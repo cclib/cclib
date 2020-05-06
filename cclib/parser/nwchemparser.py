@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2020, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -206,7 +206,7 @@ class NWChem(logfileparser.Logfile):
         # It also appears that we have to handle cartesian vs. spherical
 
         if line[1:11] == "Summary of":
-            match = re.match(' Summary of "([^\"]*)" -> "([^\"]*)" \((.+)\)', line)
+            match = re.match(r' Summary of "([^\"]*)" -> "([^\"]*)" \((.+)\)', line)
 
             if match and match.group(1) == match.group(2):
 
@@ -1097,7 +1097,7 @@ class NWChem(logfileparser.Logfile):
         # for matching the shells
         table = utils.PeriodicTable()
         elements = [table.element[x] for x in self.atomnos]
-        pattern = re.compile("(\ds)+(\dp)*(\dd)*(\df)*(\dg)*")
+        pattern = re.compile(r"(\ds)+(\dp)*(\dd)*(\df)*(\dg)*")
 
         labels = {}
         labels['s'] = ["%iS"]

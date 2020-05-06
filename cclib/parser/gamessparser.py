@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2018, the cclib development team
+# Copyright (c) 2020, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -1063,7 +1063,7 @@ class GAMESS(logfileparser.Logfile):
                     self.mosyms[0].extend(list(map(self.normalisesym, line.split())))
 
                 # Now we have nbasis lines. We will use the same method as in normalise_aonames() before.
-                p = re.compile("(\d+)\s*([A-Z][A-Z]?)\s*(\d+)\s*([A-Z]+)")
+                p = re.compile(r"(\d+)\s*([A-Z][A-Z]?)\s*(\d+)\s*([A-Z]+)")
                 oldatom = '0'
                 i_atom = 0  # counter to keep track of n_atoms > 99
                 flag_w = True  # flag necessary to keep from adding 100's at wrong time

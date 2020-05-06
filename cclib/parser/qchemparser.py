@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2018, the cclib development team
+# Copyright (c) 2020, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -61,11 +61,11 @@ class QChem(logfileparser.Logfile):
         )
 
         # Compile the dashes-and-or-spaces-only regex.
-        self.re_dashes_and_spaces = re.compile('^[\s-]+$')
+        self.re_dashes_and_spaces = re.compile(r'^[\s-]+$')
 
         # Compile the regex for extracting the atomic index from an
         # aoname.
-        self.re_atomindex = re.compile('(\d+)_')
+        self.re_atomindex = re.compile(r'(\d+)_')
 
         # A maximum of 6 columns per block when printing matrices. The
         # Fock matrix is 4.
@@ -729,7 +729,7 @@ cannot be determined. Rerun without `$molecule read`."""
             # Useful for determining the number of occupied/virtual orbitals.
             if 'Nuclear Repulsion Energy' in line:
                 line = next(inputfile)
-                nelec_re_string = 'There are(\s+[0-9]+) alpha and(\s+[0-9]+) beta electrons'
+                nelec_re_string = r'There are(\s+[0-9]+) alpha and(\s+[0-9]+) beta electrons'
                 match = re.findall(nelec_re_string, line.strip())
                 self.set_attribute('nalpha', int(match[0][0].strip()))
                 self.set_attribute('nbeta', int(match[0][1].strip()))

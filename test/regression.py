@@ -1,7 +1,7 @@
 # This file is part of cclib (http://cclib.github.io), a library for parsing
 # and interpreting the results of computational chemistry packages.
 #
-# Copyright (C) 2019, the cclib development team
+# Copyright (C) 2020, the cclib development team
 #
 # The library is free software, distributed under the terms of
 # the GNU Lesser General Public version 2.1 or later. You should have
@@ -232,7 +232,7 @@ def testADF_ADF2016_fa2_adf_out(logfile):
 
 
 def testDALTON_DALTON_2013_dvb_td_normalprint_out(logfile):
-    """This original unit test prints a DFT-specific version of the excitation
+    r"""This original unit test prints a DFT-specific version of the excitation
     eigenvectors, which we do not parse.
 
     Here is an example of the general output (requiring `**RESPONSE/.PRINT 4`

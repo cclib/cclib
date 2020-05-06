@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2019, the cclib development team
+# Copyright (c) 2020, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -244,7 +244,7 @@ def ccopen(source, *args, **kwargs):
                 is_stream = True
 
                 # Retrieve filename from URL if possible
-                filename = re.findall("\w+\.\w+", source.split('/')[-1])
+                filename = re.findall(r"\w+\.\w+", source.split('/')[-1])
                 filename = filename[0] if filename else ""
 
                 inputfile = logfileparser.openlogfile(filename, object=response.read())

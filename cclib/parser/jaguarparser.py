@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2018, the cclib development team
+# Copyright (c) 2020, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -203,7 +203,7 @@ class Jaguar(logfileparser.Logfile):
             if not hasattr(self, "atomcoords") or line[1:21] == "Symmetrized geometry":
                 # Wipe the "Input geometry" if "Symmetrized geometry" present
                 self.atomcoords = []
-            p = re.compile("(\D+)\d+")  # One/more letters followed by a number
+            p = re.compile(r"(\D+)\d+")  # One/more letters followed by a number
             atomcoords = []
             atomnos = []
             angstrom = next(inputfile)

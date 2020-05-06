@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2018, the cclib development team
+# Copyright (c) 2020, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -72,10 +72,10 @@ class Molcas(logfileparser.Logfile):
     def before_parsing(self):
         # Compile the regex for extracting the element symbol from the
         # atom label in the "Molecular structure info" block.
-        self.re_atomelement = re.compile('([a-zA-Z]+)\d?')
+        self.re_atomelement = re.compile(r'([a-zA-Z]+)\d?')
 
         # Compile the dashes-and-or-spaces-only regex.
-        self.re_dashes_and_spaces = re.compile('^[\s-]+$')
+        self.re_dashes_and_spaces = re.compile(r'^[\s-]+$')
 
         # Molcas can do multiple calculations in one job, and each one
         # starts from the gateway module. Onle parse the first.
@@ -314,17 +314,17 @@ class Molcas(logfileparser.Logfile):
             while line.split() != ['Energy', 'Energy', 'Energy', 'Change', 'Delta', 'Norm', 'in', 'Sec.']:
                 line = next(inputfile)
 
-            iteration_regex = ("^([0-9]+)"                                  # Iter
-                               "( [ \-0-9]*\.[0-9]{6,9})"                   # Tot. SCF Energy
-                               "( [ \-0-9]*\.[0-9]{6,9})"                   # One-electron Energy
-                               "( [ \-0-9]*\.[0-9]{6,9})"                   # Two-electron Energy
-                               "( [ \-0-9]*\.[0-9]{2}E[\-\+][0-9]{2}\*?)"   # Energy Change
-                               "( [ \-0-9]*\.[0-9]{2}E[\-\+][0-9]{2}\*?)"   # Max Dij or Delta Norm
-                               "( [ \-0-9]*\.[0-9]{2}E[\-\+][0-9]{2}\*?)"   # Max Fij
-                               "( [ \-0-9]*\.[0-9]{2}E[\-\+][0-9]{2}\*?)"   # DNorm
-                               "( [ \-0-9]*\.[0-9]{2}E[\-\+][0-9]{2}\*?)"   # TNorm
-                               "( [ A-Za-z0-9]*)"                           # AccCon
-                               "( [ \.0-9]*)$")                             # Time in Sec.
+            iteration_regex = (r"^([0-9]+)"                                  # Iter
+                               r"( [ \-0-9]*\.[0-9]{6,9})"                   # Tot. SCF Energy
+                               r"( [ \-0-9]*\.[0-9]{6,9})"                   # One-electron Energy
+                               r"( [ \-0-9]*\.[0-9]{6,9})"                   # Two-electron Energy
+                               r"( [ \-0-9]*\.[0-9]{2}E[\-\+][0-9]{2}\*?)"   # Energy Change
+                               r"( [ \-0-9]*\.[0-9]{2}E[\-\+][0-9]{2}\*?)"   # Max Dij or Delta Norm
+                               r"( [ \-0-9]*\.[0-9]{2}E[\-\+][0-9]{2}\*?)"   # Max Fij
+                               r"( [ \-0-9]*\.[0-9]{2}E[\-\+][0-9]{2}\*?)"   # DNorm
+                               r"( [ \-0-9]*\.[0-9]{2}E[\-\+][0-9]{2}\*?)"   # TNorm
+                               r"( [ A-Za-z0-9]*)"                           # AccCon
+                               r"( [ \.0-9]*)$")                             # Time in Sec.
 
             scfvalues = []
             line = next(inputfile)
@@ -912,7 +912,7 @@ class Molcas(logfileparser.Logfile):
             gbasis_array = []
             while '--' not in line and '****' not in line:
                 if 'Basis set:' in line:
-                    basis_element_patterns = re.findall('Basis set:([A-Za-z]{1,2})\.', line)
+                    basis_element_patterns = re.findall(r'Basis set:([A-Za-z]{1,2})\.', line)
                     assert len(basis_element_patterns) == 1
                     basis_element = basis_element_patterns[0].title()
                     gbasis_array.append((basis_element, []))
