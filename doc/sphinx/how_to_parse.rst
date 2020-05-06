@@ -10,22 +10,38 @@ Importing cclib and parsing a file is a few lines of Python code, making it simp
 
 .. code-block:: python
 
-  import cclib
+  >>> import cclib
 
-  filename = "logfile.out"
-  parser = cclib.io.ccopen(filename)
-  data = parser.parse()
-  print("There are %i atoms and %i MOs" % (data.natom, data.nmo))
+  >>> filename = "water.out"
+  >>> parser = cclib.io.ccopen(filename)
+  >>> data = parser.parse()
+  >>> print("There are %i atoms and %i MOs" % (data.natom, data.nmo))
+
+  There are 3 atoms and 7 MOs
 
 A newer command, ``ccread``, combines both the format detection and parsing steps:
 
 .. code-block:: python
 
-  import cclib
+  >>> import cclib
 
-  filename = "logfile.out"
-  data = cclib.io.ccread(filename)
-  print("There are %i atoms and %i MOs" % (data.natom, data.nmo))
+  >>> filename = "logfile.out"
+  >>> data = cclib.io.ccread(filename)
+  >>> print("There are %i atoms and %i MOs" % (data.natom, data.nmo))
+
+  There are 3 atoms and 7 MOs
+
+The `data` object above contains all the information cclib was able to to parse from the output file, available as attributes on the object:
+
+.. code-block:: python
+
+  >>> dir(data)
+
+  [(...), 'atomcoords', 'atommasses', 'atomnos', 'charge', (...), 'mult', 'natom, 'nbasis', ...]
+
+You can find a full list of these attribute on the `parsed data`_ page.
+
+.. _`parsed data`: data.html
 
 From command line
 +++++++++++++++++
