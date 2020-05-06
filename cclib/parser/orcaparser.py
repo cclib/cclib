@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2019, the cclib development team
+# Copyright (c) 2020, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -736,7 +736,7 @@ class ORCA(logfileparser.Logfile):
 
                         # This regex will tease out all number with exactly
                         # six digits after the decimal point.
-                        coeffs = re.findall('-?\d+\.\d{6}', line)
+                        coeffs = re.findall(r'-?\d+\.\d{6}', line)
 
                         # Something is very wrong if this does not hold.
                         assert len(coeffs) <= 6
@@ -1070,7 +1070,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
 ------------------------------------------------------------------------------------------
   0( 0)-> 1( 0) 1   83163.2    120.2   0.088250385   2.25340   0.00000   0.00000   1.50113
 """
-                    reg = r'(\d+)\( ?(\d+)\)-> ?(\d+)\( ?(\d+)\) (\d+)'+ '\s+(\d+\.\d+)'*4 + '\s+(-?\d+\.\d+)'*3
+                    reg = r'(\d+)\( ?(\d+)\)-> ?(\d+)\( ?(\d+)\) (\d+)'+ r'\s+(\d+\.\d+)'*4 + r'\s+(-?\d+\.\d+)'*3
                     res = re.search(reg, line)
                     jstate, jblock, istate, iblock, mult, energy, wavelength, intensity, t2, tx, ty, tz = res.groups()
                     return energy, intensity

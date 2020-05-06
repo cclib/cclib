@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2020, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -68,7 +68,7 @@ class MOPAC(logfileparser.Logfile):
         self.geomdone = False
 
         # Compile the dashes-and-or-spaces-only regex.
-        self.re_dashes_and_spaces = re.compile('^[\s-]+$')
+        self.re_dashes_and_spaces = re.compile(r'^[\s-]+$')
 
         self.star = ' * '
         self.stars = ' *******************************************************************************'

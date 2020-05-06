@@ -77,10 +77,10 @@ class Gaussian(logfileparser.Logfile):
     def before_parsing(self):
 
         # Extract only well-formed numbers in scientific notation.
-        self.re_scinot = re.compile('(\w*)=\s*(-?\d\.\d{2}D[+-]\d{2})')
+        self.re_scinot = re.compile(r'(\w*)=\s*(-?\d\.\d{2}D[+-]\d{2})')
         # Extract only well-formed numbers in traditional
         # floating-point format.
-        self.re_float = re.compile('(\w*-?\w*)=\s*(-?\d+\.\d{10,})')
+        self.re_float = re.compile(r'(\w*-?\w*)=\s*(-?\d+\.\d{10,})')
 
         # Flag for identifying Coupled Cluster runs.
         self.coupledcluster = False
@@ -212,7 +212,7 @@ class Gaussian(logfileparser.Logfile):
             while line.split()[0] == 'Charge':
 
                 # For the supermolecule, we can parse the charge and multicplicity.
-                regex = ".*=(.*)Mul.*=\s*-?(\d+).*"
+                regex = r".*=(.*)Mul.*=\s*-?(\d+).*"
                 match = re.match(regex, line)
                 assert match, "Something unusual about the line: '%s'" % line
 
@@ -252,7 +252,7 @@ class Gaussian(logfileparser.Logfile):
 
             if line.split()[-1] == "supermolecule" or not "fragment" in line:
 
-                regex = ".*=(.*)Mul.*=\s*-?(\d+).*"
+                regex = r".*=(.*)Mul.*=\s*-?(\d+).*"
                 match = re.match(regex, line)
                 assert match, "Something unusual about the line: '%s'" % line
 
@@ -267,7 +267,7 @@ class Gaussian(logfileparser.Logfile):
 
             self.updateprogress(inputfile, "Attributes", self.fupdate)
 
-            natom = int(re.search('NAtoms=\s*(\d+)', line).group(1))
+            natom = int(re.search(r'NAtoms=\s*(\d+)', line).group(1))
             self.set_attribute('natom', natom)
 
         # Basis set name
@@ -1271,7 +1271,7 @@ class Gaussian(logfileparser.Logfile):
             # Excited State   2:   ?Spin  -A      0.1222 eV 10148.75 nm  f=0.0000
             # (Gaussian 09 ZINDO)
             # Excited State   1:      Singlet-?Sym    2.5938 eV  478.01 nm  f=0.0000  <S**2>=0.000
-            p = re.compile(":(?P<sym>.*?)(?P<energy>-?\d*\.\d*) eV")
+            p = re.compile(r":(?P<sym>.*?)(?P<energy>-?\d*\.\d*) eV")
             groups = p.search(line).groups()
             self.etenergies.append(utils.convertor(utils.float(groups[1]), "eV", "wavenumber"))
             self.etoscs.append(utils.float(line.split("f=")[-1].split()[0]))
@@ -1279,7 +1279,7 @@ class Gaussian(logfileparser.Logfile):
 
             line = next(inputfile)
 
-            p = re.compile("(\d+)")
+            p = re.compile(r"(\d+)")
             CIScontrib = []
             while line.find(" ->") >= 0:  # This is a contribution to the transition
                 parts = line.split("->")
