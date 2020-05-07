@@ -1595,8 +1595,7 @@ class Gaussian(logfileparser.Logfile):
                     line = next(inputfile)
                     # Just do this the first time 'round.
                     if base == 0:
-                        # Changed below from :12 to :11 to deal with Elmar Neumann's example.
-                        parts = line[:11].split()
+                        parts = line[:12].split()
                         # New atom.
                         if len(parts) > 1:
                             if i > 0:
