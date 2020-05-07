@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2019, the cclib development team
+# Copyright (c) 2020, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -97,10 +97,13 @@ class FileWrapper(object):
 
         # Assume the position is what was passed to the constructor.
         self.pos = pos
+        
+        self.last_line = None
 
     def next(self):
         line = next(self.src)
         self.pos += len(line)
+        self.last_line = line
         return line
 
     def __next__(self):
@@ -333,6 +336,10 @@ class Logfile(object):
             except StopIteration:
                 self.logger.error("Unexpectedly encountered end of logfile.")
                 break
+            except Exception as e:
+                self.logger.error("Encountered error when parsing.")
+                self.logger.error("Last line read: %s" % inputfile.last_line)
+                raise
 
         # Close input file object.
         if not self.isstream:
