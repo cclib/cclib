@@ -312,6 +312,7 @@ Molpro/Molpro2012/stopiter_molpro_dft.out
 Molpro/Molpro2012/stopiter_molpro_hf.out
 Molpro/Molpro2012/trithiolane_polar.out
 MOPAC/MOPAC2016/9S3_uuu_Cs_cation_freq_PM7.out
+MOPAC/MOPAC2016/fa_from_issue_763.out
 NWChem/NWChem6.0/dvb_gopt_hf_unconverged.out
 NWChem/NWChem6.0/dvb_sp_hf_moments_only_octupole.out
 NWChem/NWChem6.0/dvb_sp_hf_moments_only_quadrupole.out

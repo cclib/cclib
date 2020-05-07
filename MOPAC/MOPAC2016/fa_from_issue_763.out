@@ -1,0 +1,176 @@
+ *******************************************************************************
+ ** Site#: 32791        For non-commercial use only    Version 19.179L 64BITS **
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 19.179L, James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web: HTTP://OpenMOPAC.net. Days left: 320**
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              PM6 CALCULATION RESULTS
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Mon Aug 12 10:11:30 2019  *
+ *  PM6        - The PM6 Hamiltonian to be used
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *******************************************************************************
+PM6
+ Formaldehyde
+ All coordinates are Cartesian
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+ 
+     1       O          0.00000000      0.00000000      0.00000000   
+     2       C          1.21000000  *   0.00000000      0.00000000   
+     3       H          1.79000000  *   0.93000000  *   0.00000000   
+     4       H          1.79000000  *  -0.93000000  *   0.00000000   
+ 
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM           X           Y           Z
+
+     1         O          0.0000      0.0000      0.0000
+     2         C          1.2100      0.0000      0.0000
+     3         H          1.7900      0.9300      0.0000
+     4         H          1.7900     -0.9300      0.0000
+
+ General Reference for PM6:
+ "Optimization of Parameters for Semiempirical Methods V: Modification of NDDO Approximations
+ and Application to 70 Elements", J. J. P. Stewart, J. Mol. Mod., 13, 1173-1213 (2007)
+ URL: http://www.springerlink.com/content/ar33482301010477/fulltext.pdf
+
+           Empirical Formula: C H2 O  =     4 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C2v 
+
+
+      RHF CALCULATION, NO. OF DOUBLY OCCUPIED LEVELS = 6
+
+
+          Geometry optimization using EF
+
+          DIAGONAL MATRIX USED AS START HESSIAN
+
+ CYCLE:     1 TIME:   0.004 TIME LEFT:  2.00D  GRAD.:     1.448 HEAT: -20.69535
+ CYCLE:     2 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:     0.556 HEAT: -20.69694
+
+     GRADIENT =  0.55627 IS LESS THAN CUTOFF =  1.00000
+
+
+
+ -------------------------------------------------------------------------------
+ PM6
+ Formaldehyde
+ All coordinates are Cartesian
+
+
+     GEOMETRY OPTIMISED USING EIGENVECTOR FOLLOWING (EF).     
+     SCF FIELD WAS ACHIEVED                                   
+
+
+                              PM6 CALCULATION
+                                                       MOPAC2016 (Version: 19.179L)
+                                                       Mon Aug 12 10:11:30 2019
+                                                       No. of days remaining = 320
+
+
+
+
+          FINAL HEAT OF FORMATION =        -20.69694 KCAL/MOL =     -86.59602 KJ/MOL
+
+
+          TOTAL ENERGY            =       -440.23216 EV
+          ELECTRONIC ENERGY       =       -825.85319 EV  POINT GROUP:     C2v 
+          CORE-CORE REPULSION     =        385.62104 EV
+          COSMO AREA              =         60.76 SQUARE ANGSTROMS
+          COSMO VOLUME            =         42.59 CUBIC ANGSTROMS
+
+          GRADIENT NORM           =          0.55627 = 0.27814 PER ATOM
+          IONIZATION POTENTIAL    =         10.204677 EV
+          HOMO LUMO ENERGIES (EV) =        -10.205  0.032
+          NO. OF FILLED LEVELS    =          6
+          MOLECULAR WEIGHT        =         30.0262
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            H     3    O     1     2.01835
+            H     4    O     1     1.65229
+            O     1    C     2     0.00000
+
+
+          SCF CALCULATIONS        =          3
+ 
+          WALL-CLOCK TIME         =          0.055 SECONDS
+          COMPUTATION TIME        =          0.018 SECONDS
+
+
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+ 
+     1       O          0.00000000      0.00000000      0.00000000   
+     2       C          1.21065591  *   0.00000000      0.00000000   
+     3       H          1.79071041  *   0.93117273  *   0.00000000   
+     4       H          1.79068800  *  -0.93117273  *   0.00000000   
+
+                             CARTESIAN COORDINATES
+
+   1    O        0.000000000     0.000000000     0.000000000
+   2    C        1.210655911     0.000000000     0.000000000
+   3    H        1.790710411     0.931172726     0.000000000
+   4    H        1.790688001    -0.931172726     0.000000000
+
+
+           Empirical Formula: C H2 O  =     4 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C2v 
+
+
+                  EIGENVALUES  
+ -32.00977 -23.55734 -17.18544 -15.13590 -14.76134 -10.20468   0.03241   4.08971
+   4.45646   4.74859
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       
+    1          O          -0.422858        6.4229     1.85375     4.56910
+    2          C           0.236611        3.7634     1.14508     2.61831
+    3          H           0.093124        0.9069     0.90688
+    4          H           0.093123        0.9069     0.90688
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.     2.978     0.000     0.000     2.978
+ HYBRID        -0.161    -0.000    -0.000     0.161
+ SUM            2.817     0.000    -0.000     2.817
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+     Atom    s        px        py        pz   
+    1  O   1.85375   1.29072   1.93531   1.34308
+    2  C   1.14508   0.89773   1.06366   0.65692
+    3  H   0.90688
+    4  H   0.90688
+
+ **********************
+ *                    *
+ * JOB ENDED NORMALLY *
+ *                    *
+ **********************
+
+
+
+ TOTAL JOB TIME:             0.05 SECONDS
+
+ == MOPAC DONE ==
