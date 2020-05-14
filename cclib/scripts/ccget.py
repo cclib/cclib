@@ -15,6 +15,7 @@ import glob
 import logging
 import os.path
 import sys
+from fuzzywuzzy import process
 from functools import partial
 from pprint import pprint
 
@@ -111,6 +112,12 @@ def ccget():
     attrnames = []
     filenames = []
     for arg in arglist:
+        if arg not in ccData._attrlist:
+            fuzzy_attr, confidence = process.extractOne(arg, ccData._attrlist)
+            if confidence > 85:
+                logging.warn("Attribute '{0}' not found, but attribute '{1}' is close. "
+                    "Using '{1}' instead.".format(arg, fuzzy_attr))
+                arg = fuzzy_attr
         if arg in ccData._attrlist:
             attrnames.append(arg)
         elif URL_PATTERN.match(arg) or os.path.isfile(arg):
