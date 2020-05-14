@@ -171,53 +171,45 @@ class ORCA(logfileparser.Logfile):
                 elif line[0] == '%':
                     pass
 
-                # Geometry block
-                elif line[0] == '*':
-                    coord_type, charge, multiplicity = line[1:].split()[:3]
-                    self.set_attribute('charge', int(charge))
-                    self.set_attribute('multiplicity', int(multiplicity))
-                    coord_type = coord_type.lower()
-                    self.metadata['coord_type'] = coord_type
-                    if coord_type == 'xyz':
-                        def splitter(line):
-                            atom, x, y, z = line.split()[:4]
-                            return [atom, float(x), float(y), float(z)]
-                    elif coord_type in ['int', 'internal']:
-                        def splitter(line):
-                            atom, a1, a2, a3, bond, angle, dihedral = line.split()[:7]
-                            return [atom, int(a1), int(a2), int(a3), float(bond), float(angle), float(dihedral)]
-                    elif coord_type == 'gzmt':
-                        def splitter(line):
-                            vals = line.split()[:7]
-                            if len(vals) == 7:
-                                atom, a1, bond, a2, angle, a3, dihedral = vals
-                                return [atom, int(a1), float(bond), int(a2), float(angle), int(a3), float(dihedral)]
-                            elif len(vals) == 5:
-                                return [vals[0], int(vals[1]), float(vals[2]), int(vals[3]), float(vals[4])]
-                            elif len(vals) == 3:
-                                return [vals[0], int(vals[1]), float(vals[2])]
-                            elif len(vals) == 1:
-                                return [vals[0]]
-                            self.logger.warning('Incorrect number of atoms in input geometry.')
-                    elif 'file' in coord_type:
-                        pass
-                    else:
-                        self.logger.warning('Invalid coordinate type.')
-
-                    if 'file' not in coord_type:
-                        for line in lines_iter:
-                            if not line:
-                                continue
-                            if line[0] == '#' or line.strip(' ') == '\n':
-                                continue
-                            if line.strip()[0] == '*' or line.strip() == "end":
-                                break
-                            # Strip basis specification that can appear after coordinates
-                            line = line.split('newGTO')[0].strip()
-                            coords.append(splitter(line))
-
             self.metadata['keywords'] = keywords
-            self.metadata['coords'] = coords
+            # If the calculations is a parameter scan then immediately following the 
+            # input file block is the following section:
+
+            # | 12> **                         ****END OF INPUT****
+            # ================================================================================
+            # 
+            #                        ******************************
+            #                        * Parameter Scan Calculation *
+            #                        ******************************
+            # 
+            # Trajectory settings:
+            #     -> SCF surface will be mapped
+            # 
+            # There are 1 parameter(s) to be scanned
+            #              R: range=   0.58220000 ..   5.08220000  steps=   46
+            # There will be   46 energy evaluations
+            #
+            #
+            # following this each calculation has the following block at the start
+            #
+            #         *************************************************************
+            #                                TRAJECTORY STEP   1
+            #                  R  :   0.58220000
+            #         *************************************************************
+
+        if 'Parameter Scan Calculation' in line:
+            self.skip_lines(inputfile,['s', 'b', 'Trajectory settings', 'Surface information', 'b'])
+            line = next(inputfile)
+            num_params = int(line.strip().split()[2])
+            for i in range(num_params):
+                line = next(inputfile).strip()
+                self.append_attribute('scannames', line.split(':')[0])
+        if 'TRAJECTORY STEP' in line:
+            current_params = []
+            for i in range(len(self.scannames)):
+                line = next(inputfile)
+                current_params.append(float(line.split(':')[-1].strip()))
+            self.append_attribute('scanparm', tuple(current_params))
 
         if line[0:15] == "Number of atoms":
 
