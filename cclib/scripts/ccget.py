@@ -15,7 +15,7 @@ import glob
 import logging
 import os.path
 import sys
-from fuzzywuzzy import process
+import difflib
 from functools import partial
 from pprint import pprint
 
@@ -113,8 +113,9 @@ def ccget():
     filenames = []
     for arg in arglist:
         if arg not in ccData._attrlist:
-            fuzzy_attr, confidence = process.extractOne(arg, ccData._attrlist)
-            if confidence > 85:
+            fuzzy_attr = difflib.get_close_matches(arg, ccData._attrlist, n=1, cutoff=0.85)
+            if len(fuzzy_attr) > 0:
+                fuzzy_attr = fuzzy_attr[0]
                 logging.warn("Attribute '{0}' not found, but attribute '{1}' is close. "
                     "Using '{1}' instead.".format(arg, fuzzy_attr))
                 arg = fuzzy_attr
