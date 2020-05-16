@@ -116,7 +116,7 @@ def ccget():
             fuzzy_attr = difflib.get_close_matches(arg, ccData._attrlist, n=1, cutoff=0.85)
             if len(fuzzy_attr) > 0:
                 fuzzy_attr = fuzzy_attr[0]
-                logging.warn("Attribute '{0}' not found, but attribute '{1}' is close. "
+                logging.warning("Attribute '{0}' not found, but attribute '{1}' is close. "
                     "Using '{1}' instead.".format(arg, fuzzy_attr))
                 arg = fuzzy_attr
         if arg in ccData._attrlist:
