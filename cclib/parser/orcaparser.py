@@ -172,30 +172,30 @@ class ORCA(logfileparser.Logfile):
                     pass
 
             self.metadata['keywords'] = keywords
-            # If the calculations is a parameter scan then immediately following the 
-            # input file block is the following section:
+        # If the calculations is a unrelaxed parameter scan then immediately following the 
+        # input file block is the following section:
 
-            # | 12> **                         ****END OF INPUT****
-            # ================================================================================
-            # 
-            #                        ******************************
-            #                        * Parameter Scan Calculation *
-            #                        ******************************
-            # 
-            # Trajectory settings:
-            #     -> SCF surface will be mapped
-            # 
-            # There are 1 parameter(s) to be scanned
-            #              R: range=   0.58220000 ..   5.08220000  steps=   46
-            # There will be   46 energy evaluations
-            #
-            #
-            # following this each calculation has the following block at the start
-            #
-            #         *************************************************************
-            #                                TRAJECTORY STEP   1
-            #                  R  :   0.58220000
-            #         *************************************************************
+        # | 12> **                         ****END OF INPUT****
+        # ================================================================================
+        # 
+        #                        ******************************
+        #                        * Parameter Scan Calculation *
+        #                        ******************************
+        # 
+        # Trajectory settings:
+        #     -> SCF surface will be mapped
+        # 
+        # There are 1 parameter(s) to be scanned
+        #              R: range=   0.58220000 ..   5.08220000  steps=   46
+        # There will be   46 energy evaluations
+        #
+        #
+        # following this each calculation has the following block at the start
+        #
+        #         *************************************************************
+        #                                TRAJECTORY STEP   1
+        #                  R  :   0.58220000
+        #         *************************************************************
 
         if 'Parameter Scan Calculation' in line:
             self.skip_lines(inputfile,['s', 'b', 'Trajectory settings', 'Surface information', 'b'])
@@ -211,6 +211,37 @@ class ORCA(logfileparser.Logfile):
                 current_params.append(float(line.split(':')[-1].strip()))
             self.append_attribute('scanparm', tuple(current_params))
 
+        # If the calculations is a relaxed parameter scan then immediately following the 
+        # input file block is the following section:
+
+        #                        ******************************
+        #                        *    Relaxed Surface Scan    *
+        #                        ******************************
+        # 
+        #         Dihedral (  9,   8,   3,   2):   range=   0.00000000 .. 360.00000000  steps =   12
+        # 
+        # There is 1 parameter to be scanned.
+        # There will be   12 constrained geometry optimizations.
+        # 
+        # 
+        #          *************************************************************
+        #          *               RELAXED SURFACE SCAN STEP   1               *
+        #          *                                                           *
+        #          *   Dihedral (  9,   8,   3,   2)  :   0.00000000           *
+        #          *************************************************************
+
+        if 'Relaxed Surface Scan' in line:
+            self.skip_lines(inputfile,['s', 'b'])
+            line = next(inputfile)
+            while not line.isspace():
+                line = line.strip()
+                self.append_attribute('scannames', line.split(':')[0])
+                line = next(inputfile)
+            print(line)
+            line = next(inputfile)
+            print(line)
+            num_params = int(line.strip().split()[2])
+        
         if line[0:15] == "Number of atoms":
 
             natom = int(line.split()[-1])
@@ -418,16 +449,17 @@ Dispersion correction           -0.016199959
         # RMS Gradient             TolRMSG  ....  1.0000e-04 Eh/bohr
         # Max. Displacement        TolMAXD  ....  4.0000e-03 bohr
         # RMS Displacement         TolRMSD  ....  2.0000e-03 bohr
-        if line[25:50] == "RELAXED SURFACE SCAN STEP":
+        if 'RELAXED SURFACE SCAN STEP' in line:
+            self.skip_lines(inputfile,['b'])
+            current_params = []
+            for i in range(len(self.scannames)):
+                line = next(inputfile)
+                line = line.replace('*','')
+                current_params.append(float(line.split(':')[-1].strip()))
+            self.append_attribute('scanparm', tuple(current_params))
 
             self.is_relaxed_scan = True
-            blank = next(inputfile)
-            info = next(inputfile)
-            stars = next(inputfile)
-            blank = next(inputfile)
-
-            line = next(inputfile)
-            while line[0:23] != "Convergence Tolerances:":
+            while "Convergence Tolerances:" not in line:
                 line = next(inputfile)
 
             self.geotargets = []
