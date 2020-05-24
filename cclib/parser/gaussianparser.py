@@ -948,42 +948,113 @@ class Gaussian(logfileparser.Logfile):
                 line = next(inputfile)
             self.grads.append(forces)
 
-        #Extract PES scan data
-        #Summary of the potential surface scan:
-        #  N       A          SCF
-        #----  ---------  -----------
-        #   1   109.0000    -76.43373
-        #   2   119.0000    -76.43011
-        #   3   129.0000    -76.42311
-        #   4   139.0000    -76.41398
-        #   5   149.0000    -76.40420
-        #   6   159.0000    -76.39541
-        #   7   169.0000    -76.38916
-        #   8   179.0000    -76.38664
-        #   9   189.0000    -76.38833
-        #  10   199.0000    -76.39391
-        #  11   209.0000    -76.40231
-        #----  ---------  -----------
+        if "Number of optimizations in scan" in line:
+            self.scan_length = int(line.split()[-1])
+
+        # All PES scan have a list of initial parameters from which we
+        # can get the names and more.
+        #
+        #                            ----------------------------
+        #                           !    Initial Parameters    !
+        #                           ! (Angstroms and Degrees)  !
+        # --------------------------                            --------------------------
+        # ! Name  Definition              Value          Derivative Info.                !
+        # --------------------------------------------------------------------------------
+        # ! R1    R(1,2)                  1.4212         estimate D2E/DX2                !
+        # ! R2    R(1,14)                 1.4976         estimate D2E/DX2                !
+        # ...
+        if "Initial Parameters" in line:
+            self.scannames_all = []
+            self.scannames_scanned = []
+            self.skip_lines(inputfile, ['units', 'd', 'header', 'd'])
+            line = next(inputfile)
+            while line.strip()[0] == '!':
+                name = line.split()[1]
+                definition = line.split()[2]
+                self.scannames_all.append(name)
+                if line.split()[4] == 'Scan':
+                    self.scannames_scanned.append(name)
+                    self.append_attribute('scannames', definition)
+                line = next(inputfile)
+
+        # Extract unrelaxed PES scan data, which looks something like:
+        #
+        # Summary of the potential surface scan:
+        #   N       A          SCF
+        # ----  ---------  -----------
+        #    1   109.0000    -76.43373
+        #    2   119.0000    -76.43011
+        #    3   129.0000    -76.42311
+        #    4   139.0000    -76.41398
+        #    5   149.0000    -76.40420
+        #    6   159.0000    -76.39541
+        #    7   169.0000    -76.38916
+        #    8   179.0000    -76.38664
+        #    9   189.0000    -76.38833
+        #   10   199.0000    -76.39391
+        #   11   209.0000    -76.40231
+        # ----  ---------  -----------
         if "Summary of the potential surface scan:" in line:
 
-            scanenergies = []
-            scanparm = []
             colmnames = next(inputfile)
+            if not hasattr(self, "scannames"):
+                self.set_attribute("scannames", colmnames.split()[1:-1])
+
             hyphens = next(inputfile)
             line = next(inputfile)
             while line != hyphens:
                 broken = line.split()
-                scanenergies.append(float(broken[-1]))
-                scanparm.append(map(float, broken[1:-1]))
+                self.append_attribute('scanenergies', (utils.convertor(float(broken[-1]), "hartree", "eV")))
+                self.append_attribute('scanparm', [float(p) for p in broken[1:-1]])
                 line = next(inputfile)
-            if not hasattr(self, "scanenergies"):
-                self.scanenergies = []
-                self.scanenergies = scanenergies
-            if not hasattr(self, "scanparm"):
-                self.scanparm = []
-                self.scanparm = scanparm
-            if not hasattr(self, "scannames"):
-                self.scannames = colmnames.split()[1:-1]
+
+        # Extract relaxed (optimized) PES scan data, for which the form
+        # of the output is transposed:
+        #
+        #  Summary of Optimized Potential Surface Scan (add -382.0 to energies):
+        #                            1         2         3         4         5
+        #      Eigenvalues --    -0.30827  -0.30695  -0.30265  -0.29955  -0.30260
+        #            R1           1.42115   1.42152   1.42162   1.42070   1.42071
+        #            R2           1.49761   1.49787   1.49855   1.49901   1.49858
+        #            R3           1.42245   1.42185   1.42062   1.42048   1.42147
+        #            R4           1.40217   1.40236   1.40306   1.40441   1.40412
+        # ...
+        if "Summary of Optimized Potential Surface Scan" in line:
+            # The base energy separation is version dependent, and first
+            # appears in Gaussian16.
+            base_energy = 0.0
+            if "add" in line and "to energies" in line:
+                base_energy = float(line.split()[-3])
+
+            scanenergies = []
+            scanparm = [[] for _ in range(len(self.scannames))]
+            while len(scanenergies) != self.scan_length:
+                line = next(inputfile)
+                indices = [int(i) for i in line.split()]           
+                widths = [10]*len(indices)
+                splitter = utils.WidthSplitter(widths)
+
+                line = next(inputfile)
+                eigenvalues_in_line = line[21:].rstrip()
+                assert len(eigenvalues_in_line) == sum(widths)
+                eigenvalues = [float(e) for e in splitter.split(eigenvalues_in_line)]
+                eigenvalues = [base_energy + e for e in eigenvalues]
+                assert len(eigenvalues) == len(indices)
+                eigenvalues = [utils.convertor(e, "hartree", "eV") for e in eigenvalues]
+                scanenergies.extend(eigenvalues)
+
+                for _, name in enumerate(self.scannames_all):
+                    line = next(inputfile)
+                    assert line.split()[0] == name
+                    if name in self.scannames_scanned:
+                        iname = self.scannames_scanned.index(name)
+                        params_in_line = line[21:].rstrip()
+                        assert len(params_in_line) == sum(widths)
+                        params = [float(v) for v in splitter.split(params_in_line)]
+                        scanparm[iname].extend(params)
+
+            self.set_attribute('scanenergies', scanenergies)
+            self.set_attribute('scanparm', scanparm)
 
         # Orbital symmetries.
         if line[1:20] == 'Orbital symmetries:' and not hasattr(self, "mosyms"):
