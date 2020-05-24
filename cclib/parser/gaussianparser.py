@@ -974,7 +974,7 @@ class Gaussian(logfileparser.Logfile):
             while line != hyphens:
                 broken = line.split()
                 scanenergies.append(float(broken[-1]))
-                scanparm.append(map(float, broken[1:-1]))
+                scanparm.append([float(p) for p in broken[1:-1]])
                 line = next(inputfile)
             if not hasattr(self, "scanenergies"):
                 self.scanenergies = []
