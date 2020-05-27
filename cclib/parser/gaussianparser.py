@@ -1211,6 +1211,8 @@ class Gaussian(logfileparser.Logfile):
                     if not hasattr(self, 'vibdisps'):
                         self.vibdisps = []
                     disps = []
+                    if not hasattr(self, 'nqmf'):
+                        self.set_attribute('nqmf', self.natom)
                     for n in range(self.nqmf):
                         line = next(inputfile)
                         numbers = [float(s) for s in line[10:].split()]
