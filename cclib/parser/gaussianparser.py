@@ -103,6 +103,9 @@ class Gaussian(logfileparser.Logfile):
         self.hp_polarizabilities = False
 
     def after_parsing(self):
+        # atomcoords are parsed as a list of lists but it should be an array
+        if hasattr(self, "atomcoords"):
+            self.atomcoords = numpy.array(self.atomcoords)
 
         # Correct the percent values in the etsecs in the case of
         # a restricted calculation. The following has the
@@ -114,7 +117,12 @@ class Gaussian(logfileparser.Logfile):
 
         if hasattr(self, "scanenergies"):
             self.scancoords = []
-            self.scancoords = self.atomcoords
+            if hasattr(self, 'optstatus'):
+                converged_indexes = [x for x, y in enumerate(self.optstatus) if y & data.ccData.OPT_DONE > 0]
+                print(type(self.atomcoords))
+                self.scancoords = self.atomcoords[converged_indexes,:,:]
+            else:
+                self.scancoords = self.atomcoords
 
         if (hasattr(self, 'enthalpy') and hasattr(self, 'temperature')
                 and hasattr(self, 'freeenergy')):
@@ -457,7 +465,7 @@ class Gaussian(logfileparser.Logfile):
 
             if not self.BOMD: self.inputcoords.append(atomcoords)
 
-            self.set_attribute('atomnos', self.inputatoms)
+            self.set_attribute('atomnos', numpy.array(self.inputatoms))
             self.set_attribute('natom', len(self.inputatoms))
 
         if self.BOMD and line.startswith(' Summary information for step'):
