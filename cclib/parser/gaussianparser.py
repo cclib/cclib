@@ -1002,11 +1002,15 @@ class Gaussian(logfileparser.Logfile):
 
             hyphens = next(inputfile)
             line = next(inputfile)
+            scanparm = [[] for _ in range(len(self.scannames))]
             while line != hyphens:
                 broken = line.split()
                 self.append_attribute('scanenergies', (utils.convertor(float(broken[-1]), "hartree", "eV")))
-                self.append_attribute('scanparm', [float(p) for p in broken[1:-1]])
+                for idx,p in enumerate(broken[1:-1]):
+                    scanparm[idx].append(float(p))
+                #self.append_attribute('scanparm', [float(p) for p in broken[1:-1]])
                 line = next(inputfile)
+            self.set_attribute('scanparm', scanparm)
 
         # Extract relaxed (optimized) PES scan data, for which the form
         # of the output is transposed:
