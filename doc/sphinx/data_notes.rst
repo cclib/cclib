@@ -488,6 +488,26 @@ or by providing the corresponding argument to ``ccopen``,
     parser = ccopen("filename", optdone_as_list=True) # could also do future=True instead of optdone_as_list
     data = parser.parse()
 
+scancoords
+----------
+
+An array containing the geometries for each step of shape `(number of scan steps, number of atoms, 3)`. In the case of an unrelaxed scan this is equivalent to `atomcoords`, however this is not the case for a relaxed scan as a geometry optimization is performed at each scan step.
+
+scanenergies
+------------
+
+A list containing the energies at each point of the scan. As with `scancoords`, `scanenergies` is only equivalent to `[scf,mp,cc]energies` in the case of an unrelaxed scan of the scf, mp, and/or cc potential energy surface.
+
+scannames
+_________
+
+A list containing the names of each parameter scanned.
+
+scanparm
+________
+
+A list of lists where each list contains the values scanned for each parameter in `scannames`. 
+
 scfenergies
 -----------
 
