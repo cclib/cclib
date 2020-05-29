@@ -1037,8 +1037,12 @@ class Gaussian(logfileparser.Logfile):
                 line = next(inputfile)
                 eigenvalues_in_line = line[21:].rstrip()
                 assert len(eigenvalues_in_line) == sum(widths)
-                eigenvalues = [float(e) for e in splitter.split(eigenvalues_in_line)]
-                eigenvalues = [base_energy + e for e in eigenvalues]
+                cols = list(splitter.split(eigenvalues_in_line))
+                try:
+                    eigenvalues = [float(e) for e in cols]
+                    eigenvalues = [base_energy + e for e in eigenvalues]
+                except ValueError:
+                    eigenvalues = [numpy.nan for _ in cols]
                 assert len(eigenvalues) == len(indices)
                 eigenvalues = [utils.convertor(e, "hartree", "eV") for e in eigenvalues]
                 scanenergies.extend(eigenvalues)
