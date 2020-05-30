@@ -272,8 +272,9 @@ class Gaussian(logfileparser.Logfile):
 
             # Necessary for `if line.strip().split()[0:3] == ["Atom", "AN", "X"]:` block
             if not hasattr(self, 'nqmf'):
-                nqmf = int(re.search('NQMF=\s*(\d+)', line).group(1))
-                self.set_attribute('nqmf', nqmf)
+                match = re.search('NQMF=\s*(\d+)', line)
+                if match is not None:
+                    self.set_attribute('nqmf', int(match.group(1)))
 
         # Basis set name
         if line[1:15] == "Standard basis":
