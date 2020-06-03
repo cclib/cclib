@@ -5,7 +5,7 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
-"""Test the various population analyses (MPA, LPA, CSPA) in cclib"""
+"""Test the various population analyses (MPA, LPA, CSPA, BPA) in cclib"""
 
 from __future__ import print_function
 
@@ -16,7 +16,7 @@ import unittest
 
 import numpy
 
-from cclib.method import CSPA, LPA, MPA, OPA
+from cclib.method import CSPA, LPA, MPA, OPA, BPA
 from cclib.method.calculationmethod import MissingAttributeError
 from cclib.parser import Gaussian
 
@@ -28,7 +28,7 @@ from ..test_data import getdatafile
 class PopulationTest(unittest.TestCase):
     """Generic population method tests."""
     
-    methods = (CSPA, LPA, MPA, OPA)
+    methods = (CSPA, LPA, MPA, OPA, BPA)
 
     def parse(self):
         self.data, self.logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_un_sp.log"])
@@ -126,8 +126,29 @@ class GaussianCSPATest(unittest.TestCase):
         totalspin = sum(self.analysis.fragspins)
         self.assertAlmostEqual(totalspin, formalspin, delta=1.0e-3)
 
+class GaussianBPATest(unittest.TestCase):
+    """Bickelhaupt Population Analysis test"""
+    
+    def setUp(self):
+        self.data, self.logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_un_sp.log"])
+        self.analysis = BPA(self.data)
+        self.analysis.logger.setLevel(0)
+        self.analysis.calculate()
+    
+    def testsumcharges(self):
+        """Do the BPA charges sum up to the total formal charge?"""
+        formalcharge = sum(self.data.atomnos) - self.data.charge
+        totalpopulation = sum(self.analysis.fragcharges)
+        self.assertAlmostEqual(totalpopulation, formalcharge, delta=1.0e-3)
+        
+    def testsumspins(self):
+        """Do the BPA spins sum up to the total formal spin?"""
+        formalspin = self.data.homos[0] - self.data.homos[1]
+        totalspin = sum(self.analysis.fragspins)
+        self.assertAlmostEqual(totalspin, formalspin, delta=1.0e-3)
 
-tests = [GaussianMPATest, GaussianLPATest, GaussianCSPATest]
+
+tests = [GaussianMPATest, GaussianLPATest, GaussianCSPATest, GaussianBPATest]
 
 
 if __name__ == "__main__":

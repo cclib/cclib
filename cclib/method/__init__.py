@@ -19,4 +19,5 @@ from cclib.method.mpa import MPA
 from cclib.method.nuclear import Nuclear
 from cclib.method.opa import OPA
 from cclib.method.orbitals import Orbitals
+from cclib.method.bpa import BPA
 # from cclib.method.volume import Volume
