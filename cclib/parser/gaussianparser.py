@@ -117,11 +117,10 @@ class Gaussian(logfileparser.Logfile):
 
         if hasattr(self, "scanenergies"):
             self.scancoords = []
-            if hasattr(self, 'optstatus'):
+            if hasattr(self, 'optstatus') and hasattr(self, 'atomcoords'):
                 converged_indexes = [x for x, y in enumerate(self.optstatus) if y & data.ccData.OPT_DONE > 0]
-                print(type(self.atomcoords))
                 self.scancoords = self.atomcoords[converged_indexes,:,:]
-            else:
+            elif hasattr(self, 'atomcoords'):
                 self.scancoords = self.atomcoords
 
         if (hasattr(self, 'enthalpy') and hasattr(self, 'temperature')
