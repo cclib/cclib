@@ -958,7 +958,7 @@ class Gaussian(logfileparser.Logfile):
         if "Number of optimizations in scan" in line:
             self.scan_length = int(line.split()[-1])
 
-        # All PES scan have a list of initial parameters from which we
+        # All PES scans have a list of initial parameters from which we
         # can get the names and more.
         #
         #                            ----------------------------

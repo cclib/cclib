@@ -965,7 +965,7 @@ def testGaussian_Gaussian09_2D_PES_all_converged_log(logfile):
     )
     
     # The energies printed in the scan summary are misformated.
-    assert numpy.all(logfile.data.scanenergies == numpy.nan)
+    assert numpy.all(numpy.isnan(logfile.data.scanenergies))
 
 
 def testGaussian_Gaussian09_2D_PES_one_unconverged_log(logfile):
