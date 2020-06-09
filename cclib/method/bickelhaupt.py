@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2018, the cclib development team
+# Copyright (c) 2020, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
-"""Calculation of Bickelhaupt population analysis (BPA) based on data parsed by cclib."""
+"""Calculation of Bickelhaupt population analysis based on data parsed by cclib."""
 
 import random
 
@@ -14,21 +14,21 @@ import numpy
 from cclib.method.population import Population
 
 
-class BPA(Population):
+class Bickelhaupt(Population):
     """Bickelhaupt population analysis."""
 
     def __init__(self, *args):
 
         # Call the __init__ method of the superclass.
-        super(BPA, self).__init__(logname="BPA", *args)
+        super(Bickelhaupt, self).__init__(logname="Bickelhaupt Population Analysis", *args)
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "BPA of %s" % (self.data)
+        return "Bickelhaupt charges of %s" % (self.data)
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'BPA("%s")' % (self.data)
+        return 'Bickelhaupt("%s")' % (self.data)
 
     def calculate(self, indices=None, fupdate=0.05):
         """Perform a Bickelhaupt population analysis."""
@@ -86,7 +86,7 @@ class BPA(Population):
         if self.progress:
             self.progress.update(nstep, "Done")
 
-        retval = super(BPA, self).partition(indices)
+        retval = super(Bickelhaupt, self).partition(indices)
 
         if not retval:
             self.logger.error("Error in partitioning results")

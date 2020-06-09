@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2020, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -19,5 +19,5 @@ from cclib.method.mpa import MPA
 from cclib.method.nuclear import Nuclear
 from cclib.method.opa import OPA
 from cclib.method.orbitals import Orbitals
-from cclib.method.bpa import BPA
+from cclib.method.bickelhaupt import Bickelhaupt
 # from cclib.method.volume import Volume
