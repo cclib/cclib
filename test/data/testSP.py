@@ -422,7 +422,7 @@ class GenericDispersionTest(unittest.TestCase):
     def testdispersionenergies(self):
         """Is the dispersion energy parsed correctly?"""
         self.assertTrue(len(self.data.dispersionenergies), 1)
-        self.assertAlmostEquals(self.data.dispersionenergies[0], -0.40407836521053214)
+        self.assertAlmostEqual(self.data.dispersionenergies[0], -0.4005496, delta=2.0e-7)
 
 if __name__=="__main__":
 
