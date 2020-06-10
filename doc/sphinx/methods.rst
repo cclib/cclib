@@ -144,6 +144,64 @@ The LPA class available from cclib.method performs Löwdin population analysis a
     m = LPA(d)
     m.calculate()
 
+.. index::
+    single: methods; Bickelhaupt Population Analysis
+
+Bickelhaupt Population Analysis
+-------------------------------
+
+The Bickelhaupt class available from cclib.method performs Bickelhaupt population analysis that has been proposed in *Organometallics* 1996, 15, 13, 2923–2931. `doi:10.1021/om950966x <https://pubs.acs.org/doi/abs/10.1021/om950966x>`_
+
+The contribution of the a-th atomic orbital to the i-th molecular orbital in this method is written in terms of the molecular orbital coefficients, c, and the overlap matrix, S:
+
+.. math:: \Phi_{ai} = \sum_b w_{ab} c_{ai} c_{bi} S_{ab}
+
+where the weights :math:`w_{ab}` that are applied on the Mulliken atomic orbital contributions are defined as:
+
+.. math:: w_{ab} = 2 \frac{\sum_k c_{ak}^2}{\sum_i c_{ai}^2 + \sum_j c_{bj}^2}
+
+The weights are introduced to replace the somewhat arbitrary partitioning of off-diagonal charges in the Mulliken population analysis, which divides the off-diagonal charges identically to both atoms. Bickelhaupt population analysis instead divides the off-diagonal elements based on the relative magnitude of diagonal elements.
+
+.. code-block:: python
+
+    import sys
+
+    from cclib.method import Bickelhaupt
+    from cclib.parser import ccopen
+
+    d = ccopen(sys.argv[1]).parse()
+    m = Bickelhaupt(d)
+    m.calculate()
+
+After the calculate() method is called, the following attributes are available:
+
+* ``aoresults``: a three dimensional array with spin, molecular orbital, and atomic orbitals as the axes, so that ``aoresults[0][45][0]`` gives the contribution of the 1st atomic orbital to the 46th alpha/restricted molecular orbital,
+* ``fragresults``: a three dimensional array with spin, molecular orbital, and atoms as the axes, so that ``fragresults[1][23][4]`` gives the contribution of the 5th fragment orbitals to the 24th beta molecular orbital)
+* ``fragcharges``: a vector with the number of (partial) electrons in each fragment, so that ``fragcharges[2]`` gives the number of electrons in the 3rd fragment.
+
+Custom fragments
+~~~~~~~~~~~~~~~~
+
+The calculate method chooses atoms as the fragments by default, and optionally accepts a list of lists containing the atomic orbital numbers (e.g. ``[[0, 1, 2], [3, 4, 5, 6], ...]``) of arbitrary fragments. Calling it in this way is useful if one is more interested in the contributions of groups of atoms or even certain orbitals or orbital groups, such as metal d, to the molecular orbitals. In this case, fragresults and fragcharges reflect the chosen groups of atomic orbitals instead of atoms.
+
+Custom progress
+~~~~~~~~~~~~~~~
+
+The Bickelhaupt class also can take a progress class as an argument so that the progress of the calculation can be monitored:
+
+.. code-block:: python
+
+    from cclib.method import Bickelhaupt
+    from cclib.parser import ccopen
+    from cclib.progress import TextProgress
+    import logging
+
+    progress = TextProgress()
+    d = ccopen("mycalc.out", logging.ERROR).parse(progress)
+
+    m = Bickelhaupt(d, progress, logging.ERROR)
+    m.calculate()
+
 ..
    Overlap Population Analysis
    ---------------------------
