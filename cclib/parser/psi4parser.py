@@ -38,9 +38,13 @@ class Psi4(logfileparser.Logfile):
         # coefficients when printing.
         self.version_4_beta = False
 
-        # This is just used to track which part of the output we are in for Psi4,
-        # with changes triggered by ==> things like this <== (Psi3 does not have this)
+        # This is just used to track which part of the output we are in, with
+        # changes triggered by ==> things like this <==.
         self.section = None
+
+        # There are also sometimes subsections within each section, denoted
+        # with =>/<= rather than ==>/<==.
+        self.subsection = None
 
     def after_parsing(self):
 
@@ -112,6 +116,10 @@ class Psi4(logfileparser.Logfile):
             self.section = line.strip()[4:-4]
             if self.section == "DFT Potential":
                 self.metadata["methods"].append("DFT")
+
+        # There is also the possibility of subsections.
+        if (line.strip()[:2] == "=>") and (line.strip()[-2:] == "<="):
+            self.subsection = line.strip()[3:-3]
 
         # Determine whether or not the reference wavefunction is
         # restricted, unrestricted, or restricted open-shell.
@@ -543,7 +551,7 @@ class Psi4(logfileparser.Logfile):
                 self.scfenergies = []
             self.scfenergies.append(utils.convertor(e, 'hartree', 'eV'))
 
-        if self.section == "Energetics":
+        if self.subsection == "Energetics":
             if "Empirical Dispersion Energy" in line:
                 dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
                 self.append_attribute("dispersionenergies", dispersion)
