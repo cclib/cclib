@@ -260,7 +260,7 @@ SP        QChem       GenericSPTest         basicQChem4.2               dvb_sp.o
 SP        QChem       GenericSPTest         basicQChem5.1               dvb_sp.out
 SP        Turbomole   TurbomoleSPTest       basicTurbomole5.9           dvb_sp/basis      dvb_sp/control      dvb_sp/job.last      dvb_sp/coord      dvb_sp/mos
 SP        DALTON      GenericDispersionTest basicDALTON-2018            dvb_dispersion_bp86_d3zero.out
-SP        GAMESS      GenericDispersionTest basicFirefly8.1             dvb_dispersion_bp86_d3zero.out
+SP        GAMESS      FireflyDispersionTest basicFirefly8.1             dvb_dispersion_bp86_d3zero.out
 SP        GAMESS      GenericDispersionTest basicGAMESS-US2018          dvb_dispersion_bp86_d3zero.out
 SP        Gaussian    GenericDispersionTest basicGaussian16             dvb_dispersion_bp86_d3zero.out
 # SP        Molpro      GenericDispersionTest basicMolpro2018             dvb_dispersion_bp86_d3zero.out
