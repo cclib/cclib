@@ -15,7 +15,6 @@ import six
 from six import add_move, MovedModule
 add_move(MovedModule('mock', 'mock', 'unittest.mock'))
 from six.moves import mock
-
 import cclib
 
 
@@ -59,6 +58,20 @@ class ccgetTest(unittest.TestCase):
         ccread_call_args, ccread_call_kwargs = mock_ccread.call_args
         self.assertEqual(ccread_call_args[0], INPUT_FILE)
 
+    @mock.patch("logging.warning")
+    @mock.patch(
+        "cclib.scripts.ccget.sys.argv",
+        ["ccget", "atomcoord", INPUT_FILE]
+    )
+    def test_ccread_invocation_matching_args(self, mock_warn, mock_ccread):
+        self.main()
+        self.assertEqual(mock_warn.call_count, 1)
+        warn_call_args, warn_call_kwargs = mock_warn.call_args
+        warn_message = warn_call_args[0]
+        self.assertEqual(warn_message, "Attribute 'atomcoord' not found, but attribute 'atomcoords' is close. Using 'atomcoords' instead.")
+        self.assertEqual(mock_ccread.call_count, 1)
+        ccread_call_args, ccread_call_kwargs = mock_ccread.call_args
+        self.assertEqual(ccread_call_args[0], INPUT_FILE)
 
 @mock.patch("cclib.scripts.ccwrite.ccwrite")
 class ccwriteTest(unittest.TestCase):
