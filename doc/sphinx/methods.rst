@@ -154,11 +154,13 @@ The Bickelhaupt class available from cclib.method performs Bickelhaupt populatio
 
 The contribution of the a-th atomic orbital to the i-th molecular orbital in this method is written in terms of the molecular orbital coefficients, c, and the overlap matrix, S:
 
-.. math:: \Phi_{ai} = \sum_b w_{ab} c_{ai} c_{bi} S_{ab}
+.. math:: \Phi_{ai,\alpha} = \sum_b w_{ab,\alpha} c_{ai,\alpha} c_{bi,\alpha} S_{ab}
 
 where the weights :math:`w_{ab}` that are applied on the Mulliken atomic orbital contributions are defined as:
 
-.. math:: w_{ab} = 2 \frac{\sum_k c_{ak}^2}{\sum_i c_{ai}^2 + \sum_j c_{bj}^2}
+.. math:: w_{ab,\alpha} = 2 \frac{\sum_k c_{ak,\alpha}^2}{\sum_i c_{ai,\alpha}^2 + \sum_j c_{bj,\alpha}^2}
+
+In case of unrestricted calculations, :math:`\alpha` charges and :math:`\beta` charges are each determined to obtain total charge. In restricted calculations, :math:`\alpha` subscript can be ignored since the coefficients are equivalent for both spin orbitals.
 
 The weights are introduced to replace the somewhat arbitrary partitioning of off-diagonal charges in the Mulliken population analysis, which divides the off-diagonal charges identically to both atoms. Bickelhaupt population analysis instead divides the off-diagonal elements based on the relative magnitude of diagonal elements.
 

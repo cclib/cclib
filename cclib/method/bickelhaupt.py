@@ -24,11 +24,11 @@ class Bickelhaupt(Population):
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "Bickelhaupt charges of %s" % (self.data)
+        return "Bickelhaupt charges of {}".format(self.data)
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'Bickelhaupt("%s")' % (self.data)
+        return "Bickelhaupt({})".format(self.data)
 
     def calculate(self, indices=None, fupdate=0.05):
         """Perform a Bickelhaupt population analysis."""
@@ -60,7 +60,7 @@ class Bickelhaupt(Population):
                     self.progress.update(step, "Bickelhaupt Population Analysis")
                 for j in range(self.data.nbasis):
                     # W_{ab} = 2 * \sum_k c_{ak}^2 / (\sum_i c_{ai}^2 + \sum_j c_{bj}^2)
-                    # W is (nbasis)x(nbasis)
+                    # The dimension of W is (nbasis)x(nbasis)
                     aTerm = numpy.dot(self.data.mocoeffs[spin][0:(self.data.homos[spin]+1),i], self.data.mocoeffs[spin][0:(self.data.homos[spin]+1),i])
                     bTerm = numpy.dot(self.data.mocoeffs[spin][0:(self.data.homos[spin]+1),j], self.data.mocoeffs[spin][0:(self.data.homos[spin]+1),j])
                     w[spin][i][j] = 2 * aTerm / (aTerm + bTerm)
@@ -78,8 +78,10 @@ class Bickelhaupt(Population):
 
                     elif hasattr(self.data, "fooverlaps"):
                         overlaps = self.data.fooverlaps[a]
-
-                    self.aoresults[spin][i][a] = numpy.sum(numpy.multiply(numpy.multiply(numpy.multiply(w[spin][a], self.data.mocoeffs[spin][i][a]), self.data.mocoeffs[spin][i]), overlaps))
+                    
+                    temp = numpy.multiply(w[spin][a], self.data.mocoeffs[spin][i][a])
+                    temp = numpy.multiply(temp, self.data.mocoeffs[spin][i])
+                    self.aoresults[spin][i][a] = numpy.sum(numpy.multiply(temp, overlaps))
 
                 step += 1
 

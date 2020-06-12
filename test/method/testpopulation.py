@@ -5,7 +5,7 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
-"""Test the various population analyses (MPA, LPA, CSPA, BPA) in cclib"""
+"""Test the various population analyses (MPA, LPA, CSPA, Bickelhaupt) in cclib"""
 
 from __future__ import print_function
 
