@@ -697,40 +697,7 @@ def testGAMESS_UK_GAMESS_UK8_0_stopiter_gamessuk_hf_out(logfile):
 
 
 # Gaussian #
-
-
-def testGaussian_Gaussian16_naturalspinorbitals_parsing_log(logfile):
-    """A UHF calculation with natural spin orbitals."""
-
-    assert isinstance(logfile.data.nsocoeffs, list)
-    assert isinstance(logfile.data.nsocoeffs[0], numpy.ndarray)
-    assert isinstance(logfile.data.nsocoeffs[1], numpy.ndarray)
-    assert isinstance(logfile.data.nsooccnos, list)
-    assert isinstance(logfile.data.nsooccnos[0], list)
-    assert isinstance(logfile.data.nsooccnos[1], list)
-    assert isinstance(logfile.data.aonames,list)
-    assert isinstance(logfile.data.atombasis,list)
-
-    assert numpy.shape(logfile.data.nsocoeffs) == (2,logfile.data.nmo,logfile.data.nmo)
-    assert len(logfile.data.nsooccnos[0]) == logfile.data.nmo
-    assert len(logfile.data.nsooccnos[1]) == logfile.data.nmo
-    assert len(logfile.data.aonames) == logfile.data.nbasis
-    assert len(numpy.ravel(logfile.data.atombasis)) == logfile.data.nbasis
-
-    assert logfile.data.nsooccnos[0][14] == 0.00506
-    assert logfile.data.nsooccnos[1][14] == 0.00318
-    assert logfile.data.nsocoeffs[0][14,12] == 0.00618
-    assert logfile.data.nsocoeffs[1][14,9] == 0.79289
-    assert logfile.data.aonames[41] == 'O2_9D 0'
-    assert logfile.data.atombasis[1][0] == 23
-
-    assert logfile.data.metadata["legacy_package_version"] == "16revisionA.03"
-    assert logfile.data.metadata["package_version"] == "2016+A.03"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
-
-
+    
 def testGaussian_Gaussian98_C_bigmult_log(logfile):
     """
     This file failed first becuase it had a double digit multiplicity.
@@ -1154,6 +1121,44 @@ def testGaussian_Gaussian09_stopiter_gaussian_out(logfile):
 
     assert logfile.data.metadata["package_version"] == "2009+D.01"
 
+
+def testGaussian_Gaussian16_naturalspinorbitals_parsing_log(logfile):
+    """A UHF calculation with natural spin orbitals."""
+
+    assert isinstance(logfile.data.nsocoeffs, list)
+    assert isinstance(logfile.data.nsocoeffs[0], numpy.ndarray)
+    assert isinstance(logfile.data.nsocoeffs[1], numpy.ndarray)
+    assert isinstance(logfile.data.nsooccnos, list)
+    assert isinstance(logfile.data.nsooccnos[0], list)
+    assert isinstance(logfile.data.nsooccnos[1], list)
+    assert isinstance(logfile.data.aonames,list)
+    assert isinstance(logfile.data.atombasis,list)
+
+    assert numpy.shape(logfile.data.nsocoeffs) == (2,logfile.data.nmo,logfile.data.nmo)
+    assert len(logfile.data.nsooccnos[0]) == logfile.data.nmo
+    assert len(logfile.data.nsooccnos[1]) == logfile.data.nmo
+    assert len(logfile.data.aonames) == logfile.data.nbasis
+    assert len(numpy.ravel(logfile.data.atombasis)) == logfile.data.nbasis
+
+    assert logfile.data.nsooccnos[0][14] == 0.00506
+    assert logfile.data.nsooccnos[1][14] == 0.00318
+    assert logfile.data.nsocoeffs[0][14,12] == 0.00618
+    assert logfile.data.nsocoeffs[1][14,9] == 0.79289
+    assert logfile.data.aonames[41] == 'O2_9D 0'
+    assert logfile.data.atombasis[1][0] == 23
+
+    assert logfile.data.metadata["legacy_package_version"] == "16revisionA.03"
+    assert logfile.data.metadata["package_version"] == "2016+A.03"
+    assert isinstance(
+        parse_version(logfile.data.metadata["package_version"]), Version
+    )
+
+def testGaussian_Gaussian16_issue851_log(logfile):
+    """Surface scan from cclib/cclib#851 where attributes were not lists."""
+
+    assert isinstance(logfile.data.scannames, list)
+    assert isinstance(logfile.data.scanparm, list)
+    assert isinstance(logfile.data.scanenergies, list)
 
 # Jaguar #
 
@@ -3131,8 +3136,6 @@ old_unittests = {
     "Gaussian/Gaussian09/dvb_un_sp_revA.02.log":        GaussianSPunTest_nomosyms,
     "Gaussian/Gaussian09/dvb_un_sp_b_revA.02.log":      GaussianSPunTest,
     "Gaussian/Gaussian09/trithiolane_polar.log":        GaussianPolarTest,
-
-    "Gaussian/Gaussian16/issue851.log":        GenericUnrelaxedScanTest,
 
     "Jaguar/Jaguar4.2/dvb_gopt.out":    JaguarGeoOptTest_nmo45,
     "Jaguar/Jaguar4.2/dvb_gopt_b.out":  GenericGeoOptTest,
