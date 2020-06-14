@@ -34,6 +34,8 @@ before_install:
         conda install pytest pytest-cov codecov -c conda-forge
         pip install pytest-shutil
         conda list
+    else
+        python -m pip install -U pytest pytest-cov
     fi
     pip install -r requirements.txt
 
