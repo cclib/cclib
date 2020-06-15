@@ -25,12 +25,12 @@ If Python is not on the PATH and you use Windows, add the full path to the direc
 To test, try importing NumPy at the Python prompt. You should see something similar to the following:
 
         $ python3
-        Python 3.2.3 (default, Feb 27 2014, 21:31:18) 
-	[GCC 4.6.3] on linux2
+        Python 3.8.2 (default, Apr 27 2020, 21:31:18) 
+	[GCC 9.3.0] on linux
 	Type "help", "copyright", "credits" or "license" for more information.
 	>>> import numpy
 	>>> numpy.__version__
-	'1.6.2'
+	'1.6.3'
 
 (To exit, press CTRL+Z in Windows or CTRL+D in Linux)
 
@@ -48,14 +48,14 @@ The version installed from a distribuion might not be the most recent one. To in
 To test, trying importing cclib at the Python prompt. You should see something similar to the following:
 
         $ python3
-        Python 3.2.3 (default, Feb 27 2014, 21:31:18) 
-	[GCC 4.6.3] on linux2
+        Python 3.8.2 (default, Apr 27 2020, 21:31:18) 
+	[GCC 9.3.0] on linux
 	Type "help", "copyright", "credits" or "license" for more information.
 	  Press ESC for command-line completion (twice for guesses).
 	  History is saved to ~/.pyhistory.
 	>>> import cclib
 	>>> cclib.__version__
-	'1.6.2'
+	'1.6.3'
 
 To run the unit tests, change directory into INSTALLDIR/test and run the following command:
 

@@ -1,3 +1,25 @@
+Changes in cclib-1.6.3
+
+Features:
+    * New bridge to Psi4 (Felipe S. S. Schneider)
+    * New attribute zpve for zero-point vibrational energy correction (kuriba)
+    * New attributes for electric transition dipoles of electronic transitions (mwykes)
+    * Support ccenergies in ORCA
+    * Support mpenergies in ORCA (Alex Maldonado)
+    * Support grads in MOLCAS (Daniele Padula)
+    * Support Mulliken atomspins in Gaussian (Peter St. John)
+    * Support temperature, pressure, enthalpy, entropy and freenergy attributes in GAMESS (Mark Perri)
+    * Support fuzzy matching of attribute in ccget script
+    * Updated test file versions to Psi4 1.3.1, and ORCA 4.2
+
+Bugfixes:
+    * Fixed parsing of vibrational attribute for single atoms in ORCA (Felipe S. S. Schneider)
+    * Fixed parsing very long ORCA logfiles (Alex Maldonado)
+    * Fixed method code for principal moments of inertia, and mulliken charges in Gaussian (James E T Smith)
+    * Fixed scannames, scanparm and scanenergies in Gaussian (Dustin Wheeler)
+    * Fixed freeenergy in ORCA 4.2 (shijunang)
+    * Fixed name collisions in tests and use of periodic table in utilities (Waylon Peng)
+
 Changes in cclib-1.6.2
 
 Features:
