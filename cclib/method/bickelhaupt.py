@@ -32,20 +32,29 @@ class Bickelhaupt(Population):
 
     def calculate(self, indices=None, fupdate=0.05):
         """Perform a Bickelhaupt population analysis."""
+        # Bickelhaupt population analysis uses the relative magnitude of the diagonal terms to
+        # partition off-diagonal terms. The weights are therefore calculated using the following
+        # formula:
+        # W_{ab} = 2 * \sum_k c_{ak}^2 / (\sum_i c_{ai}^2 + \sum_j c_{bj}^2)
+        # The dimension of W is (nbasis)x(nbasis).
+        # Then, each term is calculated similarly to Mulliken charges, in a form of
+        # X_{ai} = \sum_b W_{ab} c_{ai} c_{bi} S_{ab}
+        # This agrees with quation 11 on 10.1021/om950966x, with the charge (q) terms substituted
+        # with MO coefficients.
 
         # Determine number of steps, and whether process involves beta orbitals.
         self.logger.info("Creating attribute aoresults: [array[2]]")
         nbasis = self.data.nbasis
         alpha = len(self.data.mocoeffs[0])
-        self.aoresults = [ numpy.zeros([alpha, nbasis], "d") ]
-        w = [ numpy.zeros([self.data.nbasis, self.data.nbasis], "d") ]
+        self.aoresults = [numpy.zeros([alpha, nbasis], "d")]
+        w = [numpy.zeros([self.data.nbasis, self.data.nbasis], "d")]
         nstep = alpha + nbasis
-        unrestricted = (len(self.data.mocoeffs) == 2)
+        unrestricted = len(self.data.mocoeffs) == 2
         if unrestricted:
             beta = len(self.data.mocoeffs[1])
             self.aoresults.append(numpy.zeros([beta, nbasis], "d"))
             w.append(numpy.zeros([self.data.nbasis, self.data.nbasis], "d"))
-            nstep += (beta + nbasis)
+            nstep += beta + nbasis
 
         # Intialize progress if available.
         if self.progress:
@@ -59,17 +68,20 @@ class Bickelhaupt(Population):
                 if self.progress and random.random() < fupdate:
                     self.progress.update(step, "Bickelhaupt Population Analysis")
                 for j in range(self.data.nbasis):
-                    # W_{ab} = 2 * \sum_k c_{ak}^2 / (\sum_i c_{ai}^2 + \sum_j c_{bj}^2)
-                    # The dimension of W is (nbasis)x(nbasis)
-                    aTerm = numpy.dot(self.data.mocoeffs[spin][0:(self.data.homos[spin]+1),i], self.data.mocoeffs[spin][0:(self.data.homos[spin]+1),i])
-                    bTerm = numpy.dot(self.data.mocoeffs[spin][0:(self.data.homos[spin]+1),j], self.data.mocoeffs[spin][0:(self.data.homos[spin]+1),j])
+                    aTerm = numpy.dot(
+                        self.data.mocoeffs[spin][0 : (self.data.homos[spin] + 1), i],
+                        self.data.mocoeffs[spin][0 : (self.data.homos[spin] + 1), i],
+                    )
+                    bTerm = numpy.dot(
+                        self.data.mocoeffs[spin][0 : (self.data.homos[spin] + 1), j],
+                        self.data.mocoeffs[spin][0 : (self.data.homos[spin] + 1), j],
+                    )
                     w[spin][i][j] = 2 * aTerm / (aTerm + bTerm)
                 step += 1
 
         for spin in range(len(self.data.mocoeffs)):
-            for i in range(len(self.data.mocoeffs[spin])): # for each mo
-                for a in range(self.data.nbasis): # for each basis
-                    # X_{ai} = \sum_b w_{ab} c_{ai} c_{bi} S_{ab}
+            for i in range(len(self.data.mocoeffs[spin])):  # for each mo
+                for a in range(self.data.nbasis):  # for each basis
                     if hasattr(self.data, "aooverlaps"):
                         overlaps = self.data.aooverlaps[a]
                     # handle spin-unrestricted beta case
@@ -78,10 +90,14 @@ class Bickelhaupt(Population):
 
                     elif hasattr(self.data, "fooverlaps"):
                         overlaps = self.data.fooverlaps[a]
-                    
-                    temp = numpy.multiply(w[spin][a], self.data.mocoeffs[spin][i][a])
-                    temp = numpy.multiply(temp, self.data.mocoeffs[spin][i])
-                    self.aoresults[spin][i][a] = numpy.sum(numpy.multiply(temp, overlaps))
+
+                    self.aoresults[spin][i][a] = numpy.sum(
+                        (
+                            (w[spin][a] * self.data.mocoeffs[spin][i][a])
+                            * self.data.mocoeffs[spin][i]
+                        )
+                        * overlaps
+                    )
 
                 step += 1
 
@@ -107,16 +123,16 @@ class Bickelhaupt(Population):
             for i in range(self.data.homos[spin] + 1):
 
                 temp = numpy.reshape(self.fragresults[spin][i], (size,))
-                self.fragcharges = numpy.add(self.fragcharges, temp)
+                self.fragcharges = self.fragcharges + temp
                 if spin == 0:
-                    alpha = numpy.add(alpha, temp)
+                    alpha += temp
                 elif spin == 1:
-                    beta = numpy.add(beta, temp)
+                    beta += temp
 
         if not unrestricted:
-            self.fragcharges = numpy.multiply(self.fragcharges, 2)
+            self.fragcharges = self.fragcharges * 2
         else:
             self.logger.info("Creating fragspins: array[1]")
-            self.fragspins = numpy.subtract(alpha, beta)
+            self.fragspins = alpha - beta
 
         return True
