@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2020, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -24,7 +24,7 @@ OPT_NEW = cclib.parser.data.ccData.OPT_NEW
 
 
 class GenericScanTestBase(unittest.TestCase):
-    """Base relaxed potential energy surface scan unittest."""
+    """Base potential energy surface scan unittest."""
 
     def assertOptNew(self, optstatus_value):
         return optstatus_value & OPT_NEW == OPT_NEW
@@ -33,7 +33,7 @@ class GenericScanTestBase(unittest.TestCase):
         return optstatus_value & OPT_DONE == OPT_DONE
 
 
-class GenericScanTest_optdone_bool(GenericScanTestBase):
+class GenericRelaxedScanTest_optdone_bool(GenericScanTestBase):
     """Generic relaxed potential energy surface scan unittest."""
 
     datatype = cclib.parser.data.ccData_optdone_bool
@@ -63,8 +63,34 @@ class GenericScanTest_optdone_bool(GenericScanTestBase):
         self.assertOptDone(self.data.optstatus[0])
         self.assertOptDone(self.data.optstatus[-1])
 
+class GenericUnrelaxedScanTest(GenericScanTestBase):
+    """Generic unrelaxed potential energy surface scan unittest."""
 
-class GenericScanTest(GenericScanTestBase):
+    # extra indices
+    extra = 0
+    
+    @skipForParser("Jaguar", "Not implemented")
+    def testscannames(self):
+        self.assertIsInstance(self.data.scannames, list)
+
+    @skipForParser("Jaguar", "Not implemented")
+    def testscanenergies(self):
+        self.assertIsInstance(self.data.scanenergies, list)
+        
+        # This checks the order of magnitude, and unit conversion if nothing else.
+        numpy.testing.assert_array_less(numpy.array(self.data.scanenergies), -10000)
+
+    @skipForParser("Jaguar", "Not implemented")
+    def testscanparm(self):
+        self.assertIsInstance(self.data.scanparm, list)
+
+        # Each parameters should have as many values as there are scan
+        # energies, or optimized point on the PES.
+        for parm in self.data.scanparm:
+            self.assertEqual(len(parm), len(self.data.scanenergies))
+
+
+class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
     """Generic relaxed potential energy surface scan unittest."""
 
     # extra indices
@@ -105,18 +131,45 @@ class GenericScanTest(GenericScanTestBase):
             if idone != len(self.data.optstatus) - 1:
                 self.assertOptNew(self.data.optstatus[idone+1])
 
+    @skipForParser("Jaguar", "Not implemented")
+    @skipForParser("ORCA", "Not implemented")
+    def testscannames(self):
+        self.assertIsInstance(self.data.scannames, list)
 
-class GaussianScanTest(GenericScanTest):
+    @skipForParser("Jaguar", "Not implemented")
+    @skipForParser("ORCA", "Not implemented")
+    def testscanenergies(self):
+        self.assertIsInstance(self.data.scanenergies, list)
+        
+        # This checks the order of magnitude, and unit conversion if nothing else.
+        numpy.testing.assert_array_less(numpy.array(self.data.scanenergies), -10000)
+
+    @skipForParser("Jaguar", "Not implemented")
+    @skipForParser("ORCA", "Not implemented")
+    def testscanparm(self):
+        self.assertIsInstance(self.data.scanparm, list)
+
+        # Each parameters should have as many values as there are scan
+        # energies, or optimized point on the PES.
+        for parm in self.data.scanparm:
+            self.assertEqual(len(parm), len(self.data.scanenergies))
+
+
+class GaussianUnrelaxedScanTest(GenericUnrelaxedScanTest):
+    """Customized unrelaxed potential energy surface scan unittest"""
+    extra = 1
+
+class GaussianRelaxedScanTest(GenericRelaxedScanTest):
     """Customized relaxed potential energy surface scan unittest"""
     extra = 1
 
 
-class JaguarScanTest(GenericScanTest):
+class JaguarRelaxedScanTest(GenericRelaxedScanTest):
     """Customized relaxed potential energy surface scan unittest"""
     extra = 1
 
 
-class OrcaScanTest(GenericScanTest):
+class OrcaRelaxedScanTest(GenericRelaxedScanTest):
     """Customized relaxed potential energy surface scan unittest"""
     extra = 1
 

@@ -76,7 +76,7 @@ class ccData(object):
         scancoords -- geometries of each scan step (array[3], angstroms)
         scanenergies -- energies of potential energy surface (list)
         scannames -- names of varaibles scanned (list of strings)
-        scanparm -- values of parameters in potential energy surface (list of tuples)
+        scanparm -- values of parameters in potential energy surface (list of lists)
         scfenergies -- molecular electronic energies after SCF (Hartree-Fock, DFT) (array[1], eV)
         scftargets -- targets for convergence of the SCF (array[2])
         scfvalues -- current values for convergence of the SCF (list of arrays[2])
