@@ -1,4 +1,4 @@
-On behalf of the cclib development team, we are pleased to announce the release of cclib 1.6.2, which is now available for download from https://cclib.github.io. This is a minor update to version 1.6.1 that includes some new functionality and attributes, as well as bug fixes and small improvements.
+On behalf of the cclib development team, we are pleased to announce the release of cclib 1.6.3, which is now available for download from https://cclib.github.io. This is a minor update to version 1.6.1 that includes some new functionality and attributes, as well as bug fixes and small improvements.
 
 cclib is an open source library, written in Python, for parsing and interpreting the results of computational chemistry packages. It currently parses output files from 15 different programs: ADF, DALTON, Firefly, GAMESS (US), GAMESS-UK, Gaussian, Jaguar, Molpro, MOLCAS, MOPAC, NWChem, ORCA, Psi, QChem and Turbomole.
 
@@ -14,7 +14,7 @@ Among other data, cclib extracts:
 
 cclib also provides some calculation methods for interpreting the electronic properties of molecules such as:
 
-    * Mulliken and Lowdin population analyses
+    * Mulliken, Lowdin and other population analyses
     * Overlap population analysis
     * Mayer's bond orders
 
@@ -36,9 +36,12 @@ The cclib development team
 ———
 
 Summary of changes since last version:
-* New attributes nsocoeffs and nsooccnos for natural spin orbital coefficients (Shiv Upadhyay)
-* New methods for alpha and beta electron counts (Jaime Rodríguez-Guerra)
-* Support coreelectrons attribute in Molcas (Kunal Sharma)
-* Support etoscs for response calculations in Dalton (Peter Reinholdt)
-* Updated testing framework (Jaime Rodríguez-Guerra, Maxim Stolyarchuk and others)
-* Many other minor improvements and bug fixes from Alessandro Genova, Felipe S. S. Schneider and others
+* New bridge to Psi4 (Felipe S. S. Schneider)
+* New attribute zpve for zero-point vibrational energy correction (kuriba)
+* New attributes for electric transition dipoles of electronic transitions (mwykes)
+* Support ccenergies and mpenergies in ORCA
+* Support grads in MOLCAS (Daniele Padula)
+* Support thermochemistry attributes in GAMESS (Mark Perri)
+* Support Mulliken atomspins in Gaussian (Peter St. John)
+* Support fuzzy matching of attribute in ccget script
+* Many other minor improvements and bug fixes from Felipe S. S. Schneider, Alex Maldonado, James E T Smith, Dustin Wheeler, shijunang, Waylon Peng and others
