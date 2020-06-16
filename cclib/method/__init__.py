@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2020, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
 """Example analyses and calculations based on data parsed by cclib."""
 
+from cclib.method.bickelhaupt import Bickelhaupt
 from cclib.method.cda import CDA
 from cclib.method.cspa import CSPA
 from cclib.method.density import Density
