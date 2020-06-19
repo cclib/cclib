@@ -54,32 +54,7 @@ def makehorton(ccdat):
     attributes = {}
 
     if hortonver == 2:
-        renameAttrs = {"atomnos": "numbers", "mult": "ms2", "polarizability": "polar"}
-        inputattrs = ccdat.__dict__
-
-        attributes = dict(
-            (renameAttrs[oldKey], val)
-            for (oldKey, val) in inputattrs.items()
-            if (oldKey in renameAttrs)
-        )
-
-        # Rest of attributes need some manipulation in data structure
-        if hasattr(ccdat, "atomcoords"):
-            # cclib parses the whole history of coordinates in the list, horton keeps the last one.
-            attributes["coordinates"] = ccdat.atomcoords[-1]
-        if hasattr(ccdat, "mocoeffs"):
-            attributes["orb_alpha"] = ccdat.mocoeffs[0]
-            if len(ccdat.mocoeffs) == 2:
-                attributes["orb_beta"] = ccdat.mocoeffs[1]
-        if hasattr(ccdat, "coreelectrons") and isinstance(
-            ccdat.coreelectrons, numpy.ndarray
-        ):  # type-checked
-            attributes["pseudo_numbers"] = ccdat.atomnos - ccdat.coreelectrons
-        if hasattr(ccdat, "atomcharges") and ("mulliken" in ccdat.atomcharges):
-            attributes["mulliken_charges"] = ccdat.atomcharges["mulliken"]
-        if hasattr(ccdat, "atomcharges") and ("natural" in ccdat.atomcharges):
-            attributes["npa_charges"] = ccdat.atomcharges["natural"]
-
+        pass  # Populate with bridge for horton 2 in later PR
     elif hortonver == 3:
         pass  # Populate with bridge for horton 3 in later PR
 
@@ -125,7 +100,6 @@ def makecclib(iodat):
                 attributes["atomcharges"]["natural"] = iodat.npa_charges
         elif hasattr(iodat, "npa_charges"):
             attributes["atomcharges"] = {"natural": iodat.npa_charges}
-
     elif hortonver == 3:
         # Horton 3 IOData class uses attr and does not have __dict__.
         if hasattr(iodat, "atcoords"):

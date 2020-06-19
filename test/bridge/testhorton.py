@@ -56,56 +56,11 @@ class HortonTest(unittest.TestCase):
                     self._hortonver = 2
                     self.iodat = IOData.from_file(inputfile)
         if self._found_iodata:
-            from iodata import IOData
-            from iodata.orbitals import MolecularOrbitals
-            from iodata.api import load_one
-
-            self._hortonver = 3
-
-            self.iodat = load_one(filename=inputfile)
+            # Add horton 3 import lines
+            pass
 
     def test_makehorton(self):
-        """ Check that the bridge from cclib to horton works correctly """
-        # First use `makehorton` function to generate IOData object converted from cclib ccData
-        hortonequiv = cclib2horton.makehorton(self.data)
-
-        if self._hortonver == 2:
-            # Identify attributes that should be verified
-            check = ["pseudo_numbers", "ms2"]  # float or int
-            checkArr = [
-                "coordinates",
-                "numbers",
-                "orb_alpha",
-                "orb_beta",
-                "mulliken_charges",
-                "npa_charges",
-            ]  # one dimensional arrays
-            checkArrArr = ["polar"]  # two dimensional arrays
-
-            for attr in check:
-                if hasattr(self.iodat, attr) and hasattr(hortonequiv, attr):
-                    self.assertAlmostEqual(
-                        getattr(self.iodat, attr),
-                        getattr(hortonequiv, attr),
-                        delta=1.0e-3,
-                    )
-
-            for attr in checkArr:
-                if hasattr(self.iodat, attr) and hasattr(hortonequiv, attr):
-                    assert_array_almost_equal(
-                        getattr(self.iodat, attr), getattr(hortonequiv, attr), decimal=3
-                    )
-
-            for attr in checkArrArr:
-                if hasattr(self.iodat, attr) and hasattr(hortonequiv, attr):
-                    assert_array_almost_equal(
-                        getattr(self.iodat, attr)[0],
-                        getattr(hortonequiv, attr)[0],
-                        decimal=3,
-                    )
-
-        elif self._hortonver == 3:
-            pass
+        pass
 
     def test_makecclib(self):
         """ Check that the bridge from horton to cclib works correctly """
