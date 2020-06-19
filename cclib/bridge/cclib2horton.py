@@ -33,6 +33,7 @@ if _found_iodata:
     from iodata import IOData
     from iodata.orbitals import MolecularOrbitals
 
+
 def check_horton():
     if _old_horton:
         raise ImportError(
@@ -44,6 +45,7 @@ def check_horton():
         return 3
     elif _found_horton:
         return 2
+
 
 def makehorton(ccdat):
     """ Create horton IOData object from ccData object """
@@ -72,14 +74,47 @@ def makehorton(ccdat):
         if hasattr(ccdat, "coreelectrons") and isinstance(
             ccdat.coreelectrons, numpy.ndarray
         ):  # type-checked
-            attributes["pseudo_numbers"] = ccdat.coreelectrons
+            attributes["pseudo_numbers"] = ccdat.atomnos - ccdat.coreelectrons
         if hasattr(ccdat, "atomcharges") and ("mulliken" in ccdat.atomcharges):
             attributes["mulliken_charges"] = ccdat.atomcharges["mulliken"]
         if hasattr(ccdat, "atomcharges") and ("natural" in ccdat.atomcharges):
             attributes["npa_charges"] = ccdat.atomcharges["natural"]
 
     elif hortonver == 3:
-        pass  # Populate with bridge for horton 3 in later PR
+        # In horton 3 IOData, inputs are type-checked -- thus the bridge also verifies the types.
+        # if coordinates are known; numpy.ndarray (size natom-by-3)
+        if hasattr(ccdat, "atomcoords") and isinstance(ccdat.atomcoords, numpy.ndarray):
+            attributes["atcoords"] = ccdat.atomcoords[-1]
+        # if atomic numbers are known; numpy.ndarray (size natom)
+        if hasattr(ccdat, "atomnos") and isinstance(ccdat.atomnos, numpy.ndarray):
+            attributes["atnums"] = ccdat.atomnos
+        # if orbital coefficients known; iodata.orbitals.MolecularOrbitals
+        if hasattr(ccdat, "mocoeffs") and isinstance(ccdat.mocoeffs, numpy.ndarray):
+            attributes["mo"] = MolecularOrbitals(
+                kind="restricted",
+                norba=len(ccdat.mocoeffs[0]),
+                coeffs=ccdat.mocoeffs[0].T,
+            )
+            # and if unrestricted:
+            if len(mocoeffs) == 2:
+                attributes["mo"].kind = "unrestricted"
+                attributes["mo"].norbb = len(ccdat.mocoeffs[1])
+                attributes["mo"].coeffs.append(ccdat.mocoeffs[1].T)
+        # if multiplicity known; float / should not be set when mocoeffs present
+        if (
+            hasattr(ccdat, "mult")
+            and ccdat.mult != None
+            and not isinstance(ccdat.mocoeffs, numpy.ndarray)
+        ):
+            attributes["spinpol"] = ccdat.mult - 1  # horton has 2S+1, iodata has 2S
+        # if pseudopotentials exist; numpy.ndarray (size natom)
+        if hasattr(ccdat, "coreelectrons") and isinstance(
+            ccdat.coreelectrons, numpy.ndarray
+        ):
+            attributes["atcorenums"] = ccdat.atomnos - ccdat.coreelectrons
+        # if mulliken charges are known; dict of numpy.ndarrays (size natom)
+        if hasattr(ccdat, "atomcharges") and isinstance(ccdat.atomcharges, dict):
+            attributes["atcharges"] = ccdat.atomcharges
 
     return IOData(**attributes)  # Pass collected attributes into IOData constructor
 
@@ -143,4 +178,5 @@ def makecclib(iodat):
             attributes["coreelectrons"] = iodat.atnums - iodat.atcorenums
         if hasattr(iodat, "atcharges"):
             attributes["atomcharges"] = iodat.atcharges
+
     return ccData(attributes)
