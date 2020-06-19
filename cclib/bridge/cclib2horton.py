@@ -125,7 +125,24 @@ def makecclib(iodat):
                 attributes["atomcharges"]["natural"] = iodat.npa_charges
         elif hasattr(iodat, "npa_charges"):
             attributes["atomcharges"] = {"natural": iodat.npa_charges}
-    elif hortonver == 3:
-        pass
 
+    elif hortonver == 3:
+        # Horton 3 IOData class uses attr and does not have __dict__.
+        if hasattr(iodat, "atcoords"):
+            # cclib parses the whole history of coordinates in the list, horton keeps the last one.
+            attributes["atomcoords"] = [iodat.atcoords]
+        if hasattr(iodat, "mo"):
+            # MO coefficient should be transposed to match the dimensions.
+            attributes["mocoeffs"] = [iodat.mo.coeffs[: iodat.mo.norba].T]
+            if iodat.mo.kind == "unrestricted":
+                attributes["mocoeffs"].append(iodat.mo.coeffs[iodat.mo.norba :].T)
+        if hasattr(iodat, "spinpol"):
+            # IOData stores 2S, ccData stores 2S+1.
+            attributes["mult"] = iodat.spinpol + 1
+        if hasattr(iodat, "atnums"):
+            attributes["atnums"] = iodat.atnums
+        if hasattr(iodat, "atcorenums"):
+            attributes["coreelectrons"] = iodat.atnums - iodat.atcorenums
+        if hasattr(iodat, "atcharges"):
+            attributes["atomcharges"] = iodat.atcharges
     return ccData(attributes)

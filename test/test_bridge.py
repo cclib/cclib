@@ -15,6 +15,7 @@ sys.path.insert(1, "bridge")
 if sys.version_info[0] == 3:
     if sys.version_info[1] >= 6:
         from .bridge.testpsi4 import *
+        from .bridge.testhorton import *
     if sys.version_info[1] >= 4:
         from .bridge.testbiopython import *
 from .bridge.testopenbabel import *
