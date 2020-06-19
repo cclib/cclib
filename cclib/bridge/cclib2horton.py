@@ -33,7 +33,6 @@ if _found_iodata:
     from iodata import IOData
     from iodata.orbitals import MolecularOrbitals
 
-
 def check_horton():
     if _old_horton:
         raise ImportError(
@@ -45,7 +44,6 @@ def check_horton():
         return 3
     elif _found_horton:
         return 2
-
 
 def makehorton(ccdat):
     """ Create horton IOData object from ccData object """
