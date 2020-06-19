@@ -20,8 +20,8 @@ if sys.version_info[0] == 3:
 from .bridge.testopenbabel import *
 
 if sys.version_info[0] == 2:
+    from .bridge.testhorton import *
     from .bridge.testpyquante import *
-
 
 if __name__ == "__main__":
     unittest.main()

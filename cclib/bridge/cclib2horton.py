@@ -13,11 +13,13 @@ from cclib.parser.utils import find_package
 
 # First check horton version
 _old_horton = False
-_found_horton = find_package('horton')
-_found_iodata = find_package('iodata')
+_found_horton = find_package("horton")
+_found_iodata = find_package("iodata")
 
-if _found_horton: # Detect whether horton 2 is present or not
-    try: # Older horton packages do not have __version__, causing exceptions.
+# Detect whether horton 2 is present or not
+if _found_horton:
+    # Older horton packages do not have __version__, causing exceptions.
+    try:
         from horton import __version__
     except:
         _old_horton = True
@@ -25,43 +27,78 @@ if _found_horton: # Detect whether horton 2 is present or not
         if __version__[0] == "2":
             from horton.io.iodata import IOData
 
-if _found_iodata: # Detect whether iodata (part of horton 3) is present or not; Horton 3 is divided into smaller (sub)packages that each take different functionalities.
+# Detect whether iodata (part of horton 3) is present or not
+# Horton 3 is divided into smaller (sub)packages that each take different functionalities.
+if _found_iodata:
     from iodata import IOData
     from iodata.orbitals import MolecularOrbitals
-    
+
+
 def check_horton():
     if _old_horton:
         raise ImportError("You must have at least version 2 of `horton` to use this function.")
     elif not _found_horton and not _found_iodata:
         raise ImportError("You must install `horton` to use this function.")
-    if (_found_iodata):
+    if _found_iodata:
         return 3
-    elif (_found_horton):
+    elif _found_horton:
         return 2
+
 
 def makehorton(ccdat):
     """ Create horton IOData object from ccData object """
-    
+
     hortonver = check_horton()
     attributes = {}
-    
-    if (hortonver == 2):
-        pass # Populate with bridge for horton 2 in later PR
-    elif (hortonver == 3):
-        pass # Populate with bridge for horton 3 in later PR
-    
-    return IOData(**attributes) # Pass collected attributes into IOData constructor
-    
+
+    if hortonver == 2:
+        pass  # Populate with bridge for horton 2 in later PR
+    elif hortonver == 3:
+        pass  # Populate with bridge for horton 3 in later PR
+
+    return IOData(**attributes)  # Pass collected attributes into IOData constructor
+
+
 def makecclib(iodat):
     """ Create cclib ccData object from horton IOData object """
-    
+
     hortonver = check_horton()
     attributes = {}
-    
-    if(hortonver == 2):
+
+    if hortonver == 2:
+        # For a few attributes, a simple renaming suffices
+        renameAttrs = {
+            "numbers": "atomnos",
+            "ms2": "mult",
+            "polar": "polarizability",
+        }
+        inputattrs = iodat.__dict__
+
+        attributes = dict(
+            (renameAttrs[oldKey], val)
+            for (oldKey, val) in inputattrs.items()
+            if (oldKey in renameAttrs)
+        )
+
+        # Rest of attributes need some manipulation in data structure.
+        if hasattr(iodat, "coordinates"):
+            # cclib parses the whole history of coordinates in the list, horton keeps the last one.
+            attributes["atomcoords"] = [iodat.coordinates]
+        if hasattr(iodat, "orb_alpha"):
+            attributes["mocoeffs"] = [iodat.orb_alpha]
+        if hasattr(iodat, "orb_beta"):
+            attributes["mocoeffs"].append(iodat.orb_beta)
+        if hasattr(iodat, "pseudo_numbers"):
+            # cclib stores the number of excluded electrons,
+            # horton IOData stores the number of electrons that were considered after exclusion.
+            attributes["coreelectrons"] = iodat.numbers - iodat.pseudo_numbers
+        if hasattr(iodat, "mulliken_charges"):
+            attributes["atomcharges"] = {"mulliken": iodat.mulliken_charges}
+            if hasattr(iodat, "npa_charges"):
+                attributes["atomcharges"]["natural"] = iodat.npa_charges
+        elif hasattr(iodat, "npa_charges"):
+            attributes["atomcharges"] = {"natural": iodat.npa_charges}
+    elif hortonver == 3:
         pass
-    elif (hortonver == 3):
-        pass
-    
+
     return ccData(attributes)
-    
