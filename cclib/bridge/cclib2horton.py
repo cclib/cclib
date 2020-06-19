@@ -125,6 +125,7 @@ def makecclib(iodat):
                 attributes["atomcharges"]["natural"] = iodat.npa_charges
         elif hasattr(iodat, "npa_charges"):
             attributes["atomcharges"] = {"natural": iodat.npa_charges}
+
     elif hortonver == 3:
         # Horton 3 IOData class uses attr and does not have __dict__.
         if hasattr(iodat, "atcoords"):
