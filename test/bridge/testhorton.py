@@ -24,9 +24,15 @@ class HortonTest(unittest.TestCase):
     def setUp(self):
         super(HortonTest, self).setUp()
 
-        self.data, self.logfile = getdatafile("Gaussian", "basicGaussian16", ["dvb_un_sp.fchk"])
-        datadir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data"))
-        inputfile = os.path.join(datadir, "Gaussian", "basicGaussian16", "dvb_un_sp.fchk")
+        self.data, self.logfile = getdatafile(
+            "Gaussian", "basicGaussian16", ["dvb_un_sp.fchk"]
+        )
+        datadir = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "..", "..", "data")
+        )
+        inputfile = os.path.join(
+            datadir, "Gaussian", "basicGaussian16", "dvb_un_sp.fchk"
+        )
 
         self._old_horton = False
         self._found_horton = find_package("horton")
@@ -54,7 +60,47 @@ class HortonTest(unittest.TestCase):
             pass
 
     def test_makehorton(self):
-        pass
+        """ Check that the bridge from cclib to horton works correctly """
+        # First use `makehorton` function to generate IOData object converted from cclib ccData
+        hortonequiv = cclib2horton.makehorton(self.data)
+
+        if self._hortonver == 2:
+            # Identify attributes that should be verified
+            check = ["pseudo_numbers", "ms2"]  # float or int
+            checkArr = [
+                "coordinates",
+                "numbers",
+                "orb_alpha",
+                "orb_beta",
+                "mulliken_charges",
+                "npa_charges",
+            ]  # one dimensional arrays
+            checkArrArr = ["polar"]  # two dimensional arrays
+
+            for attr in check:
+                if hasattr(self.iodat, attr) and hasattr(hortonequiv, attr):
+                    self.assertAlmostEqual(
+                        getattr(self.iodat, attr),
+                        getattr(hortonequiv, attr),
+                        delta=1.0e-3,
+                    )
+
+            for attr in checkArr:
+                if hasattr(self.iodat, attr) and hasattr(hortonequiv, attr):
+                    assert_array_almost_equal(
+                        getattr(self.iodat, attr), getattr(hortonequiv, attr), decimal=3
+                    )
+
+            for attr in checkArrArr:
+                if hasattr(self.iodat, attr) and hasattr(hortonequiv, attr):
+                    assert_array_almost_equal(
+                        getattr(self.iodat, attr)[0],
+                        getattr(hortonequiv, attr)[0],
+                        decimal=3,
+                    )
+
+        elif self._hortonver == 3:
+            pass
 
     def test_makecclib(self):
         """ Check that the bridge from horton to cclib works correctly """
@@ -89,7 +135,9 @@ class HortonTest(unittest.TestCase):
             for chg in checkChg:
                 if chg in self.data.atomcharges and chg in cclibequiv.atomcharges:
                     assert_array_almost_equal(
-                        self.data.atomcharges[chg][0], cclibequiv.atomcharges[chg][0], decimal=3
+                        self.data.atomcharges[chg][0],
+                        cclibequiv.atomcharges[chg][0],
+                        decimal=3,
                     )
 
 
