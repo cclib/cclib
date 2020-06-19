@@ -58,8 +58,13 @@ class HortonTest(unittest.TestCase):
                     self._hortonver = 2
                     self.iodat = IOData.from_file(inputfile)
         if self._found_iodata:
-            # Add horton 3 import lines
-            pass
+            from iodata import IOData
+            from iodata.orbitals import MolecularOrbitals
+            from iodata.api import load_one
+
+            self._hortonver = 3
+
+            self.iodat = load_one(filename=inputfile)
 
     def test_makehorton(self):
         """ Check that the bridge from cclib to horton works correctly """

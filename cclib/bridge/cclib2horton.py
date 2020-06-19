@@ -37,9 +37,7 @@ if _found_iodata:
 
 def check_horton():
     if _old_horton:
-        raise ImportError(
-            "You must have at least version 2 of `horton` to use this function."
-        )
+        raise ImportError("You must have at least version 2 of `horton` to use this function.")
     elif not _found_horton and not _found_iodata:
         raise ImportError("You must install `horton` to use this function.")
     if _found_iodata:
@@ -48,7 +46,7 @@ def check_horton():
         return 2
 
 
-def makehorton(ccdat):
+def makehorton(data):
     """ Create horton IOData object from ccData object """
 
     hortonver = check_horton()
@@ -56,7 +54,7 @@ def makehorton(ccdat):
 
     if hortonver == 2:
         renameAttrs = {"atomnos": "numbers", "mult": "ms2", "polarizability": "polar"}
-        inputattrs = ccdat.__dict__
+        inputattrs = data.__dict__
 
         attributes = dict(
             (renameAttrs[oldKey], val)
@@ -65,21 +63,21 @@ def makehorton(ccdat):
         )
 
         # Rest of attributes need some manipulation in data structure.
-        if hasattr(ccdat, "atomcoords"):
+        if hasattr(data, "atomcoords"):
             # cclib parses the whole history of coordinates in the list, horton keeps the last one.
-            attributes["coordinates"] = ccdat.atomcoords[-1]
-        if hasattr(ccdat, "mocoeffs"):
-            attributes["orb_alpha"] = ccdat.mocoeffs[0]
-            if len(ccdat.mocoeffs) == 2:
-                attributes["orb_beta"] = ccdat.mocoeffs[1]
-        if hasattr(ccdat, "coreelectrons") and isinstance(
-            ccdat.coreelectrons, numpy.ndarray
-        ):  # type-checked
-            attributes["pseudo_numbers"] = ccdat.atomnos - ccdat.coreelectrons
-        if hasattr(ccdat, "atomcharges") and ("mulliken" in ccdat.atomcharges):
-            attributes["mulliken_charges"] = ccdat.atomcharges["mulliken"]
-        if hasattr(ccdat, "atomcharges") and ("natural" in ccdat.atomcharges):
-            attributes["npa_charges"] = ccdat.atomcharges["natural"]
+            attributes["coordinates"] = data.atomcoords[-1]
+        if hasattr(data, "mocoeffs"):
+            attributes["orb_alpha"] = data.mocoeffs[0]
+            if len(data.mocoeffs) == 2:
+                attributes["orb_beta"] = data.mocoeffs[1]
+        if hasattr(data, "coreelectrons"):
+            # cclib stores num of electrons screened out by pseudopotential
+            # horton stores num of electrons after applying pseudopotential
+            attributes["pseudo_numbers"] = data.atomnos - numpy.asanyarray(data.coreelectrons)
+        if hasattr(data, "atomcharges") and ("mulliken" in data.atomcharges):
+            attributes["mulliken_charges"] = data.atomcharges["mulliken"]
+        if hasattr(data, "atomcharges") and ("natural" in data.atomcharges):
+            attributes["npa_charges"] = data.atomcharges["natural"]
 
     elif hortonver == 3:
         pass  # Populate with bridge for horton 3 in later PR
@@ -117,8 +115,8 @@ def makecclib(iodat):
         if hasattr(iodat, "orb_beta"):
             attributes["mocoeffs"].append(iodat.orb_beta)
         if hasattr(iodat, "pseudo_numbers"):
-            # cclib stores the number of excluded electrons,
-            # horton IOData stores the number of electrons that were considered after exclusion.
+            # cclib stores num of electrons screened out by pseudopotential
+            # horton stores num of electrons after applying pseudopotential
             attributes["coreelectrons"] = iodat.numbers - iodat.pseudo_numbers
         if hasattr(iodat, "mulliken_charges"):
             attributes["atomcharges"] = {"mulliken": iodat.mulliken_charges}
@@ -126,7 +124,30 @@ def makecclib(iodat):
                 attributes["atomcharges"]["natural"] = iodat.npa_charges
         elif hasattr(iodat, "npa_charges"):
             attributes["atomcharges"] = {"natural": iodat.npa_charges}
-    elif hortonver == 3:
-        pass
 
+    elif hortonver == 3:
+        # Horton 3 IOData class uses attr and does not have __dict__.
+        # In horton 3, some attributes have a default value of None.
+        # Therefore, second hasattr statement is needed for mo attribute.
+        if hasattr(iodat, "atcoords"):
+            # cclib parses the whole history of coordinates in the list, horton keeps the last one.
+            attributes["atomcoords"] = [iodat.atcoords]
+        if hasattr(iodat, "mo") and hasattr(iodat.mo, "norba"):
+            # MO coefficient should be transposed to match the dimensions.
+            attributes["mocoeffs"] = [iodat.mo.coeffs[: iodat.mo.norba].T]
+            if iodat.mo.kind == "unrestricted":
+                attributes["mocoeffs"].append(iodat.mo.coeffs[iodat.mo.norba :].T)
+        if hasattr(iodat, "spinpol"):
+            # IOData stores 2S, ccData stores 2S+1.
+            attributes["mult"] = iodat.spinpol + 1
+        if hasattr(iodat, "atnums"):
+            # cclib stores num of electrons screened out by pseudopotential
+            # horton stores num of electrons after applying pseudopotential
+            attributes["atnums"] = numpy.asanyarray(iodat.atnums)
+        if hasattr(iodat, "atcorenums"):
+            attributes["coreelectrons"] = numpy.asanyarray(iodat.atnums) - numpy.asanyarray(
+                iodat.atcorenums
+            )
+        if hasattr(iodat, "atcharges"):
+            attributes["atomcharges"] = iodat.atcharges
     return ccData(attributes)
