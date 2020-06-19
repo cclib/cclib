@@ -107,7 +107,34 @@ class HortonTest(unittest.TestCase):
                     )
 
         elif self._hortonver == 3:
-            pass
+            # Identify attributes that should be verified
+            check = ["spinpol"]  # float or int
+            checkArr = ["atcoords", "atnums", "atcorenums"]  # one dimensional arrays
+
+            # IOData in horton 3 uses attr and initializes all possible attributes by default value of None. Thus, hasattr cannot be used here by its own.
+            for attr in check:
+                if (
+                    hasattr(self.iodat, attr)
+                    and hasattr(hortonequiv, attr)
+                    and getattr(self.iodat, attr) != None
+                    and getattr(hortonequiv, attr) != None
+                ):
+                    self.assertAlmostEqual(
+                        getattr(self.iodat, attr),
+                        getattr(hortonequiv, attr),
+                        delta=1.0e-3,
+                    )
+
+            for attr in checkArr:
+                if (
+                    hasattr(self.iodat, attr)
+                    and hasattr(hortonequiv, attr)
+                    and isinstance(getattr(self.iodat, attr), numpy.ndarray)
+                    and isinstance(getattr(hortonequiv, attr), numpy.ndarray)
+                ):
+                    assert_array_almost_equal(
+                        getattr(self.iodat, attr), getattr(hortonequiv, attr), decimal=3
+                    )
 
     def test_makecclib(self):
         """ Check that the bridge from horton to cclib works correctly """
