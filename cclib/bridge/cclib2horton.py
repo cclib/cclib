@@ -63,7 +63,7 @@ def makehorton(ccdat):
             if (oldKey in renameAttrs)
         )
 
-        # Rest of attributes need some manupulation in data structure
+        # Rest of attributes need some manipulation in data structure
         if hasattr(ccdat, "atomcoords"):
             # cclib parses the whole history of coordinates in the list, horton keeps the last one.
             attributes["coordinates"] = ccdat.atomcoords[-1]
