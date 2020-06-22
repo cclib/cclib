@@ -16,7 +16,8 @@ before_install:
   - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu eoan universe"
   - sudo apt update
   - sudo apt install libopenbabel-dev
-
+  # For Python 3.6+ machine, horton 3 IOData is installed from source. For Python 2.7 machine, horton 2 is installed from conda.
+  # From the documentation, horton 3 works with Python 3.6+ and horton 2 does with Python 2.7
   - |
     if [[ $(echo "$TRAVIS_PYTHON_VERSION >= 3.6" | bc -l) == 1 ]];
     then
@@ -28,15 +29,36 @@ before_install:
         conda config --set always_yes yes --set changeps1 no
         conda update -q conda
         conda info -a
-        conda create -q -n p4env python=$TRAVIS_PYTHON_VERSION ci-psi4 psi4 numpy matplotlib jupyter scipy -c psi4/label/dev -c defaults -c conda-forge
+        conda create -q -n p4env python=$TRAVIS_PYTHON_VERSION ci-psi4 psi4 numpy matplotlib jupyter scipy cython -c psi4/label/dev -c defaults -c conda-forge -c anaconda
 
         source activate p4env
         conda install pytest pytest-cov codecov -c conda-forge
         pip install pytest-shutil
+        pip install git+https://github.com/theochem/iodata.git
+        
         conda list
+    
+    elif [[ $(echo "$TRAVIS_PYTHON_VERSION < 3.0" | bc -l) == 1 ]];
+    then
+        wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh
+        bash miniconda.sh -b -p $HOME/miniconda -u
+        export PATH="$HOME/miniconda/bin:$PATH"
+
+        hash -r
+        conda config --set always_yes yes --set changeps1 no
+        conda update -q conda
+        conda info -a
+        conda create -q -n hortonenv python=$TRAVIS_PYTHON_VERSION horton openbabel -c theochem -c conda-forge -c openbabel
+        
+        source activate hortonenv
+        conda install pytest pytest-cov codecov -c conda-forge
+        pip install pytest-shutil
+        conda list
+    
     else
         python -m pip install -U pytest pytest-cov
     fi
+
     pip install -r requirements.txt
 
 install:
