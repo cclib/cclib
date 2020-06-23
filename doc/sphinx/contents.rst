@@ -12,6 +12,7 @@ Table of Contents
     data
     data_notes
     methods
+    bridge
     development
     data_dev
     changelog
