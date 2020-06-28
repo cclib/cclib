@@ -1,9 +1,9 @@
 
     -----------------------------------------------------------------------
           Psi4: An Open-Source Ab Initio Electronic Structure Package
-                               Psi4 1.2.1 release
+                               Psi4 1.3.1 release
 
-                         Git: Rev {HEAD} 406f4de 
+                         Git: Rev {HEAD} 2ce1c29 
 
 
     R. M. Parrish, L. A. Burns, D. G. A. Smith, A. C. Simmonett,
@@ -17,16 +17,17 @@
 
 
                          Additional Contributions by
-    P. Kraus, H. Kruse, M. H. Lechner, M. C. Schieber, and R. A. Shaw
+    P. Kraus, H. Kruse, M. H. Lechner, M. C. Schieber, R. A. Shaw,
+    A. Alenaizan, R. Galvelis, Z. L. Glick, S. Lehtola, and J. P. Misiewicz
 
     -----------------------------------------------------------------------
 
 
-    Psi4 started on: Sunday, 28 June 2020 11:43AM
+    Psi4 started on: Sunday, 28 June 2020 01:00PM
 
-    Process ID: 36042
+    Process ID: 46755
     Host:       osmium
-    PSIDATADIR: /home/eric/.pyenv/versions/miniconda3-4.7.12/envs/psi4-1.2.1-3.6/share/psi4
+    PSIDATADIR: /home/eric/.pyenv/versions/miniconda3-4.7.12/envs/psi4-1.3.1-3.6/share/psi4
     Memory:     500.0 MiB
     Threads:    1
     
@@ -66,21 +67,21 @@ energy('bp86-d3zero')
 --------------------------------------------------------------------------
 
 *** tstart() called on osmium
-*** at Sun Jun 28 11:43:06 2020
+*** at Sun Jun 28 13:00:39 2020
 
    => Loading Basis Set <=
 
     Name: STO-3G
     Role: ORBITAL
     Keyword: BASIS
-    atoms 1-6, 11-12, 16-17  entry C          line    61 file /home/eric/.pyenv/versions/miniconda3-4.7.12/envs/psi4-1.2.1-3.6/share/psi4/basis/sto-3g.gbs 
-    atoms 7-10, 13-15, 18-20 entry H          line    19 file /home/eric/.pyenv/versions/miniconda3-4.7.12/envs/psi4-1.2.1-3.6/share/psi4/basis/sto-3g.gbs 
+    atoms 1-6, 11-12, 16-17  entry C          line    61 file /home/eric/.pyenv/versions/miniconda3-4.7.12/envs/psi4-1.3.1-3.6/share/psi4/basis/sto-3g.gbs 
+    atoms 7-10, 13-15, 18-20 entry H          line    19 file /home/eric/.pyenv/versions/miniconda3-4.7.12/envs/psi4-1.3.1-3.6/share/psi4/basis/sto-3g.gbs 
 
 
          ---------------------------------------------------------
                                    SCF
-            by Justin Turney, Rob Parrish, Andy Simmonett
-                             and Daniel Smith
+               by Justin Turney, Rob Parrish, Andy Simmonett
+                          and Daniel G. A. Smith
                               RKS Reference
                         1 Threads,    500 MiB Core
          ---------------------------------------------------------
@@ -100,26 +101,26 @@ energy('bp86-d3zero')
          C           -0.278679480000     1.366831620000     0.000000000000    12.000000000000
          C           -1.323030410000     0.441735750000     0.000000000000    12.000000000000
          C           -1.044345060000    -0.924849780000     0.000000000000    12.000000000000
-         H            2.365954430000    -0.790377260000     0.000000000000     1.007825032070
-         H            1.867460940000     1.654079970000     0.000000000000     1.007825032070
-         H           -2.365954430000     0.790377260000     0.000000000000     1.007825032070
-         H           -1.867460940000    -1.654079970000     0.000000000000     1.007825032070
+         H            2.365954430000    -0.790377260000     0.000000000000     1.007825032230
+         H            1.867460940000     1.654079970000     0.000000000000     1.007825032230
+         H           -2.365954430000     0.790377260000     0.000000000000     1.007825032230
+         H           -1.867460940000    -1.654079970000     0.000000000000     1.007825032230
          C           -0.586591690000     2.875899310000     0.000000000000    12.000000000000
          C            0.363501880000     3.800764200000     0.000000000000    12.000000000000
-         H           -1.656477680000     3.123943120000     0.000000000000     1.007825032070
-         H            0.144295600000     4.876932350000     0.000000000000     1.007825032070
-         H            1.433387880000     3.552720390000     0.000000000000     1.007825032070
+         H           -1.656477680000     3.123943120000     0.000000000000     1.007825032230
+         H            0.144295600000     4.876932350000     0.000000000000     1.007825032230
+         H            1.433387880000     3.552720390000     0.000000000000     1.007825032230
          C            0.586591690000    -2.875899310000     0.000000000000    12.000000000000
          C           -0.363501880000    -3.800764200000     0.000000000000    12.000000000000
-         H            1.656477680000    -3.123943120000     0.000000000000     1.007825032070
-         H           -0.144295600000    -4.876932350000     0.000000000000     1.007825032070
-         H           -1.433387880000    -3.552720390000     0.000000000000     1.007825032070
+         H            1.656477680000    -3.123943120000     0.000000000000     1.007825032230
+         H           -0.144295600000    -4.876932350000     0.000000000000     1.007825032230
+         H           -1.433387880000    -3.552720390000     0.000000000000     1.007825032230
 
   Running in c2h symmetry.
 
   Rotational constants: A =      0.15397  B =      0.02357  C =      0.02044 [cm^-1]
-  Rotational constants: A =   4616.01032  B =    706.72886  C =    612.89265 [MHz]
-  Nuclear repulsion =  450.006136316299489
+  Rotational constants: A =   4616.01035  B =    706.72887  C =    612.89266 [MHz]
+  Nuclear repulsion =  450.006138085107125
 
   Charge       = 0
   Multiplicity = 1
@@ -154,8 +155,8 @@ energy('bp86-d3zero')
 
     BP86 GGA Exchange-Correlation Functional
 
-   A. D. Becke, Phys. Rev. A, 38, 3098-3100, 1988
-   J. P. Perdew, Phys. Rev. B, 33, 8822, 1986
+    A. D. Becke, Phys. Rev. A, 38, 3098-3100, 1988
+    J. P. Perdew, Phys. Rev. B, 33, 8822, 1986
 
 
     Deriv               =              1
@@ -175,37 +176,39 @@ energy('bp86-d3zero')
 
    => Molecular Quadrature <=
 
-    Radial Scheme       =       TREUTLER
-    Pruning Scheme      =           FLAT
-    Nuclear Scheme      =       TREUTLER
+    Radial Scheme          =       TREUTLER
+    Pruning Scheme         =           FLAT
+    Nuclear Scheme         =       TREUTLER
 
-    BS radius alpha     =              1
-    Pruning alpha       =              1
-    Radial Points       =             75
-    Spherical Points    =            302
-    Total Points        =         438960
-    Total Blocks        =           3304
-    Max Points          =            256
-    Max Functions       =             56
+    BS radius alpha        =              1
+    Pruning alpha          =              1
+    Radial Points          =             75
+    Spherical Points       =            302
+    Total Points           =         438960
+    Total Blocks           =           3304
+    Max Points             =            256
+    Max Functions          =             56
 
-   => -D3ZERO: Empirical Dispersion <=
+   => BP86-D3: Empirical Dispersion <=
 
     Grimme's -D3 (zero-damping) Dispersion Correction
     Grimme S.; Antony J.; Ehrlich S.; Krieg H. (2010), J. Chem. Phys., 132: 154104
 
-        S6 =   1.000000E+00
-        S8 =   1.683000E+00
-       SR6 =   1.139000E+00
-       SR8 =   1.000000E+00
-    ALPHA6 =   1.400000E+01
+        s6 =       1.000000
+        s8 =       1.683000
+       sr6 =       1.139000
+    alpha6 =      14.000000
+       sr8 =       1.000000
 
    => Loading Basis Set <=
 
     Name: (STO-3G AUX)
     Role: JKFIT
     Keyword: DF_BASIS_SCF
-    atoms 1-6, 11-12, 16-17  entry C          line   203 file /home/eric/.pyenv/versions/miniconda3-4.7.12/envs/psi4-1.2.1-3.6/share/psi4/basis/def2-svp-jkfit.gbs 
-    atoms 7-10, 13-15, 18-20 entry H          line    23 file /home/eric/.pyenv/versions/miniconda3-4.7.12/envs/psi4-1.2.1-3.6/share/psi4/basis/def2-svp-jkfit.gbs 
+    atoms 1-6, 11-12, 16-17  entry C          line   203 file /home/eric/.pyenv/versions/miniconda3-4.7.12/envs/psi4-1.3.1-3.6/share/psi4/basis/def2-svp-jkfit.gbs 
+    atoms 7-10, 13-15, 18-20 entry H          line    23 file /home/eric/.pyenv/versions/miniconda3-4.7.12/envs/psi4-1.3.1-3.6/share/psi4/basis/def2-svp-jkfit.gbs 
+
+  Starting with a DF guess...
 
   ==> Pre-Iterations <==
 
@@ -220,11 +223,9 @@ energy('bp86-d3zero')
     Total      60      60      35      35      35       0
    -------------------------------------------------------
 
-  Starting with a DF guess...
-
   ==> Integral Setup <==
 
-  DFHelper Memory: AOs need 0.031 [GiB]; user supplied 0.366 [GiB]. Using in-core AOs.
+  DFHelper Memory: AOs need 0.031 GiB; user supplied 0.031 GiB. Using in-core AOs.
 
   ==> MemDFJK: Density-Fitted J/K Matrices <==
 
@@ -232,11 +233,11 @@ energy('bp86-d3zero')
     K tasked:                    No
     wK tasked:                   No
     OpenMP threads:               1
-    Memory (MB):                375
+    Memory [MiB]:                31
     Algorithm:                 Core
     Schwarz Cutoff:           1E-12
     Mask sparsity (%):       4.1111
-    Fitting Condition:        1E-12
+    Fitting Condition:        1E-10
 
    => Auxiliary Basis Set <=
 
@@ -248,7 +249,9 @@ energy('bp86-d3zero')
     Spherical Harmonics?: true
     Max angular momentum: 4
 
-  Minimum eigenvalue in the overlap matrix is 1.7141694910E-01.
+  Cached 100.0% of DFT collocation blocks in 0.579 [GiB].
+
+  Minimum eigenvalue in the overlap matrix is 1.7141694614E-01.
   Using Symmetric Orthogonalization.
 
   SCF Guess: Superposition of Atomic Densities via on-the-fly atomic UHF.
@@ -257,20 +260,17 @@ energy('bp86-d3zero')
 
                            Total Energy        Delta E     RMS |[F,P]|
 
-   @DF-RKS iter   0:  -382.90553909757364   -3.82906e+02   1.22472e-01 
-   @DF-RKS iter   1:  -382.31473719351607    5.90802e-01   4.43486e-03 
-   @DF-RKS iter   2:  -382.25727480598874    5.74624e-02   9.12146e-03 DIIS
-   @DF-RKS iter   3:  -382.32870047072839   -7.14257e-02   1.51064e-03 DIIS
-   @DF-RKS iter   4:  -382.33039371942624   -1.69325e-03   4.80403e-04 DIIS
-   @DF-RKS iter   5:  -382.33056068378517   -1.66964e-04   1.29539e-04 DIIS
-   @DF-RKS iter   6:  -382.33057555794420   -1.48742e-05   1.65332e-05 DIIS
-   @DF-RKS iter   7:  -382.33057582082887   -2.62885e-07   3.02588e-06 DIIS
-   @DF-RKS iter   8:  -382.33057582743044   -6.60157e-09   1.33829e-06 DIIS
-   @DF-RKS iter   9:  -382.33057582881833   -1.38789e-09   3.39679e-07 DIIS
+   @DF-RKS iter SAD:  -378.33553144971785   -3.78336e+02   0.00000e+00 
+   @DF-RKS iter   1:  -382.32730081658690   -3.99177e+00   2.15087e-03 DIIS
+   @DF-RKS iter   2:  -382.31598657633066    1.13142e-02   4.10269e-03 DIIS
+   @DF-RKS iter   3:  -382.32995538529570   -1.39688e-02   8.63121e-04 DIIS
+   @DF-RKS iter   4:  -382.33050022852973   -5.44843e-04   3.08163e-04 DIIS
+   @DF-RKS iter   5:  -382.33057111709866   -7.08886e-05   7.44534e-05 DIIS
+   @DF-RKS iter   6:  -382.33057572994784   -4.61285e-06   1.00858e-05 DIIS
+   @DF-RKS iter   7:  -382.33057582908833   -9.91405e-08   1.20669e-06 DIIS
+   @DF-RKS iter   8:  -382.33057583038021   -1.29188e-09   3.73203e-07 DIIS
 
   DF guess converged.
-
-  ==> Integral Setup <==
 
   ==> DirectJK: Integral-Direct J/K Matrices <==
 
@@ -280,10 +280,12 @@ energy('bp86-d3zero')
     Integrals threads:           1
     Schwarz Cutoff:          1E-12
 
-   @RKS iter  10:  -382.32750640355357    3.06943e-03   7.73327e-06 DIIS
-   @RKS iter  11:  -382.32750641495716   -1.14036e-08   1.69206e-06 DIIS
-   @RKS iter  12:  -382.32750641661488   -1.65772e-09   1.07262e-06 DIIS
-   @RKS iter  13:  -382.32750641767700   -1.06212e-09   1.56252e-07 DIIS
+   @RKS iter   9:  -382.32750640101347   -3.82328e+02   7.73767e-06 DIIS
+   @RKS iter  10:  -382.32750641243820   -1.14247e-08   1.70665e-06 DIIS
+   @RKS iter  11:  -382.32750641413236   -1.69416e-09   1.07595e-06 DIIS
+   @RKS iter  12:  -382.32750641521386   -1.08150e-09   1.86096e-07 DIIS
+  Energy and wave function converged.
+
 
   ==> Post-Iterations <==
 
@@ -293,9 +295,9 @@ energy('bp86-d3zero')
     Doubly Occupied:                                                      
 
        1Bu    -9.743480     1Ag    -9.743419     2Bu    -9.732220  
-       2Ag    -9.732219     3Bu    -9.731734     3Ag    -9.731715  
-       4Bu    -9.730549     4Ag    -9.730436     5Bu    -9.716192  
-       5Ag    -9.716192     6Ag    -0.743693     6Bu    -0.683803  
+       2Ag    -9.732218     3Bu    -9.731734     3Ag    -9.731715  
+       4Bu    -9.730549     4Ag    -9.730436     5Bu    -9.716193  
+       5Ag    -9.716193     6Ag    -0.743693     6Bu    -0.683802  
        7Ag    -0.651306     7Bu    -0.636216     8Bu    -0.603985  
        8Ag    -0.526574     9Ag    -0.503242     9Bu    -0.476365  
       10Ag    -0.458800    11Ag    -0.411975    10Bu    -0.389629  
@@ -321,20 +323,19 @@ energy('bp86-d3zero')
              Ag    Bg    Au    Bu 
     DOCC [    15,    3,    2,   15 ]
 
-  Energy converged.
-
-  @RKS Final Energy:  -382.32750641767700
+  @RKS Final Energy:  -382.32750641521386
 
    => Energetics <=
 
-    Nuclear Repulsion Energy =            450.0061363162994894
-    One-Electron Energy =               -1408.7649911927062476
-    Two-Electron Energy =                 634.3450783819241678
-    DFT Exchange-Correlation Energy =     -57.8990099931943902
+    Nuclear Repulsion Energy =            450.0061380851071249
+    One-Electron Energy =               -1408.7650253347392209
+    Two-Electron Energy =                 634.3451107619988534
+    DFT Exchange-Correlation Energy =     -57.8990099975805421
     Empirical Dispersion Energy =          -0.0147199300000000
     VV10 Nonlocal Energy =                  0.0000000000000000
-    Total Energy =                       -382.3275064176770002
+    Total Energy =                       -382.3275064152138611
 
+Computation Completed
 
 
 Properties will be evaluated at   0.000000,   0.000000,   0.000000 [a0]
@@ -342,29 +343,29 @@ Properties will be evaluated at   0.000000,   0.000000,   0.000000 [a0]
 Properties computed using the SCF density matrix
 
   Nuclear Dipole Moment: [e a0]
-     X:     0.0000      Y:    -0.0000      Z:     0.0000
+     X:    -0.0000      Y:     0.0000      Z:     0.0000
 
   Electronic Dipole Moment: [e a0]
      X:     0.0000      Y:     0.0000      Z:     0.0000
 
   Dipole Moment: [e a0]
-     X:     0.0000      Y:    -0.0000      Z:     0.0000     Total:     0.0000
+     X:    -0.0000      Y:     0.0000      Z:     0.0000     Total:     0.0000
 
   Dipole Moment: [D]
-     X:     0.0000      Y:    -0.0000      Z:     0.0000     Total:     0.0000
+     X:    -0.0000      Y:     0.0000      Z:     0.0000     Total:     0.0000
 
 
-*** tstop() called on osmium at Sun Jun 28 11:43:23 2020
+*** tstop() called on osmium at Sun Jun 28 13:00:54 2020
 Module time:
-	user time   =      17.13 seconds =       0.29 minutes
-	system time =       0.16 seconds =       0.00 minutes
-	total time  =         17 seconds =       0.28 minutes
+	user time   =      14.79 seconds =       0.25 minutes
+	system time =       0.24 seconds =       0.00 minutes
+	total time  =         15 seconds =       0.25 minutes
 Total time:
-	user time   =      17.13 seconds =       0.29 minutes
-	system time =       0.16 seconds =       0.00 minutes
-	total time  =         17 seconds =       0.28 minutes
+	user time   =      14.79 seconds =       0.25 minutes
+	system time =       0.24 seconds =       0.00 minutes
+	total time  =         15 seconds =       0.25 minutes
 
-    Psi4 stopped on: Sunday, 28 June 2020 11:43AM
-    Psi4 wall time for execution: 0:00:17.41
+    Psi4 stopped on: Sunday, 28 June 2020 01:00PM
+    Psi4 wall time for execution: 0:00:15.11
 
 *** Psi4 exiting successfully. Buy a developer a beer!
