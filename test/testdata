@@ -263,7 +263,6 @@ SP        DALTON      GenericDispersionTest basicDALTON-2018            dvb_disp
 SP        GAMESS      FireflyDispersionTest basicFirefly8.1             dvb_dispersion_bp86_d3zero.out
 SP        GAMESS      GenericDispersionTest basicGAMESS-US2018          dvb_dispersion_bp86_d3zero.out
 SP        Gaussian    GenericDispersionTest basicGaussian16             dvb_dispersion_bp86_d3zero.out
-# SP        Molpro      GenericDispersionTest basicMolpro2018             dvb_dispersion_bp86_d3zero.out
 SP        NWChem      GenericDispersionTest basicNWChem6.8              dvb_dispersion_bp86_d3zero.out
 SP        ORCA        GenericDispersionTest basicORCA4.1                dvb_dispersion_bp86_d3zero.out
 SP        ORCA        GenericDispersionTest basicORCA4.2                dvb_dispersion_bp86_d3zero.out
