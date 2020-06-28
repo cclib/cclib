@@ -266,6 +266,7 @@ SP        Gaussian    GenericDispersionTest basicGaussian16             dvb_disp
 # SP        Molpro      GenericDispersionTest basicMolpro2018             dvb_dispersion_bp86_d3zero.out
 SP        NWChem      GenericDispersionTest basicNWChem6.8              dvb_dispersion_bp86_d3zero.out
 SP        ORCA        GenericDispersionTest basicORCA4.1                dvb_dispersion_bp86_d3zero.out
+SP        ORCA        GenericDispersionTest basicORCA4.2                dvb_dispersion_bp86_d3zero.out
 SP        Psi4        GenericDispersionTest basicPsi4-1.2.1             dvb_dispersion_bp86_d3zero.out
 SP        QChem       GenericDispersionTest basicQChem5.1               dvb_dispersion_bp86_d3zero.out
 
