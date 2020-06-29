@@ -196,5 +196,4 @@ def makecclib(iodat):
             )
         if hasattr(iodat, "atcharges"):
             attributes["atomcharges"] = iodat.atcharges
-
     return ccData(attributes)

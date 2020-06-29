@@ -27,13 +27,13 @@ class HortonTest(unittest.TestCase):
         super(HortonTest, self).setUp()
 
         self.data, self.logfile = getdatafile(
-            "Gaussian", "basicGaussian16", ["dvb_un_sp.fchk"]
+            "Gaussian", "basicGaussian16", ["dvb_un_sp.log"]
         )
         datadir = os.path.abspath(
             os.path.join(os.path.dirname(__file__), "..", "..", "data")
         )
         inputfile = os.path.join(
-            datadir, "Gaussian", "basicGaussian16", "dvb_un_sp.fchk"
+            datadir, "Gaussian", "basicGaussian16", "dvb_un_sp.log"
         )
 
         self._old_horton = False
@@ -73,7 +73,7 @@ class HortonTest(unittest.TestCase):
 
         if self._hortonver == 2:
             # Identify attributes that should be verified
-            check = ["pseudo_numbers", "ms2"]  # float or int
+            check = ["ms2"]  # float or int
             checkArr = [
                 "coordinates",
                 "numbers",
@@ -81,6 +81,7 @@ class HortonTest(unittest.TestCase):
                 "orb_beta",
                 "mulliken_charges",
                 "npa_charges",
+                "pseudo_numbers",
             ]  # one dimensional arrays
             checkArrArr = ["polar"]  # two dimensional arrays
 
@@ -142,8 +143,13 @@ class HortonTest(unittest.TestCase):
         cclibequiv = cclib2horton.makecclib(self.iodat)
 
         # Identify attributes that should be verified
-        check = ["mult", "coreelectrons"]  # float or int
-        checkArr = ["atomcoords", "atomnos", "mocoeffs"]  # one dimensional arrays
+        check = ["mult"]  # float or int
+        checkArr = [
+            "atomcoords",
+            "atomnos",
+            "mocoeffs",
+            "coreelectrons",
+        ]  # one dimensional arrays
         checkArrArr = ["polarizability"]  # two dimensional arrays
         checkChg = ["mulliken", "natural"]  # partial charges
 
