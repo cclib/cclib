@@ -18,11 +18,13 @@ if sys.version_info[0] == 3:
         from .bridge.testhorton import *
     if sys.version_info[1] >= 4:
         from .bridge.testbiopython import *
+    from .bridge.testpyquante import pyquante2Test
+
 from .bridge.testopenbabel import *
 
 if sys.version_info[0] == 2:
     from .bridge.testhorton import *
-    from .bridge.testpyquante import *
+    from .bridge.testpyquante import PyquanteTest
 
 if __name__ == "__main__":
     unittest.main()
