@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2020, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -29,7 +29,6 @@ if _found_pyvtk:
 def _check_pyvtk(found_pyvtk):
     if not found_pyvtk:
         raise ImportError("You must install `pyvtk` to use this function")
-
 
 class Volume(object):
     """Represent a volume in space.
@@ -136,9 +135,16 @@ def scinotation(num):
     return ("%sE%s%s" % (broken[0], sign, broken[1][-2:])).rjust(12)
 
 
-def getbfs(coords, gbasis):
-    """Convenience function for both wavefunction and density based on PyQuante Ints.py."""
-    mymol = cclib2pyquante.makepyquante(coords, [0 for _ in coords])
+def getbfs(ccdata):
+    """Convenience function for both wavefunction and density based on PyQuante Ints.py.
+    
+    Input:
+        ccdata -- ccData object
+        
+    Output:
+        bfs -- list of PyQuante CGBF objects
+    """
+    pymol = cclib2pyquante.makepyquante(ccdata)
 
     sym2powerlist = {
         'S' : [(0, 0, 0)],
@@ -149,29 +155,36 @@ def getbfs(coords, gbasis):
         }
 
     bfs = []
-    for i, atom in enumerate(mymol):
-        bs = gbasis[i]
-        for sym, prims in bs:
-            for power in sym2powerlist[sym]:
-                bf = CGBF(atom.pos(), power)
-                for expnt, coef in prims:
-                    bf.add_primitive(expnt, coef)
-                bf.normalize()
-                bfs.append(bf)
+    
+    #PyQuante
+    if _found_pyquante:
+        for i, atom in enumerate(pymol):
+            bs = ccdata.gbasis[i]
+            for sym, prims in bs:
+                for power in sym2powerlist[sym]:
+                    bf = CGBF(atom.pos(), power)
+                    for expnt, coef in prims:
+                        bf.add_primitive(expnt, coef)
+                    bf.normalize()
+                    bfs.append(bf)
+
+    #Add pyquante2 code in subsequent PR
 
     return bfs
 
 
-def wavefunction(coords, mocoeffs, gbasis, volume):
+def wavefunction(ccdata, volume, mocoeffs):
     """Calculate the magnitude of the wavefunction at every point in a volume.
-
-    Attributes:
-        coords -- the coordinates of the atoms
-        mocoeffs -- mocoeffs for one eigenvalue
-        gbasis -- gbasis from a parser object
-        volume -- a template Volume object (will not be altered)
+    
+    Inputs:
+        ccdata -- ccData object
+        volume -- Volume object (will not be altered)
+        mocoeffs -- molecular orbital to use for calculation; i.e. ccdata.mocoeffs[0][3]
+    
+    Output:
+        Volume object with wavefunction at each grid point stored in data attribute
     """
-    bfs = getbfs(coords, gbasis)
+    bfs = getbfs(ccdata)
 
     wavefn = copy.copy(volume)
     wavefn.data = numpy.zeros(wavefn.data.shape, "d")
@@ -181,20 +194,33 @@ def wavefunction(coords, mocoeffs, gbasis, volume):
     y = numpy.arange(wavefn.origin[1], wavefn.topcorner[1] + wavefn.spacing[1], wavefn.spacing[1]) / conversion
     z = numpy.arange(wavefn.origin[2], wavefn.topcorner[2] + wavefn.spacing[2], wavefn.spacing[2]) / conversion
 
-    for bs in range(len(bfs)):
-        data = numpy.zeros(wavefn.data.shape, "d")
-        for i, xval in enumerate(x):
-            for j, yval in enumerate(y):
-                for k, zval in enumerate(z):
-                    data[i, j, k] = bfs[bs].amp(xval, yval, zval)
-        data *= mocoeffs[bs]
-        wavefn.data += data
+    #PyQuante
+    if _found_pyquante:
+        for bs in range(len(bfs)):
+            data = numpy.zeros(wavefn.data.shape, "d")
+            for i, xval in enumerate(x):
+                for j, yval in enumerate(y):
+                    for k, zval in enumerate(z):
+                        data[i, j, k] = bfs[bs].amp(xval, yval, zval)
+            data *= mocoeffs[bs]
+            wavefn.data += data
+
+    #Add pyquante2 code in subsequent PR
 
     return wavefn
 
 
-def electrondensity(coords, mocoeffslist, gbasis, volume):
+def electrondensity(ccdata, volume, mocoeffslist):
     """Calculate the magnitude of the electron density at every point in a volume.
+
+    Inputs:
+        ccdata -- ccData object
+        volume -- Volume object (will not be altered)
+        mocoeffslist -- list of molecular orbital to calculate electron density from;
+                        i.e. [ccdata.mocoeffs[0][1:2]]
+    
+    Output:
+        Volume object with wavefunction at each grid point stored in data attribute
 
     Attributes:
         coords -- the coordinates of the atoms
@@ -205,7 +231,7 @@ def electrondensity(coords, mocoeffslist, gbasis, volume):
     Note: mocoeffs is a list of NumPy arrays. The list will be of length 1
           for restricted calculations, and length 2 for unrestricted.
     """
-    bfs = getbfs(coords, gbasis)
+    bfs = getbfs(ccdata)
 
     density = copy.copy(volume)
     density.data = numpy.zeros(density.data.shape, "d")
@@ -215,6 +241,9 @@ def electrondensity(coords, mocoeffslist, gbasis, volume):
     y = numpy.arange(density.origin[1], density.topcorner[1] + density.spacing[1], density.spacing[1]) / conversion
     z = numpy.arange(density.origin[2], density.topcorner[2] + density.spacing[2], density.spacing[2]) / conversion
 
+    # For occupied orbitals
+    # `mocoeff` and `gbasis` in ccdata object is ordered in a way `homos` can specify which orbital
+    # is the highest lying occupied orbital in mocoeff and gbasis.
     for mocoeffs in mocoeffslist:
         for mocoeff in mocoeffs:
             wavefn = numpy.zeros(density.data.shape, "d")

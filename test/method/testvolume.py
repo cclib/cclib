@@ -38,9 +38,8 @@ class VolumeTest(unittest.TestCase):
 
         vol = volume.Volume((-3.0, -6.0, -2.0), (3.0, 6.0, 2.0), (0.25, 0.25, 0.25))
 
-        wavefn = volume.wavefunction(data_sp.atomcoords[0],
-                                     data_sp.mocoeffs[0][data_sp.homos[0]],
-                                     data_basis.gbasis, vol)
+        wavefn = volume.wavefunction(data_sp, vol, 
+                                     data_sp.mocoeffs[0][data_sp.homos[0]])
         integral = wavefn.integrate()
         integral_square = wavefn.integrate_square()
 
@@ -59,8 +58,7 @@ class VolumeTest(unittest.TestCase):
         vol = volume.Volume((-3.0, -6.0, -2.0), (3.0, 6.0, 2.0), (0.25, 0.25, 0.25))
 
         frontierorbs = [data_sp.mocoeffs[0][(data_sp.homos[0] - 3):(data_sp.homos[0] + 1)]]
-        density = volume.electrondensity(data_sp.atomcoords[0],
-                                         frontierorbs, data_basis.gbasis, vol)
+        density = volume.electrondensity(data_sp, vol, frontierorbs)
         integral = density.integrate()
 
         self.assertTrue(abs(integral - 8.00) < 1e-2)
