@@ -74,21 +74,28 @@ class Bader(Method):
            Cartesian, uniformly spaced grids are assumed for this function.
            """
 
-        # First obtain charge densities on the grid
-        if len(self.data.mocoeffs) == 1:
-            self.chgdensity = electrondensity_spin(
-                self.data, self.volume, [self.data.mocoeffs[0][: self.data.homos[0]]]
-            )
-            self.chgdensity.data *= 2
+        # Obtain charge densities on the grid if it does not contain one.
+        if not numpy.any(self.volume.data):
+            self.logger.info("Calculating charge densities on the provided empty grid.")
+            if len(self.data.mocoeffs) == 1:
+                self.chgdensity = electrondensity_spin(
+                    self.data, self.volume, [self.data.mocoeffs[0][: self.data.homos[0]]]
+                )
+                self.chgdensity.data *= 2
+            else:
+                self.chgdensity = electrondensity_spin(
+                    self.data,
+                    self.volume,
+                    [
+                        self.data.mocoeffs[0][: self.data.homos[0]],
+                        self.data.mocoeffs[1][: self.data.homos[1]],
+                    ],
+                )
+        # If charge densities are provided beforehand, log this information
+        # `Volume` object does not contain (nor rely on) information about the constituent atoms.
         else:
-            self.chgdensity = electrondensity_spin(
-                self.data,
-                self.volume,
-                [
-                    self.data.mocoeffs[0][: self.data.homos[0]],
-                    self.data.mocoeffs[1][: self.data.homos[1]],
-                ],
-            )
+            self.logger.info("Using charge densities from the provided Volume object.")
+            self.chgdensity = self.volume
 
         # Assign each grid point to Bader areas
         self.fragresults = numpy.zeros(self.chgdensity.data.shape, "d")
