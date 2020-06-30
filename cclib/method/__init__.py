@@ -7,6 +7,7 @@
 
 """Example analyses and calculations based on data parsed by cclib."""
 
+from cclib.method.bader import Bader
 from cclib.method.bickelhaupt import Bickelhaupt
 from cclib.method.cda import CDA
 from cclib.method.cspa import CSPA
@@ -20,4 +21,4 @@ from cclib.method.mpa import MPA
 from cclib.method.nuclear import Nuclear
 from cclib.method.opa import OPA
 from cclib.method.orbitals import Orbitals
-# from cclib.method.volume import Volume
+from cclib.method.volume import Volume

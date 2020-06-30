@@ -1,9 +1,9 @@
 
     -----------------------------------------------------------------------
           Psi4: An Open-Source Ab Initio Electronic Structure Package
-                               Psi4 1.2.1 release
+                               Psi4 1.3.2 release
 
-                         Git: Rev {HEAD} 406f4de 
+                         Git: Rev {HEAD} ecbda83 
 
 
     R. M. Parrish, L. A. Burns, D. G. A. Smith, A. C. Simmonett,
@@ -17,7 +17,8 @@
 
 
                          Additional Contributions by
-    P. Kraus, H. Kruse, M. H. Lechner, M. C. Schieber, and R. A. Shaw
+    P. Kraus, H. Kruse, M. H. Lechner, M. C. Schieber, R. A. Shaw,
+    A. Alenaizan, R. Galvelis, Z. L. Glick, S. Lehtola, and J. P. Misiewicz
 
     -----------------------------------------------------------------------
 
@@ -70,8 +71,8 @@ cubeprop(scf_wfn)
 
          ---------------------------------------------------------
                                    SCF
-            by Justin Turney, Rob Parrish, Andy Simmonett
-                             and Daniel Smith
+               by Justin Turney, Rob Parrish, Andy Simmonett
+                          and Daniel G. A. Smith
                               RHF Reference
                         1 Threads,    500 MiB Core
          ---------------------------------------------------------
@@ -85,15 +86,15 @@ cubeprop(scf_wfn)
 
        Center              X                  Y                   Z               Mass       
     ------------   -----------------  -----------------  -----------------  -----------------
-         O            0.000000000000     0.000000000000    -0.066678531529    15.994914619560
-         H            0.000000000000    -0.790649154947     0.529118341392     1.007825032070
-         H            0.000000000000     0.790649154947     0.529118341392     1.007825032070
+         O            0.000000000000     0.000000000000    -0.066678531538    15.994914619570
+         H            0.000000000000    -0.790649154947     0.529118341382     1.007825032230
+         H            0.000000000000     0.790649154947     0.529118341382     1.007825032230
 
   Running in c2v symmetry.
 
   Rotational constants: A =     26.52958  B =     13.37869  C =      8.89367 [cm^-1]
-  Rotational constants: A = 795336.70122  B = 401083.16849  C = 266625.59877 [MHz]
-  Nuclear repulsion =    8.887006225878341
+  Rotational constants: A = 795336.70717  B = 401083.17149  C = 266625.60076 [MHz]
+  Nuclear repulsion =    8.887006260809876
 
   Charge       = 0
   Multiplicity = 1
@@ -188,7 +189,7 @@ cubeprop(scf_wfn)
 
   ==> Integral Setup <==
 
-  DFHelper Memory: AOs need 0.000 [GiB]; user supplied 0.366 [GiB]. Using in-core AOs.
+  DFHelper Memory: AOs need 0.000 GiB; user supplied 0.366 GiB. Using in-core AOs.
 
   ==> MemDFJK: Density-Fitted J/K Matrices <==
 
@@ -196,11 +197,11 @@ cubeprop(scf_wfn)
     K tasked:                   Yes
     wK tasked:                   No
     OpenMP threads:               1
-    Memory (MB):                375
+    Memory [MiB]:               375
     Algorithm:                 Core
     Schwarz Cutoff:           1E-12
     Mask sparsity (%):       0.0000
-    Fitting Condition:        1E-12
+    Fitting Condition:        1E-10
 
    => Auxiliary Basis Set <=
 
@@ -212,7 +213,7 @@ cubeprop(scf_wfn)
     Spherical Harmonics?: true
     Max angular momentum: 4
 
-  Minimum eigenvalue in the overlap matrix is 3.6393052139E-01.
+  Minimum eigenvalue in the overlap matrix is 3.6393051884E-01.
   Using Symmetric Orthogonalization.
 
   SCF Guess: Superposition of Atomic Densities via on-the-fly atomic UHF.
@@ -259,6 +260,7 @@ cubeprop(scf_wfn)
     Two-Electron Energy =                  37.9884453610336408
     Total Energy =                        -74.9644171321832715
 
+Computation Completed
 
 
 Properties will be evaluated at   0.000000,   0.000000,   0.000000 [a0]

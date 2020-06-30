@@ -12,7 +12,6 @@ import copy
 
 import numpy
 
-from cclib.bridge import cclib2pyquante
 from cclib.parser.utils import convertor
 from cclib.parser.utils import find_package
 
@@ -44,6 +43,7 @@ if _found_pyquante:
     from PyQuante.CGBF import CGBF
 
     def getbfs(ccdata):
+        from cclib.bridge import cclib2pyquante
         pymol = cclib2pyquante.makepyquante(ccdata)
 
         bfs = []
@@ -56,6 +56,9 @@ if _found_pyquante:
                         bf.add_primitive(expnt, coef)
                     bf.normalize()
                     bfs.append(bf)
+        
+        del cclib2pyquante
+        
         return bfs
 
     # Small wrapper PyQuante & pyquante2 function that evaluates basis function on a given point
@@ -69,6 +72,7 @@ if _found_pyquante2:
     from pyquante2 import cgbf
 
     def getbfs(ccdata):
+        from cclib.bridge import cclib2pyquante
         pymol = cclib2pyquante.makepyquante(ccdata)
 
         bfs = []
@@ -88,7 +92,9 @@ if _found_pyquante2:
                     )
                     basisfunction.normalize()
                     bfs.append(basisfunction)
-
+        
+        del cclib2pyquante
+        
         return bfs
 
     # Small wrapper PyQuante & pyquante2 function that evaluates basis function on a given point
@@ -111,9 +117,6 @@ def _check_pyquante():
 def _check_pyvtk(found_pyvtk):
     if not found_pyvtk:
         raise ImportError("You must install `pyvtk` to use this function.")
-
-
-_check_pyquante()
 
 
 class Volume(object):
@@ -249,7 +252,6 @@ def getGrid(vol):
     
     return (x, y, z)
 
-
 def wavefunction(ccdata, volume, mocoeffs):
     """Calculate the magnitude of the wavefunction at every point in a volume.
     
@@ -326,7 +328,8 @@ def electrondensity_spin(ccdata, volume, mocoeffslist):
                         data[i, j, :] = tmp
                 data *= mocoeff[bs]
                 wavefn += data
-            density.data += wavefn ** 2
+            density.data += wavefn ** 2 # lastly put them into second power
+
 
     return density
 
@@ -361,3 +364,4 @@ def electrondensity(ccdata, volume, mocoeffslist):
         edens = electrondensity_spin(ccdata, volume, [mocoeffslist[0]])
         edens.data *= 2
         return edens
+
