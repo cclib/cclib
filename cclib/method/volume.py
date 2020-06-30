@@ -12,23 +12,92 @@ import copy
 
 import numpy
 
+from cclib.bridge import cclib2pyquante
 from cclib.parser.utils import convertor
 from cclib.parser.utils import find_package
+
+sym2powerlist = {
+    'S' : [(0, 0, 0)],
+    'P' : [(1, 0, 0), (0, 1, 0), (0, 0, 1)],
+    'D' : [(2, 0, 0), (0, 2, 0), (0, 0, 2), (1, 1, 0), (0, 1, 1), (1, 0, 1)],
+    'F' : [(3, 0, 0), (2, 1, 0), (2, 0, 1), (1, 2, 0), (1, 1, 1), (1, 0, 2),
+           (0, 3, 0), (0, 2, 1), (0, 1, 2), (0, 0, 3)]
+    }
+
 
 _found_pyquante = find_package("PyQuante")
 if _found_pyquante:
     from PyQuante.CGBF import CGBF
-    from cclib.bridge import cclib2pyquante
+    
+    def getbfs(ccdata):
+        pymol = cclib2pyquante.makepyquante(ccdata)
+        
+        bfs = []
+        for i, atom in enumerate(pymol):
+            bs = ccdata.gbasis[i]
+            for sym, prims in bs:
+                for power in sym2powerlist[sym]:
+                    bf = CGBF(atom.pos(), power)
+                    for expnt, coef in prims:
+                        bf.add_primitive(expnt, coef)
+                    bf.normalize()
+                    bfs.append(bf)
+        return bfs
+        
+        
+    # Small wrapper PyQuante & pyquante2 function that evaluates basis function on a given point
+    # Used in both `wavefunction` and `electrondensity`
+    def pyamp(bfs, bs, x, y, z):
+        return bfs[bs].amp(x, y, z)
+
+
+
+_found_pyquante2 = find_package("pyquante2")
+if _found_pyquante2:
+    from pyquante2 import cgbf
+    
+    def getbfs(ccdata):
+        pymol = cclib2pyquante.makepyquante(ccdata)
+        
+        bfs = []
+        for i, atom in enumerate(pymol): # `atom` is instance of pyquante2.geo.atom.atom class.
+            basis = ccdata.gbasis[i] # `basis` is basis coefficients stored in ccData.
+            for sym, primitives in basis:
+                for power in sym2powerlist[sym]: # `sym` is S, P, D, F and is used as key here.
+                    exponentlist = []
+                    coefficientlist = []
+                    
+                    for exponents, coefficients in primitives:
+                        exponentlist.append(exponents)
+                        coefficientlist.append(coefficients)
+                    
+                    basisfunction = cgbf(atom.atuple()[1:4], powers = power, exps=exponentlist, coefs=coefficientlist)
+                    basisfunction.normalize()
+                    bfs.append(basisfunction)
+                    
+        return bfs
+    
+    
+    # Small wrapper PyQuante & pyquante2 function that evaluates basis function on a given point
+    # Used in both `wavefunction` and `electrondensity`
+    def pyamp(bfs, bs, x, y, z):
+        return bfs[bs](x, y, z) # 1D numpy array with size 1 is returned from __call__ here.
+
 
 _found_pyvtk = find_package("pyvtk")
 if _found_pyvtk:
     from pyvtk import *
     from pyvtk.DataSetAttr import *
 
+def _check_pyquante():
+    if (not _found_pyquante) and (not _found_pyquante2):
+        raise ImportError("You must install `pyquante2` or `PyQuante` to use this function.")
 
 def _check_pyvtk(found_pyvtk):
     if not found_pyvtk:
-        raise ImportError("You must install `pyvtk` to use this function")
+        raise ImportError("You must install `pyvtk` to use this function.")
+
+_check_pyquante()
 
 class Volume(object):
     """Represent a volume in space.
@@ -135,44 +204,6 @@ def scinotation(num):
     return ("%sE%s%s" % (broken[0], sign, broken[1][-2:])).rjust(12)
 
 
-def getbfs(ccdata):
-    """Convenience function for both wavefunction and density based on PyQuante Ints.py.
-    
-    Input:
-        ccdata -- ccData object
-        
-    Output:
-        bfs -- list of PyQuante CGBF objects
-    """
-    pymol = cclib2pyquante.makepyquante(ccdata)
-
-    sym2powerlist = {
-        'S' : [(0, 0, 0)],
-        'P' : [(1, 0, 0), (0, 1, 0), (0, 0, 1)],
-        'D' : [(2, 0, 0), (0, 2, 0), (0, 0, 2), (1, 1, 0), (0, 1, 1), (1, 0, 1)],
-        'F' : [(3, 0, 0), (2, 1, 0), (2, 0, 1), (1, 2, 0), (1, 1, 1), (1, 0, 2),
-               (0, 3, 0), (0, 2, 1), (0, 1, 2), (0, 0, 3)]
-        }
-
-    bfs = []
-    
-    #PyQuante
-    if _found_pyquante:
-        for i, atom in enumerate(pymol):
-            bs = ccdata.gbasis[i]
-            for sym, prims in bs:
-                for power in sym2powerlist[sym]:
-                    bf = CGBF(atom.pos(), power)
-                    for expnt, coef in prims:
-                        bf.add_primitive(expnt, coef)
-                    bf.normalize()
-                    bfs.append(bf)
-
-    #Add pyquante2 code in subsequent PR
-
-    return bfs
-
-
 def wavefunction(ccdata, volume, mocoeffs):
     """Calculate the magnitude of the wavefunction at every point in a volume.
     
@@ -194,24 +225,21 @@ def wavefunction(ccdata, volume, mocoeffs):
     y = numpy.arange(wavefn.origin[1], wavefn.topcorner[1] + wavefn.spacing[1], wavefn.spacing[1]) / conversion
     z = numpy.arange(wavefn.origin[2], wavefn.topcorner[2] + wavefn.spacing[2], wavefn.spacing[2]) / conversion
 
-    #PyQuante
-    if _found_pyquante:
-        for bs in range(len(bfs)):
-            data = numpy.zeros(wavefn.data.shape, "d")
-            for i, xval in enumerate(x):
-                for j, yval in enumerate(y):
-                    for k, zval in enumerate(z):
-                        data[i, j, k] = bfs[bs].amp(xval, yval, zval)
-            data *= mocoeffs[bs]
-            wavefn.data += data
-
-    #Add pyquante2 code in subsequent PR
+    # PyQuante & pyquante2
+    for bs in range(len(bfs)):
+        data = numpy.zeros(wavefn.data.shape, "d")
+        for i, xval in enumerate(x):
+            for j, yval in enumerate(y):
+                for k, zval in enumerate(z):
+                    data[i, j, k] = pyamp(bfs, bs, xval, yval, zval)
+        data *= mocoeffs[bs]
+        wavefn.data += data
 
     return wavefn
 
 
-def electrondensity(ccdata, volume, mocoeffslist):
-    """Calculate the magnitude of the electron density at every point in a volume.
+def electrondensity_spin(ccdata, volume, mocoeffslist):
+    """Calculate the magnitude of the electron density at every point in a volume for either up or down spin
 
     Inputs:
         ccdata -- ccData object
@@ -228,9 +256,10 @@ def electrondensity(ccdata, volume, mocoeffslist):
         gbasis -- gbasis from a parser object
         volume -- a template Volume object (will not be altered)
 
-    Note: mocoeffs is a list of NumPy arrays. The list will be of length 1
-          for restricted calculations, and length 2 for unrestricted.
+    Note: mocoeffs is a list of NumPy arrays. The list will be of length 1.
     """
+    assert len(mocoeffslist) == 1, "mocoeffslist input to the function should have length of 1."
+    
     bfs = getbfs(ccdata)
 
     density = copy.copy(volume)
@@ -253,17 +282,43 @@ def electrondensity(ccdata, volume, mocoeffslist):
                     for j, yval in enumerate(y):
                         tmp = []
                         for zval in z:
-                            tmp.append(bfs[bs].amp(xval, yval, zval))
+                            tmp.append(pyamp(bfs, bs, xval, yval, zval))
                         data[i, j, :] = tmp
                 data *= mocoeff[bs]
                 wavefn += data
             density.data += wavefn ** 2
 
-    # TODO ROHF
-    if len(mocoeffslist) == 1:
-        density.data *= 2.0
-
     return density
 
+def electrondensity(ccdata, volume, mocoeffslist):
+    """Calculate the magnitude of the total electron density at every point in a volume.
 
+    Inputs:
+        ccdata -- ccData object
+        volume -- Volume object (will not be altered)
+        mocoeffslist -- list of molecular orbital to calculate electron density from;
+                        i.e. [ccdata.mocoeffs[0][1:2]]
+    
+    Output:
+        Volume object with wavefunction at each grid point stored in data attribute
+
+    Attributes:
+        coords -- the coordinates of the atoms
+        mocoeffs -- mocoeffs for all of the occupied eigenvalues
+        gbasis -- gbasis from a parser object
+        volume -- a template Volume object (will not be altered)
+
+    Note: mocoeffs is a list of NumPy arrays. The list will be of length 1
+          for restricted calculations, and length 2 for unrestricted.
+    """
+
+    if len(mocoeffslist) == 2:
+        return electrondensity_spin(ccdata, volume, [mocoeffslist[0]]) + electrondensity_spin(ccdata, volume, [mocoeffslist[1]])
+    else:
+        edens = electrondensity_spin(ccdata, volume, [mocoeffslist[0]])
+        edens.data *= 2
+        return edens
+    
 del find_package
+
+    
