@@ -277,6 +277,14 @@ class Gaussian(logfileparser.Logfile):
             natom = int(re.search(r'NAtoms=\s*(\d+)', line).group(1))
             self.set_attribute('natom', natom)
 
+            # Necessary for `if line.strip().split()[0:3] == ["Atom", "AN", "X"]:` block
+            if not hasattr(self, 'nqmf'):
+                match = re.search('NQMF=\s*(\d+)', line)
+                if match is not None:
+                    nqmf = int(match.group(1))
+                    if nqmf > 0:
+                        self.set_attribute('nqmf', nqmf)
+
         # Basis set name
         if line[1:15] == "Standard basis":
             self.metadata["basis_set"] = line.split()[2]
@@ -1292,7 +1300,9 @@ class Gaussian(logfileparser.Logfile):
                     if not hasattr(self, 'vibdisps'):
                         self.vibdisps = []
                     disps = []
-                    for n in range(self.natom):
+                    if not hasattr(self, 'nqmf'):
+                        self.set_attribute('nqmf', self.natom)
+                    for n in range(self.nqmf):
                         line = next(inputfile)
                         numbers = [float(s) for s in line[10:].split()]
                         N = len(numbers) // 3
