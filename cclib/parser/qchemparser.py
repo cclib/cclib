@@ -11,6 +11,7 @@ from __future__ import division
 from __future__ import print_function
 
 import itertools
+import math
 import re
 
 import numpy
@@ -979,6 +980,11 @@ cannot be determined. Rerun without `$molecule read`."""
                 if not has_triples:
                     ccsdenergy = utils.convertor(ccsdenergy, 'hartree', 'eV')
                     self.ccenergies.append(ccsdenergy)
+
+            if line[:11] == " CCSD  T1^2":
+                t1_squared = float(line.split()[3])
+                t1_norm = math.sqrt(t1_squared)
+                self.metadata["t1_diagnostic"] = t1_norm / math.sqrt(2 * (self.nalpha + self.nbeta))
 
             # Electronic transitions. Works for both CIS and TDDFT.
             if 'Excitation Energies' in line:
