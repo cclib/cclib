@@ -306,6 +306,16 @@ Notes
 * The atom coordinates in molecules and fragments must be the same, which is usually accomplished with an argument in the QM program (the NoSymm keyword in Gaussian, for instance).
 * The current implementation has some subtle differences than the code from the Frenking group. The CDA class in cclib follows the formula outlined in one of Frenking's CDA papers, but contains an extra factor of 2 to give results that agree with those from the original CDA program. It also doesn't include negligible terms (on the order of 10^-6) that result from overlap between MOs on the same fragment that appears to be included in the Frenking code. Contact atenderholt (at) gmail (dot) com for discussion and more information.
 
+.. index::
+    single: methods; Accessing additional methods through bridge
+    
+Accessing additional methods through bridge
+----------------
+
+Some other population analyses methods including Hirshfeld partial charges and Iterative Stockholder charges can be calculated using bridge functions implemented in cclib. For more information, refer to `bridge`_ section of the documentation.
+
+.. _`bridge`: bridge.html
+
 ..
    Electron Density Calculation
    ----------------------------
