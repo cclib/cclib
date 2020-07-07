@@ -80,7 +80,58 @@ def makehorton(data):
             attributes["npa_charges"] = data.atomcharges["natural"]
 
     elif hortonver == 3:
-        pass  # Populate with bridge for horton 3 in later PR
+        # In horton 3 IOData, inputs are type-checked -- thus the bridge also verifies the types.
+        # if coordinates are known; numpy.ndarray (size natom-by-3)
+        if hasattr(data, "atomcoords"):
+            attributes["atcoords"] = numpy.asanyarray(data.atomcoords)[-1]
+        # if atomic numbers are known; numpy.ndarray (size natom)
+        if hasattr(data, "atomnos"):
+            attributes["atnums"] = numpy.asanyarray(data.atomnos)
+        # if orbital coefficients known; iodata.orbitals.MolecularOrbitals
+        if hasattr(data, "mocoeffs"):
+            # First build a dictionary of inputs that will be passed to the constructor of
+            # horton3's MolecularOrbitals object.
+            moattr = {
+                "kind": "restricted",
+                "norba": data.nbasis,
+                "norbb": None,
+                # In horton 3, occupation in MOs are represented as 1's (occupied) and
+                # 0's (unoccupied). Beta orbitals follow directly after alpha orbitals, forming
+                # 1D array.
+                "occs": numpy.concatenate(
+                    numpy.ones(data.homos[0]), numpy.zeros(data.nbasis - data.homos[0])
+                ),
+                "coeffs": data.mocoeffs[0],
+                "energies": None,
+                "irreps": None,
+            }
+            # and if unrestricted:
+            if len(mocoeffs) == 2:
+                moattr["kind"] = "unrestricted"
+                moattr["norbb"] = data.nbasis
+                moattr["coeffs"].append(data.mocoeffs[1].T)
+                moattr["occs"].append(
+                    numpy.concatenate(
+                        numpy.ones(data.homos[1]),
+                        numpy.zeros(data.nbasis - data.homos[1]),
+                    )
+                )
+            # Then construct MolecularOrbitals object
+            attributes["mo"] = MolecularOrbitals(**moattr)
+        # if multiplicity known; float / should not be set when mocoeffs present
+        # Refer to IOData code:
+        # https://github.com/theochem/iodata/blob/b36513d162f99b57264005583701c6987037839c/iodata/iodata.py#L174
+        if (
+            hasattr(data, "mult")
+            and not hasattr(data, "mocoeffs")
+        ):
+            attributes["spinpol"] = data.mult - 1  # horton has 2S+1, iodata has 2S
+        # if pseudopotentials exist; numpy.ndarray (size natom)
+        if hasattr(data, "coreelectrons"):
+            attributes["atcorenums"] = data.atomnos - numpy.asanyarray(data.coreelectrons)
+        # if mulliken charges are known; dict of numpy.ndarrays (size natom)
+        if hasattr(data, "atomcharges"):
+            attributes["atcharges"] = data.atomcharges
 
     return IOData(**attributes)  # Pass collected attributes into IOData constructor
 
@@ -137,17 +188,18 @@ def makecclib(iodat):
             attributes["mocoeffs"] = [iodat.mo.coeffs[: iodat.mo.norba].T]
             if iodat.mo.kind == "unrestricted":
                 attributes["mocoeffs"].append(iodat.mo.coeffs[iodat.mo.norba :].T)
-        if hasattr(iodat, "spinpol"):
+        if hasattr(iodat, "spinpol") and isinstance(iodat.spinpol, int):
             # IOData stores 2S, ccData stores 2S+1.
             attributes["mult"] = iodat.spinpol + 1
         if hasattr(iodat, "atnums"):
+            attributes["atnums"] = numpy.asanyarray(iodat.atnums)
+        if hasattr(iodat, "atcorenums") and isinstance(iodat.atnums, numpy.ndarray):
             # cclib stores num of electrons screened out by pseudopotential
             # horton stores num of electrons after applying pseudopotential
-            attributes["atnums"] = numpy.asanyarray(iodat.atnums)
-        if hasattr(iodat, "atcorenums"):
             attributes["coreelectrons"] = numpy.asanyarray(iodat.atnums) - numpy.asanyarray(
                 iodat.atcorenums
             )
         if hasattr(iodat, "atcharges"):
             attributes["atomcharges"] = iodat.atcharges
+
     return ccData(attributes)
