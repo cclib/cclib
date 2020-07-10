@@ -102,9 +102,9 @@ class Gaussian(logfileparser.Logfile):
 
     def after_parsing(self):
         # atomcoords are parsed as a list of lists but it should be an array
-        if hasattr(self, "atomcoords"):	
+        if hasattr(self, "atomcoords"):
             self.atomcoords = numpy.array(self.atomcoords)
-        
+
         # Correct the percent values in the etsecs in the case of
         # a restricted calculation. The following has the
         # effect of including each transition twice.
@@ -115,10 +115,10 @@ class Gaussian(logfileparser.Logfile):
 
         if hasattr(self, "scanenergies"):
             self.scancoords = []
-            if hasattr(self, 'optstatus') and hasattr(self, 'atomcoords'):	
-                converged_indexes = [x for x, y in enumerate(self.optstatus) if y & data.ccData.OPT_DONE > 0]	
-                self.scancoords = self.atomcoords[converged_indexes,:,:]	
-            elif hasattr(self, 'atomcoords'):	
+            if hasattr(self, 'optstatus') and hasattr(self, 'atomcoords'):
+                converged_indexes = [x for x, y in enumerate(self.optstatus) if y & data.ccData.OPT_DONE > 0]
+                self.scancoords = self.atomcoords[converged_indexes,:,:]
+            elif hasattr(self, 'atomcoords'):
                 self.scancoords = self.atomcoords
 
         if (hasattr(self, 'enthalpy') and hasattr(self, 'temperature')
@@ -288,12 +288,12 @@ class Gaussian(logfileparser.Logfile):
             natom = int(re.search(r'NAtoms=\s*(\d+)', line).group(1))
             self.set_attribute('natom', natom)
 
-            # Necessary for `if line.strip().split()[0:3] == ["Atom", "AN", "X"]:` block	
-            if not hasattr(self, 'nqmf'):	
-                match = re.search('NQMF=\s*(\d+)', line)	
-                if match is not None:	
-                    nqmf = int(match.group(1))	
-                    if nqmf > 0:	
+            # Necessary for `if line.strip().split()[0:3] == ["Atom", "AN", "X"]:` block
+            if not hasattr(self, 'nqmf'):
+                match = re.search('NQMF=\s*(\d+)', line)
+                if match is not None:
+                    nqmf = int(match.group(1))
+                    if nqmf > 0:
                         self.set_attribute('nqmf', nqmf)
 
         # Basis set name
@@ -999,120 +999,120 @@ class Gaussian(logfileparser.Logfile):
                 line = next(inputfile)
             self.grads.append(forces)
 
-        if "Number of optimizations in scan" in line:	       
-            self.scan_length = int(line.split()[-1])	   
+        if "Number of optimizations in scan" in line:
+            self.scan_length = int(line.split()[-1])
 
-        # All PES scans have a list of initial parameters from which we	 
-        # can get the names and more.	     
+        # All PES scans have a list of initial parameters from which we
+        # can get the names and more.
         #
-        #                            ----------------------------	     
-        #                           !    Initial Parameters    !	        
-        #                           ! (Angstroms and Degrees)  !	       
-        # --------------------------                            --------------------------	      
-        # ! Name  Definition              Value          Derivative Info.                !	      
-        # --------------------------------------------------------------------------------	       
-        # ! R1    R(1,2)                  1.4212         estimate D2E/DX2                !	      
-        # ! R2    R(1,14)                 1.4976         estimate D2E/DX2                !	    
-        # ...	    
-        if "Initial Parameters" in line:	 
-            self.scannames_all = []	
-            self.scannames_scanned = []	
-            self.skip_lines(inputfile, ['units', 'd', 'header', 'd'])	
-            line = next(inputfile)	
-            while line.strip()[0] == '!':	
-                name = line.split()[1]	
-                definition = line.split()[2]	
-                self.scannames_all.append(name)	
-                if line.split()[4] == 'Scan':	
-                    self.scannames_scanned.append(name)	
-                    self.append_attribute('scannames', definition)	
-                line = next(inputfile)	
+        #                            ----------------------------
+        #                           !    Initial Parameters    !
+        #                           ! (Angstroms and Degrees)  !
+        # --------------------------                            --------------------------    
+        # ! Name  Definition              Value          Derivative Info.                !  
+        # --------------------------------------------------------------------------------   
+        # ! R1    R(1,2)                  1.4212         estimate D2E/DX2                !
+        # ! R2    R(1,14)                 1.4976         estimate D2E/DX2                !
+        # ...
+        if "Initial Parameters" in line:
+            self.scannames_all = []
+            self.scannames_scanned = []
+            self.skip_lines(inputfile, ['units', 'd', 'header', 'd'])
+            line = next(inputfile)
+            while line.strip()[0] == '!':
+                name = line.split()[1]
+                definition = line.split()[2]
+                self.scannames_all.append(name)
+                if line.split()[4] == 'Scan':
+                    self.scannames_scanned.append(name)
+                    self.append_attribute('scannames', definition)
+                line = next(inputfile)
 
-        # Extract unrelaxed PES scan data, which looks something like:	
-        #	
-        # Summary of the potential surface scan:	
-        #   N       A          SCF	
-        # ----  ---------  -----------	
-        #    1   109.0000    -76.43373	
-        #    2   119.0000    -76.43011	
-        #    3   129.0000    -76.42311	
-        #    4   139.0000    -76.41398	
-        #    5   149.0000    -76.40420	
-        #    6   159.0000    -76.39541	
-        #    7   169.0000    -76.38916	
-        #    8   179.0000    -76.38664	
-        #    9   189.0000    -76.38833	
-        #   10   199.0000    -76.39391	
-        #   11   209.0000    -76.40231	
+        # Extract unrelaxed PES scan data, which looks something like:
+        #
+        # Summary of the potential surface scan:
+        #   N       A          SCF
+        # ----  ---------  -----------
+        #    1   109.0000    -76.43373
+        #    2   119.0000    -76.43011
+        #    3   129.0000    -76.42311
+        #    4   139.0000    -76.41398
+        #    5   149.0000    -76.40420
+        #    6   159.0000    -76.39541
+        #    7   169.0000    -76.38916
+        #    8   179.0000    -76.38664
+        #    9   189.0000    -76.38833
+        #   10   199.0000    -76.39391
+        #   11   209.0000    -76.40231
         # ----  ---------  -----------
         if "Summary of the potential surface scan:" in line:
 
             colmnames = next(inputfile)
-            if not hasattr(self, "scannames"):	
-                self.set_attribute("scannames", colmnames.split()[1:-1])	
+            if not hasattr(self, "scannames"):
+                self.set_attribute("scannames", colmnames.split()[1:-1])
 
             hyphens = next(inputfile)
             line = next(inputfile)
             scanparm = [[] for _ in range(len(self.scannames))]
             while line != hyphens:
                 broken = line.split()
-                self.append_attribute('scanenergies', (utils.convertor(float(broken[-1]), "hartree", "eV")))	                
-                for idx,p in enumerate(broken[1:-1]):	                
-                    scanparm[idx].append(float(p))	
-                #self.append_attribute('scanparm', [float(p) for p in broken[1:-1]])	
-                line = next(inputfile)	
-            self.set_attribute('scanparm', scanparm)	
+                self.append_attribute('scanenergies', (utils.convertor(float(broken[-1]), "hartree", "eV")))        
+                for idx,p in enumerate(broken[1:-1]):   
+                    scanparm[idx].append(float(p))
+                #self.append_attribute('scanparm', [float(p) for p in broken[1:-1]])
+                line = next(inputfile)
+            self.set_attribute('scanparm', scanparm)
 
-        # Extract relaxed (optimized) PES scan data, for which the form	
-        # of the output is transposed:	
-        #	
-        #  Summary of Optimized Potential Surface Scan (add -382.0 to energies):	
-        #                            1         2         3         4         5	
-        #      Eigenvalues --    -0.30827  -0.30695  -0.30265  -0.29955  -0.30260	
-        #            R1           1.42115   1.42152   1.42162   1.42070   1.42071	
-        #            R2           1.49761   1.49787   1.49855   1.49901   1.49858	
-        #            R3           1.42245   1.42185   1.42062   1.42048   1.42147	
-        #            R4           1.40217   1.40236   1.40306   1.40441   1.40412	
-        # ...	
-        if "Summary of Optimized Potential Surface Scan" in line:	
-            # The base energy separation is version dependent, and first	
-            # appears in Gaussian16.	
-            base_energy = 0.0	
-            if "add" in line and "to energies" in line:	
-                base_energy = float(line.split()[-3])	
+        # Extract relaxed (optimized) PES scan data, for which the form
+        # of the output is transposed:
+        #
+        #  Summary of Optimized Potential Surface Scan (add -382.0 to energies):
+        #                            1         2         3         4         5
+        #      Eigenvalues --    -0.30827  -0.30695  -0.30265  -0.29955  -0.30260
+        #            R1           1.42115   1.42152   1.42162   1.42070   1.42071
+        #            R2           1.49761   1.49787   1.49855   1.49901   1.49858
+        #            R3           1.42245   1.42185   1.42062   1.42048   1.42147
+        #            R4           1.40217   1.40236   1.40306   1.40441   1.40412
+        # ...
+        if "Summary of Optimized Potential Surface Scan" in line:
+            # The base energy separation is version dependent, and first
+            # appears in Gaussian16.
+            base_energy = 0.0
+            if "add" in line and "to energies" in line:
+                base_energy = float(line.split()[-3])
 
-            scanenergies = []	
-            scanparm = [[] for _ in range(len(self.scannames))]	
-            while len(scanenergies) != self.scan_length:	
-                line = next(inputfile)	
-                indices = [int(i) for i in line.split()]           	
-                widths = [10]*len(indices)	
-                splitter = utils.WidthSplitter(widths)	
+            scanenergies = []
+            scanparm = [[] for _ in range(len(self.scannames))]
+            while len(scanenergies) != self.scan_length:
+                line = next(inputfile)
+                indices = [int(i) for i in line.split()]  	
+                widths = [10]*len(indices)
+                splitter = utils.WidthSplitter(widths)
 
                 line = next(inputfile)
-                eigenvalues_in_line = line[21:].rstrip()	          
-                assert len(eigenvalues_in_line) == sum(widths)	                
-                cols = list(splitter.split(eigenvalues_in_line))	                
-                try:	       
-                    eigenvalues = [float(e) for e in cols]	               
-                    eigenvalues = [base_energy + e for e in eigenvalues]	               
-                except ValueError:	         
-                    eigenvalues = [numpy.nan for _ in cols]	             
-                assert len(eigenvalues) == len(indices)	
-                eigenvalues = [utils.convertor(e, "hartree", "eV") for e in eigenvalues]	
-                scanenergies.extend(eigenvalues)	
+                eigenvalues_in_line = line[21:].rstrip()     
+                assert len(eigenvalues_in_line) == sum(widths)             
+                cols = list(splitter.split(eigenvalues_in_line))             
+                try:    
+                    eigenvalues = [float(e) for e in cols]       
+                    eigenvalues = [base_energy + e for e in eigenvalues]             
+                except ValueError:      
+                    eigenvalues = [numpy.nan for _ in cols]      
+                assert len(eigenvalues) == len(indices)
+                eigenvalues = [utils.convertor(e, "hartree", "eV") for e in eigenvalues]
+                scanenergies.extend(eigenvalues)
 
-                for _, name in enumerate(self.scannames_all):	
-                    line = next(inputfile)	
-                    assert line.split()[0] == name	
-                    if name in self.scannames_scanned:	
-                        iname = self.scannames_scanned.index(name)	
-                        params_in_line = line[21:].rstrip()	
-                        assert len(params_in_line) == sum(widths)	
-                        params = [float(v) for v in splitter.split(params_in_line)]	
-                        scanparm[iname].extend(params)	
+                for _, name in enumerate(self.scannames_all):
+                    line = next(inputfile)
+                    assert line.split()[0] == name
+                    if name in self.scannames_scanned:
+                        iname = self.scannames_scanned.index(name)
+                        params_in_line = line[21:].rstrip()
+                        assert len(params_in_line) == sum(widths)
+                        params = [float(v) for v in splitter.split(params_in_line)]
+                        scanparm[iname].extend(params)
 
-            self.set_attribute('scanenergies', scanenergies)	
+            self.set_attribute('scanenergies', scanenergies)
             self.set_attribute('scanparm', scanparm)
 
         # Orbital symmetries.
@@ -1186,13 +1186,12 @@ class Gaussian(logfileparser.Logfile):
 
             self.updateprogress(inputfile, "Eigenvalues", self.fupdate)
             self.moenergies = [[]]
-            HOMO = -2 
+            HOMO = -2
 
             while line.find('Alpha') == 1:
-
                 if line.split()[1] == "virt." and HOMO == -2:
 
-                    # if there aren't any symmetries, this is a good way to find the HOMO
+                    # If there aren't any symmetries, this is a good way to find the HOMO
                     HOMO = len(self.moenergies[0])
                     self.homos = [HOMO]
                     # the LUMO is the orbital above the HOMO
@@ -1210,21 +1209,21 @@ class Gaussian(logfileparser.Logfile):
                     except ValueError:
                         x = numpy.nan
                     self.moenergies[0].append(utils.convertor(x, "hartree", "eV"))
-                    i += 1 
+                    i += 1
                 line = next(inputfile)
 
-            # If, at this point, self.homo is unset, then there were not 
+            # If, at this point, self.homos is unset, then there were not
             # any alpha virtual orbitals
             if not hasattr(self, "homos"):
                 HOMO = len(self.moenergies[0])
                 self.homos = [HOMO]
-          
-            if line.find('Beta') == 2: 
+
+            if line.find('Beta') == 2:
                 self.moenergies.append([])
 
             HOMO = -2
             while line.find('Beta') == 2:
-                if line.split()[1] == "virt." and HOMO == -2: 
+                if line.split()[1] == "virt." and HOMO == -2:
 
                     # If there aren't any symmetries, this is a good way to find the HOMO.
                     # Also, check for consistency if homos was already parsed.

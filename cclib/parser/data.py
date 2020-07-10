@@ -188,7 +188,7 @@ class ccData:
        "vibrmasses":       Attribute(numpy.ndarray,    'reduced masses',              'vibrations'),
        "vibsyms":          Attribute(list,             'vibration symmetry',          'vibrations'),
        "zpve":             Attribute(float,            'zero-point correction',       'properties:energies')
-    }   
+    }
 
     # The name of all attributes can be generated from the dictionary above.
     _attrlist = sorted(_attributes.keys())
