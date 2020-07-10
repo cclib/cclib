@@ -70,7 +70,7 @@ class ccData:
         mult -- multiplicity of the system (integer)
         natom -- number of atoms (integer)
         nbasis -- number of basis functions (integer)
-        natom -- number of hydrogens (integer)
+        nhydrogen -- number of hydrogens (integer)
         nmo -- number of molecular orbitals (integer)
         nocoeffs -- natural orbital coefficients (array[2])
         nooccnos -- natural orbital occupation numbers (array[1])
