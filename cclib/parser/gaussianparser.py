@@ -1056,7 +1056,7 @@ class Gaussian(logfileparser.Logfile):
             scanparm = [[] for _ in range(len(self.scannames))]
             while line != hyphens:
                 broken = line.split()
-                self.append_attribute('scanenergies', (utils.convertor(float(broken[-1]), "hartree", "eV")))     
+                self.append_attribute('scanenergies', (utils.convertor(float(broken[-1]), "hartree", "eV")))
                 for idx,p in enumerate(broken[1:-1]):
                     scanparm[idx].append(float(p))
                 #self.append_attribute('scanparm', [float(p) for p in broken[1:-1]])
@@ -1085,13 +1085,13 @@ class Gaussian(logfileparser.Logfile):
             scanparm = [[] for _ in range(len(self.scannames))]
             while len(scanenergies) != self.scan_length:
                 line = next(inputfile)
-                indices = [int(i) for i in line.split()]
+                indices = [int(i) for i in line.split()]           
                 widths = [10]*len(indices)
                 splitter = utils.WidthSplitter(widths)
 
                 line = next(inputfile)
                 eigenvalues_in_line = line[21:].rstrip()
-                assert len(eigenvalues_in_line) == sum(widths) 
+                assert len(eigenvalues_in_line) == sum(widths)
                 cols = list(splitter.split(eigenvalues_in_line))
                 try:
                     eigenvalues = [float(e) for e in cols]
@@ -1257,7 +1257,7 @@ class Gaussian(logfileparser.Logfile):
 
             if hasattr(self, "lumos") and hasattr(self, "moenergies"):
                 self.lumoenergies = find_mo_energy(self.lumos,self.moenergies)
-            
+
         # Start of the IR/Raman frequency section.
         # Caution is advised here, as additional frequency blocks
         #   can be printed by Gaussian (with slightly different formats),
@@ -1932,7 +1932,7 @@ class Gaussian(logfileparser.Logfile):
         # ...
         #
         # APT and Lowdin charges are also displayed in this way
-        if hasattr(self, "natom") and hasattr(self, "nhydrogen"): # these are required to iterate over the correct number of lines
+        if hasattr(self, "natom") and hasattr(self, "nhydrogen"):
             if line[1:25] == "Mulliken atomic charges:" or line[1:18] == "Mulliken charges:" or \
             line[1:57] == "Mulliken charges with hydrogens summed into heavy atoms:" or \
             line[1:23] == "Lowdin Atomic Charges:" or line[1:16] == "Lowdin charges:" or \
@@ -1942,8 +1942,8 @@ class Gaussian(logfileparser.Logfile):
             line[1:37] == "Mulliken charges and spin densities:" or \
             line[1:32] == "Mulliken atomic spin densities:":
 
-                has_spin = 'spin densities' in line 
-                has_charges = 'charges' in line 
+                has_spin = 'spin densities' in line
+                has_charges = 'charges' in line
 
                 if has_charges and not hasattr(self, "atomcharges"):
                     self.atomcharges = {}
@@ -1965,7 +1965,7 @@ class Gaussian(logfileparser.Logfile):
                     n = self.natom
 
                 # iterate over each line and append values to a list based on what property we have
-                for i in range (0,n): 
+                for i in range (0,n):
                     if has_charges:
                         charges.append(float(nline.split()[2]))
                     if has_spin and has_charges:
@@ -1984,7 +1984,7 @@ class Gaussian(logfileparser.Logfile):
                             self.atomcharges["mulliken"] = charges
                     elif has_spin:
                         self.atomspins["mulliken_spins"] = spins
-            
+
                 elif "Lowdin" in line:
                     if is_sum:
                         self.atomcharges["lowdin_sum"] = charges
@@ -2160,7 +2160,7 @@ class Gaussian(logfileparser.Logfile):
             self.chempot = []
             self.electrophilicity = []
             for i in range(0,len(self.homoenergies)):
-                homoenergies = self.homoenergies[i] 
+                homoenergies = self.homoenergies[i]
                 lumoenergies = self.lumoenergies[i]
                 hardness = (lumoenergies - homoenergies) / 2
                 softness = 1 / hardness
