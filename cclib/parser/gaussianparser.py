@@ -1008,9 +1008,9 @@ class Gaussian(logfileparser.Logfile):
         #                            ----------------------------
         #                           !    Initial Parameters    !
         #                           ! (Angstroms and Degrees)  !
-        # --------------------------                            --------------------------    
-        # ! Name  Definition              Value          Derivative Info.                !  
-        # --------------------------------------------------------------------------------   
+        # --------------------------                            --------------------------
+        # ! Name  Definition              Value          Derivative Info.                !
+        # --------------------------------------------------------------------------------
         # ! R1    R(1,2)                  1.4212         estimate D2E/DX2                !
         # ! R2    R(1,14)                 1.4976         estimate D2E/DX2                !
         # ...
@@ -1056,8 +1056,8 @@ class Gaussian(logfileparser.Logfile):
             scanparm = [[] for _ in range(len(self.scannames))]
             while line != hyphens:
                 broken = line.split()
-                self.append_attribute('scanenergies', (utils.convertor(float(broken[-1]), "hartree", "eV")))        
-                for idx,p in enumerate(broken[1:-1]):   
+                self.append_attribute('scanenergies', (utils.convertor(float(broken[-1]), "hartree", "eV")))     
+                for idx,p in enumerate(broken[1:-1]):
                     scanparm[idx].append(float(p))
                 #self.append_attribute('scanparm', [float(p) for p in broken[1:-1]])
                 line = next(inputfile)
@@ -1085,17 +1085,17 @@ class Gaussian(logfileparser.Logfile):
             scanparm = [[] for _ in range(len(self.scannames))]
             while len(scanenergies) != self.scan_length:
                 line = next(inputfile)
-                indices = [int(i) for i in line.split()]  	
+                indices = [int(i) for i in line.split()]
                 widths = [10]*len(indices)
                 splitter = utils.WidthSplitter(widths)
 
                 line = next(inputfile)
                 eigenvalues_in_line = line[21:].rstrip()
-                assert len(eigenvalues_in_line) == sum(widths)        
-                cols = list(splitter.split(eigenvalues_in_line))       
+                assert len(eigenvalues_in_line) == sum(widths) 
+                cols = list(splitter.split(eigenvalues_in_line))
                 try:
                     eigenvalues = [float(e) for e in cols]
-                    eigenvalues = [base_energy + e for e in eigenvalues]      
+                    eigenvalues = [base_energy + e for e in eigenvalues]
                 except ValueError:
                     eigenvalues = [numpy.nan for _ in cols]
                 assert len(eigenvalues) == len(indices)
