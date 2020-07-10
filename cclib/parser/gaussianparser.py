@@ -1090,14 +1090,14 @@ class Gaussian(logfileparser.Logfile):
                 splitter = utils.WidthSplitter(widths)
 
                 line = next(inputfile)
-                eigenvalues_in_line = line[21:].rstrip()     
-                assert len(eigenvalues_in_line) == sum(widths)             
-                cols = list(splitter.split(eigenvalues_in_line))             
-                try:    
-                    eigenvalues = [float(e) for e in cols]       
-                    eigenvalues = [base_energy + e for e in eigenvalues]             
-                except ValueError:      
-                    eigenvalues = [numpy.nan for _ in cols]      
+                eigenvalues_in_line = line[21:].rstrip()
+                assert len(eigenvalues_in_line) == sum(widths)        
+                cols = list(splitter.split(eigenvalues_in_line))       
+                try:
+                    eigenvalues = [float(e) for e in cols]
+                    eigenvalues = [base_energy + e for e in eigenvalues]      
+                except ValueError:
+                    eigenvalues = [numpy.nan for _ in cols]
                 assert len(eigenvalues) == len(indices)
                 eigenvalues = [utils.convertor(e, "hartree", "eV") for e in eigenvalues]
                 scanenergies.extend(eigenvalues)
@@ -1191,7 +1191,7 @@ class Gaussian(logfileparser.Logfile):
             while line.find('Alpha') == 1:
                 if line.split()[1] == "virt." and HOMO == -2:
 
-                    # If there aren't any symmetries, this is a good way to find the HOMO
+                    # If there aren't any symmetries, this is a good way to find the HOMO.
                     HOMO = len(self.moenergies[0])
                     self.homos = [HOMO]
                     # the LUMO is the orbital above the HOMO
