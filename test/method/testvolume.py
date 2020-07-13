@@ -43,8 +43,8 @@ class VolumeTest(unittest.TestCase):
         integral = wavefn.integrate()
         integral_square = wavefn.integrate_square()
 
-        self.assertTrue(abs(integral) < 1e-6) # not necessarily true for all wavefns
-        self.assertTrue(abs(integral_square - 1.00) < 1e-3) #   true for all wavefns
+        self.assertAlmostEqual(integral, 0, delta = 1e-6) # not necessarily true for all wavefns
+        self.assertAlmostEqual(integral_square, 1.00, delta = 1e-2) # true for all wavefns
         print(integral, integral_square)
 
     def test_density(self):
