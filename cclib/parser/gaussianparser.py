@@ -1918,57 +1918,46 @@ class Gaussian(logfileparser.Logfile):
         #     2  C    0.320624   0.000869
         #
         # APT and Lowdin charges are also displayed in this way
-        if hasattr(self, "natom") and hasattr(self, "nhydrogen"):
-            if line[1:25] == "Mulliken atomic charges:" or line[1:18] == "Mulliken charges:" or \
-            line[1:57] == "Mulliken charges with hydrogens summed into heavy atoms:" or \
-            line[1:32] == "Mulliken atomic spin densities:" or \
-            line[1:76] == "Mulliken charges and spin densities with hydrogens summed into heavy atoms:" or \
-            line[1:37] == "Mulliken charges and spin densities:" or \
-            line[1:23] == "Lowdin atomic charges:" or line[1:16] == "Lowdin charges:" or \
-            line[1:55] == "Lowdin charges with hydrogens summed into heavy atoms:" or \
-            line[1:30] == "Lowdin atomic spin densities:" or \
-            line[1:74] == "Lowdin charges and spin densities with hydrogens summed into heavy atoms:" or \
-            line[1:35] == "Lowdin charges and spin densities:" or \
-            line[1:20] == "APT atomic charges:" or line[1:13] == "APT charges:" or \
-            line[1:52] == "APT charges with hydrogens summed into heavy atoms:" or \
-            line[1:27] == "APT atomic spin densities:" or \
-            line[1:71] == "APT charges and spin densities with hydrogens summed into heavy atoms:" or \
-            line[1:32] == "APT charges and spin densities:":
+        def extract_charges_spins(prop,header):
+            phrases = [" atomic charges:"," charges:"," charges with hydrogens summed into heavy atoms:"," atomic spin densities:"," charges and spin densities with hydrogens summed into heavy atoms:"," charges and spin densities:"]
+            for phrase in phrases:
+                to_join = [prop,phrase]
+                if "".join(to_join) in line:
 
-                has_spin = 'spin densities' in line
-                has_charges = 'charges' in line
+                    has_spin = 'spin densities' in line
+                    has_charges = 'charges' in line
 
-                if has_charges and not hasattr(self, "atomcharges"):
-                    self.atomcharges = {}
+                    if has_charges and not hasattr(self, "atomcharges"):
+                        self.atomcharges = {}
 
-                if has_spin and not hasattr(self, "atomspins"):
-                    self.atomspins = {}
+                    if has_spin and not hasattr(self, "atomspins"):
+                        self.atomspins = {}
 
-                ones = next(inputfile)
+                    ones = next(inputfile)
 
-                charges = []
-                spins = []
-                nline = next(inputfile)
+                    charges = []
+                    spins = []
+                    nline = next(inputfile)
 
-                # calculate how many lines need iterating over based on whether property is summed or not
-                is_sum = 'summed' in line
-                if is_sum:
-                    n = self.natom - self.nhydrogen
-                else:
-                    n = self.natom
+                    # calculate how many lines need iterating over based on whether property is summed or not
+                    is_sum = 'summed' in line
+                    if is_sum:
+                        n = self.natom - self.nhydrogen
+                    else:
+                        n = self.natom
 
-                # iterate over each line and append values to a list based on what property we have
-                for i in range (0,n):
-                    if has_charges:
-                        charges.append(float(nline.split()[2]))
-                    if has_spin and has_charges:
-                        spins.append(float(nline.split()[3]))
-                    if has_spin and not has_charges:
-                        spins.append(float(nline.split()[2]))
-                    if not i == n-1:
-                        nline = next(inputfile)
+                    # iterate over each line and append values to a list based on what property we have
+                    for i in range (0,n):
+                        if has_charges:
+                            charges.append(float(nline.split()[2]))
+                        if has_spin and has_charges:
+                            spins.append(float(nline.split()[3]))
+                        if has_spin and not has_charges:
+                            spins.append(float(nline.split()[2]))
+                        if not i == n-1:
+                            nline = next(inputfile)
 
-                def extract_charges_spins(prop,header):
+                    # input extracted values into self.atomcharges
                     if prop in line:
                         if has_charges:
                             if is_sum:
@@ -1985,10 +1974,10 @@ class Gaussian(logfileparser.Logfile):
                                 title_list = [header,"_spin"]
                                 self.atomspins["".join(title_list)] = spins
 
-                # input extracted values into self.atomcharges
-                extract_charges_spins("Mulliken","mul")
-                extract_charges_spins("Lowdin","lowdin")
-                extract_charges_spins("APT","APT")
+        if hasattr(self, "natom") and hasattr(self, "nhydrogen"):
+            extract_charges_spins("Mulliken","mul")
+            extract_charges_spins("Lowdin","lowdin")
+            extract_charges_spins("APT","APT")
 
         if line.strip() == "Natural Population":
             if not hasattr(self, 'atomcharges'):
