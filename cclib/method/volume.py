@@ -221,9 +221,10 @@ def wavefunction(ccdata, volume, mocoeffs):
     wavefn.data = numpy.zeros(wavefn.data.shape, "d")
 
     conversion = convertor(1, "bohr", "Angstrom")
-    x = numpy.arange(wavefn.origin[0], wavefn.topcorner[0] + wavefn.spacing[0], wavefn.spacing[0]) / conversion
-    y = numpy.arange(wavefn.origin[1], wavefn.topcorner[1] + wavefn.spacing[1], wavefn.spacing[1]) / conversion
-    z = numpy.arange(wavefn.origin[2], wavefn.topcorner[2] + wavefn.spacing[2], wavefn.spacing[2]) / conversion
+    gridendpt = wavefn.topcorner + 0.5 * wavefn.spacing
+    x = numpy.arange(wavefn.origin[0], gridendpt[0], wavefn.spacing[0]) / conversion
+    y = numpy.arange(wavefn.origin[1], gridendpt[1], wavefn.spacing[1]) / conversion
+    z = numpy.arange(wavefn.origin[2], gridendpt[2], wavefn.spacing[2]) / conversion
 
     # PyQuante & pyquante2
     for bs in range(len(bfs)):
@@ -266,9 +267,10 @@ def electrondensity_spin(ccdata, volume, mocoeffslist):
     density.data = numpy.zeros(density.data.shape, "d")
 
     conversion = convertor(1, "bohr", "Angstrom")
-    x = numpy.arange(density.origin[0], density.topcorner[0] + density.spacing[0], density.spacing[0]) / conversion
-    y = numpy.arange(density.origin[1], density.topcorner[1] + density.spacing[1], density.spacing[1]) / conversion
-    z = numpy.arange(density.origin[2], density.topcorner[2] + density.spacing[2], density.spacing[2]) / conversion
+    gridendpt = density.topcorner + 0.5 * density.spacing
+    x = numpy.arange(density.origin[0], gridendpt[0], density.spacing[0]) / conversion
+    y = numpy.arange(density.origin[1], gridendpt[1], density.spacing[1]) / conversion
+    z = numpy.arange(density.origin[2], gridendpt[2], density.spacing[2]) / conversion
 
     # For occupied orbitals
     # `mocoeff` and `gbasis` in ccdata object is ordered in a way `homos` can specify which orbital
