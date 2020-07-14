@@ -1992,7 +1992,6 @@ class Gaussian(logfileparser.Logfile):
                         else:
                             self.atomspins["APT_spin"] = spins
 
-
         if line.strip() == "Natural Population":
             if not hasattr(self, 'atomcharges'):
                 self.atomcharges = {}
