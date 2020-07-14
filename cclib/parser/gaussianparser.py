@@ -1919,7 +1919,8 @@ class Gaussian(logfileparser.Logfile):
             line[1:13] == "APT charges:" or \
             line[1:52] == "APT charges with hydrogens summed into heavy atoms:" or \
             line[1:37] == "Mulliken charges and spin densities:" or \
-            line[1:32] == "Mulliken atomic spin densities:":
+            line[1:32] == "Mulliken atomic spin densities:"  or \
+            line[1:76] == "Mulliken charges and spin densities with hydrogens summed into heavy atoms:":
 
                 has_spin = 'spin densities' in line
                 has_charges = 'charges' in line
@@ -1958,24 +1959,38 @@ class Gaussian(logfileparser.Logfile):
                 if "Mulliken" in line:
                     if has_charges:
                         if is_sum:
-                            self.atomcharges["mulliken_sum"] = charges
+                            self.atomcharges["mul_charge_sum"] = charges
                         else:
-                            self.atomcharges["mulliken"] = charges
-                    elif has_spin:
-                        self.atomspins["mulliken_spins"] = spins
-
-                elif "Lowdin" in line:
-                    if is_sum:
-                        self.atomcharges["lowdin_sum"] = charges
-                    else:
-                        self.atomcharges["lowdin"] = charges
+                            self.atomcharges["mul_charge"] = charges
+                    if has_spin:
+                        if is_sum:
+                            self.atomspins["mul_spin_sum"] = spins
+                        else:
+                            self.atomspins["mul_spin"] = spins
+                        
+                if "Lowdin" in line:
+                    if has_charges:
+                        if is_sum:
+                            self.atomcharges["lowdin_charge_sum"] = charges
+                        else:
+                            self.atomcharges["lowdin_charge"] = charges
+                    if has_spin:
+                        if is_sum:
+                            self.atomspins["lowdin_spin_sum"] = spins
+                        else:
+                            self.atomspins["lowdin_spin"] = spins
 
                 if "APT" in line:
                     if has_charges:
                         if is_sum:
-                            self.atomcharges["APT_sum"] = charges
+                            self.atomcharges["APT_charge_sum"] = charges
                         else:
-                            self.atomcharges["APT"] = charges
+                            self.atomcharges["APT_charge"] = charges
+                    if has_spin:
+                        if is_sum:
+                            self.atomspins["APT_spin_sum"] = spins
+                        else:
+                            self.atomspins["APT_spin"] = spins
 
 
         if line.strip() == "Natural Population":
