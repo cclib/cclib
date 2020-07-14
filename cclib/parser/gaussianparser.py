@@ -1919,13 +1919,20 @@ class Gaussian(logfileparser.Logfile):
         #
         # APT and Lowdin charges are also displayed in this way
         def extract_charges_spins(prop,header):
-            phrases = [" atomic charges:"," charges:"," charges with hydrogens summed into heavy atoms:"," atomic spin densities:"," charges and spin densities with hydrogens summed into heavy atoms:"," charges and spin densities:"]
+            phrases = [" atomic charges:",
+            " Atomic Charges:",
+            " charges:",
+            " charges with hydrogens summed into heavy atoms:",
+            " atomic charges with hydrogens summed into heavy atoms:",
+            " atomic spin densities:",
+            " charges and spin densities with hydrogens summed into heavy atoms:",
+            " charges and spin densities:"]
             for phrase in phrases:
                 to_join = [prop,phrase]
                 if "".join(to_join) in line:
-
-                    has_spin = 'spin densities' in line
-                    has_charges = 'charges' in line
+        
+                    has_spin = 'spin' in line or 'Spin' in line
+                    has_charges = 'charges' in line or 'Charges' in line
 
                     if has_charges and not hasattr(self, "atomcharges"):
                         self.atomcharges = {}
@@ -1947,15 +1954,20 @@ class Gaussian(logfileparser.Logfile):
                         n = self.natom
 
                     # iterate over each line and append values to a list based on what property we have
-                    for i in range (0,n):
-                        if has_charges:
-                            charges.append(float(nline.split()[2]))
-                        if has_spin and has_charges:
-                            spins.append(float(nline.split()[3]))
-                        if has_spin and not has_charges:
-                            spins.append(float(nline.split()[2]))
-                        if not i == n-1:
+                    i = 0
+                    while i != n:
+                        if is_sum and nline.split()[1] == "H":  # some files included hydrogens in lists of summed charges with value 0.0, so these should not be recorded
                             nline = next(inputfile)
+                        else:
+                            if has_charges:
+                                charges.append(float(nline.split()[2]))
+                            if has_spin and has_charges:
+                                spins.append(float(nline.split()[3]))
+                            if has_spin and not has_charges:
+                                spins.append(float(nline.split()[2]))
+                            if not i == n-1: # make sure we don't move to the header line for another set of values
+                                nline = next(inputfile)
+                            i +=1
 
                     # input extracted values into self.atomcharges
                     if prop in line:
