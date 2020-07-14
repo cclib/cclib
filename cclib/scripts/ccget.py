@@ -91,7 +91,7 @@ def ccget():
 
     # Toggle full print behaviour for numpy arrays.
     if full:
-        numpy.set_printoptions(threshold=numpy.nan)
+        numpy.set_printoptions(threshold=numpy.inf)
 
     # We need at least one attribute and the filename, so two arguments, or
     # just one filename if we want to list attributes that can be extracted.
