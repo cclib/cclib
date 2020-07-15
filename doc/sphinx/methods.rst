@@ -307,6 +307,61 @@ Notes
 * The current implementation has some subtle differences than the code from the Frenking group. The CDA class in cclib follows the formula outlined in one of Frenking's CDA papers, but contains an extra factor of 2 to give results that agree with those from the original CDA program. It also doesn't include negligible terms (on the order of 10^-6) that result from overlap between MOs on the same fragment that appears to be included in the Frenking code. Contact atenderholt (at) gmail (dot) com for discussion and more information.
 
 .. index::
+    single: methods; Bader's QTAIM
+    
+Bader's QTAIM
+----------------
+
+Bader's QTAIM charges define the border between the atoms in the molecule as a surface where each point on the surface has zero flux. In other words, the points on the surface of the Bader spaces satisfy the equation :math:`\nabla \rho (r) \cdot n(r) = 0`. In cclib, numerical calculation of QTAIM charges through the algorithm proposed in `[Henkelman2006] <http://theory.cm.utexas.edu/henkelman/code/bader/download/henkelman06_354.pdf>`_  is implemented.
+
+Calculating the Bader's QTAIM charges in cclib follow similar steps as other population analysis methods. The following code provides an example of how QTAIM charges can be obtained.
+
+.. code-block:: python
+
+    from cclib.method import Bader
+    from cclib.method import Volume
+    from cclib.parser import ccopen
+    from cclib.progress import TextProgress
+    import logging
+
+    progress = TextProgress()
+    d = ccopen("mycalc.out", logging.ERROR).parse(progress)
+
+    # Inputs for Volume object below are origin, top corner, and spacing
+    # represented in Cartesian coordinates and in angstroms.
+    vol = Volume((-3, -3, -3), (3, 3, 3), (.1, .1, .1))
+
+    m = Bader(d, vol)
+    m.calculate()
+
+After the calculate() method is called, the following attributes are available:
+
+* ``fragresults``: a three dimensional array x, y, and z coordinates from the Volume object as the axes, so that ``fragresults[1][2][3]`` gives the Bader space (in integers starting from 1) that the grid space in (0, 1, 2) position belongs to.
+* ``matches``: a vector with the Bader space (integers starting from 1) that an atom is matched with.
+* ``fragcharges``: a vector with the number of (partial) electrons in each atom, so that ``fragcharges[2]`` gives the number of electrons in the 3rd atom.
+
+Since some computational chemistry packages support writing out charge densities as cube files during calculations, it is highly recommended to do so especially for larger systems.
+To calculate Bader charges from a cube file, a ``Volume`` object should be prepared by reading in a cube file and should be passed into a Bader object as shown below:
+
+.. code-block:: python
+
+    from cclib.method import volume
+    from cclib.method import Bader
+    from cclib.parser import ccopen
+    from cclib.progress import TextProgress
+    import logging
+    
+    progress = TextProgress()
+    d = ccopen("mycalc.out", logging.ERROR).parse(progress)
+
+    # Read in from cube file
+    vol = volume.read_from_cube("mycalc.cube")
+
+    m = Bader(d, vol)
+    m.calculate()
+
+
+.. index::
     single: methods; Accessing additional methods through bridge
     
 Accessing additional methods through bridge
