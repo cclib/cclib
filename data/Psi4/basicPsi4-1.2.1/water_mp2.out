@@ -22,11 +22,11 @@
     -----------------------------------------------------------------------
 
 
-    Psi4 started on: Friday, 24 August 2018 06:37PM
+    Psi4 started on: Wednesday, 15 July 2020 02:57PM
 
-    Process ID: 24324
-    Host:       gold
-    PSIDATADIR: /home/eric/opt/apps/python/psi4conda/share/psi4
+    Process ID: 959791
+    Host:       homesvr
+    PSIDATADIR: /home/minsikcho/anaconda3/envs/p4env/share/psi4
     Memory:     500.0 MiB
     Threads:    1
     
@@ -42,22 +42,30 @@ H 1 0.99 2 106.0
 
 set {
     basis sto-3g
+    print_basis true
+    print_mos true
+    cubeprop_tasks ['orbitals', 'density']
+    cubic_grid_spacing [0.5, 0.5, 0.5]
+    cubic_grid_overage [3, 1.5, 2.4]
 }
 
-energy('mp2')
+mp2_e, scf_wfn = energy('mp2', return_wfn=True)
+cubeprop(scf_wfn)
+
+
 --------------------------------------------------------------------------
     SCF Algorithm Type (re)set to DF.
 
-*** tstart() called on gold
-*** at Fri Aug 24 18:37:07 2018
+*** tstart() called on homesvr
+*** at Wed Jul 15 14:57:37 2020
 
    => Loading Basis Set <=
 
     Name: STO-3G
     Role: ORBITAL
     Keyword: BASIS
-    atoms 1   entry O          line    81 file /home/eric/opt/apps/python/psi4conda/share/psi4/basis/sto-3g.gbs 
-    atoms 2-3 entry H          line    19 file /home/eric/opt/apps/python/psi4conda/share/psi4/basis/sto-3g.gbs 
+    atoms 1   entry O          line    81 file /home/minsikcho/anaconda3/envs/p4env/share/psi4/basis/sto-3g.gbs 
+    atoms 2-3 entry H          line    19 file /home/minsikcho/anaconda3/envs/p4env/share/psi4/basis/sto-3g.gbs 
 
 
          ---------------------------------------------------------
@@ -119,8 +127,51 @@ energy('mp2')
     Name: (STO-3G AUX)
     Role: JKFIT
     Keyword: DF_BASIS_SCF
-    atoms 1   entry O          line   323 file /home/eric/opt/apps/python/psi4conda/share/psi4/basis/def2-svp-jkfit.gbs 
-    atoms 2-3 entry H          line    23 file /home/eric/opt/apps/python/psi4conda/share/psi4/basis/def2-svp-jkfit.gbs 
+    atoms 1   entry O          line   323 file /home/minsikcho/anaconda3/envs/p4env/share/psi4/basis/def2-svp-jkfit.gbs 
+    atoms 2-3 entry H          line    23 file /home/minsikcho/anaconda3/envs/p4env/share/psi4/basis/def2-svp-jkfit.gbs 
+
+  -AO BASIS SET INFORMATION:
+    Name                   = STO-3G
+    Blend                  = STO-3G
+    Total number of shells = 5
+    Number of primitives   = 15
+    Number of AO           = 7
+    Number of SO           = 7
+    Maximum AM             = 1
+    Spherical Harmonics    = TRUE
+
+  -Contraction Scheme:
+    Atom   Type   All Primitives // Shells:
+   ------ ------ --------------------------
+       1     O     6s 3p // 2s 1p 
+       2     H     3s // 1s 
+       3     H     3s // 1s 
+
+  ==> AO Basis Functions <==
+
+    [ STO-3G ]
+    spherical
+    ****
+    O   1
+    S   3 1.00
+                       130.70932000           0.15432897
+                        23.80886100           0.53532814
+                         6.44360830           0.44463454
+    S   3 1.00
+                         5.03315130          -0.09996723
+                         1.16959610           0.39951283
+                         0.38038900           0.70011547
+    P   3 1.00
+                         5.03315130           0.15591627
+                         1.16959610           0.60768372
+                         0.38038900           0.39195739
+    ****
+    H   2
+    S   3 1.00
+                         3.42525091           0.15432897
+                         0.62391373           0.53532814
+                         0.16885540           0.44463454
+    ****
 
   ==> Pre-Iterations <==
 
@@ -170,14 +221,14 @@ energy('mp2')
 
                            Total Energy        Delta E     RMS |[F,P]|
 
-   @DF-RHF iter   0:   -74.71460191107995   -7.47146e+01   3.03940e-01 
-   @DF-RHF iter   1:   -74.91600325469190   -2.01401e-01   5.09813e-02 
-   @DF-RHF iter   2:   -74.96229021096319   -4.62870e-02   9.16895e-03 DIIS
-   @DF-RHF iter   3:   -74.96398815217506   -1.69794e-03   3.56711e-03 DIIS
-   @DF-RHF iter   4:   -74.96441461353317   -4.26461e-04   3.22682e-04 DIIS
-   @DF-RHF iter   5:   -74.96441710792517   -2.49439e-06   3.57733e-05 DIIS
-   @DF-RHF iter   6:   -74.96441713215150   -2.42263e-08   1.11484e-06 DIIS
-   @DF-RHF iter   7:   -74.96441713217189   -2.03926e-11   4.76811e-10 DIIS
+   @DF-RHF iter   0:   -74.71460191108939   -7.47146e+01   3.03940e-01 
+   @DF-RHF iter   1:   -74.91600325470347   -2.01401e-01   5.09813e-02 
+   @DF-RHF iter   2:   -74.96229021097456   -4.62870e-02   9.16895e-03 DIIS
+   @DF-RHF iter   3:   -74.96398815218649   -1.69794e-03   3.56711e-03 DIIS
+   @DF-RHF iter   4:   -74.96441461354455   -4.26461e-04   3.22682e-04 DIIS
+   @DF-RHF iter   5:   -74.96441710793660   -2.49439e-06   3.57733e-05 DIIS
+   @DF-RHF iter   6:   -74.96441713216285   -2.42263e-08   1.11484e-06 DIIS
+   @DF-RHF iter   7:   -74.96441713218326   -2.04068e-11   4.76814e-10 DIIS
 
   ==> Post-Iterations <==
 
@@ -199,14 +250,14 @@ energy('mp2')
 
   Energy converged.
 
-  @DF-RHF Final Energy:   -74.96441713217189
+  @DF-RHF Final Energy:   -74.96441713218326
 
    => Energetics <=
 
     Nuclear Repulsion Energy =              8.8870062258783413
-    One-Electron Energy =                -121.8398687190932321
-    Two-Electron Energy =                  37.9884453610430199
-    Total Energy =                        -74.9644171321718744
+    One-Electron Energy =                -121.8398687190952501
+    Two-Electron Energy =                  37.9884453610336408
+    Total Energy =                        -74.9644171321832715
 
 
 
@@ -227,18 +278,50 @@ Properties computed using the SCF density matrix
      X:     0.0000      Y:     0.0000      Z:     1.6732     Total:     1.6732
 
 
-*** tstop() called on gold at Fri Aug 24 18:37:07 2018
-Module time:
-	user time   =       0.28 seconds =       0.00 minutes
-	system time =       0.00 seconds =       0.00 minutes
-	total time  =          0 seconds =       0.00 minutes
-Total time:
-	user time   =       0.28 seconds =       0.00 minutes
-	system time =       0.00 seconds =       0.00 minutes
-	total time  =          0 seconds =       0.00 minutes
+  ==> Molecular Orbitals <==
 
-*** tstart() called on gold
-*** at Fri Aug 24 18:37:07 2018
+                            1            2            3            4            5
+
+ 1    O1 s0         0.9942034    0.2342174    0.0000000    0.1004582    0.0000000
+ 2    O1 s0         0.0259139   -0.8458846    0.0000000   -0.5214075    0.0000000
+ 3    O1 p0         0.0039930   -0.1170354    0.0000000    0.7742484    0.0000000
+ 4    O1 p+1        0.0000000    0.0000000    0.0000000    0.0000000    1.0000000
+ 5    O1 p-1        0.0000000    0.0000000    0.6032830    0.0000000    0.0000000
+ 6    H2 s0        -0.0056268   -0.1564492   -0.4463951    0.2890869    0.0000000
+ 7    H3 s0        -0.0056268   -0.1564492    0.4463951    0.2890869    0.0000000
+
+            Ene   -20.2439758   -1.2506624   -0.6031659   -0.4454697   -0.3882152
+            Sym            A1           A1           B2           A1           B1
+            Occ             2            2            2            2            2
+
+
+                           6            7
+
+ 1    O1 s0         0.1283482    0.0000000
+ 2    O1 s0        -0.8325149    0.0000000
+ 3    O1 p0        -0.7326476    0.0000000
+ 4    O1 p+1        0.0000000    0.0000000
+ 5    O1 p-1        0.0000000    0.9764982
+ 6    H2 s0         0.7757921    0.8089054
+ 7    H3 s0         0.7757921   -0.8089054
+
+            Ene     0.5707720    0.7086314
+            Sym            A1           B2
+            Occ             0            0
+
+
+*** tstop() called on homesvr at Wed Jul 15 14:57:38 2020
+Module time:
+	user time   =       0.43 seconds =       0.01 minutes
+	system time =       0.01 seconds =       0.00 minutes
+	total time  =          1 seconds =       0.02 minutes
+Total time:
+	user time   =       0.43 seconds =       0.01 minutes
+	system time =       0.01 seconds =       0.00 minutes
+	total time  =          1 seconds =       0.02 minutes
+
+*** tstart() called on homesvr
+*** at Wed Jul 15 14:57:38 2020
 
 
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
@@ -250,8 +333,8 @@ Total time:
     Name: (STO-3G AUX)
     Role: RIFIT
     Keyword: DF_BASIS_MP2
-    atoms 1   entry O          line   406 file /home/eric/opt/apps/python/psi4conda/share/psi4/basis/def2-qzvpp-ri.gbs 
-    atoms 2-3 entry H          line    24 file /home/eric/opt/apps/python/psi4conda/share/psi4/basis/def2-qzvpp-ri.gbs 
+    atoms 1   entry O          line   406 file /home/minsikcho/anaconda3/envs/p4env/share/psi4/basis/def2-qzvpp-ri.gbs 
+    atoms 2-3 entry H          line    24 file /home/minsikcho/anaconda3/envs/p4env/share/psi4/basis/def2-qzvpp-ri.gbs 
 
 	 --------------------------------------------------------
 	                          DF-MP2                         
@@ -282,35 +365,63 @@ Total time:
 	-----------------------------------------------------------
 	 ==================> DF-MP2 Energies <==================== 
 	-----------------------------------------------------------
-	 Reference Energy          =     -74.9644171321718886 [Eh]
+	 Reference Energy          =     -74.9644171321832573 [Eh]
 	 Singles Energy            =      -0.0000000000000000 [Eh]
-	 Same-Spin Energy          =      -0.0021865372482765 [Eh]
-	 Opposite-Spin Energy      =      -0.0358629201406745 [Eh]
-	 Correlation Energy        =      -0.0380494573889510 [Eh]
-	 Total Energy              =     -75.0024665895608393 [Eh]
+	 Same-Spin Energy          =      -0.0021865372482756 [Eh]
+	 Opposite-Spin Energy      =      -0.0358629201406502 [Eh]
+	 Correlation Energy        =      -0.0380494573889258 [Eh]
+	 Total Energy              =     -75.0024665895721796 [Eh]
 	-----------------------------------------------------------
 	 ================> DF-SCS-MP2 Energies <================== 
 	-----------------------------------------------------------
 	 SCS Same-Spin Scale       =       0.3333333333333333 [-]
 	 SCS Opposite-Spin Scale   =       1.2000000000000000 [-]
-	 SCS Same-Spin Energy      =      -0.0007288457494255 [Eh]
-	 SCS Opposite-Spin Energy  =      -0.0430355041688094 [Eh]
-	 SCS Correlation Energy    =      -0.0437643499182349 [Eh]
-	 SCS Total Energy          =     -75.0081814820901229 [Eh]
+	 SCS Same-Spin Energy      =      -0.0007288457494252 [Eh]
+	 SCS Opposite-Spin Energy  =      -0.0430355041687802 [Eh]
+	 SCS Correlation Energy    =      -0.0437643499182054 [Eh]
+	 SCS Total Energy          =     -75.0081814821014632 [Eh]
 	-----------------------------------------------------------
 
 
-*** tstop() called on gold at Fri Aug 24 18:37:07 2018
+*** tstop() called on homesvr at Wed Jul 15 14:57:38 2020
 Module time:
-	user time   =       0.10 seconds =       0.00 minutes
+	user time   =       0.13 seconds =       0.00 minutes
 	system time =       0.00 seconds =       0.00 minutes
 	total time  =          0 seconds =       0.00 minutes
 Total time:
-	user time   =       0.38 seconds =       0.01 minutes
-	system time =       0.00 seconds =       0.00 minutes
-	total time  =          0 seconds =       0.00 minutes
+	user time   =       0.56 seconds =       0.01 minutes
+	system time =       0.01 seconds =       0.00 minutes
+	total time  =          1 seconds =       0.02 minutes
+  ==> One Electron Grid Properties (v2.0) <==
 
-    Psi4 stopped on: Friday, 24 August 2018 06:37PM
-    Psi4 wall time for execution: 0:00:00.40
+  ==> CubicScalarGrid <==
+
+    Filepath     = .
+    Total Points =             2197
+    XYZ Blocking =               10
+    X Points     =               13
+    Y Points     =               13
+    Z Points     =               13
+    X Spacing    =        5.000E-01
+    Y Spacing    =        5.000E-01
+    Z Spacing    =        5.000E-01
+    X Minimum    =       -3.000E+00
+    Y Minimum    =       -3.000E+00
+    Z Minimum    =       -2.563E+00
+    X Maximum    =        3.000E+00
+    Y Maximum    =        3.000E+00
+    Z Maximum    =        3.437E+00
+
+  Basis Set: STO-3G
+    Blend: STO-3G
+    Number of shells: 5
+    Number of basis function: 7
+    Number of Cartesian functions: 7
+    Spherical Harmonics?: true
+    Max angular momentum: 1
+
+
+    Psi4 stopped on: Wednesday, 15 July 2020 02:57PM
+    Psi4 wall time for execution: 0:00:00.60
 
 *** Psi4 exiting successfully. Buy a developer a beer!

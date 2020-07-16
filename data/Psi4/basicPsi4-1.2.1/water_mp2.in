@@ -7,6 +7,14 @@ H 1 0.99 2 106.0
 
 set {
     basis sto-3g
+    print_basis true
+    print_mos true
+    cubeprop_tasks ['orbitals', 'density']
+    cubic_grid_spacing [0.5, 0.5, 0.5]
+    cubic_grid_overage [3, 1.5, 2.4]
 }
 
-energy('mp2')
+mp2_e, scf_wfn = energy('mp2', return_wfn=True)
+cubeprop(scf_wfn)
+
+
