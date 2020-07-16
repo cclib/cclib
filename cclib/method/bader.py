@@ -16,7 +16,7 @@ from cclib.method.volume import electrondensity_spin
 from cclib.parser.utils import convertor
 
 # Distance between two adjacent grids (sqrt[2] or sqrt[3] for uniform Cartesian grid)
-griddist = [
+_griddist = [
     [[1.73205, 1.41421, 1.73205], [1.41421, 1, 1.41421], [1.73205, 1.41421, 1.73205],],
     [[1.41421, 1, 1.41421], [1, 1, 1], [1.41421, 1, 1.41421]],
     [[1.73205, 1.41421, 1.73205], [1.41421, 1, 1.41421], [1.73205, 1.41421, 1.73205],],
@@ -25,6 +25,12 @@ griddist = [
 
 class MissingInputError(Exception):
     pass
+
+
+def __cartesian_dist(pt1, pt2):
+    """ Small utility function that calculates Euclidian distance between two points
+        pt1 and pt2 are numpy arrays representing a point in Cartesian coordinates """
+    return numpy.sqrt(numpy.einsum("ij,ij->j", pt1 - pt2, pt1 - pt2s))
 
 
 class Bader(Method):
@@ -56,11 +62,6 @@ class Bader(Method):
            
            Cartesian, uniformly spaced grids are assumed for this function.
            """
-
-        def cartesian_dist(pt1, pt2):
-            """ Small utility function that calculates Euclidian distance between two points
-                pt1 and pt2 are numpy arrays representing a point in Cartesian coordinates """
-            return numpy.sqrt(numpy.einsum("ij,ij->j", pt1 - pt2, pt1 - pt2s))
 
         # First obtain charge densities on the grid
         if len(self.data.mocoeffs) == 1:
@@ -98,7 +99,10 @@ class Bader(Method):
                         loopcondition = True
 
                         while loopcondition:
-                            tmp = (
+                            # Here, `delta_rho` corresponds to equation 2,
+                            # and `grad_rho_dot_r` corresponds to equation 1 in the aforementioned
+                            # paper (doi:10.1016/j.commatsci.2005.04.010)
+                            delta_rho = (
                                 self.chgdensity.data[
                                     xindex - 1 : xindex + 2,
                                     yindex - 1 : yindex + 2,
@@ -106,8 +110,8 @@ class Bader(Method):
                                 ]
                                 - self.chgdensity.data[xindex, yindex, zindex]
                             )
-                            grad = tmp / griddist
-                            maxat = numpy.where(grad == numpy.amax(grad))
+                            grad_rho_dot_r = delta_rho / _griddist
+                            maxat = numpy.where(grad_rho_dot_r == numpy.amax(grad_rho_dot_r))
 
                             nextDirection = list(zip(maxat[0], maxat[1], maxat[2]))[0]
                             nextDirection = [ind - 1 for ind in nextDirection]
@@ -115,7 +119,7 @@ class Bader(Method):
                             if len(list(zip(maxat[0], maxat[1], maxat[2]))) > 1:
                                 # when one or more directions indicate max grad (of 0), prioritize
                                 # to include all points in the Bader space
-                                if list(zip(maxat[0], maxat[1], maxat[2]))[0] == (1, 1, 1):
+                                if list(zip(maxat[0], maxat[1], maxat[2]))[0] == (1, 1, 1,):
                                     nextDirection = list(zip(maxat[0], maxat[1], maxat[2]))[1]
                                     nextDirection = [ind - 1 for ind in nextDirection]
 
