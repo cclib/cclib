@@ -1922,12 +1922,11 @@ class Gaussian(logfileparser.Logfile):
             """Extracts atomic charges and spin densities into self.atomcharges and self.atomspins dictionaries
     
             Inputs:
-                prop - property type to be extracted (Mulliken, Lowdin, APT)
+                prop - property type to be extracted (e.g. Mulliken, Lowdin, APT)
                 header - name for atomcharges / atomspins dictionary key for that property type
             """
 
             phrases = [" atomic charges:",
-            " Atomic Charges:",
             " charges:",
             " charges with hydrogens summed into heavy atoms:",
             " atomic charges with hydrogens summed into heavy atoms:",
@@ -1935,7 +1934,7 @@ class Gaussian(logfileparser.Logfile):
             " charges and spin densities with hydrogens summed into heavy atoms:",
             " charges and spin densities:"]
             for phrase in phrases:
-                if f"{prop}{phrase}" in line:
+                if f"{prop}{phrase}".lower() in line.lower():
                     has_spin = 'spin' in line.lower()
                     has_charges = 'charges' in line.lower()
                     if has_charges and not hasattr(self, "atomcharges"):
@@ -1959,7 +1958,7 @@ class Gaussian(logfileparser.Logfile):
                         if has_charges:
                             charges.append(float(nline.split()[2]))
                         if has_spin and has_charges:
-                             spins.append(float(nline.split()[3]))
+                            spins.append(float(nline.split()[3]))
                         if has_spin and not has_charges:
                             spins.append(float(nline.split()[2]))
                     # input extracted values into self.atomcharges
