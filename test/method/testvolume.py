@@ -74,20 +74,33 @@ class VolumeTest(unittest.TestCase):
         # Reference values were calculated using cubegen method in Psi4.
         # First six rows are information about the coordinates of the grid and comments.
         tmp = []
-        
+
         with open(os.path.dirname(os.path.realpath(__file__)) + "/water_mp2.cube") as f:
             lines = f.readlines()
             for line in lines[6 : len(lines)]:
                 tmp.extend(line.split())
-        tmp = numpy.asanyarray(tmp, dtype = float)
+        tmp = numpy.asanyarray(tmp, dtype=float)
         refcube = numpy.resize(tmp, (13, 13, 13))
 
         # Values for the grid below are constructed to match Psi4 cube file.
         vol = volume.Volume(
-            (-1.587532, -1.587532, -1.356299), 
-            (1.58754, 1.58754, 1.81877), 
-            (0.26458860545, 0.26458860545, 0.26458860545)
+            (-1.587532, -1.587532, -1.356299),
+            (1.58754, 1.58754, 1.81877),
+            (0.26458860545, 0.26458860545, 0.26458860545),
         )
         density = volume.electrondensity(data, vol, [data.mocoeffs[0][: data.homos[0]]])
 
-        assert_allclose(density.data, refcube, atol=.5, rtol=.1)
+        assert_allclose(density.data, refcube, atol=0.5, rtol=0.1)
+
+    def test_roundtrip_cube(self):
+        """Write a cube file and then read it back. Check if the volume object contains
+           identical information on each grid point"""
+
+        data, logfile = getdatafile(Psi4, "basicPsi4-1.2.1", ["water_mp2.out"])
+        vol = volume.Volume((-1, -1, -1), (1, 1, 1), (0.4, 0.4, 0.4))
+        density = volume.electrondensity(data, vol, [data.mocoeffs[0][: data.homos[0]]])
+
+        density.writeascube("coarsewater.cube")
+        density_recovered = volume.read_from_cube("coarsewater.cube")
+
+        assert_allclose(density.data, density_recovered.data, rtol=0.05)
