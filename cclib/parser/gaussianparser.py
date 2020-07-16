@@ -1918,7 +1918,14 @@ class Gaussian(logfileparser.Logfile):
         #     2  C    0.320624   0.000869
         #
         # APT and Lowdin charges are also displayed in this way
-        def extract_charges_spins(prop,header):
+        def extract_charges_spins(prop: str, header: str) -> dict:
+            """Extracts atomic charges and spin densities into self.atomcharges and self.atomspins dictionaries
+    
+            Inputs:
+                prop - property type to be extracted (Mulliken, Lowdin, APT)
+                header - name for atomcharges / atomspins dictionary key for that property type
+            """
+
             phrases = [" atomic charges:",
             " Atomic Charges:",
             " charges:",
@@ -1928,63 +1935,45 @@ class Gaussian(logfileparser.Logfile):
             " charges and spin densities with hydrogens summed into heavy atoms:",
             " charges and spin densities:"]
             for phrase in phrases:
-                to_join = [prop,phrase]
-                if "".join(to_join) in line:
-        
-                    has_spin = 'spin' in line or 'Spin' in line
-                    has_charges = 'charges' in line or 'Charges' in line
-
+                if f"{prop}{phrase}" in line:
+                    has_spin = 'spin' in line.lower()
+                    has_charges = 'charges' in line.lower()
                     if has_charges and not hasattr(self, "atomcharges"):
                         self.atomcharges = {}
-
                     if has_spin and not hasattr(self, "atomspins"):
                         self.atomspins = {}
-
                     ones = next(inputfile)
-
                     charges = []
                     spins = []
-                    nline = next(inputfile)
-
-                    # calculate how many lines need iterating over based on whether property is summed or not
+                    # calculate how many lines need iterating over based on whether property is summed into hydrogens or not
                     is_sum = 'summed' in line
                     if is_sum:
                         n = self.natom - self.nhydrogen
                     else:
                         n = self.natom
-
                     # iterate over each line and append values to a list based on what property we have
-                    i = 0
-                    while i != n:
-                        if is_sum and nline.split()[1] == "H":  # some files included hydrogens in lists of summed charges with value 0.0, so these should not be recorded
+                    for i in range(n):
+                        nline = next(inputfile)
+                        while is_sum and nline.split()[1] == "H":  # some files included hydrogens in lists of summed charges with value 0.0, so these should not be recorded
                             nline = next(inputfile)
-                        else:
-                            if has_charges:
-                                charges.append(float(nline.split()[2]))
-                            if has_spin and has_charges:
-                                spins.append(float(nline.split()[3]))
-                            if has_spin and not has_charges:
-                                spins.append(float(nline.split()[2]))
-                            if not i == n-1: # make sure we don't move to the header line for another set of values
-                                nline = next(inputfile)
-                            i +=1
-
+                        if has_charges:
+                            charges.append(float(nline.split()[2]))
+                        if has_spin and has_charges:
+                             spins.append(float(nline.split()[3]))
+                        if has_spin and not has_charges:
+                            spins.append(float(nline.split()[2]))
                     # input extracted values into self.atomcharges
                     if prop in line:
                         if has_charges:
                             if is_sum:
-                                title_list = [header,"_charge_sum"]
-                                self.atomcharges["".join(title_list)] = charges
+                                self.atomcharges[f"{header}_charge_sum"] = charges
                             else:
-                                title_list = [header,"_charge"]
-                                self.atomcharges["".join(title_list)] = charges
+                                self.atomcharges[f"{header}_charge"] = charges
                         if has_spin:
                             if is_sum:
-                                title_list = [header,"_spin_sum"]
-                                self.atomspins["".join(title_list)] = spins
+                                self.atomspins[f"{header}_spin_sum"] = spins
                             else:
-                                title_list = [header,"_spin"]
-                                self.atomspins["".join(title_list)] = spins
+                                self.atomspins[f"{header}_spin"] = spins
 
         if hasattr(self, "natom") and hasattr(self, "nhydrogen"):
             extract_charges_spins("Mulliken","mul")
