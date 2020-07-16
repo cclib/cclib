@@ -233,6 +233,7 @@ Gaussian/Gaussian09/2D-PES-all-converged.log
 Gaussian/Gaussian09/2D-PES-one-unconverged.log
 Gaussian/Gaussian09/534.out
 Gaussian/Gaussian09/ansaBPFP2_acetylene_ircf_LQA.out
+Gaussian/Gaussian09/benzene_excited_states_optimization_issue889.log
 Gaussian/Gaussian09/benzene_freq.log
 Gaussian/Gaussian09/benzene_HPfreq.log
 Gaussian/Gaussian09/BH3CO_fragment_guess.log
