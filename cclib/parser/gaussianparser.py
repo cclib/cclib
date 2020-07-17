@@ -1918,23 +1918,22 @@ class Gaussian(logfileparser.Logfile):
         #     2  C    0.320624   0.000869
         #
         # APT and Lowdin charges are also displayed in this way
-        def extract_charges_spins(prop: str, header: str) -> dict:
+        def extract_charges_spins(property: str) -> dict:
             """Extracts atomic charges and spin densities into self.atomcharges and self.atomspins dictionaries
     
             Inputs:
-                prop - property type to be extracted (e.g. Mulliken, Lowdin, APT)
-                header - name for atomcharges / atomspins dictionary key for that property type
+                property - property type to be extracted (e.g. Mulliken, Lowdin, APT)
             """
 
-            phrases = [" atomic charges:",
+            headers = [" atomic charges:",
             " charges:",
             " charges with hydrogens summed into heavy atoms:",
             " atomic charges with hydrogens summed into heavy atoms:",
             " atomic spin densities:",
             " charges and spin densities with hydrogens summed into heavy atoms:",
             " charges and spin densities:"]
-            for phrase in phrases:
-                if f"{prop}{phrase}".lower() in line.lower():
+            for header in headers:
+                if f"{property}{header}".lower() in line.lower():
                     has_spin = 'spin' in line.lower()
                     has_charges = 'charges' in line.lower()
                     if has_charges and not hasattr(self, "atomcharges"):
@@ -1950,10 +1949,10 @@ class Gaussian(logfileparser.Logfile):
                         n = self.natom - self.nhydrogen
                     else:
                         n = self.natom
-                    # iterate over each line and append values to a list based on what property we have
+                    # iterate over each line and append values to a list based on whether they are charges or spins
                     for i in range(n):
                         nline = next(inputfile)
-                        while is_sum and nline.split()[1] == "H":  # some files included hydrogens in lists of summed charges with value 0.0, so these should not be recorded
+                        while is_sum and nline.split()[1] == "H":  # some files include hydrogens in lists of summed charges with value 0.0, so these should not be recorded
                             nline = next(inputfile)
                         if has_charges:
                             charges.append(float(nline.split()[2]))
@@ -1962,22 +1961,22 @@ class Gaussian(logfileparser.Logfile):
                         if has_spin and not has_charges:
                             spins.append(float(nline.split()[2]))
                     # input extracted values into self.atomcharges
-                    if prop in line:
+                    if property.lower() in line.lower():
                         if has_charges:
                             if is_sum:
-                                self.atomcharges[f"{header}_charge_sum"] = charges
+                                self.atomcharges[f"{property}_sum"] = charges
                             else:
-                                self.atomcharges[f"{header}_charge"] = charges
+                                self.atomcharges[f"{property}"] = charges
                         if has_spin:
                             if is_sum:
-                                self.atomspins[f"{header}_spin_sum"] = spins
+                                self.atomspins[f"{property}_sum"] = spins
                             else:
-                                self.atomspins[f"{header}_spin"] = spins
+                                self.atomspins[f"{property}"] = spins
 
         if hasattr(self, "natom") and hasattr(self, "nhydrogen"):
-            extract_charges_spins("Mulliken","mul")
-            extract_charges_spins("Lowdin","lowdin")
-            extract_charges_spins("APT","APT")
+            extract_charges_spins("mulliken")
+            extract_charges_spins("lowdin")
+            extract_charges_spins("APT")
 
         if line.strip() == "Natural Population":
             if not hasattr(self, 'atomcharges'):
