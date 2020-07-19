@@ -449,6 +449,10 @@ class ORCA(logfileparser.Logfile):
                 'ccenergies',
                 utils.convertor(utils.float(line.split()[-1]), 'hartree', 'eV')
             )
+            line = next(inputfile)
+            assert line[:23] == 'Singles Norm <S|S>**1/2'
+            line = next(inputfile)
+            self.metadata["t1_diagnostic"] = utils.float(line.split()[-1])
 
         # ------------------
         # CARTESIAN GRADIENT

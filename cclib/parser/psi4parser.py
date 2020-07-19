@@ -1040,6 +1040,20 @@ class Psi4(logfileparser.Logfile):
         if line.strip().startswith('Using finite-differences of gradients'):
             self.set_attribute('finite_difference', True)
 
+        # This is the result of calling `print_variables()` and contains all
+        # current inner variables known to Psi4.
+        if line.strip() == "Variable Map:":
+            self.skip_line(inputfile, "d")
+            line = next(inputfile)
+            while line.strip():
+                tokens = line.split()
+                # Remove double quotation marks
+                name = " ".join(tokens[:-2])[1:-1]
+                value = float(tokens[-1])
+                if name == "CC T1 DIAGNOSTIC":
+                    self.metadata["t1_diagnostic"] = value
+                line = next(inputfile)
+
         if line[:54] == '*** Psi4 exiting successfully. Buy a developer a beer!'\
                 or line[:54] == '*** PSI4 exiting successfully. Buy a developer a beer!':
             self.metadata['success'] = True

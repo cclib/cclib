@@ -854,6 +854,9 @@ class DALTON(logfileparser.Logfile):
                     "ccenergies", utils.convertor(ccenergies[-1], "hartree", "eV")
                 )
 
+        if "Tau1 diagnostic" in line:
+            self.metadata["t1_diagnostic"] = float(line.split()[-1])
+
         # The molecular geometry requires the use of .RUN PROPERTIES in the input.
         # Note that the second column is not the nuclear charge, but the atom type
         # index used internally by DALTON.

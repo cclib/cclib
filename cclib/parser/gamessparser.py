@@ -283,6 +283,9 @@ class GAMESS(logfileparser.Logfile):
                     ccenergy = float(line.split()[2])
             self.ccenergies.append(utils.convertor(ccenergy, "hartree", "eV"))
 
+        if "T1 DIAGNOSTIC" in line:
+            self.metadata["t1_diagnostic"] = float(line.split()[3])
+
         # Also collect MP2 energies, which are always calculated before CC
         if line[8:23] == "MBPT(2) ENERGY:":
             if not hasattr(self, "mpenergies"):
