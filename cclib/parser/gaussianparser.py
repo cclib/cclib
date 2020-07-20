@@ -921,15 +921,8 @@ class Gaussian(logfileparser.Logfile):
             # (Issue #889) and similar properties are only reported for the
             # final step of an optimization.
             if not allconverged:
-                if hasattr(self, "etenergies"):
-                    self.etenergies = []
-                    self.etoscs = []
-                    self.etsyms = []
-                    self.etsecs = []
-                if hasattr(self, "etdips"):
-                    self.etdips = []
-                    self.etveldips = []
-                    self.etmagdips = []
+                for reset_attr in ["etenergies", "etoscs", "etsyms", "etsecs", "etdips", "etveldips", "etmagdips"]:
+                    setattr(self, reset_attr, [])
 
             self.geovalues.append(newlist)
 
