@@ -12,6 +12,7 @@ import unittest
 
 sys.path.insert(1, "method")
 
+from .method.testbader import *
 from .method.testcda import *
 from .method.testelectrons import *
 from .method.testmbo import *
