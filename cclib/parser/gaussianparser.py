@@ -1443,6 +1443,7 @@ class Gaussian(logfileparser.Logfile):
                 self.etdips = []
                 self.etveldips = []
                 self.etmagdips = []
+            if self.etdips == []:
                 self.netroot = 0
             etrootcount = 0  # to count number of et roots
 
