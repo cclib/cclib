@@ -922,7 +922,8 @@ class Gaussian(logfileparser.Logfile):
             # final step of an optimization.
             if not allconverged:
                 for reset_attr in ["etenergies", "etoscs", "etsyms", "etsecs", "etdips", "etveldips", "etmagdips"]:
-                    setattr(self, reset_attr, [])
+                    if hasattr(self, reset_attr):
+                        setattr(self, reset_attr, [])
 
             self.geovalues.append(newlist)
 
@@ -1974,7 +1975,7 @@ class Gaussian(logfileparser.Logfile):
         # Order is XX, YX, YY, ZX, ZY, ZZ (lower triangle).
         if line[2:23] == "Exact polarizability:":
             if not self.hp_polarizabilities:
-                if not hasattr(self, 'polarizabilities'):
+                if not  hasattr(self, 'polarizabilities'):
                     self.polarizabilities = []
                 polarizability = numpy.zeros(shape=(3, 3))
                 indices = numpy.tril_indices(3)
