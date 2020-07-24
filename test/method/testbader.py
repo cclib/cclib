@@ -16,7 +16,7 @@ import unittest
 
 import numpy
 
-from cclib.method import Bader, Volume
+from cclib.method import Bader, volume
 from cclib.parser import Psi4
 from cclib.method.calculationmethod import MissingAttributeError
 
@@ -34,7 +34,7 @@ class BaderTest(unittest.TestCase):
 
     def parse(self):
         self.data, self.logfile = getdatafile(Psi4, "basicPsi4-1.2.1", ["water_mp2.out"])
-        self.volume = Volume((-4, -4, -4), (4, 4, 4), (0.2, 0.2, 0.2))
+        self.volume = volume.Volume((-4, -4, -4), (4, 4, 4), (0.2, 0.2, 0.2))
 
     def testmissingrequiredattributes(self):
         """Is an error raised when required attributes are missing?"""
@@ -49,7 +49,7 @@ class BaderTest(unittest.TestCase):
         """
 
         self.data, logfile = getdatafile(Psi4, "basicPsi4-1.2.1", ["water_mp2.out"])
-        self.volume = Volume((-4, -4, -4), (4, 4, 4), (0.2, 0.2, 0.2))
+        self.volume = volume.Volume((-4, -4, -4), (4, 4, 4), (0.2, 0.2, 0.2))
         self.analysis = Bader(self.data, self.volume)
         self.analysis.calculate()
 
