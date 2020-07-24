@@ -1975,7 +1975,7 @@ class Gaussian(logfileparser.Logfile):
         # Order is XX, YX, YY, ZX, ZY, ZZ (lower triangle).
         if line[2:23] == "Exact polarizability:":
             if not self.hp_polarizabilities:
-                if not  hasattr(self, 'polarizabilities'):
+                if not hasattr(self, 'polarizabilities'):
                     self.polarizabilities = []
                 polarizability = numpy.zeros(shape=(3, 3))
                 indices = numpy.tril_indices(3)
