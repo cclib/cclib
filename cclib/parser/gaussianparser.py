@@ -901,12 +901,14 @@ class Gaussian(logfileparser.Logfile):
             if not hasattr(self, "geotargets"):
                 self.geovalues = []
                 self.geotargets = numpy.array([0.0, 0.0, 0.0, 0.0], "d")
-
+            allconverged = True
             newlist = [0]*4
             for i in range(4):
                 line = next(inputfile)
                 self.logger.debug(line)
                 parts = line.split()
+                if "NO" in parts[-1]:
+                    allconverged = False
                 try:
                     value = utils.float(parts[2])
                 except ValueError:
@@ -914,6 +916,14 @@ class Gaussian(logfileparser.Logfile):
                 else:
                     newlist[i] = value
                 self.geotargets[i] = utils.float(parts[3])
+            # reset some parameters that are printed each iteration if the 
+            # optimization has not yet converged. For example, etenergies 
+            # (Issue #889) and similar properties are only reported for the
+            # final step of an optimization.
+            if not allconverged:
+                for reset_attr in ["etenergies", "etoscs", "etsyms", "etsecs", "etdips", "etveldips", "etmagdips"]:
+                    if hasattr(self, reset_attr):
+                        setattr(self, reset_attr, [])
 
             self.geovalues.append(newlist)
 
@@ -1434,6 +1444,7 @@ class Gaussian(logfileparser.Logfile):
                 self.etdips = []
                 self.etveldips = []
                 self.etmagdips = []
+            if self.etdips == []:
                 self.netroot = 0
             etrootcount = 0  # to count number of et roots
 

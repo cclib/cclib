@@ -1121,6 +1121,15 @@ def testGaussian_Gaussian09_stopiter_gaussian_out(logfile):
 
     assert logfile.data.metadata["package_version"] == "2009+D.01"
 
+def testGaussian_Gaussian09_benzene_excited_states_optimization_issue889_log(logfile):
+    """Check that only converged geometry excited states properties are reported."""
+    assert logfile.data.etdips.shape == (20,3)
+    assert len(logfile.data.etenergies) == 20
+    assert logfile.data.etmagdips.shape == (20,3)
+    assert len(logfile.data.etoscs) == 20
+    assert len(logfile.data.etrotats) == 20
+    assert len(logfile.data.etsecs) == 20
+    assert logfile.data.etveldips.shape == (20,3)
 
 def testGaussian_Gaussian16_naturalspinorbitals_parsing_log(logfile):
     """A UHF calculation with natural spin orbitals."""
