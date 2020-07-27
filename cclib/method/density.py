@@ -17,8 +17,8 @@ from cclib.method.calculationmethod import Method
 
 class Density(Method):
     """Calculate the density matrix"""
-    def __init__(self, data, progress=None, loglevel=logging.INFO,
-                 logname="Density"):
+
+    def __init__(self, data, progress=None, loglevel=logging.INFO, logname="Density"):
 
         # Call the __init__ method of the superclass.
         super(Density, self).__init__(data, progress, loglevel, logname)
@@ -38,18 +38,18 @@ class Density(Method):
         if not hasattr(self.data, "mocoeffs"):
             self.logger.error("Missing mocoeffs")
             return False
-        if not hasattr(self.data,"nbasis"):
+        if not hasattr(self.data, "nbasis"):
             self.logger.error("Missing nbasis")
             return False
-        if not hasattr(self.data,"homos"):
+        if not hasattr(self.data, "homos"):
             self.logger.error("Missing homos")
             return False
 
         self.logger.info("Creating attribute density: array[3]")
         size = self.data.nbasis
-        unrestricted = (len(self.data.mocoeffs) == 2)
+        unrestricted = len(self.data.mocoeffs) == 2
 
-        #determine number of steps, and whether process involves beta orbitals
+        # determine number of steps, and whether process involves beta orbitals
         nstep = self.data.homos[0] + 1
         if unrestricted:
             self.density = numpy.zeros([2, size, size], "d")
@@ -57,7 +57,7 @@ class Density(Method):
         else:
             self.density = numpy.zeros([1, size, size], "d")
 
-        #intialize progress if available
+        # intialize progress if available
         if self.progress:
             self.progress.initialize(nstep)
 
@@ -73,15 +73,37 @@ class Density(Method):
                 colt = numpy.reshape(col, (1, size))
 
                 tempdensity = numpy.dot(col, colt)
-                self.density[spin] = numpy.add(self.density[spin],
-                                                 tempdensity)
+                self.density[spin] = numpy.add(self.density[spin], tempdensity)
 
                 step += 1
 
-        if not unrestricted: #multiply by two to account for second electron
+        if not unrestricted:  # multiply by two to account for second electron
             self.density[0] = numpy.add(self.density[0], self.density[0])
 
         if self.progress:
             self.progress.update(nstep, "Done")
 
-        return True #let caller know we finished density
+        return True  # let caller know we finished density
+
+    def normalize(self):
+        """ Normalize density matrix."""
+
+        norm = numpy.linalg.norm(self.density[0])
+
+        if norm == 0:
+            self.logger.error("Norm of density matrix equals zero.")
+            return False
+
+        self.density[0] = self.density[0] / norm
+
+        if len(self.density) == 2:
+            # Normalize beta density matrix as well
+            norm = numpy.linalg.norm(self.density[1])
+
+            if norm == 1:
+                self.logger.error("Norm of density matrix equals zero.")
+                return False
+
+                self.density[1] = self.density[1] / norm
+
+        return True
