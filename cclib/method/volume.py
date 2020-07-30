@@ -229,6 +229,10 @@ class Volume(object):
         with open(filename, "w") as outputfile:
             outputfile.write("\n".join(ans))
 
+    def coordinates(self, indices):
+        """Return [x, y, z] coordinates that correspond to input indices"""
+        return self.origin + self.spacing * indices
+
 
 def scinotation(num):
     """Write in scientific notation."""

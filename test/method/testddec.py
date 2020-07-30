@@ -82,3 +82,16 @@ class DDEC6Test(unittest.TestCase):
         assert_allclose(self.analysis.proatom_density[0][0:5], refO_den, rtol=1e-3)
         assert_allclose(self.analysis.proatom_density[1][0:5], refH_den, rtol=1e-3)
         assert_allclose(self.analysis.proatom_density[2][0:5], refH_den, rtol=1e-3)
+
+    def test_step1_charges(self):
+        """Are step 1 charges calculated correctly?"""
+
+        self.parse()
+        # use precalculated fine cube file
+        imported_vol = volume.read_from_cube(os.path.join(os.path.dirname(os.path.realpath(__file__)), "water_fine.cube"))
+        
+        analysis = DDEC6(self.data, imported_vol, os.path.dirname(os.path.realpath(__file__)))
+        analysis.calculate()
+        
+        # values from `chargemol` calculation
+        assert_allclose(analysis.refcharges, [-0.513006, 0.256231, 0.256775], rtol=.1)
