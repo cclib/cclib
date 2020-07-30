@@ -91,6 +91,7 @@ class Bader(Method):
                         self.data.mocoeffs[1][: self.data.homos[1]],
                     ],
                 )
+
         # If charge densities are provided beforehand, log this information
         # `Volume` object does not contain (nor rely on) information about the constituent atoms.
         else:
