@@ -11,6 +11,7 @@ from cclib.method.bader import Bader
 from cclib.method.bickelhaupt import Bickelhaupt
 from cclib.method.cda import CDA
 from cclib.method.cspa import CSPA
+from cclib.method.ddec import DDEC6
 from cclib.method.density import Density
 from cclib.method.electrons import Electrons
 from cclib.method.fragments import FragmentAnalysis
