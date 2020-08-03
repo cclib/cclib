@@ -83,15 +83,28 @@ class DDEC6Test(unittest.TestCase):
         assert_allclose(self.analysis.proatom_density[1][0:5], refH_den, rtol=1e-3)
         assert_allclose(self.analysis.proatom_density[2][0:5], refH_den, rtol=1e-3)
 
-    def test_step1_charges(self):
-        """Are step 1 charges calculated correctly?"""
-
+    def test_step1_and_2_charges(self):
+        """Are step 1 and 2 charges calculated correctly?
+        
+        Here, values are compared against `chargemol` calculations.
+        Due to the differences in basis set used for calculation and slightly different integration
+        grid, some discrepancy is inevitable in the comparison.
+        TODO: Test suite based on horton densities will be added after full implementation of
+              DDEC6 algorithm.
+        """
+        
         self.parse()
         # use precalculated fine cube file
-        imported_vol = volume.read_from_cube(os.path.join(os.path.dirname(os.path.realpath(__file__)), "water_fine.cube"))
-        
+        imported_vol = volume.read_from_cube(
+            os.path.join(os.path.dirname(os.path.realpath(__file__)), "water_fine.cube")
+        )
+
         analysis = DDEC6(self.data, imported_vol, os.path.dirname(os.path.realpath(__file__)))
         analysis.calculate()
-        
+
         # values from `chargemol` calculation
-        assert_allclose(analysis.refcharges, [-0.513006, 0.256231, 0.256775], rtol=.1)
+        # which is based on proatomic densities calculated with different basis set.
+        # discrepancy comes from the fact that `chargemol` grid & `horton` grid don't exactly match
+        # (rtol is adjusted to account for this inevitable discrepancy)
+        assert_allclose(analysis.refcharges[0], [-0.513006, 0.256231, 0.256775], rtol=0.10)
+        assert_allclose(analysis.refcharges[1], [-0.831591, 0.415430, 0.416161], rtol=0.20)
