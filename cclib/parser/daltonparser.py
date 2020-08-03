@@ -619,6 +619,12 @@ class DALTON(logfileparser.Logfile):
                     self.homos.append(self.homos[0])
                     self.homos[0] += self.unpaired_electrons
 
+        if "Dispersion Energy Correction" in line:
+            self.skip_lines(inputfile, ["pluses_and_dashes", "b"])
+            line = next(inputfile)
+            dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
+            self.append_attribute("dispersionenergies", dispersion)
+
         #  *********************************************
         #  ***** DIIS optimization of Hartree-Fock *****
         #  *********************************************

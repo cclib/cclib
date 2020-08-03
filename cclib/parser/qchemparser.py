@@ -691,6 +691,14 @@ cannot be determined. Rerun without `$molecule read`."""
                 tokens = line.split()
                 self.append_attribute('time', float(tokens[8]))
 
+            if line.strip() == "Adding empirical dispersion correction":
+                while "energy" not in line:
+                    line = next(inputfile)
+                self.append_attribute(
+                    "dispersionenergies",
+                    utils.convertor(utils.float(line.split()[-2]), "hartree", "eV")
+                )
+
             # Extract the atomic numbers and coordinates of the atoms.
             if 'Standard Nuclear Orientation' in line:
                 if "Angstroms" in line:

@@ -418,7 +418,27 @@ class TurbomoleSPTest(GenericSPTest):
     num_scf_criteria = 2
 
 
-if __name__=="__main__":
+class GenericDispersionTest(unittest.TestCase):
+    """Generic single-geometry dispersion correction unittest"""
+
+    dispersionenergy = -0.4005496
+
+    def testdispersionenergies(self):
+        """Is the dispersion energy parsed correctly?"""
+        self.assertTrue(len(self.data.dispersionenergies), 1)
+        self.assertAlmostEqual(
+            self.data.dispersionenergies[0],
+            self.dispersionenergy,
+            delta=2.0e-7
+        )
+
+
+class FireflyDispersionTest(GenericDispersionTest):
+    """Customized single-geometry dispersion correction unittest"""
+    dispersionenergy = -0.4299821
+
+
+if __name__ == "__main__":
 
     import sys
     sys.path.insert(1, os.path.join(__filedir__, ".."))

@@ -15,6 +15,8 @@ import re
 import numpy
 from packaging.version import parse as parse_version
 
+from six.moves import zip_longest
+
 from cclib.parser import logfileparser
 from cclib.parser import utils
 
@@ -26,7 +28,6 @@ class ORCA(logfileparser.Logfile):
 
         # Call the __init__ method of the superclass
         super(ORCA, self).__init__(logname="ORCA", *args, **kwargs)
-
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -48,6 +49,35 @@ class ORCA(logfileparser.Logfile):
 
         # Keep track of whether this is a relaxed scan calculation
         self.is_relaxed_scan = False
+
+    def after_parsing(self):
+        # ORCA doesn't add the dispersion energy to the "Total energy" (which
+        # we parse), only to the "FINAL SINGLE POINT ENERGY" (which we don't
+        # parse).
+        if hasattr(self, "scfenergies") and hasattr(self, "dispersionenergies"):
+            for i, (scfenergy, dispersionenergy) in enumerate(
+                zip_longest(self.scfenergies, self.dispersionenergies)
+            ):
+                # It isn't as problematic if there are more dispersion than
+                # SCF energies, since all dispersion energies can still be
+                # added to the SCF energies, hence the difference in log level.
+                if dispersionenergy is None:
+                    self.logger.error(
+                        "The number of SCF and dispersion energies are not equal: %d vs. %d, "
+                        "can't add dispersion energy to all SCF energies",
+                        len(self.scfenergies),
+                        len(self.dispersionenergies)
+                    )
+                    break
+                if scfenergy is None:
+                    self.logger.warning(
+                        "The number of SCF and dispersion energies are not equal: %d vs. %d, "
+                        "can't add dispersion energy to all SCF energies",
+                        len(self.scfenergies),
+                        len(self.dispersionenergies)
+                    )
+                    break
+                self.scfenergies[i] += dispersionenergy
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -292,6 +322,47 @@ class ORCA(logfileparser.Logfile):
             self.scfenergies.append(energy)
 
             self._append_scfvalues_scftargets(inputfile, line)
+
+        """
+-------------------------------------------------------------------------------
+                          DFT DISPERSION CORRECTION
+
+                              DFTD3 V3.1  Rev 1
+                              USING zero damping
+-------------------------------------------------------------------------------
+The omegaB97X-D3 functional is recognized. Fit by Chai et al.
+Active option DFTDOPT                   ...         3
+
+molecular C6(AA) [au] = 9563.878941
+
+
+            DFT-D V3
+ parameters
+ s6 scaling factor         :     1.0000
+ rs6 scaling factor        :     1.2810
+ s8 scaling factor         :     1.0000
+ rs8 scaling factor        :     1.0940
+ Damping factor alpha6     :    14.0000
+ Damping factor alpha8     :    16.0000
+ ad hoc parameters k1-k3   :    16.0000     1.3333    -4.0000
+
+ Edisp/kcal,au: -10.165629059768  -0.016199959356
+ E6   /kcal   :  -4.994512983
+ E8   /kcal   :  -5.171116077
+ % E8         :  50.868628459
+
+-------------------------   ----------------
+Dispersion correction           -0.016199959
+-------------------------   ----------------
+"""
+        if "DFT DISPERSION CORRECTION" in line:
+            # A bunch of parameters are printed the first time dispersion is called
+            # However, they vary wildly in form and number, making parsing problematic
+            line = next(inputfile)
+            while 'Dispersion correction' not in line:
+                line = next(inputfile)
+            dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
+            self.append_attribute("dispersionenergies", dispersion)
 
         # The convergence targets for geometry optimizations are printed at the
         # beginning of the output, although the order and their description is
@@ -1259,7 +1330,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
         #   are not printed (there is a blank line at the end).
         if line[:22] == "LOEWDIN ATOMIC CHARGES":
             self.parse_charge_section(line, inputfile, 'lowdin')
-        #CHELPG Charges            
+        #CHELPG Charges
         #--------------------------------
         #  0   C   :       0.363939
         #  1   H   :       0.025695
@@ -1593,7 +1664,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
           handle to file object
         chargestype : str
           what type of charge we're dealing with, must be one of
-          'mulliken', 'lowdin' or 'chelpg'   
+          'mulliken', 'lowdin' or 'chelpg'
         """
         has_spins = 'AND SPIN POPULATIONS' in line
 

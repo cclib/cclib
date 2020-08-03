@@ -542,6 +542,10 @@ class NWChem(logfileparser.Logfile):
             energy = utils.convertor(energy, "hartree", "eV")
             self.scfenergies.append(energy)
 
+        if "Dispersion correction" in line:
+            dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
+            self.append_attribute("dispersionenergies", dispersion)
+
         # The final MO orbitals are printed in a simple list, but apparently not for
         # DFT calcs, and often this list does not contain all MOs, so make sure to
         # parse them from the MO analysis below if possible. This section will be like this:
