@@ -102,9 +102,50 @@ class DDEC6Test(unittest.TestCase):
         analysis = DDEC6(self.data, imported_vol, os.path.dirname(os.path.realpath(__file__)))
         analysis.calculate()
 
+        radial_indices = []
+        for atomi in range(len(self.data.atomnos)):
+            lst = []
+            for radius in [0.05, 0.10, 0.15, 0.20, 0.25]:
+                # find closest radius index
+                lst.append(numpy.abs(analysis.radial_grid_r[atomi] - radius).argmin())
+            radial_indices.append(lst)
+
         # values from `chargemol` calculation
         # which is based on proatomic densities calculated with different basis set.
         # discrepancy comes from the fact that `chargemol` grid & `horton` grid don't exactly match
         # (rtol is adjusted to account for this inevitable discrepancy)
+        # STEP 1
+        # Check assigned charges.
         assert_allclose(analysis.refcharges[0], [-0.513006, 0.256231, 0.256775], rtol=0.10)
+        # STEP 2
+        # Check assigned charges.
         assert_allclose(analysis.refcharges[1], [-0.831591, 0.415430, 0.416161], rtol=0.20)
+        # STEP 3
+        # Check integrated charge density (rho^cond(r)) on grid with integrated values (=nelec).
+        self.assertAlmostEqual(
+            analysis.chgdensity.integrate(), analysis.rho_cond.integrate(), delta=1
+        )
+        for atomi in range(len(analysis.data.atomnos)):
+            self.assertAlmostEqual(
+                analysis._integrate_from_radial([analysis._cond_density[atomi]], [atomi])
+                + analysis.refcharges[-1][atomi],
+                analysis.data.atomnos[atomi],
+                delta=0.5,
+            )
+        # Also compare with data from `chargemol`
+        # discrepancy comes from the fact that `chargemol` grid and `horton` grid do not exactly match
+        assert_allclose(
+            analysis.tau[0][radial_indices[0]],
+            [0.999846160, 0.999739647, 0.999114037, 0.997077942, 0.994510889],
+            rtol=0.10,
+        )
+        assert_allclose(
+            analysis.tau[1][radial_indices[1]],
+            [0.864765882, 0.848824620, 0.805562019, 0.760402501, 0.736949861],
+            rtol=0.10,
+        )
+        assert_allclose(
+            analysis.tau[2][radial_indices[2]],
+            [0.845934391, 0.839099407, 0.803699493, 0.778428137, 0.698628724],
+            rtol=0.10,
+        )
