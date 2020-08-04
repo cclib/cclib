@@ -1933,7 +1933,7 @@ class Gaussian(logfileparser.Logfile):
             " charges and spin densities with hydrogens summed into heavy atoms:",
             " charges and spin densities:"]
             for header in headers:
-                if f"{property}{header}".lower() in line.lower():
+                if '{}{}'.format(property,header).lower() in line.lower():
                     has_spin = 'spin' in line.lower()
                     has_charges = 'charges' in line.lower()
                     if has_charges and not hasattr(self, "atomcharges"):
@@ -1964,14 +1964,14 @@ class Gaussian(logfileparser.Logfile):
                     if property.lower() in line.lower():
                         if has_charges:
                             if is_sum:
-                                self.atomcharges[f"{property}_sum"] = charges
+                                self.atomcharges['{}_sum'.format(property)] = charges
                             else:
-                                self.atomcharges[f"{property}"] = charges
+                                self.atomcharges['{}'.format(property)] = charges
                         if has_spin:
                             if is_sum:
-                                self.atomspins[f"{property}_sum"] = spins
+                                self.atomspins['{}_sum'.format(property)] = spins
                             else:
-                                self.atomspins[f"{property}"] = spins
+                                self.atomspins['{}'.format(property)] = spins
 
         if hasattr(self, "natom") and hasattr(self, "nhydrogen"):
             extract_charges_spins("mulliken")
