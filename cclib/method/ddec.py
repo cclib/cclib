@@ -274,24 +274,56 @@ class DDEC6(Method):
         self.logger.info("Conditioning charge densities.")
         self.condition_densities()
 
+        # STEP 4-7
+        # Optimize weights on each grid point
+        kappa = [0.0 for x in self.data.atomnos]
+        update_kappa = False
+        self.N_A = []
+        steps = 4
+        while steps < 5:  # change this to 8 after implementing kappa routine
+            self.logger.info("Optimizing charge weights (Step {}).".format(steps))
+            self.N_A.append(self._calculate_w_and_u())
+
+            # Update kappa as described in Figure S4.2 of doi: 10.1039/c6ra04656h
+            if numpy.any([x if x < -1e-5 else 0 for x in self.N_A[-1]]) and steps != 4:
+                update_kappa = True
+            if (
+                steps > 5
+                and update_kappa
+                and numpy.diff(self.N_A)[-1] < 1e-5
+                and numpy.diff(self.N_A)[-2] < 1e-5
+            ):
+                update_kappa = False
+                kappa = [0.0 for x in self.data.atomnos]
+
+            # TODO: EXIT LOOP HERE for steps = 7
+            if not update_kappa:
+                steps = steps + 1
+            else:
+                # `steps` not incremented in this case
+                # First update kappa based on equation 93
+                kappa_new = kappa - self.N_A / self.u_A
+                kappa = [x if x > 0 else 0.0 for x in kappa_new]
+                # TODO: In both cases, calculate G_A and H_A to update w_A based on S4.3 in doi: 10.1039/c6ra04656h
+
     def calculate_refcharges(self):
         """ Calculate reference charges from proatom density and molecular density
             [STEP 1 and 2]
         """
         # Generator object to iterate over the grid
         xshape, yshape, zshape = self.chgdensity.data.shape
-        atoms = len(self.data.atomnos)
+        natoms = self.data.natom
         indices = (
             (i, x, y, z)
-            for i in range(atoms)
+            for i in range(natoms)
             for x in range(xshape)
             for y in range(yshape)
             for z in range(zshape)
         )
 
-        stockholder_w = numpy.zeros((atoms, xshape, yshape, zshape))
-        localized_w = numpy.zeros((atoms, xshape, yshape, zshape))
-        self.closest_r_index = numpy.zeros((atoms, xshape, yshape, zshape), dtype=int)
+        stockholder_w = numpy.zeros((natoms, xshape, yshape, zshape))
+        localized_w = numpy.zeros((natoms, xshape, yshape, zshape))
+        self.closest_r_index = numpy.zeros((natoms, xshape, yshape, zshape), dtype=int)
 
         for atomi, xindex, yindex, zindex in indices:
             # Distance of the grid from atom grid
@@ -315,11 +347,11 @@ class DDEC6(Method):
         stockholder_bigW = numpy.sum(stockholder_w, axis=0)
         localized_bigW = numpy.sum(localized_w, axis=0)
 
-        refcharges = numpy.zeros((atoms))
-        localizedcharges = numpy.zeros((atoms))
-        stockholdercharges = numpy.zeros((atoms))
+        refcharges = numpy.zeros((natoms))
+        localizedcharges = numpy.zeros((natoms))
+        stockholdercharges = numpy.zeros((natoms))
 
-        for atomi in range(atoms):
+        for atomi in range(natoms):
             # Equation 52 and 51 in doi: 10.1039/c6ra04656h
             localizedcharges[atomi] = self.data.atomnos[atomi] - self.chgdensity.integrate(
                 weights=(localized_w[atomi] / localized_bigW)
@@ -342,10 +374,10 @@ class DDEC6(Method):
         """
         # Generator object to iterate over the grid
         xshape, yshape, zshape = self.chgdensity.data.shape
-        atoms = len(self.data.atomnos)
+        natoms = self.data.natom
         indices = (
             (i, x, y, z)
-            for i in range(atoms)
+            for i in range(natoms)
             for x in range(xshape)
             for y in range(yshape)
             for z in range(zshape)
@@ -404,6 +436,7 @@ class DDEC6(Method):
 
                 self._candidates_phi[atomi].append(phiAI[atomi])
                 self._candidates_bigPhi[atomi].append(bigphiAI[atomi])
+
 
             # lowerbigPhi is largest negative Phi.
             # upperbigPhi is smallest positive Phi.
@@ -540,16 +573,19 @@ class DDEC6(Method):
 
         # Generator object to iterate over the grid
         xshape, yshape, zshape = self.chgdensity.data.shape
-        atoms = len(self.data.atomnos)
+        natoms = self.data.natom
         indices = (
             (i, x, y, z)
-            for i in range(atoms)
+            for i in range(natoms)
             for x in range(xshape)
             for y in range(yshape)
             for z in range(zshape)
         )
 
-        self._leftterm = numpy.zeros((atoms, xshape, yshape, zshape), dtype=float)
+        self._leftterm = numpy.zeros((natoms, xshape, yshape, zshape), dtype=float)
+        # rho_cond_cartesian is rho^cond projected on Cartesian grid
+        # (used for Step 4 calculation)
+        self._rho_cond_cartesian = numpy.zeros((natoms, xshape, yshape, zshape), dtype=float)
         self.tau = []
 
         # rho_cond -- equation 65 in doi: 10.1039/c6ra04656h
@@ -566,10 +602,10 @@ class DDEC6(Method):
             for xindex, yindex, zindex in grid:
                 # leftterm is the first spherical average term in equation 66.
                 # <rho^cond_A(r_A) / sqrt(rho^cond(r))>
-                self._leftterm[atomi][xindex][yindex][zindex] = self._cond_density[atomi][
+                self._rho_cond_cartesian[atomi][xindex][yindex][zindex] = self._cond_density[atomi][
                     self.closest_r_index[atomi][xindex][yindex][zindex]
                 ]
-            self._leftterm[atomi] = self._leftterm[atomi] / rho_cond_sqrt
+            self._leftterm[atomi] = self._rho_cond_cartesian[atomi] / rho_cond_sqrt
             for radiusi in range(len(self.tau[atomi])):
                 grid_filter = self.closest_r_index[atomi] == radiusi
                 num_grid_filter = numpy.count_nonzero(grid_filter)
@@ -590,9 +626,73 @@ class DDEC6(Method):
             # Make tau monotonic decreasing
             self.tau[atomi] = numpy.maximum.accumulate(self.tau[atomi][::-1])[::-1]
 
-    def _phiai(self, ya, bigphiAI, atomi):
-        """ Evaluate phi_A^I based on equation S100
+    def _calculate_w_and_u(self):
+        """ Calculate weights placed on each integration grid point
+            [STEP 4-7]
         """
+        # From equation 67, w_A(r_A) = self._cond_density
+        # From equation 8, W(r) = self.rho_cond
+        xshape, yshape, zshape = self.chgdensity.data.shape
+        natoms = self.data.natom
+
+        # Evaluate rho_A(r_A) from equation 68, rho_A^avg(r_A) from equation 69,
+        # theta(r_A) from equation 70, w_avg from equation 71,
+        # N_A from equation 72, rho_wavg from equation 73, and u_A from equation 77.
+        self._rho_A = []
+        self._rho_A_avg = []
+        self._theta = []
+        self._wavg = []
+        N_A = []
+        self.rho_wavg = []
+        self.u_A = []
+        for atomi in range(natoms):
+            indices = (
+                (x, y, z) for x in range(xshape) for y in range(yshape) for z in range(zshape)
+            )
+            self._rho_A.append(copy.deepcopy(self.chgdensity))
+            self._rho_A[atomi].data = numpy.zeros_like(self._rho_A[atomi].data, dtype=float)
+            for xindex, yindex, zindex in indices:
+                # Equation 68
+                self._rho_A[atomi].data[xindex][yindex][zindex] = (
+                    self.chgdensity.data[xindex][yindex][zindex]
+                    * self._cond_density[atomi][self.closest_r_index[atomi][xindex][yindex][zindex]]
+                    / self.rho_cond.data[xindex][yindex][zindex]
+                )
+            self._rho_A_avg.append(numpy.zeros_like(self.proatom_density[atomi], dtype=float))
+            self._theta.append(numpy.zeros_like(self.proatom_density[atomi], dtype=float))
+            self._wavg.append(numpy.zeros_like(self.proatom_density[atomi], dtype=float))
+            for radiusi in range(len(self._rho_A_avg[atomi])):
+                # Equation 69, 70, and 71
+                self._rho_A_avg[atomi] = self._spherical_average_from_cartesian(
+                    self._rho_A[atomi].data, atomi, self.radial_grid_r[atomi]
+                )
+                self._rho_A_avg[atomi] = numpy.maximum.accumulate(self._rho_A_avg[atomi][::-1])[
+                    ::-1
+                ]
+                self._theta[atomi] = self._spherical_average_from_cartesian(
+                    (1 - self._rho_cond_cartesian[atomi] / self.rho_cond.data)
+                    * self._rho_A[atomi].data,
+                    atomi,
+                    self.radial_grid_r[atomi],
+                )
+                self._theta[atomi] = numpy.maximum.accumulate(self._theta[atomi][::-1])[::-1]
+                self._wavg[atomi] = self._spherical_average_from_cartesian(
+                    self._rho_cond_cartesian[atomi] / self.rho_cond.data,
+                    atomi,
+                    self.radial_grid_r[atomi],
+                )
+                self._wavg[atomi] = numpy.maximum.accumulate(self._wavg[atomi][::-1])[::-1]
+            # Equation 72, 73, and 77
+            N_A.append(self._rho_A[atomi].integrate())
+            self.rho_wavg.append(
+                (self._theta[atomi] + self._rho_A_avg[atomi] * self._wavg[atomi] / 5)
+                / (1 - (4 / 5) * self._wavg[atomi])
+            )
+            self.u_A.append(self._integrate_from_radial([self._theta[atomi]], [atomi]))
+
+        return N_A
+
+    def _phiai(self, ya, bigphiAI, atomi):
         # Re-evaluate cond_density
         if isinstance(bigphiAI, float) and not numpy.isinf(bigphiAI):
             cond_density = ya + bigphiAI * numpy.sqrt(ya)
@@ -618,6 +718,7 @@ class DDEC6(Method):
         # Y_a^avg -- Equation 40 in doi: 10.1039/c6ra04656h
         ya = numpy.zeros_like(proatom_density[atomi], dtype=float)
         weights = self.chgdensity.data / rho_ref
+
         for radiusi in range(len(ya)):
             grid_filter = self.closest_r_index[atomi] == radiusi
             num_grid_filter = numpy.count_nonzero(grid_filter)
@@ -654,3 +755,17 @@ class DDEC6(Method):
                 )
 
         return grid.integrate()
+
+    def _spherical_average_from_cartesian(self, cartesian_grid, atom_index, radius_list):
+        spherical_average = numpy.zeros(len(radius_list))
+        for radiusi in range(len(radius_list)):
+            grid_filter = self.closest_r_index[atom_index] == radiusi
+            num_grid_filter = numpy.count_nonzero(grid_filter)
+            if num_grid_filter < 1:
+                average = 0.0
+            else:
+                average = numpy.sum(grid_filter * cartesian_grid) / num_grid_filter
+                if average < 1e-20:
+                    average = 0.0
+            spherical_average[radiusi] = average
+        return spherical_average

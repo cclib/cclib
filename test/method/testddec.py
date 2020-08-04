@@ -92,7 +92,7 @@ class DDEC6Test(unittest.TestCase):
         TODO: Test suite based on horton densities will be added after full implementation of
               DDEC6 algorithm.
         """
-        
+
         self.parse()
         # use precalculated fine cube file
         imported_vol = volume.read_from_cube(
@@ -148,4 +148,9 @@ class DDEC6Test(unittest.TestCase):
             analysis.tau[2][radial_indices[2]],
             [0.845934391, 0.839099407, 0.803699493, 0.778428137, 0.698628724],
             rtol=0.10,
+        )
+        # STEP 4
+        # Check values assigned to u_A
+        assert_allclose(
+            analysis.u_A, [0.572349429, 0.296923935, 0.296520531], atol=0.05,
         )
