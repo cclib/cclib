@@ -113,14 +113,6 @@ class DDEC6(Stockholder):
             )
         )
 
-        # Notify user about the total charge in the density grid
-        integrated_density = self.charge_density.integrate()
-        self.logger.info(
-            "Total charge density in the grid is {}. If this does not match what is expected, using a finer grid may help.".format(
-                integrated_density
-            )
-        )
-
         # * STEP 1 *
         # Carry out step 1 of DDEC6 algorithm [Determining reference charge value]
         # Refer to equations 49-57 in doi: 10.1039/c6ra04656h
@@ -202,24 +194,16 @@ class DDEC6(Stockholder):
         # continue to next step. Otherwise, calculate g and h. In both cases, calculate new
         # rho_cond.
         steps = 5
-        update_kappa = False
+        self._update_kappa = False
         while steps < 7:
             self.logger.info("Optimizing grid weights. (Step {}/7)".format(steps))
             self.N_A.append(self._calculate_w_and_u())
 
-            # Update kappa as described in Figure S4.2 of doi: 10.1039/c6ra04656h
-            if numpy.any([x if x < -1e-5 else 0 for x in self.N_A[-1]]):
-                update_kappa = True
-            if (
-                update_kappa
-                and numpy.any(numpy.diff(self.N_A)[-1] < 1e-5)  # change in N_A during last cycle
-                and numpy.any(numpy.diff(self.N_A)[-2] < 1e-5)  # change in N_A during last to
-                # second cycle
-            ):
-                update_kappa = False
-                self._kappa = [0.0 for x in self.data.atomnos]
+            # Determine whether kappa needs to be updated or not based on Figure S4.2
+            # of doi: 10.1039/c6ra04656h
+            self._update_kappa = self._check_kappa()
 
-            if not update_kappa:
+            if not self._update_kappa:
                 # Increment steps
                 steps = steps + 1
                 # Calculate G_A and H_A based on S4.3 in doi: 10.1039/c6ra04656h
@@ -251,6 +235,23 @@ class DDEC6(Stockholder):
         # Finally, store calculated DDEC6 charges in fragcharges
         self.logger.info("Creating fragcharges: array[1]")
         self.fragcharges = numpy.array(self.data.atomnos - self.N_A[-1], dtype=float)
+
+    def _check_kappa(self):
+        """ Return whether kappa needs to be updated or not based on Figure S4.2
+            of doi: 10.1039/c6ra04656h
+        """
+        if numpy.any([x if x < -1e-5 else 0 for x in self.N_A[-1]]):
+            return True
+        elif (
+            self._update_kappa
+            and numpy.any(numpy.diff(self.N_A)[-1] < 1e-5)  # change in N_A during last cycle
+            and numpy.any(numpy.diff(self.N_A)[-2] < 1e-5)  # change in N_A during last to
+            # second cycle
+        ):
+            self._kappa = [0.0 for x in self.data.atomnos]
+            return False
+        else:
+            return self._update_kappa
 
     def calculate_reference_charges(self):
         """ Calculate reference charges from proatom density and molecular density
@@ -366,131 +367,15 @@ class DDEC6(Stockholder):
             self._candidates_bigPhi.append([bigphiAI[atomi]])
             self._candidates_phi.append([phiAI[atomi]])
 
-            while phiAI[atomi] <= 0:
-                # Iterative algorithm until convergence
-                # Refer to S101 in doi: 10.1039/c6ra04656h
-                bigphiAI[atomi] = 2 * bigphiAI[atomi] - phiAI[atomi] / self._integrate_from_radial(
-                    [numpy.sqrt(self._y_a[atomi])], [atomi]
-                )
-
-                # When Phi is updated, related quantities are updated as well
-                # Refer to S100 in doi: 10.1039/c6ra04656h
-                phiAI[atomi], self._cond_density[atomi] = self._update_phiai(
-                    self._y_a[atomi], bigphiAI[atomi], atomi
-                )
-
-                self._candidates_phi[atomi].append(phiAI[atomi])
-                self._candidates_bigPhi[atomi].append(bigphiAI[atomi])
-
-            # lowerbigPhi is largest negative Phi.
-            # upperbigPhi is smallest positive Phi.
-            self._candidates_phi[atomi] = numpy.array(self._candidates_phi[atomi], dtype=float)
-            self._candidates_bigPhi[atomi] = numpy.array(
-                self._candidates_bigPhi[atomi], dtype=float
+            # Attempt to find the point where phiAI is zero iteratively
+            # Refer to S101 in doi: 10.1039/c6ra04656h
+            self._candidates_phi[atomi], self._candidates_bigPhi[atomi] = self._converge_phi(
+                phiAI[atomi], 1, atomi
             )
-            if numpy.count_nonzero(self._candidates_phi[atomi] < 0) > 0:
-                lower_ind = numpy.where(
-                    self._candidates_phi[atomi]
-                    == self._candidates_phi[atomi][self._candidates_phi[atomi] < 0].max()
-                )[0][0]
-                lowerbigPhi = self._candidates_bigPhi[atomi][lower_ind]
-                lowerphi = self._candidates_phi[atomi][lower_ind]
-            else:  # assign some large negative number
-                lowerbigPhi = numpy.NINF
-                lowerphi = numpy.NINF
-            if numpy.count_nonzero(self._candidates_phi[atomi] > 0) > 0:
-                upper_ind = numpy.where(
-                    self._candidates_phi[atomi]
-                    == self._candidates_phi[atomi][self._candidates_phi[atomi] > 0].min()
-                )[0][0]
-                upperbigPhi = self._candidates_bigPhi[atomi][upper_ind]
-                upperphi = self._candidates_phi[atomi][upper_ind]
-            else:  # assign some large positive number
-                upperbigPhi = numpy.PINF
-                upperphi = numpy.PINF
 
-            for iteration in range(50):
-                # Flow diagram on Figure S1 in doi: 10.1039/c6ra04656h details the procedure.
-                midbigPhi = (lowerbigPhi + upperbigPhi) / 2.0
-                midphi = self._update_phiai(self._y_a[atomi], midbigPhi, atomi)[0]
-                # Exit conditions
-                if abs(lowerphi) < self.convergence_level:
-                    bigphiAI[atomi] = lowerbigPhi
-                    break
-                elif abs(upperphi) < self.convergence_level:
-                    bigphiAI[atomi] = upperbigPhi
-                    break
-                elif abs(midphi) < self.convergence_level:
-                    bigphiAI[atomi] = midbigPhi
-                    break
-
-                # Parabolic fitting as described on Figure S1 in doi: 10.1039/c6ra04656h
-                # Type casting here converts from size 1 numpy.ndarray to float
-                xpts = numpy.array(
-                    [float(lowerbigPhi), float(midbigPhi), float(upperbigPhi)], dtype=float
-                )
-                ypts = numpy.array([float(lowerphi), float(midphi), float(upperphi)], dtype=float)
-                fit = numpy.polyfit(xpts, ypts, 2)
-                roots = numpy.roots(fit)  # max two roots (bigPhi)
-
-                belowphi = self._update_phiai(self._y_a[atomi], roots.min(), atomi)[0]
-                abovephi = self._update_phiai(self._y_a[atomi], roots.max(), atomi)[0]
-
-                if abs(abovephi) < self.convergence_level:
-                    bigphiAI[atomi] = roots.min()
-                    break
-                elif abs(belowphi) < self.convergence_level:
-                    bigphiAI[atomi] = roots.max()
-                    break
-                else:
-                    if 3 * abs(abovephi) < abs(belowphi):
-                        corbigPhi = roots.max() - 2.0 * abovephi * (roots.max() - roots.min()) / (
-                            abovephi - belowphi
-                        )
-                    elif 3 * abs(belowphi) < abs(abovephi):
-                        corbigPhi = roots.min() - 2.0 * belowphi * (roots.max() - roots.min()) / (
-                            abovephi - belowphi
-                        )
-                    else:
-                        corbigPhi = (roots.max() + roots.min()) / 2.0
-                    # New candidates
-                    corphi = self._update_phiai(self._y_a[atomi], corbigPhi, atomi)[0]
-                    self._candidates_bigPhi[atomi] = numpy.array(
-                        [lowerbigPhi, midbigPhi, upperbigPhi, roots.max(), roots.min(), corbigPhi,],
-                        dtype=float,
-                    )
-                    self._candidates_phi[atomi] = numpy.array(
-                        [lowerphi, midphi, upperphi, abovephi, belowphi, corphi], dtype=float
-                    )
-
-                    # Update upperphi and lowerphi
-                    lower_ind = numpy.where(
-                        self._candidates_phi[atomi]
-                        == self._candidates_phi[atomi][self._candidates_phi[atomi] < 0].max()
-                    )[0][0]
-                    upper_ind = numpy.where(
-                        self._candidates_phi[atomi]
-                        == self._candidates_phi[atomi][self._candidates_phi[atomi] > 0].min()
-                    )[0][0]
-
-                    lowerphi = self._candidates_phi[atomi][lower_ind]
-                    upperphi = self._candidates_phi[atomi][upper_ind]
-
-                    if abs(lowerphi) < self.convergence_level:
-                        bigphiAI[atomi] = self._candidates_bigPhi[atomi][lower_ind]
-                        break
-                    elif abs(upperphi) < self.convergence_level:
-                        bigphiAI[atomi] = self._candidates_bigPhi[atomi][upper_ind]
-                        break
-                    else:
-                        # Fitting needs to continue in this case.
-                        lowerbigPhi = self._candidates_bigPhi[atomi][lower_ind]
-                        lowerphi = self._candidates_phi[atomi][lower_ind]
-                        upperbigPhi = self._candidates_bigPhi[atomi][upper_ind]
-                        upperphi = self._candidates_phi[atomi][upper_ind]
-
-                if iteration == self.max_iteration - 1:
-                    raise ConvergenceError("Iterative conditioning failed to converge.")
+            # Perform parabolic fit to find optimized phiAI
+            # Refer to Figure S1 in doi: 10.1039/c6ra04656h
+            bigphiAI[atomi] = self._parabolic_fit(self._y_a[atomi], 1, atomi)
 
             # Set final conditioned density using chosen Phi
             self._cond_density[atomi] = self._update_phiai(
@@ -560,6 +445,34 @@ class DDEC6(Stockholder):
                         )
             # Make tau monotonic decreasing
             self.tau[atomi] = numpy.maximum.accumulate(self.tau[atomi][::-1])[::-1]
+
+    def _ya(self, proatom_density, atomi):
+        # Function that calculates Y_a^avg
+        # See Eq. 40-41 in doi: 10.1039/c6ra04656h
+        rho_ref = self._rho_ref
+        # Y_a^avg -- Equation 40 in doi: 10.1039/c6ra04656h
+        ya = numpy.zeros_like(proatom_density[atomi], dtype=float)
+        weights = self.charge_density.data / rho_ref
+
+        for radiusi in range(len(ya)):
+            grid_filter = self.closest_r_index[atomi] == radiusi
+            num_grid_filter = numpy.count_nonzero(grid_filter)
+            if num_grid_filter < 1:
+                ya[radiusi] = 0.0
+            else:
+                spherical_avg = numpy.sum(grid_filter * weights) / num_grid_filter
+                ya[radiusi] = proatom_density[atomi][radiusi] * spherical_avg
+
+        # Make y_a monotonic decreasing
+        # Refer to module_reshaping_functions.f08::77-79
+        ya = numpy.maximum.accumulate(ya[::-1])[::-1]
+        ya = numpy.minimum.accumulate(ya)
+
+        # Normalize y_a (see module_DDEC6_valence_iterator.f08::284)
+        nelec = self._integrate_from_radial([ya], [atomi])
+        ya *= (self.data.atomnos[atomi] - self.reference_charges[-1][atomi]) / nelec
+
+        return ya
 
     def _calculate_w_and_u(self):
         """ Calculate weights placed on each integration grid point
@@ -640,7 +553,6 @@ class DDEC6(Stockholder):
             This is a quantity introduced in DDEC6 as a constraint preventing the tails from being
             too diffuse.
             [STEP 4-7]
-            TODO: some similarities exist with step 3 routine. code refactoring may improve readability.
         """
         self._candidates_bigPhi = []
         self._candidates_phi = []
@@ -649,6 +561,7 @@ class DDEC6(Stockholder):
         phiAII = numpy.zeros_like(self.data.atomnos, dtype=float)
         bigphiAII = numpy.zeros_like(self.data.atomnos, dtype=float)
         self._g = []
+        self._eta = []
 
         for atomi in range(self.data.natom):
             # G_A -- equation S102 in doi: 10.1039/c6ra04656h
@@ -657,9 +570,9 @@ class DDEC6(Stockholder):
                 self.rho_wavg[atomi]
             )
             # Exponential constraint (as expressed in equation S105)
-            eta = (1 - (self.tau[atomi]) ** 2) * 1.75 * convertor(1, "Angstrom", "bohr")
+            self._eta.append((1 - (self.tau[atomi]) ** 2) * 1.75 * convertor(1, "Angstrom", "bohr"))
             exp_applied = self._g[atomi][:-1] * numpy.exp(
-                -1 * eta[1:] * numpy.diff(self.radial_grid_r[atomi])
+                -1 * self._eta[atomi][1:] * numpy.diff(self.radial_grid_r[atomi])
             )
             for radiusi in range(1, len(self._g[atomi])):
                 self._g[atomi][radiusi] = min(self._g[atomi][radiusi], exp_applied[radiusi - 1])
@@ -671,146 +584,18 @@ class DDEC6(Stockholder):
             self._candidates_bigPhi.append([bigphiAII[atomi]])
             self._candidates_phi.append([phiAII[atomi]])
 
-            while phiAII[atomi] <= 0:
-                # Iterative algorithm until convergence
-                # Refer to Figure S3 in doi: 10.1039/c6ra04656h
-                temp = self._integrate_from_radial([numpy.sqrt(self.rho_wavg[atomi])], [atomi])
-                bigphiAII[atomi] = 2 * bigphiAII[atomi] - phiAII[atomi] / temp
-
-                # When Phi is updated, related quantities are updated as well
-                # Refer to S102 in doi: 10.1039/c6ra04656h
-                phiAII[atomi], self._g[atomi] = self._update_phiaii(
-                    self.rho_wavg[atomi], eta, bigphiAII[atomi], atomi
-                )
-
-                self._candidates_phi[atomi].append(phiAII[atomi])
-                self._candidates_bigPhi[atomi].append(bigphiAII[atomi])
-
-                if abs(phiAII[atomi]) < self.convergence_level:
-                    fitphi = False
-                    phiAII[atomi] = self.convergence_level
-                    break
-
-                if abs(phiAII[atomi]) < self.convergence_level:
-                    fitphi = False
-                    phiAII[atomi] = self.convergence_level
-                    break
-
-
-            # lowerbigPhi is negative Phi with the smallest magnitude.
-            # upperbigPhi is positive Phi with the smallest magnitude.
-            self._candidates_phi[atomi] = numpy.array(self._candidates_phi[atomi], dtype=float)
-            self._candidates_bigPhi[atomi] = numpy.array(
-                self._candidates_bigPhi[atomi], dtype=float
+            # Attempt to find the point where phiAI is zero iteratively
+            # Refer to S101 in doi: 10.1039/c6ra04656h
+            self._candidates_phi[atomi], self._candidates_bigPhi[atomi] = self._converge_phi(
+                phiAII[atomi], 1, atomi
             )
-            if numpy.count_nonzero(self._candidates_phi[atomi] < 0) > 0:
-                lower_ind = numpy.where(
-                    self._candidates_phi[atomi]
-                    == self._candidates_phi[atomi][self._candidates_phi[atomi] < 0].max()
-                )[0][0]
-                lowerbigPhi = self._candidates_bigPhi[atomi][lower_ind]
-                lowerphi = self._candidates_phi[atomi][lower_ind]
-            else:  # assign some large negative number
-                lowerbigPhi = numpy.NINF
-                lowerphi = numpy.NINF
-            if numpy.count_nonzero(self._candidates_phi[atomi] > 0) > 0:
-                upper_ind = numpy.where(
-                    self._candidates_phi[atomi]
-                    == self._candidates_phi[atomi][self._candidates_phi[atomi] > 0].min()
-                )[0][0]
-                upperbigPhi = self._candidates_bigPhi[atomi][upper_ind]
-                upperphi = self._candidates_phi[atomi][upper_ind]
-            else:  # assign some large positive number
-                upperbigPhi = numpy.PINF
-                upperphi = numpy.PINF
 
-            for iteration in range(50):
-                # Flow diagram on Figure S1 in doi: 10.1039/c6ra04656h details the procedure.
-                midbigPhi = (lowerbigPhi + upperbigPhi) / 2.0
-                midphi = self._update_phiai(self._y_a[atomi], midbigPhi, atomi)[0]
-                # Exit conditions
-                if abs(lowerphi) < self.convergence_level:
-                    bigphiAII[atomi] = lowerbigPhi
-                    break
-                elif abs(upperphi) < self.convergence_level:
-                    bigphiAII[atomi] = upperbigPhi
-                    break
-                elif abs(midphi) < self.convergence_level:
-                    bigphiAII[atomi] = midbigPhi
-                    break
-
-                # Parabolic fitting as described on Figure S1 in doi: 10.1039/c6ra04656h
-                # Type casting here converts from size 1 numpy.ndarray to float
-                xpts = numpy.array(
-                    [float(lowerbigPhi), float(midbigPhi), float(upperbigPhi)], dtype=float
-                )
-                ypts = numpy.array([float(lowerphi), float(midphi), float(upperphi)], dtype=float)
-                fit = numpy.polyfit(xpts, ypts, 2)
-                roots = numpy.roots(fit)  # max two roots (bigPhi)
-
-                belowphi = self._update_phiaii(self.rho_wavg[atomi], eta, roots.min(), atomi)[0]
-                abovephi = self._update_phiaii(self.rho_wavg[atomi], eta, roots.max(), atomi)[0]
-
-                if abs(abovephi) < self.convergence_level:
-                    bigphiAII[atomi] = roots.min()
-                    break
-                elif abs(belowphi) < self.convergence_level:
-                    bigphiAII[atomi] = roots.max()
-                    break
-                else:
-                    if 3 * abs(abovephi) < abs(belowphi):
-                        corbigPhi = roots.max() - 2.0 * abovephi * (roots.max() - roots.min()) / (
-                            abovephi - belowphi
-                        )
-                    elif 3 * abs(belowphi) < abs(abovephi):
-                        corbigPhi = roots.min() - 2.0 * belowphi * (roots.max() - roots.min()) / (
-                            abovephi - belowphi
-                        )
-                    else:
-                        corbigPhi = (roots.max() + roots.min()) / 2.0
-                    # New candidates
-                    corphi = self._update_phiaii(self.rho_wavg[atomi], eta, corbigPhi, atomi)[0]
-                    self._candidates_bigPhi[atomi] = numpy.array(
-                        [lowerbigPhi, midbigPhi, upperbigPhi, roots.max(), roots.min(), corbigPhi,],
-                        dtype=float,
-                    )
-                    self._candidates_phi[atomi] = numpy.array(
-                        [lowerphi, midphi, upperphi, abovephi, belowphi, corphi], dtype=float
-                    )
-
-                    # Update upperphi and lowerphi
-                    lower_ind = numpy.where(
-                        self._candidates_phi[atomi]
-                        == self._candidates_phi[atomi][self._candidates_phi[atomi] < 0].max()
-                    )[0][0]
-                    upper_ind = numpy.where(
-                        self._candidates_phi[atomi]
-                        == self._candidates_phi[atomi][self._candidates_phi[atomi] > 0].min()
-                    )[0][0]
-
-                    lowerphi = self._candidates_phi[atomi][lower_ind]
-                    upperphi = self._candidates_phi[atomi][upper_ind]
-
-                    if abs(lowerphi) < self.convergence_level:
-                        bigphiAII[atomi] = self._candidates_bigPhi[atomi][lower_ind]
-                        break
-                    elif abs(upperphi) < self.convergence_level:
-                        bigphiAII[atomi] = self._candidates_bigPhi[atomi][upper_ind]
-                        break
-                    else:
-                        # Fitting needs to continue in this case.
-                        lowerbigPhi = self._candidates_bigPhi[atomi][lower_ind]
-                        lowerphi = self._candidates_phi[atomi][lower_ind]
-                        upperbigPhi = self._candidates_bigPhi[atomi][upper_ind]
-                        upperphi = self._candidates_phi[atomi][upper_ind]
-
-                if iteration == self.max_iteration - 1:
-                    raise ConvergenceError("Iterative conditioning failed to converge.")
+            # Perform parabolic fit to find optimized phiAI
+            # Refer to Figure S1 in doi: 10.1039/c6ra04656h
+            bigphiAII[atomi] = self._parabolic_fit(self.rho_wavg[atomi], 2, atomi)
 
             # Set final G_A value using chosen Phi
-            self._g[atomi] = self._update_phiaii(
-                self.rho_wavg[atomi], eta, bigphiAII[atomi], atomi
-            )[1]
+            self._g[atomi] = self._update_phiaii(self.rho_wavg[atomi], bigphiAII[atomi], atomi)[1]
 
     def calculate_H(self):
         """ Calculate H_A(r_A)
@@ -864,7 +649,7 @@ class DDEC6(Stockholder):
 
         return phiAI, cond_density
 
-    def _update_phiaii(self, rhowavg, eta, bigphiAI, atomi):
+    def _update_phiaii(self, rhowavg, bigphiAI, atomi):
         # Update phi^a_ii and quantity that directly follows (G_A) in each step of
         # iterative optimization. (Refer to Figure S3)
         # Re-evaluate g_a
@@ -872,7 +657,9 @@ class DDEC6(Stockholder):
         ga = rhowavg + bigphiAI * numpy.sqrt(rhowavg)
 
         # Exponential Decrease Condition
-        exp_applied = ga[:-1] * numpy.exp(-1 * eta[1:] * numpy.diff(self.radial_grid_r[atomi]))
+        exp_applied = ga[:-1] * numpy.exp(
+            -1 * self._eta[atomi][1:] * numpy.diff(self.radial_grid_r[atomi])
+        )
         for radiusi in range(1, len(ga)):
             ga[radiusi] = min(ga[radiusi], exp_applied[radiusi - 1])
 
@@ -880,34 +667,6 @@ class DDEC6(Stockholder):
         phiAII = self._integrate_from_radial([ga - rhowavg], [atomi])
 
         return phiAII, ga
-
-    def _ya(self, proatom_density, atomi):
-        # Function that calculates Y_a^avg
-        # See Eq. 40-41 in doi: 10.1039/c6ra04656h
-        rho_ref = self._rho_ref
-        # Y_a^avg -- Equation 40 in doi: 10.1039/c6ra04656h
-        ya = numpy.zeros_like(proatom_density[atomi], dtype=float)
-        weights = self.charge_density.data / rho_ref
-
-        for radiusi in range(len(ya)):
-            grid_filter = self.closest_r_index[atomi] == radiusi
-            num_grid_filter = numpy.count_nonzero(grid_filter)
-            if num_grid_filter < 1:
-                ya[radiusi] = 0.0
-            else:
-                spherical_avg = numpy.sum(grid_filter * weights) / num_grid_filter
-                ya[radiusi] = proatom_density[atomi][radiusi] * spherical_avg
-
-        # Make y_a monotonic decreasing
-        # Refer to module_reshaping_functions.f08::77-79
-        ya = numpy.maximum.accumulate(ya[::-1])[::-1]
-        ya = numpy.minimum.accumulate(ya)
-
-        # Normalize y_a (see module_DDEC6_valence_iterator.f08::284)
-        nelec = self._integrate_from_radial([ya], [atomi])
-        ya *= (self.data.atomnos[atomi] - self.reference_charges[-1][atomi]) / nelec
-
-        return ya
 
     def _integrate_from_radial(self, radial_density_list, atom_list):
         # Function that reads in list of radial densities, projects it on Cartesian grid,
@@ -959,3 +718,188 @@ class DDEC6(Stockholder):
                 self._rho_cond_cartesian[atomi][xindex][yindex][zindex] = self._cond_density[atomi][
                     self.closest_r_index[atomi][xindex][yindex][zindex]
                 ]
+
+    def _converge_phi(self, phiA, superscript, atomi):
+        """ Update phi until it is positive.
+            This is used in step 3 (for phi_A^I) and in steps 4-6 (for phi_A^II).
+            
+            --- Inputs ---
+            phiA            Either phi_A^I or phi_A^II
+            superscript     1 when calculating phi_I (STEP 3)
+                            2 when calculating phi_II (STEPS 4-6)
+            atomi           Index of target atom as in ccData object
+            
+            Refer to Equation S101, Figure S1 and S3 for an overview.
+        """
+        # Initial value of bigphi is zero (Equation S100)
+        bigphiA = 0.0
+
+        # List to store candidate values for parabolic fitting
+        candidates_phi = [phiA]
+        candidates_bigphi = [bigphiA]
+
+        while phiA <= 0:
+            # Iterative algorithm until convergence
+            # Refer to S101 in doi: 10.1039/c6ra04656h
+            if superscript == 1:
+                temp = self._integrate_from_radial([numpy.sqrt(self._y_a[atomi])], [atomi])
+            elif superscript == 2:
+                temp = self._integrate_from_radial([numpy.sqrt(self.rho_wavg[atomi])], [atomi])
+
+            bigphiA = 2 * bigphiA - phiA / temp
+
+            # When Phi is updated, related quantities are updated as well
+            # Refer to S100 in doi: 10.1039/c6ra04656h [Step 3]
+            #       or S102 in doi: 10.1039/c6ra04656h [Steps 4-6]
+
+            if superscript == 1:
+                phiA, self._cond_density[atomi] = self._update_phiai(
+                    self._y_a[atomi], bigphiA, atomi
+                )
+            elif superscript == 2:
+                phiA, self._g[atomi] = self._update_phiaii(self.rho_wavg[atomi], bigphiA, atomi)
+
+            candidates_phi.append(phiA)
+            candidates_bigphi.append(bigphiA)
+
+        return candidates_phi, candidates_bigphi
+
+    def _parabolic_fit(self, pseudodensity, superscript, atomi):
+        """ Optimize phi using parabolic fitting.
+            This is used in step 3 (for phi_A^I) and in steps 4-6 (for phi_A^II).
+            
+            --- Inputs ---
+            phiA            Either phi_A^I or phi_A^II
+            superscript     1 when calculating phi_I (STEP 3)
+                            2 when calculating phi_II (STEPS 4-6)
+            atomi           Index of target atom as in ccData object
+            
+            Refer to Figure S1 and S3 for an overview.
+        """
+        # Set update methods for phi_A^I or phi_A^II
+        if superscript == 1:
+
+            def update(pdens, bigPhi, atomi):
+                return self._update_phiai(pdens, bigPhi, atomi)
+
+        elif superscript == 2:
+
+            def update(pdens, bigPhi, atomi):
+                return self._update_phiaii(pseudodensity, bigPhi, atomi)
+
+        # lowerbigPhi is bigPhi that yields biggest negative phi.
+        # upperbigPhi is bigPhi that yields smallest positive phi.
+        # The point here is to find two phi values that are closest to zero (from positive side
+        # and negative side respectively).
+        self._candidates_phi[atomi] = numpy.array(self._candidates_phi[atomi], dtype=float)
+        self._candidates_bigPhi[atomi] = numpy.array(self._candidates_bigPhi[atomi], dtype=float)
+        if numpy.count_nonzero(self._candidates_phi[atomi] < 0) > 0:
+            # If there is at least one candidate phi that is negative
+            lower_ind = numpy.where(
+                self._candidates_phi[atomi]
+                == self._candidates_phi[atomi][self._candidates_phi[atomi] < 0].max()
+            )[0][0]
+            lowerbigPhi = self._candidates_bigPhi[atomi][lower_ind]
+            lowerphi = self._candidates_phi[atomi][lower_ind]
+        else:  # assign some large negative number otherwise
+            lowerbigPhi = numpy.NINF
+            lowerphi = numpy.NINF
+        if numpy.count_nonzero(self._candidates_phi[atomi] > 0) > 0:
+            # If there is at least one candidate phi that is positive
+            upper_ind = numpy.where(
+                self._candidates_phi[atomi]
+                == self._candidates_phi[atomi][self._candidates_phi[atomi] > 0].min()
+            )[0][0]
+            upperbigPhi = self._candidates_bigPhi[atomi][upper_ind]
+            upperphi = self._candidates_phi[atomi][upper_ind]
+        else:  # assign some large positive number otherwise
+            upperbigPhi = numpy.PINF
+            upperphi = numpy.PINF
+
+        for iteration in range(self.max_iteration):
+            # Flow diagram on Figure S1 in doi: 10.1039/c6ra04656h details the procedure.
+            # Find midpoint between positive bigPhi that yields phi closest to zero and negative
+            # bigPhi closest to zero. Then, evaluate phi.
+            # This can be thought as linear fitting compared to parabolic fitting below.
+            midbigPhi = (lowerbigPhi + upperbigPhi) / 2.0
+            midphi = update(pseudodensity, midbigPhi, atomi)[0]
+            # Exit conditions -- if any of three phi values are within the convergence level.
+            if abs(lowerphi) < self.convergence_level:
+                return lowerbigPhi
+            elif abs(upperphi) < self.convergence_level:
+                return upperbigPhi
+            elif abs(midphi) < self.convergence_level:
+                return midbigPhi
+
+            # Parabolic fitting as described on Figure S1 in doi: 10.1039/c6ra04656h
+            # Type casting here converts from size 1 numpy.ndarray to float
+            xpts = numpy.array(
+                [float(lowerbigPhi), float(midbigPhi), float(upperbigPhi)], dtype=float
+            )
+            ypts = numpy.array([float(lowerphi), float(midphi), float(upperphi)], dtype=float)
+            fit = numpy.polyfit(xpts, ypts, 2)
+            roots = numpy.roots(fit)  # max two roots (bigPhi) from parabolic fitting
+
+            # Find phi for two bigPhis that were obtained from parabolic fitting.
+            belowphi = update(pseudodensity, roots.min(), atomi)[0]
+            abovephi = update(pseudodensity, roots.max(), atomi)[0]
+
+            # If phi values from parabolically fitted bigPhis lie within the convergence level,
+            # exit the iterative algorithm.
+            if abs(abovephi) < self.convergence_level:
+                return roots.min()
+            elif abs(belowphi) < self.convergence_level:
+                return roots.max()
+            else:
+                # Otherwise, corrected phi value is obtained in a way that cuts the numerical
+                # search domain in half in each iteration.
+                if 3 * abs(abovephi) < abs(belowphi):
+                    corbigPhi = roots.max() - 2.0 * abovephi * (roots.max() - roots.min()) / (
+                        abovephi - belowphi
+                    )
+                elif 3 * abs(belowphi) < abs(abovephi):
+                    corbigPhi = roots.min() - 2.0 * belowphi * (roots.max() - roots.min()) / (
+                        abovephi - belowphi
+                    )
+                else:
+                    corbigPhi = (roots.max() + roots.min()) / 2.0
+                # New candidates of phi and bigPhi are determined as bigPhi yielding largest
+                # negative phi and bigPhi yielding smallest positve phi. This is analogous to how
+                # the first candidiate phi values are evaluated.
+                corphi = update(pseudodensity, corbigPhi, atomi)[0]
+                self._candidates_bigPhi[atomi] = numpy.array(
+                    [lowerbigPhi, midbigPhi, upperbigPhi, roots.max(), roots.min(), corbigPhi,],
+                    dtype=float,
+                )
+                self._candidates_phi[atomi] = numpy.array(
+                    [lowerphi, midphi, upperphi, abovephi, belowphi, corphi], dtype=float
+                )
+
+                # Set new upperphi and lowerphi
+                lower_ind = numpy.where(
+                    self._candidates_phi[atomi]
+                    == self._candidates_phi[atomi][self._candidates_phi[atomi] < 0].max()
+                )[0][0]
+                upper_ind = numpy.where(
+                    self._candidates_phi[atomi]
+                    == self._candidates_phi[atomi][self._candidates_phi[atomi] > 0].min()
+                )[0][0]
+
+                lowerphi = self._candidates_phi[atomi][lower_ind]
+                upperphi = self._candidates_phi[atomi][upper_ind]
+
+                # If new lowerphi or upperphi values are within convergence level, exit the
+                # iterative algorithm. Otherwise, start new linear/parabolic fitting.
+                if abs(lowerphi) < self.convergence_level:
+                    return self._candidates_bigPhi[atomi][lower_ind]
+                elif abs(upperphi) < self.convergence_level:
+                    return self._candidates_bigPhi[atomi][upper_ind]
+                else:
+                    # Fitting needs to continue in this case.
+                    lowerbigPhi = self._candidates_bigPhi[atomi][lower_ind]
+                    lowerphi = self._candidates_phi[atomi][lower_ind]
+                    upperbigPhi = self._candidates_bigPhi[atomi][upper_ind]
+                    upperphi = self._candidates_phi[atomi][upper_ind]
+
+        # Raise Exception if convergence is not achieved within max_iteration.
+        raise ConvergenceError("Iterative conditioning failed to converge.")
