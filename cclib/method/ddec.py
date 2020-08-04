@@ -113,6 +113,7 @@ class DDEC6(Stockholder):
             )
         )
 
+
         # * STEP 1 *
         # Carry out step 1 of DDEC6 algorithm [Determining reference charge value]
         # Refer to equations 49-57 in doi: 10.1039/c6ra04656h
