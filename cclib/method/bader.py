@@ -213,10 +213,8 @@ class Bader(Method):
         self.fragcharges = numpy.zeros(len(self.data.atomcoords[-1]), "d")
 
         for atom_index, baderarea_index in enumerate(self.matches):
-            # turn off all other grid points
-            chargedensity = copy.deepcopy(self.chgdensity)
-            mask = self.fragresults == baderarea_index
-            chargedensity.data *= mask
-            self.fragcharges[atom_index] = chargedensity.integrate()
+            self.fragcharges[atom_index] = self.chgdensity.integrate(
+                weights=(self.fragresults == baderarea_index)
+            )
 
         return True

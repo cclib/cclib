@@ -178,23 +178,28 @@ class Volume(object):
         )
         v.tofile(filename)
 
-    def integrate(self):
-        boxvol = (
-            self.spacing[0]
-            * self.spacing[1]
-            * self.spacing[2]
-            * convertor(1, "Angstrom", "bohr") ** 3
-        )
-        return sum(self.data.ravel()) * boxvol
+    def integrate(self, weights=None):
+        weights = numpy.ones_like(self.data) if weights is None else weights
 
-    def integrate_square(self):
         boxvol = (
             self.spacing[0]
             * self.spacing[1]
             * self.spacing[2]
             * convertor(1, "Angstrom", "bohr") ** 3
         )
-        return sum(self.data.ravel() ** 2) * boxvol
+
+        return numpy.sum(self.data * weights) * boxvol
+
+    def integrate_square(self, weights=None):
+        weights = numpy.ones_like(self.data) if weights is None else weights
+
+        boxvol = (
+            self.spacing[0]
+            * self.spacing[1]
+            * self.spacing[2]
+            * convertor(1, "Angstrom", "bohr") ** 3
+        )
+        return numpy.sum((self.data * weights) ** 2) * boxvol
 
     def writeascube(self, filename):
         # Remember that the units are bohr, not Angstroms
