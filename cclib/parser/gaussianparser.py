@@ -492,8 +492,15 @@ class Gaussian(logfileparser.Logfile):
 
             if not self.BOMD: self.inputcoords.append(atomcoords)
 
+            # at the same time we can also get the hydrogen count
+            nhydrogen = 0
+            for inputatom in self.inputatoms:
+                if inputatom == 1:
+                    nhydrogen += 1
+
             self.set_attribute('atomnos', numpy.array(self.inputatoms))
             self.set_attribute('natom', len(self.inputatoms))
+            self.set_attribute('nhydrogen', nhydrogen)
 
         if self.BOMD and line.startswith(' Summary information for step'):
 
@@ -591,7 +598,14 @@ class Gaussian(logfileparser.Logfile):
                 line = next(inputfile)
             self.atomcoords.append(atomcoords)
 
+            # at the same time we can also get the hydrogen count
+            nhydrogen = 0
+            for atomno in atomnos:
+                if atomno == 1:
+                    nhydrogen += 1
+
             self.set_attribute('natom', len(atomnos))
+            self.set_attribute('nhydrogen', nhydrogen)
             self.set_attribute('atomnos', atomnos)
 
         # This is a bit of a hack for regression Gaussian09/BH3_fragment_guess.pop_minimal.log
