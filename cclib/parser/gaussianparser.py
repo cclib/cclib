@@ -1918,11 +1918,11 @@ class Gaussian(logfileparser.Logfile):
         #     2  C    0.320624   0.000869
         #
         # APT and Lowdin charges are also displayed in this way
-        def extract_charges_spins(property: str) -> dict:
+        def extract_charges_spins(property):
             """Extracts atomic charges and spin densities into self.atomcharges and self.atomspins dictionaries
     
             Inputs:
-                property - property type to be extracted (e.g. Mulliken, Lowdin, APT)
+                property - property type to be extracted as a string(e.g. Mulliken, Lowdin, APT)
             """
 
             headers = [" atomic charges:",
