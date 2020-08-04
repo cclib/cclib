@@ -26,8 +26,6 @@ from typing import List
 class MissingInputError(Exception):
     pass
 
-class ConvergenceError(Exception):
-    pass
 
 class ConvergenceError(Exception):
     pass
@@ -106,6 +104,14 @@ class DDEC6(Stockholder):
         """
 
         super(DDEC6, self).calculate()
+
+        # Notify user about the total charge in the density grid
+        integrated_density = self.charge_density.integrate()
+        self.logger.info(
+            "Total charge density in the grid is {}. If this does not match what is expected, using a finer grid may help.".format(
+                integrated_density
+            )
+        )
 
         # Notify user about the total charge in the density grid
         integrated_density = self.charge_density.integrate()
@@ -679,6 +685,17 @@ class DDEC6(Stockholder):
 
                 self._candidates_phi[atomi].append(phiAII[atomi])
                 self._candidates_bigPhi[atomi].append(bigphiAII[atomi])
+
+                if abs(phiAII[atomi]) < self.convergence_level:
+                    fitphi = False
+                    phiAII[atomi] = self.convergence_level
+                    break
+
+                if abs(phiAII[atomi]) < self.convergence_level:
+                    fitphi = False
+                    phiAII[atomi] = self.convergence_level
+                    break
+
 
             # lowerbigPhi is negative Phi with the smallest magnitude.
             # upperbigPhi is positive Phi with the smallest magnitude.
