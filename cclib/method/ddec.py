@@ -25,8 +25,10 @@ from typing import List
 class MissingInputError(Exception):
     pass
 
+
 class ConvergenceError(Exception):
     pass
+
 
 class DDEC6(Method):
     """DDEC6 charges."""
@@ -234,13 +236,12 @@ class DDEC6(Method):
         Calculate DDEC6 charges based on doi: 10.1039/c6ra04656h paper.
         Cartesian, uniformly spaced grids are assumed for this function.
         """
-
         # Obtain charge densities on the grid if it does not contain one.
         if not numpy.any(self.volume.data):
             self.logger.info("Calculating charge densities on the provided empty grid.")
             if len(self.data.mocoeffs) == 1:
                 self.charge_density = electrondensity_spin(
-                    self.data, self.volume, [self.data.mocoeffs[0][: self.data.homos[0]]]
+                    self.data, self.volume, [self.data.mocoeffs[0][: self.data.homos[0] + 1]]
                 )
                 self.charge_density.data *= 2
             else:
@@ -248,8 +249,8 @@ class DDEC6(Method):
                     self.data,
                     self.volume,
                     [
-                        self.data.mocoeffs[0][: self.data.homos[0]],
-                        self.data.mocoeffs[1][: self.data.homos[1]],
+                        self.data.mocoeffs[0][: self.data.homos[0] + 1],
+                        self.data.mocoeffs[1][: self.data.homos[1] + 1],
                     ],
                 )
         # If charge densities are provided beforehand, log this information
@@ -258,11 +259,23 @@ class DDEC6(Method):
             self.logger.info("Using charge densities from the provided Volume object.")
             self.charge_density = self.volume
 
+        # Notify user about the total charge in the density grid
+        integrated_density = self.charge_density.integrate()
+        self.logger.info(
+            "Total charge density in the grid is {}. If this does not match what is expected, using a finer grid may help.".format(
+                integrated_density
+            )
+        )
+
         # * STEP 1 *
         # Carry out step 1 of DDEC6 algorithm [Determining reference charge value]
         # Refer to equations 49-57 in doi: 10.1039/c6ra04656h
         self.logger.info("Creating first reference charges. (Step 1/7)")
-        reference_charges, localized_charges, stockholder_charges = self.calculate_reference_charges()
+        (
+            reference_charges,
+            localized_charges,
+            stockholder_charges,
+        ) = self.calculate_reference_charges()
         self.reference_charges = [reference_charges]
         self._localized_charges = [localized_charges]
         self._stockholder_charges = [stockholder_charges]
@@ -368,7 +381,7 @@ class DDEC6(Method):
             # Update weights (w_A) using equation 96 in doi: 10.1039/c6ra04656h
             # self._cond_density is first created in step 3 by conditioning on the total densities
             # as described in Figure S1. Then, this quantity is updated in every step that follows
-            # until the last step in the algorithm when the weights placed on the grid is 
+            # until the last step in the algorithm when the weights placed on the grid is
             # iteratively updated.
             for atomi in range(self.data.natom):
                 self._cond_density[atomi] = math.exp(self._kappa[atomi]) * self._h[atomi]
@@ -562,9 +575,7 @@ class DDEC6(Method):
                 xpts = numpy.array(
                     [float(lowerbigPhi), float(midbigPhi), float(upperbigPhi)], dtype=float
                 )
-                ypts = numpy.array(
-                    [float(lowerphi), float(midphi), float(upperphi)], dtype=float
-                )
+                ypts = numpy.array([float(lowerphi), float(midphi), float(upperphi)], dtype=float)
                 fit = numpy.polyfit(xpts, ypts, 2)
                 roots = numpy.roots(fit)  # max two roots (bigPhi)
 
@@ -579,26 +590,19 @@ class DDEC6(Method):
                     break
                 else:
                     if 3 * abs(abovephi) < abs(belowphi):
-                        corbigPhi = roots.max() - 2.0 * abovephi * (
-                            roots.max() - roots.min()
-                        ) / (abovephi - belowphi)
+                        corbigPhi = roots.max() - 2.0 * abovephi * (roots.max() - roots.min()) / (
+                            abovephi - belowphi
+                        )
                     elif 3 * abs(belowphi) < abs(abovephi):
-                        corbigPhi = roots.min() - 2.0 * belowphi * (
-                            roots.max() - roots.min()
-                        ) / (abovephi - belowphi)
+                        corbigPhi = roots.min() - 2.0 * belowphi * (roots.max() - roots.min()) / (
+                            abovephi - belowphi
+                        )
                     else:
                         corbigPhi = (roots.max() + roots.min()) / 2.0
                     # New candidates
                     corphi = self._update_phiai(self._y_a[atomi], corbigPhi, atomi)[0]
                     self._candidates_bigPhi[atomi] = numpy.array(
-                        [
-                            lowerbigPhi,
-                            midbigPhi,
-                            upperbigPhi,
-                            roots.max(),
-                            roots.min(),
-                            corbigPhi,
-                        ],
+                        [lowerbigPhi, midbigPhi, upperbigPhi, roots.max(), roots.min(), corbigPhi,],
                         dtype=float,
                     )
                     self._candidates_phi[atomi] = numpy.array(
@@ -635,7 +639,9 @@ class DDEC6(Method):
                     raise ConvergenceError("Iterative conditioning failed to converge.")
 
             # Set final conditioned density using chosen Phi
-            self._cond_density[atomi] = self._update_phiai(self._y_a[atomi], bigphiAI[atomi], atomi)[1]
+            self._cond_density[atomi] = self._update_phiai(
+                self._y_a[atomi], bigphiAI[atomi], atomi
+            )[1]
 
         self.logger.info("Calculating tau and combined conditioned densities.")
 
@@ -723,8 +729,11 @@ class DDEC6(Method):
         for atomi in range(self.data.natom):
             self._rho_A.append(copy.deepcopy(self.charge_density))
             # Equation 68
-            self._rho_A[atomi].data = (
-                self.charge_density.data * self._rho_cond_cartesian[atomi] / self.rho_cond.data
+            self._rho_A[atomi].data = numpy.divide(
+                self.charge_density.data * self._rho_cond_cartesian[atomi],
+                self.rho_cond.data,
+                out=numpy.zeros_like(self.charge_density.data, dtype=float),
+                where=self.rho_cond.data != 0,
             )
             self._rho_A_avg.append(numpy.zeros_like(self.proatom_density[atomi], dtype=float))
             self._theta.append(numpy.zeros_like(self.proatom_density[atomi], dtype=float))
@@ -735,14 +744,27 @@ class DDEC6(Method):
             )
             self._rho_A_avg[atomi] = numpy.maximum.accumulate(self._rho_A_avg[atomi][::-1])[::-1]
             self._theta[atomi] = self._spherical_average_from_cartesian(
-                (1 - self._rho_cond_cartesian[atomi] / self.rho_cond.data)
+                (
+                    1
+                    - numpy.divide(
+                        self._rho_cond_cartesian[atomi],
+                        self.rho_cond.data,
+                        out=numpy.zeros_like(self.rho_cond.data, dtype=float),
+                        where=self.rho_cond.data != 0,
+                    )
+                )
                 * self._rho_A[atomi].data,
                 atomi,
                 self.radial_grid_r[atomi],
             )
             self._theta[atomi] = numpy.maximum.accumulate(self._theta[atomi][::-1])[::-1]
             self._wavg[atomi] = self._spherical_average_from_cartesian(
-                self._rho_cond_cartesian[atomi] / self.rho_cond.data,
+                numpy.divide(
+                    self._rho_cond_cartesian[atomi],
+                    self.rho_cond.data,
+                    out=numpy.zeros_like(self.rho_cond.data, dtype=float),
+                    where=self.rho_cond.data != 0,
+                ),
                 atomi,
                 self.radial_grid_r[atomi],
             )
@@ -857,9 +879,7 @@ class DDEC6(Method):
                 xpts = numpy.array(
                     [float(lowerbigPhi), float(midbigPhi), float(upperbigPhi)], dtype=float
                 )
-                ypts = numpy.array(
-                    [float(lowerphi), float(midphi), float(upperphi)], dtype=float
-                )
+                ypts = numpy.array([float(lowerphi), float(midphi), float(upperphi)], dtype=float)
                 fit = numpy.polyfit(xpts, ypts, 2)
                 roots = numpy.roots(fit)  # max two roots (bigPhi)
 
@@ -874,26 +894,19 @@ class DDEC6(Method):
                     break
                 else:
                     if 3 * abs(abovephi) < abs(belowphi):
-                        corbigPhi = roots.max() - 2.0 * abovephi * (
-                            roots.max() - roots.min()
-                        ) / (abovephi - belowphi)
+                        corbigPhi = roots.max() - 2.0 * abovephi * (roots.max() - roots.min()) / (
+                            abovephi - belowphi
+                        )
                     elif 3 * abs(belowphi) < abs(abovephi):
-                        corbigPhi = roots.min() - 2.0 * belowphi * (
-                            roots.max() - roots.min()
-                        ) / (abovephi - belowphi)
+                        corbigPhi = roots.min() - 2.0 * belowphi * (roots.max() - roots.min()) / (
+                            abovephi - belowphi
+                        )
                     else:
                         corbigPhi = (roots.max() + roots.min()) / 2.0
                     # New candidates
                     corphi = self._update_phiaii(self.rho_wavg[atomi], eta, corbigPhi, atomi)[0]
                     self._candidates_bigPhi[atomi] = numpy.array(
-                        [
-                            lowerbigPhi,
-                            midbigPhi,
-                            upperbigPhi,
-                            roots.max(),
-                            roots.min(),
-                            corbigPhi,
-                        ],
+                        [lowerbigPhi, midbigPhi, upperbigPhi, roots.max(), roots.min(), corbigPhi,],
                         dtype=float,
                     )
                     self._candidates_phi[atomi] = numpy.array(
@@ -930,7 +943,9 @@ class DDEC6(Method):
                     raise ConvergenceError("Iterative conditioning failed to converge.")
 
             # Set final G_A value using chosen Phi
-            self._g[atomi] = self._update_phiaii(self.rho_wavg[atomi], eta, bigphiAII[atomi], atomi)[1]
+            self._g[atomi] = self._update_phiaii(
+                self.rho_wavg[atomi], eta, bigphiAII[atomi], atomi
+            )[1]
 
     def calculate_H(self):
         """ Calculate H_A(r_A)
@@ -946,7 +961,10 @@ class DDEC6(Method):
 
             # Determine eta_upper using equation 86 in doi: 10.1039/c6ra04656h
             # and apply upper limit using equation 91.
-            eta = 2.5 * convertor(1, "Angstrom", "bohr") / (1 - (self.tau[atomi]) ** 2)
+            temp = (
+                1 - (self.tau[atomi]) ** 2 + self.convergence_level
+            )  # convergence_level is added to avoid divide-by-zero in next line for highly polar molecules.
+            eta = 2.5 * convertor(1, "Angstrom", "bohr") / temp
             exp_applied = self._h[atomi][:-1] * numpy.exp(
                 -1 * eta[1:] * numpy.diff(self.radial_grid_r[atomi])
             )

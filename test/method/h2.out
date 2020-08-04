@@ -1,0 +1,311 @@
+
+    -----------------------------------------------------------------------
+          Psi4: An Open-Source Ab Initio Electronic Structure Package
+                               Psi4 1.2.1 release
+
+                         Git: Rev {HEAD} 406f4de 
+
+
+    R. M. Parrish, L. A. Burns, D. G. A. Smith, A. C. Simmonett,
+    A. E. DePrince III, E. G. Hohenstein, U. Bozkaya, A. Yu. Sokolov,
+    R. Di Remigio, R. M. Richard, J. F. Gonthier, A. M. James,
+    H. R. McAlexander, A. Kumar, M. Saitow, X. Wang, B. P. Pritchard,
+    P. Verma, H. F. Schaefer III, K. Patkowski, R. A. King, E. F. Valeev,
+    F. A. Evangelista, J. M. Turney, T. D. Crawford, and C. D. Sherrill,
+    J. Chem. Theory Comput. 13(7) pp 3185--3197 (2017).
+    (doi: 10.1021/acs.jctc.7b00174)
+
+
+                         Additional Contributions by
+    P. Kraus, H. Kruse, M. H. Lechner, M. C. Schieber, and R. A. Shaw
+
+    -----------------------------------------------------------------------
+
+
+    Psi4 started on: Thursday, 30 July 2020 10:30PM
+
+    Process ID: 2067849
+    Host:       homesvr
+    PSIDATADIR: /home/minsikcho/anaconda3/envs/p4env/share/psi4
+    Memory:     500.0 MiB
+    Threads:    1
+    
+  ==> Input File <==
+
+--------------------------------------------------------------------------
+molecule hydrogen {
+0 1
+H 
+H 1 1.0
+}
+
+set {
+    basis sto-3g
+    print_basis true
+    print_mos true
+    cubeprop_tasks ['density']
+    cubic_grid_spacing [0.5, 0.5, 0.5]
+}
+
+scf_e, scf_wfn = energy('scf', return_wfn=True)
+cubeprop(scf_wfn)
+
+
+--------------------------------------------------------------------------
+
+*** tstart() called on homesvr
+*** at Thu Jul 30 22:30:10 2020
+
+   => Loading Basis Set <=
+
+    Name: STO-3G
+    Role: ORBITAL
+    Keyword: BASIS
+    atoms 1-2 entry H          line    19 file /home/minsikcho/anaconda3/envs/p4env/share/psi4/basis/sto-3g.gbs 
+
+
+         ---------------------------------------------------------
+                                   SCF
+            by Justin Turney, Rob Parrish, Andy Simmonett
+                             and Daniel Smith
+                              RHF Reference
+                        1 Threads,    500 MiB Core
+         ---------------------------------------------------------
+
+  ==> Geometry <==
+
+    Molecular point group: d2h
+    Full point group: D_inf_h
+
+    Geometry (in Angstrom), charge = 0, multiplicity = 1:
+
+       Center              X                  Y                   Z               Mass       
+    ------------   -----------------  -----------------  -----------------  -----------------
+         H            0.000000000000     0.000000000000    -0.500000000000     1.007825032070
+         H            0.000000000000     0.000000000000     0.500000000000     1.007825032070
+
+  Running in d2h symmetry.
+
+  Rotational constants: A = ************  B =     33.45348  C =     33.45348 [cm^-1]
+  Rotational constants: A = ************  B = 1002910.20547  C = 1002910.20547 [MHz]
+  Nuclear repulsion =    0.529177208590000
+
+  Charge       = 0
+  Multiplicity = 1
+  Electrons    = 2
+  Nalpha       = 1
+  Nbeta        = 1
+
+  ==> Algorithm <==
+
+  SCF Algorithm Type is DF.
+  DIIS enabled.
+  MOM disabled.
+  Fractional occupation disabled.
+  Guess Type is SAD.
+  Energy threshold   = 1.00e-06
+  Density threshold  = 1.00e-06
+  Integral threshold = 0.00e+00
+
+  ==> Primary Basis <==
+
+  Basis Set: STO-3G
+    Blend: STO-3G
+    Number of shells: 2
+    Number of basis function: 2
+    Number of Cartesian functions: 2
+    Spherical Harmonics?: true
+    Max angular momentum: 0
+
+   => Loading Basis Set <=
+
+    Name: (STO-3G AUX)
+    Role: JKFIT
+    Keyword: DF_BASIS_SCF
+    atoms 1-2 entry H          line    23 file /home/minsikcho/anaconda3/envs/p4env/share/psi4/basis/def2-svp-jkfit.gbs 
+
+  -AO BASIS SET INFORMATION:
+    Name                   = STO-3G
+    Blend                  = STO-3G
+    Total number of shells = 2
+    Number of primitives   = 6
+    Number of AO           = 2
+    Number of SO           = 2
+    Maximum AM             = 0
+    Spherical Harmonics    = TRUE
+
+  -Contraction Scheme:
+    Atom   Type   All Primitives // Shells:
+   ------ ------ --------------------------
+       1     H     3s // 1s 
+       2     H     3s // 1s 
+
+  ==> AO Basis Functions <==
+
+    [ STO-3G ]
+    spherical
+    ****
+    H   1
+    S   3 1.00
+                         3.42525091           0.15432897
+                         0.62391373           0.53532814
+                         0.16885540           0.44463454
+    ****
+
+  ==> Pre-Iterations <==
+
+   -------------------------------------------------------
+    Irrep   Nso     Nmo     Nalpha   Nbeta   Ndocc  Nsocc
+   -------------------------------------------------------
+     Ag         1       1       0       0       0       0
+     B1g        0       0       0       0       0       0
+     B2g        0       0       0       0       0       0
+     B3g        0       0       0       0       0       0
+     Au         0       0       0       0       0       0
+     B1u        1       1       0       0       0       0
+     B2u        0       0       0       0       0       0
+     B3u        0       0       0       0       0       0
+   -------------------------------------------------------
+    Total       2       2       1       1       1       0
+   -------------------------------------------------------
+
+  ==> Integral Setup <==
+
+  DFHelper Memory: AOs need 0.000 [GiB]; user supplied 0.366 [GiB]. Using in-core AOs.
+
+  ==> MemDFJK: Density-Fitted J/K Matrices <==
+
+    J tasked:                   Yes
+    K tasked:                   Yes
+    wK tasked:                   No
+    OpenMP threads:               1
+    Memory (MB):                375
+    Algorithm:                 Core
+    Schwarz Cutoff:           1E-12
+    Mask sparsity (%):       0.0000
+    Fitting Condition:        1E-12
+
+   => Auxiliary Basis Set <=
+
+  Basis Set: (STO-3G AUX)
+    Blend: DEF2-SVP-JKFIT
+    Number of shells: 12
+    Number of basis function: 36
+    Number of Cartesian functions: 40
+    Spherical Harmonics?: true
+    Max angular momentum: 2
+
+  Minimum eigenvalue in the overlap matrix is 5.0351531097E-01.
+  Using Symmetric Orthogonalization.
+
+  SCF Guess: Superposition of Atomic Densities via on-the-fly atomic UHF.
+
+  ==> Iterations <==
+
+                           Total Energy        Delta E     RMS |[F,P]|
+
+   @DF-RHF iter   0:    -0.64350626933469   -6.43506e-01   0.00000e+00 
+   @DF-RHF iter   1:    -1.06613556513357   -4.22629e-01   0.00000e+00 
+   @DF-RHF iter   2:    -1.06613556513357    0.00000e+00   0.00000e+00 DIIS
+
+  ==> Post-Iterations <==
+
+    Orbital Energies [Eh]
+    ---------------------
+
+    Doubly Occupied:                                                      
+
+       1Ag    -0.484469  
+
+    Virtual:                                                              
+
+       1B1u    0.457494  
+
+    Final Occupation by Irrep:
+             Ag   B1g   B2g   B3g    Au   B1u   B2u   B3u 
+    DOCC [     1,    0,    0,    0,    0,    0,    0,    0 ]
+
+  Energy converged.
+
+  @DF-RHF Final Energy:    -1.06613556513357
+
+   => Energetics <=
+
+    Nuclear Repulsion Energy =              0.5291772085899999
+    One-Electron Energy =                  -2.2216883554204356
+    Two-Electron Energy =                   0.6263755816968615
+    Total Energy =                         -1.0661355651335742
+
+
+
+Properties will be evaluated at   0.000000,   0.000000,   0.000000 [a0]
+
+Properties computed using the SCF density matrix
+
+  Nuclear Dipole Moment: [e a0]
+     X:     0.0000      Y:     0.0000      Z:     0.0000
+
+  Electronic Dipole Moment: [e a0]
+     X:     0.0000      Y:     0.0000      Z:     0.0000
+
+  Dipole Moment: [e a0]
+     X:     0.0000      Y:     0.0000      Z:     0.0000     Total:     0.0000
+
+  Dipole Moment: [D]
+     X:     0.0000      Y:     0.0000      Z:     0.0000     Total:     0.0000
+
+
+  ==> Molecular Orbitals <==
+
+                           1            2
+
+ 1    H1 s0         0.5780280    0.9965031
+ 2    H2 s0         0.5780280   -0.9965031
+
+            Ene    -0.4844686    0.4574939
+            Sym            Ag          B1u
+            Occ             2            0
+
+
+*** tstop() called on homesvr at Thu Jul 30 22:30:11 2020
+Module time:
+	user time   =       0.32 seconds =       0.01 minutes
+	system time =       0.01 seconds =       0.00 minutes
+	total time  =          1 seconds =       0.02 minutes
+Total time:
+	user time   =       0.32 seconds =       0.01 minutes
+	system time =       0.01 seconds =       0.00 minutes
+	total time  =          1 seconds =       0.02 minutes
+  ==> One Electron Grid Properties (v2.0) <==
+
+  ==> CubicScalarGrid <==
+
+    Filepath     = .
+    Total Points =             6069
+    XYZ Blocking =               10
+    X Points     =               17
+    Y Points     =               17
+    Z Points     =               21
+    X Spacing    =        5.000E-01
+    Y Spacing    =        5.000E-01
+    Z Spacing    =        5.000E-01
+    X Minimum    =       -4.000E+00
+    Y Minimum    =       -4.000E+00
+    Z Minimum    =       -5.000E+00
+    X Maximum    =        4.000E+00
+    Y Maximum    =        4.000E+00
+    Z Maximum    =        5.000E+00
+
+  Basis Set: STO-3G
+    Blend: STO-3G
+    Number of shells: 2
+    Number of basis function: 2
+    Number of Cartesian functions: 2
+    Spherical Harmonics?: true
+    Max angular momentum: 0
+
+
+    Psi4 stopped on: Thursday, 30 July 2020 10:30PM
+    Psi4 wall time for execution: 0:00:00.35
+
+*** Psi4 exiting successfully. Buy a developer a beer!

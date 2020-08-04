@@ -18,6 +18,7 @@ import numpy
 
 from cclib.method import DDEC6, volume
 from cclib.parser import Psi4
+from cclib.io import ccread
 from cclib.method.calculationmethod import MissingAttributeError
 
 from numpy.testing import assert_allclose
@@ -32,23 +33,32 @@ class DDEC6Test(unittest.TestCase):
         super(DDEC6Test, self).setUp()
         self.parse()
 
-    def parse(self):
-        self.data, self.logfile = getdatafile(Psi4, "basicPsi4-1.2.1", ["water_mp2.out"])
-        self.volume = volume.Volume((-4, -4, -4), (4, 4, 4), (0.2, 0.2, 0.2))
+    def parse(self, molecule_name=None):
+        if molecule_name == None:
+            self.data, self.logfile = getdatafile(Psi4, "basicPsi4-1.2.1", ["water_mp2.out"])
+        else:
+            self.data = ccread(
+                os.path.join(os.path.dirname(os.path.realpath(__file__)), molecule_name + ".out")
+            )
 
     def testmissingrequiredattributes(self):
         """Is an error raised when required attributes are missing?"""
         for missing_attribute in DDEC6.required_attrs:
             self.parse()
+            vol = volume.Volume((-4, -4, -4), (4, 4, 4), (0.2, 0.2, 0.2))
             delattr(self.data, missing_attribute)
             with self.assertRaises(MissingAttributeError):
-                trialBader = DDEC6(self.data, self.volume)
+                trialBader = DDEC6(
+                    self.data, vol, os.path.dirname(os.path.realpath(__file__))
+                )
 
     def test_proatom_read(self):
         """Are proatom densities imported correctly?"""
 
         self.parse()
-        self.analysis = DDEC6(self.data, self.volume, os.path.dirname(os.path.realpath(__file__)))
+        vol = volume.Volume((-4, -4, -4), (4, 4, 4), (0.2, 0.2, 0.2))
+
+        self.analysis = DDEC6(self.data, vol, os.path.dirname(os.path.realpath(__file__)))
 
         refH_den = [
             2.66407645e-01,
@@ -90,8 +100,6 @@ class DDEC6Test(unittest.TestCase):
         Here, values are compared against `chargemol` calculations.
         Due to the differences in basis set used for calculation and slightly different integration
         grid, some discrepancy is inevitable in the comparison.
-        TODO: Test suite based on horton densities will be added after full implementation of
-              DDEC6 algorithm.
         """
 
         self.parse()
@@ -164,3 +172,56 @@ class DDEC6Test(unittest.TestCase):
         )
         # Check assigned charges
         assert_allclose(analysis.fragcharges, [-0.757097, 0.378410, 0.378687], atol=0.2)
+
+    def test_chgsum_h2(self):
+        """ Are DDEC6 charges for hydrogen atoms in nonpolar H2 small as expected?
+        
+            Using much denser grid (spacing of 0.1 rather than 0.2 which is the cube file included
+            in the test) gives [0.00046066, 0.00046066]. 
+        """
+
+        self.parse("h2")
+        vol = volume.Volume((-2, -2, -2), (2, 2, 2), (0.2, 0.2, 0.2))
+        analysis = DDEC6(self.data, vol, os.path.dirname(os.path.realpath(__file__)))
+        analysis.calculate()
+
+        self.assertAlmostEqual(analysis.fragcharges[0], analysis.fragcharges[1], delta=1e-12)
+
+    def test_chgsum_co(self):
+        """ Are DDEC6 charges for carbon monoxide reported as expected?
+        
+            Deviation from a total of zero (-0.00682) occurs because the integrated value of total
+            density (14.006876594937234) is slightly larger than # of electrons.
+            
+            Using a finer grid reduces this discrepancy.
+        """
+
+        self.parse("co")
+        imported_vol = volume.read_from_cube(
+            os.path.join(os.path.dirname(os.path.realpath(__file__)), "co.cube")
+        )
+        analysis = DDEC6(self.data, imported_vol, os.path.dirname(os.path.realpath(__file__)))
+        analysis.calculate()
+
+        self.assertAlmostEqual(numpy.sum(analysis.fragcharges), 0, delta=1e-2)
+        assert_allclose(analysis.fragcharges, [0.13221636, -0.13903595], atol=1e-3)
+
+    def test_chg_nh3(self):
+        """ Are DDEC6 charges for ammonia reported as expected?
+        
+            Deviation from a total of zero (0.026545) occurs because the integrated value of total
+            density (9.973453129261163) is slightly smaller than number of electrons.
+            
+            Using a finer grid reduces this discrepancy.
+        """
+
+        self.parse("nh3")
+        imported_vol = volume.read_from_cube(
+            os.path.join(os.path.dirname(os.path.realpath(__file__)), "nh3.cube")
+        )
+        analysis = DDEC6(self.data, imported_vol, os.path.dirname(os.path.realpath(__file__)))
+        analysis.calculate()
+
+        assert_allclose(
+            analysis.fragcharges, [-0.7824003, 0.26854388, 0.26959206, 0.27081123], atol=1e-3
+        )
