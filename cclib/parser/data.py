@@ -65,7 +65,6 @@ class ccData:
         mult -- multiplicity of the system (integer)
         natom -- number of atoms (integer)
         nbasis -- number of basis functions (integer)
-        nhydrogen -- number of hydrogens (integer)
         nmo -- number of molecular orbitals (integer)
         nocoeffs -- natural orbital coefficients (array[2])
         nooccnos -- natural orbital occupation numbers (array[1])
@@ -147,7 +146,6 @@ class ccData:
        "mult":             Attribute(int,              'multiplicity',                'properties'),
        "natom":            Attribute(int,              'number of atoms',             'properties'),
        "nbasis":           Attribute(int,              'basis number',                'properties:orbitals'),
-       "nhydrogen":        Attribute(int,              'number of hydrogens',         'properties'),
        "nmo":              Attribute(int,              'MO number',                   'properties:orbitals'),
        "nocoeffs":         Attribute(numpy.ndarray,    'TBD',                         'N/A'),
        "nooccnos":         Attribute(numpy.ndarray,    'TBD',                         'N/A'),
