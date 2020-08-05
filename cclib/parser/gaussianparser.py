@@ -251,7 +251,8 @@ class Gaussian(logfileparser.Logfile):
             nhydrogen = 0
             while line.split() and not "Variables" in line and not "Leave Link" in line:
                 natom += 1
-                if line.split()[0] == "H": # at the same time we can also get the hydrogen count
+                # At the same time we can also get the hydrogen count.
+                if line.split()[0] == "H":
                     nhydrogen += 1
                 line = inputfile.next()
             self.set_attribute('natom', natom)
@@ -492,7 +493,7 @@ class Gaussian(logfileparser.Logfile):
 
             if not self.BOMD: self.inputcoords.append(atomcoords)
 
-            # at the same time we can also get the hydrogen count
+            # At the same time we can also get the hydrogen count.
             nhydrogen = 0
             for inputatom in self.inputatoms:
                 if inputatom == 1:
@@ -598,7 +599,7 @@ class Gaussian(logfileparser.Logfile):
                 line = next(inputfile)
             self.atomcoords.append(atomcoords)
 
-            # at the same time we can also get the hydrogen count
+            # At the same time we can also get the hydrogen count.
             nhydrogen = 0
             for atomno in atomnos:
                 if atomno == 1:
@@ -1924,19 +1925,21 @@ class Gaussian(logfileparser.Logfile):
         #     2  C    0.002063
         # ...
         #
-        # Spins may be included in the same section, e.g.
+        # Spins may be included in the same section.
         #
         # Mulliken charges and spin densities:
         #               1          2
         #     1  O   -0.596188   0.019133
         #     2  C    0.320624   0.000869
         #
-        # APT and Lowdin charges are also displayed in this way
-        def extract_charges_spins(property):
-            """Extracts atomic charges and spin densities into self.atomcharges and self.atomspins dictionaries
+        # APT and Lowdin charges are also displayed in this way.
+        def extract_charges_spins(prop):
+            """Extracts atomic charges and spin densities into 
+               self.atomcharges and self.atomspins dictionaries
     
             Inputs:
-                property - property type to be extracted as a string(e.g. Mulliken, Lowdin, APT)
+                prop - property type to be extracted as a 
+                string(e.g. Mulliken, Lowdin, APT)
             """
 
             headers = [" atomic charges:",
@@ -1947,7 +1950,7 @@ class Gaussian(logfileparser.Logfile):
             " charges and spin densities with hydrogens summed into heavy atoms:",
             " charges and spin densities:"]
             for header in headers:
-                if '{}{}'.format(property,header).lower() in line.lower():
+                if '{}{}'.format(prop,header).lower() in line.lower():
                     has_spin = 'spin' in line.lower()
                     has_charges = 'charges' in line.lower()
                     if has_charges and not hasattr(self, "atomcharges"):
@@ -1957,16 +1960,21 @@ class Gaussian(logfileparser.Logfile):
                     ones = next(inputfile)
                     charges = []
                     spins = []
-                    # calculate how many lines need iterating over based on whether property is summed into hydrogens or not
+                    # calculate how many lines need iterating over based on 
+                    # whether property is summed into hydrogens or not.
                     is_sum = 'summed' in line
                     if is_sum:
                         n = self.natom - self.nhydrogen
                     else:
                         n = self.natom
-                    # iterate over each line and append values to a list based on whether they are charges or spins
+                    # iterate over each line and append values to a list 
+                    # based on whether they are charges or spins.
                     for i in range(n):
                         nline = next(inputfile)
-                        while is_sum and nline.split()[1] == "H":  # some files include hydrogens in lists of summed charges with value 0.0, so these should not be recorded
+                        # some older versions of Gaussian include hydrogens 
+                        # in lists of summed charges with value 0.0, so 
+                        # these should not be recorded.
+                        while is_sum and nline.split()[1] == "H":
                             nline = next(inputfile)
                         if has_charges:
                             charges.append(float(nline.split()[2]))
@@ -1975,17 +1983,17 @@ class Gaussian(logfileparser.Logfile):
                         if has_spin and not has_charges:
                             spins.append(float(nline.split()[2]))
                     # input extracted values into self.atomcharges
-                    if property.lower() in line.lower():
+                    if prop.lower() in line.lower():
                         if has_charges:
                             if is_sum:
-                                self.atomcharges['{}_sum'.format(property)] = charges
+                                self.atomcharges['{}_sum'.format(prop)] = charges
                             else:
-                                self.atomcharges['{}'.format(property)] = charges
+                                self.atomcharges['{}'.format(prop)] = charges
                         if has_spin:
                             if is_sum:
-                                self.atomspins['{}_sum'.format(property)] = spins
+                                self.atomspins['{}_sum'.format(prop)] = spins
                             else:
-                                self.atomspins['{}'.format(property)] = spins
+                                self.atomspins['{}'.format(prop)] = spins
 
         if hasattr(self, "natom") and hasattr(self, "nhydrogen"):
             extract_charges_spins("mulliken")
