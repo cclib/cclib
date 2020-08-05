@@ -51,7 +51,7 @@ class DDEC6(Method):
         assert os.path.isdir(
             proatom_path
         ), "Directory that contains proatom densities should be added as an input."
-        
+
         # Read in reference charges.
         self.proatom_density = []
         self.radial_grid_r = []
@@ -70,6 +70,11 @@ class DDEC6(Method):
 
     def _check_required_attributes(self):
         super(DDEC6, self)._check_required_attributes()
+
+    def _cartesian_dist(self, pt1, pt2):
+        """ Small utility function that calculates Euclidian distance between two points
+            pt1 and pt2 are numpy arrays representing a point in Cartesian coordinates. """
+        return numpy.sqrt(numpy.dot(pt1 - pt2, pt1 - pt2))
 
     def _read_proatom(self, directory, atom_num, charge):
         """Return a list containing proatom reference densities."""
@@ -91,14 +96,14 @@ class DDEC6(Method):
 
         if os.path.isfile(chargemol_path):
             # Use chargemol proatom densities
-            # Each shell is 5.600570811644798 angstroms apart (uniform).
-            # *scalefactor* = 10.58354497764173 in module_global_parameter.f08
-            density = numpy.loadtxt(path, skiprows=12, dtype=float)
-            radiusgrid = numpy.arange(1, len(density + 1)) * 5.600570811644798
+            # Each shell is .05 angstroms apart (uniform).
+            # *scalefactor* = 10.58354497764173 bohrs in module_global_parameter.f08
+            density = numpy.loadtxt(chargemol_path, skiprows=12, dtype=float)
+            radiusgrid = numpy.arange(1, len(density + 1)) * 0.05
 
         elif os.path.isfile(horton_path):
             # Use horton proatom densities
-            assert find_package("h5py"), ("h5py is needed to read in proatom densities from horton.")
+            assert find_package("h5py"), "h5py is needed to read in proatom densities from horton."
 
             import h5py
 
@@ -117,11 +122,15 @@ class DDEC6(Method):
                 gridmax = convertor(float(gridmax), "bohr", "Angstrom")
                 gridn = int(gridn)
                 # Convert byte to string in Python3
-                if sys.version[0] == '3':
-                    gridtype = gridtype.decode('UTF-8')
+                if sys.version[0] == "3":
+                    gridtype = gridtype.decode("UTF-8")
 
                 # First verify that it is one of recognized grids
-                assert gridtype in ["LinearRTransform", "ExpRTransform", "PowerRTransform"], "Grid type not recognized."
+                assert gridtype in [
+                    "LinearRTransform",
+                    "ExpRTransform",
+                    "PowerRTransform",
+                ], "Grid type not recognized."
 
                 if gridtype == "LinearRTransform":
                     # Linear transformation. r(t) = rmin + t*(rmax - rmin)/(npoint - 1)
@@ -134,16 +143,16 @@ class DDEC6(Method):
                 elif gridtype == "PowerRTransform":
                     # Power transformation. r(t) = rmin*t^power
                     # with  power = log(rmax/rmin)/log(npoint)
-                    gridcoeff = math.log(gridmax/gridmin) / math.log(gridn)
+                    gridcoeff = math.log(gridmax / gridmin) / math.log(gridn)
                     radiusgrid = gridmin * numpy.power(numpy.arange(1, gridn + 1), gridcoeff)
 
                 density = list(proatomdb[keystring]["rho"])
 
                 del h5py
-        
+
         else:
             raise MissingInputError("Pro-atom densities were not found in the specified path.")
-            
+
         return density, radiusgrid
 
     def calculate(self, indices=None, fupdate=0.05):
@@ -174,3 +183,61 @@ class DDEC6(Method):
         else:
             self.logger.info("Using charge densities from the provided Volume object.")
             self.chgdensity = self.volume
+
+        # STEP 1
+        # Carry out step 1 of DDEC6 algorithm [Determining ion charge value]
+        # Refer to equations 49-57 in doi: 10.1039/c6ra04656h
+        self.calculate_refcharges()
+
+    def calculate_refcharges(self):
+        # Generator object to iterate over the grid
+        xshape, yshape, zshape = self.chgdensity.data.shape
+        atoms = len(self.data.atomnos)
+        indices = (
+            (i, x, y, z)
+            for i in range(atoms)
+            for x in range(xshape)
+            for y in range(yshape)
+            for z in range(zshape)
+        )
+
+        stockholder_w = numpy.zeros((atoms, xshape, yshape, zshape))
+        localized_w = numpy.zeros((atoms, xshape, yshape, zshape))
+
+        for atomi, xindex, yindex, zindex in indices:
+            # Distance of the grid from atom grid
+            dist_r = self._cartesian_dist(
+                self.data.atomcoords[-1][atomi],
+                self.chgdensity.coordinates([xindex, yindex, zindex]),
+            )
+            closest_r_index = numpy.abs(self.radial_grid_r[atomi] - dist_r).argmin()
+
+            stockholder_w[atomi][xindex][yindex][zindex] = self.proatom_density[atomi][
+                closest_r_index
+            ]
+
+        localized_w = numpy.power(stockholder_w, 4)
+
+        stockholder_bigW = numpy.sum(stockholder_w, axis=0)
+        localized_bigW = numpy.sum(localized_w, axis=0)
+
+        self.logger.info("Creating first reference charges.")
+        self.refcharges = numpy.zeros((atoms))
+        self._localizedcharges = numpy.zeros((atoms))
+        self._stockholdercharges = numpy.zeros((atoms))
+
+        for atomi in range(atoms):
+            chargedensity = copy.deepcopy(self.chgdensity)
+            localized_weight = localized_w[atomi] / localized_bigW
+            chargedensity.data *= localized_weight
+            self._localizedcharges[atomi] = self.data.atomnos[atomi] - chargedensity.integrate()
+
+            chargedensity = copy.deepcopy(self.chgdensity)
+            stockholder_weight = stockholder_w[atomi] / stockholder_bigW
+            chargedensity.data *= stockholder_weight
+            self._stockholdercharges[atomi] = self.data.atomnos[atomi] - chargedensity.integrate()
+
+            # In DDEC6, weights of 1/3 and 2/3 are assigned for stockholder and localized charges.
+            self.refcharges[atomi] = (self._stockholdercharges[atomi] / 3.0) + (
+                self._localizedcharges[atomi] * 2.0 / 3.0
+            )
