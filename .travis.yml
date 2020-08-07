@@ -33,7 +33,7 @@ before_install:
 
         source activate p4env
         conda install pytest pytest-cov codecov -c conda-forge
-        pip install pytest-shutil h5py
+        pip install pytest-shutil h5py pyscf
         pip install git+https://github.com/theochem/iodata.git
         
         conda list
@@ -52,7 +52,7 @@ before_install:
         
         source activate hortonenv
         conda install pytest pytest-cov codecov -c conda-forge
-        pip install pytest-shutil
+        pip install pytest-shutil pyscf
         conda list
     
     else
