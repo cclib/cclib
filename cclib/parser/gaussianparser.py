@@ -248,15 +248,10 @@ class Gaussian(logfileparser.Logfile):
             # Also, in older versions there is bo blank line (G98 regressions),
             # so we need to watch out for leaving the link.
             natom = 0
-            nhydrogen = 0
             while line.split() and not "Variables" in line and not "Leave Link" in line:
                 natom += 1
-                # At the same time we can also get the hydrogen count.
-                if line.split()[0] == "H":
-                    nhydrogen += 1
                 line = inputfile.next()
             self.set_attribute('natom', natom)
-            self.set_attribute('nhydrogen', nhydrogen)
 
         # Continuing from above, there is not always a symbolic matrix, for example
         # if the Z-matrix was in the input file. In such cases, try to match the
@@ -493,15 +488,8 @@ class Gaussian(logfileparser.Logfile):
 
             if not self.BOMD: self.inputcoords.append(atomcoords)
 
-            # At the same time we can also get the hydrogen count.
-            nhydrogen = 0
-            for inputatom in self.inputatoms:
-                if inputatom == 1:
-                    nhydrogen += 1
-
             self.set_attribute('atomnos', numpy.array(self.inputatoms))
             self.set_attribute('natom', len(self.inputatoms))
-            self.set_attribute('nhydrogen', nhydrogen)
 
         if self.BOMD and line.startswith(' Summary information for step'):
 
@@ -599,14 +587,7 @@ class Gaussian(logfileparser.Logfile):
                 line = next(inputfile)
             self.atomcoords.append(atomcoords)
 
-            # At the same time we can also get the hydrogen count.
-            nhydrogen = 0
-            for atomno in atomnos:
-                if atomno == 1:
-                    nhydrogen += 1
-
             self.set_attribute('natom', len(atomnos))
-            self.set_attribute('nhydrogen', nhydrogen)
             self.set_attribute('atomnos', atomnos)
 
         # This is a bit of a hack for regression Gaussian09/BH3_fragment_guess.pop_minimal.log
@@ -1953,29 +1934,43 @@ class Gaussian(logfileparser.Logfile):
             ones = next(inputfile)
             charges = []
             spins = []
-            # calculate how many lines need iterating over based on 
-            # whether property is summed into hydrogens or not.
             is_sum = 'summed' in line
+            # Iterate over each line and append values to a list 
+            # based on whether they are charges or spins. 
             if is_sum:
-                n = self.natom - self.nhydrogen
+                for i in self.atomnos:
+                    # For lists of summed charges or spins, a value
+                    # of 0 is added if the atom is a hydrogen.
+                    if i == 1:
+                        if has_charges:
+                            charges.append(float(0))
+                        if has_spin and has_charges:
+                            spins.append(float(0))
+                        if has_spin and not has_charges:
+                            spins.append(float(0))
+                    else:
+                        nline = next(inputfile)
+                        # Some older versions of Gaussian already include 
+                        # hydrogens with value 0 for summed charges or 
+                        # spins, so these should be ignored.
+                        while nline.split()[1] == "H":
+                            nline = next(inputfile)
+                        if has_charges:
+                            charges.append(float(nline.split()[2]))
+                        if has_spin and has_charges:
+                            spins.append(float(nline.split()[3]))
+                        if has_spin and not has_charges:
+                            spins.append(float(nline.split()[2]))
             else:
-                n = self.natom
-            # iterate over each line and append values to a list 
-            # based on whether they are charges or spins.
-            for i in range(n):
-                nline = next(inputfile)
-                # some older versions of Gaussian include hydrogens 
-                # in lists of summed charges with value 0.0, so 
-                # these should not be recorded.
-                while is_sum and nline.split()[1] == "H":
+                for i in self.atomnos:
                     nline = next(inputfile)
-                if has_charges:
-                    charges.append(float(nline.split()[2]))
-                if has_spin and has_charges:
-                    spins.append(float(nline.split()[3]))
-                if has_spin and not has_charges:
-                    spins.append(float(nline.split()[2]))
-            # input extracted values into self.atomcharges
+                    if has_charges:
+                        charges.append(float(nline.split()[2]))
+                    if has_spin and has_charges:
+                        spins.append(float(nline.split()[3]))
+                    if has_spin and not has_charges:
+                        spins.append(float(nline.split()[2]))
+            # Input extracted values into self.atomcharges.
             if prop.lower() in line.lower():
                 if has_charges:
                     if is_sum:
@@ -1988,6 +1983,7 @@ class Gaussian(logfileparser.Logfile):
                     else:
                         self.atomspins['{}'.format(prop)] = spins
 
+        # Define strings needed for line detection.
         props = ["mulliken","lowdin","APT"]
         headers = [" atomic charges:",
         " charges:",
@@ -1997,14 +1993,14 @@ class Gaussian(logfileparser.Logfile):
         " charges and spin densities with hydrogens summed into heavy atoms:",
         " charges and spin densities:"]
         
-        if hasattr(self, "natom") and hasattr(self, "nhydrogen"):
-        # combine props and headers to find lines heading lists
+        if hasattr(self, "atomnos"):
+        # Combine props and headers to find lines heading lists
         # of atom charges or spins.
             for prop in props:
                 for header in headers:
                     if '{}{}'.format(prop,header).lower() in line.lower():
                         extract_charges_spins(line,prop)
-
+                        
         if line.strip() == "Natural Population":
             if not hasattr(self, 'atomcharges'):
                 self.atomcharges = {}
