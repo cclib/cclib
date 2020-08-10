@@ -19,6 +19,8 @@ from cclib.method.volume import electrondensity_spin
 from cclib.parser.utils import convertor
 from cclib.parser.utils import find_package
 
+from typing import List
+
 
 class MissingInputError(Exception):
     pass
@@ -42,6 +44,7 @@ class DDEC6(Method):
 
         self.volume = volume
         self.fragresults = None
+        self.proatom_path = proatom_path
 
         if numpy.sum(self.data.coreelectrons) != 0:
             # TODO: Pseudopotentials should be added back
@@ -76,7 +79,12 @@ class DDEC6(Method):
             pt1 and pt2 are numpy arrays representing a point in Cartesian coordinates. """
         return numpy.sqrt(numpy.dot(pt1 - pt2, pt1 - pt2))
 
-    def _read_proatom(self, directory, atom_num, charge):
+    def _read_proatom(self, 
+                      directory,        # type = str
+                      atom_num,         # type = int
+                      charge            # type = float
+                      ):
+        # type: (...) -> numpy.ndarray, numpy.ndarray
         """Return a list containing proatom reference densities."""
         # TODO: Treat calculations with psuedopotentials
         # TODO: Modify so that proatom densities are read only once for horton
@@ -88,17 +96,36 @@ class DDEC6(Method):
         #       atoms.h5
         # File format:
         #   Starting from line 13, each line contains the charge densities for each shell
-        chargemol_path = os.path.join(
+        # If `charge` is not an integer, proatom densities have to be linearly interpolated between
+        # the densities of the ion/atom with floor(charge) and ceiling(charge)
+        charge_floor = int(math.floor(charge))
+        charge_ceil = int(math.ceil(charge))
+        
+        chargemol_path_floor = os.path.join(
             directory,
-            "c2_{:03d}_{:03d}_{:03d}_500_100.txt".format(atom_num, atom_num, atom_num - charge),
+            "c2_{:03d}_{:03d}_{:03d}_500_100.txt".format(atom_num, atom_num, atom_num - charge_floor),
+        )
+        chargemol_path_ceil = os.path.join(
+            directory,
+            "c2_{:03d}_{:03d}_{:03d}_500_100.txt".format(atom_num, atom_num, atom_num - charge_ceil),
         )
         horton_path = os.path.join(directory, "atoms.h5")
 
-        if os.path.isfile(chargemol_path):
+
+        if os.path.isfile(chargemol_path_floor) or os.path.isfile(chargemol_path_ceil):
             # Use chargemol proatom densities
             # Each shell is .05 angstroms apart (uniform).
             # *scalefactor* = 10.58354497764173 bohrs in module_global_parameter.f08
-            density = numpy.loadtxt(chargemol_path, skiprows=12, dtype=float)
+            if atom_num <= charge_floor:
+                density_floor = numpy.array([0])
+            else:
+                density_floor = numpy.loadtxt(chargemol_path_floor, skiprows=12, dtype=float)
+            if atom_num >= charge_ceil:
+                density_ceil = numpy.array([0])
+            else:
+                density_ceil = numpy.loadtxt(chargemol_path_ceil, skiprows=12, dtype=float)
+            
+            density = (charge_ceil - charge) * density_floor + (charge - charge_floor) * density_ceil
             radiusgrid = numpy.arange(1, len(density + 1)) * 0.05
 
         elif os.path.isfile(horton_path):
@@ -108,50 +135,64 @@ class DDEC6(Method):
             import h5py
 
             with h5py.File(horton_path, "r") as proatomdb:
-                keystring = "Z={}_Q={:+d}".format(atom_num, charge)
+                if atom_num <= charge_floor:
+                    density_floor = numpy.array([0])
+                    radiusgrid = numpy.array([0])
+                else:
+                    keystring_floor = "Z={}_Q={:+d}".format(atom_num, charge_floor)
+                    density_floor = numpy.asanyarray(list(proatomdb[keystring_floor]["rho"]))
+                    
+                    # gridspec is specification of integration grid for proatom densities in horton.
+                    # Example -- ['PowerRTransform', '1.1774580743206259e-07', '20.140888089596444', '41']
+                    #   is constructed using PowerRTransform grid
+                    #   with rmin = 1.1774580743206259e-07
+                    #        rmax = 20.140888089596444
+                    #   and  ngrid = 41
+                    # PowerRTransform is default in horton-atomdb.py.
+                    gridtype, gridmin, gridmax, gridn = proatomdb[keystring_floor].attrs["rtransform"].split()
+                    gridmin = convertor(float(gridmin), "bohr", "Angstrom")
+                    gridmax = convertor(float(gridmax), "bohr", "Angstrom")
+                    gridn = int(gridn)
+                    # Convert byte to string in Python3
+                    if sys.version[0] == "3":
+                        gridtype = gridtype.decode("UTF-8")
+    
+                    # First verify that it is one of recognized grids
+                    assert gridtype in [
+                        "LinearRTransform",
+                        "ExpRTransform",
+                        "PowerRTransform",
+                    ], "Grid type not recognized."
+    
+                    if gridtype == "LinearRTransform":
+                        # Linear transformation. r(t) = rmin + t*(rmax - rmin)/(npoint - 1)
+                        gridcoeff = (gridmax - gridmin) / (gridn - 1)
+                        radiusgrid = gridmin + numpy.arange(1, gridn + 1) * gridcoeff
+                    elif gridtype == "ExpRTransform":
+                        # Exponential transformation. r(t) = rmin*exp(t*log(rmax/rmin)/(npoint - 1))
+                        gridcoeff = math.log(gridmax / gridmin) / (gridn - 1)
+                        radiusgrid = gridmin * numpy.exp(numpy.arange(1, gridn + 1) * gridcoeff)
+                    elif gridtype == "PowerRTransform":
+                        # Power transformation. r(t) = rmin*t^power
+                        # with  power = log(rmax/rmin)/log(npoint)
+                        gridcoeff = math.log(gridmax / gridmin) / math.log(gridn)
+                        radiusgrid = gridmin * numpy.power(numpy.arange(1, gridn + 1), gridcoeff)
 
-                # gridspec is specification of integration grid for proatom densities in horton.
-                # Example -- ['PowerRTransform', '1.1774580743206259e-07', '20.140888089596444', '41']
-                #   is constructed using PowerRTransform grid
-                #   with rmin = 1.1774580743206259e-07
-                #        rmax = 20.140888089596444
-                #   and  ngrid = 41
-                # PowerRTransform is default in horton-atomdb.py.
-                gridtype, gridmin, gridmax, gridn = proatomdb[keystring].attrs["rtransform"].split()
-                gridmin = convertor(float(gridmin), "bohr", "Angstrom")
-                gridmax = convertor(float(gridmax), "bohr", "Angstrom")
-                gridn = int(gridn)
-                # Convert byte to string in Python3
-                if sys.version[0] == "3":
-                    gridtype = gridtype.decode("UTF-8")
+                if atom_num <= charge_ceil:
+                    density_ceil = numpy.array([0])
+                else:
+                    keystring_ceil = "Z={}_Q={:+d}".format(atom_num, charge_ceil)
+                    density_ceil = numpy.asanyarray(list(proatomdb[keystring_ceil]["rho"]))
 
-                # First verify that it is one of recognized grids
-                assert gridtype in [
-                    "LinearRTransform",
-                    "ExpRTransform",
-                    "PowerRTransform",
-                ], "Grid type not recognized."
-
-                if gridtype == "LinearRTransform":
-                    # Linear transformation. r(t) = rmin + t*(rmax - rmin)/(npoint - 1)
-                    gridcoeff = (gridmax - gridmin) / (gridn - 1)
-                    radiusgrid = gridmin + numpy.arange(1, gridn + 1) * gridcoeff
-                elif gridtype == "ExpRTransform":
-                    # Exponential transformation. r(t) = rmin*exp(t*log(rmax/rmin)/(npoint - 1))
-                    gridcoeff = math.log(gridmax / gridmin) / (gridn - 1)
-                    radiusgrid = gridmin * numpy.exp(numpy.arange(1, gridn + 1) * gridcoeff)
-                elif gridtype == "PowerRTransform":
-                    # Power transformation. r(t) = rmin*t^power
-                    # with  power = log(rmax/rmin)/log(npoint)
-                    gridcoeff = math.log(gridmax / gridmin) / math.log(gridn)
-                    radiusgrid = gridmin * numpy.power(numpy.arange(1, gridn + 1), gridcoeff)
-
-                density = list(proatomdb[keystring]["rho"])
+                density = (charge_ceil - charge) * density_floor + (charge - charge_floor) * density_ceil
 
                 del h5py
 
         else:
             raise MissingInputError("Pro-atom densities were not found in the specified path.")
+
+        if charge == charge_floor:
+            density = density_floor
 
         return density, radiusgrid
 
@@ -187,7 +228,27 @@ class DDEC6(Method):
         # STEP 1
         # Carry out step 1 of DDEC6 algorithm [Determining ion charge value]
         # Refer to equations 49-57 in doi: 10.1039/c6ra04656h
-        self.calculate_refcharges()
+        self.logger.info("Creating first reference charges.")
+        ref, loc, stock = self.calculate_refcharges()
+        self.refcharges = [ref]
+        self._localizedcharges = [loc]
+        self._stockholdercharges = [stock]
+
+        # STEP 2
+        # Load new proatom densities.
+        self.logger.info("Creating second reference charges.")
+        self.proatom_density = []
+        self.radial_grid_r = []
+        for i, atom_number in enumerate(self.data.atomnos):
+            density, r = self._read_proatom(self.proatom_path, atom_number, float(self.refcharges[0][i]))
+            self.proatom_density.append(density)
+            self.radial_grid_r.append(r)
+
+        # Carry out step 2 of DDEC6 algorithm [Determining ion charge value again]
+        ref, loc, stock = self.calculate_refcharges()
+        self.refcharges.append(ref)
+        self._localizedcharges.append(loc)
+        self._stockholdercharges.append(stock)
 
     def calculate_refcharges(self):
         # Generator object to iterate over the grid
@@ -212,32 +273,33 @@ class DDEC6(Method):
             )
             closest_r_index = numpy.abs(self.radial_grid_r[atomi] - dist_r).argmin()
 
+            # Equation 54 in doi: 10.1039/c6ra04656h
             stockholder_w[atomi][xindex][yindex][zindex] = self.proatom_density[atomi][
                 closest_r_index
             ]
 
+        # Equation 55 in doi: 10.1039/c6ra04656h
         localized_w = numpy.power(stockholder_w, 4)
 
+        # Equation 53 in doi: 10.1039/c6ra04656h
         stockholder_bigW = numpy.sum(stockholder_w, axis=0)
         localized_bigW = numpy.sum(localized_w, axis=0)
 
-        self.logger.info("Creating first reference charges.")
-        self.refcharges = numpy.zeros((atoms))
-        self._localizedcharges = numpy.zeros((atoms))
-        self._stockholdercharges = numpy.zeros((atoms))
+        refcharges = numpy.zeros((atoms))
+        localizedcharges = numpy.zeros((atoms))
+        stockholdercharges = numpy.zeros((atoms))
 
         for atomi in range(atoms):
-            chargedensity = copy.deepcopy(self.chgdensity)
-            localized_weight = localized_w[atomi] / localized_bigW
-            chargedensity.data *= localized_weight
-            self._localizedcharges[atomi] = self.data.atomnos[atomi] - chargedensity.integrate()
-
-            chargedensity = copy.deepcopy(self.chgdensity)
-            stockholder_weight = stockholder_w[atomi] / stockholder_bigW
-            chargedensity.data *= stockholder_weight
-            self._stockholdercharges[atomi] = self.data.atomnos[atomi] - chargedensity.integrate()
+            # Equation 52 and 51 in doi: 10.1039/c6ra04656h
+            localizedcharges[atomi] = self.data.atomnos[atomi] - self.chgdensity.integrate(
+                weights=(localized_w[atomi] / localized_bigW)
+            )
+            stockholdercharges[atomi] = self.data.atomnos[atomi] - self.chgdensity.integrate(
+                weights=(stockholder_w[atomi] / stockholder_bigW)
+            )
 
             # In DDEC6, weights of 1/3 and 2/3 are assigned for stockholder and localized charges.
-            self.refcharges[atomi] = (self._stockholdercharges[atomi] / 3.0) + (
-                self._localizedcharges[atomi] * 2.0 / 3.0
-            )
+            # (Equation 50 and 58 in doi: 10.1039/c6ra04656h)
+            refcharges[atomi] = (stockholdercharges[atomi] / 3.0) + (localizedcharges[atomi] * 2.0 / 3.0)
+        
+        return refcharges, localizedcharges, stockholdercharges
