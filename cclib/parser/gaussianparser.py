@@ -1997,7 +1997,7 @@ class Gaussian(logfileparser.Logfile):
         " charges and spin densities with hydrogens summed into heavy atoms:",
         " charges and spin densities:"]
         
-        if hasattr(self, "natom") and hasattr(self, "nhydrogen") and hasattr(self, "atomnos"):
+        if hasattr(self, "natom") and hasattr(self, "nhydrogen"):
         # combine props and headers to find lines heading lists
         # of atom charges or spins.
             for prop in props:
