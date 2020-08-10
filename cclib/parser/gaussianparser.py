@@ -1933,13 +1933,15 @@ class Gaussian(logfileparser.Logfile):
         #     2  C    0.320624   0.000869
         #
         # APT and Lowdin charges are also displayed in this way.
-        def extract_charges_spins(line):
+        def extract_charges_spins(line,prop):
             """Extracts atomic charges and spin densities into 
                self.atomcharges and self.atomspins dictionaries.
     
             Inputs:
                 line - line header marking the beginning of a
                 particular set of charges or spins.
+                prop - property type to be extracted as a
+                string (e.g. Mulliken, Lowdin, APT).
             """
 
             has_spin = 'spin' in line.lower()
@@ -1995,13 +1997,13 @@ class Gaussian(logfileparser.Logfile):
         " charges and spin densities with hydrogens summed into heavy atoms:",
         " charges and spin densities:"]
         
-        if hasattr(self, "natom") and hasattr(self, "nhydrogen"):
+        if hasattr(self, "natom") and hasattr(self, "nhydrogen") and hasattr(self, "atomnos"):
         # combine props and headers to find lines heading lists
         # of atom charges or spins.
             for prop in props:
                 for header in headers:
                     if '{}{}'.format(prop,header).lower() in line.lower():
-                        extract_charges_spins(line)
+                        extract_charges_spins(line,prop)
 
         if line.strip() == "Natural Population":
             if not hasattr(self, 'atomcharges'):
