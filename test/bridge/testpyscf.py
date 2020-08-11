@@ -24,6 +24,7 @@ class PyscfTest(unittest.TestCase):
         pyscfmol = cclib2pyscf.makepyscf(atomcoords, atomnos)
         pyscfmol.basis = "6-31G**"
         pyscfmol.cart = True
+        pyscfmol.verbose = 0
         pyscfmol.build()
 
         mhf = pyscfmol.HF(conv_tol=1e-6)

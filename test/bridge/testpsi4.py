@@ -22,10 +22,11 @@ class Psi4Test(unittest.TestCase):
         psi4.core.set_output_file("psi4_output.dat", False)
 
         atomnos = np.array([1, 8, 1], "i")
-        a = np.array([[-1, 1, 0], [0, 0, 0], [1, 1, 0]], "f")
-        psi4mol = cclib2psi4.makepsi4(a, atomnos)
+        atomcoords = np.array([[-1, 1, 0], [0, 0, 0], [1, 1, 0]], "f")
+        psi4mol = cclib2psi4.makepsi4(atomcoords, atomnos)
+        psi4.set_options({'scf_type': 'pk'})
         en = energy("scf/6-31G**", molecule=psi4mol)
-        ref = -75.82474605514503
+        ref = -75.824754602
         assert abs(en - ref) < 1.0e-6
 
 
