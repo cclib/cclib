@@ -9,23 +9,26 @@ import unittest
 
 import numpy as np
 
-from cclib.bridge import cclib2psi4
+from cclib.bridge import cclib2pyscf
 
 
-class Psi4Test(unittest.TestCase):
-    """Tests for the cclib2psi4 bridge in cclib."""
+class PyscfTest(unittest.TestCase):
+    """Tests for the cclib2pyscf bridge in cclib."""
 
-    def test_makepsi4(self):
-        import psi4
-        from psi4 import energy
-
-        psi4.core.set_output_file("psi4_output.dat", False)
+    def test_makepyscf(self):
+        import pyscf
+        from pyscf import scf
 
         atomnos = np.array([1, 8, 1], "i")
         atomcoords = np.array([[-1, 1, 0], [0, 0, 0], [1, 1, 0]], "f")
-        psi4mol = cclib2psi4.makepsi4(atomcoords, atomnos)
-        psi4.set_options({'scf_type': 'pk'})
-        en = energy("scf/6-31G**", molecule=psi4mol)
+        pyscfmol = cclib2pyscf.makepyscf(atomcoords, atomnos)
+        pyscfmol.basis = "6-31G**"
+        pyscfmol.cart = True
+        pyscfmol.verbose = 0
+        pyscfmol.build()
+
+        mhf = pyscfmol.HF(conv_tol=1e-6)
+        en = mhf.kernel()
         ref = -75.824754602
         assert abs(en - ref) < 1.0e-6
 
