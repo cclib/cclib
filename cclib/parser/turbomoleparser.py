@@ -176,8 +176,12 @@ class Turbomole(logfileparser.Logfile):
         #   1   c           x   0.00000  0.00001  0.00000 -0.01968 -0.04257  0.00001
         #                   y  -0.08246 -0.08792  0.02675 -0.00010  0.00000  0.17930
         #                   z   0.00001  0.00003  0.00004 -0.10350  0.11992 -0.00003
+        # ....
+        #
+        # reduced mass(g/mol)     3.315    2.518    2.061    3.358    3.191    2.323
+
         if 'NORMAL MODES and VIBRATIONAL FREQUENCIES (cm**(-1))' in line:
-            vibfreqs, vibsyms, vibirs, vibdisps = [], [], [], []
+            vibfreqs, vibsyms, vibirs, vibdisps, vibrmasses = [], [], [], [], []
             while '****  force : all done  ****' not in line:
                 if line.strip().startswith('frequency'):
                     freqs = [float(i.replace('i', '-')) for i in line.split()[1:]]
@@ -211,12 +215,17 @@ class Turbomole(logfileparser.Logfile):
                             disps.append([x[i][j], y[i][j], z[i][j]])
                         vibdisps.append(disps)
 
+                if line.strip().startswith('reduced mass(g/mol)'):
+                    rmasses = [utils.float(f) for f in line.split()[2:]]
+                    vibrmasses.extend(rmasses)
+
                 line = next(inputfile)
 
             self.set_attribute('vibfreqs', vibfreqs)
             self.set_attribute('vibsyms', vibsyms)
             self.set_attribute('vibirs', vibirs)
             self.set_attribute('vibdisps', vibdisps)
+            self.set_attribute('vibrmasses', vibrmasses)
 
         # In this section we are parsing mocoeffs and moenergies from
         # the files like: mos, alpha and beta.
@@ -380,20 +389,20 @@ class Turbomole(logfileparser.Logfile):
                         self.append_attribute('mpenergies', mp2energy)
                 line = next(inputfile)
 
-    def deleting_modes(self, vibfreqs, vibdisps, vibirs):
+    def deleting_modes(self, vibfreqs, vibdisps, vibirs, vibrmasses):
         """Deleting frequencies relating to translations or rotations"""
         i = 0
         while i < len(vibfreqs):
             if vibfreqs[i] == 0.0:
                 # Deleting frequencies that have value 0 since they
                 # do not correspond to vibrations.
-                del vibfreqs[i], vibdisps[i], vibirs[i]
+                del vibfreqs[i], vibdisps[i], vibirs[i], vibrmasses[i]
                 i -= 1
             i += 1
 
     def after_parsing(self):
         if hasattr(self, 'vibfreqs'):
-            self.deleting_modes(self.vibfreqs, self.vibdisps, self.vibirs)
+            self.deleting_modes(self.vibfreqs, self.vibdisps, self.vibirs, self.vibrmasses)
 
 
 class OldTurbomole(logfileparser.Logfile):

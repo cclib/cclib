@@ -786,6 +786,7 @@ class GAMESS(logfileparser.Logfile):
 
             self.vibfreqs = []
             self.vibirs = []
+            self.vibrmasses = []
             self.vibdisps = []
 
             # Need to get to the modes line, which is often preceeded by
@@ -864,6 +865,7 @@ class GAMESS(logfileparser.Logfile):
 
                 # Skip the reduced mass (not always present).
                 if line.find("REDUCED") >= 0:
+                    self.vibrmasses.extend(list(map(float, line.strip().split()[2:])))
                     line = next(inputfile)
 
                 # Not present in numerical Hessian calculations.
@@ -907,6 +909,7 @@ class GAMESS(logfileparser.Logfile):
             # Exclude rotations and translations.
             self.vibfreqs = numpy.array(self.vibfreqs[:startrot-1]+self.vibfreqs[endrot:], "d")
             self.vibirs = numpy.array(self.vibirs[:startrot-1]+self.vibirs[endrot:], "d")
+            self.vibrmasses = numpy.array(self.vibrmasses[:startrot-1]+self.vibrmasses[endrot:], "d")
             self.vibdisps = numpy.array(self.vibdisps[:startrot-1]+self.vibdisps[endrot:], "d")
             if hasattr(self, "vibramans"):
                 self.vibramans = numpy.array(self.vibramans[:startrot-1]+self.vibramans[endrot:], "d")
