@@ -37,12 +37,16 @@ class GenericIRTest(unittest.TestCase):
                          (self.numvib, len(self.data.atomnos), 3))
 
     def testlengths(self):
-        """Are the lengths of vibfreqs and vibirs (and if present, vibsyms) correct?"""
+        """Are the lengths of vibfreqs and vibirs (and if present, vibsyms, vibfconnsts and vibrmasses) correct?"""
         self.assertEqual(len(self.data.vibfreqs), self.numvib)
         if hasattr(self.data, 'vibirs'):
             self.assertEqual(len(self.data.vibirs), self.numvib)
         if hasattr(self.data, 'vibsyms'):
             self.assertEqual(len(self.data.vibsyms), self.numvib)
+        if hasattr(self.data, 'vibfconsts'):
+            self.assertEqual(len(self.data.vibfconsts), self.numvib)
+        if hasattr(self.data, 'vibrmasses'):
+            self.assertEqual(len(self.data.vibrmasses), self.numvib)
 
     def testfreqval(self):
         """Is the highest freq value 3630 +/- 200 wavenumber?"""
@@ -63,10 +67,21 @@ class FireflyIRTest(GenericIRTest):
 class GaussianIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
+    max_force_constant = 10.0
+    max_reduced_mass = 6.9
+
+    def testvibfconsts(self):
+        """Is the maximum force constants 10. +/- 0.1 mDyn/angstrom?"""
+        self.assertAlmostEqual(max(self.data.vibfconsts), self.max_force_constant, delta=0.1)
+
+    def testvibrmasses(self):
+        """Is the maximum reduced mass 6.9 +/- 0.1 daltons?"""
+        self.assertAlmostEqual(max(self.data.vibrmasses), self.max_reduced_mass, delta=0.1)
+
     def testvibsyms(self):
         """Is the length of vibsyms correct?"""
         self.assertEqual(len(self.data.vibsyms), self.numvib)
-        
+
     def testzeropointcorrection(self):
         # reference zero-point correction from dvb_ir.out
         zpve = 0.1771
