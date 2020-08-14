@@ -1278,7 +1278,7 @@ class Gaussian(logfileparser.Logfile):
                     freqs = [utils.float(f) for f in line[15:].split()]
                     self.vibfreqs.extend(freqs)
 
-                if line[1:15] == "Red. masses --":  # note: matches low-precision block, and
+                if line[1:15] == "Red. masses --":  # note: matches only low-precision block
 
                     if not hasattr(self, 'vibrmasses'):
                         self.vibrmasses = []
@@ -1286,7 +1286,7 @@ class Gaussian(logfileparser.Logfile):
                     rmasses = [utils.float(f) for f in line[15:].split()]
                     self.vibrmasses.extend(rmasses)
 
-                if line[1:15] == "Frc consts  --":  # note: matches low-precision block, and
+                if line[1:15] == "Frc consts  --":  # note: matches only low-precision block
 
                     if not hasattr(self, 'vibfconsts'):
                         self.vibfconsts = []

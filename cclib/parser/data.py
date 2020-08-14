@@ -168,7 +168,7 @@ class ccData(object):
        "vibanharms":       Attribute(numpy.ndarray,    'anharmonicity constants',     'vibrations'),
        "vibdisps":         Attribute(numpy.ndarray,    'displacement',                'vibrations'),
        "vibfreqs":         Attribute(numpy.ndarray,    'frequencies',                 'vibrations'),
-       "vibfconsts":       Attribute(numpy.ndarray,    'forece concstants',           'vibrations'),
+       "vibfconsts":       Attribute(numpy.ndarray,    'force constants',             'vibrations'),
        "vibirs":           Attribute(numpy.ndarray,    'IR',                          'vibrations:intensities'),
        "vibramans":        Attribute(numpy.ndarray,    'raman',                       'vibrations:intensities'),
        "vibrmasses":       Attribute(numpy.ndarray,    'reduced masses',              'vibrations'),

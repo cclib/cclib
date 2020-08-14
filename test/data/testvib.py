@@ -110,6 +110,7 @@ class GaussianIRTest(GenericIRTest):
 class JaguarIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
+    # Jagur outputs vibrational info with cartesian coordinates
     max_force_constant = 3.7
     max_reduced_mass = 2.3
 
@@ -247,6 +248,7 @@ class GamessIRTest(GenericIRTest):
 class Psi4IRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
+    # RHF is used for Psi4 IR test data instead of B3LYP
     max_force_constant = 9.37
 
 
