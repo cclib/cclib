@@ -984,7 +984,9 @@ class Psi4(logfileparser.Logfile):
                 assert 'Force constant:' in line
                 if not hasattr(self, "vibfconsts"):
                     self.vibfconsts = []
-                self.vibfconsts.append(float(line.split()[2]))
+                self.vibfconsts.append(
+                    utils.convertor(float(line.split()[2]), "hartree/bohr2", "mDyne/angstrom")
+                )
                 line = next(inputfile)
                 assert 'X       Y       Z           mass' in line
                 line = next(inputfile)

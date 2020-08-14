@@ -151,6 +151,7 @@ def convertor(value, fromunits, tounits):
         "ebohr4_to_Debye.ang3": lambda x: x * 0.3766479268,
         "ebohr5_to_Debye.ang4": lambda x: x * 0.1993134985,
 
+        "hartree/bohr2_to_mDyne/angstrom": lambda x: x * 8.23872350 / 0.5291772109
     }
 
     return _convertor["%s_to_%s" % (fromunits, tounits)](value)
