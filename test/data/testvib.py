@@ -70,7 +70,7 @@ class GenericIRTest(unittest.TestCase):
     @skipForParser('ORCA', 'ORCA cannot print force constants')
     @skipForParser('Turbomole', 'Turbomole cannot print force constants')
     @skipForLogfile('Jaguar/Jaguar4.2', 'Data file does not contain force constants')
-    @skipForLogfile('Psi4/Psi4-1.0', 'Data file contains vibrational info with non-mass-weighted coordinates')
+    @skipForLogfile('Psi4/Psi4-1.0', 'Data file contains vibrational info with cartesian coordinates')
     def testvibfconsts(self):
         """Is the maximum force constant 10. +/- 0.1 mDyn/angstrom?"""
         self.assertAlmostEqual(max(self.data.vibfconsts), self.max_force_constant, delta=0.1)
