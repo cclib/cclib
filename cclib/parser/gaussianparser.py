@@ -1939,9 +1939,12 @@ class Gaussian(logfileparser.Logfile):
             # based on whether they are charges or spins. 
             if is_sum:
                 for i in self.atomnos:
+                    # Ignore translation vectors.
+                    if i == -2:
+                        pass
                     # For lists of summed charges or spins, a value
                     # of 0 is added if the atom is a hydrogen.
-                    if i == 1:
+                    elif i == 1:
                         if has_charges:
                             charges.append(float(0))
                         if has_spin and has_charges:
@@ -1963,13 +1966,17 @@ class Gaussian(logfileparser.Logfile):
                             spins.append(float(nline.split()[2]))
             else:
                 for i in self.atomnos:
-                    nline = next(inputfile)
-                    if has_charges:
-                        charges.append(float(nline.split()[2]))
-                    if has_spin and has_charges:
-                        spins.append(float(nline.split()[3]))
-                    if has_spin and not has_charges:
-                        spins.append(float(nline.split()[2]))
+                    # Ignore translation vectors.
+                    if i == -2:
+                        pass
+                    else:
+                        nline = next(inputfile)
+                        if has_charges:
+                            charges.append(float(nline.split()[2]))
+                        if has_spin and has_charges:
+                            spins.append(float(nline.split()[3]))
+                        if has_spin and not has_charges:
+                            spins.append(float(nline.split()[2]))
             # Input extracted values into self.atomcharges.
             if prop.lower() in line.lower():
                 if has_charges:
