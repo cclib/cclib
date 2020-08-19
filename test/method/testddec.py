@@ -83,8 +83,9 @@ class DDEC6Test(unittest.TestCase):
         assert_allclose(self.analysis.proatom_density[1][0:5], refH_den, rtol=1e-3)
         assert_allclose(self.analysis.proatom_density[2][0:5], refH_den, rtol=1e-3)
 
-    def test_step1_and_2_charges(self):
-        """Are step 1 and 2 charges calculated correctly?
+    def test_water_charges(self):
+        """Are charges and quantities in each step of DDEC6 algorithm calculated correctly
+        for water?
         
         Here, values are compared against `chargemol` calculations.
         Due to the differences in basis set used for calculation and slightly different integration
@@ -116,19 +117,19 @@ class DDEC6Test(unittest.TestCase):
         # (rtol is adjusted to account for this inevitable discrepancy)
         # STEP 1
         # Check assigned charges.
-        assert_allclose(analysis.refcharges[0], [-0.513006, 0.256231, 0.256775], rtol=0.10)
+        assert_allclose(analysis.reference_charges[0], [-0.513006, 0.256231, 0.256775], rtol=0.10)
         # STEP 2
         # Check assigned charges.
-        assert_allclose(analysis.refcharges[1], [-0.831591, 0.415430, 0.416161], rtol=0.20)
+        assert_allclose(analysis.reference_charges[1], [-0.831591, 0.415430, 0.416161], rtol=0.20)
         # STEP 3
         # Check integrated charge density (rho^cond(r)) on grid with integrated values (=nelec).
         self.assertAlmostEqual(
-            analysis.chgdensity.integrate(), analysis.rho_cond.integrate(), delta=1
+            analysis.charge_density.integrate(), analysis.rho_cond.integrate(), delta=1
         )
         for atomi in range(len(analysis.data.atomnos)):
             self.assertAlmostEqual(
                 analysis._integrate_from_radial([analysis._cond_density[atomi]], [atomi])
-                + analysis.refcharges[-1][atomi],
+                + analysis.reference_charges[-1][atomi],
                 analysis.data.atomnos[atomi],
                 delta=0.5,
             )
@@ -149,8 +150,17 @@ class DDEC6Test(unittest.TestCase):
             [0.845934391, 0.839099407, 0.803699493, 0.778428137, 0.698628724],
             rtol=0.10,
         )
-        # STEP 4
+        # STEP 4-7
         # Check values assigned to u_A
         assert_allclose(
-            analysis.u_A, [0.572349429, 0.296923935, 0.296520531], atol=0.05,
+            analysis.u_A,
+            [
+                [0.572349429, 0.296923935, 0.296520531],
+                [0.563154399, 0.291919678, 0.291376710],
+                [0.563475132, 0.292007655, 0.291508794],
+                [0.565816045, 0.293131322, 0.292902112],
+            ],
+            atol=0.05,
         )
+        # Check assigned charges
+        assert_allclose(analysis.fragcharges, [-0.757097, 0.378410, 0.378687], atol=0.2)
