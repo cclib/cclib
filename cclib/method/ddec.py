@@ -681,7 +681,6 @@ class DDEC6(Stockholder):
 
     def _update_rho_cond(self):
         # Update total weights on Cartesian grid using equation 65 in doi: 10.1039/c6ra04656h
-        # Generator object to iterate over the grid
         ngridx, ngridy, ngridz = self.charge_density.data.shape
 
         self.rho_cond.data = numpy.zeros_like(self.rho_cond.data, dtype=float)
@@ -690,14 +689,12 @@ class DDEC6(Stockholder):
         )
 
         for atomi in range(self.data.natom):
-            grid = ((x, y, z) for x in range(ngridx) for y in range(ngridy) for z in range(ngridz))
-            for xindex, yindex, zindex in grid:
-                self.rho_cond.data[xindex][yindex][zindex] += self._cond_density[atomi][
-                    self.closest_r_index[atomi][xindex][yindex][zindex]
-                ]
-                self._rho_cond_cartesian[atomi][xindex][yindex][zindex] = self._cond_density[atomi][
-                    self.closest_r_index[atomi][xindex][yindex][zindex]
-                ]
+            self.rho_cond.data += self._cond_density[atomi][
+                self.closest_r_index[atomi]
+            ]
+            self._rho_cond_cartesian[atomi] = self._cond_density[atomi][
+                self.closest_r_index[atomi]
+            ]
 
     def _converge_phi(self, phiA, superscript, atomi):
         """ Update phi until it is positive.
