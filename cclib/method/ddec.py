@@ -675,14 +675,8 @@ class DDEC6(Stockholder):
         grid = copy.deepcopy(self.charge_density)
         grid.data = numpy.zeros_like(grid.data, dtype=float)
 
-        ngridx, ngridy, ngridz = self.charge_density.data.shape
-        indices = ((x, y, z) for x in range(ngridx) for y in range(ngridy) for z in range(ngridz))
-
         for density, atomi in zip(radial_density_list, atom_list):
-            for x, y, z in indices:
-                grid.data[x][y][z] = (
-                    grid.data[x][y][z] + density[self.closest_r_index[atomi][x][y][z]]
-                )
+            grid.data += density[self.closest_r_index[atomi]]
 
         return grid.integrate()
 
