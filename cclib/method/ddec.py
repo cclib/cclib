@@ -325,20 +325,13 @@ class DDEC6(Stockholder):
         """
         # Generator object to iterate over the grid
         ngridx, ngridy, ngridz = self.charge_density.data.shape
-        indices = (
-            (i, x, y, z)
-            for i in range(self.data.natom)
-            for x in range(ngridx)
-            for y in range(ngridy)
-            for z in range(ngridz)
-        )
 
         self._rho_ref = numpy.zeros((ngridx, ngridy, ngridz))
 
-        for atomi, xindex, yindex, zindex in indices:
+        for atomi in range(self.data.natom):
             # rho_ref -- Equation 41 in doi: 10.1039/c6ra04656h
-            self._rho_ref[xindex][yindex][zindex] += self.proatom_density[atomi][
-                self.closest_r_index[atomi][xindex][yindex][zindex]
+            self._rho_ref += self.proatom_density[atomi][
+                self.closest_r_index[atomi]
             ]
 
         self._candidates_bigPhi = []
@@ -394,13 +387,6 @@ class DDEC6(Stockholder):
 
         # Generator object to iterate over the grid
         ngridx, ngridy, ngridz = self.charge_density.data.shape
-        indices = (
-            (i, x, y, z)
-            for i in range(self.data.natom)
-            for x in range(ngridx)
-            for y in range(ngridy)
-            for z in range(ngridz)
-        )
 
         self._leftterm = numpy.zeros((self.data.natom, ngridx, ngridy, ngridz), dtype=float)
         # rho_cond_cartesian is rho^cond projected on Cartesian grid
@@ -411,21 +397,20 @@ class DDEC6(Stockholder):
         self.tau = []
 
         # rho_cond -- equation 65 in doi: 10.1039/c6ra04656h
-        for atomi, xindex, yindex, zindex in indices:
-            self.rho_cond.data[xindex][yindex][zindex] += self._cond_density[atomi][
-                self.closest_r_index[atomi][xindex][yindex][zindex]
+        for atomi in range(self.data.natom):
+            self.rho_cond.data += self._cond_density[atomi][
+                self.closest_r_index[atomi]
             ]
 
         rho_cond_sqrt = numpy.sqrt(self.rho_cond.data)
 
         for atomi in range(self.data.natom):
             self.tau.append(numpy.zeros_like(self.proatom_density[atomi], dtype=float))
-            for xindex, yindex, zindex in numpy.ndindex(ngridx, ngridy, ngridz):
-                # leftterm is the first spherical average term in equation 66.
-                # <rho^cond_A(r_A) / sqrt(rho^cond(r))>
-                self._rho_cond_cartesian[atomi][xindex][yindex][zindex] = self._cond_density[atomi][
-                    self.closest_r_index[atomi][xindex][yindex][zindex]
-                ]
+            # leftterm is the first spherical average term in equation 66.
+            # <rho^cond_A(r_A) / sqrt(rho^cond(r))>
+            self._rho_cond_cartesian[atomi] = self._cond_density[atomi][
+                self.closest_r_index[atomi]
+            ]
             self._leftterm[atomi] = self._rho_cond_cartesian[atomi] / rho_cond_sqrt
             for radiusi in range(len(self.tau[atomi])):
                 grid_filter = self.closest_r_index[atomi] == radiusi
