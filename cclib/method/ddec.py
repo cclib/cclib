@@ -263,33 +263,33 @@ class DDEC6(Stockholder):
         """
         # Generator object to iterate over the grid
         ngridx, ngridy, ngridz = self.charge_density.data.shape
-        indices = (
-            (i, x, y, z)
-            for i in range(self.data.natom)
-            for x in range(ngridx)
-            for y in range(ngridy)
-            for z in range(ngridz)
-        )
         grid_shape = (self.data.natom, ngridx, ngridy, ngridz)
 
         stockholder_w = numpy.zeros(grid_shape)
         localized_w = numpy.zeros(grid_shape)
         self.closest_r_index = numpy.zeros(grid_shape, dtype=int)
 
-        for atomi, xindex, yindex, zindex in indices:
-            # Distance of the grid from atom grid
-            dist_r = self._cartesian_dist(
-                self.data.atomcoords[-1][atomi],
-                self.charge_density.coordinates([xindex, yindex, zindex]),
+        indices = numpy.asanyarray(
+            tuple(
+                (x, y, z)
+                for x in range(ngridx)
+                for y in range(ngridy)
+                for z in range(ngridz)
             )
-            self.closest_r_index[atomi][xindex][yindex][zindex] = numpy.abs(
-                self.radial_grid_r[atomi] - dist_r
-            ).argmin()
+        )
+        coordinates = self.charge_density.coordinates(indices)
+
+        for atomi in range(self.data.natom):
+            # Distance of the grid from atom grid
+            self.closest_r_index[atomi] = numpy.argmin(
+                numpy.abs(
+                    self.radial_grid_r[atomi][..., numpy.newaxis] - numpy.linalg.norm(self.data.atomcoords[-1][atomi] - coordinates, axis=1)
+                ),
+                axis=0
+            ).reshape((ngridx, ngridy, ngridz))
 
             # Equation 54 in doi: 10.1039/c6ra04656h
-            stockholder_w[atomi][xindex][yindex][zindex] = self.proatom_density[atomi][
-                self.closest_r_index[atomi][xindex][yindex][zindex]
-            ]
+            stockholder_w[atomi] = self.proatom_density[atomi][self.closest_r_index[atomi]]
 
         # Equation 55 in doi: 10.1039/c6ra04656h
         localized_w = numpy.power(stockholder_w, 4)
