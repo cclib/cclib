@@ -16,6 +16,7 @@ from .method.testbader import *
 from .method.testcda import *
 from .method.testddec import *
 from .method.testelectrons import *
+from .method.testhirshfeld import *
 from .method.testmbo import *
 from .method.testmoments import *
 from .method.testnuclear import *

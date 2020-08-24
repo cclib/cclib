@@ -15,6 +15,7 @@ from cclib.method.ddec import DDEC6
 from cclib.method.density import Density
 from cclib.method.electrons import Electrons
 from cclib.method.fragments import FragmentAnalysis
+from cclib.method.hirshfeld import Hirshfeld
 from cclib.method.lpa import LPA
 from cclib.method.mbo import MBO
 from cclib.method.moments import Moments
@@ -22,4 +23,5 @@ from cclib.method.mpa import MPA
 from cclib.method.nuclear import Nuclear
 from cclib.method.opa import OPA
 from cclib.method.orbitals import Orbitals
+from cclib.method.stockholder import Stockholder
 from cclib.method.volume import Volume
