@@ -48,9 +48,7 @@ class DDEC6Test(unittest.TestCase):
             vol = volume.Volume((-4, -4, -4), (4, 4, 4), (0.2, 0.2, 0.2))
             delattr(self.data, missing_attribute)
             with self.assertRaises(MissingAttributeError):
-                trialBader = DDEC6(
-                    self.data, vol, os.path.dirname(os.path.realpath(__file__))
-                )
+                trial = DDEC6(self.data, vol, os.path.dirname(os.path.realpath(__file__)))
 
     def test_proatom_read(self):
         """Are proatom densities imported correctly?"""
