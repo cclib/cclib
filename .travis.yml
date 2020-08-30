@@ -1,3 +1,4 @@
+dist: focal
 language: python
 python:
   - 2.7
@@ -17,8 +18,6 @@ addons:
 #     - $HOME/miniconda
 
 before_install:
-  - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu eoan universe"
-  - sudo apt update
   # For Python 3.6+ machine, horton 3 IOData is installed from source. For Python 2.7 machine, horton 2 is installed from conda.
   # From the documentation, horton 3 works with Python 3.6+ and horton 2 does with Python 2.7
   - |
