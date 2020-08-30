@@ -28,13 +28,15 @@ before_install:
         export PATH="$HOME/miniconda/bin:$PATH"
 
         hash -r
+        conda config --add channels conda-forge
+        conda config --set channel_priority strict
         conda config --set always_yes yes --set changeps1 no
         conda update -q conda
         conda info -a
-        conda create -q -n condaenv -c conda-forge -c openbabel -c psi4/label/dev python=$TRAVIS_PYTHON_VERSION ci-psi4 openbabel psi4
+        conda create -q -n condaenv -c openbabel -c psi4/label/dev python=$TRAVIS_PYTHON_VERSION ci-psi4 openbabel psi4
 
         source activate condaenv
-        conda install pytest pytest-cov codecov -c conda-forge
+        conda install pytest pytest-cov codecov
         pip install pytest-shutil h5py pyscf
         pip install git+https://github.com/theochem/iodata.git
 
@@ -46,13 +48,15 @@ before_install:
         export PATH="$HOME/miniconda/bin:$PATH"
 
         hash -r
+        conda config --add channels conda-forge
+        conda config --set channel_priority strict
         conda config --set always_yes yes --set changeps1 no
         conda update -q conda
         conda info -a
-        conda create -q -n condaenv -c conda-forge -c openbabel -c psi4/label/dev -c theochem python=$TRAVIS_PYTHON_VERSION ci-psi4 horton openbabel psi4
+        conda create -q -n condaenv -c openbabel -c psi4/label/dev -c theochem python=$TRAVIS_PYTHON_VERSION ci-psi4 horton openbabel psi4
 
         source activate condaenv
-        conda install pytest pytest-cov codecov -c conda-forge
+        conda install pytest pytest-cov codecov
         pip install pytest-shutil pyscf
 
         conda list
@@ -62,8 +66,7 @@ before_install:
         python -m pip install openbabel
         python -m pip install -U pytest pytest-cov h5py
     fi
-
-    pip install -r requirements.txt
+  - pip install -r requirements.txt
 
 install:
   - pip install .
