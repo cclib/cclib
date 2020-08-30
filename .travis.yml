@@ -7,10 +7,14 @@ addons:
     apt:
       packages:
         - swig
-cache:
-  pip: true
-  directories:
-    - $HOME/miniconda
+
+# Disable caching (#936), see
+# https://github.com/cclib/cclib/pull/930#issuecomment-680869933.
+#
+# cache:
+#   pip: true
+#   directories:
+#     - $HOME/miniconda
 
 before_install:
   - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu eoan universe"
