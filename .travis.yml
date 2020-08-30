@@ -19,9 +19,6 @@ addons:
 before_install:
   - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu eoan universe"
   - sudo apt update
-  # Add this back once we migrate to a pip-only/pip+conda testing matrix
-  # - sudo apt install libopenbabel-dev
-  #
   # For Python 3.6+ machine, horton 3 IOData is installed from source. For Python 2.7 machine, horton 2 is installed from conda.
   # From the documentation, horton 3 works with Python 3.6+ and horton 2 does with Python 2.7
   - |
@@ -35,13 +32,7 @@ before_install:
         conda config --set always_yes yes --set changeps1 no
         conda update -q conda
         conda info -a
-        conda create -q -n condaenv python=$TRAVIS_PYTHON_VERSION \
-            -c conda-forge \
-            -c openbabel \
-            -c psi4/label/dev \
-            ci-psi4 \
-            openbabel \
-            psi4
+        conda create -q -n condaenv -c conda-forge -c openbabel -c psi4/label/dev python=$TRAVIS_PYTHON_VERSION ci-psi4 openbabel psi4
 
         source activate condaenv
         conda install pytest pytest-cov codecov -c conda-forge
@@ -59,22 +50,17 @@ before_install:
         conda config --set always_yes yes --set changeps1 no
         conda update -q conda
         conda info -a
-        conda create -q -n condaenv python=$TRAVIS_PYTHON_VERSION \
-            -c conda-forge \
-            -c openbabel \
-            -c psi4/label/dev \
-            -c theochem \
-            ci-psi4 \
-            horton \
-            openbabel \
-            psi4
+        conda create -q -n condaenv -c conda-forge -c openbabel -c psi4/label/dev -c theochem python=$TRAVIS_PYTHON_VERSION ci-psi4 horton openbabel psi4
 
         source activate condaenv
         conda install pytest pytest-cov codecov -c conda-forge
         pip install pytest-shutil pyscf
-        conda list
 
+        conda list
     else
+        # Python 3.5
+        sudo apt install libopenbabel-dev
+        python -m pip install openbabel
         python -m pip install -U pytest pytest-cov h5py
     fi
 
