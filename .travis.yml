@@ -42,7 +42,7 @@ before_install:
         conda config --set always_yes yes --set changeps1 no --set channel_priority flexible
         conda update -q conda
         conda info -a
-        conda create -q -n condaenv python=$TRAVIS_PYTHON_VERSION ci-psi4 openbabel=2.4.1 psi4
+        conda create -q -n condaenv python=$TRAVIS_PYTHON_VERSION ci-psi4 openbabel psi4
 
         source activate condaenv
         conda install pytest pytest-cov codecov pytest-shutil
@@ -62,7 +62,7 @@ before_install:
         conda config --set always_yes yes --set changeps1 no --set channel_priority flexible
         conda update -q conda
         conda info -a
-        conda create -q -n condaenv python=$TRAVIS_PYTHON_VERSION horton openbabel
+        conda create -q -n condaenv python=$TRAVIS_PYTHON_VERSION horton openbabel=2.4.1
 
         source activate condaenv
         conda install pytest pytest-cov codecov pytest-shutil
