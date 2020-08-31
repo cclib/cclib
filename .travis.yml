@@ -29,11 +29,10 @@ before_install:
 
         hash -r
         conda config --add channels conda-forge
-        conda config --set channel_priority strict
-        conda config --set always_yes yes --set changeps1 no
+        conda config --set always_yes yes --set changeps1 no --set channel_priority flexible
         conda update -q conda
         conda info -a
-        conda create -q -n condaenv -c openbabel -c psi4/label/dev python=$TRAVIS_PYTHON_VERSION ci-psi4 openbabel psi4
+        conda create -q -n condaenv -c openbabel -c psi4 python=$TRAVIS_PYTHON_VERSION ci-psi4 openbabel psi4
 
         source activate condaenv
         conda install pytest pytest-cov codecov
@@ -49,11 +48,10 @@ before_install:
 
         hash -r
         conda config --add channels conda-forge
-        conda config --set channel_priority strict
-        conda config --set always_yes yes --set changeps1 no
+        conda config --set always_yes yes --set changeps1 no --set channel_priority flexible
         conda update -q conda
         conda info -a
-        conda create -q -n condaenv -c openbabel -c psi4/label/dev -c theochem python=$TRAVIS_PYTHON_VERSION ci-psi4 horton openbabel psi4
+        conda create -q -n condaenv -c openbabel -c theochem python=$TRAVIS_PYTHON_VERSION horton openbabel
 
         source activate condaenv
         conda install pytest pytest-cov codecov
