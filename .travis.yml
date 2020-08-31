@@ -20,6 +20,15 @@ addons:
 before_install:
   # For Python 3.6+ machine, horton 3 IOData is installed from source. For Python 2.7 machine, horton 2 is installed from conda.
   # From the documentation, horton 3 works with Python 3.6+ and horton 2 does with Python 2.7
+  #
+  # For Open Babel,
+  # - 2.7: Use 2.4.1 from conda, because PyQuante 1.x requires the 2.4.x API.
+  # - 3.5: Use the latest version from PyPI and build the bindings to the
+  #   OS-provided libraries. The Ubuntu package doesn't install a pkgconfig
+  #   file for the OB setup.py file to find, so it incorrectly guesses header
+  #   and library paths under /usr/local. Pass the correct paths to the
+  #   underlying "python setup.py build_ext" command.
+  # - >= 3.6: Use the latest version from conda.
   - |
     if [[ $(echo "$TRAVIS_PYTHON_VERSION >= 3.6" | bc -l) == 1 ]];
     then
@@ -33,7 +42,7 @@ before_install:
         conda config --set always_yes yes --set changeps1 no --set channel_priority flexible
         conda update -q conda
         conda info -a
-        conda create -q -n condaenv python=$TRAVIS_PYTHON_VERSION ci-psi4 openbabel psi4
+        conda create -q -n condaenv python=$TRAVIS_PYTHON_VERSION ci-psi4 openbabel=2.4.1 psi4
 
         source activate condaenv
         conda install pytest pytest-cov codecov pytest-shutil
@@ -62,7 +71,7 @@ before_install:
     else
         # Python 3.5
         sudo apt install libopenbabel-dev
-        python -m pip install openbabel
+        python -m pip install --global-option=build_ext --global-option='-I/usr/include/openbabel3' --global-option='-L/usr/lib/openbabel3' openbabel
         python -m pip install -U pytest pytest-cov
     fi
   - pip install -r requirements.txt
