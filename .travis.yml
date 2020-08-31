@@ -29,15 +29,16 @@ before_install:
 
         hash -r
         conda config --add channels conda-forge
+        conda config --add channels psi4
         conda config --set always_yes yes --set changeps1 no --set channel_priority flexible
         conda update -q conda
         conda info -a
-        conda create -q -n condaenv -c openbabel -c psi4 python=$TRAVIS_PYTHON_VERSION ci-psi4 openbabel psi4
+        conda create -q -n condaenv python=$TRAVIS_PYTHON_VERSION ci-psi4 openbabel psi4
 
         source activate condaenv
-        conda install pytest pytest-cov codecov
-        pip install pytest-shutil h5py pyscf
-        pip install git+https://github.com/theochem/iodata.git
+        conda install pytest pytest-cov codecov pytest-shutil
+        python -m pip install h5py pyscf
+        python -m pip install git+https://github.com/theochem/iodata.git
 
         conda list
     elif [[ $(echo "$TRAVIS_PYTHON_VERSION < 3.0" | bc -l) == 1 ]];
@@ -48,21 +49,21 @@ before_install:
 
         hash -r
         conda config --add channels conda-forge
+        conda config --add channels theochem
         conda config --set always_yes yes --set changeps1 no --set channel_priority flexible
         conda update -q conda
         conda info -a
-        conda create -q -n condaenv -c openbabel -c theochem python=$TRAVIS_PYTHON_VERSION horton openbabel
+        conda create -q -n condaenv python=$TRAVIS_PYTHON_VERSION horton openbabel
 
         source activate condaenv
-        conda install pytest pytest-cov codecov
-        pip install pytest-shutil pyscf
+        conda install pytest pytest-cov codecov pytest-shutil
 
         conda list
     else
         # Python 3.5
         sudo apt install libopenbabel-dev
         python -m pip install openbabel
-        python -m pip install -U pytest pytest-cov h5py
+        python -m pip install -U pytest pytest-cov
     fi
   - pip install -r requirements.txt
 
