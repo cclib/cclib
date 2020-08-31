@@ -21,6 +21,8 @@ before_install:
   # For Python 3.6+ machine, horton 3 IOData is installed from source. For Python 2.7 machine, horton 2 is installed from conda.
   # From the documentation, horton 3 works with Python 3.6+ and horton 2 does with Python 2.7
   #
+  # h5py is needed for both Horton 2 and Horton 3.
+  #
   # For Open Babel,
   # - 2.7: Use 2.4.1 from conda, because PyQuante 1.x requires the 2.4.x API.
   # - 3.5: Use the latest version from PyPI and build the bindings to the
@@ -72,7 +74,7 @@ before_install:
         # Python 3.5
         sudo apt install libopenbabel-dev
         python -m pip install --global-option=build_ext --global-option='-I/usr/include/openbabel3' --global-option='-L/usr/lib/openbabel3' openbabel
-        python -m pip install -U pytest pytest-cov
+        python -m pip install -U pytest pytest-cov h5py
     fi
   - pip install -r requirements.txt
 
