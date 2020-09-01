@@ -303,7 +303,7 @@ cannot be determined. Rerun without `$molecule read`."""
         line = next(inputfile)
         assert len(line.split()) == min(self.ncolsblock, ncols)
         colcounter = 0
-        split_fixed = utils.WidthSplitter((4, 3, 5, 6, 10, 10, 10, 10, 10, 10))
+        split_fixed = utils.WidthSplitter((4, 4, 4, 6, 10, 10, 10, 10, 10, 10))
         while colcounter < ncols:
             # If the line is just the column header (indices)...
             if line[:5].strip() == '':
