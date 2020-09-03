@@ -1,0 +1,14 @@
+molecule {
+ ${charge} ${mult}
+ ${element} 0.0 0.0 0.0
+}
+
+set {
+ basis cc-pvdz
+ scf_type df
+ guess sad
+ molden_write true
+ reference uhf
+}
+
+energy('blyp')
