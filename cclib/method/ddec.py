@@ -214,7 +214,7 @@ class DDEC6(Stockholder):
             else:
                 # `steps` not incremented in this case
                 # First update kappa based on equation 93
-                kappa_new = self._kappa - self.N_A[cycle] / self.u_A[cycle]
+                kappa_new = self._kappa - self.N_A[-1] / self.u_A[-1]
                 self._kappa = [x if x > 0 else 0.0 for x in kappa_new]
 
             # Update weights (w_A) using equation 96 in doi: 10.1039/c6ra04656h
