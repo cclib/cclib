@@ -10,6 +10,7 @@
 import sys
 import numpy
 import periodictable
+import scipy.spatial.transform
 
 
 # See https://github.com/kachayev/fn.py/commit/391824c43fb388e0eca94e568ff62cc35b543ecb
@@ -155,6 +156,25 @@ def convertor(value, fromunits, tounits):
 
     return _convertor["%s_to_%s" % (fromunits, tounits)](value)
 
+def get_rotation(a, b):
+    """Get rotation part for transforming a to b, where a and b are same positions with different orientations
+    If one atom positions, i.e (1,3) shape array, are given, it returns identify transformation
+
+    Args:
+        a (np.ndarray): positions with shape(N,3)
+        b (np.ndarray): positions with shape(N,3)
+    Returns:
+        scipy.spatial.transform.Rotation
+    """
+    assert a.shape == b.shape
+    if a.shape[0] == 1:
+        return scipy.spatial.transform.Rotation.from_euler('xyz', [0,0,0])
+    # remove translation part
+    a_ = a - a[0]
+    b_ = b - b[0]
+    # get rotation
+    r, _ = scipy.spatial.transform.Rotation.align_vectors(b_, a_)
+    return r
 
 class PeriodicTable(object):
     """Allows conversion between element name and atomic no."""

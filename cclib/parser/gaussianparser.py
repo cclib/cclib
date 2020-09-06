@@ -156,6 +156,15 @@ class Gaussian(logfileparser.Logfile):
             self.atomcoords= \
               [self.atomcoords_BOMD[i] for i in sorted(self.atomcoords_BOMD.keys())]
 
+        # Gaussian prints 'forces' in input orientation unlike other values such as 'moments' or 'vibdisp'.
+        # Therefore, we convert 'grads' to the values in standard orientation with rotation matrix.
+        if hasattr(self, 'grads') and hasattr(self, 'inputcoords') and hasattr(self, 'atomcoords'):
+            grads_std = []
+            for grad, inputcoord, atomcoord in zip(self.grads, self.inputcoords, self.atomcoords):
+                rotation = utils.get_rotation(numpy.array(inputcoord), numpy.array(atomcoord))
+                grads_std.append(rotation.apply(grad))
+            self.grads = numpy.array(grads_std)
+
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
