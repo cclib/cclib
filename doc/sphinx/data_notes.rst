@@ -565,3 +565,15 @@ vibdisps
 --------
 
 The attribute ``vibdisps`` stores the Cartesian displacement vectors from the output of a vibrational frequency calculation. It is a rank 3 array having dimensions ``M x N x 3``, where ``M`` is the number of normal modes and ``N`` is the number of atoms. ``M`` is typically ``3N-6`` (``3N-5`` for linear molecules).
+
+vibfconsts
+--------
+
+The attribute ``vibrmasses`` stores the force constants in :math:`\mathrm{Å^4/Da}` from vibrational frequency calculation. It is a rank 1 array having dimension ``M``, where ``M`` is the number of normal modes.
+
+
+vibrmasses
+--------
+
+The attribute ``vibrmasses`` stores the reduced masses in Daltons (Da) from vibrational frequency calculation. It is a rank 1 array having dimension ``M``, where ``M`` is the number of normal modes.
+
