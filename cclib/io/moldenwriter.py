@@ -160,17 +160,22 @@ class MOLDEN(filewriter.Writer):
         if hasattr(self.ccdata, 'mosyms'):
             has_syms = True
             syms = self.ccdata.mosyms
+        unres = len(moenergies) > 1
 
         spin = 'Alpha'
-        for i in range(mult):
+        for i in range(len(moenergies)):
             for j in range(len(moenergies[i])):
                 if has_syms:
                     lines.append(' Sym= %s' % syms[i][j])
                 moenergy = utils.convertor(moenergies[i][j], 'eV', 'hartree')
                 lines.append(' Ene= {:10.4f}'.format(moenergy))
                 lines.append(' Spin= %s' % spin)
-                if j <= homos[i]:
-                    lines.append(' Occup= {:10.6f}'.format(2.0 / mult))
+                if unres and j <= homos[i]:
+                    lines.append(' Occup= {:10.6f}'.format(1.0))
+                elif not unres and j <= homos[i] and j <= homos[i+1]:
+                    lines.append(' Occup= {:10.6f}'.format(2.0))
+                elif not unres and j <= homos[i] and j > homos[i+1]:
+                    lines.append(' Occup= {:10.6f}'.format(1.0))
                 else:
                     lines.append(' Occup= {:10.6f}'.format(0.0))
                 # Rearrange mocoeffs according to Molden's lexicographical order.
