@@ -457,6 +457,8 @@ class Gaussian(logfileparser.Logfile):
         #   in the event the standard orientation isn't available.
         # Don't extract from Input or Z-matrix orientation in a BOMD run, as only
         #   the final geometry should be kept but extract inputatoms.
+        # We also use "inputcoords" to convert "grads" from input orientation
+        #   to standard orientation
         if line.find("Input orientation") > -1 or line.find("Z-Matrix orientation") > -1:
 
             # If this is a counterpoise calculation, this output means that
@@ -475,8 +477,15 @@ class Gaussian(logfileparser.Logfile):
             line = next(inputfile)
             while list(set(line.strip())) != ["-"]:
                 broken = line.split()
-                self.inputatoms.append(int(broken[1]))
-                atomcoords.append(list(map(float, broken[3:6])))
+                atomno = int(broken[1])
+                # Atom with atomno -1 only appears on "Z-Matrix orientation", and excluded on
+                #   "Input orientation" or "Standard orientation".
+                # We remove this line to keep shape consistency of "atomcoords" and "inputcoords",
+                #   so that we can convert "grads" from input orientation to standard orientaion
+                #   with rotation matrix calculated from "atomcoords" and "inputcoords"
+                if atomno != -1:
+                    self.inputatoms.append(atomno)
+                    atomcoords.append(list(map(float, broken[3:6])))
                 line = next(inputfile)
 
             if not self.BOMD: self.inputcoords.append(atomcoords)
