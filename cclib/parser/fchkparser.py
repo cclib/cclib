@@ -39,4 +39,26 @@ class FChk(logfileparser.Logfile):
         return symlabel
 
     def extract(self, inputfile, line):
-        pass
+
+        self.updateprogress(inputfile, "Basic Information", self.fupdate)
+
+        if line[0:14] == 'Atomic numbers':
+            self.natom = int(line.split()[-1])
+            atomnos = self._parse_block(inputfile, self.natom, int)
+            self.set_attribute('atomnos', atomnos)
+
+        if line[0:29] == 'Current cartesian coordinates':
+            count = int(line.split()[-1])
+            assert count % 3 == 0
+
+            coords = numpy.array(self._parse_block(inputfile, count, float))
+            coords.shape = (1, int(count / 3), 3)
+            self.set_attribute('atomcoords', coords)
+
+
+    def _parse_block(self, inputfile, count, type):
+        atomnos = []
+        while len(atomnos) < count :
+            line = next(inputfile)
+            atomnos.extend([ type(x) for x in line.split()])
+        return atomnos
