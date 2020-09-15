@@ -163,7 +163,6 @@ class MOLDEN(filewriter.Writer):
             syms = self.ccdata.mosyms
         unres = len(moenergies) > 1
         openshell = len(homos) > 1
-        print(unres, openshell)
 
         spin = 'Alpha'
         for i in range(len(moenergies)):
