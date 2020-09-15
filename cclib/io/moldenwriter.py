@@ -10,6 +10,7 @@
 import os.path
 import math
 import decimal
+import numpy 
 
 from cclib.parser import utils
 from cclib.io import filewriter
@@ -161,6 +162,8 @@ class MOLDEN(filewriter.Writer):
             has_syms = True
             syms = self.ccdata.mosyms
         unres = len(moenergies) > 1
+        openshell = len(homos) > 1
+        print(unres, openshell)
 
         spin = 'Alpha'
         for i in range(len(moenergies)):
@@ -170,14 +173,22 @@ class MOLDEN(filewriter.Writer):
                 moenergy = utils.convertor(moenergies[i][j], 'eV', 'hartree')
                 lines.append(' Ene= {:10.4f}'.format(moenergy))
                 lines.append(' Spin= %s' % spin)
-                if unres and j <= homos[i]:
-                    lines.append(' Occup= {:10.6f}'.format(1.0))
-                elif not unres and j <= homos[i] and j <= homos[i+1]:
-                    lines.append(' Occup= {:10.6f}'.format(2.0))
-                elif not unres and j <= homos[i] and j > homos[i+1]:
-                    lines.append(' Occup= {:10.6f}'.format(1.0))
+                if unres and openshell: 
+                    if j <= homos[i]:
+                        lines.append(' Occup= {:10.6f}'.format(1.0))
+                    else:
+                        lines.append(' Occup= {:10.6f}'.format(0.0))
+                elif not unres and openshell:
+                    occ = numpy.sum(j <= homos)
+                    if j <= homos[i]:
+                        lines.append(' Occup= {:10.6f}'.format(occ))
+                    else:
+                        lines.append(' Occup= {:10.6f}'.format(0.0))
                 else:
-                    lines.append(' Occup= {:10.6f}'.format(0.0))
+                    if j <= homos[i]:
+                        lines.append(' Occup= {:10.6f}'.format(2.0))
+                    else:
+                        lines.append(' Occup= {:10.6f}'.format(0.0))
                 # Rearrange mocoeffs according to Molden's lexicographical order.
                 mocoeffs[i][j] = self._rearrange_mocoeffs(mocoeffs[i][j])
                 for k, mocoeff in enumerate(mocoeffs[i][j]):
