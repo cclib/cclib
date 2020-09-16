@@ -47,6 +47,15 @@ class FChk(logfileparser.Logfile):
             atomnos = self._parse_block(inputfile, self.natom, int)
             self.set_attribute('atomnos', atomnos)
 
+        if line[0:19] == 'Number of electrons':
+            alpha = next(inputfile)
+            alpha_homo = int(alpha.split()[-1]) - 1
+
+            beta = next(inputfile)
+            beta_homo = int(beta.split()[-1]) - 1
+
+            self.homos = [alpha_homo, beta_homo]
+
         if line[0:29] == 'Current cartesian coordinates':
             count = int(line.split()[-1])
             assert count % 3 == 0
