@@ -668,6 +668,14 @@ def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out(logfile):
         parse_version(logfile.data.metadata["package_version"]), Version
     )
 
+def testnoparseGAMESS_WinGAMESS_H2O_def2SVPD_triplet_2019_06_30_R1_out(filename):
+    """Check if the molden writer can handle an unrestricted (ROHF) case
+    """
+    data = cclib.io.ccread(os.path.join(__filedir__,filename))
+    writer = cclib.io.moldenwriter.MOLDEN(data)
+    # Check size of Atoms section.
+    self.assertEqual(len(writer._mo_from_ccdata()), ((4+len(data.gbasis))*len(data.mocoeffs)))
+
 
 # GAMESS-UK #
 
