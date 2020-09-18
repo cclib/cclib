@@ -40,9 +40,9 @@ class FChk(logfileparser.Logfile):
 
     def extract(self, inputfile, line):
 
-        self.updateprogress(inputfile, "Basic Information", self.fupdate)
-
         if line[0:14] == 'Atomic numbers':
+            self.updateprogress(inputfile, "Basic Information", self.fupdate)
+
             self.natom = int(line.split()[-1])
             atomnos = self._parse_block(inputfile, self.natom, int)
             self.set_attribute('atomnos', atomnos)
@@ -64,6 +64,29 @@ class FChk(logfileparser.Logfile):
             coords.shape = (1, int(count / 3), 3)
             self.set_attribute('atomcoords', coords)
 
+        if line[0:25] == 'Number of basis functions':
+            self.nbasis = int(line.split()[-1])
+
+        if line[0:14] == 'Overlap Matrix':
+            self.updateprogress(inputfile, "Overlap Matrix", self.fupdate)
+
+            count = int(line.split()[-1])
+
+            # triangle matrix, with number of elements in a row:
+            # 1 + 2 + 3 + .... + self.nbasis
+            assert count == (self.nbasis + 1) * self.nbasis / 2
+            raw_overlaps = self._parse_block(inputfile, count, float)
+
+            # now turn into matrix
+            overlaps = numpy.zeros((self.nbasis, self.nbasis))
+            raw_index = 0
+            for row in range(self.nbasis):
+                for col in range(row, self.nbasis):
+                    overlaps[row, col] = raw_overlaps[raw_index]
+                    overlaps[col, row] = raw_overlaps[raw_index]
+                    raw_index += 1
+
+            self.set_attribute('aooverlaps', overlaps)
 
     def _parse_block(self, inputfile, count, type):
         atomnos = []
