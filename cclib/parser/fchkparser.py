@@ -84,6 +84,25 @@ class FChk(logfileparser.Logfile):
 
             self.set_attribute('aooverlaps', overlaps)
 
+        if line[0:31] == 'Number of independent functions':
+            self.nmo = int(line.split()[-1])
+
+        if line[0:21] == 'Alpha MO coefficients':
+            count = int(line.split()[-1])
+            assert count == self.nbasis * self.nmo
+
+            coeffs = numpy.array(self._parse_block(inputfile, count, float, 'Alpha Coefficients'))
+            coeffs.shape = (self.nmo, self.nbasis)
+            self.set_attribute('mocoeffs', [coeffs])
+
+        if line[0:20] == 'Beta MO coefficients':
+            count = int(line.split()[-1])
+            assert count == self.nbasis * self.nmo
+
+            coeffs = numpy.array(self._parse_block(inputfile, count, float, 'Beta Coefficients'))
+            coeffs.shape = (self.nmo, self.nbasis)
+            self.append_attribute('mocoeffs', coeffs)
+
     def _parse_block(self, inputfile, count, type, msg):
         atomnos = []
         while len(atomnos) < count :
