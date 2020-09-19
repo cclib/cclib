@@ -40,6 +40,12 @@ class FChk(logfileparser.Logfile):
 
     def extract(self, inputfile, line):
 
+        if line[0:6] == 'Charge':
+            self.charge = int(line.split()[-1])
+
+        if line[0:12] == 'Multiplicity':
+            self.mult = int(line.split()[-1])
+
         if line[0:14] == 'Atomic numbers':
             self.natom = int(line.split()[-1])
             atomnos = self._parse_block(inputfile, self.natom, int, 'Basic Information')
