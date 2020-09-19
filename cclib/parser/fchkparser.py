@@ -41,10 +41,8 @@ class FChk(logfileparser.Logfile):
     def extract(self, inputfile, line):
 
         if line[0:14] == 'Atomic numbers':
-            self.updateprogress(inputfile, "Basic Information", self.fupdate)
-
             self.natom = int(line.split()[-1])
-            atomnos = self._parse_block(inputfile, self.natom, int)
+            atomnos = self._parse_block(inputfile, self.natom, int, 'Basic Information')
             self.set_attribute('atomnos', atomnos)
 
         if line[0:19] == 'Number of electrons':
@@ -60,7 +58,7 @@ class FChk(logfileparser.Logfile):
             count = int(line.split()[-1])
             assert count % 3 == 0
 
-            coords = numpy.array(self._parse_block(inputfile, count, float))
+            coords = numpy.array(self._parse_block(inputfile, count, float, 'Coordinates'))
             coords.shape = (1, int(count / 3), 3)
             self.set_attribute('atomcoords', coords)
 
@@ -68,14 +66,12 @@ class FChk(logfileparser.Logfile):
             self.nbasis = int(line.split()[-1])
 
         if line[0:14] == 'Overlap Matrix':
-            self.updateprogress(inputfile, "Overlap Matrix", self.fupdate)
-
             count = int(line.split()[-1])
 
             # triangle matrix, with number of elements in a row:
             # 1 + 2 + 3 + .... + self.nbasis
             assert count == (self.nbasis + 1) * self.nbasis / 2
-            raw_overlaps = self._parse_block(inputfile, count, float)
+            raw_overlaps = self._parse_block(inputfile, count, float, 'Overlap Matrix')
 
             # now turn into matrix
             overlaps = numpy.zeros((self.nbasis, self.nbasis))
@@ -88,9 +84,10 @@ class FChk(logfileparser.Logfile):
 
             self.set_attribute('aooverlaps', overlaps)
 
-    def _parse_block(self, inputfile, count, type):
+    def _parse_block(self, inputfile, count, type, msg):
         atomnos = []
         while len(atomnos) < count :
+            self.updateprogress(inputfile, msg, self.fupdate)
             line = next(inputfile)
             atomnos.extend([ type(x) for x in line.split()])
         return atomnos
