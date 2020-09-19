@@ -95,6 +95,13 @@ class FChk(logfileparser.Logfile):
             coeffs.shape = (self.nmo, self.nbasis)
             self.set_attribute('mocoeffs', [coeffs])
 
+        if line[0:22] == 'Alpha Orbital Energies':
+            count = int(line.split()[-1])
+            assert count == self.nmo
+
+            energies = numpy.array(self._parse_block(inputfile, count, float, 'Alpha MO Energies'))
+            self.set_attribute('moenergies', [energies])
+
         if line[0:20] == 'Beta MO coefficients':
             count = int(line.split()[-1])
             assert count == self.nbasis * self.nmo
@@ -102,6 +109,13 @@ class FChk(logfileparser.Logfile):
             coeffs = numpy.array(self._parse_block(inputfile, count, float, 'Beta Coefficients'))
             coeffs.shape = (self.nmo, self.nbasis)
             self.append_attribute('mocoeffs', coeffs)
+
+        if line[0:21] == 'Beta Orbital Energies':
+            count = int(line.split()[-1])
+            assert count == self.nmo
+
+            energies = numpy.array(self._parse_block(inputfile, count, float, 'Alpha MO Energies'))
+            self.append_attribute('moenergies', energies)
 
     def _parse_block(self, inputfile, count, type, msg):
         atomnos = []
