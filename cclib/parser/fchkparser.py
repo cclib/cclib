@@ -18,6 +18,34 @@ from cclib.parser import data
 from cclib.parser import logfileparser
 from cclib.parser import utils
 
+SHELL_ORBITALS = {
+    0: ['S'],
+    1: ['PX', 'PY', 'PZ'],
+    -1: ['S', 'PX', 'PY', 'PZ'],
+    2: ['D1', 'D2', 'D3', 'D4', 'D5', 'D6'],
+    -2: ['D1', 'D2', 'D3', 'D4', 'D5'],
+    3:  ['F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10'],
+    -3: ['F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7'],
+    4: ['G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'G9', 'G10', 'G11', 'G12','G13'],
+    -4: ['G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'G9']
+
+}
+
+SHELL_START = {
+    0: 1,
+    1: 2,
+    -1: 1,
+    2: 3,
+    -2: 3,
+    3: 4,
+    -3: 4
+}
+
+
+def shell_to_orbitals(type, offset):
+    return ['{}{}'.format(SHELL_START[type] + offset, x) for x in SHELL_ORBITALS[type]]
+
+
 class FChk(logfileparser.Logfile):
     """A Formatted checkpoint file."""
 
@@ -122,6 +150,51 @@ class FChk(logfileparser.Logfile):
 
             energies = numpy.array(self._parse_block(inputfile, count, float, 'Alpha MO Energies'))
             self.append_attribute('moenergies', energies)
+
+        if line[0:11] == 'Shell types':
+            self.parse_aonames(line, inputfile)
+
+    def parse_aonames(self, line, inputfile):
+        # e.g.: Shell types                                I   N=          28
+        count = int(line.split()[-1])
+        shell_types = self._parse_block(inputfile, count, int, 'Atomic Orbital Names')
+
+        # e.g.: Number of primitives per shell             I   N=          28
+        next(inputfile)
+        self._parse_block(inputfile, count, int, 'Atomic Orbital Names')
+
+        # e.g. Shell to atom map                          I   N=          28
+        next(inputfile)
+        shell_map = self._parse_block(inputfile, count, int, 'Atomic Orbital Names')
+        table = utils.PeriodicTable()
+
+        elements = (table.element[x] for x in self.atomnos)
+        atom_labels = ["{}{}".format(y, x) for x, y in enumerate(elements, 1)]
+
+        # get orbitals for first atom
+        atom = shell_map[0] - 1
+        offset = 0
+        aonames = ["{}_{}".format(atom_labels[atom], x) for x in shell_to_orbitals(shell_types[0], offset)]
+
+        # get rest
+        for i in range(1, len(shell_types)):
+            _type = shell_types[i]
+            atom = shell_map[i] - 1
+            offset += 1
+
+            # determine if we move to next atom
+            if atom != shell_map[i - 1] - 1:
+                offset = 0
+
+            # determine if we've changed shell type
+            if _type != shell_types[i - 1]:
+                offset = 0
+
+            orbitals = ["{}_{}".format(atom_labels[atom], x) for x in shell_to_orbitals(_type, offset)]
+            aonames.extend(orbitals)
+
+        assert len(aonames) == self.nbasis, 'Length of aonames != nbasis: {} != {}'.format(len(aonames), self.nbasis)
+        self.set_attribute('aonames', aonames)
 
     def _parse_block(self, inputfile, count, type, msg):
         atomnos = []
