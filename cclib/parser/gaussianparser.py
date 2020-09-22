@@ -1226,8 +1226,8 @@ class Gaussian(logfileparser.Logfile):
         # an extra frequency block with higher-precision vibdisps is
         # printed before the normal frequency block.
         # Note that the code parses only the vibsyms and vibdisps
-        # from the high-precision block, but parses vibsyms, vibfreqs,
-        # vibramans and vibirs from the normal block. vibsyms parsed
+        # from the high-precision block, but parses vibsyms, vibfreqs, vibfconsts,
+        # vibramans, vibrmasses and vibirs from the normal block. vibsyms parsed
         # from the high-precision block are discarded and replaced by those
         # from the normal block while the high-precision vibdisps, if present,
         # are used to overwrite default-precision vibdisps at the end of the parse.
@@ -1255,6 +1255,10 @@ class Gaussian(logfileparser.Logfile):
                             self.vibfreqs = []
                         if hasattr(self, 'vibramans'):
                             self.vibramans = []
+                        if hasattr(self, "vibrmasses"):
+                            self.vibrmasses = []
+                        if hasattr(self, "vibfconsts"):
+                            self.vibfconsts = []
                         if hasattr(self, 'vibdisps'):
                             self.vibdisps = []
 
@@ -1273,6 +1277,22 @@ class Gaussian(logfileparser.Logfile):
 
                     freqs = [utils.float(f) for f in line[15:].split()]
                     self.vibfreqs.extend(freqs)
+
+                if line[1:15] == "Red. masses --":  # note: matches only low-precision block
+
+                    if not hasattr(self, 'vibrmasses'):
+                        self.vibrmasses = []
+
+                    rmasses = [utils.float(f) for f in line[15:].split()]
+                    self.vibrmasses.extend(rmasses)
+
+                if line[1:15] == "Frc consts  --":  # note: matches only low-precision block
+
+                    if not hasattr(self, 'vibfconsts'):
+                        self.vibfconsts = []
+
+                    fconsts = [utils.float(f) for f in line[15:].split()]
+                    self.vibfconsts.extend(fconsts)
 
                 if line[1:15] == "IR Inten    --":  # note: matches only low-precision block
 

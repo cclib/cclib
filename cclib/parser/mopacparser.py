@@ -225,6 +225,17 @@ class MOPAC(logfileparser.Logfile):
                 # transform to km/mol
                 self.vibirs.append(math.sqrt(tdipole))
 
+            line = inputfile.next()
+            if 'TRAVEL' in line:
+                pass
+
+            line = inputfile.next()
+            if 'RED. MASS' in line:
+                if not hasattr(self, 'vibrmasses'):
+                    self.vibrmasses = []
+                rmass = float(line.split()[2])
+                self.vibrmasses.append(rmass)
+
         # Orbital eigenvalues, e.g.
         #           ALPHA EIGENVALUES
         #            BETA EIGENVALUES

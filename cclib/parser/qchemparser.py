@@ -1479,6 +1479,18 @@ cannot be determined. Rerun without `$molecule read`."""
                         vibfreqs = map(float, line.split()[1:])
                         self.vibfreqs.extend(vibfreqs)
 
+                    if 'Force Cnst:' in line:
+                        if not hasattr(self, 'vibfconsts'):
+                            self.vibfconsts = []
+                        vibfconsts = map(float, line.split()[2:])
+                        self.vibfconsts.extend(vibfconsts)
+
+                    if 'Red. Mass' in line:
+                        if not hasattr(self, 'vibrmasses'):
+                            self.vibrmasses = []
+                        vibrmasses = map(float, line.split()[2:])
+                        self.vibrmasses.extend(vibrmasses)
+
                     if 'IR Intens:' in line:
                         if not hasattr(self, 'vibirs'):
                             self.vibirs = []

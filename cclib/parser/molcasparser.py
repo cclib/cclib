@@ -397,6 +397,11 @@ class Molcas(logfileparser.Logfile):
                     self.vibirs.extend(vibirs)
 
                 if 'Red.' in line:
+                    if not hasattr(self, 'vibrmasses'):
+                        self.vibrmasses = []
+                    vibrmasses = map(float, line.split()[2:])
+                    self.vibrmasses.extend(vibrmasses)
+
                     self.skip_line(inputfile, 'blank')
                     line = next(inputfile)
                     if not hasattr(self, 'vibdisps'):
