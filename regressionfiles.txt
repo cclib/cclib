@@ -186,6 +186,7 @@ GAMESS-UK/GAMESS-UK8.0/stopiter_gamessuk_dft.out
 GAMESS-UK/GAMESS-UK8.0/stopiter_gamessuk_hf.out
 GAMESS/WinGAMESS/dvb_td_2007.03.24.r1.out
 GAMESS/WinGAMESS/dvb_td_trplet_2007.03.24.r1.out
+GAMESS/WinGAMESS/H2O_def2SVPD_triplet_2019.06.30.R1.out
 GAMESS/WinGAMESS/WinGAMESS.log
 Gaussian/Gaussian03/AM1_SP.out
 Gaussian/Gaussian03/anth1.log
