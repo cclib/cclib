@@ -546,6 +546,12 @@ Dispersion correction           -0.016199959
                 self.skip_lines(inputfile, ['dashes', 'blank'])
 
             line = next(inputfile).strip()
+            if 'CONSTRAINED CARTESIAN COORDINATES' in line:
+                self.skip_line(
+                    inputfile, 'constrained Cartesian coordinate warning'
+                )
+                line = next(inputfile).strip()
+
             while line:
                 tokens = line.split()
                 x, y, z = float(tokens[-3]), float(tokens[-2]), float(tokens[-1])

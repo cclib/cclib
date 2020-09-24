@@ -1673,6 +1673,17 @@ def testORCA_ORCA4_1_single_atom_freq_out(logfile):
     numpy.testing.assert_almost_equal(logfile.data.freeenergy, -460.16182, 6)
 
 
+def testORCA_ORCA4_2_947_out(logfile):
+    """A constrained geometry optimization which prints the extra line
+
+    WARNING: THERE ARE 5 CONSTRAINED CARTESIAN COORDINATES
+
+    just before the gradient.
+    """
+    assert len(logfile.data.atomcoords) == 7
+    assert len(logfile.data.grads) == 6
+
+
 def testORCA_ORCA4_2_MP2_gradient_out(logfile):
     """ORCA numerical frequency calculation with gradients."""
     assert logfile.data.metadata["package_version"] == "4.2.0"
