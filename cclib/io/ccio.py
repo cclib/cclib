@@ -36,6 +36,7 @@ from cclib.parser.utils import find_package
 
 from cclib.parser.adfparser import ADF
 from cclib.parser.daltonparser import DALTON
+from cclib.parser.fchkparser import FChk
 from cclib.parser.gamessparser import GAMESS
 from cclib.parser.gamessukparser import GAMESSUK
 from cclib.parser.gaussianparser import Gaussian
@@ -93,6 +94,7 @@ triggers = [
 
     (ADF,       ["Amsterdam Density Functional"],                   True),
     (DALTON,    ["Dalton - An Electronic Structure Program"],       True),
+    (FChk,      ["Number of atoms", "I"],                           True),
     (GAMESS,    ["GAMESS"],                                         False),
     (GAMESS,    ["GAMESS VERSION"],                                 True),
     (GAMESSUK,  ["G A M E S S - U K"],                              True),
