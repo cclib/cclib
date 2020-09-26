@@ -52,7 +52,7 @@ class FChk(logfileparser.Logfile):
     def __init__(self, *args, **kwargs):
 
         # Call the __init__ method of the superclass
-        super(FChk, self).__init__(logname="FCHK", *args, **kwargs)
+        super(FChk, self).__init__(logname="FChk", *args, **kwargs)
 
     def __str__(self):
         """Return a string representation of the object."""

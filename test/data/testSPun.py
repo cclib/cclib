@@ -99,6 +99,7 @@ class GenericSPunTest(unittest.TestCase):
             self.assertEqual(len(self.data.moenergies[0]), self.data.nmo)
             self.assertEqual(len(self.data.moenergies[1]), self.data.nmo)
 
+    @skipForParser('FChk', 'Fchk files do not have a section for symmetry')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Molpro', '?')
     @skipForParser('ORCA', 'ORCA has no support for symmetry yet')
