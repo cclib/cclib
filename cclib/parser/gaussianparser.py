@@ -163,7 +163,7 @@ class Gaussian(logfileparser.Logfile):
             for grad, inputcoord, atomcoord in zip(self.grads, self.inputcoords, self.atomcoords):
                 rotation = utils.get_rotation(numpy.array(inputcoord), numpy.array(atomcoord))
                 grads_std.append(rotation.apply(grad))
-            self.grads = numpy.array(grads_std)
+            self.set_attribute('grads', numpy.array(grads_std))
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""

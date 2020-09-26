@@ -54,7 +54,12 @@ class GetRotationTest(unittest.TestCase):
 
     def test_default(self):
         """Is the rotation is correct?"""
-        assert numpy.alltrue(numpy.abs(self.r.as_matrix() - utils.get_rotation(self.a, self.b).as_matrix()) < self.delta)
+        _r = utils.get_rotation(self.a, self.b)
+        # as_dcm is renamed to from_matrix in scipy 1.4.0 and will be removed in sicpy 1.6.0
+        if hasattr(self.r, "as_matrix"):
+            numpy.testing.assert_allclose(self.r.as_matrix(), _r.as_matrix(), atol=self.delta)
+        else:
+            numpy.testing.assert_allclose(self.r.as_dcm(), _r.as_dcm(), atol=self.delta)
 
     def test_two_atoms(self):
         """Is the rotation is correct for 2 atoms?"""
@@ -62,13 +67,16 @@ class GetRotationTest(unittest.TestCase):
         b2 = self.b[:2]
         rotated_diff = self.r.apply(a2) - utils.get_rotation(a2, b2).apply(a2)
         # rotated_diff should be translation
-        assert numpy.alltrue(numpy.abs(rotated_diff[0] - rotated_diff[1]) < self.delta)
+        numpy.testing.assert_allclose(rotated_diff[0], rotated_diff[1], atol=self.delta)
 
     def test_one_atom(self):
         """Is the rotation is identity for 1 atom?"""
         a1 = self.a[:1]
         b1 = self.b[:1]
-        assert numpy.alltrue(numpy.abs(numpy.identity(3) - utils.get_rotation(a1, b1).as_matrix()) < self.delta)
+        if hasattr(self.r, "as_matrix"):
+            numpy.testing.assert_allclose(numpy.eye(3), utils.get_rotation(a1, b1).as_matrix(), atol=self.delta)
+        else:
+            numpy.testing.assert_allclose(numpy.eye(3), utils.get_rotation(a1, b1).as_dcm(), atol=self.delta)
 
 
 class PeriodicTableTest(unittest.TestCase):

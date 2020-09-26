@@ -156,6 +156,26 @@ def convertor(value, fromunits, tounits):
 
     return _convertor["%s_to_%s" % (fromunits, tounits)](value)
 
+def _get_rmat_from_vecs(a, b):
+    """Get rotation matrix from two 3D vectors, a and b
+    Args:
+       a (np.ndaray): 3d vector with shape (3,0)
+       b (np.ndaray): 3d vector with shape (3,0)
+    Returns:
+       np.ndarray
+    """
+    a_ = (a / numpy.linalg.norm(a, 2))
+    b_ = (b / numpy.linalg.norm(b, 2))
+    v = numpy.cross(a_, b_)
+    s = numpy.linalg.norm(v, 2)
+    c = numpy.dot(a_, b_)
+    # skew-symmetric cross product of v
+    vx = numpy.array([[0, -v[2], v[1]],
+                    [v[2], 0, -v[0]],
+                    [-v[1], v[0], 0]])
+    rmat = numpy.identity(3) + vx + numpy.matmul(vx, vx) * ((1-c)/s**2)
+    return rmat
+
 def get_rotation(a, b):
     """Get rotation part for transforming a to b, where a and b are same positions with different orientations
     If one atom positions, i.e (1,3) shape array, are given, it returns identify transformation
@@ -172,8 +192,17 @@ def get_rotation(a, b):
     # remove translation part
     a_ = a - a[0]
     b_ = b - b[0]
-    # get rotation
-    r, _ = scipy.spatial.transform.Rotation.align_vectors(b_, a_)
+    if hasattr(scipy.spatial.transform.Rotation, "align_vectors"):
+        r, _ = scipy.spatial.transform.Rotation.align_vectors(b_, a_)
+    else:
+        if numpy.linalg.matrix_rank(a_) == 1:
+            # in the case of linear molecule, e.g. O2, C2H2
+            idx = numpy.argmax(numpy.linalg.norm(a_, ord=2, axis=1))
+            rmat = _get_rmat_from_vecs(a_[idx], b_[idx])
+            r = scipy.spatial.transform.Rotation.from_dcm(rmat)
+        else:
+            # we need to remove b_[0] and a_[1] ( both of them are [0,0,0] ) to avoid SVD unconvergence error
+            r, _ = scipy.spatial.transform.Rotation.match_vectors(b_[1:], a_[1:])
     return r
 
 class PeriodicTable(object):
