@@ -16,8 +16,8 @@ from cclib.io import (
     cjsonwriter,
     cmlwriter,
     moldenwriter,
-    qcjsonreader,
-    qcjsonwriter,
+    qcschemareader,
+    qcschemawriter,
     wfxwriter,
     xyzreader,
     xyzwriter,
@@ -99,7 +99,7 @@ triggers = [
 
 readerclasses = {
     "cjson": cjsonreader.CJSON,
-    "qcschema": qcjsonreader.QCSchemaReader,
+    "qcschema": qcschemareader.QCSchemaReader,
     "xyz": xyzreader.XYZ,
 }
 
@@ -107,7 +107,7 @@ writerclasses = {
     "cjson": cjsonwriter.CJSON,
     "cml": cmlwriter.CML,
     "molden": moldenwriter.MOLDEN,
-    "qcschema": qcjsonwriter.QCSchemaWriter,
+    "qcschema": qcschemawriter.QCSchemaWriter,
     "wfx": wfxwriter.WFXWriter,
     "xyz": xyzwriter.XYZ,
 }
