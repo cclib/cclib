@@ -669,12 +669,17 @@ def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out(logfile):
     )
 
 def testnoparseGAMESS_WinGAMESS_H2O_def2SVPD_triplet_2019_06_30_R1_out(filename):
-    """Check if the molden writer can handle an unrestricted (ROHF) case
+    """Check if the molden writer can handle an unrestricted case
     """
     data = cclib.io.ccread(os.path.join(__filedir__,filename))
     writer = cclib.io.moldenwriter.MOLDEN(data)
     # Check size of Atoms section.
-    self.assertEqual(len(writer._mo_from_ccdata()), ((4+len(data.gbasis))*len(data.mocoeffs)))
+    self.assertEqual(len(writer._mo_from_ccdata()), ((4+len(data.gbasis))*len(data.mocoeffs[0])*2))
+    # check docc orbital
+    beta_idx = (4+len(data.gbasis) * data.mocoeffs[0])
+    self.assertEqual("Beta" in writer._mo_from_ccdata()[beta_idx+2])
+    self.assertEqual("Occup=   1.000000" in writer._mo_from_ccdata()[beta_idx+3])
+    self.assertEqual("0.989063" in writer._mo_from_ccdata()[beta_idx+5])
 
 
 # GAMESS-UK #
