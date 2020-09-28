@@ -4,7 +4,7 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
-"""A writer for MolSSI quantum chemical JSON (QCJSON) files."""
+"""A writer for MolSSI quantum chemical JSON (QCSchema) files."""
 
 import json
 
@@ -14,7 +14,7 @@ from .cjsonwriter import CJSON as CJSONWriter
 from .cjsonwriter import JSONIndentEncoder, NumpyAwareJSONEncoder
 
 
-class QCJSONWriter(CJSONWriter):
+class QCSchemaWriter(CJSONWriter):
     """A writer for QCSchema files."""
 
     def __init__(self, ccdata, *args, **kwargs):

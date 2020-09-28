@@ -99,7 +99,7 @@ triggers = [
 
 readerclasses = {
     "cjson": cjsonreader.CJSON,
-    "qcjson": qcjsonreader.QCJSONReader,
+    "qcschema": qcjsonreader.QCSchemaReader,
     "xyz": xyzreader.XYZ,
 }
 
@@ -107,7 +107,7 @@ writerclasses = {
     "cjson": cjsonwriter.CJSON,
     "cml": cmlwriter.CML,
     "molden": moldenwriter.MOLDEN,
-    "qcjson": qcjsonwriter.QCJSONWriter,
+    "qcschema": qcjsonwriter.QCSchemaWriter,
     "wfx": wfxwriter.WFXWriter,
     "xyz": xyzwriter.XYZ,
 }
