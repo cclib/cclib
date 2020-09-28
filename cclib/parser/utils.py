@@ -202,7 +202,14 @@ def get_rotation(a, b):
             r = scipy.spatial.transform.Rotation.from_dcm(rmat)
         else:
             # we need to remove b_[0] and a_[1] ( both of them are [0,0,0] ) to avoid SVD unconvergence error
-            r, _ = scipy.spatial.transform.Rotation.match_vectors(b_[1:], a_[1:])
+            # Kabsch Algorithm
+            cov = numpy.dot(b_.T, a_)
+            V, S, W = numpy.linalg.svd(cov)
+            if ((numpy.linalg.det(V) * numpy.linalg.det(W))< 0.0):
+                S[-1] = -S[-1]
+                V[:,-1] = -V[:,-1]
+            rmat = numpy.dot(V, W)
+            r = scipy.spatial.transform.Rotation.from_dcm(rmat)
     return r
 
 class PeriodicTable(object):
