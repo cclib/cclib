@@ -2556,6 +2556,16 @@ def testQChem_QChem5_0_argon_out(logfile):
     assert logfile.data.scfenergies[0] == convertor(state_0_energy, 'hartree', 'eV')
     assert abs(logfile.data.etenergies[0] - convertor(state_1_energy - state_0_energy, 'hartree', 'wavenumber')) < 1.0e-1
 
+def testQChem_QChem5_0_Si_out(logfile):
+    """
+    This job includes MOs as a test for this version. This fist MO coefficient is checked to ensure they were parsed.
+    """
+    assert logfile.data.metadata["legacy_package_version"] == "5.0.2"
+    assert logfile.data.metadata["package_version"] == "5.0.2"
+    assert isinstance(
+        parse_version(logfile.data.metadata["package_version"]), Version
+    )
+    assert logfile.data.mocoeffs[0][0,0] == 1.00042
 
 def testQChem_QChem5_1_old_final_print_1_out(logfile):
     """This job has was run from a development version."""
