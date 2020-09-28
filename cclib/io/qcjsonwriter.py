@@ -5,7 +5,7 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
-"""A writer for MolSSI quantum chemical JSON (QCJSON) files.
+"""A writer for MolSSI quantum chemical JSON (QCSchema) files.
 """
 
 import json
@@ -16,11 +16,11 @@ from .cjsonwriter import CJSON as CJSONWriter
 from .cjsonwriter import JSONIndentEncoder, NumpyAwareJSONEncoder
 
 
-class QCJSONWriter(CJSONWriter):
+class QCSchemaWriter(CJSONWriter):
     """A writer for QCSchema files."""
 
     def __init__(self, ccdata, *args, **kwargs):
-        super(QCJSONWriter, self).__init__(ccdata, *args, **kwargs)
+        super(QCSchemaWriter, self).__init__(ccdata, *args, **kwargs)
 
     def as_dict(self):
         qcschema_dict = dict()
@@ -28,10 +28,7 @@ class QCJSONWriter(CJSONWriter):
         qcschema_dict["schema_name"] = "qcschema_output"
         qcschema_dict["schema_version"] = 1
 
-        qcschema_dict["molecule"] = {
-            "schema_name": "qcschema_molecule",
-            "schema_version": 2,
-        }
+        qcschema_dict["molecule"] = {"schema_name": "qcschema_molecule", "schema_version": 2}
 
         # TODO make this an enum
         if hasattr(self.ccdata, "hessian"):
@@ -84,19 +81,13 @@ class QCJSONWriter(CJSONWriter):
         if method == "HF":
             return_energy = scf_total_energy
         elif method == "CCSD":
-            mp2_total_energy = convertor(
-                self.ccdata.mpenergies[-1][-1], "eV", "hartree"
-            )
+            mp2_total_energy = convertor(self.ccdata.mpenergies[-1][-1], "eV", "hartree")
             mp2_correlation_energy = convertor(
-                self.ccdata.mpenergies[-1][-1] - self.ccdata.scfenergies[-1],
-                "eV",
-                "hartree",
+                self.ccdata.mpenergies[-1][-1] - self.ccdata.scfenergies[-1], "eV", "hartree"
             )
             ccsd_total_energy = convertor(self.ccdata.ccenergies[-1], "eV", "hartree")
             ccsd_correlation_energy = convertor(
-                self.ccdata.ccenergies[-1] - self.ccdata.scfenergies[-1],
-                "eV",
-                "hartree",
+                self.ccdata.ccenergies[-1] - self.ccdata.scfenergies[-1], "eV", "hartree"
             )
             return_energy = ccsd_total_energy
         else:
