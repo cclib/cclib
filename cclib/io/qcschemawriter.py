@@ -89,7 +89,7 @@ class QCSchemaWriter(CJSONWriter):
             )
             return_energy = ccsd_total_energy
         else:
-            pass
+            raise RuntimeError(f"Don't know what to do with method {method}")
 
         qcschema_dict["properties"] = {
             "calcinfo_nbasis": self.ccdata.nbasis,
@@ -133,7 +133,11 @@ class QCSchemaWriter(CJSONWriter):
             )
 
         # TODO gradient, Hessian
-        qcschema_dict["return_result"] = return_energy
+        if driver == "energy":
+            return_result = return_energy
+        else:
+            raise RuntimeError(f"Don't know driver {driver}")
+        qcschema_dict["return_result"] = return_result
 
         return qcschema_dict
 
