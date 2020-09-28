@@ -94,7 +94,7 @@ class FChk(logfileparser.Logfile):
 
             coords = numpy.array(self._parse_block(inputfile, count, float, 'Coordinates'))
             coords.shape = (1, int(count / 3), 3)
-            self.set_attribute('atomcoords', coords)
+            self.set_attribute('atomcoords', utils.convertor(coords, 'bohr', 'Angstrom'))
 
         if line[0:25] == 'Number of basis functions':
             self.set_attribute('nbasis', int(line.split()[-1]))
@@ -111,11 +111,12 @@ class FChk(logfileparser.Logfile):
             overlaps = numpy.zeros((self.nbasis, self.nbasis))
             raw_index = 0
             for row in range(self.nbasis):
-                for col in range(row, self.nbasis):
+                for col in range(row + 1):
                     overlaps[row, col] = raw_overlaps[raw_index]
                     overlaps[col, row] = raw_overlaps[raw_index]
                     raw_index += 1
 
+            print(overlaps[0:5, 0:5])
             self.set_attribute('aooverlaps', overlaps)
 
         if line[0:31] == 'Number of independent functions':
@@ -195,6 +196,13 @@ class FChk(logfileparser.Logfile):
 
         assert len(aonames) == self.nbasis, 'Length of aonames != nbasis: {} != {}'.format(len(aonames), self.nbasis)
         self.set_attribute('aonames', aonames)
+
+    def after_parsing(self):
+        """Correct data or do parser-specific validation after parsing is finished."""
+
+        # If restricted calculation, need to remove beta homo
+        if len(self.moenergies) == len(self.homos) - 1:
+            self.homos.pop()
 
     def _parse_block(self, inputfile, count, type, msg):
         atomnos = []

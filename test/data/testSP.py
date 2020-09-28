@@ -140,19 +140,23 @@ class GenericSPTest(unittest.TestCase):
         """Is the index of the HOMO equal to 34?"""
         numpy.testing.assert_array_equal(self.data.homos, numpy.array([34],"i"), "%s != array([34],'i')" % numpy.array_repr(self.data.homos))
 
+    @skipForParser('FChk', 'Formatted Checkpoint files do not have a section for SCF energy')
     def testscfvaluetype(self):
         """Are scfvalues and its elements the right type??"""
         self.assertEqual(type(self.data.scfvalues),type([]))
         self.assertEqual(type(self.data.scfvalues[0]),type(numpy.array([])))
 
+    @skipForParser('FChk', 'Formatted Checkpoint files do not have a section for SCF energy')
     def testscfenergy(self):
         """Is the SCF energy within the target?"""
         self.assertAlmostEqual(self.data.scfenergies[-1], self.b3lyp_energy, delta=40, msg="Final scf energy: %f not %i +- 40eV" %(self.data.scfenergies[-1], self.b3lyp_energy))
 
+    @skipForParser('FChk', 'Formatted Checkpoint files do not have a section for SCF convergence')
     def testscftargetdim(self):
         """Do the scf targets have the right dimensions?"""
         self.assertEqual(self.data.scftargets.shape, (len(self.data.scfvalues), len(self.data.scfvalues[0][0])))
 
+    @skipForParser('FChk', 'Formatted Checkpoint files do not have a section for SCF convergence')
     def testscftargets(self):
         """Are correct number of SCF convergence criteria being parsed?"""
         self.assertEqual(len(self.data.scftargets[0]), self.num_scf_criteria)
@@ -324,11 +328,13 @@ class GenericSPTest(unittest.TestCase):
         # the parser and isn't stored on ccData?
         self.assertIn("package", self.data.metadata)
 
+    @skipForParser('FChk', 'Formatted Checkpoint files do not have section for legacy package version')
     def testmetadata_legacy_package_version(self):
         """Does metadata have expected keys and values?"""
         # TODO Test specific values for each unit test.
         self.assertIn("legacy_package_version", self.data.metadata)
 
+    @skipForParser('FChk', 'Formatted Checkpoint files do not have section for package version')
     def testmetadata_package_version(self):
         """Does metadata have expected keys and values?"""
         # TODO Test specific values for each unit test.
