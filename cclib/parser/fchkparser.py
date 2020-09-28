@@ -69,10 +69,10 @@ class FChk(logfileparser.Logfile):
     def extract(self, inputfile, line):
 
         if line[0:6] == 'Charge':
-            self.charge = int(line.split()[-1])
+            self.set_attribute('charge', int(line.split()[-1]))
 
         if line[0:12] == 'Multiplicity':
-            self.mult = int(line.split()[-1])
+            self.set_attribute('mult', int(line.split()[-1]))
 
         if line[0:14] == 'Atomic numbers':
             self.natom = int(line.split()[-1])
@@ -86,7 +86,7 @@ class FChk(logfileparser.Logfile):
             beta = next(inputfile)
             beta_homo = int(beta.split()[-1]) - 1
 
-            self.homos = [alpha_homo, beta_homo]
+            self.set_attribute('homos', [alpha_homo, beta_homo])
 
         if line[0:29] == 'Current cartesian coordinates':
             count = int(line.split()[-1])
@@ -97,7 +97,7 @@ class FChk(logfileparser.Logfile):
             self.set_attribute('atomcoords', coords)
 
         if line[0:25] == 'Number of basis functions':
-            self.nbasis = int(line.split()[-1])
+            self.set_attribute('nbasis', int(line.split()[-1]))
 
         if line[0:14] == 'Overlap Matrix':
             count = int(line.split()[-1])
@@ -119,7 +119,7 @@ class FChk(logfileparser.Logfile):
             self.set_attribute('aooverlaps', overlaps)
 
         if line[0:31] == 'Number of independent functions':
-            self.nmo = int(line.split()[-1])
+            self.set_attribute('nmo', int(line.split()[-1]))
 
         if line[0:21] == 'Alpha MO coefficients':
             count = int(line.split()[-1])
