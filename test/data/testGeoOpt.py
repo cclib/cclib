@@ -247,7 +247,7 @@ class DALTONGeoOptTest(GenericGeoOptTest):
 
 
 class GaussianGeoOptTest(GenericGeoOptTest):
-    """Customzed geometry optimization unittest"""
+    """Customized geometry optimization unittest"""
 
     def testgradsorientation(self):
         """Are the orientations for grads and atomcoords are same?"""

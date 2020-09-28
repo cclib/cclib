@@ -201,7 +201,7 @@ def get_rotation(a, b):
             rmat = _get_rmat_from_vecs(a_[idx], b_[idx])
             r = scipy.spatial.transform.Rotation.from_dcm(rmat)
         else:
-            # we need to remove b_[0] and a_[1] ( both of them are [0,0,0] ) to avoid SVD unconvergence error
+            # scipy.spatial.transform.Rotation.match_vectors has bug
             # Kabsch Algorithm
             cov = numpy.dot(b_.T, a_)
             V, S, W = numpy.linalg.svd(cov)
