@@ -1,9 +1,9 @@
 packaging>=19.0
 numpy
+periodictable
 
 # methods
 scipy>=1.2.0
-periodictable
 
 # bridges
 biopython==1.76
