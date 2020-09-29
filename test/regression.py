@@ -674,12 +674,12 @@ def testnoparseGAMESS_WinGAMESS_H2O_def2SVPD_triplet_2019_06_30_R1_out(filename)
     data = cclib.io.ccread(os.path.join(__filedir__,filename))
     writer = cclib.io.moldenwriter.MOLDEN(data)
     # Check size of Atoms section.
-    self.assertEqual(len(writer._mo_from_ccdata()), ((4+len(data.gbasis))*len(data.mocoeffs[0])*2))
+    self.assertEqual(len(writer._mo_from_ccdata()), (data.nbasis+4)*(data.nmo*2))
     # check docc orbital
-    beta_idx = (4+len(data.gbasis) * data.mocoeffs[0])
+    beta_idx = (data.nbasis+4)*(data.nmo)
     self.assertEqual("Beta" in writer._mo_from_ccdata()[beta_idx+2])
     self.assertEqual("Occup=   1.000000" in writer._mo_from_ccdata()[beta_idx+3])
-    self.assertEqual("0.989063" in writer._mo_from_ccdata()[beta_idx+5])
+    self.assertEqual("0.989063" in writer._mo_from_ccdata()[beta_idx+4])
 
 
 # GAMESS-UK #
