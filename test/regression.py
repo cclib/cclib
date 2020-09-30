@@ -69,7 +69,7 @@ from cclib.parser import Psi4
 from cclib.parser import QChem
 from cclib.parser import Turbomole
 
-from cclib.io import ccopen
+from cclib.io import ccopen, ccread, moldenwriter
 
 # This assume that the cclib-data repository is located at a specific location
 # within the cclib repository. It would be better to figure out a more natural
@@ -668,18 +668,18 @@ def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out(logfile):
         parse_version(logfile.data.metadata["package_version"]), Version
     )
 
-def testnoparseGAMESS_WinGAMESS_H2O_def2SVPD_triplet_2019_06_30_R1_out(filename):
+def testnoparseGAMESS_WinGAMESS_H2O_def2SVPD_triplet_2019_06_30_R1_out(logfile):
     """Check if the molden writer can handle an unrestricted case
     """
-    data = cclib.io.ccread(os.path.join(__filedir__,filename))
-    writer = cclib.io.moldenwriter.MOLDEN(data)
+    data = ccread(os.path.join(__filedir__,logfile))
+    writer = moldenwriter.MOLDEN(data)
     # Check size of Atoms section.
-    self.assertEqual(len(writer._mo_from_ccdata()), (data.nbasis+4)*(data.nmo*2))
+    assert len(writer._mo_from_ccdata()) == (data.nbasis + 4) * (data.nmo * 2)
     # check docc orbital
-    beta_idx = (data.nbasis+4)*(data.nmo)
-    self.assertEqual("Beta" in writer._mo_from_ccdata()[beta_idx+2])
-    self.assertEqual("Occup=   1.000000" in writer._mo_from_ccdata()[beta_idx+3])
-    self.assertEqual("0.989063" in writer._mo_from_ccdata()[beta_idx+4])
+    beta_idx = (data.nbasis + 4) * data.nmo
+    assert "Beta" in writer._mo_from_ccdata()[beta_idx + 2]
+    assert "Occup=   1.000000" in writer._mo_from_ccdata()[beta_idx + 3]
+    assert "0.989063" in writer._mo_from_ccdata()[beta_idx + 4]
 
 
 # GAMESS-UK #
