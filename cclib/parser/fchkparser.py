@@ -42,7 +42,14 @@ SHELL_START = {
 }
 
 
-def shell_to_orbitals(type, offset):
+def _shell_to_orbitals(type, offset):
+    """Convert a Fchk shell type and offset to a list of string representations.
+
+    For example, shell type = -2 corresponds to d orbitals (spherical basis) with
+    an offset = 1 would correspond to the 4d orbitals, so this function returns
+    `['4D1', '4D2', '4D3', '4D4', '4D5']`.
+    """
+
     return ['{}{}'.format(SHELL_START[type] + offset, x) for x in SHELL_ORBITALS[type]]
 
 
@@ -182,7 +189,7 @@ class FChk(logfileparser.Logfile):
         # get orbitals for first atom and start aonames and atombasis lists
         atom = shell_map[0] - 1
         shell_offset = 0
-        orbitals = shell_to_orbitals(shell_types[0], shell_offset)
+        orbitals = _shell_to_orbitals(shell_types[0], shell_offset)
         aonames = ["{}_{}".format(atom_labels[atom], x) for x in orbitals]
         atombasis = [list(range(len(orbitals)))]
 
@@ -203,7 +210,7 @@ class FChk(logfileparser.Logfile):
             if _type != shell_types[i - 1]:
                 shell_offset = 0
 
-            orbitals = shell_to_orbitals(_type, shell_offset)
+            orbitals = _shell_to_orbitals(_type, shell_offset)
             aonames.extend(["{}_{}".format(atom_labels[atom], x) for x in orbitals])
             atombasis[-1].extend(list(range(basis_offset, basis_offset + len(orbitals))))
 
