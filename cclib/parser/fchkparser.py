@@ -34,7 +34,7 @@ SHELL_ORBITALS = {
 SHELL_START = {
     0: 1,
     1: 2,
-    -1: 1,
+    -1: 2,
     2: 3,
     -2: 3,
     3: 4,
@@ -53,6 +53,7 @@ class FChk(logfileparser.Logfile):
 
         # Call the __init__ method of the superclass
         super(FChk, self).__init__(logname="FChk", *args, **kwargs)
+        self.start = True
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -67,6 +68,12 @@ class FChk(logfileparser.Logfile):
         return symlabel
 
     def extract(self, inputfile, line):
+
+        # just opened file, skip first line to get basis
+        if self.start:
+            method = next(inputfile)
+            self.metadata['basis_set'] = method.split()[-1]
+            self.start = False
 
         if line[0:6] == 'Charge':
             self.set_attribute('charge', int(line.split()[-1]))
@@ -172,30 +179,39 @@ class FChk(logfileparser.Logfile):
         elements = (table.element[x] for x in self.atomnos)
         atom_labels = ["{}{}".format(y, x) for x, y in enumerate(elements, 1)]
 
-        # get orbitals for first atom
+        # get orbitals for first atom and start aonames and atombasis lists
         atom = shell_map[0] - 1
-        offset = 0
-        aonames = ["{}_{}".format(atom_labels[atom], x) for x in shell_to_orbitals(shell_types[0], offset)]
+        shell_offset = 0
+        orbitals = shell_to_orbitals(shell_types[0], shell_offset)
+        aonames = ["{}_{}".format(atom_labels[atom], x) for x in orbitals]
+        atombasis = [list(range(len(orbitals)))]
 
         # get rest
         for i in range(1, len(shell_types)):
             _type = shell_types[i]
             atom = shell_map[i] - 1
-            offset += 1
+            shell_offset += 1
+            basis_offset = atombasis[-1][-1] + 1 # atombasis is increasing numbers, so just grab last
 
-            # determine if we move to next atom
+            # if we've move to next atom, need to update offset of shells (e.g. start at 1S)
+            # and start new list for atom basis
             if atom != shell_map[i - 1] - 1:
-                offset = 0
+                shell_offset = 0
+                atombasis.append([])
 
-            # determine if we've changed shell type
+            # determine if we've changed shell type (e.g. from S to P)
             if _type != shell_types[i - 1]:
-                offset = 0
+                shell_offset = 0
 
-            orbitals = ["{}_{}".format(atom_labels[atom], x) for x in shell_to_orbitals(_type, offset)]
-            aonames.extend(orbitals)
+            orbitals = shell_to_orbitals(_type, shell_offset)
+            aonames.extend(["{}_{}".format(atom_labels[atom], x) for x in orbitals])
+            atombasis[-1].extend(list(range(basis_offset, basis_offset + len(orbitals))))
 
         assert len(aonames) == self.nbasis, 'Length of aonames != nbasis: {} != {}'.format(len(aonames), self.nbasis)
         self.set_attribute('aonames', aonames)
+
+        assert len(atombasis) == self.natom, 'Length of atombasis != natom: {} != {}'.format(len(atombasis), self.natom)
+        self.set_attribute('atombasis', atombasis)
 
     def after_parsing(self):
         """Correct data or do parser-specific validation after parsing is finished."""
