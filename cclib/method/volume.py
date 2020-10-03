@@ -64,8 +64,12 @@ if _found_pyquante:
 
     # Small wrapper PyQuante & pyquante2 function that evaluates basis function on a given point
     # Used in both `wavefunction` and `electrondensity`
-    def pyamp(bfs, bs, x, y, z):
-        return bfs[bs].amp(x, y, z)
+    def pyamp(bfs, bs, points):
+        # 1D numpy array with size 1 is returned from __call__ here.
+        mesh_vals = numpy.zeros(len(points))
+        for i in range(len(points)):
+            mesh_vals[i] = bfs[bs].amp(points[i][0], points[i][1], points[i][2])
+        return mesh_vals
 
 
 _found_pyquante2 = find_package("pyquante2")
