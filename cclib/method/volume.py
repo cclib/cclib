@@ -317,6 +317,7 @@ def wavefunction(ccdata, volume, mocoeffs):
     Output:
         Volume object with wavefunction at each grid point stored in data attribute
     """
+    _check_pyquante()
     bfs = getbfs(ccdata)
 
     wavefn = copy.copy(volume)
@@ -360,7 +361,7 @@ def electrondensity_spin(ccdata, volume, mocoeffslist):
     assert (
         len(mocoeffslist) == 1
     ), "mocoeffslist input to the function should have length of 1."
-
+    _check_pyquante()
     bfs = getbfs(ccdata)
 
     density = copy.copy(volume)
