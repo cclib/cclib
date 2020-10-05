@@ -62,10 +62,23 @@ if _found_pyquante:
 
         return bfs
 
-    # Small wrapper PyQuante & pyquante2 function that evaluates basis function on a given point
-    # Used in both `wavefunction` and `electrondensity`
     def pyamp(bfs, bs, points):
-        # 1D numpy array with size 1 is returned from __call__ here.
+        """Wrapper for evaluating basis functions at one or more grid points.
+
+        Parameters
+        ----------
+        bfs : list
+            List of PyQuante 1 `CGBFs`s (contracted Gaussian basis functions).
+        bs : int
+            Index into the list of CGBFs for the basis function to evaluate.
+        points : numpy.ndarray
+            An [n, 3] array of `n` Cartesian grid points on which to evaluate the basis function.
+
+        Returns
+        -------
+        out : numpy.ndarray
+            An [n, ] array of the requested basis function's value on each grid point.
+        """
         mesh_vals = numpy.zeros(len(points))
         for i in range(len(points)):
             mesh_vals[i] = bfs[bs].amp(points[i][0], points[i][1], points[i][2])
@@ -103,10 +116,23 @@ if _found_pyquante2:
 
         return bfs
 
-    # Small wrapper PyQuante & pyquante2 function that evaluates basis function on a given point
-    # Used in both `wavefunction` and `electrondensity`
     def pyamp(bfs, bs, points):
-        # 1D numpy array with size 1 is returned from __call__ here.
+        """Wrapper for evaluating basis functions at one or more grid points.
+
+        Parameters
+        ----------
+        bfs : list
+            List of pyquante2 `cgbf`s (contracted Gaussian basis functions).
+        bs : int
+            Index into the list of CGBFs for the basis function to evaluate.
+        points : numpy.ndarray
+            An [n, 3] array of `n` Cartesian grid points on which to evaluate the basis function.
+
+        Returns
+        -------
+        out : numpy.ndarray
+            An [n, ] array of the requested basis function's value on each grid point.
+        """
         return bfs[bs].mesh(points)
 
 
