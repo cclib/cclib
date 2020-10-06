@@ -17,6 +17,8 @@ if sys.version_info[0] == 3:
         from .bridge.testpsi4 import *
         from .bridge.testpyscf import *
         from .bridge.testhorton import Horton3Test
+    if sys.version_info[1] >= 5:
+        from .bridge.testase import *
     if sys.version_info[1] >= 4:
         from .bridge.testbiopython import *
     from .bridge.testpyquante import pyquante2Test
