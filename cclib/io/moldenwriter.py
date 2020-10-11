@@ -161,14 +161,15 @@ class MOLDEN(filewriter.Writer):
         if hasattr(self.ccdata, 'mosyms'):
             has_syms = True
             syms = self.ccdata.mosyms
+        else:
+            syms = numpy.full_like(moenergies, 'A', dtype=str)
         unres = len(moenergies) > 1
         openshell = len(homos) > 1
 
         spin = 'Alpha'
         for i in range(len(moenergies)):
             for j in range(len(moenergies[i])):
-                if has_syms:
-                    lines.append(' Sym= %s' % syms[i][j])
+                lines.append(' Sym= %s' % syms[i][j])
                 moenergy = utils.convertor(moenergies[i][j], 'eV', 'hartree')
                 lines.append(' Ene= {:10.4f}'.format(moenergy))
                 lines.append(' Spin= %s' % spin)
