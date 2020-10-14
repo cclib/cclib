@@ -1,4 +1,4 @@
-On behalf of the cclib development team, we are pleased to announce the release of cclib 1.6.3, which is now available for download from https://cclib.github.io. This is a minor update to version 1.6.1 that includes some new functionality and attributes, as well as bug fixes and small improvements.
+On behalf of the cclib development team, we are pleased to announce the release of cclib 1.6.4, which is now available for download from https://cclib.github.io. This is a minor update to version 1.6.1 that includes some new functionality and attributes, as well as bug fixes and small improvements.
 
 cclib is an open source library, written in Python, for parsing and interpreting the results of computational chemistry packages. It currently parses output files from 15 different programs: ADF, DALTON, Firefly, GAMESS (US), GAMESS-UK, Gaussian, Jaguar, Molpro, MOLCAS, MOPAC, NWChem, ORCA, Psi, QChem and Turbomole.
 
@@ -14,7 +14,7 @@ Among other data, cclib extracts:
 
 cclib also provides some calculation methods for interpreting the electronic properties of molecules such as:
 
-    * Mulliken, Lowdin and other population analyses
+    * Mulliken, Lowdin, Stockholder type, Bader and other population analyses
     * Overlap population analysis
     * Mayer's bond orders
 
@@ -36,12 +36,12 @@ The cclib development team
 ———
 
 Summary of changes since last version:
-* New bridge to Psi4 (Felipe S. S. Schneider)
-* New attribute zpve for zero-point vibrational energy correction (kuriba)
-* New attributes for electric transition dipoles of electronic transitions (mwykes)
-* Support ccenergies and mpenergies in ORCA
-* Support grads in MOLCAS (Daniele Padula)
-* Support thermochemistry attributes in GAMESS (Mark Perri)
-* Support Mulliken atomspins in Gaussian (Peter St. John)
-* Support fuzzy matching of attribute in ccget script
-* Many other minor improvements and bug fixes from Felipe S. S. Schneider, Alex Maldonado, James E T Smith, Dustin Wheeler, shijunang, Waylon Peng and others
+* [GSOC2020] New method: bader calculates QTAIM partial charges (Minsik Cho)
+* [GSOC2020] New methods: bickelhaupt, stockholder, hirshfeld and ddec calculate partial charges (Minsik Cho)
+* [GSOC2020] New bridge to Horton (Minsik Cho)
+* New bridge to Atomic Simulation Environment (Felipe S. S. Schneider)
+* New bridge to PySCF (Amanda Dumi)
+* New attribute dispersionenergies for molecular dispersion energy corrections (Theo Keane)
+* New attribute vibfconsts for vibrational force constants (Chikashi Shinagawa)
+* New attribute vibrmasses for vibrational reduced masses (Chikashi Shinagawa)
+* Many other minor improvements and bug fixes - see CHANGELOG for details
