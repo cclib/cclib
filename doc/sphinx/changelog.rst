@@ -4,6 +4,56 @@
 Changelog
 =========
 
+Changes in cclib-1.6.4
+----------------------
+
+**Features**
+
+* [GSOC2020] New method: bader calculates QTAIM partial charges (Minsik Cho)
+* [GSOC2020] New methods: Bader's QTAIM, Bickelhaupt, Stockholder, Hirshfeld, and DDEC6 partial charges (Minsik Cho)
+* [GSOC2020] New bridge to Horton (Minsik Cho)
+* [GSOC2020] Support reading cube files in volume method (Minsik Cho)
+* New bridge to Atomic Simulation Environment (Felipe S. S. Schneider)
+* New bridge to PySCF (Amanda Dumi)
+* New attribute dispersionenergies for molecular dispersion energy corrections (Theo Keane, Jonathon Vandezande)
+* New attribute vibfconsts for vibrational force constants (Chikashi Shinagawa)
+* New attribute vibrmasses for vibrational reduced masses (Chikashi Shinagawa)
+* Support t1_diagnostic in metadata for most parsers (Felipe S. S. Schneider)
+
+**Bugfixes**
+
+* Fixed parsing of ORCA optimization with constraints (Jonathon Vandezande)
+* Fixed parsing of too many excited states in Gaussian09 optimization (Oliver Lee)
+* Fixed parsing Gaussian logfiles with NQMF / reduced number of atoms (Michael D'Addario)
+* Fixed bug in QChem parser related to two letter chemical symbols (Amanda Dumi)
+* Fixed Gaussian grads to align with standard orientation like other attributes (Chikashi Shinagawa)
+* Fixed handling of open shell systems in modelwriter and wfxwriter (Dave Z.)
+
+Changes in cclib-1.6.3
+----------------------
+
+**Features**
+
+* New bridge to Psi4 (Felipe S. S. Schneider)
+* New attribute zpve for zero-point vibrational energy correction (kuriba)
+* New attributes for electric transition dipoles of electronic transitions (mwykes)
+* Support ccenergies in ORCA
+* Support mpenergies in ORCA (Alex Maldonado)
+* Support grads in MOLCAS (Daniele Padula)
+* Support Mulliken atomspins in Gaussian (Peter St. John)
+* Support temperature, pressure, enthalpy, entropy and freenergy attributes in GAMESS (Mark Perri)
+* Support fuzzy matching of attribute in ccget script
+* Updated test file versions to Psi4 1.3.1, and ORCA 4.2
+
+**Bugfixes**
+
+* Fixed parsing of vibrational attribute for single atoms in ORCA (Felipe S. S. Schneider)
+* Fixed parsing very long ORCA logfiles (Alex Maldonado)
+* Fixed method code for principal moments of inertia, and mulliken charges in Gaussian (James E T Smith)
+* Fixed scannames, scanparm and scanenergies in Gaussian (Dustin Wheeler)
+* Fixed freeenergy in ORCA 4.2 (shijunang)
+* Fixed name collisions in tests and use of periodic table in utilities (Waylon Peng)
+
 Changes in cclib-1.6.2
 ----------------------
 
