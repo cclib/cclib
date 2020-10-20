@@ -41,7 +41,7 @@ Summary of changes since last version:
 * [GSOC2020] New bridge to Horton (Minsik Cho)
 * New bridge to Atomic Simulation Environment (Felipe S. S. Schneider)
 * New bridge to PySCF (Amanda Dumi)
-* New attribute dispersionenergies for molecular dispersion energy corrections (Theo Keane)
+* New attribute dispersionenergies for molecular dispersion energy corrections
 * New attribute vibfconsts for vibrational force constants (Chikashi Shinagawa)
 * New attribute vibrmasses for vibrational reduced masses (Chikashi Shinagawa)
 * Many other minor improvements and bug fixes - see CHANGELOG for details

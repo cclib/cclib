@@ -15,10 +15,10 @@ Changes in cclib-1.6.4
 * [GSOC2020] Support reading cube files in volume method (Minsik Cho)
 * New bridge to Atomic Simulation Environment (Felipe S. S. Schneider)
 * New bridge to PySCF (Amanda Dumi)
-* New attribute dispersionenergies for molecular dispersion energy corrections (Theo Keane, Jonathon Vandezande)
+* New attribute dispersionenergies for molecular dispersion energy corrections
 * New attribute vibfconsts for vibrational force constants (Chikashi Shinagawa)
 * New attribute vibrmasses for vibrational reduced masses (Chikashi Shinagawa)
-* Support t1_diagnostic in metadata for most parsers (Felipe S. S. Schneider)
+* Support t1_diagnostic in metadata for most parsers
 
 **Bugfixes**
 
