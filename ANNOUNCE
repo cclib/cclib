@@ -36,8 +36,7 @@ The cclib development team
 ———
 
 Summary of changes since last version:
-* [GSOC2020] New method: bader calculates QTAIM partial charges (Minsik Cho)
-* [GSOC2020] New methods: bickelhaupt, stockholder, hirshfeld and ddec calculate partial charges (Minsik Cho)
+* [GSOC2020] New methods: Bader's QTAIM, Bickelhaupt, Stockholder, Hirshfeld, and DDEC6 partial charges (Minsik Cho)
 * [GSOC2020] New bridge to Horton (Minsik Cho)
 * New bridge to Atomic Simulation Environment (Felipe S. S. Schneider)
 * New bridge to PySCF (Amanda Dumi)

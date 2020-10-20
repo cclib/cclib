@@ -9,7 +9,6 @@ Changes in cclib-1.6.4
 
 **Features**
 
-* [GSOC2020] New method: bader calculates QTAIM partial charges (Minsik Cho)
 * [GSOC2020] New methods: Bader's QTAIM, Bickelhaupt, Stockholder, Hirshfeld, and DDEC6 partial charges (Minsik Cho)
 * [GSOC2020] New bridge to Horton (Minsik Cho)
 * [GSOC2020] Support reading cube files in volume method (Minsik Cho)
