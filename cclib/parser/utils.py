@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2018, the cclib development team
+# Copyright (c) 2020, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -10,7 +10,6 @@
 import sys
 import numpy
 import periodictable
-import scipy.spatial.transform
 
 
 # See https://github.com/kachayev/fn.py/commit/391824c43fb388e0eca94e568ff62cc35b543ecb
@@ -45,6 +44,11 @@ def find_package(package):
         import importlib
         module_spec = importlib.util.find_spec(package)
         return module_spec is not None and module_spec.loader is not None
+
+
+_found_scipy = find_package("scipy")
+if _found_scipy:
+    import scipy.spatial
 
 
 def symmetrize(m, use_triangle='lower'):
@@ -185,8 +189,11 @@ def get_rotation(a, b):
         a (np.ndarray): positions with shape(N,3)
         b (np.ndarray): positions with shape(N,3)
     Returns:
-        scipy.spatial.transform.Rotation
+        A scipy.spatial.transform.Rotation object
     """
+    if not _found_scipy:
+        raise ImportError("You must install `scipy` to use this function")
+
     assert a.shape == b.shape
     if a.shape[0] == 1:
         return scipy.spatial.transform.Rotation.from_euler('xyz', [0,0,0])
