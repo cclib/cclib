@@ -1939,7 +1939,9 @@ class Gaussian(logfileparser.Logfile):
             # based on whether they are charges or spins. 
             if is_sum:
                 for i in self.atomnos:
-                    # Ignore translation vectors.
+                    # currently bug exists where files with translation vectors report
+                    # an extra atom with atomnumber -2 in self.atomnos, so must ignore 
+                    # this by passing whenever i in self.atomnos == -2.
                     if i == -2:
                         pass
                     # For lists of summed charges or spins, a value
