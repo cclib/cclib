@@ -1,3 +1,24 @@
+Changes in cclib-1.6.4
+
+Features:
+    * [GSOC2020] New methods: Bader's QTAIM, Bickelhaupt, Stockholder, Hirshfeld, and DDEC6 partial charges (Minsik Cho)
+    * [GSOC2020] New bridge to Horton (Minsik Cho)
+    * [GSOC2020] Support reading cube files in volume method (Minsik Cho)
+    * New bridge to Atomic Simulation Environment (Felipe S. S. Schneider)
+    * New bridge to PySCF (Amanda Dumi)
+    * New attribute dispersionenergies for molecular dispersion energy corrections
+    * New attribute vibfconsts for vibrational force constants (Chikashi Shinagawa)
+    * New attribute vibrmasses for vibrational reduced masses (Chikashi Shinagawa)
+    * Support t1_diagnostic in metadata for most parsers
+
+Bugfixes:
+    * Fixed parsing of ORCA optimization with constraints (Jonathon Vandezande)
+    * Fixed parsing of too many excited states in Gaussian09 optimization (Oliver Lee)
+    * Fixed parsing Gaussian logfiles with NQMF / reduced number of atoms (Michael D'Addario)
+    * Fixed bug in QChem parser related to two letter chemical symbols (Amanda Dumi)
+    * Fixed Gaussian grads to align with standard orientation like other attributes (Chikashi Shinagawa)
+    * Fixed handling of open shell systems in modelwriter and wfxwriter (Dave Z.)
+
 Changes in cclib-1.6.3
 
 Features:
