@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2020, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -21,7 +21,7 @@ if _found_periodictable:
 
 _found_scipy = find_package("scipy")
 if _found_scipy:
-    import scipy.constants as spc
+    import scipy.constants
 
 
 def _check_periodictable(found_periodictable):
@@ -163,14 +163,14 @@ class Nuclear(Method):
         principal_moments, principal_axes = np.linalg.eigh(moi_tensor)
         if units == "amu_bohr_2":
             _check_scipy(_found_scipy)
-            bohr2ang = spc.value("atomic unit of length") / spc.angstrom
+            bohr2ang = scipy.constants.value("atomic unit of length") / scipy.constants.angstrom
             conv = 1 / bohr2ang ** 2
         elif units == "amu_angstrom_2":
             conv = 1
         elif units == "g_cm_2":
             _check_scipy(_found_scipy)
-            amu2g = spc.value("unified atomic mass unit") * spc.kilo
-            conv = amu2g * (spc.angstrom / spc.centi) ** 2
+            amu2g = scipy.constants.value("unified atomic mass unit") * scipy.constants.kilo
+            conv = amu2g * (scipy.constants.angstrom / scipy.constants.centi) ** 2
         return conv * principal_moments, principal_axes
 
     def rotational_constants(self, units='ghz'):
@@ -181,14 +181,14 @@ class Nuclear(Method):
             raise ValueError("Invalid units, pick one of {}".format(choices))
         principal_moments = self.principal_moments_of_inertia("amu_angstrom_2")[0]
         _check_scipy(_found_scipy)
-        bohr2ang = spc.value('atomic unit of length') / spc.angstrom
-        xfamu = 1 / spc.value('electron mass in u')
-        xthz = spc.value('hartree-hertz relationship')
-        rotghz = xthz * (bohr2ang ** 2) / (2 * xfamu * spc.giga)
+        bohr2ang = scipy.constants.value('atomic unit of length') / scipy.constants.angstrom
+        xfamu = 1 / scipy.constants.value('electron mass in u')
+        xthz = scipy.constants.value('hartree-hertz relationship')
+        rotghz = xthz * (bohr2ang ** 2) / (2 * xfamu * scipy.constants.giga)
         if units == 'ghz':
             conv = rotghz
         if units == 'invcm':
-            ghz2invcm = spc.giga * spc.centi / spc.c
+            ghz2invcm = scipy.constants.giga * scipy.constants.centi / scipy.constants.c
             conv = rotghz * ghz2invcm
         return conv / principal_moments
 
