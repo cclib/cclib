@@ -264,7 +264,7 @@ class Gaussian(logfileparser.Logfile):
 
             self.updateprogress(inputfile, "Charge and Multiplicity", self.fupdate)
 
-            if line.split()[-1] == "supermolecule" or not "fragment" in line:
+            if line.split()[-1] == "supermolecule" or (not "fragment" in line and not "model system" in line):
 
                 regex = r".*=(.*)Mul.*=\s*-?(\d+).*"
                 match = re.match(regex, line)
@@ -275,6 +275,9 @@ class Gaussian(logfileparser.Logfile):
 
             if line.split()[-2] == "fragment":
                 self.nfragments = int(line.split()[-1].strip('.'))
+
+            if line.strip()[-13:] == "model system.":
+                self.nmodels = getattr(self, 'nmodels', 0) + 1
 
         # Number of atoms is also explicitely printed after the above.
         if line[1:8] == "NAtoms=":
@@ -598,14 +601,14 @@ class Gaussian(logfileparser.Logfile):
             if not "full" in line:
                 inputfile.seek(0, 2)
 
-        # Another hack for regression Gaussian03/ortho_prod_prod_freq.log, which is an ONIOM job.
+        # Another hack for regression Gaussian03/ortho_prod_freq.log, which is an ONIOM job.
         # Basically for now we stop parsing after the output for the real system, because
         # currently we don't support changes in system size or fragments in cclib. When we do,
         # we will want to parse the model systems, too, and that is what nmodels could track.
         if "ONIOM: generating point" in line and line.strip()[-13:] == 'model system.' and getattr(self, 'nmodels', 0) > 0:
             inputfile.seek(0, 2)
 
-        # With the gfinput keyword, the atomic basis set functios are:
+        # With the gfinput keyword, the atomic basis set functions are:
         #
         # AO basis set in the form of general basis input (Overlap normalization):
         #  1 0
@@ -1924,7 +1927,6 @@ class Gaussian(logfileparser.Logfile):
                 prop - property type to be extracted as a
                 string (e.g. Mulliken, Lowdin, APT).
             """
-
             has_spin = 'spin' in line.lower()
             has_charges = 'charges' in line.lower()
             if has_charges and not hasattr(self, "atomcharges"):
