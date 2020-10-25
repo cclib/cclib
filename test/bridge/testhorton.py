@@ -154,7 +154,8 @@ class Horton3Test(unittest.TestCase):
             datadir, "Gaussian", "basicGaussian16", "dvb_un_sp.fchk"
         )
 
-        self._found_iodata = find_package("iodata")
+        if not find_package("iodata"):
+            raise ImportError("Must install iodata to run this test")
 
         from iodata import IOData
         from iodata.orbitals import MolecularOrbitals

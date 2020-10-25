@@ -13,6 +13,11 @@ import numpy as np
 
 from cclib import ccopen
 from cclib.bridge import cclib2ase
+from cclib.parser.utils import find_package
+
+
+if not find_package('ase'):
+    raise ImportError('Must install ase to run this test')
 
 from ase import Atoms
 from ase.calculators.emt import EMT
@@ -20,6 +25,9 @@ from ase.calculators.emt import EMT
 
 class ASETest(unittest.TestCase):
     """Tests for the cclib2ase bridge in cclib."""
+
+    def setUp(self):
+        super(ASETest, self).setUp()
 
     def test_makease_allows_optimization(self):
         """Ensure makease works from direct input."""

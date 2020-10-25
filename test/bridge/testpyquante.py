@@ -21,11 +21,13 @@ class PyquanteTest(unittest.TestCase):
 
     def setUp(self):
         super(PyquanteTest, self).setUp()
-        self._found_pyquante = find_package("PyQuante")
+        if not find_package("PyQuante"):
+            raise ImportError("Must install PyQuante to run this test")
+
         self.data, self.logfile = getdatafile("Gaussian", "basicGaussian16", ["water_ccsd.log"])
 
     def test_makepyquante(self):
-        # Test older PyQuante bridge
+        """Test older PyQuante bridge."""
         from PyQuante.hartree_fock import hf
         from PyQuante.Molecule import Molecule
 
@@ -47,7 +49,9 @@ class pyquante2Test(unittest.TestCase):
 
     def setUp(self):
         super(pyquante2Test, self).setUp()
-        self._found_pyquante2 = find_package("pyquante2")
+        if not find_package("pyquante2"):
+            raise ImportError("Must install pyquante2 to run this test")
+            
         self.data, self.logfile = getdatafile("Gaussian", "basicGaussian16", ["water_ccsd.log"])
 
     def test_makepyquante(self):

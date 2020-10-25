@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2018, the cclib development team
+# Copyright (c) 2020, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -10,10 +10,16 @@ import unittest
 import numpy
 
 from cclib.bridge import cclib2biopython
+from cclib.parser.utils import find_package
 
 
 class BiopythonTest(unittest.TestCase):
     """Tests for the cclib2biopython bridge in cclib."""
+
+    def setUp(self):
+        super(BiopythonTest, self).setUp()
+        if not find_package("Bio"):
+            raise ImportError("Must install biopython to run this test")
 
     def test_makebiopython(self):
         from Bio.PDB.Superimposer import Superimposer
