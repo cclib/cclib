@@ -264,7 +264,7 @@ class Gaussian(logfileparser.Logfile):
 
             self.updateprogress(inputfile, "Charge and Multiplicity", self.fupdate)
 
-            if line.split()[-1] == "supermolecule" or (not "fragment" in line and not "model system" in line):
+            if line.split()[-1] == "supermolecule" or not "fragment" in line:
 
                 regex = r".*=(.*)Mul.*=\s*-?(\d+).*"
                 match = re.match(regex, line)
@@ -275,9 +275,6 @@ class Gaussian(logfileparser.Logfile):
 
             if line.split()[-2] == "fragment":
                 self.nfragments = int(line.split()[-1].strip('.'))
-
-            if line.strip()[-13:] == "model system.":
-                self.nmodels = getattr(self, 'nmodels', 0) + 1
 
         # Number of atoms is also explicitely printed after the above.
         if line[1:8] == "NAtoms=":
