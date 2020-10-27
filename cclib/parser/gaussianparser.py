@@ -601,12 +601,12 @@ class Gaussian(logfileparser.Logfile):
             if not "full" in line:
                 inputfile.seek(0, 2)
 
-        # Another hack for regression Gaussian03/ortho_prod_prod_freq.log, which is an ONIOM job.
-        # Basically for now we stop parsing after the output for the real system, because
+        # For ONIOM jobs, we skip parsing for the output for the model systems, because
         # currently we don't support changes in system size or fragments in cclib. When we do,
         # we will want to parse the model systems, too, and that is what nmodels could track.
         if "ONIOM: generating point" in line and line.strip()[-13:] == 'model system.' and getattr(self, 'nmodels', 0) > 0:
-            inputfile.seek(0, 2)
+            while not line[1:30] == 'ONIOM: Integrating ONIOM file':
+                line = inputfile.next()
 
         # With the gfinput keyword, the atomic basis set functios are:
         #
