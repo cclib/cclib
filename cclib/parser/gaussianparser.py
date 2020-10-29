@@ -762,7 +762,7 @@ class Gaussian(logfileparser.Logfile):
                         matches.get('RMSDP', numpy.nan),
                         matches.get('MaxDP', numpy.nan)
                     ]
-                    if len(self.scftargets[0]) == 3:
+                    if hasattr(self, "scftargets") and len(self.scftargets[0]) == 3:
                         scfvalues_step.append(matches.get('DE', numpy.nan))
                     scfvalues.append(scfvalues_step)
 
