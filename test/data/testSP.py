@@ -57,6 +57,7 @@ class GenericSPTest(unittest.TestCase):
         self.assertEqual(sum(self.data.atomnos == 6) + sum(self.data.atomnos == 1), 20)
 
     @skipForParser('DALTON', 'DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now')
+    @skipForParser('FChk', 'The parser is still being developed so we skip this test')
     @skipForLogfile('Jaguar/basicJaguar7', 'We did not print the atomic partial charges in the unit tests for this version')
     @skipForLogfile('Molpro/basicMolpro2006', "These tests were run a long time ago and since we don't have access to Molpro 2006 anymore, we can skip this test (it is tested in 2012)")
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
@@ -105,6 +106,7 @@ class GenericSPTest(unittest.TestCase):
         # Check if all are different (every orbital indexed once).
         self.assertEqual(len(set(all)), len(all))
 
+    @skipForParser('FChk', 'Formatted checkpoint files do not have a section for atommasses')
     @skipForParser('GAMESS', 'atommasses not implemented yet')
     @skipForParser('GAMESSUK', 'atommasses not implemented yet')
     @skipForParser('Jaguar', 'atommasses not implemented yet')
@@ -126,6 +128,7 @@ class GenericSPTest(unittest.TestCase):
         ans = numpy.zeros(self.data.natom, 'i')
         numpy.testing.assert_array_equal(self.data.coreelectrons, ans)
 
+    @skipForParser('FChk', 'Formatted checkpoint files do not have a section for symmetry')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Molpro', '?')
     @skipForParser('ORCA', 'ORCA has no support for symmetry yet')
@@ -219,7 +222,7 @@ class GenericSPTest(unittest.TestCase):
         col = self.data.aooverlaps[:,0]
         self.assertEqual(sum(col - row), 0.0)
 
-        # All values on diagonal should be exactly zero.
+        # All values on diagonal should be exactly one.
         for i in range(self.data.nbasis):
             self.assertEqual(self.data.aooverlaps[i,i], 1.0)
 
@@ -233,6 +236,7 @@ class GenericSPTest(unittest.TestCase):
         """There should be no optdone attribute set."""
         self.assertFalse(hasattr(self.data, 'optdone'))
 
+    @skipForParser('FChk', 'The parser is still being developed so we skip this test')
     @skipForParser('Gaussian', 'Logfile needs to be updated')
     @skipForParser('Jaguar', 'No dipole moments in the logfile')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
@@ -298,6 +302,7 @@ class GenericSPTest(unittest.TestCase):
 
     @skipForParser('ADF', 'reading input file contents and name is not implemented')
     @skipForParser('DALTON', 'reading input file contents and name is not implemented')
+    @skipForParser('FChk', 'Formatted checkpoint files do not have an input file section')
     @skipForParser('GAMESS', 'reading input file contents and name is not implemented')
     @skipForParser('GAMESSUK', 'reading input file contents and name is not implemented')
     @skipForParser('Gaussian', 'reading input file contents and name is not implemented')
