@@ -1182,6 +1182,11 @@ def testGaussian_Gaussian16_issue851_log(logfile):
     assert isinstance(logfile.data.scanparm, list)
     assert isinstance(logfile.data.scanenergies, list)
 
+def testGaussian_Gaussian16_issue962_log(logfile):
+    """For issue 962, this shouldn't have scftargets but should parse fully"""
+
+    assert !hasattr(logfile.data, scftargets)
+
 # Jaguar #
 
 # It would be good to have an unconverged geometry optimization so that
