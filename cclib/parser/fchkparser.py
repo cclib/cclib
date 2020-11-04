@@ -54,7 +54,10 @@ def _shell_to_orbitals(type, offset):
 
 
 class FChk(logfileparser.Logfile):
-    """A Formatted checkpoint file."""
+    """A Formatted checkpoint file, which contains molecular and wavefunction information.
+
+    These files are produced by Gaussian and Q-Chem.
+    """
 
     def __init__(self, *args, **kwargs):
 
