@@ -130,11 +130,11 @@ class Nuclear(Method):
         moi_tensor = self.moment_of_inertia_tensor()
         principal_moments, principal_axes = np.linalg.eigh(moi_tensor)
         if units == 'amu_bohr_2':
-            conv = 1
-        if units == 'amu_angstrom_2':
             bohr2ang = constants.atomic_unit_of_length / _ANGSTROM
-            conv = bohr2ang ** 2
-        if units == 'g_cm_2':
+            conv = 1 / bohr2ang ** 2
+        elif units == 'amu_angstrom_2':
+            conv = 1
+        elif units == 'g_cm_2':
             amu2g = constants.unified_atomic_mass_unit * _KILO
             conv = amu2g * (constants.atomic_unit_of_length * _CENTI) ** 2
         return conv * principal_moments, principal_axes
@@ -145,7 +145,7 @@ class Nuclear(Method):
         units = units.lower()
         if units not in choices:
             raise ValueError("Invalid units, pick one of {}".format(choices))
-        principal_moments = self.principal_moments_of_inertia()[0]
+        principal_moments = self.principal_moments_of_inertia("amu_angstrom_2")[0]
         bohr2ang = constants.atomic_unit_of_length / _ANGSTROM
         xfamu = 1 / constants.electron_mass_in_u
         rotghz = constants.hartree_hertz_relationship * (bohr2ang ** 2) / (2 * xfamu * _GIGA)
