@@ -13,7 +13,7 @@ import sys
 class MissingAttributeError(Exception):
     pass
 
-class Method(object):
+class Method:
     """Abstract base class for all cclib method classes.
 
     Subclasses defined by cclib:

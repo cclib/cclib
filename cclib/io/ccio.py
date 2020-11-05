@@ -15,9 +15,6 @@ import sys
 import re
 from tempfile import NamedTemporaryFile
 
-# We want this as long as we need to support both Python 2 and 3.
-from six import string_types
-
 # Python 2->3 changes the default file object hierarchy.
 if sys.version_info[0] == 2:
     fileclass = file
@@ -137,7 +134,7 @@ def guess_filetype(inputfile):
         return None
 
     filetype = None
-    if isinstance(inputfile, string_types):
+    if isinstance(inputfile, str):
         for line in inputfile:
             for parser, phrases, do_break in triggers:
                 if all([line.lower().find(p.lower()) >= 0 for p in phrases]):

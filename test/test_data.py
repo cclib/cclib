@@ -124,7 +124,7 @@ def ccdata_getattribute_with_coverage(self, attr):
     return object.__getattribute__(self, attr)
 
 
-class DataSuite(object):
+class DataSuite:
     """Suite containing data (logfile) tests in cclib.
 
     This is supposed to represent a single run of the entire data test suite in cclib or

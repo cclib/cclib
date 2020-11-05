@@ -19,7 +19,7 @@ from cclib.method import orbitals
 Attribute = namedtuple('Attribute', ['type', 'json_key', 'attribute_path'])
 
 
-class ccData(object):
+class ccData:
     """Stores data extracted by cclib parsers
 
     Description of cclib attributes:

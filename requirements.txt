@@ -1,7 +1,5 @@
 packaging>=19.0
 numpy
-# We need this as long as we need support both Python 2 and 3.
-six
 
 # methods
 scipy
@@ -18,8 +16,6 @@ git+https://github.com/rpmuller/pyquante2.git ; python_version > '3.0'
 sphinx
 
 # For testing
-pytest>=3.6
+pytest
 coverage
 pytest-cov
-# This library is in the standard library starting from Python 3.3.
-mock ; python_version < '3.3'
