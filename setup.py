@@ -60,6 +60,7 @@ def setup_cclib():
             "packaging>=19.0",
             "numpy",
             "periodictable",
+            "scipy>=1.2.0",
             "six",
         ],
 
