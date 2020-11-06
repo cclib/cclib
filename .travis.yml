@@ -23,7 +23,6 @@ before_install:
   # h5py is needed for both Horton 2 and Horton 3.
   #
   # For Open Babel,
-  # - 2.7: Use 2.4.1 from conda, because PyQuante 1.x requires the 2.4.x API.
   # - 3.5: Use the latest version from PyPI and build the bindings to the
   #   OS-provided libraries. The Ubuntu package doesn't install a pkgconfig
   #   file for the OB setup.py file to find, so it incorrectly guesses header
@@ -49,24 +48,6 @@ before_install:
         conda install pytest pytest-cov codecov pytest-shutil
         python -m pip install h5py pyscf
         python -m pip install git+https://github.com/theochem/iodata.git
-
-        conda list
-    elif [[ $(echo "$TRAVIS_PYTHON_VERSION < 3.0" | bc -l) == 1 ]];
-    then
-        wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh
-        bash miniconda.sh -b -p $HOME/miniconda -u
-        export PATH="$HOME/miniconda/bin:$PATH"
-
-        hash -r
-        conda config --add channels conda-forge
-        conda config --add channels theochem
-        conda config --set always_yes yes --set changeps1 no --set channel_priority flexible
-        conda update -q conda
-        conda info -a
-        conda create -q -n condaenv python=$TRAVIS_PYTHON_VERSION horton openbabel=2.4.1
-
-        source activate condaenv
-        conda install pytest pytest-cov codecov pytest-shutil
 
         conda list
     else
