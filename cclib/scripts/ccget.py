@@ -9,8 +9,6 @@
 """Script for loading data from computational chemistry files."""
 
 
-from __future__ import print_function
-
 import glob
 import logging
 import os.path

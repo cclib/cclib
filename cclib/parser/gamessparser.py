@@ -8,7 +8,6 @@
 """Parser for GAMESS(US) output files"""
 
 
-from __future__ import print_function
 import re
 
 import numpy

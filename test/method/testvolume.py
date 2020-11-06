@@ -7,8 +7,6 @@
 
 """Test the Volume and related methods in cclib"""
 
-from __future__ import print_function
-
 import os, sys
 import unittest
 import numpy

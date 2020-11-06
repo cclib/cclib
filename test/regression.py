@@ -36,8 +36,6 @@ inside the data directory, like so:
     python -m test.regression Gaussian/Gaussian03/borane-opt.log
 """
 
-from __future__ import print_function
-
 import glob
 import logging
 import os

@@ -7,8 +7,6 @@
 
 """Run data tests for cclib."""
 
-from __future__ import print_function
-
 import importlib
 import logging
 import os

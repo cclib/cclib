@@ -7,7 +7,6 @@
 
 """Calculation methods related to volume based on cclib data."""
 
-from __future__ import print_function
 import copy
 
 import numpy

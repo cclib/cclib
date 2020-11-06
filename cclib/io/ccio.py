@@ -6,8 +6,6 @@
 # the terms of the BSD 3-Clause License.
 """Tools for identifying, reading and writing files and streams."""
 
-from __future__ import print_function
-
 import atexit
 import io
 import os

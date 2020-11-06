@@ -13,8 +13,6 @@
 # https://github.com/ben-albrecht/cclib/blob/master/cclib/parser/mopacparser.py
 # Merged and modernized by Geoff Hutchison
 
-from __future__ import print_function
-
 import re
 import math
 

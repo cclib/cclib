@@ -6,10 +6,7 @@
 # the terms of the BSD 3-Clause License.
 """Unit tests for main scripts (ccget, ccwrite)."""
 
-from __future__ import print_function
-
 import os
-import sys
 import unittest
 from unittest import mock
 

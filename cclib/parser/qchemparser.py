@@ -7,9 +7,6 @@
 
 """Parser for Q-Chem output files"""
 
-from __future__ import division
-from __future__ import print_function
-
 import itertools
 import math
 import re

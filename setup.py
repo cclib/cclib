@@ -12,8 +12,6 @@ chemistry log files. It also provides a platform to implement
 algorithms in a package-independent manner.
 """
 
-from __future__ import absolute_import, with_statement
-
 import setuptools
 
 
