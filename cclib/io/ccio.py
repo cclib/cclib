@@ -12,18 +12,8 @@ import os
 import sys
 import re
 from tempfile import NamedTemporaryFile
-
-# Python 2->3 changes the default file object hierarchy.
-if sys.version_info[0] == 2:
-    fileclass = file
-
-    from urllib2 import urlopen, URLError
-else:
-    fileclass = io.IOBase
-
-    from urllib.request import urlopen
-    from urllib.error import URLError
-
+from urllib.request import urlopen
+from urllib.error import URLError
 
 from cclib.parser import data
 from cclib.parser import logfileparser
@@ -380,7 +370,7 @@ def ccwrite(ccobj, outputtype=None, outputdest=None,
         if isinstance(outputdest, str):
             with open(outputdest, 'w') as outputobj:
                 outputobj.write(output)
-        elif isinstance(outputdest, fileclass):
+        elif isinstance(outputdest, io.IOBase):
             outputdest.write(output)
         else:
             raise ValueError
@@ -421,7 +411,7 @@ def _determine_output_format(outputtype, outputdest):
         # Then checkout outputdest.
         if isinstance(outputdest, str):
             extension = os.path.splitext(outputdest)[1].lower()
-        elif isinstance(outputdest, fileclass):
+        elif isinstance(outputdest, io.IOBase):
             extension = os.path.splitext(outputdest.name)[1].lower()
         else:
             raise UnknownOutputFormatError

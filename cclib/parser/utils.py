@@ -7,29 +7,12 @@
 
 """Utilities often used by cclib parsers and scripts"""
 
+import importlib
 import sys
+from itertools import accumulate
+
 import numpy
 import periodictable
-
-
-# See https://github.com/kachayev/fn.py/commit/391824c43fb388e0eca94e568ff62cc35b543ecb
-if sys.version_info <= (3, 3):
-    import operator
-    def accumulate(iterable, func=operator.add):
-        """Return running totals"""
-        # accumulate([1,2,3,4,5]) --> 1 3 6 10 15
-        # accumulate([1,2,3,4,5], operator.mul) --> 1 2 6 24 120
-        it = iter(iterable)
-        try:
-            total = next(it)
-        except StopIteration:
-            return
-        yield total
-        for element in it:
-            total = func(total, element)
-            yield total
-else:
-    from itertools import accumulate
 
 
 def find_package(package):
@@ -37,13 +20,8 @@ def find_package(package):
 
     Derived from https://stackoverflow.com/a/14050282
     """
-    if sys.version_info.major == 2:
-        import pkgutil
-        return pkgutil.find_loader(package) is not None
-    else:
-        import importlib
-        module_spec = importlib.util.find_spec(package)
-        return module_spec is not None and module_spec.loader is not None
+    module_spec = importlib.util.find_spec(package)
+    return module_spec is not None and module_spec.loader is not None
 
 
 _found_scipy = find_package("scipy")

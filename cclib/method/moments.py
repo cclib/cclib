@@ -8,11 +8,7 @@
 """Calculation of electric multipole moments based on data parsed by cclib."""
 
 import sys
-
-if sys.version_info <= (3, 3):
-    from collections import Iterable
-else:
-    from collections.abc import Iterable
+from collections.abc import Iterable
 
 import numpy
 

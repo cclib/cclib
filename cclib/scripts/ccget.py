@@ -12,7 +12,6 @@
 import glob
 import logging
 import os.path
-import sys
 import difflib
 from functools import partial
 from pprint import pprint
@@ -24,10 +23,7 @@ from cclib.io import ccread, URL_PATTERN
 
 
 # Set up options for pretty-printing output.
-if sys.version_info < (3, 4):
-    pprint = partial(pprint, width=120)
-else:
-    pprint = partial(pprint, width=120, compact=True)
+pprint = partial(pprint, width=120, compact=True)
 numpy.set_printoptions(linewidth=120)
 
 
