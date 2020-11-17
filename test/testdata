@@ -326,6 +326,7 @@ TD        ORCA        OrcaROCISTest         basicORCA4.1          dvb_rocis.out
 TD        ORCA        OrcaROCISTest         basicORCA4.2          dvb_rocis.out
 TD        QChem       QChemTDDFTTest        basicQChem4.2         dvb_td.out
 TD        QChem       QChemTDDFTTest        basicQChem5.1         dvb_td.out
+TD        QChem       QChemTDDFTTest        basicQChem5.2         dvb_td.out
 
 TDun      Gaussian    GenericTDunTest       basicGaussian09       CO_TD_delta.log
 TDun      Gaussian    GenericTDunTest       basicGaussian16       CO_TD_delta.log
