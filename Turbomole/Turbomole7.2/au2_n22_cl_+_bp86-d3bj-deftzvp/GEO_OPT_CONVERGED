@@ -1,0 +1,24 @@
+CONVERGENCY CRITERIA FULFILLED IN CYCLE 19
+
+ energy change  : actual value =   0.6520E-07 threshold =   0.1000E-06
+ geom. gradient : actual value =   0.3722E-04 threshold =   0.1000E-03
+
+Job ended at   Tue Mar 19 09:52:26 CET 2019
+  on machine     compute-1-1.local
+  by user        mschmitt
+  in directory   /nfs/home/wissang/mschmitt/Rechnungen/au2_n22_cl_+/bp86-d3bj-def2qzvpp/c2v
+  
+job.start file had been created with details about the job type: 
+
+Tue Mar 19 09:44:37 CET 2019
+jobex WAS CALLED AS: jobex -c 300 -gcart 4 -energy 7
+AN OPTIMIZATION WITH MAX. 300 CYCLES WILL BE PERFORMED
+CONVERGENCY CRITERION FOR TOTAL SCF-ENERGY IS 10**(-7)
+CONVERGENCY CRITERION FOR MAXIMUM NORM OF SCF-ENERGY GRADIENT IS 10**(-4)
+CONVERGENCY CRITERION FOR MAXIMUM NORM OF BASIS SET GRADIENT IS 10**(-3)
+PROCEDURE WILL START WITH A dscf like STEP
+LOAD MODULES WILL BE TAKEN FROM DIRECTORY /share/apps/TURBOMOLE7.2/bin/em64t-unknown-linux-gnu
+DSCF  = /share/apps/TURBOMOLE7.2/bin/em64t-unknown-linux-gnu/ridft
+GRAD  = /share/apps/TURBOMOLE7.2/bin/em64t-unknown-linux-gnu/rdgrad
+STATPT = /share/apps/TURBOMOLE7.2/bin/em64t-unknown-linux-gnu/statpt
+

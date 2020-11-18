@@ -1,0 +1,15 @@
+## 1-CPU TURBOMOLE-ridft on standard queue ##
+## ------------------------------------- ##
+
+## #$ -M ich@meinserver.de
+## uncomment this to send email confirmation
+
+export BASEDIR=.
+export PATH=$BASEDIR:$PATH
+export EXE=$BASEDIR/
+cd $BASEDIR 
+
+## Commands:
+nohup raman > raman.out
+RamanMix
+

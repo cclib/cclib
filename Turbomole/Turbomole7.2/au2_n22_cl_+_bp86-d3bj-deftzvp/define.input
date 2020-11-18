@@ -1,0 +1,38 @@
+
+
+
+a coord0
+
+desy .1
+
+ired
+*
+no
+
+
+b all def2-QZVPP
+*
+eht
+
+1
+
+
+
+
+ri
+on
+m 2000
+
+dft
+on
+func b-p
+grid m4
+
+dsp
+bj
+
+
+
+*
+q
+

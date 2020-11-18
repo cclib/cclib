@@ -1,0 +1,9 @@
+dist  3  n --  4  n =  2.0895 au = 110.57 pm
+dist  6  n --  7  n =  2.0895 au = 110.57 pm
+dist  2 au --  3  n =  3.7262 au = 197.18 pm
+dist  5 au --  6  n =  3.7262 au = 197.18 pm
+dist  1 cl --  2 au =  4.3080 au = 227.97 pm
+dist  1 cl --  5 au =  4.3080 au = 227.97 pm
+dist  2 au --  4  n =  5.8157 au = 307.75 pm
+dist  5 au --  7  n =  5.8157 au = 307.75 pm
+dist  2 au --  5 au =  6.4199 au = 339.73 pm

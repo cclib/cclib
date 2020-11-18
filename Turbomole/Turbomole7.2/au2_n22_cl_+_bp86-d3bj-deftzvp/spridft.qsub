@@ -1,0 +1,14 @@
+## 1-CPU TURBOMOLE RI-DFT single point on default queue ##
+## ---------------------------------------------------- ##
+
+## #$ -M ich@meinserver.de
+## uncomment this to send email confirmation
+
+export PATH=$BASEDIR:$PATH
+export BASEDIR=.
+export EXE=$BASEDIR/
+cd $BASEDIR 
+
+## Commands:
+nohup ridft > ridft.out
+eiger > eiger.out
