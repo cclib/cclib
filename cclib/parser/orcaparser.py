@@ -8,14 +8,11 @@
 """Parser for ORCA output files"""
 
 
-from __future__ import print_function
-
 import re
+from itertools import zip_longest
 
 import numpy
 from packaging.version import parse as parse_version
-
-from six.moves import zip_longest
 
 from cclib.parser import logfileparser
 from cclib.parser import utils

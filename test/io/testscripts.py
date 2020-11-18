@@ -6,15 +6,10 @@
 # the terms of the BSD 3-Clause License.
 """Unit tests for main scripts (ccget, ccwrite)."""
 
-from __future__ import print_function
-
 import os
-import sys
 import unittest
-import six
-from six import add_move, MovedModule
-add_move(MovedModule('mock', 'mock', 'unittest.mock'))
-from six.moves import mock
+from unittest import mock
+
 import cclib
 
 
@@ -123,8 +118,8 @@ class ccframeTest(unittest.TestCase):
     @mock.patch("cclib.io.ccio._has_pandas", False)
     def test_main_without_pandas(self):
         """Does ccframe fail if Pandas can't be imported?"""
-        with six.assertRaisesRegex(
-            self, ImportError, "You must install `pandas` to use this function"
+        with self.assertRaisesRegex(
+            ImportError, "You must install `pandas` to use this function"
         ):
             cclib.scripts.ccframe.main()
 

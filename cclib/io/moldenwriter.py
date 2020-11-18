@@ -238,7 +238,7 @@ class MOLDEN(filewriter.Writer):
         return '\n'.join(molden_lines)
 
 
-class MoldenReformatter(object):
+class MoldenReformatter:
     """Reformat Molden output files."""
 
     def __init__(self, filestring):

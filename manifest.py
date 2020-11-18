@@ -7,8 +7,6 @@
 
 """Create a MANIFEST file for distributing soruces with distutils."""
 
-from __future__ import print_function
-
 import glob
 import os
 

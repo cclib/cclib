@@ -17,13 +17,7 @@ import os
 import random
 import sys
 import zipfile
-from abc import ABCMeta, abstractmethod
-from six import add_metaclass
-
-if sys.version_info.major == 2:
-    getargspec = inspect.getargspec
-else:
-    getargspec = inspect.getfullargspec
+from abc import ABC, abstractmethod
 
 import numpy
 
@@ -63,14 +57,7 @@ class myGzipFile(gzip.GzipFile):
         return line
 
 
-class myFileinputFile(fileinput.FileInput):
-    """Implement next() method"""
-    def next(self):
-        line = next(self)
-        return line
-
-
-class FileWrapper(object):
+class FileWrapper:
     """Wrap a file-like object or stream with some custom tweaks"""
 
     def __init__(self, source, pos=0):
@@ -178,17 +165,10 @@ def openlogfile(filename, object=None):
         if len(filename) == 0:
             return None
 
-        # Compression (gzip and bzip) is supported as of Python 2.5.
-        if sys.version_info[0] >= 2 and sys.version_info[1] >= 5:
-            fileobject = fileinput.input(filename, openhook=fileinput.hook_compressed)
-        else:
-            fileobject = myFileinputFile(filename)
-
-        return fileobject
+        return fileinput.input(filename, openhook=fileinput.hook_compressed)
 
 
-@add_metaclass(ABCMeta)
-class Logfile(object):
+class Logfile(ABC):
     """Abstract class for logfile objects.
 
     Subclasses defined by cclib:
@@ -293,7 +273,7 @@ class Logfile(object):
             raise AttributeError("Class %s has no extract() method." % self.__class__.__name__)
         if not callable(self.extract):
             raise AttributeError("Method %s._extract not callable." % self.__class__.__name__)
-        if len(getargspec(self.extract)[0]) != 3:
+        if len(inspect.getargspec(self.extract)[0]) != 3:
             raise AttributeError("Method %s._extract takes wrong number of arguments." % self.__class__.__name__)
 
         # Save the current list of attributes to keep after parsing.

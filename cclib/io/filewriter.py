@@ -8,15 +8,8 @@
 """Generic file writer and related tools"""
 
 import logging
-import sys
-from abc import ABCMeta, abstractmethod
-from six import add_metaclass
-
-
-if sys.version_info <= (3, 3):
-    from collections import Iterable
-else:
-    from collections.abc import Iterable
+from abc import ABC, abstractmethod
+from collections.abc import Iterable
 
 import numpy
 
@@ -38,8 +31,7 @@ class MissingAttributeError(Exception):
     pass
 
 
-@add_metaclass(ABCMeta)
-class Writer:
+class Writer(ABC):
     """Abstract class for writer objects."""
 
     required_attrs = ()

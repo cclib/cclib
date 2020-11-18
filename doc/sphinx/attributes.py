@@ -3,8 +3,6 @@
 """Generate the attributes.rst and attributes_dev.rst files from the
 ccData docstring that describes attributes."""
 
-from __future__ import print_function
-
 from docs_common import check_cclib
 
 import cclib

@@ -7,15 +7,8 @@
 
 """Test the Electrons method in cclib"""
 
-from __future__ import print_function
-
 import sys
-import os
-import re
-import logging
 import unittest
-
-import numpy
 
 from cclib.method import Electrons
 from cclib.parser import Gaussian

@@ -12,11 +12,8 @@ import os
 import sys
 import tempfile
 import unittest
-
-from six import add_move, MovedModule
-add_move(MovedModule('mock', 'mock', 'unittest.mock'))
-from six.moves import mock
-from six.moves.urllib.request import urlopen
+from unittest import mock
+from urllib.request import urlopen
 
 import cclib
 

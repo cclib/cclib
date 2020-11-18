@@ -6,29 +6,14 @@
 # the terms of the BSD 3-Clause License.
 """Tools for identifying, reading and writing files and streams."""
 
-from __future__ import print_function
-
 import atexit
 import io
 import os
 import sys
 import re
 from tempfile import NamedTemporaryFile
-
-# We want this as long as we need to support both Python 2 and 3.
-from six import string_types
-
-# Python 2->3 changes the default file object hierarchy.
-if sys.version_info[0] == 2:
-    fileclass = file
-
-    from urllib2 import urlopen, URLError
-else:
-    fileclass = io.IOBase
-
-    from urllib.request import urlopen
-    from urllib.error import URLError
-
+from urllib.request import urlopen
+from urllib.error import URLError
 
 from cclib.parser import data
 from cclib.parser import logfileparser
@@ -137,7 +122,7 @@ def guess_filetype(inputfile):
         return None
 
     filetype = None
-    if isinstance(inputfile, string_types):
+    if isinstance(inputfile, str):
         for line in inputfile:
             for parser, phrases, do_break in triggers:
                 if all([line.lower().find(p.lower()) >= 0 for p in phrases]):
@@ -385,7 +370,7 @@ def ccwrite(ccobj, outputtype=None, outputdest=None,
         if isinstance(outputdest, str):
             with open(outputdest, 'w') as outputobj:
                 outputobj.write(output)
-        elif isinstance(outputdest, fileclass):
+        elif isinstance(outputdest, io.IOBase):
             outputdest.write(output)
         else:
             raise ValueError
@@ -426,7 +411,7 @@ def _determine_output_format(outputtype, outputdest):
         # Then checkout outputdest.
         if isinstance(outputdest, str):
             extension = os.path.splitext(outputdest)[1].lower()
-        elif isinstance(outputdest, fileclass):
+        elif isinstance(outputdest, io.IOBase):
             extension = os.path.splitext(outputdest.name)[1].lower()
         else:
             raise UnknownOutputFormatError
