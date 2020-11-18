@@ -1183,7 +1183,7 @@ def testGaussian_Gaussian16_issue851_log(logfile):
 def testGaussian_Gaussian16_issue962_log(logfile):
     """For issue 962, this shouldn't have scftargets but should parse fully"""
 
-    assert not hasattr(logfile.data, scftargets)
+    assert not hasattr(logfile.data, "scftargets")
 
 # Jaguar #
 
