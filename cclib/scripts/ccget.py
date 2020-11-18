@@ -16,6 +16,9 @@ import difflib
 from functools import partial
 from pprint import pprint
 
+# This is needed for testing purposes only.
+import sys
+
 import numpy
 
 from cclib.parser import ccData
