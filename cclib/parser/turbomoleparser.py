@@ -148,7 +148,7 @@ class Turbomole(logfileparser.Logfile):
             atomnos = []
             line = next(inputfile)
             while len(line) > 2:
-                atomnos.append(self.periodic_table.number[line.split()[3].upper()])
+                atomnos.append(self.periodic_table.number[line.split()[3].capitalize()])
                 atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") 
                                    for x in line.split()[:3]])
                 line = next(inputfile)
@@ -179,33 +179,51 @@ class Turbomole(logfileparser.Logfile):
         # reduced mass(g/mol)     3.315    2.518    2.061    3.358    3.191    2.323
 
         if 'NORMAL MODES and VIBRATIONAL FREQUENCIES (cm**(-1))' in line:
+            has_raman = False
+            while line[7:11] != 'mode':
+                line = next(inputfile)
+                if line.startswith(" differential RAMAN cross sections"):
+                    has_raman = True
             vibfreqs, vibsyms, vibirs, vibdisps, vibrmasses = [], [], [], [], []
-            while '****  force : all done  ****' not in line:
-                if line.strip().startswith('frequency'):
+            while 'all done  ****' not in line:
+
+                if line.strip().startswith('mode'):
+                    self.skip_line(inputfile, 'b')
+                    line = next(inputfile)
+                    assert line.strip().startswith('frequency')
                     freqs = [float(i.replace('i', '-')) for i in line.split()[1:]]
                     vibfreqs.extend(freqs)
-                    self.skip_line(inputfile, ['b'])
+                    self.skip_lines(inputfile, ['b'])
                     line = next(inputfile)
-                    if line.strip().startswith('symmetry'):
-                        syms = line.split()[1:]
-                        vibsyms.extend(syms)
+                    assert line.strip().startswith('symmetry')
+                    syms = line.split()[1:]
+                    vibsyms.extend(syms)
 
-                    self.skip_lines(inputfile, ['b', 'IR', 'dQIP'])
+                    self.skip_lines(inputfile, ['b', 'IR', 'dDIP/dQ'])
                     line = next(inputfile)
-                    if line.strip().startswith('intensity (km/mol)'):
-                        irs = [utils.float(f) for f in line.split()[2:]]
-                        vibirs.extend(irs)
+                    assert line.strip().startswith('intensity (km/mol)')
+                    irs = [utils.float(f) for f in line.split()[2:]]
+                    vibirs.extend(irs)
 
-                    self.skip_lines(inputfile, ['intensity', 'b', 'raman', 'b'])
+                    self.skip_lines(inputfile, ['intensity %', 'b', 'RAMAN'])
+                    if has_raman:
+                        self.skip_lines(
+                            inputfile,
+                            ['(par,par)', '(ort,ort)', '(ort,unpol)', 'depol. ratio']
+                        )
+                    line = next(inputfile)
+                    assert not line.strip()
                     line = next(inputfile)
                     x, y, z = [], [], []
-                    while line.split():
+                    atomcounter = 0
+                    while atomcounter < self.natom:
                         x.append([float(i) for i in line.split()[3:]])
                         line = next(inputfile)
                         y.append([float(i) for i in line.split()[1:]])
                         line = next(inputfile)
                         z.append([float(i) for i in line.split()[1:]])
                         line = next(inputfile)
+                        atomcounter += 1
 
                     for j in range(len(x[0])):
                         disps = []
@@ -213,7 +231,8 @@ class Turbomole(logfileparser.Logfile):
                             disps.append([x[i][j], y[i][j], z[i][j]])
                         vibdisps.append(disps)
 
-                if line.strip().startswith('reduced mass(g/mol)'):
+                    line = next(inputfile)
+                    assert line.startswith('reduced mass(g/mol)')
                     rmasses = [utils.float(f) for f in line.split()[2:]]
                     vibrmasses.extend(rmasses)
 
