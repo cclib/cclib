@@ -53,8 +53,8 @@ if [ -f "index.html" ]; then
     # This will return 1 if there are no changes, which should not result in
     # failure.
     git commit \
-        -m "Deploy code docs to GitHub Pages Travis build: ${TRAVIS_BUILD_NUMBER}" \
-        -m "Commit: ${TRAVIS_COMMIT}" || ret=$?
+        -m "Deploy code docs to GitHub Pages Travis build: ${GITHUB_ACTION}" \
+        -m "Commit: ${GITHUB_SHA}" || ret=$?
     git push "https://${GH_TOKEN}@${GH_REPO_REF}"
 else
     echo "" >&2

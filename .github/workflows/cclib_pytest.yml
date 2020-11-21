@@ -1,0 +1,79 @@
+name: cclib
+
+on: 
+  push:
+    branches: [ $default-branch ]
+  pull_request:
+    branches: [ $default-branch ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.5, 3.6, 3.7, 3.8]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install swig
+      run: sudo apt-get install swig
+    - name: Install deps Python >3.5
+      with:
+          python-version: [3.6, 3.7, 3.8]
+      run: |
+        wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+        bash miniconda.sh -b -p $HOME/miniconda -u
+        export PATH="$HOME/miniconda/bin:$PATH"
+        hash -r
+        conda config --add channels conda-forge
+        conda config --add channels psi4
+        conda config --set always_yes yes --set changeps1 no --set channel_priority flexible
+        conda update -q conda
+        conda info -a
+        conda create -q -n condaenv python=$TRAVIS_PYTHON_VERSION ci-psi4 openbabel psi4
+        source activate condaenv
+        conda install pytest pytest-cov codecov pytest-shutil
+        python -m pip install h5py pyscf
+        python -m pip install git+https://github.com/theochem/iodata.git
+        conda list
+    - name: Install deps python 3.5
+      with:
+          python-version: 3.5
+      run: |
+        sudo apt install libopenbabel-dev
+        python -m pip install --global-option=build_ext --global-option='-I/usr/include/openbabel3' --global-option='-L/usr/lib/openbabel3' openbabel
+        python -m pip install -U pytest pytest-cov h5py
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 pytest
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Install cclib
+      run: |
+        python -m pip install .
+    - name: Before Test
+      run: |
+        export DOCS_BRANCH_NAME=master
+        export DOCS_REPO_NAME=cclib.github.io
+        export DOCS_REPO_OWNER=cclib
+        export DOCS_ROOT_DIR="${GITHUB_WORKSPACE}"/doc/sphinx
+        export DOCS_BUILD_DIR="${DOCS_ROOT_DIR}"/_build/html
+        export THEME_DIR="${DOCS_ROOT_DIR}"/_themes
+        install -dm755 "${THEME_DIR}"
+    - name: Test with pytest
+      run: |
+        env | sort
+        bash github_actions/run_pytest.bash
+        bash github_actions/build_docs.bash
+    - name: After Push
+      on:
+        push:
+          branches: [ $default-branch ]
+      with:
+          python-version: 3.8
+      run: |
+        bash github_actions/deploy_docs.bash
+        

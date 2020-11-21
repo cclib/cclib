@@ -1,21 +1,3 @@
-dist: focal
-language: python
-python:
-  - 3.5
-  - 3.7
-addons:
-    apt:
-      packages:
-        - swig
-
-# Disable caching (#936), see
-# https://github.com/cclib/cclib/pull/930#issuecomment-680869933.
-#
-# cache:
-#   pip: true
-#   directories:
-#     - $HOME/miniconda
-
 before_install:
   # For Python 3.6+ machine, horton 3 IOData is installed from source. For Python 2.7 machine, horton 2 is installed from conda.
   # From the documentation, horton 3 works with Python 3.6+ and horton 2 does with Python 2.7
@@ -58,29 +40,3 @@ before_install:
     fi
   - pip install -r requirements.txt
 
-install:
-  - pip install .
-
-before_script:
-  - |
-    export DOCS_BRANCH_NAME=master
-    export DOCS_REPO_NAME=cclib.github.io
-    export DOCS_REPO_OWNER=cclib
-    export DOCS_ROOT_DIR="${TRAVIS_BUILD_DIR}"/doc/sphinx
-    export DOCS_BUILD_DIR="${DOCS_ROOT_DIR}"/_build/html
-    export THEME_DIR="${DOCS_ROOT_DIR}"/_themes
-  - install -dm755 "${THEME_DIR}"
-
-script:
-  - env | sort
-  - bash travis/run_pytest.bash
-  - bash travis/build_docs.bash
-
-after_success:
-  - |
-    if [[ "${TRAVIS_BRANCH}" == master && "${TRAVIS_PULL_REQUEST}" == false && $(echo "$TRAVIS_PYTHON_VERSION == 3.7" | bc -l) == 1 ]];
-    then
-        # Commits to master that are not pull requests, that is, only actual
-        # addition of code to master, should deploy the documentation.
-        bash ${TRAVIS_BUILD_DIR}/travis/deploy_docs_travis.bash
-    fi
