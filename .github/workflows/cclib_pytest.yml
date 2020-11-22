@@ -21,8 +21,7 @@ jobs:
     - name: Install swig
       run: sudo apt-get install swig
     - name: Install deps Python >3.5
-      with:
-          python-version: [3.6, 3.7, 3.8]
+      if: ${{ matrix.python-version }} > 3.6
       run: |
         wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
         bash miniconda.sh -b -p $HOME/miniconda -u
