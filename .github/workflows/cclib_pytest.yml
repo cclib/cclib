@@ -1,25 +1,28 @@
 name: cclib
 
-on: 
-  push:
-    branches: [ $default-branch ]
-  pull_request:
-    branches: [ $default-branch ]
+on: [push, pull_request]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.5, 3.6, 3.7, 3.8]
+        python-version: ['3.5', '3.6', '3.7', '3.8']
     steps:
+    - run: |
+        # Hack to get setup-python to work on act
+        if [ ! -f "/etc/lsb-release" ] ; then
+          echo "DISTRIB_RELEASE=18.04" > /etc/lsb-release
+        fi
+        apt update && apt install sudo
+    - name: Install swig
+      run: |
+        apt install swig
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install swig
-      run: sudo apt-get install swig
     - name: Install deps Python >3.5
       if: ${{ matrix.python-version }} > 3.6
       run: |
