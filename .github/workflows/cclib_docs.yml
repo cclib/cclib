@@ -1,0 +1,19 @@
+name: cclib
+
+on:
+  pull_request:
+    branches:
+      - master
+    types: [closed]
+
+jobs:
+  build:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.8']
+    steps:
+    - name: After Push
+      run: |
+        bash github_actions/deploy_docs.bash
