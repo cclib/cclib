@@ -11,7 +11,8 @@ jobs:
     steps:
     - name: Install swig
       run: |
-        apt update && apt install swig
+        sudo apt-get update -y -qq
+        sudo apt-get install -y -qq swig
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
@@ -38,7 +39,7 @@ jobs:
     - name: Install deps python 3.5
       if: ${{ matrix.python-version }} == 3.5
       run: |
-        apt install libopenbabel-dev
+        sudo apt-get -y -qq install libopenbabel-dev
         python -m pip install --global-option=build_ext --global-option='-I/usr/include/openbabel3' --global-option='-L/usr/lib/openbabel3' openbabel
         python -m pip install -U pytest pytest-cov h5py
     - name: Install dependencies
