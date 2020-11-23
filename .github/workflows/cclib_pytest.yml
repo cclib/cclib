@@ -42,8 +42,7 @@ jobs:
         python -m pip install git+https://github.com/theochem/iodata.git
         conda list
     - name: Install deps python 3.5
-      with:
-          python-version: 3.5
+      if: ${{ matrix.python-version }} == 3.5
       run: |
         sudo apt install libopenbabel-dev
         python -m pip install --global-option=build_ext --global-option='-I/usr/include/openbabel3' --global-option='-L/usr/lib/openbabel3' openbabel
