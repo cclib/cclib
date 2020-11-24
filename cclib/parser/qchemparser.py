@@ -69,7 +69,7 @@ class QChem(logfileparser.Logfile):
         # D(   35) --> V(    3) amplitude =  0.0644
         # S(  1) --> V(  1) amplitude = -0.1628 alpha
         # D(189) --> S(  1) amplitude = -0.0120 beta
-        self.re_tddft = re.compile(r'[SD]\( *(\d+)\) --> [VS]\( *(\d+)\) amplitude = *([^ ]*)( (alpha|beta))?')
+        self.re_tddft = re.compile(r'([SD])\( *(\d+)\) --> ([VS])\( *(\d+)\) amplitude = *([^ ]*)( (alpha|beta))?')
 
         # A maximum of 6 columns per block when printing matrices. The
         # Fock matrix is 4.
@@ -1056,8 +1056,9 @@ cannot be determined. Rerun without `$molecule read`."""
                         sec = []
                         while line.strip() != '':
                             re_match = self.re_tddft.search(line)
+                            #print(re_match.group(1),"|", re_match.group(2),"|",re_match.group(3),"|",re_match.group(4),"|",re_match.group(5),"|",re_match.group(6),"|",re_match.group(7))
                             if self.unrestricted:
-                                spin = spinmap[re_match.group(5)]
+                                spin = spinmap[re_match.group(7)]
                             else:
                                 spin = 0
 
@@ -1072,9 +1073,44 @@ cannot be determined. Rerun without `$molecule read`."""
                             else:
                                 assert line[5] == ":"
                                 ttype = line[4]
-                            startidx = int(re_match.group(1)) - 1
-                            endidx = int(re_match.group(2)) - 1 + self.nalpha
-                            contrib = float(re_match.group(3))
+
+                            # get start and end indices of contribution
+                            # as the numbers written in parentheses:
+                            index_pattern = re.compile(r"\(( *\d+)\)")
+                            indices=index_pattern.findall(line)
+                            #assert len(indices)==2 # there must always be a 'start' and 'end' index.
+
+                            if self.unrestricted:
+                                # Here are three different countings: 
+                                # The 'D'oubly occupied orbitals,
+                                # the 'S'ingly occupied (i.e. index > self.nbeta) and
+                                # the 'V'irtual orbitals (index > self.nalpha)
+                                # from or to which the excitation can go:
+
+                                # split 'line' by '(' to get three strings due to double occurence of '('.
+                                # From the first and second string (i.e. before the parentheses), take the last character.
+                                if re_match.group(1) == "D":
+                                    startidx = int(indices[0]) - 1
+                                elif re_match.group(1) == "S":
+                                    startidx = int(indices[0]) - 1 + self.nbeta
+                                    assert startidx < self.nalpha
+                                else:
+                                    startidx=-15
+                                    assert "invalid from_occ"
+
+                                if re_match.group(3) == "S":
+                                    endidx = int(indices[1]) - 1 + self.nbeta
+                                    assert endidx < self.nalpha
+                                elif re_match.group(3) == "V":
+                                    endidx = int(indices[1]) - 1 + self.nalpha
+                                else:
+                                    assert "invalid to_occ"
+
+                            else:
+                                startidx = int(re_match.group(2)) - 1
+                                endidx = int(re_match.group(4)) - 1 + self.nalpha
+
+                            contrib = float(re_match.group(5))
 
                             start = (startidx, spin)
                             end = (endidx, spin)
