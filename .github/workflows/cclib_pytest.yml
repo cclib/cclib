@@ -35,8 +35,8 @@ jobs:
         $CONDA/bin/conda update -q conda
         $CONDA/bin/conda info -a
         $CONDA/bin/conda install ci-psi4 openbabel psi4
-        #$CONDA/bin/conda create -q -n condaenv python=${{matrix.python-version}} ci-psi4 openbabel psi4
-        #source activate condaenv
+        $CONDA/bin/conda create -q -n condaenv python=${{matrix.python-version}} ci-psi4 openbabel psi4
+        $CONDA/bin/conda activate condaenv
         $CONDA/bin/conda install pytest pytest-cov codecov pytest-shutil
         python -m pip install h5py pyscf
         python -m pip install git+https://github.com/theochem/iodata.git
@@ -49,9 +49,11 @@ jobs:
         python -m pip install -U pytest pytest-cov h5py
     - name: Install cclib
       run: |
+        if ${{ matrix.python_version }} != 3.5 $CONDA/bin/conda activate condaenv
         python -m pip install .
     - name: Before Test
       run: |
+        if ${{ matrix.python_version }} != 3.5 $CONDA/bin/conda activate condaenv
         export DOCS_BRANCH_NAME=master
         export DOCS_REPO_NAME=cclib.github.io
         export DOCS_REPO_OWNER=cclib
@@ -61,6 +63,7 @@ jobs:
         install -dm755 "${THEME_DIR}"
     - name: Test with pytest
       run: |
+        if ${{ matrix.python_version }} != 3.5 $CONDA/bin/conda activate condaenv
         env | sort
         bash github_actions/run_pytest.bash
         bash github_actions/build_docs.bash
