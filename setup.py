@@ -12,8 +12,6 @@ chemistry log files. It also provides a platform to implement
 algorithms in a package-independent manner.
 """
 
-from __future__ import absolute_import, with_statement
-
 import setuptools
 
 
@@ -36,7 +34,7 @@ def setup_cclib():
 
     setuptools.setup(
         name="cclib",
-        version="1.6.3",
+        version="1.6.4",
         url="http://cclib.github.io/",
         author="cclib development team",
         author_email="cclib-users@lists.sourceforge.net",
@@ -60,7 +58,7 @@ def setup_cclib():
             "packaging>=19.0",
             "numpy",
             "periodictable",
-            "six",
+            "scipy>=1.2.0",
         ],
 
     )

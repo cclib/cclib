@@ -10,6 +10,7 @@
 import os.path
 import math
 import decimal
+import numpy 
 
 from cclib.parser import utils
 from cclib.io import filewriter
@@ -160,19 +161,34 @@ class MOLDEN(filewriter.Writer):
         if hasattr(self.ccdata, 'mosyms'):
             has_syms = True
             syms = self.ccdata.mosyms
+        else:
+            syms = numpy.full_like(moenergies, 'A', dtype=str)
+        unres = len(moenergies) > 1
+        openshell = len(homos) > 1
 
         spin = 'Alpha'
-        for i in range(mult):
+        for i in range(len(moenergies)):
             for j in range(len(moenergies[i])):
-                if has_syms:
-                    lines.append(' Sym= %s' % syms[i][j])
+                lines.append(' Sym= %s' % syms[i][j])
                 moenergy = utils.convertor(moenergies[i][j], 'eV', 'hartree')
                 lines.append(' Ene= {:10.4f}'.format(moenergy))
                 lines.append(' Spin= %s' % spin)
-                if j <= homos[i]:
-                    lines.append(' Occup= {:10.6f}'.format(2.0 / mult))
+                if unres and openshell: 
+                    if j <= homos[i]:
+                        lines.append(' Occup= {:10.6f}'.format(1.0))
+                    else:
+                        lines.append(' Occup= {:10.6f}'.format(0.0))
+                elif not unres and openshell:
+                    occ = numpy.sum(j <= homos)
+                    if j <= homos[i]:
+                        lines.append(' Occup= {:10.6f}'.format(occ))
+                    else:
+                        lines.append(' Occup= {:10.6f}'.format(0.0))
                 else:
-                    lines.append(' Occup= {:10.6f}'.format(0.0))
+                    if j <= homos[i]:
+                        lines.append(' Occup= {:10.6f}'.format(2.0))
+                    else:
+                        lines.append(' Occup= {:10.6f}'.format(0.0))
                 # Rearrange mocoeffs according to Molden's lexicographical order.
                 mocoeffs[i][j] = self._rearrange_mocoeffs(mocoeffs[i][j])
                 for k, mocoeff in enumerate(mocoeffs[i][j]):
@@ -222,7 +238,7 @@ class MOLDEN(filewriter.Writer):
         return '\n'.join(molden_lines)
 
 
-class MoldenReformatter(object):
+class MoldenReformatter:
     """Reformat Molden output files."""
 
     def __init__(self, filestring):

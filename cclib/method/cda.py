@@ -7,8 +7,6 @@
 
 """Charge Decomposition Analysis (CDA)"""
 
-from __future__ import print_function
-
 import random
 
 import numpy

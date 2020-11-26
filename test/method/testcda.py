@@ -7,14 +7,9 @@
 
 """Test the CDA method in cclib"""
 
-from __future__ import print_function
-
 import sys
-import os
 import logging
 import unittest
-
-import numpy
 
 sys.path.insert(1, "..")
 

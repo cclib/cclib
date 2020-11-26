@@ -9,15 +9,15 @@
 """Script for loading data from computational chemistry files."""
 
 
-from __future__ import print_function
-
 import glob
 import logging
 import os.path
-import sys
 import difflib
 from functools import partial
 from pprint import pprint
+
+# This is needed for testing purposes only.
+import sys
 
 import numpy
 
@@ -26,10 +26,7 @@ from cclib.io import ccread, URL_PATTERN
 
 
 # Set up options for pretty-printing output.
-if sys.version_info < (3, 4):
-    pprint = partial(pprint, width=120)
-else:
-    pprint = partial(pprint, width=120, compact=True)
+pprint = partial(pprint, width=120, compact=True)
 numpy.set_printoptions(linewidth=120)
 
 

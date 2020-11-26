@@ -7,8 +7,6 @@
 
 """Parser for Turbomole output files."""
 
-from __future__ import print_function
-
 import re
 
 import numpy
@@ -150,7 +148,7 @@ class Turbomole(logfileparser.Logfile):
             atomnos = []
             line = next(inputfile)
             while len(line) > 2:
-                atomnos.append(self.periodic_table.number[line.split()[3].upper()])
+                atomnos.append(self.periodic_table.number[line.split()[3].capitalize()])
                 atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") 
                                    for x in line.split()[:3]])
                 line = next(inputfile)
@@ -176,34 +174,56 @@ class Turbomole(logfileparser.Logfile):
         #   1   c           x   0.00000  0.00001  0.00000 -0.01968 -0.04257  0.00001
         #                   y  -0.08246 -0.08792  0.02675 -0.00010  0.00000  0.17930
         #                   z   0.00001  0.00003  0.00004 -0.10350  0.11992 -0.00003
+        # ....
+        #
+        # reduced mass(g/mol)     3.315    2.518    2.061    3.358    3.191    2.323
+
         if 'NORMAL MODES and VIBRATIONAL FREQUENCIES (cm**(-1))' in line:
-            vibfreqs, vibsyms, vibirs, vibdisps = [], [], [], []
-            while '****  force : all done  ****' not in line:
-                if line.strip().startswith('frequency'):
+            has_raman = False
+            while line[7:11] != 'mode':
+                line = next(inputfile)
+                if line.startswith(" differential RAMAN cross sections"):
+                    has_raman = True
+            vibfreqs, vibsyms, vibirs, vibdisps, vibrmasses = [], [], [], [], []
+            while 'all done  ****' not in line:
+
+                if line.strip().startswith('mode'):
+                    self.skip_line(inputfile, 'b')
+                    line = next(inputfile)
+                    assert line.strip().startswith('frequency')
                     freqs = [float(i.replace('i', '-')) for i in line.split()[1:]]
                     vibfreqs.extend(freqs)
-                    self.skip_line(inputfile, ['b'])
+                    self.skip_lines(inputfile, ['b'])
                     line = next(inputfile)
-                    if line.strip().startswith('symmetry'):
-                        syms = line.split()[1:]
-                        vibsyms.extend(syms)
+                    assert line.strip().startswith('symmetry')
+                    syms = line.split()[1:]
+                    vibsyms.extend(syms)
 
-                    self.skip_lines(inputfile, ['b', 'IR', 'dQIP'])
+                    self.skip_lines(inputfile, ['b', 'IR', 'dDIP/dQ'])
                     line = next(inputfile)
-                    if line.strip().startswith('intensity (km/mol)'):
-                        irs = [utils.float(f) for f in line.split()[2:]]
-                        vibirs.extend(irs)
+                    assert line.strip().startswith('intensity (km/mol)')
+                    irs = [utils.float(f) for f in line.split()[2:]]
+                    vibirs.extend(irs)
 
-                    self.skip_lines(inputfile, ['intensity', 'b', 'raman', 'b'])
+                    self.skip_lines(inputfile, ['intensity %', 'b', 'RAMAN'])
+                    if has_raman:
+                        self.skip_lines(
+                            inputfile,
+                            ['(par,par)', '(ort,ort)', '(ort,unpol)', 'depol. ratio']
+                        )
+                    line = next(inputfile)
+                    assert not line.strip()
                     line = next(inputfile)
                     x, y, z = [], [], []
-                    while line.split():
+                    atomcounter = 0
+                    while atomcounter < self.natom:
                         x.append([float(i) for i in line.split()[3:]])
                         line = next(inputfile)
                         y.append([float(i) for i in line.split()[1:]])
                         line = next(inputfile)
                         z.append([float(i) for i in line.split()[1:]])
                         line = next(inputfile)
+                        atomcounter += 1
 
                     for j in range(len(x[0])):
                         disps = []
@@ -211,12 +231,18 @@ class Turbomole(logfileparser.Logfile):
                             disps.append([x[i][j], y[i][j], z[i][j]])
                         vibdisps.append(disps)
 
+                    line = next(inputfile)
+                    assert line.startswith('reduced mass(g/mol)')
+                    rmasses = [utils.float(f) for f in line.split()[2:]]
+                    vibrmasses.extend(rmasses)
+
                 line = next(inputfile)
 
             self.set_attribute('vibfreqs', vibfreqs)
             self.set_attribute('vibsyms', vibsyms)
             self.set_attribute('vibirs', vibirs)
             self.set_attribute('vibdisps', vibdisps)
+            self.set_attribute('vibrmasses', vibrmasses)
 
         # In this section we are parsing mocoeffs and moenergies from
         # the files like: mos, alpha and beta.
@@ -380,20 +406,20 @@ class Turbomole(logfileparser.Logfile):
                         self.append_attribute('mpenergies', mp2energy)
                 line = next(inputfile)
 
-    def deleting_modes(self, vibfreqs, vibdisps, vibirs):
+    def deleting_modes(self, vibfreqs, vibdisps, vibirs, vibrmasses):
         """Deleting frequencies relating to translations or rotations"""
         i = 0
         while i < len(vibfreqs):
             if vibfreqs[i] == 0.0:
                 # Deleting frequencies that have value 0 since they
                 # do not correspond to vibrations.
-                del vibfreqs[i], vibdisps[i], vibirs[i]
+                del vibfreqs[i], vibdisps[i], vibirs[i], vibrmasses[i]
                 i -= 1
             i += 1
 
     def after_parsing(self):
         if hasattr(self, 'vibfreqs'):
-            self.deleting_modes(self.vibfreqs, self.vibdisps, self.vibirs)
+            self.deleting_modes(self.vibfreqs, self.vibdisps, self.vibirs, self.vibrmasses)
 
 
 class OldTurbomole(logfileparser.Logfile):

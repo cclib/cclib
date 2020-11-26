@@ -8,14 +8,11 @@
 """Parser for ORCA output files"""
 
 
-from __future__ import print_function
-
 import re
+from itertools import zip_longest
 
 import numpy
 from packaging.version import parse as parse_version
-
-from six.moves import zip_longest
 
 from cclib.parser import logfileparser
 from cclib.parser import utils
@@ -546,6 +543,12 @@ Dispersion correction           -0.016199959
                 self.skip_lines(inputfile, ['dashes', 'blank'])
 
             line = next(inputfile).strip()
+            if 'CONSTRAINED CARTESIAN COORDINATES' in line:
+                self.skip_line(
+                    inputfile, 'constrained Cartesian coordinate warning'
+                )
+                line = next(inputfile).strip()
+
             while line:
                 tokens = line.split()
                 x, y, z = float(tokens[-3]), float(tokens[-2]), float(tokens[-1])

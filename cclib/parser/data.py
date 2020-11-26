@@ -19,7 +19,7 @@ from cclib.method import orbitals
 Attribute = namedtuple('Attribute', ['type', 'json_key', 'attribute_path'])
 
 
-class ccData(object):
+class ccData:
     """Stores data extracted by cclib parsers
 
     Description of cclib attributes:
@@ -88,8 +88,10 @@ class ccData(object):
         vibanharms -- vibrational anharmonicity constants (array[2], 1/cm)
         vibdisps -- cartesian displacement vectors (array[3], delta angstrom)
         vibfreqs -- vibrational frequencies (array[1], 1/cm)
+        vibfconsts -- force constants of vibrations (array[1], mDyne/angstrom)
         vibirs -- IR intensities (array[1], km/mol)
         vibramans -- Raman activities (array[1], A^4/Da)
+        vibrmasses -- reduced masses of vibrations (array[1], daltons)
         vibsyms -- symmetries of vibrations (list of strings)
         zpve -- zero-point vibrational energy correction (float, hartree/particle)
     (1) The term 'array' refers to a numpy array
@@ -166,8 +168,10 @@ class ccData(object):
        "vibanharms":       Attribute(numpy.ndarray,    'anharmonicity constants',     'vibrations'),
        "vibdisps":         Attribute(numpy.ndarray,    'displacement',                'vibrations'),
        "vibfreqs":         Attribute(numpy.ndarray,    'frequencies',                 'vibrations'),
+       "vibfconsts":       Attribute(numpy.ndarray,    'force constants',             'vibrations'),
        "vibirs":           Attribute(numpy.ndarray,    'IR',                          'vibrations:intensities'),
        "vibramans":        Attribute(numpy.ndarray,    'raman',                       'vibrations:intensities'),
+       "vibrmasses":       Attribute(numpy.ndarray,    'reduced masses',              'vibrations'),
        "vibsyms":          Attribute(list,             'vibration symmetry',          'vibrations'),
        "zpve":             Attribute(float,            'zero-point correction',       'properties:energies')
     }

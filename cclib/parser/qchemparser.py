@@ -7,9 +7,6 @@
 
 """Parser for Q-Chem output files"""
 
-from __future__ import division
-from __future__ import print_function
-
 import itertools
 import math
 import re
@@ -67,6 +64,12 @@ class QChem(logfileparser.Logfile):
         # Compile the regex for extracting the atomic index from an
         # aoname.
         self.re_atomindex = re.compile(r'(\d+)_')
+
+        # QChem changed the number of spaces from version 5.1 to 5.2
+        # D(   35) --> V(    3) amplitude =  0.0644
+        # S(  1) --> V(  1) amplitude = -0.1628 alpha
+        # D(189) --> S(  1) amplitude = -0.0120 beta
+        self.re_tddft = re.compile(r'[SD]\( *(\d+)\) --> [VS]\( *(\d+)\) amplitude = *([^ ]*)( (alpha|beta))?')
 
         # A maximum of 6 columns per block when printing matrices. The
         # Fock matrix is 4.
@@ -303,7 +306,7 @@ cannot be determined. Rerun without `$molecule read`."""
         line = next(inputfile)
         assert len(line.split()) == min(self.ncolsblock, ncols)
         colcounter = 0
-        split_fixed = utils.WidthSplitter((4, 3, 5, 6, 10, 10, 10, 10, 10, 10))
+        split_fixed = utils.WidthSplitter((4, 4, 4, 6, 10, 10, 10, 10, 10, 10))
         while colcounter < ncols:
             # If the line is just the column header (indices)...
             if line[:5].strip() == '':
@@ -1052,8 +1055,9 @@ cannot be determined. Rerun without `$molecule read`."""
                     if 'amplitude' in line:
                         sec = []
                         while line.strip() != '':
+                            re_match = self.re_tddft.search(line)
                             if self.unrestricted:
-                                spin = spinmap[line[42:47].strip()]
+                                spin = spinmap[re_match.group(5)]
                             else:
                                 spin = 0
 
@@ -1065,15 +1069,12 @@ cannot be determined. Rerun without `$molecule read`."""
                             # starts reindexing virtual orbitals at 1.
                             if line[5] == '(':
                                 ttype = 'X'
-                                startidx = int(line[6:9]) - 1
-                                endidx = int(line[17:20]) - 1 + self.nalpha
-                                contrib = float(line[34:41].strip())
                             else:
                                 assert line[5] == ":"
                                 ttype = line[4]
-                                startidx = int(line[9:12]) - 1
-                                endidx = int(line[20:23]) - 1 + self.nalpha
-                                contrib = float(line[37:44].strip())
+                            startidx = int(re_match.group(1)) - 1
+                            endidx = int(re_match.group(2)) - 1 + self.nalpha
+                            contrib = float(re_match.group(3))
 
                             start = (startidx, spin)
                             end = (endidx, spin)
@@ -1478,6 +1479,18 @@ cannot be determined. Rerun without `$molecule read`."""
                             self.vibfreqs = []
                         vibfreqs = map(float, line.split()[1:])
                         self.vibfreqs.extend(vibfreqs)
+
+                    if 'Force Cnst:' in line:
+                        if not hasattr(self, 'vibfconsts'):
+                            self.vibfconsts = []
+                        vibfconsts = map(float, line.split()[2:])
+                        self.vibfconsts.extend(vibfconsts)
+
+                    if 'Red. Mass' in line:
+                        if not hasattr(self, 'vibrmasses'):
+                            self.vibrmasses = []
+                        vibrmasses = map(float, line.split()[2:])
+                        self.vibrmasses.extend(vibrmasses)
 
                     if 'IR Intens:' in line:
                         if not hasattr(self, 'vibirs'):

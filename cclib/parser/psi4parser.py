@@ -981,8 +981,12 @@ class Psi4(logfileparser.Logfile):
                 _vibfreq = Psi4.parse_vibfreq(line[13:].strip())
                 assert abs(vibfreq - _vibfreq) < 1.0e-2
                 line = next(inputfile)
-                # Can't do anything with this for now.
                 assert 'Force constant:' in line
+                if not hasattr(self, "vibfconsts"):
+                    self.vibfconsts = []
+                self.vibfconsts.append(
+                    utils.convertor(float(line.split()[2]), "hartree/bohr2", "mDyne/angstrom")
+                )
                 line = next(inputfile)
                 assert 'X       Y       Z           mass' in line
                 line = next(inputfile)
@@ -1017,6 +1021,8 @@ class Psi4(logfileparser.Logfile):
             vibsyms = []
             vibfreqs = []
             vibdisps = []
+            vibrmasses = []
+            vibfconsts = []
 
             # Skip lines till the first Vibration block
             while not line.strip().startswith('Vibration'):
@@ -1027,10 +1033,12 @@ class Psi4(logfileparser.Logfile):
             while line.strip().startswith('Vibration'):
                 n = len(line.split()) - 1
                 n_modes += n
-                vibfreqs_, vibsyms_, vibdisps_ = self.parse_vibration(n, inputfile)
+                vibfreqs_, vibsyms_, vibdisps_, vibrmasses_, vibfconsts_ = self.parse_vibration(n, inputfile)
                 vibfreqs.extend(vibfreqs_)
                 vibsyms.extend(vibsyms_)
                 vibdisps.extend(vibdisps_)
+                vibrmasses.extend(vibrmasses_)
+                vibfconsts.extend(vibfconsts_)
                 line = next(inputfile)
 
             # It looks like the symmetry of the normal mode may be missing 
@@ -1044,6 +1052,12 @@ class Psi4(logfileparser.Logfile):
 
             if len(vibdisps) == n_modes:
                 self.set_attribute('vibdisps', vibdisps)
+
+            if len(vibdisps) == n_modes:
+                self.set_attribute('vibrmasses', vibrmasses)
+
+            if len(vibdisps) == n_modes:
+                self.set_attribute('vibfconsts', vibfconsts)
 
         # If finite difference is used to compute forces (i.e. by displacing
         # slightly all the atoms), a series of additional scf calculations is
@@ -1127,9 +1141,13 @@ class Psi4(logfileparser.Logfile):
 
         line = next(inputfile)
         assert 'Reduced mass' in line
+        chomp = line.split()
+        vibrmasses = [utils.float(x) for x in chomp[3:]]
 
         line = next(inputfile)
         assert 'Force const' in line
+        chomp = line.split()
+        vibfconsts = [utils.float(x) for x in chomp[3:]]
 
         line = next(inputfile)
         assert 'Turning point' in line
@@ -1155,7 +1173,7 @@ class Psi4(logfileparser.Logfile):
 
             line = next(inputfile)
 
-        return vibfreqs, vibsyms, vibdisps
+        return vibfreqs, vibsyms, vibdisps, vibrmasses, vibfconsts
 
     @staticmethod
     def parse_vibfreq(vibfreq):

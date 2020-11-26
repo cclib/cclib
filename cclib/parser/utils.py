@@ -1,35 +1,18 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2018, the cclib development team
+# Copyright (c) 2020, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
 """Utilities often used by cclib parsers and scripts"""
 
+import importlib
 import sys
+from itertools import accumulate
+
 import numpy
 import periodictable
-
-
-# See https://github.com/kachayev/fn.py/commit/391824c43fb388e0eca94e568ff62cc35b543ecb
-if sys.version_info <= (3, 3):
-    import operator
-    def accumulate(iterable, func=operator.add):
-        """Return running totals"""
-        # accumulate([1,2,3,4,5]) --> 1 3 6 10 15
-        # accumulate([1,2,3,4,5], operator.mul) --> 1 2 6 24 120
-        it = iter(iterable)
-        try:
-            total = next(it)
-        except StopIteration:
-            return
-        yield total
-        for element in it:
-            total = func(total, element)
-            yield total
-else:
-    from itertools import accumulate
 
 
 def find_package(package):
@@ -37,13 +20,13 @@ def find_package(package):
 
     Derived from https://stackoverflow.com/a/14050282
     """
-    if sys.version_info.major == 2:
-        import pkgutil
-        return pkgutil.find_loader(package) is not None
-    else:
-        import importlib
-        module_spec = importlib.util.find_spec(package)
-        return module_spec is not None and module_spec.loader is not None
+    module_spec = importlib.util.find_spec(package)
+    return module_spec is not None and module_spec.loader is not None
+
+
+_found_scipy = find_package("scipy")
+if _found_scipy:
+    import scipy.spatial
 
 
 def symmetrize(m, use_triangle='lower'):
@@ -151,12 +134,71 @@ def convertor(value, fromunits, tounits):
         "ebohr4_to_Debye.ang3": lambda x: x * 0.3766479268,
         "ebohr5_to_Debye.ang4": lambda x: x * 0.1993134985,
 
+        "hartree/bohr2_to_mDyne/angstrom": lambda x: x * 8.23872350 / 0.5291772109
     }
 
     return _convertor["%s_to_%s" % (fromunits, tounits)](value)
 
+def _get_rmat_from_vecs(a, b):
+    """Get rotation matrix from two 3D vectors, a and b
+    Args:
+       a (np.ndaray): 3d vector with shape (3,0)
+       b (np.ndaray): 3d vector with shape (3,0)
+    Returns:
+       np.ndarray
+    """
+    a_ = (a / numpy.linalg.norm(a, 2))
+    b_ = (b / numpy.linalg.norm(b, 2))
+    v = numpy.cross(a_, b_)
+    s = numpy.linalg.norm(v, 2)
+    c = numpy.dot(a_, b_)
+    # skew-symmetric cross product of v
+    vx = numpy.array([[0, -v[2], v[1]],
+                    [v[2], 0, -v[0]],
+                    [-v[1], v[0], 0]])
+    rmat = numpy.identity(3) + vx + numpy.matmul(vx, vx) * ((1-c)/s**2)
+    return rmat
 
-class PeriodicTable(object):
+def get_rotation(a, b):
+    """Get rotation part for transforming a to b, where a and b are same positions with different orientations
+    If one atom positions, i.e (1,3) shape array, are given, it returns identify transformation
+
+    Args:
+        a (np.ndarray): positions with shape(N,3)
+        b (np.ndarray): positions with shape(N,3)
+    Returns:
+        A scipy.spatial.transform.Rotation object
+    """
+    if not _found_scipy:
+        raise ImportError("You must install `scipy` to use this function")
+
+    assert a.shape == b.shape
+    if a.shape[0] == 1:
+        return scipy.spatial.transform.Rotation.from_euler('xyz', [0,0,0])
+    # remove translation part
+    a_ = a - a[0]
+    b_ = b - b[0]
+    if hasattr(scipy.spatial.transform.Rotation, "align_vectors"):
+        r, _ = scipy.spatial.transform.Rotation.align_vectors(b_, a_)
+    else:
+        if numpy.linalg.matrix_rank(a_) == 1:
+            # in the case of linear molecule, e.g. O2, C2H2
+            idx = numpy.argmax(numpy.linalg.norm(a_, ord=2, axis=1))
+            rmat = _get_rmat_from_vecs(a_[idx], b_[idx])
+            r = scipy.spatial.transform.Rotation.from_dcm(rmat)
+        else:
+            # scipy.spatial.transform.Rotation.match_vectors has bug
+            # Kabsch Algorithm
+            cov = numpy.dot(b_.T, a_)
+            V, S, W = numpy.linalg.svd(cov)
+            if ((numpy.linalg.det(V) * numpy.linalg.det(W))< 0.0):
+                S[-1] = -S[-1]
+                V[:,-1] = -V[:,-1]
+            rmat = numpy.dot(V, W)
+            r = scipy.spatial.transform.Rotation.from_dcm(rmat)
+    return r
+
+class PeriodicTable:
     """Allows conversion between element name and atomic no."""
 
     def __init__(self):

@@ -280,6 +280,13 @@ Note that many programs print atomic coordinates before and after a geometry opt
 
 If the optimisation has finished successfully, the values in the last row should be smaller than the values in geotargets_ (unless the convergence criteria require otherwise).
 
+
+grads
+---------
+The attribute ``grads`` contains the atom forces (gradients) coordinates as taken from the output file. This is an array of rank 3, with a shape (n,m,3) where n is 1 for a single point calculation and >=1 for a geometry optimisation and m is the number of atoms. The orientation of ``grads`` is equal to that of `atomcoords`_.
+
+**Gaussian**: Gaussian calculation prints grads in the input orientaion. The calculation with symmetry outputs ``atomcoords`` and other values in standard orientation, and we converet ``grads`` to that in standard orientation. The calculation without symmetry (e.g. with ``Symmetry=None`` kyword) outputs outputs ``atomcoords`` and other values, and we don't convert ``grads``.
+
 hessian
 -------
 
@@ -565,3 +572,14 @@ vibdisps
 --------
 
 The attribute ``vibdisps`` stores the Cartesian displacement vectors from the output of a vibrational frequency calculation. It is a rank 3 array having dimensions ``M x N x 3``, where ``M`` is the number of normal modes and ``N`` is the number of atoms. ``M`` is typically ``3N-6`` (``3N-5`` for linear molecules).
+
+vibfconsts
+--------
+
+The attribute ``vibrmasses`` stores the force constants in :math:`\mathrm{Å^4/Da}` from vibrational frequency calculation. It is a rank 1 array having dimension ``M``, where ``M`` is the number of normal modes.
+
+vibrmasses
+--------
+
+The attribute ``vibrmasses`` stores the reduced masses in Daltons (Da) from vibrational frequency calculation. It is a rank 1 array having dimension ``M``, where ``M`` is the number of normal modes.
+

@@ -246,6 +246,14 @@ class DALTONGeoOptTest(GenericGeoOptTest):
         self.assertTrue(sum(convergence) >= 2)
 
 
+class GaussianGeoOptTest(GenericGeoOptTest):
+    """Customized geometry optimization unittest"""
+
+    def testgradsorientation(self):
+        """Are the orientations for grads and atomcoords are same?"""
+        # since z-coordinates of atomcoords are all 0 for dvb, z-values of grads should be all 0
+        assert numpy.alltrue(numpy.abs(self.data.grads[:,:,2]) < 1e-14)
+
 class MolcasGeoOptTest(GenericGeoOptTest):
     """Customized geometry optimization unittest"""
 

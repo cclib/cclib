@@ -156,8 +156,7 @@ class Stockholder(Method):
                     gridmin = convertor(float(gridmin), "bohr", "Angstrom")
                     gridmax = convertor(float(gridmax), "bohr", "Angstrom")
                     gridn = int(gridn)
-                    # Convert byte to string in Python3
-                    if sys.version[0] == "3":
+                    if isinstance(gridtype, bytes):
                         gridtype = gridtype.decode("UTF-8")
 
                     # First verify that it is one of recognized grids

@@ -263,33 +263,33 @@ class DDEC6(Stockholder):
         """
         # Generator object to iterate over the grid
         ngridx, ngridy, ngridz = self.charge_density.data.shape
-        indices = (
-            (i, x, y, z)
-            for i in range(self.data.natom)
-            for x in range(ngridx)
-            for y in range(ngridy)
-            for z in range(ngridz)
-        )
         grid_shape = (self.data.natom, ngridx, ngridy, ngridz)
 
         stockholder_w = numpy.zeros(grid_shape)
         localized_w = numpy.zeros(grid_shape)
         self.closest_r_index = numpy.zeros(grid_shape, dtype=int)
 
-        for atomi, xindex, yindex, zindex in indices:
-            # Distance of the grid from atom grid
-            dist_r = self._cartesian_dist(
-                self.data.atomcoords[-1][atomi],
-                self.charge_density.coordinates([xindex, yindex, zindex]),
+        indices = numpy.asanyarray(
+            tuple(
+                (x, y, z)
+                for x in range(ngridx)
+                for y in range(ngridy)
+                for z in range(ngridz)
             )
-            self.closest_r_index[atomi][xindex][yindex][zindex] = numpy.abs(
-                self.radial_grid_r[atomi] - dist_r
-            ).argmin()
+        )
+        coordinates = self.charge_density.coordinates(indices)
+
+        for atomi in range(self.data.natom):
+            # Distance of the grid from atom grid
+            self.closest_r_index[atomi] = numpy.argmin(
+                numpy.abs(
+                    self.radial_grid_r[atomi][..., numpy.newaxis] - numpy.linalg.norm(self.data.atomcoords[-1][atomi] - coordinates, axis=1)
+                ),
+                axis=0
+            ).reshape((ngridx, ngridy, ngridz))
 
             # Equation 54 in doi: 10.1039/c6ra04656h
-            stockholder_w[atomi][xindex][yindex][zindex] = self.proatom_density[atomi][
-                self.closest_r_index[atomi][xindex][yindex][zindex]
-            ]
+            stockholder_w[atomi] = self.proatom_density[atomi][self.closest_r_index[atomi]]
 
         # Equation 55 in doi: 10.1039/c6ra04656h
         localized_w = numpy.power(stockholder_w, 4)
@@ -325,20 +325,13 @@ class DDEC6(Stockholder):
         """
         # Generator object to iterate over the grid
         ngridx, ngridy, ngridz = self.charge_density.data.shape
-        indices = (
-            (i, x, y, z)
-            for i in range(self.data.natom)
-            for x in range(ngridx)
-            for y in range(ngridy)
-            for z in range(ngridz)
-        )
 
         self._rho_ref = numpy.zeros((ngridx, ngridy, ngridz))
 
-        for atomi, xindex, yindex, zindex in indices:
+        for atomi in range(self.data.natom):
             # rho_ref -- Equation 41 in doi: 10.1039/c6ra04656h
-            self._rho_ref[xindex][yindex][zindex] += self.proatom_density[atomi][
-                self.closest_r_index[atomi][xindex][yindex][zindex]
+            self._rho_ref += self.proatom_density[atomi][
+                self.closest_r_index[atomi]
             ]
 
         self._candidates_bigPhi = []
@@ -394,13 +387,6 @@ class DDEC6(Stockholder):
 
         # Generator object to iterate over the grid
         ngridx, ngridy, ngridz = self.charge_density.data.shape
-        indices = (
-            (i, x, y, z)
-            for i in range(self.data.natom)
-            for x in range(ngridx)
-            for y in range(ngridy)
-            for z in range(ngridz)
-        )
 
         self._leftterm = numpy.zeros((self.data.natom, ngridx, ngridy, ngridz), dtype=float)
         # rho_cond_cartesian is rho^cond projected on Cartesian grid
@@ -411,21 +397,20 @@ class DDEC6(Stockholder):
         self.tau = []
 
         # rho_cond -- equation 65 in doi: 10.1039/c6ra04656h
-        for atomi, xindex, yindex, zindex in indices:
-            self.rho_cond.data[xindex][yindex][zindex] += self._cond_density[atomi][
-                self.closest_r_index[atomi][xindex][yindex][zindex]
+        for atomi in range(self.data.natom):
+            self.rho_cond.data += self._cond_density[atomi][
+                self.closest_r_index[atomi]
             ]
 
         rho_cond_sqrt = numpy.sqrt(self.rho_cond.data)
 
         for atomi in range(self.data.natom):
             self.tau.append(numpy.zeros_like(self.proatom_density[atomi], dtype=float))
-            for xindex, yindex, zindex in numpy.ndindex(ngridx, ngridy, ngridz):
-                # leftterm is the first spherical average term in equation 66.
-                # <rho^cond_A(r_A) / sqrt(rho^cond(r))>
-                self._rho_cond_cartesian[atomi][xindex][yindex][zindex] = self._cond_density[atomi][
-                    self.closest_r_index[atomi][xindex][yindex][zindex]
-                ]
+            # leftterm is the first spherical average term in equation 66.
+            # <rho^cond_A(r_A) / sqrt(rho^cond(r))>
+            self._rho_cond_cartesian[atomi] = self._cond_density[atomi][
+                self.closest_r_index[atomi]
+            ]
             self._leftterm[atomi] = self._rho_cond_cartesian[atomi] / rho_cond_sqrt
             for radiusi in range(len(self.tau[atomi])):
                 grid_filter = self.closest_r_index[atomi] == radiusi
@@ -675,14 +660,8 @@ class DDEC6(Stockholder):
         grid = copy.deepcopy(self.charge_density)
         grid.data = numpy.zeros_like(grid.data, dtype=float)
 
-        ngridx, ngridy, ngridz = self.charge_density.data.shape
-        indices = ((x, y, z) for x in range(ngridx) for y in range(ngridy) for z in range(ngridz))
-
         for density, atomi in zip(radial_density_list, atom_list):
-            for x, y, z in indices:
-                grid.data[x][y][z] = (
-                    grid.data[x][y][z] + density[self.closest_r_index[atomi][x][y][z]]
-                )
+            grid.data += density[self.closest_r_index[atomi]]
 
         return grid.integrate()
 
@@ -702,7 +681,6 @@ class DDEC6(Stockholder):
 
     def _update_rho_cond(self):
         # Update total weights on Cartesian grid using equation 65 in doi: 10.1039/c6ra04656h
-        # Generator object to iterate over the grid
         ngridx, ngridy, ngridz = self.charge_density.data.shape
 
         self.rho_cond.data = numpy.zeros_like(self.rho_cond.data, dtype=float)
@@ -711,14 +689,12 @@ class DDEC6(Stockholder):
         )
 
         for atomi in range(self.data.natom):
-            grid = ((x, y, z) for x in range(ngridx) for y in range(ngridy) for z in range(ngridz))
-            for xindex, yindex, zindex in grid:
-                self.rho_cond.data[xindex][yindex][zindex] += self._cond_density[atomi][
-                    self.closest_r_index[atomi][xindex][yindex][zindex]
-                ]
-                self._rho_cond_cartesian[atomi][xindex][yindex][zindex] = self._cond_density[atomi][
-                    self.closest_r_index[atomi][xindex][yindex][zindex]
-                ]
+            self.rho_cond.data += self._cond_density[atomi][
+                self.closest_r_index[atomi]
+            ]
+            self._rho_cond_cartesian[atomi] = self._cond_density[atomi][
+                self.closest_r_index[atomi]
+            ]
 
     def _converge_phi(self, phiA, superscript, atomi):
         """ Update phi until it is positive.

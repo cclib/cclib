@@ -5,7 +5,7 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
-"""Calculation of DDEC charges based on data parsed by cclib."""
+"""Calculation of Hirshfeld charges based on data parsed by cclib."""
 import copy
 import random
 import numpy
@@ -66,8 +66,10 @@ class Hirshfeld(Stockholder):
         super(Hirshfeld, self)._check_required_attributes()
 
     def _cartesian_dist(self, pt1, pt2):
-        """ Small utility function that calculates Euclidian distance between two points
-            pt1 and pt2 are numpy arrays representing a point in Cartesian coordinates. """
+        """Small utility function that calculates Euclidian distance between two points.
+        
+        Arguments pt1 and pt2 are NumPy arrays representing points in Cartesian coordinates.
+        """
         return numpy.sqrt(numpy.dot(pt1 - pt2, pt1 - pt2))
 
     def _read_proatom(
@@ -76,11 +78,10 @@ class Hirshfeld(Stockholder):
         return super(Hirshfeld, self)._read_proatom(directory, atom_num, charge)
 
     def calculate(self):
-        """ Calculate Hirshfeld charges
-        """
+        """Calculate Hirshfeld charges."""
         super(Hirshfeld, self).calculate()
 
-        # Generator object to iterate over the grid
+        # Generator object to iterate over the grid.
         ngridx, ngridy, ngridz = self.charge_density.data.shape
         indices = (
             (i, x, y, z)
@@ -95,7 +96,7 @@ class Hirshfeld(Stockholder):
         self.closest_r_index = numpy.zeros(grid_shape, dtype=int)
 
         for atomi, xindex, yindex, zindex in indices:
-            # Distance of the grid from atom grid
+            # Distance of the grid from atom grid.
             dist_r = self._cartesian_dist(
                 self.data.atomcoords[-1][atomi],
                 self.charge_density.coordinates([xindex, yindex, zindex]),

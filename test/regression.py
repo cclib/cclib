@@ -36,8 +36,6 @@ inside the data directory, like so:
     python -m test.regression Gaussian/Gaussian03/borane-opt.log
 """
 
-from __future__ import print_function
-
 import glob
 import logging
 import os
@@ -69,7 +67,7 @@ from cclib.parser import Psi4
 from cclib.parser import QChem
 from cclib.parser import Turbomole
 
-from cclib.io import ccopen
+from cclib.io import ccopen, ccread, moldenwriter
 
 # This assume that the cclib-data repository is located at a specific location
 # within the cclib repository. It would be better to figure out a more natural
@@ -668,6 +666,19 @@ def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out(logfile):
         parse_version(logfile.data.metadata["package_version"]), Version
     )
 
+def testnoparseGAMESS_WinGAMESS_H2O_def2SVPD_triplet_2019_06_30_R1_out(logfile):
+    """Check if the molden writer can handle an unrestricted case
+    """
+    data = ccread(os.path.join(__filedir__,logfile))
+    writer = moldenwriter.MOLDEN(data)
+    # Check size of Atoms section.
+    assert len(writer._mo_from_ccdata()) == (data.nbasis + 4) * (data.nmo * 2)
+    # check docc orbital
+    beta_idx = (data.nbasis + 4) * data.nmo
+    assert "Beta" in writer._mo_from_ccdata()[beta_idx + 2]
+    assert "Occup=   1.000000" in writer._mo_from_ccdata()[beta_idx + 3]
+    assert "0.989063" in writer._mo_from_ccdata()[beta_idx + 4]
+
 
 # GAMESS-UK #
 
@@ -1168,6 +1179,11 @@ def testGaussian_Gaussian16_issue851_log(logfile):
     assert isinstance(logfile.data.scannames, list)
     assert isinstance(logfile.data.scanparm, list)
     assert isinstance(logfile.data.scanenergies, list)
+
+def testGaussian_Gaussian16_issue962_log(logfile):
+    """For issue 962, this shouldn't have scftargets but should parse fully"""
+
+    assert not hasattr(logfile.data, "scftargets")
 
 # Jaguar #
 
@@ -1671,6 +1687,17 @@ def testORCA_ORCA4_1_single_atom_freq_out(logfile):
     numpy.testing.assert_almost_equal(logfile.data.enthalpy, -460.14376, 5)
     numpy.testing.assert_almost_equal(logfile.data.entropy, 6.056e-5, 8)
     numpy.testing.assert_almost_equal(logfile.data.freeenergy, -460.16182, 6)
+
+
+def testORCA_ORCA4_2_947_out(logfile):
+    """A constrained geometry optimization which prints the extra line
+
+    WARNING: THERE ARE 5 CONSTRAINED CARTESIAN COORDINATES
+
+    just before the gradient.
+    """
+    assert len(logfile.data.atomcoords) == 7
+    assert len(logfile.data.grads) == 6
 
 
 def testORCA_ORCA4_2_MP2_gradient_out(logfile):
@@ -2545,6 +2572,16 @@ def testQChem_QChem5_0_argon_out(logfile):
     assert logfile.data.scfenergies[0] == convertor(state_0_energy, 'hartree', 'eV')
     assert abs(logfile.data.etenergies[0] - convertor(state_1_energy - state_0_energy, 'hartree', 'wavenumber')) < 1.0e-1
 
+def testQChem_QChem5_0_Si_out(logfile):
+    """
+    This job includes MOs as a test for this version. This fist MO coefficient is checked to ensure they were parsed.
+    """
+    assert logfile.data.metadata["legacy_package_version"] == "5.0.2"
+    assert logfile.data.metadata["package_version"] == "5.0.2"
+    assert isinstance(
+        parse_version(logfile.data.metadata["package_version"]), Version
+    )
+    assert logfile.data.mocoeffs[0][0,0] == 1.00042
 
 def testQChem_QChem5_1_old_final_print_1_out(logfile):
     """This job has was run from a development version."""

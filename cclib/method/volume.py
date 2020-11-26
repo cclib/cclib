@@ -7,7 +7,6 @@
 
 """Calculation methods related to volume based on cclib data."""
 
-from __future__ import print_function
 import copy
 
 import numpy
@@ -62,10 +61,27 @@ if _found_pyquante:
 
         return bfs
 
-    # Small wrapper PyQuante & pyquante2 function that evaluates basis function on a given point
-    # Used in both `wavefunction` and `electrondensity`
-    def pyamp(bfs, bs, x, y, z):
-        return bfs[bs].amp(x, y, z)
+    def pyamp(bfs, bs, points):
+        """Wrapper for evaluating basis functions at one or more grid points.
+
+        Parameters
+        ----------
+        bfs : list
+            List of PyQuante 1 `CGBFs`s (contracted Gaussian basis functions).
+        bs : int
+            Index into the list of CGBFs for the basis function to evaluate.
+        points : numpy.ndarray
+            An [n, 3] array of `n` Cartesian grid points on which to evaluate the basis function.
+
+        Returns
+        -------
+        out : numpy.ndarray
+            An [n, ] array of the requested basis function's value on each grid point.
+        """
+        mesh_vals = numpy.zeros(len(points))
+        for i in range(len(points)):
+            mesh_vals[i] = bfs[bs].amp(points[i][0], points[i][1], points[i][2])
+        return mesh_vals
 
 
 _found_pyquante2 = find_package("pyquante2")
@@ -73,15 +89,14 @@ if _found_pyquante2:
     from pyquante2 import cgbf
 
     def getbfs(ccdata):
-        from cclib.bridge import cclib2pyquante
-
-        pymol = cclib2pyquante.makepyquante(ccdata)
-
         bfs = []
-        for i, atom in enumerate(pymol):  # `atom` is instance of pyquante2.geo.atom.atom class.
-            basis = ccdata.gbasis[i]  # `basis` is basis coefficients stored in ccData.
+        # `atom` is instance of pyquante2.geo.atom.atom class.
+        for i, atom in enumerate(ccdata.atomcoords[-1]):
+            # `basis` is basis coefficients stored in ccData.
+            basis = ccdata.gbasis[i]
             for sym, primitives in basis:
-                for power in sym2powerlist[sym]:  # `sym` is S, P, D, F and is used as key here.
+                # `sym` is S, P, D, F and is used as key here.
+                for power in sym2powerlist[sym]:
                     exponentlist = []
                     coefficientlist = []
 
@@ -90,19 +105,34 @@ if _found_pyquante2:
                         coefficientlist.append(coefficients)
 
                     basisfunction = cgbf(
-                        atom.atuple()[1:4], powers=power, exps=exponentlist, coefs=coefficientlist,
+                        convertor(atom, "Angstrom", "bohr"),
+                        powers=power,
+                        exps=exponentlist,
+                        coefs=coefficientlist,
                     )
                     basisfunction.normalize()
                     bfs.append(basisfunction)
 
-        del cclib2pyquante
-
         return bfs
 
-    # Small wrapper PyQuante & pyquante2 function that evaluates basis function on a given point
-    # Used in both `wavefunction` and `electrondensity`
-    def pyamp(bfs, bs, x, y, z):
-        return bfs[bs](x, y, z)  # 1D numpy array with size 1 is returned from __call__ here.
+    def pyamp(bfs, bs, points):
+        """Wrapper for evaluating basis functions at one or more grid points.
+
+        Parameters
+        ----------
+        bfs : list
+            List of pyquante2 `cgbf`s (contracted Gaussian basis functions).
+        bs : int
+            Index into the list of CGBFs for the basis function to evaluate.
+        points : numpy.ndarray
+            An [n, 3] array of `n` Cartesian grid points on which to evaluate the basis function.
+
+        Returns
+        -------
+        out : numpy.ndarray
+            An [n, ] array of the requested basis function's value on each grid point.
+        """
+        return bfs[bs].mesh(points)
 
 
 _found_pyvtk = find_package("pyvtk")
@@ -113,7 +143,9 @@ if _found_pyvtk:
 
 def _check_pyquante():
     if (not _found_pyquante) and (not _found_pyquante2):
-        raise ImportError("You must install `pyquante2` or `PyQuante` to use this function.")
+        raise ImportError(
+            "You must install `pyquante2` or `PyQuante` to use this function."
+        )
 
 
 def _check_pyvtk(found_pyvtk):
@@ -142,12 +174,18 @@ class Volume(object):
         self.spacing = numpy.asarray(spacing, dtype=float)
         self.numpts = []
         for i in range(3):
-            self.numpts.append(int((self.topcorner[i] - self.origin[i]) / self.spacing[i] + 1))
+            self.numpts.append(
+                int((self.topcorner[i] - self.origin[i]) / self.spacing[i] + 1)
+            )
         self.data = numpy.zeros(tuple(self.numpts), "d")
 
     def __str__(self):
         """Return a string representation."""
-        return "Volume %s to %s (density: %s)" % (self.origin, self.topcorner, self.spacing,)
+        return "Volume %s to %s (density: %s)" % (
+            self.origin,
+            self.topcorner,
+            self.spacing,
+        )
 
     def write(self, filename, fformat="Cube"):
         """Write the volume to a file."""
@@ -254,10 +292,10 @@ def scinotation(num):
 def getGrid(vol):
     """Helper function that returns (x, y, z), each of which are numpy array of the values that
        correspond to grid points.
-       
+
     Input:
        vol -- Volume object (will not be altered)
-       """
+    """
     conversion = convertor(1, "bohr", "Angstrom")
     gridendpt = vol.topcorner + 0.5 * vol.spacing
     x = numpy.arange(vol.origin[0], gridendpt[0], vol.spacing[0]) / conversion
@@ -269,31 +307,32 @@ def getGrid(vol):
 
 def wavefunction(ccdata, volume, mocoeffs):
     """Calculate the magnitude of the wavefunction at every point in a volume.
-    
+
     Inputs:
         ccdata -- ccData object
         volume -- Volume object (will not be altered)
         mocoeffs -- molecular orbital to use for calculation; i.e. ccdata.mocoeffs[0][3]
-    
+
     Output:
         Volume object with wavefunction at each grid point stored in data attribute
     """
+    _check_pyquante()
     bfs = getbfs(ccdata)
 
     wavefn = copy.copy(volume)
     wavefn.data = numpy.zeros(wavefn.data.shape, "d")
 
     x, y, z = getGrid(wavefn)
+    gridpoints = numpy.asanyarray(
+        tuple((xp, yp, zp) for xp in x for yp in y for zp in z)
+    )
 
     # PyQuante & pyquante2
     for bs in range(len(bfs)):
-        data = numpy.zeros(wavefn.data.shape, "d")
-        for i, xval in enumerate(x):
-            for j, yval in enumerate(y):
-                for k, zval in enumerate(z):
-                    data[i, j, k] = pyamp(bfs, bs, xval, yval, zval)
-        data *= mocoeffs[bs]
-        wavefn.data += data
+        if abs(mocoeffs[bs]) > 0.0:
+            wavefn.data += numpy.resize(
+                pyamp(bfs, bs, gridpoints) * mocoeffs[bs], wavefn.data.shape
+            )
 
     return wavefn
 
@@ -306,7 +345,7 @@ def electrondensity_spin(ccdata, volume, mocoeffslist):
         volume -- Volume object (will not be altered)
         mocoeffslist -- list of molecular orbital to calculate electron density from;
                         i.e. [ccdata.mocoeffs[0][1:2]]
-    
+
     Output:
         Volume object with wavefunction at each grid point stored in data attribute
 
@@ -318,14 +357,19 @@ def electrondensity_spin(ccdata, volume, mocoeffslist):
 
     Note: mocoeffs is a list of NumPy arrays. The list will be of length 1.
     """
-    assert len(mocoeffslist) == 1, "mocoeffslist input to the function should have length of 1."
-
+    assert (
+        len(mocoeffslist) == 1
+    ), "mocoeffslist input to the function should have length of 1."
+    _check_pyquante()
     bfs = getbfs(ccdata)
 
     density = copy.copy(volume)
     density.data = numpy.zeros(density.data.shape, "d")
 
     x, y, z = getGrid(density)
+    gridpoints = numpy.asanyarray(
+        tuple((xp, yp, zp) for xp in x for yp in y for zp in z)
+    )
 
     # For occupied orbitals
     # `mocoeff` and `gbasis` in ccdata object is ordered in a way `homos` can specify which orbital
@@ -334,17 +378,11 @@ def electrondensity_spin(ccdata, volume, mocoeffslist):
         for mocoeff in mocoeffs:
             wavefn = numpy.zeros(density.data.shape, "d")
             for bs in range(len(bfs)):
-                data = numpy.zeros(density.data.shape, "d")
-                for i, xval in enumerate(x):
-                    for j, yval in enumerate(y):
-                        tmp = []
-                        for zval in z:
-                            tmp.append(pyamp(bfs, bs, xval, yval, zval))
-                        data[i, j, :] = tmp
-                data *= mocoeff[bs]
-                wavefn += data
+                if abs(mocoeff[bs]) > 0.0:
+                    wavefn += numpy.resize(
+                        pyamp(bfs, bs, gridpoints) * mocoeff[bs], density.data.shape
+                    )
             density.data += wavefn ** 2
-
     return density
 
 
@@ -356,7 +394,7 @@ def electrondensity(ccdata, volume, mocoeffslist):
         volume -- Volume object (will not be altered)
         mocoeffslist -- list of molecular orbital to calculate electron density from;
                         i.e. [ccdata.mocoeffs[0][1:2]]
-    
+
     Output:
         Volume object with wavefunction at each grid point stored in data attribute
 
@@ -371,9 +409,9 @@ def electrondensity(ccdata, volume, mocoeffslist):
     """
 
     if len(mocoeffslist) == 2:
-        return electrondensity_spin(ccdata, volume, [mocoeffslist[0]]) + electrondensity_spin(
-            ccdata, volume, [mocoeffslist[1]]
-        )
+        return electrondensity_spin(
+            ccdata, volume, [mocoeffslist[0]]
+        ) + electrondensity_spin(ccdata, volume, [mocoeffslist[1]])
     else:
         edens = electrondensity_spin(ccdata, volume, [mocoeffslist[0]])
         edens.data *= 2
@@ -382,12 +420,12 @@ def electrondensity(ccdata, volume, mocoeffslist):
 
 def read_from_cube(filepath):
     """Read data from cube files and construct volume object
-    
+
        Specification of cube file format is described in http://paulbourke.net/dataformats/cube/
-       
+
     Input:
         filepath -- path to the cube file
-        
+
     Output:
         vol -- Volume object filled with data from cube file
     """

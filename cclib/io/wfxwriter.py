@@ -182,7 +182,9 @@ class WFXWriter(filewriter.Writer):
 
     def _no_alpha_electrons(self):
         """Section: Number of Alpha Electrons."""
-        return int(numpy.ceil(self.ccdata.nelectrons / 2.0))
+        no_electrons = numpy.sum(self.ccdata.atomnos - self.ccdata.coreelectrons) - self.ccdata.charge
+        no_alpha = (no_electrons + (self.ccdata.mult - 1))//2
+        return int(no_alpha)
 
     def _no_beta_electrons(self):
         """Section: Number of Beta Electrons."""
@@ -394,7 +396,7 @@ class WFXWriter(filewriter.Writer):
         """Return primitve mocoeffs array."""
         prim_mocoeff = []
 
-        for i in range(self.ccdata.mult):
+        for i in range(len(self.ccdata.mocoeffs)):
             for j in range(self._nmos()):
                 mocoeffs = self.ccdata.mocoeffs[i][j]
                 if self.ccdata.metadata['package'] == 'GAMESS':

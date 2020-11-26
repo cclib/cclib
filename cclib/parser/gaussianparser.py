@@ -8,8 +8,6 @@
 """Parser for Gaussian output files"""
 
 
-from __future__ import print_function
-
 import re
 
 import numpy
@@ -155,6 +153,15 @@ class Gaussian(logfileparser.Logfile):
         if hasattr(self, 'atomcoords_BOMD'):
             self.atomcoords= \
               [self.atomcoords_BOMD[i] for i in sorted(self.atomcoords_BOMD.keys())]
+
+        # Gaussian prints 'forces' in input orientation unlike other values such as 'moments' or 'vibdisp'.
+        # Therefore, we convert 'grads' to the values in standard orientation with rotation matrix.
+        if hasattr(self, 'grads') and hasattr(self, 'inputcoords') and hasattr(self, 'atomcoords'):
+            grads_std = []
+            for grad, inputcoord, atomcoord in zip(self.grads, self.inputcoords, self.atomcoords):
+                rotation = utils.get_rotation(numpy.array(inputcoord), numpy.array(atomcoord))
+                grads_std.append(rotation.apply(grad))
+            self.set_attribute('grads', numpy.array(grads_std))
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -448,6 +455,8 @@ class Gaussian(logfileparser.Logfile):
         #   in the event the standard orientation isn't available.
         # Don't extract from Input or Z-matrix orientation in a BOMD run, as only
         #   the final geometry should be kept but extract inputatoms.
+        # We also use "inputcoords" to convert "grads" from input orientation
+        #   to standard orientation
         if line.find("Input orientation") > -1 or line.find("Z-Matrix orientation") > -1:
 
             # If this is a counterpoise calculation, this output means that
@@ -466,8 +475,15 @@ class Gaussian(logfileparser.Logfile):
             line = next(inputfile)
             while list(set(line.strip())) != ["-"]:
                 broken = line.split()
-                self.inputatoms.append(int(broken[1]))
-                atomcoords.append(list(map(float, broken[3:6])))
+                atomno = int(broken[1])
+                # Atom with atomno -1 only appears on "Z-Matrix orientation", and excluded on
+                #   "Input orientation" or "Standard orientation".
+                # We remove this line to keep shape consistency of "atomcoords" and "inputcoords",
+                #   so that we can convert "grads" from input orientation to standard orientaion
+                #   with rotation matrix calculated from "atomcoords" and "inputcoords"
+                if atomno != -1:
+                    self.inputatoms.append(atomno)
+                    atomcoords.append(list(map(float, broken[3:6])))
                 line = next(inputfile)
 
             if not self.BOMD: self.inputcoords.append(atomcoords)
@@ -744,7 +760,7 @@ class Gaussian(logfileparser.Logfile):
                         matches.get('RMSDP', numpy.nan),
                         matches.get('MaxDP', numpy.nan)
                     ]
-                    if len(self.scftargets[0]) == 3:
+                    if hasattr(self, "scftargets") and len(self.scftargets[0]) == 3:
                         scfvalues_step.append(matches.get('DE', numpy.nan))
                     scfvalues.append(scfvalues_step)
 
@@ -1226,8 +1242,8 @@ class Gaussian(logfileparser.Logfile):
         # an extra frequency block with higher-precision vibdisps is
         # printed before the normal frequency block.
         # Note that the code parses only the vibsyms and vibdisps
-        # from the high-precision block, but parses vibsyms, vibfreqs,
-        # vibramans and vibirs from the normal block. vibsyms parsed
+        # from the high-precision block, but parses vibsyms, vibfreqs, vibfconsts,
+        # vibramans, vibrmasses and vibirs from the normal block. vibsyms parsed
         # from the high-precision block are discarded and replaced by those
         # from the normal block while the high-precision vibdisps, if present,
         # are used to overwrite default-precision vibdisps at the end of the parse.
@@ -1255,6 +1271,10 @@ class Gaussian(logfileparser.Logfile):
                             self.vibfreqs = []
                         if hasattr(self, 'vibramans'):
                             self.vibramans = []
+                        if hasattr(self, "vibrmasses"):
+                            self.vibrmasses = []
+                        if hasattr(self, "vibfconsts"):
+                            self.vibfconsts = []
                         if hasattr(self, 'vibdisps'):
                             self.vibdisps = []
 
@@ -1273,6 +1293,22 @@ class Gaussian(logfileparser.Logfile):
 
                     freqs = [utils.float(f) for f in line[15:].split()]
                     self.vibfreqs.extend(freqs)
+
+                if line[1:15] == "Red. masses --":  # note: matches only low-precision block
+
+                    if not hasattr(self, 'vibrmasses'):
+                        self.vibrmasses = []
+
+                    rmasses = [utils.float(f) for f in line[15:].split()]
+                    self.vibrmasses.extend(rmasses)
+
+                if line[1:15] == "Frc consts  --":  # note: matches only low-precision block
+
+                    if not hasattr(self, 'vibfconsts'):
+                        self.vibfconsts = []
+
+                    fconsts = [utils.float(f) for f in line[15:].split()]
+                    self.vibfconsts.extend(fconsts)
 
                 if line[1:15] == "IR Inten    --":  # note: matches only low-precision block
 

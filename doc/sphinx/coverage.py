@@ -7,8 +7,6 @@
 
 """Generate the coverage.rst and coverage.rst files from test results."""
 
-from __future__ import print_function
-
 import os
 import sys
 

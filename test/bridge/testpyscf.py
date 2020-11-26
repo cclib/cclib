@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2019, the cclib development team
+# Copyright (c) 2020, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -10,10 +10,16 @@ import unittest
 import numpy as np
 
 from cclib.bridge import cclib2pyscf
+from cclib.parser.utils import find_package
 
 
 class PyscfTest(unittest.TestCase):
     """Tests for the cclib2pyscf bridge in cclib."""
+
+    def setUp(self):
+        super(PyscfTest, self).setUp()        
+        if not find_package('pyscf'):
+            raise ImportError('Must install pyscf to run this test')
 
     def test_makepyscf(self):
         import pyscf

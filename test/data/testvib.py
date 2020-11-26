@@ -10,7 +10,7 @@
 import os
 import unittest
 
-from skip import skipForParser
+from skip import skipForParser, skipForLogfile
 
 
 __filedir__ = os.path.realpath(os.path.dirname(__file__))
@@ -21,6 +21,10 @@ class GenericIRTest(unittest.TestCase):
 
     # Unit tests should normally give this value for the largest IR intensity.
     max_IR_intensity = 100
+
+    # Unit tests may give these values for the largest force constant and reduced mass, respectively.
+    max_force_constant = 10.0
+    max_reduced_mass = 6.9
 
     def setUp(self):
         """Initialize the number of vibrational frequencies on a per molecule basis"""
@@ -37,12 +41,16 @@ class GenericIRTest(unittest.TestCase):
                          (self.numvib, len(self.data.atomnos), 3))
 
     def testlengths(self):
-        """Are the lengths of vibfreqs and vibirs (and if present, vibsyms) correct?"""
+        """Are the lengths of vibfreqs and vibirs (and if present, vibsyms, vibfconnsts and vibrmasses) correct?"""
         self.assertEqual(len(self.data.vibfreqs), self.numvib)
         if hasattr(self.data, 'vibirs'):
             self.assertEqual(len(self.data.vibirs), self.numvib)
         if hasattr(self.data, 'vibsyms'):
             self.assertEqual(len(self.data.vibsyms), self.numvib)
+        if hasattr(self.data, 'vibfconsts'):
+            self.assertEqual(len(self.data.vibfconsts), self.numvib)
+        if hasattr(self.data, 'vibrmasses'):
+            self.assertEqual(len(self.data.vibrmasses), self.numvib)
 
     def testfreqval(self):
         """Is the highest freq value 3630 +/- 200 wavenumber?"""
@@ -52,6 +60,31 @@ class GenericIRTest(unittest.TestCase):
     def testirintens(self):
         """Is the maximum IR intensity 100 +/- 10 km/mol?"""
         self.assertAlmostEqual(max(self.data.vibirs), self.max_IR_intensity, delta=10)
+
+    @skipForParser('ADF', 'ADF cannot print force constants')
+    @skipForParser('DALTON', 'DALTON cannot print force constants')
+    @skipForParser('GAMESS', 'GAMESS-US cannot print force constants')
+    @skipForParser('GAMESSUK', 'GAMESS-UK cannot print force constants')
+    @skipForParser('Molcas', 'Molcas cannot print force constants')
+    @skipForParser('Molpro', 'Molpro cannot print force constants')
+    @skipForParser('ORCA', 'ORCA cannot print force constants')
+    @skipForParser('Turbomole', 'Turbomole cannot print force constants')
+    @skipForLogfile('Jaguar/Jaguar4.2', 'Data file does not contain force constants')
+    @skipForLogfile('Psi4/Psi4-1.0', 'Data file contains vibrational info with cartesian coordinates')
+    def testvibfconsts(self):
+        """Is the maximum force constant 10. +/- 0.1 mDyn/angstrom?"""
+        self.assertAlmostEqual(max(self.data.vibfconsts), self.max_force_constant, delta=0.1)
+
+    @skipForParser('ADF', 'ADF cannot print reduced masses')
+    @skipForParser('DALTON', 'DALTON cannot print reduced masses')
+    @skipForParser('GAMESSUK', 'GAMESSUK cannot print reduced masses')
+    @skipForParser('Molpro', 'Molpro cannot print reduced masses')
+    @skipForParser('ORCA', 'ORCA cannot print reduced masses')
+    @skipForLogfile('GAMESS/PCGAMESS', 'Data file does not contain reduced masses')
+    @skipForLogfile('Psi4/Psi4-1.0', 'Data file does not contain reduced masses')
+    def testvibrmasses(self):
+        """Is the maximum reduced mass 6.9 +/- 0.1 daltons?"""
+        self.assertAlmostEqual(max(self.data.vibrmasses), self.max_reduced_mass, delta=0.1)
 
 
 class FireflyIRTest(GenericIRTest):
@@ -66,7 +99,7 @@ class GaussianIRTest(GenericIRTest):
     def testvibsyms(self):
         """Is the length of vibsyms correct?"""
         self.assertEqual(len(self.data.vibsyms), self.numvib)
-        
+
     def testzeropointcorrection(self):
         # reference zero-point correction from dvb_ir.out
         zpve = 0.1771
@@ -76,6 +109,10 @@ class GaussianIRTest(GenericIRTest):
 
 class JaguarIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
+
+    # Jagur outputs vibrational info with cartesian coordinates
+    max_force_constant = 3.7
+    max_reduced_mass = 2.3
 
     def testvibsyms(self):
         """Is the length of vibsyms correct?"""
@@ -207,6 +244,14 @@ class GamessIRTest(GenericIRTest):
          """Is the freeenergy reasonable"""
          self.assertAlmostEqual(-381.90808120060200, self.data.freeenergy, self.freeenergy_places)
 
+
+class Psi4IRTest(GenericIRTest):
+    """Customized vibrational frequency unittest"""
+
+    # RHF is used for Psi4 IR test data instead of B3LYP
+    max_force_constant = 9.37
+
+
 class GenericIRimgTest(unittest.TestCase):
     """Generic imaginary vibrational frequency unittest"""
 
@@ -294,7 +339,6 @@ class QChemRamanTest(GenericRamanTest):
     """Customized Raman unittest"""
 
     max_raman_intensity = 588
-
 
 if __name__=="__main__":
 

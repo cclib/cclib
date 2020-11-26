@@ -613,6 +613,7 @@ class Jaguar(logfileparser.Logfile):
 
             self.vibfreqs = []
             self.vibdisps = []
+            self.vibrmasses = []
             forceconstants = False
             intensities = False
             while line.strip():
@@ -646,8 +647,12 @@ class Jaguar(logfileparser.Logfile):
                         self.vibirs = []
                     self.vibirs.extend(list(map(float, line[1:])))
                     line = next(inputfile).split()
+                self.vibrmasses.extend(list(map(float, line[2:])))
                 if forceconstants:
-                    line = next(inputfile)
+                    line = next(inputfile).split()
+                    if not hasattr(self, "vibfconsts"):
+                        self.vibfconsts = []
+                    self.vibfconsts.extend(list(map(float, line[2:])))
 
                 # Start parsing the displacements.
                 # Variable 'q' holds up to 7 lists of triplets.
@@ -671,8 +676,11 @@ class Jaguar(logfileparser.Logfile):
             # Convert new data to arrays.
             self.vibfreqs = numpy.array(self.vibfreqs, "d")
             self.vibdisps = numpy.array(self.vibdisps, "d")
+            self.vibrmasses = numpy.array(self.vibrmasses, "d")
             if hasattr(self, "vibirs"):
                 self.vibirs = numpy.array(self.vibirs, "d")
+            if hasattr(self, "vibfconsts"):
+                self.vibfconsts = numpy.array(self.vibfconsts, "d")
 
         # Parse excited state output (for CIS calculations).
         # Jaguar calculates only singlet states.
