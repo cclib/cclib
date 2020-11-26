@@ -229,8 +229,8 @@ class GenericSPTest(unittest.TestCase):
         # Check some additional values that don't seem to move around between programs.
         self.assertAlmostEqual(self.data.aooverlaps[0, 1], self.overlap01, delta=0.01)
         self.assertAlmostEqual(self.data.aooverlaps[1, 0], self.overlap01, delta=0.01)
-        self.assertEqual(self.data.aooverlaps[3,0], 0.0)
-        self.assertEqual(self.data.aooverlaps[0,3], 0.0)
+        self.assertAlmostEqual(self.data.aooverlaps[3,0], 0.0)
+        self.assertAlmostEqual(self.data.aooverlaps[0,3], 0.0)
 
     def testoptdone(self):
         """There should be no optdone attribute set."""
