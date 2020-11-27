@@ -3303,8 +3303,11 @@ def test_regressions(which=[], opt_traceback=False, regdir=__regression_dir__, l
         for p in parser_names:
             filenames[p] = []
             pdir = os.path.join(regdir, get_program_dir(p))
-            for version in os.listdir(pdir):
-                for job in os.listdir(os.path.join(pdir, version)):
+            for version in os.scandir(pdir):
+                if version.is_file():
+                    continue
+
+                for job in os.listdir(version.path):
                     path = os.path.join(pdir, version, job)
                     if os.path.isdir(path):
                         filenames[p].append(os.path.join(path, "*"))
