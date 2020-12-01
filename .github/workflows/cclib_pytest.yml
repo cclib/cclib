@@ -3,7 +3,7 @@ name: cclib
 on: [push, pull_request]
 
 jobs:
-  build:
+  linux-python:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
@@ -24,21 +24,22 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Install deps Python >3.5
       if: ${{ matrix.python-version != '3.5' }}
-      run: |
-        hash -r
-        $CONDA/bin/conda config --add channels conda-forge
-        $CONDA/bin/conda config --add channels psi4
-        $CONDA/bin/conda config --set always_yes yes --set changeps1 no --set channel_priority flexible
-        $CONDA/bin/conda update -q conda
-        $CONDA/bin/conda info -a
-        $CONDA/bin/conda create -q -n condaenv python=${{matrix.python-version}} 
-        eval "$($CONDA/bin/conda shell.bash hook)"
-        $CONDA/bin/conda activate condaenv
-        $CONDA/bin/conda install ci-psi4 openbabel psi4
-        $CONDA/bin/conda install pytest pytest-cov codecov pytest-shutil
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-update-conda: true
+          python-version: ${{ matrix.python-version }}
+          mamba-version: "*"
+          channels: conda-forge, psi4
+      - shell: bash -l {0}  
+        run: |
+        conda config --set always_yes yes --set changeps1 no --set channel_priority flexible
+        conda update -q conda
+        conda info -a
+        conda install ci-psi4 openbabel psi4
+        conda install pytest pytest-cov codecov pytest-shutil
         python -m pip install h5py pyscf
         python -m pip install git+https://github.com/theochem/iodata.git
-        $CONDA/bin/conda list
+        conda list
     - name: Install deps python 3.5
       if: ${{ matrix.python-version == '3.5' }}
       run: |
@@ -47,11 +48,11 @@ jobs:
         python -m pip install -U pytest pytest-cov h5py
     - name: Install cclib
       run: |
-        if ${matrix.python_version} != 3.5 $CONDA/bin/conda activate condaenv
+        if ${matrix.python_version} != 3.5 which python
         python -m pip install .
     - name: Before Test
       run: |
-        if ${matrix.python_version} != 3.5 $CONDA/bin/conda activate condaenv
+        if ${matrix.python_version} != 3.5 which python
         export DOCS_BRANCH_NAME=master
         export DOCS_REPO_NAME=cclib.github.io
         export DOCS_REPO_OWNER=cclib
@@ -61,7 +62,7 @@ jobs:
         install -dm755 "${THEME_DIR}"
     - name: Test with pytest
       run: |
-        if ${{ matrix.python_version }} != 3.5 $CONDA/bin/conda activate condaenv
+        if ${{ matrix.python_version }} != 3.5 which python
         env | sort
         bash .github/scripts/run_pytest.bash
         bash .github/scripts/build_docs.bash
