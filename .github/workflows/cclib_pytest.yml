@@ -49,11 +49,11 @@ jobs:
         python -m pip install -U pytest pytest-cov h5py
     - name: Install cclib
       run: |
-        if ${{ matrix.python_version }} != 3.5 $CONDA/bin/conda activate condaenv
+        if ${matrix.python_version} != 3.5 $CONDA/bin/conda activate condaenv
         python -m pip install .
     - name: Before Test
       run: |
-        if ${{ matrix.python_version }} != 3.5 $CONDA/bin/conda activate condaenv
+        if ${matrix.python_version} != 3.5 $CONDA/bin/conda activate condaenv
         export DOCS_BRANCH_NAME=master
         export DOCS_REPO_NAME=cclib.github.io
         export DOCS_REPO_OWNER=cclib
@@ -65,5 +65,5 @@ jobs:
       run: |
         if ${{ matrix.python_version }} != 3.5 $CONDA/bin/conda activate condaenv
         env | sort
-        bash github_actions/run_pytest.bash
-        bash github_actions/build_docs.bash
+        bash .github/scripts/run_pytest.bash
+        bash .github/scripts/build_docs.bash

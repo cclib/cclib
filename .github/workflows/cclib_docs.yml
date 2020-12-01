@@ -16,4 +16,4 @@ jobs:
     steps:
     - name: After Push
       run: |
-        bash github_actions/deploy_docs.bash
+        bash .github/scripts/deploy_docs.bash
