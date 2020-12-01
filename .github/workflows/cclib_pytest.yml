@@ -25,9 +25,6 @@ jobs:
     - name: Install deps Python >3.5
       if: ${{ matrix.python-version != '3.5' }}
       run: |
-          #wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
-          #bash miniconda.sh -b -p $HOME/miniconda -u
-          #export PATH="$HOME/miniconda/bin:$PATH"
         hash -r
         $CONDA/bin/conda config --add channels conda-forge
         $CONDA/bin/conda config --add channels psi4
