@@ -34,9 +34,9 @@ jobs:
         $CONDA/bin/conda config --set always_yes yes --set changeps1 no --set channel_priority flexible
         $CONDA/bin/conda update -q conda
         $CONDA/bin/conda info -a
-        $CONDA/bin/conda create -q -n condaenv python=${{matrix.python-version}} ci-psi4 openbabel psi4
-        $CONDA/bin/conda install ci-psi4 openbabel psi4
+        $CONDA/bin/conda create -q -n condaenv python=${{matrix.python-version}} 
         $CONDA/bin/conda activate condaenv
+        $CONDA/bin/conda install ci-psi4 openbabel psi4
         $CONDA/bin/conda install pytest pytest-cov codecov pytest-shutil
         python -m pip install h5py pyscf
         python -m pip install git+https://github.com/theochem/iodata.git
