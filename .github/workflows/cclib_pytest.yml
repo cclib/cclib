@@ -35,6 +35,7 @@ jobs:
         $CONDA/bin/conda update -q conda
         $CONDA/bin/conda info -a
         $CONDA/bin/conda create -q -n condaenv python=${{matrix.python-version}} 
+        $CONDA/bin/conda init bash
         $CONDA/bin/conda activate condaenv
         $CONDA/bin/conda install ci-psi4 openbabel psi4
         $CONDA/bin/conda install pytest pytest-cov codecov pytest-shutil
