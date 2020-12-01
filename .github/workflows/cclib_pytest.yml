@@ -26,40 +26,42 @@ jobs:
         pip install flake8 pytest numpy
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Install deps Python >3.5
-      if: ${{ matrix.python-version != '3.5' }}
       - shell: bash -l {0}  
         run: |
-        conda config --set always_yes yes --set changeps1 no --set channel_priority flexible
-        conda update -q conda
-        conda info -a
-        conda install ci-psi4 openbabel psi4
-        conda install pytest pytest-cov codecov pytest-shutil
-        python -m pip install h5py pyscf
-        python -m pip install git+https://github.com/theochem/iodata.git
-        conda list
+          conda config --set always_yes yes --set changeps1 no --set channel_priority flexible
+          conda update -q conda
+          conda info -a
+          conda install ci-psi4 openbabel psi4
+          conda install pytest pytest-cov codecov pytest-shutil
+          python -m pip install h5py pyscf
+          python -m pip install git+https://github.com/theochem/iodata.git
+          conda list
     - name: Install deps python 3.5
-      if: ${{ matrix.python-version == '3.5' }}
-      run: |
-        sudo apt-get update && sudo apt-get -y -qq install libopenbabel-dev
-        python -m pip install --global-option=build_ext --global-option='-I/usr/include/openbabel3' --global-option='-L/usr/lib/openbabel3' openbabel
-        python -m pip install -U pytest pytest-cov h5py
+      - shell: bash -l {0}  
+        run: |
+          sudo apt-get update && sudo apt-get -y -qq install libopenbabel-dev
+          python -m pip install --global-option=build_ext --global-option='-I/usr/include/openbabel3' --global-option='-L/usr/lib/openbabel3' openbabel
+          python -m pip install -U pytest pytest-cov h5py
     - name: Install cclib
-      run: |
-        if ${matrix.python_version} != 3.5 which python
-        python -m pip install .
+      - shell: bash -l {0}  
+        run: |
+          which python
+          python -m pip install .
     - name: Before Test
-      run: |
-        if ${matrix.python_version} != 3.5 which python
-        export DOCS_BRANCH_NAME=master
-        export DOCS_REPO_NAME=cclib.github.io
-        export DOCS_REPO_OWNER=cclib
-        export DOCS_ROOT_DIR="${GITHUB_WORKSPACE}"/doc/sphinx
-        export DOCS_BUILD_DIR="${DOCS_ROOT_DIR}"/_build/html
-        export THEME_DIR="${DOCS_ROOT_DIR}"/_themes
-        install -dm755 "${THEME_DIR}"
+      - shell: bash -l {0}  
+        run: |
+          which python
+          export DOCS_BRANCH_NAME=master
+          export DOCS_REPO_NAME=cclib.github.io
+          export DOCS_REPO_OWNER=cclib
+          export DOCS_ROOT_DIR="${GITHUB_WORKSPACE}"/doc/sphinx
+          export DOCS_BUILD_DIR="${DOCS_ROOT_DIR}"/_build/html
+          export THEME_DIR="${DOCS_ROOT_DIR}"/_themes
+          install -dm755 "${THEME_DIR}"
     - name: Test with pytest
-      run: |
-        if ${{ matrix.python_version }} != 3.5 which python
-        env | sort
-        bash .github/scripts/run_pytest.bash
-        bash .github/scripts/build_docs.bash
+      - shell: bash -l {0}  
+        run: |
+          which python
+          env | sort
+          bash .github/scripts/run_pytest.bash
+          bash .github/scripts/build_docs.bash
