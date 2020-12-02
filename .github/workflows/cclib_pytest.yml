@@ -30,8 +30,13 @@ jobs:
       run: |
           conda config --set always_yes yes --set changeps1 no --set channel_priority strict
           conda info -a
-          conda install ci-psi4 openbabel psi4
-          conda install pytest pytest-cov codecov pytest-shutil
+          conda install ci-psi4 
+          conda install openbabel 
+          conda install psi4
+          conda install pytest
+          conda install pytest-cov 
+          conda install codecov 
+          conda install pytest-shutil
           python -m pip install h5py pyscf
           python -m pip install git+https://github.com/theochem/iodata.git
           conda list
