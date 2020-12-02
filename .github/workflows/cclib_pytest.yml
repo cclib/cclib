@@ -28,7 +28,7 @@ jobs:
     - name: Install conda deps
       shell: bash -l {0}  
       run: |
-          conda config --set always_yes yes --set changeps1 no --set channel_priority flexible
+          conda config --set always_yes yes --set changeps1 no --set channel_priority strict
           conda info -a
           conda install ci-psi4 openbabel psi4
           conda install pytest pytest-cov codecov pytest-shutil
