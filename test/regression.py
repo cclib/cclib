@@ -3308,7 +3308,7 @@ def test_regressions(which=[], opt_traceback=False, regdir=__regression_dir__, l
                     continue
 
                 for job in os.listdir(version.path):
-                    path = os.path.join(pdir, version, job)
+                    path = os.path.join(version.path, job)
                     if os.path.isdir(path):
                         filenames[p].append(os.path.join(path, "*"))
                     else:
