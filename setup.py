@@ -52,7 +52,7 @@ def setup_cclib():
                 "cda=cclib.scripts.cda:main",
             ]
         },
-        install_requires=["packaging>=19.0", "numpy", "periodictable", "scipy>=1.2.0"],
+        install_requires=["packaging>=19.0", "numpy", "qcelemental", "scipy>=1.2.0"],
         # py.typed
         zip_safe=False,
     )
