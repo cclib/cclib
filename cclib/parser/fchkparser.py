@@ -133,7 +133,6 @@ class FChk(logfileparser.Logfile):
                     overlaps[col, row] = raw_overlaps[raw_index]
                     raw_index += 1
 
-            print(overlaps[0:5, 0:5])
             self.set_attribute('aooverlaps', overlaps)
 
         if line[0:31] == 'Number of independent functions':
@@ -184,9 +183,8 @@ class FChk(logfileparser.Logfile):
         # e.g. Shell to atom map                          I   N=          28
         next(inputfile)
         shell_map = self._parse_block(inputfile, count, int, 'Atomic Orbital Names')
-        table = utils.PeriodicTable()
 
-        elements = (table.element[x] for x in self.atomnos)
+        elements = (self.table.element[x] for x in self.atomnos)
         atom_labels = ["{}{}".format(y, x) for x, y in enumerate(elements, 1)]
 
         # get orbitals for first atom and start aonames and atombasis lists
