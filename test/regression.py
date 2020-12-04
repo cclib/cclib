@@ -53,6 +53,7 @@ from cclib.parser import ccData
 
 from cclib.parser import ADF
 from cclib.parser import DALTON
+from cclib.parser import FChk
 from cclib.parser import GAMESS
 from cclib.parser import GAMESSUK
 from cclib.parser import Gaussian
