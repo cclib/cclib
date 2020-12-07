@@ -74,7 +74,7 @@ class FileWrapper:
             self.size = self.src.tell()
             self.src.seek(pos, 0)
 
-        except (AttributeError, IOError, io.UnsupportedOperation):
+        except (AttributeError, OSError, io.UnsupportedOperation):
             # Stream returned by urllib should have size information.
             if hasattr(self.src, 'headers') and 'content-length' in self.src.headers:
                 self.size = int(self.src.headers['content-length'])

@@ -218,7 +218,7 @@ def ccopen(source, *args, **kwargs):
         if not is_url:
             try:
                 inputfile = logfileparser.openlogfile(source)
-            except IOError as error:
+            except OSError as error:
                 if not kwargs.get('quiet', False):
                     (errno, strerror) = error.args
                 return None
@@ -251,7 +251,7 @@ def ccopen(source, *args, **kwargs):
     if is_stream:
         try:
             inputfile.seek(0, 0)
-        except (AttributeError, IOError):
+        except (AttributeError, OSError):
             contents = inputfile.read()
             try:
                 inputfile = io.StringIO(contents)
