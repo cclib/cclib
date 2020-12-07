@@ -152,7 +152,7 @@ def _check_pyvtk(found_pyvtk):
         raise ImportError("You must install `pyvtk` to use this function.")
 
 
-class Volume(object):
+class Volume:
     """Represent a volume in space.
 
     Required parameters:

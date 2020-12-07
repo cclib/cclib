@@ -23,7 +23,7 @@ class Horton2Test(unittest.TestCase):
     # and the attributes that were converted.
 
     def setUp(self):
-        super(Horton2Test, self).setUp()
+        super().setUp()
 
         self.data, self.logfile = getdatafile(
             "Gaussian", "basicGaussian16", ["dvb_un_sp.fchk"]
@@ -141,7 +141,7 @@ class Horton3Test(unittest.TestCase):
     # and the attributes that were converted.
 
     def setUp(self):
-        super(Horton3Test, self).setUp()
+        super().setUp()
 
         self.data, self.logfile = getdatafile(
             "Gaussian", "basicGaussian16", ["dvb_un_sp.fchk"]

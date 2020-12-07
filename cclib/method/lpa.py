@@ -18,7 +18,7 @@ class LPA(Population):
     def __init__(self, *args):
 
         # Call the __init__ method of the superclass.
-        super(LPA, self).__init__(logname="LPA", *args)
+        super().__init__(logname="LPA", *args)
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -89,7 +89,7 @@ class LPA(Population):
         if self.progress:
             self.progress.update(nstep, "Done")
 
-        retval = super(LPA, self).partition(indices)
+        retval = super().partition(indices)
 
         if not retval:
             self.logger.error("Error in partitioning results")

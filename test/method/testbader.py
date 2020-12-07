@@ -25,7 +25,7 @@ class BaderTest(unittest.TestCase):
     """Bader's QTAIM method tests."""
 
     def setUp(self):
-        super(BaderTest, self).setUp()
+        super().setUp()
         self.parse()
 
     def parse(self):

@@ -22,7 +22,7 @@ class CSPA(Population):
     def __init__(self, *args):
 
         # Call the __init__ method of the superclass.
-        super(CSPA, self).__init__(logname="CSPA", *args)
+        super().__init__(logname="CSPA", *args)
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -75,7 +75,7 @@ class CSPA(Population):
         if self.progress:
             self.progress.update(nstep, "Done")
 
-        retval = super(CSPA, self).partition(indices)
+        retval = super().partition(indices)
 
         if not retval:
             self.logger.error("Error in partitioning results")

@@ -27,7 +27,7 @@ class HirshfeldTest(unittest.TestCase):
     """Hirshfeld method tests."""
 
     def setUp(self):
-        super(HirshfeldTest, self).setUp()
+        super().setUp()
         self.parse()
 
     def parse(self):

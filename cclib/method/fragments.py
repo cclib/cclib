@@ -21,7 +21,7 @@ class FragmentAnalysis(Method):
                  logname="FragmentAnalysis of"):
 
         # Call the __init__ method of the superclass.
-        super(FragmentAnalysis, self).__init__(data, progress, loglevel, logname)
+        super().__init__(data, progress, loglevel, logname)
         self.parsed = False
 
     def __str__(self):

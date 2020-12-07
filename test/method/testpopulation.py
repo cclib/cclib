@@ -127,7 +127,7 @@ class GaussianBickelhauptTest(unittest.TestCase):
     """Bickelhaupt Population Analysis test"""
     
     def setUp(self):
-        super(GaussianBickelhauptTest, self).setUp()
+        super().setUp()
         self.data, self.logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_un_sp.log"])
         self.analysis = Bickelhaupt(self.data)
         self.analysis.logger.setLevel(0)

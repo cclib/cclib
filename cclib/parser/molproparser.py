@@ -53,7 +53,7 @@ class Molpro(logfileparser.Logfile):
 
     def __init__(self, *args, **kwargs):
         # Call the __init__ method of the superclass
-        super(Molpro, self).__init__(logname="Molpro", *args, **kwargs)
+        super().__init__(logname="Molpro", *args, **kwargs)
 
     def __str__(self):
         """Return a string representation of the object."""

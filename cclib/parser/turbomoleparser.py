@@ -46,7 +46,7 @@ class Turbomole(logfileparser.Logfile):
     """A Turbomole log file."""
 
     def __init__(self, *args, **kwargs):
-        super(Turbomole, self).__init__(logname="Turbomole", *args, **kwargs)
+        super().__init__(logname="Turbomole", *args, **kwargs)
 
     def __str__(self):
         """Return a string representation of the object."""

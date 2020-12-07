@@ -20,7 +20,7 @@ class Electrons(Method):
 
         self.required_attrs = ('atomnos','charge','coreelectrons','homos')
 
-        super(Electrons, self).__init__(data, progress, loglevel, logname)
+        super().__init__(data, progress, loglevel, logname)
 
     def __str__(self):
         """Returns a string representation of the object."""

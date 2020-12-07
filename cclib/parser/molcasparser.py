@@ -21,7 +21,7 @@ class Molcas(logfileparser.Logfile):
     def __init__(self, *args, **kwargs):
 
         # Call the __init__ method of the superclass
-        super(Molcas, self).__init__(logname="Molcas", *args, **kwargs)
+        super().__init__(logname="Molcas", *args, **kwargs)
 
     def __str__(self):
         """Return a string repeesentation of the object."""

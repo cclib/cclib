@@ -19,7 +19,7 @@ class PyquanteTest(unittest.TestCase):
     """Tests for the cclib2pyquante bridge in cclib."""
 
     def setUp(self):
-        super(PyquanteTest, self).setUp()
+        super().setUp()
         if not find_package("PyQuante"):
             raise ImportError("Must install PyQuante to run this test")
 
@@ -47,7 +47,7 @@ class pyquante2Test(unittest.TestCase):
     """Tests for the cclib2pyquante bridge in cclib."""
 
     def setUp(self):
-        super(pyquante2Test, self).setUp()
+        super().setUp()
         if not find_package("pyquante2"):
             raise ImportError("Must install pyquante2 to run this test")
             

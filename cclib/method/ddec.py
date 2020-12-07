@@ -66,7 +66,7 @@ class DDEC6(Stockholder):
                 total densities that are partitioned resemble the proatom densities and to prevent
                 the numerical algorithm from failing to converge.
         """
-        super(DDEC6, self).__init__(data, volume, proatom_path, progress, loglevel, logname)
+        super().__init__(data, volume, proatom_path, progress, loglevel, logname)
 
         self.convergence_level = convergence_level
         self.max_iteration = max_iteration
@@ -84,7 +84,7 @@ class DDEC6(Stockholder):
         return f"DDEC6({self.data})"
 
     def _check_required_attributes(self):
-        super(DDEC6, self)._check_required_attributes()
+        super()._check_required_attributes()
 
     def _cartesian_dist(self, pt1, pt2):
         """ Small utility function that calculates Euclidian distance between two points
@@ -94,7 +94,7 @@ class DDEC6(Stockholder):
     def _read_proatom(
         self, directory, atom_num, charge  # type = str  # type = int  # type = float
     ):
-        return super(DDEC6, self)._read_proatom(directory, atom_num, charge)
+        return super()._read_proatom(directory, atom_num, charge)
 
     def calculate(self, indices=None, fupdate=0.05):
         """
@@ -102,7 +102,7 @@ class DDEC6(Stockholder):
         Cartesian, uniformly spaced grids are assumed for this function.
         """
 
-        super(DDEC6, self).calculate()
+        super().calculate()
 
         # Notify user about the total charge in the density grid
         integrated_density = self.charge_density.integrate()

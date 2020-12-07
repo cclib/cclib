@@ -25,7 +25,7 @@ class Moments(Method):
         self.required_attrs = ('atomcoords', 'atomcharges')
         self.results = {}
 
-        super(Moments, self).__init__(data)
+        super().__init__(data)
 
     def __str__(self):
         """Returns a string representation of the object."""

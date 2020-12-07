@@ -67,7 +67,7 @@ class Nuclear(Method):
 
         self.required_attrs = ('natom','atomcoords','atomnos','charge')
 
-        super(Nuclear, self).__init__(data, progress, loglevel, logname)
+        super().__init__(data, progress, loglevel, logname)
 
     def __str__(self):
         """Return a string representation of the object."""

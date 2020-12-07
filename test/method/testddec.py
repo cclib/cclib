@@ -25,7 +25,7 @@ class DDEC6Test(unittest.TestCase):
     """DDEC6 method tests."""
 
     def setUp(self):
-        super(DDEC6Test, self).setUp()
+        super().setUp()
         self.parse()
 
     def parse(self, molecule_name=None):

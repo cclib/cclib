@@ -24,7 +24,7 @@ class Population(Method):
 
     def __init__(self, data, progress=None, \
                  loglevel=logging.INFO, logname="Log"):
-        super(Population, self).__init__(data, progress, loglevel, logname)
+        super().__init__(data, progress, loglevel, logname)
 
         self.fragresults = None
 
@@ -37,7 +37,7 @@ class Population(Method):
         return "Population"
 
     def _check_required_attributes(self):
-        super(Population, self)._check_required_attributes()
+        super()._check_required_attributes()
         
         if self.overlap_attributes and not any(hasattr(self.data, a) for a in self.overlap_attributes):
             raise MissingAttributeError(

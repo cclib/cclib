@@ -16,7 +16,7 @@ class PyscfTest(unittest.TestCase):
     """Tests for the cclib2pyscf bridge in cclib."""
 
     def setUp(self):
-        super(PyscfTest, self).setUp()        
+        super().setUp()        
         if not find_package('pyscf'):
             raise ImportError('Must install pyscf to run this test')
 

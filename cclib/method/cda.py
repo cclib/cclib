@@ -37,7 +37,7 @@ class CDA(FragmentAnalysis):
         """
 
 
-        retval = super(CDA, self).calculate(fragments, cupdate)
+        retval = super().calculate(fragments, cupdate)
         if not retval:
             return False
 

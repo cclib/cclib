@@ -28,7 +28,7 @@ class XYZ(filewriter.Writer):
         self.required_attrs = ('natom', 'atomcoords', 'atomnos')
 
         # Call the __init__ method of the superclass
-        super(XYZ, self).__init__(ccdata, *args, **kwargs)
+        super().__init__(ccdata, *args, **kwargs)
 
         self.do_firstgeom = firstgeom
         self.do_lastgeom = lastgeom

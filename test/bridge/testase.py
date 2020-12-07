@@ -26,7 +26,7 @@ class ASETest(unittest.TestCase):
     """Tests for the cclib2ase bridge in cclib."""
 
     def setUp(self):
-        super(ASETest, self).setUp()
+        super().setUp()
 
     def test_makease_allows_optimization(self):
         """Ensure makease works from direct input."""

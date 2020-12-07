@@ -16,7 +16,7 @@ class BiopythonTest(unittest.TestCase):
     """Tests for the cclib2biopython bridge in cclib."""
 
     def setUp(self):
-        super(BiopythonTest, self).setUp()
+        super().setUp()
         if not find_package("Bio"):
             raise ImportError("Must install biopython to run this test")
 

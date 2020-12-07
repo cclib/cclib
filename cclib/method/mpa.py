@@ -19,7 +19,7 @@ class MPA(Population):
     def __init__(self, *args):
 
         # Call the __init__ method of the superclass.
-        super(MPA, self).__init__(logname="MPA", *args)
+        super().__init__(logname="MPA", *args)
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -80,7 +80,7 @@ class MPA(Population):
         if self.progress:
             self.progress.update(nstep, "Done")
 
-        retval = super(MPA, self).partition(indices)
+        retval = super().partition(indices)
 
         if not retval:
             self.logger.error("Error in partitioning results")
