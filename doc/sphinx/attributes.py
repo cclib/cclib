@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """Generate the attributes.rst and attributes_dev.rst files from the
 ccData docstring that describes attributes."""
 

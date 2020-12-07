@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # cclib documentation build configuration file, created by
 # sphinx-quickstart on Thu Jan 30 14:44:27 2014.
@@ -40,8 +39,8 @@ source_suffix = '.rst'
 master_doc = 'contents'
 
 # General information about the project.
-project = u'cclib'
-copyright = u'2014-2018, cclib Development Team'
+project = 'cclib'
+copyright = '2014-2018, cclib Development Team'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

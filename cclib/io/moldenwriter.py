@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2020, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -105,7 +104,7 @@ class MOLDEN(filewriter.Writer):
         lines = ["scf-first    1 THROUGH   %d" % len(self.ccdata.scfenergies)]
 
         for scfenergy in self.ccdata.scfenergies:
-            lines.append('{:15.6f}'.format(scfenergy))
+            lines.append(f'{scfenergy:15.6f}')
 
         return lines
 
