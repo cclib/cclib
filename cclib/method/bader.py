@@ -57,11 +57,11 @@ class Bader(Method):
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "Bader's QTAIM charges of {}".format(self.data)
+        return f"Bader's QTAIM charges of {self.data}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return "Bader({})".format(self.data)
+        return f"Bader({self.data})"
 
     def _check_required_attributes(self):
         super(Bader, self)._check_required_attributes()

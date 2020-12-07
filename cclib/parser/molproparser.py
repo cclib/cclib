@@ -486,7 +486,7 @@ class Molpro(logfileparser.Logfile):
                 try:
                     line = next(inputfile)
                 except StopIteration:
-                    self.logger.warning('File terminated before end of last SCF! Last gradient: {}'.format(grad))
+                    self.logger.warning(f'File terminated before end of last SCF! Last gradient: {grad}')
                     break
             self.scfvalues.append(numpy.array(scfvalues))
 

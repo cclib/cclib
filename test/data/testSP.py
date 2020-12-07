@@ -116,7 +116,7 @@ class GenericSPTest(unittest.TestCase):
     def testatommasses(self):
         """Do the atom masses sum up to the molecular mass?"""
         mm = 1000*sum(self.data.atommasses)
-        msg = "Molecule mass: %f not %f +- %fmD" % (mm, self.molecularmass, self.mass_precision)
+        msg = f"Molecule mass: {mm:f} not {self.molecularmass:f} +- {self.mass_precision:f}mD"
         self.assertAlmostEqual(mm, self.molecularmass, delta=self.mass_precision, msg=msg)
 
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')

@@ -504,7 +504,7 @@ class GAMESSUK(logfileparser.Logfile):
                         self.atombasis[atomno].append(orbno)
                     if not self.aonames:
                         pg = p.match(line[:18].strip()).groups()
-                        atomname = "%s%s%s" % (pg[1][0].upper(), pg[1][1:], pg[0])
+                        atomname = "{}{}{}".format(pg[1][0].upper(), pg[1][1:], pg[0])
                         if atomname != oldatomname:
                             aonum = 1
                         oldatomname = atomname

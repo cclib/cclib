@@ -43,7 +43,7 @@ class Method:
         self.loglevel = loglevel
         self.logname = logname
         self._check_required_attributes()
-        self.logger = logging.getLogger('%s %s' % (self.logname, self.data))
+        self.logger = logging.getLogger(f'{self.logname} {self.data}')
         self.logger.setLevel(self.loglevel)
         self.logformat = "[%(name)s %(levelname)s] %(message)s"
         handler = logging.StreamHandler(sys.stdout)

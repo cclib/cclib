@@ -708,7 +708,7 @@ cannot be determined. Rerun without `$molecule read`."""
                 elif 'Bohr' in line:
                     convertor = lambda x: utils.convertor(x, 'bohr', 'Angstrom')
                 else:
-                    raise ValueError("Unknown units in coordinate header: {}".format(line))
+                    raise ValueError(f"Unknown units in coordinate header: {line}")
                 self.skip_lines(inputfile, ['cols', 'dashes'])
                 atomelements = []
                 atomcoords = []
@@ -833,7 +833,7 @@ cannot be determined. Rerun without `$molecule read`."""
                         line = next(inputfile)
                     # Is this the end of the file for some reason?
                     except StopIteration:
-                        self.logger.warning('File terminated before end of last SCF! Last error: {}'.format(error))
+                        self.logger.warning(f'File terminated before end of last SCF! Last error: {error}')
                         break
 
                     # We've converged, but still need the last iteration.

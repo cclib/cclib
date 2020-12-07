@@ -157,7 +157,7 @@ class Nuclear(Method):
         choices = ('amu_bohr_2', 'amu_angstrom_2', 'g_cm_2')
         units = units.lower()
         if units not in choices:
-            raise ValueError("Invalid units, pick one of {}".format(choices))
+            raise ValueError(f"Invalid units, pick one of {choices}")
         moi_tensor = self.moment_of_inertia_tensor()
         principal_moments, principal_axes = np.linalg.eigh(moi_tensor)
         if units == "amu_bohr_2":
@@ -177,7 +177,7 @@ class Nuclear(Method):
         choices = ('invcm', 'ghz')
         units = units.lower()
         if units not in choices:
-            raise ValueError("Invalid units, pick one of {}".format(choices))
+            raise ValueError(f"Invalid units, pick one of {choices}")
         principal_moments = self.principal_moments_of_inertia("amu_angstrom_2")[0]
         _check_scipy(_found_scipy)
         bohr2ang = scipy.constants.value('atomic unit of length') / scipy.constants.angstrom

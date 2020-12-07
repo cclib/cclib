@@ -45,7 +45,7 @@ def printResults():
 
 
     print("---------------------------")
-    print("T:  %7.3f %7.3f %7.3f" % (fa.donations[0].sum(),
+    print("T:  {:7.3f} {:7.3f} {:7.3f}".format(fa.donations[0].sum(),
                                         fa.bdonations[0].sum(),
                                         fa.repulsions[0].sum()))
     print("\n\n")

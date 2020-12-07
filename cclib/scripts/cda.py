@@ -30,7 +30,7 @@ def main():
 
     if retval:
 
-        print("Charge decomposition analysis of {}\n".format(args.file1))
+        print(f"Charge decomposition analysis of {args.file1}\n")
 
         if len(data1.homos) == 2:
             print("ALPHA SPIN:")

@@ -1782,7 +1782,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             try:
                 line = next(inputfile).split()
             except StopIteration:
-                self.logger.warning('File terminated before end of last SCF! Last Max-DP: {}'.format(maxDP))
+                self.logger.warning(f'File terminated before end of last SCF! Last Max-DP: {maxDP}')
                 break
 
     def parse_scf_expanded_format(self, inputfile, line):

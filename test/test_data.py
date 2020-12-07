@@ -171,7 +171,7 @@ class DataSuite:
             description = ''
             if not self.silent:
                 print("", file=stream_test)
-                description = "%s/%s: %s" % (td['subdir'], ",".join(td['files']), test.__doc__)
+                description = "{}/{}: {}".format(td['subdir'], ",".join(td['files']), test.__doc__)
                 print("*** %s ***" % description, file=self.stream)
 
             test.data, test.logfile = getdatafile(
@@ -261,7 +261,7 @@ class DataSuite:
         print("      ", "".join(["%-12s" % pn for pn in parser_names]), file=self.stream)
         print("HOMO", "   ".join(["%+9.4f" % out.moenergies[0][out.homos[0]] for out in output]), file=self.stream)
         print("LUMO", "   ".join(["%+9.4f" % out.moenergies[0][out.homos[0]+1] for out in output]), file=self.stream)
-        print("H-L ", "   ".join(["%9.4f" % (out.moenergies[0][out.homos[0]+1]-out.moenergies[0][out.homos[0]],) for out in output]), file=self.stream)
+        print("H-L ", "   ".join(["{:9.4f}".format(out.moenergies[0][out.homos[0]+1]-out.moenergies[0][out.homos[0]]) for out in output]), file=self.stream)
 
 
 def test_all(parsers, modules, terse, silent, loglevel, summary, visual_tests):

@@ -3344,7 +3344,7 @@ def test_regressions(which=[], opt_traceback=False, regdir=__regression_dir__, l
     # to any regression file name.
     orphaned_tests = []
     for pn in parser_names:
-        prefix = "test%s_%s" % (pn, pn)
+        prefix = f"test{pn}_{pn}"
         tests = [fn for fn in globals() if fn[:len(prefix)] == prefix]
         normalized = [normalisefilename(fn.replace(__regression_dir__, '')) for fn in filenames[pn]]
         orphaned = [t for t in tests if t[4:] not in normalized]

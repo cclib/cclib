@@ -216,7 +216,7 @@ class Logfile(ABC):
         #   which means that care needs to be taken not to duplicate handlers.
         self.loglevel = loglevel
         self.logname = logname
-        self.logger = logging.getLogger('%s %s' % (self.logname, self.filename))
+        self.logger = logging.getLogger(f'{self.logname} {self.filename}')
         self.logger.setLevel(self.loglevel)
         if len(self.logger.handlers) == 0:
             handler = logging.StreamHandler(logstream)
@@ -258,7 +258,7 @@ class Logfile(ABC):
                 if type(value) in [numpy.ndarray, list]:
                     self.logger.info("Creating attribute %s[]" % name)
                 else:
-                    self.logger.info("Creating attribute %s: %s" % (name, str(value)))
+                    self.logger.info("Creating attribute {}: {}".format(name, str(value)))
 
         # Set the attribute.
         object.__setattr__(self, name, value)
@@ -427,7 +427,7 @@ class Logfile(ABC):
             try:
                 numpy.testing.assert_equal(getattr(self, name), value)
             except AssertionError:
-                self.logger.warning("Attribute %s changed value (%s -> %s)" % (name, getattr(self, name), value))
+                self.logger.warning("Attribute {} changed value ({} -> {})".format(name, getattr(self, name), value))
 
         setattr(self, name, value)
 

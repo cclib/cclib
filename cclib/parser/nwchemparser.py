@@ -382,7 +382,7 @@ class NWChem(logfileparser.Logfile):
                             line = next(inputfile)
                         # Is this the end of the file for some reason?
                         except StopIteration:
-                            self.logger.warning('File terminated before end of last SCF! Last gradient norm: {}'.format(gnorm))
+                            self.logger.warning(f'File terminated before end of last SCF! Last gradient norm: {gnorm}')
                             break
                     if not hasattr(self, 'scfvalues'):
                         self.scfvalues = []
@@ -435,7 +435,7 @@ class NWChem(logfileparser.Logfile):
                     line = next(inputfile)
                 # Is this the end of the file for some reason?
                 except StopIteration:
-                    self.logger.warning('File terminated before end of last SCF! Last error: {}'.format(diis))
+                    self.logger.warning(f'File terminated before end of last SCF! Last error: {diis}')
                     break
 
             if not hasattr(self, 'scfvalues'):

@@ -113,7 +113,7 @@ class DALTON(logfileparser.Logfile):
             revision = line.split()[4]
             package_version = self.metadata.get("package_version")
             if package_version:
-                self.metadata["package_version"] = "{}+{}".format(package_version, revision)
+                self.metadata["package_version"] = f"{package_version}+{revision}"
 
         # Is the basis set from a single library file, or is it
         # manually specified? See before_parsing().
@@ -666,7 +666,7 @@ class DALTON(logfileparser.Logfile):
                     continue
 
                 # the first hit of @ n where n is the current iteration
-                strcompare = "@{0:>3d}".format(iteration)
+                strcompare = f"@{iteration:>3d}"
                 if strcompare in line:
                     temp = line.split()
                     error_norm = utils.float(temp[3])

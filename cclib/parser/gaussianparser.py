@@ -285,7 +285,7 @@ class Gaussian(logfileparser.Logfile):
 
             # Necessary for `if line.strip().split()[0:3] == ["Atom", "AN", "X"]:` block
             if not hasattr(self, 'nqmf'):
-                match = re.search('NQMF=\s*(\d+)', line)
+                match = re.search(r'NQMF=\s*(\d+)', line)
                 if match is not None:
                     nqmf = int(match.group(1))
                     if nqmf > 0:
@@ -428,7 +428,7 @@ class Gaussian(logfileparser.Logfile):
                     try:
                         numpy.testing.assert_equal(self.moments[4], hexadecapole)
                     except AssertionError:
-                        self.logger.warning("Attribute hexadecapole changed value (%s -> %s)" % (self.moments[4], hexadecapole))
+                        self.logger.warning("Attribute hexadecapole changed value ({} -> {})".format(self.moments[4], hexadecapole))
                     self.append_attribute("moments", hexadecapole)
 
         # Catch message about completed optimization.
@@ -1694,9 +1694,9 @@ class Gaussian(logfileparser.Logfile):
                             if i > 0:
                                 self.atombasis.append(atombasis)
                             atombasis = []
-                            atomname = "%s%s" % (parts[2], parts[1])
+                            atomname = "{}{}".format(parts[2], parts[1])
                         orbital = line[start_of_basis_fn_name:20].strip()
-                        self.aonames.append("%s_%s" % (atomname, orbital))
+                        self.aonames.append(f"{atomname}_{orbital}")
                         atombasis.append(i)
 
                     part = line[21:].replace("D", "E").rstrip()
@@ -1749,9 +1749,9 @@ class Gaussian(logfileparser.Logfile):
                             if i > 0:
                                 atombasis.append(basisonatom)
                             basisonatom = []
-                            atomname = "%s%s" % (parts[2], parts[1])
+                            atomname = "{}{}".format(parts[2], parts[1])
                         orbital = line[11:20].strip()
-                        aonames.append("%s_%s" % (atomname, orbital))
+                        aonames.append(f"{atomname}_{orbital}")
                         basisonatom.append(i)
                     part = line[21:].replace("D", "E").rstrip()
                     temp = []

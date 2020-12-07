@@ -232,7 +232,7 @@ class ADF(logfileparser.Logfile):
                 info = line.split()
 
                 if len(info) == 7:  # fragment name is listed here
-                    self.fragnames.append("%s_%s" % (info[1], info[0]))
+                    self.fragnames.append("{}_{}".format(info[1], info[0]))
                     self.frags.append([])
                     self.frags[-1].append(int(info[2]) - 1)
 
@@ -610,7 +610,7 @@ class ADF(logfileparser.Logfile):
                     if info[3] != '0.00':
                         homob = len(moenergies[1]) - 1
                 else:
-                    print(("Error reading line: %s" % line))
+                    print(f"Error reading line: {line}")
 
                 line = next(inputfile)
 
@@ -840,7 +840,7 @@ class ADF(logfileparser.Logfile):
                     # At this point, we are either at the start of the next SFO or at
                     # a blank line...the end
 
-                    self.fonames.append("%s_%s" % (frag, orbital))
+                    self.fonames.append(f"{frag}_{orbital}")
                 symoffset += num
 
                 # blankline blankline

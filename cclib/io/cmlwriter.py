@@ -50,9 +50,9 @@ class CML(filewriter.Writer):
                 d = {
                     'id': 'a{}'.format(atomid + 1),
                     'elementType': elements[atomid],
-                    'x3': '{:.10f}'.format(x),
-                    'y3': '{:.10f}'.format(y),
-                    'z3': '{:.10f}'.format(z),
+                    'x3': f'{x:.10f}',
+                    'y3': f'{y:.10f}',
+                    'z3': f'{z:.10f}',
                 }
                 _set_attrs(atom, d)
 

@@ -110,7 +110,7 @@ def generate_coverage():
     lines.append("")
 
     for attr in attributes:
-        lines.append(".. _`%s`: data_notes.html#%s" % (attr, attr))
+        lines.append(f".. _`{attr}`: data_notes.html#{attr}")
 
     return "\n".join(lines)
 

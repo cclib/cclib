@@ -76,7 +76,7 @@ def generate_attributes():
     lines.append("")
 
     for n in names:
-        lines.append(".. _`%s`: data_notes.html#%s" % (n, n))
+        lines.append(f".. _`{n}`: data_notes.html#{n}")
 
     return "\n".join(lines)
 

@@ -194,7 +194,7 @@ def ccget():
             for attr in attrnames:
                 if cjsonfile:
                     if attr in data:
-                        print("%s:\n%s" % (attr, data[attr]))
+                        print("{}:\n{}".format(attr, data[attr]))
                         continue
                 else:
                     if hasattr(data, attr):

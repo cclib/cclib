@@ -77,11 +77,11 @@ class DDEC6(Stockholder):
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "DDEC6 charges of {}".format(self.data)
+        return f"DDEC6 charges of {self.data}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return "DDEC6({})".format(self.data)
+        return f"DDEC6({self.data})"
 
     def _check_required_attributes(self):
         super(DDEC6, self)._check_required_attributes()
@@ -196,7 +196,7 @@ class DDEC6(Stockholder):
         steps = 5
         self._update_kappa = False
         while steps < 7:
-            self.logger.info("Optimizing grid weights. (Step {}/7)".format(steps))
+            self.logger.info(f"Optimizing grid weights. (Step {steps}/7)")
             self.N_A.append(self._calculate_w_and_u())
 
             # Determine whether kappa needs to be updated or not based on Figure S4.2

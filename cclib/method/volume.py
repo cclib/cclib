@@ -180,7 +180,7 @@ class Volume(object):
 
     def __str__(self):
         """Return a string representation."""
-        return "Volume %s to %s (density: %s)" % (
+        return "Volume {} to {} (density: {})".format(
             self.origin,
             self.topcorner,
             self.spacing,
@@ -285,7 +285,7 @@ def scinotation(num):
         sign = "-"
     else:
         sign = "+"
-    return ("%sE%s%s" % (broken[0], sign, broken[1][-2:])).rjust(12)
+    return ("{}E{}{}".format(broken[0], sign, broken[1][-2:])).rjust(12)
 
 
 def getGrid(vol):

@@ -35,7 +35,7 @@ def makepyquante(data):
     if missing:
         missing = " ".join(missing)
         raise MissingAttributeError(
-            "Could not create pyquante molecule due to missing attribute: {}".format(missing)
+            f"Could not create pyquante molecule due to missing attribute: {missing}"
         )
 
     # In pyquante2, molecular geometry is specified in a format of:

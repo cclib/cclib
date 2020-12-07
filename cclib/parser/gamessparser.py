@@ -88,7 +88,7 @@ class GAMESS(logfileparser.Logfile):
             match = re.search(r"Firefly version\s([\d.]*)\D*(\d*)\s*\*", line)
             if match:
                 base_version, build = match.groups()
-                package_version = "{}+{}".format(base_version, build)
+                package_version = f"{base_version}+{build}"
                 self.metadata["package_version"] = package_version
                 self.metadata["legacy_package_version"] = base_version
         if "GAMESS VERSION =" in line:
@@ -104,8 +104,8 @@ class GAMESS(logfileparser.Logfile):
                 else:
                     # `(R23)` -> 23
                     release = possible_release[2:-1]
-                self.metadata["package_version"] = '{}.r{}'.format(year, release)
-                self.metadata["legacy_package_version"] = "{}R{}".format(year, release)
+                self.metadata["package_version"] = f'{year}.r{release}'
+                self.metadata["legacy_package_version"] = f"{year}R{release}"
 
         if line[1:12] == "INPUT CARD>":
             return
@@ -1118,7 +1118,7 @@ class GAMESS(logfileparser.Logfile):
                             orbno = int(g[0])-1
                         else:  # For F orbitals, as shown above
                             g = [x.strip() for x in line.split()]
-                            aoname = "%s%s_%s" % (g[1].capitalize(), oldatom, g[2])
+                            aoname = "{}{}_{}".format(g[1].capitalize(), oldatom, g[2])
                             atomno = int(oldatom)-1
                             orbno = int(g[0])-1
 

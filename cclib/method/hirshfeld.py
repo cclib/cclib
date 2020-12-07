@@ -55,11 +55,11 @@ class Hirshfeld(Stockholder):
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "Hirshfeld charges of {}".format(self.data)
+        return f"Hirshfeld charges of {self.data}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return "Hirshfeld({})".format(self.data)
+        return f"Hirshfeld({self.data})"
 
     def _check_required_attributes(self):
         super(Hirshfeld, self)._check_required_attributes()

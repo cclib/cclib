@@ -170,7 +170,7 @@ class MOLDEN(filewriter.Writer):
             for j in range(len(moenergies[i])):
                 lines.append(' Sym= %s' % syms[i][j])
                 moenergy = utils.convertor(moenergies[i][j], 'eV', 'hartree')
-                lines.append(' Ene= {:10.4f}'.format(moenergy))
+                lines.append(f' Ene= {moenergy:10.4f}')
                 lines.append(' Spin= %s' % spin)
                 if unres and openshell: 
                     if j <= homos[i]:
@@ -180,7 +180,7 @@ class MOLDEN(filewriter.Writer):
                 elif not unres and openshell:
                     occ = numpy.sum(j <= homos)
                     if j <= homos[i]:
-                        lines.append(' Occup= {:10.6f}'.format(occ))
+                        lines.append(f' Occup= {occ:10.6f}')
                     else:
                         lines.append(' Occup= {:10.6f}'.format(0.0))
                 else:

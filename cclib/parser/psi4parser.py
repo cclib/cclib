@@ -90,13 +90,13 @@ class Psi4(logfileparser.Logfile):
             if "beta" in package_version:
                 self.version_4_beta = True
                 # `beta2+` -> `0!0.beta2`
-                package_version = "0!0.{}".format(package_version)
+                package_version = f"0!0.{package_version}"
                 if package_version[-1] == "+":
                     # There is no good way to keep the bare plus sign around,
                     # but this version is so old...
                     package_version = package_version[:-1]
             else:
-                package_version = "1!{}".format(package_version)
+                package_version = f"1!{package_version}"
             self.skip_line(inputfile, "blank")
             line = next(inputfile)
             if "Git:" in line:
@@ -426,7 +426,7 @@ class Psi4(logfileparser.Logfile):
                 try:
                     line = next(inputfile)
                 except StopIteration:
-                    self.logger.warning('File terminated before end of last SCF! Last density err: {}'.format(ddensity))
+                    self.logger.warning(f'File terminated before end of last SCF! Last density err: {ddensity}')
                     break
             self.section = "Post-Iterations"
             self.scfvalues.append(scfvals)
