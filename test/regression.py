@@ -3315,7 +3315,7 @@ def test_regressions(which=[], opt_traceback=False, regdir=__regression_dir__, l
     # This file should contain the paths to all regresssion test files we have gathered
     # over the years. It is not really necessary, since we can discover them on the disk,
     # but we keep it as a legacy and a way to track the regression tests.
-    regfile = open(os.path.join(regdir, "regressionfiles.txt"), "r")
+    regfile = open(os.path.join(regdir, "regressionfiles.txt"))
     regfilenames = [os.sep.join(x.strip().split("/")) for x in regfile.readlines()]
     regfile.close()
 

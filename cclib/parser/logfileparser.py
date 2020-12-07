@@ -154,7 +154,7 @@ def openlogfile(filename, object=None):
         else:
             # Assuming that object is text file encoded in utf-8
             fileobject = io.StringIO(object.decode('utf-8')) if object \
-                    else FileWrapper(io.open(filename, "r", errors='ignore'))
+                    else FileWrapper(open(filename, errors='ignore'))
 
         return fileobject
 

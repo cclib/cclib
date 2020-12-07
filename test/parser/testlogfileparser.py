@@ -26,7 +26,7 @@ class FileWrapperTest(unittest.TestCase):
     def test_file_seek(self):
         """Can we seek anywhere in a file object?"""
         fpath = os.path.join(__datadir__,"data/ADF/basicADF2007.01/dvb_gopt.adfout")
-        with open(fpath, 'r') as fobject:
+        with open(fpath) as fobject:
             wrapper = cclib.parser.logfileparser.FileWrapper(fobject)
             wrapper.seek(0, 0)
             self.assertEqual(wrapper.pos, 0)
