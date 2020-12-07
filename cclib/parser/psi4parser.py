@@ -73,8 +73,8 @@ class Psi4(logfileparser.Logfile):
                                   '## F-D gradient (Symmetry 0) ##',
                                   ['Irrep num and total size', 'b', '123', 'b']),
     }
-    GRADIENT_HEADERS = set([gradient_type.header
-                            for gradient_type in GRADIENT_TYPES.values()])
+    GRADIENT_HEADERS = {gradient_type.header
+                            for gradient_type in GRADIENT_TYPES.values()}
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
