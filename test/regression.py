@@ -3294,7 +3294,7 @@ def make_regression_from_old_unittest(test_class):
     return old_unit_test
 
 
-def test_regressions(which=[], opt_traceback=False, regdir=__regression_dir__, loglevel=logging.ERROR):
+def test_regressions(which=[], opt_traceback=True, regdir=__regression_dir__, loglevel=logging.ERROR):
 
     # Build a list of regression files that can be found. If there is a directory
     # on the third level, then treat all files within it as one job.
