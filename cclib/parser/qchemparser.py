@@ -114,6 +114,9 @@ class QChem(logfileparser.Logfile):
             'CCD', 'CCSD', 'CCSD(T)',
             'QCISD', 'QCISD(T)'
         ]
+        # create empty list for the computing time to be stored in. 
+        self.metadata['wall_time'] =[]
+        self.metadata['cpu_time'] =[]
 
     def after_parsing(self):
 
@@ -1586,6 +1589,9 @@ cannot be determined. Rerun without `$molecule read`."""
 
         if line[:16] == ' Total job time:':
             self.metadata['success'] = True
+            a = line.split()
+            self.metadata['wall_time'].append(a[-2].split('s')[0])
+            self.metadata['cpu_time'].append(a[-1].split('s')[0])
 
         # TODO:
         # 'enthalpy' (incorrect)
