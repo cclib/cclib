@@ -11,7 +11,7 @@ jobs:
     steps:
     - name: Install SWIG and Git
       run: |
-       apt update && apt install -y -qq git swig
+       sudo apt update && sudo apt install -y -qq git swig
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }} with conda
       uses: conda-incubator/setup-miniconda@v2
