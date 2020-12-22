@@ -53,6 +53,7 @@ from cclib.parser import ccData
 
 from cclib.parser import ADF
 from cclib.parser import DALTON
+from cclib.parser import FChk
 from cclib.parser import GAMESS
 from cclib.parser import GAMESSUK
 from cclib.parser import Gaussian
@@ -3303,9 +3304,12 @@ def test_regressions(which=[], opt_traceback=True, regdir=__regression_dir__, lo
         for p in parser_names:
             filenames[p] = []
             pdir = os.path.join(regdir, get_program_dir(p))
-            for version in os.listdir(pdir):
-                for job in os.listdir(os.path.join(pdir, version)):
-                    path = os.path.join(pdir, version, job)
+            for version in os.scandir(pdir):
+                if version.is_file():
+                    continue
+
+                for job in os.listdir(version.path):
+                    path = os.path.join(version.path, job)
                     if os.path.isdir(path):
                         filenames[p].append(os.path.join(path, "*"))
                     else:

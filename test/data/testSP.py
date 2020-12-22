@@ -57,6 +57,7 @@ class GenericSPTest(unittest.TestCase):
         self.assertEqual(sum(self.data.atomnos == 6) + sum(self.data.atomnos == 1), 20)
 
     @skipForParser('DALTON', 'DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now')
+    @skipForParser('FChk', 'The parser is still being developed so we skip this test')
     @skipForLogfile('Jaguar/basicJaguar7', 'We did not print the atomic partial charges in the unit tests for this version')
     @skipForLogfile('Molpro/basicMolpro2006', "These tests were run a long time ago and since we don't have access to Molpro 2006 anymore, we can skip this test (it is tested in 2012)")
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
@@ -105,6 +106,7 @@ class GenericSPTest(unittest.TestCase):
         # Check if all are different (every orbital indexed once).
         self.assertEqual(len(set(all)), len(all))
 
+    @skipForParser('FChk', 'Formatted checkpoint files do not have a section for atommasses')
     @skipForParser('GAMESS', 'atommasses not implemented yet')
     @skipForParser('GAMESSUK', 'atommasses not implemented yet')
     @skipForParser('Jaguar', 'atommasses not implemented yet')
@@ -126,6 +128,7 @@ class GenericSPTest(unittest.TestCase):
         ans = numpy.zeros(self.data.natom, 'i')
         numpy.testing.assert_array_equal(self.data.coreelectrons, ans)
 
+    @skipForParser('FChk', 'Formatted checkpoint files do not have a section for symmetry')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Molpro', '?')
     @skipForParser('ORCA', 'ORCA has no support for symmetry yet')
@@ -140,19 +143,23 @@ class GenericSPTest(unittest.TestCase):
         """Is the index of the HOMO equal to 34?"""
         numpy.testing.assert_array_equal(self.data.homos, numpy.array([34],"i"), "%s != array([34],'i')" % numpy.array_repr(self.data.homos))
 
+    @skipForParser('FChk', 'Formatted Checkpoint files do not have a section for SCF energy')
     def testscfvaluetype(self):
         """Are scfvalues and its elements the right type??"""
         self.assertEqual(type(self.data.scfvalues),type([]))
         self.assertEqual(type(self.data.scfvalues[0]),type(numpy.array([])))
 
+    @skipForParser('FChk', 'Formatted Checkpoint files do not have a section for SCF energy')
     def testscfenergy(self):
         """Is the SCF energy within the target?"""
         self.assertAlmostEqual(self.data.scfenergies[-1], self.b3lyp_energy, delta=40, msg="Final scf energy: %f not %i +- 40eV" %(self.data.scfenergies[-1], self.b3lyp_energy))
 
+    @skipForParser('FChk', 'Formatted Checkpoint files do not have a section for SCF convergence')
     def testscftargetdim(self):
         """Do the scf targets have the right dimensions?"""
         self.assertEqual(self.data.scftargets.shape, (len(self.data.scfvalues), len(self.data.scfvalues[0][0])))
 
+    @skipForParser('FChk', 'Formatted Checkpoint files do not have a section for SCF convergence')
     def testscftargets(self):
         """Are correct number of SCF convergence criteria being parsed?"""
         self.assertEqual(len(self.data.scftargets[0]), self.num_scf_criteria)
@@ -215,20 +222,21 @@ class GenericSPTest(unittest.TestCase):
         col = self.data.aooverlaps[:,0]
         self.assertEqual(sum(col - row), 0.0)
 
-        # All values on diagonal should be exactly zero.
+        # All values on diagonal should be exactly one.
         for i in range(self.data.nbasis):
             self.assertEqual(self.data.aooverlaps[i,i], 1.0)
 
         # Check some additional values that don't seem to move around between programs.
         self.assertAlmostEqual(self.data.aooverlaps[0, 1], self.overlap01, delta=0.01)
         self.assertAlmostEqual(self.data.aooverlaps[1, 0], self.overlap01, delta=0.01)
-        self.assertEqual(self.data.aooverlaps[3,0], 0.0)
-        self.assertEqual(self.data.aooverlaps[0,3], 0.0)
+        self.assertAlmostEqual(self.data.aooverlaps[3,0], 0.0)
+        self.assertAlmostEqual(self.data.aooverlaps[0,3], 0.0)
 
     def testoptdone(self):
         """There should be no optdone attribute set."""
         self.assertFalse(hasattr(self.data, 'optdone'))
 
+    @skipForParser('FChk', 'The parser is still being developed so we skip this test')
     @skipForParser('Gaussian', 'Logfile needs to be updated')
     @skipForParser('Jaguar', 'No dipole moments in the logfile')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
@@ -294,6 +302,7 @@ class GenericSPTest(unittest.TestCase):
 
     @skipForParser('ADF', 'reading input file contents and name is not implemented')
     @skipForParser('DALTON', 'reading input file contents and name is not implemented')
+    @skipForParser('FChk', 'Formatted checkpoint files do not have an input file section')
     @skipForParser('GAMESS', 'reading input file contents and name is not implemented')
     @skipForParser('GAMESSUK', 'reading input file contents and name is not implemented')
     @skipForParser('Gaussian', 'reading input file contents and name is not implemented')
@@ -324,11 +333,13 @@ class GenericSPTest(unittest.TestCase):
         # the parser and isn't stored on ccData?
         self.assertIn("package", self.data.metadata)
 
+    @skipForParser('FChk', 'Formatted Checkpoint files do not have section for legacy package version')
     def testmetadata_legacy_package_version(self):
         """Does metadata have expected keys and values?"""
         # TODO Test specific values for each unit test.
         self.assertIn("legacy_package_version", self.data.metadata)
 
+    @skipForParser('FChk', 'Formatted Checkpoint files do not have section for package version')
     def testmetadata_package_version(self):
         """Does metadata have expected keys and values?"""
         # TODO Test specific values for each unit test.

@@ -9,5 +9,6 @@ htmlcov
 .pytest_cache
 cclib.egg-info
 timer.dat
+.DS_Store
 venv
 .idea
