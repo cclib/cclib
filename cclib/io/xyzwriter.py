@@ -81,7 +81,7 @@ class XYZ(filewriter.Writer):
         """Create an XYZ file of the geometry at the given index."""
 
         atomcoords = self.ccdata.atomcoords[index]
-        existing_comment = "" if not self.ccdata.metadata["comments"] \
+        existing_comment = "" if "comments" not in self.ccdata.metadata \
             else self.ccdata.metadata["comments"][index]
 
         # Create a comment derived from the filename and the index.
