@@ -11,6 +11,7 @@ Changes in cclib-1.7
 
 * Dropping support for Python 2
 * SciPy is now a hard dependency for cclib
+* New parser: formatted checkpoint files (QChem only right now)
 
 **Bugfixes**
 
