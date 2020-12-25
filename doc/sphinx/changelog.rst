@@ -4,6 +4,21 @@
 Changelog
 =========
 
+Changes in cclib-1.7
+--------------------
+
+**Features**
+
+* Dropping support for Python 2
+* SciPy is now a hard dependency for cclib
+* New parser: formatted checkpoint files (QChem only right now)
+
+**Bugfixes**
+
+* Fixed parsing of Gaussian files missing scftargets (Hubert Weißmann)
+* Fixed parsing TDA excited states from QChem (srtlg)
+* Fixed parsing two character elements from Turbomole
+
 Changes in cclib-1.6.4
 ----------------------
 
