@@ -125,12 +125,31 @@ class Turbomole(logfileparser.Logfile):
         if index > -1:
             line = line[index + len(searchstr):]
             tokens = line.split()
-            package_version = tokens[0][1:].replace("-", ".")
+            # This line could look like any of the following:
+            # - TURBOMOLE rev. V7.4.1 (2bfdd732)
+            # - TURBOMOLE V7.2 ( 21471 ) 11 Oct 2017 at 17:04:51
+            # - TURBOMOLE V5-9-0 29 Nov 2006 at 22:06:41
+            
+            # Determine where the version string is.
+            if tokens[0] == "rev.":
+                version_index = 1
+            else:
+                version_index = 0
+
+            package_version = tokens[version_index][1:].replace("-", ".")
             self.metadata["package_version"] = package_version
             self.metadata["legacy_package_version"] = package_version
-            if tokens[1] == "(":
-                revision = tokens[2]
+            
+            # The revision may or may not contain whitespace inside the brackets.
+            if "(" == tokens[version_index +1][0] and ")" == tokens[version_index +1][-1]:
+                revision = tokens[version_index +1][1:-1]
                 self.metadata["package_version"] = "{}.r{}".format(package_version, revision)
+                
+            elif tokens[version_index +1] == "(":
+                revision = tokens[version_index +2]
+                self.metadata["package_version"] = "{}.r{}".format(package_version, revision)
+            
+            
 
         ## Atomic coordinates in job.last:
         #              +--------------------------------------------------+
