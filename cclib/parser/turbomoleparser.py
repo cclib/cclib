@@ -174,6 +174,61 @@ class Turbomole(logfileparser.Logfile):
             if len(set(basis_sets)) == 1:
                 self.metadata["basis_set"] = list(set(basis_sets))[0]
         
+        ## Orbital occupation info from dscf.
+        #  orbitals $scfmo  will be written to file mos
+        # 
+        #     irrep                  1a          2a          3a          4a          5a   
+        #  eigenvalues H        -20.25992    -1.24314    -0.57053    -0.46144    -0.39295
+        #             eV        -551.3047    -33.8279    -15.5250    -12.5564    -10.6929
+        #  occupation              2.0000      2.0000      2.0000      2.0000      2.0000
+        # 
+        #     irrep                  6a          7a   
+        #  eigenvalues H          0.55091     0.64409
+        #             eV          14.9910     17.5268
+        ## Or
+        #  orbitals $uhfmo_beta  will be written to file beta
+        # 
+        #  orbitals $uhfmo_alpha  will be written to file alpha
+        #  
+        #  alpha: 
+        # 
+        #     irrep                 31a         32a         33a         34a         35a   
+        #  eigenvalues H         -0.47570    -0.46573    -0.40741    -0.39213    -0.35411
+        #             eV         -12.9446    -12.6733    -11.0862    -10.6705     -9.6358
+        #  occupation              1.0000      1.0000      1.0000      1.0000      1.0000 
+        # 
+        #     irrep                 36a         37a         38a         39a         40a   
+        #  eigenvalues H         -0.18634    -0.10035    -0.09666    -0.02740     0.06072
+        #             eV          -5.0705     -2.7306     -2.6303     -0.7455      1.6522
+        #  
+        #  beta:  
+        # 
+        #     irrep                 30a         31a         32a         33a         34a   
+        #  eigenvalues H         -0.49118    -0.47348    -0.44470    -0.39020    -0.37919
+        #             eV         -13.3658    -12.8842    -12.1009    -10.6181    -10.3184
+        #  occupation              1.0000      1.0000      1.0000      1.0000      1.0000 
+        # 
+        #     irrep                 35a         36a         37a         38a         39a   
+        #  eigenvalues H         -0.28091    -0.15088    -0.09343    -0.07531    -0.00688
+        #             eV          -7.6440     -4.1058     -2.5424     -2.0493     -0.1873
+        if "will be written to file mos" in line \
+        or "alpha:" in line \
+        or "beta:" in line:
+            # Keep track of alpha/beta.
+            beta = "beta:" in line
+                
+            # Skip.
+            self.skip_lines(inputfile, "\b")
+            line = next(inputfile)
+            
+            if "irrep" in line:
+                # The orbital number appears to always be followed by 'a' regardless of whether the orbital is alpha or beta (Turbomole bug?).
+                homo = int(line.split()[-1][:-1]) -1
+                if beta:
+                    self.homos.append(homo)
+                else:
+                    self.set_attribute("homos", [homo])
+                
             
 
         ## Atomic coordinates in job.last:
