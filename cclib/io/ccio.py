@@ -459,7 +459,7 @@ def sort_turbomole_outputs(filelist):
         'gradient' : 7,
         'aoforce' : 8,
     }
-
+    
     known_files = []
     unknown_files = []
     sorted_list = []
@@ -467,6 +467,12 @@ def sort_turbomole_outputs(filelist):
         filename = path_leaf(fname)
         if filename in sorting_order:
             known_files.append([fname, sorting_order[filename]])
+        elif "job." in filename:
+            # Calling 'jobex -keep' will also write job.n files, where n ranges from 0 to inf.
+            # Numbered job files are inserted before job.last.
+            job_number = int(filename[4:]) +1
+            job_order = float("{}.{}".format(sorting_order['job.last'] -1, job_number))
+            known_files.append([fname, job_order])
         else:
             unknown_files.append(fname)
     for i in sorted(known_files, key=lambda x: x[1]):
