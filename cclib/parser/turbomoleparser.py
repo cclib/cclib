@@ -75,6 +75,7 @@ class Turbomole(logfileparser.Logfile):
     def before_parsing(self):
         self.geoopt = False # Is this a GeoOpt? Needed for SCF targets/values.
         self.periodic_table = utils.PeriodicTable()
+        self.new_module()
 
     @staticmethod
     def split_molines(inline):
@@ -95,6 +96,13 @@ class Turbomole(logfileparser.Logfile):
             return [float(f1), float(f2)]
         if(len(f1) > 1):
             return [float(f1)]
+        
+    def new_module(self):
+        """
+        This method is called when we start parsing a new module (Turbomole subprogram).
+        """
+        self.DFT = False
+        self.metadata['success'] = False
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -354,6 +362,70 @@ class Turbomole(logfileparser.Logfile):
                 self.append_attribute('atomcoords', atomcoords)
                 self.set_attribute('atomnos', atomnos)
                 self.set_attribute('natom', len(atomcoords))
+        
+        
+        # Optimisation convergence criteria using statpt.
+        #
+        # ****************************************************************** 
+        #                     CONVERGENCE INFORMATION
+        # 
+        #                          Converged?     Value      Criterion
+        #        Energy change         no       0.0000011   0.0000010
+        #        RMS of displacement   yes      0.0001152   0.0005000
+        #        RMS of gradient       yes      0.0000548   0.0005000
+        #        MAX displacement      yes      0.0001409   0.0010000
+        #        MAX gradient          yes      0.0000670   0.0010000
+        # ****************************************************************** 
+        if "CONVERGENCE INFORMATION" in line:
+            # This is an optimisation.
+            # The cclib expectation is for atomcoords, scfenergies and geovalues to all have the same length (and for equivalent indices to relate to the same calculation step).
+            # However, there is an initial energy step before optimisation begins (ie, the starting geom and energy).
+            # To maintain list alignment, we will thus delete any coordinates and energies parsed before optimisation.
+            if not hasattr(self, 'geovalues'):
+                for attr in ("atomcoords", "scfvalues", "scftargets", "scfenergies", "mpenergies", "ccenergies"):
+                    if hasattr(self, attr):
+                        delattr(self, attr)
+                        
+            # We now need to do some balancing of the various lists we have parsed.
+            # The cclib expectation is for atomcoords, scfenergies, and geovalues to have the same length (and for equivalent indices to relate to the same calculation step).
+            # However, there should always be one more energy calculation than there are 
+            
+            
+            # Skip lines.
+            line = next(inputfile)
+            line = next(inputfile)
+            line = next(inputfile)
+            
+            convergence = []
+            geovalues = []
+            geotargets = []
+            
+            # There are a variable number of criteria.
+            while len(line.split()) > 3:
+                parts = line.split()
+                # lower() is for (unnecessary?) future proofing...
+                converged = parts[-3].lower() == "yes"
+                value = float(parts[-2])
+                criterion = float(parts[-1])
+                
+                # TODO: possibly require some unit conversions?
+                convergence.append(converged)
+                geovalues.append(value)
+                geotargets.append(criterion)
+                
+                # Next.                
+                line = next(inputfile)
+                
+            self.set_attribute("geotargets", geotargets)
+            self.append_attribute("geovalues", geovalues)
+            
+            if all(convergence):
+                # This iteration has converged.
+                self.append_attribute("optdone", len(self.geovalues) -1)
+            elif not hasattr(self, 'optdone'):
+                self.set_attribute("optdone", [])
+            
+            
 
         # Frequency values in aoforce.out
         #        mode               7        8        9       10       11       12
