@@ -467,7 +467,7 @@ def sort_turbomole_outputs(filelist):
         filename = path_leaf(fname)
         if filename in sorting_order:
             known_files.append([fname, sorting_order[filename]])
-        elif "job." in filename:
+        elif re.match(r"^job\.[0-9]+$", filename):
             # Calling 'jobex -keep' will also write job.n files, where n ranges from 0 to inf.
             # Numbered job files are inserted before job.last.
             job_number = int(filename[4:]) +1
