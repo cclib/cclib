@@ -37,16 +37,15 @@ class GenericGeoOptTest(unittest.TestCase):
 
     @skipForParser('Molcas', 'The parser is still being developed so we skip this test')
     @skipForParser('MOPAC', 'The success status is not parsed yet')
-    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def test_success(self):
         self.assertTrue(self.data.metadata['success'])
 
-    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
+    ##@skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testnatom(self):
         """Is the number of atoms equal to 20?"""
         self.assertEqual(self.data.natom, 20)
 
-    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
+    ##@skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testatomnos(self):
         """Are the atomnos correct?"""
         # This will work only for numpy
@@ -62,7 +61,7 @@ class GenericGeoOptTest(unittest.TestCase):
         count_H = sum(self.data.atomnos == 1)
         self.assertEqual(count_C + count_H, 20)
 
-    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
+    ##@skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testatomcoords(self):
         """Are atomcoords consistent with natom and Angstroms?"""
         natom = len(self.data.atomcoords[0])
@@ -70,7 +69,7 @@ class GenericGeoOptTest(unittest.TestCase):
         msg = "natom is %d but len(atomcoords[0]) is %d" % (ref, natom)
         self.assertEqual(natom, ref, msg)
 
-    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
+    ##@skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testatomcoords_units(self):
         """Are atomcoords consistent with Angstroms?"""
         min_carbon_dist = get_minimum_carbon_separation(self.data)
@@ -119,7 +118,7 @@ class GenericGeoOptTest(unittest.TestCase):
         self.assertEqual(type(self.data.scfvalues),type([]))
         self.assertEqual(type(self.data.scfvalues[0]),type(numpy.array([])))
 
-    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
+    ##@skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testscfenergy(self):
         """Is the SCF energy close to target?"""
         scf = self.data.scfenergies[-1]
@@ -128,7 +127,7 @@ class GenericGeoOptTest(unittest.TestCase):
         msg = "Final SCF energy: %f not %i +- %ieV" %(scf, ref, tol)
         self.assertAlmostEqual(scf, ref, delta=40, msg=msg)
 
-    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
+    ##@skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testscfenergydim(self):
         """Is the number of SCF energies consistent with atomcoords?"""
         count_scfenergies = self.data.scfenergies.shape[0] - self.extrascfs
@@ -169,7 +168,7 @@ class GenericGeoOptTest(unittest.TestCase):
         self.assertEqual(dim_geotargets, dim_geovalues)
 
     @skipForParser('MOPAC', 'Not implemented.')
-    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
+    ##@skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testoptdone(self):
         """Has the geometry converged and set optdone to True?"""
         self.assertTrue(self.data.optdone)

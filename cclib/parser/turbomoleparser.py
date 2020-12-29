@@ -154,6 +154,13 @@ class Turbomole(logfileparser.Logfile):
             elif tokens[version_index +1] == "(":
                 revision = tokens[version_index +2]
                 self.metadata["package_version"] = "{}.r{}".format(package_version, revision)
+                
+            # We have entered a new module (sub program); reset our success flag.
+            self.metadata['success'] = False
+            
+        if ": all done  ****" in line:
+            # End of module, set success flag.
+            self.metadata['success'] = True
             
         ## Basis set info from dscf.
         #               +--------------------------------------------------+
