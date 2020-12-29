@@ -48,9 +48,6 @@ class Turbomole(logfileparser.Logfile):
 
     def __init__(self, *args, **kwargs):
         super(Turbomole, self).__init__(logname="Turbomole", *args, **kwargs)
-        
-        # Flag for whether this calc is DFT.
-        self.DFT = False
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -72,6 +69,7 @@ class Turbomole(logfileparser.Logfile):
     def before_parsing(self):
         self.geoopt = False # Is this a GeoOpt? Needed for SCF targets/values.
         self.periodic_table = utils.PeriodicTable()
+        self.new_module()
 
     @staticmethod
     def split_molines(inline):
@@ -92,6 +90,13 @@ class Turbomole(logfileparser.Logfile):
             return [float(f1), float(f2)]
         if(len(f1) > 1):
             return [float(f1)]
+        
+    def new_module(self):
+        """
+        This method is called when we start parsing a new module (Turbomole subprogram).
+        """
+        self.DFT = False
+        self.metadata['success'] = False
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -129,6 +134,9 @@ class Turbomole(logfileparser.Logfile):
         searchstr = ": TURBOMOLE"
         index = line.find(searchstr)
         if index > -1:
+            # We have entered a new module.
+            self.new_module()
+            
             line = line[index + len(searchstr):]
             tokens = line.split()
             # This line could look like any of the following:
@@ -155,8 +163,6 @@ class Turbomole(logfileparser.Logfile):
                 revision = tokens[version_index +2]
                 self.metadata["package_version"] = "{}.r{}".format(package_version, revision)
                 
-            # We have entered a new module (sub program); reset our success flag.
-            self.metadata['success'] = False
             
         if ": all done  ****" in line:
             # End of module, set success flag.
@@ -286,6 +292,70 @@ class Turbomole(logfileparser.Logfile):
                 self.append_attribute('atomcoords', atomcoords)
                 self.set_attribute('atomnos', atomnos)
                 self.set_attribute('natom', len(atomcoords))
+        
+        
+        # Optimisation convergence criteria using statpt.
+        #
+        # ****************************************************************** 
+        #                     CONVERGENCE INFORMATION
+        # 
+        #                          Converged?     Value      Criterion
+        #        Energy change         no       0.0000011   0.0000010
+        #        RMS of displacement   yes      0.0001152   0.0005000
+        #        RMS of gradient       yes      0.0000548   0.0005000
+        #        MAX displacement      yes      0.0001409   0.0010000
+        #        MAX gradient          yes      0.0000670   0.0010000
+        # ****************************************************************** 
+        if "CONVERGENCE INFORMATION" in line:
+            # This is an optimisation.
+            # The cclib expectation is for atomcoords, scfenergies and geovalues to all have the same length (and for equivalent indices to relate to the same calculation step).
+            # However, there is an initial energy step before optimisation begins (ie, the starting geom and energy).
+            # To maintain list alignment, we will thus delete any coordinates and energies parsed before optimisation.
+            if not hasattr(self, 'geovalues'):
+                for attr in ("atomcoords", "scfvalues", "scftargets", "scfenergies", "mpenergies", "ccenergies"):
+                    if hasattr(self, attr):
+                        delattr(self, attr)
+                        
+            # We now need to do some balancing of the various lists we have parsed.
+            # The cclib expectation is for atomcoords, scfenergies, and geovalues to have the same length (and for equivalent indices to relate to the same calculation step).
+            # However, there should always be one more energy calculation than there are 
+            
+            
+            # Skip lines.
+            line = next(inputfile)
+            line = next(inputfile)
+            line = next(inputfile)
+            
+            convergence = []
+            geovalues = []
+            geotargets = []
+            
+            # There are a variable number of criteria.
+            while len(line.split()) > 3:
+                parts = line.split()
+                # lower() is for (unnecessary?) future proofing...
+                converged = parts[-3].lower() == "yes"
+                value = float(parts[-2])
+                criterion = float(parts[-1])
+                
+                # TODO: possibly require some unit conversions?
+                convergence.append(converged)
+                geovalues.append(value)
+                geotargets.append(criterion)
+                
+                # Next.                
+                line = next(inputfile)
+                
+            self.set_attribute("geotargets", geotargets)
+            self.append_attribute("geovalues", geovalues)
+            
+            if all(convergence):
+                # This iteration has converged.
+                self.append_attribute("optdone", len(self.geovalues) -1)
+            elif not hasattr(self, 'optdone'):
+                self.set_attribute("optdone", [])
+            
+            
 
         # Frequency values in aoforce.out
         #        mode               7        8        9       10       11       12
@@ -510,8 +580,6 @@ class Turbomole(logfileparser.Logfile):
         #  *   D1 diagnostic                           :      0.0132            *
         #  *                                                                    *
         #  **********************************************************************
-#         if 'C C S D F 1 2   P R O G R A M' in line:
-#             while 'ccsdf12 : all done' not in line:
         # Look for MP energies.
         for mp_level in range(2,6):
             if "Final MP{} energy".format(mp_level) in line:
@@ -540,8 +608,6 @@ class Turbomole(logfileparser.Logfile):
         #  *     (MP2-energy evaluated from T2 amplitudes)     *
         #  *                                                   *
         #  *****************************************************
-#         if 'm p g r a d - program' in line:
-#             while 'ccsdf12 : all done' not in line:
         if 'MP2-energy' in line:
             line = next(inputfile)
             if 'total' in line:
@@ -549,7 +615,7 @@ class Turbomole(logfileparser.Logfile):
                 self.append_attribute('mpenergies', mp2energy)
                 self.metadata['methods'].append("MP2")
                 
-        # Support for the now outdated (?) rimp2
+        # Support for (the now outdated?) rimp2
         # ------------------------------------------------
         #     Method          :  MP2     
         #     Total Energy    :    -75.0009789796
