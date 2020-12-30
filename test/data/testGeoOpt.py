@@ -73,7 +73,6 @@ class GenericGeoOptTest(unittest.TestCase):
         self.assertTrue(dev < 0.15, "Minimum carbon dist is %.2f (not 1.34)" % min_carbon_dist)
 
     @skipForParser('Molcas', 'The parser is still being developed so we skip this test')
-    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testcharge_and_mult(self):
         """Are the charge and multiplicity correct?"""
         self.assertEqual(self.data.charge, 0)
@@ -171,9 +170,8 @@ class GenericGeoOptTest(unittest.TestCase):
     @skipForParser("NWChem", "Not implemented.")
     @skipForParser("ORCA", "Not implemented.")
     @skipForParser("QChem", "Not implemented.")
-    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testoptstatus(self):
-        """Is optstatus consistent with geovalues and reasonable?"""
+        """Is optstatus consistent with geovalues and reasonable?"""       
         self.assertEqual(len(self.data.optstatus), len(self.data.geovalues))
         self.assertEqual(self.data.optstatus[0], self.data.OPT_NEW)
         for i in range(1, len(self.data.optstatus)-1):
@@ -181,7 +179,6 @@ class GenericGeoOptTest(unittest.TestCase):
         self.assertEqual(self.data.optstatus[-1], self.data.OPT_DONE)
 
     @skipForParser('Molcas', 'The parser is still being developed so we skip this test')
-    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testmoenergies(self):
         """Are only the final MOs parsed?"""
         self.assertEqual(len(self.data.moenergies), 1)
@@ -367,3 +364,50 @@ if __name__=="__main__":
     from test_data import DataSuite
     suite = DataSuite(['GeoOpt'])
     suite.testall()
+
+
+class TurbomoleKeepGeoOptTest(GenericGeoOptTest):
+    """Customized geometry optimization unittest"""
+    
+    # In Turbomole, each optimisation step is written to its own file,
+    # (job.1, job.2 ... job.last) and consists of three (or more)
+    # submodule steps:
+    # - grad: Calculation of gradient.
+    # - statpt: Update of coordinates.
+    # - dscf: Calculation of SCF from new geometry.
+    # - [rimp2/ricc2/ccsdf12]: Calculation of higher order energies.
+    #
+    # In addition, this cycle is started by an initial dscf step stored
+    # in the job.0 file. Each submodule will print the current atom coords
+    # during startup, so there will always be one more atom coords than
+    # there are geom steps (we make sure in the parser not to parse
+    # identical coords more than once).
+    #
+    # However, the number of SCF energies will depend on whether the
+    # jobex script was called with the -keep flag or not. Without -keep
+    # (the default), jobex will delete all intermediate files (including
+    # job.0), so we can only parse job.final. In this case, only one
+    # SCF energy will be available (the final energy). Alternatively,
+    # with -keep we can parse the energy at each step, including the
+    # initial energy, and so len(scfenergies) == len(atomcoords) (one
+    # greater than the number of opt steps).
+    #
+    # The test data was called with jobex -keep.
+    extracoords = 1
+    extrascfs = 1
+    
+class TurbomoleGeoOptTest(GenericGeoOptTest):
+    """Customized geometry optimization unittest"""
+    
+    # The test data was not called with jobex -keep.
+    extracoords = 1
+    extrascfs = 0
+    
+    def testoptstatus(self):
+        """Is optstatus consistent with geovalues and reasonable?""" 
+        self.assertEqual(len(self.data.optstatus), len(self.data.geovalues))
+        # We only have the final energy available, so there's no point looking for OPT_NEW.
+        for i in range(1, len(self.data.optstatus)-1):
+            self.assertEqual(self.data.optstatus[i], self.data.OPT_UNKNOWN)
+        self.assertEqual(self.data.optstatus[-1], self.data.OPT_DONE)
+    
