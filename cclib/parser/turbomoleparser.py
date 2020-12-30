@@ -13,6 +13,7 @@ import numpy
 
 from cclib.parser import logfileparser
 from cclib.parser import utils
+from cclib.parser import data
 
 class AtomBasis:
     def __init__(self, atname, basis_name, inputfile):
@@ -193,6 +194,30 @@ class Turbomole(logfileparser.Logfile):
             if len(set(basis_sets)) == 1:
                 self.metadata["basis_set"] = list(set(basis_sets))[0]
         
+        # Molecular charge info from dscf.
+        #               nuc           elec       ->  total
+        #  ------------------------------------------------------------------------------
+        #                           charge      
+        #  ------------------------------------------------------------------------------
+        #           43.000000     -42.000000       1.000000
+        if "nuc           elec       ->  total" in line:
+            line = next(inputfile)
+            line = next(inputfile)
+            if "charge" in line:
+                line = next(inputfile)
+                line = next(inputfile)
+                
+                total_charge = float(line.split()[2])
+                total_charge_int = round(total_charge)
+                
+                # Check we wont loose information converting to int.
+                if total_charge != total_charge_int:
+                    self.logger.warning("Converting non integer total charge '{}' to integer".format(total_charge))
+                
+                # Set regardless.
+                self.set_attribute("charge", total_charge_int)
+                
+        
         ## Orbital occupation info from dscf.
         #  orbitals $scfmo  will be written to file mos
         # 
@@ -253,7 +278,10 @@ class Turbomole(logfileparser.Logfile):
             else:
                 self.homos[1] = homo['index']
                 
-            
+        
+        # Coord gradients.
+        
+        
         ## Atomic coordinates in job.last:
         #              +--------------------------------------------------+
         #              | Atomic coordinate, charge and isotop information |
@@ -293,6 +321,13 @@ class Turbomole(logfileparser.Logfile):
                 self.set_attribute('atomnos', atomnos)
                 self.set_attribute('natom', len(atomcoords))
         
+        # Flag that indicates we are doing an opt.
+        if "OPTIMIZATION CYCLE" in line:
+            self.append_attribute("optstatus", data.ccData.OPT_UNKNOWN)
+            
+            if "OPTIMIZATION CYCLE 1" in line:
+                # This is the start of the opt.
+                self.optstatus[-1] += data.ccData.OPT_NEW
         
         # Optimisation convergence criteria using statpt.
         #
@@ -308,19 +343,6 @@ class Turbomole(logfileparser.Logfile):
         # ****************************************************************** 
         if "CONVERGENCE INFORMATION" in line:
             # This is an optimisation.
-            # The cclib expectation is for atomcoords, scfenergies and geovalues to all have the same length (and for equivalent indices to relate to the same calculation step).
-            # However, there is an initial energy step before optimisation begins (ie, the starting geom and energy).
-            # To maintain list alignment, we will thus delete any coordinates and energies parsed before optimisation.
-            if not hasattr(self, 'geovalues'):
-                for attr in ("atomcoords", "scfvalues", "scftargets", "scfenergies", "mpenergies", "ccenergies"):
-                    if hasattr(self, attr):
-                        delattr(self, attr)
-                        
-            # We now need to do some balancing of the various lists we have parsed.
-            # The cclib expectation is for atomcoords, scfenergies, and geovalues to have the same length (and for equivalent indices to relate to the same calculation step).
-            # However, there should always be one more energy calculation than there are 
-            
-            
             # Skip lines.
             line = next(inputfile)
             line = next(inputfile)
@@ -352,10 +374,13 @@ class Turbomole(logfileparser.Logfile):
             if all(convergence):
                 # This iteration has converged.
                 self.append_attribute("optdone", len(self.geovalues) -1)
-            elif not hasattr(self, 'optdone'):
-                self.set_attribute("optdone", [])
-            
-            
+                self.optstatus[-1] += data.ccData.OPT_DONE
+            else:
+                # Not converged.
+                if not hasattr(self, 'optdone'):
+                    self.set_attribute("optdone", [])
+                #self.optstatus[-1] += data.ccData.OPT_UNCONVERGED
+                
 
         # Frequency values in aoforce.out
         #        mode               7        8        9       10       11       12
@@ -733,6 +758,20 @@ class Turbomole(logfileparser.Logfile):
     def after_parsing(self):
         if hasattr(self, 'vibfreqs'):
             self.deleting_modes(self.vibfreqs, self.vibdisps, self.vibirs, self.vibrmasses)
+            
+        # Try and determine our multiplicity from our orbitals.
+        if hasattr(self, "homos"):
+            if len(self.homos) == 1:
+                # If we are restricted (len(homos) == 1); assume we have to be singlet.
+                self.set_attribute("mult", 1)
+            else:
+                # Unrestricted, the difference in homos should tell us the no. of unpaired e-.
+                unpaired_e = abs(self.homos[0] - self.homos[1])
+                self.set_attribute("mult", unpaired_e +1)
+                
+        # Set a flag if we stopped part way through an opt.
+        if hasattr(self, "optstatus") and self.optstatus[-1] != data.ccData.OPT_DONE:
+            self.optstatus[-1] += data.ccData.OPT_UNCONVERGED
 
 
 class OldTurbomole(logfileparser.Logfile):
