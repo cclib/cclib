@@ -352,10 +352,3 @@ $end
 
     2007-08-13 16:24:40.654 
 
-fine, there is no data group "$actual step"
-next step = grad
- energy change  : actual value =   0.6730E-07 threshold =   0.1000E-05
- geom. gradient : actual value =   0.2047E-04 threshold =   0.1000E-02
-
-CONVERGENCY CRITERIA FULFILLED IN CYCLE 2
-
