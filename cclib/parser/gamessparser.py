@@ -693,13 +693,13 @@ class GAMESS(logfileparser.Logfile):
                     # will look like 10099, 101100, 102101, etc., with no spaces between
                     # the numbers. We can check if this is the case by seeing if the first
                     # number on the line exceeds 10000.
-                    gt_100_its = int(line.split()[0]) > 10000
+                    base_split = line.split()
+                    gt_100_its = int(base_split[0]) > 10000
                     if gt_100_its:
-                        base_split = line.split()
                         first_two = [base_split[0][:3], base_split[0][3:]]
                         split = [*first_two, *base_split[1:]]
                     else:
-                        split = line.split()
+                        split = base_split
                     values.append([float(split[self.scf_valcol])])
                 try:
                     line = next(inputfile)
