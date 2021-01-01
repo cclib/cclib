@@ -19,7 +19,7 @@ from cclib.method.volume import electrondensity_spin
 from cclib.parser.utils import convertor
 from cclib.parser.utils import find_package
 
-from typing import List
+from typing import Optional, Sequence, Tuple
 
 
 class MissingInputError(Exception):
@@ -78,9 +78,8 @@ class Stockholder(Method):
         super()._check_required_attributes()
 
     def _read_proatom(
-        self, directory, atom_num, charge  # type = str  # type = int  # type = float
-    ):
-        # type: (...) -> numpy.ndarray, numpy.ndarray
+        self, directory: str, atom_num: int, charge: float
+    ) -> Tuple[numpy.ndarray, numpy.ndarray]:
         """Return a list containing proatom reference densities."""
         # TODO: Treat calculations with psuedopotentials
         # TODO: Modify so that proatom densities are read only once for horton
