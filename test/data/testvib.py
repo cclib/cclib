@@ -92,7 +92,6 @@ class GenericIRTest(unittest.TestCase):
     @skipForParser('ADF', 'not implemented yet')
     @skipForParser('DALTON', 'not implemented yet')
     @skipForParser('GAMESSUK', 'not implemented yet')
-    @skipForParser('Jaguar', 'not implemented yet')
     @skipForParser('Molcas', 'not implemented yet')
     @skipForParser('Molpro', 'not implemented yet')
     @skipForParser('ORCA', 'not implemented yet')
