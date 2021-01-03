@@ -86,6 +86,23 @@ class GenericIRTest(unittest.TestCase):
         """Is the maximum reduced mass 6.9 +/- 0.1 daltons?"""
         self.assertAlmostEqual(max(self.data.vibrmasses), self.max_reduced_mass, delta=0.1)
 
+    @skipForParser('ADF', 'not implemented yet')
+    @skipForParser('DALTON', 'not implemented yet')
+    @skipForParser('GAMESS', 'not implemented yet')
+    @skipForParser('GAMESSUK', 'not implemented yet')
+    @skipForParser('Jaguar', 'not implemented yet')
+    @skipForParser('Molcas', 'not implemented yet')
+    @skipForParser('Molpro', 'not implemented yet')
+    @skipForParser('ORCA', 'not implemented yet')
+    @skipForParser('Psi3', 'not implemented yet')
+    @skipForParser('Psi4', 'not implemented yet')
+    @skipForParser('Turbomole', 'not implemented yet')
+    def testzeropointcorrection(self):
+        # reference zero-point correction from dvb_ir.out
+        zpve = 0.1771
+        """Is the zero-point correction correct?"""
+        self.assertAlmostEqual(self.data.zpve, zpve, delta=0.001)
+
 
 class FireflyIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
@@ -99,12 +116,6 @@ class GaussianIRTest(GenericIRTest):
     def testvibsyms(self):
         """Is the length of vibsyms correct?"""
         self.assertEqual(len(self.data.vibsyms), self.numvib)
-
-    def testzeropointcorrection(self):
-        # reference zero-point correction from dvb_ir.out
-        zpve = 0.1771
-        """Is the zero-point correction correct?"""
-        self.assertAlmostEqual(self.data.zpve, zpve, delta=0.001)
 
 
 class JaguarIRTest(GenericIRTest):

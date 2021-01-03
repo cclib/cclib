@@ -1554,8 +1554,8 @@ cannot be determined. Rerun without `$molecule read`."""
                     assert 'Zero point vibrational energy' in line
                     if not hasattr(self, 'zpe'):
                         # Convert from kcal/mol to Hartree/particle.
-                        self.zpe = utils.convertor(float(line.split()[4]),
-                                                   'kcal/mol', 'hartree')
+                        self.zpve = utils.convertor(float(line.split()[4]),
+                                                    'kcal/mol', 'hartree')
                     atommasses = []
                     while 'Translational Enthalpy' not in line:
                         if 'Has Mass' in line:
