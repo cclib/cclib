@@ -26,6 +26,9 @@ class GenericIRTest(unittest.TestCase):
     max_force_constant = 10.0
     max_reduced_mass = 6.9
 
+    # reference zero-point correction from Gaussian 16 dvb_ir.out
+    zpve = 0.1771
+
     def setUp(self):
         """Initialize the number of vibrational frequencies on a per molecule basis"""
         self.numvib = 3*len(self.data.atomnos) - 6
@@ -96,16 +99,16 @@ class GenericIRTest(unittest.TestCase):
     @skipForParser('Psi3', 'not implemented yet')
     @skipForParser('Turbomole', 'not implemented yet')
     def testzeropointcorrection(self):
-        # reference zero-point correction from Gaussian 16 dvb_ir.out
-        zpve = 0.1771
         """Is the zero-point correction correct?"""
-        self.assertAlmostEqual(self.data.zpve, zpve, delta=0.001)
+        self.assertAlmostEqual(self.data.zpve, self.zpve, delta=0.001)
 
 
 class FireflyIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
     max_IR_intensity = 135
+    # ???
+    zpve = 0.1935
 
 
 class GaussianIRTest(GenericIRTest):
@@ -259,6 +262,7 @@ class Psi4IRTest(GenericIRTest):
 
     # RHF is used for Psi4 IR test data instead of B3LYP
     max_force_constant = 9.37
+    zpve = 0.1917
 
 
 class GenericIRimgTest(unittest.TestCase):
