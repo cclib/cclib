@@ -94,10 +94,9 @@ class GenericIRTest(unittest.TestCase):
     @skipForParser('Molpro', 'not implemented yet')
     @skipForParser('ORCA', 'not implemented yet')
     @skipForParser('Psi3', 'not implemented yet')
-    @skipForParser('Psi4', 'not implemented yet')
     @skipForParser('Turbomole', 'not implemented yet')
     def testzeropointcorrection(self):
-        # reference zero-point correction from dvb_ir.out
+        # reference zero-point correction from Gaussian 16 dvb_ir.out
         zpve = 0.1771
         """Is the zero-point correction correct?"""
         self.assertAlmostEqual(self.data.zpve, zpve, delta=0.001)

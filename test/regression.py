@@ -3257,7 +3257,7 @@ old_unittests = {
     "Psi4/Psi4-1.0/C_bigbasis.out":     Psi4BigBasisTest,
     "Psi4/Psi4-1.0/dvb_gopt_rhf.out":   Psi4GeoOptTest,
     "Psi4/Psi4-1.0/dvb_gopt_rks.out":   Psi4GeoOptTest,
-    "Psi4/Psi4-1.0/dvb_ir_rhf.out":     GenericIRTest,
+    "Psi4/Psi4-1.0/dvb_ir_rhf.out":     Psi4IRTest,
     "Psi4/Psi4-1.0/dvb_sp_rhf.out":     PsiSPTest_noatommasses,
     "Psi4/Psi4-1.0/dvb_sp_rks.out":     PsiSPTest_noatommasses,
     "Psi4/Psi4-1.0/dvb_sp_rohf.out":    GenericROSPTest,

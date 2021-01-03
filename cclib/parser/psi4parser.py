@@ -1059,6 +1059,27 @@ class Psi4(logfileparser.Logfile):
             if len(vibdisps) == n_modes:
                 self.set_attribute('vibfconsts', vibfconsts)
 
+        # Second one is 1.0, first one is 1.2 and newer
+        if (self.section == "Thermochemistry Energy Analysis" and "Thermochemistry Energy Analysis" in line) \
+           or (self.section == "Energy Analysis" and "Energy Analysis" in line):
+
+            self.skip_lines(
+                inputfile,
+                [
+                    "b",
+                    "Raw electronic energy",
+                    "Total E0",
+                    "b",
+                    "Zero-point energy, ZPE_vib = Sum_i nu_i / 2",
+                    "Electronic ZPE",
+                    "Translational ZPE",
+                    "Rotational ZPE"
+                ]
+            )
+            line = next(inputfile)
+            assert "Vibrational ZPE" in line
+            self.set_attribute("zpve", float(line.split()[6]))
+
         # If finite difference is used to compute forces (i.e. by displacing
         # slightly all the atoms), a series of additional scf calculations is
         # performed. Orbitals, geometries, energies, etc. for these shouln't be
