@@ -759,6 +759,17 @@ class ADF(logfileparser.Logfile):
             if hasattr(self, "vibramans"):
                 self.vibramans = numpy.array(self.vibramans, "d")
 
+            self.skip_lines(
+                inputfile,
+                ["b", "b", "e", "Statistical Thermal Analysis", "e", "b"]
+            )
+            line = next(inputfile)
+            assert "Pressure" in line
+            self.set_attribute("pressure", float(line.split()[1]))
+            line = next(inputfile)
+            assert "Temperature" in line
+            self.set_attribute("temperature", float(line.split()[1]))
+
         #******************************************************************************************************************8
         #delete this after new implementation using smat, eigvec print,eprint?
         # Extract the number of basis sets
