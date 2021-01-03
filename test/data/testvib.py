@@ -90,7 +90,6 @@ class GenericIRTest(unittest.TestCase):
         self.assertAlmostEqual(max(self.data.vibrmasses), self.max_reduced_mass, delta=0.1)
 
     @skipForParser('ADF', 'not implemented yet')
-    @skipForParser('DALTON', 'not implemented yet')
     @skipForParser('GAMESSUK', 'not implemented yet')
     @skipForParser('Molcas', 'not implemented yet')
     @skipForParser('Molpro', 'not implemented yet')
