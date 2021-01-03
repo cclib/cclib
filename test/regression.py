@@ -3010,12 +3010,19 @@ class OrcaTDDFTTest_error(OrcaTDDFTTest):
 
 class OrcaIRTest_old_coordsOK(OrcaIRTest):
 
+    zpve = 0.1986
+
     enthalpy_places = -1
     entropy_places = 2
     freeenergy_places = -1
 
 
 class OrcaIRTest_old(OrcaIRTest):
+    """The frequency part of this calculation didn't finish, but went ahead and
+    printed incomplete and incorrect results anyway.
+    """
+
+    zpve = 0.0200
 
     enthalpy_places = -1
     entropy_places = 2

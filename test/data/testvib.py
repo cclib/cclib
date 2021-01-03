@@ -94,7 +94,6 @@ class GenericIRTest(unittest.TestCase):
     @skipForParser('GAMESSUK', 'not implemented yet')
     @skipForParser('Molcas', 'not implemented yet')
     @skipForParser('Molpro', 'not implemented yet')
-    @skipForParser('ORCA', 'not implemented yet')
     @skipForParser('Psi3', 'not implemented yet')
     @skipForParser('Turbomole', 'not implemented yet')
     def testzeropointcorrection(self):
@@ -165,6 +164,7 @@ class OrcaIRTest(GenericIRTest):
 
     # ORCA has a bug in the intensities for version < 4.0
     max_IR_intensity = 215
+    zpve = 0.1921
 
     enthalpy_places = 3
     entropy_places = 3
