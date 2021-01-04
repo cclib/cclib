@@ -89,7 +89,6 @@ class GenericIRTest(unittest.TestCase):
         """Is the maximum reduced mass 6.9 +/- 0.1 daltons?"""
         self.assertAlmostEqual(max(self.data.vibrmasses), self.max_reduced_mass, delta=0.1)
 
-    @skipForParser('Molcas', 'not implemented yet')
     @skipForParser('Molpro', 'not implemented yet')
     @skipForParser('Psi3', 'not implemented yet')
     @skipForParser('Turbomole', 'not implemented yet')
@@ -139,6 +138,7 @@ class MolcasIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
     max_IR_intensity = 65
+    zpve = 0.1783
 
     entropy_places = 3
     enthalpy_places = 3
