@@ -3082,7 +3082,7 @@ old_unittests = {
     "ADF/ADF2004.01/dvb_sp_d.adfout":       ADFSPTest_nosyms_noscfvalues,
     "ADF/ADF2004.01/dvb_un_sp.adfout":      GenericSPunTest,
     "ADF/ADF2004.01/dvb_un_sp_c.adfout":    GenericSPunTest,
-    "ADF/ADF2004.01/dvb_ir.adfout":         GenericIRTest,
+    "ADF/ADF2004.01/dvb_ir.adfout":         ADFIRTest,
 
     "ADF/ADF2006.01/dvb_gopt.adfout":              ADFGeoOptTest_noscfvalues,
     "ADF/ADF2013.01/dvb_gopt_b_fullscf.adfout":    ADFGeoOptTest,

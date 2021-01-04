@@ -333,8 +333,8 @@ TD        QChem       QChemTDDFTTest        basicQChem5.1         dvb_td.out
 TDun      Gaussian    GenericTDunTest       basicGaussian09       CO_TD_delta.log
 TDun      Gaussian    GenericTDunTest       basicGaussian16       CO_TD_delta.log
 
-vib       ADF         GenericIRTest         basicADF2007.01       dvb_ir.adfout
-vib       ADF         GenericIRTest         basicADF2013.01       dvb_ir.adfout
+vib       ADF         ADFIRTest             basicADF2007.01       dvb_ir.adfout
+vib       ADF         ADFIRTest             basicADF2013.01       dvb_ir.adfout
 vib       DALTON      GenericIRTest         basicDALTON-2013      dvb_ir.out
 vib       DALTON      GenericIRTest         basicDALTON-2015      dvb_ir.out
 vib       GAMESSUK    GenericIRTest         basicGAMESS-UK7.0     dvb_ir.out

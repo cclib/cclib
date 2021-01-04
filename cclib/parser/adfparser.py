@@ -770,6 +770,34 @@ class ADF(logfileparser.Logfile):
             assert "Temperature" in line
             self.set_attribute("temperature", float(line.split()[1]))
 
+            self.skip_lines(
+                inputfile,
+                [
+                    "b",
+                    "b",
+                    "b",
+                    "Moments of Inertia",
+                    "e",
+                    "b",
+                    "principal moments",
+                    "d",
+                    "MOI tensor Xx",
+                    "MOI tensor Yx",
+                    "MOI tensor Zx",
+                    "b",
+                    "b",
+                ]
+            )
+            while line.split() != ["Temp", "Transl", "Rotat", "Vibrat", "Total"]:
+                line = next(inputfile)
+            self.skip_lines(inputfile, ["d", "s"])
+            line = next(inputfile)
+            assert "Entropy" in line
+            # self.set_attribute("entropy", float(line.split()))
+            line = next(inputfile)
+            assert "Internal Energy" in line
+            self.set_attribute("zpve", utils.convertor(float(line.split()[5]), "kcal/mol", "hartree"))
+
         #******************************************************************************************************************8
         #delete this after new implementation using smat, eigvec print,eprint?
         # Extract the number of basis sets
