@@ -876,6 +876,9 @@ class Molpro(logfileparser.Logfile):
                 line = next(inputfile)
                 self.amass += list(map(float, line.strip().split()[2:]))
 
+        if line[1:18] == "Zero point energy":
+            self.set_attribute("zpve", float(line.split()[3]))
+
         #1PROGRAM * POP (Mulliken population analysis)
         #
         #

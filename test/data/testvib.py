@@ -89,7 +89,6 @@ class GenericIRTest(unittest.TestCase):
         """Is the maximum reduced mass 6.9 +/- 0.1 daltons?"""
         self.assertAlmostEqual(max(self.data.vibrmasses), self.max_reduced_mass, delta=0.1)
 
-    @skipForParser('Molpro', 'not implemented yet')
     @skipForParser('Psi3', 'not implemented yet')
     @skipForParser('Turbomole', 'not implemented yet')
     def testzeropointcorrection(self):
