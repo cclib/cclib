@@ -60,8 +60,10 @@ def generate_coverage():
         print(e)
         sys.exit(1)
 
+    attributes = sorted(cclib.parser.data.ccData._attrlist)
+
     ncols = len(parser_names) + 1
-    colwidth = 20
+    colwidth = 4 + max(len(attribute) for attribute in attributes)
     colfmt = "%%-%is" % colwidth
     dashes = ("=" * (colwidth - 1) + " ") * ncols
 
@@ -92,7 +94,6 @@ def generate_coverage():
     # if it has been parsed by at least one unit test. Substitute an OK sign or
     # T/D appropriately, with the exception of attributes that have been explicitely
     # designated as N/A.
-    attributes = sorted(cclib.parser.data.ccData._attrlist)
     for attr in attributes:
         parsed = [any([attr in t['data'].__dict__ for t in alltests[p]]) for p in parser_names]
         for ip, p in enumerate(parsed):

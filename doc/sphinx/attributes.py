@@ -26,30 +26,13 @@ def generate_attributes():
     attributes = [line for line in data_doc.split('\n') if line[:8].strip() == '']
     attributes = [line for line in attributes if "--" in line]
 
-    # These are the widths of the columns in the table
-    wattr = 20
-    wdesc = 65
-    wunit = 28
-    wtype = 32
-
-    dashes = "    "
-    for w in [wattr, wdesc, wunit, wtype]:
-        dashes += "="*(w-1) + " "
-    header = "    "
-    header += "Name".ljust(wattr)
-    header += "Description".ljust(wdesc)
-    header += "Units".ljust(wunit)
-    header += "Data type".ljust(wtype)
-    lines.append(dashes)
-    lines.append(header)
-    lines.append(dashes)
-
     names = []
+    descriptions = []
+    units = []
+    types = []
     for line in attributes:
-
         # There is always a double dash after the name.
         attr, desc = line.strip().split(' -- ')
-        names.append(attr)
 
         # The type and unit are in parentheses, but these
         # are not always the only parentheses on the line.
@@ -64,14 +47,40 @@ def generate_attributes():
             atype = other
             aunit = ''
 
+        for i in range(1, 4):
+            atype = atype.replace('[%i]' % i, ' of rank %i' % i)
+
+        names.append(attr)
+        descriptions.append(desc)
+        units.append(aunit)
+        types.append(atype)
+
+    # These are the widths of the columns in the table
+    wattr = 4 + max(len(attr) for attr in names)
+    wdesc = 1 + max(len(desc) for desc in descriptions)
+    wunit = 1 + max(len(aunit) for aunit in units)
+    wtype = 1 + max(len(atype) for atype in types)
+
+    dashes = "    "
+    for w in [wattr, wdesc, wunit, wtype]:
+        dashes += "="*(w-1) + " "
+    header = "    "
+    header += "Name".ljust(wattr)
+    header += "Description".ljust(wdesc)
+    header += "Units".ljust(wunit)
+    header += "Data type".ljust(wtype)
+    lines.append(dashes)
+    lines.append(header)
+    lines.append(dashes)
+
+    for attr, desc, aunit, atype in zip(names, descriptions, units, types):
         # Print the line with columns align to the table. Note that
         # the description sometimes contain Unicode characters, so
         # decode-encode when justifying to get the correct length.
         attr = ("`%s`_" % attr).ljust(wattr)
         desc = desc.ljust(wdesc)
         aunit = aunit.ljust(wunit)
-        for i in range(1, 4):
-            atype = atype.replace('[%i]' % i, ' of rank %i' % i)
+
         lines.append("    " + attr + desc + aunit + atype)
 
     lines.append(dashes)
