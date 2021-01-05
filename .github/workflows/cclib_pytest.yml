@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        python-version: ['3.6', '3.7', '3.8']
+        python-version: ['3.6', '3.7']
     steps:
     - name: Install SWIG and Git
       run: |
@@ -25,7 +25,7 @@ jobs:
       run: |
           conda config --set always_yes true --set changeps1 false --set channel_priority flexible --set quiet true
           conda info -a
-          conda install psi4 openbabel pytest-cov pytest-shutil h5py
+          conda install ci-psi4 psi4 openbabel pytest-cov pytest-shutil h5py
           python -m pip install pyscf
           python -m pip install git+https://github.com/theochem/iodata.git
           conda list
