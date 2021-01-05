@@ -40,7 +40,7 @@ def generate_coverage():
 
     from test.test_data import (all_modules, all_parsers, parser_names, DataSuite)
     import inspect
-    ds_args = inspect.getargspec(DataSuite.__init__).args
+    ds_args = inspect.getfullargspec(DataSuite.__init__).args
     logpath = thispath + "/coverage.tests.log"
     try:
         with open(logpath, "w") as flog:
