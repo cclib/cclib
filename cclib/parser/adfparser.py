@@ -793,7 +793,11 @@ class ADF(logfileparser.Logfile):
             self.skip_lines(inputfile, ["d", "s"])
             line = next(inputfile)
             assert "Entropy" in line
-            # self.set_attribute("entropy", float(line.split()))
+            self.set_attribute(
+                "entropy",
+                utils.convertor(float(line.split()[6]) * self.temperature / 1000,
+                                "kcal/mol", "hartree")
+            )
             line = next(inputfile)
             assert "Internal Energy" in line
             self.set_attribute("zpve", utils.convertor(float(line.split()[5]), "kcal/mol", "hartree"))
