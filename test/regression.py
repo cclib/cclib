@@ -647,7 +647,7 @@ def testGAMESS_GAMESS_US2018_exam45_log(logfile):
 
 def testGAMESS_GAMESS_US2018_exam46_log(logfile):
     """
-    This logfile needs >100 scf iterations for convergence, which used to cause
+    This logfile has >100 scf iterations, which used to cause
     a parsing error.
     """
     assert len(logfile.data.scfvalues[0]) == 113
