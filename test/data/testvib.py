@@ -90,7 +90,6 @@ class GenericIRTest(unittest.TestCase):
         self.assertAlmostEqual(max(self.data.vibrmasses), self.max_reduced_mass, delta=0.1)
 
     @skipForParser('Psi3', 'not implemented yet')
-    @skipForParser('Turbomole', 'not implemented yet')
     def testzeropointcorrection(self):
         """Is the zero-point correction correct?"""
         self.assertAlmostEqual(self.data.zpve, self.zpve, delta=1.0e-3)
@@ -267,6 +266,13 @@ class Psi4IRTest(GenericIRTest):
     # RHF is used for Psi4 IR test data instead of B3LYP
     max_force_constant = 9.37
     zpve = 0.1917
+
+
+class TurbomoleIRTest(GenericIRTest):
+    """Customized vibrational frequency unittest"""
+
+    # ???
+    zpve = 0.1725
 
 
 class GenericIRimgTest(unittest.TestCase):
