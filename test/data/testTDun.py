@@ -35,7 +35,7 @@ class GenericTDunTest(unittest.TestCase):
         self.assertEqual(len(self.data.etoscs), self.number)
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForLogfile("Turbomole/basicTurbomole7.4/CO_cc2_TD", "Rotatory strengths are not currently available for ricc2")
     def testrotatsnumber(self):
         """Is the length of etrotats correct?"""
         self.assertEqual(len(self.data.etrotats), self.number)
