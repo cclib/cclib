@@ -71,8 +71,8 @@ class GenericTDTest(unittest.TestCase):
     @skipForParser('GAMESS', 'etrotats are not yet implemented')
     @skipForParser('GAMESSUK', 'etrotats are not yet implemented')
     @skipForParser('Jaguar', 'etrotats are not yet implemented')
-    @skipForParser('Turbomole', 'etrotats are not yet implemented')
     @skipForParser('QChem', 'Q-Chem cannot calculate rotatory strengths')
+    @skipForLogfile("Turbomole/basicTurbomole7.4/CO_cc2_TD", "Rotatory strengths are not currently available for ricc2")
     def testrotatsnumber(self):
         """Is the length of etrotats correct?"""
         self.assertEqual(len(self.data.etrotats), self.number)

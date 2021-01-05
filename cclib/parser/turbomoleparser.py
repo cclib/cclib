@@ -887,10 +887,19 @@ class Turbomole(logfileparser.Logfile):
             energy = utils.convertor(utils.float(line.split()[-1]), 'hartree', 'wavenumber')
             self.append_attribute("etenergies", energy)
             
+            # Oscillator strength.
             while "length representation:" not in line:
                 line = next(inputfile)
             oscillator_strength = utils.float(line.split()[-1])
             self.append_attribute("etoscs", oscillator_strength)
+            
+            line = next(inputfile)
+            
+            # Rotatory strength.
+            while "length representation:" not in line:
+                line = next(inputfile)
+            rotatory_strength = utils.float(line.split()[-1])
+            self.append_attribute("etrotats", rotatory_strength)
             
             while "Dominant contributions:" not in line:
                 line = next(inputfile)
