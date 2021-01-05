@@ -12,7 +12,10 @@
 # serve to show the default.
 
 import sys, os
-
+# this adds the styling ccs to increase the content max width
+# previously there was a large blank space on the right side of the screen
+def setup(app):
+    app.add_css_file('increase_max_width.css')
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
