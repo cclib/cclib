@@ -1,10 +1,5 @@
 name: cclib docs push
 on: 
-  workflow_run:
-    workflows: ["cclib docs build"]
-    branches: [master]
-    types: 
-      - completed
   pull_request:
     branches:
       - master
