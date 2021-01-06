@@ -645,6 +645,18 @@ def testGAMESS_GAMESS_US2018_exam45_log(logfile):
         parse_version(logfile.data.metadata["package_version"]), Version
     )
 
+def testGAMESS_GAMESS_US2018_exam46_log(logfile):
+    """
+    This logfile has >100 scf iterations, which used to cause
+    a parsing error.
+    """
+    assert len(logfile.data.scfvalues[0]) == 113
+    assert logfile.data.metadata["legacy_package_version"] == "2018R3"
+    assert logfile.data.metadata["package_version"] == "2018.r3"
+    assert isinstance(
+        parse_version(logfile.data.metadata["package_version"]), Version
+    )
+
 
 def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out(logfile):
     """Do some basic checks for this old unit test that was failing.

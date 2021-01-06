@@ -689,13 +689,19 @@ class GAMESS(logfileparser.Logfile):
                 except ValueError:
                     pass
                 else:
-                    values.append([float(line.split()[self.scf_valcol])])
+                    # if there were 100 iterations or more, the first part of the line
+                    # will look like 10099, 101100, 102101, etc., with no spaces between
+                    # the numbers. We can check if this is the case by seeing if the first
+                    # number on the line exceeds 10000.
+                    split_line = [line[0:4], line[4:7]] + line[7:].split()
+                    values.append([float(split_line[self.scf_valcol])])
                 try:
                     line = next(inputfile)
                 except StopIteration:
                     self.logger.warning('File terminated before end of last SCF!')
                     break
             self.scfvalues.append(values)
+
 
         # Sometimes, only the first SCF cycle has the banner parsed for above,
         # so we must identify them from the header before the SCF iterations.
