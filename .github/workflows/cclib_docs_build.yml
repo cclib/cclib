@@ -12,7 +12,7 @@ jobs:
         name: pytest-coverage-report
         path: docs/sphinx/coverage
     - name: Build docs
-    - uses: ammaraskar/sphinx-action@master
+      uses: ammaraskar/sphinx-action@master
       with:
         docs-folder: "doc/sphinx"
         pre-build-command: "python -m pip install git+https://github.com/cclib/sphinx_rtd_theme.git"
