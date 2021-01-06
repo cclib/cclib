@@ -1,6 +1,11 @@
-name: cclib docs
+name: cclib docs build
 
-on: [push, pull_request]
+on: 
+  workflow_run:
+    workflows: ["Pytest"]
+    branches: [master]
+    types: 
+      - completed
 
 jobs:
   build:
