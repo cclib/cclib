@@ -2,8 +2,8 @@ name: cclib docs build
 
 on: 
   workflow_run:
-    workflows: ["Pytest"]
-    branches: [master]
+    workflows: 
+      - Pytest
     types: 
       - completed
 
