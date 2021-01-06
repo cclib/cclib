@@ -1,0 +1,24 @@
+name: cclib docs
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Get Coverage Report artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: pytest-coverage-report
+        path: docs/sphinx/coverage
+    - name: Build docs
+    - uses: ammaraskar/sphinx-action@master
+      with:
+        docs-folder: "doc/sphinx"
+        pre-build-command: "python -m pip install git+https://github.com/cclib/sphinx_rtd_theme.git"
+        build-command: "make default"
+    - name: Store completed docs
+      uses: actions/upload-artifact@v2
+      with:
+        name: html-docs
+        path: doc/sphinx/_build/html

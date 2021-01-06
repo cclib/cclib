@@ -56,4 +56,8 @@ jobs:
           which python
           env | sort
           bash .github/scripts/run_pytest.bash
-    #       bash .github/scripts/build_docs.bash
+    - name: Store coverage report
+      uses: actions/upload-artifact@v2
+      with:
+        name: pytest-coverage-report
+        path: htmlcov
