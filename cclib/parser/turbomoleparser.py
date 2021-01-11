@@ -74,7 +74,7 @@ class Turbomole(logfileparser.Logfile):
         return label[0].upper() + label[1:]
 
     def before_parsing(self):
-        self.geoopt = False # Is this a GeoOpt? Needed for SCF targets/values.
+        
         self.periodic_table = utils.PeriodicTable()
         self.new_module()
 
