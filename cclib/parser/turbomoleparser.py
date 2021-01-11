@@ -330,27 +330,31 @@ class Turbomole(logfileparser.Logfile):
         #     irrep                 35a         36a         37a         38a         39a   
         #  eigenvalues H         -0.28091    -0.15088    -0.09343    -0.07531    -0.00688
         #             eV          -7.6440     -4.1058     -2.5424     -2.0493     -0.1873
-        if "will be written to file mos" in line and hasattr(self, "mosyms"):
-            orbitals, line = self.parse_dscf_orbitals(inputfile, line)
-            self.set_attribute("homos", [self.determine_homo(self.mosyms[0], orbitals)])
-        
-        if "alpha:" in line and hasattr(self, "mosyms"):
-            orbitals, line = self.parse_dscf_orbitals(inputfile, line)
-            homo = self.determine_homo(self.mosyms[0], orbitals)
-            if not hasattr(self, "homos"):
-                self.set_attribute('homos', [homo])
-            else:
-                self.homos[0] = homo
+        # There's no point parsing HOMO/LUMO if we don't already have orbitals.
+        if hasattr(self, "mosyms"):
+            if "will be written to file mos" in line:
+                orbitals, line = self.parse_dscf_orbitals(inputfile, line)
+                self.set_attribute("homos", [self.determine_homo(self.mosyms[0], orbitals)])
             
-        if "beta:" in line and hasattr(self, "mosyms"):
-            orbitals, line = self.parse_dscf_orbitals(inputfile, line)
-            homo = self.determine_homo(self.mosyms[1], orbitals)
-            if not hasattr(self, "homos"):
-                self.set_attribute('homos', [homo])
-            elif len(self.homos) == 1:
-                self.homos.append(homo)
-            else:
-                self.homos[1] = homo
+            if "alpha:" in line:
+                orbitals, line = self.parse_dscf_orbitals(inputfile, line)
+                if len(orbitals) > 0:
+                    homo = self.determine_homo(self.mosyms[0], orbitals)
+                    if not hasattr(self, "homos"):
+                        self.set_attribute('homos', [homo])
+                    else:
+                        self.homos[0] = homo
+                
+            if "beta:" in line:
+                orbitals, line = self.parse_dscf_orbitals(inputfile, line)
+                if len(orbitals) > 0:
+                    homo = self.determine_homo(self.mosyms[1], orbitals)
+                    if not hasattr(self, "homos"):
+                        self.set_attribute('homos', [homo])
+                    elif len(self.homos) == 1:
+                        self.homos.append(homo)
+                    else:
+                        self.homos[1] = homo
         
         # Coordinates and gradients from statpt.
         #   *************************************************************************
