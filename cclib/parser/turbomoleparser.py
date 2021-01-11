@@ -874,7 +874,7 @@ class Turbomole(logfileparser.Logfile):
         #       occ. orbital   energy / eV   virt. orbital     energy / eV   |coeff.|^2*100
         #         7 a   alpha          -15.12     12 a   alpha            4.74       24.5
         #         7 a   beta           -15.12     12 a   beta             4.74       24.5        
-        if "Excitation energy:" in line:
+        if "Excitation energy:" in line and "excitation" in self.last_lines[-5].split():
             # The irrep of the state is a few lines back.
             symm_parts = self.last_lines[-5].split()
             # We don't always have the multiplicity available.
