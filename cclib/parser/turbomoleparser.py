@@ -164,9 +164,6 @@ class Turbomole(logfileparser.Logfile):
             # We have entered a new module (sub program); reset our success flag.
             self.metadata['success'] = False
             
-        if ": all done  ****" in line:
-            # End of module, set success flag.
-            self.metadata['success'] = True
             
             
 
@@ -461,6 +458,12 @@ class Turbomole(logfileparser.Logfile):
                         mp2energy = [utils.convertor(utils.float(line.split()[3]), 'hartree', 'eV')]
                         self.append_attribute('mpenergies', mp2energy)
                 line = next(inputfile)
+                
+            
+        if ": all done  ****" in line:
+            # End of module, set success flag.
+            self.metadata['success'] = True
+        
 
     def deleting_modes(self, vibfreqs, vibdisps, vibirs, vibrmasses):
         """Deleting frequencies relating to translations or rotations"""
