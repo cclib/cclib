@@ -14,7 +14,8 @@ on:
     - '**:**'
 
 jobs:
-  linux-python:
+
+  run-tests:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
@@ -61,3 +62,53 @@ jobs:
         with:
           name: pytest-coverage-report
           path: htmlcov
+
+  build-docs:
+    runs-on: ubuntu-20.04
+    needs: "run-tests"
+    steps:
+      - name: Get Coverage Report artifact
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
+        uses: actions/download-artifact@v2
+        with:
+          name: pytest-coverage-report
+          path: docs/sphinx/coverage
+      - name: Build docs
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
+        uses: ammaraskar/sphinx-action@master
+        with:
+          docs-folder: "doc/sphinx"
+          pre-build-command: "python -m pip install git+https://github.com/cclib/sphinx_rtd_theme.git"
+          build-command: "make default"
+      - name: Store completed docs
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: html-docs
+          path: doc/sphinx/_build/html
+
+  push-docs:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-20.04
+    needs: "build-docs"
+    steps:
+      - name: Get docs html
+        uses: actions/download-artifact@v2
+        with:
+          name: html-docs
+          path: html-docs
+      - name: Commit documentation changes
+        run: |
+          git clone https://github.com/cclib/cclib.git --branch gh-pages --single-branch gh-pages
+          cp -r html-docs/* gh-pages/
+          cd gh-pages
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "Commit: ${GITHUB_SHA}" || true
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          branch: gh-pages
+          directory: gh-pages
+          github_token: ${{ secrets.GITHUB_TOKEN }}

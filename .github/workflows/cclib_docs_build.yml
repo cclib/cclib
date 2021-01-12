@@ -11,7 +11,7 @@ on:
       - completed
 
 jobs:
-  build:
+  build-docs:
     runs-on: ubuntu-20.04
     steps:
       - name: Get Coverage Report artifact
