@@ -167,11 +167,6 @@ class Turbomole(logfileparser.Logfile):
             elif tokens[version_index +1] == "(":
                 revision = tokens[version_index +2]
                 self.metadata["package_version"] = "{}.r{}".format(package_version, revision)
-                
-            
-        if ": all done  ****" in line:
-            # End of module, set success flag.
-            self.metadata['success'] = True
             
         ## Basis set info from dscf.
         #               +--------------------------------------------------+
@@ -1101,6 +1096,11 @@ class Turbomole(logfileparser.Logfile):
         #  
         if "oscillator strength (length gauge)   :" in line:
             self.append_attribute("etoscs", utils.float(line.split()[-1]))
+                
+            
+        if ": all done  ****" in line:
+            # End of module, set success flag.
+            self.metadata['success'] = True
         
         # All done for this loop.
         # Keep track of last lines.
