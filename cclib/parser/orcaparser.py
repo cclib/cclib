@@ -116,15 +116,16 @@ class ORCA(logfileparser.Logfile):
             while line[0] != '=':
                 if line.lower()[:7] == 'warning':
                     self.metadata['warnings'].append('')
-                    while len(line) > 1:
+                    while len(line) > 1 and set(line.strip()) != {'='}:
                         self.metadata['warnings'][-1] += line[9:].strip()
                         line = next(inputfile)
                 elif line.lower()[:4] == 'info':
                     self.metadata['info'].append('')
-                    while len(line) > 1:
+                    while len(line) > 1 and set(line.strip()) != {'='}:
                         self.metadata['info'][-1] += line[9:].strip()
                         line = next(inputfile)
-                line = next(inputfile)
+                else:
+                    line = next(inputfile)
 
         # ================================================================================
         #                                        INPUT FILE
