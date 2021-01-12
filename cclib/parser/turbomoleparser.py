@@ -972,12 +972,14 @@ class Turbomole(logfileparser.Logfile):
             while "Electric transition dipole moment (length rep.):" not in line:
                 line = next(inputfile)
             line = next(inputfile)
+            
+            # Unlike PDM, we leave TDMs in units of au (based on the implementation for Gaussian). 
             line = next(inputfile)
-            tdm_x = utils.convertor(float(line.split()[1]), "ebohr", "Debye")
+            tdm_x = float(line.split()[1])
             line = next(inputfile)
-            tdm_y = utils.convertor(float(line.split()[1]), "ebohr", "Debye")
+            tdm_y = float(line.split()[1])
             line = next(inputfile)
-            tdm_z = utils.convertor(float(line.split()[1]), "ebohr", "Debye")
+            tdm_z = float(line.split()[1])
             
             self.append_attribute("etdips", [tdm_x, tdm_y, tdm_z])
             
