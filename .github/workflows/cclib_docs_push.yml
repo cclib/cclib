@@ -1,13 +1,14 @@
 ---
 # yamllint disable rule:line-length
-name: cclib docs push
+name: docs push
 
 # yamllint disable-line rule:truthy
 on:
   pull_request:
     branches:
       - master
-    types: [closed]
+    types:
+      - closed
 
 jobs:
   build:

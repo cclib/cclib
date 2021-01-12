@@ -1,12 +1,12 @@
 ---
 # yamllint disable rule:line-length
-name: build docs
+name: docs build
 
 # yamllint disable-line rule:truthy
 on:
   workflow_run:
     workflows:
-      - run tests
+      - "run tests"
     types:
       - completed
 
