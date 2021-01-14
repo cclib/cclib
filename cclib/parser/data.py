@@ -33,6 +33,7 @@ class ccData:
         atomspins -- atomic spin densities (dict of arrays[1])
         ccenergies -- molecular energies with Coupled-Cluster corrections (array[2], eV)
         charge -- net charge of the system (integer)
+        chempot -- estimate of the molecular chemical potential (array[1])
         coreelectrons -- number of core electrons in atom pseudopotentials (array[1])
         dispersionenergies -- a molecular dispersion energy corrections (array[1], eV)
         enthalpy -- sum of electronic and thermal enthalpies (float, hartree/particle)
@@ -54,8 +55,12 @@ class ccData:
         geotargets -- targets for convergence of geometry optimization (array[1])
         geovalues -- current values for convergence of geometry optmization (array[1])
         grads -- current values of forces (gradients) in geometry optimization (array[3])
+        hardness -- estimate of the molecular hardness (array[1])
         hessian -- elements of the force constant matrix (array[1])
+        homoenergies -- energy of HOMO(s) (array[1], eV)
         homos -- molecular orbital indices of HOMO(s) (array[1])
+        lumoenergies -- energy of LUMO(s) (array[1], eV)
+        lumos -- molecular orbital indices of LUMO(s) (array[1])
         metadata -- various metadata about the package and computation (dict)
         mocoeffs -- molecular orbital coefficients (list of arrays[2])
         moenergies -- molecular orbital energies (list of arrays[1], eV)
@@ -65,6 +70,7 @@ class ccData:
         mult -- multiplicity of the system (integer)
         natom -- number of atoms (integer)
         nbasis -- number of basis functions (integer)
+        natom -- number of hydrogens (integer)
         nmo -- number of molecular orbitals (integer)
         nocoeffs -- natural orbital coefficients (array[2])
         nooccnos -- natural orbital occupation numbers (array[1])
@@ -81,6 +87,7 @@ class ccData:
         scfenergies -- molecular electronic energies after SCF (Hartree-Fock, DFT) (array[1], eV)
         scftargets -- targets for convergence of the SCF (array[2])
         scfvalues -- current values for convergence of the SCF (list of arrays[2])
+        softness -- estimate of the molecular softness (array[1])
         temperature -- temperature used for Thermochemistry (float, kelvin)
         time -- time in molecular dynamics and other trajectories (array[1], fs)
         transprop -- all absorption and emission spectra (dictionary {name:(etenergies, etoscs)})
@@ -114,6 +121,7 @@ class ccData:
        "atomspins":        Attribute(dict,             'spins',                       'atoms'),
        "ccenergies":       Attribute(numpy.ndarray,    'coupled cluster',             'properties:energy'),
        "charge":           Attribute(int,              'charge',                      'properties'),
+       "chempot":          Attribute(numpy.ndarray,    'chemical potential',          'approximation'),
        "coreelectrons":    Attribute(numpy.ndarray,    'core electrons',              'atoms'),
        "dispersionenergies":Attribute(numpy.ndarray,   'dispersion correction',       'properties:energy'),
        "enthalpy":         Attribute(float,            'enthalpy',                    'properties'),
@@ -135,8 +143,12 @@ class ccData:
        "geotargets":       Attribute(numpy.ndarray,    'geometric targets',           'optimization'),
        "geovalues":        Attribute(numpy.ndarray,    'geometric values',            'optimization'),
        "grads":            Attribute(numpy.ndarray,    'TBD',                         'N/A'),
+       "hardness":         Attribute(numpy.ndarray,    'hardness',                    'approximation'),
        "hessian":          Attribute(numpy.ndarray,    'hessian matrix',              'vibrations'),
+       "homoenergies":       Attribute(numpy.ndarray,  'homo energies',               'properties:orbitals'),
        "homos":            Attribute(numpy.ndarray,    'homos',                       'properties:orbitals'),
+       "lumoenergies":       Attribute(numpy.ndarray,  'lumo energies',               'properties:orbitals'),
+       "lumos":            Attribute(numpy.ndarray,    'lumos',                       'properties:orbitals'),
        "metadata":         Attribute(dict,             'TBD',                         'N/A'),
        "mocoeffs":         Attribute(list,             'coeffs',                      'properties:orbitals'),
        "moenergies":       Attribute(list,             'energies',                    'properties:orbitals'),
@@ -146,6 +158,7 @@ class ccData:
        "mult":             Attribute(int,              'multiplicity',                'properties'),
        "natom":            Attribute(int,              'number of atoms',             'properties'),
        "nbasis":           Attribute(int,              'basis number',                'properties:orbitals'),
+       "nhydrogen":        Attribute(int,              'number of hydrogens',         'properties'),
        "nmo":              Attribute(int,              'MO number',                   'properties:orbitals'),
        "nocoeffs":         Attribute(numpy.ndarray,    'TBD',                         'N/A'),
        "nooccnos":         Attribute(numpy.ndarray,    'TBD',                         'N/A'),
@@ -162,6 +175,7 @@ class ccData:
        "scfenergies":      Attribute(numpy.ndarray,    'scf energies',                'optimization:scf'),
        "scftargets":       Attribute(numpy.ndarray,    'targets',                     'optimization:scf'),
        "scfvalues":        Attribute(list,             'values',                      'optimization:scf'),
+       "softness":         Attribute(numpy.ndarray,     'softness',                   'approximation'),
        "temperature":      Attribute(float,            'temperature',                 'properties'),
        "time":             Attribute(numpy.ndarray,    'time',                        'N/A'),
        "transprop":        Attribute(dict,             'electronic transitions',      'transitions'),
@@ -174,7 +188,7 @@ class ccData:
        "vibrmasses":       Attribute(numpy.ndarray,    'reduced masses',              'vibrations'),
        "vibsyms":          Attribute(list,             'vibration symmetry',          'vibrations'),
        "zpve":             Attribute(float,            'zero-point correction',       'properties:energies')
-    }
+    }   
 
     # The name of all attributes can be generated from the dictionary above.
     _attrlist = sorted(_attributes.keys())
