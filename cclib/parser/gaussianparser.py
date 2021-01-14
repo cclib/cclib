@@ -1192,11 +1192,8 @@ class Gaussian(logfileparser.Logfile):
                 if line.split()[1] == "virt." and HOMO == -2:
 
                     # If there aren't any symmetries, this is a good way to find the HOMO.
-                    HOMO = len(self.moenergies[0])
+                    HOMO = len(self.moenergies[0])-1
                     self.homos = [HOMO]
-                    # the LUMO is the orbital above the HOMO
-                    LUMO = HOMO + 1
-                    self.lumos = [LUMO]
 
                 # Convert to floats and append to moenergies, but sometimes Gaussian
                 #  doesn't print correctly so test for ValueError (bug 1756789).
@@ -1215,7 +1212,7 @@ class Gaussian(logfileparser.Logfile):
             # If, at this point, self.homos is unset, then there were not
             # any alpha virtual orbitals
             if not hasattr(self, "homos"):
-                HOMO = len(self.moenergies[0])
+                HOMO = len(self.moenergies[0])-1
                 self.homos = [HOMO]
 
             if line.find('Beta') == 2:
@@ -1227,11 +1224,8 @@ class Gaussian(logfileparser.Logfile):
 
                     # If there aren't any symmetries, this is a good way to find the HOMO.
                     # Also, check for consistency if homos was already parsed.
-                    HOMO = len(self.moenergies[1])
+                    HOMO = len(self.moenergies[1])-1
                     self.homos.append(HOMO)
-                    # the LUMO is the orbital above the HOMO
-                    LUMO = HOMO + 1
-                    self.lumos.append(LUMO)
 
                 part = line[28:]
                 i = 0
@@ -1242,21 +1236,6 @@ class Gaussian(logfileparser.Logfile):
                 line = next(inputfile)
 
             self.moenergies = [numpy.array(x, "d") for x in self.moenergies]
-
-            # set homoenergies and lumoenergies
-            def find_mo_energy(mo,moenergies):
-                moenergy = []
-                for i in range(0,len(mo)):
-                    energies = moenergies[i]
-                    n = mo[i] - 1
-                    moenergy.append(energies[n])
-                    return moenergy
-
-            if hasattr(self, "homos") and hasattr(self, "moenergies"):
-                self.homoenergies = find_mo_energy(self.homos,self.moenergies)
-
-            if hasattr(self, "lumos") and hasattr(self, "moenergies"):
-                self.lumoenergies = find_mo_energy(self.lumos,self.moenergies)
 
         # Start of the IR/Raman frequency section.
         # Caution is advised here, as additional frequency blocks
@@ -2150,23 +2129,3 @@ class Gaussian(logfileparser.Logfile):
 
         if line[:31] == ' Normal termination of Gaussian':
             self.metadata['success'] = True
-
-        # define some extra properties that can be approximated by homo and lumo energies
-        # definitions: https://pubs.acs.org/doi/10.1021/tx2003257
-        # derivations: https://www.mdpi.com/1422-0067/5/8/239/html)
-        if hasattr(self, "homoenergies") and hasattr(self, "lumoenergies"):
-            self.hardness = []
-            self.softness = []
-            self.chempot = []
-            self.electrophilicity = []
-            for i in range(0,len(self.homoenergies)):
-                homoenergies = self.homoenergies[i]
-                lumoenergies = self.lumoenergies[i]
-                hardness = (lumoenergies - homoenergies) / 2
-                softness = 1 / hardness
-                chempot = (lumoenergies + homoenergies) / 2
-                electrophilicity = (chempot**2) / (2*hardness)
-                self.hardness.append(hardness)
-                self.softness.append(softness)
-                self.chempot.append(chempot)
-                self.electrophilicity.append(electrophilicity)
