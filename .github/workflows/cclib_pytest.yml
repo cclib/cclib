@@ -65,13 +65,18 @@ jobs:
 
   build-docs:
     runs-on: ubuntu-20.04
+    strategy:
+      python-version: '3.7'
     needs: "run-tests"
     steps:
+      - name: Install Git
+        run: |
+          sudo apt-get update && sudo apt-get install -y -qq git
       - name: Get Coverage Report artifact
         uses: actions/download-artifact@v2
         with:
           name: pytest-coverage-report
-          path: docs/sphinx/coverage
+          path: doc/sphinx/coverage
       - name: Build docs
         uses: ammaraskar/sphinx-action@master
         with:
