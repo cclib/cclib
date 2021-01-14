@@ -1,6 +1,6 @@
 ---
 # yamllint disable rule:line-length
-name: run tests
+name: run tests / build docs / push docs
 
 # yamllint disable-line rule:truthy
 on: 
