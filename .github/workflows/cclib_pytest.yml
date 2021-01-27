@@ -87,6 +87,8 @@ jobs:
         working-directory: ./doc/sphinx
         run: |
           pwd
+          ls
+          make -v
           make default
           touch doc/sphinx/_build/html/.nojekyll
       - name: Store completed docs
