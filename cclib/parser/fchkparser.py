@@ -171,6 +171,30 @@ class FChk(logfileparser.Logfile):
         if line[0:11] == 'Shell types':
             self.parse_aonames(line, inputfile)
 
+        if line[0:19] == 'Real atomic weights':
+            count = int(line.split()[-1])
+            assert count == self.natom
+
+            atommasses = numpy.array(self._parse_block(inputfile, count, float, 'Atomic Masses'))
+
+            self.set_attribute('atommasses', atommasses)
+
+        if line[0:18] == 'Cartesian Gradient':
+            count = int(line.split()[-1])
+            assert count == self.natom*3
+
+            gradient = numpy.array(self._parse_block(inputfile, count, float, 'Gradient'))
+
+            self.set_attribute('grads', gradient)
+
+        if line[0:25] == 'Cartesian Force Constants':
+            count = int(line.split()[-1])
+            assert count == (3*self.natom*(3*self.natom+1))/2
+
+            hessian = numpy.array(self._parse_block(inputfile, count, float, 'Gradient'))
+
+            self.set_attribute('hessian', hessian)
+
     def parse_aonames(self, line, inputfile):
         # e.g.: Shell types                                I   N=          28
         count = int(line.split()[-1])
