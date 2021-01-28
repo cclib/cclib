@@ -179,6 +179,11 @@ class FChk(logfileparser.Logfile):
 
             self.set_attribute('atommasses', atommasses)
 
+        if line[0:10] == 'SCF Energy':
+            self.scfenergy = float(line.split()[-1])
+
+            self.set_attribute('scfenergies', [utils.convertor(self.scfenergy,'hartree','eV')])
+
         if line[0:18] == 'Cartesian Gradient':
             count = int(line.split()[-1])
             assert count == self.natom*3
@@ -194,6 +199,84 @@ class FChk(logfileparser.Logfile):
             hessian = numpy.array(self._parse_block(inputfile, count, float, 'Gradient'))
 
             self.set_attribute('hessian', hessian)
+
+        if line[0:13] == 'ETran scalars':
+            count = int(line.split()[-1])
+
+            etscalars = self._parse_block(inputfile, count, int, 'ET Scalars')
+
+            # Added new class attribute: net (number of excited estates)
+            self.net = etscalars[0]
+            self.netroot = etscalars[4]
+
+        if line[0:10] == 'ETran spin':
+            count = int(line.split()[-1])
+            assert count == self.net
+
+            etspin = self._parse_block(inputfile, count, int, 'ET Spin')
+
+            spin_labels = { 0:'Singlet',
+                            2:'Triplet',
+                           -1:'Unknown'}
+            etsyms = []
+            for i in etspin:
+                if i in spin_labels:
+                    etsyms.append(spin_labels[i])
+                else:
+                    etsyms.append(spin_labels[-1])
+
+            # This must be completed with actual symm irrep, but "ETran symm" section seems
+            # not to be given nothing but zeroes regardles the symm irrep
+
+            self.set_attribute('etsyms', etsyms)
+
+        if line[0:18] == 'ETran state values':
+            # This section is organized as follows:
+            # ·First the properties of each excited state (up to self.net):
+            # E, {muNx,muNy,muNz,muvelNx,muvelNy,muvelNz,mmagNx,mmagNy,mmagNz,unkX,unkY,unkZ,unkX,unkY,unkZ}_N=1,self.net
+            # ·The comes 48 items (only if Freq is requested)
+            # They were all 0.000 in G09, but get an actual value in G16
+            # ·Then, the derivates of each property with respect to Cartesian coordiates only for target state (self.netroot)
+            # For each Cartesian coordiate, all derivatives wrt to it are included:
+            #  dE/dx1 dmux/dx1 dmuy/dx1 ... unkZ/dx1
+            #  dE/dy1 dmux/dy1 dmuy/dy1 ... unkZ/dy1
+            #  ...
+            #  dE/dzN dmux/dzN dmuy/dzN ... unkZ/dzN
+            # The number of items is therefore:
+            ### 16*self.net (no Freq jobs)
+            ### 16*self.net + 48 + 3*self.natom*16 (Freq jobs)
+            count = int(line.split()[-1])
+            assert count in [16*self.net, 16*self.net+48+3*self.natom*16]
+
+            etvalues = self._parse_block(inputfile, count, float, 'ET Values')
+
+            # ETr energies (1/cm)
+            etenergies_au = [ e_es-self.scfenergy for e_es in etvalues[0:self.net*16:16] ]
+            etenergies = [ utils.convertor(etr,'hartree','wavenumber') for etr in etenergies_au ]
+            self.set_attribute('etenergies', etenergies)
+
+            # ETr dipoles (length-gauge)
+            etdips = []
+            for k in range(1,16*self.net,16):
+                etdips.append(etvalues[k:k+3])
+            self.set_attribute('etdips',etdips)
+
+            # Osc. Strength from Etr dipoles
+            # oscs = 2/3 * Etr(au) * dip²(au)
+            etoscs = [ 2.0/3.0*e*numpy.linalg.norm(numpy.array(dip))**2 for e,dip in zip(etenergies_au,etdips) ]
+            self.set_attribute('etoscs', etoscs)
+
+            # ETr dipoles (velocity-gauge)
+            etveldips = []
+            for k in range(4,16*self.net,16):
+                etveldips.append(etvalues[k:k+3])
+            self.set_attribute('etveldips',etveldips)
+
+            # ETr magnetic dipoles
+            etmagdips = []
+            for k in range(7,16*self.net,16):
+                etmagdips.append(etvalues[k:k+3])
+            self.set_attribute('etmagdips',etmagdips)
 
     def parse_aonames(self, line, inputfile):
         # e.g.: Shell types                                I   N=          28
