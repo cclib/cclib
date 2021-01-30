@@ -225,8 +225,10 @@ class FChk(logfileparser.Logfile):
                 else:
                     etsyms.append(spin_labels[-1])
 
-            # This must be completed with actual symm irrep, but "ETran symm" section seems
-            # not to be given nothing but zeroes regardles the symm irrep
+            # The extracted property does not contain the actual irrep label
+            # (contrarily to that extracted from the Gaussian log)
+            # After this, 'Etran sym' appears (and would need to be parsed), 
+            # but at least in Gaussian this contains only zeroes regardless of the irrep.
 
             self.set_attribute('etsyms', etsyms)
 
@@ -234,7 +236,7 @@ class FChk(logfileparser.Logfile):
             # This section is organized as follows:
             # ·First the properties of each excited state (up to self.net):
             # E, {muNx,muNy,muNz,muvelNx,muvelNy,muvelNz,mmagNx,mmagNy,mmagNz,unkX,unkY,unkZ,unkX,unkY,unkZ}_N=1,self.net
-            # ·The comes 48 items (only if Freq is requested)
+            # ·Then come 48 items (only if Freq is requested)
             # They were all 0.000 in G09, but get an actual value in G16
             # ·Then, the derivates of each property with respect to Cartesian coordiates only for target state (self.netroot)
             # For each Cartesian coordiate, all derivatives wrt to it are included:
