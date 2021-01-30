@@ -347,6 +347,25 @@ class GenericSPTest(unittest.TestCase):
             packaging.version.parse(self.data.metadata["package_version"]),
             packaging.version.Version
         )
+    @skipForParser('ADF', 'reading cpu/wall time is not implemented for this parser')
+    @skipForParser('DALTON', 'reading cpu/wall time is not implemented for this parser') 
+    @skipForParser('FChk', 'reading cpu/wall time is not implemented for this parser') 
+    @skipForParser('GAMESS', 'reading cpu/wall time is not implemented for this parser') 
+    @skipForParser('GAMESSUK', 'reading cpu/wall time is not implemented for this parser') 
+    @skipForParser('GAMESSUS', 'reading cpu/wall time is not implemented for this parser') 
+    @skipForParser('Gaussian', 'reading cpu/wall time is not implemented for this parser') 
+    @skipForParser('Jaguar', 'reading cpu/wall time is not implemented for this parser') 
+    @skipForParser('Molcas', ' reading cpu/wall time is not implemented for this parser') 
+    @skipForParser('Molpro', 'reading cpu/wall time is not implemented for this parser') 
+    @skipForParser('NWChem', 'reading cpu/wall time is not implemented for this parser') 
+    @skipForParser('ORCA', 'reading cpu not implemented for this parser, wall time not available') 
+    @skipForParser('Psi3', 'reading cpu/wall time is not implemented for this parser') 
+    @skipForParser('Psi4', 'reading cpu/wall time is not implemented for this parser') 
+    @skipForParser('Turbomole', 'reading cpu/wall time is not implemented for this parser') 
+    def testmetadata_times(self):
+        """Does metadata have expected keys and values?"""
+        self.assertIn("cpu_time", self.data.metadata)
+        self.assertIn("wall_time", self.data.metadata)
 
 
 class ADFSPTest(GenericSPTest):
