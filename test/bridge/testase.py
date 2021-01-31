@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2020, the cclib development team
+# Copyright (c) 20211, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -102,10 +102,10 @@ class ASETest(unittest.TestCase):
             ase_data.atomcharges["mulliken"], data.atomcharges["mulliken"]
         )
         assert np.allclose(
-            ase_data.atomspins["mulliken"], 0
-        )  # spin densities not supported but overwritten by EMT
+            ase_data.atomspins["mulliken"], data.atomspins["mulliken"]
+        )
         assert np.isclose(ase_data.charge, data.charge)
-        assert np.isclose(ase_data.mult, 1)
+        assert np.isclose(ase_data.mult, data.mult)
         assert np.isclose(ase_data.natom, len(data.atomnos))
         assert np.isclose(ase_data.temperature, 0)
 
