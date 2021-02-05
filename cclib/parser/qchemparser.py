@@ -1056,7 +1056,6 @@ cannot be determined. Rerun without `$molecule read`."""
                         sec = []
                         while line.strip() != '':
                             re_match = self.re_tddft.search(line)
-                            #print(re_match.group(1),"|", re_match.group(2),"|",re_match.group(3),"|",re_match.group(4),"|",re_match.group(5),"|",re_match.group(6),"|",re_match.group(7))
                             if self.unrestricted:
                                 spin = spinmap[re_match.group(7)]
                             else:
@@ -1087,22 +1086,30 @@ cannot be determined. Rerun without `$molecule read`."""
                                 # the 'V'irtual orbitals (index > self.nalpha)
                                 # from or to which the excitation can go:
 
+                                # this is supposed to be the standard case:
+                                n_minor=self.nbeta
+                                n_major=self.nalpha
+                                # but this also can appear 
+                                if self.nbeta > self.nalpha:
+                                   n_minor=self.nalpha
+                                   n_major=self.nbeta
+
                                 # split 'line' by '(' to get three strings due to double occurence of '('.
                                 # From the first and second string (i.e. before the parentheses), take the last character.
                                 if re_match.group(1) == "D":
                                     startidx = int(indices[0]) - 1
                                 elif re_match.group(1) == "S":
-                                    startidx = int(indices[0]) - 1 + self.nbeta
-                                    assert startidx < self.nalpha
+                                    startidx = int(indices[0]) - 1 + n_minor
+                                    assert startidx < n_major
                                 else:
                                     startidx=-15
                                     assert "invalid from_occ"
 
                                 if re_match.group(3) == "S":
-                                    endidx = int(indices[1]) - 1 + self.nbeta
-                                    assert endidx < self.nalpha
+                                    endidx = int(indices[1]) - 1 + n_minor
+                                    assert endidx < n_major
                                 elif re_match.group(3) == "V":
-                                    endidx = int(indices[1]) - 1 + self.nalpha
+                                    endidx = int(indices[1]) - 1 + n_major
                                 else:
                                     assert "invalid to_occ"
 
