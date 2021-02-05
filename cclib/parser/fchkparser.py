@@ -206,12 +206,12 @@ class FChk(logfileparser.Logfile):
             etscalars = self._parse_block(inputfile, count, int, 'ET Scalars')
 
             # Added new class attribute: net (number of excited estates)
-            self.net = etscalars[0]
-            self.netroot = etscalars[4]
+            net = etscalars[0]
+            netroot = etscalars[4]
 
         if line[0:10] == 'ETran spin':
             count = int(line.split()[-1])
-            assert count == self.net
+            assert count == net
 
             etspin = self._parse_block(inputfile, count, int, 'ET Spin')
 
@@ -234,32 +234,32 @@ class FChk(logfileparser.Logfile):
 
         if line[0:18] == 'ETran state values':
             # This section is organized as follows:
-            # ·First the properties of each excited state (up to self.net):
-            # E, {muNx,muNy,muNz,muvelNx,muvelNy,muvelNz,mmagNx,mmagNy,mmagNz,unkX,unkY,unkZ,unkX,unkY,unkZ}_N=1,self.net
+            # ·First the properties of each excited state (up to net):
+            # E, {muNx,muNy,muNz,muvelNx,muvelNy,muvelNz,mmagNx,mmagNy,mmagNz,unkX,unkY,unkZ,unkX,unkY,unkZ}_N=1,net
             # ·Then come 48 items (only if Freq is requested)
             # They were all 0.000 in G09, but get an actual value in G16
-            # ·Then, the derivates of each property with respect to Cartesian coordiates only for target state (self.netroot)
+            # ·Then, the derivates of each property with respect to Cartesian coordiates only for target state (netroot)
             # For each Cartesian coordiate, all derivatives wrt to it are included:
             #  dE/dx1 dmux/dx1 dmuy/dx1 ... unkZ/dx1
             #  dE/dy1 dmux/dy1 dmuy/dy1 ... unkZ/dy1
             #  ...
             #  dE/dzN dmux/dzN dmuy/dzN ... unkZ/dzN
             # The number of items is therefore:
-            ### 16*self.net (no Freq jobs)
-            ### 16*self.net + 48 + 3*self.natom*16 (Freq jobs)
+            ### 16*net (no Freq jobs)
+            ### 16*net + 48 + 3*self.natom*16 (Freq jobs)
             count = int(line.split()[-1])
-            assert count in [16*self.net, 16*self.net+48+3*self.natom*16]
+            assert count in [16*net, 16*net+48+3*self.natom*16]
 
             etvalues = self._parse_block(inputfile, count, float, 'ET Values')
 
             # ETr energies (1/cm)
-            etenergies_au = [ e_es-self.scfenergy for e_es in etvalues[0:self.net*16:16] ]
+            etenergies_au = [ e_es-self.scfenergy for e_es in etvalues[0:net*16:16] ]
             etenergies = [ utils.convertor(etr,'hartree','wavenumber') for etr in etenergies_au ]
             self.set_attribute('etenergies', etenergies)
 
             # ETr dipoles (length-gauge)
             etdips = []
-            for k in range(1,16*self.net,16):
+            for k in range(1,16*net,16):
                 etdips.append(etvalues[k:k+3])
             self.set_attribute('etdips',etdips)
 
@@ -270,13 +270,13 @@ class FChk(logfileparser.Logfile):
 
             # ETr dipoles (velocity-gauge)
             etveldips = []
-            for k in range(4,16*self.net,16):
+            for k in range(4,16*net,16):
                 etveldips.append(etvalues[k:k+3])
             self.set_attribute('etveldips',etveldips)
 
             # ETr magnetic dipoles
             etmagdips = []
-            for k in range(7,16*self.net,16):
+            for k in range(7,16*net,16):
                 etmagdips.append(etvalues[k:k+3])
             self.set_attribute('etmagdips',etmagdips)
 
