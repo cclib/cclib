@@ -196,7 +196,7 @@ class FChk(logfileparser.Logfile):
             count = int(line.split()[-1])
             assert count == (3*self.natom*(3*self.natom+1))/2
 
-            hessian = numpy.array(self._parse_block(inputfile, count, float, 'Gradient'))
+            hessian = numpy.array(self._parse_block(inputfile, count, float, 'Hessian'))
 
             self.set_attribute('hessian', hessian)
 
@@ -205,13 +205,11 @@ class FChk(logfileparser.Logfile):
 
             etscalars = self._parse_block(inputfile, count, int, 'ET Scalars')
 
-            # Added new class attribute: net (number of excited estates)
-            net = etscalars[0]
-            netroot = etscalars[4]
+            # Set attribute: self.netroot (number of excited estates)
+            self.netroot = etscalars[4]
 
         if line[0:10] == 'ETran spin':
             count = int(line.split()[-1])
-            assert count == net
 
             etspin = self._parse_block(inputfile, count, int, 'ET Spin')
 
@@ -248,6 +246,10 @@ class FChk(logfileparser.Logfile):
             ### 16*net (no Freq jobs)
             ### 16*net + 48 + 3*self.natom*16 (Freq jobs)
             count = int(line.split()[-1])
+            if hasattr(self,'etsyms'):
+                net = len(self.etsyms)
+            else:
+                net = 0 # This forces an AssertionError below
             assert count in [16*net, 16*net+48+3*self.natom*16]
 
             etvalues = self._parse_block(inputfile, count, float, 'ET Values')
