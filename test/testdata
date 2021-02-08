@@ -314,6 +314,7 @@ TD        ADF         ADFTDDFTTest          basicADF2007.01       dvb_td.adfout
 TD        ADF         ADFTDDFTTest          basicADF2013.01       dvb_td.adfout
 TD        DALTON      DALTONTDTest          basicDALTON-2013      dvb_td.out
 TD        DALTON      DALTONTDTest          basicDALTON-2015      dvb_td.out
+TD        FChk        GenericTDTest         basicQChem5.0         dvb_td.FChk
 TD        GAMESS      GenericTDTest         basicFirefly8.0       dvb_td.out
 TD        GAMESS      GenericTDDFTtrpTest   basicFirefly8.0       dvb_td_trplet.out
 TD        GAMESS      GAMESSUSTDDFTTest     basicGAMESS-US2017    dvb_td.out
