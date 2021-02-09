@@ -84,7 +84,7 @@ jobs:
         run: |
           python -m pip install git+https://github.com/cclib/sphinx_rtd_theme.git
       - name: Build docs
-        working-directory: ./doc/sphinx
+        working-directory: ${{ github.workspace }}/cclib/doc/sphinx
         run: |
           pwd
           ls
