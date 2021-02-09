@@ -56,7 +56,7 @@ def setup_cclib():
         },
         install_requires=[
             "packaging>=19.0",
-            "numpy",
+            "numpy<1.20",
             "periodictable",
             "scipy>=1.2.0",
         ],
