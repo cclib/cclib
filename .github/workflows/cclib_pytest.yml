@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        python-version: ['3.6', '3.7']
+        python-version: [3.6, 3.7]
     steps:
       - name: Install SWIG and Git
         run: |
@@ -58,7 +58,7 @@ jobs:
           env | sort
           bash .github/scripts/run_pytest.bash
       - name: Codecov
-        if: matrix.python_version == 3.7
+        if: matrix.python-version == 3.7
         uses: codecov/codecov-action@v1
         with:
           files: ./coverage-unit.xml,./coverage-regression.xml 
