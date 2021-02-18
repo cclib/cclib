@@ -67,6 +67,8 @@ jobs:
     runs-on: ubuntu-20.04
     needs: "run-tests"
     steps:
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
       - name: Set up Python 3.7
         uses: actions/setup-python@v2
         with:
