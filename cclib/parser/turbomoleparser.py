@@ -587,7 +587,7 @@ class Turbomole(logfileparser.Logfile):
                     self.skip_lines(inputfile, ['b'])
                     line = next(inputfile)
                     assert line.strip().startswith('symmetry')
-                    syms = line.split()[1:]
+                    syms = [self.normalisesym(sym) for sym in line.split()[1:]]
                     vibsyms.extend(syms)
 
                     self.skip_lines(inputfile, ['b', 'IR', 'dDIP/dQ'])
