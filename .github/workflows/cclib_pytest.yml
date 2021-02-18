@@ -57,6 +57,14 @@ jobs:
           which python
           env | sort
           bash .github/scripts/run_pytest.bash
+      - name: Codecov
+        uses: actions/checkout@master
+        uses: codecov/codecov-action@v1
+        with:
+          files: ./coverage-unit.xml,./coverage-regression.xml 
+          name: codecov-cclib
+          fail_ci_if_error: true 
+          verbose: true 
       # - name: Store coverage report
       #   uses: actions/upload-artifact@v2
       #   with:
