@@ -58,77 +58,78 @@ jobs:
           env | sort
           bash .github/scripts/run_pytest.bash
       - name: Codecov
+        if: matrix.python_version == '3.7'
         uses: codecov/codecov-action@v1
         with:
           files: ./coverage-unit.xml,./coverage-regression.xml 
           name: codecov-cclib
           fail_ci_if_error: true 
-          verbose: true 
-      # - name: Store coverage report
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: pytest-coverage-report
-      #     path: htmlcov
-
-  build-docs:
-    runs-on: ubuntu-20.04
-    needs: "run-tests"
-    steps:
-      - name: Set up Python 3.7
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.7'
-          architecture: 'x64'
-      - name: Install Git
-        run: |
-          sudo apt-get update && sudo apt-get install -y -qq git
-      # - name: Get Coverage Report artifact
-      #   uses: actions/download-artifact@v2
-      #   with:
-      #     name: pytest-coverage-report
-      #     path: doc/sphinx/coverage
-      - name: Install sphinx theme
-        run: |
-          python -m pip install git+https://github.com/cclib/sphinx_rtd_theme.git
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-      - name: Build docs
-        working-directory: ./doc/sphinx
-        run: |
-          pwd
-          ls
-          find | sort
-          make -v
-          make default
-          touch doc/sphinx/_build/html/.nojekyll
-      - name: Store completed docs
-        uses: actions/upload-artifact@v2
-        with:
-          name: html-docs
-          path: doc/sphinx/_build/html
-
-  push-docs:
-    if: github.event.pull_request.merged == true
-    runs-on: ubuntu-20.04
-    needs: "build-docs"
-    steps:
-      - name: Get docs html
-        uses: actions/download-artifact@v2
-        with:
-          name: html-docs
-          path: html-docs
-      - name: Commit documentation changes
-        run: |
-          git clone https://github.com/cclib/cclib.git --branch gh-pages --single-branch gh-pages
-          cp -r html-docs/* gh-pages/
-          cd gh-pages
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add .
-          git commit -m "Commit: ${GITHUB_SHA}" || true
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          branch: gh-pages
-          directory: gh-pages
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          verbose: false
+          #       # - name: Store coverage report
+          #       #   uses: actions/upload-artifact@v2
+          #       #   with:
+          #       #     name: pytest-coverage-report
+          #       #     path: htmlcov
+          # 
+          #   build-docs:
+          #     runs-on: ubuntu-20.04
+          #     needs: "run-tests"
+          #     steps:
+          #       - name: Set up Python 3.7
+          #         uses: actions/setup-python@v2
+          #         with:
+          #           python-version: '3.7'
+          #           architecture: 'x64'
+          #       - name: Install Git
+          #         run: |
+          #           sudo apt-get update && sudo apt-get install -y -qq git
+          #       # - name: Get Coverage Report artifact
+          #       #   uses: actions/download-artifact@v2
+          #       #   with:
+          #       #     name: pytest-coverage-report
+          #       #     path: doc/sphinx/coverage
+          #       - name: Install sphinx theme
+          #         run: |
+          #           python -m pip install git+https://github.com/cclib/sphinx_rtd_theme.git
+          #       - name: Setup tmate session
+          #         uses: mxschmitt/action-tmate@v3
+          #       - name: Build docs
+          #         working-directory: ./doc/sphinx
+          #         run: |
+          #           pwd
+          #           ls
+          #           find | sort
+          #           make -v
+          #           make default
+          #           touch doc/sphinx/_build/html/.nojekyll
+          #       - name: Store completed docs
+          #         uses: actions/upload-artifact@v2
+          #         with:
+          #           name: html-docs
+          #           path: doc/sphinx/_build/html
+          # 
+          #   push-docs:
+          #     if: github.event.pull_request.merged == true
+          #     runs-on: ubuntu-20.04
+          #     needs: "build-docs"
+          #     steps:
+          #       - name: Get docs html
+          #         uses: actions/download-artifact@v2
+          #         with:
+          #           name: html-docs
+          #           path: html-docs
+          #       - name: Commit documentation changes
+          #         run: |
+          #           git clone https://github.com/cclib/cclib.git --branch gh-pages --single-branch gh-pages
+          #           cp -r html-docs/* gh-pages/
+          #           cd gh-pages
+          #           git config --local user.email "action@github.com"
+          #           git config --local user.name "GitHub Action"
+          #           git add .
+          #           git commit -m "Commit: ${GITHUB_SHA}" || true
+          #       - name: Push changes
+          #         uses: ad-m/github-push-action@master
+          #         with:
+          #           branch: gh-pages
+          #           directory: gh-pages
+          #           github_token: ${{ secrets.GITHUB_TOKEN }}
