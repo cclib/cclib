@@ -58,7 +58,6 @@ jobs:
           env | sort
           bash .github/scripts/run_pytest.bash
       - name: Codecov
-        uses: actions/checkout@master
         uses: codecov/codecov-action@v1
         with:
           files: ./coverage-unit.xml,./coverage-regression.xml 
