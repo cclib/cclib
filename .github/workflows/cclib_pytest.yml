@@ -57,18 +57,16 @@ jobs:
           which python
           env | sort
           bash .github/scripts/run_pytest.bash
-      - name: Store coverage report
-        uses: actions/upload-artifact@v2
-        with:
-          name: pytest-coverage-report
-          path: htmlcov
+      # - name: Store coverage report
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: pytest-coverage-report
+      #     path: htmlcov
 
   build-docs:
     runs-on: ubuntu-20.04
     needs: "run-tests"
     steps:
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
       - name: Set up Python 3.7
         uses: actions/setup-python@v2
         with:
@@ -77,14 +75,16 @@ jobs:
       - name: Install Git
         run: |
           sudo apt-get update && sudo apt-get install -y -qq git
-      - name: Get Coverage Report artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: pytest-coverage-report
-          path: doc/sphinx/coverage
+      # - name: Get Coverage Report artifact
+      #   uses: actions/download-artifact@v2
+      #   with:
+      #     name: pytest-coverage-report
+      #     path: doc/sphinx/coverage
       - name: Install sphinx theme
         run: |
           python -m pip install git+https://github.com/cclib/sphinx_rtd_theme.git
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
       - name: Build docs
         working-directory: ./doc/sphinx
         run: |
