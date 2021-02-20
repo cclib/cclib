@@ -1,4 +1,7 @@
 ---
+# Notes: It's not clear why this doesn't work, but we're keeping it for
+# posterity and replacing it with Read the Docs.
+
 # yamllint disable rule:line-length
 name: docs build
 
