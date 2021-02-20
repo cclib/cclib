@@ -10,12 +10,15 @@ sphinx:
   configuration: doc/sphinx/conf.py
 
 # Optionally build your docs in additional formats such as PDF and ePub
-formats: 
+formats:
   - pdf
 
 # Optionally set the version of Python and requirements required to build your docs
 python:
   version: 3.7
   install:
+    # Workaround for pyquante2-induced failure...
+    - method: pip
+      path: numpy
     - requirements: requirements.txt
   system_packages: true
