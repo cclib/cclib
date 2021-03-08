@@ -1,3 +1,4 @@
+---
 # .readthedocs.yml
 # Read the Docs configuration file
 # See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
@@ -13,12 +14,12 @@ sphinx:
 formats:
   - pdf
 
-# Optionally set the version of Python and requirements required to build your docs
+# Optionally set the version of Python
+# and requirements required to build your docs
 python:
   version: 3.7
   system_packages: true
   install:
-    # Workaround for pyquante2-induced failure...
     - method: pip
-      path: numpy
+    - requirements: docs/requirements.txt
     - requirements: requirements.txt
