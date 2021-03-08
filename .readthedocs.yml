@@ -20,7 +20,6 @@ python:
   version: 3.7
   system_packages: true
   install:
-    # Workaround for pyquante2-induced failure...
     - method: pip
     - requirements: docs/requirements.txt
     - requirements: requirements.txt
