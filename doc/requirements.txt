@@ -1,4 +1,0 @@
-packaging>=19.0
-numpy
-# For building the documentation
-sphinx
