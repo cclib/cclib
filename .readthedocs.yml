@@ -20,5 +20,4 @@ python:
   version: 3.7
   system_packages: true
   install:
-    - requirements: doc/requirements.txt
     - requirements: requirements.txt
