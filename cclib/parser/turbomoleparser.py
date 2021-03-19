@@ -405,6 +405,13 @@ class Turbomole(logfileparser.Logfile):
 
             scfenergy = utils.convertor(utils.float(line.split()[4]), 'hartree', 'eV')
             self.append_attribute('scfenergies', scfenergy)
+            
+            # We need to determine whether this is a HF or DFT energy for metadata.
+            # For now, assume DFT if we have a functional, otherwise HF.
+            if "functional" in self.metadata:
+                self.metadata['methods'].append("DFT")
+            else:
+                self.metadata['methods'].append("HF")
 
         #  **********************************************************************
         #  *                                                                    *
