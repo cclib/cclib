@@ -974,7 +974,7 @@ class Turbomole(logfileparser.Logfile):
                 if index > homo:
                     homo = index
                     
-        return homo
+        return homo        
 
     def deleting_modes(self, vibfreqs, vibdisps, vibirs, vibrmasses):
         """Deleting frequencies relating to translations or rotations"""
