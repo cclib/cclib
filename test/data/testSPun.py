@@ -86,7 +86,6 @@ class GenericSPunTest(unittest.TestCase):
         self.assertEqual(self.data.charge, 1)
         self.assertEqual(self.data.mult, 2)
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testhomos(self):
         """Are the homos correct?"""
         msg = "%s != array([34,33],'i')" % numpy.array_repr(self.data.homos)
