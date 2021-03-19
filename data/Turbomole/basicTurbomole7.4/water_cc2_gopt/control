@@ -1,0 +1,77 @@
+$title
+$symmetry c1
+$redundant    file=coord
+$user-defined bonds    file=coord
+$coord    file=coord
+$optimize
+ internal   on
+ redundant  on
+ cartesian  off
+ global     off
+ basis      off
+$atoms
+o  1                                                                           \
+   basis =o cc-pVDZ                                                            \
+   cbas  =o cc-pVDZ
+h  2-3                                                                         \
+   basis =h cc-pVDZ                                                            \
+   cbas  =h cc-pVDZ
+$basis    file=basis
+$scfmo   file=mos
+$closed shells
+ a       1-5                                    ( 2 )
+$scfiterlimit       30
+$scfconv        7
+$thize     0.10000000E-04
+$thime        5
+$scfdamp   start=0.300  step=0.050  min=0.100
+$scfdump
+$scfintunit
+ unit=30       size=0        file=twoint
+$scfdiis
+$maxcor    500 MiB  per_core
+$scforbitalshift  automatic=.1
+$drvopt
+   cartesian  on
+   basis      off
+   global     off
+   hessian    on
+   dipole     on
+   nuclear polarizability
+$interconversion  off
+   qconv=1.d-7
+   maxiter=25
+$coordinateupdate
+   dqmax=0.3
+   interpolate  on
+   statistics    5
+$forceupdate
+   ahlrichs numgeo=0  mingeo=3 maxgeo=4 modus=<g|dq> dynamic fail=0.3
+   threig=0.005  reseig=0.005  thrbig=3.0  scale=1.00  damping=0.0
+$forceinit on
+   diag=default
+$energy    file=energy
+$grad    file=gradient
+$forceapprox    file=forceapprox
+$denconv     0.10000000E-06
+$cbas    file=auxbasis
+$ricc2
+  cc2
+  geoopt model=cc2       state=(x)
+  scs   cos= 1.20000   css= 0.33333
+$rundimensions
+   natoms=3
+   nbf(CAO)=25
+   nbf(AO)=24
+$last step     ricc2
+$last SCF energy change = 0.12777065E-07
+$charge from dscf
+          0.000 (not to be modified here)
+$dipole from ricc2
+  x     0.00000000000000    y    -0.00000000000368    z    -0.78172234976237    a.u.
+   | dipole | =    1.9869550399  debye
+$last CC2 energy change= -.33445469E-13
+$optinfo       file=optinfo
+$hessapprox   file=hessapprox
+$orbital_max_rnorm 0.38542733904987E-06
+$end
