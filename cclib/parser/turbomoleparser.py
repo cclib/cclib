@@ -797,6 +797,17 @@ class Turbomole(logfileparser.Logfile):
                 else:
                     self.mpenergies[-1].append(mpenergy)
                 self.metadata['methods'].append("MP{}".format(mp_level))
+            
+#         if 'C C S D F 1 2   P R O G R A M' in line:
+#             while 'ccsdf12 : all done' not in line:
+        if 'Final CCSD energy' in line or 'Final CC2 energy' in line:
+            self.append_attribute(
+                'ccenergies',
+                utils.convertor(utils.float(line.split()[5]), 'hartree', 'eV')
+            )
+            self.metadata['methods'].append("CCSD")
+
+                #line = next(inputfile)
 
         #  *****************************************************
         #  *                                                   *
