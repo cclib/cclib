@@ -806,6 +806,16 @@ class Turbomole(logfileparser.Logfile):
                 utils.convertor(utils.float(line.split()[5]), 'hartree', 'eV')
             )
             self.metadata['methods'].append("CCSD")
+            
+        # Look for MP energies.
+        for mp_level in range(2,6):
+            if "Final MP{} energy".format(mp_level) in line:
+                mpenergy = utils.convertor(utils.float(line.split()[5]), 'hartree', 'eV')
+                if mp_level == 2:
+                    self.append_attribute('mpenergies', [mpenergy])
+                else:
+                    self.mpenergies[-1].append(mpenergy)
+                self.metadata['methods'].append("MP{}".format(mp_level))
 
                 #line = next(inputfile)
 
@@ -824,7 +834,7 @@ class Turbomole(logfileparser.Logfile):
                 mp2energy = [utils.convertor(utils.float(line.split()[3]), 'hartree', 'eV')]
                 self.append_attribute('mpenergies', mp2energy)
                 self.metadata['methods'].append("MP2")
- 
+
         # Support for the now outdated (?) rimp2
         # ------------------------------------------------
         #     Method          :  MP2     
