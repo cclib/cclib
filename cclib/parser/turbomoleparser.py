@@ -258,6 +258,9 @@ class Turbomole(logfileparser.Logfile):
         #    -9.36352819    0.00017229    0.07445322    h      1    1.000    0     0
         #    -0.92683849   -0.00007461   -2.49592179    c      3    6.000    0     0
         #    -1.65164853   -0.00009927   -4.45456858    h      1    1.000    0     0
+        #
+        # During a jobex driven optimisation, the above geometry section will be printed at the start of each module (subprogram).
+        # We only want one coord entry per step, so we need to be careful not to add the same geometry multiple times.
         if 'Atomic coordinate, charge and isotop information' in line:
             while 'atomic coordinates' not in line:
                 line = next(inputfile)
@@ -270,10 +273,12 @@ class Turbomole(logfileparser.Logfile):
                 atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") 
                                    for x in line.split()[:3]])
                 line = next(inputfile)
-
-            self.append_attribute('atomcoords', atomcoords)
-            self.set_attribute('atomnos', atomnos)
-            self.set_attribute('natom', len(atomcoords))
+            
+            # Check the coordinates we just parsed are not already in atomcoords.
+            if not hasattr(self, 'atomcoords') or self.atomcoords[-1] != atomcoords:
+                self.append_attribute('atomcoords', atomcoords)
+                self.set_attribute('atomnos', atomnos)
+                self.set_attribute('natom', len(atomcoords))
 
         # Frequency values in aoforce.out
         #        mode               7        8        9       10       11       12
