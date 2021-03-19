@@ -109,12 +109,15 @@ class Turbomole(logfileparser.Logfile):
             nmo = int(line.split('=')[1])
             self.set_attribute('nbasis', nmo)
             self.set_attribute('nmo', nmo)
-            
+        
         # The DFT functional.
-        # This information is printed by dscf but not in an easily parsible format, so we'll take it from the control file instead...
+        # This information is printed by dscf but not in an easily parsable format, so we'll take it from the control file instead...
         # Additionally, turbomole stores functional names in lower case. This looks odd, so we'll convert to uppercase (?)
         if line[3:13] == "functional":
+            # $dft
+            #    functional b-p
             self.metadata['functional'] = line.split()[1].upper()
+        
         
         # Extract the version number and optionally the build number.
         searchstr = ": TURBOMOLE"
