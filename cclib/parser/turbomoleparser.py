@@ -48,6 +48,9 @@ class Turbomole(logfileparser.Logfile):
 
     def __init__(self, *args, **kwargs):
         super(Turbomole, self).__init__(logname="Turbomole", *args, **kwargs)
+        
+        # Flag for whether this calc is DFT.
+        self.DFT = False
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -123,7 +126,10 @@ class Turbomole(logfileparser.Logfile):
             # $dft
             #    functional b-p
             self.metadata['functional'] = line.split()[1].upper()
+            self.DFT = True
         
+        if "density functional" in line:
+            self.DFT = True
         
         # Extract the version number and optionally the build number.
         searchstr = ": TURBOMOLE"
@@ -396,6 +402,12 @@ class Turbomole(logfileparser.Logfile):
 
             scfenergy = utils.convertor(utils.float(line.split()[4]), 'hartree', 'eV')
             self.append_attribute('scfenergies', scfenergy)
+            
+            # We need to determine whether this is a HF or DFT energy for metadata.
+            if self.DFT:
+                self.metadata['methods'].append("DFT")
+            else:
+                self.metadata['methods'].append("HF")
 
         #  **********************************************************************
         #  *                                                                    *
