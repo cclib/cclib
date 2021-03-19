@@ -10,7 +10,7 @@
 import itertools
 import math
 import re
-
+import datetime
 import numpy
 
 from cclib.parser import logfileparser
@@ -114,6 +114,9 @@ class QChem(logfileparser.Logfile):
             'CCD', 'CCSD', 'CCSD(T)',
             'QCISD', 'QCISD(T)'
         ]
+        # create empty list for the computing time to be stored in. 
+        self.metadata['wall_time'] =[]
+        self.metadata['cpu_time'] =[]
 
     def after_parsing(self):
 
@@ -1586,6 +1589,20 @@ cannot be determined. Rerun without `$molecule read`."""
 
         if line[:16] == ' Total job time:':
             self.metadata['success'] = True
+            # the line format is " Total job time:  120.37s(wall), 2251.02s(cpu)" at the end of each job ran. 
+            # first split the line by white space
+            try:
+                a = line.split()
+                # next split the second to last entry at the 's' to pull wall time
+                # cast as a float for use in timedelta data structure
+                wall_td = datetime.timedelta(seconds=float(a[-2].split('s')[0]))
+                # next split the last entry at the 's' to pull cpu time
+                # cast as a float for use in timedelta data structure
+                cpu_td = datetime.timedelta(seconds=float(a[-1].split('s')[0]))
+                self.metadata['wall_time'].append(wall_td)
+                self.metadata['cpu_time'].append(cpu_td)
+            except:
+                pass
 
         # TODO:
         # 'enthalpy' (incorrect)
