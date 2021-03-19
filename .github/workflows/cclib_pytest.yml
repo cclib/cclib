@@ -31,7 +31,7 @@ jobs:
           conda info -a
           conda install ci-psi4 psi4 openbabel pytest-cov pytest-shutil h5py
           python -m pip install pyscf
-          python -m pip install git+https://github.com/theochem/iodata.git
+          python -m pip install qc-iodata
           conda list
           conda env export
       - name: Install core dependencies
