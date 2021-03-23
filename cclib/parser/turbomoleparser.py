@@ -454,7 +454,7 @@ class Turbomole(logfileparser.Logfile):
             atomcoords = []
             atomnos = []
             line = next(inputfile)
-            while len(line) > 2:
+            while len(line.split()) >= 3:
                 atomnos.append(self.periodic_table.number[line.split()[3].capitalize()])
                 atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") 
                                    for x in line.split()[:3]])
