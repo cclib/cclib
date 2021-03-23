@@ -1131,7 +1131,16 @@ class Turbomole(logfileparser.Logfile):
                     
         return homo        
 
-            
+    
+    def split_irrep(self, irrep):
+        """
+        Split a Turbomole irrep into number and symmetry.
+        """
+        rematch = re.match(r"^([0-9]+)(.+)$", irrep)
+        number = int(rematch.group(1))
+        sym = self.normalisesym(rematch.group(2))
+        return (number, sym)
+    
     def parse_dscf_orbitals(self, inputfile, line):
         """
         Extract orbital occupation and energies from a dscf logfile.
@@ -1183,7 +1192,7 @@ class Turbomole(logfileparser.Logfile):
         
         orbitals = []
         while True: 
-            indices = []
+            irreps = []
             energies_hartree = []
             energies_eV = []
             occupations = []
@@ -1196,7 +1205,8 @@ class Turbomole(logfileparser.Logfile):
                 # All done.
                 break
             else:
-                indices = [int(irrep[:-1]) -1 for irrep in line.split()[1:]]
+                # Turbomole lists orbitals of different symmetry separately.
+                irreps = line.split()[1:]
             
             # Energy in H.
             line = next(inputfile)
@@ -1212,18 +1222,53 @@ class Turbomole(logfileparser.Logfile):
             if "occupation" in line:
                 occupations = [float(occupation) for occupation in line.split()[1:]]
                 line = next(inputfile)
-            else:
-                occupations = [0.0] * len(indices)
+            
+            # If we have any missing occupations, fill with 0
+            occupations.extend([0.0] * (len(irreps) - len(occupations)))
                 
             # Add to list.
             orbitals.extend([
-                 {'index': index, 'energy_H': energy_H, 'energy_eV': energy_eV, 'occupancy': occupation}
-                 for index, energy_H, energy_eV, occupation
-                 in zip(indices, energies_hartree, energies_eV, occupations)
+                 {'irrep': irrep, 'energy_H': energy_H, 'energy_eV': energy_eV, 'occupancy': occupation}
+                 for irrep, energy_H, energy_eV, occupation
+                 in zip(irreps, energies_hartree, energies_eV, occupations)
             ])
             
         return orbitals, line
+    
+    
+    def determine_homo(self, mosyms, dscf_mos):
+        """
+        Determine the highest occupied molecular orbital.
         
+        Returns
+        -------
+        int
+            the index of the HOMO.
+        """
+        # First, we need a mapping between each irrep and its index in mosyms etc.
+        symm_count = {}
+        irreps = []
+        
+        for symm in mosyms:
+            try:
+                symm_count[symm] += 1
+            except KeyError:
+                symm_count[symm] = 1
+            
+            irreps.append((symm_count[symm], symm))
+            
+        # We also have occupancy info from dscf (but probably only for those orbitals close to the HOMO/LUMO gap).
+        # We now need to determine which orbital with occupancy is highest.
+        homo = 0
+        for mo in dscf_mos:
+            if mo['occupancy'] > 0:
+                # This orbital has electrons, determine its position out of all orbitals.
+                index = irreps.index(self.split_irrep(mo['irrep']))
+                if index > homo:
+                    homo = index
+                    
+        return homo
+                
 
     def deleting_modes(self, vibfreqs, vibdisps, vibirs, vibrmasses):
         """Deleting frequencies relating to translations or rotations"""
