@@ -65,7 +65,7 @@ class Turbomole(logfileparser.Logfile):
         """
         # TODO more work could be required, but we don't have any logfiles
         # with non-C1 symmetry.
-        return label[0].upper() + label[1:]
+        return label.capitalize()
 
     def before_parsing(self):
         self.geoopt = False # Is this a GeoOpt? Needed for SCF targets/values.
