@@ -117,8 +117,8 @@ class Turbomole(logfileparser.Logfile):
         if line[3:11] == "nbf(AO)=":
             nmo = int(line.split('=')[1])
             self.set_attribute('nbasis', nmo)
-            self.set_attribute('nmo', nmo)
-        
+            #self.set_attribute('nmo', nmo)
+            
         # The DFT functional.
         # This information is printed by dscf but not in an easily parsable format, so we'll take it from the control file instead...
         # Additionally, turbomole stores functional names in lower case. This looks odd, so we'll convert to uppercase (?)
@@ -255,29 +255,27 @@ class Turbomole(logfileparser.Logfile):
         #     irrep                 35a         36a         37a         38a         39a   
         #  eigenvalues H         -0.28091    -0.15088    -0.09343    -0.07531    -0.00688
         #             eV          -7.6440     -4.1058     -2.5424     -2.0493     -0.1873
-        if "will be written to file mos" in line:
+        if "will be written to file mos" in line and hasattr(self, "mosyms"):
             orbitals, line = self.parse_dscf_orbitals(inputfile, line)
-            homo = [orbital for orbital in orbitals if orbital['occupancy'] != 0][-1]
-            self.set_attribute('homos', [homo['index']])
+            self.set_attribute("homos", [self.determine_homo(self.mosyms[0], orbitals)])
         
-        if "alpha:" in line:
+        if "alpha:" in line and hasattr(self, "mosyms"):
             orbitals, line = self.parse_dscf_orbitals(inputfile, line)
-            homo = [orbital for orbital in orbitals if orbital['occupancy'] != 0][-1]
+            homo = self.determine_homo(self.mosyms[0], orbitals)
             if not hasattr(self, "homos"):
-                self.set_attribute('homos', [homo['index']])
+                self.set_attribute('homos', [homo])
             else:
-                self.homos[0] = homo['index']
+                self.homos[0] = homo
             
-        if "beta:" in line:
+        if "beta:" in line and hasattr(self, "mosyms"):
             orbitals, line = self.parse_dscf_orbitals(inputfile, line)
-            homo = [orbital for orbital in orbitals if orbital['occupancy'] != 0][-1]
+            homo = self.determine_homo(self.mosyms[1], orbitals)
             if not hasattr(self, "homos"):
-                self.set_attribute('homos', [None, homo['index']])
+                self.set_attribute('homos', [homo])
             elif len(self.homos) == 1:
-                self.homos.append(homo['index'])
+                self.homos.append(homo)
             else:
-                self.homos[1] = homo['index']
-                
+                self.homos[1] = homo
         
         # Coordinates and gradients from statpt.
         #   *************************************************************************
@@ -575,12 +573,15 @@ class Turbomole(logfileparser.Logfile):
 
             moenergies = []
             mocoeffs = []
+            mosyms = []
 
             while not line.strip().startswith('$'):
+                number, sym = line.split()[:2]
                 info = re.match(r".*eigenvalue=(?P<moenergy>[0-9D\.+-]{20})\s+nsaos=(?P<count>\d+).*", line)
                 eigenvalue = utils.float(info.group('moenergy'))
                 orbital_energy = utils.convertor(eigenvalue, 'hartree', 'eV')
                 moenergies.append(orbital_energy)
+                mosyms.append(self.normalisesym(sym))
                 single_coeffs = []
                 nsaos = int(info.group('count'))
 
@@ -595,15 +596,16 @@ class Turbomole(logfileparser.Logfile):
             for i in mocoeffs:
                 while len(i) < max_nsaos:
                     i.append(numpy.nan)
-
-            if not hasattr(self, 'mocoeffs'):
-                self.mocoeffs = []
-
-            if not hasattr(self, 'moenergies'):
-                self.moenergies = []
-
-            self.mocoeffs.append(mocoeffs)
-            self.moenergies.append(moenergies)
+            
+            # We now need to sort our orbitals (because Turbomole groups them by symm).
+            mos = list(zip(moenergies, mocoeffs, mosyms))
+            mos.sort(key = lambda mo: mo[0])
+            moenergies, mocoeffs, mosyms = zip(*mos)
+            
+            self.append_attribute("moenergies", moenergies)
+            self.append_attribute("mocoeffs", mocoeffs)
+            self.append_attribute("mosyms", mosyms)
+            self.set_attribute("nmo", len(moenergies))
 
         # Parsing the scfenergies, scfvalues and scftargets from job.last file.
         # scf convergence criterion : increment of total energy < .1000000D-05
@@ -644,6 +646,10 @@ class Turbomole(logfileparser.Logfile):
             iter_energy = []
             iter_one_elec_energy = []
             while 'convergence criteria satisfied' not in line:
+                # nbasis
+                if  "number of basis functions" in line:
+                    self.set_attribute("nbasis", int(line.split()[-1]))
+                
                 if 'ITERATION  ENERGY' in line:
                     line = next(inputfile)
                     info = line.split()
@@ -734,7 +740,16 @@ class Turbomole(logfileparser.Logfile):
             mp2energy = [utils.convertor(utils.float(line.split()[3]), 'hartree', 'eV')]
             self.append_attribute('mpenergies', mp2energy)
             self.metadata['methods'].append("MP2")
-            
+    
+    def split_irrep(self, irrep):
+        """
+        Split a Turbomole irrep into number and symmetry.
+        """
+        rematch = re.match(r"^([0-9]+)(.+)$", irrep)
+        number = int(rematch.group(1))
+        sym = self.normalisesym(rematch.group(2))
+        return (number, sym)
+    
     def parse_dscf_orbitals(self, inputfile, line):
         """
         Extract orbital occupation and energies from a dscf logfile.
@@ -786,7 +801,7 @@ class Turbomole(logfileparser.Logfile):
         
         orbitals = []
         while True: 
-            indices = []
+            irreps = []
             energies_hartree = []
             energies_eV = []
             occupations = []
@@ -799,7 +814,8 @@ class Turbomole(logfileparser.Logfile):
                 # All done.
                 break
             else:
-                indices = [int(irrep[:-1]) -1 for irrep in line.split()[1:]]
+                # Turbomole lists orbitals of different symmetry separately.
+                irreps = line.split()[1:]
             
             # Energy in H.
             line = next(inputfile)
@@ -815,18 +831,53 @@ class Turbomole(logfileparser.Logfile):
             if "occupation" in line:
                 occupations = [float(occupation) for occupation in line.split()[1:]]
                 line = next(inputfile)
-            else:
-                occupations = [0.0] * len(indices)
+            
+            # If we have any missing occupations, fill with 0
+            occupations.extend([0.0] * (len(irreps) - len(occupations)))
                 
             # Add to list.
             orbitals.extend([
-                 {'index': index, 'energy_H': energy_H, 'energy_eV': energy_eV, 'occupancy': occupation}
-                 for index, energy_H, energy_eV, occupation
-                 in zip(indices, energies_hartree, energies_eV, occupations)
+                 {'irrep': irrep, 'energy_H': energy_H, 'energy_eV': energy_eV, 'occupancy': occupation}
+                 for irrep, energy_H, energy_eV, occupation
+                 in zip(irreps, energies_hartree, energies_eV, occupations)
             ])
             
         return orbitals, line
+    
+    
+    def determine_homo(self, mosyms, dscf_mos):
+        """
+        Determine the highest occupied molecular orbital.
         
+        Returns
+        -------
+        int
+            the index of the HOMO.
+        """
+        # First, we need a mapping between each irrep and its index in mosyms etc.
+        symm_count = {}
+        irreps = []
+        
+        for symm in mosyms:
+            try:
+                symm_count[symm] += 1
+            except KeyError:
+                symm_count[symm] = 1
+            
+            irreps.append((symm_count[symm], symm))
+            
+        # We also have occupancy info from dscf (but probably only for those orbitals close to the HOMO/LUMO gap).
+        # We now need to determine which orbital with occupancy is highest.
+        homo = 0
+        for mo in dscf_mos:
+            if mo['occupancy'] > 0:
+                # This orbital has electrons, determine its position out of all orbitals.
+                index = irreps.index(self.split_irrep(mo['irrep']))
+                if index > homo:
+                    homo = index
+                    
+        return homo
+                
 
     def deleting_modes(self, vibfreqs, vibdisps, vibirs, vibrmasses):
         """Deleting frequencies relating to translations or rotations"""
