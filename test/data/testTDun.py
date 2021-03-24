@@ -46,13 +46,12 @@ class GenericTDunTest(unittest.TestCase):
         self.assertEqual(len(self.data.etsecs), self.number)
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testsymsnumber(self):
         """Is the length of etsyms correct?"""
         self.assertEqual(len(self.data.etsyms), self.number)
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForParser('Turbomole', 'Turbomole etsyms are not available for UHF')
     def testsyms(self):
         """Is etsyms populated by singlets and triplets 50/50?"""
         singlets = [sym for sym in self.data.etsyms if "Singlet" in sym]
