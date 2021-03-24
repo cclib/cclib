@@ -26,7 +26,6 @@ class GenericSPunTest(unittest.TestCase):
         """Is the number of atoms equal to 20?"""
         self.assertEqual(self.data.natom, 20)
 
-    ##@skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testatomnos(self):
         """Are the atomnos correct?"""
         self.assertTrue(numpy.alltrue([numpy.issubdtype(atomno, numpy.signedinteger)
