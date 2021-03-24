@@ -1,0 +1,419 @@
+Mon  4 Jan 18:13:20 GMT 2021
+
+ DSCF STATISTICS OUTPUT :
+
+ integral neglect threshold       :  0.72E-10
+ integral storage threshold THIZE :  0.10E-04
+ integral storage threshold THIME :         5
+
+
+ --------------------    1.ITERATION  --------------------
+ norm of density matrix                :    2.38716900482    
+number of threads:  1
+number of integral batches per thread:
+    0          20515
+ number of shell pairs ii,jj included :          210
+ number of integral batches included  :        20515
+ number of batches from twoint        :            0
+ unnecessary integral batches on file :            0
+
+ cpu-time for fock matrix construction :        0.018 s
+ wall clock time elapsed for SCF integral evaluation :        0.018 s
+
+
+         0 2 e - integrals written in         0 blocks requiring       0 k-byte
+
+ total energy                          : -112.46397425424    
+ one-electron energy                   : -197.06794145298    
+ two-electron energy                   :  62.033383442307    
+ damping factor ttr                    :            1.000    
+
+ --------------------    2.ITERATION  --------------------
+ RMS (maximum over irreps) of difference density =0.811548D-02
+ 
+  weight factors dlin for linear combination of density matrices :
+  0.99004008    
+ accerr=   1.980  crierr=1000.000  ilam=  0  grange= 0.0      chatol=   0.640
+
+ norm of differential density matrix   :   0.271260446316    
+ norm of simple difference density     :   0.272300438210    
+ norm of density matrix                :    2.37890913060    
+ RMS of optimized differential CAO density matrix (alpha+beta) =0.382440D-02
+ RMS of optimized differential CAO density matrix (alpha-beta) =0.000000D+00
+ cpu-time elapsed since end of
+ last fock matrix construction         :        0.004 s
+number of threads:  1
+number of integral batches per thread:
+    0          20510
+ number of shell pairs ii,jj included :          210
+ number of integral batches included  :        20510
+ number of batches from twoint        :            0
+ unnecessary integral batches on file :            0
+
+ cpu-time for fock matrix construction :        0.017 s
+ total energy                          : -112.67683935634    
+ one-electron energy                   : -197.67093387889    
+ two-electron energy                   :  62.423510766118    
+ energy increment                      :          -0.2129    
+ damping factor ttr                    :           0.9500    
+
+ --------------------    3.ITERATION  --------------------
+ RMS (maximum over irreps) of difference density =0.563640D-02
+ 
+  weight factors dlin for linear combination of density matrices :
+  0.98876365       1.5611910    
+ accerr=   2.975  crierr=1000.000  ilam=  0  grange= 0.0      chatol=   0.471
+
+ norm of differential density matrix   :   0.115537124594    
+ norm of simple difference density     :   0.191132819268    
+ norm of density matrix                :    2.40081757484    
+ RMS of optimized differential CAO density matrix (alpha+beta) =0.159663D-02
+ RMS of optimized differential CAO density matrix (alpha-beta) =0.000000D+00
+ cpu-time elapsed since end of
+ last fock matrix construction         :        0.003 s
+number of threads:  1
+number of integral batches per thread:
+    0          20508
+ number of shell pairs ii,jj included :          210
+ number of integral batches included  :        20508
+ number of batches from twoint        :            0
+ unnecessary integral batches on file :            0
+
+ cpu-time for fock matrix construction :        0.017 s
+ total energy                          : -112.73850080996    
+ one-electron energy                   : -198.02968348853    
+ two-electron energy                   :  62.720598922137    
+ energy increment                      :          -0.6166E-01
+ damping factor ttr                    :           0.8000    
+
+ --------------------    4.ITERATION  --------------------
+ RMS (maximum over irreps) of difference density =0.476379D-02
+ 
+  weight factors dlin for linear combination of density matrices :
+  0.99032700       1.8763942       2.1636071    
+ accerr=   4.460  crierr=1000.000  ilam=  0  grange= 0.0      chatol=   0.379
+
+ norm of differential density matrix   :   0.312489822369E-01
+ norm of simple difference density     :   0.162404161774    
+ norm of density matrix                :    2.43133743097    
+ RMS of optimized differential CAO density matrix (alpha+beta) =0.450730D-03
+ RMS of optimized differential CAO density matrix (alpha-beta) =0.000000D+00
+ cpu-time elapsed since end of
+ last fock matrix construction         :        0.003 s
+number of threads:  1
+number of integral batches per thread:
+    0          20502
+ number of shell pairs ii,jj included :          210
+ number of integral batches included  :        20502
+ number of batches from twoint        :            0
+ unnecessary integral batches on file :            0
+
+ cpu-time for fock matrix construction :        0.018 s
+ total energy                          : -112.76021268292    
+ one-electron energy                   : -198.18782619322    
+ two-electron energy                   :  62.857029753865    
+ energy increment                      :          -0.2171E-01
+ damping factor ttr                    :           0.6500    
+
+ --------------------    5.ITERATION  --------------------
+ RMS (maximum over irreps) of difference density =0.362946D-02
+ 
+  weight factors dlin for linear combination of density matrices :
+  0.99191456       2.0410355       3.0948033       2.3053377    
+ accerr=   6.579  crierr=1000.000  ilam=  0  grange= 0.0      chatol=   0.325
+
+ norm of differential density matrix   :   0.742295334485E-02
+ norm of simple difference density     :   0.123705382735    
+ norm of density matrix                :    2.45894803102    
+ RMS of optimized differential CAO density matrix (alpha+beta) =0.108094D-03
+ RMS of optimized differential CAO density matrix (alpha-beta) =0.000000D+00
+ cpu-time elapsed since end of
+ last fock matrix construction         :        0.003 s
+number of threads:  1
+number of integral batches per thread:
+    0          20491
+ number of shell pairs ii,jj included :          210
+ number of integral batches included  :        20491
+ number of batches from twoint        :            0
+ unnecessary integral batches on file :            0
+
+ cpu-time for fock matrix construction :        0.020 s
+ total energy                          : -112.76735392929    
+ one-electron energy                   : -198.24345477971    
+ two-electron energy                   :  62.905517093987    
+ energy increment                      :          -0.7141E-02
+ damping factor ttr                    :           0.5000    
+
+ --------------------    6.ITERATION  --------------------
+ RMS (maximum over irreps) of difference density =0.235472D-02
+ 
+  weight factors dlin for linear combination of density matrices :
+  0.99282485       2.1191194       3.6911121       3.3550475       2.4467063    
+ accerr=   9.101  crierr=1000.000  ilam=  0  grange= 0.0      chatol=   0.293
+
+ norm of differential density matrix   :   0.171430745285E-02
+ norm of simple difference density     :   0.799640457929E-01
+ norm of density matrix                :    2.47804748708    
+ RMS of optimized differential CAO density matrix (alpha+beta) =0.252710D-04
+ RMS of optimized differential CAO density matrix (alpha-beta) =0.000000D+00
+ cpu-time elapsed since end of
+ last fock matrix construction         :        0.004 s
+number of threads:  1
+number of integral batches per thread:
+    0          20447
+ number of shell pairs ii,jj included :          210
+ number of integral batches included  :        20447
+ number of batches from twoint        :            0
+ unnecessary integral batches on file :            0
+
+ cpu-time for fock matrix construction :        0.018 s
+ total energy                          : -112.76939398974    
+ one-electron energy                   : -198.25715059494    
+ two-electron energy                   :  62.917172848769    
+ energy increment                      :          -0.2040E-02
+ damping factor ttr                    :           0.3500    
+
+ --------------------    7.ITERATION  --------------------
+ RMS (maximum over irreps) of difference density =0.129088D-02
+ 
+  weight factors dlin for linear combination of density matrices :
+  0.99317184       2.1510354       4.0078728       3.9950548       3.6553493    
+   2.6712220    
+ accerr=  11.770  crierr=1000.000  ilam=  0  grange= 0.0      chatol=   0.273
+
+ norm of differential density matrix   :   0.565922985049E-03
+ norm of simple difference density     :   0.436351654924E-01
+ norm of density matrix                :    2.48842262682    
+ RMS of optimized differential CAO density matrix (alpha+beta) =0.796660D-05
+ RMS of optimized differential CAO density matrix (alpha-beta) =0.000000D+00
+ cpu-time elapsed since end of
+ last fock matrix construction         :        0.003 s
+number of threads:  1
+number of integral batches per thread:
+    0          20372
+ number of shell pairs ii,jj included :          210
+ number of integral batches included  :        20372
+ number of batches from twoint        :            0
+ unnecessary integral batches on file :            0
+
+ cpu-time for fock matrix construction :        0.018 s
+ total energy                          : -112.76986592711    
+ one-electron energy                   : -198.25751939880    
+ two-electron energy                   :  62.917069715261    
+ energy increment                      :          -0.4719E-03
+ damping factor ttr                    :           0.4000    
+
+ --------------------    8.ITERATION  --------------------
+ RMS (maximum over irreps) of difference density =0.498626D-03
+ 
+  weight factors dlin for linear combination of density matrices :
+  0.99322863       2.1595273       4.1248082       4.2577690       4.2700886    
+   4.0331658       2.4010277    
+ accerr=  14.039  crierr=1000.000  ilam=  0  grange= 0.0      chatol=   0.261
+
+ norm of differential density matrix   :   0.204446744382E-03
+ norm of simple difference density     :   0.167986850502E-01
+ norm of density matrix                :    2.49212605759    
+ RMS of optimized differential CAO density matrix (alpha+beta) =0.288679D-05
+ RMS of optimized differential CAO density matrix (alpha-beta) =0.000000D+00
+ cpu-time elapsed since end of
+ last fock matrix construction         :        0.003 s
+number of threads:  1
+number of integral batches per thread:
+    0          20237
+ number of shell pairs ii,jj included :          210
+ number of integral batches included  :        20237
+ number of batches from twoint        :            0
+ unnecessary integral batches on file :            0
+
+ cpu-time for fock matrix construction :        0.018 s
+ total energy                          : -112.76993955843    
+ one-electron energy                   : -198.25543643671    
+ two-electron energy                   :  62.914913121844    
+ energy increment                      :          -0.7363E-04
+ damping factor ttr                    :           0.4500    
+
+ --------------------    9.ITERATION  --------------------
+ RMS (maximum over irreps) of difference density =0.193991D-03
+ 
+  weight factors dlin for linear combination of density matrices :
+  0.99323670       2.1614351       4.1681195       4.3621963       4.5482558    
+   4.8917267       3.4866076       2.5980421    
+ accerr=  16.107  crierr=1000.000  ilam=  0  grange= 0.0      chatol=   0.252
+
+ norm of differential density matrix   :   0.830004418846E-04
+ norm of simple difference density     :   0.654817127783E-02
+ norm of density matrix                :    2.49343613293    
+ RMS of optimized differential CAO density matrix (alpha+beta) =0.115577D-05
+ RMS of optimized differential CAO density matrix (alpha-beta) =0.000000D+00
+ cpu-time elapsed since end of
+ last fock matrix construction         :        0.003 s
+number of threads:  1
+number of integral batches per thread:
+    0          20138
+ number of shell pairs ii,jj included :          210
+ number of integral batches included  :        20138
+ number of batches from twoint        :            0
+ unnecessary integral batches on file :            0
+
+ cpu-time for fock matrix construction :        0.019 s
+ total energy                          : -112.76995166960    
+ one-electron energy                   : -198.25425685997    
+ two-electron energy                   :  62.913721433937    
+ energy increment                      :          -0.1211E-04
+ damping factor ttr                    :           0.3000    
+
+ --------------------   10.ITERATION  --------------------
+ RMS (maximum over irreps) of difference density =0.874056D-04
+ 
+  weight factors dlin for linear combination of density matrices :
+  0.99323921       2.1616668       4.1864254       4.4090144       4.6827484    
+   5.4359123       4.2630563       4.1857863       2.1195076    
+ accerr=  18.284  crierr=1000.000  ilam=  0  grange= 0.0      chatol=   0.245
+
+ norm of differential density matrix   :   0.266857230994E-04
+ norm of simple difference density     :   0.296520212268E-02
+ norm of density matrix                :    2.49396386927    
+ RMS of optimized differential CAO density matrix (alpha+beta) =0.375562D-06
+ RMS of optimized differential CAO density matrix (alpha-beta) =0.000000D+00
+ cpu-time elapsed since end of
+ last fock matrix construction         :        0.004 s
+number of threads:  1
+number of integral batches per thread:
+    0          19958
+ number of shell pairs ii,jj included :          210
+ number of integral batches included  :        19958
+ number of batches from twoint        :            0
+ unnecessary integral batches on file :            0
+
+ cpu-time for fock matrix construction :        0.019 s
+ total energy                          : -112.76995387113    
+ one-electron energy                   : -198.25353435721    
+ two-electron energy                   :  62.912996729640    
+ energy increment                      :          -0.2202E-05
+ damping factor ttr                    :           0.1500    
+
+ --------------------   11.ITERATION  --------------------
+ RMS (maximum over irreps) of difference density =0.312627D-04
+ 
+  weight factors dlin for linear combination of density matrices :
+  0.99324363       2.1613813       4.1920856       4.4245390       4.7311867    
+   5.7111521       4.7071161       5.3270377       3.1594705       2.0036792    
+ accerr=  20.254  crierr=1000.000  ilam=  0  grange= 0.0      chatol=   0.239
+
+ norm of differential density matrix   :   0.790811749049E-05
+ norm of simple difference density     :   0.107092423452E-02
+ norm of density matrix                :    2.49411665277    
+ RMS of optimized differential CAO density matrix (alpha+beta) =0.114876D-06
+ RMS of optimized differential CAO density matrix (alpha-beta) =0.000000D+00
+ cpu-time elapsed since end of
+ last fock matrix construction         :        0.004 s
+number of threads:  1
+number of integral batches per thread:
+    0          19818
+ number of shell pairs ii,jj included :          210
+ number of integral batches included  :        19818
+ number of batches from twoint        :            0
+ unnecessary integral batches on file :            0
+
+ cpu-time for fock matrix construction :        0.018 s
+ total energy                          : -112.76995412596    
+ one-electron energy                   : -198.25329061530    
+ two-electron energy                   :  62.912752732904    
+ energy increment                      :          -0.2548E-06
+ damping factor ttr                    :           0.1000    
+
+ --------------------   12.ITERATION  --------------------
+ RMS (maximum over irreps) of difference density =0.784005D-05
+ 
+  weight factors dlin for linear combination of density matrices :
+  0.99324675       2.1611653       4.1928899       4.4272015       4.7400781    
+   5.8035976       4.8774700       5.8628791       3.6690977       2.8389341    
+   1.8565515    
+ accerr=  21.551  crierr=1000.000  ilam=  0  grange= 0.0      chatol=   0.236
+
+ norm of differential density matrix   :   0.151050779696E-05
+ norm of simple difference density     :   0.268599486389E-03
+ norm of density matrix                :    2.49413434541    
+ RMS of optimized differential CAO density matrix (alpha+beta) =0.212123D-07
+ RMS of optimized differential CAO density matrix (alpha-beta) =0.000000D+00
+ cpu-time elapsed since end of
+ last fock matrix construction         :        0.004 s
+number of threads:  1
+number of integral batches per thread:
+    0          19374
+ number of shell pairs ii,jj included :          210
+ number of integral batches included  :        19374
+ number of batches from twoint        :            0
+ unnecessary integral batches on file :            0
+
+ unnecessary ii,jj pairs on file      :            1
+ cpu-time for fock matrix construction :        0.017 s
+ total energy                          : -112.76995414275    
+ one-electron energy                   : -198.25320288386    
+ two-electron energy                   :  62.912664984673    
+ energy increment                      :          -0.1679E-07
+ damping factor ttr                    :           0.1000    
+
+ --------------------   13.ITERATION  --------------------
+ RMS (maximum over irreps) of difference density =0.227586D-05
+ 
+  weight factors dlin for linear combination of density matrices :
+  0.99306984       2.1487953       4.1224152       3.8451032       1.5944502    
+  0.18753228      0.20531268E-01  0.36136235E-02  0.41365748E-03  0.36056719E-04
+  0.27411660E-05  0.75824797E-07
+ accerr=  10.048  crierr=  10.000  ilam= 11  grange=-.10E-02  chatol=   0.285
+
+ norm of differential density matrix   :   0.325091467709E-01
+ norm of simple difference density     :   0.760353673896E-04
+ norm of density matrix                :    2.49413330205    
+ RMS of optimized differential CAO density matrix (alpha+beta) =0.483181D-03
+ RMS of optimized differential CAO density matrix (alpha-beta) =0.000000D+00
+ cpu-time elapsed since end of
+ last fock matrix construction         :        0.004 s
+number of threads:  1
+number of integral batches per thread:
+    0          20501
+ number of shell pairs ii,jj included :          210
+ number of integral batches included  :        20501
+ number of batches from twoint        :            0
+ unnecessary integral batches on file :            0
+
+ cpu-time for fock matrix construction :        0.019 s
+ total energy                          : -112.76995414384    
+ one-electron energy                   : -198.25321935102    
+ two-electron energy                   :  62.912681450740    
+ energy increment                      :          -0.1091E-08
+ damping factor ttr                    :           0.1500    
+
+ --------------------   14.ITERATION  --------------------
+ RMS (maximum over irreps) of difference density =0.502874D-06
+ 
+  weight factors dlin for linear combination of density matrices :
+  0.99305151       2.1475047       4.1150637       3.7846360       1.2675957    
+ -0.39342642     -0.47797563     -0.57988589     -0.37947917     -0.14081655    
+ -0.13292915      0.17382202       1.1037858    
+ accerr=  10.029  crierr=  10.000  ilam=  1  grange=-.36E-10  chatol=   0.285
+
+ norm of differential density matrix   :   0.512008333175E-06
+ norm of simple difference density     :   0.162844820420E-04
+ norm of density matrix                :    2.49413187197    
+ RMS of optimized differential CAO density matrix (alpha+beta) =0.733010D-08
+ RMS of optimized differential CAO density matrix (alpha-beta) =0.000000D+00
+ cpu-time elapsed since end of
+ last fock matrix construction         :        0.004 s
+number of threads:  1
+number of integral batches per thread:
+    0          18729
+ number of shell pairs ii,jj included :          210
+ number of integral batches included  :        18729
+ number of batches from twoint        :            0
+ unnecessary integral batches on file :            0
+
+ unnecessary ii,jj pairs on file      :            2
+ cpu-time for fock matrix construction :        0.017 s
+ total energy                          : -112.76995414402    
+ one-electron energy                   : -198.25319783276    
+ two-electron energy                   :  62.912659932310    
+ energy increment                      :          -0.1757E-09
+ damping factor ttr                    :           0.2000    
