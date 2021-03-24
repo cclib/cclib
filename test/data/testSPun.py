@@ -77,7 +77,6 @@ class GenericSPunTest(unittest.TestCase):
             self.assertEqual(self.data.nsocoeffs[1].shape, (self.data.nmo, self.data.nmo))
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testcharge_and_mult(self):
         """Are the charge and multiplicity correct?"""
         self.assertEqual(self.data.charge, 1)
