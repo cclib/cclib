@@ -60,6 +60,13 @@ class GenericTDunTest(unittest.TestCase):
         self.assertEqual(len(triplets), self.number/2)
 
 
+class TurbomoleTDunTest(GenericTDunTest):
+    """Customized time-dependent unrestricted HF/DFT unittest"""
+    
+    number = 10
+
+
+
 if __name__=="__main__":
 
     import sys
