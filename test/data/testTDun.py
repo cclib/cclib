@@ -24,7 +24,6 @@ class GenericTDunTest(unittest.TestCase):
     number = 24
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testenergiesnumber(self):
         """Is the length of etenergies correct?"""
         self.assertEqual(len(self.data.etenergies), self.number)
