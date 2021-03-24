@@ -13,6 +13,7 @@ import unittest
 import numpy
 
 from skip import skipForParser
+from skip import skipForLogfile
 
 __filedir__ = os.path.realpath(os.path.dirname(__file__))
 
@@ -29,7 +30,7 @@ class GenericTDunTest(unittest.TestCase):
         self.assertEqual(len(self.data.etenergies), self.number)
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')    
+    @skipForLogfile("Turbomole/basicTurbomole7.4/CO_cc2_TD_un", "Oscillator strengths are not available for triplets with Turbomole's ricc2")
     def testoscsnumber(self):
         """Is the length of eotscs correct?"""
         self.assertEqual(len(self.data.etoscs), self.number)
