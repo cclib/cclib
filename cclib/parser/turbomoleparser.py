@@ -988,7 +988,9 @@ class Turbomole(logfileparser.Logfile):
         #  | a   |   1   |   9   |    0.4454969 |   12.12259 |  97775.273 |  94.26 |   5.74 |
         #  | a   |   1   |  10   |    0.5036295 |   13.70446 | 110533.909 |  93.51 |   6.49 |
         #  +================================================================================+
-        if "| sym | multi | state |          CC2 excitation energies       |  %t1   |  %t2   |" in line:
+        # TODO: Perhaps need a more general way to look for lines like this?
+        if "| sym | multi | state |          CC2 excitation energies       |  %t1   |  %t2   |" in line \
+        or "| sym | multi | state |          ADC(2) excitation energies    |  %t1   |  %t2   |" in line:
             line = next(inputfile)
             line = next(inputfile)
             line = next(inputfile)
