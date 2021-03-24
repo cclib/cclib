@@ -45,7 +45,6 @@ class GenericTDTest(unittest.TestCase):
         self.assertAlmostEqual(max(self.data.etoscs), 0.67, delta=0.1)
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testsecs(self):
         """Is the sum of etsecs close to 1?"""
         self.assertEqual(len(self.data.etsecs), self.number)
@@ -55,7 +54,6 @@ class GenericTDTest(unittest.TestCase):
 
     @skipForParser('DALTON', 'This is true for calculations without symmetry, but not with?')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testsecs_transition(self):
         """Is the lowest E transition from the HOMO or to the LUMO?"""
         lowestEtrans = self.data.etsecs[numpy.argmin(self.data.etenergies)]
