@@ -215,6 +215,40 @@ class OrcaROCIS40Test(OrcaROCISTest):
     n_spectra = 9
 
 
+class TurbomoleTDTest(GenericTDTest):
+    """Customized time-dependent HF/DFT unittest"""
+    
+    number = 10
+    expected_l_max = 91432
+    
+    def testoscs(self):
+        """Is the maximum of etoscs in the right range?"""
+        self.assertEqual(len(self.data.etoscs), self.number)
+        self.assertAlmostEqual(max(self.data.etoscs), 0.19, delta=0.1)
+
+
+class TurbomoleTDTripTest(GenericTDTest):
+    """Customized time-dependent HF/DFT unittest"""
+    
+    number = 10
+    expected_l_max = 51530
+
+    def testoscs(self):
+        """Is the maximum of etoscs in the right range?"""
+        self.assertEqual(len(self.data.etoscs), self.number)
+        self.assertAlmostEqual(max(self.data.etoscs), 0.84, delta=0.1)
+        
+class TurbomoleTDCC2TripTest(GenericTDTest):
+    """Customized time-dependent HF/DFT unittest"""
+    # This test is for triplets with ricc2, which does not support oscillator strengths.
+    
+    number = 10
+
+    def testenergies(self):
+        """Is the l_max reasonable?"""
+        self.assertEqual(len(self.data.etenergies), self.number)
+        
+
 if __name__ =="__main__":
 
     import sys
@@ -223,3 +257,4 @@ if __name__ =="__main__":
     from test_data import DataSuite
     suite = DataSuite(['TD'])
     suite.testall()
+    
