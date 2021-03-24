@@ -983,6 +983,150 @@ class Turbomole(logfileparser.Logfile):
             
             self.append_attribute("etdips", [tdm_x, tdm_y, tdm_z])
             
+        # Excitation energies with ricc2.
+        #  +================================================================================+
+        #  | sym | multi | state |          CC2 excitation energies       |  %t1   |  %t2   |
+        #  |     |       |       +----------------------------------------+--------+--------+
+        #  |     |       |       |   Hartree    |    eV      |    cm-1    |    %   |    %   |
+        #  +================================================================================+
+        #  | a   |   1   |   1   |    0.3257471 |    8.86403 |  71493.234 |  94.89 |   5.11 |
+        #  | a   |   1   |   2   |    0.3257471 |    8.86403 |  71493.232 |  94.89 |   5.11 |
+        #  | a   |   1   |   3   |    0.3864541 |   10.51595 |  84816.880 |  95.05 |   4.95 |
+        #  | a   |   1   |   4   |    0.3938325 |   10.71673 |  86436.241 |  94.09 |   5.91 |
+        #  | a   |   1   |   5   |    0.3938325 |   10.71673 |  86436.241 |  94.09 |   5.91 |
+        #  | a   |   1   |   6   |    0.4122171 |   11.21700 |  90471.202 |  93.32 |   6.68 |
+        #  | a   |   1   |   7   |    0.4351537 |   11.84114 |  95505.195 |  94.16 |   5.84 |
+        #  | a   |   1   |   8   |    0.4454969 |   12.12259 |  97775.278 |  94.26 |   5.74 |
+        #  | a   |   1   |   9   |    0.4454969 |   12.12259 |  97775.273 |  94.26 |   5.74 |
+        #  | a   |   1   |  10   |    0.5036295 |   13.70446 | 110533.909 |  93.51 |   6.49 |
+        #  +================================================================================+
+        # TODO: Perhaps need a more general way to look for lines like this?
+        if "| sym | multi | state |          CC2 excitation energies       |  %t1   |  %t2   |" in line \
+        or "| sym | multi | state |          ADC(2) excitation energies    |  %t1   |  %t2   |" in line:
+            line = next(inputfile)
+            line = next(inputfile)
+            line = next(inputfile)
+            line = next(inputfile)
+            
+            # Reset in case we've parsed this section before for some reason...
+            for attr in ("etenergies", "etsyms", "etoscs", "etsecs"):
+                if hasattr(self, attr):
+                    delattr(self, attr)
+            
+            while len(line.split("|")) > 1:
+                # Split.
+                parts = [part.strip() for part in line.split("|")]
+                
+                if parts[2] == "1":
+                    mult = "Singlet"
+                elif parts[2] == "2":
+                    mult = "Doublet"
+                elif parts[2] == "3":
+                    mult = "Triplet"
+                elif parts[2] == "4":
+                    mult = "Quartet"
+                elif parts[2] == "-":
+                    mult = "???"
+                else:
+                    mult = parts[2]
+                    
+                symmetry = "{}-{}".format(mult, parts[1].capitalize())
+                self.append_attribute("etsyms", symmetry)
+                    
+                #energy = utils.convertor(utils.float(parts[4]), "hartree", "wavenumber")
+                energy = utils.float(parts[6])
+                self.append_attribute("etenergies", energy)
+                
+                # Go again.
+                line = next(inputfile)
+        
+        # Singly excited configurations are printed separately with ricc2.
+        #      +=======================================================================+
+        #      | type: RE0                    symmetry: a               state:    1    |
+        #      +-----------------------+-----------------------+-----------------------+
+        #      | occ. orb.  index spin | vir. orb.  index spin |  coeff/|amp|     %    |
+        #      +=======================+=======================+=======================+
+        #      |    7 a        7       |    9 a        9       |   0.65683      43.1   |
+        #      |    7 a        7       |   13 a       13       |   0.47926      23.0   |
+        #      |    7 a        7       |   12 a       12       |  -0.44814      20.1   |
+        #      |    7 a        7       |   10 a       10       |  -0.24445       6.0   |
+        #      |    7 a        7       |   16 a       16       |  -0.14810       2.2   |
+        #      |    4 a        4       |   13 a       13       |   0.11053       1.2   |
+        #      +=======================+=======================+=======================+
+        #      norm of printed elements:  0.95585
+        # for UHF:
+        #      +=======================================================================+
+        #      | type: RE0                    symmetry: a               state:    1    |
+        #      +-----------------------+-----------------------+-----------------------+
+        #      | occ. orb.  index spin | vir. orb.  index spin |  coeff/|amp|     %    |
+        #      +=======================+=======================+=======================+
+        #      |    7 a        7 (b)   |   12 a       12 (b)   |   0.49335      24.3   |
+        #      |    7 a        7 (a)   |   12 a       12 (a)   |  -0.49335      24.3   |
+        #      |    7 a        7 (a)   |    9 a        9 (a)   |   0.42257      17.9   |
+        #      |    7 a        7 (b)   |    9 a        9 (b)   |  -0.42257      17.9   |
+        #      |    7 a        7 (b)   |   13 a       13 (b)   |   0.20077       4.0   |
+        #      |    7 a        7 (a)   |   13 a       13 (a)   |  -0.20077       4.0   |
+        #      |    7 a        7 (a)   |   15 a       15 (a)   |   0.11607       1.3   |
+        #      |    7 a        7 (b)   |   15 a       15 (b)   |  -0.11607       1.3   |
+        #      +=======================+=======================+=======================+
+        if "| occ. orb.  index spin | vir. orb.  index spin |  coeff/|amp|     %    |" in line:
+            line = next(inputfile)
+            line = next(inputfile)
+            
+            transitions = []
+                
+            while len(line.split()) > 1:
+                parts = line.split()
+                
+                # Determine our start orbital.
+                # Unlike the HF/DFT level excited states printed by escf, ricc2 prints
+                # the orbital index directly.
+                start_MO = int(parts[3]) -1
+                
+                # Get alpha/beta, deleting "alpha" or "beta" from the line so our
+                # indexes are aligned for both RHF and UHF.
+                if parts[4] == "(a)":
+                    start_AB = 0
+                    parts.pop(4)
+                if parts[4] == "(b)":
+                    start_AB = 1
+                    parts.pop(4)
+                else:
+                    start_AB = 0
+                    
+                # And end orbital.
+                end_MO = int(parts[7]) -1
+                
+                if parts[8] == "(b)":
+                    end_AB = 1
+                else:
+                    end_AB = 0
+                
+                # Finally, get our coefficient.
+                # Once again, ricc2 beats escf and we have both the coefficient and %
+                # available.
+                coeff = utils.float(parts[-3])
+                
+                # Add to list.
+                transitions.append((
+                    (start_MO, start_AB),
+                    (end_MO, end_AB),
+                    coeff
+                ))
+                
+                # Go again.
+                line = next(inputfile)
+            
+            self.append_attribute("etsecs", transitions)
+                
+        # Oscillator strengths are also printed separately with ricc2, 
+        # and may be missing entirely.
+        #  
+        #        oscillator strength (length gauge)   :      0.09614727
+        #  
+        if "oscillator strength (length gauge)   :" in line:
+            self.append_attribute("etoscs", utils.float(line.split()[-1]))
+            
         
         # All done for this loop.
         # Keep track of last lines.
@@ -1129,152 +1273,7 @@ class Turbomole(logfileparser.Logfile):
                 if index > homo:
                     homo = index
                     
-        return homo        
-
-                
-        
-        # Excitation energies with ricc2.
-        #  +================================================================================+
-        #  | sym | multi | state |          CC2 excitation energies       |  %t1   |  %t2   |
-        #  |     |       |       +----------------------------------------+--------+--------+
-        #  |     |       |       |   Hartree    |    eV      |    cm-1    |    %   |    %   |
-        #  +================================================================================+
-        #  | a   |   1   |   1   |    0.3257471 |    8.86403 |  71493.234 |  94.89 |   5.11 |
-        #  | a   |   1   |   2   |    0.3257471 |    8.86403 |  71493.232 |  94.89 |   5.11 |
-        #  | a   |   1   |   3   |    0.3864541 |   10.51595 |  84816.880 |  95.05 |   4.95 |
-        #  | a   |   1   |   4   |    0.3938325 |   10.71673 |  86436.241 |  94.09 |   5.91 |
-        #  | a   |   1   |   5   |    0.3938325 |   10.71673 |  86436.241 |  94.09 |   5.91 |
-        #  | a   |   1   |   6   |    0.4122171 |   11.21700 |  90471.202 |  93.32 |   6.68 |
-        #  | a   |   1   |   7   |    0.4351537 |   11.84114 |  95505.195 |  94.16 |   5.84 |
-        #  | a   |   1   |   8   |    0.4454969 |   12.12259 |  97775.278 |  94.26 |   5.74 |
-        #  | a   |   1   |   9   |    0.4454969 |   12.12259 |  97775.273 |  94.26 |   5.74 |
-        #  | a   |   1   |  10   |    0.5036295 |   13.70446 | 110533.909 |  93.51 |   6.49 |
-        #  +================================================================================+
-        if "| sym | multi | state |          CC2 excitation energies       |  %t1   |  %t2   |" in line:
-            line = next(inputfile)
-            line = next(inputfile)
-            line = next(inputfile)
-            line = next(inputfile)
-            
-            # Reset in case we've parsed this section before for some reason...
-            for attr in ("etenergies", "etsyms", "etoscs", "etsecs"):
-                if hasattr(self, attr):
-                    delattr(self, attr)
-            
-            while len(line.split("|")) > 1:
-                # Split.
-                parts = [part.strip() for part in line.split("|")]
-                
-                if parts[2] == "1":
-                    mult = "Singlet"
-                elif parts[2] == "2":
-                    mult = "Doublet"
-                elif parts[2] == "3":
-                    mult = "Triplet"
-                elif parts[2] == "4":
-                    mult = "Quartet"
-                elif parts[2] == "-":
-                    mult = "???"
-                else:
-                    mult = parts[2]
-                    
-                symmetry = "{}-{}".format(mult, parts[1].capitalize())
-                self.append_attribute("etsyms", symmetry)
-                    
-                #energy = utils.convertor(utils.float(parts[4]), "hartree", "wavenumber")
-                energy = utils.float(parts[6])
-                self.append_attribute("etenergies", energy)
-                
-                # Go again.
-                line = next(inputfile)
-        
-        # Singly excited configurations are printed separately with ricc2.
-        #      +=======================================================================+
-        #      | type: RE0                    symmetry: a               state:    1    |
-        #      +-----------------------+-----------------------+-----------------------+
-        #      | occ. orb.  index spin | vir. orb.  index spin |  coeff/|amp|     %    |
-        #      +=======================+=======================+=======================+
-        #      |    7 a        7       |    9 a        9       |   0.65683      43.1   |
-        #      |    7 a        7       |   13 a       13       |   0.47926      23.0   |
-        #      |    7 a        7       |   12 a       12       |  -0.44814      20.1   |
-        #      |    7 a        7       |   10 a       10       |  -0.24445       6.0   |
-        #      |    7 a        7       |   16 a       16       |  -0.14810       2.2   |
-        #      |    4 a        4       |   13 a       13       |   0.11053       1.2   |
-        #      +=======================+=======================+=======================+
-        #      norm of printed elements:  0.95585
-        # for UHF:
-        #      +=======================================================================+
-        #      | type: RE0                    symmetry: a               state:    1    |
-        #      +-----------------------+-----------------------+-----------------------+
-        #      | occ. orb.  index spin | vir. orb.  index spin |  coeff/|amp|     %    |
-        #      +=======================+=======================+=======================+
-        #      |    7 a        7 (b)   |   12 a       12 (b)   |   0.49335      24.3   |
-        #      |    7 a        7 (a)   |   12 a       12 (a)   |  -0.49335      24.3   |
-        #      |    7 a        7 (a)   |    9 a        9 (a)   |   0.42257      17.9   |
-        #      |    7 a        7 (b)   |    9 a        9 (b)   |  -0.42257      17.9   |
-        #      |    7 a        7 (b)   |   13 a       13 (b)   |   0.20077       4.0   |
-        #      |    7 a        7 (a)   |   13 a       13 (a)   |  -0.20077       4.0   |
-        #      |    7 a        7 (a)   |   15 a       15 (a)   |   0.11607       1.3   |
-        #      |    7 a        7 (b)   |   15 a       15 (b)   |  -0.11607       1.3   |
-        #      +=======================+=======================+=======================+
-        if "| occ. orb.  index spin | vir. orb.  index spin |  coeff/|amp|     %    |" in line:
-            line = next(inputfile)
-            line = next(inputfile)
-            
-            transitions = []
-                
-            while len(line.split()) > 1:
-                parts = line.split()
-                
-                # Determine our start orbital.
-                # Unlike the HF/DFT level excited states printed by escf, ricc2 prints
-                # the orbital index directly.
-                start_MO = int(parts[3]) -1
-                
-                # Get alpha/beta, deleting "alpha" or "beta" from the line so our
-                # indexes are aligned for both RHF and UHF.
-                if parts[4] == "(a)":
-                    start_AB = 0
-                    parts.pop(4)
-                if parts[4] == "(b)":
-                    start_AB = 1
-                    parts.pop(4)
-                else:
-                    start_AB = 0
-                    
-                # And end orbital.
-                end_MO = int(parts[7]) -1
-                
-                if parts[8] == "(b)":
-                    end_AB = 1
-                else:
-                    end_AB = 0
-                
-                # Finally, get our coefficient.
-                # Once again, ricc2 beats escf and we have both the coefficient and %
-                # available.
-                coeff = utils.float(parts[-3])
-                
-                # Add to list.
-                transitions.append((
-                    (start_MO, start_AB),
-                    (end_MO, end_AB),
-                    coeff
-                ))
-                
-                # Go again.
-                line = next(inputfile)
-            
-            self.append_attribute("etsecs", transitions)
-                
-        # Oscillator strengths are also printed separately with ricc2, 
-        # and may be missing entirely.
-        #  
-        #        oscillator strength (length gauge)   :      0.09614727
-        #  
-        if "oscillator strength (length gauge)   :" in line:
-            self.append_attribute("etoscs", utils.float(line.split()[-1]))
-        
+        return homo
     
     def split_irrep(self, irrep):
         """
