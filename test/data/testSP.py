@@ -175,6 +175,7 @@ class GenericSPTest(unittest.TestCase):
 
     @skipForParser('DALTON', 'mocoeffs not implemented yet')
     @skipForLogfile('Jaguar/basicJaguar7', 'Data file does not contain enough information. Can we make a new one?')
+    @skipForParser('Turbomole', 'Use of symmetry has reduced the number of mo coeffs')
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis?"""
         if hasattr(self.data, "mocoeffs"):
