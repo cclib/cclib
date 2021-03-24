@@ -13,6 +13,7 @@ import unittest
 import numpy
 
 from skip import skipForParser
+from skip import skipForLogfile
 
 
 __filedir__ = os.path.realpath(os.path.dirname(__file__))
@@ -25,7 +26,7 @@ class GenericTDTest(unittest.TestCase):
     expected_l_max = 41000
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForLogfile('basicTurbomole7.4', 'Oscillator strengths are not available for Turbomole triplets using ricc2')
     def testenergies(self):
         """Is the l_max reasonable?"""
 
@@ -37,7 +38,7 @@ class GenericTDTest(unittest.TestCase):
         self.assertAlmostEqual(self.data.etenergies[idx_lambdamax], self.expected_l_max, delta=5000)
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForLogfile("Turbomole/basicTurbomole7.4/CO_cc2_TD_trip", "Oscillator strengths are not available for triplets with Turbomole's ricc2")
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
         self.assertEqual(len(self.data.etoscs), self.number)
