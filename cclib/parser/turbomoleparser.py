@@ -122,7 +122,84 @@ class Turbomole(logfileparser.Logfile):
             if tokens[1] == "(":
                 revision = tokens[2]
                 self.metadata["package_version"] = "{}.r{}".format(package_version, revision)
-
+        
+        # Molecular charge and dipole info from dscf.
+        #  ==============================================================================
+        #                            electrostatic moments
+        #  ==============================================================================
+        # 
+        #  reference point for electrostatic moments:    0.00000   0.00000   0.00000
+        # 
+        #  
+        #               nuc           elec       ->  total
+        #  ------------------------------------------------------------------------------
+        #                           charge      
+        #  ------------------------------------------------------------------------------
+        #           70.000000     -70.000000      -0.000000
+        #  
+        #  ------------------------------------------------------------------------------
+        #                        dipole moment  
+        #  ------------------------------------------------------------------------------
+        #    x      -0.000000       0.000000      -0.000000
+        #    y       0.001384      -0.001340       0.000044
+        #    z      -0.000000       0.000000      -0.000000
+        #  
+        #    | dipole moment | =     0.0000 a.u. =     0.0001 debye 
+        #  
+        #  ------------------------------------------------------------------------------
+        #                      quadrupole moment
+        #  ------------------------------------------------------------------------------
+        #   xx    1499.472650   -1537.186938     -37.714287
+        #   yy       0.000002     -43.588053     -43.588051
+        #   zz     244.507989    -281.855472     -37.347483
+        #   xy      -0.000000       0.000000      -0.000000
+        #   xz      -5.011477       5.064680       0.053203
+        #   yz      -0.000000       0.000000       0.000000
+        #  
+        #      1/3  trace=     -39.549940
+        #      anisotropy=       6.066190
+        if "reference point for electrostatic moments:" in line:
+            # This indicates the start of a new dipole section.
+            # Safe to overwrite any old dipoles.
+            parts = line.split()
+            self.moments = [[
+                utils.convertor(float(parts[-3]), "ebohr", "Debye"),
+                utils.convertor(float(parts[-2]), "ebohr", "Debye"),
+                utils.convertor(float(parts[-1]), "ebohr", "Debye")
+            ]]
+            
+        if "dipole moment" in line:
+            line = next(inputfile)
+            if " ------------------------------------------------------------------------------" in line:
+                line = next(inputfile)
+                x_coord =  utils.convertor(float(line.split()[-1]), "ebohr", "Debye")
+                line = next(inputfile)
+                y_coord =  utils.convertor(float(line.split()[-1]), "ebohr", "Debye")
+                line = next(inputfile)
+                z_coord =  utils.convertor(float(line.split()[-1]), "ebohr", "Debye")
+                
+                # Assume 0,0,0 as origin if not given.
+                if not hasattr(self, "moments"):
+                    self.moments = [[0,0,0]]
+                self.moments.append([x_coord, y_coord, z_coord])
+                
+        if "quadrupole moment" in line:
+            line = next(inputfile)
+            if " ------------------------------------------------------------------------------" in line:
+                line = next(inputfile)
+                xx_coord  = utils.convertor(float(line.split()[-1]), "ebohr2", "Buckingham")
+                line = next(inputfile)
+                yy_coord  = utils.convertor(float(line.split()[-1]), "ebohr2", "Buckingham")
+                line = next(inputfile)
+                zz_coord  = utils.convertor(float(line.split()[-1]), "ebohr2", "Buckingham")
+                line = next(inputfile)
+                xy_coord  = utils.convertor(float(line.split()[-1]), "ebohr2", "Buckingham")
+                line = next(inputfile)
+                xz_coord  = utils.convertor(float(line.split()[-1]), "ebohr2", "Buckingham")
+                line = next(inputfile)
+                yz_coord  = utils.convertor(float(line.split()[-1]), "ebohr2", "Buckingham")
+                self.moments.append([xx_coord, xy_coord, xz_coord, yy_coord, yz_coord, zz_coord])
+                
         ## Atomic coordinates in job.last:
         #              +--------------------------------------------------+
         #              | Atomic coordinate, charge and isotop information |
