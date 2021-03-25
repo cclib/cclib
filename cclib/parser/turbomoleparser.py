@@ -278,7 +278,7 @@ class Turbomole(logfileparser.Logfile):
                 total_charge = float(line.split()[2])
                 total_charge_int = round(total_charge)
                 
-                # Check we wont loose information converting to int.
+                # Check we won't loose information converting to int.
                 if total_charge != total_charge_int:
                     self.logger.warning("Converting non integer total charge '{}' to integer".format(total_charge))
                 
