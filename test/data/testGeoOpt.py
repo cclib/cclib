@@ -118,7 +118,7 @@ class GenericGeoOptTest(unittest.TestCase):
         self.assertEqual(type(self.data.scfvalues),type([]))
         self.assertEqual(type(self.data.scfvalues[0]),type(numpy.array([])))
 
-    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
+    ##@skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testscfenergy(self):
         """Is the SCF energy close to target?"""
         scf = self.data.scfenergies[-1]
@@ -127,7 +127,7 @@ class GenericGeoOptTest(unittest.TestCase):
         msg = "Final SCF energy: %f not %i +- %ieV" %(scf, ref, tol)
         self.assertAlmostEqual(scf, ref, delta=40, msg=msg)
 
-    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
+    ##@skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testscfenergydim(self):
         """Is the number of SCF energies consistent with atomcoords?"""
         count_scfenergies = self.data.scfenergies.shape[0] - self.extrascfs
