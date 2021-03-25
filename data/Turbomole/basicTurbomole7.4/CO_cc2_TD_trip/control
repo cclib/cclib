@@ -1,0 +1,78 @@
+$title
+$symmetry c1
+$redundant    file=coord
+$user-defined bonds    file=coord
+$coord    file=coord
+$optimize
+ internal   on
+ redundant  on
+ cartesian  off
+ global     off
+ basis      off
+$atoms
+c  1                                                                           \
+   basis =c 6-311++G**                                                         \
+   cbas  =c def2-QZVPP
+o  2                                                                           \
+   basis =o 6-311++G**                                                         \
+   cbas  =o def2-QZVPP
+$basis    file=basis
+$scfmo   file=mos
+$closed shells
+ a       1-7                                    ( 2 )
+$scfiterlimit       30
+$scfconv        7
+$thize     0.10000000E-04
+$thime        5
+$scfdamp   start=0.300  step=0.050  min=0.100
+$scfdump
+$scfintunit
+ unit=30       size=0        file=twoint
+$scfdiis
+$maxcor    500 MiB  per_core
+$scforbitalshift  automatic=.1
+$drvopt
+   cartesian  on
+   basis      off
+   global     off
+   hessian    on
+   dipole     on
+   nuclear polarizability
+$interconversion  off
+   qconv=1.d-7
+   maxiter=25
+$coordinateupdate
+   dqmax=0.3
+   interpolate  on
+   statistics    5
+$forceupdate
+   ahlrichs numgeo=0  mingeo=3 maxgeo=4 modus=<g|dq> dynamic fail=0.3
+   threig=0.005  reseig=0.005  thrbig=3.0  scale=1.00  damping=0.0
+$forceinit on
+   diag=default
+$energy    file=energy
+$grad    file=gradient
+$forceapprox    file=forceapprox
+$denconv     0.10000000E-06
+$ricc2
+  cc2
+  scs   cos= 1.20000   css= 0.33333
+$cbas    file=auxbasis
+$excitations
+  irrep=a  multiplicity=  3  nexc= 10  npre=  0  nstart=  0
+$rundimensions
+   natoms=2
+   nbf(CAO)=46
+   nbf(AO)=44
+$last step     ricc2
+$orbital_max_rnorm 0.10470580409094E-05
+$last SCF energy change = -112.76995
+$charge from dscf
+         -0.000 (not to be modified here)
+$dipole from dscf
+  x    -0.00000000000001    y     0.00000000000000    z    -0.11354269854341    a.u.
+   | dipole | =    0.2885989344  debye
+$excitation_energies_CCS_____3^a___ file=exstates
+$excitation_energies_CC2_____3^a___ file=exstates
+$t2_norm_of_re0_CC2_____3^a___ file=exstates
+$end

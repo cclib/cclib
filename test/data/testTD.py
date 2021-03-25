@@ -13,6 +13,7 @@ import unittest
 import numpy
 
 from skip import skipForParser
+from skip import skipForLogfile
 
 
 __filedir__ = os.path.realpath(os.path.dirname(__file__))
@@ -25,7 +26,7 @@ class GenericTDTest(unittest.TestCase):
     expected_l_max = 41000
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForLogfile('basicTurbomole7.4', 'Oscillator strengths are not available for Turbomole triplets using ricc2')
     def testenergies(self):
         """Is the l_max reasonable?"""
 
@@ -37,14 +38,13 @@ class GenericTDTest(unittest.TestCase):
         self.assertAlmostEqual(self.data.etenergies[idx_lambdamax], self.expected_l_max, delta=5000)
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForLogfile("Turbomole/basicTurbomole7.4/CO_cc2_TD_trip", "Oscillator strengths are not available for triplets with Turbomole's ricc2")
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
         self.assertEqual(len(self.data.etoscs), self.number)
         self.assertAlmostEqual(max(self.data.etoscs), 0.67, delta=0.1)
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testsecs(self):
         """Is the sum of etsecs close to 1?"""
         self.assertEqual(len(self.data.etsecs), self.number)
@@ -54,7 +54,6 @@ class GenericTDTest(unittest.TestCase):
 
     @skipForParser('DALTON', 'This is true for calculations without symmetry, but not with?')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testsecs_transition(self):
         """Is the lowest E transition from the HOMO or to the LUMO?"""
         lowestEtrans = self.data.etsecs[numpy.argmin(self.data.etenergies)]
@@ -63,7 +62,6 @@ class GenericTDTest(unittest.TestCase):
                         t[0][2][0] == self.data.homos[0] + 1, t[0])
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')    
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testsymsnumber(self):
         """Is the length of etsyms correct?"""
         self.assertEqual(len(self.data.etsyms), self.number)
@@ -74,6 +72,8 @@ class GenericTDTest(unittest.TestCase):
     @skipForParser('GAMESSUK', 'etrotats are not yet implemented')
     @skipForParser('Jaguar', 'etrotats are not yet implemented')
     @skipForParser('QChem', 'Q-Chem cannot calculate rotatory strengths')
+    @skipForLogfile("Turbomole/basicTurbomole7.4/CO_cc2_TD", "Rotatory strengths are not currently available for ricc2")
+    @skipForLogfile("Turbomole/basicTurbomole7.4/CO_adc2_TD", "Rotatory strengths are not currently available for ricc2")
     def testrotatsnumber(self):
         """Is the length of etrotats correct?"""
         self.assertEqual(len(self.data.etrotats), self.number)
@@ -214,6 +214,50 @@ class OrcaROCIS40Test(OrcaROCISTest):
     n_spectra = 9
 
 
+class TurbomoleTDTest(GenericTDTest):
+    """Customized time-dependent HF/DFT unittest"""
+    
+    number = 10
+    expected_l_max = 91432
+    
+    def testoscs(self):
+        """Is the maximum of etoscs in the right range?"""
+        self.assertEqual(len(self.data.etoscs), self.number)
+        self.assertAlmostEqual(max(self.data.etoscs), 0.19, delta=0.1)
+
+class TurbomoleTDADC2Test(GenericTDTest):
+    """Customized time-dependent HF/DFT unittest"""
+    
+    number = 10
+    expected_l_max = 91432
+    
+    def testoscs(self):
+        """Is the maximum of etoscs in the right range?"""
+        self.assertEqual(len(self.data.etoscs), self.number)
+        self.assertAlmostEqual(max(self.data.etoscs), 0.80, delta=0.1)
+
+class TurbomoleTDTripTest(GenericTDTest):
+    """Customized time-dependent HF/DFT unittest"""
+    
+    number = 10
+    expected_l_max = 51530
+
+    def testoscs(self):
+        """Is the maximum of etoscs in the right range?"""
+        self.assertEqual(len(self.data.etoscs), self.number)
+        self.assertAlmostEqual(max(self.data.etoscs), 0.84, delta=0.1)
+        
+class TurbomoleTDCC2TripTest(GenericTDTest):
+    """Customized time-dependent HF/DFT unittest"""
+    # This test is for triplets with ricc2, which does not support oscillator strengths.
+    
+    number = 10
+
+    def testenergies(self):
+        """Is the l_max reasonable?"""
+        self.assertEqual(len(self.data.etenergies), self.number)
+        
+
 if __name__ =="__main__":
 
     import sys
@@ -222,3 +266,4 @@ if __name__ =="__main__":
     from test_data import DataSuite
     suite = DataSuite(['TD'])
     suite.testall()
+    
