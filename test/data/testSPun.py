@@ -22,7 +22,7 @@ __filedir__ = os.path.realpath(os.path.dirname(__file__))
 class GenericSPunTest(unittest.TestCase):
     """Generic unrestricted single point unittest"""
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    ##@skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testnatom(self):
         """Is the number of atoms equal to 20?"""
         self.assertEqual(self.data.natom, 20)
