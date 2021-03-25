@@ -35,7 +35,7 @@ class GenericSPunTest(unittest.TestCase):
         self.assertEqual(self.data.atomnos.shape, (20,) )
         self.assertEqual(sum(self.data.atomnos==6) + sum(self.data.atomnos==1), 20)
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    ##@skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testatomcoords(self):
         """Are the dimensions of atomcoords 1 x natom x 3?"""
         self.assertEqual(self.data.atomcoords.shape,(1,self.data.natom,3))
