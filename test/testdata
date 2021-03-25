@@ -159,6 +159,7 @@ GeoOpt    Psi4        Psi4GeoOptTest        basicPsi4-1.3.1       dvb_gopt_rhf.o
 GeoOpt    Psi4        Psi4GeoOptTest        basicPsi4-1.3.1       dvb_gopt_rks.out
 GeoOpt    QChem       GenericGeoOptTest     basicQChem4.2         dvb_gopt.out
 GeoOpt    QChem       GenericGeoOptTest     basicQChem5.1         dvb_gopt.out
+GeoOpt    Turbomole   GenericGeoOptTest     basicTurbomole5.9     dvb_gopt/basis      dvb_gopt/control      dvb_gopt/mos      dvb_gopt/job.last
 
 MP        DALTON      GenericMP2Test        basicDALTON-2013      water_mp2.out
 MP        DALTON      GenericMP2Test        basicDALTON-2015      water_mp2.out
