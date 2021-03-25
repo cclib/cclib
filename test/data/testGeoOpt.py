@@ -40,7 +40,7 @@ class GenericGeoOptTest(unittest.TestCase):
     def test_success(self):
         self.assertTrue(self.data.metadata['success'])
 
-    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
+    ##@skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testnatom(self):
         """Is the number of atoms equal to 20?"""
         self.assertEqual(self.data.natom, 20)
