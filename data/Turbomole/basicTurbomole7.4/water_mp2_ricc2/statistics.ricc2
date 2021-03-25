@@ -1,0 +1,5 @@
+ number of batches in I-loop:   1
+ memory allocated per RI-intermediate in I-loop:        1 MiB
+ memory allocated per RI-intermediate in j-loop:        1 MiB
+ number of RI-intermediates used: 1
+ total memory allocated in ccn5engine:        1 MiB
