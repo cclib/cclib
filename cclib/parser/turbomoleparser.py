@@ -327,17 +327,24 @@ class Turbomole(logfileparser.Logfile):
             while line.strip().startswith('#') and not line.find('eigenvalue') > 0:
                 line = next(inputfile)
 
+            moirreps = []
             moenergies = []
             mocoeffs = []
             mosyms = []
 
             while not line.strip().startswith('$'):
                 number, sym = line.split()[:2]
+                number = int(number)
+                sym = self.normalisesym(sym)
+                
                 info = re.match(r".*eigenvalue=(?P<moenergy>[0-9D\.+-]{20})\s+nsaos=(?P<count>\d+).*", line)
                 eigenvalue = utils.float(info.group('moenergy'))
                 orbital_energy = utils.convertor(eigenvalue, 'hartree', 'eV')
+                
                 moenergies.append(orbital_energy)
-                mosyms.append(self.normalisesym(sym))
+                mosyms.append(sym)
+                moirreps.append((number, sym))
+                
                 single_coeffs = []
                 nsaos = int(info.group('count'))
 
@@ -354,10 +361,13 @@ class Turbomole(logfileparser.Logfile):
                     i.append(numpy.nan)
             
             # We now need to sort our orbitals (because Turbomole groups them by symm).
-            mos = list(zip(moenergies, mocoeffs, mosyms))
+            mos = list(zip(moenergies, mocoeffs, mosyms, moirreps))
             mos.sort(key = lambda mo: mo[0])
-            moenergies, mocoeffs, mosyms = zip(*mos)
+            moenergies, mocoeffs, mosyms, moirreps = zip(*mos)
             
+            # MO irreps is not actually recognised as a cclib attribute,
+            # but we may need this info to parse other sections.
+            self.append_attribute("moirreps", moirreps)
             self.append_attribute("moenergies", moenergies)
             self.append_attribute("mocoeffs", mocoeffs)
             self.append_attribute("mosyms", mosyms)
