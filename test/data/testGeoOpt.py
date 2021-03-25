@@ -168,7 +168,7 @@ class GenericGeoOptTest(unittest.TestCase):
         self.assertEqual(dim_geotargets, dim_geovalues)
 
     @skipForParser('MOPAC', 'Not implemented.')
-    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
+    ##@skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testoptdone(self):
         """Has the geometry converged and set optdone to True?"""
         self.assertTrue(self.data.optdone)
