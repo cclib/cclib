@@ -261,7 +261,7 @@ SP        Psi4        PsiSPTest             basicPsi4-1.3.1             dvb_sp_r
 SP        Psi4        PsiSPTest             basicPsi4-1.3.1             dvb_sp_rks.out
 SP        QChem       GenericSPTest         basicQChem4.2               dvb_sp.out
 SP        QChem       GenericSPTest         basicQChem5.1               dvb_sp.out
-SP        Turbomole   TurbomoleSPTest       basicTurbomole5.9           dvb_sp_symm/basis      dvb_sp_symm/control      dvb_sp_symm/job.last      dvb_sp_symm/coord      dvb_sp_symm/mos
+SP        Turbomole   TurbomoleSPTest       basicTurbomole5.9           dvb_sp_symm/mos       dvb_sp_symm/basis      dvb_sp_symm/control      dvb_sp_symm/dscf.out      dvb_sp_symm/coord
 SP        DALTON      GenericDispersionTest basicDALTON-2018            dvb_dispersion_bp86_d3zero.out
 SP        GAMESS      FireflyDispersionTest basicFirefly8.1             dvb_dispersion_bp86_d3zero.out
 SP        GAMESS      GenericDispersionTest basicGAMESS-US2018          dvb_dispersion_bp86_d3zero.out
@@ -308,7 +308,7 @@ SPun      Psi4        GenericSPunTest       basicPsi4-1.3.1       dvb_sp_uhf.out
 SPun      Psi4        GenericSPunTest       basicPsi4-1.3.1       dvb_sp_uks.out
 SPun      QChem       GenericSPunTest       basicQChem4.2         dvb_sp_un.out
 SPun      QChem       GenericSPunTest       basicQChem5.1         dvb_sp_un.out
-SPun      Turbomole   GenericSPunTest       basicTurbomole5.9     dvb_un_sp/basis    dvb_un_sp/control    dvb_un_sp/dscf.out    dvb_un_sp/coord    dvb_un_sp/alpha    dvb_un_sp/beta    dvb_un_sp/gradient
+SPun      Turbomole   GenericSPunTest       basicTurbomole5.9     dvb_un_sp/alpha    dvb_un_sp/beta    dvb_un_sp/basis    dvb_un_sp/control    dvb_un_sp/dscf.out    dvb_un_sp/coord    dvb_un_sp/gradient
 
 TD        ADF         ADFTDDFTTest          basicADF2007.01       dvb_td.adfout
 TD        ADF         ADFTDDFTTest          basicADF2013.01       dvb_td.adfout
