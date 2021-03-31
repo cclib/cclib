@@ -967,7 +967,20 @@ class Turbomole(logfileparser.Logfile):
                     line = next(inputfile)
                 
                 self.append_attribute("etsecs", transitions)
-                
+        
+            # Transition dipoles.
+            while "Electric transition dipole moment (length rep.):" not in line:
+                line = next(inputfile)
+            line = next(inputfile)
+            line = next(inputfile)
+            tdm_x = utils.convertor(float(line.split()[1]), "ebohr", "Debye")
+            line = next(inputfile)
+            tdm_y = utils.convertor(float(line.split()[1]), "ebohr", "Debye")
+            line = next(inputfile)
+            tdm_z = utils.convertor(float(line.split()[1]), "ebohr", "Debye")
+            
+            self.append_attribute("etdips", [tdm_x, tdm_y, tdm_z])
+            
         
         # All done for this loop.
         # Keep track of last lines.
