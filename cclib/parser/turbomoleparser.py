@@ -4,6 +4,7 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
+import collections
 
 """Parser for Turbomole output files."""
 
@@ -55,6 +56,9 @@ class Turbomole(logfileparser.Logfile):
         
         # A Regex that we use to extract version info.
         self.version_regex = re.compile(r"TURBOMOLE(?: rev\.)? V([\d]+)[.-]([\d]+)(?:[.-]([\d]))?(?: \( ?([0-9A-z]+) ?\))?")
+
+        # A list of previous lines to allow look-behind functionality.
+        self.last_lines = collections.deque([""] * 10, 10)
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -833,6 +837,133 @@ class Turbomole(logfileparser.Logfile):
             self.metadata['methods'].append("MP2")
 
 
+        
+        
+        # Excited state info from escf.
+        #                          1 singlet a excitation
+        # 
+        # 
+        #  Total energy:                           -112.9060086800507    
+        # 
+        #  Excitation energy:                      0.3111453714493050    
+        # 
+        #  Excitation energy / eV:                  8.466699968968847    
+        # 
+        #  Excitation energy / nm:                  146.4375074832943    
+        # 
+        #  Excitation energy / cm^(-1):             68288.51549285055    
+        # 
+        # 
+        #  Oscillator strength:
+        # 
+        #     velocity representation:             0.1011193926229111    
+        # 
+        #     length representation:               0.9461905579062439E-01
+        # 
+        #     mixed representation:                0.9781524141002400E-01
+        # 
+        # 
+        #  Rotatory strength:
+        # 
+        #     velocity representation:             0.1282566570726007E-10
+        # 
+        #     velocity rep. / 10^(-40)erg*cm^3:    0.8285997783054736E-06
+        # 
+        #     length representation:               0.1242930160103103E-10
+        # 
+        #     length rep. / 10^(-40)erg*cm^3:      0.8029927479925187E-06
+        # 
+        # 
+        #  Dominant contributions:
+        # 
+        #       occ. orbital   energy / eV   virt. orbital     energy / eV   |coeff.|^2*100
+        #         7 a             -10.76           9 a              -0.78       96.7
+        #
+        ## For UHF:
+        #       occ. orbital   energy / eV   virt. orbital     energy / eV   |coeff.|^2*100
+        #         7 a   alpha          -15.12     12 a   alpha            4.74       24.5
+        #         7 a   beta           -15.12     12 a   beta             4.74       24.5        
+        if "Excitation energy:" in line:
+            # The irrep of the state is a few lines back.
+            symm_parts = self.last_lines[-5].split()
+            # We don't always have the multiplicity available.
+            if len(symm_parts) < 4:
+                # No mult.
+                mult = "???"
+            else:
+                mult = symm_parts[1].capitalize()
+            
+            symmetry = "{}-{}".format(mult, symm_parts[-2].capitalize())
+            self.append_attribute("etsyms", symmetry)
+            
+            # Energy should be in cm-1...
+            energy = utils.convertor(utils.float(line.split()[-1]), 'hartree', 'wavenumber')
+            self.append_attribute("etenergies", energy)
+            
+            while "length representation:" not in line:
+                line = next(inputfile)
+            oscillator_strength = utils.float(line.split()[-1])
+            self.append_attribute("etoscs", oscillator_strength)
+            
+            while "Dominant contributions:" not in line:
+                line = next(inputfile)
+            line = next(inputfile)
+            line = next(inputfile)
+            line = next(inputfile)
+            
+            # We can't get transitions if we don't have any orbitals.
+            if hasattr(self, 'moirreps'):
+                transitions = []
+                
+                while len(line.split()) > 0:
+                    parts = line.split()
+                    
+                    # Get alpha/beta, deleting "alpha" or "beta" from the line so
+                    # our indexes are aligned for both RHF and UHF.
+                    if parts[2] == "alpha":
+                        start_AB = 0
+                        parts.pop(2)
+                    if parts[2] == "beta":
+                        start_AB = 1
+                        parts.pop(2)
+                    else:
+                        start_AB = 0
+                
+                    # Determine our start orbital.
+                    start_MO_irrep = (int(parts[0]), self.normalisesym(parts[1]))
+                    start_MO = self.moirreps[start_AB].index(start_MO_irrep)
+                    
+                    if parts[5] == "beta":
+                        end_AB = 1
+                    else:
+                        end_AB = 0
+                        
+                    # And end orbital.
+                    end_MO_irrep = (int(parts[3]), self.normalisesym(parts[4]))
+                    end_MO = self.moirreps[end_AB].index(end_MO_irrep)
+                    
+                    # Finally, get our coefficient.
+                    # Sadly, Turbomole only prints |coeff.|^2*100, so we can't determine whether
+                    # the coefficient is negative or positive...
+                    coeff = (utils.float(parts[-1]) /100) ** 0.5
+                    
+                    # Add to list.
+                    transitions.append((
+                        (start_MO, start_AB),
+                        (end_MO, end_AB),
+                        coeff
+                    ))
+                    
+                    # Go again.
+                    line = next(inputfile)
+                
+                self.append_attribute("etsecs", transitions)
+                
+        
+        # All done for this loop.
+        # Keep track of last lines.
+        self.last_lines.append(line)
+            
         if ": all done  ****" in line:
             # End of module, set success flag.
             self.metadata['success'] = True
@@ -941,8 +1072,8 @@ class Turbomole(logfileparser.Logfile):
             ])
             
         return orbitals, line
-    
-    
+            
+        
     def determine_homo(self, mosyms, dscf_mos):
         """
         Determine the highest occupied molecular orbital.
