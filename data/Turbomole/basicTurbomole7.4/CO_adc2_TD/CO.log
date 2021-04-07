@@ -1,0 +1,3181 @@
+
+  ========================================================================
+                license information 
+    WARNING: License file not found!
+             Please copy license.txt to $TURBODIR/LICENSE/
+ No valid license file found, switching to DEMO mode
+  ========================================================================
+
+   OpenMP run-time library returned nthreads =  8
+
+ dscf (oliver-Inspiron-7591) : TURBOMOLE rev. V7.4.1 (2bfdd732) compiled 4 Nov 2019 at 15:42:21
+ Copyright (C) 2019 TURBOMOLE GmbH, Karlsruhe
+
+
+    2021-03-10 09:06:37.619 
+
+
+
+                             d s c f - program
+
+                   idea & directorship : reinhart ahlrichs
+                   program development : marco haeser
+                                         michael baer
+                           dft version : oliver treutler
+
+
+                          quantum chemistry group
+                          universitaet  karlsruhe
+                                  germany
+
+
+
+
+                          References             
+                                                 
+          TURBOMOLE:                             
+              R. Ahlrichs, M. Baer, M. Haeser, H. Horn, and
+              C. Koelmel
+              Electronic structure calculations on workstation
+              computers: the program system TURBOMOLE
+              Chem. Phys. Lett. 162: 165 (1989)
+          Density Functional:                              
+              O. Treutler and R. Ahlrichs                      
+              Efficient Molecular Numerical Integration Schemes
+              J. Chem. Phys. 102: 346 (1995)                   
+          Parallel Version:                                
+              Performance of parallel TURBOMOLE for Density    
+              Functional Calculations                          
+              M. v. Arnim and R. Ahlrichs                      
+              J. Comp. Chem. 19: 1746 (1998)                   
+                                         
+
+
+
+
+              +--------------------------------------------------+
+              | Atomic coordinate, charge and isotop information |
+              +--------------------------------------------------+
+
+                    atomic coordinates            atom    charge  isotop
+          0.00000000    0.00000000   -1.21522618    c      6.000     0
+          0.00000000    0.00000000    0.91143381    o      8.000     0
+ 
+       center of nuclear mass  :    0.00000000    0.00000000   -0.00049517
+       center of nuclear charge:    0.00000000    0.00000000    0.00000810
+
+   *************************************************************************
+   CO_Excited_States_ADC2_SCS_S_1____S_2__cc_pVDZ                           
+   *************************************************************************
+
+
+
+              +--------------------------------------------------+
+              |               basis set information              |
+              +--------------------------------------------------+
+
+              we will work with the 1s 3p 5d 7f 9g ... basis set
+              ...i.e. with spherical basis functions...
+
+   type   atoms  prim   cont   basis
+   ---------------------------------------------------------------------------
+    c        1     34     14   cc-pVDZ   [3s2p1d|17s4p1d]
+    o        1     34     14   cc-pVDZ   [3s2p1d|17s4p1d]
+   ---------------------------------------------------------------------------
+   total:    2     68     28
+   ---------------------------------------------------------------------------
+
+   total number of primitive shells          :   44
+   total number of contracted shells         :   12
+   total number of cartesian basis functions :   30
+   total number of SCF-basis functions       :   28
+
+
+ integral neglect threshold       :  0.11E-09
+ integral storage threshold THIZE :  0.10E-04
+ integral storage threshold THIME :         5
+
+
+ DENSITY CONVERGENCE CHECK SWITCHED ON !
+ SCF CONVERGENCE IF RMS(delta[D]) <     0.1000000000E-06
+
+
+ symmetry group of the molecule :   c1 
+
+ the group has the following generators :
+   c1(z)
+
+    1 symmetry operations found
+
+ there are 1 real representations :   a   
+
+ maximum number of shells which are related by symmetry :  1
+
+
+    mo occupation :
+   irrep   mo's   occupied
+    a       28        7
+ 
+ number of basis functions   :                     28
+ number of occupied orbitals :                      7
+ 
+
+ automatic virtual orbital shift switched on 
+      shift if e(lumo)-e(homo) < 0.10000000    
+
+
+          ------------------------
+          nuclear repulsion energy  :   22.5706038124    
+          ------------------------
+
+
+         -----------------
+         -S,T+V- integrals
+         -----------------
+
+ 1e-integrals will be neglected if expon. factor < 0.111399E-10
+ 
+   Difference densities algorithm switched on.
+   The maximal number of linear combinations of
+   difference densities is                    20 .
+
+ DIIS switched on: error vector is FDS-SDF
+ Max. Iterations for DIIS is     :   5
+ DIIS matrix (see manual) 
+    Scaling factor of diagonals  :  1.200
+    threshold for scaling factor :  0.000
+
+ scf convergence criterion : increment of total energy < .1000000D-06
+                  and increment of one-electron energy < .1000000D-03
+
+  MOs are in ASCII format !
+
+
+ reading orbital data $scfmo  from file mos
+ orbital characterization : expanded
+ mo provided and orthogonalized by Cholesky decomposition
+
+ DSCF restart information will be dumped onto file mos
+
+ 
+                                              current damping :  0.300
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
+   1  -112.45040885488    -197.07112616     62.050113495    0.000D+00 0.111D-09
+          max. resid. norm for Fia-block=  3.850D-01 for orbital      1a         
+          max. resid. fock norm         =  1.324D+00 for orbital      9a         
+          Delta Eig. =    40.2529501935 eV 
+ 
+                                              current damping :  0.250
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
+   2  -112.72345139486    -197.89018512     62.596129910    0.240D-01 0.719D-10
+          Norm of current diis error: 0.41577    
+          max. resid. norm for Fia-block=  1.285D-01 for orbital      1a         
+          max. resid. fock norm         =  1.416D-01 for orbital     14a         
+          Delta Eig. =     9.1089866798 eV 
+ 
+                                              current damping :  0.100
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
+   3  -112.74532148986    -198.36969974     63.053774440    0.114D-01 0.586D-10
+          Norm of current diis error: 0.13020    
+          max. resid. norm for Fia-block=  2.692D-02 for orbital      1a         
+          max. resid. fock norm         =  3.728D-02 for orbital     14a         
+          Delta Eig. =     3.0082537108 eV 
+ 
+                                              current damping :  0.150
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
+   4  -112.74900278658    -198.21629441     62.896687810    0.663D-02 0.497D-10
+          Norm of current diis error: 0.49484E-01
+          max. resid. norm for Fia-block=  1.256D-02 for orbital      7a         
+          max. resid. fock norm         =  1.374D-02 for orbital      7a         
+          Delta Eig. =     0.8258751284 eV 
+ 
+                                              current damping :  0.200
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
+   5  -112.74947508231    -198.28778671     62.967707818    0.242D-02 0.463D-10
+          Norm of current diis error: 0.12265E-01
+          max. resid. norm for Fia-block=  4.219D-03 for orbital      7a         
+          max. resid. fock norm         =  4.244D-03 for orbital      7a         
+ mo-orthogonalization: Cholesky decomposition
+          Delta Eig. =     0.0591572641 eV 
+ 
+                                              current damping :  0.250
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
+   6  -112.74952839082    -198.27767876     62.957546556    0.927D-03 0.438D-10
+          Norm of current diis error: 0.44059E-02
+          max. resid. norm for Fia-block=  1.804D-03 for orbital      7a         
+          max. resid. fock norm         =  1.823D-03 for orbital      7a         
+          Delta Eig. =     0.0147026488 eV 
+ 
+                                              current damping :  0.100
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
+   7  -112.74953514701    -198.27714326     62.957004298    0.331D-03 0.414D-10
+          Norm of current diis error: 0.14962E-02
+          max. resid. norm for Fia-block=  5.871D-04 for orbital      7a         
+          max. resid. fock norm         =  5.948D-04 for orbital      7a         
+          Delta Eig. =     0.0060215692 eV 
+ 
+                                              current damping :  0.100
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
+   8  -112.74953594068    -198.27681401     62.956674252    0.109D-03 0.392D-10
+          Norm of current diis error: 0.36927E-03
+          max. resid. norm for Fia-block=  1.270D-04 for orbital      4a         
+          max. resid. fock norm         =  1.356D-04 for orbital     15a         
+          Delta Eig. =     0.0015309071 eV 
+ 
+                                              current damping :  0.100
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
+   9  -112.74953598422    -198.27677149     62.956631689    0.163D-04 0.376D-10
+          Norm of current diis error: 0.97589E-04
+          max. resid. norm for Fia-block=  3.997D-05 for orbital      4a         
+          max. resid. fock norm         =  4.051D-05 for orbital      4a         
+          Delta Eig. =     0.0002669597 eV 
+ 
+                                              current damping :  0.100
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
+  10  -112.74953598738    -198.27673446     62.956594660    0.392D-05 0.364D-10
+          Norm of current diis error: 0.25274E-04
+          max. resid. norm for Fia-block=  1.213D-05 for orbital      4a         
+          max. resid. fock norm         =  1.277D-05 for orbital      4a         
+ mo-orthogonalization: Cholesky decomposition
+          Delta Eig. =     0.0003409110 eV 
+ 
+                                              current damping :  0.150
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
+  11  -112.74953598762    -198.27676070     62.956620902    0.113D-05 0.355D-10
+          Norm of current diis error: 0.90429E-05
+          max. resid. norm for Fia-block=  1.736D-06 for orbital      5a         
+          max. resid. fock norm         =  1.736D-06 for orbital      5a         
+          Delta Eig. =     0.0001550222 eV 
+
+ ENERGY & DENSITY CONVERGED !
+
+ 
+                                              current damping :  0.200
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
+  12  -112.74953598807    -198.27674493     62.956605130    0.280D-06 0.351D-10
+          max. resid. norm for Fia-block=  6.748D-07 for orbital      4a         
+          max. resid. fock norm         =  8.022D-07 for orbital     15a         
+
+ convergence criteria satisfied after    12 iterations
+
+
+   *************************************************************************
+   CO_Excited_States_ADC2_SCS_S_1____S_2__cc_pVDZ                           
+   *************************************************************************
+
+
+                  ------------------------------------------ 
+                 |  total energy      =   -112.74953598807  |
+                  ------------------------------------------ 
+                 :  kinetic energy    =    112.61330427420  :
+                 :  potential energy  =   -225.36284026227  :
+                 :  virial theorem    =      1.99879173149  :
+                 :  wavefunction norm =      1.00000000000  :
+                  .......................................... 
+
+
+ <geterg> : there is no data group $energy 
+
+
+ <skperg> : $end is missing 
+
+
+ orbitals $scfmo  will be written to file mos
+
+    irrep                  3a          4a          5a          6a          7a   
+ eigenvalues H         -1.52491    -0.80237    -0.63565    -0.63565    -0.54848
+            eV         -41.4951    -21.8338    -17.2969    -17.2969    -14.9249
+ occupation              2.0000      2.0000      2.0000      2.0000      2.0000
+
+    irrep                  8a          9a         10a         11a         12a   
+ eigenvalues H          0.15581     0.15581     0.38277     0.67232     0.67232
+            eV           4.2398      4.2398     10.4159     18.2949     18.2949
+ 
+ 
+ 
+ 
+ ==============================================================================
+                           electrostatic moments
+ ==============================================================================
+
+ reference point for electrostatic moments:    0.00000   0.00000   0.00000
+
+ 
+              nuc           elec       ->  total
+ ------------------------------------------------------------------------------
+                          charge      
+ ------------------------------------------------------------------------------
+          14.000000     -14.000000       0.000000
+ 
+ ------------------------------------------------------------------------------
+                       dipole moment  
+ ------------------------------------------------------------------------------
+   x       0.000000      -0.000000      -0.000000
+   y       0.000000      -0.000000      -0.000000
+   z       0.000113      -0.086604      -0.086491
+ 
+   | dipole moment | =     0.0865 a.u. =     0.2198 debye 
+ 
+ ------------------------------------------------------------------------------
+                     quadrupole moment
+ ------------------------------------------------------------------------------
+  xx       0.000000      -7.452113      -7.452113
+  yy       0.000000      -7.452113      -7.452113
+  zz      15.506341     -24.522804      -9.016463
+  xy       0.000000       0.000000       0.000000
+  xz       0.000000      -0.000000      -0.000000
+  yz       0.000000       0.000000       0.000000
+ 
+     1/3  trace=      -7.973563
+     anisotropy=       1.564350
+ 
+ ==============================================================================
+ 
+HOMO-LUMO Separation
+ HOMO         :   -0.54847608 H =    -14.92480 eV
+ LUMO         :    0.15580937 H =     +4.23979 eV
+ HOMO-LUMO gap:    0.70428545 H =    +19.16459 eV
+ 
+ ==============================================================================
+
+
+    ------------------------------------------------------------------------
+         total  cpu-time :   0.87 seconds
+         total wall-time :   0.12 seconds
+    ------------------------------------------------------------------------
+
+   ****  dscf : all done  ****
+
+
+    2021-03-10 09:06:37.727 
+
+
+  ========================================================================
+                license information 
+    WARNING: License file not found!
+             Please copy license.txt to $TURBODIR/LICENSE/
+ No valid license file found, switching to DEMO mode
+  ========================================================================
+
+   OpenMP run-time library returned nthreads =  8
+
+ ricc2 (oliver-Inspiron-7591) : TURBOMOLE rev. V7.4.1 (2bfdd732) compiled 4 Nov 2019 at 15:42:21
+ Copyright (C) 2019 TURBOMOLE GmbH, Karlsruhe
+
+
+    2021-03-10 09:06:37.772 
+
+
+
+                              R I C C 2 - PROGRAM
+
+                          the quantum chemistry groups
+                             at the universities in
+                           Karlsruhe, Bochum & Mainz
+                                   Germany
+
+
+
+   *-----------------------------------------------------------------------*
+   |                     program will use  8 thread(s)                     |
+   *-----------------------------------------------------------------------*
+
+
+              +--------------------------------------------------+
+              | Atomic coordinate, charge and isotop information |
+              +--------------------------------------------------+
+
+                    atomic coordinates            atom    charge  isotop
+          0.00000000    0.00000000   -1.21522618    c      6.000     0
+          0.00000000    0.00000000    0.91143381    o      8.000     0
+ 
+       center of nuclear mass  :    0.00000000    0.00000000   -0.00049517
+       center of nuclear charge:    0.00000000    0.00000000    0.00000810
+
+   *************************************************************************
+   CO_Excited_States_ADC2_SCS_S_1____S_2__cc_pVDZ                           
+   *************************************************************************
+
+
+
+              +--------------------------------------------------+
+              |               basis set information              |
+              +--------------------------------------------------+
+
+              we will work with the 1s 3p 5d 7f 9g ... basis set
+              ...i.e. with spherical basis functions...
+
+   type   atoms  prim   cont   basis
+   ---------------------------------------------------------------------------
+    c        1     34     14   cc-pVDZ   [3s2p1d|17s4p1d]
+    o        1     34     14   cc-pVDZ   [3s2p1d|17s4p1d]
+   ---------------------------------------------------------------------------
+   total:    2     68     28
+   ---------------------------------------------------------------------------
+
+   total number of primitive shells          :   44
+   total number of contracted shells         :   12
+   total number of cartesian basis functions :   30
+   total number of SCF-basis functions       :   28
+
+
+ symmetry group of the molecule :   c1 
+
+ the group has the following generators :
+   c1(z)
+
+    1 symmetry operations found
+
+ there are 1 real representations :   a   
+
+
+   =========================================================================
+
+
+     restricted closed shell calculation for the wavefunction models:
+               ADC(2)     - Algebraic Diagrammatic Construction to 2. Order (strict)
+
+     Spin-Component Scaling will be applied...
+          scaling factors:  C_os = 1.200  C_ss = 0.333
+
+
+     global parameters for ricc2 program:
+
+        hard restart (reuse of interm.) :  disabled
+        soft restart (reuse of vectors) :  disabled
+        threshold for vector function   :    0.100000E-05
+        convergence threshold energy    :    0.100000E-06
+        linear dependence threshold     :    0.100000E-13
+        global print level              :      1
+        maximum number of iterations    :    50
+        maximum number DIIS vectors     :    10
+        max. dim. of reduced space      :   100
+        core memory limit (MB)          : *****
+
+     Scratch Directory : /scratch/tmp/oliver/e611d55f7c384cd4b38366770daf3302/
+
+
+   =========================================================================
+
+    der. integral neglect threshold  :  0.10E-07
+    integral neglect threshold       :  0.11E-09
+    integral storage threshold THIZE :  0.10E-04
+    integral storage threshold THIME :         5
+
+
+                  +------------------------------------------+
+                  |     Auxiliary basis set information      |
+                  +------------------------------------------+
+
+              we will work with the 1s 3p 5d 7f 9g ... basis set
+              ...i.e. with spherical basis functions...
+
+   type   atoms  prim   cont   basis
+   ---------------------------------------------------------------------------
+    c        1     56     56   cc-pVDZ   [7s5p4d2f|7s5p4d2f]
+    o        1     56     56   cc-pVDZ   [7s5p4d2f|7s5p4d2f]
+   ---------------------------------------------------------------------------
+   total:    2    112    112
+   ---------------------------------------------------------------------------
+
+   total number of primitive shells          :   36
+   total number of contracted shells         :   36
+   total number of cartesian basis functions :  132
+   total number of SCF-basis functions       :  112
+
+
+ maximum number of shells which are related by symmetry :  1
+
+
+ The symmetry information takes   1 MB
+
+*---------------------------------------------------------------------*
+|               simplified C1 algorithm will be applied               |
+*---------------------------------------------------------------------*
+  MOs are in ASCII format !
+
+
+ reading orbital data $scfmo  from file mos
+ orbital characterization : scfconv=7
+ time elapsed for calculating density matrices :   0.001 sec
+ all orbitals will be active in the correlation treatment
+
+
+   Molecular Orbital Statistic:
+   ============================
+
+   -----------------------------
+   orbitals in total:
+   -----------------------------
+    frozen occupied :      0
+    active occupied :      7
+    active virtual  :     21
+    frozen virtual  :      0
+    all together    :     28
+   -----------------------------
+
+
+     time in riccmos       cpu:  0.01 sec    wall:  0.00 sec    ratio: 11.1
+
+     total memory allocated for calculation of (Q|P)**(-1/2) : 1 MiB
+
+
+     calculation of (P|Q) ...
+     time in lp2sym        cpu:  0.01 sec    wall:  0.00 sec    ratio:  8.1
+
+
+     calculation of the Cholesky decomposition of (P|Q)**(-1) ...
+     time in invmetri      cpu:  0.03 sec    wall:  0.01 sec    ratio:  5.7
+
+   threshold for RMS(d[D]) in SCF was     :  0.10E-06
+   integral neglect threshold             :  0.11E-09
+   derivative integral neglect threshold  :  0.10E-07
+
+
+ setting up bound for integral derivative estimation
+
+ increment for numerical differentiation : 0.00050000
+
+   =========================================================================
+
+     Energy of reference wave function is  -112.7495359881000
+     Maximum orbital residual is           0.8022061015305E-06
+
+
+     Number of symmetry-nonredundant auxiliary basis functions:      112
+
+     Block lengths for integral files:
+        frozen occupied (BOI):        0 MiB
+        active occupied (BJI):        1 MiB
+        active virtual  (BAI):        1 MiB
+        frozen virtual  (BGI):        0 MiB
+               general  (BTI):        1 MiB
+
+   =========================================================================
+
+
+
+
+   **************************************************************************
+   *                                                                        *
+   *          OPTIMIZATION OF THE GROUND STATE CLUSTER AMPLITUDES           *
+   *                                                                        *
+   **************************************************************************
+
+
+   Iter.   MP2 energy       Norm(Omega)   Norm(t1)  Norm(t2)     cpu    wall
+   ...........................................................................
+    1   -113.0311356662    0.0570892890     0.00000   0.18747    0.00    0.00
+   ...........................................................................
+
+
+     time in total         cpu:  0.06 sec    wall:  0.01 sec    ratio:  6.8
+
+
+     **********************************************************************
+     *                                                                    *
+     *   RHF  energy                             :   -112.7495359881      *
+     *   MP2 correlation energy                  :     -0.2815996781      *
+     *                                                                    *
+     *   Final MP2 energy                        :   -113.0311356662      *
+     *                                                                    *
+     *   Norm of MP1 T2 amplitudes               :      0.1874731314      *
+     *                                                                    *
+     *   D1 diagnostic                           :      0.0333            *
+     *                                                                    *
+     **********************************************************************
+
+
+
+ **************************************************************
+ *                                                            *
+ *    OPTIMIZATION OF THE EXCITED STATE CLUSTER AMPLITUDES    *
+ *                                                            *
+ **************************************************************
+
+
+  preoptimize excitation energies/vectors using CCS:
+  ==================================================
+
+
+ ======== LINEAR CC RESPONSE SOLVER ========
+
+    threshold for convergence: 1.00E-03
+    maximum number of simultaneous Jacobi matrix transformations: 10
+                                                
+     summary of start vectors generation:
+     -------------------------------------------
+     type of solution vectors      : RE0
+     symmetry                      : a  
+     number of vectors requested   :    10
+     number of vectors generated   :    10
+       -- guessed as rhs/(e_a-e_i) :    10
+     -------------------------------------------
+                                                
+
+    Iter  #Vectors  time (min)    max. residual 
+    --------------------------------------------
+      1      10         0.00     0.32E+00  ( 10)
+      2      10         0.00     0.45E-01  (  8)
+      3      10         0.00     0.13E-01  (  7)
+      4       9         0.00     0.58E-02  (  7)
+      5       4         0.00     0.15E-02  (  7)
+      6       3         0.00     0.69E-03  ( 10)
+    --------------------------------------------
+    converged in  6 iterations
+
+         Total time          0.00 minutes
+
+
+ ===========================================
+
+
+
+
+ Note that this is the intermediate result of a preoptimization!
+ The convergence threshold was  0.1E-02 only!
+
+
+ +==================================================================+
+ | sym | multi | state |          CCS excitation energies           |
+ |     |       |       +--------------------------------------------+
+ |     |       |       |   Hartree    |     eV       |     cm-1     |
+ +==================================================================+
+ | a   |   1   |   1   |    0.3387340 |      9.21742 |    74343.520 |
+ | a   |   1   |   2   |    0.3387341 |      9.21742 |    74343.531 |
+ | a   |   1   |   3   |    0.3608479 |      9.81917 |    79196.969 |
+ | a   |   1   |   4   |    0.3767670 |     10.25235 |    82690.807 |
+ | a   |   1   |   5   |    0.3767670 |     10.25235 |    82690.807 |
+ | a   |   1   |   6   |    0.5884223 |     16.01179 |   129143.765 |
+ | a   |   1   |   7   |    0.5884223 |     16.01179 |   129143.766 |
+ | a   |   1   |   8   |    0.5891316 |     16.03109 |   129299.448 |
+ | a   |   1   |   9   |    0.6637640 |     18.06194 |   145679.369 |
+ | a   |   1   |  10   |    0.7039780 |     19.15622 |   154505.315 |
+ +==================================================================+
+
+
+
+
+  preoptimize ADC(2) excitation energies/vectors using a quasi linear algorithm:
+  ==============================================================================
+
+
+ ======== LINEAR CC RESPONSE SOLVER ========
+
+    threshold for convergence: 1.00E-03
+    maximum number of simultaneous Jacobi matrix transformations: 10
+                                                
+     summary of start vectors generation:
+     -------------------------------------------
+     type of solution vectors      : RE0
+     symmetry                      : a  
+     number of vectors requested   :    10
+     number of vectors generated   :    10
+       -- restarted from file      :    10
+     -------------------------------------------
+                                                
+
+    Iter  #Vectors  time (min)    max. residual 
+    --------------------------------------------
+ threshold for this macro iteration:  5.787817482431512E-002
+      1      10         0.00     0.98E-01  (  8)
+ ...adapted threshold to:  6.610849045264688E-002
+      2       3         0.00     0.53E-01  (  4)
+                                                
+     summary of start vectors generation:
+     -------------------------------------------
+     type of solution vectors      : RE0
+     symmetry                      : a  
+     number of vectors requested   :    10
+     number of vectors generated   :    10
+       -- restarted from file      :    10
+     -------------------------------------------
+                                                
+
+    Iter  #Vectors  time (min)    max. residual 
+    --------------------------------------------
+ threshold for this macro iteration:  5.876519235485489E-003
+      3      10         0.00     0.53E-01  (  5)
+      4      10         0.00     0.94E-02  (  9)
+      5       4         0.00     0.58E-02  ( 10)
+                                                
+     summary of start vectors generation:
+     -------------------------------------------
+     type of solution vectors      : RE0
+     symmetry                      : a  
+     number of vectors requested   :    10
+     number of vectors generated   :    10
+       -- restarted from file      :    10
+     -------------------------------------------
+                                                
+
+    Iter  #Vectors  time (min)    max. residual 
+    --------------------------------------------
+ threshold for this macro iteration:  1.000000000000000E-003
+      6      10         0.00     0.20E-02  ( 10)
+      7       7         0.00     0.10E-02  ( 10)
+      8       1         0.00     0.76E-03  (  7)
+    --------------------------------------------
+    converged in  8 iterations
+
+         Total time          0.00 minutes
+
+
+ ===========================================
+
+
+
+
+ Note that this is the intermediate result of a preoptimization!
+ The convergence threshold was  0.1E-02 only!
+
+
+ +==================================================================+
+ | sym | multi | state |          ADC(2) excitation energies        |
+ |     |       |       +--------------------------------------------+
+ |     |       |       |   Hartree    |     eV       |     cm-1     |
+ +==================================================================+
+ | a   |   1   |   1   |    0.3338815 |      9.08538 |    73278.523 |
+ | a   |   1   |   2   |    0.3338849 |      9.08547 |    73279.265 |
+ | a   |   1   |   3   |    0.3817726 |     10.38856 |    83789.408 |
+ | a   |   1   |   4   |    0.3889332 |     10.58341 |    85360.969 |
+ | a   |   1   |   5   |    0.3889332 |     10.58341 |    85360.969 |
+ | a   |   1   |   6   |    0.5274468 |     14.35256 |   115761.194 |
+ | a   |   1   |   7   |    0.5274474 |     14.35257 |   115761.315 |
+ | a   |   1   |   8   |    0.5293197 |     14.40352 |   116172.243 |
+ | a   |   1   |   9   |    0.6211579 |     16.90257 |   136328.391 |
+ | a   |   1   |  10   |    0.6923908 |     18.84091 |   151962.206 |
+ +==================================================================+
+
+
+
+
+
+ solve for ADC(2) excitation energies/vectors using a DIIS algorithm:
+ =================================================================
+
+
+ ========= DIIS CC RESPONSE SOLVER =========
+
+    threshold for convergence: 1.00E-06
+    max. nb. of DIIS vectors :      10
+    maximum number of simultaneous Jacobi matrix transformations: 10
+                                                
+     summary of start vectors generation:
+     -------------------------------------------
+     type of solution vectors      : RE0
+     symmetry                      : a  
+     number of vectors requested   :    10
+     number of vectors generated   :    10
+       -- restarted from file      :    10
+     -------------------------------------------
+                                                
+
+    Iter  #Vectors  time (min)   residual
+    --------------------------------------
+      1      10         0.00     0.26E-03  (  6)    0.60E+00
+      2      10         0.00     0.12E-03  (  9)    0.99E-03
+      3      10         0.00     0.46E-04  ( 10)    0.18E+01
+      4       9         0.00     0.40E-04  (  6)    0.20E+01
+      5       5         0.00     0.24E-04  (  6)    0.19E+01
+      6       3         0.00     0.81E-06  (  6)    0.16E+01
+    --------------------------------------
+    converged in   6 iterations
+
+   Total time          0.00 minutes
+
+
+ ===========================================
+
+
+
+
+
+ +================================================================================+
+ | sym | multi | state |          ADC(2) excitation energies    |  %t1   |  %t2   |
+ |     |       |       +----------------------------------------+--------+--------+
+ |     |       |       |   Hartree    |    eV      |    cm-1    |    %   |    %   |
+ +================================================================================+
+ | a   |   1   |   1   |    0.3338830 |    9.08542 |  73278.841 |  95.36 |   4.64 |
+ | a   |   1   |   2   |    0.3338830 |    9.08542 |  73278.848 |  95.36 |   4.64 |
+ | a   |   1   |   3   |    0.3817677 |   10.38843 |  83788.317 |  95.32 |   4.68 |
+ | a   |   1   |   4   |    0.3889260 |   10.58322 |  85359.398 |  94.41 |   5.59 |
+ | a   |   1   |   5   |    0.3889260 |   10.58322 |  85359.398 |  94.41 |   5.59 |
+ | a   |   1   |   6   |    0.5274923 |   14.35380 | 115771.187 |  91.35 |   8.65 |
+ | a   |   1   |   7   |    0.5274923 |   14.35380 | 115771.187 |  91.35 |   8.65 |
+ | a   |   1   |   8   |    0.5293579 |   14.40456 | 116180.619 |  91.68 |   8.32 |
+ | a   |   1   |   9   |    0.6211637 |   16.90273 | 136329.682 |  94.79 |   5.21 |
+ | a   |   1   |  10   |    0.6924049 |   18.84130 | 151965.302 |  94.93 |   5.07 |
+ +================================================================================+
+
+
+       Energy:     0.3338830 H      9.08542 eV    73278.841 cm-1
+
+     +=======================================================================+
+     | type: RE0                    symmetry: a               state:    1    |
+     +-----------------------+-----------------------+-----------------------+
+     | occ. orb.  index spin | vir. orb.  index spin |  coeff/|amp|     %    |
+     +=======================+=======================+=======================+
+     |    7 a        7       |    8 a        8       |   0.92634      85.8   |
+     |    7 a        7       |    9 a        9       |   0.25362       6.4   |
+     |    4 a        4       |    8 a        8       |   0.21339       4.6   |
+     +=======================+=======================+=======================+
+     norm of printed elements:  0.96797
+
+
+       Energy:     0.3338830 H      9.08542 eV    73278.848 cm-1
+
+     +=======================================================================+
+     | type: RE0                    symmetry: a               state:    2    |
+     +-----------------------+-----------------------+-----------------------+
+     | occ. orb.  index spin | vir. orb.  index spin |  coeff/|amp|     %    |
+     +=======================+=======================+=======================+
+     |    7 a        7       |    9 a        9       |   0.92635      85.8   |
+     |    7 a        7       |    8 a        8       |  -0.25360       6.4   |
+     |    4 a        4       |    9 a        9       |   0.21339       4.6   |
+     +=======================+=======================+=======================+
+     norm of printed elements:  0.96797
+
+
+       Energy:     0.3817677 H     10.38843 eV    83788.317 cm-1
+
+     +=======================================================================+
+     | type: RE0                    symmetry: a               state:    3    |
+     +-----------------------+-----------------------+-----------------------+
+     | occ. orb.  index spin | vir. orb.  index spin |  coeff/|amp|     %    |
+     +=======================+=======================+=======================+
+     |    6 a        6       |    8 a        8       |   0.67196      45.2   |
+     |    5 a        5       |    9 a        9       |  -0.67196      45.2   |
+     |    5 a        5       |    8 a        8       |   0.18400       3.4   |
+     |    6 a        6       |    9 a        9       |   0.18400       3.4   |
+     +=======================+=======================+=======================+
+     norm of printed elements:  0.97079
+
+
+       Energy:     0.3889260 H     10.58322 eV    85359.398 cm-1
+
+     +=======================================================================+
+     | type: RE0                    symmetry: a               state:    4    |
+     +-----------------------+-----------------------+-----------------------+
+     | occ. orb.  index spin | vir. orb.  index spin |  coeff/|amp|     %    |
+     +=======================+=======================+=======================+
+     |    6 a        6       |    9 a        9       |   0.69650      48.5   |
+     |    5 a        5       |    8 a        8       |  -0.69650      48.5   |
+     +=======================+=======================+=======================+
+     norm of printed elements:  0.97022
+
+
+       Energy:     0.3889260 H     10.58322 eV    85359.398 cm-1
+
+     +=======================================================================+
+     | type: RE0                    symmetry: a               state:    5    |
+     +-----------------------+-----------------------+-----------------------+
+     | occ. orb.  index spin | vir. orb.  index spin |  coeff/|amp|     %    |
+     +=======================+=======================+=======================+
+     |    6 a        6       |    8 a        8       |   0.69680      48.6   |
+     |    5 a        5       |    9 a        9       |   0.69680      48.6   |
+     +=======================+=======================+=======================+
+     norm of printed elements:  0.97106
+
+
+       Energy:     0.5274923 H     14.35380 eV   115771.187 cm-1
+
+     +=======================================================================+
+     | type: RE0                    symmetry: a               state:    6    |
+     +-----------------------+-----------------------+-----------------------+
+     | occ. orb.  index spin | vir. orb.  index spin |  coeff/|amp|     %    |
+     +=======================+=======================+=======================+
+     |    4 a        4       |    8 a        8       |   0.95067      90.4   |
+     |    7 a        7       |    8 a        8       |  -0.23237       5.4   |
+     +=======================+=======================+=======================+
+     norm of printed elements:  0.95778
+
+
+       Energy:     0.5274923 H     14.35380 eV   115771.187 cm-1
+
+     +=======================================================================+
+     | type: RE0                    symmetry: a               state:    7    |
+     +-----------------------+-----------------------+-----------------------+
+     | occ. orb.  index spin | vir. orb.  index spin |  coeff/|amp|     %    |
+     +=======================+=======================+=======================+
+     |    4 a        4       |    8 a        8       |   0.94900      90.1   |
+     |    7 a        7       |    8 a        8       |  -0.23196       5.4   |
+     +=======================+=======================+=======================+
+     norm of printed elements:  0.95441
+
+
+       Energy:     0.5293579 H     14.40456 eV   116180.619 cm-1
+
+     +=======================================================================+
+     | type: RE0                    symmetry: a               state:    8    |
+     +-----------------------+-----------------------+-----------------------+
+     | occ. orb.  index spin | vir. orb.  index spin |  coeff/|amp|     %    |
+     +=======================+=======================+=======================+
+     |    6 a        6       |    9 a        9       |   0.62674      39.3   |
+     |    5 a        5       |    8 a        8       |   0.62674      39.3   |
+     |    7 a        7       |   10 a       10       |   0.32143      10.3   |
+     |    5 a        5       |    9 a        9       |   0.17162       2.9   |
+     |    6 a        6       |    8 a        8       |  -0.17162       2.9   |
+     |    7 a        7       |   15 a       15       |  -0.10023       1.0   |
+     +=======================+=======================+=======================+
+     norm of printed elements:  0.95787
+
+
+       Energy:     0.6211637 H     16.90273 eV   136329.682 cm-1
+
+     +=======================================================================+
+     | type: RE0                    symmetry: a               state:    9    |
+     +-----------------------+-----------------------+-----------------------+
+     | occ. orb.  index spin | vir. orb.  index spin |  coeff/|amp|     %    |
+     +=======================+=======================+=======================+
+     |    7 a        7       |   10 a       10       |   0.94499      89.3   |
+     |    5 a        5       |    8 a        8       |  -0.19920       4.0   |
+     |    6 a        6       |    9 a        9       |  -0.19920       4.0   |
+     +=======================+=======================+=======================+
+     norm of printed elements:  0.97236
+
+
+       Energy:     0.6924049 H     18.84130 eV   151965.302 cm-1
+
+     +=======================================================================+
+     | type: RE0                    symmetry: a               state:   10    |
+     +-----------------------+-----------------------+-----------------------+
+     | occ. orb.  index spin | vir. orb.  index spin |  coeff/|amp|     %    |
+     +=======================+=======================+=======================+
+     |    5 a        5       |   10 a       10       |   0.99095      98.2   |
+     +=======================+=======================+=======================+
+     norm of printed elements:  0.98199
+
+
+
+     Info: copy ADC(2) right eigenvectors into left eigenvector files.
+
+
+                    ========   CC DENSITY MODULE   ========
+
+                      current wave-function model: ADC(2)  
+
+  calculating overlap between   10 left and right vector(s)
+    density nr.      cpu/min        wall/min    L     R
+   ------------------------------------------------------
+         1             0.00            0.00    LE0    RE0 
+         2             0.00            0.00    LE0    RE0 
+         3             0.00            0.00    LE0    RE0 
+         4             0.00            0.00    LE0    RE0 
+         5             0.00            0.00    LE0    RE0 
+         6             0.00            0.00    LE0    RE0 
+         7             0.00            0.00    LE0    RE0 
+         8             0.00            0.00    LE0    RE0 
+         9             0.00            0.00    LE0    RE0 
+        10             0.00            0.00    LE0    RE0 
+   ------------------------------------------------------
+     time in cc_1den       cpu:  0.31 sec    wall:  0.04 sec    ratio:  7.7
+
+
+
+     +==========================================================+
+     |   contributions of excitation levels to excited states   |
+     |     wavefunctions as computed from the <L|R> overlap     |
+     +----------------------------------------------------------+
+     | sym | multi | state |    E / eV  | % singles | % doubles |
+     +==========================================================+
+     | a   |   1   |   1   |    9.08542 |   95.68   |    4.32   |
+     | a   |   1   |   2   |    9.08542 |   95.68   |    4.32   |
+     | a   |   1   |   3   |   10.38843 |   95.69   |    4.31   |
+     | a   |   1   |   4   |   10.58322 |   94.95   |    5.05   |
+     | a   |   1   |   5   |   10.58322 |   94.95   |    5.05   |
+     | a   |   1   |   6   |   14.35380 |   91.91   |    8.09   |
+     | a   |   1   |   7   |   14.35380 |   91.91   |    8.09   |
+     | a   |   1   |   8   |   14.40456 |   92.07   |    7.93   |
+     | a   |   1   |   9   |   16.90273 |   95.07   |    4.93   |
+     | a   |   1   |  10   |   18.84130 |   95.23   |    4.77   |
+     +==========================================================+
+
+
+
+     No geometry optimization requested (for this method)...
+        ... excited state gradients will not be written to $grad.
+
+
+      The semi-canonical algorithm will be used for densities
+
+
+                    ========   CC DENSITY MODULE   ========
+
+                      current wave-function model: ADC(2)  
+
+  calculating    20 xi densities
+     and    10 xi type intermediate(s) for excited state gradient
+
+   a semicanonical algorithm will be used when possible
+
+    density nr.      cpu/min        wall/min    L     R
+   ------------------------------------------------------
+         1             0.00            0.00    LE0    R0  
+         2             0.00            0.00    LE0    R0  
+         3             0.00            0.00    LE0    R0  
+         4             0.00            0.00    LE0    R0  
+         5             0.00            0.00    LE0    R0  
+         6             0.00            0.00    LE0    R0  
+         7             0.00            0.00    LE0    R0  
+         8             0.00            0.00    LE0    R0  
+         9             0.00            0.00    LE0    R0  
+        10             0.00            0.00    LE0    R0  
+        11             0.00            0.00    NL0    R0  
+        12             0.00            0.00    NL0    R0  
+        13             0.00            0.00    NL0    R0  
+        14             0.00            0.00    NL0    R0  
+        15             0.00            0.00    NL0    R0  
+        16             0.00            0.00    NL0    R0  
+        17             0.00            0.00    NL0    R0  
+        18             0.00            0.00    NL0    R0  
+        19             0.00            0.00    NL0    R0  
+        20             0.00            0.00    NL0    R0  
+   ------------------------------------------------------
+     time in cc_1den       cpu:  1.50 sec    wall:  0.19 sec    ratio:  7.9
+
+
+                    ========   CC DENSITY MODULE   ========
+
+                      current wave-function model: ADC(2)  
+
+  calculating    10 A densities
+     and    10 set of A type intermediate(s) for excited state gradient
+
+   a semicanonical algorithm will be used when possible
+
+    density nr.      cpu/min        wall/min    L     R
+   ------------------------------------------------------
+         1             0.00            0.00    LE0    RE0 
+         2             0.00            0.00    LE0    RE0 
+         3             0.00            0.00    LE0    RE0 
+         4             0.00            0.00    LE0    RE0 
+         5             0.00            0.00    LE0    RE0 
+         6             0.00            0.00    LE0    RE0 
+         7             0.00            0.00    LE0    RE0 
+         8             0.00            0.00    LE0    RE0 
+         9             0.00            0.00    LE0    RE0 
+        10             0.00            0.00    LE0    RE0 
+   ------------------------------------------------------
+     time in cc_1den       cpu:  1.80 sec    wall:  0.23 sec    ratio:  7.9
+
+ reading orbital data $scfmo  from file mos
+ orbital characterization : scfconv=7
+ all orbitals will be active in the correlation treatment
+
+   EMP2+Excitation energy :     -112.697252699320
+   dto. calc. from traces :     -112.697252679505
+   Delta                  :       -0.000000019815
+
+
+   EMP2+Excitation energy :     -112.697252666522
+   dto. calc. from traces :     -112.697252679505
+   Delta                  :        0.000000012983
+
+
+   EMP2+Excitation energy :     -112.649368003899
+   dto. calc. from traces :     -112.649368003442
+   Delta                  :       -0.000000000456
+
+
+   EMP2+Excitation energy :     -112.642209630832
+   dto. calc. from traces :     -112.642209629781
+   Delta                  :       -0.000000001051
+
+
+   EMP2+Excitation energy :     -112.642209630828
+   dto. calc. from traces :     -112.642209629781
+   Delta                  :       -0.000000001047
+
+
+   EMP2+Excitation energy :     -112.503643323855
+   dto. calc. from traces :     -112.503643314901
+   Delta                  :       -0.000000008954
+
+
+   EMP2+Excitation energy :     -112.503643321721
+   dto. calc. from traces :     -112.503643314901
+   Delta                  :       -0.000000006820
+
+
+   EMP2+Excitation energy :     -112.501777816058
+   dto. calc. from traces :     -112.501777800337
+   Delta                  :       -0.000000015721
+
+
+   EMP2+Excitation energy :     -112.409971927281
+   dto. calc. from traces :     -112.409971923691
+   Delta                  :       -0.000000003590
+
+
+   EMP2+Excitation energy :     -112.338730802875
+   dto. calc. from traces :     -112.338730820396
+   Delta                  :        0.000000017521
+
+   --------------------------------------------------------------------------
+
+        Solving 4-Index ERI based CPHF equations using a RI-CPHF
+        preoptimization with a "cbas" type auxiliary basis
+
+
+ ======== LINEAR CC RESPONSE SOLVER ========
+
+    threshold for convergence: 1.00E-02
+    maximum number of simultaneous Jacobi matrix transformations: 10
+                                                
+     summary of start vectors generation:
+     -------------------------------------------
+     type of solution vectors      : l0o
+     symmetry                      : a  
+     number of vectors requested   :    10
+     number of vectors generated   :    10
+       -- guessed as rhs/(e_a-e_i) :    10
+     -------------------------------------------
+                                                
+
+    Iter  #Vectors  time (min)    max. residual 
+    --------------------------------------------
+      1      10         0.00     0.21E+00  (  8)
+      2      10         0.00     0.33E-01  ( 10)
+      3       9         0.00     0.31E-02  ( 10)
+    --------------------------------------------
+    converged in  3 iterations
+
+         Total time          0.00 minutes
+
+
+ ===========================================
+
+
+
+
+ ======== LINEAR CC RESPONSE SOLVER ========
+
+    threshold for convergence: 1.00E-04
+    maximum number of simultaneous Jacobi matrix transformations: 10
+                                                
+     summary of start vectors generation:
+     -------------------------------------------
+     type of solution vectors      : l0o
+     symmetry                      : a  
+     number of vectors requested   :    10
+     number of vectors generated   :    10
+       -- restarted from file      :    10
+     -------------------------------------------
+                                                
+
+    Iter  #Vectors  time (min)    max. residual 
+    --------------------------------------------
+      1      10         0.00     0.30E-02  ( 10)
+      2      10         0.00     0.24E-03  ( 10)
+      3       8         0.00     0.44E-04  (  1)
+    --------------------------------------------
+    converged in  3 iterations
+
+         Total time          0.00 minutes
+
+
+ ===========================================
+
+
+   --------------------------------------------------------------------------
+
+ 1e-integral 1st. derivatives will be neglected if expon. factor < 0.100000E-11
+
+
+ 1e-integral 1st. derivatives will be neglected if expon. factor < 0.100000E-11
+
+
+ 1e-integral 1st. derivatives will be neglected if expon. factor < 0.100000E-11
+
+
+ 1e-integral 1st. derivatives will be neglected if expon. factor < 0.100000E-11
+
+
+ 1e-integral 1st. derivatives will be neglected if expon. factor < 0.100000E-11
+
+
+ 1e-integral 1st. derivatives will be neglected if expon. factor < 0.100000E-11
+
+
+ 1e-integral 1st. derivatives will be neglected if expon. factor < 0.100000E-11
+
+
+ 1e-integral 1st. derivatives will be neglected if expon. factor < 0.100000E-11
+
+
+ 1e-integral 1st. derivatives will be neglected if expon. factor < 0.100000E-11
+
+
+ 1e-integral 1st. derivatives will be neglected if expon. factor < 0.100000E-11
+
+
+
+ **************************************************************
+ *                                                            *
+ *<<<<<<<<<<<<  ONE-PHOTON ABSORPTION STRENGTHS  >>>>>>>>>>>>>*
+ *                                                            *
+ **************************************************************
+
+
+  +=========================================================================+
+  |  Transition                                             model: ADC(2)   |
+  |    number, symmetry, multiplicity:    1 a    1                          |
+  |    frequency :   0.3338829669 a.u.     9.08542 e.V.     73278.8 rcm     |
+  +=========================================================================+
+
+     +-----------+-----------------+-----------------+---------------------+
+     | operator  |   left moment   |  right moment   | transition strength |
+     +-----------+-----------------+-----------------+---------------------+
+     | xdiplen   |      0.59062175 |      0.59062175 |       0.34883405    |
+     | ydiplen   |      0.04429974 |      0.04429974 |       0.00196247    |
+     | zdiplen   |     -0.00000000 |     -0.00000000 |       0.00000000    |
+     +-----------+-----------------+-----------------+---------------------+
+ 
+       oscillator strength (length gauge)   :      0.07808332
+ 
+ 
+
+
+  +=========================================================================+
+  |  Transition                                             model: ADC(2)   |
+  |    number, symmetry, multiplicity:    2 a    1                          |
+  |    frequency :   0.3338829997 a.u.     9.08542 e.V.     73278.8 rcm     |
+  +=========================================================================+
+
+     +-----------+-----------------+-----------------+---------------------+
+     | operator  |   left moment   |  right moment   | transition strength |
+     +-----------+-----------------+-----------------+---------------------+
+     | xdiplen   |     -0.04428591 |     -0.04428591 |       0.00196124    |
+     | ydiplen   |      0.59062245 |      0.59062245 |       0.34883488    |
+     | zdiplen   |      0.00000000 |      0.00000000 |       0.00000000    |
+     +-----------+-----------------+-----------------+---------------------+
+ 
+       oscillator strength (length gauge)   :      0.07808324
+ 
+ 
+
+
+  +=========================================================================+
+  |  Transition                                             model: ADC(2)   |
+  |    number, symmetry, multiplicity:    3 a    1                          |
+  |    frequency :   0.3817676623 a.u.    10.38843 e.V.     83788.3 rcm     |
+  +=========================================================================+
+
+     +-----------+-----------------+-----------------+---------------------+
+     | operator  |   left moment   |  right moment   | transition strength |
+     +-----------+-----------------+-----------------+---------------------+
+     | xdiplen   |      0.00000000 |      0.00000000 |       0.00000000    |
+     | ydiplen   |     -0.00000000 |     -0.00000000 |       0.00000000    |
+     | zdiplen   |      0.00000000 |      0.00000000 |       0.00000000    |
+     +-----------+-----------------+-----------------+---------------------+
+ 
+       oscillator strength (length gauge)   :      0.00000000
+ 
+ 
+
+
+  +=========================================================================+
+  |  Transition                                             model: ADC(2)   |
+  |    number, symmetry, multiplicity:    4 a    1                          |
+  |    frequency :   0.3889260354 a.u.    10.58322 e.V.     85359.4 rcm     |
+  +=========================================================================+
+
+     +-----------+-----------------+-----------------+---------------------+
+     | operator  |   left moment   |  right moment   | transition strength |
+     +-----------+-----------------+-----------------+---------------------+
+     | xdiplen   |     -0.00000000 |     -0.00000000 |       0.00000000    |
+     | ydiplen   |      0.00000000 |      0.00000000 |       0.00000000    |
+     | zdiplen   |      0.00000000 |      0.00000000 |       0.00000000    |
+     +-----------+-----------------+-----------------+---------------------+
+ 
+       oscillator strength (length gauge)   :      0.00000000
+ 
+ 
+
+
+  +=========================================================================+
+  |  Transition                                             model: ADC(2)   |
+  |    number, symmetry, multiplicity:    5 a    1                          |
+  |    frequency :   0.3889260354 a.u.    10.58322 e.V.     85359.4 rcm     |
+  +=========================================================================+
+
+     +-----------+-----------------+-----------------+---------------------+
+     | operator  |   left moment   |  right moment   | transition strength |
+     +-----------+-----------------+-----------------+---------------------+
+     | xdiplen   |      0.00000000 |      0.00000000 |       0.00000000    |
+     | ydiplen   |     -0.00000000 |     -0.00000000 |       0.00000000    |
+     | zdiplen   |      0.00000000 |      0.00000000 |       0.00000000    |
+     +-----------+-----------------+-----------------+---------------------+
+ 
+       oscillator strength (length gauge)   :      0.00000000
+ 
+ 
+
+
+  +=========================================================================+
+  |  Transition                                             model: ADC(2)   |
+  |    number, symmetry, multiplicity:    6 a    1                          |
+  |    frequency :   0.5274923423 a.u.    14.35380 e.V.    115771.2 rcm     |
+  +=========================================================================+
+
+     +-----------+-----------------+-----------------+---------------------+
+     | operator  |   left moment   |  right moment   | transition strength |
+     +-----------+-----------------+-----------------+---------------------+
+     | xdiplen   |     -0.72816370 |     -0.72816370 |       0.53022237    |
+     | ydiplen   |      0.04699776 |      0.04699776 |       0.00220879    |
+     | zdiplen   |     -0.00000000 |     -0.00000000 |       0.00000000    |
+     +-----------+-----------------+-----------------+---------------------+
+ 
+       oscillator strength (length gauge)   :      0.18723557
+ 
+ 
+
+
+  +=========================================================================+
+  |  Transition                                             model: ADC(2)   |
+  |    number, symmetry, multiplicity:    7 a    1                          |
+  |    frequency :   0.5274923445 a.u.    14.35380 e.V.    115771.2 rcm     |
+  +=========================================================================+
+
+     +-----------+-----------------+-----------------+---------------------+
+     | operator  |   left moment   |  right moment   | transition strength |
+     +-----------+-----------------+-----------------+---------------------+
+     | xdiplen   |     -0.72871450 |     -0.72871450 |       0.53102482    |
+     | ydiplen   |      0.03750172 |      0.03750172 |       0.00140638    |
+     | zdiplen   |     -0.00000000 |     -0.00000000 |       0.00000000    |
+     +-----------+-----------------+-----------------+---------------------+
+ 
+       oscillator strength (length gauge)   :      0.18723559
+ 
+ 
+
+
+  +=========================================================================+
+  |  Transition                                             model: ADC(2)   |
+  |    number, symmetry, multiplicity:    8 a    1                          |
+  |    frequency :   0.5293578501 a.u.    14.40456 e.V.    116180.6 rcm     |
+  +=========================================================================+
+
+     +-----------+-----------------+-----------------+---------------------+
+     | operator  |   left moment   |  right moment   | transition strength |
+     +-----------+-----------------+-----------------+---------------------+
+     | xdiplen   |      0.00000000 |      0.00000000 |       0.00000000    |
+     | ydiplen   |      0.00000000 |      0.00000000 |       0.00000000    |
+     | zdiplen   |     -1.05237067 |     -1.05237067 |       1.10748403    |
+     +-----------+-----------------+-----------------+---------------------+
+ 
+       oscillator strength (length gauge)   :      0.39083691
+ 
+ 
+
+
+  +=========================================================================+
+  |  Transition                                             model: ADC(2)   |
+  |    number, symmetry, multiplicity:    9 a    1                          |
+  |    frequency :   0.6211637389 a.u.    16.90273 e.V.    136329.7 rcm     |
+  +=========================================================================+
+
+     +-----------+-----------------+-----------------+---------------------+
+     | operator  |   left moment   |  right moment   | transition strength |
+     +-----------+-----------------+-----------------+---------------------+
+     | xdiplen   |      0.00000000 |      0.00000000 |       0.00000000    |
+     | ydiplen   |      0.00000000 |      0.00000000 |       0.00000000    |
+     | zdiplen   |      1.39352187 |      1.39352187 |       1.94190319    |
+     +-----------+-----------------+-----------------+---------------------+
+ 
+       oscillator strength (length gauge)   :      0.80415990
+ 
+ 
+
+
+  +=========================================================================+
+  |  Transition                                             model: ADC(2)   |
+  |    number, symmetry, multiplicity:   10 a    1                          |
+  |    frequency :   0.6924048633 a.u.    18.84130 e.V.    151965.3 rcm     |
+  +=========================================================================+
+
+     +-----------+-----------------+-----------------+---------------------+
+     | operator  |   left moment   |  right moment   | transition strength |
+     +-----------+-----------------+-----------------+---------------------+
+     | xdiplen   |      0.72162699 |      0.72162699 |       0.52074551    |
+     | ydiplen   |      0.05414989 |      0.05414989 |       0.00293221    |
+     | zdiplen   |     -0.00000000 |     -0.00000000 |       0.00000000    |
+     +-----------+-----------------+-----------------+---------------------+
+ 
+       oscillator strength (length gauge)   :      0.24173133
+ 
+ 
+ Exporting transition densities
+
+
+ *************************************************************
+ *                                                           *
+ *<<<<<<<<<<<<<<<  EXCITED STATE PROPERTIES  >>>>>>>>>>>>>>>>*
+ *                                                           *
+ *************************************************************
+
+
+
+  +=========================================================================+
+  |  Excited state reached by transition:                   model: ADC(2)   |
+  |    number, symmetry, multiplicity:    1 a    1                          |
+  |    frequency :   0.3338829669 a.u.     9.08542 e.V.     73278.8 rcm     |
+  +=========================================================================+
+
+      Total energy of excited state:    -112.6972526993
+
+   +-----------------+-----------------+-----------------+-----------------+
+   | operator        | expect. value   | electr. contrib.| nuclear contrib.|
+   +-----------------+-----------------+-----------------+-----------------+
+   | xdiplen (unrel) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | xdiplen (relax) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | ydiplen (unrel) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | ydiplen (relax) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | zdiplen (unrel) |     -0.30933637 |     -0.30944975 |      0.00011338 |
+   | zdiplen (relax) |     -0.07674540 |     -0.07685879 |      0.00011338 |
+   | xxqudlen(unrel) |     -8.82811747 |     -8.82811747 |      0.00000000 |
+   | xxqudlen(relax) |     -8.74265069 |     -8.74265069 |      0.00000000 |
+   | xyqudlen(unrel) |     -0.10542734 |     -0.10542734 |      0.00000000 |
+   | xyqudlen(relax) |     -0.10003378 |     -0.10003378 |      0.00000000 |
+   | xzqudlen(unrel) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | xzqudlen(relax) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | yyqudlen(unrel) |     -7.43042585 |     -7.43042585 |      0.00000000 |
+   | yyqudlen(relax) |     -7.41646649 |     -7.41646649 |      0.00000000 |
+   | yzqudlen(unrel) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | yzqudlen(relax) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | zzqudlen(unrel) |     -7.66508603 |    -23.17142671 |     15.50634068 |
+   | zzqudlen(relax) |     -7.78482941 |    -23.29117009 |     15.50634068 |
+   +-----------------+-----------------+-----------------+-----------------+
+
+
+     Analysis of relaxed properties:
+     ===============================
+
+
+     dipole moment:
+     --------------
+
+     x      0.00000000
+     y      0.00000000
+     z     -0.07674540
+
+     | dipole moment | =      0.07674540 a.u. =      0.19506736 debye
+
+
+     traceless quadrupole tensor:
+     ----------------------------
+
+               x              y              z
+
+     x    -1.14200274    -0.15005068    -0.00000000
+     y                    0.84727356    -0.00000000
+     z                                   0.29472918
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9971989,   0.0747953,   0.0000000 )
+      y' = (  -0.0747953,   0.9971989,  -0.0000000 )
+      z' = (  -0.0000000,   0.0000000,   1.0000000 )
+
+     < Q(x'x') > =     -1.15325736 a.u.
+     < Q(y'y') > =      0.85852817 a.u.
+     < Q(z'z') > =      0.29472918 a.u.
+
+
+     second moment of electron density:
+     ----------------------------------
+
+               x              y              z
+
+     x     8.74265069     0.10003378     0.00000000
+     y                    7.41646649     0.00000000
+     z                                  23.29117009
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9971989,   0.0747953,  -0.0000000 )
+      y' = (  -0.0747953,   0.9971989,  -0.0000000 )
+      z' = (   0.0000000,   0.0000000,   1.0000000 )
+
+     < x'x'> =      8.75015376 a.u.
+     < y'y'> =      7.40896341 a.u.
+     < z'z'> =     23.29117009 a.u.
+
+     Isotropic second moment:     alpha =     13.15009575 a.u.
+
+     Anisotropy of second moment:  beta =     15.25589126 a.u.
+ 
+
+
+     Analysis of unrelaxed properties:
+     =================================
+
+
+     dipole moment:
+     --------------
+
+     x      0.00000000
+     y     -0.00000000
+     z     -0.30933637
+
+     | dipole moment | =      0.30933637 a.u. =      0.78625462 debye
+
+
+     traceless quadrupole tensor:
+     ----------------------------
+
+               x              y              z
+
+     x    -1.28036152    -0.15814102    -0.00000000
+     y                    0.81617590     0.00000000
+     z                                   0.46418563
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9971989,   0.0747952,   0.0000000 )
+      y' = (  -0.0747952,   0.9971989,   0.0000000 )
+      z' = (   0.0000000,   0.0000000,   1.0000000 )
+
+     < Q(x'x') > =     -1.29222293 a.u.
+     < Q(y'y') > =      0.82803731 a.u.
+     < Q(z'z') > =      0.46418563 a.u.
+
+
+     second moment of electron density:
+     ----------------------------------
+
+               x              y              z
+
+     x     8.82811747     0.10542734     0.00000000
+     y                    7.43042585    -0.00000000
+     z                                  23.17142671
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9971989,   0.0747952,   0.0000000 )
+      y' = (  -0.0747952,   0.9971989,   0.0000000 )
+      z' = (   0.0000000,   0.0000000,   1.0000000 )
+
+     < x'x'> =      8.83602507 a.u.
+     < y'y'> =      7.42251825 a.u.
+     < z'z'> =     23.17142671 a.u.
+
+     Isotropic second moment:     alpha =     13.14332335 a.u.
+
+     Anisotropy of second moment:  beta =     15.09188291 a.u.
+ 
+ 
+          --------------------------------------------------
+           total gradient of ADC(2) energy of excited state  
+          --------------------------------------------------
+
+          ------------------------------------------------
+           cartesian gradient of the energy (hartree/bohr)
+          ------------------------------------------------
+
+  ATOM      1 c           2 o 
+dE/dx  0.3050589D-12 -0.3050589D-12
+dE/dy  0.3996889D-12 -0.3996889D-12
+dE/dz  0.2593032D+00 -0.2593032D+00
+ 
+ resulting FORCE  (fx,fy,fz) = (0.252D-27,0.858D-27,-.113D-10)
+ resulting MOMENT (mx,my,mz) = (0.850D-12,-.649D-12,0.000D+00)
+
+
+ **********************************************************************
+  |maximum component of gradient| : 0.25930323      (atom  2 o )       
+   gradient norm                  : 0.36671014    
+ **********************************************************************
+
+
+  +=========================================================================+
+  |  Excited state reached by transition:                   model: ADC(2)   |
+  |    number, symmetry, multiplicity:    2 a    1                          |
+  |    frequency :   0.3338829997 a.u.     9.08542 e.V.     73278.8 rcm     |
+  +=========================================================================+
+
+      Total energy of excited state:    -112.6972526665
+
+   +-----------------+-----------------+-----------------+-----------------+
+   | operator        | expect. value   | electr. contrib.| nuclear contrib.|
+   +-----------------+-----------------+-----------------+-----------------+
+   | xdiplen (unrel) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | xdiplen (relax) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | ydiplen (unrel) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | ydiplen (relax) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | zdiplen (unrel) |     -0.30933617 |     -0.30944955 |      0.00011338 |
+   | zdiplen (relax) |     -0.07674537 |     -0.07685875 |      0.00011338 |
+   | xxqudlen(unrel) |     -7.43042059 |     -7.43042059 |      0.00000000 |
+   | xxqudlen(relax) |     -7.41646024 |     -7.41646024 |      0.00000000 |
+   | xyqudlen(unrel) |      0.10539458 |      0.10539458 |      0.00000000 |
+   | xyqudlen(relax) |      0.10000266 |      0.10000266 |      0.00000000 |
+   | xzqudlen(unrel) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | xzqudlen(relax) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | yyqudlen(unrel) |     -8.82812076 |     -8.82812076 |      0.00000000 |
+   | yyqudlen(relax) |     -8.74265439 |     -8.74265439 |      0.00000000 |
+   | yzqudlen(unrel) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | yzqudlen(relax) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | zzqudlen(unrel) |     -7.66508601 |    -23.17142669 |     15.50634068 |
+   | zzqudlen(relax) |     -7.78482727 |    -23.29116795 |     15.50634068 |
+   +-----------------+-----------------+-----------------+-----------------+
+
+
+     Analysis of relaxed properties:
+     ===============================
+
+
+     dipole moment:
+     --------------
+
+     x      0.00000000
+     y      0.00000000
+     z     -0.07674537
+
+     | dipole moment | =      0.07674537 a.u. =      0.19506727 debye
+
+
+     traceless quadrupole tensor:
+     ----------------------------
+
+               x              y              z
+
+     x     0.84728059     0.15000399     0.00000000
+     y                   -1.14201064    -0.00000000
+     z                                   0.29473005
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9972007,   0.0747719,  -0.0000000 )
+      y' = (  -0.0747719,   0.9972007,   0.0000000 )
+      z' = (   0.0000000,  -0.0000000,   1.0000000 )
+
+     < Q(x'x') > =      0.85852816 a.u.
+     < Q(y'y') > =     -1.15325821 a.u.
+     < Q(z'z') > =      0.29473005 a.u.
+
+
+     second moment of electron density:
+     ----------------------------------
+
+               x              y              z
+
+     x     7.41646024    -0.10000266    -0.00000000
+     y                    8.74265439     0.00000000
+     z                                  23.29116795
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9972007,   0.0747719,   0.0000000 )
+      y' = (  -0.0747719,   0.9972007,  -0.0000000 )
+      z' = (  -0.0000000,   0.0000000,   1.0000000 )
+
+     < x'x'> =      7.40896186 a.u.
+     < y'y'> =      8.75015277 a.u.
+     < z'z'> =     23.29116795 a.u.
+
+     Isotropic second moment:     alpha =     13.15009419 a.u.
+
+     Anisotropy of second moment:  beta =     15.25589043 a.u.
+ 
+
+
+     Analysis of unrelaxed properties:
+     =================================
+
+
+     dipole moment:
+     --------------
+
+     x      0.00000000
+     y     -0.00000000
+     z     -0.30933617
+
+     | dipole moment | =      0.30933617 a.u. =      0.78625411 debye
+
+
+     traceless quadrupole tensor:
+     ----------------------------
+
+               x              y              z
+
+     x     0.81618279     0.15809187    -0.00000000
+     y                   -1.28036746    -0.00000000
+     z                                   0.46418467
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9972007,   0.0747719,   0.0000000 )
+      y' = (  -0.0747719,   0.9972007,   0.0000000 )
+      z' = (   0.0000000,   0.0000000,   1.0000000 )
+
+     < Q(x'x') > =      0.82803680 a.u.
+     < Q(y'y') > =     -1.29222147 a.u.
+     < Q(z'z') > =      0.46418467 a.u.
+
+
+     second moment of electron density:
+     ----------------------------------
+
+               x              y              z
+
+     x     7.43042059    -0.10539458     0.00000000
+     y                    8.82812076     0.00000000
+     z                                  23.17142669
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9972007,   0.0747719,   0.0000000 )
+      y' = (  -0.0747719,   0.9972007,   0.0000000 )
+      z' = (   0.0000000,   0.0000000,   1.0000000 )
+
+     < x'x'> =      7.42251792 a.u.
+     < y'y'> =      8.83602343 a.u.
+     < z'z'> =     23.17142669 a.u.
+
+     Isotropic second moment:     alpha =     13.14332268 a.u.
+
+     Anisotropy of second moment:  beta =     15.09188377 a.u.
+ 
+ 
+          --------------------------------------------------
+           total gradient of ADC(2) energy of excited state  
+          --------------------------------------------------
+
+          ------------------------------------------------
+           cartesian gradient of the energy (hartree/bohr)
+          ------------------------------------------------
+
+  ATOM      1 c           2 o 
+dE/dx  0.3732810D-12 -0.3732810D-12
+dE/dy  0.4910279D-12 -0.4910279D-12
+dE/dz  0.2593034D+00 -0.2593034D+00
+ 
+ resulting FORCE  (fx,fy,fz) = (0.404D-27,0.303D-27,-.113D-10)
+ resulting MOMENT (mx,my,mz) = (0.104D-11,-.794D-12,0.000D+00)
+
+
+ **********************************************************************
+  |maximum component of gradient| : 0.25930337      (atom  2 o )       
+   gradient norm                  : 0.36671034    
+ **********************************************************************
+
+
+  +=========================================================================+
+  |  Excited state reached by transition:                   model: ADC(2)   |
+  |    number, symmetry, multiplicity:    3 a    1                          |
+  |    frequency :   0.3817676623 a.u.    10.38843 e.V.     83788.3 rcm     |
+  +=========================================================================+
+
+      Total energy of excited state:    -112.6493680039
+
+   +-----------------+-----------------+-----------------+-----------------+
+   | operator        | expect. value   | electr. contrib.| nuclear contrib.|
+   +-----------------+-----------------+-----------------+-----------------+
+   | xdiplen (unrel) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | xdiplen (relax) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | ydiplen (unrel) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | ydiplen (relax) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | zdiplen (unrel) |      0.91778641 |      0.91767302 |      0.00011338 |
+   | zdiplen (relax) |      0.62700942 |      0.62689603 |      0.00011338 |
+   | xxqudlen(unrel) |     -7.83390885 |     -7.83390885 |      0.00000000 |
+   | xxqudlen(relax) |     -7.74684184 |     -7.74684184 |      0.00000000 |
+   | xyqudlen(unrel) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | xyqudlen(relax) |      0.00000005 |      0.00000005 |      0.00000000 |
+   | xzqudlen(unrel) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | xzqudlen(relax) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | yyqudlen(unrel) |     -7.83390885 |     -7.83390885 |      0.00000000 |
+   | yyqudlen(relax) |     -7.74684420 |     -7.74684420 |      0.00000000 |
+   | yzqudlen(unrel) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | yzqudlen(relax) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | zzqudlen(unrel) |    -10.38147617 |    -25.88781685 |     15.50634068 |
+   | zzqudlen(relax) |    -10.07790921 |    -25.58424989 |     15.50634068 |
+   +-----------------+-----------------+-----------------+-----------------+
+
+
+     Analysis of relaxed properties:
+     ===============================
+
+
+     dipole moment:
+     --------------
+
+     x      0.00000000
+     y      0.00000000
+     z      0.62700942
+
+     | dipole moment | =      0.62700942 a.u. =      1.59369896 debye
+
+
+     traceless quadrupole tensor:
+     ----------------------------
+
+               x              y              z
+
+     x     1.16553487     0.00000008    -0.00000000
+     y                    1.16553133    -0.00000000
+     z                                  -2.33106619
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9997374,   0.0229147,  -0.0000000 )
+      y' = (  -0.0229147,   0.9997374,  -0.0000000 )
+      z' = (   0.0000000,   0.0000000,   1.0000000 )
+
+     < Q(x'x') > =      1.16553487 a.u.
+     < Q(y'y') > =      1.16553132 a.u.
+     < Q(z'z') > =     -2.33106619 a.u.
+
+
+     second moment of electron density:
+     ----------------------------------
+
+               x              y              z
+
+     x     7.74684184    -0.00000005     0.00000000
+     y                    7.74684420     0.00000000
+     z                                  25.58424989
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9997374,   0.0229147,  -0.0000000 )
+      y' = (  -0.0229147,   0.9997374,  -0.0000000 )
+      z' = (   0.0000000,   0.0000000,   1.0000000 )
+
+     < x'x'> =      7.74684184 a.u.
+     < y'y'> =      7.74684420 a.u.
+     < z'z'> =     25.58424989 a.u.
+
+     Isotropic second moment:     alpha =     13.69264531 a.u.
+
+     Anisotropy of second moment:  beta =     17.83740687 a.u.
+ 
+
+
+     Analysis of unrelaxed properties:
+     =================================
+
+
+     dipole moment:
+     --------------
+
+     x      0.00000000
+     y      0.00000000
+     z      0.91778641
+
+     | dipole moment | =      0.91778641 a.u. =      2.33278035 debye
+
+
+     traceless quadrupole tensor:
+     ----------------------------
+
+               x              y              z
+
+     x     1.27378366     0.00000000    -0.00000000
+     y                    1.27378366    -0.00000000
+     z                                  -2.54756732
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9882724,  -0.1527012,   0.0000000 )
+      y' = (   0.1527012,   0.9882724,   0.0000000 )
+      z' = (   0.0000000,   0.0000000,   1.0000000 )
+
+     < Q(x'x') > =      1.27378366 a.u.
+     < Q(y'y') > =      1.27378366 a.u.
+     < Q(z'z') > =     -2.54756732 a.u.
+
+
+     second moment of electron density:
+     ----------------------------------
+
+               x              y              z
+
+     x     7.83390885    -0.00000000     0.00000000
+     y                    7.83390885     0.00000000
+     z                                  25.88781685
+
+
+     principal axes of tensor: 
+
+      x' = (   1.0000000,   0.0000000,   0.0000000 )
+      y' = (   0.0000000,   1.0000000,   0.0000000 )
+      z' = (   0.0000000,   0.0000000,   1.0000000 )
+
+     < x'x'> =      7.83390885 a.u.
+     < y'y'> =      7.83390885 a.u.
+     < z'z'> =     25.88781685 a.u.
+
+     Isotropic second moment:     alpha =     13.85187818 a.u.
+
+     Anisotropy of second moment:  beta =     18.05390800 a.u.
+ 
+ 
+          --------------------------------------------------
+           total gradient of ADC(2) energy of excited state  
+          --------------------------------------------------
+
+          ------------------------------------------------
+           cartesian gradient of the energy (hartree/bohr)
+          ------------------------------------------------
+
+  ATOM      1 c           2 o 
+dE/dx -0.2847813D-11  0.2847813D-11
+dE/dy -0.5663612D-11  0.5663612D-11
+dE/dz  0.4603004D+00 -0.4603004D+00
+ 
+ resulting FORCE  (fx,fy,fz) = (0.293D-22,0.423D-22,-.179D-10)
+ resulting MOMENT (mx,my,mz) = (-.120D-10,0.606D-11,0.000D+00)
+
+
+ **********************************************************************
+  |maximum component of gradient| : 0.46030044      (atom  2 o )       
+   gradient norm                  : 0.65096313    
+ **********************************************************************
+
+
+  +=========================================================================+
+  |  Excited state reached by transition:                   model: ADC(2)   |
+  |    number, symmetry, multiplicity:    4 a    1                          |
+  |    frequency :   0.3889260354 a.u.    10.58322 e.V.     85359.4 rcm     |
+  +=========================================================================+
+
+      Total energy of excited state:    -112.6422096308
+
+   +-----------------+-----------------+-----------------+-----------------+
+   | operator        | expect. value   | electr. contrib.| nuclear contrib.|
+   +-----------------+-----------------+-----------------+-----------------+
+   | xdiplen (unrel) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | xdiplen (relax) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | ydiplen (unrel) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | ydiplen (relax) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | zdiplen (unrel) |      0.90959060 |      0.90947721 |      0.00011338 |
+   | zdiplen (relax) |      0.57516708 |      0.57505369 |      0.00011338 |
+   | xxqudlen(unrel) |     -7.85050714 |     -7.85050714 |      0.00000000 |
+   | xxqudlen(relax) |     -7.74668010 |     -7.74668010 |      0.00000000 |
+   | xyqudlen(unrel) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | xyqudlen(relax) |      0.00000006 |      0.00000006 |      0.00000000 |
+   | xzqudlen(unrel) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | xzqudlen(relax) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | yyqudlen(unrel) |     -7.85050714 |     -7.85050714 |      0.00000000 |
+   | yyqudlen(relax) |     -7.74668242 |     -7.74668242 |      0.00000000 |
+   | yzqudlen(unrel) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | yzqudlen(relax) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | zzqudlen(unrel) |    -10.40553385 |    -25.91187453 |     15.50634068 |
+   | zzqudlen(relax) |    -10.07717664 |    -25.58351732 |     15.50634068 |
+   +-----------------+-----------------+-----------------+-----------------+
+
+
+     Analysis of relaxed properties:
+     ===============================
+
+
+     dipole moment:
+     --------------
+
+     x      0.00000000
+     y      0.00000000
+     z      0.57516708
+
+     | dipole moment | =      0.57516708 a.u. =      1.46192888 debye
+
+
+     traceless quadrupole tensor:
+     ----------------------------
+
+               x              y              z
+
+     x     1.16524943     0.00000008    -0.00000000
+     y                    1.16524595    -0.00000000
+     z                                  -2.33049539
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9997137,   0.0239281,  -0.0000000 )
+      y' = (  -0.0239281,   0.9997137,  -0.0000000 )
+      z' = (   0.0000000,   0.0000000,   1.0000000 )
+
+     < Q(x'x') > =      1.16524944 a.u.
+     < Q(y'y') > =      1.16524595 a.u.
+     < Q(z'z') > =     -2.33049539 a.u.
+
+
+     second moment of electron density:
+     ----------------------------------
+
+               x              y              z
+
+     x     7.74668010    -0.00000006     0.00000000
+     y                    7.74668242     0.00000000
+     z                                  25.58351732
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9997137,   0.0239281,  -0.0000000 )
+      y' = (  -0.0239281,   0.9997137,  -0.0000000 )
+      z' = (   0.0000000,   0.0000000,   1.0000000 )
+
+     < x'x'> =      7.74668009 a.u.
+     < y'y'> =      7.74668242 a.u.
+     < z'z'> =     25.58351732 a.u.
+
+     Isotropic second moment:     alpha =     13.69229328 a.u.
+
+     Anisotropy of second moment:  beta =     17.83683607 a.u.
+ 
+
+
+     Analysis of unrelaxed properties:
+     =================================
+
+
+     dipole moment:
+     --------------
+
+     x      0.00000000
+     y      0.00000000
+     z      0.90959060
+
+     | dipole moment | =      0.90959060 a.u. =      2.31194868 debye
+
+
+     traceless quadrupole tensor:
+     ----------------------------
+
+               x              y              z
+
+     x     1.27751335    -0.00000000    -0.00000000
+     y                    1.27751335    -0.00000000
+     z                                  -2.55502671
+
+
+     principal axes of tensor: 
+
+      x' = (   0.7755099,   0.6313354,   0.0000000 )
+      y' = (  -0.6313354,   0.7755099,   0.0000000 )
+      z' = (   0.0000000,   0.0000000,   1.0000000 )
+
+     < Q(x'x') > =      1.27751335 a.u.
+     < Q(y'y') > =      1.27751335 a.u.
+     < Q(z'z') > =     -2.55502671 a.u.
+
+
+     second moment of electron density:
+     ----------------------------------
+
+               x              y              z
+
+     x     7.85050714     0.00000000     0.00000000
+     y                    7.85050714     0.00000000
+     z                                  25.91187453
+
+
+     principal axes of tensor: 
+
+      x' = (   1.0000000,   0.0000000,   0.0000000 )
+      y' = (   0.0000000,   1.0000000,   0.0000000 )
+      z' = (   0.0000000,   0.0000000,   1.0000000 )
+
+     < x'x'> =      7.85050714 a.u.
+     < y'y'> =      7.85050714 a.u.
+     < z'z'> =     25.91187453 a.u.
+
+     Isotropic second moment:     alpha =     13.87096294 a.u.
+
+     Anisotropy of second moment:  beta =     18.06136739 a.u.
+ 
+ 
+          --------------------------------------------------
+           total gradient of ADC(2) energy of excited state  
+          --------------------------------------------------
+
+          ------------------------------------------------
+           cartesian gradient of the energy (hartree/bohr)
+          ------------------------------------------------
+
+  ATOM      1 c           2 o 
+dE/dx -0.3379408D-11  0.3379408D-11
+dE/dy -0.3822755D-11  0.3822755D-11
+dE/dz  0.4636707D+00 -0.4636707D+00
+ 
+ resulting FORCE  (fx,fy,fz) = (0.274D-22,0.397D-22,-.188D-10)
+ resulting MOMENT (mx,my,mz) = (-.813D-11,0.719D-11,0.000D+00)
+
+
+ **********************************************************************
+  |maximum component of gradient| : 0.46367074      (atom  2 o )       
+   gradient norm                  : 0.65572945    
+ **********************************************************************
+
+
+  +=========================================================================+
+  |  Excited state reached by transition:                   model: ADC(2)   |
+  |    number, symmetry, multiplicity:    5 a    1                          |
+  |    frequency :   0.3889260354 a.u.    10.58322 e.V.     85359.4 rcm     |
+  +=========================================================================+
+
+      Total energy of excited state:    -112.6422096308
+
+   +-----------------+-----------------+-----------------+-----------------+
+   | operator        | expect. value   | electr. contrib.| nuclear contrib.|
+   +-----------------+-----------------+-----------------+-----------------+
+   | xdiplen (unrel) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | xdiplen (relax) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | ydiplen (unrel) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | ydiplen (relax) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | zdiplen (unrel) |      0.90959060 |      0.90947722 |      0.00011338 |
+   | zdiplen (relax) |      0.57516707 |      0.57505368 |      0.00011338 |
+   | xxqudlen(unrel) |     -7.85050706 |     -7.85050706 |      0.00000000 |
+   | xxqudlen(relax) |     -7.74668002 |     -7.74668002 |      0.00000000 |
+   | xyqudlen(unrel) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | xyqudlen(relax) |      0.00000006 |      0.00000006 |      0.00000000 |
+   | xzqudlen(unrel) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | xzqudlen(relax) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | yyqudlen(unrel) |     -7.85050706 |     -7.85050706 |      0.00000000 |
+   | yyqudlen(relax) |     -7.74668234 |     -7.74668234 |      0.00000000 |
+   | yzqudlen(unrel) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | yzqudlen(relax) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | zzqudlen(unrel) |    -10.40553384 |    -25.91187452 |     15.50634068 |
+   | zzqudlen(relax) |    -10.07717665 |    -25.58351733 |     15.50634068 |
+   +-----------------+-----------------+-----------------+-----------------+
+
+
+     Analysis of relaxed properties:
+     ===============================
+
+
+     dipole moment:
+     --------------
+
+     x      0.00000000
+     y      0.00000000
+     z      0.57516707
+
+     | dipole moment | =      0.57516707 a.u. =      1.46192885 debye
+
+
+     traceless quadrupole tensor:
+     ----------------------------
+
+               x              y              z
+
+     x     1.16524947     0.00000008    -0.00000000
+     y                    1.16524599    -0.00000000
+     z                                  -2.33049547
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9997137,   0.0239281,  -0.0000000 )
+      y' = (  -0.0239281,   0.9997137,  -0.0000000 )
+      z' = (   0.0000000,   0.0000000,   1.0000000 )
+
+     < Q(x'x') > =      1.16524948 a.u.
+     < Q(y'y') > =      1.16524599 a.u.
+     < Q(z'z') > =     -2.33049547 a.u.
+
+
+     second moment of electron density:
+     ----------------------------------
+
+               x              y              z
+
+     x     7.74668002    -0.00000006     0.00000000
+     y                    7.74668234     0.00000000
+     z                                  25.58351733
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9997137,   0.0239281,  -0.0000000 )
+      y' = (  -0.0239281,   0.9997137,  -0.0000000 )
+      z' = (   0.0000000,   0.0000000,   1.0000000 )
+
+     < x'x'> =      7.74668002 a.u.
+     < y'y'> =      7.74668234 a.u.
+     < z'z'> =     25.58351733 a.u.
+
+     Isotropic second moment:     alpha =     13.69229323 a.u.
+
+     Anisotropy of second moment:  beta =     17.83683615 a.u.
+ 
+
+
+     Analysis of unrelaxed properties:
+     =================================
+
+
+     dipole moment:
+     --------------
+
+     x      0.00000000
+     y     -0.00000000
+     z      0.90959060
+
+     | dipole moment | =      0.90959060 a.u. =      2.31194868 debye
+
+
+     traceless quadrupole tensor:
+     ----------------------------
+
+               x              y              z
+
+     x     1.27751339     0.00000000    -0.00000000
+     y                    1.27751339     0.00000000
+     z                                  -2.55502678
+
+
+     tensor is diagonal: 
+       [ (x',y',z') = (x,y,z) ]
+
+     < Q(x'x') > =      1.27751339 a.u.
+     < Q(y'y') > =      1.27751339 a.u.
+     < Q(z'z') > =     -2.55502678 a.u.
+
+
+     second moment of electron density:
+     ----------------------------------
+
+               x              y              z
+
+     x     7.85050706    -0.00000000     0.00000000
+     y                    7.85050706    -0.00000000
+     z                                  25.91187452
+
+
+     tensor is diagonal: 
+       [ (x',y',z') = (x,y,z) ]
+
+     < x'x'> =      7.85050706 a.u.
+     < y'y'> =      7.85050706 a.u.
+     < z'z'> =     25.91187452 a.u.
+
+     Isotropic second moment:     alpha =     13.87096288 a.u.
+
+     Anisotropy of second moment:  beta =     18.06136746 a.u.
+ 
+ 
+          --------------------------------------------------
+           total gradient of ADC(2) energy of excited state  
+          --------------------------------------------------
+
+          ------------------------------------------------
+           cartesian gradient of the energy (hartree/bohr)
+          ------------------------------------------------
+
+  ATOM      1 c           2 o 
+dE/dx -0.3379550D-11  0.3379550D-11
+dE/dy -0.3822420D-11  0.3822420D-11
+dE/dz  0.4636707D+00 -0.4636707D+00
+ 
+ resulting FORCE  (fx,fy,fz) = (0.274D-22,0.397D-22,-.188D-10)
+ resulting MOMENT (mx,my,mz) = (-.813D-11,0.719D-11,0.000D+00)
+
+
+ **********************************************************************
+  |maximum component of gradient| : 0.46367074      (atom  2 o )       
+   gradient norm                  : 0.65572946    
+ **********************************************************************
+
+
+  +=========================================================================+
+  |  Excited state reached by transition:                   model: ADC(2)   |
+  |    number, symmetry, multiplicity:    6 a    1                          |
+  |    frequency :   0.5274923423 a.u.    14.35380 e.V.    115771.2 rcm     |
+  +=========================================================================+
+
+      Total energy of excited state:    -112.5036433239
+
+   +-----------------+-----------------+-----------------+-----------------+
+   | operator        | expect. value   | electr. contrib.| nuclear contrib.|
+   +-----------------+-----------------+-----------------+-----------------+
+   | xdiplen (unrel) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | xdiplen (relax) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | ydiplen (unrel) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | ydiplen (relax) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | zdiplen (unrel) |      1.09843981 |      1.09832642 |      0.00011338 |
+   | zdiplen (relax) |      0.89455304 |      0.89443966 |      0.00011338 |
+   | xxqudlen(unrel) |     -9.03456815 |     -9.03456815 |      0.00000000 |
+   | xxqudlen(relax) |     -8.87638051 |     -8.87638051 |      0.00000000 |
+   | xyqudlen(unrel) |      0.09444854 |      0.09444854 |      0.00000000 |
+   | xyqudlen(relax) |      0.08979803 |      0.08979803 |      0.00000000 |
+   | xzqudlen(unrel) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | xzqudlen(relax) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | yyqudlen(unrel) |     -7.57734341 |     -7.57734341 |      0.00000000 |
+   | yyqudlen(relax) |     -7.49091372 |     -7.49091372 |      0.00000000 |
+   | yzqudlen(unrel) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | yzqudlen(relax) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | zzqudlen(unrel) |     -8.96990699 |    -24.47624767 |     15.50634068 |
+   | zzqudlen(relax) |     -8.89436296 |    -24.40070364 |     15.50634068 |
+   +-----------------+-----------------+-----------------+-----------------+
+
+
+     Analysis of relaxed properties:
+     ===============================
+
+
+     dipole moment:
+     --------------
+
+     x      0.00000000
+     y      0.00000000
+     z      0.89455304
+
+     | dipole moment | =      0.89455304 a.u. =      2.27372701 debye
+
+
+     traceless quadrupole tensor:
+     ----------------------------
+
+               x              y              z
+
+     x    -0.68374217     0.13469705    -0.00000000
+     y                    1.39445802    -0.00000000
+     z                                  -0.71071584
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9979235,  -0.0644102,  -0.0000000 )
+      y' = (   0.0644102,   0.9979235,  -0.0000000 )
+      z' = (   0.0000000,  -0.0000000,   1.0000000 )
+
+     < Q(x'x') > =     -0.69243610 a.u.
+     < Q(y'y') > =      1.40315194 a.u.
+     < Q(z'z') > =     -0.71071584 a.u.
+
+
+     second moment of electron density:
+     ----------------------------------
+
+               x              y              z
+
+     x     8.87638051    -0.08979803     0.00000000
+     y                    7.49091372     0.00000000
+     z                                  24.40070364
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9979235,  -0.0644102,  -0.0000000 )
+      y' = (   0.0644102,   0.9979235,  -0.0000000 )
+      z' = (   0.0000000,   0.0000000,   1.0000000 )
+
+     < x'x'> =      8.88217646 a.u.
+     < y'y'> =      7.48511777 a.u.
+     < z'z'> =     24.40070364 a.u.
+
+     Isotropic second moment:     alpha =     13.58933262 a.u.
+
+     Anisotropy of second moment:  beta =     16.26212631 a.u.
+ 
+
+
+     Analysis of unrelaxed properties:
+     =================================
+
+
+     dipole moment:
+     --------------
+
+     x      0.00000000
+     y     -0.00000000
+     z      1.09843981
+
+     | dipole moment | =      1.09843981 a.u. =      2.79195548 debye
+
+
+     traceless quadrupole tensor:
+     ----------------------------
+
+               x              y              z
+
+     x    -0.76094294     0.14167280    -0.00000000
+     y                    1.42489415     0.00000000
+     z                                  -0.66395121
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9979235,  -0.0644099,   0.0000000 )
+      y' = (   0.0644099,   0.9979235,   0.0000000 )
+      z' = (   0.0000000,   0.0000000,   1.0000000 )
+
+     < Q(x'x') > =     -0.77008707 a.u.
+     < Q(y'y') > =      1.43403828 a.u.
+     < Q(z'z') > =     -0.66395121 a.u.
+
+
+     second moment of electron density:
+     ----------------------------------
+
+               x              y              z
+
+     x     9.03456815    -0.09444854     0.00000000
+     y                    7.57734341    -0.00000000
+     z                                  24.47624767
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9979235,  -0.0644099,   0.0000000 )
+      y' = (   0.0644099,   0.9979235,   0.0000000 )
+      z' = (   0.0000000,   0.0000000,   1.0000000 )
+
+     < x'x'> =      9.04066423 a.u.
+     < y'y'> =      7.57124733 a.u.
+     < z'z'> =     24.47624767 a.u.
+
+     Isotropic second moment:     alpha =     13.69605308 a.u.
+
+     Anisotropy of second moment:  beta =     16.22028758 a.u.
+ 
+ 
+          --------------------------------------------------
+           total gradient of ADC(2) energy of excited state  
+          --------------------------------------------------
+
+          ------------------------------------------------
+           cartesian gradient of the energy (hartree/bohr)
+          ------------------------------------------------
+
+  ATOM      1 c           2 o 
+dE/dx -0.2790912D-11  0.2790912D-11
+dE/dy -0.5960002D-11  0.5960002D-11
+dE/dz  0.2558779D+00 -0.2558779D+00
+ 
+ resulting FORCE  (fx,fy,fz) = (0.311D-22,0.447D-22,0.624D-10)
+ resulting MOMENT (mx,my,mz) = (-.127D-10,0.594D-11,0.000D+00)
+
+
+ **********************************************************************
+  |maximum component of gradient| : 0.25587793      (atom  1 c )       
+   gradient norm                  : 0.36186605    
+ **********************************************************************
+
+
+  +=========================================================================+
+  |  Excited state reached by transition:                   model: ADC(2)   |
+  |    number, symmetry, multiplicity:    7 a    1                          |
+  |    frequency :   0.5274923445 a.u.    14.35380 e.V.    115771.2 rcm     |
+  +=========================================================================+
+
+      Total energy of excited state:    -112.5036433217
+
+   +-----------------+-----------------+-----------------+-----------------+
+   | operator        | expect. value   | electr. contrib.| nuclear contrib.|
+   +-----------------+-----------------+-----------------+-----------------+
+   | xdiplen (unrel) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | xdiplen (relax) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | ydiplen (unrel) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | ydiplen (relax) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | zdiplen (unrel) |      1.09843974 |      1.09832636 |      0.00011338 |
+   | zdiplen (relax) |      0.89455301 |      0.89443963 |      0.00011338 |
+   | xxqudlen(unrel) |     -9.03678278 |     -9.03678278 |      0.00000000 |
+   | xxqudlen(relax) |     -8.87848610 |     -8.87848610 |      0.00000000 |
+   | xyqudlen(unrel) |      0.07542226 |      0.07542226 |      0.00000000 |
+   | xyqudlen(relax) |      0.07170862 |      0.07170862 |      0.00000000 |
+   | xzqudlen(unrel) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | xzqudlen(relax) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | yyqudlen(unrel) |     -7.57512888 |     -7.57512888 |      0.00000000 |
+   | yyqudlen(relax) |     -7.48880824 |     -7.48880824 |      0.00000000 |
+   | yzqudlen(unrel) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | yzqudlen(relax) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | zzqudlen(unrel) |     -8.96990702 |    -24.47624770 |     15.50634068 |
+   | zzqudlen(relax) |     -8.89436297 |    -24.40070365 |     15.50634068 |
+   +-----------------+-----------------+-----------------+-----------------+
+
+
+     Analysis of relaxed properties:
+     ===============================
+
+
+     dipole moment:
+     --------------
+
+     x      0.00000000
+     y      0.00000000
+     z      0.89455301
+
+     | dipole moment | =      0.89455301 a.u. =      2.27372694 debye
+
+
+     traceless quadrupole tensor:
+     ----------------------------
+
+               x              y              z
+
+     x    -0.68690050     0.10756293    -0.00000000
+     y                    1.39761630    -0.00000000
+     z                                  -0.71071580
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9986783,  -0.0513962,  -0.0000000 )
+      y' = (   0.0513962,   0.9986783,  -0.0000000 )
+      z' = (   0.0000000,  -0.0000000,   1.0000000 )
+
+     < Q(x'x') > =     -0.69243614 a.u.
+     < Q(y'y') > =      1.40315194 a.u.
+     < Q(z'z') > =     -0.71071580 a.u.
+
+
+     second moment of electron density:
+     ----------------------------------
+
+               x              y              z
+
+     x     8.87848610    -0.07170862     0.00000000
+     y                    7.48880824     0.00000000
+     z                                  24.40070365
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9986783,  -0.0513962,  -0.0000000 )
+      y' = (   0.0513962,   0.9986783,  -0.0000000 )
+      z' = (   0.0000000,   0.0000000,   1.0000000 )
+
+     < x'x'> =      8.88217653 a.u.
+     < y'y'> =      7.48511781 a.u.
+     < z'z'> =     24.40070365 a.u.
+
+     Isotropic second moment:     alpha =     13.58933267 a.u.
+
+     Anisotropy of second moment:  beta =     16.26212627 a.u.
+ 
+
+
+     Analysis of unrelaxed properties:
+     =================================
+
+
+     dipole moment:
+     --------------
+
+     x      0.00000000
+     y     -0.00000000
+     z      1.09843974
+
+     | dipole moment | =      1.09843974 a.u. =      2.79195531 debye
+
+
+     traceless quadrupole tensor:
+     ----------------------------
+
+               x              y              z
+
+     x    -0.76426483     0.11313339     0.00000000
+     y                    1.42821601     0.00000000
+     z                                  -0.66395119
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9986784,  -0.0513959,  -0.0000000 )
+      y' = (   0.0513959,   0.9986784,   0.0000000 )
+      z' = (   0.0000000,  -0.0000000,   1.0000000 )
+
+     < Q(x'x') > =     -0.77008712 a.u.
+     < Q(y'y') > =      1.43403831 a.u.
+     < Q(z'z') > =     -0.66395119 a.u.
+
+
+     second moment of electron density:
+     ----------------------------------
+
+               x              y              z
+
+     x     9.03678278    -0.07542226    -0.00000000
+     y                    7.57512888    -0.00000000
+     z                                  24.47624770
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9986784,  -0.0513959,   0.0000000 )
+      y' = (   0.0513959,   0.9986784,   0.0000000 )
+      z' = (   0.0000000,   0.0000000,   1.0000000 )
+
+     < x'x'> =      9.04066431 a.u.
+     < y'y'> =      7.57124736 a.u.
+     < z'z'> =     24.47624770 a.u.
+
+     Isotropic second moment:     alpha =     13.69605312 a.u.
+
+     Anisotropy of second moment:  beta =     16.22028757 a.u.
+ 
+ 
+          --------------------------------------------------
+           total gradient of ADC(2) energy of excited state  
+          --------------------------------------------------
+
+          ------------------------------------------------
+           cartesian gradient of the energy (hartree/bohr)
+          ------------------------------------------------
+
+  ATOM      1 c           2 o 
+dE/dx -0.2805102D-11  0.2805102D-11
+dE/dy -0.5979084D-11  0.5979084D-11
+dE/dz  0.2558779D+00 -0.2558779D+00
+ 
+ resulting FORCE  (fx,fy,fz) = (0.312D-22,0.449D-22,0.624D-10)
+ resulting MOMENT (mx,my,mz) = (-.127D-10,0.597D-11,0.000D+00)
+
+
+ **********************************************************************
+  |maximum component of gradient| : 0.25587794      (atom  1 c )       
+   gradient norm                  : 0.36186605    
+ **********************************************************************
+
+
+  +=========================================================================+
+  |  Excited state reached by transition:                   model: ADC(2)   |
+  |    number, symmetry, multiplicity:    8 a    1                          |
+  |    frequency :   0.5293578501 a.u.    14.40456 e.V.    116180.6 rcm     |
+  +=========================================================================+
+
+      Total energy of excited state:    -112.5017778161
+
+   +-----------------+-----------------+-----------------+-----------------+
+   | operator        | expect. value   | electr. contrib.| nuclear contrib.|
+   +-----------------+-----------------+-----------------+-----------------+
+   | xdiplen (unrel) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | xdiplen (relax) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | ydiplen (unrel) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | ydiplen (relax) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | zdiplen (unrel) |      0.65175415 |      0.65164077 |      0.00011338 |
+   | zdiplen (relax) |      0.18756845 |      0.18745507 |      0.00011338 |
+   | xxqudlen(unrel) |     -8.17351124 |     -8.17351124 |      0.00000000 |
+   | xxqudlen(relax) |     -7.95082673 |     -7.95082673 |      0.00000000 |
+   | xyqudlen(unrel) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | xyqudlen(relax) |      0.00000006 |      0.00000006 |      0.00000000 |
+   | xzqudlen(unrel) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | xzqudlen(relax) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | yyqudlen(unrel) |     -8.17351124 |     -8.17351124 |      0.00000000 |
+   | yyqudlen(relax) |     -7.95082830 |     -7.95082830 |      0.00000000 |
+   | yzqudlen(unrel) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | yzqudlen(relax) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | zzqudlen(unrel) |    -10.35880887 |    -25.86514955 |     15.50634068 |
+   | zzqudlen(relax) |     -9.83172949 |    -25.33807017 |     15.50634068 |
+   +-----------------+-----------------+-----------------+-----------------+
+
+
+     Analysis of relaxed properties:
+     ===============================
+
+
+     dipole moment:
+     --------------
+
+     x      0.00000000
+     y      0.00000000
+     z      0.18756845
+
+     | dipole moment | =      0.18756845 a.u. =      0.47675145 debye
+
+
+     traceless quadrupole tensor:
+     ----------------------------
+
+               x              y              z
+
+     x     0.94045217     0.00000009    -0.00000000
+     y                    0.94044981    -0.00000000
+     z                                  -1.88090198
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9993108,   0.0371213,  -0.0000000 )
+      y' = (  -0.0371213,   0.9993108,  -0.0000000 )
+      z' = (   0.0000000,   0.0000000,   1.0000000 )
+
+     < Q(x'x') > =      0.94045217 a.u.
+     < Q(y'y') > =      0.94044981 a.u.
+     < Q(z'z') > =     -1.88090198 a.u.
+
+
+     second moment of electron density:
+     ----------------------------------
+
+               x              y              z
+
+     x     7.95082673    -0.00000006     0.00000000
+     y                    7.95082830     0.00000000
+     z                                  25.33807017
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9993108,   0.0371213,  -0.0000000 )
+      y' = (  -0.0371213,   0.9993108,  -0.0000000 )
+      z' = (   0.0000000,   0.0000000,   1.0000000 )
+
+     < x'x'> =      7.95082673 a.u.
+     < y'y'> =      7.95082830 a.u.
+     < z'z'> =     25.33807017 a.u.
+
+     Isotropic second moment:     alpha =     13.74657507 a.u.
+
+     Anisotropy of second moment:  beta =     17.38724266 a.u.
+ 
+
+
+     Analysis of unrelaxed properties:
+     =================================
+
+
+     dipole moment:
+     --------------
+
+     x     -0.00000000
+     y     -0.00000000
+     z      0.65175415
+
+     | dipole moment | =      0.65175415 a.u. =      1.65659380 debye
+
+
+     traceless quadrupole tensor:
+     ----------------------------
+
+               x              y              z
+
+     x     1.09264881    -0.00000000    -0.00000000
+     y                    1.09264881    -0.00000000
+     z                                  -2.18529763
+
+
+     principal axes of tensor: 
+
+      x' = (   1.0000000,  -0.0000000,  -0.0000000 )
+      y' = (   0.0000000,   1.0000000,  -0.0000000 )
+      z' = (   0.0000000,   0.0000000,   1.0000000 )
+
+     < Q(x'x') > =      1.09264881 a.u.
+     < Q(y'y') > =      1.09264881 a.u.
+     < Q(z'z') > =     -2.18529763 a.u.
+
+
+     second moment of electron density:
+     ----------------------------------
+
+               x              y              z
+
+     x     8.17351124     0.00000000     0.00000000
+     y                    8.17351124     0.00000000
+     z                                  25.86514955
+
+
+     principal axes of tensor: 
+
+      x' = (   1.0000000,   0.0000000,   0.0000000 )
+      y' = (   0.0000000,   1.0000000,  -0.0000000 )
+      z' = (   0.0000000,   0.0000000,   1.0000000 )
+
+     < x'x'> =      8.17351124 a.u.
+     < y'y'> =      8.17351124 a.u.
+     < z'z'> =     25.86514955 a.u.
+
+     Isotropic second moment:     alpha =     14.07072401 a.u.
+
+     Anisotropy of second moment:  beta =     17.69163831 a.u.
+ 
+ 
+          --------------------------------------------------
+           total gradient of ADC(2) energy of excited state  
+          --------------------------------------------------
+
+          ------------------------------------------------
+           cartesian gradient of the energy (hartree/bohr)
+          ------------------------------------------------
+
+  ATOM      1 c           2 o 
+dE/dx  0.1298800D-11 -0.1298800D-11
+dE/dy  0.1365943D-11 -0.1365943D-11
+dE/dz  0.4986302D+00 -0.4986302D+00
+ 
+ resulting FORCE  (fx,fy,fz) = (0.343D-26,0.404D-26,-.423D-10)
+ resulting MOMENT (mx,my,mz) = (0.290D-11,-.276D-11,0.000D+00)
+
+
+ **********************************************************************
+  |maximum component of gradient| : 0.49863020      (atom  2 o )       
+   gradient norm                  : 0.70516959    
+ **********************************************************************
+
+
+  +=========================================================================+
+  |  Excited state reached by transition:                   model: ADC(2)   |
+  |    number, symmetry, multiplicity:    9 a    1                          |
+  |    frequency :   0.6211637389 a.u.    16.90273 e.V.    136329.7 rcm     |
+  +=========================================================================+
+
+      Total energy of excited state:    -112.4099719273
+
+   +-----------------+-----------------+-----------------+-----------------+
+   | operator        | expect. value   | electr. contrib.| nuclear contrib.|
+   +-----------------+-----------------+-----------------+-----------------+
+   | xdiplen (unrel) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | xdiplen (relax) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | ydiplen (unrel) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | ydiplen (relax) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | zdiplen (unrel) |     -0.22821531 |     -0.22832869 |      0.00011338 |
+   | zdiplen (relax) |      0.12160974 |      0.12149636 |      0.00011338 |
+   | xxqudlen(unrel) |     -9.17155141 |     -9.17155141 |      0.00000000 |
+   | xxqudlen(relax) |     -8.88607043 |     -8.88607043 |      0.00000000 |
+   | xyqudlen(unrel) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | xyqudlen(relax) |     -0.00000001 |     -0.00000001 |      0.00000000 |
+   | xzqudlen(unrel) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | xzqudlen(relax) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | yyqudlen(unrel) |     -9.17155141 |     -9.17155141 |      0.00000000 |
+   | yyqudlen(relax) |     -8.88607008 |     -8.88607008 |      0.00000000 |
+   | yzqudlen(unrel) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | yzqudlen(relax) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | zzqudlen(unrel) |    -10.95654864 |    -26.46288932 |     15.50634068 |
+   | zzqudlen(relax) |    -10.95160654 |    -26.45794722 |     15.50634068 |
+   +-----------------+-----------------+-----------------+-----------------+
+
+
+     Analysis of relaxed properties:
+     ===============================
+
+
+     dipole moment:
+     --------------
+
+     x     -0.00000000
+     y     -0.00000000
+     z      0.12160974
+
+     | dipole moment | =      0.12160974 a.u. =      0.30910113 debye
+
+
+     traceless quadrupole tensor:
+     ----------------------------
+
+               x              y              z
+
+     x     1.03276788    -0.00000001     0.00000000
+     y                    1.03276840     0.00000000
+     z                                  -2.06553628
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9997574,   0.0220249,   0.0000000 )
+      y' = (  -0.0220249,   0.9997574,   0.0000000 )
+      z' = (  -0.0000000,  -0.0000000,   1.0000000 )
+
+     < Q(x'x') > =      1.03276788 a.u.
+     < Q(y'y') > =      1.03276840 a.u.
+     < Q(z'z') > =     -2.06553628 a.u.
+
+
+     second moment of electron density:
+     ----------------------------------
+
+               x              y              z
+
+     x     8.88607043     0.00000001    -0.00000000
+     y                    8.88607008    -0.00000000
+     z                                  26.45794722
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9997574,   0.0220249,   0.0000000 )
+      y' = (  -0.0220249,   0.9997574,   0.0000000 )
+      z' = (  -0.0000000,  -0.0000000,   1.0000000 )
+
+     < x'x'> =      8.88607043 a.u.
+     < y'y'> =      8.88607008 a.u.
+     < z'z'> =     26.45794722 a.u.
+
+     Isotropic second moment:     alpha =     14.74336258 a.u.
+
+     Anisotropy of second moment:  beta =     17.57187696 a.u.
+ 
+
+
+     Analysis of unrelaxed properties:
+     =================================
+
+
+     dipole moment:
+     --------------
+
+     x     -0.00000000
+     y     -0.00000000
+     z     -0.22821531
+
+     | dipole moment | =      0.22821531 a.u. =      0.58006545 debye
+
+
+     traceless quadrupole tensor:
+     ----------------------------
+
+               x              y              z
+
+     x     0.89249861     0.00000000    -0.00000000
+     y                    0.89249861    -0.00000000
+     z                                  -1.78499722
+
+
+     principal axes of tensor: 
+
+      x' = (   1.0000000,   0.0000000,   0.0000000 )
+      y' = (   0.0000000,   1.0000000,   0.0000000 )
+      z' = (   0.0000000,   0.0000000,   1.0000000 )
+
+     < Q(x'x') > =      0.89249861 a.u.
+     < Q(y'y') > =      0.89249861 a.u.
+     < Q(z'z') > =     -1.78499722 a.u.
+
+
+     second moment of electron density:
+     ----------------------------------
+
+               x              y              z
+
+     x     9.17155141    -0.00000000     0.00000000
+     y                    9.17155141     0.00000000
+     z                                  26.46288932
+
+
+     tensor is diagonal: 
+       [ (x',y',z') = (x,y,z) ]
+
+     < x'x'> =      9.17155141 a.u.
+     < y'y'> =      9.17155141 a.u.
+     < z'z'> =     26.46288932 a.u.
+
+     Isotropic second moment:     alpha =     14.93533071 a.u.
+
+     Anisotropy of second moment:  beta =     17.29133791 a.u.
+ 
+ 
+          --------------------------------------------------
+           total gradient of ADC(2) energy of excited state  
+          --------------------------------------------------
+
+          ------------------------------------------------
+           cartesian gradient of the energy (hartree/bohr)
+          ------------------------------------------------
+
+  ATOM      1 c           2 o 
+dE/dx -0.5291453D-12  0.5291453D-12
+dE/dy -0.7057379D-12  0.7057379D-12
+dE/dz  0.7168494D-01 -0.7168494D-01
+ 
+ resulting FORCE  (fx,fy,fz) = (0.202D-27,-.303D-27,0.185D-10)
+ resulting MOMENT (mx,my,mz) = (-.150D-11,0.113D-11,0.000D+00)
+
+
+ **********************************************************************
+  |maximum component of gradient| : 0.71684942E-01  (atom  1 c )       
+   gradient norm                  : 0.10137782    
+ **********************************************************************
+
+
+  +=========================================================================+
+  |  Excited state reached by transition:                   model: ADC(2)   |
+  |    number, symmetry, multiplicity:   10 a    1                          |
+  |    frequency :   0.6924048633 a.u.    18.84130 e.V.    151965.3 rcm     |
+  +=========================================================================+
+
+      Total energy of excited state:    -112.3387308029
+
+   +-----------------+-----------------+-----------------+-----------------+
+   | operator        | expect. value   | electr. contrib.| nuclear contrib.|
+   +-----------------+-----------------+-----------------+-----------------+
+   | xdiplen (unrel) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | xdiplen (relax) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | ydiplen (unrel) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | ydiplen (relax) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | zdiplen (unrel) |      0.93569750 |      0.93558412 |      0.00011338 |
+   | zdiplen (relax) |      0.75220324 |      0.75208986 |      0.00011338 |
+   | xxqudlen(unrel) |     -8.71263391 |     -8.71263391 |      0.00000000 |
+   | xxqudlen(relax) |     -8.41251165 |     -8.41251165 |      0.00000000 |
+   | xyqudlen(unrel) |      0.06828999 |      0.06828999 |      0.00000000 |
+   | xyqudlen(relax) |      0.07015951 |      0.07015951 |      0.00000000 |
+   | xzqudlen(unrel) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | xzqudlen(relax) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | yyqudlen(unrel) |     -9.61757416 |     -9.61757416 |      0.00000000 |
+   | yyqudlen(relax) |     -9.34222662 |     -9.34222662 |      0.00000000 |
+   | yzqudlen(unrel) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | yzqudlen(relax) |     -0.00000000 |     -0.00000000 |      0.00000000 |
+   | zzqudlen(unrel) |    -12.80493933 |    -28.31128001 |     15.50634068 |
+   | zzqudlen(relax) |    -12.22636410 |    -27.73270478 |     15.50634068 |
+   +-----------------+-----------------+-----------------+-----------------+
+
+
+     Analysis of relaxed properties:
+     ===============================
+
+
+     dipole moment:
+     --------------
+
+     x      0.00000000
+     y      0.00000000
+     z      0.75220324
+
+     | dipole moment | =      0.75220324 a.u. =      1.91190992 debye
+
+
+     traceless quadrupole tensor:
+     ----------------------------
+
+               x              y              z
+
+     x     2.37178371     0.10523926    -0.00000000
+     y                    0.97721126    -0.00000000
+     z                                  -3.34899497
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9971964,   0.0748282,  -0.0000000 )
+      y' = (  -0.0748282,   0.9971964,  -0.0000000 )
+      z' = (   0.0000000,   0.0000000,   1.0000000 )
+
+     < Q(x'x') > =      2.37968071 a.u.
+     < Q(y'y') > =      0.96931426 a.u.
+     < Q(z'z') > =     -3.34899497 a.u.
+
+
+     second moment of electron density:
+     ----------------------------------
+
+               x              y              z
+
+     x     8.41251165    -0.07015951     0.00000000
+     y                    9.34222662     0.00000000
+     z                                  27.73270478
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9971964,   0.0748282,  -0.0000000 )
+      y' = (  -0.0748282,   0.9971964,  -0.0000000 )
+      z' = (   0.0000000,   0.0000000,   1.0000000 )
+
+     < x'x'> =      8.40724698 a.u.
+     < y'y'> =      9.34749129 a.u.
+     < z'z'> =     27.73270478 a.u.
+
+     Isotropic second moment:     alpha =     15.16248102 a.u.
+
+     Anisotropy of second moment:  beta =     18.87290987 a.u.
+ 
+
+
+     Analysis of unrelaxed properties:
+     =================================
+
+
+     dipole moment:
+     --------------
+
+     x      0.00000000
+     y      0.00000000
+     z      0.93569750
+
+     | dipole moment | =      0.93569750 a.u. =      2.37830580 debye
+
+
+     traceless quadrupole tensor:
+     ----------------------------
+
+               x              y              z
+
+     x     2.49862283     0.10243499    -0.00000000
+     y                    1.14121247     0.00000000
+     z                                  -3.63983530
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9971964,   0.0748282,   0.0000000 )
+      y' = (  -0.0748282,   0.9971964,   0.0000000 )
+      z' = (   0.0000000,   0.0000000,   1.0000000 )
+
+     < Q(x'x') > =      2.50630941 a.u.
+     < Q(y'y') > =      1.13352589 a.u.
+     < Q(z'z') > =     -3.63983530 a.u.
+
+
+     second moment of electron density:
+     ----------------------------------
+
+               x              y              z
+
+     x     8.71263391    -0.06828999     0.00000000
+     y                    9.61757416    -0.00000000
+     z                                  28.31128001
+
+
+     principal axes of tensor: 
+
+      x' = (   0.9971964,   0.0748282,   0.0000000 )
+      y' = (  -0.0748282,   0.9971964,   0.0000000 )
+      z' = (   0.0000000,   0.0000000,   1.0000000 )
+
+     < x'x'> =      8.70750953 a.u.
+     < y'y'> =      9.62269854 a.u.
+     < z'z'> =     28.31128001 a.u.
+
+     Isotropic second moment:     alpha =     15.54716269 a.u.
+
+     Anisotropy of second moment:  beta =     19.16257375 a.u.
+ 
+ 
+          --------------------------------------------------
+           total gradient of ADC(2) energy of excited state  
+          --------------------------------------------------
+
+          ------------------------------------------------
+           cartesian gradient of the energy (hartree/bohr)
+          ------------------------------------------------
+
+  ATOM      1 c           2 o 
+dE/dx -0.1797257D-11  0.1797257D-11
+dE/dy -0.2988445D-11  0.2988445D-11
+dE/dz  0.3126503D+00 -0.3126503D+00
+ 
+ resulting FORCE  (fx,fy,fz) = (0.245D-22,0.351D-22,-.589D-10)
+ resulting MOMENT (mx,my,mz) = (-.636D-11,0.382D-11,0.000D+00)
+
+
+ **********************************************************************
+  |maximum component of gradient| : 0.31265027      (atom  2 o )       
+   gradient norm                  : 0.44215425    
+ **********************************************************************
+ Exporting excited state densities
+
+
+    ------------------------------------------------------------------------
+         total  cpu-time :  12.93 seconds
+         total wall-time :   1.65 seconds
+    ------------------------------------------------------------------------
+
+   ****  ricc2 : all done  ****
+
+
+    2021-03-10 09:06:39.407 
+
