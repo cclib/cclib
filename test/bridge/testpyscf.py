@@ -6,37 +6,40 @@
 # the terms of the BSD 3-Clause License.
 
 import unittest
-
 import numpy as np
-
+from test.test_data import getdatafile
 from cclib.bridge import cclib2pyscf
-from cclib.parser.utils import find_package
+from cclib.parser.utils import find_package, convertor
 
 
 class PyscfTest(unittest.TestCase):
     """Tests for the cclib2pyscf bridge in cclib."""
 
     def setUp(self):
-        super(PyscfTest, self).setUp()        
-        if not find_package('pyscf'):
-            raise ImportError('Must install pyscf to run this test')
+        super(PyscfTest, self).setUp()
+        if not find_package("pyscf"):
+            raise ImportError("Must install pyscf to run this test")
+        self.data, self.logfile = getdatafile(
+            "GAMESS", "basicGAMESS-US2018", ["water_mp2.out"]
+        )
 
     def test_makepyscf(self):
         import pyscf
         from pyscf import scf
 
-        atomnos = np.array([1, 8, 1], "i")
-        atomcoords = np.array([[-1, 1, 0], [0, 0, 0], [1, 1, 0]], "f")
-        pyscfmol = cclib2pyscf.makepyscf(atomcoords, atomnos)
-        pyscfmol.basis = "6-31G**"
+        refen = convertor(self.data.scfenergies[-1],"eV","hartree")  # value in eVs
+        pyscfmol = cclib2pyscf.makepyscf(self.data)
         pyscfmol.cart = True
         pyscfmol.verbose = 0
         pyscfmol.build()
 
-        mhf = pyscfmol.HF(conv_tol=1e-6)
+        mhf = pyscfmol.HF(conv_tol=1e-9)
         en = mhf.kernel()
-        ref = -75.824754602
-        assert abs(en - ref) < 1.0e-6
+        assert abs(en - refen) < 1.0e-5
+        # check that default basis is returned if basis is not present.
+        del self.data.gbasis
+        pyscfmol2 = cclib2pyscf.makepyscf(self.data)
+        assert pyscfmol2.basis == "sto-3g"
 
 
 if __name__ == "__main__":
