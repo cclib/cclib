@@ -303,6 +303,37 @@ class GAMESSUK(logfileparser.Logfile):
 
                 freqnum = next(inputfile)
 
+        if line[40:63] == "thermochemical analysis":
+            self.skip_lines(inputfile, ["s", "b", "b"])
+            line = next(inputfile)
+            assert "temperature" in line
+            self.set_attribute("temperature", float(line.split()[1]))
+            line = next(inputfile)
+            assert "pressure" in line
+            self.set_attribute("pressure", float(line.split()[1]))
+            self.skip_lines(
+                inputfile,
+                [
+                    "b",
+                    "molecular mass",
+                    "b",
+                    "principal moments of inertia header",
+                    "principal moment values",
+                    "b",
+                    "rotational symmetry number",
+                    "b",
+                    "rotational temperatures",
+                    "b"
+                 ]
+            )
+            line = next(inputfile)
+            assert "zero point vibrational energy" in line
+            line = next(inputfile)
+            assert "kcal/mol" in line
+            line = next(inputfile)
+            assert "hartree/particle" in line
+            self.set_attribute("zpve", float(line.split()[0]))
+
         if line[26:36] == "raman data":
             self.vibramans = []
 

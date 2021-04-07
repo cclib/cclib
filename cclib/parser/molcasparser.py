@@ -470,6 +470,10 @@ class Molcas(logfileparser.Logfile):
         #  ++    Isotopic shifts:
         if line[4:19] == 'THERMOCHEMISTRY':
 
+            while "ZPVE" not in line:
+                line = next(inputfile)
+            self.set_attribute("zpve", float(line.split()[3]))
+
             temperature_values = []
             pressure_values = []
             entropy_values = []
