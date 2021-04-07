@@ -24,7 +24,8 @@ def skipForLogfile(fragment, msg):
     """Return a decorator that skips the test for logfiles containing fragment."""
     def testdecorator(testfunc):
         def testwrapper(self, *args, **kwargs):
-            if fragment in self.logfile.filename:
+            # self.logfile.filename may be a string or list of strings.
+            if fragment in self.logfile.filename or any(fragment in filename for filename in self.logfile.filename):
                 self.skipTest(msg)
             else:
                 testfunc(self, *args, **kwargs)

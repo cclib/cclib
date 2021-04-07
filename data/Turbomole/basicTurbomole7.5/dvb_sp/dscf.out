@@ -1,0 +1,342 @@
+
+ dscf (kennedy10) : TURBOMOLE rev. V7.5.0 compiled 13 Jun 2020 at 23:29:25
+ Copyright (C) 2020 TURBOMOLE GmbH, Karlsruhe
+
+
+    2020-12-31 10:34:24.780 
+
+
+
+                             d s c f - program
+
+                   idea & directorship : reinhart ahlrichs
+                   program development : marco haeser
+                                         michael baer
+                           dft version : oliver treutler
+
+
+                          quantum chemistry group
+                          universitaet  karlsruhe
+                                  germany
+
+
+
+   *-----------------------------------------------------------------------*
+   |                     program will use  1 thread(s)                     |
+   *-----------------------------------------------------------------------*
+
+
+              +--------------------------------------------------+
+              | Atomic coordinate, charge and isotop information |
+              +--------------------------------------------------+
+
+                    atomic coordinates            atom    charge  isotop
+         -2.69176369    0.44712810    0.00000000    c      6.000     0
+         -1.69852364   -2.06488484    0.00000000    c      6.000     0
+          0.92683508   -2.49591247    0.00000000    c      6.000     0
+          2.69176369   -0.44712810    0.00000000    c      6.000     0
+          1.69852364    2.06488484    0.00000000    c      6.000     0
+         -3.00422990   -3.69235477    0.00000000    h      1.000     0
+          1.65163953   -4.45457581    0.00000000    h      1.000     0
+          3.00422990    3.69235477    0.00000000    h      1.000     0
+          5.46170534   -1.01478293    0.00000000    c      6.000     0
+          7.37289876    0.68855951    0.00000000    c      6.000     0
+          7.04372736    2.74543191    0.00000000    h      1.000     0
+          5.92882674   -3.05381632    0.00000000    h      1.000     0
+          9.36353626    0.07445521    0.00000000    h      1.000     0
+         -5.46170534    1.01478293    0.00000000    c      6.000     0
+         -5.92882674    3.05381632    0.00000000    h      1.000     0
+         -7.37289876   -0.68855951    0.00000000    c      6.000     0
+         -7.04372736   -2.74543191    0.00000000    h      1.000     0
+         -9.36353626   -0.07445521    0.00000000    h      1.000     0
+         -0.92683508    2.49591247    0.00000000    c      6.000     0
+         -1.65163953    4.45457581    0.00000000    h      1.000     0
+ 
+       center of nuclear mass  :    0.00000000    0.00000000    0.00000000
+       center of nuclear charge:    0.00000000    0.00000000    0.00000000
+
+              +--------------------------------------------------+
+              |               basis set information              |
+              +--------------------------------------------------+
+
+              we will work with the 1s 3p 5d 7f 9g ... basis set
+              ...i.e. with spherical basis functions...
+
+   type   atoms  prim   cont   basis
+   ---------------------------------------------------------------------------
+    c       10     15      5   sto-3g   [2s1p|6s3p]
+    h       10      3      1   sto-3g   [1s|3s]
+   ---------------------------------------------------------------------------
+   total:   20    180     60
+   ---------------------------------------------------------------------------
+
+   total number of primitive shells          :   12
+   total number of contracted shells         :   40
+   total number of cartesian basis functions :   60
+   total number of SCF-basis functions       :   60
+
+
+ integral neglect threshold       :  0.56E-10
+ integral storage threshold THIZE :  0.10E-04
+ integral storage threshold THIME :         5
+
+
+ symmetry group of the molecule :   c2h
+
+ the group has the following generators :
+   c2(z)
+   mirror plane sigma(xy)
+
+    4 symmetry operations found
+
+ there are 4 real representations :   ag   bg   au   bu  
+
+ maximum number of shells which are related by symmetry :  2
+
+
+          ------------------------
+          nuclear repulsion energy  :   443.892737969    
+          ------------------------
+
+
+         -----------------
+         -S,T+V- integrals
+         -----------------
+
+ 1e-integrals will be neglected if expon. factor < 0.556994E-11
+ 
+   Difference densities algorithm switched on.
+   The maximal number of linear combinations of
+   difference densities is                    20 .
+
+ DIIS switched on: error vector is FDS-SDF
+ Max. Iterations for DIIS is     :   5
+ DIIS matrix (see manual) 
+    Scaling factor of diagonals  :  1.200
+    threshold for scaling factor :  0.000
+
+ scf convergence criterion : increment of total energy < .1000000D-06
+                  and increment of one-electron energy < .1000000D-03
+
+ MOs are in ASCII format !
+
+
+    mo occupation :
+   irrep   mo's   occupied
+    ag      25       15
+    bg       5        3
+    au       5        2
+    bu      25       15
+ 
+ number of basis functions   :    60
+ number of occupied orbitals :    35
+ 
+
+ reading orbital data $scfmo  from file mos
+ orbital characterization : expanded
+ virtual MOs provided and orthogonalized by Cholesky decomposition
+
+ automatic virtual orbital shift switched on 
+      shift if e(lumo)-e(homo) < 0.10000000    
+
+
+ DSCF restart information will be dumped onto file mos
+
+ 
+                                              current damping :  0.300
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     NORM[dD(SAO)]  TOL
+   1  -379.47978628200    -1393.2834178     569.91089353    0.000D+00 0.556D-10
+          max. resid. norm for Fia-block=  2.336D-01 for orbital      2bu        
+          max. resid. fock norm         =  2.866D-01 for orbital     17bu        
+          Delta Eig. =    38.8023820232 eV 
+ 
+                                              current damping :  0.250
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     NORM[dD(SAO)]  TOL
+   2  -379.71510073858    -1395.3295916     571.72175284    0.537D+00 0.355D-10
+          Norm of current diis error: 0.35809    
+          max. resid. norm for Fia-block=  7.432D-02 for orbital      6ag        
+          max. resid. fock norm         =  8.991D-02 for orbital     16ag        
+          Delta Eig. =     8.4408584162 eV 
+ 
+                                              current damping :  0.150
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     NORM[dD(SAO)]  TOL
+   3  -379.75699874846    -1396.0016422     572.35190553    0.113D+00 0.268D-10
+          Norm of current diis error: 0.98585E-01
+          max. resid. norm for Fia-block=  2.268D-02 for orbital      6ag        
+          max. resid. fock norm         =  2.429D-02 for orbital      6ag        
+          Delta Eig. =     1.6994895642 eV 
+ 
+                                              current damping :  0.100
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     NORM[dD(SAO)]  TOL
+   4  -379.76184738034    -1396.2270604     572.57247508    0.387D-01 0.234D-10
+          Norm of current diis error: 0.21343E-01
+          max. resid. norm for Fia-block=  4.908D-03 for orbital      6bu        
+          max. resid. fock norm         =  5.475D-03 for orbital      6bu        
+          Delta Eig. =     0.2167816373 eV 
+ 
+                                              current damping :  0.100
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     NORM[dD(SAO)]  TOL
+   5  -379.76221558696    -1396.2509213     572.59596775    0.904D-02 0.218D-10
+          Norm of current diis error: 0.54537E-02
+          max. resid. norm for Fia-block=  2.297D-03 for orbital      3bg        
+          max. resid. fock norm         =  2.301D-03 for orbital      3bg        
+ mo-orthogonalization: Cholesky decomposition
+          Delta Eig. =     0.0469836722 eV 
+ 
+                                              current damping :  0.100
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     NORM[dD(SAO)]  TOL
+   6  -379.76225093605    -1396.2664620     572.61147311    0.244D-02 0.208D-10
+          Norm of current diis error: 0.20559E-02
+          max. resid. norm for Fia-block=  5.763D-04 for orbital      3bg        
+          max. resid. fock norm         =  7.250D-04 for orbital     24bu        
+          Delta Eig. =     0.0315992664 eV 
+ 
+                                              current damping :  0.150
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     NORM[dD(SAO)]  TOL
+   7  -379.76225557380    -1396.2648075     572.60981394    0.623D-03 0.200D-10
+          Norm of current diis error: 0.68730E-03
+          max. resid. norm for Fia-block=  3.159D-04 for orbital      3bg        
+          max. resid. fock norm         =  3.161D-04 for orbital      3bg        
+          Delta Eig. =     0.0047989310 eV 
+ 
+                                              current damping :  0.200
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     NORM[dD(SAO)]  TOL
+   8  -379.76225620401    -1396.2666911     572.61169695    0.129D-03 0.193D-10
+          Norm of current diis error: 0.23173E-03
+          max. resid. norm for Fia-block=  8.810D-05 for orbital     14bu        
+          max. resid. fock norm         =  1.134D-04 for orbital     24bu        
+          Delta Eig. =     0.0020215084 eV 
+ 
+                                              current damping :  0.100
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     NORM[dD(SAO)]  TOL
+   9  -379.76225628187    -1396.2669488     572.61195452    0.460D-04 0.185D-10
+          Norm of current diis error: 0.88990E-04
+          max. resid. norm for Fia-block=  3.584D-05 for orbital     14bu        
+          max. resid. fock norm         =  4.480D-05 for orbital     24bu        
+          Delta Eig. =     0.0004634117 eV 
+ 
+                                              current damping :  0.100
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     NORM[dD(SAO)]  TOL
+  10  -379.76225629526    -1396.2671378     572.61214354    0.798D-05 0.176D-10
+          Norm of current diis error: 0.29338E-04
+          max. resid. norm for Fia-block=  1.225D-05 for orbital     14bu        
+          max. resid. fock norm         =  1.524D-05 for orbital     24bu        
+ mo-orthogonalization: Cholesky decomposition
+          Delta Eig. =     0.0002319586 eV 
+
+ ENERGY CONVERGED !
+
+ 
+                                              current damping :  0.100
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     NORM[dD(SAO)]  TOL
+  11  -379.76225629614    -1396.2672004     572.61220613    0.199D-05 0.170D-10
+          max. resid. norm for Fia-block=  2.254D-06 for orbital      2au        
+          max. resid. fock norm         =  2.291D-06 for orbital      3au        
+
+ convergence criteria satisfied after    11 iterations
+
+
+                  ------------------------------------------ 
+                 |  total energy      =   -379.76225629614  |
+                  ------------------------------------------ 
+                 :  kinetic energy    =    376.18764262177  :
+                 :  potential energy  =   -755.94989891792  :
+                 :  virial theorem    =      1.99058723289  :
+                 :  wavefunction norm =      1.00000000000  :
+                  .......................................... 
+
+
+ <geterg> : there is no data group $energy 
+
+
+ <skperg> : $end is missing 
+
+
+ orbitals $scfmo  will be written to file mos
+
+    irrep                 11ag        12ag        13ag        14ag        15ag  
+ eigenvalues H         -0.62385    -0.54995    -0.49069    -0.42054    -0.41399
+            eV         -16.9761    -14.9649    -13.3524    -11.4437    -11.2652
+ occupation              2.0000      2.0000      2.0000      2.0000      2.0000
+
+    irrep                 16ag        17ag        18ag        19ag        20ag  
+ eigenvalues H          0.56264     0.61652     0.65078     0.68532     0.73074
+            eV          15.3102     16.7764     17.7087     18.6487     19.8846
+
+    irrep                  1bg         2bg         3bg         4bg         5bg  
+ eigenvalues H         -0.37417    -0.27616    -0.21854     0.30544     0.51756
+            eV         -10.1817     -7.5148     -5.9468      8.3115     14.0837
+ occupation              2.0000      2.0000      2.0000
+
+    irrep                  1au         2au         3au         4au         5au  
+ eigenvalues H         -0.45981    -0.31140     0.19582     0.26780     0.39456
+            eV         -12.5122     -8.4738      5.3286      7.2874     10.7367
+ occupation              2.0000      2.0000
+
+    irrep                 11bu        12bu        13bu        14bu        15bu  
+ eigenvalues H         -0.57032    -0.55063    -0.52214    -0.49345    -0.44578
+            eV         -15.5193    -14.9835    -14.2082    -13.4274    -12.1303
+ occupation              2.0000      2.0000      2.0000      2.0000      2.0000
+
+    irrep                 16bu        17bu        18bu        19bu        20bu  
+ eigenvalues H          0.57219     0.62353     0.65185     0.67297     0.69551
+            eV          15.5702     16.9673     17.7379     18.3126     18.9259
+ 
+ 
+ 
+ 
+ ==============================================================================
+                           electrostatic moments
+ ==============================================================================
+
+ reference point for electrostatic moments:    0.00000   0.00000   0.00000
+
+ 
+              nuc           elec       ->  total
+ ------------------------------------------------------------------------------
+                          charge      
+ ------------------------------------------------------------------------------
+          70.000000     -70.000000      -0.000000
+ 
+ ------------------------------------------------------------------------------
+                       dipole moment  
+ ------------------------------------------------------------------------------
+   x      -0.000000       0.000000       0.000000
+   y      -0.000000      -0.000000      -0.000000
+   z       0.000000       0.000000       0.000000
+ 
+   | dipole moment | =     0.0000 a.u. =     0.0000 debye 
+ 
+ ------------------------------------------------------------------------------
+                     quadrupole moment
+ ------------------------------------------------------------------------------
+  xx    1510.541914   -1549.459517     -38.917604
+  yy     247.056734    -285.368596     -38.311862
+  zz       0.000000     -43.603053     -43.603053
+  xy       5.625568      -5.658088      -0.032520
+  xz       0.000000       0.000000       0.000000
+  yz       0.000000       0.000000       0.000000
+ 
+     1/3  trace=     -40.277506
+     anisotropy=       5.016144
+ 
+ ==============================================================================
+ 
+HOMO-LUMO Separation
+ HOMO         :   -0.21853785 H =     -5.94672 eV
+ LUMO         :    0.19581975 H =     +5.32853 eV
+ HOMO-LUMO gap:    0.41435760 H =    +11.27525 eV
+ 
+ ==============================================================================
+
+
+    ------------------------------------------------------------------------
+         total  cpu-time :   1.59 seconds
+         total wall-time :   2.05 seconds
+    ------------------------------------------------------------------------
+
+   ****  dscf : all done  ****
+
+
+    2020-12-31 10:34:26.536 
+

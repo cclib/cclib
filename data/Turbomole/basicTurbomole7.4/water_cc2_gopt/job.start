@@ -1,0 +1,13 @@
+
+Sat 26 Dec 14:39:14 GMT 2020
+jobex WAS CALLED AS: jobex -level cc2 -c 100 -keep
+AN OPTIMIZATION WITH MAX. 100 CYCLES WILL BE PERFORMED
+CONVERGENCY CRITERION FOR TOTAL CC2-ENERGY IS 10**(-6)
+CONVERGENCY CRITERION FOR MAXIMUM NORM OF CC2-ENERGY GRADIENT IS 10**(-3)
+CONVERGENCY CRITERION FOR MAXIMUM NORM OF BASIS SET GRADIENT IS 10**(-3)
+PROCEDURE WILL START WITH A dscf like STEP
+LOAD MODULES WILL BE TAKEN FROM DIRECTORY /home/oliver/Software/TmoleX19/TURBOMOLE/bin/em64t-unknown-linux-gnu
+DSCF  = /home/oliver/Software/TmoleX19/TURBOMOLE/bin/em64t-unknown-linux-gnu/dscf
+GRAD  = /home/oliver/Software/TmoleX19/TURBOMOLE/bin/em64t-unknown-linux-gnu/ricc2
+STATPT = /home/oliver/Software/TmoleX19/TURBOMOLE/bin/em64t-unknown-linux-gnu/statpt
+
