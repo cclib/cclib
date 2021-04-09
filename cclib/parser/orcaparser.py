@@ -150,7 +150,7 @@ class ORCA(logfileparser.Logfile):
             for line in inputfile:
                 if line[0] != '|':
                     break
-                lines.append(line[6:])
+                lines.append(line[line.find('> ')+2:])
 
             self.metadata['input_file_contents'] = ''.join(lines[:-1])
             lines_iter = iter(lines[:-1])
