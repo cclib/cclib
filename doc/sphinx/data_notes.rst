@@ -283,9 +283,9 @@ If the optimisation has finished successfully, the values in the last row should
 
 grads
 -----
-The attribute ``grads`` contains the forces on the atoms, that is, the gradient of the energy with respect to the atomic coordinates. This is an array of rank 3, with dimensions `n x m x 3` where `n` is 1 for a single point calculation and `>=1` for a geometry optimisation, `m` is the number of atoms and the last dimension contains the x, y and z components of the gradient. The orientation of ``grads`` is equal to that of `atomcoords`_.
+The attribute ``grads`` contains the forces on the atoms, that is, the gradient of the energy with respect to atomic coordinates. ``grads`` is an array of rank 3, with dimensions `n x m x 3` where `n` is 1 for a single point calculation and `>=1` for a geometry optimisation, `m` is the number of atoms and the last dimension contains the x, y and z components of the gradient. The orientation of ``grads`` corresponds to that of `atomcoords`_.
 
-**Gaussian**: In calculations that include point-group symmetry, ``grads`` is converted to standard orientation to match ``atomcoords`` and other quantities which are also presented in the standard orientation. Because of this, the ``grads`` group will differ from that printed in the output file by Gaussian (which is always in the input orientation). Calculations without symmetry (that is, with the ``Symmetry=None`` keyword) yield everything in the input oridentation; in those cases, ``grads`` should match what is printed in the output file.
+**Gaussian**: In calculations that include point-group symmetry, ``grads`` is converted to standard orientation to match the orientation of ``atomcoords`` and other quantities. Because of this, the ``grads`` group will differ from that printed in the output file by Gaussian (which is always in the input orientation). Calculations without symmetry (that is, with the ``Symmetry=None`` keyword) yield everything in the input orientation and in those cases ``grads`` should match exactly what is printed in the output file.
 
 hessian
 -------
