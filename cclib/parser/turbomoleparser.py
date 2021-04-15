@@ -740,24 +740,29 @@ class Turbomole(logfileparser.Logfile):
             one_electron_energy_threshold = utils.float(next(inputfile).split()[-1])
             scftargets = [total_energy_threshold, one_electron_energy_threshold]
             self.append_attribute('scftargets', scftargets)
-            iter_energy = []
-            iter_one_elec_energy = []
+            
+            # Get ready for SCF iteration energies.
+            self.iter_energy = []
+            self.iter_one_elec_energy = []
+            
+        if 'ITERATION  ENERGY' in line:
             while 'convergence criteria satisfied' not in line:
                 # nbasis
-                if  "number of basis functions" in line:
-                    self.set_attribute("nbasis", int(line.split()[-1]))
+                # Doesn't appear to do anything, number of basis functions does not appear in this section?
+                #if  "number of basis functions" in line:
+                #    self.set_attribute("nbasis", int(line.split()[-1]))
                 
                 if 'ITERATION  ENERGY' in line:
                     line = next(inputfile)
                     info = line.split()
-                    iter_energy.append(utils.float(info[1]))
-                    iter_one_elec_energy.append(utils.float(info[2]))
+                    self.iter_energy.append(utils.float(info[1]))
+                    self.iter_one_elec_energy.append(utils.float(info[2]))
                 line = next(inputfile)
 
-            assert len(iter_energy) == len(iter_one_elec_energy), \
+            assert len(self.iter_energy) == len(self.iter_one_elec_energy), \
                 'Different number of values found for total energy and one electron energy.'
             scfvalues = [[x - y, a - b] for x, y, a, b in 
-                         zip(iter_energy[1:], iter_energy[:-1], iter_one_elec_energy[1:], iter_one_elec_energy[:-1])]
+                         zip(self.iter_energy[1:], self.iter_energy[:-1], self.iter_one_elec_energy[1:], self.iter_one_elec_energy[:-1])]
             self.append_attribute('scfvalues', scfvalues)
             while 'total energy' not in line:
                 line = next(inputfile)
