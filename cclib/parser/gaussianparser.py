@@ -100,6 +100,10 @@ class Gaussian(logfileparser.Logfile):
         # dedicated `polar` job? If so, avoid duplicate parsing.
         self.hp_polarizabilities = False
 
+        # Set default elapsed and CPU job times to 0.
+        self.metadata["elapsedtime"] = 0
+        self.metadata["cputime"] = 0
+
     def after_parsing(self):
         # atomcoords are parsed as a list of lists but it should be an array
         if hasattr(self, "atomcoords"):
@@ -2098,6 +2102,16 @@ class Gaussian(logfileparser.Logfile):
                 if not hasattr(self, 'optdone'):
                     self.optdone = []
                 self.optdone.append(len(self.optstatus) - 1)
+
+        # Extract total elapsed and CPU job times in seconds
+        if line[:14] == ' Elapsed time:':
+            days, hours, minutes, seconds = float(line.split()[2]), float(line.split()[4]), float(line.split()[6]), float(line.split()[8])
+            elapsed = seconds + 60*minutes + 60*60*hours + 60*60*24*days
+            self.metadata["elapsedtime"] += elapsed
+        if line[:14] == ' Job cpu time:':
+            days, hours, minutes, seconds = float(line.split()[3]), float(line.split()[5]), float(line.split()[7]), float(line.split()[9])
+            cpu = seconds + 60*minutes + 60*60*hours + 60*60*24*days
+            self.metadata["cputime"] += cpu
 
         if line[:31] == ' Normal termination of Gaussian':
             self.metadata['success'] = True
