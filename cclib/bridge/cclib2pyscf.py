@@ -30,7 +30,7 @@ def makepyscf(data, charge=0, mult=1):
     """Create a Pyscf Molecule."""
     _check_pyscf(_found_pyscf)
     # if hasattr(data, "gbasis"):
-    #     basis = 
+    #     basis =
     inputattrs = data.__dict__
     required_attrs = {"atomcoords", "atomnos"}
     missing = [x for x in required_attrs if not hasattr(data, x)]
@@ -46,7 +46,7 @@ def makepyscf(data, charge=0, mult=1):
         ],
     unit="Angstrom",
     charge=charge,
-    multiplicity=mult  
+    multiplicity=mult
     )
     inputattr = data.__dict__
     pt = PeriodicTable()
@@ -79,12 +79,13 @@ def makepyscf_mos(ccdata,mol):
         cclib object from parsed output
     mol: pyscf Molecule object
        molecule object that must contain the mol.basis attribute
+
     Returns
     ----
     mo_coeff : n_spin x nmo x nao ndarray
         molecular coeffcients, unnormalized according to pyscf standards
     mo_occ : array
-        molecular orbital occupation 
+        molecular orbital occupation
     mo_syms : array
        molecular orbital symmetry labels
     mo_spin: array
@@ -96,8 +97,8 @@ def makepyscf_mos(ccdata,mol):
         mol.build()
         s = mol.intor('int1e_ovlp')
         if np.shape(ccdata.mocoeffs)[0] == 1:
-            mo_coeff = ccdata.mocoeffs[0].T
-            mo_coeff = np.einsum('i,ij->ij', np.sqrt(1/s.diagonal()), mo_coeff)
+            mo_coeffs = ccdata.mocoeffs[0].T
+            mo_coeffs = np.einsum('i,ij->ij', np.sqrt(1/s.diagonal()), mo_coeffs)
             mo_occ = np.zeros(ccdata.nmo)
             mo_occ[:ccdata.homos[0]+1] = 2
             if hasattr(ccdata, 'mosyms'):
@@ -106,11 +107,14 @@ def makepyscf_mos(ccdata,mol):
                 mo_syms = np.full_like(ccdata.moenergies, 'A', dtype=str)
             mo_energies = ccdata.moenergies
         elif np.shape(ccdata.mocoeffs)[0] == 2:
-            mo_coeff = ccdata.mocoeffs
-            mo_coeff = np.einsum('i,ij->ij', np.sqrt(1/s.diagonal()), mo_coeff)
+            mo_coeff_a = ccdata.mocoeffs[0].T
+            mo_coeff_b = ccdata.mocoeffs[1].T
+            mo_coeff_a = np.einsum('i,ij->ij', np.sqrt(1/s.diagonal()), mo_coeff_a)
+            mo_coeff_b = np.einsum('i,ij->ij', np.sqrt(1/s.diagonal()), mo_coeff_b)
             mo_occ = np.zeros((2,ccdata.nmo))
             mo_occ[0,:ccdata.homos[0]+1] = 1
             mo_occ[1,:ccdata.homos[1]+1] = 1
+            mo_coeffs = np.array([mo_coeff_a,mo_coeff_b])
             if hasattr(ccdata, 'mosyms'):
                 mo_syms = ccdata.mosyms
             else:
@@ -119,7 +123,7 @@ def makepyscf_mos(ccdata,mol):
 
 
 
-    return mo_coeff, mo_occ, mo_syms, mo_energies
+    return mo_coeffs, mo_occ, mo_syms, mo_energies
 
 
 
