@@ -7,7 +7,7 @@
 
 """Bridge for using cclib data in PySCF (https://github.com/pyscf/pyscf)."""
 
-from cclib.parser.utils import find_package, PeriodicTable
+from cclib.parser.utils import find_package, PeriodicTable, convertor
 import numpy as np
 
 l_sym2num = {"S": 0, "P": 1, "D": 2, "F": 3, "G": 4}
@@ -88,44 +88,35 @@ def makepyscf_mos(ccdata,mol):
         molecular orbital occupation
     mo_syms : array
        molecular orbital symmetry labels
-    mo_spin: array
     mo_energies: array
-        molecular orbital energies
+        molecular orbital energies in units of Hartree
     """
     inputattrs = ccdata.__dict__
     if "mocoeffs" in inputattrs:
         mol.build()
         s = mol.intor('int1e_ovlp')
         if np.shape(ccdata.mocoeffs)[0] == 1:
-            mo_coeffs = ccdata.mocoeffs[0].T
-            mo_coeffs = np.einsum('i,ij->ij', np.sqrt(1/s.diagonal()), mo_coeffs)
+            mo_coeffs = np.einsum('i,ij->ij', np.sqrt(1/s.diagonal()), ccdata.mocoeffs[0].T)
             mo_occ = np.zeros(ccdata.nmo)
             mo_occ[:ccdata.homos[0]+1] = 2
+            mo_energies = convertor(np.array(ccdata.moenergies),"eV","hartree")
             if hasattr(ccdata, 'mosyms'):
                 mo_syms = ccdata.mosyms
             else:
                 mo_syms = np.full_like(ccdata.moenergies, 'A', dtype=str)
-            mo_energies = ccdata.moenergies
+
         elif np.shape(ccdata.mocoeffs)[0] == 2:
-            mo_coeff_a = ccdata.mocoeffs[0].T
-            mo_coeff_b = ccdata.mocoeffs[1].T
-            mo_coeff_a = np.einsum('i,ij->ij', np.sqrt(1/s.diagonal()), mo_coeff_a)
-            mo_coeff_b = np.einsum('i,ij->ij', np.sqrt(1/s.diagonal()), mo_coeff_b)
+            mo_coeff_a = np.einsum('i,ij->ij', np.sqrt(1/s.diagonal()), ccdata.mocoeffs[0].T)
+            mo_coeff_b = np.einsum('i,ij->ij', np.sqrt(1/s.diagonal()), ccdata.mocoeffs[1].T)
             mo_occ = np.zeros((2,ccdata.nmo))
             mo_occ[0,:ccdata.homos[0]+1] = 1
             mo_occ[1,:ccdata.homos[1]+1] = 1
             mo_coeffs = np.array([mo_coeff_a,mo_coeff_b])
+            mo_energies = convertor(np.array(ccdata.moenergies),"eV","hartree")
             if hasattr(ccdata, 'mosyms'):
                 mo_syms = ccdata.mosyms
             else:
                 mo_syms = np.full_like(ccdata.moenergies, 'A', dtype=str)
-            mo_energies = ccdata.moenergies
-
-
-
     return mo_coeffs, mo_occ, mo_syms, mo_energies
-
-
-
 
 del find_package

@@ -22,9 +22,12 @@ class PyscfTest(unittest.TestCase):
         self.data, self.logfile = getdatafile(
             "GAMESS", "basicGAMESS-US2018", ["dvb_sp.out"]
         )
-        datadir = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), "..", "..", "data")
+        self.udata, self.ulogfile = getdatafile(
+            "GAMESS", "basicGAMESS-US2018", ["dvb_un_sp.out"]
         )
+        # datadir = os.path.abspath(
+        #     os.path.join(os.path.dirname(__file__), "..", "..", "data")
+        # )
 
     def test_makepyscf(self):
         import pyscf
@@ -48,13 +51,19 @@ class PyscfTest(unittest.TestCase):
     def test_makepyscf_mos(self):
         pyscfmol = cclib2pyscf.makepyscf(self.data)
         mo_coeff, mo_occ, mo_syms, mo_energies = cclib2pyscf.makepyscf_mos(self.data,pyscfmol)
-        assert np.allclose(mo_energies, self.data.moenergies)
+        assert np.allclose(mo_energies,convertor(np.array(self.data.moenergies),"eV","hartree"))
         # check first MO coefficient
-        print(np.shape(np.array(self.data.mocoeffs)))
         assert np.allclose(mo_coeff[0][0], self.data.mocoeffs[0][0][0])
         # check a random middle MO coefficient
         assert np.allclose(mo_coeff[0][10],self.data.mocoeffs[0][10][0])
-
+        # test unrestricted code.
+        pyscfmol = cclib2pyscf.makepyscf(self.udata)
+        mo_coeff, mo_occ, mo_syms, mo_energies = cclib2pyscf.makepyscf_mos(self.udata,pyscfmol)
+        assert np.allclose(mo_energies,convertor(np.array(self.udata.moenergies),"eV","hartree"))
+        # check first MO coefficient
+        assert np.allclose(mo_coeff[0][0][0], self.udata.mocoeffs[0][0][0])
+        # check a random middle MO coefficient
+        assert np.allclose(mo_coeff[0][0][10],self.udata.mocoeffs[0][10][0])
 
 if __name__ == "__main__":
     unittest.main()
