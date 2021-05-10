@@ -1116,6 +1116,15 @@ class DALTON(logfileparser.Logfile):
             # order.
             self.vibramans = vibramans[::-1]
 
+        if line.strip() == "Total Molecular Energy":
+            self.skip_lines(
+                inputfile,
+                ["d", "b", "electronic     vibrational           total    energy", "b"]
+            )
+            tokens = next(inputfile).split()
+            assert tokens[3] == "Hartrees"
+            self.set_attribute("zpve", float(tokens[1]))
+
         # Static polarizability from **PROPERTIES/.POLARI.
         if line.strip() == "Static polarizabilities (au)":
             if not hasattr(self, 'polarizabilities'):

@@ -916,7 +916,7 @@ Dispersion correction           -0.016199959
             while line[:17] != 'Electronic energy':
                 line = next(inputfile)
             self.electronic_energy = float(line.split()[3])
-            self.zpe = float(next(inputfile).split()[4])
+            self.set_attribute("zpve", float(next(inputfile).split()[4]))
             thermal_vibrational_correction = float(next(inputfile).split()[4])
             thermal_rotional_correction = float(next(inputfile).split()[4])
             thermal_translational_correction = float(next(inputfile).split()[4])

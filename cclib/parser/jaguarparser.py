@@ -682,6 +682,35 @@ class Jaguar(logfileparser.Logfile):
             if hasattr(self, "vibfconsts"):
                 self.vibfconsts = numpy.array(self.vibfconsts, "d")
 
+            line = freqs
+
+            # Jaguar 4.2:
+            #
+            # Thermochemical Properties:
+            #   pressure:        1.0000 atm
+            #   rotational symmetry number:    2
+            #   zero point energy:    111.455 kcal/mol
+            #
+            # Jaguar >= 7.0:
+            #
+            #   Thermochemical properties at    1.0000 atm
+            #   ...
+            #   The zero point energy (ZPE):    111.155 kcal/mol
+            while "thermochemical properties" not in line.lower():
+                line = next(inputfile)
+            tokens = line.split()
+            if len(tokens) == 5:
+                self.set_attribute("pressure", float(line.split()[3]))
+            line = next(inputfile)
+            if "pressure" in line:
+                self.set_attribute("pressure", float(line.split()[1]))
+            while "zero point energy" not in line:
+                line = next(inputfile)
+            self.set_attribute(
+                "zpve",
+                utils.convertor(float(line.split()[-2]), "kcal/mol", "hartree")
+            )
+
         # Parse excited state output (for CIS calculations).
         # Jaguar calculates only singlet states.
         if line[2:15] == "Excited State":

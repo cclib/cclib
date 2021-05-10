@@ -3022,12 +3022,19 @@ class OrcaTDDFTTest_error(OrcaTDDFTTest):
 
 class OrcaIRTest_old_coordsOK(OrcaIRTest):
 
+    zpve = 0.1986
+
     enthalpy_places = -1
     entropy_places = 2
     freeenergy_places = -1
 
 
 class OrcaIRTest_old(OrcaIRTest):
+    """The frequency part of this calculation didn't finish, but went ahead and
+    printed incomplete and incorrect results anyway.
+    """
+
+    zpve = 0.0200
 
     enthalpy_places = -1
     entropy_places = 2
@@ -3087,7 +3094,7 @@ old_unittests = {
     "ADF/ADF2004.01/dvb_sp_d.adfout":       ADFSPTest_nosyms_noscfvalues,
     "ADF/ADF2004.01/dvb_un_sp.adfout":      GenericSPunTest,
     "ADF/ADF2004.01/dvb_un_sp_c.adfout":    GenericSPunTest,
-    "ADF/ADF2004.01/dvb_ir.adfout":         GenericIRTest,
+    "ADF/ADF2004.01/dvb_ir.adfout":         ADFIRTest,
 
     "ADF/ADF2006.01/dvb_gopt.adfout":              ADFGeoOptTest_noscfvalues,
     "ADF/ADF2013.01/dvb_gopt_b_fullscf.adfout":    ADFGeoOptTest,
@@ -3269,7 +3276,7 @@ old_unittests = {
     "Psi4/Psi4-1.0/C_bigbasis.out":     Psi4BigBasisTest,
     "Psi4/Psi4-1.0/dvb_gopt_rhf.out":   Psi4GeoOptTest,
     "Psi4/Psi4-1.0/dvb_gopt_rks.out":   Psi4GeoOptTest,
-    "Psi4/Psi4-1.0/dvb_ir_rhf.out":     GenericIRTest,
+    "Psi4/Psi4-1.0/dvb_ir_rhf.out":     Psi4IRTest,
     "Psi4/Psi4-1.0/dvb_sp_rhf.out":     PsiSPTest_noatommasses,
     "Psi4/Psi4-1.0/dvb_sp_rks.out":     PsiSPTest_noatommasses,
     "Psi4/Psi4-1.0/dvb_sp_rohf.out":    GenericROSPTest,

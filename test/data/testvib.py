@@ -26,6 +26,9 @@ class GenericIRTest(unittest.TestCase):
     max_force_constant = 10.0
     max_reduced_mass = 6.9
 
+    # reference zero-point correction from Gaussian 16 dvb_ir.out
+    zpve = 0.1771
+
     def setUp(self):
         """Initialize the number of vibrational frequencies on a per molecule basis"""
         self.numvib = 3*len(self.data.atomnos) - 6
@@ -86,11 +89,27 @@ class GenericIRTest(unittest.TestCase):
         """Is the maximum reduced mass 6.9 +/- 0.1 daltons?"""
         self.assertAlmostEqual(max(self.data.vibrmasses), self.max_reduced_mass, delta=0.1)
 
+    @skipForParser('Psi3', 'not implemented yet')
+    def testzeropointcorrection(self):
+        """Is the zero-point correction correct?"""
+        self.assertAlmostEqual(self.data.zpve, self.zpve, delta=1.0e-3)
+
+
+class ADFIRTest(GenericIRTest):
+    """Customized vibrational frequency unittest"""
+
+    # ???
+    def testzeropointcorrection(self):
+        """Is the zero-point correction correct?"""
+        self.assertAlmostEqual(self.data.zpve, self.zpve, delta=1.0e-2)
+
 
 class FireflyIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
     max_IR_intensity = 135
+    # ???
+    zpve = 0.1935
 
 
 class GaussianIRTest(GenericIRTest):
@@ -134,7 +153,6 @@ class GaussianIRTest(GenericIRTest):
         """Does G = H - TS hold"""
         self.assertAlmostEqual(self.data.enthalpy - self.data.temperature * self.data.entropy, self.data.freeenergy, self.freeenergy_places)
 
-
 class JaguarIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
@@ -151,6 +169,7 @@ class MolcasIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
     max_IR_intensity = 65
+    zpve = 0.1783
 
     entropy_places = 6
     enthalpy_places = 3
@@ -186,6 +205,7 @@ class OrcaIRTest(GenericIRTest):
 
     # ORCA has a bug in the intensities for version < 4.0
     max_IR_intensity = 215
+    zpve = 0.1921
 
     enthalpy_places = 3
     entropy_places = 6
@@ -302,6 +322,14 @@ class Psi4IRTest(GenericIRTest):
 
     # RHF is used for Psi4 IR test data instead of B3LYP
     max_force_constant = 9.37
+    zpve = 0.1917
+
+
+class TurbomoleIRTest(GenericIRTest):
+    """Customized vibrational frequency unittest"""
+
+    # ???
+    zpve = 0.1725
 
 
 class GenericIRimgTest(unittest.TestCase):

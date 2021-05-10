@@ -1,0 +1,304 @@
+
+ DSCF STATISTICS OUTPUT :
+
+ integral neglect threshold       :  0.33E-10
+ integral storage threshold THIZE :  0.10E-04
+ integral storage threshold THIME :         5
+
+
+
+ --------------------    1.ITERATION  --------------------
+ number of shell pairs ii,jj included :          210
+ number of integral batches included  :        20510
+ number of batches from twoint        :            0
+ unnecessary integral batches on file :            0
+
+ cpu-time for fock matrix construction :        0.150 s
+ wall clock time elapsed for SCF integral evaluation :        0.151 s
+
+ eigenvalue        1 after current iteration:   0.38884410D+00
+ eigenvalue        2 after current iteration:   0.38884410D+00
+ eigenvalue        3 after current iteration:   0.42211720D+00
+ eigenvalue        4 after current iteration:   0.42211720D+00
+ eigenvalue        5 after current iteration:   0.43582206D+00
+ eigenvalue        6 after current iteration:   0.46334488D+00
+ eigenvalue        7 after current iteration:   0.47832370D+00
+ eigenvalue        8 after current iteration:   0.48366108D+00
+ eigenvalue        9 after current iteration:   0.48454757D+00
+ eigenvalue       10 after current iteration:   0.49194164D+00
+
+
+ --------------------    2.ITERATION  --------------------
+ cpu-time elapsed since end of
+ last fock matrix construction         :        0.209 s
+ number of shell pairs ii,jj included :          210
+ number of integral batches included  :        20510
+ number of batches from twoint        :            0
+ unnecessary integral batches on file :            0
+
+ cpu-time for fock matrix construction :        0.085 s
+ eigenvalue        1 after current iteration:   0.21572892D+00
+ eigenvalue        2 after current iteration:   0.21572892D+00
+ eigenvalue        3 after current iteration:   0.27364061D+00
+ eigenvalue        4 after current iteration:   0.31819783D+00
+ eigenvalue        5 after current iteration:   0.34138357D+00
+ eigenvalue        6 after current iteration:   0.34138357D+00
+ eigenvalue        7 after current iteration:   0.40759334D+00
+ eigenvalue        8 after current iteration:   0.45294991D+00
+ eigenvalue        9 after current iteration:   0.45965799D+00
+ eigenvalue       10 after current iteration:   0.47386757D+00
+
+
+ --------------------    3.ITERATION  --------------------
+ cpu-time elapsed since end of
+ last fock matrix construction         :        0.296 s
+ number of shell pairs ii,jj included :          210
+ number of integral batches included  :        20510
+ number of batches from twoint        :            0
+ unnecessary integral batches on file :            0
+
+ cpu-time for fock matrix construction :        0.086 s
+ eigenvalue        1 after current iteration:   0.19749377D+00
+ eigenvalue        2 after current iteration:   0.19749377D+00
+ eigenvalue        3 after current iteration:   0.24988017D+00
+ eigenvalue        4 after current iteration:   0.30155399D+00
+ eigenvalue        5 after current iteration:   0.32507925D+00
+ eigenvalue        6 after current iteration:   0.32507925D+00
+ eigenvalue        7 after current iteration:   0.35627374D+00
+ eigenvalue        8 after current iteration:   0.40671055D+00
+ eigenvalue        9 after current iteration:   0.45126803D+00
+ eigenvalue       10 after current iteration:   0.46170070D+00
+
+
+ --------------------    4.ITERATION  --------------------
+ cpu-time elapsed since end of
+ last fock matrix construction         :        0.385 s
+ number of shell pairs ii,jj included :          210
+ number of integral batches included  :        20510
+ number of batches from twoint        :            0
+ unnecessary integral batches on file :            0
+
+ cpu-time for fock matrix construction :        0.088 s
+ eigenvalue        1 after current iteration:   0.19713112D+00
+ eigenvalue        2 after current iteration:   0.19713112D+00
+ eigenvalue        3 after current iteration:   0.23700147D+00
+ eigenvalue        4 after current iteration:   0.29517031D+00
+ eigenvalue        5 after current iteration:   0.29625133D+00
+ eigenvalue        6 after current iteration:   0.32370716D+00
+ eigenvalue        7 after current iteration:   0.32370716D+00
+ eigenvalue        8 after current iteration:   0.38041626D+00
+ eigenvalue        9 after current iteration:   0.40478219D+00
+ eigenvalue       10 after current iteration:   0.40711612D+00
+
+
+ --------------------    5.ITERATION  --------------------
+ cpu-time elapsed since end of
+ last fock matrix construction         :        0.476 s
+ number of shell pairs ii,jj included :          210
+ number of integral batches included  :        20510
+ number of batches from twoint        :            0
+ unnecessary integral batches on file :            0
+
+ cpu-time for fock matrix construction :        0.089 s
+ eigenvalue        1 after current iteration:   0.19706875D+00
+ eigenvalue        2 after current iteration:   0.19706875D+00
+ eigenvalue        3 after current iteration:   0.23485432D+00
+ eigenvalue        4 after current iteration:   0.29298214D+00
+ eigenvalue        5 after current iteration:   0.29307786D+00
+ eigenvalue        6 after current iteration:   0.32367951D+00
+ eigenvalue        7 after current iteration:   0.32367951D+00
+ eigenvalue        8 after current iteration:   0.35453860D+00
+ eigenvalue        9 after current iteration:   0.36913823D+00
+ eigenvalue       10 after current iteration:   0.40663432D+00
+
+
+ --------------------    6.ITERATION  --------------------
+ cpu-time elapsed since end of
+ last fock matrix construction         :        0.570 s
+ number of shell pairs ii,jj included :          210
+ number of integral batches included  :        20510
+ number of batches from twoint        :            0
+ unnecessary integral batches on file :            0
+
+ cpu-time for fock matrix construction :        0.090 s
+ eigenvalue        1 after current iteration:   0.19706698D+00
+ eigenvalue        2 after current iteration:   0.19706698D+00
+ eigenvalue        3 after current iteration:   0.23478901D+00
+ eigenvalue        4 after current iteration:   0.29285680D+00
+ eigenvalue        5 after current iteration:   0.29288356D+00
+ eigenvalue        6 after current iteration:   0.32367776D+00
+ eigenvalue        7 after current iteration:   0.32367776D+00
+ eigenvalue        8 after current iteration:   0.35049742D+00
+ eigenvalue        9 after current iteration:   0.36763583D+00
+ eigenvalue       10 after current iteration:   0.40202019D+00
+
+
+ --------------------    7.ITERATION  --------------------
+ cpu-time elapsed since end of
+ last fock matrix construction         :        0.664 s
+ number of shell pairs ii,jj included :          210
+ number of integral batches included  :        20511
+ number of batches from twoint        :            0
+ unnecessary integral batches on file :            0
+
+ cpu-time for fock matrix construction :        0.090 s
+ eigenvalue        1 after current iteration:   0.19706691D+00
+ eigenvalue        2 after current iteration:   0.19706691D+00
+ eigenvalue        3 after current iteration:   0.23478768D+00
+ eigenvalue        4 after current iteration:   0.29285392D+00
+ eigenvalue        5 after current iteration:   0.29285444D+00
+ eigenvalue        6 after current iteration:   0.32367761D+00
+ eigenvalue        7 after current iteration:   0.32367761D+00
+ eigenvalue        8 after current iteration:   0.34605456D+00
+ eigenvalue        9 after current iteration:   0.36732525D+00
+ eigenvalue       10 after current iteration:   0.36850683D+00
+
+
+ --------------------    8.ITERATION  --------------------
+ cpu-time elapsed since end of
+ last fock matrix construction         :        0.761 s
+ number of shell pairs ii,jj included :          210
+ number of integral batches included  :        20511
+ number of batches from twoint        :            0
+ unnecessary integral batches on file :            0
+
+ cpu-time for fock matrix construction :        0.090 s
+ eigenvalue        1 after current iteration:   0.19706691D+00
+ eigenvalue        2 after current iteration:   0.19706691D+00
+ eigenvalue        3 after current iteration:   0.23478763D+00
+ eigenvalue        4 after current iteration:   0.29285382D+00
+ eigenvalue        5 after current iteration:   0.29285382D+00
+ eigenvalue        6 after current iteration:   0.32367760D+00
+ eigenvalue        7 after current iteration:   0.32367760D+00
+ eigenvalue        8 after current iteration:   0.34583365D+00
+ eigenvalue        9 after current iteration:   0.34846634D+00
+ eigenvalue       10 after current iteration:   0.36789279D+00
+
+
+ --------------------    9.ITERATION  --------------------
+ cpu-time elapsed since end of
+ last fock matrix construction         :        0.858 s
+ number of shell pairs ii,jj included :          210
+ number of integral batches included  :        20511
+ number of batches from twoint        :            0
+ unnecessary integral batches on file :            0
+
+ cpu-time for fock matrix construction :        0.090 s
+ eigenvalue        1 after current iteration:   0.19706691D+00
+ eigenvalue        2 after current iteration:   0.19706691D+00
+ eigenvalue        3 after current iteration:   0.23478763D+00
+ eigenvalue        4 after current iteration:   0.29285381D+00
+ eigenvalue        5 after current iteration:   0.29285381D+00
+ eigenvalue        6 after current iteration:   0.32367760D+00
+ eigenvalue        7 after current iteration:   0.32367760D+00
+ eigenvalue        8 after current iteration:   0.34583131D+00
+ eigenvalue        9 after current iteration:   0.34589824D+00
+ eigenvalue       10 after current iteration:   0.36788543D+00
+
+
+ --------------------   10.ITERATION  --------------------
+ cpu-time elapsed since end of
+ last fock matrix construction         :        0.957 s
+ number of shell pairs ii,jj included :          210
+ number of integral batches included  :        20511
+ number of batches from twoint        :            0
+ unnecessary integral batches on file :            0
+
+ cpu-time for fock matrix construction :        0.060 s
+ eigenvalue        1 after current iteration:   0.19706691D+00
+ eigenvalue        2 after current iteration:   0.19706691D+00
+ eigenvalue        3 after current iteration:   0.23478763D+00
+ eigenvalue        4 after current iteration:   0.29285381D+00
+ eigenvalue        5 after current iteration:   0.29285381D+00
+ eigenvalue        6 after current iteration:   0.32367760D+00
+ eigenvalue        7 after current iteration:   0.32367760D+00
+ eigenvalue        8 after current iteration:   0.34583129D+00
+ eigenvalue        9 after current iteration:   0.34583274D+00
+ eigenvalue       10 after current iteration:   0.36788536D+00
+
+
+ --------------------   11.ITERATION  --------------------
+ cpu-time elapsed since end of
+ last fock matrix construction         :        1.026 s
+ number of shell pairs ii,jj included :          210
+ number of integral batches included  :        20504
+ number of batches from twoint        :            0
+ unnecessary integral batches on file :            0
+
+ cpu-time for fock matrix construction :        0.037 s
+ eigenvalue        1 after current iteration:   0.19706691D+00
+ eigenvalue        2 after current iteration:   0.19706691D+00
+ eigenvalue        3 after current iteration:   0.23478763D+00
+ eigenvalue        4 after current iteration:   0.29285381D+00
+ eigenvalue        5 after current iteration:   0.29285381D+00
+ eigenvalue        6 after current iteration:   0.32367760D+00
+ eigenvalue        7 after current iteration:   0.32367760D+00
+ eigenvalue        8 after current iteration:   0.34583129D+00
+ eigenvalue        9 after current iteration:   0.34583132D+00
+ eigenvalue       10 after current iteration:   0.36788536D+00
+
+
+ --------------------   12.ITERATION  --------------------
+ cpu-time elapsed since end of
+ last fock matrix construction         :        1.072 s
+ number of shell pairs ii,jj included :          210
+ number of integral batches included  :        20486
+ number of batches from twoint        :            0
+ unnecessary integral batches on file :            0
+
+ cpu-time for fock matrix construction :        0.030 s
+ eigenvalue        1 after current iteration:   0.19706691D+00
+ eigenvalue        2 after current iteration:   0.19706691D+00
+ eigenvalue        3 after current iteration:   0.23478763D+00
+ eigenvalue        4 after current iteration:   0.29285381D+00
+ eigenvalue        5 after current iteration:   0.29285381D+00
+ eigenvalue        6 after current iteration:   0.32367760D+00
+ eigenvalue        7 after current iteration:   0.32367760D+00
+ eigenvalue        8 after current iteration:   0.34583129D+00
+ eigenvalue        9 after current iteration:   0.34583129D+00
+ eigenvalue       10 after current iteration:   0.36788536D+00
+
+
+ --------------------   13.ITERATION  --------------------
+ cpu-time elapsed since end of
+ last fock matrix construction         :        1.111 s
+ number of shell pairs ii,jj included :          210
+ number of integral batches included  :        20372
+ number of batches from twoint        :            0
+ unnecessary integral batches on file :            0
+
+ cpu-time for fock matrix construction :        0.021 s
+ eigenvalue        1 after current iteration:   0.19706691D+00
+ eigenvalue        2 after current iteration:   0.19706691D+00
+ eigenvalue        3 after current iteration:   0.23478763D+00
+ eigenvalue        4 after current iteration:   0.29285382D+00
+ eigenvalue        5 after current iteration:   0.29285382D+00
+ eigenvalue        6 after current iteration:   0.32367760D+00
+ eigenvalue        7 after current iteration:   0.32367760D+00
+ eigenvalue        8 after current iteration:   0.34583129D+00
+ eigenvalue        9 after current iteration:   0.34583129D+00
+ eigenvalue       10 after current iteration:   0.36788535D+00
+
+
+ --------------------   14.ITERATION  --------------------
+ cpu-time elapsed since end of
+ last fock matrix construction         :        1.142 s
+ number of shell pairs ii,jj included :          210
+ number of integral batches included  :        20149
+ number of batches from twoint        :            0
+ unnecessary integral batches on file :            0
+
+ cpu-time for fock matrix construction :        0.021 s
+ eigenvalue        1 after current iteration:   0.19706693D+00
+ eigenvalue        2 after current iteration:   0.19706699D+00
+ eigenvalue        3 after current iteration:   0.23478763D+00
+ eigenvalue        4 after current iteration:   0.29285383D+00
+ eigenvalue        5 after current iteration:   0.29285387D+00
+ eigenvalue        6 after current iteration:   0.32367761D+00
+ eigenvalue        7 after current iteration:   0.32367762D+00
+ eigenvalue        8 after current iteration:   0.34583128D+00
+ eigenvalue        9 after current iteration:   0.34583129D+00
+ eigenvalue       10 after current iteration:   0.36788538D+00
+
+  escf  : cpu elapsed         1.189 s
+          wall                1.240 s
