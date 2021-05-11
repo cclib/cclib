@@ -6,11 +6,13 @@
 # the terms of the BSD 3-Clause License.
 
 import unittest
+
 import numpy as np
-from test.test_data import getdatafile
+
 from cclib.bridge import cclib2pyscf
 from cclib.parser.utils import find_package, convertor
-import os
+
+from test.test_data import getdatafile
 
 
 class PyscfTest(unittest.TestCase):
@@ -25,9 +27,6 @@ class PyscfTest(unittest.TestCase):
         self.udata, self.ulogfile = getdatafile(
             "GAMESS", "basicGAMESS-US2018", ["dvb_un_sp.out"]
         )
-        # datadir = os.path.abspath(
-        #     os.path.join(os.path.dirname(__file__), "..", "..", "data")
-        # )
 
     def test_makepyscf(self):
         import pyscf

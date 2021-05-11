@@ -29,8 +29,6 @@ def _check_pyscf(found_pyscf):
 def makepyscf(data, charge=0, mult=1):
     """Create a Pyscf Molecule."""
     _check_pyscf(_found_pyscf)
-    # if hasattr(data, "gbasis"):
-    #     basis =
     inputattrs = data.__dict__
     required_attrs = {"atomcoords", "atomnos"}
     missing = [x for x in required_attrs if not hasattr(data, x)]
@@ -40,13 +38,13 @@ def makepyscf(data, charge=0, mult=1):
             "Could not create pyscf molecule due to missing attribute: {}".format(missing)
         )
     mol = gto.Mole(
-    atom=[
-        ["{}".format(data.atomnos[i]), data.atomcoords[-1][i]]
-        for i in range(data.natom)
+        atom=[
+            ["{}".format(data.atomnos[i]), data.atomcoords[-1][i]]
+            for i in range(data.natom)
         ],
-    unit="Angstrom",
-    charge=charge,
-    multiplicity=mult
+        unit="Angstrom",
+        charge=charge,
+        multiplicity=mult
     )
     inputattr = data.__dict__
     pt = PeriodicTable()
