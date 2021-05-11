@@ -27,4 +27,6 @@ if find_package("ase"):
 if find_package("iodata"):
     from cclib.bridge.cclib2horton import makehorton
 
+if find_package("pyscf"):
+    from cclib.bridge.cclib2pyscf import makepyscf, makepyscf_mos
 del find_package
