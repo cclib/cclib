@@ -2105,11 +2105,13 @@ class Gaussian(logfileparser.Logfile):
 
         # Extract total elapsed and CPU job times in seconds
         if line[:14] == ' Elapsed time:':
-            days, hours, minutes, seconds = float(line.split()[2]), float(line.split()[4]), float(line.split()[6]), float(line.split()[8])
+            split_line = line.split()
+            days, hours, minutes, seconds = float(split_line[2]), float(split_line[4]), float(split_line[6]), float(split_line[8])
             elapsed = seconds + 60*minutes + 60*60*hours + 60*60*24*days
             self.metadata["elapsedtime"] += elapsed
         if line[:14] == ' Job cpu time:':
-            days, hours, minutes, seconds = float(line.split()[3]), float(line.split()[5]), float(line.split()[7]), float(line.split()[9])
+            split_line = line.split()
+            days, hours, minutes, seconds = float(split_line[3]), float(split_line[5]), float(split_line[7]), float(split_line[9])
             cpu = seconds + 60*minutes + 60*60*hours + 60*60*24*days
             self.metadata["cputime"] += cpu
 
