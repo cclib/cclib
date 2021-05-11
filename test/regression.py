@@ -1748,6 +1748,11 @@ def testORCA_ORCA4_2_water_dlpno_ccsd_out(logfile):
     assert hasattr(logfile.data, 'ccenergies')
 
 
+def testORCA_ORCA4_2_longer_input_out(logfile):
+    """Longer ORCA input file (#1034)."""
+    assert logfile.data.metadata['input_file_contents'][-47:-4] == 'H   1.066878310   1.542378768  -0.602599044'
+
+
 # PSI 3 #
 
 
