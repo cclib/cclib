@@ -38,6 +38,7 @@ from cclib.parser.psi4parser import Psi4
 from cclib.parser.qchemparser import QChem
 from cclib.parser.turbomoleparser import Turbomole
 from cclib.parser.logfilewrapper import FileWrapper
+from cclib.parser.cfourparser import CFOUR
 
 from cclib.io import cjsonreader
 from cclib.io import cjsonwriter
@@ -89,6 +90,7 @@ triggers = [
     (Psi4,      ["Psi4: An Open-Source Ab Initio Electronic Structure Package"],          True),
     (QChem,     ["A Quantum Leap Into The Future Of Chemistry"],    True),
     (Turbomole, ["TURBOMOLE"],                                      True),
+    (CFOUR, ["CFOUR"],                                      True),
 
 ]
 
@@ -401,6 +403,63 @@ def _determine_output_format(outputtype, outputdest):
             raise UnknownOutputFormatError(extension)
 
     return outputclass
+
+def path_leaf(path):
+    """
+    Splits the path to give the filename. Works irrespective of '\'
+    or '/' appearing in the path and also with path ending with '/' or '\'.
+
+    Inputs:
+      path - a string path of a logfile.
+    Returns:
+      tail - 'directory/subdirectory/logfilename' will return 'logfilename'.
+      ntpath.basename(head) - 'directory/subdirectory/logfilename/' will return 'logfilename'.
+    """
+    head, tail = os.path.split(path)
+    return tail or os.path.basename(head)
+
+def sort_turbomole_outputs(filelist):
+    """
+    Sorts a list of inputs (or list of log files) according to the order
+    defined below. Just appends the unknown files in the end of the sorted list.
+
+    Inputs:
+      filelist - a list of Turbomole log files needed to be parsed.
+    Returns:
+      sorted_list - a sorted list of Turbomole files needed for proper parsing.
+    """
+    sorting_order = {
+        'basis' : 0,
+        'control' : 1,
+        'mos' : 2,
+        'alpha' : 3,
+        'beta' : 4,
+        'job.last' : 5,
+        'coord' : 6,
+        'gradient' : 7,
+        'aoforce' : 8,
+    }
+
+    known_files = []
+    unknown_files = []
+    sorted_list = []
+    for fname in filelist:
+        filename = path_leaf(fname)
+        if filename in sorting_order:
+            known_files.append([fname, sorting_order[filename]])
+        elif re.match(r"^job\.[0-9]+$", filename):
+            # Calling 'jobex -keep' will also write job.n files, where n ranges from 0 to inf.
+            # Numbered job files are inserted before job.last.
+            job_number = int(filename[4:]) +1
+            job_order = float(f"{sorting_order['job.last'] - 1}.{job_number}")
+            known_files.append([fname, job_order])
+        else:
+            unknown_files.append(fname)
+    for i in sorted(known_files, key=lambda x: x[1]):
+        sorted_list.append(i[0])
+    if unknown_files:
+        sorted_list.extend(unknown_files)
+    return sorted_list
 
 
 def _check_pandas(found_pandas):

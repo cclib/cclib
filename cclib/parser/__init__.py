@@ -32,6 +32,7 @@ from cclib.parser.psi3parser import Psi3
 from cclib.parser.psi4parser import Psi4
 from cclib.parser.qchemparser import QChem
 from cclib.parser.turbomoleparser import Turbomole
+from cclib.parser.cfourparser import CFOUR
 
 from cclib.parser.data import ccData
 
