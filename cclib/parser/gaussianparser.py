@@ -2104,16 +2104,16 @@ class Gaussian(logfileparser.Logfile):
                 self.optdone.append(len(self.optstatus) - 1)
 
         # Extract total elapsed and CPU job times in seconds
-        if line[:14] == ' Elapsed time:':
+        if line[:14] == ' Elapsed time:' or line[:14] == ' Job cpu time:':
+            n = 2
+            key = 'elapsedtime'
+            if line[:14] == ' Job cpu time:':
+                n += 1
+                key = 'cputime'
             split_line = line.split()
-            days, hours, minutes, seconds = float(split_line[2]), float(split_line[4]), float(split_line[6]), float(split_line[8])
-            elapsed = seconds + 60*minutes + 60*60*hours + 60*60*24*days
-            self.metadata["elapsedtime"] += elapsed
-        if line[:14] == ' Job cpu time:':
-            split_line = line.split()
-            days, hours, minutes, seconds = float(split_line[3]), float(split_line[5]), float(split_line[7]), float(split_line[9])
-            cpu = seconds + 60*minutes + 60*60*hours + 60*60*24*days
-            self.metadata["cputime"] += cpu
+            days, hours, minutes, seconds = float(split_line[n]), float(split_line[n+2]), float(split_line[n+4]), float(split_line[n+6])
+            time = seconds + 60*minutes + 60*60*hours + 60*60*24*days
+            self.metadata[key] += time
 
         if line[:31] == ' Normal termination of Gaussian':
             self.metadata['success'] = True
