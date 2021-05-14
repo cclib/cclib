@@ -763,8 +763,6 @@ def testGaussian_Gaussian98_NIST_CCCBDB_1himidaz_m23b6_out(logfile):
     assert hasattr(logfile.data, 'metadata')
     assert hasattr(logfile.data, 'mult')
 
-    assert logfile.data.metadata["cputime"] == 15374.4
-    assert logfile.data.metadata["elapsedtime"] == 0
     assert logfile.data.metadata["package_version"] == "1998+A.7"
 
 
@@ -772,6 +770,8 @@ def testGaussian_Gaussian98_test_Cu2_log(logfile):
     """An example of the number of basis set function changing."""
     assert logfile.data.nbasis == 38
 
+    assert logfile.data.metadata["cputime"] == 25.8
+    assert logfile.data.metadata["elapsedtime"] == 0
     assert logfile.data.metadata["legacy_package_version"] == "98revisionA.11.4"
     assert logfile.data.metadata["package_version"] == "1998+A.11.4"
     assert isinstance(
