@@ -55,6 +55,8 @@ class ccData:
         grads -- current values of forces (gradients) in geometry optimization (array[3])
         hessian -- elements of the force constant matrix (array[1])
         homos -- molecular orbital indices of HOMO(s) (array[1])
+        ircstatus -- IRC status for each set of atomic coordinate (array[1])
+        ircvalues -- raw data for each step of an IRC calculation (dict of string to int/float/list of string)
         metadata -- various metadata about the package and computation (dict)
         mocoeffs -- molecular orbital coefficients (list of arrays[2])
         moenergies -- molecular orbital energies (list of arrays[1], eV)
@@ -143,6 +145,8 @@ class ccData:
         "grads": Attribute(numpy.ndarray, "TBD", "N/A"),
         "hessian": Attribute(numpy.ndarray, "hessian matrix", "vibrations"),
         "homos": Attribute(numpy.ndarray, "homos", "properties:orbitals"),
+        "ircstatus": Attribute(numpy.ndarray, "status", "optimization:irc"),
+        "ircvalues": Attribute(dict, "raw data", "optimization:irc"),
         "metadata": Attribute(dict, "TBD", "N/A"),
         "mocoeffs": Attribute(list, "coeffs", "properties:orbitals"),
         "moenergies": Attribute(list, "energies", "properties:orbitals"),
@@ -189,7 +193,7 @@ class ccData:
     _attrlist = sorted(_attributes.keys())
 
     # Arrays are double precision by default, but these will be integer arrays.
-    _intarrays = ["atomnos", "coreelectrons", "homos", "optstatus"]
+    _intarrays = ["atomnos", "coreelectrons", "homos", "ircstatus", "optstatus"]
 
     # Attributes that should be lists of arrays (double precision).
     _listsofarrays = ["mocoeffs", "moenergies", "moments", "polarizabilities", "scfvalues"]

@@ -13,6 +13,7 @@ import math
 import re
 
 from cclib.parser import logfileparser, utils
+from cclib.parser.data import ccData
 
 import numpy
 from packaging.version import Version
@@ -124,6 +125,10 @@ class QChem(logfileparser.Logfile):
             "QCISD",
             "QCISD(T)",
         ]
+
+        # For an IRC/reaction path calculation, positive/negative one for
+        # following the positive/negative direction of the lowest eigenmode
+        self.rpath_direction = None
 
     def after_parsing(self):
         super(QChem, self).after_parsing()
@@ -248,6 +253,16 @@ cannot be determined. Rerun without `$molecule read`."""
                 user_charge = self.user_input["molecule"].get("charge")
                 if user_charge is not None:
                     self.set_attribute("charge", user_charge)
+
+        # Some versions of Q-Chem have a bug where the initial (TS) structure
+        # is printed as the final geometry in an rpath job. Trim it out. None
+        # of the other things calculated on each step of an rpath job
+        # (energies, grads, atomcharges...each step is a force calculation)
+        # have this problem.
+        if hasattr(self, "ircstatus") and hasattr(self, "atomcoords"):
+            if len(self.atomcoords) == len(self.ircstatus) + 1:
+                # TODO this is wrong when a job follows the rpath job.
+                self.atomcoords = self.atomcoords[:-1]
 
     def parse_charge_section(self, inputfile, chargetype):
         """Parse the population analysis charge block."""
@@ -1591,6 +1606,77 @@ cannot be determined. Rerun without `$molecule read`."""
                     ncolsblock = 5
                 grad = QChem.parse_matrix(inputfile, 3, self.natom, ncolsblock)
                 self.grads.append(grad.T)
+
+            if "Starting direction for rxn path" in line:
+                self.rpath_direction = int(line.split()[-1])
+                # This appears before any other IRC/reaction path output. If
+                # geometries appeared before this job, we assume they have
+                # nothing to do with the IRC and ignore them, except for the
+                # immediately preceding geometry, which is the starting step.
+                #
+                # We also handle the case that an IRC job has been performed
+                # previously, but there were some coordinates present between
+                # its final step and whatever we are about to do.
+                if not hasattr(self, "ircstatus"):
+                    self.ircstatus = [ccData.OPT_UNKNOWN for _ in range(len(self.atomcoords) - 1)]
+                else:
+                    nmissing = len(self.atomcoords) - len(self.ircstatus)
+                    if nmissing > 0:
+                        self.ircstatus.extend([ccData.OPT_UNKNOWN for _ in range(nmissing - 1)])
+                self.ircstatus.append(ccData.OPT_NEW + ccData.OPT_DONE)
+
+            if "Reaction path following" in line:
+                # When this section appears, the immediately preceding
+                # energy/geometry corresponds to the converged step along the
+                # reaction path, and the other steps are corrector/predictor
+                # steps.
+                tokens = next(inputfile).split()
+                assert len(tokens) == 10
+                assert self.rpath_direction is not None
+                coord_idx = len(self.atomcoords) - 1
+                ircvalues_step = {
+                    "direction": self.rpath_direction,
+                    "coord_idx": coord_idx,
+                    "step_energy": utils.convertor(float(tokens[3]), "hartree", "eV"),
+                    "gradient_norm": float(tokens[5]),
+                    "s_lin": float(tokens[7]),
+                    "s_tot": float(tokens[9]),
+                }
+                if not hasattr(self, "ircvalues"):
+                    self.ircvalues = dict()
+                if coord_idx in self.ircvalues:
+                    assert self.ircvalues[coord_idx]["status"] == 4
+                else:
+                    self.ircvalues[coord_idx] = dict()
+                self.ircvalues[coord_idx].update(ircvalues_step)
+
+            if "IRC --- Status" in line:
+                # Again, this corresponds to the previous energy/geometry.
+                tokens = line.split()
+                coord_idx = len(self.atomcoords) - 1
+                status = int(tokens[4][:-1])
+                status_lines = list()
+                while line.strip().startswith("IRC --"):
+                    status_lines.append(line)
+                    line = next(inputfile)
+                assert coord_idx not in self.ircvalues
+                if status == 4:
+                    if "Bisector search finished successfully." in status_lines[1]:
+                        ircstatus = ccData.OPT_DONE
+                    else:
+                        ircstatus = ccData.OPT_UNCONVERGED
+                # For now, status == 1, which corresponds to taking the
+                # steepest descent step after accepting an IRC step into the
+                # path, is not printed explicitly in the output.
+                else:
+                    assert status in (2, 3)
+                    ircstatus = ccData.OPT_UNCONVERGED
+                self.ircvalues[coord_idx] = {
+                    "direction": self.rpath_direction,
+                    "status": status,
+                    "status_lines": status_lines,
+                }
+                self.ircstatus.append(ircstatus)
 
             # (Static) polarizability from frequency calculations.
             if "Polarizability Matrix (a.u.)" in line:
