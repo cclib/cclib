@@ -254,15 +254,13 @@ cannot be determined. Rerun without `$molecule read`."""
                 if user_charge is not None:
                     self.set_attribute("charge", user_charge)
 
-        # Some versions of Q-Chem have a bug where the initial (TS) structure
-        # is printed as the final geometry in an rpath job. Trim it out. None
-        # of the other things calculated on each step of an rpath job
-        # (energies, grads, atomcharges...each step is a force calculation)
-        # have this problem.
+        # If a multi-step calculation was performed, and one of the steps was
+        # an IRC calculation, make sure that the IRC status is padded to the
+        # full number of available atomic positions.
         if hasattr(self, "ircstatus") and hasattr(self, "atomcoords"):
-            if len(self.atomcoords) == len(self.ircstatus) + 1:
-                # TODO this is wrong when a job follows the rpath job.
-                self.atomcoords = self.atomcoords[:-1]
+            nmissing = len(self.atomcoords) - len(self.ircstatus)
+            if nmissing > 0:
+                self.ircstatus.extend([ccData.OPT_UNKNOWN for _ in range(nmissing)])
 
     def parse_charge_section(self, inputfile, chargetype):
         """Parse the population analysis charge block."""
@@ -1677,6 +1675,17 @@ cannot be determined. Rerun without `$molecule read`."""
                     "status_lines": status_lines,
                 }
                 self.ircstatus.append(ircstatus)
+
+            if line.strip() == "Here is where we should summarize the reaction path":
+                # Some versions of Q-Chem have a bug where the initial (TS)
+                # structure is printed as the final geometry in an rpath
+                # job. Trim it out. None of the other things calculated on
+                # each step of an rpath job (energies, grads,
+                # atomcharges...each step is a force calculation) have this
+                # problem.
+                if hasattr(self, "atomcoords"):
+                    assert hasattr(self, "ircstatus")
+                    self.atomcoords = self.atomcoords[:-1]
 
             # (Static) polarizability from frequency calculations.
             if "Polarizability Matrix (a.u.)" in line:

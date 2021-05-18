@@ -2788,6 +2788,7 @@ def testQChem_QChem5_3_ts_30_irc_out(logfile):
             raise RuntimeError(f"Don't know how to handle direction {direction}")
     positive_path_energies = logfile.data.scfenergies[positive_path]
     negative_path_energies = logfile.data.scfenergies[negative_path]
+    crit = {"rtol": 0.0, "atol": 1.0e-6}
     numpy.testing.assert_allclose(
         convertor(positive_path_energies, "eV", "hartree"),
         [
@@ -2833,8 +2834,7 @@ def testQChem_QChem5_3_ts_30_irc_out(logfile):
             -230.178506,
             -230.178570,
         ],
-        rtol=0.0,
-        atol=1.0e-6,
+        **crit,
     )
     numpy.testing.assert_allclose(
         convertor(negative_path_energies, "eV", "hartree"),
@@ -2876,9 +2876,130 @@ def testQChem_QChem5_3_ts_30_irc_out(logfile):
             -230.204063,
             -230.204085,
         ],
-        rtol=0.0,
-        atol=1.0e-6,
+        **crit,
     )
+    npoints = 249
+    assert len(logfile.data.ircstatus) == npoints
+    assert len(logfile.data.atomcoords) == npoints
+    numpy.testing.assert_allclose(
+        logfile.data.atomcoords[positive_path[0]], logfile.data.atomcoords[negative_path[0]]
+    )
+
+
+def testQChem_QChem5_3_ts_30_out(logfile):
+    converged_indices = [x for x, y in enumerate(logfile.data.ircstatus) if y & ccData.OPT_DONE > 0]
+    directions = [logfile.data.ircvalues[idx]["direction"] for idx in converged_indices]
+    positive_path = list()
+    negative_path = list()
+    for idx, direction in zip(converged_indices, directions):
+        if direction == 1:
+            positive_path.append(idx)
+        elif direction == -1:
+            negative_path.append(idx)
+        else:
+            raise RuntimeError(f"Don't know how to handle direction {direction}")
+    positive_path_energies = logfile.data.scfenergies[positive_path]
+    negative_path_energies = logfile.data.scfenergies[negative_path]
+    crit = {"rtol": 0.0, "atol": 1.0e-6}
+    numpy.testing.assert_allclose(
+        convertor(positive_path_energies, "eV", "hartree"),
+        [
+            -230.065574,
+            -230.067389,
+            -230.071981,
+            -230.078084,
+            -230.084868,
+            -230.091832,
+            -230.098719,
+            -230.105265,
+            -230.111327,
+            -230.116804,
+            -230.122062,
+            -230.126894,
+            -230.131559,
+            -230.135913,
+            -230.139997,
+            -230.143937,
+            -230.147647,
+            -230.151021,
+            -230.154079,
+            -230.156034,
+            -230.158838,
+            -230.160353,
+            -230.162792,
+            -230.163790,
+            -230.165992,
+            -230.166727,
+            -230.168665,
+            -230.169146,
+            -230.170909,
+            -230.171270,
+            -230.172782,
+            -230.173014,
+            -230.174401,
+            -230.174587,
+            -230.175773,
+            -230.175932,
+            -230.176838,
+            -230.176913,
+            -230.177824,
+            -230.178506,
+            -230.178570,
+        ],
+        **crit,
+    )
+    numpy.testing.assert_allclose(
+        convertor(negative_path_energies, "eV", "hartree"),
+        [
+            -230.065574,
+            -230.067677,
+            -230.073962,
+            -230.083529,
+            -230.094905,
+            -230.106791,
+            -230.118395,
+            -230.129357,
+            -230.139524,
+            -230.148806,
+            -230.157156,
+            -230.164544,
+            -230.170976,
+            -230.176358,
+            -230.180421,
+            -230.181922,
+            -230.185373,
+            -230.186331,
+            -230.189264,
+            -230.189909,
+            -230.192449,
+            -230.192901,
+            -230.195120,
+            -230.195441,
+            -230.197384,
+            -230.197609,
+            -230.199299,
+            -230.199453,
+            -230.200905,
+            -230.201009,
+            -230.202220,
+            -230.202287,
+            -230.203273,
+            -230.203315,
+            -230.204063,
+            -230.204085,
+        ],
+        **crit,
+    )
+    npoints = 275
+    assert len(logfile.data.ircstatus) == npoints
+    assert len(logfile.data.atomcoords) == npoints
+    numpy.testing.assert_allclose(
+        logfile.data.atomcoords[positive_path[0]], logfile.data.atomcoords[negative_path[0]]
+    )
+    # This is the structure for the analytic frequency calculation preceding
+    # the IRC calculation.
+    assert positive_path[0] == 24
+    numpy.testing.assert_allclose(logfile.data.atomcoords[23], logfile.data.atomcoords[24])
 
 
 # Turbomole
