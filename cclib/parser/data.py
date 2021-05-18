@@ -36,7 +36,7 @@ class ccData:
         coreelectrons -- number of core electrons in atom pseudopotentials (array[1])
         dispersionenergies -- a molecular dispersion energy corrections (array[1], eV)
         enthalpy -- sum of electronic and thermal enthalpies (float, hartree/particle)
-        entropy -- entropy (float, hartree/particle)
+        entropy -- entropy (float, hartree/(particle*kelvin))
         etenergies -- energies of electronic transitions (array[1], 1/cm)
         etoscs -- oscillator strengths of electronic transitions (array[1])
         etdips -- electric transition dipoles of electronic transitions (array[2], ebohr)
