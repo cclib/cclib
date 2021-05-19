@@ -122,12 +122,18 @@ class Turbomole(logfileparser.Logfile):
         # The DFT functional.
         # This information is printed by dscf but not in an easily parsable format, so we'll take it from the control file instead...
         # Additionally, turbomole stores functional names in lower case. This looks odd, so we'll convert to uppercase (?)
+        # We are parsing this section from the control file.
         if line[3:13] == "functional":
             # $dft
             #    functional b-p
             self.metadata['functional'] = line.split()[1].upper()
             self.DFT = True
         
+        # Information about DFT is also printed by dscf in the main .log file.
+        # We don't parse this at the moment, but it is still important to know
+        # if we are using DFT for parsing later on (to distinguish between DFT
+        # Vs HF etc). If we don't have the control file available, we will 
+        # need this check:
         if "density functional" in line:
             self.DFT = True
         
