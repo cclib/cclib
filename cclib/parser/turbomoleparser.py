@@ -108,7 +108,6 @@ class Turbomole(logfileparser.Logfile):
         if line[3:11] == "nbf(AO)=":
             nmo = int(line.split('=')[1])
             self.set_attribute('nbasis', nmo)
-            #self.set_attribute('nmo', nmo)
         
         # Extract the version number and optionally the build number.
         searchstr = ": TURBOMOLE"
