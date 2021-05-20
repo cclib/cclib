@@ -10,34 +10,60 @@ import unittest
 import numpy as np
 
 from cclib.bridge import cclib2pyscf
-from cclib.parser.utils import find_package
+from cclib.parser.utils import find_package, convertor
+
+from test.test_data import getdatafile
 
 
 class PyscfTest(unittest.TestCase):
-    """Tests for the cclib2pyscf bridge in cclib."""
 
     def setUp(self):
-        super(PyscfTest, self).setUp()        
-        if not find_package('pyscf'):
-            raise ImportError('Must install pyscf to run this test')
+        super(PyscfTest, self).setUp()
+        if not find_package("pyscf"):
+            raise ImportError("Must install pyscf to run this test")
+        self.data, self.logfile = getdatafile(
+            "GAMESS", "basicGAMESS-US2018", ["dvb_sp.out"]
+        )
+        self.udata, self.ulogfile = getdatafile(
+            "GAMESS", "basicGAMESS-US2018", ["dvb_un_sp.out"]
+        )
 
     def test_makepyscf(self):
         import pyscf
-        from pyscf import scf
+        from pyscf import dft
 
-        atomnos = np.array([1, 8, 1], "i")
-        atomcoords = np.array([[-1, 1, 0], [0, 0, 0], [1, 1, 0]], "f")
-        pyscfmol = cclib2pyscf.makepyscf(atomcoords, atomnos)
-        pyscfmol.basis = "6-31G**"
+        refen = convertor(self.data.scfenergies[-1],"eV","hartree")  # value in eVs
+        pyscfmol = cclib2pyscf.makepyscf(self.data)
         pyscfmol.cart = True
         pyscfmol.verbose = 0
         pyscfmol.build()
 
-        mhf = pyscfmol.HF(conv_tol=1e-6)
+        mhf = dft.RKS(pyscfmol)
+        mhf.xc = 'b3lyp'
         en = mhf.kernel()
-        ref = -75.824754602
-        assert abs(en - ref) < 1.0e-6
+        assert abs(en - refen) < 1.0e-4
+        # check that default basis is returned if basis is not present.
+        del self.data.gbasis
+        pyscfmol2 = cclib2pyscf.makepyscf(self.data)
+        assert pyscfmol2.basis == "sto-3g"
 
+    def test_makepyscf_mos(self):
+        pyscfmol = cclib2pyscf.makepyscf(self.data)
+        mo_coeff, mo_occ, mo_syms, mo_energies = cclib2pyscf.makepyscf_mos(self.data,pyscfmol)
+        assert np.allclose(mo_energies,convertor(np.array(self.data.moenergies),"eV","hartree"))
+        # check first MO coefficient
+        assert np.allclose(mo_coeff[0][0], self.data.mocoeffs[0][0][0])
+        # check a random middle MO coefficient
+        assert np.allclose(mo_coeff[0][10],self.data.mocoeffs[0][10][0])
+        # test unrestricted code.
+        pyscfmol = cclib2pyscf.makepyscf(self.udata)
+        mo_coeff, mo_occ, mo_syms, mo_energies = cclib2pyscf.makepyscf_mos(self.udata,pyscfmol)
+        assert np.allclose(mo_energies,convertor(np.array(self.udata.moenergies),"eV","hartree"))
+        # check first MO coefficient
+        assert np.allclose(mo_coeff[0][0][0], self.udata.mocoeffs[0][0][0])
+        # check a random middle MO coefficient
+        assert np.allclose(mo_coeff[0][0][10],self.udata.mocoeffs[0][10][0])
 
 if __name__ == "__main__":
     unittest.main()
+    PyscfTest.test_makepyscf_from_mos()

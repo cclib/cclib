@@ -69,7 +69,7 @@ class QChem(logfileparser.Logfile):
         # D(   35) --> V(    3) amplitude =  0.0644
         # S(  1) --> V(  1) amplitude = -0.1628 alpha
         # D(189) --> S(  1) amplitude = -0.0120 beta
-        self.re_tddft = re.compile(r'[SD]\( *(\d+)\) --> [VS]\( *(\d+)\) amplitude = *([^ ]*)( (alpha|beta))?')
+        self.re_tddft = re.compile(r'([SD])\( *(\d+)\) --> ([VS])\( *(\d+)\) amplitude = *([^ ]*)( (alpha|beta))?')
 
         # A maximum of 6 columns per block when printing matrices. The
         # Fock matrix is 4.
@@ -1060,7 +1060,7 @@ cannot be determined. Rerun without `$molecule read`."""
                         while line.strip() != '':
                             re_match = self.re_tddft.search(line)
                             if self.unrestricted:
-                                spin = spinmap[re_match.group(5)]
+                                spin = spinmap[re_match.group(7)]
                             else:
                                 spin = 0
 
@@ -1075,9 +1075,52 @@ cannot be determined. Rerun without `$molecule read`."""
                             else:
                                 assert line[5] == ":"
                                 ttype = line[4]
-                            startidx = int(re_match.group(1)) - 1
-                            endidx = int(re_match.group(2)) - 1 + self.nalpha
-                            contrib = float(re_match.group(3))
+
+                            # get start and end indices of contribution
+                            # as the numbers written in parentheses:
+                            index_pattern = re.compile(r"\(( *\d+)\)")
+                            indices=index_pattern.findall(line)
+                            #assert len(indices)==2 # there must always be a 'start' and 'end' index.
+
+                            if self.unrestricted:
+                                # Here are three different countings: 
+                                # The 'D'oubly occupied orbitals,
+                                # the 'S'ingly occupied (i.e. index > self.nbeta) and
+                                # the 'V'irtual orbitals (index > self.nalpha)
+                                # from or to which the excitation can go:
+
+                                # this is supposed to be the standard case:
+                                n_minor=self.nbeta
+                                n_major=self.nalpha
+                                # but this also can appear 
+                                if self.nbeta > self.nalpha:
+                                   n_minor=self.nalpha
+                                   n_major=self.nbeta
+
+                                # split 'line' by '(' to get three strings due to double occurence of '('.
+                                # From the first and second string (i.e. before the parentheses), take the last character.
+                                if re_match.group(1) == "D":
+                                    startidx = int(indices[0]) - 1
+                                elif re_match.group(1) == "S":
+                                    startidx = int(indices[0]) - 1 + n_minor
+                                    assert startidx < n_major
+                                else:
+                                    startidx=-15
+                                    assert "invalid from_occ"
+
+                                if re_match.group(3) == "S":
+                                    endidx = int(indices[1]) - 1 + n_minor
+                                    assert endidx < n_major
+                                elif re_match.group(3) == "V":
+                                    endidx = int(indices[1]) - 1 + n_major
+                                else:
+                                    assert "invalid to_occ"
+
+                            else:
+                                startidx = int(re_match.group(2)) - 1
+                                endidx = int(re_match.group(4)) - 1 + self.nalpha
+
+                            contrib = float(re_match.group(5))
 
                             start = (startidx, spin)
                             end = (endidx, spin)
@@ -1557,8 +1600,8 @@ cannot be determined. Rerun without `$molecule read`."""
                     assert 'Zero point vibrational energy' in line
                     if not hasattr(self, 'zpe'):
                         # Convert from kcal/mol to Hartree/particle.
-                        self.zpe = utils.convertor(float(line.split()[4]),
-                                                   'kcal/mol', 'hartree')
+                        self.zpve = utils.convertor(float(line.split()[4]),
+                                                    'kcal/mol', 'hartree')
                     atommasses = []
                     while 'Translational Enthalpy' not in line:
                         if 'Has Mass' in line:
@@ -1580,12 +1623,12 @@ cannot be determined. Rerun without `$molecule read`."""
                 line = next(inputfile)
                 assert 'Total Entropy' in line
                 if not hasattr(self, 'entropy'):
-                    entropy = float(line.split()[2]) * self.temperature / 1000
+                    entropy = float(line.split()[2]) / 1000
                     # This is the *temperature dependent* entropy.
                     self.entropy = utils.convertor(entropy,
                                                    'kcal/mol', 'hartree')
                 if not hasattr(self, 'freeenergy'):
-                    self.freeenergy = self.enthalpy - self.entropy
+                    self.freeenergy = self.enthalpy - self.entropy * self.temperature
 
         if line[:16] == ' Total job time:':
             self.metadata['success'] = True
@@ -1605,9 +1648,6 @@ cannot be determined. Rerun without `$molecule read`."""
                 pass
 
         # TODO:
-        # 'enthalpy' (incorrect)
-        # 'entropy' (incorrect)
-        # 'freeenergy' (incorrect)
         # 'nocoeffs'
         # 'nooccnos'
         # 'vibanharms'

@@ -121,8 +121,6 @@ class Turbomole(logfileparser.Logfile):
         # Additionally, turbomole stores functional names in lower case. This looks odd, so we'll convert to uppercase (?)
         # We are parsing this section from the control file.
         if line[3:13] == "functional":
-            # $dft
-            #    functional b-p
             self.metadata['functional'] = line.split()[1].upper()
             self.DFT = True
         
@@ -267,6 +265,9 @@ class Turbomole(logfileparser.Logfile):
                     assert line.startswith('reduced mass(g/mol)')
                     rmasses = [utils.float(f) for f in line.split()[2:]]
                     vibrmasses.extend(rmasses)
+
+                if "zero point VIBRATIONAL energy" in line:
+                    self.set_attribute("zpve", float(line.split()[6]))
 
                 line = next(inputfile)
 
