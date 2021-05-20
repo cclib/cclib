@@ -51,6 +51,9 @@ class Turbomole(logfileparser.Logfile):
         
         # Flag for whether this calc is DFT.
         self.DFT = False
+        
+        # A Regex that we use to extract version info.
+        self.version_regex = re.compile(r"TURBOMOLE(?: rev\.)? V([\d]+)[.-]([\d]+)(?:[.-]([\d]))?(?: \( ?([0-9A-z]+) ?\))?")
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -132,40 +135,25 @@ class Turbomole(logfileparser.Logfile):
             self.DFT = True
         
         # Extract the version number and optionally the build number.
-        searchstr = ": TURBOMOLE"
-        index = line.find(searchstr)
-        if index > -1:
-            line = line[index + len(searchstr):]
-            tokens = line.split()
+        version_match = self.version_regex.search(line)
+        if version_match:            
+            # We only combine the parts of the version string we actually got.
+            # Our regex ensures we have at least the first two parts (x.y), and optionally a third part (x.y.z).
             # This line could look like any of the following:
             # - TURBOMOLE rev. V7.4.1 (2bfdd732)
             # - TURBOMOLE V7.2 ( 21471 ) 11 Oct 2017 at 17:04:51
             # - TURBOMOLE V5-9-0 29 Nov 2006 at 22:06:41
+            version = ".".join([version_part for version_part in version_match.group(1,2,3) if version_part is not None])
             
-            # Determine where the version string is.
-            if tokens[0] == "rev.":
-                version_index = 1
-            else:
-                version_index = 0
-
-            package_version = tokens[version_index][1:].replace("-", ".")
-            self.metadata["package_version"] = package_version
-            self.metadata["legacy_package_version"] = package_version
-            
-            # The revision may or may not contain whitespace inside the brackets.
-            if "(" == tokens[version_index +1][0] and ")" == tokens[version_index +1][-1]:
-                revision = tokens[version_index +1][1:-1]
-                self.metadata["package_version"] = "{}.r{}".format(package_version, revision)
-                
-            elif tokens[version_index +1] == "(":
-                revision = tokens[version_index +2]
-                self.metadata["package_version"] = "{}.r{}".format(package_version, revision)
+            # We may also have a build ID.
+            build_id = version_match.group(4)
+                            
+            self.metadata["legacy_package_version"] = version
+            self.metadata["package_version"] = "{}.r{}".format(version, build_id) if build_id is not None else version
                 
             # We have entered a new module (sub program); reset our success flag.
             self.metadata['success'] = False
-            
-            
-            
+
 
         ## Atomic coordinates in job.last:
         #              +--------------------------------------------------+
