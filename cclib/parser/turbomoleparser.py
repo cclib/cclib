@@ -109,7 +109,7 @@ class Turbomole(logfileparser.Logfile):
             nmo = int(line.split('=')[1])
             self.set_attribute('nbasis', nmo)
             self.set_attribute('nmo', nmo)
-        
+
         # Extract the version number and optionally the build number.
         searchstr = ": TURBOMOLE"
         index = line.find(searchstr)
@@ -149,7 +149,7 @@ class Turbomole(logfileparser.Logfile):
             if len(set(basis_sets)) == 1:
                 self.metadata["basis_set"] = list(set(basis_sets))[0]
 
-
+#while "---------------------------------------------------------------------------" not in line:
 
         ## Atomic coordinates in job.last:
         #              +--------------------------------------------------+
