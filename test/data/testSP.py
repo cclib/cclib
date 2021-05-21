@@ -450,7 +450,7 @@ class TurbomoleSPTest(GenericSPTest):
     def testmetadata_basis_set(self):
         """Does metadata have expected keys and values?"""
         # One of our test cases used sto-3g hondo
-        valid_basis = self.data.metadata["basis_set"].lower() == "sto-3g" or self.data.metadata["basis_set"].lower() == "sto-3g hondo"
+        valid_basis = self.data.metadata["basis_set"].lower() in ("sto-3g", "sto-3g hondo")
         self.assertTrue(valid_basis)
 
 
