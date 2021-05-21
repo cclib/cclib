@@ -689,13 +689,19 @@ class GAMESS(logfileparser.Logfile):
                 except ValueError:
                     pass
                 else:
-                    values.append([float(line.split()[self.scf_valcol])])
+                    # if there were 100 iterations or more, the first part of the line
+                    # will look like 10099, 101100, 102101, etc., with no spaces between
+                    # the numbers. We can check if this is the case by seeing if the first
+                    # number on the line exceeds 10000.
+                    split_line = [line[0:4], line[4:7]] + line[7:].split()
+                    values.append([float(split_line[self.scf_valcol])])
                 try:
                     line = next(inputfile)
                 except StopIteration:
                     self.logger.warning('File terminated before end of last SCF!')
                     break
             self.scfvalues.append(values)
+
 
         # Sometimes, only the first SCF cycle has the banner parsed for above,
         # so we must identify them from the header before the SCF iterations.
@@ -1526,10 +1532,32 @@ class GAMESS(logfileparser.Logfile):
             match = re.search(r"THERMOCHEMISTRY AT T=(.*)K", line)
             if match:
                 self.set_attribute('temperature', float(match.group(1)))
-        if "PASCAL." in line:
+            self.skip_lines(inputfile, ['d', 'b', 'USING IDEAL GAS, ...'])
+            line = next(inputfile)
+            assert "PASCAL." in line
             match = re.search(r"P=(.*)PASCAL.", line)
             if match:
                 self.set_attribute('pressure', float(match.group(1))/1.01325e5)
+            self.skip_lines(
+                inputfile,
+                [
+                    "ALL FREQUENCIES ARE SCALED",
+                    "THE MOMENTS OF INERTIA ARE (IN AMU*BOHR**2)",
+                    "moments of inertia",
+                    "THE ROTATIONAL SYMMETRY NUMBER IS",
+                    "THE ROTATIONAL CONSTANTS ARE (IN GHZ)",
+                    "rotational constants",
+                ]
+            )
+            line = next(inputfile)
+            if "IMAGINARY FREQUENCY VIBRATION(S)" in line:
+                line = next(inputfile)
+                line = next(inputfile)
+            if "VIBRATIONAL MODES ARE USED IN THERMOCHEMISTRY." in line:
+                line = next(inputfile)
+            line = next(inputfile)
+            assert "HARTREE/MOLECULE" in line
+            self.set_attribute('zpve', float(line.split()[0]))
 
         if "KCAL/MOL  KCAL/MOL  KCAL/MOL CAL/MOL-K CAL/MOL-K CAL/MOL-K" in line:
             self.skip_lines(inputfile,["ELEC","TRANS","ROT","VIB"])

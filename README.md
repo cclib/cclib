@@ -1,6 +1,6 @@
 ### cclib
 
-[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.1407790.svg)](https://dx.doi.org/10.5281/zenodo.1407790)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4420433.svg)](https://doi.org/10.5281/zenodo.4420433)
 [![PyPI version](http://img.shields.io/pypi/v/cclib.svg?style=flat)](https://pypi.python.org/pypi/cclib)
 [![GitHub release](https://img.shields.io/github/release/cclib/cclib.svg?style=flat)](https://github.com/cclib/cclib/releases)
 [![build status](http://img.shields.io/travis/cclib/cclib/master.svg?style=flat)](https://travis-ci.org/cclib/cclib)

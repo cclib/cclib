@@ -645,6 +645,18 @@ def testGAMESS_GAMESS_US2018_exam45_log(logfile):
         parse_version(logfile.data.metadata["package_version"]), Version
     )
 
+def testGAMESS_GAMESS_US2018_exam46_log(logfile):
+    """
+    This logfile has >100 scf iterations, which used to cause
+    a parsing error.
+    """
+    assert len(logfile.data.scfvalues[0]) == 113
+    assert logfile.data.metadata["legacy_package_version"] == "2018R3"
+    assert logfile.data.metadata["package_version"] == "2018.r3"
+    assert isinstance(
+        parse_version(logfile.data.metadata["package_version"]), Version
+    )
+
 
 def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out(logfile):
     """Do some basic checks for this old unit test that was failing.
@@ -1734,6 +1746,11 @@ def testORCA_ORCA4_2_water_dlpno_ccsd_out(logfile):
         T1 diagnostic                              ...      0.004934608  
     """
     assert hasattr(logfile.data, 'ccenergies')
+
+
+def testORCA_ORCA4_2_longer_input_out(logfile):
+    """Longer ORCA input file (#1034)."""
+    assert logfile.data.metadata['input_file_contents'][-47:-4] == 'H   1.066878310   1.542378768  -0.602599044'
 
 
 # PSI 3 #
@@ -3010,12 +3027,19 @@ class OrcaTDDFTTest_error(OrcaTDDFTTest):
 
 class OrcaIRTest_old_coordsOK(OrcaIRTest):
 
+    zpve = 0.1986
+
     enthalpy_places = -1
     entropy_places = 2
     freeenergy_places = -1
 
 
 class OrcaIRTest_old(OrcaIRTest):
+    """The frequency part of this calculation didn't finish, but went ahead and
+    printed incomplete and incorrect results anyway.
+    """
+
+    zpve = 0.0200
 
     enthalpy_places = -1
     entropy_places = 2
@@ -3075,7 +3099,7 @@ old_unittests = {
     "ADF/ADF2004.01/dvb_sp_d.adfout":       ADFSPTest_nosyms_noscfvalues,
     "ADF/ADF2004.01/dvb_un_sp.adfout":      GenericSPunTest,
     "ADF/ADF2004.01/dvb_un_sp_c.adfout":    GenericSPunTest,
-    "ADF/ADF2004.01/dvb_ir.adfout":         GenericIRTest,
+    "ADF/ADF2004.01/dvb_ir.adfout":         ADFIRTest,
 
     "ADF/ADF2006.01/dvb_gopt.adfout":              ADFGeoOptTest_noscfvalues,
     "ADF/ADF2013.01/dvb_gopt_b_fullscf.adfout":    ADFGeoOptTest,
@@ -3257,7 +3281,7 @@ old_unittests = {
     "Psi4/Psi4-1.0/C_bigbasis.out":     Psi4BigBasisTest,
     "Psi4/Psi4-1.0/dvb_gopt_rhf.out":   Psi4GeoOptTest,
     "Psi4/Psi4-1.0/dvb_gopt_rks.out":   Psi4GeoOptTest,
-    "Psi4/Psi4-1.0/dvb_ir_rhf.out":     GenericIRTest,
+    "Psi4/Psi4-1.0/dvb_ir_rhf.out":     Psi4IRTest,
     "Psi4/Psi4-1.0/dvb_sp_rhf.out":     PsiSPTest_noatommasses,
     "Psi4/Psi4-1.0/dvb_sp_rks.out":     PsiSPTest_noatommasses,
     "Psi4/Psi4-1.0/dvb_sp_rohf.out":    GenericROSPTest,

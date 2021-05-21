@@ -150,7 +150,7 @@ class ORCA(logfileparser.Logfile):
             for line in inputfile:
                 if line[0] != '|':
                     break
-                lines.append(line[6:])
+                lines.append(line[line.find('> ')+2:])
 
             self.metadata['input_file_contents'] = ''.join(lines[:-1])
             lines_iter = iter(lines[:-1])
@@ -916,7 +916,7 @@ Dispersion correction           -0.016199959
             while line[:17] != 'Electronic energy':
                 line = next(inputfile)
             self.electronic_energy = float(line.split()[3])
-            self.zpe = float(next(inputfile).split()[4])
+            self.set_attribute("zpve", float(next(inputfile).split()[4]))
             thermal_vibrational_correction = float(next(inputfile).split()[4])
             thermal_rotional_correction = float(next(inputfile).split()[4])
             thermal_translational_correction = float(next(inputfile).split()[4])
@@ -947,7 +947,7 @@ Dispersion correction           -0.016199959
 
             # ORCA prints -inf for single atom entropy.
             if self.natom > 1:
-                self.entropy = float(next(inputfile).split()[4])
+                self.entropy = float(next(inputfile).split()[4]) / self.temperature
             else:
                 self.entropy = (electronic_entropy + translational_entropy) / self.temperature
 
