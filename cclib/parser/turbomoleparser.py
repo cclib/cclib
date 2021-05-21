@@ -141,7 +141,7 @@ class Turbomole(logfileparser.Logfile):
             line = next(inputfile)
             line = next(inputfile)
             basis_sets = []
-            while "---------------------------------------------------------------------------" not in line:
+            while set(line.strip()) != {"-"}:
                 basis_sets.append(" ".join(line.split()[4:-1]))
                 line = next(inputfile)
 
@@ -263,6 +263,9 @@ class Turbomole(logfileparser.Logfile):
                     assert line.startswith('reduced mass(g/mol)')
                     rmasses = [utils.float(f) for f in line.split()[2:]]
                     vibrmasses.extend(rmasses)
+
+                if "zero point VIBRATIONAL energy" in line:
+                    self.set_attribute("zpve", float(line.split()[6]))
 
                 line = next(inputfile)
 
