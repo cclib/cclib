@@ -168,9 +168,9 @@ class Turbomole(logfileparser.Logfile):
                 utils.convertor(float(parts[-1]), "bohr", "Angstrom")
             ]]
             
-        if "dipole moment" in line:
+        if line.strip() == "dipole moment":
             line = next(inputfile)
-            if " ------------------------------------------------------------------------------" in line:
+            if set(line.strip()) == {"-"}:
                 line = next(inputfile)
                 x_coord =  utils.convertor(float(line.split()[-1]), "ebohr", "Debye")
                 line = next(inputfile)
@@ -183,9 +183,9 @@ class Turbomole(logfileparser.Logfile):
                     self.moments = [[0,0,0]]
                 self.moments.append([x_coord, y_coord, z_coord])
                 
-        if "quadrupole moment" in line:
+        if line.strip() == "quadrupole moment":
             line = next(inputfile)
-            if " ------------------------------------------------------------------------------" in line:
+            if set(line.strip()) == {"-"}:
                 line = next(inputfile)
                 xx_coord  = utils.convertor(float(line.split()[-1]), "ebohr2", "Buckingham")
                 line = next(inputfile)
