@@ -163,9 +163,9 @@ class Turbomole(logfileparser.Logfile):
             # Safe to overwrite any old dipoles.
             parts = line.split()
             self.moments = [[
-                utils.convertor(float(parts[-3]), "ebohr", "Debye"),
-                utils.convertor(float(parts[-2]), "ebohr", "Debye"),
-                utils.convertor(float(parts[-1]), "ebohr", "Debye")
+                utils.convertor(float(parts[-3]), "bohr", "Angstrom"),
+                utils.convertor(float(parts[-2]), "bohr", "Angstrom"),
+                utils.convertor(float(parts[-1]), "bohr", "Angstrom")
             ]]
             
         if "dipole moment" in line:
