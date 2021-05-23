@@ -1532,10 +1532,32 @@ class GAMESS(logfileparser.Logfile):
             match = re.search(r"THERMOCHEMISTRY AT T=(.*)K", line)
             if match:
                 self.set_attribute('temperature', float(match.group(1)))
-        if "PASCAL." in line:
+            self.skip_lines(inputfile, ['d', 'b', 'USING IDEAL GAS, ...'])
+            line = next(inputfile)
+            assert "PASCAL." in line
             match = re.search(r"P=(.*)PASCAL.", line)
             if match:
                 self.set_attribute('pressure', float(match.group(1))/1.01325e5)
+            self.skip_lines(
+                inputfile,
+                [
+                    "ALL FREQUENCIES ARE SCALED",
+                    "THE MOMENTS OF INERTIA ARE (IN AMU*BOHR**2)",
+                    "moments of inertia",
+                    "THE ROTATIONAL SYMMETRY NUMBER IS",
+                    "THE ROTATIONAL CONSTANTS ARE (IN GHZ)",
+                    "rotational constants",
+                ]
+            )
+            line = next(inputfile)
+            if "IMAGINARY FREQUENCY VIBRATION(S)" in line:
+                line = next(inputfile)
+                line = next(inputfile)
+            if "VIBRATIONAL MODES ARE USED IN THERMOCHEMISTRY." in line:
+                line = next(inputfile)
+            line = next(inputfile)
+            assert "HARTREE/MOLECULE" in line
+            self.set_attribute('zpve', float(line.split()[0]))
 
         if "KCAL/MOL  KCAL/MOL  KCAL/MOL CAL/MOL-K CAL/MOL-K CAL/MOL-K" in line:
             self.skip_lines(inputfile,["ELEC","TRANS","ROT","VIB"])

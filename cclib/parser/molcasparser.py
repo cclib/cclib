@@ -470,6 +470,10 @@ class Molcas(logfileparser.Logfile):
         #  ++    Isotopic shifts:
         if line[4:19] == 'THERMOCHEMISTRY':
 
+            while "ZPVE" not in line:
+                line = next(inputfile)
+            self.set_attribute("zpve", float(line.split()[3]))
+
             temperature_values = []
             pressure_values = []
             entropy_values = []
@@ -486,7 +490,8 @@ class Molcas(logfileparser.Logfile):
                 if line[1:48] == 'Molecular Partition Function and Molar Entropy:':
                     while 'TOTAL' not in line:
                         line = next(inputfile)
-                    entropy_values.append(utils.convertor(float(line.split()[2]), 'kcal/mol', 'hartree'))
+                    # Molcas reports entropy values in kcal/mol*K but actually writes them in cal/mol*K
+                    entropy_values.append(utils.convertor(float(line.split()[2]), 'kcal/mol', 'hartree') / 1000)
 
                 if line[1:40] == 'Sum of energy and thermal contributions':
                     internal_energy_values.append(float(next(inputfile).split()[2]))

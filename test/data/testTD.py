@@ -43,6 +43,7 @@ class GenericTDTest(unittest.TestCase):
         self.assertEqual(len(self.data.etoscs), self.number)
         self.assertAlmostEqual(max(self.data.etoscs), 0.67, delta=0.1)
 
+    @skipForParser('FChk','The parser is still being developed so we skip this test')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testsecs(self):
@@ -52,6 +53,7 @@ class GenericTDTest(unittest.TestCase):
         sumofsec = sum([z*z for (x, y, z) in lowestEtrans])
         self.assertAlmostEqual(sumofsec, 1.0, delta=0.16)
 
+    @skipForParser('FChk', 'This is true for calculations without symmetry, but not with?')
     @skipForParser('DALTON', 'This is true for calculations without symmetry, but not with?')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
@@ -70,6 +72,7 @@ class GenericTDTest(unittest.TestCase):
 
     @skipForParser('ADF', 'etrotats are not yet implemented')
     @skipForParser('DALTON', 'etrotats are not yet implemented')
+    @skipForParser('FChk', 'etrotats are not yet implemented')
     @skipForParser('GAMESS', 'etrotats are not yet implemented')
     @skipForParser('GAMESSUK', 'etrotats are not yet implemented')
     @skipForParser('Jaguar', 'etrotats are not yet implemented')

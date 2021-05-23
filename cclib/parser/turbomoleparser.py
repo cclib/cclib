@@ -313,6 +313,9 @@ class Turbomole(logfileparser.Logfile):
                     rmasses = [utils.float(f) for f in line.split()[2:]]
                     vibrmasses.extend(rmasses)
 
+                if "zero point VIBRATIONAL energy" in line:
+                    self.set_attribute("zpve", float(line.split()[6]))
+
                 line = next(inputfile)
 
             self.set_attribute('vibfreqs', vibfreqs)
