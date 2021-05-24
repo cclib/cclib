@@ -50,7 +50,7 @@ class Turbomole(logfileparser.Logfile):
         super(Turbomole, self).__init__(logname="Turbomole", *args, **kwargs)
         
         # Flag for whether this calc is DFT.
-        self.DFT = False
+        self.is_DFT = False
         
         # A Regex that we use to extract version info.
         self.version_regex = re.compile(r"TURBOMOLE(?: rev\.)? V([\d]+)[.-]([\d]+)(?:[.-]([\d]))?(?: \( ?([0-9A-z]+) ?\))?")
@@ -122,7 +122,7 @@ class Turbomole(logfileparser.Logfile):
         # We are parsing this section from the control file.
         if line[3:13] == "functional":
             self.metadata['functional'] = line.split()[1].upper()
-            self.DFT = True
+            self.is_DFT = True
         
         # Information about DFT is also printed by dscf in the main .log file.
         # We don't parse this at the moment, but it is still important to know
@@ -130,7 +130,7 @@ class Turbomole(logfileparser.Logfile):
         # Vs HF etc). If we don't have the control file available, we will 
         # need this check:
         if "density functional" in line:
-            self.DFT = True
+            self.is_DFT = True
         
         # Extract the version number and optionally the build number.
         version_match = self.version_regex.search(line)
@@ -387,7 +387,7 @@ class Turbomole(logfileparser.Logfile):
             self.append_attribute('scfenergies', scfenergy)
             
             # We need to determine whether this is a HF or DFT energy for metadata.
-            if self.DFT:
+            if self.is_DFT:
                 self.metadata['methods'].append("DFT")
             else:
                 self.metadata['methods'].append("HF")
@@ -956,5 +956,4 @@ class OldTurbomole(logfileparser.Logfile):
                     del self.vibsyms[i]
                     i -= 1
                 i += 1
-
 
