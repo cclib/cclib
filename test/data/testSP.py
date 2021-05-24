@@ -241,7 +241,6 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('Gaussian', 'Logfile needs to be updated')
     @skipForParser('Jaguar', 'No dipole moments in the logfile')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testmoments(self):
         """Does the dipole and possible higher molecular moments look reasonable?"""
 
