@@ -123,6 +123,34 @@ class Turbomole(logfileparser.Logfile):
                 revision = tokens[2]
                 self.metadata["package_version"] = "{}.r{}".format(package_version, revision)
 
+
+        ## Basis set info from dscf.
+        #               +--------------------------------------------------+
+        #               |               basis set information              |
+        #               +--------------------------------------------------+
+        # 
+        #               we will work with the 1s 3p 5d 7f 9g ... basis set
+        #               ...i.e. with spherical basis functions...
+        # 
+        #    type   atoms  prim   cont   basis
+        #    ---------------------------------------------------------------------------
+        #     o        1     15      5   sto-3g hondo  [2s1p|6s3p]
+        #     h        2      3      1   sto-3g hondo  [1s|3s]
+        #    ---------------------------------------------------------------------------
+        if "type   atoms  prim   cont   basis" in line:
+            line = next(inputfile)
+            line = next(inputfile)
+            basis_sets = []
+            while set(line.strip()) != {"-"}:
+                basis_sets.append(" ".join(line.split()[4:-1]))
+                line = next(inputfile)
+
+            # Turbomole gives us the basis set for each atom, but we're only interested if the same basis set is used throughout (for now).
+            if len(set(basis_sets)) == 1:
+                self.metadata["basis_set"] = list(set(basis_sets))[0]
+
+#while "---------------------------------------------------------------------------" not in line:
+
         ## Atomic coordinates in job.last:
         #              +--------------------------------------------------+
         #              | Atomic coordinate, charge and isotop information |
