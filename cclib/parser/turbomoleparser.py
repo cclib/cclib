@@ -50,7 +50,7 @@ class Turbomole(logfileparser.Logfile):
         super(Turbomole, self).__init__(logname="Turbomole", *args, **kwargs)
         
         # Flag for whether this calc is DFT.
-        self.DFT = False
+        self.is_DFT = False
         
         # A Regex that we use to extract version info.
         self.version_regex = re.compile(r"TURBOMOLE(?: rev\.)? V([\d]+)[.-]([\d]+)(?:[.-]([\d]))?(?: \( ?([0-9A-z]+) ?\))?")
@@ -956,5 +956,4 @@ class OldTurbomole(logfileparser.Logfile):
                     del self.vibsyms[i]
                     i -= 1
                 i += 1
-
 
