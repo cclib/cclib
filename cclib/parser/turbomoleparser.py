@@ -48,6 +48,12 @@ class Turbomole(logfileparser.Logfile):
 
     def __init__(self, *args, **kwargs):
         super(Turbomole, self).__init__(logname="Turbomole", *args, **kwargs)
+        
+        # Flag for whether this calc is DFT.
+        self.is_DFT = False
+        
+        # A Regex that we use to extract version info.
+        self.version_regex = re.compile(r"TURBOMOLE(?: rev\.)? V([\d]+)[.-]([\d]+)(?:[.-]([\d]))?(?: \( ?([0-9A-z]+) ?\))?")
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -108,19 +114,42 @@ class Turbomole(logfileparser.Logfile):
         if line[3:11] == "nbf(AO)=":
             nmo = int(line.split('=')[1])
             self.set_attribute('nbasis', nmo)
+                    
+        # The DFT functional.
+        # This information is printed by dscf but not in an easily parsable format, so we'll take it from the control file instead...
+        # Additionally, turbomole stores functional names in lower case. This looks odd, so we'll convert to uppercase (?)
+        # We are parsing this section from the control file.
+        if line[3:13] == "functional":
+            self.metadata['functional'] = line.split()[1].upper()
+            self.is_DFT = True
         
+        # Information about DFT is also printed by dscf in the main .log file.
+        # We don't parse this at the moment, but it is still important to know
+        # if we are using DFT for parsing later on (to distinguish between DFT
+        # Vs HF etc). If we don't have the control file available, we will 
+        # need this check:
+        if "density functional" in line:
+            self.is_DFT = True
+
         # Extract the version number and optionally the build number.
-        searchstr = ": TURBOMOLE"
-        index = line.find(searchstr)
-        if index > -1:
-            line = line[index + len(searchstr):]
-            tokens = line.split()
-            package_version = tokens[0][1:].replace("-", ".")
-            self.metadata["package_version"] = package_version
-            self.metadata["legacy_package_version"] = package_version
-            if tokens[1] == "(":
-                revision = tokens[2]
-                self.metadata["package_version"] = "{}.r{}".format(package_version, revision)
+        version_match = self.version_regex.search(line)
+        if version_match:            
+            # We only combine the parts of the version string we actually got.
+            # Our regex ensures we have at least the first two parts (x.y), and optionally a third part (x.y.z).
+            # This line could look like any of the following:
+            # - TURBOMOLE rev. V7.4.1 (2bfdd732)
+            # - TURBOMOLE V7.2 ( 21471 ) 11 Oct 2017 at 17:04:51
+            # - TURBOMOLE V5-9-0 29 Nov 2006 at 22:06:41
+            version = ".".join([version_part for version_part in version_match.group(1,2,3) if version_part is not None])
+            
+            # We may also have a build ID.
+            build_id = version_match.group(4)
+                            
+            self.metadata["legacy_package_version"] = version
+            self.metadata["package_version"] = "{}.r{}".format(version, build_id) if build_id is not None else version
+                
+            # We have entered a new module (sub program); reset our success flag.
+            self.metadata['success'] = False
         
         ## Orbital occupation info from dscf.
         #  orbitals $scfmo  will be written to file mos
@@ -537,6 +566,12 @@ class Turbomole(logfileparser.Logfile):
 
             scfenergy = utils.convertor(utils.float(line.split()[4]), 'hartree', 'eV')
             self.append_attribute('scfenergies', scfenergy)
+            
+            # We need to determine whether this is a HF or DFT energy for metadata.
+            if self.is_DFT:
+                self.metadata['methods'].append("DFT")
+            else:
+                self.metadata['methods'].append("HF")
 
         #  **********************************************************************
         #  *                                                                    *
@@ -590,6 +625,12 @@ class Turbomole(logfileparser.Logfile):
                         mp2energy = [utils.convertor(utils.float(line.split()[3]), 'hartree', 'eV')]
                         self.append_attribute('mpenergies', mp2energy)
                 line = next(inputfile)
+                
+            
+        if ": all done  ****" in line:
+            # End of module, set success flag.
+            self.metadata['success'] = True
+        
 
     
     def split_irrep(self, irrep):
@@ -1235,5 +1276,4 @@ class OldTurbomole(logfileparser.Logfile):
                     del self.vibsyms[i]
                     i -= 1
                 i += 1
-
 
