@@ -354,7 +354,6 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('GAMESS', 'reading cpu/wall time is not implemented for this parser') 
     @skipForParser('GAMESSUK', 'reading cpu/wall time is not implemented for this parser') 
     @skipForParser('GAMESSUS', 'reading cpu/wall time is not implemented for this parser') 
-    @skipForParser('Gaussian', 'reading cpu/wall time is not implemented for this parser') 
     @skipForParser('Jaguar', 'reading cpu/wall time is not implemented for this parser') 
     @skipForParser('Molcas', ' reading cpu/wall time is not implemented for this parser') 
     @skipForParser('Molpro', 'reading cpu/wall time is not implemented for this parser') 

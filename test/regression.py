@@ -42,7 +42,7 @@ import os
 import sys
 import traceback
 import unittest
-
+import datetime
 import numpy
 from packaging.version import parse as parse_version
 from packaging.version import Version
@@ -770,8 +770,8 @@ def testGaussian_Gaussian98_test_Cu2_log(logfile):
     """An example of the number of basis set function changing."""
     assert logfile.data.nbasis == 38
 
-    assert logfile.data.metadata["cputime"] == 25.8
-    assert logfile.data.metadata["elapsedtime"] == 0
+    assert logfile.data.metadata["cpu_time"] == [datetime.timedelta(seconds=25, microseconds=800000)]
+    assert logfile.data.metadata["wall_time"] == []
     assert logfile.data.metadata["legacy_package_version"] == "98revisionA.11.4"
     assert logfile.data.metadata["package_version"] == "1998+A.11.4"
     assert isinstance(
@@ -882,8 +882,8 @@ def testGaussian_Gaussian03_dvb_gopt_symmfollow_log(logfile):
     """
     assert len(logfile.data.atomcoords) == len(logfile.data.geovalues)
 
-    assert logfile.data.metadata["cputime"] == 99.0
-    assert logfile.data.metadata["elapsedtime"] == 0
+    assert logfile.data.metadata["cpu_time"] == [datetime.timedelta(seconds=99)]
+    assert logfile.data.metadata["wall_time"] == []
     assert logfile.data.metadata["legacy_package_version"] == "03revisionC.01"
     assert logfile.data.metadata["package_version"] == "2003+C.01"
     assert isinstance(
@@ -1000,8 +1000,8 @@ def testGaussian_Gaussian09_dvb_gopt_unconverged_log(logfile):
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
     assert logfile.data.optstatus[-1] == logfile.data.OPT_UNCONVERGED
 
-    assert logfile.data.metadata["cputime"] == 27.7
-    assert logfile.data.metadata["elapsedtime"] == 0
+    assert logfile.data.metadata["cpu_time"] == [datetime.timedelta(seconds=27, microseconds=700000)]
+    assert logfile.data.metadata["wall_time"] == []
     assert logfile.data.metadata["package_version"] == "2009+D.01"
 
 
@@ -1186,8 +1186,8 @@ def testGaussian_Gaussian16_naturalspinorbitals_parsing_log(logfile):
     assert logfile.data.aonames[41] == 'O2_9D 0'
     assert logfile.data.atombasis[1][0] == 23
 
-    assert logfile.data.metadata["cputime"] == 74.4
-    assert logfile.data.metadata["elapsedtime"] == 3.5
+    assert logfile.data.metadata["cpu_time"] == [datetime.timedelta(seconds=74, microseconds=400000)]
+    assert logfile.data.metadata["wall_time"] == [datetime.timedelta(seconds=3, microseconds=500000)]
     assert logfile.data.metadata["legacy_package_version"] == "16revisionA.03"
     assert logfile.data.metadata["package_version"] == "2016+A.03"
     assert isinstance(

@@ -9,7 +9,7 @@
 
 
 import re
-
+import datetime
 import numpy
 
 from cclib.parser import data
@@ -100,9 +100,9 @@ class Gaussian(logfileparser.Logfile):
         # dedicated `polar` job? If so, avoid duplicate parsing.
         self.hp_polarizabilities = False
 
-        # Set default elapsed and CPU job times to 0.
-        self.metadata["elapsedtime"] = 0
-        self.metadata["cputime"] = 0
+        # Create empty list for the computing time to be stored in.
+        self.metadata['wall_time'] =[]
+        self.metadata['cpu_time'] =[]
 
     def after_parsing(self):
         # atomcoords are parsed as a list of lists but it should be an array
@@ -2103,17 +2103,24 @@ class Gaussian(logfileparser.Logfile):
                     self.optdone = []
                 self.optdone.append(len(self.optstatus) - 1)
 
-        # Extract total elapsed and CPU job times in seconds
+        # Extract total elapsed (wall) and CPU job times
         if line[:14] == ' Elapsed time:' or line[:14] == ' Job cpu time:':
-            n = 2
-            key = 'elapsedtime'
-            if line[:14] == ' Job cpu time:':
-                n += 1
-                key = 'cputime'
-            split_line = line.split()
-            days, hours, minutes, seconds = float(split_line[n]), float(split_line[n+2]), float(split_line[n+4]), float(split_line[n+6])
-            time = seconds + 60*minutes + 60*60*hours + 60*60*24*days
-            self.metadata[key] += time
+            # the line format is " Elapsed time:       0 days  0 hours  0 minutes 47.5 seconds." at the end of each job ran.
+            # the line format is " Job cpu time:       0 days  0 hours  8 minutes 45.7 seconds." at the end of each job ran.
+            try:
+                n = 2
+                key = 'wall_time'
+                # if parsing a cpu time change key and shift n
+                if line[:14] == ' Job cpu time:':
+                    n += 1
+                    key = 'cpu_time'
+                # split the line by white space
+                split_line = line.split()
+                # cast the time elements as floats for use in timedelta data structure
+                time = datetime.timedelta(days=float(split_line[n]), hours=float(split_line[n+2]), minutes=float(split_line[n+4]), seconds=float(split_line[n+6]))
+                self.metadata[key].append(time)
+            except:
+                pass
 
         if line[:31] == ' Normal termination of Gaussian':
             self.metadata['success'] = True
