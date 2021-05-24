@@ -37,7 +37,6 @@ class GenericGeoOptTest(unittest.TestCase):
 
     @skipForParser('Molcas', 'The parser is still being developed so we skip this test')
     @skipForParser('MOPAC', 'The success status is not parsed yet')
-    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def test_success(self):
         self.assertTrue(self.data.metadata['success'])
 
