@@ -114,7 +114,6 @@ class Turbomole(logfileparser.Logfile):
         if line[3:11] == "nbf(AO)=":
             nmo = int(line.split('=')[1])
             self.set_attribute('nbasis', nmo)
-            self.set_attribute('nmo', nmo)
                     
         # The DFT functional.
         # This information is printed by dscf but not in an easily parsable format, so we'll take it from the control file instead...
@@ -131,7 +130,7 @@ class Turbomole(logfileparser.Logfile):
         # need this check:
         if "density functional" in line:
             self.is_DFT = True
-        
+
         # Extract the version number and optionally the build number.
         version_match = self.version_regex.search(line)
         if version_match:            
@@ -151,6 +150,69 @@ class Turbomole(logfileparser.Logfile):
                 
             # We have entered a new module (sub program); reset our success flag.
             self.metadata['success'] = False
+        
+        ## Orbital occupation info from dscf.
+        #  orbitals $scfmo  will be written to file mos
+        # 
+        #     irrep                  1a          2a          3a          4a          5a   
+        #  eigenvalues H        -20.25992    -1.24314    -0.57053    -0.46144    -0.39295
+        #             eV        -551.3047    -33.8279    -15.5250    -12.5564    -10.6929
+        #  occupation              2.0000      2.0000      2.0000      2.0000      2.0000
+        # 
+        #     irrep                  6a          7a   
+        #  eigenvalues H          0.55091     0.64409
+        #             eV          14.9910     17.5268
+        ## Or
+        #  orbitals $uhfmo_beta  will be written to file beta
+        # 
+        #  orbitals $uhfmo_alpha  will be written to file alpha
+        #  
+        #  alpha: 
+        # 
+        #     irrep                 31a         32a         33a         34a         35a   
+        #  eigenvalues H         -0.47570    -0.46573    -0.40741    -0.39213    -0.35411
+        #             eV         -12.9446    -12.6733    -11.0862    -10.6705     -9.6358
+        #  occupation              1.0000      1.0000      1.0000      1.0000      1.0000 
+        # 
+        #     irrep                 36a         37a         38a         39a         40a   
+        #  eigenvalues H         -0.18634    -0.10035    -0.09666    -0.02740     0.06072
+        #             eV          -5.0705     -2.7306     -2.6303     -0.7455      1.6522
+        #  
+        #  beta:  
+        # 
+        #     irrep                 30a         31a         32a         33a         34a   
+        #  eigenvalues H         -0.49118    -0.47348    -0.44470    -0.39020    -0.37919
+        #             eV         -13.3658    -12.8842    -12.1009    -10.6181    -10.3184
+        #  occupation              1.0000      1.0000      1.0000      1.0000      1.0000 
+        # 
+        #     irrep                 35a         36a         37a         38a         39a   
+        #  eigenvalues H         -0.28091    -0.15088    -0.09343    -0.07531    -0.00688
+        #             eV          -7.6440     -4.1058     -2.5424     -2.0493     -0.1873
+        # There's no point parsing HOMO/LUMO if we don't already have orbitals.
+        if hasattr(self, "mosyms"):
+            if "will be written to file mos" in line:
+                orbitals, line = self.parse_dscf_orbitals(inputfile, line)
+                self.set_attribute("homos", [self.determine_homo(self.mosyms[0], orbitals)])
+            
+            if "alpha:" in line:
+                orbitals, line = self.parse_dscf_orbitals(inputfile, line)
+                if len(orbitals) > 0:
+                    homo = self.determine_homo(self.mosyms[0], orbitals)
+                    if not hasattr(self, "homos"):
+                        self.set_attribute('homos', [homo])
+                    else:
+                        self.homos[0] = homo
+                
+            if "beta:" in line:
+                orbitals, line = self.parse_dscf_orbitals(inputfile, line)
+                if len(orbitals) > 0:
+                    homo = self.determine_homo(self.mosyms[1], orbitals)
+                    if not hasattr(self, "homos"):
+                        self.set_attribute('homos', [homo])
+                    elif len(self.homos) == 1:
+                        self.homos.append(homo)
+                    else:
+                        self.homos[1] = homo
         
         # Molecular charge and dipole info from dscf.
         #  ==============================================================================
@@ -398,14 +460,24 @@ class Turbomole(logfileparser.Logfile):
             while line.strip().startswith('#') and not line.find('eigenvalue') > 0:
                 line = next(inputfile)
 
+            moirreps = []
             moenergies = []
             mocoeffs = []
+            mosyms = []
 
             while not line.strip().startswith('$'):
+                number, sym = line.split()[:2]
+                number = int(number)
+                sym = self.normalisesym(sym)
+                
                 info = re.match(r".*eigenvalue=(?P<moenergy>[0-9D\.+-]{20})\s+nsaos=(?P<count>\d+).*", line)
                 eigenvalue = utils.float(info.group('moenergy'))
                 orbital_energy = utils.convertor(eigenvalue, 'hartree', 'eV')
+                
                 moenergies.append(orbital_energy)
+                mosyms.append(sym)
+                moirreps.append((number, sym))
+                
                 single_coeffs = []
                 nsaos = int(info.group('count'))
 
@@ -420,15 +492,19 @@ class Turbomole(logfileparser.Logfile):
             for i in mocoeffs:
                 while len(i) < max_nsaos:
                     i.append(numpy.nan)
-
-            if not hasattr(self, 'mocoeffs'):
-                self.mocoeffs = []
-
-            if not hasattr(self, 'moenergies'):
-                self.moenergies = []
-
-            self.mocoeffs.append(mocoeffs)
-            self.moenergies.append(moenergies)
+            
+            # We now need to sort our orbitals (because Turbomole groups them by symm).
+            mos = list(zip(moenergies, mocoeffs, mosyms, moirreps))
+            mos.sort(key = lambda mo: mo[0])
+            moenergies, mocoeffs, mosyms, moirreps = zip(*mos)
+            
+            # MO irreps is not actually recognised as a cclib attribute,
+            # but we may need this info to parse other sections.
+            self.append_attribute("moirreps", moirreps)
+            self.append_attribute("moenergies", moenergies)
+            self.append_attribute("mocoeffs", mocoeffs)
+            self.append_attribute("mosyms", mosyms)
+            self.set_attribute("nmo", len(moenergies))
 
         # Parsing the scfenergies, scfvalues and scftargets from job.last file.
         # scf convergence criterion : increment of total energy < .1000000D-05
@@ -469,6 +545,10 @@ class Turbomole(logfileparser.Logfile):
             iter_energy = []
             iter_one_elec_energy = []
             while 'convergence criteria satisfied' not in line:
+                # nbasis
+                if  "number of basis functions" in line:
+                    self.set_attribute("nbasis", int(line.split()[-1]))
+                
                 if 'ITERATION  ENERGY' in line:
                     line = next(inputfile)
                     info = line.split()
@@ -551,6 +631,145 @@ class Turbomole(logfileparser.Logfile):
             # End of module, set success flag.
             self.metadata['success'] = True
         
+
+    
+    def split_irrep(self, irrep):
+        """
+        Split a Turbomole irrep into number and symmetry.
+        """
+        rematch = re.match(r"^([0-9]+)(.+)$", irrep)
+        number = int(rematch.group(1))
+        sym = self.normalisesym(rematch.group(2))
+        return (number, sym)
+    
+    def parse_dscf_orbitals(self, inputfile, line):
+        """
+        Extract orbital occupation and energies from a dscf logfile.
+        
+        Returns
+        -------
+        tuple
+            a two membered tuple where the first element is a list of dictionaries of the the orbitals parsed, while the second is the line on which parsing should continue.
+        """
+        ## Orbital occupation info from dscf.
+        #  orbitals $scfmo  will be written to file mos
+        # 
+        #     irrep                  1a          2a          3a          4a          5a   
+        #  eigenvalues H        -20.25992    -1.24314    -0.57053    -0.46144    -0.39295
+        #             eV        -551.3047    -33.8279    -15.5250    -12.5564    -10.6929
+        #  occupation              2.0000      2.0000      2.0000      2.0000      2.0000
+        # ...
+        #     irrep                  6a          7a   
+        #  eigenvalues H          0.55091     0.64409
+        #             eV          14.9910     17.5268
+        ## Or
+        #  orbitals $uhfmo_beta  will be written to file beta
+        # 
+        #  orbitals $uhfmo_alpha  will be written to file alpha
+        #  
+        #  alpha: 
+        # 
+        #     irrep                 31a         32a         33a         34a         35a   
+        #  eigenvalues H         -0.47570    -0.46573    -0.40741    -0.39213    -0.35411
+        #             eV         -12.9446    -12.6733    -11.0862    -10.6705     -9.6358
+        #  occupation              1.0000      1.0000      1.0000      1.0000      1.0000 
+        # ...
+        #     irrep                 36a         37a         38a         39a         40a   
+        #  eigenvalues H         -0.18634    -0.10035    -0.09666    -0.02740     0.06072
+        #             eV          -5.0705     -2.7306     -2.6303     -0.7455      1.6522
+        #  
+        #  beta:  
+        # 
+        #     irrep                 30a         31a         32a         33a         34a   
+        #  eigenvalues H         -0.49118    -0.47348    -0.44470    -0.39020    -0.37919
+        #             eV         -13.3658    -12.8842    -12.1009    -10.6181    -10.3184
+        #  occupation              1.0000      1.0000      1.0000      1.0000      1.0000 
+        # ...
+        #     irrep                 35a         36a         37a         38a         39a   
+        #  eigenvalues H         -0.28091    -0.15088    -0.09343    -0.07531    -0.00688
+        #             eV          -7.6440     -4.1058     -2.5424     -2.0493     -0.1873
+        # Skip blank line.
+        line = next(inputfile)
+        
+        orbitals = []
+        while True: 
+            irreps = []
+            energies_hartree = []
+            energies_eV = []
+            occupations = []
+            
+            # MO index
+            line = next(inputfile)
+            
+            # Check we're still in the right section.
+            if "irrep" not in line:
+                # All done.
+                break
+            else:
+                # Turbomole lists orbitals of different symmetry separately.
+                irreps = line.split()[1:]
+            
+            # Energy in H.
+            line = next(inputfile)
+            energies_hartree = [float(energy) for energy in line.split()[2:]]
+            
+            # Energy in eV.
+            line = next(inputfile)
+            energies_eV = [float(energy) for energy in line.split()[1:]]
+            
+            # Occupation.
+            # This line will be missing if the orbitals are virtual (unoccupied).
+            line = next(inputfile)
+            if "occupation" in line:
+                occupations = [float(occupation) for occupation in line.split()[1:]]
+                line = next(inputfile)
+            
+            # If we have any missing occupations, fill with 0
+            occupations.extend([0.0] * (len(irreps) - len(occupations)))
+                
+            # Add to list.
+            orbitals.extend([
+                 {'irrep': irrep, 'energy_H': energy_H, 'energy_eV': energy_eV, 'occupancy': occupation}
+                 for irrep, energy_H, energy_eV, occupation
+                 in zip(irreps, energies_hartree, energies_eV, occupations)
+            ])
+            
+        return orbitals, line
+    
+    
+    def determine_homo(self, mosyms, dscf_mos):
+        """
+        Determine the highest occupied molecular orbital.
+        
+        Returns
+        -------
+        int
+            the index of the HOMO.
+        """
+        # First, we need a mapping between each irrep and its index in mosyms etc.
+        symm_count = {}
+        irreps = []
+        
+        for symm in mosyms:
+            try:
+                symm_count[symm] += 1
+            except KeyError:
+                symm_count[symm] = 1
+            
+            irreps.append((symm_count[symm], symm))
+            
+        # We also have occupancy info from dscf (but probably only for those orbitals close to the HOMO/LUMO gap).
+        # We now need to determine which orbital with occupancy is highest.
+        homo = 0
+        for mo in dscf_mos:
+            if mo['occupancy'] > 0:
+                # This orbital has electrons, determine its position out of all orbitals.
+                index = irreps.index(self.split_irrep(mo['irrep']))
+                if index > homo:
+                    homo = index
+                    
+        return homo
+                
 
     def deleting_modes(self, vibfreqs, vibdisps, vibirs, vibrmasses):
         """Deleting frequencies relating to translations or rotations"""

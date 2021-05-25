@@ -132,13 +132,11 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Molpro', '?')
     @skipForParser('ORCA', 'ORCA has no support for symmetry yet')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u?"""
         sumwronglabels = sum([x not in ['Ag', 'Bu', 'Au', 'Bg'] for x in self.data.mosyms[0]])
         self.assertEqual(sumwronglabels, 0)
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testhomos(self):
         """Is the index of the HOMO equal to 34?"""
         numpy.testing.assert_array_equal(self.data.homos, numpy.array([34],"i"), "%s != array([34],'i')" % numpy.array_repr(self.data.homos))
