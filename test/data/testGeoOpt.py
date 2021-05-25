@@ -37,7 +37,6 @@ class GenericGeoOptTest(unittest.TestCase):
 
     @skipForParser('Molcas', 'The parser is still being developed so we skip this test')
     @skipForParser('MOPAC', 'The success status is not parsed yet')
-    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def test_success(self):
         self.assertTrue(self.data.metadata['success'])
 
@@ -106,7 +105,6 @@ class GenericGeoOptTest(unittest.TestCase):
 
     @skipForParser('Molcas', 'The parser is still being developed so we skip this test')
     @skipForParser('MOPAC', 'Not implemented.')
-    @skipForParser('Turbomole', 'The parser is still being developed so we skip this test')
     def testhomos(self):
         """Is the index of the HOMO equal to 34?"""
         ref = numpy.array([34], "i")

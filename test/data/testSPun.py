@@ -86,7 +86,6 @@ class GenericSPunTest(unittest.TestCase):
         self.assertEqual(self.data.charge, 1)
         self.assertEqual(self.data.mult, 2)
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testhomos(self):
         """Are the homos correct?"""
         msg = "%s != array([34,33],'i')" % numpy.array_repr(self.data.homos)
@@ -103,7 +102,6 @@ class GenericSPunTest(unittest.TestCase):
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Molpro', '?')
     @skipForParser('ORCA', 'ORCA has no support for symmetry yet')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testmosyms(self):
         """Are the dims of the mosyms equals to 2 x nmo?"""
         shape = (len(self.data.mosyms), len(self.data.mosyms[0]))
