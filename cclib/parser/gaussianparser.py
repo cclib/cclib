@@ -1984,21 +1984,31 @@ class Gaussian(logfileparser.Logfile):
                                 spins.append(float(split_line[3]))
                         elif has_spin:
                             spins.append(float(split_line[2]))
+            # When the charge type is not given explicitly we 
+            # must find it from the bottom line, which always 
+            # has the format: "Sum of Mulliken charges=   0.00000"
+            # so we can extract the type by splitting each 
+            # line until we get a valid charge type.
+            while prop.lower() not in ["mulliken","lowdin","apt"]:
+                nline = next(inputfile)
+                prop = nline.split()[2].lower()
             # Input extracted values into self.atomcharges.
-            if prop.lower() in line.lower():
-                if has_charges:
-                    if is_sum:
-                        self.atomcharges['{}_sum'.format(prop)] = charges
-                    else:
-                        self.atomcharges['{}'.format(prop)] = charges
-                if has_spin:
-                    if is_sum:
-                        self.atomspins['{}_sum'.format(prop)] = spins
-                    else:
-                        self.atomspins['{}'.format(prop)] = spins
+            if has_charges:
+                if is_sum:
+                    self.atomcharges['{}_sum'.format(prop)] = charges
+                else:
+                    self.atomcharges['{}'.format(prop)] = charges
+            if has_spin:
+                if is_sum:
+                    self.atomspins['{}_sum'.format(prop)] = spins
+                else:
+                    self.atomspins['{}'.format(prop)] = spins
 
-        # Define strings needed for line detection.
-        props = ["mulliken","lowdin","APT"]
+        # Define strings needed for line detection. Older Gaussian
+        # versions don't always give the charge type explicitly,
+        # so we must include "atomic" as a general term to catch
+        # all other atomic charge or spin lines.
+        props = ["mulliken","lowdin","apt","atomic"]
         headers = [" atomic charges:",
         " charges:",
         " charges with hydrogens summed into heavy atoms:",
@@ -2013,7 +2023,16 @@ class Gaussian(logfileparser.Logfile):
             for prop in props:
                 for header in headers:
                     if '{}{}'.format(prop,header).lower() in line.lower():
-                        extract_charges_spins(line,prop)
+                        # When we use "atomic" as the property, only 
+                        # extract if the charge type isn't given explicity.
+                        # This prevents us from reading some lines twice.
+                        # e.g. "Mulliken atomic charges:" is caught by 
+                        # "mulliken atomic charges:" and " atomic charges:"
+                        if prop == "atomic":
+                            if not "mulliken" in line.lower() and not "lowdin" in line.lower() and not "apt" in line.lower():
+                                extract_charges_spins(line,prop)
+                        else:
+                            extract_charges_spins(line,prop)
                         
         if line.strip() == "Natural Population":
             if not hasattr(self, 'atomcharges'):
