@@ -2775,7 +2775,7 @@ def testQChem_QChem5_3_ts_30_irc_out(logfile):
     """
     assert logfile.data.metadata["package_version"] == "5.3.2dev+trunk-35976"
     assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
-    converged_indices = [x for x, y in enumerate(logfile.data.ircstatus) if y & ccData.OPT_DONE > 0]
+    converged_indices = logfile.data.opt_indices(ccData.OPT_DONE)
     directions = [logfile.data.ircvalues[idx]["direction"] for idx in converged_indices]
     positive_path = list()
     negative_path = list()
@@ -2879,15 +2879,16 @@ def testQChem_QChem5_3_ts_30_irc_out(logfile):
         **crit,
     )
     npoints = 249
-    assert len(logfile.data.ircstatus) == npoints
-    assert len(logfile.data.atomcoords) == npoints
+    assert len(logfile.data.optstatus) == npoints + 1
+    assert len(logfile.data.scfenergies) == npoints
+    assert len(logfile.data.atomcoords) == npoints + 1
     numpy.testing.assert_allclose(
         logfile.data.atomcoords[positive_path[0]], logfile.data.atomcoords[negative_path[0]]
     )
 
 
 def testQChem_QChem5_3_ts_30_out(logfile):
-    converged_indices = [x for x, y in enumerate(logfile.data.ircstatus) if y & ccData.OPT_DONE > 0]
+    converged_indices = logfile.data.opt_indices(ccData.OPT_DONE)
     directions = [logfile.data.ircvalues[idx]["direction"] for idx in converged_indices]
     positive_path = list()
     negative_path = list()
@@ -2991,8 +2992,9 @@ def testQChem_QChem5_3_ts_30_out(logfile):
         **crit,
     )
     npoints = 275
-    assert len(logfile.data.ircstatus) == npoints
-    assert len(logfile.data.atomcoords) == npoints
+    assert len(logfile.data.optstatus) == npoints + 1
+    assert len(logfile.data.scfenergies) == npoints
+    assert len(logfile.data.atomcoords) == npoints + 1
     numpy.testing.assert_allclose(
         logfile.data.atomcoords[positive_path[0]], logfile.data.atomcoords[negative_path[0]]
     )

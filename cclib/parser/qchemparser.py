@@ -255,12 +255,12 @@ cannot be determined. Rerun without `$molecule read`."""
                     self.set_attribute("charge", user_charge)
 
         # If a multi-step calculation was performed, and one of the steps was
-        # an IRC calculation, make sure that the IRC status is padded to the
-        # full number of available atomic positions.
-        if hasattr(self, "ircstatus") and hasattr(self, "atomcoords"):
-            nmissing = len(self.atomcoords) - len(self.ircstatus)
+        # a geometry optimization or IRC calculation, make sure that the
+        # status is padded to the full number of available atomic positions.
+        if hasattr(self, "optstatus") and hasattr(self, "atomcoords"):
+            nmissing = len(self.atomcoords) - len(self.optstatus)
             if nmissing > 0:
-                self.ircstatus.extend([ccData.OPT_UNKNOWN for _ in range(nmissing)])
+                self.optstatus.extend([ccData.OPT_UNKNOWN for _ in range(nmissing)])
 
     def parse_charge_section(self, inputfile, chargetype):
         """Parse the population analysis charge block."""
@@ -1615,13 +1615,13 @@ cannot be determined. Rerun without `$molecule read`."""
                 # We also handle the case that an IRC job has been performed
                 # previously, but there were some coordinates present between
                 # its final step and whatever we are about to do.
-                if not hasattr(self, "ircstatus"):
-                    self.ircstatus = [ccData.OPT_UNKNOWN for _ in range(len(self.atomcoords) - 1)]
+                if not hasattr(self, "optstatus"):
+                    self.optstatus = [ccData.OPT_UNKNOWN for _ in range(len(self.atomcoords) - 1)]
                 else:
-                    nmissing = len(self.atomcoords) - len(self.ircstatus)
+                    nmissing = len(self.atomcoords) - len(self.optstatus)
                     if nmissing > 0:
-                        self.ircstatus.extend([ccData.OPT_UNKNOWN for _ in range(nmissing - 1)])
-                self.ircstatus.append(ccData.OPT_NEW + ccData.OPT_DONE)
+                        self.optstatus.extend([ccData.OPT_UNKNOWN for _ in range(nmissing - 1)])
+                self.optstatus.append(ccData.OPT_NEW + ccData.OPT_DONE)
 
             if "Reaction path following" in line:
                 # When this section appears, the immediately preceding
@@ -1660,32 +1660,21 @@ cannot be determined. Rerun without `$molecule read`."""
                 assert coord_idx not in self.ircvalues
                 if status == 4:
                     if "Bisector search finished successfully." in status_lines[1]:
-                        ircstatus = ccData.OPT_DONE
+                        optstatus = ccData.OPT_DONE
                     else:
-                        ircstatus = ccData.OPT_UNCONVERGED
+                        optstatus = ccData.OPT_UNCONVERGED
                 # For now, status == 1, which corresponds to taking the
                 # steepest descent step after accepting an IRC step into the
                 # path, is not printed explicitly in the output.
                 else:
                     assert status in (2, 3)
-                    ircstatus = ccData.OPT_UNCONVERGED
+                    optstatus = ccData.OPT_UNCONVERGED
                 self.ircvalues[coord_idx] = {
                     "direction": self.rpath_direction,
                     "status": status,
                     "status_lines": status_lines,
                 }
-                self.ircstatus.append(ircstatus)
-
-            if line.strip() == "Here is where we should summarize the reaction path":
-                # Some versions of Q-Chem have a bug where the initial (TS)
-                # structure is printed as the final geometry in an rpath
-                # job. Trim it out. None of the other things calculated on
-                # each step of an rpath job (energies, grads,
-                # atomcharges...each step is a force calculation) have this
-                # problem.
-                if hasattr(self, "atomcoords"):
-                    assert hasattr(self, "ircstatus")
-                    self.atomcoords = self.atomcoords[:-1]
+                self.optstatus.append(optstatus)
 
             # (Static) polarizability from frequency calculations.
             if "Polarizability Matrix (a.u.)" in line:
