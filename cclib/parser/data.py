@@ -380,6 +380,12 @@ class ccData:
         """Write parsed attributes to an XML file."""
         return self.write(filename=filename, indices=indices, outputtype="xyz")
 
+    def opt_indices(self, optstatus):
+        """
+        Return the indices corresponding to the given optimization status.
+        """
+        return [x for x, y in enumerate(self.optstatus) if y & optstatus > 0]
+
     @property
     def converged_geometries(self) -> numpy.ndarray:
         """
@@ -391,7 +397,7 @@ class ccData:
             - The input geometry for single points
         """
         if hasattr(self, "optstatus"):
-            converged_indexes = [x for x, y in enumerate(self.optstatus) if y & self.OPT_DONE > 0]
+            converged_indexes = self.opt_indices(self.OPT_DONE)
             return self.atomcoords[converged_indexes]
         else:
             return self.atomcoords
@@ -406,7 +412,7 @@ class ccData:
             - The input geometry for simple optimisations or single points
         """
         if hasattr(self, "optstatus"):
-            new_indexes = [x for x, y in enumerate(self.optstatus) if y & self.OPT_NEW > 0]
+            new_indexes = self.opt_indices(self.OPT_NEW)
             return self.atomcoords[new_indexes]
         else:
             return self.atomcoords
@@ -421,7 +427,7 @@ class ccData:
             - The input geometry for simple optimisations or single points
         """
         if hasattr(self, "optstatus"):
-            unknown_indexes = [x for x, y in enumerate(self.optstatus) if y == self.OPT_UNKNOWN]
+            unknown_indexes = self.opt_indices(self.OPT_UNKNOWN)
             return self.atomcoords[unknown_indexes]
         else:
             return self.atomcoords
@@ -436,9 +442,7 @@ class ccData:
             - The input geometry for simple optimisations or single points
         """
         if hasattr(self, "optstatus"):
-            unconverged_indexes = [
-                x for x, y in enumerate(self.optstatus) if y & self.OPT_UNCONVERGED > 0
-            ]
+            unconverged_indexes = self.opt_indices(self.OPT_UNCONVERGED)
             return self.atomcoords[unconverged_indexes]
         else:
             return self.atomcoords
