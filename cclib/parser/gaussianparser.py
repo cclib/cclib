@@ -1952,9 +1952,9 @@ class Gaussian(logfileparser.Logfile):
                     elif i == 1:
                         if has_charges:
                             charges.append(float(0))
-                        if has_spin and has_charges:
-                            spins.append(float(0))
-                        if has_spin and not has_charges:
+                            if has_spin:
+                                spins.append(float(0))
+                        elif has_spin:
                             spins.append(float(0))
                     else:
                         nline = next(inputfile)
@@ -1963,12 +1963,13 @@ class Gaussian(logfileparser.Logfile):
                         # spins, so these should be ignored.
                         while nline.split()[1] == "H":
                             nline = next(inputfile)
+                        split_line = nline.split()
                         if has_charges:
-                            charges.append(float(nline.split()[2]))
-                        if has_spin and has_charges:
-                            spins.append(float(nline.split()[3]))
-                        if has_spin and not has_charges:
-                            spins.append(float(nline.split()[2]))
+                            charges.append(float(split_line[2]))
+                            if has_spin:
+                                spins.append(float(split_line[3]))
+                        elif has_spin:
+                            spins.append(float(split_line[2]))
             else:
                 for i in self.atomnos:
                     # Ignore translation vectors.
@@ -1976,12 +1977,13 @@ class Gaussian(logfileparser.Logfile):
                         pass
                     else:
                         nline = next(inputfile)
+                        split_line = nline.split()
                         if has_charges:
-                            charges.append(float(nline.split()[2]))
-                        if has_spin and has_charges:
-                            spins.append(float(nline.split()[3]))
-                        if has_spin and not has_charges:
-                            spins.append(float(nline.split()[2]))
+                            charges.append(float(split_line[2]))
+                            if has_spin:
+                                spins.append(float(split_line[3]))
+                        elif has_spin:
+                            spins.append(float(split_line[2]))
             # Input extracted values into self.atomcharges.
             if prop.lower() in line.lower():
                 if has_charges:
