@@ -447,24 +447,49 @@ class Turbomole(logfileparser.Logfile):
         #
         # During a jobex driven optimisation, the above geometry section will be printed at the start of each module (subprogram).
         # We only want one coord entry per step, so we need to be careful not to add the same geometry multiple times.
-        if 'Atomic coordinate, charge and isotop information' in line:
-            while 'atomic coordinates' not in line:
+        #
+        # For 'large' molecules (probably >= 100 atoms), certain turbomole modules (eg, STATP) will only print a truncated
+        # coordinate section here, with some lines being cut and replaced with 3 lines consisting only of whitespace and 
+        # full stops (.):
+        #   5.98651205   -2.33496770   -0.80565619    c      6.000     0
+        #   9.67800538   -0.33507410    1.19593467    c      6.000     0
+        #   6.76781184    0.69969618    5.52907043    c      6.000     0
+        #    .             .             .            .      .         .
+        #    .             .             .            .      .         .
+        #    .             .             .            .      .         .
+        #  21.85796486    5.25815448    5.52575969    h      1.000     0
+        #  16.70506498    7.08657699   13.19684279    h      1.000     0
+        #  25.54043040    7.25266316    7.52378680    h      1.000     0
+        #
+        # This is very annoying, but not disastrous as it is likely the coordinates from this step will have been already printed
+        # from another module, so we can just ignore sections like this.
+        try:
+            if 'Atomic coordinate, charge and isotop information' in line:
+                while 'atomic coordinates' not in line:
+                    line = next(inputfile)
+    
+                atomcoords = []
+                atomnos = []
                 line = next(inputfile)
-
-            atomcoords = []
-            atomnos = []
-            line = next(inputfile)
-            while len(line.split()) >= 3:
-                atomnos.append(self.periodic_table.number[line.split()[3].capitalize()])
-                atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") 
-                                   for x in line.split()[:3]])
-                line = next(inputfile)
-            
-            # Check the coordinates we just parsed are not already in atomcoords.
-            if not hasattr(self, 'atomcoords') or self.atomcoords[-1] != atomcoords:
-                self.append_attribute('atomcoords', atomcoords)
-                self.set_attribute('atomnos', atomnos)
-                self.set_attribute('natom', len(atomcoords))
+                while len(line.split()) >= 3:
+                    atomnos.append(self.periodic_table.number[line.split()[3].capitalize()])
+                    atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") 
+                                       for x in line.split()[:3]])
+                    line = next(inputfile)
+                
+                # Check the coordinates we just parsed are not already in atomcoords.
+                if not hasattr(self, 'atomcoords') or self.atomcoords[-1] != atomcoords:
+                    self.append_attribute('atomcoords', atomcoords)
+                    self.set_attribute('atomnos', atomnos)
+                    self.set_attribute('natom', len(atomcoords))
+        except Exception as e:
+            # Something went wrong, check to see if the coord line we parsed was garbage, or if something else happened.
+            if set(line.strip()).issubset({' ', '.'}):
+                # This line is a truncated coord line, we can skip this coord section.
+                pass
+            else:
+                # Panic.
+                raise e 
         
         # Flag that indicates we are doing an opt.
         if "OPTIMIZATION CYCLE" in line:
