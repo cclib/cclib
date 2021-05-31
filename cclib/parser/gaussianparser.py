@@ -601,14 +601,15 @@ class Gaussian(logfileparser.Logfile):
             if not "full" in line:
                 inputfile.seek(0, 2)
 
-        # For ONIOM jobs, we skip parsing for the output for the model systems, because
+        # Another hack for regression Gaussian03/ortho_prod_freq.log, which is an ONIOM job.
+        # Basically for now we stop parsing after the output for the real system, because
         # currently we don't support changes in system size or fragments in cclib. When we do,
         # we will want to parse the model systems, too, and that is what nmodels could track.
         if "ONIOM: generating point" in line and line.strip()[-13:] == 'model system.' and getattr(self, 'nmodels', 0) > 0:
             while not line[1:30] == 'ONIOM: Integrating ONIOM file':
                 line = inputfile.next()
 
-        # With the gfinput keyword, the atomic basis set functios are:
+        # With the gfinput keyword, the atomic basis set functions are:
         #
         # AO basis set in the form of general basis input (Overlap normalization):
         #  1 0
@@ -1909,47 +1910,130 @@ class Gaussian(logfileparser.Logfile):
         #     2  C    0.002063
         # ...
         #
-        if line[1:25] == "Mulliken atomic charges:" or line[1:18] == "Mulliken charges:" or \
-           line[1:23] == "Lowdin Atomic Charges:" or line[1:16] == "Lowdin charges:" or \
-           line[1:37] == "Mulliken charges and spin densities:" or \
-           line[1:32] == "Mulliken atomic spin densities:":
-
-            has_spin = 'spin densities' in line 
-            has_charges = 'charges' in line 
-
+        # Spins may be included in the same section.
+        #
+        # Mulliken charges and spin densities:
+        #               1          2
+        #     1  O   -0.596188   0.019133
+        #     2  C    0.320624   0.000869
+        #
+        # APT and Lowdin charges are also displayed in this way.
+        def extract_charges_spins(line,prop):
+            """Extracts atomic charges and spin densities into 
+               self.atomcharges and self.atomspins dictionaries.
+    
+            Inputs:
+                line - line header marking the beginning of a
+                particular set of charges or spins.
+                prop - property type to be extracted as a
+                string (e.g. Mulliken, Lowdin, APT).
+            """
+            has_spin = 'spin' in line.lower()
+            has_charges = 'charges' in line.lower()
             if has_charges and not hasattr(self, "atomcharges"):
                 self.atomcharges = {}
-
             if has_spin and not hasattr(self, "atomspins"):
                 self.atomspins = {}
-
             ones = next(inputfile)
-
             charges = []
             spins = []
-            nline = next(inputfile)
-            while not "Sum of" in nline:
-                if has_charges:
-                    charges.append(float(nline.split()[2]))
-
-                if has_spin and has_charges:
-                    spins.append(float(nline.split()[3]))
-
-                if has_spin and not has_charges:
-                    spins.append(float(nline.split()[2]))
-
+            is_sum = 'summed' in line
+            # Iterate over each line and append values to a list 
+            # based on whether they are charges or spins. 
+            if is_sum:
+                for i in self.atomnos:
+                    # currently bug exists where files with translation vectors report
+                    # an extra atom with atomnumber -2 in self.atomnos, so must ignore 
+                    # this by passing whenever i in self.atomnos == -2.
+                    if i == -2:
+                        pass
+                    # For lists of summed charges or spins, a value
+                    # of 0 is added if the atom is a hydrogen.
+                    elif i == 1:
+                        if has_charges:
+                            charges.append(float(0))
+                            if has_spin:
+                                spins.append(float(0))
+                        elif has_spin:
+                            spins.append(float(0))
+                    else:
+                        nline = next(inputfile)
+                        # Some older versions of Gaussian already include 
+                        # hydrogens with value 0 for summed charges or 
+                        # spins, so these should be ignored.
+                        while nline.split()[1] == "H":
+                            nline = next(inputfile)
+                        split_line = nline.split()
+                        if has_charges:
+                            charges.append(float(split_line[2]))
+                            if has_spin:
+                                spins.append(float(split_line[3]))
+                        elif has_spin:
+                            spins.append(float(split_line[2]))
+            else:
+                for i in self.atomnos:
+                    # Ignore translation vectors.
+                    if i == -2:
+                        pass
+                    else:
+                        nline = next(inputfile)
+                        split_line = nline.split()
+                        if has_charges:
+                            charges.append(float(split_line[2]))
+                            if has_spin:
+                                spins.append(float(split_line[3]))
+                        elif has_spin:
+                            spins.append(float(split_line[2]))
+            # When the charge type is not given explicitly we 
+            # must find it from the bottom line, which always 
+            # has the format: "Sum of Mulliken charges=   0.00000"
+            # so we can extract the type by splitting each 
+            # line until we get a valid charge type.
+            while prop.lower() not in ["mulliken","lowdin","apt"]:
                 nline = next(inputfile)
+                prop = nline.split()[2].lower()
+            # Input extracted values into self.atomcharges.
+            if has_charges:
+                if is_sum:
+                    self.atomcharges['{}_sum'.format(prop)] = charges
+                else:
+                    self.atomcharges['{}'.format(prop)] = charges
+            if has_spin:
+                if is_sum:
+                    self.atomspins['{}_sum'.format(prop)] = spins
+                else:
+                    self.atomspins['{}'.format(prop)] = spins
 
-            if "Mulliken" in line:
-                if has_charges:
-                    self.atomcharges["mulliken"] = charges
-                if has_spin:
-                    self.atomspins["mulliken"] = spins
-
-            elif "Lowdin" in line:
-                self.atomcharges["lowdin"] = charges
-
-
+        # Define strings needed for line detection. Older Gaussian
+        # versions don't always give the charge type explicitly,
+        # so we must include "atomic" as a general term to catch
+        # all other atomic charge or spin lines.
+        props = ["mulliken","lowdin","apt","atomic"]
+        headers = [" atomic charges:",
+        " charges:",
+        " charges with hydrogens summed into heavy atoms:",
+        " atomic charges with hydrogens summed into heavy atoms:",
+        " atomic spin densities:",
+        " charges and spin densities with hydrogens summed into heavy atoms:",
+        " charges and spin densities:"]
+        
+        if hasattr(self, "atomnos"):
+        # Combine props and headers to find lines heading lists
+        # of atom charges or spins.
+            for prop in props:
+                for header in headers:
+                    if '{}{}'.format(prop,header).lower() in line.lower():
+                        # When we use "atomic" as the property, only 
+                        # extract if the charge type isn't given explicity.
+                        # This prevents us from reading some lines twice.
+                        # e.g. "Mulliken atomic charges:" is caught by 
+                        # "mulliken atomic charges:" and " atomic charges:"
+                        if prop == "atomic":
+                            if not "mulliken" in line.lower() and not "lowdin" in line.lower() and not "apt" in line.lower():
+                                extract_charges_spins(line,prop)
+                        else:
+                            extract_charges_spins(line,prop)
+                        
         if line.strip() == "Natural Population":
             if not hasattr(self, 'atomcharges'):
                 self.atomcharges = {}
