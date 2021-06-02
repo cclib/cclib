@@ -76,7 +76,6 @@ class Turbomole(logfileparser.Logfile):
     def before_parsing(self):
         
         self.periodic_table = utils.PeriodicTable()
-        self.new_module()
 
     @staticmethod
     def split_molines(inline):
@@ -98,13 +97,6 @@ class Turbomole(logfileparser.Logfile):
         if(len(f1) > 1):
             return [float(f1)]
         
-    def new_module(self):
-        """
-        This method is called when we start parsing a new module (Turbomole subprogram).
-        """
-        self.DFT = False
-        self.metadata['success'] = False
-
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
