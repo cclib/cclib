@@ -788,8 +788,6 @@ class Turbomole(logfileparser.Logfile):
         #  *   D1 diagnostic                           :      0.0132            *
         #  *                                                                    *
         #  **********************************************************************
-#         if 'C C S D F 1 2   P R O G R A M' in line:
-#             while 'ccsdf12 : all done' not in line:
         # Look for MP energies.
         for mp_level in range(2,6):
             if "Final MP{} energy".format(mp_level) in line:
@@ -799,8 +797,6 @@ class Turbomole(logfileparser.Logfile):
                 else:
                     self.mpenergies[-1].append(mpenergy)
                 self.metadata['methods'].append("MP{}".format(mp_level))
-
-                #line = next(inputfile)
 
         #  *****************************************************
         #  *                                                   *
