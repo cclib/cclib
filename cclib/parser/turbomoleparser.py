@@ -813,7 +813,7 @@ class Turbomole(logfileparser.Logfile):
                 mp2energy = [utils.convertor(utils.float(line.split()[3]), 'hartree', 'eV')]
                 self.append_attribute('mpenergies', mp2energy)
                 self.metadata['methods'].append("MP2")
-                
+ 
         # Support for the now outdated (?) rimp2
         # ------------------------------------------------
         #     Method          :  MP2     
@@ -824,14 +824,14 @@ class Turbomole(logfileparser.Logfile):
             mp2energy = [utils.convertor(utils.float(line.split()[3]), 'hartree', 'eV')]
             self.append_attribute('mpenergies', mp2energy)
             self.metadata['methods'].append("MP2")
-                
-            
+
+
         if ": all done  ****" in line:
             # End of module, set success flag.
             self.metadata['success'] = True
-        
 
-    
+
+
     def split_irrep(self, irrep):
         """
         Split a Turbomole irrep into number and symmetry.
