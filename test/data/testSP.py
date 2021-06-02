@@ -80,7 +80,6 @@ class GenericSPTest(unittest.TestCase):
         self.assertTrue(dev < 0.03, "Minimum carbon dist is %.2f (not 1.34)" % min_carbon_dist)
 
     @skipForParser('Molcas', 'missing mult')
-    @skipForParser('Turbomole', 'missing charge')
     def testcharge_and_mult(self):
         """Are the charge and multiplicity correct?"""
         self.assertEqual(self.data.charge, 0)

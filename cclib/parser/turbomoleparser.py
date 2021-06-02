@@ -13,6 +13,7 @@ import numpy
 
 from cclib.parser import logfileparser
 from cclib.parser import utils
+from cclib.parser import data
 
 class AtomBasis:
     def __init__(self, atname, basis_name, inputfile):
@@ -73,7 +74,7 @@ class Turbomole(logfileparser.Logfile):
         return label[0].upper() + label[1:]
 
     def before_parsing(self):
-        self.geoopt = False # Is this a GeoOpt? Needed for SCF targets/values.
+        
         self.periodic_table = utils.PeriodicTable()
 
     @staticmethod
@@ -95,7 +96,7 @@ class Turbomole(logfileparser.Logfile):
             return [float(f1), float(f2)]
         if(len(f1) > 1):
             return [float(f1)]
-
+        
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
@@ -258,7 +259,24 @@ class Turbomole(logfileparser.Logfile):
                 utils.convertor(float(parts[-2]), "bohr", "Angstrom"),
                 utils.convertor(float(parts[-1]), "bohr", "Angstrom")
             ]]
-            
+
+        if "nuc           elec       ->  total" in line:
+            line = next(inputfile)
+            line = next(inputfile)
+            if "charge" in line:
+                line = next(inputfile)
+                line = next(inputfile)
+                
+                total_charge = float(line.split()[2])
+                total_charge_int = round(total_charge)
+                
+                # Check we won't loose information converting to int.
+                if total_charge != total_charge_int:
+                    self.logger.warning("Converting non integer total charge '{}' to integer".format(total_charge))
+                
+                # Set regardless.
+                self.set_attribute("charge", total_charge_int)
+
         if line.strip() == "dipole moment":
             line = next(inputfile)
             if set(line.strip()) == {"-"}:
@@ -315,6 +333,91 @@ class Turbomole(logfileparser.Logfile):
             # Turbomole gives us the basis set for each atom, but we're only interested if the same basis set is used throughout (for now).
             if len(set(basis_sets)) == 1:
                 self.metadata["basis_set"] = list(set(basis_sets))[0]
+                
+        # Coordinates and gradients from statpt.
+        #   *************************************************************************
+        #  ATOM                      CARTESIAN COORDINATES
+        #   1 c      -2.67642286424381      0.00038527796998     -0.44566112589039
+        #   2 c      -1.69183504162310      0.00075591605173      2.05352357416443
+        #   3 c       0.92311977253458      0.00052122921704      2.48381308900370
+        #   4 c       2.67642286424491      0.00038528140768      0.44566112589851
+        #   5 c       1.69183504161656      0.00075592009652     -2.05352357415432
+        #   6 h      -2.98983238801665      0.00149374762706      3.67174843088014
+        #   7 h       1.64279730150941      0.00038458181684      4.43158185858240
+        #   8 h       2.98983238800216      0.00149376082387     -3.67174843087059
+        #   9 c       5.44975417206469     -0.00039526372012      1.01184691031725
+        #  10 c       7.34299179214000     -0.00071986894317     -0.68271530533475
+        #  11 h       7.01332300460381     -0.00029648805084     -2.72785997302809
+        #  12 h       5.91422629512709     -0.00052260839470      3.03917498747826
+        #  13 h       9.32456490822245     -0.00139866158379     -0.07769877084777
+        #  14 c      -5.44975417205833     -0.00039526324514     -1.01184691032156
+        #  15 h      -5.91422629512079     -0.00052260600240     -3.03917498748360
+        #  16 c      -7.34299179213657     -0.00071986698481      0.68271530532303
+        #  17 h      -7.01332300460557     -0.00029648750734      2.72785997301777
+        #  18 h      -9.32456490821458     -0.00139865699894      0.07769877082649
+        #  19 c      -0.92311977253569      0.00052122610063     -2.48381308899233
+        #  20 h      -1.64279730151053      0.00038457006746     -4.43158185856859
+        # *************************************************************************
+        #  ATOM                      CARTESIAN GRADIENTS  
+        #   1 c       0.00001122250995      0.00000667056223      0.00001828623085
+        #   2 c       0.00000193381649     -0.00001184358472      0.00001337145426
+        #   3 c      -0.00000578603102      0.00000187474419      0.00000987215044
+        #   4 c      -0.00001122250794      0.00000667041002     -0.00001828623169
+        #   5 c      -0.00000193381900     -0.00001184350870     -0.00001337145668
+        #   6 h      -0.00001402399615      0.00001821929428     -0.00000611193875
+        #   7 h       0.00001742260704     -0.00000462667818     -0.00000195847724
+        #   8 h       0.00001402399610      0.00001821957100      0.00000611193919
+        #   9 c      -0.00006557131494     -0.00002136001589      0.00002475454295
+        #  10 c       0.00006109842779     -0.00000007565809     -0.00004223963891
+        #  11 h      -0.00002879535900      0.00000574108155     -0.00000337279221
+        #  12 h       0.00004754086240      0.00000863480152     -0.00000658955451
+        #  13 h      -0.00000914653785     -0.00000320753859      0.00003066647865
+        #  14 c       0.00006557131503     -0.00002135978825     -0.00002475454202
+        #  15 h      -0.00004754086227      0.00000863481272      0.00000658955373
+        #  16 c      -0.00006109842855     -0.00000007566316      0.00004223963942
+        #  17 h       0.00002879535887      0.00000574109116      0.00000337279251
+        #  18 h       0.00000914653868     -0.00000320756462     -0.00003066647871
+        #  19 c       0.00000578603127      0.00000187466275     -0.00000987214898
+        #  20 h      -0.00001742260682     -0.00000462696679      0.00000195847629
+        # *************************************************************************
+        #
+        # In older versions (5.9)
+        # ATOM               CARTESIAN GRADIENTS
+        #  1 c      -0.00006249573129     -0.00001452041025     -0.00002380577094
+        #  2 c       0.00007390978833     -0.00000084052225      0.00000584172986
+        #  3 c      -0.00000362984325      0.00000466314052     -0.00002733252443
+        #  4 c       0.00006249783071     -0.00001452158676      0.00002380177091
+        #  5 c      -0.00007390342509     -0.00000084270316     -0.00000584066725
+        #  6 h      -0.00005950589946      0.00000095087455      0.00005137853319
+        #  7 h      -0.00000645073463     -0.00000179899463      0.00003328307243
+        #  8 h       0.00005950123260      0.00000095090879     -0.00005137678599
+        #  9 c      -0.00004885046058     -0.00002593955699     -0.00004887642413
+        # 10 c       0.00000015222157      0.00004027444288      0.00003204866033
+        # 11 h       0.00001239310045      0.00001308636889     -0.00000092060218
+        # 12 h       0.00001561988506     -0.00001608132438      0.00002717833564
+        # 13 h      -0.00000616830304      0.00000016851704     -0.00003103539353
+        # 14 c       0.00004884621752     -0.00002593547764      0.00004887866674
+        # 15 h      -0.00001561780942     -0.00001607888272     -0.00002718198410
+        # 16 c      -0.00000015329549      0.00004026946593     -0.00003204885735
+        # 17 h      -0.00001239289077      0.00001308531162      0.00000092210161
+        # 18 h       0.00000616838338      0.00000016858902      0.00003103523777
+        # 19 c       0.00000362187006      0.00000466096401      0.00002733645543
+        # 20 h       0.00000645786975     -0.00000179869042     -0.00003328556910
+        #     Optint: norm of internal gradient       0.00029710
+        #
+        if "CARTESIAN GRADIENTS" in line:
+            atomcoords = []
+            atomnos = []
+            line = next(inputfile)
+            while len(line.split()) == 5:
+                atomnos.append(self.periodic_table.number[line.split()[-4].capitalize()])
+                atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") 
+                                   for x in line.split()[-3:]])
+                line = next(inputfile)
+            
+            self.set_attribute('atomnos', atomnos)
+            self.set_attribute('natom', len(atomcoords))
+            self.append_attribute("grads", atomcoords)
 
         ## Atomic coordinates in job.last:
         #              +--------------------------------------------------+
@@ -333,22 +436,113 @@ class Turbomole(logfileparser.Logfile):
         #    -9.36352819    0.00017229    0.07445322    h      1    1.000    0     0
         #    -0.92683849   -0.00007461   -2.49592179    c      3    6.000    0     0
         #    -1.65164853   -0.00009927   -4.45456858    h      1    1.000    0     0
-        if 'Atomic coordinate, charge and isotop information' in line:
-            while 'atomic coordinates' not in line:
+        #
+        # During a jobex driven optimisation, the above geometry section will be printed at the start of each module (subprogram).
+        # We only want one coord entry per step, so we need to be careful not to add the same geometry multiple times.
+        #
+        # For 'large' molecules (probably >= 100 atoms), certain turbomole modules (eg, STATP) will only print a truncated
+        # coordinate section here, with some lines being cut and replaced with 3 lines consisting only of whitespace and 
+        # full stops (.):
+        #   5.98651205   -2.33496770   -0.80565619    c      6.000     0
+        #   9.67800538   -0.33507410    1.19593467    c      6.000     0
+        #   6.76781184    0.69969618    5.52907043    c      6.000     0
+        #    .             .             .            .      .         .
+        #    .             .             .            .      .         .
+        #    .             .             .            .      .         .
+        #  21.85796486    5.25815448    5.52575969    h      1.000     0
+        #  16.70506498    7.08657699   13.19684279    h      1.000     0
+        #  25.54043040    7.25266316    7.52378680    h      1.000     0
+        #
+        # This is very annoying, but not disastrous as it is likely the coordinates from this step will have been already printed
+        # from another module, so we can just ignore sections like this.
+        try:
+            if 'Atomic coordinate, charge and isotop information' in line:
+                while 'atomic coordinates' not in line:
+                    line = next(inputfile)
+    
+                atomcoords = []
+                atomnos = []
                 line = next(inputfile)
-
-            atomcoords = []
-            atomnos = []
+                while len(line.split()) >= 3:
+                    atomnos.append(self.periodic_table.number[line.split()[3].capitalize()])
+                    atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") 
+                                       for x in line.split()[:3]])
+                    line = next(inputfile)
+                
+                # Check the coordinates we just parsed are not already in atomcoords.
+                if not hasattr(self, 'atomcoords') or self.atomcoords[-1] != atomcoords:
+                    self.append_attribute('atomcoords', atomcoords)
+                    self.set_attribute('atomnos', atomnos)
+                    self.set_attribute('natom', len(atomcoords))
+        except Exception as e:
+            # Something went wrong, check to see if the coord line we parsed was garbage, or if something else happened.
+            if set(line.strip()).issubset({' ', '.'}):
+                # This line is a truncated coord line, we can skip this coord section.
+                pass
+            else:
+                # Panic.
+                raise e 
+        
+        # Flag that indicates we are doing an opt.
+        if "OPTIMIZATION CYCLE" in line:
+            self.append_attribute("optstatus", data.ccData.OPT_UNKNOWN)
+            
+            if "OPTIMIZATION CYCLE 1" in line:
+                # This is the start of the opt.
+                self.optstatus[-1] += data.ccData.OPT_NEW
+        
+        # Optimisation convergence criteria using statpt.
+        #
+        # ****************************************************************** 
+        #                     CONVERGENCE INFORMATION
+        # 
+        #                          Converged?     Value      Criterion
+        #        Energy change         no       0.0000011   0.0000010
+        #        RMS of displacement   yes      0.0001152   0.0005000
+        #        RMS of gradient       yes      0.0000548   0.0005000
+        #        MAX displacement      yes      0.0001409   0.0010000
+        #        MAX gradient          yes      0.0000670   0.0010000
+        # ****************************************************************** 
+        if "CONVERGENCE INFORMATION" in line:
+            # This is an optimisation.
+            # Skip lines.
             line = next(inputfile)
-            while len(line) > 2:
-                atomnos.append(self.periodic_table.number[line.split()[3].capitalize()])
-                atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") 
-                                   for x in line.split()[:3]])
+            line = next(inputfile)
+            line = next(inputfile)
+            
+            convergence = []
+            geovalues = []
+            geotargets = []
+            
+            # There are a variable number of criteria.
+            while len(line.split()) > 3:
+                parts = line.split()
+                # lower() is for (unnecessary?) future proofing...
+                converged = parts[-3].lower() == "yes"
+                value = float(parts[-2])
+                criterion = float(parts[-1])
+                
+                # TODO: possibly require some unit conversions?
+                convergence.append(converged)
+                geovalues.append(value)
+                geotargets.append(criterion)
+                
+                # Next.                
                 line = next(inputfile)
-
-            self.append_attribute('atomcoords', atomcoords)
-            self.set_attribute('atomnos', atomnos)
-            self.set_attribute('natom', len(atomcoords))
+                
+            self.set_attribute("geotargets", geotargets)
+            self.append_attribute("geovalues", geovalues)
+            
+            if all(convergence):
+                # This iteration has converged.
+                self.append_attribute("optdone", len(self.geovalues) -1)
+                self.optstatus[-1] += data.ccData.OPT_DONE
+            else:
+                # Not converged.
+                if not hasattr(self, 'optdone'):
+                    self.set_attribute("optdone", [])
+                #self.optstatus[-1] += data.ccData.OPT_UNCONVERGED
+                
 
         # Frequency values in aoforce.out
         #        mode               7        8        9       10       11       12
@@ -769,7 +963,6 @@ class Turbomole(logfileparser.Logfile):
                     homo = index
                     
         return homo
-                
 
     def deleting_modes(self, vibfreqs, vibdisps, vibirs, vibrmasses):
         """Deleting frequencies relating to translations or rotations"""
@@ -785,6 +978,20 @@ class Turbomole(logfileparser.Logfile):
     def after_parsing(self):
         if hasattr(self, 'vibfreqs'):
             self.deleting_modes(self.vibfreqs, self.vibdisps, self.vibirs, self.vibrmasses)
+            
+        # Try and determine our multiplicity from our orbitals.
+        if hasattr(self, "homos"):
+            if len(self.homos) == 1:
+                # If we are restricted (len(homos) == 1); assume we have to be singlet.
+                self.set_attribute("mult", 1)
+            else:
+                # Unrestricted, the difference in homos should tell us the no. of unpaired e-.
+                unpaired_e = abs(self.homos[0] - self.homos[1])
+                self.set_attribute("mult", unpaired_e +1)
+                
+        # Set a flag if we stopped part way through an opt.
+        if hasattr(self, "optstatus") and self.optstatus[-1] != data.ccData.OPT_DONE:
+            self.optstatus[-1] += data.ccData.OPT_UNCONVERGED
 
 
 class OldTurbomole(logfileparser.Logfile):
