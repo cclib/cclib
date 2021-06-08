@@ -76,6 +76,14 @@ class ORCA(logfileparser.Logfile):
                     break
                 self.scfenergies[i] += dispersionenergy
 
+
+    def skip_until_no_match_line(self, inputfile, regex):
+        line = next(inputfile)
+        while re.match(regex, line):
+            line = next(inputfile)
+        return line
+
+
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
@@ -1485,7 +1493,8 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             self.skip_line(inputfile, 'CI strategy')
             num_blocks = int(next(inputfile).split()[-1])
             for b in range(1, num_blocks + 1):
-                vals = next(inputfile).split()
+                line = self.skip_until_no_match_line(inputfile, r'^\s*$')
+                vals = line.split()
                 block = int(vals[1])
                 weight = float(vals[3])
                 assert b == block
@@ -1551,9 +1560,10 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             # ROOT   0:  E=     -14.5950507665 Eh
             #       0.89724 [     0]: 2000
             for b in range(num_blocks):
+                line = self.skip_until_no_match_line(inputfile, r'^\s*$|^-*$')
                 # Parse the block data.
                 reg = r'BLOCK\s+(\d+) MULT=\s*(\d+) (IRREP=\s*\w+ )?(NROOTS=\s*(\d+))?'
-                groups = re.search(reg, next(inputfile)).groups()
+                groups = re.search(reg, line).groups()
                 block = int(groups[0])
                 mult = int(groups[1])
                 # The irrep will only be printed if using symmetry.
@@ -1602,8 +1612,9 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 next(inputfile)
                 for j, line in zip(range(num_orbs), inputfile):
                     density[j][i:i + 6] = list(map(float, line.split()[1:]))
-            self.skip_lines(inputfile, ['Trace', 'b', 'd'])
 
+            line = self.skip_until_no_match_line(inputfile, r'^\s*$|^-*$|^Trace.*$|^Extracting.*$')
+            
             # This is only printed for open-shells.
             # -------------------
             # SPIN-DENSITY MATRIX
@@ -1612,7 +1623,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             #                   0          1          2          3          4          5
             #       0      -0.003709   0.001410   0.000074  -0.000564  -0.007978   0.000735
             #       1       0.001410  -0.001750  -0.000544  -0.003815   0.008462  -0.004529
-            if next(inputfile).strip() == 'SPIN-DENSITY MATRIX':
+            if line.strip() == 'SPIN-DENSITY MATRIX':
                 self.skip_lines(inputfile, ['d', 'b'])
                 spin_density = numpy.zeros((num_orbs, num_orbs))
                 for i in range(0, num_orbs, 6):
