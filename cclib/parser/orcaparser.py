@@ -1184,17 +1184,27 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             # -------------------------------------------------------------------
             #    1   43167.6    231.7      0.00000   0.00000  -0.00000   0.00000
             #
+            # OR (from 4.2.0 onwards)
+            #------------------------------------------------------------------------------
+            #                             CD SPECTRUM
+            #------------------------------------------------------------------------------
+            #      States        Energy   Wavelength   R*T        RX        RY        RZ
+            #                    (cm-1)      (nm)   (1e40*sgs)   (au)      (au)      (au)
+            #------------------------------------------------------------------------------
+            #  0( 1)-> 1( 1) 1   37192.8    268.9     0.00000  -0.00000  -0.34085   0.00000
+            # ...
+            #------------------------------------------------------------------------------
             etenergies = []
             etrotats = []
             self.skip_lines(inputfile, ["d", "State   Energy Wavelength", "(cm-1)   (nm)", "d"])
             line = next(inputfile)
-            while line.strip():
+            while line.strip() and not self.str_contains_only(line.strip(), ['-']):
                 tokens = line.split()
                 if "spin forbidden" in line:
                     etrotat, mx, my, mz = 0.0, 0.0, 0.0, 0.0
                 else:
-                    etrotat, mx, my, mz = [utils.float(t) for t in tokens[3:]]
-                etenergies.append(utils.float(tokens[1]))
+                    etrotat, mx, my, mz = [utils.float(t) for t in tokens[-4:]]
+                etenergies.append(utils.float(tokens[-6]))
                 etrotats.append(etrotat)
                 line = next(inputfile)
             self.set_attribute("etrotats", etrotats)

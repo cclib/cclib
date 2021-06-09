@@ -511,7 +511,7 @@ class Logfile(ABC):
             for character, keys in expected_characters.items():
                 if expected in keys:
                     try:
-                        assert all([c == character for c in line.strip() if c != ' '])
+                        assert self.str_contains_only(line.strip(), [character, ' '])
                     except AssertionError:
                         frame, fname, lno, funcname, funcline, index = inspect.getouterframes(inspect.currentframe())[1]
                         parser = fname.split('/')[-1]
@@ -537,3 +537,8 @@ class Logfile(ABC):
         while re.match(regex, line):
             line = next(inputfile)
         return line
+
+    def str_contains_only(self, string, chars):
+        """Checks if string contains only the specified characters.
+        """
+        return all([c in chars for c in string])
