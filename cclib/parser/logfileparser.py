@@ -526,7 +526,7 @@ class Logfile(ABC):
 
     skip_line = lambda self, inputfile, expected: self.skip_lines(inputfile, [expected])
 
-    def skip_until_no_match_line(self, inputfile, regex):
+    def skip_until_no_match(self, inputfile, regex):
         """Skip lines that match a regex. First non-matching line is returned.
 
         This method allows to skip a variable number of lines, allowing for example,
