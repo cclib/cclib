@@ -17,6 +17,7 @@ import os
 import random
 import sys
 import zipfile
+import re
 from abc import ABC, abstractmethod
 
 import numpy
@@ -524,3 +525,15 @@ class Logfile(ABC):
         return lines
 
     skip_line = lambda self, inputfile, expected: self.skip_lines(inputfile, [expected])
+
+    def skip_until_no_match_line(self, inputfile, regex):
+        """Skip lines that match a regex. First non-matching line is returned.
+
+        This method allows to skip a variable number of lines, allowing for example,
+        to parse sections that might have different whitespace/spurious lines for
+        different versions of the software.
+        """
+        line = next(inputfile)
+        while re.match(regex, line):
+            line = next(inputfile)
+        return line

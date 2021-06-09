@@ -76,14 +76,6 @@ class ORCA(logfileparser.Logfile):
                     break
                 self.scfenergies[i] += dispersionenergy
 
-
-    def skip_until_no_match_line(self, inputfile, regex):
-        line = next(inputfile)
-        while re.match(regex, line):
-            line = next(inputfile)
-        return line
-
-
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
