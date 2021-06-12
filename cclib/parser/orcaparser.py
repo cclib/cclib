@@ -1183,6 +1183,8 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             #         (cm-1)   (nm)       (1e40*cgs)   (au)      (au)      (au)  
             # -------------------------------------------------------------------
             #    1   43167.6    231.7      0.00000   0.00000  -0.00000   0.00000
+            # ...
+            #    6   25291.1    395.4 spin forbidden
             #
             # OR (from 4.2.0 onwards)
             #------------------------------------------------------------------------------
@@ -1202,9 +1204,10 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 tokens = line.split()
                 if "spin forbidden" in line:
                     etrotat, mx, my, mz = 0.0, 0.0, 0.0, 0.0
+                    etenergies.append(utils.float(tokens[-4]))
                 else:
                     etrotat, mx, my, mz = [utils.float(t) for t in tokens[-4:]]
-                etenergies.append(utils.float(tokens[-6]))
+                    etenergies.append(utils.float(tokens[-6]))
                 etrotats.append(etrotat)
                 line = next(inputfile)
             self.set_attribute("etrotats", etrotats)
