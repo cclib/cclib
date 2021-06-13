@@ -101,7 +101,6 @@ CC        QChem       GenericCCTest         basicQChem4.2         water_ccsd(t).
 CC        QChem       GenericCCTest         basicQChem5.1         water_ccd.out
 CC        QChem       GenericCCTest         basicQChem5.1         water_ccsd.out
 CC        QChem       GenericCCTest         basicQChem5.1         water_ccsd(t).out
-CC        Turbomole   GenericCCTest         basicTurbomole7.2     water_ccsd/basis      water_ccsd/control      water_ccsd/mos      water_ccsd/dscf.out      water_ccsd/ccsdf12.out
 
 CI        GAMESS      GAMESSCISTest         basicGAMESS-US2017    water_cis_saps.out
 CI        GAMESS      GAMESSCISTest         basicGAMESS-US2018    water_cis_saps.out
@@ -207,6 +206,10 @@ MP        QChem       GenericMP3Test        basicQChem5.1         water_mp3.out
 MP        QChem       QChemMP4SDQTest       basicQChem5.1         water_mp4sdq.out
 MP        QChem       QChemMP4SDTQTest      basicQChem5.1         water_mp4.out
 MP        Turbomole   GenericMP2Test        basicTurbomole7.2     water_mp2/basis    water_mp2/control    water_mp2/coord    water_mp2/mos    water_mp2/dscf.out    water_mp2/ccsdf12.out
+MP        Turbomole   GenericMP2Test        basicTurbomole7.4     water_mp2/basis    water_mp2/control    water_mp2/coord    water_mp2/mos    water_mp2/dscf.out    water_mp2/ccsdf12.out
+MP        Turbomole   GenericMP2Test        basicTurbomole7.4     water_mp2_rimp2/basis    water_mp2_rimp2/control    water_mp2_rimp2/coord    water_mp2_rimp2/mos    water_mp2_rimp2/dscf.out    water_mp2_rimp2/rimp2.out
+MP        Turbomole   GenericMP2Test        basicTurbomole7.4     water_mp2_ricc2/basis    water_mp2_ricc2/control    water_mp2_ricc2/coord    water_mp2_ricc2/mos    water_mp2_ricc2/dscf.out    water_mp2_ricc2/ricc2.out
+MP        Turbomole   GenericMP3Test        basicTurbomole7.4     water_mp3/basis    water_mp3/control    water_mp3/coord    water_mp3/mos    water_mp3/dscf.out    water_mp3/ccsdf12.out
 
 Polar     DALTON      ReferencePolarTest    basicDALTON-2015      Trp_polar_abalnr.out
 Polar     GAMESS      ReferencePolarTest    basicGAMESS-US2017    Trp_polar_tdhf.out

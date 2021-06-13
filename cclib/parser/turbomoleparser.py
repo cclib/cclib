@@ -788,19 +788,15 @@ class Turbomole(logfileparser.Logfile):
         #  *   D1 diagnostic                           :      0.0132            *
         #  *                                                                    *
         #  **********************************************************************
-        if 'C C S D F 1 2   P R O G R A M' in line:
-            while 'ccsdf12 : all done' not in line:
-                if 'Final MP2 energy' in line:
-                    mp2energy = [utils.convertor(utils.float(line.split()[5]), 'hartree', 'eV')]
-                    self.append_attribute('mpenergies', mp2energy)
-
-                if 'Final CCSD energy' in line:
-                    self.append_attribute(
-                        'ccenergies',
-                        utils.convertor(utils.float(line.split()[5]), 'hartree', 'eV')
-                    )
-
-                line = next(inputfile)
+        # Look for MP energies.
+        for mp_level in range(2,6):
+            if "Final MP{} energy".format(mp_level) in line:
+                mpenergy = utils.convertor(utils.float(line.split()[5]), 'hartree', 'eV')
+                if mp_level == 2:
+                    self.append_attribute('mpenergies', [mpenergy])
+                else:
+                    self.mpenergies[-1].append(mpenergy)
+                self.metadata['methods'].append("MP{}".format(mp_level))
 
         #  *****************************************************
         #  *                                                   *
@@ -811,22 +807,31 @@ class Turbomole(logfileparser.Logfile):
         #  *     (MP2-energy evaluated from T2 amplitudes)     *
         #  *                                                   *
         #  *****************************************************
-        if 'm p g r a d - program' in line:
-            while 'ccsdf12 : all done' not in line:
-                if 'MP2-energy' in line:
-                    line = next(inputfile)
-                    if 'total' in line:
-                        mp2energy = [utils.convertor(utils.float(line.split()[3]), 'hartree', 'eV')]
-                        self.append_attribute('mpenergies', mp2energy)
-                line = next(inputfile)
-                
-            
+        if 'MP2-energy' in line:
+            line = next(inputfile)
+            if 'total' in line:
+                mp2energy = [utils.convertor(utils.float(line.split()[3]), 'hartree', 'eV')]
+                self.append_attribute('mpenergies', mp2energy)
+                self.metadata['methods'].append("MP2")
+ 
+        # Support for the now outdated (?) rimp2
+        # ------------------------------------------------
+        #     Method          :  MP2     
+        #     Total Energy    :    -75.0009789796
+        # ------------------------------------------------
+        if "Method          :  MP2" in line:
+            line = next(inputfile)
+            mp2energy = [utils.convertor(utils.float(line.split()[3]), 'hartree', 'eV')]
+            self.append_attribute('mpenergies', mp2energy)
+            self.metadata['methods'].append("MP2")
+
+
         if ": all done  ****" in line:
             # End of module, set success flag.
             self.metadata['success'] = True
-        
 
-    
+
+
     def split_irrep(self, irrep):
         """
         Split a Turbomole irrep into number and symmetry.
