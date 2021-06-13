@@ -2615,6 +2615,15 @@ def testQChem_QChem5_1_old_final_print_1_out(logfile):
     )
 
 
+def testQChem_QChem5_2_HSO2F_TS_out(logfile):
+    """This file consists of three parts: an initial frequency calculation, a
+    transition state search, then a final frequency calculation for TS
+    confirmation.  The last set of vibrational analysis information should be
+    saved, not the first set.
+    """
+    assert logfile.data.vibfreqs[0] == -1388.93
+
+
 def testQChem_QChem5_3_ccman2_soc_cisd_out(logfile):
     """This file has its atomcoords in bohr, which need to be converted."""
     convfac = 0.5291772109
