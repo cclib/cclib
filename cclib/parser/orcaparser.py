@@ -1466,15 +1466,16 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             total_el = int(next(inputfile).split()[-1])
             total_orbs = int(next(inputfile).split()[-1])
 
+            line = utils.skip_until_no_match(inputfile, r'^\s*$|^Total number aux.*$|^Determined.*$')
+
             # Determined orbital ranges:
             #    Internal       0 -   -1 (   0 orbitals)
             #    Active         0 -    3 (   4 orbitals)
             #    External       4 -   19 (  16 orbitals)
-            self.skip_lines(inputfile, ['b', 'Determined'])
             orbital_ranges = []
             # Parse the orbital ranges for: Internal, Active, and External orbitals.
             for i in range(3):
-                vals = next(inputfile).split()
+                vals = line.split()
                 start, end, num = int(vals[1]), int(vals[3]), int(vals[5])
                 # Change from inclusive to exclusive in order to match python.
                 end = end + 1
