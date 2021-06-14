@@ -1200,7 +1200,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             etrotats = []
             self.skip_lines(inputfile, ["d", "State   Energy Wavelength", "(cm-1)   (nm)", "d"])
             line = next(inputfile)
-            while line.strip() and not self.str_contains_only(line.strip(), ['-']):
+            while line.strip() and not utils.str_contains_only(line.strip(), ['-']):
                 tokens = line.split()
                 if "spin forbidden" in line:
                     etrotat, mx, my, mz = 0.0, 0.0, 0.0, 0.0
@@ -1498,7 +1498,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             self.skip_line(inputfile, 'CI strategy')
             num_blocks = int(next(inputfile).split()[-1])
             for b in range(1, num_blocks + 1):
-                line = self.skip_until_no_match(inputfile, r'^\s*$')
+                line = utils.skip_until_no_match(inputfile, r'^\s*$')
                 vals = line.split()
                 block = int(vals[1])
                 weight = float(vals[3])
@@ -1565,7 +1565,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             # ROOT   0:  E=     -14.5950507665 Eh
             #       0.89724 [     0]: 2000
             for b in range(num_blocks):
-                line = self.skip_until_no_match(inputfile, r'^\s*$|^-*$')
+                line = utils.skip_until_no_match(inputfile, r'^\s*$|^-*$')
                 # Parse the block data.
                 reg = r'BLOCK\s+(\d+) MULT=\s*(\d+) (IRREP=\s*\w+ )?(NROOTS=\s*(\d+))?'
                 groups = re.search(reg, line).groups()
@@ -1618,7 +1618,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 for j, line in zip(range(num_orbs), inputfile):
                     density[j][i:i + 6] = list(map(float, line.split()[1:]))
 
-            line = self.skip_until_no_match(inputfile, r'^\s*$|^-*$|^Trace.*$|^Extracting.*$')
+            line = utils.skip_until_no_match(inputfile, r'^\s*$|^-*$|^Trace.*$|^Extracting.*$')
             
             # This is only printed for open-shells.
             # -------------------

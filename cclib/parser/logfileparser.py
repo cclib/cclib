@@ -17,7 +17,6 @@ import os
 import random
 import sys
 import zipfile
-import re
 from abc import ABC, abstractmethod
 
 import numpy
@@ -511,7 +510,7 @@ class Logfile(ABC):
             for character, keys in expected_characters.items():
                 if expected in keys:
                     try:
-                        assert self.str_contains_only(line.strip(), [character, ' '])
+                        assert utils.str_contains_only(line.strip(), [character, ' '])
                     except AssertionError:
                         frame, fname, lno, funcname, funcline, index = inspect.getouterframes(inspect.currentframe())[1]
                         parser = fname.split('/')[-1]
@@ -526,19 +525,3 @@ class Logfile(ABC):
 
     skip_line = lambda self, inputfile, expected: self.skip_lines(inputfile, [expected])
 
-    def skip_until_no_match(self, inputfile, regex):
-        """Skip lines that match a regex. First non-matching line is returned.
-
-        This method allows to skip a variable number of lines, allowing for example,
-        to parse sections that might have different whitespace/spurious lines for
-        different versions of the software.
-        """
-        line = next(inputfile)
-        while re.match(regex, line):
-            line = next(inputfile)
-        return line
-
-    def str_contains_only(self, string, chars):
-        """Checks if string contains only the specified characters.
-        """
-        return all([c in chars for c in string])
