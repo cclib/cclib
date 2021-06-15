@@ -787,7 +787,14 @@ class Turbomole(logfileparser.Logfile):
         #  *                                                                    *
         #  *   D1 diagnostic                           :      0.0132            *
         #  *                                                                    *
-        #  **********************************************************************
+        #  **********************************************************************            
+        if 'Final CCSD energy' in line or 'Final CC2 energy' in line:
+            self.append_attribute(
+                'ccenergies',
+                utils.convertor(utils.float(line.split()[5]), 'hartree', 'eV')
+            )
+            self.metadata['methods'].append("CCSD")
+            
         # Look for MP energies.
         for mp_level in range(2,6):
             if "Final MP{} energy".format(mp_level) in line:
@@ -813,7 +820,7 @@ class Turbomole(logfileparser.Logfile):
                 mp2energy = [utils.convertor(utils.float(line.split()[3]), 'hartree', 'eV')]
                 self.append_attribute('mpenergies', mp2energy)
                 self.metadata['methods'].append("MP2")
- 
+
         # Support for the now outdated (?) rimp2
         # ------------------------------------------------
         #     Method          :  MP2     

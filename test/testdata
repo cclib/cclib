@@ -101,6 +101,9 @@ CC        QChem       GenericCCTest         basicQChem4.2         water_ccsd(t).
 CC        QChem       GenericCCTest         basicQChem5.1         water_ccd.out
 CC        QChem       GenericCCTest         basicQChem5.1         water_ccsd.out
 CC        QChem       GenericCCTest         basicQChem5.1         water_ccsd(t).out
+CC        Turbomole   GenericCCTest         basicTurbomole7.2     water_ccsd/basis      water_ccsd/control      water_ccsd/mos      water_ccsd/dscf.out      water_ccsd/ccsdf12.out
+CC        Turbomole   GenericCCTest         basicTurbomole7.4     water_ccsd/basis      water_ccsd/control      water_ccsd/mos      water_ccsd/dscf.out      water_ccsd/ccsdf12.out
+CC        Turbomole   GenericCCTest         basicTurbomole7.4     water_cc2/basis      water_cc2/control      water_cc2/mos      water_cc2/dscf.out      water_cc2/ricc2.out
 
 CI        GAMESS      GAMESSCISTest         basicGAMESS-US2017    water_cis_saps.out
 CI        GAMESS      GAMESSCISTest         basicGAMESS-US2018    water_cis_saps.out
