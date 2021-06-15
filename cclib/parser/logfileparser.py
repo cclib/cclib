@@ -510,7 +510,7 @@ class Logfile(ABC):
             for character, keys in expected_characters.items():
                 if expected in keys:
                     try:
-                        assert all([c == character for c in line.strip() if c != ' '])
+                        assert utils.str_contains_only(line.strip(), [character, ' '])
                     except AssertionError:
                         frame, fname, lno, funcname, funcline, index = inspect.getouterframes(inspect.currentframe())[1]
                         parser = fname.split('/')[-1]
@@ -524,3 +524,4 @@ class Logfile(ABC):
         return lines
 
     skip_line = lambda self, inputfile, expected: self.skip_lines(inputfile, [expected])
+

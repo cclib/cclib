@@ -1183,18 +1183,31 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             #         (cm-1)   (nm)       (1e40*cgs)   (au)      (au)      (au)  
             # -------------------------------------------------------------------
             #    1   43167.6    231.7      0.00000   0.00000  -0.00000   0.00000
+            # ...
+            #    6   25291.1    395.4 spin forbidden
             #
+            # OR (from 4.2.0 onwards)
+            #------------------------------------------------------------------------------
+            #                             CD SPECTRUM
+            #------------------------------------------------------------------------------
+            #      States        Energy   Wavelength   R*T        RX        RY        RZ
+            #                    (cm-1)      (nm)   (1e40*sgs)   (au)      (au)      (au)
+            #------------------------------------------------------------------------------
+            #  0( 1)-> 1( 1) 1   37192.8    268.9     0.00000  -0.00000  -0.34085   0.00000
+            # ...
+            #------------------------------------------------------------------------------
             etenergies = []
             etrotats = []
             self.skip_lines(inputfile, ["d", "State   Energy Wavelength", "(cm-1)   (nm)", "d"])
             line = next(inputfile)
-            while line.strip():
+            while line.strip() and not utils.str_contains_only(line.strip(), ['-']):
                 tokens = line.split()
                 if "spin forbidden" in line:
                     etrotat, mx, my, mz = 0.0, 0.0, 0.0, 0.0
+                    etenergies.append(utils.float(tokens[-4]))
                 else:
-                    etrotat, mx, my, mz = [utils.float(t) for t in tokens[3:]]
-                etenergies.append(utils.float(tokens[1]))
+                    etrotat, mx, my, mz = [utils.float(t) for t in tokens[-4:]]
+                    etenergies.append(utils.float(tokens[-6]))
                 etrotats.append(etrotat)
                 line = next(inputfile)
             self.set_attribute("etrotats", etrotats)
@@ -1453,15 +1466,16 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             total_el = int(next(inputfile).split()[-1])
             total_orbs = int(next(inputfile).split()[-1])
 
+            line = utils.skip_until_no_match(inputfile, r'^\s*$|^Total number aux.*$|^Determined.*$')
+
             # Determined orbital ranges:
             #    Internal       0 -   -1 (   0 orbitals)
             #    Active         0 -    3 (   4 orbitals)
             #    External       4 -   19 (  16 orbitals)
-            self.skip_lines(inputfile, ['b', 'Determined'])
             orbital_ranges = []
             # Parse the orbital ranges for: Internal, Active, and External orbitals.
             for i in range(3):
-                vals = next(inputfile).split()
+                vals = line.split()
                 start, end, num = int(vals[1]), int(vals[3]), int(vals[5])
                 # Change from inclusive to exclusive in order to match python.
                 end = end + 1
@@ -1485,7 +1499,8 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             self.skip_line(inputfile, 'CI strategy')
             num_blocks = int(next(inputfile).split()[-1])
             for b in range(1, num_blocks + 1):
-                vals = next(inputfile).split()
+                line = utils.skip_until_no_match(inputfile, r'^\s*$')
+                vals = line.split()
                 block = int(vals[1])
                 weight = float(vals[3])
                 assert b == block
@@ -1551,9 +1566,10 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             # ROOT   0:  E=     -14.5950507665 Eh
             #       0.89724 [     0]: 2000
             for b in range(num_blocks):
+                line = utils.skip_until_no_match(inputfile, r'^\s*$|^-*$')
                 # Parse the block data.
                 reg = r'BLOCK\s+(\d+) MULT=\s*(\d+) (IRREP=\s*\w+ )?(NROOTS=\s*(\d+))?'
-                groups = re.search(reg, next(inputfile)).groups()
+                groups = re.search(reg, line).groups()
                 block = int(groups[0])
                 mult = int(groups[1])
                 # The irrep will only be printed if using symmetry.
@@ -1602,8 +1618,9 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 next(inputfile)
                 for j, line in zip(range(num_orbs), inputfile):
                     density[j][i:i + 6] = list(map(float, line.split()[1:]))
-            self.skip_lines(inputfile, ['Trace', 'b', 'd'])
 
+            line = utils.skip_until_no_match(inputfile, r'^\s*$|^-*$|^Trace.*$|^Extracting.*$')
+            
             # This is only printed for open-shells.
             # -------------------
             # SPIN-DENSITY MATRIX
@@ -1612,7 +1629,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             #                   0          1          2          3          4          5
             #       0      -0.003709   0.001410   0.000074  -0.000564  -0.007978   0.000735
             #       1       0.001410  -0.001750  -0.000544  -0.003815   0.008462  -0.004529
-            if next(inputfile).strip() == 'SPIN-DENSITY MATRIX':
+            if line.strip() == 'SPIN-DENSITY MATRIX':
                 self.skip_lines(inputfile, ['d', 'b'])
                 spin_density = numpy.zeros((num_orbs, num_orbs))
                 for i in range(0, num_orbs, 6):
