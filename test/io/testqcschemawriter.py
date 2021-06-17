@@ -11,9 +11,9 @@ import os
 import unittest
 from pathlib import Path
 
-import qcschema
-
 import cclib
+
+import qcschema
 
 __filedir__ = os.path.dirname(__file__)
 __filepath__ = Path(os.path.realpath(__filedir__))
