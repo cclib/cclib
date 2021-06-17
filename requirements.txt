@@ -2,6 +2,9 @@ packaging>=19.0
 numpy
 periodictable
 
+# io
+git+https://github.com/MolSSI/QCSchema.git
+
 # methods
 scipy>=1.2.0
 
