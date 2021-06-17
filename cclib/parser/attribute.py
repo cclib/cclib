@@ -159,6 +159,20 @@ class coreelectrons(Attribute):
         )
 
 
+class dispersionenergies(Attribute):
+    """a molecular dispersion energy corrections (array[1], eV)"""
+
+    def __init__(self, *args, **kwargs):
+        super(type(self), self).__init__(
+            "dispersionenergies",
+            np.ndarray,
+            "dispersion correction",
+            "properties:energy",
+            *args,
+            **kwargs,
+        )
+
+
 class enthalpy(Attribute):
     """sum of electronic and thermal enthalpies (float, hartree/particle)"""
 
@@ -672,6 +686,15 @@ class vibramans(Attribute):
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__(
             "vibramans", np.ndarray, "raman", "vibrations:intensities", *args, **kwargs
+        )
+
+
+class vibrmasses(Attribute):
+    """reduced masses of vibrations (array[1], daltons)"""
+
+    def __init__(self, *args, **kwargs):
+        super(type(self), self).__init__(
+            "vibrmasses", np.ndarray, "reduced masses", "vibrations", *args, **kwargs
         )
 
 
