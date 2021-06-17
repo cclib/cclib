@@ -10,35 +10,40 @@
 
 import json
 
+from cclib.io.cjsonwriter import CJSON as CJSONWriter
+from cclib.io.cjsonwriter import JSONIndentEncoder, NumpyAwareJSONEncoder
 from cclib.parser.utils import convertor
 
-from .cjsonwriter import CJSON as CJSONWriter
-from .cjsonwriter import JSONIndentEncoder, NumpyAwareJSONEncoder
+from qcschema import validate
 
 
 class QCSchemaWriter(CJSONWriter):
     """A writer for QCSchema files."""
 
     def __init__(self, ccdata, *args, **kwargs):
-        super(QCSchemaWriter, self).__init__(ccdata, *args, **kwargs)
+        super().__init__(ccdata, *args, **kwargs)
 
     def as_dict(self):
         metadata = self.ccdata.metadata
 
-        qcschema_dict = dict()
+        qcschema_dict = {
+            "schema_name": "qcschema_output",
+            "schema_version": 1,
+            "molecule": {
+                "schema_name": "qcschema_molecule",
+                "schema_version": 2,
+                "validated": True,
+            },
+        }
 
-        qcschema_dict["schema_name"] = "qcschema_output"
-        qcschema_dict["schema_version"] = 1
-
-        qcschema_dict["molecule"] = {"schema_name": "qcschema_molecule", "schema_version": 2}
-
-        # TODO make this an enum
+        # TODO This should be derived from a parsed job type.
         if hasattr(self.ccdata, "hessian"):
-            driver = "Hessian"
+            driver = "hessian"
         elif hasattr(self.ccdata, "grads"):
             driver = "gradient"
         else:
             driver = "energy"
+        # TODO what is "properties" for?
         qcschema_dict["driver"] = driver
 
         qcschema_dict["success"] = metadata["success"]
@@ -139,12 +144,19 @@ class QCSchemaWriter(CJSONWriter):
                 }
             )
 
-        # TODO gradient, Hessian
         if driver == "energy":
             return_result = return_energy
+        elif driver == "gradient":
+            return_result = self.ccdata.grads[-1].flatten().tolist()
+        elif driver == "hessian":
+            return_result = self.ccdata.hessian.flatten().tolist()
+        elif driver == "properties":
+            pass
         else:
             raise RuntimeError("Don't know driver {}".format(driver))
         qcschema_dict["return_result"] = return_result
+
+        validate(qcschema_dict, schema_type="output")
 
         return qcschema_dict
 

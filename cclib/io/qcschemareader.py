@@ -8,9 +8,9 @@
 """A reader for MolSSI quantum chemical JSON (QCSchema) files.
 """
 
-from .cjsonreader import CJSON as CJSONReader
+from cclib.io.cjsonreader import CJSON as CJSONReader
 
 
 class QCSchemaReader(CJSONReader):
     def __init__(self, source, *args, **kwargs):
-        super(QCSchemaReader, self).__init__(source, *args, **kwargs)
+        super().__init__(source, *args, **kwargs)
