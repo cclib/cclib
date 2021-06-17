@@ -6,7 +6,7 @@
 
 """A reader for MolSSI quantum chemical JSON (QCSchema) files."""
 
-from .cjsonreader import CJSON as CJSONReader
+from cclib.io.cjsonreader import CJSON as CJSONReader
 
 
 class QCSchemaReader(CJSONReader):
