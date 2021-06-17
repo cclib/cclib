@@ -966,6 +966,8 @@ class Turbomole(logfileparser.Logfile):
                     # Go again.
                     line = next(inputfile)
                 
+                # Print a warning because we're missing the sign (+/-) of etsecs.
+                self.logger.warning("The sign (+/-) of the coefficient for singly-excited configurations is not available")
                 self.append_attribute("etsecs", transitions)
         
             # Transition dipoles.
