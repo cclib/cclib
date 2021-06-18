@@ -20,9 +20,21 @@ __filepath__ = Path(os.path.realpath(__filedir__))
 __datadir__ = __filepath__.joinpath("..", "..").resolve()
 
 
+def validate_output(outputpath):
+    data = cclib.io.ccread(str(outputpath))
+    writer = cclib.io.qcschemawriter.QCSchemaWriter(data)
+    qcschema.validate(writer.as_dict(), schema_type="output")
+
+
 class QCSchemaWriterTest(unittest.TestCase):
-    def test_validate_output_hf(self):
+    def test_validate_output_b3lyp_energy(self):
         fpath = __datadir__ / "data" / "QChem" / "basicQChem5.1" / "dvb_sp.out"
-        data = cclib.io.ccread(str(fpath))
-        writer = cclib.io.qcschemawriter.QCSchemaWriter(data)
-        qcschema.validate(writer.as_dict(), schema_type="output")
+        validate_output(fpath)
+
+    def test_validate_output_b3lyp_gradient(self):
+        fpath = __datadir__ / "data" / "QChem" / "basicQChem5.1" / "dvb_gopt.out"
+        validate_output(fpath)
+
+    def test_validate_output_b3lyp_hessian(self):
+        fpath = __datadir__ / "data" / "QChem" / "basicQChem5.1" / "dvb_ir.out"
+        validate_output(fpath)
