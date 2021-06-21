@@ -837,8 +837,6 @@ class Turbomole(logfileparser.Logfile):
             self.metadata['methods'].append("MP2")
 
 
-        
-        
         # Excited state info from escf.
         #                          1 singlet a excitation
         # 
