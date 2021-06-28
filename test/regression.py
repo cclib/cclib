@@ -1761,6 +1761,11 @@ def testORCA_ORCA4_2_longer_input_out(logfile):
     assert logfile.data.metadata['input_file_contents'][-47:-4] == 'H   1.066878310   1.542378768  -0.602599044'
 
 
+def testORCA_ORCA4_2_casscf_out(logfile):
+    """ORCA casscf input file (#1044)."""
+    assert numpy.isclose(logfile.data.etenergies[0], 28271.0)
+
+
 # PSI 3 #
 
 

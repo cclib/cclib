@@ -13,6 +13,7 @@ import numpy
 
 from cclib.parser import logfileparser
 from cclib.parser import utils
+from cclib.parser import data
 
 class AtomBasis:
     def __init__(self, atname, basis_name, inputfile):
@@ -48,6 +49,12 @@ class Turbomole(logfileparser.Logfile):
 
     def __init__(self, *args, **kwargs):
         super(Turbomole, self).__init__(logname="Turbomole", *args, **kwargs)
+        
+        # Flag for whether this calc is DFT.
+        self.is_DFT = False
+        
+        # A Regex that we use to extract version info.
+        self.version_regex = re.compile(r"TURBOMOLE(?: rev\.)? V([\d]+)[.-]([\d]+)(?:[.-]([\d]))?(?: \( ?([0-9A-z]+) ?\))?")
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -67,7 +74,7 @@ class Turbomole(logfileparser.Logfile):
         return label[0].upper() + label[1:]
 
     def before_parsing(self):
-        self.geoopt = False # Is this a GeoOpt? Needed for SCF targets/values.
+        
         self.periodic_table = utils.PeriodicTable()
 
     @staticmethod
@@ -89,7 +96,7 @@ class Turbomole(logfileparser.Logfile):
             return [float(f1), float(f2)]
         if(len(f1) > 1):
             return [float(f1)]
-
+        
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
@@ -108,20 +115,309 @@ class Turbomole(logfileparser.Logfile):
         if line[3:11] == "nbf(AO)=":
             nmo = int(line.split('=')[1])
             self.set_attribute('nbasis', nmo)
-            self.set_attribute('nmo', nmo)
+                    
+        # The DFT functional.
+        # This information is printed by dscf but not in an easily parsable format, so we'll take it from the control file instead...
+        # Additionally, turbomole stores functional names in lower case. This looks odd, so we'll convert to uppercase (?)
+        # We are parsing this section from the control file.
+        if line[3:13] == "functional":
+            self.metadata['functional'] = line.split()[1].upper()
+            self.is_DFT = True
+        
+        # Information about DFT is also printed by dscf in the main .log file.
+        # We don't parse this at the moment, but it is still important to know
+        # if we are using DFT for parsing later on (to distinguish between DFT
+        # Vs HF etc). If we don't have the control file available, we will 
+        # need this check:
+        if "density functional" in line:
+            self.is_DFT = True
 
         # Extract the version number and optionally the build number.
-        searchstr = ": TURBOMOLE"
-        index = line.find(searchstr)
-        if index > -1:
-            line = line[index + len(searchstr):]
-            tokens = line.split()
-            package_version = tokens[0][1:].replace("-", ".")
-            self.metadata["package_version"] = package_version
-            self.metadata["legacy_package_version"] = package_version
-            if tokens[1] == "(":
-                revision = tokens[2]
-                self.metadata["package_version"] = "{}.r{}".format(package_version, revision)
+        version_match = self.version_regex.search(line)
+        if version_match:            
+            # We only combine the parts of the version string we actually got.
+            # Our regex ensures we have at least the first two parts (x.y), and optionally a third part (x.y.z).
+            # This line could look like any of the following:
+            # - TURBOMOLE rev. V7.4.1 (2bfdd732)
+            # - TURBOMOLE V7.2 ( 21471 ) 11 Oct 2017 at 17:04:51
+            # - TURBOMOLE V5-9-0 29 Nov 2006 at 22:06:41
+            version = ".".join([version_part for version_part in version_match.group(1,2,3) if version_part is not None])
+            
+            # We may also have a build ID.
+            build_id = version_match.group(4)
+                            
+            self.metadata["legacy_package_version"] = version
+            self.metadata["package_version"] = "{}.r{}".format(version, build_id) if build_id is not None else version
+                
+            # We have entered a new module (sub program); reset our success flag.
+            self.metadata['success'] = False
+        
+        ## Orbital occupation info from dscf.
+        #  orbitals $scfmo  will be written to file mos
+        # 
+        #     irrep                  1a          2a          3a          4a          5a   
+        #  eigenvalues H        -20.25992    -1.24314    -0.57053    -0.46144    -0.39295
+        #             eV        -551.3047    -33.8279    -15.5250    -12.5564    -10.6929
+        #  occupation              2.0000      2.0000      2.0000      2.0000      2.0000
+        # 
+        #     irrep                  6a          7a   
+        #  eigenvalues H          0.55091     0.64409
+        #             eV          14.9910     17.5268
+        ## Or
+        #  orbitals $uhfmo_beta  will be written to file beta
+        # 
+        #  orbitals $uhfmo_alpha  will be written to file alpha
+        #  
+        #  alpha: 
+        # 
+        #     irrep                 31a         32a         33a         34a         35a   
+        #  eigenvalues H         -0.47570    -0.46573    -0.40741    -0.39213    -0.35411
+        #             eV         -12.9446    -12.6733    -11.0862    -10.6705     -9.6358
+        #  occupation              1.0000      1.0000      1.0000      1.0000      1.0000 
+        # 
+        #     irrep                 36a         37a         38a         39a         40a   
+        #  eigenvalues H         -0.18634    -0.10035    -0.09666    -0.02740     0.06072
+        #             eV          -5.0705     -2.7306     -2.6303     -0.7455      1.6522
+        #  
+        #  beta:  
+        # 
+        #     irrep                 30a         31a         32a         33a         34a   
+        #  eigenvalues H         -0.49118    -0.47348    -0.44470    -0.39020    -0.37919
+        #             eV         -13.3658    -12.8842    -12.1009    -10.6181    -10.3184
+        #  occupation              1.0000      1.0000      1.0000      1.0000      1.0000 
+        # 
+        #     irrep                 35a         36a         37a         38a         39a   
+        #  eigenvalues H         -0.28091    -0.15088    -0.09343    -0.07531    -0.00688
+        #             eV          -7.6440     -4.1058     -2.5424     -2.0493     -0.1873
+        # There's no point parsing HOMO/LUMO if we don't already have orbitals.
+        if hasattr(self, "mosyms"):
+            if "will be written to file mos" in line:
+                orbitals, line = self.parse_dscf_orbitals(inputfile, line)
+                self.set_attribute("homos", [self.determine_homo(self.mosyms[0], orbitals)])
+            
+            if "alpha:" in line:
+                orbitals, line = self.parse_dscf_orbitals(inputfile, line)
+                if len(orbitals) > 0:
+                    homo = self.determine_homo(self.mosyms[0], orbitals)
+                    if not hasattr(self, "homos"):
+                        self.set_attribute('homos', [homo])
+                    else:
+                        self.homos[0] = homo
+                
+            if "beta:" in line:
+                orbitals, line = self.parse_dscf_orbitals(inputfile, line)
+                if len(orbitals) > 0:
+                    homo = self.determine_homo(self.mosyms[1], orbitals)
+                    if not hasattr(self, "homos"):
+                        self.set_attribute('homos', [homo])
+                    elif len(self.homos) == 1:
+                        self.homos.append(homo)
+                    else:
+                        self.homos[1] = homo
+        
+        # Molecular charge and dipole info from dscf.
+        #  ==============================================================================
+        #                            electrostatic moments
+        #  ==============================================================================
+        # 
+        #  reference point for electrostatic moments:    0.00000   0.00000   0.00000
+        # 
+        #  
+        #               nuc           elec       ->  total
+        #  ------------------------------------------------------------------------------
+        #                           charge      
+        #  ------------------------------------------------------------------------------
+        #           70.000000     -70.000000      -0.000000
+        #  
+        #  ------------------------------------------------------------------------------
+        #                        dipole moment  
+        #  ------------------------------------------------------------------------------
+        #    x      -0.000000       0.000000      -0.000000
+        #    y       0.001384      -0.001340       0.000044
+        #    z      -0.000000       0.000000      -0.000000
+        #  
+        #    | dipole moment | =     0.0000 a.u. =     0.0001 debye 
+        #  
+        #  ------------------------------------------------------------------------------
+        #                      quadrupole moment
+        #  ------------------------------------------------------------------------------
+        #   xx    1499.472650   -1537.186938     -37.714287
+        #   yy       0.000002     -43.588053     -43.588051
+        #   zz     244.507989    -281.855472     -37.347483
+        #   xy      -0.000000       0.000000      -0.000000
+        #   xz      -5.011477       5.064680       0.053203
+        #   yz      -0.000000       0.000000       0.000000
+        #  
+        #      1/3  trace=     -39.549940
+        #      anisotropy=       6.066190
+        if "reference point for electrostatic moments:" in line:
+            # This indicates the start of a new dipole section.
+            # Safe to overwrite any old dipoles.
+            parts = line.split()
+            self.moments = [[
+                utils.convertor(float(parts[-3]), "bohr", "Angstrom"),
+                utils.convertor(float(parts[-2]), "bohr", "Angstrom"),
+                utils.convertor(float(parts[-1]), "bohr", "Angstrom")
+            ]]
+
+        if "nuc           elec       ->  total" in line:
+            line = next(inputfile)
+            line = next(inputfile)
+            if "charge" in line:
+                line = next(inputfile)
+                line = next(inputfile)
+                
+                total_charge = float(line.split()[2])
+                total_charge_int = round(total_charge)
+                
+                # Check we won't loose information converting to int.
+                if total_charge != total_charge_int:
+                    self.logger.warning("Converting non integer total charge '{}' to integer".format(total_charge))
+                
+                # Set regardless.
+                self.set_attribute("charge", total_charge_int)
+
+        if line.strip() == "dipole moment":
+            line = next(inputfile)
+            if set(line.strip()) == {"-"}:
+                line = next(inputfile)
+                x_coord =  utils.convertor(float(line.split()[-1]), "ebohr", "Debye")
+                line = next(inputfile)
+                y_coord =  utils.convertor(float(line.split()[-1]), "ebohr", "Debye")
+                line = next(inputfile)
+                z_coord =  utils.convertor(float(line.split()[-1]), "ebohr", "Debye")
+                
+                # Assume 0,0,0 as origin if not given.
+                if not hasattr(self, "moments"):
+                    self.moments = [[0,0,0]]
+                self.moments.append([x_coord, y_coord, z_coord])
+                
+        if line.strip() == "quadrupole moment":
+            line = next(inputfile)
+            if set(line.strip()) == {"-"}:
+                line = next(inputfile)
+                xx_coord  = utils.convertor(float(line.split()[-1]), "ebohr2", "Buckingham")
+                line = next(inputfile)
+                yy_coord  = utils.convertor(float(line.split()[-1]), "ebohr2", "Buckingham")
+                line = next(inputfile)
+                zz_coord  = utils.convertor(float(line.split()[-1]), "ebohr2", "Buckingham")
+                line = next(inputfile)
+                xy_coord  = utils.convertor(float(line.split()[-1]), "ebohr2", "Buckingham")
+                line = next(inputfile)
+                xz_coord  = utils.convertor(float(line.split()[-1]), "ebohr2", "Buckingham")
+                line = next(inputfile)
+                yz_coord  = utils.convertor(float(line.split()[-1]), "ebohr2", "Buckingham")
+                self.moments.append([xx_coord, xy_coord, xz_coord, yy_coord, yz_coord, zz_coord])
+                
+        ## Basis set info from dscf.
+        #               +--------------------------------------------------+
+        #               |               basis set information              |
+        #               +--------------------------------------------------+
+        # 
+        #               we will work with the 1s 3p 5d 7f 9g ... basis set
+        #               ...i.e. with spherical basis functions...
+        # 
+        #    type   atoms  prim   cont   basis
+        #    ---------------------------------------------------------------------------
+        #     o        1     15      5   sto-3g hondo  [2s1p|6s3p]
+        #     h        2      3      1   sto-3g hondo  [1s|3s]
+        #    ---------------------------------------------------------------------------
+        if "type   atoms  prim   cont   basis" in line:
+            line = next(inputfile)
+            line = next(inputfile)
+            basis_sets = []
+            while set(line.strip()) != {"-"}:
+                basis_sets.append(" ".join(line.split()[4:-1]))
+                line = next(inputfile)
+
+            # Turbomole gives us the basis set for each atom, but we're only interested if the same basis set is used throughout (for now).
+            if len(set(basis_sets)) == 1:
+                self.metadata["basis_set"] = list(set(basis_sets))[0]
+                
+        # Coordinates and gradients from statpt.
+        #   *************************************************************************
+        #  ATOM                      CARTESIAN COORDINATES
+        #   1 c      -2.67642286424381      0.00038527796998     -0.44566112589039
+        #   2 c      -1.69183504162310      0.00075591605173      2.05352357416443
+        #   3 c       0.92311977253458      0.00052122921704      2.48381308900370
+        #   4 c       2.67642286424491      0.00038528140768      0.44566112589851
+        #   5 c       1.69183504161656      0.00075592009652     -2.05352357415432
+        #   6 h      -2.98983238801665      0.00149374762706      3.67174843088014
+        #   7 h       1.64279730150941      0.00038458181684      4.43158185858240
+        #   8 h       2.98983238800216      0.00149376082387     -3.67174843087059
+        #   9 c       5.44975417206469     -0.00039526372012      1.01184691031725
+        #  10 c       7.34299179214000     -0.00071986894317     -0.68271530533475
+        #  11 h       7.01332300460381     -0.00029648805084     -2.72785997302809
+        #  12 h       5.91422629512709     -0.00052260839470      3.03917498747826
+        #  13 h       9.32456490822245     -0.00139866158379     -0.07769877084777
+        #  14 c      -5.44975417205833     -0.00039526324514     -1.01184691032156
+        #  15 h      -5.91422629512079     -0.00052260600240     -3.03917498748360
+        #  16 c      -7.34299179213657     -0.00071986698481      0.68271530532303
+        #  17 h      -7.01332300460557     -0.00029648750734      2.72785997301777
+        #  18 h      -9.32456490821458     -0.00139865699894      0.07769877082649
+        #  19 c      -0.92311977253569      0.00052122610063     -2.48381308899233
+        #  20 h      -1.64279730151053      0.00038457006746     -4.43158185856859
+        # *************************************************************************
+        #  ATOM                      CARTESIAN GRADIENTS  
+        #   1 c       0.00001122250995      0.00000667056223      0.00001828623085
+        #   2 c       0.00000193381649     -0.00001184358472      0.00001337145426
+        #   3 c      -0.00000578603102      0.00000187474419      0.00000987215044
+        #   4 c      -0.00001122250794      0.00000667041002     -0.00001828623169
+        #   5 c      -0.00000193381900     -0.00001184350870     -0.00001337145668
+        #   6 h      -0.00001402399615      0.00001821929428     -0.00000611193875
+        #   7 h       0.00001742260704     -0.00000462667818     -0.00000195847724
+        #   8 h       0.00001402399610      0.00001821957100      0.00000611193919
+        #   9 c      -0.00006557131494     -0.00002136001589      0.00002475454295
+        #  10 c       0.00006109842779     -0.00000007565809     -0.00004223963891
+        #  11 h      -0.00002879535900      0.00000574108155     -0.00000337279221
+        #  12 h       0.00004754086240      0.00000863480152     -0.00000658955451
+        #  13 h      -0.00000914653785     -0.00000320753859      0.00003066647865
+        #  14 c       0.00006557131503     -0.00002135978825     -0.00002475454202
+        #  15 h      -0.00004754086227      0.00000863481272      0.00000658955373
+        #  16 c      -0.00006109842855     -0.00000007566316      0.00004223963942
+        #  17 h       0.00002879535887      0.00000574109116      0.00000337279251
+        #  18 h       0.00000914653868     -0.00000320756462     -0.00003066647871
+        #  19 c       0.00000578603127      0.00000187466275     -0.00000987214898
+        #  20 h      -0.00001742260682     -0.00000462696679      0.00000195847629
+        # *************************************************************************
+        #
+        # In older versions (5.9)
+        # ATOM               CARTESIAN GRADIENTS
+        #  1 c      -0.00006249573129     -0.00001452041025     -0.00002380577094
+        #  2 c       0.00007390978833     -0.00000084052225      0.00000584172986
+        #  3 c      -0.00000362984325      0.00000466314052     -0.00002733252443
+        #  4 c       0.00006249783071     -0.00001452158676      0.00002380177091
+        #  5 c      -0.00007390342509     -0.00000084270316     -0.00000584066725
+        #  6 h      -0.00005950589946      0.00000095087455      0.00005137853319
+        #  7 h      -0.00000645073463     -0.00000179899463      0.00003328307243
+        #  8 h       0.00005950123260      0.00000095090879     -0.00005137678599
+        #  9 c      -0.00004885046058     -0.00002593955699     -0.00004887642413
+        # 10 c       0.00000015222157      0.00004027444288      0.00003204866033
+        # 11 h       0.00001239310045      0.00001308636889     -0.00000092060218
+        # 12 h       0.00001561988506     -0.00001608132438      0.00002717833564
+        # 13 h      -0.00000616830304      0.00000016851704     -0.00003103539353
+        # 14 c       0.00004884621752     -0.00002593547764      0.00004887866674
+        # 15 h      -0.00001561780942     -0.00001607888272     -0.00002718198410
+        # 16 c      -0.00000015329549      0.00004026946593     -0.00003204885735
+        # 17 h      -0.00001239289077      0.00001308531162      0.00000092210161
+        # 18 h       0.00000616838338      0.00000016858902      0.00003103523777
+        # 19 c       0.00000362187006      0.00000466096401      0.00002733645543
+        # 20 h       0.00000645786975     -0.00000179869042     -0.00003328556910
+        #     Optint: norm of internal gradient       0.00029710
+        #
+        if "CARTESIAN GRADIENTS" in line:
+            atomcoords = []
+            atomnos = []
+            line = next(inputfile)
+            while len(line.split()) == 5:
+                atomnos.append(self.periodic_table.number[line.split()[-4].capitalize()])
+                atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") 
+                                   for x in line.split()[-3:]])
+                line = next(inputfile)
+            
+            self.set_attribute('atomnos', atomnos)
+            self.set_attribute('natom', len(atomcoords))
+            self.append_attribute("grads", atomcoords)
 
         ## Atomic coordinates in job.last:
         #              +--------------------------------------------------+
@@ -140,22 +436,113 @@ class Turbomole(logfileparser.Logfile):
         #    -9.36352819    0.00017229    0.07445322    h      1    1.000    0     0
         #    -0.92683849   -0.00007461   -2.49592179    c      3    6.000    0     0
         #    -1.65164853   -0.00009927   -4.45456858    h      1    1.000    0     0
-        if 'Atomic coordinate, charge and isotop information' in line:
-            while 'atomic coordinates' not in line:
+        #
+        # During a jobex driven optimisation, the above geometry section will be printed at the start of each module (subprogram).
+        # We only want one coord entry per step, so we need to be careful not to add the same geometry multiple times.
+        #
+        # For 'large' molecules (probably >= 100 atoms), certain turbomole modules (eg, STATP) will only print a truncated
+        # coordinate section here, with some lines being cut and replaced with 3 lines consisting only of whitespace and 
+        # full stops (.):
+        #   5.98651205   -2.33496770   -0.80565619    c      6.000     0
+        #   9.67800538   -0.33507410    1.19593467    c      6.000     0
+        #   6.76781184    0.69969618    5.52907043    c      6.000     0
+        #    .             .             .            .      .         .
+        #    .             .             .            .      .         .
+        #    .             .             .            .      .         .
+        #  21.85796486    5.25815448    5.52575969    h      1.000     0
+        #  16.70506498    7.08657699   13.19684279    h      1.000     0
+        #  25.54043040    7.25266316    7.52378680    h      1.000     0
+        #
+        # This is very annoying, but not disastrous as it is likely the coordinates from this step will have been already printed
+        # from another module, so we can just ignore sections like this.
+        try:
+            if 'Atomic coordinate, charge and isotop information' in line:
+                while 'atomic coordinates' not in line:
+                    line = next(inputfile)
+    
+                atomcoords = []
+                atomnos = []
                 line = next(inputfile)
-
-            atomcoords = []
-            atomnos = []
+                while len(line.split()) >= 3:
+                    atomnos.append(self.periodic_table.number[line.split()[3].capitalize()])
+                    atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") 
+                                       for x in line.split()[:3]])
+                    line = next(inputfile)
+                
+                # Check the coordinates we just parsed are not already in atomcoords.
+                if not hasattr(self, 'atomcoords') or self.atomcoords[-1] != atomcoords:
+                    self.append_attribute('atomcoords', atomcoords)
+                    self.set_attribute('atomnos', atomnos)
+                    self.set_attribute('natom', len(atomcoords))
+        except Exception as e:
+            # Something went wrong, check to see if the coord line we parsed was garbage, or if something else happened.
+            if set(line.strip()).issubset({' ', '.'}):
+                # This line is a truncated coord line, we can skip this coord section.
+                pass
+            else:
+                # Panic.
+                raise e 
+        
+        # Flag that indicates we are doing an opt.
+        if "OPTIMIZATION CYCLE" in line:
+            self.append_attribute("optstatus", data.ccData.OPT_UNKNOWN)
+            
+            if "OPTIMIZATION CYCLE 1" in line:
+                # This is the start of the opt.
+                self.optstatus[-1] += data.ccData.OPT_NEW
+        
+        # Optimisation convergence criteria using statpt.
+        #
+        # ****************************************************************** 
+        #                     CONVERGENCE INFORMATION
+        # 
+        #                          Converged?     Value      Criterion
+        #        Energy change         no       0.0000011   0.0000010
+        #        RMS of displacement   yes      0.0001152   0.0005000
+        #        RMS of gradient       yes      0.0000548   0.0005000
+        #        MAX displacement      yes      0.0001409   0.0010000
+        #        MAX gradient          yes      0.0000670   0.0010000
+        # ****************************************************************** 
+        if "CONVERGENCE INFORMATION" in line:
+            # This is an optimisation.
+            # Skip lines.
             line = next(inputfile)
-            while len(line) > 2:
-                atomnos.append(self.periodic_table.number[line.split()[3].capitalize()])
-                atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom") 
-                                   for x in line.split()[:3]])
+            line = next(inputfile)
+            line = next(inputfile)
+            
+            convergence = []
+            geovalues = []
+            geotargets = []
+            
+            # There are a variable number of criteria.
+            while len(line.split()) > 3:
+                parts = line.split()
+                # lower() is for (unnecessary?) future proofing...
+                converged = parts[-3].lower() == "yes"
+                value = float(parts[-2])
+                criterion = float(parts[-1])
+                
+                # TODO: possibly require some unit conversions?
+                convergence.append(converged)
+                geovalues.append(value)
+                geotargets.append(criterion)
+                
+                # Next.                
                 line = next(inputfile)
-
-            self.append_attribute('atomcoords', atomcoords)
-            self.set_attribute('atomnos', atomnos)
-            self.set_attribute('natom', len(atomcoords))
+                
+            self.set_attribute("geotargets", geotargets)
+            self.append_attribute("geovalues", geovalues)
+            
+            if all(convergence):
+                # This iteration has converged.
+                self.append_attribute("optdone", len(self.geovalues) -1)
+                self.optstatus[-1] += data.ccData.OPT_DONE
+            else:
+                # Not converged.
+                if not hasattr(self, 'optdone'):
+                    self.set_attribute("optdone", [])
+                #self.optstatus[-1] += data.ccData.OPT_UNCONVERGED
+                
 
         # Frequency values in aoforce.out
         #        mode               7        8        9       10       11       12
@@ -267,14 +654,24 @@ class Turbomole(logfileparser.Logfile):
             while line.strip().startswith('#') and not line.find('eigenvalue') > 0:
                 line = next(inputfile)
 
+            moirreps = []
             moenergies = []
             mocoeffs = []
+            mosyms = []
 
             while not line.strip().startswith('$'):
+                number, sym = line.split()[:2]
+                number = int(number)
+                sym = self.normalisesym(sym)
+                
                 info = re.match(r".*eigenvalue=(?P<moenergy>[0-9D\.+-]{20})\s+nsaos=(?P<count>\d+).*", line)
                 eigenvalue = utils.float(info.group('moenergy'))
                 orbital_energy = utils.convertor(eigenvalue, 'hartree', 'eV')
+                
                 moenergies.append(orbital_energy)
+                mosyms.append(sym)
+                moirreps.append((number, sym))
+                
                 single_coeffs = []
                 nsaos = int(info.group('count'))
 
@@ -289,15 +686,19 @@ class Turbomole(logfileparser.Logfile):
             for i in mocoeffs:
                 while len(i) < max_nsaos:
                     i.append(numpy.nan)
-
-            if not hasattr(self, 'mocoeffs'):
-                self.mocoeffs = []
-
-            if not hasattr(self, 'moenergies'):
-                self.moenergies = []
-
-            self.mocoeffs.append(mocoeffs)
-            self.moenergies.append(moenergies)
+            
+            # We now need to sort our orbitals (because Turbomole groups them by symm).
+            mos = list(zip(moenergies, mocoeffs, mosyms, moirreps))
+            mos.sort(key = lambda mo: mo[0])
+            moenergies, mocoeffs, mosyms, moirreps = zip(*mos)
+            
+            # MO irreps is not actually recognised as a cclib attribute,
+            # but we may need this info to parse other sections.
+            self.append_attribute("moirreps", moirreps)
+            self.append_attribute("moenergies", moenergies)
+            self.append_attribute("mocoeffs", mocoeffs)
+            self.append_attribute("mosyms", mosyms)
+            self.set_attribute("nmo", len(moenergies))
 
         # Parsing the scfenergies, scfvalues and scftargets from job.last file.
         # scf convergence criterion : increment of total energy < .1000000D-05
@@ -338,6 +739,10 @@ class Turbomole(logfileparser.Logfile):
             iter_energy = []
             iter_one_elec_energy = []
             while 'convergence criteria satisfied' not in line:
+                # nbasis
+                if  "number of basis functions" in line:
+                    self.set_attribute("nbasis", int(line.split()[-1]))
+                
                 if 'ITERATION  ENERGY' in line:
                     line = next(inputfile)
                     info = line.split()
@@ -355,6 +760,12 @@ class Turbomole(logfileparser.Logfile):
 
             scfenergy = utils.convertor(utils.float(line.split()[4]), 'hartree', 'eV')
             self.append_attribute('scfenergies', scfenergy)
+            
+            # We need to determine whether this is a HF or DFT energy for metadata.
+            if self.is_DFT:
+                self.metadata['methods'].append("DFT")
+            else:
+                self.metadata['methods'].append("HF")
 
         #  **********************************************************************
         #  *                                                                    *
@@ -376,20 +787,23 @@ class Turbomole(logfileparser.Logfile):
         #  *                                                                    *
         #  *   D1 diagnostic                           :      0.0132            *
         #  *                                                                    *
-        #  **********************************************************************
-        if 'C C S D F 1 2   P R O G R A M' in line:
-            while 'ccsdf12 : all done' not in line:
-                if 'Final MP2 energy' in line:
-                    mp2energy = [utils.convertor(utils.float(line.split()[5]), 'hartree', 'eV')]
-                    self.append_attribute('mpenergies', mp2energy)
-
-                if 'Final CCSD energy' in line:
-                    self.append_attribute(
-                        'ccenergies',
-                        utils.convertor(utils.float(line.split()[5]), 'hartree', 'eV')
-                    )
-
-                line = next(inputfile)
+        #  **********************************************************************            
+        if 'Final CCSD energy' in line or 'Final CC2 energy' in line:
+            self.append_attribute(
+                'ccenergies',
+                utils.convertor(utils.float(line.split()[5]), 'hartree', 'eV')
+            )
+            self.metadata['methods'].append("CCSD")
+            
+        # Look for MP energies.
+        for mp_level in range(2,6):
+            if "Final MP{} energy".format(mp_level) in line:
+                mpenergy = utils.convertor(utils.float(line.split()[5]), 'hartree', 'eV')
+                if mp_level == 2:
+                    self.append_attribute('mpenergies', [mpenergy])
+                else:
+                    self.mpenergies[-1].append(mpenergy)
+                self.metadata['methods'].append("MP{}".format(mp_level))
 
         #  *****************************************************
         #  *                                                   *
@@ -400,14 +814,167 @@ class Turbomole(logfileparser.Logfile):
         #  *     (MP2-energy evaluated from T2 amplitudes)     *
         #  *                                                   *
         #  *****************************************************
-        if 'm p g r a d - program' in line:
-            while 'ccsdf12 : all done' not in line:
-                if 'MP2-energy' in line:
-                    line = next(inputfile)
-                    if 'total' in line:
-                        mp2energy = [utils.convertor(utils.float(line.split()[3]), 'hartree', 'eV')]
-                        self.append_attribute('mpenergies', mp2energy)
+        if 'MP2-energy' in line:
+            line = next(inputfile)
+            if 'total' in line:
+                mp2energy = [utils.convertor(utils.float(line.split()[3]), 'hartree', 'eV')]
+                self.append_attribute('mpenergies', mp2energy)
+                self.metadata['methods'].append("MP2")
+
+        # Support for the now outdated (?) rimp2
+        # ------------------------------------------------
+        #     Method          :  MP2     
+        #     Total Energy    :    -75.0009789796
+        # ------------------------------------------------
+        if "Method          :  MP2" in line:
+            line = next(inputfile)
+            mp2energy = [utils.convertor(utils.float(line.split()[3]), 'hartree', 'eV')]
+            self.append_attribute('mpenergies', mp2energy)
+            self.metadata['methods'].append("MP2")
+
+
+        if ": all done  ****" in line:
+            # End of module, set success flag.
+            self.metadata['success'] = True
+
+
+
+    def split_irrep(self, irrep):
+        """
+        Split a Turbomole irrep into number and symmetry.
+        """
+        rematch = re.match(r"^([0-9]+)(.+)$", irrep)
+        number = int(rematch.group(1))
+        sym = self.normalisesym(rematch.group(2))
+        return (number, sym)
+    
+    def parse_dscf_orbitals(self, inputfile, line):
+        """
+        Extract orbital occupation and energies from a dscf logfile.
+        
+        Returns
+        -------
+        tuple
+            a two membered tuple where the first element is a list of dictionaries of the the orbitals parsed, while the second is the line on which parsing should continue.
+        """
+        ## Orbital occupation info from dscf.
+        #  orbitals $scfmo  will be written to file mos
+        # 
+        #     irrep                  1a          2a          3a          4a          5a   
+        #  eigenvalues H        -20.25992    -1.24314    -0.57053    -0.46144    -0.39295
+        #             eV        -551.3047    -33.8279    -15.5250    -12.5564    -10.6929
+        #  occupation              2.0000      2.0000      2.0000      2.0000      2.0000
+        # ...
+        #     irrep                  6a          7a   
+        #  eigenvalues H          0.55091     0.64409
+        #             eV          14.9910     17.5268
+        ## Or
+        #  orbitals $uhfmo_beta  will be written to file beta
+        # 
+        #  orbitals $uhfmo_alpha  will be written to file alpha
+        #  
+        #  alpha: 
+        # 
+        #     irrep                 31a         32a         33a         34a         35a   
+        #  eigenvalues H         -0.47570    -0.46573    -0.40741    -0.39213    -0.35411
+        #             eV         -12.9446    -12.6733    -11.0862    -10.6705     -9.6358
+        #  occupation              1.0000      1.0000      1.0000      1.0000      1.0000 
+        # ...
+        #     irrep                 36a         37a         38a         39a         40a   
+        #  eigenvalues H         -0.18634    -0.10035    -0.09666    -0.02740     0.06072
+        #             eV          -5.0705     -2.7306     -2.6303     -0.7455      1.6522
+        #  
+        #  beta:  
+        # 
+        #     irrep                 30a         31a         32a         33a         34a   
+        #  eigenvalues H         -0.49118    -0.47348    -0.44470    -0.39020    -0.37919
+        #             eV         -13.3658    -12.8842    -12.1009    -10.6181    -10.3184
+        #  occupation              1.0000      1.0000      1.0000      1.0000      1.0000 
+        # ...
+        #     irrep                 35a         36a         37a         38a         39a   
+        #  eigenvalues H         -0.28091    -0.15088    -0.09343    -0.07531    -0.00688
+        #             eV          -7.6440     -4.1058     -2.5424     -2.0493     -0.1873
+        # Skip blank line.
+        line = next(inputfile)
+        
+        orbitals = []
+        while True: 
+            irreps = []
+            energies_hartree = []
+            energies_eV = []
+            occupations = []
+            
+            # MO index
+            line = next(inputfile)
+            
+            # Check we're still in the right section.
+            if "irrep" not in line:
+                # All done.
+                break
+            else:
+                # Turbomole lists orbitals of different symmetry separately.
+                irreps = line.split()[1:]
+            
+            # Energy in H.
+            line = next(inputfile)
+            energies_hartree = [float(energy) for energy in line.split()[2:]]
+            
+            # Energy in eV.
+            line = next(inputfile)
+            energies_eV = [float(energy) for energy in line.split()[1:]]
+            
+            # Occupation.
+            # This line will be missing if the orbitals are virtual (unoccupied).
+            line = next(inputfile)
+            if "occupation" in line:
+                occupations = [float(occupation) for occupation in line.split()[1:]]
                 line = next(inputfile)
+            
+            # If we have any missing occupations, fill with 0
+            occupations.extend([0.0] * (len(irreps) - len(occupations)))
+                
+            # Add to list.
+            orbitals.extend([
+                 {'irrep': irrep, 'energy_H': energy_H, 'energy_eV': energy_eV, 'occupancy': occupation}
+                 for irrep, energy_H, energy_eV, occupation
+                 in zip(irreps, energies_hartree, energies_eV, occupations)
+            ])
+            
+        return orbitals, line
+    
+    
+    def determine_homo(self, mosyms, dscf_mos):
+        """
+        Determine the highest occupied molecular orbital.
+        
+        Returns
+        -------
+        int
+            the index of the HOMO.
+        """
+        # First, we need a mapping between each irrep and its index in mosyms etc.
+        symm_count = {}
+        irreps = []
+        
+        for symm in mosyms:
+            try:
+                symm_count[symm] += 1
+            except KeyError:
+                symm_count[symm] = 1
+            
+            irreps.append((symm_count[symm], symm))
+            
+        # We also have occupancy info from dscf (but probably only for those orbitals close to the HOMO/LUMO gap).
+        # We now need to determine which orbital with occupancy is highest.
+        homo = 0
+        for mo in dscf_mos:
+            if mo['occupancy'] > 0:
+                # This orbital has electrons, determine its position out of all orbitals.
+                index = irreps.index(self.split_irrep(mo['irrep']))
+                if index > homo:
+                    homo = index
+                    
+        return homo
 
     def deleting_modes(self, vibfreqs, vibdisps, vibirs, vibrmasses):
         """Deleting frequencies relating to translations or rotations"""
@@ -423,6 +990,20 @@ class Turbomole(logfileparser.Logfile):
     def after_parsing(self):
         if hasattr(self, 'vibfreqs'):
             self.deleting_modes(self.vibfreqs, self.vibdisps, self.vibirs, self.vibrmasses)
+            
+        # Try and determine our multiplicity from our orbitals.
+        if hasattr(self, "homos"):
+            if len(self.homos) == 1:
+                # If we are restricted (len(homos) == 1); assume we have to be singlet.
+                self.set_attribute("mult", 1)
+            else:
+                # Unrestricted, the difference in homos should tell us the no. of unpaired e-.
+                unpaired_e = abs(self.homos[0] - self.homos[1])
+                self.set_attribute("mult", unpaired_e +1)
+                
+        # Set a flag if we stopped part way through an opt.
+        if hasattr(self, "optstatus") and self.optstatus[-1] != data.ccData.OPT_DONE:
+            self.optstatus[-1] += data.ccData.OPT_UNCONVERGED
 
 
 class OldTurbomole(logfileparser.Logfile):
@@ -914,5 +1495,4 @@ class OldTurbomole(logfileparser.Logfile):
                     del self.vibsyms[i]
                     i -= 1
                 i += 1
-
 

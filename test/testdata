@@ -102,6 +102,8 @@ CC        QChem       GenericCCTest         basicQChem5.1         water_ccd.out
 CC        QChem       GenericCCTest         basicQChem5.1         water_ccsd.out
 CC        QChem       GenericCCTest         basicQChem5.1         water_ccsd(t).out
 CC        Turbomole   GenericCCTest         basicTurbomole7.2     water_ccsd/basis      water_ccsd/control      water_ccsd/mos      water_ccsd/dscf.out      water_ccsd/ccsdf12.out
+CC        Turbomole   GenericCCTest         basicTurbomole7.4     water_ccsd/basis      water_ccsd/control      water_ccsd/mos      water_ccsd/dscf.out      water_ccsd/ccsdf12.out
+CC        Turbomole   GenericCCTest         basicTurbomole7.4     water_cc2/basis      water_cc2/control      water_cc2/mos      water_cc2/dscf.out      water_cc2/ricc2.out
 
 CI        GAMESS      GAMESSCISTest         basicGAMESS-US2017    water_cis_saps.out
 CI        GAMESS      GAMESSCISTest         basicGAMESS-US2018    water_cis_saps.out
@@ -159,6 +161,8 @@ GeoOpt    Psi4        Psi4GeoOptTest        basicPsi4-1.3.1       dvb_gopt_rhf.o
 GeoOpt    Psi4        Psi4GeoOptTest        basicPsi4-1.3.1       dvb_gopt_rks.out
 GeoOpt    QChem       GenericGeoOptTest     basicQChem4.2         dvb_gopt.out
 GeoOpt    QChem       GenericGeoOptTest     basicQChem5.1         dvb_gopt.out
+GeoOpt    Turbomole   TurbomoleGeoOptTest   basicTurbomole5.9     dvb_gopt/basis      dvb_gopt/control      dvb_gopt/mos      dvb_gopt/job.last
+GeoOpt    Turbomole   TurbomoleKeepGeoOptTest   basicTurbomole7.5     dvb_gopt/basis      dvb_gopt/control      dvb_gopt/mos      dvb_gopt/job.0      dvb_gopt/job.1      dvb_gopt/job.2      dvb_gopt/job.3      dvb_gopt/job.4      dvb_gopt/job.5     dvb_gopt/job.last
 
 MP        DALTON      GenericMP2Test        basicDALTON-2013      water_mp2.out
 MP        DALTON      GenericMP2Test        basicDALTON-2015      water_mp2.out
@@ -205,6 +209,10 @@ MP        QChem       GenericMP3Test        basicQChem5.1         water_mp3.out
 MP        QChem       QChemMP4SDQTest       basicQChem5.1         water_mp4sdq.out
 MP        QChem       QChemMP4SDTQTest      basicQChem5.1         water_mp4.out
 MP        Turbomole   GenericMP2Test        basicTurbomole7.2     water_mp2/basis    water_mp2/control    water_mp2/coord    water_mp2/mos    water_mp2/dscf.out    water_mp2/ccsdf12.out
+MP        Turbomole   GenericMP2Test        basicTurbomole7.4     water_mp2/basis    water_mp2/control    water_mp2/coord    water_mp2/mos    water_mp2/dscf.out    water_mp2/ccsdf12.out
+MP        Turbomole   GenericMP2Test        basicTurbomole7.4     water_mp2_rimp2/basis    water_mp2_rimp2/control    water_mp2_rimp2/coord    water_mp2_rimp2/mos    water_mp2_rimp2/dscf.out    water_mp2_rimp2/rimp2.out
+MP        Turbomole   GenericMP2Test        basicTurbomole7.4     water_mp2_ricc2/basis    water_mp2_ricc2/control    water_mp2_ricc2/coord    water_mp2_ricc2/mos    water_mp2_ricc2/dscf.out    water_mp2_ricc2/ricc2.out
+MP        Turbomole   GenericMP3Test        basicTurbomole7.4     water_mp3/basis    water_mp3/control    water_mp3/coord    water_mp3/mos    water_mp3/dscf.out    water_mp3/ccsdf12.out
 
 Polar     DALTON      ReferencePolarTest    basicDALTON-2015      Trp_polar_abalnr.out
 Polar     GAMESS      ReferencePolarTest    basicGAMESS-US2017    Trp_polar_tdhf.out
@@ -262,6 +270,7 @@ SP        Psi4        PsiSPTest             basicPsi4-1.3.1             dvb_sp_r
 SP        QChem       GenericSPTest         basicQChem4.2               dvb_sp.out
 SP        QChem       GenericSPTest         basicQChem5.1               dvb_sp.out
 SP        Turbomole   TurbomoleSPTest       basicTurbomole5.9           dvb_sp_symm/mos       dvb_sp_symm/basis      dvb_sp_symm/control      dvb_sp_symm/dscf.out      dvb_sp_symm/coord
+SP        Turbomole   TurbomoleSPTest       basicTurbomole7.5           dvb_sp/basis      dvb_sp/control      dvb_sp/mos      dvb_sp/dscf.out      dvb_sp/coord
 SP        DALTON      GenericDispersionTest basicDALTON-2018            dvb_dispersion_bp86_d3zero.out
 SP        GAMESS      FireflyDispersionTest basicFirefly8.1             dvb_dispersion_bp86_d3zero.out
 SP        GAMESS      GenericDispersionTest basicGAMESS-US2018          dvb_dispersion_bp86_d3zero.out

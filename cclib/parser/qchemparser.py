@@ -1620,13 +1620,13 @@ cannot be determined. Rerun without `$molecule read`."""
                 line = next(inputfile)
                 assert 'Total Entropy' in line
                 if not hasattr(self, 'entropy'):
-                    entropy = float(line.split()[2]) * self.temperature / 1000
+                    entropy = float(line.split()[2]) / 1000
                     # This is the *temperature dependent* entropy.
                     self.entropy = utils.convertor(entropy,
                                                    'kcal/mol', 'hartree')
                 if not hasattr(self, 'freeenergy'):
-                    self.freeenergy = self.enthalpy - self.entropy
-        
+                    self.freeenergy = self.enthalpy - self.entropy * self.temperature
+
         # Extract total elapsed (wall) and CPU job times
         if line[:16] == ' Total job time:':
             self.metadata['success'] = True
@@ -1651,9 +1651,6 @@ cannot be determined. Rerun without `$molecule read`."""
                 pass
 
         # TODO:
-        # 'enthalpy' (incorrect)
-        # 'entropy' (incorrect)
-        # 'freeenergy' (incorrect)
         # 'nocoeffs'
         # 'nooccnos'
         # 'vibanharms'

@@ -8,7 +8,7 @@
 """Utilities often used by cclib parsers and scripts"""
 
 import importlib
-import sys
+import re
 from itertools import accumulate
 
 import numpy
@@ -197,6 +197,23 @@ def get_rotation(a, b):
             rmat = numpy.dot(V, W)
             r = scipy.spatial.transform.Rotation.from_dcm(rmat)
     return r
+
+def skip_until_no_match(inputfile, regex):
+    """Skip lines that match a regex. First non-matching line is returned.
+
+    This method allows to skip a variable number of lines, allowing for example,
+    to parse sections that might have different whitespace/spurious lines for
+    different versions of the software.
+    """
+    line = next(inputfile)
+    while re.match(regex, line):
+        line = next(inputfile)
+    return line
+
+def str_contains_only(string, chars):
+    """Checks if string contains only the specified characters.
+    """
+    return all([c in chars for c in string])
 
 class PeriodicTable:
     """Allows conversion between element name and atomic no."""
