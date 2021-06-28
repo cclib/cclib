@@ -100,10 +100,6 @@ class Gaussian(logfileparser.Logfile):
         # dedicated `polar` job? If so, avoid duplicate parsing.
         self.hp_polarizabilities = False
 
-        # Create empty list for the computing time to be stored in.
-        self.metadata['wall_time'] =[]
-        self.metadata['cpu_time'] =[]
-
     def after_parsing(self):
         # atomcoords are parsed as a list of lists but it should be an array
         if hasattr(self, "atomcoords"):
@@ -2105,6 +2101,11 @@ class Gaussian(logfileparser.Logfile):
 
         # Extract total elapsed (wall) and CPU job times
         if line[:14] == ' Elapsed time:' or line[:14] == ' Job cpu time:':
+            # create empty list for the times to be stored in
+            if line[:14] == ' Elapsed time:' and not "wall_time" in self.metadata:
+                self.metadata['wall_time'] = []
+            if line[:14] == ' Job cpu time:' and not "cpu_time" in self.metadata:
+                self.metadata['cpu_time'] = []
             # the line format is " Elapsed time:       0 days  0 hours  0 minutes 47.5 seconds." at the end of each job ran.
             # the line format is " Job cpu time:       0 days  0 hours  8 minutes 45.7 seconds." at the end of each job ran.
             try:

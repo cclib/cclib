@@ -363,10 +363,11 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('Psi4', 'reading cpu/wall time is not implemented for this parser') 
     @skipForParser('Turbomole', 'reading cpu/wall time is not implemented for this parser') 
     def testmetadata_times(self):
-        """Does metadata have expected keys and values?"""
-        self.assertIn("cpu_time", self.data.metadata)
-        self.assertIn("wall_time", self.data.metadata)
-
+        """Does metadata have expected keys and values of correct types?"""
+        if "wall_time" in self.data.metadata:
+            assert self.data.metadata["wall_time"][0] == datetime.timedelta
+        if "cpu_time" in self.data.metadata:
+            assert self.data.metadata["cpu_time"][0] == datetime.timedelta
 
 class ADFSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
