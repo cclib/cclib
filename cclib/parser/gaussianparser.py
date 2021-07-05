@@ -2202,7 +2202,12 @@ class Gaussian(logfileparser.Logfile):
                 # split the line by white space
                 split_line = line.split()
                 # cast the time elements as floats for use in timedelta data structure
-                time = datetime.timedelta(days=float(split_line[n]), hours=float(split_line[n+2]), minutes=float(split_line[n+4]), seconds=float(split_line[n+6]))
+                time = datetime.timedelta(
+                    days=float(split_line[n]),
+                    hours=float(split_line[n+2]),
+                    minutes=float(split_line[n+4]),
+                    seconds=float(split_line[n+6]),
+                )
                 self.metadata[key].append(time)
             except:
                 pass
