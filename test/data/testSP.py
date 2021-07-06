@@ -7,6 +7,7 @@
 
 """Test single point logfiles in cclib."""
 
+import datetime
 import os
 import unittest
 
@@ -360,9 +361,13 @@ class GenericSPTest(unittest.TestCase):
     def testmetadata_times(self):
         """Does metadata have expected keys and values of correct types?"""
         if "wall_time" in self.data.metadata:
-            assert self.data.metadata["wall_time"][0] == datetime.timedelta
+            assert self.data.metadata["wall_time"]
+            assert all(isinstance(wall_time, datetime.timedelta)
+                       for wall_time in self.data.metadata["wall_time"])
         if "cpu_time" in self.data.metadata:
-            assert self.data.metadata["cpu_time"][0] == datetime.timedelta
+            assert self.data.metadata["cpu_time"]
+            assert all(isinstance(cpu_time, datetime.timedelta)
+                       for cpu_time in self.data.metadata["cpu_time"])
 
 class ADFSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
