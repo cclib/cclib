@@ -1262,22 +1262,21 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
         #      1       C          122.158        130.692
         # ...
         if line[:15] == 'CHEMICAL SHIFTS':
-            tensors = [[], [], []]
-            for line in inputfile:
-                if line[:32] == 'CHEMICAL SHIELDING SUMMARY (ppm)':
-                    break
+            nmrtensors = dict()
+            while line.strip() != 'CHEMICAL SHIELDING SUMMARY (ppm)':
                 if line[:8] == ' Nucleus':
-                    atom = re.search('Nucleus\s+(\d+)\w', line).groups()
+                    atom = int(re.search(r'Nucleus\s+(\d+)\w', line).groups()[0])
                     self.skip_lines(inputfile, ['-', ''])
-                    for i in range(3):
+                    atomtensors = dict()
+                    for i in ("diamagnetic", "paramagnetic", "total"):
                         t_type = next(inputfile).split()[0]
                         tensor = numpy.zeros((3, 3))
                         for j, row in zip(range(3), inputfile):
                             tensor[j, :] = list(map(float, row.split()))
-                        tensors[i].append(tensor)
+                        atomtensors[i] = tensor
                         self.skip_line(inputfile, '')
-
-            self.skip_lines(inputfile, ['-', '', '', 'text', '-'])
+                    nmrtensors[atom] = atomtensors
+                line = next(inputfile)
 
             isotropic, anisotropic = [], []
             for line in inputfile:
@@ -1287,7 +1286,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 isotropic.append(float(iso))
                 anisotropic.append(float(aniso))
 
-            self.set_attribute('nmrtensors', tensors)
+            self.set_attribute('nmrtensors', nmrtensors)
 
         if line[:23] == "VIBRATIONAL FREQUENCIES":
 
