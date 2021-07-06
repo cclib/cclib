@@ -1268,16 +1268,19 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                     atom = int(re.search(r'Nucleus\s+(\d+)\w', line).groups()[0])
                     self.skip_lines(inputfile, ['-', ''])
                     atomtensors = dict()
-                    for i in ("diamagnetic", "paramagnetic", "total"):
-                        t_type = next(inputfile).split()[0]
+                    for _ in range(3):
+                        t_type = next(inputfile).split()[0].lower()
                         tensor = numpy.zeros((3, 3))
                         for j, row in zip(range(3), inputfile):
                             tensor[j, :] = list(map(float, row.split()))
-                        atomtensors[i] = tensor
+                        atomtensors[t_type] = tensor
                         self.skip_line(inputfile, '')
                     nmrtensors[atom] = atomtensors
                 line = next(inputfile)
 
+            self.skip_lines(inputfile, ['-', '', '', 'text', '-'])
+
+            # Not currently used.
             isotropic, anisotropic = [], []
             for line in inputfile:
                 if not line.strip():
