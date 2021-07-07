@@ -9,7 +9,7 @@
 
 
 import re
-
+import datetime
 import numpy
 
 from cclib.parser import data
@@ -2182,6 +2182,35 @@ class Gaussian(logfileparser.Logfile):
                 if not hasattr(self, 'optdone'):
                     self.optdone = []
                 self.optdone.append(len(self.optstatus) - 1)
+
+        # Extract total elapsed (wall) and CPU job times
+        if line[:14] == ' Elapsed time:' or line[:14] == ' Job cpu time:':
+            # create empty list for the times to be stored in
+            if line[:14] == ' Elapsed time:' and not "wall_time" in self.metadata:
+                self.metadata['wall_time'] = []
+            if line[:14] == ' Job cpu time:' and not "cpu_time" in self.metadata:
+                self.metadata['cpu_time'] = []
+            # the line format is " Elapsed time:       0 days  0 hours  0 minutes 47.5 seconds." at the end of each job ran.
+            # the line format is " Job cpu time:       0 days  0 hours  8 minutes 45.7 seconds." at the end of each job ran.
+            try:
+                n = 2
+                key = 'wall_time'
+                # if parsing a cpu time change key and shift n
+                if line[:14] == ' Job cpu time:':
+                    n += 1
+                    key = 'cpu_time'
+                # split the line by white space
+                split_line = line.split()
+                # cast the time elements as floats for use in timedelta data structure
+                time = datetime.timedelta(
+                    days=float(split_line[n]),
+                    hours=float(split_line[n+2]),
+                    minutes=float(split_line[n+4]),
+                    seconds=float(split_line[n+6]),
+                )
+                self.metadata[key].append(time)
+            except:
+                pass
 
         if line[:31] == ' Normal termination of Gaussian':
             self.metadata['success'] = True

@@ -7,6 +7,7 @@
 
 """Test single point logfiles in cclib."""
 
+import datetime
 import os
 import unittest
 
@@ -349,7 +350,6 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('GAMESS', 'reading cpu/wall time is not implemented for this parser') 
     @skipForParser('GAMESSUK', 'reading cpu/wall time is not implemented for this parser') 
     @skipForParser('GAMESSUS', 'reading cpu/wall time is not implemented for this parser') 
-    @skipForParser('Gaussian', 'reading cpu/wall time is not implemented for this parser') 
     @skipForParser('Jaguar', 'reading cpu/wall time is not implemented for this parser') 
     @skipForParser('Molcas', ' reading cpu/wall time is not implemented for this parser') 
     @skipForParser('Molpro', 'reading cpu/wall time is not implemented for this parser') 
@@ -359,10 +359,15 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('Psi4', 'reading cpu/wall time is not implemented for this parser') 
     @skipForParser('Turbomole', 'reading cpu/wall time is not implemented for this parser') 
     def testmetadata_times(self):
-        """Does metadata have expected keys and values?"""
-        self.assertIn("cpu_time", self.data.metadata)
-        self.assertIn("wall_time", self.data.metadata)
-
+        """Does metadata have expected keys and values of correct types?"""
+        if "wall_time" in self.data.metadata:
+            assert self.data.metadata["wall_time"]
+            assert all(isinstance(wall_time, datetime.timedelta)
+                       for wall_time in self.data.metadata["wall_time"])
+        if "cpu_time" in self.data.metadata:
+            assert self.data.metadata["cpu_time"]
+            assert all(isinstance(cpu_time, datetime.timedelta)
+                       for cpu_time in self.data.metadata["cpu_time"])
 
 class ADFSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
