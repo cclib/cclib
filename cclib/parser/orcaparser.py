@@ -184,7 +184,13 @@ class ORCA(logfileparser.Logfile):
                     elif coord_type in ['int', 'internal']:
                         def splitter(line):
                             atom, a1, a2, a3, bond, angle, dihedral = line.split()[:7]
-                            return [atom, int(a1), int(a2), int(a3), float(bond), float(angle), float(dihedral)]
+                            # This could be some combination of floats and variables
+                            # C                  0    0    0       0.0                  0.0                   0.0
+                            # C                  3    2    1       {B3}                 {A2}                  {D1}
+                            try:
+                                return [atom, int(a1), int(a2), int(a3), float(bond), float(angle), float(dihedral)]
+                            except:
+                                return [atom, int(a1), int(a2), int(a3), str(bond), str(angle), str(dihedral)]
                     elif coord_type == 'gzmt':
                         def splitter(line):
                             vals = line.split()[:7]
@@ -281,9 +287,7 @@ class ORCA(logfileparser.Logfile):
                 line = line.strip()
                 self.append_attribute('scannames', line.split(':')[0])
                 line = next(inputfile)
-            print(line)
             line = next(inputfile)
-            print(line)
             num_params = int(line.strip().split()[2])
         
         if line[0:15] == "Number of atoms":
