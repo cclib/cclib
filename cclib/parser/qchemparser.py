@@ -1470,12 +1470,20 @@ cannot be determined. Rerun without `$molecule read`."""
             # For IR-related jobs, the Hessian is printed (dim: 3*natom, 3*natom).
             # Note that this is *not* the mass-weighted Hessian.
             if any(header in line for header in self.hessian_headers):
-                if not hasattr(self, 'hessian'):
-                    dim = 3*self.natom
-                    self.hessian = QChem.parse_matrix(inputfile, dim, dim, self.ncolsblock)
+                dim = 3*self.natom
+                self.set_attribute(
+                    "hessian", QChem.parse_matrix(inputfile, dim, dim, self.ncolsblock)
+                )
 
             # Start of the IR/Raman frequency section.
             if 'VIBRATIONAL ANALYSIS' in line:
+
+                vibfreqs = []
+                vibfconsts = []
+                vibrmasses = []
+                vibirs = []
+                vibramans = []
+                vibdisps = []
 
                 while 'STANDARD THERMODYNAMIC QUANTITIES' not in line:
                     ## IR, optional Raman:
@@ -1518,39 +1526,22 @@ cannot be determined. Rerun without `$molecule read`."""
                     # if not hasattr(self, 'vibsyms'):
                     #     self.vibsyms = []
                     if 'Frequency:' in line:
-                        if not hasattr(self, 'vibfreqs'):
-                            self.vibfreqs = []
-                        vibfreqs = map(float, line.split()[1:])
-                        self.vibfreqs.extend(vibfreqs)
+                        vibfreqs.extend(map(float, line.split()[1:]))
 
                     if 'Force Cnst:' in line:
-                        if not hasattr(self, 'vibfconsts'):
-                            self.vibfconsts = []
-                        vibfconsts = map(float, line.split()[2:])
-                        self.vibfconsts.extend(vibfconsts)
+                        vibfconsts.extend(map(float, line.split()[2:]))
 
                     if 'Red. Mass' in line:
-                        if not hasattr(self, 'vibrmasses'):
-                            self.vibrmasses = []
-                        vibrmasses = map(float, line.split()[2:])
-                        self.vibrmasses.extend(vibrmasses)
+                        vibrmasses.extend(map(float, line.split()[2:]))
 
                     if 'IR Intens:' in line:
-                        if not hasattr(self, 'vibirs'):
-                            self.vibirs = []
-                        vibirs = map(float, line.split()[2:])
-                        self.vibirs.extend(vibirs)
+                        vibirs.extend(map(float, line.split()[2:]))
 
                     if 'Raman Intens:' in line:
-                        if not hasattr(self, 'vibramans'):
-                            self.vibramans = []
-                        vibramans = map(float, line.split()[2:])
-                        self.vibramans.extend(vibramans)
+                        vibramans.extend(map(float, line.split()[2:]))
 
                     # This is the start of the displacement block.
                     if line.split()[0:3] == ['X', 'Y', 'Z']:
-                        if not hasattr(self, 'vibdisps'):
-                            self.vibdisps = []
                         disps = []
                         for k in range(self.natom):
                             line = next(inputfile)
@@ -1561,7 +1552,7 @@ cannot be determined. Rerun without `$molecule read`."""
                                     disps.append([])
                             for n in range(N):
                                 disps[n].append(numbers[3*n:(3*n)+3])
-                        self.vibdisps.extend(disps)
+                        vibdisps.extend(disps)
 
                     line = next(inputfile)
 
@@ -1577,6 +1568,19 @@ cannot be determined. Rerun without `$molecule read`."""
                     #                 self.vibanharms = []
                     #             self.vibanharms.append(float(line.split()[-1]))
                     #         line = next(inputfile)
+
+                if vibfreqs:
+                    self.set_attribute("vibfreqs", vibfreqs)
+                if vibfconsts:
+                    self.set_attribute("vibfconsts", vibfconsts)
+                if vibrmasses:
+                    self.set_attribute("vibrmasses", vibrmasses)
+                if vibirs:
+                    self.set_attribute("vibirs", vibirs)
+                if vibramans:
+                    self.set_attribute("vibramans", vibramans)
+                if vibdisps:
+                    self.set_attribute("vibdisps", vibdisps)
 
             if 'STANDARD THERMODYNAMIC QUANTITIES AT' in line:
 
