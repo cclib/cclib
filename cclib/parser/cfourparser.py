@@ -84,7 +84,6 @@ class CFOUR(logfileparser.Logfile):
 
         if '@GETXYZ-I' in line:
             self.natom = int(line.split()[1])
-            print(self.natom)
 
         if 'Coordinates (in bohr)' in line:
             # skip labeling lines
@@ -99,7 +98,22 @@ class CFOUR(logfileparser.Logfile):
             coord_block = numpy.array(self._parse_block(inputfile, self.natom,str, 'parsing coordinate blocks'))
             self.atomnos = numpy.array(coord_block[:,1],dtype=int)
             self.atomcoords = numpy.array(coord_block[:,2:],dtype=float)
-            
+
+        # find the number of basis functions
+        if  'There are' in line and 'basis functions.' in line:
+            self.nbasis = line.split()[2]
+            print(self.nbasis)
+        if  'GAUSSIAN BASIS INFORMATION' in line:
+            for i in range(4):
+                 line = next(inputfile)
+            print(line)
+        self.gbasis = []
+        else:
+            raise Warning('cFOUR job not run with Print=1 option, basis is not detailed enough')
+        self.gbasis = []
+
+
+
     def _parse_block(self, inputfile, count, type, msg):
         """
         pases through a block
