@@ -20,14 +20,14 @@ from cclib.parser import utils
 
 SHELL_ORBITALS = {
     0: ['S'],
-    1: ['PX', 'PY', 'PZ'],
-    -1: ['S', 'PX', 'PY', 'PZ'],
-    2: ['D1', 'D2', 'D3', 'D4', 'D5', 'D6'],
-    -2: ['D1', 'D2', 'D3', 'D4', 'D5'],
-    3:  ['F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10'],
-    -3: ['F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7'],
-    4: ['G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'G9', 'G10', 'G11', 'G12','G13'],
-    -4: ['G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'G9']
+    1: ['X', 'Y', 'Z'],
+    -1: [],
+    2: ['XX', 'XY', 'XZ', 'YY', 'YZ', 'ZZ'],
+    -2: [],
+    3:  [],
+    -3: [],
+    4: [],
+    -4: []
 
 }
 
@@ -107,10 +107,43 @@ class CFOUR(logfileparser.Logfile):
             for i in range(4):
                  line = next(inputfile)
             print(line)
-        self.gbasis = []
+            self.gbasis = []
+            split_line = line.split() # example line:  O #1  1    S
+            atom_num = int(split_line[1].strip('#'))
+            ang_mom = split_line[3]
+            prim_count = 0
+            atom_bas = []
+            print('#' not in line)
+            basis_done = False
+            # the line that ends the basis line is two ints.
+            # TODO check if this is universal, like when there is one atom/basis fucntion
+            while len(line.split()) != 2:
+                print(line)
+                while ('#' not in line) and (basis_done==True):
+                    if len(line.split()) ==2:
+                        basis_done=True
+                        break
+                    if line =='\n':
+                        line = next(inputfile)
+                        continue
+                    print(line)
+                    print(line=='\n')
+                    print('we are here!')
+                    prim_count += 1
+                    line = line.strip('+')
+                    split_line = line.split()
+                    exp = split_line[1]
+                    coeffs = split_line[2:]
+                    # will need to make a list for each coefficient
+                    # since we are  getting an entry for three lists, probably quickest to gnerate it as thre lists.
+                    basis_tuple_struct = numpy.zeros((2,len(coeffs)))
+                    # for i in coeffs:
+                    line = next(inputfile)
+                line = next(inputfile)
         else:
-            raise Warning('cFOUR job not run with Print=1 option, basis is not detailed enough')
-        self.gbasis = []
+            pass
+            # raise Warning('CFOUR job was not run with PRINT=1 option, basis is not detailed enough')
+
 
 
 
