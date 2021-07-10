@@ -43,9 +43,12 @@ class QCSchemaWriter(CJSONWriter):
             "provenance": {
                 "creator": metadata["package"],
                 "version": metadata["package_version"],
-                # FIXME
-                "routine": "",
+                "routine": f"{self.__module__}.{self.__class__.__qualname__}",
             },
+            "success": metadata["success"],
+            "error": None,
+            "stdout": None,
+            "stderr": None,
         }
 
         # TODO This should be derived from a parsed job type.  It's also not
@@ -59,8 +62,6 @@ class QCSchemaWriter(CJSONWriter):
             driver = "energy"
         # TODO what is "properties" for?
         qcschema_dict["driver"] = driver
-
-        qcschema_dict["success"] = metadata["success"]
 
         # FIXME
         # if "keywords" in metadata:
@@ -77,7 +78,7 @@ class QCSchemaWriter(CJSONWriter):
             # FIXME
             method = "HF"
 
-        qcschema_dict["model"] = {"method": method, "basis": metadata["basis_set"]}
+        qcschema_dict["model"] = {"method": method.lower(), "basis": metadata["basis_set"].lower()}
 
         scf_total_energy = convertor(self.ccdata.scfenergies[-1], "eV", "hartree")
         mp2_correlation_energy = None
