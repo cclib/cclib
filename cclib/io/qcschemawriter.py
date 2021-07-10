@@ -90,10 +90,11 @@ class QCSchemaWriter(CJSONWriter):
         elif metadata["methods"][-1] == "DFT":
             return_energy = scf_total_energy
         elif method == "CCSD":
-            mp2_total_energy = convertor(self.ccdata.mpenergies[-1][-1], "eV", "hartree")
-            mp2_correlation_energy = convertor(
-                self.ccdata.mpenergies[-1][-1] - self.ccdata.scfenergies[-1], "eV", "hartree"
-            )
+            if hasattr(self.ccdata, "mpenergies"):
+                mp2_total_energy = convertor(self.ccdata.mpenergies[-1][-1], "eV", "hartree")
+                mp2_correlation_energy = convertor(
+                    self.ccdata.mpenergies[-1][-1] - self.ccdata.scfenergies[-1], "eV", "hartree"
+                )
             ccsd_total_energy = convertor(self.ccdata.ccenergies[-1], "eV", "hartree")
             ccsd_correlation_energy = convertor(
                 self.ccdata.ccenergies[-1] - self.ccdata.scfenergies[-1], "eV", "hartree"
