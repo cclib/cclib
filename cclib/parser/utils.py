@@ -126,6 +126,7 @@ def convertor(value: float, fromunits: str, tounits: str) -> float:
         "ebohr3_to_Debye.ang2": lambda x: x * 0.7117614302,
         "ebohr4_to_Debye.ang3": lambda x: x * 0.3766479268,
         "ebohr5_to_Debye.ang4": lambda x: x * 0.1993134985,
+        "Debye_to_ebohr": lambda x: x / 2.5417462300,
         # FIXME I'm not sure this is correct.
         "hartree/bohr2_to_mDyne/angstrom": lambda x: x * 8.23872350 / 0.5291772109,
     }
