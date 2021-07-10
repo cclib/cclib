@@ -102,6 +102,14 @@ class QCSchemaWriter(CJSONWriter):
         else:
             raise RuntimeError("Don't know what to do with method {}".format(method))
 
+        scf_dipole_moment = None
+        if hasattr(self.ccdata, "moments"):
+            # FIXME We currently have no easy way to tell if the moments from
+            # a correlated calculation are true correlated (relaxed) density
+            # moments, or just SCF density moments.
+            dipole_moment = convertor(self.ccdata.moments[1], "Debye", "ebohr")
+            scf_dipole_moment = dipole_moment.tolist()
+
         qcschema_dict["properties"] = {
             "calcinfo_nalpha": self.ccdata.homos[0] + 1,
             "calcinfo_natom": self.ccdata.natom,
@@ -109,8 +117,6 @@ class QCSchemaWriter(CJSONWriter):
             "calcinfo_nbeta": self.ccdata.homos[-1] + 1,
             "calcinfo_nmo": self.ccdata.nmo,
             "return_energy": return_energy,
-            # TODO check units
-            "scf_dipole_moment": self.ccdata.moments[1].tolist(),
             "scf_iterations": self.ccdata.scfvalues[-1].shape[0],
             "scf_total_energy": scf_total_energy,
             # TODO These properties aren't parsed yet.
@@ -146,6 +152,8 @@ class QCSchemaWriter(CJSONWriter):
             qcschema_dict["properties"][
                 "scf_dispersion_correction_energy"
             ] = self.ccdata.dispersionenergies[-1]
+        if scf_dipole_moment is not None:
+            qcschema_dict["scf_dipole_moment"] = scf_dipole_moment
         if mp2_correlation_energy is not None:
             qcschema_dict["properties"].update(
                 {
