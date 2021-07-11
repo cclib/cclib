@@ -14,6 +14,8 @@ from cclib.io.cjsonwriter import CJSON as CJSONWriter
 from cclib.io.cjsonwriter import JSONIndentEncoder, NumpyAwareJSONEncoder
 from cclib.parser.utils import convertor, find_package
 
+import numpy as np
+
 _found_qcschema = find_package("qcschema")
 if _found_qcschema:
     import qcschema
@@ -78,7 +80,9 @@ class QCSchemaWriter(CJSONWriter):
             # FIXME
             method = "HF"
 
-        qcschema_dict["model"] = {"method": method.lower(), "basis": metadata["basis_set"].lower()}
+        basis_set_name = metadata["basis_set"].lower()
+
+        qcschema_dict["model"] = {"method": method.lower(), "basis": basis_set_name}
 
         scf_total_energy = convertor(self.ccdata.scfenergies[-1], "eV", "hartree")
         mp2_correlation_energy = None
@@ -170,6 +174,40 @@ class QCSchemaWriter(CJSONWriter):
                     "ccsd_total_energy": ccsd_total_energy,
                 }
             )
+
+        qcschema_dict["wavefunction"] = {
+            "basis": {"name": basis_set_name, "center_data": {}, "atom_map": []}
+            # TODO in latest schema version
+            # "restricted": bool,
+        }
+
+        has_beta = len(self.ccdata.homos) == 2
+
+        if hasattr(self.ccdata, "gbasis"):
+            pass
+
+        # FIXME Again, since we currently do not know if the (natural) orbital
+        # coefficients and eigenvalues come from diagonalizing a (correlated)
+        # density matrix, we assume that they are from SCF.
+        if hasattr(self.ccdata, "moenergies"):
+            qcschema_dict["wavefunction"]["scf_eigenvalues_a"] = self.ccdata.moenergies[0].tolist()
+            if has_beta:
+                qcschema_dict["wavefunction"]["scf_eigenvalues_b"] = self.ccdata.moenergies[
+                    1
+                ].tolist()
+
+        if hasattr(self.ccdata, "mocoeffs"):
+            mocoeffs_a = self.ccdata.mocoeffs[0]
+            # Sometimes we don't parse all MOs and fill missing ones with NaN,
+            # which isn't allowed by QCSchema.
+            if not np.isnan(mocoeffs_a).any():
+                qcschema_dict["wavefunction"]["scf_orbitals_a"] = mocoeffs_a.transpose().tolist()
+            if has_beta:
+                mocoeffs_b = self.ccdata.mocoeffs[1]
+                if not np.isnan(mocoeffs_b).any():
+                    qcschema_dict["wavefunction"][
+                        "scf_orbitals_b"
+                    ] = mocoeffs_b.transpose().tolist()
 
         if driver == "energy":
             return_result = return_energy
