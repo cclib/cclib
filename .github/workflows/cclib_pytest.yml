@@ -11,29 +11,8 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        python-version: [3.6, 3.7]
+        container: ['shivupa/cclib-ci:py37']
     steps:
-      - name: Install SWIG and Git
-        run: |
-          sudo apt-get update && sudo apt-get install -y -qq git swig
-      - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }} with conda
-        uses: conda-incubator/setup-miniconda@v2
-        with:
-          auto-update-conda: true
-          miniconda-version: "latest"
-          python-version: ${{ matrix.python-version }}
-          channels: psi4, conda-forge
-      - name: Install conda-based and testing dependencies
-        shell: bash -l {0}
-        run: |
-          conda config --set always_yes true --set changeps1 false --set channel_priority flexible --set quiet true
-          conda info -a
-          conda install ci-psi4 psi4 openbabel pytest-cov pytest-shutil h5py=2.10.0
-          python -m pip install pyscf
-          python -m pip install qc-iodata
-          conda list
-          conda env export
       - name: Install core dependencies
         shell: bash -l {0}
         run: |
@@ -50,7 +29,7 @@ jobs:
           env | sort
           bash .github/scripts/run_pytest.bash
       - name: Upload coverage to Codecov
-        if: matrix.python-version == 3.7
+        if: matrix.container == 'shivupa/cclib-ci:py37'
         uses: codecov/codecov-action@v1
         with:
           files: ./coverage-unit.xml,./coverage-regression.xml
