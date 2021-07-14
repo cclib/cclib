@@ -341,9 +341,12 @@ TD        ORCA        OrcaROCISTest         basicORCA4.1          dvb_rocis.out
 TD        ORCA        OrcaROCISTest         basicORCA4.2          dvb_rocis.out
 TD        QChem       QChemTDDFTTest        basicQChem4.2         dvb_td.out
 TD        QChem       QChemTDDFTTest        basicQChem5.1         dvb_td.out
+TD        Turbomole   TurbomoleTDTest       basicTurbomole7.4     CO_TD/basis    CO_TD/control    CO_TD/mos    CO_TD/dscf.out    CO_TD/escf.out    CO_TD/coord
+TD        Turbomole   TurbomoleTDTripTest   basicTurbomole7.4     CO_TD_trip/basis    CO_TD_trip/control    CO_TD_trip/mos    CO_TD_trip/dscf.out    CO_TD_trip/escf.out    CO_TD_trip/coord
 
 TDun      Gaussian    GenericTDunTest       basicGaussian09       CO_TD_delta.log
 TDun      Gaussian    GenericTDunTest       basicGaussian16       CO_TD_delta.log
+TDun	  Turbomole   TurbomoleTDunTest     basicTurbomole7.4     CO_TD_un/basis    CO_TD_un/control    CO_TD_un/alpha    CO_TD_un/beta    CO_TD_un/dscf.out    CO_TD_un/escf.out    CO_TD_un/coord
 
 vib       ADF         ADFIRTest             basicADF2007.01       dvb_ir.adfout
 vib       ADF         ADFIRTest             basicADF2013.01       dvb_ir.adfout
