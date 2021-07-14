@@ -12,6 +12,8 @@ jobs:
     strategy:
       matrix:
         container: ['shivupa/cclib-ci:py37']
+    container:
+      image: ${{ matrix.container }}
     steps:
       - uses: actions/checkout@v2
       - name: Install core dependencies
