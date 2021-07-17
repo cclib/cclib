@@ -71,6 +71,18 @@ class NuclearTest(unittest.TestCase):
         nre = utils.convertor(nre, "hartree", "eV")
         assert round(abs(nuclear.repulsion_energy() - nre), 5) == 0
 
+    def test_center_of_mass(self) -> None:
+        data, logfile = getdatafile(DALTON, "basicDALTON-2015", ["dvb_sp_hf.out"])
+        nuclear = Nuclear(data)
+        nuclear.logger.setLevel(logging.ERROR)
+
+        np.testing.assert_allclose(
+            nuclear.center_of_mass(), np.array([0.0, 0.0, 0.0]), rtol=0.0, atol=1.0e-13
+        )
+
+    def test_moment_of_intertia_tensor(self) -> None:
+        pass
+
     def test_principal_moments_of_inertia(self) -> None:
         """Testing principal moments of inertia and the principal axes for one
         logfile where it is printed.

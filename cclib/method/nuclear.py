@@ -117,7 +117,7 @@ class Nuclear(Method):
         return moi_tensor
 
     def principal_moments_of_inertia(
-        self, units: str = "amu_bohr_2"
+        self, units: str = "amu_bohr_2", atomcoords_index: int = -1
     ) -> Tuple[np.ndarray, np.ndarray]:
         """Return the principal moments of inertia in 3 kinds of units:
         1. [amu][bohr]^2
@@ -129,7 +129,7 @@ class Nuclear(Method):
         units = units.lower()
         if units not in choices:
             raise ValueError(f"Invalid units, pick one of {choices}")
-        moi_tensor = self.moment_of_inertia_tensor()
+        moi_tensor = self.moment_of_inertia_tensor(atomcoords_index=atomcoords_index)
         principal_moments, principal_axes = np.linalg.eigh(moi_tensor)
         if units == "amu_bohr_2":
             bohr2ang = constants.atomic_unit_of_length / _ANGSTROM
@@ -141,19 +141,23 @@ class Nuclear(Method):
             conv = amu2g * (constants.atomic_unit_of_length * _CENTI) ** 2
         return conv * principal_moments, principal_axes
 
-    def rotational_constants(self, units: str = "ghz") -> np.ndarray:
+    def rotational_constants(self, units: str = "ghz", atomcoords_index: int = -1) -> np.ndarray:
         """Compute the rotational constants in 1/cm or GHz."""
         choices = ("invcm", "ghz")
         units = units.lower()
         if units not in choices:
             raise ValueError(f"Invalid units, pick one of {choices}")
-        principal_moments = self.principal_moments_of_inertia("amu_angstrom_2")[0]
+        principal_moments = self.principal_moments_of_inertia(
+            "amu_angstrom_2", atomcoords_index=atomcoords_index
+        )[0]
         bohr2ang = constants.atomic_unit_of_length / _ANGSTROM
         xfamu = 1 / constants.electron_mass_in_u
         rotghz = constants.hartree_hertz_relationship * (bohr2ang**2) / (2 * xfamu * _GIGA)
         if units == "ghz":
             conv = rotghz
-        if units == "invcm":
+        elif units == "invcm":
             ghz2invcm = _GIGA * _CENTI / constants.c
             conv = rotghz * ghz2invcm
+        else:
+            raise ValueError("Invalid units, pick one of {}".format(choices))
         return conv / principal_moments

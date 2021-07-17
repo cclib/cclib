@@ -42,6 +42,7 @@ import traceback
 import unittest
 
 from cclib.io import ccopen, ccread, moldenwriter
+from cclib.method import Nuclear
 from cclib.parser import (
     ADF,
     DALTON,
@@ -449,6 +450,10 @@ def testDALTON_DALTON_2016_huge_neg_polar_stat_out(logfile):
 def testDALTON_DALTON_2016_Trp_polar_response_diplnx_out(logfile):
     """Check that only the xx component of polarizability is defined and
     all others are NaN even after parsing a previous file with full tensor.
+
+    Since the molecule (tryptophan) also lacks intrinsic symmetry, it serves
+    as a test for a non-zero center of mass, as well as the principal moments
+    of inertia and rotational constants.
     """
     full_tens_path = os.path.join(__regression_dir__, "DALTON/DALTON-2015/Trp_polar_response.out")
     DALTON(full_tens_path, loglevel=logging.ERROR).parse()
@@ -459,6 +464,43 @@ def testDALTON_DALTON_2016_Trp_polar_response_diplnx_out(logfile):
     assert (
         logfile.data.metadata["package_version"]
         == "2016.2+7db4647eac203e51aae7da3cbc289f55146b30e9"
+    )
+
+    nuclear = Nuclear(logfile.data)
+    numpy.testing.assert_allclose(
+        nuclear.center_of_mass(),
+        convertor(
+            numpy.array([6.317789803281, 0.497269061322, -2.037317863588]), "bohr", "Angstrom"
+        ),
+        rtol=0.0,
+        atol=1.0e-6,
+    )
+    pmoi, moi_axes = nuclear.principal_moments_of_inertia(units="amu_angstrom_2")
+    # numpy.testing.assert_allclose(
+    #     numpy.array([408.875429, 1397.895049, 1588.907843]),
+    #     pmoi,
+    #     rtol=0.0,
+    #     atol=1.0e-6,
+    # )
+    # numpy.testing.assert_allclose(
+    #     numpy.array([[-0.626320, 0.092893, 0.774012],
+    #                  [0.754463, 0.322162, 0.571837],
+    #                  [-0.196238, 0.942116, -0.271861]]),
+    #     moi_axes,
+    #     rtol=0.0,
+    #     atol=1.0e-6,
+    # )
+
+    rotcons_ghz = nuclear.rotational_constants("ghz")
+    rotcons_wavenumber = nuclear.rotational_constants("invcm")
+    # numpy.testing.assert_allclose(
+    #     numpy.array([1236.0220, 361.5286, 318.0669]),
+    #     rotcons_ghz * 1000,
+    #     rtol=0.0,
+    #     atol=1.0e-4
+    # )
+    numpy.testing.assert_allclose(
+        numpy.array([0.041229, 0.012059, 0.010610]), rotcons_wavenumber, rtol=0.0, atol=1.0e-6
     )
 
 
@@ -1111,6 +1153,18 @@ def testGaussian_Gaussian09_irc_point_log(logfile):
     assert hasattr(logfile.data, "vibfreqs")
     assert len(logfile.data.vibfreqs) == 11
 
+    nuclear = Nuclear(logfile.data)
+    numpy.testing.assert_allclose(
+        numpy.array([148.6430872, 1.2672197, 1.2672197]),
+        nuclear.rotational_constants("ghz"),
+        rtol=0.0,
+        atol=1.0e-3,
+    )
+    pmoi, moi_axes = nuclear.principal_moments_of_inertia("amu_bohr_2")
+    numpy.testing.assert_allclose(
+        numpy.array([12.14144, 1424.17386, 1424.17386]), pmoi, rtol=0.0, atol=1.0e-3
+    )
+
     assert logfile.data.metadata["package_version"] == "2009+D.01"
 
 
@@ -1311,6 +1365,14 @@ def testGaussian_Gaussian16_issue851_log(logfile):
     assert isinstance(logfile.data.scannames, list)
     assert isinstance(logfile.data.scanparm, list)
     assert isinstance(logfile.data.scanenergies, list)
+
+    nuclear = Nuclear(logfile.data)
+    numpy.testing.assert_allclose(
+        numpy.array([361.9878736, 361.9878736, 180.9939368]),
+        nuclear.rotational_constants("ghz"),
+        rtol=0.0,
+        atol=1.0e-3,
+    )
 
 
 def testGaussian_Gaussian16_issue962_log(logfile):
