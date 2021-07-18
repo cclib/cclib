@@ -76,6 +76,7 @@ class GenericTDTest(unittest.TestCase):
     @skipForParser('Jaguar', 'etrotats are not yet implemented')
     @skipForParser('QChem', 'Q-Chem cannot calculate rotatory strengths')
     @skipForLogfile("Turbomole/basicTurbomole7.4/CO_cc2_TD", "Rotatory strengths are not currently available for ricc2")
+    @skipForLogfile("Turbomole/basicTurbomole7.4/CO_adc2_TD", "Rotatory strengths are not currently available for ricc2")
     def testrotatsnumber(self):
         """Is the length of etrotats correct?"""
         self.assertEqual(len(self.data.etrotats), self.number)
@@ -227,6 +228,16 @@ class TurbomoleTDTest(GenericTDTest):
         self.assertEqual(len(self.data.etoscs), self.number)
         self.assertAlmostEqual(max(self.data.etoscs), 0.19, delta=0.1)
 
+class TurbomoleTDADC2Test(GenericTDTest):
+    """Customized time-dependent HF/DFT unittest"""
+    
+    number = 10
+    expected_l_max = 136329
+    
+    def testoscs(self):
+        """Is the maximum of etoscs in the right range?"""
+        self.assertEqual(len(self.data.etoscs), self.number)
+        self.assertAlmostEqual(max(self.data.etoscs), 0.80, delta=0.1)
 
 class TurbomoleTDTripTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
