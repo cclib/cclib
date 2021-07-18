@@ -251,9 +251,9 @@ Note that a value for gconv7 is not available until the second iteration, so it 
 
 **Molpro** has custom convergence criteria, as described in the `manual <Molpro manual convergence_>`_:
 
-    The standard MOLPRO convergence criterion requires the maximum component of the gradient to be less then :math:`3 \cdot 10^{-4}` [a.u.] and the maximum energy change to be less than :math:`1 \cdot 10^{-6}` [H] or the maximum component of the gradient to be less then $ 3 \cdot 10^{-4}$ [a.u.] and the maximum component of the step to be less then :math:`3 \cdot 10^{-4}` [a.u.].
+    The standard MOLPRO convergence criterion requires the maximum component of the gradient to be less than :math:`3 \cdot 10^{-4}` [a.u.] and the maximum energy change to be less than :math:`1 \cdot 10^{-6}` [H] or the maximum component of the gradient to be less than :math:`3 \cdot 10^{-4}` [a.u.] and the maximum component of the step to be less than :math:`3 \cdot 10^{-4}` [a.u.].
 
-.. _Molpro manual convergence: https://www.molpro.net/info/2012.1/doc/manual/node592.html
+.. _Molpro manual convergence: https://www.molpro.net/manual/doku.php?id=geometry_optimization_optg#options_to_modify_convergence_criteria
 
 **ORCA** tracks the change in energy as well as RMS and maximum gradients and displacements. As of version 3.0, an optimisation is considered converged when all the tolerances are met, and there are four exceptions:
 
