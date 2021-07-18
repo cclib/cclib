@@ -266,7 +266,7 @@ Note that a value for gconv7 is not available until the second iteration, so it 
 
 .. _`in the documentation`: http://sirius.chem.vt.edu/psi4manual/latest/optking.html
 
-.. _`numpy.inf`: http://docs.scipy.org/doc/numpy-1.8.1/user/misc.html#ieee-754-floating-point-special-values
+.. _`numpy.inf`: https://numpy.org/doc/stable/user/misc.html#ieee-754-floating-point-special-values
 
 .. index::
     single: geomtry optimisation; geovalues (attribute)
