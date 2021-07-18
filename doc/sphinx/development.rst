@@ -64,12 +64,13 @@ When creating a new release on GitHub, the typical procedure might include the f
 * Create the source distributions (``python setup.py sdist --formats=gztar,zip``) and Windows binary installers (``python setup.py bdist_wininst``)
 * Create a release on GitHub using the created tag (see `Creating releases`_) and upload the source distributions and Windows binaries
 * Email the users and developers mailing list with the message in `ANNOUNCE`_
-* Update the Python package index (https://pypi.python.org/pypi/cclib), normally done by ``python setup.py register``
+* Update the `Python package index`_, normally done by ``python setup.py register``
 * For significant releases, if appropriate, send an email to the `CCL list`_ and any mailing lists for computational chemistry packages supported by cclib
 
 .. _`parsed attributes`: data.html
 
 .. _`ANNOUNCE`: https://github.com/cclib/cclib/blob/master/ANNOUNCE
+.. _`Python package index`: https://pypi.org/project/cclib/
 .. _`CHANGELOG`: https://github.com/cclib/cclib/blob/master/CHANGELOG
 .. _`setup.py`: https://github.com/cclib/cclib/blob/master/setup.py
 .. _`__init__.py`: https://github.com/cclib/cclib/blob/master/src/cclib/__init__.py
@@ -151,7 +152,7 @@ Websites related to cclib
 .. _`cclib organization on github`: https://github.com/cclib
 .. _`cclib project page on Sourceforge`: http://sourceforge.net/projects/cclib/
 .. _`cclib page for GitHub Actions`: https://github.com/cclib/cclib/actions
-.. _`cclib entry on PyPI`: http://www.python.org/pypi/cclib
+.. _`cclib entry on PyPI`: https://pypi.org/project/cclib/
 .. _`cclib entry on libraries.io`: https://libraries.io/pypi/cclib
 .. _`cclib entry on Open Hub`: https://www.openhub.net/p/cclib
 
