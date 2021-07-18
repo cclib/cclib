@@ -290,7 +290,7 @@ The attribute ``grads`` contains the forces on the atoms, that is, the negative 
 hessian
 -------
 
-An array of rank 1 that contains the elements of the `hessian <http://en.wikipedia.org/wiki/Hessian_matrix>`_ or force constant matrix. Only the lower triangular part of the 3Nx3N matrix is stored (this may change in the future, maybe also only the unweighted matrix will be parsed).
+An array of rank 2 that contains the elements of the `hessian <https://en.wikipedia.org/wiki/Hessian_matrix>`_ or force constant matrix. The full symmetric ``3N x 3N`` matrix is stored.
 
 .. index::
     single: molecular orbitals; homos (attribute)
