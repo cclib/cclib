@@ -66,7 +66,7 @@ class ccData:
         natom -- number of atoms (integer)
         nbasis -- number of basis functions (integer)
         nmo -- number of molecular orbitals (integer)
-        nmrtensors -- Nuclear magnetic resonance tensors (dict of dicts of array[2])
+        nmrtensors -- Nuclear magnetic resonance chemical shielding tensors (dict of dicts of array[2])
         nocoeffs -- natural orbital coefficients (array[2])
         nooccnos -- natural orbital occupation numbers (array[1])
         nsocoeffs -- natural spin orbital coefficients (list of array[2])
