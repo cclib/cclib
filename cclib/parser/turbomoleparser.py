@@ -1003,9 +1003,7 @@ class Turbomole(logfileparser.Logfile):
         # TODO: Perhaps need a more general way to look for lines like this?
         if "| sym | multi | state |          CC2 excitation energies       |  %t1   |  %t2   |" in line \
         or "| sym | multi | state |          ADC(2) excitation energies    |  %t1   |  %t2   |" in line:
-            line = next(inputfile)
-            line = next(inputfile)
-            line = next(inputfile)
+            self.skip_lines(inputfile, ["divider", "units", "divider"])
             line = next(inputfile)
             
             # Reset in case we've parsed this section before for some reason...
@@ -1070,7 +1068,7 @@ class Turbomole(logfileparser.Logfile):
         #      |    7 a        7 (b)   |   15 a       15 (b)   |  -0.11607       1.3   |
         #      +=======================+=======================+=======================+
         if "| occ. orb.  index spin | vir. orb.  index spin |  coeff/|amp|     %    |" in line:
-            line = next(inputfile)
+            self.skip_lines(inputfile, ["divider"])
             line = next(inputfile)
             
             transitions = []
