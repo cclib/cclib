@@ -1031,7 +1031,6 @@ class Turbomole(logfileparser.Logfile):
                 symmetry = "{}-{}".format(mult, parts[1].capitalize())
                 self.append_attribute("etsyms", symmetry)
                     
-                #energy = utils.convertor(utils.float(parts[4]), "hartree", "wavenumber")
                 energy = utils.float(parts[6])
                 self.append_attribute("etenergies", energy)
                 
