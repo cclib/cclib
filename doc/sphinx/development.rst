@@ -172,5 +172,5 @@ Besides input from a number of people `listed in the repository`_, the following
 
 .. _`Eric Berquist`: https://github.com/berquist
 .. _`Karol M. Langner`: https://github.com/langner
-.. _`Noel O'Boyle`: https://www.redbrick.dcu.ie/~noel/
+.. _`Noel O'Boyle`: https://noel.redbrick.dcu.ie/
 .. _`Shiv Upadhyay`: https://github.com/shivupa
