@@ -327,6 +327,8 @@ A dictionary containing metadata_ (data about data) for the calculation. Current
 * ``methods``: A list of strings containing each method used in order. Currently, the list may contain ``HF``, ``DFT``, ``LMP2``/``DF-MP2``/``MP2``, ``MP3``, ``MP4``, ``CCSD``, and/or ``CCSD(T)``/``CCSD-T``.
 * ``package``: A string with the name of the quantum chemistry program used.
 * ``package_version``: A string representation of the package version. It is formatted to allow comparison using relational operators.
+* ``symmetry_detected``: A string representing the full or largest point group detected by the program.
+* ``symmetry_used``: A string representing the point group used by the program for the calculation. This may be different from ``symmetry_detected`` if the full point group is non-abelian and the program can only take advantage of abelian groups. For example, when performing a calculation on benzene with symmetry turned on, ``symmetry_detected`` may be ``d6h``, but ``symmetry_used`` is most likely ``d2h``, since D2h is the largest abelian subgroup of D6h.
 * ``success``: A boolean for whether or not the calculation completed properly.
 * ``unrestricted``: A boolean for whether or not the calculation was performed with a unrestricted wavefunction.
 * ``wall_time``: A list of datetime.timedeltas containing the wall time of each calculation in the output.  
