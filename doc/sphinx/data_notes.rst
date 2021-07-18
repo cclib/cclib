@@ -264,7 +264,7 @@ Note that a value for gconv7 is not available until the second iteration, so it 
 
 **Psi** normally tracks five different values, as described `in the documentation`_, but their use various depending on the strategy employed. The default strategy (QCHEM) check whether the maximum force is converged and if the maximum energy change or displacement is converged. Additionally, to aid with flat potential energy surfaces, convergence is as assumed when the root mean square force converged to 0.01 of its default target. Note that Psi print values even for targets that are not being used -- in these cases the targets are parsed as `numpy.inf`_ so that they can still be used (any value will be converged).
 
-.. _`in the documentation`: http://sirius.chem.vt.edu/psi4manual/latest/optking.html
+.. _`in the documentation`: https://psicode.org/psi4manual/master/optking.html#convergence-criteria
 
 .. _`numpy.inf`: https://numpy.org/doc/stable/user/misc.html#ieee-754-floating-point-special-values
 
