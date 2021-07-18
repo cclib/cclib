@@ -472,6 +472,11 @@ Commands to get information on all orbitals:
 
 .. _Jaguar manual nmo: http://www.pdc.kth.se/doc/jaguar4.1/html/manual/mang.html#644675
 
+nmrtensors
+----------
+
+A dictionary where the keys zero-index the atomic center for which the chemical shielding tensor is calculated, and the values are themselves dictionaries containing the keys ``total``, ``paramagnetic``, and ``diamagnetic``. These correspond to the total chemical shielding tensor and its separation into paramagnetic and diamagnetic components, where :math:`\sigma_{K}^{\textrm{tot}} = \sigma_{K}^{\textrm{para}} + \sigma_{K}^{\textrm{dia}}` for a nucleus :math:`K`.  Each tensor is represented as a 3-by-3 NumPy array. If no breakdown for paramagnetic and diamagnetic contributions to the chemical shielding is available, then only the ``total`` key will be present.
+
 optdone
 -------
 
