@@ -69,7 +69,7 @@ Currently, cclib parses Mulliken, Löwdin, NPA and CHELPG charges, whose respect
 
 In practice, these may differ somewhat from the values cclib calculates in the various `calculation methods`_.
 
-**Molpro**: use the ``pop`` command (see http://www.molpro.net/info/2015.1/doc/manual/node515.html).
+**Molpro**: use the ``pop`` command (see https://www.molpro.net/manual/doku.php?id=properties_and_expectation_values&s[]=population&s[]=analysis#calling_the_population_analysis_program_pop).
 
 .. _`calculation methods`: methods.html
 
@@ -183,7 +183,7 @@ The difficulty in handling the basis for a molecule with symmetry and the availa
 gbasis
 ------
 
-This attribute stores information about the Gaussian basis functions that were used in the calculation, per atom using the same conventions as `PyQuante <http://pyquante.sf.net>`_. Specifically, ``gbasis`` is a list of lists iterating over atoms and Gaussian basis functions. The elements (basis functions) are tuples of length 2 consisting of orbital type (e.g. 'S', 'P' or 'D') and a list (per contracted GTO) of tuples of size 2 consisting of the exponent and coefficient. Confused? Well, here's ``gbasis`` for a molecule consisting of a single C atom with a STO-3G basis:
+This attribute stores information about the Gaussian basis functions that were used in the calculation, per atom using the same conventions as `PyQuante <http://pyquante.sourceforge.net/>`_. Specifically, ``gbasis`` is a list of lists iterating over atoms and Gaussian basis functions. The elements (basis functions) are tuples of length 2 consisting of orbital type (e.g. 'S', 'P' or 'D') and a list (per contracted GTO) of tuples of size 2 consisting of the exponent and coefficient. Confused? Well, here's ``gbasis`` for a molecule consisting of a single C atom with a STO-3G basis:
 
 .. code-block:: python
 
@@ -209,7 +209,7 @@ This attribute stores information about the Gaussian basis functions that were u
 
 For D and F functions there is an important distinction between pure (5D, 7F) or Cartesian (6D, 10F) functions. PyQuante can only handle Cartesian functions, but we should extract this information in any case, and perhaps work to extend the PyQuante basis set format to include this.
 
-**Gaussian**: the `GFINPUT`_ keyword should normally be used (`GFPRINT`_ gives equivalent information in a different format and is supported in cclib after v1.2).
+**Gaussian**: the `GFINPUT`_ keyword should normally be used (`GFPRINT`_ gives equivalent information in a different format).
 
 **GAMESS/GAMESS-UK**: no special keywords are required, but the basis is only available for symmetry inequivalent atoms. There does not seem to be any way to get GAMESS to say which atoms are related through symmetry. As a result, if you want to get basis set info for every atom, you need to reduce the symmetry to C1.
 
@@ -217,8 +217,8 @@ For D and F functions there is an important distinction between pure (5D, 7F) or
 
 **ORCA**: include ``Print[ P_Basis ] 2`` in the ``output`` block
 
-.. _`GFINPUT`: http://www.gaussian.com/g_tech/g_ur/k_gfinput.htm
-.. _`GFPRINT`: http://www.gaussian.com/g_tech/g_ur/k_gfprint.htm
+.. _`GFINPUT`: https://gaussian.com/gfinput/
+.. _`GFPRINT`: https://gaussian.com/gfprint/
 
 .. index::
     single: geometry optimisation; geotargets (attribute)
@@ -571,7 +571,7 @@ The attribute ``scfvalues`` is a list of arrays of dimension ``n x m`` (one elem
 
 **Gaussian**: requires the `route section`_ to start with #P
 
-.. _`route section`: http://www.gaussian.com/g_tech/g_ur/k_route.htm
+.. _`route section`: https://gaussian.com/route/
 
 **GAMESS-UK**: convergence information is printed only for the first optimisation step by default, but can be forced at all steps by adding ``IPRINT SCF`` to the input file.
 

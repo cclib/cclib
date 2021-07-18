@@ -69,14 +69,14 @@ A record for the latest release is also available on Zenodo_.
 .. _ADF: https://www.scm.com/product/adf/
 .. _DALTON: https://daltonprogram.org/
 .. _Firefly: http://classic.chem.msu.su/gran/gamess/
-.. _`GAMESS (US)`: http://www.msg.ameslab.gov/GAMESS/GAMESS.html
+.. _`GAMESS (US)`: https://www.msg.chem.iastate.edu/gamess/
 .. _`GAMESS-UK`: http://www.cfs.dl.ac.uk
-.. _`Gaussian`: http://www.gaussian.com
+.. _`Gaussian`: https://gaussian.com/
 .. _Jaguar: https://www.schrodinger.com/products/jaguar
 .. _Molcas: https://gitlab.com/Molcas/OpenMolcas
 .. _Molpro: https://www.molpro.net/
 .. _MOPAC: http://openmopac.net/
-.. _NWChem: http://www.nwchem-sw.org/index.php/Main_Page
+.. _NWChem: https://nwchemgit.github.io/
 .. _ORCA: https://orcaforum.kofo.mpg.de/app.php/portal
 .. _Psi4: https://psicode.org/
 .. _`Q-Chem`: https://q-chem.com/
@@ -91,6 +91,6 @@ A record for the latest release is also available on Zenodo_.
 
 .. _GaussSum: http://gausssum.sourceforge.net/
 .. _QMForge: https://qmforge.net/
-.. _literature: http://pubs.acs.org/doi/abs/10.1021/jacs.5b05600
-.. _DOI: http://dx.doi.org/10.1002/jcc.20823
-.. _Zenodo: http://dx.doi.org/10.5281/zenodo.1407790
+.. _literature: https://doi.org/10.1021/jacs.5b05600
+.. _DOI: https://doi.org/10.1002/jcc.20823
+.. _Zenodo: https://zenodo.org/record/1407790

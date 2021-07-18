@@ -79,7 +79,7 @@ There are in fact two packages, `python-cclib`_ containing the Python module, an
 
 .. _`Debian GNU/Linux`: https://www.debian.org
 .. _`Ubuntu`: https://ubuntu.com/
-.. _`cclib packages`: https://packages.debian.org/src:cclib
+.. _`cclib packages`: https://packages.debian.org/search?searchon=sourcenames&keywords=cclib
 .. _`python-cclib`: https://packages.debian.org/stretch/python-cclib
 .. _`cclib`: https://packages.debian.org/stretch/cclib
 .. _`cclib-data`: https://packages.debian.org/stretch/cclib-data
@@ -126,7 +126,7 @@ What next?
  * Read the list and specifications of the `parsed data`_ and related `data notes`_
  * Test the program using the test data files included in the full source distribution
  * Run the unit and regression tests in the test directory (``testall.py`` and ``regression.py``)
- * Send any questions to the cclib-users mailing list at https://lists.sourceforge.net/lists/listinfo/cclib-users.
+ * Send any questions to the cclib-users mailing list at https://sourceforge.net/projects/cclib/lists/cclib-users.
  * Write some computational chemistry algorithms using information parsed from cclib and donate the code to the project
 
 .. _`parsed data`: data.html
