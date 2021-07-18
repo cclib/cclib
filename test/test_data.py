@@ -39,7 +39,7 @@ legacy_parser_names = ["Psi3"]
 module_names = [
     "SP", "SPun", "GeoOpt", "Basis", "Core",    # Basic calculations.
     "MP", "CC", "CI", "TD", "TDun",             # Post-SCF calculations.
-    "vib", "BOMD", "Polar", "Scan",             # Other property calculations.
+    "BOMD", "NMR", "Polar", "Scan", "vib"       # Other property calculations.
 ]
 all_modules = {tn: importlib.import_module('.data.test' + tn, package='test')
                for tn in module_names}

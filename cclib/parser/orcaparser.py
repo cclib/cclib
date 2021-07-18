@@ -116,15 +116,16 @@ class ORCA(logfileparser.Logfile):
             while line[0] != '=':
                 if line.lower()[:7] == 'warning':
                     self.metadata['warnings'].append('')
-                    while len(line) > 1:
+                    while len(line) > 1 and set(line.strip()) != {'='}:
                         self.metadata['warnings'][-1] += line[9:].strip()
                         line = next(inputfile)
                 elif line.lower()[:4] == 'info':
                     self.metadata['info'].append('')
-                    while len(line) > 1:
+                    while len(line) > 1 and set(line.strip()) != {'='}:
                         self.metadata['info'][-1] += line[9:].strip()
                         line = next(inputfile)
-                line = next(inputfile)
+                else:
+                    line = next(inputfile)
 
         # ================================================================================
         #                                        INPUT FILE
@@ -1288,7 +1289,82 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                                     "the output file may be malformed")
                 self.set_attribute("etenergies", etenergies)
 
+        # ---------------
+        # CHEMICAL SHIFTS
+        # ---------------
+        #
+        # Note: using conversion factor for au to ppm alpha^2/2 =   26.625677252
+        # GIAO: Doing para- and diamagnetic shielding integrals analytically     ...done
+        #  --------------
+        #  Nucleus   0C :
+        #  --------------
+        #
+        # Diamagnetic contribution to the shielding tensor (ppm) :
+        #            261.007         -0.294        -0.000
+        #             -0.093        266.836         0.000
+        #             -0.000         -0.000       244.502
+        #
+        # Paramagnetic contribution to the shielding tensor (ppm):
+        #           -179.969          6.352        -0.000
+        #              3.571       -210.368        -0.000
+        #              0.000          0.000       -31.944
+        #
+        # Total shielding tensor (ppm):
+        #             81.038          6.058        -0.000
+        #              3.478         56.468        -0.000
+        #              0.000          0.000       212.558
+        #
+        #
+        #  Diagonalized sT*s matrix:
+        #
+        #  sDSO           266.692          261.151          244.502  iso=     257.448
+        #  sPSO          -211.114         -179.223          -31.944  iso=    -140.760
+        #         ---------------  ---------------  ---------------
+        #  Total           55.577           81.929          212.558  iso=     116.688
+        # ...
+        #
+        #--------------------------
+        #CHEMICAL SHIELDING SUMMARY (ppm)
+        #--------------------------
+        #
+        #
+        #  Nucleus  Element    Isotropic     Anisotropy
+        #  -------  -------  ------------   ------------
+        #      0       C          116.686        143.809
+        #      1       C          122.158        130.692
+        # ...
+        if line[:15] == 'CHEMICAL SHIFTS':
+            nmrtensors = dict()
+            while line.strip() != 'CHEMICAL SHIELDING SUMMARY (ppm)':
+                if line[:8] == ' Nucleus':
+                    atom = int(re.search(r'Nucleus\s+(\d+)\w', line).groups()[0])
+                    self.skip_lines(inputfile, ['-', ''])
+                    atomtensors = dict()
+                    for _ in range(3):
+                        t_type = next(inputfile).split()[0].lower()
+                        tensor = numpy.zeros((3, 3))
+                        for j, row in zip(range(3), inputfile):
+                            tensor[j, :] = list(map(float, row.split()))
+                        atomtensors[t_type] = tensor
+                        self.skip_line(inputfile, '')
+                    nmrtensors[atom] = atomtensors
+                line = next(inputfile)
+
+            self.skip_lines(inputfile, ['-', '', '', 'text', '-'])
+
+            # Not currently used.
+            isotropic, anisotropic = [], []
+            for line in inputfile:
+                if not line.strip():
+                    break
+                nucleus, element, iso, aniso = line.split()
+                isotropic.append(float(iso))
+                anisotropic.append(float(aniso))
+
+            self.set_attribute('nmrtensors', nmrtensors)
+
         if line[:23] == "VIBRATIONAL FREQUENCIES":
+
             self.skip_lines(inputfile, ['d', 'b'])
 
             # Starting with 4.1, a scaling factor for frequencies is printed
