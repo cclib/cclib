@@ -46,10 +46,6 @@ class DALTON(logfileparser.Logfile):
         # would like to use as triggers.
         self.section = None
 
-        # If there is no symmetry (point group is C1), set default 
-        # symlabel to A (the only representation in C1)
-        self.symlabels = ['A']
-
         # Is the basis set from a single library file? This is true
         # when the first line is BASIS, false for INTGRL/ATOMBASIS.
         self.basislibrary = True
@@ -786,7 +782,7 @@ class DALTON(logfileparser.Logfile):
                 # energies per line, though, so we can deduce if we have the labels or
                 # not just the index. In the latter case, we depend on the labels
                 # being read earlier into the list `symlabels`. Finally, if no symlabels
-                # were read that implies there is only one symmetry, namely Ag.
+                # were read that implies there is only one symmetry, namely A.
                 if 'A' in cols[1] or 'B' in cols[1]:
                     sym = self.normalisesym(cols[1])
                     energies = [float(t) for t in cols[2:]]
@@ -795,7 +791,7 @@ class DALTON(logfileparser.Logfile):
                         sym = self.normalisesym(self.symlabels[int(cols[0]) - 1])
                     else:
                         assert cols[0] == '1'
-                        sym = "Ag"
+                        sym = "A"
                     energies = [float(t) for t in cols[1:]]
 
                 while len(energies) > 0:
