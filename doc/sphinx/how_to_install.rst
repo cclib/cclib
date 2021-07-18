@@ -16,7 +16,7 @@ Python is an open-source programming language available from https://www.python.
 
     apt-get install python python-dev
 
-NumPy (Numerical Python) adds a fast array facility and linear algebra routines to Python. It is available from https://www.numpy.org. Windows users should use the most recent NumPy installation for the Python version they have (e.g. numpy-1.0.3.1.win32-py2.4.exe for Python 2.4). Linux users are recommended to find a binary package for their distribution rather than compiling it themselves. In Debian/Ubuntu it is installed as follows (as root):
+NumPy (Numerical Python) adds a fast array facility and linear algebra routines to Python. It is available from https://numpy.org/. Windows users should use the most recent NumPy installation for the Python version they have (e.g. numpy-1.0.3.1.win32-py2.4.exe for Python 2.4). Linux users are recommended to find a binary package for their distribution rather than compiling it themselves. In Debian/Ubuntu it is installed as follows (as root):
 
 .. code-block:: bash
 
@@ -64,7 +64,7 @@ or to your home directory using::
 
 .. _pip: https://pip.pypa.io/en/stable/
 .. _`Python Package Index`: https://pypi.org/
-.. _`cclib uploaded to PyPI`: https://pypi.python.org/pypi/cclib
+.. _`cclib uploaded to PyPI`: https://pypi.org/project/cclib/
 
 Installing using a system package manager
 -----------------------------------------
@@ -78,7 +78,7 @@ If you're using `Debian GNU/Linux`_, `Ubuntu`_, or a similar distribution, there
 There are in fact two packages, `python-cclib`_ containing the Python module, and `cclib`_ which installs just the user scripts. If you also need to also install the unittests and logfiles we distribute, you will need to install the `cclib-data`_ package from the non-free repositories (due to license issues). Because of distribution release cycles, package manager versions of cclib may be out of date compared to the PyPI version.
 
 .. _`Debian GNU/Linux`: https://www.debian.org
-.. _`Ubuntu`: https://www.ubuntu.com
+.. _`Ubuntu`: https://ubuntu.com/
 .. _`cclib packages`: https://packages.debian.org/src:cclib
 .. _`python-cclib`: https://packages.debian.org/stretch/python-cclib
 .. _`cclib`: https://packages.debian.org/stretch/cclib

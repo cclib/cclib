@@ -72,12 +72,12 @@ A record for the latest release is also available on Zenodo_.
 .. _`GAMESS (US)`: http://www.msg.ameslab.gov/GAMESS/GAMESS.html
 .. _`GAMESS-UK`: http://www.cfs.dl.ac.uk
 .. _`Gaussian`: http://www.gaussian.com
-.. _Jaguar: https://www.schrodinger.com/jaguar
+.. _Jaguar: https://www.schrodinger.com/products/jaguar
 .. _Molcas: https://gitlab.com/Molcas/OpenMolcas
 .. _Molpro: https://www.molpro.net/
 .. _MOPAC: http://openmopac.net/
 .. _NWChem: http://www.nwchem-sw.org/index.php/Main_Page
-.. _ORCA: https://orcaforum.cec.mpg.de/
+.. _ORCA: https://orcaforum.kofo.mpg.de/app.php/portal
 .. _Psi4: https://psicode.org/
 .. _`Q-Chem`: https://q-chem.com/
 .. _Turbomole: http://www.turbomole-gmbh.com/
@@ -85,8 +85,8 @@ A record for the latest release is also available on Zenodo_.
 .. _`source package for cclib 1.7`: https://github.com/cclib/cclib/releases/download/v1.7/cclib-1.7.zip
 .. _`current development version`: https://github.com/cclib/cclib/archive/master.zip
 .. _`GitHub repository`: https://github.com/cclib/cclib
-.. _`mailing list`: https://lists.sourceforge.net/lists/listinfo/cclib-users
-.. _`developers mailing list`: https://lists.sourceforge.net/lists/listinfo/cclib-devel
+.. _`mailing list`: https://sourceforge.net/projects/cclib/lists/cclib-users
+.. _`developers mailing list`: https://sourceforge.net/projects/cclib/lists/cclib-devel
 .. _`tracker`: https://github.com/cclib/cclib/issues
 
 .. _GaussSum: http://gausssum.sourceforge.net/
