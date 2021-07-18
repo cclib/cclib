@@ -145,13 +145,13 @@ Websites related to cclib
 * The `cclib project page on Sourceforge`_ (inactive now)
 * The `cclib page for GitHub Actions`_
 * The `cclib entry on PyPI`_
-* The `cclib entry on Ohloh`_
+* The `cclib entry on Open Hub`_
 
 .. _`cclib organization on github`: https://github.com/cclib
 .. _`cclib project page on Sourceforge`: http://sourceforge.net/projects/cclib/
-.. _`cclib entry on PyPI`: http://www.python.org/pypi/cclib
 .. _`cclib page for GitHub Actions`: https://github.com/cclib/cclib/actions
-.. _`cclib entry on Ohloh`: https://www.ohloh.net/p/cclib
+.. _`cclib entry on PyPI`: http://www.python.org/pypi/cclib
+.. _`cclib entry on Open Hub`: https://www.openhub.net/p/cclib
 
 Developers
 ==========
