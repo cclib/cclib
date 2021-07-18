@@ -163,9 +163,11 @@ Besides input from a number of people `listed in the repository`_, the following
 * `Noel O'Boyle`_
 * Christopher Rowley
 * Adam Tenderholt
+* `Shiv Upadhyay`_
 
 .. _`listed in the repository`: https://github.com/cclib/cclib/blob/master/THANKS
 
 .. _`Eric Berquist`: https://github.com/berquist
 .. _`Karol M. Langner`: https://github.com/langner
 .. _`Noel O'Boyle`: https://www.redbrick.dcu.ie/~noel/
+.. _`Shiv Upadhyay`: https://github.com/shivupa
