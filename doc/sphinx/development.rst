@@ -85,14 +85,11 @@ Testing
 .. index::
     single: testing; unit tests
 
-The `test directory`_, which is not included in the default download, contains the test scripts that keep cclib reliable, and keep the developers sane. With any new commit or pull request to cclib on GitHub the tests are triggered and run with `Travis CI`_, for both the current production version |release| (|travis_prod|) as well as master (|travis_master|).
+The `test directory`_, which is not included in the default download, contains the test scripts that keep cclib reliable, and keep the developers sane. With any new commit or pull request to cclib on GitHub the tests are triggered and run with `GitHub Actions`_.
 
 The input files for tests, which are logfiles from computational chemistry programs, are located in the `data directory`_. These are a central part of cclib, and any progress should always be supported by corresponding tests. When a user opens an issue or reports a bug, it is prudent to write a test that reproduces the bug as well as fixing it. This ensures it will remain fixed in the future. Likewise, extending the coverage of data attributes to more programs should proceed in parallel with the growth of unit tests.
 
-.. _`Travis CI`: https://travis-ci.org/cclib/cclib
-
-.. |travis_prod| image:: https://travis-ci.org/cclib/cclib.svg?branch=v1.6.2
-.. |travis_master| image:: https://travis-ci.org/cclib/cclib.svg?branch=master
+.. _`GitHub Actions`: https://github.com/cclib/cclib/actions
 
 .. _`data directory`: https://github.com/cclib/cclib/tree/master/data
 .. _`test directory`: https://github.com/cclib/cclib/tree/master/test
@@ -133,27 +130,27 @@ Regression tests ensure that bugs, once fixed, stay fixed. These are real-life f
 
 For every bug found in the parsers, there should be a corresponding regression test that tests this bug stays fixed. The process is automated by `regression.py`_, which runs through all of our test data, both the basic data and regression files, opens them, tries to parse, and runs any relevant regression tests defined for that file. New regression tests are added by creating a function ``testMyFileName_out`` according to the examples at the start of `regression.py`_.
 
-Using both the unit and regression tests, the line-by-line `test coverage`_ shows which parts of cclib are touched by at least one test. When adding new features and tests, the Travis CI `testing script`_ can be run locally to generate the HTML coverage pages and ensure that the tests exercise the feature code.
+Using both the unit and regression tests, the line-by-line `test coverage`_ shows which parts of cclib are touched by at least one test. When adding new features and tests, the GitHub Actions `testing script`_ can be run locally to generate the HTML coverage pages and ensure that the tests exercise the feature code.
 
 .. _`cclib-data`: https://github.com/cclib/cclib-data
 .. _`regression.py`: https://github.com/cclib/cclib/blob/master/test/regression.py
 
 .. _`test coverage`: coverage/index.html
-.. _`testing script`: https://github.com/cclib/cclib/blob/master/travis/run_pytest.sh
+.. _`testing script`: https://github.com/cclib/cclib/blob/master/.github/scripts/run_pytest.bash
 
 Websites related to cclib
 =========================
 
 * The official `cclib organization on github`_
 * The `cclib project page on Sourceforge`_ (inactive now)
-* The `cclib page for Travis CI`_
+* The `cclib page for GitHub Actions`_
 * The `cclib entry on PyPI`_
 * The `cclib entry on Ohloh`_
 
 .. _`cclib organization on github`: https://github.com/cclib
 .. _`cclib project page on Sourceforge`: http://sourceforge.net/projects/cclib/
 .. _`cclib entry on PyPI`: http://www.python.org/pypi/cclib
-.. _`cclib page for Travis CI`: https://travis-ci.org/cclib/cclib
+.. _`cclib page for GitHub Actions`: https://github.com/cclib/cclib/actions
 .. _`cclib entry on Ohloh`: https://www.ohloh.net/p/cclib
 
 Developers
