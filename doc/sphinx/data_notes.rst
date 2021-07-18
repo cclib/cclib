@@ -213,7 +213,7 @@ For D and F functions there is an important distinction between pure (5D, 7F) or
 
 **GAMESS/GAMESS-UK**: no special keywords are required, but the basis is only available for symmetry inequivalent atoms. There does not seem to be any way to get GAMESS to say which atoms are related through symmetry. As a result, if you want to get basis set info for every atom, you need to reduce the symmetry to C1.
 
-**Jaguar**: for more information see manual (for example at http://yfaat.ch.huji.ac.il/jaguar-help/mand.html#114223)
+**Jaguar**: for more information see manual (for example at https://web.archive.org/web/20141117001641/http://yfaat.ch.huji.ac.il/jaguar-help/mand.html)
 
 **ORCA**: include ``Print[ P_Basis ] 2`` in the ``output`` block
 
@@ -237,7 +237,7 @@ In some special cases, the values in ``geotargets`` will be `numpy.inf`_.
     - maximum gradient below TOL * 1/4,
     - average gradient below TOL * 1/6.
 
-.. _`GAMESS-UK manual section on controlling optimisation`: http://www.cfs.dl.ac.uk/docs/html/part4/node14.html 
+.. _`GAMESS-UK manual section on controlling optimisation`: https://web.archive.org/web/20190809095414/http://www.cfs.dl.ac.uk/docs/html/part4/node14.html
 
 **Jaguar** has several geometry convergence criteria,
 
@@ -364,7 +364,7 @@ A list of rank 1 arrays containing the molecular orbital energies in eV. The lis
 
 **Jaguar**: the first ten virtual orbitals are printed by default. In order to print more, use the ``ipvirt`` keyword, with ``ipvirt=-1`` printing all virtual orbitals.
 
-.. _`FORMAT HIGH`: http://www.cfs.dl.ac.uk/docs/html/part3/node8.html#SECTION00083000000000000000
+.. _`FORMAT HIGH`: https://web.archive.org/web/20190809100513/http://www.cfs.dl.ac.uk/docs/html/part3/node8.html
 
 .. index::
     single: properties; moments (attribute)
@@ -547,13 +547,13 @@ For intermediate steps in a geometry optimisation the situation is more complica
 
 where ``old criteria`` is the initial value or from the previous geometry cycle, ``grdmax`` is the maximum gradient from the last geometry step and ``accint`` is the current integration accuracy.
 
-.. _`CONVERGE subkey of the SCF block`: http://www.scm.com/Doc/Doc2014/ADF/ADFUsersGuide/page235.html#keyscheme%20INTEGRATION
+.. _`CONVERGE subkey of the SCF block`: https://www.scm.com/doc/ADF/Input/SCF.html#main-options
 
 **GAMESS**: Two criteria are, the maximum and root-mean-square (RMS) density matrix change, are used with a default starting value of 5.0E-05. It seems these values can change over the course of a geometry optimisation. ROHF calculations use SQCDF instead of the standard RMS change.
 
 **GAMESS-UK**: According to `the manual <GAMESS-UK manual convergence_>`_, convergence is determined by convergence of density matrix elements. The default value for SCF is 1E-5, but it appears to be 1E-7 for geoopts.
 
-.. _`GAMESS-UK manual convergence`: http://www.cfs.dl.ac.uk/docs/html/part4/node6.html
+.. _`GAMESS-UK manual convergence`: https://web.archive.org/web/20190809100922/http://www.cfs.dl.ac.uk/docs/html/part4/node6.html
 
 **Gaussian**: normally three criteria are used.
 

@@ -70,7 +70,7 @@ A record for the latest release is also available on Zenodo_.
 .. _DALTON: https://daltonprogram.org/
 .. _Firefly: http://classic.chem.msu.su/gran/gamess/
 .. _`GAMESS (US)`: https://www.msg.chem.iastate.edu/gamess/
-.. _`GAMESS-UK`: http://www.cfs.dl.ac.uk
+.. _`GAMESS-UK`: https://web.archive.org/web/20190613042645/http://www.cfs.dl.ac.uk/
 .. _`Gaussian`: https://gaussian.com/
 .. _Jaguar: https://www.schrodinger.com/products/jaguar
 .. _Molcas: https://gitlab.com/Molcas/OpenMolcas
