@@ -31,16 +31,6 @@ SHELL_ORBITALS = {
 
 }
 
-SHELL_START = {
-    0: 1,
-    1: 2,
-    -1: 2,
-    2: 3,
-    -2: 3,
-    3: 4,
-    -3: 4
-}
-
 
 def _shell_to_orbitals(type, offset):
     """Convert a Fchk shell type and offset to a list of string representations.
@@ -113,32 +103,59 @@ class CFOUR(logfileparser.Logfile):
             ang_mom = split_line[3]
             prim_count = 0
             atom_bas = []
-            print('#' not in line)
             basis_done = False
+            line = next(inputfile)
             # the line that ends the basis line is two ints.
             # TODO check if this is universal, like when there is one atom/basis fucntion
-            while len(line.split()) != 2:
+            while not basis_done:
+                print('the new line is:')
                 print(line)
-                while ('#' not in line) and (basis_done==True):
-                    if len(line.split()) ==2:
+                print(len(line.split()))
+                self.gbasis.append([])
+                while ('#' not in line) and (basis_done is False):
+                    if len(line.split()) == 2:
                         basis_done=True
                         break
                     if line =='\n':
                         line = next(inputfile)
                         continue
+                    print('skipping')
                     print(line)
                     print(line=='\n')
                     print('we are here!')
                     prim_count += 1
                     line = line.strip('+')
                     split_line = line.split()
-                    exp = split_line[1]
-                    coeffs = split_line[2:]
+                    print(split_line)
+                    exp = float(split_line[1])
+                    print('exponents')
+                    print(exp)
+                    coeffs = numpy.array(split_line[2:],dtype=float)
+                    basis_list = []
+                    for i in coeffs:
+                        basis_list.append((exp,i))
+                    print('coeffs')
+                    print(coeffs)
+                    pairs = zip(numpy.ones(len(coeffs))*exp,coeffs)
+                    print('pairs are')
+                    print(list(pairs)) # successfully gets each of the s functions organized.
                     # will need to make a list for each coefficient
-                    # since we are  getting an entry for three lists, probably quickest to gnerate it as thre lists.
-                    basis_tuple_struct = numpy.zeros((2,len(coeffs)))
+                    # since we are  getting an entry for three lists,
+                    # probably quickest to gnerate it as thre lists.
+
                     # for i in coeffs:
                     line = next(inputfile)
+                if basis_done:
+                    break
+                print('the line outside of this is:')
+                print(line)
+                self.gbasis[-1].append([ang_mom, basis_list])
+                split_line = line.split() # example line:  O #1  1    S
+                atom_num = int(split_line[1].strip('#'))
+                ang_mom = split_line[3]
+
+
+                print(self.gbasis)
                 line = next(inputfile)
         else:
             pass
