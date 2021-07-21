@@ -2254,5 +2254,22 @@ class Gaussian(logfileparser.Logfile):
             except:
                 pass
 
+        # Extract Rotational Constants
+        # Example:
+        # Rotational constants (GHZ):           3.13081     1.24272     0.88960
+        # OR for linear molecules:
+        # Rotational constants (GHZ): ************ 12.73690 12.73690
+        # Note: rotational constant will be converted to wavenumber units (1/cm) to standardize across parsers
+        if line[:27] == ' Rotational constants (GHZ)':
+            if not hasattr(self, "rotcons"):
+                self.rotcons = []
+            splits = line.split()
+
+            # Determine if the molecule is linear and only has two constants
+            if '*' in line:  # linear molecule
+                self.rotcons.append([0.0]+[utils.float(splits[i])/29.9792458 for i in (-2, -1)])
+            else:
+                self.rotcons.append([utils.float(splits[i])/29.9792458 for i in (-3, -2, -1)])
+
         if line[:31] == ' Normal termination of Gaussian':
             self.metadata['success'] = True
