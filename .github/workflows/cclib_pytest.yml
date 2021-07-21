@@ -24,6 +24,7 @@ jobs:
         shell: bash -l {0}
         run: |
           which python
+          which pip
           python -m pip install .
       - name: Test with pytest
         shell: bash -l {0}
