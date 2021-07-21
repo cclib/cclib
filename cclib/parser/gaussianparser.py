@@ -2271,5 +2271,12 @@ class Gaussian(logfileparser.Logfile):
             else:
                 self.rotcons.append([utils.float(splits[i])/29.9792458 for i in (-3, -2, -1)])
 
+        # Extract Molecular Mass (in amu)
+        # Example:
+        # Molecular mass:   128.06260 amu.
+        if line[:16] == ' Molecular mass:':
+            splits = line.split()
+            self.molmass = utils.float(splits[2])
+
         if line[:31] == ' Normal termination of Gaussian':
             self.metadata['success'] = True
