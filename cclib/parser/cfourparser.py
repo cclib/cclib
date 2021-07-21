@@ -18,37 +18,12 @@ from cclib.parser import data
 from cclib.parser import logfileparser
 from cclib.parser import utils
 
-SHELL_ORBITALS = {
-    0: ['S'],
-    1: ['X', 'Y', 'Z'],
-    -1: [],
-    2: ['XX', 'XY', 'XZ', 'YY', 'YZ', 'ZZ'],
-    -2: [],
-    3:  [],
-    -3: [],
-    4: [],
-    -4: []
-
-}
-
-
-def _shell_to_orbitals(type, offset):
-    """Convert a Fchk shell type and offset to a list of string representations.
-
-    For example, shell type = -2 corresponds to d orbitals (spherical basis) with
-    an offset = 1 would correspond to the 4d orbitals, so this function returns
-    `['4D1', '4D2', '4D3', '4D4', '4D5']`.
-    """
-
-    return ['{}{}'.format(SHELL_START[type] + offset, x) for x in SHELL_ORBITALS[type]]
-
 
 class CFOUR(logfileparser.Logfile):
     """ A CFOUR output file
     """
 
     def __init__(self, *args, **kwargs):
-
         # Call the __init__ method of the superclass
         super(CFOUR, self).__init__(logname="CFOUR", *args, **kwargs)
         self.start = True
@@ -65,8 +40,8 @@ class CFOUR(logfileparser.Logfile):
         """Just return label"""
         return symlabel
 
-    def extract(self, inputfile, line):
 
+    def extract(self, inputfile, line):
         # just opened file, skip first line to get basis
         if 'Version' in line:
             package_version = line.split()[1]
@@ -92,14 +67,13 @@ class CFOUR(logfileparser.Logfile):
         # find the number of basis functions
         if  'There are' in line and 'basis functions.' in line:
             self.nbasis = line.split()[2]
-            print(self.nbasis)
         if  'GAUSSIAN BASIS INFORMATION' in line:
             for i in range(4):
                  line = next(inputfile)
-            print(line)
-            self.gbasis = []
+            self.gbasis = [[]]
             split_line = line.split() # example line:  O #1  1    S
             atom_num = int(split_line[1].strip('#'))
+            new_atom_num = 0
             ang_mom = split_line[3]
             prim_count = 0
             atom_bas = []
@@ -108,10 +82,6 @@ class CFOUR(logfileparser.Logfile):
             # the line that ends the basis line is two ints.
             # TODO check if this is universal, like when there is one atom/basis fucntion
             while not basis_done:
-                print('the new line is:')
-                print(line)
-                print(len(line.split()))
-                self.gbasis.append([])
                 while ('#' not in line) and (basis_done is False):
                     if len(line.split()) == 2:
                         basis_done=True
@@ -119,26 +89,17 @@ class CFOUR(logfileparser.Logfile):
                     if line =='\n':
                         line = next(inputfile)
                         continue
-                    print('skipping')
-                    print(line)
-                    print(line=='\n')
-                    print('we are here!')
+
                     prim_count += 1
                     line = line.strip('+')
                     split_line = line.split()
-                    print(split_line)
                     exp = float(split_line[1])
-                    print('exponents')
-                    print(exp)
                     coeffs = numpy.array(split_line[2:],dtype=float)
                     basis_list = []
                     for i in coeffs:
                         basis_list.append((exp,i))
-                    print('coeffs')
-                    print(coeffs)
                     pairs = zip(numpy.ones(len(coeffs))*exp,coeffs)
-                    print('pairs are')
-                    print(list(pairs)) # successfully gets each of the s functions organized.
+# successfully gets each of the s functions organized.
                     # will need to make a list for each coefficient
                     # since we are  getting an entry for three lists,
                     # probably quickest to gnerate it as thre lists.
@@ -149,14 +110,26 @@ class CFOUR(logfileparser.Logfile):
                     break
                 print('the line outside of this is:')
                 print(line)
-                self.gbasis[-1].append([ang_mom, basis_list])
+                self.gbasis[-1].append((ang_mom, basis_list))
                 split_line = line.split() # example line:  O #1  1    S
-                atom_num = int(split_line[1].strip('#'))
+                new_atom_num = int(split_line[1].strip('#'))
                 ang_mom = split_line[3]
-
-
+                if ang_mom not in ['S','X','XX','XXX']: # CFOUR outputs each component, though cclib only stores as S, P, D.
+                    print('angular momenta of repeat')
+                    print(line)
+                    line = next(inputfile)
+                    print(line)
+                    while ('#' not in line):
+                        line = next(inputfile)
+                        if len(line) == 2:
+                            basis_done = True
+                    print(line)
+                else:
+                    line = next(inputfile)
+                if new_atom_num != atom_num:
+                    self.gbasis.append([])
+                    atom_num = new_atom_num
                 print(self.gbasis)
-                line = next(inputfile)
         else:
             pass
             # raise Warning('CFOUR job was not run with PRINT=1 option, basis is not detailed enough')
