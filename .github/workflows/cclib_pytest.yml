@@ -15,7 +15,8 @@ jobs:
     container:
       image: ${{ matrix.container }}
     steps:
-      - uses: actions/checkout@v2
+      - name: checkout
+        uses: actions/checkout@v2
       - name: Install core dependencies
         shell: bash -l {0}
         run: |
