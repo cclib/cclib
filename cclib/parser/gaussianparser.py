@@ -2037,15 +2037,16 @@ class Gaussian(logfileparser.Logfile):
         if line.strip() == "Natural Population":
             if not hasattr(self, 'atomcharges'):
                 self.atomcharges = {}
-            line1 = next(inputfile)
-            line2 = next(inputfile)
-            if line1.split()[0] == 'Natural' and line2.split()[2] == 'Charge':
-                dashes = next(inputfile)
-                charges = []
-                for i in range(self.natom):
-                    nline = next(inputfile)
-                    charges.append(float(nline.split()[2]))
-                self.atomcharges["natural"] = charges
+            if "natural" not in self.atomcharges:
+                line1 = next(inputfile)
+                line2 = next(inputfile)
+                if line1.split()[0] == 'Natural' and line2.split()[2] == 'Charge':
+                    dashes = next(inputfile)
+                    charges = []
+                    for i in range(self.natom):
+                        nline = next(inputfile)
+                        charges.append(float(nline.split()[2]))
+                    self.atomcharges["natural"] = charges
 
         #Extract Thermochemistry
         #Temperature   298.150 Kelvin.  Pressure   1.00000 Atm.
