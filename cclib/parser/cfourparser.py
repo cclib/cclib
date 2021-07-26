@@ -65,6 +65,8 @@ class CFOUR(logfileparser.Logfile):
             self.atomcoords = numpy.array(coord_block[:,2:],dtype=float)
 
         # find the number of basis functions
+        ang_mom_map = {'S':'S','X':'P','XX':'D','XXX':'F'}
+
         if  'There are' in line and 'basis functions.' in line:
             self.nbasis = line.split()[2]
         if  'GAUSSIAN BASIS INFORMATION' in line:
@@ -75,12 +77,9 @@ class CFOUR(logfileparser.Logfile):
             atom_num = int(split_line[1].strip('#'))
             new_atom_num = 0
             ang_mom = split_line[3]
-            prim_count = 0
-            atom_bas = []
             basis_done = False
             line = next(inputfile)
-            # the line that ends the basis line is two ints.
-            # TODO check if this is universal, like when there is one atom/basis fucntion
+            count = 0
             while not basis_done:
                 while ('#' not in line) and (basis_done is False):
                     if len(line.split()) == 2:
@@ -89,46 +88,42 @@ class CFOUR(logfileparser.Logfile):
                     if line =='\n':
                         line = next(inputfile)
                         continue
-
-                    prim_count += 1
-                    line = line.strip('+')
-                    split_line = line.split()
-                    exp = float(split_line[1])
-                    coeffs = numpy.array(split_line[2:],dtype=float)
-                    basis_list = []
-                    for i in coeffs:
-                        basis_list.append((exp,i))
-                    pairs = zip(numpy.ones(len(coeffs))*exp,coeffs)
-# successfully gets each of the s functions organized.
-                    # will need to make a list for each coefficient
-                    # since we are  getting an entry for three lists,
-                    # probably quickest to gnerate it as thre lists.
-
-                    # for i in coeffs:
-                    line = next(inputfile)
+                    if ang_mom not in ['S','X','XX','XXX']: # CFOUR outputs each component, though cclib only stores as S, P, D.
+                        print('angular momenta of repeat')
+                        print(line)
+                        line = next(inputfile)
+                        print(line)
+                        while ('#' not in line):
+                            line = next(inputfile)
+                            if len(line) == 2:
+                                basis_done = True
+                        print(line)
+                    else:
+                        print('we are stuck here somehow, right?')
+                        line = line.strip('+')
+                        split_line = line.split()
+                        exp = float(split_line[1])
+                        coeffs = numpy.array(split_line[2:],dtype=float)
+                        basis_list = []
+                        for i in coeffs:
+                            basis_list.append((exp,i))
+                        pairs = zip(numpy.ones(len(coeffs))*exp,coeffs)
+                        line = next(inputfile)
+                        self.gbasis[-1].append((ang_mom_map[ang_mom], basis_list))
                 if basis_done:
                     break
-                print('the line outside of this is:')
+                print('line after appending new basis is:')
                 print(line)
-                self.gbasis[-1].append((ang_mom, basis_list))
                 split_line = line.split() # example line:  O #1  1    S
                 new_atom_num = int(split_line[1].strip('#'))
                 ang_mom = split_line[3]
-                if ang_mom not in ['S','X','XX','XXX']: # CFOUR outputs each component, though cclib only stores as S, P, D.
-                    print('angular momenta of repeat')
-                    print(line)
-                    line = next(inputfile)
-                    print(line)
-                    while ('#' not in line):
-                        line = next(inputfile)
-                        if len(line) == 2:
-                            basis_done = True
-                    print(line)
-                else:
-                    line = next(inputfile)
+                line = next(inputfile)
                 if new_atom_num != atom_num:
                     self.gbasis.append([])
                     atom_num = new_atom_num
+                count +=1
+                if count == 3:
+                    exit
                 print(self.gbasis)
         else:
             pass
