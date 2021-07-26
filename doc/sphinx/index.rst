@@ -32,7 +32,7 @@ The current version is **cclib 1.7** (see the changelog_ for what's new). The fo
 
 Output files from other versions of the above programs may still work, and regression tests are always welcome. The following legacy parsers are still tested as regressions, but not actively maintained:
 
-- Psi3_ (version 3.4)
+- Psi3 (version 3.4)
 
 Many types of output data are parsed by cclib, including atom coordinates, orbital information, vibrational modes and TD-DFT calculations. See the page on `Extracted Data`_ for a complete list with coverage for the different programs. Several `calculation methods`_ are also provided for interpreting the electronic properties of molecules.
 
@@ -55,8 +55,8 @@ If you use cclib in your scientific work, please support our work by adding a re
 
 A record for the latest release is also available on Zenodo_.
 
-.. _`open source`: http://en.wikipedia.org/wiki/Open_source
-.. _Python: http://www.python.org
+.. _`open source`: https://en.wikipedia.org/wiki/Open_source
+.. _Python: https://www.python.org
 .. _`BSD 3-clause license`: https://en.wikipedia.org/wiki/BSD_licenses#3-clause_license_(%22BSD_License_2.0%22,_%22Revised_BSD_License%22,_%22New_BSD_License%22,_or_%22Modified_BSD_License%22)
 
 .. _changelog: changelog.html
@@ -67,31 +67,30 @@ A record for the latest release is also available on Zenodo_.
 .. _development: development.html
 
 .. _ADF: https://www.scm.com/product/adf/
-.. _DALTON: http://daltonprogram.org
+.. _DALTON: https://daltonprogram.org/
 .. _Firefly: http://classic.chem.msu.su/gran/gamess/
-.. _`GAMESS (US)`: http://www.msg.ameslab.gov/GAMESS/GAMESS.html
-.. _`GAMESS-UK`: http://www.cfs.dl.ac.uk
-.. _`Gaussian`: http://www.gaussian.com
-.. _Jaguar: https://www.schrodinger.com/jaguar
+.. _`GAMESS (US)`: https://www.msg.chem.iastate.edu/gamess/
+.. _`GAMESS-UK`: https://web.archive.org/web/20190613042645/http://www.cfs.dl.ac.uk/
+.. _`Gaussian`: https://gaussian.com/
+.. _Jaguar: https://www.schrodinger.com/products/jaguar
 .. _Molcas: https://gitlab.com/Molcas/OpenMolcas
-.. _Molpro: http://www.molpro.net/
+.. _Molpro: https://www.molpro.net/
 .. _MOPAC: http://openmopac.net/
-.. _NWChem: http://www.nwchem-sw.org/index.php/Main_Page
-.. _ORCA: https://orcaforum.cec.mpg.de/
-.. _Psi3: http://openscience.org/psi3/
-.. _Psi4: http://psicode.org/
-.. _`Q-Chem`: http://q-chem.com/
+.. _NWChem: https://nwchemgit.github.io/
+.. _ORCA: https://orcaforum.kofo.mpg.de/app.php/portal
+.. _Psi4: https://psicode.org/
+.. _`Q-Chem`: https://q-chem.com/
 .. _Turbomole: http://www.turbomole-gmbh.com/
 
 .. _`source package for cclib 1.7`: https://github.com/cclib/cclib/releases/download/v1.7/cclib-1.7.zip
 .. _`current development version`: https://github.com/cclib/cclib/archive/master.zip
 .. _`GitHub repository`: https://github.com/cclib/cclib
-.. _`mailing list`: https://lists.sourceforge.net/lists/listinfo/cclib-users
-.. _`developers mailing list`: https://lists.sourceforge.net/lists/listinfo/cclib-devel
+.. _`mailing list`: https://sourceforge.net/projects/cclib/lists/cclib-users
+.. _`developers mailing list`: https://sourceforge.net/projects/cclib/lists/cclib-devel
 .. _`tracker`: https://github.com/cclib/cclib/issues
 
 .. _GaussSum: http://gausssum.sourceforge.net/
 .. _QMForge: https://qmforge.net/
-.. _literature: http://pubs.acs.org/doi/abs/10.1021/jacs.5b05600
-.. _DOI: http://dx.doi.org/10.1002/jcc.20823
-.. _Zenodo: http://dx.doi.org/10.5281/zenodo.1407790
+.. _literature: https://doi.org/10.1021/jacs.5b05600
+.. _DOI: https://doi.org/10.1002/jcc.20823
+.. _Zenodo: https://zenodo.org/record/1407790

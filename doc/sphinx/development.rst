@@ -34,9 +34,9 @@ We follow a typical GitHub collaborative model, relying on `forks and pull reque
 * Reviewing and merging open pull requests (by someone else)
 * Using `issues`_ to plan and prioritize future work
 
-.. _`creating your own fork`: https://help.github.com/articles/fork-a-repo
-.. _`creating a pull request`: https://help.github.com/articles/creating-a-pull-request
-.. _`forks and pull requests`: https://help.github.com/articles/using-pull-requests
+.. _`forks and pull requests`: https://docs.github.com/en/github/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests
+.. _`creating your own fork`: https://docs.github.com/en/get-started/quickstart/fork-a-repo
+.. _`creating a pull request`: https://docs.github.com/en/github/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request
 .. _`issues`: https://github.com/cclib/cclib/issues
 
 Here are some general guidelines for developers who are contributing code:
@@ -45,7 +45,7 @@ Here are some general guidelines for developers who are contributing code:
 * There should normally not be more failed tests than before your changes.
 * For larger changes or features that take some time to implement, `using branches`_ is recommended.
 
-.. _`using branches`: https://help.github.com/articles/branching-out
+.. _`using branches`: https://docs.github.com/en/github/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-branches
 
 Releasing a new version
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -64,18 +64,19 @@ When creating a new release on GitHub, the typical procedure might include the f
 * Create the source distributions (``python setup.py sdist --formats=gztar,zip``) and Windows binary installers (``python setup.py bdist_wininst``)
 * Create a release on GitHub using the created tag (see `Creating releases`_) and upload the source distributions and Windows binaries
 * Email the users and developers mailing list with the message in `ANNOUNCE`_
-* Update the Python package index (https://pypi.python.org/pypi/cclib), normally done by ``python setup.py register``
+* Update the `Python package index`_, normally done by ``python setup.py register``
 * For significant releases, if appropriate, send an email to the `CCL list`_ and any mailing lists for computational chemistry packages supported by cclib
 
 .. _`parsed attributes`: data.html
 
 .. _`ANNOUNCE`: https://github.com/cclib/cclib/blob/master/ANNOUNCE
+.. _`Python package index`: https://pypi.org/project/cclib/
 .. _`CHANGELOG`: https://github.com/cclib/cclib/blob/master/CHANGELOG
 .. _`setup.py`: https://github.com/cclib/cclib/blob/master/setup.py
-.. _`__init__.py`: https://github.com/cclib/cclib/blob/master/src/cclib/__init__.py
+.. _`__init__.py`: https://github.com/cclib/cclib/blob/master/cclib/__init__.py
 .. _`manifest.py`: https://github.com/cclib/cclib/blob/master/manifest.py
 
-.. _`Creating releases`: https://help.github.com/articles/creating-releases
+.. _`Creating releases`: https://docs.github.com/en/github/administering-a-repository/releasing-projects-on-github/managing-releases-in-a-repository
 
 .. _`CCL list`: http://www.ccl.net
 
@@ -145,13 +146,15 @@ Websites related to cclib
 * The `cclib project page on Sourceforge`_ (inactive now)
 * The `cclib page for GitHub Actions`_
 * The `cclib entry on PyPI`_
-* The `cclib entry on Ohloh`_
+* The `cclib entry on libraries.io`_
+* The `cclib entry on Open Hub`_
 
 .. _`cclib organization on github`: https://github.com/cclib
-.. _`cclib project page on Sourceforge`: http://sourceforge.net/projects/cclib/
-.. _`cclib entry on PyPI`: http://www.python.org/pypi/cclib
+.. _`cclib project page on Sourceforge`: https://sourceforge.net/projects/cclib/
 .. _`cclib page for GitHub Actions`: https://github.com/cclib/cclib/actions
-.. _`cclib entry on Ohloh`: https://www.ohloh.net/p/cclib
+.. _`cclib entry on PyPI`: https://pypi.org/project/cclib/
+.. _`cclib entry on libraries.io`: https://libraries.io/pypi/cclib
+.. _`cclib entry on Open Hub`: https://www.openhub.net/p/cclib
 
 Developers
 ==========
@@ -163,9 +166,11 @@ Besides input from a number of people `listed in the repository`_, the following
 * `Noel O'Boyle`_
 * Christopher Rowley
 * Adam Tenderholt
+* `Shiv Upadhyay`_
 
 .. _`listed in the repository`: https://github.com/cclib/cclib/blob/master/THANKS
 
 .. _`Eric Berquist`: https://github.com/berquist
 .. _`Karol M. Langner`: https://github.com/langner
-.. _`Noel O'Boyle`: https://www.redbrick.dcu.ie/~noel/
+.. _`Noel O'Boyle`: https://noel.redbrick.dcu.ie/
+.. _`Shiv Upadhyay`: https://github.com/shivupa

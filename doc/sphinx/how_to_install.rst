@@ -16,7 +16,7 @@ Python is an open-source programming language available from https://www.python.
 
     apt-get install python python-dev
 
-NumPy (Numerical Python) adds a fast array facility and linear algebra routines to Python. It is available from https://www.numpy.org. Windows users should use the most recent NumPy installation for the Python version they have (e.g. numpy-1.0.3.1.win32-py2.4.exe for Python 2.4). Linux users are recommended to find a binary package for their distribution rather than compiling it themselves. In Debian/Ubuntu it is installed as follows (as root):
+NumPy (Numerical Python) adds a fast array facility and linear algebra routines to Python. It is available from https://numpy.org/. Windows users should use the most recent NumPy installation for the Python version they have (e.g. numpy-1.0.3.1.win32-py2.4.exe for Python 2.4). Linux users are recommended to find a binary package for their distribution rather than compiling it themselves. In Debian/Ubuntu it is installed as follows (as root):
 
 .. code-block:: bash
 
@@ -64,7 +64,7 @@ or to your home directory using::
 
 .. _pip: https://pip.pypa.io/en/stable/
 .. _`Python Package Index`: https://pypi.org/
-.. _`cclib uploaded to PyPI`: https://pypi.python.org/pypi/cclib
+.. _`cclib uploaded to PyPI`: https://pypi.org/project/cclib/
 
 Installing using a system package manager
 -----------------------------------------
@@ -78,8 +78,8 @@ If you're using `Debian GNU/Linux`_, `Ubuntu`_, or a similar distribution, there
 There are in fact two packages, `python-cclib`_ containing the Python module, and `cclib`_ which installs just the user scripts. If you also need to also install the unittests and logfiles we distribute, you will need to install the `cclib-data`_ package from the non-free repositories (due to license issues). Because of distribution release cycles, package manager versions of cclib may be out of date compared to the PyPI version.
 
 .. _`Debian GNU/Linux`: https://www.debian.org
-.. _`Ubuntu`: https://www.ubuntu.com
-.. _`cclib packages`: https://packages.debian.org/src:cclib
+.. _`Ubuntu`: https://ubuntu.com/
+.. _`cclib packages`: https://packages.debian.org/search?searchon=sourcenames&keywords=cclib
 .. _`python-cclib`: https://packages.debian.org/stretch/python-cclib
 .. _`cclib`: https://packages.debian.org/stretch/cclib
 .. _`cclib-data`: https://packages.debian.org/stretch/cclib-data
@@ -88,8 +88,8 @@ Manual download and install
 ---------------------------
 
 The source code of the newest release of cclib (version |release|) is distributed as:
- * A .zip file: https://github.com/cclib/cclib/releases/download/v1.6/cclib-1.6.2.zip
- * A .tar.gz file: https://github.com/cclib/cclib/releases/download/v1.6/cclib-1.6.2.tar.gz
+ * A .zip file: https://github.com/cclib/cclib/releases/download/v1.7/cclib-1.7.zip
+ * A .tar.gz file: https://github.com/cclib/cclib/releases/download/v1.7/cclib-1.7.tar.gz
  * Windows binary installers (see the `newest release page`_)
 
 On Windows, if you choose to download the .exe files instead, you can install simply by double-clicking on the file. To uninstall, use the "Add and Remove Programs" menu in the Control Panel.
@@ -118,7 +118,7 @@ To test, trying importing '''cclib''' at the Python prompt. You should see somet
     '1.6.2'
     >>>
 
-.. _`newest release page`: https://github.com/cclib/cclib/releases/tag/v1.3.1
+.. _`newest release page`: https://github.com/cclib/cclib/releases/tag/v1.7
 
 What next?
 ----------
@@ -126,7 +126,7 @@ What next?
  * Read the list and specifications of the `parsed data`_ and related `data notes`_
  * Test the program using the test data files included in the full source distribution
  * Run the unit and regression tests in the test directory (``testall.py`` and ``regression.py``)
- * Send any questions to the cclib-users mailing list at https://lists.sourceforge.net/lists/listinfo/cclib-users.
+ * Send any questions to the cclib-users mailing list at https://sourceforge.net/projects/cclib/lists/cclib-users.
  * Write some computational chemistry algorithms using information parsed from cclib and donate the code to the project
 
 .. _`parsed data`: data.html

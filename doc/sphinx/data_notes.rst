@@ -69,7 +69,7 @@ Currently, cclib parses Mulliken, Löwdin, NPA and CHELPG charges, whose respect
 
 In practice, these may differ somewhat from the values cclib calculates in the various `calculation methods`_.
 
-**Molpro**: use the ``pop`` command (see http://www.molpro.net/info/2015.1/doc/manual/node515.html).
+**Molpro**: use the ``pop`` command (see https://www.molpro.net/manual/doku.php?id=properties_and_expectation_values&s[]=population&s[]=analysis#calling_the_population_analysis_program_pop).
 
 .. _`calculation methods`: methods.html
 
@@ -183,7 +183,7 @@ The difficulty in handling the basis for a molecule with symmetry and the availa
 gbasis
 ------
 
-This attribute stores information about the Gaussian basis functions that were used in the calculation, per atom using the same conventions as `PyQuante <http://pyquante.sf.net>`_. Specifically, ``gbasis`` is a list of lists iterating over atoms and Gaussian basis functions. The elements (basis functions) are tuples of length 2 consisting of orbital type (e.g. 'S', 'P' or 'D') and a list (per contracted GTO) of tuples of size 2 consisting of the exponent and coefficient. Confused? Well, here's ``gbasis`` for a molecule consisting of a single C atom with a STO-3G basis:
+This attribute stores information about the Gaussian basis functions that were used in the calculation, per atom using the same conventions as `PyQuante <http://pyquante.sourceforge.net/>`_. Specifically, ``gbasis`` is a list of lists iterating over atoms and Gaussian basis functions. The elements (basis functions) are tuples of length 2 consisting of orbital type (e.g. 'S', 'P' or 'D') and a list (per contracted GTO) of tuples of size 2 consisting of the exponent and coefficient. Confused? Well, here's ``gbasis`` for a molecule consisting of a single C atom with a STO-3G basis:
 
 .. code-block:: python
 
@@ -209,16 +209,16 @@ This attribute stores information about the Gaussian basis functions that were u
 
 For D and F functions there is an important distinction between pure (5D, 7F) or Cartesian (6D, 10F) functions. PyQuante can only handle Cartesian functions, but we should extract this information in any case, and perhaps work to extend the PyQuante basis set format to include this.
 
-**Gaussian**: the `GFINPUT`_ keyword should normally be used (`GFPRINT`_ gives equivalent information in a different format and is supported in cclib after v1.2).
+**Gaussian**: the `GFINPUT`_ keyword should normally be used (`GFPRINT`_ gives equivalent information in a different format).
 
 **GAMESS/GAMESS-UK**: no special keywords are required, but the basis is only available for symmetry inequivalent atoms. There does not seem to be any way to get GAMESS to say which atoms are related through symmetry. As a result, if you want to get basis set info for every atom, you need to reduce the symmetry to C1.
 
-**Jaguar**: for more information see manual (for example at http://yfaat.ch.huji.ac.il/jaguar-help/mand.html#114223)
+**Jaguar**: for more information see manual (for example at https://web.archive.org/web/20141117001641/http://yfaat.ch.huji.ac.il/jaguar-help/mand.html)
 
 **ORCA**: include ``Print[ P_Basis ] 2`` in the ``output`` block
 
-.. _`GFINPUT`: http://www.gaussian.com/g_tech/g_ur/k_gfinput.htm
-.. _`GFPRINT`: http://www.gaussian.com/g_tech/g_ur/k_gfprint.htm
+.. _`GFINPUT`: https://gaussian.com/gfinput/
+.. _`GFPRINT`: https://gaussian.com/gfprint/
 
 .. index::
     single: geometry optimisation; geotargets (attribute)
@@ -237,7 +237,7 @@ In some special cases, the values in ``geotargets`` will be `numpy.inf`_.
     - maximum gradient below TOL * 1/4,
     - average gradient below TOL * 1/6.
 
-.. _`GAMESS-UK manual section on controlling optimisation`: http://www.cfs.dl.ac.uk/docs/html/part4/node14.html 
+.. _`GAMESS-UK manual section on controlling optimisation`: https://web.archive.org/web/20190809095414/http://www.cfs.dl.ac.uk/docs/html/part4/node14.html
 
 **Jaguar** has several geometry convergence criteria,
 
@@ -251,9 +251,9 @@ Note that a value for gconv7 is not available until the second iteration, so it 
 
 **Molpro** has custom convergence criteria, as described in the `manual <Molpro manual convergence_>`_:
 
-    The standard MOLPRO convergence criterion requires the maximum component of the gradient to be less then :math:`3 \cdot 10^{-4}` [a.u.] and the maximum energy change to be less than :math:`1 \cdot 10^{-6}` [H] or the maximum component of the gradient to be less then $ 3 \cdot 10^{-4}$ [a.u.] and the maximum component of the step to be less then :math:`3 \cdot 10^{-4}` [a.u.].
+    The standard MOLPRO convergence criterion requires the maximum component of the gradient to be less than :math:`3 \cdot 10^{-4}` [a.u.] and the maximum energy change to be less than :math:`1 \cdot 10^{-6}` [H] or the maximum component of the gradient to be less than :math:`3 \cdot 10^{-4}` [a.u.] and the maximum component of the step to be less than :math:`3 \cdot 10^{-4}` [a.u.].
 
-.. _Molpro manual convergence: https://www.molpro.net/info/2012.1/doc/manual/node592.html
+.. _Molpro manual convergence: https://www.molpro.net/manual/doku.php?id=geometry_optimization_optg#options_to_modify_convergence_criteria
 
 **ORCA** tracks the change in energy as well as RMS and maximum gradients and displacements. As of version 3.0, an optimisation is considered converged when all the tolerances are met, and there are four exceptions:
 
@@ -264,9 +264,9 @@ Note that a value for gconv7 is not available until the second iteration, so it 
 
 **Psi** normally tracks five different values, as described `in the documentation`_, but their use various depending on the strategy employed. The default strategy (QCHEM) check whether the maximum force is converged and if the maximum energy change or displacement is converged. Additionally, to aid with flat potential energy surfaces, convergence is as assumed when the root mean square force converged to 0.01 of its default target. Note that Psi print values even for targets that are not being used -- in these cases the targets are parsed as `numpy.inf`_ so that they can still be used (any value will be converged).
 
-.. _`in the documentation`: http://sirius.chem.vt.edu/psi4manual/latest/optking.html
+.. _`in the documentation`: https://psicode.org/psi4manual/master/optking.html#convergence-criteria
 
-.. _`numpy.inf`: http://docs.scipy.org/doc/numpy-1.8.1/user/misc.html#ieee-754-floating-point-special-values
+.. _`numpy.inf`: https://numpy.org/doc/stable/user/misc.html#ieee-754-floating-point-special-values
 
 .. index::
     single: geomtry optimisation; geovalues (attribute)
@@ -290,7 +290,7 @@ The attribute ``grads`` contains the forces on the atoms, that is, the negative 
 hessian
 -------
 
-An array of rank 1 that contains the elements of the `hessian <http://en.wikipedia.org/wiki/Hessian_matrix>`_ or force constant matrix. Only the lower triangular part of the 3Nx3N matrix is stored (this may change in the future, maybe also only the unweighted matrix will be parsed).
+An array of rank 2 that contains the elements of the `hessian <https://en.wikipedia.org/wiki/Hessian_matrix>`_ or force constant matrix. The full symmetric ``3N x 3N`` matrix is stored.
 
 .. index::
     single: molecular orbitals; homos (attribute)
@@ -364,7 +364,7 @@ A list of rank 1 arrays containing the molecular orbital energies in eV. The lis
 
 **Jaguar**: the first ten virtual orbitals are printed by default. In order to print more, use the ``ipvirt`` keyword, with ``ipvirt=-1`` printing all virtual orbitals.
 
-.. _`FORMAT HIGH`: http://www.cfs.dl.ac.uk/docs/html/part3/node8.html#SECTION00083000000000000000
+.. _`FORMAT HIGH`: https://web.archive.org/web/20190809100513/http://www.cfs.dl.ac.uk/docs/html/part3/node8.html
 
 .. index::
     single: properties; moments (attribute)
@@ -547,13 +547,13 @@ For intermediate steps in a geometry optimisation the situation is more complica
 
 where ``old criteria`` is the initial value or from the previous geometry cycle, ``grdmax`` is the maximum gradient from the last geometry step and ``accint`` is the current integration accuracy.
 
-.. _`CONVERGE subkey of the SCF block`: http://www.scm.com/Doc/Doc2014/ADF/ADFUsersGuide/page235.html#keyscheme%20INTEGRATION
+.. _`CONVERGE subkey of the SCF block`: https://www.scm.com/doc/ADF/Input/SCF.html#main-options
 
 **GAMESS**: Two criteria are, the maximum and root-mean-square (RMS) density matrix change, are used with a default starting value of 5.0E-05. It seems these values can change over the course of a geometry optimisation. ROHF calculations use SQCDF instead of the standard RMS change.
 
 **GAMESS-UK**: According to `the manual <GAMESS-UK manual convergence_>`_, convergence is determined by convergence of density matrix elements. The default value for SCF is 1E-5, but it appears to be 1E-7 for geoopts.
 
-.. _`GAMESS-UK manual convergence`: http://www.cfs.dl.ac.uk/docs/html/part4/node6.html
+.. _`GAMESS-UK manual convergence`: https://web.archive.org/web/20190809100922/http://www.cfs.dl.ac.uk/docs/html/part4/node6.html
 
 **Gaussian**: normally three criteria are used.
 
@@ -571,7 +571,7 @@ The attribute ``scfvalues`` is a list of arrays of dimension ``n x m`` (one elem
 
 **Gaussian**: requires the `route section`_ to start with #P
 
-.. _`route section`: http://www.gaussian.com/g_tech/g_ur/k_route.htm
+.. _`route section`: https://gaussian.com/route/
 
 **GAMESS-UK**: convergence information is printed only for the first optimisation step by default, but can be forced at all steps by adding ``IPRINT SCF`` to the input file.
 
