@@ -1161,6 +1161,15 @@ def testGaussian_Gaussian09_benzene_excited_states_optimization_issue889_log(log
     assert len(logfile.data.etsecs) == 20
     assert logfile.data.etveldips.shape == (20,3)
 
+def testGaussian_Gaussian16_H3_natcharge_log(logfile):
+    """A calculation with natural charges calculated. Test issue 1055 where 
+    only the beta set of charges was parsed rather than the spin independent"""
+
+    assert isinstance(logfile.data.atomcharges, dict)
+    assert "mulliken" in logfile.data.atomcharges
+    assert "natural" in logfile.data.atomcharges
+    assert numpy.all(logfile.data.atomcharges["natural"] == [ 0.0721, -0.1442,  0.0721])
+
 def testGaussian_Gaussian16_naturalspinorbitals_parsing_log(logfile):
     """A UHF calculation with natural spin orbitals."""
 
