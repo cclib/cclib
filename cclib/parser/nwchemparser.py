@@ -83,7 +83,7 @@ class NWChem(logfileparser.Logfile):
 
             # Another way to know the number of atoms is to look at the size of the geometry.
             if not hasattr(self, 'natom'):
-                natom = len(coords) 
+                natom = len(coords)
                 self.set_attribute('natom', natom)
 
             self.atomcoords.append(coords)
@@ -1120,7 +1120,7 @@ class NWChem(logfileparser.Logfile):
             self.set_attribute('electronic_thermal_energy', utils.float(line.split()[8]) + utils.convertor(self.scfenergies[-1], "eV", "hartree"))
         if line[1:14] == "Total Entropy":
             self.set_attribute('entropy', utils.convertor(1e-3 * utils.float(line.split()[3]),"kcal/mol","hartree"))
-        
+
         # extract vibrational frequencies (in cm-1)
         if line.strip() == "Normal Eigenvalue ||           Projected Infra Red Intensities":
             if not hasattr(self, 'vibfreqs'):
@@ -1134,11 +1134,11 @@ class NWChem(logfileparser.Logfile):
                 self.vibirs.append(utils.float(line.split()[5]))
                 line = next(inputfile) # next line
 
-        # NWChem TD-DFT excited states transitions  
+        # NWChem TD-DFT excited states transitions
         #
         # Have to deal with :
         # ----------------------------------------------------------------------------
-        # Root   1 singlet a              0.105782828 a.u.                2.8785 eV 
+        # Root   1 singlet a              0.105782828 a.u.                2.8785 eV
         # ----------------------------------------------------------------------------
         #    Transition Moments    X -1.88278   Y -0.46346   Z -0.05660
         #    Transition Moments   XX -5.63612  XY  4.57009  XZ -0.38291
@@ -1152,7 +1152,7 @@ class NWChem(logfileparser.Logfile):
         #    Occ.  117  a   ---  Virt.  118  a   -0.08960 Y
         #    Occ.  117  a   ---  Virt.  119  a    0.08235 X
         # ----------------------------------------------------------------------------
-        # Root   2 singlet a              0.127858653 a.u.                3.4792 eV 
+        # Root   2 singlet a              0.127858653 a.u.                3.4792 eV
         # ----------------------------------------------------------------------------
         #    Transition Moments    X -0.02031   Y  0.11238   Z -0.09893
         #    Transition Moments   XX -0.23065  XY -0.35697  XZ -0.11250
@@ -1181,7 +1181,7 @@ class NWChem(logfileparser.Logfile):
                 self.etoscs = []
                 self.etsyms = []
                 self.etsecs = []
-            
+
             self.etenergies.append(utils.convertor(utils.float(line.split()[-2]), "eV", "wavenumber"))
             self.etsyms.append(str.join(" ", line.split()[2:-4]))
 
@@ -1207,7 +1207,7 @@ class NWChem(logfileparser.Logfile):
                 occ = int(occ) - 1  # subtract 1 so that it is an index into moenergies
                 virt = int(virt) - 1  # subtract 1 so that it is an index into moenergies
                 coef = utils.float(coef)
-                if (direction == 'Y'): 
+                if (direction == 'Y'):
                     # imaginary or negative excitation (denoted Y)
                     tmp = virt
                     virt = occ
