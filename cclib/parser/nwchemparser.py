@@ -183,7 +183,6 @@ class NWChem(logfileparser.Logfile):
                     line = next(inputfile)
                 gbasis_dict[atomelement].extend(shells)
 
-        # at this point natom and/or atomnos could be missing
             gbasis = []
             for i in range(self.natom):
                 atomtype = self.table.element[self.atomnos[i]]
@@ -279,7 +278,7 @@ class NWChem(logfileparser.Logfile):
         if line.strip() == "General Information":
 
             if hasattr(self, 'linesearch') and self.linesearch:
-                return
+                return # problem here
 
             while line.strip():
 
@@ -418,7 +417,7 @@ class NWChem(logfileparser.Logfile):
         if line.split() == ['convergence', 'iter', 'energy', 'DeltaE', 'RMS-Dens', 'Diis-err', 'time']:
 
             if hasattr(self, 'linesearch') and self.linesearch:
-                return
+                return # problem here
 
             self.skip_line(inputfile, 'dashes')
             line = next(inputfile)
@@ -546,7 +545,7 @@ class NWChem(logfileparser.Logfile):
             # since the step size can become smaller). We want to skip these SCF cycles,
             # unless the coordinates can also be extracted (possibly from the gradients?).
             if hasattr(self, 'linesearch') and self.linesearch:
-                return
+                return # problem here
 
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
@@ -1128,8 +1127,8 @@ class NWChem(logfileparser.Logfile):
                 self.vibfreqs = []
             if not hasattr(self, 'vibirs'):
                 self.vibirs = []
-            line = next(inputfile) # units
-            line = next(inputfile) # dashes
+            self.skiplines # units
+            self.skiplines # dashes
             line = next(inputfile) # first line of data
             while (line[:-1] != " ----------------------------------------------------------------------------"):
                 self.vibfreqs.append(float(line.split()[1]))
