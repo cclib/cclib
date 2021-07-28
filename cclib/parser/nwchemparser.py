@@ -41,6 +41,11 @@ class NWChem(logfileparser.Logfile):
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
+        # search for No. of atoms     :
+        if line[:22] == "          No. of atoms":
+            if not hasattr(self, 'natom'):
+                natom = int(line[28:])
+                self.set_attribute('natom', natom)
 
         # Extract the version number and the version control information, if
         # it exists.
