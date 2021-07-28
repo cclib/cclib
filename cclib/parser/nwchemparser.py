@@ -41,6 +41,11 @@ class NWChem(logfileparser.Logfile):
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
+        # search for No. of atoms     :    
+        if line[:22] == "          No. of atoms":
+            if not hasattr(self, 'natom'):
+                natom = int(line[28:])
+                self.set_attribute('natom', natom)
 
         # Extract the version number and the version control information, if
         # it exists.
@@ -93,8 +98,14 @@ class NWChem(logfileparser.Logfile):
             self.set_attribute('natom', natom)
 
         if line.strip() == "NWChem Geometry Optimization":
-            self.skip_lines(inputfile, ['d', 'b', 'b', 'b', 'b', 'title', 'b', 'b'])
+            # If the calculation doesn't have a title specified, there
+            # aren't as many lines to skip here.
+            self.skip_lines(inputfile, ['d', 'b', 'b'])
             line = next(inputfile)
+            # skip more lines with title
+            if not line.strip():
+                 self.skip_lines(inputfile, ['b', 'title', 'b', 'b'])
+                 line = next(inputfile)
             while line.strip():
                 if "maximum gradient threshold" in line:
                     gmax = float(line.split()[-1])
@@ -1174,27 +1185,31 @@ class NWChem(logfileparser.Logfile):
             
             self.etenergies.append(utils.convertor(utils.float(line.split()[-2]), "eV", "wavenumber"))
             self.etsyms.append(str.join(" ", line.split()[2:-4]))
-            for _ in range(8):
+
+            # find Dipole Oscillator Strength
+            while not ("Dipole Oscillator Strength" in line):
                 line = next(inputfile)
-            self.etoscs.append(float(line.split()[-1]))
-            line = next(inputfile) # blank line
-            line = next(inputfile) # first transition
+            etoscs = float(line.split()[-1])
+            # in case of magnetic contribution replace, replace Dipole Oscillator Strength with Total Oscillator Strength
+            while not (line.find("Occ.") >= 0):
+                if "Total Oscillator Strength" in line:
+                    etoscs = float(line.split()[-1])
+                line = next(inputfile)
+            self.etoscs.append(etoscs)
+
             CIScontrib = []
             while line.find("Occ.") >= 0:
-                if (len(line.split()) == 9):
+                if (len(line.split()) == 9): # restricted
                     _, occ, _, _, _, virt, _, coef, direction = line.split()
                     type1 = "alpha"
                     type2 = "alpha"
-                elif (len(line.split()) == 11):
+                else: # unrestricted: len(line.split()) should be 11
                     _, occ, type1, _, _, _, virt, type2, _, coef, direction = line.split()
-                    raise(Exception("Excited State transition : not only alpha"))
-                else:
-                    # not alpha/beta
-                    raise(Exception("Excited State transition : not implemented"))
                 occ = int(occ) - 1  # subtract 1 so that it is an index into moenergies
                 virt = int(virt) - 1  # subtract 1 so that it is an index into moenergies
                 coef = float(coef)
-                if (direction == 'Y'):
+                if (direction == 'Y'): 
+                    # imaginary or negative excitation (denoted Y)
                     tmp = virt
                     virt = occ
                     occ = tmp
@@ -1204,11 +1219,9 @@ class NWChem(logfileparser.Logfile):
                 frommoindex = 0  # For restricted or alpha unrestricted
                 if type1 == "beta":
                     frommoindex = 1
-                tomoindex = 0
+                tomoindex = 0 # For restricted or alpha unrestricted
                 if type2 == "beta":
                     tomoindex = 1
-                # For restricted calculations, the percentage will be corrected
-                # after parsing (see after_parsing() above).
                 CIScontrib.append([(occ, frommoindex), (virt, tomoindex), coef])
                 line = next(inputfile)
             self.etsecs.append(CIScontrib)
