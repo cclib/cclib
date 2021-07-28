@@ -1109,17 +1109,17 @@ class NWChem(logfileparser.Logfile):
         # - Rotational                     =    2.979 cal/mol-K
         # - Vibrational                    =   97.716 cal/mol-K
         if line[1:12] == "Temperature":
-            self.set_attribute('temperature', float(line.split()[2][:-1]))
+            self.set_attribute('temperature', utils.float(line.split()[2][:-1]))
         if line[1:28] == "frequency scaling parameter":
-            self.set_attribute('pressure', float(line.split()[4]))
+            self.set_attribute('pressure', utils.float(line.split()[4]))
         if line[1:31] == "Thermal correction to Enthalpy":
-            self.set_attribute('enthalpy', float(line.split()[8]) + utils.convertor(self.scfenergies[-1], "eV", "hartree"))
+            self.set_attribute('enthalpy', utils.float(line.split()[8]) + utils.convertor(self.scfenergies[-1], "eV", "hartree"))
         if line[1:32] == "Zero-Point correction to Energy":
-            self.set_attribute('zero_point_energy', float(line.split()[8]) + utils.convertor(self.scfenergies[-1], "eV", "hartree"))
+            self.set_attribute('zero_point_energy', utils.float(line.split()[8]) + utils.convertor(self.scfenergies[-1], "eV", "hartree"))
         if line[1:29] == "Thermal correction to Energy":
-            self.set_attribute('electronic_thermal_energy', float(line.split()[8]) + utils.convertor(self.scfenergies[-1], "eV", "hartree"))
+            self.set_attribute('electronic_thermal_energy', utils.float(line.split()[8]) + utils.convertor(self.scfenergies[-1], "eV", "hartree"))
         if line[1:14] == "Total Entropy":
-            self.set_attribute('entropy', utils.convertor(1e-3 * float(line.split()[3]),"kcal/mol","hartree"))
+            self.set_attribute('entropy', utils.convertor(1e-3 * utils.float(line.split()[3]),"kcal/mol","hartree"))
         
         # extract vibrational frequencies (in cm-1)
         if line.strip() == "Normal Eigenvalue ||           Projected Infra Red Intensities":
@@ -1131,8 +1131,8 @@ class NWChem(logfileparser.Logfile):
             self.skiplines # dashes
             line = next(inputfile) # first line of data
             while (line[:-1] != " ----------------------------------------------------------------------------"):
-                self.vibfreqs.append(float(line.split()[1]))
-                self.vibirs.append(float(line.split()[5]))
+                self.vibfreqs.append(utils.float(line.split()[1]))
+                self.vibirs.append(utils.float(line.split()[5]))
                 line = next(inputfile) # next line
 
         # NWChem TD-DFT excited states transitions  
@@ -1189,11 +1189,11 @@ class NWChem(logfileparser.Logfile):
             # find Dipole Oscillator Strength
             while not ("Dipole Oscillator Strength" in line):
                 line = next(inputfile)
-            etoscs = float(line.split()[-1])
+            etoscs = utils.float(line.split()[-1])
             # in case of magnetic contribution replace, replace Dipole Oscillator Strength with Total Oscillator Strength
             while not (line.find("Occ.") >= 0):
                 if "Total Oscillator Strength" in line:
-                    etoscs = float(line.split()[-1])
+                    etoscs = utils.float(line.split()[-1])
                 line = next(inputfile)
             self.etoscs.append(etoscs)
 
@@ -1207,7 +1207,7 @@ class NWChem(logfileparser.Logfile):
                     _, occ, type1, _, _, _, virt, type2, _, coef, direction = line.split()
                 occ = int(occ) - 1  # subtract 1 so that it is an index into moenergies
                 virt = int(virt) - 1  # subtract 1 so that it is an index into moenergies
-                coef = float(coef)
+                coef = utils.float(coef)
                 if (direction == 'Y'): 
                     # imaginary or negative excitation (denoted Y)
                     tmp = virt
