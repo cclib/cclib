@@ -188,7 +188,6 @@ class NWChem(logfileparser.Logfile):
                     line = next(inputfile)
                 gbasis_dict[atomelement].extend(shells)
 
-        # at this point natom and/or atomnos could be missing
             gbasis = []
             for i in range(self.natom):
                 atomtype = self.table.element[self.atomnos[i]]
