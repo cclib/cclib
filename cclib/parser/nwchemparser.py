@@ -41,11 +41,6 @@ class NWChem(logfileparser.Logfile):
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
-        # search for No. of atoms     :    
-        if line[:22] == "          No. of atoms":
-            if not hasattr(self, 'natom'):
-                natom = int(line[28:])
-                self.set_attribute('natom', natom)
 
         # Extract the version number and the version control information, if
         # it exists.
@@ -85,6 +80,11 @@ class NWChem(logfileparser.Logfile):
                 coords.append(list(map(float, [x, y, z])))
                 atomnos.append(int(float(nuclear)))
                 line = next(inputfile)
+
+            # Another way to know the number of atoms is to look at the size of the geometry.
+            if not hasattr(self, 'natom'):
+                natom = len(coords) 
+                self.set_attribute('natom', natom)
 
             self.atomcoords.append(coords)
 
@@ -183,6 +183,7 @@ class NWChem(logfileparser.Logfile):
                     line = next(inputfile)
                 gbasis_dict[atomelement].extend(shells)
 
+        # at this point natom and/or atomnos could be missing
             gbasis = []
             for i in range(self.natom):
                 atomtype = self.table.element[self.atomnos[i]]
