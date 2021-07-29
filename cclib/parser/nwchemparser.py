@@ -1127,8 +1127,7 @@ class NWChem(logfileparser.Logfile):
                 self.vibfreqs = []
             if not hasattr(self, 'vibirs'):
                 self.vibirs = []
-            self.skiplines # units
-            self.skiplines # dashes
+            self.skip_lines(inputfile, ['units', 'd']) # units, dashes
             line = next(inputfile) # first line of data
             while (line[:-1] != " ----------------------------------------------------------------------------"):
                 self.vibfreqs.append(utils.float(line.split()[1]))
