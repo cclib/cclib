@@ -1117,11 +1117,11 @@ class NWChem(logfileparser.Logfile):
             self.set_attribute('temperature', utils.float(line.split()[2][:-1]))
         if line[1:28] == "frequency scaling parameter":
             self.set_attribute('pressure', utils.float(line.split()[4]))
-        if line[1:31] == "Thermal correction to Enthalpy":
+        if line[1:31] == "Thermal correction to Enthalpy" and hasattr(self, 'scfenergies'):
             self.set_attribute('enthalpy', utils.float(line.split()[8]) + utils.convertor(self.scfenergies[-1], "eV", "hartree"))
-        if line[1:32] == "Zero-Point correction to Energy":
+        if line[1:32] == "Zero-Point correction to Energy" and hasattr(self, 'scfenergies'):
             self.set_attribute('zero_point_energy', utils.float(line.split()[8]) + utils.convertor(self.scfenergies[-1], "eV", "hartree"))
-        if line[1:29] == "Thermal correction to Energy":
+        if line[1:29] == "Thermal correction to Energy" and hasattr(self, 'scfenergies'):
             self.set_attribute('electronic_thermal_energy', utils.float(line.split()[8]) + utils.convertor(self.scfenergies[-1], "eV", "hartree"))
         if line[1:14] == "Total Entropy":
             self.set_attribute('entropy', utils.convertor(1e-3 * utils.float(line.split()[3]),"kcal/mol","hartree"))
