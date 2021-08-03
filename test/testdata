@@ -386,7 +386,7 @@ vib       Jaguar      JaguarIRTest          basicJaguar8.3        dvb_ir.out
 vib       Molcas      MolcasIRTest          basicOpenMolcas18.0   dvb_ir.out
 vib       Molpro      GenericIRTest         basicMolpro2006       dvb_ir.out            dvb_ir.log
 vib       Molpro      GenericIRTest         basicMolpro2012       dvb_ir.out            dvb_ir.log
-vib       NWChem      GenericIRTest         basicNWChem7.0        dvb_ir.out
+vib       NWChem      NWChemIRTest          basicNWChem7.0        dvb_ir.out
 vib       ORCA        GenericIRTest         basicORCA4.1          dvb_ir.out
 vib       ORCA        GenericIRTest         basicORCA4.2          dvb_ir.out
 vib       ORCA        GenericIRTest         basicORCA5.0          dvb_ir.out

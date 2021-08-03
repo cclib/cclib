@@ -1120,7 +1120,7 @@ class NWChem(logfileparser.Logfile):
         if line[1:31] == "Thermal correction to Enthalpy" and hasattr(self, 'scfenergies'):
             self.set_attribute('enthalpy', utils.float(line.split()[8]) + utils.convertor(self.scfenergies[-1], "eV", "hartree"))
         if line[1:32] == "Zero-Point correction to Energy" and hasattr(self, 'scfenergies'):
-            self.set_attribute('zpve', utils.float(line.split()[8]) + utils.convertor(self.scfenergies[-1], "eV", "hartree"))
+            self.set_attribute('zpve', utils.float(line.split()[8]))
         if line[1:29] == "Thermal correction to Energy" and hasattr(self, 'scfenergies'):
             self.set_attribute('electronic_thermal_energy', utils.float(line.split()[8]) + utils.convertor(self.scfenergies[-1], "eV", "hartree"))
         if line[1:14] == "Total Entropy":
