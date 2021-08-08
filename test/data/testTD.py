@@ -74,6 +74,7 @@ class GenericTDTest(unittest.TestCase):
     @skipForParser('GAMESS', 'etrotats are not yet implemented')
     @skipForParser('GAMESSUK', 'etrotats are not yet implemented')
     @skipForParser('Jaguar', 'etrotats are not yet implemented')
+    @skipForParser('NWChem', 'etrotats are not yet implemented')
     @skipForParser('QChem', 'Q-Chem cannot calculate rotatory strengths')
     @skipForLogfile("Turbomole/basicTurbomole7.4/CO_cc2_TD", "Rotatory strengths are not currently available for ricc2")
     @skipForLogfile("Turbomole/basicTurbomole7.4/CO_adc2_TD", "Rotatory strengths are not currently available for ricc2")
@@ -137,7 +138,6 @@ class JaguarTDDFTTest(GenericTDTest):
         """Is the maximum of etoscs in the right range?"""
         self.assertEqual(len(self.data.etoscs), self.number)
         self.assertAlmostEqual(max(self.data.etoscs), 1.0, delta=0.2)
-
 
 class OrcaTDDFTTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""

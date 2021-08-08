@@ -1138,7 +1138,6 @@ class NWChem(logfileparser.Logfile):
                 self.vibfreqs.append(utils.float(line.split()[1]))
                 self.vibirs.append(utils.float(line.split()[5]))
                 line = next(inputfile) # next line
-
         # NWChem TD-DFT excited states transitions
         #
         # Have to deal with :
@@ -1181,7 +1180,7 @@ class NWChem(logfileparser.Logfile):
 
         if line[:6] == "  Root":
             et_num = int(line.split()[1])
-            if not hasattr(self, "etenergies") or et_num == 1 :
+            if not hasattr(self, "etenergies"):
                 self.etenergies = []
                 self.etoscs = []
                 self.etsyms = []
@@ -1190,45 +1189,49 @@ class NWChem(logfileparser.Logfile):
             self.etenergies.append(utils.convertor(utils.float(line.split()[-2]), "eV", "wavenumber"))
             self.etsyms.append(str.join(" ", line.split()[2:-4]))
 
-            # find Dipole Oscillator Strength
-            while not ("Dipole Oscillator Strength" in line):
-                line = next(inputfile)
-            etoscs = utils.float(line.split()[-1])
-            # in case of magnetic contribution replace, replace Dipole Oscillator Strength with Total Oscillator Strength
-            while not (line.find("Occ.") >= 0):
-                if "Total Oscillator Strength" in line:
-                    etoscs = utils.float(line.split()[-1])
-                line = next(inputfile)
-            self.etoscs.append(etoscs)
-
-            CIScontrib = []
-            while line.find("Occ.") >= 0:
-                if (len(line.split()) == 9): # restricted
-                    _, occ, _, _, _, virt, _, coef, direction = line.split()
-                    type1 = "alpha"
-                    type2 = "alpha"
-                else: # unrestricted: len(line.split()) should be 11
-                    _, occ, type1, _, _, _, virt, type2, _, coef, direction = line.split()
-                occ = int(occ) - 1  # subtract 1 so that it is an index into moenergies
-                virt = int(virt) - 1  # subtract 1 so that it is an index into moenergies
-                coef = utils.float(coef)
-                if (direction == 'Y'):
-                    # imaginary or negative excitation (denoted Y)
-                    tmp = virt
-                    virt = occ
-                    occ = tmp
-                    tmp = type1
-                    type1 = type2
-                    type2 = tmp
-                frommoindex = 0  # For restricted or alpha unrestricted
-                if type1 == "beta":
-                    frommoindex = 1
-                tomoindex = 0 # For restricted or alpha unrestricted
-                if type2 == "beta":
-                    tomoindex = 1
-                CIScontrib.append([(occ, frommoindex), (virt, tomoindex), coef])
-                line = next(inputfile)
-            self.etsecs.append(CIScontrib)
+            self.skip_lines(inputfile, ['dashes'])
+            line = next(inputfile)
+            if ("Spin forbidden" not in line):
+                # find Dipole Oscillator Strength
+                while not ("Dipole Oscillator Strength" in line):
+                    line = next(inputfile)
+                etoscs = utils.float(line.split()[-1])
+                # in case of magnetic contribution replace, replace Dipole Oscillator Strength with Total Oscillator Strength
+                while not (line.find("Occ.") >= 0):
+                    if "Total Oscillator Strength" in line:
+                        etoscs = utils.float(line.split()[-1])
+                    line = next(inputfile)
+                self.etoscs.append(etoscs)
+                CIScontrib = []
+                while line.find("Occ.") >= 0:
+                    if (len(line.split()) == 9): # restricted
+                        _, occ, _, _, _, virt, _, coef, direction = line.split()
+                        type1 = "alpha"
+                        type2 = "alpha"
+                    else: # unrestricted: len(line.split()) should be 11
+                        _, occ, type1, _, _, _, virt, type2, _, coef, direction = line.split()
+                    occ = int(occ) - 1  # subtract 1 so that it is an index into moenergies
+                    virt = int(virt) - 1  # subtract 1 so that it is an index into moenergies
+                    coef = utils.float(coef)
+                    if (direction == 'Y'):
+                        # imaginary or negative excitation (denoted Y)
+                        tmp = virt
+                        virt = occ
+                        occ = tmp
+                        tmp = type1
+                        type1 = type2
+                        type2 = tmp
+                    frommoindex = 0  # For restricted or alpha unrestricted
+                    if type1 == "beta":
+                        frommoindex = 1
+                    tomoindex = 0 # For restricted or alpha unrestricted
+                    if type2 == "beta":
+                        tomoindex = 1
+                    CIScontrib.append([(occ, frommoindex), (virt, tomoindex), coef])
+                    line = next(inputfile)
+                self.etsecs.append(CIScontrib)
+            else:
+                self.etoscs.append(0.0)
 
     def before_parsing(self):
         """NWChem-specific routines performed before parsing a file.
