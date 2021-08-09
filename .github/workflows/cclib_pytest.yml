@@ -29,8 +29,8 @@ jobs:
         run: |
           conda config --set always_yes true --set changeps1 false --set channel_priority flexible --set quiet true
           conda info -a
-          conda install ci-psi4 psi4 openbabel pytest-cov pytest-shutil h5py
-          python -m pip install git+https://github.com/pyscf/pyscf.git
+          conda install ci-psi4 psi4 openbabel pytest-cov pytest-shutil h5py=2.10.0
+          python -m pip install pyscf
           python -m pip install qc-iodata
           conda list
           conda env export
