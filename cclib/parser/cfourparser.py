@@ -64,7 +64,7 @@ class CFOUR(logfileparser.Logfile):
             self.atomcoords = numpy.array(coord_block[:,2:],dtype=float)
 
         # find the number of basis functions
-        ang_mom_map = {'S':'S', 'X':'P', 'XX':'D','XXX':'F'}
+        ang_mom_map = {'S':'S', 'X':'P', 'XX':'D','F300':'F','G400':'G'}
         if  'There are' in line and 'basis functions.' in line:
             self.nbasis = line.split()[2]
         if  'GAUSSIAN BASIS INFORMATION' in line:
@@ -93,7 +93,7 @@ class CFOUR(logfileparser.Logfile):
                         new_shell = True
                         continue
                     # CFOUR outputs each component, cclib only stores as 1 per ang_mom
-                    if ang_mom not in ['S','X','XX','XXX']:
+                    if ang_mom not in ['S','X','XX','XXX','F300','G400']:
                         line = next(inputfile)
                         while ('#' not in line):
                             line = next(inputfile)

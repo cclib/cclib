@@ -20,6 +20,7 @@ from cclib.parser import logfileparser
 from cclib.parser.utils import find_package
 
 from cclib.parser.adfparser import ADF
+from cclib.parser.cfourparser import CFOUR
 from cclib.parser.daltonparser import DALTON
 from cclib.parser.fchkparser import FChk
 from cclib.parser.gamessparser import GAMESS
@@ -70,6 +71,7 @@ if _has_pandas:
 triggers = [
 
     (ADF,       ["Amsterdam Density Functional"],                   True),
+    (CFOUR,       ["CFOUR"],                   True),
     (DALTON,    ["Dalton - An Electronic Structure Program"],       True),
     (FChk,      ["Number of atoms", "I"],                           True),
     (GAMESS,    ["GAMESS"],                                         False),
