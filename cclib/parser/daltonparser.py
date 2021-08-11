@@ -46,13 +46,9 @@ class DALTON(logfileparser.Logfile):
         # would like to use as triggers.
         self.section = None
 
-        # If there is no symmetry, assume this.
-        self.symlabels = ['Ag']
-
         # Is the basis set from a single library file? This is true
         # when the first line is BASIS, false for INTGRL/ATOMBASIS.
         self.basislibrary = True
-
 
     def parse_geometry(self, lines):
         """Parse DALTON geometry lines into an atomcoords array."""
@@ -153,6 +149,30 @@ class DALTON(logfileparser.Logfile):
 
             self.geotargets.append(target)
             self.geotargets_names.append(name)
+
+        # Main location of symmetry information (point group, ordering
+        # of irreducible representations).
+        if line.strip() == "SYMGRP: Point group information":
+
+            self.skip_lines(inputfile, ['d', 'b'])
+            line = next(inputfile)
+            if 'Point group:' in line:
+                point_group_detected = line.split()[-1].lower()
+                point_group_used = point_group_detected
+            else:
+                assert 'Full point group is:' in line
+                point_group_detected = re.sub(r"\W", "", line.split()[-1]).lower()
+                line = next(inputfile)
+                assert 'Represented as:' in line
+                point_group_used = re.sub(r"\W", "", line.split()[-1]).lower()
+                self.skip_line(inputfile, 'b')
+                line = next(inputfile)
+                if 'The irrep name for each symmetry:' in line:
+                    irreps = [self.normalisesym(irrep) for irrep in line.split()[8:][1::2]]
+                    self.symlabels = irreps
+
+            self.metadata['symmetry_detected'] = point_group_detected
+            self.metadata['symmetry_used'] = point_group_used
 
         # This is probably the first place where atomic symmetry labels are printed,
         # somewhere afer the SYMGRP point group information section. We need to know
@@ -762,7 +782,7 @@ class DALTON(logfileparser.Logfile):
                 # energies per line, though, so we can deduce if we have the labels or
                 # not just the index. In the latter case, we depend on the labels
                 # being read earlier into the list `symlabels`. Finally, if no symlabels
-                # were read that implies there is only one symmetry, namely Ag.
+                # were read that implies there is only one symmetry, namely A.
                 if 'A' in cols[1] or 'B' in cols[1]:
                     sym = self.normalisesym(cols[1])
                     energies = [float(t) for t in cols[2:]]
@@ -771,7 +791,7 @@ class DALTON(logfileparser.Logfile):
                         sym = self.normalisesym(self.symlabels[int(cols[0]) - 1])
                     else:
                         assert cols[0] == '1'
-                        sym = "Ag"
+                        sym = "A"
                     energies = [float(t) for t in cols[1:]]
 
                 while len(energies) > 0:
