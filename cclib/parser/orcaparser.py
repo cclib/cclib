@@ -1056,7 +1056,7 @@ Dispersion correction           -0.016199959
             # Contains STATE or is blank
             while line.find("STATE") >= 0:
                 broken = line.split()
-                etenergies.append(float(broken[-2]))
+                etenergies.append(float(broken[7]))
                 etsyms.append(sym)
                 line = next(inputfile)
                 sec = []
@@ -1075,6 +1075,9 @@ Dispersion correction           -0.016199959
                         contrib = numpy.nan
                     sec.append([start, end, contrib])
                     line = next(inputfile)
+                    # ORCA 5.0 seems to print symmetry at end of block listing transitions
+                    if 'Symmetry' in line:
+                        line = next(inputfile)
                 etsecs.append(sec)
                 line = next(inputfile)
 
