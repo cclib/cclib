@@ -1423,6 +1423,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 # we have a single atom
                 self.set_attribute('vibdisps', numpy.array([]))
 
+        # ORCA 4 example
         # -----------
         # IR SPECTRUM
         # -----------
@@ -1432,17 +1433,40 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
         #    6:      2069.36    1.674341  ( -0.000000   0.914970  -0.914970)
         #    7:      3978.81   76.856228  (  0.000000   6.199041  -6.199042)
         #    8:      4113.34   61.077784  ( -0.000000   5.526201   5.526200)
+        # ...
+
+        # ORCA 5 example
+        # -----------
+        # IR SPECTRUM
+        # -----------
+        #
+        # Mode   freq       eps      Int      T**2         TX        TY        TZ
+        #       cm**-1   L/(mol*cm) km/mol    a.u.
+        # ----------------------------------------------------------------------------
+        #  6:     45.66   0.000006    0.03  0.000039  ( 0.000000  0.000000  0.006256)
+        #  7:     78.63   0.000000    0.00  0.000000  ( 0.000000  0.000000  0.000000)
+        # ...
         if line[:11] == "IR SPECTRUM":
-            self.skip_lines(inputfile, ['d', 'b', 'header', 'd'])
+            if self.metadata['package_version'][0] == '4':
+                self.skip_lines(inputfile, ['d', 'b', 'header', 'd'])
+                regex = r'\s+(?P<num>\d+):\s+(?P<frequency>\d+\.\d+)\s+(?P<intensity>\d+\.\d+)'
+            elif self.metadata['package_version'][0] == '5':
+                self.skip_lines(inputfile, ['d', 'b', 'header', 'units', 'd'])
+                regex = r'\s+(?P<num>\d+):\s+(?P<frequency>\d+\.\d+)\s+(?P<eps>\d+\.\d+)\s+(?P<intensity>\d+\.\d+)'
+            else:
+                raise Exception('Unsupported version: ' + self.metadata['package_version'])
 
             if self.natom > 1:
                 all_vibirs = numpy.zeros((3 * self.natom,), "d")
 
                 line = next(inputfile)
-                while len(line) > 2:
-                    num = int(line[0:4])
-                    all_vibirs[num] = float(line.split()[2])
+                matches = re.match(regex, line)
+                while matches:
+                    num = int(matches.group('num'))
+                    intensity = float(matches.group('intensity'))
+                    all_vibirs[num] = intensity
                     line = next(inputfile)
+                    matches = re.match(regex, line)
 
                 self.set_attribute('vibirs', all_vibirs[self.first_mode:])
             else:
