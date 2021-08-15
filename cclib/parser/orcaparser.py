@@ -1447,10 +1447,11 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
         #  7:     78.63   0.000000    0.00  0.000000  ( 0.000000  0.000000  0.000000)
         # ...
         if line[:11] == "IR SPECTRUM":
-            if self.metadata['package_version'][0] == '4':
+            major_version = int(self.metadata['package_version'][0])
+            if major_version <= 4:
                 self.skip_lines(inputfile, ['d', 'b', 'header', 'd'])
                 regex = r'\s+(?P<num>\d+):\s+(?P<frequency>\d+\.\d+)\s+(?P<intensity>\d+\.\d+)'
-            elif self.metadata['package_version'][0] == '5':
+            elif major_version >= 5:
                 self.skip_lines(inputfile, ['d', 'b', 'header', 'units', 'd'])
                 regex = r'\s+(?P<num>\d+):\s+(?P<frequency>\d+\.\d+)\s+(?P<eps>\d+\.\d+)\s+(?P<intensity>\d+\.\d+)'
             else:
