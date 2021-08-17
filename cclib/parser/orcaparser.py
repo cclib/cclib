@@ -1447,15 +1447,17 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
         #  7:     78.63   0.000000    0.00  0.000000  ( 0.000000  0.000000  0.000000)
         # ...
         if line[:11] == "IR SPECTRUM":
-            major_version = int(self.metadata['package_version'][0])
+            package_version = self.metadata.get('package_version', None)
+            if package_version is None:
+                self.logger.warn('package_version has not been set, assuming 5.x.x')
+                package_version = '5.x.x'
+            major_version = int(package_version[0])
             if major_version <= 4:
                 self.skip_lines(inputfile, ['d', 'b', 'header', 'd'])
                 regex = r'\s+(?P<num>\d+):\s+(?P<frequency>\d+\.\d+)\s+(?P<intensity>\d+\.\d+)'
-            elif major_version >= 5:
+            else:
                 self.skip_lines(inputfile, ['d', 'b', 'header', 'units', 'd'])
                 regex = r'\s+(?P<num>\d+):\s+(?P<frequency>\d+\.\d+)\s+(?P<eps>\d+\.\d+)\s+(?P<intensity>\d+\.\d+)'
-            else:
-                raise Exception('Unsupported version: ' + self.metadata['package_version'])
 
             if self.natom > 1:
                 all_vibirs = numpy.zeros((3 * self.natom,), "d")
