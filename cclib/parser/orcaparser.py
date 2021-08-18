@@ -1056,7 +1056,7 @@ Dispersion correction           -0.016199959
             # Contains STATE or is blank
             while line.find("STATE") >= 0:
                 broken = line.split()
-                etenergies.append(float(broken[-2]))
+                etenergies.append(float(broken[7]))
                 etsyms.append(sym)
                 line = next(inputfile)
                 sec = []
@@ -1075,6 +1075,9 @@ Dispersion correction           -0.016199959
                         contrib = numpy.nan
                     sec.append([start, end, contrib])
                     line = next(inputfile)
+                    # ORCA 5.0 seems to print symmetry at end of block listing transitions
+                    if 'Symmetry' in line:
+                        line = next(inputfile)
                 etsecs.append(sec)
                 line = next(inputfile)
 
@@ -1420,6 +1423,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 # we have a single atom
                 self.set_attribute('vibdisps', numpy.array([]))
 
+        # ORCA 4 example
         # -----------
         # IR SPECTRUM
         # -----------
@@ -1429,17 +1433,43 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
         #    6:      2069.36    1.674341  ( -0.000000   0.914970  -0.914970)
         #    7:      3978.81   76.856228  (  0.000000   6.199041  -6.199042)
         #    8:      4113.34   61.077784  ( -0.000000   5.526201   5.526200)
+        # ...
+
+        # ORCA 5 example
+        # -----------
+        # IR SPECTRUM
+        # -----------
+        #
+        # Mode   freq       eps      Int      T**2         TX        TY        TZ
+        #       cm**-1   L/(mol*cm) km/mol    a.u.
+        # ----------------------------------------------------------------------------
+        #  6:     45.66   0.000006    0.03  0.000039  ( 0.000000  0.000000  0.006256)
+        #  7:     78.63   0.000000    0.00  0.000000  ( 0.000000  0.000000  0.000000)
+        # ...
         if line[:11] == "IR SPECTRUM":
-            self.skip_lines(inputfile, ['d', 'b', 'header', 'd'])
+            package_version = self.metadata.get('package_version', None)
+            if package_version is None:
+                self.logger.warn('package_version has not been set, assuming 5.x.x')
+                package_version = '5.x.x'
+            major_version = int(package_version[0])
+            if major_version <= 4:
+                self.skip_lines(inputfile, ['d', 'b', 'header', 'd'])
+                regex = r'\s+(?P<num>\d+):\s+(?P<frequency>\d+\.\d+)\s+(?P<intensity>\d+\.\d+)'
+            else:
+                self.skip_lines(inputfile, ['d', 'b', 'header', 'units', 'd'])
+                regex = r'\s+(?P<num>\d+):\s+(?P<frequency>\d+\.\d+)\s+(?P<eps>\d+\.\d+)\s+(?P<intensity>\d+\.\d+)'
 
             if self.natom > 1:
                 all_vibirs = numpy.zeros((3 * self.natom,), "d")
 
                 line = next(inputfile)
-                while len(line) > 2:
-                    num = int(line[0:4])
-                    all_vibirs[num] = float(line.split()[2])
+                matches = re.match(regex, line)
+                while matches:
+                    num = int(matches.group('num'))
+                    intensity = float(matches.group('intensity'))
+                    all_vibirs[num] = intensity
                     line = next(inputfile)
+                    matches = re.match(regex, line)
 
                 self.set_attribute('vibirs', all_vibirs[self.first_mode:])
             else:

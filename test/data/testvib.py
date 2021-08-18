@@ -412,7 +412,7 @@ class GaussianRamanTest(GenericRamanTest):
 class OrcaRamanTest(GenericRamanTest):
     """Customized Raman unittest"""
 
-    max_raman_intensity = 1048
+    max_raman_intensity = 1045
 
 
 class QChemRamanTest(GenericRamanTest):
