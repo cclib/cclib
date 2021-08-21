@@ -24,8 +24,6 @@ jobs:
           which python
           which conda
           conda info -a
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
       - name: Install cclib
         run: |
           python -m pip install .
