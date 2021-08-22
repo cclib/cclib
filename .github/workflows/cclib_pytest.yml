@@ -19,14 +19,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Set conda environment
+      - name: Prepare conda environment
         run: |
-          echo ". /opt/conda/etc/profile.d/conda.sh && conda activate cclib" >> ~/.profile
-      - name: Install core dependencies
-        run: |
-          which python
-          which conda
-          conda info -a
+          echo "/env/bin" >> $GITHUB_PATH
       - name: Install cclib
         run: |
           python -m pip install .
