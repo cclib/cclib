@@ -10,17 +10,17 @@ Changes in cclib-1.7.1
 **Features**
 
 * New parser: formatted checkpoint files
-* New attribute: dispersionenergies for molecular dispersion energy corrections (Elliot Farrar)
-* New attribute: nmrtensors for nuclear magnetics resonance chemical shielding tensors
+* New attribute: nmrtensors for nuclear magnetics resonance chemical shielding tensors (Jonathon Vandezande)
+* Support atomcharges and atomspins for APT charges in Gaussian (Elliot Farrar)
 * Support scannames and scanparms for ORCA logfiles
 * Support geometry optimization output and metadata in Turbomole (Oliver Lee)
 * Support moments, homos, mosyms, and moenergies in Turbomole (Oliver Lee)
 * Support mpenergies and ccenergies in Turbomole (Oliver Lee)
 * Support excited state attributes for TD-DFT, CC2 and ADC(2) methods in Turbomole (Oliver Lee)
-* Support scfenergies, grad, hessian, atommasses, etenergies and etsyms for fchk output
+* Support scfenergies, grad, hessian, atommasses, etenergies and etsyms for fchk output (Javier Cerezo)
 * Support zpve for QChem, GAMESS, Psi4, Jaguar, ORCA, DALTON, ADF, GAMESSUK, Molcas and Molpro
 * Support walltime and cpu time metadata for QChem output (Amanda Dumi)
-* Support walltime and cpu time metadata for Gaussian output
+* Support walltime and cpu time metadata for Gaussian output (Ellior Farrar)
 * Support point group metadata in DALTON
 * Plumbed through gbasis and mocoeffs to pyscf bridge (Amanda Dumi)
 * Added MO symmetry to Molden writer (Amanda Dumi)
