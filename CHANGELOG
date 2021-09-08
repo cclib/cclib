@@ -1,9 +1,39 @@
+Changes in cclib-1.7.1
+
+Features:
+    * New parser: formatted checkpoint files
+    * New attribute: nmrtensors for nuclear magnetics resonance chemical shielding tensors (Jonathon Vandezande)
+    * Support atomcharges and atomspins for APT charges in Gaussian (Elliot Farrar)
+    * Support scannames and scanparms for ORCA logfiles
+    * Support geometry optimization output and metadata in Turbomole (Oliver Lee)
+    * Support moments, homos, mosyms, and moenergies in Turbomole (Oliver Lee)
+    * Support mpenergies and ccenergies in Turbomole (Oliver Lee)
+    * Support excited state attributes for TD-DFT, CC2 and ADC(2) methods in Turbomole (Oliver Lee)
+    * Support scfenergies, grad, hessian, atommasses, etenergies and etsyms for fchk output (Javier Cerezo)
+    * Support zpve for QChem, GAMESS, Psi4, Jaguar, ORCA, DALTON, ADF, GAMESSUK, Molcas and Molpro
+    * Support walltime and cpu time metadata for QChem output (Amanda Dumi)
+    * Support walltime and cpu time metadata for Gaussian output (Ellior Farrar)
+    * Support point group metadata in DALTON
+    * Plumbed through gbasis and mocoeffs to pyscf bridge (Amanda Dumi)
+    * Added MO symmetry to Molden writer (Amanda Dumi)
+
+Bugfixes:
+    * Improved parsing and testing enthalpy and freeenergy (Felipe Schneider)
+    * Fixed parsing ONION output for Gaussian (Elliot Farrar)
+    * Fixed parsing of GAMESS logfiles with more than 100 SCF iterations (simonaxelrod)
+    * Fixed parsing of very long (10K+) ORCA logfiles (Alex Maldonado)
+    * Fixed parsing of Turbomole outputs that don't compute SCF energies (Oliver Lee)
+    * Fixed parsing natural charges in Gaussian output
+    * Fixed parsing vibrational analysis (last, not first) in QChem
+    * Fixed indices for open shell systems in QChem (Hubert Weißmann)
+    * Cleaned up Turbomole unit test logfiles (froessler)
+    * Updated documentation for grads (Cyrille Lavigne)
+
 Changes in cclib-1.7
 
 Features:
     * Dropping support for Python 2
     * SciPy is now a hard dependency for cclib
-    * New parser: formatted checkpoint files (QChem only right now)
 
 Bugfixes:
     * Fixed parsing of Gaussian files missing scftargets (Hubert Weißmann)
