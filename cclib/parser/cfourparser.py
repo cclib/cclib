@@ -66,7 +66,7 @@ class CFOUR(logfileparser.Logfile):
         # find the number of basis functions
         ang_mom_map = {'S':'S', 'X':'P', 'XX':'D','F300':'F','G400':'G'}
         if  'There are' in line and 'basis functions.' in line:
-            self.nbasis = line.split()[2]
+            self.nbasis = int(line.split()[2])
         if  'GAUSSIAN BASIS INFORMATION' in line:
             self.skip_lines(inputfile, ['blank', 'column_titles', 'blank'])
             line = next(inputfile)
@@ -84,7 +84,7 @@ class CFOUR(logfileparser.Logfile):
                 overall_basis = []
                 while ('#' not in line) and (basis_done is False):
                     # the basis section end is marked by a line with two numbers.
-                    if len(line.split()) == 2:
+                    if len(line.split()) == 2 and ('.' not in line):
                         basis_done=True
                         break
                     # there are new lines between each basis shell.
