@@ -16,7 +16,7 @@ Currently supported programs:
     ADF, Firefly, GAMESS(US), GAMESS-UK, Gaussian,
     Jaguar, Molpro, MOPAC, NWChem, ORCA, Psi, Q-Chem
 
-And additionally: formatted checkpoitns files (fchk)
+And additionally: formatted checkpoints files (fchk)
 
 Another aim is to facilitate the implementation of algorithms that are not specific
 to any particular computational chemistry package and to maximise interoperability

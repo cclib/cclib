@@ -35,7 +35,7 @@ Changes in cclib-1.7.1
 * Fixed parsing natural charges in Gaussian output
 * Fixed parsing vibrational analysis (last, not first) in QChem
 * Fixed indices for open shell systems in QChem (Hubert Weißmann)
-* Cleaned up Turbomoe unit test logfiles (froessler)
+* Cleaned up Turbomole unit test logfiles (froessler)
 * Updated documentation for grads (Cyrille Lavigne)
 
 Changes in cclib-1.7
