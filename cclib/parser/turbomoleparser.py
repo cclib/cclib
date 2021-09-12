@@ -69,9 +69,6 @@ class Turbomole(logfileparser.Logfile):
         self.minutes_regex = re.compile(r"([0-9.]*) minutes")
         self.seconds_regex = re.compile(r"([0-9.]*) seconds")
 
-        # Assume we're using one thread if we're not told otherwise.
-        self.metadata["num_cpu"] = 1
-
     @classmethod
     def sort_input(self, file_names: typing.List[str]) -> typing.List:
         """
@@ -173,15 +170,6 @@ class Turbomole(logfileparser.Logfile):
         if line[3:11] == "nbf(AO)=":
             nmo = int(line.split("=")[1])
             self.set_attribute("nbasis", nmo)
-
-        # Performance stuff.
-        if "OpenMP run-time library returned nthreads =" in line:
-            self.metadata["num_cpu"] = int(line.split()[-1])
-
-        mem_match = re.match(r"^\$maxcor *([0-9.]*) *MiB *per_core$", line)
-        if mem_match:
-            # Turbomole helpfully prints the units here, but this seems to just be fluff and it's always MiB.
-            self.memory_per_cpu = int(float(mem_match.groups()[0]) * 1024 * 1024)
 
         # The DFT functional.
         # This information is printed by dscf but not in an easily parsable format, so we'll take it from the control file instead...
@@ -770,9 +758,8 @@ class Turbomole(logfileparser.Logfile):
                     r".*eigenvalue=(?P<moenergy>[0-9D\.+-]{20})\s+nsaos=(?P<count>\d+).*", line
                 )
                 eigenvalue = utils.float(info.group("moenergy"))
-                orbital_energy = utils.convertor(eigenvalue, "hartree", "eV")
 
-                moenergies.append(orbital_energy)
+                moenergies.append(eigenvalue)
                 mosyms.append(sym)
                 moirreps.append((number, sym))
 
@@ -875,8 +862,7 @@ class Turbomole(logfileparser.Logfile):
             while "total energy" not in line:
                 line = next(inputfile)
 
-            scfenergy = utils.convertor(utils.float(line.split()[4]), "hartree", "eV")
-            self.append_attribute("scfenergies", scfenergy)
+            self.append_attribute("scfenergies", utils.float(line.split()[4]))
 
             # We need to determine whether this is a HF or DFT energy for metadata.
             if self.is_DFT:
@@ -906,15 +892,13 @@ class Turbomole(logfileparser.Logfile):
         #  *                                                                    *
         #  **********************************************************************
         if "Final CCSD energy" in line or "Final CC2 energy" in line:
-            self.append_attribute(
-                "ccenergies", utils.convertor(utils.float(line.split()[5]), "hartree", "eV")
-            )
+            self.append_attribute("ccenergies", utils.float(line.split()[5]))
             self.metadata["methods"].append("CCSD")
 
         # Look for MP energies.
         for mp_level in range(2, 6):
             if f"Final MP{mp_level} energy" in line:
-                mpenergy = utils.convertor(utils.float(line.split()[5]), "hartree", "eV")
+                mpenergy = utils.float(line.split()[5])
                 if mp_level == 2:
                     self.append_attribute("mpenergies", [mpenergy])
                 else:
@@ -933,8 +917,7 @@ class Turbomole(logfileparser.Logfile):
         if "MP2-energy" in line:
             line = next(inputfile)
             if "total" in line:
-                mp2energy = [utils.convertor(utils.float(line.split()[3]), "hartree", "eV")]
-                self.append_attribute("mpenergies", mp2energy)
+                self.append_attribute("mpenergies", [utils.float(line.split()[3])])
                 self.metadata["methods"].append("MP2")
 
         # Support for the now outdated (?) rimp2
@@ -947,8 +930,7 @@ class Turbomole(logfileparser.Logfile):
         if not hasattr(self, "mpenergies"):
             if "Method          :  MP2" in line:
                 line = next(inputfile)
-                mp2energy = [utils.convertor(utils.float(line.split()[3]), "hartree", "eV")]
-                self.append_attribute("mpenergies", mp2energy)
+                self.append_attribute("mpenergies", [utils.float(line.split()[3])])
                 self.metadata["methods"].append("MP2")
 
         # Excited state metadata.
@@ -1047,9 +1029,7 @@ class Turbomole(logfileparser.Logfile):
             symmetry = f"{mult}-{symm_parts[-2].capitalize()}"
             self.append_attribute("etsyms", symmetry)
 
-            # Energy should be in cm-1...
-            energy = utils.convertor(utils.float(line.split()[-1]), "hartree", "wavenumber")
-            self.append_attribute("etenergies", energy)
+            self.append_attribute("etenergies", utils.float(line.split()[-1]))
 
             # Oscillator strength.
             while "length representation:" not in line:
@@ -1207,7 +1187,7 @@ class Turbomole(logfileparser.Logfile):
                 symmetry = f"{mult}-{parts[1].capitalize()}"
                 self.append_attribute("etsyms", symmetry)
 
-                energy = utils.float(parts[6])
+                energy = utils.float(parts[4])
                 self.append_attribute("etenergies", energy)
 
                 # Go again.
@@ -1508,10 +1488,6 @@ class Turbomole(logfileparser.Logfile):
         # Set a flag if we stopped part way through an opt.
         if hasattr(self, "optstatus") and self.optstatus[-1] != data.ccData.OPT_DONE:
             self.optstatus[-1] += data.ccData.OPT_UNCONVERGED
-
-        # Set memory from mem per cpu.
-        if hasattr(self, "memory_per_cpu"):
-            self.metadata["memory_available"] = int(self.memory_per_cpu * self.metadata["num_cpu"])
 
 
 class OldTurbomole(logfileparser.Logfile):
@@ -1856,9 +1832,7 @@ class OldTurbomole(logfileparser.Logfile):
                     except ValueError:
                         print(spin, ": ", title)
 
-                    orb_en = utils.convertor(energy, "hartree", "eV")
-
-                    moenergies.append(orb_en)
+                    moenergies.append(energy)
                     single_mo = []
 
                     while len(single_mo) < self.nbasis:

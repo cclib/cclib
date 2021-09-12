@@ -642,7 +642,7 @@ class Gaussian(logfileparser.Logfile):
 
             line = next(inputfile)
             broken = line.split(";")[1].split()
-            ene = utils.convertor(utils.float(broken[-1]), "hartree", "eV")
+            ene = utils.float(broken[-1])
             if not hasattr(self, "energies_BOMD"):
                 self.set_attribute("energies_BOMD", {step: ene})
             else:
@@ -860,8 +860,7 @@ class Gaussian(logfileparser.Logfile):
                         shell_line = line
 
         if "Dispersion energy=" in line:
-            dispersion = utils.convertor(float(line.split()[-2]), "hartree", "eV")
-            self.append_attribute("dispersionenergies", dispersion)
+            self.append_attribute("dispersionenergies", float(line.split()[-2]))
 
         # Find the targets for SCF convergence (QM calcs).
         # Not for BOMD as targets are not available in the summary
@@ -986,17 +985,12 @@ class Gaussian(logfileparser.Logfile):
                 self.metadata["methods"].append("DFT")
                 self.metadata["functional"] = t1[t1.index("(") + 2 : t1.rindex(")")]
 
-            if not hasattr(self, "scfenergies"):
-                self.scfenergies = []
-
-            self.scfenergies.append(utils.convertor(utils.float(line.split()[4]), "hartree", "eV"))
+            self.append_attribute("scfenergies", utils.float(line.split()[4]))
         # gmagoon 5/27/09: added scfenergies reading for PM3 case
         # Example line: " Energy=   -0.077520562724 NIter=  14."
         # See regression Gaussian03/QVGXLLKOCUKJST-UHFFFAOYAJmult3Fixed.out
         if line[1:8] == "Energy=":
-            if not hasattr(self, "scfenergies"):
-                self.scfenergies = []
-            self.scfenergies.append(utils.convertor(utils.float(line.split()[1]), "hartree", "eV"))
+            self.append_attribute("scfenergies", utils.float(line.split()[1]))
 
         # Total energies after Moller-Plesset corrections.
         # Second order correction is always first, so its first occurance
@@ -1009,20 +1003,13 @@ class Gaussian(logfileparser.Logfile):
         # Newer versions of gausian introduced a space between 'EUMP2' and '='...
         if "EUMP2 =" in line[27:36] or "EUMP2=" in line[27:35]:
             self.metadata["methods"].append("MP2")
-
-            if not hasattr(self, "mpenergies"):
-                self.mpenergies = []
-            self.mpenergies.append([])
-            mp2energy = utils.float(line.split("=")[2])
-            self.mpenergies[-1].append(utils.convertor(mp2energy, "hartree", "eV"))
+            self.append_attribute("mpenergies", [utils.float(line.split("=")[2])])
 
         # Example MP3 output line:
         #  E3=       -0.10518801D-01     EUMP3=      -0.75012800924D+02
         if line[34:40] == "EUMP3=":
             self.metadata["methods"].append("MP3")
-
-            mp3energy = utils.float(line.split("=")[2])
-            self.mpenergies[-1].append(utils.convertor(mp3energy, "hartree", "eV"))
+            self.mpenergies[-1].append(utils.float(line.split("=")[2]))
 
         # Example MP4 output lines:
         #  E4(DQ)=   -0.31002157D-02        UMP4(DQ)=   -0.75015901139D+02
@@ -1039,14 +1026,13 @@ class Gaussian(logfileparser.Logfile):
                 line = next(inputfile)
                 if line[34:45] == "UMP4(SDTQ)=":
                     mp4energy = utils.float(line.split("=")[2])
-            self.mpenergies[-1].append(utils.convertor(mp4energy, "hartree", "eV"))
+            self.mpenergies[-1].append(mp4energy)
 
         # Example MP5 output line:
         #  DEMP5 =  -0.11048812312D-02 MP5 =  -0.75017172926D+02
         if line[29:34] == "MP5 =":
             self.metadata["methods"].append("MP5")
-            mp5energy = utils.float(line.split("=")[2])
-            self.mpenergies[-1].append(utils.convertor(mp5energy, "hartree", "eV"))
+            self.mpenergies[-1].append(utils.float(line.split("=")[2]))
 
         # Total energies after Coupled Cluster corrections.
         # Second order MBPT energies (MP2) are also calculated for these runs,
@@ -1202,9 +1188,7 @@ class Gaussian(logfileparser.Logfile):
             scanparm = [[] for _ in range(len(self.scannames))]
             while line != hyphens:
                 broken = line.split()
-                self.append_attribute(
-                    "scanenergies", (utils.convertor(float(broken[-1]), "hartree", "eV"))
-                )
+                self.append_attribute("scanenergies", float(broken[-1]))
                 for idx, p in enumerate(broken[1:-1]):
                     scanparm[idx].append(float(p))
                 # self.append_attribute('scanparm', [float(p) for p in broken[1:-1]])
@@ -1247,7 +1231,6 @@ class Gaussian(logfileparser.Logfile):
                 except ValueError:
                     eigenvalues = [numpy.nan for _ in cols]
                 assert len(eigenvalues) == len(indices)
-                eigenvalues = [utils.convertor(e, "hartree", "eV") for e in eigenvalues]
                 scanenergies.extend(eigenvalues)
 
                 for _, name in enumerate(self.scannames_all):
@@ -1350,7 +1333,7 @@ class Gaussian(logfileparser.Logfile):
                         x = utils.float(s)
                     except ValueError:
                         x = numpy.nan
-                    self.moenergies[0].append(utils.convertor(x, "hartree", "eV"))
+                    self.moenergies[0].append(x)
                     i += 1
                 line = next(inputfile)
 
@@ -1375,7 +1358,7 @@ class Gaussian(logfileparser.Logfile):
                 i = 0
                 while i * 10 + 4 < len(part):
                     x = part[i * 10 : (i + 1) * 10]
-                    self.moenergies[1].append(utils.convertor(utils.float(x), "hartree", "eV"))
+                    self.moenergies[1].append(utils.float(x))
                     i += 1
                 line = next(inputfile)
 
@@ -1592,8 +1575,10 @@ class Gaussian(logfileparser.Logfile):
             # Excited State   1:      Singlet-?Sym    2.5938 eV  478.01 nm  f=0.0000  <S**2>=0.000
             p = re.compile(r":(?P<sym>.*?)(?P<energy>-?\d*\.\d*) eV")
             groups = p.search(line).groups()
-            self.etenergies.append(utils.convertor(utils.float(groups[1]), "eV", "wavenumber"))
-            self.etoscs.append(utils.float(line.split("f=")[-1].split()[0]))
+            self.append_attribute(
+                "etenergies", utils.convertor(utils.float(groups[1]), "eV", "hartree")
+            )
+            self.append_attribute("etoscs", utils.float(line.split("f=")[-1].split()[0]))
             # Fix Gaussian's weird capitalisation.
             mult, symm = groups[0].strip().split("-")
             self.append_attribute("etsyms", "{}-{}".format(mult, self.normalisesym(symm)))
@@ -1630,7 +1615,7 @@ class Gaussian(logfileparser.Logfile):
                 # after parsing (see after_parsing() above).
                 CIScontrib.append([(fromMO, frommoindex), (toMO, tomoindex), percent])
                 line = next(inputfile)
-            self.etsecs.append(CIScontrib)
+            self.append_attribute("etsecs", CIScontrib)
 
             # Skip over 'de-excitation' contributions (these are typically hidden but can be revealed
             # by iop(9/40=2)).

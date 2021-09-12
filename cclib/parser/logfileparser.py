@@ -94,12 +94,13 @@ class Logfile(ABC):
 
         # Change the class used if we want optdone to be a list or if the 'future' option
         # is used, which might have more consequences in the future.
-        optdone_as_list = kwds.get("optdone_as_list", False) or kwds.get("future", False)
+        self.future = kwds.get("future", False)
+        optdone_as_list = kwds.get("optdone_as_list", False) or self.future
         optdone_as_list = optdone_as_list if isinstance(optdone_as_list, bool) else False
         if optdone_as_list:
             self.datatype = ccData
         # Parsing of Natural Orbitals and Natural Spin Orbtials into one attribute
-        self.unified_no_nso = kwds.get("future", False)
+        self.unified_no_nso = self.future
 
     @property
     def filename(self):
@@ -222,6 +223,39 @@ class Logfile(ABC):
         # Update self.progress as done.
         if hasattr(self, "progress"):
             self.progress.update(self.inputfile.size, "Done")
+
+        # https://github.com/cclib/cclib/issues/89
+        if not self.future:
+            attrs_for_ev = ["scfenergies", "dispersionenergies", "mpenergies", "ccenergies"]
+            attrs_for_wavenumbers = ["etenergies"]
+            if hasattr(data, "moenergies"):
+                moenergies = getattr(data, "moenergies")
+                setattr(
+                    data,
+                    "moenergies",
+                    [
+                        utils.convertor(moenergies_spin, "hartree", "eV")
+                        for moenergies_spin in moenergies
+                    ],
+                )
+            if hasattr(data, "scanenergies"):
+                scanenergies = getattr(data, "scanenergies")
+                setattr(
+                    data,
+                    "scanenergies",
+                    [
+                        utils.convertor(scanenergy_step, "hartree", "eV")
+                        for scanenergy_step in scanenergies
+                    ],
+                )
+            for attr_name in attrs_for_ev:
+                if hasattr(data, attr_name):
+                    attr = getattr(data, attr_name)
+                    setattr(data, attr_name, utils.convertor(attr, "hartree", "eV"))
+            for attr_name in attrs_for_wavenumbers:
+                if hasattr(data, attr_name):
+                    attr = getattr(data, attr_name)
+                    setattr(data, attr_name, utils.convertor(attr, "hartree", "wavenumber"))
 
         return data
 

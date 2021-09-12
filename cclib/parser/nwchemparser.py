@@ -590,15 +590,10 @@ class NWChem(logfileparser.Logfile):
             if hasattr(self, "linesearch") and self.linesearch:
                 return
 
-            if not hasattr(self, "scfenergies"):
-                self.scfenergies = []
-            energy = float(line.split()[-1])
-            energy = utils.convertor(energy, "hartree", "eV")
-            self.scfenergies.append(energy)
+            self.append_attribute("scfenergies", float(line.split()[-1]))
 
         if "Dispersion correction" in line:
-            dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
-            self.append_attribute("dispersionenergies", dispersion)
+            self.append_attribute("dispersionenergies", float(line.split()[-1]))
 
         # The final MO orbitals are printed in a simple list, but apparently not for
         # DFT calcs, and often this list does not contain all MOs, so make sure to
@@ -690,9 +685,7 @@ class NWChem(logfileparser.Logfile):
                     for i in range(1, nvector):
                         energies.append(None)
 
-                energy = utils.float(line[34:47])
-                energy = utils.convertor(energy, "hartree", "eV")
-                energies.append(energy)
+                energies.append(utils.float(line[34:47]))
 
                 # When symmetry is not used, this part of the line is missing.
                 if line[47:58].strip() == "Symmetry=":
@@ -1064,11 +1057,8 @@ class NWChem(logfileparser.Logfile):
 
         if "Total MP2 energy" in line:
             self.metadata["methods"].append("MP2")
-            mpenerg = float(line.split()[-1])
-            if not hasattr(self, "mpenergies"):
-                self.mpenergies = []
-            self.mpenergies.append([])
-            self.mpenergies[-1].append(utils.convertor(mpenerg, "hartree", "eV"))
+            self.append_attribute("mpenergies", [])
+            self.mpenergies[-1].append(float(line.split()[-1]))
 
         if line.strip() == "NWChem Extensible Many-Electron Theory Module":
             ccenergies = []
@@ -1081,9 +1071,7 @@ class NWChem(logfileparser.Logfile):
                     self.metadata["methods"].append("CCSD(T)")
                     ccenergies.append(float(line.split()[-1]))
             if ccenergies:
-                self.append_attribute(
-                    "ccenergies", utils.convertor(ccenergies[-1], "hartree", "eV")
-                )
+                self.append_attribute("ccenergies", ccenergies[-1])
 
         # Static and dynamic polarizability.
         if "Linear Response polarizability / au" in line:

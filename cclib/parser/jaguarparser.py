@@ -226,26 +226,16 @@ class Jaguar(logfileparser.Logfile):
         # Hartree-Fock energy after SCF
         if line[1:18] == "SCFE: SCF energy:":
             self.metadata["methods"].append("HF")
-            if not hasattr(self, "scfenergies"):
-                self.scfenergies = []
             temp = line.strip().split()
-            scfenergy = float(temp[temp.index("hartrees") - 1])
-            scfenergy = utils.convertor(scfenergy, "hartree", "eV")
-            self.scfenergies.append(scfenergy)
+            self.append_attribute("scfenergies", float(temp[temp.index("hartrees") - 1]))
 
         # Energy after LMP2 correction
         if line[1:18] == "Total LMP2 Energy":
             self.metadata["methods"].append("LMP2")
-            if not hasattr(self, "mpenergies"):
-                self.mpenergies = [[]]
-            lmp2energy = float(line.split()[-1])
-            lmp2energy = utils.convertor(lmp2energy, "hartree", "eV")
-            self.mpenergies[-1].append(lmp2energy)
+            self.append_attribute("mpenergies", [float(line.split()[-1])])
 
         if line[15:45] == "Geometry optimization complete":
-            if not hasattr(self, "optdone"):
-                self.optdone = []
-            self.optdone.append(len(self.geovalues) - 1)
+            self.append_attribute("optdone", len(self.geovalues) - 1)
 
         if line.find("number of occupied orbitals") > 0:
             # Get number of MOs
@@ -358,7 +348,6 @@ class Jaguar(logfileparser.Logfile):
                     syms = [line[2 * i + 1] for i in range(len(line) // 2)]
                 else:
                     energies = [float(e) for e in line]
-                energies = [utils.convertor(e, "hartree", "eV") for e in energies]
                 self.moenergies[spin].extend(energies)
                 if issyms:
                     syms = [self.normalisesym(s) for s in syms]
@@ -718,16 +707,14 @@ class Jaguar(logfileparser.Logfile):
         # Parse excited state output (for CIS calculations).
         # Jaguar calculates only singlet states.
         if line[2:15] == "Excited State":
-            if not hasattr(self, "etenergies"):
-                self.etenergies = []
             if not hasattr(self, "etoscs"):
                 self.etoscs = []
             if not hasattr(self, "etsecs"):
                 self.etsecs = []
                 self.etsyms = []
-            etenergy = float(line.split()[3])
-            etenergy = utils.convertor(etenergy, "eV", "wavenumber")
-            self.etenergies.append(etenergy)
+            self.append_attribute(
+                "etenergies", utils.convertor(float(line.split()[3]), "eV", "hartree")
+            )
 
             self.skip_lines(inputfile, ["line", "line", "line", "line"])
 

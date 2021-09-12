@@ -13,7 +13,6 @@ import random
 
 from cclib.method.calculationmethod import Method
 from cclib.method.volume import electrondensity_spin
-from cclib.parser.utils import convertor
 
 import numpy
 

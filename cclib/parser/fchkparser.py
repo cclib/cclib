@@ -159,7 +159,7 @@ class FChk(logfileparser.Logfile):
         if line[0:10] == "SCF Energy":
             self.scfenergy = float(line.split()[-1])
 
-            self.set_attribute("scfenergies", [utils.convertor(self.scfenergy, "hartree", "eV")])
+            self.set_attribute("scfenergies", [self.scfenergy])
 
         if line[0:16] == "Mulliken Charges":
             count = int(line.split()[-1])
@@ -271,8 +271,7 @@ class FChk(logfileparser.Logfile):
             etvalues = self._parse_block(inputfile, count, float, "ET Values")
 
             # ETr energies (1/cm)
-            etenergies_au = [e_es - self.scfenergy for e_es in etvalues[0 : net * 16 : 16]]
-            etenergies = [utils.convertor(etr, "hartree", "wavenumber") for etr in etenergies_au]
+            etenergies = [e_es - self.scfenergy for e_es in etvalues[0 : net * 16 : 16]]
             self.set_attribute("etenergies", etenergies)
 
             # ETr dipoles (length-gauge)
@@ -285,7 +284,7 @@ class FChk(logfileparser.Logfile):
             # oscs = 2/3 * Etr(au) * dip²(au)
             etoscs = [
                 2.0 / 3.0 * e * numpy.linalg.norm(numpy.array(dip)) ** 2
-                for e, dip in zip(etenergies_au, etdips)
+                for e, dip in zip(etenergies, etdips)
             ]
             self.set_attribute("etoscs", etoscs)
 

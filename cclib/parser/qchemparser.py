@@ -381,7 +381,7 @@ cannot be determined. Rerun without `$molecule read`."""
             else:
                 for e in tokens:
                     try:
-                        energy = utils.convertor(utils.float(e), "hartree", "eV")
+                        energy = utils.float(e)
                     except ValueError:
                         energy = numpy.nan
                     energies.append(energy)
@@ -783,10 +783,7 @@ cannot be determined. Rerun without `$molecule read`."""
             if line.strip() == "Adding empirical dispersion correction":
                 while "energy" not in line:
                     line = next(inputfile)
-                self.append_attribute(
-                    "dispersionenergies",
-                    utils.convertor(utils.float(line.split()[-2]), "hartree", "eV"),
-                )
+                self.append_attribute("dispersionenergies", utils.float(line.split()[-2]))
 
             # Extract the atomic numbers and coordinates of the atoms.
             if "Standard Nuclear Orientation" in line:
@@ -991,10 +988,7 @@ cannot be determined. Rerun without `$molecule read`."""
                 self.mocoeffs.append(mocoeffs.transpose())
 
             if "Total energy in the final basis set" in line:
-                if not hasattr(self, "scfenergies"):
-                    self.scfenergies = []
-                scfenergy = float(line.split()[-1])
-                self.scfenergies.append(utils.convertor(scfenergy, "hartree", "eV"))
+                self.append_attribute("scfenergies", float(line.split()[-1]))
 
             # Geometry optimization.
 
@@ -1036,16 +1030,10 @@ cannot be determined. Rerun without `$molecule read`."""
 
             # This is the MP2/cdman case.
             if "MP2         total energy" in line:
-                if not hasattr(self, "mpenergies"):
-                    self.mpenergies = []
-                mp2energy = float(line.split()[4])
-                mp2energy = utils.convertor(mp2energy, "hartree", "eV")
-                self.mpenergies.append([mp2energy])
+                self.append_attribute("mpenergies", [float(line.split()[4])])
 
             # This is the MP3/ccman2 case.
             if line[1:11] == "MP2 energy" and line[12:19] != "read as":
-                if not hasattr(self, "mpenergies"):
-                    self.mpenergies = []
                 mpenergies = []
                 mp2energy = float(line.split()[3])
                 mpenergies.append(mp2energy)
@@ -1055,13 +1043,10 @@ cannot be determined. Rerun without `$molecule read`."""
                 if "MP3 energy" in line:
                     mp3energy = float(line.split()[3])
                     mpenergies.append(mp3energy)
-                mpenergies = [utils.convertor(mpe, "hartree", "eV") for mpe in mpenergies]
-                self.mpenergies.append(mpenergies)
+                self.append_attribute("mpenergies", mpenergies)
 
             # This is the MP4/ccman case.
             if "EHF" in line:
-                if not hasattr(self, "mpenergies"):
-                    self.mpenergies = []
                 mpenergies = []
 
                 while list(set(line.strip())) != ["-"]:
@@ -1081,22 +1066,15 @@ cannot be determined. Rerun without `$molecule read`."""
 
                     line = next(inputfile)
 
-                mpenergies = [utils.convertor(mpe, "hartree", "eV") for mpe in mpenergies]
-                self.mpenergies.append(mpenergies)
+                self.append_attribute("mpenergies", mpenergies)
 
             # Coupled cluster corrections.
             # Hopefully we only have to deal with ccman2 here.
 
             if "CCD total energy" in line:
-                if not hasattr(self, "ccenergies"):
-                    self.ccenergies = []
-                ccdenergy = float(line.split()[-1])
-                ccdenergy = utils.convertor(ccdenergy, "hartree", "eV")
-                self.ccenergies.append(ccdenergy)
+                self.append_attribute("ccenergies", float(line.split()[-1]))
             if "CCSD total energy" in line:
                 has_triples = False
-                if not hasattr(self, "ccenergies"):
-                    self.ccenergies = []
                 ccsdenergy = float(line.split()[-1])
                 # Make sure we aren't actually doing CCSD(T).
                 line = next(inputfile)
@@ -1104,11 +1082,9 @@ cannot be determined. Rerun without `$molecule read`."""
                 if "CCSD(T) total energy" in line:
                     has_triples = True
                     ccsdtenergy = float(line.split()[-1])
-                    ccsdtenergy = utils.convertor(ccsdtenergy, "hartree", "eV")
-                    self.ccenergies.append(ccsdtenergy)
+                    self.append_attribute("ccenergies", ccsdtenergy)
                 if not has_triples:
-                    ccsdenergy = utils.convertor(ccsdenergy, "hartree", "eV")
-                    self.ccenergies.append(ccsdenergy)
+                    self.append_attribute("ccenergies", ccsdenergy)
 
             if line[:11] == " CCSD  T1^2":
                 t1_squared = float(line.split()[3])
@@ -1154,14 +1130,9 @@ cannot be determined. Rerun without `$molecule read`."""
                     # ground state energy, rather than just the EE;
                     # this will be more accurate.
                     if "Total energy for state" in line:
-                        energy = utils.convertor(float(line.split()[5]), "hartree", "wavenumber")
-                        etenergy = energy - utils.convertor(
-                            self.scfenergies[-1], "eV", "wavenumber"
-                        )
-                        etenergies.append(etenergy)
+                        etenergies.append(float(line.split()[5]) - self.scfenergies[-1])
                     # if 'excitation energy' in line:
-                    #     etenergy = utils.convertor(float(line.split()[-1]), 'eV', 'wavenumber')
-                    #     etenergies.append(etenergy)
+                    #     etenergies.append(float(line.split()[-1]))
                     if "Multiplicity" in line:
                         etsym = line.split()[1]
                         etsyms.append(etsym)

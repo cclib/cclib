@@ -652,8 +652,7 @@ class DALTON(logfileparser.Logfile):
         if "Dispersion Energy Correction" in line:
             self.skip_lines(inputfile, ["pluses_and_dashes", "b"])
             line = next(inputfile)
-            dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
-            self.append_attribute("dispersionenergies", dispersion)
+            self.append_attribute("dispersionenergies", float(line.split()[-1]))
 
         #  *********************************************
         #  ***** DIIS optimization of Hartree-Fock *****
@@ -814,9 +813,7 @@ class DALTON(logfileparser.Logfile):
             moenergies, mosyms = zip(*sdata)
 
             self.moenergies = [[]]
-            self.moenergies[0] = [
-                utils.convertor(moenergy, "hartree", "eV") for moenergy in moenergies
-            ]
+            self.moenergies[0] = [moenergy for moenergy in moenergies]
             self.mosyms = [[]]
             self.mosyms[0] = mosyms
 
@@ -851,18 +848,14 @@ class DALTON(logfileparser.Logfile):
             self.metadata["functional"] = line.split()[-1]
 
         if "Final DFT energy" in line or "Final HF energy" in line:
-            if not hasattr(self, "scfenergies"):
-                self.scfenergies = []
             temp = line.split()
-            self.scfenergies.append(utils.convertor(float(temp[-1]), "hartree", "eV"))
+            self.append_attribute("scfenergies", float(temp[-1]))
 
         if "@   = MP2 second order energy" in line:
             self.metadata["methods"].append("MP2")
-            energ = utils.convertor(float(line.split()[-1]), "hartree", "eV")
             if not hasattr(self, "mpenergies"):
                 self.mpenergies = []
-            self.mpenergies.append([])
-            self.mpenergies[-1].append(energ)
+            self.mpenergies.append([float(line.split()[-1])])
 
         if "Starting in Coupled Cluster Section (CC)" in line:
             self.section = "CC"
@@ -875,10 +868,7 @@ class DALTON(logfileparser.Logfile):
                     if not hasattr(self, "mpenergies") or not len(self.mpenergies) == len(
                         self.scfenergies
                     ):
-                        self.append_attribute(
-                            "mpenergies",
-                            [utils.convertor(float(line.split()[-1]), "hartree", "eV")],
-                        )
+                        self.append_attribute("mpenergies", [float(line.split()[-1])])
                 if "Total CCSD  energy:" in line:
                     self.metadata["methods"].append("CCSD")
                     ccenergies.append(float(line.split()[-1]))
@@ -887,9 +877,7 @@ class DALTON(logfileparser.Logfile):
                     ccenergies.append(float(line.split()[-1]))
                 line = next(inputfile)
             if ccenergies:
-                self.append_attribute(
-                    "ccenergies", utils.convertor(ccenergies[-1], "hartree", "eV")
-                )
+                self.append_attribute("ccenergies", ccenergies[-1])
 
         if "Tau1 diagnostic" in line:
             self.metadata["t1_diagnostic"] = float(line.split()[-1])
@@ -1279,10 +1267,12 @@ class DALTON(logfileparser.Logfile):
                     etoscs_keys.add(etosc_key)
                     etsym = tokens[9]
                     etsyms.append(f"{symmap[do_triplet]}-{etsym}")
-                    self.skip_lines(inputfile, ["d", "b", "Excitation energy in a.u."])
+                    self.skip_lines(inputfile, ["d", "b"])
                     line = next(inputfile)
-                    etenergies.append(utils.float(line.split()[3]))
-                    self.skip_lines(inputfile, ["b", "@ Total energy", "b"])
+                    etenergies.append(utils.float(line.split()[4]))
+                    self.skip_lines(
+                        inputfile, ["energy in other units", "b", "@ Total energy", "b"]
+                    )
 
                 if line.startswith("@ Operator type:"):
                     line = next(inputfile)
