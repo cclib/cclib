@@ -521,8 +521,6 @@ class ORCA(logfileparser.Logfile):
         # line. However, what comes after that is different for single point calculations
         # and in the inner steps of geometry optimizations.
         if "SCF CONVERGED AFTER" in line:
-            if not hasattr(self, "scfenergies"):
-                self.scfenergies = []
             if not hasattr(self, "scfvalues"):
                 self.scfvalues = []
             if not hasattr(self, "scftargets"):
@@ -530,8 +528,7 @@ class ORCA(logfileparser.Logfile):
 
             while not "Total Energy       :" in line:
                 line = next(inputfile)
-            energy = utils.convertor(float(line.split()[3]), "hartree", "eV")
-            self.scfenergies.append(energy)
+            self.append_attribute("scfenergies", utils.float(line.split()[3]))
             if self.is_DFT:
                 method = "DFT"
             else:
@@ -557,15 +554,12 @@ class ORCA(logfileparser.Logfile):
         #       *           SCF NOT CONVERGED AFTER   8 CYCLES      *
         #       *****************************************************
         if "SCF NOT CONVERGED AFTER" in line:
-            if not hasattr(self, "scfenergies"):
-                self.scfenergies = []
             if not hasattr(self, "scfvalues"):
                 self.scfvalues = []
             if not hasattr(self, "scftargets"):
                 self.scftargets = []
 
-            energy = utils.convertor(self.scfvalues[-1][-1][0], "hartree", "eV")
-            self.scfenergies.append(energy)
+            self.append_attribute("scfenergies", self.scfvalues[-1][-1][0])
             self.metadata["methods"].append("HF" if not self.is_DFT else "DFT")
 
             self._append_scfvalues_scftargets(inputfile, line)
@@ -608,8 +602,7 @@ Dispersion correction           -0.016199959
             line = next(inputfile)
             while "Dispersion correction" not in line:
                 line = next(inputfile)
-            dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
-            self.append_attribute("dispersionenergies", dispersion)
+            self.append_attribute("dispersionenergies", utils.float(line.split()[-1]))
 
         # The convergence targets for geometry optimizations are printed at the
         # beginning of the output, although the order and their description is
@@ -709,11 +702,8 @@ Dispersion correction           -0.016199959
         if "MP2 TOTAL ENERGY" in line[:16]:
             if not hasattr(self, "mpenergies"):
                 self.metadata["methods"].append("MP2")
-                self.mpenergies = []
 
-            self.mpenergies.append([])
-            mp2energy = utils.float(line.split()[-2])
-            self.mpenergies[-1].append(utils.convertor(mp2energy, "hartree", "eV"))
+            self.append_attribute("mpenergies", [utils.float(line.split()[-2])])
 
         # MP2 energy output line is different for MP3, since it uses the MDCI
         # code, which is also in charge of coupled cluster.
@@ -729,18 +719,12 @@ Dispersion correction           -0.016199959
         # Number of pairs included                   ... 55
         # Total number of pairs                      ... 55
         if "E(MP2)" in line:
-            if not hasattr(self, "mpenergies"):
-                self.mpenergies = []
-
-            self.mpenergies.append([])
-            mp2energy = utils.float(line.split()[-1])
-            self.mpenergies[-1].append(utils.convertor(mp2energy, "hartree", "eV"))
+            self.append_attribute("mpenergies", [utils.float(line.split()[-1])])
 
             line = next(inputfile)
             if line[:6] == "E(MP3)":
                 self.metadata["methods"].append("MP3")
-                mp3energy = utils.float(line.split()[2])
-                self.mpenergies[-1].append(utils.convertor(mp3energy, "hartree", "eV"))
+                self.mpenergies[-1].append(utils.float(line.split()[2]))
             else:
                 assert line[:14] == "Initial E(tot)"
 
@@ -757,14 +741,12 @@ Dispersion correction           -0.016199959
             self.skip_lines(inputfile, ["d", "b"])
             line = next(inputfile)
             assert line[:4] == "E(0)"
-            scfenergy = utils.convertor(float(line.split()[-1]), "hartree", "eV")
+            scfenergy = float(line.split()[-1])
             line = next(inputfile)
             assert line[:7] == "E(CORR)"
             while "E(TOT)" not in line:
                 line = next(inputfile)
-            self.append_attribute(
-                "ccenergies", utils.convertor(float(line.split()[-1]), "hartree", "eV")
-            )
+            self.append_attribute("ccenergies", float(line.split()[-1]))
             self.metadata["methods"].append("CCSD")
             line = next(inputfile)
             assert line[:23] == "Singles Norm <S|S>**1/2"
@@ -941,7 +923,7 @@ Dispersion correction           -0.016199959
                 if self.uses_symmetry:
                     mosym = self.normalisesym(info[4].split("-")[1])
                 self.mooccnos[0].append(mooccno)
-                self.moenergies[0].append(utils.convertor(moenergy, "hartree", "eV"))
+                self.moenergies[0].append(moenergy)
                 self.mosyms[0].append(mosym)
                 line = next(inputfile)
 
@@ -964,7 +946,7 @@ Dispersion correction           -0.016199959
                     if self.uses_symmetry:
                         mosym = self.normalisesym(info[4].split("-")[1])
                     self.mooccnos[1].append(mooccno)
-                    self.moenergies[1].append(utils.convertor(moenergy, "hartree", "eV"))
+                    self.moenergies[1].append(moenergy)
                     self.mosyms[1].append(mosym)
                     line = next(inputfile)
 
@@ -1279,7 +1261,7 @@ Dispersion correction           -0.016199959
             # Contains STATE or is blank
             while line.find("STATE") >= 0:
                 broken = line.split()
-                etenergies.append(float(broken[7]))
+                etenergies.append(utils.float(broken[3]))
                 line = next(inputfile)
                 sec = []
                 # Contains SEC or is blank
@@ -1339,11 +1321,14 @@ Dispersion correction           -0.016199959
                     -----------------------------------------------------------------------------
                        1 5184116.7      1.9   0.040578220   0.00258  -0.05076  -0.00000  -0.00000"""
                     try:
-                        state, energy, wavelength, intensity, t2, tx, ty, tz = line.split()
+                        state, energy, wavelength, intensity, t2, tx, ty, tz = [
+                            utils.float(x) for x in line.split()
+                        ]
                     except ValueError as e:
                         # Must be spin forbidden and thus no intensity
-                        energy = line.split()[1]
+                        energy = utils.float(line.split()[1])
                         intensity = 0
+                    energy = utils.convertor(energy, "wavenumber", "hartree")
                     return energy, intensity
 
             # Check for variations
@@ -1373,7 +1358,8 @@ Dispersion correction           -0.016199959
                         d2_contrib,
                         m2_contrib,
                         q2_contrib,
-                    ) = line.split()
+                    ) = [utils.float(x) for x in line.split()]
+                    energy = utils.convertor(energy, "wavenumber", "hartree")
                     return energy, intensity
 
             elif (
@@ -1391,10 +1377,11 @@ Dispersion correction           -0.016199959
                     -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
                        1 61784150.6      0.2      0.00000         0.00000         3.23572         0.00000         0.00000         0.00000323571519         0.00000         0.00000         1.00000         0.00000          0.00000
                        2 61793079.3      0.2      0.00000         0.00000         2.85949         0.00000        -0.00000         0.00000285948800         0.00000         0.00000         1.00000         0.00000         -0.00000"""
-                    vals = line.split()
+                    vals = [utils.float(x) for x in line.split()]
+                    energy = utils.convertor(vals[1], "wavenumber", "hartree")
                     if len(vals) < 14:
-                        return vals[1], 0
-                    return vals[1], vals[8]
+                        return energy, 0
+                    return energy, vals[8]
 
             elif line[:5] == "X-RAY" and (
                 line[6:23] == "EMISSION SPECTRUM" or line[6:25] == "ABSORPTION SPECTRUM"
@@ -1410,6 +1397,7 @@ Dispersion correction           -0.016199959
                     -------------------------------------------------------------------------------------
                         1   90a ->    0a      8748.824     0.000002678629     0.00004  -0.00001   0.00003"""
                     state, start, arrow, end, energy, intensity, tx, ty, tz = line.split()
+                    energy = utils.convertor(utils.float(energy), "eV", "hartree")
                     return energy, intensity
 
             elif (
@@ -1444,6 +1432,7 @@ Dispersion correction           -0.016199959
                         m2_contrib,
                         q2_contrib,
                     ) = line.split()
+                    energy = utils.convertor(utils.float(energy), "eV", "hartree")
                     return energy, intensity
 
             elif line[:55] == "SPIN ORBIT CORRECTED ABSORPTION SPECTRUM VIA TRANSITION":
@@ -1458,7 +1447,10 @@ Dispersion correction           -0.016199959
                     -------------------------------------------------------------------------------
                      0  1       0.0      0.0   0.000000000   0.00000   0.00000   0.00000   0.00000
                      0  2 5184116.4      1.9   0.020288451   0.00258   0.05076   0.00003   0.00000"""
-                    state, state2, energy, wavelength, intensity, t2, tx, ty, tz = line.split()
+                    state, state2, energy, wavelength, intensity, t2, tx, ty, tz = [
+                        utils.float(x) for x in line.split()
+                    ]
+                    energy = utils.convertor(energy, "wavenumber", "hartree")
                     return energy, intensity
 
             elif (
@@ -1490,7 +1482,8 @@ Dispersion correction           -0.016199959
                         d2_contrib,
                         m2_contrib,
                         q2_contrib,
-                    ) = line.split()
+                    ) = [utils.float(x) for x in line.split()]
+                    energy = utils.convertor(energy, "wavenumber", "hartree")
                     return energy, intensity
 
             # Clashes with Orca 2.6 (and presumably before) TDDFT absorption spectrum printing
@@ -1527,6 +1520,7 @@ Dispersion correction           -0.016199959
                         ty,
                         tz,
                     ) = res.groups()
+                    energy = utils.convertor(utils.float(energy), "wavenumber", "hartree")
                     return energy, intensity
 
             name = line
@@ -1641,10 +1635,11 @@ Dispersion correction           -0.016199959
                 tokens = line.split()
                 if "spin forbidden" in line:
                     etrotat, mx, my, mz = 0.0, 0.0, 0.0, 0.0
-                    etenergies.append(utils.float(tokens[-4]))
+                    etenergy_wavenumber = utils.float(tokens[-4])
                 else:
                     etrotat, mx, my, mz = [utils.float(t) for t in tokens[-4:]]
-                    etenergies.append(utils.float(tokens[-6]))
+                    etenergy_wavenumber = utils.float(tokens[-6])
+                etenergies.append(utils.convertor(etenergy_wavenumber, "wavenumber", "hartree"))
                 etrotats.append(etrotat)
                 line = next(inputfile)
             self.set_attribute("etrotats", etrotats)
