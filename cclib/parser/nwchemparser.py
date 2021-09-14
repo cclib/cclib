@@ -94,8 +94,15 @@ class NWChem(logfileparser.Logfile):
             self.set_attribute('natom', natom)
 
         if line.strip() == "NWChem Geometry Optimization":
-            self.skip_lines(inputfile, ['d', 'b', 'b', 'b', 'b', 'title', 'b', 'b'])
-            line = next(inputfile)
+            try:
+                # see cclib/cclib#1057
+                self.skip_lines(inputfile, ['d', 'b', 'b'])
+                line = next(inputfile)
+                assert "maximum gradient threshold" in line
+            except: 
+                self.skip_lines(inputfile, ['b', 'b', 'title', 'b', 'b'])
+                line = next(inputfile)
+                assert "maximum gradient threshold" in line
             while line.strip():
                 if "maximum gradient threshold" in line:
                     gmax = float(line.split()[-1])
