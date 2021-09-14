@@ -94,6 +94,7 @@ class NWChem(logfileparser.Logfile):
             self.atomcoords.append(coords)
 
             self.set_attribute('atomnos', atomnos)
+            self.set_attribute('natom', len(atomnos))
 
         # If the geometry is printed in XYZ format, it will have the number of atoms.
         if line[12:31] == "XYZ format geometry":
@@ -103,14 +104,15 @@ class NWChem(logfileparser.Logfile):
             self.set_attribute('natom', natom)
 
         if line.strip() == "NWChem Geometry Optimization":
-            # If the calculation doesn't have a title specified, there
-            # aren't as many lines to skip here.
-            self.skip_lines(inputfile, ['d', 'b', 'b'])
-            line = next(inputfile)
-            # skip more lines with title
-            if not line.strip():
-                 self.skip_lines(inputfile, ['b', 'title', 'b', 'b'])
-                 line = next(inputfile)
+            try:
+                # see cclib/cclib#1057
+                self.skip_lines(inputfile, ['d', 'b', 'b'])
+                line = next(inputfile)
+                assert "maximum gradient threshold" in line
+            except: 
+                self.skip_lines(inputfile, ['b', 'b', 'title', 'b', 'b'])
+                line = next(inputfile)
+                assert "maximum gradient threshold" in line
             while line.strip():
                 if "maximum gradient threshold" in line:
                     gmax = utils.float(line.split()[-1])
@@ -283,7 +285,7 @@ class NWChem(logfileparser.Logfile):
         if line.strip() == "General Information":
 
             if hasattr(self, 'linesearch') and self.linesearch:
-                return # problem here
+                self.logger.warning("This file might have multiple jobs or contain a geometry optimization. Attributes might be overwritten multiple times.")
 
             while line.strip():
 
@@ -370,7 +372,7 @@ class NWChem(logfileparser.Logfile):
         if line.strip() == "Quadratically convergent ROHF":
 
             if hasattr(self, 'linesearch') and self.linesearch:
-                return
+                self.logger.warning("This file might have multiple jobs or contain a geometry optimization. Attributes might be overwritten multiple times.")
 
             while not "Final" in line:
 
@@ -422,7 +424,7 @@ class NWChem(logfileparser.Logfile):
         if line.split() == ['convergence', 'iter', 'energy', 'DeltaE', 'RMS-Dens', 'Diis-err', 'time']:
 
             if hasattr(self, 'linesearch') and self.linesearch:
-                return # problem here
+                self.logger.warning("This file might have multiple jobs or contain a geometry optimization. Attributes might be overwritten multiple times.")
 
             self.skip_line(inputfile, 'dashes')
             line = next(inputfile)
@@ -550,7 +552,7 @@ class NWChem(logfileparser.Logfile):
             # since the step size can become smaller). We want to skip these SCF cycles,
             # unless the coordinates can also be extracted (possibly from the gradients?).
             if hasattr(self, 'linesearch') and self.linesearch:
-                return # problem here
+                self.logger.warning("This file might have multiple jobs or contain a geometry optimization. Attributes might be overwritten multiple times.")
 
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
