@@ -275,7 +275,7 @@ class NWChem(logfileparser.Logfile):
         if line.strip() == "General Information":
 
             if hasattr(self, 'linesearch') and self.linesearch:
-                return
+                self.logger.warning("This file might have multiple jobs or contain a geometry optimization. Attributes might be overwritten multiple times.")
 
             while line.strip():
 
@@ -362,7 +362,7 @@ class NWChem(logfileparser.Logfile):
         if line.strip() == "Quadratically convergent ROHF":
 
             if hasattr(self, 'linesearch') and self.linesearch:
-                return
+                self.logger.warning("This file might have multiple jobs or contain a geometry optimization. Attributes might be overwritten multiple times.")
 
             while not "Final" in line:
 
@@ -414,7 +414,7 @@ class NWChem(logfileparser.Logfile):
         if line.split() == ['convergence', 'iter', 'energy', 'DeltaE', 'RMS-Dens', 'Diis-err', 'time']:
 
             if hasattr(self, 'linesearch') and self.linesearch:
-                return
+                self.logger.warning("This file might have multiple jobs or contain a geometry optimization. Attributes might be overwritten multiple times.")
 
             self.skip_line(inputfile, 'dashes')
             line = next(inputfile)
@@ -542,7 +542,7 @@ class NWChem(logfileparser.Logfile):
             # since the step size can become smaller). We want to skip these SCF cycles,
             # unless the coordinates can also be extracted (possibly from the gradients?).
             if hasattr(self, 'linesearch') and self.linesearch:
-                return
+                self.logger.warning("This file might have multiple jobs or contain a geometry optimization. Attributes might be overwritten multiple times.")
 
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
