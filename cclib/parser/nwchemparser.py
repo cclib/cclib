@@ -84,6 +84,7 @@ class NWChem(logfileparser.Logfile):
             self.atomcoords.append(coords)
 
             self.set_attribute('atomnos', atomnos)
+            self.set_attribute('natom', len(atomnos))
 
         # If the geometry is printed in XYZ format, it will have the number of atoms.
         if line[12:31] == "XYZ format geometry":
