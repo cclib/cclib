@@ -41,6 +41,11 @@ class NWChem(logfileparser.Logfile):
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
+        # search for No. of atoms     :
+        if line[:22] == "          No. of atoms":
+            if not hasattr(self, 'natom'):
+                natom = int(line[28:])
+                self.set_attribute('natom', natom)
 
         # Extract the version number and the version control information, if
         # it exists.
@@ -78,8 +83,13 @@ class NWChem(logfileparser.Logfile):
                 else:
                     index, atomname, tag, nuclear, x, y, z = line.split()
                 coords.append(list(map(float, [x, y, z])))
-                atomnos.append(int(float(nuclear)))
+                atomnos.append(int(utils.float(nuclear)))
                 line = next(inputfile)
+
+            # Another way to know the number of atoms is to look at the size of the geometry.
+            if not hasattr(self, 'natom'):
+                natom = len(coords)
+                self.set_attribute('natom', natom)
 
             self.atomcoords.append(coords)
 
@@ -105,13 +115,13 @@ class NWChem(logfileparser.Logfile):
                 assert "maximum gradient threshold" in line
             while line.strip():
                 if "maximum gradient threshold" in line:
-                    gmax = float(line.split()[-1])
+                    gmax = utils.float(line.split()[-1])
                 if "rms gradient threshold" in line:
-                    grms = float(line.split()[-1])
+                    grms = utils.float(line.split()[-1])
                 if "maximum cartesian step threshold" in line:
-                    xmax = float(line.split()[-1])
+                    xmax = utils.float(line.split()[-1])
                 if "rms cartesian step threshold" in line:
-                    xrms = float(line.split()[-1])
+                    xrms = utils.float(line.split()[-1])
                 line = next(inputfile)
 
             self.set_attribute('geotargets', [gmax, grms, xmax, xrms])
@@ -172,8 +182,8 @@ class NWChem(logfileparser.Logfile):
                             shell = (type, [])
                         else:
                             assert shell[0] == type
-                        exp = float(exp)
-                        coeff = float(coeff)
+                        exp = utils.float(exp)
+                        coeff = utils.float(coeff)
                         shell[1].append((exp, coeff))
                         line = next(inputfile)
                     shells.append(shell)
@@ -257,7 +267,7 @@ class NWChem(logfileparser.Logfile):
             line = next(inputfile)
             while line.strip():
                 if line[2:8] == "charge":
-                    charge = int(float(line.split()[-1]))
+                    charge = int(utils.float(line.split()[-1]))
                     self.set_attribute('charge', charge)
                 if line[2:13] == "open shells":
                     unpaired = int(line.split()[-1])
@@ -343,7 +353,7 @@ class NWChem(logfileparser.Logfile):
                 assert indices == list(range(1, self.nbasis+1))
 
                 for i in range(1, len(data[0])):
-                    vector = [float(d[i]) for d in data]
+                    vector = [utils.float(d[i]) for d in data]
                     aooverlaps.append(vector)
 
             self.set_attribute('aooverlaps', aooverlaps)
@@ -368,7 +378,7 @@ class NWChem(logfileparser.Logfile):
 
                 # Only the norm of the orbital gradient is used to test convergence.
                 if line[:22] == " Convergence threshold":
-                    target = float(line.split()[-1])
+                    target = utils.float(line.split()[-1])
                     if not hasattr(self, "scftargets"):
                         self.scftargets = []
                     self.scftargets.append([target])
@@ -488,10 +498,10 @@ class NWChem(logfileparser.Logfile):
             at_and_dashes = next(inputfile)
             line = next(inputfile)
             assert int(line.split()[1]) == self.geostep == 0
-            gmax = float(line.split()[4])
-            grms = float(line.split()[5])
-            xrms = float(line.split()[6])
-            xmax = float(line.split()[7])
+            gmax = utils.float(line.split()[4])
+            grms = utils.float(line.split()[5])
+            xrms = utils.float(line.split()[6])
+            xmax = utils.float(line.split()[7])
             if not hasattr(self, 'geovalues'):
                 self.geovalues = []
             self.geovalues.append([gmax, grms, xmax, xrms])
@@ -503,10 +513,10 @@ class NWChem(logfileparser.Logfile):
             if self.linesearch:
                 #print(line)
                 return
-            gmax = float(line.split()[4])
-            grms = float(line.split()[5])
-            xrms = float(line.split()[6])
-            xmax = float(line.split()[7])
+            gmax = utils.float(line.split()[4])
+            grms = utils.float(line.split()[5])
+            xrms = utils.float(line.split()[6])
+            xmax = utils.float(line.split()[7])
             if not hasattr(self, 'geovalues'):
                 self.geovalues = []
             self.geovalues.append([gmax, grms, xmax, xrms])
@@ -546,12 +556,12 @@ class NWChem(logfileparser.Logfile):
 
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
-            energy = float(line.split()[-1])
+            energy = utils.float(line.split()[-1])
             energy = utils.convertor(energy, "hartree", "eV")
             self.scfenergies.append(energy)
 
         if "Dispersion correction" in line:
-            dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
+            dispersion = utils.convertor(utils.float(line.split()[-1]), "hartree", "eV")
             self.append_attribute("dispersionenergies", dispersion)
 
         # The final MO orbitals are printed in a simple list, but apparently not for
@@ -776,7 +786,7 @@ class NWChem(logfileparser.Logfile):
             while line.strip():
                 index, atomname, nuclear, atom = line.split()[:4]
                 shells = line.split()[4:]
-                charges.append(float(atom)-float(nuclear))
+                charges.append(utils.float(atom)-utils.float(nuclear))
                 line = next(inputfile)
             self.atomcharges['mulliken'] = charges
 
@@ -839,8 +849,8 @@ class NWChem(logfileparser.Logfile):
                 line = next(inputfile)
                 iatom, element, ncharge, epop = line.split()
                 iatom = int(iatom)
-                ncharge = float(ncharge)
-                epop = float(epop)
+                ncharge = utils.float(ncharge)
+                epop = utils.float(epop)
                 assert iatom == (i+1)
                 charges.append(epop-ncharge)
 
@@ -879,7 +889,7 @@ class NWChem(logfileparser.Logfile):
             assert "(in au)" in reference_comment
             reference = next(inputfile).split()
             self.reference = [reference[-7], reference[-4], reference[-1]]
-            self.reference = numpy.array([float(x) for x in self.reference])
+            self.reference = numpy.array([utils.float(x) for x in self.reference])
             self.reference = utils.convertor(self.reference, 'bohr', 'Angstrom')
 
             self.skip_line(inputfile, 'blank')
@@ -890,7 +900,7 @@ class NWChem(logfileparser.Logfile):
             dipole = []
             for i in range(3):
                 line = next(inputfile)
-                dipole.append(float(line.split()[1]))
+                dipole.append(utils.float(line.split()[1]))
 
             dipole = utils.convertor(numpy.array(dipole), "ebohr", "Debye")
 
@@ -931,7 +941,7 @@ class NWChem(logfileparser.Logfile):
             assert "(in au)" in reference_comment
             reference = next(inputfile).split()
             self.reference = [reference[-7], reference[-4], reference[-1]]
-            self.reference = numpy.array([float(x) for x in self.reference])
+            self.reference = numpy.array([utils.float(x) for x in self.reference])
             self.reference = utils.convertor(self.reference, 'bohr', 'Angstrom')
 
             self.skip_lines(inputfile, ['b', 'units', 'susc', 'b'])
@@ -945,7 +955,7 @@ class NWChem(logfileparser.Logfile):
             quadrupole = {}
             for i in range(6):
                 line = next(inputfile)
-                quadrupole[line.split()[0]] = float(line.split()[-1])
+                quadrupole[line.split()[0]] = utils.float(line.split()[-1])
             lex = sorted(quadrupole.keys())
             quadrupole = [quadrupole[key] for key in lex]
 
@@ -992,7 +1002,7 @@ class NWChem(logfileparser.Logfile):
             assert "(in au)" in reference_comment
             reference = next(inputfile).split()
             self.reference = [reference[-7], reference[-4], reference[-1]]
-            self.reference = numpy.array([float(x) for x in self.reference])
+            self.reference = numpy.array([utils.float(x) for x in self.reference])
             self.reference = utils.convertor(self.reference, 'bohr', 'Angstrom')
 
             self.skip_line(inputfile, 'blank')
@@ -1005,7 +1015,7 @@ class NWChem(logfileparser.Logfile):
             octupole = {}
             for i in range(10):
                 line = next(inputfile)
-                octupole[line.split()[0]] = float(line.split()[-1])
+                octupole[line.split()[0]] = utils.float(line.split()[-1])
             lex = sorted(octupole.keys())
             octupole = [octupole[key] for key in lex]
 
@@ -1026,7 +1036,7 @@ class NWChem(logfileparser.Logfile):
 
         if "Total MP2 energy" in line:
             self.metadata["methods"].append("MP2")
-            mpenerg = float(line.split()[-1])
+            mpenerg = utils.float(line.split()[-1])
             if not hasattr(self, "mpenergies"):
                 self.mpenergies = []
             self.mpenergies.append([])
@@ -1038,10 +1048,10 @@ class NWChem(logfileparser.Logfile):
                 line = next(inputfile)
                 if "CCSD total energy / hartree" in line or "total CCSD energy:" in line:
                     self.metadata["methods"].append("CCSD")
-                    ccenergies.append(float(line.split()[-1]))
+                    ccenergies.append(utils.float(line.split()[-1]))
                 if "CCSD(T) total energy / hartree" in line:
                     self.metadata["methods"].append("CCSD(T)")
-                    ccenergies.append(float(line.split()[-1]))
+                    ccenergies.append(utils.float(line.split()[-1]))
             if ccenergies:
                 self.append_attribute(
                     "ccenergies", utils.convertor(ccenergies[-1], "hartree", "eV")
@@ -1073,7 +1083,7 @@ class NWChem(logfileparser.Logfile):
             self.skip_line(inputfile, 'd')
             line = next(inputfile)
             assert "Time elapsed (fs)" in line
-            time = float(line.split()[4])
+            time = utils.float(line.split()[4])
             self.append_attribute('time', time)
 
         # BOMD: geometry coordinates when `print low`.
@@ -1085,9 +1095,145 @@ class NWChem(logfileparser.Logfile):
                 while line.strip():
                     tokens = line.split()
                     assert len(tokens) == 8
-                    atomcoords_step.append([float(c) for c in tokens[2:5]])
+                    atomcoords_step.append([utils.float(c) for c in tokens[2:5]])
                     line = next(inputfile)
                 self.atomcoords.append(atomcoords_step)
+
+        # Extract Thermochemistry in au (Hartree)
+        #
+        # have to deal with :
+        # Temperature                      =   298.15K
+        # frequency scaling parameter      =   1.0000
+        # Zero-Point correction to Energy  =  259.352 kcal/mol  (  0.413304 au)
+        # Thermal correction to Energy     =  275.666 kcal/mol  (  0.439302 au)
+        # Thermal correction to Enthalpy   =  276.258 kcal/mol  (  0.440246 au)
+        # Total Entropy                    =  176.764 cal/mol-K
+        # - Translational                =   44.169 cal/mol-K (mol. weight = 448.1245)
+        # - Rotational                   =   37.018 cal/mol-K (symmetry #  =        1)
+        # - Vibrational                  =   95.577 cal/mol-K
+        # Cv (constant volume heat capacity) =  103.675 cal/mol-K
+        # - Translational                  =    2.979 cal/mol-K
+        # - Rotational                     =    2.979 cal/mol-K
+        # - Vibrational                    =   97.716 cal/mol-K
+        if line[1:12] == "Temperature":
+            self.set_attribute('temperature', utils.float(line.split()[2][:-1]))
+        if line[1:28] == "frequency scaling parameter":
+            self.set_attribute('pressure', utils.float(line.split()[4]))
+        if line[1:31] == "Thermal correction to Enthalpy" and hasattr(self, 'scfenergies'):
+            self.set_attribute('enthalpy', utils.float(line.split()[8]) + utils.convertor(self.scfenergies[-1], "eV", "hartree"))
+        if line[1:32] == "Zero-Point correction to Energy" and hasattr(self, 'scfenergies'):
+            self.set_attribute('zpve', utils.float(line.split()[8]))
+        if line[1:29] == "Thermal correction to Energy" and hasattr(self, 'scfenergies'):
+            self.set_attribute('electronic_thermal_energy', utils.float(line.split()[8]) + utils.convertor(self.scfenergies[-1], "eV", "hartree"))
+        if line[1:14] == "Total Entropy":
+            self.set_attribute('entropy', utils.convertor(1e-3 * utils.float(line.split()[3]),"kcal/mol","hartree"))
+
+        # extract vibrational frequencies (in cm-1)
+        if line.strip() == "Normal Eigenvalue ||           Projected Infra Red Intensities":
+            if not hasattr(self, 'vibfreqs'):
+                self.vibfreqs = []
+            if not hasattr(self, 'vibirs'):
+                self.vibirs = []
+            self.skip_lines(inputfile, ['units', 'd']) # units, dashes
+            line = next(inputfile) # first line of data
+            while (set(line.strip()[:-1]) != {'-'}):
+                self.vibfreqs.append(utils.float(line.split()[1]))
+                self.vibirs.append(utils.float(line.split()[5]))
+                line = next(inputfile) # next line
+        # NWChem TD-DFT excited states transitions
+        #
+        # Have to deal with :
+        # ----------------------------------------------------------------------------
+        # Root   1 singlet a              0.105782828 a.u.                2.8785 eV
+        # ----------------------------------------------------------------------------
+        #    Transition Moments    X -1.88278   Y -0.46346   Z -0.05660
+        #    Transition Moments   XX -5.63612  XY  4.57009  XZ -0.38291
+        #    Transition Moments   YY  6.48024  YZ -1.50109  ZZ -0.17430
+        #    Dipole Oscillator Strength                    0.2653650650
+        #    Electric Quadrupole                           0.0000003789
+        #    Magnetic Dipole                               0.0000001767
+        #    Total Oscillator Strength                     0.2653656206
+        #
+        #    Occ.  117  a   ---  Virt.  118  a    0.98676 X
+        #    Occ.  117  a   ---  Virt.  118  a   -0.08960 Y
+        #    Occ.  117  a   ---  Virt.  119  a    0.08235 X
+        # ----------------------------------------------------------------------------
+        # Root   2 singlet a              0.127858653 a.u.                3.4792 eV
+        # ----------------------------------------------------------------------------
+        #    Transition Moments    X -0.02031   Y  0.11238   Z -0.09893
+        #    Transition Moments   XX -0.23065  XY -0.35697  XZ -0.11250
+        #    Transition Moments   YY  0.16402  YZ -0.01716  ZZ  0.16705
+        #    Dipole Oscillator Strength                    0.0019460560
+        #    Electric Quadrupole                           0.0000000021
+        #    Magnetic Dipole                               0.0000002301
+        #    Total Oscillator Strength                     0.0019462882
+        #
+        #    Occ.  110  a   ---  Virt.  118  a   -0.05918 X
+        #    Occ.  110  a   ---  Virt.  119  a   -0.06022 X
+        #    Occ.  110  a   ---  Virt.  124  a    0.05962 X
+        #    Occ.  114  a   ---  Virt.  118  a    0.87840 X
+        #    Occ.  114  a   ---  Virt.  119  a   -0.12213 X
+        #    Occ.  114  a   ---  Virt.  123  a    0.07120 X
+        #    Occ.  114  a   ---  Virt.  124  a   -0.05022 X
+        #    Occ.  114  a   ---  Virt.  125  a    0.06104 X
+        #    Occ.  114  a   ---  Virt.  126  a    0.05065 X
+        #    Occ.  115  a   ---  Virt.  118  a    0.12907 X
+        #    Occ.  116  a   ---  Virt.  118  a   -0.40137 X
+
+        if line[:6] == "  Root":
+            et_num = int(line.split()[1])
+            if not hasattr(self, "etenergies"):
+                self.etenergies = []
+                self.etoscs = []
+                self.etsyms = []
+                self.etsecs = []
+
+            self.etenergies.append(utils.convertor(utils.float(line.split()[-2]), "eV", "wavenumber"))
+            self.etsyms.append(str.join(" ", line.split()[2:-4]))
+
+            self.skip_lines(inputfile, ['dashes'])
+            line = next(inputfile)
+            if ("Spin forbidden" not in line):
+                # find Dipole Oscillator Strength
+                while not ("Dipole Oscillator Strength" in line):
+                    line = next(inputfile)
+                etoscs = utils.float(line.split()[-1])
+                # in case of magnetic contribution replace, replace Dipole Oscillator Strength with Total Oscillator Strength
+                while not (line.find("Occ.") >= 0):
+                    if "Total Oscillator Strength" in line:
+                        etoscs = utils.float(line.split()[-1])
+                    line = next(inputfile)
+                self.etoscs.append(etoscs)
+                CIScontrib = []
+                while line.find("Occ.") >= 0:
+                    if (len(line.split()) == 9): # restricted
+                        _, occ, _, _, _, virt, _, coef, direction = line.split()
+                        type1 = "alpha"
+                        type2 = "alpha"
+                    else: # unrestricted: len(line.split()) should be 11
+                        _, occ, type1, _, _, _, virt, type2, _, coef, direction = line.split()
+                    occ = int(occ) - 1  # subtract 1 so that it is an index into moenergies
+                    virt = int(virt) - 1  # subtract 1 so that it is an index into moenergies
+                    coef = utils.float(coef)
+                    if (direction == 'Y'):
+                        # imaginary or negative excitation (denoted Y)
+                        tmp = virt
+                        virt = occ
+                        occ = tmp
+                        tmp = type1
+                        type1 = type2
+                        type2 = tmp
+                    frommoindex = 0  # For restricted or alpha unrestricted
+                    if type1 == "beta":
+                        frommoindex = 1
+                    tomoindex = 0 # For restricted or alpha unrestricted
+                    if type2 == "beta":
+                        tomoindex = 1
+                    CIScontrib.append([(occ, frommoindex), (virt, tomoindex), coef])
+                    line = next(inputfile)
+                self.etsecs.append(CIScontrib)
+            else:
+                self.etoscs.append(0.0)
 
     def before_parsing(self):
         """NWChem-specific routines performed before parsing a file.

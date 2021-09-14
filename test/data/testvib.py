@@ -37,6 +37,7 @@ class GenericIRTest(unittest.TestCase):
         """Are basic attributes correct?"""
         self.assertEqual(self.data.natom, 20)
 
+    @skipForParser('NWChem', 'Not implemented for this parser')
     def testvibdisps(self):
         """Are the dimensions of vibdisps consistent with numvib x N x 3"""
         self.assertEqual(len(self.data.vibfreqs), self.numvib)
@@ -70,6 +71,7 @@ class GenericIRTest(unittest.TestCase):
     @skipForParser('GAMESSUK', 'GAMESS-UK cannot print force constants')
     @skipForParser('Molcas', 'Molcas cannot print force constants')
     @skipForParser('Molpro', 'Molpro cannot print force constants')
+    @skipForParser('NWChem', 'Not implemented for this parser')
     @skipForParser('ORCA', 'ORCA cannot print force constants')
     @skipForParser('Turbomole', 'Turbomole cannot print force constants')
     @skipForLogfile('Jaguar/Jaguar4.2', 'Data file does not contain force constants')
@@ -82,6 +84,7 @@ class GenericIRTest(unittest.TestCase):
     @skipForParser('DALTON', 'DALTON cannot print reduced masses')
     @skipForParser('GAMESSUK', 'GAMESSUK cannot print reduced masses')
     @skipForParser('Molpro', 'Molpro cannot print reduced masses')
+    @skipForParser('NWChem', 'Not implemented for this parser')
     @skipForParser('ORCA', 'ORCA cannot print reduced masses')
     @skipForLogfile('GAMESS/PCGAMESS', 'Data file does not contain reduced masses')
     @skipForLogfile('Psi4/Psi4-1.0', 'Data file does not contain reduced masses')
@@ -198,6 +201,13 @@ class MolcasIRTest(GenericIRTest):
     def testfreeenergyconsistency(self):
         """Does G = H - TS hold"""
         self.assertAlmostEqual(self.data.enthalpy - self.data.temperature * self.data.entropy, self.data.freeenergy, self.freeenergy_places)
+
+class NWChemIRTest(GenericIRTest):
+    """Generic imaginary vibrational frequency unittest"""
+
+    def setUp(self):
+        """Initialize the number of vibrational frequencies on a per molecule basis"""
+        self.numvib = 3*len(self.data.atomnos)
 
 
 class OrcaIRTest(GenericIRTest):
