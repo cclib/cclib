@@ -409,7 +409,7 @@ After the calculate() method is called, the following attributes are available:
     single: methods; Hirshfeld Population Analysis
     
 Hirshfeld Population Analysis
-----------------
+-----------------------------
 
 Hirshfeld Population Analysis is the most basic charge partitioning method among stockholder-type methods and was introduced initially in `[Hirshfeld1977] <https://doi.org/10.1007/BF00549096>`_.
 In Hirshfeld method, proatom densities, which are charge densities of neutral atoms that comprise the given molecule, are used to calculate the weights that will be applied to partition charge densities on each grid point.
@@ -452,7 +452,7 @@ After the calculate() method is called, the following attributes are available:
     single: methods; Accessing additional methods through bridge
     
 Accessing additional methods through bridge
-----------------
+-------------------------------------------
 
 Some other population analyses methods including Hirshfeld partial charges and Iterative Stockholder charges can be calculated using bridge functions implemented in cclib. For more information, refer to `bridge`_ section of the documentation.
 
