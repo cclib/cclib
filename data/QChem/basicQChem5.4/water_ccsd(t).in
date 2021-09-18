@@ -5,6 +5,7 @@ $end
 $rem
  method = ccsd(t)
  basis = sto-3g
+ gui = 2
 $end
 
 $molecule

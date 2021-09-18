@@ -4,6 +4,7 @@ $rem
  scf_convergence = 9
  thresh = 14
  dft_d = d3_zero
+ gui = 2
 $end
 
 $molecule

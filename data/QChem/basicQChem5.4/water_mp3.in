@@ -5,6 +5,7 @@ $end
 $rem
  method = mp3
  basis = sto-3g
+ gui = 2
 $end
 
 $molecule

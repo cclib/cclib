@@ -6,6 +6,7 @@ $rem
  method = b3lyp
  basis = sto-3g
  cis_n_roots = 5
+ gui = 2
 $end
 
 $molecule

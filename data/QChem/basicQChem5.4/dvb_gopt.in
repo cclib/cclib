@@ -6,6 +6,7 @@ $rem
  jobtype = opt
  method = b3lyp
  basis = sto-3g
+ gui = 2
 $end
 
 $molecule

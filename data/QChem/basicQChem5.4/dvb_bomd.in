@@ -10,6 +10,7 @@ $rem
  aimd_temp = 298
  time_step = 25
  aimd_steps = 35
+ gui = 2
 $end
 
 $molecule

@@ -8,6 +8,7 @@ $rem
  method = b3lyp
  basis = sto-3g
  anhar = true
+ gui = 2
 $end
 
 $molecule

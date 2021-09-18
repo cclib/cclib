@@ -1,11 +1,12 @@
 $rem
- method hf
- basis sto-3g
- scf_convergence 9
- thresh 12
- symmetry false
- sym_ignore true
- moprop 2
+ method = hf
+ basis = sto-3g
+ scf_convergence = 9
+ thresh = 12
+ symmetry = false
+ sym_ignore = true
+ moprop = 2
+ gui = 2
 $end
 
 $molecule
