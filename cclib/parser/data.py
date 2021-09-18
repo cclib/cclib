@@ -100,7 +100,8 @@ class ccData:
     (2) The number of dimensions of an array is given in square brackets
     (3) Python indexes arrays/lists starting at zero, so if homos==[10], then
             the 11th molecular orbital is the HOMO
-    (4) If the future flag was passed during parsing, all values are in atomic units.
+    (4) If the future flag was passed during parsing, all values marked as eV are in atomic units,
+            along with etenergies.
     """
 
     # The expected types for all supported attributes.
