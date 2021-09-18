@@ -1,0 +1,18 @@
+$comment
+ Water, single point, RCCSD(T)/STO-3G
+$end
+
+$rem
+ method = ccsd(t)
+ basis = sto-3g
+$end
+
+$molecule
+ 0 1
+ O
+ H 1 R1
+ H 1 R1 2 A1
+
+ R1=0.99
+ A1=106.0
+$end
