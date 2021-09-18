@@ -6,6 +6,7 @@ $rem
  method = b3lyp
  basis = gen
  ecp = gen
+ ecp_fit = true
  unrestricted = false
  scf_guess = gwh
  scf_algorithm = diis_gdm
