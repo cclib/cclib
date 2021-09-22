@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2020, the cclib development team
+# Copyright (c) 2021, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -16,6 +16,8 @@ Currently supported programs:
     ADF, Firefly, GAMESS(US), GAMESS-UK, Gaussian,
     Jaguar, Molpro, MOPAC, NWChem, ORCA, Psi, Q-Chem
 
+And additionally: formatted checkpoints files (fchk)
+
 Another aim is to facilitate the implementation of algorithms that are not specific
 to any particular computational chemistry package and to maximise interoperability
 with other open source computational chemistry and cheminformatic software libraries.
@@ -23,7 +25,7 @@ To this end, cclib provides a number of bridges to help transfer data to other l
 as well as example methods that take parsed data as input.
 """
 
-__version__ = "1.7"
+__version__ = "1.7.1"
 
 from cclib import parser
 from cclib import progress
