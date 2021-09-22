@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2019, the cclib development team
+# Copyright (c) 2021, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -36,7 +36,7 @@ def generate_coverage():
     os.chdir(testpath)
 
     thispath = os.path.dirname(os.path.realpath(__file__))
-    sys.path.insert(1, thispath)
+    sys.path.insert(1, os.path.join(thispath, testpath))
 
     from test.test_data import (all_modules, all_parsers, parser_names, DataSuite)
     import inspect
