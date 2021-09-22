@@ -1,12 +1,12 @@
 $comment
- Water, single point, RCIS(D)/STO-3G (5 singlets, 5 triplets)
+ Water, single point, RCIS/STO-3G (5 singlets, 5 triplets)
 $end
 
 $rem
- method = cis(d)
+ method = cis
  basis = sto-3g
  cis_n_roots = 5
- ao2mo_disk = 200
+ gui = 2
 $end
 
 $molecule

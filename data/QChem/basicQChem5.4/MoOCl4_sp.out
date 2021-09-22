@@ -1,0 +1,687 @@
+                  Welcome to Q-Chem
+     A Quantum Leap Into The Future Of Chemistry
+
+
+ Q-Chem 5.4 (devel), Q-Chem, Inc., Pleasanton, CA (2021)
+
+ E. Epifanovsky,  A. T. B. Gilbert,  Xintian Feng,  Joonho Lee,  Yuezhi Mao,  
+ N. Mardirossian,  P. Pokhilko,  A. White,  M. Wormit,  M. P. Coons,  
+ A. L. Dempwolff,  Zhengting Gan,  D. Hait,  P. R. Horn,  L. D. Jacobson,  
+ I. Kaliman,  J. Kussmann,  A. W. Lange,  Ka Un Lao,  D. S. Levine,  Jie Liu,  
+ S. C. McKenzie,  A. F. Morrison,  K. Nanda,  F. Plasser,  D. R. Rehn,  
+ M. L. Vidal,  Zhi-Qiang You,  Ying Zhu,  B. Alam,  B. Albrecht,  
+ A. Aldossary,  E. Alguire,  J. H. Andersen,  D. Barton,  K. Begam,  A. Behn,  
+ Y. A. Bernard,  E. J. Berquist,  H. Burton,  A. Carreras,  K. Carter-Fenk,  
+ R. Chakraborty,  A. D. Chien,  K. D. Closser,  V. Cofer-Shabica,  
+ S. Dasgupta,  Jia Deng,  M. de Wergifosse,  M. Diedenhofen,  Hainam Do,  
+ S. Ehlert,  Po-Tung Fang,  S. Fatehi,  Qingguo Feng,  T. Friedhoff,  
+ J. Gayvert,  Qinghui Ge,  G. Gidofalvi,  M. Goldey,  J. Gomes,  
+ C. Gonzalez-Espinoza,  S. Gulania,  A. Gunina,  M. W. D. Hanson-Heine,  
+ P. H. P. Harbach,  A. W. Hauser,  M. F. Herbst,  M. Hernandez Vera,  
+ M. Hodecker,  Z. C. Holden,  S. Houck,  Xunkun Huang,  Kerwin Hui,  
+ B. C. Huynh,  M. Ivanov,  Hyunjun Ji,  Hanjie Jiang,  B. Kaduk,  S. Kaehler,  
+ K. Khistyaev,  Jaehoon Kim,  P. Klunzinger,  Z. Koczor-Benda,  
+ Joong Hoon Koh,  D. Kosenkov,  L. Koulias,  T. Kowalczyk,  C. M. Krauter,  
+ K. Kue,  A. Kunitsa,  T. Kus,  A. Landau,  K. V. Lawler,  D. Lefrancois,  
+ S. Lehtola,  Rain Li,  Yi-Pei Li,  Jiashu Liang,  M. Liebenthal,  
+ Hung-Hsuan Lin,  You-Sheng Lin,  Fenglai Liu,  Kuan-Yu Liu,  
+ M. Loipersberger,  A. Luenser,  A. Manjanath,  P. Manohar,  E. Mansoor,  
+ S. F. Manzer,  Shan-Ping Mao,  A. V. Marenich,  T. Markovich,  S. Mason,  
+ S. A. Maurer,  P. F. McLaughlin,  M. F. S. J. Menger,  J.-M. Mewes,  
+ S. A. Mewes,  P. Morgante,  J. W. Mullinax,  K. J. Oosterbaan,  G. Paran,  
+ Alexander C. Paul,  Suranjan K. Paul,  F. Pavosevic,  Zheng Pei,  S. Prager,  
+ E. I. Proynov,  E. Ramos,  B. Rana,  A. E. Rask,  A. Rettig,  R. M. Richard,  
+ F. Rob,  E. Rossomme,  T. Scheele,  M. Scheurer,  M. Schneider,  
+ N. Sergueev,  S. M. Sharada,  W. Skomorowski,  D. W. Small,  C. J. Stein,  
+ Yu-Chuan Su,  E. J. Sundstrom,  Zhen Tao,  J. Thirman,  T. Tsuchimochi,  
+ N. M. Tubman,  S. P. Veccham,  O. Vydrov,  J. Wenzel,  J. Witte,  A. Yamada,  
+ Kun Yao,  S. Yeganeh,  S. R. Yost,  A. Zech,  Igor Ying Zhang,  Xing Zhang,  
+ Yu Zhang,  D. Zuev,  A. Aspuru-Guzik,  A. T. Bell,  N. A. Besley,  
+ K. B. Bravaya,  B. R. Brooks,  D. Casanova,  Jeng-Da Chai,  S. Coriani,  
+ C. J. Cramer,  A. E. DePrince, III,  R. A. DiStasio Jr.,  A. Dreuw,  
+ B. D. Dunietz,  T. R. Furlani,  W. A. Goddard III,  S. Grimme,  
+ S. Hammes-Schiffer,  T. Head-Gordon,  W. J. Hehre,  Chao-Ping Hsu,  
+ T.-C. Jagau,  Yousung Jung,  A. Klamt,  Jing Kong,  D. S. Lambrecht,  
+ WanZhen Liang,  N. J. Mayhall,  C. W. McCurdy,  J. B. Neaton,  
+ C. Ochsenfeld,  J. A. Parkhill,  R. Peverati,  V. A. Rassolov,  Yihan Shao,  
+ L. V. Slipchenko,  T. Stauch,  R. P. Steele,  J. E. Subotnik,  
+ A. J. W. Thom,  A. Tkatchenko,  D. G. Truhlar,  T. Van Voorhis,  
+ T. A. Wesolowski,  K. B. Whaley,  H. L. Woodcock III,  P. M. Zimmerman,  
+ S. Faraji,  P. M. W. Gill,  M. Head-Gordon,  J. M. Herbert,  A. I. Krylov
+
+ Additional authors for Version 5.4.1: 
+ S. Kotaru,  Shaozhi Li,  Xiangyuan Li,  F. Matz,  A. Molle,  Haisheng Ren,  
+ Yingli Su,  Hung-Yi Tsai,  C. Utku,  Fang Wang
+
+ Contributors to earlier versions of Q-Chem not listed above: 
+ R. D. Adamson,  B. Austin,  R. Baer,  J. Baker,  G. J. O. Beran,  
+ K. Brandhorst,  S. T. Brown,  E. F. C. Byrd,  A. K. Chakraborty,  
+ G. K. L. Chan,  Chun-Min Chang,  Yunqing Chen,  C.-L. Cheng,  
+ Siu Hung Chien,  D. M. Chipman,  D. L. Crittenden,  H. Dachsel,  
+ R. J. Doerksen,  A. D. Dutoi,  R. G. Edgar,  J. Fosso-Tande,  
+ L. Fusti-Molnar,  D. Ghosh,  A. Ghysels,  A. Golubeva-Zadorozhnaya,  
+ J. Gonthier,  M. S. Gordon,  S. R. Gwaltney,  G. Hawkins,  J. E. Herr,  
+ A. Heyden,  S. Hirata,  E. G. Hohenstein,  G. Kedziora,  F. J. Keil,  
+ C. Kelley,  Jihan Kim,  R. A. King,  R. Z. Khaliullin,  P. P. Korambath,  
+ W. Kurlancheek,  A. Laurent,  A. M. Lee,  M. S. Lee,  S. V. Levchenko,  
+ Ching Yeh Lin,  D. Liotard,  E. Livshits,  R. C. Lochan,  I. Lotan,  
+ L. A. Martinez-Martinez,  P. E. Maslen,  N. Nair,  D. P. O'Neill,  
+ D. Neuhauser,  E. Neuscamman,  C. M. Oana,  R. Olivares-Amaya,  R. Olson,  
+ T. M. Perrine,  B. Peters,  P. A. Pieniazek,  A. Prociuk,  Y. M. Rhee,  
+ J. Ritchie,  M. A. Rohrdanz,  E. Rosta,  N. J. Russ,  H. F. Schaefer III,  
+ M. W. Schmidt,  N. E. Schultz,  S. Sharma,  N. Shenvi,  C. D. Sherrill,  
+ A. C. Simmonett,  A. Sodt,  T. Stein,  D. Stuck,  K. S. Thanthiriwatte,  
+ V. Vanovschi,  L. Vogt,  Tao Wang,  A. Warshel,  M. A. Watson,  
+ C. F. Williams,  Q. Wu,  X. Xu,  Jun Yang,  W. Zhang,  Yan Zhao
+
+ Please cite Q-Chem as follows:
+ Y. Shao et al., Mol. Phys. 113, 184-215 (2015)
+ DOI: 10.1080/00268976.2014.952696
+
+ Q-Chem 5.4.1 for Intel X86 EM64T Linux
+
+ Parts of Q-Chem use Armadillo 9.900.5 (Nocturnal Misbehaviour).
+ http://arma.sourceforge.net/
+
+Compilation information
+-----------------------
+
+ SVN revision             | 37731
+ SVN branch               | trunk
+ Last SVN revision        | 37729
+ Last SVN author          | epif
+ Hostname                 | osmium
+ User                     | eric
+ System                   | Linux-5.14.3-arch1-1
+ Processor                | x86_64
+ Compiler                 | GNU
+ C compiler version       | 10.3.0
+ CXX compiler version     | 10.3.0
+ Fortran compiler version | 10.3.0
+ Configuration time       | 2021-09-18 20:48:41
+
+
+ Q-Chem begins on Sun Sep 19 10:15:01 2021  
+
+ Host: osmium
+0
+
+     Scratch files written to /tmp/qchem/qchem2851264//
+ Processing $rem in /home/eric/data/opt/apps/qchem/archive/r37729-g10.3.0-openblas/config/preferences:
+ Processing $rem in /home/eric/.qchemrc:
+
+ Checking the input file for inconsistencies... 	...done.
+
+--------------------------------------------------------------
+User input:
+--------------------------------------------------------------
+$comment
+ MoOCl4, single point, with pseudopotentials, RB3LYP/{LanL2MB/6-31G(d)}
+$end
+
+$rem
+ method = b3lyp
+ basis = gen
+ ecp = gen
+ ecp_fit = true
+ unrestricted = false
+ scf_guess = gwh
+ scf_algorithm = diis_gdm
+ scf_convergence = 9
+ thresh = 14
+ max_scf_cycles = 200
+ print_general_basis = true
+ iprint = 100
+ gui = 2
+$end
+
+$molecule
+ -2 1
+Mo     0.000325    -0.000325     0.051810
+ O     0.000206    -0.000206     1.741504
+Cl     1.711727    -1.711727    -0.659846
+Cl    -1.710992    -1.711738    -0.660079
+Cl    -1.711004     1.711004    -0.660311
+Cl     1.711738     1.710992    -0.660079
+$end
+
+$basis
+ O
+ 6-31g(d)
+ ****
+ Mo
+ lanl2dz
+ ****
+ Cl
+ lanl2dz
+ ****
+$end
+
+$ecp
+ Mo
+ lanl2dz
+ ****
+ Cl
+ lanl2dz
+ ****
+$end
+--------------------------------------------------------------
+ ----------------------------------------------------------------
+             Standard Nuclear Orientation (Angstroms)
+    I     Atom           X                Y                Z
+ ----------------------------------------------------------------
+    1      Mo     -0.0000056728     0.2956854500     0.0000000000
+    2      O      -0.0000013631     1.9853794584     0.0000000000
+    3      Cl     -2.4202245156    -0.4162054311     0.0000000009
+    4      Cl     -0.0000044684    -0.4162035532    -2.4202355932
+    5      Cl      2.4202481073    -0.4162006722    -0.0000000009
+    6      Cl     -0.0000044667    -0.4162035532     2.4202355932
+ ----------------------------------------------------------------
+ Molecular Point Group                 Cs    NOp =  2
+ Nuclear Repulsion Energy =         193.08466374 hartrees
+ There are       26 alpha and       26 beta electrons
+ Requested basis set is non-standard
+ Basis set in general basis input format:
+-----------------------------------------------------------------------
+$basis
+Mo   0
+S    4    1.000000
+   2.36100000E+00    8.13925900E-01 
+   1.30900000E+00   -1.13600840E+00 
+   4.50000000E-01   -1.16115920E+00 
+   1.68100000E-01    1.00647860E+00 
+S    3    1.000000
+   2.36100000E+00   -9.12176000E-01 
+   1.30900000E+00    1.14774530E+00 
+   4.50000000E-01    6.09710900E-01 
+S    1    1.000000
+   4.23000000E-02    1.00000000E+00 
+P    3    1.000000
+   4.89500000E+00   -9.08258000E-02 
+   1.04400000E+00    7.04289900E-01 
+   3.87700000E-01    3.97317900E-01 
+P    2    1.000000
+   4.99500000E-01   -1.08194500E-01 
+   7.80000000E-02    1.03680930E+00 
+P    1    1.000000
+   2.47000000E-02    1.00000000E+00 
+D    3    1.000000
+   2.99300000E+00    5.27063000E-02 
+   1.06300000E+00    5.00390700E-01 
+   3.72100000E-01    5.79402400E-01 
+D    1    1.000000
+   1.17800000E-01    1.00000000E+00 
+****
+O    0
+S    6    1.000000
+   5.48467170E+03    1.83110000E-03 
+   8.25234950E+02    1.39501000E-02 
+   1.88046960E+02    6.84451000E-02 
+   5.29645000E+01    2.32714300E-01 
+   1.68975700E+01    4.70193000E-01 
+   5.79963530E+00    3.58520900E-01 
+SP   3    1.000000
+   1.55396160E+01   -1.10777500E-01   7.08743000E-02 
+   3.59993360E+00   -1.48026300E-01   3.39752800E-01 
+   1.01376180E+00    1.13076700E+00   7.27158600E-01 
+SP   1    1.000000
+   2.70005800E-01    1.00000000E+00   1.00000000E+00 
+D    1    1.000000
+   8.00000000E-01    1.00000000E+00 
+****
+Cl   0
+S    2    1.000000
+   2.23100000E+00   -4.90058900E-01 
+   4.72000000E-01    1.25426840E+00 
+S    1    1.000000
+   1.63100000E-01    1.00000000E+00 
+P    2    1.000000
+   6.29600000E+00   -6.35641000E-02 
+   6.33300000E-01    1.01413550E+00 
+P    1    1.000000
+   1.81900000E-01    1.00000000E+00 
+****
+Cl   0
+S    2    1.000000
+   2.23100000E+00   -4.90058900E-01 
+   4.72000000E-01    1.25426840E+00 
+S    1    1.000000
+   1.63100000E-01    1.00000000E+00 
+P    2    1.000000
+   6.29600000E+00   -6.35641000E-02 
+   6.33300000E-01    1.01413550E+00 
+P    1    1.000000
+   1.81900000E-01    1.00000000E+00 
+****
+Cl   0
+S    2    1.000000
+   2.23100000E+00   -4.90058900E-01 
+   4.72000000E-01    1.25426840E+00 
+S    1    1.000000
+   1.63100000E-01    1.00000000E+00 
+P    2    1.000000
+   6.29600000E+00   -6.35641000E-02 
+   6.33300000E-01    1.01413550E+00 
+P    1    1.000000
+   1.81900000E-01    1.00000000E+00 
+****
+Cl   0
+S    2    1.000000
+   2.23100000E+00   -4.90058900E-01 
+   4.72000000E-01    1.25426840E+00 
+S    1    1.000000
+   1.63100000E-01    1.00000000E+00 
+P    2    1.000000
+   6.29600000E+00   -6.35641000E-02 
+   6.33300000E-01    1.01413550E+00 
+P    1    1.000000
+   1.81900000E-01    1.00000000E+00 
+****
+$end
+-----------------------------------------------------------------------
+ There are 28 shells and 68 basis functions
+ Number of Cartesian basis functions =     71
+ Maximum angular momentum            =      2
+ Maximum degree of contraction       =      6
+ Maximum number of momentum cases    =      2
+ --------------------------------------------------------------------
+ Atom   I     L     Exponents     Normalized Contraction Coefficients
+ --------------------------------------------------------------------
+   1    1     0    2.361000E+00   1.104885E+00
+                   1.309000E+00  -9.908236E-01
+                   4.500000E-01  -4.546856E-01
+                   1.681000E-01   1.883174E-01
+        2     0    2.361000E+00  -1.238257E+00
+                   1.309000E+00   1.001061E+00
+                   4.500000E-01   2.387500E-01
+        3     0    4.230000E-02   6.647607E-02
+        4     1    4.895000E+00  -9.426277E-01
+                   1.044000E+00   1.059418E+00
+                   3.877000E-01   1.732599E-01
+        5     1    4.995000E-01  -6.476116E-02
+                   7.800000E-02   6.091963E-02
+        6     1    2.470000E-02   1.395762E-02
+        7     2    2.993000E+00   5.908248E-01
+                   1.063000E+00   9.165410E-01
+                   3.721000E-01   1.690613E-01
+        8     2    1.178000E-01   3.898645E-02
+   2    9     0    5.484672E+03   8.317352E-01
+                   8.252350E+02   1.530807E+00
+                   1.880470E+02   2.477149E+00
+                   5.296450E+01   3.256280E+00
+                   1.689757E+01   2.792894E+00
+                   5.799635E+00   9.549377E-01
+       10    0-1   1.553962E+01  -6.179337E-01  3.116946E+00
+                   3.599934E+00  -2.757210E-01  2.401437E+00
+                   1.013762E+00   8.142076E-01  1.054361E+00
+       11    0-1   2.700058E-01   2.669561E-01  2.774319E-01
+       12     2    8.000000E-01   1.113825E+00
+   3   13     0    2.231000E+00  -6.375776E-01
+                   4.720000E-01   5.090461E-01
+       14     0    1.631000E-01   1.829155E-01
+       15     1    6.296000E+00  -9.036138E-01
+                   6.333000E-01   8.166725E-01
+       16     1    1.819000E-01   1.693289E-01
+   4   17     0    2.231000E+00  -6.375776E-01
+                   4.720000E-01   5.090461E-01
+       18     0    1.631000E-01   1.829155E-01
+       19     1    6.296000E+00  -9.036138E-01
+                   6.333000E-01   8.166725E-01
+       20     1    1.819000E-01   1.693289E-01
+   5   21     0    2.231000E+00  -6.375776E-01
+                   4.720000E-01   5.090461E-01
+       22     0    1.631000E-01   1.829155E-01
+       23     1    6.296000E+00  -9.036138E-01
+                   6.333000E-01   8.166725E-01
+       24     1    1.819000E-01   1.693289E-01
+   6   25     0    2.231000E+00  -6.375776E-01
+                   4.720000E-01   5.090461E-01
+       26     0    1.631000E-01   1.829155E-01
+       27     1    6.296000E+00  -9.036138E-01
+                   6.333000E-01   8.166725E-01
+       28     1    1.819000E-01   1.693289E-01
+ --------------------------------------------------------------------
+
+ Total QAlloc Memory Limit   2000 MB
+ Mega-Array Size       188 MB
+ MEM_STATIC part       192 MB
+
+                       Distance Matrix (Angstroms)
+             Mo(  1)   O (  2)   Cl(  3)   Cl(  4)   Cl(  5)
+   O (  2)  1.689694
+   Cl(  3)  2.522746  3.409559
+   Cl(  4)  2.522762  3.409566  3.422719
+   Cl(  5)  2.522778  3.409574  4.840473  3.422742
+   Cl(  6)  2.522762  3.409566  3.422719  4.840471  3.422742
+
+ The following effective core potentials will be applied 
+ ---------------------------------------------------------------------
+ Atom     Valence      Angular     Power    Exponents   Coefficients
+         Electrons     Momentum     of R 
+ ---------------------------------------------------------------------
+ Mo          14         F and up 
+                                     0     537.966781     -0.046949
+                                     1     147.898294    -20.208008
+                                     2      45.735890   -106.211630
+                                     2      13.291147    -41.810737
+                                     2       4.705996     -4.205410
+                         S-F
+                                     0     110.299176      2.806372
+                                     1      23.201465     44.516201
+                                     2       5.353013     82.778523
+                         P-F
+                                     0      63.290140      4.942088
+                                     1      23.331530     25.860498
+                                     2      24.675942    132.470874
+                                     2       4.649304     57.314979
+                         D-F
+                                     0     104.483998      3.005459
+                                     1      66.230724     26.363785
+                                     2      39.128318    183.384920
+                                     2      13.116444     98.445307
+                                     2       3.628026     22.490138
+ Cl          7         D and up 
+                                     1      94.813000    -10.000000
+                                     2     165.644000     66.272917
+                                     2      30.831700    -28.968595
+                                     2      10.584100    -12.866337
+                                     2       3.770400     -1.710217
+                         S-D
+                                     0     128.839100      3.000000
+                                     1     120.378600     12.852851
+                                     2      63.562200    275.672398
+                                     2      18.069500    115.677712
+                                     2       3.814200     35.060609
+                         P-D
+                                     0     216.526300      5.000000
+                                     1      46.572300      7.479486
+                                     2     147.468500    613.032000
+                                     2      48.986900    280.800685
+                                     2      13.209600    107.878824
+                                     2       3.183100     15.343956
+ ---------------------------------------------------------------------
+ A cutoff of  1.0D-14 yielded    406 shell pairs
+ There are      2421 function pairs (      2646 Cartesian)
+ Requested basis set is non-standard
+ Compound shells will be simplified
+ There are 30 shells and 68 basis functions
+ Number of Cartesian basis functions =     71
+ Maximum angular momentum            =      2
+ Maximum degree of contraction       =      6
+ Maximum number of momentum cases    =      1
+ --------------------------------------------------------------------
+ Atom   I     L     Exponents     Normalized Contraction Coefficients
+ --------------------------------------------------------------------
+   1    1     0    2.361000E+00   1.104885E+00
+                   1.309000E+00  -9.908236E-01
+                   4.500000E-01  -4.546856E-01
+                   1.681000E-01   1.883174E-01
+        2     0    2.361000E+00  -1.238257E+00
+                   1.309000E+00   1.001061E+00
+                   4.500000E-01   2.387500E-01
+        3     0    4.230000E-02   6.647607E-02
+        4     1    4.895000E+00  -9.426277E-01
+                   1.044000E+00   1.059418E+00
+                   3.877000E-01   1.732599E-01
+        5     1    4.995000E-01  -6.476116E-02
+                   7.800000E-02   6.091963E-02
+        6     1    2.470000E-02   1.395762E-02
+        7     2    2.993000E+00   5.908248E-01
+                   1.063000E+00   9.165410E-01
+                   3.721000E-01   1.690613E-01
+        8     2    1.178000E-01   3.898645E-02
+   2    9     0    5.484672E+03   8.317352E-01
+                   8.252350E+02   1.530807E+00
+                   1.880470E+02   2.477149E+00
+                   5.296450E+01   3.256280E+00
+                   1.689757E+01   2.792894E+00
+                   5.799635E+00   9.549377E-01
+       10     0    1.553962E+01  -6.179337E-01
+                   3.599934E+00  -2.757210E-01
+                   1.013762E+00   8.142076E-01
+       11     1    1.553962E+01   3.116946E+00
+                   3.599934E+00   2.401437E+00
+                   1.013762E+00   1.054361E+00
+       12     0    2.700058E-01   2.669561E-01
+       13     1    2.700058E-01   2.774319E-01
+       14     2    8.000000E-01   1.113825E+00
+   3   15     0    2.231000E+00  -6.375776E-01
+                   4.720000E-01   5.090461E-01
+       16     0    1.631000E-01   1.829155E-01
+       17     1    6.296000E+00  -9.036138E-01
+                   6.333000E-01   8.166725E-01
+       18     1    1.819000E-01   1.693289E-01
+   4   19     0    2.231000E+00  -6.375776E-01
+                   4.720000E-01   5.090461E-01
+       20     0    1.631000E-01   1.829155E-01
+       21     1    6.296000E+00  -9.036138E-01
+                   6.333000E-01   8.166725E-01
+       22     1    1.819000E-01   1.693289E-01
+   5   23     0    2.231000E+00  -6.375776E-01
+                   4.720000E-01   5.090461E-01
+       24     0    1.631000E-01   1.829155E-01
+       25     1    6.296000E+00  -9.036138E-01
+                   6.333000E-01   8.166725E-01
+       26     1    1.819000E-01   1.693289E-01
+   6   27     0    2.231000E+00  -6.375776E-01
+                   4.720000E-01   5.090461E-01
+       28     0    1.631000E-01   1.829155E-01
+       29     1    6.296000E+00  -9.036138E-01
+                   6.333000E-01   8.166725E-01
+       30     1    1.819000E-01   1.693289E-01
+ --------------------------------------------------------------------
+ The following effective core potentials will be applied 
+ ---------------------------------------------------------------------
+ Atom     Valence      Angular     Power    Exponents   Coefficients
+         Electrons     Momentum     of R 
+ ---------------------------------------------------------------------
+ Mo          14         F and up 
+                                     0     537.966781     -0.046949
+                                     1     147.898294    -20.208008
+                                     2      45.735890   -106.211630
+                                     2      13.291147    -41.810737
+                                     2       4.705996     -4.205410
+                         S-F
+                                     0     110.299176      2.806372
+                                     1      23.201465     44.516201
+                                     2       5.353013     82.778523
+                         P-F
+                                     0      63.290140      4.942088
+                                     1      23.331530     25.860498
+                                     2      24.675942    132.470874
+                                     2       4.649304     57.314979
+                         D-F
+                                     0     104.483998      3.005459
+                                     1      66.230724     26.363785
+                                     2      39.128318    183.384920
+                                     2      13.116444     98.445307
+                                     2       3.628026     22.490138
+ Cl          7         D and up 
+                                     1      94.813000    -10.000000
+                                     2     165.644000     66.272917
+                                     2      30.831700    -28.968595
+                                     2      10.584100    -12.866337
+                                     2       3.770400     -1.710217
+                         S-D
+                                     0     128.839100      3.000000
+                                     1     120.378600     12.852851
+                                     2      63.562200    275.672398
+                                     2      18.069500    115.677712
+                                     2       3.814200     35.060609
+                         P-D
+                                     0     216.526300      5.000000
+                                     1      46.572300      7.479486
+                                     2     147.468500    613.032000
+                                     2      48.986900    280.800685
+                                     2      13.209600    107.878824
+                                     2       3.183100     15.343956
+ ---------------------------------------------------------------------
+ A cutoff of  1.0D-14 yielded    465 shell pairs
+ There are      2415 function pairs (      2640 Cartesian)
+ Using a fitted effective core potential
+ Smallest overlap matrix eigenvalue = 1.55E-02
+
+ Scale SEOQF with 1.000000e-01/1.000000e-01/1.000000e-01
+
+ Standard Electronic Orientation quadrupole field applied
+ Nucleus-field energy     =    -0.0000000032 hartrees
+ Constructing guess Fock matrix from core Hamiltonian
+ Applying Wolfsberg-Helmholtz approximation
+
+ -----------------------------------------------------------------------
+  General SCF calculation program by
+  Eric Jon Sundstrom, Paul Horn, Yuezhi Mao, Dmitri Zuev, Alec White,
+  David Stuck, Shaama M.S., Shane Yost, Joonho Lee, David Small,
+  Daniel Levine, Susi Lehtola, Hugh Burton, Evgeny Epifanovsky,
+  Bang C. Huynh
+ -----------------------------------------------------------------------
+ Exchange:     0.2000 Hartree-Fock + 0.0800 Slater + 0.7200 B88
+ Correlation:  0.1900 VWN1RPA + 0.8100 LYP
+ Using SG-1 standard quadrature grid
+ A restricted SCF calculation will be
+ performed using DIIS, GDM
+ SCF converges when RMS gradient is below 1.0e-09
+ ---------------------------------------
+  Cycle       Energy         DIIS error
+ ---------------------------------------
+    1    -190.4878078956      1.37e-01  
+    2    -172.1184191035      1.38e-01  
+    3    -187.3056700835      1.21e-01  
+    4    -199.8184927485      5.86e-02  
+    5    -191.3725082797      9.49e-02  
+    6    -201.8298133380      4.00e-02  
+    7    -202.1027393145      3.54e-02  
+    8    -201.9626144651      3.72e-02  
+    9    -201.9769307742      3.70e-02  
+   10    -202.3659651113      2.63e-02  
+   11    -202.6002766759      1.95e-02  
+   12    -202.7469923224      1.00e-02  
+   13    -202.7849548195      6.06e-03  Done DIIS. Switching to GDM
+ ---------------------------------------
+  Cycle       Energy        RMS Gradient
+ ---------------------------------------
+    1    -202.7849548195      1.60e-01   Descent step
+    2    -202.3422161352      7.46e-01  Line search: overstep
+    3    -202.8011724328      7.24e-02   Normal BFGS step
+    4    -202.8030007344      4.68e-02   Normal BFGS step
+    5    -202.8061500716      2.42e-02   Normal BFGS step
+    6    -202.8067892546      6.26e-03   Normal BFGS step
+    7    -202.8068727494      1.87e-03   Normal BFGS step
+    8    -202.8068886703      1.33e-03   Normal BFGS step
+    9    -202.8068909472      1.05e-04   Normal BFGS step
+   10    -202.8068910650      7.53e-05   Normal BFGS step
+   11    -202.8068910791      1.64e-05   Normal BFGS step
+   12    -202.8068910795      4.49e-06   Normal BFGS step
+   13    -202.8068910797      2.32e-06   Normal BFGS step
+   14    -202.8068910797      4.02e-07   Normal BFGS step
+   15    -202.8068910797      5.99e-08   Normal BFGS step
+   16    -202.8068910797      8.54e-08   Normal BFGS step
+   17    -202.8068910797      1.94e-08   Normal BFGS step
+   18    -202.8068910797      1.20e-08   Normal BFGS step
+   19    -202.8068910797      3.39e-09   Normal BFGS step
+   20    -202.8068910797      1.50e-09   Normal BFGS step
+   21    -202.8068910797      3.34e-10  Convergence criterion met
+ ---------------------------------------
+ SCF time:   CPU 7.33s  wall 8.00s 
+ SCF   energy in the final basis set =     -202.8068910797
+ Total energy in the final basis set =     -202.8068910797
+
+ --------------------------------------------------------------
+             Orbital Energies (a.u.) and Symmetries
+ --------------------------------------------------------------
+
+ Alpha MOs, Restricted
+ -- Occupied --                  
+-18.887  -2.222  -1.289  -1.225  -1.225  -0.623  -0.449  -0.437
+  1 A'    2 A'    3 A'    1 A"    4 A'    5 A'    6 A'    2 A"                 
+ -0.437  -0.435  -0.107  -0.086  -0.086  -0.046  -0.032  -0.023
+  7 A'    8 A'    9 A'    3 A"   10 A'   11 A'   12 A'    4 A"                 
+ -0.016  -0.016   0.000   0.017   0.017   0.025   0.029   0.029
+  5 A"   13 A'   14 A'    6 A"   15 A'   16 A'   17 A'    7 A"                 
+  0.047   0.119
+  8 A"    9 A"                                                                 
+ -- Virtual --                   
+  0.235   0.235   0.262   0.264   0.277   0.278   0.278   0.338
+ 10 A"   18 A'   19 A'   20 A'   21 A'   11 A"   22 A'   23 A'                 
+  0.496   0.524   0.524   0.679   0.688   0.688   0.706   0.736
+ 24 A'   12 A"   25 A'   13 A"   14 A"   26 A'   27 A'   28 A'                 
+  0.942   0.988   1.036   1.036   1.062   1.069   1.078   1.078
+ 29 A'   15 A"   16 A"   30 A'   31 A'   32 A'   17 A"   33 A'                 
+  1.143   1.152   1.152   1.159   1.255   1.372   1.372   1.687
+ 34 A'   18 A"   35 A'   19 A"   36 A'   20 A"   37 A'   38 A'                 
+  2.084   2.095   2.095   2.119   2.216   5.297   7.537   8.970
+ 21 A"   22 A"   39 A'   40 A'   41 A'   42 A'   43 A'   44 A'                 
+  8.971  10.161
+ 23 A"   45 A'                                                                 
+
+ Beta MOs, Restricted
+ -- Occupied --                  
+-18.887  -2.222  -1.289  -1.225  -1.225  -0.623  -0.449  -0.437
+  1 A'    2 A'    3 A'    1 A"    4 A'    5 A'    6 A'    2 A"                 
+ -0.437  -0.435  -0.107  -0.086  -0.086  -0.046  -0.032  -0.023
+  7 A'    8 A'    9 A'    3 A"   10 A'   11 A'   12 A'    4 A"                 
+ -0.016  -0.016   0.000   0.017   0.017   0.025   0.029   0.029
+  5 A"   13 A'   14 A'    6 A"   15 A'   16 A'   17 A'    7 A"                 
+  0.047   0.119
+  8 A"    9 A"                                                                 
+ -- Virtual --                   
+  0.235   0.235   0.262   0.264   0.277   0.278   0.278   0.338
+ 10 A"   18 A'   19 A'   20 A'   21 A'   11 A"   22 A'   23 A'                 
+  0.496   0.524   0.524   0.679   0.688   0.688   0.706   0.736
+ 24 A'   12 A"   25 A'   13 A"   14 A"   26 A'   27 A'   28 A'                 
+  0.942   0.988   1.036   1.036   1.062   1.069   1.078   1.078
+ 29 A'   15 A"   16 A"   30 A'   31 A'   32 A'   17 A"   33 A'                 
+  1.143   1.152   1.152   1.159   1.255   1.372   1.372   1.687
+ 34 A'   18 A"   35 A'   19 A"   36 A'   20 A"   37 A'   38 A'                 
+  2.084   2.095   2.095   2.119   2.216   5.297   7.537   8.970
+ 21 A"   22 A"   39 A'   40 A'   41 A'   42 A'   43 A'   44 A'                 
+  8.971  10.161
+ 23 A"   45 A'                                                                 
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Mo                    0.422861
+      2 O                    -0.509742
+      3 Cl                   -0.478275
+      4 Cl                   -0.478279
+      5 Cl                   -0.478284
+      6 Cl                   -0.478279
+  ----------------------------------------
+  Sum of atomic charges =    -2.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -9.6064
+    Dipole Moment (Debye)
+         X      -0.0001      Y       1.2987      Z      -0.0000
+       Tot       1.2987
+    Quadrupole Moments (Debye-Ang)
+        XX    -114.5148     XY       0.0000     YY     -88.9858
+        XZ      -0.0000     YZ      -0.0000     ZZ    -114.5148
+    Octopole Moments (Debye-Ang^2)
+       XXX      -0.0019    XXY      17.9804    XYY      -0.0001
+       YYY      -1.1000    XXZ      -0.0000    XYZ       0.0000
+       YYZ       0.0000    XZZ       0.0000    YZZ      17.9804
+       ZZZ      -0.0000
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -1237.2183   XXXY       0.0003   XXYY    -233.0374
+      XYYY       0.0001   YYYY    -342.7927   XXXZ       0.0000
+      XXYZ       0.0000   XYYZ      -0.0000   YYYZ      -0.0000
+      XXZZ    -354.9394   XYZZ      -0.0001   YYZZ    -233.0373
+      XZZZ      -0.0000   YZZZ      -0.0000   ZZZZ   -1237.2174
+ -----------------------------------------------------------------
+ Total job time:  7.53s(wall), 7.51s(cpu) 
+ Sun Sep 19 10:15:09 2021
+
+        *************************************************************
+        *                                                           *
+        *  Thank you very much for using Q-Chem.  Have a nice day.  *
+        *                                                           *
+        *************************************************************
+
+
