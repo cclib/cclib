@@ -44,7 +44,7 @@ master_doc = 'contents'
 
 # General information about the project.
 project = u'cclib'
-copyright = u'2014-2018, cclib Development Team'
+copyright = u'2014-2021, cclib Development Team'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
