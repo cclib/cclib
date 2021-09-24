@@ -13,6 +13,8 @@ import re
 import datetime
 import numpy
 
+from packaging.version import parse as parse_version
+
 from cclib.parser import logfileparser
 from cclib.parser import utils
 
@@ -457,6 +459,10 @@ cannot be determined. Rerun without `$molecule read`."""
                     self.metadata["package_version"], svn_branch, svn_revision
                 )
 
+        if "package_version" in self.metadata:
+            self.set_attribute("package_version",
+                               parse_version(self.metadata["package_version"]))
+
         # Disable/enable parsing for fragment sections.
         if any(message in line for message in self.fragment_section_headers):
             self.is_fragment_section = True
@@ -771,6 +777,21 @@ cannot be determined. Rerun without `$molecule read`."""
                     self.norbdisp_alpha_aonames = min(self.norbdisp_alpha_aonames, self.nbasis)
                     self.norbdisp_beta = min(self.norbdisp_beta, self.nbasis)
                     self.norbdisp_beta_aonames = min(self.norbdisp_beta_aonames, self.nbasis)
+
+            # Finally, versions of Q-Chem greater than 5.1 print all MOs in
+            # the "Final <Spin> MO Coefficients" blocks, but *not* the TODO
+            # blocks.
+            if hasattr(self, "package_version"):
+                pv = self.package_version
+                if pv.major >= 5 and pv.minor > 1:
+                    norbdisp = None
+                    if hasattr(self, "nmo"):
+                        norbdisp = self.nmo
+                    elif hasattr(self, "nbasis"):
+                        norbdisp = self.nbasis
+                    if norbdisp is not None:
+                        self.norbdisp_alpha = norbdisp
+                        self.norbdisp_beta = norbdisp
 
             # Check for whether or not we're peforming an
             # (un)restricted calculation.
