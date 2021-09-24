@@ -101,12 +101,12 @@ Compilation information
  Configuration time       | 2021-09-18 20:48:41
 
 
- Q-Chem begins on Sun Sep 19 10:15:02 2021  
+ Q-Chem begins on Fri Sep 24 09:36:16 2021  
 
  Host: osmium
 0
 
-     Scratch files written to /tmp/qchem/qchem2851246//
+     Scratch files written to /tmp/qchem/qchem400704//
  Processing $rem in /home/eric/data/opt/apps/qchem/archive/r37729-g10.3.0-openblas/config/preferences:
  Processing $rem in /home/eric/.qchemrc:
 
@@ -126,6 +126,7 @@ $rem
  print_general_basis = true
  print_orbitals = true
  molden_format = false
+ gui = 2
 $end
 
 $molecule
@@ -1636,7 +1637,7 @@ $end
    58   0.0132856  -0.0602543  -0.0000000   0.2941528  -0.0456237   0.0706941
    59   0.2680684   0.0665409   0.0000000  -0.0456237   0.2929786  -0.0802421
    60  -0.0742249  -0.2659844  -0.0000000   0.0706941  -0.0802421   0.2945314
- SCF time:   CPU 1.73s  wall 2.00s 
+ SCF time:   CPU 1.57s  wall 2.00s 
  SCF   energy in the final basis set =     -382.3003975729
  Total energy in the final basis set =     -382.3003975729
 
@@ -2186,8 +2187,8 @@ $end
       XXZZ    -356.7122   XYZZ      -0.0669   YYZZ     -72.1348
       XZZZ      -0.0000   YZZZ       0.0000   ZZZZ     -47.5456
  -----------------------------------------------------------------
- Total job time:  2.05s(wall), 2.04s(cpu) 
- Sun Sep 19 10:15:04 2021
+ Total job time:  2.48s(wall), 1.86s(cpu) 
+ Fri Sep 24 09:36:18 2021
 
         *************************************************************
         *                                                           *
