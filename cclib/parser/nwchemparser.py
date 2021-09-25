@@ -86,11 +86,6 @@ class NWChem(logfileparser.Logfile):
                 atomnos.append(int(float(nuclear)))
                 line = next(inputfile)
 
-            # Another way to know the number of atoms is to look at the size of the geometry.
-            if not hasattr(self, 'natom'):
-                natom = len(coords)
-                self.set_attribute('natom', natom)
-
             self.atomcoords.append(coords)
 
             self.set_attribute('atomnos', atomnos)
@@ -104,15 +99,13 @@ class NWChem(logfileparser.Logfile):
             self.set_attribute('natom', natom)
 
         if line.strip() == "NWChem Geometry Optimization":
-            try:
-                # see cclib/cclib#1057
-                self.skip_lines(inputfile, ['d', 'b', 'b'])
+            # see cclib/cclib#1057
+            self.skip_lines(inputfile, ['d', 'b', 'b'])
+            line = next(inputfile)
+            if "maximum gradient threshold" not in line:
+                self.skip_lines(inputfile, ['b', 'title', 'b', 'b'])
                 line = next(inputfile)
-                assert "maximum gradient threshold" in line
-            except: 
-                self.skip_lines(inputfile, ['b', 'b', 'title', 'b', 'b'])
-                line = next(inputfile)
-                assert "maximum gradient threshold" in line
+            assert "maximum gradient threshold" in line
             while line.strip():
                 if "maximum gradient threshold" in line:
                     gmax = float(line.split()[-1])
@@ -285,7 +278,8 @@ class NWChem(logfileparser.Logfile):
         if line.strip() == "General Information":
 
             if hasattr(self, 'linesearch') and self.linesearch:
-                self.logger.warning("This file might have multiple jobs or contain a geometry optimization. Attributes might be overwritten multiple times.")
+                self.logger.warning("This file might have multiple jobs or contain a geometry optimization. "
+                        "Attributes might be overwritten multiple times.")
 
             while line.strip():
 
@@ -372,7 +366,7 @@ class NWChem(logfileparser.Logfile):
         if line.strip() == "Quadratically convergent ROHF":
 
             if hasattr(self, 'linesearch') and self.linesearch:
-                self.logger.warning("This file might have multiple jobs or contain a geometry optimization."
+                self.logger.warning("This file might have multiple jobs or contain a geometry optimization. "
                         "Attributes might be overwritten multiple times.")
 
             while not "Final" in line:
@@ -425,7 +419,8 @@ class NWChem(logfileparser.Logfile):
         if line.split() == ['convergence', 'iter', 'energy', 'DeltaE', 'RMS-Dens', 'Diis-err', 'time']:
 
             if hasattr(self, 'linesearch') and self.linesearch:
-                self.logger.warning("This file might have multiple jobs or contain a geometry optimization. Attributes might be overwritten multiple times.")
+                self.logger.warning("This file might have multiple jobs or contain a geometry optimization. "
+                "Attributes might be overwritten multiple times.")
 
             self.skip_line(inputfile, 'dashes')
             line = next(inputfile)
@@ -555,7 +550,8 @@ class NWChem(logfileparser.Logfile):
             # since the step size can become smaller). We want to skip these SCF cycles,
             # unless the coordinates can also be extracted (possibly from the gradients?).
             if hasattr(self, 'linesearch') and self.linesearch:
-                self.logger.warning("This file might have multiple jobs or contain a geometry optimization. Attributes might be overwritten multiple times.")
+                self.logger.warning("This file might have multiple jobs or contain a geometry optimization. "
+                        "Attributes might be overwritten multiple times.")
 
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
@@ -1119,30 +1115,37 @@ class NWChem(logfileparser.Logfile):
         # - Rotational                     =    2.979 cal/mol-K
         # - Vibrational                    =   97.716 cal/mol-K
         if line[1:12] == "Temperature":
-            self.set_attribute('temperature', utils.float(line.split()[2][:-1]))
+            self.set_attribute("temperature", utils.float(line.split()[2][:-1]))
         if line[1:28] == "frequency scaling parameter":
-            self.set_attribute('pressure', utils.float(line.split()[4]))
-        if line[1:31] == "Thermal correction to Enthalpy" and hasattr(self, 'scfenergies'):
-            self.set_attribute('enthalpy', utils.float(line.split()[8]) + utils.convertor(self.scfenergies[-1], "eV", "hartree"))
-        if line[1:32] == "Zero-Point correction to Energy" and hasattr(self, 'scfenergies'):
-            self.set_attribute('zpve', utils.float(line.split()[8]))
-        if line[1:29] == "Thermal correction to Energy" and hasattr(self, 'scfenergies'):
-            self.set_attribute('electronic_thermal_energy', utils.float(line.split()[8]) + utils.convertor(self.scfenergies[-1], "eV", "hartree"))
+            self.set_attribute("pressure", utils.float(line.split()[4]))
+        if line[1:31] == "Thermal correction to Enthalpy" and hasattr(self, "scfenergies"):
+            self.set_attribute(
+                "enthalpy",
+                utils.float(line.split()[8])
+                + utils.convertor(self.scfenergies[-1], "eV", "hartree"),
+            )
+        if line[1:32] == "Zero-Point correction to Energy" and hasattr(self, "scfenergies"):
+            self.set_attribute("zpve", utils.float(line.split()[8]))
+        if line[1:29] == "Thermal correction to Energy" and hasattr(self, "scfenergies"):
+            self.set_attribute(
+                "electronic_thermal_energy",
+                utils.float(line.split()[8])
+                + utils.convertor(self.scfenergies[-1], "eV", "hartree"),
+            )
         if line[1:14] == "Total Entropy":
-            self.set_attribute('entropy', utils.convertor(1e-3 * utils.float(line.split()[3]),"kcal/mol","hartree"))
-
+            self.set_attribute(
+                "entropy",
+                utils.convertor(1e-3 * utils.float(line.split()[3]), "kcal/mol", "hartree"),
+            )
+        
         # extract vibrational frequencies (in cm-1)
         if line.strip() == "Normal Eigenvalue ||           Projected Infra Red Intensities":
-            if not hasattr(self, 'vibfreqs'):
-                self.vibfreqs = []
-            if not hasattr(self, 'vibirs'):
-                self.vibirs = []
-            self.skip_lines(inputfile, ['units', 'd']) # units, dashes
-            line = next(inputfile) # first line of data
-            while (set(line.strip()[:-1]) != {'-'}):
-                self.vibfreqs.append(utils.float(line.split()[1]))
-                self.vibirs.append(utils.float(line.split()[5]))
-                line = next(inputfile) # next line
+            self.skip_lines(inputfile, ["units", "d"])  # units, dashes
+            line = next(inputfile)  # first line of data
+            while set(line.strip()[:-1]) != {"-"}:
+                self.append_attribute("vibfreqs", utils.float(line.split()[1]))
+                self.append_attribute("vibirs", utils.float(line.split()[5]))
+                line = next(inputfile)  # next line
         # NWChem TD-DFT excited states transitions
         #
         # Have to deal with :
@@ -1184,19 +1187,14 @@ class NWChem(logfileparser.Logfile):
         #    Occ.  116  a   ---  Virt.  118  a   -0.40137 X
 
         if line[:6] == "  Root":
-            et_num = int(line.split()[1])
-            if not hasattr(self, "etenergies"):
-                self.etenergies = []
-                self.etoscs = []
-                self.etsyms = []
-                self.etsecs = []
-
-            self.etenergies.append(utils.convertor(utils.float(line.split()[-2]), "eV", "wavenumber"))
-            self.etsyms.append(str.join(" ", line.split()[2:-4]))
-
-            self.skip_lines(inputfile, ['dashes'])
+            self.append_attribute(
+                "etenergies", utils.convertor(utils.float(line.split()[-2]), "eV", "wavenumber")
+            )
+            self.append_attribute("etsyms", str.join(" ", line.split()[2:-4]))
+        
+            self.skip_lines(inputfile, ["dashes"])
             line = next(inputfile)
-            if ("Spin forbidden" not in line):
+            if "Spin forbidden" not in line:
                 # find Dipole Oscillator Strength
                 while not ("Dipole Oscillator Strength" in line):
                     line = next(inputfile)
@@ -1206,19 +1204,19 @@ class NWChem(logfileparser.Logfile):
                     if "Total Oscillator Strength" in line:
                         etoscs = utils.float(line.split()[-1])
                     line = next(inputfile)
-                self.etoscs.append(etoscs)
+                self.append_attribute("etoscs", etoscs)
                 CIScontrib = []
                 while line.find("Occ.") >= 0:
-                    if (len(line.split()) == 9): # restricted
+                    if len(line.split()) == 9:  # restricted
                         _, occ, _, _, _, virt, _, coef, direction = line.split()
                         type1 = "alpha"
                         type2 = "alpha"
-                    else: # unrestricted: len(line.split()) should be 11
+                    else:  # unrestricted: len(line.split()) should be 11
                         _, occ, type1, _, _, _, virt, type2, _, coef, direction = line.split()
                     occ = int(occ) - 1  # subtract 1 so that it is an index into moenergies
                     virt = int(virt) - 1  # subtract 1 so that it is an index into moenergies
                     coef = utils.float(coef)
-                    if (direction == 'Y'):
+                    if direction == "Y":
                         # imaginary or negative excitation (denoted Y)
                         tmp = virt
                         virt = occ
@@ -1229,14 +1227,14 @@ class NWChem(logfileparser.Logfile):
                     frommoindex = 0  # For restricted or alpha unrestricted
                     if type1 == "beta":
                         frommoindex = 1
-                    tomoindex = 0 # For restricted or alpha unrestricted
+                    tomoindex = 0  # For restricted or alpha unrestricted
                     if type2 == "beta":
                         tomoindex = 1
                     CIScontrib.append([(occ, frommoindex), (virt, tomoindex), coef])
                     line = next(inputfile)
-                self.etsecs.append(CIScontrib)
+                self.append_attribute("etsecs", CIScontrib)
             else:
-                self.etoscs.append(0.0)
+                self.append_attribute("etoscs", 0.0)
 
     def before_parsing(self):
         """NWChem-specific routines performed before parsing a file.
