@@ -83,7 +83,7 @@ class NWChem(logfileparser.Logfile):
                 else:
                     index, atomname, tag, nuclear, x, y, z = line.split()
                 coords.append(list(map(float, [x, y, z])))
-                atomnos.append(int(utils.float(nuclear)))
+                atomnos.append(int(float(nuclear)))
                 line = next(inputfile)
 
             # Another way to know the number of atoms is to look at the size of the geometry.
@@ -115,13 +115,13 @@ class NWChem(logfileparser.Logfile):
                 assert "maximum gradient threshold" in line
             while line.strip():
                 if "maximum gradient threshold" in line:
-                    gmax = utils.float(line.split()[-1])
+                    gmax = float(line.split()[-1])
                 if "rms gradient threshold" in line:
-                    grms = utils.float(line.split()[-1])
+                    grms = float(line.split()[-1])
                 if "maximum cartesian step threshold" in line:
-                    xmax = utils.float(line.split()[-1])
+                    xmax = float(line.split()[-1])
                 if "rms cartesian step threshold" in line:
-                    xrms = utils.float(line.split()[-1])
+                    xrms = float(line.split()[-1])
                 line = next(inputfile)
 
             self.set_attribute('geotargets', [gmax, grms, xmax, xrms])
@@ -182,8 +182,8 @@ class NWChem(logfileparser.Logfile):
                             shell = (type, [])
                         else:
                             assert shell[0] == type
-                        exp = utils.float(exp)
-                        coeff = utils.float(coeff)
+                        exp = float(exp)
+                        coeff = float(coeff)
                         shell[1].append((exp, coeff))
                         line = next(inputfile)
                     shells.append(shell)
@@ -267,7 +267,7 @@ class NWChem(logfileparser.Logfile):
             line = next(inputfile)
             while line.strip():
                 if line[2:8] == "charge":
-                    charge = int(utils.float(line.split()[-1]))
+                    charge = int(float(line.split()[-1]))
                     self.set_attribute('charge', charge)
                 if line[2:13] == "open shells":
                     unpaired = int(line.split()[-1])
@@ -353,7 +353,7 @@ class NWChem(logfileparser.Logfile):
                 assert indices == list(range(1, self.nbasis+1))
 
                 for i in range(1, len(data[0])):
-                    vector = [utils.float(d[i]) for d in data]
+                    vector = [float(d[i]) for d in data]
                     aooverlaps.append(vector)
 
             self.set_attribute('aooverlaps', aooverlaps)
@@ -372,13 +372,14 @@ class NWChem(logfileparser.Logfile):
         if line.strip() == "Quadratically convergent ROHF":
 
             if hasattr(self, 'linesearch') and self.linesearch:
-                self.logger.warning("This file might have multiple jobs or contain a geometry optimization. Attributes might be overwritten multiple times.")
+                self.logger.warning("This file might have multiple jobs or contain a geometry optimization."
+                        "Attributes might be overwritten multiple times.")
 
             while not "Final" in line:
 
                 # Only the norm of the orbital gradient is used to test convergence.
                 if line[:22] == " Convergence threshold":
-                    target = utils.float(line.split()[-1])
+                    target = float(line.split()[-1])
                     if not hasattr(self, "scftargets"):
                         self.scftargets = []
                     self.scftargets.append([target])
@@ -497,11 +498,12 @@ class NWChem(logfileparser.Logfile):
         if line[0] == "@" and line.split()[1] == "Step":
             at_and_dashes = next(inputfile)
             line = next(inputfile)
-            assert int(line.split()[1]) == self.geostep == 0
-            gmax = utils.float(line.split()[4])
-            grms = utils.float(line.split()[5])
-            xrms = utils.float(line.split()[6])
-            xmax = utils.float(line.split()[7])
+            tokens = line.split()
+            assert int(tokens[1]) == self.geostep == 0
+            gmax = float(tokens[4])
+            grms = float(tokens[5])
+            xrms = float(tokens[6])
+            xmax = float(tokens[7])
             if not hasattr(self, 'geovalues'):
                 self.geovalues = []
             self.geovalues.append([gmax, grms, xmax, xrms])
@@ -509,14 +511,15 @@ class NWChem(logfileparser.Logfile):
         if line[2:6] == "Step":
             self.skip_line(inputfile, 'dashes')
             line = next(inputfile)
-            assert int(line.split()[1]) == self.geostep
+            tokens = line.split()
+            assert int(tokens[1]) == self.geostep
             if self.linesearch:
                 #print(line)
                 return
-            gmax = utils.float(line.split()[4])
-            grms = utils.float(line.split()[5])
-            xrms = utils.float(line.split()[6])
-            xmax = utils.float(line.split()[7])
+            gmax = float(tokens[4])
+            grms = float(tokens[5])
+            xrms = float(tokens[6])
+            xmax = float(tokens[7])
             if not hasattr(self, 'geovalues'):
                 self.geovalues = []
             self.geovalues.append([gmax, grms, xmax, xrms])
@@ -556,7 +559,7 @@ class NWChem(logfileparser.Logfile):
 
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
-            energy = utils.float(line.split()[-1])
+            energy = float(line.split()[-1])
             energy = utils.convertor(energy, "hartree", "eV")
             self.scfenergies.append(energy)
 
@@ -786,7 +789,7 @@ class NWChem(logfileparser.Logfile):
             while line.strip():
                 index, atomname, nuclear, atom = line.split()[:4]
                 shells = line.split()[4:]
-                charges.append(utils.float(atom)-utils.float(nuclear))
+                charges.append(float(atom)-float(nuclear))
                 line = next(inputfile)
             self.atomcharges['mulliken'] = charges
 
@@ -849,8 +852,8 @@ class NWChem(logfileparser.Logfile):
                 line = next(inputfile)
                 iatom, element, ncharge, epop = line.split()
                 iatom = int(iatom)
-                ncharge = utils.float(ncharge)
-                epop = utils.float(epop)
+                ncharge = float(ncharge)
+                epop = float(epop)
                 assert iatom == (i+1)
                 charges.append(epop-ncharge)
 
@@ -889,7 +892,7 @@ class NWChem(logfileparser.Logfile):
             assert "(in au)" in reference_comment
             reference = next(inputfile).split()
             self.reference = [reference[-7], reference[-4], reference[-1]]
-            self.reference = numpy.array([utils.float(x) for x in self.reference])
+            self.reference = numpy.array([float(x) for x in self.reference])
             self.reference = utils.convertor(self.reference, 'bohr', 'Angstrom')
 
             self.skip_line(inputfile, 'blank')
@@ -900,7 +903,7 @@ class NWChem(logfileparser.Logfile):
             dipole = []
             for i in range(3):
                 line = next(inputfile)
-                dipole.append(utils.float(line.split()[1]))
+                dipole.append(float(line.split()[1]))
 
             dipole = utils.convertor(numpy.array(dipole), "ebohr", "Debye")
 
@@ -941,7 +944,7 @@ class NWChem(logfileparser.Logfile):
             assert "(in au)" in reference_comment
             reference = next(inputfile).split()
             self.reference = [reference[-7], reference[-4], reference[-1]]
-            self.reference = numpy.array([utils.float(x) for x in self.reference])
+            self.reference = numpy.array([float(x) for x in self.reference])
             self.reference = utils.convertor(self.reference, 'bohr', 'Angstrom')
 
             self.skip_lines(inputfile, ['b', 'units', 'susc', 'b'])
@@ -955,7 +958,7 @@ class NWChem(logfileparser.Logfile):
             quadrupole = {}
             for i in range(6):
                 line = next(inputfile)
-                quadrupole[line.split()[0]] = utils.float(line.split()[-1])
+                quadrupole[line.split()[0]] = float(line.split()[-1])
             lex = sorted(quadrupole.keys())
             quadrupole = [quadrupole[key] for key in lex]
 
@@ -1002,7 +1005,7 @@ class NWChem(logfileparser.Logfile):
             assert "(in au)" in reference_comment
             reference = next(inputfile).split()
             self.reference = [reference[-7], reference[-4], reference[-1]]
-            self.reference = numpy.array([utils.float(x) for x in self.reference])
+            self.reference = numpy.array([float(x) for x in self.reference])
             self.reference = utils.convertor(self.reference, 'bohr', 'Angstrom')
 
             self.skip_line(inputfile, 'blank')
@@ -1015,7 +1018,7 @@ class NWChem(logfileparser.Logfile):
             octupole = {}
             for i in range(10):
                 line = next(inputfile)
-                octupole[line.split()[0]] = utils.float(line.split()[-1])
+                octupole[line.split()[0]] = float(line.split()[-1])
             lex = sorted(octupole.keys())
             octupole = [octupole[key] for key in lex]
 
@@ -1036,7 +1039,7 @@ class NWChem(logfileparser.Logfile):
 
         if "Total MP2 energy" in line:
             self.metadata["methods"].append("MP2")
-            mpenerg = utils.float(line.split()[-1])
+            mpenerg = float(line.split()[-1])
             if not hasattr(self, "mpenergies"):
                 self.mpenergies = []
             self.mpenergies.append([])
@@ -1051,7 +1054,7 @@ class NWChem(logfileparser.Logfile):
                     ccenergies.append(utils.float(line.split()[-1]))
                 if "CCSD(T) total energy / hartree" in line:
                     self.metadata["methods"].append("CCSD(T)")
-                    ccenergies.append(utils.float(line.split()[-1]))
+                    ccenergies.append(float(line.split()[-1]))
             if ccenergies:
                 self.append_attribute(
                     "ccenergies", utils.convertor(ccenergies[-1], "hartree", "eV")
@@ -1083,7 +1086,7 @@ class NWChem(logfileparser.Logfile):
             self.skip_line(inputfile, 'd')
             line = next(inputfile)
             assert "Time elapsed (fs)" in line
-            time = utils.float(line.split()[4])
+            time = float(line.split()[4])
             self.append_attribute('time', time)
 
         # BOMD: geometry coordinates when `print low`.
@@ -1095,7 +1098,7 @@ class NWChem(logfileparser.Logfile):
                 while line.strip():
                     tokens = line.split()
                     assert len(tokens) == 8
-                    atomcoords_step.append([utils.float(c) for c in tokens[2:5]])
+                    atomcoords_step.append([float(c) for c in tokens[2:5]])
                     line = next(inputfile)
                 self.atomcoords.append(atomcoords_step)
 
