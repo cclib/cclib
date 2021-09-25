@@ -278,8 +278,7 @@ class NWChem(logfileparser.Logfile):
         if line.strip() == "General Information":
 
             if hasattr(self, 'linesearch') and self.linesearch:
-                self.logger.warning("This file might have multiple jobs or contain a geometry optimization. "
-                        "Attributes might be overwritten multiple times.")
+                return
 
             while line.strip():
 
@@ -353,7 +352,7 @@ class NWChem(logfileparser.Logfile):
             self.set_attribute('aooverlaps', aooverlaps)
 
         if line.strip() in ("The SCF is already converged", "The DFT is already converged"):
-            if self.linesearch:
+            if hasattr(self, 'linesearch') and self.linesearch:
                 return
             if hasattr(self, 'scftargets'):
                 self.scftargets.append(self.scftargets[-1])
@@ -366,8 +365,7 @@ class NWChem(logfileparser.Logfile):
         if line.strip() == "Quadratically convergent ROHF":
 
             if hasattr(self, 'linesearch') and self.linesearch:
-                self.logger.warning("This file might have multiple jobs or contain a geometry optimization. "
-                        "Attributes might be overwritten multiple times.")
+                return
 
             while not "Final" in line:
 
@@ -419,8 +417,7 @@ class NWChem(logfileparser.Logfile):
         if line.split() == ['convergence', 'iter', 'energy', 'DeltaE', 'RMS-Dens', 'Diis-err', 'time']:
 
             if hasattr(self, 'linesearch') and self.linesearch:
-                self.logger.warning("This file might have multiple jobs or contain a geometry optimization. "
-                "Attributes might be overwritten multiple times.")
+                return
 
             self.skip_line(inputfile, 'dashes')
             line = next(inputfile)
@@ -499,25 +496,20 @@ class NWChem(logfileparser.Logfile):
             grms = float(tokens[5])
             xrms = float(tokens[6])
             xmax = float(tokens[7])
-            if not hasattr(self, 'geovalues'):
-                self.geovalues = []
-            self.geovalues.append([gmax, grms, xmax, xrms])
+            self.append_attribute("geovalues", [gmax, grms, xmax, xrms])
             self.linesearch = True
         if line[2:6] == "Step":
             self.skip_line(inputfile, 'dashes')
             line = next(inputfile)
             tokens = line.split()
             assert int(tokens[1]) == self.geostep
-            if self.linesearch:
-                #print(line)
-                return
             gmax = float(tokens[4])
             grms = float(tokens[5])
             xrms = float(tokens[6])
             xmax = float(tokens[7])
-            if not hasattr(self, 'geovalues'):
-                self.geovalues = []
-            self.geovalues.append([gmax, grms, xmax, xrms])
+            if hasattr(self, 'linesearch') and self.linesearch:
+                return
+            self.append_attribute("geovalues", [gmax, grms, xmax, xrms])
             self.linesearch = True
 
         # There is a clear message when the geometry optimization has converged:
@@ -550,8 +542,7 @@ class NWChem(logfileparser.Logfile):
             # since the step size can become smaller). We want to skip these SCF cycles,
             # unless the coordinates can also be extracted (possibly from the gradients?).
             if hasattr(self, 'linesearch') and self.linesearch:
-                self.logger.warning("This file might have multiple jobs or contain a geometry optimization. "
-                        "Attributes might be overwritten multiple times.")
+                return
 
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
@@ -560,7 +551,7 @@ class NWChem(logfileparser.Logfile):
             self.scfenergies.append(energy)
 
         if "Dispersion correction" in line:
-            dispersion = utils.convertor(utils.float(line.split()[-1]), "hartree", "eV")
+            dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
             self.append_attribute("dispersionenergies", dispersion)
 
         # The final MO orbitals are printed in a simple list, but apparently not for
@@ -1047,7 +1038,7 @@ class NWChem(logfileparser.Logfile):
                 line = next(inputfile)
                 if "CCSD total energy / hartree" in line or "total CCSD energy:" in line:
                     self.metadata["methods"].append("CCSD")
-                    ccenergies.append(utils.float(line.split()[-1]))
+                    ccenergies.append(float(line.split()[-1]))
                 if "CCSD(T) total energy / hartree" in line:
                     self.metadata["methods"].append("CCSD(T)")
                     ccenergies.append(float(line.split()[-1]))
