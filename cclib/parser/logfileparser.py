@@ -310,6 +310,7 @@ class Logfile(ABC):
 
         # Loop over lines in the file object and call extract().
         # This is where the actual parsing is done.
+        data = None
         for line in inputfile:
             self.updateprogress(inputfile, "Unsupported information", cupdate)
 
@@ -327,53 +328,67 @@ class Logfile(ABC):
                 self.logger.error(f"Last line read: {inputfile.last_line}")
                 raise
 
-        # Close input file object.
-        if not self.isstream:
-            inputfile.close()
+            # If there are multiple jobs in the same output file then the jobend attribute
+            # This will trigger us to create a data object. If we have a data object already
+            # then we create a list of data objects
+            if hasattr(self, "jobend") and self.jobend:
+                # Maybe the sub-class has something to do after parsing.
+                self.after_parsing()
 
-        # Maybe the sub-class has something to do after parsing.
-        self.after_parsing()
+                # If atomcoords were not parsed, but some input coordinates were ("inputcoords").
+                # This is originally from the Gaussian parser, a regression fix.
+                if not hasattr(self, "atomcoords") and hasattr(self, "inputcoords"):
+                    self.atomcoords = numpy.array(self.inputcoords, 'd')
 
-        # If atomcoords were not parsed, but some input coordinates were ("inputcoords").
-        # This is originally from the Gaussian parser, a regression fix.
-        if not hasattr(self, "atomcoords") and hasattr(self, "inputcoords"):
-            self.atomcoords = numpy.array(self.inputcoords, 'd')
+                # Set nmo if not set already - to nbasis.
+                if not hasattr(self, "nmo") and hasattr(self, "nbasis"):
+                    self.nmo = self.nbasis
 
-        # Set nmo if not set already - to nbasis.
-        if not hasattr(self, "nmo") and hasattr(self, "nbasis"):
-            self.nmo = self.nbasis
+                # Create a default coreelectrons array, unless it's impossible
+                # to determine.
+                if not hasattr(self, "coreelectrons") and hasattr(self, "natom"):
+                    self.coreelectrons = numpy.zeros(self.natom, "i")
+                if hasattr(self, "incorrect_coreelectrons"):
+                    self.__delattr__("coreelectrons")
 
-        # Create a default coreelectrons array, unless it's impossible
-        # to determine.
-        if not hasattr(self, "coreelectrons") and hasattr(self, "natom"):
-            self.coreelectrons = numpy.zeros(self.natom, "i")
-        if hasattr(self, "incorrect_coreelectrons"):
-            self.__delattr__("coreelectrons")
+                current_data = self.datatype(attributes=self.__dict__)
+                # Now make sure that the cclib attributes in the data object are all the correct type,
+                # including arrays and lists of arrays.
+                current_data.arrayify()
+                # Perform final checks on values of attributes.
+                current_data.check_values(logger=self.logger)
+                if data is None:
+                    # Create the data object we want to return. This is normally ccData, but can be changed
+                    # by passing the datatype argument to the constructor. All supported cclib attributes
+                    # are copied to this object, but beware that in order to be moved an attribute must be
+                    # included in the data._attrlist of ccData (or whatever else).
+                    # There is the possibility of passing assitional argument via self.data_args, but
+                    # we use this sparingly in cases where we want to limit the API with options, etc.
+                    data = current_data
+                else:
+                    if type(data) is not list:
+                        data = [data]
+                    data.append(current_data)
 
-        # Create the data object we want to return. This is normally ccData, but can be changed
-        # by passing the datatype argument to the constructor. All supported cclib attributes
-        # are copied to this object, but beware that in order to be moved an attribute must be
-        # included in the data._attrlist of ccData (or whatever else).
-        # There is the possibility of passing assitional argument via self.data_args, but
-        # we use this sparingly in cases where we want to limit the API with options, etc.
-        data = self.datatype(attributes=self.__dict__)
+                # Delete all temporary attributes (including cclib attributes).
+                # All attributes should have been moved to a data object, which will be returned.
+                for attr in list(self.__dict__.keys()):
+                    if not attr in _nodelete:
+                        self.__delattr__(attr)
 
-        # Now make sure that the cclib attributes in the data object are all the correct type,
-        # including arrays and lists of arrays.
-        data.arrayify()
+                # confirm we no longer have the jobend attribute
+                assert not hasattr(self, "jobend")
 
-        # Delete all temporary attributes (including cclib attributes).
-        # All attributes should have been moved to a data object, which will be returned.
-        for attr in list(self.__dict__.keys()):
-            if not attr in _nodelete:
-                self.__delattr__(attr)
-
-        # Perform final checks on values of attributes.
-        data.check_values(logger=self.logger)
+                # Maybe the sub-class has something to do before parsing.
+                self.before_parsing()
 
         # Update self.progress as done.
         if hasattr(self, "progress"):
             self.progress.update(inputfile.size, "Done")
+
+        # Close input file object.
+        if not self.isstream:
+            inputfile.close()
 
         return data
 
