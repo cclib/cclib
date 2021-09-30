@@ -41,6 +41,11 @@ class NWChem(logfileparser.Logfile):
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
+        # search for No. of atoms     :
+        if line[:22] == "          No. of atoms":
+            if not hasattr(self, 'natom'):
+                natom = int(line[28:])
+                self.set_attribute('natom', natom)
 
         # Extract the version number and the version control information, if
         # it exists.
@@ -84,6 +89,7 @@ class NWChem(logfileparser.Logfile):
             self.atomcoords.append(coords)
 
             self.set_attribute('atomnos', atomnos)
+            self.set_attribute('natom', len(atomnos))
 
         # If the geometry is printed in XYZ format, it will have the number of atoms.
         if line[12:31] == "XYZ format geometry":
@@ -93,8 +99,13 @@ class NWChem(logfileparser.Logfile):
             self.set_attribute('natom', natom)
 
         if line.strip() == "NWChem Geometry Optimization":
-            self.skip_lines(inputfile, ['d', 'b', 'b', 'b', 'b', 'title', 'b', 'b'])
+            # see cclib/cclib#1057
+            self.skip_lines(inputfile, ['d', 'b', 'b'])
             line = next(inputfile)
+            if "maximum gradient threshold" not in line:
+                self.skip_lines(inputfile, ['b', 'title', 'b', 'b'])
+                line = next(inputfile)
+            assert "maximum gradient threshold" in line
             while line.strip():
                 if "maximum gradient threshold" in line:
                     gmax = float(line.split()[-1])
@@ -341,7 +352,7 @@ class NWChem(logfileparser.Logfile):
             self.set_attribute('aooverlaps', aooverlaps)
 
         if line.strip() in ("The SCF is already converged", "The DFT is already converged"):
-            if self.linesearch:
+            if hasattr(self, 'linesearch') and self.linesearch:
                 return
             if hasattr(self, 'scftargets'):
                 self.scftargets.append(self.scftargets[-1])
@@ -479,29 +490,26 @@ class NWChem(logfileparser.Logfile):
         if line[0] == "@" and line.split()[1] == "Step":
             at_and_dashes = next(inputfile)
             line = next(inputfile)
-            assert int(line.split()[1]) == self.geostep == 0
-            gmax = float(line.split()[4])
-            grms = float(line.split()[5])
-            xrms = float(line.split()[6])
-            xmax = float(line.split()[7])
-            if not hasattr(self, 'geovalues'):
-                self.geovalues = []
-            self.geovalues.append([gmax, grms, xmax, xrms])
+            tokens = line.split()
+            assert int(tokens[1]) == self.geostep == 0
+            gmax = float(tokens[4])
+            grms = float(tokens[5])
+            xrms = float(tokens[6])
+            xmax = float(tokens[7])
+            self.append_attribute("geovalues", [gmax, grms, xmax, xrms])
             self.linesearch = True
         if line[2:6] == "Step":
             self.skip_line(inputfile, 'dashes')
             line = next(inputfile)
-            assert int(line.split()[1]) == self.geostep
-            if self.linesearch:
-                #print(line)
+            tokens = line.split()
+            assert int(tokens[1]) == self.geostep
+            gmax = float(tokens[4])
+            grms = float(tokens[5])
+            xrms = float(tokens[6])
+            xmax = float(tokens[7])
+            if hasattr(self, 'linesearch') and self.linesearch:
                 return
-            gmax = float(line.split()[4])
-            grms = float(line.split()[5])
-            xrms = float(line.split()[6])
-            xmax = float(line.split()[7])
-            if not hasattr(self, 'geovalues'):
-                self.geovalues = []
-            self.geovalues.append([gmax, grms, xmax, xrms])
+            self.append_attribute("geovalues", [gmax, grms, xmax, xrms])
             self.linesearch = True
 
         # There is a clear message when the geometry optimization has converged:
@@ -1080,6 +1088,144 @@ class NWChem(logfileparser.Logfile):
                     atomcoords_step.append([float(c) for c in tokens[2:5]])
                     line = next(inputfile)
                 self.atomcoords.append(atomcoords_step)
+
+        # Extract Thermochemistry in au (Hartree)
+        #
+        # have to deal with :
+        # Temperature                      =   298.15K
+        # frequency scaling parameter      =   1.0000
+        # Zero-Point correction to Energy  =  259.352 kcal/mol  (  0.413304 au)
+        # Thermal correction to Energy     =  275.666 kcal/mol  (  0.439302 au)
+        # Thermal correction to Enthalpy   =  276.258 kcal/mol  (  0.440246 au)
+        # Total Entropy                    =  176.764 cal/mol-K
+        # - Translational                =   44.169 cal/mol-K (mol. weight = 448.1245)
+        # - Rotational                   =   37.018 cal/mol-K (symmetry #  =        1)
+        # - Vibrational                  =   95.577 cal/mol-K
+        # Cv (constant volume heat capacity) =  103.675 cal/mol-K
+        # - Translational                  =    2.979 cal/mol-K
+        # - Rotational                     =    2.979 cal/mol-K
+        # - Vibrational                    =   97.716 cal/mol-K
+        if line[1:12] == "Temperature":
+            self.set_attribute("temperature", utils.float(line.split()[2][:-1]))
+        if line[1:28] == "frequency scaling parameter":
+            self.set_attribute("pressure", utils.float(line.split()[4]))
+        if line[1:31] == "Thermal correction to Enthalpy" and hasattr(self, "scfenergies"):
+            self.set_attribute(
+                "enthalpy",
+                utils.float(line.split()[8])
+                + utils.convertor(self.scfenergies[-1], "eV", "hartree"),
+            )
+        if line[1:32] == "Zero-Point correction to Energy" and hasattr(self, "scfenergies"):
+            self.set_attribute("zpve", utils.float(line.split()[8]))
+        if line[1:29] == "Thermal correction to Energy" and hasattr(self, "scfenergies"):
+            self.set_attribute(
+                "electronic_thermal_energy",
+                utils.float(line.split()[8])
+                + utils.convertor(self.scfenergies[-1], "eV", "hartree"),
+            )
+        if line[1:14] == "Total Entropy":
+            self.set_attribute(
+                "entropy",
+                utils.convertor(1e-3 * utils.float(line.split()[3]), "kcal/mol", "hartree"),
+            )
+        
+        # extract vibrational frequencies (in cm-1)
+        if line.strip() == "Normal Eigenvalue ||           Projected Infra Red Intensities":
+            self.skip_lines(inputfile, ["units", "d"])  # units, dashes
+            line = next(inputfile)  # first line of data
+            while set(line.strip()[:-1]) != {"-"}:
+                self.append_attribute("vibfreqs", utils.float(line.split()[1]))
+                self.append_attribute("vibirs", utils.float(line.split()[5]))
+                line = next(inputfile)  # next line
+        # NWChem TD-DFT excited states transitions
+        #
+        # Have to deal with :
+        # ----------------------------------------------------------------------------
+        # Root   1 singlet a              0.105782828 a.u.                2.8785 eV
+        # ----------------------------------------------------------------------------
+        #    Transition Moments    X -1.88278   Y -0.46346   Z -0.05660
+        #    Transition Moments   XX -5.63612  XY  4.57009  XZ -0.38291
+        #    Transition Moments   YY  6.48024  YZ -1.50109  ZZ -0.17430
+        #    Dipole Oscillator Strength                    0.2653650650
+        #    Electric Quadrupole                           0.0000003789
+        #    Magnetic Dipole                               0.0000001767
+        #    Total Oscillator Strength                     0.2653656206
+        #
+        #    Occ.  117  a   ---  Virt.  118  a    0.98676 X
+        #    Occ.  117  a   ---  Virt.  118  a   -0.08960 Y
+        #    Occ.  117  a   ---  Virt.  119  a    0.08235 X
+        # ----------------------------------------------------------------------------
+        # Root   2 singlet a              0.127858653 a.u.                3.4792 eV
+        # ----------------------------------------------------------------------------
+        #    Transition Moments    X -0.02031   Y  0.11238   Z -0.09893
+        #    Transition Moments   XX -0.23065  XY -0.35697  XZ -0.11250
+        #    Transition Moments   YY  0.16402  YZ -0.01716  ZZ  0.16705
+        #    Dipole Oscillator Strength                    0.0019460560
+        #    Electric Quadrupole                           0.0000000021
+        #    Magnetic Dipole                               0.0000002301
+        #    Total Oscillator Strength                     0.0019462882
+        #
+        #    Occ.  110  a   ---  Virt.  118  a   -0.05918 X
+        #    Occ.  110  a   ---  Virt.  119  a   -0.06022 X
+        #    Occ.  110  a   ---  Virt.  124  a    0.05962 X
+        #    Occ.  114  a   ---  Virt.  118  a    0.87840 X
+        #    Occ.  114  a   ---  Virt.  119  a   -0.12213 X
+        #    Occ.  114  a   ---  Virt.  123  a    0.07120 X
+        #    Occ.  114  a   ---  Virt.  124  a   -0.05022 X
+        #    Occ.  114  a   ---  Virt.  125  a    0.06104 X
+        #    Occ.  114  a   ---  Virt.  126  a    0.05065 X
+        #    Occ.  115  a   ---  Virt.  118  a    0.12907 X
+        #    Occ.  116  a   ---  Virt.  118  a   -0.40137 X
+
+        if line[:6] == "  Root":
+            self.append_attribute(
+                "etenergies", utils.convertor(utils.float(line.split()[-2]), "eV", "wavenumber")
+            )
+            self.append_attribute("etsyms", str.join(" ", line.split()[2:-4]))
+        
+            self.skip_lines(inputfile, ["dashes"])
+            line = next(inputfile)
+            if "Spin forbidden" not in line:
+                # find Dipole Oscillator Strength
+                while not ("Dipole Oscillator Strength" in line):
+                    line = next(inputfile)
+                etoscs = utils.float(line.split()[-1])
+                # in case of magnetic contribution replace, replace Dipole Oscillator Strength with Total Oscillator Strength
+                while not (line.find("Occ.") >= 0):
+                    if "Total Oscillator Strength" in line:
+                        etoscs = utils.float(line.split()[-1])
+                    line = next(inputfile)
+                self.append_attribute("etoscs", etoscs)
+                CIScontrib = []
+                while line.find("Occ.") >= 0:
+                    if len(line.split()) == 9:  # restricted
+                        _, occ, _, _, _, virt, _, coef, direction = line.split()
+                        type1 = "alpha"
+                        type2 = "alpha"
+                    else:  # unrestricted: len(line.split()) should be 11
+                        _, occ, type1, _, _, _, virt, type2, _, coef, direction = line.split()
+                    occ = int(occ) - 1  # subtract 1 so that it is an index into moenergies
+                    virt = int(virt) - 1  # subtract 1 so that it is an index into moenergies
+                    coef = utils.float(coef)
+                    if direction == "Y":
+                        # imaginary or negative excitation (denoted Y)
+                        tmp = virt
+                        virt = occ
+                        occ = tmp
+                        tmp = type1
+                        type1 = type2
+                        type2 = tmp
+                    frommoindex = 0  # For restricted or alpha unrestricted
+                    if type1 == "beta":
+                        frommoindex = 1
+                    tomoindex = 0  # For restricted or alpha unrestricted
+                    if type2 == "beta":
+                        tomoindex = 1
+                    CIScontrib.append([(occ, frommoindex), (virt, tomoindex), coef])
+                    line = next(inputfile)
+                self.append_attribute("etsecs", CIScontrib)
+            else:
+                self.append_attribute("etoscs", 0.0)
 
     def before_parsing(self):
         """NWChem-specific routines performed before parsing a file.

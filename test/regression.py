@@ -1485,6 +1485,17 @@ def testNWChem_NWChem6_5_stopiter_nwchem_hf_out(logfile):
 
     assert logfile.data.metadata["package_version"] == "6.5+26243"
 
+#def testNWChem_NWChem6_8_1057_out(logfile):
+#    """Multistep job caused a premature end of parsing."""
+#    assert not hasattr(logfile.data, "atomnos")
+#    assert not hasattr(logfile.data, "gbasis")
+#
+#    assert logfile.data.metadata["legacy_package_version"] == "6.8.1"
+#    assert logfile.data.metadata["package_version"] == "6.8.1+g2272a644e"
+#    assert isinstance(
+#        parse_version(logfile.data.metadata["package_version"]), Version
+#    )
+
 
 def testNWChem_NWChem6_8_526_out(logfile):
     """If `print low` is present in the input, SCF iterations are not
