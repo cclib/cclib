@@ -2,13 +2,6 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
-#
-# Copyright (c) 2021, the trexio development team
-#
-# This file is part of TREX (http://trex-coe.eu) and is distributed under
-# the terms of the BSD 3-Clause License.
-# Contributors :: Ravindra Shinde, Evgeny Posenitskiy
-
 """A writer for trexio format files (hdf5)."""
 
 from cclib.io import filewriter
