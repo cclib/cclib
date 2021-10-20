@@ -78,8 +78,9 @@ class QChem(logfileparser.Logfile):
         self.ncolsblock = 6
 
         # By default, when asked to print orbitals via
-        # `scf_print`/`scf_final_print` and/or `print_orbitals`,
-        # Q-Chem will print all occupieds and the first 5 virtuals.
+        # `scf_print`/`scf_final_print` and/or `print_orbitals`, Q-Chem will
+        # print all occupieds and the first 5 virtuals for versions prior to
+        # 5.2.
         #
         # When the number is set for `print_orbitals`, that section of
         # the output will display (NOcc + that many virtual) MOs, but
@@ -92,7 +93,6 @@ class QChem(logfileparser.Logfile):
         # NBasis)!
         self.norbdisp_alpha = self.norbdisp_beta = 5
         self.norbdisp_alpha_aonames = self.norbdisp_beta_aonames = 5
-        self.norbdisp_set = False
 
         self.alpha_mo_coefficient_headers = (
             'RESTRICTED (RHF) MOLECULAR ORBITAL COEFFICIENTS',
@@ -532,7 +532,6 @@ cannot be determined. Rerun without `$molecule read`."""
                                     norbdisp_aonames = int(option)
                                     self.norbdisp_alpha_aonames = norbdisp_aonames
                                     self.norbdisp_beta_aonames = norbdisp_aonames
-                                    self.norbdisp_set = True
 
                     if line.strip().lower() == '$ecp':
 
@@ -778,9 +777,9 @@ cannot be determined. Rerun without `$molecule read`."""
                     self.norbdisp_beta = min(self.norbdisp_beta, self.nbasis)
                     self.norbdisp_beta_aonames = min(self.norbdisp_beta_aonames, self.nbasis)
 
-            # Finally, versions of Q-Chem greater than 5.1 print all MOs in
-            # the "Final <Spin> MO Coefficients" blocks, but *not* the TODO
-            # blocks.
+            # Finally, versions of Q-Chem greater than 5.1.2 print all MOs in
+            # the "Final <Spin> MO Coefficients" blocks, but *not* the
+            # "MOLECULAR ORBITAL COEFFICIENTS" blocks.
             if hasattr(self, "package_version"):
                 pv = self.package_version
                 if pv.major >= 5 and pv.minor > 1:
@@ -1674,8 +1673,3 @@ cannot be determined. Rerun without `$molecule read`."""
                 self.metadata['cpu_time'].append(cpu_td)
             except:
                 pass
-
-        # TODO:
-        # 'nocoeffs'
-        # 'nooccnos'
-        # 'vibanharms'
