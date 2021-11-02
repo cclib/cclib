@@ -64,7 +64,7 @@ class NuclearTest(unittest.TestCase):
     def test_repulsion_energy(self):
         """Testing nuclear repulsion energy for one logfile where it is printed."""
 
-        data, logfile = getdatafile(QChem, "basicQChem4.2", ["water_mp4sdq.out"])
+        data, logfile = getdatafile(QChem, "basicQChem5.4", ["water_mp4sdq.out"])
         nuclear = Nuclear(data)
         nuclear.logger.setLevel(logging.ERROR)
 
