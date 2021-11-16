@@ -567,7 +567,8 @@ class Gaussian(logfileparser.Logfile):
             line = next(inputfile)
             while line[1:16] != "Leave Link  101":
                 if line[1:8] == "AtmWgt=":
-                    self.atommasses.extend(list(map(float, line.split()[1:])))
+                    if len(self.atommasses) < self.natom:
+                        self.atommasses.extend(list(map(float, line.split()[1:])))
                 line = next(inputfile)
 
         # Symmetry: point group
