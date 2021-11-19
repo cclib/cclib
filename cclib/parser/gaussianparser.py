@@ -545,9 +545,9 @@ class Gaussian(logfileparser.Logfile):
 
         # Extract the atomic masses.
         # Typical section:
-        #                    Isotopes and Nuclear Properties:
-        #(Nuclear quadrupole moments (NQMom) in fm**2, nuclear magnetic moments (NMagM)
-        # in nuclear magnetons)
+        #                     Isotopes and Nuclear Properties:
+        #  (Nuclear quadrupole moments (NQMom) in fm**2, nuclear magnetic moments (NMagM)
+        #   in nuclear magnetons)
         #
         #  Atom         1           2           3           4           5           6           7           8           9          10
         # IAtWgt=          12          12          12          12          12           1           1           1          12          12
