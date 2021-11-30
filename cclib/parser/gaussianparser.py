@@ -2108,7 +2108,7 @@ class Gaussian(logfileparser.Logfile):
                 polarizability = numpy.zeros(shape=(3, 3))
                 indices = numpy.tril_indices(3)
                 polarizability[indices] = [utils.float(x) for x in
-                                           [line[23:31], line[31:39], line[39:47], line[47:55], line[55:63], line[63:71]]]
+                                           line.split()[2:]]
                 polarizability = utils.symmetrize(polarizability, use_triangle='lower')
                 self.polarizabilities.append(polarizability)
 
