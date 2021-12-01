@@ -229,6 +229,7 @@ Polar     GAMESS      ReferencePolarTest    basicGAMESS-US2017    Trp_polar_tdhf
 Polar     GAMESS      ReferencePolarTest    basicGAMESS-US2018    Trp_polar_tdhf.out
 Polar     Gaussian    ReferencePolarTest    basicGaussian09       Trp_polar.log
 Polar     Gaussian    ReferencePolarTest    basicGaussian16       Trp_polar.log
+Polar     Gaussian    ReferencePolarTest    basicGaussian16       Trp_polar_G16C01.log
 Polar     Molpro      ReferencePolarTest    basicMolpro2012       Trp_polar.out
 Polar     NWChem      ReferencePolarTest    basicNWChem6.5        Trp_polar.out
 Polar     ORCA        ReferencePolarTest    basicORCA4.1          Trp_polar.out
@@ -382,6 +383,7 @@ vib       GAMESS      GamessIRTest          basicGAMESS-US2017    dvb_ir.out
 vib       GAMESS      GamessIRTest          basicGAMESS-US2018    dvb_ir.out
 vib       Gaussian    GaussianIRTest        basicGaussian09       dvb_ir.out
 vib       Gaussian    GaussianIRTest        basicGaussian16       dvb_ir.out
+vib       Gaussian    GaussianIRTest        basicGaussian16       dvb_ir_G16C01.out
 vib       Jaguar      JaguarIRTest          basicJaguar7.0        dvb_ir.out
 vib       Jaguar      JaguarIRTest          basicJaguar8.3        dvb_ir.out
 vib       Molcas      MolcasIRTest          basicOpenMolcas18.0   dvb_ir.out
