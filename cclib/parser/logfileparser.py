@@ -282,10 +282,6 @@ class Logfile(ABC):
                 f"Method {self.__class__.__name__}._extract takes wrong number of arguments."
             )
 
-        # Save the current list of attributes to keep after parsing.
-        # The dict of self should be the same after parsing.
-        _nodelete = list(set(self.__dict__.keys()))
-
         # Initiate the FileInput object for the input files.
         # Remember that self.filename can be a list of files.
         if not self.isstream:
@@ -307,6 +303,10 @@ class Logfile(ABC):
 
         # Maybe the sub-class has something to do before parsing.
         self.before_parsing()
+
+        # Save the current list of attributes to keep after parsing.
+        # The dict of self should be the same after parsing.
+        _nodelete = list(set(self.__dict__.keys()))
 
         # Loop over lines in the file object and call extract().
         # This is where the actual parsing is done.
