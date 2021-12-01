@@ -5,7 +5,7 @@
 
 set -euxo pipefail
 
-python -m pytest -v --capture=no --cov=cclib --cov-report=term --cov-report=xml:coverage-unit.xml --terse test
+python -m pytest -v --capture=no --cov=cclib --cov-report=term --cov-report=xml:coverage-unit.xml --terse test -k "not test_method"
 pushd data
 bash ./regression_download.sh
 popd
