@@ -1588,7 +1588,6 @@ class GAMESS(logfileparser.Logfile):
             self.set_attribute('entropy', utils.convertor(float(thermoValues[6])/1000.0,"kcal/mol","hartree"))
 
 
-        if line[:30] == ' ddikick.x: exited gracefully.'\
-                or line[:41] == ' EXECUTION OF FIREFLY TERMINATED NORMALLY'\
+        if line[:41] == ' EXECUTION OF FIREFLY TERMINATED NORMALLY'\
                 or line[:40] == ' EXECUTION OF GAMESS TERMINATED NORMALLY':
             self.metadata['success'] = True
