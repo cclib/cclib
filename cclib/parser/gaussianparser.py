@@ -2107,8 +2107,18 @@ class Gaussian(logfileparser.Logfile):
                     self.polarizabilities = []
                 polarizability = numpy.zeros(shape=(3, 3))
                 indices = numpy.tril_indices(3)
-                polarizability[indices] = [utils.float(x) for x in
-                                           [line[23:31], line[31:39], line[39:47], line[47:55], line[55:63], line[63:71]]]
+                try:
+                    # G16 C01 changes polarizability printing
+                    # Sample:
+                    #       Exact polarizability:      68.238       6.777     143.018       0.000       0.000      11.343
+                    polarizability[indices] = [utils.float(x) for x in 
+                                               [line[23:35], line[35:47], line[47:59], line[59:71], line[71:83], line[83:95]]]
+                except:
+                    # G16A03 and older
+                    # Sample:
+                    #       Exact polarizability:  68.238  -6.777 143.018   0.000   0.000  11.343
+                    polarizability[indices] = [utils.float(x) for x in 
+                                               [line[23:31], line[31:39], line[39:47], line[47:55], line[55:63], line[63:71]]]
                 polarizability = utils.symmetrize(polarizability, use_triangle='lower')
                 self.polarizabilities.append(polarizability)
 
