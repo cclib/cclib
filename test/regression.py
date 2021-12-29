@@ -3353,12 +3353,33 @@ old_unittests = {
     "Psi4/Psi4-beta5/water_ccsd.out":   GenericCCTest,
     "Psi4/Psi4-beta5/water_mp2.out":    GenericMP2Test,
 
+    "QChem/QChem4.2/C_bigbasis.out":         QChemBigBasisTest,
+    "QChem/QChem4.2/MoOCl4_sp.out":          GenericCoreTest,
+    "QChem/QChem4.2/Trp_polar.out":          ReferencePolarTest,
+    "QChem/QChem4.2/dvb_bomd.out":           GenericBOMDTest,
+    "QChem/QChem4.2/dvb_gopt.out":           GenericGeoOptTest,
+    "QChem/QChem4.2/dvb_ir.out":             QChemIRTest,
+    "QChem/QChem4.2/dvb_raman.out":          QChemRamanTest,
+    # also GenericBasisTest
+    "QChem/QChem4.2/dvb_sp.out":             GenericSPTest,
+    "QChem/QChem4.2/dvb_sp_un.out":          GenericSPunTest,
+    "QChem/QChem4.2/dvb_td.out":             QChemTDDFTTest,
+    "QChem/QChem4.2/water_ccd.out":          GenericCCTest,
+    "QChem/QChem4.2/water_ccsd(t).out":      GenericCCTest,
+    "QChem/QChem4.2/water_ccsd.out":         GenericCCTest,
+    "QChem/QChem4.2/water_cis.out":          QChemCISTest,
+    # ???
+    # create mode 100644 QChem/QChem4.2/water_ir.out
+    # create mode 100644 QChem/QChem4.2/water_ir_anharm.out
+    "QChem/QChem4.2/water_mp2.out":          GenericMP2Test,
+    "QChem/QChem4.2/water_mp3.out":          GenericMP3Test,
+    "QChem/QChem4.2/water_mp4.out":          QChemMP4SDTQTest,
+    "QChem/QChem4.2/water_mp4sdq.out":       QChemMP4SDQTest,
     "QChem/QChem4.2/Trp_freq.out":           ReferencePolarTest,
     "QChem/QChem4.2/trithiolane_polar.out":  GaussianPolarTest,
     "QChem/QChem4.2/trithiolane_freq.out":   GaussianPolarTest,
     "QChem/QChem4.4/Trp_polar_ideriv1.out":  ReferencePolarTest,
     "QChem/QChem4.4/Trp_polar_response.out": ReferencePolarTest,
-
 }
 
 def make_regression_from_old_unittest(test_class):
