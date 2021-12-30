@@ -2659,6 +2659,19 @@ def testQChem_QChem5_3_ccman2_soc_cisd_out(logfile):
     assert logfile.data.atomcoords[0, 1, 2] == 1.72795 * convfac
 
 
+def testQChem_QChem5_3_ts_30_irc_out(logfile):
+    """This is a compound frequency -> TS -> freq -> IRC -> opt job,
+    originally meant for #1040.
+
+    It incorrectly has (developer) version information appended to metadata
+    for each new calculation section.
+    """
+    assert logfile.data.metadata["package_version"] == "5.3.2dev+trunk-35976"
+    assert isinstance(
+        parse_version(logfile.data.metadata["package_version"]), Version
+    )
+
+
 # Turbomole
 
 
