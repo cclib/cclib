@@ -13,7 +13,7 @@ import re
 import datetime
 import numpy
 
-from packaging.version import parse as parse_version
+from packaging.version import parse as parse_version, Version
 
 from cclib.parser import logfileparser
 from cclib.parser import utils
@@ -449,19 +449,22 @@ cannot be determined. Rerun without `$molecule read`."""
                 package_version = groups[0]
                 self.metadata["package_version"] = package_version
                 self.metadata["legacy_package_version"] = package_version
+                self.set_attribute("parsed_svn_revision", False)
         # Avoid "Last SVN revision" entry.
         if "SVN revision" in line and "Last" not in line:
             svn_revision = line.split()[3]
             line = next(inputfile)
             svn_branch = line.split()[3].replace("/", "_")
-            if "package_version" in self.metadata:
+            if "package_version" in self.metadata \
+               and hasattr(self, "parsed_svn_revision") \
+               and not self.parsed_svn_revision:
                 self.metadata["package_version"] = "{}dev+{}-{}".format(
                     self.metadata["package_version"], svn_branch, svn_revision
                 )
-
-        if "package_version" in self.metadata:
-            self.set_attribute("package_version",
-                               parse_version(self.metadata["package_version"]))
+                parsed_version = parse_version(self.metadata["package_version"])
+                assert isinstance(parsed_version, Version)
+                self.set_attribute("package_version", parsed_version)
+                self.set_attribute("parsed_svn_revision", True)
 
         # Disable/enable parsing for fragment sections.
         if any(message in line for message in self.fragment_section_headers):
