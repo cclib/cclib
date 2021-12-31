@@ -3,7 +3,7 @@ numpy
 periodictable
 
 # io
-git+https://github.com/MolSSI/QCSchema.git
+git+https://github.com/berquist/QC_JSON_Schema.git@branches/make-pip-installable
 
 # methods
 scipy>=1.2.0
