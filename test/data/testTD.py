@@ -148,7 +148,7 @@ class OrcaTDDFTTest(GenericTDTest):
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
         self.assertEqual(len(self.data.etoscs), self.number)
-        self.assertAlmostEqual(max(self.data.etoscs), .09, delta=0.01)
+        self.assertAlmostEqual(max(self.data.etoscs), 1.17, delta=0.01)
 
 
 class QChemTDDFTTest(GenericTDTest):
@@ -179,7 +179,7 @@ class OrcaROCISTest(GenericTDTest):
     """Customized test for ROCIS"""
     number = 57
     expected_l_max = 2316970.8
-    n_spectra = 8
+    n_spectra = 2
 
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
