@@ -3373,7 +3373,6 @@ old_unittests = {
     "QChem/QChem4.2/dvb_gopt.out":           GenericGeoOptTest,
     "QChem/QChem4.2/dvb_ir.out":             QChemIRTest,
     "QChem/QChem4.2/dvb_raman.out":          QChemRamanTest,
-    # also GenericBasisTest
     "QChem/QChem4.2/dvb_sp.out":             GenericSPTest,
     "QChem/QChem4.2/dvb_sp_un.out":          GenericSPunTest,
     "QChem/QChem4.2/dvb_td.out":             QChemTDDFTTest,
@@ -3381,9 +3380,6 @@ old_unittests = {
     "QChem/QChem4.2/water_ccsd(t).out":      GenericCCTest,
     "QChem/QChem4.2/water_ccsd.out":         GenericCCTest,
     "QChem/QChem4.2/water_cis.out":          QChemCISTest,
-    # ???
-    # create mode 100644 QChem/QChem4.2/water_ir.out
-    # create mode 100644 QChem/QChem4.2/water_ir_anharm.out
     "QChem/QChem4.2/water_mp2.out":          GenericMP2Test,
     "QChem/QChem4.2/water_mp3.out":          GenericMP3Test,
     "QChem/QChem4.2/water_mp4.out":          QChemMP4SDTQTest,
