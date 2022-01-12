@@ -253,7 +253,7 @@ class DataSuite:
             'NWChem6.5' : getdatafile('NWChem', "basicNWChem6.5", ["dvb_gopt_ks.out"])[0],
             'ORCA4.2' : getdatafile('ORCA', "basicORCA4.2", ["dvb_gopt.out"])[0],
             'Psi4-1.3.1' : getdatafile('Psi4', "basicPsi4-1.3.1", ["dvb_gopt_rks.out"])[0],
-            'QChem5.1' : getdatafile('QChem', "basicQChem5.1", ["dvb_gopt.out"])[0],
+            'QChem5.4' : getdatafile('QChem', "basicQChem5.4", ["dvb_gopt.out"])[0],
         }
         parser_names = sorted(parsers_to_test.keys())
         output = [parsers_to_test[pn] for pn in parser_names]

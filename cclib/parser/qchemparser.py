@@ -13,6 +13,8 @@ import re
 import datetime
 import numpy
 
+from packaging.version import parse as parse_version, Version
+
 from cclib.parser import logfileparser
 from cclib.parser import utils
 
@@ -76,8 +78,9 @@ class QChem(logfileparser.Logfile):
         self.ncolsblock = 6
 
         # By default, when asked to print orbitals via
-        # `scf_print`/`scf_final_print` and/or `print_orbitals`,
-        # Q-Chem will print all occupieds and the first 5 virtuals.
+        # `scf_print`/`scf_final_print` and/or `print_orbitals`, Q-Chem will
+        # print all occupieds and the first 5 virtuals for versions prior to
+        # 5.2.
         #
         # When the number is set for `print_orbitals`, that section of
         # the output will display (NOcc + that many virtual) MOs, but
@@ -90,7 +93,6 @@ class QChem(logfileparser.Logfile):
         # NBasis)!
         self.norbdisp_alpha = self.norbdisp_beta = 5
         self.norbdisp_alpha_aonames = self.norbdisp_beta_aonames = 5
-        self.norbdisp_set = False
 
         self.alpha_mo_coefficient_headers = (
             'RESTRICTED (RHF) MOLECULAR ORBITAL COEFFICIENTS',
@@ -447,15 +449,22 @@ cannot be determined. Rerun without `$molecule read`."""
                 package_version = groups[0]
                 self.metadata["package_version"] = package_version
                 self.metadata["legacy_package_version"] = package_version
+                self.set_attribute("parsed_svn_revision", False)
         # Avoid "Last SVN revision" entry.
         if "SVN revision" in line and "Last" not in line:
             svn_revision = line.split()[3]
             line = next(inputfile)
             svn_branch = line.split()[3].replace("/", "_")
-            if "package_version" in self.metadata:
+            if "package_version" in self.metadata \
+               and hasattr(self, "parsed_svn_revision") \
+               and not self.parsed_svn_revision:
                 self.metadata["package_version"] = "{}dev+{}-{}".format(
                     self.metadata["package_version"], svn_branch, svn_revision
                 )
+                parsed_version = parse_version(self.metadata["package_version"])
+                assert isinstance(parsed_version, Version)
+                self.set_attribute("package_version", parsed_version)
+                self.set_attribute("parsed_svn_revision", True)
 
         # Disable/enable parsing for fragment sections.
         if any(message in line for message in self.fragment_section_headers):
@@ -526,7 +535,6 @@ cannot be determined. Rerun without `$molecule read`."""
                                     norbdisp_aonames = int(option)
                                     self.norbdisp_alpha_aonames = norbdisp_aonames
                                     self.norbdisp_beta_aonames = norbdisp_aonames
-                                    self.norbdisp_set = True
 
                     if line.strip().lower() == '$ecp':
 
@@ -771,6 +779,21 @@ cannot be determined. Rerun without `$molecule read`."""
                     self.norbdisp_alpha_aonames = min(self.norbdisp_alpha_aonames, self.nbasis)
                     self.norbdisp_beta = min(self.norbdisp_beta, self.nbasis)
                     self.norbdisp_beta_aonames = min(self.norbdisp_beta_aonames, self.nbasis)
+
+            # Finally, versions of Q-Chem greater than 5.1.2 print all MOs in
+            # the "Final <Spin> MO Coefficients" blocks, but *not* the
+            # "MOLECULAR ORBITAL COEFFICIENTS" blocks.
+            if hasattr(self, "package_version"):
+                pv = self.package_version
+                if pv.major >= 5 and pv.minor > 1:
+                    norbdisp = None
+                    if hasattr(self, "nmo"):
+                        norbdisp = self.nmo
+                    elif hasattr(self, "nbasis"):
+                        norbdisp = self.nbasis
+                    if norbdisp is not None:
+                        self.norbdisp_alpha = norbdisp
+                        self.norbdisp_beta = norbdisp
 
             # Check for whether or not we're peforming an
             # (un)restricted calculation.
@@ -1653,8 +1676,3 @@ cannot be determined. Rerun without `$molecule read`."""
                 self.metadata['cpu_time'].append(cpu_td)
             except:
                 pass
-
-        # TODO:
-        # 'nocoeffs'
-        # 'nooccnos'
-        # 'vibanharms'
