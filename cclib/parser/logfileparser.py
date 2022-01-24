@@ -273,7 +273,7 @@ class Logfile(ABC):
             raise AttributeError("Class %s has no extract() method." % self.__class__.__name__)
         if not callable(self.extract):
             raise AttributeError("Method %s._extract not callable." % self.__class__.__name__)
-        if len(inspect.getargspec(self.extract)[0]) != 3:
+        if len(inspect.getfullargspec(self.extract)[0]) != 3:
             raise AttributeError("Method %s._extract takes wrong number of arguments." % self.__class__.__name__)
 
         # Save the current list of attributes to keep after parsing.
