@@ -30,7 +30,7 @@ jobs:
           env | sort
           bash .github/scripts/run_pytest.bash
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v2
         with:
           files: ./coverage-unit.xml,./coverage-regression.xml
           name: codecov-cclib
