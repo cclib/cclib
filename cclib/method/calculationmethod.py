@@ -9,6 +9,7 @@
 
 import logging
 import sys
+from typing import Optional
 
 from cclib.parser.data import ccData
 from cclib.progress import Progress

@@ -1,4 +1,10 @@
-[mypy]
+[tool.mypy]
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+
+scripts_are_modules = true
+warn_unused_configs = true
 
 # Disallow dynamic typing
 disallow_any_unimported = True
@@ -19,26 +25,21 @@ disallow_untyped_decorators = True
 
 # Configuring warnings
 warn_unused_ignores = True
-warn_return_any = True
-warn_unreachable = True
+#warn_return_any = True
+#warn_unreachable = True
 
 # Miscellaneous
-warn_unused_configs = True
+#warn_unused_configs = True
 
-[mypy-numpy.*]
-ignore_missing_imports = True
-
-[mypy-openbabel.*]
-ignore_missing_imports = True
-
-[mypy-pandas.*]
-ignore_missing_imports = True
-
-[mypy-periodictable.*]
-ignore_missing_imports = True
-
-[mypy-pybel.*]
-ignore_missing_imports = True
-
-[mypy-scipy.*]
-ignore_missing_imports = True
+[[tool.mypy.overrides]]
+module = [
+    "openbabel",
+    "pandas",
+    "periodictable",
+    "pybel",
+    "PyQt4",
+    "scipy",
+    "scipy.spatial",
+    "scipy.spatial.transform",
+]
+ignore_missing_imports = true

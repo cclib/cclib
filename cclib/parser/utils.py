@@ -30,7 +30,7 @@ if _found_scipy:
     import scipy.spatial
 
 
-def symmetrize(m: np.ndarray, use_triangle: str = 'lower') -> np.ndarray:
+def symmetrize(m: numpy.ndarray, use_triangle: str = 'lower') -> numpy.ndarray:
     """Symmetrize a square NumPy array by reflecting one triangular
     section across the diagonal to the other.
     """
