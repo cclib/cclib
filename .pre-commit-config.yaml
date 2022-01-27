@@ -12,6 +12,5 @@ repos:
         additional_dependencies:
           - numpy
           - packaging
-          - qc-iodata
           - types-setuptools
         args: []

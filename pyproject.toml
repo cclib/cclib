@@ -33,9 +33,15 @@ warn_unused_ignores = True
 
 [[tool.mypy.overrides]]
 module = [
+    "ase",
+    "ase.calculators.emt",
+    "iodata",
+    "iodata.api",
+    "iodata.orbitals",
     "openbabel",
     "pandas",
     "periodictable",
+    "psi4",
     "pybel",
     "PyQt4",
     "scipy",
