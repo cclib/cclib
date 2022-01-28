@@ -20,9 +20,7 @@ class FragmentAnalysis(Method):
     """Convert a molecule's basis functions from atomic-based to fragment MO-based"""
     def __init__(self, data, progress=None, loglevel=logging.INFO,
                  logname="FragmentAnalysis of"):
-
-        # Call the __init__ method of the superclass.
-        super(FragmentAnalysis, self).__init__(data, progress, loglevel, logname)
+        super().__init__(data, progress, loglevel, logname)
         self.parsed = False
 
     def __str__(self):

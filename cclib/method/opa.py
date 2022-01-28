@@ -26,9 +26,7 @@ class OPA(Population):
     """Overlap population analysis."""
 
     def __init__(self, *args):
-
-        # Call the __init__ method of the superclass.
-        super(OPA, self).__init__(logname="OPA", *args)
+        super().__init__(logname="OPA", *args)
 
     def __str__(self):
         """Return a string representation of the object."""

@@ -44,7 +44,7 @@ class Bader(Method):
     required_attrs = ("homos", "mocoeffs", "nbasis", "gbasis")
 
     def __init__(self, data, volume, progress=None, loglevel=logging.INFO, logname="Log"):
-        super(Bader, self).__init__(data, progress, loglevel, logname)
+        super().__init__(data, progress, loglevel, logname)
 
         self.volume = volume
         self.fragresults = None
@@ -65,7 +65,7 @@ class Bader(Method):
         return "Bader({})".format(self.data)
 
     def _check_required_attributes(self):
-        super(Bader, self)._check_required_attributes()
+        super()._check_required_attributes()
 
     def calculate(self, indices=None, fupdate=0.05):
         """Calculate Bader's QTAIM charges using on-grid algorithm proposed by Henkelman group

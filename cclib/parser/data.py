@@ -419,12 +419,11 @@ class ccData_optdone_bool(ccData):
     """This is the version of ccData where optdone is a Boolean."""
 
     def __init__(self, *args, **kwargs):
-
-        super(ccData_optdone_bool, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self._attributes["optdone"] = Attribute(bool, 'done', 'optimization')
 
     def setattributes(self, *args, **kwargs):
-        invalid = super(ccData_optdone_bool, self).setattributes(*args, **kwargs)
+        invalid = super().setattributes(*args, **kwargs)
 
         # Reduce optdone to a Boolean, because it will be parsed as a list. If this list has any element,
         # it means that there was an optimized structure and optdone should be True.

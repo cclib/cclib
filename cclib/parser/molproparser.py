@@ -53,8 +53,7 @@ class Molpro(logfileparser.Logfile):
     atomic_orbital_names = create_atomic_orbital_names(['D', 'F', 'G'])
 
     def __init__(self, *args, **kwargs):
-        # Call the __init__ method of the superclass
-        super(Molpro, self).__init__(logname="Molpro", *args, **kwargs)
+        super().__init__(logname="Molpro", *args, **kwargs)
 
     def __str__(self):
         """Return a string representation of the object."""

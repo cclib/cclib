@@ -21,9 +21,7 @@ class GAMESSUK(logfileparser.Logfile):
     SCFRMS, SCFMAX, SCFENERGY = list(range(3))  # Used to index self.scftargets[]
 
     def __init__(self, *args, **kwargs):
-
-        # Call the __init__ method of the superclass
-        super(GAMESSUK, self).__init__(logname="GAMESSUK", *args, **kwargs)
+        super().__init__(logname="GAMESSUK", *args, **kwargs)
 
     def __str__(self):
         """Return a string representation of the object."""

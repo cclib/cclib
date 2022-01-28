@@ -60,9 +60,7 @@ class FChk(logfileparser.Logfile):
     """
 
     def __init__(self, *args, **kwargs):
-
-        # Call the __init__ method of the superclass
-        super(FChk, self).__init__(logname="FChk", *args, **kwargs)
+        super().__init__(logname="FChk", *args, **kwargs)
         self.start = True
 
     def __str__(self):
