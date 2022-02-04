@@ -43,7 +43,7 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
         with:
-          files: ./coverage-unit.xml,./coverage-regression.xml
+          files: ./coverage-unit.xml,./coverage-regression.xml,./coverage-method.xml
           name: codecov-cclib
           fail_ci_if_error: true
           verbose: false
