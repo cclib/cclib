@@ -34,7 +34,7 @@ class ccData:
         ccenergies -- molecular energies with Coupled-Cluster corrections (array[2], eV)
         charge -- net charge of the system (integer)
         coreelectrons -- number of core electrons in atom pseudopotentials (array[1])
-        dispersionenergies -- a molecular dispersion energy corrections (array[1], eV)
+        dispersionenergies -- dispersion energy corrections (array[1], eV)
         enthalpy -- sum of electronic and thermal enthalpies (float, hartree/particle)
         entropy -- entropy (float, hartree/(particle*kelvin))
         etenergies -- energies of electronic transitions (array[1], 1/cm)

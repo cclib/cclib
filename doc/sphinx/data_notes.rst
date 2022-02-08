@@ -117,6 +117,13 @@ coreelectrons
 
 The attribute ``coreelectrons`` contains the number of core electrons in each atom's pseudopotentials. It is an array of rank 1, with as many integer elements as there are atoms.
 
+dispersionenergies
+------------------
+
+This is a rank 1 array that contains the isolated dispersion energy for each geometry.  This will be generally true for empirical models, such as those from Grimme that only depend on relative atomic positions.  For self-consistently determined corrections that are incorporated during SCF iterations, this array will be empty.
+
+However, in *all* cases the dispersion energy for a given geometry will also be a part of `scfenergies`_.
+
 etenergies
 ----------
 
@@ -515,12 +522,12 @@ scanenergies
 A list containing the energies at each point of the scan. As with `scancoords`, `scanenergies` is only equivalent to `[scf,mp,cc]energies` in the case of an unrelaxed scan of the scf, mp, and/or cc potential energy surface.
 
 scannames
-_________
+---------
 
 A list containing the names of each parameter scanned.
 
 scanparm
-________
+--------
 
 A list of lists where each list contains the values scanned for each parameter in `scannames`. 
 
@@ -528,6 +535,10 @@ scfenergies
 -----------
 
 An array containing the converged SCF energies of the calculation, in eV. For an optimisation log file, there will be as many elements in this array as there were optimisation steps.
+
+If a dispersion correction of any form was used, it is part of the SCF energy and, in the event that it is separable, such as with D3 and similar empirical corrections, it is also available separately under `dispersionenergies`_.
+
+If any other corrections were present in calculating the SCF energy, in particular perturbative, empirical, or "single-shot" corrections, assume that they are *not* present in ``scfenergies``.  Corrections included self-consistently, such as from implicit solvation models, should be present.  Check the parsed result carefully and, when in doubt, ask on the issue tracker.
 
 **Molpro**: typically prints output about geometry optimisation in a separate logfile. So, both that and the initial output need to be passed to the cclib parser.
 
