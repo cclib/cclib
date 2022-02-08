@@ -19,9 +19,7 @@ class Density(Method):
     """Calculate the density matrix"""
     def __init__(self, data, progress=None, loglevel=logging.INFO,
                  logname="Density"):
-
-        # Call the __init__ method of the superclass.
-        super(Density, self).__init__(data, progress, loglevel, logname)
+        super().__init__(data, progress, loglevel, logname)
 
     def __str__(self):
         """Return a string representation of the object."""

@@ -48,7 +48,7 @@ class Stockholder(Method):
                 proatom_path -- path to proatom densities
                 (directory containing atoms.h5 in horton or c2_001_001_000_400_075.txt in chargemol)
         """
-        super(Stockholder, self).__init__(data, progress, loglevel, logname)
+        super().__init__(data, progress, loglevel, logname)
 
         self.volume = volume
         self.proatom_path = proatom_path
@@ -75,7 +75,7 @@ class Stockholder(Method):
         return "Stockholder"
 
     def _check_required_attributes(self):
-        super(Stockholder, self)._check_required_attributes()
+        super()._check_required_attributes()
 
     def _read_proatom(
         self, directory, atom_num, charge  # type = str  # type = int  # type = float

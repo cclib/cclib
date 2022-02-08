@@ -27,8 +27,7 @@ class CJSON(filewriter.Writer):
         Inputs:
           ccdata - An instance of ccData, parsed from a logfile.
         """
-
-        super(CJSON, self).__init__(ccdata, terse=terse, *args, **kwargs)
+        super().__init__(ccdata, terse=terse, *args, **kwargs)
 
     def pathname(self, path):
         """Return filename without extension to be used as name."""
@@ -180,7 +179,7 @@ class NumpyAwareJSONEncoder(json.JSONEncoder):
 class JSONIndentEncoder(json.JSONEncoder):
 
     def __init__(self, *args, **kwargs):
-        super(JSONIndentEncoder, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.current_indent = 0
         self.current_indent_str = ""
 

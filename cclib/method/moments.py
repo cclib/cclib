@@ -23,10 +23,9 @@ class Moments(Method):
     dictionary whose keys denote the used charge population scheme.
     """
     def __init__(self, data):
+        super().__init__(data)
         self.required_attrs = ('atomcoords', 'atomcharges')
         self.results = {}
-
-        super(Moments, self).__init__(data)
 
     def __str__(self):
         """Returns a string representation of the object."""

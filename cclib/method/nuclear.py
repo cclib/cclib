@@ -65,10 +65,8 @@ class Nuclear(Method):
     """A container for methods pertaining to atomic nuclei."""
 
     def __init__(self, data, progress=None, loglevel=logging.INFO, logname="Log"):
-
+        super().__init__(data, progress, loglevel, logname)
         self.required_attrs = ('natom','atomcoords','atomnos','charge')
-
-        super(Nuclear, self).__init__(data, progress, loglevel, logname)
 
     def __str__(self):
         """Return a string representation of the object."""

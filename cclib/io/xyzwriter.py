@@ -25,11 +25,9 @@ class XYZ(filewriter.Writer):
           lastgeom - Boolean to write the last available geometry from the logfile.
           allgeom - Boolean to write all available geometries from the logfile.
         """
+        super().__init__(ccdata, *args, **kwargs)
 
         self.required_attrs = ('natom', 'atomcoords', 'atomnos')
-
-        # Call the __init__ method of the superclass
-        super(XYZ, self).__init__(ccdata, *args, **kwargs)
 
         self.do_firstgeom = firstgeom
         self.do_lastgeom = lastgeom

@@ -17,9 +17,7 @@ class Psi3(logfileparser.Logfile):
     """A Psi3 log file."""
 
     def __init__(self, *args, **kwargs):
-
-        # Call the __init__ method of the superclass
-        super(Psi3, self).__init__(logname="Psi3", *args, **kwargs)
+        super().__init__(logname="Psi3", *args, **kwargs)
 
     def __str__(self):
         """Return a string representation of the object."""

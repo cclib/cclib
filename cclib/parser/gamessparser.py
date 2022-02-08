@@ -46,9 +46,7 @@ class GAMESS(logfileparser.Logfile):
             'ACC6C': 'aug-cc-pCV6Z'}
 
     def __init__(self, *args, **kwargs):
-
-        # Call the __init__ method of the superclass
-        super(GAMESS, self).__init__(logname="GAMESS", *args, **kwargs)
+        super().__init__(logname="GAMESS", *args, **kwargs)
 
     def __str__(self):
         """Return a string representation of the object."""

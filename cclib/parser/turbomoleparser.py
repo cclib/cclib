@@ -49,7 +49,7 @@ class Turbomole(logfileparser.Logfile):
     """A Turbomole log file."""
 
     def __init__(self, *args, **kwargs):
-        super(Turbomole, self).__init__(logname="Turbomole", *args, **kwargs)
+        super().__init__(logname="Turbomole", *args, **kwargs)
         
         # Flag for whether this calc is DFT.
         self.is_DFT = False
@@ -1311,8 +1311,7 @@ class OldTurbomole(logfileparser.Logfile):
     """A Turbomole output file. Code is outdated and is not being used."""
 
     def __init__(self, *args):
-        # Call the __init__ method of the superclass
-        super(Turbomole, self).__init__(logname="Turbomole", *args)
+        super().__init__(logname="Turbomole", *args)
         
     def __str__(self):
         """Return a string representation of the object."""
