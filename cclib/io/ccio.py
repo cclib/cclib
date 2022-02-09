@@ -11,6 +11,7 @@ import io
 import os
 import sys
 import re
+import pathlib
 from tempfile import NamedTemporaryFile
 from urllib.request import urlopen
 from urllib.error import URLError
@@ -192,6 +193,11 @@ def ccopen(source, *args, **kwargs):
     # Check if source is a link or contains links. Retrieve their content.
     # Try to open the logfile(s), using openlogfile, if the source is a string (filename)
     # or list of filenames. If it can be read, assume it is an open file object/stream.
+    if isinstance(source, pathlib.PurePath):
+        source = str(source)
+    if isinstance(source, pathlib.PurePath)\
+            and all([isinstance(s, pathlib.PurePath) for s in source]):
+        source = [str(item) for item in source]
     is_string = isinstance(source, str)
     is_url = True if is_string and URL_PATTERN.match(source) else False
     is_listofstrings = isinstance(source, list) and all([isinstance(s, str) for s in source])
@@ -521,3 +527,4 @@ def ccframe(ccobjs, *args, **kwargs):
 
 
 del find_package
+
