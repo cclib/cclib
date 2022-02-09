@@ -92,6 +92,22 @@ class GAMESSUK(logfileparser.Logfile):
             if not self.geotargets:
                 self.geotargets = geotargets
 
+        if line.strip() == "molecular symmetry":
+            self.skip_lines(inputfile, ['s', 'b'])
+            line = next(inputfile)
+            assert "molecular point group" in line
+            pg = line.split()[-1]
+            line = next(inputfile)
+            assert "order of principal axis" in line
+            naxis = line.split()[-1]
+            point_group_full = pg.replace('n', naxis)
+            # TODO It is unclear whether or not the full molecular
+            # point group or the largest Abelian subgroup is being
+            # printed.
+            point_group_abelian = point_group_full
+            self.metadata['symmetry_detected'] = point_group_full
+            self.metadata['symmetry_used'] = point_group_abelian
+
         # This is the only place coordinates are printed in single point calculations. Note that
         # in the following fragment, the basis set selection is not always printed:
         #
@@ -497,6 +513,11 @@ class GAMESSUK(logfileparser.Logfile):
                 self.mosysms = [mosyms, mosyms]
             else:
                 self.mosyms = [mosyms]
+
+        if line.strip() == "Number of orbitals belonging to irreps of this group":
+            self.skip_line(inputfile, 'd')
+            line = next(inputfile)
+            irreps = [self.normalisesym(irrep) for irrep in line.split()[::2]]
 
         if line[50:62] == "eigenvectors":
         # Mocoeffs...can get evalues from here too

@@ -71,6 +71,8 @@ class Gaussian(logfileparser.Logfile):
     }
 
     def before_parsing(self):
+        # Calculations use point group symmetry by default.
+        self.uses_symmetry = True
 
         # Extract only well-formed numbers in scientific notation.
         self.re_scinot = re.compile(r'(\w*)=\s*(-?\d\.\d{2}D[+-]\d{2})')
@@ -563,6 +565,33 @@ class Gaussian(logfileparser.Logfile):
                 if line[1:8] == "AtmWgt=":
                     self.atommasses.extend(list(map(float, line.split()[1:])))
                 line = next(inputfile)
+
+        # Symmetry: point group
+        if line.strip() == "Symmetry turned off by external request.":
+            self.set_attribute('uses_symmetry', False)
+        if "Full point group" in line:
+            point_group_detected = line.split()[3].lower()
+            if self.uses_symmetry:
+                while "Largest Abelian subgroup" not in line:
+                    line = next(inputfile)
+                    if "Leave Link" in line:
+                        # TODO To handle this properly, it needs to be
+                        # calculated from the full point group.
+                        point_group_used = point_group_detected
+                        break
+                if "Leave Link" not in line:
+                    point_group_used = line.split()[3].lower()
+            else:
+                point_group_used = "c1"
+            self.metadata['symmetry_detected'] = point_group_detected
+            self.metadata['symmetry_used'] = point_group_used
+
+        # Symmetry: ordering of irreducible representations
+        if "symmetry adapted cartesian basis functions" in line:
+            if not hasattr(self, 'symlabels'):
+                self.symlabels = []
+            irrep = self.normalisesym(line.split()[-2])
+            self.symlabels.append(irrep)
 
         # Extract the atomic numbers and coordinates of the atoms.
         if line.strip() == "Standard orientation:":

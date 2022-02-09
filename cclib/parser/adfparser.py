@@ -172,6 +172,16 @@ class ADF(logfileparser.Logfile):
             info = line.split()
             if info[1] == "NOSYM":
                 self.nosymflag = True
+                point_group_abelian = "c1"
+            else:
+                point_group_abelian = info[1].replace('(', '').replace(')', '').lower()
+            # TODO It is unclear exactly what point groups ADF can
+            # use, since their irrep table with labels lists many
+            # non-Abelian groups:
+            # https://www.scm.com/doc/ADF/Appendices/Symmetry.html
+            point_group_full = point_group_abelian
+            self.metadata['symmetry_detected'] = point_group_full
+            self.metadata['symmetry_used'] = point_group_abelian
 
         # Use this to read the subspecies of irreducible representations.
         # It will be a list, with each element representing one irrep.

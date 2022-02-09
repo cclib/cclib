@@ -38,6 +38,8 @@ class ORCA(logfileparser.Logfile):
 
     def before_parsing(self):
 
+        self.uses_symmetry = False
+
         # A geometry optimization is started only when
         # we parse a cycle (so it will be larger than zero().
         self.gopt_cycle = 0
@@ -303,6 +305,29 @@ class ORCA(logfileparser.Logfile):
 
             mult = int(line.split()[-1])
             self.set_attribute('mult', mult)
+
+        if line[1:18] == "Symmetry handling":
+            self.uses_symmetry = True
+
+            line = next(inputfile)
+            assert "Point group" in line
+            point_group_full = line.split()[3].lower()
+            line = next(inputfile)
+            assert "Used point group" in line
+            point_group_abelian = line.split()[4].lower()
+            line = next(inputfile)
+            assert "Number of irreps" in line
+            nirrep = int(line.split()[4])
+            for n in range(nirrep):
+                line = next(inputfile)
+                assert "symmetry adapted basis functions" in line
+                irrep = line[8:13]
+                if not hasattr(self, 'symlabels'):
+                    self.symlabels = []
+                self.symlabels.append(self.normalisesym(irrep))
+
+            self.metadata['symmetry_detected'] = point_group_full
+            self.metadata['symmetry_used'] = point_group_abelian
 
         # SCF convergence output begins with:
         #
@@ -752,14 +777,19 @@ Dispersion correction           -0.016199959
 
             self.mooccnos = [[]]
             self.moenergies = [[]]
+            self.mosyms = [[]]
 
             line = next(inputfile)
             while len(line) > 20:  # restricted calcs are terminated by ------
                 info = line.split()
                 mooccno = int(float(info[1]))
                 moenergy = float(info[2])
+                mosym = 'A'
+                if self.uses_symmetry:
+                    mosym = self.normalisesym(info[4].split('-')[1])
                 self.mooccnos[0].append(mooccno)
                 self.moenergies[0].append(utils.convertor(moenergy, "hartree", "eV"))
+                self.mosyms[0].append(mosym)
                 line = next(inputfile)
 
             line = next(inputfile)
@@ -770,14 +800,19 @@ Dispersion correction           -0.016199959
 
                 self.mooccnos.append([])
                 self.moenergies.append([])
+                self.mosyms.append([])
 
                 line = next(inputfile)
                 while len(line) > 20:  # actually terminated by ------
                     info = line.split()
                     mooccno = int(float(info[1]))
                     moenergy = float(info[2])
+                    mosym = 'A'
+                    if self.uses_symmetry:
+                        mosym = self.normalisesym(info[4].split('-')[1])
                     self.mooccnos[1].append(mooccno)
                     self.moenergies[1].append(utils.convertor(moenergy, "hartree", "eV"))
+                    self.mosyms[1].append(mosym)
                     line = next(inputfile)
 
             if not hasattr(self, 'homos'):

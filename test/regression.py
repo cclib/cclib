@@ -2813,6 +2813,14 @@ class ADFSPTest_nosyms_noscfvalues(ADFSPTest_nosyms):
     def testaooverlaps(self):
         """AO overlaps were not printed here."""
 
+    def testmetadata_symmetry_detected(self):
+        """Symmetry is completely turned off and not even detected."""
+        self.assertEqual(self.data.metadata["symmetry_detected"], "c1")
+
+    def testmetadata_symmetry_used(self):
+        """Symmetry is completely turned off and not even detected."""
+        self.assertEqual(self.data.metadata["symmetry_used"], "c1")
+
 
 class ADFSPTest_nosyms_valence(ADFSPTest_nosyms):
     def testlengthmoenergies(self):
@@ -2834,7 +2842,16 @@ class ADFSPTest_nosyms_valence_noscfvalues(ADFSPTest_nosyms_valence):
     def testaooverlaps(self):
         """AO overlaps were not printed here."""
 
-# DATLON #
+    def testmetadata_symmetry_detected(self):
+        """Symmetry is completely turned off and not even detected."""
+        self.assertEqual(self.data.metadata["symmetry_detected"], "c1")
+
+    def testmetadata_symmetry_used(self):
+        """Symmetry is completely turned off and not even detected."""
+        self.assertEqual(self.data.metadata["symmetry_used"], "c1")
+
+
+# DALTON #
 
 
 class DALTONBigBasisTest_aug_cc_pCVQZ(GenericBigBasisTest):
@@ -2949,6 +2966,14 @@ class JaguarSPTest_6_31gss_nomosyms(JaguarSPTest_6_31gss):
     @unittest.skip('Cannot parse mosyms from this file.')
     def testsymlabels(self):
         """mosyms were not printed here."""
+
+    def testmetadata_symmetry_detected(self):
+        """This calculation has symmetry detected but disabled."""
+        self.assertEqual(self.data.metadata["symmetry_detected"], "c2h")
+
+    def testmetadata_symmetry_used(self):
+        """This calculation has symmetry detected but disabled."""
+        self.assertEqual(self.data.metadata["symmetry_used"], "c1")
 
 
 class JaguarSPunTest_nomosyms(JaguarSPunTest):
@@ -3066,6 +3091,14 @@ class OrcaSPTest_3_21g(OrcaSPTest, GenericSPTest):
     @unittest.skip('This calculation has no symmetry.')
     def testsymlabels(self):
         """This calculation has no symmetry."""
+
+    def testmetadata_symmetry_detected(self):
+        """This calculation has no symmetry."""
+        self.assertNotIn("symmetry_detected", self.data.metadata)
+
+    def testmetadata_symmetry_used(self):
+        """This calculation has no symmetry."""
+        self.assertNotIn("symmetry_used", self.data.metadata)
 
 
 class OrcaGeoOptTest_3_21g(OrcaGeoOptTest):

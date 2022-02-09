@@ -71,6 +71,12 @@ class Psi3(logfileparser.Logfile):
 
         if line.strip() == '-SYMMETRY INFORMATION:':
             line = next(inputfile)
+            assert "Computational point group is" in line
+            point_group_abelian = line.split()[4].lower()
+            # TODO Psi 3 doesn't print the full point group?
+            point_group_full = point_group_abelian
+            self.metadata['symmetry_detected'] = point_group_full
+            self.metadata['symmetry_used'] = point_group_abelian
             while line.strip():
                 if "Number of atoms" in line:
                     self.set_attribute('natom', int(line.split()[-1]))

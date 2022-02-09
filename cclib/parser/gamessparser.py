@@ -181,6 +181,23 @@ class GAMESS(logfileparser.Logfile):
                     if line.split()[2] == "6" and line.split()[3] == "POLAR=NONE":
                         self.metadata["basis_set"] = "6-311G"
 
+        # Symmetry: point group
+        if " THE POINT GROUP OF THE MOLECULE IS" in line:
+            pg = line.split()[-1]
+            line = next(inputfile)
+            order = line.split()[-1]
+            point_group_full = pg.replace('N', order).lower()
+            # TODO It appears that GAMESS does not reduce to the
+            # largest Abelian subgroup.
+            point_group_abelian = point_group_full
+            self.metadata['symmetry_detected'] = point_group_full
+            self.metadata['symmetry_used'] = point_group_abelian
+
+        # Symmetry: ordering of irreducible representations
+        if line.strip() == "DIMENSIONS OF THE SYMMETRY SUBSPACES ARE":
+            line = next(inputfile)
+            symlabels = [self.normalisesym(label) for label in line.split()[::3]]
+
         # We are looking for this line:
         #           PARAMETERS CONTROLLING GEOMETRY SEARCH ARE
         #           ...

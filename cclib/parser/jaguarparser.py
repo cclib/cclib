@@ -48,6 +48,7 @@ class Jaguar(logfileparser.Logfile):
         self.geoopt = False
 
     def after_parsing(self):
+        super(Jaguar, self).after_parsing()
 
         # This is to make sure we always have optdone after geometry optimizations,
         # even if it is to be empty for unconverged runs. We have yet to test this
@@ -195,6 +196,14 @@ class Jaguar(logfileparser.Logfile):
                 if len(line.split()) == 2:
                     self.coreelectrons.append(int(line.split()[1]))
                 line = next(inputfile)
+
+        if "Molecular Point Group:" in line:
+            point_group_full = line.split()[3].lower()
+            while "Point Group used:" not in line:
+                line = next(inputfile)
+            point_group_abelian = line.split()[3].lower()
+            self.metadata['symmetry_detected'] = point_group_full
+            self.metadata['symmetry_used'] = point_group_abelian
 
         if line[2:14] == "new geometry" or line[1:21] == "Symmetrized geometry" or line.find("Input geometry") > 0:
         # Get the atom coordinates

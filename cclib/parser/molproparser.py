@@ -74,6 +74,7 @@ class Molpro(logfileparser.Logfile):
         self.insidescf = False
 
     def after_parsing(self):
+        super(Molpro, self).after_parsing()
 
         # If optimization thresholds are default, they are normally not printed and we need
         # to set them to the default after parsing. Make sure to set them in the same order that
@@ -282,6 +283,14 @@ class Molpro(logfileparser.Logfile):
                 self.metadata["package_version"] = ''.join([
                     package_version, "+", line.split()[-1]
                 ])
+
+        if line[1:12] == "Point group":
+            point_group_abelian = line.split()[-1].lower()
+            # TODO It looks like Molpro only prints the largest usable
+            # Abelian subgroup.
+            point_group_full = point_group_abelian
+            self.metadata['symmetry_detected'] = point_group_full
+            self.metadata['symmetry_used'] = point_group_abelian
 
         if line[1:19] == "ATOMIC COORDINATES":
 

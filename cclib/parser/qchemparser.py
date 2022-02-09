@@ -116,6 +116,7 @@ class QChem(logfileparser.Logfile):
         ]
 
     def after_parsing(self):
+        super(QChem, self).after_parsing()
 
         # If parsing a fragment job, each of the geometries appended to
         # `atomcoords` may be of different lengths, which will prevent
@@ -599,6 +600,15 @@ cannot be determined. Rerun without `$molecule read`."""
                             self.user_input['molecule']['mult'] = mult
 
                     line = next(inputfile).lower()
+
+            # Point group symmetry.
+            if 'Molecular Point Group' in line:
+                point_group_full = line.split()[3].lower()
+                self.metadata['symmetry_detected'] = point_group_full
+                line = next(inputfile)
+                if 'Largest Abelian Subgroup' in line:
+                    point_group_abelian = line.split()[3].lower()
+                    self.metadata['symmetry_used'] = point_group_abelian
 
             # Parse the basis set name
             if 'Requested basis set' in line:
