@@ -214,7 +214,8 @@ class OrcaROCIS40Test(OrcaROCISTest):
     # In ORCA 4.0, an additional spectrum ("COMBINED ELECTRIC DIPOLE +
     # MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM (Origin Independent,
     # Length Representation)") was present that is not in ORCA 4.1.
-    n_spectra = 9
+    # Changed via 1085. Only the Electric Dipole are parsed
+    n_spectra = 2
 
 
 class TurbomoleTDTest(GenericTDTest):
