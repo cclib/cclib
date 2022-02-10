@@ -1,10 +1,11 @@
- Entering Gaussian System, Link 0=g16_main
+ Entering Gaussian System, Link 0=g16
+ Input=water_ccd.com
+ Output=water_ccd.log
  Initial command:
- /software/Gaussian16/g16_sse4/g16/l1.exe "/tmp/Gau-4853.inp" -scrdir="/tmp/"
- Entering Link 1 = /software/Gaussian16/g16_sse4/g16/l1.exe PID=      4854.
+ /gpfs1/apps/software/Gaussian16/AVX//g16/l1.exe "/gpfs1/home/osl/test/Gau-53299.inp" -scrdir="/gpfs1/home/osl/test/"
+ Entering Link 1 = /gpfs1/apps/software/Gaussian16/AVX//g16/l1.exe PID=     53300.
   
- Copyright (c) 1988,1990,1992,1993,1995,1998,2003,2009,2016,
-            Gaussian, Inc.  All Rights Reserved.
+ Copyright (c) 1988-2019, Gaussian, Inc.  All Rights Reserved.
   
  This is part of the Gaussian(R) 16 program.  It is based on
  the Gaussian(R) 09 system (copyright 2009, Gaussian, Inc.),
@@ -55,7 +56,7 @@
   
 
  Cite this work as:
- Gaussian 16, Revision A.03,
+ Gaussian 16, Revision C.01,
  M. J. Frisch, G. W. Trucks, H. B. Schlegel, G. E. Scuseria, 
  M. A. Robb, J. R. Cheeseman, G. Scalmani, V. Barone, 
  G. A. Petersson, H. Nakatsuji, X. Li, M. Caricato, A. V. Marenich, 
@@ -71,11 +72,11 @@
  K. Raghavachari, A. P. Rendell, J. C. Burant, S. S. Iyengar, 
  J. Tomasi, M. Cossi, J. M. Millam, M. Klene, C. Adamo, R. Cammi, 
  J. W. Ochterski, R. L. Martin, K. Morokuma, O. Farkas, 
- J. B. Foresman, and D. J. Fox, Gaussian, Inc., Wallingford CT, 2016.
+ J. B. Foresman, and D. J. Fox, Gaussian, Inc., Wallingford CT, 2019.
  
  ******************************************
- Gaussian 16:  ES64L-G16RevA.03 25-Dec-2016
-                 4-Apr-2018 
+ Gaussian 16:  ES64L-G16RevC.01  3-Jul-2019
+                10-Feb-2022 
  ******************************************
  %chk=water_ccd
  -------------
@@ -90,8 +91,8 @@
  9/5=6/13;
  6/7=2,8=2,9=2,10=2/1;
  99/5=1,9=1/99;
- Leave Link    1 at Wed Apr  4 10:15:34 2018, MaxMem=           0 cpu:               0.0 elap:               0.1
- (Enter /software/Gaussian16/g16_sse4/g16/l101.exe)
+ Leave Link    1 at Thu Feb 10 17:20:44 2022, MaxMem=           0 cpu:               0.0 elap:               0.0
+ (Enter /gpfs1/apps/software/Gaussian16/AVX//g16/l101.exe)
  -----
  Water
  -----
@@ -120,8 +121,8 @@
  NQMom=    0.0000000   0.0000000   0.0000000
  NMagM=    0.0000000   2.7928460   2.7928460
  AtZNuc=   8.0000000   1.0000000   1.0000000
- Leave Link  101 at Wed Apr  4 10:15:34 2018, MaxMem=   104857600 cpu:               0.1 elap:               0.1
- (Enter /software/Gaussian16/g16_sse4/g16/l202.exe)
+ Leave Link  101 at Thu Feb 10 17:20:45 2022, MaxMem=   104857600 cpu:               0.2 elap:               0.3
+ (Enter /gpfs1/apps/software/Gaussian16/AVX//g16/l202.exe)
                           Input orientation:                          
  ---------------------------------------------------------------------
  Center     Atomic      Atomic             Coordinates (Angstroms)
@@ -152,8 +153,8 @@
       3          1           0       -0.000000   -0.790649   -0.476637
  ---------------------------------------------------------------------
  Rotational constants (GHZ):         795.3367043         401.0831699         266.6255997
- Leave Link  202 at Wed Apr  4 10:15:34 2018, MaxMem=   104857600 cpu:               0.0 elap:               0.0
- (Enter /software/Gaussian16/g16_sse4/g16/l301.exe)
+ Leave Link  202 at Thu Feb 10 17:20:45 2022, MaxMem=   104857600 cpu:               0.0 elap:               0.0
+ (Enter /gpfs1/apps/software/Gaussian16/AVX//g16/l301.exe)
  Standard basis: STO-3G (5D, 7F)
  Ernie: Thresh=  0.10000D-02 Tol=  0.10000D-05 Strict=F.
  There are     4 symmetry adapted cartesian basis functions of A1  symmetry.
@@ -174,19 +175,19 @@
  Integral buffers will be    131072 words long.
  Raffenetti 1 integral format.
  Two-electron integral symmetry is turned on.
- Leave Link  301 at Wed Apr  4 10:15:35 2018, MaxMem=   104857600 cpu:               0.1 elap:               0.1
- (Enter /software/Gaussian16/g16_sse4/g16/l302.exe)
+ Leave Link  301 at Thu Feb 10 17:20:45 2022, MaxMem=   104857600 cpu:               0.0 elap:               0.0
+ (Enter /gpfs1/apps/software/Gaussian16/AVX//g16/l302.exe)
  NPDir=0 NMtPBC=     1 NCelOv=     1 NCel=       1 NClECP=     1 NCelD=      1
          NCelK=      1 NCelE2=     1 NClLst=     1 CellRange=     0.0.
  One-electron integrals computed using PRISM.
  One-electron integral symmetry used in STVInt
  NBasis=     7 RedAO= T EigKep=  3.64D-01  NBF=     4     0     1     2
  NBsUse=     7 1.00D-06 EigRej= -1.00D+00 NBFU=     4     0     1     2
- Leave Link  302 at Wed Apr  4 10:15:35 2018, MaxMem=   104857600 cpu:               0.1 elap:               0.1
- (Enter /software/Gaussian16/g16_sse4/g16/l303.exe)
+ Leave Link  302 at Thu Feb 10 17:20:45 2022, MaxMem=   104857600 cpu:               0.1 elap:               0.1
+ (Enter /gpfs1/apps/software/Gaussian16/AVX//g16/l303.exe)
  DipDrv:  MaxL=1.
- Leave Link  303 at Wed Apr  4 10:15:35 2018, MaxMem=   104857600 cpu:               0.0 elap:               0.0
- (Enter /software/Gaussian16/g16_sse4/g16/l401.exe)
+ Leave Link  303 at Thu Feb 10 17:20:45 2022, MaxMem=   104857600 cpu:               0.0 elap:               0.0
+ (Enter /gpfs1/apps/software/Gaussian16/AVX//g16/l401.exe)
  ExpMin= 1.69D-01 ExpMax= 1.31D+02 ExpMxC= 1.31D+02 IAcc=3 IRadAn=         5 AccDes= 0.00D+00
  Harris functional with IExCor=  205 and IRadAn=       5 diagonalized for initial guess.
  HarFok:  IExCor=  205 AccDes= 0.00D+00 IRadAn=         5 IDoV= 1 UseB2=F ITyADJ=14
@@ -196,15 +197,15 @@
          wScrn=  0.000000 ICntrl=       500 IOpCl=  0 I1Cent=   200000004 NGrid=           0
          NMat0=    1 NMatS0=      1 NMatT0=    0 NMatD0=    1 NMtDS0=    0 NMtDT0=    0
  Petite list used in FoFCou.
- Harris En= -75.0379832789565    
+ Harris En= -75.0379832789563    
  JPrj=0 DoOrth=F DoCkMO=F.
  Initial guess orbital symmetries:
        Occupied  (A1) (A1) (B2) (A1) (B1)
        Virtual   (A1) (B2)
  The electronic state of the initial guess is 1-A1.
- Leave Link  401 at Wed Apr  4 10:15:35 2018, MaxMem=   104857600 cpu:               0.1 elap:               0.2
- (Enter /software/Gaussian16/g16_sse4/g16/l502.exe)
- Keep R1 ints in memory in symmetry-blocked form, NReq=803110.
+ Leave Link  401 at Thu Feb 10 17:20:45 2022, MaxMem=   104857600 cpu:               0.1 elap:               0.1
+ (Enter /gpfs1/apps/software/Gaussian16/AVX//g16/l502.exe)
+ Keep R1 ints in memory in symmetry-blocked form, NReq=803179.
  FoFCou: FMM=F IPFlag=           0 FMFlag=           0 FMFlg1=           0
          NFxFlg=           0 DoJE=F BraDBF=F KetDBF=F FulRan=T
          wScrn=  0.000000 ICntrl=       600 IOpCl=  0 I1Cent=           0 NGrid=           0
@@ -212,16 +213,16 @@
  Petite list used in FoFCou.
  Closed shell SCF:
  Using DIIS extrapolation, IDIIS=  1040.
- NGot=   104857600 LenX=   104855741 LenY=   104854859
+ NGot=   104857600 LenX=   104855678 LenY=   104854796
  Requested convergence on RMS density matrix=1.00D-08 within 128 cycles.
  Requested convergence on MAX density matrix=1.00D-06.
  Requested convergence on             energy=1.00D-06.
  No special actions if energy rises.
 
  Cycle   1  Pass 1  IDiag  1:
- E= -74.9100247229696    
+ E= -74.9100247229695    
  DIIS: error= 7.64D-02 at cycle   1 NSaved=   1.
- NSaved= 1 IEnMin= 1 EnMin= -74.9100247229696     IErMin= 1 ErrMin= 7.64D-02
+ NSaved= 1 IEnMin= 1 EnMin= -74.9100247229695     IErMin= 1 ErrMin= 7.64D-02
  ErrMax= 7.64D-02  0.00D+00 EMaxC= 1.00D-01 BMatC= 3.91D-02 BMatP= 3.91D-02
  IDIUse=3 WtCom= 2.36D-01 WtEn= 7.64D-01
  Coeff-Com:  0.100D+01
@@ -232,9 +233,9 @@
  RMSDP=4.14D-02 MaxDP=1.46D-01              OVMax= 0.00D+00
 
  Cycle   2  Pass 1  IDiag  1:
- E= -74.9638052697970     Delta-E=       -0.053780546827 Rises=F Damp=F
+ E= -74.9638052697969     Delta-E=       -0.053780546827 Rises=F Damp=F
  DIIS: error= 7.19D-03 at cycle   2 NSaved=   2.
- NSaved= 2 IEnMin= 2 EnMin= -74.9638052697970     IErMin= 2 ErrMin= 7.19D-03
+ NSaved= 2 IEnMin= 2 EnMin= -74.9638052697969     IErMin= 2 ErrMin= 7.19D-03
  ErrMax= 7.19D-03  0.00D+00 EMaxC= 1.00D-01 BMatC= 4.76D-04 BMatP= 3.91D-02
  IDIUse=3 WtCom= 9.28D-01 WtEn= 7.19D-02
  Coeff-Com:  0.720D-01 0.928D+00
@@ -244,9 +245,9 @@
  RMSDP=3.23D-03 MaxDP=9.49D-03 DE=-5.38D-02 OVMax= 0.00D+00
 
  Cycle   3  Pass 1  IDiag  1:
- E= -74.9643149493719     Delta-E=       -0.000509679575 Rises=F Damp=F
+ E= -74.9643149493718     Delta-E=       -0.000509679575 Rises=F Damp=F
  DIIS: error= 1.06D-03 at cycle   3 NSaved=   3.
- NSaved= 3 IEnMin= 3 EnMin= -74.9643149493719     IErMin= 3 ErrMin= 1.06D-03
+ NSaved= 3 IEnMin= 3 EnMin= -74.9643149493718     IErMin= 3 ErrMin= 1.06D-03
  ErrMax= 1.06D-03  0.00D+00 EMaxC= 1.00D-01 BMatC= 7.90D-06 BMatP= 4.76D-04
  IDIUse=3 WtCom= 9.89D-01 WtEn= 1.06D-02
  Coeff-Com: -0.130D-01-0.147D+00 0.116D+01
@@ -290,14 +291,14 @@
  RMSDP=3.82D-07 MaxDP=1.36D-06 DE=-3.06D-08 OVMax= 0.00D+00
 
  Cycle   7  Pass 1  IDiag  1:
- E= -74.9643287913547     Delta-E=       -0.000000000002 Rises=F Damp=F
+ E= -74.9643287913546     Delta-E=       -0.000000000002 Rises=F Damp=F
  DIIS: error= 2.34D-10 at cycle   7 NSaved=   7.
- NSaved= 7 IEnMin= 7 EnMin= -74.9643287913547     IErMin= 7 ErrMin= 2.34D-10
+ NSaved= 7 IEnMin= 7 EnMin= -74.9643287913546     IErMin= 7 ErrMin= 2.34D-10
  ErrMax= 2.34D-10  0.00D+00 EMaxC= 1.00D-01 BMatC= 4.69D-19 BMatP= 7.25D-13
  IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
- Coeff-Com:  0.882D-10 0.136D-07 0.497D-06-0.537D-05 0.192D-04 0.135D-02
+ Coeff-Com:  0.881D-10 0.137D-07 0.494D-06-0.535D-05 0.191D-04 0.135D-02
  Coeff-Com:  0.999D+00
- Coeff:      0.882D-10 0.136D-07 0.497D-06-0.537D-05 0.192D-04 0.135D-02
+ Coeff:      0.881D-10 0.137D-07 0.494D-06-0.535D-05 0.191D-04 0.135D-02
  Coeff:      0.999D+00
  Gap=     0.959 Goal=   None    Shift=    0.000
  RMSDP=2.79D-10 MaxDP=8.82D-10 DE=-1.95D-12 OVMax= 0.00D+00
@@ -305,8 +306,8 @@
  SCF Done:  E(RHF) =  -74.9643287914     A.U. after    7 cycles
             NFock=  7  Conv=0.28D-09     -V/T= 2.0060
  KE= 7.451686029031D+01 PE=-1.963570298475D+02 EE= 3.798883450080D+01
- Leave Link  502 at Wed Apr  4 10:15:35 2018, MaxMem=   104857600 cpu:               0.1 elap:               0.1
- (Enter /software/Gaussian16/g16_sse4/g16/l801.exe)
+ Leave Link  502 at Thu Feb 10 17:20:45 2022, MaxMem=   104857600 cpu:               0.1 elap:               0.2
+ (Enter /gpfs1/apps/software/Gaussian16/AVX//g16/l801.exe)
  Windowed orbitals will be sorted by symmetry type.
  ExpMin= 1.69D-01 ExpMax= 1.31D+02 ExpMxC= 1.31D+02 IAcc=3 IRadAn=         5 AccDes= 0.00D+00
  HarFok:  IExCor=  205 AccDes= 0.00D+00 IRadAn=         5 IDoV=-2 UseB2=F ITyADJ=14
@@ -316,16 +317,16 @@
  Range of M.O.s used for correlation:     2     7
  NBasis=     7 NAE=     5 NBE=     5 NFC=     1 NFV=     0
  NROrb=      6 NOA=     4 NOB=     4 NVA=     2 NVB=     2
- Leave Link  801 at Wed Apr  4 10:15:35 2018, MaxMem=   104857600 cpu:               0.1 elap:               0.2
- (Enter /software/Gaussian16/g16_sse4/g16/l804.exe)
+ Leave Link  801 at Thu Feb 10 17:20:45 2022, MaxMem=   104857600 cpu:               0.1 elap:               0.1
+ (Enter /gpfs1/apps/software/Gaussian16/AVX//g16/l804.exe)
  Closed-shell transformation, MDV=   104857600 ITran=3 ISComp=2.
- Unit  1 TFree=          3108 TCopy=        114951.
+ Unit  1 TFree=        249048 TCopy=        205836.
  Semi-Direct transformation.
  ModeAB=           2 MOrb=             4 LenV=     104737995
  LASXX=           42 LTotXX=          42 LenRXX=          42
  LTotAB=          90 MaxLAS=         672 LenRXY=         672
- NonZer=         816 LenScr=      785920 LnRSAI=           0
- LnScr1=           0 LExtra=           0 Total=       786634
+ NonZer=         816 LenScr=      655360 LnRSAI=           0
+ LnScr1=           0 LExtra=           0 Total=       656074
  MaxDsk=          -1 SrtSym=           F ITran=            3
  DoSDTr:  NPSUse=  1
  JobTyp=0 Pass  1:  I=   1 to   4.
@@ -340,14 +341,14 @@
      beta-beta   T2 =       0.4074384508D-03 E2=     -0.1088543309D-02
  ANorm=    0.1007309534D+01
  E2 =    -0.3795333610D-01 EUMP2 =    -0.75002282127453D+02
- Leave Link  804 at Wed Apr  4 10:15:35 2018, MaxMem=   104857600 cpu:               0.1 elap:               0.1
- (Enter /software/Gaussian16/g16_sse4/g16/l913.exe)
+ Leave Link  804 at Thu Feb 10 17:20:45 2022, MaxMem=   104857600 cpu:               0.0 elap:               0.0
+ (Enter /gpfs1/apps/software/Gaussian16/AVX//g16/l913.exe)
  CIDS:  MDV=   104857600.
  Frozen-core window:  NFC=   1 NFV=   0.
  IFCWin=0 IBDFC=1 NFBD=     0     0 NFCmp=     0     0 NFFFC=     0     0
  Using DD3R+UMP44R for 1st iteration.
  Using DD4RQ for 2nd and later iterations.
- Keep R2 and R3 ints in memory in symmetry-blocked form, NReq=805486.
+ Keep R2 and R3 ints in memory in symmetry-blocked form, NReq=805555.
  FoFCou: FMM=F IPFlag=           0 FMFlag=           0 FMFlg1=           0
          NFxFlg=           0 DoJE=F BraDBF=F KetDBF=F FulRan=T
          wScrn=  0.000000 ICntrl=       600 IOpCl=  0 I1Cent=           0 NGrid=           0
@@ -415,7 +416,7 @@
  **********************
  DD1Dir will call FoFMem   1 times, MxPair=        20
  NAB=    10 NAA=     0 NBB=     0.
- A-vector RMS=  1.2642619D-07 Max=  2.4215109D-07 conv= 1.00D-05.
+ A-vector RMS=  1.2642619D-07 Max=  2.4215108D-07 conv= 1.00D-05.
  RLE energy=       -0.0530492209
  DE(Corr)= -0.53049180E-01 E(CORR)=     -75.017377971     Delta= 1.07D-06
  NORM(A)=   0.10148087D+01
@@ -423,7 +424,7 @@
  **********************
  DD1Dir will call FoFMem   1 times, MxPair=        20
  NAB=    10 NAA=     0 NBB=     0.
- A-vector RMS=  3.2708573D-08 Max=  7.5783717D-08 conv= 1.00D-05.
+ A-vector RMS=  3.2708823D-08 Max=  7.5784157D-08 conv= 1.00D-05.
  RLE energy=       -0.0530492069
  DE(Corr)= -0.53049212E-01 E(CORR)=     -75.017378003     Delta=-3.16D-08
  NORM(A)=   0.10148087D+01
@@ -431,13 +432,13 @@
  Wavefunction amplitudes converged. E(Corr)=     -75.017378003    
  Largest amplitude= 8.18D-02
  Discarding MO integrals.
- Leave Link  913 at Wed Apr  4 10:15:35 2018, MaxMem=   104857600 cpu:               0.1 elap:               0.1
- (Enter /software/Gaussian16/g16_sse4/g16/l601.exe)
+ Leave Link  913 at Thu Feb 10 17:20:46 2022, MaxMem=   104857600 cpu:               0.1 elap:               0.2
+ (Enter /gpfs1/apps/software/Gaussian16/AVX//g16/l601.exe)
  Copying SCF densities to generalized density rwf, IOpCl= 0 IROHF=0.
 
  **********************************************************************
 
-            Population analysis using the SCF density.
+            Population analysis using the SCF Density.
 
  **********************************************************************
 
@@ -473,7 +474,7 @@
    XY=              0.0000   XZ=              0.0000   YZ=              0.0000
  Octapole moment (field-independent basis, Debye-Ang**2):
   XXX=              0.0000  YYY=             -0.0000  ZZZ=             -0.1457  XYY=             -0.0000
-  XXY=              0.0000  XXZ=              0.0136  XZZ=              0.0000  YZZ=              0.0000
+  XXY=             -0.0000  XXZ=              0.0136  XZZ=              0.0000  YZZ=              0.0000
   YYZ=             -0.5848  XYZ=             -0.0000
  Hexadecapole moment (field-independent basis, Debye-Ang**3):
  XXXX=             -3.2614 YYYY=             -6.8264 ZZZZ=             -4.9965 XXXY=             -0.0000
@@ -485,17 +486,22 @@
  Symmetry A2   KE= 0.000000000000D+00
  Symmetry B1   KE= 5.057462452019D+00
  Symmetry B2   KE= 2.890427498754D+00
- Leave Link  601 at Wed Apr  4 10:15:35 2018, MaxMem=   104857600 cpu:               0.0 elap:               0.0
- (Enter /software/Gaussian16/g16_sse4/g16/l9999.exe)
- 1\1\GINC-QNODE4109\SP\RCCD-FC\STO-3G\H2O1\ASR731\04-Apr-2018\0\\#P CCD
- /STO-3G\\Water\\0,1\O\H,1,0.99\H,1,0.99,2,106.\\Version=ES64L-G16RevA.
- 03\State=1-A1\HF=-74.9643288\MP2=-75.0022821\MP3=-75.0128009\MP4D=-75.
- 0161936\MP4DQ=-75.0159011\CCD=-75.017378\RMSD=2.787e-10\PG=C02V [C2(O1
- ),SGV(H2)]\\@
+ Leave Link  601 at Thu Feb 10 17:20:46 2022, MaxMem=   104857600 cpu:               0.0 elap:               0.0
+ (Enter /gpfs1/apps/software/Gaussian16/AVX//g16/l9999.exe)
+ Unable to Open any file for archive entry.
+ 1\1\GINC-KENNEDY60\SP\RCCD-FC\STO-3G\H2O1\OSL\10-Feb-2022\0\\#P CCD/ST
+ O-3G\\Water\\0,1\O\H,1,0.99\H,1,0.99,2,106.\\Version=ES64L-G16RevC.01\
+ State=1-A1\HF=-74.9643288\MP2=-75.0022821\MP3=-75.0128009\MP4D=-75.016
+ 1936\MP4DQ=-75.0159011\CCD=-75.017378\RMSD=2.787e-10\PG=C02V [C2(O1),S
+ GV(H2)]\\@
+ The archive entry for this job was punched.
 
 
- E PUR SI MUOVE    -- GALILEO GALILEI
- Job cpu time:       0 days  0 hours  0 minutes  1.1 seconds.
+ A SUCCESSFUL PURSUIT OF SCIENCE MAKES A MAN THE
+ BENEFACTOR OF ALL MANKIND OF EVERY AGE.
+   --  JOSEPH PRIESTLEY, "EXPERIMENTS AND
+ OBSERVATIONS ON DIFFERENT KINDS OF AIR", 1774
+ Job cpu time:       0 days  0 hours  0 minutes  0.9 seconds.
  Elapsed time:       0 days  0 hours  0 minutes  1.2 seconds.
- File lengths (MBytes):  RWF=     13 Int=      0 D2E=      0 Chk=     16 Scr=      1
- Normal termination of Gaussian 16 at Wed Apr  4 10:15:36 2018.
+ File lengths (MBytes):  RWF=     24 Int=      0 D2E=      0 Chk=      2 Scr=      2
+ Normal termination of Gaussian 16 at Thu Feb 10 17:20:46 2022.
