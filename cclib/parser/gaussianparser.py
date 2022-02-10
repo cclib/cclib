@@ -162,6 +162,12 @@ class Gaussian(logfileparser.Logfile):
                 rotation = utils.get_rotation(numpy.array(inputcoord), numpy.array(atomcoord))
                 grads_std.append(rotation.apply(grad))
             self.set_attribute('grads', numpy.array(grads_std))
+        
+        if hasattr(self, "ccenergy"):
+            if not hasattr(self, "ccenergies"):
+                self.ccenergies = []
+            self.ccenergies.append(utils.convertor(self.ccenergy, "hartree", "eV"))
+            del self.ccenergy
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -930,12 +936,6 @@ class Gaussian(logfileparser.Logfile):
             if line[1:9] == "CCSD(T)=":
                 self.metadata["methods"].append("CCSD-T")
                 self.ccenergy = utils.float(line.split()[1])
-        if line[12:53] == "Population analysis using the SCF density":
-            if hasattr(self, "ccenergy"):
-                if not hasattr(self, "ccenergies"):
-                    self.ccenergies = []
-                self.ccenergies.append(utils.convertor(self.ccenergy, "hartree", "eV"))
-                del self.ccenergy
         # Find step number for current optimization/IRC
         # Matches "Step number  123", "Pt XX Step number 123" and "PtXXX Step number 123"
         if " Step number" in line:
