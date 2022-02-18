@@ -164,9 +164,7 @@ class Gaussian(logfileparser.Logfile):
             self.set_attribute('grads', numpy.array(grads_std))
         
         if hasattr(self, "ccenergy"):
-            if not hasattr(self, "ccenergies"):
-                self.ccenergies = []
-            self.ccenergies.append(utils.convertor(self.ccenergy, "hartree", "eV"))
+            self.append_attribute("ccenergies", utils.convertor(self.ccenergy, "hartree", "eV"))
             del self.ccenergy
 
     def extract(self, inputfile, line):
