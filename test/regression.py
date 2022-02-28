@@ -1214,6 +1214,11 @@ def testGaussian_Gaussian16_issue962_log(logfile):
     """For issue 962, this shouldn't have scftargets but should parse fully"""
 
     assert not hasattr(logfile.data, "scftargets")
+    
+def testGaussian_Gaussian16_C01_CC_log(logfile):
+    """For issue 1110, check parsing of ccenergies in newer Gaussian version"""
+
+    assert hasattr(logfile.data, "ccenergies")
 
 # Jaguar #
 
