@@ -36,6 +36,11 @@ class GenericSPTest(unittest.TestCase):
     # Approximate B3LYP energy of dvb after SCF in STO-3G.
     b3lyp_energy = -10365
 
+    # Approximate energy of the innermost molecular orbital of DVB with
+    # B3LYP/STO-3G (from Q-Chem 5.4).
+    b3lyp_moenergy = -272.60365543
+    b3lyp_moenergy_delta = 7.55e-2
+
     # Overlap first two atomic orbitals.
     overlap01 = 0.24
 
@@ -149,7 +154,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('FChk', 'Formatted Checkpoint files do not have a section for SCF energy')
     def testscfenergy(self):
         """Is the SCF energy within the target?"""
-        self.assertAlmostEqual(self.data.scfenergies[-1], self.b3lyp_energy, delta=40, msg="Final scf energy: %f not %i +- 40eV" %(self.data.scfenergies[-1], self.b3lyp_energy))
+        self.assertAlmostEqual(self.data.scfenergies[-1], self.b3lyp_energy, delta=40)
 
     @skipForParser('FChk', 'Formatted Checkpoint files do not have a section for SCF convergence')
     def testscftargetdim(self):
@@ -171,6 +176,12 @@ class GenericSPTest(unittest.TestCase):
         if hasattr(self.data, "moenergies"):
             self.assertIsInstance(self.data.moenergies, list)
             self.assertIsInstance(self.data.moenergies[0], numpy.ndarray)
+
+    @skipForLogfile('Gaussian/basicGaussian16/dvb_sp_no.out', 'no energies for natural orbitals')
+    @skipForLogfile('Turbomole/basicTurbomole5.9/dvb_sp_symm', 'delta of 7.4, everything else ok')
+    def testfirstmoenergy(self):
+        """Is the lowest energy molecular orbital within the target?"""
+        self.assertAlmostEqual(self.data.moenergies[0][0], self.b3lyp_moenergy, delta=self.b3lyp_moenergy_delta)
 
     @skipForParser('DALTON', 'mocoeffs not implemented yet')
     @skipForLogfile('Jaguar/basicJaguar7', 'Data file does not contain enough information. Can we make a new one?')
@@ -385,6 +396,26 @@ class GenericSPTest(unittest.TestCase):
             assert all(isinstance(cpu_time, datetime.timedelta)
                        for cpu_time in self.data.metadata["cpu_time"])
 
+
+class GenericHFSPTest(GenericSPTest):
+
+    # Approximate HF energy of dvb after SCF in STO-3G (from DALTON 2015).
+    hf_scfenergy = -10334.03948035995
+
+    # Approximate energy of the innermost molecular orbital of DVB with
+    # HF/STO-3G (from Psi4 1.3.1).
+    hf_moenergy = -300.43401785663235
+
+    @skipForParser('FChk', 'Formatted Checkpoint files do not have a section for SCF energy')
+    def testscfenergy(self):
+        """Is the SCF energy within the target?"""
+        self.assertAlmostEqual(self.data.scfenergies[-1], self.hf_scfenergy, delta=6.5e-1)
+
+    def testfirstmoenergy(self):
+        """Is the lowest energy molecular orbital within the target?"""
+        self.assertAlmostEqual(self.data.moenergies[0][0], self.hf_moenergy, delta=1.6e-1)
+
+
 class ADFSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
 
@@ -396,6 +427,7 @@ class ADFSPTest(GenericSPTest):
     foverlap22 = 1.03585
     num_scf_criteria = 2
     b3lyp_energy = -140
+    b3lyp_moenergy = -269.6079423873336
 
     def testfoverlaps(self):
         """Are the dims and values of the fragment orbital overlap matrix correct?"""
@@ -413,15 +445,21 @@ class ADFSPTest(GenericSPTest):
         self.assertAlmostEqual(self.data.fooverlaps[1, 1], self.foverlap11, delta=0.0001)
         self.assertAlmostEqual(self.data.fooverlaps[2, 2], self.foverlap22, delta=0.0001)
 
+
 class GaussianSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
 
     num_scf_criteria = 3
 
 class JaguarSPTest(GenericSPTest):
-    """Customized restricted single point unittest"""
+    """Customized restricted single point KS unittest"""
 
     num_scf_criteria = 2
+
+
+class JaguarHFSPTest(JaguarSPTest, GenericHFSPTest):
+    """Customized restricted single point KS unittest"""
+
 
 class Jaguar7SPTest(JaguarSPTest):
     """Customized restricted single point unittest"""
@@ -436,8 +474,8 @@ class MolcasSPTest(GenericSPTest):
 
     num_scf_criteria = 4
 
-class MolproSPTest(GenericSPTest):
-    """Customized restricted single point unittest"""
+class MolproSPTest(GenericHFSPTest):
+    """Customized restricted single point HF unittest"""
 
     num_scf_criteria = 2
 
@@ -447,9 +485,14 @@ class NWChemKSSPTest(GenericSPTest):
     num_scf_criteria = 3
 
 class PsiSPTest(GenericSPTest):
-    """Customized restricted single point HF/KS unittest"""
+    """Customized restricted single point KS unittest"""
 
     num_scf_criteria = 2
+
+
+class PsiHFSPTest(PsiSPTest, GenericHFSPTest):
+    """Customized restricted single point HF unittest"""
+
 
 class OrcaSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
@@ -457,10 +500,13 @@ class OrcaSPTest(GenericSPTest):
     # Orca has different weights for the masses
     molecularmass = 130190
 
+    b3lyp_moenergy_delta = 1.2e-1
+
     num_scf_criteria = 3
 
+
 class TurbomoleSPTest(GenericSPTest):
-    """Customized restricted single point unittest"""
+    """Customized restricted single point KS unittest"""
 
     num_scf_criteria = 2
     
@@ -469,6 +515,10 @@ class TurbomoleSPTest(GenericSPTest):
         # One of our test cases used sto-3g hondo
         valid_basis = self.data.metadata["basis_set"].lower() in ("sto-3g", "sto-3g hondo")
         self.assertTrue(valid_basis)
+
+
+class TurbomoleHFSPTest(TurbomoleSPTest, GenericHFSPTest):
+    """Customized restricted single point HF unittest"""
 
 
 class GenericDispersionTest(unittest.TestCase):

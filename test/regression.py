@@ -2843,6 +2843,10 @@ class ADFSPTest_nosyms_valence_noscfvalues(ADFSPTest_nosyms_valence):
     def testscfvaluetype(self):
         """SCF cycles were not printed here."""
 
+    @unittest.skip('Cannot parse moenergies from this file.')
+    def testfirstmoenergy(self):
+        """MO energies were not printed here."""
+
     @unittest.skip('Cannot parse aooverlaps from this file.')
     def testaooverlaps(self):
         """AO overlaps were not printed here."""
@@ -2880,6 +2884,10 @@ class DALTONSPTest_nosymmetry(GenericSPTest):
     def testmetadata_symmetry_used(self):
         """Does metadata have expected keys and values?"""
         self.assertEqual(self.data.metadata["symmetry_used"], "c1")
+
+
+class DALTONHFSPTest_nosymmetry(DALTONSPTest_nosymmetry, GenericHFSPTest):
+    pass
 
 
 class DALTONTDTest_noetsecs(DALTONTDTest):
@@ -2960,6 +2968,7 @@ class JaguarSPTest_6_31gss(JaguarSPTest):
     """AO counts and some values are different in 6-31G** compared to STO-3G."""
     nbasisdict = {1: 5, 6: 15}
     b3lyp_energy = -10530
+    b3lyp_moenergy = -277.610006052399
     overlap01 = 0.22
 
     def testmetadata_basis_set(self):
@@ -3088,9 +3097,10 @@ class MolproBigBasisTest_cart(MolproBigBasisTest):
 # ORCA #
 
 
-class OrcaSPTest_3_21g(OrcaSPTest, GenericSPTest):
+class OrcaSPTest_3_21g(OrcaSPTest):
     nbasisdict = {1: 2, 6: 9}
     b3lyp_energy = -10460
+    b3lyp_moenergy = -276.1556935784018
     overlap01 = 0.19
     molecularmass = 130190
     @unittest.skip('This calculation has no symmetry.')
@@ -3193,6 +3203,13 @@ class PsiSPTest_noatommasses(PsiSPTest):
         """These values are not present in this output file."""
 
 
+class PsiHFSPTest_noatommasses(PsiHFSPTest):
+
+    @unittest.skip('atommasses were not printed in this file.')
+    def testatommasses(self):
+        """These values are not present in this output file."""
+
+
 old_unittests = {
 
     "ADF/ADF2004.01/MoOCl4-sp.adfout":      ADFCoreTest,
@@ -3212,7 +3229,7 @@ old_unittests = {
 
     "DALTON/DALTON-2013/C_bigbasis.aug-cc-pCVQZ.out":       DALTONBigBasisTest_aug_cc_pCVQZ,
     "DALTON/DALTON-2013/b3lyp_energy_dvb_sp_nosym.out":     DALTONSPTest_nosymmetry,
-    "DALTON/DALTON-2013/dvb_sp_hf_nosym.out":               DALTONSPTest_nosymmetry,
+    "DALTON/DALTON-2013/dvb_sp_hf_nosym.out":               DALTONHFSPTest_nosymmetry,
     "DALTON/DALTON-2013/dvb_td_normalprint.out":            DALTONTDTest_noetsecs,
     "DALTON/DALTON-2013/sp_b3lyp_dvb.out":                  GenericSPTest,
     "DALTON/DALTON-2015/dvb_td_normalprint.out":            DALTONTDTest_noetsecs,
@@ -3267,7 +3284,7 @@ old_unittests = {
     "GAMESS/PCGAMESS/dvb_gopt_b.out":       GenericGeoOptTest,
     "GAMESS/PCGAMESS/dvb_ir.out":           FireflyIRTest,
     "GAMESS/PCGAMESS/dvb_raman.out":        GenericRamanTest,
-    "GAMESS/PCGAMESS/dvb_sp.out":           GenericSPTest,
+    "GAMESS/PCGAMESS/dvb_sp.out":           GenericHFSPTest,
     "GAMESS/PCGAMESS/dvb_td.out":           GenericTDTest,
     "GAMESS/PCGAMESS/dvb_td_trplet.out":    GenericTDDFTtrpTest,
     "GAMESS/PCGAMESS/dvb_un_sp.out":        GenericSPunTest,
@@ -3387,7 +3404,7 @@ old_unittests = {
     "Psi4/Psi4-1.0/dvb_gopt_rhf.out":   Psi4GeoOptTest,
     "Psi4/Psi4-1.0/dvb_gopt_rks.out":   Psi4GeoOptTest,
     "Psi4/Psi4-1.0/dvb_ir_rhf.out":     Psi4IRTest,
-    "Psi4/Psi4-1.0/dvb_sp_rhf.out":     PsiSPTest_noatommasses,
+    "Psi4/Psi4-1.0/dvb_sp_rhf.out":     PsiHFSPTest_noatommasses,
     "Psi4/Psi4-1.0/dvb_sp_rks.out":     PsiSPTest_noatommasses,
     "Psi4/Psi4-1.0/dvb_sp_rohf.out":    GenericROSPTest,
     "Psi4/Psi4-1.0/dvb_sp_uhf.out":     GenericSPunTest,
@@ -3398,7 +3415,7 @@ old_unittests = {
     "Psi4/Psi4-beta5/C_bigbasis.out":   GenericBigBasisTest,
     "Psi4/Psi4-beta5/dvb_gopt_hf.out":  Psi4GeoOptTest,
     "Psi4/Psi4-beta5/dvb_sp_hf.out":    GenericBasisTest,
-    "Psi4/Psi4-beta5/dvb_sp_hf.out":    PsiSPTest_noatommasses,
+    "Psi4/Psi4-beta5/dvb_sp_hf.out":    PsiHFSPTest_noatommasses,
     "Psi4/Psi4-beta5/dvb_sp_ks.out":    GenericBasisTest,
     "Psi4/Psi4-beta5/dvb_sp_ks.out":    PsiSPTest_noatommasses,
     "Psi4/Psi4-beta5/water_ccsd.out":   GenericCCTest,
