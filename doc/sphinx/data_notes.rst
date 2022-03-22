@@ -120,7 +120,7 @@ The attribute ``coreelectrons`` contains the number of core electrons in each at
 dispersionenergies
 ------------------
 
-This is a rank 1 array that contains the isolated dispersion energy for each geometry.  This will be generally true for empirical models, such as those from Grimme that only depend on relative atomic positions.  For self-consistently determined corrections that are incorporated during SCF iterations, this array will be empty.
+This is a rank 1 array that contains the isolated dispersion energy for each geometry.  This will be populated for empirical models, such as those from Grimme that only depend on relative atomic positions.  For self-consistently determined corrections that are incorporated during SCF iterations, there is no separable dispersion energy contribution, so this attribute will not be present.
 
 However, in *all* cases the dispersion energy for a given geometry will also be a part of `scfenergies`_.
 
