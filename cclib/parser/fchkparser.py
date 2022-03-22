@@ -149,7 +149,7 @@ class FChk(logfileparser.Logfile):
             assert count == self.nmo
 
             energies = numpy.array(self._parse_block(inputfile, count, float, 'Alpha MO Energies'))
-            self.set_attribute('moenergies', [energies])
+            self.set_attribute('moenergies', [utils.convertor(energies, 'hartree', 'eV')])
 
         if line[0:20] == 'Beta MO coefficients':
             count = int(line.split()[-1])
@@ -164,7 +164,7 @@ class FChk(logfileparser.Logfile):
             assert count == self.nmo
 
             energies = numpy.array(self._parse_block(inputfile, count, float, 'Alpha MO Energies'))
-            self.append_attribute('moenergies', energies)
+            self.append_attribute('moenergies', utils.convertor(energies, 'hartree', 'eV'))
 
         if line[0:11] == 'Shell types':
             self.parse_aonames(line, inputfile)
