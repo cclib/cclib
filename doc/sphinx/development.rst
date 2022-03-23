@@ -31,7 +31,7 @@ We follow a typical GitHub collaborative model, relying on `forks and pull reque
 
 * `Creating your own fork`_ of cclib in order to develop
 * `Creating a pull request`_ to contribute your changes
-* Reviewing and merging open pull requests (by someone else)
+* Reviewing and merging open pull requests into master
 * Using `issues`_ to plan and prioritize future work
 
 .. _`forks and pull requests`: https://docs.github.com/en/github/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests
@@ -41,6 +41,8 @@ We follow a typical GitHub collaborative model, relying on `forks and pull reque
 
 Here are some general guidelines for developers who are contributing code:
 
+* All contributions should be reviewed by at least one core developer
+* Contributions from a core developer need to be reviewed by another core developer
 * Run and review the unit tests (see below) before submitting a pull request.
 * There should normally not be more failed tests than before your changes.
 * For larger changes or features that take some time to implement, `using branches`_ is recommended.
