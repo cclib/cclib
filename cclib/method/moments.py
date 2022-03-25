@@ -29,11 +29,11 @@ class Moments(Method):
 
     def __str__(self):
         """Returns a string representation of the object."""
-        return "Multipole moments of %s" % (self.data)
+        return f"Multipole moments of {self.data}"
 
     def __repr__(self):
         """Returns a representation of the object."""
-        return 'Moments("%s")' % (self.data)
+        return f'Moments("{self.data}")'
 
     def _calculate_dipole(self, charges, coords, origin):
         """Calculate the dipole moment from the given atomic charges
@@ -129,7 +129,7 @@ class Moments(Method):
                     raise ValueError(msg, e)
             origin_pos = numpy.average(coords, weights=atommasses, axis=0)
         else:
-            raise ValueError("{} is invalid value for 'origin'".format(origin))
+            raise ValueError(f"{origin} is invalid value for 'origin'")
 
         dipole = self._calculate_dipole(charges, coords, origin_pos)
         quadrupole = self._calculate_quadrupole(charges, coords, origin_pos)

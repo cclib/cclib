@@ -205,7 +205,7 @@ class Logfile(ABC):
             self.isstream = False
             self.isfileinput = True
         elif hasattr(source, "read"):
-            self.filename = "stream %s" % str(type(source))
+            self.filename = f"stream {str(type(source))}"
             self.isstream = True
             self.stream = source
         else:
@@ -217,7 +217,7 @@ class Logfile(ABC):
         #   which means that care needs to be taken not to duplicate handlers.
         self.loglevel = loglevel
         self.logname = logname
-        self.logger = logging.getLogger('%s %s' % (self.logname, self.filename))
+        self.logger = logging.getLogger(f"{self.logname} {self.filename}")
         self.logger.setLevel(self.loglevel)
         if len(self.logger.handlers) == 0:
             handler = logging.StreamHandler(logstream)
@@ -257,9 +257,9 @@ class Logfile(ABC):
             # Call logger.info() only if the attribute is new.
             if not hasattr(self, name):
                 if type(value) in [numpy.ndarray, list]:
-                    self.logger.info("Creating attribute %s[]" % name)
+                    self.logger.info(f"Creating attribute {name}[]")
                 else:
-                    self.logger.info("Creating attribute %s: %s" % (name, str(value)))
+                    self.logger.info(f"Creating attribute {name}: {str(value)}")
 
         # Set the attribute.
         object.__setattr__(self, name, value)
@@ -270,11 +270,17 @@ class Logfile(ABC):
         # Check that the sub-class has an extract attribute,
         #  that is callable with the proper number of arguemnts.
         if not hasattr(self, "extract"):
-            raise AttributeError("Class %s has no extract() method." % self.__class__.__name__)
+            raise AttributeError(
+                f"Class {self.__class__.__name__} has no extract() method."
+            )
         if not callable(self.extract):
-            raise AttributeError("Method %s._extract not callable." % self.__class__.__name__)
+            raise AttributeError(
+                f"Method {self.__class__.__name__}._extract not callable."
+            )
         if len(inspect.getfullargspec(self.extract)[0]) != 3:
-            raise AttributeError("Method %s._extract takes wrong number of arguments." % self.__class__.__name__)
+            raise AttributeError(
+                f"Method {self.__class__.__name__}._extract takes wrong number of arguments."
+            )
 
         # Save the current list of attributes to keep after parsing.
         # The dict of self should be the same after parsing.
@@ -318,7 +324,7 @@ class Logfile(ABC):
                 break
             except Exception as e:
                 self.logger.error("Encountered error when parsing.")
-                self.logger.error("Last line read: %s" % inputfile.last_line)
+                self.logger.error(f"Last line read: {inputfile.last_line}")
                 raise
 
         # Close input file object.
@@ -428,7 +434,9 @@ class Logfile(ABC):
             try:
                 numpy.testing.assert_equal(getattr(self, name), value)
             except AssertionError:
-                self.logger.warning("Attribute %s changed value (%s -> %s)" % (name, getattr(self, name), value))
+                self.logger.warning(
+                    f"Attribute {name} changed value ({getattr(self, name)} -> {value})"
+                )
 
         setattr(self, name, value)
 
@@ -503,7 +511,7 @@ class Logfile(ABC):
                 except AssertionError:
                     frame, fname, lno, funcname, funcline, index = inspect.getouterframes(inspect.currentframe())[1]
                     parser = fname.split('/')[-1]
-                    msg = "In %s, line %i, line not blank as expected: %s" % (parser, lno, line.strip())
+                    msg = f"In {parser}, line {int(lno)}, line not blank as expected: {line.strip()}"
                     self.logger.warning(msg)
 
             # All cases of heterogeneous lines can be dealt with by the same code.
@@ -514,7 +522,7 @@ class Logfile(ABC):
                     except AssertionError:
                         frame, fname, lno, funcname, funcline, index = inspect.getouterframes(inspect.currentframe())[1]
                         parser = fname.split('/')[-1]
-                        msg = "In %s, line %i, line not all %s as expected: %s" % (parser, lno, keys[0], line.strip())
+                        msg = f"In {parser}, line {int(lno)}, line not all {keys[0]} as expected: {line.strip()}"
                         self.logger.warning(msg)
                         continue
 

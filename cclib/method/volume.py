@@ -181,11 +181,7 @@ class Volume(object):
 
     def __str__(self):
         """Return a string representation."""
-        return "Volume %s to %s (density: %s)" % (
-            self.origin,
-            self.topcorner,
-            self.spacing,
-        )
+        return f"Volume {self.origin} to {self.topcorner} (density: {self.spacing})"
 
     def write(self, filename, fformat="Cube"):
         """Write the volume to a file."""
@@ -277,7 +273,7 @@ class Volume(object):
 
 def scinotation(num):
     """Write in scientific notation."""
-    ans = "%10.5E" % num
+    ans = f"{num:10.5E}"
     broken = ans.split("E")
     exponent = int(broken[1])
     if exponent < -99:
@@ -286,7 +282,7 @@ def scinotation(num):
         sign = "-"
     else:
         sign = "+"
-    return ("%sE%s%s" % (broken[0], sign, broken[1][-2:])).rjust(12)
+    return (f"{broken[0]}E{sign}{broken[1][-2:]}").rjust(12)
 
 
 def getGrid(vol):

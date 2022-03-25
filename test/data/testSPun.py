@@ -84,7 +84,7 @@ class GenericSPunTest(unittest.TestCase):
 
     def testhomos(self):
         """Are the homos correct?"""
-        msg = "%s != array([34,33],'i')" % numpy.array_repr(self.data.homos)
+        msg = f"{numpy.array_repr(self.data.homos)} != array([34,33],'i')"
         numpy.testing.assert_array_equal(self.data.homos, numpy.array([34,33],"i"), msg)
 
     def testmoenergies(self):
@@ -123,7 +123,7 @@ class GenericROSPTest(GenericSPunTest):
         """Are the HOMO indices equal to 34 and 33 (one more alpha electron
         than beta electron)?
         """
-        msg = "%s != array([34, 33], 'i')" % numpy.array_repr(self.data.homos)
+        msg = f"{numpy.array_repr(self.data.homos)} != array([34, 33], 'i')"
         numpy.testing.assert_array_equal(self.data.homos, numpy.array([34, 33], "i"), msg)
 
     @skipForParser('QChem', 'prints 2 sets of different MO energies?')

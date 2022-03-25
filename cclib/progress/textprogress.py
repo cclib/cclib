@@ -36,12 +36,12 @@ class TextProgress:
             mystr = "\r["
             prog = int(self.progress / 10)
             mystr += prog * "=" + (10-prog) * "-"
-            mystr += "] %3i" % self.progress + "%"
+            mystr += f"] {int(self.progress):3}%"
 
             if text:
-                mystr += "    "+text
+                mystr += f"    {text}"
 
-            sys.stdout.write("\r" + 70 * " ")
+            sys.stdout.write(f"\r{70 * ' '}")
             sys.stdout.flush()
             sys.stdout.write(mystr)
             sys.stdout.flush()

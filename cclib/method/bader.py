@@ -58,11 +58,11 @@ class Bader(Method):
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "Bader's QTAIM charges of {}".format(self.data)
+        return f"Bader's QTAIM charges of {self.data}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return "Bader({})".format(self.data)
+        return f"Bader({self.data})"
 
     def _check_required_attributes(self):
         super()._check_required_attributes()
@@ -201,9 +201,7 @@ class Bader(Method):
 
         assert (
             0 not in self.matches
-        ), "Failed to assign Bader regions to atoms. Try with a finer grid. Content of Bader area matches: {}".format(
-            self.matches
-        )
+        ), f"Failed to assign Bader regions to atoms. Try with a finer grid. Content of Bader area matches: {self.matches}"
         assert len(
             numpy.unique(self.matches) != len(self.data.atomnos)
         ), "Failed to assign unique Bader regions to each atom. Try with a finer grid."

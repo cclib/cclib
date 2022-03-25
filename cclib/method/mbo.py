@@ -22,11 +22,11 @@ class MBO(Density):
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "Mayer's bond order of %s" % (self.data)
+        return f"Mayer's bond order of {self.data}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'Mayer\'s bond order("%s")' % (self.data)
+        return f'Mayer\'s bond order("{self.data}")'
 
     def calculate(self, indices=None, fupdate=0.05):
         """Calculate Mayer's bond orders."""

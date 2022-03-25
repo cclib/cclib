@@ -45,8 +45,7 @@ class GenericBasisTest(unittest.TestCase):
         """Are the name of basis set functions acceptable?"""
         for atom in self.data.gbasis:
             for fns in atom:
-                self.assertTrue(fns[0] in self.names,
-                             "%s not one of S or P" % fns[0])
+                self.assertTrue(fns[0] in self.names, f"{fns[0]} not one of S or P")
 
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testsizeofbasis(self):

@@ -26,11 +26,11 @@ class ORCA(logfileparser.Logfile):
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "ORCA log file %s" % (self.filename)
+        return f"ORCA log file {self.filename}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'ORCA("%s")' % (self.filename)
+        return f'ORCA("{self.filename}")'
 
     def normalisesym(self, label):
         """ORCA does not require normalizing symmetry labels."""
@@ -86,10 +86,8 @@ class ORCA(logfileparser.Logfile):
             self.metadata["package_version"] = self.metadata["legacy_package_version"].replace(".x", "dev")
             possible_revision_line = next(inputfile)
             if "SVN: $Rev" in possible_revision_line:
-                self.metadata["package_version"] += "+{}".format(
-                    re.search(r"\d+", possible_revision_line).group()
-                )
-
+                version = re.search(r'\d+', possible_revision_line).group()
+                self.metadata["package_version"] += f"+{version}"
 
         # ================================================================================
         #                                         WARNINGS
@@ -915,7 +913,7 @@ Dispersion correction           -0.016199959
                             num = int(line[0:3])
                             orbital = line.split()[1].upper()
 
-                            aonames.append("%s%i_%s" % (atomname, num+1, orbital))
+                            aonames.append(f"{atomname}{int(num + 1)}_{orbital}")
                             atombasis[num].append(j)
 
                         # This regex will tease out all number with exactly
@@ -2011,7 +2009,9 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             try:
                 line = next(inputfile).split()
             except StopIteration:
-                self.logger.warning('File terminated before end of last SCF! Last Max-DP: {}'.format(maxDP))
+                self.logger.warning(
+                    f"File terminated before end of last SCF! Last Max-DP: {maxDP}"
+                )
                 break
 
     def parse_scf_expanded_format(self, inputfile, line):

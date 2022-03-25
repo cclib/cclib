@@ -47,11 +47,11 @@ class CML(filewriter.Writer):
                 atom = ET.SubElement(atomArray, 'atom')
                 x, y, z = self.ccdata.atomcoords[-1][atomid].tolist()
                 d = {
-                    'id': 'a{}'.format(atomid + 1),
-                    'elementType': elements[atomid],
-                    'x3': '{:.10f}'.format(x),
-                    'y3': '{:.10f}'.format(y),
-                    'z3': '{:.10f}'.format(z),
+                    "id": f"a{atomid + 1}",
+                    "elementType": elements[atomid],
+                    "x3": f"{x:.10f}",
+                    "y3": f"{y:.10f}",
+                    "z3": f"{z:.10f}",
                 }
                 _set_attrs(atom, d)
 
@@ -59,11 +59,8 @@ class CML(filewriter.Writer):
         bondArray = ET.SubElement(molecule, 'bondArray')
         if _has_openbabel:
             for bc in self.bond_connectivities:
-                bond = ET.SubElement(bondArray, 'bond')
-                d = {
-                    'atomRefs2': 'a{} a{}'.format(bc[0] + 1, bc[1] + 1),
-                    'order': str(bc[2]),
-                }
+                bond = ET.SubElement(bondArray, "bond")
+                d = {"atomRefs2": f"a{bc[0] + 1} a{bc[1] + 1}", "order": str(bc[2])}
                 _set_attrs(bond, d)
 
         _indent(molecule)
@@ -82,10 +79,10 @@ def _set_attrs(element, d):
 
 def _indent(elem, level=0):
     """An in-place pretty-print indenter for XML."""
-    i = "\n" + (level * "  ")
+    i = f"\n{level * '  '}"
     if len(elem):
         if not elem.text or not elem.text.strip():
-            elem.text = i + "  "
+            elem.text = f"{i}  "
         if not elem.tail or not elem.tail.strip():
             elem.tail = i
         for elem in elem:

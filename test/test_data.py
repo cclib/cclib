@@ -41,15 +41,17 @@ module_names = [
     "MP", "CC", "CI", "TD", "TDun",             # Post-SCF calculations.
     "BOMD", "NMR", "Polar", "Scan", "vib"       # Other property calculations.
 ]
-all_modules = {tn: importlib.import_module('.data.test' + tn, package='test')
-               for tn in module_names}
+all_modules = {
+    tn: importlib.import_module(f".data.test{tn}", package="test")
+    for tn in module_names
+}
 
 
 def gettestdata():
     """Return a dict of the test file data."""
 
     testdatadir = os.path.dirname(os.path.realpath(__file__))
-    with open(testdatadir + '/testdata') as testdatafile:
+    with open(f"{testdatadir}/testdata") as testdatafile:
         lines = testdatafile.readlines()
 
     # Remove blank lines and those starting with '#'.
@@ -173,8 +175,8 @@ class DataSuite:
             description = ''
             if not self.silent:
                 print("", file=stream_test)
-                description = "%s/%s: %s" % (td['subdir'], ",".join(td['files']), test.__doc__)
-                print("*** %s ***" % description, file=self.stream)
+                description = f"{td['subdir']}/{','.join(td['files'])}: {test.__doc__}"
+                print(f"*** {description} ***", file=self.stream)
 
             test.data, test.logfile = getdatafile(
                 parser, td['subdir'], td['files'], stream=self.stream, loglevel=self.loglevel,
@@ -201,8 +203,12 @@ class DataSuite:
             self.perpackage[td['parser']][3] += len(getattr(results, 'skipped', []))
 
             self.alltests.append(test)
-            self.errors.extend([description + "\n" + "".join(map(str, e)) for e in results.errors])
-            self.failures.extend([description + "\n" + "".join(map(str, f)) for f in results.failures])
+            self.errors.extend(
+                [f"{description}\n{''.join(map(str, e))}" for e in results.errors]
+            )
+            self.failures.extend(
+                [f"{description}\n{''.join(map(str, f))}" for f in results.failures]
+            )
 
         if self.terse:
             devnull.close()
@@ -234,8 +240,10 @@ class DataSuite:
                 total[i] += l[i]
 
         print("\n********* SUMMARY OF EVERYTHING **************", file=self.stream)
-        print("TOTAL: %d\tPASSED: %d\tFAILED: %d\tERRORS: %d\tSKIPPED: %d" \
-                %(total[0], total[0]-(total[1]+total[2]+total[3]), total[2], total[1], total[3]), file=self.stream)
+        print(
+            f"TOTAL: {int(total[0])}\tPASSED: {int(total[0] - (total[1] + total[2] + total[3]))}\tFAILED: {int(total[2])}\tERRORS: {int(total[1])}\tSKIPPED: {int(total[3])}",
+            file=self.stream,
+        )
 
     def visualtests(self, stream=sys.stdout):
         """These are not formal tests -- but they should be eyeballed."""
@@ -260,10 +268,31 @@ class DataSuite:
 
         print("\n*** Visual tests ***", file=self.stream)
         print("MO energies of optimised dvb", file=self.stream)
-        print("      ", "".join(["%-12s" % pn for pn in parser_names]), file=self.stream)
-        print("HOMO", "   ".join(["%+9.4f" % out.moenergies[0][out.homos[0]] for out in output]), file=self.stream)
-        print("LUMO", "   ".join(["%+9.4f" % out.moenergies[0][out.homos[0]+1] for out in output]), file=self.stream)
-        print("H-L ", "   ".join(["%9.4f" % (out.moenergies[0][out.homos[0]+1]-out.moenergies[0][out.homos[0]],) for out in output]), file=self.stream)
+        print(
+            "      ", "".join([f"{pn:12s}" for pn in parser_names]), file=self.stream
+        )
+        print(
+            "HOMO",
+            "   ".join([f"{out.moenergies[0][out.homos[0]]:+9.4f}" for out in output]),
+            file=self.stream,
+        )
+        print(
+            "LUMO",
+            "   ".join(
+                [f"{out.moenergies[0][out.homos[0] + 1]:+9.4f}" for out in output]
+            ),
+            file=self.stream,
+        )
+        print(
+            "H-L ",
+            "   ".join(
+                [
+                    f"{out.moenergies[0][out.homos[0] + 1] - out.moenergies[0][out.homos[0]]:9.4f}"
+                    for out in output
+                ]
+            ),
+            file=self.stream,
+        )
 
 
 def test_all(parsers, modules, terse, silent, loglevel, summary, visual_tests):

@@ -86,7 +86,7 @@ class Writer(ABC):
         if missing:
             missing = ' '.join(missing)
             raise MissingAttributeError(
-                'Could not parse required attributes to write file: ' + missing)
+                f"Could not parse required attributes to write file: {missing}")
 
     def _make_openbabel_from_ccdata(self):
         """Create Open Babel and Pybel molecules from ccData."""

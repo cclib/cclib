@@ -21,11 +21,11 @@ class Psi3(logfileparser.Logfile):
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "Psi3 log file %s" % (self.filename)
+        return f"Psi3 log file {self.filename}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'Psi3("%s")' % (self.filename)
+        return f'Psi3("{self.filename}")'
 
     def normalisesym(self, label):
         """Psi3 does not require normalizing symmetry labels."""

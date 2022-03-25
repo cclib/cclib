@@ -305,15 +305,15 @@ class ccData:
                 val = self._attributes[attr].type(val)
             except ValueError:
                 args = (attr, type(val), self._attributes[attr].type)
-                raise TypeError("attribute %s is %s instead of %s and could not be converted" % args)
+                raise TypeError(
+                    f"attribute {args[0]} is {args[1]} instead of {args[2]} and could not be converted"
+                )
 
     def check_values(self, logger=logging):
         """Perform custom checks on the values of attributes."""
         if hasattr(self, "etenergies") and any(e < 0 for e in self.etenergies):
             negative_values = [e for e in self.etenergies if e < 0]
-            msg = ("At least one excitation energy is negative. "
-                   "\nNegative values: %s\nFull etenergies: %s"
-                   % (negative_values, self.etenergies))
+            msg = f"At least one excitation energy is negative. \nNegative values: {negative_values}\nFull etenergies: {self.etenergies}"
             logger.error(msg)
 
     def write(self, filename=None, indices=None, *args, **kwargs):

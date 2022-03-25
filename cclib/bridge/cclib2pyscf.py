@@ -35,12 +35,11 @@ def makepyscf(data, charge=0, mult=1):
     if missing:
         missing = " ".join(missing)
         raise MissingAttributeError(
-            "Could not create pyscf molecule due to missing attribute: {}".format(missing)
+            f"Could not create pyscf molecule due to missing attribute: {missing}"
         )
     mol = gto.Mole(
         atom=[
-            ["{}".format(data.atomnos[i]), data.atomcoords[-1][i]]
-            for i in range(data.natom)
+            [f"{data.atomnos[i]}", data.atomcoords[-1][i]] for i in range(data.natom)
         ],
         unit="Angstrom",
         charge=charge,
@@ -58,12 +57,12 @@ def makepyscf(data, charge=0, mult=1):
             for jdx, j in enumerate(curr_atom_basis):
                 curr_l = j[0]
                 curr_e_prim = j[1]
-                new_list = [l_sym2num["{}".format(curr_l)]]
+                new_list = [l_sym2num[f"{curr_l}"]]
                 new_list += curr_e_prim
-                if not "{}".format(pt.element[uatoms[idx]]) in basis:
-                    basis["{}".format(pt.element[uatoms[idx]])] = [new_list]
+                if not f"{pt.element[uatoms[idx]]}" in basis:
+                    basis[f"{pt.element[uatoms[idx]]}"] = [new_list]
                 else:
-                    basis["{}".format(pt.element[uatoms[idx]])].append(new_list)
+                    basis[f"{pt.element[uatoms[idx]]}"].append(new_list)
         mol.basis = basis
         mol.cart = True
     return mol

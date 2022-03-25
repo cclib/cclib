@@ -83,7 +83,9 @@ class GenericSPTest(unittest.TestCase):
         """Are atomcoords consistent with Angstroms?"""
         min_carbon_dist = get_minimum_carbon_separation(self.data)
         dev = abs(min_carbon_dist - 1.34)
-        self.assertTrue(dev < 0.03, "Minimum carbon dist is %.2f (not 1.34)" % min_carbon_dist)
+        self.assertTrue(
+            dev < 0.03, f"Minimum carbon dist is {min_carbon_dist:.2f} (not 1.34)"
+        )
 
     @skipForParser('Molcas', 'missing mult')
     def testcharge_and_mult(self):
@@ -124,7 +126,7 @@ class GenericSPTest(unittest.TestCase):
     def testatommasses(self):
         """Do the atom masses sum up to the molecular mass?"""
         mm = 1000*sum(self.data.atommasses)
-        msg = "Molecule mass: %f not %f +- %fmD" % (mm, self.molecularmass, self.mass_precision)
+        msg = f"Molecule mass: {mm:f} not {self.molecularmass:f} +- {self.mass_precision:f}mD"
         self.assertAlmostEqual(mm, self.molecularmass, delta=self.mass_precision, msg=msg)
 
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
@@ -143,7 +145,11 @@ class GenericSPTest(unittest.TestCase):
 
     def testhomos(self):
         """Is the index of the HOMO equal to 34?"""
-        numpy.testing.assert_array_equal(self.data.homos, numpy.array([34],"i"), "%s != array([34],'i')" % numpy.array_repr(self.data.homos))
+        numpy.testing.assert_array_equal(
+            self.data.homos,
+            numpy.array([34], "i"),
+            f"{numpy.array_repr(self.data.homos)} != array([34],'i')",
+        )
 
     @skipForParser('FChk', 'Formatted Checkpoint files do not have a section for SCF energy')
     def testscfvaluetype(self):

@@ -108,12 +108,12 @@ class MOLDENTest(unittest.TestCase):
         filenames = ['dvb_un_sp', 'C_bigbasis', 'water_mp2']
         for fn in filenames:
             fpath = os.path.join(__datadir__,
-                                 "data/GAMESS/basicGAMESS-US2018/"+fn+".out")
+                                 f"data/GAMESS/basicGAMESS-US2018/{fn}.out")
             data = cclib.io.ccread(fpath)
             cclib_out = cclib.io.moldenwriter.MOLDEN(data).generate_repr()
             # Reformat cclib's output to remove extra spaces.
             cclib_out_formatted = MoldenReformatter(cclib_out).reformat()
-            fpath = os.path.join(__testdir__, "data/molden5.7_"+fn+".molden")
+            fpath = os.path.join(__testdir__, f"data/molden5.7_{fn}.molden")
             with open(fpath) as handle:
                 molden_out = handle.read()
             # Reformat Molden's output to remove extra spaces,

@@ -24,11 +24,11 @@ class Jaguar(logfileparser.Logfile):
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "Jaguar output file %s" % (self.filename)
+        return f"Jaguar output file {self.filename}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'Jaguar("%s")' % (self.filename)
+        return f'Jaguar("{self.filename}")'
 
     def normalisesym(self, label):
         """Normalise the symmetries used by Jaguar.
@@ -63,7 +63,7 @@ class Jaguar(logfileparser.Logfile):
         if "Jaguar version" in line:
             tokens = line.split()
             base_version = tokens[3][:-1]
-            package_version = "{}+{}".format(base_version, tokens[5])
+            package_version = f"{base_version}+{tokens[5]}"
             self.metadata["package_version"] = package_version
             self.metadata["legacy_package_version"] = base_version
 
@@ -310,7 +310,9 @@ class Jaguar(logfileparser.Logfile):
                 try:
                     line = next(inputfile)
                 except StopIteration:
-                    self.logger.warning('File terminated before end of last SCF! Last error: {}'.format(maxdiiserr))
+                    self.logger.warning(
+                        f"File terminated before end of last SCF! Last error: {maxdiiserr}"
+                    )
                     break
             self.scfvalues.append(values)
 
@@ -447,17 +449,17 @@ class Jaguar(logfileparser.Logfile):
                                 dcount = 6  # six d orbitals in Jaguar
 
                             if info[2] == 'S':
-                                aonames.append("%s_%i%s" % (info[1], scount, info[2]))
+                                aonames.append(f"{info[1]}_{int(scount)}{info[2]}")
                                 scount += 1
 
                             if info[2] == 'X' or info[2] == 'Y' or info[2] == 'Z':
-                                aonames.append("%s_%iP%s" % (info[1], pcount / 3, info[2]))
+                                aonames.append(f"{info[1]}_{int(pcount / 3)}P{info[2]}")
                                 pcount += 1
 
                             if info[2] == 'XX' or info[2] == 'YY' or info[2] == 'ZZ' or \
                                info[2] == 'XY' or info[2] == 'XZ' or info[2] == 'YZ':
 
-                                aonames.append("%s_%iD%s" % (info[1], dcount / 6, info[2]))
+                                aonames.append(f"{info[1]}_{int(dcount / 6)}D{info[2]}")
                                 dcount += 1
 
                             lastatom = info[1]
