@@ -36,14 +36,14 @@ jobs:
         run: |
           env | sort
           bash .github/scripts/run_pytest.bash
-      - name: Test method code with pytest
-        if: steps.filter.outputs.method == 'true' 
+      - name: Test methods with pytest
+        if: steps.filter.outputs.methods == 'false'
         run: |
           bash .github/scripts/run_pytest_methods.bash
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
         with:
-          files: ./coverage-unit.xml,./coverage-regression.xml
+          files: ./coverage-unit.xml,./coverage-regression.xml,./coverage-method.xml
           name: codecov-cclib
           fail_ci_if_error: true
           verbose: false
