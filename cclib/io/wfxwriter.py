@@ -60,16 +60,16 @@ _M = dict(
 
 def _section(section_name, section_data):
     """Add opening/closing section_name tags to data."""
-    opening_tag = ['<' + section_name + '>']
-    closing_tag = ['</' + section_name + '>']
+    opening_tag = [f"<{section_name}>"]
+    closing_tag = [f"</{section_name}>"]
 
     section = None
     if isinstance(section_data, list):
         section = opening_tag + section_data + closing_tag
     elif isinstance(section_data, str):
-        section = opening_tag + (' ' + section_data).split('\n') + closing_tag
+        section = opening_tag + f" {section_data}".split("\n") + closing_tag
     elif isinstance(section_data, int) or isinstance(section_data, float):
-        section = opening_tag + [' ' + str(section_data)] + closing_tag
+        section = opening_tag + [f" {str(section_data)}"] + closing_tag
     return section
 
 
@@ -80,11 +80,13 @@ def _list_format(data, per_line, style=WFX_FIELD_FMT):
     # Template for last line.
     last_template = style * leftover
 
-    pretty_list = [template%tuple(data[i:i+per_line])
-                    for i in range(0, len(data) - leftover, per_line)]
+    pretty_list = [
+        template % tuple(data[i : i + per_line])
+        for i in range(0, len(data) - leftover, per_line)
+    ]
     if leftover:
-        return pretty_list + [last_template%tuple(data[-1*leftover:])]
-    return  pretty_list
+        return pretty_list + [last_template % tuple(data[-1 * leftover :])]
+    return pretty_list
 
 
 class WFXWriter(filewriter.Writer):
@@ -98,8 +100,7 @@ class WFXWriter(filewriter.Writer):
         Return filename without extension to be used as title."""
         title = "Written by cclib."
         if self.jobfilename is not None:
-            return os.path.basename(os.path.splitext(self.jobfilename)[0]) +\
-                    '. ' + title
+            return f"{os.path.basename(os.path.splitext(self.jobfilename)[0])}. {title}"
         return title
 
     def _keywords(self):
@@ -156,19 +157,22 @@ class WFXWriter(filewriter.Writer):
     def _nuclear_charges(self):
         """Section: Nuclear Charges."""
         nuclear_charge = [WFX_FIELD_FMT % Z for Z in self.ccdata.atomnos]
-        if hasattr(self.ccdata, 'coreelectrons'):
-            nuclear_charge = [WFX_FIELD_FMT % Z
-                              for Z in self.ccdata.atomnos -
-                              self.ccdata.coreelectrons]
+        if hasattr(self.ccdata, "coreelectrons"):
+            nuclear_charge = [
+                WFX_FIELD_FMT % Z
+                for Z in self.ccdata.atomnos - self.ccdata.coreelectrons
+            ]
         return nuclear_charge
 
     def _nuclear_coords(self):
         """Section: Nuclear Cartesian Coordinates.
         Nuclear coordinates in Bohr."""
         coord_template = WFX_FIELD_FMT * 3
-        to_bohr = lambda x: utils.convertor(x, 'Angstrom', 'bohr')
-        nuc_coords = [coord_template % tuple(to_bohr(coord))
-                      for coord in self.ccdata.atomcoords[-1]]
+        to_bohr = lambda x: utils.convertor(x, "Angstrom", "bohr")
+        nuc_coords = [
+            coord_template % tuple(to_bohr(coord))
+            for coord in self.ccdata.atomcoords[-1]
+        ]
         return nuc_coords
 
     def _net_charge(self):
@@ -204,7 +208,7 @@ class WFXWriter(filewriter.Writer):
                 prim_centers += [nuc_num] * ORBITAL_COUNT[prims[0]]\
                                 * len(prims[1])
 
-        return _list_format(prim_centers, 10, '%d ')
+        return _list_format(prim_centers, 10, "%d ")
 
     def _rearrange_modata(self, data):
         """Rearranges MO related data according the expected order of
@@ -263,7 +267,7 @@ class WFXWriter(filewriter.Writer):
         # GAMESS specific reordering.
         if self.ccdata.metadata['package'] == 'GAMESS':
             prim_types = self._rearrange_modata(prim_types)
-        return _list_format(prim_types, 10, '%d ')
+        return _list_format(prim_types, 10, "%d ")
 
     def _prim_exps(self):
         """Section: Primitive Exponents.
@@ -282,11 +286,11 @@ class WFXWriter(filewriter.Writer):
         alpha = self._no_alpha_electrons()
         beta = self._no_beta_electrons()
         if len(self.ccdata.homos) == 1:
-            occup += [WFX_FIELD_FMT % (2)] * int(electrons / 2) +\
-                        [WFX_FIELD_FMT % (1)] * (electrons % 2)
+            occup += [WFX_FIELD_FMT % (2)] * int(electrons / 2) + [
+                WFX_FIELD_FMT % (1)
+            ] * (electrons % 2)
         else:
-            occup += [WFX_FIELD_FMT % (1)] *  + alpha +\
-                        [WFX_FIELD_FMT % (1)] * beta
+            occup += [WFX_FIELD_FMT % (1)] * +alpha + [WFX_FIELD_FMT % (1)] * beta
         return occup
 
     def _mo_energies(self):
@@ -295,12 +299,14 @@ class WFXWriter(filewriter.Writer):
         alpha_elctrons = self._no_alpha_electrons()
         beta_electrons = self._no_beta_electrons()
         for mo_energy in self.ccdata.moenergies[0][:alpha_elctrons]:
-            mo_energies.append(WFX_FIELD_FMT % (
-                utils.convertor(mo_energy, 'eV', 'hartree')))
+            mo_energies.append(
+                WFX_FIELD_FMT % (utils.convertor(mo_energy, "eV", "hartree"))
+            )
         if self.ccdata.mult > 1:
             for mo_energy in self.ccdata.moenergies[1][:beta_electrons]:
-                mo_energies.append(WFX_FIELD_FMT % (
-                    utils.convertor(mo_energy, 'eV', 'hartree')))
+                mo_energies.append(
+                    WFX_FIELD_FMT % (utils.convertor(mo_energy, "eV", "hartree"))
+                )
         return mo_energies
 
     def _mo_spin_types(self):
@@ -310,8 +316,9 @@ class WFXWriter(filewriter.Writer):
         alpha = self._no_alpha_electrons()
         beta = self._no_beta_electrons()
         if len(self.ccdata.homos) == 1:
-            spin_types += ['Alpha and Beta'] * int(electrons / 2) +\
-                            ['Alpha'] * (electrons % 2)
+            spin_types += ["Alpha and Beta"] * int(electrons / 2) + ["Alpha"] * (
+                electrons % 2
+            )
         else:
             spin_types += ['Alpha'] * alpha +\
                             ['Beta'] * beta
@@ -448,9 +455,8 @@ class WFXWriter(filewriter.Writer):
         elif hasattr(self.ccdata, 'scfenergies'):
             energy = self.ccdata.scfenergies[-1]
         else:
-            raise filewriter.MissingAttributeError(
-                'scfenergies/mpenergies/ccenergies')
-        return WFX_FIELD_FMT % (utils.convertor(energy, 'eV', 'hartree'))
+            raise filewriter.MissingAttributeError("scfenergies/mpenergies/ccenergies")
+        return WFX_FIELD_FMT % (utils.convertor(energy, "eV", "hartree"))
 
     def _virial_ratio(self):
         """Ratio of kinetic energy to potential energy."""
@@ -508,8 +514,8 @@ class WFXWriter(filewriter.Writer):
             except:
                 if section_required:
                     raise filewriter.MissingAttributeError(
-                        'Unable to write required wfx section: '
-                        + section_name)
+                        f"Unable to write required wfx section: {section_name}"
+                    )
 
         wfx_lines.append('')
         return '\n'.join(wfx_lines)

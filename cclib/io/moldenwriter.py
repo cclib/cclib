@@ -47,21 +47,20 @@ class MOLDEN(filewriter.Writer):
         if self.ghost is not None:
             elements = [self.ghost if e is None else e for e in elements]
         elif None in elements:
-            raise ValueError('It seems that there is at least one ghost atom ' +
-                             'in these elements. Please use the ghost flag to'+
-                             ' specify a label for the ghost atoms.')
+            raise ValueError(
+                f"It seems that there is at least one ghost atom in these elements. Please use the ghost flag to specify a label for the ghost atoms."
+            )
         atomcoords = self.ccdata.atomcoords[index]
         atomnos = self.ccdata.atomnos
         nos = range(self.ccdata.natom)
 
         # element_name number atomic_number x y z
-        atom_template = '{:2s} {:5d} {:2d} {:12.6f} {:12.6f} {:12.6f}'
+        atom_template = "{:2s} {:5d} {:2d} {:12.6f} {:12.6f} {:12.6f}"
         lines = []
         for element, no, atomno, coord in zip(elements, nos, atomnos,
                                               atomcoords):
             x, y, z = map(round_molden, coord)
-            lines.append(atom_template.format(element, no + 1, atomno,
-                                              x, y, z))
+            lines.append(atom_template.format(element, no + 1, atomno, x, y, z))
 
         return lines
 
@@ -77,12 +76,12 @@ class MOLDEN(filewriter.Writer):
         """
 
         gbasis = self.ccdata.gbasis
-        label_template = '{:s} {:5d} 1.00'
-        basis_template = '{:15.9e} {:15.9e}'
+        label_template = "{:s} {:5d} 1.00"
+        basis_template = "{:15.9e} {:15.9e}"
         lines = []
 
         for no, basis in enumerate(gbasis):
-            lines.append('{:3d} 0'.format(no + 1))
+            lines.append(f"{no + 1:3d} 0")
             for prims in basis:
                 lines.append(label_template.format(prims[0].lower(),
                                                    len(prims[1])))
@@ -102,10 +101,10 @@ class MOLDEN(filewriter.Writer):
            -673.590571
         """
 
-        lines = ["scf-first    1 THROUGH   %d" % len(self.ccdata.scfenergies)]
+        lines = [f"scf-first    1 THROUGH   {len(self.ccdata.scfenergies)}"]
 
         for scfenergy in self.ccdata.scfenergies:
-            lines.append('{:15.6f}'.format(scfenergy))
+            lines.append(f"{scfenergy:15.6f}")
 
         return lines
 
@@ -169,30 +168,30 @@ class MOLDEN(filewriter.Writer):
         spin = 'Alpha'
         for i in range(len(moenergies)):
             for j in range(len(moenergies[i])):
-                lines.append(' Sym= %s' % syms[i][j])
-                moenergy = utils.convertor(moenergies[i][j], 'eV', 'hartree')
-                lines.append(' Ene= {:10.4f}'.format(moenergy))
-                lines.append(' Spin= %s' % spin)
-                if unres and openshell: 
+                lines.append(f" Sym= {syms[i][j]}")
+                moenergy = utils.convertor(moenergies[i][j], "eV", "hartree")
+                lines.append(f" Ene= {moenergy:10.4f}")
+                lines.append(f" Spin= {spin}")
+                if unres and openshell:
                     if j <= homos[i]:
-                        lines.append(' Occup= {:10.6f}'.format(1.0))
+                        lines.append(f" Occup= {1.0:10.6f}")
                     else:
-                        lines.append(' Occup= {:10.6f}'.format(0.0))
+                        lines.append(f" Occup= {0.0:10.6f}")
                 elif not unres and openshell:
                     occ = numpy.sum(j <= homos)
                     if j <= homos[i]:
-                        lines.append(' Occup= {:10.6f}'.format(occ))
+                        lines.append(f" Occup= {occ:10.6f}")
                     else:
-                        lines.append(' Occup= {:10.6f}'.format(0.0))
+                        lines.append(f" Occup= {0.0:10.6f}")
                 else:
                     if j <= homos[i]:
-                        lines.append(' Occup= {:10.6f}'.format(2.0))
+                        lines.append(f" Occup= {2.0:10.6f}")
                     else:
-                        lines.append(' Occup= {:10.6f}'.format(0.0))
+                        lines.append(f" Occup= {0.0:10.6f}")
                 # Rearrange mocoeffs according to Molden's lexicographical order.
                 mocoeffs[i][j] = self._rearrange_mocoeffs(mocoeffs[i][j])
                 for k, mocoeff in enumerate(mocoeffs[i][j]):
-                    lines.append('{:4d}  {:10.6f}'.format(k + 1, mocoeff))
+                    lines.append(f"{k + 1:4d}  {mocoeff:10.6f}")
 
             spin = 'Beta'
 
@@ -211,7 +210,7 @@ class MOLDEN(filewriter.Writer):
         # Coordinates for the Electron Density/Molecular orbitals.
         # [Atoms] (Angs|AU)
         unit = "Angs"
-        molden_lines.append('[Atoms] %s' % unit)
+        molden_lines.append(f"[Atoms] {unit}")
         # Last set of coordinates for geometry optimization runs.
         index = -1
         molden_lines.extend(self._coords_from_ccdata(index))
@@ -248,8 +247,8 @@ class MoldenReformatter:
         """Convert Molden style number formatting to scientific notation.
         0.9910616900D+02 --> 9.910617e+01
         """
-        num = num.replace('D', 'e')
-        return str('%.9e' % decimal.Decimal(num))
+        num = num.replace("D", "e")
+        return str(f"{decimal.Decimal(num):.9e}")
 
     def reformat(self):
         """Reformat Molden output file to:
@@ -289,15 +288,17 @@ class MoldenReformatter:
             # Convert sp to s and p orbitals.
             elif 'sp' in line:
                 n_prim = int(line.split()[1])
-                new_s = ['s ' + str(n_prim) + ' 1.00']
-                new_p = ['p ' + str(n_prim) + ' 1.00']
+                new_s = [f"s {str(n_prim)} 1.00"]
+                new_p = [f"p {str(n_prim)} 1.00"]
                 while n_prim > 0:
                     n_prim -= 1
                     line = next(filelines).split()
-                    new_s.append(self.scinotation(line[0]) + ' '
-                                 + self.scinotation(line[1]))
-                    new_p.append(self.scinotation(line[0]) + ' '
-                                 + self.scinotation(line[2]))
+                    new_s.append(
+                        f"{self.scinotation(line[0])} {self.scinotation(line[1])}"
+                    )
+                    new_p.append(
+                        f"{self.scinotation(line[0])} {self.scinotation(line[2])}"
+                    )
                 lines.extend(new_s)
                 lines.extend(new_p)
             else:

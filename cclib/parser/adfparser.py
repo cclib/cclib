@@ -24,11 +24,11 @@ class ADF(logfileparser.Logfile):
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "ADF log file %s" % (self.filename)
+        return f"ADF log file {self.filename}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'ADF("%s")' % (self.filename)
+        return f'ADF("{self.filename}")'
 
     def normalisesym(self, label):
         """Use standard symmetry labels instead of ADF labels.
@@ -47,15 +47,15 @@ class ADF(logfileparser.Logfile):
 
         ans = label.replace(".", "")
         if ans[1:3] == "''":
-            temp = ans[0] + '"'
+            temp = f"{ans[0]}\""
             ans = temp
 
         l = len(ans)
         if l > 1 and ans[0] == ans[1]:  # Python only tests the second condition if the first is true
             if l > 2 and ans[1] == ans[2]:
-                ans = ans.replace(ans[0]*3, ans[0]) + '"'
+                ans = f"{ans.replace(ans[0] * 3, ans[0])}\""
             else:
-                ans = ans.replace(ans[0]*2, ans[0]) + "'"
+                ans = f"{ans.replace(ans[0] * 2, ans[0])}'"
         return ans
 
     def normalisedegenerates(self, label, num, ndict=None):
@@ -76,9 +76,9 @@ class ADF(logfileparser.Logfile):
             if num in ndict[label]:
                 return ndict[label][num]
             else:
-                return "%s:%i" % (label, num+1)
+                return f"{label}:{int(num + 1)}"
         else:
-            return "%s:%i" % (label, num+1)
+            return f"{label}:{int(num + 1)}"
 
     def before_parsing(self):
 
@@ -144,18 +144,18 @@ class ADF(logfileparser.Logfile):
             tokens = line.split()[1:-1]
             assert len(tokens) >= 1
             if tokens[0] == "Build":
-                package_version += "+{}".format(tokens[1])
+                package_version += f"+{tokens[1]}"
             else:
                 assert tokens[0][0] == "r"
                 # If a year-type version has already been parsed (YYYY(.nn)),
                 # it should take precedence, otherwise use the more detailed
                 # version first.
                 if match:
-                    package_version = '{}dev{}'.format(package_version, tokens[0][1:])
+                    package_version = f"{package_version}dev{tokens[0][1:]}"
                 else:
                     year = tokens[1].split("-")[0]
                     self.metadata["package_version_description"] = package_version
-                    package_version = '{}dev{}'.format(year, tokens[0][1:])
+                    package_version = f"{year}dev{tokens[0][1:]}"
                     self.metadata["legacy_package_version"] = year
                 self.metadata["package_version_date"] = tokens[1]
             self.metadata["package_version"] = package_version
@@ -241,7 +241,7 @@ class ADF(logfileparser.Logfile):
                 info = line.split()
 
                 if len(info) == 7:  # fragment name is listed here
-                    self.fragnames.append("%s_%s" % (info[1], info[0]))
+                    self.fragnames.append(f"{info[1]}_{info[0]}")
                     self.frags.append([])
                     self.frags[-1].append(int(info[2]) - 1)
 
@@ -574,7 +574,7 @@ class ADF(logfileparser.Logfile):
             info = line.split()
 
             if not info[0] == '1':
-                self.logger.warning("MO info up to #%s is missing" % info[0])
+                self.logger.warning(f"MO info up to #{info[0]} is missing")
 
             #handle case where MO information up to a certain orbital are missing
             while int(info[0]) - 1 != len(self.moenergies[0]):
@@ -619,7 +619,7 @@ class ADF(logfileparser.Logfile):
                     if info[3] != '0.00':
                         homob = len(moenergies[1]) - 1
                 else:
-                    print(("Error reading line: %s" % line))
+                    print(f"Error reading line: {line}")
 
                 line = next(inputfile)
 
@@ -882,17 +882,17 @@ class ADF(logfileparser.Logfile):
                         # i.e. while not completely blank, but blank at the start
                         info = line[43:].split()
                         if len(info) > 0:  # len(info)==0 for the second line of dvb_ir.adfout
-                            frag += "+" + fragname + info[-1]
+                            frag += f"+{fragname}{info[-1]}"
                             coeff = float(info[-4])
                             if coeff < 0:
-                                orbital += '-' + info[-3] + info[-2].replace(":", "")
+                                orbital += f"-{info[-3]}{info[-2].replace(':', '')}"
                             else:
-                                orbital += '+' + info[-3] + info[-2].replace(":", "")
+                                orbital += f"+{info[-3]}{info[-2].replace(':', '')}"
                         line = next(inputfile)
                     # At this point, we are either at the start of the next SFO or at
                     # a blank line...the end
 
-                    self.fonames.append("%s_%s" % (frag, orbital))
+                    self.fonames.append(f"{frag}_{orbital}")
                 symoffset += num
 
                 # blankline blankline

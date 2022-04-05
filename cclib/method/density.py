@@ -23,11 +23,11 @@ class Density(Method):
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "Density matrix of %s" % (self.data)
+        return f"Density matrix of {self.data}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'Density matrix("%s")' % (self.data)
+        return f'Density matrix("{self.data}")'
 
     def calculate(self, fupdate=0.05):
         """Calculate the density matrix."""

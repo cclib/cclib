@@ -160,8 +160,8 @@ def ccread(source, *args, **kwargs):
 
     log = ccopen(source, *args, **kwargs)
     if log:
-        if kwargs.get('verbose', None):
-            print('Identified logfile to be in %s format' % log.logname)
+        if kwargs.get("verbose", None):
+            print(f"Identified logfile to be in {log.logname} format")
         # If the input file is a CJSON file and not a standard compchemlog file
         cjson_as_input = kwargs.get("cjson", False)
         if cjson_as_input:
@@ -477,7 +477,7 @@ def sort_turbomole_outputs(filelist):
             # Calling 'jobex -keep' will also write job.n files, where n ranges from 0 to inf.
             # Numbered job files are inserted before job.last.
             job_number = int(filename[4:]) +1
-            job_order = float("{}.{}".format(sorting_order['job.last'] -1, job_number))
+            job_order = float(f"{sorting_order['job.last'] - 1}.{job_number}")
             known_files.append([fname, job_order])
         else:
             unknown_files.append(fname)

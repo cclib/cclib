@@ -88,7 +88,9 @@ class GenericCISTest(unittest.TestCase):
                         found = True
                         self.assertAlmostEqual(abs(s[2]), abs(exc[2]), delta=self.etsecs_precision)
                 if not found:
-                    self.fail("Excitation %i->%s not found (singlet state %i)" %(exc[0], exc[1], i))
+                    self.fail(
+                        f"Excitation {int(exc[0])}->{exc[1]} not found (singlet state {int(i)})"
+                    )
         # Not all programs do triplets (i.e. Jaguar).
         if len(triplets) >= 4:
             for i in range(4):
@@ -99,7 +101,9 @@ class GenericCISTest(unittest.TestCase):
                             found = True
                             self.assertAlmostEqual(abs(s[2]), abs(exc[2]), delta=self.etsecs_precision)
                     if not found:
-                        self.fail("Excitation %i->%s not found (triplet state %i)" %(exc[0], exc[1], i))
+                        self.fail(
+                            f"Excitation {int(exc[0])}->{exc[1]} not found (triplet state {int(i)})"
+                        )
 
 
 class GAMESSCISTest(GenericCISTest):

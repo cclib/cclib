@@ -63,14 +63,16 @@ class GenericGeoOptTest(unittest.TestCase):
         """Are atomcoords consistent with natom and Angstroms?"""
         natom = len(self.data.atomcoords[0])
         ref = self.data.natom
-        msg = "natom is %d but len(atomcoords[0]) is %d" % (ref, natom)
+        msg = f"natom is {int(ref)} but len(atomcoords[0]) is {int(natom)}"
         self.assertEqual(natom, ref, msg)
 
     def testatomcoords_units(self):
         """Are atomcoords consistent with Angstroms?"""
         min_carbon_dist = get_minimum_carbon_separation(self.data)
         dev = abs(min_carbon_dist - 1.34)
-        self.assertTrue(dev < 0.15, "Minimum carbon dist is %.2f (not 1.34)" % min_carbon_dist)
+        self.assertTrue(
+            dev < 0.15, f"Minimum carbon dist is {min_carbon_dist:.2f} (not 1.34)"
+        )
 
     @skipForParser('Molcas', 'The parser is still being developed so we skip this test')
     def testcharge_and_mult(self):
@@ -101,7 +103,7 @@ class GenericGeoOptTest(unittest.TestCase):
     def testhomos(self):
         """Is the index of the HOMO equal to 34?"""
         ref = numpy.array([34], "i")
-        msg = "%s != array([34], 'i')" % numpy.array_repr(self.data.homos)
+        msg = f"{numpy.array_repr(self.data.homos)} != array([34], 'i')"
         numpy.testing.assert_array_equal(self.data.homos, ref, msg)
 
     @skipForParser('MOPAC', 'The scfvalues attribute is not parsed yet')
@@ -115,7 +117,7 @@ class GenericGeoOptTest(unittest.TestCase):
         scf = self.data.scfenergies[-1]
         ref = self.b3lyp_energy
         tol = self.b3lyp_tolerance
-        msg = "Final SCF energy: %f not %i +- %ieV" %(scf, ref, tol)
+        msg = f"Final SCF energy: {scf:f} not {int(ref)} +- {int(tol)}eV"
         self.assertAlmostEqual(scf, ref, delta=40, msg=msg)
 
     def testscfenergydim(self):
@@ -136,7 +138,7 @@ class GenericGeoOptTest(unittest.TestCase):
         """Are atomcoords consistent with geovalues?"""
         count_geovalues = len(self.data.geovalues)
         count_coords = len(self.data.atomcoords) - self.extracoords
-        msg = "len(atomcoords) is %d but len(geovalues) is %d" % (count_coords, count_geovalues)
+        msg = f"len(atomcoords) is {int(count_coords)} but len(geovalues) is {int(count_geovalues)}"
         self.assertEqual(count_geovalues, count_coords, msg)
 
     @skipForParser('MOPAC', 'Not implemented.')

@@ -21,11 +21,11 @@ class LPA(Population):
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "LPA of %s" % (self.data)
+        return f"LPA of {self.data}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'LPA("%s")' % (self.data)
+        return f'LPA("{self.data}")'
 
     def calculate(self, indices=None, x=0.5, fupdate=0.05):
         """Perform a calculation of Löwdin population analysis.

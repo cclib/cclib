@@ -22,11 +22,11 @@ class CDA(FragmentAnalysis):
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "CDA of %s" % (self.data)
+        return f"CDA of {self.data}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'CDA("%s")' % (self.data)
+        return f'CDA("{self.data}")'
 
     def calculate(self, fragments, cupdate=0.05):
         """Perform the charge decomposition analysis.

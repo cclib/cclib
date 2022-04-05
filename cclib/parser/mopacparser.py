@@ -35,11 +35,11 @@ class MOPAC(logfileparser.Logfile):
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "MOPAC log file %s" % (self.filename)
+        return f"MOPAC log file {self.filename}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'MOPAC("%s")' % (self.filename)
+        return f'MOPAC("{self.filename}")'
 
     def normalisesym(self, label):
         """MOPAC does not require normalizing symmetry labels."""

@@ -50,7 +50,7 @@ def _shell_to_orbitals(type, offset):
     `['4D1', '4D2', '4D3', '4D4', '4D5']`.
     """
 
-    return ['{}{}'.format(SHELL_START[type] + offset, x) for x in SHELL_ORBITALS[type]]
+    return [f"{SHELL_START[type] + offset}{x}" for x in SHELL_ORBITALS[type]]
 
 
 class FChk(logfileparser.Logfile):
@@ -65,11 +65,11 @@ class FChk(logfileparser.Logfile):
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "Formatted checkpoint file %s" % self.filename
+        return f"Formatted checkpoint file {self.filename}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'FCHK("%s")' % self.filename
+        return f'FCHK("{self.filename}")'
 
     def normalisesym(self, symlabel):
         """Just return label"""
@@ -294,13 +294,13 @@ class FChk(logfileparser.Logfile):
         shell_map = self._parse_block(inputfile, count, int, 'Atomic Orbital Names')
 
         elements = (self.table.element[x] for x in self.atomnos)
-        atom_labels = ["{}{}".format(y, x) for x, y in enumerate(elements, 1)]
+        atom_labels = [f"{y}{x}" for x, y in enumerate(elements, 1)]
 
         # get orbitals for first atom and start aonames and atombasis lists
         atom = shell_map[0] - 1
         shell_offset = 0
         orbitals = _shell_to_orbitals(shell_types[0], shell_offset)
-        aonames = ["{}_{}".format(atom_labels[atom], x) for x in orbitals]
+        aonames = [f"{atom_labels[atom]}_{x}" for x in orbitals]
         atombasis = [list(range(len(orbitals)))]
 
         # get rest
@@ -321,14 +321,18 @@ class FChk(logfileparser.Logfile):
                 shell_offset = 0
 
             orbitals = _shell_to_orbitals(_type, shell_offset)
-            aonames.extend(["{}_{}".format(atom_labels[atom], x) for x in orbitals])
+            aonames.extend([f"{atom_labels[atom]}_{x}" for x in orbitals])
             atombasis[-1].extend(list(range(basis_offset, basis_offset + len(orbitals))))
 
-        assert len(aonames) == self.nbasis, 'Length of aonames != nbasis: {} != {}'.format(len(aonames), self.nbasis)
-        self.set_attribute('aonames', aonames)
+        assert (
+            len(aonames) == self.nbasis
+        ), f"Length of aonames != nbasis: {len(aonames)} != {self.nbasis}"
+        self.set_attribute("aonames", aonames)
 
-        assert len(atombasis) == self.natom, 'Length of atombasis != natom: {} != {}'.format(len(atombasis), self.natom)
-        self.set_attribute('atombasis', atombasis)
+        assert (
+            len(atombasis) == self.natom
+        ), f"Length of atombasis != natom: {len(atombasis)} != {self.natom}"
+        self.set_attribute("atombasis", atombasis)
 
     def after_parsing(self):
         """Correct data or do parser-specific validation after parsing is finished."""

@@ -83,7 +83,7 @@ class Nuclear(Method):
         counts = {el: elements.count(el) for el in set(elements)}
 
         formula = ""
-        elcount = lambda el, c: "%s%i" % (el, c) if c > 1 else el
+        elcount = lambda el, c: f"{el}{int(c)}" if c > 1 else el
         if 'C' in elements:
             formula += elcount('C', counts['C'])
             counts.pop('C')
@@ -96,7 +96,7 @@ class Nuclear(Method):
         if getattr(self.data, 'charge', 0):
             magnitude = abs(self.data.charge)
             sign = "+" if self.data.charge > 0 else "-"
-            formula += "(%s%i)" % (sign, magnitude)
+            formula += f"({sign}{int(magnitude)})"
         return formula
 
     def repulsion_energy(self, atomcoords_index=-1):
@@ -156,7 +156,7 @@ class Nuclear(Method):
         choices = ('amu_bohr_2', 'amu_angstrom_2', 'g_cm_2')
         units = units.lower()
         if units not in choices:
-            raise ValueError("Invalid units, pick one of {}".format(choices))
+            raise ValueError(f"Invalid units, pick one of {choices}")
         moi_tensor = self.moment_of_inertia_tensor()
         principal_moments, principal_axes = np.linalg.eigh(moi_tensor)
         if units == "amu_bohr_2":
@@ -176,7 +176,7 @@ class Nuclear(Method):
         choices = ('invcm', 'ghz')
         units = units.lower()
         if units not in choices:
-            raise ValueError("Invalid units, pick one of {}".format(choices))
+            raise ValueError(f"Invalid units, pick one of {choices}")
         principal_moments = self.principal_moments_of_inertia("amu_angstrom_2")[0]
         _check_scipy(_found_scipy)
         bohr2ang = scipy.constants.value('atomic unit of length') / scipy.constants.angstrom

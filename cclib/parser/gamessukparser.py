@@ -25,11 +25,11 @@ class GAMESSUK(logfileparser.Logfile):
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "GAMESS UK log file %s" % (self.filename)
+        return f"GAMESS UK log file {self.filename}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'GAMESSUK("%s")' % (self.filename)
+        return f'GAMESSUK("{self.filename}")'
 
     def normalisesym(self, label):
         """Use standard symmetry labels instead of GAMESS UK labels."""
@@ -56,9 +56,7 @@ class GAMESSUK(logfileparser.Logfile):
             revision = line.split()[1]
             package_version = self.metadata.get("package_version")
             if package_version:
-                self.metadata["package_version"] = "{}+{}".format(
-                    package_version, revision
-                )
+                self.metadata["package_version"] = f"{package_version}+{revision}"
 
         if line[1:22] == "total number of atoms":
             natom = int(line.split()[-1])
@@ -364,7 +362,11 @@ class GAMESSUK(logfileparser.Logfile):
 
         if line[3:11] == "SCF TYPE":
             self.scftype = line.split()[-2]
-            assert self.scftype in ['rhf', 'uhf', 'gvb'], "%s not one of 'rhf', 'uhf' or 'gvb'" % self.scftype
+            assert self.scftype in [
+                "rhf",
+                "uhf",
+                "gvb",
+            ], f"{self.scftype} not one of 'rhf', 'uhf' or 'gvb'"
 
         if line[15:31] == "convergence data":
             if not hasattr(self, "scfvalues"):
@@ -387,7 +389,9 @@ class GAMESSUK(logfileparser.Logfile):
                 try:
                     line = next(inputfile)
                 except StopIteration:
-                    self.logger.warning('File terminated before end of last SCF! Last tester: {}'.format(line.split()[5]))
+                    self.logger.warning(
+                        f"File terminated before end of last SCF! Last tester: {line.split()[5]}"
+                    )
                     break
             self.scfvalues.append(scfvalues)
 
@@ -445,7 +449,13 @@ class GAMESSUK(logfileparser.Logfile):
                     # See GAMESS-UK 7.0 distribution/examples/chap12/pyridine2_21m10r.out
                     # for an example of the latter
                         sym = basisregexp.match(temp[1]).groups()[0]
-                        assert sym in ['s', 'p', 'd', 'f', 'sp'], "'%s' not a recognized symmetry" % sym
+                        assert sym in [
+                            "s",
+                            "p",
+                            "d",
+                            "f",
+                            "sp",
+                        ], f"'{sym}' not a recognized symmetry"
                         if sym == "sp":
                             coeff.setdefault("S", []).append((float(temp[3]), float(temp[6])))
                             coeff.setdefault("P", []).append((float(temp[3]), float(temp[10])))
@@ -502,7 +512,9 @@ class GAMESSUK(logfileparser.Logfile):
                     for j in range(multiple[temp[0]]):
                         mosyms.append(self.normalisesym(temp))  # add twice for 'e', etc.
                 line = next(inputfile)
-            assert len(mosyms) == self.nmo, "mosyms: %d but nmo: %d" % (len(mosyms), self.nmo)
+            assert (
+                len(mosyms) == self.nmo
+            ), f"mosyms: {len(mosyms)} but nmo: {int(self.nmo)}"
             if self.betamosyms:
                 # Only append if beta (otherwise with IPRINT SCF
                 # it will add mosyms for every step of a geo opt)
@@ -555,14 +567,14 @@ class GAMESSUK(logfileparser.Logfile):
                         self.atombasis[atomno].append(orbno)
                     if not self.aonames:
                         pg = p.match(line[:18].strip()).groups()
-                        atomname = "%s%s%s" % (pg[1][0].upper(), pg[1][1:], pg[0])
+                        atomname = f"{pg[1][0].upper()}{pg[1][1:]}{pg[0]}"
                         if atomname != oldatomname:
                             aonum = 1
                         oldatomname = atomname
-                        name = "%s_%d%s" % (atomname, aonum, pg[2].upper())
+                        name = f"{atomname}_{int(aonum)}{pg[2].upper()}"
                         if name in aonames:
                             aonum += 1
-                        name = "%s_%d%s" % (atomname, aonum, pg[2].upper())
+                        name = f"{atomname}_{int(aonum)}{pg[2].upper()}"
                         aonames.append(name)
                     temp = list(map(float, line[19:].split()))
                     mocoeffs[mo:(mo+len(temp)), basis] = temp

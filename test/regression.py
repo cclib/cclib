@@ -73,7 +73,7 @@ from cclib.io import ccopen, ccread, moldenwriter
 # This assume that the cclib-data repository is located at a specific location
 # within the cclib repository. It would be better to figure out a more natural
 # way to import the relevant tests from cclib here.
-test_dir = os.path.realpath(os.path.dirname(__file__)) + "/../../test"
+test_dir = f"{os.path.realpath(os.path.dirname(__file__))}/../../test"
 # This is safer than sys.path.append, and isn't sys.path.insert(0, ...) so
 # virtualenvs work properly. See https://stackoverflow.com/q/10095037.
 sys.path.insert(1, os.path.abspath(test_dir))
@@ -3507,7 +3507,7 @@ def test_regressions(which=[], opt_traceback=True, regdir=__regression_dir__, lo
 
     # Create the regression test functions from logfiles that were old unittests.
     for path, test_class in old_unittests.items():
-        funcname = "test" + normalisefilename(path)
+        funcname = f"test{normalisefilename(path)}"
         func = make_regression_from_old_unittest(test_class)
         globals()[funcname] = func
 
@@ -3515,7 +3515,7 @@ def test_regressions(which=[], opt_traceback=True, regdir=__regression_dir__, lo
     # to any regression file name.
     orphaned_tests = []
     for pn in parser_names:
-        prefix = "test%s_%s" % (pn, pn)
+        prefix = f"test{pn}_{pn}"
         tests = [fn for fn in globals() if fn[:len(prefix)] == prefix]
         normalized = [normalisefilename(fn.replace(__regression_dir__, '')) for fn in filenames[pn]]
         orphaned = [t for t in tests if t[4:] not in normalized]
@@ -3548,10 +3548,10 @@ def test_regressions(which=[], opt_traceback=True, regdir=__regression_dir__, lo
 
             parser_total += 1
             if parser_total == 1:
-                print("Are the %s files ccopened and parsed correctly?" % pn)
+                print(f"Are the {pn} files ccopened and parsed correctly?")
 
             total += 1
-            print("  %s ..."  % fname, end=" ")
+            print(f"  {fname} ...", end=" ")
 
             # Check if there is a test (needs to be an appropriately named function).
             # If not, there can also be a test that does not assume the file is
@@ -3560,10 +3560,10 @@ def test_regressions(which=[], opt_traceback=True, regdir=__regression_dir__, lo
             test_this = test_noparse = False
             fname_norm = normalisefilename(fname.replace(__regression_dir__, ''))
 
-            funcname = "test" + fname_norm
+            funcname = f"test{fname_norm}"
             test_this = funcname in globals()
 
-            funcname_noparse = "testnoparse" + fname_norm
+            funcname_noparse = f"testnoparse{fname_norm}"
             test_noparse = not test_this and funcname_noparse in globals()
 
             if not test_noparse:
@@ -3596,7 +3596,7 @@ def test_regressions(which=[], opt_traceback=True, regdir=__regression_dir__, lo
                                     res = eval(funcname)(logfile)
                                     if res and len(res.failures) > 0:
                                         failures += len(res.failures)
-                                        print("%i test(s) failed" % len(res.failures))
+                                        print(f"{len(res.failures)} test(s) failed")
                                         if opt_traceback:
                                             for f in res.failures:
                                                 print("Failure for", f[0])
@@ -3604,7 +3604,7 @@ def test_regressions(which=[], opt_traceback=True, regdir=__regression_dir__, lo
                                         continue
                                     elif res and len(res.errors) > 0:
                                         errors += len(res.errors)
-                                        print("{:d} test(s) had errors".format(len(res.errors)))
+                                        print(f"{len(res.errors):d} test(s) had errors")
                                         if opt_traceback:
                                             for f in res.errors:
                                                 print("Error for", f[0])
@@ -3639,24 +3639,28 @@ def test_regressions(which=[], opt_traceback=True, regdir=__regression_dir__, lo
         if parser_total:
             print()
 
-    print("Total: %d   Failed: %d  Errors: %d" % (total, failures, errors))
+    print(f"Total: {int(total)}   Failed: {int(failures)}  Errors: {int(errors)}")
     if not opt_traceback and failures + errors > 0:
         print("\nFor more information on failures/errors, add --traceback as an argument.")
 
     # Show these warnings at the end, so that they're easy to notice. Notice that the lists
     # were populated at the beginning of this function.
     if len(missing_on_disk) > 0:
-        print("\nWARNING: You are missing %d regression file(s)." % len(missing_on_disk))
+        print(f"\nWARNING: You are missing {len(missing_on_disk)} regression file(s).")
         print("Run regression_download.sh in the ../data directory to update.")
         print("Missing files:")
         print("\n".join(missing_on_disk))
     if len(missing_in_list) > 0:
-        print("\nWARNING: The list in 'regressionfiles.txt' is missing %d file(s)." % len(missing_in_list))
+        print(
+            f"\nWARNING: The list in 'regressionfiles.txt' is missing {len(missing_in_list)} file(s)."
+        )
         print("Add these files paths to the list and commit the change.")
         print("Missing files:")
         print("\n".join(missing_in_list))
     if len(orphaned_tests) > 0:
-        print("\nWARNING: There are %d orphaned regression test functions." % len(orphaned_tests))
+        print(
+            f"\nWARNING: There are {len(orphaned_tests)} orphaned regression test functions."
+        )
         print("Please make sure these function names correspond to regression files:")
         print("\n".join(orphaned_tests))
 

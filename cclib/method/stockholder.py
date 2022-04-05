@@ -99,15 +99,11 @@ class Stockholder(Method):
 
         chargemol_path_floor = os.path.join(
             directory,
-            "c2_{:03d}_{:03d}_{:03d}_500_100.txt".format(
-                atom_num, atom_num, atom_num - charge_floor
-            ),
+            f"c2_{atom_num:03d}_{atom_num:03d}_{atom_num - charge_floor:03d}_500_100.txt",
         )
         chargemol_path_ceil = os.path.join(
             directory,
-            "c2_{:03d}_{:03d}_{:03d}_500_100.txt".format(
-                atom_num, atom_num, atom_num - charge_ceil
-            ),
+            f"c2_{atom_num:03d}_{atom_num:03d}_{atom_num - charge_ceil:03d}_500_100.txt",
         )
         horton_path = os.path.join(directory, "atoms.h5")
 
@@ -140,7 +136,7 @@ class Stockholder(Method):
                     density_floor = numpy.array([0])
                     radiusgrid = numpy.array([0])
                 else:
-                    keystring_floor = "Z={}_Q={:+d}".format(atom_num, charge_floor)
+                    keystring_floor = f"Z={atom_num}_Q={charge_floor:+d}"
                     density_floor = numpy.asanyarray(list(proatomdb[keystring_floor]["rho"]))
 
                     # gridspec is specification of integration grid for proatom densities in horton.
@@ -183,7 +179,7 @@ class Stockholder(Method):
                 if atom_num <= charge_ceil:
                     density_ceil = numpy.array([0])
                 else:
-                    keystring_ceil = "Z={}_Q={:+d}".format(atom_num, charge_ceil)
+                    keystring_ceil = f"Z={atom_num}_Q={charge_ceil:+d}"
                     density_ceil = numpy.asanyarray(list(proatomdb[keystring_ceil]["rho"]))
 
                 density = (charge_ceil - charge) * density_floor + (

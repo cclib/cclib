@@ -22,11 +22,11 @@ class Bickelhaupt(Population):
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "Bickelhaupt charges of {}".format(self.data)
+        return f"Bickelhaupt charges of {self.data}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return "Bickelhaupt({})".format(self.data)
+        return f"Bickelhaupt({self.data})"
 
     def calculate(self, indices=None, fupdate=0.05):
         """Perform a Bickelhaupt population analysis."""

@@ -67,7 +67,9 @@ def main():
                         help=('overwrite output file in case it already exists'))
     args = parser.parse_args()
     if args.output is not None and not args.force and os.path.exists(args.output):
-        parser.exit(1, 'failure: exiting to avoid overwriting existing file "{}"\n'.format(args.output))
+        parser.exit(
+            1, f'failure: exiting to avoid overwriting existing file "{args.output}"\n'
+        )
 
     process_logfiles(args.compchemlogfiles, args.output, args.identifier)
 

@@ -278,8 +278,10 @@ class QChemIRTest(GenericIRTest):
 
     def testatommasses(self):
         """Do the atom masses sum up to the molecular mass (130078.25+-0.1mD)?"""
-        mm = 1000*sum(self.data.atommasses)
-        self.assertAlmostEqual(mm, 130078.25, delta=0.1, msg = "Molecule mass: %f not 130078 +- 0.1mD" % mm)
+        mm = 1000 * sum(self.data.atommasses)
+        self.assertAlmostEqual(
+            mm, 130078.25, delta=0.1, msg=f"Molecule mass: {mm:f} not 130078 +- 0.1mD"
+        )
 
     def testhessian(self):
         """Do the frequencies from the Hessian match the printed frequencies?"""
@@ -299,8 +301,10 @@ class GamessIRTest(GenericIRTest):
 
     def testatommasses(self):
         """Do the atom masses sum up to the molecular mass (130078.25+-0.1mD)?"""
-        mm = 1000*sum(self.data.atommasses)
-        self.assertAlmostEqual(mm, 130078.25, delta=0.1, msg = "Molecule mass: %f not 130078 +- 0.1mD" % mm)
+        mm = 1000 * sum(self.data.atommasses)
+        self.assertAlmostEqual(
+            mm, 130078.25, delta=0.1, msg=f"Molecule mass: {mm:f} not 130078 +- 0.1mD"
+        )
 
     def testtemperature(self):
         """Is the temperature 298.15 K?"""

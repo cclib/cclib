@@ -48,7 +48,7 @@ def generate_attributes():
             aunit = ''
 
         for i in range(1, 4):
-            atype = atype.replace('[%i]' % i, ' of rank %i' % i)
+            atype = atype.replace(f"[{int(i)}]", f" of rank {int(i)}")
 
         names.append(attr)
         descriptions.append(desc)
@@ -63,7 +63,7 @@ def generate_attributes():
 
     dashes = "    "
     for w in [wattr, wdesc, wunit, wtype]:
-        dashes += "="*(w-1) + " "
+        dashes += f"{'=' * (w - 1)} "
     header = "    "
     header += "Name".ljust(wattr)
     header += "Description".ljust(wdesc)
@@ -77,17 +77,17 @@ def generate_attributes():
         # Print the line with columns align to the table. Note that
         # the description sometimes contain Unicode characters, so
         # decode-encode when justifying to get the correct length.
-        attr = ("`%s`_" % attr).ljust(wattr)
+        attr = f"`{attr}`_".ljust(wattr)
         desc = desc.ljust(wdesc)
         aunit = aunit.ljust(wunit)
 
-        lines.append("    " + attr + desc + aunit + atype)
+        lines.append(f"    {attr}{desc}{aunit}{atype}")
 
     lines.append(dashes)
     lines.append("")
 
     for n in names:
-        lines.append(".. _`%s`: data_notes.html#%s" % (n, n))
+        lines.append(f".. _`{n}`: data_notes.html#{n}")
 
     return "\n".join(lines)
 
