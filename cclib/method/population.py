@@ -18,13 +18,12 @@ class Population(Method):
     """An abstract base class for population-type methods."""
 
     # All of these are typically required for population analyses.
-    required_attrs = ('homos', 'mocoeffs', 'nbasis')
+    required_attrs = ("homos", "mocoeffs", "nbasis")
 
     # At least one of these are typically required.
-    overlap_attributes = ('aooverlaps', 'fooverlaps')
+    overlap_attributes = ("aooverlaps", "fooverlaps")
 
-    def __init__(self, data, progress=None, \
-                 loglevel=logging.INFO, logname="Log"):
+    def __init__(self, data, progress=None, loglevel=logging.INFO, logname="Log"):
         super().__init__(data, progress, loglevel, logname)
 
         self.fragresults = None
@@ -39,10 +38,13 @@ class Population(Method):
 
     def _check_required_attributes(self):
         super()._check_required_attributes()
-        
-        if self.overlap_attributes and not any(hasattr(self.data, a) for a in self.overlap_attributes):
+
+        if self.overlap_attributes and not any(
+            hasattr(self.data, a) for a in self.overlap_attributes
+        ):
             raise MissingAttributeError(
-                    'Need overlap matrix (aooverlaps or fooverlaps attribute) for Population methods')
+                "Need overlap matrix (aooverlaps or fooverlaps attribute) for Population methods"
+            )
 
     def partition(self, indices=None):
 
@@ -60,15 +62,15 @@ class Population(Method):
             atoms = []
             indices = []
 
-            name = names[0].split('_')[0]
+            name = names[0].split("_")[0]
             atoms.append(name)
             indices.append([0])
 
             for i in range(1, len(names)):
-                name = names[i].split('_')[0]
+                name = names[i].split("_")[0]
                 try:
                     index = atoms.index(name)
-                except ValueError: #not found in atom list
+                except ValueError:  # not found in atom list
                     atoms.append(name)
                     indices.append([i])
                 else:
@@ -90,9 +92,9 @@ class Population(Method):
         #   and add to correct result row.
         for spin in range(len(results)):
 
-            for i in range(natoms): # Number of groups.
+            for i in range(natoms):  # Number of groups.
 
-                for j in range(len(indices[i])): # For each group.
+                for j in range(len(indices[i])):  # For each group.
 
                     temp = self.aoresults[spin][:, indices[i][j]]
                     results[spin][:, i] = numpy.add(results[spin][:, i], temp)

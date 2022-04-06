@@ -16,6 +16,7 @@ from cclib.method.population import Population
 
 class LPA(Population):
     """The Löwdin population analysis"""
+
     def __init__(self, *args):
         super().__init__(logname="LPA", *args)
 
@@ -35,13 +36,13 @@ class LPA(Population):
           x - overlap matrix exponent in wavefunxtion projection (x=0.5 for Lowdin)
         """
 
-        unrestricted = (len(self.data.mocoeffs) == 2)
+        unrestricted = len(self.data.mocoeffs) == 2
         nbasis = self.data.nbasis
 
         # Determine number of steps, and whether process involves beta orbitals.
         self.logger.info("Creating attribute aoresults: [array[2]]")
         alpha = len(self.data.mocoeffs[0])
-        self.aoresults = [ numpy.zeros([alpha, nbasis], "d") ]
+        self.aoresults = [numpy.zeros([alpha, nbasis], "d")]
         nstep = alpha
 
         if unrestricted:
@@ -64,8 +65,8 @@ class LPA(Population):
         # We don't need to invert U, since S is symmetrical.
         eigenvalues, U = numpy.linalg.eig(S)
         UI = U.transpose()
-        Sdiagroot1 = numpy.identity(len(S))*numpy.power(eigenvalues, x)
-        Sdiagroot2 = numpy.identity(len(S))*numpy.power(eigenvalues, 1-x)
+        Sdiagroot1 = numpy.identity(len(S)) * numpy.power(eigenvalues, x)
+        Sdiagroot2 = numpy.identity(len(S)) * numpy.power(eigenvalues, 1 - x)
         Sroot1 = numpy.dot(U, numpy.dot(Sdiagroot1, UI))
         Sroot2 = numpy.dot(U, numpy.dot(Sdiagroot2, UI))
 

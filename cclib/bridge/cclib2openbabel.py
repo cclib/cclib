@@ -34,16 +34,16 @@ def makecclib(mol):
     """
     _check_openbabel(_found_openbabel)
     attributes = {
-        'atomcoords':   [],
-        'atommasses':   [],
-        'atomnos':      [],
-        'natom':        mol.NumAtoms(),
+        "atomcoords": [],
+        "atommasses": [],
+        "atomnos": [],
+        "natom": mol.NumAtoms(),
     }
     for atom in ob.OBMolAtomIter(mol):
-        attributes['atomcoords'].append([atom.GetX(), atom.GetY(), atom.GetZ()])
-        attributes['atommasses'].append(atom.GetAtomicMass())
-        attributes['atomnos'].append(atom.GetAtomicNum())
-    attributes['atomcoords'] = [attributes['atomcoords']]
+        attributes["atomcoords"].append([atom.GetX(), atom.GetY(), atom.GetZ()])
+        attributes["atommasses"].append(atom.GetAtomicMass())
+        attributes["atomnos"].append(atom.GetAtomicNum())
+    attributes["atomcoords"] = [attributes["atomcoords"]]
     return ccData(attributes)
 
 

@@ -11,15 +11,22 @@ import glob
 import os
 
 
-files = ['ANNOUNCE', 'CHANGELOG', 'INSTALL', 'LICENSE', 'README.md','THANKS',]
-files += ['setup.py']
+files = [
+    "ANNOUNCE",
+    "CHANGELOG",
+    "INSTALL",
+    "LICENSE",
+    "README.md",
+    "THANKS",
+]
+files += ["setup.py"]
 
-source = 'cclib'
+source = "cclib"
 files.append(os.path.join(source, "__init__.py"))
 
-folders = ['bridge', 'io', 'method', 'parser', 'progress']
+folders = ["bridge", "io", "method", "parser", "progress"]
 for folder in folders:
-    files.extend(glob.glob(os.path.join(source, folder, '*.py')))
+    files.extend(glob.glob(os.path.join(source, folder, "*.py")))
 
 for f in files:
     if not os.path.isfile(f):

@@ -25,14 +25,14 @@ from ..test_data import getdatafile
 
 class PopulationTest(unittest.TestCase):
     """Generic population method tests."""
-    
+
     methods = (CSPA, LPA, MPA, OPA, Bickelhaupt)
 
     def parse(self):
         self.data, self.logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_un_sp.log"])
 
     def calculate(self, method_class):
-        if not hasattr(self, 'data'):
+        if not hasattr(self, "data"):
             self.parse()
         self.analysis = method_class(self.data)
         self.analysis.logger.setLevel(0)
@@ -124,53 +124,57 @@ class GaussianCSPATest(unittest.TestCase):
         totalspin = sum(self.analysis.fragspins)
         self.assertAlmostEqual(totalspin, formalspin, delta=1.0e-3)
 
+
 class GaussianBickelhauptTest(unittest.TestCase):
     """Bickelhaupt Population Analysis test"""
-    
+
     def setUp(self):
         super(GaussianBickelhauptTest, self).setUp()
         self.data, self.logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_un_sp.log"])
         self.analysis = Bickelhaupt(self.data)
         self.analysis.logger.setLevel(0)
         self.analysis.calculate()
-    
+
     def testsumcharges(self):
         """Do the Bickelhaupt charges sum up to the total formal charge?"""
         formalcharge = sum(self.data.atomnos) - self.data.charge
         totalpopulation = sum(self.analysis.fragcharges)
         self.assertAlmostEqual(totalpopulation, formalcharge, delta=1.0e-3)
-        
+
     def testsumspins(self):
         """Do the Bickelhaupt spins sum up to the total formal spin?"""
         formalspin = self.data.homos[0] - self.data.homos[1]
         totalspin = sum(self.analysis.fragspins)
         self.assertAlmostEqual(totalspin, formalspin, delta=1.0e-3)
-    
+
     def test_dvb_sp(self):
         """Testing Bickelhaupt charges (restricted) against outputs from Multiwfn."""
         data, logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_sp.out"])
         bpa = Bickelhaupt(data)
         bpa.logger.setLevel(logging.ERROR)
         bpa.calculate()
-        
+
         e_bpa = numpy.loadtxt(f"{os.path.dirname(os.path.realpath(__file__))}/dvb_sp.bpa")
         self.assertTrue(numpy.all(bpa.fragcharges >= e_bpa - 0.05))
         self.assertTrue(numpy.all(bpa.fragcharges <= e_bpa + 0.05))
-        
+
     def test_dvb_un_sp(self):
         """Testing Bickelhaupt charges (unrestricted) against outputs from Multiwfn."""
         data, logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_un_sp.log"])
         bpa = Bickelhaupt(data)
         bpa.logger.setLevel(logging.ERROR)
         bpa.calculate()
-        
+
         e_bpaalpha = numpy.loadtxt(f"{os.path.dirname(os.path.realpath(__file__))}/dvb_un_sp.bpa")
-        e_bpaspin = numpy.loadtxt(f"{os.path.dirname(os.path.realpath(__file__))}/dvb_un_sp.bpaspin")
-        
+        e_bpaspin = numpy.loadtxt(
+            f"{os.path.dirname(os.path.realpath(__file__))}/dvb_un_sp.bpaspin"
+        )
+
         self.assertTrue(numpy.all(bpa.fragcharges >= e_bpaalpha - 0.05))
         self.assertTrue(numpy.all(bpa.fragcharges <= e_bpaalpha + 0.05))
         self.assertTrue(numpy.all(bpa.fragspins >= e_bpaspin - 0.05))
         self.assertTrue(numpy.all(bpa.fragspins <= e_bpaspin + 0.05))
+
 
 tests = [GaussianMPATest, GaussianLPATest, GaussianCSPATest, GaussianBickelhauptTest]
 

@@ -10,8 +10,10 @@
 import logging
 import sys
 
+
 class MissingAttributeError(Exception):
     pass
+
 
 class Method:
     """Abstract base class for all cclib method classes.
@@ -32,7 +34,9 @@ class Method:
 
     All the modules containing methods should be importable.
     """
+
     required_attrs = ()
+
     def __init__(self, data, progress=None, loglevel=logging.INFO, logname="Log"):
         """Initialise the Logfile object.
 
@@ -53,10 +57,9 @@ class Method:
 
     def _check_required_attributes(self):
         """Check if required attributes are present in data."""
-        missing = [x for x in self.required_attrs
-                    if not hasattr(self.data, x)]
+        missing = [x for x in self.required_attrs if not hasattr(self.data, x)]
         if missing:
-            missing = ' '.join(missing)
+            missing = " ".join(missing)
             raise MissingAttributeError(
                 f"Could not parse required attributes to use method: {missing}"
             )

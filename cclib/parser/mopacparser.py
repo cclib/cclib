@@ -27,6 +27,7 @@ def symbol2int(symbol):
     t = utils.PeriodicTable()
     return t.number[symbol]
 
+
 class MOPAC(logfileparser.Logfile):
     """A MOPAC20XX output file."""
 
@@ -46,13 +47,13 @@ class MOPAC(logfileparser.Logfile):
         return label
 
     def before_parsing(self):
-        #TODO
+        # TODO
 
         # Defaults
         charge = 0
-        self.set_attribute('charge', charge)
+        self.set_attribute("charge", charge)
         mult = 1
-        self.set_attribute('mult', mult)
+        self.set_attribute("mult", mult)
 
         # Keep track of whether or not we're performing an
         # (un)restricted calculation.
@@ -64,20 +65,24 @@ class MOPAC(logfileparser.Logfile):
         self.geomdone = False
 
         # Compile the dashes-and-or-spaces-only regex.
-        self.re_dashes_and_spaces = re.compile(r'^[\s-]+$')
+        self.re_dashes_and_spaces = re.compile(r"^[\s-]+$")
 
-        self.star = ' * '
-        self.stars = ' *******************************************************************************'
+        self.star = " * "
+        self.stars = (
+            " *******************************************************************************"
+        )
 
-        self.spinstate = {'SINGLET': 1,
-                          'DOUBLET': 2,
-                          'TRIPLET': 3,
-                          'QUARTET': 4,
-                          'QUINTET': 5,
-                          'SEXTET': 6,
-                          'HEPTET': 7,
-                          'OCTET': 8,
-                          'NONET': 9}
+        self.spinstate = {
+            "SINGLET": 1,
+            "DOUBLET": 2,
+            "TRIPLET": 3,
+            "QUARTET": 4,
+            "QUINTET": 5,
+            "SEXTET": 6,
+            "HEPTET": 7,
+            "OCTET": 8,
+            "NONET": 9,
+        }
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -87,9 +92,7 @@ class MOPAC(logfileparser.Logfile):
             # Ignore the platorm information for now (the last character).
             self.metadata["package_version"] = line.split()[8][:-1]
             # Use the year as the legacy (short) package version.
-            self.skip_lines(
-                inputfile, ["Stewart Computational Chemistry", "s", "s", "s", "s"]
-            )
+            self.skip_lines(inputfile, ["Stewart Computational Chemistry", "s", "s", "s", "s"])
             self.metadata["legacy_package_version"] = next(inputfile).split()[1][5:]
 
         # Extract the atomic numbers and coordinates from the optimized geometry
@@ -135,22 +138,22 @@ class MOPAC(logfileparser.Logfile):
             self.inputcoords.append(atomcoords)
 
             if not hasattr(self, "natom"):
-                self.atomnos = numpy.array(self.inputatoms, 'i')
+                self.atomnos = numpy.array(self.inputatoms, "i")
                 self.natom = len(self.atomnos)
 
-        if 'CHARGE ON SYSTEM =' in line:
+        if "CHARGE ON SYSTEM =" in line:
             charge = int(line.split()[5])
-            self.set_attribute('charge', charge)
+            self.set_attribute("charge", charge)
 
-        if 'SPIN STATE DEFINED' in line:
+        if "SPIN STATE DEFINED" in line:
             # find the multiplicity from the line token (SINGLET, DOUBLET, TRIPLET, etc)
             mult = self.spinstate[line.split()[1]]
-            self.set_attribute('mult', mult)
+            self.set_attribute("mult", mult)
 
         # Read energy (in kcal/mol, converted to eV)
         #
         # FINAL HEAT OF FORMATION =       -333.88606 KCAL =   -1396.97927 KJ
-        if 'FINAL HEAT OF FORMATION =' in line:
+        if "FINAL HEAT OF FORMATION =" in line:
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
             self.scfenergies.append(utils.convertor(utils.float(line.split()[5]), "kcal/mol", "eV"))
@@ -158,18 +161,18 @@ class MOPAC(logfileparser.Logfile):
         # Molecular mass parsing (units will be amu)
         #
         # MOLECULAR WEIGHT        ==        130.1890
-        if line[0:35] == '          MOLECULAR WEIGHT        =':
+        if line[0:35] == "          MOLECULAR WEIGHT        =":
             self.molmass = utils.float(line.split()[3])
 
-        #rotational constants
-        #Example:
+        # rotational constants
+        # Example:
         #          ROTATIONAL CONSTANTS IN CM(-1)
         #
         #          A =    0.01757641   B =    0.00739763   C =    0.00712013
         # could also read in moment of inertia, but this should just differ by a constant: rot cons= h/(8*Pi^2*I)
         # note that the last occurence of this in the thermochemistry section has reduced precision,
         # so we will want to use the 2nd to last instance
-        if line[0:40] == '          ROTATIONAL CONSTANTS IN CM(-1)':
+        if line[0:40] == "          ROTATIONAL CONSTANTS IN CM(-1)":
             blankline = inputfile.next()
             rotinfo = inputfile.next()
             if not hasattr(self, "rotcons"):
@@ -196,38 +199,38 @@ class MOPAC(logfileparser.Logfile):
         # TRAVEL      0.0359        C 15 --  H 29           +6.0% (802.8%)    24.5%
         # RED. MASS   1.7417        C 13 --  C 17           +5.8% (792.7%)     0.0%
         # EFF. MASS1242.2114
-        if line[1:10] == 'VIBRATION':
+        if line[1:10] == "VIBRATION":
             self.updateprogress(inputfile, "Frequency Information", self.fupdate)
 
             # get the vib symmetry
             if len(line.split()) >= 3:
                 sym = line.split()[2]
-                if not hasattr(self, 'vibsyms'):
+                if not hasattr(self, "vibsyms"):
                     self.vibsyms = []
                 self.vibsyms.append(sym)
 
             line = inputfile.next()
-            if 'FREQ' in line:
-                if not hasattr(self, 'vibfreqs'):
+            if "FREQ" in line:
+                if not hasattr(self, "vibfreqs"):
                     self.vibfreqs = []
                 freq = float(line.split()[1])
                 self.vibfreqs.append(freq)
 
             line = inputfile.next()
-            if 'T-DIPOLE' in line:
-                if not hasattr(self, 'vibirs'):
+            if "T-DIPOLE" in line:
+                if not hasattr(self, "vibirs"):
                     self.vibirs = []
                 tdipole = float(line.split()[1])
                 # transform to km/mol
                 self.vibirs.append(math.sqrt(tdipole))
 
             line = inputfile.next()
-            if 'TRAVEL' in line:
+            if "TRAVEL" in line:
                 pass
 
             line = inputfile.next()
-            if 'RED. MASS' in line:
-                if not hasattr(self, 'vibrmasses'):
+            if "RED. MASS" in line:
+                if not hasattr(self, "vibrmasses"):
                     self.vibrmasses = []
                 rmass = float(line.split()[2])
                 self.vibrmasses.append(rmass)
@@ -236,9 +239,9 @@ class MOPAC(logfileparser.Logfile):
         #           ALPHA EIGENVALUES
         #            BETA EIGENVALUES
         # or just "EIGENVALUES" for closed-shell
-        if 'EIGENVALUES' in line:
-            if not hasattr(self, 'moenergies'):
-                self.moenergies = [] # list of arrays
+        if "EIGENVALUES" in line:
+            if not hasattr(self, "moenergies"):
+                self.moenergies = []  # list of arrays
 
             energies = []
             line = inputfile.next()
@@ -252,5 +255,5 @@ class MOPAC(logfileparser.Logfile):
         # Example:
         # NET ATOMIC CHARGES
 
-        if line[:16] == '== MOPAC DONE ==':
-            self.metadata['success'] = True
+        if line[:16] == "== MOPAC DONE ==":
+            self.metadata["success"] = True

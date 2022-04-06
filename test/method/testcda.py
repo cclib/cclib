@@ -51,7 +51,6 @@ def printResults():
 
 
 class CDATest(unittest.TestCase):
-
     def runTest(self):
         """Testing CDA results against Frenking's code"""
         fa = main(log=False)

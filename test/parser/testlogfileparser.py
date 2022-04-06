@@ -22,12 +22,12 @@ __filedir__ = os.path.dirname(__file__)
 __filepath__ = os.path.realpath(__filedir__)
 __datadir__ = os.path.join(__filepath__, "..", "..")
 
-class FileWrapperTest(unittest.TestCase):
 
+class FileWrapperTest(unittest.TestCase):
     def test_file_seek(self):
         """Can we seek anywhere in a file object?"""
-        fpath = os.path.join(__datadir__,"data/ADF/basicADF2007.01/dvb_gopt.adfout")
-        with open(fpath, 'r') as fobject:
+        fpath = os.path.join(__datadir__, "data/ADF/basicADF2007.01/dvb_gopt.adfout")
+        with open(fpath, "r") as fobject:
             wrapper = cclib.parser.logfileparser.FileWrapper(fobject)
             wrapper.seek(0, 0)
             self.assertEqual(wrapper.pos, 0)
@@ -88,7 +88,7 @@ class LogfileTest(unittest.TestCase):
 
     def test_parse_check_values(self):
         """Are custom checks performed after parsing finishes?
-        
+
         The purpose of this test is not to comprehensively cover all the checks,
         but rather to make sure the call and logging works. The unit tests
         for the data class should have comprehensive coverage.

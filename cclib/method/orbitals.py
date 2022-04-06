@@ -22,10 +22,9 @@ from cclib.method.calculationmethod import Method
 class Orbitals(Method):
     """A class for orbital related methods."""
 
-    def __init__(self, data, progress=None, \
-                 loglevel=logging.INFO, logname="Log"):
+    def __init__(self, data, progress=None, loglevel=logging.INFO, logname="Log"):
         super().__init__(data, progress, loglevel, logname)
-        self.required_attrs = ('mocoeffs','moenergies','homos')
+        self.required_attrs = ("mocoeffs", "moenergies", "homos")
         self.fragresults = None
 
     def __str__(self):

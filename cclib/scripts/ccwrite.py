@@ -20,34 +20,49 @@ def main():
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('outputtype',
-                        choices=('json', 'cjson', 'cml', 'xyz', 'molden', 'wfx'),
-                        help='the output format to write (json/cjson are identical)')
-    parser.add_argument('compchemlogfile',
-                        nargs='+',
-                        help='one or more computational chemistry output files to parse and convert')
+    parser.add_argument(
+        "outputtype",
+        choices=("json", "cjson", "cml", "xyz", "molden", "wfx"),
+        help="the output format to write (json/cjson are identical)",
+    )
+    parser.add_argument(
+        "compchemlogfile",
+        nargs="+",
+        help="one or more computational chemistry output files to parse and convert",
+    )
 
-    parser.add_argument('-v', '--verbose',
-                        action='store_true',
-                        help='more verbose parsing output (only errors by default)')
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="more verbose parsing output (only errors by default)",
+    )
 
-    parser.add_argument('-g', '--ghost',
-                        type=str,
-                        default=None,
-                        help='Symbol to use for ghost atoms')
+    parser.add_argument(
+        "-g", "--ghost", type=str, default=None, help="Symbol to use for ghost atoms"
+    )
 
-    parser.add_argument('-t', '--terse',
-                        action='store_true',
-                        help='CJSON by default is not indented for readability, saves space (indented for readability\'s sake)')
+    parser.add_argument(
+        "-t",
+        "--terse",
+        action="store_true",
+        help="CJSON by default is not indented for readability, saves space (indented for readability's sake)",
+    )
 
-    parser.add_argument('-u', '--future',
-                        action='store_true',
-                        help='use experimental features (currently optdone_as_list)')
+    parser.add_argument(
+        "-u",
+        "--future",
+        action="store_true",
+        help="use experimental features (currently optdone_as_list)",
+    )
 
-    parser.add_argument('-i', '--index',
-                        type=int,
-                        default=None,
-                        help='optional zero-based index for which structure to extract')
+    parser.add_argument(
+        "-i",
+        "--index",
+        type=int,
+        default=None,
+        help="optional zero-based index for which structure to extract",
+    )
 
     args = parser.parse_args()
 
@@ -64,7 +79,7 @@ def main():
         # We might want to use this option in the near future.
         ccopen_kwargs = dict()
         if future:
-            ccopen_kwargs['future'] = True
+            ccopen_kwargs["future"] = True
 
         print(f"Attempting to parse {filename}")
         log = ccopen(filename, **ccopen_kwargs)
@@ -87,22 +102,21 @@ def main():
         print("\n".join(hasattrs))
 
         # Write out to disk.
-        outputdest = '.'.join([os.path.splitext(os.path.basename(filename))[0], outputtype])
+        outputdest = ".".join([os.path.splitext(os.path.basename(filename))[0], outputtype])
         ccwrite_kwargs = dict()
         if future:
-            ccwrite_kwargs['future'] = True
+            ccwrite_kwargs["future"] = True
         if ghost:
-            ccwrite_kwargs['ghost'] = ghost
+            ccwrite_kwargs["ghost"] = ghost
         # For XYZ files, write the last geometry unless otherwise
         # specified.
         if not index:
             index = -1
-        ccwrite_kwargs['jobfilename'] = filename
+        ccwrite_kwargs["jobfilename"] = filename
 
         # The argument terse presently is only applicable to
         # CJSON/JSON formats
-        ccwrite(data, outputtype, outputdest, indices=index, terse=terse,
-                **ccwrite_kwargs)
+        ccwrite(data, outputtype, outputdest, indices=index, terse=terse, **ccwrite_kwargs)
 
 
 if __name__ == "__main__":

@@ -34,7 +34,6 @@ class FloatTest(unittest.TestCase):
 
 
 class ConvertorTest(unittest.TestCase):
-
     def test_convertor(self):
         self.assertEqual(f"{utils.convertor(8.0, 'eV', 'wavenumber'):.3f}", "64524.354")
 
@@ -43,12 +42,9 @@ class GetRotationTest(unittest.TestCase):
     delta = 1e-14
 
     def setUp(self):
-        self.r = scipy.spatial.transform.Rotation.from_euler('xyz', [15, 25, 35], degrees=True)
+        self.r = scipy.spatial.transform.Rotation.from_euler("xyz", [15, 25, 35], degrees=True)
         self.t = numpy.array([-1, 0, 2])
-        self.a = numpy.array([[1., 1., 1.],
-                              [0., 1., 2.],
-                              [0., 0., 0.],
-                              [0., 0., 4.]])
+        self.a = numpy.array([[1.0, 1.0, 1.0], [0.0, 1.0, 2.0], [0.0, 0.0, 0.0], [0.0, 0.0, 4.0]])
         self.b = self.r.apply(self.a + self.t)
 
     def test_default(self):
@@ -73,32 +69,45 @@ class GetRotationTest(unittest.TestCase):
         a1 = self.a[:1]
         b1 = self.b[:1]
         if hasattr(self.r, "as_matrix"):
-            numpy.testing.assert_allclose(numpy.eye(3), utils.get_rotation(a1, b1).as_matrix(), atol=self.delta)
+            numpy.testing.assert_allclose(
+                numpy.eye(3), utils.get_rotation(a1, b1).as_matrix(), atol=self.delta
+            )
         else:
-            numpy.testing.assert_allclose(numpy.eye(3), utils.get_rotation(a1, b1).as_dcm(), atol=self.delta)
+            numpy.testing.assert_allclose(
+                numpy.eye(3), utils.get_rotation(a1, b1).as_dcm(), atol=self.delta
+            )
 
 
 class PeriodicTableTest(unittest.TestCase):
-
     def setUp(self):
         self.t = utils.PeriodicTable()
 
     def test_periodictable(self):
-        self.assertEqual(self.t.element[6], 'C')
-        self.assertEqual(self.t.number['C'], 6)
-        self.assertEqual(self.t.element[44], 'Ru')
-        self.assertEqual(self.t.number['Au'], 79)
+        self.assertEqual(self.t.element[6], "C")
+        self.assertEqual(self.t.number["C"], 6)
+        self.assertEqual(self.t.element[44], "Ru")
+        self.assertEqual(self.t.number["Au"], 79)
 
 
 class WidthSplitterTest(unittest.TestCase):
-
     def test_default(self):
         """Does the splitter remove empty fields by default properly?"""
         fixed_splitter = utils.WidthSplitter((4, 3, 5, 6, 10, 10, 10, 10, 10, 10))
         line_full = "  60  H 10  s        0.14639   0.00000   0.00000  -0.00000  -0.00000   0.00000"
         line_truncated = "   1  C 1   s       -0.00000  -0.00000   0.00000"
-        ref_full = ['60', 'H', '10', 's', '0.14639', '0.00000', '0.00000', '-0.00000', '-0.00000', '0.00000']
-        ref_truncated = ['1', 'C', '1', 's', '-0.00000', '-0.00000', '0.00000']
+        ref_full = [
+            "60",
+            "H",
+            "10",
+            "s",
+            "0.14639",
+            "0.00000",
+            "0.00000",
+            "-0.00000",
+            "-0.00000",
+            "0.00000",
+        ]
+        ref_truncated = ["1", "C", "1", "s", "-0.00000", "-0.00000", "0.00000"]
         tokens_full = fixed_splitter.split(line_full)
         tokens_truncated = fixed_splitter.split(line_truncated)
         self.assertEqual(ref_full, tokens_full)
@@ -108,7 +117,7 @@ class WidthSplitterTest(unittest.TestCase):
         """Does the splitter return even the empty fields when asked?"""
         fixed_splitter = utils.WidthSplitter((4, 3, 5, 6, 10, 10, 10, 10, 10, 10))
         line = "   1  C 1   s       -0.00000  -0.00000   0.00000"
-        ref_not_truncated = ['1', 'C', '1', 's', '-0.00000', '-0.00000', '0.00000', '', '', '']
+        ref_not_truncated = ["1", "C", "1", "s", "-0.00000", "-0.00000", "0.00000", "", "", ""]
         tokens_not_truncated = fixed_splitter.split(line, truncate=False)
         self.assertEqual(ref_not_truncated, tokens_not_truncated)
 

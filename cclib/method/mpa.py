@@ -35,9 +35,9 @@ class MPA(Population):
         self.logger.info("Creating attribute aoresults: [array[2]]")
         nbasis = self.data.nbasis
         alpha = len(self.data.mocoeffs[0])
-        self.aoresults = [ numpy.zeros([alpha, nbasis], "d") ]
+        self.aoresults = [numpy.zeros([alpha, nbasis], "d")]
         nstep = alpha
-        unrestricted = (len(self.data.mocoeffs) == 2)
+        unrestricted = len(self.data.mocoeffs) == 2
         if unrestricted:
             beta = len(self.data.mocoeffs[1])
             self.aoresults.append(numpy.zeros([beta, nbasis], "d"))

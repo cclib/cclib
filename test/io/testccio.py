@@ -23,7 +23,6 @@ __datadir__ = os.path.join(__filepath__, "..", "..")
 
 
 class guess_fileypeTest(unittest.TestCase):
-
     def setUp(self):
         self.guess = cclib.io.ccio.guess_filetype
 
@@ -32,27 +31,38 @@ class guess_fileypeTest(unittest.TestCase):
         self.assertIsNone(self.guess([]))
         self.assertIsNone(self.guess(None))
         self.assertIsNone(self.guess(os.devnull))
-        self.assertIsNone(self.guess(['test', 'random', 'quantum chemistry']))
+        self.assertIsNone(self.guess(["test", "random", "quantum chemistry"]))
 
     def test_programs(self):
         """Does the function catch programs as expected?"""
         self.assertEqual(self.guess(["Amsterdam Density Functional"]), cclib.parser.ADF)
-        self.assertEqual(self.guess(['Dalton - An Electronic Structure Program']), cclib.parser.DALTON)
-        self.assertEqual(self.guess(['GAMESS']), cclib.parser.GAMESS)
-        self.assertEqual(self.guess(['G A M E S S - U K']), cclib.parser.GAMESSUK)
-        self.assertEqual(self.guess(['Gaussian, Inc.']), cclib.parser.Gaussian)
-        self.assertEqual(self.guess(['Jaguar']), cclib.parser.Jaguar)
-        self.assertEqual(self.guess(['PROGRAM SYSTEM MOLPRO']), cclib.parser.Molpro)
-        self.assertEqual(self.guess(['MOPAC2016']), cclib.parser.MOPAC)
-        self.assertEqual(self.guess(['Northwest Computational Chemistry Package']), cclib.parser.NWChem)
-        self.assertEqual(self.guess(['O   R   C   A']), cclib.parser.ORCA)
-        self.assertEqual(self.guess(["PSI3: An Open-Source Ab Initio Electronic Structure Package"]), cclib.parser.Psi3)
-        self.assertEqual(self.guess(["Psi4: An Open-Source Ab Initio Electronic Structure Package"]), cclib.parser.Psi4)
-        self.assertEqual(self.guess(['A Quantum Leap Into The Future Of Chemistry']), cclib.parser.QChem)
+        self.assertEqual(
+            self.guess(["Dalton - An Electronic Structure Program"]), cclib.parser.DALTON
+        )
+        self.assertEqual(self.guess(["GAMESS"]), cclib.parser.GAMESS)
+        self.assertEqual(self.guess(["G A M E S S - U K"]), cclib.parser.GAMESSUK)
+        self.assertEqual(self.guess(["Gaussian, Inc."]), cclib.parser.Gaussian)
+        self.assertEqual(self.guess(["Jaguar"]), cclib.parser.Jaguar)
+        self.assertEqual(self.guess(["PROGRAM SYSTEM MOLPRO"]), cclib.parser.Molpro)
+        self.assertEqual(self.guess(["MOPAC2016"]), cclib.parser.MOPAC)
+        self.assertEqual(
+            self.guess(["Northwest Computational Chemistry Package"]), cclib.parser.NWChem
+        )
+        self.assertEqual(self.guess(["O   R   C   A"]), cclib.parser.ORCA)
+        self.assertEqual(
+            self.guess(["PSI3: An Open-Source Ab Initio Electronic Structure Package"]),
+            cclib.parser.Psi3,
+        )
+        self.assertEqual(
+            self.guess(["Psi4: An Open-Source Ab Initio Electronic Structure Package"]),
+            cclib.parser.Psi4,
+        )
+        self.assertEqual(
+            self.guess(["A Quantum Leap Into The Future Of Chemistry"]), cclib.parser.QChem
+        )
 
 
 class ccreadTest(unittest.TestCase):
-
     def setUp(self):
         self.ccread = cclib.io.ccio.ccread
 
@@ -64,7 +74,6 @@ class ccreadTest(unittest.TestCase):
 
 
 class ccopenTest(unittest.TestCase):
-
     def setUp(self):
         self.ccopen = cclib.io.ccio.ccopen
 
@@ -95,8 +104,12 @@ class ccopenTest(unittest.TestCase):
         base_url = "https://raw.githubusercontent.com/cclib/cclib/master/data/"
         filenames = ["QChem/basicQChem5.1/dvb_td.out", "Molpro/basicMolpro2012/h2o_mp2.out"]
         for fname in filenames:
-            self.assertEqual(self.ccopen(os.path.join(fpath, fname), quiet=True).parse().getattributes(tolists=True),
-                             self.ccopen(base_url + fname, quiet=True).parse().getattributes(tolists=True))
+            self.assertEqual(
+                self.ccopen(os.path.join(fpath, fname), quiet=True)
+                .parse()
+                .getattributes(tolists=True),
+                self.ccopen(base_url + fname, quiet=True).parse().getattributes(tolists=True),
+            )
 
     def test_multi_url_io(self):
         """Does the function works with multiple URLs such good as with multiple filenames?"""
@@ -105,9 +118,12 @@ class ccopenTest(unittest.TestCase):
         filenames = ["Molpro/basicMolpro2012/dvb_gopt.out", "Molpro/basicMolpro2012/dvb_gopt.log"]
         self.assertEqual(
             self.ccopen([os.path.join(fpath, fname) for fname in filenames], quiet=True)
-                .parse().getattributes(tolists=True),
+            .parse()
+            .getattributes(tolists=True),
             self.ccopen([base_url + fname for fname in filenames], quiet=True)
-                .parse().getattributes(tolists=True))
+            .parse()
+            .getattributes(tolists=True),
+        )
 
     @unittest.skip("This should also work if cjsonreader supported streams.")
     def test_cjson(self):
@@ -116,7 +132,6 @@ class ccopenTest(unittest.TestCase):
 
 
 class _determine_output_formatTest(unittest.TestCase):
-
     def setUp(self):
         self._determine_output_format = cclib.io.ccio._determine_output_format
         self.UnknownOutputFormatError = cclib.io.ccio.UnknownOutputFormatError
@@ -125,17 +140,17 @@ class _determine_output_formatTest(unittest.TestCase):
         """Does the function determine output class as expected."""
         outputtype = "xyz"
         outputdest = "file.xyz"
-        self.assertEqual(self._determine_output_format(outputtype, outputdest),
-                         cclib.io.xyzwriter.XYZ)
+        self.assertEqual(
+            self._determine_output_format(outputtype, outputdest), cclib.io.xyzwriter.XYZ
+        )
         # Must raise a KeyError for unsuported extensions
-        self.assertRaises(self.UnknownOutputFormatError,
-                          self._determine_output_format, 'ext', outputdest)
-        self.assertRaises(self.UnknownOutputFormatError,
-                          self._determine_output_format, None, None)
+        self.assertRaises(
+            self.UnknownOutputFormatError, self._determine_output_format, "ext", outputdest
+        )
+        self.assertRaises(self.UnknownOutputFormatError, self._determine_output_format, None, None)
 
 
 class fallbackTest(unittest.TestCase):
-
     def setUp(self):
         self.fallback = cclib.io.ccio.fallback
 
@@ -145,13 +160,10 @@ class fallbackTest(unittest.TestCase):
 
 
 class ccframeTest(unittest.TestCase):
-
     @mock.patch("cclib.io.ccio._has_pandas", False)
     def test_ccframe_call_without_pandas(self):
         """Does ccframe fails cleanly if Pandas can't be imported?"""
-        with self.assertRaisesRegexp(
-            ImportError, "You must install `pandas` to use this function"
-        ):
+        with self.assertRaisesRegexp(ImportError, "You must install `pandas` to use this function"):
             cclib.io.ccio.ccframe([])
 
 

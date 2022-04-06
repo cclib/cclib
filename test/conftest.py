@@ -18,19 +18,18 @@ version_major = sys.version_info.major
 
 # Paths that should be ignored for all Python versions.
 paths_ignore_allver = [
-    'cclib/progress/qt4progress.py',
+    "cclib/progress/qt4progress.py",
 ]
 
 # Paths that should run only for Python 2.7.
 paths_ignore_only_2_7 = [
-    'cclib/bridge/cclib2pyquante.py',
+    "cclib/bridge/cclib2pyquante.py",
 ]
 
 
 def match_path(path, partial_paths):
     """Does the given path contain any of the stubs in partial_paths?"""
-    return any(partial_path in str(path)
-               for partial_path in partial_paths)
+    return any(partial_path in str(path) for partial_path in partial_paths)
 
 
 def pytest_ignore_collect(path, config):
@@ -56,8 +55,8 @@ def pytest_generate_tests(metafunc):
         metafunc.parametrize("modules", [{p: all_modules[p] for p in module_names}])
         metafunc.parametrize("terse", [metafunc.config.getoption("--terse")])
         metafunc.parametrize("silent", [metafunc.config.getoption("--silent")])
-        metafunc.parametrize("loglevel",
-                             [logging.DEBUG if metafunc.config.getoption("--debug")
-                              else logging.ERROR])
+        metafunc.parametrize(
+            "loglevel", [logging.DEBUG if metafunc.config.getoption("--debug") else logging.ERROR]
+        )
         metafunc.parametrize("summary", [True])
         metafunc.parametrize("visual_tests", [True])

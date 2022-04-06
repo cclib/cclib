@@ -40,7 +40,7 @@ class CSPA(Population):
         self.logger.info("Creating attribute aoresults: array[3]")
 
         # Determine number of steps, and whether process involves beta orbitals.
-        unrestricted = (len(self.data.mocoeffs)==2)
+        unrestricted = len(self.data.mocoeffs) == 2
         nbasis = self.data.nbasis
         self.aoresults = []
         alpha = len(self.data.mocoeffs[0])
@@ -66,7 +66,7 @@ class CSPA(Population):
                 submocoeffs = self.data.mocoeffs[spin][i]
                 scale = numpy.inner(submocoeffs, submocoeffs)
                 tempcoeffs = numpy.multiply(submocoeffs, submocoeffs)
-                tempvec = tempcoeffs/scale
+                tempvec = tempcoeffs / scale
                 self.aoresults[spin][i] = numpy.divide(tempcoeffs, scale).astype("d")
 
                 step += 1

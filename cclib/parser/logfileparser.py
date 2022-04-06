@@ -32,6 +32,7 @@ logging.logMultiprocessing = 0
 
 class myBZ2File(bz2.BZ2File):
     """Return string instead of bytes"""
+
     def __next__(self):
         line = super(bz2.BZ2File, self).__next__()
         return line.decode("ascii", "replace")
@@ -43,10 +44,11 @@ class myBZ2File(bz2.BZ2File):
 
 class myGzipFile(gzip.GzipFile):
     """Return string instead of bytes"""
+
     def __next__(self):
         super_ob = super(gzip.GzipFile, self)
         # seemingly different versions of gzip can have either next or __next__
-        if hasattr(super_ob, 'next'):
+        if hasattr(super_ob, "next"):
             line = super_ob.next()
         else:
             line = super_ob.__next__()
@@ -77,14 +79,14 @@ class FileWrapper:
 
         except (AttributeError, IOError, io.UnsupportedOperation):
             # Stream returned by urllib should have size information.
-            if hasattr(self.src, 'headers') and 'content-length' in self.src.headers:
-                self.size = int(self.src.headers['content-length'])
+            if hasattr(self.src, "headers") and "content-length" in self.src.headers:
+                self.size = int(self.src.headers["content-length"])
             else:
                 self.size = pos
 
         # Assume the position is what was passed to the constructor.
         self.pos = pos
-        
+
         self.last_line = None
 
     def next(self):
@@ -119,7 +121,7 @@ class FileWrapper:
             self.pos = pos
         if ref == 1:
             self.pos += pos
-        if ref == 2 and hasattr(self, 'size'):
+        if ref == 2 and hasattr(self, "size"):
             self.pos = self.size
 
 
@@ -147,15 +149,18 @@ def openlogfile(filename, object=None):
             assert len(zip.namelist()) == 1, "ERROR: Zip file contains more than 1 file"
             fileobject = io.StringIO(zip.read(zip.namelist()[0]).decode("ascii", "ignore"))
 
-        elif extension in ['.bz', '.bz2']:
+        elif extension in [".bz", ".bz2"]:
             # Module 'bz2' is not always importable.
             assert bz2 is not None, "ERROR: module bz2 cannot be imported"
             fileobject = myBZ2File(object, "r") if object else myBZ2File(filename, "r")
 
         else:
             # Assuming that object is text file encoded in utf-8
-            fileobject = io.StringIO(object.decode('utf-8')) if object \
-                    else FileWrapper(io.open(filename, "r", errors='ignore'))
+            fileobject = (
+                io.StringIO(object.decode("utf-8"))
+                if object
+                else FileWrapper(io.open(filename, "r", errors="ignore"))
+            )
 
         return fileobject
 
@@ -176,8 +181,15 @@ class Logfile(ABC):
         NWChem, ORCA, Psi, Q-Chem
     """
 
-    def __init__(self, source, loglevel=logging.ERROR, logname="Log",
-                 logstream=sys.stderr, datatype=ccData_optdone_bool, **kwds):
+    def __init__(
+        self,
+        source,
+        loglevel=logging.ERROR,
+        logname="Log",
+        logstream=sys.stderr,
+        datatype=ccData_optdone_bool,
+        **kwds,
+    ):
         """Initialise the Logfile object.
 
         This should be called by a subclass in its own __init__ method.
@@ -230,8 +242,7 @@ class Logfile(ABC):
             self.metadata["package"] = self.logname
             self.metadata["methods"] = []
             # Indicate if the computation has completed successfully
-            self.metadata['success'] = False
-
+            self.metadata["success"] = False
 
         # Periodic table of elements.
         self.table = utils.PeriodicTable()
@@ -247,7 +258,7 @@ class Logfile(ABC):
         if optdone_as_list:
             self.datatype = ccData
         # Parsing of Natural Orbitals and Natural Spin Orbtials into one attribute
-        self.unified_no_nso = kwds.get("future",False)
+        self.unified_no_nso = kwds.get("future", False)
 
     def __setattr__(self, name, value):
 
@@ -270,13 +281,9 @@ class Logfile(ABC):
         # Check that the sub-class has an extract attribute,
         #  that is callable with the proper number of arguemnts.
         if not hasattr(self, "extract"):
-            raise AttributeError(
-                f"Class {self.__class__.__name__} has no extract() method."
-            )
+            raise AttributeError(f"Class {self.__class__.__name__} has no extract() method.")
         if not callable(self.extract):
-            raise AttributeError(
-                f"Method {self.__class__.__name__}._extract not callable."
-            )
+            raise AttributeError(f"Method {self.__class__.__name__}._extract not callable.")
         if len(inspect.getfullargspec(self.extract)[0]) != 3:
             raise AttributeError(
                 f"Method {self.__class__.__name__}._extract takes wrong number of arguments."
@@ -337,7 +344,7 @@ class Logfile(ABC):
         # If atomcoords were not parsed, but some input coordinates were ("inputcoords").
         # This is originally from the Gaussian parser, a regression fix.
         if not hasattr(self, "atomcoords") and hasattr(self, "inputcoords"):
-            self.atomcoords = numpy.array(self.inputcoords, 'd')
+            self.atomcoords = numpy.array(self.inputcoords, "d")
 
         # Set nmo if not set already - to nbasis.
         if not hasattr(self, "nmo") and hasattr(self, "nbasis"):
@@ -419,7 +426,7 @@ class Logfile(ABC):
 
         Note that this can be used for scalars and lists alike, whenever we want
         to set a value for an attribute.
-        
+
         Parameters
         ----------
         name: str
@@ -449,13 +456,12 @@ class Logfile(ABC):
 
     def extend_attribute(self, name, values):
         """Appends an iterable of values to an attribute."""
-        
+
         if not hasattr(self, name):
             self.set_attribute(name, [])
         getattr(self, name).extend(values)
 
-    def _assign_coreelectrons_to_element(self, element, ncore,
-                                         ncore_is_total_count=False):
+    def _assign_coreelectrons_to_element(self, element, ncore, ncore_is_total_count=False):
         """Assign core electrons to all instances of the element.
 
         It's usually reasonable to do this for all atoms of a given element,
@@ -476,8 +482,8 @@ class Logfile(ABC):
         if ncore_is_total_count:
             ncore = ncore // len(indices)
 
-        if not hasattr(self, 'coreelectrons'):
-            self.coreelectrons = numpy.zeros(self.natom, 'i')
+        if not hasattr(self, "coreelectrons"):
+            self.coreelectrons = numpy.zeros(self.natom, "i")
         self.coreelectrons[indices] = ncore
 
     def skip_lines(self, inputfile, sequence):
@@ -493,9 +499,9 @@ class Logfile(ABC):
         """
 
         expected_characters = {
-            '-': ['dashes', 'd'],
-            '=': ['equals', 'e'],
-            '*': ['stars', 's'],
+            "-": ["dashes", "d"],
+            "=": ["equals", "e"],
+            "*": ["stars", "s"],
         }
 
         lines = []
@@ -509,19 +515,25 @@ class Logfile(ABC):
                 try:
                     assert line.strip() == ""
                 except AssertionError:
-                    frame, fname, lno, funcname, funcline, index = inspect.getouterframes(inspect.currentframe())[1]
-                    parser = fname.split('/')[-1]
-                    msg = f"In {parser}, line {int(lno)}, line not blank as expected: {line.strip()}"
+                    frame, fname, lno, funcname, funcline, index = inspect.getouterframes(
+                        inspect.currentframe()
+                    )[1]
+                    parser = fname.split("/")[-1]
+                    msg = (
+                        f"In {parser}, line {int(lno)}, line not blank as expected: {line.strip()}"
+                    )
                     self.logger.warning(msg)
 
             # All cases of heterogeneous lines can be dealt with by the same code.
             for character, keys in expected_characters.items():
                 if expected in keys:
                     try:
-                        assert utils.str_contains_only(line.strip(), [character, ' '])
+                        assert utils.str_contains_only(line.strip(), [character, " "])
                     except AssertionError:
-                        frame, fname, lno, funcname, funcline, index = inspect.getouterframes(inspect.currentframe())[1]
-                        parser = fname.split('/')[-1]
+                        frame, fname, lno, funcname, funcline, index = inspect.getouterframes(
+                            inspect.currentframe()
+                        )[1]
+                        parser = fname.split("/")[-1]
                         msg = f"In {parser}, line {int(lno)}, line not all {keys[0]} as expected: {line.strip()}"
                         self.logger.warning(msg)
                         continue
@@ -532,4 +544,3 @@ class Logfile(ABC):
         return lines
 
     skip_line = lambda self, inputfile, expected: self.skip_lines(inputfile, [expected])
-

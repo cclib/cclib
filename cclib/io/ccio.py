@@ -55,14 +55,13 @@ if _has_pandas:
 
 # Regular expression for validating URLs
 URL_PATTERN = re.compile(
-
-    r'^(?:http|ftp)s?://'  # http:// or https://
-    r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'  # domain...
-    r'localhost|'  # localhost...
-    r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ...or ip
-    r'(?::\d+)?'  # optional port
-    r'(?:/?|[/?]\S+)$', re.IGNORECASE
-
+    r"^(?:http|ftp)s?://"  # http:// or https://
+    r"(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|"  # domain...
+    r"localhost|"  # localhost...
+    r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"  # ...or ip
+    r"(?::\d+)?"  # optional port
+    r"(?:/?|[/?]\S+)$",
+    re.IGNORECASE,
 )
 
 # Parser choice is triggered by certain phrases occurring the logfile. Where these
@@ -77,41 +76,39 @@ URL_PATTERN = re.compile(
 # The triggers are defined by the tuples in the list below like so:
 #   (parser, phrases, flag whether we should break)
 triggers = [
-
-    (ADF,       ["Amsterdam Density Functional"],                   True),
-    (DALTON,    ["Dalton - An Electronic Structure Program"],       True),
-    (FChk,      ["Number of atoms", "I"],                           True),
-    (GAMESS,    ["GAMESS"],                                         False),
-    (GAMESS,    ["GAMESS VERSION"],                                 True),
-    (GAMESSUK,  ["G A M E S S - U K"],                              True),
-    (Gaussian,  ["Gaussian, Inc."],                                 True),
-    (Jaguar,    ["Jaguar"],                                         True),
-    (Molcas,    ["MOLCAS"],                                         True),
-    (Molpro,    ["PROGRAM SYSTEM MOLPRO"],                          True),
-    (Molpro,    ["1PROGRAM"],                                       False),
-    (MOPAC,     ["MOPAC20"],                                        True),
-    (NWChem,    ["Northwest Computational Chemistry Package"],      True),
-    (ORCA,      ["O   R   C   A"],                                  True),
-    (Psi3,      ["PSI3: An Open-Source Ab Initio Electronic Structure Package"],          True),
-    (Psi4,      ["Psi4: An Open-Source Ab Initio Electronic Structure Package"],          True),
-    (QChem,     ["A Quantum Leap Into The Future Of Chemistry"],    True),
-    (Turbomole, ["TURBOMOLE"],                                      True),
-
+    (ADF, ["Amsterdam Density Functional"], True),
+    (DALTON, ["Dalton - An Electronic Structure Program"], True),
+    (FChk, ["Number of atoms", "I"], True),
+    (GAMESS, ["GAMESS"], False),
+    (GAMESS, ["GAMESS VERSION"], True),
+    (GAMESSUK, ["G A M E S S - U K"], True),
+    (Gaussian, ["Gaussian, Inc."], True),
+    (Jaguar, ["Jaguar"], True),
+    (Molcas, ["MOLCAS"], True),
+    (Molpro, ["PROGRAM SYSTEM MOLPRO"], True),
+    (Molpro, ["1PROGRAM"], False),
+    (MOPAC, ["MOPAC20"], True),
+    (NWChem, ["Northwest Computational Chemistry Package"], True),
+    (ORCA, ["O   R   C   A"], True),
+    (Psi3, ["PSI3: An Open-Source Ab Initio Electronic Structure Package"], True),
+    (Psi4, ["Psi4: An Open-Source Ab Initio Electronic Structure Package"], True),
+    (QChem, ["A Quantum Leap Into The Future Of Chemistry"], True),
+    (Turbomole, ["TURBOMOLE"], True),
 ]
 
 readerclasses = {
-    'cjson': cjsonreader.CJSON,
-    'json': cjsonreader.CJSON,
-    'xyz': xyzreader.XYZ,
+    "cjson": cjsonreader.CJSON,
+    "json": cjsonreader.CJSON,
+    "xyz": xyzreader.XYZ,
 }
 
 writerclasses = {
-    'cjson': cjsonwriter.CJSON,
-    'json': cjsonwriter.CJSON,
-    'cml': cmlwriter.CML,
-    'molden': moldenwriter.MOLDEN,
-    'wfx': wfxwriter.WFXWriter,
-    'xyz': xyzwriter.XYZ,
+    "cjson": cjsonwriter.CJSON,
+    "json": cjsonwriter.CJSON,
+    "cml": cmlwriter.CML,
+    "molden": moldenwriter.MOLDEN,
+    "wfx": wfxwriter.WFXWriter,
+    "xyz": xyzwriter.XYZ,
 }
 
 
@@ -169,8 +166,8 @@ def ccread(source, *args, **kwargs):
         else:
             return log.parse()
     else:
-        if kwargs.get('verbose', None):
-            print('Attempting to use fallback mechanism to read file')
+        if kwargs.get("verbose", None):
+            print("Attempting to use fallback mechanism to read file")
         return fallback(source)
 
 
@@ -195,8 +192,9 @@ def ccopen(source, *args, **kwargs):
     # or list of filenames. If it can be read, assume it is an open file object/stream.
     if isinstance(source, pathlib.PurePath):
         source = str(source)
-    if isinstance(source, pathlib.PurePath)\
-            and all([isinstance(s, pathlib.PurePath) for s in source]):
+    if isinstance(source, pathlib.PurePath) and all(
+        [isinstance(s, pathlib.PurePath) for s in source]
+    ):
         source = [str(item) for item in source]
     is_string = isinstance(source, str)
     is_url = True if is_string and URL_PATTERN.match(source) else False
@@ -219,7 +217,7 @@ def ccopen(source, *args, **kwargs):
                         # Delete temporary file when the program finishes
                         atexit.register(os.remove, tfile.name)
                     except (ValueError, URLError) as error:
-                        if not kwargs.get('quiet', False):
+                        if not kwargs.get("quiet", False):
                             (errno, strerror) = error.args
                         return None
             source = filelist
@@ -228,7 +226,7 @@ def ccopen(source, *args, **kwargs):
             try:
                 inputfile = logfileparser.openlogfile(source)
             except IOError as error:
-                if not kwargs.get('quiet', False):
+                if not kwargs.get("quiet", False):
                     (errno, strerror) = error.args
                 return None
         else:
@@ -237,12 +235,12 @@ def ccopen(source, *args, **kwargs):
                 is_stream = True
 
                 # Retrieve filename from URL if possible
-                filename = re.findall(r"\w+\.\w+", source.split('/')[-1])
+                filename = re.findall(r"\w+\.\w+", source.split("/")[-1])
                 filename = filename[0] if filename else ""
 
                 inputfile = logfileparser.openlogfile(filename, object=response.read())
             except (ValueError, URLError) as error:
-                if not kwargs.get('quiet', False):
+                if not kwargs.get("quiet", False):
                     (errno, strerror) = error.args
                 return None
 
@@ -277,7 +275,7 @@ def ccopen(source, *args, **kwargs):
     # the readers, falling back to Open Babel.
     if not filetype:
         if kwargs.get("cjson"):
-            filetype = readerclasses['cjson']
+            filetype = readerclasses["cjson"]
         elif source and not is_stream:
             ext = os.path.splitext(source)[1][1:].lower()
             for extension in readerclasses:
@@ -326,9 +324,16 @@ def fallback(source):
             print("Could not import `openbabel`, fallback mechanism might not work.")
 
 
-def ccwrite(ccobj, outputtype=None, outputdest=None,
-            indices=None, terse=False, returnstr=False,
-            *args, **kwargs):
+def ccwrite(
+    ccobj,
+    outputtype=None,
+    outputdest=None,
+    indices=None,
+    terse=False,
+    returnstr=False,
+    *args,
+    **kwargs,
+):
     """Write the parsed data from an outputfile to a standard chemical
     representation.
 
@@ -363,20 +368,20 @@ def ccwrite(ccobj, outputtype=None, outputdest=None,
 
     # If the logfile name has been passed in through kwargs (such as
     # in the ccwrite script), make sure it has precedence.
-    if 'jobfilename' in kwargs:
-        jobfilename = kwargs['jobfilename']
+    if "jobfilename" in kwargs:
+        jobfilename = kwargs["jobfilename"]
         # Avoid passing multiple times into the main call.
-        del kwargs['jobfilename']
+        del kwargs["jobfilename"]
 
-    outputobj = outputclass(ccdata, jobfilename=jobfilename,
-                            indices=indices, terse=terse,
-                            *args, **kwargs)
+    outputobj = outputclass(
+        ccdata, jobfilename=jobfilename, indices=indices, terse=terse, *args, **kwargs
+    )
     output = outputobj.generate_repr()
 
     # If outputdest isn't None, write the output to disk.
     if outputdest is not None:
         if isinstance(outputdest, str):
-            with open(outputdest, 'w') as outputobj:
+            with open(outputdest, "w") as outputobj:
                 outputobj.write(output)
         elif isinstance(outputdest, io.IOBase):
             outputdest.write(output)
@@ -430,6 +435,7 @@ def _determine_output_format(outputtype, outputdest):
 
     return outputclass
 
+
 def path_leaf(path):
     """
     Splits the path to give the filename. Works irrespective of '\'
@@ -444,6 +450,7 @@ def path_leaf(path):
     head, tail = os.path.split(path)
     return tail or os.path.basename(head)
 
+
 def sort_turbomole_outputs(filelist):
     """
     Sorts a list of inputs (or list of log files) according to the order
@@ -455,17 +462,17 @@ def sort_turbomole_outputs(filelist):
       sorted_list - a sorted list of Turbomole files needed for proper parsing.
     """
     sorting_order = {
-        'basis' : 0,
-        'control' : 1,
-        'mos' : 2,
-        'alpha' : 3,
-        'beta' : 4,
-        'job.last' : 5,
-        'coord' : 6,
-        'gradient' : 7,
-        'aoforce' : 8,
+        "basis": 0,
+        "control": 1,
+        "mos": 2,
+        "alpha": 3,
+        "beta": 4,
+        "job.last": 5,
+        "coord": 6,
+        "gradient": 7,
+        "aoforce": 8,
     }
-    
+
     known_files = []
     unknown_files = []
     sorted_list = []
@@ -476,7 +483,7 @@ def sort_turbomole_outputs(filelist):
         elif re.match(r"^job\.[0-9]+$", filename):
             # Calling 'jobex -keep' will also write job.n files, where n ranges from 0 to inf.
             # Numbered job files are inserted before job.last.
-            job_number = int(filename[4:]) +1
+            job_number = int(filename[4:]) + 1
             job_order = float(f"{sorting_order['job.last'] - 1}.{job_number}")
             known_files.append([fname, job_order])
         else:
@@ -518,13 +525,10 @@ def ccframe(ccobjs, *args, **kwargs):
             raise ValueError
 
         attributes = ccdata.getattributes()
-        attributes.update({
-            'jobfilename': jobfilename
-        })
+        attributes.update({"jobfilename": jobfilename})
 
         logfiles.append(pd.Series(attributes))
     return pd.DataFrame(logfiles)
 
 
 del find_package
-

@@ -35,7 +35,7 @@ class CJSON(filereader.Reader):
             json_key = v.json_key
             attribute_path = v.attribute_path.split(":")
 
-            if attribute_path[0] == 'N/A':
+            if attribute_path[0] == "N/A":
                 continue
 
             levels = len(attribute_path)

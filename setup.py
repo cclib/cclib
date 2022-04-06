@@ -45,13 +45,13 @@ def setup_cclib():
         long_description="\n".join(doclines[2:]),
         classifiers=classifiers.split("\n"),
         platforms=["Any."],
-        packages=setuptools.find_packages(exclude=['*test*']),
+        packages=setuptools.find_packages(exclude=["*test*"]),
         entry_points={
-            'console_scripts': [
-                'ccframe=cclib.scripts.ccframe:main',
-                'ccget=cclib.scripts.ccget:ccget',
-                'ccwrite=cclib.scripts.ccwrite:main',
-                'cda=cclib.scripts.cda:main'
+            "console_scripts": [
+                "ccframe=cclib.scripts.ccframe:main",
+                "ccget=cclib.scripts.ccget:ccget",
+                "ccwrite=cclib.scripts.ccwrite:main",
+                "cda=cclib.scripts.cda:main",
             ]
         },
         install_requires=[
@@ -60,9 +60,8 @@ def setup_cclib():
             "periodictable",
             "scipy>=1.2.0",
         ],
-
     )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     setup_cclib()

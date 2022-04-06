@@ -96,26 +96,23 @@ __regression_dir__ = os.path.join(__filedir__, "../data/regression/")
 
 # ADF #
 
+
 def testADF_ADF2004_01_Fe_ox3_final_out(logfile):
     """Make sure HOMOS are correct."""
     assert logfile.data.homos[0] == 59 and logfile.data.homos[1] == 54
 
     assert logfile.data.metadata["legacy_package_version"] == "2004.01"
     assert logfile.data.metadata["package_version"] == "2004.01+200410211341"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testADF_ADF2013_01_dvb_gopt_b_unconverged_adfout(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
-    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+    assert hasattr(logfile.data, "optdone") and not logfile.data.optdone
 
     assert logfile.data.metadata["legacy_package_version"] == "2013.01"
     assert logfile.data.metadata["package_version"] == "2013.01+201309012319"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testADF_ADF2013_01_stopiter_dvb_sp_adfout(logfile):
@@ -184,7 +181,7 @@ def testADF_ADF2014_01_DMO_ORD_orig_out(logfile):
     """In lieu of a unit test, make sure the polarizability (and
     potentially later the optical rotation) is properly parsed.
     """
-    assert hasattr(logfile.data, 'polarizabilities')
+    assert hasattr(logfile.data, "polarizabilities")
     assert len(logfile.data.polarizabilities) == 1
     assert logfile.data.polarizabilities[0].shape == (3, 3)
 
@@ -195,9 +192,7 @@ def testADF_ADF2014_01_DMO_ORD_orig_out(logfile):
 
     assert logfile.data.metadata["legacy_package_version"] == "2014"
     assert logfile.data.metadata["package_version"] == "2014dev42059"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
     assert logfile.data.metadata["package_version_date"] == "2014-06-11"
     assert logfile.data.metadata["package_version_description"] == "development version"
 
@@ -206,9 +201,7 @@ def testADF_ADF2016_166_tddft_0_31_new_out(logfile):
     """This file led to StopIteration (#430)."""
     assert logfile.data.metadata["legacy_package_version"] == "2016"
     assert logfile.data.metadata["package_version"] == "2016dev53619"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
     assert logfile.data.metadata["package_version_date"] == "2016-07-21"
     assert "package_version_description" not in logfile.data.metadata
 
@@ -220,9 +213,7 @@ def testADF_ADF2016_fa2_adf_out(logfile):
 
     assert logfile.data.metadata["legacy_package_version"] == "2016"
     assert logfile.data.metadata["package_version"] == "2016dev50467"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
     assert logfile.data.metadata["package_version_date"] == "2016-02-17"
     assert logfile.data.metadata["package_version_description"] == "branches/AndrewAtkins/ADF-Shar"
 
@@ -273,10 +264,11 @@ def testDALTON_DALTON_2013_dvb_td_normalprint_out(logfile):
     assert hasattr(logfile.data, "etoscs")
 
     assert logfile.data.metadata["legacy_package_version"] == "2013.4"
-    assert logfile.data.metadata["package_version"] == "2013.4+7abef2ada27562fe5e02849d6caeaa67c961732f"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
+    assert (
+        logfile.data.metadata["package_version"]
+        == "2013.4+7abef2ada27562fe5e02849d6caeaa67c961732f"
     )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testDALTON_DALTON_2015_dalton_atombasis_out(logfile):
@@ -288,10 +280,11 @@ def testDALTON_DALTON_2015_dalton_atombasis_out(logfile):
     assert hasattr(logfile.data, "atombasis")
 
     assert logfile.data.metadata["legacy_package_version"] == "2015.0"
-    assert logfile.data.metadata["package_version"] == "2015.0+d34efb170c481236ad60c789dea90a4c857c6bab"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
+    assert (
+        logfile.data.metadata["package_version"]
+        == "2015.0+d34efb170c481236ad60c789dea90a4c857c6bab"
     )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testDALTON_DALTON_2015_dalton_intgrl_out(logfile):
@@ -302,7 +295,10 @@ def testDALTON_DALTON_2015_dalton_intgrl_out(logfile):
     assert logfile.data.nbasis == 4
     assert hasattr(logfile.data, "atombasis")
 
-    assert logfile.data.metadata["package_version"] == "2015.0+d34efb170c481236ad60c789dea90a4c857c6bab"
+    assert (
+        logfile.data.metadata["package_version"]
+        == "2015.0+d34efb170c481236ad60c789dea90a4c857c6bab"
+    )
 
 
 def testDALTON_DALTON_2015_dvb_td_normalprint_out(logfile):
@@ -314,21 +310,30 @@ def testDALTON_DALTON_2015_dvb_td_normalprint_out(logfile):
     assert hasattr(logfile.data, "etsyms")
     assert hasattr(logfile.data, "etoscs")
 
-    assert logfile.data.metadata["package_version"] == "2015.0+d34efb170c481236ad60c789dea90a4c857c6bab"
+    assert (
+        logfile.data.metadata["package_version"]
+        == "2015.0+d34efb170c481236ad60c789dea90a4c857c6bab"
+    )
 
 
 def testDALTON_DALTON_2015_stopiter_dalton_dft_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 8
 
-    assert logfile.data.metadata["package_version"] == "2015.0+d34efb170c481236ad60c789dea90a4c857c6bab"
+    assert (
+        logfile.data.metadata["package_version"]
+        == "2015.0+d34efb170c481236ad60c789dea90a4c857c6bab"
+    )
 
 
 def testDALTON_DALTON_2015_stopiter_dalton_hf_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 5
 
-    assert logfile.data.metadata["package_version"] == "2015.0+d34efb170c481236ad60c789dea90a4c857c6bab"
+    assert (
+        logfile.data.metadata["package_version"]
+        == "2015.0+d34efb170c481236ad60c789dea90a4c857c6bab"
+    )
 
 
 def testDALTON_DALTON_2016_huge_neg_polar_freq_out(logfile):
@@ -340,10 +345,11 @@ def testDALTON_DALTON_2016_huge_neg_polar_freq_out(logfile):
     assert abs(logfile.data.polarizabilities[2][0, 0] - 183.6308) < 1.0e-5
 
     assert logfile.data.metadata["legacy_package_version"] == "2016.2"
-    assert logfile.data.metadata["package_version"] == "2016.2+7db4647eac203e51aae7da3cbc289f55146b30e9"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
+    assert (
+        logfile.data.metadata["package_version"]
+        == "2016.2+7db4647eac203e51aae7da3cbc289f55146b30e9"
     )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testDALTON_DALTON_2016_huge_neg_polar_stat_out(logfile):
@@ -354,7 +360,10 @@ def testDALTON_DALTON_2016_huge_neg_polar_stat_out(logfile):
     assert len(logfile.data.polarizabilities) == 1
     assert abs(logfile.data.polarizabilities[0][1, 1] + 7220.150408) < 1.0e-7
 
-    assert logfile.data.metadata["package_version"] == "2016.2+7db4647eac203e51aae7da3cbc289f55146b30e9"
+    assert (
+        logfile.data.metadata["package_version"]
+        == "2016.2+7db4647eac203e51aae7da3cbc289f55146b30e9"
+    )
 
 
 def testDALTON_DALTON_2016_Trp_polar_response_diplnx_out(logfile):
@@ -367,7 +376,10 @@ def testDALTON_DALTON_2016_Trp_polar_response_diplnx_out(logfile):
     assert abs(logfile.data.polarizabilities[0][0, 0] - 95.11540019) < 1.0e-8
     assert numpy.count_nonzero(numpy.isnan(logfile.data.polarizabilities)) == 8
 
-    assert logfile.data.metadata["package_version"] == "2016.2+7db4647eac203e51aae7da3cbc289f55146b30e9"
+    assert (
+        logfile.data.metadata["package_version"]
+        == "2016.2+7db4647eac203e51aae7da3cbc289f55146b30e9"
+    )
 
 
 def testDALTON_DALTON_2018_dft_properties_nosym_H2O_cc_pVDZ_out(logfile):
@@ -379,9 +391,7 @@ def testDALTON_DALTON_2018_dft_properties_nosym_H2O_cc_pVDZ_out(logfile):
     """
     assert logfile.data.metadata["legacy_package_version"] == "2019.alpha"
     assert logfile.data.metadata["package_version"] == "2019.alpha"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testDALTON_DALTON_2018_tdhf_2000_out(logfile):
@@ -394,10 +404,11 @@ def testDALTON_DALTON_2018_tdhf_2000_out(logfile):
     assert logfile.data.etsecs[0][0] == [(1, 0), (2, 0), -0.9733558768]
 
     assert logfile.data.metadata["legacy_package_version"] == "2019.alpha"
-    assert logfile.data.metadata["package_version"] == "2019.alpha+25947a3d842ee2ebb42bff87a4dd64adbbd3ec5b"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
+    assert (
+        logfile.data.metadata["package_version"]
+        == "2019.alpha+25947a3d842ee2ebb42bff87a4dd64adbbd3ec5b"
     )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testDALTON_DALTON_2018_tdhf_2000_sym_out(logfile):
@@ -409,7 +420,10 @@ def testDALTON_DALTON_2018_tdhf_2000_sym_out(logfile):
         assert len(getattr(logfile.data, attr)) == 3
     assert logfile.data.etsecs[0][0] == [(1, 0), (2, 0), 0.9733562358]
 
-    assert logfile.data.metadata["package_version"] == "2019.alpha+25947a3d842ee2ebb42bff87a4dd64adbbd3ec5b"
+    assert (
+        logfile.data.metadata["package_version"]
+        == "2019.alpha+25947a3d842ee2ebb42bff87a4dd64adbbd3ec5b"
+    )
 
 
 def testDALTON_DALTON_2018_tdhf_normal_out(logfile):
@@ -421,7 +435,10 @@ def testDALTON_DALTON_2018_tdhf_normal_out(logfile):
         assert len(getattr(logfile.data, attr)) == 9
     assert logfile.data.etsecs[0][0] == [(1, 0), (2, 0), -0.9733558768]
 
-    assert logfile.data.metadata["package_version"] == "2019.alpha+25947a3d842ee2ebb42bff87a4dd64adbbd3ec5b"
+    assert (
+        logfile.data.metadata["package_version"]
+        == "2019.alpha+25947a3d842ee2ebb42bff87a4dd64adbbd3ec5b"
+    )
 
 
 def testDALTON_DALTON_2018_tdhf_normal_sym_out(logfile):
@@ -433,7 +450,10 @@ def testDALTON_DALTON_2018_tdhf_normal_sym_out(logfile):
         assert len(getattr(logfile.data, attr)) == 3
     assert logfile.data.etsecs[0][0] == [(1, 0), (2, 0), 0.9733562358]
 
-    assert logfile.data.metadata["package_version"] == "2019.alpha+25947a3d842ee2ebb42bff87a4dd64adbbd3ec5b"
+    assert (
+        logfile.data.metadata["package_version"]
+        == "2019.alpha+25947a3d842ee2ebb42bff87a4dd64adbbd3ec5b"
+    )
 
 
 def testDALTON_DALTON_2018_tdpbe_2000_out(logfile):
@@ -445,7 +465,10 @@ def testDALTON_DALTON_2018_tdpbe_2000_out(logfile):
         assert len(getattr(logfile.data, attr)) == 9
     assert logfile.data.etsecs[0][0] == [(1, 0), (2, 0), 0.9992665559]
 
-    assert logfile.data.metadata["package_version"] == "2019.alpha+25947a3d842ee2ebb42bff87a4dd64adbbd3ec5b"
+    assert (
+        logfile.data.metadata["package_version"]
+        == "2019.alpha+25947a3d842ee2ebb42bff87a4dd64adbbd3ec5b"
+    )
 
 
 def testDALTON_DALTON_2018_tdpbe_2000_sym_out(logfile):
@@ -457,7 +480,10 @@ def testDALTON_DALTON_2018_tdpbe_2000_sym_out(logfile):
         assert len(getattr(logfile.data, attr)) == 3
     assert logfile.data.etsecs[0][0] == [(1, 0), (2, 0), 0.9992672154]
 
-    assert logfile.data.metadata["package_version"] == "2019.alpha+25947a3d842ee2ebb42bff87a4dd64adbbd3ec5b"
+    assert (
+        logfile.data.metadata["package_version"]
+        == "2019.alpha+25947a3d842ee2ebb42bff87a4dd64adbbd3ec5b"
+    )
 
 
 def testDALTON_DALTON_2018_tdpbe_normal_out(logfile):
@@ -469,7 +495,10 @@ def testDALTON_DALTON_2018_tdpbe_normal_out(logfile):
         assert len(getattr(logfile.data, attr)) == 9
     assert logfile.data.etsecs[0][0] == [(1, 0), (2, 0), 0.9992665559]
 
-    assert logfile.data.metadata["package_version"] == "2019.alpha+25947a3d842ee2ebb42bff87a4dd64adbbd3ec5b"
+    assert (
+        logfile.data.metadata["package_version"]
+        == "2019.alpha+25947a3d842ee2ebb42bff87a4dd64adbbd3ec5b"
+    )
 
 
 def testDALTON_DALTON_2018_tdpbe_normal_sym_out(logfile):
@@ -481,7 +510,10 @@ def testDALTON_DALTON_2018_tdpbe_normal_sym_out(logfile):
         assert len(getattr(logfile.data, attr)) == 3
     assert logfile.data.etsecs[0][0] == [(1, 0), (2, 0), 0.9992672154]
 
-    assert logfile.data.metadata["package_version"] == "2019.alpha+25947a3d842ee2ebb42bff87a4dd64adbbd3ec5b"
+    assert (
+        logfile.data.metadata["package_version"]
+        == "2019.alpha+25947a3d842ee2ebb42bff87a4dd64adbbd3ec5b"
+    )
 
 
 # Firefly #
@@ -489,13 +521,11 @@ def testDALTON_DALTON_2018_tdpbe_normal_sym_out(logfile):
 
 def testGAMESS_Firefly8_0_dvb_gopt_a_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
-    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+    assert hasattr(logfile.data, "optdone") and not logfile.data.optdone
 
     assert logfile.data.metadata["legacy_package_version"] == "8.0.1"
     assert logfile.data.metadata["package_version"] == "8.0.1+8540"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testGAMESS_Firefly8_0_h2o_log(logfile):
@@ -504,9 +534,7 @@ def testGAMESS_Firefly8_0_h2o_log(logfile):
 
     assert logfile.data.metadata["legacy_package_version"] == "8.0.0"
     assert logfile.data.metadata["package_version"] == "8.0.0+7651"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testGAMESS_Firefly8_0_stopiter_firefly_out(logfile):
@@ -518,29 +546,25 @@ def testGAMESS_Firefly8_0_stopiter_firefly_out(logfile):
 
 def testGAMESS_Firefly8_1_benzene_am1_log(logfile):
     """Molecular orbitals were not parsed (cclib/cclib#228)."""
-    assert hasattr(logfile.data, 'mocoeffs')
+    assert hasattr(logfile.data, "mocoeffs")
 
     assert logfile.data.metadata["legacy_package_version"] == "8.1.0"
     assert logfile.data.metadata["package_version"] == "8.1.0+9035"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testGAMESS_Firefly8_1_naphtalene_t_0_out(logfile):
     """Molecular orbitals were not parsed (cclib/cclib#228)."""
-    assert hasattr(logfile.data, 'mocoeffs')
+    assert hasattr(logfile.data, "mocoeffs")
 
     assert logfile.data.metadata["legacy_package_version"] == "8.1.1"
     assert logfile.data.metadata["package_version"] == "8.1.1+9295"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testGAMESS_Firefly8_1_naphtalene_t_0_SP_out(logfile):
     """Molecular orbitals were not parsed (cclib/cclib#228)."""
-    assert hasattr(logfile.data, 'mocoeffs')
+    assert hasattr(logfile.data, "mocoeffs")
 
     assert logfile.data.metadata["package_version"] == "8.1.1+9295"
 
@@ -556,9 +580,7 @@ def testGAMESS_GAMESS_US2008_N2_UMP2_out(logfile):
 
     assert logfile.data.metadata["legacy_package_version"] == "2008R1"
     assert logfile.data.metadata["package_version"] == "2008.r1"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testGAMESS_GAMESS_US2008_N2_ROMP2_out(logfile):
@@ -578,9 +600,7 @@ def testGAMESS_GAMESS_US2009_open_shell_ccsd_test_log(logfile):
 
     assert logfile.data.metadata["legacy_package_version"] == "2009R3"
     assert logfile.data.metadata["package_version"] == "2009.r3"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testGAMESS_GAMESS_US2009_paulo_h2o_mp2_out(logfile):
@@ -594,13 +614,11 @@ def testGAMESS_GAMESS_US2009_paulo_h2o_mp2_out(logfile):
 
 def testGAMESS_GAMESS_US2012_dvb_gopt_a_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
-    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+    assert hasattr(logfile.data, "optdone") and not logfile.data.optdone
 
     assert logfile.data.metadata["legacy_package_version"] == "2012R2"
     assert logfile.data.metadata["package_version"] == "2012.r2"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testGAMESS_GAMESS_US2012_stopiter_gamess_out(logfile):
@@ -616,34 +634,29 @@ def testGAMESS_GAMESS_US2013_N_UHF_out(logfile):
 
     assert logfile.data.metadata["legacy_package_version"] == "2013R1"
     assert logfile.data.metadata["package_version"] == "2013.r1"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testGAMESS_GAMESS_US2014_CdtetraM1B3LYP_log(logfile):
     """This logfile had coefficients for only 80 molecular orbitals."""
     assert len(logfile.data.mocoeffs) == 2
-    assert numpy.count_nonzero(logfile.data.mocoeffs[0][79-1:, :]) == 258
-    assert numpy.count_nonzero(logfile.data.mocoeffs[0][80-1: 0:]) == 0
+    assert numpy.count_nonzero(logfile.data.mocoeffs[0][79 - 1 :, :]) == 258
+    assert numpy.count_nonzero(logfile.data.mocoeffs[0][80 - 1 : 0 :]) == 0
     assert logfile.data.mocoeffs[0].all() == logfile.data.mocoeffs[1].all()
 
     assert logfile.data.metadata["legacy_package_version"] == "2014R1"
     assert logfile.data.metadata["package_version"] == "2014.r1"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testGAMESS_GAMESS_US2018_exam45_log(logfile):
     """This logfile has EOM-CC electronic transitions (not currently supported)."""
-    assert not hasattr(logfile.data, 'etenergies')
+    assert not hasattr(logfile.data, "etenergies")
 
     assert logfile.data.metadata["legacy_package_version"] == "2018R2"
     assert logfile.data.metadata["package_version"] == "2018.r2"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
+
 
 def testGAMESS_GAMESS_US2018_exam46_log(logfile):
     """
@@ -653,9 +666,7 @@ def testGAMESS_GAMESS_US2018_exam46_log(logfile):
     assert len(logfile.data.scfvalues[0]) == 113
     assert logfile.data.metadata["legacy_package_version"] == "2018R3"
     assert logfile.data.metadata["package_version"] == "2018.r3"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out(logfile):
@@ -667,7 +678,9 @@ def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out(logfile):
     """
     number = 5
     assert len(logfile.data.etenergies) == number
-    idx_lambdamax = [i for i, x in enumerate(logfile.data.etoscs) if x == max(logfile.data.etoscs)][0]
+    idx_lambdamax = [i for i, x in enumerate(logfile.data.etoscs) if x == max(logfile.data.etoscs)][
+        0
+    ]
     assert abs(logfile.data.etenergies[idx_lambdamax] - 24500) < 100
     assert len(logfile.data.etoscs) == number
     assert abs(max(logfile.data.etoscs) - 0.0) < 0.01
@@ -675,14 +688,12 @@ def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out(logfile):
 
     assert logfile.data.metadata["legacy_package_version"] == "2007R1"
     assert logfile.data.metadata["package_version"] == "2007.r1"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
+
 
 def testnoparseGAMESS_WinGAMESS_H2O_def2SVPD_triplet_2019_06_30_R1_out(logfile):
-    """Check if the molden writer can handle an unrestricted case
-    """
-    data = ccread(os.path.join(__filedir__,logfile))
+    """Check if the molden writer can handle an unrestricted case"""
+    data = ccread(os.path.join(__filedir__, logfile))
     writer = moldenwriter.MOLDEN(data)
     # Check size of Atoms section.
     assert len(writer._mo_from_ccdata()) == (data.nbasis + 4) * (data.nmo * 2)
@@ -697,13 +708,11 @@ def testnoparseGAMESS_WinGAMESS_H2O_def2SVPD_triplet_2019_06_30_R1_out(logfile):
 
 
 def testGAMESS_UK_GAMESS_UK8_0_dvb_gopt_hf_unconverged_out(logfile):
-    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+    assert hasattr(logfile.data, "optdone") and not logfile.data.optdone
 
     assert logfile.data.metadata["legacy_package_version"] == "8.0"
     assert logfile.data.metadata["package_version"] == "8.0+6248"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testGAMESS_UK_GAMESS_UK8_0_stopiter_gamessuk_dft_out(logfile):
@@ -721,7 +730,8 @@ def testGAMESS_UK_GAMESS_UK8_0_stopiter_gamessuk_hf_out(logfile):
 
 
 # Gaussian #
-    
+
+
 def testGaussian_Gaussian98_C_bigmult_log(logfile):
     """
     This file failed first becuase it had a double digit multiplicity.
@@ -730,13 +740,11 @@ def testGaussian_Gaussian98_C_bigmult_log(logfile):
     assert logfile.data.charge == -3
     assert logfile.data.mult == 10
     assert logfile.data.homos[0] == 8
-    assert logfile.data.homos[1] == -1 # No occupied beta orbitals
+    assert logfile.data.homos[1] == -1  # No occupied beta orbitals
 
     assert logfile.data.metadata["legacy_package_version"] == "98revisionA.11.3"
     assert logfile.data.metadata["package_version"] == "1998+A.11.3"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testGaussian_Gaussian98_NIST_CCCBDB_1himidaz_m21b0_out(logfile):
@@ -752,16 +760,14 @@ def testGaussian_Gaussian98_NIST_CCCBDB_1himidaz_m21b0_out(logfile):
 
     assert logfile.data.metadata["legacy_package_version"] == "98revisionA.7"
     assert logfile.data.metadata["package_version"] == "1998+A.7"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testGaussian_Gaussian98_NIST_CCCBDB_1himidaz_m23b6_out(logfile):
     """A job that was killed before it ended, should have several basic attributes parsed."""
-    assert hasattr(logfile.data, 'charge')
-    assert hasattr(logfile.data, 'metadata')
-    assert hasattr(logfile.data, 'mult')
+    assert hasattr(logfile.data, "charge")
+    assert hasattr(logfile.data, "metadata")
+    assert hasattr(logfile.data, "mult")
 
     assert logfile.data.metadata["package_version"] == "1998+A.7"
 
@@ -770,13 +776,13 @@ def testGaussian_Gaussian98_test_Cu2_log(logfile):
     """An example of the number of basis set function changing."""
     assert logfile.data.nbasis == 38
 
-    assert logfile.data.metadata["cpu_time"] == [datetime.timedelta(seconds=25, microseconds=800000)]
+    assert logfile.data.metadata["cpu_time"] == [
+        datetime.timedelta(seconds=25, microseconds=800000)
+    ]
     assert "wall_time" not in logfile.data.metadata
     assert logfile.data.metadata["legacy_package_version"] == "98revisionA.11.4"
     assert logfile.data.metadata["package_version"] == "1998+A.11.4"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testGaussian_Gaussian98_test_H2_log(logfile):
@@ -784,8 +790,8 @@ def testGaussian_Gaussian98_test_H2_log(logfile):
     The atomic charges from a natural population analysis were
     not parsed correctly, and they should be zero for dihydrogen.
     """
-    assert logfile.data.atomcharges['natural'][0] == 0.0
-    assert logfile.data.atomcharges['natural'][1] == 0.0
+    assert logfile.data.atomcharges["natural"][0] == 0.0
+    assert logfile.data.atomcharges["natural"][1] == 0.0
 
     assert logfile.data.metadata["package_version"] == "1998+A.11.4"
 
@@ -809,9 +815,7 @@ def testGaussian_Gaussian03_AM1_SP_out(logfile):
 
     assert logfile.data.metadata["legacy_package_version"] == "03revisionE.01"
     assert logfile.data.metadata["package_version"] == "2003+E.01"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testGaussian_Gaussian03_anthracene_log(logfile):
@@ -820,9 +824,7 @@ def testGaussian_Gaussian03_anthracene_log(logfile):
 
     assert logfile.data.metadata["legacy_package_version"] == "03revisionC.02"
     assert logfile.data.metadata["package_version"] == "2003+C.02"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testGaussian_Gaussian03_borane_opt_log(logfile):
@@ -842,9 +844,7 @@ def testGaussian_Gaussian03_chn1_log(logfile):
 
     assert logfile.data.metadata["legacy_package_version"] == "03revisionB.04"
     assert logfile.data.metadata["package_version"] == "2003+B.04"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testGaussian_Gaussian03_cyclopropenyl_rhf_g03_cut_log(logfile):
@@ -869,9 +869,7 @@ def testGaussian_Gaussian03_DCV4T_C60_log(logfile):
 
     assert logfile.data.metadata["legacy_package_version"] == "03revisionD.02"
     assert logfile.data.metadata["package_version"] == "2003+D.02"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testGaussian_Gaussian03_dvb_gopt_symmfollow_log(logfile):
@@ -886,9 +884,7 @@ def testGaussian_Gaussian03_dvb_gopt_symmfollow_log(logfile):
     assert "wall_time" not in logfile.data.metadata
     assert logfile.data.metadata["legacy_package_version"] == "03revisionC.01"
     assert logfile.data.metadata["package_version"] == "2003+C.01"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testGaussian_Gaussian03_mendes_out(logfile):
@@ -932,9 +928,7 @@ def testGaussian_Gaussian09_100_g09(logfile):
 
     assert logfile.data.metadata["legacy_package_version"] == "09revisionB.01"
     assert logfile.data.metadata["package_version"] == "2009+B.01"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testGaussian_Gaussian09_25DMF_HRANH_log(logfile):
@@ -944,7 +938,7 @@ def testGaussian_Gaussian09_25DMF_HRANH_log(logfile):
     N = len(logfile.data.vibfreqs)
     assert 39 == N == anharms.shape[0] == anharms.shape[1]
     assert abs(anharms[0][0] + 43.341) < 0.01
-    assert abs(anharms[N-1][N-1] + 36.481) < 0.01
+    assert abs(anharms[N - 1][N - 1] + 36.481) < 0.01
 
     assert logfile.data.metadata["package_version"] == "2009+B.01"
 
@@ -955,10 +949,8 @@ def testGaussian_Gaussian09_2D_PES_all_converged_log(logfile):
 
     assert logfile.data.metadata["legacy_package_version"] == "09revisionD.01"
     assert logfile.data.metadata["package_version"] == "2009+D.01"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
-    
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
+
     # The energies printed in the scan summary are misformated.
     assert numpy.all(numpy.isnan(logfile.data.scanenergies))
 
@@ -977,16 +969,14 @@ def testGaussian_Gaussian09_534_out(logfile):
 
     assert logfile.data.metadata["legacy_package_version"] == "09revisionA.02"
     assert logfile.data.metadata["package_version"] == "2009+A.02"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testGaussian_Gaussian09_BSL_opt_freq_DFT_out(logfile):
     """Failed for converting to CJSON when moments weren't parsed for
     Gaussian.
     """
-    assert hasattr(logfile.data, 'moments')
+    assert hasattr(logfile.data, "moments")
     # dipole Y
     assert logfile.data.moments[1][1] == 0.5009
     # hexadecapole ZZZZ
@@ -997,10 +987,12 @@ def testGaussian_Gaussian09_BSL_opt_freq_DFT_out(logfile):
 
 def testGaussian_Gaussian09_dvb_gopt_unconverged_log(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
-    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+    assert hasattr(logfile.data, "optdone") and not logfile.data.optdone
     assert logfile.data.optstatus[-1] == logfile.data.OPT_UNCONVERGED
 
-    assert logfile.data.metadata["cpu_time"] == [datetime.timedelta(seconds=27, microseconds=700000)]
+    assert logfile.data.metadata["cpu_time"] == [
+        datetime.timedelta(seconds=27, microseconds=700000)
+    ]
     assert "wall_time" not in logfile.data.metadata
     assert logfile.data.metadata["package_version"] == "2009+D.01"
 
@@ -1048,7 +1040,7 @@ def testGaussian_Gaussian09_issue_460_log(logfile):
     RMSDP=5.24D-09 MaxDP=1.47D-06 DE=-1.82D-11 OVMax= 2.15 (Enter /QFsoft/applic/GAUSSIAN/g09d.01_pgi11.9-ISTANBUL/g09/l703.exe)
     RMSDP=1.71D-04 MaxDP=1.54D-02    Iteration    2 A^-1*A deviation from unit magnitude is 1.11D-15 for    266.
     """
-    assert hasattr(logfile.data, 'scfvalues')
+    assert hasattr(logfile.data, "scfvalues")
     assert logfile.data.scfvalues[0][0, 0] == 3.37e-03
     assert numpy.isnan(logfile.data.scfvalues[0][0, 2])
 
@@ -1079,7 +1071,7 @@ def testGaussian_Gaussian09_OPT_oniom_log(logfile):
 
 def testGaussian_Gaussian09_oniom_IR_intensity_log(logfile):
     """Problem parsing IR intensity from mode 192"""
-    assert hasattr(logfile.data, 'vibirs')
+    assert hasattr(logfile.data, "vibirs")
     assert len(logfile.data.vibirs) == 216
 
     assert logfile.data.metadata["package_version"] == "2009+C.01"
@@ -1094,14 +1086,14 @@ def testGaussian_Gaussian09_Ru2bpyen2_H2_freq3_log(logfile):
 
 def testGaussian_Gaussian09_benzene_HPfreq_log(logfile):
     """Check that higher precision vib displacements obtained with freq=hpmodes) are parsed correctly."""
-    assert abs(logfile.data.vibdisps[0,0,2] - (-0.04497)) < 0.00001
+    assert abs(logfile.data.vibdisps[0, 0, 2] - (-0.04497)) < 0.00001
 
     assert logfile.data.metadata["package_version"] == "2009+C.01"
 
 
 def testGaussian_Gaussian09_benzene_freq_log(logfile):
     """Check that default precision vib displacements are parsed correctly."""
-    assert abs(logfile.data.vibdisps[0,0,2] - (-0.04)) < 0.00001
+    assert abs(logfile.data.vibdisps[0, 0, 2] - (-0.04)) < 0.00001
 
     assert logfile.data.metadata["package_version"] == "2009+C.01"
 
@@ -1129,18 +1121,24 @@ def testGaussian_Gaussian09_relaxed_PES_testCO2_log(logfile):
     assert new_points[0] == 0
 
     # The next two new points are at the end of unconverged runs.
-    assert optstatus[new_points[1]-1] == ccData.OPT_UNCONVERGED
-    assert all(optstatus[i] == ccData.OPT_UNKNOWN for i in range(new_points[0]+1, new_points[1]-1))
-    assert optstatus[new_points[2]-1] == ccData.OPT_UNCONVERGED
-    assert all(optstatus[i] == ccData.OPT_UNKNOWN for i in range(new_points[1]+1, new_points[2]-1))
+    assert optstatus[new_points[1] - 1] == ccData.OPT_UNCONVERGED
+    assert all(
+        optstatus[i] == ccData.OPT_UNKNOWN for i in range(new_points[0] + 1, new_points[1] - 1)
+    )
+    assert optstatus[new_points[2] - 1] == ccData.OPT_UNCONVERGED
+    assert all(
+        optstatus[i] == ccData.OPT_UNKNOWN for i in range(new_points[1] + 1, new_points[2] - 1)
+    )
 
     # The next new point is after a convergence.
-    assert optstatus[new_points[3]-1] == ccData.OPT_DONE
-    assert all(optstatus[i] == ccData.OPT_UNKNOWN for i in range(new_points[2]+1, new_points[3]-1))
+    assert optstatus[new_points[3] - 1] == ccData.OPT_DONE
+    assert all(
+        optstatus[i] == ccData.OPT_UNKNOWN for i in range(new_points[2] + 1, new_points[3] - 1)
+    )
 
     # All subsequent point are both new and converged, since they seem
     # to have converged in a single step.
-    assert all(s == ccData.OPT_DONE + ccData.OPT_NEW for s in optstatus[new_points[3]:])
+    assert all(s == ccData.OPT_DONE + ccData.OPT_NEW for s in optstatus[new_points[3] :])
 
     assert logfile.data.metadata["package_version"] == "2009+D.01"
 
@@ -1151,24 +1149,27 @@ def testGaussian_Gaussian09_stopiter_gaussian_out(logfile):
 
     assert logfile.data.metadata["package_version"] == "2009+D.01"
 
+
 def testGaussian_Gaussian09_benzene_excited_states_optimization_issue889_log(logfile):
     """Check that only converged geometry excited states properties are reported."""
-    assert logfile.data.etdips.shape == (20,3)
+    assert logfile.data.etdips.shape == (20, 3)
     assert len(logfile.data.etenergies) == 20
-    assert logfile.data.etmagdips.shape == (20,3)
+    assert logfile.data.etmagdips.shape == (20, 3)
     assert len(logfile.data.etoscs) == 20
     assert len(logfile.data.etrotats) == 20
     assert len(logfile.data.etsecs) == 20
-    assert logfile.data.etveldips.shape == (20,3)
+    assert logfile.data.etveldips.shape == (20, 3)
+
 
 def testGaussian_Gaussian16_H3_natcharge_log(logfile):
-    """A calculation with natural charges calculated. Test issue 1055 where 
+    """A calculation with natural charges calculated. Test issue 1055 where
     only the beta set of charges was parsed rather than the spin independent"""
 
     assert isinstance(logfile.data.atomcharges, dict)
     assert "mulliken" in logfile.data.atomcharges
     assert "natural" in logfile.data.atomcharges
-    assert numpy.all(logfile.data.atomcharges["natural"] == [ 0.0721, -0.1442,  0.0721])
+    assert numpy.all(logfile.data.atomcharges["natural"] == [0.0721, -0.1442, 0.0721])
+
 
 def testGaussian_Gaussian16_naturalspinorbitals_parsing_log(logfile):
     """A UHF calculation with natural spin orbitals."""
@@ -1179,10 +1180,10 @@ def testGaussian_Gaussian16_naturalspinorbitals_parsing_log(logfile):
     assert isinstance(logfile.data.nsooccnos, list)
     assert isinstance(logfile.data.nsooccnos[0], list)
     assert isinstance(logfile.data.nsooccnos[1], list)
-    assert isinstance(logfile.data.aonames,list)
-    assert isinstance(logfile.data.atombasis,list)
+    assert isinstance(logfile.data.aonames, list)
+    assert isinstance(logfile.data.atombasis, list)
 
-    assert numpy.shape(logfile.data.nsocoeffs) == (2,logfile.data.nmo,logfile.data.nmo)
+    assert numpy.shape(logfile.data.nsocoeffs) == (2, logfile.data.nmo, logfile.data.nmo)
     assert len(logfile.data.nsooccnos[0]) == logfile.data.nmo
     assert len(logfile.data.nsooccnos[1]) == logfile.data.nmo
     assert len(logfile.data.aonames) == logfile.data.nbasis
@@ -1190,18 +1191,21 @@ def testGaussian_Gaussian16_naturalspinorbitals_parsing_log(logfile):
 
     assert logfile.data.nsooccnos[0][14] == 0.00506
     assert logfile.data.nsooccnos[1][14] == 0.00318
-    assert logfile.data.nsocoeffs[0][14,12] == 0.00618
-    assert logfile.data.nsocoeffs[1][14,9] == 0.79289
-    assert logfile.data.aonames[41] == 'O2_9D 0'
+    assert logfile.data.nsocoeffs[0][14, 12] == 0.00618
+    assert logfile.data.nsocoeffs[1][14, 9] == 0.79289
+    assert logfile.data.aonames[41] == "O2_9D 0"
     assert logfile.data.atombasis[1][0] == 23
 
-    assert logfile.data.metadata["cpu_time"] == [datetime.timedelta(seconds=74, microseconds=400000)]
-    assert logfile.data.metadata["wall_time"] == [datetime.timedelta(seconds=3, microseconds=500000)]
+    assert logfile.data.metadata["cpu_time"] == [
+        datetime.timedelta(seconds=74, microseconds=400000)
+    ]
+    assert logfile.data.metadata["wall_time"] == [
+        datetime.timedelta(seconds=3, microseconds=500000)
+    ]
     assert logfile.data.metadata["legacy_package_version"] == "16revisionA.03"
     assert logfile.data.metadata["package_version"] == "2016+A.03"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
+
 
 def testGaussian_Gaussian16_issue851_log(logfile):
     """Surface scan from cclib/cclib#851 where attributes were not lists."""
@@ -1210,21 +1214,24 @@ def testGaussian_Gaussian16_issue851_log(logfile):
     assert isinstance(logfile.data.scanparm, list)
     assert isinstance(logfile.data.scanenergies, list)
 
+
 def testGaussian_Gaussian16_issue962_log(logfile):
     """For issue 962, this shouldn't have scftargets but should parse fully"""
 
     assert not hasattr(logfile.data, "scftargets")
-    
+
+
 def testGaussian_Gaussian16_C01_CC_log(logfile):
     """For issue 1110, check parsing of ccenergies in newer Gaussian version"""
 
     assert hasattr(logfile.data, "ccenergies")
 
+
 # Jaguar #
 
 # It would be good to have an unconverged geometry optimization so that
 # we can test that optdone is set properly.
-#def testJaguarX.X_dvb_gopt_unconverged:
+# def testJaguarX.X_dvb_gopt_unconverged:
 #    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 
 
@@ -1234,9 +1241,7 @@ def testJaguar_Jaguar8_3_stopiter_jaguar_dft_out(logfile):
 
     assert logfile.data.metadata["legacy_package_version"] == "8.3"
     assert logfile.data.metadata["package_version"] == "8.3+13"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testJaguar_Jaguar8_3_stopiter_jaguar_hf_out(logfile):
@@ -1255,10 +1260,11 @@ def testMolcas_Molcas18_test_standard_000_out(logfile):
     assert not hasattr(logfile.data, "mocoeffs")
 
     assert logfile.data.metadata["legacy_package_version"] == "18.09"
-    assert logfile.data.metadata["package_version"] == "18.09+52-ge15dc38.81d3fb3dc6a5c5df6b3791ef1ef3790f"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
+    assert (
+        logfile.data.metadata["package_version"]
+        == "18.09+52-ge15dc38.81d3fb3dc6a5c5df6b3791ef1ef3790f"
     )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testMolcas_Molcas18_test_standard_001_out(logfile):
@@ -1269,21 +1275,30 @@ def testMolcas_Molcas18_test_standard_001_out(logfile):
     assert logfile.data.nbasis == 30
     assert logfile.data.nmo == 30
 
-    assert logfile.data.metadata["package_version"] == "18.09+52-ge15dc38.81d3fb3dc6a5c5df6b3791ef1ef3790f"
+    assert (
+        logfile.data.metadata["package_version"]
+        == "18.09+52-ge15dc38.81d3fb3dc6a5c5df6b3791ef1ef3790f"
+    )
 
 
 def testMolcas_Molcas18_test_standard_003_out(logfile):
     """This logfile has extra charged monopoles (not part of the molecule)."""
     assert logfile.data.charge == 0
 
-    assert logfile.data.metadata["package_version"] == "18.09+52-ge15dc38.81d3fb3dc6a5c5df6b3791ef1ef3790f"
+    assert (
+        logfile.data.metadata["package_version"]
+        == "18.09+52-ge15dc38.81d3fb3dc6a5c5df6b3791ef1ef3790f"
+    )
 
 
 def testMolcas_Molcas18_test_standard_005_out(logfile):
     """Final geometry in optimization has fewer atoms due to symmetry, and so is ignored."""
     assert len(logfile.data.atomcoords) == 2
 
-    assert logfile.data.metadata["package_version"] == "18.09+52-ge15dc38.81d3fb3dc6a5c5df6b3791ef1ef3790f"
+    assert (
+        logfile.data.metadata["package_version"]
+        == "18.09+52-ge15dc38.81d3fb3dc6a5c5df6b3791ef1ef3790f"
+    )
 
 
 def testMolcas_Molcas18_test_stevenv_001_out(logfile):
@@ -1291,7 +1306,10 @@ def testMolcas_Molcas18_test_stevenv_001_out(logfile):
     assert not hasattr(logfile.data, "moenergies")
     assert not hasattr(logfile.data, "mocoeffs")
 
-    assert logfile.data.metadata["package_version"] == "18.09+52-ge15dc38.81d3fb3dc6a5c5df6b3791ef1ef3790f"
+    assert (
+        logfile.data.metadata["package_version"]
+        == "18.09+52-ge15dc38.81d3fb3dc6a5c5df6b3791ef1ef3790f"
+    )
 
 
 def testMolcas_Molcas18_test_stevenv_desym_out(logfile):
@@ -1299,7 +1317,10 @@ def testMolcas_Molcas18_test_stevenv_desym_out(logfile):
     assert len(logfile.data.scfvalues) == 1
     assert len(logfile.data.scfvalues[0]) == 26
 
-    assert logfile.data.metadata["package_version"] == "18.09+52-ge15dc38.81d3fb3dc6a5c5df6b3791ef1ef3790f"
+    assert (
+        logfile.data.metadata["package_version"]
+        == "18.09+52-ge15dc38.81d3fb3dc6a5c5df6b3791ef1ef3790f"
+    )
 
 
 # Molpro #
@@ -1318,7 +1339,7 @@ def testMolpro_Molpro2008_ch2o_molpro_casscf_out(logfile):
     # The MO coefficients are printed in several block, each corresponding
     # to one irrep, so make sure we have reconstructed the coefficients correctly.
     assert len(logfile.data.moenergies) == 1
-    assert logfile.data.moenergies[0].shape == (logfile.data.nmo, )
+    assert logfile.data.moenergies[0].shape == (logfile.data.nmo,)
     assert len(logfile.data.mocoeffs) == 1
     assert logfile.data.mocoeffs[0].shape == (logfile.data.nmo, logfile.data.nbasis)
 
@@ -1334,38 +1355,38 @@ def testMolpro_Molpro2008_ch2o_molpro_casscf_out(logfile):
 
     assert logfile.data.metadata["legacy_package_version"] == "2012.1"
     assert logfile.data.metadata["package_version"] == "2012.1"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testMolpro_Molpro2012_CHONHSH_HF_STO_3G_out(logfile):
     """Formatting of the basis function is slightly different than expected."""
     assert len(logfile.data.gbasis) == 7
-    assert len(logfile.data.gbasis[0]) == 3 # C
-    assert len(logfile.data.gbasis[1]) == 3 # N
-    assert len(logfile.data.gbasis[2]) == 3 # O
-    assert len(logfile.data.gbasis[3]) == 5 # S
-    assert len(logfile.data.gbasis[4]) == 1 # H
-    assert len(logfile.data.gbasis[5]) == 1 # H
-    assert len(logfile.data.gbasis[6]) == 1 # H
+    assert len(logfile.data.gbasis[0]) == 3  # C
+    assert len(logfile.data.gbasis[1]) == 3  # N
+    assert len(logfile.data.gbasis[2]) == 3  # O
+    assert len(logfile.data.gbasis[3]) == 5  # S
+    assert len(logfile.data.gbasis[4]) == 1  # H
+    assert len(logfile.data.gbasis[5]) == 1  # H
+    assert len(logfile.data.gbasis[6]) == 1  # H
 
     assert logfile.data.metadata["legacy_package_version"] == "2012.1"
-    assert logfile.data.metadata["package_version"] == "2012.1.23+f8cfea266908527a8826bdcd5983aaf62e47d3bf"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
+    assert (
+        logfile.data.metadata["package_version"]
+        == "2012.1.23+f8cfea266908527a8826bdcd5983aaf62e47d3bf"
     )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testMolpro_Molpro2012_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
-    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+    assert hasattr(logfile.data, "optdone") and not logfile.data.optdone
 
     assert logfile.data.metadata["legacy_package_version"] == "2012.1"
-    assert logfile.data.metadata["package_version"] == "2012.1.12+e112a8ab93d81616c1987a1f1ef3707d874b6803"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
+    assert (
+        logfile.data.metadata["package_version"]
+        == "2012.1.12+e112a8ab93d81616c1987a1f1ef3707d874b6803"
     )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testMolpro_Molpro2012_stopiter_molpro_dft_out(logfile):
@@ -1373,17 +1394,21 @@ def testMolpro_Molpro2012_stopiter_molpro_dft_out(logfile):
     assert len(logfile.data.scfvalues[0]) == 6
 
     assert logfile.data.metadata["legacy_package_version"] == "2012.1"
-    assert logfile.data.metadata["package_version"] == "2012.1+c18f7d37f9f045f75d4f3096db241dde02ddca0a"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
+    assert (
+        logfile.data.metadata["package_version"]
+        == "2012.1+c18f7d37f9f045f75d4f3096db241dde02ddca0a"
     )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testMolpro_Molpro2012_stopiter_molpro_hf_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert len(logfile.data.scfvalues[0]) == 6
 
-    assert logfile.data.metadata["package_version"] == "2012.1+c18f7d37f9f045f75d4f3096db241dde02ddca0a"
+    assert (
+        logfile.data.metadata["package_version"]
+        == "2012.1+c18f7d37f9f045f75d4f3096db241dde02ddca0a"
+    )
 
 
 # MOPAC #
@@ -1391,13 +1416,11 @@ def testMolpro_Molpro2012_stopiter_molpro_hf_out(logfile):
 
 def testMOPAC_MOPAC2016_9S3_uuu_Cs_cation_freq_PM7_out(logfile):
     """There was a syntax error in the frequency parsing."""
-    assert hasattr(logfile.data, 'vibfreqs')
+    assert hasattr(logfile.data, "vibfreqs")
 
     assert logfile.data.metadata["legacy_package_version"] == "2016"
     assert logfile.data.metadata["package_version"] == "16.175"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 # NWChem #
@@ -1405,18 +1428,16 @@ def testMOPAC_MOPAC2016_9S3_uuu_Cs_cation_freq_PM7_out(logfile):
 
 def testNWChem_NWChem6_0_dvb_gopt_hf_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
-    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+    assert hasattr(logfile.data, "optdone") and not logfile.data.optdone
 
     assert logfile.data.metadata["legacy_package_version"] == "6.0"
     assert logfile.data.metadata["package_version"] == "6.0"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testNWChem_NWChem6_0_dvb_sp_hf_moments_only_quadrupole_out(logfile):
     """Quadrupole moments are printed/parsed, but not lower moments (no shape)."""
-    assert hasattr(logfile.data, 'moments') and len(logfile.data.moments) == 3
+    assert hasattr(logfile.data, "moments") and len(logfile.data.moments) == 3
     assert len(logfile.data.moments[0]) == 3
     assert not logfile.data.moments[1].shape
     assert len(logfile.data.moments[2]) == 6
@@ -1426,7 +1447,7 @@ def testNWChem_NWChem6_0_dvb_sp_hf_moments_only_quadrupole_out(logfile):
 
 def testNWChem_NWChem6_0_dvb_sp_hf_moments_only_octupole_out(logfile):
     """Quadrupole moments are printed/parsed, but not lower moments (no shape)."""
-    assert hasattr(logfile.data, 'moments') and len(logfile.data.moments) == 4
+    assert hasattr(logfile.data, "moments") and len(logfile.data.moments) == 4
     assert len(logfile.data.moments[0]) == 3
     assert not logfile.data.moments[1].shape
     assert not logfile.data.moments[2].shape
@@ -1479,9 +1500,7 @@ def testNWChem_NWChem6_5_stopiter_nwchem_dft_out(logfile):
 
     assert logfile.data.metadata["legacy_package_version"] == "6.5"
     assert logfile.data.metadata["package_version"] == "6.5+26243"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testNWChem_NWChem6_5_stopiter_nwchem_hf_out(logfile):
@@ -1490,7 +1509,8 @@ def testNWChem_NWChem6_5_stopiter_nwchem_hf_out(logfile):
 
     assert logfile.data.metadata["package_version"] == "6.5+26243"
 
-#def testNWChem_NWChem6_8_1057_out(logfile):
+
+# def testNWChem_NWChem6_8_1057_out(logfile):
 #    """Multistep job caused a premature end of parsing."""
 #    assert not hasattr(logfile.data, "atomnos")
 #    assert not hasattr(logfile.data, "gbasis")
@@ -1511,9 +1531,7 @@ def testNWChem_NWChem6_8_526_out(logfile):
 
     assert logfile.data.metadata["legacy_package_version"] == "6.8.1"
     assert logfile.data.metadata["package_version"] == "6.8.1+g08bf49b"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 # ORCA #
@@ -1536,9 +1554,7 @@ def testORCA_ORCA2_8_co_cosmo_out(logfile):
 
     assert logfile.data.metadata["legacy_package_version"] == "2.8"
     assert logfile.data.metadata["package_version"] == "2.8+2287"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testORCA_ORCA2_9_job_out(logfile):
@@ -1547,13 +1563,11 @@ def testORCA_ORCA2_9_job_out(logfile):
     Make sure that the sum of such densities is one in this case (or reasonaby close),
     but remember that this attribute is a dictionary, so we must iterate.
     """
-    assert all([abs(sum(v)-1.0) < 0.0001 for k, v in logfile.data.atomspins.items()])
+    assert all([abs(sum(v) - 1.0) < 0.0001 for k, v in logfile.data.atomspins.items()])
 
     assert logfile.data.metadata["legacy_package_version"] == "2.9.0"
     assert logfile.data.metadata["package_version"] == "2.9.0"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testORCA_ORCA2_9_qmspeedtest_hf_out(logfile):
@@ -1564,15 +1578,13 @@ def testORCA_ORCA2_9_qmspeedtest_hf_out(logfile):
 
     assert logfile.data.metadata["legacy_package_version"] == "2.9.1"
     assert logfile.data.metadata["package_version"] == "2.9.1"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testORCA_ORCA3_0_chelpg_out(logfile):
     """ORCA file with chelpg charges"""
-    assert 'chelpg' in logfile.data.atomcharges
-    charges = logfile.data.atomcharges['chelpg']
+    assert "chelpg" in logfile.data.atomcharges
+    charges = logfile.data.atomcharges["chelpg"]
     assert len(charges) == 9
     assert charges[0] == 0.363939
     assert charges[1] == 0.025695
@@ -1580,29 +1592,25 @@ def testORCA_ORCA3_0_chelpg_out(logfile):
 
 def testORCA_ORCA3_0_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
-    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+    assert hasattr(logfile.data, "optdone") and not logfile.data.optdone
 
     assert logfile.data.metadata["legacy_package_version"] == "3.0.1"
     assert logfile.data.metadata["package_version"] == "3.0.1"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testORCA_ORCA3_0_polar_rhf_cg_out(logfile):
     """Alternative CP-SCF solver for the polarizability wasn't being detected."""
-    assert hasattr(logfile.data, 'polarizabilities')
+    assert hasattr(logfile.data, "polarizabilities")
 
     assert logfile.data.metadata["legacy_package_version"] == "3.0.3"
     assert logfile.data.metadata["package_version"] == "3.0.3"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testORCA_ORCA3_0_polar_rhf_diis_out(logfile):
     """Alternative CP-SCF solver for the polarizability wasn't being detected."""
-    assert hasattr(logfile.data, 'polarizabilities')
+    assert hasattr(logfile.data, "polarizabilities")
 
     assert logfile.data.metadata["package_version"] == "3.0.3"
 
@@ -1623,7 +1631,7 @@ def testORCA_ORCA3_0_stopiter_orca_scf_large_out(logfile):
 
 def testORCA_ORCA4_0_1_ttt_td_out(logfile):
     """RPA is slightly different from TDA, see #373."""
-    assert hasattr(logfile.data, 'etsyms')
+    assert hasattr(logfile.data, "etsyms")
     assert len(logfile.data.etsecs) == 24
     assert len(logfile.data.etsecs[0]) == 1
     assert numpy.isnan(logfile.data.etsecs[0][0][2])
@@ -1632,9 +1640,7 @@ def testORCA_ORCA4_0_1_ttt_td_out(logfile):
 
     assert logfile.data.metadata["legacy_package_version"] == "4.0.0"
     assert logfile.data.metadata["package_version"] == "4.0.0"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testORCA_ORCA4_0_hydrogen_fluoride_numfreq_out(logfile):
@@ -1649,7 +1655,7 @@ def testORCA_ORCA4_0_hydrogen_fluoride_usesym_anfreq_out(logfile):
 
 def testORCA_ORCA4_0_invalid_literal_for_float_out(logfile):
     """MO coefficients are glued together, see #629."""
-    assert hasattr(logfile.data, 'mocoeffs')
+    assert hasattr(logfile.data, "mocoeffs")
     assert logfile.data.mocoeffs[0].shape == (logfile.data.nmo, logfile.data.nbasis)
 
     # Test the coefficients from this line where things are glued together:
@@ -1663,30 +1669,27 @@ def testORCA_ORCA4_0_invalid_literal_for_float_out(logfile):
 
     assert logfile.data.metadata["legacy_package_version"] == "4.0.1.2"
     assert logfile.data.metadata["package_version"] == "4.0.1.2"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testORCA_ORCA4_0_IrCl6_sp_out(logfile):
     """Tests ECP and weird SCF printing."""
-    assert hasattr(logfile.data, 'scfvalues')
+    assert hasattr(logfile.data, "scfvalues")
     assert len(logfile.data.scfvalues) == 1
     vals_first = [0.000000000000, 28.31276975, 0.71923638]
     vals_last = [0.000037800796, 0.00412549, 0.00014041]
     numpy.testing.assert_almost_equal(logfile.data.scfvalues[0][0], vals_first)
     numpy.testing.assert_almost_equal(logfile.data.scfvalues[0][-1], vals_last)
 
+
 def testORCA_ORCA4_0_comment_or_blank_line_out(logfile):
     """Coordinates with blank lines or comments weren't parsed correctly (#747)."""
-    assert hasattr(logfile.data,"atomcoords")
+    assert hasattr(logfile.data, "atomcoords")
     assert logfile.data.atomcoords.shape == (1, 8, 3)
 
     assert logfile.data.metadata["legacy_package_version"] == "4.0.1.2"
     assert logfile.data.metadata["package_version"] == "4.0.1.2"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testORCA_ORCA4_1_725_out(logfile):
@@ -1696,15 +1699,15 @@ def testORCA_ORCA4_1_725_out(logfile):
     In #725 we decided to not include these potentials in the parsed results.
     """
     assert logfile.data.natom == 7
-    numpy.testing.assert_equal(logfile.data.atomnos, numpy.array([20, 17, 17, 17, 17, 17, 17], dtype=int))
+    numpy.testing.assert_equal(
+        logfile.data.atomnos, numpy.array([20, 17, 17, 17, 17, 17, 17], dtype=int)
+    )
     assert len(logfile.data.atomcharges["mulliken"]) == 7
     assert len(logfile.data.atomcharges["lowdin"]) == 7
 
     assert logfile.data.metadata["legacy_package_version"] == "4.1.x"
     assert logfile.data.metadata["package_version"] == "4.1dev+13440"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testORCA_ORCA4_1_orca_from_issue_736_out(logfile):
@@ -1749,16 +1752,17 @@ def testORCA_ORCA4_2_947_out(logfile):
 def testORCA_ORCA4_2_MP2_gradient_out(logfile):
     """ORCA numerical frequency calculation with gradients."""
     assert logfile.data.metadata["package_version"] == "4.2.0"
-    assert hasattr(logfile.data, 'grads')
+    assert hasattr(logfile.data, "grads")
     assert logfile.data.grads.shape == (1, 3, 3)
     # atom 2, y-coordinate.
     idx = (0, 1, 1)
     assert logfile.data.grads[idx] == -0.00040549
 
+
 def testORCA_ORCA4_2_long_input_out(logfile):
     """Long ORCA input file (#804)."""
     assert logfile.data.metadata["package_version"] == "4.2.0"
-    assert hasattr(logfile.data, 'atomcoords')
+    assert hasattr(logfile.data, "atomcoords")
     assert logfile.data.atomcoords.shape == (100, 12, 3)
 
 
@@ -1775,15 +1779,18 @@ def testORCA_ORCA4_2_water_dlpno_ccsd_out(logfile):
         E(CORR)(weak-pairs)                        ...      0.000000000
         E(CORR)(corrected)                         ...     -0.049905771
         E(TOT)                                     ...    -75.013480013
-        Singles Norm <S|S>**1/2                    ...      0.013957180  
-        T1 diagnostic                              ...      0.004934608  
+        Singles Norm <S|S>**1/2                    ...      0.013957180
+        T1 diagnostic                              ...      0.004934608
     """
-    assert hasattr(logfile.data, 'ccenergies')
+    assert hasattr(logfile.data, "ccenergies")
 
 
 def testORCA_ORCA4_2_longer_input_out(logfile):
     """Longer ORCA input file (#1034)."""
-    assert logfile.data.metadata['input_file_contents'][-47:-4] == 'H   1.066878310   1.542378768  -0.602599044'
+    assert (
+        logfile.data.metadata["input_file_contents"][-47:-4]
+        == "H   1.066878310   1.542378768  -0.602599044"
+    )
 
 
 def testORCA_ORCA4_2_casscf_out(logfile):
@@ -1804,9 +1811,7 @@ def testPsi3_Psi3_4_water_psi3_log(logfile):
 
     assert logfile.data.metadata["legacy_package_version"] == "3.4"
     assert logfile.data.metadata["package_version"] == "3.4alpha"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 # PSI 4 #
@@ -1816,27 +1821,24 @@ def testPsi4_Psi4_beta5_dvb_gopt_hf_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert logfile.data.metadata["legacy_package_version"] == "beta5"
     assert logfile.data.metadata["package_version"] == "0!0.beta5"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
-    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
+    assert hasattr(logfile.data, "optdone") and not logfile.data.optdone
 
 
 def testPsi4_Psi4_beta5_sample_cc54_0_01_0_1_0_1_out(logfile):
     """TODO"""
     assert logfile.data.metadata["legacy_package_version"] == "beta2+"
-    assert logfile.data.metadata["package_version"] == "0!0.beta2.dev+fa5960b375b8ca2a5e4000a48cb95e7f218c579a"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
+    assert (
+        logfile.data.metadata["package_version"]
+        == "0!0.beta2.dev+fa5960b375b8ca2a5e4000a48cb95e7f218c579a"
     )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testPsi4_Psi4_beta5_stopiter_psi_dft_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert logfile.data.metadata["package_version"] == "0!0.beta5"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
     assert len(logfile.data.scfvalues[0]) == 7
 
 
@@ -1849,19 +1851,15 @@ def testPsi4_Psi4_beta5_stopiter_psi_hf_out(logfile):
 def testPsi4_Psi4_0_5_sample_scf5_out(logfile):
     assert logfile.data.metadata["legacy_package_version"] == "0.5"
     assert logfile.data.metadata["package_version"] == "1!0.5.dev+master-dbe9080"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testPsi4_Psi4_0_5_water_fdgrad_out(logfile):
     """Ensure that finite difference gradients are parsed."""
     assert logfile.data.metadata["legacy_package_version"] == "1.2a1.dev429"
     assert logfile.data.metadata["package_version"] == "1!1.2a1.dev429+fixsym-7838fc1-dirty"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
-    assert hasattr(logfile.data, 'grads')
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
+    assert hasattr(logfile.data, "grads")
     assert logfile.data.grads.shape == (1, 3, 3)
     assert abs(logfile.data.grads[0, 0, 2] - 0.05498126903657) < 1.0e-12
     # In C2v symmetry, there are 5 unique displacements for the
@@ -1873,12 +1871,10 @@ def testPsi4_Psi4_1_2_ch4_hf_opt_freq_out(logfile):
     """Ensure that molecular orbitals and normal modes are parsed in Psi4 1.2"""
     assert logfile.data.metadata["legacy_package_version"] == "1.2.1"
     assert logfile.data.metadata["package_version"] == "1!1.2.1.dev+HEAD-406f4de"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
-    assert hasattr(logfile.data, 'mocoeffs')
-    assert hasattr(logfile.data, 'vibdisps')
-    assert hasattr(logfile.data, 'vibfreqs')
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
+    assert hasattr(logfile.data, "mocoeffs")
+    assert hasattr(logfile.data, "vibdisps")
+    assert hasattr(logfile.data, "vibfreqs")
 
 
 # Q-Chem #
@@ -1896,9 +1892,7 @@ def testQChem_QChem4_2_CH3___Na__RS_out(logfile):
 
     assert logfile.data.metadata["legacy_package_version"] == "4.2.2"
     assert logfile.data.metadata["package_version"] == "4.2.2"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
     assert logfile.data.charge == 1
     assert logfile.data.mult == 2
@@ -1931,9 +1925,7 @@ def testQChem_QChem4_2_CH3___Na__RS_SCF_out(logfile):
 
     assert logfile.data.metadata["legacy_package_version"] == "4.1.0.1"
     assert logfile.data.metadata["package_version"] == "4.1.0.1"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
     assert logfile.data.charge == 1
     assert logfile.data.mult == 2
@@ -1964,9 +1956,7 @@ def testQChem_QChem4_2_CH4___Na__out(logfile):
 
     assert logfile.data.metadata["legacy_package_version"] == "4.2.0"
     assert logfile.data.metadata["package_version"] == "4.2.0"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
     assert logfile.data.charge == 1
     assert logfile.data.mult == 1
@@ -1997,9 +1987,7 @@ def testQChem_QChem4_2_CH3___Na__RS_SCF_noprint_out(logfile):
 
     assert logfile.data.metadata["legacy_package_version"] == "4.3.0"
     assert logfile.data.metadata["package_version"] == "4.3.0"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
     assert logfile.data.charge == 1
     assert logfile.data.mult == 2
@@ -2200,7 +2188,7 @@ def testQChem_QChem4_2_CO2_linear_dependence_printdefault_out(logfile):
 def testQChem_QChem4_2_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert logfile.data.metadata["package_version"] == "4.2.0"
-    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+    assert hasattr(logfile.data, "optdone") and not logfile.data.optdone
 
 
 def testQChem_QChem4_2_dvb_sp_multipole_10_out(logfile):
@@ -2210,7 +2198,7 @@ def testQChem_QChem4_2_dvb_sp_multipole_10_out(logfile):
     the parser by making sure the first moment (pure X) is as expected.
     """
     assert logfile.data.metadata["package_version"] == "4.2.0"
-    assert hasattr(logfile.data, 'moments') and len(logfile.data.moments) == 11
+    assert hasattr(logfile.data, "moments") and len(logfile.data.moments) == 11
     tol = 1.0e-6
     assert logfile.data.moments[1][0] < tol
     assert abs(logfile.data.moments[2][0] - -50.9647) < tol
@@ -2231,7 +2219,7 @@ def testQChem_QChem4_2_MoOCl4_sp_noprint_builtin_mixed_all_Cl_out(logfile):
     assert logfile.data.metadata["package_version"] == "4.2.0"
     assert logfile.data.charge == -2
     assert logfile.data.mult == 1
-    assert hasattr(logfile.data, 'coreelectrons')
+    assert hasattr(logfile.data, "coreelectrons")
     coreelectrons = numpy.array([0, 0, 10, 10, 10, 10], dtype=int)
     assert numpy.all(coreelectrons == logfile.data.coreelectrons)
 
@@ -2245,7 +2233,7 @@ def testQChem_QChem4_2_MoOCl4_sp_noprint_builtin_mixed_both_out(logfile):
     assert logfile.data.metadata["package_version"] == "4.2.0"
     assert logfile.data.charge == -2
     assert logfile.data.mult == 1
-    assert not hasattr(logfile.data, 'coreelectrons')
+    assert not hasattr(logfile.data, "coreelectrons")
 
 
 def testQChem_QChem4_2_MoOCl4_sp_noprint_builtin_mixed_single_Mo_out(logfile):
@@ -2253,7 +2241,7 @@ def testQChem_QChem4_2_MoOCl4_sp_noprint_builtin_mixed_single_Mo_out(logfile):
     assert logfile.data.metadata["package_version"] == "4.2.0"
     assert logfile.data.charge == -2
     assert logfile.data.mult == 1
-    assert hasattr(logfile.data, 'coreelectrons')
+    assert hasattr(logfile.data, "coreelectrons")
     coreelectrons = numpy.array([28, 0, 0, 0, 0, 0], dtype=int)
     assert numpy.all(coreelectrons == logfile.data.coreelectrons)
 
@@ -2267,7 +2255,7 @@ def testQChem_QChem4_2_MoOCl4_sp_noprint_builtin_out(logfile):
     assert logfile.data.metadata["package_version"] == "4.2.0"
     assert logfile.data.charge == -2
     assert logfile.data.mult == 1
-    assert not hasattr(logfile.data, 'coreelectrons')
+    assert not hasattr(logfile.data, "coreelectrons")
 
 
 def testQChem_QChem4_2_MoOCl4_sp_noprint_user_Mo_builtin_all_Cl_out(logfile):
@@ -2277,7 +2265,7 @@ def testQChem_QChem4_2_MoOCl4_sp_noprint_user_Mo_builtin_all_Cl_out(logfile):
     assert logfile.data.metadata["package_version"] == "4.2.0"
     assert logfile.data.charge == -2
     assert logfile.data.mult == 1
-    assert hasattr(logfile.data, 'coreelectrons')
+    assert hasattr(logfile.data, "coreelectrons")
     coreelectrons = numpy.array([28, 0, 10, 10, 10, 10], dtype=int)
     assert numpy.all(coreelectrons == logfile.data.coreelectrons)
 
@@ -2292,7 +2280,7 @@ def testQChem_QChem4_2_MoOCl4_sp_print_builtin_mixed_single_Mo_single_Cl_out(log
     assert logfile.data.metadata["package_version"] == "4.2.0"
     assert logfile.data.charge == -2
     assert logfile.data.mult == 1
-    assert hasattr(logfile.data, 'coreelectrons')
+    assert hasattr(logfile.data, "coreelectrons")
     coreelectrons = numpy.array([28, 0, 10, 10, 10, 10], dtype=int)
     assert numpy.all(coreelectrons == logfile.data.coreelectrons)
 
@@ -2420,9 +2408,7 @@ def testQChem_QChem4_2_stopiter_qchem_out(logfile):
     """Check to ensure that an incomplete SCF is handled correctly."""
     assert logfile.data.metadata["legacy_package_version"] == "4.0.0.1"
     assert logfile.data.metadata["package_version"] == "4.0.0.1"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
     assert len(logfile.data.scfvalues[0]) == 7
 
 
@@ -2431,7 +2417,7 @@ def testQChem_QChem4_3_R_propylene_oxide_force_ccsd_out(logfile):
     parsed.
     """
     assert logfile.data.metadata["package_version"] == "4.3.0"
-    assert hasattr(logfile.data, 'grads')
+    assert hasattr(logfile.data, "grads")
     assert logfile.data.grads.shape == (1, logfile.data.natom, 3)
     # atom 9, y-coordinate.
     idx = (0, 8, 1)
@@ -2452,7 +2438,7 @@ def testQChem_QChem4_3_R_propylene_oxide_force_mp2_out(logfile):
     being parsed.
     """
     assert logfile.data.metadata["package_version"] == "4.3.0"
-    assert hasattr(logfile.data, 'grads')
+    assert hasattr(logfile.data, "grads")
     assert logfile.data.grads.shape == (1, logfile.data.natom, 3)
     # atom 9, y-coordinate.
     idx = (0, 8, 1)
@@ -2464,7 +2450,7 @@ def testQChem_QChem4_3_R_propylene_oxide_force_rimp2_out(logfile):
     being parsed.
     """
     assert logfile.data.metadata["package_version"] == "4.3.0"
-    assert hasattr(logfile.data, 'grads')
+    assert hasattr(logfile.data, "grads")
     assert logfile.data.grads.shape == (1, logfile.data.natom, 3)
     # atom 9, y-coordinate.
     idx = (0, 8, 1)
@@ -2472,72 +2458,68 @@ def testQChem_QChem4_3_R_propylene_oxide_force_rimp2_out(logfile):
 
 
 def testQChem_QChem4_3_R_propylene_oxide_freq_ccsd_out(logfile):
-    """Check to see that the CCSD (numerical) Hessian is being parsed.
-    """
+    """Check to see that the CCSD (numerical) Hessian is being parsed."""
     assert logfile.data.metadata["package_version"] == "4.3.0"
     # The gradient of the initial geometry in a Hessian calculated
     # from finite difference of gradients should be the same as in a
     # force calculation.
-    assert hasattr(logfile.data, 'grads')
-    ngrads = 1 + 6*logfile.data.natom
+    assert hasattr(logfile.data, "grads")
+    ngrads = 1 + 6 * logfile.data.natom
     assert logfile.data.grads.shape == (ngrads, logfile.data.natom, 3)
     # atom 9, y-coordinate.
     idx = (0, 8, 1)
     assert logfile.data.grads[idx] == 0.00584973
 
-    assert hasattr(logfile.data, 'hessian')
-    assert logfile.data.hessian.shape == (3*logfile.data.natom, 3*logfile.data.natom)
+    assert hasattr(logfile.data, "hessian")
+    assert logfile.data.hessian.shape == (3 * logfile.data.natom, 3 * logfile.data.natom)
     # atom 4, x-coordinate.
     idx = (9, 9)
     assert logfile.data.hessian[idx] == 0.3561243
 
 
 def testQChem_QChem4_3_R_propylene_oxide_freq_hf_numerical_gradients_out(logfile):
-    """Check to see that the HF Hessian (from gradients) is being parsed.
-    """
+    """Check to see that the HF Hessian (from gradients) is being parsed."""
     assert logfile.data.metadata["package_version"] == "4.3.0"
     # This isn't implemented yet.
     assert not hasattr(logfile.data, "freq")
 
 
 def testQChem_QChem4_3_R_propylene_oxide_freq_mp2_out(logfile):
-    """Check to see that the MP2 (numerical) Hessian is being parsed.
-    """
+    """Check to see that the MP2 (numerical) Hessian is being parsed."""
     assert logfile.data.metadata["package_version"] == "4.3.0"
     # The gradient of the initial geometry in a Hessian calculated
     # from finite difference of gradients should be the same as in a
     # force calculation.
-    assert hasattr(logfile.data, 'grads')
-    ngrads = 1 + 6*logfile.data.natom
+    assert hasattr(logfile.data, "grads")
+    ngrads = 1 + 6 * logfile.data.natom
     assert logfile.data.grads.shape == (ngrads, logfile.data.natom, 3)
     # atom 9, y-coordinate.
     idx = (0, 8, 1)
     assert logfile.data.grads[idx] == 0.00436177
 
-    assert hasattr(logfile.data, 'hessian')
-    assert logfile.data.hessian.shape == (3*logfile.data.natom, 3*logfile.data.natom)
+    assert hasattr(logfile.data, "hessian")
+    assert logfile.data.hessian.shape == (3 * logfile.data.natom, 3 * logfile.data.natom)
     # atom 4, x-coordinate.
     idx = (9, 9)
     assert logfile.data.hessian[idx] == 0.3520255
 
 
 def testQChem_QChem4_3_R_propylene_oxide_freq_rimp2_out(logfile):
-    """Check to see that the RI-MP2 (numerical) Hessian is being parsed.
-    """
+    """Check to see that the RI-MP2 (numerical) Hessian is being parsed."""
     assert logfile.data.metadata["package_version"] == "4.3.0"
     # The gradient of the initial geometry in a Hessian calculated
     # from finite difference of gradients should be the same as in a
     # force calculation.
-    assert hasattr(logfile.data, 'grads')
-    ngrads = 1 + 6*logfile.data.natom
+    assert hasattr(logfile.data, "grads")
+    ngrads = 1 + 6 * logfile.data.natom
     assert logfile.data.grads.shape == (ngrads, logfile.data.natom, 3)
     # atom 9, y-coordinate.
     idx = (0, 8, 1)
     # Well, not quite in this case...
     assert logfile.data.grads[idx] == 0.00436167
 
-    assert hasattr(logfile.data, 'hessian')
-    assert logfile.data.hessian.shape == (3*logfile.data.natom, 3*logfile.data.natom)
+    assert hasattr(logfile.data, "hessian")
+    assert logfile.data.hessian.shape == (3 * logfile.data.natom, 3 * logfile.data.natom)
     # atom 4, x-coordinate.
     idx = (9, 9)
     assert logfile.data.hessian[idx] == 0.3520538
@@ -2549,10 +2531,8 @@ def testQChem_QChem4_4_full_2_out(logfile):
     """
     assert logfile.data.metadata["legacy_package_version"] == "4.4.2"
     assert logfile.data.metadata["package_version"] == "4.4.2"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
-    assert hasattr(logfile.data, 'polarizabilities')
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
+    assert hasattr(logfile.data, "polarizabilities")
 
 
 def testQChem_QChem4_4_srtlg_out(logfile):
@@ -2561,9 +2541,7 @@ def testQChem_QChem4_4_srtlg_out(logfile):
     """
     assert logfile.data.metadata["legacy_package_version"] == "4.4.0"
     assert logfile.data.metadata["package_version"] == "4.4.0"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
     # There is a linear dependence problem.
     nbasis, nmo = 1129, 1115
     assert len(logfile.data.mocoeffs) == 2
@@ -2584,7 +2562,7 @@ def testQChem_QChem4_4_Trp_polar_ideriv0_out(logfile):
     large errors.
     """
     assert logfile.data.metadata["package_version"] == "4.4.2"
-    assert hasattr(logfile.data, 'polarizabilities')
+    assert hasattr(logfile.data, "polarizabilities")
 
 
 def testQChem_QChem4_4_top_out(logfile):
@@ -2605,9 +2583,7 @@ def testQChem_QChem5_0_438_out(logfile):
     """
     assert logfile.data.metadata["legacy_package_version"] == "5.0.0"
     assert logfile.data.metadata["package_version"] == "5.0.0"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
     assert logfile.data.charge == 0
     assert logfile.data.coreelectrons[0] == 60
 
@@ -2618,15 +2594,20 @@ def testQChem_QChem5_0_argon_out(logfile):
     """
     assert logfile.data.metadata["legacy_package_version"] == "5.0.1"
     assert logfile.data.metadata["package_version"] == "5.0.1"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
     nroots = 12
     assert len(logfile.data.etenergies) == nroots
     state_0_energy = -526.6323968555
     state_1_energy = -526.14663738
-    assert logfile.data.scfenergies[0] == convertor(state_0_energy, 'hartree', 'eV')
-    assert abs(logfile.data.etenergies[0] - convertor(state_1_energy - state_0_energy, 'hartree', 'wavenumber')) < 1.0e-1
+    assert logfile.data.scfenergies[0] == convertor(state_0_energy, "hartree", "eV")
+    assert (
+        abs(
+            logfile.data.etenergies[0]
+            - convertor(state_1_energy - state_0_energy, "hartree", "wavenumber")
+        )
+        < 1.0e-1
+    )
+
 
 def testQChem_QChem5_0_Si_out(logfile):
     """
@@ -2634,18 +2615,15 @@ def testQChem_QChem5_0_Si_out(logfile):
     """
     assert logfile.data.metadata["legacy_package_version"] == "5.0.2"
     assert logfile.data.metadata["package_version"] == "5.0.2"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
-    assert logfile.data.mocoeffs[0][0,0] == 1.00042
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
+    assert logfile.data.mocoeffs[0][0, 0] == 1.00042
+
 
 def testQChem_QChem5_1_old_final_print_1_out(logfile):
     """This job has was run from a development version."""
     assert logfile.data.metadata["legacy_package_version"] == "5.1.0"
     assert logfile.data.metadata["package_version"] == "5.1.0dev+branches_libresponse-27553"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 def testQChem_QChem5_2_HSO2F_TS_out(logfile):
@@ -2672,9 +2650,7 @@ def testQChem_QChem5_3_ts_30_irc_out(logfile):
     for each new calculation section.
     """
     assert logfile.data.metadata["package_version"] == "5.3.2dev+trunk-35976"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
 # Turbomole
@@ -2683,9 +2659,7 @@ def testQChem_QChem5_3_ts_30_irc_out(logfile):
 def testTurbomole_Turbomole7_2_dvb_gopt_b3_lyp_Gaussian__(logfile):
     assert logfile.data.metadata["legacy_package_version"] == "7.2"
     assert logfile.data.metadata["package_version"] == "7.2.r21471"
-    assert isinstance(
-        parse_version(logfile.data.metadata["package_version"]), Version
-    )
+    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
     assert logfile.data.natom == 20
 
 
@@ -2726,7 +2700,7 @@ def flatten(seq):
     """
     res = []
     for item in seq:
-        if (isinstance(item, (tuple, list))):
+        if isinstance(item, (tuple, list)):
             res.extend(flatten(item))
         else:
             res.append(item)
@@ -2745,11 +2719,12 @@ def normalisefilename(filename):
     ans = []
     for y in filename:
         x = y.lower()
-        if (x >= 'a' and x <= 'z') or (x >= '0' and x <= '9'):
+        if (x >= "a" and x <= "z") or (x >= "0" and x <= "9"):
             ans.append(y)
         else:
             ans.append("_")
     return "".join(ans)
+
 
 # When a unit test is removed or replaced by a newer version, we normally want
 # the old logfile to become a regression, namely to run the unit test as part of
@@ -2769,29 +2744,29 @@ for m, module in all_modules.items():
 
 
 class ADFGeoOptTest_noscfvalues(ADFGeoOptTest):
-    @unittest.skip('Cannot parse scfvalues from this file.')
+    @unittest.skip("Cannot parse scfvalues from this file.")
     def testgeovalues_scfvalues(self):
         """SCF cycles were not printed here."""
 
-    @unittest.skip('Cannot parse scfvalues from this file.')
+    @unittest.skip("Cannot parse scfvalues from this file.")
     def testscftargetdim(self):
         """SCF cycles were not printed here."""
 
-    @unittest.skip('Cannot parse scfvalues from this file.')
+    @unittest.skip("Cannot parse scfvalues from this file.")
     def testscfvaluetype(self):
         """SCF cycles were not printed here."""
 
 
 class ADFSPTest_noscfvalues(ADFSPTest):
-    @unittest.skip('Cannot parse scfvalues from this file.')
+    @unittest.skip("Cannot parse scfvalues from this file.")
     def testscftargetdim(self):
         """SCF cycles were not printed here."""
 
-    @unittest.skip('Cannot parse scfvalues from this file.')
+    @unittest.skip("Cannot parse scfvalues from this file.")
     def testscfvaluetype(self):
         """SCF cycles were not printed here."""
 
-    @unittest.skip('Cannot parse aooverlaps from this file.')
+    @unittest.skip("Cannot parse aooverlaps from this file.")
     def testaooverlaps(self):
         """AO overlaps were not printed here."""
 
@@ -2800,21 +2775,22 @@ class ADFSPTest_nosyms(ADFSPTest, GenericSPTest):
     foverlap00 = 1.00000
     foverlap11 = 0.99999
     foverlap22 = 0.99999
-    @unittest.skip('Symmetry labels were not printed here')
+
+    @unittest.skip("Symmetry labels were not printed here")
     def testsymlabels(self):
         """Symmetry labels were not printed here."""
 
 
 class ADFSPTest_nosyms_noscfvalues(ADFSPTest_nosyms):
-    @unittest.skip('Cannot parse scfvalues from this file.')
+    @unittest.skip("Cannot parse scfvalues from this file.")
     def testscftargetdim(self):
         """SCF cycles were not printed here."""
 
-    @unittest.skip('Cannot parse scfvalues from this file.')
+    @unittest.skip("Cannot parse scfvalues from this file.")
     def testscfvaluetype(self):
         """SCF cycles were not printed here."""
 
-    @unittest.skip('Cannot parse aooverlaps from this file.')
+    @unittest.skip("Cannot parse aooverlaps from this file.")
     def testaooverlaps(self):
         """AO overlaps were not printed here."""
 
@@ -2835,19 +2811,19 @@ class ADFSPTest_nosyms_valence(ADFSPTest_nosyms):
 
 
 class ADFSPTest_nosyms_valence_noscfvalues(ADFSPTest_nosyms_valence):
-    @unittest.skip('Cannot parse scfvalues from this file.')
+    @unittest.skip("Cannot parse scfvalues from this file.")
     def testscftargetdim(self):
         """SCF cycles were not printed here."""
 
-    @unittest.skip('Cannot parse scfvalues from this file.')
+    @unittest.skip("Cannot parse scfvalues from this file.")
     def testscfvaluetype(self):
         """SCF cycles were not printed here."""
 
-    @unittest.skip('Cannot parse moenergies from this file.')
+    @unittest.skip("Cannot parse moenergies from this file.")
     def testfirstmoenergy(self):
         """MO energies were not printed here."""
 
-    @unittest.skip('Cannot parse aooverlaps from this file.')
+    @unittest.skip("Cannot parse aooverlaps from this file.")
     def testaooverlaps(self):
         """AO overlaps were not printed here."""
 
@@ -2864,17 +2840,16 @@ class ADFSPTest_nosyms_valence_noscfvalues(ADFSPTest_nosyms_valence):
 
 
 class DALTONBigBasisTest_aug_cc_pCVQZ(GenericBigBasisTest):
-    contractions = { 6: 29 }
+    contractions = {6: 29}
     spherical = True
 
 
 class DALTONSPTest_nosymmetry(GenericSPTest):
-
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u?"""
         # A calculation without symmetry, meaning it belongs to the C1 point
         # group, only has the `A` irreducible representation.
-        sumwronglabels = sum(x not in {'A'} for x in self.data.mosyms[0])
+        sumwronglabels = sum(x not in {"A"} for x in self.data.mosyms[0])
         self.assertEqual(sumwronglabels, 0)
 
     def testmetadata_symmetry_detected(self):
@@ -2894,9 +2869,11 @@ class DALTONTDTest_noetsecs(DALTONTDTest):
     @unittest.skip("etsecs cannot be parsed from this file")
     def testsecs(self):
         pass
+
     @unittest.skip("etsecs cannot be parsed from this file")
     def testsecs_transition(self):
         pass
+
 
 # GAMESS #
 
@@ -2905,43 +2882,47 @@ class GAMESSUSSPunTest_charge0(GenericSPunTest):
     def testcharge_and_mult(self):
         """The charge in the input was wrong."""
         self.assertEqual(self.data.charge, 0)
-    @unittest.skip('HOMOs were incorrect due to charge being wrong')
+
+    @unittest.skip("HOMOs were incorrect due to charge being wrong")
     def testhomos(self):
         """HOMOs were incorrect due to charge being wrong."""
 
 
 class GAMESSUSIRTest_ts(GenericIRimgTest):
-    @unittest.skip('This is a transition state with different intensities')
+    @unittest.skip("This is a transition state with different intensities")
     def testirintens(self):
         """This is a transition state with different intensities."""
 
 
 class GAMESSUSCISTest_dets(GenericCISTest):
     nstates = 10
-    @unittest.skip('This gives unexpected coeficcients, also for current unit tests.')
+
+    @unittest.skip("This gives unexpected coeficcients, also for current unit tests.")
     def testetsecsvalues(self):
         """This gives unexpected coeficcients, also for current unit tests."""
 
 
 class GAMESSSPTest_noaooverlaps(GenericSPTest):
-    @unittest.skip('Cannot parse aooverlaps from this file.')
+    @unittest.skip("Cannot parse aooverlaps from this file.")
     def testaooverlaps(self):
         """aooverlaps were not printed here."""
 
+
 # Gaussian #
 
+
 class GaussianSPunTest_nomosyms(GaussianSPunTest):
-    @unittest.skip('Cannot parse mosyms from this file.')
+    @unittest.skip("Cannot parse mosyms from this file.")
     def testmosyms(self):
         """mosyms were not printed here."""
 
 
 class GaussianSPunTest_nonaturalorbitals(GaussianCISTest):
-    @unittest.skip('Cannot parse natrual orbitals from this file.')
+    @unittest.skip("Cannot parse natrual orbitals from this file.")
     def testnocoeffs(self):
         """natural orbitals were not printed here."""
 
-    @unittest.skip('Cannot parse natrual orbital occupation numbers from this file.')
+    @unittest.skip("Cannot parse natrual orbital occupation numbers from this file.")
     def testnooccnos(self):
         """natural orbital occupation numbers were not printed here."""
 
@@ -2961,11 +2942,13 @@ class GaussianPolarTest(ReferencePolarTest):
     isotropic_delta = 2.0
     principal_components_delta = 0.7
 
+
 # Jaguar #
 
 
 class JaguarSPTest_6_31gss(JaguarSPTest):
     """AO counts and some values are different in 6-31G** compared to STO-3G."""
+
     nbasisdict = {1: 5, 6: 15}
     b3lyp_energy = -10530
     b3lyp_moenergy = -277.610006052399
@@ -2977,7 +2960,7 @@ class JaguarSPTest_6_31gss(JaguarSPTest):
 
 
 class JaguarSPTest_6_31gss_nomosyms(JaguarSPTest_6_31gss):
-    @unittest.skip('Cannot parse mosyms from this file.')
+    @unittest.skip("Cannot parse mosyms from this file.")
     def testsymlabels(self):
         """mosyms were not printed here."""
 
@@ -2991,7 +2974,7 @@ class JaguarSPTest_6_31gss_nomosyms(JaguarSPTest_6_31gss):
 
 
 class JaguarSPunTest_nomosyms(JaguarSPunTest):
-    @unittest.skip('Cannot parse mosyms from this file.')
+    @unittest.skip("Cannot parse mosyms from this file.")
     def testmosyms(self):
         """mosyms were not printed here."""
 
@@ -3003,7 +2986,7 @@ class JaguarSPunTest_nmo_all(JaguarSPunTest):
 
 
 class JaguarSPunTest_nmo_all_nomosyms(JaguarSPunTest_nmo_all):
-    @unittest.skip('Cannot parse mosyms from this file.')
+    @unittest.skip("Cannot parse mosyms from this file.")
     def testmosyms(self):
         """mosyms were not printed here."""
 
@@ -3019,19 +3002,19 @@ class JaguarSPTest_nmo45(GenericSPTest):
         """Without special options, Jaguar only print Homo+10 orbital energies."""
         self.assertEqual(len(self.data.moenergies[0]), 45)
 
-    @unittest.skip('Cannot parse mos from this file.')
+    @unittest.skip("Cannot parse mos from this file.")
     def testfornoormo(self):
         """mos were not printed here."""
 
-    @unittest.skip('Cannot parse scftargets from this file.')
+    @unittest.skip("Cannot parse scftargets from this file.")
     def testscftargets(self):
         """scftargets were not parsed correctly here."""
 
-    @unittest.skip('Cannot parse atomcharges from this file.')
+    @unittest.skip("Cannot parse atomcharges from this file.")
     def testatomcharges(self):
         """atomcharges were not parsed correctly here."""
 
-    @unittest.skip('Cannot parse atombasis from this file.')
+    @unittest.skip("Cannot parse atombasis from this file.")
     def testatombasis(self):
         """atombasis was not parsed correctly here."""
 
@@ -3049,19 +3032,19 @@ class JaguarGeoOptTest_nmo45(GenericGeoOptTest):
 
 
 class JaguarGeoOptTest_nmo45_nogeo(JaguarGeoOptTest_nmo45):
-    @unittest.skip('Cannot parse geotargets from this file.')
+    @unittest.skip("Cannot parse geotargets from this file.")
     def testgeotargets(self):
         """geotargets were not printed here."""
 
-    @unittest.skip('Cannot parse geovalues from this file.')
+    @unittest.skip("Cannot parse geovalues from this file.")
     def testgeovalues_atomcoords(self):
         """geovalues were not printed here."""
 
-    @unittest.skip('Cannot parse geovalues from this file.')
+    @unittest.skip("Cannot parse geovalues from this file.")
     def testgeovalues_scfvalues(self):
         """geovalues were not printed here."""
 
-    @unittest.skip('Cannot parse optdone from this file.')
+    @unittest.skip("Cannot parse optdone from this file.")
     def testoptdone(self):
         """optdone does not exist for this file."""
 
@@ -3072,27 +3055,29 @@ class JaguarGeoOptTest_6_31gss(GenericGeoOptTest):
 
 
 class MolcasBigBasisTest_nogbasis(MolcasBigBasisTest):
-    @unittest.skip('gbasis was not printed in this output file')
+    @unittest.skip("gbasis was not printed in this output file")
     def testgbasis(self):
         """gbasis was not parsed for this file"""
 
-    @unittest.skip('gbasis was not printed in this output file')
+    @unittest.skip("gbasis was not printed in this output file")
     def testnames(self):
         """gbasis was not parsed for this file"""
 
-    @unittest.skip('gbasis was not printed in this output file')
+    @unittest.skip("gbasis was not printed in this output file")
     def testprimitives(self):
         """gbasis was not parsed for this file"""
 
-    @unittest.skip('gbasis was not printed in this output file')
+    @unittest.skip("gbasis was not printed in this output file")
     def testsizeofbasis(self):
         """gbasis was not parsed for this file"""
+
 
 # Molpro #
 
 
 class MolproBigBasisTest_cart(MolproBigBasisTest):
     spherical = False
+
 
 # ORCA #
 
@@ -3103,7 +3088,8 @@ class OrcaSPTest_3_21g(OrcaSPTest):
     b3lyp_moenergy = -276.1556935784018
     overlap01 = 0.19
     molecularmass = 130190
-    @unittest.skip('This calculation has no symmetry.')
+
+    @unittest.skip("This calculation has no symmetry.")
     def testsymlabels(self):
         """This calculation has no symmetry."""
 
@@ -3125,9 +3111,11 @@ class OrcaSPunTest_charge0(GenericSPunTest):
     def testcharge_and_mult(self):
         """The charge in the input was wrong."""
         self.assertEqual(self.data.charge, 0)
-    @unittest.skip('HOMOs were incorrect due to charge being wrong.')
+
+    @unittest.skip("HOMOs were incorrect due to charge being wrong.")
     def testhomos(self):
         """HOMOs were incorrect due to charge being wrong."""
+
     def testorbitals(self):
         """Closed-shell calculation run as open-shell."""
         self.assertTrue(self.data.closed_shell)
@@ -3160,12 +3148,14 @@ class OrcaIRTest_old(OrcaIRTest):
     entropy_places = 2
     freeenergy_places = -1
 
-    @unittest.skip('These values were wrong due to wrong input coordinates.')
+    @unittest.skip("These values were wrong due to wrong input coordinates.")
     def testfreqval(self):
         """These values were wrong due to wrong input coordinates."""
-    @unittest.skip('These values were wrong due to wrong input coordinates.')
+
+    @unittest.skip("These values were wrong due to wrong input coordinates.")
     def testirintens(self):
         """These values were wrong due to wrong input coordinates."""
+
 
 # PSI3 #
 
@@ -3177,274 +3167,248 @@ class Psi3SPTest(GenericSPTest):
     # that a SALC calculation is done instead of a full LCAO.
     b3lyp_energy = -10300
 
-    @unittest.skip('atommasses not implemented yet')
+    @unittest.skip("atommasses not implemented yet")
     def testatommasses(self):
         pass
 
-    @unittest.skip('Psi3 did not print partial atomic charges')
+    @unittest.skip("Psi3 did not print partial atomic charges")
     def testatomcharges(self):
         pass
 
-    @unittest.skip('MO coefficients are printed separately for each SALC')
+    @unittest.skip("MO coefficients are printed separately for each SALC")
     def testfornoormo(self):
         pass
 
-    @unittest.skip('MO coefficients are printed separately for each SALC')
+    @unittest.skip("MO coefficients are printed separately for each SALC")
     def testdimmocoeffs(self):
         pass
+
 
 # PSI4 #
 
 
 class PsiSPTest_noatommasses(PsiSPTest):
-
-    @unittest.skip('atommasses were not printed in this file.')
+    @unittest.skip("atommasses were not printed in this file.")
     def testatommasses(self):
         """These values are not present in this output file."""
 
 
 class PsiHFSPTest_noatommasses(PsiHFSPTest):
-
-    @unittest.skip('atommasses were not printed in this file.')
+    @unittest.skip("atommasses were not printed in this file.")
     def testatommasses(self):
         """These values are not present in this output file."""
 
 
 old_unittests = {
-
-    "ADF/ADF2004.01/MoOCl4-sp.adfout":      ADFCoreTest,
-    "ADF/ADF2004.01/dvb_gopt.adfout":       ADFGeoOptTest_noscfvalues,
-    "ADF/ADF2004.01/dvb_gopt_b.adfout":     ADFGeoOptTest,
-    "ADF/ADF2004.01/dvb_sp.adfout":         ADFSPTest_noscfvalues,
-    "ADF/ADF2004.01/dvb_sp_b.adfout":       ADFSPTest_noscfvalues,
-    "ADF/ADF2004.01/dvb_sp_c.adfout":       ADFSPTest_nosyms_valence_noscfvalues,
-    "ADF/ADF2004.01/dvb_sp_d.adfout":       ADFSPTest_nosyms_noscfvalues,
-    "ADF/ADF2004.01/dvb_un_sp.adfout":      GenericSPunTest,
-    "ADF/ADF2004.01/dvb_un_sp_c.adfout":    GenericSPunTest,
-    "ADF/ADF2004.01/dvb_ir.adfout":         ADFIRTest,
-
-    "ADF/ADF2006.01/dvb_gopt.adfout":              ADFGeoOptTest_noscfvalues,
-    "ADF/ADF2013.01/dvb_gopt_b_fullscf.adfout":    ADFGeoOptTest,
-    "ADF/ADF2014.01/dvb_gopt_b_fullscf.out":       ADFGeoOptTest,
-
-    "DALTON/DALTON-2013/C_bigbasis.aug-cc-pCVQZ.out":       DALTONBigBasisTest_aug_cc_pCVQZ,
-    "DALTON/DALTON-2013/b3lyp_energy_dvb_sp_nosym.out":     DALTONSPTest_nosymmetry,
-    "DALTON/DALTON-2013/dvb_sp_hf_nosym.out":               DALTONHFSPTest_nosymmetry,
-    "DALTON/DALTON-2013/dvb_td_normalprint.out":            DALTONTDTest_noetsecs,
-    "DALTON/DALTON-2013/sp_b3lyp_dvb.out":                  GenericSPTest,
-    "DALTON/DALTON-2015/dvb_td_normalprint.out":            DALTONTDTest_noetsecs,
-    "DALTON/DALTON-2015/trithiolane_polar_abalnr.out":      GaussianPolarTest,
-    "DALTON/DALTON-2015/trithiolane_polar_response.out":    GaussianPolarTest,
-    "DALTON/DALTON-2015/trithiolane_polar_static.out":      GaussianPolarTest,
-    "DALTON/DALTON-2015/Trp_polar_response.out":            ReferencePolarTest,
-    "DALTON/DALTON-2015/Trp_polar_static.out":              ReferencePolarTest,
-
-    "GAMESS/GAMESS-US2005/water_ccd_2005.06.27.r3.out":         GenericCCTest,
-    "GAMESS/GAMESS-US2005/water_ccsd_2005.06.27.r3.out":        GenericCCTest,
-    "GAMESS/GAMESS-US2005/water_ccsd(t)_2005.06.27.r3.out":     GenericCCTest,
-    "GAMESS/GAMESS-US2005/water_cis_dets_2005.06.27.r3.out":    GAMESSUSCISTest_dets,
-    "GAMESS/GAMESS-US2005/water_cis_saps_2005.06.27.r3.out":    GenericCISTest,
-    "GAMESS/GAMESS-US2005/MoOCl4-sp_2005.06.27.r3.out":         GenericCoreTest,
-    "GAMESS/GAMESS-US2005/water_mp2_2005.06.27.r3.out":         GenericMP2Test,
-
-    "GAMESS/GAMESS-US2006/C_bigbasis_2006.02.22.r3.out":    GenericBigBasisTest,
-    "GAMESS/GAMESS-US2006/dvb_gopt_a_2006.02.22.r2.out":    GenericGeoOptTest,
-    "GAMESS/GAMESS-US2006/dvb_sp_2006.02.22.r2.out":        GenericSPTest,
-    "GAMESS/GAMESS-US2006/dvb_un_sp_2006.02.22.r2.out":     GenericSPunTest,
-    "GAMESS/GAMESS-US2006/dvb_ir.2006.02.22.r2.out":        GenericIRTest,
-    "GAMESS/GAMESS-US2006/nh3_ts_ir.2006.2.22.r2.out":      GAMESSUSIRTest_ts,
-
-    "GAMESS/GAMESS-US2010/dvb_gopt.log":    GenericGeoOptTest,
-    "GAMESS/GAMESS-US2010/dvb_sp.log":      GAMESSSPTest_noaooverlaps,
-    "GAMESS/GAMESS-US2010/dvb_sp_un.log":   GAMESSUSSPunTest_charge0,
-    "GAMESS/GAMESS-US2010/dvb_td.log":      GAMESSUSTDDFTTest,
-    "GAMESS/GAMESS-US2010/dvb_ir.log":      GenericIRTest,
-
-    "GAMESS/GAMESS-US2014/Trp_polar_freq.out":         ReferencePolarTest,
+    "ADF/ADF2004.01/MoOCl4-sp.adfout": ADFCoreTest,
+    "ADF/ADF2004.01/dvb_gopt.adfout": ADFGeoOptTest_noscfvalues,
+    "ADF/ADF2004.01/dvb_gopt_b.adfout": ADFGeoOptTest,
+    "ADF/ADF2004.01/dvb_sp.adfout": ADFSPTest_noscfvalues,
+    "ADF/ADF2004.01/dvb_sp_b.adfout": ADFSPTest_noscfvalues,
+    "ADF/ADF2004.01/dvb_sp_c.adfout": ADFSPTest_nosyms_valence_noscfvalues,
+    "ADF/ADF2004.01/dvb_sp_d.adfout": ADFSPTest_nosyms_noscfvalues,
+    "ADF/ADF2004.01/dvb_un_sp.adfout": GenericSPunTest,
+    "ADF/ADF2004.01/dvb_un_sp_c.adfout": GenericSPunTest,
+    "ADF/ADF2004.01/dvb_ir.adfout": ADFIRTest,
+    "ADF/ADF2006.01/dvb_gopt.adfout": ADFGeoOptTest_noscfvalues,
+    "ADF/ADF2013.01/dvb_gopt_b_fullscf.adfout": ADFGeoOptTest,
+    "ADF/ADF2014.01/dvb_gopt_b_fullscf.out": ADFGeoOptTest,
+    "DALTON/DALTON-2013/C_bigbasis.aug-cc-pCVQZ.out": DALTONBigBasisTest_aug_cc_pCVQZ,
+    "DALTON/DALTON-2013/b3lyp_energy_dvb_sp_nosym.out": DALTONSPTest_nosymmetry,
+    "DALTON/DALTON-2013/dvb_sp_hf_nosym.out": DALTONHFSPTest_nosymmetry,
+    "DALTON/DALTON-2013/dvb_td_normalprint.out": DALTONTDTest_noetsecs,
+    "DALTON/DALTON-2013/sp_b3lyp_dvb.out": GenericSPTest,
+    "DALTON/DALTON-2015/dvb_td_normalprint.out": DALTONTDTest_noetsecs,
+    "DALTON/DALTON-2015/trithiolane_polar_abalnr.out": GaussianPolarTest,
+    "DALTON/DALTON-2015/trithiolane_polar_response.out": GaussianPolarTest,
+    "DALTON/DALTON-2015/trithiolane_polar_static.out": GaussianPolarTest,
+    "DALTON/DALTON-2015/Trp_polar_response.out": ReferencePolarTest,
+    "DALTON/DALTON-2015/Trp_polar_static.out": ReferencePolarTest,
+    "GAMESS/GAMESS-US2005/water_ccd_2005.06.27.r3.out": GenericCCTest,
+    "GAMESS/GAMESS-US2005/water_ccsd_2005.06.27.r3.out": GenericCCTest,
+    "GAMESS/GAMESS-US2005/water_ccsd(t)_2005.06.27.r3.out": GenericCCTest,
+    "GAMESS/GAMESS-US2005/water_cis_dets_2005.06.27.r3.out": GAMESSUSCISTest_dets,
+    "GAMESS/GAMESS-US2005/water_cis_saps_2005.06.27.r3.out": GenericCISTest,
+    "GAMESS/GAMESS-US2005/MoOCl4-sp_2005.06.27.r3.out": GenericCoreTest,
+    "GAMESS/GAMESS-US2005/water_mp2_2005.06.27.r3.out": GenericMP2Test,
+    "GAMESS/GAMESS-US2006/C_bigbasis_2006.02.22.r3.out": GenericBigBasisTest,
+    "GAMESS/GAMESS-US2006/dvb_gopt_a_2006.02.22.r2.out": GenericGeoOptTest,
+    "GAMESS/GAMESS-US2006/dvb_sp_2006.02.22.r2.out": GenericSPTest,
+    "GAMESS/GAMESS-US2006/dvb_un_sp_2006.02.22.r2.out": GenericSPunTest,
+    "GAMESS/GAMESS-US2006/dvb_ir.2006.02.22.r2.out": GenericIRTest,
+    "GAMESS/GAMESS-US2006/nh3_ts_ir.2006.2.22.r2.out": GAMESSUSIRTest_ts,
+    "GAMESS/GAMESS-US2010/dvb_gopt.log": GenericGeoOptTest,
+    "GAMESS/GAMESS-US2010/dvb_sp.log": GAMESSSPTest_noaooverlaps,
+    "GAMESS/GAMESS-US2010/dvb_sp_un.log": GAMESSUSSPunTest_charge0,
+    "GAMESS/GAMESS-US2010/dvb_td.log": GAMESSUSTDDFTTest,
+    "GAMESS/GAMESS-US2010/dvb_ir.log": GenericIRTest,
+    "GAMESS/GAMESS-US2014/Trp_polar_freq.out": ReferencePolarTest,
     "GAMESS/GAMESS-US2014/trithiolane_polar_freq.out": GaussianPolarTest,
     "GAMESS/GAMESS-US2014/trithiolane_polar_tdhf.out": GenericPolarTest,
-    "GAMESS/GAMESS-US2014/C_bigbasis.out" : GenericBigBasisTest,
-    "GAMESS/GAMESS-US2014/dvb_gopt_a.out" : GenericGeoOptTest,
-    "GAMESS/GAMESS-US2014/dvb_ir.out" : GamessIRTest,
-    "GAMESS/GAMESS-US2014/dvb_sp.out" : GenericBasisTest,
-    "GAMESS/GAMESS-US2014/dvb_sp.out" : GenericSPTest,
-    "GAMESS/GAMESS-US2014/dvb_td.out" : GAMESSUSTDDFTTest,
-    "GAMESS/GAMESS-US2014/dvb_td_trplet.out" : GenericTDDFTtrpTest,
-    "GAMESS/GAMESS-US2014/dvb_un_sp.out" : GenericSPunTest,
-    "GAMESS/GAMESS-US2014/MoOCl4-sp.out" : GenericCoreTest,
-    "GAMESS/GAMESS-US2014/nh3_ts_ir.out" : GenericIRimgTest,
-    "GAMESS/GAMESS-US2014/water_ccd.out" : GenericCCTest,
-    "GAMESS/GAMESS-US2014/water_ccsd.out" : GenericCCTest,
-    "GAMESS/GAMESS-US2014/water_ccsd(t).out" : GenericCCTest,
-    "GAMESS/GAMESS-US2014/water_cis_saps.out" : GAMESSCISTest,
-    "GAMESS/GAMESS-US2014/water_mp2.out" : GenericMP2Test,
-
-
-    "GAMESS/PCGAMESS/C_bigbasis.out":       GenericBigBasisTest,
-    "GAMESS/PCGAMESS/dvb_gopt_b.out":       GenericGeoOptTest,
-    "GAMESS/PCGAMESS/dvb_ir.out":           FireflyIRTest,
-    "GAMESS/PCGAMESS/dvb_raman.out":        GenericRamanTest,
-    "GAMESS/PCGAMESS/dvb_sp.out":           GenericHFSPTest,
-    "GAMESS/PCGAMESS/dvb_td.out":           GenericTDTest,
-    "GAMESS/PCGAMESS/dvb_td_trplet.out":    GenericTDDFTtrpTest,
-    "GAMESS/PCGAMESS/dvb_un_sp.out":        GenericSPunTest,
-    "GAMESS/PCGAMESS/water_mp2.out":        GenericMP2Test,
-    "GAMESS/PCGAMESS/water_mp3.out":        GenericMP3Test,
-    "GAMESS/PCGAMESS/water_mp4.out":        GenericMP4SDQTest,
-    "GAMESS/PCGAMESS/water_mp4_sdtq.out":   GenericMP4SDTQTest,
-
-    "GAMESS/WinGAMESS/dvb_td_2007.03.24.r1.out":    GAMESSUSTDDFTTest,
-
-    "Gaussian/Gaussian03/CO_TD_delta.log":    GenericTDunTest,
-    "Gaussian/Gaussian03/C_bigbasis.out":     GaussianBigBasisTest,
-    "Gaussian/Gaussian03/dvb_gopt.out":       GenericGeoOptTest,
-    "Gaussian/Gaussian03/dvb_ir.out":         GaussianIRTest,
-    "Gaussian/Gaussian03/dvb_raman.out":      GaussianRamanTest,
-    "Gaussian/Gaussian03/dvb_sp.out":         GaussianSPTest,
-    "Gaussian/Gaussian03/dvb_sp_basis.log":   GenericBasisTest,
+    "GAMESS/GAMESS-US2014/C_bigbasis.out": GenericBigBasisTest,
+    "GAMESS/GAMESS-US2014/dvb_gopt_a.out": GenericGeoOptTest,
+    "GAMESS/GAMESS-US2014/dvb_ir.out": GamessIRTest,
+    "GAMESS/GAMESS-US2014/dvb_sp.out": GenericBasisTest,
+    "GAMESS/GAMESS-US2014/dvb_sp.out": GenericSPTest,
+    "GAMESS/GAMESS-US2014/dvb_td.out": GAMESSUSTDDFTTest,
+    "GAMESS/GAMESS-US2014/dvb_td_trplet.out": GenericTDDFTtrpTest,
+    "GAMESS/GAMESS-US2014/dvb_un_sp.out": GenericSPunTest,
+    "GAMESS/GAMESS-US2014/MoOCl4-sp.out": GenericCoreTest,
+    "GAMESS/GAMESS-US2014/nh3_ts_ir.out": GenericIRimgTest,
+    "GAMESS/GAMESS-US2014/water_ccd.out": GenericCCTest,
+    "GAMESS/GAMESS-US2014/water_ccsd.out": GenericCCTest,
+    "GAMESS/GAMESS-US2014/water_ccsd(t).out": GenericCCTest,
+    "GAMESS/GAMESS-US2014/water_cis_saps.out": GAMESSCISTest,
+    "GAMESS/GAMESS-US2014/water_mp2.out": GenericMP2Test,
+    "GAMESS/PCGAMESS/C_bigbasis.out": GenericBigBasisTest,
+    "GAMESS/PCGAMESS/dvb_gopt_b.out": GenericGeoOptTest,
+    "GAMESS/PCGAMESS/dvb_ir.out": FireflyIRTest,
+    "GAMESS/PCGAMESS/dvb_raman.out": GenericRamanTest,
+    "GAMESS/PCGAMESS/dvb_sp.out": GenericHFSPTest,
+    "GAMESS/PCGAMESS/dvb_td.out": GenericTDTest,
+    "GAMESS/PCGAMESS/dvb_td_trplet.out": GenericTDDFTtrpTest,
+    "GAMESS/PCGAMESS/dvb_un_sp.out": GenericSPunTest,
+    "GAMESS/PCGAMESS/water_mp2.out": GenericMP2Test,
+    "GAMESS/PCGAMESS/water_mp3.out": GenericMP3Test,
+    "GAMESS/PCGAMESS/water_mp4.out": GenericMP4SDQTest,
+    "GAMESS/PCGAMESS/water_mp4_sdtq.out": GenericMP4SDTQTest,
+    "GAMESS/WinGAMESS/dvb_td_2007.03.24.r1.out": GAMESSUSTDDFTTest,
+    "Gaussian/Gaussian03/CO_TD_delta.log": GenericTDunTest,
+    "Gaussian/Gaussian03/C_bigbasis.out": GaussianBigBasisTest,
+    "Gaussian/Gaussian03/dvb_gopt.out": GenericGeoOptTest,
+    "Gaussian/Gaussian03/dvb_ir.out": GaussianIRTest,
+    "Gaussian/Gaussian03/dvb_raman.out": GaussianRamanTest,
+    "Gaussian/Gaussian03/dvb_sp.out": GaussianSPTest,
+    "Gaussian/Gaussian03/dvb_sp_basis.log": GenericBasisTest,
     "Gaussian/Gaussian03/dvb_sp_basis_b.log": GenericBasisTest,
-    "Gaussian/Gaussian03/dvb_td.out":         GaussianTDDFTTest,
-    "Gaussian/Gaussian03/dvb_un_sp.out":      GaussianSPunTest_nomosyms,
-    "Gaussian/Gaussian03/dvb_un_sp_b.log":    GaussianSPunTest,
-    "Gaussian/Gaussian03/Mo4OCl4-sp.log":     GenericCoreTest,
-    "Gaussian/Gaussian03/water_ccd.log":      GenericCCTest,
-    "Gaussian/Gaussian03/water_ccsd(t).log":  GenericCCTest,
-    "Gaussian/Gaussian03/water_ccsd.log":     GenericCCTest,
-    "Gaussian/Gaussian03/water_cis.log":      GaussianSPunTest_nonaturalorbitals,
-    "Gaussian/Gaussian03/water_cisd.log":     GaussianSPunTest_nonaturalorbitals,
-    "Gaussian/Gaussian03/water_mp2.log":      GaussianMP2Test,
-    "Gaussian/Gaussian03/water_mp3.log":      GaussianMP3Test,
-    "Gaussian/Gaussian03/water_mp4.log":      GaussianMP4SDTQTest,
-    "Gaussian/Gaussian03/water_mp4sdq.log":   GaussianMP4SDQTest,
-    "Gaussian/Gaussian03/water_mp5.log":      GenericMP5Test,
-
-    "Gaussian/Gaussian09/dvb_gopt_revA.02.out":         GenericGeoOptTest,
-    "Gaussian/Gaussian09/dvb_ir_revA.02.out":           GaussianIRTest,
-    "Gaussian/Gaussian09/dvb_raman_revA.02.out":        GaussianRamanTest,
-    "Gaussian/Gaussian09/dvb_scan_revA.02.log":         GaussianRelaxedScanTest,
-    "Gaussian/Gaussian09/dvb_sp_basis_b_gfprint.log":   GenericBasisTest,
-    "Gaussian/Gaussian09/dvb_sp_basis_gfinput.log":     GenericBasisTest,
-    "Gaussian/Gaussian09/dvb_sp_revA.02.out":           GaussianSPTest,
-    "Gaussian/Gaussian09/dvb_td_revA.02.out":           GaussianTDDFTTest,
-    "Gaussian/Gaussian09/dvb_un_sp_revA.02.log":        GaussianSPunTest_nomosyms,
-    "Gaussian/Gaussian09/dvb_un_sp_b_revA.02.log":      GaussianSPunTest,
-    "Gaussian/Gaussian09/trithiolane_polar.log":        GaussianPolarTest,
-
-    "Jaguar/Jaguar4.2/dvb_gopt.out":    JaguarGeoOptTest_nmo45,
-    "Jaguar/Jaguar4.2/dvb_gopt_b.out":  GenericGeoOptTest,
-    "Jaguar/Jaguar4.2/dvb_sp.out":      JaguarSPTest_nmo45,
-    "Jaguar/Jaguar4.2/dvb_sp_b.out":    JaguarSPTest_nmo45,
-    "Jaguar/Jaguar4.2/dvb_un_sp.out":   JaguarSPunTest_nmo_all_nomosyms,
-    "Jaguar/Jaguar4.2/dvb_ir.out":      JaguarIRTest,
-
-    "Jaguar/Jaguar6.0/dvb_gopt.out":    JaguarGeoOptTest_6_31gss,
-    "Jaguar/Jaguar6.0/dvb_sp.out":      JaguarSPTest_6_31gss_nomosyms,
-    "Jaguar/Jaguar6.0/dvb_un_sp.out" :  JaguarSPunTest_nmo_all_nomosyms,
-
-    "Jaguar/Jaguar6.5/dvb_gopt.out":    JaguarGeoOptTest_nmo45,
-    "Jaguar/Jaguar6.5/dvb_sp.out":      JaguarSPTest_nmo45,
-    "Jaguar/Jaguar6.5/dvb_un_sp.out":   JaguarSPunTest_nomosyms,
-    "Jaguar/Jaguar6.5/dvb_ir.out":      JaguarIRTest,
-
-    "Molcas/Molcas8.0/dvb_sp.out":      MolcasSPTest,
-    "Molcas/Molcas8.0/dvb_sp_un.out":   GenericSPunTest,
-    "Molcas/Molcas8.0/C_bigbasis.out":  MolcasBigBasisTest_nogbasis,
-
-    "Molpro/Molpro2006/C_bigbasis_cart.out":    MolproBigBasisTest_cart,
-    "Molpro/Molpro2012/trithiolane_polar.out":  GenericPolarTest,
-
+    "Gaussian/Gaussian03/dvb_td.out": GaussianTDDFTTest,
+    "Gaussian/Gaussian03/dvb_un_sp.out": GaussianSPunTest_nomosyms,
+    "Gaussian/Gaussian03/dvb_un_sp_b.log": GaussianSPunTest,
+    "Gaussian/Gaussian03/Mo4OCl4-sp.log": GenericCoreTest,
+    "Gaussian/Gaussian03/water_ccd.log": GenericCCTest,
+    "Gaussian/Gaussian03/water_ccsd(t).log": GenericCCTest,
+    "Gaussian/Gaussian03/water_ccsd.log": GenericCCTest,
+    "Gaussian/Gaussian03/water_cis.log": GaussianSPunTest_nonaturalorbitals,
+    "Gaussian/Gaussian03/water_cisd.log": GaussianSPunTest_nonaturalorbitals,
+    "Gaussian/Gaussian03/water_mp2.log": GaussianMP2Test,
+    "Gaussian/Gaussian03/water_mp3.log": GaussianMP3Test,
+    "Gaussian/Gaussian03/water_mp4.log": GaussianMP4SDTQTest,
+    "Gaussian/Gaussian03/water_mp4sdq.log": GaussianMP4SDQTest,
+    "Gaussian/Gaussian03/water_mp5.log": GenericMP5Test,
+    "Gaussian/Gaussian09/dvb_gopt_revA.02.out": GenericGeoOptTest,
+    "Gaussian/Gaussian09/dvb_ir_revA.02.out": GaussianIRTest,
+    "Gaussian/Gaussian09/dvb_raman_revA.02.out": GaussianRamanTest,
+    "Gaussian/Gaussian09/dvb_scan_revA.02.log": GaussianRelaxedScanTest,
+    "Gaussian/Gaussian09/dvb_sp_basis_b_gfprint.log": GenericBasisTest,
+    "Gaussian/Gaussian09/dvb_sp_basis_gfinput.log": GenericBasisTest,
+    "Gaussian/Gaussian09/dvb_sp_revA.02.out": GaussianSPTest,
+    "Gaussian/Gaussian09/dvb_td_revA.02.out": GaussianTDDFTTest,
+    "Gaussian/Gaussian09/dvb_un_sp_revA.02.log": GaussianSPunTest_nomosyms,
+    "Gaussian/Gaussian09/dvb_un_sp_b_revA.02.log": GaussianSPunTest,
+    "Gaussian/Gaussian09/trithiolane_polar.log": GaussianPolarTest,
+    "Jaguar/Jaguar4.2/dvb_gopt.out": JaguarGeoOptTest_nmo45,
+    "Jaguar/Jaguar4.2/dvb_gopt_b.out": GenericGeoOptTest,
+    "Jaguar/Jaguar4.2/dvb_sp.out": JaguarSPTest_nmo45,
+    "Jaguar/Jaguar4.2/dvb_sp_b.out": JaguarSPTest_nmo45,
+    "Jaguar/Jaguar4.2/dvb_un_sp.out": JaguarSPunTest_nmo_all_nomosyms,
+    "Jaguar/Jaguar4.2/dvb_ir.out": JaguarIRTest,
+    "Jaguar/Jaguar6.0/dvb_gopt.out": JaguarGeoOptTest_6_31gss,
+    "Jaguar/Jaguar6.0/dvb_sp.out": JaguarSPTest_6_31gss_nomosyms,
+    "Jaguar/Jaguar6.0/dvb_un_sp.out": JaguarSPunTest_nmo_all_nomosyms,
+    "Jaguar/Jaguar6.5/dvb_gopt.out": JaguarGeoOptTest_nmo45,
+    "Jaguar/Jaguar6.5/dvb_sp.out": JaguarSPTest_nmo45,
+    "Jaguar/Jaguar6.5/dvb_un_sp.out": JaguarSPunTest_nomosyms,
+    "Jaguar/Jaguar6.5/dvb_ir.out": JaguarIRTest,
+    "Molcas/Molcas8.0/dvb_sp.out": MolcasSPTest,
+    "Molcas/Molcas8.0/dvb_sp_un.out": GenericSPunTest,
+    "Molcas/Molcas8.0/C_bigbasis.out": MolcasBigBasisTest_nogbasis,
+    "Molpro/Molpro2006/C_bigbasis_cart.out": MolproBigBasisTest_cart,
+    "Molpro/Molpro2012/trithiolane_polar.out": GenericPolarTest,
     "NWChem/NWChem6.6/trithiolane_polar.out": GaussianPolarTest,
-
-    "ORCA/ORCA2.6/dvb_gopt.out":    OrcaGeoOptTest_3_21g,
-    "ORCA/ORCA2.6/dvb_sp.out":      OrcaSPTest_3_21g,
-    "ORCA/ORCA2.6/dvb_td.out":      OrcaTDDFTTest_error,
-    "ORCA/ORCA2.6/dvb_ir.out":      OrcaIRTest_old_coordsOK,
-
-    "ORCA/ORCA2.8/dvb_gopt.out":    OrcaGeoOptTest,
-    "ORCA/ORCA2.8/dvb_sp.out":      GenericBasisTest,
-    "ORCA/ORCA2.8/dvb_sp.out":      OrcaSPTest,
-    "ORCA/ORCA2.8/dvb_sp_un.out":   OrcaSPunTest_charge0,
-    "ORCA/ORCA2.8/dvb_td.out":      OrcaTDDFTTest,
-    "ORCA/ORCA2.8/dvb_ir.out":      OrcaIRTest_old,
-
-    "ORCA/ORCA2.9/dvb_gopt.out":    OrcaGeoOptTest,
-    "ORCA/ORCA2.9/dvb_ir.out":      OrcaIRTest,
-    "ORCA/ORCA2.9/dvb_raman.out":   GenericRamanTest,
-    "ORCA/ORCA2.9/dvb_scan.out":    OrcaRelaxedScanTest,
-    "ORCA/ORCA2.9/dvb_sp.out":      GenericBasisTest,
-    "ORCA/ORCA2.9/dvb_sp.out":      OrcaSPTest,
-    "ORCA/ORCA2.9/dvb_sp_un.out":   GenericSPunTest,
-    "ORCA/ORCA2.9/dvb_td.out":      OrcaTDDFTTest,
-
-    "ORCA/ORCA3.0/dvb_bomd.out":          GenericBOMDTest,
-    "ORCA/ORCA3.0/dvb_gopt.out":          OrcaGeoOptTest,
-    "ORCA/ORCA3.0/dvb_ir.out":            OrcaIRTest,
-    "ORCA/ORCA3.0/dvb_raman.out":         GenericRamanTest,
-    "ORCA/ORCA3.0/dvb_scan.out":          OrcaRelaxedScanTest,
-    "ORCA/ORCA3.0/dvb_sp_un.out":         GenericSPunTest,
-    "ORCA/ORCA3.0/dvb_sp.out":            GenericBasisTest,
-    "ORCA/ORCA3.0/dvb_sp.out":            OrcaSPTest,
-    "ORCA/ORCA3.0/dvb_td.out":            OrcaTDDFTTest,
-    "ORCA/ORCA3.0/Trp_polar.out":         ReferencePolarTest,
+    "ORCA/ORCA2.6/dvb_gopt.out": OrcaGeoOptTest_3_21g,
+    "ORCA/ORCA2.6/dvb_sp.out": OrcaSPTest_3_21g,
+    "ORCA/ORCA2.6/dvb_td.out": OrcaTDDFTTest_error,
+    "ORCA/ORCA2.6/dvb_ir.out": OrcaIRTest_old_coordsOK,
+    "ORCA/ORCA2.8/dvb_gopt.out": OrcaGeoOptTest,
+    "ORCA/ORCA2.8/dvb_sp.out": GenericBasisTest,
+    "ORCA/ORCA2.8/dvb_sp.out": OrcaSPTest,
+    "ORCA/ORCA2.8/dvb_sp_un.out": OrcaSPunTest_charge0,
+    "ORCA/ORCA2.8/dvb_td.out": OrcaTDDFTTest,
+    "ORCA/ORCA2.8/dvb_ir.out": OrcaIRTest_old,
+    "ORCA/ORCA2.9/dvb_gopt.out": OrcaGeoOptTest,
+    "ORCA/ORCA2.9/dvb_ir.out": OrcaIRTest,
+    "ORCA/ORCA2.9/dvb_raman.out": GenericRamanTest,
+    "ORCA/ORCA2.9/dvb_scan.out": OrcaRelaxedScanTest,
+    "ORCA/ORCA2.9/dvb_sp.out": GenericBasisTest,
+    "ORCA/ORCA2.9/dvb_sp.out": OrcaSPTest,
+    "ORCA/ORCA2.9/dvb_sp_un.out": GenericSPunTest,
+    "ORCA/ORCA2.9/dvb_td.out": OrcaTDDFTTest,
+    "ORCA/ORCA3.0/dvb_bomd.out": GenericBOMDTest,
+    "ORCA/ORCA3.0/dvb_gopt.out": OrcaGeoOptTest,
+    "ORCA/ORCA3.0/dvb_ir.out": OrcaIRTest,
+    "ORCA/ORCA3.0/dvb_raman.out": GenericRamanTest,
+    "ORCA/ORCA3.0/dvb_scan.out": OrcaRelaxedScanTest,
+    "ORCA/ORCA3.0/dvb_sp_un.out": GenericSPunTest,
+    "ORCA/ORCA3.0/dvb_sp.out": GenericBasisTest,
+    "ORCA/ORCA3.0/dvb_sp.out": OrcaSPTest,
+    "ORCA/ORCA3.0/dvb_td.out": OrcaTDDFTTest,
+    "ORCA/ORCA3.0/Trp_polar.out": ReferencePolarTest,
     "ORCA/ORCA3.0/trithiolane_polar.out": GaussianPolarTest,
-
-    "ORCA/ORCA4.0/dvb_sp.out":            GenericBasisTest,
-    "ORCA/ORCA4.0/dvb_gopt.out":          OrcaGeoOptTest,
-    "ORCA/ORCA4.0/Trp_polar.out":         ReferencePolarTest,
-    "ORCA/ORCA4.0/dvb_sp.out":            OrcaSPTest,
-    "ORCA/ORCA4.0/dvb_sp_un.out":         GenericSPunTest,
-    "ORCA/ORCA4.0/dvb_td.out":            OrcaTDDFTTest,  
-    "ORCA/ORCA4.0/dvb_rocis.out":         OrcaROCIS40Test,
-    "ORCA/ORCA4.0/dvb_ir.out":            GenericIRTest,
-    "ORCA/ORCA4.0/dvb_raman.out":         OrcaRamanTest,
-
-    "Psi3/Psi3.4/dvb_sp_hf.out":          Psi3SPTest,
-
-    "Psi4/Psi4-1.0/C_bigbasis.out":     Psi4BigBasisTest,
-    "Psi4/Psi4-1.0/dvb_gopt_rhf.out":   Psi4GeoOptTest,
-    "Psi4/Psi4-1.0/dvb_gopt_rks.out":   Psi4GeoOptTest,
-    "Psi4/Psi4-1.0/dvb_ir_rhf.out":     Psi4IRTest,
-    "Psi4/Psi4-1.0/dvb_sp_rhf.out":     PsiHFSPTest_noatommasses,
-    "Psi4/Psi4-1.0/dvb_sp_rks.out":     PsiSPTest_noatommasses,
-    "Psi4/Psi4-1.0/dvb_sp_rohf.out":    GenericROSPTest,
-    "Psi4/Psi4-1.0/dvb_sp_uhf.out":     GenericSPunTest,
-    "Psi4/Psi4-1.0/dvb_sp_uks.out":     GenericSPunTest,
-    "Psi4/Psi4-1.0/water_ccsd(t).out":  GenericCCTest,
-    "Psi4/Psi4-1.0/water_ccsd.out":     GenericCCTest,
-    "Psi4/Psi4-1.0/water_mp2.out":      GenericMP2Test,
-    "Psi4/Psi4-beta5/C_bigbasis.out":   GenericBigBasisTest,
-    "Psi4/Psi4-beta5/dvb_gopt_hf.out":  Psi4GeoOptTest,
-    "Psi4/Psi4-beta5/dvb_sp_hf.out":    GenericBasisTest,
-    "Psi4/Psi4-beta5/dvb_sp_hf.out":    PsiHFSPTest_noatommasses,
-    "Psi4/Psi4-beta5/dvb_sp_ks.out":    GenericBasisTest,
-    "Psi4/Psi4-beta5/dvb_sp_ks.out":    PsiSPTest_noatommasses,
-    "Psi4/Psi4-beta5/water_ccsd.out":   GenericCCTest,
-    "Psi4/Psi4-beta5/water_mp2.out":    GenericMP2Test,
-
-    "QChem/QChem4.2/C_bigbasis.out":         QChemBigBasisTest,
-    "QChem/QChem4.2/MoOCl4_sp.out":          GenericCoreTest,
-    "QChem/QChem4.2/Trp_polar.out":          ReferencePolarTest,
-    "QChem/QChem4.2/dvb_bomd.out":           GenericBOMDTest,
-    "QChem/QChem4.2/dvb_gopt.out":           GenericGeoOptTest,
-    "QChem/QChem4.2/dvb_ir.out":             QChemIRTest,
-    "QChem/QChem4.2/dvb_raman.out":          QChemRamanTest,
-    "QChem/QChem4.2/dvb_sp.out":             GenericSPTest,
-    "QChem/QChem4.2/dvb_sp_un.out":          GenericSPunTest,
-    "QChem/QChem4.2/dvb_td.out":             QChemTDDFTTest,
-    "QChem/QChem4.2/water_ccd.out":          GenericCCTest,
-    "QChem/QChem4.2/water_ccsd(t).out":      GenericCCTest,
-    "QChem/QChem4.2/water_ccsd.out":         GenericCCTest,
-    "QChem/QChem4.2/water_cis.out":          QChemCISTest,
-    "QChem/QChem4.2/water_mp2.out":          GenericMP2Test,
-    "QChem/QChem4.2/water_mp3.out":          GenericMP3Test,
-    "QChem/QChem4.2/water_mp4.out":          QChemMP4SDTQTest,
-    "QChem/QChem4.2/water_mp4sdq.out":       QChemMP4SDQTest,
-    "QChem/QChem4.2/Trp_freq.out":           ReferencePolarTest,
-    "QChem/QChem4.2/trithiolane_polar.out":  GaussianPolarTest,
-    "QChem/QChem4.2/trithiolane_freq.out":   GaussianPolarTest,
-    "QChem/QChem4.4/Trp_polar_ideriv1.out":  ReferencePolarTest,
+    "ORCA/ORCA4.0/dvb_sp.out": GenericBasisTest,
+    "ORCA/ORCA4.0/dvb_gopt.out": OrcaGeoOptTest,
+    "ORCA/ORCA4.0/Trp_polar.out": ReferencePolarTest,
+    "ORCA/ORCA4.0/dvb_sp.out": OrcaSPTest,
+    "ORCA/ORCA4.0/dvb_sp_un.out": GenericSPunTest,
+    "ORCA/ORCA4.0/dvb_td.out": OrcaTDDFTTest,
+    "ORCA/ORCA4.0/dvb_rocis.out": OrcaROCIS40Test,
+    "ORCA/ORCA4.0/dvb_ir.out": GenericIRTest,
+    "ORCA/ORCA4.0/dvb_raman.out": OrcaRamanTest,
+    "Psi3/Psi3.4/dvb_sp_hf.out": Psi3SPTest,
+    "Psi4/Psi4-1.0/C_bigbasis.out": Psi4BigBasisTest,
+    "Psi4/Psi4-1.0/dvb_gopt_rhf.out": Psi4GeoOptTest,
+    "Psi4/Psi4-1.0/dvb_gopt_rks.out": Psi4GeoOptTest,
+    "Psi4/Psi4-1.0/dvb_ir_rhf.out": Psi4IRTest,
+    "Psi4/Psi4-1.0/dvb_sp_rhf.out": PsiHFSPTest_noatommasses,
+    "Psi4/Psi4-1.0/dvb_sp_rks.out": PsiSPTest_noatommasses,
+    "Psi4/Psi4-1.0/dvb_sp_rohf.out": GenericROSPTest,
+    "Psi4/Psi4-1.0/dvb_sp_uhf.out": GenericSPunTest,
+    "Psi4/Psi4-1.0/dvb_sp_uks.out": GenericSPunTest,
+    "Psi4/Psi4-1.0/water_ccsd(t).out": GenericCCTest,
+    "Psi4/Psi4-1.0/water_ccsd.out": GenericCCTest,
+    "Psi4/Psi4-1.0/water_mp2.out": GenericMP2Test,
+    "Psi4/Psi4-beta5/C_bigbasis.out": GenericBigBasisTest,
+    "Psi4/Psi4-beta5/dvb_gopt_hf.out": Psi4GeoOptTest,
+    "Psi4/Psi4-beta5/dvb_sp_hf.out": GenericBasisTest,
+    "Psi4/Psi4-beta5/dvb_sp_hf.out": PsiHFSPTest_noatommasses,
+    "Psi4/Psi4-beta5/dvb_sp_ks.out": GenericBasisTest,
+    "Psi4/Psi4-beta5/dvb_sp_ks.out": PsiSPTest_noatommasses,
+    "Psi4/Psi4-beta5/water_ccsd.out": GenericCCTest,
+    "Psi4/Psi4-beta5/water_mp2.out": GenericMP2Test,
+    "QChem/QChem4.2/C_bigbasis.out": QChemBigBasisTest,
+    "QChem/QChem4.2/MoOCl4_sp.out": GenericCoreTest,
+    "QChem/QChem4.2/Trp_polar.out": ReferencePolarTest,
+    "QChem/QChem4.2/dvb_bomd.out": GenericBOMDTest,
+    "QChem/QChem4.2/dvb_gopt.out": GenericGeoOptTest,
+    "QChem/QChem4.2/dvb_ir.out": QChemIRTest,
+    "QChem/QChem4.2/dvb_raman.out": QChemRamanTest,
+    "QChem/QChem4.2/dvb_sp.out": GenericSPTest,
+    "QChem/QChem4.2/dvb_sp_un.out": GenericSPunTest,
+    "QChem/QChem4.2/dvb_td.out": QChemTDDFTTest,
+    "QChem/QChem4.2/water_ccd.out": GenericCCTest,
+    "QChem/QChem4.2/water_ccsd(t).out": GenericCCTest,
+    "QChem/QChem4.2/water_ccsd.out": GenericCCTest,
+    "QChem/QChem4.2/water_cis.out": QChemCISTest,
+    "QChem/QChem4.2/water_mp2.out": GenericMP2Test,
+    "QChem/QChem4.2/water_mp3.out": GenericMP3Test,
+    "QChem/QChem4.2/water_mp4.out": QChemMP4SDTQTest,
+    "QChem/QChem4.2/water_mp4sdq.out": QChemMP4SDQTest,
+    "QChem/QChem4.2/Trp_freq.out": ReferencePolarTest,
+    "QChem/QChem4.2/trithiolane_polar.out": GaussianPolarTest,
+    "QChem/QChem4.2/trithiolane_freq.out": GaussianPolarTest,
+    "QChem/QChem4.4/Trp_polar_ideriv1.out": ReferencePolarTest,
     "QChem/QChem4.4/Trp_polar_response.out": ReferencePolarTest,
 }
+
 
 def make_regression_from_old_unittest(test_class):
     """Return a regression test function from an old unit test logfile."""
@@ -3452,13 +3416,15 @@ def make_regression_from_old_unittest(test_class):
     def old_unit_test(logfile):
         test_class.logfile = logfile
         test_class.data = logfile.data
-        devnull = open(os.devnull, 'w')
+        devnull = open(os.devnull, "w")
         return unittest.TextTestRunner(stream=devnull).run(unittest.makeSuite(test_class))
 
     return old_unit_test
 
 
-def test_regressions(which=[], opt_traceback=True, regdir=__regression_dir__, loglevel=logging.ERROR):
+def test_regressions(
+    which=[], opt_traceback=True, regdir=__regression_dir__, loglevel=logging.ERROR
+):
 
     # Build a list of regression files that can be found. If there is a directory
     # on the third level, then treat all files within it as one job.
@@ -3500,8 +3466,8 @@ def test_regressions(which=[], opt_traceback=True, regdir=__regression_dir__, lo
     for fn in regfilenames:
         if not os.path.exists(os.path.join(regdir, fn)):
             missing_on_disk.append(fn)
-    for fn in glob.glob(os.path.join(regdir, '*', '*', '*')):
-        fn = fn.replace(regdir, '').strip('/')
+    for fn in glob.glob(os.path.join(regdir, "*", "*", "*")):
+        fn = fn.replace(regdir, "").strip("/")
         if fn not in regfilenames:
             missing_in_list.append(fn)
 
@@ -3516,8 +3482,8 @@ def test_regressions(which=[], opt_traceback=True, regdir=__regression_dir__, lo
     orphaned_tests = []
     for pn in parser_names:
         prefix = f"test{pn}_{pn}"
-        tests = [fn for fn in globals() if fn[:len(prefix)] == prefix]
-        normalized = [normalisefilename(fn.replace(__regression_dir__, '')) for fn in filenames[pn]]
+        tests = [fn for fn in globals() if fn[: len(prefix)] == prefix]
+        normalized = [normalisefilename(fn.replace(__regression_dir__, "")) for fn in filenames[pn]]
         orphaned = [t for t in tests if t[4:] not in normalized]
         orphaned_tests.extend(orphaned)
 
@@ -3536,15 +3502,15 @@ def test_regressions(which=[], opt_traceback=True, regdir=__regression_dir__, lo
         # Continue to next iteration if we are limiting the regression and the current
         #   name was not explicitely chosen (that is, passed as an argument).
         if which_parsers and pn not in which_parsers:
-            continue;
+            continue
 
         parser_total = 0
         current_filenames = filenames[pn]
         current_filenames.sort()
         for fname in current_filenames:
-            relative_path = fname[len(regdir):]
+            relative_path = fname[len(regdir) :]
             if which_filenames and relative_path not in which_filenames:
-                continue;
+                continue
 
             parser_total += 1
             if parser_total == 1:
@@ -3558,7 +3524,7 @@ def test_regressions(which=[], opt_traceback=True, regdir=__regression_dir__, lo
             # correctly parsed (for fragments, for example), and these test need
             # to be additionaly prepended with 'testnoparse'.
             test_this = test_noparse = False
-            fname_norm = normalisefilename(fname.replace(__regression_dir__, ''))
+            fname_norm = normalisefilename(fname.replace(__regression_dir__, ""))
 
             funcname = f"test{fname_norm}"
             test_this = funcname in globals()
@@ -3567,7 +3533,7 @@ def test_regressions(which=[], opt_traceback=True, regdir=__regression_dir__, lo
             test_noparse = not test_this and funcname_noparse in globals()
 
             if not test_noparse:
-                datatype = parser_class.datatype if hasattr(parser_class, 'datatype') else ccData
+                datatype = parser_class.datatype if hasattr(parser_class, "datatype") else ccData
                 job_filenames = glob.glob(fname)
                 try:
                     if len(job_filenames) == 1:
@@ -3658,14 +3624,13 @@ def test_regressions(which=[], opt_traceback=True, regdir=__regression_dir__, lo
         print("Missing files:")
         print("\n".join(missing_in_list))
     if len(orphaned_tests) > 0:
-        print(
-            f"\nWARNING: There are {len(orphaned_tests)} orphaned regression test functions."
-        )
+        print(f"\nWARNING: There are {len(orphaned_tests)} orphaned regression test functions.")
         print("Please make sure these function names correspond to regression files:")
         print("\n".join(orphaned_tests))
 
     if failures + errors > 0:
         sys.exit(1)
+
 
 if __name__ == "__main__":
 
@@ -3679,7 +3644,7 @@ if __name__ == "__main__":
         "parser_or_module",
         nargs="*",
         help="Limit the test to the packages/parsers passed as arguments. "
-             "No arguments implies all parsers."
+        "No arguments implies all parsers.",
     )
 
     args = parser.parse_args()

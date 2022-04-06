@@ -32,5 +32,5 @@ if __name__ == "__main__":
 
     from test_data import DataSuite
 
-    suite = DataSuite(['NMR'])
+    suite = DataSuite(["NMR"])
     suite.testall()

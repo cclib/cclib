@@ -41,12 +41,12 @@ class Stockholder(Method):
         loglevel=logging.INFO,
         logname="Log",
     ):
-        """ Initialize Stockholder-type method object.
-            Inputs are:
-                data -- ccData object that describe target molecule.
-                volume -- Volume object that describe target Cartesian grid.
-                proatom_path -- path to proatom densities
-                (directory containing atoms.h5 in horton or c2_001_001_000_400_075.txt in chargemol)
+        """Initialize Stockholder-type method object.
+        Inputs are:
+            data -- ccData object that describe target molecule.
+            volume -- Volume object that describe target Cartesian grid.
+            proatom_path -- path to proatom densities
+            (directory containing atoms.h5 in horton or c2_001_001_000_400_075.txt in chargemol)
         """
         super().__init__(data, progress, loglevel, logname)
 
@@ -197,9 +197,9 @@ class Stockholder(Method):
         return density, radiusgrid
 
     def calculate(self, indices=None, fupdate=0.05):
-        """ Charge density on a Cartesian grid is a common routine required for Stockholder-type
-            and related methods. This abstract class prepares the grid if input Volume object
-            is empty.
+        """Charge density on a Cartesian grid is a common routine required for Stockholder-type
+        and related methods. This abstract class prepares the grid if input Volume object
+        is empty.
         """
         # Obtain charge densities on the grid if it does not contain one.
         if not numpy.any(self.volume.data):

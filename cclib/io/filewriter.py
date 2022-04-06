@@ -19,6 +19,7 @@ from cclib.parser.utils import find_package
 _has_openbabel = find_package("openbabel")
 if _has_openbabel:
     from cclib.bridge import makeopenbabel
+
     try:
         from openbabel import openbabel as ob
         import openbabel.pybel as pb
@@ -36,8 +37,7 @@ class Writer(ABC):
 
     required_attrs = ()
 
-    def __init__(self, ccdata, jobfilename=None, indices=None, terse=False,
-                 *args, **kwargs):
+    def __init__(self, ccdata, jobfilename=None, indices=None, terse=False, *args, **kwargs):
         """Initialize the Writer object.
 
         This should be called by a subclass in its own __init__ method.
@@ -76,34 +76,33 @@ class Writer(ABC):
         """Calculate the total dipole moment."""
 
         # ccdata.moments may exist, but only contain center-of-mass coordinates
-        if len(getattr(self.ccdata, 'moments', [])) > 1:
+        if len(getattr(self.ccdata, "moments", [])) > 1:
             return numpy.linalg.norm(self.ccdata.moments[1])
 
     def _check_required_attributes(self):
         """Check if required attributes are present in ccdata."""
-        missing = [x for x in self.required_attrs
-                   if not hasattr(self.ccdata, x)]
+        missing = [x for x in self.required_attrs if not hasattr(self.ccdata, x)]
         if missing:
-            missing = ' '.join(missing)
+            missing = " ".join(missing)
             raise MissingAttributeError(
-                f"Could not parse required attributes to write file: {missing}")
+                f"Could not parse required attributes to write file: {missing}"
+            )
 
     def _make_openbabel_from_ccdata(self):
         """Create Open Babel and Pybel molecules from ccData."""
-        if not hasattr(self.ccdata, 'charge'):
+        if not hasattr(self.ccdata, "charge"):
             logging.warning("ccdata object does not have charge, setting to 0")
             _charge = 0
         else:
             _charge = self.ccdata.charge
-        if not hasattr(self.ccdata, 'mult'):
+        if not hasattr(self.ccdata, "mult"):
             logging.warning("ccdata object does not have spin multiplicity, setting to 1")
             _mult = 1
         else:
             _mult = self.ccdata.mult
-        obmol = makeopenbabel(self.ccdata.atomcoords,
-                              self.ccdata.atomnos,
-                              charge=_charge,
-                              mult=_mult)
+        obmol = makeopenbabel(
+            self.ccdata.atomcoords, self.ccdata.atomnos, charge=_charge, mult=_mult
+        )
         if self.jobfilename is not None:
             obmol.SetTitle(self.jobfilename)
         return (obmol, pb.Molecule(obmol))
@@ -116,9 +115,13 @@ class Writer(ABC):
         """
         bond_connectivities = []
         for obbond in ob.OBMolBondIter(obmol):
-            bond_connectivities.append((obbond.GetBeginAtom().GetIndex(),
-                                        obbond.GetEndAtom().GetIndex(),
-                                        obbond.GetBondOrder()))
+            bond_connectivities.append(
+                (
+                    obbond.GetBeginAtom().GetIndex(),
+                    obbond.GetEndAtom().GetIndex(),
+                    obbond.GetBondOrder(),
+                )
+            )
         return bond_connectivities
 
     def _fix_indices(self):
@@ -132,7 +135,7 @@ class Writer(ABC):
             self.indices = set([self.indices])
         # This is the most likely place to get the number of
         # geometries from.
-        if hasattr(self.ccdata, 'atomcoords'):
+        if hasattr(self.ccdata, "atomcoords"):
             lencoords = len(self.ccdata.atomcoords)
             indices = set()
             for i in self.indices:

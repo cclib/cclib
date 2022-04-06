@@ -28,7 +28,6 @@ from ..test_data import getdatafile
 
 
 class NuclearTest(unittest.TestCase):
-
     def test_stoichiometry(self):
         """Testing stoichoimetry generation."""
         data = ccData()
@@ -44,7 +43,7 @@ class NuclearTest(unittest.TestCase):
         check([], "")
         check([6, 1, 6, 1, 1, 1], "C2H4")
         check([1, 1, 1, 6, 1, 6], "C2H4")
-       
+
         # Charges.
         check([8], "O", charge=0)
         check([8], "O(+1)", charge=1)
@@ -70,9 +69,9 @@ class NuclearTest(unittest.TestCase):
 
         with open(logfile.filename) as f:
             output = f.read()
-        line = re.search('Nuclear Repulsion Energy = .* hartrees', output).group()
+        line = re.search("Nuclear Repulsion Energy = .* hartrees", output).group()
         nre = float(line.split()[4])
-        nre = utils.convertor(nre, 'Angstrom', 'bohr')
+        nre = utils.convertor(nre, "Angstrom", "bohr")
         self.assertAlmostEqual(nuclear.repulsion_energy(), nre, places=7)
 
     def test_principal_moments_of_inertia(self):
@@ -106,7 +105,7 @@ class NuclearTest(unittest.TestCase):
         logfile where it is printed.
 
         This test was added as a follow-up to PR #790.
-        """        
+        """
         data, _ = getdatafile(Gaussian, "basicGaussian16", ["dvb_ir.out"])
         nuclear = Nuclear(data)
         nuclear.logger.setLevel(logging.ERROR)
@@ -127,13 +126,13 @@ class NuclearTest(unittest.TestCase):
         with open(logfile.filename) as f:
             for line in f:
                 if line.strip() == "Rotational constants":
-                    while line.split() != ['A', 'B', 'C']:
+                    while line.split() != ["A", "B", "C"]:
                         line = next(f)
                     line = next(f)
                     ref_mhz = [float(x) for x in next(f).split()[:-1]]
                     ref_invcm = [float(x) for x in next(f).split()[:-1]]
-        rotconsts_ghz = nuclear.rotational_constants('ghz')
-        rotconsts_invcm = nuclear.rotational_constants('invcm')
+        rotconsts_ghz = nuclear.rotational_constants("ghz")
+        rotconsts_invcm = nuclear.rotational_constants("invcm")
         np.testing.assert_allclose(rotconsts_ghz * 1.0e3, ref_mhz, rtol=0, atol=1.0e-4)
         np.testing.assert_allclose(rotconsts_invcm, ref_invcm, rtol=0, atol=1.0e-4)
 
@@ -145,8 +144,9 @@ class NuclearTest(unittest.TestCase):
             for line in f:
                 if "Rotational constants (GHZ):" in line:
                     ref_ghz = [float(x) for x in line.split()[3:]]
-        rotconsts_ghz = nuclear.rotational_constants('ghz')
+        rotconsts_ghz = nuclear.rotational_constants("ghz")
         np.testing.assert_allclose(rotconsts_ghz, ref_ghz, rtol=0, atol=1.0e-5)
+
 
 if __name__ == "__main__":
     unittest.TextTestRunner(verbosity=2).run(unittest.makeSuite(NuclearTest))

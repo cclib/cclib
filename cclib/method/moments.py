@@ -22,9 +22,10 @@ class Moments(Method):
     The obtained results are stored in `results` attribute as a
     dictionary whose keys denote the used charge population scheme.
     """
+
     def __init__(self, data):
         super().__init__(data)
-        self.required_attrs = ('atomcoords', 'atomcharges')
+        self.required_attrs = ("atomcoords", "atomcharges")
         self.results = {}
 
     def __str__(self):
@@ -39,33 +40,33 @@ class Moments(Method):
         """Calculate the dipole moment from the given atomic charges
         and their coordinates with respect to the origin.
         """
-        transl_coords_au = convertor(coords - origin, 'Angstrom', 'bohr')
+        transl_coords_au = convertor(coords - origin, "Angstrom", "bohr")
         dipole = numpy.dot(charges, transl_coords_au)
 
-        return convertor(dipole, 'ebohr', 'Debye')
+        return convertor(dipole, "ebohr", "Debye")
 
     def _calculate_quadrupole(self, charges, coords, origin):
         """Calculate the traceless quadrupole moment from the given
         atomic charges and their coordinates with respect to the origin.
         """
-        transl_coords_au = convertor(coords - origin, 'Angstrom', 'bohr')
+        transl_coords_au = convertor(coords - origin, "Angstrom", "bohr")
 
         delta = numpy.eye(3)
         Q = numpy.zeros([3, 3])
         for i in range(3):
             for j in range(3):
                 for q, r in zip(charges, transl_coords_au):
-                    Q[i,j] += 1/2 * q * (3 * r[i] * r[j] - \
-                              numpy.linalg.norm(r)**2 * delta[i,j])
+                    Q[i, j] += (
+                        1 / 2 * q * (3 * r[i] * r[j] - numpy.linalg.norm(r) ** 2 * delta[i, j])
+                    )
 
         triu_idxs = numpy.triu_indices_from(Q)
         raveled_idxs = numpy.ravel_multi_index(triu_idxs, Q.shape)
         quadrupole = numpy.take(Q.flatten(), raveled_idxs)
 
-        return convertor(quadrupole, 'ebohr2', 'Buckingham')
+        return convertor(quadrupole, "ebohr2", "Buckingham")
 
-    def calculate(self, origin='nuccharge', population='mulliken',
-                  masses=None):
+    def calculate(self, origin="nuccharge", population="mulliken", masses=None):
         """Calculate electric dipole and quadrupole moments using parsed
         partial atomic charges.
 
@@ -109,23 +110,24 @@ class Moments(Method):
         try:
             charges = self.data.atomcharges[population]
         except KeyError as e:
-            msg = ("charges coming from requested population analysis"
-                   "scheme are not parsed")
+            msg = "charges coming from requested population analysis" "scheme are not parsed"
             raise ValueError(msg, e)
 
         if isinstance(origin, Iterable) and not isinstance(origin, str):
             origin_pos = numpy.asarray(origin)
-        elif origin == 'nuccharge':
+        elif origin == "nuccharge":
             origin_pos = numpy.average(coords, weights=self.data.atomnos, axis=0)
-        elif origin == 'mass':
+        elif origin == "mass":
             if masses:
                 atommasses = numpy.asarray(masses)
             else:
                 try:
                     atommasses = self.data.atommasses
                 except AttributeError as e:
-                    msg = ("atomic masses were not parsed, consider provide "
-                           "'masses' argument instead")
+                    msg = (
+                        "atomic masses were not parsed, consider provide "
+                        "'masses' argument instead"
+                    )
                     raise ValueError(msg, e)
             origin_pos = numpy.average(coords, weights=atommasses, axis=0)
         else:

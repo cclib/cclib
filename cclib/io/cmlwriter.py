@@ -30,21 +30,21 @@ class CML(filewriter.Writer):
         """Generate the CML representation of the logfile data."""
 
         # Create the base molecule.
-        molecule = ET.Element('molecule')
+        molecule = ET.Element("molecule")
         d = {
             # Write the namespace directly.
-            'xmlns': 'http://www.xml-cml.org/schema',
+            "xmlns": "http://www.xml-cml.org/schema",
         }
         if self.jobfilename is not None:
-            d['id'] = self.jobfilename
+            d["id"] = self.jobfilename
         _set_attrs(molecule, d)
 
         # Form the listing of all the atoms present.
-        atomArray = ET.SubElement(molecule, 'atomArray')
-        if hasattr(self.ccdata, 'atomcoords') and hasattr(self.ccdata, 'atomnos'):
+        atomArray = ET.SubElement(molecule, "atomArray")
+        if hasattr(self.ccdata, "atomcoords") and hasattr(self.ccdata, "atomnos"):
             elements = [self.pt.element[Z] for Z in self.ccdata.atomnos]
             for atomid in range(self.ccdata.natom):
-                atom = ET.SubElement(atomArray, 'atom')
+                atom = ET.SubElement(atomArray, "atom")
                 x, y, z = self.ccdata.atomcoords[-1][atomid].tolist()
                 d = {
                     "id": f"a{atomid + 1}",
@@ -56,7 +56,7 @@ class CML(filewriter.Writer):
                 _set_attrs(atom, d)
 
         # Form the listing of all the bonds present.
-        bondArray = ET.SubElement(molecule, 'bondArray')
+        bondArray = ET.SubElement(molecule, "bondArray")
         if _has_openbabel:
             for bc in self.bond_connectivities:
                 bond = ET.SubElement(bondArray, "bond")
@@ -86,7 +86,7 @@ def _indent(elem, level=0):
         if not elem.tail or not elem.tail.strip():
             elem.tail = i
         for elem in elem:
-            _indent(elem, level+1)
+            _indent(elem, level + 1)
         if not elem.tail or not elem.tail.strip():
             elem.tail = i
     else:
@@ -94,18 +94,19 @@ def _indent(elem, level=0):
             elem.tail = i
 
 
-def _tostring(element, xml_declaration=True, encoding='utf-8', method='xml'):
+def _tostring(element, xml_declaration=True, encoding="utf-8", method="xml"):
     """A reimplementation of tostring() found in ElementTree."""
+
     class dummy:
         pass
+
     data = []
     file = dummy()
     file.write = data.append
-    ET.ElementTree(element).write(file,
-                                  xml_declaration=xml_declaration,
-                                  encoding=encoding,
-                                  method=method)
-    return b''.join(data).decode(encoding)
+    ET.ElementTree(element).write(
+        file, xml_declaration=xml_declaration, encoding=encoding, method=method
+    )
+    return b"".join(data).decode(encoding)
 
 
 del find_package

@@ -33,7 +33,11 @@ class PyquanteTest(unittest.TestCase):
 
         reference = Molecule(
             "h2o",
-            [(8, (0, 0, 0.119159)), (1, (0, 0.790649, -0.476637)), (1, (0, -0.790649, -0.476637)),],
+            [
+                (8, (0, 0, 0.119159)),
+                (1, (0, 0.790649, -0.476637)),
+                (1, (0, -0.790649, -0.476637)),
+            ],
             units="Angstroms",
         )
         refen, reforbe, reforbs = hf(reference)
@@ -51,7 +55,7 @@ class pyquante2Test(unittest.TestCase):
         super(pyquante2Test, self).setUp()
         if not find_package("pyquante2"):
             raise ImportError("Must install pyquante2 to run this test")
-            
+
         self.data, self.logfile = getdatafile("Gaussian", "basicGaussian16", ["water_ccsd.log"])
 
     def test_makepyquante(self):

@@ -19,27 +19,18 @@ from cclib.parser import logfileparser
 from cclib.parser import utils
 
 SHELL_ORBITALS = {
-    0: ['S'],
-    1: ['PX', 'PY', 'PZ'],
-    -1: ['S', 'PX', 'PY', 'PZ'],
-    2: ['D1', 'D2', 'D3', 'D4', 'D5', 'D6'],
-    -2: ['D1', 'D2', 'D3', 'D4', 'D5'],
-    3:  ['F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10'],
-    -3: ['F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7'],
-    4: ['G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'G9', 'G10', 'G11', 'G12','G13'],
-    -4: ['G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'G9']
-
+    0: ["S"],
+    1: ["PX", "PY", "PZ"],
+    -1: ["S", "PX", "PY", "PZ"],
+    2: ["D1", "D2", "D3", "D4", "D5", "D6"],
+    -2: ["D1", "D2", "D3", "D4", "D5"],
+    3: ["F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10"],
+    -3: ["F1", "F2", "F3", "F4", "F5", "F6", "F7"],
+    4: ["G1", "G2", "G3", "G4", "G5", "G6", "G7", "G8", "G9", "G10", "G11", "G12", "G13"],
+    -4: ["G1", "G2", "G3", "G4", "G5", "G6", "G7", "G8", "G9"],
 }
 
-SHELL_START = {
-    0: 1,
-    1: 2,
-    -1: 2,
-    2: 3,
-    -2: 3,
-    3: 4,
-    -3: 4
-}
+SHELL_START = {0: 1, 1: 2, -1: 2, 2: 3, -2: 3, 3: 4, -3: 4}
 
 
 def _shell_to_orbitals(type, offset):
@@ -80,47 +71,47 @@ class FChk(logfileparser.Logfile):
         # just opened file, skip first line to get basis
         if self.start:
             method = next(inputfile)
-            self.metadata['basis_set'] = method.split()[-1]
+            self.metadata["basis_set"] = method.split()[-1]
             self.start = False
 
-        if line[0:6] == 'Charge':
-            self.set_attribute('charge', int(line.split()[-1]))
+        if line[0:6] == "Charge":
+            self.set_attribute("charge", int(line.split()[-1]))
 
-        if line[0:12] == 'Multiplicity':
-            self.set_attribute('mult', int(line.split()[-1]))
+        if line[0:12] == "Multiplicity":
+            self.set_attribute("mult", int(line.split()[-1]))
 
-        if line[0:14] == 'Atomic numbers':
+        if line[0:14] == "Atomic numbers":
             self.natom = int(line.split()[-1])
-            atomnos = self._parse_block(inputfile, self.natom, int, 'Basic Information')
-            self.set_attribute('atomnos', atomnos)
+            atomnos = self._parse_block(inputfile, self.natom, int, "Basic Information")
+            self.set_attribute("atomnos", atomnos)
 
-        if line[0:19] == 'Number of electrons':
+        if line[0:19] == "Number of electrons":
             alpha = next(inputfile)
             alpha_homo = int(alpha.split()[-1]) - 1
 
             beta = next(inputfile)
             beta_homo = int(beta.split()[-1]) - 1
 
-            self.set_attribute('homos', [alpha_homo, beta_homo])
+            self.set_attribute("homos", [alpha_homo, beta_homo])
 
-        if line[0:29] == 'Current cartesian coordinates':
+        if line[0:29] == "Current cartesian coordinates":
             count = int(line.split()[-1])
             assert count % 3 == 0
 
-            coords = numpy.array(self._parse_block(inputfile, count, float, 'Coordinates'))
+            coords = numpy.array(self._parse_block(inputfile, count, float, "Coordinates"))
             coords.shape = (1, int(count / 3), 3)
-            self.set_attribute('atomcoords', utils.convertor(coords, 'bohr', 'Angstrom'))
+            self.set_attribute("atomcoords", utils.convertor(coords, "bohr", "Angstrom"))
 
-        if line[0:25] == 'Number of basis functions':
-            self.set_attribute('nbasis', int(line.split()[-1]))
+        if line[0:25] == "Number of basis functions":
+            self.set_attribute("nbasis", int(line.split()[-1]))
 
-        if line[0:14] == 'Overlap Matrix':
+        if line[0:14] == "Overlap Matrix":
             count = int(line.split()[-1])
 
             # triangle matrix, with number of elements in a row:
             # 1 + 2 + 3 + .... + self.nbasis
             assert count == (self.nbasis + 1) * self.nbasis / 2
-            raw_overlaps = self._parse_block(inputfile, count, float, 'Overlap Matrix')
+            raw_overlaps = self._parse_block(inputfile, count, float, "Overlap Matrix")
 
             # now turn into matrix
             overlaps = numpy.zeros((self.nbasis, self.nbasis))
@@ -131,89 +122,87 @@ class FChk(logfileparser.Logfile):
                     overlaps[col, row] = raw_overlaps[raw_index]
                     raw_index += 1
 
-            self.set_attribute('aooverlaps', overlaps)
+            self.set_attribute("aooverlaps", overlaps)
 
-        if line[0:31] == 'Number of independent functions':
-            self.set_attribute('nmo', int(line.split()[-1]))
+        if line[0:31] == "Number of independent functions":
+            self.set_attribute("nmo", int(line.split()[-1]))
 
-        if line[0:21] == 'Alpha MO coefficients':
+        if line[0:21] == "Alpha MO coefficients":
             count = int(line.split()[-1])
             assert count == self.nbasis * self.nmo
 
-            coeffs = numpy.array(self._parse_block(inputfile, count, float, 'Alpha Coefficients'))
+            coeffs = numpy.array(self._parse_block(inputfile, count, float, "Alpha Coefficients"))
             coeffs.shape = (self.nmo, self.nbasis)
-            self.set_attribute('mocoeffs', [coeffs])
+            self.set_attribute("mocoeffs", [coeffs])
 
-        if line[0:22] == 'Alpha Orbital Energies':
+        if line[0:22] == "Alpha Orbital Energies":
             count = int(line.split()[-1])
             assert count == self.nmo
 
-            energies = numpy.array(self._parse_block(inputfile, count, float, 'Alpha MO Energies'))
-            self.set_attribute('moenergies', [utils.convertor(energies, 'hartree', 'eV')])
+            energies = numpy.array(self._parse_block(inputfile, count, float, "Alpha MO Energies"))
+            self.set_attribute("moenergies", [utils.convertor(energies, "hartree", "eV")])
 
-        if line[0:20] == 'Beta MO coefficients':
+        if line[0:20] == "Beta MO coefficients":
             count = int(line.split()[-1])
             assert count == self.nbasis * self.nmo
 
-            coeffs = numpy.array(self._parse_block(inputfile, count, float, 'Beta Coefficients'))
+            coeffs = numpy.array(self._parse_block(inputfile, count, float, "Beta Coefficients"))
             coeffs.shape = (self.nmo, self.nbasis)
-            self.append_attribute('mocoeffs', coeffs)
+            self.append_attribute("mocoeffs", coeffs)
 
-        if line[0:21] == 'Beta Orbital Energies':
+        if line[0:21] == "Beta Orbital Energies":
             count = int(line.split()[-1])
             assert count == self.nmo
 
-            energies = numpy.array(self._parse_block(inputfile, count, float, 'Alpha MO Energies'))
-            self.append_attribute('moenergies', utils.convertor(energies, 'hartree', 'eV'))
+            energies = numpy.array(self._parse_block(inputfile, count, float, "Alpha MO Energies"))
+            self.append_attribute("moenergies", utils.convertor(energies, "hartree", "eV"))
 
-        if line[0:11] == 'Shell types':
+        if line[0:11] == "Shell types":
             self.parse_aonames(line, inputfile)
 
-        if line[0:19] == 'Real atomic weights':
+        if line[0:19] == "Real atomic weights":
             count = int(line.split()[-1])
             assert count == self.natom
 
-            atommasses = numpy.array(self._parse_block(inputfile, count, float, 'Atomic Masses'))
+            atommasses = numpy.array(self._parse_block(inputfile, count, float, "Atomic Masses"))
 
-            self.set_attribute('atommasses', atommasses)
+            self.set_attribute("atommasses", atommasses)
 
-        if line[0:10] == 'SCF Energy':
+        if line[0:10] == "SCF Energy":
             self.scfenergy = float(line.split()[-1])
 
-            self.set_attribute('scfenergies', [utils.convertor(self.scfenergy,'hartree','eV')])
+            self.set_attribute("scfenergies", [utils.convertor(self.scfenergy, "hartree", "eV")])
 
-        if line[0:18] == 'Cartesian Gradient':
+        if line[0:18] == "Cartesian Gradient":
             count = int(line.split()[-1])
-            assert count == self.natom*3
+            assert count == self.natom * 3
 
-            gradient = numpy.array(self._parse_block(inputfile, count, float, 'Gradient'))
+            gradient = numpy.array(self._parse_block(inputfile, count, float, "Gradient"))
 
-            self.set_attribute('grads', gradient)
+            self.set_attribute("grads", gradient)
 
-        if line[0:25] == 'Cartesian Force Constants':
+        if line[0:25] == "Cartesian Force Constants":
             count = int(line.split()[-1])
-            assert count == (3*self.natom*(3*self.natom+1))/2
+            assert count == (3 * self.natom * (3 * self.natom + 1)) / 2
 
-            hessian = numpy.array(self._parse_block(inputfile, count, float, 'Hessian'))
+            hessian = numpy.array(self._parse_block(inputfile, count, float, "Hessian"))
 
-            self.set_attribute('hessian', hessian)
+            self.set_attribute("hessian", hessian)
 
-        if line[0:13] == 'ETran scalars':
+        if line[0:13] == "ETran scalars":
             count = int(line.split()[-1])
 
-            etscalars = self._parse_block(inputfile, count, int, 'ET Scalars')
+            etscalars = self._parse_block(inputfile, count, int, "ET Scalars")
 
             # Set attribute: self.netroot (number of excited estates)
             self.netroot = etscalars[4]
 
-        if line[0:10] == 'ETran spin':
+        if line[0:10] == "ETran spin":
             count = int(line.split()[-1])
 
-            etspin = self._parse_block(inputfile, count, int, 'ET Spin')
+            etspin = self._parse_block(inputfile, count, int, "ET Spin")
 
-            spin_labels = { 0:'Singlet',
-                            2:'Triplet',
-                           -1:'Unknown'}
+            spin_labels = {0: "Singlet", 2: "Triplet", -1: "Unknown"}
             etsyms = []
             for i in etspin:
                 if i in spin_labels:
@@ -223,12 +212,12 @@ class FChk(logfileparser.Logfile):
 
             # The extracted property does not contain the actual irrep label
             # (contrarily to that extracted from the Gaussian log)
-            # After this, 'Etran sym' appears (and would need to be parsed), 
+            # After this, 'Etran sym' appears (and would need to be parsed),
             # but at least in Gaussian this contains only zeroes regardless of the irrep.
 
-            self.set_attribute('etsyms', etsyms)
+            self.set_attribute("etsyms", etsyms)
 
-        if line[0:18] == 'ETran state values':
+        if line[0:18] == "ETran state values":
             # This section is organized as follows:
             # ·First the properties of each excited state (up to net):
             # E, {muNx,muNy,muNz,muvelNx,muvelNy,muvelNz,mmagNx,mmagNy,mmagNz,unkX,unkY,unkZ,unkX,unkY,unkZ}_N=1,net
@@ -244,54 +233,57 @@ class FChk(logfileparser.Logfile):
             ### 16*net (no Freq jobs)
             ### 16*net + 48 + 3*self.natom*16 (Freq jobs)
             count = int(line.split()[-1])
-            if hasattr(self,'etsyms'):
+            if hasattr(self, "etsyms"):
                 net = len(self.etsyms)
             else:
-                net = 0 # This forces an AssertionError below
-            assert count in [16*net, 16*net+48+3*self.natom*16]
+                net = 0  # This forces an AssertionError below
+            assert count in [16 * net, 16 * net + 48 + 3 * self.natom * 16]
 
-            etvalues = self._parse_block(inputfile, count, float, 'ET Values')
+            etvalues = self._parse_block(inputfile, count, float, "ET Values")
 
             # ETr energies (1/cm)
-            etenergies_au = [ e_es-self.scfenergy for e_es in etvalues[0:net*16:16] ]
-            etenergies = [ utils.convertor(etr,'hartree','wavenumber') for etr in etenergies_au ]
-            self.set_attribute('etenergies', etenergies)
+            etenergies_au = [e_es - self.scfenergy for e_es in etvalues[0 : net * 16 : 16]]
+            etenergies = [utils.convertor(etr, "hartree", "wavenumber") for etr in etenergies_au]
+            self.set_attribute("etenergies", etenergies)
 
             # ETr dipoles (length-gauge)
             etdips = []
-            for k in range(1,16*net,16):
-                etdips.append(etvalues[k:k+3])
-            self.set_attribute('etdips',etdips)
+            for k in range(1, 16 * net, 16):
+                etdips.append(etvalues[k : k + 3])
+            self.set_attribute("etdips", etdips)
 
             # Osc. Strength from Etr dipoles
             # oscs = 2/3 * Etr(au) * dip²(au)
-            etoscs = [ 2.0/3.0*e*numpy.linalg.norm(numpy.array(dip))**2 for e,dip in zip(etenergies_au,etdips) ]
-            self.set_attribute('etoscs', etoscs)
+            etoscs = [
+                2.0 / 3.0 * e * numpy.linalg.norm(numpy.array(dip)) ** 2
+                for e, dip in zip(etenergies_au, etdips)
+            ]
+            self.set_attribute("etoscs", etoscs)
 
             # ETr dipoles (velocity-gauge)
             etveldips = []
-            for k in range(4,16*net,16):
-                etveldips.append(etvalues[k:k+3])
-            self.set_attribute('etveldips',etveldips)
+            for k in range(4, 16 * net, 16):
+                etveldips.append(etvalues[k : k + 3])
+            self.set_attribute("etveldips", etveldips)
 
             # ETr magnetic dipoles
             etmagdips = []
-            for k in range(7,16*net,16):
-                etmagdips.append(etvalues[k:k+3])
-            self.set_attribute('etmagdips',etmagdips)
+            for k in range(7, 16 * net, 16):
+                etmagdips.append(etvalues[k : k + 3])
+            self.set_attribute("etmagdips", etmagdips)
 
     def parse_aonames(self, line, inputfile):
         # e.g.: Shell types                                I   N=          28
         count = int(line.split()[-1])
-        shell_types = self._parse_block(inputfile, count, int, 'Atomic Orbital Names')
+        shell_types = self._parse_block(inputfile, count, int, "Atomic Orbital Names")
 
         # e.g.: Number of primitives per shell             I   N=          28
         next(inputfile)
-        self._parse_block(inputfile, count, int, 'Atomic Orbital Names')
+        self._parse_block(inputfile, count, int, "Atomic Orbital Names")
 
         # e.g. Shell to atom map                          I   N=          28
         next(inputfile)
-        shell_map = self._parse_block(inputfile, count, int, 'Atomic Orbital Names')
+        shell_map = self._parse_block(inputfile, count, int, "Atomic Orbital Names")
 
         elements = (self.table.element[x] for x in self.atomnos)
         atom_labels = [f"{y}{x}" for x, y in enumerate(elements, 1)]
@@ -308,7 +300,9 @@ class FChk(logfileparser.Logfile):
             _type = shell_types[i]
             atom = shell_map[i] - 1
             shell_offset += 1
-            basis_offset = atombasis[-1][-1] + 1 # atombasis is increasing numbers, so just grab last
+            basis_offset = (
+                atombasis[-1][-1] + 1
+            )  # atombasis is increasing numbers, so just grab last
 
             # if we've move to next atom, need to update offset of shells (e.g. start at 1S)
             # and start new list for atom basis
@@ -343,8 +337,8 @@ class FChk(logfileparser.Logfile):
 
     def _parse_block(self, inputfile, count, type, msg):
         atomnos = []
-        while len(atomnos) < count :
+        while len(atomnos) < count:
             self.updateprogress(inputfile, msg, self.fupdate)
             line = next(inputfile)
-            atomnos.extend([ type(x) for x in line.split()])
+            atomnos.extend([type(x) for x in line.split()])
         return atomnos

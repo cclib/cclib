@@ -17,7 +17,7 @@ from numpy.testing import assert_array_almost_equal
 
 
 class Horton2Test(unittest.TestCase):
-    """ Tests for the horton 2 bridge in cclib """
+    """Tests for the horton 2 bridge in cclib"""
 
     # Both horton and cclib can read in fchk files. The test routine utilizes this fact
     # and compares the attributes that were directly loaded from each package
@@ -26,15 +26,9 @@ class Horton2Test(unittest.TestCase):
     def setUp(self):
         super(Horton2Test, self).setUp()
 
-        self.data, self.logfile = getdatafile(
-            "Gaussian", "basicGaussian16", ["dvb_un_sp.fchk"]
-        )
-        datadir = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), "..", "..", "data")
-        )
-        inputfile = os.path.join(
-            datadir, "Gaussian", "basicGaussian16", "dvb_un_sp.fchk"
-        )
+        self.data, self.logfile = getdatafile("Gaussian", "basicGaussian16", ["dvb_un_sp.fchk"])
+        datadir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data"))
+        inputfile = os.path.join(datadir, "Gaussian", "basicGaussian16", "dvb_un_sp.fchk")
 
         self._old_horton = False
         self._found_horton = find_package("horton")
@@ -58,7 +52,7 @@ class Horton2Test(unittest.TestCase):
                     self.iodat = IOData.from_file(inputfile)
 
     def test_makehorton(self):
-        """ Check that the bridge from cclib to horton works correctly """
+        """Check that the bridge from cclib to horton works correctly"""
         # First use `makehorton` function to generate IOData object converted from cclib ccData
         hortonequiv = cclib2horton.makehorton(self.data)
 
@@ -97,7 +91,7 @@ class Horton2Test(unittest.TestCase):
                 )
 
     def test_makecclib(self):
-        """ Check that the bridge from horton to cclib works correctly """
+        """Check that the bridge from horton to cclib works correctly"""
         # First use `makecclib` function to generate ccData object converted from horton IOData
         cclibequiv = cclib2horton.makecclib(self.iodat)
 
@@ -134,8 +128,9 @@ class Horton2Test(unittest.TestCase):
                         decimal=3,
                     )
 
+
 class Horton3Test(unittest.TestCase):
-    """ Tests for the horton 3 bridge in cclib """
+    """Tests for the horton 3 bridge in cclib"""
 
     # Both horton and cclib can read in fchk files. The test routine utilizes this fact
     # and compares the attributes that were directly loaded from each package
@@ -144,15 +139,9 @@ class Horton3Test(unittest.TestCase):
     def setUp(self):
         super(Horton3Test, self).setUp()
 
-        self.data, self.logfile = getdatafile(
-            "Gaussian", "basicGaussian16", ["dvb_un_sp.fchk"]
-        )
-        datadir = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), "..", "..", "data")
-        )
-        inputfile = os.path.join(
-            datadir, "Gaussian", "basicGaussian16", "dvb_un_sp.fchk"
-        )
+        self.data, self.logfile = getdatafile("Gaussian", "basicGaussian16", ["dvb_un_sp.fchk"])
+        datadir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data"))
+        inputfile = os.path.join(datadir, "Gaussian", "basicGaussian16", "dvb_un_sp.fchk")
 
         if not find_package("iodata"):
             raise ImportError("Must install iodata to run this test")
@@ -166,7 +155,7 @@ class Horton3Test(unittest.TestCase):
         self.iodat = load_one(filename=inputfile)
 
     def test_makehorton(self):
-        """ Check that the bridge from cclib to horton works correctly """
+        """Check that the bridge from cclib to horton works correctly"""
         # First use `makehorton` function to generate IOData object converted from cclib ccData
         hortonequiv = cclib2horton.makehorton(self.data)
 
@@ -201,7 +190,7 @@ class Horton3Test(unittest.TestCase):
                 )
 
     def test_makecclib(self):
-        """ Check that the bridge from horton to cclib works correctly """
+        """Check that the bridge from horton to cclib works correctly"""
         # First use `makecclib` function to generate ccData object converted from horton IOData
         cclibequiv = cclib2horton.makecclib(self.iodat)
 

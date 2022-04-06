@@ -7,8 +7,7 @@
 
 import sys
 
-if 'PyQt4' in list(sys.modules.keys()):
+if "PyQt4" in list(sys.modules.keys()):
     from cclib.progress.qt4progress import Qt4Progress
 
 from cclib.progress.textprogress import TextProgress
-

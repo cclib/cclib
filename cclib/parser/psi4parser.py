@@ -48,9 +48,9 @@ class Psi4(logfileparser.Logfile):
         super(Psi4, self).after_parsing()
 
         # Newer versions of Psi4 don't explicitly print the number of atoms.
-        if not hasattr(self, 'natom'):
-            if hasattr(self, 'atomnos'):
-                self.set_attribute('natom', len(self.atomnos))
+        if not hasattr(self, "natom"):
+            if hasattr(self, "atomnos"):
+                self.set_attribute("natom", len(self.atomnos))
 
     def normalisesym(self, label):
         """Use standard symmetry labels instead of Psi4 labels.
@@ -64,17 +64,16 @@ class Psi4(logfileparser.Logfile):
     # Match the number of skipped lines required based on the type of
     # gradient present (determined from the header), as otherwise the
     # parsing is identical.
-    GradientInfo = namedtuple('GradientInfo', ['gradient_type', 'header', 'skip_lines'])
+    GradientInfo = namedtuple("GradientInfo", ["gradient_type", "header", "skip_lines"])
     GRADIENT_TYPES = {
-        'analytic': GradientInfo('analytic',
-                                 '-Total Gradient:',
-                                 ['header', 'dash header']),
-        'numerical': GradientInfo('numerical',
-                                  '## F-D gradient (Symmetry 0) ##',
-                                  ['Irrep num and total size', 'b', '123', 'b']),
+        "analytic": GradientInfo("analytic", "-Total Gradient:", ["header", "dash header"]),
+        "numerical": GradientInfo(
+            "numerical",
+            "## F-D gradient (Symmetry 0) ##",
+            ["Irrep num and total size", "b", "123", "b"],
+        ),
     }
-    GRADIENT_HEADERS = set([gradient_type.header
-                            for gradient_type in GRADIENT_TYPES.values()])
+    GRADIENT_HEADERS = set([gradient_type.header for gradient_type in GRADIENT_TYPES.values()])
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -102,7 +101,7 @@ class Psi4(logfileparser.Logfile):
             if "Git:" in line:
                 tokens = line.split()
                 assert tokens[1] == "Rev"
-                revision = '-'.join(tokens[2:]).replace("{", "").replace("}", "")
+                revision = "-".join(tokens[2:]).replace("{", "").replace("}", "")
                 dev_flag = "" if "dev" in package_version else ".dev"
                 package_version = f"{package_version}{dev_flag}+{revision}"
             self.metadata["package_version"] = package_version
@@ -125,7 +124,7 @@ class Psi4(logfileparser.Logfile):
                 line = next(inputfile)
             self.reference = line.split()[0]
             # Work with a complex reference as if it's real.
-            if self.reference[0] == 'C':
+            if self.reference[0] == "C":
                 self.reference = self.reference[1:]
 
         # Parse the XC density functional
@@ -158,18 +157,18 @@ class Psi4(logfileparser.Logfile):
                 # TODO this isn't right, need to "know" about symmetry.
                 point_group_full = point_group_abelian
 
-            self.metadata['symmetry_detected'] = point_group_full
-            self.metadata['symmetry_used'] = point_group_abelian
+            self.metadata["symmetry_detected"] = point_group_full
+            self.metadata["symmetry_used"] = point_group_abelian
 
         if (self.section == "Geometry") and ("Geometry (in Angstrom), charge" in line):
 
             assert line.split()[3] == "charge"
-            charge = int(line.split()[5].strip(','))
-            self.set_attribute('charge', charge)
+            charge = int(line.split()[5].strip(","))
+            self.set_attribute("charge", charge)
 
             assert line.split()[6] == "multiplicity"
-            mult = int(line.split()[8].strip(':'))
-            self.set_attribute('mult', mult)
+            mult = int(line.split()[8].strip(":"))
+            self.set_attribute("mult", mult)
 
             self.skip_line(inputfile, "blank")
             line = next(inputfile)
@@ -196,35 +195,39 @@ class Psi4(logfileparser.Logfile):
                 line = next(inputfile)
 
             # The 0 is to handle the presence of ghost atoms.
-            self.set_attribute('atomnos', [self.table.number.get(el, 0) for el in elements])
+            self.set_attribute("atomnos", [self.table.number.get(el, 0) for el in elements])
 
-            if not hasattr(self, 'atomcoords'):
+            if not hasattr(self, "atomcoords"):
                 self.atomcoords = []
 
             # This condition discards any repeated coordinates that Psi print. For example,
             # geometry optimizations will print the coordinates at the beginning of and SCF
             # section and also at the start of the gradient calculation.
-            if len(self.atomcoords) == 0 \
-                or (self.atomcoords[-1] != coords and not hasattr(self, 'finite_difference')):
+            if len(self.atomcoords) == 0 or (
+                self.atomcoords[-1] != coords and not hasattr(self, "finite_difference")
+            ):
                 self.atomcoords.append(coords)
 
             if len(atommasses) > 0:
-                if not hasattr(self, 'atommasses'):
+                if not hasattr(self, "atommasses"):
                     self.atommasses = atommasses
 
         # Psi4 repeats the charge and multiplicity after the geometry.
         if (self.section == "Geometry") and (line[2:16].lower() == "charge       ="):
             charge = int(line.split()[-1])
-            self.set_attribute('charge', charge)
+            self.set_attribute("charge", charge)
         if (self.section == "Geometry") and (line[2:16].lower() == "multiplicity ="):
             mult = int(line.split()[-1])
-            self.set_attribute('mult', mult)
+            self.set_attribute("mult", mult)
 
         # The printout for Psi4 has a more obvious trigger for the SCF parameter printout.
-        if (self.section == "Algorithm") and (line.strip() == "==> Algorithm <==") \
-            and not hasattr(self, 'finite_difference'):
+        if (
+            (self.section == "Algorithm")
+            and (line.strip() == "==> Algorithm <==")
+            and not hasattr(self, "finite_difference")
+        ):
 
-            self.skip_line(inputfile, 'blank')
+            self.skip_line(inputfile, "blank")
 
             line = next(inputfile)
             while line.strip():
@@ -253,9 +256,11 @@ class Psi4(logfileparser.Logfile):
             if line[2:12] == "Basis Set:":
                 self.metadata["basis_set"] = line.split()[2]
 
-        if (self.section == "Primary Basis" or self.section == "DFT Potential") and line.strip() == "-Contraction Scheme:":
+        if (
+            self.section == "Primary Basis" or self.section == "DFT Potential"
+        ) and line.strip() == "-Contraction Scheme:":
 
-            self.skip_lines(inputfile, ['headers', 'd'])
+            self.skip_lines(inputfile, ["headers", "d"])
 
             atomnos = []
             atombasis = []
@@ -274,21 +279,21 @@ class Psi4(logfileparser.Logfile):
                 # which will need to be extended later when considering larger basis sets,
                 # with corrections for the cartesian/spherical cases.
                 ao_count = 0
-                shells = line.split('//')[1].split()
+                shells = line.split("//")[1].split()
                 for s in shells:
                     count, type = s
-                    multiplier = 3*(type == 'p') or 1
-                    ao_count += multiplier*int(count)
+                    multiplier = 3 * (type == "p") or 1
+                    ao_count += multiplier * int(count)
 
                 if len(atombasis) > 0:
                     atombasis_pos = atombasis[-1][-1] + 1
-                atombasis.append(list(range(atombasis_pos, atombasis_pos+ao_count)))
+                atombasis.append(list(range(atombasis_pos, atombasis_pos + ao_count)))
 
                 line = next(inputfile)
 
-            self.set_attribute('natom', len(atomnos))
-            self.set_attribute('atomnos', atomnos)
-            self.set_attribute('atombasis', atombasis)
+            self.set_attribute("natom", len(atomnos))
+            self.set_attribute("atomnos", atomnos)
+            self.set_attribute("atombasis", atombasis)
 
         # The atomic basis set is straightforward to parse, but there are some complications
         # when symmetry is used, because in that case Psi4 only print the symmetry-unique atoms,
@@ -309,7 +314,9 @@ class Psi4(logfileparser.Logfile):
         #                        71.61683700           2.70781445
         #                        13.04509600           2.61888016
         # ...
-        if (self.section == "AO Basis Functions") and (line.strip() == "==> AO Basis Functions <=="):
+        if (self.section == "AO Basis Functions") and (
+            line.strip() == "==> AO Basis Functions <=="
+        ):
 
             def get_symmetry_atom_basis(gbasis):
                 """Get symmetry atom by replicating the last atom in gbasis of the same element."""
@@ -321,33 +328,35 @@ class Psi4(logfileparser.Logfile):
                 last_same = ngbasis - self.atomnos[:ngbasis][::-1].index(missing_atomno) - 1
                 return gbasis[last_same]
 
-            dfact = lambda n: (n <= 0) or n * dfact(n-2)
+            dfact = lambda n: (n <= 0) or n * dfact(n - 2)
 
             # Early beta versions of Psi4 normalize basis function
             # coefficients when printing.
             if self.version_4_beta:
+
                 def get_normalization_factor(exp, lx, ly, lz):
-                    norm_s = (2*exp/numpy.pi)**0.75
+                    norm_s = (2 * exp / numpy.pi) ** 0.75
                     if lx + ly + lz > 0:
-                        nom = (4*exp)**((lx+ly+lz)/2.0)
-                        den = numpy.sqrt(dfact(2*lx-1) * dfact(2*ly-1) * dfact(2*lz-1))
+                        nom = (4 * exp) ** ((lx + ly + lz) / 2.0)
+                        den = numpy.sqrt(dfact(2 * lx - 1) * dfact(2 * ly - 1) * dfact(2 * lz - 1))
                         return norm_s * nom / den
                     else:
                         return norm_s
+
             else:
                 get_normalization_factor = lambda exp, lx, ly, lz: 1
 
-            self.skip_lines(inputfile, ['b', 'basisname'])
+            self.skip_lines(inputfile, ["b", "basisname"])
 
             line = next(inputfile)
             spherical = line.strip() == "spherical"
-            if hasattr(self, 'spherical_basis'):
+            if hasattr(self, "spherical_basis"):
                 assert self.spherical_basis == spherical
             else:
                 self.spherical_basis = spherical
 
             gbasis = []
-            self.skip_line(inputfile, 'stars')
+            self.skip_line(inputfile, "stars")
             line = next(inputfile)
             while line.strip():
 
@@ -371,7 +380,9 @@ class Psi4(logfileparser.Logfile):
                     nprimitives = int(nprimitives)
 
                     # Get the angular momentum for this shell type.
-                    momentum = {'S': 0, 'P': 1, 'D': 2, 'F': 3, 'G': 4, 'H': 5, 'I': 6}[shell_type.upper()]
+                    momentum = {"S": 0, "P": 1, "D": 2, "F": 3, "G": 4, "H": 5, "I": 6}[
+                        shell_type.upper()
+                    ]
 
                     # Read in the primitives.
                     primitives_lines = [next(inputfile) for i in range(nprimitives)]
@@ -402,14 +413,14 @@ class Psi4(logfileparser.Logfile):
         # A block called 'Calculation Information' prints these before starting the SCF.
         if (self.section == "Pre-Iterations") and ("Number of atoms" in line):
             natom = int(line.split()[-1])
-            self.set_attribute('natom', natom)
+            self.set_attribute("natom", natom)
         if (self.section == "Pre-Iterations") and ("Number of atomic orbitals" in line):
             nbasis = int(line.split()[-1])
-            self.set_attribute('nbasis', nbasis)
+            self.set_attribute("nbasis", nbasis)
         if (self.section == "Pre-Iterations") and ("Total" in line):
             chomp = line.split()
             nbasis = int(chomp[1])
-            self.set_attribute('nbasis', nbasis)
+            self.set_attribute("nbasis", nbasis)
 
         #  ==> Iterations <==
 
@@ -419,18 +430,21 @@ class Psi4(logfileparser.Logfile):
         # repulsion integrals. In that case, there are actually two convergence cycles performed,
         # one for the density-fitted algorithm and one for the exact one, and the iterations are
         # printed in two blocks separated by some set-up information.
-        if (self.section == "Iterations") and (line.strip() == "==> Iterations <==") \
-            and not hasattr(self, 'finite_difference'):
+        if (
+            (self.section == "Iterations")
+            and (line.strip() == "==> Iterations <==")
+            and not hasattr(self, "finite_difference")
+        ):
 
-            if not hasattr(self, 'scfvalues'):
+            if not hasattr(self, "scfvalues"):
                 self.scfvalues = []
             scfvals = []
 
-            self.skip_lines(inputfile, ['b', 'header', 'b'])
+            self.skip_lines(inputfile, ["b", "header", "b"])
             line = next(inputfile)
             # Read each SCF iteration.
             while line.strip() != "==> Post-Iterations <==":
-                if line.strip() and line.split()[0][0] == '@':
+                if line.strip() and line.split()[0][0] == "@":
                     denergy = float(line.split()[4])
                     ddensity = float(line.split()[5])
                     scfvals.append([denergy, ddensity])
@@ -451,28 +465,29 @@ class Psi4(logfileparser.Logfile):
         #
         # Here is how the block looks like for Psi4:
         #
-        #	Orbital Energies (a.u.)
-        #	-----------------------
+        # 	Orbital Energies (a.u.)
+        # 	-----------------------
         #
-        #	Doubly Occupied:
+        # 	Doubly Occupied:
         #
-        #	   1Bu   -11.040586     1Ag   -11.040524     2Bu   -11.031589
-        #	   2Ag   -11.031589     3Bu   -11.028950     3Ag   -11.028820
+        # 	   1Bu   -11.040586     1Ag   -11.040524     2Bu   -11.031589
+        # 	   2Ag   -11.031589     3Bu   -11.028950     3Ag   -11.028820
         # (...)
-        #	  15Ag    -0.415620     1Bg    -0.376962     2Au    -0.315126
-        #	   2Bg    -0.278361     3Bg    -0.222189
+        # 	  15Ag    -0.415620     1Bg    -0.376962     2Au    -0.315126
+        # 	   2Bg    -0.278361     3Bg    -0.222189
         #
-        #	Virtual:
+        # 	Virtual:
         #
-        #	   3Au     0.198995     4Au     0.268517     4Bg     0.308826
-        #	   5Au     0.397078     5Bg     0.521759    16Ag     0.565017
+        # 	   3Au     0.198995     4Au     0.268517     4Bg     0.308826
+        # 	   5Au     0.397078     5Bg     0.521759    16Ag     0.565017
         # (...)
-        #	  24Ag     0.990287    24Bu     1.027266    25Ag     1.107702
-        #	  25Bu     1.124938
+        # 	  24Ag     0.990287    24Bu     1.027266    25Ag     1.107702
+        # 	  25Bu     1.124938
         #
         # The case is different in the trigger string.
-        if ("orbital energies (a.u.)" in line.lower()  or "orbital energies [eh]" in line.lower()) \
-            and not hasattr(self, 'finite_difference'):
+        if (
+            "orbital energies (a.u.)" in line.lower() or "orbital energies [eh]" in line.lower()
+        ) and not hasattr(self, "finite_difference"):
 
             # If this is Psi4, we will be in the appropriate section.
             assert self.section == "Post-Iterations"
@@ -481,87 +496,90 @@ class Psi4(logfileparser.Logfile):
             self.mosyms = [[]]
 
             # Psi4 has dashes under the trigger line, but Psi3 did not.
-            self.skip_line(inputfile, 'dashes')
-            self.skip_line(inputfile, 'blank')
+            self.skip_line(inputfile, "dashes")
+            self.skip_line(inputfile, "blank")
 
             # Both versions have this case-insensitive substring.
             occupied = next(inputfile)
-            if self.reference[0:2] == 'RO' or self.reference[0:1] == 'R':
-                assert 'doubly occupied' in occupied.lower()
-            elif self.reference[0:1] == 'U':
-                assert 'alpha occupied' in occupied.lower()
+            if self.reference[0:2] == "RO" or self.reference[0:1] == "R":
+                assert "doubly occupied" in occupied.lower()
+            elif self.reference[0:1] == "U":
+                assert "alpha occupied" in occupied.lower()
 
-            self.skip_line(inputfile, 'blank')
+            self.skip_line(inputfile, "blank")
 
             # Parse the occupied MO symmetries and energies.
             self._parse_mosyms_moenergies(inputfile, 0)
 
             # The last orbital energy here represents the HOMO.
-            self.homos = [len(self.moenergies[0])-1]
+            self.homos = [len(self.moenergies[0]) - 1]
             # For a restricted open-shell calculation, this is the
             # beta HOMO, and we assume the singly-occupied orbitals
             # are all alpha, which are handled next.
-            if self.reference[0:2] == 'RO':
+            if self.reference[0:2] == "RO":
                 self.homos.append(self.homos[0])
 
             unoccupied = next(inputfile)
-            if self.reference[0:2] == 'RO':
-                assert unoccupied.strip() == 'Singly Occupied:'
-            elif self.reference[0:1] == 'R':
-                assert unoccupied.strip() == 'Virtual:'
-            elif self.reference[0:1] == 'U':
-                assert unoccupied.strip() == 'Alpha Virtual:'
+            if self.reference[0:2] == "RO":
+                assert unoccupied.strip() == "Singly Occupied:"
+            elif self.reference[0:1] == "R":
+                assert unoccupied.strip() == "Virtual:"
+            elif self.reference[0:1] == "U":
+                assert unoccupied.strip() == "Alpha Virtual:"
 
             # Psi4 now has a blank line, Psi3 does not.
-            self.skip_line(inputfile, 'blank')
+            self.skip_line(inputfile, "blank")
 
             # Parse the unoccupied MO symmetries and energies.
             self._parse_mosyms_moenergies(inputfile, 0)
 
             # Here is where we handle the Beta or Singly occupied orbitals.
-            if self.reference[0:1] == 'U':
+            if self.reference[0:1] == "U":
                 self.mosyms.append([])
                 self.moenergies.append([])
                 line = next(inputfile)
-                assert line.strip() == 'Beta Occupied:'
-                self.skip_line(inputfile, 'blank')
+                assert line.strip() == "Beta Occupied:"
+                self.skip_line(inputfile, "blank")
                 self._parse_mosyms_moenergies(inputfile, 1)
-                self.homos.append(len(self.moenergies[1])-1)
+                self.homos.append(len(self.moenergies[1]) - 1)
                 line = next(inputfile)
-                assert line.strip() == 'Beta Virtual:'
-                self.skip_line(inputfile, 'blank')
+                assert line.strip() == "Beta Virtual:"
+                self.skip_line(inputfile, "blank")
                 self._parse_mosyms_moenergies(inputfile, 1)
-            elif self.reference[0:2] == 'RO':
+            elif self.reference[0:2] == "RO":
                 line = next(inputfile)
-                assert line.strip() == 'Virtual:'
-                self.skip_line(inputfile, 'blank')
+                assert line.strip() == "Virtual:"
+                self.skip_line(inputfile, "blank")
                 self._parse_mosyms_moenergies(inputfile, 0)
 
             line = next(inputfile)
-            assert line.strip() == 'Final Occupation by Irrep:'
+            assert line.strip() == "Final Occupation by Irrep:"
             line = next(inputfile)
             irreps = line.split()
             line = next(inputfile)
             tokens = line.split()
-            assert tokens[0] == 'DOCC'
-            docc = sum([int(x.replace(',', '')) for x in tokens[2:-1]])
+            assert tokens[0] == "DOCC"
+            docc = sum([int(x.replace(",", "")) for x in tokens[2:-1]])
             line = next(inputfile)
             if line.strip():
                 tokens = line.split()
-                assert tokens[0] in ('SOCC', 'NA')
-                socc = sum([int(x.replace(',', '')) for x in tokens[2:-1]])
+                assert tokens[0] in ("SOCC", "NA")
+                socc = sum([int(x.replace(",", "")) for x in tokens[2:-1]])
                 # Fix up the restricted open-shell alpha HOMO.
-                if self.reference[0:2] == 'RO':
+                if self.reference[0:2] == "RO":
                     self.homos[0] += socc
 
         # Both Psi3 and Psi4 print the final SCF energy right after the orbital energies,
         # but the label is different. Psi4 also does DFT, and the label is also different in that case.
-        if self.section == "Post-Iterations" and "Final Energy:" in line \
-            and not hasattr(self, 'finite_difference'):
+        if (
+            self.section == "Post-Iterations"
+            and "Final Energy:" in line
+            and not hasattr(self, "finite_difference")
+        ):
             e = float(line.split()[3])
-            if not hasattr(self, 'scfenergies'):
+            if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
-            self.scfenergies.append(utils.convertor(e, 'hartree', 'eV'))
+            self.scfenergies.append(utils.convertor(e, "hartree", "eV"))
 
         if self.subsection == "Energetics":
             if "Empirical Dispersion Energy" in line:
@@ -597,16 +615,20 @@ class Psi4(logfileparser.Logfile):
         #            Sym            Ag
         #            Occ             0
 
-        if (self.section) and ("Molecular Orbitals" in self.section) \
-           and ("Molecular Orbitals" in line) and not hasattr(self, 'finite_difference'):
+        if (
+            (self.section)
+            and ("Molecular Orbitals" in self.section)
+            and ("Molecular Orbitals" in line)
+            and not hasattr(self, "finite_difference")
+        ):
 
-            self.skip_line(inputfile, 'blank')
+            self.skip_line(inputfile, "blank")
 
             mocoeffs = []
             indices = next(inputfile)
             while indices.strip():
 
-                if indices[:3] == '***':
+                if indices[:3] == "***":
                     break
 
                 indices = [int(i) for i in indices.split()]
@@ -617,7 +639,7 @@ class Psi4(logfileparser.Logfile):
                 else:
                     assert len(mocoeffs) == indices[-1]
 
-                self.skip_line(inputfile, 'blank')
+                self.skip_line(inputfile, "blank")
 
                 n = len(indices)
                 line = next(inputfile)
@@ -625,19 +647,19 @@ class Psi4(logfileparser.Logfile):
                     chomp = line.split()
                     m = len(chomp)
                     iao = int(chomp[0])
-                    coeffs = [float(c) for c in chomp[m - n:]]
+                    coeffs = [float(c) for c in chomp[m - n :]]
                     for i, c in enumerate(coeffs):
-                        mocoeffs[indices[i]-1].append(c)
+                        mocoeffs[indices[i] - 1].append(c)
                     line = next(inputfile)
 
                 energies = next(inputfile)
                 symmetries = next(inputfile)
                 occupancies = next(inputfile)
 
-                self.skip_lines(inputfile, ['b', 'b'])
+                self.skip_lines(inputfile, ["b", "b"])
                 indices = next(inputfile)
 
-            if not hasattr(self, 'mocoeffs'):
+            if not hasattr(self, "mocoeffs"):
                 self.mocoeffs = []
             self.mocoeffs.append(mocoeffs)
 
@@ -652,7 +674,7 @@ class Psi4(logfileparser.Logfile):
         # ...
         for pop_type in ["Mulliken", "Lowdin"]:
             if line.strip() == f"{pop_type} Charges: (a.u.)":
-                if not hasattr(self, 'atomcharges'):
+                if not hasattr(self, "atomcharges"):
                     self.atomcharges = {}
                 header = next(inputfile)
 
@@ -669,27 +691,27 @@ class Psi4(logfileparser.Logfile):
 
         # This is for the older conventional MP2 code in 4.0b5.
         mp_trigger = "MP2 Total Energy (a.u.)"
-        if line.strip()[:len(mp_trigger)] == mp_trigger:
+        if line.strip()[: len(mp_trigger)] == mp_trigger:
             self.metadata["methods"].append("MP2")
-            mpenergy = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
-            if not hasattr(self, 'mpenergies'):
+            mpenergy = utils.convertor(float(line.split()[-1]), "hartree", "eV")
+            if not hasattr(self, "mpenergies"):
                 self.mpenergies = []
             self.mpenergies.append([mpenergy])
         # This is for the newer DF-MP2 code in 4.0.
-        if 'DF-MP2 Energies' in line:
+        if "DF-MP2 Energies" in line:
             self.metadata["methods"].append("DF-MP2")
-            while 'Total Energy' not in line:
+            while "Total Energy" not in line:
                 line = next(inputfile)
-            mpenergy = utils.convertor(float(line.split()[3]), 'hartree', 'eV')
-            if not hasattr(self, 'mpenergies'):
+            mpenergy = utils.convertor(float(line.split()[3]), "hartree", "eV")
+            if not hasattr(self, "mpenergies"):
                 self.mpenergies = []
             self.mpenergies.append([mpenergy])
 
         # Note this is just a start and needs to be modified for CCSD(T), etc.
         ccsd_trigger = "* CCSD total energy"
-        if line.strip()[:len(ccsd_trigger)] == ccsd_trigger:
+        if line.strip()[: len(ccsd_trigger)] == ccsd_trigger:
             self.metadata["methods"].append("CCSD")
-            ccsd_energy = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
+            ccsd_energy = utils.convertor(float(line.split()[-1]), "hartree", "eV")
             if not hasattr(self, "ccenergis"):
                 self.ccenergies = []
             self.ccenergies.append(ccsd_energy)
@@ -712,14 +734,19 @@ class Psi4(logfileparser.Logfile):
         #      2    -379.77675264   -7.79e-03      1.88e-02      4.37e-03 o    2.29e-02      6.76e-03 o  ~
         #  ---------------------------------------------------------------------------------------------
         #
-        if (self.section == "Convergence Check") and line.strip() == "==> Convergence Check <==" \
-            and not hasattr(self, 'finite_difference'):
+        if (
+            (self.section == "Convergence Check")
+            and line.strip() == "==> Convergence Check <=="
+            and not hasattr(self, "finite_difference")
+        ):
 
             if not hasattr(self, "optstatus"):
                 self.optstatus = []
             self.optstatus.append(data.ccData.OPT_UNKNOWN)
 
-            self.skip_lines(inputfile, ['b', 'units', 'comment', 'dash+tilde', 'header', 'dash+tilde'])
+            self.skip_lines(
+                inputfile, ["b", "units", "comment", "dash+tilde", "header", "dash+tilde"]
+            )
 
             # These are the position in the line at which numbers should start.
             starts = [27, 41, 55, 69, 83]
@@ -727,31 +754,31 @@ class Psi4(logfileparser.Logfile):
             criteria = next(inputfile)
             geotargets = []
             for istart in starts:
-                if criteria[istart:istart+9].strip():
-                    geotargets.append(float(criteria[istart:istart+9]))
+                if criteria[istart : istart + 9].strip():
+                    geotargets.append(float(criteria[istart : istart + 9]))
                 else:
                     geotargets.append(numpy.inf)
 
-            self.skip_line(inputfile, 'dashes')
+            self.skip_line(inputfile, "dashes")
 
             values = next(inputfile)
             step = int(values.split()[0])
             geovalues = []
             for istart in starts:
-                if values[istart:istart+9].strip():
-                    geovalues.append(float(values[istart:istart+9]))
+                if values[istart : istart + 9].strip():
+                    geovalues.append(float(values[istart : istart + 9]))
 
             if step == 1:
                 self.optstatus[-1] += data.ccData.OPT_NEW
 
             # This assertion may be too restrictive, but we haven't seen the geotargets change.
             # If such an example comes up, update the value since we're interested in the last ones.
-            if not hasattr(self, 'geotargets'):
+            if not hasattr(self, "geotargets"):
                 self.geotargets = geotargets
             else:
                 assert self.geotargets == geotargets
 
-            if not hasattr(self, 'geovalues'):
+            if not hasattr(self, "geovalues"):
                 self.geovalues = []
             self.geovalues.append(geovalues)
 
@@ -763,9 +790,9 @@ class Psi4(logfileparser.Logfile):
             # This is a workaround for Psi4.0/sample_opt-irc-2.out;
             # IRC calculations currently aren't parsed properly for
             # optimization parameters.
-            if hasattr(self, 'geovalues'):
+            if hasattr(self, "geovalues"):
 
-                if not hasattr(self, 'optdone'):
+                if not hasattr(self, "optdone"):
                     self.optdone = []
                 self.optdone.append(len(self.geovalues))
 
@@ -775,7 +802,7 @@ class Psi4(logfileparser.Logfile):
         # This message means that optimization has stopped for some reason, but we
         # still want optdone to exist in this case, although it will be an empty list.
         if line.strip() == "Optimizer: Did not converge!":
-            if not hasattr(self, 'optdone'):
+            if not hasattr(self, "optdone"):
                 self.optdone = []
 
             assert hasattr(self, "optstatus") and len(self.optstatus) > 0
@@ -793,16 +820,16 @@ class Psi4(logfileparser.Logfile):
         # Properties will be evaluated at   0.000000,   0.000000,   0.000000 [a0]
         #
         if "Properties will be evaluated at" in line.strip():
-            self.origin = numpy.array([float(x.strip(',')) for x in line.split()[-4:-1]])
+            self.origin = numpy.array([float(x.strip(",")) for x in line.split()[-4:-1]])
             assert line.split()[-1] in ["Bohr", "[a0]"]
-            self.origin = utils.convertor(self.origin, 'bohr', 'Angstrom')
+            self.origin = utils.convertor(self.origin, "bohr", "Angstrom")
 
         # The properties section print the molecular dipole moment:
         #
         #  ==> Properties <==
         #
         #
-        #Properties computed using the SCF density density matrix
+        # Properties computed using the SCF density density matrix
         #  Nuclear Dipole Moment: (a.u.)
         #     X:     0.0000      Y:     0.0000      Z:     0.0000
         #
@@ -815,21 +842,25 @@ class Psi4(logfileparser.Logfile):
         if (self.section == "Properties") and line.strip() == "Dipole Moment: (a.u.)":
 
             line = next(inputfile)
-            dipole = numpy.array([float(line.split()[1]), float(line.split()[3]), float(line.split()[5])])
+            dipole = numpy.array(
+                [float(line.split()[1]), float(line.split()[3]), float(line.split()[5])]
+            )
             dipole = utils.convertor(dipole, "ebohr", "Debye")
 
-            if not hasattr(self, 'moments'):
+            if not hasattr(self, "moments"):
                 # Old versions of Psi4 don't print the origin; assume
                 # it's at zero.
-                if not hasattr(self, 'origin'):
+                if not hasattr(self, "origin"):
                     self.origin = numpy.array([0.0, 0.0, 0.0])
                 self.moments = [self.origin, dipole]
             else:
                 try:
                     assert numpy.all(self.moments[1] == dipole)
                 except AssertionError:
-                    self.logger.warning('Overwriting previous multipole moments with new values')
-                    self.logger.warning('This could be from post-HF properties or geometry optimization')
+                    self.logger.warning("Overwriting previous multipole moments with new values")
+                    self.logger.warning(
+                        "This could be from post-HF properties or geometry optimization"
+                    )
                     self.moments = [self.origin, dipole]
 
         # Higher multipole moments are printed separately, on demand, in lexicographical order.
@@ -852,7 +883,7 @@ class Psi4(logfileparser.Logfile):
         #
         if line.strip() == "Multipole Moments:":
 
-            self.skip_lines(inputfile, ['b', 'd', 'header', 'd', 'b'])
+            self.skip_lines(inputfile, ["b", "d", "header", "d", "b"])
 
             # The reference used here should have been printed somewhere
             # before the properties and parsed above.
@@ -861,7 +892,7 @@ class Psi4(logfileparser.Logfile):
             line = next(inputfile)
             while "----------" not in line.strip():
 
-                rank = int(line.split()[2].strip('.'))
+                rank = int(line.split()[2].strip("."))
 
                 multipole = []
                 line = next(inputfile)
@@ -869,9 +900,7 @@ class Psi4(logfileparser.Logfile):
 
                     value = float(line.split()[-1])
                     fromunits = f"ebohr{(rank > 1) * f'{int(rank)}'}"
-                    tounits = (
-                        f"Debye{(rank > 1) * '.ang'}{(rank > 2) * f'{int(rank - 1)}'}"
-                    )
+                    tounits = f"Debye{(rank > 1) * '.ang'}{(rank > 2) * f'{int(rank - 1)}'}"
                     value = utils.convertor(value, fromunits, tounits)
                     multipole.append(value)
 
@@ -881,7 +910,7 @@ class Psi4(logfileparser.Logfile):
                 moments.append(multipole)
                 line = next(inputfile)
 
-            if not hasattr(self, 'moments'):
+            if not hasattr(self, "moments"):
                 self.moments = moments
             else:
                 for im, m in enumerate(moments):
@@ -919,7 +948,7 @@ class Psi4(logfileparser.Logfile):
             ][0]
             gradient = self.parse_gradient(inputfile, gradient_skip_lines)
 
-            if not hasattr(self, 'grads'):
+            if not hasattr(self, "grads"):
                 self.grads = []
             self.grads.append(gradient)
 
@@ -943,17 +972,17 @@ class Psi4(logfileparser.Logfile):
         #                         (cm-1)
         #       -----------------------------------------------
         #            Au          137.2883
-        if line.strip() == 'Irrep      Harmonic Frequency':
+        if line.strip() == "Irrep      Harmonic Frequency":
 
             vibsyms = []
             vibfreqs = []
 
-            self.skip_lines(inputfile, ['(cm-1)', 'dashes'])
+            self.skip_lines(inputfile, ["(cm-1)", "dashes"])
 
             ## The first section contains the symmetry of each normal
             ## mode and its frequency.
             line = next(inputfile)
-            while '---' not in line:
+            while "---" not in line:
                 chomp = line.split()
                 vibsym = chomp[0]
                 vibfreq = Psi4.parse_vibfreq(chomp[1])
@@ -961,21 +990,21 @@ class Psi4(logfileparser.Logfile):
                 vibfreqs.append(vibfreq)
                 line = next(inputfile)
 
-            self.set_attribute('vibsyms', vibsyms)
-            self.set_attribute('vibfreqs', vibfreqs)
+            self.set_attribute("vibsyms", vibsyms)
+            self.set_attribute("vibfreqs", vibfreqs)
 
             line = next(inputfile)
-            assert line.strip() == ''
+            assert line.strip() == ""
             line = next(inputfile)
-            assert 'Normal Modes' in line
+            assert "Normal Modes" in line
             line = next(inputfile)
-            assert 'Molecular mass is' in line
-            if hasattr(self, 'atommasses'):
+            assert "Molecular mass is" in line
+            if hasattr(self, "atommasses"):
                 assert abs(float(line.split()[3]) - sum(self.atommasses)) < 1.0e-4
             line = next(inputfile)
-            assert line.strip() == 'Frequencies in cm^-1; force constants in au.'
+            assert line.strip() == "Frequencies in cm^-1; force constants in au."
             line = next(inputfile)
-            assert line.strip() == ''
+            assert line.strip() == ""
             line = next(inputfile)
 
             ## The second section contains the frequency, force
@@ -995,16 +1024,16 @@ class Psi4(logfileparser.Logfile):
                 _vibfreq = Psi4.parse_vibfreq(line[13:].strip())
                 assert abs(vibfreq - _vibfreq) < 1.0e-2
                 line = next(inputfile)
-                assert 'Force constant:' in line
+                assert "Force constant:" in line
                 if not hasattr(self, "vibfconsts"):
                     self.vibfconsts = []
                 self.vibfconsts.append(
                     utils.convertor(float(line.split()[2]), "hartree/bohr2", "mDyne/angstrom")
                 )
                 line = next(inputfile)
-                assert 'X       Y       Z           mass' in line
+                assert "X       Y       Z           mass" in line
                 line = next(inputfile)
-                if not hasattr(self, 'vibdisps'):
+                if not hasattr(self, "vibdisps"):
                     self.vibdisps = []
                 normal_mode_disps = []
                 # for k in range(self.natom):
@@ -1030,7 +1059,7 @@ class Psi4(logfileparser.Logfile):
         #   Vibration                       10                  11                  12
         #   ...
 
-        if line.strip() == '==> Harmonic Vibrational Analysis <==':
+        if line.strip() == "==> Harmonic Vibrational Analysis <==":
 
             vibsyms = []
             vibfreqs = []
@@ -1039,15 +1068,17 @@ class Psi4(logfileparser.Logfile):
             vibfconsts = []
 
             # Skip lines till the first Vibration block
-            while not line.strip().startswith('Vibration'):
+            while not line.strip().startswith("Vibration"):
                 line = next(inputfile)
 
             n_modes = 0
             # Parse all the Vibration blocks
-            while line.strip().startswith('Vibration'):
+            while line.strip().startswith("Vibration"):
                 n = len(line.split()) - 1
                 n_modes += n
-                vibfreqs_, vibsyms_, vibdisps_, vibrmasses_, vibfconsts_ = self.parse_vibration(n, inputfile)
+                vibfreqs_, vibsyms_, vibdisps_, vibrmasses_, vibfconsts_ = self.parse_vibration(
+                    n, inputfile
+                )
                 vibfreqs.extend(vibfreqs_)
                 vibsyms.extend(vibsyms_)
                 vibdisps.extend(vibdisps_)
@@ -1055,27 +1086,29 @@ class Psi4(logfileparser.Logfile):
                 vibfconsts.extend(vibfconsts_)
                 line = next(inputfile)
 
-            # It looks like the symmetry of the normal mode may be missing 
+            # It looks like the symmetry of the normal mode may be missing
             # from some / most. Only include them if they are there for all
 
             if len(vibfreqs) == n_modes:
-                self.set_attribute('vibfreqs', vibfreqs)
+                self.set_attribute("vibfreqs", vibfreqs)
 
             if len(vibsyms) == n_modes:
-                self.set_attribute('vibsyms', vibsyms)
+                self.set_attribute("vibsyms", vibsyms)
 
             if len(vibdisps) == n_modes:
-                self.set_attribute('vibdisps', vibdisps)
+                self.set_attribute("vibdisps", vibdisps)
 
             if len(vibdisps) == n_modes:
-                self.set_attribute('vibrmasses', vibrmasses)
+                self.set_attribute("vibrmasses", vibrmasses)
 
             if len(vibdisps) == n_modes:
-                self.set_attribute('vibfconsts', vibfconsts)
+                self.set_attribute("vibfconsts", vibfconsts)
 
         # Second one is 1.0, first one is 1.2 and newer
-        if (self.section == "Thermochemistry Energy Analysis" and "Thermochemistry Energy Analysis" in line) \
-           or (self.section == "Energy Analysis" and "Energy Analysis" in line):
+        if (
+            self.section == "Thermochemistry Energy Analysis"
+            and "Thermochemistry Energy Analysis" in line
+        ) or (self.section == "Energy Analysis" and "Energy Analysis" in line):
 
             self.skip_lines(
                 inputfile,
@@ -1087,8 +1120,8 @@ class Psi4(logfileparser.Logfile):
                     "Zero-point energy, ZPE_vib = Sum_i nu_i / 2",
                     "Electronic ZPE",
                     "Translational ZPE",
-                    "Rotational ZPE"
-                ]
+                    "Rotational ZPE",
+                ],
             )
             line = next(inputfile)
             assert "Vibrational ZPE" in line
@@ -1099,8 +1132,8 @@ class Psi4(logfileparser.Logfile):
         # performed. Orbitals, geometries, energies, etc. for these shouln't be
         # included in the parsed data.
 
-        if line.strip().startswith('Using finite-differences of gradients'):
-            self.set_attribute('finite_difference', True)
+        if line.strip().startswith("Using finite-differences of gradients"):
+            self.set_attribute("finite_difference", True)
 
         # This is the result of calling `print_variables()` and contains all
         # current inner variables known to Psi4.
@@ -1116,9 +1149,11 @@ class Psi4(logfileparser.Logfile):
                     self.metadata["t1_diagnostic"] = value
                 line = next(inputfile)
 
-        if line[:54] == '*** Psi4 exiting successfully. Buy a developer a beer!'\
-                or line[:54] == '*** PSI4 exiting successfully. Buy a developer a beer!':
-            self.metadata['success'] = True
+        if (
+            line[:54] == "*** Psi4 exiting successfully. Buy a developer a beer!"
+            or line[:54] == "*** PSI4 exiting successfully. Buy a developer a beer!"
+        ):
+            self.metadata["success"] = True
 
     def _parse_mosyms_moenergies(self, inputfile, spinidx):
         """Parse molecular orbital symmetries and energies from the
@@ -1127,8 +1162,8 @@ class Psi4(logfileparser.Logfile):
         line = next(inputfile)
         while line.strip():
             for i in range(len(line.split()) // 2):
-                self.mosyms[spinidx].append(line.split()[i*2][-2:])
-                moenergy = utils.convertor(float(line.split()[i*2+1]), "hartree", "eV")
+                self.mosyms[spinidx].append(line.split()[i * 2][-2:])
+                moenergy = utils.convertor(float(line.split()[i * 2 + 1]), "hartree", "eV")
                 self.moenergies[spinidx].append(moenergy)
             line = next(inputfile)
         return
@@ -1165,39 +1200,39 @@ class Psi4(logfileparser.Logfile):
         #       5   H                0.02 -0.33 -0.39    0.01  0.13  0.31    0.60  0.01  0.01
 
         line = next(inputfile)
-        assert 'Freq' in line
+        assert "Freq" in line
         chomp = line.split()
         vibfreqs = [Psi4.parse_vibfreq(x) for x in chomp[-n:]]
 
         line = next(inputfile)
-        assert 'Irrep' in line
+        assert "Irrep" in line
         chomp = line.split()
         vibsyms = [irrep for irrep in chomp[1:]]
 
         line = next(inputfile)
-        assert 'Reduced mass' in line
+        assert "Reduced mass" in line
         chomp = line.split()
         vibrmasses = [utils.float(x) for x in chomp[3:]]
 
         line = next(inputfile)
-        assert 'Force const' in line
+        assert "Force const" in line
         chomp = line.split()
         vibfconsts = [utils.float(x) for x in chomp[3:]]
 
         line = next(inputfile)
-        assert 'Turning point' in line
+        assert "Turning point" in line
 
         line = next(inputfile)
-        assert 'RMS dev' in line
+        assert "RMS dev" in line
 
         line = next(inputfile)
-        assert 'Char temp' in line
+        assert "Char temp" in line
 
         line = next(inputfile)
-        assert '---' in line
+        assert "---" in line
 
         line = next(inputfile)
-        vibdisps = [ [] for i in range(n)]
+        vibdisps = [[] for i in range(n)]
         while len(line.strip()) > 0:
             chomp = line.split()
             for i in range(n):
@@ -1215,7 +1250,7 @@ class Psi4(logfileparser.Logfile):
         """Imaginary frequencies are printed as '12.34i', rather than
         '-12.34'.
         """
-        is_imag = vibfreq[-1] == 'i'
+        is_imag = vibfreq[-1] == "i"
         if is_imag:
             return -float(vibfreq[:-1])
         else:

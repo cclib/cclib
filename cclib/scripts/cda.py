@@ -54,7 +54,6 @@ def main():
 
                 if i == data1.homos[spin]:
                     print("------ HOMO - LUMO gap ------")
-                    
 
             print("-------------------------------------")
             print(
@@ -62,5 +61,5 @@ def main():
             )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

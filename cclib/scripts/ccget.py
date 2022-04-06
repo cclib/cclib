@@ -38,40 +38,47 @@ def ccget():
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
-        "attribute_or_compchemlogfile", nargs="+",
+        "attribute_or_compchemlogfile",
+        nargs="+",
         help="one or more attributes to be parsed from one ore more logfiles",
     )
 
     group = parser.add_mutually_exclusive_group()
 
     group.add_argument(
-        "--list", "-l",
+        "--list",
+        "-l",
         action="store_true",
         help="print a list of attributes available in each file",
     )
     group.add_argument(
-        "--json", "-j",
+        "--json",
+        "-j",
         action="store_true",
         help="the given logfile is in CJSON format",
     )
     group.add_argument(
-        "--multi", "-m",
+        "--multi",
+        "-m",
         action="store_true",
         help="parse multiple input files as one input stream",
     )
 
     parser.add_argument(
-        "--verbose", "-v",
+        "--verbose",
+        "-v",
         action="store_true",
         help="more verbose parsing output (only errors by default)",
     )
     parser.add_argument(
-        "--future", "-u",
+        "--future",
+        "-u",
         action="store_true",
         help="use experimental features (currently optdone_as_list)",
     )
     parser.add_argument(
-        "--full", "-f",
+        "--full",
+        "-f",
         action="store_true",
         help="toggle full print behaviour for attributes",
     )
@@ -164,15 +171,15 @@ def ccget():
         # triggering experimental or alternative behavior (as with optdone).
         kwargs = {}
         if verbose:
-            kwargs['verbose'] = True
-            kwargs['loglevel'] = logging.INFO
+            kwargs["verbose"] = True
+            kwargs["loglevel"] = logging.INFO
         else:
-            kwargs['verbose'] = False
-            kwargs['loglevel'] = logging.ERROR
+            kwargs["verbose"] = False
+            kwargs["loglevel"] = logging.ERROR
         if future:
-            kwargs['future'] = True
+            kwargs["future"] = True
         if cjsonfile:
-            kwargs['cjson'] = True
+            kwargs["cjson"] = True
 
         print(f"Attempting to read {name}")
         data = ccread(filename, **kwargs)

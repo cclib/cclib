@@ -10,7 +10,7 @@
 import sys
 import unittest
 
-sys.path.insert(1, 'io')
+sys.path.insert(1, "io")
 
 from .io.testccio import *
 from .io.testcjsonreader import *

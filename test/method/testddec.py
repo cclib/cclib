@@ -90,7 +90,7 @@ class DDEC6Test(unittest.TestCase):
     def test_water_charges(self):
         """Are charges and quantities in each step of DDEC6 algorithm calculated correctly
         for water?
-        
+
         Here, values are compared against `chargemol` calculations.
         Due to the differences in basis set used for calculation and slightly different integration
         grid, some discrepancy is inevitable in the comparison.
@@ -168,10 +168,10 @@ class DDEC6Test(unittest.TestCase):
         assert_allclose(analysis.fragcharges, [-0.757097, 0.378410, 0.378687], atol=0.2)
 
     def test_chgsum_h2(self):
-        """ Are DDEC6 charges for hydrogen atoms in nonpolar H2 small as expected?
-        
-            Using much denser grid (spacing of 0.1 rather than 0.2 which is the cube file included
-            in the test) gives [0.00046066, 0.00046066]. 
+        """Are DDEC6 charges for hydrogen atoms in nonpolar H2 small as expected?
+
+        Using much denser grid (spacing of 0.1 rather than 0.2 which is the cube file included
+        in the test) gives [0.00046066, 0.00046066].
         """
 
         self.parse("h2")
@@ -182,12 +182,12 @@ class DDEC6Test(unittest.TestCase):
         self.assertAlmostEqual(analysis.fragcharges[0], analysis.fragcharges[1], delta=1e-12)
 
     def test_chgsum_co(self):
-        """ Are DDEC6 charges for carbon monoxide reported as expected?
-        
-            Deviation from a total of zero (-0.00682) occurs because the integrated value of total
-            density (14.006876594937234) is slightly larger than # of electrons.
-            
-            Using a finer grid reduces this discrepancy.
+        """Are DDEC6 charges for carbon monoxide reported as expected?
+
+        Deviation from a total of zero (-0.00682) occurs because the integrated value of total
+        density (14.006876594937234) is slightly larger than # of electrons.
+
+        Using a finer grid reduces this discrepancy.
         """
 
         self.parse("co")
@@ -201,12 +201,12 @@ class DDEC6Test(unittest.TestCase):
         assert_allclose(analysis.fragcharges, [0.13221636, -0.13903595], atol=1e-3)
 
     def test_chg_nh3(self):
-        """ Are DDEC6 charges for ammonia reported as expected?
-        
-            Deviation from a total of zero (0.026545) occurs because the integrated value of total
-            density (9.973453129261163) is slightly smaller than number of electrons.
-            
-            Using a finer grid reduces this discrepancy.
+        """Are DDEC6 charges for ammonia reported as expected?
+
+        Deviation from a total of zero (0.026545) occurs because the integrated value of total
+        density (9.973453129261163) is slightly smaller than number of electrons.
+
+        Using a finer grid reduces this discrepancy.
         """
 
         self.parse("nh3")

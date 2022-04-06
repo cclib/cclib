@@ -38,23 +38,23 @@ class GenericRelaxedScanTest_optdone_bool(GenericScanTestBase):
 
     datatype = cclib.parser.data.ccData_optdone_bool
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
+    @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     def testoptdone(self):
         """Is the optimization finished?"""
         self.assertIsInstance(self.data.optdone, bool)
         self.assertEqual(self.data.optdone, True)
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
+    @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     def testindices(self):
         """Do the indices match the results from geovalues."""
         assert self.data.optdone and numpy.all(self.data.geovalues[-1] <= self.data.geotargets)
 
     @skipForParser("Jaguar", "Not implemented")
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("ORCA", "Not implemented")
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     def testoptstatus(self):
         """Does optstatus contain expected values?"""
 
@@ -63,12 +63,13 @@ class GenericRelaxedScanTest_optdone_bool(GenericScanTestBase):
         self.assertOptDone(self.data.optstatus[0])
         self.assertOptDone(self.data.optstatus[-1])
 
+
 class GenericUnrelaxedScanTest(GenericScanTestBase):
     """Generic unrelaxed potential energy surface scan unittest."""
 
     # extra indices
     extra = 0
-    
+
     @skipForParser("Jaguar", "Not implemented")
     def testscannames(self):
         self.assertIsInstance(self.data.scannames, list)
@@ -77,7 +78,7 @@ class GenericUnrelaxedScanTest(GenericScanTestBase):
     @skipForParser("Jaguar", "Not implemented")
     def testscanenergies(self):
         self.assertIsInstance(self.data.scanenergies, list)
-        
+
         # This checks the order of magnitude, and unit conversion if nothing else.
         numpy.testing.assert_array_less(numpy.array(self.data.scanenergies), -10000)
 
@@ -97,17 +98,17 @@ class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
 
     # extra indices
     extra = 0
-    
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+
+    @skipForParser("Molcas", "The parser is still being developed so we skip this test")
+    @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     def testnumindices(self):
         """Do the number of indices match number of scan points."""
         self.assertEqual(len(self.data.optdone), 12 + self.extra)
 
-    @skipForParser("Jaguar", "Does not work as expected")    
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser("Jaguar", "Does not work as expected")
+    @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("ORCA", "Does not work as expected")
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     def testindices(self):
         """Do the indices match the results from geovalues."""
         indexes = self.data.optdone
@@ -117,9 +118,9 @@ class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
         numpy.testing.assert_array_equal(geovalues, geovalues_from_index)
 
     @skipForParser("Jaguar", "Not implemented")
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("ORCA", "Not implemented")
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     def testoptstatus(self):
         """Does optstatus contain expected values?"""
         OPT_NEW = self.data.OPT_NEW
@@ -131,7 +132,7 @@ class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
         for idone in self.data.optdone:
             self.assertOptDone(self.data.optstatus[idone])
             if idone != len(self.data.optstatus) - 1:
-                self.assertOptNew(self.data.optstatus[idone+1])
+                self.assertOptNew(self.data.optstatus[idone + 1])
 
     @skipForParser("Jaguar", "Not implemented")
     def testscannames(self):
@@ -141,7 +142,7 @@ class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
     @skipForParser("ORCA", "Not implemented")
     def testscanenergies(self):
         self.assertIsInstance(self.data.scanenergies, list)
-        
+
         # This checks the order of magnitude, and unit conversion if nothing else.
         numpy.testing.assert_array_less(numpy.array(self.data.scanenergies), -10000)
 
@@ -158,28 +159,35 @@ class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
 
 class GaussianUnrelaxedScanTest(GenericUnrelaxedScanTest):
     """Customized unrelaxed potential energy surface scan unittest"""
+
     extra = 1
+
 
 class GaussianRelaxedScanTest(GenericRelaxedScanTest):
     """Customized relaxed potential energy surface scan unittest"""
+
     extra = 1
 
 
 class JaguarRelaxedScanTest(GenericRelaxedScanTest):
     """Customized relaxed potential energy surface scan unittest"""
+
     extra = 1
 
 
 class OrcaRelaxedScanTest(GenericRelaxedScanTest):
     """Customized relaxed potential energy surface scan unittest"""
+
     extra = 1
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
 
     import sys
+
     sys.path.insert(1, os.path.join(__filedir__, ".."))
 
     from test_data import DataSuite
-    suite = DataSuite(['Scan'])
+
+    suite = DataSuite(["Scan"])
     suite.testall()

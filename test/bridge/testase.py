@@ -16,8 +16,8 @@ from cclib.bridge import cclib2ase
 from cclib.parser.utils import find_package
 
 
-if not find_package('ase'):
-    raise ImportError('Must install ase to run this test')
+if not find_package("ase"):
+    raise ImportError("Must install ase to run this test")
 
 from ase import Atoms
 from ase.calculators.emt import EMT
@@ -78,12 +78,8 @@ class ASETest(unittest.TestCase):
         ase_data = cclib2ase.makecclib(dvb_sp_un)
         assert np.allclose(ase_data.atomcoords, [data.atomcoords[-1]])
         assert np.allclose(ase_data.atomnos, data.atomnos)
-        assert np.allclose(
-            ase_data.atomcharges["mulliken"], data.atomcharges["mulliken"]
-        )
-        assert np.allclose(
-            ase_data.atomspins["mulliken"], data.atomspins["mulliken"]
-        )
+        assert np.allclose(ase_data.atomcharges["mulliken"], data.atomcharges["mulliken"])
+        assert np.allclose(ase_data.atomspins["mulliken"], data.atomspins["mulliken"])
         assert np.allclose(ase_data.atommasses, data.atommasses)
         assert np.isclose(ase_data.charge, data.charge)
         assert np.isclose(ase_data.mult, data.mult)
@@ -98,12 +94,8 @@ class ASETest(unittest.TestCase):
         assert np.allclose(ase_data.atomcoords, [data.atomcoords[-1]])
         assert np.allclose(ase_data.atomnos, data.atomnos)
         assert np.allclose(ase_data.atommasses, data.atommasses)
-        assert np.allclose(
-            ase_data.atomcharges["mulliken"], data.atomcharges["mulliken"]
-        )
-        assert np.allclose(
-            ase_data.atomspins["mulliken"], data.atomspins["mulliken"]
-        )
+        assert np.allclose(ase_data.atomcharges["mulliken"], data.atomcharges["mulliken"])
+        assert np.allclose(ase_data.atomspins["mulliken"], data.atomspins["mulliken"])
         assert np.isclose(ase_data.charge, data.charge)
         assert np.isclose(ase_data.mult, data.mult)
         assert np.isclose(ase_data.natom, len(data.atomnos))
@@ -129,9 +121,7 @@ class ASETest(unittest.TestCase):
         ase_data = cclib2ase.makecclib(dvb_ir)
         assert np.allclose(ase_data.atomcoords, [data.atomcoords[-1]])
         assert np.allclose(ase_data.atomnos, data.atomnos)
-        assert np.allclose(
-            ase_data.atomcharges["mulliken"], data.atomcharges["mulliken"]
-        )
+        assert np.allclose(ase_data.atomcharges["mulliken"], data.atomcharges["mulliken"])
         assert np.allclose(ase_data.atomspins["mulliken"], 0)
         assert np.allclose(ase_data.atommasses, data.atommasses)
         assert np.isclose(ase_data.charge, data.charge, atol=1e-5)
@@ -160,12 +150,8 @@ class ASETest(unittest.TestCase):
         # No temperature here.
         # No freeenergy here.
 
-        assert np.allclose(
-            trajdata.atomcharges["mulliken"], data.atomcharges["mulliken"]
-        )
-        assert np.allclose(
-            trajdata.atomspins["mulliken"], data.atomspins["mulliken"]
-        )
+        assert np.allclose(trajdata.atomcharges["mulliken"], data.atomcharges["mulliken"])
+        assert np.allclose(trajdata.atomspins["mulliken"], data.atomspins["mulliken"])
 
         # A closed-shell single structure frequency calculation.
         data = ccopen("data/ORCA/basicORCA4.2/dvb_ir.out").parse()
@@ -186,9 +172,7 @@ class ASETest(unittest.TestCase):
         # No temperature here.
         # No freeenergy here.
 
-        assert np.allclose(
-            trajdata.atomcharges["mulliken"], data.atomcharges["mulliken"]
-        )
+        assert np.allclose(trajdata.atomcharges["mulliken"], data.atomcharges["mulliken"])
         # No atomspins here.
 
     def test_write_and_read_opt_trajectories(self):
@@ -212,9 +196,7 @@ class ASETest(unittest.TestCase):
         # No temperature here.
         # No freeenergy here.
 
-        assert np.allclose(
-            trajdata.atomcharges["mulliken"], data.atomcharges["mulliken"]
-        )
+        assert np.allclose(trajdata.atomcharges["mulliken"], data.atomcharges["mulliken"])
         # No atomspins here.
 
     def test_read_ase_native_trajectory(self):

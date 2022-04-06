@@ -10,7 +10,7 @@
 import os.path
 import math
 import decimal
-import numpy 
+import numpy
 
 from cclib.parser import utils
 from cclib.io import filewriter
@@ -19,22 +19,22 @@ from cclib.io import filewriter
 def round_molden(num, p=6):
     """Molden style number rounding in [Atoms] section."""
     # Digit at pth position after dot.
-    p_digit = math.floor(abs(num) * 10 ** p) % 10
+    p_digit = math.floor(abs(num) * 10**p) % 10
     # If the 6th digit after dot is greater than 5, but is not 7,
     # round the number upto 6th place.
     # Else truncate at 6th digit after dot.
     if p_digit > 5 and p_digit != 7:
         return round(num, p)
     if num >= 0:
-        return math.floor(num * 10 ** p) / 10 ** p
+        return math.floor(num * 10**p) / 10**p
     else:
-        return math.ceil(num * 10 ** p) / 10 ** p
+        return math.ceil(num * 10**p) / 10**p
 
 
 class MOLDEN(filewriter.Writer):
     """A writer for MOLDEN files."""
 
-    required_attrs = ('atomcoords', 'atomnos', 'natom')
+    required_attrs = ("atomcoords", "atomnos", "natom")
 
     def _title(self, path):
         """Return filename without extension to be used as title."""
@@ -57,8 +57,7 @@ class MOLDEN(filewriter.Writer):
         # element_name number atomic_number x y z
         atom_template = "{:2s} {:5d} {:2d} {:12.6f} {:12.6f} {:12.6f}"
         lines = []
-        for element, no, atomno, coord in zip(elements, nos, atomnos,
-                                              atomcoords):
+        for element, no, atomno, coord in zip(elements, nos, atomnos, atomcoords):
             x, y, z = map(round_molden, coord)
             lines.append(atom_template.format(element, no + 1, atomno, x, y, z))
 
@@ -83,12 +82,11 @@ class MOLDEN(filewriter.Writer):
         for no, basis in enumerate(gbasis):
             lines.append(f"{no + 1:3d} 0")
             for prims in basis:
-                lines.append(label_template.format(prims[0].lower(),
-                                                   len(prims[1])))
+                lines.append(label_template.format(prims[0].lower(), len(prims[1])))
                 for prim in prims[1]:
                     lines.append(basis_template.format(prim[0], prim[1]))
-            lines.append('')
-        lines.append('')
+            lines.append("")
+        lines.append("")
         return lines
 
     def _scfconv_from_ccdata(self):
@@ -122,18 +120,17 @@ class MOLDEN(filewriter.Writer):
         aonames = self.ccdata.aonames
         mocoeffs = mocoeffs.tolist()
 
-        pos_yyx = [key for key, val in enumerate(aonames) if '_YYX' in val]
-        pos_yyz = [key for key, val in enumerate(aonames) if '_YYZ' in val]
+        pos_yyx = [key for key, val in enumerate(aonames) if "_YYX" in val]
+        pos_yyz = [key for key, val in enumerate(aonames) if "_YYZ" in val]
 
         if pos_yyx:
             for pos in pos_yyx:
-                mocoeffs.insert(pos-2, mocoeffs.pop(pos))
+                mocoeffs.insert(pos - 2, mocoeffs.pop(pos))
         if pos_yyz:
             for pos in pos_yyz:
-                mocoeffs.insert(pos+2, mocoeffs.pop(pos))
+                mocoeffs.insert(pos + 2, mocoeffs.pop(pos))
 
         return mocoeffs
-
 
     def _mo_from_ccdata(self):
         """Create [MO] section.
@@ -157,15 +154,15 @@ class MOLDEN(filewriter.Writer):
         lines = []
 
         # Sym attribute is optional in [MO] section.
-        if hasattr(self.ccdata, 'mosyms'):
+        if hasattr(self.ccdata, "mosyms"):
             has_syms = True
             syms = self.ccdata.mosyms
         else:
-            syms = numpy.full_like(moenergies, 'A', dtype=str)
+            syms = numpy.full_like(moenergies, "A", dtype=str)
         unres = len(moenergies) > 1
         openshell = len(homos) > 1
 
-        spin = 'Alpha'
+        spin = "Alpha"
         for i in range(len(moenergies)):
             for j in range(len(moenergies[i])):
                 lines.append(f" Sym= {syms[i][j]}")
@@ -193,18 +190,18 @@ class MOLDEN(filewriter.Writer):
                 for k, mocoeff in enumerate(mocoeffs[i][j]):
                     lines.append(f"{k + 1:4d}  {mocoeff:10.6f}")
 
-            spin = 'Beta'
+            spin = "Beta"
 
         return lines
 
     def generate_repr(self):
         """Generate the MOLDEN representation of the logfile data."""
 
-        molden_lines = ['[Molden Format]']
+        molden_lines = ["[Molden Format]"]
 
         # Title of file.
         if self.jobfilename is not None:
-            molden_lines.append('[Title]')
+            molden_lines.append("[Title]")
             molden_lines.append(self._title(self.jobfilename))
 
         # Coordinates for the Electron Density/Molecular orbitals.
@@ -216,13 +213,16 @@ class MOLDEN(filewriter.Writer):
         molden_lines.extend(self._coords_from_ccdata(index))
 
         # Either both [GTO] and [MO] should be present or none of them.
-        if hasattr(self.ccdata, 'gbasis') and hasattr(self.ccdata, 'mocoeffs')\
-                and hasattr(self.ccdata, 'moenergies'):
+        if (
+            hasattr(self.ccdata, "gbasis")
+            and hasattr(self.ccdata, "mocoeffs")
+            and hasattr(self.ccdata, "moenergies")
+        ):
 
-            molden_lines.append('[GTO]')
+            molden_lines.append("[GTO]")
             molden_lines.extend(self._gto_from_ccdata())
 
-            molden_lines.append('[MO]')
+            molden_lines.append("[MO]")
             molden_lines.extend(self._mo_from_ccdata())
 
         # Omitting until issue #390 is resolved.
@@ -234,7 +234,7 @@ class MOLDEN(filewriter.Writer):
 
         # molden_lines.append('')
 
-        return '\n'.join(molden_lines)
+        return "\n".join(molden_lines)
 
 
 class MoldenReformatter:
@@ -259,49 +259,45 @@ class MoldenReformatter:
         lines = []
 
         for line in filelines:
-            line = line.replace('\n', '')
+            line = line.replace("\n", "")
             # Replace multiple spaces with single spaces.
-            line = ' '.join(line.split())
+            line = " ".join(line.split())
 
             # Check for [Title] section.
-            if '[title]' in line.lower():
+            if "[title]" in line.lower():
                 # skip the title
                 line = next(filelines)
                 line = next(filelines)
 
             # Exclude SCFCONV section until issue #390 is resolved.
             # https://github.com/cclib/cclib/issues/390
-            if '[scfconv]' in line.lower():
+            if "[scfconv]" in line.lower():
                 break
 
             # Although Molden format specifies Sym in [MO] section,
             # the Molden program does not print it.
-            if 'sym' in line.lower():
+            if "sym" in line.lower():
                 continue
 
             # Convert D notation to scientific notation.
-            if 'D' in line:
+            if "D" in line:
                 vals = line.split()
                 vals = [self.scinotation(i) for i in vals]
-                lines.append(' '.join(vals))
+                lines.append(" ".join(vals))
 
             # Convert sp to s and p orbitals.
-            elif 'sp' in line:
+            elif "sp" in line:
                 n_prim = int(line.split()[1])
                 new_s = [f"s {str(n_prim)} 1.00"]
                 new_p = [f"p {str(n_prim)} 1.00"]
                 while n_prim > 0:
                     n_prim -= 1
                     line = next(filelines).split()
-                    new_s.append(
-                        f"{self.scinotation(line[0])} {self.scinotation(line[1])}"
-                    )
-                    new_p.append(
-                        f"{self.scinotation(line[0])} {self.scinotation(line[2])}"
-                    )
+                    new_s.append(f"{self.scinotation(line[0])} {self.scinotation(line[1])}")
+                    new_p.append(f"{self.scinotation(line[0])} {self.scinotation(line[2])}")
                 lines.extend(new_s)
                 lines.extend(new_p)
             else:
                 lines.append(line)
 
-        return '\n'.join(lines)
+        return "\n".join(lines)

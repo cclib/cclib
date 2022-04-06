@@ -23,7 +23,6 @@ from ..test_data import getdatafile
 
 
 class MBOTest(unittest.TestCase):
-
     def test_mbo_sp(self):
         """Testing Mayer bond orders for restricted single point."""
 
@@ -48,6 +47,7 @@ class MBOTest(unittest.TestCase):
         bond_orders = mbo.fragresults[0] + mbo.fragresults[1]
         self.assertTrue(numpy.all(bond_orders >= e_mbo - 0.30))
         self.assertTrue(numpy.all(bond_orders <= e_mbo + 0.30))
+
 
 if __name__ == "__main__":
     unittest.TextTestRunner(verbosity=2).run(unittest.makeSuite(MBOTest))

@@ -66,7 +66,7 @@ class Nuclear(Method):
 
     def __init__(self, data, progress=None, loglevel=logging.INFO, logname="Log"):
         super().__init__(data, progress, loglevel, logname)
-        self.required_attrs = ('natom','atomcoords','atomnos','charge')
+        self.required_attrs = ("natom", "atomcoords", "atomnos", "charge")
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -84,16 +84,16 @@ class Nuclear(Method):
 
         formula = ""
         elcount = lambda el, c: f"{el}{int(c)}" if c > 1 else el
-        if 'C' in elements:
-            formula += elcount('C', counts['C'])
-            counts.pop('C')
-            if 'H' in elements:
-              formula += elcount('H', counts['H'])
-              counts.pop('H')
+        if "C" in elements:
+            formula += elcount("C", counts["C"])
+            counts.pop("C")
+            if "H" in elements:
+                formula += elcount("H", counts["H"])
+                counts.pop("H")
         for el, c in sorted(counts.items()):
             formula += elcount(el, c)
 
-        if getattr(self.data, 'charge', 0):
+        if getattr(self.data, "charge", 0):
             magnitude = abs(self.data.charge)
             sign = "+" if self.data.charge > 0 else "-"
             formula += f"({sign}{int(magnitude)})"
@@ -105,11 +105,11 @@ class Nuclear(Method):
         for i in range(self.data.natom):
             ri = self.data.atomcoords[atomcoords_index][i]
             zi = self.data.atomnos[i]
-            for j in range(i+1, self.data.natom):
+            for j in range(i + 1, self.data.natom):
                 rj = self.data.atomcoords[0][j]
                 zj = self.data.atomnos[j]
-                d = np.linalg.norm(ri-rj)
-                nre += zi*zj/d
+                d = np.linalg.norm(ri - rj)
+                nre += zi * zj / d
         return nre
 
     def center_of_mass(self, atomcoords_index=-1):
@@ -132,9 +132,9 @@ class Nuclear(Method):
 
         moi_tensor = np.empty((3, 3))
 
-        moi_tensor[0][0] = np.sum(masses * (coords[:, 1]**2 + coords[:, 2]**2))
-        moi_tensor[1][1] = np.sum(masses * (coords[:, 0]**2 + coords[:, 2]**2))
-        moi_tensor[2][2] = np.sum(masses * (coords[:, 0]**2 + coords[:, 1]**2))
+        moi_tensor[0][0] = np.sum(masses * (coords[:, 1] ** 2 + coords[:, 2] ** 2))
+        moi_tensor[1][1] = np.sum(masses * (coords[:, 0] ** 2 + coords[:, 2] ** 2))
+        moi_tensor[2][2] = np.sum(masses * (coords[:, 0] ** 2 + coords[:, 1] ** 2))
 
         moi_tensor[0][1] = np.sum(masses * coords[:, 0] * coords[:, 1])
         moi_tensor[0][2] = np.sum(masses * coords[:, 0] * coords[:, 2])
@@ -146,14 +146,14 @@ class Nuclear(Method):
 
         return moi_tensor
 
-    def principal_moments_of_inertia(self, units='amu_bohr_2'):
+    def principal_moments_of_inertia(self, units="amu_bohr_2"):
         """Return the principal moments of inertia in 3 kinds of units:
         1. [amu][bohr]^2
         2. [amu][angstrom]^2
         3. [g][cm]^2
         and the principal axes.
         """
-        choices = ('amu_bohr_2', 'amu_angstrom_2', 'g_cm_2')
+        choices = ("amu_bohr_2", "amu_angstrom_2", "g_cm_2")
         units = units.lower()
         if units not in choices:
             raise ValueError(f"Invalid units, pick one of {choices}")
@@ -162,7 +162,7 @@ class Nuclear(Method):
         if units == "amu_bohr_2":
             _check_scipy(_found_scipy)
             bohr2ang = scipy.constants.value("atomic unit of length") / scipy.constants.angstrom
-            conv = 1 / bohr2ang ** 2
+            conv = 1 / bohr2ang**2
         elif units == "amu_angstrom_2":
             conv = 1
         elif units == "g_cm_2":
@@ -171,21 +171,21 @@ class Nuclear(Method):
             conv = amu2g * (scipy.constants.angstrom / scipy.constants.centi) ** 2
         return conv * principal_moments, principal_axes
 
-    def rotational_constants(self, units='ghz'):
+    def rotational_constants(self, units="ghz"):
         """Compute the rotational constants in 1/cm or GHz."""
-        choices = ('invcm', 'ghz')
+        choices = ("invcm", "ghz")
         units = units.lower()
         if units not in choices:
             raise ValueError(f"Invalid units, pick one of {choices}")
         principal_moments = self.principal_moments_of_inertia("amu_angstrom_2")[0]
         _check_scipy(_found_scipy)
-        bohr2ang = scipy.constants.value('atomic unit of length') / scipy.constants.angstrom
-        xfamu = 1 / scipy.constants.value('electron mass in u')
-        xthz = scipy.constants.value('hartree-hertz relationship')
-        rotghz = xthz * (bohr2ang ** 2) / (2 * xfamu * scipy.constants.giga)
-        if units == 'ghz':
+        bohr2ang = scipy.constants.value("atomic unit of length") / scipy.constants.angstrom
+        xfamu = 1 / scipy.constants.value("electron mass in u")
+        xthz = scipy.constants.value("hartree-hertz relationship")
+        rotghz = xthz * (bohr2ang**2) / (2 * xfamu * scipy.constants.giga)
+        if units == "ghz":
             conv = rotghz
-        if units == 'invcm':
+        if units == "invcm":
             ghz2invcm = scipy.constants.giga * scipy.constants.centi / scipy.constants.c
             conv = rotghz * ghz2invcm
         return conv / principal_moments

@@ -10,24 +10,32 @@
 
 def skipForParser(parser, msg):
     """Return a decorator that skips the test for specified parser."""
+
     def testdecorator(testfunc):
         def testwrapper(self, *args, **kwargs):
             if self.logfile.logname == parser:
                 self.skipTest(msg)
             else:
                 testfunc(self, *args, **kwargs)
+
         return testwrapper
+
     return testdecorator
 
 
 def skipForLogfile(fragment, msg):
     """Return a decorator that skips the test for logfiles containing fragment."""
+
     def testdecorator(testfunc):
         def testwrapper(self, *args, **kwargs):
             # self.logfile.filename may be a string or list of strings.
-            if fragment in self.logfile.filename or any(fragment in filename for filename in self.logfile.filename):
+            if fragment in self.logfile.filename or any(
+                fragment in filename for filename in self.logfile.filename
+            ):
                 self.skipTest(msg)
             else:
                 testfunc(self, *args, **kwargs)
+
         return testwrapper
+
     return testdecorator

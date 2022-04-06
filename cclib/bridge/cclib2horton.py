@@ -26,7 +26,7 @@ def check_horton():
 
 
 def makehorton(data):
-    """ Create horton IOData object from ccData object """
+    """Create horton IOData object from ccData object"""
 
     check_horton()
     attributes = {}
@@ -72,10 +72,7 @@ def makehorton(data):
     # if multiplicity known; float / should not be set when mocoeffs present
     # Refer to IOData code:
     # https://github.com/theochem/iodata/blob/b36513d162f99b57264005583701c6987037839c/iodata/iodata.py#L174
-    if (
-        hasattr(data, "mult")
-        and not hasattr(data, "mocoeffs")
-    ):
+    if hasattr(data, "mult") and not hasattr(data, "mocoeffs"):
         attributes["spinpol"] = data.mult - 1  # horton has 2S+1, iodata has 2S
     # if pseudopotentials exist; numpy.ndarray (size natom)
     if hasattr(data, "coreelectrons"):
@@ -88,7 +85,7 @@ def makehorton(data):
 
 
 def makecclib(iodat):
-    """ Create cclib ccData object from horton IOData object """
+    """Create cclib ccData object from horton IOData object"""
 
     check_horton()
     attributes = {}
