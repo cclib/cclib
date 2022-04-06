@@ -172,8 +172,16 @@ class ORCA(logfileparser.Logfile):
                 # Geometry block
                 elif line[0] == '*':
                     coord_type, charge, multiplicity = line[1:].split()[:3]
-                    self.set_attribute('charge', int(charge))
-                    self.set_attribute('multiplicity', int(multiplicity))
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "charge",
+                        "value": int(charge),
+                    }
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "multiplicity",
+                        "value": int(multiplicity),
+                    }
                     coord_type = coord_type.lower()
                     self.metadata['coord_type'] = coord_type
                     if coord_type == 'xyz':
@@ -292,17 +300,29 @@ class ORCA(logfileparser.Logfile):
         if line[0:15] == "Number of atoms":
 
             natom = int(line.split()[-1])
-            self.set_attribute('natom', natom)
+            yield {
+                "kind": "set_attribute",
+                "name": "natom",
+                "value": natom,
+            }
 
         if line[1:13] == "Total Charge":
 
             charge = int(line.split()[-1])
-            self.set_attribute('charge', charge)
+            yield {
+                "kind": "set_attribute",
+                "name": "charge",
+                "value": charge,
+            }
 
             line = next(inputfile)
 
             mult = int(line.split()[-1])
-            self.set_attribute('mult', mult)
+            yield {
+                "kind": "set_attribute",
+                "name": "mult",
+                "value": mult,
+            }
 
         if line[1:18] == "Symmetry handling":
             self.uses_symmetry = True
@@ -731,8 +751,16 @@ Dispersion correction           -0.016199959
                     atomcoords.append([float(x), float(y), float(z)])
                 line = next(inputfile)
 
-            self.set_attribute('natom', len(atomnos))
-            self.set_attribute('atomnos', atomnos)
+            yield {
+                "kind": "set_attribute",
+                "name": "natom",
+                "value": len(atomnos),
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "atomnos",
+                "value": atomnos,
+            }
             self.append_attribute("atomcoords", atomcoords)
 
         """ Grab atom masses
@@ -818,27 +846,46 @@ Dispersion correction           -0.016199959
                 singly_occupied = self.mooccnos[0].count(1)
                 # Restricted closed-shell.
                 if doubly_occupied > 0 and singly_occupied == 0:
-                    self.set_attribute('homos', [doubly_occupied - 1])
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "homos",
+                        "value": [doubly_occupied - 1],
+                    }
                 # Restricted open-shell.
                 elif doubly_occupied > 0 and singly_occupied > 0:
-                    self.set_attribute('homos', [doubly_occupied + singly_occupied - 1,
-                                                 doubly_occupied - 1])
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "homos",
+                        "value": [doubly_occupied + singly_occupied - 1, doubly_occupied - 1],
+                    }
                 # Unrestricted.
                 else:
                     assert len(self.moenergies) == 2
                     assert doubly_occupied == 0
                     assert self.mooccnos[1].count(2) == 0
                     nbeta = self.mooccnos[1].count(1)
-                    self.set_attribute('homos', [singly_occupied - 1, nbeta - 1])
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "homos",
+                        "value": [singly_occupied - 1, nbeta - 1],
+                    }
 
         # So nbasis was parsed at first with the first pattern, but it turns out that
         # semiempirical methods (at least AM1 as reported by Julien Idé) do not use this.
         # For this reason, also check for the second patterns, and use it as an assert
         # if nbasis was already parsed. Regression PCB_1_122.out covers this test case.
         if line[1:32] == "# of contracted basis functions":
-            self.set_attribute('nbasis', int(line.split()[-1]))
+            yield {
+                "kind": "set_attribute",
+                "name": "nbasis",
+                "value": int(line.split()[-1]),
+            }
         if line[1:27] == "Basis Dimension        Dim":
-            self.set_attribute('nbasis', int(line.split()[-1]))
+            yield {
+                "kind": "set_attribute",
+                "name": "nbasis",
+                "value": int(line.split()[-1]),
+            }
 
         if line[0:14] == "OVERLAP MATRIX":
 
@@ -925,9 +972,21 @@ Dispersion correction           -0.016199959
 
                         mocoeffs[spin][i:i+len(coeffs), j] = [float(c) for c in coeffs]
 
-            self.set_attribute('aonames', aonames)
-            self.set_attribute('atombasis', atombasis)
-            self.set_attribute("mocoeffs", mocoeffs)
+            yield {
+                "kind": "set_attribute",
+                "name": "aonames",
+                "value": aonames,
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "atombasis",
+                "value": atombasis,
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "mocoeffs",
+                "value": mocoeffs,
+            }
 
         # Basis set information
         # ORCA prints this out in a somewhat indirect fashion.
@@ -1020,7 +1079,11 @@ Dispersion correction           -0.016199959
             while line[:17] != 'Electronic energy':
                 line = next(inputfile)
             self.electronic_energy = float(line.split()[3])
-            self.set_attribute("zpve", float(next(inputfile).split()[4]))
+            yield {
+                "kind": "set_attribute",
+                "name": "zpve",
+                "value": float(next(inputfile).split()[4]),
+            }
             thermal_vibrational_correction = float(next(inputfile).split()[4])
             thermal_rotional_correction = float(next(inputfile).split()[4])
             thermal_translational_correction = float(next(inputfile).split()[4])
@@ -1278,8 +1341,16 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
 
                 line = next(inputfile)
 
-            self.set_attribute('etenergies', etenergies)
-            self.set_attribute('etoscs', etoscs)
+            yield {
+                "kind": "set_attribute",
+                "name": "etenergies",
+                "value": etenergies,
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "etoscs",
+                "value": etoscs,
+            }
             self.transprop[name] = (numpy.asarray(etenergies), numpy.asarray(etoscs))
 
         if line.strip() == "CD SPECTRUM":
@@ -1317,11 +1388,20 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                     etenergies.append(utils.float(tokens[-6]))
                 etrotats.append(etrotat)
                 line = next(inputfile)
-            self.set_attribute("etrotats", etrotats)
+            yield {
+                "kind": "set_attribute",
+                "name": "etrotats",
+                "value": etrotats,
+            }
             if not hasattr(self, "etenergies"):
-                self.logger.warning("etenergies not parsed before ECD section, "
-                                    "the output file may be malformed")
-                self.set_attribute("etenergies", etenergies)
+                self.logger.warning(
+                    "etenergies not parsed before ECD section, " "the output file may be malformed"
+                )
+                yield {
+                    "kind": "set_attribute",
+                    "name": "etenergies",
+                    "value": etenergies,
+                }
 
         # ---------------
         # CHEMICAL SHIFTS
@@ -1395,7 +1475,11 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 isotropic.append(float(iso))
                 anisotropic.append(float(aniso))
 
-            self.set_attribute('nmrtensors', nmrtensors)
+            yield {
+                "kind": "set_attribute",
+                "name": "nmrtensors",
+                "value": nmrtensors,
+            }
 
         if line[:23] == "VIBRATIONAL FREQUENCIES":
 
@@ -1417,12 +1501,20 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 self.num_modes = 3*self.natom - self.first_mode
                 if self.num_modes > 3*self.natom - 6:
                     msg = "Modes corresponding to rotations/translations may be non-zero."
-                    if self.num_modes == 3*self.natom - 5:
-                        msg += '\n You can ignore this if the molecule is linear.'
-                self.set_attribute('vibfreqs', vibfreqs[self.first_mode:])
+                    if self.num_modes == 3 * self.natom - 5:
+                        msg += "\n You can ignore this if the molecule is linear."
+                yield {
+                    "kind": "set_attribute",
+                    "name": "vibfreqs",
+                    "value": vibfreqs[self.first_mode :],
+                }
             else:
                 # we have a single atom
-                self.set_attribute('vibfreqs', numpy.array([]))
+                yield {
+                    "kind": "set_attribute",
+                    "name": "vibfreqs",
+                    "value": numpy.array([]),
+                }
 
         # NORMAL MODES
         # ------------
@@ -1449,10 +1541,18 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                         all_vibdisps[mode:mode + 6, atom, 1] = next(inputfile).split()[1:]
                         all_vibdisps[mode:mode + 6, atom, 2] = next(inputfile).split()[1:]
 
-                self.set_attribute('vibdisps', all_vibdisps[self.first_mode:])
+                yield {
+                    "kind": "set_attribute",
+                    "name": "vibdisps",
+                    "value": all_vibdisps[self.first_mode :],
+                }
             else:
                 # we have a single atom
-                self.set_attribute('vibdisps', numpy.array([]))
+                yield {
+                    "kind": "set_attribute",
+                    "name": "vibdisps",
+                    "value": numpy.array([]),
+                }
 
         # ORCA 4 example
         # -----------
@@ -1502,10 +1602,18 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                     line = next(inputfile)
                     matches = re.match(regex, line)
 
-                self.set_attribute('vibirs', all_vibirs[self.first_mode:])
+                yield {
+                    "kind": "set_attribute",
+                    "name": "vibirs",
+                    "value": all_vibirs[self.first_mode :],
+                }
             else:
                 # we have a single atom
-                self.set_attribute('vibirs', numpy.array([]))
+                yield {
+                    "kind": "set_attribute",
+                    "name": "vibirs",
+                    "value": numpy.array([]),
+                }
 
         # --------------
         # RAMAN SPECTRUM
@@ -1528,10 +1636,18 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                     all_vibramans[num] = float(line.split()[2])
                     line = next(inputfile)
 
-                self.set_attribute('vibramans', all_vibramans[self.first_mode:])
+                yield {
+                    "kind": "set_attribute",
+                    "name": "vibramans",
+                    "value": all_vibramans[self.first_mode :],
+                }
             else:
                 # we have a single atom
-                self.set_attribute('vibramans', numpy.array([]))
+                yield {
+                    "kind": "set_attribute",
+                    "name": "vibramans",
+                    "value": numpy.array([]),
+                }
 
         # ORCA will print atomic charges along with the spin populations,
         #   so care must be taken about choosing the proper column.
@@ -1592,14 +1708,22 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             dipole = numpy.array([float(d) for d in total.split()[-3:]])
             dipole = utils.convertor(dipole, "ebohr", "Debye")
 
-            if not hasattr(self, 'moments'):
-                self.set_attribute('moments', [reference, dipole])
+            if not hasattr(self, "moments"):
+                yield {
+                    "kind": "set_attribute",
+                    "name": "moments",
+                    "value": [reference, dipole],
+                }
             else:
                 try:
                     assert numpy.all(self.moments[1] == dipole)
                 except AssertionError:
-                    self.logger.warning('Overwriting previous multipole moments with new values')
-                    self.set_attribute('moments', [reference, dipole])
+                    self.logger.warning("Overwriting previous multipole moments with new values")
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "moments",
+                        "value": [reference, dipole],
+                    }
 
         if "Molecular Dynamics Iteration" in line:
             self.skip_lines(inputfile, ['d', 'ORCA MD', 'd', 'New Coordinates'])

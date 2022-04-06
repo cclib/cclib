@@ -240,7 +240,11 @@ cannot be determined. Rerun without `$molecule read`."""
             if self.user_input.get('molecule') is not None:
                 user_charge = self.user_input['molecule'].get('charge')
                 if user_charge is not None:
-                    self.set_attribute('charge', user_charge)
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "charge",
+                        "value": user_charge,
+                    }
 
     def parse_charge_section(self, inputfile, chargetype):
         """Parse the population analysis charge block."""
@@ -448,7 +452,11 @@ cannot be determined. Rerun without `$molecule read`."""
                 package_version = groups[0]
                 self.metadata["package_version"] = package_version
                 self.metadata["legacy_package_version"] = package_version
-                self.set_attribute("parsed_svn_revision", False)
+                yield {
+                    "kind": "set_attribute",
+                    "name": "parsed_svn_revision",
+                    "value": False,
+                }
         # Avoid "Last SVN revision" entry.
         if "SVN revision" in line and "Last" not in line:
             svn_revision = line.split()[3]
@@ -464,8 +472,16 @@ cannot be determined. Rerun without `$molecule read`."""
                 ] = f"{self.metadata['package_version']}dev+{svn_branch}-{svn_revision}"
                 parsed_version = parse_version(self.metadata["package_version"])
                 assert isinstance(parsed_version, Version)
-                self.set_attribute("package_version", parsed_version)
-                self.set_attribute("parsed_svn_revision", True)
+                yield {
+                    "kind": "set_attribute",
+                    "name": "package_version",
+                    "value": parsed_version,
+                }
+                yield {
+                    "kind": "set_attribute",
+                    "name": "parsed_svn_revision",
+                    "value": True,
+                }
 
         # Disable/enable parsing for fragment sections.
         if any(message in line for message in self.fragment_section_headers):
@@ -761,8 +777,16 @@ cannot be determined. Rerun without `$molecule read`."""
                 line = next(inputfile)
                 nelec_re_string = r'There are(\s+[0-9]+) alpha and(\s+[0-9]+) beta electrons'
                 match = re.findall(nelec_re_string, line.strip())
-                self.set_attribute('nalpha', int(match[0][0].strip()))
-                self.set_attribute('nbeta', int(match[0][1].strip()))
+                yield {
+                    "kind": "set_attribute",
+                    "name": "nalpha",
+                    "value": int(match[0][0].strip()),
+                }
+                yield {
+                    "kind": "set_attribute",
+                    "name": "nbeta",
+                    "value": int(match[0][1].strip()),
+                }
                 self.norbdisp_alpha += self.nalpha
                 self.norbdisp_alpha_aonames += self.nalpha
                 self.norbdisp_beta += self.nbeta
@@ -771,17 +795,29 @@ cannot be determined. Rerun without `$molecule read`."""
                 # total spin of the system.
                 S = (self.nalpha - self.nbeta) / 2
                 mult = int(2 * S + 1)
-                self.set_attribute('mult', mult)
+                yield {
+                    "kind": "set_attribute",
+                    "name": "mult",
+                    "value": mult,
+                }
                 # Calculate the molecular charge as the difference between
                 # the atomic numbers and the number of electrons.
                 if hasattr(self, 'atomnos'):
                     charge = sum(self.atomnos) - (self.nalpha + self.nbeta)
-                    self.set_attribute('charge', charge)
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "charge",
+                        "value": charge,
+                    }
 
             # Number of basis functions.
-            if 'basis functions' in line:
-                if not hasattr(self, 'nbasis'):
-                    self.set_attribute('nbasis', int(line.split()[-3]))
+            if "basis functions" in line:
+                if not hasattr(self, "nbasis"):
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "nbasis",
+                        "value": int(line.split()[-3]),
+                    }
                     # In the case that there are fewer basis functions
                     # (and therefore MOs) than default number of MOs
                     # displayed, reset the display values.
@@ -1167,10 +1203,26 @@ cannot be determined. Rerun without `$molecule read`."""
 
                     line = next(inputfile)
 
-                self.set_attribute('etenergies', etenergies)
-                self.set_attribute('etsyms', etsyms)
-                self.set_attribute('etoscs', etoscs)
-                self.set_attribute('etsecs', etsecs)
+                yield {
+                    "kind": "set_attribute",
+                    "name": "etenergies",
+                    "value": etenergies,
+                }
+                yield {
+                    "kind": "set_attribute",
+                    "name": "etsyms",
+                    "value": etsyms,
+                }
+                yield {
+                    "kind": "set_attribute",
+                    "name": "etoscs",
+                    "value": etoscs,
+                }
+                yield {
+                    "kind": "set_attribute",
+                    "name": "etsecs",
+                    "value": etsecs,
+                }
 
             # Static and dynamic polarizability from mopropman.
             if 'Polarizability (a.u.)' in line:
@@ -1253,15 +1305,31 @@ cannot be determined. Rerun without `$molecule read`."""
 
                 # For now, only keep the last set of MO energies, even though it is
                 # printed at every step of geometry optimizations and fragment jobs.
-                self.set_attribute('moenergies', [numpy.array(energies_alpha)])
-                self.set_attribute('homos', [homo_alpha])
-                self.set_attribute('mosyms', [symbols_alpha])
+                yield {
+                    "kind": "set_attribute",
+                    "name": "moenergies",
+                    "value": [numpy.array(energies_alpha)],
+                }
+                yield {
+                    "kind": "set_attribute",
+                    "name": "homos",
+                    "value": [homo_alpha],
+                }
+                yield {
+                    "kind": "set_attribute",
+                    "name": "mosyms",
+                    "value": [symbols_alpha],
+                }
                 if self.unrestricted:
                     self.moenergies.append(numpy.array(energies_beta))
                     self.homos.append(homo_beta)
                     self.mosyms.append(symbols_beta)
 
-                self.set_attribute('nmo', len(self.moenergies[0]))
+                yield {
+                    "kind": "set_attribute",
+                    "name": "nmo",
+                    "value": len(self.moenergies[0]),
+                }
 
             # Molecular orbital energies, no symmetries.
             if line.strip() == 'Orbital Energies (a.u.)':
@@ -1309,13 +1377,25 @@ cannot be determined. Rerun without `$molecule read`."""
 
                 # For now, only keep the last set of MO energies, even though it is
                 # printed at every step of geometry optimizations and fragment jobs.
-                self.set_attribute('moenergies', [numpy.array(energies_alpha)])
-                self.set_attribute('homos', [homo_alpha])
+                yield {
+                    "kind": "set_attribute",
+                    "name": "moenergies",
+                    "value": [numpy.array(energies_alpha)],
+                }
+                yield {
+                    "kind": "set_attribute",
+                    "name": "homos",
+                    "value": [homo_alpha],
+                }
                 if self.unrestricted:
                     self.moenergies.append(numpy.array(energies_beta))
                     self.homos.append(homo_beta)
 
-                self.set_attribute('nmo', len(self.moenergies[0]))
+                yield {
+                    "kind": "set_attribute",
+                    "name": "nmo",
+                    "value": len(self.moenergies[0]),
+                }
 
             # Molecular orbital coefficients.
 
@@ -1505,10 +1585,12 @@ cannot be determined. Rerun without `$molecule read`."""
             # For IR-related jobs, the Hessian is printed (dim: 3*natom, 3*natom).
             # Note that this is *not* the mass-weighted Hessian.
             if any(header in line for header in self.hessian_headers):
-                dim = 3*self.natom
-                self.set_attribute(
-                    "hessian", QChem.parse_matrix(inputfile, dim, dim, self.ncolsblock)
-                )
+                dim = 3 * self.natom
+                yield {
+                    "kind": "set_attribute",
+                    "name": "hessian",
+                    "value": QChem.parse_matrix(inputfile, dim, dim, self.ncolsblock),
+                }
 
             # Start of the IR/Raman frequency section.
             if 'VIBRATIONAL ANALYSIS' in line:
@@ -1605,17 +1687,41 @@ cannot be determined. Rerun without `$molecule read`."""
                     #         line = next(inputfile)
 
                 if vibfreqs:
-                    self.set_attribute("vibfreqs", vibfreqs)
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "vibfreqs",
+                        "value": vibfreqs,
+                    }
                 if vibfconsts:
-                    self.set_attribute("vibfconsts", vibfconsts)
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "vibfconsts",
+                        "value": vibfconsts,
+                    }
                 if vibrmasses:
-                    self.set_attribute("vibrmasses", vibrmasses)
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "vibrmasses",
+                        "value": vibrmasses,
+                    }
                 if vibirs:
-                    self.set_attribute("vibirs", vibirs)
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "vibirs",
+                        "value": vibirs,
+                    }
                 if vibramans:
-                    self.set_attribute("vibramans", vibramans)
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "vibramans",
+                        "value": vibramans,
+                    }
                 if vibdisps:
-                    self.set_attribute("vibdisps", vibdisps)
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "vibdisps",
+                        "value": vibdisps,
+                    }
 
             if 'STANDARD THERMODYNAMIC QUANTITIES AT' in line:
 

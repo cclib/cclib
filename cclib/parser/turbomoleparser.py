@@ -117,9 +117,13 @@ class Turbomole(logfileparser.Logfile):
             self.natom=int(line[10:])
 
         if line[3:11] == "nbf(AO)=":
-            nmo = int(line.split('=')[1])
-            self.set_attribute('nbasis', nmo)
-                    
+            nmo = int(line.split("=")[1])
+            yield {
+                "kind": "set_attribute",
+                "name": "nbasis",
+                "value": nmo,
+            }
+
         # The DFT functional.
         # This information is printed by dscf but not in an easily parsable format, so we'll take it from the control file instead...
         # Additionally, turbomole stores functional names in lower case. This looks odd, so we'll convert to uppercase (?)
@@ -199,14 +203,22 @@ class Turbomole(logfileparser.Logfile):
         if hasattr(self, "mosyms"):
             if "will be written to file mos" in line:
                 orbitals, line = self.parse_dscf_orbitals(inputfile, line)
-                self.set_attribute("homos", [self.determine_homo(self.mosyms[0], orbitals)])
-            
+                yield {
+                    "kind": "set_attribute",
+                    "name": "homos",
+                    "value": [self.determine_homo(self.mosyms[0], orbitals)],
+                }
+
             if "alpha:" in line:
                 orbitals, line = self.parse_dscf_orbitals(inputfile, line)
                 if len(orbitals) > 0:
                     homo = self.determine_homo(self.mosyms[0], orbitals)
                     if not hasattr(self, "homos"):
-                        self.set_attribute('homos', [homo])
+                        yield {
+                            "kind": "set_attribute",
+                            "name": "homos",
+                            "value": [homo],
+                        }
                     else:
                         self.homos[0] = homo
                 
@@ -215,7 +227,11 @@ class Turbomole(logfileparser.Logfile):
                 if len(orbitals) > 0:
                     homo = self.determine_homo(self.mosyms[1], orbitals)
                     if not hasattr(self, "homos"):
-                        self.set_attribute('homos', [homo])
+                        yield {
+                            "kind": "set_attribute",
+                            "name": "homos",
+                            "value": [homo],
+                        }
                     elif len(self.homos) == 1:
                         self.homos.append(homo)
                     else:
@@ -283,7 +299,11 @@ class Turbomole(logfileparser.Logfile):
                     )
 
                 # Set regardless.
-                self.set_attribute("charge", total_charge_int)
+                yield {
+                    "kind": "set_attribute",
+                    "name": "charge",
+                    "value": total_charge_int,
+                }
 
         if line.strip() == "dipole moment":
             line = next(inputfile)
@@ -423,8 +443,16 @@ class Turbomole(logfileparser.Logfile):
                                    for x in line.split()[-3:]])
                 line = next(inputfile)
             
-            self.set_attribute('atomnos', atomnos)
-            self.set_attribute('natom', len(atomcoords))
+            yield {
+                "kind": "set_attribute",
+                "name": "atomnos",
+                "value": atomnos,
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "natom",
+                "value": len(atomcoords),
+            }
             self.append_attribute("grads", atomcoords)
 
         ## Atomic coordinates in job.last:
@@ -478,10 +506,18 @@ class Turbomole(logfileparser.Logfile):
                     line = next(inputfile)
                 
                 # Check the coordinates we just parsed are not already in atomcoords.
-                if not hasattr(self, 'atomcoords') or self.atomcoords[-1] != atomcoords:
-                    self.append_attribute('atomcoords', atomcoords)
-                    self.set_attribute('atomnos', atomnos)
-                    self.set_attribute('natom', len(atomcoords))
+                if not hasattr(self, "atomcoords") or self.atomcoords[-1] != atomcoords:
+                    self.append_attribute("atomcoords", atomcoords)
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "atomnos",
+                        "value": atomnos,
+                    }
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "natom",
+                        "value": len(atomcoords),
+                    }
         except Exception as e:
             # Something went wrong, check to see if the coord line we parsed was garbage, or if something else happened.
             if set(line.strip()).issubset({' ', '.'}):
@@ -538,7 +574,11 @@ class Turbomole(logfileparser.Logfile):
                 # Next.                
                 line = next(inputfile)
                 
-            self.set_attribute("geotargets", geotargets)
+            yield {
+                "kind": "set_attribute",
+                "name": "geotargets",
+                "value": geotargets,
+            }
             self.append_attribute("geovalues", geovalues)
             
             if all(convergence):
@@ -547,10 +587,13 @@ class Turbomole(logfileparser.Logfile):
                 self.optstatus[-1] += data.ccData.OPT_DONE
             else:
                 # Not converged.
-                if not hasattr(self, 'optdone'):
-                    self.set_attribute("optdone", [])
-                #self.optstatus[-1] += data.ccData.OPT_UNCONVERGED
-                
+                if not hasattr(self, "optdone"):
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "optdone",
+                        "value": [],
+                    }
+                # self.optstatus[-1] += data.ccData.OPT_UNCONVERGED
 
         # Frequency values in aoforce.out
         #        mode               7        8        9       10       11       12
@@ -632,15 +675,39 @@ class Turbomole(logfileparser.Logfile):
                     vibrmasses.extend(rmasses)
 
                 if "zero point VIBRATIONAL energy" in line:
-                    self.set_attribute("zpve", float(line.split()[6]))
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "zpve",
+                        "value": float(line.split()[6]),
+                    }
 
                 line = next(inputfile)
 
-            self.set_attribute('vibfreqs', vibfreqs)
-            self.set_attribute('vibsyms', vibsyms)
-            self.set_attribute('vibirs', vibirs)
-            self.set_attribute('vibdisps', vibdisps)
-            self.set_attribute('vibrmasses', vibrmasses)
+            yield {
+                "kind": "set_attribute",
+                "name": "vibfreqs",
+                "value": vibfreqs,
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "vibsyms",
+                "value": vibsyms,
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "vibirs",
+                "value": vibirs,
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "vibdisps",
+                "value": vibdisps,
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "vibrmasses",
+                "value": vibrmasses,
+            }
 
         # In this section we are parsing mocoeffs and moenergies from
         # the files like: mos, alpha and beta.
@@ -706,7 +773,11 @@ class Turbomole(logfileparser.Logfile):
             self.append_attribute("moenergies", moenergies)
             self.append_attribute("mocoeffs", mocoeffs)
             self.append_attribute("mosyms", mosyms)
-            self.set_attribute("nmo", len(moenergies))
+            yield {
+                "kind": "set_attribute",
+                "name": "nmo",
+                "value": len(moenergies),
+            }
 
         # Parsing the scfenergies, scfvalues and scftargets from job.last file.
         # scf convergence criterion : increment of total energy < .1000000D-05
@@ -753,9 +824,13 @@ class Turbomole(logfileparser.Logfile):
             while 'convergence criteria satisfied' not in line:
                 # nbasis
                 # Doesn't appear to do anything, number of basis functions does not appear in this section?
-                #if  "number of basis functions" in line:
-                #    self.set_attribute("nbasis", int(line.split()[-1]))
-                
+                # if  "number of basis functions" in line:
+                #    yield {
+                #     "kind": "set_attribute",
+                #     "name": "nbasis",
+                #     "value":  int(line.split()[-1]),
+                # }
+
                 if 'ITERATION  ENERGY' in line:
                     line = next(inputfile)
                     info = line.split()
@@ -1300,12 +1375,20 @@ class Turbomole(logfileparser.Logfile):
         if hasattr(self, "homos"):
             if len(self.homos) == 1:
                 # If we are restricted (len(homos) == 1); assume we have to be singlet.
-                self.set_attribute("mult", 1)
+                yield {
+                    "kind": "set_attribute",
+                    "name": "mult",
+                    "value": 1,
+                }
             else:
                 # Unrestricted, the difference in homos should tell us the no. of unpaired e-.
                 unpaired_e = abs(self.homos[0] - self.homos[1])
-                self.set_attribute("mult", unpaired_e +1)
-                
+                yield {
+                    "kind": "set_attribute",
+                    "name": "mult",
+                    "value": unpaired_e + 1,
+                }
+
         # Set a flag if we stopped part way through an opt.
         if hasattr(self, "optstatus") and self.optstatus[-1] != data.ccData.OPT_DONE:
             self.optstatus[-1] += data.ccData.OPT_UNCONVERGED

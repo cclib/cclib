@@ -130,8 +130,12 @@ class Molcas(logfileparser.Logfile):
             if self.atomnos == []:
                 self.atomnos = [self.table.number[ae.title()] for ae in atomelements]
 
-            if not hasattr(self, 'natom'):
-                self.set_attribute('natom', len(self.atomnos))
+            if not hasattr(self, "natom"):
+                yield {
+                    "kind": "set_attribute",
+                    "name": "natom",
+                    "value": len(self.atomnos),
+                }
 
         ## This section is present when executing &SCF.
         #  ++    Orbital specifications:
@@ -157,15 +161,27 @@ class Molcas(logfileparser.Logfile):
                     symmetry_count = int(line.split()[-1])
                 if line.strip().startswith('Total number of orbitals'):
                     nmos = line.split()[-symmetry_count:]
-                    self.set_attribute('nmo', sum(map(int, nmos)))
-                if line.strip().startswith('Number of basis functions'):
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "nmo",
+                        "value": sum(map(int, nmos)),
+                    }
+                if line.strip().startswith("Number of basis functions"):
                     nbasis = line.split()[-symmetry_count:]
-                    self.set_attribute('nbasis', sum(map(int, nbasis)))
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "nbasis",
+                        "value": sum(map(int, nbasis)),
+                    }
 
                 line = next(inputfile)
 
-        if line.strip().startswith(('Molecular charge', 'Total molecular charge')):
-            self.set_attribute('charge', int(float(line.split()[-1])))
+        if line.strip().startswith(("Molecular charge", "Total molecular charge")):
+            yield {
+                "kind": "set_attribute",
+                "name": "charge",
+                "value": int(float(line.split()[-1])),
+            }
 
         #  ++    Molecular charges:
         #  ------------------
@@ -222,7 +238,11 @@ class Molcas(logfileparser.Logfile):
                     atomcharges.extend(map(float, line.split()[1:]))
 
             # Molcas only performs Mulliken population analysis.
-            self.set_attribute('atomcharges', {'mulliken': atomcharges})
+            yield {
+                "kind": "set_attribute",
+                "name": "atomcharges",
+                "value": {"mulliken": atomcharges},
+            }
 
             # Ensure the charge printed here is identical to the
             # charge printed before entering the SCF.
@@ -466,7 +486,11 @@ class Molcas(logfileparser.Logfile):
 
             while "ZPVE" not in line:
                 line = next(inputfile)
-            self.set_attribute("zpve", float(line.split()[3]))
+            yield {
+                "kind": "set_attribute",
+                "name": "zpve",
+                "value": float(line.split()[3]),
+            }
 
             temperature_values = []
             pressure_values = []
@@ -501,23 +525,43 @@ class Molcas(logfileparser.Logfile):
             if 298.15 in temperature_values:
                 index = temperature_values.index(298.15)
 
-            self.set_attribute('temperature', temperature_values[index])
+            yield {
+                "kind": "set_attribute",
+                "name": "temperature",
+                "value": temperature_values[index],
+            }
             if len(temperature_values) > 1:
                 self.logger.warning('More than 1 values of temperature found')
 
-            self.set_attribute('pressure', pressure_values[index])
+            yield {
+                "kind": "set_attribute",
+                "name": "pressure",
+                "value": pressure_values[index],
+            }
             if len(pressure_values) > 1:
                 self.logger.warning('More than 1 values of pressure found')
 
-            self.set_attribute('entropy', entropy_values[index])
+            yield {
+                "kind": "set_attribute",
+                "name": "entropy",
+                "value": entropy_values[index],
+            }
             if len(entropy_values) > 1:
                 self.logger.warning('More than 1 values of entropy found')
 
-            self.set_attribute('enthalpy', enthalpy_values[index])
+            yield {
+                "kind": "set_attribute",
+                "name": "enthalpy",
+                "value": enthalpy_values[index],
+            }
             if len(enthalpy_values) > 1:
                 self.logger.warning('More than 1 values of enthalpy found')
 
-            self.set_attribute('freeenergy', free_energy_values[index])
+            yield {
+                "kind": "set_attribute",
+                "name": "freeenergy",
+                "value": free_energy_values[index],
+            }
             if len(free_energy_values) > 1:
                 self.logger.warning('More than 1 values of freeenergy found')
 
@@ -811,7 +855,11 @@ class Molcas(logfileparser.Logfile):
                                 j += 1
                             line = next(inputfile)
                             tokens = line.split()
-                        self.set_attribute('aonames', aonames)
+                        yield {
+                            "kind": "set_attribute",
+                            "name": "aonames",
+                            "value": aonames,
+                        }
 
                 if len(moenergies) != self.nmo:
                     moenergies.extend([numpy.nan for x in range(self.nmo - len(moenergies))])

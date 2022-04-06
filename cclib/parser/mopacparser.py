@@ -50,9 +50,17 @@ class MOPAC(logfileparser.Logfile):
 
         # Defaults
         charge = 0
-        self.set_attribute('charge', charge)
+        yield {
+            "kind": "set_attribute",
+            "name": "charge",
+            "value": charge,
+        }
         mult = 1
-        self.set_attribute('mult', mult)
+        yield {
+            "kind": "set_attribute",
+            "name": "mult",
+            "value": mult,
+        }
 
         # Keep track of whether or not we're performing an
         # (un)restricted calculation.
@@ -140,12 +148,20 @@ class MOPAC(logfileparser.Logfile):
 
         if 'CHARGE ON SYSTEM =' in line:
             charge = int(line.split()[5])
-            self.set_attribute('charge', charge)
+            yield {
+                "kind": "set_attribute",
+                "name": "charge",
+                "value": charge,
+            }
 
         if 'SPIN STATE DEFINED' in line:
             # find the multiplicity from the line token (SINGLET, DOUBLET, TRIPLET, etc)
             mult = self.spinstate[line.split()[1]]
-            self.set_attribute('mult', mult)
+            yield {
+                "kind": "set_attribute",
+                "name": "mult",
+                "value": mult,
+            }
 
         # Read energy (in kcal/mol, converted to eV)
         #
