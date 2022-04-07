@@ -1266,7 +1266,7 @@ class NWChem(logfileparser.Logfile):
                 "name": "electronic_thermal_energy",
                 "value": utils.float(line.split()[8])
                 + utils.convertor(self.scfenergies[-1], "eV", "hartree"),
-            )
+            }
         if line[1:14] == "Total Entropy":
             yield {
                 "kind": "set_attribute",
