@@ -1176,9 +1176,21 @@ Dispersion correction           -0.016199959
                 etsecs.append(sec)
                 line = next(inputfile)
 
-            self.extend_attribute('etenergies', etenergies)
-            self.extend_attribute('etsecs', etsecs)
-            self.extend_attribute('etsyms', etsyms)
+            yield {
+                "kind": "extend_attribute",
+                "name": "etenergies",
+                "value": etenergies,
+            }
+            yield {
+                "kind": "extend_attribute",
+                "name": "etsecs",
+                "value": etsecs,
+            }
+            yield {
+                "kind": "extend_attribute",
+                "name": "etsyms",
+                "value": etsyms,
+            }
 
         # Parse the various absorption spectra for TDDFT and ROCIS.
         if 'ABSORPTION SPECTRUM' in line or 'ELECTRIC DIPOLE' in line:
