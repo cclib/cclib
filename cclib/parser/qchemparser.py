@@ -726,10 +726,11 @@ cannot be determined. Rerun without `$molecule read`."""
 
             if 'TIME STEP #' in line:
                 tokens = line.split()
+                time = float(tokens[8])
                 yield {
                     "kind": "append_attribute",
                     "name": "time",
-                    "value": float(tokens[8]),
+                    "value": time,
                 }
 
             if line.strip() == "Adding empirical dispersion correction":

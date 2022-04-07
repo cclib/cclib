@@ -152,8 +152,13 @@ class Gaussian(logfileparser.Logfile):
         if hasattr(self, 'vibdispshp'):
             self.vibdisps = self.vibdispshp
             del self.vibdispshp
-        if hasattr(self, 'time'):
-            self.time = [self.time[i] for i in sorted(self.time.keys())]
+        if hasattr(self, "time"):
+            time = [self.time[i] for i in sorted(self.time.keys())]
+            yield {
+                "kind": "set_attribute",
+                "name": "time",
+                "value": time,
+            }
         if hasattr(self, "energies_BOMD"):
             yield {
                 "kind": "set_attribute",
@@ -572,11 +577,7 @@ class Gaussian(logfileparser.Logfile):
             line = next(inputfile)
             broken = line.split()
             if not hasattr(self, "time"):
-                yield {
-                    "kind": "set_attribute",
-                    "name": "time",
-                    "value": {step: float(broken[-1])},
-                }
+                self.time = {step: float(broken[-1])}
             else:
                 self.time[step] = float(broken[-1])
 
@@ -2473,9 +2474,9 @@ class Gaussian(logfileparser.Logfile):
                 # cast the time elements as floats for use in timedelta data structure
                 time = datetime.timedelta(
                     days=float(split_line[n]),
-                    hours=float(split_line[n+2]),
-                    minutes=float(split_line[n+4]),
-                    seconds=float(split_line[n+6]),
+                    hours=float(split_line[n + 2]),
+                    minutes=float(split_line[n + 4]),
+                    seconds=float(split_line[n + 6]),
                 )
                 self.metadata[key].append(time)
             except:
