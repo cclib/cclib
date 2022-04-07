@@ -306,7 +306,11 @@ class Logfile(ABC):
         self.cupdate = cupdate
 
         # Maybe the sub-class has something to do before parsing.
-        self.before_parsing()
+        if inspect.isgeneratorfunction(self.before_parsing):
+            for token in self.before_parsing():
+                self.handle(token)
+        else:
+            self.before_parsing()
 
         # Loop over lines in the file object and call extract().
         # This is where the actual parsing is done.
@@ -333,7 +337,11 @@ class Logfile(ABC):
             inputfile.close()
 
         # Maybe the sub-class has something to do after parsing.
-        self.after_parsing()
+        if inspect.isgeneratorfunction(self.after_parsing):
+            for token in self.after_parsing():
+                self.handle(token)
+        else:
+            self.after_parsing()
 
         # If atomcoords were not parsed, but some input coordinates were ("inputcoords").
         # This is originally from the Gaussian parser, a regression fix.
