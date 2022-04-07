@@ -318,7 +318,8 @@ class Logfile(ABC):
             # Any attributes can be freely set and used across calls, however only those
             #   in data._attrlist will be moved to final data object that is returned.
             try:
-                self.extract(inputfile, line)
+                for token in self.extract(inputfile, line):
+                    self.handle(token)
             except StopIteration:
                 self.logger.error("Unexpectedly encountered end of logfile.")
                 break
@@ -413,6 +414,19 @@ class Logfile(ABC):
         for name in ("mpenergies",):
             if hasattr(self, name):
                 delattr(self, name)
+
+    def handle(self, token):
+        """Handle a token."""
+        if token["kind"] == "set_attribute":
+            self.set_attribute(token["name"], token["value"])
+        elif token["kind"] == "append_attribute":
+            for token in self.append_attribute(token["name"], token["value"]):
+                self.handle(token)
+        elif token["kind"] == "extend_attribute":
+            for token in self.extend_attribute(token["name"], token["value"]):
+                self.handle(token)
+        else:
+            raise ValueError(f"Unknown token kind: {token['kind']}")
 
     def set_attribute(self, name, value, check_change=True):
         """Set an attribute and perform an optional check when it already exists.
