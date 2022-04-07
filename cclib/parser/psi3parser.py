@@ -62,8 +62,16 @@ class Psi3(logfileparser.Logfile):
 
                 line = next(inputfile)
 
-            self.set_attribute('natom', len(coords))
-            self.set_attribute('atomnos', numbers)
+            yield {
+                "kind": "set_attribute",
+                "name": "natom",
+                "value": len(coords),
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "atomnos",
+                "value": numbers,
+            }
 
             if not hasattr(self, 'atomcoords'):
                 self.atomcoords = []
@@ -79,13 +87,21 @@ class Psi3(logfileparser.Logfile):
             self.metadata['symmetry_used'] = point_group_abelian
             while line.strip():
                 if "Number of atoms" in line:
-                    self.set_attribute('natom', int(line.split()[-1]))
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "natom",
+                        "value": int(line.split()[-1]),
+                    }
                 line = next(inputfile)
         if line.strip() == "-BASIS SET INFORMATION:":
             line = next(inputfile)
             while line.strip():
                 if "Number of SO" in line:
-                    self.set_attribute('nbasis', int(line.split()[-1]))
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "nbasis",
+                        "value": int(line.split()[-1]),
+                    }
                 line = next(inputfile)
 
         # In Psi3, the section with the contraction scheme can be used to infer atombasis.
@@ -109,7 +125,11 @@ class Psi3(logfileparser.Logfile):
                     indices.append(range(start, start+nfuncs))
                 line = next(inputfile)
 
-            self.set_attribute('atombasis', indices)
+            yield {
+                "kind": "set_attribute",
+                "name": "atombasis",
+                "value": indices,
+            }
 
         if line.strip() == "CINTS: An integrals program written in C":
 
@@ -125,10 +145,18 @@ class Psi3(logfileparser.Logfile):
             while line.strip():
                 if "Number of atoms" in line:
                     natom = int(line.split()[-1])
-                    self.set_attribute('natom', natom)
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "natom",
+                        "value": natom,
+                    }
                 if "Number of symmetry orbitals" in line:
                     nbasis = int(line.split()[-1])
-                    self.set_attribute('nbasis', nbasis)
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "nbasis",
+                        "value": nbasis,
+                    }
                 line = next(inputfile)
 
         if line.strip() == "CSCF3.0: An SCF program written in C":
@@ -140,10 +168,18 @@ class Psi3(logfileparser.Logfile):
             while line.strip():
                 if line.split()[0] == "multiplicity":
                     mult = int(line.split()[-1])
-                    self.set_attribute('mult', mult)
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "mult",
+                        "value": mult,
+                    }
                 if line.split()[0] == "charge":
                     charge = int(line.split()[-1])
-                    self.set_attribute('charge', charge)
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "charge",
+                        "value": charge,
+                    }
                 if line.split()[0] == "convergence":
                     conv = float(line.split()[-1])
                 if line.split()[0] == "reference":

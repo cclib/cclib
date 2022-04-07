@@ -235,8 +235,16 @@ class Molpro(logfileparser.Logfile):
                 if len(m) < self.nbasis:
                     mocoeffs[im] = m + [0.0 for i in range(self.nbasis - len(m))]
 
-        self.set_attribute('atombasis', atombasis)
-        self.set_attribute('aonames', aonames)
+        yield {
+            "kind": "set_attribute",
+            "name": "atombasis",
+            "value": atombasis,
+        }
+        yield {
+            "kind": "set_attribute",
+            "name": "aonames",
+            "value": aonames,
+        }
 
         if self.naturalorbitals:
             # Consistent with current cclib conventions, keep only the
@@ -311,8 +319,16 @@ class Molpro(logfileparser.Logfile):
 
             self.atomcoords.append(atomcoords)
 
-            self.set_attribute('atomnos', atomnos)
-            self.set_attribute('natom', len(self.atomnos))
+            yield {
+                "kind": "set_attribute",
+                "name": "atomnos",
+                "value": atomnos,
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "natom",
+                "value": len(self.atomnos),
+            }
 
         # Use BASIS DATA to parse input for gbasis, aonames and atombasis. If symmetry is used,
         # the function number starts from 1 for each irrep (the irrep index comes after the dot).
@@ -411,13 +427,29 @@ class Molpro(logfileparser.Logfile):
                     funcnr = len(aonames)
                     atombasis[funcatom-1].append(funcnr-1)
 
-            self.set_attribute('aonames', aonames)
-            self.set_attribute('atombasis', atombasis)
-            self.set_attribute('gbasis', gbasis)
+            yield {
+                "kind": "set_attribute",
+                "name": "aonames",
+                "value": aonames,
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "atombasis",
+                "value": atombasis,
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "gbasis",
+                "value": gbasis,
+            }
 
         if line[1:23] == "NUMBER OF CONTRACTIONS":
             nbasis = int(line.split()[3])
-            self.set_attribute('nbasis', nbasis)
+            yield {
+                "kind": "set_attribute",
+                "name": "nbasis",
+                "value": nbasis,
+            }
 
         # Basis set name
         if line[1:8] == "Library":
@@ -439,10 +471,18 @@ class Molpro(logfileparser.Logfile):
             nuclear = numpy.sum(self.atomnos)
 
             charge = nuclear - spinup - spindown
-            self.set_attribute('charge', charge)
+            yield {
+                "kind": "set_attribute",
+                "name": "charge",
+                "value": charge,
+            }
 
             mult = spinup - spindown + 1
-            self.set_attribute('mult', mult)
+            yield {
+                "kind": "set_attribute",
+                "name": "mult",
+                "value": mult,
+            }
 
         # Convergenve thresholds for SCF cycle, should be contained in a line such as:
         #   CONVERGENCE THRESHOLDS:    1.00E-05 (Density)    1.40E-07 (Energy)
@@ -504,7 +544,11 @@ class Molpro(logfileparser.Logfile):
         if "dispersion correction" in line \
            and line.strip() != "dispersion correction activated":
             dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
-            self.append_attribute("dispersionenergies", dispersion)
+            yield {
+                "kind": "append_attribute",
+                "name": "dispersionenergies",
+                "value": dispersion,
+            }
 
         # SCF result - RHF/UHF and DFT (RKS) energies.
         if (line[1:5] in ["!RHF", "!UHF", "!RKS"] and line[16:22].lower() == "energy"):
@@ -875,7 +919,11 @@ class Molpro(logfileparser.Logfile):
             for l in tmp:
                 hessian += l
 
-            self.set_attribute("hessian", hessian)
+            yield {
+                "kind": "set_attribute",
+                "name": "hessian",
+                "value": hessian,
+            }
 
         if line[1:14] == "Atomic Masses" and hasattr(self, "hessian"):
 
@@ -887,7 +935,11 @@ class Molpro(logfileparser.Logfile):
                 self.amass += list(map(float, line.strip().split()[2:]))
 
         if line[1:18] == "Zero point energy":
-            self.set_attribute("zpve", float(line.split()[3]))
+            yield {
+                "kind": "set_attribute",
+                "name": "zpve",
+                "value": float(line.split()[3]),
+            }
 
         #1PROGRAM * POP (Mulliken population analysis)
         #

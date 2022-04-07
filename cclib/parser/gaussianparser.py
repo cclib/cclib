@@ -121,9 +121,16 @@ class Gaussian(logfileparser.Logfile):
             elif hasattr(self, 'atomcoords'):
                 self.scancoords = self.atomcoords
 
-        if (hasattr(self, 'enthalpy') and hasattr(self, 'temperature')
-                and hasattr(self, 'freeenergy')):
-            self.set_attribute('entropy', (self.enthalpy - self.freeenergy) / self.temperature)
+        if (
+            hasattr(self, "enthalpy")
+            and hasattr(self, "temperature")
+            and hasattr(self, "freeenergy")
+        ):
+            yield {
+                "kind": "set_attribute",
+                "name": "entropy",
+                "value": (self.enthalpy - self.freeenergy) / self.temperature,
+            }
 
         # This bit is needed in order to trim coordinates that are printed a second time
         # at the end of geometry optimizations. Note that we need to do this for both atomcoords
@@ -145,14 +152,21 @@ class Gaussian(logfileparser.Logfile):
         if hasattr(self, 'vibdispshp'):
             self.vibdisps = self.vibdispshp
             del self.vibdispshp
-        if hasattr(self, 'time'):
-            self.time = [self.time[i] for i in sorted(self.time.keys())]
-        if hasattr(self, 'energies_BOMD'):
-            self.set_attribute('scfenergies',
-              [self.energies_BOMD[i] for i in sorted(self.energies_BOMD.keys())])
-        if hasattr(self, 'atomcoords_BOMD'):
-            self.atomcoords= \
-              [self.atomcoords_BOMD[i] for i in sorted(self.atomcoords_BOMD.keys())]
+        if hasattr(self, "time"):
+            time = [self.time[i] for i in sorted(self.time.keys())]
+            yield {
+                "kind": "set_attribute",
+                "name": "time",
+                "value": time,
+            }
+        if hasattr(self, "energies_BOMD"):
+            yield {
+                "kind": "set_attribute",
+                "name": "scfenergies",
+                "value": [self.energies_BOMD[i] for i in sorted(self.energies_BOMD.keys())],
+            }
+        if hasattr(self, "atomcoords_BOMD"):
+            self.atomcoords = [self.atomcoords_BOMD[i] for i in sorted(self.atomcoords_BOMD.keys())]
 
         # Gaussian prints 'forces' in input orientation unlike other values such as 'moments' or 'vibdisp'.
         # Therefore, we convert 'grads' to the values in standard orientation with rotation matrix.
@@ -161,10 +175,18 @@ class Gaussian(logfileparser.Logfile):
             for grad, inputcoord, atomcoord in zip(self.grads, self.inputcoords, self.atomcoords):
                 rotation = utils.get_rotation(numpy.array(inputcoord), numpy.array(atomcoord))
                 grads_std.append(rotation.apply(grad))
-            self.set_attribute('grads', numpy.array(grads_std))
-        
+            yield {
+                "kind": "set_attribute",
+                "name": "grads",
+                "value": numpy.array(grads_std),
+            }
+
         if hasattr(self, "ccenergy"):
-            self.append_attribute("ccenergies", utils.convertor(self.ccenergy, "hartree", "eV"))
+            yield {
+                "kind": "append_attribute",
+                "name": "ccenergies",
+                "value": utils.convertor(self.ccenergy, "hartree", "eV"),
+            }
             del self.ccenergy
 
     def extract(self, inputfile, line):
@@ -234,8 +256,16 @@ class Gaussian(logfileparser.Logfile):
                 match = re.match(regex, line)
                 assert match, f"Something unusual about the line: '{line}'"
 
-                self.set_attribute('charge', int(match.groups()[0]))
-                self.set_attribute('mult', int(match.groups()[1]))
+                yield {
+                    "kind": "set_attribute",
+                    "name": "charge",
+                    "value": int(match.groups()[0]),
+                }
+                yield {
+                    "kind": "set_attribute",
+                    "name": "mult",
+                    "value": int(match.groups()[1]),
+                }
 
                 if line.split()[-2] == "fragment":
                     self.nfragments = int(line.split()[-1].strip('.'))
@@ -255,7 +285,11 @@ class Gaussian(logfileparser.Logfile):
             while line.split() and not "Variables" in line and not "Leave Link" in line:
                 natom += 1
                 line = inputfile.next()
-            self.set_attribute('natom', natom)
+            yield {
+                "kind": "set_attribute",
+                "name": "natom",
+                "value": natom,
+            }
 
         # Continuing from above, there is not always a symbolic matrix, for example
         # if the Z-matrix was in the input file. In such cases, try to match the
@@ -274,8 +308,16 @@ class Gaussian(logfileparser.Logfile):
                 match = re.match(regex, line)
                 assert match, f"Something unusual about the line: '{line}'"
 
-                self.set_attribute('charge', int(match.groups()[0]))
-                self.set_attribute('mult', int(match.groups()[1]))
+                yield {
+                    "kind": "set_attribute",
+                    "name": "charge",
+                    "value": int(match.groups()[0]),
+                }
+                yield {
+                    "kind": "set_attribute",
+                    "name": "mult",
+                    "value": int(match.groups()[1]),
+                }
 
             if line.split()[-2] == "fragment":
                 self.nfragments = int(line.split()[-1].strip('.'))
@@ -288,8 +330,12 @@ class Gaussian(logfileparser.Logfile):
 
             self.updateprogress(inputfile, "Attributes", self.fupdate)
 
-            natom = int(re.search(r'NAtoms=\s*(\d+)', line).group(1))
-            self.set_attribute('natom', natom)
+            natom = int(re.search(r"NAtoms=\s*(\d+)", line).group(1))
+            yield {
+                "kind": "set_attribute",
+                "name": "natom",
+                "value": natom,
+            }
 
             # Necessary for `if line.strip().split()[0:3] == ["Atom", "AN", "X"]:` block
             if not hasattr(self, 'nqmf'):
@@ -297,7 +343,11 @@ class Gaussian(logfileparser.Logfile):
                 if match is not None:
                     nqmf = int(match.group(1))
                     if nqmf > 0:
-                        self.set_attribute('nqmf', nqmf)
+                        yield {
+                            "kind": "set_attribute",
+                            "name": "nqmf",
+                            "value": nqmf,
+                        }
 
         # Basis set name
         if line[1:15] == "Standard basis":
@@ -431,7 +481,11 @@ class Gaussian(logfileparser.Logfile):
                 self.moments = [self.reference, None, None, None, hexadecapole]
             else:
                 if len(self.moments) == 4:
-                    self.append_attribute("moments", hexadecapole)
+                    yield {
+                        "kind": "append_attribute",
+                        "name": "moments",
+                        "value": hexadecapole,
+                    }
                 else:
                     try:
                         numpy.testing.assert_equal(self.moments[4], hexadecapole)
@@ -439,7 +493,11 @@ class Gaussian(logfileparser.Logfile):
                         self.logger.warning(
                             f"Attribute hexadecapole changed value ({self.moments[4]} -> {hexadecapole})"
                         )
-                    self.append_attribute("moments", hexadecapole)
+                    yield {
+                        "kind": "append_attribute",
+                        "name": "moments",
+                        "value": hexadecapole,
+                    }
 
         # Catch message about completed optimization.
         if line[1:23] == "Optimization completed":
@@ -497,8 +555,16 @@ class Gaussian(logfileparser.Logfile):
 
             if not self.BOMD: self.inputcoords.append(atomcoords)
 
-            self.set_attribute('atomnos', numpy.array(self.inputatoms))
-            self.set_attribute('natom', len(self.inputatoms))
+            yield {
+                "kind": "set_attribute",
+                "name": "atomnos",
+                "value": numpy.array(self.inputatoms),
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "natom",
+                "value": len(self.inputatoms),
+            }
 
         if self.BOMD and line.startswith(' Summary information for step'):
 
@@ -511,7 +577,7 @@ class Gaussian(logfileparser.Logfile):
             line = next(inputfile)
             broken = line.split()
             if not hasattr(self, "time"):
-                self.set_attribute('time', {step:float(broken[-1])})
+                self.time = {step: float(broken[-1])}
             else:
                 self.time[step] = float(broken[-1])
 
@@ -519,7 +585,11 @@ class Gaussian(logfileparser.Logfile):
             broken = line.split(';')[1].split()
             ene = utils.convertor(utils.float(broken[-1]), "hartree", "eV")
             if not hasattr(self, "energies_BOMD"):
-                self.set_attribute('energies_BOMD', {step:ene})
+                yield {
+                    "kind": "set_attribute",
+                    "name": "energies_BOMD",
+                    "value": {step: ene},
+                }
             else:
                 self.energies_BOMD[step] = ene
 
@@ -541,9 +611,16 @@ class Gaussian(logfileparser.Logfile):
 
             self.atomcoords_BOMD[step] = atomcoords
 
-            #self.set_attribute('atomnos', self.inputatoms)
-            #self.set_attribute('natom', len(self.inputatoms))
-
+            # yield {
+            #     "kind": "set_attribute",
+            #     "name": 'atomnos',
+            #     "value":  self.inputatoms,
+            # }
+            # yield {
+            #     "kind": "set_attribute",
+            #     "name": 'natom',
+            #     "value":  len(self.inputatoms),
+            # }
 
         # Extract the atomic masses.
         # Typical section:
@@ -574,7 +651,11 @@ class Gaussian(logfileparser.Logfile):
 
         # Symmetry: point group
         if line.strip() == "Symmetry turned off by external request.":
-            self.set_attribute('uses_symmetry', False)
+            yield {
+                "kind": "set_attribute",
+                "name": "uses_symmetry",
+                "value": False,
+            }
         if "Full point group" in line:
             point_group_detected = line.split()[3].lower()
             if self.uses_symmetry:
@@ -623,8 +704,16 @@ class Gaussian(logfileparser.Logfile):
                 line = next(inputfile)
             self.atomcoords.append(atomcoords)
 
-            self.set_attribute('natom', len(atomnos))
-            self.set_attribute('atomnos', atomnos)
+            yield {
+                "kind": "set_attribute",
+                "name": "natom",
+                "value": len(atomnos),
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "atomnos",
+                "value": atomnos,
+            }
 
         # This is a bit of a hack for regression Gaussian09/BH3_fragment_guess.pop_minimal.log
         # to skip output for all fragments, assuming the supermolecule is always printed first.
@@ -737,7 +826,11 @@ class Gaussian(logfileparser.Logfile):
 
         if "Dispersion energy=" in line:
             dispersion = utils.convertor(float(line.split()[-2]), "hartree", "eV")
-            self.append_attribute("dispersionenergies", dispersion)
+            yield {
+                "kind": "append_attribute",
+                "name": "dispersionenergies",
+                "value": dispersion,
+            }
 
         # Find the targets for SCF convergence (QM calcs).
         # Not for BOMD as targets are not available in the summary
@@ -1054,7 +1147,11 @@ class Gaussian(logfileparser.Logfile):
                 self.scannames_all.append(name)
                 if line.split()[4] == 'Scan':
                     self.scannames_scanned.append(name)
-                    self.append_attribute('scannames', definition)
+                    yield {
+                        "kind": "append_attribute",
+                        "name": "scannames",
+                        "value": definition,
+                    }
                 line = next(inputfile)
 
         # Extract unrelaxed PES scan data, which looks something like:
@@ -1078,19 +1175,35 @@ class Gaussian(logfileparser.Logfile):
 
             colmnames = next(inputfile)
             if not hasattr(self, "scannames"):
-                self.set_attribute("scannames", colmnames.split()[1:-1])
+                yield {
+                    "kind": "set_attribute",
+                    "name": "scannames",
+                    "value": colmnames.split()[1:-1],
+                }
 
             hyphens = next(inputfile)
             line = next(inputfile)
             scanparm = [[] for _ in range(len(self.scannames))]
             while line != hyphens:
                 broken = line.split()
-                self.append_attribute('scanenergies', (utils.convertor(float(broken[-1]), "hartree", "eV")))
-                for idx,p in enumerate(broken[1:-1]):
+                yield {
+                    "kind": "append_attribute",
+                    "name": "scanenergies",
+                    "value": (utils.convertor(float(broken[-1]), "hartree", "eV")),
+                }
+                for idx, p in enumerate(broken[1:-1]):
                     scanparm[idx].append(float(p))
-                #self.append_attribute('scanparm', [float(p) for p in broken[1:-1]])
+                # yield {
+                #     "kind": "append_attribute",
+                #     "name": 'scanparm',
+                #     "value": [float(p) for p in broken[1:-1]]
+                # }
                 line = next(inputfile)
-            self.set_attribute('scanparm', scanparm)
+            yield {
+                "kind": "set_attribute",
+                "name": "scanparm",
+                "value": scanparm,
+            }
 
         # Extract relaxed (optimized) PES scan data, for which the form
         # of the output is transposed:
@@ -1141,8 +1254,16 @@ class Gaussian(logfileparser.Logfile):
                         params = [float(v) for v in splitter.split(params_in_line)]
                         scanparm[iname].extend(params)
 
-            self.set_attribute('scanenergies', scanenergies)
-            self.set_attribute('scanparm', scanparm)
+            yield {
+                "kind": "set_attribute",
+                "name": "scanenergies",
+                "value": scanenergies,
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "scanparm",
+                "value": scanparm,
+            }
 
         # Orbital symmetries.
         if line[1:20] == 'Orbital symmetries:' and not hasattr(self, "mosyms"):
@@ -1200,7 +1321,11 @@ class Gaussian(logfileparser.Logfile):
             # and will occasionally drop some without warning. We can infer the number,
             # however, from the MO symmetries printed here. Specifically, this fixes
             # regression Gaussian/Gaussian09/dvb_sp_terse.log (#23 on github).
-            self.set_attribute('nmo', len(self.mosyms[-1]))
+            yield {
+                "kind": "set_attribute",
+                "name": "nmo",
+                "value": len(self.mosyms[-1]),
+            }
 
         # Alpha/Beta electron eigenvalues.
         if line[1:6] == "Alpha" and line.find("eigenvalues") >= 0:
@@ -1385,8 +1510,12 @@ class Gaussian(logfileparser.Logfile):
                     if not hasattr(self, 'vibdisps'):
                         self.vibdisps = []
                     disps = []
-                    if not hasattr(self, 'nqmf'):
-                        self.set_attribute('nqmf', self.natom)
+                    if not hasattr(self, "nqmf"):
+                        yield {
+                            "kind": "set_attribute",
+                            "name": "nqmf",
+                            "value": self.natom,
+                        }
                     for n in range(self.nqmf):
                         line = next(inputfile)
                         numbers = [float(s) for s in line[10:].split()]
@@ -1632,15 +1761,23 @@ class Gaussian(logfileparser.Logfile):
             if self.oniom:
                 return
 
-            nmo = int(line.split('=')[1].split()[0])
-            self.set_attribute('nmo', nmo)
+            nmo = int(line.split("=")[1].split()[0])
+            yield {
+                "kind": "set_attribute",
+                "name": "nmo",
+                "value": nmo,
+            }
 
         # For AM1 calculations, set nbasis by a second method,
         #   as nmo may not always be explicitly stated.
         if line[7:22] == "basis functions, ":
 
             nbasis = int(line.split()[0])
-            self.set_attribute('nbasis', nbasis)
+            yield {
+                "kind": "set_attribute",
+                "name": "nbasis",
+                "value": nbasis,
+            }
 
         # Molecular orbital overlap matrix.
         # Has to deal with lines such as:
@@ -1801,11 +1938,29 @@ class Gaussian(logfileparser.Logfile):
 
         if line[5:33] == "Natural Orbital Coefficients":
             updateprogress_title = "Natural orbitals"
-            nooccnos, nocoeffs, aonames, atombasis = natural_orbital_single_spin_parsing(inputfile, updateprogress_title)
-            self.set_attribute("nocoeffs", nocoeffs)
-            self.set_attribute("nooccnos", nooccnos)
-            self.set_attribute("atombasis", atombasis)
-            self.set_attribute("aonames", aonames)
+            nooccnos, nocoeffs, aonames, atombasis = natural_orbital_single_spin_parsing(
+                inputfile, updateprogress_title
+            )
+            yield {
+                "kind": "set_attribute",
+                "name": "nocoeffs",
+                "value": nocoeffs,
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "nooccnos",
+                "value": nooccnos,
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "atombasis",
+                "value": atombasis,
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "aonames",
+                "value": aonames,
+            }
 
         # Natural spin orbital coefficients (nsocoeffs) and occupation numbers (nsooccnos)
         # Parsed attributes are similar to the natural orbitals above except
@@ -1829,24 +1984,77 @@ class Gaussian(logfileparser.Logfile):
             updateprogress_title = "Natural Spin orbitals (alpha)"
             nsooccnos, nsocoeffs, aonames, atombasis = natural_orbital_single_spin_parsing(inputfile, updateprogress_title)
             if self.unified_no_nso:
-                self.append_attribute("nocoeffs", nsocoeffs)
-                self.append_attribute("nooccnos", nsooccnos)
+                yield {
+                    "kind": "append_attribute",
+                    "name": "nocoeffs",
+                    "value": nsocoeffs,
+                }
+                yield {
+                    "kind": "append_attribute",
+                    "name": "nooccnos",
+                    "value": nsooccnos,
+                }
             else:
-                self.append_attribute("nsocoeffs", nsocoeffs)
-                self.append_attribute("nsooccnos", nsooccnos)
-            self.set_attribute("atombasis", atombasis)
-            self.set_attribute("aonames", aonames)
+                yield {
+                    "kind": "append_attribute",
+                    "name": "nsocoeffs",
+                    "value": nsocoeffs,
+                }
+                yield {
+                    "kind": "append_attribute",
+                    "name": "nsooccnos",
+                    "value": nsooccnos,
+                }
+            yield {
+                "kind": "set_attribute",
+                "name": "atombasis",
+                "value": atombasis,
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "aonames",
+                "value": aonames,
+            }
         if line[5:38] == "Beta Natural Orbital Coefficients":
             updateprogress_title = "Natural Spin orbitals (beta)"
-            nsooccnos, nsocoeffs, aonames, atombasis = natural_orbital_single_spin_parsing(inputfile, updateprogress_title)
+            (
+                nsooccnos,
+                nsocoeffs,
+                aonames,
+                atombasis,
+            ) = natural_orbital_single_spin_parsing(inputfile, updateprogress_title)
             if self.unified_no_nso:
-                self.append_attribute("nocoeffs", nsocoeffs)
-                self.append_attribute("nooccnos", nsooccnos)
+                yield {
+                    "kind": "append_attribute",
+                    "name": "nocoeffs",
+                    "value": nsocoeffs,
+                }
+                yield {
+                    "kind": "append_attribute",
+                    "name": "nooccnos",
+                    "value": nsooccnos,
+                }
             else:
-                self.append_attribute("nsocoeffs", nsocoeffs)
-                self.append_attribute("nsooccnos", nsooccnos)
-            self.set_attribute("atombasis", atombasis)
-            self.set_attribute("aonames", aonames)
+                yield {
+                    "kind": "append_attribute",
+                    "name": "nsocoeffs",
+                    "value": nsocoeffs,
+                }
+                yield {
+                    "kind": "append_attribute",
+                    "name": "nsooccnos",
+                    "value": nsooccnos,
+                }
+            yield {
+                "kind": "set_attribute",
+                "name": "atombasis",
+                "value": atombasis,
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "aonames",
+                "value": aonames,
+            }
 
         # For FREQ=Anharm, extract anharmonicity constants
         if line[1:40] == "X matrix of Anharmonic Constants (cm-1)":
@@ -2090,14 +2298,34 @@ class Gaussian(logfileparser.Logfile):
         #Sum of electronic and thermal Enthalpies=            -563.635755
         #Sum of electronic and thermal Free Energies=         -563.689037
         if "Zero-point correction" in line:
-            self.set_attribute('zpve', float(line.split()[2]))
+            yield {
+                "kind": "set_attribute",
+                "name": "zpve",
+                "value": float(line.split()[2]),
+            }
         if "Sum of electronic and thermal Enthalpies" in line:
-            self.set_attribute('enthalpy', float(line.split()[6]))
+            yield {
+                "kind": "set_attribute",
+                "name": "enthalpy",
+                "value": float(line.split()[6]),
+            }
         if "Sum of electronic and thermal Free Energies=" in line:
-            self.set_attribute('freeenergy', float(line.split()[7]))
+            yield {
+                "kind": "set_attribute",
+                "name": "freeenergy",
+                "value": float(line.split()[7]),
+            }
         if line[1:13] == "Temperature ":
-            self.set_attribute('temperature', float(line.split()[1]))
-            self.set_attribute('pressure', float(line.split()[4]))
+            yield {
+                "kind": "set_attribute",
+                "name": "temperature",
+                "value": float(line.split()[1]),
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "pressure",
+                "value": float(line.split()[4]),
+            }
 
         # Static polarizability (from `polar`), lower triangular
         # matrix.
@@ -2246,9 +2474,9 @@ class Gaussian(logfileparser.Logfile):
                 # cast the time elements as floats for use in timedelta data structure
                 time = datetime.timedelta(
                     days=float(split_line[n]),
-                    hours=float(split_line[n+2]),
-                    minutes=float(split_line[n+4]),
-                    seconds=float(split_line[n+6]),
+                    hours=float(split_line[n + 2]),
+                    minutes=float(split_line[n + 4]),
+                    seconds=float(split_line[n + 6]),
                 )
                 self.metadata[key].append(time)
             except:

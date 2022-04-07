@@ -117,9 +117,13 @@ class Turbomole(logfileparser.Logfile):
             self.natom=int(line[10:])
 
         if line[3:11] == "nbf(AO)=":
-            nmo = int(line.split('=')[1])
-            self.set_attribute('nbasis', nmo)
-                    
+            nmo = int(line.split("=")[1])
+            yield {
+                "kind": "set_attribute",
+                "name": "nbasis",
+                "value": nmo,
+            }
+
         # The DFT functional.
         # This information is printed by dscf but not in an easily parsable format, so we'll take it from the control file instead...
         # Additionally, turbomole stores functional names in lower case. This looks odd, so we'll convert to uppercase (?)
@@ -199,14 +203,22 @@ class Turbomole(logfileparser.Logfile):
         if hasattr(self, "mosyms"):
             if "will be written to file mos" in line:
                 orbitals, line = self.parse_dscf_orbitals(inputfile, line)
-                self.set_attribute("homos", [self.determine_homo(self.mosyms[0], orbitals)])
-            
+                yield {
+                    "kind": "set_attribute",
+                    "name": "homos",
+                    "value": [self.determine_homo(self.mosyms[0], orbitals)],
+                }
+
             if "alpha:" in line:
                 orbitals, line = self.parse_dscf_orbitals(inputfile, line)
                 if len(orbitals) > 0:
                     homo = self.determine_homo(self.mosyms[0], orbitals)
                     if not hasattr(self, "homos"):
-                        self.set_attribute('homos', [homo])
+                        yield {
+                            "kind": "set_attribute",
+                            "name": "homos",
+                            "value": [homo],
+                        }
                     else:
                         self.homos[0] = homo
                 
@@ -215,7 +227,11 @@ class Turbomole(logfileparser.Logfile):
                 if len(orbitals) > 0:
                     homo = self.determine_homo(self.mosyms[1], orbitals)
                     if not hasattr(self, "homos"):
-                        self.set_attribute('homos', [homo])
+                        yield {
+                            "kind": "set_attribute",
+                            "name": "homos",
+                            "value": [homo],
+                        }
                     elif len(self.homos) == 1:
                         self.homos.append(homo)
                     else:
@@ -283,7 +299,11 @@ class Turbomole(logfileparser.Logfile):
                     )
 
                 # Set regardless.
-                self.set_attribute("charge", total_charge_int)
+                yield {
+                    "kind": "set_attribute",
+                    "name": "charge",
+                    "value": total_charge_int,
+                }
 
         if line.strip() == "dipole moment":
             line = next(inputfile)
@@ -423,9 +443,17 @@ class Turbomole(logfileparser.Logfile):
                                    for x in line.split()[-3:]])
                 line = next(inputfile)
             
-            self.set_attribute('atomnos', atomnos)
-            self.set_attribute('natom', len(atomcoords))
-            self.append_attribute("grads", atomcoords)
+            yield {
+                "kind": "set_attribute",
+                "name": "atomnos",
+                "value": atomnos,
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "natom",
+                "value": len(atomcoords),
+            }
+            yield {"kind": "append_attribute", "name": "grads", "value": atomcoords}
 
         ## Atomic coordinates in job.last:
         #              +--------------------------------------------------+
@@ -478,10 +506,18 @@ class Turbomole(logfileparser.Logfile):
                     line = next(inputfile)
                 
                 # Check the coordinates we just parsed are not already in atomcoords.
-                if not hasattr(self, 'atomcoords') or self.atomcoords[-1] != atomcoords:
-                    self.append_attribute('atomcoords', atomcoords)
-                    self.set_attribute('atomnos', atomnos)
-                    self.set_attribute('natom', len(atomcoords))
+                if not hasattr(self, "atomcoords") or self.atomcoords[-1] != atomcoords:
+                    yield {"kind": "append_attribute", "name": "atomcoords", "value": atomcoords}
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "atomnos",
+                        "value": atomnos,
+                    }
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "natom",
+                        "value": len(atomcoords),
+                    }
         except Exception as e:
             # Something went wrong, check to see if the coord line we parsed was garbage, or if something else happened.
             if set(line.strip()).issubset({' ', '.'}):
@@ -493,8 +529,12 @@ class Turbomole(logfileparser.Logfile):
         
         # Flag that indicates we are doing an opt.
         if "OPTIMIZATION CYCLE" in line:
-            self.append_attribute("optstatus", data.ccData.OPT_UNKNOWN)
-            
+            yield {
+                "kind": "append_attribute",
+                "name": "optstatus",
+                "value": data.ccData.OPT_UNKNOWN,
+            }
+
             if "OPTIMIZATION CYCLE 1" in line:
                 # This is the start of the opt.
                 self.optstatus[-1] += data.ccData.OPT_NEW
@@ -538,19 +578,30 @@ class Turbomole(logfileparser.Logfile):
                 # Next.                
                 line = next(inputfile)
                 
-            self.set_attribute("geotargets", geotargets)
-            self.append_attribute("geovalues", geovalues)
-            
+            yield {
+                "kind": "set_attribute",
+                "name": "geotargets",
+                "value": geotargets,
+            }
+            yield {"kind": "append_attribute", "name": "geovalues", "value": geovalues}
+
             if all(convergence):
                 # This iteration has converged.
-                self.append_attribute("optdone", len(self.geovalues) -1)
+                yield {
+                    "kind": "append_attribute",
+                    "name": "optdone",
+                    "value": len(self.geovalues) - 1,
+                }
                 self.optstatus[-1] += data.ccData.OPT_DONE
             else:
                 # Not converged.
-                if not hasattr(self, 'optdone'):
-                    self.set_attribute("optdone", [])
-                #self.optstatus[-1] += data.ccData.OPT_UNCONVERGED
-                
+                if not hasattr(self, "optdone"):
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "optdone",
+                        "value": [],
+                    }
+                # self.optstatus[-1] += data.ccData.OPT_UNCONVERGED
 
         # Frequency values in aoforce.out
         #        mode               7        8        9       10       11       12
@@ -632,15 +683,39 @@ class Turbomole(logfileparser.Logfile):
                     vibrmasses.extend(rmasses)
 
                 if "zero point VIBRATIONAL energy" in line:
-                    self.set_attribute("zpve", float(line.split()[6]))
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "zpve",
+                        "value": float(line.split()[6]),
+                    }
 
                 line = next(inputfile)
 
-            self.set_attribute('vibfreqs', vibfreqs)
-            self.set_attribute('vibsyms', vibsyms)
-            self.set_attribute('vibirs', vibirs)
-            self.set_attribute('vibdisps', vibdisps)
-            self.set_attribute('vibrmasses', vibrmasses)
+            yield {
+                "kind": "set_attribute",
+                "name": "vibfreqs",
+                "value": vibfreqs,
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "vibsyms",
+                "value": vibsyms,
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "vibirs",
+                "value": vibirs,
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "vibdisps",
+                "value": vibdisps,
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "vibrmasses",
+                "value": vibrmasses,
+            }
 
         # In this section we are parsing mocoeffs and moenergies from
         # the files like: mos, alpha and beta.
@@ -702,11 +777,15 @@ class Turbomole(logfileparser.Logfile):
             
             # MO irreps is not actually recognised as a cclib attribute,
             # but we may need this info to parse other sections.
-            self.append_attribute("moirreps", moirreps)
-            self.append_attribute("moenergies", moenergies)
-            self.append_attribute("mocoeffs", mocoeffs)
-            self.append_attribute("mosyms", mosyms)
-            self.set_attribute("nmo", len(moenergies))
+            yield {"kind": "append_attribute", "name": "moirreps", "value": moirreps}
+            yield {"kind": "append_attribute", "name": "moenergies", "value": moenergies}
+            yield {"kind": "append_attribute", "name": "mocoeffs", "value": mocoeffs}
+            yield {"kind": "append_attribute", "name": "mosyms", "value": mosyms}
+            yield {
+                "kind": "set_attribute",
+                "name": "nmo",
+                "value": len(moenergies),
+            }
 
         # Parsing the scfenergies, scfvalues and scftargets from job.last file.
         # scf convergence criterion : increment of total energy < .1000000D-05
@@ -743,8 +822,8 @@ class Turbomole(logfileparser.Logfile):
             total_energy_threshold = utils.float(line.split()[-1])
             one_electron_energy_threshold = utils.float(next(inputfile).split()[-1])
             scftargets = [total_energy_threshold, one_electron_energy_threshold]
-            self.append_attribute('scftargets', scftargets)
-            
+            yield {"kind": "append_attribute", "name": "scftargets", "value": scftargets}
+
             # Get ready for SCF iteration energies.
             self.iter_energy = []
             self.iter_one_elec_energy = []
@@ -753,9 +832,13 @@ class Turbomole(logfileparser.Logfile):
             while 'convergence criteria satisfied' not in line:
                 # nbasis
                 # Doesn't appear to do anything, number of basis functions does not appear in this section?
-                #if  "number of basis functions" in line:
-                #    self.set_attribute("nbasis", int(line.split()[-1]))
-                
+                # if  "number of basis functions" in line:
+                #    yield {
+                #     "kind": "set_attribute",
+                #     "name": "nbasis",
+                #     "value":  int(line.split()[-1]),
+                # }
+
                 if 'ITERATION  ENERGY' in line:
                     line = next(inputfile)
                     info = line.split()
@@ -763,17 +846,25 @@ class Turbomole(logfileparser.Logfile):
                     self.iter_one_elec_energy.append(utils.float(info[2]))
                 line = next(inputfile)
 
-            assert len(self.iter_energy) == len(self.iter_one_elec_energy), \
-                'Different number of values found for total energy and one electron energy.'
-            scfvalues = [[x - y, a - b] for x, y, a, b in 
-                         zip(self.iter_energy[1:], self.iter_energy[:-1], self.iter_one_elec_energy[1:], self.iter_one_elec_energy[:-1])]
-            self.append_attribute('scfvalues', scfvalues)
-            while 'total energy' not in line:
+            assert len(self.iter_energy) == len(
+                self.iter_one_elec_energy
+            ), "Different number of values found for total energy and one electron energy."
+            scfvalues = [
+                [x - y, a - b]
+                for x, y, a, b in zip(
+                    self.iter_energy[1:],
+                    self.iter_energy[:-1],
+                    self.iter_one_elec_energy[1:],
+                    self.iter_one_elec_energy[:-1],
+                )
+            ]
+            yield {"kind": "append_attribute", "name": "scfvalues", "value": scfvalues}
+            while "total energy" not in line:
                 line = next(inputfile)
 
-            scfenergy = utils.convertor(utils.float(line.split()[4]), 'hartree', 'eV')
-            self.append_attribute('scfenergies', scfenergy)
-            
+            scfenergy = utils.convertor(utils.float(line.split()[4]), "hartree", "eV")
+            yield {"kind": "append_attribute", "name": "scfenergies", "value": scfenergy}
+
             # We need to determine whether this is a HF or DFT energy for metadata.
             if self.is_DFT:
                 self.metadata['methods'].append("DFT")
@@ -801,19 +892,20 @@ class Turbomole(logfileparser.Logfile):
         #  *   D1 diagnostic                           :      0.0132            *
         #  *                                                                    *
         #  **********************************************************************            
-        if 'Final CCSD energy' in line or 'Final CC2 energy' in line:
-            self.append_attribute(
-                'ccenergies',
-                utils.convertor(utils.float(line.split()[5]), 'hartree', 'eV')
-            )
-            self.metadata['methods'].append("CCSD")
-            
+        if "Final CCSD energy" in line or "Final CC2 energy" in line:
+            yield {
+                "kind": "append_attribute",
+                "name": "ccenergies",
+                "value": utils.convertor(utils.float(line.split()[5]), "hartree", "eV"),
+            }
+            self.metadata["methods"].append("CCSD")
+
         # Look for MP energies.
         for mp_level in range(2,6):
             if f"Final MP{mp_level} energy" in line:
                 mpenergy = utils.convertor(utils.float(line.split()[5]), 'hartree', 'eV')
                 if mp_level == 2:
-                    self.append_attribute('mpenergies', [mpenergy])
+                    yield {"kind": "append_attribute", "name": "mpenergies", "value": [mpenergy]}
                 else:
                     self.mpenergies[-1].append(mpenergy)
                 self.metadata["methods"].append(f"MP{mp_level}")
@@ -829,10 +921,10 @@ class Turbomole(logfileparser.Logfile):
         #  *****************************************************
         if 'MP2-energy' in line:
             line = next(inputfile)
-            if 'total' in line:
-                mp2energy = [utils.convertor(utils.float(line.split()[3]), 'hartree', 'eV')]
-                self.append_attribute('mpenergies', mp2energy)
-                self.metadata['methods'].append("MP2")
+            if "total" in line:
+                mp2energy = [utils.convertor(utils.float(line.split()[3]), "hartree", "eV")]
+                yield {"kind": "append_attribute", "name": "mpenergies", "value": mp2energy}
+                self.metadata["methods"].append("MP2")
 
         # Support for the now outdated (?) rimp2
         # ------------------------------------------------
@@ -841,10 +933,9 @@ class Turbomole(logfileparser.Logfile):
         # ------------------------------------------------
         if "Method          :  MP2" in line:
             line = next(inputfile)
-            mp2energy = [utils.convertor(utils.float(line.split()[3]), 'hartree', 'eV')]
-            self.append_attribute('mpenergies', mp2energy)
-            self.metadata['methods'].append("MP2")
-
+            mp2energy = [utils.convertor(utils.float(line.split()[3]), "hartree", "eV")]
+            yield {"kind": "append_attribute", "name": "mpenergies", "value": mp2energy}
+            self.metadata["methods"].append("MP2")
 
         # Excited state info from escf.
         #                          1 singlet a excitation
@@ -901,26 +992,26 @@ class Turbomole(logfileparser.Logfile):
                 mult = symm_parts[1].capitalize()
             
             symmetry = f"{mult}-{symm_parts[-2].capitalize()}"
-            self.append_attribute("etsyms", symmetry)
-            
+            yield {"kind": "append_attribute", "name": "etsyms", "value": symmetry}
+
             # Energy should be in cm-1...
-            energy = utils.convertor(utils.float(line.split()[-1]), 'hartree', 'wavenumber')
-            self.append_attribute("etenergies", energy)
-            
+            energy = utils.convertor(utils.float(line.split()[-1]), "hartree", "wavenumber")
+            yield {"kind": "append_attribute", "name": "etenergies", "value": energy}
+
             # Oscillator strength.
             while "length representation:" not in line:
                 line = next(inputfile)
             oscillator_strength = utils.float(line.split()[-1])
-            self.append_attribute("etoscs", oscillator_strength)
-            
+            yield {"kind": "append_attribute", "name": "etoscs", "value": oscillator_strength}
+
             line = next(inputfile)
             
             # Rotatory strength.
             while "length representation:" not in line:
                 line = next(inputfile)
             rotatory_strength = utils.float(line.split()[-1])
-            self.append_attribute("etrotats", rotatory_strength)
-            
+            yield {"kind": "append_attribute", "name": "etrotats", "value": rotatory_strength}
+
             while "Dominant contributions:" not in line:
                 line = next(inputfile)
             line = next(inputfile)
@@ -974,9 +1065,11 @@ class Turbomole(logfileparser.Logfile):
                     line = next(inputfile)
                 
                 # Print a warning because we're missing the sign (+/-) of etsecs.
-                self.logger.warning("The sign (+/-) of the coefficient for singly-excited configurations is not available")
-                self.append_attribute("etsecs", transitions)
-        
+                self.logger.warning(
+                    "The sign (+/-) of the coefficient for singly-excited configurations is not available"
+                )
+                yield {"kind": "append_attribute", "name": "etsecs", "value": transitions}
+
             # Transition dipoles.
             while "Electric transition dipole moment (length rep.):" not in line:
                 line = next(inputfile)
@@ -990,8 +1083,8 @@ class Turbomole(logfileparser.Logfile):
             line = next(inputfile)
             tdm_z = float(line.split()[1])
             
-            self.append_attribute("etdips", [tdm_x, tdm_y, tdm_z])
-            
+            yield {"kind": "append_attribute", "name": "etdips", "value": [tdm_x, tdm_y, tdm_z]}
+
         # Excitation energies with ricc2.
         #  +================================================================================+
         #  | sym | multi | state |          CC2 excitation energies       |  %t1   |  %t2   |
@@ -1038,11 +1131,11 @@ class Turbomole(logfileparser.Logfile):
                     mult = parts[2]
                     
                 symmetry = f"{mult}-{parts[1].capitalize()}"
-                self.append_attribute("etsyms", symmetry)
-                    
+                yield {"kind": "append_attribute", "name": "etsyms", "value": symmetry}
+
                 energy = utils.float(parts[6])
-                self.append_attribute("etenergies", energy)
-                
+                yield {"kind": "append_attribute", "name": "etenergies", "value": energy}
+
                 # Go again.
                 line = next(inputfile)
         
@@ -1123,17 +1216,20 @@ class Turbomole(logfileparser.Logfile):
                 # Go again.
                 line = next(inputfile)
             
-            self.append_attribute("etsecs", transitions)
-                
-        # Oscillator strengths are also printed separately with ricc2, 
+            yield {"kind": "append_attribute", "name": "etsecs", "value": transitions}
+
+        # Oscillator strengths are also printed separately with ricc2,
         # and may be missing entirely.
         #  
         #        oscillator strength (length gauge)   :      0.09614727
         #  
         if "oscillator strength (length gauge)   :" in line:
-            self.append_attribute("etoscs", utils.float(line.split()[-1]))
-            
-        
+            yield {
+                "kind": "append_attribute",
+                "name": "etoscs",
+                "value": utils.float(line.split()[-1]),
+            }
+
         # All done for this loop.
         # Keep track of last lines.
         self.last_lines.append(line)
@@ -1300,12 +1396,20 @@ class Turbomole(logfileparser.Logfile):
         if hasattr(self, "homos"):
             if len(self.homos) == 1:
                 # If we are restricted (len(homos) == 1); assume we have to be singlet.
-                self.set_attribute("mult", 1)
+                yield {
+                    "kind": "set_attribute",
+                    "name": "mult",
+                    "value": 1,
+                }
             else:
                 # Unrestricted, the difference in homos should tell us the no. of unpaired e-.
                 unpaired_e = abs(self.homos[0] - self.homos[1])
-                self.set_attribute("mult", unpaired_e +1)
-                
+                yield {
+                    "kind": "set_attribute",
+                    "name": "mult",
+                    "value": unpaired_e + 1,
+                }
+
         # Set a flag if we stopped part way through an opt.
         if hasattr(self, "optstatus") and self.optstatus[-1] != data.ccData.OPT_DONE:
             self.optstatus[-1] += data.ccData.OPT_UNCONVERGED

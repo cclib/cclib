@@ -224,7 +224,11 @@ class GAMESS(logfileparser.Logfile):
             )
         ):
             dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
-            self.append_attribute("dispersionenergies", dispersion)
+            yield {
+                "kind": "append_attribute",
+                "name": "dispersionenergies",
+                "value": dispersion,
+            }
 
         # For total energies after Moller-Plesset corrections, the output looks something like this:
         #
@@ -321,11 +325,19 @@ class GAMESS(logfileparser.Logfile):
         if line[1:19] == "CHARGE OF MOLECULE":
 
             charge = int(round(float(line.split()[-1])))
-            self.set_attribute('charge', charge)
+            yield {
+                "kind": "set_attribute",
+                "name": "charge",
+                "value": charge,
+            }
 
             line = next(inputfile)
             mult = int(line.split()[-1])
-            self.set_attribute('mult', mult)
+            yield {
+                "kind": "set_attribute",
+                "name": "mult",
+                "value": mult,
+            }
 
         # Electronic transitions (etenergies) for CIS runs and TD-DFT, which
         # have very similar outputs. The outputs EOM look very differentm, though.
@@ -587,7 +599,11 @@ class GAMESS(logfileparser.Logfile):
                 atomnos.append(int(round(float(temp[1]))))  # Don't use the atom name as this is arbitary
                 line = next(inputfile)
 
-            self.set_attribute('atomnos', atomnos)
+            yield {
+                "kind": "set_attribute",
+                "name": "atomnos",
+                "value": atomnos,
+            }
             self.atomcoords.append(atomcoords)
 
         if line[12:40] == "EQUILIBRIUM GEOMETRY LOCATED":
@@ -831,7 +847,11 @@ class GAMESS(logfileparser.Logfile):
                         temp = line.strip().split()
                         atommasses.append(float(temp[2]))
                         line = next(inputfile)
-                    self.set_attribute('atommasses', atommasses)
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "atommasses",
+                        "value": atommasses,
+                    }
 
                 if "THIS IS NOT A STATIONARY POINT" in line:
                     msg = "\n   This is not a stationary point on the molecular PES"
@@ -1274,7 +1294,11 @@ class GAMESS(logfileparser.Logfile):
             line = next(inputfile)
             homos.append(int(line.split()[-1])-1)
 
-            self.set_attribute('homos', homos)
+            yield {
+                "kind": "set_attribute",
+                "name": "homos",
+                "value": homos,
+            }
 
         if line.find("SYMMETRIES FOR INITIAL GUESS ORBITALS FOLLOW") >= 0:
             # Not unrestricted, so lop off the second index.
@@ -1299,31 +1323,55 @@ class GAMESS(logfileparser.Logfile):
         #   this is slightly different (ex. lower case for FMO in exam37).
         if not hasattr(self, "natom") and "NUMBER OF ATOMS" in line.upper():
             natom = int(line.split()[-1])
-            self.set_attribute('natom', natom)
+            yield {
+                "kind": "set_attribute",
+                "name": "natom",
+                "value": natom,
+            }
 
         # The first is from Julien's Example and the second is from Alexander's
         # I think it happens if you use a polar basis function instead of a cartesian one
         if line.find("NUMBER OF CARTESIAN GAUSSIAN BASIS") == 1 or line.find("TOTAL NUMBER OF BASIS FUNCTIONS") == 1:
             nbasis = int(line.strip().split()[-1])
-            self.set_attribute('nbasis', nbasis)
+            yield {
+                "kind": "set_attribute",
+                "name": "nbasis",
+                "value": nbasis,
+            }
 
         elif line.find("TOTAL NUMBER OF CONTAMINANTS DROPPED") >= 0:
             nmos_dropped = int(line.split()[-1])
             if hasattr(self, "nmo"):
-                self.set_attribute('nmo', self.nmo - nmos_dropped)
+                yield {
+                    "kind": "set_attribute",
+                    "name": "nmo",
+                    "value": self.nmo - nmos_dropped,
+                }
             else:
-                self.set_attribute('nmo', self.nbasis - nmos_dropped)
+                yield {
+                    "kind": "set_attribute",
+                    "name": "nmo",
+                    "value": self.nbasis - nmos_dropped,
+                }
 
         # Note that this line is present if ISPHER=1, e.g. for C_bigbasis
         elif line.find("SPHERICAL HARMONICS KEPT IN THE VARIATION SPACE") >= 0:
             nmo = int(line.strip().split()[-1])
-            self.set_attribute('nmo', nmo)
+            yield {
+                "kind": "set_attribute",
+                "name": "nmo",
+                "value": nmo,
+            }
 
         # Note that this line is not always present, so by default
         # NBsUse is set equal to NBasis (see below).
         elif line.find("TOTAL NUMBER OF MOS IN VARIATION SPACE") == 1:
             nmo = int(line.split()[-1])
-            self.set_attribute('nmo', nmo)
+            yield {
+                "kind": "set_attribute",
+                "name": "nmo",
+                "value": nmo,
+            }
 
         elif line.find("OVERLAP MATRIX") == 0 or line.find("OVERLAP MATRIX") == 1:
             # The first is for PC-GAMESS, the second for GAMESS
@@ -1443,7 +1491,11 @@ class GAMESS(logfileparser.Logfile):
             reference = numpy.array([float(x) for x in coords_and_charge.split()[:3]])
             reference = utils.convertor(reference, 'bohr', 'Angstrom')
             charge = int(round(float(coords_and_charge.split()[-2])))
-            self.set_attribute('charge', charge)
+            yield {
+                "kind": "set_attribute",
+                "name": "charge",
+                "value": charge,
+            }
 
             dipoleheader = next(inputfile)
             assert dipoleheader.split()[:3] == ['DX', 'DY', 'DZ']
@@ -1546,13 +1598,21 @@ class GAMESS(logfileparser.Logfile):
         if "THERMOCHEMISTRY AT T=" in line:
             match = re.search(r"THERMOCHEMISTRY AT T=(.*)K", line)
             if match:
-                self.set_attribute('temperature', float(match.group(1)))
-            self.skip_lines(inputfile, ['d', 'b', 'USING IDEAL GAS, ...'])
+                yield {
+                    "kind": "set_attribute",
+                    "name": "temperature",
+                    "value": float(match.group(1)),
+                }
+            self.skip_lines(inputfile, ["d", "b", "USING IDEAL GAS, ..."])
             line = next(inputfile)
             assert "PASCAL." in line
             match = re.search(r"P=(.*)PASCAL.", line)
             if match:
-                self.set_attribute('pressure', float(match.group(1))/1.01325e5)
+                yield {
+                    "kind": "set_attribute",
+                    "name": "pressure",
+                    "value": float(match.group(1)) / 1.01325e5,
+                }
             self.skip_lines(
                 inputfile,
                 [
@@ -1572,7 +1632,11 @@ class GAMESS(logfileparser.Logfile):
                 line = next(inputfile)
             line = next(inputfile)
             assert "HARTREE/MOLECULE" in line
-            self.set_attribute('zpve', float(line.split()[0]))
+            yield {
+                "kind": "set_attribute",
+                "name": "zpve",
+                "value": float(line.split()[0]),
+            }
 
         if "KCAL/MOL  KCAL/MOL  KCAL/MOL CAL/MOL-K CAL/MOL-K CAL/MOL-K" in line:
             self.skip_lines(inputfile,["ELEC","TRANS","ROT","VIB"])
@@ -1583,10 +1647,23 @@ class GAMESS(logfileparser.Logfile):
                 electronicEnergy = utils.convertor(self.scfenergies[-1],"eV","hartree")
             else:
                 electronicEnergy = 0  # GAMESS  prints thermochemistry at the end, so it should have a value for this already
-            self.set_attribute('enthalpy', electronicEnergy + utils.convertor(float(thermoValues[2]),"kcal/mol","hartree"))
-            self.set_attribute('freeenergy', electronicEnergy + utils.convertor(float(thermoValues[3]),"kcal/mol","hartree"))
-            self.set_attribute('entropy', utils.convertor(float(thermoValues[6])/1000.0,"kcal/mol","hartree"))
-
+            yield {
+                "kind": "set_attribute",
+                "name": "enthalpy",
+                "value": electronicEnergy
+                + utils.convertor(float(thermoValues[2]), "kcal/mol", "hartree"),
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "freeenergy",
+                "value": electronicEnergy
+                + utils.convertor(float(thermoValues[3]), "kcal/mol", "hartree"),
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "entropy",
+                "value": utils.convertor(float(thermoValues[6]) / 1000.0, "kcal/mol", "hartree"),
+            }
 
         if line[:30] == ' ddikick.x: exited gracefully.'\
                 or line[:41] == ' EXECUTION OF FIREFLY TERMINATED NORMALLY'\

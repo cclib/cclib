@@ -233,11 +233,27 @@ class DALTON(logfileparser.Logfile):
                 else:
                     atommasses.append(float(cols[1]))
 
-            self.set_attribute('atomnos', atomnos)
-            self.set_attribute('atommasses', atommasses)
+            yield {
+                "kind": "set_attribute",
+                "name": "atomnos",
+                "value": atomnos,
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "atommasses",
+                "value": atommasses,
+            }
 
-            self.set_attribute('natom', len(atomnos))
-            self.set_attribute('natom', len(atommasses))
+            yield {
+                "kind": "set_attribute",
+                "name": "natom",
+                "value": len(atomnos),
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "natom",
+                "value": len(atommasses),
+            }
 
             # Save this for later if there were any labels.
             self.symmetry_atoms = symmetry_atoms or None
@@ -280,7 +296,11 @@ class DALTON(logfileparser.Logfile):
 
             line = next(inputfile)
             assert "Total number of atoms:" in line
-            self.set_attribute("natom", int(line.split()[-1]))
+            yield {
+                "kind": "set_attribute",
+                "name": "natom",
+                "value": int(line.split()[-1]),
+            }
 
             # When using the INTGRL keyword and not pulling from the
             # basis set library, the "Basis set used" line doesn't
@@ -346,15 +366,35 @@ class DALTON(logfileparser.Logfile):
                         atombasis.append(list(range(nbasis, nbasis + cont)))
                         nbasis += cont
 
-            self.set_attribute('atomnos', atomnos)
-            self.set_attribute('atombasis', atombasis)
-            self.set_attribute('nbasis', nbasis)
+            yield {
+                "kind": "set_attribute",
+                "name": "atomnos",
+                "value": atomnos,
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "atombasis",
+                "value": atombasis,
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "nbasis",
+                "value": nbasis,
+            }
 
             self.skip_line(inputfile, 'dashes')
 
             line = next(inputfile)
-            self.set_attribute('natom', int(line.split()[iatoms]))
-            self.set_attribute('nbasis', int(line.split()[icont]))
+            yield {
+                "kind": "set_attribute",
+                "name": "natom",
+                "value": int(line.split()[iatoms]),
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "nbasis",
+                "value": int(line.split()[icont]),
+            }
 
             self.skip_line(inputfile, 'dashes')
 
@@ -508,7 +548,11 @@ class DALTON(logfileparser.Logfile):
 
             self.skip_line(inputfile, 'blank')
 
-            self.set_attribute('gbasis', gbasis)
+            yield {
+                "kind": "set_attribute",
+                "name": "gbasis",
+                "value": gbasis,
+            }
 
         # Since DALTON sometimes uses symmetry labels (Ag, Au, etc.) and sometimes
         # just the symmetry group index, we need to parse and keep a mapping between
@@ -581,8 +625,12 @@ class DALTON(logfileparser.Logfile):
             index = 4
             if "@" in chomp:
                 index = 5
-            self.set_attribute("nbasis", int(chomp[index]))
-            self.nmo_per_symmetry = list(map(int, chomp[index+2:]))
+            yield {
+                "kind": "set_attribute",
+                "name": "nbasis",
+                "value": int(chomp[index]),
+            }
+            self.nmo_per_symmetry = list(map(int, chomp[index + 2 :]))
             assert self.nbasis == sum(self.nmo_per_symmetry)
         if "Threshold for SCF convergence" in line:
             if not hasattr(self, "scftargets"):
@@ -620,17 +668,29 @@ class DALTON(logfileparser.Logfile):
             self.unpaired_electrons = int(line.split()[-1])
             line = next(inputfile)
             assert "Total charge of the molecule" in line
-            self.set_attribute("charge", int(line.split()[-1]))
-            self.skip_line(inputfile, 'b')
+            yield {
+                "kind": "set_attribute",
+                "name": "charge",
+                "value": int(line.split()[-1]),
+            }
+            self.skip_line(inputfile, "b")
             line = next(inputfile)
             assert "Spin multiplicity and 2 M_S" in line
-            self.set_attribute("mult", int(line.split()[-2]))
+            yield {
+                "kind": "set_attribute",
+                "name": "mult",
+                "value": int(line.split()[-2]),
+            }
             # Dalton only has ROHF, no UHF
             if self.mult != 1:
                 self.metadata["unrestricted"] = True
 
-            if not hasattr(self, 'homos'):
-                self.set_attribute('homos', [(self.paired_electrons // 2) - 1])
+            if not hasattr(self, "homos"):
+                yield {
+                    "kind": "set_attribute",
+                    "name": "homos",
+                    "value": [(self.paired_electrons // 2) - 1],
+                }
                 if self.unpaired_electrons > 0:
                     self.homos.append(self.homos[0])
                     self.homos[0] += self.unpaired_electrons
@@ -639,7 +699,7 @@ class DALTON(logfileparser.Logfile):
             self.skip_lines(inputfile, ["pluses_and_dashes", "b"])
             line = next(inputfile)
             dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
-            self.append_attribute("dispersionenergies", dispersion)
+            yield {"kind": "append_attribute", "name": "dispersionenergies", "value": dispersion}
 
         #  *********************************************
         #  ***** DIIS optimization of Hartree-Fock *****
@@ -811,7 +871,11 @@ class DALTON(logfileparser.Logfile):
             if not hasattr(self, "nmo"):
                 self.nmo = self.nbasis
                 if len(self.moenergies[0]) != self.nmo:
-                    self.set_attribute('nmo', len(self.moenergies[0]))
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "nmo",
+                        "value": len(self.moenergies[0]),
+                    }
 
         #                       .-----------------------------------.
         #                       | >>> Final results from SIRIUS <<< |
@@ -858,12 +922,14 @@ class DALTON(logfileparser.Logfile):
             while "END OF COUPLED CLUSTER CALCULATION" not in line:
                 if "Total MP2   energy" in line:
                     # If **WAVE FUNCTIONS\n.MP2 was specified, don't double-add this.
-                    if not hasattr(self, "mpenergies") or \
-                       not len(self.mpenergies) == len(self.scfenergies):
-                        self.append_attribute(
-                            "mpenergies",
-                            [utils.convertor(float(line.split()[-1]), "hartree", "eV")]
-                        )
+                    if not hasattr(self, "mpenergies") or not len(self.mpenergies) == len(
+                        self.scfenergies
+                    ):
+                        yield {
+                            "kind": "append_attribute",
+                            "name": "mpenergies",
+                            "value": [utils.convertor(float(line.split()[-1]), "hartree", "eV")],
+                        }
                 if "Total CCSD  energy:" in line:
                     self.metadata["methods"].append("CCSD")
                     ccenergies.append(float(line.split()[-1]))
@@ -872,9 +938,11 @@ class DALTON(logfileparser.Logfile):
                     ccenergies.append(float(line.split()[-1]))
                 line = next(inputfile)
             if ccenergies:
-                self.append_attribute(
-                    "ccenergies", utils.convertor(ccenergies[-1], "hartree", "eV")
-                )
+                yield {
+                    "kind": "append_attribute",
+                    "name": "ccenergies",
+                    "value": utils.convertor(ccenergies[-1], "hartree", "eV"),
+                }
 
         if "Tau1 diagnostic" in line:
             self.metadata["t1_diagnostic"] = float(line.split()[-1])
@@ -1141,7 +1209,11 @@ class DALTON(logfileparser.Logfile):
             )
             tokens = next(inputfile).split()
             assert tokens[3] == "Hartrees"
-            self.set_attribute("zpve", float(tokens[1]))
+            yield {
+                "kind": "set_attribute",
+                "name": "zpve",
+                "value": float(tokens[1]),
+            }
 
         # Static polarizability from **PROPERTIES/.POLARI.
         if line.strip() == "Static polarizabilities (au)":
@@ -1292,10 +1364,22 @@ class DALTON(logfileparser.Logfile):
                         line = next(inputfile)
                     etsecs.append(etsec)
 
-            self.set_attribute("etsyms", etsyms)
-            self.set_attribute("etenergies", etenergies)
+            yield {
+                "kind": "set_attribute",
+                "name": "etsyms",
+                "value": etsyms,
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "etenergies",
+                "value": etenergies,
+            }
             if etsecs:
-                self.set_attribute("etsecs", etsecs)
+                yield {
+                    "kind": "set_attribute",
+                    "name": "etsecs",
+                    "value": etsecs,
+                }
             if etoscs:
                 for k in etoscs_keys:
                     # If the oscillator strength of a transition is known to
@@ -1306,7 +1390,11 @@ class DALTON(logfileparser.Logfile):
                 # `.keys()` is not strictly necessary, but make it obvious
                 # that this is being sorted in order of excitation and
                 # symmetry, not oscillator strength.
-                self.set_attribute("etoscs", [etoscs[k] for k in sorted(etoscs.keys())])
+                yield {
+                    "kind": "set_attribute",
+                    "name": "etoscs",
+                    "value": [etoscs[k] for k in sorted(etoscs.keys())],
+                }
 
         if line[:37] == ' >>>> Total wall time used in DALTON:':
             self.metadata['success'] = True

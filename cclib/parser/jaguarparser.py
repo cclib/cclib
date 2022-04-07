@@ -73,8 +73,16 @@ class Jaguar(logfileparser.Logfile):
 
         # Extract charge and multiplicity
         if line[2:22] == "net molecular charge":
-            self.set_attribute('charge', int(line.split()[-1]))
-            self.set_attribute('mult', int(next(inputfile).split()[-1]))
+            yield {
+                "kind": "set_attribute",
+                "name": "charge",
+                "value": int(line.split()[-1]),
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "mult",
+                "value": int(next(inputfile).split()[-1]),
+            }
 
         # The Gaussian basis set information is printed before the geometry, and we need
         # to do some indexing to get this into cclib format, because fn increments
@@ -156,10 +164,18 @@ class Jaguar(logfileparser.Logfile):
                 line = next(inputfile)
 
             # The indices for atombasis can also be read later from the molecular orbital output.
-            self.set_attribute('atombasis', atombasis)
+            yield {
+                "kind": "set_attribute",
+                "name": "atombasis",
+                "value": atombasis,
+            }
 
             # This length of atombasis should always be the number of atoms.
-            self.set_attribute('natom', len(self.atombasis))
+            yield {
+                "kind": "set_attribute",
+                "name": "natom",
+                "value": len(self.atombasis),
+            }
 
         #  Effective Core Potential
         #
@@ -224,7 +240,11 @@ class Jaguar(logfileparser.Logfile):
                 line = next(inputfile)
             self.atomcoords.append(atomcoords)
             self.atomnos = numpy.array(atomnos, "i")
-            self.set_attribute('natom', len(atomcoords))
+            yield {
+                "kind": "set_attribute",
+                "name": "natom",
+                "value": len(atomcoords),
+            }
 
         # Hartree-Fock energy after SCF
         if line[1:18] == "SCFE: SCF energy:":
@@ -265,7 +285,11 @@ class Jaguar(logfileparser.Logfile):
 
         if line[2:27] == "number of basis functions":
             nbasis = int(line.strip().split()[-1])
-            self.set_attribute('nbasis', nbasis)
+            yield {
+                "kind": "set_attribute",
+                "name": "nbasis",
+                "value": nbasis,
+            }
 
         if line.find("number of alpha occupied orb") > 0:
         # Get number of MOs for an unrestricted calc
@@ -709,16 +733,25 @@ class Jaguar(logfileparser.Logfile):
                 line = next(inputfile)
             tokens = line.split()
             if len(tokens) == 5:
-                self.set_attribute("pressure", float(line.split()[3]))
+                yield {
+                    "kind": "set_attribute",
+                    "name": "pressure",
+                    "value": float(line.split()[3]),
+                }
             line = next(inputfile)
             if "pressure" in line:
-                self.set_attribute("pressure", float(line.split()[1]))
+                yield {
+                    "kind": "set_attribute",
+                    "name": "pressure",
+                    "value": float(line.split()[1]),
+                }
             while "zero point energy" not in line:
                 line = next(inputfile)
-            self.set_attribute(
-                "zpve",
-                utils.convertor(float(line.split()[-2]), "kcal/mol", "hartree")
-            )
+            yield {
+                "kind": "set_attribute",
+                "name": "zpve",
+                "value": utils.convertor(float(line.split()[-2]), "kcal/mol", "hartree"),
+            }
 
         # Parse excited state output (for CIS calculations).
         # Jaguar calculates only singlet states.

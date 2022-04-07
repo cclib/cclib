@@ -306,7 +306,11 @@ class Logfile(ABC):
         self.cupdate = cupdate
 
         # Maybe the sub-class has something to do before parsing.
-        self.before_parsing()
+        if inspect.isgeneratorfunction(self.before_parsing):
+            for token in self.before_parsing():
+                self.handle(token)
+        else:
+            self.before_parsing()
 
         # Loop over lines in the file object and call extract().
         # This is where the actual parsing is done.
@@ -318,7 +322,8 @@ class Logfile(ABC):
             # Any attributes can be freely set and used across calls, however only those
             #   in data._attrlist will be moved to final data object that is returned.
             try:
-                self.extract(inputfile, line)
+                for token in self.extract(inputfile, line):
+                    self.handle(token)
             except StopIteration:
                 self.logger.error("Unexpectedly encountered end of logfile.")
                 break
@@ -332,7 +337,11 @@ class Logfile(ABC):
             inputfile.close()
 
         # Maybe the sub-class has something to do after parsing.
-        self.after_parsing()
+        if inspect.isgeneratorfunction(self.after_parsing):
+            for token in self.after_parsing():
+                self.handle(token)
+        else:
+            self.after_parsing()
 
         # If atomcoords were not parsed, but some input coordinates were ("inputcoords").
         # This is originally from the Gaussian parser, a regression fix.
@@ -414,6 +423,19 @@ class Logfile(ABC):
             if hasattr(self, name):
                 delattr(self, name)
 
+    def handle(self, token):
+        """Handle a token."""
+        if token["kind"] == "set_attribute":
+            self.set_attribute(token["name"], token["value"])
+        elif token["kind"] == "append_attribute":
+            for token in self.append_attribute(token["name"], token["value"]):
+                self.handle(token)
+        elif token["kind"] == "extend_attribute":
+            for token in self.extend_attribute(token["name"], token["value"]):
+                self.handle(token)
+        else:
+            raise ValueError(f"Unknown token kind: {token['kind']}")
+
     def set_attribute(self, name, value, check_change=True):
         """Set an attribute and perform an optional check when it already exists.
 
@@ -444,14 +466,22 @@ class Logfile(ABC):
         """Appends a value to an attribute."""
 
         if not hasattr(self, name):
-            self.set_attribute(name, [])
+            yield {
+                "kind": "set_attribute",
+                "name": name,
+                "value": [],
+            }
         getattr(self, name).append(value)
 
     def extend_attribute(self, name, values):
         """Appends an iterable of values to an attribute."""
         
         if not hasattr(self, name):
-            self.set_attribute(name, [])
+            yield {
+                "kind": "set_attribute",
+                "name": name,
+                "value": [],
+            }
         getattr(self, name).extend(values)
 
     def _assign_coreelectrons_to_element(self, element, ncore,

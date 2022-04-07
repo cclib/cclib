@@ -60,7 +60,11 @@ class GAMESSUK(logfileparser.Logfile):
 
         if line[1:22] == "total number of atoms":
             natom = int(line.split()[-1])
-            self.set_attribute('natom', natom)
+            yield {
+                "kind": "set_attribute",
+                "name": "natom",
+                "value": natom,
+            }
 
         if line[3:44] == "convergence threshold in optimization run":
             # Assuming that this is only found in the case of OPTXYZ
@@ -157,7 +161,11 @@ class GAMESSUK(logfileparser.Logfile):
             if not hasattr(self, "atomcoords"):
                 self.atomcoords = []
             self.atomcoords.append(atomcoords)
-            self.set_attribute('atomnos', atomnos)
+            yield {
+                "kind": "set_attribute",
+                "name": "atomnos",
+                "value": atomnos,
+            }
 
         # Each step of a geometry optimization will also print the coordinates:
         #
@@ -198,7 +206,11 @@ class GAMESSUK(logfileparser.Logfile):
             if not hasattr(self, "atomcoords"):
                 self.atomcoords = []
             self.atomcoords.append(atomcoords)
-            self.set_attribute('atomnos', atomnos)
+            yield {
+                "kind": "set_attribute",
+                "name": "atomnos",
+                "value": atomnos,
+            }
 
         # This is printed when a geometry optimization succeeds, after the last gradient of the energy.
         if line[40:62] == "optimization converged":
@@ -215,16 +227,28 @@ class GAMESSUK(logfileparser.Logfile):
         if line[1:32] == "total number of basis functions":
 
             nbasis = int(line.split()[-1])
-            self.set_attribute('nbasis', nbasis)
+            yield {
+                "kind": "set_attribute",
+                "name": "nbasis",
+                "value": nbasis,
+            }
 
             while line.find("charge of molecule") < 0:
                 line = next(inputfile)
 
             charge = int(line.split()[-1])
-            self.set_attribute('charge', charge)
+            yield {
+                "kind": "set_attribute",
+                "name": "charge",
+                "value": charge,
+            }
 
             mult = int(next(inputfile).split()[-1])
-            self.set_attribute('mult', mult)
+            yield {
+                "kind": "set_attribute",
+                "name": "mult",
+                "value": mult,
+            }
 
             alpha = int(next(inputfile).split()[-1])-1
             beta = int(next(inputfile).split()[-1])-1
@@ -319,10 +343,18 @@ class GAMESSUK(logfileparser.Logfile):
             self.skip_lines(inputfile, ["s", "b", "b"])
             line = next(inputfile)
             assert "temperature" in line
-            self.set_attribute("temperature", float(line.split()[1]))
+            yield {
+                "kind": "set_attribute",
+                "name": "temperature",
+                "value": float(line.split()[1]),
+            }
             line = next(inputfile)
             assert "pressure" in line
-            self.set_attribute("pressure", float(line.split()[1]))
+            yield {
+                "kind": "set_attribute",
+                "name": "pressure",
+                "value": float(line.split()[1]),
+            }
             self.skip_lines(
                 inputfile,
                 [
@@ -344,7 +376,11 @@ class GAMESSUK(logfileparser.Logfile):
             assert "kcal/mol" in line
             line = next(inputfile)
             assert "hartree/particle" in line
-            self.set_attribute("zpve", float(line.split()[0]))
+            yield {
+                "kind": "set_attribute",
+                "name": "zpve",
+                "value": float(line.split()[0]),
+            }
 
         if line[26:36] == "raman data":
             self.vibramans = []
@@ -729,7 +765,11 @@ class GAMESSUK(logfileparser.Logfile):
                 self.skip_line(inputfile, "blank")
                 line = inputfile.next()
 
-            self.set_attribute('nooccnos', occupations)
+            yield {
+                "kind": "set_attribute",
+                "name": "nooccnos",
+                "value": occupations,
+            }
 
         if line[:33] == ' end of  G A M E S S   program at':
             self.metadata['success'] = True

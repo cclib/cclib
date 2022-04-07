@@ -48,9 +48,13 @@ class Psi4(logfileparser.Logfile):
         super(Psi4, self).after_parsing()
 
         # Newer versions of Psi4 don't explicitly print the number of atoms.
-        if not hasattr(self, 'natom'):
-            if hasattr(self, 'atomnos'):
-                self.set_attribute('natom', len(self.atomnos))
+        if not hasattr(self, "natom"):
+            if hasattr(self, "atomnos"):
+                yield {
+                    "kind": "set_attribute",
+                    "name": "natom",
+                    "value": len(self.atomnos),
+                }
 
     def normalisesym(self, label):
         """Use standard symmetry labels instead of Psi4 labels.
@@ -164,12 +168,20 @@ class Psi4(logfileparser.Logfile):
         if (self.section == "Geometry") and ("Geometry (in Angstrom), charge" in line):
 
             assert line.split()[3] == "charge"
-            charge = int(line.split()[5].strip(','))
-            self.set_attribute('charge', charge)
+            charge = int(line.split()[5].strip(","))
+            yield {
+                "kind": "set_attribute",
+                "name": "charge",
+                "value": charge,
+            }
 
             assert line.split()[6] == "multiplicity"
-            mult = int(line.split()[8].strip(':'))
-            self.set_attribute('mult', mult)
+            mult = int(line.split()[8].strip(":"))
+            yield {
+                "kind": "set_attribute",
+                "name": "mult",
+                "value": mult,
+            }
 
             self.skip_line(inputfile, "blank")
             line = next(inputfile)
@@ -196,7 +208,11 @@ class Psi4(logfileparser.Logfile):
                 line = next(inputfile)
 
             # The 0 is to handle the presence of ghost atoms.
-            self.set_attribute('atomnos', [self.table.number.get(el, 0) for el in elements])
+            yield {
+                "kind": "set_attribute",
+                "name": "atomnos",
+                "value": [self.table.number.get(el, 0) for el in elements],
+            }
 
             if not hasattr(self, 'atomcoords'):
                 self.atomcoords = []
@@ -215,10 +231,18 @@ class Psi4(logfileparser.Logfile):
         # Psi4 repeats the charge and multiplicity after the geometry.
         if (self.section == "Geometry") and (line[2:16].lower() == "charge       ="):
             charge = int(line.split()[-1])
-            self.set_attribute('charge', charge)
+            yield {
+                "kind": "set_attribute",
+                "name": "charge",
+                "value": charge,
+            }
         if (self.section == "Geometry") and (line[2:16].lower() == "multiplicity ="):
             mult = int(line.split()[-1])
-            self.set_attribute('mult', mult)
+            yield {
+                "kind": "set_attribute",
+                "name": "mult",
+                "value": mult,
+            }
 
         # The printout for Psi4 has a more obvious trigger for the SCF parameter printout.
         if (self.section == "Algorithm") and (line.strip() == "==> Algorithm <==") \
@@ -286,9 +310,21 @@ class Psi4(logfileparser.Logfile):
 
                 line = next(inputfile)
 
-            self.set_attribute('natom', len(atomnos))
-            self.set_attribute('atomnos', atomnos)
-            self.set_attribute('atombasis', atombasis)
+            yield {
+                "kind": "set_attribute",
+                "name": "natom",
+                "value": len(atomnos),
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "atomnos",
+                "value": atomnos,
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "atombasis",
+                "value": atombasis,
+            }
 
         # The atomic basis set is straightforward to parse, but there are some complications
         # when symmetry is used, because in that case Psi4 only print the symmetry-unique atoms,
@@ -402,14 +438,26 @@ class Psi4(logfileparser.Logfile):
         # A block called 'Calculation Information' prints these before starting the SCF.
         if (self.section == "Pre-Iterations") and ("Number of atoms" in line):
             natom = int(line.split()[-1])
-            self.set_attribute('natom', natom)
+            yield {
+                "kind": "set_attribute",
+                "name": "natom",
+                "value": natom,
+            }
         if (self.section == "Pre-Iterations") and ("Number of atomic orbitals" in line):
             nbasis = int(line.split()[-1])
-            self.set_attribute('nbasis', nbasis)
+            yield {
+                "kind": "set_attribute",
+                "name": "nbasis",
+                "value": nbasis,
+            }
         if (self.section == "Pre-Iterations") and ("Total" in line):
             chomp = line.split()
             nbasis = int(chomp[1])
-            self.set_attribute('nbasis', nbasis)
+            yield {
+                "kind": "set_attribute",
+                "name": "nbasis",
+                "value": nbasis,
+            }
 
         #  ==> Iterations <==
 
@@ -566,7 +614,11 @@ class Psi4(logfileparser.Logfile):
         if self.subsection == "Energetics":
             if "Empirical Dispersion Energy" in line:
                 dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
-                self.append_attribute("dispersionenergies", dispersion)
+                yield {
+                    "kind": "append_attribute",
+                    "name": "dispersionenergies",
+                    "value": dispersion,
+                }
 
         #   ==> Molecular Orbitals <==
         #
@@ -961,8 +1013,16 @@ class Psi4(logfileparser.Logfile):
                 vibfreqs.append(vibfreq)
                 line = next(inputfile)
 
-            self.set_attribute('vibsyms', vibsyms)
-            self.set_attribute('vibfreqs', vibfreqs)
+            yield {
+                "kind": "set_attribute",
+                "name": "vibsyms",
+                "value": vibsyms,
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "vibfreqs",
+                "value": vibfreqs,
+            }
 
             line = next(inputfile)
             assert line.strip() == ''
@@ -1059,19 +1119,39 @@ class Psi4(logfileparser.Logfile):
             # from some / most. Only include them if they are there for all
 
             if len(vibfreqs) == n_modes:
-                self.set_attribute('vibfreqs', vibfreqs)
+                yield {
+                    "kind": "set_attribute",
+                    "name": "vibfreqs",
+                    "value": vibfreqs,
+                }
 
             if len(vibsyms) == n_modes:
-                self.set_attribute('vibsyms', vibsyms)
+                yield {
+                    "kind": "set_attribute",
+                    "name": "vibsyms",
+                    "value": vibsyms,
+                }
 
             if len(vibdisps) == n_modes:
-                self.set_attribute('vibdisps', vibdisps)
+                yield {
+                    "kind": "set_attribute",
+                    "name": "vibdisps",
+                    "value": vibdisps,
+                }
 
             if len(vibdisps) == n_modes:
-                self.set_attribute('vibrmasses', vibrmasses)
+                yield {
+                    "kind": "set_attribute",
+                    "name": "vibrmasses",
+                    "value": vibrmasses,
+                }
 
             if len(vibdisps) == n_modes:
-                self.set_attribute('vibfconsts', vibfconsts)
+                yield {
+                    "kind": "set_attribute",
+                    "name": "vibfconsts",
+                    "value": vibfconsts,
+                }
 
         # Second one is 1.0, first one is 1.2 and newer
         if (self.section == "Thermochemistry Energy Analysis" and "Thermochemistry Energy Analysis" in line) \
@@ -1092,15 +1172,23 @@ class Psi4(logfileparser.Logfile):
             )
             line = next(inputfile)
             assert "Vibrational ZPE" in line
-            self.set_attribute("zpve", float(line.split()[6]))
+            yield {
+                "kind": "set_attribute",
+                "name": "zpve",
+                "value": float(line.split()[6]),
+            }
 
         # If finite difference is used to compute forces (i.e. by displacing
         # slightly all the atoms), a series of additional scf calculations is
         # performed. Orbitals, geometries, energies, etc. for these shouln't be
         # included in the parsed data.
 
-        if line.strip().startswith('Using finite-differences of gradients'):
-            self.set_attribute('finite_difference', True)
+        if line.strip().startswith("Using finite-differences of gradients"):
+            yield {
+                "kind": "set_attribute",
+                "name": "finite_difference",
+                "value": True,
+            }
 
         # This is the result of calling `print_variables()` and contains all
         # current inner variables known to Psi4.

@@ -83,16 +83,28 @@ class FChk(logfileparser.Logfile):
             self.metadata['basis_set'] = method.split()[-1]
             self.start = False
 
-        if line[0:6] == 'Charge':
-            self.set_attribute('charge', int(line.split()[-1]))
+        if line[0:6] == "Charge":
+            yield {
+                "kind": "set_attribute",
+                "name": "charge",
+                "value": int(line.split()[-1]),
+            }
 
-        if line[0:12] == 'Multiplicity':
-            self.set_attribute('mult', int(line.split()[-1]))
+        if line[0:12] == "Multiplicity":
+            yield {
+                "kind": "set_attribute",
+                "name": "mult",
+                "value": int(line.split()[-1]),
+            }
 
         if line[0:14] == 'Atomic numbers':
             self.natom = int(line.split()[-1])
-            atomnos = self._parse_block(inputfile, self.natom, int, 'Basic Information')
-            self.set_attribute('atomnos', atomnos)
+            atomnos = self._parse_block(inputfile, self.natom, int, "Basic Information")
+            yield {
+                "kind": "set_attribute",
+                "name": "atomnos",
+                "value": atomnos,
+            }
 
         if line[0:19] == 'Number of electrons':
             alpha = next(inputfile)
@@ -101,7 +113,11 @@ class FChk(logfileparser.Logfile):
             beta = next(inputfile)
             beta_homo = int(beta.split()[-1]) - 1
 
-            self.set_attribute('homos', [alpha_homo, beta_homo])
+            yield {
+                "kind": "set_attribute",
+                "name": "homos",
+                "value": [alpha_homo, beta_homo],
+            }
 
         if line[0:29] == 'Current cartesian coordinates':
             count = int(line.split()[-1])
@@ -109,10 +125,18 @@ class FChk(logfileparser.Logfile):
 
             coords = numpy.array(self._parse_block(inputfile, count, float, 'Coordinates'))
             coords.shape = (1, int(count / 3), 3)
-            self.set_attribute('atomcoords', utils.convertor(coords, 'bohr', 'Angstrom'))
+            yield {
+                "kind": "set_attribute",
+                "name": "atomcoords",
+                "value": utils.convertor(coords, "bohr", "Angstrom"),
+            }
 
-        if line[0:25] == 'Number of basis functions':
-            self.set_attribute('nbasis', int(line.split()[-1]))
+        if line[0:25] == "Number of basis functions":
+            yield {
+                "kind": "set_attribute",
+                "name": "nbasis",
+                "value": int(line.split()[-1]),
+            }
 
         if line[0:14] == 'Overlap Matrix':
             count = int(line.split()[-1])
@@ -131,10 +155,18 @@ class FChk(logfileparser.Logfile):
                     overlaps[col, row] = raw_overlaps[raw_index]
                     raw_index += 1
 
-            self.set_attribute('aooverlaps', overlaps)
+            yield {
+                "kind": "set_attribute",
+                "name": "aooverlaps",
+                "value": overlaps,
+            }
 
-        if line[0:31] == 'Number of independent functions':
-            self.set_attribute('nmo', int(line.split()[-1]))
+        if line[0:31] == "Number of independent functions":
+            yield {
+                "kind": "set_attribute",
+                "name": "nmo",
+                "value": int(line.split()[-1]),
+            }
 
         if line[0:21] == 'Alpha MO coefficients':
             count = int(line.split()[-1])
@@ -142,14 +174,22 @@ class FChk(logfileparser.Logfile):
 
             coeffs = numpy.array(self._parse_block(inputfile, count, float, 'Alpha Coefficients'))
             coeffs.shape = (self.nmo, self.nbasis)
-            self.set_attribute('mocoeffs', [coeffs])
+            yield {
+                "kind": "set_attribute",
+                "name": "mocoeffs",
+                "value": [coeffs],
+            }
 
         if line[0:22] == 'Alpha Orbital Energies':
             count = int(line.split()[-1])
             assert count == self.nmo
 
-            energies = numpy.array(self._parse_block(inputfile, count, float, 'Alpha MO Energies'))
-            self.set_attribute('moenergies', [utils.convertor(energies, 'hartree', 'eV')])
+            energies = numpy.array(self._parse_block(inputfile, count, float, "Alpha MO Energies"))
+            yield {
+                "kind": "set_attribute",
+                "name": "moenergies",
+                "value": [utils.convertor(energies, "hartree", "eV")],
+            }
 
         if line[0:20] == 'Beta MO coefficients':
             count = int(line.split()[-1])
@@ -157,30 +197,38 @@ class FChk(logfileparser.Logfile):
 
             coeffs = numpy.array(self._parse_block(inputfile, count, float, 'Beta Coefficients'))
             coeffs.shape = (self.nmo, self.nbasis)
-            self.append_attribute('mocoeffs', coeffs)
+            yield {"kind": "append_attribute", "name": "mocoeffs", "value": coeffs}
 
         if line[0:21] == 'Beta Orbital Energies':
             count = int(line.split()[-1])
             assert count == self.nmo
 
-            energies = numpy.array(self._parse_block(inputfile, count, float, 'Alpha MO Energies'))
-            self.append_attribute('moenergies', utils.convertor(energies, 'hartree', 'eV'))
-
-        if line[0:11] == 'Shell types':
-            self.parse_aonames(line, inputfile)
-
+            energies = numpy.array(self._parse_block(inputfile, count, float, "Alpha MO Energies"))
+            yield {
+                "kind": "append_attribute",
+                "name": "moenergies",
+                "value": utils.convertor(energies, "hartree", "eV"),
+            }
         if line[0:19] == 'Real atomic weights':
             count = int(line.split()[-1])
             assert count == self.natom
 
             atommasses = numpy.array(self._parse_block(inputfile, count, float, 'Atomic Masses'))
 
-            self.set_attribute('atommasses', atommasses)
+            yield {
+                "kind": "set_attribute",
+                "name": "atommasses",
+                "value": atommasses,
+            }
 
         if line[0:10] == 'SCF Energy':
             self.scfenergy = float(line.split()[-1])
 
-            self.set_attribute('scfenergies', [utils.convertor(self.scfenergy,'hartree','eV')])
+            yield {
+                "kind": "set_attribute",
+                "name": "scfenergies",
+                "value": [utils.convertor(self.scfenergy, "hartree", "eV")],
+            }
 
         if line[0:18] == 'Cartesian Gradient':
             count = int(line.split()[-1])
@@ -188,7 +236,11 @@ class FChk(logfileparser.Logfile):
 
             gradient = numpy.array(self._parse_block(inputfile, count, float, 'Gradient'))
 
-            self.set_attribute('grads', gradient)
+            yield {
+                "kind": "set_attribute",
+                "name": "grads",
+                "value": gradient,
+            }
 
         if line[0:25] == 'Cartesian Force Constants':
             count = int(line.split()[-1])
@@ -196,7 +248,11 @@ class FChk(logfileparser.Logfile):
 
             hessian = numpy.array(self._parse_block(inputfile, count, float, 'Hessian'))
 
-            self.set_attribute('hessian', hessian)
+            yield {
+                "kind": "set_attribute",
+                "name": "hessian",
+                "value": hessian,
+            }
 
         if line[0:13] == 'ETran scalars':
             count = int(line.split()[-1])
@@ -226,7 +282,11 @@ class FChk(logfileparser.Logfile):
             # After this, 'Etran sym' appears (and would need to be parsed), 
             # but at least in Gaussian this contains only zeroes regardless of the irrep.
 
-            self.set_attribute('etsyms', etsyms)
+            yield {
+                "kind": "set_attribute",
+                "name": "etsyms",
+                "value": etsyms,
+            }
 
         if line[0:18] == 'ETran state values':
             # This section is organized as follows:
@@ -253,32 +313,55 @@ class FChk(logfileparser.Logfile):
             etvalues = self._parse_block(inputfile, count, float, 'ET Values')
 
             # ETr energies (1/cm)
-            etenergies_au = [ e_es-self.scfenergy for e_es in etvalues[0:net*16:16] ]
-            etenergies = [ utils.convertor(etr,'hartree','wavenumber') for etr in etenergies_au ]
-            self.set_attribute('etenergies', etenergies)
+            etenergies_au = [e_es - self.scfenergy for e_es in etvalues[0 : net * 16 : 16]]
+            etenergies = [utils.convertor(etr, "hartree", "wavenumber") for etr in etenergies_au]
+            yield {
+                "kind": "set_attribute",
+                "name": "etenergies",
+                "value": etenergies,
+            }
 
             # ETr dipoles (length-gauge)
             etdips = []
-            for k in range(1,16*net,16):
-                etdips.append(etvalues[k:k+3])
-            self.set_attribute('etdips',etdips)
+            for k in range(1, 16 * net, 16):
+                etdips.append(etvalues[k : k + 3])
+            yield {
+                "kind": "set_attribute",
+                "name": "etdips",
+                "value": etdips,
+            }
 
             # Osc. Strength from Etr dipoles
             # oscs = 2/3 * Etr(au) * dip²(au)
-            etoscs = [ 2.0/3.0*e*numpy.linalg.norm(numpy.array(dip))**2 for e,dip in zip(etenergies_au,etdips) ]
-            self.set_attribute('etoscs', etoscs)
+            etoscs = [
+                2.0 / 3.0 * e * numpy.linalg.norm(numpy.array(dip)) ** 2
+                for e, dip in zip(etenergies_au, etdips)
+            ]
+            yield {
+                "kind": "set_attribute",
+                "name": "etoscs",
+                "value": etoscs,
+            }
 
             # ETr dipoles (velocity-gauge)
             etveldips = []
-            for k in range(4,16*net,16):
-                etveldips.append(etvalues[k:k+3])
-            self.set_attribute('etveldips',etveldips)
+            for k in range(4, 16 * net, 16):
+                etveldips.append(etvalues[k : k + 3])
+            yield {
+                "kind": "set_attribute",
+                "name": "etveldips",
+                "value": etveldips,
+            }
 
             # ETr magnetic dipoles
             etmagdips = []
-            for k in range(7,16*net,16):
-                etmagdips.append(etvalues[k:k+3])
-            self.set_attribute('etmagdips',etmagdips)
+            for k in range(7, 16 * net, 16):
+                etmagdips.append(etvalues[k : k + 3])
+            yield {
+                "kind": "set_attribute",
+                "name": "etmagdips",
+                "value": etmagdips,
+            }
 
     def parse_aonames(self, line, inputfile):
         # e.g.: Shell types                                I   N=          28
@@ -327,12 +410,20 @@ class FChk(logfileparser.Logfile):
         assert (
             len(aonames) == self.nbasis
         ), f"Length of aonames != nbasis: {len(aonames)} != {self.nbasis}"
-        self.set_attribute("aonames", aonames)
+        yield {
+            "kind": "set_attribute",
+            "name": "aonames",
+            "value": aonames,
+        }
 
         assert (
             len(atombasis) == self.natom
         ), f"Length of atombasis != natom: {len(atombasis)} != {self.natom}"
-        self.set_attribute("atombasis", atombasis)
+        yield {
+            "kind": "set_attribute",
+            "name": "atombasis",
+            "value": atombasis,
+        }
 
     def after_parsing(self):
         """Correct data or do parser-specific validation after parsing is finished."""

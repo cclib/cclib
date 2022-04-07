@@ -225,10 +225,26 @@ class ADF(logfileparser.Logfile):
                 line = next(inputfile)
             self.atomcoords.append(atomcoords)
 
-            self.set_attribute('natom', len(atomnos))
-            self.set_attribute('atomnos', atomnos)
-            self.set_attribute('atommasses', atommasses)
-            self.set_attribute('coreelectrons', coreelectrons)
+            yield {
+                "kind": "set_attribute",
+                "name": "natom",
+                "value": len(atomnos),
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "atomnos",
+                "value": atomnos,
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "atommasses",
+                "value": atommasses,
+            }
+            yield {
+                "kind": "set_attribute",
+                "name": "coreelectrons",
+                "value": coreelectrons,
+            }
 
         if line[1:10] == "FRAGMENTS":
             header = next(inputfile)
@@ -254,7 +270,11 @@ class ADF(logfileparser.Logfile):
         if line[1:11] == "Net Charge":
 
             charge = int(line.split()[2])
-            self.set_attribute('charge', charge)
+            yield {
+                "kind": "set_attribute",
+                "name": "charge",
+                "value": charge,
+            }
 
             line = next(inputfile)
             if len(line.strip()):
@@ -263,7 +283,11 @@ class ADF(logfileparser.Logfile):
                 mult = int(line.split()[2]) + 1
             else:
                 mult = 1
-            self.set_attribute('mult', mult)
+            yield {
+                "kind": "set_attribute",
+                "name": "mult",
+                "value": mult,
+            }
 
         if line[1:22] == "S C F   U P D A T E S":
         # find targets for SCF convergence
@@ -349,7 +373,11 @@ class ADF(logfileparser.Logfile):
             # Now all values should be parsed, and so no Nones remaining.
             assert all([all([x is not None for x in ao]) for ao in overlaps])
 
-            self.set_attribute('aooverlaps', overlaps)
+            yield {
+                "kind": "set_attribute",
+                "name": "aooverlaps",
+                "value": overlaps,
+            }
 
         if line[1:11] == "CYCLE    1":
 
@@ -585,10 +613,14 @@ class ADF(logfileparser.Logfile):
 
             while len(line) > 10:
                 info = line.split()
-                self.mosyms[0].append('A')
-                self.moenergies[0].append(utils.convertor(float(info[2]), 'hartree', 'eV'))
-                if info[1] == '0.000' and not hasattr(self, 'homos'):
-                    self.set_attribute('homos', [len(self.moenergies[0]) - 2])
+                self.mosyms[0].append("A")
+                self.moenergies[0].append(utils.convertor(float(info[2]), "hartree", "eV"))
+                if info[1] == "0.000" and not hasattr(self, "homos"):
+                    yield {
+                        "kind": "set_attribute",
+                        "name": "homos",
+                        "value": [len(self.moenergies[0]) - 2],
+                    }
                 line = next(inputfile)
 
             self.moenergies = [numpy.array(self.moenergies[0], "d")]
@@ -625,7 +657,11 @@ class ADF(logfileparser.Logfile):
 
             self.moenergies = [numpy.array(x, "d") for x in moenergies]
 
-            self.set_attribute('homos', [homoa, homob])
+            yield {
+                "kind": "set_attribute",
+                "name": "homos",
+                "value": [homoa, homob],
+            }
 
         # Extracting orbital symmetries and energies, homos.
         if line[1:29] == 'Orbital Energies, all Irreps' and not hasattr(self, "mosyms"):
@@ -721,7 +757,11 @@ class ADF(logfileparser.Logfile):
                     print(("Error", info))
 
             if len(info) == 6:  # still unrestricted, despite being out of loop
-                self.set_attribute('homos', [homoa, homob])
+                yield {
+                    "kind": "set_attribute",
+                    "name": "homos",
+                    "value": [homoa, homob],
+                }
 
             self.moenergies = [numpy.array(x, "d") for x in self.moenergies]
 
@@ -773,10 +813,18 @@ class ADF(logfileparser.Logfile):
             )
             line = next(inputfile)
             assert "Pressure" in line
-            self.set_attribute("pressure", float(line.split()[1]))
+            yield {
+                "kind": "set_attribute",
+                "name": "pressure",
+                "value": float(line.split()[1]),
+            }
             line = next(inputfile)
             assert "Temperature" in line
-            self.set_attribute("temperature", float(line.split()[1]))
+            yield {
+                "kind": "set_attribute",
+                "name": "temperature",
+                "value": float(line.split()[1]),
+            }
 
             self.skip_lines(
                 inputfile,
@@ -801,21 +849,31 @@ class ADF(logfileparser.Logfile):
             self.skip_lines(inputfile, ["d", "s"])
             line = next(inputfile)
             assert "Entropy" in line
-            self.set_attribute(
-                "entropy",
-                utils.convertor(float(line.split()[6]) * self.temperature / 1000,
-                                "kcal/mol", "hartree")
-            )
+            yield {
+                "kind": "set_attribute",
+                "name": "entropy",
+                "value": utils.convertor(
+                    float(line.split()[6]) * self.temperature / 1000, "kcal/mol", "hartree"
+                ),
+            }
             line = next(inputfile)
             assert "Internal Energy" in line
-            self.set_attribute("zpve", utils.convertor(float(line.split()[5]), "kcal/mol", "hartree"))
+            yield {
+                "kind": "set_attribute",
+                "name": "zpve",
+                "value": utils.convertor(float(line.split()[5]), "kcal/mol", "hartree"),
+            }
 
         #******************************************************************************************************************8
         #delete this after new implementation using smat, eigvec print,eprint?
         # Extract the number of basis sets
         if line[1:49] == "Total nr. of (C)SFOs (summation over all irreps)":
             nbasis = int(line.split(":")[1].split()[0])
-            self.set_attribute('nbasis', nbasis)
+            yield {
+                "kind": "set_attribute",
+                "name": "nbasis",
+                "value": nbasis,
+            }
 
         # now that we're here, let's extract aonames
 
