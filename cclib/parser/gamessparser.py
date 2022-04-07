@@ -224,7 +224,11 @@ class GAMESS(logfileparser.Logfile):
             )
         ):
             dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
-            self.append_attribute("dispersionenergies", dispersion)
+            yield {
+                "kind": "append_attribute",
+                "name": "dispersionenergies",
+                "value": dispersion,
+            }
 
         # For total energies after Moller-Plesset corrections, the output looks something like this:
         #

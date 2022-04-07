@@ -125,7 +125,11 @@ class Molcas(logfileparser.Logfile):
                 atomcoords.append(list(map(float, sline[5:])))
                 line = next(inputfile)
 
-            self.append_attribute('atomcoords', atomcoords)
+            yield {
+                "kind": "append_attribute",
+                "name": "atomcoords",
+                "value": atomcoords,
+            }
 
             if self.atomnos == []:
                 self.atomnos = [self.table.number[ae.title()] for ae in atomelements]
@@ -304,7 +308,11 @@ class Molcas(logfileparser.Logfile):
                 for y in targets:
                     scftargets.extend([float(x.split()[-1]) for x in lines if y in x])
 
-                self.append_attribute('scftargets', scftargets)
+                yield {
+                    "kind": "append_attribute",
+                    "name": "scftargets",
+                    "value": scftargets,
+                }
 
         #  ++ Convergence information
         #                                     SCF        iterations: Energy and convergence statistics
@@ -360,7 +368,7 @@ class Molcas(logfileparser.Logfile):
 
                 line = next(inputfile)
 
-            self.append_attribute('scfvalues', scfvalues)
+            yield {"kind": "append_attribute", "name": "scfvalues", "value": scfvalues}
 
         #  Harmonic frequencies in cm-1
         #
@@ -766,7 +774,7 @@ class Molcas(logfileparser.Logfile):
                 grads.append(tmpgrads)
                 line = next(inputfile)
 
-            self.append_attribute('grads', grads)
+            yield {"kind": "append_attribute", "name": "grads", "value": grads}
 
         # This code here works, but QM/MM gradients are printed after QM ones.
         # Maybe another attribute is needed to store them to have both.
@@ -864,7 +872,11 @@ class Molcas(logfileparser.Logfile):
                 if len(moenergies) != self.nmo:
                     moenergies.extend([numpy.nan for x in range(self.nmo - len(moenergies))])
 
-                self.append_attribute('moenergies', moenergies)
+                yield {
+                    "kind": "append_attribute",
+                    "name": "moenergies",
+                    "value": moenergies,
+                }
 
                 if not hasattr(self, 'homos'):
                     self.homos = []
@@ -874,7 +886,11 @@ class Molcas(logfileparser.Logfile):
                     nan_array = [numpy.nan for i in range(self.nbasis)]
                     mocoeffs.append(nan_array)
 
-                self.append_attribute('mocoeffs', mocoeffs)
+                yield {
+                    "kind": "append_attribute",
+                    "name": "mocoeffs",
+                    "value": mocoeffs,
+                }
 
         ## Parsing MP energy from the &MBPT2 module.
         #  Conventional algorithm used...

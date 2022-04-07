@@ -726,15 +726,20 @@ cannot be determined. Rerun without `$molecule read`."""
 
             if 'TIME STEP #' in line:
                 tokens = line.split()
-                self.append_attribute('time', float(tokens[8]))
+                yield {
+                    "kind": "append_attribute",
+                    "name": "time",
+                    "value": float(tokens[8]),
+                }
 
             if line.strip() == "Adding empirical dispersion correction":
                 while "energy" not in line:
                     line = next(inputfile)
-                self.append_attribute(
-                    "dispersionenergies",
-                    utils.convertor(utils.float(line.split()[-2]), "hartree", "eV")
-                )
+                yield {
+                    "kind": "append_attribute",
+                    "name": "dispersionenergies",
+                    "value": utils.convertor(utils.float(line.split()[-2]), "hartree", "eV"),
+                }
 
             # Extract the atomic numbers and coordinates of the atoms.
             if 'Standard Nuclear Orientation' in line:
@@ -754,7 +759,11 @@ cannot be determined. Rerun without `$molecule read`."""
                     atomcoords.append([convertor(float(value)) for value in entry[2:]])
                     line = next(inputfile)
 
-                self.append_attribute('atomcoords', atomcoords)
+                yield {
+                    "kind": "append_attribute",
+                    "name": "atomcoords",
+                    "value": atomcoords,
+                }
 
                 # We calculate and handle atomnos no matter what, since in
                 # the case of fragment calculations the atoms may change,

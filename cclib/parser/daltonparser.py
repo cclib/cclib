@@ -699,7 +699,7 @@ class DALTON(logfileparser.Logfile):
             self.skip_lines(inputfile, ["pluses_and_dashes", "b"])
             line = next(inputfile)
             dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
-            self.append_attribute("dispersionenergies", dispersion)
+            yield {"kind": "append_attribute", "name": "dispersionenergies", "value": dispersion}
 
         #  *********************************************
         #  ***** DIIS optimization of Hartree-Fock *****
@@ -922,12 +922,14 @@ class DALTON(logfileparser.Logfile):
             while "END OF COUPLED CLUSTER CALCULATION" not in line:
                 if "Total MP2   energy" in line:
                     # If **WAVE FUNCTIONS\n.MP2 was specified, don't double-add this.
-                    if not hasattr(self, "mpenergies") or \
-                       not len(self.mpenergies) == len(self.scfenergies):
-                        self.append_attribute(
-                            "mpenergies",
-                            [utils.convertor(float(line.split()[-1]), "hartree", "eV")]
-                        )
+                    if not hasattr(self, "mpenergies") or not len(self.mpenergies) == len(
+                        self.scfenergies
+                    ):
+                        yield {
+                            "kind": "append_attribute",
+                            "name": "mpenergies",
+                            "value": [utils.convertor(float(line.split()[-1]), "hartree", "eV")],
+                        }
                 if "Total CCSD  energy:" in line:
                     self.metadata["methods"].append("CCSD")
                     ccenergies.append(float(line.split()[-1]))
@@ -936,9 +938,11 @@ class DALTON(logfileparser.Logfile):
                     ccenergies.append(float(line.split()[-1]))
                 line = next(inputfile)
             if ccenergies:
-                self.append_attribute(
-                    "ccenergies", utils.convertor(ccenergies[-1], "hartree", "eV")
-                )
+                yield {
+                    "kind": "append_attribute",
+                    "name": "ccenergies",
+                    "value": utils.convertor(ccenergies[-1], "hartree", "eV"),
+                }
 
         if "Tau1 diagnostic" in line:
             self.metadata["t1_diagnostic"] = float(line.split()[-1])

@@ -197,18 +197,18 @@ class FChk(logfileparser.Logfile):
 
             coeffs = numpy.array(self._parse_block(inputfile, count, float, 'Beta Coefficients'))
             coeffs.shape = (self.nmo, self.nbasis)
-            self.append_attribute('mocoeffs', coeffs)
+            yield {"kind": "append_attribute", "name": "mocoeffs", "value": coeffs}
 
         if line[0:21] == 'Beta Orbital Energies':
             count = int(line.split()[-1])
             assert count == self.nmo
 
-            energies = numpy.array(self._parse_block(inputfile, count, float, 'Alpha MO Energies'))
-            self.append_attribute('moenergies', utils.convertor(energies, 'hartree', 'eV'))
-
-        if line[0:11] == 'Shell types':
-            self.parse_aonames(line, inputfile)
-
+            energies = numpy.array(self._parse_block(inputfile, count, float, "Alpha MO Energies"))
+            yield {
+                "kind": "append_attribute",
+                "name": "moenergies",
+                "value": utils.convertor(energies, "hartree", "eV"),
+            }
         if line[0:19] == 'Real atomic weights':
             count = int(line.split()[-1])
             assert count == self.natom

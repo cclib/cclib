@@ -177,7 +177,11 @@ class Gaussian(logfileparser.Logfile):
             }
 
         if hasattr(self, "ccenergy"):
-            self.append_attribute("ccenergies", utils.convertor(self.ccenergy, "hartree", "eV"))
+            yield {
+                "kind": "append_attribute",
+                "name": "ccenergies",
+                "value": utils.convertor(self.ccenergy, "hartree", "eV"),
+            }
             del self.ccenergy
 
     def extract(self, inputfile, line):
@@ -472,7 +476,11 @@ class Gaussian(logfileparser.Logfile):
                 self.moments = [self.reference, None, None, None, hexadecapole]
             else:
                 if len(self.moments) == 4:
-                    self.append_attribute("moments", hexadecapole)
+                    yield {
+                        "kind": "append_attribute",
+                        "name": "moments",
+                        "value": hexadecapole,
+                    }
                 else:
                     try:
                         numpy.testing.assert_equal(self.moments[4], hexadecapole)
@@ -480,7 +488,11 @@ class Gaussian(logfileparser.Logfile):
                         self.logger.warning(
                             f"Attribute hexadecapole changed value ({self.moments[4]} -> {hexadecapole})"
                         )
-                    self.append_attribute("moments", hexadecapole)
+                    yield {
+                        "kind": "append_attribute",
+                        "name": "moments",
+                        "value": hexadecapole,
+                    }
 
         # Catch message about completed optimization.
         if line[1:23] == "Optimization completed":
@@ -813,7 +825,11 @@ class Gaussian(logfileparser.Logfile):
 
         if "Dispersion energy=" in line:
             dispersion = utils.convertor(float(line.split()[-2]), "hartree", "eV")
-            self.append_attribute("dispersionenergies", dispersion)
+            yield {
+                "kind": "append_attribute",
+                "name": "dispersionenergies",
+                "value": dispersion,
+            }
 
         # Find the targets for SCF convergence (QM calcs).
         # Not for BOMD as targets are not available in the summary
@@ -1130,7 +1146,11 @@ class Gaussian(logfileparser.Logfile):
                 self.scannames_all.append(name)
                 if line.split()[4] == 'Scan':
                     self.scannames_scanned.append(name)
-                    self.append_attribute('scannames', definition)
+                    yield {
+                        "kind": "append_attribute",
+                        "name": "scannames",
+                        "value": definition,
+                    }
                 line = next(inputfile)
 
         # Extract unrelaxed PES scan data, which looks something like:
@@ -1165,10 +1185,18 @@ class Gaussian(logfileparser.Logfile):
             scanparm = [[] for _ in range(len(self.scannames))]
             while line != hyphens:
                 broken = line.split()
-                self.append_attribute('scanenergies', (utils.convertor(float(broken[-1]), "hartree", "eV")))
-                for idx,p in enumerate(broken[1:-1]):
+                yield {
+                    "kind": "append_attribute",
+                    "name": "scanenergies",
+                    "value": (utils.convertor(float(broken[-1]), "hartree", "eV")),
+                }
+                for idx, p in enumerate(broken[1:-1]):
                     scanparm[idx].append(float(p))
-                #self.append_attribute('scanparm', [float(p) for p in broken[1:-1]])
+                # yield {
+                #     "kind": "append_attribute",
+                #     "name": 'scanparm',
+                #     "value": [float(p) for p in broken[1:-1]]
+                # }
                 line = next(inputfile)
             yield {
                 "kind": "set_attribute",
@@ -1955,11 +1983,27 @@ class Gaussian(logfileparser.Logfile):
             updateprogress_title = "Natural Spin orbitals (alpha)"
             nsooccnos, nsocoeffs, aonames, atombasis = natural_orbital_single_spin_parsing(inputfile, updateprogress_title)
             if self.unified_no_nso:
-                self.append_attribute("nocoeffs", nsocoeffs)
-                self.append_attribute("nooccnos", nsooccnos)
+                yield {
+                    "kind": "append_attribute",
+                    "name": "nocoeffs",
+                    "value": nsocoeffs,
+                }
+                yield {
+                    "kind": "append_attribute",
+                    "name": "nooccnos",
+                    "value": nsooccnos,
+                }
             else:
-                self.append_attribute("nsocoeffs", nsocoeffs)
-                self.append_attribute("nsooccnos", nsooccnos)
+                yield {
+                    "kind": "append_attribute",
+                    "name": "nsocoeffs",
+                    "value": nsocoeffs,
+                }
+                yield {
+                    "kind": "append_attribute",
+                    "name": "nsooccnos",
+                    "value": nsooccnos,
+                }
             yield {
                 "kind": "set_attribute",
                 "name": "atombasis",
@@ -1972,13 +2016,34 @@ class Gaussian(logfileparser.Logfile):
             }
         if line[5:38] == "Beta Natural Orbital Coefficients":
             updateprogress_title = "Natural Spin orbitals (beta)"
-            nsooccnos, nsocoeffs, aonames, atombasis = natural_orbital_single_spin_parsing(inputfile, updateprogress_title)
+            (
+                nsooccnos,
+                nsocoeffs,
+                aonames,
+                atombasis,
+            ) = natural_orbital_single_spin_parsing(inputfile, updateprogress_title)
             if self.unified_no_nso:
-                self.append_attribute("nocoeffs", nsocoeffs)
-                self.append_attribute("nooccnos", nsooccnos)
+                yield {
+                    "kind": "append_attribute",
+                    "name": "nocoeffs",
+                    "value": nsocoeffs,
+                }
+                yield {
+                    "kind": "append_attribute",
+                    "name": "nooccnos",
+                    "value": nsooccnos,
+                }
             else:
-                self.append_attribute("nsocoeffs", nsocoeffs)
-                self.append_attribute("nsooccnos", nsooccnos)
+                yield {
+                    "kind": "append_attribute",
+                    "name": "nsocoeffs",
+                    "value": nsocoeffs,
+                }
+                yield {
+                    "kind": "append_attribute",
+                    "name": "nsooccnos",
+                    "value": nsooccnos,
+                }
             yield {
                 "kind": "set_attribute",
                 "name": "atombasis",

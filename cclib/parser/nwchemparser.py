@@ -596,7 +596,11 @@ class NWChem(logfileparser.Logfile):
             grms = float(tokens[5])
             xrms = float(tokens[6])
             xmax = float(tokens[7])
-            self.append_attribute("geovalues", [gmax, grms, xmax, xrms])
+            yield {
+                "kind": "append_attribute",
+                "name": "geovalues",
+                "value": [gmax, grms, xmax, xrms],
+            }
             self.linesearch = True
         if line[2:6] == "Step":
             self.skip_line(inputfile, 'dashes')
@@ -609,7 +613,11 @@ class NWChem(logfileparser.Logfile):
             xmax = float(tokens[7])
             if hasattr(self, 'linesearch') and self.linesearch:
                 return
-            self.append_attribute("geovalues", [gmax, grms, xmax, xrms])
+            yield {
+                "kind": "append_attribute",
+                "name": "geovalues",
+                "value": [gmax, grms, xmax, xrms],
+            }
             self.linesearch = True
 
         # There is a clear message when the geometry optimization has converged:
@@ -652,7 +660,7 @@ class NWChem(logfileparser.Logfile):
 
         if "Dispersion correction" in line:
             dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
-            self.append_attribute("dispersionenergies", dispersion)
+            yield {"kind": "append_attribute", "name": "dispersionenergies", "value": dispersion}
 
         # The final MO orbitals are printed in a simple list, but apparently not for
         # DFT calcs, and often this list does not contain all MOs, so make sure to
@@ -1157,9 +1165,11 @@ class NWChem(logfileparser.Logfile):
                     self.metadata["methods"].append("CCSD(T)")
                     ccenergies.append(float(line.split()[-1]))
             if ccenergies:
-                self.append_attribute(
-                    "ccenergies", utils.convertor(ccenergies[-1], "hartree", "eV")
-                )
+                yield {
+                    "kind": "append_attribute",
+                    "name": "ccenergies",
+                    "value": utils.convertor(ccenergies[-1], "hartree", "eV"),
+                }
 
         # Static and dynamic polarizability.
         if "Linear Response polarizability / au" in line:
@@ -1188,7 +1198,7 @@ class NWChem(logfileparser.Logfile):
             line = next(inputfile)
             assert "Time elapsed (fs)" in line
             time = float(line.split()[4])
-            self.append_attribute('time', time)
+            yield {"kind": "append_attribute", "name": "time", "value": time}
 
         # BOMD: geometry coordinates when `print low`.
         if line.strip() == "DFT ENERGY GRADIENTS":
@@ -1271,8 +1281,16 @@ class NWChem(logfileparser.Logfile):
             self.skip_lines(inputfile, ["units", "d"])  # units, dashes
             line = next(inputfile)  # first line of data
             while set(line.strip()[:-1]) != {"-"}:
-                self.append_attribute("vibfreqs", utils.float(line.split()[1]))
-                self.append_attribute("vibirs", utils.float(line.split()[5]))
+                yield {
+                    "kind": "append_attribute",
+                    "name": "vibfreqs",
+                    "value": utils.float(line.split()[1]),
+                }
+                yield {
+                    "kind": "append_attribute",
+                    "name": "vibirs",
+                    "value": utils.float(line.split()[5]),
+                }
                 line = next(inputfile)  # next line
         # NWChem TD-DFT excited states transitions
         #
@@ -1315,11 +1333,17 @@ class NWChem(logfileparser.Logfile):
         #    Occ.  116  a   ---  Virt.  118  a   -0.40137 X
 
         if line[:6] == "  Root":
-            self.append_attribute(
-                "etenergies", utils.convertor(utils.float(line.split()[-2]), "eV", "wavenumber")
-            )
-            self.append_attribute("etsyms", str.join(" ", line.split()[2:-4]))
-        
+            yield {
+                "kind": "append_attribute",
+                "name": "etenergies",
+                "value": utils.convertor(utils.float(line.split()[-2]), "eV", "wavenumber"),
+            }
+            yield {
+                "kind": "append_attribute",
+                "name": "etsyms",
+                "value": str.join(" ", line.split()[2:-4]),
+            }
+
             self.skip_lines(inputfile, ["dashes"])
             line = next(inputfile)
             if "Spin forbidden" not in line:
@@ -1332,7 +1356,7 @@ class NWChem(logfileparser.Logfile):
                     if "Total Oscillator Strength" in line:
                         etoscs = utils.float(line.split()[-1])
                     line = next(inputfile)
-                self.append_attribute("etoscs", etoscs)
+                yield {"kind": "append_attribute", "name": "etoscs", "value": etoscs}
                 CIScontrib = []
                 while line.find("Occ.") >= 0:
                     if len(line.split()) == 9:  # restricted
@@ -1360,9 +1384,9 @@ class NWChem(logfileparser.Logfile):
                         tomoindex = 1
                     CIScontrib.append([(occ, frommoindex), (virt, tomoindex), coef])
                     line = next(inputfile)
-                self.append_attribute("etsecs", CIScontrib)
+                yield {"kind": "append_attribute", "name": "etsecs", "value": CIScontrib}
             else:
-                self.append_attribute("etoscs", 0.0)
+                yield {"kind": "append_attribute", "name": "etoscs", "value": 0.0}
 
     def before_parsing(self):
         """NWChem-specific routines performed before parsing a file.

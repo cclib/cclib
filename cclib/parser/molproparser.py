@@ -544,7 +544,11 @@ class Molpro(logfileparser.Logfile):
         if "dispersion correction" in line \
            and line.strip() != "dispersion correction activated":
             dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
-            self.append_attribute("dispersionenergies", dispersion)
+            yield {
+                "kind": "append_attribute",
+                "name": "dispersionenergies",
+                "value": dispersion,
+            }
 
         # SCF result - RHF/UHF and DFT (RKS) energies.
         if (line[1:5] in ["!RHF", "!UHF", "!RKS"] and line[16:22].lower() == "energy"):

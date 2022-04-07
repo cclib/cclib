@@ -260,13 +260,13 @@ class ORCA(logfileparser.Logfile):
             num_params = int(line.strip().split()[2])
             for i in range(num_params):
                 line = next(inputfile).strip()
-                self.append_attribute('scannames', line.split(':')[0])
-        if 'TRAJECTORY STEP' in line:
+                yield {"kind": "append_attribute", "name": "scannames", "value": line.split(":")[0]}
+        if "TRAJECTORY STEP" in line:
             current_params = []
             for i in range(len(self.scannames)):
                 line = next(inputfile)
-                current_params.append(float(line.split(':')[-1].strip()))
-            self.append_attribute('scanparm', tuple(current_params))
+                current_params.append(float(line.split(":")[-1].strip()))
+            yield {"kind": "append_attribute", "name": "scanparm", "value": tuple(current_params)}
 
         # If the calculations is a relaxed parameter scan then immediately following the 
         # input file block is the following section:
@@ -292,7 +292,7 @@ class ORCA(logfileparser.Logfile):
             line = next(inputfile)
             while not line.isspace():
                 line = line.strip()
-                self.append_attribute('scannames', line.split(':')[0])
+                yield {"kind": "append_attribute", "name": "scannames", "value": line.split(":")[0]}
                 line = next(inputfile)
             line = next(inputfile)
             num_params = int(line.strip().split()[2])
@@ -472,7 +472,7 @@ Dispersion correction           -0.016199959
             while 'Dispersion correction' not in line:
                 line = next(inputfile)
             dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
-            self.append_attribute("dispersionenergies", dispersion)
+            yield {"kind": "append_attribute", "name": "dispersionenergies", "value": dispersion}
 
         # The convergence targets for geometry optimizations are printed at the
         # beginning of the output, although the order and their description is
@@ -544,9 +544,9 @@ Dispersion correction           -0.016199959
             current_params = []
             for i in range(len(self.scannames)):
                 line = next(inputfile)
-                line = line.replace('*','')
-                current_params.append(float(line.split(':')[-1].strip()))
-            self.append_attribute('scanparm', tuple(current_params))
+                line = line.replace("*", "")
+                current_params.append(float(line.split(":")[-1].strip()))
+            yield {"kind": "append_attribute", "name": "scanparm", "value": tuple(current_params)}
 
             self.is_relaxed_scan = True
             while "Convergence Tolerances:" not in line:
@@ -627,10 +627,11 @@ Dispersion correction           -0.016199959
             assert line[:7] == 'E(CORR)'
             while 'E(TOT)' not in line:
                 line = next(inputfile)
-            self.append_attribute(
-                'ccenergies',
-                utils.convertor(utils.float(line.split()[-1]), 'hartree', 'eV')
-            )
+            yield {
+                "kind": "append_attribute",
+                "name": "ccenergies",
+                "value": utils.convertor(utils.float(line.split()[-1]), "hartree", "eV"),
+            }
             line = next(inputfile)
             assert line[:23] == 'Singles Norm <S|S>**1/2'
             line = next(inputfile)
@@ -728,7 +729,7 @@ Dispersion correction           -0.016199959
                     newvalues.append(values[names.index(n)])
                     assert targets[names.index(n)] == self.geotargets[i]
 
-            self.append_attribute("geovalues", newvalues)
+            yield {"kind": "append_attribute", "name": "geovalues", "value": newvalues}
 
         """ Grab cartesian coordinates
         ---------------------------------
@@ -761,7 +762,7 @@ Dispersion correction           -0.016199959
                 "name": "atomnos",
                 "value": atomnos,
             }
-            self.append_attribute("atomcoords", atomcoords)
+            yield {"kind": "append_attribute", "name": "atomcoords", "value": atomcoords}
 
         """ Grab atom masses
         ----------------------------
@@ -1731,7 +1732,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             tokens = line.split()
             assert tokens[0] == "time"
             time = utils.convertor(float(tokens[2]), "time_au", "fs")
-            self.append_attribute('time', time)
+            yield {"kind": "append_attribute", "name": "time", "value": time}
 
         # Static polarizability.
         if line.strip() == "THE POLARIZABILITY TENSOR":
