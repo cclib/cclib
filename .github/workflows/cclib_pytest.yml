@@ -40,7 +40,7 @@ jobs:
           env | sort
           bash .github/scripts/run_pytest.bash
       - name: Test methods with pytest
-        if: steps.filter.outputs.methods == 'false'
+        if: steps.filter.outputs.methods == 'true'
         run: |
           bash .github/scripts/run_pytest_methods.bash
       - name: Upload coverage to Codecov
