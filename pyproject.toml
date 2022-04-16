@@ -1,0 +1,9 @@
+[tool.black]
+line-length = 100
+target-version = ['py39']
+
+[tool.isort]
+profile = "black"
+# default is FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER
+# Placing third-party imports at the end makes their inclusion more obvious
+sections = ["FUTURE", "STDLIB", "FIRSTPARTY", "THIRDPARTY", "LOCALFOLDER"]
