@@ -44,6 +44,7 @@ from cclib.parser.psi4parser import Psi4
 from cclib.parser.qchemparser import QChem
 from cclib.parser.turbomoleparser import Turbomole
 from cclib.parser.utils import find_package
+from cclib.parser.xtbparser import XTB
 
 _has_cclib2openbabel = find_package("openbabel")
 if _has_cclib2openbabel:
@@ -86,6 +87,7 @@ triggers = [
     (Psi4, ["Psi4: An Open-Source Ab Initio Electronic Structure Package"], True),
     (QChem, ["A Quantum Leap Into The Future Of Chemistry"], True),
     (Turbomole, ["TURBOMOLE"], True),
+    (XTB, ["x T B"], True),
 ]
 
 readerclasses = {"cjson": cjsonreader.CJSON, "json": cjsonreader.CJSON, "xyz": xyzreader.XYZ}
