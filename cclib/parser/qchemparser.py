@@ -23,17 +23,15 @@ class QChem(logfileparser.Logfile):
     """A Q-Chem log file."""
 
     def __init__(self, *args, **kwargs):
-
-        # Call the __init__ method of the superclass
-        super(QChem, self).__init__(logname="QChem", *args, **kwargs)
+        super().__init__(logname="QChem", *args, **kwargs)
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "QChem log file %s" % (self.filename)
+        return f"QChem log file {self.filename}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'QChem("%s")' % (self.filename)
+        return f'QChem("{self.filename}")'
 
     def normalisesym(self, label):
         """Q-Chem does not require normalizing symmetry labels."""
@@ -118,6 +116,7 @@ class QChem(logfileparser.Logfile):
         ]
 
     def after_parsing(self):
+        super(QChem, self).after_parsing()
 
         # If parsing a fragment job, each of the geometries appended to
         # `atomcoords` may be of different lengths, which will prevent
@@ -163,8 +162,8 @@ class QChem(logfileparser.Logfile):
                         # principal quantum number (1S, 2P, 3D, 4F,
                         # ...).
                         bfcounts[bfname] = angmom.index(bfname[0])
-                    newbfname = '{}{}'.format(bfcounts[bfname], bfname)
-                    self.aonames[bfindex] = '_'.join([atomname, newbfname])
+                    newbfname = f"{bfcounts[bfname]}{bfname}"
+                    self.aonames[bfindex] = "_".join([atomname, newbfname])
 
         # Assign the number of core electrons replaced by ECPs.
         if hasattr(self, 'user_input') and self.user_input.get('rem') is not None:
@@ -329,7 +328,7 @@ cannot be determined. Rerun without `$molecule read`."""
                         if row[2] != '':
                             name = self.atommap.get(row[1] + str(row[2]))
                         else:
-                            name = self.atommap.get(row[1] + '1')
+                            name = self.atommap.get(f"{row[1]}1")
                         # For l > 1, there is a space between l and
                         # m_l when using spherical functions.
                         shell = row[2 + offset]
@@ -455,12 +454,14 @@ cannot be determined. Rerun without `$molecule read`."""
             svn_revision = line.split()[3]
             line = next(inputfile)
             svn_branch = line.split()[3].replace("/", "_")
-            if "package_version" in self.metadata \
-               and hasattr(self, "parsed_svn_revision") \
-               and not self.parsed_svn_revision:
-                self.metadata["package_version"] = "{}dev+{}-{}".format(
-                    self.metadata["package_version"], svn_branch, svn_revision
-                )
+            if (
+                "package_version" in self.metadata
+                and hasattr(self, "parsed_svn_revision")
+                and not self.parsed_svn_revision
+            ):
+                self.metadata[
+                    "package_version"
+                ] = f"{self.metadata['package_version']}dev+{svn_branch}-{svn_revision}"
                 parsed_version = parse_version(self.metadata["package_version"])
                 assert isinstance(parsed_version, Version)
                 self.set_attribute("package_version", parsed_version)
@@ -602,6 +603,15 @@ cannot be determined. Rerun without `$molecule read`."""
 
                     line = next(inputfile).lower()
 
+            # Point group symmetry.
+            if 'Molecular Point Group' in line:
+                point_group_full = line.split()[3].lower()
+                self.metadata['symmetry_detected'] = point_group_full
+                line = next(inputfile)
+                if 'Largest Abelian Subgroup' in line:
+                    point_group_abelian = line.split()[3].lower()
+                    self.metadata['symmetry_used'] = point_group_abelian
+
             # Parse the basis set name
             if 'Requested basis set' in line:
                 self.metadata["basis_set"] = line.split()[-1]
@@ -717,7 +727,7 @@ cannot be determined. Rerun without `$molecule read`."""
                 elif 'Bohr' in line:
                     convertor = lambda x: utils.convertor(x, 'bohr', 'Angstrom')
                 else:
-                    raise ValueError("Unknown units in coordinate header: {}".format(line))
+                    raise ValueError(f"Unknown units in coordinate header: {line}")
                 self.skip_lines(inputfile, ['cols', 'dashes'])
                 atomelements = []
                 atomcoords = []
@@ -857,7 +867,9 @@ cannot be determined. Rerun without `$molecule read`."""
                         line = next(inputfile)
                     # Is this the end of the file for some reason?
                     except StopIteration:
-                        self.logger.warning('File terminated before end of last SCF! Last error: {}'.format(error))
+                        self.logger.warning(
+                            f"File terminated before end of last SCF! Last error: {error}"
+                        )
                         break
 
                     # We've converged, but still need the last iteration.
@@ -1149,7 +1161,7 @@ cannot be determined. Rerun without `$molecule read`."""
                             elif ttype == 'Y':
                                 sec.append([end, start, contrib])
                             else:
-                                raise ValueError('Unknown transition type: %s' % ttype)
+                                raise ValueError(f"Unknown transition type: {ttype}")
                             line = next(inputfile)
                         etsecs.append(sec)
 

@@ -18,22 +18,20 @@ class MBO(Density):
     """Mayer's bond orders"""
 
     def __init__(self, *args):
-
-        # Call the __init__ method of the superclass.
-        super(MBO, self).__init__(logname="MBO", *args)
+        super().__init__(logname="MBO", *args)
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "Mayer's bond order of %s" % (self.data)
+        return f"Mayer's bond order of {self.data}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'Mayer\'s bond order("%s")' % (self.data)
+        return f'Mayer\'s bond order("{self.data}")'
 
     def calculate(self, indices=None, fupdate=0.05):
         """Calculate Mayer's bond orders."""
 
-        retval = super(MBO, self).calculate(fupdate)
+        retval = super().calculate(fupdate)
         if not retval: #making density didn't work
             return False
 

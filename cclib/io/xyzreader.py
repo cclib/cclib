@@ -16,12 +16,12 @@ class XYZ(filereader.Reader):
     """A reader for XYZ (Cartesian coordinate) files."""
 
     def __init__(self, source, *args, **kwargs):
-        super(XYZ, self).__init__(source, *args, **kwargs)
+        super().__init__(source, *args, **kwargs)
 
         self.pt = PeriodicTable()
 
     def parse(self):
-        super(XYZ, self).parse()
+        super().parse()
 
         self.generate_repr()
 

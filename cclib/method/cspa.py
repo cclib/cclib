@@ -21,17 +21,15 @@ class CSPA(Population):
     overlap_attributes = ()
 
     def __init__(self, *args):
-
-        # Call the __init__ method of the superclass.
-        super(CSPA, self).__init__(logname="CSPA", *args)
+        super().__init__(logname="CSPA", *args)
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "CSPA of %s" % (self.data)
+        return f"CSPA of {self.data}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'CSPA("%s")' % (self.data)
+        return f'CSPA("{self.data}")'
 
     def calculate(self, indices=None, fupdate=0.05):
         """Perform the C squared population analysis.
@@ -76,7 +74,7 @@ class CSPA(Population):
         if self.progress:
             self.progress.update(nstep, "Done")
 
-        retval = super(CSPA, self).partition(indices)
+        retval = super().partition(indices)
 
         if not retval:
             self.logger.error("Error in partitioning results")

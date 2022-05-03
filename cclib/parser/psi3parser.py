@@ -17,17 +17,15 @@ class Psi3(logfileparser.Logfile):
     """A Psi3 log file."""
 
     def __init__(self, *args, **kwargs):
-
-        # Call the __init__ method of the superclass
-        super(Psi3, self).__init__(logname="Psi3", *args, **kwargs)
+        super().__init__(logname="Psi3", *args, **kwargs)
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "Psi3 log file %s" % (self.filename)
+        return f"Psi3 log file {self.filename}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'Psi3("%s")' % (self.filename)
+        return f'Psi3("{self.filename}")'
 
     def normalisesym(self, label):
         """Psi3 does not require normalizing symmetry labels."""
@@ -73,6 +71,12 @@ class Psi3(logfileparser.Logfile):
 
         if line.strip() == '-SYMMETRY INFORMATION:':
             line = next(inputfile)
+            assert "Computational point group is" in line
+            point_group_abelian = line.split()[4].lower()
+            # TODO Psi 3 doesn't print the full point group?
+            point_group_full = point_group_abelian
+            self.metadata['symmetry_detected'] = point_group_full
+            self.metadata['symmetry_used'] = point_group_abelian
             while line.strip():
                 if "Number of atoms" in line:
                     self.set_attribute('natom', int(line.split()[-1]))

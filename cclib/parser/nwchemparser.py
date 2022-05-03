@@ -21,17 +21,15 @@ class NWChem(logfileparser.Logfile):
     """An NWChem log file."""
 
     def __init__(self, *args, **kwargs):
-
-        # Call the __init__ method of the superclass
-        super(NWChem, self).__init__(logname="NWChem", *args, **kwargs)
+        super().__init__(logname="NWChem", *args, **kwargs)
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "NWChem log file %s" % (self.filename)
+        return f"NWChem log file {self.filename}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'NWChem("%s")' % (self.filename)
+        return f'NWChem("{self.filename}")'
 
     def normalisesym(self, label):
         """NWChem does not require normalizing symmetry labels."""
@@ -55,9 +53,9 @@ class NWChem(logfileparser.Logfile):
             self.metadata["package_version"] = base_package_version
             line = next(inputfile)
             if "nwchem revision" in line:
-                self.metadata["package_version"] = "{}+{}".format(
-                    self.metadata["package_version"], line.split()[3].split("-")[-1]
-                )
+                self.metadata[
+                    "package_version"
+                ] = f"{self.metadata['package_version']}+{line.split()[3].split('-')[-1]}"
 
         # This is printed in the input module, so should always be the first coordinates,
         # and contains some basic information we want to parse as well. However, this is not
@@ -90,6 +88,24 @@ class NWChem(logfileparser.Logfile):
 
             self.set_attribute('atomnos', atomnos)
             self.set_attribute('natom', len(atomnos))
+
+        if line.strip() == "Symmetry information":
+            self.skip_lines(inputfile, ['d', 'b'])
+            line = next(inputfile)
+            assert line[1:11] == "Group name"
+            point_group_full = line.split()[2].lower()
+            line = next(inputfile)
+            assert line[1:13] == "Group number"
+            line = next(inputfile)
+            assert line[1:12] == "Group order"
+            self.pg_order = int(line.split()[2])
+            # TODO It is unclear what class of point group NWChem
+            # prints, since it can handle crystallographic groups in
+            # some places:
+            # http://www.nwchem-sw.org/index.php/Release66:Geometry
+            point_group_abelian = point_group_full
+            self.metadata['symmetry_detected'] = point_group_full
+            self.metadata['symmetry_used'] = point_group_abelian
 
         # If the geometry is printed in XYZ format, it will have the number of atoms.
         if line[12:31] == "XYZ format geometry":
@@ -248,6 +264,14 @@ class NWChem(logfileparser.Logfile):
 
                 self.set_attribute('atombasis', atombasis)
 
+        if line.strip() == "Symmetry analysis of basis":
+            self.skip_lines(inputfile, ['d', 'b'])
+            if not hasattr(self, 'symlabels'):
+                self.symlabels = []
+            for _ in range(self.pg_order):
+                line = next(inputfile)
+                self.symlabels.append(self.normalisesym(line.split()[0]))
+
         # This section contains general parameters for Hartree-Fock calculations,
         # which do not contain the 'General Information' section like most jobs.
         if line.strip() == "NWChem SCF Module":
@@ -394,7 +418,9 @@ class NWChem(logfileparser.Logfile):
                             line = next(inputfile)
                         # Is this the end of the file for some reason?
                         except StopIteration:
-                            self.logger.warning('File terminated before end of last SCF! Last gradient norm: {}'.format(gnorm))
+                            self.logger.warning(
+                                f"File terminated before end of last SCF! Last gradient norm: {gnorm}"
+                            )
                             break
                     if not hasattr(self, 'scfvalues'):
                         self.scfvalues = []
@@ -447,7 +473,9 @@ class NWChem(logfileparser.Logfile):
                     line = next(inputfile)
                 # Is this the end of the file for some reason?
                 except StopIteration:
-                    self.logger.warning('File terminated before end of last SCF! Last error: {}'.format(diis))
+                    self.logger.warning(
+                        f"File terminated before end of last SCF! Last error: {diis}"
+                    )
                     break
 
             if not hasattr(self, 'scfvalues'):
@@ -586,7 +614,9 @@ class NWChem(logfileparser.Logfile):
                     sym = sym[0].upper() + sym[1:]
                     if self.mosyms[0][index]:
                         if self.mosyms[0][index] != sym:
-                            self.logger.warning("Symmetry of MO %i has changed" % (index+1))
+                            self.logger.warning(
+                                f"Symmetry of MO {int(index + 1)} has changed"
+                            )
                     self.mosyms[0][index] = sym
                 line = next(inputfile)
 
@@ -1242,6 +1272,7 @@ class NWChem(logfileparser.Logfile):
 
         Currently, expands self.shells() into self.aonames.
         """
+        super(NWChem, self).after_parsing()
 
         # setup a few necessary things, including a regular expression
         # for matching the shells
@@ -1288,7 +1319,7 @@ class NWChem(logfileparser.Logfile):
                 self.logger.warning(msg)
                 break
 
-            prefix = "%s%i_" % (element, i + 1)  # (e.g. C1_)
+            prefix = f"{element}{int(i + 1)}_"  # (e.g. C1_)
 
             matches = pattern.match(shell_text)
             for j, group in enumerate(matches.groups()):

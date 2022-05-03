@@ -20,17 +20,15 @@ class Psi4(logfileparser.Logfile):
     """A Psi4 log file."""
 
     def __init__(self, *args, **kwargs):
-
-        # Call the __init__ method of the superclass
-        super(Psi4, self).__init__(logname="Psi4", *args, **kwargs)
+        super().__init__(logname="Psi4", *args, **kwargs)
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "Psi4 log file %s" % (self.filename)
+        return f"Psi4 log file {self.filename}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'Psi4("%s")' % (self.filename)
+        return f'Psi4("{self.filename}")'
 
     def before_parsing(self):
 
@@ -47,6 +45,7 @@ class Psi4(logfileparser.Logfile):
         self.subsection = None
 
     def after_parsing(self):
+        super(Psi4, self).after_parsing()
 
         # Newer versions of Psi4 don't explicitly print the number of atoms.
         if not hasattr(self, 'natom'):
@@ -91,13 +90,13 @@ class Psi4(logfileparser.Logfile):
             if "beta" in package_version:
                 self.version_4_beta = True
                 # `beta2+` -> `0!0.beta2`
-                package_version = "0!0.{}".format(package_version)
+                package_version = f"0!0.{package_version}"
                 if package_version[-1] == "+":
                     # There is no good way to keep the bare plus sign around,
                     # but this version is so old...
                     package_version = package_version[:-1]
             else:
-                package_version = "1!{}".format(package_version)
+                package_version = f"1!{package_version}"
             self.skip_line(inputfile, "blank")
             line = next(inputfile)
             if "Git:" in line:
@@ -105,9 +104,7 @@ class Psi4(logfileparser.Logfile):
                 assert tokens[1] == "Rev"
                 revision = '-'.join(tokens[2:]).replace("{", "").replace("}", "")
                 dev_flag = "" if "dev" in package_version else ".dev"
-                package_version = "{}{}+{}".format(
-                    package_version, dev_flag, revision
-                )
+                package_version = f"{package_version}{dev_flag}+{revision}"
             self.metadata["package_version"] = package_version
 
         # This will automatically change the section attribute for Psi4, when encountering
@@ -151,6 +148,19 @@ class Psi4(logfileparser.Logfile):
         #           C          1.415253322400    -0.230221785400     0.000000000000
         # ...
         #
+        if (self.section == "Geometry") and ("Molecular point group" in line):
+
+            point_group_abelian = line.split()[3].lower()
+            line = next(inputfile)
+            if "Full point group" in line:
+                point_group_full = line.split()[3].lower()
+            else:
+                # TODO this isn't right, need to "know" about symmetry.
+                point_group_full = point_group_abelian
+
+            self.metadata['symmetry_detected'] = point_group_full
+            self.metadata['symmetry_used'] = point_group_abelian
+
         if (self.section == "Geometry") and ("Geometry (in Angstrom), charge" in line):
 
             assert line.split()[3] == "charge"
@@ -427,7 +437,9 @@ class Psi4(logfileparser.Logfile):
                 try:
                     line = next(inputfile)
                 except StopIteration:
-                    self.logger.warning('File terminated before end of last SCF! Last density err: {}'.format(ddensity))
+                    self.logger.warning(
+                        f"File terminated before end of last SCF! Last density err: {ddensity}"
+                    )
                     break
             self.section = "Post-Iterations"
             self.scfvalues.append(scfvals)
@@ -639,7 +651,7 @@ class Psi4(logfileparser.Logfile):
         #        2     C     2.99909  2.99909  0.00000  0.00182
         # ...
         for pop_type in ["Mulliken", "Lowdin"]:
-            if line.strip() == "%s Charges: (a.u.)" % pop_type:
+            if line.strip() == f"{pop_type} Charges: (a.u.)":
                 if not hasattr(self, 'atomcharges'):
                     self.atomcharges = {}
                 header = next(inputfile)
@@ -856,8 +868,10 @@ class Psi4(logfileparser.Logfile):
                 while line.strip():
 
                     value = float(line.split()[-1])
-                    fromunits = "ebohr" + (rank > 1)*("%i" % rank)
-                    tounits = "Debye" + (rank > 1)*".ang" + (rank > 2)*("%i" % (rank-1))
+                    fromunits = f"ebohr{(rank > 1) * f'{int(rank)}'}"
+                    tounits = (
+                        f"Debye{(rank > 1) * '.ang'}{(rank > 2) * f'{int(rank - 1)}'}"
+                    )
                     value = utils.convertor(value, fromunits, tounits)
                     multipole.append(value)
 

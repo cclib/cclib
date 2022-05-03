@@ -69,7 +69,7 @@ class FileWrapperTest(unittest.TestCase):
         ]
         get_attributes = lambda data: [a for a in data._attrlist if hasattr(data, a)]
         for lf in logfiles:
-            path = "%s/%s" % (__datadir__, lf)
+            path = f"{__datadir__}/{lf}"
             expected_attributes = get_attributes(cclib.io.ccread(path))
             with open(path) as handle:
                 contents = handle.read()
@@ -104,8 +104,12 @@ class LogfileTest(unittest.TestCase):
         parser.parse()
         try:
             parser.logger.error.assert_called_once()
-        except AttributeError: # assert_called_once is not availible until python 3.6
-            self.assertEqual(parser.logger.error.call_count, 1, "Expected mock to have been called once. Called {} times.".format(parser.logger.error.call_count))
+        except AttributeError:  # assert_called_once is not availible until python 3.6
+            self.assertEqual(
+                parser.logger.error.call_count,
+                1,
+                f"Expected mock to have been called once. Called {parser.logger.error.call_count} times.",
+            )
 
 
 if __name__ == "__main__":

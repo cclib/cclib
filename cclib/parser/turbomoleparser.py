@@ -49,7 +49,7 @@ class Turbomole(logfileparser.Logfile):
     """A Turbomole log file."""
 
     def __init__(self, *args, **kwargs):
-        super(Turbomole, self).__init__(logname="Turbomole", *args, **kwargs)
+        super().__init__(logname="Turbomole", *args, **kwargs)
         
         # Flag for whether this calc is DFT.
         self.is_DFT = False
@@ -62,11 +62,11 @@ class Turbomole(logfileparser.Logfile):
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "Turbomole output file %s" % (self.filename)
+        return f"Turbomole output file {self.filename}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'Turbomole("%s")' % (self.filename)
+        return f'Turbomole("{self.filename}")'
 
     def normalisesym(self, label):
         """Normalise the symmetries used by Turbomole.
@@ -151,8 +151,10 @@ class Turbomole(logfileparser.Logfile):
             build_id = version_match.group(4)
                             
             self.metadata["legacy_package_version"] = version
-            self.metadata["package_version"] = "{}.r{}".format(version, build_id) if build_id is not None else version
-                
+            self.metadata["package_version"] = (
+                f"{version}.r{build_id}" if build_id is not None else version
+            )
+
             # We have entered a new module (sub program); reset our success flag.
             self.metadata['success'] = False
         
@@ -276,8 +278,10 @@ class Turbomole(logfileparser.Logfile):
                 
                 # Check we won't loose information converting to int.
                 if total_charge != total_charge_int:
-                    self.logger.warning("Converting non integer total charge '{}' to integer".format(total_charge))
-                
+                    self.logger.warning(
+                        f"Converting non integer total charge '{total_charge}' to integer"
+                    )
+
                 # Set regardless.
                 self.set_attribute("charge", total_charge_int)
 
@@ -806,13 +810,13 @@ class Turbomole(logfileparser.Logfile):
             
         # Look for MP energies.
         for mp_level in range(2,6):
-            if "Final MP{} energy".format(mp_level) in line:
+            if f"Final MP{mp_level} energy" in line:
                 mpenergy = utils.convertor(utils.float(line.split()[5]), 'hartree', 'eV')
                 if mp_level == 2:
                     self.append_attribute('mpenergies', [mpenergy])
                 else:
                     self.mpenergies[-1].append(mpenergy)
-                self.metadata['methods'].append("MP{}".format(mp_level))
+                self.metadata["methods"].append(f"MP{mp_level}")
 
         #  *****************************************************
         #  *                                                   *
@@ -896,7 +900,7 @@ class Turbomole(logfileparser.Logfile):
             else:
                 mult = symm_parts[1].capitalize()
             
-            symmetry = "{}-{}".format(mult, symm_parts[-2].capitalize())
+            symmetry = f"{mult}-{symm_parts[-2].capitalize()}"
             self.append_attribute("etsyms", symmetry)
             
             # Energy should be in cm-1...
@@ -1033,7 +1037,7 @@ class Turbomole(logfileparser.Logfile):
                 else:
                     mult = parts[2]
                     
-                symmetry = "{}-{}".format(mult, parts[1].capitalize())
+                symmetry = f"{mult}-{parts[1].capitalize()}"
                 self.append_attribute("etsyms", symmetry)
                     
                 energy = utils.float(parts[6])
@@ -1311,16 +1315,15 @@ class OldTurbomole(logfileparser.Logfile):
     """A Turbomole output file. Code is outdated and is not being used."""
 
     def __init__(self, *args):
-        # Call the __init__ method of the superclass
-        super(Turbomole, self).__init__(logname="Turbomole", *args)
+        super().__init__(logname="Turbomole", *args)
         
     def __str__(self):
         """Return a string representation of the object."""
-        return "Turbomole output file %s" % (self.filename)
+        return f"Turbomole output file {self.filename}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'Turbomole("%s")' % (self.filename)
+        return f'Turbomole("{self.filename}")'
 
     def atlist(self, atstr):
         # turn atstr from atoms section into array
@@ -1542,64 +1545,89 @@ class OldTurbomole(logfileparser.Logfile):
                             d_counter=6
                             
                         for j in range(0, len(basis.symmetries), 1):
-                            if basis.symmetries[j]=='s':
-                                self.aonames.append("%s%d_%d%s" % \
-                                              (pa, counter, s_counter, "S"))
-                                s_counter=s_counter+1
-                            elif basis.symmetries[j]=='p':
-                                self.aonames.append("%s%d_%d%s" % \
-                                              (pa, counter, p_counter, "PX"))
-                                self.aonames.append("%s%d_%d%s" % \
-                                              (pa, counter, p_counter, "PY"))
-                                self.aonames.append("%s%d_%d%s" % \
-                                              (pa, counter, p_counter, "PZ"))
-                                p_counter=p_counter+1
-                            elif basis.symmetries[j]=='d':
-                                self.aonames.append("%s%d_%d%s" % \
-                                         (pa, counter, d_counter, "D 0"))
-                                self.aonames.append("%s%d_%d%s" % \
-                                         (pa, counter, d_counter, "D+1"))
-                                self.aonames.append("%s%d_%d%s" % \
-                                         (pa, counter, d_counter, "D-1"))
-                                self.aonames.append("%s%d_%d%s" % \
-                                         (pa, counter, d_counter, "D+2"))
-                                self.aonames.append("%s%d_%d%s" % \
-                                         (pa, counter, d_counter, "D-2"))
-                                d_counter=d_counter+1
-                            elif basis.symmetries[j]=='f':
-                                 self.aonames.append("%s%d_%d%s" % \
-                                       (pa, counter, f_counter, "F 0"))
-                                 self.aonames.append("%s%d_%d%s" % \
-                                       (pa, counter, f_counter, "F+1"))
-                                 self.aonames.append("%s%d_%d%s" % \
-                                       (pa, counter, f_counter, "F-1"))
-                                 self.aonames.append("%s%d_%d%s" % \
-                                       (pa, counter, f_counter, "F+2"))
-                                 self.aonames.append("%s%d_%d%s" % \
-                                       (pa, counter, f_counter, "F-2"))
-                                 self.aonames.append("%s%d_%d%s" % \
-                                       (pa, counter, f_counter, "F+3"))
-                                 self.aonames.append("%s%d_%d%s" % \
-                                        (pa, counter, f_counter, "F-3"))
-                            elif basis.symmetries[j]=='g':
-                                self.aonames.append("%s%d_%d%s" % \
-                                       (pa, counter, f_counter, "G 0"))
-                                self.aonames.append("%s%d_%d%s" % \
-                                       (pa, counter, f_counter, "G+1"))
-                                self.aonames.append("%s%d_%d%s" % \
-                                       (pa, counter, f_counter, "G-1"))
-                                self.aonames.append("%s%d_%d%s" % \
-                                        (pa, counter, g_counter, "G+2"))
-                                self.aonames.append("%s%d_%d%s" % \
-                                         (pa, counter, g_counter, "G-2"))
-                                self.aonames.append("%s%d_%d%s" % \
-                                         (pa, counter, g_counter, "G+3"))
-                                self.aonames.append("%s%d_%d%s" % \
-                                          (pa, counter, g_counter, "G-3"))
-                                self.aonames.append("%s%d_%d%s" % \
-                                          (pa, counter, g_counter, "G+4"))
-                                self.aonames.append("%s%d_%d%s" % \
-                                          (pa, counter, g_counter, "G-4"))
+                            if basis.symmetries[j] == "s":
+                                self.aonames.append(
+                                    f"{pa}{int(counter)}_{int(s_counter)}{'S'}"
+                                )
+                                s_counter = s_counter + 1
+                            elif basis.symmetries[j] == "p":
+                                self.aonames.append(
+                                    f"{pa}{int(counter)}_{int(p_counter)}{'PX'}"
+                                )
+                                self.aonames.append(
+                                    f"{pa}{int(counter)}_{int(p_counter)}{'PY'}"
+                                )
+                                self.aonames.append(
+                                    f"{pa}{int(counter)}_{int(p_counter)}{'PZ'}"
+                                )
+                                p_counter = p_counter + 1
+                            elif basis.symmetries[j] == "d":
+                                self.aonames.append(
+                                    f"{pa}{int(counter)}_{int(d_counter)}{'D 0'}"
+                                )
+                                self.aonames.append(
+                                    f"{pa}{int(counter)}_{int(d_counter)}{'D+1'}"
+                                )
+                                self.aonames.append(
+                                    f"{pa}{int(counter)}_{int(d_counter)}{'D-1'}"
+                                )
+                                self.aonames.append(
+                                    f"{pa}{int(counter)}_{int(d_counter)}{'D+2'}"
+                                )
+                                self.aonames.append(
+                                    f"{pa}{int(counter)}_{int(d_counter)}{'D-2'}"
+                                )
+                                d_counter = d_counter + 1
+                            elif basis.symmetries[j] == "f":
+                                self.aonames.append(
+                                    f"{pa}{int(counter)}_{int(f_counter)}{'F 0'}"
+                                )
+                                self.aonames.append(
+                                    f"{pa}{int(counter)}_{int(f_counter)}{'F+1'}"
+                                )
+                                self.aonames.append(
+                                    f"{pa}{int(counter)}_{int(f_counter)}{'F-1'}"
+                                )
+                                self.aonames.append(
+                                    f"{pa}{int(counter)}_{int(f_counter)}{'F+2'}"
+                                )
+                                self.aonames.append(
+                                    f"{pa}{int(counter)}_{int(f_counter)}{'F-2'}"
+                                )
+                                self.aonames.append(
+                                    f"{pa}{int(counter)}_{int(f_counter)}{'F+3'}"
+                                )
+                                self.aonames.append(
+                                    f"{pa}{int(counter)}_{int(f_counter)}{'F-3'}"
+                                )
+                            elif basis.symmetries[j] == "g":
+                                self.aonames.append(
+                                    f"{pa}{int(counter)}_{int(f_counter)}{'G 0'}"
+                                )
+                                self.aonames.append(
+                                    f"{pa}{int(counter)}_{int(f_counter)}{'G+1'}"
+                                )
+                                self.aonames.append(
+                                    f"{pa}{int(counter)}_{int(f_counter)}{'G-1'}"
+                                )
+                                self.aonames.append(
+                                    f"{pa}{int(counter)}_{int(g_counter)}{'G+2'}"
+                                )
+                                self.aonames.append(
+                                    f"{pa}{int(counter)}_{int(g_counter)}{'G-2'}"
+                                )
+                                self.aonames.append(
+                                    f"{pa}{int(counter)}_{int(g_counter)}{'G+3'}"
+                                )
+                                self.aonames.append(
+                                    f"{pa}{int(counter)}_{int(g_counter)}{'G-3'}"
+                                )
+                                self.aonames.append(
+                                    f"{pa}{int(counter)}_{int(g_counter)}{'G+4'}"
+                                )
+                                self.aonames.append(
+                                    f"{pa}{int(counter)}_{int(g_counter)}{'G-4'}"
+                                )
                         break
                 counter=counter+1
                 

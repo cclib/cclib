@@ -25,11 +25,9 @@ class XYZ(filewriter.Writer):
           lastgeom - Boolean to write the last available geometry from the logfile.
           allgeom - Boolean to write all available geometries from the logfile.
         """
+        super().__init__(ccdata, *args, **kwargs)
 
         self.required_attrs = ('natom', 'atomcoords', 'atomnos')
-
-        # Call the __init__ method of the superclass
-        super(XYZ, self).__init__(ccdata, *args, **kwargs)
 
         self.do_firstgeom = firstgeom
         self.do_lastgeom = lastgeom
@@ -90,15 +88,15 @@ class XYZ(filewriter.Writer):
         else:
             geometry_num = index + 1
         if self.jobfilename is not None:
-            comment = "{}: Geometry {}".format(self.jobfilename, geometry_num)
+            comment = f"{self.jobfilename}: Geometry {geometry_num}"
         else:
-            comment = "Geometry {}".format(geometry_num)
+            comment = f"Geometry {geometry_num}"
         # Wrap the geometry number part of the comment in square brackets,
         # prefixing it with one previously parsed if it existed.
         if existing_comment:
-            comment = "{} [{}]".format(existing_comment, comment)
+            comment = f"{existing_comment} [{comment}]"
         else:
-            comment = "[{}]".format(comment)
+            comment = f"[{comment}]"
 
         atom_template = '{:3s} {:15.10f} {:15.10f} {:15.10f}'
         block = []

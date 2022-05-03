@@ -21,17 +21,15 @@ class Gaussian(logfileparser.Logfile):
     """A Gaussian 98/03 log file."""
 
     def __init__(self, *args, **kwargs):
-
-        # Call the __init__ method of the superclass
-        super(Gaussian, self).__init__(logname="Gaussian", *args, **kwargs)
+        super().__init__(logname="Gaussian", *args, **kwargs)
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "Gaussian log file %s" % (self.filename)
+        return f"Gaussian log file {self.filename}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'Gaussian("%s")' % (self.filename)
+        return f'Gaussian("{self.filename}")'
 
     def normalisesym(self, label):
         """Use standard symmetry labels instead of Gaussian labels.
@@ -48,7 +46,7 @@ class Gaussian(logfileparser.Logfile):
                 tmp = label[len(k):]
                 label = v
                 if tmp:
-                    label = v + "." + tmp
+                    label = f"{v}.{tmp}"
 
         ans = label.replace("U", "u").replace("G", "g")
         return ans
@@ -73,6 +71,8 @@ class Gaussian(logfileparser.Logfile):
     }
 
     def before_parsing(self):
+        # Calculations use point group symmetry by default.
+        self.uses_symmetry = True
 
         # Extract only well-formed numbers in scientific notation.
         self.re_scinot = re.compile(r'(\w*)=\s*(-?\d\.\d{2}D[+-]\d{2})')
@@ -162,6 +162,10 @@ class Gaussian(logfileparser.Logfile):
                 rotation = utils.get_rotation(numpy.array(inputcoord), numpy.array(atomcoord))
                 grads_std.append(rotation.apply(grad))
             self.set_attribute('grads', numpy.array(grads_std))
+        
+        if hasattr(self, "ccenergy"):
+            self.append_attribute("ccenergies", utils.convertor(self.ccenergy, "hartree", "eV"))
+            del self.ccenergy
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -188,9 +192,9 @@ class Gaussian(logfileparser.Logfile):
             platform = "-".join(platform_full_version_tokens[:-1])
             year_suffix = full_version[1:3]
             revision = full_version[6:]
-            self.metadata["package_version"] = "{}+{}".format(
-                self.YEAR_SUFFIXES_TO_YEARS[year_suffix], revision
-            )
+            self.metadata[
+                "package_version"
+            ] = f"{self.YEAR_SUFFIXES_TO_YEARS[year_suffix]}+{revision}"
             self.metadata["platform"] = platform
 
         if line.strip().startswith("Link1:  Proceeding to internal job step number"):
@@ -228,7 +232,7 @@ class Gaussian(logfileparser.Logfile):
                 # For the supermolecule, we can parse the charge and multicplicity.
                 regex = r".*=(.*)Mul.*=\s*-?(\d+).*"
                 match = re.match(regex, line)
-                assert match, "Something unusual about the line: '%s'" % line
+                assert match, f"Something unusual about the line: '{line}'"
 
                 self.set_attribute('charge', int(match.groups()[0]))
                 self.set_attribute('mult', int(match.groups()[1]))
@@ -268,7 +272,7 @@ class Gaussian(logfileparser.Logfile):
 
                 regex = r".*=(.*)Mul.*=\s*-?(\d+).*"
                 match = re.match(regex, line)
-                assert match, "Something unusual about the line: '%s'" % line
+                assert match, f"Something unusual about the line: '{line}'"
 
                 self.set_attribute('charge', int(match.groups()[0]))
                 self.set_attribute('mult', int(match.groups()[1]))
@@ -432,7 +436,9 @@ class Gaussian(logfileparser.Logfile):
                     try:
                         numpy.testing.assert_equal(self.moments[4], hexadecapole)
                     except AssertionError:
-                        self.logger.warning("Attribute hexadecapole changed value (%s -> %s)" % (self.moments[4], hexadecapole))
+                        self.logger.warning(
+                            f"Attribute hexadecapole changed value ({self.moments[4]} -> {hexadecapole})"
+                        )
                     self.append_attribute("moments", hexadecapole)
 
         # Catch message about completed optimization.
@@ -565,6 +571,33 @@ class Gaussian(logfileparser.Logfile):
                 if line[1:8] == "AtmWgt=":
                     self.atommasses.extend(list(map(float, line.split()[1:])))
                 line = next(inputfile)
+
+        # Symmetry: point group
+        if line.strip() == "Symmetry turned off by external request.":
+            self.set_attribute('uses_symmetry', False)
+        if "Full point group" in line:
+            point_group_detected = line.split()[3].lower()
+            if self.uses_symmetry:
+                while "Largest Abelian subgroup" not in line:
+                    line = next(inputfile)
+                    if "Leave Link" in line:
+                        # TODO To handle this properly, it needs to be
+                        # calculated from the full point group.
+                        point_group_used = point_group_detected
+                        break
+                if "Leave Link" not in line:
+                    point_group_used = line.split()[3].lower()
+            else:
+                point_group_used = "c1"
+            self.metadata['symmetry_detected'] = point_group_detected
+            self.metadata['symmetry_used'] = point_group_used
+
+        # Symmetry: ordering of irreducible representations
+        if "symmetry adapted cartesian basis functions" in line:
+            if not hasattr(self, 'symlabels'):
+                self.symlabels = []
+            irrep = self.normalisesym(line.split()[-2])
+            self.symlabels.append(irrep)
 
         # Extract the atomic numbers and coordinates of the atoms.
         if line.strip() == "Standard orientation:":
@@ -903,12 +936,6 @@ class Gaussian(logfileparser.Logfile):
             if line[1:9] == "CCSD(T)=":
                 self.metadata["methods"].append("CCSD-T")
                 self.ccenergy = utils.float(line.split()[1])
-        if line[12:53] == "Population analysis using the SCF density":
-            if hasattr(self, "ccenergy"):
-                if not hasattr(self, "ccenergies"):
-                    self.ccenergies = []
-                self.ccenergies.append(utils.convertor(self.ccenergy, "hartree", "eV"))
-                del self.ccenergy
         # Find step number for current optimization/IRC
         # Matches "Step number  123", "Pt XX Step number 123" and "PtXXX Step number 123"
         if " Step number" in line:
@@ -936,7 +963,9 @@ class Gaussian(logfileparser.Logfile):
                 try:
                     value = utils.float(parts[2])
                 except ValueError:
-                    self.logger.error("Problem parsing the value for geometry optimisation: %s is not a number." % parts[2])
+                    self.logger.error(
+                        f"Problem parsing the value for geometry optimisation: {parts[2]} is not a number."
+                    )
                 else:
                     newlist[i] = value
                 self.geotargets[i] = utils.float(parts[3])
@@ -1587,7 +1616,9 @@ class Gaussian(logfileparser.Logfile):
                 try:
                     assert nbasis == self.nbasis
                 except AssertionError:
-                    self.logger.warning("Number of basis functions (nbasis) has changed from %i to %i" % (self.nbasis, nbasis))
+                    self.logger.warning(
+                        f"Number of basis functions (nbasis) has changed from {int(self.nbasis)} to {int(nbasis)}"
+                    )
             self.nbasis = nbasis
 
         # Number of linearly-independent basis sets.
@@ -1699,9 +1730,9 @@ class Gaussian(logfileparser.Logfile):
                             if i > 0:
                                 self.atombasis.append(atombasis)
                             atombasis = []
-                            atomname = "%s%s" % (parts[2], parts[1])
+                            atomname = f"{parts[2]}{parts[1]}"
                         orbital = line[start_of_basis_fn_name:20].strip()
-                        self.aonames.append("%s_%s" % (atomname, orbital))
+                        self.aonames.append(f"{atomname}_{orbital}")
                         atombasis.append(i)
 
                     part = line[21:].replace("D", "E").rstrip()
@@ -1754,9 +1785,9 @@ class Gaussian(logfileparser.Logfile):
                             if i > 0:
                                 atombasis.append(basisonatom)
                             basisonatom = []
-                            atomname = "%s%s" % (parts[2], parts[1])
+                            atomname = f"{parts[2]}{parts[1]}"
                         orbital = line[11:20].strip()
-                        aonames.append("%s_%s" % (atomname, orbital))
+                        aonames.append(f"{atomname}_{orbital}")
                         basisonatom.append(i)
                     part = line[21:].replace("D", "E").rstrip()
                     temp = []
@@ -1995,14 +2026,14 @@ class Gaussian(logfileparser.Logfile):
             # Input extracted values into self.atomcharges.
             if has_charges:
                 if is_sum:
-                    self.atomcharges['{}_sum'.format(prop)] = charges
+                    self.atomcharges[f"{prop}_sum"] = charges
                 else:
-                    self.atomcharges['{}'.format(prop)] = charges
+                    self.atomcharges[f"{prop}"] = charges
             if has_spin:
                 if is_sum:
-                    self.atomspins['{}_sum'.format(prop)] = spins
+                    self.atomspins[f"{prop}_sum"] = spins
                 else:
-                    self.atomspins['{}'.format(prop)] = spins
+                    self.atomspins[f"{prop}"] = spins
 
         # Define strings needed for line detection. Older Gaussian
         # versions don't always give the charge type explicitly,
@@ -2022,8 +2053,8 @@ class Gaussian(logfileparser.Logfile):
         # of atom charges or spins.
             for prop in props:
                 for header in headers:
-                    if '{}{}'.format(prop,header).lower() in line.lower():
-                        # When we use "atomic" as the property, only 
+                    if f"{prop}{header}".lower() in line.lower():
+                        # When we use "atomic" as the property, only
                         # extract if the charge type isn't given explicity.
                         # This prevents us from reading some lines twice.
                         # e.g. "Mulliken atomic charges:" is caught by 

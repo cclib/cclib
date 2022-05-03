@@ -18,17 +18,15 @@ class Bickelhaupt(Population):
     """Bickelhaupt population analysis."""
 
     def __init__(self, *args):
-
-        # Call the __init__ method of the superclass.
-        super(Bickelhaupt, self).__init__(logname="Bickelhaupt Population Analysis", *args)
+        super().__init__(logname="Bickelhaupt Population Analysis", *args)
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "Bickelhaupt charges of {}".format(self.data)
+        return f"Bickelhaupt charges of {self.data}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return "Bickelhaupt({})".format(self.data)
+        return f"Bickelhaupt({self.data})"
 
     def calculate(self, indices=None, fupdate=0.05):
         """Perform a Bickelhaupt population analysis."""
@@ -104,7 +102,7 @@ class Bickelhaupt(Population):
         if self.progress:
             self.progress.update(nstep, "Done")
 
-        retval = super(Bickelhaupt, self).partition(indices)
+        retval = super().partition(indices)
 
         if not retval:
             self.logger.error("Error in partitioning results")

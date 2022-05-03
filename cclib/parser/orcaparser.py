@@ -22,23 +22,23 @@ class ORCA(logfileparser.Logfile):
     """An ORCA log file."""
 
     def __init__(self, *args, **kwargs):
-
-        # Call the __init__ method of the superclass
-        super(ORCA, self).__init__(logname="ORCA", *args, **kwargs)
+        super().__init__(logname="ORCA", *args, **kwargs)
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "ORCA log file %s" % (self.filename)
+        return f"ORCA log file {self.filename}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'ORCA("%s")' % (self.filename)
+        return f'ORCA("{self.filename}")'
 
     def normalisesym(self, label):
         """ORCA does not require normalizing symmetry labels."""
         return label
 
     def before_parsing(self):
+
+        self.uses_symmetry = False
 
         # A geometry optimization is started only when
         # we parse a cycle (so it will be larger than zero().
@@ -86,10 +86,8 @@ class ORCA(logfileparser.Logfile):
             self.metadata["package_version"] = self.metadata["legacy_package_version"].replace(".x", "dev")
             possible_revision_line = next(inputfile)
             if "SVN: $Rev" in possible_revision_line:
-                self.metadata["package_version"] += "+{}".format(
-                    re.search(r"\d+", possible_revision_line).group()
-                )
-
+                version = re.search(r'\d+', possible_revision_line).group()
+                self.metadata["package_version"] += f"+{version}"
 
         # ================================================================================
         #                                         WARNINGS
@@ -305,6 +303,29 @@ class ORCA(logfileparser.Logfile):
 
             mult = int(line.split()[-1])
             self.set_attribute('mult', mult)
+
+        if line[1:18] == "Symmetry handling":
+            self.uses_symmetry = True
+
+            line = next(inputfile)
+            assert "Point group" in line
+            point_group_full = line.split()[3].lower()
+            line = next(inputfile)
+            assert "Used point group" in line
+            point_group_abelian = line.split()[4].lower()
+            line = next(inputfile)
+            assert "Number of irreps" in line
+            nirrep = int(line.split()[4])
+            for n in range(nirrep):
+                line = next(inputfile)
+                assert "symmetry adapted basis functions" in line
+                irrep = line[8:13]
+                if not hasattr(self, 'symlabels'):
+                    self.symlabels = []
+                self.symlabels.append(self.normalisesym(irrep))
+
+            self.metadata['symmetry_detected'] = point_group_full
+            self.metadata['symmetry_used'] = point_group_abelian
 
         # SCF convergence output begins with:
         #
@@ -754,14 +775,19 @@ Dispersion correction           -0.016199959
 
             self.mooccnos = [[]]
             self.moenergies = [[]]
+            self.mosyms = [[]]
 
             line = next(inputfile)
             while len(line) > 20:  # restricted calcs are terminated by ------
                 info = line.split()
                 mooccno = int(float(info[1]))
                 moenergy = float(info[2])
+                mosym = 'A'
+                if self.uses_symmetry:
+                    mosym = self.normalisesym(info[4].split('-')[1])
                 self.mooccnos[0].append(mooccno)
                 self.moenergies[0].append(utils.convertor(moenergy, "hartree", "eV"))
+                self.mosyms[0].append(mosym)
                 line = next(inputfile)
 
             line = next(inputfile)
@@ -772,14 +798,19 @@ Dispersion correction           -0.016199959
 
                 self.mooccnos.append([])
                 self.moenergies.append([])
+                self.mosyms.append([])
 
                 line = next(inputfile)
                 while len(line) > 20:  # actually terminated by ------
                     info = line.split()
                     mooccno = int(float(info[1]))
                     moenergy = float(info[2])
+                    mosym = 'A'
+                    if self.uses_symmetry:
+                        mosym = self.normalisesym(info[4].split('-')[1])
                     self.mooccnos[1].append(mooccno)
                     self.moenergies[1].append(utils.convertor(moenergy, "hartree", "eV"))
+                    self.mosyms[1].append(mosym)
                     line = next(inputfile)
 
             if not hasattr(self, 'homos'):
@@ -882,7 +913,7 @@ Dispersion correction           -0.016199959
                             num = int(line[0:3])
                             orbital = line.split()[1].upper()
 
-                            aonames.append("%s%i_%s" % (atomname, num+1, orbital))
+                            aonames.append(f"{atomname}{int(num + 1)}_{orbital}")
                             atombasis[num].append(j)
 
                         # This regex will tease out all number with exactly
@@ -1978,7 +2009,9 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             try:
                 line = next(inputfile).split()
             except StopIteration:
-                self.logger.warning('File terminated before end of last SCF! Last Max-DP: {}'.format(maxDP))
+                self.logger.warning(
+                    f"File terminated before end of last SCF! Last Max-DP: {maxDP}"
+                )
                 break
 
     def parse_scf_expanded_format(self, inputfile, line):

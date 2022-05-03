@@ -20,17 +20,15 @@ class DALTON(logfileparser.Logfile):
     """A DALTON log file."""
 
     def __init__(self, *args, **kwargs):
-
-        # Call the __init__ method of the superclass
-        super(DALTON, self).__init__(logname="DALTON", *args, **kwargs)
+        super().__init__(logname="DALTON", *args, **kwargs)
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "DALTON log file %s" % (self.filename)
+        return f"DALTON log file {self.filename}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'DALTON("%s")' % (self.filename)
+        return f'DALTON("{self.filename}")'
 
     def normalisesym(self, label):
         """DALTON does not require normalizing symmetry labels."""
@@ -110,7 +108,7 @@ class DALTON(logfileparser.Logfile):
             revision = line.split()[4]
             package_version = self.metadata.get("package_version")
             if package_version:
-                self.metadata["package_version"] = "{}+{}".format(package_version, revision)
+                self.metadata["package_version"] = f"{package_version}+{revision}"
 
         # Is the basis set from a single library file, or is it
         # manually specified? See before_parsing().
@@ -491,7 +489,7 @@ class DALTON(logfileparser.Logfile):
 
                 # We want to count the number of contractiong already parsed for each orbital,
                 # but need to make sure to differentiate between atoms and symmetry atoms.
-                orblabel = str(iatom) + '.' + orbital + (sym or "")
+                orblabel = f"{str(iatom)}.{orbital}{sym or ''}"
                 orbitalcount[orblabel] = orbitalcount.get(orblabel, 0) + 1
 
                 # Here construct the actual primitives for gbasis, which should be a list
@@ -687,7 +685,7 @@ class DALTON(logfileparser.Logfile):
                     continue
 
                 # the first hit of @ n where n is the current iteration
-                strcompare = "@{0:>3d}".format(iteration)
+                strcompare = f"@{iteration:>3d}"
                 if strcompare in line:
                     temp = line.split()
                     error_norm = utils.float(temp[3])
@@ -1250,7 +1248,7 @@ class DALTON(logfileparser.Logfile):
                     etosc_key = (sym_num, excited_state_num_in_sym)
                     etoscs_keys.add(etosc_key)
                     etsym = tokens[9]
-                    etsyms.append(symmap[do_triplet] + "-" + etsym)
+                    etsyms.append(f"{symmap[do_triplet]}-{etsym}")
                     self.skip_lines(inputfile, ["d", "b", "Excitation energy in a.u."])
                     line = next(inputfile)
                     etenergies.append(utils.float(line.split()[3]))

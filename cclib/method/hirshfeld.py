@@ -52,18 +52,18 @@ class Hirshfeld(Stockholder):
                 proatom_path -- path to proatom densities
                 (directory containing atoms.h5 in horton or c2_001_001_000_400_075.txt in chargemol)
         """
-        super(Hirshfeld, self).__init__(data, volume, proatom_path, progress, loglevel, logname)
+        super().__init__(data, volume, proatom_path, progress, loglevel, logname)
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "Hirshfeld charges of {}".format(self.data)
+        return f"Hirshfeld charges of {self.data}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return "Hirshfeld({})".format(self.data)
+        return f"Hirshfeld({self.data})"
 
     def _check_required_attributes(self):
-        super(Hirshfeld, self)._check_required_attributes()
+        super()._check_required_attributes()
 
     def _cartesian_dist(self, pt1, pt2):
         """Small utility function that calculates Euclidian distance between two points.
@@ -75,11 +75,11 @@ class Hirshfeld(Stockholder):
     def _read_proatom(
         self, directory, atom_num, charge  # type = str  # type = int  # type = float
     ):
-        return super(Hirshfeld, self)._read_proatom(directory, atom_num, charge)
+        return super()._read_proatom(directory, atom_num, charge)
 
     def calculate(self):
         """Calculate Hirshfeld charges."""
-        super(Hirshfeld, self).calculate()
+        super().calculate()
 
         # Generator object to iterate over the grid.
         ngridx, ngridy, ngridz = self.charge_density.data.shape

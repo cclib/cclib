@@ -17,12 +17,12 @@ class CJSON(filereader.Reader):
     """A reader for chemical JSON (CJSON) log files."""
 
     def __init__(self, source, *args, **kwargs):
-        super(CJSON, self).__init__(source, *args, **kwargs)
+        super().__init__(source, *args, **kwargs)
 
         self.representation = dict()
 
     def parse(self):
-        super(CJSON, self).parse()
+        super().parse()
 
         json_data = json.loads(self.filecontents)
 

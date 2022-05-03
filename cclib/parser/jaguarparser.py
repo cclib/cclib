@@ -20,17 +20,15 @@ class Jaguar(logfileparser.Logfile):
     """A Jaguar output file"""
 
     def __init__(self, *args, **kwargs):
-
-        # Call the __init__ method of the superclass
-        super(Jaguar, self).__init__(logname="Jaguar", *args, **kwargs)
+        super().__init__(logname="Jaguar", *args, **kwargs)
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "Jaguar output file %s" % (self.filename)
+        return f"Jaguar output file {self.filename}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'Jaguar("%s")' % (self.filename)
+        return f'Jaguar("{self.filename}")'
 
     def normalisesym(self, label):
         """Normalise the symmetries used by Jaguar.
@@ -50,6 +48,7 @@ class Jaguar(logfileparser.Logfile):
         self.geoopt = False
 
     def after_parsing(self):
+        super(Jaguar, self).after_parsing()
 
         # This is to make sure we always have optdone after geometry optimizations,
         # even if it is to be empty for unconverged runs. We have yet to test this
@@ -64,7 +63,7 @@ class Jaguar(logfileparser.Logfile):
         if "Jaguar version" in line:
             tokens = line.split()
             base_version = tokens[3][:-1]
-            package_version = "{}+{}".format(base_version, tokens[5])
+            package_version = f"{base_version}+{tokens[5]}"
             self.metadata["package_version"] = package_version
             self.metadata["legacy_package_version"] = base_version
 
@@ -198,6 +197,14 @@ class Jaguar(logfileparser.Logfile):
                     self.coreelectrons.append(int(line.split()[1]))
                 line = next(inputfile)
 
+        if "Molecular Point Group:" in line:
+            point_group_full = line.split()[3].lower()
+            while "Point Group used:" not in line:
+                line = next(inputfile)
+            point_group_abelian = line.split()[3].lower()
+            self.metadata['symmetry_detected'] = point_group_full
+            self.metadata['symmetry_used'] = point_group_abelian
+
         if line[2:14] == "new geometry" or line[1:21] == "Symmetrized geometry" or line.find("Input geometry") > 0:
         # Get the atom coordinates
             if not hasattr(self, "atomcoords") or line[1:21] == "Symmetrized geometry":
@@ -303,7 +310,9 @@ class Jaguar(logfileparser.Logfile):
                 try:
                     line = next(inputfile)
                 except StopIteration:
-                    self.logger.warning('File terminated before end of last SCF! Last error: {}'.format(maxdiiserr))
+                    self.logger.warning(
+                        f"File terminated before end of last SCF! Last error: {maxdiiserr}"
+                    )
                     break
             self.scfvalues.append(values)
 
@@ -440,17 +449,17 @@ class Jaguar(logfileparser.Logfile):
                                 dcount = 6  # six d orbitals in Jaguar
 
                             if info[2] == 'S':
-                                aonames.append("%s_%i%s" % (info[1], scount, info[2]))
+                                aonames.append(f"{info[1]}_{int(scount)}{info[2]}")
                                 scount += 1
 
                             if info[2] == 'X' or info[2] == 'Y' or info[2] == 'Z':
-                                aonames.append("%s_%iP%s" % (info[1], pcount / 3, info[2]))
+                                aonames.append(f"{info[1]}_{int(pcount / 3)}P{info[2]}")
                                 pcount += 1
 
                             if info[2] == 'XX' or info[2] == 'YY' or info[2] == 'ZZ' or \
                                info[2] == 'XY' or info[2] == 'XZ' or info[2] == 'YZ':
 
-                                aonames.append("%s_%iD%s" % (info[1], dcount / 6, info[2]))
+                                aonames.append(f"{info[1]}_{int(dcount / 6)}D{info[2]}")
                                 dcount += 1
 
                             lastatom = info[1]

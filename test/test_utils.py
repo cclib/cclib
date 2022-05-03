@@ -36,8 +36,7 @@ class FloatTest(unittest.TestCase):
 class ConvertorTest(unittest.TestCase):
 
     def test_convertor(self):
-        self.assertEqual("%.3f" % utils.convertor(8.0, "eV", "wavenumber"),
-                         "64524.354")
+        self.assertEqual(f"{utils.convertor(8.0, 'eV', 'wavenumber'):.3f}", "64524.354")
 
 
 class GetRotationTest(unittest.TestCase):

@@ -20,17 +20,15 @@ class Molcas(logfileparser.Logfile):
     """A Molcas log file."""
 
     def __init__(self, *args, **kwargs):
-
-        # Call the __init__ method of the superclass
-        super(Molcas, self).__init__(logname="Molcas", *args, **kwargs)
+        super().__init__(logname="Molcas", *args, **kwargs)
 
     def __str__(self):
         """Return a string repeesentation of the object."""
-        return "Molcas log file %s" % (self.filename)
+        return f"Molcas log file {self.filename}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'Molcas("%s")' % (self.filename)
+        return f'Molcas("{self.filename}")'
 
     def normalisesym(self, label):
         """Normalise the symmetries used by Molcas.
@@ -51,21 +49,17 @@ class Molcas(logfileparser.Logfile):
             # distinction between development and release builds in their
             # version cycle.
             if "tag" in self.metadata and "revision" in self.metadata:
-                self.metadata["package_version"] = "{}+{}.{}".format(
-                    self.metadata["package_version"],
-                    self.metadata["tag"],
-                    self.metadata["revision"]
-                )
+                self.metadata[
+                    "package_version"
+                ] = f"{self.metadata['package_version']}+{self.metadata['tag']}.{self.metadata['revision']}"
             elif "tag" in self.metadata:
-                self.metadata["package_version"] = "{}+{}".format(
-                    self.metadata["package_version"],
-                    self.metadata["tag"]
-                )
+                self.metadata[
+                    "package_version"
+                ] = f"{self.metadata['package_version']}+{self.metadata['tag']}"
             elif "revision" in self.metadata:
-                self.metadata["package_version"] = "{}+{}".format(
-                    self.metadata["package_version"],
-                    self.metadata["revision"]
-                )
+                self.metadata[
+                    "package_version"
+                ] = f"{self.metadata['package_version']}+{self.metadata['revision']}"
 
     def before_parsing(self):
         # Compile the regex for extracting the element symbol from the
@@ -634,10 +628,7 @@ class Molcas(logfileparser.Logfile):
                 self.atomcoords.append(atomcoords)
             else:
                 self.logger.warning(
-                        "Parsed coordinates not consistent with previous, skipping. "
-                        "This could be due to symmetry being turned on during the job. "
-                        "Length was %i, now found %i. New coordinates: %s"
-                        % (len(self.atomcoords[-1]), len(atomcoords), str(atomcoords)))
+                        f"Parsed coordinates not consistent with previous, skipping. This could be due to symmetry being turned on during the job. Length was {len(self.atomcoords[-1])}, now found {len(atomcoords)}. New coordinates: {str(atomcoords)}")
 
         #  **********************************************************************************************************************
         #  *                                    Energy Statistics for Geometry Optimization                                     *
@@ -689,10 +680,7 @@ class Molcas(logfileparser.Logfile):
                 self.atomcoords.append(atomcoords)
             else:
                 self.logger.error(
-                        'Number of atoms (%d) in parsed atom coordinates '
-                        'is smaller than previously (%d), possibly due to '
-                        'symmetry. Ignoring these coordinates.'
-                        % (len(atomcoords), self.natom))
+                        f'Number of atoms ({len(atomcoords)}) in parsed atom coordinates is smaller than previously ({int(self.natom)}), possibly due to symmetry. Ignoring these coordinates.')
 
         ## Parsing Molecular Gradients attributes in this section.
         # ()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
@@ -815,7 +803,7 @@ class Molcas(logfileparser.Logfile):
                     tokens = line.split()
                     if tokens and tokens[0] == '1':
                         while tokens and tokens[0] != '--':
-                            aonames.append("{atom}_{orbital}".format(atom=tokens[1], orbital=tokens[2]))
+                            aonames.append(f"{tokens[1]}_{tokens[2]}")
                             info = tokens[3:]
                             j = 0
                             for i in orbital_index:

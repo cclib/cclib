@@ -41,7 +41,7 @@ def generate_coverage():
     from test.test_data import (all_modules, all_parsers, parser_names, DataSuite)
     import inspect
     ds_args = inspect.getfullargspec(DataSuite.__init__).args
-    logpath = thispath + "/coverage.tests.log"
+    logpath = f"{thispath}/coverage.tests.log"
     try:
         with open(logpath, "w") as flog:
             stdout_backup = sys.stdout
@@ -64,8 +64,8 @@ def generate_coverage():
 
     ncols = len(parser_names) + 1
     colwidth = 4 + max(len(attribute) for attribute in attributes)
-    colfmt = "%%-%is" % colwidth
-    dashes = ("=" * (colwidth - 1) + " ") * ncols
+    colfmt = f"%-{int(colwidth)}s"
+    dashes = f"{'=' * (colwidth - 1)} " * ncols
 
     lines.append(dashes)
     lines.append(colfmt * ncols % tuple(["attributes"] + parser_names))
@@ -106,13 +106,13 @@ def generate_coverage():
                     parsed[ip] = "N/P"
                 else:
                     parsed[ip] = "T/D"
-        lines.append(colfmt*ncols % tuple(["`%s`_" % attr] + parsed))
+        lines.append(colfmt * ncols % tuple([f"`{attr}`_"] + parsed))
 
     lines.append(dashes)
     lines.append("")
 
     for attr in attributes:
-        lines.append(".. _`%s`: data_notes.html#%s" % (attr, attr))
+        lines.append(f".. _`{attr}`: data_notes.html#{attr}")
 
     return "\n".join(lines)
 

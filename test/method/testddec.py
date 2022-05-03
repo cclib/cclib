@@ -34,7 +34,7 @@ class DDEC6Test(unittest.TestCase):
             self.data, self.logfile = getdatafile(Psi4, "basicPsi4-1.2.1", ["water_mp2.out"])
         else:
             self.data = ccread(
-                os.path.join(os.path.dirname(os.path.realpath(__file__)), molecule_name + ".out")
+                os.path.join(os.path.dirname(os.path.realpath(__file__)), f"{molecule_name}.out")
             )
 
     def testmissingrequiredattributes(self):

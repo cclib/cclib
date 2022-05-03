@@ -31,7 +31,7 @@ def main():
 
     if retval:
 
-        print("Charge decomposition analysis of {}\n".format(args.file1))
+        print(f"Charge decomposition analysis of {args.file1}\n")
 
         if len(data1.homos) == 2:
             print("ALPHA SPIN:")
@@ -48,22 +48,18 @@ def main():
 
             for i in range(len(fa.donations[spin])):
 
-                print("%4i: %7.3f %7.3f %7.3f %7.3f" % \
-                        (i + 1, fa.donations[spin][i],
-                                fa.bdonations[spin][i],
-                                fa.repulsions[spin][i],
-                                fa.residuals[spin][i]))
+                print(
+                    f"{int(i + 1):4}: {fa.donations[spin][i]:7.3f} {fa.bdonations[spin][i]:7.3f} {fa.repulsions[spin][i]:7.3f} {fa.residuals[spin][i]:7.3f}"
+                )
 
                 if i == data1.homos[spin]:
                     print("------ HOMO - LUMO gap ------")
                     
 
             print("-------------------------------------")
-            print(" T:   %7.3f %7.3f %7.3f %7.3f" % \
-                    (fa.donations[spin].sum(),
-                        fa.bdonations[spin].sum(),
-                        fa.repulsions[spin].sum(),
-                        fa.residuals[spin].sum()))
+            print(
+                f" T:   {fa.donations[spin].sum():7.3f} {fa.bdonations[spin].sum():7.3f} {fa.repulsions[spin].sum():7.3f} {fa.residuals[spin].sum():7.3f}"
+            )
 
 
 if __name__ == '__main__':

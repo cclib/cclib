@@ -18,17 +18,15 @@ class MPA(Population):
     """Mulliken population analysis."""
 
     def __init__(self, *args):
-
-        # Call the __init__ method of the superclass.
-        super(MPA, self).__init__(logname="MPA", *args)
+        super().__init__(logname="MPA", *args)
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "MPA of %s" % (self.data)
+        return f"MPA of {self.data}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'MPA("%s")' % (self.data)
+        return f'MPA("{self.data}")'
 
     def calculate(self, indices=None, fupdate=0.05):
         """Perform a Mulliken population analysis."""
@@ -81,7 +79,7 @@ class MPA(Population):
         if self.progress:
             self.progress.update(nstep, "Done")
 
-        retval = super(MPA, self).partition(indices)
+        retval = super().partition(indices)
 
         if not retval:
             self.logger.error("Error in partitioning results")

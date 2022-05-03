@@ -113,8 +113,10 @@ def ccget():
             fuzzy_attr = difflib.get_close_matches(arg, ccData._attrlist, n=1, cutoff=0.85)
             if len(fuzzy_attr) > 0:
                 fuzzy_attr = fuzzy_attr[0]
-                logging.warning("Attribute '{0}' not found, but attribute '{1}' is close. "
-                    "Using '{1}' instead.".format(arg, fuzzy_attr))
+                logging.warning(
+                    f"Attribute '{arg}' not found, but attribute '{fuzzy_attr}' is close. "
+                    f"Using '{fuzzy_attr}' instead."
+                )
                 arg = fuzzy_attr
         if arg in ccData._attrlist:
             attrnames.append(arg)
@@ -125,7 +127,7 @@ def ccget():
             if wildcardmatches:
                 filenames.extend(wildcardmatches)
             else:
-                print("%s is neither a filename nor an attribute name." % arg)
+                print(f"{arg} is neither a filename nor an attribute name.")
                 parser.print_usage()
                 parser.exit(1)
 
@@ -153,7 +155,7 @@ def ccget():
     for filename in filenames:
 
         if multifile:
-            name = ", ".join(filename[:-1]) + " and " + filename[-1]
+            name = f"{', '.join(filename[:-1])} and {filename[-1]}"
         else:
             name = filename
 
@@ -172,30 +174,30 @@ def ccget():
         if cjsonfile:
             kwargs['cjson'] = True
 
-        print("Attempting to read %s" % name)
+        print(f"Attempting to read {name}")
         data = ccread(filename, **kwargs)
 
         if data is None:
-            print("Cannot figure out the format of '%s'" % name)
+            print(f"Cannot figure out the format of '{name}'")
             print("Report this to the cclib development team if you think it is an error.")
-            print("\n" + parser.format_usage())
+            print(f"\n{parser.format_usage()}")
             parser.exit(1)
 
         if showattr:
-            print("cclib can parse the following attributes from %s:" % name)
+            print(f"cclib can parse the following attributes from {name}:")
             if cjsonfile:
                 for key in data:
                     print(key)
                 break
             for attr in data._attrlist:
                 if hasattr(data, attr):
-                    print("  %s" % attr)
+                    print(f"  {attr}")
         else:
             invalid = False
             for attr in attrnames:
                 if cjsonfile:
                     if attr in data:
-                        print("%s:\n%s" % (attr, data[attr]))
+                        print(f"{attr}:\n{data[attr]}")
                         continue
                 else:
                     if hasattr(data, attr):
@@ -209,7 +211,7 @@ def ccget():
                             pprint(attr_val)
                         continue
 
-                print("Could not parse %s from this file." % attr)
+                print(f"Could not parse {attr} from this file.")
                 invalid = True
             if invalid:
                 parser.print_help()

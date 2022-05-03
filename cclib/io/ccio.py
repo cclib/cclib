@@ -11,6 +11,7 @@ import io
 import os
 import sys
 import re
+import pathlib
 from tempfile import NamedTemporaryFile
 from urllib.request import urlopen
 from urllib.error import URLError
@@ -161,8 +162,8 @@ def ccread(source, *args, **kwargs):
 
     log = ccopen(source, *args, **kwargs)
     if log:
-        if kwargs.get('verbose', None):
-            print('Identified logfile to be in %s format' % log.logname)
+        if kwargs.get("verbose", None):
+            print(f"Identified logfile to be in {log.logname} format")
         # If the input file is a CJSON file and not a standard compchemlog file
         cjson_as_input = kwargs.get("cjson", False)
         if cjson_as_input:
@@ -194,6 +195,11 @@ def ccopen(source, *args, **kwargs):
     # Check if source is a link or contains links. Retrieve their content.
     # Try to open the logfile(s), using openlogfile, if the source is a string (filename)
     # or list of filenames. If it can be read, assume it is an open file object/stream.
+    if isinstance(source, pathlib.PurePath):
+        source = str(source)
+    if isinstance(source, pathlib.PurePath)\
+            and all([isinstance(s, pathlib.PurePath) for s in source]):
+        source = [str(item) for item in source]
     is_string = isinstance(source, str)
     is_url = True if is_string and URL_PATTERN.match(source) else False
     is_listofstrings = isinstance(source, list) and all([isinstance(s, str) for s in source])
@@ -473,7 +479,7 @@ def sort_turbomole_outputs(filelist):
             # Calling 'jobex -keep' will also write job.n files, where n ranges from 0 to inf.
             # Numbered job files are inserted before job.last.
             job_number = int(filename[4:]) +1
-            job_order = float("{}.{}".format(sorting_order['job.last'] -1, job_number))
+            job_order = float(f"{sorting_order['job.last'] - 1}.{job_number}")
             known_files.append([fname, job_order])
         else:
             unknown_files.append(fname)
@@ -523,3 +529,4 @@ def ccframe(ccobjs, *args, **kwargs):
 
 
 del find_package
+

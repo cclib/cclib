@@ -137,7 +137,7 @@ def convertor(value, fromunits, tounits):
         "hartree/bohr2_to_mDyne/angstrom": lambda x: x * 8.23872350 / 0.5291772109
     }
 
-    return _convertor["%s_to_%s" % (fromunits, tounits)](value)
+    return _convertor[f"{fromunits}_to_{tounits}"](value)
 
 def _get_rmat_from_vecs(a, b):
     """Get rotation matrix from two 3D vectors, a and b

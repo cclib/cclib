@@ -39,16 +39,14 @@ def printResults():
     spin = 0
     for i in range(len(fa.donations[0])):
 
-        print("%2i: %7.3f %7.3f %7.3f" % (i,
-                                            fa.donations[spin][i],
-                                            fa.bdonations[spin][i],
-                                            fa.repulsions[spin][i]))
-
+        print(
+            f"{int(i):2}: {fa.donations[spin][i]:7.3f} {fa.bdonations[spin][i]:7.3f} {fa.repulsions[spin][i]:7.3f}"
+        )
 
     print("---------------------------")
-    print("T:  %7.3f %7.3f %7.3f" % (fa.donations[0].sum(),
-                                        fa.bdonations[0].sum(),
-                                        fa.repulsions[0].sum()))
+    print(
+        f"T:  {fa.donations[0].sum():7.3f} {fa.bdonations[0].sum():7.3f} {fa.repulsions[0].sum():7.3f}"
+    )
     print("\n\n")
 
 

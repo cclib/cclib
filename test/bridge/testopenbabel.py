@@ -50,7 +50,7 @@ class OpenbabelTest(unittest.TestCase):
 
     def test_readfile(self):
         """Try to load an XYZ file with uracyl through Openbabel"""
-        data = cclib2openbabel.readfile(self.path + "/uracil.xyz", "XYZ")
+        data = cclib2openbabel.readfile(f"{self.path}/uracil.xyz", "XYZ")
         assert data.natom == 12
 
 

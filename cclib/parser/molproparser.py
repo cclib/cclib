@@ -41,7 +41,7 @@ def create_atomic_orbital_names(orbitals):
 
         # For spherical functions, we need to construct the names.
         pre = str(i+3) + orb.lower()
-        spherical = [pre + '0'] + [pre + str(j) + s for j in range(1, i+3) for s in ['-', '+']]
+        spherical = [f"{pre}0"] + [pre + str(j) + s for j in range(1, i+3) for s in ['-', '+']]
         atomic_orbital_names[orb] = cartesian + spherical
 
     return atomic_orbital_names
@@ -53,16 +53,15 @@ class Molpro(logfileparser.Logfile):
     atomic_orbital_names = create_atomic_orbital_names(['D', 'F', 'G'])
 
     def __init__(self, *args, **kwargs):
-        # Call the __init__ method of the superclass
-        super(Molpro, self).__init__(logname="Molpro", *args, **kwargs)
+        super().__init__(logname="Molpro", *args, **kwargs)
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "Molpro log file %s" % (self.filename)
+        return f"Molpro log file {self.filename}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'Molpro("%s")' % (self.filename)
+        return f'Molpro("{self.filename}")'
 
     def normalisesym(self, label):
         """Normalise the symmetries used by Molpro."""
@@ -75,6 +74,7 @@ class Molpro(logfileparser.Logfile):
         self.insidescf = False
 
     def after_parsing(self):
+        super(Molpro, self).after_parsing()
 
         # If optimization thresholds are default, they are normally not printed and we need
         # to set them to the default after parsing. Make sure to set them in the same order that
@@ -176,7 +176,7 @@ class Molpro(logfileparser.Logfile):
                         else:
                             functype = s
                             element = self.table.element[self.atomnos[atomno-1]]
-                            aoname = "%s%i_%s" % (element, atomno, functype)
+                            aoname = f"{element}{int(atomno)}_{functype}"
                             aonames.append(aoname)
                     line = next(inputfile)
 
@@ -215,7 +215,7 @@ class Molpro(logfileparser.Logfile):
                     try:
                         c = float(p)
                     except ValueError as detail:
-                        self.logger.warn("setting coeff element to zero: %s" % detail)
+                        self.logger.warn(f"setting coeff element to zero: {detail}")
                         c = 0.0
                     coeff.append(c)
                 coeffs.extend(coeff)
@@ -283,6 +283,14 @@ class Molpro(logfileparser.Logfile):
                 self.metadata["package_version"] = ''.join([
                     package_version, "+", line.split()[-1]
                 ])
+
+        if line[1:12] == "Point group":
+            point_group_abelian = line.split()[-1].lower()
+            # TODO It looks like Molpro only prints the largest usable
+            # Abelian subgroup.
+            point_group_full = point_group_abelian
+            self.metadata['symmetry_detected'] = point_group_full
+            self.metadata['symmetry_used'] = point_group_abelian
 
         if line[1:19] == "ATOMIC COORDINATES":
 
@@ -398,7 +406,7 @@ class Molpro(logfileparser.Logfile):
                 # are also printed, but they don't get numbers so they are nor parsed.
                 if line_nr:
                     element = self.table.element[self.atomnos[funcatom-1]]
-                    aoname = "%s%i_%s" % (element, funcatom, functype)
+                    aoname = f"{element}{int(funcatom)}_{functype}"
                     aonames.append(aoname)
                     funcnr = len(aonames)
                     atombasis[funcatom-1].append(funcnr-1)
@@ -487,7 +495,9 @@ class Molpro(logfileparser.Logfile):
                 try:
                     line = next(inputfile)
                 except StopIteration:
-                    self.logger.warning('File terminated before end of last SCF! Last gradient: {}'.format(grad))
+                    self.logger.warning(
+                        f"File terminated before end of last SCF! Last gradient: {grad}"
+                    )
                     break
             self.scfvalues.append(numpy.array(scfvalues))
 

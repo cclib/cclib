@@ -66,11 +66,13 @@ def main():
         if future:
             ccopen_kwargs['future'] = True
 
-        print("Attempting to parse {}".format(filename))
+        print(f"Attempting to parse {filename}")
         log = ccopen(filename, **ccopen_kwargs)
 
         if not log:
-            print("Cannot figure out what type of computational chemistry output file '{}' is.".format(filename))
+            print(
+                f"Cannot figure out what type of computational chemistry output file '{filename}' is."
+            )
             print("Report this to the cclib development team if you think this is an error.")
             sys.exit()
 
@@ -80,9 +82,9 @@ def main():
             log.logger.setLevel(logging.ERROR)
         data = log.parse()
 
-        print("cclib can parse the following attributes from {}:".format(filename))
-        hasattrs = ['  {}'.format(attr) for attr in ccData._attrlist if hasattr(data, attr)]
-        print('\n'.join(hasattrs))
+        print(f"cclib can parse the following attributes from {filename}:")
+        hasattrs = [f"  {attr}" for attr in ccData._attrlist if hasattr(data, attr)]
+        print("\n".join(hasattrs))
 
         # Write out to disk.
         outputdest = '.'.join([os.path.splitext(os.path.basename(filename))[0], outputtype])

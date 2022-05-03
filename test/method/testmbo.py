@@ -32,7 +32,7 @@ class MBOTest(unittest.TestCase):
         mbo.logger.setLevel(logging.ERROR)
         mbo.calculate()
 
-        e_mbo = numpy.loadtxt(os.path.dirname(os.path.realpath(__file__)) + "/dvb_sp.mbo")
+        e_mbo = numpy.loadtxt(f"{os.path.dirname(os.path.realpath(__file__))}/dvb_sp.mbo")
         self.assertTrue(numpy.all(mbo.fragresults[0] >= e_mbo - 0.25))
         self.assertTrue(numpy.all(mbo.fragresults[0] <= e_mbo + 0.25))
 
@@ -44,7 +44,7 @@ class MBOTest(unittest.TestCase):
         mbo.logger.setLevel(logging.ERROR)
         mbo.calculate()
 
-        e_mbo = numpy.loadtxt(os.path.dirname(os.path.realpath(__file__)) + "/dvb_un_sp.mbo")
+        e_mbo = numpy.loadtxt(f"{os.path.dirname(os.path.realpath(__file__))}/dvb_un_sp.mbo")
         bond_orders = mbo.fragresults[0] + mbo.fragresults[1]
         self.assertTrue(numpy.all(bond_orders >= e_mbo - 0.30))
         self.assertTrue(numpy.all(bond_orders <= e_mbo + 0.30))

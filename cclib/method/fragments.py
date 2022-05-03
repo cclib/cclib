@@ -20,18 +20,16 @@ class FragmentAnalysis(Method):
     """Convert a molecule's basis functions from atomic-based to fragment MO-based"""
     def __init__(self, data, progress=None, loglevel=logging.INFO,
                  logname="FragmentAnalysis of"):
-
-        # Call the __init__ method of the superclass.
-        super(FragmentAnalysis, self).__init__(data, progress, loglevel, logname)
+        super().__init__(data, progress, loglevel, logname)
         self.parsed = False
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "Fragment molecule basis of %s" % (self.data)
+        return f"Fragment molecule basis of {self.data}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'Fragment molecular basis("%s")' % (self.data)
+        return f'Fragment molecular basis("{self.data}")'
 
     def calculate(self, fragments, cupdate=0.05):
 
@@ -56,9 +54,9 @@ class FragmentAnalysis(Method):
             #assign fonames based on fragment name and MO number
             for i in range(fragments[j].nbasis):
                 if hasattr(fragments[j],"name"):
-                    self.fonames.append("%s_%i"%(fragments[j].name,i+1))
+                    self.fonames.append(f"{fragments[j].name}_{int(i + 1)}")
                 else:
-                    self.fonames.append("noname%i_%i"%(j,i+1))
+                    self.fonames.append(f"noname{int(j)}_{int(i + 1)}")
 
         nBasis = self.data.nbasis
         nAlpha = self.data.homos[0] + 1

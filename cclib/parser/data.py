@@ -36,7 +36,7 @@ class ccData:
         ccenergies -- molecular energies with Coupled-Cluster corrections (array[2], eV)
         charge -- net charge of the system (integer)
         coreelectrons -- number of core electrons in atom pseudopotentials (array[1])
-        dispersionenergies -- a molecular dispersion energy corrections (array[1], eV)
+        dispersionenergies -- dispersion energy corrections (array[1], eV)
         enthalpy -- sum of electronic and thermal enthalpies (float, hartree/particle)
         entropy -- entropy (float, hartree/(particle*kelvin))
         etenergies -- energies of electronic transitions (array[1], 1/cm)
@@ -309,15 +309,15 @@ class ccData:
                 val = self._attributes[attr].type(val)
             except ValueError:
                 args = (attr, type(val), self._attributes[attr].type)
-                raise TypeError("attribute %s is %s instead of %s and could not be converted" % args)
+                raise TypeError(
+                    f"attribute {args[0]} is {args[1]} instead of {args[2]} and could not be converted"
+                )
 
     def check_values(self, logger=logging):
         """Perform custom checks on the values of attributes."""
         if hasattr(self, "etenergies") and any(e < 0 for e in self.etenergies):
             negative_values = [e for e in self.etenergies if e < 0]
-            msg = ("At least one excitation energy is negative. "
-                   "\nNegative values: %s\nFull etenergies: %s"
-                   % (negative_values, self.etenergies))
+            msg = f"At least one excitation energy is negative. \nNegative values: {negative_values}\nFull etenergies: {self.etenergies}"
             logger.error(msg)
 
     def write(self, filename=None, indices=None, *args, **kwargs):
@@ -423,12 +423,11 @@ class ccData_optdone_bool(ccData):
     """This is the version of ccData where optdone is a Boolean."""
 
     def __init__(self, *args, **kwargs):
-
-        super(ccData_optdone_bool, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self._attributes["optdone"] = Attribute(bool, 'done', 'optimization')
 
     def setattributes(self, *args, **kwargs):
-        invalid = super(ccData_optdone_bool, self).setattributes(*args, **kwargs)
+        invalid = super().setattributes(*args, **kwargs)
 
         # Reduce optdone to a Boolean, because it will be parsed as a list. If this list has any element,
         # it means that there was an optimized structure and optdone should be True.

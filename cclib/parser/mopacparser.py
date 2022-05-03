@@ -31,17 +31,15 @@ class MOPAC(logfileparser.Logfile):
     """A MOPAC20XX output file."""
 
     def __init__(self, *args, **kwargs):
-
-        # Call the __init__ method of the superclass
-        super(MOPAC, self).__init__(logname="MOPAC", *args, **kwargs)
+        super().__init__(logname="MOPAC", *args, **kwargs)
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "MOPAC log file %s" % (self.filename)
+        return f"MOPAC log file {self.filename}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'MOPAC("%s")' % (self.filename)
+        return f'MOPAC("{self.filename}")'
 
     def normalisesym(self, label):
         """MOPAC does not require normalizing symmetry labels."""

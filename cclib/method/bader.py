@@ -44,7 +44,7 @@ class Bader(Method):
     required_attrs = ("homos", "mocoeffs", "nbasis", "gbasis")
 
     def __init__(self, data, volume, progress=None, loglevel=logging.INFO, logname="Log"):
-        super(Bader, self).__init__(data, progress, loglevel, logname)
+        super().__init__(data, progress, loglevel, logname)
 
         self.volume = volume
         self.fragresults = None
@@ -58,14 +58,14 @@ class Bader(Method):
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "Bader's QTAIM charges of {}".format(self.data)
+        return f"Bader's QTAIM charges of {self.data}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return "Bader({})".format(self.data)
+        return f"Bader({self.data})"
 
     def _check_required_attributes(self):
-        super(Bader, self)._check_required_attributes()
+        super()._check_required_attributes()
 
     def calculate(self, indices=None, fupdate=0.05):
         """Calculate Bader's QTAIM charges using on-grid algorithm proposed by Henkelman group
@@ -201,9 +201,7 @@ class Bader(Method):
 
         assert (
             0 not in self.matches
-        ), "Failed to assign Bader regions to atoms. Try with a finer grid. Content of Bader area matches: {}".format(
-            self.matches
-        )
+        ), f"Failed to assign Bader regions to atoms. Try with a finer grid. Content of Bader area matches: {self.matches}"
         assert len(
             numpy.unique(self.matches) != len(self.data.atomnos)
         ), "Failed to assign unique Bader regions to each atom. Try with a finer grid."

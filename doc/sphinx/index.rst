@@ -46,7 +46,7 @@ If you need further help, find a bug, need new features or have any question, pl
 About cclib
 -----------
 
-The code behind cclib was started as a collaboration between Noel O'Boyle, Adam Tenderholt and Karol M. Langner (see page about Development_ for details) and is licensed under the `BSD 3-clause license`_. Other developers are encouraged to contribute to this open source project -- send an email to the `developers mailing list`_. Applications that use cclib include GaussSum_ and QMForge_. It has also been used in the literature_.
+The code behind cclib was started as a collaboration between Noel O'Boyle, Adam Tenderholt and Karol M. Langner (see page about Development_ for details) and is licensed under the `BSD 3-clause license`_. Other developers are encouraged to contribute to this open source project -- send an email to the `mailing list`_. Applications that use cclib include GaussSum_ and QMForge_. It has also been used in the literature_.
 
 If you use cclib in your scientific work, please support our work by adding a reference to the following article:
 
@@ -85,8 +85,7 @@ A record for the latest release is also available on Zenodo_.
 .. _`source package for cclib 1.7.1`: https://github.com/cclib/cclib/releases/download/v1.7.1/cclib-1.7.1.zip
 .. _`current development version`: https://github.com/cclib/cclib/archive/master.zip
 .. _`GitHub repository`: https://github.com/cclib/cclib
-.. _`mailing list`: https://sourceforge.net/projects/cclib/lists/cclib-users
-.. _`developers mailing list`: https://sourceforge.net/projects/cclib/lists/cclib-devel
+.. _`mailing list`: https://groups.google.com/g/cclib
 .. _`tracker`: https://github.com/cclib/cclib/issues
 
 .. _GaussSum: http://gausssum.sourceforge.net/

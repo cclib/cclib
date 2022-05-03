@@ -46,17 +46,15 @@ class GAMESS(logfileparser.Logfile):
             'ACC6C': 'aug-cc-pCV6Z'}
 
     def __init__(self, *args, **kwargs):
-
-        # Call the __init__ method of the superclass
-        super(GAMESS, self).__init__(logname="GAMESS", *args, **kwargs)
+        super().__init__(logname="GAMESS", *args, **kwargs)
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "GAMESS log file %s" % (self.filename)
+        return f"GAMESS log file {self.filename}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'GAMESS("%s")' % (self.filename)
+        return f'GAMESS("{self.filename}")'
 
     def normalisesym(self, label):
         """Normalise the symmetries used by GAMESS.
@@ -89,7 +87,7 @@ class GAMESS(logfileparser.Logfile):
             match = re.search(r"Firefly version\s([\d.]*)\D*(\d*)\s*\*", line)
             if match:
                 base_version, build = match.groups()
-                package_version = "{}+{}".format(base_version, build)
+                package_version = f"{base_version}+{build}"
                 self.metadata["package_version"] = package_version
                 self.metadata["legacy_package_version"] = base_version
         if "GAMESS VERSION =" in line:
@@ -105,8 +103,8 @@ class GAMESS(logfileparser.Logfile):
                 else:
                     # `(R23)` -> 23
                     release = possible_release[2:-1]
-                self.metadata["package_version"] = '{}.r{}'.format(year, release)
-                self.metadata["legacy_package_version"] = "{}R{}".format(year, release)
+                self.metadata["package_version"] = f"{year}.r{release}"
+                self.metadata["legacy_package_version"] = f"{year}R{release}"
 
         if line[1:12] == "INPUT CARD>":
             return
@@ -182,6 +180,23 @@ class GAMESS(logfileparser.Logfile):
                                 self.metadata["basis_set"] = "6-311G**"
                     if line.split()[2] == "6" and line.split()[3] == "POLAR=NONE":
                         self.metadata["basis_set"] = "6-311G"
+
+        # Symmetry: point group
+        if " THE POINT GROUP OF THE MOLECULE IS" in line:
+            pg = line.split()[-1]
+            line = next(inputfile)
+            order = line.split()[-1]
+            point_group_full = pg.replace('N', order).lower()
+            # TODO It appears that GAMESS does not reduce to the
+            # largest Abelian subgroup.
+            point_group_abelian = point_group_full
+            self.metadata['symmetry_detected'] = point_group_full
+            self.metadata['symmetry_used'] = point_group_abelian
+
+        # Symmetry: ordering of irreducible representations
+        if line.strip() == "DIMENSIONS OF THE SYMMETRY SUBSPACES ARE":
+            line = next(inputfile)
+            symlabels = [self.normalisesym(label) for label in line.split()[::3]]
 
         # We are looking for this line:
         #           PARAMETERS CONTROLLING GEOMETRY SEARCH ARE
@@ -1119,13 +1134,13 @@ class GAMESS(logfileparser.Logfile):
                                 flag_w = True  # reset flag
                             g2 = g2 + i_atom
 
-                            aoname = "%s%i_%s" % (g[1].capitalize(), g2, g[3])
+                            aoname = f"{g[1].capitalize()}{int(g2)}_{g[3]}"
                             oldatom = str(g2)
                             atomno = g2-1
                             orbno = int(g[0])-1
                         else:  # For F orbitals, as shown above
                             g = [x.strip() for x in line.split()]
-                            aoname = "%s%s_%s" % (g[1].capitalize(), oldatom, g[2])
+                            aoname = f"{g[1].capitalize()}{oldatom}_{g[2]}"
                             atomno = int(oldatom)-1
                             orbno = int(g[0])-1
 

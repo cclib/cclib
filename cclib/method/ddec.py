@@ -67,7 +67,7 @@ class DDEC6(Stockholder):
                 total densities that are partitioned resemble the proatom densities and to prevent
                 the numerical algorithm from failing to converge.
         """
-        super(DDEC6, self).__init__(data, volume, proatom_path, progress, loglevel, logname)
+        super().__init__(data, volume, proatom_path, progress, loglevel, logname)
 
         self.convergence_level = convergence_level
         self.max_iteration = max_iteration
@@ -78,14 +78,14 @@ class DDEC6(Stockholder):
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "DDEC6 charges of {}".format(self.data)
+        return f"DDEC6 charges of {self.data}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return "DDEC6({})".format(self.data)
+        return f"DDEC6({self.data})"
 
     def _check_required_attributes(self):
-        super(DDEC6, self)._check_required_attributes()
+        super()._check_required_attributes()
 
     def _cartesian_dist(self, pt1, pt2):
         """ Small utility function that calculates Euclidian distance between two points
@@ -95,22 +95,19 @@ class DDEC6(Stockholder):
     def _read_proatom(
         self, directory, atom_num, charge  # type = str  # type = int  # type = float
     ):
-        return super(DDEC6, self)._read_proatom(directory, atom_num, charge)
+        return super()._read_proatom(directory, atom_num, charge)
 
     def calculate(self, indices=None, fupdate=0.05):
         """
         Calculate DDEC6 charges based on doi: 10.1039/c6ra04656h paper.
         Cartesian, uniformly spaced grids are assumed for this function.
         """
-
-        super(DDEC6, self).calculate()
+        super().calculate()
 
         # Notify user about the total charge in the density grid
         integrated_density = self.charge_density.integrate()
         self.logger.info(
-            "Total charge density in the grid is {}. If this does not match what is expected, using a finer grid may help.".format(
-                integrated_density
-            )
+            f"Total charge density in the grid is {integrated_density}. If this does not match what is expected, using a finer grid may help."
         )
 
 
@@ -197,7 +194,7 @@ class DDEC6(Stockholder):
         steps = 5
         self._update_kappa = False
         while steps < 7:
-            self.logger.info("Optimizing grid weights. (Step {}/7)".format(steps))
+            self.logger.info(f"Optimizing grid weights. (Step {steps}/7)")
             self.N_A.append(self._calculate_w_and_u())
 
             # Determine whether kappa needs to be updated or not based on Figure S4.2

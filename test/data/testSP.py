@@ -36,6 +36,11 @@ class GenericSPTest(unittest.TestCase):
     # Approximate B3LYP energy of dvb after SCF in STO-3G.
     b3lyp_energy = -10365
 
+    # Approximate energy of the innermost molecular orbital of DVB with
+    # B3LYP/STO-3G (from Q-Chem 5.4).
+    b3lyp_moenergy = -272.60365543
+    b3lyp_moenergy_delta = 7.55e-2
+
     # Overlap first two atomic orbitals.
     overlap01 = 0.24
 
@@ -78,7 +83,9 @@ class GenericSPTest(unittest.TestCase):
         """Are atomcoords consistent with Angstroms?"""
         min_carbon_dist = get_minimum_carbon_separation(self.data)
         dev = abs(min_carbon_dist - 1.34)
-        self.assertTrue(dev < 0.03, "Minimum carbon dist is %.2f (not 1.34)" % min_carbon_dist)
+        self.assertTrue(
+            dev < 0.03, f"Minimum carbon dist is {min_carbon_dist:.2f} (not 1.34)"
+        )
 
     @skipForParser('Molcas', 'missing mult')
     def testcharge_and_mult(self):
@@ -119,7 +126,7 @@ class GenericSPTest(unittest.TestCase):
     def testatommasses(self):
         """Do the atom masses sum up to the molecular mass?"""
         mm = 1000*sum(self.data.atommasses)
-        msg = "Molecule mass: %f not %f +- %fmD" % (mm, self.molecularmass, self.mass_precision)
+        msg = f"Molecule mass: {mm:f} not {self.molecularmass:f} +- {self.mass_precision:f}mD"
         self.assertAlmostEqual(mm, self.molecularmass, delta=self.mass_precision, msg=msg)
 
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
@@ -131,7 +138,6 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('FChk', 'Formatted checkpoint files do not have a section for symmetry')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Molpro', '?')
-    @skipForParser('ORCA', 'ORCA has no support for symmetry yet')
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u?"""
         sumwronglabels = sum([x not in ['Ag', 'Bu', 'Au', 'Bg'] for x in self.data.mosyms[0]])
@@ -139,7 +145,11 @@ class GenericSPTest(unittest.TestCase):
 
     def testhomos(self):
         """Is the index of the HOMO equal to 34?"""
-        numpy.testing.assert_array_equal(self.data.homos, numpy.array([34],"i"), "%s != array([34],'i')" % numpy.array_repr(self.data.homos))
+        numpy.testing.assert_array_equal(
+            self.data.homos,
+            numpy.array([34], "i"),
+            f"{numpy.array_repr(self.data.homos)} != array([34],'i')",
+        )
 
     @skipForParser('FChk', 'Formatted Checkpoint files do not have a section for SCF energy')
     def testscfvaluetype(self):
@@ -150,7 +160,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('FChk', 'Formatted Checkpoint files do not have a section for SCF energy')
     def testscfenergy(self):
         """Is the SCF energy within the target?"""
-        self.assertAlmostEqual(self.data.scfenergies[-1], self.b3lyp_energy, delta=40, msg="Final scf energy: %f not %i +- 40eV" %(self.data.scfenergies[-1], self.b3lyp_energy))
+        self.assertAlmostEqual(self.data.scfenergies[-1], self.b3lyp_energy, delta=40)
 
     @skipForParser('FChk', 'Formatted Checkpoint files do not have a section for SCF convergence')
     def testscftargetdim(self):
@@ -172,6 +182,12 @@ class GenericSPTest(unittest.TestCase):
         if hasattr(self.data, "moenergies"):
             self.assertIsInstance(self.data.moenergies, list)
             self.assertIsInstance(self.data.moenergies[0], numpy.ndarray)
+
+    @skipForLogfile('Gaussian/basicGaussian16/dvb_sp_no.out', 'no energies for natural orbitals')
+    @skipForLogfile('Turbomole/basicTurbomole5.9/dvb_sp_symm', 'delta of 7.4, everything else ok')
+    def testfirstmoenergy(self):
+        """Is the lowest energy molecular orbital within the target?"""
+        self.assertAlmostEqual(self.data.moenergies[0][0], self.b3lyp_moenergy, delta=self.b3lyp_moenergy_delta)
 
     @skipForParser('DALTON', 'mocoeffs not implemented yet')
     @skipForLogfile('Jaguar/basicJaguar7', 'Data file does not contain enough information. Can we make a new one?')
@@ -345,39 +361,17 @@ class GenericSPTest(unittest.TestCase):
             packaging.version.Version
         )
 
-    @skipForParser('ADF', 'reading point group symmetry and name is not implemented')
     @skipForParser('FChk', 'point group symmetry cannot be printed')
-    @skipForParser('GAMESS', 'reading point group symmetry and name is not implemented')
-    @skipForParser('GAMESSUK', 'reading point group symmetry and name is not implemented')
-    @skipForParser('Gaussian', 'reading point group symmetry and name is not implemented')
-    @skipForParser('Jaguar', 'reading point group symmetry and name is not implemented')
     @skipForParser('Molcas', 'reading point group symmetry and name is not implemented')
     @skipForParser('Molpro', 'reading point group symmetry and name is not implemented')
-    @skipForParser('MOPAC', 'reading point group symmetry and name is not implemented')
-    @skipForParser('NWChem', 'reading point group symmetry and name is not implemented')
-    @skipForParser('ORCA', 'reading point group symmetry and name is not implemented')
-    @skipForParser('Psi3', 'reading point group symmetry and name is not implemented')
-    @skipForParser('Psi4', 'reading point group symmetry and name is not implemented')
-    @skipForParser('QChem', 'reading point group symmetry and name is not implemented')
     @skipForParser('Turbomole', 'reading point group symmetry and name is not implemented')
     def testmetadata_symmetry_detected(self):
         """Does metadata have expected keys and values?"""
         self.assertEqual(self.data.metadata["symmetry_detected"], "c2h")
 
-    @skipForParser('ADF', 'reading point group symmetry and name is not implemented')
     @skipForParser('FChk', 'point group symmetry cannot be printed')
-    @skipForParser('GAMESS', 'reading point group symmetry and name is not implemented')
-    @skipForParser('GAMESSUK', 'reading point group symmetry and name is not implemented')
-    @skipForParser('Gaussian', 'reading point group symmetry and name is not implemented')
-    @skipForParser('Jaguar', 'reading point group symmetry and name is not implemented')
     @skipForParser('Molcas', 'reading point group symmetry and name is not implemented')
     @skipForParser('Molpro', 'reading point group symmetry and name is not implemented')
-    @skipForParser('MOPAC', 'reading point group symmetry and name is not implemented')
-    @skipForParser('NWChem', 'reading point group symmetry and name is not implemented')
-    @skipForParser('ORCA', 'reading point group symmetry and name is not implemented')
-    @skipForParser('Psi3', 'reading point group symmetry and name is not implemented')
-    @skipForParser('Psi4', 'reading point group symmetry and name is not implemented')
-    @skipForParser('QChem', 'reading point group symmetry and name is not implemented')
     @skipForParser('Turbomole', 'reading point group symmetry and name is not implemented')
     def testmetadata_symmetry_used(self):
         """Does metadata have expected keys and values?"""
@@ -408,6 +402,26 @@ class GenericSPTest(unittest.TestCase):
             assert all(isinstance(cpu_time, datetime.timedelta)
                        for cpu_time in self.data.metadata["cpu_time"])
 
+
+class GenericHFSPTest(GenericSPTest):
+
+    # Approximate HF energy of dvb after SCF in STO-3G (from DALTON 2015).
+    hf_scfenergy = -10334.03948035995
+
+    # Approximate energy of the innermost molecular orbital of DVB with
+    # HF/STO-3G (from Psi4 1.3.1).
+    hf_moenergy = -300.43401785663235
+
+    @skipForParser('FChk', 'Formatted Checkpoint files do not have a section for SCF energy')
+    def testscfenergy(self):
+        """Is the SCF energy within the target?"""
+        self.assertAlmostEqual(self.data.scfenergies[-1], self.hf_scfenergy, delta=6.5e-1)
+
+    def testfirstmoenergy(self):
+        """Is the lowest energy molecular orbital within the target?"""
+        self.assertAlmostEqual(self.data.moenergies[0][0], self.hf_moenergy, delta=1.6e-1)
+
+
 class ADFSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
 
@@ -419,6 +433,7 @@ class ADFSPTest(GenericSPTest):
     foverlap22 = 1.03585
     num_scf_criteria = 2
     b3lyp_energy = -140
+    b3lyp_moenergy = -269.6079423873336
 
     def testfoverlaps(self):
         """Are the dims and values of the fragment orbital overlap matrix correct?"""
@@ -436,15 +451,21 @@ class ADFSPTest(GenericSPTest):
         self.assertAlmostEqual(self.data.fooverlaps[1, 1], self.foverlap11, delta=0.0001)
         self.assertAlmostEqual(self.data.fooverlaps[2, 2], self.foverlap22, delta=0.0001)
 
+
 class GaussianSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
 
     num_scf_criteria = 3
 
 class JaguarSPTest(GenericSPTest):
-    """Customized restricted single point unittest"""
+    """Customized restricted single point KS unittest"""
 
     num_scf_criteria = 2
+
+
+class JaguarHFSPTest(JaguarSPTest, GenericHFSPTest):
+    """Customized restricted single point KS unittest"""
+
 
 class Jaguar7SPTest(JaguarSPTest):
     """Customized restricted single point unittest"""
@@ -459,8 +480,8 @@ class MolcasSPTest(GenericSPTest):
 
     num_scf_criteria = 4
 
-class MolproSPTest(GenericSPTest):
-    """Customized restricted single point unittest"""
+class MolproSPTest(GenericHFSPTest):
+    """Customized restricted single point HF unittest"""
 
     num_scf_criteria = 2
 
@@ -470,9 +491,14 @@ class NWChemKSSPTest(GenericSPTest):
     num_scf_criteria = 3
 
 class PsiSPTest(GenericSPTest):
-    """Customized restricted single point HF/KS unittest"""
+    """Customized restricted single point KS unittest"""
 
     num_scf_criteria = 2
+
+
+class PsiHFSPTest(PsiSPTest, GenericHFSPTest):
+    """Customized restricted single point HF unittest"""
+
 
 class OrcaSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
@@ -480,10 +506,13 @@ class OrcaSPTest(GenericSPTest):
     # Orca has different weights for the masses
     molecularmass = 130190
 
+    b3lyp_moenergy_delta = 1.2e-1
+
     num_scf_criteria = 3
 
+
 class TurbomoleSPTest(GenericSPTest):
-    """Customized restricted single point unittest"""
+    """Customized restricted single point KS unittest"""
 
     num_scf_criteria = 2
     
@@ -492,6 +521,10 @@ class TurbomoleSPTest(GenericSPTest):
         # One of our test cases used sto-3g hondo
         valid_basis = self.data.metadata["basis_set"].lower() in ("sto-3g", "sto-3g hondo")
         self.assertTrue(valid_basis)
+
+
+class TurbomoleHFSPTest(TurbomoleSPTest, GenericHFSPTest):
+    """Customized restricted single point HF unittest"""
 
 
 class GenericDispersionTest(unittest.TestCase):

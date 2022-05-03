@@ -1,0 +1,26 @@
+
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+      method:
+        target: auto
+        flags:
+          - method
+      unit:
+        target: auto
+        flags:
+          - unit
+
+flags:
+  method:
+    paths:
+      - cclib/method/
+    carryforward: true
+  unit:
+    paths:
+      - cclib/io/
+      - cclib/parser/
+      - cclib/bridge/
+    carryforward: true

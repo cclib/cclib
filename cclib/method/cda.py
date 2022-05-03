@@ -18,17 +18,15 @@ class CDA(FragmentAnalysis):
     """Charge Decomposition Analysis (CDA)"""
 
     def __init__(self, *args):
-
-        # Call the __init__ method of the superclass.
-        super(FragmentAnalysis, self).__init__(logname="CDA", *args)
+        super().__init__(logname="CDA", *args)
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "CDA of %s" % (self.data)
+        return f"CDA of {self.data}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'CDA("%s")' % (self.data)
+        return f'CDA("{self.data}")'
 
     def calculate(self, fragments, cupdate=0.05):
         """Perform the charge decomposition analysis.
@@ -38,7 +36,7 @@ class CDA(FragmentAnalysis):
         """
 
 
-        retval = super(CDA, self).calculate(fragments, cupdate)
+        retval = super().calculate(fragments, cupdate)
         if not retval:
             return False
 
