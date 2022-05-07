@@ -12,7 +12,7 @@ coverage:
         target: auto
         flags:
           - unit
-
+      flag_coverage_not_uploaded_behavior: pass 
 flags:
   method:
     paths:
