@@ -3362,11 +3362,6 @@ old_unittests = {
 
     "NWChem/NWChem6.6/trithiolane_polar.out": GaussianPolarTest,
 
-    "ORCA/ORCA2.6/dvb_gopt.out":    OrcaGeoOptTest_3_21g,
-    "ORCA/ORCA2.6/dvb_sp.out":      OrcaSPTest_3_21g,
-    "ORCA/ORCA2.6/dvb_td.out":      OrcaTDDFTTest_error,
-    "ORCA/ORCA2.6/dvb_ir.out":      OrcaIRTest_old_coordsOK,
-
     "ORCA/ORCA2.8/dvb_gopt.out":    OrcaGeoOptTest,
     "ORCA/ORCA2.8/dvb_sp.out":      GenericBasisTest,
     "ORCA/ORCA2.8/dvb_sp.out":      OrcaSPTest,

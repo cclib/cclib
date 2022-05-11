@@ -1117,7 +1117,7 @@ Dispersion correction           -0.016199959
             self.extend_attribute('etsyms', etsyms)
 
         # Parse the various absorption spectra for TDDFT and ROCIS.
-        if ('ABSORPTION SPECTRUM' in line and 'ELECTRIC DIPOLE' in line) and not 'SOC' in line:
+        if 'ABSORPTION SPECTRUM' in line or 'ELECTRIC DIPOLE' in line:
             # CASSCF has an anomalous printing of ABSORPTION SPECTRUM.
             if line[:-1] == 'ABSORPTION SPECTRUM':
                 return
@@ -1126,9 +1126,11 @@ Dispersion correction           -0.016199959
 
             # Standard header, occasionally changes
             header = ['d', 'header', 'header', 'd']
+            energy_intensity = None
 
-            def energy_intensity(line):
-                """ TDDFT and related methods standard method of output
+            if line == "ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS":
+                def energy_intensity(line):
+                    """ TDDFT and related methods standard method of output
 -----------------------------------------------------------------------------
          ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS
 -----------------------------------------------------------------------------
@@ -1137,16 +1139,16 @@ State   Energy  Wavelength   fosc         T2         TX        TY        TZ
 -----------------------------------------------------------------------------
    1 5184116.7      1.9   0.040578220   0.00258  -0.05076  -0.00000  -0.00000
 """
-                try:
-                    state, energy, wavelength, intensity, t2, tx, ty, tz = line.split()
-                except ValueError as e:
-                    # Must be spin forbidden and thus no intensity
-                    energy = line.split()[1]
-                    intensity = 0
-                return energy, intensity
+                    try:
+                        state, energy, wavelength, intensity, t2, tx, ty, tz = line.split()
+                    except ValueError as e:
+                        # Must be spin forbidden and thus no intensity
+                        energy = line.split()[1]
+                        intensity = 0
+                    return energy, intensity
 
             # Check for variations
-            if line == 'COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM' or \
+            elif line == 'COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM' or \
                line == 'COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM (origin adjusted)':
                 def energy_intensity(line):
                     """ TDDFT with DoQuad == True
@@ -1266,21 +1268,22 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             if not hasattr(self, 'transprop'):
                 self.transprop = {}
 
-            etenergies = []
-            etoscs = []
-            line = next(inputfile)
-            # The sections are occasionally ended with dashed lines
-            # other times they are blank (other than a new line)
-            while len(line.strip('-')) > 2:
-                energy, intensity = energy_intensity(line)
-                etenergies.append(float(energy))
-                etoscs.append(float(intensity))
-
+            if energy_intensity is not None:
+                etenergies = []
+                etoscs = []
                 line = next(inputfile)
+                # The sections are occasionally ended with dashed lines
+                # other times they are blank (other than a new line)
+                while len(line.strip('-')) > 2:
+                    energy, intensity = energy_intensity(line)
+                    etenergies.append(float(energy))
+                    etoscs.append(float(intensity))
 
-            self.set_attribute('etenergies', etenergies)
-            self.set_attribute('etoscs', etoscs)
-            self.transprop[name] = (numpy.asarray(etenergies), numpy.asarray(etoscs))
+                    line = next(inputfile)
+
+                self.set_attribute('etenergies', etenergies)
+                self.set_attribute('etoscs', etoscs)
+                self.transprop[name] = (numpy.asarray(etenergies), numpy.asarray(etoscs))
 
         if line.strip() == "CD SPECTRUM":
             # -------------------------------------------------------------------
