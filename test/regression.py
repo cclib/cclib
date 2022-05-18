@@ -3140,6 +3140,13 @@ class OrcaTDDFTTest_error(OrcaTDDFTTest):
         self.assertAlmostEqual(max(self.data.etoscs), 1.0, delta=0.2)
 
 
+class OrcaTDDFTTest_pre1085(OrcaTDDFTTest):
+    def testoscs(self):
+        """These values changed in the electric dipole osc strengths prior to Orca 4.0. See PR1085"""
+        self.assertEqual(len(self.data.etoscs), self.number)
+        self.assertAlmostEqual(max(self.data.etoscs), 0.94, delta=0.2)
+
+
 class OrcaIRTest_old_coordsOK(OrcaIRTest):
 
     zpve = 0.1986
@@ -3355,16 +3362,11 @@ old_unittests = {
 
     "NWChem/NWChem6.6/trithiolane_polar.out": GaussianPolarTest,
 
-    "ORCA/ORCA2.6/dvb_gopt.out":    OrcaGeoOptTest_3_21g,
-    "ORCA/ORCA2.6/dvb_sp.out":      OrcaSPTest_3_21g,
-    "ORCA/ORCA2.6/dvb_td.out":      OrcaTDDFTTest_error,
-    "ORCA/ORCA2.6/dvb_ir.out":      OrcaIRTest_old_coordsOK,
-
     "ORCA/ORCA2.8/dvb_gopt.out":    OrcaGeoOptTest,
     "ORCA/ORCA2.8/dvb_sp.out":      GenericBasisTest,
     "ORCA/ORCA2.8/dvb_sp.out":      OrcaSPTest,
     "ORCA/ORCA2.8/dvb_sp_un.out":   OrcaSPunTest_charge0,
-    "ORCA/ORCA2.8/dvb_td.out":      OrcaTDDFTTest,
+    "ORCA/ORCA2.8/dvb_td.out":      OrcaTDDFTTest_pre1085,
     "ORCA/ORCA2.8/dvb_ir.out":      OrcaIRTest_old,
 
     "ORCA/ORCA2.9/dvb_gopt.out":    OrcaGeoOptTest,
@@ -3374,7 +3376,7 @@ old_unittests = {
     "ORCA/ORCA2.9/dvb_sp.out":      GenericBasisTest,
     "ORCA/ORCA2.9/dvb_sp.out":      OrcaSPTest,
     "ORCA/ORCA2.9/dvb_sp_un.out":   GenericSPunTest,
-    "ORCA/ORCA2.9/dvb_td.out":      OrcaTDDFTTest,
+    "ORCA/ORCA2.9/dvb_td.out":      OrcaTDDFTTest_pre1085,
 
     "ORCA/ORCA3.0/dvb_bomd.out":          GenericBOMDTest,
     "ORCA/ORCA3.0/dvb_gopt.out":          OrcaGeoOptTest,
@@ -3384,7 +3386,7 @@ old_unittests = {
     "ORCA/ORCA3.0/dvb_sp_un.out":         GenericSPunTest,
     "ORCA/ORCA3.0/dvb_sp.out":            GenericBasisTest,
     "ORCA/ORCA3.0/dvb_sp.out":            OrcaSPTest,
-    "ORCA/ORCA3.0/dvb_td.out":            OrcaTDDFTTest,
+    "ORCA/ORCA3.0/dvb_td.out":            OrcaTDDFTTest_pre1085,
     "ORCA/ORCA3.0/Trp_polar.out":         ReferencePolarTest,
     "ORCA/ORCA3.0/trithiolane_polar.out": GaussianPolarTest,
 

@@ -148,7 +148,7 @@ class OrcaTDDFTTest(GenericTDTest):
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
         self.assertEqual(len(self.data.etoscs), self.number)
-        self.assertAlmostEqual(max(self.data.etoscs), .09, delta=0.01)
+        self.assertAlmostEqual(max(self.data.etoscs), 1.17, delta=0.01)
 
 
 class QChemTDDFTTest(GenericTDTest):
@@ -179,7 +179,8 @@ class OrcaROCISTest(GenericTDTest):
     """Customized test for ROCIS"""
     number = 57
     expected_l_max = 2316970.8
-    n_spectra = 8
+    # per 1085, no VELOCITY DIPOLE MOMENTS are parsed
+    n_spectra = 7
 
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
@@ -214,7 +215,8 @@ class OrcaROCIS40Test(OrcaROCISTest):
     # In ORCA 4.0, an additional spectrum ("COMBINED ELECTRIC DIPOLE +
     # MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM (Origin Independent,
     # Length Representation)") was present that is not in ORCA 4.1.
-    n_spectra = 9
+    # Changed via 1085. VELOCITY DIPOLE MOMENTS are not parsed.
+    n_spectra = 8
 
 
 class TurbomoleTDTest(GenericTDTest):
