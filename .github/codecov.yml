@@ -7,11 +7,13 @@ coverage:
       method:
         target: auto
         flags:
-          paths:
-            - method
+          - method
       unit:
         target: auto
+        flags:
+          - unit
       flag_coverage_not_uploaded_behavior: pass 
+
 flags:
   method:
     paths:
