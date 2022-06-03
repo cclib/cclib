@@ -43,11 +43,20 @@ jobs:
         if: steps.filter.outputs.methods == 'true'
         run: |
           bash .github/scripts/run_pytest_methods.bash
-      - name: Upload coverage to Codecov
+      - name: Upload coverage to Codecov for what is always run
         uses: codecov/codecov-action@v2
         with:
-          files: ./coverage-unit.xml,./coverage-regression.xml,./coverage-method.xml
+          files: ./coverage-unit.xml,./coverage-regression.xml
           name: codecov-cclib
+          fail_ci_if_error: true
+          verbose: false
+        if: matrix.container == 'shivupa/cclib-ci:py37'
+      - name: Upload coverage to Codecov for methods only
+        uses: codecov/codecov-action@v2
+        with:
+          files: ./coverage-method.xml
+          name: codecov-cclib
+          flags: method
           fail_ci_if_error: true
           verbose: false
         if: matrix.container == 'shivupa/cclib-ci:py37'

@@ -12,25 +12,21 @@ coverage:
         target: auto
         flags:
           - unit
-      flag_coverage_not_uploaded_behavior: pass 
 
 flags:
   method:
     paths:
-      - cclib/method/
+      - cclib/method
     carryforward: true
   unit:
     paths:
-      - cclib/io/
-      - cclib/parser/
-      - cclib/bridge/
+      - cclib/io
+      - cclib/parser
+      - cclib/bridge
     carryforward: true
 
 comment:
   layout: "reach, diff, flags, files"
   behavior: default
   require_changes: false  
-  require_base: yes
-  require_head: yes       
-  branches: null
   show_carryforward_flags: true
