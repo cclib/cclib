@@ -29,6 +29,8 @@ basis
   *  library sto-3g
 end
 
+memory total 4 gb
+
 dft
   xc b3lyp
 end

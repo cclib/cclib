@@ -35,6 +35,7 @@ property
   quadrupole
   octupole
 end
+memory total 4 gb
 DFT
    xc B3LYP
    grid fine
