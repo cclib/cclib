@@ -10,7 +10,8 @@
 import os.path
 import math
 import decimal
-import numpy 
+import numpy
+from itertools import zip_longest
 
 from cclib.parser import utils
 from cclib.io import filewriter
@@ -32,7 +33,11 @@ def round_molden(num, p=6):
 
 
 class MOLDEN(filewriter.Writer):
-    """A writer for MOLDEN files."""
+    """A writer for MOLDEN files.
+
+    Documentation of the format is located at
+    https://www3.cmbi.umcn.nl/molden/molden_format.html.
+    """
 
     required_attrs = ('atomcoords', 'atomnos', 'natom')
 
@@ -197,6 +202,44 @@ class MOLDEN(filewriter.Writer):
 
         return lines
 
+    def _freq_from_ccdata(self):
+
+        lines = []
+
+        if hasattr(self.ccdata, "vibfreqs"):
+            vibfreqs = self.ccdata.vibfreqs
+            vibfreqs_lines = ["[FREQ]"]
+            vibfreqs_lines.extend([f"{vibfreq:16.8f}" for vibfreq in vibfreqs])
+            lines.append("\n".join(vibfreqs_lines))
+
+        if hasattr(self.ccdata, "vibdisps"):
+            vibdisps = self.ccdata.vibdisps
+            vibdisps_lines = ["[FR-NORM-COORD]"]
+            for vibidx in range(vibdisps.shape[0]):
+                vibdisps_lines.append(f"vibration {vibidx + 1}")
+                for iatom in range(vibdisps.shape[1]):
+                    vibdisps_lines.append(
+                        "{:15.8f} {:15.8f} {:15.8f}".format(*vibdisps[vibidx, iatom])
+                    )
+            lines.append("\n".join(vibdisps_lines))
+
+        if hasattr(self.ccdata, "vibirs"):
+            vibirs = self.ccdata.vibirs
+            has_vibramans = hasattr(self.ccdata, "vibramans")
+            vibramans = [] if not has_vibramans else self.ccdata.vibramans
+            vibirs_lines = ["[INT]"]
+            for vibir, vibraman in zip_longest(vibirs, vibramans):
+                if not has_vibramans:
+                    vibirs_lines.append(f"{vibir:12.6f}")
+                else:
+                    vibirs_lines.append(f"{vibir:12.6f} {vibraman:12.6f}")
+            lines.append("\n".join(vibirs_lines))
+
+        if lines:
+            lines.append("")
+
+        return lines
+
     def generate_repr(self):
         """Generate the MOLDEN representation of the logfile data."""
 
@@ -233,6 +276,8 @@ class MOLDEN(filewriter.Writer):
         #         molden_lines.extend(self._scfconv_from_ccdata())
 
         # molden_lines.append('')
+
+        molden_lines.extend(self._freq_from_ccdata())
 
         return '\n'.join(molden_lines)
 
