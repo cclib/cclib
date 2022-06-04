@@ -58,15 +58,15 @@ task scf property
                                          
 
 
-              Northwest Computational Chemistry Package (NWChem) 6.6
-              ------------------------------------------------------
+             Northwest Computational Chemistry Package (NWChem) 7.0.2
+             --------------------------------------------------------
 
 
                     Environmental Molecular Sciences Laboratory
                        Pacific Northwest National Laboratory
                                 Richland, WA 99352
 
-                              Copyright (c) 1994-2015
+                              Copyright (c) 1994-2020
                        Pacific Northwest National Laboratory
                             Battelle Memorial Institute
 
@@ -91,15 +91,16 @@ task scf property
            Job information
            ---------------
 
-    hostname        = copper
+    hostname        = osmium
     program         = nwchem
-    date            = Wed Jul 27 00:50:17 2016
+    date            = Sat Jun  4 13:34:13 2022
 
-    compiled        = Sun_Feb_14_13:23:17_2016
-    source          = /build/nwchem-XLLp2O/nwchem-6.6+r27746
-    nwchem branch   = 6.6
-    nwchem revision = 27746
-    ga revision     = 10594
+    compiled        = Fri_Jul_02_16:33:00_2021
+    source          = /tmp/eric/spack-stage/spack-stage-nwchem-7.0.2-ooqysy46k2ki4umav4357wohumino4rf/spack-src
+    nwchem branch   = 7.0.2
+    nwchem revision = b9985dfa
+    ga revision     = 5.7.2
+    use scalapack   = T
     input           = Trp_polar.in
     prefix          = Trp_polar.
     data base       = ./Trp_polar.db
@@ -323,6 +324,9 @@ task scf property
 
 
 
+  library name resolved from: environment
+  library file name is: </home/eric/data/spack/opt/spack/linux-archrolling-zen/gcc-11.1.0/nwchem-7.0.2-ooqysy46k2ki4umav4357wohumino4rf/share/nwchem/libraries/>
+  
 
 
  Summary of "ao basis" -> "" (cartesian)
@@ -435,7 +439,7 @@ task scf property
 
 
 
- Forming initial guess at       0.5s
+ Forming initial guess at       0.1s
 
 
       Superposition of Atomic Density Guess
@@ -453,7 +457,7 @@ task scf property
  LUMO         =       0.219320
 
 
- Starting SCF solution at       1.9s
+ Starting SCF solution at       0.9s
 
 
 
@@ -466,34 +470,25 @@ task scf property
  ----------------------------------------------
 
 
- Integral file          = ./Trp_polar.aoints.0
- Record size in doubles =  65536        No. of integs per rec  =  43688
- Max. records in memory =    230        Max. records in file   =  19288
- No. of bits per label  =      8        No. of bits per value  =     64
-
-
- #quartets = 8.876D+05 #integrals = 5.254D+06 #direct =  0.0% #cached =100.0%
-
-
               iter       energy          gnorm     gmax       time
              ----- ------------------- --------- --------- --------
-                 1     -673.3333996738  1.65D+00  4.34D-01      7.5
-                 2     -673.5579531921  5.23D-01  9.82D-02      7.7
-                 3     -673.5901146605  4.41D-02  1.96D-02      7.9
-                 4     -673.5905709881  9.27D-04  3.19D-04      8.3
-                 5     -673.5905711126  4.29D-07  2.12D-07      9.0
-                 6     -673.5905711126  8.42D-11  1.57D-11      9.7
+                 1     -673.3333996734  1.65D+00  4.34D-01      4.0
+                 2     -673.5579531919  5.23D-01  9.82D-02     10.4
+                 3     -673.5901147188  4.41D-02  1.96D-02     16.9
+                 4     -673.5905709876  9.27D-04  3.18D-04     26.3
+                 5     -673.5905711122  4.29D-07  2.12D-07     44.2
+                 6     -673.5905711122  8.62D-11  1.54D-11     60.9
 
 
        Final RHF  results 
        ------------------ 
 
-         Total SCF energy =   -673.590571112627
-      One-electron energy =  -2824.796309158325
-      Two-electron energy =   1194.099334358451
+         Total SCF energy =   -673.590571112173
+      One-electron energy =  -2824.796309163842
+      Two-electron energy =   1194.099334364422
  Nuclear repulsion energy =    957.106403687247
 
-        Time for solution =      8.2s
+        Time for solution =     60.1s
 
 
              Final eigenvalues
@@ -1087,9 +1082,6 @@ task scf property
      2   0 1 1      1.348243      0.000000    138.161061
      2   0 0 2    -66.859565      0.000000   2136.322277
 
-
- Parallel integral file used     121 records with       0 large values
-
  *** CALLING NEW AORESP DRIVER FOR CLOSED AND OPEN SHELLS ***
  Entering AOResponse driver routine
 
@@ -1126,7 +1118,7 @@ task scf property
  number of frequencies:     1
  frequency in a.u.:  0.0000000E+00
  Perturbing field: electric
- Using Dipole Length Gauge
+ Using El. Dipole Length Gauge
 
  Setting up CPKS with frequency omega =      0.00000000 a.u.
 
@@ -1146,16 +1138,7 @@ task scf property
   max iterations   =       50
   max subspace     =       30
 
-
- Integral file          = ./Trp_polar.aoints.0
- Record size in doubles =  65536        No. of integs per rec  =  43688
- Max. records in memory =    230        Max. records in file   =  19288
- No. of bits per label  =      8        No. of bits per value  =     64
-
-
- #quartets = 8.876D+05 #integrals = 5.216D+06 #direct =  0.0% #cached =100.0%
-
- SCF residual:    2.1313889800972591E-009
+ SCF residual:    8.6162510654915214E-011
 
 
 Iterative solution of linear equations
@@ -1164,31 +1147,28 @@ Iterative solution of linear equations
   Maximum subspace       30
         Iterations       50
        Convergence  1.0D-08
-        Start time     14.9
+        Start time     64.2
 
 
    iter   nsub   residual    time
    ----  ------  --------  ---------
-     1      3    1.75D+00      20.1
-     2      6    9.75D-01      25.3
-     3      9    1.24D-01      30.7
-     4     12    7.84D-02      35.8
-     5     15    2.15D-02      40.9
-     6     18    8.05D-03      46.2
-     7     21    2.62D-03      51.3
-     8     24    6.19D-04      56.4
-     9     27    1.73D-04      61.5
-    10     30    3.45D-05      66.6
-    11     30    1.27D-05      71.7
-    12     30    3.46D-06      76.8
-    13     30    8.13D-07      82.4
-    14     30    2.20D-07      87.7
-    15     30    9.27D-08      92.8
-    16     30    3.83D-08      98.1
-    17     30    9.56D-09     103.2
-
- Parallel integral file used     120 records with       0 large values
-
+     1      3    1.75D+00      68.0
+     2      6    9.75D-01      71.8
+     3      9    1.24D-01      75.7
+     4     12    7.84D-02      79.5
+     5     15    2.15D-02      83.3
+     6     18    8.05D-03      87.1
+     7     21    2.62D-03      90.9
+     8     24    6.19D-04      94.7
+     9     27    1.73D-04      98.5
+    10     30    3.45D-05     102.4
+    11     30    1.27D-05     106.2
+    12     30    3.46D-06     110.0
+    13     30    8.13D-07     113.8
+    14     30    2.17D-07     117.6
+    15     30    9.34D-08     121.4
+    16     30    4.26D-08     125.2
+    17     30    9.93D-09     129.0
 
  Electric Dipole Response Matrix (nonzero elements):
 
@@ -1197,9 +1177,13 @@ Iterative solution of linear equations
     2   -2.2776  49.9964  30.4190
     3   -3.7757  30.4190  77.2609
 
+ ------------------------------------------
+ average:        74.12421 + I       0.00000
+
+
  DFT Linear Response polarizability / au 
  Frequency  =       0.0000000 / au
- Wavelength =        Infinity / nm
+ Wavelength = -999999.0000000 / nm
               X              Y              Z
  -----------------------------------------------
  X      95.1154128     -2.2775871     -3.7757114
@@ -1208,40 +1192,25 @@ Iterative solution of linear equations
  -----------------------------------------------
  Eigenvalues =      91.5362531     30.2942943    100.5420753
  Isotropic   =      74.1242076
- Anisotropic =      54.0568623
+ Anisotropic =      66.2058649
  -----------------------------------------------
 
- average:    74.124207568359509       + I    0.0000000000000000     
-
  Magnetic Dipole Response Matrix (nonzero elements):
- Optical rotation tensor G' 
+ Optical rotation tensor Beta
 
-              1        2        3      
-    1    2.6578 -41.3337 -14.1031
-    2   24.5834 -49.5181  54.5550
-    3   32.9671 -89.3949  46.9648
- average:    3.4811070632445741E-002  + I    0.0000000000000000     
+ *** static G'=0. Use GPRIME input with finite omega
+ *** or better ORBETA without GPRIME for small or zero freq.
 
- Principal components and PAS (Real part)
-              -86.3069
-               83.5151
-                2.8963
- ---------------------
- average:       0.0348
 
-              1        2        3      
-    1    0.3566  -0.3712   0.8573
-    2    0.8772   0.4487  -0.1706
-    3   -0.3214   0.8130   0.4856
+ zero matrix
+
+
+ ------------------------------------------
+ average:         0.00000 + I       0.00000
+
  Exiting AOResponse driver routine
 
- Task  times  cpu:      104.2s     wall:      103.1s
-
-
-                                NWChem Input Module
-                                -------------------
-
-
+ Task  times  cpu:      129.0s     wall:      129.8s
  Summary of allocated global arrays
 -----------------------------------
   No active global arrays
@@ -1252,12 +1221,11 @@ Iterative solution of linear equations
                          ------------------------------
 
        create   destroy   get      put      acc     scatter   gather  read&inc
-calls: 1984     1984     6.16e+05 3.42e+04 5.39e+05 1129        0      464     
-number of processes/call 1.00e+00 1.00e+00 1.00e+00 0.00e+00 0.00e+00
-bytes total:             6.33e+08 6.50e+07 5.33e+08 6.96e+02 0.00e+00 3.71e+03
+calls: 1996     1996     3.63e+05 3.42e+04 5.43e+05 1129        0      716     
+number of processes/call -2.42e+13 -2.68e+14 8.47e+12 0.00e+00 0.00e+00
+bytes total:             3.44e+08 6.50e+07 5.34e+08 6.96e+02 0.00e+00 5.73e+03
 bytes remote:            0.00e+00 0.00e+00 0.00e+00 0.00e+00 0.00e+00 0.00e+00
 Max memory consumed for GA by this process: 2219688 bytes
-
 MA_summarize_allocated_blocks: starting scan ...
 MA_summarize_allocated_blocks: scan completed: 0 heap blocks, 0 stack blocks
 MA usage statistics:
@@ -1266,11 +1234,18 @@ MA usage statistics:
 					      heap	     stack
 					      ----	     -----
 	current number of blocks	         0	         0
-	maximum number of blocks	        25	        35
+	maximum number of blocks	        24	        35
 	current total bytes		         0	         0
-	maximum total bytes		 120649536	  22511736
-	maximum total K-bytes		    120650	     22512
-	maximum total M-bytes		       121	        23
+	maximum total bytes		     80120	  22511736
+	maximum total K-bytes		        81	     22512
+	maximum total M-bytes		         1	        23
+
+
+                                NWChem Input Module
+                                -------------------
+
+
+
 
 
                                      CITATION
@@ -1278,33 +1253,52 @@ MA usage statistics:
                 Please cite the following reference when publishing
                            results obtained with NWChem:
 
-                 M. Valiev, E.J. Bylaska, N. Govind, K. Kowalski,
-              T.P. Straatsma, H.J.J. van Dam, D. Wang, J. Nieplocha,
-                        E. Apra, T.L. Windus, W.A. de Jong
-                 "NWChem: a comprehensive and scalable open-source
-                  solution for large scale molecular simulations"
-                      Comput. Phys. Commun. 181, 1477 (2010)
-                           doi:10.1016/j.cpc.2010.04.018
+          E. Aprà, E. J. Bylaska, W. A. de Jong, N. Govind, K. Kowalski,
+       T. P. Straatsma, M. Valiev, H. J. J. van Dam, Y. Alexeev, J. Anchell,
+       V. Anisimov, F. W. Aquino, R. Atta-Fynn, J. Autschbach, N. P. Bauman,
+     J. C. Becca, D. E. Bernholdt, K. Bhaskaran-Nair, S. Bogatko, P. Borowski,
+        J. Boschen, J. Brabec, A. Bruner, E. Cauët, Y. Chen, G. N. Chuev,
+      C. J. Cramer, J. Daily, M. J. O. Deegan, T. H. Dunning Jr., M. Dupuis,
+   K. G. Dyall, G. I. Fann, S. A. Fischer, A. Fonari, H. Früchtl, L. Gagliardi,
+      J. Garza, N. Gawande, S. Ghosh, K. Glaesemann, A. W. Götz, J. Hammond,
+       V. Helms, E. D. Hermes, K. Hirao, S. Hirata, M. Jacquelin, L. Jensen,
+   B. G. Johnson, H. Jónsson, R. A. Kendall, M. Klemm, R. Kobayashi, V. Konkov,
+      S. Krishnamoorthy, M. Krishnan, Z. Lin, R. D. Lins, R. J. Littlefield,
+      A. J. Logsdail, K. Lopata, W. Ma, A. V. Marenich, J. Martin del Campo,
+   D. Mejia-Rodriguez, J. E. Moore, J. M. Mullin, T. Nakajima, D. R. Nascimento,
+    J. A. Nichols, P. J. Nichols, J. Nieplocha, A. Otero-de-la-Roza, B. Palmer,
+    A. Panyala, T. Pirojsirikul, B. Peng, R. Peverati, J. Pittner, L. Pollack,
+   R. M. Richard, P. Sadayappan, G. C. Schatz, W. A. Shelton, D. W. Silverstein,
+   D. M. A. Smith, T. A. Soares, D. Song, M. Swart, H. L. Taylor, G. S. Thomas,
+            V. Tipparaju, D. G. Truhlar, K. Tsemekhman, T. Van Voorhis,
+     Á. Vázquez-Mayagoitia, P. Verma, O. Villa, A. Vishnu, K. D. Vogiatzis,
+        D. Wang, J. H. Weare, M. J. Williamson, T. L. Windus, K. Woliński,
+        A. T. Wong, Q. Wu, C. Yang, Q. Yu, M. Zacharias, Z. Zhang, Y. Zhao,
+                                and R. J. Harrison
+                        "NWChem: Past, present, and future
+                         J. Chem. Phys. 152, 184102 (2020)
+                               doi:10.1063/5.0004997
 
                                       AUTHORS
                                       -------
-          E. Apra, E. J. Bylaska, W. A. de Jong, N. Govind, K. Kowalski,
-       T. P. Straatsma, M. Valiev, H. J. J. van Dam, D. Wang, T. L. Windus,
-        J. Hammond, J. Autschbach, K. Bhaskaran-Nair, J. Brabec, K. Lopata,
-       S. A. Fischer, S. Krishnamoorthy, W. Ma, M. Klemm, O. Villa, Y. Chen,
-    V. Anisimov, F. Aquino, S. Hirata, M. T. Hackler, T. Risthaus, M. Malagoli,
-       A. Marenich, A. Otero-de-la-Roza, J. Mullin, P. Nichols, R. Peverati,
-     J. Pittner, Y. Zhao, P.-D. Fan, A. Fonari, M. Williamson, R. J. Harrison,
-       J. R. Rehr, M. Dupuis, D. Silverstein, D. M. A. Smith, J. Nieplocha,
-        V. Tipparaju, M. Krishnan, B. E. Van Kuiken, A. Vazquez-Mayagoitia,
-        L. Jensen, M. Swart, Q. Wu, T. Van Voorhis, A. A. Auer, M. Nooijen,
-      L. D. Crosby, E. Brown, G. Cisneros, G. I. Fann, H. Fruchtl, J. Garza,
-        K. Hirao, R. A. Kendall, J. A. Nichols, K. Tsemekhman, K. Wolinski,
-     J. Anchell, D. E. Bernholdt, P. Borowski, T. Clark, D. Clerc, H. Dachsel,
-   M. J. O. Deegan, K. Dyall, D. Elwood, E. Glendening, M. Gutowski, A. C. Hess,
-         J. Jaffe, B. G. Johnson, J. Ju, R. Kobayashi, R. Kutteh, Z. Lin,
-   R. Littlefield, X. Long, B. Meng, T. Nakajima, S. Niu, L. Pollack, M. Rosing,
-   K. Glaesemann, G. Sandrone, M. Stave, H. Taylor, G. Thomas, J. H. van Lenthe,
-                               A. T. Wong, Z. Zhang.
+     E. Apra, E. J. Bylaska, N. Govind, K. Kowalski, M. Valiev, W. A. de Jong,
+      T. P. Straatsma, H. J. J. van Dam, D. Wang, T. L. Windus, N. P. Bauman,
+       A. Panyala, J. Hammond, J. Autschbach, K. Bhaskaran-Nair, J. Brabec,
+    K. Lopata, S. A. Fischer, S. Krishnamoorthy, M. Jacquelin, W. Ma, M. Klemm,
+       O. Villa, Y. Chen, V. Anisimov, F. Aquino, S. Hirata, M. T. Hackler,
+           Eric Hermes, L. Jensen, J. E. Moore, J. C. Becca, V. Konjkov,
+            D. Mejia-Rodriguez, T. Risthaus, M. Malagoli, A. Marenich,
+   A. Otero-de-la-Roza, J. Mullin, P. Nichols, R. Peverati, J. Pittner, Y. Zhao,
+        P.-D. Fan, A. Fonari, M. J. Williamson, R. J. Harrison, J. R. Rehr,
+      M. Dupuis, D. Silverstein, D. M. A. Smith, J. Nieplocha, V. Tipparaju,
+      M. Krishnan, B. E. Van Kuiken, A. Vazquez-Mayagoitia, M. Swart, Q. Wu,
+   T. Van Voorhis, A. A. Auer, M. Nooijen, L. D. Crosby, E. Brown, G. Cisneros,
+     G. I. Fann, H. Fruchtl, J. Garza, K. Hirao, R. A. Kendall, J. A. Nichols,
+       K. Tsemekhman, K. Wolinski, J. Anchell, D. E. Bernholdt, P. Borowski,
+       T. Clark, D. Clerc, H. Dachsel, M. J. O. Deegan, K. Dyall, D. Elwood,
+      E. Glendening, M. Gutowski, A. C. Hess, J. Jaffe, B. G. Johnson, J. Ju,
+        R. Kobayashi, R. Kutteh, Z. Lin, R. Littlefield, X. Long, B. Meng,
+      T. Nakajima, S. Niu, L. Pollack, M. Rosing, K. Glaesemann, G. Sandrone,
+      M. Stave, H. Taylor, G. Thomas, J. H. van Lenthe, A. T. Wong, Z. Zhang.
 
- Total times  cpu:      104.2s     wall:      103.4s
+ Total times  cpu:      129.0s     wall:      129.8s
