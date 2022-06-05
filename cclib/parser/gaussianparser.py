@@ -1990,7 +1990,7 @@ class Gaussian(logfileparser.Logfile):
                 self.atomcharges = {}
             if has_spin and not hasattr(self, "atomspins"):
                 self.atomspins = {}
-            ones = next(inputfile)
+            _ = next(inputfile)
             charges = []
             spins = []
             is_sum = 'summed' in line
@@ -2103,6 +2103,49 @@ class Gaussian(logfileparser.Logfile):
                         nline = next(inputfile)
                         charges.append(float(nline.split()[2]))
                     self.atomcharges["natural"] = charges
+
+        # Combined Hirshfeld/CM5 is different enough that we don't try and
+        # reuse extract_charges_spins, at least for now.
+        if "Hirshfeld charges, spin densities, dipoles, and CM5 charges" in line:
+            if not hasattr(self, "atomcharges"):
+                self.atomcharges = {}
+            has_spins = len(self.homos) == 2
+            if has_spins and not hasattr(self, "atomspins"):
+                self.atomspins = {}
+            self.skip_line(inputfile, "Q-H        S-H        Dx")
+            line = next(inputfile)
+            atomcharges_hirshfeld = []
+            atomcharges_cm5 = []
+            atomspins_hirshfeld = []
+            while "Tot" not in line:
+                tokens = line.split()
+                atomcharges_hirshfeld.append(float(tokens[2]))
+                atomcharges_cm5.append(float(tokens[7]))
+                if has_spins:
+                    atomspins_hirshfeld.append(float(tokens[3]))
+                line = next(inputfile)
+            self.atomcharges["hirshfeld"] = atomcharges_hirshfeld
+            self.atomcharges["cm5"] = atomcharges_cm5
+            if has_spins:
+                self.atomspins["hirshfeld"] = atomspins_hirshfeld
+            self.skip_lines(
+                inputfile,
+                ["Hirshfeld charges with hydrogens summed into heavy atoms:", "Q-H       Q-CM5"]
+            )
+            line = next(inputfile)
+            atomcharges_hirshfeld_summed = []
+            atomcharges_cm5_summed = []
+            for i in self.atomnos:
+                if i == 1:
+                    atomcharges_hirshfeld_summed.append(0.0)
+                    atomcharges_cm5_summed.append(0.0)
+                else:
+                    tokens = line.split()
+                    atomcharges_hirshfeld_summed.append(float(tokens[2]))
+                    atomcharges_cm5_summed.append(float(tokens[3]))
+                    line = next(inputfile)
+            self.atomcharges["hirshfeld_sum"] = atomcharges_hirshfeld_summed
+            self.atomcharges["cm5_sum"] = atomcharges_cm5_summed
 
         #Extract Thermochemistry
         #Temperature   298.150 Kelvin.  Pressure   1.00000 Atm.
