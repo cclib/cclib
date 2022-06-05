@@ -19,6 +19,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Allow repo access (see https://github.com/actions/checkout/issues/760)
+        run: |
+          git config --global --add safe.directory /__w/cclib/cclib
       - name: Prepare conda environment
         run: |
           echo "/env/bin" >> $GITHUB_PATH
