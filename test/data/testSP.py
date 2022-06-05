@@ -68,11 +68,40 @@ class GenericSPTest(unittest.TestCase):
     @skipForLogfile('Molpro/basicMolpro2006', "These tests were run a long time ago and since we don't have access to Molpro 2006 anymore, we can skip this test (it is tested in 2012)")
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testatomcharges(self):
-        """Are atomcharges (at least Mulliken) consistent with natom and sum to zero?"""
-        for type in set(['mulliken'] + list(self.data.atomcharges.keys())):
-            charges = self.data.atomcharges[type]
-            self.assertEqual(len(charges), self.data.natom)
-            self.assertAlmostEqual(sum(charges), 0.0, delta=0.001)
+        """Are atomic charges consistent with natom?"""
+        for atomcharge_type in self.data.atomcharges:
+            charges = self.data.atomcharges[atomcharge_type]
+            natom = self.data.natom
+            self.assertEqual(
+                len(charges),
+                natom,
+                msg=f"len(atomcharges['{atomcharge_type}']) = {len(charges)}, natom = {natom}"
+            )
+
+    @skipForParser('DALTON', 'DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now')
+    @skipForParser('FChk', 'The parser is still being developed so we skip this test')
+    @skipForLogfile('Jaguar/basicJaguar7', 'We did not print the atomic partial charges in the unit tests for this version')
+    @skipForLogfile('Molpro/basicMolpro2006', "These tests were run a long time ago and since we don't have access to Molpro 2006 anymore, we can skip this test (it is tested in 2012)")
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    def testatomcharges_mulliken(self):
+        """Do Mulliken atomic charges sum to zero?"""
+        charges = self.data.atomcharges["mulliken"]
+        self.assertAlmostEqual(sum(charges), 0.0, delta=0.001)
+
+    @skipForParser('ADF', 'Lowdin charges not present by default')
+    @skipForParser('DALTON', 'DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now')
+    @skipForParser('FChk', 'The parser is still being developed so we skip this test')
+    @skipForParser('Gaussian', 'Lowdin charges not present by default')
+    @skipForParser('Jaguar', 'Lowdin charges not present by default')
+    @skipForParser('NWChem', 'Lowdin charges not present by default')
+    @skipForParser('Molcas', 'Lowdin charges not present by default')
+    @skipForParser('Molpro', 'Lowdin charges not present by default')
+    @skipForParser('QChem', 'Lowdin charges not present by default')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    def testatomcharges_lowdin(self):
+        """Do Lowdin atomic charges sum to zero?"""
+        charges = self.data.atomcharges["lowdin"]
+        self.assertAlmostEqual(sum(charges), 0.0, delta=0.001)
 
     def testatomcoords(self):
         """Are the dimensions of atomcoords 1 x natom x 3?"""
