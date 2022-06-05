@@ -82,7 +82,7 @@ class GenericSPTest(unittest.TestCase):
     def testatomcharges_mulliken(self):
         """Do Mulliken atomic charges sum to zero?"""
         charges = self.data.atomcharges["mulliken"]
-        assert abs(sum(charges)) < 0.001
+        assert abs(sum(charges)) < 1.0e-2
 
     @skipForParser('ADF', 'Lowdin charges not present by default')
     @skipForParser('DALTON', 'DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now')
@@ -97,7 +97,26 @@ class GenericSPTest(unittest.TestCase):
     def testatomcharges_lowdin(self):
         """Do Lowdin atomic charges sum to zero?"""
         charges = self.data.atomcharges["lowdin"]
-        assert abs(sum(charges)) < 0.001
+        assert abs(sum(charges)) < 1.0e-2
+
+    @skipForParser('ADF', 'Hirshfeld charges not implemented')
+    @skipForParser('DALTON', 'DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now')
+    @skipForParser('FChk', 'The parser is still being developed so we skip this test')
+    @skipForParser('Gaussian', 'Hirshfeld charges not implemented')
+    @skipForParser('GAMESS', 'Hirshfeld charges not implemented')
+    @skipForParser('GAMESSUK', 'Hirshfeld charges not implemented')
+    @skipForParser('Jaguar', 'Hirshfeld charges not implemented')
+    @skipForParser('NWChem', 'Hirshfeld charges not implemented')
+    @skipForParser('Molcas', 'Hirshfeld charges not implemented')
+    @skipForParser('Molpro', 'Hirshfeld charges not implemented')
+    @skipForLogfile('ORCA/basicORCA4.1', 'This needs to be moved to regressions')
+    @skipForParser('Psi4', 'Hirshfeld charges not implemented')
+    @skipForParser('QChem', 'Hirshfeld charges not implemented')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    def testatomcharges_hirshfeld(self):
+        """Do Hirshfeld atomic charges sum to roughly zero?"""
+        charges = self.data.atomcharges["hirshfeld"]
+        assert abs(sum(charges)) < 5.0e-2
 
     def testatomcoords(self):
         """Are the dimensions of atomcoords 1 x natom x 3?"""
