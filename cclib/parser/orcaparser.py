@@ -2179,8 +2179,6 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
           what type of charge we're dealing with, must be one of
           'mulliken', 'lowdin', 'chelpg' or 'hirshfeld'
         """
-        for i in range(0, 2):
-            heading_line = next(inputfile)
         has_spins = 'AND SPIN POPULATIONS' in line
 
         if not hasattr(self, "atomcharges"):
@@ -2205,12 +2203,16 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
         elif chargestype == 'hirshfeld':
             should_stop = lambda x: not bool(x.strip())
             start, stop = 9, 17
-            for i in range(0, 2):
-                next(inputfile)
-            has_spins = 'SPIN' in line
-            if has_spins and not hasattr(self, "atomspins"):
-                self.atomspins = {}
-            line = next(inputfile) # As Hirshfeld has an extra Headings Line
+            self.skip_lines(
+                inputfile,
+                [
+                    "d",
+                    "b",
+                    "Total integrated alpha density",
+                    "Total integrated beta density",
+                    "header",
+                ]
+            )
         else:
             raise RuntimeError(f"unknown chargestype: {chargestype}")
 
