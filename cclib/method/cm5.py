@@ -42,6 +42,9 @@ from cclib.method.calculationmethod import Method
 
 
 class CM5(Method):
+    """Compute Charge Model 5 (CM5) atomic charges.
+
+    The description of charges is from https://doi.org/10.1021/ct200866d."""
     def __init__(self, data, fscale=1.20, progress=None, loglevel=logging.INFO, logname="Log"):
         super().__init__(data, progress, loglevel, logname)
 
@@ -78,7 +81,7 @@ class CM5(Method):
             self.atomradius[Z] = r1_avg
 
     def cm5_charges(self):
-        """Returns an array with cm5 charges"""
+        """Compute the CM5 atomic charges."""
         nat = self.data.natom
         qcm5 = np.empty(nat)
         z = self.data.atomnos
@@ -100,7 +103,7 @@ class CM5(Method):
         return qcm5
 
     def dipole_moment(self):
-        """Returns the dipole moment computed from CM5 atomic charges."""
+        """Compute the dipole moment from CM5 atomic charges."""
         nat = self.data.natom
         dipole = np.empty(nat)
         cm5_charges = self.cm5_charges()
@@ -112,15 +115,17 @@ class CM5(Method):
         return dipole, s
 
     def quadrupole_moment(self):
-        """Returns the quadrupole moment computed from CM5 atomic charges."""
-        bohr = 0.52917726
+        """Compute the quadrupole moment from CM5 atomic charges."""
+        # This is the conversion factor used in https://github.com/hokru/cm5charges.
+        # bohr = 0.52917726
+        atomcoords = convertor(self.data.atomcoords, "Angstrom", "bohr")
         nat = self.data.natom
         quad = np.empty([nat, nat])
         cm5_charges = self.cm5_charges()
         for k in range(0, nat - 1):
-            dx = self.data.atomcoords[-1, k, 0] / bohr
-            dy = self.data.atomcoords[-1, k, 1] / bohr
-            dz = self.data.atomcoords[-1, k, 2] / bohr
+            dx = atomcoords[-1, k, 0]
+            dy = atomcoords[-1, k, 1]
+            dz = atomcoords[-1, k, 2]
             quad[0, 0] += dx * dx * cm5_charges[k]
             quad[1, 1] += dy * dy * cm5_charges[k]
             quad[2, 2] += dz * dz * cm5_charges[k]
@@ -131,66 +136,11 @@ class CM5(Method):
 
 
 def tij(i, j):
-    #              NULL H       He       Li   Be      B        C        N        O        F        Ne
-    dz = np.array(
-        [
-            0.0,
-            0.0056,
-            -0.1543,
-            0.0,
-            0.0333,
-            -0.1030,
-            -0.0446,
-            -0.1072,
-            -0.0802,
-            -0.0629,
-            -0.1088,  #   Na      Mg   Al       Si       P        S        Cl       Ar
-            0.0184,
-            0.0,
-            -0.0726,
-            -0.0790,
-            -0.0756,
-            -0.0565,
-            -0.0444,
-            -0.07676,  #   K       Ca                                                Zn   Ga       Ge       As       Se       Br   Kr
-            0.0130,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            -0.0557,
-            -0.0533,
-            -0.0399,
-            -0.0313,
-            0.0,
-            0.0,  #                                                                                   I        Xe
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            -0.0220,
-            0.0,
-        ]
-    )
+    """Compute eq. 4 from 10.1021/ct200866d.
+
+    These include the extended set of parameters presented in the Supporting
+    Information.
+    """
 
     #               H-C     H-N     H-O     C-N     C-O     N-O
     dzz = np.array([0.0502, 0.1747, 0.1671, 0.0556, 0.0234, -0.0346])
@@ -225,6 +175,52 @@ def tij(i, j):
         elif j == 7:
             tij = -dzz[6]
     else:
+        dz = np.zeros((119,))
+        dz[1] = 0.0056
+        dz[2] = -0.1543
+        dz[4] = 0.0333
+        dz[5] = -0.1030
+        dz[6] = -0.0446
+        dz[7] = -0.1072
+        dz[8] = -0.0802
+        dz[9] = -0.0629
+        dz[10] = -0.1088
+        dz[11] = 0.0184
+        dz[13] = -0.0726
+        dz[14] = -0.0790
+        dz[15] = -0.0756
+        dz[16] = -0.0565
+        dz[17] = -0.0444
+        dz[18] = -0.0767
+        dz[19] = 0.0130
+        dz[31] = -0.0512
+        dz[32] = -0.0557
+        dz[33] = -0.0533
+        dz[34] = -0.0399
+        dz[35] = -0.0313
+        dz[36] = -0.0541
+        dz[37] = 0.0092
+        dz[49] = -0.0361
+        dz[50] = -0.0393
+        dz[51] = -0.0376
+        dz[52] = -0.0281
+        dz[53] = -0.0220
+        dz[54] = -0.0381
+        dz[55] = 0.0065
+        dz[81] = -0.0255
+        dz[82] = -0.0277
+        dz[83] = -0.0265
+        dz[84] = -0.0198
+        dz[85] = -0.0155
+        dz[86] = -0.0269
+        dz[87] = 0.0046
+        dz[113] = -0.0179
+        dz[114] = -0.0195
+        dz[115] = -0.0187
+        dz[116] = -0.0140
+        dz[117] = -0.0110
+        dz[118] = -0.0189
+
         tij = dz[i] - dz[j]
 
     return tij
