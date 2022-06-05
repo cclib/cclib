@@ -39,6 +39,7 @@ import numpy as np
 import periodictable.covalent_radius as pt
 
 from cclib.method.calculationmethod import Method
+from cclib.parser.utils import convertor
 
 
 class CM5(Method):
@@ -98,7 +99,7 @@ class CM5(Method):
                     bij = np.exp(
                         -alpha * (rij - self.atomradius[z[i]] - self.atomradius[z[j]])
                     )  # eq.2
-                    s += tij(z[i], z[j]) * bij
+                    s += _tij(z[i], z[j]) * bij
             qcm5[i] = hirshfeld_charges[i] + s
         return qcm5
 
@@ -135,12 +136,33 @@ class CM5(Method):
         return quad
 
 
-def tij(i, j):
-    """Compute eq. 4 from 10.1021/ct200866d.
+def _tij(i: int, j: int, extended: bool = True) -> float:
+    """Compute a single $T_{kk'}$ in eq. (1) from 10.1021/ct200866d.
+
+    This term may be computed from special case pairwise values in eq. (3) or
+    more generally via eq. (4), depending on the atomic numbers i and j.
+
+    Notation-wise, k and k prime are renamed to i and j.
 
     These include the extended set of parameters presented in the Supporting
     Information.
+
+    Arguments
+    ---------
+    i : int
+        Atomic number of first index
+    j : int
+        Atomic number of second index
+    extended : bool (default True)
+        Should the extended set of $D_{Z}$ parameters presented in the
+        Supporting Information be used?
+
+    Returns
+    -------
+    $T_{ij}$ : float
     """
+
+    tij = 0.0
 
     #               H-C     H-N     H-O     C-N     C-O     N-O
     dzz = np.array([0.0502, 0.1747, 0.1671, 0.0556, 0.0234, -0.0346])
@@ -175,6 +197,7 @@ def tij(i, j):
         elif j == 7:
             tij = -dzz[6]
     else:
+        # Indices used here correspond directly to atomic number.
         dz = np.zeros((119,))
         dz[1] = 0.0056
         dz[2] = -0.1543
@@ -193,33 +216,36 @@ def tij(i, j):
         dz[17] = -0.0444
         dz[18] = -0.0767
         dz[19] = 0.0130
-        dz[31] = -0.0512
+        if extended:
+            dz[31] = -0.0512
         dz[32] = -0.0557
         dz[33] = -0.0533
         dz[34] = -0.0399
         dz[35] = -0.0313
-        dz[36] = -0.0541
-        dz[37] = 0.0092
-        dz[49] = -0.0361
-        dz[50] = -0.0393
-        dz[51] = -0.0376
-        dz[52] = -0.0281
+        if extended:
+            dz[36] = -0.0541
+            dz[37] = 0.0092
+            dz[49] = -0.0361
+            dz[50] = -0.0393
+            dz[51] = -0.0376
+            dz[52] = -0.0281
         dz[53] = -0.0220
-        dz[54] = -0.0381
-        dz[55] = 0.0065
-        dz[81] = -0.0255
-        dz[82] = -0.0277
-        dz[83] = -0.0265
-        dz[84] = -0.0198
-        dz[85] = -0.0155
-        dz[86] = -0.0269
-        dz[87] = 0.0046
-        dz[113] = -0.0179
-        dz[114] = -0.0195
-        dz[115] = -0.0187
-        dz[116] = -0.0140
-        dz[117] = -0.0110
-        dz[118] = -0.0189
+        if extended:
+            dz[54] = -0.0381
+            dz[55] = 0.0065
+            dz[81] = -0.0255
+            dz[82] = -0.0277
+            dz[83] = -0.0265
+            dz[84] = -0.0198
+            dz[85] = -0.0155
+            dz[86] = -0.0269
+            dz[87] = 0.0046
+            dz[113] = -0.0179
+            dz[114] = -0.0195
+            dz[115] = -0.0187
+            dz[116] = -0.0140
+            dz[117] = -0.0110
+            dz[118] = -0.0189
 
         tij = dz[i] - dz[j]
 
