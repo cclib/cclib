@@ -2192,30 +2192,30 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
 
         # depending on chargestype, decide when to stop parsing lines
         # start, stop - indices for slicing lines and grabbing values
+        # should_stop: when to stop parsing
         if chargestype == 'mulliken':
             should_stop = lambda x: x.startswith('Sum of atomic charges')
             start, stop = 8, 20
         elif chargestype == 'lowdin':
-            # stops when blank line encountered
             should_stop = lambda x: not bool(x.strip())
             start, stop = 8, 20
         elif chargestype == 'chelpg':
             should_stop = lambda x: x.startswith('---')
             start, stop = 11, 26
         elif chargestype == 'hirshfeld':
-            # stops when blank line encountered
             should_stop = lambda x: not bool(x.strip())
             start, stop = 9, 17
             for i in range(0, 2):
                 next(inputfile)
-            has_spins = 'SPIN' in line # Checking the headings line for spin
+            has_spins = 'SPIN' in line
             if has_spins and not hasattr(self, "atomspins"):
                 self.atomspins = {}
             line = next(inputfile) # As Hirshfeld has an extra Headings Line
+        else:
+            raise RuntimeError(f"unknown chargestype: {chargestype}")
 
         charges = []
-        if has_spins:
-            spins = []
+        spins = []
 
         line = next(inputfile)
         while not should_stop(line):
