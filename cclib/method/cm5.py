@@ -36,7 +36,7 @@ Output:
 import logging
 
 import numpy as np
-import periodictable.covalent_radius as pt
+import periodictable.covalent_radius as covalent_radius
 
 from cclib.method.calculationmethod import Method
 from cclib.parser.utils import convertor
@@ -46,40 +46,19 @@ class CM5(Method):
     """Compute Charge Model 5 (CM5) atomic charges.
 
     The description of charges is from https://doi.org/10.1021/ct200866d."""
-    def __init__(self, data, fscale=1.20, progress=None, loglevel=logging.INFO, logname="Log"):
+    def __init__(self, data, radii: str = "hkruse", progress=None, loglevel=logging.INFO, logname="Log"):
         super().__init__(data, progress, loglevel, logname)
 
         self.required_attrs = ("natom", "atomcoords", "atomnos")
-        self.fscale = fscale
-        self.atomradius = np.empty(119)
-        self.atomradius[0] = 0.20
 
-        for line in pt.CorderoPyykko.split("\n"):
-            fields = line.split()
-            if line[0] == "#":
-                continue
-            else:
-                fields = line.split()
-                Z = int(fields[0])
-
-                if len(fields) < 6:
-                    for _ in range(len(fields), 6):
-                        fields.append("0.0")
-
-                if fields[2] == "-":
-                    rC = 0.0
-                    drC = 0.0
-                else:
-                    sfields = fields[2].split("(")
-                    rC = float(sfields[0])
-                    drC = float(sfields[1].split(")", 1)[0]) / 100 if len(sfields) == 2 else 0.0
-
-                r1 = float(fields[3])
-                r1_avg = (rC + r1) / 2 if r1 is not 0.0 else rC
-                r2 = float(fields[4])
-                r3 = float(fields[5])
-
-            self.atomradius[Z] = r1_avg
+        if radii == "CorderoPyykko":
+            self.atomradius = _radii_cordero_pyykko(radii)
+        elif radii == "Cordero":
+            self.atomradius = _radii_cordero_pyykko(radii)
+        elif radii == "hkruse":
+            self.atomradius = _radii_hkruse()
+        else:
+            raise RuntimeError(f"invalid name for radii: {radii}")
 
     def cm5_charges(self):
         """Compute the CM5 atomic charges."""
@@ -250,3 +229,68 @@ def _tij(i: int, j: int, extended: bool = True) -> float:
         tij = dz[i] - dz[j]
 
     return tij
+
+
+def _radii_cordero_pyykko(radii: str):
+    atomradius = np.empty(119)
+    atomradius[0] = 0.20
+
+    for line in covalent_radius.CorderoPyykko.split("\n"):
+        if line[0] == "#":
+            continue
+        fields = line.split()
+        Z = int(fields[0])
+
+        if len(fields) < 6:
+            for _ in range(len(fields), 6):
+                fields.append("0.0")
+
+        if fields[2] == "-":
+            rC = 0.0
+            # drC = 0.0
+        else:
+            sfields = fields[2].split("(")
+            rC = float(sfields[0])
+            # drC = float(sfields[1].split(")", 1)[0]) / 100 if len(sfields) == 2 else 0.0
+
+        r1 = float(fields[3])
+        r1_avg = (rC + r1) / 2 if r1 != 0.0 else rC
+        # r2 = float(fields[4])
+        # r3 = float(fields[5])
+
+        if radii == "CorderoPyykko":
+            atomradius[Z] = r1_avg
+        elif radii == "Cordero":
+            atomradius[Z] = rC
+
+    return atomradius
+
+
+def _radii_hkruse():
+    """Return the covalent radii found in
+    https://github.com/hokru/cm5charges/blob/23f58b728e9f4af2306702c7cd48b1afb4b72b15/cm5.f90#L58."""
+    # fmt: off
+    atomradius = np.array([
+        # dummy
+        0.0,
+        # H He
+        0.32,0.37,
+        # Li     Be     B     C       N      O     F      Ne
+        1.30,0.99,0.84,0.75,0.71,0.64,0.60,0.62,
+        # Na    Mg     Al     Si     P      S       Cl     Ar
+        1.60,1.40,1.24,1.14,1.09,1.04,1.00,1.01,
+        # K      Ca     Sc     Ti     V      Cr      Mn     Fe     Co    Ni     Cu     Zn     Ga     Ge     As     Se     Br    Kr
+        2.00,1.74,1.59,1.48,1.44,1.30,1.29,1.24,1.18,1.17,1.22,1.20,1.23,1.20,1.20,1.18,1.17,1.24,
+        #  Rb    Sr     Y      Zr      Nb     Mo    Tc     Ru     Rh     Pd     Ag     Cd     In    Sn      Sb      Te     I     Xe
+        2.15,1.90,1.78,1.64,1.56,1.46,1.38,1.36,1.34,1.30,1.36,1.40,1.42,1.40,1.40,1.37,1.32,1.36,
+        # Cs Ba
+        2.38,2.06,
+        # La-Lu
+        1.94,1.84,1.90,1.73,1.86,1.85,1.83,1.82,1.81,1.80,1.79,1.77,1.77,1.78,1.74,
+        # Hf     Ta     W       Re     Os    Ir     Pt     Au     Hg     Ti     Pb     Bi     Po     At     Rn
+        1.64,1.58,1.50,1.41,1.36,1.32,1.30,1.64,1.88,1.48,1.45,1.50,1.42,1.47,1.46,
+        # Fr-Pu
+        2.42,2.11,2.01,1.90,1.84,1.83,1.80,1.80
+    ])
+    # fmt: on
+    return atomradius
