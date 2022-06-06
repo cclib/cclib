@@ -63,7 +63,7 @@ class CM5(Method):
         else:
             raise RuntimeError(f"invalid name for radii: {radii}")
 
-    def cm5_charges(self, fscale: float = FSCALE):
+    def cm5_charges(self, fscale: float = FSCALE, extended: bool = True):
         """Compute the CM5 atomic charges."""
         nat = self.data.natom
         qcm5 = np.empty(nat)
@@ -81,24 +81,24 @@ class CM5(Method):
                     bij = np.exp(
                         -alpha * (rij - self.atomradius[z[i]] - self.atomradius[z[j]])
                     )  # eq.2
-                    tij = _tij(z[i], z[j])
+                    tij = _tij(z[i], z[j], extended=extended)
                     s += tij * bij
                     # print(f"i: {i} j: {j} zi: {z[i]} zj: {z[j]} ri: {self.atomradius[z[i]]} rj: {self.atomradius[z[j]]} rij: {rij} bij: {bij} tij: {tij}")
             qcm5[i] = hirshfeld_charges[i] + s
         return qcm5
 
-    def dipole_moment(self, fscale: float = FSCALE):
+    def dipole_moment(self, fscale: float = FSCALE, extended: bool = True):
         """Compute the dipole moment from CM5 atomic charges."""
         nat = self.data.natom
         dipole = np.empty((3,))
-        cm5_charges = self.cm5_charges(fscale=fscale)
+        cm5_charges = self.cm5_charges(fscale=fscale, extended=extended)
         for i in range(0, nat):
             for j in range(0, 2):
                 dipole[j] += cm5_charges[i] * self.data.atomcoords[-1, i, j]
         dipole *= 4.802889778
         return dipole
 
-    def quadrupole_moment(self, fscale: float = FSCALE):
+    def quadrupole_moment(self, fscale: float = FSCALE, extended: bool = True):
         """Compute the quadrupole moment from CM5 atomic charges."""
         # This is the conversion factor used in https://github.com/hokru/cm5charges.
         # bohr = 0.52917726
@@ -106,7 +106,7 @@ class CM5(Method):
         atomcoords = convertor(self.data.atomcoords, "Angstrom", "bohr")
         nat = self.data.natom
         quad = np.empty((3, 3))
-        cm5_charges = self.cm5_charges(fscale=fscale)
+        cm5_charges = self.cm5_charges(fscale=fscale, extended=extended)
         for k in range(0, nat):
             dx = atomcoords[-1, k, 0]
             dy = atomcoords[-1, k, 1]
@@ -120,7 +120,7 @@ class CM5(Method):
         return quad
 
 
-def _tij(i: int, j: int, extended: bool = False) -> float:
+def _tij(i: int, j: int, extended: bool = True) -> float:
     """Compute a single $T_{kk'}$ in eq. (1) from 10.1021/ct200866d.
 
     This term may be computed from special case pairwise values in eq. (3) or
