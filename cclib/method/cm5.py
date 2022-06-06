@@ -16,10 +16,6 @@ import numpy as np
 import periodictable.covalent_radius as covalent_radius
 
 from cclib.method.calculationmethod import Method
-from cclib.parser.utils import convertor
-
-# https://github.com/hokru/cm5charges/blob/23f58b728e9f4af2306702c7cd48b1afb4b72b15/cm5.f90#L94
-FSCALE = 1.20
 
 
 class CM5(Method):
@@ -43,10 +39,10 @@ class CM5(Method):
         else:
             raise RuntimeError(f"invalid name for radii: {radii}")
 
-    def charges(self, fscale: float = FSCALE, extended: bool = True):
+    def charges(self, extended: bool = True):
         """Compute the CM5 atomic charges."""
         nat = self.data.natom
-        qcm5 = np.empty(nat)
+        qcm5 = np.zeros(nat)
         z = self.data.atomnos
         xyz = self.data.atomcoords[-1]
         hirshfeld_charges = self.data.atomcharges["hirshfeld"]
@@ -58,46 +54,14 @@ class CM5(Method):
             for j in range(0, nat):
                 if i != j:
                     rij = np.linalg.norm(np.subtract(xyz[i], xyz[j]))
+                    # eq. (2)
                     bij = np.exp(
                         -alpha * (rij - self.atomradius[z[i]] - self.atomradius[z[j]])
-                    )  # eq.2
+                    )
                     tij = _tij(z[i], z[j], extended=extended)
                     s += tij * bij
-                    # print(f"i: {i} j: {j} zi: {z[i]} zj: {z[j]} ri: {self.atomradius[z[i]]} rj: {self.atomradius[z[j]]} rij: {rij} bij: {bij} tij: {tij}")
             qcm5[i] = hirshfeld_charges[i] + s
         return qcm5
-
-    def dipole_moment(self, fscale: float = FSCALE, extended: bool = True):
-        """Compute the dipole moment from CM5 atomic charges."""
-        nat = self.data.natom
-        dipole = np.empty((3,))
-        cm5_charges = self.charges(fscale=fscale, extended=extended)
-        for i in range(0, nat):
-            for j in range(0, 2):
-                dipole[j] += cm5_charges[i] * self.data.atomcoords[-1, i, j]
-        dipole *= 4.802889778
-        return dipole
-
-    def quadrupole_moment(self, fscale: float = FSCALE, extended: bool = True):
-        """Compute the quadrupole moment from CM5 atomic charges."""
-        # This is the conversion factor used in https://github.com/hokru/cm5charges.
-        # bohr = 0.52917726
-        # atomcoords = self.data.atomcoords / bohr
-        atomcoords = convertor(self.data.atomcoords, "Angstrom", "bohr")
-        nat = self.data.natom
-        quad = np.empty((3, 3))
-        cm5_charges = self.charges(fscale=fscale, extended=extended)
-        for k in range(0, nat):
-            dx = atomcoords[-1, k, 0]
-            dy = atomcoords[-1, k, 1]
-            dz = atomcoords[-1, k, 2]
-            quad[0, 0] += dx * dx * cm5_charges[k]
-            quad[1, 1] += dy * dy * cm5_charges[k]
-            quad[2, 2] += dz * dz * cm5_charges[k]
-            quad[0, 1] += dx * dy * cm5_charges[k]
-            quad[0, 2] += dx * dz * cm5_charges[k]
-            quad[1, 2] += dy * dz * cm5_charges[k]
-        return quad
 
 
 def _tij(i: int, j: int, extended: bool = True) -> float:
@@ -218,7 +182,7 @@ def _tij(i: int, j: int, extended: bool = True) -> float:
 
 
 def _radii_cordero_pyykko(radii: str):
-    atomradius = np.empty(119)
+    atomradius = np.zeros(119)
     atomradius[0] = 0.20
 
     for line in covalent_radius.CorderoPyykko.split("\n"):
