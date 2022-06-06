@@ -1,36 +1,13 @@
-"""
-This file is an implementation of the Charge Model 5 that can be used to calculate CM5 Charges, dipole moment and quadrupole moment
+# -*- coding: utf-8 -*-
+#
+# Copyright (c) 2022, the cclib development team
+#
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
 
-It is based on this Fortran implementation: https://github.com/hokru/cm5charges
------------------------------------------------
-Points to be noted:
------------------------------------------------
-1) Only ORCA output files are supported, and "Print[P_Hirshfeld] 1" must be entered in the ORCA input file to produce Hirshfeld charges.
-2) Single bond atomic radii are considered.
-3) For Carbon, only sp3 atomic radius is considered.
+"""Compute Charge Model 5 (CM5) atomic charges and associated properties.
 
------------------------------------------------
-Example on how to Use this class:
------------------------------------------------
-from cclib.method import CM5
-from cclib.parser import ORCA
-
-parser = ORCA("water_hpa.out") #test file found in /cclib/data/ORCA/basicORCA4.2/
-data = parser.parse()
-
-cm5 = CM5(data, 1.20)
-print(cm5.cm5_charges())
-print(cm5.dipole_moment())
-print(cm5.quadrupole_moment())
-
-------------------------------------------------
-Output:
-------------------------------------------------
-[-0.3880329  0.2227029  0.16703  ]
-(array([-3.7422439 , -3.34907393,  0.80222668]), 5.0856910330516865)
-[[ 2.9476879   0.39972848 -0.47709812]
- [ 2.648237   -0.2199436  -0.65167883]
- [ 1.183168    1.256816   -0.11061444]]
+The description of charges is from https://doi.org/10.1021/ct200866d.
 """
 
 import logging
@@ -46,10 +23,13 @@ FSCALE = 1.20
 
 
 class CM5(Method):
-    """Compute Charge Model 5 (CM5) atomic charges.
+    """Compute Charge Model 5 (CM5) atomic charges and associated properties.
 
-    The description of charges is from https://doi.org/10.1021/ct200866d."""
-    def __init__(self, data, radii: str = "hkruse", progress=None, loglevel=logging.INFO, logname="Log"):
+    The description of charges is from https://doi.org/10.1021/ct200866d.
+
+    This implementation is derived from https://github.com/hokru.
+    """
+    def __init__(self, data, radii: str = "hokru", progress=None, loglevel=logging.INFO, logname="Log"):
         super().__init__(data, progress, loglevel, logname)
 
         self.required_attrs = ("natom", "atomcoords", "atomnos")
@@ -58,12 +38,12 @@ class CM5(Method):
             self.atomradius = _radii_cordero_pyykko(radii)
         elif radii == "Cordero":
             self.atomradius = _radii_cordero_pyykko(radii)
-        elif radii == "hkruse":
-            self.atomradius = _radii_hkruse()
+        elif radii == "hokru":
+            self.atomradius = _radii_hokru()
         else:
             raise RuntimeError(f"invalid name for radii: {radii}")
 
-    def cm5_charges(self, fscale: float = FSCALE, extended: bool = True):
+    def charges(self, fscale: float = FSCALE, extended: bool = True):
         """Compute the CM5 atomic charges."""
         nat = self.data.natom
         qcm5 = np.empty(nat)
@@ -91,7 +71,7 @@ class CM5(Method):
         """Compute the dipole moment from CM5 atomic charges."""
         nat = self.data.natom
         dipole = np.empty((3,))
-        cm5_charges = self.cm5_charges(fscale=fscale, extended=extended)
+        cm5_charges = self.charges(fscale=fscale, extended=extended)
         for i in range(0, nat):
             for j in range(0, 2):
                 dipole[j] += cm5_charges[i] * self.data.atomcoords[-1, i, j]
@@ -106,7 +86,7 @@ class CM5(Method):
         atomcoords = convertor(self.data.atomcoords, "Angstrom", "bohr")
         nat = self.data.natom
         quad = np.empty((3, 3))
-        cm5_charges = self.cm5_charges(fscale=fscale, extended=extended)
+        cm5_charges = self.charges(fscale=fscale, extended=extended)
         for k in range(0, nat):
             dx = atomcoords[-1, k, 0]
             dy = atomcoords[-1, k, 1]
@@ -272,7 +252,7 @@ def _radii_cordero_pyykko(radii: str):
     return atomradius
 
 
-def _radii_hkruse():
+def _radii_hokru():
     """Return the covalent radii found in
     https://github.com/hokru/cm5charges/blob/23f58b728e9f4af2306702c7cd48b1afb4b72b15/cm5.f90#L58."""
     # fmt: off
