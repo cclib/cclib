@@ -41,6 +41,9 @@ import periodictable.covalent_radius as covalent_radius
 from cclib.method.calculationmethod import Method
 from cclib.parser.utils import convertor
 
+# https://github.com/hokru/cm5charges/blob/23f58b728e9f4af2306702c7cd48b1afb4b72b15/cm5.f90#L94
+FSCALE = 1.20
+
 
 class CM5(Method):
     """Compute Charge Model 5 (CM5) atomic charges.
@@ -60,7 +63,7 @@ class CM5(Method):
         else:
             raise RuntimeError(f"invalid name for radii: {radii}")
 
-    def cm5_charges(self):
+    def cm5_charges(self, fscale: float = FSCALE):
         """Compute the CM5 atomic charges."""
         nat = self.data.natom
         qcm5 = np.empty(nat)
@@ -70,39 +73,41 @@ class CM5(Method):
 
         alpha = 2.474  # Angstrom
 
-        for i in range(0, nat - 1):
+        for i in range(0, nat):
             s = 0
-            for j in range(0, nat - 1):
+            for j in range(0, nat):
                 if i != j:
-                    rij = np.linalg.norm(np.subtract(xyz[i], xyz[j]))  # = nuclear.get_distances()
+                    rij = np.linalg.norm(np.subtract(xyz[i], xyz[j]))
                     bij = np.exp(
                         -alpha * (rij - self.atomradius[z[i]] - self.atomradius[z[j]])
                     )  # eq.2
-                    s += _tij(z[i], z[j]) * bij
+                    tij = _tij(z[i], z[j])
+                    s += tij * bij
+                    # print(f"i: {i} j: {j} zi: {z[i]} zj: {z[j]} ri: {self.atomradius[z[i]]} rj: {self.atomradius[z[j]]} rij: {rij} bij: {bij} tij: {tij}")
             qcm5[i] = hirshfeld_charges[i] + s
         return qcm5
 
-    def dipole_moment(self):
+    def dipole_moment(self, fscale: float = FSCALE):
         """Compute the dipole moment from CM5 atomic charges."""
         nat = self.data.natom
-        dipole = np.empty(nat)
-        cm5_charges = self.cm5_charges()
+        dipole = np.empty((3,))
+        cm5_charges = self.cm5_charges(fscale=fscale)
         for i in range(0, nat):
             for j in range(0, 2):
-                dipole[j] += cm5_charges[i] * self.data.atomcoords[-1, j, i] * self.fscale
+                dipole[j] += cm5_charges[i] * self.data.atomcoords[-1, i, j]
         dipole *= 4.802889778
-        s = np.sqrt(dipole[0] ** 2 + dipole[1] ** 2 + dipole[2] ** 2)
-        return dipole, s
+        return dipole
 
-    def quadrupole_moment(self):
+    def quadrupole_moment(self, fscale: float = FSCALE):
         """Compute the quadrupole moment from CM5 atomic charges."""
         # This is the conversion factor used in https://github.com/hokru/cm5charges.
         # bohr = 0.52917726
+        # atomcoords = self.data.atomcoords / bohr
         atomcoords = convertor(self.data.atomcoords, "Angstrom", "bohr")
         nat = self.data.natom
-        quad = np.empty([nat, nat])
-        cm5_charges = self.cm5_charges()
-        for k in range(0, nat - 1):
+        quad = np.empty((3, 3))
+        cm5_charges = self.cm5_charges(fscale=fscale)
+        for k in range(0, nat):
             dx = atomcoords[-1, k, 0]
             dy = atomcoords[-1, k, 1]
             dz = atomcoords[-1, k, 2]
@@ -115,7 +120,7 @@ class CM5(Method):
         return quad
 
 
-def _tij(i: int, j: int, extended: bool = True) -> float:
+def _tij(i: int, j: int, extended: bool = False) -> float:
     """Compute a single $T_{kk'}$ in eq. (1) from 10.1021/ct200866d.
 
     This term may be computed from special case pairwise values in eq. (3) or
@@ -123,8 +128,8 @@ def _tij(i: int, j: int, extended: bool = True) -> float:
 
     Notation-wise, k and k prime are renamed to i and j.
 
-    These include the extended set of parameters presented in the Supporting
-    Information.
+    These optionally include the extended set of parameters presented in the
+    Supporting Information.
 
     Arguments
     ---------
@@ -143,8 +148,9 @@ def _tij(i: int, j: int, extended: bool = True) -> float:
 
     tij = 0.0
 
-    #               H-C     H-N     H-O     C-N     C-O     N-O
-    dzz = np.array([0.0502, 0.1747, 0.1671, 0.0556, 0.0234, -0.0346])
+    # A dummy first index is used to match the Fortran implementation.
+    #                    H-C     H-N     H-O     C-N     C-O     N-O
+    dzz = np.array([0.0, 0.0502, 0.1747, 0.1671, 0.0556, 0.0234, -0.0346])
 
     # catch special cases
     if i == 1:
