@@ -839,11 +839,14 @@ class Turbomole(logfileparser.Logfile):
         #     Method          :  MP2     
         #     Total Energy    :    -75.0009789796
         # ------------------------------------------------
-        if "Method          :  MP2" in line:
-            line = next(inputfile)
-            mp2energy = [utils.convertor(utils.float(line.split()[3]), 'hartree', 'eV')]
-            self.append_attribute('mpenergies', mp2energy)
-            self.metadata['methods'].append("MP2")
+        # Need to be careufl here, in some ricc2 calcs this line will appear even tho
+        # we already have this MP2 energy from the above section.
+        if not hasattr(self, "mpenergies"):
+            if "Method          :  MP2" in line:
+                line = next(inputfile)
+                mp2energy = [utils.convertor(utils.float(line.split()[3]), 'hartree', 'eV')]
+                self.append_attribute('mpenergies', mp2energy)
+                self.metadata['methods'].append("MP2")
 
 
         # Excited state info from escf.
