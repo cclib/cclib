@@ -839,8 +839,8 @@ class Turbomole(logfileparser.Logfile):
         #     Method          :  MP2     
         #     Total Energy    :    -75.0009789796
         # ------------------------------------------------
-        # Need to be careufl here, in some ricc2 calcs this line will appear even tho
-        # we already have this MP2 energy from the above section.
+        # Need to be careufl here, in some ricc2 calcs (opts?) this line will appear even
+        # though we already have this MP2 energy from the above section.
         if not hasattr(self, "mpenergies"):
             if "Method          :  MP2" in line:
                 line = next(inputfile)
