@@ -2689,6 +2689,9 @@ def testTurbomole_Turbomole7_2_dvb_gopt_b3_lyp_Gaussian__(logfile):
     assert logfile.data.natom == 20
 
 
+def testTurbomole_Turbomole7_5_mp2_opt__(logfile):
+    assert len(logfile.data.scfenergies) == len(logfile.data.mpenergies)
+
 # These regression tests are for logfiles that are not to be parsed
 # for some reason, and the function should start with 'testnoparse'.
 
