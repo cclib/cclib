@@ -65,7 +65,16 @@ atomcharges
 
 The attribute ``atomcharges`` contains the atomic partial charges as taken from the output file. Since these charges are arbitrary and depend on the details of a population analysis, this attribute is dictionary containing any number of various atomic charges. The keys in this dictionary are strings naming the population analysis, and the values are arrays of rank 1 and contain the actual charges.
 
-Currently, cclib parses Mulliken, Löwdin, NPA and CHELPG charges, whose respective dictionary keys are ``mulliken``, ``lowdin``, ``natural`` and ``chelpg``.
+Currently, cclib parses several different charge types depending on the program:
+
+    =========== ==============================
+    charge type name of key in ``atomcharges``
+    =========== ==============================
+    Mulliken    ``mulliken``
+    Löwdin      ``lowdin``
+    NPA         ``natural``
+    CHELPG      ``chelpg``
+    =========== ==============================
 
 In practice, these may differ somewhat from the values cclib calculates in the various `calculation methods`_.
 
