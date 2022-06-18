@@ -73,6 +73,7 @@ Currently, cclib parses several different charge types depending on the program:
     Mulliken     ``mulliken``
     Löwdin       ``lowdin``
     NPA          ``natural``
+    `APT`_       ``apt``
     CHELPG       ``chelpg``
     `Hirshfeld`_ ``hirshfeld``
     `CM5`_       ``cm5``
@@ -83,6 +84,7 @@ In practice, these may differ somewhat from the values cclib calculates in the v
 **Molpro**: use the ``pop`` command (see https://www.molpro.net/manual/doku.php?id=properties_and_expectation_values&s[]=population&s[]=analysis#calling_the_population_analysis_program_pop).
 
 .. _`calculation methods`: methods.html
+.. _`APT`: https://doi.org/10.1016/j.theochem.2010.06.011
 .. _`CM5`: https://doi.org/10.1021/ct200866d
 .. _`Hirshfeld`: https://doi.org/10.1007/BF01113058
 
