@@ -81,6 +81,8 @@ Currently, cclib parses several different charge types depending on the program:
 
 In practice, these may differ somewhat from the values cclib calculates in the various `calculation methods`_.
 
+**Gaussian**: additional sections are present where the partial charge on each hydrogen is added into the heavy atom it is connected to ("charges with hydrogens summed into heavy atoms").  For each charge schema (such as ``mulliken``), a corresponding key with ``_sum`` appended will be present (``mulliken_sum``) with these charges, and hydrogens will be present but set to zero.
+
 **Molpro**: use the ``pop`` command (see https://www.molpro.net/manual/doku.php?id=properties_and_expectation_values&s[]=population&s[]=analysis#calling_the_population_analysis_program_pop).
 
 .. _`calculation methods`: methods.html
