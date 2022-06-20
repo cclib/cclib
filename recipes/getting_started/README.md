@@ -97,6 +97,6 @@ If all goes well, cclib should be able to identify the generating code and parse
 
 ## How to proceed?
 More examples are availible in the `cclib/recipes` directory.
-Also further information can be found in the documentation online at https://cclib.github.io/.
+Also further information can be found in the documentation online at https://cclib.github.io.
 If you have any questions start at discussion in the google group at https://groups.google.com/g/cclib.
-If you encounter any bugs (or have code to contribute!) visit the github at github.com/cclib/cclib/.
+If you encounter any bugs (or have code to contribute!) visit the github at https://github.com/cclib/cclib.
