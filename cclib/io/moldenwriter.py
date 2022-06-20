@@ -218,7 +218,7 @@ class MOLDEN(filewriter.Writer):
             atomcoords_lines = ["[FR-COORD]"]
             for atomsym, atomcoord in zip(atomsyms, atomcoords):
                 atomcoords_lines.append(
-                    "{:3s} {:15.8f} {:15.8f} {:15.8f}".format(atomsym, *atomcoord)
+                    f"{atomsym:3s} {atomcoord[0]:15.8f} {atomcoord[1]:15.8f} {atomcoord[2]:15.8f}"
                 )
             lines.append("\n".join(atomcoords_lines))
 
@@ -228,8 +228,9 @@ class MOLDEN(filewriter.Writer):
             for vibidx in range(vibdisps.shape[0]):
                 vibdisps_lines.append(f"vibration {vibidx + 1}")
                 for iatom in range(vibdisps.shape[1]):
+                    vibdisp = vibdisps[vibidx, iatom]
                     vibdisps_lines.append(
-                        "{:15.8f} {:15.8f} {:15.8f}".format(*vibdisps[vibidx, iatom])
+                        f"{vibdisp[0]:15.8f} {vibdisp[1]:15.8f} {vibdisp[2]:15.8f}"
                     )
             lines.append("\n".join(vibdisps_lines))
 
