@@ -5,12 +5,14 @@ cclib is a Python library that provides parsers for output files of computationa
 cclib has two interfaces a command line interface and a python interface.
 
 ## Prerequisites
-  - A quantum chemistry output file that you would like to parse. If you don't have one grab one from the test datafiles in the cclib/data folder.
-  - An installed version of cclib (See https://cclib.github.io/how_to_install.html)
+
+- A quantum chemistry output file that you would like to parse. If you don't have one grab one from the test datafiles in the `cclib/data` folder.
+- An installed version of cclib (See https://cclib.github.io/how_to_install.html)
 
 ## Your first extraction (command line interface)
 
 ### What can cclib extract from my file?
+
 To see all of the possible attributes that cclib can extract from your output file try running the following command
 ```
 ccget --list [filename]
@@ -18,7 +20,7 @@ ccget --list [filename]
 
 If all goes well, cclib should be able to identify the generating code and parse attributes from the file. The command will list all of the identified attributes. For example
 ```
-$ ccget --list dvb_sp.out 
+$ ccget --list dvb_sp.out
 Attempting to read dvb_sp.out
 cclib can parse the following attributes from dvb_sp.out:
   aonames
@@ -43,10 +45,10 @@ cclib can parse the following attributes from dvb_sp.out:
   scfenergies
   scftargets
   scfvalues
-
 ```
 
 ### Access some data
+
 From the above list, accessing data is as simple as
 
 ```
@@ -62,20 +64,20 @@ moenergies
          10.4277565 ,   10.47415191,   11.26540457,   11.28929616,   11.68609258,   12.05581367,   12.44597051,
          13.11651346,   14.40241467,   14.96816657,   15.78581427,   16.38585252,   17.10499501,   17.51156031,
          18.68279275,   19.62210255,   21.30161644,   21.71501181])]
-
 ```
 
 ## Your first extraction (Python interface)
 
 ### What can cclib extract from my file?
+
 Loading an output file. The following code snippet will allow you to read in a data file.
-```
->>> import cclib 
+``` python
+>>> import cclib
 >>> data = cclib.io.ccread("dvb_sp.out")
 ```
 
 If all goes well, cclib should be able to identify the generating code and parse attributes from the file. All of the parsed attributes should be accessible in the ccData object.
-```
+``` python
 >>> print(data.moenergies)
 [array([-272.56721939, -272.56591324, -272.23768951, -272.2376623 ,
        -272.20762093, -272.20756651, -272.18990632, -272.18601509,
@@ -94,8 +96,8 @@ If all goes well, cclib should be able to identify the generating code and parse
          18.68279275,   19.62210255,   21.30161644,   21.71501181])]
 ```
 
-
 ## How to proceed?
+
 More examples are availible in the `cclib/recipes` directory.
 Also further information can be found in the documentation online at https://cclib.github.io.
 If you have any questions start at discussion in the google group at https://groups.google.com/g/cclib.
