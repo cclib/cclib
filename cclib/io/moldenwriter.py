@@ -59,13 +59,11 @@ class MOLDEN(filewriter.Writer):
         atomnos = self.ccdata.atomnos
         nos = range(self.ccdata.natom)
 
-        # element_name number atomic_number x y z
-        atom_template = "{:2s} {:5d} {:2d} {:12.6f} {:12.6f} {:12.6f}"
         lines = []
         for element, no, atomno, coord in zip(elements, nos, atomnos,
                                               atomcoords):
             x, y, z = map(round_molden, coord)
-            lines.append(atom_template.format(element, no + 1, atomno, x, y, z))
+            lines.append(f"{element:2s} {no + 1:5d} {atomno:2d} {x:12.6f} {y:12.6f} {z:12.6f}")
 
         return lines
 
@@ -81,17 +79,14 @@ class MOLDEN(filewriter.Writer):
         """
 
         gbasis = self.ccdata.gbasis
-        label_template = "{:s} {:5d} 1.00"
-        basis_template = "{:15.9e} {:15.9e}"
         lines = []
 
         for no, basis in enumerate(gbasis):
             lines.append(f"{no + 1:3d} 0")
             for prims in basis:
-                lines.append(label_template.format(prims[0].lower(),
-                                                   len(prims[1])))
+                lines.append(f"{prims[0].lower():s} {len(prims[1]):5d} 1.00")
                 for prim in prims[1]:
-                    lines.append(basis_template.format(prim[0], prim[1]))
+                    lines.append(f"{prim[0]:15.9e} {prim[1]:15.9e}")
             lines.append('')
         lines.append('')
         return lines
