@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""qchem_make_freq_input_from_opt.py: Make an input file for a Q-Chem
+r"""qchem_make_freq_input_from_opt.py: Make an input file for a Q-Chem
 frequency calculation based on the last possible geometry from a
 Q-Chem geometry optimization.
 
@@ -98,12 +98,9 @@ def getargs():
     parser = argparse.ArgumentParser()
 
     parser.add_argument("outputfilename", nargs="+")
+    parser.add_argument("--fragment", action="store_true", help="Is this a fragment calculation?")
 
-    parser.add_argument("--fragment", action="store_true", help="Is this a QChem Fragment calculation?")
-
-    args = parser.parse_args()
-
-    return args
+    return parser.parse_args()
 
 
 def parse_rem_section(outputfilename):

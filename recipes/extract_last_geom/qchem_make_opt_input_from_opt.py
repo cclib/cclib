@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""qchem_make_opt_input_from_opt.py: Make an input file for a Q-Chem
+r"""qchem_make_opt_input_from_opt.py: Make an input file for a Q-Chem
 geometry optimization based on the last possible geometry from a
 Q-Chem geometry optimization; this effectively 'restarts' the geometry
 with a new filename.
@@ -14,7 +14,6 @@ number incremented by one.
 
 import os.path
 import re
-from collections import OrderedDict
 
 import cclib
 from cclib.parser.utils import PeriodicTable
@@ -37,12 +36,9 @@ def getargs():
     parser = argparse.ArgumentParser()
 
     parser.add_argument("outputfilename", nargs="+")
+    parser.add_argument("--fragment", action="store_true", help="Is this a fragment calculation?")
 
-    parser.add_argument("--fragment", action="store_true", help="Is this a QChem Fragment calculation?")
-
-    args = parser.parse_args()
-
-    return args
+    return parser.parse_args()
 
 
 def parse_user_input(outputfilename):

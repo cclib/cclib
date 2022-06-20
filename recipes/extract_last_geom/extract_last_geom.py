@@ -30,13 +30,11 @@ def getargs():
 
     parser.add_argument("outputfilename", nargs="+")
 
-    parser.add_argument("--fragment", action="store_true", help="Is this a QChem Fragment calculation?")
-    parser.add_argument("--trajectory", action="store_true", help="Should all geometries from the QChem outputfile be saved?")
+    parser.add_argument("--fragment", action="store_true", help="Is this a fragment calculation?")
+    parser.add_argument("--trajectory", action="store_true", help="Should all geometries from the outputfile be saved?")
     parser.add_argument("--suffix", help="output geometry format.")
 
-    args = parser.parse_args()
-
-    return args
+    return parser.parse_args()
 
 
 if __name__ == "__main__":
@@ -47,6 +45,7 @@ if __name__ == "__main__":
 
     for outputfilename in args.outputfilename:
 
+        # We don't use ccread in order to later dispatch on the type
         job = ccopen(outputfilename)
         try:
             data = job.parse()
@@ -76,9 +75,10 @@ if __name__ == "__main__":
                 fh.write("\n")
                 print(xyzfilename)
 
+            # If this is from a fragment calculation, print a single fragment
+            # "XYZ" file as well.  Since we can't detect this yet, it must be
+            # explicitly passed as a flag.
             if args.fragment:
-                # If this is from a Q-Chem fragment calculation, print a single
-                # fragment "XYZ" file as well.
                 if isinstance(job, cclib.parser.qchemparser.QChem):
                     user_input = parse_user_input(outputfilename)
                     charges, multiplicities, start_indices = parse_fragments_from_molecule(
@@ -99,3 +99,11 @@ if __name__ == "__main__":
                         fh.write("\n".join(molecule_section))
                         fh.write("\n")
                         print(fragxyzfilename)
+                elif isinstance(job, cclib.parser.psi4parser.Psi4):
+                    raise RuntimeError(
+                        f"Don't know how to handle fragments originating from Psi4 (yet)"
+                    )
+                else:
+                    raise RuntimeError(
+                        f"Don't know how to handle fragments originating from {type(job)}"
+                    )
