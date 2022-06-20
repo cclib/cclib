@@ -30,9 +30,9 @@ def getargs():
 
     parser.add_argument("outputfilename", nargs="+")
 
-    parser.add_argument("--fragment", action="store_true")
-    parser.add_argument("--trajectory", action="store_true")
-    parser.add_argument("--suffix")
+    parser.add_argument("--fragment", action="store_true", help="Is this a QChem Fragment calculation?")
+    parser.add_argument("--trajectory", action="store_true", help="Should all geometries from the QChem outputfile be saved?")
+    parser.add_argument("--suffix", help="output geometry format.")
 
     args = parser.parse_args()
 

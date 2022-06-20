@@ -24,7 +24,7 @@ def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument("compchemfilename", nargs="+")
-    parser.add_argument("--scaling-energy-change", type=float, default=10.0)
+    parser.add_argument("--scaling-energy-change", type=float, default=10.0, help="Factor to scale the energy change by")
 
     args = parser.parse_args()
     compchemfilenames = args.compchemfilename

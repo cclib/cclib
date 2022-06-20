@@ -99,7 +99,7 @@ def getargs():
 
     parser.add_argument("outputfilename", nargs="+")
 
-    parser.add_argument("--fragment", action="store_true")
+    parser.add_argument("--fragment", action="store_true", help="Is this a QChem Fragment calculation?")
 
     args = parser.parse_args()
 
