@@ -995,6 +995,26 @@ class Turbomole(logfileparser.Logfile):
             
             self.append_attribute("etdips", [tdm_x, tdm_y, tdm_z])
             
+            # Mag dips.
+            while "Magnetic transition dipole moment / i:" not in line:
+                line = next(inputfile)
+            line = next(inputfile)
+            
+            line = next(inputfile)
+            tmdm_x = float(line.split()[1])
+            line = next(inputfile)
+            tmdm_y = float(line.split()[1])
+            line = next(inputfile)
+            tmdm_z = float(line.split()[1])
+            
+            # It's not at all clear what units turbomole is using for its TMDM,
+            # they appear to be equal to bohr-magneton / ~274.03011803.
+            # For now, we will multiply the values by 137.015059015 (to get into
+            # a.u. which is the defacto TMDM unit in cclib?).
+            self.append_attribute("etmagdips", [i * 137.015059015 for i in (tmdm_x, tmdm_y, tmdm_z)])
+            
+            
+            
         # Excitation energies with ricc2.
         #  +================================================================================+
         #  | sym | multi | state |          CC2 excitation energies       |  %t1   |  %t2   |
