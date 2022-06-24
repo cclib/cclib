@@ -1007,7 +1007,7 @@ class Turbomole(logfileparser.Logfile):
             line = next(inputfile)
             tmdm_z = float(line.split()[1])
             
-            # It's not at all clear what units turbomole is using for its TMDM,
+            # No idea what units Turbomole is using for its TMDM here,
             # they appear to be equal to bohr-magneton / ~274.03011803.
             # For now, we will multiply the values by 137.015059015 (to get into
             # a.u. which is the defacto TMDM unit in cclib?).
