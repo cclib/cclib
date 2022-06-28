@@ -30,7 +30,7 @@ To test, try importing NumPy at the Python prompt. You should see something simi
 	Type "help", "copyright", "credits" or "license" for more information.
 	>>> import numpy
 	>>> numpy.__version__
-	'1.7.1'
+	'1.7.2'
 
 (To exit, press CTRL+Z in Windows or CTRL+D in Linux)
 
@@ -55,7 +55,7 @@ To test, trying importing cclib at the Python prompt. You should see something s
 	  History is saved to ~/.pyhistory.
 	>>> import cclib
 	>>> cclib.__version__
-	'1.7.1'
+	'1.7.2'
 
 To run the unit tests, change directory into INSTALLDIR/test and run the following command:
 

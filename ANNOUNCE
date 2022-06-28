@@ -1,4 +1,4 @@
-On behalf of the cclib development team, we are pleased to announce the release of cclib 1.7.1, which is now available for download from https://cclib.github.io. This is a major update to version 1.6.4 that drops support for Python 2, and includes several small improvements.
+On behalf of the cclib development team, we are pleased to announce the release of cclib 1.7.2, which is now available for download from https://cclib.github.io. This is a major update to version 1.6.4 that drops support for Python 2, and includes several small improvements.
 
 WARNING: Support for Python 2 is dropped in this version.
 

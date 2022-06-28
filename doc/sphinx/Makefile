@@ -22,7 +22,7 @@ clean:
 	-rm -rf attributes*.rst
 	-rm -rf coverage*.rst
 
-PRODUCTION_VERSION = v1.7.1
+PRODUCTION_VERSION = v1.7.2
 CCLIB_PROD = $(BUILDDIR)/cclib_prod
 CCLIB_DEV = $(BUILDDIR)/cclib_dev
 SRC_PROD = $(CCLIB_PROD)/cclib
