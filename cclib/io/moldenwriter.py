@@ -299,7 +299,7 @@ class MoldenReformatter:
         0.9910616900D+02 --> 9.910617e+01
         """
         num = num.replace("D", "e")
-        return str(f"{decimal.Decimal(num):.9e}")
+        return f"{decimal.Decimal(num):.9e}"
 
     def reformat(self):
         """Reformat Molden output file to:
@@ -308,11 +308,14 @@ class MoldenReformatter:
         - replace multiple spaces with single."""
         filelines = iter(self.filestring.split("\n"))
         lines = []
+        is_header = False
 
         for line in filelines:
             line = line.replace('\n', '')
             # Replace multiple spaces with single spaces.
             line = ' '.join(line.split())
+
+            is_header = line and line[0] == "[" and line[-1] == "]"
 
             # Check for [Title] section.
             if '[title]' in line.lower():
@@ -331,7 +334,7 @@ class MoldenReformatter:
                 continue
 
             # Convert D notation to scientific notation.
-            if 'D' in line:
+            if not is_header and 'D' in line:
                 vals = line.split()
                 vals = [self.scinotation(i) for i in vals]
                 lines.append(' '.join(vals))
