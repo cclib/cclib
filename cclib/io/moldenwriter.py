@@ -207,7 +207,8 @@ class MOLDEN(filewriter.Writer):
             vibfreqs_lines.extend([f"{vibfreq:16.8f}" for vibfreq in vibfreqs])
             lines.append("\n".join(vibfreqs_lines))
 
-        if hasattr(self.ccdata, "atomcoords") and hasattr(self.ccdata, "atomnos"):
+        if all(hasattr(self.ccdata, attrname) for attrname in ("atomcoords", "atomnos")) and \
+           any(hasattr(self.ccdata, attrname) for attrname in ("vibfreqs", "vibdisps", "vibirs")):
             atomcoords = utils.convertor(self.ccdata.atomcoords[0], "Angstrom", "bohr")
             atomsyms = (self.pt.element[atomno] for atomno in self.ccdata.atomnos)
             atomcoords_lines = ["[FR-COORD]"]
