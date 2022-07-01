@@ -1007,11 +1007,11 @@ class Turbomole(logfileparser.Logfile):
             line = next(inputfile)
             tmdm_z = float(line.split()[1])
             
-            # No idea what units Turbomole is using for its TMDM here,
-            # they appear to be equal to bohr-magneton / ~274.03011803.
-            # For now, we will multiply the values by 137.015059015 (to get into
-            # a.u. which is the defacto TMDM unit in cclib?).
-            self.append_attribute("etmagdips", [i * 137.015059015 for i in (tmdm_x, tmdm_y, tmdm_z)])
+            # The Turbomole TEDM units are equivalent to bohr-magneton * 0.5a,
+            # where a is the fine structure constant (~ 1/137) (Thanks to Uwe Huniar for this info).
+            # Weirdly, this conversion does not seem to exactly match the bohr-magneton value
+            # printed by turbomole...
+            self.append_attribute("etmagdips", [i / (0.5 * (1/137.036)) for i in (tmdm_x, tmdm_y, tmdm_z)])
             
             
             
