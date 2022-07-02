@@ -209,6 +209,10 @@ class MOLDEN(filewriter.Writer):
 
         if all(hasattr(self.ccdata, attrname) for attrname in ("atomcoords", "atomnos")) and \
            any(hasattr(self.ccdata, attrname) for attrname in ("vibfreqs", "vibdisps", "vibirs")):
+            # Selecting the first set of coordinates works for when the
+            # frequency calculation is done via finite difference, but not
+            # with multi-part inputs, which there is currently no way of
+            # detecting.
             atomcoords = utils.convertor(self.ccdata.atomcoords[0], "Angstrom", "bohr")
             atomsyms = (self.pt.element[atomno] for atomno in self.ccdata.atomnos)
             atomcoords_lines = ["[FR-COORD]"]
