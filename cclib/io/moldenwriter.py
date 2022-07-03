@@ -223,7 +223,7 @@ class MOLDEN(filewriter.Writer):
             lines.append("\n".join(atomcoords_lines))
 
         if hasattr(self.ccdata, "vibdisps"):
-            vibdisps = utils.convertor(self.ccdata.vibdisps, "Angstrom", "bohr")
+            vibdisps = self.ccdata.vibdisps
             vibdisps_lines = ["[FR-NORM-COORD]"]
             for vibidx in range(vibdisps.shape[0]):
                 vibdisps_lines.append(f"vibration {vibidx + 1}")
