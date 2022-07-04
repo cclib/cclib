@@ -173,12 +173,15 @@ class Gaussian(logfileparser.Logfile):
         # Extract the version number: "Gaussian 09, Revision D.01"
         # becomes "09revisionD.01".
         if line.strip() == "Cite this work as:":
-            tokens = next(inputfile).split()
+            qm_program = next(inputfile)
+            tokens = qm_program.split()
             self.metadata["legacy_package_version"] = ''.join([
                 tokens[1][:-1],
                 'revision',
                 tokens[-1][:-1],
             ])
+
+            self.set_attribute('qm_program', qm_program[1:-2])
 
         # Extract the version number: "Gaussian 98: x86-Linux-G98RevA.11.3
         # 5-Feb-2002" becomes "1998+A.11.3", and "Gaussian 16:
@@ -192,10 +195,232 @@ class Gaussian(logfileparser.Logfile):
             platform = "-".join(platform_full_version_tokens[:-1])
             year_suffix = full_version[1:3]
             revision = full_version[6:]
-            self.metadata[
-                "package_version"
-            ] = f"{self.YEAR_SUFFIXES_TO_YEARS[year_suffix]}+{revision}"
-            self.metadata["platform"] = platform
+
+            self.metadata["package_version"] = "{}+{}".format(
+                self.YEAR_SUFFIXES_TO_YEARS[year_suffix], revision
+            )
+            self.set_attribute('run_date', run_date)
+        
+        # Extract number of processors, memory, keywords line, solvation,
+        # empirical dispersion and type of system (ground or transition state)
+        # ******************************************
+        # %mem=24GB
+        # %nprocshared=12
+        # Will use up to   12 processors via shared memory.
+        # %chk=Int23.chk
+        # ----------------------------------------------------------------------
+        # # uM062X/Def2TZVP guess=read geom=check opt=(calcfc,ts,noeigen,maxstep
+        # =5) freq=noraman
+        # ----------------------------------------------------------------------
+        elif '%mem' in line:
+            mem = line.strip().split('=')[-1]
+            self.set_attribute('memory', mem)
+
+        elif '%nprocs' in line:
+            nprocs = int(line.strip().split('=')[-1])
+            self.set_attribute('processors', nprocs)
+            
+        elif '#' in line and not hasattr(self, 'keywords_line'):
+            keywords_line = ''
+            while '----------' not in line:
+                keywords_line += line.rstrip("\n")[1:]
+                line = next(inputfile)
+                self.set_attribute('keywords_line', keywords_line[2:])
+            qm_solv,qm_disp = 'gas_phase','none'
+            calc_type = 'ground_state'
+            calcfc_found, ts_found = False, False
+            for keyword in keywords_line.split():
+                if keyword.lower().find('opt') > -1:
+                    if keyword.lower().find('calcfc') > -1:
+                        calcfc_found = True
+                    if keyword.lower().find('ts') > -1:
+                        ts_found = True
+                elif keyword.lower().startswith('scrf'):
+                    qm_solv = keyword
+                elif keyword.lower().startswith('emp'):
+                    qm_disp = keyword
+            if calcfc_found and ts_found:
+                calc_type = 'transition_state'
+            self.set_attribute('solvation', qm_solv)
+            self.set_attribute('dispersion', qm_disp)
+            self.set_attribute('calc_type', calc_type)
+
+        # Extract grid type
+        # ExpMin= 9.52D-02 ExpMax= 1.36D+04 ExpMxC= 4.63D+02 IAcc=3 IRadAn=         5 AccDes= 0.00D+00
+        elif line[1:8] == 'ExpMin=':
+            grid_lookup = {1: 'sg1', 2: 'coarse', 4: 'fine', 5: 'ultrafine', 7: 'superfine'}
+            IRadAn = int(line.strip().split()[-3])
+            grid = grid_lookup[IRadAn]
+            self.set_attribute('grid', grid)
+
+        # Extract <S**2> before and after spin annihilation
+        # <Sx>= 0.0000 <Sy>= 0.0000 <Sz>= 0.0000 <S**2>= 1.0237 S= 0.6286
+        # <L.S>= 0.000000000000E+00
+        # Annihilation of the first spin contaminant:
+        # S**2 before annihilation     1.0237,   after     0.2796
+        elif 'S**2 before annihilation' in line:
+            if not hasattr(self, 's2_after_anni'):
+                self.s2_afteranni = []
+                self.s2_beforeanni = []
+                self.s2_afteranni_fin = []
+                self.s2_beforeanni_fin = []
+            self.s2_afteranni.append(float(line.strip().split()[-1]))
+            self.s2_beforeanni.append(float(line.strip().split()[-3][:-1]))
+            self.s2_afteranni_fin = float(line.strip().split()[-1])
+            self.s2_beforeanni_fin = float(line.strip().split()[-3][:-1])
+            self.set_attribute('s2_after_anni', self.s2_afteranni)
+            self.set_attribute('s2_before_anni', self.s2_beforeanni)
+            self.set_attribute('s2_after_anni_fin', self.s2_afteranni_fin)
+            self.set_attribute('s2_before_anni_fin', self.s2_beforeanni_fin)
+
+        # Extract symmetry point group
+        #  Full point group                 C1      NOp   1
+        elif 'Full point group' in line:
+            point_group = line.strip().split()[3]
+            self.set_attribute('point_group', point_group)
+
+        # Extract symmetry number, rotational constants and rotational temperatures
+        elif 'Rotational symmetry number' in line:
+            symmno = int(line.strip().split()[3].split(".")[0])
+            self.set_attribute('symmno', symmno)	
+
+        elif line.find('Rotational constants (GHZ):') > -1:
+            try:
+                roconst = [float(line.strip().replace(':', ' ').split()[3]),
+                                float(line.strip().replace(':', ' ').split()[4]),
+                                float(line.strip().replace(':', ' ').split()[5])]
+                self.set_attribute('roconst', roconst)
+            except ValueError:
+                if line.find('********') > -1:
+                    roconst = [float(line.strip().replace(':', ' ').split()[4]),
+                                    float(line.strip().replace(':', ' ').split()[5])]
+                    self.set_attribute('roconst', roconst)
+                
+        elif line.find('Rotational temperature ') > -1:
+            rotemp = [float(line.strip().split()[3])]
+            self.set_attribute('rotemp', rotemp)
+        elif line.find('Rotational temperatures') > -1:
+            try:
+                rotemp = [float(line.strip().split()[3]), float(line.strip().split()[4]),
+                            float(line.strip().split()[5])]
+                self.set_attribute('rotemp', rotemp)
+            except ValueError:
+                if line.find('********') > -1:
+                    rotemp = [float(line.strip().split()[4]), float(line.strip().split()[5])]
+                    self.set_attribute('rotemp', rotemp)
+        
+        # Detects how many times the calculation found a stationary point. This is important
+        # to detect a problem where Gaussian converges during the optimization step but the
+        # following frequency calculation does not converge (https://gaussian.com/faq3/)
+        #     -- Stationary point found.
+        if line.find('Stationary point found') > -1:
+            if not hasattr(self, 'times_converged'):
+                self.set_attribute('times_converged', 1)
+            else:
+                self.set_attribute('times_converged', 2)
+
+        # Extract NMR data
+        #  SCF GIAO Magnetic shielding tensor (ppm):
+        #     1  C    Isotropic =   136.4123   Anisotropy =    76.5152
+        # XX=   187.1326   YX=     5.1847   ZX=     0.0000
+        # XY=     4.4768   YY=   106.8859   ZY=     0.0000
+        # XZ=     0.0001   YZ=     0.0000   ZZ=   115.2183
+        # Eigenvalues:   106.5961   115.2183   187.4224
+        #     2  H    Isotropic =    28.1863   Anisotropy =     7.5535
+        # XX=    31.4332   YX=    -4.6376   ZX=     0.0000
+        # XY=    -1.4964   YY=    27.9636   ZY=     0.0000
+        # XZ=     0.0000   YZ=     0.0000   ZZ=    25.1622
+        # Eigenvalues:    25.1622    26.1748    33.2220
+        # End of Minotr F.D. properties file   721 does not exist.
+        # End of Minotr F.D. properties file   722 does not exist.
+        # End of Minotr F.D. properties file   788 does not exist.
+        #
+        # **********************************************************************
+        if 'SCF GIAO Magnetic shielding tensor (ppm)' in line:
+            line = inputfile.next()
+            nmr_iso = []
+            nmr_anis = []
+            nmr_eigen = []
+            while '*************************' not in line:
+                if 'Isotropic' in line:
+                    nmr_iso.append(float(line.split()[4]))
+                    nmr_anis.append(float(line.split()[7]))
+                elif 'Eigenvalues' in line:
+                    nmr_eigen.append([float(line.split()[1]), float(line.split()[2]), float(line.split()[3])])
+                line = inputfile.next()
+            self.set_attribute('nmr_iso', nmr_iso)
+            self.set_attribute('nmr_anis', nmr_anis)
+            self.set_attribute('nmr_eigen', nmr_eigen)
+
+        # Extract Wiberg bond orders
+        #  Wiberg bond index matrix in the NAO basis:
+        #
+        #     Atom    1       2       3       4       5       6       7       8       9
+        #     ---- ------  ------  ------  ------  ------  ------  ------  ------  ------
+        # 1.  C  0.0000  1.0207  0.0078  0.0009  0.0002  0.0016  0.0005  0.0095  0.0024
+        # 2.  C  1.0207  0.0000  0.9907  0.0118  0.0063  0.0012  0.0039  0.0115  0.0089
+        # 3.  C  0.0078  0.9907  0.0000  0.9527  0.0217  0.0212  0.0232  1.0469  0.7798
+        # 4.  C  0.0009  0.0118  0.9527  0.0000  0.8700  0.8732  0.8783  0.0121  0.0096
+        # 5.  F  0.0002  0.0063  0.0217  0.8700  0.0000  0.0463  0.0453  0.0038  0.0017
+        # 6.  F  0.0016  0.0012  0.0212  0.8732  0.0463  0.0000  0.0469  0.0079  0.0037
+        # 7.  F  0.0005  0.0039  0.0232  0.8783  0.0453  0.0469  0.0000  0.0021  0.0074
+        # 8.  C  0.0095  0.0115  1.0469  0.0121  0.0038  0.0079  0.0021  0.0000  0.7958
+        # 9.  C  0.0024  0.0089  0.7798  0.0096  0.0017  0.0037  0.0074  0.7958  0.0000
+        if 'Wiberg bond index matrix' in line:
+            WBO_matrix = []
+            while not 'Wiberg bond index,' in line:
+                line = inputfile.next()
+                if 'Atom' in line:
+                    line = inputfile.next()
+                    line = inputfile.next()
+                    WBO_block = []
+                    while len(line) > 1:
+                        WBO_block.append(line.split()[2:])
+                        line = inputfile.next()
+                    WBO_block = numpy.array(WBO_block)
+                    WBO_block = WBO_block.transpose().tolist()
+                    WBO_matrix += WBO_block
+            self.set_attribute('WBO_matrix', WBO_matrix)
+
+        # For TD calculations look for SCF energies of the first excited state:
+        # 
+        #  This state for optimization and/or second-order correction.
+        # Total Energy, E(TD-HF/TD-DFT) =  -149.392611305    
+        # Copying the excited state density for this state as the 1-particle RhoCI density.
+        elif 'E(TD-HF/TD-DFT)' in line:
+            if not hasattr(self, 'td_energy'):
+                self.td_energy = []
+            self.td_energy.append(utils.convertor(utils.float(line.strip().split()[-1]), "hartree", "eV"))
+            self.td_energy_fin = utils.convertor(utils.float(line.strip().split()[-1]), "hartree", "eV")
+            self.set_attribute('td_energy', self.td_energy)
+            self.set_attribute('td_energy_fin', self.td_energy_fin)
+
+        # For G4 calculations look for G4 energies (Gaussian16a bug prints G4(0 K) as DE(HF)) --Brian modified to work for G16c-where bug is fixed.
+        #
+        # Temperature=              298.150000 Pressure=                      1.000000
+        # E(ZPE)=                     0.098682 E(Thermal)=                    0.103138
+        # E(CCSD(T))=              -231.530419 E(Empiric)=                   -0.104205
+        # DE(Plus)=                  -0.014015 DE(2DF)=                      -0.182003
+        # E(Delta-G3XP)=             -0.339213 DE(HF)=                       -0.022842
+        # G4(0 K)=                 -232.094014 G4 Energy=                  -232.089558
+        # G4 Enthalpy=             -232.088614 G4 Free Energy=             -232.121498
+
+        elif line.strip().startswith('E(ZPE)='): #Overwrite DFT ZPE with G4 ZPE
+            self.zero_point_corr = float(line.strip().split()[1])
+        elif line.strip().startswith('G4(0 K)'):
+            self.G4_energy = float(line.strip().split()[2])
+            self.G4_energy -= self.zero_point_corr #Remove G4 ZPE
+            self.G4_energy = utils.convertor(self.G4_energy, "hartree", "eV")
+            self.set_attribute('g4_energy', self.G4_energy)
+
+        # For ONIOM calculations use the extrapolated value rather than SCF value
+        elif "ONIOM: extrapolated energy" in line:
+            if not hasattr(self, 'oniom_energy'):
+                self.oniom_energy = []
+            self.oniom_energy.append(utils.convertor(float(line.strip().split()[4]), "hartree", "eV"))
+            self.oniom_energy_fin = utils.convertor(float(line.strip().split()[4]), "hartree", "eV")
+            self.set_attribute('oniom_energy', self.oniom_energy)
+            self.set_attribute('oniom_energy_fin', self.oniom_energy_fin)
 
         if line.strip().startswith("Link1:  Proceeding to internal job step number"):
             self.new_internal_job()
@@ -302,6 +527,7 @@ class Gaussian(logfileparser.Logfile):
         # Basis set name
         if line[1:15] == "Standard basis":
             self.metadata["basis_set"] = line.split()[2]
+            self.set_attribute('basis_set', line.split()[2])
 
         # Dipole moment
         # e.g. from G09
@@ -561,16 +787,18 @@ class Gaussian(logfileparser.Logfile):
         # ... with blank lines dividing blocks of ten, and Leave Link 101 at the end.
         # This is generally parsed before coordinates, so atomnos is not defined.
         # Note that in Gaussian03 the comments are not there yet and the labels are different.
+        
         if line.strip() == "Isotopes and Nuclear Properties:":
-
+            
             if not hasattr(self, "atommasses"):
                 self.atommasses = []
 
-            line = next(inputfile)
-            while line[1:16] != "Leave Link  101":
-                if line[1:8] == "AtmWgt=":
-                    self.atommasses.extend(list(map(float, line.split()[1:])))
                 line = next(inputfile)
+                while line[1:16] != "Leave Link  101":
+                    if line[1:8] == "AtmWgt=":
+                        self.atommasses.extend(list(map(float, line.split()[1:])))
+                    line = next(inputfile)
+                self.molecular_mass = sum(self.atommasses)
 
         # Symmetry: point group
         if line.strip() == "Symmetry turned off by external request.":
@@ -639,7 +867,7 @@ class Gaussian(logfileparser.Logfile):
         # currently we don't support changes in system size or fragments in cclib. When we do,
         # we will want to parse the model systems, too, and that is what nmodels could track.
         if "ONIOM: generating point" in line and line.strip()[-13:] == 'model system.' and getattr(self, 'nmodels', 0) > 0:
-            while not line[1:30] == 'ONIOM: Integrating ONIOM file':
+            while not line[1:27] == 'ONIOM: calculating energy.':
                 line = inputfile.next()
 
         # With the gfinput keyword, the atomic basis set functions are:
@@ -855,9 +1083,11 @@ class Gaussian(logfileparser.Logfile):
             t1 = line.split()[2]
             if t1 == 'E(RHF)':
                 self.metadata["methods"].append("HF")
+                self.set_attribute('functional', 'HF')
             else:
                 self.metadata["methods"].append("DFT")
                 self.metadata["functional"] = t1[t1.index("(") + 2:t1.rindex(")")]
+                self.set_attribute('functional', t1[t1.index("(") + 2:t1.rindex(")")])
 
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
@@ -903,7 +1133,6 @@ class Gaussian(logfileparser.Logfile):
         # Energy for most substitutions is used only (SDTQ by default)
         if line[34:42] == "UMP4(DQ)":
             self.metadata["methods"].append("MP4")
-
             mp4energy = utils.float(line.split("=")[2])
             line = next(inputfile)
             if line[34:43] == "UMP4(SDQ)":
@@ -2065,19 +2294,24 @@ class Gaussian(logfileparser.Logfile):
                         else:
                             extract_charges_spins(line,prop)
                         
-        if line.strip() == "Natural Population":
+        if "Natural Population" in line and line.strip().split()[0] == "Natural" and line.strip().split()[1] == "Population":
             if not hasattr(self, 'atomcharges'):
                 self.atomcharges = {}
+            if not hasattr(self, 'atomspins'):
+                self.atomspins = {}
             if "natural" not in self.atomcharges:
                 line1 = next(inputfile)
                 line2 = next(inputfile)
                 if line1.split()[0] == 'Natural' and line2.split()[2] == 'Charge':
                     dashes = next(inputfile)
                     charges = []
+                    spins = []
                     for i in range(self.natom):
                         nline = next(inputfile)
                         charges.append(float(nline.split()[2]))
+                        spins.append(float(nline.split()[-1]))
                     self.atomcharges["natural"] = charges
+                    self.atomspins["natural"] = spins
 
         #Extract Thermochemistry
         #Temperature   298.150 Kelvin.  Pressure   1.00000 Atm.
@@ -2090,11 +2324,14 @@ class Gaussian(logfileparser.Logfile):
         #Sum of electronic and thermal Enthalpies=            -563.635755
         #Sum of electronic and thermal Free Energies=         -563.689037
         if "Zero-point correction" in line:
-            self.set_attribute('zpve', float(line.split()[2]))
+            zpve = utils.convertor(utils.float(line.split()[2]), "hartree", "eV")
+            self.set_attribute('zpve', zpve)
         if "Sum of electronic and thermal Enthalpies" in line:
-            self.set_attribute('enthalpy', float(line.split()[6]))
+            enthalpy = utils.convertor(utils.float(line.split()[6]), "hartree", "eV")
+            self.set_attribute('enthalpy', enthalpy)
         if "Sum of electronic and thermal Free Energies=" in line:
-            self.set_attribute('freeenergy', float(line.split()[7]))
+            freeenergy = utils.convertor(utils.float(line.split()[7]), "hartree", "eV")
+            self.set_attribute('freeenergy', freeenergy)
         if line[1:13] == "Temperature ":
             self.set_attribute('temperature', float(line.split()[1]))
             self.set_attribute('pressure', float(line.split()[4]))
@@ -2256,3 +2493,4 @@ class Gaussian(logfileparser.Logfile):
 
         if line[:31] == ' Normal termination of Gaussian':
             self.metadata['success'] = True
+        
