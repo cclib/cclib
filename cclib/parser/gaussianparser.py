@@ -2267,9 +2267,9 @@ class Gaussian(logfileparser.Logfile):
 
             # Determine if the molecule is linear and only has two constants
             if '*' in line:  # linear molecule
-                self.rotcons.append([0.0]+[utils.float(splits[i])/29.9792458 for i in (-2, -1)])
+                self.rotcons.append([0.0]+[float(splits[i]) for i in (-2, -1)])
             else:
-                self.rotcons.append([utils.float(splits[i])/29.9792458 for i in (-3, -2, -1)])
+                self.rotcons.append([float(splits[i]) for i in (-3, -2, -1)])
 
         # Extract Molecular Mass (in amu)
         # Example:
