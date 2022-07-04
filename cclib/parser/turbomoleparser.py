@@ -5,6 +5,7 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 import collections
+import scipy.constants
 
 """Parser for Turbomole output files."""
 
@@ -1011,7 +1012,7 @@ class Turbomole(logfileparser.Logfile):
             # where a is the fine structure constant (~ 1/137) (Thanks to Uwe Huniar for this info).
             # Weirdly, this conversion does not seem to exactly match the bohr-magneton value
             # printed by turbomole...
-            self.append_attribute("etmagdips", [i / (0.5 * (1/137.036)) for i in (tmdm_x, tmdm_y, tmdm_z)])
+            self.append_attribute("etmagdips", [i / (0.5 * scipy.constants.alpha) for i in (tmdm_x, tmdm_y, tmdm_z)])
             
             
             
