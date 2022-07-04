@@ -229,6 +229,11 @@ class TurbomoleTDTest(GenericTDTest):
         """Is the maximum of etoscs in the right range?"""
         self.assertEqual(len(self.data.etoscs), self.number)
         self.assertAlmostEqual(max(self.data.etoscs), 0.19, delta=0.1)
+    
+    @skipForLogfile('Turbomole/basicTurbomole7.4/CO_cc2_TD', 'There are no dipole moments in ricc2')
+    def testetmagdipsshape(self):
+        """Is the shape of etmagdips correct?"""
+        self.assertEqual(numpy.shape(self.data.etmagdips), (self.number, 3))
 
 class TurbomoleTDADC2Test(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""

@@ -5,6 +5,7 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 import collections
+import scipy.constants
 
 """Parser for Turbomole output files."""
 
@@ -994,6 +995,26 @@ class Turbomole(logfileparser.Logfile):
             tdm_z = float(line.split()[1])
             
             self.append_attribute("etdips", [tdm_x, tdm_y, tdm_z])
+            
+            # Mag dips.
+            while "Magnetic transition dipole moment / i:" not in line:
+                line = next(inputfile)
+            line = next(inputfile)
+            
+            line = next(inputfile)
+            tmdm_x = float(line.split()[1])
+            line = next(inputfile)
+            tmdm_y = float(line.split()[1])
+            line = next(inputfile)
+            tmdm_z = float(line.split()[1])
+            
+            # The Turbomole TEDM units are equivalent to bohr-magneton * 0.5a,
+            # where a is the fine structure constant (~ 1/137) (Thanks to Uwe Huniar for this info).
+            # Weirdly, this conversion does not seem to exactly match the bohr-magneton value
+            # printed by turbomole...
+            self.append_attribute("etmagdips", [i / (0.5 * scipy.constants.alpha) for i in (tmdm_x, tmdm_y, tmdm_z)])
+            
+            
             
         # Excitation energies with ricc2.
         #  +================================================================================+
