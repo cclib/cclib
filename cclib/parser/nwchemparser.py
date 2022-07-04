@@ -56,6 +56,7 @@ class NWChem(logfileparser.Logfile):
                 self.metadata[
                     "package_version"
                 ] = f"{self.metadata['package_version']}+{line.split()[3].split('-')[-1]}"
+            self.set_attribute('qm_program', "NWChem version " + base_package_version)
 
         # This is printed in the input module, so should always be the first coordinates,
         # and contains some basic information we want to parse as well. However, this is not
@@ -335,11 +336,15 @@ class NWChem(logfileparser.Logfile):
                     self.scftargets = []
                 self.scftargets.append([target_energy, target_density, target_gradient])
 
-        #DFT functional information
+        # DFT functional and basis set information
         if "XC Information" in line:
             line = next(inputfile)
             line = next(inputfile)
             self.metadata["functional"] = line.split()[0]
+            self.set_attribute('functional', line.split()[0])
+        
+        if line.strip().startswith("* library "):
+            self.set_attribute('basis_set', line.strip().replace("* library ",''))
 
         # If the full overlap matrix is printed, it looks like this:
         #
@@ -581,6 +586,13 @@ class NWChem(logfileparser.Logfile):
         if "Dispersion correction" in line:
             dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
             self.append_attribute("dispersionenergies", dispersion)
+        
+        # type of dispersion
+        if line.strip().find('disp vdw 3') > -1:
+            self.set_attribute('dispersion', "D3")
+
+        if line.strip().find('disp vdw 4') > -1:
+            self.set_attribute('dispersion', "D3BJ")
 
         # The final MO orbitals are printed in a simple list, but apparently not for
         # DFT calcs, and often this list does not contain all MOs, so make sure to
@@ -1167,6 +1179,28 @@ class NWChem(logfileparser.Logfile):
                 self.append_attribute("vibfreqs", utils.float(line.split()[1]))
                 self.append_attribute("vibirs", utils.float(line.split()[5]))
                 line = next(inputfile)  # next line
+
+        # properties related to symmetry
+        if line.strip().find('symmetry #') != -1:
+            symmno = int(line.strip().split()[-1][0:-1])
+            self.set_attribute('symmno', symmno)
+
+        # Grab point group
+        if line.strip().find('symmetry detected') != -1:
+            point_group = line.strip().split()[0]
+            self.set_attribute('point_group', point_group)
+
+        # Grab rotational constants (convert cm-1 to GHz)
+        if line.strip().startswith('A='):
+            roconst, rotemp = [], []
+            roconst.append(float(line.strip().split()[1])*29.9792458)
+            rotemp.append(float(line.strip().split()[4]))
+            while line.strip().startswith('B=') or line.strip().startswith('C='):
+                roconst.append(float(line.strip().split()[1])*29.9792458)
+                rotemp.append(float(line.strip().split()[4]))
+            self.set_attribute('roconst', roconst)
+            self.set_attribute('rotemp', rotemp)
+
         # NWChem TD-DFT excited states transitions
         #
         # Have to deal with :
