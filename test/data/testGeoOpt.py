@@ -14,7 +14,7 @@ import numpy
 
 from common import get_minimum_carbon_separation
 
-from skip import skipForParser
+from skip import skipForLogfile, skipForParser
 
 __filedir__ = os.path.realpath(os.path.dirname(__file__))
 
@@ -179,6 +179,24 @@ class GenericGeoOptTest(unittest.TestCase):
         for i in range(1, len(self.data.optstatus)-1):
             self.assertEqual(self.data.optstatus[i], self.data.OPT_UNKNOWN)
         self.assertEqual(self.data.optstatus[-1], self.data.OPT_DONE)
+
+    @skipForParser('ADF', 'Not implemented yet')
+    @skipForParser('DALTON', 'Not implemented yet')
+    @skipForParser('FChk', 'Rotational constants are never written to fchk files')
+    @skipForParser('GAMESS', 'Not implemented yet')
+    @skipForParser('GAMESSUK', 'Not implemented yet')
+    @skipForParser('Jaguar', 'Not implemented yet')
+    @skipForParser('Molcas', 'Not implemented yet')
+    @skipForParser('Molpro', 'Not implemented yet')
+    @skipForLogfile('MOPAC/basicMOPAC2016', 'Not present in this file')
+    @skipForParser('NWChem', 'Not implemented yet')
+    @skipForParser('ORCA', 'Not implemented yet')
+    @skipForParser('Psi4', 'Not implemented yet')
+    @skipForParser('QChem', 'Not implemented yet')
+    @skipForParser('Turbomole', 'Not implemented yet')
+    def testrotconsts(self):
+        """Each geometry leads to a row in the rotational constants entry."""
+        self.assertEqual(self.data.rotconsts.shape, (len(self.data.atomcoords), 3))
 
     @skipForParser('Molcas', 'The parser is still being developed so we skip this test')
     def testmoenergies(self):

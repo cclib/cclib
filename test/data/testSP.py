@@ -251,6 +251,26 @@ class GenericSPTest(unittest.TestCase):
         """There should be no optdone attribute set."""
         self.assertFalse(hasattr(self.data, 'optdone'))
 
+    @skipForParser('ADF', 'Not implemented yes')
+    @skipForParser('DALTON', 'Not implemented yes')
+    @skipForParser('FChk', 'Rotational constants are never written to fchk files')
+    @skipForParser('GAMESS', 'Not implemented yes')
+    @skipForParser('GAMESSUK', 'Not implemented yet')
+    @skipForParser('Jaguar', 'Not implemented yet')
+    @skipForParser('Molcas', 'Not implemented yes')
+    @skipForParser('Molpro', 'Not implemented yes')
+    @skipForParser('NWChem', 'Not implemented yes')
+    @skipForParser('ORCA', 'Not implemented yes')
+    @skipForParser('Psi4', 'Not implemented yes')
+    @skipForParser('QChem', 'Not implemented yes')
+    @skipForParser('Turbomole', 'Not implemented yes')
+    def testrotconsts(self):
+        """A single geometry leads to single set of rotational constants."""
+        self.assertEqual(self.data.rotconsts.shape, (1, 3))
+        # taken from Gaussian16/dvb_sp.out
+        ref = [4.6266363, 0.6849065, 0.5965900]
+        numpy.testing.assert_allclose(self.data.rotconsts[0], ref, rtol=0, atol=1.0e-3)
+
     @skipForParser('FChk', 'The parser is still being developed so we skip this test')
     @skipForParser('Gaussian', 'Logfile needs to be updated')
     @skipForParser('Jaguar', 'No dipole moments in the logfile')

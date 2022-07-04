@@ -139,6 +139,8 @@ class Gaussian(logfileparser.Logfile):
                 self.atomcoords = self.atomcoords[:last_point + 1]
             if hasattr(self, 'inputcoords'):
                 self.inputcoords = self.inputcoords[:last_point + 1]
+            if hasattr(self, "rotconsts"):
+                self.rotconsts = self.rotconsts[:last_point + 1]
 
         # If we parsed high-precision vibrational displacements, overwrite
         # lower-precision displacements in self.vibdisps
