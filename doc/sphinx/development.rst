@@ -161,18 +161,24 @@ Websites related to cclib
 Developers
 ==========
 
-Besides input from a number of people `listed in the repository`_, the following developers have contributed code to cclib (in alphabetical order):
+Besides input from a number of people `listed in the repository`_, the following are core developers (in alphabetical order):
 
 * `Eric Berquist`_
+* `Minsik Cho`_
+* `Amanda Dumi`_
+* `Geoff Hutchison`_
 * `Karol M. Langner`_
-* `Noel O'Boyle`_
-* Christopher Rowley
-* Adam Tenderholt
+* `Noel O'Boyle`_ (retired)
+* `Adam Tenderholt`_
 * `Shiv Upadhyay`_
 
 .. _`listed in the repository`: https://github.com/cclib/cclib/blob/master/THANKS
 
 .. _`Eric Berquist`: https://github.com/berquist
+.. _`Minsik Cho`: https://github.com/mscho527
+.. _`Amanda Dumi`: https://github.com/amandadumi
+.. _`Geoff Hutchison`: https://github.com/ghutchis
 .. _`Karol M. Langner`: https://github.com/langner
-.. _`Noel O'Boyle`: https://noel.redbrick.dcu.ie/
+.. _`Noel O'Boyle`: https://github.com/baoilleach
+.. _`Adam Tenderholt`: https://github.com/ATenderholt
 .. _`Shiv Upadhyay`: https://github.com/shivupa
