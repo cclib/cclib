@@ -2262,8 +2262,8 @@ class Gaussian(logfileparser.Logfile):
         # OR for linear molecules:
         # Rotational constants (GHZ): ************ 12.73690 12.73690
         # Note: rotational constant will be converted to wavenumber units (1/cm) to standardize across parsers
-        if line[:27] == ' Rotational constants (GHZ)':
-            splits = line.split()
+        if line[:28] == ' Rotational constants (GHZ):':
+            splits = line[28:].split()
 
             # Determine if the molecule is linear and only has two constants
             if '*' in line:  # linear molecule
