@@ -12,7 +12,7 @@ The goals of cclib are centered around the reuse of data obtained from these pro
 Summary
 -------
 
-The current version is **cclib 1.7.1** (see the changelog_ for what's new). The following programs are supported and systematically tested at the versions given in parentheses:
+The current version is **cclib 1.7.2** (see the changelog_ for what's new). The following programs are supported and systematically tested at the versions given in parentheses:
 
 - ADF_ (versions 2007 and 2013)
 - DALTON_ (versions 2013 and 2015)
@@ -39,7 +39,7 @@ Many types of output data are parsed by cclib, including atom coordinates, orbit
 How to use cclib
 ----------------
 
-You can download the `source package for cclib 1.7.1`_ or the `current development version`_ (from the `GitHub repository`_). For information on packages available in various Linux distributions, installing the source code and requirements, as well as basic usage, the `How to install`_ is a good place to start.
+You can download the `source package for cclib 1.7.2`_ or the `current development version`_ (from the `GitHub repository`_). For information on packages available in various Linux distributions, installing the source code and requirements, as well as basic usage, the `How to install`_ is a good place to start.
 
 If you need further help, find a bug, need new features or have any question, please send email to the `mailing list`_ or submit an issue to the `tracker`_.
 
@@ -82,7 +82,7 @@ A record for the latest release is also available on Zenodo_.
 .. _`Q-Chem`: https://q-chem.com/
 .. _Turbomole: http://www.turbomole-gmbh.com/
 
-.. _`source package for cclib 1.7.1`: https://github.com/cclib/cclib/releases/download/v1.7.1/cclib-1.7.1.zip
+.. _`source package for cclib 1.7.2`: https://github.com/cclib/cclib/releases/download/v1.7.2/cclib-1.7.2.zip
 .. _`current development version`: https://github.com/cclib/cclib/archive/master.zip
 .. _`GitHub repository`: https://github.com/cclib/cclib
 .. _`mailing list`: https://groups.google.com/g/cclib
