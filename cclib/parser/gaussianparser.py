@@ -2264,12 +2264,7 @@ class Gaussian(logfileparser.Logfile):
         # Note: rotational constant will be converted to wavenumber units (1/cm) to standardize across parsers
         if line[:28] == ' Rotational constants (GHZ):':
             splits = line[28:].split()
-
-            # Determine if the molecule is linear and only has two constants
-            if '*' in line:  # linear molecule
-                self.append_attribute("rotconsts", [0.0]+[float(splits[i]) for i in (-2, -1)])
-            else:
-                self.append_attribute("rotconsts", [float(splits[i]) for i in (-3, -2, -1)])
+            self.append_attribute("rotconsts", [float(splits[i]) for i in (-3, -2, -1)])
 
         # Extract Molecular Mass (in amu)
         # Example:
