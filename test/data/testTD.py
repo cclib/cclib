@@ -13,7 +13,6 @@ import unittest
 import numpy
 
 from skip import skipForParser
-from skip import skipForLogfile
 
 
 __filedir__ = os.path.realpath(os.path.dirname(__file__))
@@ -49,7 +48,7 @@ class GenericTDTest(unittest.TestCase):
 
     @skipForParser('CFOUR','The parser is still being developed so we skip this test')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForLogfile('Turbomole/basicTurbomole7.4/CO_cc2_TD_trip', 'Oscillator strengths are not available for Turbomole triplets using ricc2 but are required for testenergies()')
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testenergies(self):
         """Is the l_max reasonable?"""
 
@@ -62,7 +61,7 @@ class GenericTDTest(unittest.TestCase):
 
     @skipForParser('CFOUR','The parser is still being developed so we skip this test')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForLogfile("Turbomole/basicTurbomole7.4/CO_cc2_TD_trip", "Oscillator strengths are not available for triplets with Turbomole's ricc2")
+    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
         assert len(self.data.etoscs) == self.number
@@ -129,11 +128,14 @@ class GenericTDTest(unittest.TestCase):
     @skipForParser('Jaguar', 'etrotats are not yet implemented')
     @skipForParser('NWChem', 'etrotats are not yet implemented')
     @skipForParser('QChem', 'Q-Chem cannot calculate rotatory strengths')
+<<<<<<< HEAD
     @skipForLogfile("FChk/basicQChem5.4", "Q-Chem cannot calculate rotatory strengths")
     @skipForLogfile("FChk/basicGaussian09", "etrotats are not available in fchk, only the main logfile")
     @skipForLogfile("FChk/basicGaussian16", "etrotats are not available in fchk, only the main logfile")
     @skipForLogfile("Turbomole/basicTurbomole7.4/CO_cc2_TD", "Rotatory strengths are not currently available for ricc2")
     @skipForLogfile("Turbomole/basicTurbomole7.4/CO_adc2_TD", "Rotatory strengths are not currently available for ricc2")
+=======
+>>>>>>> 9ac35293 (fixing)
     def testrotatsnumber(self):
         """Is the length of etrotats correct?"""
         assert len(self.data.etrotats) == self.number
@@ -391,4 +393,4 @@ if __name__ =="__main__":
     from test_data import DataSuite
     suite = DataSuite(['TD'])
     suite.testall()
-    
+
