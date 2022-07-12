@@ -4,6 +4,23 @@
 Changelog
 =========
 
+Changes in cclib-1.7.2
+----------------------
+
+**Features**
+
+    * Support vibfreqs, vibirs, etenergies, etsyms, etoscs and etsecs for NWChem (BenoitDemota)
+    * Support temperature, pressure, enthalpy, entropy, zpve and electronic_thermal_energy for NWChem (BenoitDamota)
+    * Better metadata support for point group detection
+    * Updated code and test file versions to QChem 5.4 and ORCA 5.0
+
+**Bugfixes**
+
+    * Fixed parsing mpenergies for optimization for Turbomole (Oliver Lee)
+    * Fixed ccenergies for Gaussian (Oliver Lee)
+    * Fixed oscillator strengths for ORCA (Felix Plasser)
+    * Fixed units of parsed MO energies for fchk
+
 Changes in cclib-1.7.1
 ----------------------
 
