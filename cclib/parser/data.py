@@ -141,7 +141,7 @@ class ccData:
        "grads":            Attribute(numpy.ndarray,    'TBD',                         'N/A'),
        "hessian":          Attribute(numpy.ndarray,    'hessian matrix',              'vibrations'),
        "homos":            Attribute(numpy.ndarray,    'homos',                       'properties:orbitals'),
-       "metadata":         Attribute(dict,             'TBD',                         'N/A'),
+       "metadata":         Attribute(dict,             'TBD',                         'metadata'),
        "mocoeffs":         Attribute(list,             'coeffs',                      'properties:orbitals'),
        "moenergies":       Attribute(list,             'energies',                    'properties:orbitals'),
        "moments":          Attribute(list,             'total dipole moment',         'properties'),
