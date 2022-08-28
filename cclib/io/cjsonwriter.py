@@ -124,7 +124,25 @@ class CJSON(filewriter.Writer):
             cjson_dict['atoms']['elements']['heavy atom count'] = len([x for x in self.ccdata.atomnos if x > 1])
 
         if hasattr(self.ccdata, 'metadata'):
-            cjson_dict['metadata'] = self.ccdata.metadata
+            cjson_dict['inputParameters'] = dict()
+            if 'run_date' in self.ccdata['medata']:
+                cjson_dict['metadata'] = {'run_date':self.ccdata['metadata']['run_date']}
+            if 'basis_set' in self.ccdata['metadata']:
+                cjson_dict['inputParameters']['basis_set'] = self.ccdata['metadata']['basis_set']
+            if 'methods' in self.ccdata['metadata']:
+                cjson_dict['inputParameters']['theory'] = self.ccdata['metadata']['methods']
+            if 'dispersion' in self.ccdata['metadata']:
+                cjson_dict['inputParameters']['dispersion'] = self.ccdata['metadata']['dispersion']
+            if 'functional' in self.ccdata['metadata']:
+                cjson_dict['inputParameters']['functional'] = self.ccdata['metadata']['functional']
+            if 'grid' in self.ccdata['metadata']:
+                cjson_dict['inputParameters']['grid'] = self.ccdata['metadata']['grid']
+            if 'memory' in self.ccdata['metadata']:
+                cjson_dict['inputParameters']['memory'] = self.ccdata['metadata']['memory']
+            if 'processors' in self.ccdata['metadata']:
+                cjson_dict['inputParameters']['processors'] = self.ccdata['metadata']['processors']
+            if 'qm_program' in self.ccdata['metadata']:
+                cjson_dict['inputParameters']['qm_program'] =self.ccdata['metadata']['qm_program']
 
 
         # Bond attributes:
