@@ -1487,6 +1487,11 @@ class Gaussian(logfileparser.Logfile):
                 CIScontrib.append([(fromMO, frommoindex), (toMO, tomoindex), percent])
                 line = next(inputfile)
             self.etsecs.append(CIScontrib)
+            
+            # Check if this state is our 'state of interest' (for optimisations etc).
+            if "This state for optimization and/or second-order correction" in line:
+                # Index to the current excited state.
+                self.metadata['opt_state'] = len(self.etenergies) -1
 
         # Electronic transition transition-dipole data
         #
