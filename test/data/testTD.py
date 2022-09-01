@@ -81,6 +81,20 @@ class GenericTDTest(unittest.TestCase):
     def testrotatsnumber(self):
         """Is the length of etrotats correct?"""
         self.assertEqual(len(self.data.etrotats), self.number)
+    
+    @skipForParser('ADF', 'optstate is not yet implemented')
+    @skipForParser('DALTON', 'optstate are not yet implemented')
+    @skipForParser('FChk', 'optstate are not yet implemented')
+    @skipForParser('GAMESS', 'optstate are not yet implemented')
+    @skipForParser('GAMESSUK', 'optstate are not yet implemented')
+    @skipForParser('Jaguar', 'optstate are not yet implemented')
+    @skipForParser('NWChem', 'optstate are not yet implemented')
+    @skipForParser('ORCA', 'optstate are not yet implemented')
+    @skipForParser('QChem', 'optstate are not yet implemented')
+    @skipForParser('Turbomole', 'optstate are not yet implemented')
+    def testoptstate(self):
+        # All our examples have a default state-of-interest of 1 (index 0).
+        self.assertEqual(self.data.metadata['opt_state'], 0)
 
 class ADFTDDFTTest(GenericTDTest):
     """Customized time-dependent DFT unittest"""
