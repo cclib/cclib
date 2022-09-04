@@ -1161,6 +1161,10 @@ def testGaussian_Gaussian09_benzene_excited_states_optimization_issue889_log(log
     assert len(logfile.data.etsecs) == 20
     assert logfile.data.etveldips.shape == (20,3)
 
+def testGaussian_Gaussian09_issue1150_log(logfile):
+    """ Symmetry parsing for Gaussian09 was broken"""
+    assert logfile.metadata['symmetry_detected'] == 'c1'
+
 def testGaussian_Gaussian16_H3_natcharge_log(logfile):
     """A calculation with natural charges calculated. Test issue 1055 where 
     only the beta set of charges was parsed rather than the spin independent"""

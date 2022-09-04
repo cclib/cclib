@@ -573,7 +573,7 @@ class Gaussian(logfileparser.Logfile):
                 line = next(inputfile)
 
         # Symmetry: point group
-        if line.strip() == "Symmetry turned off by external request.":
+        if "Symmetry turned off" in line:
             self.set_attribute('uses_symmetry', False)
         if "Full point group" in line:
             point_group_detected = line.split()[3].lower()
