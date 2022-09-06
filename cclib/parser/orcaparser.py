@@ -150,6 +150,8 @@ class ORCA(logfileparser.Logfile):
                 if line[0] != '|':
                     break
                 lines.append(line[line.find('> ')+2:])
+                if 'printlevel mini' in line or 'miniprint' in line:
+                    self.logger.warning("WARNING: print level is set to mini, which might cause the loss of relevant information")
 
             self.metadata['input_file_contents'] = ''.join(lines[:-1])
             lines_iter = iter(lines[:-1])
@@ -615,6 +617,27 @@ Dispersion correction           -0.016199959
             assert line[:23] == 'Singles Norm <S|S>**1/2'
             line = next(inputfile)
             self.metadata["t1_diagnostic"] = utils.float(line.split()[-1])
+
+        # SCF energy with basis cc-pVDZ:                          -40.197189724
+        # SCF energy with basis cc-pVTZ:                          -40.212905351
+        # Extrapolated CBS SCF energy (2/3) :                     -40.218016328 (-0.005110977) 
+
+        # MDCI energy with basis cc-pVDZ:                          -0.186922179
+        # MDCI energy with basis cc-pVTZ:                          -0.224166487
+        # Extrapolated CBS correlation energy (2/3) :              -0.245929689 (-0.021763202)
+
+        # Estimated CBS total energy (2/3) :                      -40.463946018
+
+
+
+        # -------------------------   --------------------
+        # FINAL SINGLE POINT ENERGY       -40.463946017697
+        # -------------------------   --------------------
+        if line[:25] == 'FINAL SINGLE POINT ENERGY':
+            self.append_attribute(
+            'finalspenergies',
+            utils.convertor(utils.float(line.split()[-1]), 'hartree', 'eV')
+            )
 
         # ------------------
         # CARTESIAN GRADIENT
@@ -2107,10 +2130,13 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             if "Last RMS-Density change" in line:
                 rmsDP_value = float(line.split()[4])
                 rmsDP_target = float(line.split()[7])
-            else:
+            elif not '**** THE GBW FILE WAS UPDATED' in line:
                 rmsDP_value = self.scfvalues[-1][-1][2]
                 rmsDP_target = self.scftargets[-1][2]
                 assert deltaE_target == self.scftargets[-1][0]
                 assert maxDP_target == self.scftargets[-1][1]
+            else:
+                rmsDP_value = 0.0
+                rmsDP_target = 0.0
             self.scfvalues[-1].append([deltaE_value, maxDP_value, rmsDP_value])
             self.scftargets.append([deltaE_target, maxDP_target, rmsDP_target])
