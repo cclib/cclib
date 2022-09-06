@@ -139,6 +139,8 @@ class Gaussian(logfileparser.Logfile):
                 self.atomcoords = self.atomcoords[:last_point + 1]
             if hasattr(self, 'inputcoords'):
                 self.inputcoords = self.inputcoords[:last_point + 1]
+            if hasattr(self, "rotconsts"):
+                self.rotconsts = self.rotconsts[:last_point + 1]
 
         # If we parsed high-precision vibrational displacements, overwrite
         # lower-precision displacements in self.vibdisps
@@ -2264,6 +2266,23 @@ class Gaussian(logfileparser.Logfile):
                 self.metadata[key].append(time)
             except:
                 pass
+
+        # Extract Rotational Constants
+        # Example:
+        # Rotational constants (GHZ):           3.13081     1.24272     0.88960
+        # OR for linear molecules:
+        # Rotational constants (GHZ): ************ 12.73690 12.73690
+        # Note: rotational constant will be converted to wavenumber units (1/cm) to standardize across parsers
+        if line[:28] == ' Rotational constants (GHZ):':
+            splits = line[28:].split()
+            self.append_attribute("rotconsts", [float(splits[i]) for i in (-3, -2, -1)])
+
+        # Extract Molecular Mass (in amu)
+        # Example:
+        # Molecular mass:   128.06260 amu.
+        if line[:16] == ' Molecular mass:':
+            splits = line.split()
+            self.molmass = utils.float(splits[2])
 
         if line[:31] == ' Normal termination of Gaussian':
             self.metadata['success'] = True

@@ -19,6 +19,7 @@ from cclib.method import Nuclear
 from cclib.parser import ccData
 from cclib.parser import DALTON
 from cclib.parser import Gaussian
+from cclib.parser import Molcas
 from cclib.parser import QChem
 from cclib.parser import utils
 
@@ -44,7 +45,7 @@ class NuclearTest(unittest.TestCase):
         check([], "")
         check([6, 1, 6, 1, 1, 1], "C2H4")
         check([1, 1, 1, 6, 1, 6], "C2H4")
-       
+
         # Charges.
         check([8], "O", charge=0)
         check([8], "O(+1)", charge=1)
@@ -106,7 +107,7 @@ class NuclearTest(unittest.TestCase):
         logfile where it is printed.
 
         This test was added as a follow-up to PR #790.
-        """        
+        """
         data, _ = getdatafile(Gaussian, "basicGaussian16", ["dvb_ir.out"])
         nuclear = Nuclear(data)
         nuclear.logger.setLevel(logging.ERROR)
@@ -116,13 +117,16 @@ class NuclearTest(unittest.TestCase):
         np.testing.assert_allclose(pmoi, ref_pmoi, rtol=0, atol=1.0e-4)
 
     def test_rotational_constants(self):
-        """Testing rotational constants for two logfiles where they are
-        printed.
+        """Testing rotational constants for logfiles where they are printed.
         """
 
         data, logfile = getdatafile(DALTON, "basicDALTON-2015", ["dvb_sp_hf.out"])
         nuclear = Nuclear(data)
         nuclear.logger.setLevel(logging.ERROR)
+
+        ref_mhz = [0.0 for _ in range(3)]
+        ref_ghz = [0.0 for _ in range(3)]
+        ref_invcm = [0.0 for _ in range(3)]
 
         with open(logfile.filename) as f:
             for line in f:
@@ -132,6 +136,7 @@ class NuclearTest(unittest.TestCase):
                     line = next(f)
                     ref_mhz = [float(x) for x in next(f).split()[:-1]]
                     ref_invcm = [float(x) for x in next(f).split()[:-1]]
+                    break
         rotconsts_ghz = nuclear.rotational_constants('ghz')
         rotconsts_invcm = nuclear.rotational_constants('invcm')
         np.testing.assert_allclose(rotconsts_ghz * 1.0e3, ref_mhz, rtol=0, atol=1.0e-4)
@@ -145,8 +150,28 @@ class NuclearTest(unittest.TestCase):
             for line in f:
                 if "Rotational constants (GHZ):" in line:
                     ref_ghz = [float(x) for x in line.split()[3:]]
+                    break
         rotconsts_ghz = nuclear.rotational_constants('ghz')
         np.testing.assert_allclose(rotconsts_ghz, ref_ghz, rtol=0, atol=1.0e-5)
+
+        data, logfile = getdatafile(Molcas, "basicOpenMolcas18.0", ["dvb_ir.out"])
+        nuclear = Nuclear(data)
+        nuclear.logger.setLevel(logging.ERROR)
+
+        with open(logfile.filename) as f:
+            for line in f:
+                if line.startswith(" Rotational Constants (cm-1)"):
+                    # sort because they don't seem to come out in the same
+                    # order, and a moment of inertia tensor isn't printed for
+                    # comparison
+                    ref_invcm = sorted([float(x) for x in line.split()[-3:]])
+                    line = next(f)
+                    ref_ghz = sorted([float(x) for x in line.split()[-3:]])
+        rotconsts_ghz = sorted(nuclear.rotational_constants('ghz'))
+        rotconsts_invcm = sorted(nuclear.rotational_constants('invcm'))
+        np.testing.assert_allclose(rotconsts_ghz, ref_ghz, rtol=0, atol=1.0e-4)
+        np.testing.assert_allclose(rotconsts_invcm, ref_invcm, rtol=0, atol=1.0e-4)
+
 
 if __name__ == "__main__":
     unittest.TextTestRunner(verbosity=2).run(unittest.makeSuite(NuclearTest))
