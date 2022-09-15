@@ -48,7 +48,9 @@ class Psi4(logfileparser.Logfile):
         # Regular expression for matching the start of an atomic charges
         # section; the second format of the header (with square brackets) is
         # for old Psi4 versions.
-        self.re_atomic_charges_header = re.compile(r"^\s*(\w+) Charges(:?: \(a\.u\.\)| \[a\.u\.\]:)")
+        self.re_atomic_charges_header = re.compile(
+            r"^\s*(Mulliken|Lowdin|MBIS) Charges(:?: \(a\.u\.\)| \[a\.u\.\]:)"
+        )
 
     def after_parsing(self):
         super(Psi4, self).after_parsing()
