@@ -1,5 +1,5 @@
  argument  1 = Trp_polar.in
-
+ 
 
 
 ============================== echo of input deck ==============================
@@ -56,26 +56,26 @@ task scf property
 
                                          
                                          
-
-
-             Northwest Computational Chemistry Package (NWChem) 7.0.2
+ 
+ 
+             Northwest Computational Chemistry Package (NWChem) 7.0.0
              --------------------------------------------------------
-
-
+ 
+ 
                     Environmental Molecular Sciences Laboratory
                        Pacific Northwest National Laboratory
                                 Richland, WA 99352
-
-                              Copyright (c) 1994-2020
+ 
+                              Copyright (c) 1994-2019
                        Pacific Northwest National Laboratory
                             Battelle Memorial Institute
-
+ 
              NWChem is an open-source computational chemistry package
                         distributed under the terms of the
                       Educational Community License (ECL) 2.0
              A copy of the license is included with this distribution
                               in the LICENSE.TXT file
-
+ 
                                   ACKNOWLEDGMENT
                                   --------------
 
@@ -91,21 +91,21 @@ task scf property
            Job information
            ---------------
 
-    hostname        = osmium
-    program         = nwchem
-    date            = Sat Jun  4 13:34:13 2022
+    hostname        = smp-n17.sam.pitt.edu
+    program         = /ihome/kjordan/shu8/software/source/nwchem/nwchem-7.0.0/bin/LINUX64/nwchem
+    date            = Tue Sep 20 18:27:17 2022
 
-    compiled        = Fri_Jul_02_16:33:00_2021
-    source          = /tmp/eric/spack-stage/spack-stage-nwchem-7.0.2-ooqysy46k2ki4umav4357wohumino4rf/spack-src
-    nwchem branch   = 7.0.2
-    nwchem revision = b9985dfa
-    ga revision     = 5.7.2
-    use scalapack   = T
+    compiled        = Wed_May_13_13:33:26_2020
+    source          = /ihome/kjordan/shu8/software/source/nwchem/nwchem-7.0.0
+    nwchem branch   = 7.0.0
+    nwchem revision = N/A
+    ga revision     = 5.7.1
+    use scalapack   = F
     input           = Trp_polar.in
     prefix          = Trp_polar.
     data base       = ./Trp_polar.db
     status          = startup
-    nproc           =        1
+    nproc           =        4
     time left       =     -1s
 
 
@@ -113,41 +113,41 @@ task scf property
            Memory information
            ------------------
 
-    heap     =   13107198 doubles =    100.0 Mbytes
-    stack    =   13107195 doubles =    100.0 Mbytes
+    heap     =   13107200 doubles =    100.0 Mbytes
+    stack    =   13107197 doubles =    100.0 Mbytes
     global   =   26214400 doubles =    200.0 Mbytes (distinct from heap & stack)
-    total    =   52428793 doubles =    400.0 Mbytes
+    total    =   52428797 doubles =    400.0 Mbytes
     verify   = yes
     hardfail = no 
 
 
            Directory information
            ---------------------
-
+ 
   0 permanent = .
   0 scratch   = .
-
-
-
-
+ 
+ 
+ 
+ 
                                 NWChem Input Module
                                 -------------------
-
-
+ 
+ 
 
  Scaling coordinates for geometry "geometry" by  1.889725989
  (inverse scale =  0.529177249)
 
  Turning off AUTOSYM since
  SYMMETRY directive was detected!
-
-
-
+ 
+ 
+ 
                              Geometry "geometry" -> ""
                              -------------------------
-
+ 
  Output coordinates in angstroms (scale by  1.889725989 to convert to a.u.)
-
+ 
   No.       Tag          Charge          X              Y              Z
  ---- ---------------- ---------- -------------- -------------- --------------
     1 N                    7.0000    -0.06998269     0.33219872     0.28212832
@@ -177,15 +177,15 @@ task scf property
    25 H                    1.0000    -0.53022787    -0.58239897     0.40845076
    26 O                    8.0000     1.45758467     0.59968873     2.40935003
    27 H                    1.0000     0.59900153     0.88424212     2.00478305
-
+ 
       Atomic Mass 
       ----------- 
-
+ 
       N                 14.003070
       C                 12.000000
       O                 15.994910
       H                  1.007825
-
+ 
 
  Effective nuclear repulsion energy (a.u.)     957.1064036872
 
@@ -194,8 +194,8 @@ task scf property
         X                 Y               Z
  ---------------- ---------------- ----------------
    676.9309203764    54.4484313070  -224.6487895865
-
-
+ 
+ 
             XYZ format geometry
             -------------------
     27
@@ -208,7 +208,7 @@ task scf property
  H                     1.84427273     2.20506050    -0.18016318
  H                     1.34558999     1.45949350    -1.68856895
  C                     3.40536469     1.12706118    -1.19180752
- C                     4.48452497     1.62350381    -0.55989180
+ C                     4.48452497     1.62350380    -0.55989180
  N                     5.65090896     1.23793264    -1.22846107
  H                     6.60093143     1.41123510    -0.90286294
  C                     5.29216196     0.43562743    -2.31316170
@@ -227,7 +227,7 @@ task scf property
  H                    -0.53022787    -0.58239897     0.40845076
  O                     1.45758467     0.59968873     2.40935003
  H                     0.59900153     0.88424212     2.00478305
-
+ 
  ==============================================================================
                                 internuclear distances
  ------------------------------------------------------------------------------
@@ -324,9 +324,6 @@ task scf property
 
 
 
-  library name resolved from: environment
-  library file name is: </home/eric/data/spack/opt/spack/linux-archrolling-zen/gcc-11.1.0/nwchem-7.0.2-ooqysy46k2ki4umav4357wohumino4rf/share/nwchem/libraries/>
-  
 
 
  Summary of "ao basis" -> "" (cartesian)
@@ -338,8 +335,8 @@ task scf property
 
                               NWChem Property Module
                               ----------------------
-
-
+ 
+ 
                       Basis "ao basis" -> "ao basis" (cartesian)
                       -----
   N (Nitrogen)
@@ -349,15 +346,15 @@ task scf property
   1 S  9.91061690E+01  0.154329
   1 S  1.80523120E+01  0.535328
   1 S  4.88566020E+00  0.444635
-
+ 
   2 S  3.78045590E+00 -0.099967
   2 S  8.78496600E-01  0.399513
   2 S  2.85714400E-01  0.700115
-
+ 
   3 P  3.78045590E+00  0.155916
   3 P  8.78496600E-01  0.607684
   3 P  2.85714400E-01  0.391957
-
+ 
   C (Carbon)
   ----------
             Exponent  Coefficients 
@@ -365,15 +362,15 @@ task scf property
   1 S  7.16168370E+01  0.154329
   1 S  1.30450960E+01  0.535328
   1 S  3.53051220E+00  0.444635
-
+ 
   2 S  2.94124940E+00 -0.099967
   2 S  6.83483100E-01  0.399513
   2 S  2.22289900E-01  0.700115
-
+ 
   3 P  2.94124940E+00  0.155916
   3 P  6.83483100E-01  0.607684
   3 P  2.22289900E-01  0.391957
-
+ 
   O (Oxygen)
   ----------
             Exponent  Coefficients 
@@ -381,15 +378,15 @@ task scf property
   1 S  1.30709320E+02  0.154329
   1 S  2.38088610E+01  0.535328
   1 S  6.44360830E+00  0.444635
-
+ 
   2 S  5.03315130E+00 -0.099967
   2 S  1.16959610E+00  0.399513
   2 S  3.80389000E-01  0.700115
-
+ 
   3 P  5.03315130E+00  0.155916
   3 P  1.16959610E+00  0.607684
   3 P  3.80389000E-01  0.391957
-
+ 
   H (Hydrogen)
   ------------
             Exponent  Coefficients 
@@ -397,7 +394,7 @@ task scf property
   1 S  3.42525091E+00  0.154329
   1 S  6.23913730E-01  0.535328
   1 S  1.68855400E-01  0.444635
-
+ 
 
 
  Summary of "ao basis" -> "ao basis" (cartesian)
@@ -412,8 +409,8 @@ task scf property
 
                                  NWChem SCF Module
                                  -----------------
-
-
+ 
+ 
 
   ao basis        = "ao basis"
   functions       =    87
@@ -441,12 +438,12 @@ task scf property
 
  Forming initial guess at       0.1s
 
-
+ 
       Superposition of Atomic Density Guess
       -------------------------------------
-
+ 
  Sum of atomic energies:        -669.34767099
-
+ 
       Non-variational initial energy
       ------------------------------
 
@@ -455,9 +452,9 @@ task scf property
  2-e energy   =    1196.263827
  HOMO         =      -0.025644
  LUMO         =       0.219320
+ 
 
-
- Starting SCF solution at       0.9s
+ Starting SCF solution at       0.4s
 
 
 
@@ -470,25 +467,37 @@ task scf property
  ----------------------------------------------
 
 
+ Integral file          = ./Trp_polar.aoints.0
+ Record size in doubles =  65536        No. of integs per rec  =  43688
+ Max. records in memory =     59        Max. records in file   = 507871
+ No. of bits per label  =      8        No. of bits per value  =     64
+
+
+ #quartets = 8.876D+05 #integrals = 5.254D+06 #direct =  0.0% #cached =100.0%
+
+
+File balance: exchanges=     4  moved=    16  time=   0.0
+
+
               iter       energy          gnorm     gmax       time
              ----- ------------------- --------- --------- --------
-                 1     -673.3333996734  1.65D+00  4.34D-01      4.0
-                 2     -673.5579531919  5.23D-01  9.82D-02     10.4
-                 3     -673.5901147188  4.41D-02  1.96D-02     16.9
-                 4     -673.5905709876  9.27D-04  3.18D-04     26.3
-                 5     -673.5905711122  4.29D-07  2.12D-07     44.2
-                 6     -673.5905711122  8.62D-11  1.54D-11     60.9
+                 1     -673.3333996737  1.65D+00  4.34D-01      1.8
+                 2     -673.5579531920  5.23D-01  9.82D-02      1.9
+                 3     -673.5901146604  4.41D-02  1.96D-02      2.0
+                 4     -673.5905709880  9.27D-04  3.19D-04      2.1
+                 5     -673.5905711125  4.29D-07  2.12D-07      2.3
+                 6     -673.5905711125  8.40D-11  1.57D-11      2.6
 
 
        Final RHF  results 
        ------------------ 
 
-         Total SCF energy =   -673.590571112173
-      One-electron energy =  -2824.796309163842
-      Two-electron energy =   1194.099334364422
- Nuclear repulsion energy =    957.106403687247
+         Total SCF energy =   -673.590571112546
+      One-electron energy =  -2824.796309158328
+      Two-electron energy =   1194.099334358534
+ Nuclear repulsion energy =    957.106403687248
 
-        Time for solution =     60.1s
+        Time for solution =      2.1s
 
 
              Final eigenvalues
@@ -559,17 +568,17 @@ task scf property
    62    0.5686
    63    0.5784
    64    0.6126
-
+ 
                        ROHF Final Molecular Orbital Analysis
                        -------------------------------------
-
+ 
  Vector   16  Occ=2.000000D+00  E=-1.347680D+00
               MO Center=  2.1D+00,  1.4D-02,  1.8D+00, r^2= 1.4D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
   ----- ------------  ---------------      ----- ------------  ---------------
     83      0.531215  26 O  s                17      0.498667   4 O  s         
     12      0.316154   3 C  s                82     -0.150376  26 O  s         
-
+ 
  Vector   17  Occ=2.000000D+00  E=-1.257839D+00
               MO Center=  2.1D+00,  3.0D-02,  1.8D+00, r^2= 1.6D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -577,21 +586,21 @@ task scf property
     83     -0.601122  26 O  s                17      0.575285   4 O  s         
     13      0.170404   3 C  px               82      0.165880  26 O  s         
     16     -0.163653   4 O  s         
-
+ 
  Vector   18  Occ=2.000000D+00  E=-1.219988D+00
               MO Center=  5.2D+00,  1.1D+00, -1.4D+00, r^2= 1.4D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
   ----- ------------  ---------------      ----- ------------  ---------------
     39      0.575738  10 N  s                45      0.240490  12 C  s         
     34      0.224719   9 C  s                38     -0.178031  10 N  s         
-
+ 
  Vector   19  Occ=2.000000D+00  E=-1.153790D+00
               MO Center=  3.5D-01,  2.5D-01,  1.2D-01, r^2= 1.4D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
   ----- ------------  ---------------      ----- ------------  ---------------
      2      0.642899   1 N  s                 7      0.295156   2 C  s         
      1     -0.192010   1 N  s                83     -0.156776  26 O  s         
-
+ 
  Vector   20  Occ=2.000000D+00  E=-1.074547D+00
               MO Center=  4.7D+00, -2.5D-01, -3.2D+00, r^2= 3.0D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -600,7 +609,7 @@ task scf property
     55      0.274831  14 C  s                73      0.245285  20 C  s         
     39     -0.239637  10 N  s                50      0.218933  13 C  s         
     45      0.154581  12 C  s         
-
+ 
  Vector   21  Occ=2.000000D+00  E=-1.025525D+00
               MO Center=  3.3D+00,  8.9D-01, -1.2D+00, r^2= 4.9D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -609,7 +618,7 @@ task scf property
     39     -0.238179  10 N  s                 2     -0.214051   1 N  s         
     50      0.172242  13 C  s                34      0.159961   9 C  s         
     73     -0.154572  20 C  s         
-
+ 
  Vector   22  Occ=2.000000D+00  E=-9.592735D-01
               MO Center=  3.5D+00,  1.5D-01, -2.1D+00, r^2= 7.7D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -618,7 +627,7 @@ task scf property
     55     -0.277279  14 C  s                50     -0.233848  13 C  s         
      7      0.216453   2 C  s                67      0.212467  18 C  s         
      2     -0.209225   1 N  s         
-
+ 
  Vector   23  Occ=2.000000D+00  E=-9.367758D-01
               MO Center=  4.5D+00, -1.6D-03, -2.8D+00, r^2= 4.9D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -626,7 +635,7 @@ task scf property
     61      0.363784  16 C  s                45     -0.316245  12 C  s         
     39      0.241637  10 N  s                50     -0.229010  13 C  s         
     73     -0.194785  20 C  s                55      0.186911  14 C  s         
-
+ 
  Vector   24  Occ=2.000000D+00  E=-9.133381D-01
               MO Center=  3.9D+00,  4.9D-01, -1.6D+00, r^2= 7.3D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -635,7 +644,7 @@ task scf property
      7     -0.236270   2 C  s                29      0.231264   8 C  s         
     55     -0.197754  14 C  s                45     -0.173508  12 C  s         
      2      0.168680   1 N  s                39     -0.159444  10 N  s         
-
+ 
  Vector   25  Occ=2.000000D+00  E=-8.376413D-01
               MO Center=  2.0D+00,  6.0D-01, -2.3D-01, r^2= 4.6D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -643,7 +652,7 @@ task scf property
      7      0.366757   2 C  s                22     -0.353749   5 C  s         
     12      0.243104   3 C  s                17     -0.179285   4 O  s         
     27     -0.153456   7 H  s         
-
+ 
  Vector   26  Occ=2.000000D+00  E=-7.830515D-01
               MO Center=  4.7D+00,  1.2D-01, -2.7D+00, r^2= 5.7D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -652,7 +661,7 @@ task scf property
     34      0.245928   9 C  s                61     -0.205605  16 C  s         
     67     -0.171985  18 C  s                78      0.157696  22 H  s         
     42      0.152741  10 N  pz        
-
+ 
  Vector   27  Occ=2.000000D+00  E=-7.493745D-01
               MO Center=  4.6D+00,  5.8D-02, -2.8D+00, r^2= 5.4D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -662,7 +671,7 @@ task scf property
     58     -0.177226  14 C  pz               76      0.174157  20 C  pz        
     34      0.164559   9 C  s                71     -0.161044  19 H  s         
     43     -0.156197  11 H  s         
-
+ 
  Vector   28  Occ=2.000000D+00  E=-7.105980D-01
               MO Center=  4.0D+00,  6.4D-01, -1.6D+00, r^2= 6.8D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -671,7 +680,7 @@ task scf property
     34     -0.184522   9 C  s                23      0.177277   5 C  px        
     40      0.171372  10 N  px               35     -0.170195   9 C  px        
     78     -0.158062  22 H  s         
-
+ 
  Vector   29  Occ=2.000000D+00  E=-6.926341D-01
               MO Center=  1.9D+00,  2.2D-01,  9.7D-01, r^2= 4.9D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -681,7 +690,7 @@ task scf property
     83     -0.204994  26 O  s                10      0.194175   2 C  pz        
     80     -0.193384  24 H  s                 7     -0.182036   2 C  s         
     85     -0.182378  26 O  py               86     -0.170177  26 O  pz        
-
+ 
  Vector   30  Occ=2.000000D+00  E=-6.691635D-01
               MO Center=  4.1D+00,  4.8D-01, -1.6D+00, r^2= 8.9D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -690,7 +699,7 @@ task scf property
     59     -0.176520  15 H  s                68     -0.164864  18 C  px        
     29      0.160693   8 C  s                23      0.159415   5 C  px        
     56      0.156672  14 C  px               55     -0.152715  14 C  s         
-
+ 
  Vector   31  Occ=2.000000D+00  E=-6.483890D-01
               MO Center=  1.7D+00,  3.3D-01,  3.8D-01, r^2= 5.4D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -700,7 +709,7 @@ task scf property
     80     -0.230715  24 H  s                 5      0.214878   1 N  pz        
     26      0.166665   6 H  s                83     -0.157332  26 O  s         
     24      0.150933   5 C  py        
-
+ 
  Vector   32  Occ=2.000000D+00  E=-6.168923D-01
               MO Center=  1.3D+00,  3.2D-01, -3.9D-01, r^2= 7.2D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -708,7 +717,7 @@ task scf property
      4      0.392993   1 N  py               81     -0.349041  25 H  s         
     79      0.235936  23 H  s                 9      0.227275   2 C  py        
      5     -0.187064   1 N  pz               40      0.174520  10 N  px        
-
+ 
  Vector   33  Occ=2.000000D+00  E=-6.023242D-01
               MO Center=  4.7D+00,  2.2D-01, -2.5D+00, r^2= 7.7D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -718,7 +727,7 @@ task scf property
     45      0.215779  12 C  s                42     -0.177068  10 N  pz        
     69     -0.174352  18 C  py               56     -0.169329  14 C  px        
     36      0.150070   9 C  py        
-
+ 
  Vector   34  Occ=2.000000D+00  E=-5.983567D-01
               MO Center=  3.8D+00,  1.1D-01, -2.4D+00, r^2= 9.2D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -727,7 +736,7 @@ task scf property
     64     -0.215759  16 C  pz               77      0.204245  21 H  s         
     32     -0.191465   8 C  pz               74      0.191526  20 C  px        
     35      0.178966   9 C  px               27      0.150281   7 H  s         
-
+ 
  Vector   35  Occ=2.000000D+00  E=-5.807631D-01
               MO Center=  1.7D+00,  2.5D-01,  2.0D-01, r^2= 5.9D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -736,7 +745,7 @@ task scf property
     79     -0.251506  23 H  s                20      0.243816   4 O  pz        
     15      0.230001   3 C  pz               17      0.221736   4 O  s         
     35     -0.166804   9 C  px               12     -0.152341   3 C  s         
-
+ 
  Vector   36  Occ=2.000000D+00  E=-5.564603D-01
               MO Center=  3.2D+00,  4.0D-01, -1.4D+00, r^2= 9.4D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -746,7 +755,7 @@ task scf property
     56      0.194241  14 C  px                4     -0.176237   1 N  py        
     59     -0.168891  15 H  s                26      0.167040   6 H  s         
     81      0.157362  25 H  s         
-
+ 
  Vector   37  Occ=2.000000D+00  E=-5.428143D-01
               MO Center=  3.9D+00,  1.3D-01, -2.0D+00, r^2= 7.9D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -756,7 +765,7 @@ task scf property
     47     -0.212804  12 C  py               77     -0.212948  21 H  s         
     53      0.174499  13 C  pz               14      0.156000   3 C  py        
     31     -0.155101   8 C  py        
-
+ 
  Vector   38  Occ=2.000000D+00  E=-5.368602D-01
               MO Center=  4.1D+00,  2.0D-01, -2.0D+00, r^2= 7.5D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -765,7 +774,7 @@ task scf property
     68      0.241772  18 C  px               46     -0.238330  12 C  px        
     40      0.232331  10 N  px               43      0.202815  11 H  s         
     24      0.178602   5 C  py               58     -0.161623  14 C  pz        
-
+ 
  Vector   39  Occ=2.000000D+00  E=-5.240885D-01
               MO Center=  4.0D+00,  6.4D-01, -1.3D+00, r^2= 6.9D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -775,7 +784,7 @@ task scf property
     27     -0.178813   7 H  s                14      0.165023   3 C  py        
     47      0.164298  12 C  py               75      0.156897  20 C  py        
     85      0.151297  26 O  py        
-
+ 
  Vector   40  Occ=2.000000D+00  E=-5.177421D-01
               MO Center=  3.6D+00,  5.8D-01, -1.2D+00, r^2= 7.7D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -785,7 +794,7 @@ task scf property
     36     -0.197463   9 C  py               18     -0.193903   4 O  px        
     58      0.193257  14 C  pz               14     -0.192070   3 C  py        
     76      0.192914  20 C  pz               47     -0.183427  12 C  py        
-
+ 
  Vector   41  Occ=2.000000D+00  E=-4.979350D-01
               MO Center=  2.3D+00,  8.1D-02,  9.2D-01, r^2= 4.7D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -795,7 +804,7 @@ task scf property
     18     -0.252297   4 O  px               23     -0.188956   5 C  px        
     86      0.172514  26 O  pz               79     -0.170958  23 H  s         
     20     -0.154188   4 O  pz        
-
+ 
  Vector   42  Occ=2.000000D+00  E=-4.871602D-01
               MO Center=  2.7D+00,  5.4D-01, -2.1D-01, r^2= 7.5D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -805,7 +814,7 @@ task scf property
     30      0.250408   8 C  px               23     -0.246383   5 C  px        
     17      0.182842   4 O  s                85      0.177600  26 O  py        
     25     -0.174829   5 C  pz                3     -0.163556   1 N  px        
-
+ 
  Vector   43  Occ=2.000000D+00  E=-4.787739D-01
               MO Center=  4.0D+00,  2.3D-01, -2.0D+00, r^2= 9.3D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -815,7 +824,7 @@ task scf property
     48     -0.198400  12 C  pz               78     -0.188058  22 H  s         
     68      0.168797  18 C  px               37     -0.162765   9 C  pz        
     41      0.162051  10 N  py               32      0.153723   8 C  pz        
-
+ 
  Vector   44  Occ=2.000000D+00  E=-4.597271D-01
               MO Center=  2.3D+00,  4.6D-01, -2.5D-01, r^2= 7.1D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -825,7 +834,7 @@ task scf property
     24      0.223691   5 C  py                3      0.214039   1 N  px        
      8     -0.208680   2 C  px               84      0.208861  26 O  px        
     25     -0.173655   5 C  pz               81     -0.171811  25 H  s         
-
+ 
  Vector   45  Occ=2.000000D+00  E=-4.446253D-01
               MO Center=  3.0D+00, -8.3D-02, -6.4D-01, r^2= 1.1D+01
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -835,7 +844,7 @@ task scf property
     87     -0.225135  27 H  s                19     -0.213269   4 O  py        
     58     -0.196845  14 C  pz               53      0.188777  13 C  pz        
     84      0.184974  26 O  px               64      0.181991  16 C  pz        
-
+ 
  Vector   46  Occ=2.000000D+00  E=-4.384767D-01
               MO Center=  3.0D+00,  4.3D-02, -8.4D-01, r^2= 1.0D+01
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -845,7 +854,7 @@ task scf property
     19     -0.203332   4 O  py               53     -0.193604  13 C  pz        
     87     -0.190988  27 H  s                64     -0.174072  16 C  pz        
     80     -0.168383  24 H  s                58      0.164333  14 C  pz        
-
+ 
  Vector   47  Occ=2.000000D+00  E=-4.166885D-01
               MO Center=  4.6D+00, -4.0D-02, -2.9D+00, r^2= 4.8D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -855,7 +864,7 @@ task scf property
     42     -0.248905  10 N  pz               64      0.234031  16 C  pz        
     36      0.204013   9 C  py               75     -0.196376  20 C  py        
     70      0.189343  18 C  pz               76      0.168679  20 C  pz        
-
+ 
  Vector   48  Occ=2.000000D+00  E=-4.139122D-01
               MO Center=  4.2D+00,  1.6D-01, -2.6D+00, r^2= 5.6D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -865,7 +874,7 @@ task scf property
     77     -0.225661  21 H  s                74     -0.216315  20 C  px        
     56      0.205514  14 C  px               68      0.206529  18 C  px        
     32     -0.192868   8 C  pz               31     -0.171550   8 C  py        
-
+ 
  Vector   49  Occ=2.000000D+00  E=-3.697146D-01
               MO Center=  4.1D-01,  3.3D-01,  5.5D-01, r^2= 2.2D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -874,7 +883,7 @@ task scf property
      2      0.347199   1 N  s                86      0.225787  26 O  pz        
     80      0.210220  24 H  s                20      0.199290   4 O  pz        
     84      0.184432  26 O  px                8      0.178807   2 C  px        
-
+ 
  Vector   50  Occ=2.000000D+00  E=-3.285250D-01
               MO Center=  2.3D+00,  3.5D-02,  1.8D+00, r^2= 2.4D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -882,7 +891,7 @@ task scf property
     85      0.616644  26 O  py               19     -0.493844   4 O  py        
     18     -0.330309   4 O  px               84      0.314412  26 O  px        
     14     -0.237817   3 C  py               86     -0.183903  26 O  pz        
-
+ 
  Vector   51  Occ=2.000000D+00  E=-3.256203D-01
               MO Center=  4.1D+00,  2.8D-01, -1.8D+00, r^2= 6.0D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -892,7 +901,7 @@ task scf property
     57      0.258203  14 C  py               41     -0.239235  10 N  py        
     32     -0.214577   8 C  pz               76      0.204092  20 C  pz        
     69     -0.190378  18 C  py               53     -0.187738  13 C  pz        
-
+ 
  Vector   52  Occ=2.000000D+00  E=-3.067447D-01
               MO Center=  2.5D+00, -1.7D-01,  8.7D-01, r^2= 4.7D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -900,7 +909,7 @@ task scf property
     20      0.709893   4 O  pz               86      0.326399  26 O  pz        
     10      0.322260   2 C  pz                5     -0.207859   1 N  pz        
     19      0.166542   4 O  py               15     -0.159921   3 C  pz        
-
+ 
  Vector   53  Occ=2.000000D+00  E=-2.425861D-01
               MO Center=  4.7D+00,  9.2D-02, -2.8D+00, r^2= 3.6D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -910,7 +919,7 @@ task scf property
     64      0.266746  16 C  pz               48     -0.259657  12 C  pz        
     53     -0.243942  13 C  pz               36     -0.239938   9 C  py        
     69     -0.227043  18 C  py               42      0.187382  10 N  pz        
-
+ 
  Vector   54  Occ=2.000000D+00  E=-2.256687D-01
               MO Center=  4.4D+00,  5.0D-01, -2.1D+00, r^2= 4.8D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -920,7 +929,7 @@ task scf property
     75      0.286252  20 C  py               32     -0.269095   8 C  pz        
     69      0.259737  18 C  py               42      0.224364  10 N  pz        
     58      0.214954  14 C  pz               37     -0.213374   9 C  pz        
-
+ 
  Vector   55  Occ=0.000000D+00  E= 2.475766D-01
               MO Center=  4.6D+00,  1.2D-01, -2.7D+00, r^2= 4.5D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -930,7 +939,7 @@ task scf property
     58     -0.309775  14 C  pz               76     -0.303073  20 C  pz        
     37     -0.277856   9 C  pz               52     -0.278937  13 C  py        
     70      0.265108  18 C  pz               31     -0.222438   8 C  py        
-
+ 
  Vector   56  Occ=0.000000D+00  E= 2.951862D-01
               MO Center=  4.6D+00, -1.9D-01, -3.2D+00, r^2= 3.2D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -940,7 +949,7 @@ task scf property
     69     -0.317449  18 C  py               52     -0.287299  13 C  py        
     57     -0.267859  14 C  py               41     -0.266365  10 N  py        
     70      0.223096  18 C  pz               53      0.198024  13 C  pz        
-
+ 
  Vector   57  Occ=0.000000D+00  E= 3.185100D-01
               MO Center=  2.4D+00, -1.8D-01,  1.3D+00, r^2= 2.0D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -949,7 +958,7 @@ task scf property
     13      0.425053   3 C  px               18     -0.354980   4 O  px        
     85     -0.267010  26 O  py               22     -0.164990   5 C  s         
     24      0.156215   5 C  py        
-
+ 
  Vector   58  Occ=0.000000D+00  E= 3.694396D-01
               MO Center=  4.1D+00,  8.1D-01, -1.5D+00, r^2= 4.5D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -959,7 +968,7 @@ task scf property
     75      0.294818  20 C  py               52     -0.293003  13 C  py        
     69     -0.279242  18 C  py               41      0.244639  10 N  py        
     76     -0.212294  20 C  pz               53      0.196315  13 C  pz        
-
+ 
  Vector   59  Occ=0.000000D+00  E= 5.218495D-01
               MO Center=  4.3D+00, -1.3D-01, -2.9D+00, r^2= 4.4D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -969,7 +978,7 @@ task scf property
     75      0.392818  20 C  py               69     -0.378240  18 C  py        
     48      0.319386  12 C  pz               58      0.298045  14 C  pz        
     53     -0.295246  13 C  pz               64     -0.271675  16 C  pz        
-
+ 
  Vector   60  Occ=0.000000D+00  E= 5.335973D-01
               MO Center=  3.1D+00,  7.0D-01, -6.4D-01, r^2= 8.0D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -979,7 +988,7 @@ task scf property
     29      0.352447   8 C  s                23     -0.347754   5 C  px        
     81      0.342335  25 H  s                30     -0.299770   8 C  px        
     22     -0.274527   5 C  s                80      0.252485  24 H  s         
-
+ 
  Vector   61  Occ=0.000000D+00  E= 5.609849D-01
               MO Center=  1.8D+00,  4.5D-01, -2.5D-01, r^2= 6.8D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -989,7 +998,7 @@ task scf property
     15     -0.386258   3 C  pz               39      0.342852  10 N  s         
     26      0.324185   6 H  s                27     -0.321314   7 H  s         
     25     -0.318304   5 C  pz                7     -0.254967   2 C  s         
-
+ 
  Vector   62  Occ=0.000000D+00  E= 5.685727D-01
               MO Center=  3.4D+00,  5.4D-01, -4.4D-01, r^2= 9.1D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -999,7 +1008,7 @@ task scf property
      2      0.418086   1 N  s                86     -0.324258  26 O  pz        
     45     -0.317743  12 C  s                83      0.277927  26 O  s         
     81     -0.248320  25 H  s                48     -0.243210  12 C  pz        
-
+ 
  Vector   63  Occ=0.000000D+00  E= 5.783672D-01
               MO Center=  3.8D+00,  1.8D-01, -2.2D+00, r^2= 1.0D+01
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -1009,7 +1018,7 @@ task scf property
     59      0.374774  15 H  s                77      0.350689  21 H  s         
      2     -0.324310   1 N  s                45     -0.324004  12 C  s         
     79      0.319563  23 H  s                32     -0.310503   8 C  pz        
-
+ 
  Vector   64  Occ=0.000000D+00  E= 6.125769D-01
               MO Center=  1.5D+00,  3.4D-01, -1.1D-01, r^2= 6.9D+00
    Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
@@ -1019,7 +1028,7 @@ task scf property
      4      0.426605   1 N  py               83      0.424471  26 O  s         
     79     -0.375980  23 H  s                12     -0.353987   3 C  s         
     86     -0.308007  26 O  pz               80      0.292355  24 H  s         
-
+ 
 
  center of mass
  --------------
@@ -1027,10 +1036,10 @@ task scf property
 
  moments of inertia (a.u.)
  ------------------
-        3632.777476380601          79.377236132538        1748.558360337129
-          79.377236132538        5566.932155187992        -428.649650229871
-        1748.558360337129        -428.649650229871        2926.474631706828
-
+        3632.777476380593          79.377236132538        1748.558360337126
+          79.377236132538        5566.932155187981        -428.649650229870
+        1748.558360337126        -428.649650229870        2926.474631706822
+ 
   Mulliken analysis of the total density
   --------------------------------------
 
@@ -1063,24 +1072,27 @@ task scf property
    25 H    1     0.84   0.84
    26 O    8     8.31   2.00  1.83  4.49
    27 H    1     0.77   0.77
-
+ 
        Multipole analysis of the density wrt the origin
        ------------------------------------------------
-
+ 
      L   x y z        total         open         nuclear
      -   - - -        -----         ----         -------
      0   0 0 0     -0.000000      0.000000    108.000000
-
+ 
      1   1 0 0     -0.475078      0.000000    676.930920
      1   0 1 0      0.375625      0.000000     54.448431
      1   0 0 1     -0.877967      0.000000   -224.648790
-
+ 
      2   2 0 0    -52.883686      0.000000   5603.282547
      2   1 1 0      6.068975      0.000000    296.023896
      2   1 0 1     -3.010707      0.000000  -2339.437621
      2   0 2 0    -59.169874      0.000000    310.736590
      2   0 1 1      1.348243      0.000000    138.161061
      2   0 0 2    -66.859565      0.000000   2136.322277
+ 
+
+ Parallel integral file used     123 records with       0 large values
 
  *** CALLING NEW AORESP DRIVER FOR CLOSED AND OPEN SHELLS ***
  Entering AOResponse driver routine
@@ -1119,15 +1131,15 @@ task scf property
  frequency in a.u.:  0.0000000E+00
  Perturbing field: electric
  Using El. Dipole Length Gauge
-
+ 
  Setting up CPKS with frequency omega =      0.00000000 a.u.
 
  STATIC response
 
                                 NWChem CPHF Module
                                 ------------------
-
-
+ 
+ 
   scftype          =     RHF 
   nclosed          =       54
   nopen            =        0
@@ -1138,7 +1150,19 @@ task scf property
   max iterations   =       50
   max subspace     =       30
 
- SCF residual:    8.6162510654915214E-011
+
+ Integral file          = ./Trp_polar.aoints.0
+ Record size in doubles =  65536        No. of integs per rec  =  43688
+ Max. records in memory =     59        Max. records in file   = 507871
+ No. of bits per label  =      8        No. of bits per value  =     64
+
+
+ #quartets = 8.876D+05 #integrals = 5.216D+06 #direct =  0.0% #cached =100.0%
+
+
+File balance: exchanges=     3  moved=    14  time=   0.0
+
+ SCF residual:   2.131377550302446E-009
 
 
 Iterative solution of linear equations
@@ -1147,28 +1171,31 @@ Iterative solution of linear equations
   Maximum subspace       30
         Iterations       50
        Convergence  1.0D-08
-        Start time     64.2
+        Start time      4.2
 
 
    iter   nsub   residual    time
    ----  ------  --------  ---------
-     1      3    1.75D+00      68.0
-     2      6    9.75D-01      71.8
-     3      9    1.24D-01      75.7
-     4     12    7.84D-02      79.5
-     5     15    2.15D-02      83.3
-     6     18    8.05D-03      87.1
-     7     21    2.62D-03      90.9
-     8     24    6.19D-04      94.7
-     9     27    1.73D-04      98.5
-    10     30    3.45D-05     102.4
-    11     30    1.27D-05     106.2
-    12     30    3.46D-06     110.0
-    13     30    8.13D-07     113.8
-    14     30    2.17D-07     117.6
-    15     30    9.34D-08     121.4
-    16     30    4.26D-08     125.2
-    17     30    9.93D-09     129.0
+     1      3    1.75D+00       7.8
+     2      6    9.75D-01      11.3
+     3      9    1.24D-01      14.8
+     4     12    7.84D-02      18.4
+     5     15    2.15D-02      21.9
+     6     18    8.05D-03      25.5
+     7     21    2.62D-03      29.0
+     8     24    6.19D-04      32.5
+     9     27    1.73D-04      36.0
+    10     30    3.45D-05      39.6
+    11     30    1.27D-05      43.1
+    12     30    3.46D-06      46.7
+    13     30    8.13D-07      50.2
+    14     30    2.20D-07      53.8
+    15     30    9.76D-08      57.3
+    16     30    3.80D-08      60.8
+    17     30    7.05D-09      64.4
+
+ Parallel integral file used     122 records with       0 large values
+
 
  Electric Dipole Response Matrix (nonzero elements):
 
@@ -1210,7 +1237,13 @@ Iterative solution of linear equations
 
  Exiting AOResponse driver routine
 
- Task  times  cpu:      129.0s     wall:      129.8s
+ Task  times  cpu:       61.9s     wall:       64.8s
+ 
+ 
+                                NWChem Input Module
+                                -------------------
+ 
+ 
  Summary of allocated global arrays
 -----------------------------------
   No active global arrays
@@ -1221,11 +1254,12 @@ Iterative solution of linear equations
                          ------------------------------
 
        create   destroy   get      put      acc     scatter   gather  read&inc
-calls: 1996     1996     3.63e+05 3.42e+04 5.43e+05 1129        0      716     
-number of processes/call -2.42e+13 -2.68e+14 8.47e+12 0.00e+00 0.00e+00
-bytes total:             3.44e+08 6.50e+07 5.34e+08 6.96e+02 0.00e+00 5.73e+03
-bytes remote:            0.00e+00 0.00e+00 0.00e+00 0.00e+00 0.00e+00 0.00e+00
-Max memory consumed for GA by this process: 2219688 bytes
+calls: 1967     1967     1.04e+05 1.01e+04 1.45e+05  643        0      152     
+number of processes/call 4.46e+13 3.45e+12 1.47e+12 0.00e+00 0.00e+00
+bytes total:             1.22e+08 2.12e+07 1.48e+08 0.00e+00 0.00e+00 1.22e+03
+bytes remote:            6.75e+07 6.12e+06 1.08e+08 -3.52e+02 0.00e+00 0.00e+00
+Max memory consumed for GA by this process: 619744 bytes
+ 
 MA_summarize_allocated_blocks: starting scan ...
 MA_summarize_allocated_blocks: scan completed: 0 heap blocks, 0 stack blocks
 MA usage statistics:
@@ -1234,51 +1268,26 @@ MA usage statistics:
 					      heap	     stack
 					      ----	     -----
 	current number of blocks	         0	         0
-	maximum number of blocks	        24	        35
+	maximum number of blocks	        25	        35
 	current total bytes		         0	         0
-	maximum total bytes		     80120	  22511736
-	maximum total K-bytes		        81	     22512
-	maximum total M-bytes		         1	        23
-
-
-                                NWChem Input Module
-                                -------------------
-
-
-
-
-
+	maximum total bytes		  30996272	  22511752
+	maximum total K-bytes		     30997	     22512
+	maximum total M-bytes		        31	        23
+ 
+ 
                                      CITATION
                                      --------
                 Please cite the following reference when publishing
                            results obtained with NWChem:
-
-          E. Aprà, E. J. Bylaska, W. A. de Jong, N. Govind, K. Kowalski,
-       T. P. Straatsma, M. Valiev, H. J. J. van Dam, Y. Alexeev, J. Anchell,
-       V. Anisimov, F. W. Aquino, R. Atta-Fynn, J. Autschbach, N. P. Bauman,
-     J. C. Becca, D. E. Bernholdt, K. Bhaskaran-Nair, S. Bogatko, P. Borowski,
-        J. Boschen, J. Brabec, A. Bruner, E. Cauët, Y. Chen, G. N. Chuev,
-      C. J. Cramer, J. Daily, M. J. O. Deegan, T. H. Dunning Jr., M. Dupuis,
-   K. G. Dyall, G. I. Fann, S. A. Fischer, A. Fonari, H. Früchtl, L. Gagliardi,
-      J. Garza, N. Gawande, S. Ghosh, K. Glaesemann, A. W. Götz, J. Hammond,
-       V. Helms, E. D. Hermes, K. Hirao, S. Hirata, M. Jacquelin, L. Jensen,
-   B. G. Johnson, H. Jónsson, R. A. Kendall, M. Klemm, R. Kobayashi, V. Konkov,
-      S. Krishnamoorthy, M. Krishnan, Z. Lin, R. D. Lins, R. J. Littlefield,
-      A. J. Logsdail, K. Lopata, W. Ma, A. V. Marenich, J. Martin del Campo,
-   D. Mejia-Rodriguez, J. E. Moore, J. M. Mullin, T. Nakajima, D. R. Nascimento,
-    J. A. Nichols, P. J. Nichols, J. Nieplocha, A. Otero-de-la-Roza, B. Palmer,
-    A. Panyala, T. Pirojsirikul, B. Peng, R. Peverati, J. Pittner, L. Pollack,
-   R. M. Richard, P. Sadayappan, G. C. Schatz, W. A. Shelton, D. W. Silverstein,
-   D. M. A. Smith, T. A. Soares, D. Song, M. Swart, H. L. Taylor, G. S. Thomas,
-            V. Tipparaju, D. G. Truhlar, K. Tsemekhman, T. Van Voorhis,
-     Á. Vázquez-Mayagoitia, P. Verma, O. Villa, A. Vishnu, K. D. Vogiatzis,
-        D. Wang, J. H. Weare, M. J. Williamson, T. L. Windus, K. Woliński,
-        A. T. Wong, Q. Wu, C. Yang, Q. Yu, M. Zacharias, Z. Zhang, Y. Zhao,
-                                and R. J. Harrison
-                        "NWChem: Past, present, and future
-                         J. Chem. Phys. 152, 184102 (2020)
-                               doi:10.1063/5.0004997
-
+ 
+                 M. Valiev, E.J. Bylaska, N. Govind, K. Kowalski,
+              T.P. Straatsma, H.J.J. van Dam, D. Wang, J. Nieplocha,
+                        E. Apra, T.L. Windus, W.A. de Jong
+                 "NWChem: a comprehensive and scalable open-source
+                  solution for large scale molecular simulations"
+                      Comput. Phys. Commun. 181, 1477 (2010)
+                           doi:10.1016/j.cpc.2010.04.018
+ 
                                       AUTHORS
                                       -------
      E. Apra, E. J. Bylaska, N. Govind, K. Kowalski, M. Valiev, W. A. de Jong,
@@ -1301,4 +1310,4 @@ MA usage statistics:
       T. Nakajima, S. Niu, L. Pollack, M. Rosing, K. Glaesemann, G. Sandrone,
       M. Stave, H. Taylor, G. Thomas, J. H. van Lenthe, A. T. Wong, Z. Zhang.
 
- Total times  cpu:      129.0s     wall:      129.8s
+ Total times  cpu:       61.9s     wall:       64.8s
