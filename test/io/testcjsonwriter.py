@@ -74,6 +74,22 @@ class CJSONWriterTest(unittest.TestCase):
         json_data = json.loads(cjson)
         assert "total dipole moment" not in json_data["properties"]
 
+    def test_metadata(self):
+        """Does the CJSON writer handle metadata properties correctly?"""
+        fpath = os.path.join(__datadir__, "data/NWChem/basicNWChem7.0/dvb_ir.out")
+        data = cclib.io.ccopen(fpath).parse()
+        cjson = cclib.io.cjsonwriter.CJSON(data).generate_repr()
+
+        json_data = json.loads(cjson)
+        self.assertTrue("run_date" in json_data["metadata"])
+        self.assertTrue("basis_set" in json_data["inputParameters"])
+        self.assertTrue("theory" in json_data["inputParameters"])
+        self.assertTrue("dispersion" in json_data["inputParameters"])
+        self.assertTrue("functional" in json_data["inputParameters"])
+        self.assertTrue("memory" in json_data["inputParameters"])
+        self.assertTrue("processors" in json_data["inputParameters"])
+        self.assertTrue("qm_program" in json_data["inputParameters"])
+
 
 if __name__ == "__main__":
     unittest.main()
