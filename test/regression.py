@@ -2971,7 +2971,23 @@ class GaussianPolarTest(ReferencePolarTest):
 # Jaguar #
 
 
-class JaguarSPTest_6_31gss(JaguarSPTest):
+class JaguarSPTest_noatomcharges(JaguarSPTest):
+    """Atomic partial charges were not printed in old Jaguar unit tests."""
+
+    @unittest.skip("Cannot parse atomcharges from this file.")
+    def testatomcharges(self):
+        """Are atomic charges consistent with natom?"""
+
+    @unittest.skip("Cannot parse atomcharges from this file.")
+    def testatomcharges_mulliken(self):
+        """Do Mulliken atomic charges sum to zero?"""
+
+    @unittest.skip("Cannot parse atomcharges from this file.")
+    def testatomcharges_lowdin(self):
+        """Do Lowdin atomic charges sum to zero?"""
+
+
+class JaguarSPTest_6_31gss(JaguarSPTest_noatomcharges):
     """AO counts and some values are different in 6-31G** compared to STO-3G."""
     nbasisdict = {1: 5, 6: 15}
     b3lyp_energy = -10530
@@ -3021,7 +3037,7 @@ class JaguarGeoOptTest_nmo45(GenericGeoOptTest):
         self.assertEqual(len(self.data.moenergies[0]), 45)
 
 
-class JaguarSPTest_nmo45(GenericSPTest):
+class JaguarSPTest_nmo45(JaguarSPTest_noatomcharges):
     def testlengthmoenergies(self):
         """Without special options, Jaguar only print Homo+10 orbital energies."""
         self.assertEqual(len(self.data.moenergies[0]), 45)

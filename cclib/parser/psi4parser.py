@@ -8,6 +8,7 @@
 """Parser for Psi4 output files."""
 
 from collections import namedtuple
+import re
 
 import numpy
 
@@ -43,6 +44,13 @@ class Psi4(logfileparser.Logfile):
         # There are also sometimes subsections within each section, denoted
         # with =>/<= rather than ==>/<==.
         self.subsection = None
+
+        # Regular expression for matching the start of an atomic charges
+        # section; the second format of the header (with square brackets) is
+        # for old Psi4 versions.
+        self.re_atomic_charges_header = re.compile(
+            r"^\s*(Mulliken|Lowdin|MBIS) Charges(:?: \(a\.u\.\)| \[a\.u\.\]:)"
+        )
 
     def after_parsing(self):
         super(Psi4, self).after_parsing()
@@ -650,22 +658,21 @@ class Psi4(logfileparser.Logfile):
         #        1     C     2.99909  2.99909  0.00000  0.00182
         #        2     C     2.99909  2.99909  0.00000  0.00182
         # ...
-        for pop_type in ["Mulliken", "Lowdin"]:
-            if line.strip() == f"{pop_type} Charges: (a.u.)":
-                if not hasattr(self, 'atomcharges'):
-                    self.atomcharges = {}
-                header = next(inputfile)
+        atomic_charges_header = self.re_atomic_charges_header.search(line)
+        if atomic_charges_header is not None:
+            if not hasattr(self, 'atomcharges'):
+                self.atomcharges = {}
 
+            while "Center  Symbol    Alpha" not in line:
                 line = next(inputfile)
-                while not line.strip():
-                    line = next(inputfile)
+            line = next(inputfile)
 
-                charges = []
-                while line.strip():
-                    ch = float(line.split()[-1])
-                    charges.append(ch)
-                    line = next(inputfile)
-                self.atomcharges[pop_type.lower()] = charges
+            charges = []
+            while line.strip():
+                ch = float(line.split()[-1])
+                charges.append(ch)
+                line = next(inputfile)
+            self.atomcharges[atomic_charges_header.groups()[0].lower()] = charges
 
         # This is for the older conventional MP2 code in 4.0b5.
         mp_trigger = "MP2 Total Energy (a.u.)"
