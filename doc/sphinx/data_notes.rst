@@ -74,9 +74,11 @@ Currently, cclib parses several different charge types depending on the program:
     Löwdin       ``lowdin``
     NPA          ``natural``
     `APT`_       ``apt``
-    CHELPG       ``chelpg``
+    `CHELPG`_    ``chelpg``
     `Hirshfeld`_ ``hirshfeld``
     `CM5`_       ``cm5``
+    `ESP`_       ``esp``
+    `RESP`_      ``resp``
     ============ ==============================
 
 In practice, these may differ somewhat from the values cclib calculates in the various `calculation methods`_.
@@ -87,8 +89,11 @@ In practice, these may differ somewhat from the values cclib calculates in the v
 
 .. _`calculation methods`: methods.html
 .. _`APT`: https://doi.org/10.1016/j.theochem.2010.06.011
-.. _`CM5`: https://doi.org/10.1021/ct200866d
+.. _`CHELPG`: https://doi.org/10.1002/jcc.540110311
 .. _`Hirshfeld`: https://doi.org/10.1007/BF01113058
+.. _`CM5`: https://doi.org/10.1021/ct200866d
+.. _`ESP`: https://doi.org/10.1002/jcc.540050204
+.. _`RESP`: https://doi.org/10.1021/j100142a004
 
 atomcoords
 ----------
