@@ -1372,6 +1372,10 @@ cannot be determined. Rerun without `$molecule read`."""
                 self.parse_charge_section(inputfile, 'cm5')
             if 'Ground-State ChElPG Net Atomic Charges' in line:
                 self.parse_charge_section(inputfile, 'chelpg')
+            if 'Merz-Kollman ESP Net Atomic Charges' in line:
+                self.parse_charge_section(inputfile, 'esp')
+            if 'Merz-Kollman RESP Net Atomic Charges' in line:
+                self.parse_charge_section(inputfile, 'resp')
 
             # Multipole moments are not printed in lexicographical order,
             # so we need to parse and sort them. The units seem OK, but there
