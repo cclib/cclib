@@ -16,133 +16,15 @@ from cclib.parser.utils import find_package
 from numpy.testing import assert_array_almost_equal
 
 
-class Horton2Test(unittest.TestCase):
-    """ Tests for the horton 2 bridge in cclib """
+class HortonTest(unittest.TestCase):
+    """Tests for the Horton bridge in cclib"""
 
     # Both horton and cclib can read in fchk files. The test routine utilizes this fact
     # and compares the attributes that were directly loaded from each package
     # and the attributes that were converted.
 
     def setUp(self):
-        super(Horton2Test, self).setUp()
-
-        self.data, self.logfile = getdatafile(
-            "Gaussian", "basicGaussian16", ["dvb_un_sp.fchk"]
-        )
-        datadir = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), "..", "..", "data")
-        )
-        inputfile = os.path.join(
-            datadir, "Gaussian", "basicGaussian16", "dvb_un_sp.fchk"
-        )
-
-        self._old_horton = False
-        self._found_horton = find_package("horton")
-
-        if self._found_horton:
-            try:
-                from horton import __version__
-            except:
-                self._old_horton = (
-                    True  # Old horton versions do not have this __version__ attribute
-                )
-            else:
-                if __version__[0] == "2":
-                    from horton.io.iodata import IOData
-                    from horton import log
-
-                    log.set_level(
-                        0
-                    )  # This suppresses horton outputs so that they do not flood the test log.
-                    self._hortonver = 2
-                    self.iodat = IOData.from_file(inputfile)
-
-    def test_makehorton(self):
-        """ Check that the bridge from cclib to horton works correctly """
-        # First use `makehorton` function to generate IOData object converted from cclib ccData
-        hortonequiv = cclib2horton.makehorton(self.data)
-
-        # Identify attributes that should be verified
-        check = ["pseudo_numbers", "ms2"]  # float or int
-        checkArr = [
-            "coordinates",
-            "numbers",
-            "orb_alpha",
-            "orb_beta",
-            "mulliken_charges",
-            "npa_charges",
-        ]  # one dimensional arrays
-        checkArrArr = ["polar"]  # two dimensional arrays
-
-        for attr in check:
-            if hasattr(self.iodat, attr) and hasattr(hortonequiv, attr):
-                self.assertAlmostEqual(
-                    getattr(self.iodat, attr),
-                    getattr(hortonequiv, attr),
-                    delta=1.0e-3,
-                )
-
-        for attr in checkArr:
-            if hasattr(self.iodat, attr) and hasattr(hortonequiv, attr):
-                assert_array_almost_equal(
-                    getattr(self.iodat, attr), getattr(hortonequiv, attr), decimal=3
-                )
-
-        for attr in checkArrArr:
-            if hasattr(self.iodat, attr) and hasattr(hortonequiv, attr):
-                assert_array_almost_equal(
-                    getattr(self.iodat, attr)[0],
-                    getattr(hortonequiv, attr)[0],
-                    decimal=3,
-                )
-
-    def test_makecclib(self):
-        """ Check that the bridge from horton to cclib works correctly """
-        # First use `makecclib` function to generate ccData object converted from horton IOData
-        cclibequiv = cclib2horton.makecclib(self.iodat)
-
-        # Identify attributes that should be verified
-        check = ["mult", "coreelectrons"]  # float or int
-        checkArr = ["atomcoords", "atomnos", "mocoeffs"]  # one dimensional arrays
-        checkArrArr = ["polarizability"]  # two dimensional arrays
-        checkChg = ["mulliken", "natural"]  # partial charges
-
-        for attr in check:
-            if hasattr(self.data, attr) and hasattr(cclibequiv, attr):
-                self.assertAlmostEqual(
-                    getattr(self.data, attr), getattr(cclibequiv, attr), delta=1.0e-3
-                )
-
-        for attr in checkArr:
-            if hasattr(self.data, attr) and hasattr(cclibequiv, attr):
-                assert_array_almost_equal(
-                    getattr(self.data, attr), getattr(cclibequiv, attr), decimal=3
-                )
-
-        for attr in checkArrArr:
-            if hasattr(self.data, attr) and hasattr(cclibequiv, attr):
-                assert_array_almost_equal(
-                    getattr(self.data, attr)[0], getattr(cclibequiv, attr)[0], decimal=3
-                )
-
-        if hasattr(self.data, "atomcharges") and hasattr(cclibequiv, "atcomcharges"):
-            for chg in checkChg:
-                if chg in self.data.atomcharges and chg in cclibequiv.atomcharges:
-                    assert_array_almost_equal(
-                        self.data.atomcharges[chg][0],
-                        cclibequiv.atomcharges[chg][0],
-                        decimal=3,
-                    )
-
-class Horton3Test(unittest.TestCase):
-    """ Tests for the horton 3 bridge in cclib """
-
-    # Both horton and cclib can read in fchk files. The test routine utilizes this fact
-    # and compares the attributes that were directly loaded from each package
-    # and the attributes that were converted.
-
-    def setUp(self):
-        super(Horton3Test, self).setUp()
+        super().setUp()
 
         self.data, self.logfile = getdatafile(
             "Gaussian", "basicGaussian16", ["dvb_un_sp.fchk"]
