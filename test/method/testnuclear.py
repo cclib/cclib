@@ -80,8 +80,29 @@ class NuclearTest(unittest.TestCase):
             nuclear.center_of_mass(), np.array([0.0, 0.0, 0.0]), rtol=0.0, atol=1.0e-13
         )
 
-    def test_moment_of_intertia_tensor(self) -> None:
-        pass
+    def test_moment_of_inertia_tensor(self) -> None:
+        """Testing the moment of inertia tensor for a logfile where it is
+        printed.
+        """
+
+        data, logfile = getdatafile(Molcas, "basicOpenMolcas18.0", ["dvb_sp.out"])
+        nuclear = Nuclear(data)
+        nuclear.logger.setLevel(logging.ERROR)
+
+        ref_moi_tensor = np.zeros(shape=(3, 3))
+
+        with open(logfile.filename) as inputfile:
+            for line in inputfile:
+                if line.strip() == "The Moment of Inertia Tensor / au":
+                    line = next(inputfile)
+                    for i in range(3):
+                        line = next(inputfile)
+                        ref_moi_tensor[i, : i + 1] = [utils.float(x) for x in line.split()[1:]]
+
+        ref_moi_tensor = utils.symmetrize(ref_moi_tensor, use_triangle="lower")
+        print("\n\n")
+        print(ref_moi_tensor)
+        print(nuclear.moment_of_inertia_tensor(units=nuclear.MOITensorUnits.amu_bohr_squared))
 
     def test_principal_moments_of_inertia(self) -> None:
         """Testing principal moments of inertia and the principal axes for one

@@ -8,6 +8,7 @@
 """Calculate properties of nuclei based on data parsed by cclib."""
 
 import logging
+from enum import Enum, auto
 from typing import Tuple
 
 from cclib.method.calculationmethod import Method
@@ -94,11 +95,31 @@ class Nuclear(Method):
 
         return numerator / denominator
 
-    def moment_of_inertia_tensor(self, atomcoords_index: int = -1) -> np.ndarray:
+    class MOITensorUnits(Enum):
+        amu_bohr_squared = auto()
+        amu_angstrom_squared = auto()
+
+    def moment_of_inertia_tensor(
+        self,
+        units: MOITensorUnits = MOITensorUnits.amu_angstrom_squared,
+        atomcoords_index: int = -1,
+    ) -> np.ndarray:
         """Return the moment of inertia tensor."""
+
         charges = self.data.atomnos
         coords = self.data.atomcoords[atomcoords_index]
         masses = get_isotopic_masses(charges)
+
+        allowed_units = Nuclear.MOITensorUnits
+        # Put input components in the right units before assembling the tensor.
+        if units == allowed_units.amu_bohr_squared:
+            bohr2ang = constants.atomic_unit_of_length / _ANGSTROM
+            coords /= bohr2ang
+        elif units == allowed_units.amu_angstrom_squared:
+            # No need to do anything, already in the correct units
+            pass
+        else:
+            raise ValueError(f"Invalid units, pick one of Nuclear.MOITensorUnits")
 
         moi_tensor = np.empty((3, 3))
 
