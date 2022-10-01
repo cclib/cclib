@@ -341,7 +341,7 @@ A dictionary containing metadata_ (data about data) for the calculation. Current
 * ``wall_time``: A list of datetime.timedeltas containing the wall time of each calculation in the output.  
 * ``warnings``: A list of strings, each of which is a warning produced during a calculation.
 
-The implementation and coverage of metadata is currently inconsistent. In the future, metadata may receive its own page similar to `extracted data`_.
+The implementation and coverage of metadata is currently inconsistent. In the future, metadata may receive its own page similar to :doc:`extracted data <data>`.
 
 .. _metadata: https://en.wikipedia.org/wiki/Metadata
 
@@ -417,7 +417,7 @@ The symmetry labels are normalised and cclib reports standard symmetry names:
     sigma.g Sigma.g                     SGG
     ======= ======= ======= ==========  ==================          ======
 
-* ADF - the full list can be found `here http://www.scm.com/Doc/Doc2005.01/ADF/ADFUsersGuide/page339.html`_.
+* ADF - the full list can be found `here <http://www.scm.com/Doc/Doc2005.01/ADF/ADFUsersGuide/page339.html>`_.
 * GAMESS-UK - to get the list, ``grep "data yr" input.m`` if you have access to the source. Note that for E, it's split into "e1+" and "e1-" for instance.
 * Jaguar - to get the list, look at the examples in ``schrodinger/jaguar-whatever/samples`` if you have access to Jaguar. Note that for E, it's written as E1pp/Ap, for instance.
 * NWChem - if molecular symmetry is turned off or set to C1, symmetry adaption for orbitals is also deactivated, and can be explicitly turned on with `adapt on` in the SCF block
@@ -425,7 +425,7 @@ The symmetry labels are normalised and cclib reports standard symmetry names:
 Developers:
 
 * The tests for these functions live in ``test/parser/testspecficparser.py``.
-* The character tables `here <http://symmetry.jacobs-university.de/>`_ may be useful in determining the correspondence between the labels used by the comp chem package and the commonly-used symbols.
+* `These <http://symmetry.jacobs-university.de/>`_ character tables may be useful in determining the correspondence between the labels used by the comp chem package and the commonly-used symbols.
 
 .. index::
     single: energy; mpenergies (attribute)
