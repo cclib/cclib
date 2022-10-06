@@ -8,17 +8,12 @@
 """Classes and tools for storing and handling parsed data"""
 
 import logging
-from collections import namedtuple
 from typing import Any, Dict, List, Mapping, Optional
 
 from cclib.method import Electrons, orbitals
+from cclib.parser.attribute import Attribute, _attributes
 
 import numpy
-
-# from cclib.parser.attribute import attributes
-
-
-Attribute = namedtuple("Attribute", ["type", "json_key", "attribute_path"])
 
 
 class ccData:
@@ -105,88 +100,6 @@ class ccData:
             the 11th molecular orbital is the HOMO
     """
 
-    # The expected types for all supported attributes.
-    # The json_key is the key name used for attributes in the CJSON/JSON format
-    # 'TBD' - To Be Decided are the key names of attributes which haven't been included in the cjson format
-    _attributes = {
-        "aonames": Attribute(list, "names", "atoms:orbitals"),
-        "aooverlaps": Attribute(numpy.ndarray, "overlaps", "properties:orbitals"),
-        "atombasis": Attribute(list, "indices", "atoms:orbitals"),
-        "atomcharges": Attribute(dict, "partial charges", "properties"),
-        "atomcoords": Attribute(numpy.ndarray, "coords", "atoms:coords:3d"),
-        "atommasses": Attribute(numpy.ndarray, "mass", "atoms"),
-        "atomnos": Attribute(numpy.ndarray, "number", "atoms:elements"),
-        "atomspins": Attribute(dict, "spins", "atoms"),
-        "ccenergies": Attribute(numpy.ndarray, "coupled cluster", "properties:energy"),
-        "charge": Attribute(int, "charge", "properties"),
-        "coreelectrons": Attribute(numpy.ndarray, "core electrons", "atoms"),
-        "dispersionenergies": Attribute(
-            numpy.ndarray, "dispersion correction", "properties:energy"
-        ),
-        "enthalpy": Attribute(float, "enthalpy", "properties"),
-        "entropy": Attribute(float, "entropy", "properties"),
-        "etenergies": Attribute(numpy.ndarray, "electronic transitions", "transitions"),
-        "etoscs": Attribute(numpy.ndarray, "oscillator strength", "transitions"),
-        "etdips": Attribute(numpy.ndarray, "electic transition dipoles", "transitions"),
-        "etveldips": Attribute(
-            numpy.ndarray, "velocity-gauge electric transition dipoles", "transitions"
-        ),
-        "etmagdips": Attribute(numpy.ndarray, "magnetic transition dipoles", "transitions"),
-        "etrotats": Attribute(numpy.ndarray, "rotatory strength", "transitions"),
-        "etsecs": Attribute(list, "one excited config", "transitions"),
-        "etsyms": Attribute(list, "symmetry", "transitions"),
-        "freeenergy": Attribute(float, "free energy", "properties:energy"),
-        "fonames": Attribute(list, "orbital names", "fragments"),
-        "fooverlaps": Attribute(numpy.ndarray, "orbital overlap", "fragments"),
-        "fragnames": Attribute(list, "fragment names", "fragments"),
-        "frags": Attribute(list, "atom indices", "fragments"),
-        "gbasis": Attribute(list, "basis functions", "atoms:orbitals"),
-        "geotargets": Attribute(numpy.ndarray, "geometric targets", "optimization"),
-        "geovalues": Attribute(numpy.ndarray, "geometric values", "optimization"),
-        "grads": Attribute(numpy.ndarray, "TBD", "N/A"),
-        "hessian": Attribute(numpy.ndarray, "hessian matrix", "vibrations"),
-        "homos": Attribute(numpy.ndarray, "homos", "properties:orbitals"),
-        "metadata": Attribute(dict, "TBD", "N/A"),
-        "mocoeffs": Attribute(list, "coeffs", "properties:orbitals"),
-        "moenergies": Attribute(list, "energies", "properties:orbitals"),
-        "moments": Attribute(list, "total dipole moment", "properties"),
-        "mosyms": Attribute(list, "molecular orbital symmetry", "properties:orbitals"),
-        "mpenergies": Attribute(numpy.ndarray, "moller plesset", "properties:energy"),
-        "mult": Attribute(int, "multiplicity", "properties"),
-        "natom": Attribute(int, "number of atoms", "properties"),
-        "nbasis": Attribute(int, "basis number", "properties:orbitals"),
-        "nmo": Attribute(int, "MO number", "properties:orbitals"),
-        "nmrtensors": Attribute(dict, "NMR chemical shielding tensors", "properties:nmr"),
-        "nocoeffs": Attribute(numpy.ndarray, "TBD", "N/A"),
-        "nooccnos": Attribute(numpy.ndarray, "TBD", "N/A"),
-        "nsocoeffs": Attribute(list, "TBD", "N/A"),
-        "nsooccnos": Attribute(list, "TBD", "N/A"),
-        "optdone": Attribute(list, "done", "optimization"),
-        "optstatus": Attribute(numpy.ndarray, "status", "optimization"),
-        "polarizabilities": Attribute(list, "polarizabilities", "N/A"),
-        "pressure": Attribute(float, "pressure", "properties"),
-        "rotconsts": Attribute(numpy.ndarray, "rotational constants", "atoms:coords:rotconsts"),
-        "scancoords": Attribute(numpy.ndarray, "step geometry", "optimization:scan"),
-        "scanenergies": Attribute(list, "PES energies", "optimization:scan"),
-        "scannames": Attribute(list, "variable names", "optimization:scan"),
-        "scanparm": Attribute(list, "PES parameter values", "optimization:scan"),
-        "scfenergies": Attribute(numpy.ndarray, "scf energies", "optimization:scf"),
-        "scftargets": Attribute(numpy.ndarray, "targets", "optimization:scf"),
-        "scfvalues": Attribute(list, "values", "optimization:scf"),
-        "temperature": Attribute(float, "temperature", "properties"),
-        "time": Attribute(numpy.ndarray, "time", "N/A"),
-        "transprop": Attribute(dict, "electronic transitions", "transitions"),
-        "vibanharms": Attribute(numpy.ndarray, "anharmonicity constants", "vibrations"),
-        "vibdisps": Attribute(numpy.ndarray, "displacement", "vibrations"),
-        "vibfreqs": Attribute(numpy.ndarray, "frequencies", "vibrations"),
-        "vibfconsts": Attribute(numpy.ndarray, "force constants", "vibrations"),
-        "vibirs": Attribute(numpy.ndarray, "IR", "vibrations:intensities"),
-        "vibramans": Attribute(numpy.ndarray, "raman", "vibrations:intensities"),
-        "vibrmasses": Attribute(numpy.ndarray, "reduced masses", "vibrations"),
-        "vibsyms": Attribute(list, "vibration symmetry", "vibrations"),
-        "zpve": Attribute(float, "zero-point correction", "properties:energies"),
-    }
-
     # The name of all attributes can be generated from the dictionary above.
     _attrlist = sorted(_attributes.keys())
 
@@ -230,7 +143,7 @@ class ccData:
 
         attrlist = [k for k in self._attrlist if hasattr(self, k)]
         for k in attrlist:
-            v = self._attributes[k].type
+            v = _attributes[k].type
             if v == numpy.ndarray:
                 setattr(self, k, getattr(self, k).tolist())
             elif v == list and k in self._listsofarrays:
@@ -253,7 +166,7 @@ class ccData:
 
         attrlist = [k for k in self._attrlist if hasattr(self, k)]
         for k in attrlist:
-            v = self._attributes[k].type
+            v = _attributes[k].type
             precision = "d"
             if k in self._intarrays:
                 precision = "i"
@@ -336,13 +249,13 @@ class ccData:
             # attr.typecheck()
 
             val = getattr(self, attr)
-            if type(val) == self._attributes[attr].type:
+            if type(val) == _attributes[attr].type:
                 continue
 
             try:
-                val = self._attributes[attr].type(val)
+                val = _attributes[attr].type(val)
             except ValueError:
-                args = (attr, type(val), self._attributes[attr].type)
+                args = (attr, type(val), _attributes[attr].type)
                 raise TypeError(
                     f"attribute {args[0]} is {args[1]} instead of {args[2]} and could not be converted"
                 )
@@ -459,7 +372,7 @@ class ccData_optdone_bool(ccData):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._attributes["optdone"] = Attribute(bool, "done", "optimization")
+        _attributes["optdone"] = Attribute(bool, "done", "optimization")
 
     def setattributes(self, *args, **kwargs):
         invalid = super().setattributes(*args, **kwargs)
