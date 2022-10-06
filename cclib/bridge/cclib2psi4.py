@@ -7,6 +7,8 @@
 
 """Bridge for using cclib data in Psi4 (http://www.psicode.org/)."""
 
+import numpy as np
+
 from cclib.parser.utils import find_package
 
 _found_psi4 = find_package("psi4")
@@ -14,12 +16,12 @@ if _found_psi4:
     from psi4.core import Molecule
 
 
-def _check_psi4(found_psi4):
+def _check_psi4(found_psi4: bool) -> None:
     if not found_psi4:
         raise ImportError("You must install `psi4` to use this function")
 
 
-def makepsi4(atomcoords, atomnos, charge=0, mult=1):
+def makepsi4(atomcoords: np.ndarray, atomnos: np.ndarray, charge: int = 0, mult: int = 1) -> "psi4.core.Molecule":
     """Create a Psi4 Molecule."""
     _check_psi4(_found_psi4)
     return Molecule.from_arrays(
