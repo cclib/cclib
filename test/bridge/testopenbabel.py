@@ -16,10 +16,10 @@ from cclib.bridge import cclib2openbabel
 class OpenbabelTest(unittest.TestCase):
     """Tests for the cclib2openbabel bridge in cclib."""
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.path = os.path.abspath(os.path.dirname(__file__))
 
-    def test_makeopenbabel(self):
+    def test_makeopenbabel(self) -> None:
         try:
             from openbabel import openbabel
         except:
@@ -31,7 +31,7 @@ class OpenbabelTest(unittest.TestCase):
         formatok = obconversion.SetOutFormat("inchi")
         assert obconversion.WriteString(obmol).strip() == "InChI=1S/H2O/h1H2"
 
-    def test_makeopenbabel_and_makecclib(self):
+    def test_makeopenbabel_and_makecclib(self) -> None:
         """Ensure that makeopenbabel and makecclib are inverse of each other"""
         atomnos = numpy.array([1, 8, 1], "i")
         atomcoords = numpy.array([[[-1., 1., 0.], [0., 0., 0.], [1., 1., 0.]]])
@@ -48,7 +48,7 @@ class OpenbabelTest(unittest.TestCase):
         numpy.testing.assert_allclose(data.atomcoords, atomcoords)
         numpy.testing.assert_allclose(data.atomnos, atomnos)
 
-    def test_readfile(self):
+    def test_readfile(self) -> None:
         """Try to load an XYZ file with uracyl through Openbabel"""
         data = cclib2openbabel.readfile(f"{self.path}/uracil.xyz", "XYZ")
         assert data.natom == 12

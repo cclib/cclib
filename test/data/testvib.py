@@ -29,22 +29,22 @@ class GenericIRTest(unittest.TestCase):
     # reference zero-point correction from Gaussian 16 dvb_ir.out
     zpve = 0.1771
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Initialize the number of vibrational frequencies on a per molecule basis"""
         self.numvib = 3*len(self.data.atomnos) - 6
 
-    def testbasics(self):
+    def testbasics(self) -> None:
         """Are basic attributes correct?"""
         self.assertEqual(self.data.natom, 20)
 
     @skipForParser('NWChem', 'Not implemented for this parser')
-    def testvibdisps(self):
+    def testvibdisps(self) -> None:
         """Are the dimensions of vibdisps consistent with numvib x N x 3"""
         self.assertEqual(len(self.data.vibfreqs), self.numvib)
         self.assertEqual(self.data.vibdisps.shape,
                          (self.numvib, len(self.data.atomnos), 3))
 
-    def testlengths(self):
+    def testlengths(self) -> None:
         """Are the lengths of vibfreqs and vibirs (and if present, vibsyms, vibfconnsts and vibrmasses) correct?"""
         self.assertEqual(len(self.data.vibfreqs), self.numvib)
         if hasattr(self.data, 'vibirs'):
@@ -56,12 +56,12 @@ class GenericIRTest(unittest.TestCase):
         if hasattr(self.data, 'vibrmasses'):
             self.assertEqual(len(self.data.vibrmasses), self.numvib)
 
-    def testfreqval(self):
+    def testfreqval(self) -> None:
         """Is the highest freq value 3630 +/- 200 wavenumber?"""
         self.assertAlmostEqual(max(self.data.vibfreqs), 3630, delta=200)
 
     @skipForParser('Psi4', 'Psi cannot print IR intensities')
-    def testirintens(self):
+    def testirintens(self) -> None:
         """Is the maximum IR intensity 100 +/- 10 km/mol?"""
         self.assertAlmostEqual(max(self.data.vibirs), self.max_IR_intensity, delta=10)
 
@@ -76,7 +76,7 @@ class GenericIRTest(unittest.TestCase):
     @skipForParser('Turbomole', 'Turbomole cannot print force constants')
     @skipForLogfile('Jaguar/Jaguar4.2', 'Data file does not contain force constants')
     @skipForLogfile('Psi4/Psi4-1.0', 'Data file contains vibrational info with cartesian coordinates')
-    def testvibfconsts(self):
+    def testvibfconsts(self) -> None:
         """Is the maximum force constant 10. +/- 0.1 mDyn/angstrom?"""
         self.assertAlmostEqual(max(self.data.vibfconsts), self.max_force_constant, delta=0.1)
 
@@ -88,12 +88,12 @@ class GenericIRTest(unittest.TestCase):
     @skipForParser('ORCA', 'ORCA cannot print reduced masses')
     @skipForLogfile('GAMESS/PCGAMESS', 'Data file does not contain reduced masses')
     @skipForLogfile('Psi4/Psi4-1.0', 'Data file does not contain reduced masses')
-    def testvibrmasses(self):
+    def testvibrmasses(self) -> None:
         """Is the maximum reduced mass 6.9 +/- 0.1 daltons?"""
         self.assertAlmostEqual(max(self.data.vibrmasses), self.max_reduced_mass, delta=0.1)
 
     @skipForParser('Psi3', 'not implemented yet')
-    def testzeropointcorrection(self):
+    def testzeropointcorrection(self) -> None:
         """Is the zero-point correction correct?"""
         self.assertAlmostEqual(self.data.zpve, self.zpve, delta=1.0e-3)
 
@@ -102,7 +102,7 @@ class ADFIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
     # ???
-    def testzeropointcorrection(self):
+    def testzeropointcorrection(self) -> None:
         """Is the zero-point correction correct?"""
         self.assertAlmostEqual(self.data.zpve, self.zpve, delta=1.0e-2)
 
@@ -118,11 +118,11 @@ class FireflyIRTest(GenericIRTest):
 class GaussianIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
-    def testvibsyms(self):
+    def testvibsyms(self) -> None:
         """Is the length of vibsyms correct?"""
         self.assertEqual(len(self.data.vibsyms), self.numvib)
 
-    def testzeropointcorrection(self):
+    def testzeropointcorrection(self) -> None:
         # reference zero-point correction from dvb_ir.out
         zpve = 0.1771
         """Is the zero-point correction correct?"""
@@ -132,27 +132,27 @@ class GaussianIRTest(GenericIRTest):
     enthalpy_places = 3
     freeenergy_places = 3
 
-    def testtemperature(self):
+    def testtemperature(self) -> None:
         """Is the temperature 298.15 K?"""
         self.assertAlmostEqual(298.15, self.data.temperature)
 
-    def testpressure(self):
+    def testpressure(self) -> None:
         """Is the pressure 1 atm?"""
         self.assertAlmostEqual(1, self.data.pressure)
 
-    def testentropy(self):
+    def testentropy(self) -> None:
          """Is the entropy reasonable"""
          self.assertAlmostEqual(0.0001462623335480945, self.data.entropy, self.entropy_places)
 
-    def testenthalpy(self):
+    def testenthalpy(self) -> None:
          """Is the enthalpy reasonable"""
          self.assertAlmostEqual(-382.12130688525264, self.data.enthalpy, self.enthalpy_places)
 
-    def testfreeenergy(self):
+    def testfreeenergy(self) -> None:
          """Is the freeenergy reasonable"""
          self.assertAlmostEqual(-382.164915, self.data.freeenergy, self.freeenergy_places)
 
-    def testfreeenergyconsistency(self):
+    def testfreeenergyconsistency(self) -> None:
         """Does G = H - TS hold"""
         self.assertAlmostEqual(self.data.enthalpy - self.data.temperature * self.data.entropy, self.data.freeenergy, self.freeenergy_places)
 
@@ -163,7 +163,7 @@ class JaguarIRTest(GenericIRTest):
     max_force_constant = 3.7
     max_reduced_mass = 2.3
 
-    def testvibsyms(self):
+    def testvibsyms(self) -> None:
         """Is the length of vibsyms correct?"""
         self.assertEqual(len(self.data.vibsyms), self.numvib)
 
@@ -178,34 +178,34 @@ class MolcasIRTest(GenericIRTest):
     enthalpy_places = 3
     freeenergy_places = 3
 
-    def testtemperature(self):
+    def testtemperature(self) -> None:
         """Is the temperature 298.15 K?"""
         self.assertAlmostEqual(298.15, self.data.temperature)
 
-    def testpressure(self):
+    def testpressure(self) -> None:
         """Is the pressure 1 atm?"""
         self.assertAlmostEqual(1, self.data.pressure)
 
-    def testentropy(self):
+    def testentropy(self) -> None:
          """Is the entropy reasonable"""
          self.assertAlmostEqual(0.00013403320476271246, self.data.entropy, self.entropy_places)
 
-    def testenthalpy(self):
+    def testenthalpy(self) -> None:
          """Is the enthalpy reasonable"""
          self.assertAlmostEqual(-382.11385, self.data.enthalpy, self.enthalpy_places)
 
-    def testfreeenergy(self):
+    def testfreeenergy(self) -> None:
          """Is the freeenergy reasonable"""
          self.assertAlmostEqual(-382.153812, self.data.freeenergy, self.freeenergy_places)
 
-    def testfreeenergyconsistency(self):
+    def testfreeenergyconsistency(self) -> None:
         """Does G = H - TS hold"""
         self.assertAlmostEqual(self.data.enthalpy - self.data.temperature * self.data.entropy, self.data.freeenergy, self.freeenergy_places)
 
 class NWChemIRTest(GenericIRTest):
     """Generic imaginary vibrational frequency unittest"""
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Initialize the number of vibrational frequencies on a per molecule basis"""
         self.numvib = 3*len(self.data.atomnos)
 
@@ -221,27 +221,27 @@ class OrcaIRTest(GenericIRTest):
     entropy_places = 6
     freeenergy_places = 3
 
-    def testtemperature(self):
+    def testtemperature(self) -> None:
         """Is the temperature 298.15 K?"""
         self.assertAlmostEqual(298.15, self.data.temperature)
 
-    def testpressure(self):
+    def testpressure(self) -> None:
         """Is the pressure 1 atm?"""
         self.assertAlmostEqual(1, self.data.pressure)
 
-    def testenthalpy(self):
+    def testenthalpy(self) -> None:
          """Is the enthalpy reasonable"""
          self.assertAlmostEqual(-381.85224835, self.data.enthalpy, self.enthalpy_places)
 
-    def testentropy(self):
+    def testentropy(self) -> None:
          """Is the entropy reasonable"""
          self.assertAlmostEqual(0.00012080325339594164, self.data.entropy, self.entropy_places)
 
-    def testfreeenergy(self):
+    def testfreeenergy(self) -> None:
          """Is the freeenergy reasonable"""
          self.assertAlmostEqual(-381.88826585, self.data.freeenergy, self.freeenergy_places)
 
-    def testfreeenergyconsistency(self):
+    def testfreeenergyconsistency(self) -> None:
         """Does G = H - TS hold"""
         self.assertAlmostEqual(self.data.enthalpy - self.data.temperature * self.data.entropy, self.data.freeenergy, self.freeenergy_places)
 
@@ -253,40 +253,40 @@ class QChemIRTest(GenericIRTest):
     entropy_places = 6
     freeenergy_places = 3
 
-    def testtemperature(self):
+    def testtemperature(self) -> None:
         """Is the temperature 298.15 K?"""
         self.assertEqual(298.15, self.data.temperature)
 
-    def testpressure(self):
+    def testpressure(self) -> None:
         """Is the pressure 1 atm?"""
         self.assertAlmostEqual(1, self.data.pressure)
 
-    def testenthalpy(self):
+    def testenthalpy(self) -> None:
          """Is the enthalpy reasonable"""
          self.assertAlmostEqual(0.1871270552135131, self.data.enthalpy, self.enthalpy_places)
 
-    def testentropy(self):
+    def testentropy(self) -> None:
          """Is the entropy reasonable"""
          self.assertAlmostEqual(0.00014667348271900577, self.data.entropy, self.entropy_places)
 
-    def testfreeenergy(self):
+    def testfreeenergy(self) -> None:
          """Is the freeenergy reasonable"""
          self.assertAlmostEqual(0.14339635634084155, self.data.freeenergy, self.freeenergy_places)
 
     # Molecular mass of DVB in mD.
     molecularmass = 130078.25
 
-    def testatommasses(self):
+    def testatommasses(self) -> None:
         """Do the atom masses sum up to the molecular mass (130078.25+-0.1mD)?"""
         mm = 1000 * sum(self.data.atommasses)
         self.assertAlmostEqual(
             mm, 130078.25, delta=0.1, msg=f"Molecule mass: {mm:f} not 130078 +- 0.1mD"
         )
 
-    def testhessian(self):
+    def testhessian(self) -> None:
         """Do the frequencies from the Hessian match the printed frequencies?"""
 
-    def testfreeenergyconsistency(self):
+    def testfreeenergyconsistency(self) -> None:
         """Does G = H - TS hold"""
         self.assertAlmostEqual(self.data.enthalpy - self.data.temperature * self.data.entropy, self.data.freeenergy, self.freeenergy_places)
 
@@ -299,34 +299,34 @@ class GamessIRTest(GenericIRTest):
     entropy_places = 6
     freeenergy_places = 3
 
-    def testatommasses(self):
+    def testatommasses(self) -> None:
         """Do the atom masses sum up to the molecular mass (130078.25+-0.1mD)?"""
         mm = 1000 * sum(self.data.atommasses)
         self.assertAlmostEqual(
             mm, 130078.25, delta=0.1, msg=f"Molecule mass: {mm:f} not 130078 +- 0.1mD"
         )
 
-    def testtemperature(self):
+    def testtemperature(self) -> None:
         """Is the temperature 298.15 K?"""
         self.assertAlmostEqual(298.15, self.data.temperature)
 
-    def testpressure(self):
+    def testpressure(self) -> None:
         """Is the pressure 1 atm?"""
         self.assertAlmostEqual(1, self.data.pressure)
 
-    def testenthalpy(self):
+    def testenthalpy(self) -> None:
          """Is the enthalpy reasonable"""
          self.assertAlmostEqual(-381.86372805188300, self.data.enthalpy, self.enthalpy_places)
 
-    def testentropy(self):
+    def testentropy(self) -> None:
          """Is the entropy reasonable"""
          self.assertAlmostEqual(0.00014875961938, self.data.entropy, self.entropy_places)
 
-    def testfreeenergy(self):
+    def testfreeenergy(self) -> None:
          """Is the freeenergy reasonable"""
          self.assertAlmostEqual(-381.90808120060200, self.data.freeenergy, self.freeenergy_places)
 
-    def testfreeenergyconsistency(self):
+    def testfreeenergyconsistency(self) -> None:
         """Does G = H - TS hold"""
         self.assertAlmostEqual(self.data.enthalpy - self.data.temperature * self.data.entropy, self.data.freeenergy, self.freeenergy_places)
 
@@ -349,21 +349,21 @@ class TurbomoleIRTest(GenericIRTest):
 class GenericIRimgTest(unittest.TestCase):
     """Generic imaginary vibrational frequency unittest"""
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Initialize the number of vibrational frequencies on a per molecule basis"""
         self.numvib = 3*len(self.data.atomnos) - 6
 
-    def testvibdisps(self):
+    def testvibdisps(self) -> None:
         """Are the dimensions of vibdisps consistent with numvib x N x 3"""
         self.assertEqual(self.data.vibdisps.shape,
                          (self.numvib, len(self.data.atomnos), 3))
 
-    def testlengths(self):
+    def testlengths(self) -> None:
         """Are the lengths of vibfreqs and vibirs correct?"""
         self.assertEqual(len(self.data.vibfreqs), self.numvib)
         self.assertEqual(len(self.data.vibirs), self.numvib)
 
-    def testfreqval(self):
+    def testfreqval(self) -> None:
         """Is the lowest freq value negative?"""
         self.assertTrue(self.data.vibfreqs[0] < 0)
 
@@ -380,11 +380,11 @@ class GenericRamanTest(unittest.TestCase):
     # This value is in amu.
     max_raman_intensity = 575
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Initialize the number of vibrational frequencies on a per molecule basis"""
         self.numvib = 3*len(self.data.atomnos) - 6
 
-    def testlengths(self):
+    def testlengths(self) -> None:
         """Is the length of vibramans correct?"""
         self.assertEqual(len(self.data.vibramans), self.numvib)
 
@@ -397,7 +397,7 @@ class GenericRamanTest(unittest.TestCase):
     # of all want to succeed in parsing, but would also like to remain
     # as comparable between programs as possible (for these tests).
     # Note also that this value is adjusted for Gaussian and DALTON - why?
-    def testramanintens(self):
+    def testramanintens(self) -> None:
         """Is the maximum Raman intensity correct?"""
         self.assertAlmostEqual(max(self.data.vibramans), self.max_raman_intensity, delta=8)
 
@@ -405,7 +405,7 @@ class GenericRamanTest(unittest.TestCase):
         # programs... perhaps we could use it if we knew why...
         #self.assertInside(self.data.vibramans[1], 2.6872, 0.0001)
 
-    def testvibdisps(self):
+    def testvibdisps(self) -> None:
         """Is the length and value of vibdisps correct?"""
         assert hasattr(self.data, "vibdisps")
         assert len(self.data.vibdisps) == 54

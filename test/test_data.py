@@ -12,6 +12,7 @@ import logging
 import os
 import sys
 import unittest
+from typing import List
 
 import cclib
 
