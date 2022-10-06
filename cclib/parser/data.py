@@ -366,6 +366,33 @@ class ccData:
     def closed_shell(self) -> bool:
         return orbitals.Orbitals(self).closed_shell()
 
+    def __setattr__(self, name: str, value: Any) -> None:
+        if name in _attributes:
+            self._parsed_attributes[name] = value
+        else:
+            super().__setattr__(name, value)
+
+    def __getattr__(self, name: str) -> Any:
+        # If we couldn't find an attribute directly on the class, which, for
+        # an Attribute, should actually be a property, then it's not
+        # implemented as a property yet and is in our special attribute
+        # container.
+        try:
+            return self._parsed_attributes[name]
+        except KeyError:
+            raise AttributeError
+
+    @property
+    def aonames(self):
+        try:
+            return self._parsed_attributes["aonames"]
+        except KeyError:
+            raise AttributeError
+
+    # @aonames.setter
+    # def aonames(self, val):
+    #     setattr(self, "aonames", val)
+
 
 class ccData_optdone_bool(ccData):
     """This is the version of ccData where optdone is a Boolean."""
