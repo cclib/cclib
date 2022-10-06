@@ -12,13 +12,9 @@ import logging
 import os
 import sys
 import unittest
-from functools import partial
-from typing import Callable, List, Optional, Type, TypeVar, Union
+from typing import List, Optional, Type, Union
 
 import cclib
-from cclib.parser.data import ccData
-
-T = TypeVar("T")
 
 __filedir__ = os.path.realpath(os.path.dirname(__file__))
 
@@ -153,15 +149,13 @@ def getdatafile(
     return data, logfile
 
 
-def _ccdata_getattribute_with_coverage(
-    original_getattribute: Callable[[ccData, str], T], self: ccData, attr: str
-) -> T:
+def ccdata_getattribute_with_coverage(self, attr):
     """A bookkeeping version of __getattribute__ for ccData objects."""
     if attr != "_attrlist" and attr in self._attrlist:
         if not hasattr(self, "coverage"):
             self.coverage = {}
         self.coverage[attr] = self.coverage.get(attr, 0) + 1
-    return original_getattribute(self, attr)
+    return object.__getattribute__(self, attr)
 
 
 class DataSuite:
@@ -236,24 +230,15 @@ class DataSuite:
             # coverage information for data attributes while the tests are run. This slightly
             # hacky approach is very convenient since it is self-contained and we don't
             # need to worry about it when writing the actual test cases.
-            #
-            # Since ccData itself overrides __getattribute__, it needs to be
-            # itself captured and called by our new coverage-storing
-            # __getattribute__.
-            stored_getattribute = test.data.__getattribute__
-            ccdata_getattribute_with_coverage = partial(
-                _ccdata_getattribute_with_coverage, stored_getattribute
-            )
-            test.data.__getattribute__ = ccdata_getattribute_with_coverage
+            test.data.__class__.__getattribute__ = ccdata_getattribute_with_coverage
 
             # Here we actually run the tests for this line in testdata.
             myunittest = unittest.makeSuite(test)
             results = unittest.TextTestRunner(stream=stream_test, verbosity=2).run(myunittest)
 
             # We don't want to collect coverage stats beyond this point, so set __getattribute__
-            # back to its original value. Note that we are setting the instance method
-            # instead of the class method.
-            test.data.__getattribute__ = stored_getattribute
+            # back to its original value. Note that we are setting the class method.
+            test.data.__class__.__getattribute__ = object.__getattribute__
 
             self.perpackage[td["parser"]][0] += results.testsRun
             self.perpackage[td["parser"]][1] += len(results.errors)
