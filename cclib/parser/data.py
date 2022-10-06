@@ -133,6 +133,8 @@ class ccData:
             attributes - optional dictionary of attributes to load as data
         """
 
+        self._parsed_attributes = dict()
+
         if attributes:
             self.setattributes(attributes)
 
@@ -196,15 +198,13 @@ class ccData:
                       means they are not specified in self._attrlist
         """
 
-        if type(attributes) is not dict:
+        if not isinstance(attributes, dict):
             raise TypeError("attributes must be in a dictionary")
 
         valid = [a for a in attributes if a in self._attrlist]
         invalid = [a for a in attributes if a not in self._attrlist]
 
         for attr in valid:
-            # `attr` is the string/name
-            print(attr, type(attributes[attr]), attributes[attr])
             setattr(self, attr, attributes[attr])
 
         self.arrayify()
@@ -339,6 +339,33 @@ class ccData:
     @property
     def closed_shell(self):
         return orbitals.Orbitals(self).closed_shell()
+
+    def __setattr__(self, name: str, value: Any) -> None:
+        if name in _attributes:
+            self._parsed_attributes[name] = value
+        else:
+            super().__setattr__(name, value)
+
+    def __getattr__(self, name: str) -> Any:
+        # If we couldn't find an attribute directly on the class, which, for
+        # an Attribute, should actually be a property, then it's not
+        # implemented as a property yet and is in our special attribute
+        # container.
+        try:
+            return self._parsed_attributes[name]
+        except KeyError:
+            raise AttributeError
+
+    @property
+    def aonames(self):
+        try:
+            return self._parsed_attributes["aonames"]
+        except KeyError:
+            raise AttributeError
+
+    # @aonames.setter
+    # def aonames(self, val):
+    #     setattr(self, "aonames", val)
 
 
 class ccData_optdone_bool(ccData):
