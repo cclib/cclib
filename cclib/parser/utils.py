@@ -143,10 +143,10 @@ def convertor(value: float, fromunits: str, tounits: str) -> float:
 def _get_rmat_from_vecs(a, b):
     """Get rotation matrix from two 3D vectors, a and b
     Args:
-       a (np.ndaray): 3d vector with shape (3,0)
-       b (np.ndaray): 3d vector with shape (3,0)
+       a (numpy.ndarray): 3d vector with shape (3,0)
+       b (numpy.ndarray): 3d vector with shape (3,0)
     Returns:
-       np.ndarray
+       numpy.ndarray
     """
     a_ = (a / numpy.linalg.norm(a, 2))
     b_ = (b / numpy.linalg.norm(b, 2))
@@ -165,8 +165,8 @@ def get_rotation(a, b):
     If one atom positions, i.e (1,3) shape array, are given, it returns identify transformation
 
     Args:
-        a (np.ndarray): positions with shape(N,3)
-        b (np.ndarray): positions with shape(N,3)
+        a (numpy.ndarray): positions with shape(N,3)
+        b (numpy.ndarray): positions with shape(N,3)
     Returns:
         A scipy.spatial.transform.Rotation object
     """
@@ -219,7 +219,7 @@ def str_contains_only(string, chars):
 class PeriodicTable:
     """Allows conversion between element name and atomic no."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.element = [None]
         self.number = {}
         

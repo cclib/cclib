@@ -6,18 +6,17 @@
 # the terms of the BSD 3-Clause License.
 
 """Stockholder partitioning based on cclib data."""
-import copy
-import random
+
 import numpy
 import logging
 import math
 import os
-import sys
 
 from cclib.method.calculationmethod import Method
 from cclib.method.volume import electrondensity_spin
 from cclib.parser.utils import convertor
 from cclib.parser.utils import find_package
+from cclib.progress import Progress
 
 from typing import Optional, Sequence, Tuple
 
@@ -36,11 +35,11 @@ class Stockholder(Method):
         self,
         data,
         volume,
-        proatom_path=None,
-        progress=None,
-        loglevel=logging.INFO,
-        logname="Log",
-    ):
+        proatom_path: str,
+        progress: Optional[Progress] = None,
+        loglevel: int = logging.INFO,
+        logname: str = "Log",
+    ) -> None:
         """ Initialize Stockholder-type method object.
             Inputs are:
                 data -- ccData object that describe target molecule.
@@ -66,15 +65,15 @@ class Stockholder(Method):
             self.proatom_density.append(density)
             self.radial_grid_r.append(r)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return "Stockholder"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return "Stockholder"
 
-    def _check_required_attributes(self):
+    def _check_required_attributes(self) -> None:
         super()._check_required_attributes()
 
     def _read_proatom(
@@ -195,7 +194,7 @@ class Stockholder(Method):
 
         return density, radiusgrid
 
-    def calculate(self, indices=None, fupdate=0.05):
+    def calculate(self, indices: Optional[Sequence[Sequence[int]]] = None, fupdate: float = 0.05) -> None:
         """ Charge density on a Cartesian grid is a common routine required for Stockholder-type
             and related methods. This abstract class prepares the grid if input Volume object
             is empty.

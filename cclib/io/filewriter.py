@@ -10,19 +10,22 @@
 import logging
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 import numpy
 
+from cclib.parser.data import ccData
 from cclib.parser.utils import PeriodicTable
 from cclib.parser.utils import find_package
 
 _has_openbabel = find_package("openbabel")
 if _has_openbabel:
     from cclib.bridge import makeopenbabel
+    # Open Babel 3.0 and above
     try:
         from openbabel import openbabel as ob
         import openbabel.pybel as pb
+    # Open Babel 2.4.x and below
     except:
         import openbabel as ob
         import pybel as pb
@@ -35,10 +38,10 @@ class MissingAttributeError(Exception):
 class Writer(ABC):
     """Abstract class for writer objects."""
 
-    required_attrs = ()
+    required_attrs: Tuple[str] = ()
 
-    def __init__(self, ccdata, jobfilename=None, indices=None, terse=False,
-                 *args, **kwargs):
+    def __init__(self, ccdata: ccData, jobfilename: Optional[str] = None, indices=None, terse: bool = False,
+                 *args, **kwargs) -> None:
         """Initialize the Writer object.
 
         This should be called by a subclass in its own __init__ method.
@@ -70,22 +73,22 @@ class Writer(ABC):
         self._fix_indices()
 
     @abstractmethod
-    def generate_repr(self):
+    def generate_repr(self) -> str:
         """Generate the written representation of the logfile data."""
 
-    def _calculate_total_dipole_moment(self):
+    def _calculate_total_dipole_moment(self) -> Optional[numpy.ndarray]:
         """Calculate the total dipole moment."""
 
         # ccdata.moments may exist, but only contain center-of-mass coordinates
         if len(getattr(self.ccdata, 'moments', [])) > 1:
             return numpy.linalg.norm(self.ccdata.moments[1])
+        return None
 
     def _check_required_attributes(self) -> None:
         """Check if required attributes are present in ccdata."""
         missing = [x for x in self.required_attrs
                    if not hasattr(self.ccdata, x)]
         if missing:
-            missing = ' '.join(missing)
             raise MissingAttributeError(
                 f"Could not parse required attributes to write file: {missing}")
 
@@ -108,7 +111,6 @@ class Writer(ABC):
         if self.jobfilename is not None:
             obmol.SetTitle(self.jobfilename)
         return (obmol, pb.Molecule(obmol))
-
     def _make_bond_connectivity_from_openbabel(self, obmol) -> List[Tuple[int, int, int]]:
         """Based upon the Open Babel/Pybel molecule, create a list of tuples
         to represent bonding information, where the three integers are

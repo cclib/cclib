@@ -18,7 +18,7 @@ import random
 import sys
 import zipfile
 from abc import ABC, abstractmethod
-from typing import Any, Iterable, List
+from typing import Any, Iterable, List, Union
 
 import numpy
 
@@ -33,18 +33,18 @@ logging.logMultiprocessing = 0
 
 class myBZ2File(bz2.BZ2File):
     """Return string instead of bytes"""
-    def __next__(self):
+    def __next__(self) -> str:
         line = super(bz2.BZ2File, self).__next__()
         return line.decode("ascii", "replace")
 
-    def next(self):
+    def next(self) -> str:
         line = self.__next__()
         return line
 
 
 class myGzipFile(gzip.GzipFile):
     """Return string instead of bytes"""
-    def __next__(self):
+    def __next__(self) -> str:
         super_ob = super(gzip.GzipFile, self)
         # seemingly different versions of gzip can have either next or __next__
         if hasattr(super_ob, 'next'):
@@ -53,7 +53,7 @@ class myGzipFile(gzip.GzipFile):
             line = super_ob.__next__()
         return line.decode("ascii", "replace")
 
-    def next(self):
+    def next(self) -> str:
         line = self.__next__()
         return line
 
@@ -177,7 +177,7 @@ class Logfile(ABC):
         NWChem, ORCA, Psi, Q-Chem
     """
 
-    def __init__(self, source, loglevel=logging.ERROR, logname="Log",
+    def __init__(self, source: Union[str, Iterable[str], fileinput.FileInput], loglevel: int = logging.ERROR, logname: str = "Log",
                  logstream=sys.stderr, datatype=ccData_optdone_bool, **kwds):
         """Initialise the Logfile object.
 
@@ -481,7 +481,7 @@ class Logfile(ABC):
             self.coreelectrons = numpy.zeros(self.natom, 'i')
         self.coreelectrons[indices] = ncore
 
-    def skip_lines(self, inputfile, sequence):
+    def skip_lines(self, inputfile, sequence: Iterable[str]) -> List[str]:
         """Read trivial line types and check they are what they are supposed to be.
 
         This function will read len(sequence) lines and do certain checks on them,

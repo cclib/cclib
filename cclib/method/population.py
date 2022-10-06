@@ -8,10 +8,13 @@
 """Population analyses based on cclib data."""
 
 import logging
+from typing import Optional
 
 import numpy
 
 from cclib.method.calculationmethod import Method, MissingAttributeError
+from cclib.parser.data import ccData
+from cclib.progress import Progress
 
 
 class Population(Method):
@@ -23,8 +26,8 @@ class Population(Method):
     # At least one of these are typically required.
     overlap_attributes = ('aooverlaps', 'fooverlaps')
 
-    def __init__(self, data, progress=None, \
-                 loglevel=logging.INFO, logname="Log"):
+    def __init__(self, data: ccData, progress: Optional[Progress] = None,
+                 loglevel: int = logging.INFO, logname: str = "Log") -> None:
         super().__init__(data, progress, loglevel, logname)
 
         self.fragresults = None
@@ -37,14 +40,14 @@ class Population(Method):
         """Return a representation of the object."""
         return "Population"
 
-    def _check_required_attributes(self):
+    def _check_required_attributes(self) -> None:
         super()._check_required_attributes()
-        
+
         if self.overlap_attributes and not any(hasattr(self.data, a) for a in self.overlap_attributes):
             raise MissingAttributeError(
                     'Need overlap matrix (aooverlaps or fooverlaps attribute) for Population methods')
 
-    def partition(self, indices=None):
+    def partition(self, indices=None) -> bool:
 
         if not hasattr(self, "aoresults"):
             self.calculate()
