@@ -7,29 +7,29 @@ scripts_are_modules = true
 warn_unused_configs = true
 
 # Disallow dynamic typing
-disallow_any_unimported = True
-disallow_any_expr = True
-disallow_any_decorated = True
-disallow_any_explicit = True
-disallow_any_generics = True
-disallow_subclassing_any = True
+# disallow_any_unimported = true
+# disallow_any_expr = true
+# disallow_any_decorated = true
+# disallow_any_explicit = true
+# disallow_any_generics = true
+# disallow_subclassing_any = true
 
 # Untyped definitions and calls
-disallow_untyped_calls = True
-disallow_untyped_defs = True
-disallow_incomplete_defs = True
-# check_untyped_defs = True
-disallow_untyped_decorators = True
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+# check_untyped_defs = true
+disallow_untyped_decorators = true
 
 # None and optional handling
 
 # Configuring warnings
-warn_unused_ignores = True
-#warn_return_any = True
-#warn_unreachable = True
+warn_unused_ignores = true
+#warn_return_any = true
+#warn_unreachable = true
 
 # Miscellaneous
-#warn_unused_configs = True
+#warn_unused_configs = true
 
 [[tool.mypy.overrides]]
 module = [
