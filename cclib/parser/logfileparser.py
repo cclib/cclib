@@ -60,7 +60,7 @@ class myGzipFile(gzip.GzipFile):
 class FileWrapper:
     """Wrap a file-like object or stream with some custom tweaks"""
 
-    def __init__(self, source, pos=0):
+    def __init__(self, source, pos: int = 0) -> None:
 
         self.src = source
 
@@ -99,10 +99,10 @@ class FileWrapper:
     def __iter__(self):
         return self
 
-    def close(self):
+    def close(self) -> None:
         self.src.close()
 
-    def seek(self, pos, ref):
+    def seek(self, pos: int, ref: int) -> None:
 
         # If we are seeking to end, we can emulate it usually. As explained above,
         # we cannot be too specific with the except clause due to differences
@@ -395,10 +395,10 @@ class Logfile(ABC):
                 self.progress.step = newstep
 
     @abstractmethod
-    def normalisesym(self, symlabel):
+    def normalisesym(self, symlabel: str) -> None:
         """Standardise the symmetry labels between parsers."""
 
-    def new_internal_job(self):
+    def new_internal_job(self) -> None:
         """Delete attributes that can be problematic in multistep jobs.
 
         TODO: instead of this hack, parse each job in a multistep comptation
