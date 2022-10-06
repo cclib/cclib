@@ -18,6 +18,7 @@ import random
 import sys
 import zipfile
 from abc import ABC, abstractmethod
+from typing import Any, Iterable, List
 
 import numpy
 
@@ -123,7 +124,7 @@ class FileWrapper:
             self.pos = self.size
 
 
-def openlogfile(filename, object=None):
+def openlogfile(filename: str, object=None):
     """Return a file object given a filename or if object specified decompresses it
     if needed and wrap it up.
 
@@ -377,15 +378,15 @@ class Logfile(ABC):
 
         return data
 
-    def before_parsing(self):
+    def before_parsing(self) -> None:
         """Set parser-specific variables and do other initial things here."""
         pass
 
-    def after_parsing(self):
+    def after_parsing(self) -> None:
         """Correct data or do parser-specific validation after parsing is finished."""
         pass
 
-    def updateprogress(self, inputfile, msg, xupdate=0.05):
+    def updateprogress(self, inputfile, msg: str, xupdate: float = 0.05) -> None:
         """Update progress."""
 
         if hasattr(self, "progress") and random.random() < xupdate:
@@ -414,7 +415,7 @@ class Logfile(ABC):
             if hasattr(self, name):
                 delattr(self, name)
 
-    def set_attribute(self, name, value, check_change=True):
+    def set_attribute(self, name: str, value: Any, check_change: bool = True) -> None:
         """Set an attribute and perform an optional check when it already exists.
 
         Note that this can be used for scalars and lists alike, whenever we want
@@ -424,7 +425,7 @@ class Logfile(ABC):
         ----------
         name: str
             The name of the attribute.
-        value: str
+        value: any
             The value for the attribute.
         check_change: bool
             By default we want to check that the value does not change
@@ -440,22 +441,22 @@ class Logfile(ABC):
 
         setattr(self, name, value)
 
-    def append_attribute(self, name, value):
+    def append_attribute(self, name: str, value: Any) -> None:
         """Appends a value to an attribute."""
 
         if not hasattr(self, name):
             self.set_attribute(name, [])
         getattr(self, name).append(value)
 
-    def extend_attribute(self, name, values):
+    def extend_attribute(self, name: str, values: Iterable[Any]) -> None:
         """Appends an iterable of values to an attribute."""
         
         if not hasattr(self, name):
             self.set_attribute(name, [])
         getattr(self, name).extend(values)
 
-    def _assign_coreelectrons_to_element(self, element, ncore,
-                                         ncore_is_total_count=False):
+    def _assign_coreelectrons_to_element(self, element: str, ncore: int,
+                                         ncore_is_total_count: bool = False) -> None:
         """Assign core electrons to all instances of the element.
 
         It's usually reasonable to do this for all atoms of a given element,
