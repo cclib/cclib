@@ -7,7 +7,7 @@ Requirements
 ------------
 
 Before you install cclib, you need to make sure that you have the following:
- * Python (at least version 3.4 is recommended, although 2.7 is still tested)
+ * Python (at least version 3.7 is recommended)
  * NumPy (at least version 1.15 is recommended)
 
 Python is an open-source programming language available from https://www.python.org. It is available for Windows as well as being included in most Linux distributions. In Debian/Ubuntu it is installed as follows (as root):
