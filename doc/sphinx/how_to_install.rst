@@ -69,20 +69,20 @@ or to your home directory using::
 Installing using a system package manager
 -----------------------------------------
 
-If you're using `Debian GNU/Linux`_, `Ubuntu`_, or a similar distribution, there are official `cclib packages`_ that you can install in any package manager (should as synaptic) or with one simple command:
+If you're using `Debian GNU/Linux`_, `Ubuntu`_, or a similar distribution, there are official `cclib packages`_ that you can install via your package manager:
 
 .. code-block:: bash
 
-    aptitude install cclib
+    apt install cclib
 
-There are in fact two packages, `python-cclib`_ containing the Python module, and `cclib`_ which installs just the user scripts. If you also need to also install the unittests and logfiles we distribute, you will need to install the `cclib-data`_ package from the non-free repositories (due to license issues). Because of distribution release cycles, package manager versions of cclib may be out of date compared to the PyPI version.
+There are in fact multiple packages, `python3-cclib`_ containing the Python module, and `cclib`_ which installs the user scripts and depends on the Python module. If you also need to also install the unittests and logfiles we distribute, you will need to install the `cclib-data`_ package from the non-free repositories (due to license issues). Because of distribution release cycles, package manager versions of cclib may be out of date compared to the PyPI version.
 
 .. _`Debian GNU/Linux`: https://www.debian.org
 .. _`Ubuntu`: https://ubuntu.com/
 .. _`cclib packages`: https://packages.debian.org/search?searchon=sourcenames&keywords=cclib
-.. _`python-cclib`: https://packages.debian.org/stretch/python-cclib
-.. _`cclib`: https://packages.debian.org/stretch/cclib
-.. _`cclib-data`: https://packages.debian.org/stretch/cclib-data
+.. _`python3-cclib`: https://packages.debian.org/bullseye/python3-cclib
+.. _`cclib`: https://packages.debian.org/bullseye/cclib
+.. _`cclib-data`: https://packages.debian.org/bullseye/cclib-data
 
 Manual download and install
 ---------------------------
