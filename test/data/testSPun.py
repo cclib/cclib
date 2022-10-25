@@ -33,6 +33,36 @@ class GenericSPunTest(unittest.TestCase):
         self.assertEqual(self.data.atomnos.shape, (20,) )
         self.assertEqual(sum(self.data.atomnos==6) + sum(self.data.atomnos==1), 20)
 
+    @skipForParser('ADF', '???')
+    @skipForParser('DALTON', 'DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now')
+    @skipForParser('FChk', 'The parser is still being developed so we skip this test')
+    @skipForParser('Jaguar', '???')
+    @skipForParser('Molcas', 'Length is zero for some reason')
+    @skipForParser('Molpro', '???')
+    @skipForParser('Turbomole', '???')
+    def testatomcharges(self):
+        """Are atomic charges consistent with natom?"""
+        for atomcharge_type in self.data.atomcharges:
+            charges = self.data.atomcharges[atomcharge_type]
+            natom = self.data.natom
+            self.assertEqual(
+                len(charges),
+                natom,
+                msg=f"len(atomcharges['{atomcharge_type}']) = {len(charges)}, natom = {natom}"
+            )
+
+    @skipForParser('ADF', '???')
+    @skipForParser('DALTON', 'DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now')
+    @skipForParser('FChk', 'The parser is still being developed so we skip this test')
+    @skipForParser('Jaguar', '???')
+    @skipForParser('Molcas', 'Length is zero for some reason')
+    @skipForParser('Molpro', '???')
+    @skipForParser('Turbomole', '???')
+    def testatomcharges_mulliken(self):
+        """Do Mulliken atomic charges sum to positive one?"""
+        charges = self.data.atomcharges["mulliken"]
+        self.assertAlmostEqual(sum(charges), 1.0, delta=1.0e-2)
+
     def testatomcoords(self):
         """Are the dimensions of atomcoords 1 x natom x 3?"""
         self.assertEqual(self.data.atomcoords.shape,(1,self.data.natom,3))
@@ -174,14 +204,10 @@ class GamessUK80SPunTest(GenericSPunTest):
 class GaussianSPunTest(GenericSPunTest):
     """Customized unrestricted single point unittest"""
 
-    def testatomcharges(self):
-        """Are atomcharges (at least Mulliken) consistent with natom and sum to one?"""
-        for type_ in set(['mulliken'] + list(self.data.atomcharges.keys())):
-            charges = self.data.atomcharges[type_]
-            self.assertEqual(len(charges), self.data.natom)
-            self.assertAlmostEqual(sum(charges), 1.0, delta=0.001)
-
     def testatomspins(self):
+        """Are atomic spins from Mulliken population analysis consistent with
+        natom and sum to one (doublet)?
+        """
         spins = self.data.atomspins['mulliken']
         self.assertEqual(len(spins), self.data.natom)
         self.assertAlmostEqual(sum(spins), 1.0, delta=0.001)

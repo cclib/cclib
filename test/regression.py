@@ -2912,6 +2912,12 @@ class GAMESSUSSPunTest_charge0(GenericSPunTest):
     def testcharge_and_mult(self):
         """The charge in the input was wrong."""
         self.assertEqual(self.data.charge, 0)
+
+    def testatomcharges_mulliken(self):
+        """The charge in the input was wrong."""
+        charges = self.data.atomcharges["mulliken"]
+        self.assertAlmostEqual(sum(charges), 0.0, delta=0.001)
+
     @unittest.skip('HOMOs were incorrect due to charge being wrong')
     def testhomos(self):
         """HOMOs were incorrect due to charge being wrong."""
@@ -3148,9 +3154,16 @@ class OrcaSPunTest_charge0(GenericSPunTest):
     def testcharge_and_mult(self):
         """The charge in the input was wrong."""
         self.assertEqual(self.data.charge, 0)
+
+    def testatomcharges_mulliken(self):
+        """The charge in the input was wrong."""
+        charges = self.data.atomcharges["mulliken"]
+        self.assertAlmostEqual(sum(charges), 0.0, delta=0.001)
+
     @unittest.skip('HOMOs were incorrect due to charge being wrong.')
     def testhomos(self):
         """HOMOs were incorrect due to charge being wrong."""
+
     def testorbitals(self):
         """Closed-shell calculation run as open-shell."""
         self.assertTrue(self.data.closed_shell)

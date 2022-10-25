@@ -806,11 +806,11 @@ class NWChem(logfileparser.Logfile):
             while line.strip():
                 index, atomname, nuclear, atom = line.split()[:4]
                 shells = line.split()[4:]
-                charges.append(float(atom)-float(nuclear))
+                charges.append(float(nuclear)-float(atom))
                 line = next(inputfile)
             self.atomcharges['mulliken'] = charges
 
-        # Not the the 'overlap population' as printed in the Mulliken population analysis,
+        # Note the 'overlap population' as printed in the Mulliken population analysis
         # is not the same thing as the 'overlap matrix'. In fact, it is the overlap matrix
         # multiplied elementwise times the density matrix.
         #
@@ -872,15 +872,15 @@ class NWChem(logfileparser.Logfile):
                 ncharge = float(ncharge)
                 epop = float(epop)
                 assert iatom == (i+1)
-                charges.append(epop-ncharge)
+                charges.append(ncharge-epop)
 
             if not hasattr(self, 'atomcharges'):
                 self.atomcharges = {}
-            if not "mulliken" in self.atomcharges:
-                self.atomcharges['mulliken'] = charges
-            else:
+            if "mulliken" in self.atomcharges:
                 assert max(self.atomcharges['mulliken'] - numpy.array(charges)) < 0.01
-                self.atomcharges['mulliken'] = charges
+            # This is going to be higher precision than "Mulliken analysis of
+            # the total density".
+            self.atomcharges['mulliken'] = charges
 
         # NWChem prints the dipole moment in atomic units first, and we could just fast forward
         # to the values in Debye, which are also printed. But we can also just convert them
