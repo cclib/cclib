@@ -8,7 +8,8 @@ periodictable
 # bridges
 biopython==1.76
 ase>=3.21 ; python_version >= '3.5'
-git+https://github.com/berquist/pyquante2.git@py37 ; python_version > '3.0'
+git+https://github.com/berquist/pyquante2.git@py37
+git+https://github.com/theochem/iodata.git@1.0.0a2
 
 # For building the documentation
 sphinx
