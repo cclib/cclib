@@ -60,6 +60,14 @@ class NWChem(logfileparser.Logfile):
 
         if "nproc" in line:
             self.metadata['processors'] = line.split()[-1]
+        if "Memory information" in line:
+            line_count = 0 
+            while 'total' not in line and line_count <=8:
+                line = next(inputfile)
+                line_count += 1
+            if 'total' in line:
+                self.metadata['memory'] = line.split()[-2:]
+
 
         # This is printed in the input module, so should always be the first coordinates,
         # and contains some basic information we want to parse as well. However, this is not
@@ -347,7 +355,6 @@ class NWChem(logfileparser.Logfile):
         
         if "Grid Information" in line:
             line = next(inputfile)
-            # todo: more information here, not sure what is needed
             self.metadata["grid"] = line.split()[-1]
 
         # If the full overlap matrix is printed, it looks like this:
@@ -589,8 +596,8 @@ class NWChem(logfileparser.Logfile):
 
         if "Dispersion correction" in line:
             dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
-            self.metadata['dispersion'] = dispersion
-        
+            self.append_attribute("dispersionenergies", dispersion)
+            
         # type of dispersion
         if line.strip().find('disp vdw 3') > -1:
             self.metadata['dispersion'] = "D3"
