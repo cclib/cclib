@@ -1731,15 +1731,9 @@ class Gaussian(logfileparser.Logfile):
                     self.logger.warning("Molecular coefficients header found but no coefficients.")
                     break
 
-                # This check does not work if the five highest occupied MOs happen to 1 through 5.
-#                 if base == 0 and int(colmNames.split()[0]) != 1:
-#                     # Implies that this is a POP=REGULAR calculation
-#                     # and so, only aonames (not mocoeffs) will be extracted
-#                     self.popregular = True
                 symmetries = next(inputfile)
                 eigenvalues = next(inputfile)
                 for i in range(self.nbasis):
-                    
 
                     line = next(inputfile)
                     if i == 0:
@@ -1767,9 +1761,6 @@ class Gaussian(logfileparser.Logfile):
 
                 if base == 0 and not beta:  # Do the last update of atombasis
                     self.atombasis.append(atombasis)
-#                 if self.popregular:
-#                     # We now have aonames, so no need to continue
-#                     break
             if not self.popregular and not beta:
                 self.mocoeffs = mocoeffs
 
