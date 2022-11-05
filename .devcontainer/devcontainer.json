@@ -1,0 +1,4 @@
+{
+    "name": "cclib",
+    "image": "shivupa/cclib-ci:py38"
+}
