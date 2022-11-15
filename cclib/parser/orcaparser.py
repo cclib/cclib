@@ -54,6 +54,9 @@ class ORCA(logfileparser.Logfile):
         # Used to estimate CPU time from wall time.
         self.num_cpu = 1
 
+        # The excited state multiplicity for post-HF excited states
+        self.mdci_et_mult = "Not specified"
+
     def after_parsing(self):
         # ORCA doesn't add the dispersion energy to the "Total energy" (which
         # we parse), only to the "FINAL SINGLE POINT ENERGY" (which we don't
@@ -1198,6 +1201,75 @@ Dispersion correction           -0.016199959
             self.extend_attribute('etenergies', etenergies)
             self.extend_attribute('etsecs', etsecs)
             self.extend_attribute('etsyms', etsyms)
+            
+        # Read higher-level excited states (EOM-CCSD etc).
+        # Multiplicity is in a different section to energies.
+        # We can only calculate one type of mult at a time.
+        if "Multiplicity                               ..." in line:
+            self.mdci_et_mult = line.split()[-1].capitalize()
+            
+        if any(x in line for x in ("ADC2 RESULTS", "EOM-CCSD RESULTS", "STEOM-CCSD RESULTS")):
+            etsecs = []
+            etenergies = []
+            etsyms = []
+            
+            self.skip_lines(inputfile, ['dashes', 'blank'])
+            line = next(inputfile)
+            while line.find("IROOT=") >= 0:
+#                 IROOT=  1:  0.125217 au     3.407 eV   27482.0 cm**-1
+#                   Amplitude    Excitation
+#                    0.114676    66 ->  74
+#                    0.171761    67 ->  73
+#                   -0.196359    68 ->  71
+#                   -0.911475    69 ->  70
+#                   Ground state amplitude: -0.000111
+#                 
+#                 Percentage Active Character     98.29
+#                 
+#                   Amplitude    Excitation in Canonical Basis
+#                   -0.101932    65 ->  74
+#                    0.104335    66 ->  74
+#                    0.170752    67 ->  73
+#                    0.194363    68 ->  71
+#                   -0.911726    69 ->  70
+                etenergies.append(utils.convertor(float(line.split()[2]), "hartree", "wavenumber"))
+                etsyms.append(self.mdci_et_mult)
+                sec = []
+                line = next(inputfile)
+                line = next(inputfile)
+                while "->" in line:
+                    contrib, start, arrow, end = line.split()
+                    try:
+                        sec.append([int(start), int(end), float(contrib)])
+                        
+                    except ValueError:
+                        # Sometimes we come across lines like:
+                        # 0.690372    69 -> x
+                        # Ignore these for now.
+                        pass
+                    
+                    line = next(inputfile)
+                
+                etsecs.append(sec)
+                
+                line = next(inputfile)
+                line = next(inputfile)
+                
+                if "Percentage Active Character " in line:
+                    # Not sure what to do with this data, just skip for now.
+                    line = next(inputfile)
+                    line = next(inputfile)
+                    line = next(inputfile)
+                    while "->" in line:
+                        line = next(inputfile)
+                
+                line = next(inputfile)
+            
+            # High level excited states will calculate excited states at a number of levels iteratively.
+            # We only care about the highest, so overwrite anything from before.
+            self.set_attribute('etenergies', etenergies)
+            self.set_attribute('etsecs', etsecs)
+            self.set_attribute('etsyms', etsyms)
 
         # Parse the various absorption spectra for TDDFT and ROCIS.
         if 'ABSORPTION SPECTRUM' in line or 'ELECTRIC DIPOLE' in line:
