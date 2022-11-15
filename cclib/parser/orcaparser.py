@@ -1089,11 +1089,11 @@ Dispersion correction           -0.016199959
         if any(x in line for x in ("TD-DFT/TDA EXCITED", "TD-DFT EXCITED")):
             # Could be singlets or triplets
             if line.find("SINGLETS") >= 0:
-                sym = "Singlet"
+                mult = "Singlet"
             elif line.find("TRIPLETS") >= 0:
-                sym = "Triplet"
+                mult = "Triplet"
             else:
-                sym = "Not specified"
+                mult = "Not specified"
 
             etsecs = []
             etenergies = []
@@ -1107,7 +1107,6 @@ Dispersion correction           -0.016199959
             while line.find("STATE") >= 0:
                 broken = line.split()
                 etenergies.append(float(broken[7]))
-                etsyms.append(sym)
                 line = next(inputfile)
                 sec = []
                 # Contains SEC or is blank
@@ -1127,8 +1126,12 @@ Dispersion correction           -0.016199959
                     line = next(inputfile)
                     # ORCA 5.0 seems to print symmetry at end of block listing transitions
                     if 'Symmetry' in line:
+                        symm = "-" + line.split()[-1]
                         line = next(inputfile)
+                    else:
+                        symm = ""
                 etsecs.append(sec)
+                etsyms.append(mult + symm)
                 line = next(inputfile)
 
             self.extend_attribute('etenergies', etenergies)
