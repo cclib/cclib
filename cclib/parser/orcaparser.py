@@ -10,6 +10,7 @@
 
 import re
 from itertools import zip_longest
+import datetime
 
 import numpy
 from packaging.version import parse as parse_version
@@ -49,6 +50,9 @@ class ORCA(logfileparser.Logfile):
         
         # Flag for whether this calc is DFT.
         self.is_DFT = False
+        
+        # Used to estimate CPU time from wall time.
+        self.num_cpu = 1
 
     def after_parsing(self):
         # ORCA doesn't add the dispersion energy to the "Total energy" (which
@@ -1900,9 +1904,48 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             energy = float(next(inputfile).strip())
             self.skip_line(inputfile, 'blank')
             core_energy = float(next(inputfile).split()[3])
+            
+        if "*        Program running with" in line  and "parallel MPI-processes     *" in line:
+            # ************************************************************
+            # *        Program running with 4 parallel MPI-processes     *
+            # *              working on a common directory               *
+            # ************************************************************
+            self.num_cpu = int(line.split()[4])
 
         if line[:15] == 'TOTAL RUN TIME:':
+            # TOTAL RUN TIME: 0 days 0 hours 0 minutes 11 seconds 901 msec
             self.metadata['success'] = True
+            
+            # Parse timings.
+            # We also have timings for individual modules (SCF, MDCI etc) which we could use instead?
+            time_split = line.split()
+            days = int(time_split[3])
+            hours = int(time_split[5])
+            minutes = int(time_split[7])
+            seconds = int(time_split[9])
+            milliseconds = int(time_split[11])
+            
+            if "wall_time" not in self.metadata:
+                self.metadata['wall_time'] = []
+            if "cpu_time" not in self.metadata:
+                self.metadata['cpu_time'] = []
+            
+            self.metadata['wall_time'].append(datetime.timedelta(
+                days = days,
+                hours = hours,
+                minutes = minutes,
+                seconds = seconds,
+                milliseconds = milliseconds
+            ))
+            
+            self.metadata['cpu_time'].append(datetime.timedelta(
+                days = days,
+                hours = hours,
+                minutes = minutes,
+                seconds = seconds,
+                milliseconds = milliseconds
+            ) * self.num_cpu)
+            
 
     def parse_charge_section(self, line, inputfile, chargestype):
         """Parse a charge section, modifies class in place
