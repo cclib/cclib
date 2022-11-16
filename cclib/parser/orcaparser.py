@@ -78,6 +78,20 @@ class ORCA(logfileparser.Logfile):
                     )
                     break
                 self.scfenergies[i] += dispersionenergy
+        
+        # ORCA prints singlet and triplet excited states separately, so the energies are out of order.
+        if hasattr(self, "etenergies"):
+            # Sort them properly.
+            prop_names = ("etenergies", "etsyms", "etoscs", "etsecs", "etrotats")
+            #zipped_props = [zipped_state for zipped_state in sorted(zip_longest(getattr(self, 'etenergies', []), getattr(self, 'etsyms', []), getattr(self, 'etoscs', []), getattr(self, 'etsecs', []), getattr(self, 'etrotats', [])), key = lambda state: state[0])]
+            zipped_props = [zipped_state for zipped_state in sorted(zip_longest(*[getattr(self, prop_name, []) for prop_name in prop_names]), key = lambda state: state[0])]
+            etprops = list(zip(*zipped_props))
+            
+            for index, prop_name in enumerate(prop_names):
+                # Ignore empty properties.
+                if etprops[index] != (None,) * len(etprops[index]):
+                    setattr(self, prop_name, list(etprops[index]))
+            
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
