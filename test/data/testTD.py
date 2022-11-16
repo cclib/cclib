@@ -256,6 +256,10 @@ class OrcaROCISTest(GenericTDTest):
     def testrotatsnumber(self):
         """ROCIS does not calculate rotatory strengths"""
         pass
+    
+    def testsyms(self):
+        """ROCIS does not show symmetries"""
+        pass
 
 
 class OrcaROCIS40Test(OrcaROCISTest):
