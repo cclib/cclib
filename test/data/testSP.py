@@ -436,8 +436,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('Molpro', 'reading cpu/wall time is not implemented for this parser') 
     @skipForParser('NWChem', 'reading cpu/wall time is not implemented for this parser')  
     @skipForParser('Psi3', 'reading cpu/wall time is not implemented for this parser') 
-    @skipForParser('Psi4', 'reading cpu/wall time is not implemented for this parser') 
-    @skipForParser('Turbomole', 'reading cpu/wall time is not implemented for this parser') 
+    @skipForParser('Psi4', 'reading cpu/wall time is not implemented for this parser')
     def testmetadata_times(self):
         """Does metadata have expected keys and values of correct types?"""
         if "wall_time" in self.data.metadata:
