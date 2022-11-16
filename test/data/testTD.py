@@ -24,6 +24,13 @@ class GenericTDTest(unittest.TestCase):
 
     number = 5
     expected_l_max = 41000
+    symmetries = [
+            "Singlet-Bu",
+            "Singlet-Bu",
+            "Singlet-Ag",
+            "Singlet-Bu",
+            "Singlet-Ag",
+        ]
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForLogfile('Turbomole/basicTurbomole7.4/CO_cc2_TD_trip', 'Oscillator strengths are not available for Turbomole triplets using ricc2 but are required for testenergies()')
@@ -67,6 +74,22 @@ class GenericTDTest(unittest.TestCase):
     def testsymsnumber(self):
         """Is the length of etsyms correct?"""
         self.assertEqual(len(self.data.etsyms), self.number)
+        
+    
+    @skipForParser('ADF', 'etrotats are not yet implemented')
+    @skipForParser('DALTON', 'etrotats are not yet implemented')
+    @skipForParser('FChk', 'etrotats are not yet implemented')
+    @skipForParser('GAMESS', 'etrotats are not yet implemented')
+    @skipForParser('GAMESSUK', 'etrotats are not yet implemented')
+    @skipForParser('Jaguar', 'etrotats are not yet implemented')
+    @skipForParser('NWChem', 'etrotats are not yet implemented')
+    @skipForParser('QChem', 'Q-Chem cannot calculate rotatory strengths')
+    @skipForLogfile("ORCA/basicORCA4.2", "etsyms are only available in ORCA >= 5.0") 
+    @skipForLogfile("ORCA/basicORCA4.1", "etsyms are only available in ORCA >= 5.0") 
+    @skipForLogfile("Gaussian/basicGaussian09", "symmetry is missing for this log file") 
+    def testsyms(self):
+        """Are the values of etsyms correct?"""
+        self.assertListEqual(self.data.etsyms, self.symmetries)
 
     @skipForParser('ADF', 'etrotats are not yet implemented')
     @skipForParser('DALTON', 'etrotats are not yet implemented')
@@ -158,12 +181,23 @@ class OrcaTDDFTTest(GenericTDTest):
 
     number = 10
     expected_l_max = 48000
+    symmetries = [
+            "Triplet-Bu",
+            "Triplet-Ag",
+            "Triplet-Bu",
+            "Triplet-Bu",
+            "Triplet-Bu",
+            "Singlet-Bu",
+            "Singlet-Bu",
+            "Singlet-Ag",
+            "Singlet-Bu",
+            "Singlet-Ag",
+        ]
 
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
         self.assertEqual(len(self.data.etoscs), self.number)
         self.assertAlmostEqual(max(self.data.etoscs), 1.17, delta=0.01)
-
 
 class QChemTDDFTTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
