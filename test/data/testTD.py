@@ -276,6 +276,18 @@ class TurbomoleTDTest(GenericTDTest):
     
     number = 10
     expected_l_max = 91432
+    symmetries = [
+        "Singlet-A",
+        "Singlet-A",
+        "Singlet-A",
+        "Singlet-A",
+        "Singlet-A",
+        "Singlet-A",
+        "Singlet-A",
+        "Singlet-A",
+        "Singlet-A",
+        "Singlet-A",
+        ]
     
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
@@ -292,6 +304,18 @@ class TurbomoleTDADC2Test(GenericTDTest):
     
     number = 10
     expected_l_max = 136329
+    symmetries = [
+        "Singlet-A",
+        "Singlet-A",
+        "Singlet-A",
+        "Singlet-A",
+        "Singlet-A",
+        "Singlet-A",
+        "Singlet-A",
+        "Singlet-A",
+        "Singlet-A",
+        "Singlet-A",
+        ]
     
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
@@ -303,6 +327,18 @@ class TurbomoleTDTripTest(GenericTDTest):
     
     number = 10
     expected_l_max = 51530
+    symmetries = [
+        "Triplet-A",
+        "Triplet-A",
+        "Triplet-A",
+        "Triplet-A",
+        "Triplet-A",
+        "Triplet-A",
+        "Triplet-A",
+        "Triplet-A",
+        "Triplet-A",
+        "Triplet-A",
+        ]
 
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
@@ -314,6 +350,18 @@ class TurbomoleTDCC2TripTest(GenericTDTest):
     # This test is for triplets with ricc2, which does not support oscillator strengths.
     
     number = 10
+    symmetries = [
+        "Triplet-A",
+        "Triplet-A",
+        "Triplet-A",
+        "Triplet-A",
+        "Triplet-A",
+        "Triplet-A",
+        "Triplet-A",
+        "Triplet-A",
+        "Triplet-A",
+        "Triplet-A",
+        ]
 
     def testenergies(self):
         """Is the l_max reasonable?"""
