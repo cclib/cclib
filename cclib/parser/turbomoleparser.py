@@ -1196,7 +1196,11 @@ class Turbomole(logfileparser.Logfile):
                 time_parts[time_part] = float(match.group(1))
                 
         # Build a timedelta from our parts.
-        duration = timedelta(days = time_parts['days'], hours = time_parts['hours'], minutes = time_parts['minutes'], milliseconds = time_parts['seconds'] * 1000)
+        duration = timedelta(
+            days = time_parts['days'],
+            hours = time_parts['hours'],
+            minutes = time_parts['minutes'],
+            milliseconds = time_parts['seconds'] * 1000)
         
         # All done.
         return duration
