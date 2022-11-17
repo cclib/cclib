@@ -74,7 +74,6 @@ class GenericTDTest(unittest.TestCase):
     @skipForParser('Molcas','The parser is still being developed so we skip this test')    
     @skipForLogfile("ORCA/basicORCA5.0/dvb_adc2.log", "etsyms are not available for this method") 
     @skipForLogfile("ORCA/basicORCA5.0/dvb_eom_ccsd.log", "etsyms are not available for this method") 
-    @skipForLogfile("ORCA/basicORCA5.0/dvb_steom_ccsd.log", "etsyms are not available for this method") 
     @skipForLogfile("ORCA/basicORCA5.0/dvb_pno_eom_ccsd.log", "etsyms are not available for this method") 
     def testsymsnumber(self):
         """Is the length of etsyms correct?"""
@@ -94,7 +93,6 @@ class GenericTDTest(unittest.TestCase):
     @skipForLogfile("Gaussian/basicGaussian09", "symmetry is missing for this log file") 
     @skipForLogfile("ORCA/basicORCA5.0/dvb_adc2.log", "etsyms are not available for this method") 
     @skipForLogfile("ORCA/basicORCA5.0/dvb_eom_ccsd.log", "etsyms are not available for this method") 
-    @skipForLogfile("ORCA/basicORCA5.0/dvb_steom_ccsd.log", "etsyms are not available for this method") 
     @skipForLogfile("ORCA/basicORCA5.0/dvb_pno_eom_ccsd.log", "etsyms are not available for this method") 
     def testsyms(self):
         """Are the values of etsyms correct?"""
