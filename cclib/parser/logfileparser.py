@@ -444,6 +444,14 @@ class Logfile(ABC):
                 )
 
         setattr(self, name, value)
+        
+    def del_attribute(self, name):
+        """Safely remove/delete an attribute, even if it does not exist."""
+        try:
+            delattr(self, name)
+            
+        except AttributeError:
+            pass
 
     def append_attribute(self, name: str, value: Any) -> None:
         """Appends a value to an attribute."""
