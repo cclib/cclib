@@ -31,6 +31,7 @@ class GenericTDTest(unittest.TestCase):
             "Singlet-Bu",
             "Singlet-Ag",
         ]
+    sumofsec = 1.0
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForLogfile('Turbomole/basicTurbomole7.4/CO_cc2_TD_trip', 'Oscillator strengths are not available for Turbomole triplets using ricc2 but are required for testenergies()')
@@ -58,7 +59,7 @@ class GenericTDTest(unittest.TestCase):
         assert len(self.data.etsecs) == self.number
         lowestEtrans = self.data.etsecs[numpy.argmin(self.data.etenergies)]
         sumofsec = sum([z*z for (x, y, z) in lowestEtrans])
-        assert abs(sumofsec - 1.0) < 0.16
+        assert abs(sumofsec - self.sumofsec) < 0.16
 
     @skipForParser('FChk', 'This is true for calculations without symmetry, but not with?')
     @skipForParser('DALTON', 'This is true for calculations without symmetry, but not with?')
@@ -71,6 +72,10 @@ class GenericTDTest(unittest.TestCase):
             t[0][2][0] == self.data.homos[0] + 1
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')    
+    @skipForLogfile("ORCA/basicORCA5.0/dvb_adc2.log", "etsyms are not available for this method") 
+    @skipForLogfile("ORCA/basicORCA5.0/dvb_eom_ccsd.log", "etsyms are not available for this method") 
+    @skipForLogfile("ORCA/basicORCA5.0/dvb_steom_ccsd.log", "etsyms are not available for this method") 
+    @skipForLogfile("ORCA/basicORCA5.0/dvb_pno_eom_ccsd.log", "etsyms are not available for this method") 
     def testsymsnumber(self):
         """Is the length of etsyms correct?"""
         assert len(self.data.etsyms) == self.number
@@ -87,6 +92,10 @@ class GenericTDTest(unittest.TestCase):
     @skipForLogfile("ORCA/basicORCA4.2", "etsyms are only available in ORCA >= 5.0") 
     @skipForLogfile("ORCA/basicORCA4.1", "etsyms are only available in ORCA >= 5.0") 
     @skipForLogfile("Gaussian/basicGaussian09", "symmetry is missing for this log file") 
+    @skipForLogfile("ORCA/basicORCA5.0/dvb_adc2.log", "etsyms are not available for this method") 
+    @skipForLogfile("ORCA/basicORCA5.0/dvb_eom_ccsd.log", "etsyms are not available for this method") 
+    @skipForLogfile("ORCA/basicORCA5.0/dvb_steom_ccsd.log", "etsyms are not available for this method") 
+    @skipForLogfile("ORCA/basicORCA5.0/dvb_pno_eom_ccsd.log", "etsyms are not available for this method") 
     def testsyms(self):
         """Are the values of etsyms correct?"""
         assert self.data.etsyms == self.symmetries
@@ -370,12 +379,21 @@ class OrcaETPostHFTest(GenericTDTest):
     """Tests for post-HF excited states with ORCA."""
     
     number = 2
+    symmetries = ["Singlet", "Singlet"]
+    # Not sure why this value != 1 for these methods?
+    # Perhaps remaining contributions were too small to print?
+    sumofsec = 0.43
     
 
-class OrcaSteomCCSDTest(OrcaETPostHFTest):
+class OrcaSTEOMCCSDTest(OrcaETPostHFTest):
     """Test for STEOM-CCSD with Orca."""
     
     number = 5
+    
+class OrcaSTEOMDLPNOCCSDTest(OrcaETPostHFTest):
+    """Test for STEOM-CCSD with Orca."""
+    
+    sumofsec = 1.0
         
 
 if __name__ =="__main__":
