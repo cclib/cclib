@@ -365,6 +365,17 @@ class TurbomoleTDCC2TripTest(GenericTDTest):
     def testenergies(self):
         """Is the l_max reasonable?"""
         assert len(self.data.etenergies) == self.number
+
+class OrcaETPostHFTest(GenericTDTest):
+    """Tests for post-HF excited states with ORCA."""
+    
+    number = 2
+    
+
+class OrcaSteomCCSDTest(OrcaETPostHFTest):
+    """Test for STEOM-CCSD with Orca."""
+    
+    number = 5
         
 
 if __name__ =="__main__":
