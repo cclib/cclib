@@ -543,6 +543,14 @@ class Logfile(ABC):
             lines.append(line)
 
         return lines
+    
+    def next_filled_line(self, inputfile):
+        """Return the next line that contains something other than whitespace."""
+        while True:
+            line = next(inputfile)
+            
+            if line.strip() != "":
+                return line
 
     skip_line = lambda self, inputfile, expected: self.skip_lines(inputfile, [expected])
 
