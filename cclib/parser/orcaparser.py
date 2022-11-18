@@ -1471,6 +1471,11 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             self.mdci_et_mult = line.split()[-1].capitalize()
             
         if any(x in line for x in ("CIS RESULTS", "ADC(2) RESULTS", "EOM-CCSD RESULTS", "STEOM-CCSD RESULTS")):
+            if self.mdci_et_mult is None and ( "EOM-CCSD" in line or "ADC(2)" in line ):
+                # These methods can only do singlets.
+                # Think this is safe?.
+                self.mdci_et_mult = "Singlet"
+            
             # CIS prints orbital contributions different to everone else.
             cis = "CIS RESULTS" in line
             
