@@ -8,6 +8,7 @@
 """Test the DDEC6 in cclib"""
 
 import os
+import sys
 import unittest
 
 import numpy
@@ -20,8 +21,6 @@ from cclib.method.calculationmethod import MissingAttributeError
 from numpy.testing import assert_allclose
 
 from ..test_data import getdatafile
-
-from skip import skipForVersion
 
 class DDEC6Test(unittest.TestCase):
     """DDEC6 method tests."""
@@ -168,7 +167,7 @@ class DDEC6Test(unittest.TestCase):
         # Check assigned charges
         assert_allclose(analysis.fragcharges, [-0.757097, 0.378410, 0.378687], atol=0.2)
 
-    @skipForVersion({"major" : 3, "minor" : 8}, "This test doesn't converge with newer psi4 versions >3.8")
+    @pytest.mark.skipif(sys.version_info > (3, 8), reason="This test doesn't converge with newer psi4 versions availiable with python >3.8")
     def test_chgsum_h2(self):
         """ Are DDEC6 charges for hydrogen atoms in nonpolar H2 small as expected?
         
