@@ -712,7 +712,11 @@ class DDEC6(Stockholder):
         candidates_phi = [phiA]
         candidates_bigphi = [bigphiA]
 
+        it_max = 200
+        curr_it = 0
+
         while phiA <= 0:
+            curr_it += 1
             # Iterative algorithm until convergence
             # Refer to S101 in doi: 10.1039/c6ra04656h
             if superscript == 1:
@@ -735,6 +739,10 @@ class DDEC6(Stockholder):
 
             candidates_phi.append(phiA)
             candidates_bigphi.append(bigphiA)
+
+            if curr_it == it_max:
+                self.logger.info("Hit iteration max")
+                break
 
         return candidates_phi, candidates_bigphi
 
