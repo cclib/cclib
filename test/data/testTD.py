@@ -90,10 +90,7 @@ class GenericTDTest(unittest.TestCase):
     @skipForParser('QChem', 'Q-Chem cannot calculate rotatory strengths')
     @skipForLogfile("ORCA/basicORCA4.2", "etsyms are only available in ORCA >= 5.0") 
     @skipForLogfile("ORCA/basicORCA4.1", "etsyms are only available in ORCA >= 5.0") 
-    @skipForLogfile("Gaussian/basicGaussian09", "symmetry is missing for this log file") 
-    @skipForLogfile("ORCA/basicORCA5.0/dvb_adc2.log", "etsyms are not available for this method") 
-    @skipForLogfile("ORCA/basicORCA5.0/dvb_eom_ccsd.log", "etsyms are not available for this method") 
-    @skipForLogfile("ORCA/basicORCA5.0/dvb_pno_eom_ccsd.log", "etsyms are not available for this method") 
+    @skipForLogfile("Gaussian/basicGaussian09", "symmetry is missing for this log file")
     def testsyms(self):
         """Are the values of etsyms correct?"""
         assert self.data.etsyms == self.symmetries
