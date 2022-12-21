@@ -83,18 +83,23 @@ class ORCA(logfileparser.Logfile):
         if hasattr(self, "etenergies"):
             # Sort them properly.
             prop_names = ("etenergies", "etsyms", "etoscs", "etsecs", "etrotats")
-            zipped_props = [zipped_state for zipped_state in 
-                sorted(
-                    zip_longest(*[getattr(self, prop_name, []) for prop_name in prop_names]),
-                    key = lambda state: state[0]
-                )
-            ]
-            etprops = list(zip(*zipped_props))
             
-            for index, prop_name in enumerate(prop_names):
-                # Ignore empty properties.
-                if etprops[index] != (None,) * len(etprops[index]):
-                    setattr(self, prop_name, list(etprops[index]))
+            # First, set energies properly, keeping track of each energy's old index.
+            energy_index = sorted([(energy, index) for index, energy in enumerate(self.etenergies)], key = lambda energy_index: energy_index[0])
+            
+            props = {}
+            for prop_name in prop_names:
+                if hasattr(self, prop_name):
+                    # Check this property and etenergies are the same length (otherwise we can accidentally and silently truncate a list that's too long).
+                    if len(getattr(self, prop_name)) != len(self.etenergies):
+                        raise Exception("Parsed different number of {} ({}) than etenergies ({})".format(prop_name, len(getattr(self, prop_name)), len(self.etenergies)))
+                    
+                    # Reorder based on our mapping.
+                    props[prop_name] = [getattr(self, prop_name)[old_index] for energy, old_index in energy_index]
+            
+            # Assign back again
+            for prop_name in props:
+                setattr(self, prop_name, props[prop_name])
             
 
     def extract(self, inputfile, line):
