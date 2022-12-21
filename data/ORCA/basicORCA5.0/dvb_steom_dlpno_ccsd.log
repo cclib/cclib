@@ -3190,6 +3190,9 @@ IROOT=  1:  0.183311 au     4.988 eV   40232.0 cm**-1
 
 Percentage Active Character     98.88
 
+Warning:: the state may have not converged with respect to active space 
+-------------------- Handle with Care -------------------- 
+
   Amplitude    Excitation in Canonical Basis
   -0.134023    32 ->  37
   -0.219768    33 ->  35
