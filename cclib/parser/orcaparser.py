@@ -1574,10 +1574,17 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 
                 if "Percentage Active Character " in line:
                     # Data currently not parsed. Just skip.
-                    self.skip_lines(inputfile, ['blank'])
-                    # Header line.
+                    line = self.next_filled_line(inputfile)
+                    
+                if "Warning:: the state may have not converged with respect to active space" in line:
+                    # Skip this line and the next (which both contain warnings).
+                    # TODO: Capture this warning?
                     line = next(inputfile)
-                    # First contribution line.
+                    line = self.next_filled_line(inputfile)
+                
+                if "Amplitude    Excitation in Canonical Basis" in line:
+                    # Data currently not parsed. Just skip.
+                    # Header line.
                     line = next(inputfile)
                     while "->" in line:
                         line = next(inputfile)
