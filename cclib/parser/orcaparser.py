@@ -1529,19 +1529,21 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 # First orbital contribution line.
                 line = next(inputfile)
                 while "->" in line:
+                    coeff_split = line.split()
                     # CIS prints coefficients after the orbitals, other modules are reversed.
                     if not cis:
-                        contrib, start, arrow, end = line.split()
+                        contrib = coeff_split[0]
+                        start = coeff_split[1]
+                        end = coeff_split[3]
                     else:
                         # CIS looks like this:
                         # 32 ->  37    0.037502 (-0.193653)
                         # 34 ->  35    0.935796 ( 0.967365)
                         # 34 ->  36    0.014167 (-0.119024)
                         # Note that sometimes the coefficient has whitespace between the brackets, sometimes not.
-                        orb_split = line.split()
-                        start = orb_split[0]
-                        end = orb_split[2]
-                        contrib = "".join(orb_split[4:])[1:-1]
+                        start = coeff_split[0]
+                        end = coeff_split[2]
+                        contrib = "".join(coeff_split[4:])[1:-1]
                     
                     try:
                         # TODO: Unrestricted?
