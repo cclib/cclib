@@ -629,6 +629,7 @@ Dispersion correction           -0.016199959
                 'ccenergies',
                 utils.convertor(utils.float(line.split()[-1]), 'hartree', 'eV')
             )
+            self.metadata['methods'].append('CCSD')
             line = next(inputfile)
             assert line[:23] == 'Singles Norm <S|S>**1/2'
             line = next(inputfile)
