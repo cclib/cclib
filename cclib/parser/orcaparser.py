@@ -88,6 +88,13 @@ class ORCA(logfileparser.Logfile):
             if "SVN: $Rev" in possible_revision_line:
                 version = re.search(r'\d+', possible_revision_line).group()
                 self.metadata["package_version"] += f"+{version}"
+        
+        # Extract basis-set info.
+        # ----- Orbital basis set information -----
+        # Your calculation utilizes the basis: cc-pVDZ
+        if "Your calculation utilizes the basis:" == line[:36]:
+            self.metadata['basis_set'] = line[37:].strip()
+        
 
         # ================================================================================
         #                                         WARNINGS
