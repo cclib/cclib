@@ -1721,7 +1721,7 @@ class Gaussian(logfileparser.Logfile):
 
                 colmNames = next(inputfile)
                 
-                if "Density Matrix:" in colmNames or "DENSITY MATRIX." in colmNames or "Beta Molecular Orbital Coefficients" in colmNames:
+                if any(name in colmNames for name in ["Density Matrix:", "DENSITY MATRIX.", "Beta Molecular Orbital Coefficients"]):
                     # Reached end of mocoeff section early, this implies pop was not full.
                     self.popregular = True
                     # We can stop processing.
