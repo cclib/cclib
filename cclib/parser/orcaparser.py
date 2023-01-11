@@ -1339,9 +1339,26 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                     etoscs.append(float(intensity))
 
                     line = next(inputfile)
-
-                self.set_attribute('etenergies', etenergies)
-                self.set_attribute('etoscs', etoscs)
+                
+                # Some of these sections contain data that we probably do not want to be populating etenergies
+                # and/or etoscs with.  For example, the SOC corrected spectra are for mixed singlet/triplet states,
+                # so they do not correspond to the symmetries given in etsyms, and the energy values given are
+                # probably not what the user would expect to find in etenergies anyway?
+                # Also, there are twice as many SOC states as true spin states, so half of the etenergies wouldn't 
+                # have a symmetry in etsyms at all...
+                #
+                # Only keep etosc given by the normal electric TDM.
+                if name == "ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS":
+                    # There's no point overwriting the etenergies we've already parsed,
+                    # especially because the previously parsed values are probably more accurate.
+                    # We could do a check to make sure the energies match, but we will fall foul
+                    # of rounding errors.
+                    if not hasattr(self, "etenergies"):
+                        self.set_attribute("etenergies", etenergies)
+                    
+                    self.set_attribute('etoscs', etoscs)
+                
+                # Save everything to transprop.
                 self.transprop[name] = (numpy.asarray(etenergies), numpy.asarray(etoscs))
 
         if line.strip() == "CD SPECTRUM":
