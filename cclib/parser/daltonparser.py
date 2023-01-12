@@ -530,7 +530,7 @@ class DALTON(logfileparser.Logfile):
 
             self.skip_lines(inputfile, ['d', 'b'])
 
-            line = inputfile.next()
+            line = next(inputfile)
             self.symcounts = [int(c) for c in line.split(':')[1].split()]
 
             self.symlabels = []
@@ -540,7 +540,7 @@ class DALTON(logfileparser.Logfile):
 
                 # If the number of orbitals for a symmetry is zero, the printout
                 # is different (see MP2 unittest logfile for an example).
-                line = inputfile.next()
+                line = next(inputfile)
 
                 if sc == 0:
                     assert "No orbitals in symmetry" in line
@@ -549,7 +549,7 @@ class DALTON(logfileparser.Logfile):
                     self.symlabels.append(line.split()[1])
                     self.skip_line(inputfile, 'blank')
                     for i in range(sc):
-                        orbital = inputfile.next()
+                        orbital = next(inputfile)
 
         if "Starting in Wave Function Section (SIRIUS)" in line:
             self.section = "SIRIUS"
