@@ -165,7 +165,7 @@ def openlogfile(filename, object=None):
         if len(filename) == 0:
             return None
 
-        return fileinput.input(filename, openhook=fileinput.hook_compressed)
+        return FileWrapper(fileinput.input(filename, openhook=fileinput.hook_compressed))
 
 
 class Logfile(ABC):
