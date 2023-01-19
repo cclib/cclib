@@ -11,10 +11,10 @@ jobs:
     strategy:
       matrix:
         container:
-          - 'shivupa/cclib-ci:py37'
-          - 'shivupa/cclib-ci:py38'
-          - 'shivupa/cclib-ci:py39'
-          - 'shivupa/cclib-ci:py310'
+          - 'shivupa/cclib-ci:py37-edge'
+          - 'shivupa/cclib-ci:py38-edge'
+          - 'shivupa/cclib-ci:py39-edge'
+          - 'shivupa/cclib-ci:py310-edge'
     container:
       image: ${{ matrix.container }}
     defaults:
