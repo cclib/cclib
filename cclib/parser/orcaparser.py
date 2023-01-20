@@ -1107,7 +1107,8 @@ Dispersion correction           -0.016199959
             elif line.find("TRIPLETS") >= 0:
                 mult = "Triplet"
             else:
-                mult = "Not specified"
+                # This behaviour matches the output Gaussian produces when it encounters an unfamiliar multiplicity.
+                mult = "???"
 
             etsecs = []
             etenergies = []
@@ -1140,12 +1141,15 @@ Dispersion correction           -0.016199959
                     line = next(inputfile)
                     # ORCA 5.0 seems to print symmetry at end of block listing transitions
                     if 'Symmetry' in line:
-                        symm = "-" + line.split()[-1]
+                        symm = line.split()[-1]
                         line = next(inputfile)
                     else:
                         symm = ""
                 etsecs.append(sec)
-                etsyms.append(mult + symm)
+                if mult != "" and symm != "":
+                    etsyms.append(mult + "-" + symm)
+                elif mult != "" or symm != "":
+                    etsyms.append(mult + symm)
                 line = next(inputfile)
 
             self.extend_attribute('etenergies', etenergies)
