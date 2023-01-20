@@ -1168,8 +1168,6 @@ Dispersion correction           -0.016199959
             while line.find("STATE") >= 0:
                 broken = line.split()
                 etenergies.append(float(broken[7]))
-                if mult is not None:
-                    etsyms.append(mult)
                 line = next(inputfile)
                 sec = []
                 # Contains SEC or is blank
