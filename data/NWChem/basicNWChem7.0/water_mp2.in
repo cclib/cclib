@@ -1,0 +1,15 @@
+  start water
+  title "water"
+
+  geometry units angstroms
+   zmatrix 
+     O
+     H1 O 0.99
+     H2 O 0.99 H1 106.0
+   end
+  end
+  basis
+    *    library sto-3g
+  end
+  task mp2
+

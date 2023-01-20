@@ -1145,8 +1145,8 @@ class NWChem(logfileparser.Logfile):
                 utils.float(line.split()[8])
                 + utils.convertor(self.scfenergies[-1], "eV", "hartree"),
             )
-        if line[1:32] == "Zero-Point correction to Energy" and hasattr(self, "scfenergies"):
-            self.set_attribute("zpve", utils.float(line.split()[8]))
+        if line[1:32] == "Zero-Point correction to Energy":
+            self.set_attribute("zpve", float(line.split()[8]))
         if line[1:29] == "Thermal correction to Energy" and hasattr(self, "scfenergies"):
             self.set_attribute(
                 "electronic_thermal_energy",
