@@ -361,11 +361,11 @@ class NWChem(logfileparser.Logfile):
 
                 self.skip_line(inputfile, 'blank')
 
-                indices = [int(i) for i in inputfile.next().split()]
+                indices = [int(i) for i in next(inputfile).split()]
                 assert indices[0] == len(aooverlaps) + 1
 
                 self.skip_line(inputfile, "dashes")
-                data = [inputfile.next().split() for i in range(self.nbasis)]
+                data = [next(inputfile).split() for i in range(self.nbasis)]
                 indices = [int(d[0]) for d in data]
                 assert indices == list(range(1, self.nbasis+1))
 

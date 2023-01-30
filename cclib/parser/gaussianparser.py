@@ -228,7 +228,7 @@ class Gaussian(logfileparser.Logfile):
 
             self.updateprogress(inputfile, "Symbolic Z-matrix", self.fupdate)
 
-            line = inputfile.next()
+            line = next(inputfile)
             while line.split()[0] == 'Charge':
 
                 # For the supermolecule, we can parse the charge and multicplicity.
@@ -245,7 +245,7 @@ class Gaussian(logfileparser.Logfile):
                 if line.strip()[-13:] == "model system.":
                     self.nmodels = getattr(self, 'nmodels', 0) + 1
 
-                line = inputfile.next()
+                line = next(inputfile)
 
             # The remaining part will allow us to get the atom count.
             # When coordinates are given, there is a blank line at the end, but if
@@ -256,7 +256,7 @@ class Gaussian(logfileparser.Logfile):
             natom = 0
             while line.split() and not "Variables" in line and not "Leave Link" in line:
                 natom += 1
-                line = inputfile.next()
+                line = next(inputfile)
             self.set_attribute('natom', natom)
 
         # Continuing from above, there is not always a symbolic matrix, for example
@@ -319,7 +319,7 @@ class Gaussian(logfileparser.Logfile):
             self.reference = [0.0, 0.0, 0.0]
             self.moments = [self.reference]
 
-            tokens = inputfile.next().split()
+            tokens = next(inputfile).split()
             # split - dipole would need to be *huge* to fail a split
             # and G03 and G09 use different spacing
             if len(tokens) >= 6:
@@ -339,7 +339,7 @@ class Gaussian(logfileparser.Logfile):
             #   XX=    -6.1213   YY=    -4.2950   ZZ=    -5.4175
             quadrupole = {}
             for j in range(2): # two rows
-                line = inputfile.next()
+                line = next(inputfile)
                 if line[22] == '=': # g03 file
                     for i in (1, 18, 35):
                         quadrupole[line[i:i+4]] = float(line[i+5:i+16])
@@ -368,7 +368,7 @@ class Gaussian(logfileparser.Logfile):
             #  YYZ=             -0.5848  XYZ=              0.0000
             octapole = {}
             for j in range(2): # two rows
-                line = inputfile.next()
+                line = next(inputfile)
                 if line[22] == '=': # g03 file
                     for i in (1, 18, 35, 52):
                         octapole[line[i:i+4]] = float(line[i+5:i+16])
@@ -377,7 +377,7 @@ class Gaussian(logfileparser.Logfile):
                         octapole[line[i:i+4]] = float(line[i+5:i+25])
 
             # last line only 2 moments
-            line = inputfile.next()
+            line = next(inputfile)
             if line[22] == '=': # g03 file
                 for i in (1, 18):
                     octapole[line[i:i+4]] = float(line[i+5:i+16])
@@ -408,7 +408,7 @@ class Gaussian(logfileparser.Logfile):
             hexadecapole = {}
             # read three lines worth of 4 moments per line
             for j in range(3):
-                line = inputfile.next()
+                line = next(inputfile)
                 if line[22] == '=': # g03 file
                     for i in (1, 18, 35, 52):
                         hexadecapole[line[i:i+4]] = float(line[i+5:i+16])
@@ -417,7 +417,7 @@ class Gaussian(logfileparser.Logfile):
                         hexadecapole[line[i:i+4]] = float(line[i+5:i+25])
 
             # last line only 3 moments
-            line = inputfile.next()
+            line = next(inputfile)
             if line[22] == '=': # g03 file
                 for i in (1, 18, 35):
                     hexadecapole[line[i:i+4]] = float(line[i+5:i+16])
@@ -642,7 +642,7 @@ class Gaussian(logfileparser.Logfile):
         # we will want to parse the model systems, too, and that is what nmodels could track.
         if "ONIOM: generating point" in line and line.strip()[-13:] == 'model system.' and getattr(self, 'nmodels', 0) > 0:
             while not line[1:30] == 'ONIOM: Integrating ONIOM file':
-                line = inputfile.next()
+                line = next(inputfile)
 
         # With the gfinput keyword, the atomic basis set functions are:
         #
@@ -683,14 +683,14 @@ class Gaussian(logfileparser.Logfile):
             if self.counterpoise != 0:
                 return
 
-            atom_line = inputfile.next()
+            atom_line = next(inputfile)
             self.gfprint = atom_line.split()[0] == "Atom"
             self.gfinput = not self.gfprint
 
             # Note how the shell information is on a separate line for gfinput,
             # whereas for gfprint it is on the same line as atom information.
             if self.gfinput:
-                shell_line = inputfile.next()
+                shell_line = next(inputfile)
 
             shell = []
             while len(self.gbasis) < self.natom:
@@ -706,7 +706,7 @@ class Gaussian(logfileparser.Logfile):
 
                 parameters = []
                 for ig in range(ngauss):
-                    line = inputfile.next()
+                    line = next(inputfile)
                     parameters.append(list(map(utils.float, line.split())))
                 for iss, ss in enumerate(subshells):
                     contractions = []
@@ -718,7 +718,7 @@ class Gaussian(logfileparser.Logfile):
                     shell.append(subshell)
 
                 if self.gfprint:
-                    line = inputfile.next()
+                    line = next(inputfile)
                     if line.split()[0] == "Atom":
                         atomnum = int(re.sub(r"\D", "", line.split()[1]))
                         if atomnum == len(self.gbasis) + 2:
@@ -728,12 +728,12 @@ class Gaussian(logfileparser.Logfile):
                     else:
                         self.gbasis.append(shell)
                 else:
-                    line = inputfile.next()
+                    line = next(inputfile)
                     if line.strip() == "****":
                         self.gbasis.append(shell)
                         shell = []
-                        atom_line = inputfile.next()
-                        shell_line = inputfile.next()
+                        atom_line = next(inputfile)
+                        shell_line = next(inputfile)
                     else:
                         shell_line = line
 

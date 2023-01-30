@@ -721,13 +721,13 @@ class GAMESSUK(logfileparser.Logfile):
             occupations = []
 
             self.skip_line(inputfile, "blank")
-            line = inputfile.next()
+            line = next(inputfile)
 
             while line.strip():
                 occupations += map(float, line.split())
 
                 self.skip_line(inputfile, "blank")
-                line = inputfile.next()
+                line = next(inputfile)
 
             self.set_attribute('nooccnos', occupations)
 
