@@ -3126,6 +3126,15 @@ class MolproBigBasisTest_cart(MolproBigBasisTest):
 # ORCA #
 
 
+class OrcaSPTest_nobasis(OrcaSPTest):
+    """Versions pre-4.0 do not concretely print the basis set(s) used aside
+    from repeating the input file.
+    """
+
+    def testmetadata_basis_set(self):
+        self.assertNotIn("basis_set", self.data.metadata)
+
+
 class OrcaSPTest_3_21g(OrcaSPTest):
     nbasisdict = {1: 2, 6: 9}
     b3lyp_energy = -10460
@@ -3400,7 +3409,7 @@ old_unittests = {
 
     "ORCA/ORCA2.8/dvb_gopt.out":    OrcaGeoOptTest,
     "ORCA/ORCA2.8/dvb_sp.out":      GenericBasisTest,
-    "ORCA/ORCA2.8/dvb_sp.out":      OrcaSPTest,
+    "ORCA/ORCA2.8/dvb_sp.out":      OrcaSPTest_nobasis,
     "ORCA/ORCA2.8/dvb_sp_un.out":   OrcaSPunTest_charge0,
     "ORCA/ORCA2.8/dvb_td.out":      OrcaTDDFTTest_pre1085,
     "ORCA/ORCA2.8/dvb_ir.out":      OrcaIRTest_old,
@@ -3410,7 +3419,7 @@ old_unittests = {
     "ORCA/ORCA2.9/dvb_raman.out":   GenericRamanTest,
     "ORCA/ORCA2.9/dvb_scan.out":    OrcaRelaxedScanTest,
     "ORCA/ORCA2.9/dvb_sp.out":      GenericBasisTest,
-    "ORCA/ORCA2.9/dvb_sp.out":      OrcaSPTest,
+    "ORCA/ORCA2.9/dvb_sp.out":      OrcaSPTest_nobasis,
     "ORCA/ORCA2.9/dvb_sp_un.out":   GenericSPunTest,
     "ORCA/ORCA2.9/dvb_td.out":      OrcaTDDFTTest_pre1085,
 
@@ -3421,7 +3430,7 @@ old_unittests = {
     "ORCA/ORCA3.0/dvb_scan.out":          OrcaRelaxedScanTest,
     "ORCA/ORCA3.0/dvb_sp_un.out":         GenericSPunTest,
     "ORCA/ORCA3.0/dvb_sp.out":            GenericBasisTest,
-    "ORCA/ORCA3.0/dvb_sp.out":            OrcaSPTest,
+    "ORCA/ORCA3.0/dvb_sp.out":            OrcaSPTest_nobasis,
     "ORCA/ORCA3.0/dvb_td.out":            OrcaTDDFTTest_pre1085,
     "ORCA/ORCA3.0/Trp_polar.out":         ReferencePolarTest,
     "ORCA/ORCA3.0/trithiolane_polar.out": GaussianPolarTest,

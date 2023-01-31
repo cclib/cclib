@@ -46,6 +46,9 @@ class ORCA(logfileparser.Logfile):
 
         # Keep track of whether this is a relaxed scan calculation
         self.is_relaxed_scan = False
+        
+        # Flag for whether this calc is DFT.
+        self.is_DFT = False
 
     def after_parsing(self):
         # ORCA doesn't add the dispersion energy to the "Total energy" (which
@@ -88,6 +91,13 @@ class ORCA(logfileparser.Logfile):
             if "SVN: $Rev" in possible_revision_line:
                 version = re.search(r'\d+', possible_revision_line).group()
                 self.metadata["package_version"] += f"+{version}"
+        
+        # Extract basis-set info.
+        # ----- Orbital basis set information -----
+        # Your calculation utilizes the basis: cc-pVDZ
+        if "Your calculation utilizes the basis:" == line[:36]:
+            self.metadata['basis_set'] = line[37:].strip()
+        
 
         # ================================================================================
         #                                         WARNINGS
@@ -326,7 +336,13 @@ class ORCA(logfileparser.Logfile):
 
             self.metadata['symmetry_detected'] = point_group_full
             self.metadata['symmetry_used'] = point_group_abelian
-
+        
+        if "Density Functional" == line[1:19]:
+            self.is_DFT = True
+            # In theory we could also parse the functional from this section, 
+            # but sadly ORCA doesn't print simple functional names.
+            
+        
         # SCF convergence output begins with:
         #
         # --------------
@@ -387,6 +403,7 @@ class ORCA(logfileparser.Logfile):
                 line = next(inputfile)
             energy = utils.convertor(float(line.split()[3]), "hartree", "eV")
             self.scfenergies.append(energy)
+            self.metadata['methods'].append('HF' if not self.is_DFT else 'DFT')
 
             self._append_scfvalues_scftargets(inputfile, line)
 
@@ -410,6 +427,7 @@ class ORCA(logfileparser.Logfile):
 
             energy = utils.convertor(self.scfvalues[-1][-1][0], "hartree", "eV")
             self.scfenergies.append(energy)
+            self.metadata['methods'].append('HF' if not self.is_DFT else 'DFT')
 
             self._append_scfvalues_scftargets(inputfile, line)
 
@@ -611,6 +629,7 @@ Dispersion correction           -0.016199959
                 'ccenergies',
                 utils.convertor(utils.float(line.split()[-1]), 'hartree', 'eV')
             )
+            self.metadata['methods'].append('CCSD')
             line = next(inputfile)
             assert line[:23] == 'Singles Norm <S|S>**1/2'
             line = next(inputfile)

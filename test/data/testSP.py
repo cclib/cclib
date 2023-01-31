@@ -356,7 +356,6 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('ADF', 'reading basis set names is not implemented')
     @skipForParser('GAMESSUK', 'reading basis set names is not implemented')
     @skipForParser('Molcas', 'reading basis set names is not implemented')
-    @skipForParser('ORCA', 'reading basis set names is not implemented')
     @skipForParser('Psi4', 'reading basis set names is not implemented')
     def testmetadata_basis_set(self):
         """Does metadata have expected keys and values?"""
