@@ -3183,9 +3183,25 @@ class OrcaTDDFTTest_error(OrcaTDDFTTest):
         """These values used to be less accurate, probably due to wrong coordinates."""
         self.assertEqual(len(self.data.etoscs), self.number)
         self.assertAlmostEqual(max(self.data.etoscs), 1.0, delta=0.2)
+        
+class OrcaTDDFTTest_pre5(OrcaTDDFTTest):
+    
+    symmetries = [
+            "Triplet",
+            "Triplet",
+            "Triplet",
+            "Triplet",
+            "Triplet",
+            "Singlet",
+            "Singlet",
+            "Singlet",
+            "Singlet",
+            "Singlet",
+        ]
 
 
-class OrcaTDDFTTest_pre1085(OrcaTDDFTTest):
+class OrcaTDDFTTest_pre1085(OrcaTDDFTTest_pre5):
+    
     def testoscs(self):
         """These values changed in the electric dipole osc strengths prior to Orca 4.0. See PR1085"""
         self.assertEqual(len(self.data.etoscs), self.number)
@@ -3440,7 +3456,7 @@ old_unittests = {
     "ORCA/ORCA4.0/Trp_polar.out":         ReferencePolarTest,
     "ORCA/ORCA4.0/dvb_sp.out":            OrcaSPTest,
     "ORCA/ORCA4.0/dvb_sp_un.out":         GenericSPunTest,
-    "ORCA/ORCA4.0/dvb_td.out":            OrcaTDDFTTest,  
+    "ORCA/ORCA4.0/dvb_td.out":            OrcaTDDFTTest_pre5,
     "ORCA/ORCA4.0/dvb_rocis.out":         OrcaROCIS40Test,
     "ORCA/ORCA4.0/dvb_ir.out":            GenericIRTest,
     "ORCA/ORCA4.0/dvb_raman.out":         OrcaRamanTest,
