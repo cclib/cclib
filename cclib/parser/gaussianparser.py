@@ -881,7 +881,8 @@ class Gaussian(logfileparser.Logfile):
         # Example MP2 output line:
         #  E2 =    -0.9505918144D+00 EUMP2 =    -0.28670924198852D+03
         # Warning! this output line is subtly different for MP3/4/5 runs
-        if "EUMP2 =" in line[27:36]:
+        # Newer versions of gausian introduced a space between 'EUMP2' and '='...
+        if "EUMP2 =" in line[27:36] or "EUMP2=" in line[27:35]:
             self.metadata["methods"].append("MP2")
 
             if not hasattr(self, "mpenergies"):
