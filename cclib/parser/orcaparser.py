@@ -1093,11 +1093,18 @@ Dispersion correction           -0.016199959
             self.skip_lines(inputfile, ['dashes'])
 
 
-            # ORCA prints -inf for sinle atom free energy.
+            # ORCA prints -inf for single atom free energy.
             if self.natom > 1:
                 self.freeenergy = float(line.split()[5])
             else:
                 self.freeenergy = self.enthalpy - self.temperature * self.entropy
+                
+        if "ORCA TD-DFT/TDA CALCULATION" in line:
+            # Start of excited states, reset our attributes in case this is an optimised excited state calc
+            # (or another type of calc where excited states are calculated multiple times).
+            for attr in ("etenergies", "etsyms", "etoscs", "etsecs", "etrotats"):
+                if hasattr(self, attr):
+                    delattr(self, attr)
 
         # Read TDDFT information
         if any(x in line for x in ("TD-DFT/TDA EXCITED", "TD-DFT EXCITED")):
