@@ -1223,6 +1223,15 @@ def testGaussian_Gaussian16_C01_CC_log(logfile):
     """For issue 1110, check parsing of ccenergies in newer Gaussian version"""
 
     assert hasattr(logfile.data, "ccenergies")
+    
+def testGaussian_Gaussian16_Ethane_mp5_log(logfile):
+    """For issue 1163, check we can parse a log file that has MPn in its description."""
+    
+    # This issue is about failing to parse if certain strings are present in the Gaussian log file description section.
+    # Check we can still parse MP energies up to MP5
+    assert hasattr(logfile.data, "mpenergies")
+    assert len(logfile.data.mpenergies) == 4
+    
 
 # Jaguar #
 
