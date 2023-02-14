@@ -8,8 +8,6 @@ periodictable
 # bridges
 biopython==1.76
 ase>=3.21 ; python_version >= '3.5'
-# for pyquante2
-cython
 git+https://github.com/cclib/pyquante2.git@py37
 git+https://github.com/theochem/iodata.git@1.0.0a2
 
