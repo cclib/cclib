@@ -50,7 +50,7 @@ bridges = [
     "pandas",
     "pyscf",
     "qc-iodata>=1.0.0a2",
-    "qcschema @ git+https://github.com/MolSSI/QCSchema.git",
+    "qcschema @ git+https://github.com/cclib/QCSchema.git@branches/make-pip-installable",
 ]
 docs = [
     "sphinx",
