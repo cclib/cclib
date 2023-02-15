@@ -57,7 +57,7 @@ def setup_cclib():
             "numpy",
             "periodictable",
             "scipy>=1.2.0",
-            "qcschema @ git+https://github.com/berquist/QC_JSON_Schema.git@make-pip-installable#egg=qcschema",
+            "qcschema @ git+https://github.com/cclib/QCSchema.git@make-pip-installable#egg=qcschema",
         ],
         # py.typed
         zip_safe=False,
