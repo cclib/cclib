@@ -99,6 +99,9 @@ class Gaussian(logfileparser.Logfile):
         # Do we have high-precision polarizabilities printed from a
         # dedicated `polar` job? If so, avoid duplicate parsing.
         self.hp_polarizabilities = False
+        
+        # Used to estimate wall times from CPU times.
+        self.num_cpu = 1
 
     def after_parsing(self):
         # atomcoords are parsed as a list of lists but it should be an array
@@ -168,6 +171,13 @@ class Gaussian(logfileparser.Logfile):
         if hasattr(self, "ccenergy"):
             self.append_attribute("ccenergies", utils.convertor(self.ccenergy, "hartree", "eV"))
             del self.ccenergy
+            
+        # If we have cpu times but no wall-times, we can calculate the later based on the number of CPUs used.
+        if "cpu_time" in self.metadata and "wall_time" not in self.metadata:
+            self.metadata['wall_time'] = []
+            for cpu_time in self.metadata['cpu_time']:
+                self.metadata['wall_time'].append(cpu_time / self.num_cpu)
+            
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -2236,6 +2246,10 @@ class Gaussian(logfileparser.Logfile):
                 if not hasattr(self, 'optdone'):
                     self.optdone = []
                 self.optdone.append(len(self.optstatus) - 1)
+                
+        # Save num CPUs incase we have an old version of Gaussian which doesn't print wall times.
+        if "Will use up to" in line:
+            self.num_cpu = int(line.split()[4])
 
         # Extract total elapsed (wall) and CPU job times
         if line[:14] == ' Elapsed time:' or line[:14] == ' Job cpu time:':

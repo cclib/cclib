@@ -6,6 +6,7 @@
 # the terms of the BSD 3-Clause License.
 import collections
 import scipy.constants
+from datetime import timedelta
 
 """Parser for Turbomole output files."""
 
@@ -57,6 +58,12 @@ class Turbomole(logfileparser.Logfile):
         
         # A Regex that we use to extract version info.
         self.version_regex = re.compile(r"TURBOMOLE(?: rev\.)? V([\d]+)[.-]([\d]+)(?:[.-]([\d]))?(?: \( ?([0-9A-z]+) ?\))?")
+        
+        # Regexes for parsing timings.
+        self.days_regex = re.compile(r"([0-9.]*) days")
+        self.hours_regex = re.compile(r"([0-9.]*) hours")
+        self.minutes_regex = re.compile(r"([0-9.]*) minutes")
+        self.seconds_regex = re.compile(r"([0-9.]*) seconds")
 
         # A list of previous lines to allow look-behind functionality.
         self.last_lines = collections.deque([""] * 10, 10)
@@ -1156,7 +1163,17 @@ class Turbomole(logfileparser.Logfile):
         #  
         if "oscillator strength (length gauge)   :" in line:
             self.append_attribute("etoscs", utils.float(line.split()[-1]))
+        
+        # Parse timings.
+        if "total  cpu-time :" in line:
+            if "cpu_time" not in self.metadata:
+                self.metadata['cpu_time'] = []
+            self.metadata['cpu_time'].append(self.duration_to_timedelta(line))
             
+        if "total wall-time :" in line:
+            if "wall_time" not in self.metadata:
+                self.metadata['wall_time'] = []
+            self.metadata['wall_time'].append(self.duration_to_timedelta(line))
         
         # All done for this loop.
         # Keep track of last lines.
@@ -1165,7 +1182,28 @@ class Turbomole(logfileparser.Logfile):
         if ": all done  ****" in line:
             # End of module, set success flag.
             self.metadata['success'] = True
-
+    
+    def duration_to_timedelta(self, duration_str):
+        """
+        Convert a Turbomole duration string into an equivalent timedelta object.
+        """
+        time_parts = {'days': 0, 'hours': 0, 'minutes': 0, 'seconds': 0}
+        
+        for time_part in time_parts:
+            # Use regex to look for each part in the string.
+            match = getattr(self, time_part + '_regex').search(duration_str)
+            if match:
+                time_parts[time_part] = float(match.group(1))
+                
+        # Build a timedelta from our parts.
+        duration = timedelta(
+            days = time_parts['days'],
+            hours = time_parts['hours'],
+            minutes = time_parts['minutes'],
+            milliseconds = time_parts['seconds'] * 1000)
+        
+        # All done.
+        return duration
 
 
     def split_irrep(self, irrep):
