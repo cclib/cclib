@@ -58,6 +58,17 @@ class NWChem(logfileparser.Logfile):
                 ] = f"{self.metadata['package_version']}+{line.split()[3].split('-')[-1]}"
             self.set_attribute('qm_program', "NWChem version " + base_package_version)
 
+        if "nproc" in line:
+            self.metadata['processors'] = line.split()[-1]
+        if "Memory information" in line:
+            line_count = 0 
+            while 'total' not in line and line_count <=8:
+                line = next(inputfile)
+                line_count += 1
+            if 'total' in line:
+                self.metadata['memory'] = line.split()[-2:]
+
+
         # This is printed in the input module, so should always be the first coordinates,
         # and contains some basic information we want to parse as well. However, this is not
         # the only place where the coordinates are printed during geometry optimization,
@@ -341,10 +352,10 @@ class NWChem(logfileparser.Logfile):
             line = next(inputfile)
             line = next(inputfile)
             self.metadata["functional"] = line.split()[0]
-            self.set_attribute('functional', line.split()[0])
         
-        if line.strip().startswith("* library "):
-            self.set_attribute('basis_set', line.strip().replace("* library ",''))
+        if "Grid Information" in line:
+            line = next(inputfile)
+            self.metadata["grid"] = line.split()[-1]
 
         # If the full overlap matrix is printed, it looks like this:
         #
@@ -586,13 +597,12 @@ class NWChem(logfileparser.Logfile):
         if "Dispersion correction" in line:
             dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
             self.append_attribute("dispersionenergies", dispersion)
-        
+            
         # type of dispersion
         if line.strip().find('disp vdw 3') > -1:
-            self.set_attribute('dispersion', "D3")
-
+            self.metadata['dispersion'] = "D3"
         if line.strip().find('disp vdw 4') > -1:
-            self.set_attribute('dispersion', "D3BJ")
+            self.metadata['dispersion'] = "D3BJ"
 
         # The final MO orbitals are printed in a simple list, but apparently not for
         # DFT calcs, and often this list does not contain all MOs, so make sure to
