@@ -81,7 +81,6 @@ class ORCA(logfileparser.Logfile):
         
         # ORCA prints singlet and triplet excited states separately, so the energies are out of order.
         if hasattr(self, "etenergies"):
-            # Sort them properly.
             prop_names = ("etenergies", "etsyms", "etoscs", "etsecs", "etrotats")
             
             # First, set energies properly, keeping track of each energy's old index.
