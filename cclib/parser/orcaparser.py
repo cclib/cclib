@@ -82,6 +82,28 @@ class ORCA(logfileparser.Logfile):
                     )
                     break
                 self.scfenergies[i] += dispersionenergy
+        
+        # ORCA prints singlet and triplet excited states separately, so the energies are out of order.
+        if hasattr(self, "etenergies"):
+            prop_names = ("etenergies", "etsyms", "etoscs", "etsecs", "etrotats")
+            
+            # First, set energies properly, keeping track of each energy's old index.
+            energy_index = sorted([(energy, index) for index, energy in enumerate(self.etenergies)], key = lambda energy_index: energy_index[0])
+            
+            props = {}
+            for prop_name in prop_names:
+                if hasattr(self, prop_name):
+                    # Check this property and etenergies are the same length (otherwise we can accidentally and silently truncate a list that's too long).
+                    if len(getattr(self, prop_name)) != len(self.etenergies):
+                        raise Exception("Parsed different number of {} ({}) than etenergies ({})".format(prop_name, len(getattr(self, prop_name)), len(self.etenergies)))
+                    
+                    # Reorder based on our mapping.
+                    props[prop_name] = [getattr(self, prop_name)[old_index] for energy, old_index in energy_index]
+            
+            # Assign back again
+            for prop_name in props:
+                setattr(self, prop_name, props[prop_name])
+            
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -1083,21 +1105,29 @@ Dispersion correction           -0.016199959
             self.skip_lines(inputfile, ['dashes'])
 
 
-            # ORCA prints -inf for sinle atom free energy.
+            # ORCA prints -inf for single atom free energy.
             if self.natom > 1:
                 self.freeenergy = float(line.split()[5])
             else:
                 self.freeenergy = self.enthalpy - self.temperature * self.entropy
+                
+        if "ORCA TD-DFT/TDA CALCULATION" in line:
+            # Start of excited states, reset our attributes in case this is an optimised excited state calc
+            # (or another type of calc where excited states are calculated multiple times).
+            for attr in ("etenergies", "etsyms", "etoscs", "etsecs", "etrotats"):
+                if hasattr(self, attr):
+                    delattr(self, attr)
 
         # Read TDDFT information
         if any(x in line for x in ("TD-DFT/TDA EXCITED", "TD-DFT EXCITED")):
             # Could be singlets or triplets
             if line.find("SINGLETS") >= 0:
-                sym = "Singlet"
+                mult = "Singlet"
             elif line.find("TRIPLETS") >= 0:
-                sym = "Triplet"
+                mult = "Triplet"
             else:
-                sym = "Not specified"
+                # This behaviour matches the output Gaussian produces when it encounters an unfamiliar multiplicity.
+                mult = "???"
 
             etsecs = []
             etenergies = []
@@ -1111,7 +1141,6 @@ Dispersion correction           -0.016199959
             while line.find("STATE") >= 0:
                 broken = line.split()
                 etenergies.append(float(broken[7]))
-                etsyms.append(sym)
                 line = next(inputfile)
                 sec = []
                 # Contains SEC or is blank
@@ -1131,8 +1160,15 @@ Dispersion correction           -0.016199959
                     line = next(inputfile)
                     # ORCA 5.0 seems to print symmetry at end of block listing transitions
                     if 'Symmetry' in line:
+                        symm = line.split()[-1]
                         line = next(inputfile)
+                    else:
+                        symm = ""
                 etsecs.append(sec)
+                if mult != "" and symm != "":
+                    etsyms.append(mult + "-" + symm)
+                elif mult != "" or symm != "":
+                    etsyms.append(mult + symm)
                 line = next(inputfile)
 
             self.extend_attribute('etenergies', etenergies)

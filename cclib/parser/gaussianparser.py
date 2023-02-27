@@ -1468,7 +1468,9 @@ class Gaussian(logfileparser.Logfile):
             groups = p.search(line).groups()
             self.etenergies.append(utils.convertor(utils.float(groups[1]), "eV", "wavenumber"))
             self.etoscs.append(utils.float(line.split("f=")[-1].split()[0]))
-            self.etsyms.append(groups[0].strip())
+            # Fix Gaussian's weird capitalisation.
+            mult, symm = groups[0].strip().split("-")
+            self.append_attribute("etsyms", "{}-{}".format(mult, self.normalisesym(symm)))
 
             line = next(inputfile)
 
