@@ -83,7 +83,12 @@ class ORCA(logfileparser.Logfile):
         if hasattr(self, "etenergies"):
             # Sort them properly.
             prop_names = ("etenergies", "etsyms", "etoscs", "etsecs", "etrotats")
-            zipped_props = [zipped_state for zipped_state in sorted(zip_longest(*[getattr(self, prop_name, []) for prop_name in prop_names]), key = lambda state: state[0])]
+            zipped_props = [zipped_state for zipped_state in 
+                sorted(
+                    zip_longest(*[getattr(self, prop_name, []) for prop_name in prop_names]),
+                    key = lambda state: state[0]
+                )
+            ]
             etprops = list(zip(*zipped_props))
             
             for index, prop_name in enumerate(prop_names):
