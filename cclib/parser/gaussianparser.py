@@ -1460,7 +1460,7 @@ class Gaussian(logfileparser.Logfile):
             self.etoscs.append(utils.float(line.split("f=")[-1].split()[0]))
             # Fix Gaussian's weird capitalisation.
             mult, symm = groups[0].strip().split("-")
-            self.etsyms.append("{}-{}".format(mult, self.normalisesym(symm)))
+            self.append_attribute("etsyms", "{}-{}".format(mult, self.normalisesym(symm)))
 
             line = next(inputfile)
 
