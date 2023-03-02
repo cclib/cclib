@@ -1516,7 +1516,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 #   Percentage singles character=     93.46
                 #       
                 #   IROOT=  2:  0.061276 au     1.667 eV   13448.5 cm**-1
-                etenergies.append(utils.convertor(float(line.split()[2]), "hartree", "wavenumber"))
+                etenergies.append(float(line.split()[6]))
                 if self.mdci_et_mult is not None:
                     etsyms.append(self.mdci_et_mult)
                 sec = []
