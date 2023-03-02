@@ -1352,21 +1352,22 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 if not any([soc_header in name for soc_header in ["SPIN ORBIT CORRECTED", "SOC CORRECTED", "ROCIS COMBINED"]]):
                     # We need to be careful about how we parse etenergies from these spectrum sections.
                     # First, and in most cases, energies printed here will be the same as those printed in 
-                    # previous sections, except to fewer decimal places. It would be disadvantageous to 
-                    # lose this extra precision that's already been parsed.
-                    # Secondly, it is challenging to determine exactly whether the energies printed here have already
-                    # been parsed, due to this aforementioned rounding.
-                    # Thirdly, some methods (ROCIS, CASSCF, SOC to name a few) may only print their final excited state
+                    # previous sections. The energies in cm-1 aught to match exactly to those parsed previously,
+                    # but other units may have rounding errors.
+                    # Secondly, some methods (ROCIS, CASSCF, SOC to name a few) may only print their final excited state
                     # energies in this spectrum section, in which case the energies will not match those previously parsed
                     # (which will be from lower levels of theory that we're not interested in). This means we cannot simply
                     # ignore the energies printed. Also, in this case we must decide whether to discard other previously
                     # parsed etdata (etsyms, etsecs etc).
+                    # Thirdly, SOC prints spin-mixed excited state spectra. This is interesting, but does not match the 
+                    # number of states or symmetry of data parsed in previous sections, so is not used to overwrite etenergies.
                     
                     # If we have no previously parsed etnergies, there's nothing to worry about.
                     if not hasattr(self, "etenergies"):
                         self.set_attribute("etenergies", etenergies)
                     
-                    # Determine if these energies are ~same as those previously parsed.
+                    # Determine if these energies are same as those previously parsed.
+                    # May want to use a smarter comparison?
                     elif len(etenergies) == len(self.etenergies) and all([self.etenergies[index] == etenergy for index, etenergy in enumerate(etenergies)]):
                         pass
                     
