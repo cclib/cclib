@@ -1230,7 +1230,8 @@ def testGaussian_Gaussian16_Ethane_mp5_log(logfile):
     # This issue is about failing to parse if certain strings are present in the Gaussian log file description section.
     # Check we can still parse MP energies up to MP5
     assert hasattr(logfile.data, "mpenergies")
-    assert len(logfile.data.mpenergies) == 4
+    assert len(logfile.data.mpenergies) == 1
+    assert len(logfile.data.mpenergies[0]) == 4
     
 
 # Jaguar #
