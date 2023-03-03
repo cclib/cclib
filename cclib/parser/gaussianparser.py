@@ -891,7 +891,8 @@ class Gaussian(logfileparser.Logfile):
         # Example MP2 output line:
         #  E2 =    -0.9505918144D+00 EUMP2 =    -0.28670924198852D+03
         # Warning! this output line is subtly different for MP3/4/5 runs
-        if "EUMP2" in line[27:34]:
+        # Newer versions of gausian introduced a space between 'EUMP2' and '='...
+        if "EUMP2 =" in line[27:36] or "EUMP2=" in line[27:35]:
             self.metadata["methods"].append("MP2")
 
             if not hasattr(self, "mpenergies"):
@@ -902,7 +903,7 @@ class Gaussian(logfileparser.Logfile):
 
         # Example MP3 output line:
         #  E3=       -0.10518801D-01     EUMP3=      -0.75012800924D+02
-        if line[34:39] == "EUMP3":
+        if line[34:40] == "EUMP3=":
             self.metadata["methods"].append("MP3")
 
             mp3energy = utils.float(line.split("=")[2])
@@ -913,21 +914,21 @@ class Gaussian(logfileparser.Logfile):
         #  E4(SDQ)=  -0.32127241D-02        UMP4(SDQ)=  -0.75016013648D+02
         #  E4(SDTQ)= -0.32671209D-02        UMP4(SDTQ)= -0.75016068045D+02
         # Energy for most substitutions is used only (SDTQ by default)
-        if line[34:42] == "UMP4(DQ)":
+        if line[34:43] == "UMP4(DQ)=":
             self.metadata["methods"].append("MP4")
 
             mp4energy = utils.float(line.split("=")[2])
             line = next(inputfile)
-            if line[34:43] == "UMP4(SDQ)":
+            if line[34:44] == "UMP4(SDQ)=":
                 mp4energy = utils.float(line.split("=")[2])
                 line = next(inputfile)
-                if line[34:44] == "UMP4(SDTQ)":
+                if line[34:45] == "UMP4(SDTQ)=":
                     mp4energy = utils.float(line.split("=")[2])
             self.mpenergies[-1].append(utils.convertor(mp4energy, "hartree", "eV"))
 
         # Example MP5 output line:
         #  DEMP5 =  -0.11048812312D-02 MP5 =  -0.75017172926D+02
-        if line[29:32] == "MP5":
+        if line[29:34] == "MP5 =":
             self.metadata["methods"].append("MP5")
             mp5energy = utils.float(line.split("=")[2])
             self.mpenergies[-1].append(utils.convertor(mp5energy, "hartree", "eV"))
