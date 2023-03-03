@@ -3390,8 +3390,6 @@ old_unittests = {
     "Gaussian/Gaussian09/dvb_un_sp_revA.02.log":        GaussianSPunTest_nomosyms,
     "Gaussian/Gaussian09/dvb_un_sp_b_revA.02.log":      GaussianSPunTest,
     "Gaussian/Gaussian09/trithiolane_polar.log":        GaussianPolarTest,
-    
-    "Gaussian/Gaussian16/Ethane.mp5.log": testGaussian_Gaussian16_Ethane_mp5_log,
 
     "Jaguar/Jaguar4.2/dvb_gopt.out":    JaguarGeoOptTest_nmo45,
     "Jaguar/Jaguar4.2/dvb_gopt_b.out":  GenericGeoOptTest,
