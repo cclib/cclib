@@ -1379,7 +1379,8 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                     else:
                         # Because these energies are new, we do not know if they correspond to the same level of theory
                         # as the previously parsed etsyms etc.
-                        self.logger.warning("New excited state energies encountered in spectrum section, resetting excited state attributes")
+                        self.logger.warning(
+                            "New excited state energies encountered in spectrum section, resetting excited state attributes")
                         
                         for attr in ("etenergies", "etsyms", "etoscs", "etsecs", "etrotats"):
                             if hasattr(self, attr):
