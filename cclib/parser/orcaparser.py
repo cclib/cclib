@@ -1387,14 +1387,6 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                                 
                         self.set_attribute("etenergies", etenergies)
                     
-#                     # There's no point overwriting the etenergies we've already parsed,
-#                     # especially because the previously parsed values normally have greater precision.
-#                     # We could do a check to make sure the energies match, but we will fall foul
-#                     # of rounding errors.
-#                     #if not hasattr(self, "etenergies"):
-#                     if True:
-#                         self.set_attribute("etenergies", etenergies)
-                    
                     self.set_attribute('etoscs', etoscs)
                 
                 # Save everything to transprop.
