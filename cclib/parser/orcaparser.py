@@ -1368,7 +1368,11 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                     
                     # Determine if these energies are same as those previously parsed.
                     # May want to use a smarter comparison?
-                    elif len(etenergies) == len(self.etenergies) and all([self.etenergies[index] == etenergy for index, etenergy in enumerate(etenergies)]):
+                    elif len(etenergies) == len(self.etenergies) and \
+                        all(
+                            [self.etenergies[index] == etenergy for
+                            index, etenergy in enumerate(etenergies)]
+                        ):
                         pass
                     
                     # New energies.
