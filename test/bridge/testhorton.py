@@ -62,8 +62,8 @@ class HortonTest(unittest.TestCase):
             if (
                 hasattr(self.iodat, attr)
                 and hasattr(hortonequiv, attr)
-                and getattr(self.iodat, attr) != None
-                and getattr(hortonequiv, attr) != None
+                and getattr(self.iodat, attr) is not None
+                and getattr(hortonequiv, attr) is not None
             ):
                 self.assertAlmostEqual(
                     getattr(self.iodat, attr),
