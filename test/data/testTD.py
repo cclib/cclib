@@ -225,7 +225,6 @@ class GenericTDDFTtrpTest(GenericTDTest):
 
 class OrcaROCISTest(GenericTDTest):
     """Customized test for ROCIS"""
-    number = 57
     number = 4
     expected_l_max = 2316970.8
     # per 1085, no VELOCITY DIPOLE MOMENTS are parsed
