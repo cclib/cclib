@@ -13,7 +13,6 @@ from typing import Optional
 import numpy
 
 from cclib.method.calculationmethod import Method, MissingAttributeError
-from cclib.parser.data import ccData
 from cclib.progress import Progress
 
 
@@ -26,7 +25,7 @@ class Population(Method):
     # At least one of these are typically required.
     overlap_attributes = ('aooverlaps', 'fooverlaps')
 
-    def __init__(self, data: ccData, progress: Optional[Progress] = None,
+    def __init__(self, data: "cclib.parser.data.ccData", progress: Optional[Progress] = None,
                  loglevel: int = logging.INFO, logname: str = "Log") -> None:
         super().__init__(data, progress, loglevel, logname)
 
