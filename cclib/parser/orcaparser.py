@@ -1339,9 +1339,58 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                     etoscs.append(float(intensity))
 
                     line = next(inputfile)
-
-                self.set_attribute('etenergies', etenergies)
-                self.set_attribute('etoscs', etoscs)
+                
+                # Some of these sections contain data that we probably do not want to be populating etenergies
+                # and/or etoscs with.  For example, the SOC corrected spectra are for mixed singlet/triplet states,
+                # so they do not correspond to the symmetries given in etsyms, and the energy values given are
+                # probably not what the user would expect to find in etenergies anyway?
+                # Also, there are twice as many SOC states as true spin states, so half of the etenergies wouldn't 
+                # have a symmetry in etsyms at all...
+                #
+                # Don't parse from SOC sections.
+                # ROCIS COMBINED is combination of SOC and ROCIS (we still parse the normal ROCIS section).
+                if not any([soc_header in name for soc_header in ["SPIN ORBIT CORRECTED", "SOC CORRECTED", "ROCIS COMBINED"]]):
+                    # We need to be careful about how we parse etenergies from these spectrum sections.
+                    # First, and in most cases, energies printed here will be the same as those printed in 
+                    # previous sections. The energies in cm-1 aught to match exactly to those parsed previously,
+                    # but other units may have rounding errors.
+                    # Secondly, some methods (ROCIS, CASSCF, SOC to name a few) may only print their final excited state
+                    # energies in this spectrum section, in which case the energies will not match those previously parsed
+                    # (which will be from lower levels of theory that we're not interested in). This means we cannot simply
+                    # ignore the energies printed. Also, in this case we must decide whether to discard other previously
+                    # parsed etdata (etsyms, etsecs etc).
+                    # Thirdly, SOC prints spin-mixed excited state spectra. This is interesting, but does not match the 
+                    # number of states or symmetry of data parsed in previous sections, so is not used to overwrite etenergies.
+                    
+                    # If we have no previously parsed etnergies, there's nothing to worry about.
+                    if not hasattr(self, "etenergies"):
+                        self.set_attribute("etenergies", etenergies)
+                    
+                    # Determine if these energies are same as those previously parsed.
+                    # May want to use a smarter comparison?
+                    elif len(etenergies) == len(self.etenergies) and \
+                        all(
+                            [self.etenergies[index] == etenergy for
+                            index, etenergy in enumerate(etenergies)]
+                        ):
+                        pass
+                    
+                    # New energies.
+                    else:
+                        # Because these energies are new, we do not know if they correspond to the same level of theory
+                        # as the previously parsed etsyms etc.
+                        self.logger.warning(
+                            "New excited state energies encountered in spectrum section, resetting excited state attributes")
+                        
+                        for attr in ("etenergies", "etsyms", "etoscs", "etsecs", "etrotats"):
+                            if hasattr(self, attr):
+                                delattr(self, attr)
+                                
+                        self.set_attribute("etenergies", etenergies)
+                    
+                    self.set_attribute('etoscs', etoscs)
+                
+                # Save everything to transprop.
                 self.transprop[name] = (numpy.asarray(etenergies), numpy.asarray(etoscs))
 
         if line.strip() == "CD SPECTRUM":
