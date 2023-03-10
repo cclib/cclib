@@ -109,28 +109,25 @@ def filename(request, filenames: Mapping[str, Path]) -> Path:
     raise RuntimeError
 
 
+def get_parsed_logfile(filenames: Mapping[str, Path], normalized_name: str) -> Logfile:
+    fn = filenames[normalized_name]
+    if fn.is_dir():
+        # FIXME List[Path] not allowed yet
+        fn = [str(x) for x in sorted(fn.iterdir())]
+    lfile = ccopen(fn)
+    lfile.data = lfile.parse()
+    return lfile
+
+
 @pytest.fixture
 def logfile(request, filenames: Mapping[str, Path]) -> Logfile:
     prefix = "test"
     assert request.node.name[:len(prefix)] == prefix
     normalized_name = request.node.name[len(prefix):]
     if normalized_name in filenames:
-        fn = filenames[normalized_name]
-        if fn.is_dir():
-            # FIXME List[Path] not allowed yet
-            fn = [str(x) for x in sorted(fn.iterdir())]
-        lfile = ccopen(fn)
-        lfile.data = lfile.parse()
-        return lfile
+        return get_parsed_logfile(filenames, normalized_name)
     if normalized_name.endswith("__") and normalized_name[:-2] in filenames:
-        normalized_name = normalized_name[:-2]
-        fn = filenames[normalized_name]
-        if fn.is_dir():
-            # FIXME List[Path] not allowed yet
-            fn = [str(x) for x in sorted(fn.iterdir())]
-        lfile = ccopen(fn)
-        lfile.data = lfile.parse()
-        return lfile
+        return get_parsed_logfile(filenames, normalized_name[:-2])
     # Allow explicitly skipped tests through.
     if "__unittest_skip__" in request.node.keywords:
         return None  # type: ignore
