@@ -77,11 +77,91 @@ test_dir = f"{os.path.realpath(os.path.dirname(__file__))}/../../test"
 # This is safer than sys.path.append, and isn't sys.path.insert(0, ...) so
 # virtualenvs work properly. See https://stackoverflow.com/q/10095037.
 sys.path.insert(1, os.path.abspath(test_dir))
-from .test_data import all_modules
-from .test_data import all_parsers
-from .test_data import module_names
 from .test_data import parser_names
 from .test_data import get_program_dir
+from .data.testBasis import (
+    GaussianBigBasisTest,
+    GenericBasisTest,
+    GenericBigBasisTest,
+    MolcasBigBasisTest,
+    MolproBigBasisTest,
+    Psi4BigBasisTest,
+    QChemBigBasisTest,
+)
+from .data.testBOMD import GenericBOMDTest
+from .data.testCC import GenericCCTest
+from .data.testCI import (
+    GAMESSCISTest,
+    GaussianCISTest,
+    GenericCISTest,
+    QChemCISTest,
+)
+from .data.testCore import ADFCoreTest, GenericCoreTest
+from .data.testGeoOpt import (
+    ADFGeoOptTest,
+    GenericGeoOptTest,
+    OrcaGeoOptTest,
+    Psi4GeoOptTest,
+)
+from .data.testMP import (
+    GaussianMP2Test,
+    GaussianMP3Test,
+    GaussianMP4SDTQTest,
+    GaussianMP4SDQTest,
+    GenericMP2Test,
+    GenericMP3Test,
+    GenericMP4SDQTest,
+    GenericMP4SDTQTest,
+    QChemMP4SDTQTest,
+    QChemMP4SDQTest,
+    GenericMP5Test,
+)
+from .data.testPolar import GenericPolarTest, ReferencePolarTest
+from .data.testScan import GaussianRelaxedScanTest, OrcaRelaxedScanTest
+from .data.testSP import (
+    ADFSPTest,
+    GaussianSPTest,
+    GenericHFSPTest,
+    GenericSPTest,
+    JaguarSPTest,
+    MolcasSPTest,
+    OrcaSPTest,
+    PsiHFSPTest,
+    PsiSPTest,
+)
+from .data.testSPun import (
+    GaussianSPunTest,
+    GenericROSPTest,
+    GenericSPunTest,
+    JaguarSPunTest,
+)
+from .data.testTD import (
+    DALTONTDTest,
+    GAMESSUSTDDFTTest,
+    GaussianTDDFTTest,
+    GenericTDTest,
+    GenericTDDFTtrpTest,
+    OrcaROCIS40Test,
+    OrcaTDDFTTest,
+    QChemTDDFTTest,
+)
+from .data.testTDun import GenericTDunTest
+from .data.testvib import (
+    ADFIRTest,
+    FireflyIRTest,
+    GamessIRTest,
+    GaussianIRTest,
+    GaussianRamanTest,
+    GenericIRimgTest,
+    GenericIRTest,
+    GenericRamanTest,
+    JaguarIRTest,
+    OrcaIRTest,
+    OrcaRamanTest,
+    Psi4IRTest,
+    QChemIRTest,
+    QChemRamanTest,
+)
 
 
 # We need this to point to files relative to this script.
@@ -2776,14 +2856,6 @@ def normalisefilename(filename):
 # regression test function will be created automatically. If modifications
 # are necessary due to developments in the unit test class, tweak it here
 # and provide the modified version of the test class.
-
-# Although there is probably a cleaner way to do this, making the unit class test names
-# global makes reading the dictionary of old unit tests much easier, especially it
-# will contain some classes defined here.
-for m, module in all_modules.items():
-    for name in dir(module):
-        if name[-4:] == "Test":
-            globals()[name] = getattr(module, name)
 
 
 class ADFGeoOptTest_noscfvalues(ADFGeoOptTest):
