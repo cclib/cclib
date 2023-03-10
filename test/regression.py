@@ -2651,6 +2651,8 @@ def testQChem_QChem5_0_Si_out(logfile):
     )
     assert logfile.data.mocoeffs[0][0,0] == 1.00042
 
+
+@unittest.skip("orphaned test functions are no longer allowed")
 def testQChem_QChem5_1_old_final_print_1_out(logfile):
     """This job has was run from a development version."""
     assert logfile.data.metadata["legacy_package_version"] == "5.1.0"
