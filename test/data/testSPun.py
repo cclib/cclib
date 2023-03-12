@@ -61,11 +61,11 @@ class GenericSPunTest(unittest.TestCase):
     def testatomcharges_mulliken(self):
         """Do Mulliken atomic charges sum to positive one?"""
         charges = self.data.atomcharges["mulliken"]
-        self.assertAlmostEqual(sum(charges), 1.0, delta=1.0e-2)
+        assert abs(sum(charges)-1.0) < 1.0e-2
 
     def testatomcoords(self):
         """Are the dimensions of atomcoords 1 x natom x 3?"""
-        self.assertEqual(self.data.atomcoords.shape,(1,self.data.natom,3))
+        assert self.data.atomcoords.shape == (1,self.data.natom,3)
 
     @skipForParser('Jaguar', 'Data file does not contain enough information')
     def testdimmocoeffs(self):
@@ -109,8 +109,8 @@ class GenericSPunTest(unittest.TestCase):
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testcharge_and_mult(self):
         """Are the charge and multiplicity correct?"""
-        self.assertEqual(self.data.charge, 1)
-        self.assertEqual(self.data.mult, 2)
+        assert self.data.charge == 1
+        assert self.data.mult == 2
 
     def testhomos(self):
         """Are the homos correct?"""
@@ -120,9 +120,9 @@ class GenericSPunTest(unittest.TestCase):
     def testmoenergies(self):
         """Are the dims of the moenergies equals to 2 x nmo?"""
         if hasattr(self.data, "moenergies"):
-            self.assertEqual(len(self.data.moenergies), 2)
-            self.assertEqual(len(self.data.moenergies[0]), self.data.nmo)
-            self.assertEqual(len(self.data.moenergies[1]), self.data.nmo)
+            assert len(self.data.moenergies) == 2
+            assert len(self.data.moenergies[0]) == self.data.nmo
+            assert len(self.data.moenergies[1]) == self.data.nmo
 
     @skipForParser('FChk', 'Fchk files do not have a section for symmetry')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
@@ -131,7 +131,7 @@ class GenericSPunTest(unittest.TestCase):
     def testmosyms(self):
         """Are the dims of the mosyms equals to 2 x nmo?"""
         shape = (len(self.data.mosyms), len(self.data.mosyms[0]))
-        self.assertEqual(shape, (2, self.data.nmo))
+        assert shape == (2, self.data.nmo)
 
 
 class GenericROSPTest(GenericSPunTest):
@@ -161,15 +161,15 @@ class GenericROSPTest(GenericSPunTest):
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testmoenergies(self):
         """Are the dims of the moenergies equals to 1 x nmo?"""
-        self.assertEqual(len(self.data.moenergies), 1)
-        self.assertEqual(len(self.data.moenergies[0]), self.data.nmo)
+        assert len(self.data.moenergies) == 1
+        assert len(self.data.moenergies[0]) == self.data.nmo
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testmosyms(self):
         """Are the dims of the mosyms equals to 1 x nmo?"""
         shape = (len(self.data.mosyms), len(self.data.mosyms[0]))
-        self.assertEqual(shape, (1, self.data.nmo))
+        assert shape == (1, self.data.nmo)
 
 
 class GamessUK70SPunTest(GenericSPunTest):
@@ -198,7 +198,7 @@ class GamessUK80SPunTest(GenericSPunTest):
 
     def testnooccnos(self):
         """Are natural orbital occupation numbers the right size?"""
-        self.assertEqual(self.data.nooccnos.shape, (self.data.nmo, ))
+        assert self.data.nooccnos.shape == (self.data.nmo, )
 
 
 class GaussianSPunTest(GenericSPunTest):
@@ -209,8 +209,8 @@ class GaussianSPunTest(GenericSPunTest):
         natom and sum to one (doublet)?
         """
         spins = self.data.atomspins['mulliken']
-        self.assertEqual(len(spins), self.data.natom)
-        self.assertAlmostEqual(sum(spins), 1.0, delta=0.001)
+        assert len(spins) == self.data.natom
+        assert abs(sum(spins)-1.0) < 0.001
 
             
 class JaguarSPunTest(GenericSPunTest):
@@ -218,16 +218,16 @@ class JaguarSPunTest(GenericSPunTest):
 
     def testmoenergies(self):
         """Are the dims of the moenergies equal to 2 x homos+11?"""
-        self.assertEqual(len(self.data.moenergies), 2)
-        self.assertEqual(len(self.data.moenergies[0]), self.data.homos[0]+11)
-        self.assertEqual(len(self.data.moenergies[1]), self.data.homos[1]+11)
+        assert len(self.data.moenergies) == 2
+        assert len(self.data.moenergies[0]) == self.data.homos[0]+11
+        assert len(self.data.moenergies[1]) == self.data.homos[1]+11
 
     def testmosyms(self):
         """Are the dims of the mosyms equals to 2 x nmo?"""
         shape0 = (len(self.data.mosyms), len(self.data.mosyms[0]))
         shape1 = (len(self.data.mosyms), len(self.data.mosyms[1]))
-        self.assertEqual(shape0, (2, self.data.homos[0]+11))
-        self.assertEqual(shape1, (2, self.data.homos[1]+11))
+        assert shape0 == (2, self.data.homos[0]+11)
+        assert shape1 == (2, self.data.homos[1]+11)
 
 
 if __name__=="__main__":

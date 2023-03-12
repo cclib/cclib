@@ -24,8 +24,8 @@ class GenericPolarTest(unittest.TestCase):
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testshape(self):
         """Is the dimension of the polarizability tensor 3 x 3?"""
-        self.assertEqual(len(self.data.polarizabilities), 1)
-        self.assertEqual(self.data.polarizabilities[0].shape, (3, 3))
+        assert len(self.data.polarizabilities) == 1
+        assert self.data.polarizabilities[0].shape == (3, 3)
 
 
 class ReferencePolarTest(GenericPolarTest):
@@ -44,7 +44,7 @@ class ReferencePolarTest(GenericPolarTest):
         +/- 0.01 from a reference?
         """
         isotropic = numpy.average(numpy.diag(self.data.polarizabilities[0]))
-        self.assertAlmostEqual(isotropic, self.isotropic, delta=self.isotropic_delta)
+        assert abs(isotropic-self.isotropic) < self.isotropic_delta
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
@@ -54,9 +54,8 @@ class ReferencePolarTest(GenericPolarTest):
         """
         principal_components = numpy.linalg.eigvalsh(self.data.polarizabilities[0])
         for c in range(3):
-            self.assertAlmostEqual(principal_components[c],
-                                   self.principal_components[c],
-                                   delta=self.principal_components_delta)
+            assert abs(principal_components[c]-self.principal_components[c]) < \
+                                   self.principal_components_delta
 
 
 if __name__=="__main__":

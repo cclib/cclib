@@ -39,7 +39,7 @@ class GenericCoreTest(unittest.TestCase):
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testcharge(self):
         """Is the total charge correct?"""
-        self.assertEqual(self.data.charge, self.charge)
+        assert self.data.charge == self.charge
 
 
 class ADFCoreTest(GenericCoreTest):

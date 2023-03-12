@@ -44,7 +44,7 @@ class DDEC6Test(unittest.TestCase):
             self.parse()
             vol = volume.Volume((-4, -4, -4), (4, 4, 4), (0.2, 0.2, 0.2))
             delattr(self.data, missing_attribute)
-            with self.assertRaises(MissingAttributeError):
+            with pytest.raises(MissingAttributeError):
                 trial = DDEC6(self.data, vol, os.path.dirname(os.path.realpath(__file__)))
 
     def test_proatom_read(self):
@@ -126,16 +126,11 @@ class DDEC6Test(unittest.TestCase):
         assert_allclose(analysis.reference_charges[1], [-0.831591, 0.415430, 0.416161], rtol=0.20)
         # STEP 3
         # Check integrated charge density (rho^cond(r)) on grid with integrated values (=nelec).
-        self.assertAlmostEqual(
-            analysis.charge_density.integrate(), analysis.rho_cond.integrate(), delta=1
-        )
+        assert abs(analysis.charge_density.integrate()-analysis.rho_cond.integrate()) < 1
         for atomi in range(len(analysis.data.atomnos)):
-            self.assertAlmostEqual(
-                analysis._integrate_from_radial([analysis._cond_density[atomi]], [atomi])
-                + analysis.reference_charges[-1][atomi],
-                analysis.data.atomnos[atomi],
-                delta=0.5,
-            )
+            assert abs(analysis._integrate_from_radial([analysis._cond_density[atomi]], [atomi])
+                + analysis.reference_charges[-1][atomi]-analysis.data.atomnos[atomi]) < \
+                0.5
         # Also compare with data from `chargemol`
         # discrepancy comes from the fact that `chargemol` grid and `horton` grid do not exactly match
         assert_allclose(
@@ -181,7 +176,7 @@ class DDEC6Test(unittest.TestCase):
         analysis = DDEC6(self.data, vol, os.path.dirname(os.path.realpath(__file__)))
         analysis.calculate()
 
-        self.assertAlmostEqual(analysis.fragcharges[0], analysis.fragcharges[1], delta=1e-12)
+        assert abs(analysis.fragcharges[0]-analysis.fragcharges[1]) < 1e-12
 
     def test_chgsum_co(self):
         """ Are DDEC6 charges for carbon monoxide reported as expected?
@@ -199,7 +194,7 @@ class DDEC6Test(unittest.TestCase):
         analysis = DDEC6(self.data, imported_vol, os.path.dirname(os.path.realpath(__file__)))
         analysis.calculate()
 
-        self.assertAlmostEqual(numpy.sum(analysis.fragcharges), 0, delta=1e-2)
+        assert abs(numpy.sum(analysis.fragcharges)-0) < 1e-2
         assert_allclose(analysis.fragcharges, [0.13221636, -0.13903595], atol=1e-3)
 
     def test_chg_nh3(self):

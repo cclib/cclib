@@ -29,7 +29,7 @@ class XYZWriterTest(unittest.TestCase):
         xyz = cclib.io.xyzwriter.XYZ(data)
 
         # The object should keep the ccData instance passed to its constructor.
-        self.assertEqual(xyz.ccdata, data)
+        assert xyz.ccdata == data
 
     def test_roundtrip_one(self):
         """Does a written XYZ file with a single structure match a reference

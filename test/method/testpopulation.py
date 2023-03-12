@@ -21,6 +21,7 @@ from cclib.parser import Gaussian
 sys.path.insert(1, "..")
 
 from ..test_data import getdatafile
+import pytest
 
 
 class PopulationTest(unittest.TestCase):
@@ -44,7 +45,7 @@ class PopulationTest(unittest.TestCase):
             self.parse()
             delattr(self.data, missing_attribute)
             for method_class in self.methods:
-                with self.assertRaises(MissingAttributeError):
+                with pytest.raises(MissingAttributeError):
                     self.calculate(method_class)
 
     def testmissingoverlaps(self):
@@ -55,7 +56,7 @@ class PopulationTest(unittest.TestCase):
                 delattr(self.data, overlap_attribute)
         for method_class in self.methods:
             if method_class.overlap_attributes:
-                with self.assertRaises(MissingAttributeError):
+                with pytest.raises(MissingAttributeError):
                     self.calculate(method_class)
 
 
@@ -72,13 +73,13 @@ class GaussianMPATest(unittest.TestCase):
         """Do the Mulliken charges sum up to the total formal charge?"""
         formalcharge = sum(self.data.atomnos) - self.data.charge
         totalpopulation = sum(self.analysis.fragcharges)
-        self.assertAlmostEqual(totalpopulation, formalcharge, delta=1.0e-3)
+        assert abs(totalpopulation-formalcharge) < 1.0e-3
 
     def testsumspins(self):
         """Do the Mulliken spins sum up to the total formal spin?"""
         formalspin = self.data.homos[0] - self.data.homos[1]
         totalspin = sum(self.analysis.fragspins)
-        self.assertAlmostEqual(totalspin, formalspin, delta=1.0e-3)
+        assert abs(totalspin-formalspin) < 1.0e-3
 
 
 class GaussianLPATest(unittest.TestCase):
@@ -94,13 +95,13 @@ class GaussianLPATest(unittest.TestCase):
         """Do the Lowdin charges sum up to the total formal charge?"""
         formalcharge = sum(self.data.atomnos) - self.data.charge
         totalpopulation = sum(self.analysis.fragcharges)
-        self.assertAlmostEqual(totalpopulation, formalcharge, delta=0.001)
+        assert abs(totalpopulation-formalcharge) < 0.001
 
     def testsumspins(self):
         """Do the Lowdin spins sum up to the total formal spin?"""
         formalspin = self.data.homos[0] - self.data.homos[1]
         totalspin = sum(self.analysis.fragspins)
-        self.assertAlmostEqual(totalspin, formalspin, delta=1.0e-3)
+        assert abs(totalspin-formalspin) < 1.0e-3
 
 
 class GaussianCSPATest(unittest.TestCase):
@@ -116,13 +117,13 @@ class GaussianCSPATest(unittest.TestCase):
         """Do the CSPA charges sum up to the total formal charge?"""
         formalcharge = sum(self.data.atomnos) - self.data.charge
         totalpopulation = sum(self.analysis.fragcharges)
-        self.assertAlmostEqual(totalpopulation, formalcharge, delta=1.0e-3)
+        assert abs(totalpopulation-formalcharge) < 1.0e-3
 
     def testsumspins(self):
         """Do the CSPA spins sum up to the total formal spin?"""
         formalspin = self.data.homos[0] - self.data.homos[1]
         totalspin = sum(self.analysis.fragspins)
-        self.assertAlmostEqual(totalspin, formalspin, delta=1.0e-3)
+        assert abs(totalspin-formalspin) < 1.0e-3
 
 class GaussianBickelhauptTest(unittest.TestCase):
     """Bickelhaupt Population Analysis test"""
@@ -138,13 +139,13 @@ class GaussianBickelhauptTest(unittest.TestCase):
         """Do the Bickelhaupt charges sum up to the total formal charge?"""
         formalcharge = sum(self.data.atomnos) - self.data.charge
         totalpopulation = sum(self.analysis.fragcharges)
-        self.assertAlmostEqual(totalpopulation, formalcharge, delta=1.0e-3)
+        assert abs(totalpopulation-formalcharge) < 1.0e-3
         
     def testsumspins(self):
         """Do the Bickelhaupt spins sum up to the total formal spin?"""
         formalspin = self.data.homos[0] - self.data.homos[1]
         totalspin = sum(self.analysis.fragspins)
-        self.assertAlmostEqual(totalspin, formalspin, delta=1.0e-3)
+        assert abs(totalspin-formalspin) < 1.0e-3
     
     def test_dvb_sp(self):
         """Testing Bickelhaupt charges (restricted) against outputs from Multiwfn."""

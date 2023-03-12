@@ -22,8 +22,8 @@ class GenericMP2Test(unittest.TestCase):
 
     def testsizeandshape(self):
         """(MP2) Are the dimensions of mpenergies correct?"""
-        self.assertEqual(self.data.mpenergies.shape,
-                         (len(self.data.scfenergies), self.level-1))
+        assert self.data.mpenergies.shape == \
+                         (len(self.data.scfenergies), self.level-1)
 
     def testsign(self):
         """Are the Moller-Plesset corrections negative?"""
@@ -31,7 +31,7 @@ class GenericMP2Test(unittest.TestCase):
             corrections = self.data.mpenergies[:,0] - self.data.scfenergies
         else:
             corrections = self.data.mpenergies[:,self.level-2] - self.data.mpenergies[:,self.level-3]
-        self.assertTrue(numpy.alltrue(corrections < 0.0))
+        assert numpy.alltrue(corrections < 0.0)
 
 class GenericMP3Test(GenericMP2Test):
     """Generic MP3 unittest"""
@@ -55,11 +55,11 @@ class GaussianMP2Test(GenericMP2Test):
         
     def testnocoeffs(self):
         """Are natural orbital coefficients the right size?"""
-        self.assertEqual(self.data.nocoeffs.shape, (self.data.nmo, self.data.nbasis))
+        assert self.data.nocoeffs.shape == (self.data.nmo, self.data.nbasis)
 
     def testnocoeffs(self):
         """Are natural orbital occupation numbers the right size?"""
-        self.assertEqual(self.data.nooccnos.shape, (self.data.nmo, ))
+        assert self.data.nooccnos.shape == (self.data.nmo, )
 
 class GaussianMP3Test(GenericMP2Test):
     """Customized MP3 unittest"""

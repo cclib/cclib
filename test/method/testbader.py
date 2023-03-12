@@ -20,6 +20,7 @@ from cclib.method.calculationmethod import MissingAttributeError
 from numpy.testing import assert_allclose
 
 from ..test_data import getdatafile
+import pytest
 
 
 class BaderTest(unittest.TestCase):
@@ -38,7 +39,7 @@ class BaderTest(unittest.TestCase):
         for missing_attribute in Bader.required_attrs:
             self.parse()
             delattr(self.data, missing_attribute)
-            with self.assertRaises(MissingAttributeError):
+            with pytest.raises(MissingAttributeError):
                 trialBader = Bader(self.data, self.volume)
 
     def test_val(self):
@@ -63,7 +64,7 @@ class BaderTest(unittest.TestCase):
         analysis = Bader(data, vol)
         analysis.calculate()
 
-        self.assertAlmostEqual(numpy.sum(analysis.fragcharges), 10, delta=1)
+        assert abs(numpy.sum(analysis.fragcharges)-10) < 1
 
     def test_symms_benzene(self):
         """ Do the carbons in benzene ring get assigned with roughly equal charges?
@@ -86,6 +87,4 @@ class BaderTest(unittest.TestCase):
         analysis = Bader(data, vol)
         analysis.calculate()
 
-        self.assertAlmostEqual(
-            analysis.fragcharges[0:6].max(), analysis.fragcharges[0:6].min(), delta=0.5
-        )
+        assert abs(analysis.fragcharges[0:6].max()-analysis.fragcharges[0:6].min()) < 0.5

@@ -33,8 +33,8 @@ class MBOTest(unittest.TestCase):
         mbo.calculate()
 
         e_mbo = numpy.loadtxt(f"{os.path.dirname(os.path.realpath(__file__))}/dvb_sp.mbo")
-        self.assertTrue(numpy.all(mbo.fragresults[0] >= e_mbo - 0.25))
-        self.assertTrue(numpy.all(mbo.fragresults[0] <= e_mbo + 0.25))
+        assert numpy.all(mbo.fragresults[0] >= e_mbo - 0.25)
+        assert numpy.all(mbo.fragresults[0] <= e_mbo + 0.25)
 
     def test_mbo_un_sp(self):
         """Testing Mayer bond orders for unrestricted single point."""
@@ -46,8 +46,8 @@ class MBOTest(unittest.TestCase):
 
         e_mbo = numpy.loadtxt(f"{os.path.dirname(os.path.realpath(__file__))}/dvb_un_sp.mbo")
         bond_orders = mbo.fragresults[0] + mbo.fragresults[1]
-        self.assertTrue(numpy.all(bond_orders >= e_mbo - 0.30))
-        self.assertTrue(numpy.all(bond_orders <= e_mbo + 0.30))
+        assert numpy.all(bond_orders >= e_mbo - 0.30)
+        assert numpy.all(bond_orders <= e_mbo + 0.30)
 
 if __name__ == "__main__":
     unittest.TextTestRunner(verbosity=2).run(unittest.makeSuite(MBOTest))
