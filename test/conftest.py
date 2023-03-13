@@ -71,6 +71,9 @@ def normalisefilename(filename: str) -> str:
     ...
     Gaussian_Gaussian03_Mo4OSibdt2_opt_log
     """
+    # TODO This is duplicated from test/regression.py, where it can be removed
+    # after all (dynamically generated) regression tests are converted to run
+    # via pytest.
     ans = []
     for y in filename:
         x = y.lower()
@@ -83,6 +86,9 @@ def normalisefilename(filename: str) -> str:
 
 @pytest.fixture(scope="session")
 def filenames() -> Dict[str, Path]:
+    """Map normalized filenames suitable for test function names to their
+    absolute location on the filesystem.
+    """
     __filedir__ = Path(__file__).resolve().parent
     __regression_dir__ = (__filedir__ / ".." / "data" / "regression").resolve()
     regfile = __regression_dir__ / "regressionfiles.txt"
@@ -98,6 +104,14 @@ def filenames() -> Dict[str, Path]:
 
 @pytest.fixture
 def filename(request, filenames: Mapping[str, Path]) -> Path:
+    """For a test function whose name corresponds to a normalized filename,
+    get the absolution location on the filesystem of the corresponding test
+    data.
+
+    The only tests that can use this fixture are those marked as 'noparse',
+    which typically instantiate the logfile object manually for manipulation.
+    Most tests require a parse and should use the logfile fixture.
+    """
     prefix = "testnoparse"
     assert request.node.name[:len(prefix)] == prefix
     normalized_name = request.node.name[len(prefix):]
@@ -110,9 +124,14 @@ def filename(request, filenames: Mapping[str, Path]) -> Path:
 
 
 def get_parsed_logfile(filenames: Mapping[str, Path], normalized_name: str) -> Logfile:
+    """For a normalized filename suitable for a test function name and a
+    mapping of these names to the absolute locations on the filesystem of
+    their test files, parse the test file and return its data on the logfile
+    instance.
+    """
     fn = filenames[normalized_name]
     if fn.is_dir():
-        # FIXME List[Path] not allowed yet
+        # TODO List[Path] not allowed yet by ccopen?
         fn = [str(x) for x in sorted(fn.iterdir())]
     lfile = ccopen(fn)
     lfile.data = lfile.parse()
@@ -121,11 +140,15 @@ def get_parsed_logfile(filenames: Mapping[str, Path], normalized_name: str) -> L
 
 @pytest.fixture
 def logfile(request, filenames: Mapping[str, Path]) -> Logfile:
+    """For a test function whose name corresponds to a normalized filename,
+    parse the corresponding data and return the logfile with data attached.
+    """
     prefix = "test"
     assert request.node.name[:len(prefix)] == prefix
     normalized_name = request.node.name[len(prefix):]
     if normalized_name in filenames:
         return get_parsed_logfile(filenames, normalized_name)
+    # Workaround (?) for locations that are full directories (e.g. Turbomole)
     if normalized_name.endswith("__") and normalized_name[:-2] in filenames:
         return get_parsed_logfile(filenames, normalized_name[:-2])
     # Allow explicitly skipped tests through.
