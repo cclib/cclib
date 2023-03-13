@@ -107,7 +107,7 @@ class WFXTest(unittest.TestCase):
 
         for mo1, mo2 in zip(normalized_mocoeffs_dat, normalized_mocoeffs_wfx):
             for coeff1, coeff2 in zip(mo1, mo2):
-                self.assertTrue(-0.09 <= abs(coeff1) - abs(coeff2) <= 0.09)
+                assert -0.09 <= abs(coeff1) - abs(coeff2) <= 0.09
 
 
     def test_programs(self):
@@ -135,10 +135,9 @@ class WFXTest(unittest.TestCase):
             mos_prog = wfx_prog._no_of_mos()
 
             # Check if normalization matrix are matching.
-            self.assertAlmostEqual(max(np.array(norm_mat_prog) -
-                                       np.array(norm_mat_ref)), 0, places=5)
+            assert round(abs(max(np.array(norm_mat_prog) - np.array(norm_mat_ref))), 5) == 0
             # Check if number of orbitals to be printed are as expected.
-            self.assertEqual(mos_prog, mos_ref)
+            assert mos_prog == mos_ref
 
     def test_section_printing(self):
         """Check if wfx section printing works as expected."""

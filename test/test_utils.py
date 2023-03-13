@@ -18,25 +18,25 @@ import scipy.spatial.transform
 class FloatTest(unittest.TestCase):
     def test_float_basic(self) -> None:
         """Are floats converted from strings correctly?"""
-        self.assertEqual(utils.float("0.0"), 0.0)
-        self.assertEqual(utils.float("1.0"), 1.0)
-        self.assertEqual(utils.float("-1.0"), -1.0)
+        assert utils.float("0.0") == 0.0
+        assert utils.float("1.0") == 1.0
+        assert utils.float("-1.0") == -1.0
 
     def test_float_numeric_format(self) -> None:
         """Does numeric formatting get converted correctly?"""
-        self.assertEqual(utils.float("1.2345E+02"), 123.45)
-        self.assertEqual(utils.float("1.2345D+02"), 123.45)
+        assert utils.float("1.2345E+02") == 123.45
+        assert utils.float("1.2345D+02") == 123.45
 
     def test_float_stars(self) -> None:
         """Does the function return nan for stars?"""
-        self.assertTrue(numpy.isnan(utils.float("*")))
-        self.assertTrue(numpy.isnan(utils.float("*****")))
+        assert numpy.isnan(utils.float("*"))
+        assert numpy.isnan(utils.float("*****"))
 
 
 class ConvertorTest(unittest.TestCase):
 
     def test_convertor(self) -> None:
-        self.assertEqual(f"{utils.convertor(8.0, 'eV', 'wavenumber'):.3f}", "64524.354")
+        assert f"{utils.convertor(8.0, 'eV', 'wavenumber'):.3f}" == "64524.354"
 
 
 class GetRotationTest(unittest.TestCase):
@@ -84,10 +84,10 @@ class PeriodicTableTest(unittest.TestCase):
         self.t = utils.PeriodicTable()
 
     def test_periodictable(self) -> None:
-        self.assertEqual(self.t.element[6], 'C')
-        self.assertEqual(self.t.number['C'], 6)
-        self.assertEqual(self.t.element[44], 'Ru')
-        self.assertEqual(self.t.number['Au'], 79)
+        assert self.t.element[6] == 'C'
+        assert self.t.number['C'] == 6
+        assert self.t.element[44] == 'Ru'
+        assert self.t.number['Au'] == 79
 
 
 class WidthSplitterTest(unittest.TestCase):
@@ -101,8 +101,8 @@ class WidthSplitterTest(unittest.TestCase):
         ref_truncated = ['1', 'C', '1', 's', '-0.00000', '-0.00000', '0.00000']
         tokens_full = fixed_splitter.split(line_full)
         tokens_truncated = fixed_splitter.split(line_truncated)
-        self.assertEqual(ref_full, tokens_full)
-        self.assertEqual(ref_truncated, tokens_truncated)
+        assert ref_full == tokens_full
+        assert ref_truncated == tokens_truncated
 
     def test_no_truncation(self) -> None:
         """Does the splitter return even the empty fields when asked?"""
@@ -110,7 +110,7 @@ class WidthSplitterTest(unittest.TestCase):
         line = "   1  C 1   s       -0.00000  -0.00000   0.00000"
         ref_not_truncated = ['1', 'C', '1', 's', '-0.00000', '-0.00000', '0.00000', '', '', '']
         tokens_not_truncated = fixed_splitter.split(line, truncate=False)
-        self.assertEqual(ref_not_truncated, tokens_not_truncated)
+        assert ref_not_truncated == tokens_not_truncated
 
 
 if __name__ == "__main__":

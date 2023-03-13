@@ -40,7 +40,7 @@ class NuclearTest(unittest.TestCase):
             data.atomnos = np.array(atomnos)
             data.atomcoords = np.zeros((data.natom, 3))
             data.charge = charge
-            self.assertEqual(Nuclear(data).stoichiometry(), formula)
+            assert Nuclear(data).stoichiometry() == formula
 
         # Basics and permutations.
         check([], "")
@@ -75,7 +75,7 @@ class NuclearTest(unittest.TestCase):
         line = re.search('Nuclear Repulsion Energy = .* hartrees', output).group()
         nre = float(line.split()[4])
         nre = utils.convertor(nre, 'Angstrom', 'bohr')
-        self.assertAlmostEqual(nuclear.repulsion_energy(), nre, places=7)
+        assert round(abs(nuclear.repulsion_energy() - nre), 7) == 0
 
     def test_principal_moments_of_inertia(self) -> None:
         """Testing principal moments of inertia and the principal axes for one

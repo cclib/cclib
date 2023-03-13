@@ -156,8 +156,8 @@ class GaussianBickelhauptTest(unittest.TestCase):
         bpa.calculate()
         
         e_bpa = numpy.loadtxt(f"{os.path.dirname(os.path.realpath(__file__))}/dvb_sp.bpa")
-        self.assertTrue(numpy.all(bpa.fragcharges >= e_bpa - 0.05))
-        self.assertTrue(numpy.all(bpa.fragcharges <= e_bpa + 0.05))
+        assert numpy.all(bpa.fragcharges >= e_bpa - 0.05)
+        assert numpy.all(bpa.fragcharges <= e_bpa + 0.05)
         
     def test_dvb_un_sp(self) -> None:
         """Testing Bickelhaupt charges (unrestricted) against outputs from Multiwfn."""
@@ -169,10 +169,10 @@ class GaussianBickelhauptTest(unittest.TestCase):
         e_bpaalpha = numpy.loadtxt(f"{os.path.dirname(os.path.realpath(__file__))}/dvb_un_sp.bpa")
         e_bpaspin = numpy.loadtxt(f"{os.path.dirname(os.path.realpath(__file__))}/dvb_un_sp.bpaspin")
         
-        self.assertTrue(numpy.all(bpa.fragcharges >= e_bpaalpha - 0.05))
-        self.assertTrue(numpy.all(bpa.fragcharges <= e_bpaalpha + 0.05))
-        self.assertTrue(numpy.all(bpa.fragspins >= e_bpaspin - 0.05))
-        self.assertTrue(numpy.all(bpa.fragspins <= e_bpaspin + 0.05))
+        assert numpy.all(bpa.fragcharges >= e_bpaalpha - 0.05)
+        assert numpy.all(bpa.fragcharges <= e_bpaalpha + 0.05)
+        assert numpy.all(bpa.fragspins >= e_bpaspin - 0.05)
+        assert numpy.all(bpa.fragspins <= e_bpaspin + 0.05)
 
 tests = [GaussianMPATest, GaussianLPATest, GaussianCSPATest, GaussianBickelhauptTest]
 

@@ -260,10 +260,10 @@ class GenericSPTest(unittest.TestCase):
             assert self.data.aooverlaps[i,i] == 1.0
 
         # Check some additional values that don't seem to move around between programs.
-        self.assertAlmostEqual(self.data.aooverlaps[0, 1], self.overlap01, delta=0.01)
-        self.assertAlmostEqual(self.data.aooverlaps[1, 0], self.overlap01, delta=0.01)
-        self.assertAlmostEqual(self.data.aooverlaps[3,0], 0.0)
-        self.assertAlmostEqual(self.data.aooverlaps[0,3], 0.0)
+        assert abs(self.data.aooverlaps[0, 1] - self.overlap01) < 0.01
+        assert abs(self.data.aooverlaps[1, 0] - self.overlap01) < 0.01
+        assert round(abs(self.data.aooverlaps[3, 0]), 7) == 0
+        assert round(abs(self.data.aooverlaps[0, 3]), 7) == 0
 
     def testoptdone(self):
         """There should be no optdone attribute set."""
@@ -308,32 +308,32 @@ class GenericSPTest(unittest.TestCase):
         dipole = self.data.moments[1]
         assert len(dipole) == 3
         for d in dipole:
-            self.assertAlmostEqual(d, 0.0, places=7)
+            assert round(abs(d), 7) == 0
 
         # If the quadrupole is there, we can expect roughly -50B for the XX moment,
         # -50B for the YY moment and and -60B for the ZZ moment.
         if len(self.data.moments) > 2:
             quadrupole = self.data.moments[2]
-            self.assertEqual(len(quadrupole), 6)
-            self.assertAlmostEqual(quadrupole[0], -50, delta=2.5)
-            self.assertAlmostEqual(quadrupole[3], -50, delta=2.5)
-            self.assertAlmostEqual(quadrupole[5], -60, delta=3)
+            assert len(quadrupole) == 6
+            assert abs(quadrupole[0] - -50) < 2.5
+            assert abs(quadrupole[3] - -50) < 2.5
+            assert abs(quadrupole[5] - -60) < 3
 
         # If the octupole is there, it should have 10 components and be zero.
         if len(self.data.moments) > 3:
             octupole = self.data.moments[3]
             assert len(octupole) == 10
             for m in octupole:
-                self.assertAlmostEqual(m, 0.0, delta=0.001)
+                assert abs(m) < 0.001
 
         # The hexadecapole should have 15 elements, an XXXX component of around -1900 Debye*ang^2,
         # a YYYY component of -330B and a ZZZZ component of -50B.
         if len(self.data.moments) > 4:
             hexadecapole = self.data.moments[4]
-            self.assertEqual(len(hexadecapole), 15)
-            self.assertAlmostEqual(hexadecapole[0], -1900, delta=90)
-            self.assertAlmostEqual(hexadecapole[10], -330, delta=11)
-            self.assertAlmostEqual(hexadecapole[14], -50, delta=2.5)
+            assert len(hexadecapole) == 15
+            assert abs(hexadecapole[0] - -1900) < 90
+            assert abs(hexadecapole[10] - -330) < 11
+            assert abs(hexadecapole[14] - -50) < 2.5
 
         # The are 21 unique 32-pole moments, and all are zero in this test case.
         if len(self.data.moments) > 5:

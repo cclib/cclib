@@ -42,8 +42,8 @@ class GenericRelaxedScanTest_optdone_bool(GenericScanTestBase):
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testoptdone(self):
         """Is the optimization finished?"""
-        self.assertIsInstance(self.data.optdone, bool)
-        self.assertEqual(self.data.optdone, True)
+        assert isinstance(self.data.optdone, bool)
+        assert self.data.optdone == True
 
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
@@ -71,12 +71,12 @@ class GenericUnrelaxedScanTest(GenericScanTestBase):
     
     @skipForParser("Jaguar", "Not implemented")
     def testscannames(self):
-        self.assertIsInstance(self.data.scannames, list)
+        assert isinstance(self.data.scannames, list)
 
     @skipForParser("ORCA", "Not implemented")
     @skipForParser("Jaguar", "Not implemented")
     def testscanenergies(self):
-        self.assertIsInstance(self.data.scanenergies, list)
+        assert isinstance(self.data.scanenergies, list)
         
         # This checks the order of magnitude, and unit conversion if nothing else.
         numpy.testing.assert_array_less(numpy.array(self.data.scanenergies), -10000)
@@ -84,12 +84,12 @@ class GenericUnrelaxedScanTest(GenericScanTestBase):
     @skipForParser("ORCA", "Not implemented")
     @skipForParser("Jaguar", "Not implemented")
     def testscanparm(self):
-        self.assertIsInstance(self.data.scanparm, list)
+        assert isinstance(self.data.scanparm, list)
 
         # Each parameters should have as many values as there are scan
         # energies, or optimized point on the PES.
         for parm in self.data.scanparm:
-            self.assertEqual(len(parm), len(self.data.scanenergies))
+            assert len(parm) == len(self.data.scanenergies)
 
 
 class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
@@ -102,7 +102,7 @@ class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testnumindices(self):
         """Do the number of indices match number of scan points."""
-        self.assertEqual(len(self.data.optdone), 12 + self.extra)
+        assert len(self.data.optdone) == 12 + self.extra
 
     @skipForParser("Jaguar", "Does not work as expected")    
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
@@ -127,7 +127,7 @@ class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
         # The input coordinates were at a stationary point.
         self.assertOptDone(self.data.optstatus[0])
 
-        self.assertEqual(len(self.data.converged_geometries), len(self.data.optdone))
+        assert len(self.data.converged_geometries) == len(self.data.optdone)
         for idone in self.data.optdone:
             self.assertOptDone(self.data.optstatus[idone])
             if idone != len(self.data.optstatus) - 1:
@@ -135,12 +135,12 @@ class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
 
     @skipForParser("Jaguar", "Not implemented")
     def testscannames(self):
-        self.assertIsInstance(self.data.scannames, list)
+        assert isinstance(self.data.scannames, list)
 
     @skipForParser("Jaguar", "Not implemented")
     @skipForParser("ORCA", "Not implemented")
     def testscanenergies(self):
-        self.assertIsInstance(self.data.scanenergies, list)
+        assert isinstance(self.data.scanenergies, list)
         
         # This checks the order of magnitude, and unit conversion if nothing else.
         numpy.testing.assert_array_less(numpy.array(self.data.scanenergies), -10000)
@@ -148,12 +148,12 @@ class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
     @skipForParser("Jaguar", "Not implemented")
     @skipForParser("ORCA", "Not implemented")
     def testscanparm(self):
-        self.assertIsInstance(self.data.scanparm, list)
+        assert isinstance(self.data.scanparm, list)
 
         # Each parameters should have as many values as there are scan
         # energies, or optimized point on the PES.
         for parm in self.data.scanparm:
-            self.assertEqual(len(parm), len(self.data.scanenergies))
+            assert len(parm) == len(self.data.scanenergies)
 
 
 class GaussianUnrelaxedScanTest(GenericUnrelaxedScanTest):

@@ -16,6 +16,7 @@ from unittest import mock
 from urllib.request import urlopen
 
 import cclib
+import pytest
 
 
 __filedir__ = os.path.dirname(__file__)
@@ -30,11 +31,11 @@ class FileWrapperTest(unittest.TestCase):
         with open(fpath, 'r') as fobject:
             wrapper = cclib.parser.logfileparser.FileWrapper(fobject)
             wrapper.seek(0, 0)
-            self.assertEqual(wrapper.pos, 0)
+            assert wrapper.pos == 0
             wrapper.seek(10, 0)
-            self.assertEqual(wrapper.pos, 10)
+            assert wrapper.pos == 10
             wrapper.seek(0, 2)
-            self.assertEqual(wrapper.pos, wrapper.size)
+            assert wrapper.pos == wrapper.size
 
     def test_url_seek(self):
         """Can we seek only to the end of an url stream?"""
@@ -47,19 +48,25 @@ class FileWrapperTest(unittest.TestCase):
         # so we need to diverge the assertions. We should try to keep the code as
         # consistent as possible, but the Errors raised are actually different.
         wrapper.seek(0, 2)
-        self.assertEqual(wrapper.pos, wrapper.size)
+        assert wrapper.pos == wrapper.size
         if sys.version_info[0] == 2:
-            self.assertRaises(AttributeError, wrapper.seek, 0, 0)
-            self.assertRaises(AttributeError, wrapper.seek, 0, 1)
+            with pytest.raises(AttributeError):
+                wrapper.seek(0, 0)
+            with pytest.raises(AttributeError):
+                wrapper.seek(0, 1)
         else:
-            self.assertRaises(io.UnsupportedOperation, wrapper.seek, 0, 0)
-            self.assertRaises(io.UnsupportedOperation, wrapper.seek, 0, 1)
+            with pytest.raises(io.UnsupportedOperation):
+                wrapper.seek(0, 0)
+            with pytest.raises(io.UnsupportedOperation):
+                wrapper.seek(0, 1)
 
     def test_stdin_seek(self):
         """We shouldn't be able to seek anywhere in standard input."""
         wrapper = cclib.parser.logfileparser.FileWrapper(sys.stdin)
-        self.assertRaises(IOError, wrapper.seek, 0, 0)
-        self.assertRaises(IOError, wrapper.seek, 0, 1)
+        with pytest.raises(IOError):
+            wrapper.seek(0, 0)
+        with pytest.raises(IOError):
+            wrapper.seek(0, 1)
 
     def test_data_stdin(self):
         """Check that the same attributes are parsed when a file is piped through standard input."""
@@ -80,7 +87,7 @@ class FileWrapperTest(unittest.TestCase):
                 stdin = io.StringIO(unicode(contents))
             stdin.seek = sys.stdin.seek
             data = cclib.io.ccread(stdin)
-            self.assertEqual(get_attributes(data), expected_attributes)
+            assert get_attributes(data) == expected_attributes
 
 
 class LogfileTest(unittest.TestCase):
@@ -102,14 +109,7 @@ class LogfileTest(unittest.TestCase):
 
         parser.etenergies = [1, -1]
         parser.parse()
-        try:
-            parser.logger.error.assert_called_once()
-        except AttributeError:  # assert_called_once is not availible until python 3.6
-            self.assertEqual(
-                parser.logger.error.call_count,
-                1,
-                f"Expected mock to have been called once. Called {parser.logger.error.call_count} times.",
-            )
+        parser.logger.error.assert_called_once()
 
 
 if __name__ == "__main__":
