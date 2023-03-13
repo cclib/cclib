@@ -712,18 +712,21 @@ class Psi4(logfileparser.Logfile):
         # a paritcular target it means they are not used (marked also with an 'o'), and in this case
         # we will set a value of numpy.inf so that any value will be smaller.
         #
-        #  ==> Convergence Check <==
-        #
+        #                               ==> Convergence Check <==                                  
+        #  
         #  Measures of convergence in internal coordinates in au.
+        #  
         #  Criteria marked as inactive (o), active & met (*), and active & unmet ( ).
-        #  ---------------------------------------------------------------------------------------------
-        #   Step     Total Energy     Delta E     MAX Force     RMS Force      MAX Disp      RMS Disp
-        #  ---------------------------------------------------------------------------------------------
-        #    Convergence Criteria    1.00e-06 *    3.00e-04 *             o    1.20e-03 *             o
-        #  ---------------------------------------------------------------------------------------------
-        #      2    -379.77675264   -7.79e-03      1.88e-02      4.37e-03 o    2.29e-02      6.76e-03 o  ~
-        #  ---------------------------------------------------------------------------------------------
+        #  
+        #  ----------------------------------------------------------------------------------------------
+        #     Step    Total Energy     Delta E     Max Force     RMS Force      Max Disp      RMS Disp
+        #  ----------------------------------------------------------------------------------------------
+        #    Convergence Criteria     1.00e-06 *    3.00e-04 *             o    1.20e-03 *             o
+        #  ----------------------------------------------------------------------------------------------
+        #       2    -379.77675264   -7.79e-03      1.88e-02      4.37e-03 o    2.29e-02      6.76e-03 o  ~
+        #  ----------------------------------------------------------------------------------------------
         #
+        
         if (self.section == "Convergence Check") and line.strip() == "==> Convergence Check <==" \
             and not hasattr(self, 'finite_difference'):
 
@@ -731,7 +734,7 @@ class Psi4(logfileparser.Logfile):
                 self.optstatus = []
             self.optstatus.append(data.ccData.OPT_UNKNOWN)
 
-            self.skip_lines(inputfile, ['b', 'units', 'comment', 'dash+tilde', 'header', 'dash+tilde'])
+            self.skip_lines(inputfile, ['b', 'units', 'b', 'comment', 'b', 'dash+tilde', 'header', 'dash+tilde'])
 
             # These are the position in the line at which numbers should start.
             starts = [27, 41, 55, 69, 83]
@@ -1052,6 +1055,7 @@ class Psi4(logfileparser.Logfile):
             vibdisps = []
             vibrmasses = []
             vibfconsts = []
+            vibirs = []
 
             # Skip lines till the first Vibration block
             while not line.strip().startswith('Vibration'):
@@ -1062,12 +1066,13 @@ class Psi4(logfileparser.Logfile):
             while line.strip().startswith('Vibration'):
                 n = len(line.split()) - 1
                 n_modes += n
-                vibfreqs_, vibsyms_, vibdisps_, vibrmasses_, vibfconsts_ = self.parse_vibration(n, inputfile)
+                vibfreqs_, vibsyms_, vibdisps_, vibrmasses_, vibfconsts_, vibirs_ = self.parse_vibration(n, inputfile)
                 vibfreqs.extend(vibfreqs_)
                 vibsyms.extend(vibsyms_)
                 vibdisps.extend(vibdisps_)
                 vibrmasses.extend(vibrmasses_)
                 vibfconsts.extend(vibfconsts_)
+                vibirs.extend(vibirs_)
                 line = next(inputfile)
 
             # It looks like the symmetry of the normal mode may be missing 
@@ -1087,6 +1092,9 @@ class Psi4(logfileparser.Logfile):
 
             if len(vibdisps) == n_modes:
                 self.set_attribute('vibfconsts', vibfconsts)
+
+            if len(vibirs) == n_modes:
+                self.set_attribute('vibirs', vibirs)
 
         # Second one is 1.0, first one is 1.2 and newer
         if (self.section == "Thermochemistry Energy Analysis" and "Thermochemistry Energy Analysis" in line) \
@@ -1186,19 +1194,35 @@ class Psi4(logfileparser.Logfile):
     @staticmethod
     def parse_vibration(n, inputfile):
 
-        #   Freq [cm^-1]                1501.9533           1501.9533           1501.9533
-        #   Irrep
-        #   Reduced mass [u]              1.1820              1.1820              1.1820
-        #   Force const [mDyne/A]         1.5710              1.5710              1.5710
-        #   Turning point v=0 [a0]        0.2604              0.2604              0.2604
-        #   RMS dev v=0 [a0 u^1/2]        0.2002              0.2002              0.2002
-        #   Char temp [K]               2160.9731           2160.9731           2160.9731
-        #   ----------------------------------------------------------------------------------
-        #       1   C               -0.00  0.01  0.13   -0.00 -0.13  0.01   -0.13  0.00 -0.00
-        #       2   H                0.33 -0.03 -0.38    0.02  0.60 -0.02    0.14 -0.01 -0.32
-        #       3   H               -0.32 -0.03 -0.37   -0.01  0.60 -0.01    0.15 -0.01  0.33
-        #       4   H                0.02  0.32 -0.36    0.01  0.16 -0.34    0.60 -0.01  0.01
-        #       5   H                0.02 -0.33 -0.39    0.01  0.13  0.31    0.60  0.01  0.01
+        #  Vibration                       1                   8                   9
+        #  Freq [cm^-1]                698.2090i           1675.6707           1675.6899
+        #  Irrep                           B2                  B1                  A1
+        #  Reduced mass [u]              1.1842              1.0783              1.0783
+        #  Force const [mDyne/A]        -0.3401              1.7838              1.7839
+        #  Turning point v=0 [a0]        0.0000              0.2581              0.2581
+        #  RMS dev v=0 [a0 u^1/2]        0.0000              0.1895              0.1895
+        #  IR activ [km/mol]            695.8115            139.3986            139.4122
+        #  Char temp [K]                 0.0000            2410.9171           2410.9446
+        #  ----------------------------------------------------------------------------------
+        #      1   O                0.00 -0.11  0.00   -0.07 -0.00 -0.00    0.00  0.00 -0.07
+        #      2   H               -0.00  0.57 -0.00    0.14  0.00  0.39    0.39 -0.00  0.59
+        #      3   H               -0.00  0.57  0.00    0.14  0.00 -0.39   -0.39 -0.00  0.59
+        #      4   H               -0.00  0.57 -0.00    0.81  0.00 -0.00   -0.00 -0.00 -0.08
+        #  
+        #  Vibration                       10                  11                  12
+        #  Freq [cm^-1]                3815.5756           4002.9095           4003.0866
+        #  Irrep                           A1                  B1                  A1
+        #  Reduced mass [u]              1.0078              1.0998              1.0998
+        #  Force const [mDyne/A]         8.6448             10.3828             10.3837
+        #  Turning point v=0 [a0]        0.1769              0.1654              0.1654
+        #  RMS dev v=0 [a0 u^1/2]        0.1256              0.1226              0.1226
+        #  IR activ [km/mol]             0.0003             759.5496            759.5086
+        #  Char temp [K]               5489.7637           5759.2955           5759.5504
+        #  ----------------------------------------------------------------------------------
+        #      1   O               -0.00 -0.00  0.00   -0.08  0.00  0.00   -0.00 -0.00 -0.08
+        #      2   H                0.50  0.00 -0.29    0.61  0.00 -0.35   -0.35 -0.00  0.21
+        #      3   H               -0.50  0.00 -0.29    0.61 -0.00  0.35    0.35  0.00  0.21
+        #      4   H                0.00  0.00  0.58    0.01  0.00 -0.00    0.00  0.00  0.81
 
         line = next(inputfile)
         assert 'Freq' in line
@@ -1228,7 +1252,11 @@ class Psi4(logfileparser.Logfile):
 
         line = next(inputfile)
         if 'IR activ' in line:
+            chomp = line.split()
+            vibirs = [utils.float(x) for x in chomp[3:]]
             line = next(inputfile)
+        else:
+            vibirs = []
         assert 'Char temp' in line
 
         line = next(inputfile)
@@ -1246,7 +1274,7 @@ class Psi4(logfileparser.Logfile):
 
             line = next(inputfile)
 
-        return vibfreqs, vibsyms, vibdisps, vibrmasses, vibfconsts
+        return vibfreqs, vibsyms, vibdisps, vibrmasses, vibfconsts, vibirs
 
     @staticmethod
     def parse_vibfreq(vibfreq):
