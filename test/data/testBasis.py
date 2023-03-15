@@ -110,12 +110,12 @@ class GenericBigBasisTest(GenericBasisTest):
     @unittest.skip('Write up a new test, and/or revise the one inherited.')
     def testcoeffs(self):
         """Are the basis set coefficients correct?"""
-        assert 1 == 1
+        assert True
 
     @unittest.skip('# of contractions is 20 for VQZ, but 29 for CVQZ; unify files first.')
     def testcontractions(self):
         """"""
-        assert 1 == 1
+        assert True
 
 
 class DALTONBigBasisTest(GenericBigBasisTest):
