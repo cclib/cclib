@@ -41,7 +41,7 @@ class GenericRelaxedScanTest_optdone_bool(unittest.TestCase):
     def testoptdone(self):
         """Is the optimization finished?"""
         assert isinstance(self.data.optdone, bool)
-        assert self.data.optdone is True
+        assert self.data.optdone
 
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
