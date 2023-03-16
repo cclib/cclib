@@ -26,15 +26,15 @@ import pytest
 class BaderTest(unittest.TestCase):
     """Bader's QTAIM method tests."""
 
-    def setUp(self):
+    def setUp(self) -> None:
         super(BaderTest, self).setUp()
         self.parse()
 
-    def parse(self):
+    def parse(self) -> None:
         self.data, self.logfile = getdatafile(Psi4, "basicPsi4-1.2.1", ["water_mp2.out"])
         self.volume = volume.Volume((-4, -4, -4), (4, 4, 4), (0.2, 0.2, 0.2))
 
-    def testmissingrequiredattributes(self):
+    def testmissingrequiredattributes(self) -> None:
         """Is an error raised when required attributes are missing?"""
         for missing_attribute in Bader.required_attrs:
             self.parse()
@@ -42,7 +42,7 @@ class BaderTest(unittest.TestCase):
             with pytest.raises(MissingAttributeError):
                 trialBader = Bader(self.data, self.volume)
 
-    def test_val(self):
+    def test_val(self) -> None:
         """Do the calculated values match with known values?
         """
 
@@ -55,7 +55,7 @@ class BaderTest(unittest.TestCase):
 
         assert_allclose(self.analysis.fragcharges, refData, atol=0.15)
 
-    def test_chgsum_hf(self):
+    def test_chgsum_hf(self) -> None:
         """Does the sum of charges equate to the number of electrons for a simple molecule?"""
 
         hfpath = os.path.join(os.path.dirname(os.path.realpath(__file__)), "hf.out")
@@ -66,7 +66,7 @@ class BaderTest(unittest.TestCase):
 
         assert abs(numpy.sum(analysis.fragcharges)-10) < 1
 
-    def test_symms_benzene(self):
+    def test_symms_benzene(self) -> None:
         """ Do the carbons in benzene ring get assigned with roughly equal charges?
         
             Discrepancy between carbons do exist in this test due to grid coarseness and limited

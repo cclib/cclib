@@ -27,13 +27,13 @@ paths_ignore_only_2_7 = [
 ]
 
 
-def match_path(path, partial_paths):
+def match_path(path, partial_paths) -> bool:
     """Does the given path contain any of the stubs in partial_paths?"""
     return any(partial_path in str(path)
                for partial_path in partial_paths)
 
 
-def pytest_ignore_collect(path, config):
+def pytest_ignore_collect(path, config) -> bool:
     """pytest automatically runs this on every discovered path. If this
     returns True for a given path, pytest will ignore it.
     """
@@ -50,7 +50,7 @@ def pytest_addoption(parser):
     parser.addoption("--silent", action="store_true")
 
 
-def pytest_generate_tests(metafunc):
+def pytest_generate_tests(metafunc) -> None:
     if metafunc.function.__name__ == "test_all":
         metafunc.parametrize("parsers", [{p: all_parsers[p] for p in parser_names}])
         metafunc.parametrize("modules", [{p: all_modules[p] for p in module_names}])

@@ -19,22 +19,22 @@ from cclib.parser import utils
 class DALTON(logfileparser.Logfile):
     """A DALTON log file."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(logname="DALTON", *args, **kwargs)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"DALTON log file {self.filename}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'DALTON("{self.filename}")'
 
-    def normalisesym(self, label):
+    def normalisesym(self, label: str) -> str:
         """DALTON does not require normalizing symmetry labels."""
         return label
 
-    def before_parsing(self):
+    def before_parsing(self) -> None:
 
         # Used to decide whether to wipe the atomcoords clean.
         self.firststdorient = True

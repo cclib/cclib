@@ -16,7 +16,7 @@ from cclib.io import ccopen
 from cclib.io import ccwrite
 
 
-def main():
+def main() -> None:
 
     parser = argparse.ArgumentParser()
 

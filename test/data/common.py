@@ -11,8 +11,10 @@ import itertools
 
 import numpy
 
+from cclib.parser.data import ccData
 
-def get_minimum_carbon_separation(data):
+
+def get_minimum_carbon_separation(data: ccData) -> float:
     """Returns minimum carbon distance for any coordinates.
 
     Note that atomcoords is 3D, and we will take the minimum

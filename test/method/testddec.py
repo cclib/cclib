@@ -11,6 +11,7 @@ import os
 import sys
 import unittest
 import pytest
+from typing import Optional
 
 import numpy
 
@@ -26,19 +27,19 @@ from ..test_data import getdatafile
 class DDEC6Test(unittest.TestCase):
     """DDEC6 method tests."""
 
-    def setUp(self):
+    def setUp(self) -> None:
         super(DDEC6Test, self).setUp()
         self.parse()
 
-    def parse(self, molecule_name=None):
-        if molecule_name == None:
+    def parse(self, molecule_name: Optional[str] = None) -> None:
+        if molecule_name is None:
             self.data, self.logfile = getdatafile(Psi4, "basicPsi4-1.2.1", ["water_mp2.out"])
         else:
             self.data = ccread(
                 os.path.join(os.path.dirname(os.path.realpath(__file__)), f"{molecule_name}.out")
             )
 
-    def testmissingrequiredattributes(self):
+    def testmissingrequiredattributes(self) -> None:
         """Is an error raised when required attributes are missing?"""
         for missing_attribute in DDEC6.required_attrs:
             self.parse()
@@ -47,7 +48,7 @@ class DDEC6Test(unittest.TestCase):
             with pytest.raises(MissingAttributeError):
                 trial = DDEC6(self.data, vol, os.path.dirname(os.path.realpath(__file__)))
 
-    def test_proatom_read(self):
+    def test_proatom_read(self) -> None:
         """Are proatom densities imported correctly?"""
 
         self.parse()
@@ -88,7 +89,7 @@ class DDEC6Test(unittest.TestCase):
         assert_allclose(self.analysis.proatom_density[1][0:5], refH_den, rtol=1e-3)
         assert_allclose(self.analysis.proatom_density[2][0:5], refH_den, rtol=1e-3)
 
-    def test_water_charges(self):
+    def test_water_charges(self) -> None:
         """Are charges and quantities in each step of DDEC6 algorithm calculated correctly
         for water?
         
@@ -164,7 +165,7 @@ class DDEC6Test(unittest.TestCase):
         assert_allclose(analysis.fragcharges, [-0.757097, 0.378410, 0.378687], atol=0.2)
 
     @pytest.mark.skipif(sys.version_info > (3, 8), reason="This test doesn't converge with newer psi4 versions availiable with python >3.8")
-    def test_chgsum_h2(self):
+    def test_chgsum_h2(self) -> None:
         """ Are DDEC6 charges for hydrogen atoms in nonpolar H2 small as expected?
         
             Using much denser grid (spacing of 0.1 rather than 0.2 which is the cube file included
@@ -178,7 +179,7 @@ class DDEC6Test(unittest.TestCase):
 
         assert abs(analysis.fragcharges[0]-analysis.fragcharges[1]) < 1e-12
 
-    def test_chgsum_co(self):
+    def test_chgsum_co(self) -> None:
         """ Are DDEC6 charges for carbon monoxide reported as expected?
         
             Deviation from a total of zero (-0.00682) occurs because the integrated value of total
@@ -197,7 +198,7 @@ class DDEC6Test(unittest.TestCase):
         assert abs(numpy.sum(analysis.fragcharges)-0) < 1e-2
         assert_allclose(analysis.fragcharges, [0.13221636, -0.13903595], atol=1e-3)
 
-    def test_chg_nh3(self):
+    def test_chg_nh3(self) -> None:
         """ Are DDEC6 charges for ammonia reported as expected?
         
             Deviation from a total of zero (0.026545) occurs because the integrated value of total

@@ -13,7 +13,7 @@ from cclib.io import ccread
 from cclib.method import CDA
 
 
-def main():
+def main() -> None:
     parser = ArgumentParser()
     parser.add_argument("file1", help="logfile containing the supermolecule")
     parser.add_argument("file2", help="logfile containing the first fragment")

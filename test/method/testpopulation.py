@@ -11,11 +11,12 @@ import sys
 import os
 import logging
 import unittest
+from typing import Type
 
 import numpy
 
 from cclib.method import CSPA, LPA, MPA, OPA, Bickelhaupt
-from cclib.method.calculationmethod import MissingAttributeError
+from cclib.method.calculationmethod import MissingAttributeError, Method
 from cclib.parser import Gaussian
 
 sys.path.insert(1, "..")
@@ -29,17 +30,17 @@ class PopulationTest(unittest.TestCase):
     
     methods = (CSPA, LPA, MPA, OPA, Bickelhaupt)
 
-    def parse(self):
+    def parse(self) -> None:
         self.data, self.logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_un_sp.log"])
 
-    def calculate(self, method_class):
+    def calculate(self, method_class: Type[Method]) -> None:
         if not hasattr(self, 'data'):
             self.parse()
         self.analysis = method_class(self.data)
         self.analysis.logger.setLevel(0)
         self.analysis.calculate()
 
-    def testmissingrequiredattributes(self):
+    def testmissingrequiredattributes(self) -> None:
         """Is an error raised when required attributes are missing?"""
         for missing_attribute in MPA.required_attrs:
             self.parse()
@@ -48,7 +49,7 @@ class PopulationTest(unittest.TestCase):
                 with pytest.raises(MissingAttributeError):
                     self.calculate(method_class)
 
-    def testmissingoverlaps(self):
+    def testmissingoverlaps(self) -> None:
         """Is an error raised when no overlaps are available?"""
         self.parse()
         for overlap_attribute in MPA.overlap_attributes:
@@ -63,19 +64,19 @@ class PopulationTest(unittest.TestCase):
 class GaussianMPATest(unittest.TestCase):
     """Mulliken Population Analysis test"""
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.data, self.logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_un_sp.log"])
         self.analysis = MPA(self.data)
         self.analysis.logger.setLevel(0)
         self.analysis.calculate()
 
-    def testsumcharges(self):
+    def testsumcharges(self) -> None:
         """Do the Mulliken charges sum up to the total formal charge?"""
         formalcharge = sum(self.data.atomnos) - self.data.charge
         totalpopulation = sum(self.analysis.fragcharges)
         assert abs(totalpopulation-formalcharge) < 1.0e-3
 
-    def testsumspins(self):
+    def testsumspins(self) -> None:
         """Do the Mulliken spins sum up to the total formal spin?"""
         formalspin = self.data.homos[0] - self.data.homos[1]
         totalspin = sum(self.analysis.fragspins)
@@ -85,19 +86,19 @@ class GaussianMPATest(unittest.TestCase):
 class GaussianLPATest(unittest.TestCase):
     """Lowdin Population Analysis test"""
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.data, self.logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_un_sp.log"])
         self.analysis = LPA(self.data)
         self.analysis.logger.setLevel(0)
         self.analysis.calculate()
 
-    def testsumcharges(self):
+    def testsumcharges(self) -> None:
         """Do the Lowdin charges sum up to the total formal charge?"""
         formalcharge = sum(self.data.atomnos) - self.data.charge
         totalpopulation = sum(self.analysis.fragcharges)
         assert abs(totalpopulation-formalcharge) < 0.001
 
-    def testsumspins(self):
+    def testsumspins(self) -> None:
         """Do the Lowdin spins sum up to the total formal spin?"""
         formalspin = self.data.homos[0] - self.data.homos[1]
         totalspin = sum(self.analysis.fragspins)
@@ -107,19 +108,19 @@ class GaussianLPATest(unittest.TestCase):
 class GaussianCSPATest(unittest.TestCase):
     """C-squared Population Analysis test"""
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.data, self.logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_un_sp.log"])
         self.analysis = CSPA(self.data)
         self.analysis.logger.setLevel(0)
         self.analysis.calculate()
 
-    def testsumcharges(self):
+    def testsumcharges(self) -> None:
         """Do the CSPA charges sum up to the total formal charge?"""
         formalcharge = sum(self.data.atomnos) - self.data.charge
         totalpopulation = sum(self.analysis.fragcharges)
         assert abs(totalpopulation-formalcharge) < 1.0e-3
 
-    def testsumspins(self):
+    def testsumspins(self) -> None:
         """Do the CSPA spins sum up to the total formal spin?"""
         formalspin = self.data.homos[0] - self.data.homos[1]
         totalspin = sum(self.analysis.fragspins)
@@ -128,26 +129,26 @@ class GaussianCSPATest(unittest.TestCase):
 class GaussianBickelhauptTest(unittest.TestCase):
     """Bickelhaupt Population Analysis test"""
     
-    def setUp(self):
+    def setUp(self) -> None:
         super(GaussianBickelhauptTest, self).setUp()
         self.data, self.logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_un_sp.log"])
         self.analysis = Bickelhaupt(self.data)
         self.analysis.logger.setLevel(0)
         self.analysis.calculate()
     
-    def testsumcharges(self):
+    def testsumcharges(self) -> None:
         """Do the Bickelhaupt charges sum up to the total formal charge?"""
         formalcharge = sum(self.data.atomnos) - self.data.charge
         totalpopulation = sum(self.analysis.fragcharges)
         assert abs(totalpopulation-formalcharge) < 1.0e-3
         
-    def testsumspins(self):
+    def testsumspins(self) -> None:
         """Do the Bickelhaupt spins sum up to the total formal spin?"""
         formalspin = self.data.homos[0] - self.data.homos[1]
         totalspin = sum(self.analysis.fragspins)
         assert abs(totalspin-formalspin) < 1.0e-3
     
-    def test_dvb_sp(self):
+    def test_dvb_sp(self) -> None:
         """Testing Bickelhaupt charges (restricted) against outputs from Multiwfn."""
         data, logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_sp.out"])
         bpa = Bickelhaupt(data)
@@ -158,7 +159,7 @@ class GaussianBickelhauptTest(unittest.TestCase):
         self.assertTrue(numpy.all(bpa.fragcharges >= e_bpa - 0.05))
         self.assertTrue(numpy.all(bpa.fragcharges <= e_bpa + 0.05))
         
-    def test_dvb_un_sp(self):
+    def test_dvb_un_sp(self) -> None:
         """Testing Bickelhaupt charges (unrestricted) against outputs from Multiwfn."""
         data, logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_un_sp.log"])
         bpa = Bickelhaupt(data)

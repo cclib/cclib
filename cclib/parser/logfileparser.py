@@ -18,6 +18,7 @@ import random
 import sys
 import zipfile
 from abc import ABC, abstractmethod
+from typing import Any, Iterable, List, Union
 
 import numpy
 
@@ -32,18 +33,18 @@ logging.logMultiprocessing = 0
 
 class myBZ2File(bz2.BZ2File):
     """Return string instead of bytes"""
-    def __next__(self):
+    def __next__(self) -> str:
         line = super(bz2.BZ2File, self).__next__()
         return line.decode("ascii", "replace")
 
-    def next(self):
+    def next(self) -> str:
         line = self.__next__()
         return line
 
 
 class myGzipFile(gzip.GzipFile):
     """Return string instead of bytes"""
-    def __next__(self):
+    def __next__(self) -> str:
         super_ob = super(gzip.GzipFile, self)
         # seemingly different versions of gzip can have either next or __next__
         if hasattr(super_ob, 'next'):
@@ -52,7 +53,7 @@ class myGzipFile(gzip.GzipFile):
             line = super_ob.__next__()
         return line.decode("ascii", "replace")
 
-    def next(self):
+    def next(self) -> str:
         line = self.__next__()
         return line
 
@@ -60,7 +61,7 @@ class myGzipFile(gzip.GzipFile):
 class FileWrapper:
     """Wrap a file-like object or stream with some custom tweaks"""
 
-    def __init__(self, source, pos=0):
+    def __init__(self, source, pos: int = 0) -> None:
 
         self.src = source
 
@@ -99,10 +100,10 @@ class FileWrapper:
     def __iter__(self):
         return self
 
-    def close(self):
+    def close(self) -> None:
         self.src.close()
 
-    def seek(self, pos, ref):
+    def seek(self, pos: int, ref: int) -> None:
 
         # If we are seeking to end, we can emulate it usually. As explained above,
         # we cannot be too specific with the except clause due to differences
@@ -123,7 +124,7 @@ class FileWrapper:
             self.pos = self.size
 
 
-def openlogfile(filename, object=None):
+def openlogfile(filename: str, object=None):
     """Return a file object given a filename or if object specified decompresses it
     if needed and wrap it up.
 
@@ -176,7 +177,7 @@ class Logfile(ABC):
         NWChem, ORCA, Psi, Q-Chem
     """
 
-    def __init__(self, source, loglevel=logging.ERROR, logname="Log",
+    def __init__(self, source: Union[str, Iterable[str], fileinput.FileInput], loglevel: int = logging.ERROR, logname: str = "Log",
                  logstream=sys.stderr, datatype=ccData_optdone_bool, **kwds):
         """Initialise the Logfile object.
 
@@ -377,15 +378,15 @@ class Logfile(ABC):
 
         return data
 
-    def before_parsing(self):
+    def before_parsing(self) -> None:
         """Set parser-specific variables and do other initial things here."""
         pass
 
-    def after_parsing(self):
+    def after_parsing(self) -> None:
         """Correct data or do parser-specific validation after parsing is finished."""
         pass
 
-    def updateprogress(self, inputfile, msg, xupdate=0.05):
+    def updateprogress(self, inputfile, msg: str, xupdate: float = 0.05) -> None:
         """Update progress."""
 
         if hasattr(self, "progress") and random.random() < xupdate:
@@ -395,10 +396,10 @@ class Logfile(ABC):
                 self.progress.step = newstep
 
     @abstractmethod
-    def normalisesym(self, symlabel):
+    def normalisesym(self, symlabel: str) -> None:
         """Standardise the symmetry labels between parsers."""
 
-    def new_internal_job(self):
+    def new_internal_job(self) -> None:
         """Delete attributes that can be problematic in multistep jobs.
 
         TODO: instead of this hack, parse each job in a multistep comptation
@@ -414,7 +415,7 @@ class Logfile(ABC):
             if hasattr(self, name):
                 delattr(self, name)
 
-    def set_attribute(self, name, value, check_change=True):
+    def set_attribute(self, name: str, value: Any, check_change: bool = True) -> None:
         """Set an attribute and perform an optional check when it already exists.
 
         Note that this can be used for scalars and lists alike, whenever we want
@@ -424,7 +425,7 @@ class Logfile(ABC):
         ----------
         name: str
             The name of the attribute.
-        value: str
+        value: any
             The value for the attribute.
         check_change: bool
             By default we want to check that the value does not change
@@ -440,22 +441,22 @@ class Logfile(ABC):
 
         setattr(self, name, value)
 
-    def append_attribute(self, name, value):
+    def append_attribute(self, name: str, value: Any) -> None:
         """Appends a value to an attribute."""
 
         if not hasattr(self, name):
             self.set_attribute(name, [])
         getattr(self, name).append(value)
 
-    def extend_attribute(self, name, values):
+    def extend_attribute(self, name: str, values: Iterable[Any]) -> None:
         """Appends an iterable of values to an attribute."""
         
         if not hasattr(self, name):
             self.set_attribute(name, [])
         getattr(self, name).extend(values)
 
-    def _assign_coreelectrons_to_element(self, element, ncore,
-                                         ncore_is_total_count=False):
+    def _assign_coreelectrons_to_element(self, element: str, ncore: int,
+                                         ncore_is_total_count: bool = False) -> None:
         """Assign core electrons to all instances of the element.
 
         It's usually reasonable to do this for all atoms of a given element,
@@ -480,7 +481,7 @@ class Logfile(ABC):
             self.coreelectrons = numpy.zeros(self.natom, 'i')
         self.coreelectrons[indices] = ncore
 
-    def skip_lines(self, inputfile, sequence):
+    def skip_lines(self, inputfile, sequence: Iterable[str]) -> List[str]:
         """Read trivial line types and check they are what they are supposed to be.
 
         This function will read len(sequence) lines and do certain checks on them,

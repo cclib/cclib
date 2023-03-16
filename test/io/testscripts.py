@@ -29,7 +29,7 @@ CJSON_OUTPUT_FILENAME = 'dvb_gopt.cjson'
 @mock.patch("cclib.scripts.ccget.ccread")
 class ccgetTest(unittest.TestCase):
 
-    def setUp(self):
+    def setUp(self) -> None:
         try:
             from cclib.scripts import ccget
         except ImportError:
@@ -38,7 +38,7 @@ class ccgetTest(unittest.TestCase):
         self.main = ccget.ccget
 
     @mock.patch("cclib.scripts.ccget.sys.argv", ["ccget"])
-    def test_empty_argv(self, mock_ccread):
+    def test_empty_argv(self, mock_ccread) -> None:
         """Does the script fail as expected if called without parameters?"""
         with pytest.raises(SystemExit):
             self.main()
@@ -47,7 +47,7 @@ class ccgetTest(unittest.TestCase):
         "cclib.scripts.ccget.sys.argv",
         ["ccget", "atomcoords", INPUT_FILE]
     )
-    def test_ccread_invocation(self, mock_ccread):
+    def test_ccread_invocation(self, mock_ccread) -> None:
         self.main()
 
         assert mock_ccread.call_count == 1
@@ -72,7 +72,7 @@ class ccgetTest(unittest.TestCase):
 @mock.patch("cclib.scripts.ccwrite.ccwrite")
 class ccwriteTest(unittest.TestCase):
 
-    def setUp(self):
+    def setUp(self) -> None:
         try:
             from cclib.scripts import ccwrite
         except ImportError:
@@ -81,7 +81,7 @@ class ccwriteTest(unittest.TestCase):
         self.main = ccwrite.main
 
     @mock.patch('cclib.scripts.ccwrite.sys.argv', ['ccwrite'])
-    def test_empty_argv(self, mock_ccwrite):
+    def test_empty_argv(self, mock_ccwrite) -> None:
         """Does the script fail as expected if called without parameters?"""
         with pytest.raises(SystemExit):
             self.main()
@@ -90,7 +90,7 @@ class ccwriteTest(unittest.TestCase):
         "cclib.scripts.ccwrite.sys.argv",
         ["ccwrite", "cjson", INPUT_FILE]
     )
-    def test_ccwrite_call(self, mock_ccwrite):
+    def test_ccwrite_call(self, mock_ccwrite) -> None:
         """is ccwrite called with the given parameters?"""
         self.main()
 
@@ -102,12 +102,12 @@ class ccwriteTest(unittest.TestCase):
 
 class ccframeTest(unittest.TestCase):
 
-    def setUp(self):
+    def setUp(self) -> None:
         # It would be best to test with Pandas and not a mock!
         if not hasattr(cclib.io.ccio, "pd"):
             cclib.io.ccio.pd = mock.MagicMock()
 
-    def test_main_empty_argv(self):
+    def test_main_empty_argv(self) -> None:
         """Does main() fail as expected if called without arguments?"""
         with pytest.raises(SystemExit):
             cclib.scripts.ccframe.main()
@@ -117,7 +117,7 @@ class ccframeTest(unittest.TestCase):
         ["ccframe", INPUT_FILE]
     )
     @mock.patch("cclib.io.ccio._has_pandas", False)
-    def test_main_without_pandas(self):
+    def test_main_without_pandas(self) -> None:
         """Does ccframe fail if Pandas can't be imported?"""
         with pytest.raises(ImportError, match="You must install `pandas` to use this function"):
             cclib.scripts.ccframe.main()
@@ -127,7 +127,7 @@ class ccframeTest(unittest.TestCase):
         ["ccframe", INPUT_FILE]
     )
     @mock.patch("cclib.io.ccio._has_pandas", True)
-    def test_main(self):
+    def test_main(self) -> None:
         """Is ccframe called with the given parameters?"""
         with mock.patch('sys.stdout') as mock_stdout:
             cclib.scripts.ccframe.main()

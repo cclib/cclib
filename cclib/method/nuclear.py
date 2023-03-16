@@ -8,6 +8,7 @@
 """Calculate properties of nuclei based on data parsed by cclib."""
 
 import logging
+from typing import Tuple
 
 import numpy as np
 
@@ -24,17 +25,17 @@ if _found_scipy:
     import scipy.constants
 
 
-def _check_periodictable(found_periodictable):
+def _check_periodictable(found_periodictable: bool) -> None:
     if not _found_periodictable:
         raise ImportError("You must install `periodictable` to use this function")
 
 
-def _check_scipy(found_scipy):
+def _check_scipy(found_scipy: bool) -> None:
     if not _found_scipy:
         raise ImportError("You must install `scipy` to use this function")
 
 
-def get_most_abundant_isotope(element):
+def get_most_abundant_isotope(element: "pt.Element") -> "pt.Isotope":
     """Given a `periodictable` element, return the most abundant
     isotope.
     """
@@ -64,19 +65,19 @@ def get_isotopic_masses(charges):
 class Nuclear(Method):
     """A container for methods pertaining to atomic nuclei."""
 
-    def __init__(self, data, progress=None, loglevel=logging.INFO, logname="Log"):
+    def __init__(self, data, progress=None, loglevel=logging.INFO, logname="Log") -> None:
         super().__init__(data, progress, loglevel, logname)
         self.required_attrs = ('natom','atomcoords','atomnos','charge')
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return "Nuclear"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return "Nuclear"
 
-    def stoichiometry(self):
+    def stoichiometry(self) -> str:
         """Return the stoichemistry of the object according to the Hill system"""
         cclib_pt = PeriodicTable()
         elements = [cclib_pt.element[ano] for ano in self.data.atomnos]
@@ -99,7 +100,7 @@ class Nuclear(Method):
             formula += f"({sign}{int(magnitude)})"
         return formula
 
-    def repulsion_energy(self, atomcoords_index=-1):
+    def repulsion_energy(self, atomcoords_index: int = -1) -> float:
         """Return the nuclear repulsion energy."""
         nre = 0.0
         for i in range(self.data.natom):
@@ -112,7 +113,7 @@ class Nuclear(Method):
                 nre += zi*zj/d
         return nre
 
-    def center_of_mass(self, atomcoords_index=-1):
+    def center_of_mass(self, atomcoords_index: int = -1) -> float:
         """Return the center of mass."""
         charges = self.data.atomnos
         coords = self.data.atomcoords[atomcoords_index]
@@ -124,7 +125,7 @@ class Nuclear(Method):
 
         return numerator / denominator
 
-    def moment_of_inertia_tensor(self, atomcoords_index=-1):
+    def moment_of_inertia_tensor(self, atomcoords_index: int = -1) -> np.ndarray:
         """Return the moment of inertia tensor."""
         charges = self.data.atomnos
         coords = self.data.atomcoords[atomcoords_index]
@@ -146,7 +147,7 @@ class Nuclear(Method):
 
         return moi_tensor
 
-    def principal_moments_of_inertia(self, units='amu_bohr_2'):
+    def principal_moments_of_inertia(self, units: str = 'amu_bohr_2') -> Tuple[np.ndarray, np.ndarray]:
         """Return the principal moments of inertia in 3 kinds of units:
         1. [amu][bohr]^2
         2. [amu][angstrom]^2
@@ -171,7 +172,7 @@ class Nuclear(Method):
             conv = amu2g * (scipy.constants.angstrom / scipy.constants.centi) ** 2
         return conv * principal_moments, principal_axes
 
-    def rotational_constants(self, units='ghz'):
+    def rotational_constants(self, units: str = 'ghz') -> np.ndarray:
         """Compute the rotational constants in 1/cm or GHz."""
         choices = ('invcm', 'ghz')
         units = units.lower()

@@ -96,7 +96,7 @@ __regression_dir__ = os.path.join(__filedir__, "../data/regression/")
 
 # ADF #
 
-def testADF_ADF2004_01_Fe_ox3_final_out(logfile):
+def testADF_ADF2004_01_Fe_ox3_final_out(logfile) -> None:
     """Make sure HOMOS are correct."""
     assert logfile.data.homos[0] == 59 and logfile.data.homos[1] == 54
 
@@ -107,7 +107,7 @@ def testADF_ADF2004_01_Fe_ox3_final_out(logfile):
     )
 
 
-def testADF_ADF2013_01_dvb_gopt_b_unconverged_adfout(logfile):
+def testADF_ADF2013_01_dvb_gopt_b_unconverged_adfout(logfile) -> None:
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
 

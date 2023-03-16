@@ -12,6 +12,7 @@ import logging
 import os
 import sys
 import unittest
+from typing import List, Optional, Type, Union
 
 import cclib
 
@@ -68,7 +69,7 @@ def gettestdata():
     return testdata
 
 
-def get_program_dir(parser_name):
+def get_program_dir(parser_name: str) -> str:
     """Return a directory name given a parser name.
 
     In at least one case (GAMESS-UK) the directory is named differently.
@@ -79,7 +80,7 @@ def get_program_dir(parser_name):
     return parser_name
 
 
-def getdatafile(parser, subdir, files, stream=None, loglevel=logging.ERROR, datatype=None):
+def getdatafile(parser: Union[str, Type[cclib.parser.logfileparser.Logfile]], subdir, files, stream=None, loglevel: int = logging.ERROR, datatype: Optional[Type[cclib.parser.data.ccData]] = None):
     """Returns a parsed logfile.
 
     Inputs:
@@ -133,7 +134,7 @@ class DataSuite:
     subdirectory, and do some basic bookkeeping.
     """
 
-    def __init__(self, parsers, modules, terse=False, silent=False, loglevel=logging.ERROR, stream=sys.stdout):
+    def __init__(self, parsers, modules, terse: bool = False, silent: bool = False, loglevel: int = logging.ERROR, stream=sys.stdout) -> None:
 
         self.parsers = parsers
         self.modules = modules
@@ -154,7 +155,7 @@ class DataSuite:
         self.alltests = []
         self.perpackage = {p: [0, 0, 0, 0] for p in self.parsers}
 
-    def testall(self):
+    def testall(self) -> List[str]:
         """Run all unittests in all modules.
 
         Run unit tests for all or a subset of parsers and modules. Arguments:
@@ -215,7 +216,7 @@ class DataSuite:
 
         return self.errors or self.failures
 
-    def summary(self):
+    def summary(self) -> None:
         """Prints a summary of the suite after it has been run."""
 
         if self.errors:
@@ -245,7 +246,7 @@ class DataSuite:
             file=self.stream,
         )
 
-    def visualtests(self, stream=sys.stdout):
+    def visualtests(self, stream=sys.stdout) -> None:
         """These are not formal tests -- but they should be eyeballed."""
 
         parsers_to_test = {
@@ -295,7 +296,7 @@ class DataSuite:
         )
 
 
-def test_all(parsers, modules, terse, silent, loglevel, summary, visual_tests):
+def test_all(parsers, modules, terse: bool, silent: bool, loglevel: int, summary: bool, visual_tests: bool) -> None:
     parsers = parsers or all_parsers
     modules = modules or all_modules
     data_suite = DataSuite(parsers, modules, terse=terse, silent=silent, loglevel=loglevel)

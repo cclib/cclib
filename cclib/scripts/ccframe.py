@@ -10,6 +10,7 @@
 import argparse
 import os.path
 import sys
+from typing import Iterable, Optional
 
 from cclib.io import ccopen
 from cclib.io import ccframe
@@ -20,7 +21,7 @@ if _has_pandas:
     import pandas as pd
 
 
-def process_logfiles(filenames, output, identifier):
+def process_logfiles(filenames: Iterable[str], output: Optional[str], identifier: str) -> None:
     df = ccframe([ccopen(path) for path in filenames])
     if output is not None:
         outputtype = os.path.splitext(os.path.basename(output))[1][1:]

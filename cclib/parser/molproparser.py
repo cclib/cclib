@@ -52,29 +52,28 @@ class Molpro(logfileparser.Logfile):
 
     atomic_orbital_names = create_atomic_orbital_names(['D', 'F', 'G'])
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(logname="Molpro", *args, **kwargs)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"Molpro log file {self.filename}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'Molpro("{self.filename}")'
 
-    def normalisesym(self, label):
+    def normalisesym(self, label: str) -> str:
         """Normalise the symmetries used by Molpro."""
         ans = label.replace("`", "'").replace("``", "''")
         return ans
 
-    def before_parsing(self):
+    def before_parsing(self) -> None:
 
         self.electronorbitals = ""
         self.insidescf = False
 
-    def after_parsing(self):
-        super(Molpro, self).after_parsing()
+    def after_parsing(self) -> None:
 
         # If optimization thresholds are default, they are normally not printed and we need
         # to set them to the default after parsing. Make sure to set them in the same order that
@@ -89,7 +88,7 @@ class Molpro(logfileparser.Logfile):
             # Default THRSTEP (convergence threshold for the geometry optimization step).
             self.geotargets.append(3E-4)
 
-    def _parse_orbitals(self, inputfile, line):
+    def _parse_orbitals(self, inputfile, line: str):
         # From this block aonames, atombasis, moenergies and mocoeffs can be parsed. The data is
         # flipped compared to most programs (GAMESS, Gaussian), since the MOs are in rows. Also, Molpro
         # does not cut the table into parts, rather each MO row has as many lines as it takes ro print
@@ -262,7 +261,7 @@ class Molpro(logfileparser.Logfile):
 
         return
 
-    def extract(self, inputfile, line):
+    def extract(self, inputfile, line: str):
         """Extract information from the file object inputfile."""
 
         # Extract the package version number. The one associated with NAME may

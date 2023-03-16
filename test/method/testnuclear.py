@@ -12,6 +12,7 @@ import os
 import re
 import logging
 import unittest
+from typing import Sequence
 
 import numpy as np
 
@@ -30,11 +31,11 @@ from ..test_data import getdatafile
 
 class NuclearTest(unittest.TestCase):
 
-    def test_stoichiometry(self):
+    def test_stoichiometry(self) -> None:
         """Testing stoichoimetry generation."""
         data = ccData()
 
-        def check(atomnos, formula, charge=0):
+        def check(atomnos: Sequence[int], formula: str, charge: int = 0) -> None:
             data.natom = len(atomnos)
             data.atomnos = np.array(atomnos)
             data.atomcoords = np.zeros((data.natom, 3))
@@ -62,7 +63,7 @@ class NuclearTest(unittest.TestCase):
         check([6, 8, 8, 1, 1], "CH2O2")
         check([16, 16, 8, 8], "O2S2")
 
-    def test_repulsion_energy(self):
+    def test_repulsion_energy(self) -> None:
         """Testing nuclear repulsion energy for one logfile where it is printed."""
 
         data, logfile = getdatafile(QChem, "basicQChem5.4", ["water_mp4sdq.out"])
@@ -76,7 +77,7 @@ class NuclearTest(unittest.TestCase):
         nre = utils.convertor(nre, 'Angstrom', 'bohr')
         self.assertAlmostEqual(nuclear.repulsion_energy(), nre, places=7)
 
-    def test_principal_moments_of_inertia(self):
+    def test_principal_moments_of_inertia(self) -> None:
         """Testing principal moments of inertia and the principal axes for one
         logfile where it is printed.
         """
@@ -102,7 +103,7 @@ class NuclearTest(unittest.TestCase):
         # are still orthonormal within each set.
         np.testing.assert_allclose(np.abs(axes), np.abs(ref_axes), rtol=0, atol=1.0e-4)
 
-    def test_principal_moments_of_inertia_2(self):
+    def test_principal_moments_of_inertia_2(self) -> None:
         """Testing principal moments of inertia and the principal axes for one
         logfile where it is printed.
 
@@ -116,7 +117,7 @@ class NuclearTest(unittest.TestCase):
         pmoi, _ = nuclear.principal_moments_of_inertia("amu_bohr_2")
         np.testing.assert_allclose(pmoi, ref_pmoi, rtol=0, atol=1.0e-4)
 
-    def test_rotational_constants(self):
+    def test_rotational_constants(self) -> None:
         """Testing rotational constants for logfiles where they are printed.
         """
 

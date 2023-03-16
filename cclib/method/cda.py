@@ -17,18 +17,18 @@ from cclib.method.fragments import FragmentAnalysis
 class CDA(FragmentAnalysis):
     """Charge Decomposition Analysis (CDA)"""
 
-    def __init__(self, *args):
+    def __init__(self, *args) -> None:
         super().__init__(logname="CDA", *args)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"CDA of {self.data}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'CDA("{self.data}")'
 
-    def calculate(self, fragments, cupdate=0.05):
+    def calculate(self, fragments, cupdate: float = 0.05) -> bool:
         """Perform the charge decomposition analysis.
 
         Inputs:
