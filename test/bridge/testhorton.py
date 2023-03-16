@@ -65,11 +65,7 @@ class HortonTest(unittest.TestCase):
                 and getattr(self.iodat, attr) is not None
                 and getattr(hortonequiv, attr) is not None
             ):
-                self.assertAlmostEqual(
-                    getattr(self.iodat, attr),
-                    getattr(hortonequiv, attr),
-                    delta=1.0e-3,
-                )
+                assert abs(getattr(self.iodat, attr)-getattr(hortonequiv, attr)) < 1.0e-3
 
         for attr in checkArr:
             if (
@@ -95,9 +91,7 @@ class HortonTest(unittest.TestCase):
 
         for attr in check:
             if hasattr(self.data, attr) and hasattr(cclibequiv, attr):
-                self.assertAlmostEqual(
-                    getattr(self.data, attr), getattr(cclibequiv, attr), delta=1.0e-3
-                )
+                assert abs(getattr(self.data, attr)-getattr(cclibequiv, attr)) < 1.0e-3
 
         for attr in checkArr:
             if hasattr(self.data, attr) and hasattr(cclibequiv, attr):

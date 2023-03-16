@@ -32,7 +32,7 @@ class RestrictedCalculationTest(unittest.TestCase):
         self.data, self.logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_sp.out"])
 
     def test_closed_shell(self):
-        self.assertTrue(Orbitals(self.data).closed_shell())
+        assert Orbitals(self.data).closed_shell()
 
 
 class UnrestrictedCalculationTest(unittest.TestCase):
@@ -41,7 +41,7 @@ class UnrestrictedCalculationTest(unittest.TestCase):
         self.data, self.logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_un_sp.log"])
 
     def test_closed_shell(self):
-        self.assertFalse(Orbitals(self.data).closed_shell())
+        assert not Orbitals(self.data).closed_shell()
 
 
 class RestrictedOpenShellCalculationTest(unittest.TestCase):
@@ -50,7 +50,7 @@ class RestrictedOpenShellCalculationTest(unittest.TestCase):
         self.data, self.logfile = getdatafile(Psi4, "basicPsi4-1.3.1", ["dvb_sp_rohf.out"])
 
     def test_closed_shel(self):
-        self.assertFalse(Orbitals(self.data).closed_shell())
+        assert not Orbitals(self.data).closed_shell()
 
 # TODO: add a case (regression) with an unrestricted calculation for a closed shell system.
 # For example, in regressions: Gaussian/Gaussian03/Mo4OSibdt2

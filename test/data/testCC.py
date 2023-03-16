@@ -20,13 +20,13 @@ class GenericCCTest(unittest.TestCase):
 
     def testsizeandshape(self):
         """Are the dimensions of ccenergies correct?"""
-        self.assertEqual(self.data.ccenergies.shape,
-                         (len(self.data.scfenergies),))
+        assert self.data.ccenergies.shape == \
+                         (len(self.data.scfenergies),)
 
     def testsign(self):
         """Are the coupled cluster corrections negative?"""
         corrections = self.data.ccenergies - self.data.scfenergies
-        self.assertTrue(numpy.alltrue(corrections < 0.0))
+        assert numpy.alltrue(corrections < 0.0)
 
 
 if __name__ == "__main__":

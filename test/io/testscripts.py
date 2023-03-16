@@ -11,6 +11,7 @@ import unittest
 from unittest import mock
 
 import cclib
+import pytest
 
 
 __filedir__ = os.path.dirname(__file__)
@@ -39,7 +40,7 @@ class ccgetTest(unittest.TestCase):
     @mock.patch("cclib.scripts.ccget.sys.argv", ["ccget"])
     def test_empty_argv(self, mock_ccread):
         """Does the script fail as expected if called without parameters?"""
-        with self.assertRaises(SystemExit):
+        with pytest.raises(SystemExit):
             self.main()
 
     @mock.patch(
@@ -49,9 +50,9 @@ class ccgetTest(unittest.TestCase):
     def test_ccread_invocation(self, mock_ccread):
         self.main()
 
-        self.assertEqual(mock_ccread.call_count, 1)
+        assert mock_ccread.call_count == 1
         ccread_call_args, ccread_call_kwargs = mock_ccread.call_args
-        self.assertEqual(ccread_call_args[0], INPUT_FILE)
+        assert ccread_call_args[0] == INPUT_FILE
 
     @mock.patch("logging.warning")
     @mock.patch(
@@ -60,13 +61,13 @@ class ccgetTest(unittest.TestCase):
     )
     def test_ccread_invocation_matching_args(self, mock_warn, mock_ccread):
         self.main()
-        self.assertEqual(mock_warn.call_count, 1)
+        assert mock_warn.call_count == 1
         warn_call_args, warn_call_kwargs = mock_warn.call_args
         warn_message = warn_call_args[0]
-        self.assertEqual(warn_message, "Attribute 'atomcoord' not found, but attribute 'atomcoords' is close. Using 'atomcoords' instead.")
-        self.assertEqual(mock_ccread.call_count, 1)
+        assert warn_message == "Attribute 'atomcoord' not found, but attribute 'atomcoords' is close. Using 'atomcoords' instead."
+        assert mock_ccread.call_count == 1
         ccread_call_args, ccread_call_kwargs = mock_ccread.call_args
-        self.assertEqual(ccread_call_args[0], INPUT_FILE)
+        assert ccread_call_args[0] == INPUT_FILE
 
 @mock.patch("cclib.scripts.ccwrite.ccwrite")
 class ccwriteTest(unittest.TestCase):
@@ -82,7 +83,7 @@ class ccwriteTest(unittest.TestCase):
     @mock.patch('cclib.scripts.ccwrite.sys.argv', ['ccwrite'])
     def test_empty_argv(self, mock_ccwrite):
         """Does the script fail as expected if called without parameters?"""
-        with self.assertRaises(SystemExit):
+        with pytest.raises(SystemExit):
             self.main()
 
     @mock.patch(
@@ -93,10 +94,10 @@ class ccwriteTest(unittest.TestCase):
         """is ccwrite called with the given parameters?"""
         self.main()
 
-        self.assertEqual(mock_ccwrite.call_count, 1)
+        assert mock_ccwrite.call_count == 1
         ccwrite_call_args, ccwrite_call_kwargs = mock_ccwrite.call_args
-        self.assertEqual(ccwrite_call_args[1], 'cjson')
-        self.assertEqual(ccwrite_call_args[2], CJSON_OUTPUT_FILENAME)
+        assert ccwrite_call_args[1] == 'cjson'
+        assert ccwrite_call_args[2] == CJSON_OUTPUT_FILENAME
 
 
 class ccframeTest(unittest.TestCase):
@@ -108,7 +109,7 @@ class ccframeTest(unittest.TestCase):
 
     def test_main_empty_argv(self):
         """Does main() fail as expected if called without arguments?"""
-        with self.assertRaises(SystemExit):
+        with pytest.raises(SystemExit):
             cclib.scripts.ccframe.main()
 
     @mock.patch(
@@ -118,9 +119,7 @@ class ccframeTest(unittest.TestCase):
     @mock.patch("cclib.io.ccio._has_pandas", False)
     def test_main_without_pandas(self):
         """Does ccframe fail if Pandas can't be imported?"""
-        with self.assertRaisesRegex(
-            ImportError, "You must install `pandas` to use this function"
-        ):
+        with pytest.raises(ImportError, match="You must install `pandas` to use this function"):
             cclib.scripts.ccframe.main()
 
     @mock.patch(
@@ -132,14 +131,14 @@ class ccframeTest(unittest.TestCase):
         """Is ccframe called with the given parameters?"""
         with mock.patch('sys.stdout') as mock_stdout:
             cclib.scripts.ccframe.main()
-            self.assertEqual(mock_stdout.write.call_count, 2)
+            assert mock_stdout.write.call_count == 2
             df, newline = mock_stdout.write.call_args_list
             if isinstance(df[0][0], mock.MagicMock):
-                self.assertEqual(df[0][0].name, 'mock.DataFrame()')
+                assert df[0][0].name == 'mock.DataFrame()'
             else:
                 # TODO: this is what we really should be testing
                 pass
-            self.assertEqual(newline[0][0], '\n')
+            assert newline[0][0] == '\n'
 
 
 if __name__ == "__main__":
