@@ -2910,18 +2910,18 @@ class ADFSPTest_nosyms_noscfvalues(ADFSPTest_nosyms):
 
     def testmetadata_symmetry_detected(self):
         """Symmetry is completely turned off and not even detected."""
-        self.assertEqual(self.data.metadata["symmetry_detected"], "c1")
+        assert self.data.metadata["symmetry_detected"] == "c1"
 
     def testmetadata_symmetry_used(self):
         """Symmetry is completely turned off and not even detected."""
-        self.assertEqual(self.data.metadata["symmetry_used"], "c1")
+        assert self.data.metadata["symmetry_used"] == "c1"
 
 
 class ADFSPTest_nosyms_valence(ADFSPTest_nosyms):
     def testlengthmoenergies(self):
         """Only valence orbital energies were printed here."""
-        self.assertEqual(len(self.data.moenergies[0]), 45)
-        self.assertEqual(self.data.moenergies[0][0], 99999.0)
+        assert len(self.data.moenergies[0]) == 45
+        assert self.data.moenergies[0][0] == 99999.0
 
 
 class ADFSPTest_nosyms_valence_noscfvalues(ADFSPTest_nosyms_valence):
@@ -2943,11 +2943,11 @@ class ADFSPTest_nosyms_valence_noscfvalues(ADFSPTest_nosyms_valence):
 
     def testmetadata_symmetry_detected(self):
         """Symmetry is completely turned off and not even detected."""
-        self.assertEqual(self.data.metadata["symmetry_detected"], "c1")
+        assert self.data.metadata["symmetry_detected"] == "c1"
 
     def testmetadata_symmetry_used(self):
         """Symmetry is completely turned off and not even detected."""
-        self.assertEqual(self.data.metadata["symmetry_used"], "c1")
+        assert self.data.metadata["symmetry_used"] == "c1"
 
 
 # DALTON #
@@ -2965,15 +2965,15 @@ class DALTONSPTest_nosymmetry(GenericSPTest):
         # A calculation without symmetry, meaning it belongs to the C1 point
         # group, only has the `A` irreducible representation.
         sumwronglabels = sum(x not in {'A'} for x in self.data.mosyms[0])
-        self.assertEqual(sumwronglabels, 0)
+        assert sumwronglabels == 0
 
     def testmetadata_symmetry_detected(self):
         """Does metadata have expected keys and values?"""
-        self.assertEqual(self.data.metadata["symmetry_detected"], "c1")
+        assert self.data.metadata["symmetry_detected"] == "c1"
 
     def testmetadata_symmetry_used(self):
         """Does metadata have expected keys and values?"""
-        self.assertEqual(self.data.metadata["symmetry_used"], "c1")
+        assert self.data.metadata["symmetry_used"] == "c1"
 
 
 class DALTONHFSPTest_nosymmetry(DALTONSPTest_nosymmetry, GenericHFSPTest):
@@ -2994,12 +2994,12 @@ class DALTONTDTest_noetsecs(DALTONTDTest):
 class GAMESSUSSPunTest_charge0(GenericSPunTest):
     def testcharge_and_mult(self):
         """The charge in the input was wrong."""
-        self.assertEqual(self.data.charge, 0)
+        assert self.data.charge == 0
 
     def testatomcharges_mulliken(self):
         """The charge in the input was wrong."""
         charges = self.data.atomcharges["mulliken"]
-        self.assertAlmostEqual(sum(charges), 0.0, delta=0.001)
+        assert abs(sum(charges)) < 0.001
 
     @unittest.skip('HOMOs were incorrect due to charge being wrong')
     def testhomos(self):
@@ -3085,7 +3085,7 @@ class JaguarSPTest_6_31gss(JaguarSPTest_noatomcharges):
 
     def testmetadata_basis_set(self):
         """This calculation did not use STO-3G for the basis set."""
-        self.assertEqual(self.data.metadata["basis_set"].lower(), "6-31g**")
+        assert self.data.metadata["basis_set"].lower() == "6-31g**"
 
 
 class JaguarSPTest_6_31gss_nomosyms(JaguarSPTest_6_31gss):
@@ -3095,11 +3095,11 @@ class JaguarSPTest_6_31gss_nomosyms(JaguarSPTest_6_31gss):
 
     def testmetadata_symmetry_detected(self):
         """This calculation has symmetry detected but disabled."""
-        self.assertEqual(self.data.metadata["symmetry_detected"], "c2h")
+        assert self.data.metadata["symmetry_detected"] == "c2h"
 
     def testmetadata_symmetry_used(self):
         """This calculation has symmetry detected but disabled."""
-        self.assertEqual(self.data.metadata["symmetry_used"], "c1")
+        assert self.data.metadata["symmetry_used"] == "c1"
 
 
 class JaguarSPunTest_nomosyms(JaguarSPunTest):
@@ -3111,7 +3111,7 @@ class JaguarSPunTest_nomosyms(JaguarSPunTest):
 class JaguarSPunTest_nmo_all(JaguarSPunTest):
     def testmoenergies(self):
         """Some tests printed all MO energies apparently."""
-        self.assertEqual(len(self.data.moenergies[0]), self.data.nmo)
+        assert len(self.data.moenergies[0]) == self.data.nmo
 
 
 class JaguarSPunTest_nmo_all_nomosyms(JaguarSPunTest_nmo_all):
@@ -3123,13 +3123,13 @@ class JaguarSPunTest_nmo_all_nomosyms(JaguarSPunTest_nmo_all):
 class JaguarGeoOptTest_nmo45(GenericGeoOptTest):
     def testlengthmoenergies(self):
         """Without special options, Jaguar only print Homo+10 orbital energies."""
-        self.assertEqual(len(self.data.moenergies[0]), 45)
+        assert len(self.data.moenergies[0]) == 45
 
 
 class JaguarSPTest_nmo45(JaguarSPTest_noatomcharges):
     def testlengthmoenergies(self):
         """Without special options, Jaguar only print Homo+10 orbital energies."""
-        self.assertEqual(len(self.data.moenergies[0]), 45)
+        assert len(self.data.moenergies[0]) == 45
 
     @unittest.skip('Cannot parse mos from this file.')
     def testfornoormo(self):
@@ -3151,13 +3151,13 @@ class JaguarSPTest_nmo45(JaguarSPTest_noatomcharges):
 class JaguarSPunTest_nmo45(GenericSPunTest):
     def testlengthmoenergies(self):
         """Without special options, Jaguar only print Homo+10 orbital energies."""
-        self.assertEqual(len(self.data.moenergies[0]), 45)
+        assert len(self.data.moenergies[0]) == 45
 
 
 class JaguarGeoOptTest_nmo45(GenericGeoOptTest):
     def testlengthmoenergies(self):
         """Without special options, Jaguar only print Homo+10 orbital energies."""
-        self.assertEqual(len(self.data.moenergies[0]), 45)
+        assert len(self.data.moenergies[0]) == 45
 
 
 class JaguarGeoOptTest_nmo45_nogeo(JaguarGeoOptTest_nmo45):
@@ -3215,7 +3215,7 @@ class OrcaSPTest_nobasis(OrcaSPTest):
     """
 
     def testmetadata_basis_set(self):
-        self.assertNotIn("basis_set", self.data.metadata)
+        assert "basis_set" not in self.data.metadata
 
 
 class OrcaSPTest_3_21g(OrcaSPTest):
@@ -3230,11 +3230,11 @@ class OrcaSPTest_3_21g(OrcaSPTest):
 
     def testmetadata_symmetry_detected(self):
         """This calculation has no symmetry."""
-        self.assertNotIn("symmetry_detected", self.data.metadata)
+        assert "symmetry_detected" not in self.data.metadata
 
     def testmetadata_symmetry_used(self):
         """This calculation has no symmetry."""
-        self.assertNotIn("symmetry_used", self.data.metadata)
+        assert "symmetry_used" not in self.data.metadata
 
 
 class OrcaGeoOptTest_3_21g(OrcaGeoOptTest):
@@ -3245,12 +3245,12 @@ class OrcaGeoOptTest_3_21g(OrcaGeoOptTest):
 class OrcaSPunTest_charge0(GenericSPunTest):
     def testcharge_and_mult(self):
         """The charge in the input was wrong."""
-        self.assertEqual(self.data.charge, 0)
+        assert self.data.charge == 0
 
     def testatomcharges_mulliken(self):
         """The charge in the input was wrong."""
         charges = self.data.atomcharges["mulliken"]
-        self.assertAlmostEqual(sum(charges), 0.0, delta=0.001)
+        assert abs(sum(charges)) < 0.001
 
     @unittest.skip('HOMOs were incorrect due to charge being wrong.')
     def testhomos(self):
@@ -3258,14 +3258,14 @@ class OrcaSPunTest_charge0(GenericSPunTest):
 
     def testorbitals(self):
         """Closed-shell calculation run as open-shell."""
-        self.assertTrue(self.data.closed_shell)
+        assert self.data.closed_shell
 
 
 class OrcaTDDFTTest_error(OrcaTDDFTTest):
     def testoscs(self):
         """These values used to be less accurate, probably due to wrong coordinates."""
-        self.assertEqual(len(self.data.etoscs), self.number)
-        self.assertAlmostEqual(max(self.data.etoscs), 1.0, delta=0.2)
+        assert len(self.data.etoscs) == self.number
+        assert abs(max(self.data.etoscs) - 1.0) < 0.2
         
 class OrcaTDDFTTest_pre5(OrcaTDDFTTest):
     
@@ -3287,8 +3287,8 @@ class OrcaTDDFTTest_pre1085(OrcaTDDFTTest_pre5):
     
     def testoscs(self):
         """These values changed in the electric dipole osc strengths prior to Orca 4.0. See PR1085"""
-        self.assertEqual(len(self.data.etoscs), self.number)
-        self.assertAlmostEqual(max(self.data.etoscs), 0.94, delta=0.2)
+        assert len(self.data.etoscs) == self.number
+        assert abs(max(self.data.etoscs) - 0.94) < 0.2
 
 
 class OrcaIRTest_old_coordsOK(OrcaIRTest):
