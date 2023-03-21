@@ -53,9 +53,11 @@ class NWChem(logfileparser.Logfile):
             self.metadata["package_version"] = base_package_version
             line = next(inputfile)
             if "nwchem revision" in line:
-                self.metadata[
-                    "package_version"
-                ] = f"{self.metadata['package_version']}+{line.split()[3].split('-')[-1]}"
+                revision = line.split()[3].split('-')[-1]
+                if revision != "N/A":
+                    self.metadata[
+                        "package_version"
+                    ] = f"{self.metadata['package_version']}+{revision}"
 
         # This is printed in the input module, so should always be the first coordinates,
         # and contains some basic information we want to parse as well. However, this is not
