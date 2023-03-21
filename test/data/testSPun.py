@@ -24,14 +24,14 @@ class GenericSPunTest(unittest.TestCase):
 
     def testnatom(self):
         """Is the number of atoms equal to 20?"""
-        self.assertEqual(self.data.natom, 20)
+        assert self.data.natom == 20
 
     def testatomnos(self):
         """Are the atomnos correct?"""
-        self.assertTrue(numpy.alltrue([numpy.issubdtype(atomno, numpy.signedinteger)
-                                       for atomno in self.data.atomnos]))
-        self.assertEqual(self.data.atomnos.shape, (20,) )
-        self.assertEqual(sum(self.data.atomnos==6) + sum(self.data.atomnos==1), 20)
+        assert numpy.alltrue([numpy.issubdtype(atomno, numpy.signedinteger)
+                              for atomno in self.data.atomnos])
+        assert self.data.atomnos.shape == (20,)
+        assert sum(self.data.atomnos == 6) + sum(self.data.atomnos == 1) == 20
 
     @skipForParser('ADF', '???')
     @skipForParser('DALTON', 'DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now')
@@ -45,11 +45,7 @@ class GenericSPunTest(unittest.TestCase):
         for atomcharge_type in self.data.atomcharges:
             charges = self.data.atomcharges[atomcharge_type]
             natom = self.data.natom
-            self.assertEqual(
-                len(charges),
-                natom,
-                msg=f"len(atomcharges['{atomcharge_type}']) = {len(charges)}, natom = {natom}"
-            )
+            assert len(charges) == natom, f"len(atomcharges['{atomcharge_type}']) = {len(charges)}, natom = {natom}"
 
     @skipForParser('ADF', '???')
     @skipForParser('DALTON', 'DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now')
@@ -71,40 +67,36 @@ class GenericSPunTest(unittest.TestCase):
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 2 x nmo x nbasis?"""
         if hasattr(self.data, "mocoeffs"):
-            self.assertIsInstance(self.data.mocoeffs, list)
-            self.assertEqual(len(self.data.mocoeffs), 2)
-            self.assertEqual(self.data.mocoeffs[0].shape,
-                             (self.data.nmo, self.data.nbasis))
-            self.assertEqual(self.data.mocoeffs[1].shape,
-                             (self.data.nmo, self.data.nbasis))
+            assert isinstance(self.data.mocoeffs, list)
+            assert len(self.data.mocoeffs) == 2
+            assert self.data.mocoeffs[0].shape == (self.data.nmo, self.data.nbasis)
+            assert self.data.mocoeffs[1].shape == (self.data.nmo, self.data.nbasis)
 
     @skipForParser('Jaguar', 'Data file does not contain enough information')
     @skipForParser('DALTON', 'mocoeffs not implemented yet')
     def testfornsoormo(self):
         """Do we have NSOs or MOs?"""
-        self.assertTrue(
-            hasattr(self.data, "nsocoeffs") or hasattr(self.data, "mocoeffs")
-        )
+        assert hasattr(self.data, "nsocoeffs") or hasattr(self.data, "mocoeffs")
 
     def testdimnsoccnos(self):
         """Are the dimensions of nsooccnos equal to 2 x nmo?"""
         if hasattr(self.data, "nsooccnos"):
-            self.assertIsInstance(self.data.nsooccnos, list)
-            self.assertIsInstance(self.data.nsooccnos[0], list)
-            self.assertIsInstance(self.data.nsooccnos[1], list)
-            self.assertEqual(len(self.data.nsooccnos), 2)
-            self.assertEqual(len(self.data.nsooccnos[0]), self.data.nmo)
-            self.assertEqual(len(self.data.nsooccnos[1]), self.data.nmo)
+            assert isinstance(self.data.nsooccnos, list)
+            assert isinstance(self.data.nsooccnos[0], list)
+            assert isinstance(self.data.nsooccnos[1], list)
+            assert len(self.data.nsooccnos) == 2
+            assert len(self.data.nsooccnos[0]) == self.data.nmo
+            assert len(self.data.nsooccnos[1]) == self.data.nmo
 
     def testdimnsocoeffs(self):
         """Are the dimensions of nsocoeffs equal to 2 x nmo x nmo?"""
         if hasattr(self.data, "nsocoeffs"):
-            self.assertIsInstance(self.data.nsocoeffs, list)
-            self.assertIsInstance(self.data.nsocoeffs[0], numpy.ndarray)
-            self.assertIsInstance(self.data.nsocoeffs[1], numpy.ndarray)
-            self.assertEqual(len(self.data.nsocoeffs), 2)
-            self.assertEqual(self.data.nsocoeffs[0].shape, (self.data.nmo, self.data.nmo))
-            self.assertEqual(self.data.nsocoeffs[1].shape, (self.data.nmo, self.data.nmo))
+            assert isinstance(self.data.nsocoeffs, list)
+            assert isinstance(self.data.nsocoeffs[0], numpy.ndarray)
+            assert isinstance(self.data.nsocoeffs[1], numpy.ndarray)
+            assert len(self.data.nsocoeffs) == 2
+            assert self.data.nsocoeffs[0].shape == (self.data.nmo, self.data.nmo)
+            assert self.data.nsocoeffs[1].shape == (self.data.nmo, self.data.nmo)
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testcharge_and_mult(self):
@@ -142,10 +134,9 @@ class GenericROSPTest(GenericSPunTest):
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis?"""
-        self.assertEqual(type(self.data.mocoeffs), type([]))
-        self.assertEqual(len(self.data.mocoeffs), 1)
-        self.assertEqual(self.data.mocoeffs[0].shape,
-                          (self.data.nmo, self.data.nbasis))
+        assert isinstance(self.data.mocoeffs, list)
+        assert len(self.data.mocoeffs) == 1
+        assert self.data.mocoeffs[0].shape == (self.data.nmo, self.data.nbasis)
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
@@ -178,19 +169,19 @@ class GamessUK70SPunTest(GenericSPunTest):
     def testdimmocoeffs(self):
         """Are the dimensions of mocoeffs equal to 2 x (homos+6) x nbasis?"""
 
-        self.assertEqual(type(self.data.mocoeffs), type([]))
-        self.assertEqual(len(self.data.mocoeffs), 2)
+        assert isinstance(self.data.mocoeffs, list)
+        assert len(self.data.mocoeffs) == 2
 
         # This is only an issue in version 7.0 (and before?), since in the version 8.0
         # logfile all eigenvectors are happily printed.
         shape_alpha = (self.data.homos[0]+6, self.data.nbasis)
         shape_beta = (self.data.homos[1]+6, self.data.nbasis)
-        self.assertEqual(self.data.mocoeffs[0].shape, shape_alpha)
-        self.assertEqual(self.data.mocoeffs[1].shape, shape_beta)
+        assert self.data.mocoeffs[0].shape == shape_alpha
+        assert self.data.mocoeffs[1].shape == shape_beta
 
     def testnooccnos(self):
         """Are natural orbital occupation numbers the right size?"""
-        self.assertEqual(self.data.nooccnos.shape, (self.data.nmo, ))
+        assert self.data.nooccnos.shape == (self.data.nmo, )
 
 
 class GamessUK80SPunTest(GenericSPunTest):

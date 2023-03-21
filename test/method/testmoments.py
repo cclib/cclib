@@ -14,6 +14,7 @@ import numpy as np
 from numpy.testing import assert_equal, assert_almost_equal
 
 from cclib.method import Moments
+import pytest
 
 
 class TestIdealizedInputs(unittest.TestCase):
@@ -42,7 +43,7 @@ class TestIdealizedInputs(unittest.TestCase):
         mock.atomnos = np.ones(mock.atomcoords.shape[1])
 
         x = Moments(mock).calculate()
-        self.assertEqual(np.count_nonzero(x[1]), 0)
+        assert np.count_nonzero(x[1]) == 0
         assert_almost_equal(x[2] / 4.80320423, [1, 0, 0, -0.5, 0, -0.5])
 
     @mock.patch('cclib.parser.ccData', spec=True)
@@ -58,8 +59,8 @@ class TestIdealizedInputs(unittest.TestCase):
         mock.atomnos = np.ones(mock.atomcoords.shape[1])
 
         x = Moments(mock).calculate()
-        self.assertEqual(np.count_nonzero(x[1]), 0)
-        self.assertEqual(np.count_nonzero(x[2]), 0)
+        assert np.count_nonzero(x[1]) == 0
+        assert np.count_nonzero(x[2]) == 0
 
     @mock.patch('cclib.parser.ccData', spec=True)
     def test_invariant_to_origin_dislacement(self, mock):
@@ -78,7 +79,7 @@ class TestIdealizedInputs(unittest.TestCase):
 
         x = Moments(mock).calculate(origin=[0, 0, 0])[1]
         y = Moments(mock).calculate(origin=[1, 1, 1])[1]
-        self.assertFalse(np.array_equal(x, y))
+        assert not np.array_equal(x, y)
 
     @mock.patch('cclib.parser.ccData', spec=True)
     def test_origin_at_center_of_nuclear_charge(self, mock):
@@ -114,7 +115,7 @@ class TestIdealizedInputs(unittest.TestCase):
         mock.configure_mock(**self.linear_dipole_attrs)
         # Replace with the refex version when Python2 is dropped.
         # with self.assertRaisesRegex(ValueError, 'masses'):
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             Moments(mock).calculate(origin='mass')
 
     @mock.patch('cclib.parser.ccData', spec=True)
@@ -127,7 +128,7 @@ class TestIdealizedInputs(unittest.TestCase):
         m.calculate(population='lowdin')
 
         a, b = m.results['mulliken'][1], m.results['lowdin'][1]
-        self.assertFalse(np.array_equal(a, b))
+        assert not np.array_equal(a, b)
 
 
 if __name__ == '__main__':

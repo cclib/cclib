@@ -29,7 +29,7 @@ class CJSONWriterTest(unittest.TestCase):
         cjson = cclib.io.cjsonwriter.CJSON(data)
 
         # The object should keep the ccData instance passed to its constructor.
-        self.assertEqual(cjson.ccdata, data)
+        assert cjson.ccdata == data
 
     def test_cjson_generation(self):
         """Does the CJSON format get generated properly?"""
@@ -41,20 +41,17 @@ class CJSONWriterTest(unittest.TestCase):
         # The data available in the cjson and ccdata objects should be equal.
         json_data = json.loads(cjson)
         number_of_atoms = json_data['properties']['number of atoms']
-        self.assertEqual(number_of_atoms, data.natom)
+        assert number_of_atoms == data.natom
 
         dipole_moment = json_data['properties']['total dipole moment']
-        self.assertAlmostEqual(
-            dipole_moment,
-            sqrt(sum(data.moments[1] ** 2))
-        )
+        assert round(abs(dipole_moment - sqrt(sum(data.moments[1] ** 2))), 7) == 0
 
         # Ensure the bond connectivity index starts from 0
         bonds = json_data.get('bonds', None)
-        self.assertIsNotNone(bonds)
+        assert bonds is not None
         indices = bonds['connections']['index']
-        self.assertEqual(min(indices), 0)
-        self.assertTrue(max(indices) < number_of_atoms)
+        assert min(indices) == 0
+        assert max(indices) < number_of_atoms
 
     def test_zero_dipole_moment(self):
         """Does the CJSON writer handle zero dipole moment correctly?"""
@@ -64,7 +61,7 @@ class CJSONWriterTest(unittest.TestCase):
         cjson = cclib.io.cjsonwriter.CJSON(data).generate_repr()
 
         json_data = json.loads(cjson)
-        self.assertAlmostEqual(json_data["properties"]['total dipole moment'], 0.0)
+        assert round(abs(json_data["properties"]['total dipole moment']), 7) == 0
 
     def test_missing_dipole_moment(self):
         """Does the CJSON writer handle missing properties correctly?"""
@@ -75,7 +72,7 @@ class CJSONWriterTest(unittest.TestCase):
         cjson = cclib.io.cjsonwriter.CJSON(data).generate_repr()
 
         json_data = json.loads(cjson)
-        self.assertFalse("total dipole moment" in json_data["properties"])
+        assert "total dipole moment" not in json_data["properties"]
 
 
 if __name__ == "__main__":

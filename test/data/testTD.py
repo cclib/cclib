@@ -37,28 +37,28 @@ class GenericTDTest(unittest.TestCase):
     def testenergies(self):
         """Is the l_max reasonable?"""
 
-        self.assertEqual(len(self.data.etenergies), self.number)
+        assert len(self.data.etenergies) == self.number
 
         # Note that if all oscillator strengths are zero (like for triplets)
         # then this will simply pick out the first energy.
         idx_lambdamax = numpy.argmax(self.data.etoscs)
-        self.assertAlmostEqual(self.data.etenergies[idx_lambdamax], self.expected_l_max, delta=5000)
+        assert abs(self.data.etenergies[idx_lambdamax] - self.expected_l_max) < 5000
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForLogfile("Turbomole/basicTurbomole7.4/CO_cc2_TD_trip", "Oscillator strengths are not available for triplets with Turbomole's ricc2")
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
-        self.assertEqual(len(self.data.etoscs), self.number)
-        self.assertAlmostEqual(max(self.data.etoscs), 0.67, delta=0.1)
+        assert len(self.data.etoscs) == self.number
+        assert abs(max(self.data.etoscs) - 0.67) < 0.1
 
     @skipForParser('FChk','The parser is still being developed so we skip this test')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     def testsecs(self):
         """Is the sum of etsecs close to 1?"""
-        self.assertEqual(len(self.data.etsecs), self.number)
+        assert len(self.data.etsecs) == self.number
         lowestEtrans = self.data.etsecs[numpy.argmin(self.data.etenergies)]
         sumofsec = sum([z*z for (x, y, z) in lowestEtrans])
-        self.assertAlmostEqual(sumofsec, 1.0, delta=0.16)
+        assert abs(sumofsec - 1.0) < 0.16
 
     @skipForParser('FChk', 'This is true for calculations without symmetry, but not with?')
     @skipForParser('DALTON', 'This is true for calculations without symmetry, but not with?')
@@ -67,13 +67,13 @@ class GenericTDTest(unittest.TestCase):
         """Is the lowest E transition from the HOMO or to the LUMO?"""
         lowestEtrans = self.data.etsecs[numpy.argmin(self.data.etenergies)]
         t = list(reversed(sorted([(c*c, s, e) for (s, e, c) in lowestEtrans])))
-        self.assertTrue(t[0][1][0] == self.data.homos[0] or
-                        t[0][2][0] == self.data.homos[0] + 1, t[0])
+        assert t[0][1][0] == self.data.homos[0] or \
+            t[0][2][0] == self.data.homos[0] + 1
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')    
     def testsymsnumber(self):
         """Is the length of etsyms correct?"""
-        self.assertEqual(len(self.data.etsyms), self.number)
+        assert len(self.data.etsyms) == self.number
         
     
     @skipForParser('ADF', 'etrotats are not yet implemented')
@@ -89,7 +89,7 @@ class GenericTDTest(unittest.TestCase):
     @skipForLogfile("Gaussian/basicGaussian09", "symmetry is missing for this log file") 
     def testsyms(self):
         """Are the values of etsyms correct?"""
-        self.assertListEqual(self.data.etsyms, self.symmetries)
+        assert self.data.etsyms == self.symmetries
 
     @skipForParser('ADF', 'etrotats are not yet implemented')
     @skipForParser('DALTON', 'etrotats are not yet implemented')
@@ -103,7 +103,7 @@ class GenericTDTest(unittest.TestCase):
     @skipForLogfile("Turbomole/basicTurbomole7.4/CO_adc2_TD", "Rotatory strengths are not currently available for ricc2")
     def testrotatsnumber(self):
         """Is the length of etrotats correct?"""
-        self.assertEqual(len(self.data.etrotats), self.number)
+        assert len(self.data.etrotats) == self.number
     
     @skipForParser('ADF', 'optstate is not yet implemented')
     @skipForParser('DALTON', 'optstate are not yet implemented')
@@ -117,7 +117,7 @@ class GenericTDTest(unittest.TestCase):
     @skipForParser('Turbomole', 'optstate are not yet implemented')
     def testoptstate(self):
         # All our examples have a default state-of-interest of 1 (index 0).
-        self.assertEqual(self.data.metadata['opt_state'], 0)
+        assert self.data.metadata['opt_state'] == 0
 
 class ADFTDDFTTest(GenericTDTest):
     """Customized time-dependent DFT unittest"""
@@ -125,12 +125,12 @@ class ADFTDDFTTest(GenericTDTest):
 
     def testsecs(self):
         """Is the sum of etsecs close to 1?"""
-        self.assertEqual(len(self.data.etsecs), self.number)
+        assert len(self.data.etsecs) == self.number
         lowestEtrans = self.data.etsecs[1]
 
         #ADF squares the etsecs
         sumofsec = sum([z for (x, y, z) in lowestEtrans])
-        self.assertAlmostEqual(sumofsec, 1.0, delta=0.16)
+        assert abs(sumofsec - 1.0) < 0.16
 
 
 class DALTONTDTest(GenericTDTest):
@@ -146,20 +146,19 @@ class GaussianTDDFTTest(GenericTDTest):
 
     def testrotatsnumber(self):
         """Is the length of etrotats correct?"""
-        self.assertEqual(len(self.data.etrotats), self.number)
+        assert len(self.data.etrotats) == self.number
 
     def testetdipsshape(self):
         """Is the shape of etdips correct?"""
-        self.assertEqual(numpy.shape(self.data.etdips), (self.number, 3))
+        assert numpy.shape(self.data.etdips) == (self.number, 3)
 
     def testetveldipsshape(self):
         """Is the shape of etveldips correct?"""
-        self.assertEqual(numpy.shape(
-            self.data.etveldips), (self.number, 3))
+        assert numpy.shape(self.data.etveldips) == (self.number, 3)
 
     def testetmagdipsshape(self):
         """Is the shape of etmagdips correct?"""
-        self.assertEqual(numpy.shape(self.data.etmagdips), (self.number, 3))
+        assert numpy.shape(self.data.etmagdips) == (self.number, 3)
 
 class GAMESSUSTDDFTTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
@@ -173,8 +172,8 @@ class JaguarTDDFTTest(GenericTDTest):
 
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
-        self.assertEqual(len(self.data.etoscs), self.number)
-        self.assertAlmostEqual(max(self.data.etoscs), 1.0, delta=0.2)
+        assert len(self.data.etoscs) == self.number
+        assert abs(max(self.data.etoscs) - 1.0) < 0.2
 
 class OrcaTDDFTTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
@@ -196,8 +195,8 @@ class OrcaTDDFTTest(GenericTDTest):
 
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
-        self.assertEqual(len(self.data.etoscs), self.number)
-        self.assertAlmostEqual(max(self.data.etoscs), 1.17, delta=0.01)
+        assert len(self.data.etoscs) == self.number
+        assert abs(max(self.data.etoscs) - 1.17) < 0.01
 
 class QChemTDDFTTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
@@ -207,8 +206,8 @@ class QChemTDDFTTest(GenericTDTest):
 
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
-        self.assertEqual(len(self.data.etoscs), self.number)
-        self.assertAlmostEqual(max(self.data.etoscs), 0.9, delta=0.1)
+        assert len(self.data.etoscs) == self.number
+        assert abs(max(self.data.etoscs) - 0.9) < 0.1
 
 
 class GenericTDDFTtrpTest(GenericTDTest):
@@ -219,8 +218,8 @@ class GenericTDDFTtrpTest(GenericTDTest):
 
     def testoscs(self):
         """Triplet excitations should be disallowed."""
-        self.assertEqual(len(self.data.etoscs), self.number)
-        self.assertAlmostEqual(max(self.data.etoscs), 0.0, delta=0.01)
+        assert len(self.data.etoscs) == self.number
+        assert abs(max(self.data.etoscs)) < 0.01
 
 
 class OrcaROCISTest(GenericTDTest):
@@ -232,14 +231,14 @@ class OrcaROCISTest(GenericTDTest):
 
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
-        self.assertEqual(len(self.data.etoscs), self.number)
-        self.assertAlmostEqual(max(self.data.etoscs), 0.015, delta=0.1)
+        assert len(self.data.etoscs) == self.number
+        assert abs(max(self.data.etoscs) - 0.015) < 0.1
 
     def testTransprop(self):
         """Check the number of spectra parsed"""
-        self.assertEqual(len(self.data.transprop), self.n_spectra)
+        assert len(self.data.transprop) == self.n_spectra
         tddft_length = 'ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS'
-        self.assertIn(tddft_length, self.data.transprop)
+        assert tddft_length in self.data.transprop
 
     def testsymsnumber(self):
         """ORCA ROCIS has no symmetry"""
@@ -291,13 +290,13 @@ class TurbomoleTDTest(GenericTDTest):
     
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
-        self.assertEqual(len(self.data.etoscs), self.number)
-        self.assertAlmostEqual(max(self.data.etoscs), 0.19, delta=0.1)
+        assert len(self.data.etoscs) == self.number
+        assert abs(max(self.data.etoscs) - 0.19) < 0.1
     
     @skipForLogfile('Turbomole/basicTurbomole7.4/CO_cc2_TD', 'There are no dipole moments in ricc2')
     def testetmagdipsshape(self):
         """Is the shape of etmagdips correct?"""
-        self.assertEqual(numpy.shape(self.data.etmagdips), (self.number, 3))
+        assert numpy.shape(self.data.etmagdips) == (self.number, 3)
 
 class TurbomoleTDADC2Test(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
@@ -319,8 +318,8 @@ class TurbomoleTDADC2Test(GenericTDTest):
     
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
-        self.assertEqual(len(self.data.etoscs), self.number)
-        self.assertAlmostEqual(max(self.data.etoscs), 0.80, delta=0.1)
+        assert len(self.data.etoscs) == self.number
+        assert abs(max(self.data.etoscs) - 0.80) < 0.1
 
 class TurbomoleTDTripTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
@@ -342,8 +341,8 @@ class TurbomoleTDTripTest(GenericTDTest):
 
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
-        self.assertEqual(len(self.data.etoscs), self.number)
-        self.assertAlmostEqual(max(self.data.etoscs), 0.84, delta=0.1)
+        assert len(self.data.etoscs) == self.number
+        assert abs(max(self.data.etoscs) - 0.84) < 0.1
         
 class TurbomoleTDCC2TripTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
@@ -365,7 +364,7 @@ class TurbomoleTDCC2TripTest(GenericTDTest):
 
     def testenergies(self):
         """Is the l_max reasonable?"""
-        self.assertEqual(len(self.data.etenergies), self.number)
+        assert len(self.data.etenergies) == self.number
         
 
 if __name__ =="__main__":

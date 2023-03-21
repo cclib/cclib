@@ -81,15 +81,15 @@ class GenericBasisTest(unittest.TestCase):
         for iatom,atom in enumerate(self.data.gbasis):
             if self.data.atomnos[iatom] == 1:
                 coeffs = atom[0][1]
-                self.assertAlmostEqual(coeffs[0][0], self.gbasis_H_1s_func0[0], 4)
-                self.assertAlmostEqual(coeffs[0][1], self.gbasis_H_1s_func0[1], 4)
+                assert round(abs(coeffs[0][0] - self.gbasis_H_1s_func0[0]), 4) == 0
+                assert round(abs(coeffs[0][1] - self.gbasis_H_1s_func0[1]), 4) == 0
             else:
                 s_coeffs = atom[1][1]
                 p_coeffs = atom[2][1]
-                self.assertAlmostEqual(s_coeffs[0][0], self.gbasis_C_2s_func0[0], 4)
-                self.assertAlmostEqual(p_coeffs[0][0], self.gbasis_C_2p_func0[0], 4)
-                self.assertAlmostEqual(s_coeffs[0][1], self.gbasis_C_2s_func0[1], 4)
-                self.assertAlmostEqual(p_coeffs[0][1], self.gbasis_C_2p_func0[1], 4)
+                assert round(abs(s_coeffs[0][0] - self.gbasis_C_2s_func0[0]), 4) == 0
+                assert round(abs(p_coeffs[0][0] - self.gbasis_C_2p_func0[0]), 4) == 0
+                assert round(abs(s_coeffs[0][1] - self.gbasis_C_2s_func0[1]), 4) == 0
+                assert round(abs(p_coeffs[0][1] - self.gbasis_C_2p_func0[1]), 4) == 0
 
 
 class JaguarBasisTest(GenericBasisTest):

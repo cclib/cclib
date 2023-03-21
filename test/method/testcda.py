@@ -60,9 +60,9 @@ class CDATest(unittest.TestCase):
         bdonation = fa.bdonations[0].sum()
         repulsion = fa.repulsions[0].sum()
 
-        self.assertAlmostEqual(donation, 0.181, 3)
-        self.assertAlmostEqual(bdonation, 0.471, 3)
-        self.assertAlmostEqual(repulsion, -0.334, 3)
+        assert round(abs(donation - 0.181), 3) == 0
+        assert round(abs(bdonation - 0.471), 3) == 0
+        assert round(abs(repulsion - -0.334), 3) == 0
 
 
 if __name__ == "__main__":
