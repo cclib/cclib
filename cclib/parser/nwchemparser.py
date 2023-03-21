@@ -121,6 +121,8 @@ class NWChem(logfileparser.Logfile):
             if "maximum gradient threshold" not in line:
                 self.skip_lines(inputfile, ['b', 'title', 'b', 'b'])
                 line = next(inputfile)
+            if "no constraints" in line:
+                line = next(inputfile)
             assert "maximum gradient threshold" in line
             while line.strip():
                 if "maximum gradient threshold" in line:

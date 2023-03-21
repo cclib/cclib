@@ -156,6 +156,8 @@ GeoOpt    NWChem      NWChemGeoOptTest      basicNWChem6.0        dvb_gopt_hf.ou
 GeoOpt    NWChem      NWChemGeoOptTest      basicNWChem6.0        dvb_gopt_ks.out
 GeoOpt    NWChem      NWChemGeoOptTest      basicNWChem6.5        dvb_gopt_hf.out
 GeoOpt    NWChem      NWChemGeoOptTest      basicNWChem6.5        dvb_gopt_ks.out
+GeoOpt    NWChem      NWChemGeoOptTest      basicNWChem7.0        dvb_gopt_hf.out
+GeoOpt    NWChem      NWChemGeoOptTest      basicNWChem7.0        dvb_gopt_ks.out
 GeoOpt    ORCA        OrcaGeoOptTest        basicORCA4.1          dvb_gopt.out
 GeoOpt    ORCA        OrcaGeoOptTest        basicORCA4.2          dvb_gopt.out
 GeoOpt    ORCA        OrcaGeoOptTest        basicORCA5.0          dvb_gopt.out
