@@ -436,7 +436,18 @@ class ORCA(logfileparser.Logfile):
                 line = next(inputfile)
             energy = utils.convertor(float(line.split()[3]), "hartree", "eV")
             self.scfenergies.append(energy)
-            self.metadata['methods'].append('HF' if not self.is_DFT else 'DFT')
+            if self.is_DFT:
+                method = "DFT"
+            else:
+                semiempirical_methods = _METHODS_SEMIEMPIRICAL & {
+                    keyword.upper() for keyword in self.metadata["keywords"]
+                }
+                assert len(semiempirical_methods) in (0, 1)
+                if semiempirical_methods:
+                    method = semiempirical_methods.pop()
+                else:
+                    method = "HF"
+            self.metadata['methods'].append(method)
 
             self._append_scfvalues_scftargets(inputfile, line)
 
@@ -2268,3 +2279,12 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 assert maxDP_target == self.scftargets[-1][1]
             self.scfvalues[-1].append([deltaE_value, maxDP_value, rmsDP_value])
             self.scftargets.append([deltaE_target, maxDP_target, rmsDP_target])
+
+
+_METHODS_SEMIEMPIRICAL = {
+    "AM1",
+    "MNDO",
+    "PM3",
+    "ZINDO/1",
+    "ZINDO/S",
+}

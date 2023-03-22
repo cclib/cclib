@@ -1853,6 +1853,8 @@ def testORCA_ORCA4_2_ligando_30_SRM1_S_ZINDO_out(logfile):
     input file despite actually using STO-3G fit to Slater functions (#1187).
     """
     assert logfile.data.metadata["basis_set"] == "STO-3G"
+    assert logfile.data.metadata["methods"] == ["ZINDO/S"]
+
 
 def testORCA_ORCA4_2_long_input_out(logfile):
     """Long ORCA input file (#804)."""
