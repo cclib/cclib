@@ -257,6 +257,13 @@ class ORCA(logfileparser.Logfile):
                             coords.append(splitter(line))
             self.metadata['keywords'] = keywords
             self.metadata['coords'] = coords
+
+        # Semiempirical methods use a minimal basis fit to Slater functions,
+        # not def2-SVP or whatever default is given before the input file is
+        # echoed.
+        if "FIT TO SLATER BASIS" in line:
+            self.metadata["basis_set"] = line.split()[0][4:]
+
         # If the calculations is a unrelaxed parameter scan then immediately following the 
         # input file block is the following section:
                 
