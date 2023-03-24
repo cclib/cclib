@@ -1129,7 +1129,8 @@ Dispersion correction           -0.016199959
             else:
                 self.freeenergy = self.enthalpy - self.temperature * self.entropy
                 
-        if "ORCA TD-DFT/TDA CALCULATION" in line:
+        if any(x in line
+               for x in ("ORCA TD-DFT/TDA CALCULATION", "ORCA CIS CALCULATION")):
             # Start of excited states, reset our attributes in case this is an optimised excited state calc
             # (or another type of calc where excited states are calculated multiple times).
             for attr in ("etenergies", "etsyms", "etoscs", "etsecs", "etrotats"):
@@ -1137,7 +1138,12 @@ Dispersion correction           -0.016199959
                     delattr(self, attr)
 
         # Read TDDFT information
-        if any(x in line for x in ("TD-DFT/TDA EXCITED", "TD-DFT EXCITED")):
+        if any(
+                x in line
+                for x in (
+                        "TD-DFT/TDA EXCITED", "TD-DFT EXCITED", "CIS-EXCITED", "CIS EXCITED"
+                )
+        ):
             # Could be singlets or triplets
             if line.find("SINGLETS") >= 0:
                 mult = "Singlet"

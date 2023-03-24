@@ -1854,6 +1854,7 @@ def testORCA_ORCA4_2_ligando_30_SRM1_S_ZINDO_out(logfile):
     """
     assert logfile.data.metadata["basis_set"] == "STO-3G"
     assert logfile.data.metadata["methods"] == ["ZINDO/S"]
+    assert hasattr(logfile.data, "etsyms")
 
 
 def testORCA_ORCA4_2_long_input_out(logfile):
