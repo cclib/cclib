@@ -1592,7 +1592,11 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 
                 line = next(inputfile)
             
-            self.nmrcouplingtensors[((atoms[0], isotopes[0]), (atoms[1], isotopes[1]))] = tensors
+            
+            if atoms not in self.nmrcouplingtensors:
+                self.nmrcouplingtensors[atoms] = {}
+                
+            self.nmrcouplingtensors[atoms][isotopes] = tensors
 
         if line[:23] == "VIBRATIONAL FREQUENCIES":
 
