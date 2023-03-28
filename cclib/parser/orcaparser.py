@@ -1592,6 +1592,10 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 
                 line = next(inputfile)
             
+            while "Total" not in line:
+                line = next(inputfile)
+                
+            tensors['isotropic'] = float(line.split()[-1])
             
             if atoms not in self.nmrcouplingtensors:
                 self.nmrcouplingtensors[atoms] = {}
