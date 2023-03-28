@@ -1507,6 +1507,94 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 anisotropic.append(float(aniso))
 
             self.set_attribute('nmrtensors', nmrtensors)
+            
+        # -----------------------------------------------------------
+        #  NUCLEUS A = C    0 NUCLEUS B = C    1 
+        #  ( 13C  gnA =  1.405  13C  gnB =  1.405) r(AB) =     2.8677
+        # -----------------------------------------------------------
+        # 
+        # Diamagnetic contribution (Hz):
+        #         0.4891        -0.1270       -0.0000
+        #        -0.1270        -0.2550        0.0000
+        #        -0.0000         0.0000       -0.1388
+        # Paramagnetic contribution (Hz):
+        #         1.1869         0.2802        0.0000
+        #         0.2802        -0.5515        0.0000
+        #        -0.0000         0.0000       -0.0408
+        # Fermi-contact contribution (Hz):
+        #         7.4196         0.0000        0.0000
+        #         0.0000         7.4196        0.0000
+        #         0.0000         0.0000        7.4196
+        # Spin-dipolar contribution (Hz):
+        #         0.7215         0.0394       -0.0000
+        #         0.0394         1.0985       -0.0000
+        #         0.0000         0.0000        3.6092
+        # Spin-dipolar/Fermi contact cross term contribution (Hz):
+        #         1.9743         0.0164        0.0000
+        #         0.0164         2.2237       -0.0000
+        #         0.0000        -0.0000       -4.1983
+        # 
+        # Total spin-spin coupling tensor  (Hz):
+        #        11.7914         0.2090       -0.0000
+        #         0.2090         9.9353       -0.0000
+        #         0.0000         0.0000        6.6509
+        # 
+        #  Diagonalized sT*s matrix:
+        #  
+        #  ssDSO           -0.139           -0.218            0.452  iso=       0.032
+        #  ssPSO           -0.041           -0.592            1.227  iso=       0.198
+        #  ssFC             7.420            7.420            7.420  iso=       7.420
+        #  ssSD             3.609            1.085            0.735  iso=       1.810
+        #  ssSD/FC         -4.198            2.217            1.981  iso=      -0.000
+        #         ---------------  ---------------  ---------------  ----------------
+        #  Total            6.651            9.912           11.815  iso=       9.459
+        #
+        # Sections for NMR spin-spin couplings.
+        if "NMR SPIN-SPIN COUPLING CONSTANTS" in line:
+            # Reset attributes for upcoming section.
+            setattr(self, "nmrcouplingtensors", dict())
+        
+        if "NUCLEUS A =" in line and "NUCLEUS B =" in line:
+            line_split = line.split()
+            # Here we're relying on whitespace between the element symbol and index.
+            # For two character elements (eg Cu) and big molecules (>1000 atoms) this space may disappear...
+            atoms = (line_split[4], line_split[9])
+            
+            # Even though our atom indices reference back to atomnos/atommasses etc, we also need to record
+            # the NMR isotope (this isn't recorded anywhere else, and multiple isotopes might get printed).
+            line = next(inputfile)
+            line_split = line.split()
+            # We might have similar whitespace problems here.
+            isotopes = (re.search(r"\d+", line_split[1])[0], re.search(r"\d+", line_split[5])[0])
+            
+            # Look for tensor sections.
+            # The order and number of tensors is not guaranteed (because different tensors can be
+            # explicitly requested).
+            tensors = dict()
+            while "Diagonalized sT*s matrix:" not in line:
+                if "contribution" in line or "Total spin-spin coupling tensor" in line:
+                    # Tensor section.
+                    t_type = line.split()[0].lower()
+                    
+                    # Do some name-nudging.
+                    if t_type == "fermi-contact":
+                        t_type = "fermi"
+                    
+                    elif t_type == "spin-dipolar/fermi":
+                        t_type = "spin-dipolar-fermi"
+                
+                    #line = next(inputfile)
+                    
+                    # Read the tensor.
+                    tensor = numpy.zeros((3, 3))
+                    for j, row in zip(range(3), inputfile):
+                        tensor[j, :] = list(map(float, row.split()))
+                    
+                    tensors[t_type] = tensor
+                
+                line = next(inputfile)
+            
+            self.nmrcouplingtensors[((atoms[0], isotopes[0]), (atoms[1], isotopes[1]))] = tensors
 
         if line[:23] == "VIBRATIONAL FREQUENCIES":
 
