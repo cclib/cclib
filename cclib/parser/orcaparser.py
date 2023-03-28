@@ -1489,7 +1489,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                         t_type = next(inputfile).split()[0].lower()
                         tensor = numpy.zeros((3, 3))
                         for j, row in zip(range(3), inputfile):
-                            tensor[j, :] = list(map(float, row.split()))
+                            tensor[j] = list(map(float, row.split()))
                         atomtensors[t_type] = tensor
                         self.skip_line(inputfile, '')
                     nmrtensors[atom] = atomtensors
