@@ -8,6 +8,7 @@
 """Test NMR logfiles in cclib."""
 
 import os
+import numpy
 import unittest
 
 from skip import skipForParser
@@ -31,9 +32,17 @@ class GenericNMRCouplingTest(unittest.TestCase):
     def testsize(self):
         """Check to make sure there are the correct number of tensors parsed"""
         assert len(self.data.nmrcouplingtensors) == 139
-        assert len(list(self.data.nmrcouplingtensors.values())[0]) == 6
-        assert list(self.data.nmrcouplingtensors.values())[0]["total"].shape == (3, 3)
-
+        
+        tensor = list(list(self.data.nmrcouplingtensors.values())[0].values())[0]
+        assert len(tensor) == 7
+        assert tensor['total'].shape == (3, 3)
+        
+        # Check the total isotropic value matches the computed value.
+        total = 0.0
+        for t_type in ("diamagnetic", "paramagnetic", "fermi", "spin-dipolar", "spin-dipolar-fermi"):
+            total += sum(numpy.linalg.eigvals(tensor[t_type])) / len(numpy.linalg.eigvals(tensor[t_type]))
+        
+        self.assertAlmostEqual(total, tensor['isotropic'], 3)
 
 if __name__ == "__main__":
     import sys
