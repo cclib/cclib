@@ -1582,8 +1582,6 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                     
                     elif t_type == "spin-dipolar/fermi":
                         t_type = "spin-dipolar-fermi"
-                
-                    #line = next(inputfile)
                     
                     # Read the tensor.
                     tensor = numpy.zeros((3, 3))
