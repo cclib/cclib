@@ -24,6 +24,14 @@ class GenericNMRTest(unittest.TestCase):
         assert len(self.data.nmrtensors) == self.data.natom
         assert len(self.data.nmrtensors[0]) == 4
         assert self.data.nmrtensors[0]["total"].shape == (3, 3)
+        
+        tensor = self.data.nmrtensors[0]
+        # Check the total isotropic value matches the computed value.
+        total = 0.0
+        for t_type in ("diamagnetic", "paramagnetic"):
+            total += sum(numpy.linalg.eigvals(tensor[t_type])) / len(numpy.linalg.eigvals(tensor[t_type]))
+        
+        self.assertAlmostEqual(total, tensor['isotropic'], 3)
 
 
 class GenericNMRCouplingTest(unittest.TestCase):
