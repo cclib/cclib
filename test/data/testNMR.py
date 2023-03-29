@@ -22,7 +22,7 @@ class GenericNMRTest(unittest.TestCase):
     def testsize(self):
         """Check to make sure there are the correct number of tensors parsed"""
         assert len(self.data.nmrtensors) == self.data.natom
-        assert len(self.data.nmrtensors[0]) == 3
+        assert len(self.data.nmrtensors[0]) == 4
         assert self.data.nmrtensors[0]["total"].shape == (3, 3)
 
 
