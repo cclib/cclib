@@ -2015,21 +2015,17 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             if "cpu_time" not in self.metadata:
                 self.metadata['cpu_time'] = []
             
-            self.metadata['wall_time'].append(datetime.timedelta(
+            dtime = datetime.timedelta(
                 days = days,
                 hours = hours,
                 minutes = minutes,
                 seconds = seconds,
                 milliseconds = milliseconds
-            ))
+            )
+            dtime = f"{dtime}"
+            self.metadata['wall_time'].append(dtime)
             
-            self.metadata['cpu_time'].append(datetime.timedelta(
-                days = days,
-                hours = hours,
-                minutes = minutes,
-                seconds = seconds,
-                milliseconds = milliseconds
-            ) * self.num_cpu)
+            self.metadata['cpu_time'].append(dtime* self.num_cpu)
             
 
     def parse_charge_section(self, line, inputfile, chargestype):
