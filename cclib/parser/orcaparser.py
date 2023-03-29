@@ -1483,28 +1483,24 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             while line.strip() != 'CHEMICAL SHIELDING SUMMARY (ppm)':
                 if line[:8] == ' Nucleus':
                     atom = int(re.search(r'Nucleus\s+(\d+)\w', line).groups()[0])
-                    self.skip_lines(inputfile, ['-', ''])
                     atomtensors = dict()
-                    for _ in range(3):
-                        t_type = next(inputfile).split()[0].lower()
-                        tensor = numpy.zeros((3, 3))
-                        for j, row in zip(range(3), inputfile):
-                            tensor[j] = list(map(float, row.split()))
-                        atomtensors[t_type] = tensor
-                        self.skip_line(inputfile, '')
+                    
+                    while "Diagonalized sT*s matrix:" not in line:
+                        if "contribution" in line or "Total shielding tensor" in line:
+                            # Tensor section.
+                            t_type = line.split()[0].lower()
+                            
+                            # Read the tensor.
+                            tensor = numpy.zeros((3, 3))
+                            for j, row in zip(range(3), inputfile):
+                                tensor[j] = list(map(float, row.split()))
+                            
+                            atomtensors[t_type] = tensor
+                        
+                        line = next(inputfile)
                     nmrtensors[atom] = atomtensors
+                
                 line = next(inputfile)
-
-            self.skip_lines(inputfile, ['-', '', '', 'text', '-'])
-
-            # Not currently used.
-            isotropic, anisotropic = [], []
-            for line in inputfile:
-                if not line.strip():
-                    break
-                nucleus, element, iso, aniso = line.split()
-                isotropic.append(float(iso))
-                anisotropic.append(float(aniso))
 
             self.set_attribute('nmrtensors', nmrtensors)
             
