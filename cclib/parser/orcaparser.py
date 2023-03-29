@@ -1498,6 +1498,11 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                             atomtensors[t_type] = tensor
                         
                         line = next(inputfile)
+                        
+                    while "Total" not in line:
+                        line = next(inputfile)
+                        
+                    atomtensors['isotropic'] = float(line.split()[-1])
                     nmrtensors[atom] = atomtensors
                 
                 line = next(inputfile)
