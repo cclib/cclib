@@ -10,6 +10,7 @@
 import os
 import numpy
 import unittest
+import pytest
 
 from skip import skipForParser
 
@@ -31,7 +32,7 @@ class GenericNMRTest(unittest.TestCase):
         for t_type in ("diamagnetic", "paramagnetic"):
             total += sum(numpy.linalg.eigvals(tensor[t_type])) / len(numpy.linalg.eigvals(tensor[t_type]))
         
-        self.assertAlmostEqual(total, tensor['isotropic'], 3)
+        assert total == pytest.approx(tensor['isotropic'], abs = 3)
 
 
 class GenericNMRCouplingTest(unittest.TestCase):
@@ -50,7 +51,7 @@ class GenericNMRCouplingTest(unittest.TestCase):
         for t_type in ("diamagnetic", "paramagnetic", "fermi", "spin-dipolar", "spin-dipolar-fermi"):
             total += sum(numpy.linalg.eigvals(tensor[t_type])) / len(numpy.linalg.eigvals(tensor[t_type]))
         
-        self.assertAlmostEqual(total, tensor['isotropic'], 3)
+        assert total == pytest.approx(tensor['isotropic'], abs = 3)
 
 if __name__ == "__main__":
     import sys
