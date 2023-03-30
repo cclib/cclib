@@ -1559,14 +1559,14 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             line_split = line.split()
             # Here we're relying on whitespace between the element symbol and index.
             # For two character elements (eg Cu) and big molecules (>1000 atoms) this space may disappear...
-            atoms = (line_split[4], line_split[9])
+            atoms = (int(line_split[4]), int(line_split[9]))
             
             # Even though our atom indices reference back to atomnos/atommasses etc, we also need to record
             # the NMR isotope (this isn't recorded anywhere else, and multiple isotopes might get printed).
             line = next(inputfile)
             line_split = line.split()
             # We might have similar whitespace problems here.
-            isotopes = (re.search(r"\d+", line_split[1])[0], re.search(r"\d+", line_split[5])[0])
+            isotopes = (int(re.search(r"\d+", line_split[1])[0]), int(re.search(r"\d+", line_split[5])[0]))
             
             # Look for tensor sections.
             # The order and number of tensors is not guaranteed (because different tensors can be
