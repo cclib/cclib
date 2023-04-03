@@ -50,9 +50,9 @@ class GenericNMRCouplingTest(unittest.TestCase):
         
         assert all(
             [
-                all((type(isotropekey[0]) == int, type(isotropekey[1]) == int))
-                for isotropes in self.data.nmrcouplingtensors.values()
-                for isotropekey in isotropes.keys()
+                all((type(isotopekey[0]) == int, type(isotopekey[1]) == int))
+                for isotopes in self.data.nmrcouplingtensors.values()
+                for isotopekey in isotopes.keys()
             ]
         )
 
