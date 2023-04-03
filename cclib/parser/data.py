@@ -68,6 +68,7 @@ class ccData:
         nbasis -- number of basis functions (integer)
         nmo -- number of molecular orbitals (integer)
         nmrtensors -- Nuclear magnetic resonance chemical shielding tensors (dict of dicts of array[2])
+        nmrcouplingtensors -- Nuclear magnetic resonance spin-spin coupling tensors (dict of dicts of array[2])
         nocoeffs -- natural orbital coefficients (array[2])
         nooccnos -- natural orbital occupation numbers (array[1])
         nsocoeffs -- natural spin orbital coefficients (list of array[2])
@@ -151,6 +152,7 @@ class ccData:
        "nbasis":           Attribute(int,              'basis number',                'properties:orbitals'),
        "nmo":              Attribute(int,              'MO number',                   'properties:orbitals'),
        "nmrtensors":       Attribute(dict,             'NMR chemical shielding tensors', 'properties:nmr'),
+       "nmrcouplingtensors":       Attribute(dict,             'NMR spin-spin coupling tensors', 'properties:nmr'),
        "nocoeffs":         Attribute(numpy.ndarray,    'TBD',                         'N/A'),
        "nooccnos":         Attribute(numpy.ndarray,    'TBD',                         'N/A'),
        "nsocoeffs":         Attribute(list,    'TBD',                         'N/A'),
