@@ -257,6 +257,13 @@ class ORCA(logfileparser.Logfile):
                             coords.append(splitter(line))
             self.metadata['keywords'] = keywords
             self.metadata['coords'] = coords
+
+        # Semiempirical methods use a minimal basis fit to Slater functions,
+        # not def2-SVP or whatever default is given before the input file is
+        # echoed.
+        if "FIT TO SLATER BASIS" in line:
+            self.metadata["basis_set"] = line.split()[0][4:]
+
         # If the calculations is a unrelaxed parameter scan then immediately following the 
         # input file block is the following section:
                 
@@ -429,7 +436,18 @@ class ORCA(logfileparser.Logfile):
                 line = next(inputfile)
             energy = utils.convertor(float(line.split()[3]), "hartree", "eV")
             self.scfenergies.append(energy)
-            self.metadata['methods'].append('HF' if not self.is_DFT else 'DFT')
+            if self.is_DFT:
+                method = "DFT"
+            else:
+                semiempirical_methods = _METHODS_SEMIEMPIRICAL & {
+                    keyword.upper() for keyword in self.metadata["keywords"]
+                }
+                assert len(semiempirical_methods) in (0, 1)
+                if semiempirical_methods:
+                    method = semiempirical_methods.pop()
+                else:
+                    method = "HF"
+            self.metadata['methods'].append(method)
 
             self._append_scfvalues_scftargets(inputfile, line)
 
@@ -1111,7 +1129,8 @@ Dispersion correction           -0.016199959
             else:
                 self.freeenergy = self.enthalpy - self.temperature * self.entropy
                 
-        if "ORCA TD-DFT/TDA CALCULATION" in line:
+        if any(x in line
+               for x in ("ORCA TD-DFT/TDA CALCULATION", "ORCA CIS CALCULATION")):
             # Start of excited states, reset our attributes in case this is an optimised excited state calc
             # (or another type of calc where excited states are calculated multiple times).
             for attr in ("etenergies", "etsyms", "etoscs", "etsecs", "etrotats"):
@@ -1119,7 +1138,12 @@ Dispersion correction           -0.016199959
                     delattr(self, attr)
 
         # Read TDDFT information
-        if any(x in line for x in ("TD-DFT/TDA EXCITED", "TD-DFT EXCITED")):
+        if any(
+                x in line
+                for x in (
+                        "TD-DFT/TDA EXCITED", "TD-DFT EXCITED", "CIS-EXCITED", "CIS EXCITED"
+                )
+        ):
             # Could be singlets or triplets
             if line.find("SINGLETS") >= 0:
                 mult = "Singlet"
@@ -2356,3 +2380,12 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 assert maxDP_target == self.scftargets[-1][1]
             self.scfvalues[-1].append([deltaE_value, maxDP_value, rmsDP_value])
             self.scftargets.append([deltaE_target, maxDP_target, rmsDP_target])
+
+
+_METHODS_SEMIEMPIRICAL = {
+    "AM1",
+    "MNDO",
+    "PM3",
+    "ZINDO/1",
+    "ZINDO/S",
+}

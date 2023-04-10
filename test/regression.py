@@ -1847,6 +1847,16 @@ def testORCA_ORCA4_2_MP2_gradient_out(logfile):
     idx = (0, 1, 1)
     assert logfile.data.grads[idx] == -0.00040549
 
+
+def testORCA_ORCA4_2_ligando_30_SRM1_S_ZINDO_out(logfile):
+    """ORCA says that ZINDO uses the def2-SVP basis set before echoing the
+    input file despite actually using STO-3G fit to Slater functions (#1187).
+    """
+    assert logfile.data.metadata["basis_set"] == "STO-3G"
+    assert logfile.data.metadata["methods"] == ["ZINDO/S"]
+    assert hasattr(logfile.data, "etsyms")
+
+
 def testORCA_ORCA4_2_long_input_out(logfile):
     """Long ORCA input file (#804)."""
     assert logfile.data.metadata["package_version"] == "4.2.0"
