@@ -321,19 +321,23 @@ class NWChem(logfileparser.Logfile):
 
                 # These will be present only in the DFT module.
                 if "Convergence on energy requested" in line:
-                    target_energy = utils.float(line.split()[-1])
+                    self.target_energy = utils.float(line.split()[-1])
                 if "Convergence on density requested" in line:
-                    target_density = utils.float(line.split()[-1])
+                    self.target_density = utils.float(line.split()[-1])
                 if "Convergence on gradient requested" in line:
-                    target_gradient = utils.float(line.split()[-1])
+                    self.target_gradient = utils.float(line.split()[-1])
 
                 line = next(inputfile)
 
             # Pretty nasty temporary hack to set scftargets only in the SCF module.
-            if "target_energy" in dir() and "target_density" in dir() and "target_gradient" in dir():
-                if not hasattr(self, 'scftargets'):
-                    self.scftargets = []
-                self.scftargets.append([target_energy, target_density, target_gradient])
+            scftargetattrs = ("target_energy", "target_density", "target_gradient")
+            if self.hasattrs(scftargetattrs):
+                self.append_attribute(
+                    "scftargets",
+                    [self.target_energy, self.target_density, self.target_gradient]
+                )
+                for attr in scftargetattrs:
+                    delattr(self, attr)
 
         #DFT functional information
         if "XC Information" in line:
@@ -1106,18 +1110,29 @@ class NWChem(logfileparser.Logfile):
             time = float(line.split()[4])
             self.append_attribute('time', time)
 
-        # BOMD: geometry coordinates when `print low`.
-        if line.strip() == "DFT ENERGY GRADIENTS":
-            if self.is_BOMD:
-                self.skip_lines(inputfile, ['b', 'atom coordinates gradient', 'xyzxyz'])
+        if "ENERGY GRADIENTS" in line:
+            self.skip_lines(inputfile, ['b', 'atom coordinates gradient', 'xyzxyz'])
+            line = next(inputfile)
+            atomcoords_step = []
+            grad_step = []
+            while line.strip():
+                tokens = line.split()
+                assert len(tokens) == 8
+                atomcoords_step.append([float(c) for c in tokens[2:5]])
+                grad_step.append([float(x) for x in tokens[5:8]])
                 line = next(inputfile)
-                atomcoords_step = []
-                while line.strip():
-                    tokens = line.split()
-                    assert len(tokens) == 8
-                    atomcoords_step.append([float(c) for c in tokens[2:5]])
-                    line = next(inputfile)
-                self.atomcoords.append(atomcoords_step)
+            self.append_attribute("grads", grad_step)
+            # BOMD: geometry coordinates when `print low`.
+            if self.is_BOMD:
+                self.append_attribute("atomcoords", atomcoords_step)
+
+        if "Atom information" in line:
+            self.skip_lines(inputfile, ["atom # X Y Z mass", "d"])
+            masses = []
+            for _ in range(self.natom):
+                line = next(inputfile)
+                masses.append(utils.float(line[61:74]))
+            self.set_attribute("atommasses", masses)
 
         # Extract Thermochemistry in au (Hartree)
         #
@@ -1269,11 +1284,11 @@ class NWChem(logfileparser.Logfile):
 
     def after_parsing(self):
         """NWChem-specific routines for after parsing a file.
-
-        Currently, expands self.shells() into self.aonames.
         """
         super(NWChem, self).after_parsing()
 
+        # Expand self.shells into a proper aonames attribute.
+        #
         # setup a few necessary things, including a regular expression
         # for matching the shells
         table = utils.PeriodicTable()
@@ -1340,3 +1355,11 @@ class NWChem(logfileparser.Logfile):
         if self.is_BOMD:
             self.atomcoords = utils.convertor(numpy.asarray(self.atomcoords)[1:, ...],
                                               'bohr', 'Angstrom')
+
+        # Versions >= 7.0 print an extra "General Information" section
+        # containing scftargets before entering "NWChem DFT Gradient Module".
+        # Since originally it only appeared before entering SCF and not also
+        # afterwards, keep every other starting from the first appearance.
+        if self.hasattrs(("grads", "scftargets")) \
+           and len(self.scftargets) == (2 * len(self.grads)):
+            self.scftargets = self.scftargets[::2]
