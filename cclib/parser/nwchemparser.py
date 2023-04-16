@@ -333,12 +333,12 @@ class NWChem(logfileparser.Logfile):
 
                 line = next(inputfile)
 
-            # Pretty nasty temporary hack to set scftargets only in the SCF module.
+            # set scftargets only in the SCF module.
             scftargetattrs = ("target_energy", "target_density", "target_gradient")
             if self.hasattrs(scftargetattrs):
                 self.append_attribute(
                     "scftargets",
-                    [self.target_energy, self.target_density, self.target_gradient]
+                    [getattr(self, attr) for attr in scftargetattrs]
                 )
                 for attr in scftargetattrs:
                     delattr(self, attr)
