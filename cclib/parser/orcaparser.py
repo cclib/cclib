@@ -1576,12 +1576,8 @@ Dispersion correction           -0.016199959
                         self.set_attribute("etenergies", etenergies)
 
                     # Determine if these energies are same as those previously parsed.
-                    # May want to use a smarter comparison?
-                    elif len(etenergies) == len(self.etenergies) and all(
-                        [
-                            round(self.etenergies[index]) == round(etenergy)
-                            for index, etenergy in enumerate(etenergies)
-                        ]
+                    elif len(etenergies) == len(self.etenergies) and numpy.allclose(
+                        etenergies, self.etenergies
                     ):
                         pass
 
