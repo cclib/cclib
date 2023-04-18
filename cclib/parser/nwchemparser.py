@@ -1271,9 +1271,7 @@ class NWChem(logfileparser.Logfile):
         #    Occ.  116  a   ---  Virt.  118  a   -0.40137 X
 
         if line[:6] == "  Root":
-            self.append_attribute(
-                "etenergies", utils.convertor(utils.float(line.split()[-2]), "eV", "wavenumber")
-            )
+            self.append_attribute("etenergies", float(line.split()[4]))
             self.append_attribute("etsyms", str.join(" ", line.split()[2:-4]))
 
             self.skip_lines(inputfile, ["dashes"])
