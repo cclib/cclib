@@ -1169,7 +1169,7 @@ class Psi4(logfileparser.Logfile):
         while line.strip():
             for i in range(len(line.split()) // 2):
                 self.mosyms[spinidx].append(line.split()[i * 2][-2:])
-                moenergy = utils.convertor(float(line.split()[i * 2 + 1]), "hartree", "eV")
+                moenergy = float(line.split()[i * 2 + 1])
                 self.moenergies[spinidx].append(moenergy)
             line = next(inputfile)
         return
