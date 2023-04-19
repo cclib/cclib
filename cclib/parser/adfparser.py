@@ -565,7 +565,10 @@ class ADF(logfileparser.Logfile):
 
             # handle case where MO information up to a certain orbital are missing
             while int(info[0]) - 1 != len(self.moenergies[0]):
-                self.moenergies[0].append(99999)
+                # FIXME if we don't know the MO energy, even if in reality
+                # it's a really big (negative) number, because you can't say
+                # what it is for certain, if should be NaN.
+                self.moenergies[0].append(utils.convertor(99999, "eV", "hartree"))
                 self.mosyms[0].append("A")
 
             homoA = None
