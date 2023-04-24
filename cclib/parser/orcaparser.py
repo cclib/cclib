@@ -664,20 +664,26 @@ Dispersion correction           -0.016199959
             self.skip_lines(inputfile, ['d', 'b'])
             line = next(inputfile)
             assert line[:4] == 'E(0)'
-            scfenergy = utils.convertor(utils.float(line.split()[-1]), 'hartree', 'eV')
+            scfenergy = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
             line = next(inputfile)
             assert line[:7] == 'E(CORR)'
             while 'E(TOT)' not in line:
                 line = next(inputfile)
             self.append_attribute(
                 'ccenergies',
-                utils.convertor(utils.float(line.split()[-1]), 'hartree', 'eV')
+                utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
             )
             self.metadata['methods'].append('CCSD')
             line = next(inputfile)
             assert line[:23] == 'Singles Norm <S|S>**1/2'
             line = next(inputfile)
-            self.metadata["t1_diagnostic"] = utils.float(line.split()[-1])
+            self.metadata["t1_diagnostic"] = float(line.split()[-1])
+
+        # Most of the "TRIPLES CORRECTION" correction block can be ignored.
+        if line[:10] == "E(CCSD(T))":
+            self.ccenergies[-1] = utils.convertor(float(line.split()[-1]), "hartree", "eV")
+            assert self.metadata["methods"][-1] == "CCSD"
+            self.metadata["methods"].append("CCSD(T)")
 
         # ------------------
         # CARTESIAN GRADIENT
