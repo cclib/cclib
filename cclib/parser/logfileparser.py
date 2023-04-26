@@ -31,31 +31,32 @@ from cclib.parser.data import ccData_optdone_bool
 logging.logMultiprocessing = 0
 
 
-class myBZ2File(bz2.BZ2File):
-    """Return string instead of bytes"""
-    def __next__(self) -> str:
-        line = super(bz2.BZ2File, self).__next__()
-        return line.decode("ascii", "replace")
+def hook_compressed_errors(filename, mode = "r", object = None):
+    extension = os.path.splitext(filename)[1]
 
-    def next(self) -> str:
-        line = self.__next__()
-        return line
+    if extension == ".gz":
+        fileobject = io.TextIOWrapper(gzip.GzipFile(filename, mode, fileobj=object), encoding = "ascii", errors = "ignore")
 
+    elif extension == ".zip":
+        zip = zipfile.ZipFile(object if object else filename, mode)
+        assert len(zip.namelist()) == 1, "ERROR: Zip file contains more than 1 file"
+        fileobject = io.StringIO(zip.read(zip.namelist()[0]).decode("ascii", "ignore"))
 
-class myGzipFile(gzip.GzipFile):
-    """Return string instead of bytes"""
-    def __next__(self) -> str:
-        super_ob = super(gzip.GzipFile, self)
-        # seemingly different versions of gzip can have either next or __next__
-        if hasattr(super_ob, 'next'):
-            line = super_ob.next()
-        else:
-            line = super_ob.__next__()
-        return line.decode("ascii", "replace")
+    elif extension in ['.bz', '.bz2']:
+        # Module 'bz2' is not always importable.
+        assert bz2 is not None, "ERROR: module bz2 cannot be imported"
+        fileobject = io.TextIOWrapper(bz2.BZ2File(object if object else filename, mode), encoding = "ascii", errors = "ignore")
 
-    def next(self) -> str:
-        line = self.__next__()
-        return line
+    elif object is not None:
+        # Assuming that object is text file encoded in utf-8
+        fileobject = io.TextIOWrapper(object, encoding = "utf-8", errors = "ignore")
+        
+    else:
+        # Normal text file.
+        
+        fileobject = open(filename, mode, errors='ignore')
+
+    return fileobject
 
 
 class FileWrapper:
@@ -137,28 +138,7 @@ def openlogfile(filename: str, object=None):
     
     # If there is a single string argument given.
     if type(filename) is str:
-
-        extension = os.path.splitext(filename)[1]
-
-        if extension == ".gz":
-            fileobject = myGzipFile(filename, "r", fileobj=object)
-
-        elif extension == ".zip":
-            zip = zipfile.ZipFile(object, "r") if object else zipfile.ZipFile(filename, "r")
-            assert len(zip.namelist()) == 1, "ERROR: Zip file contains more than 1 file"
-            fileobject = io.StringIO(zip.read(zip.namelist()[0]).decode("ascii", "ignore"))
-
-        elif extension in ['.bz', '.bz2']:
-            # Module 'bz2' is not always importable.
-            assert bz2 is not None, "ERROR: module bz2 cannot be imported"
-            fileobject = myBZ2File(object, "r") if object else myBZ2File(filename, "r")
-
-        else:
-            # Assuming that object is text file encoded in utf-8
-            fileobject = io.StringIO(object.decode('utf-8')) if object \
-                    else FileWrapper(open(filename, "r", errors='ignore'))
-
-        return fileobject
+        return FileWrapper(hook_compressed_errors(filename, object = object))
 
     elif hasattr(filename, "__iter__"):
 
@@ -168,7 +148,7 @@ def openlogfile(filename: str, object=None):
         
         # The 'errors' argument of fileinput.FileInput() looks like it should do what we want here,
         # but it's only available in python3.10 and even then doesn't work properly in conjunction with openhook...
-        return FileWrapper(fileinput.FileInput(filename, openhook= lambda filename, mode: fileinput.hook_compressed(filename, mode, errors='ignore')))
+        return FileWrapper(fileinput.FileInput(filename, openhook= lambda filename, mode, encoding = None, errors = None: hook_compressed_errors(filename, mode)))
 
 
 class Logfile(ABC):
