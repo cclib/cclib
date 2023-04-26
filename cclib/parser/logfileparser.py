@@ -289,48 +289,51 @@ class Logfile(ABC):
 
         # Initiate the FileInput object for the input files.
         # Remember that self.filename can be a list of files.
-        if not self.isstream:
-            if not self.isfileinput:
-                inputfile = openlogfile(self.filename)
+        inputfile = None
+        try:
+            if not self.isstream:
+                if not self.isfileinput:
+                    inputfile = openlogfile(self.filename)
+                else:
+                    inputfile = self.filename
             else:
-                inputfile = self.filename
-        else:
-            inputfile = FileWrapper(self.stream)
-
-        # Intialize self.progress
-        is_compressed = isinstance(inputfile, myGzipFile) or isinstance(inputfile, myBZ2File)
-        if progress and not (is_compressed):
-            self.progress = progress
-            self.progress.initialize(inputfile.size)
-            self.progress.step = 0
-        self.fupdate = fupdate
-        self.cupdate = cupdate
-
-        # Maybe the sub-class has something to do before parsing.
-        self.before_parsing()
-
-        # Loop over lines in the file object and call extract().
-        # This is where the actual parsing is done.
-        for line in inputfile:
-            self.updateprogress(inputfile, "Unsupported information", cupdate)
-
-            # This call should check if the line begins a section of extracted data.
-            # If it does, it parses some lines and sets the relevant attributes (to self).
-            # Any attributes can be freely set and used across calls, however only those
-            #   in data._attrlist will be moved to final data object that is returned.
-            try:
-                self.extract(inputfile, line)
-            except StopIteration:
-                self.logger.error("Unexpectedly encountered end of logfile.")
-                break
-            except Exception as e:
-                self.logger.error("Encountered error when parsing.")
-                self.logger.error(f"Last line read: {inputfile.last_line}")
-                raise
-
-        # Close input file object.
-        if not self.isstream:
-            inputfile.close()
+                inputfile = FileWrapper(self.stream)
+    
+            # Intialize self.progress
+            is_compressed = isinstance(inputfile, myGzipFile) or isinstance(inputfile, myBZ2File)
+            if progress and not (is_compressed):
+                self.progress = progress
+                self.progress.initialize(inputfile.size)
+                self.progress.step = 0
+            self.fupdate = fupdate
+            self.cupdate = cupdate
+    
+            # Maybe the sub-class has something to do before parsing.
+            self.before_parsing()
+    
+            # Loop over lines in the file object and call extract().
+            # This is where the actual parsing is done.
+            for line in inputfile:
+                self.updateprogress(inputfile, "Unsupported information", cupdate)
+    
+                # This call should check if the line begins a section of extracted data.
+                # If it does, it parses some lines and sets the relevant attributes (to self).
+                # Any attributes can be freely set and used across calls, however only those
+                #   in data._attrlist will be moved to final data object that is returned.
+                try:
+                    self.extract(inputfile, line)
+                except StopIteration:
+                    self.logger.error("Unexpectedly encountered end of logfile.")
+                    break
+                except Exception as e:
+                    self.logger.error("Encountered error when parsing.")
+                    self.logger.error(f"Last line read: {inputfile.last_line}")
+                    raise
+        
+        finally:
+            # Close input file object.
+            if not self.isstream and inputfile is not None:
+                inputfile.close()
 
         # Maybe the sub-class has something to do after parsing.
         self.after_parsing()
