@@ -24,6 +24,7 @@ class GenericTDTest(unittest.TestCase):
 
     number = 5
     expected_l_max = 41000
+    expected_f_max = 0.67
     symmetries = [
             "Singlet-Bu",
             "Singlet-Bu",
@@ -50,7 +51,7 @@ class GenericTDTest(unittest.TestCase):
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
         assert len(self.data.etoscs) == self.number
-        assert abs(max(self.data.etoscs) - 0.67) < 0.1
+        assert abs(max(self.data.etoscs) - self.expected_f_max) < 0.1
 
     @skipForParser('FChk','The parser is still being developed so we skip this test')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
@@ -173,11 +174,7 @@ class JaguarTDDFTTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
 
     expected_l_max = 48000
-
-    def testoscs(self):
-        """Is the maximum of etoscs in the right range?"""
-        assert len(self.data.etoscs) == self.number
-        assert abs(max(self.data.etoscs) - 1.0) < 0.2
+    expected_f_max = 1.2
 
 class OrcaTDDFTTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
@@ -207,11 +204,7 @@ class QChemTDDFTTest(GenericTDTest):
 
     number = 10
     expected_l_max = 48000
-
-    def testoscs(self):
-        """Is the maximum of etoscs in the right range?"""
-        assert len(self.data.etoscs) == self.number
-        assert abs(max(self.data.etoscs) - 0.9) < 0.1
+    expected_f_max = 0.9
 
 
 class GenericTDDFTtrpTest(GenericTDTest):
@@ -230,13 +223,9 @@ class OrcaROCISTest(GenericTDTest):
     """Customized test for ROCIS"""
     number = 4
     expected_l_max = 2316970.8
+    expected_f_max = 0.015
     # per 1085, no VELOCITY DIPOLE MOMENTS are parsed
     n_spectra = 7
-
-    def testoscs(self):
-        """Is the maximum of etoscs in the right range?"""
-        assert len(self.data.etoscs) == self.number
-        assert abs(max(self.data.etoscs) - 0.015) < 0.1
 
     def testTransprop(self):
         """Check the number of spectra parsed"""
@@ -279,6 +268,7 @@ class TurbomoleTDTest(GenericTDTest):
     
     number = 10
     expected_l_max = 91432
+    expected_f_max = 0.19
     symmetries = [
         "Singlet-A",
         "Singlet-A",
@@ -291,11 +281,6 @@ class TurbomoleTDTest(GenericTDTest):
         "Singlet-A",
         "Singlet-A",
         ]
-    
-    def testoscs(self):
-        """Is the maximum of etoscs in the right range?"""
-        assert len(self.data.etoscs) == self.number
-        assert abs(max(self.data.etoscs) - 0.19) < 0.1
     
     @skipForLogfile('Turbomole/basicTurbomole7.4/CO_cc2_TD', 'There are no dipole moments in ricc2')
     def testetmagdipsshape(self):
@@ -307,6 +292,7 @@ class TurbomoleTDADC2Test(GenericTDTest):
     
     number = 10
     expected_l_max = 136329
+    expected_f_max = 0.8
     symmetries = [
         "Singlet-A",
         "Singlet-A",
@@ -319,17 +305,13 @@ class TurbomoleTDADC2Test(GenericTDTest):
         "Singlet-A",
         "Singlet-A",
         ]
-    
-    def testoscs(self):
-        """Is the maximum of etoscs in the right range?"""
-        assert len(self.data.etoscs) == self.number
-        assert abs(max(self.data.etoscs) - 0.80) < 0.1
 
 class TurbomoleTDTripTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
     
     number = 10
     expected_l_max = 51530
+    expected_f_max = 0.84
     symmetries = [
         "Triplet-A",
         "Triplet-A",
@@ -342,11 +324,6 @@ class TurbomoleTDTripTest(GenericTDTest):
         "Triplet-A",
         "Triplet-A",
         ]
-
-    def testoscs(self):
-        """Is the maximum of etoscs in the right range?"""
-        assert len(self.data.etoscs) == self.number
-        assert abs(max(self.data.etoscs) - 0.84) < 0.1
         
 class TurbomoleTDCC2TripTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
@@ -375,17 +352,13 @@ class OrcaETPostHFTest(GenericTDTest):
     
     number = 2
     symmetries = ["Singlet", "Singlet"]
+    expected_f_max = 1.0
+    expected_l_max = 60000
     # Not sure why this value != 1 for these methods?
-    # Perhaps remaining contributions were too small to print?
+    # Perhaps remaining contributions were too small to print? 
     sumofsec = 0.43
     
-
 class OrcaSTEOMCCSDTest(OrcaETPostHFTest):
-    """Test for STEOM-CCSD with Orca."""
-    
-    number = 5
-    
-class OrcaSTEOMDLPNOCCSDTest(OrcaETPostHFTest):
     """Test for STEOM-CCSD with Orca."""
     
     sumofsec = 1.0
