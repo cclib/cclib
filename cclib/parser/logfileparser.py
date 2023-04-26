@@ -151,7 +151,7 @@ def openlogfile(filename: str, object=None):
         
         # The 'errors' argument of fileinput.FileInput() looks like it should do what we want here,
         # but it's only available in python3.10 and even then doesn't work properly in conjunction with openhook...
-        return FileWrapper(fileinput.FileInput(filename, openhook= lambda filename, mode, encoding = None, errors = None: hook_compressed_errors(filename, mode)))
+        return fileinput.FileInput(filename, openhook= lambda filename, mode, encoding = None, errors = None: hook_compressed_errors(filename, mode))
 
 
 class Logfile(ABC):
