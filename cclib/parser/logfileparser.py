@@ -544,7 +544,8 @@ class Logfile(ABC):
 
         return lines
     
-    def next_filled_line(self, inputfile):
+    @staticmethod
+    def next_filled_line(inputfile):
         """Return the next line that contains something other than whitespace."""
         while True:
             line = next(inputfile)
