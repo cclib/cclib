@@ -31,7 +31,7 @@ from cclib.parser.data import ccData_optdone_bool
 logging.logMultiprocessing = 0
 
 
-def hook_compressed_errors(filename, mode = "r", object = None):
+def hook_compressed_errors(filename, mode = "r", object = None, wrap = False):
     extension = os.path.splitext(filename)[1]
 
     if extension == ".gz":
@@ -55,6 +55,9 @@ def hook_compressed_errors(filename, mode = "r", object = None):
         # Normal text file.
         
         fileobject = open(filename, mode, errors='ignore')
+        
+        if wrap:
+            fileobject = FileWrapper(fileobject)
 
     return fileobject
 
@@ -138,7 +141,7 @@ def openlogfile(filename: str, object=None):
     
     # If there is a single string argument given.
     if type(filename) is str:
-        return FileWrapper(hook_compressed_errors(filename, object = object))
+        return hook_compressed_errors(filename, object = object, wrap = True)
 
     elif hasattr(filename, "__iter__"):
 
