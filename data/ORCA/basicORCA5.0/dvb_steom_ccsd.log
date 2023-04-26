@@ -162,7 +162,7 @@ INFO   : the flag for use of the SHARK integral package has been found!
                                        INPUT FILE
 ================================================================================
 NAME = dvb.inp
-|  1> ! EOM-CCSD NOCOSX NORI STO-3G TightSCF
+|  1> ! STEOM-CCSD NOCOSX NORI STO-3G TightSCF
 |  2> %Pal NProcs 4 end
 |  3> %MaxCore 2500
 |  4> %SCF
@@ -176,30 +176,32 @@ NAME = dvb.inp
 | 12>     DoTriplet   false
 | 13>     STEOMSOC    false
 | 14>     DoDbfilter  false
-| 15>     end
-| 16> 
-| 17> *xyz 0 1
-| 18> C            -1.41525000     0.23022000     0.00000000
-| 19> C             1.41525000    -0.23022000     0.00000000
-| 20> C            -0.49513000     1.31446000     0.00000000
-| 21> C             0.49513000    -1.31446000     0.00000000
-| 22> C             0.88941000     1.09095000     0.00000000
-| 23> C            -0.88941000    -1.09095000     0.00000000
-| 24> H            -0.87955000     2.34373000     0.00000000
-| 25> H             0.87955000    -2.34373000     0.00000000
-| 26> H             1.57790000     1.94501000     0.00000000
-| 27> H            -1.57790000    -1.94501000     0.00000000
-| 28> C             2.88458000    -0.52109000     0.00000000
-| 29> C            -2.88458000     0.52109000     0.00000000
-| 30> H             3.14034000    -1.59196000     0.00000000
-| 31> H            -3.14034000     1.59196000     0.00000000
-| 32> C             3.88004000     0.38225000     0.00000000
-| 33> C            -3.88004000    -0.38225000     0.00000000
-| 34> H             3.69468000     1.46244000     0.00000000
-| 35> H            -3.69468000    -1.46244000     0.00000000
-| 36> H             4.93165000     0.07110000     0.00000000
-| 37> H            -4.93165000    -0.07110000     0.00000000
-| 38> **                         ****END OF INPUT****
+| 15>     DoSTEOMNatTransOrb  True
+| 16>     DoStoreSTEOM        True
+| 17>     end
+| 18> 
+| 19> *xyz 0 1
+| 20> C            -1.41525000     0.23022000     0.00000000
+| 21> C             1.41525000    -0.23022000     0.00000000
+| 22> C            -0.49513000     1.31446000     0.00000000
+| 23> C             0.49513000    -1.31446000     0.00000000
+| 24> C             0.88941000     1.09095000     0.00000000
+| 25> C            -0.88941000    -1.09095000     0.00000000
+| 26> H            -0.87955000     2.34373000     0.00000000
+| 27> H             0.87955000    -2.34373000     0.00000000
+| 28> H             1.57790000     1.94501000     0.00000000
+| 29> H            -1.57790000    -1.94501000     0.00000000
+| 30> C             2.88458000    -0.52109000     0.00000000
+| 31> C            -2.88458000     0.52109000     0.00000000
+| 32> H             3.14034000    -1.59196000     0.00000000
+| 33> H            -3.14034000     1.59196000     0.00000000
+| 34> C             3.88004000     0.38225000     0.00000000
+| 35> C            -3.88004000    -0.38225000     0.00000000
+| 36> H             3.69468000     1.46244000     0.00000000
+| 37> H            -3.69468000    -1.46244000     0.00000000
+| 38> H             4.93165000     0.07110000     0.00000000
+| 39> H            -4.93165000    -0.07110000     0.00000000
+| 40> **                         ****END OF INPUT****
 ================================================================================
 
                        ****************************
@@ -408,8 +410,8 @@ Calculating Nuclear repulsion               ... done (  0.0 sec) ENN=    445.937
 SHARK setup successfully completed in   0.1 seconds
 
 Maximum memory used throughout the entire GTOINT-calculation: 5.0 MB
-[kennedy104:43703] 3 more processes have sent help message help-mpi-btl-openib.txt / error in device init
-[kennedy104:43703] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+[kennedy104:50869] 3 more processes have sent help message help-mpi-btl-openib.txt / error in device init
+[kennedy104:50869] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
 --------------------------------------------------------------------------
 WARNING: There was an error initializing an OpenFabrics device.
 
@@ -502,9 +504,9 @@ Time for diagonalization                   ...    0.001 sec
 Threshold for overlap eigenvalues          ... 1.000e-08
 Number of eigenvalues below threshold      ... 0
 Time for construction of square roots      ...    0.001 sec
-Total time needed                          ...    0.119 sec
+Total time needed                          ...    0.146 sec
 
-Time for model grid setup =    0.129 sec
+Time for model grid setup =    0.104 sec
 
 ------------------------------
 INITIAL GUESS: MODEL POTENTIAL
@@ -513,7 +515,7 @@ Loading Hartree-Fock densities                     ... done
 Calculating cut-offs                               ... done
 Initializing the effective Hamiltonian             ... done
 Setting up the integral package (SHARK)            ... done
-Starting the Coulomb interaction                   ... done (   0.4 sec)
+Starting the Coulomb interaction                   ... done (   0.0 sec)
 Reading the grid                                   ... done
 Mapping shells                                     ... done
 Starting the XC term evaluation                    ... done (   0.0 sec)
@@ -522,7 +524,7 @@ Diagonalizing the Hamiltonian                      ... done (   0.0 sec)
 Back transforming the eigenvectors                 ... done (   0.0 sec)
 Now organizing SCF variables                       ... done
                       ------------------
-                      INITIAL GUESS DONE (   0.6 sec)
+                      INITIAL GUESS DONE (   0.2 sec)
                       ------------------
 --------------
 SCF ITERATIONS
@@ -869,22 +871,22 @@ TIMINGS
 
 Total SCF time: 0 days 0 hours 0 min 2 sec 
 
-Total time                  ....       2.787 sec
-Sum of individual times     ....       2.300 sec  ( 82.5%)
+Total time                  ....       2.158 sec
+Sum of individual times     ....       1.715 sec  ( 79.5%)
 
-Fock matrix formation       ....       1.694 sec  ( 60.8%)
-Diagonalization             ....       0.007 sec  (  0.3%)
-Density matrix formation    ....       0.001 sec  (  0.0%)
-Population analysis         ....       0.018 sec  (  0.6%)
-Initial guess               ....       0.438 sec  ( 15.7%)
+Fock matrix formation       ....       1.263 sec  ( 58.5%)
+Diagonalization             ....       0.229 sec  ( 10.6%)
+Density matrix formation    ....       0.025 sec  (  1.1%)
+Population analysis         ....       0.005 sec  (  0.2%)
+Initial guess               ....       0.061 sec  (  2.8%)
 Orbital Transformation      ....       0.000 sec  (  0.0%)
 Orbital Orthonormalization  ....       0.000 sec  (  0.0%)
-DIIS solution               ....       0.008 sec  (  0.3%)
-SOSCF solution              ....       0.006 sec  (  0.2%)
+DIIS solution               ....       0.007 sec  (  0.3%)
+SOSCF solution              ....       0.021 sec  (  1.0%)
 
 Maximum memory used throughout the entire SCF-calculation: 224.8 MB
-[kennedy104:43742] 3 more processes have sent help message help-mpi-btl-openib.txt / error in device init
-[kennedy104:43742] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+[kennedy104:50898] 3 more processes have sent help message help-mpi-btl-openib.txt / error in device init
+[kennedy104:50898] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
 --------------------------------------------------------------------------
 WARNING: There was an error initializing an OpenFabrics device.
 
@@ -972,8 +974,76 @@ CLOSED-SHELL FOCK OPERATOR
 Restoring SHARK [2] ... ok
 Recanonicalizing the internal orbitals
 Recanonicalizing the virtual orbitals
-Time needed for Fock operator              ...            0.205 sec
+Time needed for Fock operator              ...            0.211 sec
 Reference energy                           ...   -379.768963134
+
+WARNING: NRootsCISNAT (0) is lower than NRoots (2).
+         I will take NRootsCISNAT = 2.
+
+-------------------
+RHF CIS CALCULATION
+-------------------
+
+Number of roots to be optimized            ... 2
+Number of amplitudes to be optimized       ... 625
+
+Building the initial guess                 ... done
+Iter    Delta-E          Residual
+-------------------------------------------------------
+  0   0.296924837644   0.023561758200 
+  1   0.040918734607   0.003706148172 
+  2   0.010467613014   0.001065816714 
+  3   0.001743028867   0.000193433797 
+  4   0.000643266798   0.000063350930 
+  5   0.000103215146   0.000006616097 
+
+      *** CONVERGENCE OF RESIDUAL NORM REACHED ***
+        --- The CIS iterations have converged ---
+
+-----------
+CIS RESULTS
+-----------
+
+IROOT=  1:  0.241150 au     6.562 eV   52926.3 cm**-1
+   32 ->  37    0.029190 (-0.170849)
+   33 ->  36    0.057375 (-0.239531)
+   34 ->  35    0.864435 (-0.929750)
+IROOT=  2:  0.254158 au     6.916 eV   55781.3 cm**-1
+   31 ->  36    0.032525 (-0.180346)
+   33 ->  35    0.528521 ( 0.726994)
+   33 ->  38    0.028767 ( 0.169608)
+   34 ->  36    0.408846 (-0.639411)
+
+--------------------------------------------------------------------
+                UNRELAXED EXCITED STATE DIPOLE MOMENTS
+--------------------------------------------------------------------
+               E(eV)     DX(au)      DY(au)      DZ(au)      |D|(D)
+IROOT=  1:     6.562   -0.000000   -0.000000   -0.000000    0.000000
+IROOT=  2:     6.916   -0.000000   -0.000000   -0.000000    0.000000
+--------------------------------------------------------------------
+
+
+------------------------------------------
+NATURAL ORBITALS FOR STATE    1
+------------------------------------------
+
+Making the (pseudo)densities                       ... done
+
+------------------------------------------
+NATURAL ORBITALS FOR STATE    2
+------------------------------------------
+
+Making the (pseudo)densities                       ... done
+
+------------------------------------------
+STATE AVERAGED NATURAL ORBITALS FOR ACTIVE SPACE SELECTION
+------------------------------------------
+
+Solving eigenvalue problem for the occupied space  ... done
+Solving eigenvalue problem for the virtual space   ... done
+After automatic selection of the active space:
+ No of roots active in IP calculation:    8  
+ No of roots active in EA calculation:    8  
 <ss|**>: 
 ------------------------------
 PARTIAL COULOMB TRANSFORMATION
@@ -993,9 +1063,9 @@ AO-integral source                         ... DIRECT
 Integral package used                      ... LIBINT
 
 Starting integral evaluation:
-<sp|**>:       300294 b        0 skpd     0.198 s (  0.001 ms/b)
-<pp|**>:       216630 b        0 skpd     0.184 s (  0.001 ms/b)
-       41085 b        0 skpd     0.071 s (  0.002 ms/b)
+<sp|**>:       300294 b        0 skpd     0.144 s (  0.000 ms/b)
+<pp|**>:       216630 b        0 skpd     0.192 s (  0.001 ms/b)
+       41085 b        0 skpd     0.074 s (  0.002 ms/b)
 Closing buffer AOJ ( 0.02 GB; CompressionRatio= 1.00)
 Collecting buffer AOJ 
     ... done with AO integral generation
@@ -1004,24 +1074,24 @@ Number of MO pairs included in the trafo   ... 1275
 IBATCH = 1 of  1
 Closing buffer JAO ( 0.02 GB; CompressionRatio= 1.00)
 Collecting buffer JAO 
-TOTAL TIME for half transformation         ...     0.516 sec
-AO-integral generation                     ...     0.423 sec
-Half transformation                        ...     0.030 sec
-J-integral sorting                         ...     0.049 sec
+TOTAL TIME for half transformation         ...     0.471 sec
+AO-integral generation                     ...     0.379 sec
+Half transformation                        ...     0.033 sec
+J-integral sorting                         ...     0.053 sec
 
 -------------------------- SECOND HALF TRANSFORMATION --------------------------
-Formation of (pq|rs)                       ... ok (     0.068 sec)
-Integral sorting                           ... ok (     0.061 sec)
+Formation of (pq|rs)                       ... ok (     0.027 sec)
+Integral sorting                           ... ok (     0.066 sec)
 
 ------------------
 CLOSED SHELL GUESS
 ------------------
 
-Initial guess performed in     0.003 sec
+Initial guess performed in     0.012 sec
 E(0)                                       ...   -379.768963134
-E(MP2)                                     ...     -0.600401250
-Initial E(tot)                             ...   -380.369364384
-<T|T>                                      ...      0.290640475
+E(MP2)                                     ...     -0.596584611
+Initial E(tot)                             ...   -380.365547745
+<T|T>                                      ...      0.286229223
 Number of pairs included                   ... 325
 Total number of pairs                      ... 325
 
@@ -1032,21 +1102,21 @@ Total number of pairs                      ... 325
 Number of amplitudes to be optimized       ... 203750
 
 Iter       E(tot)           E(Corr)          Delta-E          Residual     Time
-  0   -380.369364384     -0.600401250      0.000000000      0.020465262    0.24
+  0   -380.365547745     -0.596584611      0.000000000      0.021241519    0.26
                            *** Turning on DIIS ***
-  1   -380.437173961     -0.668210827     -0.067809577      0.018100297    0.42
-  2   -380.483580163     -0.714617028     -0.046406201      0.009282707    0.42
-  3   -380.495080121     -0.726116987     -0.011499959      0.005062216    0.43
-  4   -380.498852044     -0.729888910     -0.003771923      0.001927178    0.43
-  5   -380.500003316     -0.731040182     -0.001151272      0.000888337    0.43
-  6   -380.500284105     -0.731320971     -0.000280789      0.000357740    0.43
-  7   -380.500373141     -0.731410007     -0.000089036      0.000171259    0.43
-  8   -380.500394963     -0.731431829     -0.000021823      0.000057165    0.43
-[kennedy104:43773] 3 more processes have sent help message help-mpi-btl-openib.txt / error in device init
-[kennedy104:43773] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
-  9   -380.500397821     -0.731434687     -0.000002858      0.000037295    0.43
- 10   -380.500398304     -0.731435170     -0.000000483      0.000015286    0.43
- 11   -380.500397409     -0.731434275      0.000000895      0.000008028    0.43
+  1   -380.433070836     -0.664107702     -0.067523090      0.018220074    0.62
+  2   -380.482342764     -0.713379630     -0.049271929      0.008945186    0.44
+  3   -380.494705411     -0.725742277     -0.012362647      0.005025019    0.44
+  4 [kennedy104:50929] 3 more processes have sent help message help-mpi-btl-openib.txt / error in device init
+[kennedy104:50929] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+  -380.498647606     -0.729684472     -0.003942195      0.001994670    0.44
+  5   -380.499926100     -0.730962966     -0.001278494      0.000902212    0.44
+  6   -380.500260589     -0.731297455     -0.000334488      0.000381398    0.44
+  7   -380.500363795     -0.731400661     -0.000103206      0.000191492    0.43
+  8   -380.500393595     -0.731430461     -0.000029800      0.000071078    0.41
+  9   -380.500398564     -0.731435429     -0.000004969      0.000028840    0.41
+ 10   -380.500398887     -0.731435753     -0.000000324      0.000014865    0.40
+ 11   -380.500397734     -0.731434600      0.000001153      0.000006742    0.41
                --- The Coupled-Cluster iterations have converged ---
 
 ----------------------
@@ -1054,40 +1124,40 @@ COUPLED CLUSTER ENERGY
 ----------------------
 
 E(0)                                       ...   -379.768963134
-E(CORR)                                    ...     -0.731434275
-E(TOT)                                     ...   -380.500397409
-Singles Norm <S|S>**1/2                    ...      0.018075770  
-T1 diagnostic                              ...      0.002556300  
+E(CORR)                                    ...     -0.731434600
+E(TOT)                                     ...   -380.500397734
+Singles Norm <S|S>**1/2                    ...      0.018079248  
+T1 diagnostic                              ...      0.002556792  
 
 ------------------
 LARGEST AMPLITUDES
 ------------------
-  33-> 36  33-> 36       0.149828
-  34-> 35  34-> 35       0.128378
-  32-> 37  32-> 37       0.091737
-  34-> 36  33-> 35       0.077991
-  34-> 37  32-> 35       0.072181
-  34-> 38  31-> 35       0.066919
-  32-> 38  31-> 37       0.059561
-  33-> 39  27-> 36       0.057604
-  34-> 35  32-> 37       0.054174
-  32-> 35  32-> 35       0.054161
-  31-> 37  31-> 37       0.052492
-  34-> 39  27-> 35       0.051879
-  32-> 37  31-> 38       0.051784
-  31-> 38  31-> 38       0.050462
-  34-> 37  34-> 37       0.050015
-  34-> 35  31-> 38       0.049756
+  33-> 36  33-> 36       0.149830
+  34-> 35  34-> 35       0.128376
+  34-> 36  33-> 35       0.077993
+  32-> 37  32-> 37       0.071487
+  34-> 37  32-> 35       0.071304
+  34-> 38  31-> 35       0.066918
+  32-> 38  31-> 37       0.053206
+  34-> 43  26-> 35       0.052683
+  34-> 35  32-> 37       0.052488
+  31-> 38  31-> 38       0.050461
+  34-> 35  31-> 38       0.049757
+  32-> 35  32-> 35       0.049182
+  31-> 35  31-> 35       0.048856
+  34-> 37  34-> 37       0.046631
+  34-> 38  34-> 38       0.045673
+  31-> 37  31-> 37       0.044766
 
 
         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
         !  Warning: Densities are linearized densities !                         !
         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
 
-Trace of internal density part =     -1.014763888
-Trace of external density part =      1.014763888
-NORM  =      1.507708677 sqrt=     1.227887893
-W(HF) =      0.663258105
+Trace of internal density part =     -1.014768516
+Trace of external density part =      1.014768516
+NORM  =      1.507711117 sqrt=     1.227888886
+W(HF) =      0.663257032
 ------------------------------------------------------------------------------
                            ORCA POPULATION ANALYSIS
 ------------------------------------------------------------------------------
@@ -1127,11 +1197,11 @@ Sum of atomic charges:   -0.0000000
 MULLIKEN REDUCED ORBITAL CHARGES
 --------------------------------
   0 C s       :     3.137985  s :     3.137985
-      pz      :     0.993513  p :     2.863513
+      pz      :     0.993513  p :     2.863512
       px      :     0.927780
       py      :     0.942219
   1 C s       :     3.137985  s :     3.137985
-      pz      :     0.993513  p :     2.863513
+      pz      :     0.993513  p :     2.863512
       px      :     0.927780
       py      :     0.942219
   2 C s       :     3.145696  s :     3.145696
@@ -1142,11 +1212,11 @@ MULLIKEN REDUCED ORBITAL CHARGES
       pz      :     1.002508  p :     2.912835
       px      :     0.946695
       py      :     0.963632
-  4 C s       :     3.143901  s :     3.143901
+  4 C s       :     3.143902  s :     3.143902
       pz      :     1.001860  p :     2.915459
       px      :     0.955623
       py      :     0.957976
-  5 C s       :     3.143901  s :     3.143901
+  5 C s       :     3.143902  s :     3.143902
       pz      :     1.001860  p :     2.915459
       px      :     0.955623
       py      :     0.957976
@@ -1155,13 +1225,13 @@ MULLIKEN REDUCED ORBITAL CHARGES
   8 H s       :     0.939983  s :     0.939983
   9 H s       :     0.939983  s :     0.939983
  10 C s       :     3.147257  s :     3.147257
-      pz      :     0.997649  p :     2.908749
+      pz      :     0.997648  p :     2.908749
       px      :     0.933486
-      py      :     0.977614
+      py      :     0.977615
  11 C s       :     3.147257  s :     3.147257
-      pz      :     0.997649  p :     2.908749
+      pz      :     0.997648  p :     2.908749
       px      :     0.933486
-      py      :     0.977614
+      py      :     0.977615
  12 H s       :     0.942707  s :     0.942707
  13 H s       :     0.942707  s :     0.942707
  14 C s       :     3.155078  s :     3.155078
@@ -1211,12 +1281,12 @@ LOEWDIN REDUCED ORBITAL CHARGES
 -------------------------------
   0 C s       :     3.035741  s :     3.035741
       pz      :     0.992680  p :     2.958403
-      px      :     0.972979
-      py      :     0.992744
+      px      :     0.972978
+      py      :     0.992745
   1 C s       :     3.035741  s :     3.035741
       pz      :     0.992680  p :     2.958403
-      px      :     0.972979
-      py      :     0.992744
+      px      :     0.972978
+      py      :     0.992745
   2 C s       :     3.031186  s :     3.031186
       pz      :     1.002792  p :     2.999864
       px      :     0.998896
@@ -1226,23 +1296,23 @@ LOEWDIN REDUCED ORBITAL CHARGES
       px      :     0.998896
       py      :     0.998176
   4 C s       :     3.029213  s :     3.029213
-      pz      :     1.002216  p :     3.002380
+      pz      :     1.002216  p :     3.002379
       px      :     1.001430
-      py      :     0.998734
+      py      :     0.998733
   5 C s       :     3.029213  s :     3.029213
-      pz      :     1.002216  p :     3.002380
+      pz      :     1.002216  p :     3.002379
       px      :     1.001430
-      py      :     0.998734
+      py      :     0.998733
   6 H s       :     0.971828  s :     0.971828
   7 H s       :     0.971828  s :     0.971828
   8 H s       :     0.970104  s :     0.970104
   9 H s       :     0.970104  s :     0.970104
  10 C s       :     3.032129  s :     3.032129
-      pz      :     0.997095  p :     2.992268
+      pz      :     0.997094  p :     2.992267
       px      :     0.983473
       py      :     1.011700
  11 C s       :     3.032129  s :     3.032129
-      pz      :     0.997095  p :     2.992268
+      pz      :     0.997094  p :     2.992267
       px      :     0.983473
       py      :     1.011700
  12 H s       :     0.972890  s :     0.972890
@@ -1308,7 +1378,7 @@ B( 15-C , 17-H ) :   0.9279 B( 15-C , 19-H ) :   0.9299
             RHF EOM-CCSD CALCULATION
 ---------------------------------------------------
 
-EOM type                                   ... EE-EOM
+EOM type                                   ... IP-EOM
 Eigenvectors                               ... RHS
 Solver                                     ... Davidson
 K(R) Formation                             ... MO
@@ -1317,45 +1387,162 @@ Convergence threshold                      ... 1.00E-05
 Root homing                                ... on
 Preconditioning update                     ... CIS
 Reduced space size (times number of roots) ... 40
-Number of roots in the CIS initial guess   ... 80
-Number of roots to be optimized            ... 2
-Solving roots                              ... together
-Number of amplitudes to be optimized       ... 203750
+Number of roots in the CIS initial guess   ... 8
+Number of roots to be optimized            ... 8
+Solving roots                              ... separately
+Number of amplitudes to be optimized       ... 15650
 
 --------------------------------
 AUTOMATIC CHOICE OF INCORE LEVEL
 --------------------------------
 
 Memory available                           ...   1250.00 MB
-Memory needed for Residual-vectors         ...      3.10 MB
-Memory needed for Ritz-vectors             ...      3.10 MB
+Memory needed for Residual-vectors         ...      0.12 MB
+Memory needed for Ritz-vectors             ...      0.95 MB
 Memory needed for 3-ext integrals          ...      0.00 MB
-Memory needed for Sigma-vectors            ...    123.98 MB
-Memory needed for State-vectors            ...    123.98 MB
+Memory needed for Sigma-vectors            ...      4.77 MB
+Memory needed for State-vectors            ...      4.77 MB
  -> Final InCoreLevel    ... 5
 
 
-Dressing integrals for EOM-CCSD            ... done (    0.8)
+Dressing integrals for EOM-CCSD            ... done (    0.6)
 Building the initial guess                 ... done (    0.0)
+
+BATCH   1 OF   8
 
 Iter    Delta-E          Residual              Time
 ---------------------------------------------------
-  0   0.484762553518   0.115979181293         2.717
-  1   0.109643957842   0.009376286751         2.781
-  2   0.014899348360   0.006415718802         2.832
-  3   0.015209805602   0.008803566813         2.889
-  4   0.016258436459   0.006722424287         2.641
-  5   0.008443819218   0.003629113205         2.745
-  6   0.004367366831   0.001686899341         2.738
-  7   0.041025914365   0.038148834421         2.687
-  8   0.038484092259   0.028614099145         2.709
-  9   0.027093246848   0.009429252960         2.832
- 10   0.008120669401   0.002255516189         2.794
- 11   0.001846316904   0.000502039699         2.733
- 12   0.000415308564   0.000098261374         2.940
- 13   0.000091665224   0.000025748828         1.394
- 14   0.000029644495   0.000012581267         1.684
- 15   0.000014432658   0.000006693056         1.380
+  0   0.288189625674   0.034776435517         0.109
+  1   0.069705559638   0.001713396816         0.106
+  2   0.003744637502   0.000404474413         0.105
+  3   0.000583728661   0.000071004334         0.105
+  4   0.000088462688   0.000013935271         0.107
+  5   0.000014724876   0.000002913859         0.103
+
+      *** CONVERGENCE OF RESIDUAL NORM REACHED ***
+        --- The EOM iterations have converged ---
+
+BATCH   2 OF   8
+
+Iter    Delta-E          Residual              Time
+---------------------------------------------------
+  0   0.336841353562   0.035418710637         0.103
+  1   0.075123798205   0.001689914415         0.103
+  2   0.004041646722   0.000230542501         0.103
+  3   0.000390470110   0.000022559720         0.143
+  4   0.000057082934   0.000003315236         0.142
+
+      *** CONVERGENCE OF RESIDUAL NORM REACHED ***
+        --- The EOM iterations have converged ---
+
+BATCH   3 OF   8
+
+Iter    Delta-E          Residual              Time
+---------------------------------------------------
+  0   0.380106937861   0.033040436331         0.210
+  1   0.074450128120   0.001869811843         0.161
+  2   0.006099579864   0.000825187456         0.099
+  3   0.001261364772   0.000264665623         0.123
+  4   0.000401256209   0.000087691002         0.102
+  5   0.000196484358   0.000031624542         0.105
+  6   0.000082883266   0.000015324881         0.113
+  7   0.000072281415   0.000003442529         0.206
+
+      *** CONVERGENCE OF RESIDUAL NORM REACHED ***
+        --- The EOM iterations have converged ---
+
+BATCH   4 OF   8
+
+Iter    Delta-E          Residual              Time
+---------------------------------------------------
+  0   0.428203347038   0.033152894788         0.101
+  1   0.074712799480   0.001917183492         0.100
+  2   0.006725370096   0.001306483178         0.203
+  3   0.012269275235   0.010148788118         0.123
+  4   0.016916436962   0.001747865113         0.104
+  5   0.003469733276   0.000524491040         0.107
+  6   0.001344449476   0.000171670385         0.108
+  7   0.000307966453   0.000027951387         0.348
+  8   0.000067674831   0.000009048928         0.106
+
+      *** CONVERGENCE OF RESIDUAL NORM REACHED ***
+        --- The EOM iterations have converged ---
+
+BATCH   5 OF   8
+
+Iter    Delta-E          Residual              Time
+---------------------------------------------------
+  0   0.504979528029   0.064441597568         0.120
+  1   0.131097142750   0.008536971491         0.108
+  2   0.013198978272   0.002483532174         0.108
+  3   0.001065902544   0.000362749629         0.108
+  4   0.000506730042   0.000059626102         0.106
+  5   0.000084653830   0.000026595635         0.109
+  6   0.000090109471   0.000018891843         0.109
+  7   0.000040669922   0.000008720763         0.105
+
+      *** CONVERGENCE OF RESIDUAL NORM REACHED ***
+        --- The EOM iterations have converged ---
+
+BATCH   6 OF   8
+
+Iter    Delta-E          Residual              Time
+---------------------------------------------------
+  0   0.572622620812   0.059104776426         0.108
+  1   0.122752486956   0.006230724790         0.214
+  2   0.012747250538   0.002467636155         0.217
+  3   0.000347133469   0.001431177839         0.105
+  4   0.001488333461   0.001773895115         0.106
+  5   0.004828181611   0.001131343518         0.109
+  6   0.001643002656   0.001003910047         0.109
+  7   0.002890886684   0.003508340590         0.109
+  8   0.013990795740   0.004185057318         0.116
+  9   0.004264788489   0.000814805579         0.113
+ 10   0.001253384741   0.000563905508         0.113
+ 11   0.000827474032   0.000414304327         0.115
+ 12   0.000690935535   0.000186216735         0.142
+ 13   0.000261890826   0.000072281110         0.180
+ 14   0.000100868895   0.000043757784         0.129
+ 15   0.000177180088   0.000041707196         0.118
+ 16   0.000105056239   0.000030054760         0.232
+ 17   0.000024422223   0.000012788899         0.121
+ 18   0.000008158310   0.000004126906         0.111
+
+      *** CONVERGENCE OF RESIDUAL NORM REACHED ***
+        --- The EOM iterations have converged ---
+
+BATCH   7 OF   8
+
+Iter    Delta-E          Residual              Time
+---------------------------------------------------
+  0   0.599190563521   0.084566083752         0.118
+  1   0.194557625022   0.023741478583         0.119
+  2   0.041775486927   0.007465817290         0.104
+  3   0.001118631998   0.001816883458         0.169
+  4   0.002631290991   0.000516449972         0.111
+  5   0.001511035107   0.000193095996         0.105
+  6   0.000070845461   0.000146326186         0.107
+  7   0.000136075815   0.000040492890         0.108
+  8   0.000097738254   0.000011850126         0.108
+  9   0.000019130163   0.000005661224         0.207
+
+      *** CONVERGENCE OF RESIDUAL NORM REACHED ***
+        --- The EOM iterations have converged ---
+
+BATCH   8 OF   8
+
+Iter    Delta-E          Residual              Time
+---------------------------------------------------
+  0   0.625329655324   0.077312128488         0.154
+  1   0.173116328643   0.019008252043         0.101
+  2   0.039515118371   0.008706527845         0.200
+  3   0.003692737168   0.005270125731         0.101
+  4   0.009224548140   0.003608328023         0.103
+  5   0.006589862819   0.000706368372         0.103
+  6   0.000525186266   0.000208524192         0.102
+  7   0.000144627895   0.000068920175         0.220
+  8   0.000165409911   0.000019292052         0.107
+  9   0.000012403047   0.000008856830         0.101
 
       *** CONVERGENCE OF RESIDUAL NORM REACHED ***
         --- The EOM iterations have converged ---
@@ -1364,74 +1551,834 @@ Iter    Delta-E          Residual              Time
 EOM-CCSD RESULTS (RHS)
 ----------------------
 
-IROOT=  1:  0.201084 au     5.472 eV   44132.8 cm**-1
+IROOT=  1:  0.214082 au     5.825 eV   46985.6 cm**-1
   Amplitude    Excitation
-   0.134637    31 ->  36
-   0.455298    33 ->  35
-   0.129078    33 ->  38
-   0.422998    34 ->  36
-  Ground state amplitude:  0.000000
-Percentage singles character=     82.39
+   0.692639    34 -> x
+Percentage singles character=     92.72
 
-IROOT=  2:  0.280220 au     7.625 eV   61501.1 cm**-1
+IROOT=  2:  0.257228 au     7.000 eV   56455.1 cm**-1
   Amplitude    Excitation
-   0.666113    34 ->  35
-  Ground state amplitude: -0.000000
-Percentage singles character=     92.17
+   0.693085    33 -> x
+Percentage singles character=     92.45
 
-
-
-*****************
-Ground State  LHS
-*****************
-
-
-        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
-        ! Warning: Ground LHS states are linear, use DoTDM to get proper ones ! 
-        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
-
-
-*****************
-Excited State LHS
-*****************
-
-
--------------------
-APPROXIMATE EOM LHS 
--------------------
-
-        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
-        ! Warning: Excited LHS states are approximate, use DoLeft to get proper ones ! 
-        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
-
-IROOT=  1:  0.201084 au     5.472 eV   44132.8 cm**-1
+IROOT=  3:  0.297853 au     8.105 eV   65371.2 cm**-1
   Amplitude    Excitation
-   0.134636    31 ->  36
-   0.455340    33 ->  35
-   0.129080    33 ->  38
-   0.422980    34 ->  36
-IROOT=  2:  0.280220 au     7.625 eV   61501.1 cm**-1
+  -0.128176    26 -> x
+   0.677483    32 -> x
+Percentage singles character=     90.63
+
+IROOT=  4:  0.346223 au     9.421 eV   75987.1 cm**-1
   Amplitude    Excitation
-   0.666097    34 ->  35
+   0.685362    31 -> x
+Percentage singles character=     89.19
 
--------------------------
-Transition Dipole Moments
--------------------------
+IROOT=  5:  0.362041 au     9.852 eV   79458.7 cm**-1
+  Amplitude    Excitation
+  -0.241856    16 -> x
+   0.643601    30 -> x
+Percentage singles character=     93.53
 
+IROOT=  6:  0.432267 au    11.763 eV   94871.7 cm**-1
+  Amplitude    Excitation
+  -0.123803    13 -> x
+   0.187312    21 -> x
+   0.204968    23 -> x
+  -0.198950    24 -> x
+   0.582734    29 -> x
+Percentage singles character=     92.31
+
+IROOT=  7:  0.357311 au     9.723 eV   78420.7 cm**-1
+  Amplitude    Excitation
+  -0.108998    10 -> x
+   0.140642    18 -> x
+   0.321911    20 -> x
+   0.121349    22 -> x
+   0.244931    25 -> x
+   0.514835    28 -> x
+Percentage singles character=     93.26
+
+IROOT=  8:  0.392343 au    10.676 eV   86109.4 cm**-1
+  Amplitude    Excitation
+  -0.137919    14 -> x
+   0.123896    17 -> x
+   0.127544    21 -> x
+   0.462840    24 -> x
+   0.445858    27 -> x
+Percentage singles character=     93.22
+
+
+IP STATE=  0:  percentage singles     92.720 
+IP STATE=  1:  percentage singles     92.451 
+IP STATE=  2:  percentage singles     90.626 
+IP STATE=  3:  percentage singles     89.187 
+IP STATE=  4:  percentage singles     93.532 
+IP STATE=  5:  percentage singles     92.312 
+IP STATE=  6:  percentage singles     93.263 
+IP STATE=  7:  percentage singles     93.222 
+ Final no active IP roots:    8  
+
+---------------------------------------------------
+            RHF EOM-CCSD CALCULATION
+---------------------------------------------------
+
+EOM type                                   ... EA-EOM
+Eigenvectors                               ... RHS
+Solver                                     ... Davidson
+K(R) Formation                             ... MO
+Convergence check                          ... for each root separately
+Convergence threshold                      ... 1.00E-05
+Root homing                                ... on
+Preconditioning update                     ... CIS
+Reduced space size (times number of roots) ... 40
+Number of roots in the CIS initial guess   ... 8
+Number of roots to be optimized            ... 8
+Solving roots                              ... separately
+Number of amplitudes to be optimized       ... 15650
+
+--------------------------------
+AUTOMATIC CHOICE OF INCORE LEVEL
+--------------------------------
+
+Memory available                           ...   1250.00 MB
+Memory needed for Residual-vectors         ...      0.12 MB
+Memory needed for Ritz-vectors             ...      0.95 MB
+Memory needed for 3-ext integrals          ...      2.98 MB
+Memory needed for Sigma-vectors            ...      4.77 MB
+Memory needed for State-vectors            ...      4.77 MB
+ -> Final InCoreLevel    ... 5
+
+
+Dressing integrals for EOM-CCSD            ... done (    0.2)
+Building the initial guess                 ... done (    0.0)
+
+BATCH   1 OF   8
+
+Iter    Delta-E          Residual              Time
+---------------------------------------------------
+  0   0.266714232990   0.035636656472         0.031
+  1   0.069925942203   0.001471410368         0.030
+  2   0.003326239591   0.000269476447         0.032
+  3   0.000504868682   0.000041957336         0.032
+  4   0.000025800651   0.000006439599         0.134
+
+      *** CONVERGENCE OF RESIDUAL NORM REACHED ***
+        --- The EOM iterations have converged ---
+
+BATCH   2 OF   8
+
+Iter    Delta-E          Residual              Time
+---------------------------------------------------
+  0   0.328904126765   0.036747511639         0.036
+  1   0.077258516176   0.001557861653         0.028
+  2   0.003972082141   0.000169541691         0.027
+  3   0.000368198429   0.000014442323         0.030
+  4   0.000052243916   0.000002647896         0.143
+
+      *** CONVERGENCE OF RESIDUAL NORM REACHED ***
+        --- The EOM iterations have converged ---
+
+BATCH   3 OF   8
+
+Iter    Delta-E          Residual              Time
+---------------------------------------------------
+  0   0.374996385953   0.034279432000         0.028
+  1   0.076610813268   0.001769260859         0.131
+  2   0.006028646249   0.000626747449         0.029
+  3   0.000659181554   0.000158129523         0.029
+  4   0.000347997623   0.000040766795         0.032
+  5   0.000137148450   0.000009431833         0.133
+
+      *** CONVERGENCE OF RESIDUAL NORM REACHED ***
+        --- The EOM iterations have converged ---
+
+BATCH   4 OF   8
+
+Iter    Delta-E          Residual              Time
+---------------------------------------------------
+  0   0.449419248462   0.035436722222         0.029
+  1   0.080396970336   0.001889996375         0.028
+  2   0.007992817142   0.001658549716         0.060
+  3   0.015954243337   0.009330592549         0.047
+  4   0.012159013920   0.000927462231         0.133
+  5   0.002834237759   0.000447139646         0.031
+  6   0.001155263674   0.000111616741         0.029
+  7   0.000260838616   0.000030784205         0.224
+  8   0.000170761391   0.000039194341         0.071
+  9   0.000692611235   0.000413415571         0.031
+ 10   0.000514604792   0.000011872559         0.046
+ 11   0.000048221018   0.000002620466         0.029
+
+      *** CONVERGENCE OF RESIDUAL NORM REACHED ***
+        --- The EOM iterations have converged ---
+
+BATCH   5 OF   8
+
+Iter    Delta-E          Residual              Time
+---------------------------------------------------
+  0   0.773357206607   0.072923275936         0.030
+  1   0.170708289633   0.020244061165         0.029
+  2   0.056505868371   0.011834547694         0.030
+  3   0.207534785853   0.014407137411         0.035
+  4   0.035259723096   0.014856484683         0.034
+  5   0.188695127824   0.001102228522         0.144
+  6   0.239257180872   0.014433544939         0.034
+  7   0.034952285347   0.006578538189         0.033
+  8   0.015304566368   0.009043554705         0.031
+  9   0.059925073756   0.024320232192         0.031
+ 10   0.024832398012   0.006978049491         0.032
+ 11   0.008003697538   0.003681428311         0.032
+ 12   0.006143690064   0.002684864013         0.035
+ 13   0.003908527398   0.001623808744         0.032
+ 14   0.003357474469   0.001383573799         0.137
+ 15   0.005769435691   0.002999729593         0.033
+ 16   0.014675362950   0.005896551398         0.034
+ 17   0.007580757048   0.000964240055         0.047
+ 18   0.001379332982   0.000442268138         0.035
+ 19   0.000581437076   0.000264702836         0.041
+ 20   0.000821720400   0.000243893320         0.041
+ 21   0.000702040184   0.000397870892         0.094
+ 22   0.210153845251   0.000149618166         0.037
+ 23   0.029065086949   0.000216353768         0.138
+ 24   0.029416868633   0.000008366984         0.036
+
+      *** CONVERGENCE OF RESIDUAL NORM REACHED ***
+        --- The EOM iterations have converged ---
+
+BATCH   6 OF   8
+
+Iter    Delta-E          Residual              Time
+---------------------------------------------------
+  0   0.825161267670   0.060266194229         0.032
+  1   0.133743803246   0.008652073810         0.038
+  2   0.038404878823   0.014205444892         0.032
+  3   0.101482956298   0.022733891555         0.029
+  4   0.051684774807   0.012846740713         0.035
+  5   0.025250500285   0.012020341376         0.036
+  6   0.065232637556   0.020536171861         0.033
+  7   0.024565970212   0.006361721738         0.030
+  8   0.006335002531   0.002527366192         0.091
+  9   0.003840622165   0.003123262180         0.110
+ 10   0.022188717443   0.028548801725         0.033
+ 11   0.014580965757   0.001907608590         0.033
+ 12   0.002172189955   0.000662594183         0.038
+ 13   0.001288346229   0.000460198538         0.051
+ 14   0.001024648171   0.000560181156         0.098
+ 15   0.002012268240   0.001494490703         0.036
+ 16   0.012352298185   0.006432055084         0.044
+ 17   0.006373892789   0.001150024343         0.035
+ 18   0.002177365215   0.000549551719         0.040
+ 19   0.001610703202   0.000616473934         0.038
+ 20   0.003437754918   0.002383929218         0.036
+ 21   0.008432219420   0.002020505172         0.036
+ 22   0.002997690802   0.000466403606         0.102
+ 23   0.001146279516   0.000248502732         0.044
+ 24   0.000696633490   0.000213295828         0.045
+ 25   0.000935699000   0.000352342768         0.038
+ 26   0.001273901019   0.000967071550         0.037
+ 27   0.001303496156   0.000181846732         0.040
+ 28   0.000431523713   0.000122000395         0.053
+ 29   0.000326653899   0.000154582631         0.038
+ 30   0.000706677686   0.000697783560         0.092
+ 31   0.000680170607   0.000090699075         0.040
+ 32   0.000346428840   0.000101857421         0.041
+ 33   0.000480488918   0.000167605671         0.040
+ 34   0.001300523152   0.000749800397         0.116
+ 35   0.001731403818   0.000483126110         0.041
+ 36   0.001375586555   0.000283599273         0.041
+ 37   0.008256770224   0.001495266120         0.044
+ 38   0.003894350088   0.000755268820         0.045
+ 39   0.001687730545   0.000232941907         0.040
+ 40   0.000273732734   0.000124030734         0.058
+ 41   0.000350786104   0.000204357587         0.032
+ 42   0.001303663960   0.002713470449         0.029
+ 43   0.001738374384   0.000425237736         0.042
+ 44   0.000882366150   0.000533925498         0.041
+ 45   0.006781495172   0.007544650429         0.035
+ 46   0.005344714209   0.000761252632         0.056
+ 47   0.005759441692   0.007203963761         0.031
+ 48   0.006689972352   0.000474707016         0.035
+ 49   0.000834558319   0.000293978643         0.040
+ 50   0.002461288551   0.005886633893         0.036
+ 51   0.002485288286   0.000260588039         0.036
+ 52   0.001030698218   0.000880498933         0.094
+ 53   0.001744665345   0.001009132500         0.037
+ 54   0.000988934536   0.000335826031         0.033
+ 55   0.002112050990   0.006466115483         0.039
+ 56   0.001900882233   0.000211851272         0.044
+ 57   0.000341572529   0.000153778531         0.043
+ 58   0.000514204576   0.000388424944         0.036
+ 59   0.002889368739   0.003623073672         0.035
+ 60   0.002002542362   0.000240943718         0.037
+ 61   0.000446077168   0.000198138792         0.039
+ 62   0.001726918299   0.002490984747         0.040
+ 63   0.002220225581   0.000316521264         0.038
+ 64   0.000518491511   0.000129643963         0.038
+ 65   0.000269633030   0.000125665455         0.042
+ 66   0.000460416431   0.000199523005         0.038
+ 67   0.001618227228   0.001142833227         0.142
+ 68   0.002828672497   0.000617747841         0.146
+ 69   0.001330360097   0.000275881443         0.044
+ 70   0.001056079506   0.000527599209         0.045
+ 71   0.003652253423   0.001275787293         0.060
+ 72   0.002059523948   0.000339412584         0.070
+ 73   0.001041905945   0.000322675855         0.044
+ 74   0.005699429675   0.001692232184         0.110
+ 75   0.003848835412   0.000467715571         0.047
+ 76   0.001312995097   0.000205062032         0.045
+ 77   0.000786941617   0.000173611544         0.042
+ 78   0.000688241991   0.000278878140         0.045
+ 79   0.000264302075   0.000211420720         0.063
+ 80   0.000089281259   0.007939815511         0.047
+ 81   0.000419820989   0.000336419776         0.031
+ 82   0.000761017897   0.000327629803         0.098
+ 83   0.001755300739   0.002467117506         0.048
+ 84   0.002144410128   0.000290535673         0.036
+ 85   0.004641984183   0.001631944568         0.136
+ 86   0.003894126567   0.000302957583         0.126
+ 87   0.001181190210   0.000365234962         0.038
+ 88   0.001221365412   0.003623810676         0.037
+ 89   0.000249210834   0.000206435566         0.036
+ 90   0.000737866315   0.001423755795         0.139
+ 91   0.001147106533   0.000341402890         0.037
+ 92   0.001179600376   0.000215672190         0.067
+ 93   0.000915560192   0.002616930443         0.047
+ 94   0.001152707132   0.000485075424         0.038
+ 95   0.000596895208   0.001198358183         0.040
+ 96   0.000194746336   0.000574611355         0.039
+ 97   0.000006839248   0.000181774179         0.041
+ 98   0.000840924662   0.000544237599         0.046
+ 99   0.001336309734   0.000760502022         0.040
+100   0.000666900535   0.000143941104         0.039
+101   0.000333894431   0.000131055420         0.039
+102   0.000969071764   0.000425119743         0.040
+103   0.002056156528   0.000818941318         0.043
+104   0.001059902410   0.000133932031         0.039
+105   0.000446813124   0.000239180710         0.043
+106   0.002693441592   0.001688231616         0.043
+107   0.002107285187   0.000126330724         0.042
+108   0.000548631757   0.000092609041         0.040
+109   0.000469785473   0.000820748361         0.043
+110   0.001022242740   0.000201965968         0.044
+111   0.000154106001   0.000052814569         0.048
+112   0.000237817702   0.000039545889         0.069
+113   0.000101439410   0.000062777331         0.045
+114   0.000507240861   0.006929857873         0.047
+115   0.000277562040   0.000045044777         0.073
+116   0.000084678308   0.000015784014         0.046
+117   0.000093097063   0.000023718174         0.040
+118   0.000033182856   0.000015702304         0.064
+119   0.000149026533   0.002374241047         0.034
+120   0.000200278571   0.000014295759         0.076
+121   0.000055862407   0.000016506919         0.035
+122   0.000439137896   0.001972804352         0.036
+123   0.000432041100   0.000024778643         0.049
+124   0.000007953660   0.000043983701         0.035
+125   0.000407833857   0.000691714818         0.041
+126   0.000373567426   0.000050191432         0.038
+127   0.001391072393   0.002124626275         0.040
+128   0.001353363119   0.000051890483         0.036
+129   0.000374287937   0.000214881777         0.039
+130   0.000412947525   0.000092699203         0.037
+131   0.000131074076   0.000043808114         0.048
+132   0.001187068906   0.005602424833         0.036
+133   0.001200976405   0.000049148584         0.037
+134   0.000198500562   0.000160248711         0.038
+135   0.000247014562   0.000193927546         0.043
+136   0.000000934031   0.000029335568         0.037
+137   0.000058156109   0.000028815223         0.043
+138   0.000116550854   0.000204737215         0.039
+139   0.000112550689   0.000092389240         0.041
+140   0.000030023754   0.000027522180         0.157
+141   0.000074192956   0.000042589903         0.038
+142   0.002356699210   0.005166204642         0.042
+143   0.002251322151   0.000046427436         0.041
+144   0.000337387276   0.000019390352         0.042
+145   0.000058618113   0.000022018163         0.043
+146   0.000083377399   0.000196766689         0.041
+147   0.000414789530   0.000064518613         0.041
+148   0.000273547236   0.000017523716         0.141
+149   0.000105767220   0.000027151846         0.058
+  --- complex eigenvalues and eigenvectors
+150   0.000571638347   0.006300369610         0.046
+151   0.000778663973   0.000027030560         0.055
+152   0.000065745759   0.000021046046         0.061
+153   0.000531495574   0.000157951794         0.123
+154   0.000659324116   0.000044404599         0.044
+155   0.000258453981   0.000012898426         0.108
+156   0.000115150673   0.000022428177         0.044
+157   0.000003385733   0.000014344918         0.065
+158   0.000441097902   0.000367869600         0.073
+159   0.000431439015   0.000025321836         0.030
+160   0.000264555208   0.000022918671         0.111
+161   0.000425954633   0.000432590442         0.046
+162   0.000524700126   0.000021886064         0.136
+163   0.001155492577   0.000257912836         0.042
+164   0.000928629398   0.000020861640         0.053
+165   0.000124150993   0.000039986222         0.038
+166   0.000008396679   0.000082856757         0.036
+167   0.000278528431   0.000021089510         0.035
+168   0.000511399813   0.000673946859         0.043
+169   0.000546575855   0.000028396308         0.067
+170   0.000290235192   0.000020478653         0.038
+171   0.000248716261   0.004314224740         0.039
+172   0.000167813992   0.000023691841         0.044
+173   0.000338876929   0.000167442000         0.043
+174   0.000146364984   0.000036995969         0.037
+175   0.000041904728   0.000022811483         0.102
+176   0.000416876985   0.000098723872         0.037
+177   0.000661970474   0.000137528879         0.039
+178   0.000249683230   0.000021200612         0.050
+179   0.000062736547   0.000021028115         0.040
+180   0.000406568436   0.000143793554         0.042
+181   0.000648965191   0.000068472768         0.039
+182   0.000206948806   0.000013904409         0.042
+183   0.000060577019   0.000012417164         0.043
+184   0.000385387621   0.000208884517         0.051
+185   0.000450401862   0.000018951488         0.209
+186   0.000101529074   0.000007849878         0.101
+
+      *** CONVERGENCE OF RESIDUAL NORM REACHED ***
+        --- The EOM iterations have converged ---
+
+BATCH   7 OF   8
+
+Iter    Delta-E          Residual              Time
+---------------------------------------------------
+  0   0.905814427697   0.090155971450         0.034
+  1   0.241334721763   0.037669390204         0.033
+  2   0.293911900356   0.034568829373         0.148
+  3   0.119070811593   0.045940976409         0.034
+  4   0.167102478372   0.036118584570         0.099
+  5   0.100144460692   0.039727888944         0.035
+  6   0.087735073780   0.021083134513         0.037
+  7   0.174869412685   0.017259588709         0.038
+  8   0.080151006078   0.050314945114         0.099
+  9   0.096773995482   0.015231188749         0.037
+ 10   0.033288333235   0.008876760548         0.036
+ 11   0.034065045991   0.019090904372         0.035
+ 12   0.061564420251   0.018255840630         0.040
+ 13   0.035518668489   0.008971526159         0.039
+ 14   0.183429863150   0.003076211917         0.142
+ 15   0.009416941940   0.002680760826         0.035
+ 16   0.195153897107   0.006592284960         0.037
+ 17   0.019455112026   0.005806516105         0.063
+ 18   0.159829977309   0.004130036274         0.044
+ 19   0.179460321516   0.006547526731         0.046
+ 20   0.019851116883   0.004485214235         0.040
+ 21   0.015625590977   0.007228307368         0.095
+ 22   0.040195640205   0.008789487995         0.043
+ 23   0.018342501539   0.004995007363         0.041
+ 24   0.010854335124   0.003205111285         0.038
+ 25   0.009998767190   0.003323722221         0.051
+ 26   0.021148733211   0.020889793547         0.061
+ 27   0.179111396252   0.001056791618         0.095
+ 28   0.197064542017   0.005862593863         0.048
+ 29   0.018329428756   0.006063388193         0.041
+ 30   0.017212363846   0.004864751417         0.042
+ 31   0.026911704923   0.016836573011         0.044
+ 32   0.028262121364   0.004012782593         0.046
+ 33   0.041958783241   0.004377606081         0.044
+ 34   0.017423295054   0.009478743492         0.046
+ 35   0.019766795245   0.009357586932         0.045
+ 36   0.021475601434   0.007788021912         0.047
+ 37   0.020776483285   0.004412157062         0.047
+ 38   0.039101233383   0.004018692645         0.046
+ 39   0.013645177682   0.004697687225         0.040
+ 40   0.006925834112   0.010136803623         0.061
+ 41   0.010849097335   0.006858024842         0.034
+ 42   0.008738619364   0.006878379407         0.049
+ 43   0.018983747172   0.015842324562         0.034
+ 44   0.014849626316   0.005502470392         0.044
+ 45   0.014763004586   0.017987228172         0.036
+ 46   0.016590510255   0.004720215522         0.037
+ 47   0.019780999157   0.024816774459         0.032
+ 48   0.016680959405   0.003597710250         0.036
+ 49   0.014888333307   0.026361477971         0.037
+ 50   0.014559967348   0.004056450395         0.036
+ 51   0.010832141344   0.008624105532         0.038
+ 52   0.020917525260   0.008006687639         0.037
+ 53   0.011760497998   0.005779622946         0.039
+ 54   0.010679814523   0.008110405880         0.038
+ 55   0.009925023573   0.003052028628         0.055
+ 56   0.010051765949   0.008637196325         0.056
+ 57   0.017541213857   0.005436359833         0.047
+ 58   0.010950945871   0.005042920580         0.042
+ 59   0.019925627853   0.010364407538         0.056
+ 60   0.014600293136   0.004331636763         0.051
+ 61   0.014110054519   0.011190812813         0.041
+ 62   0.018602688263   0.004175100663         0.037
+ 63   0.005966391372   0.002764164770         0.038
+ 64   0.008985405771   0.006625278900         0.047
+ 65   0.015641659649   0.005609366692         0.046
+ 66   0.011137666289   0.003890595137         0.042
+ 67   0.019273300551   0.007244997617         0.042
+ 68   0.012872951419   0.004078559927         0.041
+ 69   0.011425818108   0.005363250532         0.037
+ 70   0.019676170518   0.004601236576         0.044
+ 71   0.010632328542   0.003674840804         0.042
+ 72   0.366805288511   0.005801714323         0.046
+ 73   0.374441401616   0.006137953946         0.046
+ 74   0.014709478195   0.002741534214         0.044
+ 75   0.343448481284   0.004861137870         0.045
+ 76   0.016614766487   0.001268054866         0.052
+ 77   0.000207721213   0.000743387989         0.047
+ 78   0.002201497241   0.001264125817         0.066
+ 79   0.001546491867   0.000644306412         0.066
+ 80   0.001822519709   0.001244233461         0.034
+ 81   0.001982088142   0.004160386334         0.040
+ 82   0.009724408583   0.005967036626         0.030
+ 83   0.003892413495   0.006322192422         0.036
+ 84   0.007656147410   0.003590835710         0.036
+ 85   0.004053024283   0.001195600738         0.041
+ 86   0.005322300276   0.001671613520         0.034
+ 87   0.008915047311   0.009278860808         0.037
+ 88   0.011113645332   0.002247704349         0.043
+ 89   0.003342516894   0.002136214490         0.033
+ 90   0.005379317799   0.003418759050         0.038
+ 91   0.014404085932   0.003038704779         0.044
+ 92   0.005118164132   0.002918504364         0.037
+ 93   0.005508248572   0.006967632101         0.037
+ 94   0.008422359788   0.002974063089         0.044
+ 95   0.003567050832   0.002114491838         0.038
+ 96   0.005507211814   0.001584588853         0.040
+ 97   0.004011186986   0.002127440715         0.073
+ 98   0.010131927574   0.005681939156         0.036
+ 99   0.005597491100   0.001234597663         0.041
+100   0.001044841388   0.000757446593         0.039
+101   0.004358499366   0.012007914454         0.041
+102   0.005692861857   0.000683264949         0.041
+103   0.000783136188   0.000196434308         0.041
+104   0.000382377280   0.000123938407         0.042
+105   0.000306706189   0.000312791354         0.043
+106   0.001081126582   0.001207104447         0.040
+107   0.000589862691   0.000110566859         0.043
+108   0.000152889835   0.000084596435         0.044
+109   0.000138940585   0.000186297800         0.047
+110   0.004874955402   0.014187902564         0.052
+111   0.004279597207   0.000188453119         0.043
+112   0.000327290750   0.000051558000         0.043
+113   0.000141543180   0.000022974094         0.051
+114   0.000009574040   0.000012445276         0.042
+115   0.000007150227   0.000009197500         0.040
+
+      *** CONVERGENCE OF RESIDUAL NORM REACHED ***
+        --- The EOM iterations have converged ---
+
+BATCH   8 OF   8
+
+Iter    Delta-E          Residual              Time
+---------------------------------------------------
+  0   0.930245748376   0.086705430842         0.042
+  1   0.234073301054   0.034903851447         0.036
+  2   0.271264052291   0.034840709722         0.028
+  3   0.096898925790   0.030868995048         0.035
+  4   0.165432576126   0.040730157508         0.034
+  5   0.088494521475   0.025437696906         0.035
+  6   0.088427193535   0.024136171300         0.033
+  7   0.136483785979   0.024733999326         0.043
+  8   0.084670606011   0.031755510174         0.037
+  9   0.061623506079   0.022699220476         0.036
+ 10   0.118547490082   0.020465566512         0.038
+ 11   0.065071330078   0.029622153574         0.036
+ 12   0.055500778403   0.018631297744         0.037
+ 13   0.097400112887   0.018329661082         0.035
+ 14   0.043097810341   0.015696494521         0.038
+ 15   0.023384307781   0.008554643273         0.049
+ 16   0.010915995752   0.004954500913         0.044
+ 17   0.010329654556   0.007400937093         0.039
+ 18   0.146625078649   0.011765878114         0.037
+ 19   0.132956230126   0.004767679197         0.041
+ 20   0.010145442297   0.003819654682         0.038
+ 21   0.140251978660   0.010928006255         0.041
+ 22   0.019923805888   0.005130391402         0.038
+ 23   0.111930603288   0.002912793030         0.048
+ 24   0.008499168642   0.002980137096         0.043
+ 25   0.127323201159   0.006316106076         0.040
+ 26   0.123776326070   0.010062889187         0.042
+ 27   0.117752103611   0.004008884419         0.043
+ 28   0.009597194363   0.002918279718         0.039
+ 29   0.096004710659   0.002075864511         0.044
+ 30   0.038964530043   0.033500502679         0.154
+ 31   0.043008830070   0.002813535621         0.043
+ 32   0.007130791654   0.005330411333         0.044
+ 33   0.104628596610   0.003671914171         0.158
+ 34   0.092619531032   0.002878433526         0.046
+ 35   0.009596005142   0.007771309771         0.084
+ 36   0.011537441184   0.001520570311         0.044
+ 37   0.004333760894   0.001320860723         0.048
+ 38   0.101463701133   0.004173090523         0.046
+ 39   0.091615128472   0.003588282964         0.039
+ 40   0.007446485414   0.003782365894         0.067
+ 41   0.058791875503   0.078958319878         0.052
+ 42   0.049000003250   0.004627057702         0.040
+ 43   0.009419128710   0.010045729501         0.032
+ 44   0.008948169506   0.004118899314         0.046
+ 45   0.005762274997   0.003617318881         0.041
+ 46   0.010034596607   0.012925015624         0.034
+ 47   0.009942435987   0.003063540011         0.042
+ 48   0.013194902540   0.022352473476         0.037
+ 49   0.012546126936   0.002706152882         0.035
+ 50   0.029091367462   0.054792518433         0.036
+ 51   0.027679509811   0.002997851005         0.045
+ 52   0.007766725089   0.007506693596         0.040
+ 53   0.010984786537   0.004810888672         0.038
+ 54   0.009049245799   0.004820199449         0.054
+ 55   0.010997602625   0.006285512563         0.040
+ 56   0.007061592526   0.001876379061         0.036
+ 57   0.005699523449   0.007334612952         0.043
+ 58   0.007926448498   0.002877798530         0.040
+ 59   0.003401717278   0.001340171647         0.042
+ 60   0.003792802793   0.002092947062         0.038
+ 61   0.016056571953   0.012883964180         0.039
+ 62   0.013252220219   0.001967617280         0.041
+ 63   0.004042295007   0.002336461289         0.053
+ 64   0.011176089166   0.008396511936         0.043
+ 65   0.008066407647   0.001899612624         0.050
+ 66   0.023583344308   0.013371744387         0.044
+ 67   0.019225613160   0.003151606228         0.046
+ 68   0.293046645886   0.007178387599         0.045
+ 69   0.020788849082   0.004630801403         0.043
+ 70   0.311655120011   0.001872659269         0.045
+ 71   0.254002218988   0.015133716371         0.044
+ 72   0.029822846613   0.005134841499         0.043
+ 73   0.286325016963   0.004355428622         0.044
+ 74   0.295464458182   0.001089866934         0.045
+ 75   0.002186649967   0.002194733529         0.047
+ 76   0.296568976388   0.001360018655         0.160
+ 77   0.291611974207   0.003009170851         0.048
+ 78   0.002774969065   0.000572804465         0.049
+ 79   0.003051302142   0.000468020973         0.073
+ 80   0.001708978617   0.003801518868         0.062
+ 81   0.003677930507   0.005875553724         0.040
+ 82   0.002081183495   0.000600413718         0.031
+ 83   0.004201682991   0.005920368518         0.036
+ 84   0.004766018499   0.000963652180         0.036
+ 85   0.002266826173   0.000365463265         0.035
+ 86   0.001799592086   0.003079357883         0.036
+ 87   0.001792154375   0.000608160399         0.037
+ 88   0.000095532807   0.000552329974         0.036
+ 89   0.002717646259   0.002711863863         0.034
+ 90   0.006586204862   0.001750994132         0.045
+ 91   0.003197010069   0.000766374966         0.038
+ 92   0.003703928394   0.002663542599         0.037
+ 93   0.006060458861   0.002088525807         0.035
+ 94   0.002915561564   0.001333208971         0.035
+ 95   0.004662965967   0.006629303327         0.039
+ 96   0.006525001187   0.001026454270         0.036
+ 97   0.001152559781   0.001201453191         0.041
+ 98   0.005988018707   0.005014473853         0.047
+ 99   0.007784976954   0.000879790761         0.043
+100   0.001235967745   0.000377937018         0.040
+101   0.000495346741   0.000456056883         0.039
+102   0.001778480438   0.001469193334         0.043
+103   0.007179001574   0.004119809612         0.052
+104   0.010133819766   0.000389310334         0.044
+105   0.000679504888   0.000227058794         0.043
+106   0.000240900381   0.000261375609         0.043
+107   0.000771541657   0.001167572335         0.044
+108   0.001666975087   0.000898754987         0.060
+109   0.000658180281   0.000147485411         0.054
+110   0.000160194237   0.000064361612         0.044
+111   0.000083810143   0.000040397422         0.043
+112   0.000118731047   0.000035334547         0.042
+113   0.000186089609   0.000058393908         0.043
+114   0.000495439281   0.000809791615         0.047
+115   0.000784104385   0.000146801476         0.044
+116   0.000113515872   0.000034548596         0.048
+117   0.000031246341   0.000012657150         0.045
+118   0.000010660370   0.000009142397         0.064
+
+      *** CONVERGENCE OF RESIDUAL NORM REACHED ***
+        --- The EOM iterations have converged ---
+
+----------------------
+EOM-CCSD RESULTS (RHS)
+----------------------
+
+IROOT=  1:  0.192931 au     5.250 eV   42343.5 cm**-1
+  Amplitude    Excitation
+   0.693280     x ->  35
+Percentage singles character=     92.93
+
+IROOT=  2:  0.247253 au     6.728 eV   54265.8 cm**-1
+  Amplitude    Excitation
+   0.692689     x ->  36
+Percentage singles character=     92.25
+
+IROOT=  3:  0.291213 au     7.924 eV   63913.8 cm**-1
+  Amplitude    Excitation
+   0.680938     x ->  37
+   0.105794     x ->  43
+Percentage singles character=     90.43
+
+IROOT=  4:  0.360533 au     9.811 eV   79127.9 cm**-1
+  Amplitude    Excitation
+   0.682018     x ->  38
+Percentage singles character=     87.37
+
+IROOT=  5:  0.519738 au    14.143 eV  114069.2 cm**-1
+  Amplitude    Excitation
+   0.326960     x ->  39
+   0.146562     x ->  41
+   0.530678     x ->  45
+   0.122505     x ->  48
+  -0.219683     x ->  51
+Percentage singles character=     93.59
+
+IROOT=  6:  0.707781 au    19.260 eV  155340.0 cm**-1
+  Amplitude    Excitation
+   0.477909     x ->  40
+   0.317729     x ->  50
+   0.107838     x ->  56
+  -0.206879     x ->  35    30 ->  36
+Percentage singles character=     56.26
+
+IROOT=  7:  0.591188 au    16.087 eV  129750.8 cm**-1
+  Amplitude    Excitation
+  -0.276847     x ->  41
+   0.159625     x ->  45
+   0.498223     x ->  47
+   0.163154     x ->  51
+  -0.286080     x ->  52
+Percentage singles character=     90.41
+
+IROOT=  8:  0.588815 au    16.022 eV  129230.0 cm**-1
+  Amplitude    Excitation
+   0.283528     x ->  42
+   0.253396     x ->  46
+   0.452418     x ->  49
+   0.239652     x ->  50
+   0.211005     x ->  53
+  -0.109786     x ->  55
+Percentage singles character=     90.06
+
+
+EA STATE=  0:  percentage singles     92.931 
+EA STATE=  1:  percentage singles     92.249 
+EA STATE=  2:  percentage singles     90.429 
+EA STATE=  3:  percentage singles     87.370 
+EA STATE=  4:  percentage singles     93.588 
+EA STATE=  5:  percentage singles     56.262 
+
+Warning: high double excitation character, excluding from the STEOM trandformation
+EA STATE=  6:  percentage singles     90.413 
+EA STATE=  7:  percentage singles     90.062 
+ Final no active EA roots:    8  
+
+---------------------------------------------------
+           RHF STEOM-CCSD CALCULATION
+---------------------------------------------------
+
+EOM type                                   ... STEOM
+Multiplicity                               ... singlet
+Solver                                     ... Davidson
+Convergence check                          ... for each root separately
+Convergence threshold                      ... 1.00E-05
+Root homing                                ... on
+Preconditioning update                     ... CIS
+Reduced space size (times number of roots) ... 40
+Number of roots in the CIS initial guess   ... 80
+Number of roots to be optimized            ... 2
+Number of amplitudes to be optimized       ... 625
+
+--------------------------------
+AUTOMATIC CHOICE OF INCORE LEVEL
+--------------------------------
+
+Memory available                           ...   1250.00 MB
+Memory needed for SIP and SEA amplitudes   ...      1.91 MB
+ -> Final InCoreLevel    ... 1
+
+
+Making SIP amplitudes for STEOM-CCSD       ... done (    0.4)
+Making SEA amplitudes for STEOM-CCSD       ... done (    0.0)
+Dressing integrals for STEOM-CCSD          ... 
+Dressing of Occ / Occ block ... done (    0.0)
+Dressing of Virt / Virt block ... done (    0.0)
+done (   44.8)
+done (    2.2)
+Building the initial guess                 ... done (    0.0)
+Solving Root No   1 
+
+Iter    Delta-E          Residual              Time
+---------------------------------------------------
+  0   0.293185725430   0.001928355616         0.010
+  1   0.010086584477   0.001432547460         0.050
+  2   0.028250263002   0.019191923580         0.010
+  3   0.028400903383   0.000535492154         0.017
+  4   0.001929104414   0.000082224815         0.010
+  5   0.000073561471   0.000015716619         0.015
+  6   0.000069030716   0.000001443414         0.012
+
+      *** CONVERGENCE OF RESIDUAL NORM REACHED ***
+       --- The STEOM iterations have converged ---
+Solving Root No   2 
+
+Iter    Delta-E          Residual              Time
+---------------------------------------------------
+  0   0.174381081679   0.000503125351         0.010
+  1   0.001816103995   0.000098997464         0.056
+  2   0.000174389360   0.000008068296         0.010
+
+      *** CONVERGENCE OF RESIDUAL NORM REACHED ***
+       --- The STEOM iterations have converged ---
+
+------------------
+STEOM-CCSD RESULTS
+------------------
+
+IROOT=  1:  0.172391 au     4.691 eV   37835.4 cm**-1
+  Amplitude    Excitation
+   0.226121    31 ->  36
+   0.691886    33 ->  35
+   0.220622    33 ->  38
+  -0.648206    34 ->  36
+  Ground state amplitude:  0.000001
+
+Percentage Active Character     99.97
+
+  Amplitude    Excitation in Canonical Basis
+  -0.226121    31 ->  36
+   0.691886    33 ->  35
+   0.220622    33 ->  38
+  -0.648206    34 ->  36
+
+IROOT=  2:  0.281162 au     7.651 eV   61707.9 cm**-1
+  Amplitude    Excitation
+   0.973329    34 ->  35
+  Ground state amplitude: -0.000010
+
+Percentage Active Character     99.06
+
+  Amplitude    Excitation in Canonical Basis
+  -0.973329    34 ->  35
+
+
+STEOM-CCSD done (    2.9 sec)
 Calculating the Dipole integrals                  ... done
 Transforming integrals                            ... done
 Calculating the Linear Momentum integrals         ... done
 Transforming integrals                            ... done
 Calculating angular momentum integrals            ... done
 Transforming integrals                            ... done
+
+--------------------------------------------------------------------
+               UNRELAXED EXCITED STATE DIPOLE MOMENTS
+--------------------------------------------------------------------
+               E(eV)     DX(au)      DY(au)      DZ(au)      |D|(D)
+IROOT=  0:     0.000    0.000000    0.000000   -0.000000    0.000000
+IROOT=  1:     4.691    0.000001   -0.000000   -0.000015    0.000039
+IROOT=  2:     7.651   -0.000248   -0.000027   -0.000137    0.000722
+--------------------------------------------------------------------
+
 -----------------------------------------------------------------------------
          ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS
 -----------------------------------------------------------------------------
 State   Energy  Wavelength   fosc         T2         TX        TY        TZ  
         (cm-1)    (nm)                  (au**2)     (au)      (au)      (au) 
 -----------------------------------------------------------------------------
-   1   44132.8    226.6   0.000528272   0.00394   0.04648   0.04220   0.00000
-   2   61501.1    162.6   0.997594062   5.34007   2.31086   0.00087   0.00000
+   1   37835.4    264.3   0.000322721   0.00281   0.03816   0.03597   0.00001
+   2   61707.9    162.1   1.079744291   5.76044   2.39996   0.02517   0.00002
 
 -------------------------------------------------------------------
                              CD SPECTRUM
@@ -1439,9 +2386,46 @@ State   Energy  Wavelength   fosc         T2         TX        TY        TZ
 State   Energy Wavelength       R         MX        MY        MZ   
         (cm-1)   (nm)       (1e40*cgs)   (au)      (au)      (au)  
 -------------------------------------------------------------------
-   1     226.6   44132.8      0.00000   0.00000   0.00000   0.00000
-   2     162.6   61501.1      0.00000  -0.00000   0.00000   0.00000
+   1     264.3   37835.4      0.00002   0.00000  -0.00001   0.00000
+   2     162.1   61707.9     -0.01077   0.00016   0.00001  -0.00002
 
+
+------------------------------------------
+NATURAL TRANSITION ORBITALS FOR STATE    1
+------------------------------------------
+
+Making the (pseudo)densities                       ... done
+Solving eigenvalue problem for the occupied space  ... done
+Solving eigenvalue problem for the virtual space   ... done
+Natural Transition Orbitals were saved in dvb.s1.nto
+Threshold for printing occupation numbers 0.001000
+
+ E=   0.172391 au      4.691 eV    37835.4 cm**-1
+    34a ->  35a  : n=  0.52800407
+    33a ->  36a  : n=  0.47167207
+
+
+------------------------------------------
+NATURAL TRANSITION ORBITALS FOR STATE    2
+------------------------------------------
+
+Making the (pseudo)densities                       ... done
+Solving eigenvalue problem for the occupied space  ... done
+Solving eigenvalue problem for the virtual space   ... done
+Natural Transition Orbitals were saved in dvb.s2.nto
+Threshold for printing occupation numbers 0.001000
+
+ E=   0.281162 au      7.651 eV    61707.9 cm**-1
+    34a ->  35a  : n=  0.96532472
+    33a ->  36a  : n=  0.01002333
+    32a ->  37a  : n=  0.00820424
+    31a ->  38a  : n=  0.00473290
+    30a ->  39a  : n=  0.00269542
+    29a ->  40a  : n=  0.00200978
+    28a ->  41a  : n=  0.00117015
+    27a ->  42a  : n=  0.00110071
+
+TDM done (    3.1 sec)
 
 
 --------------------------------------------------------------------------------
@@ -1449,45 +2433,44 @@ State   Energy Wavelength       R         MX        MY        MZ
 --------------------------------------------------------------------------------
 
 
-Total execution time                   ...       49.557 sec
+Total execution time                   ...       45.219 sec
 
-Fock Matrix Formation                  ...        0.205 sec (  0.4%)
-Initial Guess                          ...        0.003 sec (  0.0%)
-DIIS Solver                            ...        0.133 sec (  0.3%)
+Fock Matrix Formation                  ...        0.211 sec (  0.5%)
+Initial Guess                          ...        0.012 sec (  0.0%)
+DIIS Solver                            ...        0.328 sec (  0.7%)
 State Vector Update                    ...        0.008 sec (  0.0%)
-Sigma-vector construction              ...        4.800 sec (  9.7%)
+Sigma-vector construction              ...        4.810 sec ( 10.6%)
   <0|H|D>                              ...        0.002 sec (  0.0% of sigma)
-  <D|H|D>(0-ext)                       ...        0.317 sec (  6.6% of sigma)
+  <D|H|D>(0-ext)                       ...        0.315 sec (  6.5% of sigma)
   <D|H|D>(2-ext Fock)                  ...        0.006 sec (  0.1% of sigma)
-  <D|H|D>(2-ext)                       ...        0.542 sec ( 11.3% of sigma)
-  <D|H|D>(4-ext)                       ...        0.106 sec (  2.2% of sigma)
-  <D|H|D>(4-ext-corr)                  ...        0.151 sec (  3.1% of sigma)
+  <D|H|D>(2-ext)                       ...        0.548 sec ( 11.4% of sigma)
+  <D|H|D>(4-ext)                       ...        0.110 sec (  2.3% of sigma)
+  <D|H|D>(4-ext-corr)                  ...        0.150 sec (  3.1% of sigma)
   <S|H|0>                              ...        0.005 sec (  0.1% of sigma)
-  <S|H|S>                              ...        0.006 sec (  0.1% of sigma)
+  <S|H|S>                              ...        0.007 sec (  0.1% of sigma)
   <S|H|D>(1-ext)                       ...        0.049 sec (  1.0% of sigma)
   <D|H|S>(1-ext)                       ...        0.131 sec (  2.7% of sigma)
-  <S|H|D>(3-ext)                       ...        0.099 sec (  2.1% of sigma)
-  Fock-dressing                        ...        1.948 sec ( 40.6% of sigma)
-  (ik|jl)-dressing                     ...        0.590 sec ( 12.3% of sigma)
-  (ij|ab),(ia|jb)-dressing             ...        0.754 sec ( 15.7% of sigma)
+  <S|H|D>(3-ext)                       ...        0.102 sec (  2.1% of sigma)
+  Fock-dressing                        ...        1.942 sec ( 40.4% of sigma)
+  (ik|jl)-dressing                     ...        0.586 sec ( 12.2% of sigma)
+  (ij|ab),(ia|jb)-dressing             ...        0.766 sec ( 15.9% of sigma)
   Pair energies                        ...        0.004 sec (  0.1% of sigma)
-Total Time for computing EOM-CCSD      ...       43.106 sec ( 87.0% of ALL)
-  Dressing integrals                   ...        0.818 sec (  1.9% of (EOM))
-  Initial EOM-Guess                    ...        0.003 sec (  0.0% of (EOM))
-  EOM Singles                          ...        4.055 sec (  9.4% of (EOM))
-  EOM Doubles                          ...       34.752 sec ( 80.6% of (EOM))
-  Build Hamiltonian                    ...        0.254 sec (  0.6% of (EOM))
-  Diagonalize Hamiltonian              ...        0.094 sec (  0.2% of (EOM))
-  Ritz vectors                         ...        0.263 sec (  0.6% of (EOM))
-  Residual vectors                     ...        0.278 sec (  0.6% of (EOM))
-  Orthogonalization                    ...        0.756 sec (  1.8% of (EOM))
+Total Time for computing STEOM-CCSD    ...       37.192 sec ( 82.2% of ALL)
+  Dressing integrals                   ...        2.946 sec (  7.9% of (STEOM))
+  EOM+STEOM Singles                    ...        4.783 sec ( 12.9% of (STEOM))
+  EOM Doubles                          ...       24.380 sec ( 65.6% of (STEOM))
+  Build Hamiltonian                    ...        0.685 sec (  1.8% of (STEOM))
+  Diagonalize Hamiltonian              ...        0.247 sec (  0.7% of (STEOM))
+  Ritz vectors                         ...        0.582 sec (  1.6% of (STEOM))
+  Residual vectors                     ...        0.615 sec (  1.7% of (STEOM))
+  Orthogonalization                    ...        1.611 sec (  4.3% of (STEOM))
 One-particle density matrix            ...        0.005 sec (  0.0%)
 
 
-Maximum memory used throughout the entire MDCI-calculation: 407.7 MB
+Maximum memory used throughout the entire MDCI-calculation: 122.9 MB
 
 -------------------------   --------------------
-FINAL SINGLE POINT ENERGY      -380.299313718151
+FINAL SINGLE POINT ENERGY      -380.328007146120
 -------------------------   --------------------
 
 
@@ -1584,14 +2567,14 @@ WARNING: There was an error initializing an OpenFabrics device.
   Local host:   kennedy104
   Local device: mlx5_0
 --------------------------------------------------------------------------
-[kennedy104:43867] 3 more processes have sent help message help-mpi-btl-openib.txt / error in device init
-[kennedy104:43867] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+[kennedy104:51063] 3 more processes have sent help message help-mpi-btl-openib.txt / error in device init
+[kennedy104:51063] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
 
 Timings for individual modules:
 
-Sum of individual times         ...       55.952 sec (=   0.933 min)
-GTO integral calculation        ...        1.561 sec (=   0.026 min)   2.8 %
-SCF iterations                  ...        3.845 sec (=   0.064 min)   6.9 %
-MDCI module                     ...       50.546 sec (=   0.842 min)  90.3 %
+Sum of individual times         ...       50.556 sec (=   0.843 min)
+GTO integral calculation        ...        1.333 sec (=   0.022 min)   2.6 %
+SCF iterations                  ...        3.135 sec (=   0.052 min)   6.2 %
+MDCI module                     ...       46.087 sec (=   0.768 min)  91.2 %
                              ****ORCA TERMINATED NORMALLY****
-TOTAL RUN TIME: 0 days 0 hours 0 minutes 57 seconds 281 msec
+TOTAL RUN TIME: 0 days 0 hours 0 minutes 51 seconds 695 msec
