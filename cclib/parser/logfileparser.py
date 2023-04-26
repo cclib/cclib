@@ -31,37 +31,6 @@ from cclib.parser.data import ccData_optdone_bool
 logging.logMultiprocessing = 0
 
 
-def hook_compressed_errors(filename, mode = "r", object = None, wrap = False):
-    extension = os.path.splitext(filename)[1]
-
-    if extension == ".gz":
-        fileobject = io.TextIOWrapper(gzip.GzipFile(filename, mode, fileobj=object), encoding = "ascii", errors = "ignore")
-
-    elif extension == ".zip":
-        zip = zipfile.ZipFile(object if object else filename, mode)
-        assert len(zip.namelist()) == 1, "ERROR: Zip file contains more than 1 file"
-        fileobject = io.StringIO(zip.read(zip.namelist()[0]).decode("ascii", "ignore"))
-
-    elif extension in ['.bz', '.bz2']:
-        # Module 'bz2' is not always importable.
-        assert bz2 is not None, "ERROR: module bz2 cannot be imported"
-        fileobject = io.TextIOWrapper(bz2.BZ2File(object if object else filename, mode), encoding = "ascii", errors = "ignore")
-
-    elif object is not None:
-        # Assuming that object is text file encoded in utf-8
-        fileobject = io.StringIO(object.decode("utf-8", "ignore"))
-        
-    else:
-        # Normal text file.
-        
-        fileobject = open(filename, mode, errors='ignore')
-        
-        if wrap:
-            fileobject = FileWrapper(fileobject)
-
-    return fileobject
-
-
 class FileWrapper:
     """Wrap a file-like object or stream with some custom tweaks"""
 
@@ -128,6 +97,46 @@ class FileWrapper:
             self.pos = self.size
 
 
+def opencompressedfile(filename, mode = "r", object = None, wrap = False):
+    """
+    Open a possibly compressed file.
+    
+    If wrap is True and file is a 'normal' file, wrap it in a FileWrapper object
+    """
+    
+    extension = os.path.splitext(filename)[1]
+
+    if extension == ".gz":
+        fileobject = io.TextIOWrapper(gzip.GzipFile(filename, mode, fileobj=object), encoding = "ascii", errors = "ignore")
+
+    elif extension == ".zip":
+        zip = zipfile.ZipFile(object if object else filename, mode)
+        assert len(zip.namelist()) == 1, "ERROR: Zip file contains more than 1 file"
+        fileobject = io.StringIO(zip.read(zip.namelist()[0]).decode("ascii", "ignore"))
+
+    elif extension in ['.bz', '.bz2']:
+        # Module 'bz2' is not always importable.
+        assert bz2 is not None, "ERROR: module bz2 cannot be imported"
+        fileobject = io.TextIOWrapper(bz2.BZ2File(object if object else filename, mode), encoding = "ascii", errors = "ignore")
+
+    elif object is not None:
+        # Assuming that object is text file encoded in utf-8
+        fileobject = io.StringIO(object.decode("utf-8", "ignore"))
+        
+    else:
+        # Normal text file.
+        
+        fileobject = open(filename, mode, errors='ignore')
+        
+        if wrap:
+            fileobject = FileWrapper(fileobject)
+
+    # Ideally, all returned objects would be wrapped with FileWrapper (or none of them would be).
+    # This is not done because type-checking is done else-where in the code, which this could
+    # interfere with.
+    return fileobject
+
+
 def openlogfile(filename: str, object=None):
     """Return a file object given a filename or if object specified decompresses it
     if needed and wrap it up.
@@ -141,7 +150,7 @@ def openlogfile(filename: str, object=None):
     
     # If there is a single string argument given.
     if type(filename) is str:
-        return hook_compressed_errors(filename, object = object, wrap = True)
+        return opencompressedfile(filename, object = object, wrap = True)
 
     elif hasattr(filename, "__iter__"):
 
@@ -151,7 +160,7 @@ def openlogfile(filename: str, object=None):
         
         # The 'errors' argument of fileinput.FileInput() looks like it should do what we want here,
         # but it's only available in python3.10 and even then doesn't work properly in conjunction with openhook...
-        return fileinput.FileInput(filename, openhook= lambda filename, mode, encoding = None, errors = None: hook_compressed_errors(filename, mode))
+        return fileinput.FileInput(filename, openhook= lambda filename, mode, encoding = None, errors = None: opencompressedfile(filename, mode))
 
 
 class Logfile(ABC):
