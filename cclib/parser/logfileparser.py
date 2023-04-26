@@ -165,8 +165,10 @@ def openlogfile(filename: str, object=None):
         # This is needed, because fileinput will assume stdin when filename is empty.
         if len(filename) == 0:
             return None
-
-        return FileWrapper(fileinput.FileInput(filename, openhook=fileinput.hook_compressed))
+        
+        # The 'errors' argument of fileinput.FileInput() looks like it should do what we want here,
+        # but it's only available in python3.10 and even then doesn't work properly in conjunction with openhook...
+        return FileWrapper(fileinput.FileInput(filename, openhook= lambda filename, mode: fileinput.hook_compressed(filename, mode, errors='ignore')))
 
 
 class Logfile(ABC):
