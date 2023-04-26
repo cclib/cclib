@@ -269,18 +269,7 @@ class TurbomoleTDTest(GenericTDTest):
     number = 10
     expected_l_max = 91432
     expected_f_max = 0.19
-    symmetries = [
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        ]
+    symmetries = ["Singlet-A"] * 10
     
     @skipForLogfile('Turbomole/basicTurbomole7.4/CO_cc2_TD', 'There are no dipole moments in ricc2')
     def testetmagdipsshape(self):
@@ -293,18 +282,7 @@ class TurbomoleTDADC2Test(GenericTDTest):
     number = 10
     expected_l_max = 136329
     expected_f_max = 0.8
-    symmetries = [
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        ]
+    symmetries = ["Singlet-A"] * 10
 
 class TurbomoleTDTripTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
@@ -312,36 +290,14 @@ class TurbomoleTDTripTest(GenericTDTest):
     number = 10
     expected_l_max = 51530
     expected_f_max = 0.84
-    symmetries = [
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        ]
+    symmetries = ["Triplet-A"] * 10
         
 class TurbomoleTDCC2TripTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
     # This test is for triplets with ricc2, which does not support oscillator strengths.
     
     number = 10
-    symmetries = [
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        ]
+    symmetries = ["Triplet-A"] * 10
 
     def testenergies(self):
         """Is the l_max reasonable?"""
