@@ -49,7 +49,7 @@ def hook_compressed_errors(filename, mode = "r", object = None):
 
     elif object is not None:
         # Assuming that object is text file encoded in utf-8
-        fileobject = io.TextIOWrapper(object, encoding = "utf-8", errors = "ignore")
+        fileobject = io.StringIO(object.decode("utf-8", "ignore"))
         
     else:
         # Normal text file.
