@@ -1578,7 +1578,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                     
                 if "Warning:: the state may have not converged with respect to active space" in line:
                     # Skip this line and the next (which both contain warnings).
-                    # TODO: Capture this warning?
+                    self.logger.warning(line)
                     line = next(inputfile)
                     line = self.next_filled_line(inputfile)
                 
