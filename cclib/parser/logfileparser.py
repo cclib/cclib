@@ -134,9 +134,9 @@ def openlogfile(filename: str, object=None):
     Given a list of filenames, this function returns a FileInput object,
     which can be used for seamless iteration without concatenation.
     """
-
+    
     # If there is a single string argument given.
-    if type(filename) in [str, str]:
+    if type(filename) is str:
 
         extension = os.path.splitext(filename)[1]
 
