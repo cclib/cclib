@@ -282,7 +282,10 @@ class Logfile(ABC):
                 inputfile = FileWrapper(self.stream)
     
             # Intialize self.progress
-            is_compressed = isinstance(inputfile, myGzipFile) or isinstance(inputfile, myBZ2File)
+            # Not sure why we wouldn't want to keep track of progress just because we're reading
+            # from an archive?
+            #is_compressed = isinstance(inputfile, myGzipFile) or isinstance(inputfile, myBZ2File)
+            is_compressed = False
             if progress and not (is_compressed):
                 self.progress = progress
                 self.progress.initialize(inputfile.size)
