@@ -19,6 +19,7 @@ import sys
 import zipfile
 from abc import ABC, abstractmethod
 from typing import Any, Iterable, List, Union
+import codecs
 
 import numpy
 
@@ -97,42 +98,56 @@ class FileWrapper:
             self.pos = self.size
 
 
-def opencompressedfile(filename, mode = "r", object = None, wrap = False):
+def logerror(error):
+    """
+    Log a unicode decode/encode error to the logger and return a replacement character.
+    """
+    logging.warning(str(error))
+    
+    # Return type is a tuple.
+    # First item is a replacement character. Second is the position to continue from.
+    return (u'', error.start +1)
+    
+codecs.register_error('logerror', logerror)
+
+
+def opencompressedfile(filename, mode = "r", encoding = "utf-8", errors = "logerror", fileobject = None, wrap = False):
     """
     Open a possibly compressed file.
     
+    Fileobject is an option, existing and open file-like object which will be decoded and wrapped appropriately.
     If wrap is True and file is a 'normal' file, wrap it in a FileWrapper object
     """
     
     extension = os.path.splitext(filename)[1]
 
     if extension == ".gz":
-        fileobject = io.TextIOWrapper(gzip.GzipFile(filename, mode, fileobj=object), encoding = "ascii", errors = "ignore")
+        fileobject = io.TextIOWrapper(gzip.GzipFile(filename, mode, fileobj=fileobject), encoding = encoding, errors = errors)
 
     elif extension == ".zip":
-        zip = zipfile.ZipFile(object if object else filename, mode)
+        zip = zipfile.ZipFile(fileobject if fileobject else filename, mode)
         assert len(zip.namelist()) == 1, "ERROR: Zip file contains more than 1 file"
-        fileobject = io.StringIO(zip.read(zip.namelist()[0]).decode("ascii", "ignore"))
+        fileobject = io.StringIO(zip.read(zip.namelist()[0]).decode(encoding, errors))
 
     elif extension in ['.bz', '.bz2']:
         # Module 'bz2' is not always importable.
         assert bz2 is not None, "ERROR: module bz2 cannot be imported"
-        fileobject = io.TextIOWrapper(bz2.BZ2File(object if object else filename, mode), encoding = "ascii", errors = "ignore")
+        fileobject = io.TextIOWrapper(bz2.BZ2File(fileobject if fileobject else filename, mode), encoding = encoding, errors = errors)
 
-    elif object is not None:
+    elif fileobject is not None:
         # Assuming that object is text file encoded in utf-8
-        fileobject = io.StringIO(object.decode("utf-8", "ignore"))
+        fileobject = io.StringIO(fileobject.decode(encoding, errors))
         
     else:
         # Normal text file.
         
-        fileobject = open(filename, mode, errors='ignore')
+        fileobject = open(filename, mode, encoding = encoding, errors = errors)
         
         if wrap:
             fileobject = FileWrapper(fileobject)
 
     # Ideally, all returned objects would be wrapped with FileWrapper (or none of them would be).
-    # This is not done because type-checking is done else-where in the code, which this could
+    # This is not done because type-checking is done elsewhere in the code, which this could
     # interfere with.
     return fileobject
 
@@ -150,7 +165,7 @@ def openlogfile(filename: str, object=None):
     
     # If there is a single string argument given.
     if type(filename) is str:
-        return opencompressedfile(filename, object = object, wrap = True)
+        return opencompressedfile(filename, fileobject = object, wrap = True)
 
     elif hasattr(filename, "__iter__"):
 
@@ -160,7 +175,7 @@ def openlogfile(filename: str, object=None):
         
         # The 'errors' argument of fileinput.FileInput() looks like it should do what we want here,
         # but it's only available in python3.10 and even then doesn't work properly in conjunction with openhook...
-        return fileinput.FileInput(filename, openhook= lambda filename, mode, encoding = None, errors = None: opencompressedfile(filename, mode))
+        return fileinput.FileInput(filename, openhook = opencompressedfile)
 
 
 class Logfile(ABC):
