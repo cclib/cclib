@@ -7,6 +7,7 @@
 """Generic output file parser and related tools"""
 
 
+import typing
 import bz2
 import fileinput
 import gzip
@@ -111,7 +112,7 @@ def logerror(error):
 codecs.register_error('logerror', logerror)
 
 
-def opencompressedfile(filename, mode = "r", encoding = "utf-8", errors = "logerror", fileobject = None, wrap = False):
+def opencompressedfile(filename: str, mode: str = "r", encoding: str = "utf-8", errors: str = "logerror", fileobject: typing.Optional[typing.IO] = None, wrap: bool = False) -> typing.IO:
     """
     Open a possibly compressed file.
     
@@ -152,7 +153,7 @@ def opencompressedfile(filename, mode = "r", encoding = "utf-8", errors = "loger
     return fileobject
 
 
-def openlogfile(filename: str, object=None):
+def openlogfile(filename: Union[str, list[str]], object=None):
     """Return a file object given a filename or if object specified decompresses it
     if needed and wrap it up.
 
