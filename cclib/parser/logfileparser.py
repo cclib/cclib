@@ -153,7 +153,7 @@ def opencompressedfile(filename: str, mode: str = "r", encoding: str = "utf-8", 
     return fileobject
 
 
-def openlogfile(filename: Union[str, list[str]], object=None):
+def openlogfile(filename: Union[str, List[str]], object=None):
     """Return a file object given a filename or if object specified decompresses it
     if needed and wrap it up.
 
