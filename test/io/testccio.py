@@ -113,6 +113,27 @@ class ccopenTest(unittest.TestCase):
     def test_cjson(self):
         """Do we get a CJSON object then keyword argument used?"""
         assert isinstance(self.ccopen(StringIO(""), cjson=True), cclib.io.cjsonreader.CJSON)
+        
+    def test_bz2_io(self):
+        """Can we read from a bz2 archive?"""
+        file_path = os.path.join(__filedir__, "data/dvb_gopt.out.bz2")
+        # Test both single-file and multi-file parsing.
+        assert self.ccopen(file_path) is not None
+        assert self.ccopen([file_path, file_path]) is not None
+    
+    def test_gz_io(self):
+        """Can we read from a gz archive?"""
+        file_path = os.path.join(__filedir__, "data/dvb_gopt.out.gz")
+        # Test both single-file and multi-file parsing.
+        assert self.ccopen(file_path) is not None
+        assert self.ccopen([file_path, file_path]) is not None
+        
+    def test_zip_io(self):
+        """Can we read from a zip archive?"""
+        file_path = os.path.join(__filedir__, "data/dvb_gopt.out.zip")
+        # Test both single-file and multi-file parsing.
+        assert self.ccopen(file_path) is not None
+        assert self.ccopen([file_path, file_path]) is not None
 
 
 class _determine_output_formatTest(unittest.TestCase):
