@@ -165,7 +165,7 @@ def openlogfile(filename: Union[str, list[str]], object=None):
     """
     
     # If there is a single string argument given.
-    if type(filename) is str:
+    if isinstance(filename, str):
         return opencompressedfile(filename, fileobject = object, wrap = True)
 
     elif hasattr(filename, "__iter__"):
