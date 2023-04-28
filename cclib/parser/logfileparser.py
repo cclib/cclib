@@ -7,6 +7,7 @@
 """Generic output file parser and related tools"""
 
 
+import typing
 import bz2
 import fileinput
 import gzip
@@ -19,6 +20,7 @@ import sys
 import zipfile
 from abc import ABC, abstractmethod
 from typing import Any, Iterable, List, Union
+import codecs
 
 import numpy
 
@@ -29,33 +31,6 @@ from cclib.parser.data import ccData_optdone_bool
 
 # This seems to avoid a problem with Avogadro.
 logging.logMultiprocessing = 0
-
-
-class myBZ2File(bz2.BZ2File):
-    """Return string instead of bytes"""
-    def __next__(self) -> str:
-        line = super(bz2.BZ2File, self).__next__()
-        return line.decode("ascii", "replace")
-
-    def next(self) -> str:
-        line = self.__next__()
-        return line
-
-
-class myGzipFile(gzip.GzipFile):
-    """Return string instead of bytes"""
-    def __next__(self) -> str:
-        super_ob = super(gzip.GzipFile, self)
-        # seemingly different versions of gzip can have either next or __next__
-        if hasattr(super_ob, 'next'):
-            line = super_ob.next()
-        else:
-            line = super_ob.__next__()
-        return line.decode("ascii", "replace")
-
-    def next(self) -> str:
-        line = self.__next__()
-        return line
 
 
 class FileWrapper:
@@ -124,7 +99,61 @@ class FileWrapper:
             self.pos = self.size
 
 
-def openlogfile(filename: str, object=None):
+def logerror(error):
+    """
+    Log a unicode decode/encode error to the logger and return a replacement character.
+    """
+    logging.warning(str(error))
+    
+    # Return type is a tuple.
+    # First item is a replacement character. Second is the position to continue from.
+    return (u'', error.start +1)
+    
+codecs.register_error('logerror', logerror)
+
+
+def opencompressedfile(filename: str, mode: str = "r", encoding: str = "utf-8", errors: str = "logerror", fileobject: typing.Optional[typing.IO] = None, wrap: bool = False) -> typing.IO:
+    """
+    Open a possibly compressed file.
+    
+    Fileobject is an option, existing and open file-like object which will be decoded and wrapped appropriately.
+    If wrap is True and file is a 'normal' file, wrap it in a FileWrapper object
+    """
+    
+    extension = os.path.splitext(filename)[1]
+
+    if extension == ".gz":
+        fileobject = io.TextIOWrapper(gzip.GzipFile(filename, mode, fileobj=fileobject), encoding = encoding, errors = errors)
+
+    elif extension == ".zip":
+        zip = zipfile.ZipFile(fileobject if fileobject else filename, mode)
+        assert len(zip.namelist()) == 1, "ERROR: Zip file contains more than 1 file"
+        fileobject = io.StringIO(zip.read(zip.namelist()[0]).decode(encoding, errors))
+
+    elif extension in ['.bz', '.bz2']:
+        # Module 'bz2' is not always importable.
+        assert bz2 is not None, "ERROR: module bz2 cannot be imported"
+        fileobject = io.TextIOWrapper(bz2.BZ2File(fileobject if fileobject else filename, mode), encoding = encoding, errors = errors)
+
+    elif fileobject is not None:
+        # Assuming that object is text file encoded in utf-8
+        fileobject = io.StringIO(fileobject.decode(encoding, errors))
+        
+    else:
+        # Normal text file.
+        
+        fileobject = open(filename, mode, encoding = encoding, errors = errors)
+        
+        if wrap:
+            fileobject = FileWrapper(fileobject)
+
+    # Ideally, all returned objects would be wrapped with FileWrapper (or none of them would be).
+    # This is not done because type-checking is done elsewhere in the code, which this could
+    # interfere with.
+    return fileobject
+
+
+def openlogfile(filename: Union[str, List[str]], object=None):
     """Return a file object given a filename or if object specified decompresses it
     if needed and wrap it up.
 
@@ -134,39 +163,20 @@ def openlogfile(filename: str, object=None):
     Given a list of filenames, this function returns a FileInput object,
     which can be used for seamless iteration without concatenation.
     """
-
+    
     # If there is a single string argument given.
-    if type(filename) in [str, str]:
-
-        extension = os.path.splitext(filename)[1]
-
-        if extension == ".gz":
-            fileobject = myGzipFile(filename, "r", fileobj=object)
-
-        elif extension == ".zip":
-            zip = zipfile.ZipFile(object, "r") if object else zipfile.ZipFile(filename, "r")
-            assert len(zip.namelist()) == 1, "ERROR: Zip file contains more than 1 file"
-            fileobject = io.StringIO(zip.read(zip.namelist()[0]).decode("ascii", "ignore"))
-
-        elif extension in ['.bz', '.bz2']:
-            # Module 'bz2' is not always importable.
-            assert bz2 is not None, "ERROR: module bz2 cannot be imported"
-            fileobject = myBZ2File(object, "r") if object else myBZ2File(filename, "r")
-
-        else:
-            # Assuming that object is text file encoded in utf-8
-            fileobject = io.StringIO(object.decode('utf-8')) if object \
-                    else FileWrapper(io.open(filename, "r", errors='ignore'))
-
-        return fileobject
+    if isinstance(filename, str):
+        return opencompressedfile(filename, fileobject = object, wrap = True)
 
     elif hasattr(filename, "__iter__"):
 
         # This is needed, because fileinput will assume stdin when filename is empty.
         if len(filename) == 0:
             return None
-
-        return FileWrapper(fileinput.input(filename, openhook=fileinput.hook_compressed))
+        
+        # The 'errors' argument of fileinput.FileInput() looks like it should do what we want here,
+        # but it's only available in python3.10 and even then doesn't work properly in conjunction with openhook...
+        return fileinput.FileInput(filename, openhook = opencompressedfile)
 
 
 class Logfile(ABC):
@@ -289,48 +299,54 @@ class Logfile(ABC):
 
         # Initiate the FileInput object for the input files.
         # Remember that self.filename can be a list of files.
-        if not self.isstream:
-            if not self.isfileinput:
-                inputfile = openlogfile(self.filename)
+        inputfile = None
+        try:
+            if not self.isstream:
+                if not self.isfileinput:
+                    inputfile = openlogfile(self.filename)
+                else:
+                    inputfile = self.filename
             else:
-                inputfile = self.filename
-        else:
-            inputfile = FileWrapper(self.stream)
-
-        # Intialize self.progress
-        is_compressed = isinstance(inputfile, myGzipFile) or isinstance(inputfile, myBZ2File)
-        if progress and not (is_compressed):
-            self.progress = progress
-            self.progress.initialize(inputfile.size)
-            self.progress.step = 0
-        self.fupdate = fupdate
-        self.cupdate = cupdate
-
-        # Maybe the sub-class has something to do before parsing.
-        self.before_parsing()
-
-        # Loop over lines in the file object and call extract().
-        # This is where the actual parsing is done.
-        for line in inputfile:
-            self.updateprogress(inputfile, "Unsupported information", cupdate)
-
-            # This call should check if the line begins a section of extracted data.
-            # If it does, it parses some lines and sets the relevant attributes (to self).
-            # Any attributes can be freely set and used across calls, however only those
-            #   in data._attrlist will be moved to final data object that is returned.
-            try:
-                self.extract(inputfile, line)
-            except StopIteration:
-                self.logger.error("Unexpectedly encountered end of logfile.")
-                break
-            except Exception as e:
-                self.logger.error("Encountered error when parsing.")
-                self.logger.error(f"Last line read: {inputfile.last_line}")
-                raise
-
-        # Close input file object.
-        if not self.isstream:
-            inputfile.close()
+                inputfile = FileWrapper(self.stream)
+    
+            # Intialize self.progress
+            # Not sure why we wouldn't want to keep track of progress just because we're reading
+            # from an archive?
+            #is_compressed = isinstance(inputfile, myGzipFile) or isinstance(inputfile, myBZ2File)
+            is_compressed = False
+            if progress and not (is_compressed):
+                self.progress = progress
+                self.progress.initialize(inputfile.size)
+                self.progress.step = 0
+            self.fupdate = fupdate
+            self.cupdate = cupdate
+    
+            # Maybe the sub-class has something to do before parsing.
+            self.before_parsing()
+    
+            # Loop over lines in the file object and call extract().
+            # This is where the actual parsing is done.
+            for line in inputfile:
+                self.updateprogress(inputfile, "Unsupported information", cupdate)
+    
+                # This call should check if the line begins a section of extracted data.
+                # If it does, it parses some lines and sets the relevant attributes (to self).
+                # Any attributes can be freely set and used across calls, however only those
+                #   in data._attrlist will be moved to final data object that is returned.
+                try:
+                    self.extract(inputfile, line)
+                except StopIteration:
+                    self.logger.error("Unexpectedly encountered end of logfile.")
+                    break
+                except Exception as e:
+                    self.logger.error("Encountered error when parsing.")
+                    self.logger.error(f"Last line read: {inputfile.last_line}")
+                    raise
+        
+        finally:
+            # Close input file object.
+            if not self.isstream and inputfile is not None:
+                inputfile.close()
 
         # Maybe the sub-class has something to do after parsing.
         self.after_parsing()
