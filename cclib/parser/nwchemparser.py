@@ -1225,8 +1225,8 @@ class NWChem(logfileparser.Logfile):
             line = next(inputfile)  # first line of data
             vibfreqs = []
             while set(line.strip()[:-1]) != {"-"}:
-                vibfreqs.append(utils.float(line.split()[1]))
-                self.append_attribute("vibirs", utils.float(line.split()[5]))
+                vibfreqs.append(float(line.split()[1]))
+                self.append_attribute("vibirs", float(line.split()[5]))
                 line = next(inputfile)  # next line
             self.set_attribute("vibfreqs", vibfreqs)
         # NWChem TD-DFT excited states transitions
