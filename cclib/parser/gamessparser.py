@@ -386,7 +386,7 @@ class GAMESS(logfileparser.Logfile):
             sym += '-' + line.split()[-1]
             self.etsyms.append(sym)
             # skip 5 lines
-            for i in range(5):
+            for _ in range(5):
                 line = next(inputfile)
             line = next(inputfile)
             CIScontribs = []
@@ -422,7 +422,7 @@ class GAMESS(logfileparser.Logfile):
             else:
                 statenumber = int(line.split()[-1])
                 # skip 7 lines
-                for i in range(8):
+                for _ in range(8):
                     line = next(inputfile)
                 strength = float(line.split()[3])
                 self.etoscs.append(strength)
@@ -620,7 +620,7 @@ class GAMESS(logfileparser.Logfile):
             atomcoords = []
             line = next(inputfile)
 
-            for i in range(self.natom):
+            for _ in range(self.natom):
                 temp = line.strip().split()
                 atomcoords.append(list(map(float, temp[2:5])))
                 line = next(inputfile)
@@ -1048,7 +1048,7 @@ class GAMESS(logfileparser.Logfile):
             if not hasattr(self, "atombasis"):
                 self.atombasis = []
                 self.aonames = []
-                for i in range(self.natom):
+                for _ in range(self.natom):
                     self.atombasis.append([])
                 self.aonames = []
                 readatombasis = True
@@ -1553,7 +1553,7 @@ class GAMESS(logfileparser.Logfile):
             match = re.search(r"P=(.*)PASCAL.", line)
             if match:
                 self.set_attribute('pressure', float(match.group(1))/1.01325e5)
-            self.skip_lines(
+            lines = self.skip_lines(
                 inputfile,
                 [
                     "ALL FREQUENCIES ARE SCALED",
@@ -1564,6 +1564,10 @@ class GAMESS(logfileparser.Logfile):
                     "rotational constants",
                 ]
             )
+            # Sometimes the volume is printed between the pressure and "ALL
+            # FREQUENCIES ARE SCALED".
+            if lines[0][:3] == " V=":
+                line = next(inputfile)
             line = next(inputfile)
             if "IMAGINARY FREQUENCY VIBRATION(S)" in line:
                 line = next(inputfile)
@@ -1573,6 +1577,33 @@ class GAMESS(logfileparser.Logfile):
             line = next(inputfile)
             assert "HARTREE/MOLECULE" in line
             self.set_attribute('zpve', float(line.split()[0]))
+
+        if line.strip() == "CARTESIAN FORCE CONSTANT MATRIX":
+            natom = self.natom
+            hessian = numpy.zeros((3 * natom, 3 * natom))
+            field_width = 9
+            starts = [20+i*field_width for i in range(6)]
+            self.skip_line(inputfile, "d")
+            mode_count = 0
+            nmodes_per_block = 2
+            while mode_count < natom:
+                lines = self.skip_lines(
+                    inputfile,
+                    ["b", "atom indices", "atom symbols", "XYZ header"]
+                )
+                # An odd number of atoms will lead to the final part having
+                # one column instead of two; handle it dynamically.
+                if len(lines[1].split()) == 1:
+                    starts = starts[:3]
+                mode_count += nmodes_per_block
+                imode_start = mode_count - nmodes_per_block
+                for iatom_remaining in range(mode_count - nmodes_per_block, natom):
+                    for icart in range(3):
+                        line = next(inputfile)
+                        hessian[iatom_remaining*3 + icart, imode_start:imode_start + len(starts)] = [
+                            float(line[start:start+field_width]) for start in starts
+                        ]
+            self.set_attribute("hessian", utils.symmetrize(hessian))
 
         if "KCAL/MOL  KCAL/MOL  KCAL/MOL CAL/MOL-K CAL/MOL-K CAL/MOL-K" in line:
             self.skip_lines(inputfile,["ELEC","TRANS","ROT","VIB"])
