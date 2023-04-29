@@ -929,11 +929,14 @@ class Psi4(logfileparser.Logfile):
                 for info in Psi4.GRADIENT_TYPES.values()
                 if info.header == line.strip()
             ][0]
-            gradient = self.parse_gradient(inputfile, gradient_skip_lines)
 
-            if not hasattr(self, 'grads'):
-                self.grads = []
-            self.grads.append(gradient)
+            self.append_attribute(
+                "grads",
+                self.parse_gradient(inputfile, gradient_skip_lines)
+            )
+
+        if line.strip() == "## Total Hessian (Symmetry 0) ##":
+            self.set_attribute("hessian", self.parse_hessian(inputfile))
 
         # OLD Normal mode output parser (PSI4 < 1)
 
@@ -1159,6 +1162,27 @@ class Psi4(logfileparser.Logfile):
             line = next(inputfile)
         return gradient
 
+    def parse_hessian(self, inputfile):
+        """Parse the geometric/molecular Hessian."""
+        line = next(inputfile)
+        tokens = line.split()
+        nrows, ncols = int(tokens[3]), int(tokens[5])
+        icol = 0
+        col_counter = ncols
+        n_max_cols = 5
+        hessian = numpy.empty((nrows, ncols))
+        while col_counter > 0:
+            self.skip_lines(inputfile, ["b", "column numbers", "b"])
+            for irow in range(nrows):
+                line = next(inputfile)
+                # 0:5 then 5:6
+                hessian[irow, icol:icol+n_max_cols] = [float(x) for x in line.split()[1:]]
+            if col_counter - n_max_cols < 0:
+                break
+            col_counter -= n_max_cols
+            icol += n_max_cols
+        return hessian
+
     @staticmethod
     def parse_vibration(n, inputfile):
 
@@ -1203,6 +1227,8 @@ class Psi4(logfileparser.Logfile):
         assert 'RMS dev' in line
 
         line = next(inputfile)
+        if 'IR activ' in line:
+            line = next(inputfile)
         assert 'Char temp' in line
 
         line = next(inputfile)

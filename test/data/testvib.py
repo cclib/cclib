@@ -105,7 +105,6 @@ class GenericIRTest(unittest.TestCase):
     @skipForParser('Molcas', 'not implemented yet')
     @skipForParser('Molpro', 'not implemented yet')
     @skipForParser('ORCA', 'not implemented yet')
-    @skipForParser('Psi4', 'not implemented yet')
     @skipForLogfile('QChem/basicQChem5.4/dvb_ir.out', 'needs to be rerun with print level turned up')
     @skipForParser('Turbomole', 'not implemented yet')
     def testhessian(self):
