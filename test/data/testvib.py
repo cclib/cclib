@@ -37,7 +37,6 @@ class GenericIRTest(unittest.TestCase):
         """Are basic attributes correct?"""
         assert self.data.natom == 20
 
-    @skipForParser('NWChem', 'Not implemented for this parser')
     def testvibdisps(self) -> None:
         """Are the dimensions of vibdisps consistent with numvib x N x 3"""
         assert len(self.data.vibfreqs) == self.numvib
