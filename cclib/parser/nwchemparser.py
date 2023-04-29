@@ -91,6 +91,22 @@ class NWChem(logfileparser.Logfile):
             self.set_attribute('atomnos', atomnos)
             self.set_attribute('natom', len(atomnos))
 
+        if line.strip() == "Atomic Mass":
+            self.skip_lines(inputfile, ["d", "b"])
+            assert hasattr(self, "atomnos")
+            unique_atomnos = set(self.atomnos)
+            name2mass = {}
+            for _ in range(len(unique_atomnos)):
+                tokens = next(inputfile).split()
+                mtch = re.search(r"[a-zA-Z]+", tokens[0])
+                assert mtch is not None
+                name2mass[mtch.group()] = float(tokens[1])
+            masses = [
+                name2mass[self.table.element[number]]
+                for number in self.atomnos
+            ]
+            self.set_attribute("atommasses", masses)
+
         if line.strip() == "Symmetry information":
             self.skip_lines(inputfile, ['d', 'b'])
             line = next(inputfile)
