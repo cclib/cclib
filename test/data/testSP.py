@@ -142,7 +142,6 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('Jaguar', 'atommasses not implemented yet')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Molpro', 'atommasses not implemented yet')
-    @skipForParser('NWChem', 'atommasses not implemented yet')
     @skipForLogfile('Psi4/basicPsi4.0b5', 'atommasses not implemented yet')
     @skipForParser('QChem', 'atommasses not implemented yet')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
