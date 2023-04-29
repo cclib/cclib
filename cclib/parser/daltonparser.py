@@ -1014,6 +1014,26 @@ class DALTON(logfileparser.Logfile):
             if hasattr(self, 'moments'):
                 self.moments.append(dipole)
 
+        if line.strip() == "Molecular Hessian (au)":
+            self.skip_lines(inputfile, ["d", "b", "x y z header", "b"])
+            # Only the lower left triangle is printed.
+            hessian = numpy.zeros((3 * self.natom, 3 * self.natom))
+            icol = 0
+            max_ncols_per_block = 6
+            row_counter = self.natom
+            while row_counter > 0:
+                for irow in range(row_counter):
+                    for icoord in range(3):
+                        line = next(inputfile)
+                        nums = [float(x) for x in line.split()[2:]]
+                        assert 1 <= len(nums) <= max_ncols_per_block
+                        hessian[(3 * irow) + icoord, :len(nums)] = nums
+                    line = next(inputfile)
+                self.skip_lines(inputfile, ["b", "x y z header", "b"])
+                icol += max_ncols_per_block
+                row_counter -= 2
+            self.set_attribute("hessian", utils.symmetrize(hessian, "lower"))
+
         ## 'vibfreqs', 'vibirs', and 'vibsyms' appear in ABACUS.
         # Vibrational Frequencies and IR Intensities
         # ------------------------------------------
