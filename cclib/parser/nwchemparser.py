@@ -91,6 +91,22 @@ class NWChem(logfileparser.Logfile):
             self.set_attribute('atomnos', atomnos)
             self.set_attribute('natom', len(atomnos))
 
+        if line.strip() == "Atomic Mass":
+            self.skip_lines(inputfile, ["d", "b"])
+            assert hasattr(self, "atomnos")
+            unique_atomnos = set(self.atomnos)
+            name2mass = {}
+            for _ in range(len(unique_atomnos)):
+                tokens = next(inputfile).split()
+                mtch = re.search(r"[a-zA-Z]+", tokens[0])
+                assert mtch is not None
+                name2mass[mtch.group()] = float(tokens[1])
+            masses = [
+                name2mass[self.table.element[number]]
+                for number in self.atomnos
+            ]
+            self.set_attribute("atommasses", masses)
+
         if line.strip() == "Symmetry information":
             self.skip_lines(inputfile, ['d', 'b'])
             line = next(inputfile)
@@ -1177,15 +1193,42 @@ class NWChem(logfileparser.Logfile):
                 "entropy",
                 utils.convertor(1e-3 * utils.float(line.split()[3]), "kcal/mol", "hartree"),
             )
-        
+
+        if line.strip() == "(Projected Frequencies expressed in cm-1)":
+            # We can't look for "NORMAL MODE EIGENVECTORS IN CARTESIAN
+            # COORDINATES" since it also appears for unprojected normal modes.
+            vibfreqs = []
+            vibdisps = numpy.empty(shape=(3 * self.natom, self.natom, 3))
+            mode_idx = 0
+            while mode_idx < 3 * self.natom - 1:
+                lines = self.skip_lines(
+                    inputfile,
+                    ["b", "one-based mode index", "b"]
+                )
+                tokens = next(inputfile).split()
+                nmodes_block = len(tokens) - 1
+                mode_idx_end = mode_idx + nmodes_block
+                assert tokens[0] == "P.Frequency"
+                vibfreqs.extend([float(x) for x in tokens[1:]])
+                self.skip_line(inputfile, "b")
+                for idx_atom in range(self.natom):
+                    for idx_coord in range(3):
+                        tokens = next(inputfile).split()[1:]
+                        vibdisps[mode_idx:mode_idx_end, idx_atom, idx_coord] = tokens
+                mode_idx = mode_idx_end
+            self.set_attribute("vibfreqs", vibfreqs)
+            self.set_attribute("vibdisps", vibdisps)
+
         # extract vibrational frequencies (in cm-1)
         if line.strip() == "Normal Eigenvalue ||           Projected Infra Red Intensities":
             self.skip_lines(inputfile, ["units", "d"])  # units, dashes
             line = next(inputfile)  # first line of data
+            vibfreqs = []
             while set(line.strip()[:-1]) != {"-"}:
-                self.append_attribute("vibfreqs", utils.float(line.split()[1]))
-                self.append_attribute("vibirs", utils.float(line.split()[5]))
+                vibfreqs.append(float(line.split()[1]))
+                self.append_attribute("vibirs", float(line.split()[5]))
                 line = next(inputfile)  # next line
+            self.set_attribute("vibfreqs", vibfreqs)
         # NWChem TD-DFT excited states transitions
         #
         # Have to deal with :
