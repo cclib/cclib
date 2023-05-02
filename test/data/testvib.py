@@ -95,6 +95,23 @@ class GenericIRTest(unittest.TestCase):
         """Is the zero-point correction correct?"""
         assert abs(self.data.zpve - self.zpve) < 1.0e-3
 
+    @skipForParser('ADF', 'not implemented yet')
+    @skipForParser('DALTON', 'not implemented yet')
+    @skipForParser('FChk', 'not implemented yet')
+    @skipForParser('GAMESS', 'not implemented yet')
+    @skipForParser('GAMESSUK', 'not implemented yet')
+    @skipForParser('Gaussian', 'not implemented yet')
+    @skipForParser('Jaguar', 'not implemented yet')
+    @skipForParser('Molcas', 'not implemented yet')
+    @skipForParser('Molpro', 'not implemented yet')
+    @skipForParser('ORCA', 'not implemented yet')
+    @skipForParser('Psi4', 'not implemented yet')
+    @skipForLogfile('QChem/basicQChem5.4/dvb_ir.out', 'needs to be rerun with print level turned up')
+    @skipForParser('Turbomole', 'not implemented yet')
+    def testhessian(self):
+        """Are the dimensions of the molecular Hessian correct?"""
+        assert self.data.hessian.shape == (3 * self.data.natom, 3 * self.data.natom)
+
 
 class ADFIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""

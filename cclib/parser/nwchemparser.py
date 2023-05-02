@@ -1154,6 +1154,38 @@ class NWChem(logfileparser.Logfile):
                 masses.append(utils.float(line[61:74]))
             self.set_attribute("atommasses", masses)
 
+        # Section with atomic coordinates and masses (in higher precision than
+        # "Atomic Mass") printed in vibrational calculations.
+        if "Atom information" in line:
+            atommasses = []
+            self.skip_lines(inputfile, ["header", "d"])
+            line = next(inputfile)
+            while set(line.strip()) != {"-"}:
+                atommasses.append(utils.float(line.split()[-1]))
+                line = next(inputfile)
+            self.set_attribute("atommasses", atommasses)
+
+        if "MASS-WEIGHTED NUCLEAR HESSIAN" in line:
+            nelem = 3 * self.natom
+            hessian = numpy.empty((nelem, nelem))
+            rc = 1
+            cc = 1
+            self.skip_lines(inputfile, ["d"])
+            while cc < nelem:
+                lines = self.skip_lines(inputfile, ["b", "b", "column numbers", "d"])
+                cc_prev = cc
+                cc = int(lines[2].split()[-1])
+                while rc < nelem:
+                    line = next(inputfile)
+                    tokens = line.split()
+                    rc = int(tokens[0])
+                    vals = [utils.float(x) for x in tokens[1:]]
+                    cstart = cc_prev - 1
+                    cend = cstart + len(vals)
+                    hessian[rc - 1, cstart:cend] = vals
+                rc = cc + 1
+            self.set_attribute("hessian", utils.symmetrize(hessian))
+
         # Extract Thermochemistry in au (Hartree)
         #
         # have to deal with :
