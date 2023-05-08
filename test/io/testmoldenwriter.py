@@ -106,8 +106,8 @@ class MOLDENTest(unittest.TestCase):
         size_no_ccdata += len(data.nooccnos) *\
                                 (len(data.nocoeffs[0]) + extra)
         # Filter blank lines.
-        nooccnos = numpy.array([self.ccdata.nooccnos])
-        nocoeffs = numpy.array([self.ccdata.nocoeffs])
+        nooccnos = numpy.array([data.nooccnos])
+        nocoeffs = numpy.array([data.nocoeffs])
         nosyms = numpy.full_like(data.nooccnos, 'A', dtype=str)
         size_no_writer = len(list(filter(None, writer._mo_from_ccdata(nosyms, nooccnos, nocoeffs, nooccnos))))
         assert size_no_writer == size_no_ccdata
