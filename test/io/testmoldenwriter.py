@@ -86,7 +86,11 @@ class MOLDENTest(unittest.TestCase):
             size_mo_ccdata += len(data.moenergies[i]) *\
                                 (len(data.mocoeffs[i][0]) + extra)
         # Filter blank lines.
-        size_mo_writer = len(list(filter(None, writer._mo_from_ccdata(data.mosyms, data.moenergies, data.mocoeffs, data.mooccs))))
+        mooccs = numpy.zeros((len(data.homos),len(data.moenergies[0])))
+        occval = 2 // len(data.homos)
+        for i in range(len(data.homos)):
+            mooccs[i][0:data.homos[i]] = occval
+        size_mo_writer = len(list(filter(None, writer._mo_from_ccdata(data.mosyms, data.moenergies, data.mocoeffs, mooccs))))
         assert size_mo_writer == size_mo_ccdata
 
     def test_no_section_size(self):
