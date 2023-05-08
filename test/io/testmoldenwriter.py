@@ -86,8 +86,25 @@ class MOLDENTest(unittest.TestCase):
             size_mo_ccdata += len(data.moenergies[i]) *\
                                 (len(data.mocoeffs[i][0]) + extra)
         # Filter blank lines.
-        size_mo_writer = len(list(filter(None, writer._mo_from_ccdata())))
+        size_mo_writer = len(list(filter(None, writer._mo_from_ccdata(data.mosyms, data.moenergies, data.mocoeffs, data.mooccs))))
         assert size_mo_writer == size_mo_ccdata
+
+    def test_no_section_size(self):
+        """Check if size of NO section is equal to expected."""
+        fpath = os.path.join(__datadir__,
+                             "data/GAMESS/basicGAMESS-US2018/water_cis_dets.out")
+        data = cclib.io.ccread(fpath)
+        writer = cclib.io.moldenwriter.MOLDEN(data)
+        # Check size of NO section.
+        size_no_ccdata = 0
+        extra = 4 
+        for i in range(data.mult):
+            size_no_ccdata += len(data.nooccnos[i]) *\
+                                (len(data.nocoeffs[i][0]) + extra)
+        # Filter blank lines.
+        nosyms = numpy.full_like(moenergies, 'A', dtype=str)
+        size_no_writer = len(list(filter(None, writer._mo_from_ccdata(nosyms, data.nooccnos, data.nocoeffs, data.nooccnos))))
+        assert size_no_writer == size_no_ccdata
 
     def test_round_molden(self):
         """Check if Molden Style number rounding works as expected."""
