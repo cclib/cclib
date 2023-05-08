@@ -14,6 +14,7 @@ import cclib
 from cclib.io.filewriter import MissingAttributeError
 from cclib.io.moldenwriter import MoldenReformatter
 from cclib.io.moldenwriter import round_molden
+import numpy
 import pytest
 
 __filedir__ = os.path.dirname(__file__)
@@ -101,10 +102,9 @@ class MOLDENTest(unittest.TestCase):
         writer = cclib.io.moldenwriter.MOLDEN(data)
         # Check size of NO section.
         size_no_ccdata = 0
-        extra = 4 
-        for i in range(data.mult):
-            size_no_ccdata += len(data.nooccnos[i]) *\
-                                (len(data.nocoeffs[i][0]) + extra)
+        extra = 4
+        size_no_ccdata += len(data.nooccnos) *\
+                                (len(data.nocoeffs[0]) + extra)
         # Filter blank lines.
         nosyms = numpy.full_like(moenergies, 'A', dtype=str)
         size_no_writer = len(list(filter(None, writer._mo_from_ccdata(nosyms, data.nooccnos, data.nocoeffs, data.nooccnos))))
