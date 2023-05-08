@@ -135,7 +135,7 @@ class MOLDEN(filewriter.Writer):
         return mocoeffs
 
 
-    def _mo_from_ccdata(self):
+    def _mo_from_ccdata(self, mosyms, moenergies, mocoeffs, mooccs):
         """Create [MO] section.
 
         Sym= symmetry_label_1
@@ -148,86 +148,22 @@ class MOLDEN(filewriter.Writer):
         ...
         """
 
-        moenergies = self.ccdata.moenergies
-        mocoeffs = self.ccdata.mocoeffs
-        homos = self.ccdata.homos
-        mult = self.ccdata.mult
-
-        has_syms = False
         lines = []
 
-        # Sym attribute is optional in [MO] section.
-        if hasattr(self.ccdata, 'mosyms'):
-            has_syms = True
-            syms = self.ccdata.mosyms
-        else:
-            syms = numpy.full_like(moenergies, 'A', dtype=str)
-        unres = len(moenergies) > 1
-        openshell = len(homos) > 1
-
         spin = 'Alpha'
-        for i in range(len(moenergies)):
-            for j in range(len(moenergies[i])):
-                lines.append(f" Sym= {syms[i][j]}")
-                moenergy = utils.convertor(moenergies[i][j], "eV", "hartree")
-                lines.append(f" Ene= {moenergy:10.4f}")
-                lines.append(f" Spin= {spin}")
-                if unres and openshell:
-                    if j <= homos[i]:
-                        lines.append(f" Occup= {1.0:10.6f}")
-                    else:
-                        lines.append(f" Occup= {0.0:10.6f}")
-                elif not unres and openshell:
-                    occ = numpy.sum(j <= homos)
-                    if j <= homos[i]:
-                        lines.append(f" Occup= {occ:10.6f}")
-                    else:
-                        lines.append(f" Occup= {0.0:10.6f}")
-                else:
-                    if j <= homos[i]:
-                        lines.append(f" Occup= {2.0:10.6f}")
-                    else:
-                        lines.append(f" Occup= {0.0:10.6f}")
+        for i in range(len(mooccs)):
+            for j in range(len(mooccs[i])):
+                restricted_spin_idx = i // len(mocoeffs)
+                lines.append(' Sym= {}'.format(mosyms[restricted_spin_idx][j]))
+                moenergy = utils.convertor(moenergies[restricted_spin_idx][j], 'eV', 'hartree')
+                lines.append(' Ene= {:10.4f}'.format(moenergy))
+                lines.append(' Spin= {}'.format(spin))
+                lines.append(' Occup= {:10.6f}'.format(mooccs[i][j]))
                 # Rearrange mocoeffs according to Molden's lexicographical order.
-                mocoeffs[i][j] = self._rearrange_mocoeffs(mocoeffs[i][j])
-                for k, mocoeff in enumerate(mocoeffs[i][j]):
-                    lines.append(f"{k + 1:4d}  {mocoeff:10.6f}")
-
+                mocoeffs[restricted_spin_idx][j] = self._rearrange_mocoeffs(mocoeffs[restricted_spin_idx][j])
+                for k, mocoeff in enumerate(mocoeffs[restricted_spin_idx][j]):
+                    lines.append('{:4d}  {:10.6f}'.format(k + 1, mocoeff))
             spin = 'Beta'
-
-        return lines
-
-    def _no_from_ccdata(self):
-        """Create [MO] section containing natural orbitals.
-
-        Sym= symmetry_label_1
-        Ene= no_occupation_number_1
-        Spin= (Alpha|Beta)
-        Occup= no_occupation_number_1
-        ao_number_1 no_coefficient_1
-        ...
-        ao_number_n no_coefficient_n
-        ...
-        """
-
-        nooccnos = self.ccdata.nooccnos
-        nocoeffs = self.ccdata.nocoeffs
-        homos = self.ccdata.homos
-        mult = self.ccdata.mult
-
-        has_syms = False
-        lines = []
-
-        spin = 'Alpha'
-        for i in range(len(nooccnos)):
-            lines.append(' Symm= {}'.format("A"))
-            lines.append(' Ene= {:10.4f}'.format(nooccnos[i]))
-            lines.append(' Spin= %s' % spin)
-            lines.append(' Occup= {:10.6f}'.format(nooccnos[i]))
-            # Rearrange mocoeffs according to Molden's lexicographical order.
-            nocoeffs[i] = self._rearrange_mocoeffs(nocoeffs[i])
-            for k, nocoeff in enumerate(nocoeffs[i]):
-                lines.append('{:4d}  {:10.6f}'.format(k + 1, nocoeff))
         return lines
 
     def generate_repr(self):
@@ -248,24 +184,38 @@ class MOLDEN(filewriter.Writer):
         index = -1
         molden_lines.extend(self._coords_from_ccdata(index))
 
+        mocoeffs=None
+        mooccs=None
+        moenergies = None
+        if not self.naturalorbitals and hasattr(self.ccdata, 'moenergies') and hasattr(self.ccdata, 'mocoeffs'):
+            moenergies = self.ccdata.moenergies
+            mocoeffs = self.ccdata.mocoeffs
+            mooccs = numpy.zeros((len(self.ccdata.homos),len(moenergies[0])))
+            occval = 2 // len(self.ccdata.homos)
+            for i in range(len(self.ccdata.homos)):
+                mooccs[i][0:self.ccdata.homos[i]] = occval
+        elif self.naturalorbitals and hasattr(self.ccdata, 'nooccnos') and hasattr(self.ccdata, "nocoeffs"):
+            moenergies = numpy.array([self.ccdata.nooccnos])
+            mocoeffs = numpy.array([self.ccdata.nocoeffs])
+            mooccs = numpy.array([self.ccdata.nooccnos])
+        elif self.naturalorbitals and hasattr(self.ccdata, 'nsooccnos') and hasattr(self.ccdata, "nsocoeffs"):
+            moenergies = self.ccdata.nsooccnos
+            mocoeffs = self.ccdata.nsocoeffs
+            mooccs = self.ccdata.nsooccnos
+
+        mosyms = None
+        if hasattr(self.ccdata, 'mosyms') and not self.naturalorbitals:
+            mosyms = self.ccdata.mosyms
+        else:
+            mosyms = numpy.full_like(moenergies, 'A', dtype=str)
+
         # Either both [GTO] and [MO] should be present or none of them.
-        if hasattr(self.ccdata, 'gbasis') and hasattr(self.ccdata, 'mocoeffs')\
-                and hasattr(self.ccdata, 'moenergies') and not self.naturalorbitals:
-
+        if hasattr(self.ccdata, 'gbasis') and mosyms is not None and moenergies is not None and mocoeffs is not None and mooccs is not None:
             molden_lines.append('[GTO]')
             molden_lines.extend(self._gto_from_ccdata())
 
             molden_lines.append('[MO]')
-            molden_lines.extend(self._mo_from_ccdata())
-
-        if hasattr(self.ccdata, 'gbasis') and hasattr(self.ccdata, 'nocoeffs')\
-                and hasattr(self.ccdata, 'nooccnos') and self.naturalorbitals:
-
-            molden_lines.append('[GTO]')
-            molden_lines.extend(self._gto_from_ccdata())
-
-            molden_lines.append('[MO]')
-            molden_lines.extend(self._no_from_ccdata())
+            molden_lines.extend(self._mo_from_ccdata(mosyms, moenergies, mocoeffs, mooccs))
 
         # Omitting until issue #390 is resolved.
         # https://github.com/cclib/cclib/issues/390
