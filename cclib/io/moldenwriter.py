@@ -193,7 +193,7 @@ class MOLDEN(filewriter.Writer):
             mooccs = numpy.zeros((len(self.ccdata.homos),len(moenergies[0])))
             occval = 2 // len(self.ccdata.homos)
             for i in range(len(self.ccdata.homos)):
-                mooccs[i][0:self.ccdata.homos[i]] = occval
+                mooccs[i][0:self.ccdata.homos[i]+1] = occval
         elif self.naturalorbitals and hasattr(self.ccdata, 'nooccnos') and hasattr(self.ccdata, "nocoeffs"):
             moenergies = numpy.array([self.ccdata.nooccnos])
             mocoeffs = numpy.array([self.ccdata.nocoeffs])
