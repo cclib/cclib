@@ -373,10 +373,6 @@ class GAMESS(logfileparser.Logfile):
 
         # etsecs (used only for CIS runs for now)
         if line[1:14] == "EXCITED STATE":
-            if not hasattr(self, 'etsecs'):
-                self.etsecs = []
-            if not hasattr(self, 'etsyms'):
-                self.etsyms = []
             statenumber = int(line.split()[2])
             spin = int(float(line.split()[7]))
             if spin == 0:
@@ -384,10 +380,8 @@ class GAMESS(logfileparser.Logfile):
             if spin == 1:
                 sym = "Triplet"
             sym += '-' + line.split()[-1]
-            self.etsyms.append(sym)
-            # skip 5 lines
-            for _ in range(5):
-                line = next(inputfile)
+            self.append_attribute("etsyms", sym)
+            self.skip_lines(inputfile, ["b", "d", "EXCITATION", "FROM TO", "d"])
             line = next(inputfile)
             CIScontribs = []
             while line.strip()[0] != "-":
@@ -406,13 +400,10 @@ class GAMESS(logfileparser.Logfile):
                 #    coeff /= numpy.sqrt(2.0)
                 CIScontribs.append([(fromMO, MOtype), (toMO, MOtype), coeff])
                 line = next(inputfile)
-            self.etsecs.append(CIScontribs)
+            self.append_attribute("etsecs", CIScontribs)
 
         # etoscs (used only for CIS runs now)
         if line[1:50] == "TRANSITION FROM THE GROUND STATE TO EXCITED STATE":
-            if not hasattr(self, "etoscs"):
-                self.etoscs = []
-
             # This was the suggested as a fix in issue #61, and it does allow
             # the parser to finish without crashing. However, it seems that
             # etoscs is shorter in this case than the other transition attributes,
@@ -421,11 +412,21 @@ class GAMESS(logfileparser.Logfile):
                 pass
             else:
                 statenumber = int(line.split()[-1])
-                # skip 7 lines
-                for _ in range(8):
-                    line = next(inputfile)
+                self.skip_lines(
+                    inputfile,
+                    [
+                        "b",
+                        "MULTIPLICITIES",
+                        "STATE ENERGIES",
+                        "EXCITATION ENERGY",
+                        "X Y Z NORM",
+                        "TDIP a.u.",
+                        "TDIP D",
+                    ]
+                )
+                line = next(inputfile)
                 strength = float(line.split()[3])
-                self.etoscs.append(strength)
+                self.append_attribute("etoscs", strength)
 
         # TD-DFT for GAMESS-US.
         # The format for excitations has changed a bit between 2007 and 2012.
