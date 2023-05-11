@@ -69,49 +69,49 @@ BOMD      NWChem      GenericBOMDTest       basicNWChem7.0        dvb_bomd_ks.ou
 BOMD      QChem       GenericBOMDTest       basicQChem5.1         dvb_bomd.out
 BOMD      QChem       GenericBOMDTest       basicQChem5.4         dvb_bomd.out
 
-CC        DALTON      GenericCCTest         basicDALTON-2013      water_ccsdt.out
-CC        DALTON      GenericCCTest         basicDALTON-2015      water_ccsdt.out
-CC        GAMESS      GenericCCTest         basicGAMESS-US2017    water_ccd.out
-CC        GAMESS      GenericCCTest         basicGAMESS-US2018    water_ccd.out
-CC        GAMESS      GenericCCTest         basicGAMESS-US2017    water_ccsd.out
-CC        GAMESS      GenericCCTest         basicGAMESS-US2018    water_ccsd.out
-CC        GAMESS      GenericCCTest         basicGAMESS-US2017    water_ccsd(t).out
-CC        GAMESS      GenericCCTest         basicGAMESS-US2018    water_ccsd(t).out
-CC        Gaussian    GenericCCTest         basicGaussian09       water_ccd.log
-CC        Gaussian    GenericCCTest         basicGaussian16       water_ccd.log
-CC        Gaussian    GenericCCTest         basicGaussian09       water_ccsd.log
-CC        Gaussian    GenericCCTest         basicGaussian16       water_ccsd.log
-CC        Gaussian    GenericCCTest         basicGaussian09       water_ccsdt.log
-CC        Gaussian    GenericCCTest         basicGaussian16       water_ccsdt.log
-CC        Molpro      GenericCCTest         basicMolpro2006       h2o_ccd.out
-CC        Molpro      GenericCCTest         basicMolpro2012       h2o_ccd.out
-CC        Molpro      GenericCCTest         basicMolpro2006       h2o_ccsd.out
-CC        Molpro      GenericCCTest         basicMolpro2012       h2o_ccsd.out
-CC        Molpro      GenericCCTest         basicMolpro2006       h2o_ccsd(t).out
-CC        Molpro      GenericCCTest         basicMolpro2012       h2o_ccsdt.out
-CC        Molcas      GenericCCTest         basicOpenMolcas18.0   water_ccsd.out
-CC        NWChem      GenericCCTest         basicNWChem6.0        water_ccsd(t).out
-CC        NWChem      GenericCCTest         basicNWChem6.5        water_ccsd(t).out
-CC        NWChem      GenericCCTest         basicNWChem7.0        water_ccsd(t).out
-CC        ORCA        GenericCCTest         basicORCA4.1          water_ccsd.out
-CC        ORCA        GenericCCTest         basicORCA4.1          water_ccsd_t.out
-CC        ORCA        GenericCCTest         basicORCA4.2          water_ccsd.out
-CC        ORCA        GenericCCTest         basicORCA4.2          water_ccsd_t.out
-CC        ORCA        GenericCCTest         basicORCA5.0          water_ccsd.out
-CC        ORCA        GenericCCTest         basicORCA5.0          water_ccsd_t.out
-CC        Psi4        GenericCCTest         basicPsi4-1.2.1       water_ccsd.out
-CC        Psi4        GenericCCTest         basicPsi4-1.2.1       water_ccsd(t).out
-CC        Psi4        GenericCCTest         basicPsi4-1.3.1       water_ccsd.out
-CC        Psi4        GenericCCTest         basicPsi4-1.3.1       water_ccsd(t).out
-CC        QChem       GenericCCTest         basicQChem5.1         water_ccd.out
-CC        QChem       GenericCCTest         basicQChem5.1         water_ccsd.out
-CC        QChem       GenericCCTest         basicQChem5.1         water_ccsd(t).out
-CC        QChem       GenericCCTest         basicQChem5.4         water_ccd.out
-CC        QChem       GenericCCTest         basicQChem5.4         water_ccsd.out
-CC        QChem       GenericCCTest         basicQChem5.4         water_ccsd(t).out
-CC        Turbomole   GenericCCTest         basicTurbomole7.2     water_ccsd/basis      water_ccsd/control      water_ccsd/mos      water_ccsd/dscf.out      water_ccsd/ccsdf12.out
-CC        Turbomole   GenericCCTest         basicTurbomole7.4     water_ccsd/basis      water_ccsd/control      water_ccsd/mos      water_ccsd/dscf.out      water_ccsd/ccsdf12.out
-CC        Turbomole   GenericCCTest         basicTurbomole7.4     water_cc2/basis      water_cc2/control      water_cc2/mos      water_cc2/dscf.out      water_cc2/ricc2.out
+CC        DALTON      DALTONCCSDPTTest      basicDALTON-2013      water_ccsdt.out
+CC        DALTON      DALTONCCSDPTTest      basicDALTON-2015      water_ccsdt.out
+CC        GAMESS      GamessCCDTest         basicGAMESS-US2017    water_ccd.out
+CC        GAMESS      GamessCCDTest         basicGAMESS-US2018    water_ccd.out
+CC        GAMESS      GamessCCSDTest        basicGAMESS-US2017    water_ccsd.out
+CC        GAMESS      GamessCCSDTest        basicGAMESS-US2018    water_ccsd.out
+CC        GAMESS      GamessCCSDPTTest      basicGAMESS-US2017    water_ccsd(t).out
+CC        GAMESS      GamessCCSDPTTest      basicGAMESS-US2018    water_ccsd(t).out
+CC        Gaussian    GenericCCDTest        basicGaussian09       water_ccd.log
+CC        Gaussian    GenericCCDTest        basicGaussian16       water_ccd.log
+CC        Gaussian    GenericCCSDTest       basicGaussian09       water_ccsd.log
+CC        Gaussian    GenericCCSDTest       basicGaussian16       water_ccsd.log
+CC        Gaussian    GenericCCSDPTTest     basicGaussian09       water_ccsdt.log
+CC        Gaussian    GenericCCSDPTTest     basicGaussian16       water_ccsdt.log
+CC        Molpro      MolproCCDTest         basicMolpro2006       h2o_ccd.out
+CC        Molpro      MolproCCDTest         basicMolpro2012       h2o_ccd.out
+CC        Molpro      MolproCCSDTest        basicMolpro2006       h2o_ccsd.out
+CC        Molpro      MolproCCSDTest        basicMolpro2012       h2o_ccsd.out
+CC        Molpro      MolproCCSDPTTest      basicMolpro2006       h2o_ccsd(t).out
+CC        Molpro      MolproCCSDPTTest      basicMolpro2012       h2o_ccsdt.out
+CC        Molcas      MolcasCCSDTest        basicOpenMolcas18.0   water_ccsd.out
+CC        NWChem      NWChemCCSDPTTest      basicNWChem6.0        water_ccsd(t).out
+CC        NWChem      NWChemCCSDPTTest      basicNWChem6.5        water_ccsd(t).out
+CC        NWChem      NWChemCCSDPTTest      basicNWChem7.0        water_ccsd(t).out
+CC        ORCA        OrcaCCSDTest          basicORCA4.1          water_ccsd.out
+CC        ORCA        OrcaCCSDPTTest        basicORCA4.1          water_ccsd_t.out
+CC        ORCA        OrcaCCSDTest          basicORCA4.2          water_ccsd.out
+CC        ORCA        OrcaCCSDPTTest        basicORCA4.2          water_ccsd_t.out
+CC        ORCA        OrcaCCSDTest          basicORCA5.0          water_ccsd.out
+CC        ORCA        OrcaCCSDPTTest        basicORCA5.0          water_ccsd_t.out
+CC        Psi4        Psi4CCSDTest          basicPsi4-1.2.1       water_ccsd.out
+CC        Psi4        Psi4CCSDPTTest        basicPsi4-1.2.1       water_ccsd(t).out
+CC        Psi4        Psi4CCSDTest          basicPsi4-1.3.1       water_ccsd.out
+CC        Psi4        Psi4CCSDPTTest        basicPsi4-1.3.1       water_ccsd(t).out
+CC        QChem       GenericCCDTest        basicQChem5.1         water_ccd.out
+CC        QChem       GenericCCSDTest       basicQChem5.1         water_ccsd.out
+CC        QChem       GenericCCSDPTTest     basicQChem5.1         water_ccsd(t).out
+CC        QChem       GenericCCDTest        basicQChem5.4         water_ccd.out
+CC        QChem       GenericCCSDTest       basicQChem5.4         water_ccsd.out
+CC        QChem       GenericCCSDPTTest     basicQChem5.4         water_ccsd(t).out
+CC        Turbomole   TurbomoleCCSDTest     basicTurbomole7.2     water_ccsd/basis      water_ccsd/control      water_ccsd/mos      water_ccsd/dscf.out      water_ccsd/ccsdf12.out
+CC        Turbomole   TurbomoleCCSDTest     basicTurbomole7.4     water_ccsd/basis      water_ccsd/control      water_ccsd/mos      water_ccsd/dscf.out      water_ccsd/ccsdf12.out
+CC        Turbomole   GenericCC2Test        basicTurbomole7.4     water_cc2/basis      water_cc2/control      water_cc2/mos      water_cc2/dscf.out      water_cc2/ricc2.out
 
 CI        GAMESS      GAMESSCISTest         basicGAMESS-US2017    water_cis_saps.out
 CI        GAMESS      GAMESSCISTest         basicGAMESS-US2018    water_cis_saps.out
