@@ -153,7 +153,7 @@ class MOLDEN(filewriter.Writer):
         spin = 'Alpha'
         for i in range(len(mooccs)):
             for j in range(len(mooccs[i])):
-                restricted_spin_idx = i // len(mocoeffs)
+                restricted_spin_idx = i % len(mocoeffs)
                 lines.append(' Sym= {}'.format(mosyms[restricted_spin_idx][j]))
                 moenergy = utils.convertor(moenergies[restricted_spin_idx][j], 'eV', 'hartree')
                 lines.append(' Ene= {:10.4f}'.format(moenergy))
