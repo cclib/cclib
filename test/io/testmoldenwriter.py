@@ -103,8 +103,8 @@ class MOLDENTest(unittest.TestCase):
         size_no_ccdata += len(data.nooccnos) *\
                                 (len(data.nocoeffs[0]) + extra)
         # Filter blank lines.
-        nosyms, nooccnos, nocoeffs, nooccnos = writer._syms_coeffs_occs_energies_from_ccdata_for_moldenwriter()
-        size_no_writer = len(list(filter(None, writer._mo_from_ccdata(nosyms, nooccnos, nocoeffs, nooccnos))))
+        nosyms, nocoeffs, nooccs, noenergies = writer._syms_coeffs_occs_energies_from_ccdata_for_moldenwriter()
+        size_no_writer = len(list(filter(None, writer._mo_from_ccdata(nosyms, noenergies, nocoeffs, nooccs))))
         assert size_no_writer == size_no_ccdata
 
     def test_round_molden(self):
