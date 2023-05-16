@@ -764,18 +764,7 @@ def testnoparseGAMESS_WinGAMESS_H2O_def2SVPD_triplet_2019_06_30_R1_out(filename)
     """
     data = ccread(os.path.join(__filedir__,filename))
     writer = moldenwriter.MOLDEN(data)
-    moenergies = data.moenergies
-    mocoeffs = data.mocoeffs
-    mooccs = numpy.zeros((len(data.homos),len(moenergies[0])))
-    occval = 2 // len(data.homos)
-    for i in range(len(data.homos)):
-        mooccs[i][0:data.homos[i]+1] = occval
-    mosyms = None
-    if hasattr(data, 'mosyms'):
-        mosyms = data.mosyms
-    else:
-        mosyms = numpy.full_like(moenergies, 'A', dtype=str)
-
+    mosyms, mocoeffs, mooccs, moenergies = writer._syms_coeffs_occs_energies_from_ccdata_for_moldenwriter()
     molden_lines = writer._mo_from_ccdata(mosyms,moenergies,mocoeffs,mooccs)
     # Check size of Atoms section.
     assert len(molden_lines) == (data.nbasis + 4) * (data.nmo * 2)
