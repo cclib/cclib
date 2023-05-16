@@ -96,7 +96,6 @@ class GenericIRTest(unittest.TestCase):
         assert abs(self.data.zpve - self.zpve) < 1.0e-3
 
     @skipForParser('ADF', 'not implemented yet')
-    @skipForParser('FChk', 'not implemented yet')
     @skipForParser('GAMESSUK', 'not implemented yet')
     @skipForParser('Gaussian', 'not implemented yet')
     @skipForParser('Jaguar', 'not implemented yet')
