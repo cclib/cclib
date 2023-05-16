@@ -10,6 +10,7 @@
 import importlib
 import re
 from itertools import accumulate
+from math import sqrt
 from typing import Iterable, List, Sequence, TypeVar
 
 import numpy
@@ -250,3 +251,21 @@ class WidthSplitter:
             while len(elements) and elements[-1] == '':
                 elements.pop()
         return elements
+
+
+def _dim_from_tblock_size(x: int) -> int:
+    """Given the number of elements in a symmetric matrix lower triangle,
+    compute the dimension of the full matrix.
+    """
+    return int(max(0.5 * (sqrt(8*x + 1) - 1), 0.5 * (-sqrt(8*x + 1) - 1)))
+
+
+def block_to_matrix(block: numpy.ndarray) -> numpy.ndarray:
+    """Convert a flattened symmetric matrix lower triangle to its full
+    symmetrized form.
+    """
+    assert len(block.shape) == 1
+    dim = _dim_from_tblock_size(block.shape[0])
+    mat = numpy.empty(shape=(dim, dim), dtype=block.dtype)
+    mat[numpy.tril_indices_from(mat)] = block
+    return symmetrize(mat)
