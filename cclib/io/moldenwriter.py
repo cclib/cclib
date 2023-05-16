@@ -134,11 +134,11 @@ class MOLDEN(filewriter.Writer):
 
         return mocoeffs
 
-    def _syms_coeffs_occs_energies_from_ccdata_for_moldenwriter(self, data=None):
+    def _syms_energies_occs_coeffs_from_ccdata_for_moldenwriter(self, data=None):
         syms = None
-        coeffs = None
-        occs = None
         energies = None
+        occs = None
+        coeffs = None
 
         if data is None:
             data = self.ccdata
@@ -165,9 +165,9 @@ class MOLDEN(filewriter.Writer):
             syms = numpy.full_like(energies, 'A', dtype=str)
 
 
-        return syms, coeffs, occs, energies
+        return syms, energies, occs, coeffs
 
-    def _mo_from_ccdata(self, mosyms, moenergies, mocoeffs, mooccs):
+    def _mo_from_ccdata(self, mosyms, moenergies, mooccs, mocoeffs):
         """Create [MO] section.
 
         Sym= symmetry_label_1
@@ -216,14 +216,14 @@ class MOLDEN(filewriter.Writer):
         index = -1
         molden_lines.extend(self._coords_from_ccdata(index))
 
-        mosyms, mocoeffs, mooccs, moenergies = self._syms_coeffs_occs_energies_from_ccdata_for_moldenwriter()
+        mosyms, moenergies, mooccs, mocoeffs = self._syms_energies_occs_coeffs_from_ccdata_for_moldenwriter()
 
         if hasattr(self.ccdata, 'gbasis'):
             molden_lines.append('[GTO]')
             molden_lines.extend(self._gto_from_ccdata())
         if all(attr is not None for attr in (mosyms, moenergies, mooccs)):
             molden_lines.append('[MO]')
-            molden_lines.extend(self._mo_from_ccdata(mosyms, moenergies, mocoeffs, mooccs))
+            molden_lines.extend(self._mo_from_ccdata(mosyms, moenergies, mooccs, mocoeffs))
 
         # Omitting until issue #390 is resolved.
         # https://github.com/cclib/cclib/issues/390
