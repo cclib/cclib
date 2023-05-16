@@ -209,11 +209,10 @@ class MOLDEN(filewriter.Writer):
         else:
             mosyms = numpy.full_like(moenergies, 'A', dtype=str)
 
-        # Either both [GTO] and [MO] should be present or none of them.
-        if hasattr(self.ccdata, 'gbasis') and all(attr is not None for attr in (mosyms, moenergies, mooccs)):
+        if hasattr(self.ccdata, 'gbasis'):
             molden_lines.append('[GTO]')
             molden_lines.extend(self._gto_from_ccdata())
-
+        if all(attr is not None for attr in (mosyms, moenergies, mooccs)):
             molden_lines.append('[MO]')
             molden_lines.extend(self._mo_from_ccdata(mosyms, moenergies, mocoeffs, mooccs))
 
