@@ -146,7 +146,7 @@ class MOLDEN(filewriter.Writer):
         if not self.naturalorbitals and hasattr(data, 'moenergies') and hasattr(data, 'mocoeffs'):
             energies = data.moenergies
             coeffs = data.mocoeffs
-            occs = numpy.zeros((len(data.homos),len(moenergies[0])))
+            occs = numpy.zeros((len(data.homos),len(energies[0])))
             occval = 2 // len(data.homos)
             for i in range(len(data.homos)):
                 occs[i][0:data.homos[i]+1] = occval
