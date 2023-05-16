@@ -134,6 +134,38 @@ class MOLDEN(filewriter.Writer):
 
         return mocoeffs
 
+    def _syms_coeffs_occs_energies_from_ccdata_for_moldenwriter(self, data=None):
+        coeffs = None
+        occs = None
+        energies = None
+        syms = None
+
+        if data is None:
+            data = self.ccdata
+
+        if not self.naturalorbitals and hasattr(data, 'moenergies') and hasattr(data, 'mocoeffs'):
+            energies = data.moenergies
+            coeffs = data.mocoeffs
+            occs = numpy.zeros((len(data.homos),len(moenergies[0])))
+            occval = 2 // len(data.homos)
+            for i in range(len(data.homos)):
+                occs[i][0:data.homos[i]+1] = occval
+        elif self.naturalorbitals and hasattr(data, 'nooccnos') and hasattr(data, "nocoeffs"):
+            energies = numpy.array([data.nooccnos])
+            coeffs = numpy.array([data.nocoeffs])
+            occs = numpy.array([data.nooccnos])
+        elif self.naturalorbitals and hasattr(data, 'nsooccnos') and hasattr(data, "nsocoeffs"):
+            energies = data.nsooccnos
+            coeffs = data.nsocoeffs
+            occs = data.nsooccnos
+
+        if hasattr(data, 'mosyms') and not self.naturalorbitals:
+            mosyms = data.mosyms
+        else:
+            mosyms = numpy.full_like(moenergies, 'A', dtype=str)
+
+
+        return syms, coeffs, occs, energies
 
     def _mo_from_ccdata(self, mosyms, moenergies, mocoeffs, mooccs):
         """Create [MO] section.
@@ -184,30 +216,7 @@ class MOLDEN(filewriter.Writer):
         index = -1
         molden_lines.extend(self._coords_from_ccdata(index))
 
-        mocoeffs=None
-        mooccs=None
-        moenergies = None
-        if not self.naturalorbitals and hasattr(self.ccdata, 'moenergies') and hasattr(self.ccdata, 'mocoeffs'):
-            moenergies = self.ccdata.moenergies
-            mocoeffs = self.ccdata.mocoeffs
-            mooccs = numpy.zeros((len(self.ccdata.homos),len(moenergies[0])))
-            occval = 2 // len(self.ccdata.homos)
-            for i in range(len(self.ccdata.homos)):
-                mooccs[i][0:self.ccdata.homos[i]+1] = occval
-        elif self.naturalorbitals and hasattr(self.ccdata, 'nooccnos') and hasattr(self.ccdata, "nocoeffs"):
-            moenergies = numpy.array([self.ccdata.nooccnos])
-            mocoeffs = numpy.array([self.ccdata.nocoeffs])
-            mooccs = numpy.array([self.ccdata.nooccnos])
-        elif self.naturalorbitals and hasattr(self.ccdata, 'nsooccnos') and hasattr(self.ccdata, "nsocoeffs"):
-            moenergies = self.ccdata.nsooccnos
-            mocoeffs = self.ccdata.nsocoeffs
-            mooccs = self.ccdata.nsooccnos
-
-        mosyms = None
-        if hasattr(self.ccdata, 'mosyms') and not self.naturalorbitals:
-            mosyms = self.ccdata.mosyms
-        else:
-            mosyms = numpy.full_like(moenergies, 'A', dtype=str)
+        mosyms, mocoeffs, mooccs, moenergies = _syms_coeffs_occs_energies_from_ccdata_for_moldenwriter(self, self.ccdata)
 
         if hasattr(self.ccdata, 'gbasis'):
             molden_lines.append('[GTO]')
