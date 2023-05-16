@@ -87,11 +87,8 @@ class MOLDENTest(unittest.TestCase):
             size_mo_ccdata += len(data.moenergies[i]) *\
                                 (len(data.mocoeffs[i][0]) + extra)
         # Filter blank lines.
-        mooccs = numpy.zeros((len(data.homos),len(data.moenergies[0])))
-        occval = 2 // len(data.homos)
-        for i in range(len(data.homos)):
-            mooccs[i][0:data.homos[i]] = occval
-        size_mo_writer = len(list(filter(None, writer._mo_from_ccdata(data.mosyms, data.moenergies, data.mocoeffs, mooccs))))
+        mosyms, mocoeffs, mooccs, moenergies = writer._syms_coeffs_occs_energies_from_ccdata_for_moldenwriter()
+        size_mo_writer = len(list(filter(None, writer._mo_from_ccdata(mosyms, moenergies, mocoeffs, mooccs))))
         assert size_mo_writer == size_mo_ccdata
 
     def test_no_section_size(self):
@@ -106,9 +103,7 @@ class MOLDENTest(unittest.TestCase):
         size_no_ccdata += len(data.nooccnos) *\
                                 (len(data.nocoeffs[0]) + extra)
         # Filter blank lines.
-        nooccnos = numpy.array([data.nooccnos])
-        nocoeffs = numpy.array([data.nocoeffs])
-        nosyms = numpy.full_like(nooccnos, 'A', dtype=str)
+        nosyms, nooccnos, nocoeffs, nooccnos = writer._syms_coeffs_occs_energies_from_ccdata_for_moldenwriter()
         size_no_writer = len(list(filter(None, writer._mo_from_ccdata(nosyms, nooccnos, nocoeffs, nooccnos))))
         assert size_no_writer == size_no_ccdata
 
