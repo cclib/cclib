@@ -764,13 +764,15 @@ def testnoparseGAMESS_WinGAMESS_H2O_def2SVPD_triplet_2019_06_30_R1_out(filename)
     """
     data = ccread(os.path.join(__filedir__,filename))
     writer = moldenwriter.MOLDEN(data)
+    mosyms, moenergies, mooccs, mocoeffs = writer._syms_energies_occs_coeffs_from_ccdata_for_moldenwriter()
+    molden_lines = writer._mo_from_ccdata(mosyms,moenergies,mooccs,mocoeffs)
     # Check size of Atoms section.
-    assert len(writer._mo_from_ccdata()) == (data.nbasis + 4) * (data.nmo * 2)
+    assert len(molden_lines) == (data.nbasis + 4) * (data.nmo * 2)
     # check docc orbital
     beta_idx = (data.nbasis + 4) * data.nmo
-    assert "Beta" in writer._mo_from_ccdata()[beta_idx + 2]
-    assert "Occup=   1.000000" in writer._mo_from_ccdata()[beta_idx + 3]
-    assert "0.989063" in writer._mo_from_ccdata()[beta_idx + 4]
+    assert "Beta" in molden_lines[beta_idx + 2]
+    assert "Occup=   1.000000" in molden_lines[beta_idx + 3]
+    assert "0.989063" in molden_lines[beta_idx + 4]
 
 
 # GAMESS-UK #

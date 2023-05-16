@@ -14,6 +14,7 @@ import cclib
 from cclib.io.filewriter import MissingAttributeError
 from cclib.io.moldenwriter import MoldenReformatter
 from cclib.io.moldenwriter import round_molden
+import numpy
 import pytest
 
 __filedir__ = os.path.dirname(__file__)
@@ -86,8 +87,25 @@ class MOLDENTest(unittest.TestCase):
             size_mo_ccdata += len(data.moenergies[i]) *\
                                 (len(data.mocoeffs[i][0]) + extra)
         # Filter blank lines.
-        size_mo_writer = len(list(filter(None, writer._mo_from_ccdata())))
+        mosyms, moenergies, mooccs, mocoeffs = writer._syms_energies_occs_coeffs_from_ccdata_for_moldenwriter()
+        size_mo_writer = len(list(filter(None, writer._mo_from_ccdata(mosyms, moenergies, mooccs, mocoeffs))))
         assert size_mo_writer == size_mo_ccdata
+
+    def test_no_section_size(self):
+        """Check if size of NO section is equal to expected."""
+        fpath = os.path.join(__datadir__,
+                             "data/GAMESS/basicGAMESS-US2018/water_cis_dets.out")
+        data = cclib.io.ccread(fpath)
+        writer = cclib.io.moldenwriter.MOLDEN(data)
+        # Check size of NO section.
+        size_no_ccdata = 0
+        extra = 4
+        size_no_ccdata += len(data.nooccnos) *\
+                                (len(data.nocoeffs[0]) + extra)
+        # Filter blank lines.
+        nosyms, noenergies, nooccs, nocoeffs = writer._syms_energies_occs_coeffs_from_ccdata_for_moldenwriter()
+        size_no_writer = len(list(filter(None, writer._mo_from_ccdata(nosyms, noenergies, nooccs, nocoeffs))))
+        assert size_no_writer == size_no_ccdata
 
     def test_round_molden(self):
         """Check if Molden Style number rounding works as expected."""

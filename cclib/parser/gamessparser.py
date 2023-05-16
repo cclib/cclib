@@ -1034,7 +1034,9 @@ class GAMESS(logfileparser.Logfile):
         #   55  C  1 XYZ   0.000000   0.000000   0.000000   0.000000   0.000000
         #   56  C  1XXXX  -0.000014  -0.000067   0.000000   0.000000   0.000000
         #
-        if line.find("EIGENVECTORS") == 10 or line.find("MOLECULAR ORBITALS") == 10:
+        if line.find("EIGENVECTORS") == 10 or \
+           line.find("MOLECULAR ORBITALS") == 10 or \
+           line.find("INITIAL GUESS ORBITALS") == 30:
 
             # This is the stuff that we can read from these blocks.
             self.moenergies = [[]]
@@ -1231,7 +1233,8 @@ class GAMESS(logfileparser.Logfile):
         #    2  O  1  S    0.000000   0.754402   0.004472  -0.581970   0.000000
         # ...
         #
-        if line[10:30] == "CIS NATURAL ORBITALS":
+        if line[10:30] == "CIS NATURAL ORBITALS" or \
+           line[10:50] == "NATURAL ORBITALS IN ATOMIC ORBITAL BASIS":
 
             self.nocoeffs = numpy.zeros((self.nmo, self.nbasis), "d")
             self.nooccnos = []

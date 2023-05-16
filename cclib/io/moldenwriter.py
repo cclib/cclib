@@ -134,8 +134,40 @@ class MOLDEN(filewriter.Writer):
 
         return mocoeffs
 
+    def _syms_energies_occs_coeffs_from_ccdata_for_moldenwriter(self, data=None):
+        syms = None
+        energies = None
+        occs = None
+        coeffs = None
 
-    def _mo_from_ccdata(self):
+        if data is None:
+            data = self.ccdata
+
+        if not self.naturalorbitals and hasattr(data, 'moenergies') and hasattr(data, 'mocoeffs'):
+            energies = data.moenergies
+            coeffs = data.mocoeffs
+            occs = numpy.zeros((len(data.homos),len(energies[0])))
+            occval = 2 // len(data.homos)
+            for i in range(len(data.homos)):
+                occs[i][0:data.homos[i]+1] = occval
+        elif self.naturalorbitals and hasattr(data, 'nooccnos') and hasattr(data, "nocoeffs"):
+            energies = numpy.array([data.nooccnos])
+            coeffs = numpy.array([data.nocoeffs])
+            occs = numpy.array([data.nooccnos])
+        elif self.naturalorbitals and hasattr(data, 'nsooccnos') and hasattr(data, "nsocoeffs"):
+            energies = data.nsooccnos
+            coeffs = data.nsocoeffs
+            occs = data.nsooccnos
+
+        if hasattr(data, 'mosyms') and not self.naturalorbitals:
+            syms = data.mosyms
+        else:
+            syms = numpy.full_like(energies, 'A', dtype=str)
+
+
+        return syms, energies, occs, coeffs
+
+    def _mo_from_ccdata(self, mosyms, moenergies, mooccs, mocoeffs):
         """Create [MO] section.
 
         Sym= symmetry_label_1
@@ -148,53 +180,22 @@ class MOLDEN(filewriter.Writer):
         ...
         """
 
-        moenergies = self.ccdata.moenergies
-        mocoeffs = self.ccdata.mocoeffs
-        homos = self.ccdata.homos
-        mult = self.ccdata.mult
-
-        has_syms = False
         lines = []
 
-        # Sym attribute is optional in [MO] section.
-        if hasattr(self.ccdata, 'mosyms'):
-            has_syms = True
-            syms = self.ccdata.mosyms
-        else:
-            syms = numpy.full_like(moenergies, 'A', dtype=str)
-        unres = len(moenergies) > 1
-        openshell = len(homos) > 1
-
         spin = 'Alpha'
-        for i in range(len(moenergies)):
-            for j in range(len(moenergies[i])):
-                lines.append(f" Sym= {syms[i][j]}")
-                moenergy = utils.convertor(moenergies[i][j], "eV", "hartree")
-                lines.append(f" Ene= {moenergy:10.4f}")
-                lines.append(f" Spin= {spin}")
-                if unres and openshell:
-                    if j <= homos[i]:
-                        lines.append(f" Occup= {1.0:10.6f}")
-                    else:
-                        lines.append(f" Occup= {0.0:10.6f}")
-                elif not unres and openshell:
-                    occ = numpy.sum(j <= homos)
-                    if j <= homos[i]:
-                        lines.append(f" Occup= {occ:10.6f}")
-                    else:
-                        lines.append(f" Occup= {0.0:10.6f}")
-                else:
-                    if j <= homos[i]:
-                        lines.append(f" Occup= {2.0:10.6f}")
-                    else:
-                        lines.append(f" Occup= {0.0:10.6f}")
+        for i in range(len(mooccs)):
+            for j in range(len(mooccs[i])):
+                restricted_spin_idx = i % len(mocoeffs)
+                lines.append(' Sym= {}'.format(mosyms[restricted_spin_idx][j]))
+                moenergy = utils.convertor(moenergies[restricted_spin_idx][j], 'eV', 'hartree')
+                lines.append(' Ene= {:10.4f}'.format(moenergy))
+                lines.append(' Spin= {}'.format(spin))
+                lines.append(' Occup= {:10.6f}'.format(mooccs[i][j]))
                 # Rearrange mocoeffs according to Molden's lexicographical order.
-                mocoeffs[i][j] = self._rearrange_mocoeffs(mocoeffs[i][j])
-                for k, mocoeff in enumerate(mocoeffs[i][j]):
-                    lines.append(f"{k + 1:4d}  {mocoeff:10.6f}")
-
+                mocoeffs[restricted_spin_idx][j] = self._rearrange_mocoeffs(mocoeffs[restricted_spin_idx][j])
+                for k, mocoeff in enumerate(mocoeffs[restricted_spin_idx][j]):
+                    lines.append('{:4d}  {:10.6f}'.format(k + 1, mocoeff))
             spin = 'Beta'
-
         return lines
 
     def generate_repr(self):
@@ -215,15 +216,14 @@ class MOLDEN(filewriter.Writer):
         index = -1
         molden_lines.extend(self._coords_from_ccdata(index))
 
-        # Either both [GTO] and [MO] should be present or none of them.
-        if hasattr(self.ccdata, 'gbasis') and hasattr(self.ccdata, 'mocoeffs')\
-                and hasattr(self.ccdata, 'moenergies'):
+        mosyms, moenergies, mooccs, mocoeffs = self._syms_energies_occs_coeffs_from_ccdata_for_moldenwriter()
 
+        if hasattr(self.ccdata, 'gbasis'):
             molden_lines.append('[GTO]')
             molden_lines.extend(self._gto_from_ccdata())
-
+        if all(attr is not None for attr in (mosyms, moenergies, mooccs)):
             molden_lines.append('[MO]')
-            molden_lines.extend(self._mo_from_ccdata())
+            molden_lines.extend(self._mo_from_ccdata(mosyms, moenergies, mooccs, mocoeffs))
 
         # Omitting until issue #390 is resolved.
         # https://github.com/cclib/cclib/issues/390

@@ -49,6 +49,10 @@ def main() -> None:
                         default=None,
                         help='optional zero-based index for which structure to extract')
 
+    parser.add_argument('-n', '--naturalorbitals',
+                        action='store_true',
+                        help='(molden only) write natural orbitals out instead of molecular orbitals.')
+
     args = parser.parse_args()
 
     outputtype = args.outputtype
@@ -58,6 +62,7 @@ def main() -> None:
     future = args.future
     index = args.index
     ghost = args.ghost
+    naturalorbitals = args.naturalorbitals
 
     for filename in filenames:
 
@@ -93,6 +98,8 @@ def main() -> None:
             ccwrite_kwargs['future'] = True
         if ghost:
             ccwrite_kwargs['ghost'] = ghost
+        if naturalorbitals:
+            ccwrite_kwargs['naturalorbitals'] = True
         # For XYZ files, write the last geometry unless otherwise
         # specified.
         if not index:
