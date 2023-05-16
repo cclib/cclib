@@ -135,10 +135,10 @@ class MOLDEN(filewriter.Writer):
         return mocoeffs
 
     def _syms_coeffs_occs_energies_from_ccdata_for_moldenwriter(self, data=None):
+        syms = None
         coeffs = None
         occs = None
         energies = None
-        syms = None
 
         if data is None:
             data = self.ccdata
@@ -160,9 +160,9 @@ class MOLDEN(filewriter.Writer):
             occs = data.nsooccnos
 
         if hasattr(data, 'mosyms') and not self.naturalorbitals:
-            mosyms = data.mosyms
+            syms = data.mosyms
         else:
-            mosyms = numpy.full_like(moenergies, 'A', dtype=str)
+            syms = numpy.full_like(energies, 'A', dtype=str)
 
 
         return syms, coeffs, occs, energies
@@ -216,7 +216,7 @@ class MOLDEN(filewriter.Writer):
         index = -1
         molden_lines.extend(self._coords_from_ccdata(index))
 
-        mosyms, mocoeffs, mooccs, moenergies = _syms_coeffs_occs_energies_from_ccdata_for_moldenwriter()
+        mosyms, mocoeffs, mooccs, moenergies = self._syms_coeffs_occs_energies_from_ccdata_for_moldenwriter()
 
         if hasattr(self.ccdata, 'gbasis'):
             molden_lines.append('[GTO]')
