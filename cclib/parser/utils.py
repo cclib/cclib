@@ -45,14 +45,15 @@ def symmetrize(m: numpy.ndarray, use_triangle: str = 'lower') -> numpy.ndarray:
 
     dim = m.shape[0]
 
-    lower_indices = numpy.tril_indices(dim, k=-1)
-    upper_indices = numpy.triu_indices(dim, k=1)
-
     ms = m.copy()
 
     if use_triangle == 'lower':
+        lower_indices = numpy.tril_indices(dim, k=-1)
+        upper_indices = (lower_indices[1], lower_indices[0])
         ms[upper_indices] = ms[lower_indices]
     if use_triangle == 'upper':
+        upper_indices = numpy.triu_indices(dim, k=1)
+        lower_indices = (upper_indices[1], upper_indices[0])
         ms[lower_indices] = ms[upper_indices]
 
     return ms
