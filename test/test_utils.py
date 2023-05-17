@@ -113,5 +113,37 @@ class WidthSplitterTest(unittest.TestCase):
         assert ref_not_truncated == tokens_not_truncated
 
 
+class SymmetrizeTest(unittest.TestCase):
+
+    def test_dim_from_tblock_size(self) -> None:
+        assert utils._dim_from_tblock_size(1) == 1
+        # This isn't possible until we fully move to pytest.
+        # with pytest.raises(
+        #     RuntimeError,
+        #     match="The number of elements (2) isn't possible for a matrix triangle"
+        # ):
+        #     assert utils._dim_from_tblock_size(2)
+        assert utils._dim_from_tblock_size(3) == 2
+        assert utils._dim_from_tblock_size(6) == 3
+        assert utils._dim_from_tblock_size(10) == 4
+
+    def test_block_to_matrix(self) -> None:
+        inp = numpy.array([1, 2, 3, 4, 5, 6], dtype=int)
+        ref = numpy.array([[1, 2, 4], [2, 3, 5], [4, 5, 6]], dtype=int)
+        numpy.testing.assert_equal(utils.block_to_matrix(inp), ref)
+
+    def test_symmetrize(self) -> None:
+        inp = numpy.array([[1, 9, 7],
+                           [4, 8, 3],
+                           [6, 2, 5]], dtype=int)
+        ref_lower = numpy.array([[1, 4, 6],
+                                 [4, 8, 2],
+                                 [6, 2, 5]], dtype=int)
+        ref_upper = numpy.array([[1, 9, 7],
+                                 [9, 8, 3],
+                                 [7, 3, 5]], dtype=int)
+        numpy.testing.assert_equal(utils.symmetrize(inp, "lower"), ref_lower)
+        numpy.testing.assert_equal(utils.symmetrize(inp, "upper"), ref_upper)
+
 if __name__ == "__main__":
     unittest.main()

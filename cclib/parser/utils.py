@@ -256,9 +256,17 @@ class WidthSplitter:
 
 def _dim_from_tblock_size(x: int) -> int:
     """Given the number of elements in a symmetric matrix lower triangle,
-    compute the dimension of the full matrix.
+    including the diagonal, compute the dimension (length of one side) of the
+    full matrix.
     """
-    return int(max(0.5 * (sqrt(8*x + 1) - 1), 0.5 * (-sqrt(8*x + 1) - 1)))
+    r1 = 0.5 * (sqrt(8*x + 1) - 1)
+    r2 = 0.5 * (-sqrt(8*x + 1) - 1)
+    m = max(r1, r2)
+    if _BUILTIN_FLOAT(round(m)) != m:
+        raise RuntimeError(
+            f"The number of elements ({x}) isn't possible for a matrix triangle"
+        )
+    return int(m)
 
 
 def block_to_matrix(block: numpy.ndarray) -> numpy.ndarray:
