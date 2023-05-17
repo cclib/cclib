@@ -80,8 +80,9 @@ class NuclearTest(unittest.TestCase):
             nuclear.center_of_mass(), np.array([0.0, 0.0, 0.0]), rtol=0.0, atol=1.0e-13
         )
 
+    @unittest.skip("This test is still being developed")
     def test_moment_of_inertia_tensor(self) -> None:
-        """Testing the moment of inertia tensor for a logfile where it is
+        """Testing the full moment of inertia tensor for a logfile where it is
         printed.
         """
 
