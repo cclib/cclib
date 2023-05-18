@@ -19,6 +19,10 @@ class XTB(logfileparser.Logfile):
         """Return a representation of the object."""
         return 'XTB("%s")' % (self.filename)
 
+    def normalisesym(self, label):
+        """xTB does not require normalizing symmetry labels."""
+        return label
+
     def extract(self, inputfile, line):
         # Extract xtb version
         if '* xtb version' == line.strip()[:13]:
