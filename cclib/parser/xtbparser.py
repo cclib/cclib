@@ -23,6 +23,16 @@ class XTB(logfileparser.Logfile):
         """xTB does not require normalizing symmetry labels."""
         return label
 
+    def before_parsing(self):
+        self.atomprop = {}
+        self.bondprop = {}
+
+    def after_parsing(self):
+        if self.atomprop == {}:
+            delattr(self, "atomprop")
+        if self.bondprop == {}:
+            delattr(self, "bondprop")
+
     def extract(self, inputfile, line):
         # Extract xtb version
         if '* xtb version' == line.strip()[:13]:
