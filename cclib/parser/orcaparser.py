@@ -1791,7 +1791,22 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
         #   are not printed (there is a blank line at the end).
         if line[:22] == "LOEWDIN ATOMIC CHARGES":
             self.parse_charge_section(line, inputfile, 'lowdin')
-        #CHELPG Charges
+        # ------------------
+        # HIRSHFELD ANALYSIS
+        # ------------------
+        # 
+        # Total integrated alpha density =    142.999988722
+        # Total integrated beta density  =    142.999988722
+        #  
+        #   ATOM     CHARGE      SPIN                 
+        #    0 H    0.157924    0.000000         
+        #    1 O   -0.209542    0.000000         
+        #    2 C    0.030659    0.000000
+        # ...
+        #   TOTAL  -0.999977    0.000000    
+        if line[:18] == "HIRSHFELD ANALYSIS":
+            self.parse_charge_section(line, inputfile, 'hirshfeld')
+        #CHELPG Charges            
         #--------------------------------
         #  0   C   :       0.363939
         #  1   H   :       0.025695
@@ -2168,7 +2183,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
           handle to file object
         chargestype : str
           what type of charge we're dealing with, must be one of
-          'mulliken', 'lowdin' or 'chelpg'
+          'mulliken', 'lowdin', 'chelpg' or 'hirshfeld'
         """
         has_spins = 'AND SPIN POPULATIONS' in line
 
@@ -2181,20 +2196,34 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
 
         # depending on chargestype, decide when to stop parsing lines
         # start, stop - indices for slicing lines and grabbing values
+        # should_stop: when to stop parsing
         if chargestype == 'mulliken':
             should_stop = lambda x: x.startswith('Sum of atomic charges')
             start, stop = 8, 20
         elif chargestype == 'lowdin':
-            # stops when blank line encountered
             should_stop = lambda x: not bool(x.strip())
             start, stop = 8, 20
         elif chargestype == 'chelpg':
             should_stop = lambda x: x.startswith('---')
             start, stop = 11, 26
+        elif chargestype == 'hirshfeld':
+            should_stop = lambda x: not bool(x.strip())
+            start, stop = 9, 17
+            self.skip_lines(
+                inputfile,
+                [
+                    "d",
+                    "b",
+                    "Total integrated alpha density",
+                    "Total integrated beta density",
+                    "header",
+                ]
+            )
+        else:
+            raise RuntimeError(f"unknown chargestype: {chargestype}")
 
         charges = []
-        if has_spins:
-            spins = []
+        spins = []
 
         line = next(inputfile)
         while not should_stop(line):

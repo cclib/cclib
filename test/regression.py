@@ -3220,8 +3220,16 @@ class MolproBigBasisTest_cart(MolproBigBasisTest):
 
 # ORCA #
 
+class OrcaSPTest_nohirshfeld(OrcaSPTest):
+    """Versions pre-5.0 did not specify calculating Hirshfeld atomic charges.
+    """
 
-class OrcaSPTest_nobasis(OrcaSPTest):
+    @unittest.skip("atomcharges['hirshfeld'] were not calculated")
+    def testatomcharges_hirshfeld(test):
+        """Hirshfeld atomic charges were not calculated"""
+
+
+class OrcaSPTest_nobasis(OrcaSPTest_nohirshfeld):
     """Versions pre-4.0 do not concretely print the basis set(s) used aside
     from repeating the input file.
     """
@@ -3548,7 +3556,7 @@ old_unittests = [
     ("ORCA/ORCA4.0/dvb_sp.out", GenericBasisTest),
     ("ORCA/ORCA4.0/dvb_gopt.out", OrcaGeoOptTest),
     ("ORCA/ORCA4.0/Trp_polar.out", ReferencePolarTest),
-    ("ORCA/ORCA4.0/dvb_sp.out", OrcaSPTest),
+    ("ORCA/ORCA4.0/dvb_sp.out", OrcaSPTest_nohirshfeld),
     ("ORCA/ORCA4.0/dvb_sp_un.out", GenericSPunTest),
     ("ORCA/ORCA4.0/dvb_td.out", OrcaTDDFTTest_pre5),
     ("ORCA/ORCA4.0/dvb_rocis.out", OrcaROCIS40Test),

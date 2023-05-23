@@ -8,6 +8,11 @@ $rem
  scf_final_print = 2
  print_general_basis = true
  print_orbitals = true
+ lowdin_population = true
+ chelpg = true
+ esp_charges = 1
+ hirshfeld = true
+ cm5 = true
  molden_format = false
  gui = 2
 $end

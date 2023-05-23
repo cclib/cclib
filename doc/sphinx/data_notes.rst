@@ -65,13 +65,35 @@ atomcharges
 
 The attribute ``atomcharges`` contains the atomic partial charges as taken from the output file. Since these charges are arbitrary and depend on the details of a population analysis, this attribute is dictionary containing any number of various atomic charges. The keys in this dictionary are strings naming the population analysis, and the values are arrays of rank 1 and contain the actual charges.
 
-Currently, cclib parses Mulliken, Löwdin, NPA and CHELPG charges, whose respective dictionary keys are ``mulliken``, ``lowdin``, ``natural`` and ``chelpg``.
+Currently, cclib parses several different charge types depending on the program:
+
+    ============ ==============================
+    charge type  name of key in ``atomcharges``
+    ============ ==============================
+    Mulliken     ``mulliken``
+    Löwdin       ``lowdin``
+    NPA          ``natural``
+    `APT`_       ``apt``
+    `CHELPG`_    ``chelpg``
+    `Hirshfeld`_ ``hirshfeld``
+    `CM5`_       ``cm5``
+    `ESP`_       ``esp``
+    `RESP`_      ``resp``
+    ============ ==============================
 
 In practice, these may differ somewhat from the values cclib calculates in the various `calculation methods`_.
+
+**Gaussian**: additional sections are present where the partial charge on each hydrogen is added into the heavy atom it is connected to ("charges with hydrogens summed into heavy atoms").  For each charge schema (such as ``mulliken``), a corresponding key with ``_sum`` appended will be present (``mulliken_sum``) with these charges, and hydrogens will be present but set to zero.
 
 **Molpro**: use the ``pop`` command (see https://www.molpro.net/manual/doku.php?id=properties_and_expectation_values&s[]=population&s[]=analysis#calling_the_population_analysis_program_pop).
 
 .. _`calculation methods`: methods.html
+.. _`APT`: https://doi.org/10.1016/j.theochem.2010.06.011
+.. _`CHELPG`: https://doi.org/10.1002/jcc.540110311
+.. _`Hirshfeld`: https://doi.org/10.1007/BF01113058
+.. _`CM5`: https://doi.org/10.1021/ct200866d
+.. _`ESP`: https://doi.org/10.1002/jcc.540050204
+.. _`RESP`: https://doi.org/10.1021/j100142a004
 
 atomcoords
 ----------
