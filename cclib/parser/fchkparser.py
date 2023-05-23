@@ -8,13 +8,8 @@
 """Parser for Formatted Checkpoint files"""
 
 
-from __future__ import print_function
-
-import re
-
 import numpy
 
-from cclib.parser import data
 from cclib.parser import logfileparser
 from cclib.parser import utils
 
@@ -196,7 +191,7 @@ class FChk(logfileparser.Logfile):
 
             hessian = numpy.array(self._parse_block(inputfile, count, float, 'Hessian'))
 
-            self.set_attribute('hessian', hessian)
+            self.set_attribute('hessian', utils.block_to_matrix(hessian))
 
         if line[0:13] == 'ETran scalars':
             count = int(line.split()[-1])

@@ -10,6 +10,7 @@
 import importlib
 import re
 from itertools import accumulate
+from math import sqrt
 from typing import Iterable, List, Sequence, TypeVar
 
 import numpy
@@ -44,14 +45,15 @@ def symmetrize(m: numpy.ndarray, use_triangle: str = 'lower') -> numpy.ndarray:
 
     dim = m.shape[0]
 
-    lower_indices = numpy.tril_indices(dim, k=-1)
-    upper_indices = numpy.triu_indices(dim, k=1)
-
     ms = m.copy()
 
     if use_triangle == 'lower':
+        lower_indices = numpy.tril_indices(dim, k=-1)
+        upper_indices = (lower_indices[1], lower_indices[0])
         ms[upper_indices] = ms[lower_indices]
     if use_triangle == 'upper':
+        upper_indices = numpy.triu_indices(dim, k=1)
+        lower_indices = (upper_indices[1], upper_indices[0])
         ms[lower_indices] = ms[upper_indices]
 
     return ms
@@ -250,3 +252,29 @@ class WidthSplitter:
             while len(elements) and elements[-1] == '':
                 elements.pop()
         return elements
+
+
+def _dim_from_tblock_size(x: int) -> int:
+    """Given the number of elements in a symmetric matrix lower triangle,
+    including the diagonal, compute the dimension (length of one side) of the
+    full matrix.
+    """
+    r1 = 0.5 * (sqrt(8*x + 1) - 1)
+    r2 = 0.5 * (-sqrt(8*x + 1) - 1)
+    m = max(r1, r2)
+    if _BUILTIN_FLOAT(round(m)) != m:
+        raise RuntimeError(
+            f"The number of elements ({x}) isn't possible for a matrix triangle"
+        )
+    return int(m)
+
+
+def block_to_matrix(block: numpy.ndarray) -> numpy.ndarray:
+    """Convert a flattened symmetric matrix lower triangle to its full
+    symmetrized form.
+    """
+    assert len(block.shape) == 1
+    dim = _dim_from_tblock_size(block.shape[0])
+    mat = numpy.empty(shape=(dim, dim), dtype=block.dtype)
+    mat[numpy.tril_indices_from(mat)] = block
+    return symmetrize(mat)
