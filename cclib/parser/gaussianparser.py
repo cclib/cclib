@@ -305,7 +305,7 @@ class Gaussian(logfileparser.Logfile):
 
             # Necessary for `if line.strip().split()[0:3] == ["Atom", "AN", "X"]:` block
             if not hasattr(self, 'nqmf'):
-                match = re.search('NQMF=\s*(\d+)', line)
+                match = re.search(r'NQMF=\s*(\d+)', line)
                 if match is not None:
                     nqmf = int(match.group(1))
                     if nqmf > 0:
