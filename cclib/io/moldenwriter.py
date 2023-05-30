@@ -10,7 +10,8 @@
 import os.path
 import math
 import decimal
-import numpy 
+import numpy
+from itertools import zip_longest
 
 from cclib.parser import utils
 from cclib.io import filewriter
@@ -32,7 +33,11 @@ def round_molden(num, p=6):
 
 
 class MOLDEN(filewriter.Writer):
-    """A writer for MOLDEN files."""
+    """A writer for MOLDEN files.
+
+    Documentation of the format is located at
+    https://www3.cmbi.umcn.nl/molden/molden_format.html.
+    """
 
     required_attrs = ('atomcoords', 'atomnos', 'natom')
 
@@ -54,13 +59,11 @@ class MOLDEN(filewriter.Writer):
         atomnos = self.ccdata.atomnos
         nos = range(self.ccdata.natom)
 
-        # element_name number atomic_number x y z
-        atom_template = "{:2s} {:5d} {:2d} {:12.6f} {:12.6f} {:12.6f}"
         lines = []
         for element, no, atomno, coord in zip(elements, nos, atomnos,
                                               atomcoords):
             x, y, z = map(round_molden, coord)
-            lines.append(atom_template.format(element, no + 1, atomno, x, y, z))
+            lines.append(f"{element:2s} {no + 1:5d} {atomno:2d} {x:12.6f} {y:12.6f} {z:12.6f}")
 
         return lines
 
@@ -76,17 +79,14 @@ class MOLDEN(filewriter.Writer):
         """
 
         gbasis = self.ccdata.gbasis
-        label_template = "{:s} {:5d} 1.00"
-        basis_template = "{:15.9e} {:15.9e}"
         lines = []
 
         for no, basis in enumerate(gbasis):
             lines.append(f"{no + 1:3d} 0")
             for prims in basis:
-                lines.append(label_template.format(prims[0].lower(),
-                                                   len(prims[1])))
+                lines.append(f"{prims[0].lower():s} {len(prims[1]):5d} 1.00")
                 for prim in prims[1]:
-                    lines.append(basis_template.format(prim[0], prim[1]))
+                    lines.append(f"{prim[0]:15.9e} {prim[1]:15.9e}")
             lines.append('')
         lines.append('')
         return lines
@@ -198,6 +198,60 @@ class MOLDEN(filewriter.Writer):
             spin = 'Beta'
         return lines
 
+    def _freq_from_ccdata(self):
+
+        lines = []
+
+        if hasattr(self.ccdata, "vibfreqs"):
+            vibfreqs = self.ccdata.vibfreqs
+            vibfreqs_lines = ["[FREQ]"]
+            vibfreqs_lines.extend([f"{vibfreq:16.8f}" for vibfreq in vibfreqs])
+            lines.append("\n".join(vibfreqs_lines))
+
+        if all(hasattr(self.ccdata, attrname) for attrname in ("atomcoords", "atomnos")) and \
+           any(hasattr(self.ccdata, attrname) for attrname in ("vibfreqs", "vibdisps", "vibirs")):
+            # Selecting the first set of coordinates works for when the
+            # frequency calculation is done via finite difference, but not
+            # with multi-part inputs, which there is currently no way of
+            # detecting.
+            atomcoords = utils.convertor(self.ccdata.atomcoords[0], "Angstrom", "bohr")
+            atomsyms = (self.pt.element[atomno] for atomno in self.ccdata.atomnos)
+            atomcoords_lines = ["[FR-COORD]"]
+            for atomsym, atomcoord in zip(atomsyms, atomcoords):
+                atomcoords_lines.append(
+                    f"{atomsym:3s} {atomcoord[0]:15.8f} {atomcoord[1]:15.8f} {atomcoord[2]:15.8f}"
+                )
+            lines.append("\n".join(atomcoords_lines))
+
+        if hasattr(self.ccdata, "vibdisps"):
+            vibdisps = self.ccdata.vibdisps
+            vibdisps_lines = ["[FR-NORM-COORD]"]
+            for vibidx in range(vibdisps.shape[0]):
+                vibdisps_lines.append(f"vibration {vibidx + 1}")
+                for iatom in range(vibdisps.shape[1]):
+                    vibdisp = vibdisps[vibidx, iatom]
+                    vibdisps_lines.append(
+                        f"{vibdisp[0]:15.8f} {vibdisp[1]:15.8f} {vibdisp[2]:15.8f}"
+                    )
+            lines.append("\n".join(vibdisps_lines))
+
+        if hasattr(self.ccdata, "vibirs"):
+            vibirs = self.ccdata.vibirs
+            has_vibramans = hasattr(self.ccdata, "vibramans")
+            vibramans = [] if not has_vibramans else self.ccdata.vibramans
+            vibirs_lines = ["[INT]"]
+            for vibir, vibraman in zip_longest(vibirs, vibramans):
+                if not has_vibramans:
+                    vibirs_lines.append(f"{vibir:12.6f}")
+                else:
+                    vibirs_lines.append(f"{vibir:12.6f} {vibraman:12.6f}")
+            lines.append("\n".join(vibirs_lines))
+
+        if lines:
+            lines.append("")
+
+        return lines
+
     def generate_repr(self):
         """Generate the MOLDEN representation of the logfile data."""
 
@@ -234,6 +288,8 @@ class MOLDEN(filewriter.Writer):
 
         # molden_lines.append('')
 
+        molden_lines.extend(self._freq_from_ccdata())
+
         return '\n'.join(molden_lines)
 
 
@@ -248,7 +304,7 @@ class MoldenReformatter:
         0.9910616900D+02 --> 9.910617e+01
         """
         num = num.replace("D", "e")
-        return str(f"{decimal.Decimal(num):.9e}")
+        return f"{decimal.Decimal(num):.9e}"
 
     def reformat(self):
         """Reformat Molden output file to:
@@ -257,11 +313,14 @@ class MoldenReformatter:
         - replace multiple spaces with single."""
         filelines = iter(self.filestring.split("\n"))
         lines = []
+        is_header = False
 
         for line in filelines:
             line = line.replace('\n', '')
             # Replace multiple spaces with single spaces.
             line = ' '.join(line.split())
+
+            is_header = line and line[0] == "[" and line[-1] == "]"
 
             # Check for [Title] section.
             if '[title]' in line.lower():
@@ -280,7 +339,7 @@ class MoldenReformatter:
                 continue
 
             # Convert D notation to scientific notation.
-            if 'D' in line:
+            if not is_header and 'D' in line:
                 vals = line.split()
                 vals = [self.scinotation(i) for i in vals]
                 lines.append(' '.join(vals))
