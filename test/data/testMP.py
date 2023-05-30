@@ -7,31 +7,24 @@
 
 """Test Moller-Plesset logfiles in cclib"""
 
-import os
-import unittest
-
 import numpy
 
-__filedir__ = os.path.realpath(os.path.dirname(__file__))
 
-
-class GenericMP2Test(unittest.TestCase):
+class GenericMP2Test:
     """Generic MP2 unittest"""
 
     level = 2
 
-    def testsizeandshape(self):
+    def testsizeandshape(self, data) -> None:
         """(MP2) Are the dimensions of mpenergies correct?"""
-        assert self.data.mpenergies.shape == (len(self.data.scfenergies), self.level - 1)
+        assert data.mpenergies.shape == (len(data.scfenergies), self.level - 1)
 
-    def testsign(self):
+    def testsign(self, data) -> None:
         """Are the Moller-Plesset corrections negative?"""
         if self.level == 2:
-            corrections = self.data.mpenergies[:, 0] - self.data.scfenergies
+            corrections = data.mpenergies[:, 0] - data.scfenergies
         else:
-            corrections = (
-                self.data.mpenergies[:, self.level - 2] - self.data.mpenergies[:, self.level - 3]
-            )
+            corrections = data.mpenergies[:, self.level - 2] - data.mpenergies[:, self.level - 3]
         assert numpy.alltrue(corrections < 0.0)
 
 
@@ -62,13 +55,13 @@ class GenericMP5Test(GenericMP2Test):
 class GaussianMP2Test(GenericMP2Test):
     """Customized MP2 unittest"""
 
-    def testnocoeffs(self):
+    def testnocoeffs(self, data) -> None:
         """Are natural orbital coefficients the right size?"""
-        assert self.data.nocoeffs.shape == (self.data.nmo, self.data.nbasis)
+        assert data.nocoeffs.shape == (data.nmo, data.nbasis)
 
-    def testnocoeffs(self):
+    def testnocoeffs(self, data) -> None:
         """Are natural orbital occupation numbers the right size?"""
-        assert self.data.nooccnos.shape == (self.data.nmo,)
+        assert data.nooccnos.shape == (data.nmo,)
 
 
 class GaussianMP3Test(GenericMP2Test):
@@ -99,14 +92,3 @@ class QChemMP4SDTQTest(GenericMP2Test):
     """Customized MP4-SD(T)Q unittest"""
 
     level = 5
-
-
-if __name__ == "__main__":
-    import sys
-
-    sys.path.insert(1, os.path.join(__filedir__, ".."))
-
-    from test_data import DataSuite
-
-    suite = DataSuite(["MP"])
-    suite.testall()

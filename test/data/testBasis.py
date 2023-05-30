@@ -7,15 +7,10 @@
 
 """Test logfiles related to basis sets"""
 
-import os
-import unittest
-
-from skip import skipForParser
-
-__filedir__ = os.path.realpath(os.path.dirname(__file__))
+import pytest
 
 
-class GenericBasisTest(unittest.TestCase):
+class GenericBasisTest:
     """Generic basis set unittest"""
 
     # The number of contraction per atom, by atom number.
@@ -35,51 +30,45 @@ class GenericBasisTest(unittest.TestCase):
     gbasis_C_2s_func0 = [2.9412, -0.1000]
     gbasis_C_2p_func0 = [2.9412, 0.1559]
 
-    @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    def testgbasis(self):
+    def testgbasis(self, data) -> None:
         """Is gbasis the right length?"""
-        assert self.data.natom == len(self.data.gbasis)
+        assert data.natom == len(data.gbasis)
 
-    @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    def testnames(self):
+    def testnames(self, data) -> None:
         """Are the name of basis set functions acceptable?"""
-        for atom in self.data.gbasis:
+        for atom in data.gbasis:
             for fns in atom:
                 assert fns[0] in self.names, f"{fns[0]} not one of S or P"
 
-    @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    def testsizeofbasis(self):
+    def testsizeofbasis(self, data) -> None:
         """Is the basis set the correct size?"""
 
         total = 0
         multiple = self.multiple_spher if self.spherical else self.multiple
-        for atom in self.data.gbasis:
+        for atom in data.gbasis:
             for ftype, contraction in atom:
                 total += multiple[ftype]
 
-        assert self.data.nbasis == total
+        assert data.nbasis == total
 
-    @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    def testcontractions(self):
+    def testcontractions(self, data) -> None:
         """Are the number of contractions on all atoms correct?"""
-        for iatom, atom in enumerate(self.data.gbasis):
-            atomno = self.data.atomnos[iatom]
+        for iatom, atom in enumerate(data.gbasis):
+            atomno = data.atomnos[iatom]
             assert len(atom) == self.contractions[atomno]
 
-    @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    def testprimitives(self):
+    def testprimitives(self, data) -> None:
         """Are all primitives 2-tuples?"""
-        for atom in self.data.gbasis:
+        for atom in data.gbasis:
             for ftype, contraction in atom:
                 for primitive in contraction:
                     assert len(primitive) == 2
 
-    @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    def testcoeffs(self):
+    def testcoeffs(self, data) -> None:
         """Are the atomic basis set exponents and coefficients correct?"""
 
-        for iatom, atom in enumerate(self.data.gbasis):
-            if self.data.atomnos[iatom] == 1:
+        for iatom, atom in enumerate(data.gbasis):
+            if data.atomnos[iatom] == 1:
                 coeffs = atom[0][1]
                 assert round(abs(coeffs[0][0] - self.gbasis_H_1s_func0[0]), 4) == 0
                 assert round(abs(coeffs[0][1] - self.gbasis_H_1s_func0[1]), 4) == 0
@@ -112,13 +101,13 @@ class GenericBigBasisTest(GenericBasisTest):
 
     contractions = {6: 20}
 
-    @unittest.skip("Write up a new test, and/or revise the one inherited.")
-    def testcoeffs(self):
+    @pytest.mark.skip("Write up a new test, and/or revise the one inherited.")
+    def testcoeffs(self, data):
         """Are the basis set coefficients correct?"""
         assert True
 
-    @unittest.skip("# of contractions is 20 for VQZ, but 29 for CVQZ; unify files first.")
-    def testcontractions(self):
+    @pytest.mark.skip("# of contractions is 20 for VQZ, but 29 for CVQZ; unify files first.")
+    def testcontractions(self, data):
         """"""
         assert True
 
@@ -166,14 +155,3 @@ class QChemBigBasisTest(GenericBigBasisTest):
     """Customized big basis set unittest"""
 
     spherical = True
-
-
-if __name__ == "__main__":
-    import sys
-
-    sys.path.insert(1, os.path.join(__filedir__, ".."))
-
-    from test_data import DataSuite
-
-    suite = DataSuite(["Basis"])
-    suite.testall()

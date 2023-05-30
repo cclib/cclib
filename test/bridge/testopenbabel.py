@@ -6,23 +6,22 @@
 # the terms of the BSD 3-Clause License.
 
 import os
-import unittest
 
 from cclib.bridge import cclib2openbabel
 
 import numpy
 
 
-class OpenbabelTest(unittest.TestCase):
+class OpenbabelTest:
     """Tests for the cclib2openbabel bridge in cclib."""
 
-    def setUp(self) -> None:
+    def setup_method(self) -> None:
         self.path = os.path.abspath(os.path.dirname(__file__))
 
     def test_makeopenbabel(self) -> None:
         try:
             from openbabel import openbabel
-        except:
+        except ImportError:
             import openbabel
         atomnos = numpy.array([1, 8, 1], "i")
         atomcoords = numpy.array([[[-1.0, 1.0, 0.0], [0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]])
@@ -52,7 +51,3 @@ class OpenbabelTest(unittest.TestCase):
         """Try to load an XYZ file with uracyl through Openbabel"""
         data = cclib2openbabel.readfile(f"{self.path}/uracil.xyz", "XYZ")
         assert data.natom == 12
-
-
-if __name__ == "__main__":
-    unittest.main()

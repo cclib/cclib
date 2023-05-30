@@ -7,16 +7,11 @@
 
 """Test configuration interaction (CI) logfiles in cclib"""
 
-import os
-import unittest
-
 import numpy
 from skip import skipForParser
 
-__filedir__ = os.path.realpath(os.path.dirname(__file__))
 
-
-class GenericCISTest(unittest.TestCase):
+class GenericCISTest:
     """Generic CIS(RHF)/STO-3G water unittest"""
 
     nstates = 5
@@ -45,14 +40,12 @@ class GenericCISTest(unittest.TestCase):
 
     etsecs_precision = 0.0005
 
-    @skipForParser("Molcas", "The parser is still being developed so we skip this test")
-    @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    def testetenergiesvalues(self):
+    def testetenergiesvalues(self, data) -> None:
         """Are etenergies within 50 wavenumbers of the correct values?"""
-        indices0 = [i for i in range(self.nstates) if self.data.etsyms[i][0] == "S"]
-        indices1 = [i for i in range(self.nstates) if self.data.etsyms[i][0] == "T"]
-        singlets = [self.data.etenergies[i] for i in indices0]
-        triplets = [self.data.etenergies[i] for i in indices1]
+        indices0 = [i for i in range(self.nstates) if data.etsyms[i][0] == "S"]
+        indices1 = [i for i in range(self.nstates) if data.etsyms[i][0] == "T"]
+        singlets = [data.etenergies[i] for i in indices0]
+        triplets = [data.etenergies[i] for i in indices1]
         # All programs do singlets.
         singletdiff = singlets[:4] - self.etenergies0
         assert numpy.alltrue(singletdiff < 50)
@@ -61,22 +54,18 @@ class GenericCISTest(unittest.TestCase):
             tripletdiff = triplets[:4] - self.etenergies1
             assert numpy.alltrue(tripletdiff < 50)
 
-    @skipForParser("Molcas", "The parser is still being developed so we skip this test")
-    @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    def testsecs(self):
+    def testsecs(self, data) -> None:
         """Is the sum of etsecs close to 1?"""
-        etsec = self.data.etsecs[2]  # Pick one with several contributors
+        etsec = data.etsecs[2]  # Pick one with several contributors
         sumofsec = sum([z * z for (x, y, z) in etsec])
         assert abs(sumofsec - 1.0) < 0.02
 
-    @skipForParser("Molcas", "The parser is still being developed so we skip this test")
-    @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    def testetsecsvalues(self):
+    def testetsecsvalues(self, data) -> None:
         """Are etsecs correct and coefficients close to the correct values?"""
-        indices0 = [i for i in range(self.nstates) if self.data.etsyms[i][0] == "S"]
-        indices1 = [i for i in range(self.nstates) if self.data.etsyms[i][0] == "T"]
-        singlets = [self.data.etsecs[i] for i in indices0]
-        triplets = [self.data.etsecs[i] for i in indices1]
+        indices0 = [i for i in range(self.nstates) if data.etsyms[i][0] == "S"]
+        indices1 = [i for i in range(self.nstates) if data.etsyms[i][0] == "T"]
+        singlets = [data.etsecs[i] for i in indices0]
+        triplets = [data.etsecs[i] for i in indices1]
         # All programs do singlets.
         for i in range(4):
             for exc in self.etsecs0[i]:
@@ -85,10 +74,9 @@ class GenericCISTest(unittest.TestCase):
                     if s[0][0] == exc[0] and s[1][0] == exc[1]:
                         found = True
                         assert abs(abs(s[2]) - abs(exc[2])) < self.etsecs_precision
-                if not found:
-                    self.fail(
-                        f"Excitation {int(exc[0])}->{exc[1]} not found (singlet state {int(i)})"
-                    )
+                assert (
+                    found
+                ), f"Excitation {int(exc[0])}->{exc[1]} not found (singlet state {int(i)})"
         # Not all programs do triplets (i.e. Jaguar).
         if len(triplets) >= 4:
             for i in range(4):
@@ -98,22 +86,21 @@ class GenericCISTest(unittest.TestCase):
                         if s[0][0] == exc[0] and s[1][0] == exc[1]:
                             found = True
                             assert abs(abs(s[2]) - abs(exc[2])) < self.etsecs_precision
-                    if not found:
-                        self.fail(
-                            f"Excitation {int(exc[0])}->{exc[1]} not found (triplet state {int(i)})"
-                        )
+                    assert (
+                        found
+                    ), f"Excitation {int(exc[0])}->{exc[1]} not found (triplet state {int(i)})"
 
 
 class GAMESSCISTest(GenericCISTest):
     """Customized CIS(RHF)/STO-3G water unittest"""
 
-    def testnocoeffs(self):
+    def testnocoeffs(self, data) -> None:
         """Are natural orbital coefficients the right size?"""
-        assert self.data.nocoeffs.shape == (self.data.nmo, self.data.nbasis)
+        assert data.nocoeffs.shape == (data.nmo, data.nbasis)
 
-    def testnooccnos(self):
+    def testnooccnos(self, data) -> None:
         """Are natural orbital occupation numbers the right size?"""
-        assert self.data.nooccnos.shape == (self.data.nmo,)
+        assert data.nooccnos.shape == (data.nmo,)
 
 
 class GaussianCISTest(GenericCISTest):
@@ -121,13 +108,13 @@ class GaussianCISTest(GenericCISTest):
 
     nstates = 10
 
-    def testnocoeffs(self):
+    def testnocoeffs(self, data) -> None:
         """Are natural orbital coefficients the right size?"""
-        assert self.data.nocoeffs.shape == (self.data.nmo, self.data.nbasis)
+        assert data.nocoeffs.shape == (data.nmo, data.nbasis)
 
-    def testnooccnos(self):
+    def testnooccnos(self, data) -> None:
         """Are natural orbital occupation numbers the right size?"""
-        assert self.data.nooccnos.shape == (self.data.nmo,)
+        assert data.nooccnos.shape == (data.nmo,)
 
 
 class Jaguar83CISTest(GenericCISTest):
@@ -152,14 +139,3 @@ class QChemCISTest(GenericCISTest):
     """Customized CIS(RHF)/STO-3G water unittest"""
 
     nstates = 10
-
-
-if __name__ == "__main__":
-    import sys
-
-    sys.path.insert(1, os.path.join(__filedir__, ".."))
-
-    from test_data import DataSuite
-
-    suite = DataSuite(["CI"])
-    suite.testall()

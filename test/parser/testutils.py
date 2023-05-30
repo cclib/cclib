@@ -7,20 +7,18 @@
 
 """Unit tests for parser utils module."""
 
-import unittest
-
 import cclib
 
 
-class convertorTest(unittest.TestCase):
-    def test_basic(self):
+class convertorTest:
+    def test_basic(self) -> None:
         """Are some basic conversions correct?"""
         convertor = cclib.parser.utils.convertor
         assert round(abs(convertor(1.89, "bohr", "Angstrom") - 1.0), 3) == 0
         assert round(abs(convertor(0.529, "Angstrom", "bohr") - 1.0), 3) == 0
         assert round(abs(convertor(627.5, "kcal/mol", "hartree") - 1.0), 3) == 0
 
-    def test_pairs(self):
+    def test_pairs(self) -> None:
         """Do flipped conversions correspond to each other?"""
 
         convertor = cclib.parser.utils.convertor
@@ -44,21 +42,17 @@ class convertorTest(unittest.TestCase):
             assert round(abs((conv1 - conv2) / conv1), 7) == 0
 
 
-class PeriodicTableTest(unittest.TestCase):
-    def setUp(self):
+class PeriodicTableTest:
+    def setup_method(self) -> None:
         self.pt = cclib.parser.utils.PeriodicTable()
 
-    def test_elements(self):
+    def test_elements(self) -> None:
         """Does the periodic table give correct elements?"""
         assert self.pt.element[6] == "C"
         assert self.pt.element[44] == "Ru"
         assert self.pt.element[0] is None
 
-    def test_numbers(self):
+    def test_numbers(self) -> None:
         """Does the periodic table give correct atom numbers?"""
         assert self.pt.number["C"] == 6
         assert self.pt.number["Au"] == 79
-
-
-if __name__ == "__main__":
-    unittest.main()

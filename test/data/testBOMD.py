@@ -7,13 +7,8 @@
 
 """Test Born-Oppenheimer molecular dynamics (BOMD) logfiles in cclib."""
 
-import os
-import unittest
 
-__filedir__ = os.path.realpath(os.path.dirname(__file__))
-
-
-class GenericBOMDTest(unittest.TestCase):
+class GenericBOMDTest:
     """Generic Born-Oppenheimer molecular dynamics unittest"""
 
     # To calculate the initial set of forces/velocities, programs
@@ -22,23 +17,23 @@ class GenericBOMDTest(unittest.TestCase):
     nsteps = 35
     nenergies = 36
 
-    def testdimscfenergies(self):
+    def testdimscfenergies(self, data) -> None:
         """Are the number of parsed energies consistent with the number of MD
         steps?
         """
-        assert self.data.scfenergies.shape == (self.nenergies,)
+        assert data.scfenergies.shape == (self.nenergies,)
 
-    def testdimatomcoords(self):
+    def testdimatomcoords(self, data) -> None:
         """Are the number of parsed geometries consistent with the number of
         MD steps?
         """
-        assert self.data.atomcoords.shape == (self.nenergies, 20, 3)
+        assert data.atomcoords.shape == (self.nenergies, 20, 3)
 
-    def testdimtime(self):
+    def testdimtime(self, data) -> None:
         """Are the number of time points consistent with the number of MD
         steps?
         """
-        assert self.data.time.shape == (self.nsteps,)
+        assert data.time.shape == (self.nsteps,)
 
 
 class GaussianBOMDTest(GenericBOMDTest):
@@ -47,14 +42,3 @@ class GaussianBOMDTest(GenericBOMDTest):
     # This may have something to do with our corrections for
     # extrapolation step rejection.
     nenergies = 35
-
-
-if __name__ == "__main__":
-    import sys
-
-    sys.path.append(os.path.join(__filedir__, ".."))
-
-    from test_data import DataSuite
-
-    suite = DataSuite(["BOMD"])
-    suite.testall()

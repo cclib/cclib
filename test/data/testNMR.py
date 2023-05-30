@@ -14,26 +14,24 @@ import numpy
 import pytest
 from skip import skipForParser
 
-__filedir__ = os.path.realpath(os.path.dirname(__file__))
 
-
-class GenericNMRTest(unittest.TestCase):
+class GenericNMRTest:
     """Generic NMR unittest"""
 
-    def testkeys(self):
+    def testkeys(self, data) -> None:
         """Check dictionary keys are ints."""
-        key_types = set([type(key) for key in self.data.nmrtensors.keys()])
+        key_types = set([type(key) for key in data.nmrtensors.keys()])
         assert len(key_types) == 1 and int in key_types
 
-    def testsize(self):
+    def testsize(self, data) -> None:
         """Check to make sure there are the correct number of tensors parsed"""
-        assert len(self.data.nmrtensors) == self.data.natom
-        assert len(self.data.nmrtensors[0]) == 4
-        assert self.data.nmrtensors[0]["total"].shape == (3, 3)
+        assert len(data.nmrtensors) == data.natom
+        assert len(data.nmrtensors[0]) == 4
+        assert data.nmrtensors[0]["total"].shape == (3, 3)
 
-    def testisotropic(self):
+    def testisotropic(self, data) -> None:
         """Check the total isotropic value matches the computed value."""
-        tensor = self.data.nmrtensors[0]
+        tensor = data.nmrtensors[0]
         total = 0.0
         for t_type in ("diamagnetic", "paramagnetic"):
             total += sum(numpy.linalg.eigvals(tensor[t_type])) / len(
@@ -43,16 +41,16 @@ class GenericNMRTest(unittest.TestCase):
         assert total == pytest.approx(tensor["isotropic"], abs=3)
 
 
-class GenericNMRCouplingTest(unittest.TestCase):
+class GenericNMRCouplingTest:
     """Generic NMR spin-spin coupling unittest"""
 
-    def testkeys(self):
+    def testkeys(self, data) -> None:
         """Check dictionary keys are ints."""
         assert all(
             set(
                 [
                     all((type(key[0]) == int, type(key[1]) == int))
-                    for key in self.data.nmrcouplingtensors.keys()
+                    for key in data.nmrcouplingtensors.keys()
                 ]
             )
         )
@@ -60,21 +58,21 @@ class GenericNMRCouplingTest(unittest.TestCase):
         assert all(
             [
                 all((type(isotopekey[0]) == int, type(isotopekey[1]) == int))
-                for isotopes in self.data.nmrcouplingtensors.values()
+                for isotopes in data.nmrcouplingtensors.values()
                 for isotopekey in isotopes.keys()
             ]
         )
 
-    def testsize(self):
+    def testsize(self, data) -> None:
         """Check to make sure there are the correct number of tensors parsed"""
-        assert len(self.data.nmrcouplingtensors) == 139
-        tensor = list(list(self.data.nmrcouplingtensors.values())[0].values())[0]
+        assert len(data.nmrcouplingtensors) == 139
+        tensor = list(list(data.nmrcouplingtensors.values())[0].values())[0]
         assert len(tensor) == 7
         assert tensor["total"].shape == (3, 3)
 
-    def testisotropic(self):
+    def testisotropic(self, data) -> None:
         """Check the total isotropic value matches the computed value."""
-        tensor = list(list(self.data.nmrcouplingtensors.values())[0].values())[0]
+        tensor = list(list(data.nmrcouplingtensors.values())[0].values())[0]
         # Check the total isotropic value matches the computed value.
         total = 0.0
         for t_type in (
@@ -89,14 +87,3 @@ class GenericNMRCouplingTest(unittest.TestCase):
             )
 
         assert total == pytest.approx(tensor["isotropic"], abs=3)
-
-
-if __name__ == "__main__":
-    import sys
-
-    sys.path.insert(1, os.path.join(__filedir__, ".."))
-
-    from test_data import DataSuite
-
-    suite = DataSuite(["NMR"])
-    suite.testall()

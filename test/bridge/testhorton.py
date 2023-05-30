@@ -18,16 +18,14 @@ from numpy.testing import assert_array_almost_equal
 from ..test_data import getdatafile
 
 
-class HortonTest(unittest.TestCase):
+class HortonTest:
     """Tests for the Horton bridge in cclib"""
 
     # Both horton and cclib can read in fchk files. The test routine utilizes this fact
     # and compares the attributes that were directly loaded from each package
     # and the attributes that were converted.
 
-    def setUp(self):
-        super().setUp()
-
+    def setup_method(self) -> None:
         self.data, self.logfile = getdatafile("FChk", "basicGaussian16", ["dvb_un_sp.fchk"])
         datadir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data"))
         inputfile = os.path.join(datadir, "FChk", "basicGaussian16", "dvb_un_sp.fchk")
@@ -43,7 +41,7 @@ class HortonTest(unittest.TestCase):
 
         self.iodat = load_one(filename=inputfile)
 
-    def test_makehorton(self):
+    def test_makehorton(self) -> None:
         """Check that the bridge from cclib to horton works correctly"""
         # First use `makehorton` function to generate IOData object converted from cclib ccData
         hortonequiv = cclib2horton.makehorton(self.data)
@@ -74,7 +72,7 @@ class HortonTest(unittest.TestCase):
                     getattr(self.iodat, attr), getattr(hortonequiv, attr), decimal=3
                 )
 
-    def test_makecclib(self):
+    def test_makecclib(self) -> None:
         """Check that the bridge from horton to cclib works correctly"""
         # First use `makecclib` function to generate ccData object converted from horton IOData
         cclibequiv = cclib2horton.makecclib(self.iodat)
@@ -107,7 +105,3 @@ class HortonTest(unittest.TestCase):
                     assert_array_almost_equal(
                         self.data.atomcharges[chg][0], cclibequiv.atomcharges[chg][0], decimal=3
                     )
-
-
-if __name__ == "__main__":
-    unittest.main()
