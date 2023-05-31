@@ -93,125 +93,21 @@ class GAMESSDAT(logfileparser.Logfile):
         # water                                                                           
         # E(RHF)=      -74.9643287920, E(NUC)=    8.8870072224,   13 ITERS
 
-        # while "E(RHF)" not in line:
-        #     line = next(inputfile)
+        # Extract E(RHF) value using regex
+        rhf_match = re.search(r"E\(RHF\)=(.*?),", line)
+        if rhf_match:
+            self.metadata["E_RHF"] = rhf_match.group(1).strip()
 
-        # Extract E(RHF) value
+        # Extract E(NUC) value using regex
+        nuc_match = re.search(r"E\(NUC\)=(.*?),", line)
+        if nuc_match:
+            self.metadata["E_NUC"] = nuc_match.group(1).strip()
 
-        if "E(R" in line:
-            val_pattern = r"E\(R[^,]+"
-            match = re.search(val_pattern, line)
-            val = float(match.group().split(' ')[-1])
-            self.scfenergies = [ val ]
+        # Extract number of ITERS using regex
+        iters_match = re.search(r"(\d+)\s+ITERS", line)
+        if iters_match:
+            self.metadata["ITERS"] = iters_match.group(1).strip()
 
-        # Extract E(NUC) value 
-
-        if "E(NUC)=" in line:
-            pattern_e_nuc = r"E\(NUC[^,]+"
-            match_e_nuc = re.search(pattern_e_nuc, line)
-            nuc_value = float(match_e_nuc.group().split(' ')[-1].strip())
-            self.metadata["E_NUC"] = nuc_value
-
-        # Extract number of ITERS 
-
-        # if "ITERS" in line:
-        #     iters_value = int(line.split()[-1])
-        #     self.metadata["ITERS"] = iters_value
-
-        # Extract vectors
-
-        #  $VEC   
-        #  1  1 9.94202990E-01 2.59157151E-02 2.40311554E-03 3.18904296E-03 0.00000000E+00
-        #  1  2-5.62726478E-03-5.62726567E-03
-        #  2  1-2.34217935E-01 8.45881798E-01 7.04411127E-02 9.34785483E-02-0.00000000E+00
-        #  2  2 1.56449309E-01 1.56449336E-01
-        #  3  1-1.17687509E-08 6.36837896E-08 4.81820843E-01-3.63078078E-01 0.00000000E+00
-        #  3  2 4.46376801E-01-4.46376807E-01
-        #  4  1 1.00458159E-01-5.21395067E-01 4.65965488E-01 6.18357071E-01 0.00000000E+00
-        #  4  2 2.89063958E-01 2.89063907E-01
-        #  5  1-0.00000000E+00-0.00000000E+00-0.00000000E+00-0.00000000E+00 1.00000000E+00
-        #  5  2-0.00000000E+00-0.00000000E+00
-        #  6  1-1.28350522E-01 8.32525679E-01 4.40905546E-01 5.85101037E-01-0.00000000E+00
-        #  6  2-7.75800880E-01-7.75800504E-01
-        #  7  1 3.90260255E-08-2.79856684E-07 7.79855187E-01-5.87663268E-01 0.00000000E+00
-        #  7  2-8.08915389E-01 8.08915850E-01
-        #  $END   
-
-        # Extract vector information
-        # After formatting, the extracted vectors will populate self.mocoeffs
-
-        if line[1:5] == "$VEC":
-
-            self.mocoeffs = []
-
-            while "$END" not in line:
-                
-                line = next(inputfile)
-                vec_line = line.replace('-', ' -').replace('E -', 'E-').strip()
-                vectors = [float(vec) for vec in vec_line.split()[1:]]
-                line_number = line.split()[0]
-
-                if not self.mocoeffs:
-                    self.mocoeffs.append(vectors)
-
-                elif line_number == str(len(self.mocoeffs)):
-                    self.mocoeffs[-1].extend(vectors)
-
-                elif len(vectors) > 0:
-                    self.mocoeffs.append(vectors)
-
-        # Extracting Population Analysis
-
-        #  POPULATION ANALYSIS
-        # O            8.31989  -0.31989   8.22116  -0.22116
-        # H            0.84006   0.15994   0.88942   0.11058
-        # H            0.84006   0.15994   0.88942   0.11058
-
-        if line[1:20] == "POPULATION ANALYSIS":
-
-            self.metadata["population"] = []
-
-            line = next(inputfile)
-            
-            while 'MOMENTS AT POINT' not in line:
-                fields = line.split()
-                atom_info = {
-                    "atom": fields[0],
-                    "charge": float(fields[1]),
-                    "spin": float(fields[2]),
-                    "net_charge": float(fields[3]),
-                    "net_spin": float(fields[4])
-                }
-                self.metadata["population"].append(atom_info)
-                line = next(inputfile).strip()
-        
-
-        # Extracting Moments at Point
-
-        # MOMENTS AT POINT    1 X,Y,Z=  0.075831  0.100631  0.000000
-        # MP2 NATURAL ORBITALS, E(MP2)=      -75.0022821133
-
-        if line[1:17] == "MOMENTS AT POINT":
-            moment_line = line.split("=")[1].strip()
-            moment_values = moment_line.split()[1:]
-            self.moments = [float(value) for value in moment_values]
-
-
-        # Extracting Dipole
-
-        # DIPOLE       1.007144  1.336525  0.000000
-
-        if line[1:7] == "DIPOLE":
-            line = next(inputfile).strip()
-            dipole_pattern = r"DIPOLE\s+([\d.-]+)\s+([\d.-]+)\s+([\d.-]+)"
-            match = re.search(dipole_pattern, line)
-            if match:
-                self.metadata["dipole"] = {
-                    "x": float(match.group(1)),
-                    "y": float(match.group(2)),
-                    "z": float(match.group(3))
-                }
-                
         
         # Extracting MP2 Energy Value
 
