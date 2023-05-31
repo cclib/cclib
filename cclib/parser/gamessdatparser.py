@@ -101,11 +101,44 @@ class GAMESSDAT(logfileparser.Logfile):
 
         # TODO
 
-        
-        # Extracting dipole information
-        dipole_pattern = r"DIPOLE\s+([-+]?\d+\.\d+)\s+([-+]?\d+\.\d+)\s+([-+]?\d+\.\d+)\b"
-        dipole_match = re.search(dipole_pattern, line)
-        dipole = tuple(map(float, dipole_match.groups())) if dipole_match else None
-        self.metadata["dipole"] = dipole
+        # Extracting Moments at Point
 
+        # MOMENTS AT POINT    1 X,Y,Z=  0.075831  0.100631  0.000000
+        # MP2 NATURAL ORBITALS, E(MP2)=      -75.0022821133
+
+        if line.startswith("MOMENTS AT POINT"):
+            coordinates_pattern = r"X,Y,Z=\s+([\d.-]+)\s+([\d.-]+)\s+([\d.-]+)"
+            coordinates_match = re.match(coordinates_pattern, line)
+            
+            if coordinates_match:
+                self.metadata["Coordinates"] = {
+                    "X": float(coordinates_match.group(1)),
+                    "Y": float(coordinates_match.group(2)),
+                    "Z": float(coordinates_match.group(3))
+                }
+
+        # Extracting Dipole
+
+        # DIPOLE       1.007144  1.336525  0.000000
+
+        if line.startswith("DIPOLE"):
+            dipole_pattern = r"DIPOLE\s+([\d.-]+)\s+([\d.-]+)\s+([\d.-]+)"
+            dipole_match = re.match(dipole_pattern, line)
+            
+            if dipole_match:
+                self.metadata["Dipole"] = {
+                    "X": float(dipole_match.group(1)),
+                    "Y": float(dipole_match.group(2)),
+                    "Z": float(dipole_match.group(3))
+                }
         
+        # Extracting MP2 Energy Value
+
+        # MP2 NATURAL ORBITALS, E(MP2)=      -75.0022821133
+        
+        if "E(MP2)=" in line:
+            energy_pattern = r"E\(MP2\)=\s+([\d.-]+)"
+            energy_match = re.search(energy_pattern, line)
+            
+            if energy_match:
+                self.metadata["Energy(MP2)"] = float(energy_match.group(1))
