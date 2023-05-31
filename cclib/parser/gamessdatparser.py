@@ -142,3 +142,22 @@ class GAMESSDAT(logfileparser.Logfile):
             
             if energy_match:
                 self.metadata["Energy(MP2)"] = float(energy_match.group(1))
+
+        
+        # Extracting population analysis
+
+        #  POPULATION ANALYSIS
+        # O            8.33921  -0.33921   8.23786  -0.23786
+        # H            0.83039   0.16961   0.88107   0.11893
+        # H            0.83039   0.16961   0.88107   0.11893
+
+        population_pattern = r"\b([A-Z]{1,2})\s+([-+]?\d+\.\d+)\s+([-+]?\d+\.\d+)\s+([-+]?\d+\.\d+)\s+([-+]?\d+\.\d+)\b"
+        population_matches = re.findall(population_pattern, line)
+        population = []
+        for match in population_matches:
+            atom = match[0]
+            atomic_charge = float(match[1])
+            net_charge = float(match[2])
+            spin = float(match[3])
+            population.append((atom, atomic_charge, net_charge, spin))
+        self.metadata["population"] = population
