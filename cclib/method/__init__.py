@@ -10,6 +10,7 @@
 from cclib.method.bader import Bader
 from cclib.method.bickelhaupt import Bickelhaupt
 from cclib.method.cda import CDA
+from cclib.method.cm5 import CM5
 from cclib.method.cspa import CSPA
 from cclib.method.ddec import DDEC6
 from cclib.method.density import Density
