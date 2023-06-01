@@ -96,17 +96,17 @@ class GAMESSDAT(logfileparser.Logfile):
         # Extract E(RHF) value using regex
         rhf_match = re.search(r"E\(RHF\)=(.*?),", line)
         if rhf_match:
-            self.metadata["E_RHF"] = rhf_match.group(1).strip()
+            self.metadata["E_RHF"] = float(rhf_match.group(1).strip())
 
         # Extract E(NUC) value using regex
         nuc_match = re.search(r"E\(NUC\)=(.*?),", line)
         if nuc_match:
-            self.metadata["E_NUC"] = nuc_match.group(1).strip()
+            self.metadata["E_NUC"] = float(nuc_match.group(1).strip())
 
         # Extract number of ITERS using regex
         iters_match = re.search(r"(\d+)\s+ITERS", line)
         if iters_match:
-            self.metadata["ITERS"] = iters_match.group(1).strip()
+            self.metadata["ITERS"] = int(iters_match.group(1).strip())
 
         
         # Extracting MP2 Energy Value
