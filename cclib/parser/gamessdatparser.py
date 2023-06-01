@@ -56,7 +56,30 @@ class GAMESSDAT(logfileparser.Logfile):
                 
         #  $END   
 
-        # TODO
+        # Extract molecule name
+        name_pattern = r"\$DATA\s+([\w\s]+)"
+        name_match = re.search(name_pattern, line)
+        if name_match:
+            name = name_match.group(1).split('\n')[0].strip()
+            self.metadata["name"] = name
+
+        # Extract atomic information using regex
+        atom_pattern = r"(\w+)\s+([\d.]+)\s+([-+]?\d+\.\d+)\s+([-+]?\d+\.\d+)\s+([-+]?\d+\.\d+)"
+        atom_matches = re.findall(atom_pattern, line)
+
+        atomic_data = []
+        for atom_match in atom_matches:
+            atom_info = {
+                "symbol": atom_match[0],
+                "mass": float(atom_match[1]),
+                "X": float(atom_match[2]),
+                "Y": float(atom_match[3]),
+                "Z": float(atom_match[4])
+            }
+            atomic_data.append(atom_info)
+
+        if atomic_data:
+            self.metadata["atoms"] = atomic_data
 
 
         # Extract energy
@@ -68,17 +91,17 @@ class GAMESSDAT(logfileparser.Logfile):
         # Extract E(RHF) value using regex
         rhf_match = re.search(r"E\(RHF\)=(.*?),", line)
         if rhf_match:
-            self.metadata["E_RHF"] = rhf_match.group(1).strip()
+            self.metadata["E_RHF"] = float(rhf_match.group(1).strip())
 
         # Extract E(NUC) value using regex
         nuc_match = re.search(r"E\(NUC\)=(.*?),", line)
         if nuc_match:
-            self.metadata["E_NUC"] = nuc_match.group(1).strip()
+            self.metadata["E_NUC"] = float(nuc_match.group(1).strip())
 
         # Extract number of ITERS using regex
         iters_match = re.search(r"(\d+)\s+ITERS", line)
         if iters_match:
-            self.metadata["ITERS"] = iters_match.group(1).strip()
+            self.metadata["ITERS"] = int(iters_match.group(1).strip())
 
         # Extract vectors
 
@@ -99,7 +122,18 @@ class GAMESSDAT(logfileparser.Logfile):
         #  7  2-8.08915389E-01 8.08915850E-01
         #  $END   
 
-        # TODO
+        # Extract vector information using regex
+        vec_pattern = r"\d+\s+\d+\s+([-+]?\d+\.\d+E[+-]\d+)\s+([-+]?\d+\.\d+E[+-]\d+)\s+([-+]?\d+\.\d+E[+-]\d+)\s+([-+]?\d+\.\d+E[+-]\d+)\s+([-+]?\d+\.\d+E[+-]\d+)"
+        vec_matches = re.findall(vec_pattern, line)
+
+        for i, match in enumerate(vec_matches, start=1):
+            self.metadata[f"VEC_{i}"] = {
+                "val1": float(match[0]),
+                "val2": float(match[1]),
+                "val3": float(match[2]),
+                "val4": float(match[3]),
+                "val5": float(match[4])
+            }
 
         # Extracting Moments at Point
 
@@ -160,4 +194,5 @@ class GAMESSDAT(logfileparser.Logfile):
             net_charge = float(match[2])
             spin = float(match[3])
             population.append((atom, atomic_charge, net_charge, spin))
-        self.metadata["population"] = population
+        if population:
+            self.metadata["population"] = population
