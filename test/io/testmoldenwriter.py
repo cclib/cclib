@@ -124,7 +124,7 @@ class MOLDENTest(unittest.TestCase):
 
     def test_molden_cclib_diff(self):
         """Check if file written by cclib matched file written by Molden."""
-        filenames = ['dvb_un_sp', 'C_bigbasis', 'water_mp2']
+        filenames = ['dvb_un_sp', 'C_bigbasis', 'water_mp2', 'dvb_ir']
         for fn in filenames:
             fpath = os.path.join(__datadir__,
                                  f"data/GAMESS/basicGAMESS-US2018/{fn}.out")
