@@ -23,7 +23,29 @@ class CM5(Method):
 
     The description of charges is from https://doi.org/10.1021/ct200866d.
 
-    This implementation is derived from https://github.com/hokru.
+    This implementation is derived from https://github.com/hokru/cm5charges
+    (https://doi.org/10.5281/zenodo.1193753), which is derived from
+    the original CM5PAC code (https://comp.chem.umn.edu/cm5pac/).
+
+    Parameters
+    ----------
+    data : ccData
+        The parsed data to be used for atomic coordinates and numbers
+    radii : str, default "hokru"
+        Specify the set of radii to be used.  One of:
+         - "hokru": Values copied from https://github.com/hokru/cm5charges,
+           themselves copied from CM5PAC.  The original reference is
+             "Atomic Radii of the Elements," M. Mantina, R. Valero, C. J. Cramer, and D. G. Truhlar,
+             in CRC Handbook of Chemistry and Physics, 91st Edition (2010-2011),
+             edited by W. M. Haynes (CRC Press, Boca Raton, FL, 2010), pages 9-49-9-50;
+             corrected Nov. 17, 2010 for the 92nd edition.
+         - "CorderoPyykko": Values averaged from doi:10.1039/b801115j and Cordero.
+         - "Cordero": Values from 10.1002/chem.200901472.
+        The final charges seem relatively insensitive to this choice.
+
+    progress : Optional[cclib.progress.Progress], default None
+    loglevel : int, default logging.INFO
+    logname : str
     """
     def __init__(self, data, radii: str = "hokru", progress=None, loglevel=logging.INFO, logname="Log"):
         super().__init__(data, progress, loglevel, logname)
@@ -40,7 +62,24 @@ class CM5(Method):
             raise RuntimeError(f"invalid name for radii: {radii}")
 
     def charges(self, extended: bool = True):
-        """Compute the CM5 atomic charges."""
+        """Compute the CM5 atomic charges.
+
+        Parameters
+        ----------
+        extended : bool, default True
+            Should the "extended" set of charges be used?
+            The default of true mimics the behavior in the original CM5PAC program.
+            If false, only the 26 elements the model was parameterized on
+            will have a non-zero atomic model parameter $D_{Z}$ (H-Ca, Zn, Ge-Br, and I).
+            If true, all additional elements (except Sc-Cu/21-29) are considered for non-zero atomwise parameters.
+            (Even if true, the following are zero: 3, 12, 20-30, 38-48, 56-80, 88-112.)
+            Holger Kruse's code does not use the extended set.
+
+        Returns
+        -------
+        numpy.ndarray
+            The final computed CM5 charges
+        """
         nat = self.data.natom
         qcm5 = np.zeros(nat)
         z = self.data.atomnos
@@ -54,7 +93,7 @@ class CM5(Method):
             for j in range(0, nat):
                 if i != j:
                     rij = np.linalg.norm(np.subtract(xyz[i], xyz[j]))
-                    # eq. (2)
+                    # eq. (2) from doi:10.1021/ct200866d
                     bij = np.exp(
                         -alpha * (rij - self.atomradius[z[i]] - self.atomradius[z[j]])
                     )
@@ -65,7 +104,7 @@ class CM5(Method):
 
 
 def _tij(i: int, j: int, extended: bool = True) -> float:
-    """Compute a single $T_{kk'}$ in eq. (1) from 10.1021/ct200866d.
+    """Compute a single $T_{kk'}$ in eq. (1) from doi:10.1021/ct200866d.
 
     This term may be computed from special case pairwise values in eq. (3) or
     more generally via eq. (4), depending on the atomic numbers i and j.
@@ -75,13 +114,13 @@ def _tij(i: int, j: int, extended: bool = True) -> float:
     These optionally include the extended set of parameters presented in the
     Supporting Information.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     i : int
         Atomic number of first index
     j : int
         Atomic number of second index
-    extended : bool (default True)
+    extended : bool, default True
         Should the extended set of $D_{Z}$ parameters presented in the
         Supporting Information be used?
 
@@ -143,6 +182,8 @@ def _tij(i: int, j: int, extended: bool = True) -> float:
         dz[15] = -0.0756
         dz[16] = -0.0565
         dz[17] = -0.0444
+        # This (Z=18) is erroneously set as -0.07676 in Holger Kruse's
+        # implementation; here it is left as in the original.
         dz[18] = -0.0767
         dz[19] = 0.0130
         if extended:
@@ -181,7 +222,16 @@ def _tij(i: int, j: int, extended: bool = True) -> float:
     return tij
 
 
-def _radii_cordero_pyykko(radii: str):
+def _radii_cordero_pyykko(radii: str) -> np.ndarray:
+    """Return the covalent radii available in the `periodictable` package from
+    Cordero or Pyykko.
+
+    If 'Cordero', use the values directly from doi:10.1039/b801115j.
+
+    If 'CorderoPykko', use the CRC value, which is the average of
+    Cordero's value and Pyykko's single-bond value from 10.1002/chem.200901472.
+    If an element doesn't have a single-bond value, use just Cordero's.
+    """
     atomradius = np.zeros(119)
     atomradius[0] = 0.20
 
@@ -216,7 +266,7 @@ def _radii_cordero_pyykko(radii: str):
     return atomradius
 
 
-def _radii_hokru():
+def _radii_hokru() -> np.ndarray:
     """Return the covalent radii found in
     https://github.com/hokru/cm5charges/blob/23f58b728e9f4af2306702c7cd48b1afb4b72b15/cm5.f90#L58."""
     # fmt: off
