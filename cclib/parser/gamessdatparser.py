@@ -93,20 +93,26 @@ class GAMESSDAT(logfileparser.Logfile):
         # water                                                                           
         # E(RHF)=      -74.9643287920, E(NUC)=    8.8870072224,   13 ITERS
 
-        # Extract E(RHF) value using regex
-        rhf_match = re.search(r"E\(RHF\)=(.*?),", line)
-        if rhf_match:
-            self.metadata["E_RHF"] = float(rhf_match.group(1).strip())
+        while "E (RHF)" not in line:
+            line = next(inputfile)
 
-        # Extract E(NUC) value using regex
-        nuc_match = re.search(r"E\(NUC\)=(.*?),", line)
-        if nuc_match:
-            self.metadata["E_NUC"] = float(nuc_match.group(1).strip())
+        # Extract E(RHF) value
 
-        # Extract number of ITERS using regex
-        iters_match = re.search(r"(\d+)\s+ITERS", line)
-        if iters_match:
-            self.metadata["ITERS"] = int(iters_match.group(1).strip())
+        if line.startswith("E(RHF)="):
+            rhf_value = float(line.split("=")[1].strip())
+            self.metadata["E_RHF"] = rhf_value
+
+        # Extract E(NUC) value 
+
+        if "E(NUC)=" in line:
+            nuc_value = float(line.split("=")[1].strip())
+            self.metadata["E_NUC"] = nuc_value
+
+        # Extract number of ITERS 
+
+        if "ITERS" in line:
+            iters_value = int(line.split()[0])
+            self.metadata["ITERS"] = iters_value
 
         
         # Extracting MP2 Energy Value
