@@ -30,7 +30,7 @@ class CM5(Method):
     Parameters
     ----------
     data : ccData
-        The parsed data to be used for atomic coordinates and numbers
+        The parsed data to be used for atomic coordinates, numbers, and Hirshfeld charges
     radii : str, default "hokru"
         Specify the set of radii to be used.  One of:
          - "hokru": Values copied from https://github.com/hokru/cm5charges,
