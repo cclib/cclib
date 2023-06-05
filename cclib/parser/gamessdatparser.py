@@ -94,7 +94,7 @@ class GAMESSDAT(logfileparser.Logfile):
 
         if line.startswith("E(RHF)="):
             rhf_value = float(line.split("=")[1].strip())
-            self.metadata["E_RHF"] = rhf_value
+            self.scfenergies = [ rhf_value ]
 
         # Extract E(NUC) value 
 
@@ -164,11 +164,11 @@ class GAMESSDAT(logfileparser.Logfile):
         #     coordinates_match = re.match(coordinates_pattern, line)
             
         #     if coordinates_match:
-        #         self.metadata["Coordinates"] = {
-        #             "X": float(coordinates_match.group(1)),
-        #             "Y": float(coordinates_match.group(2)),
-        #             "Z": float(coordinates_match.group(3))
-        #         }
+        #         self.moments = [
+        #             float(coordinates_match.group(1)),
+        #             float(coordinates_match.group(2)),
+        #             float(coordinates_match.group(3))
+        #         ]
 
         # Extracting Dipole
 
@@ -194,4 +194,4 @@ class GAMESSDAT(logfileparser.Logfile):
         #     energy_match = re.search(energy_pattern, line)
             
         #     if energy_match:
-        #         self.metadata["Energy(MP2)"] = float(energy_match.group(1))
+        #         self.mpenergies = float(energy_match.group(1))
