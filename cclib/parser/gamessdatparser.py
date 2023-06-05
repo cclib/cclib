@@ -100,7 +100,7 @@ class GAMESSDAT(logfileparser.Logfile):
 
         if line.startswith("E(RHF)="):
             rhf_value = float(line.split("=")[1].strip())
-            self.metadata["E_RHF"] = rhf_value
+            self.scfenergies = [ rhf_value ]
 
         # Extract E(NUC) value 
 
