@@ -39,8 +39,8 @@ class CM5(Method):
              in CRC Handbook of Chemistry and Physics, 91st Edition (2010-2011),
              edited by W. M. Haynes (CRC Press, Boca Raton, FL, 2010), pages 9-49-9-50;
              corrected Nov. 17, 2010 for the 92nd edition.
-         - "CorderoPyykko": Values averaged from doi:10.1039/b801115j and Cordero.
-         - "Cordero": Values from 10.1002/chem.200901472.
+         - "Cordero": Values from doi:10.1039/b801115j.
+         - "CorderoPyykko": Values averaged from doi:10.1002/chem.200901472 and Cordero.
         The final charges seem relatively insensitive to this choice.
 
     progress : Optional[cclib.progress.Progress], default None
