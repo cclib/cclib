@@ -153,7 +153,11 @@ def data(request) -> ccData:
     files = request.param
     first = files[0]
     if first not in _CACHE:
-        _CACHE[first] = ccopen([str(f) for f in files]).parse()
+        logfile = ccopen([str(f) for f in files])
+        data = logfile.parse()
+        data.filenames = logfile.filename
+        data.parsername = logfile.logname
+        _CACHE[first] = data
     return _CACHE[first]
 
 

@@ -18,17 +18,13 @@ def skipForParser(parser: str, msg: str):
     """Return a decorator that skips the test for specified parser."""
 
     def tstdecorator(testfunc: Callable) -> Callable[[], None]:
-        print(f"parser: {parser} msg: {msg}")
-
         # breakpoint()
         def tstwrapper(self, data: ccData) -> None:
-            print(data)
-            breakpoint()
-            # if self.logfile.logname == parser:
-            #     pytest.skip(reason=msg)
-            # else:
-            #     testfunc(self, *args, **kwargs)
-            pass
+            # breakpoint()
+            if data.parsername == parser:
+                pytest.skip(reason=f"{parser}: {msg}")
+            else:
+                testfunc(self, data)
 
         return tstwrapper
 
@@ -39,17 +35,13 @@ def skipForLogfile(fragment: str, msg: str):
     """Return a decorator that skips the test for logfiles containing fragment."""
 
     def tstdecorator(testfunc: Callable) -> Callable[[], None]:
-        print(f"fragment: {fragment} msg: {msg}")
-
+        # breakpoint()
         def tstwrapper(self, data: ccData) -> None:
-            print(data)
-            breakpoint()
-            # self.logfile.filename may be a string or list of strings.
-            # if fragment in self.logfile.filename or any(fragment in filename for filename in self.logfile.filename):
-            #     self.skipTest(msg)
-            # else:
-            #     testfunc(self, *args, **kwargs)
-            pass
+            # breakpoint()
+            if any(fragment in filename for filename in data.filenames):
+                pytest.skip(reason=f"{fragment}: {msg}")
+            else:
+                testfunc(self, data)
 
         return tstwrapper
 
