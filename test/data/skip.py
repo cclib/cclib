@@ -11,21 +11,21 @@ from typing import Callable
 
 from cclib.parser import ccData
 
+import pytest
+
 
 def skipForParser(parser: str, msg: str):
     """Return a decorator that skips the test for specified parser."""
 
-    def tstdecorator(testfunc: Callable):
-        # def tstdecorator(*args, **kwargs):
+    def tstdecorator(testfunc: Callable) -> Callable[[], None]:
         print(f"parser: {parser} msg: {msg}")
 
-        # def tstwrapper(self, *args, **kwargs):
         # breakpoint()
-        def tstwrapper(data: ccData) -> None:
+        def tstwrapper(self, data: ccData) -> None:
             print(data)
             breakpoint()
             # if self.logfile.logname == parser:
-            #     self.skipTest(msg)
+            #     pytest.skip(reason=msg)
             # else:
             #     testfunc(self, *args, **kwargs)
             pass
@@ -38,13 +38,10 @@ def skipForParser(parser: str, msg: str):
 def skipForLogfile(fragment: str, msg: str):
     """Return a decorator that skips the test for logfiles containing fragment."""
 
-    def tstdecorator(testfunc: Callable):
-        # def tstdecorator(*args, **kwargs):
-        # def tstwrapper(self, *args, **kwargs):
+    def tstdecorator(testfunc: Callable) -> Callable[[], None]:
         print(f"fragment: {fragment} msg: {msg}")
 
-        # breakpoint()
-        def tstwrapper(data: ccData) -> None:
+        def tstwrapper(self, data: ccData) -> None:
             print(data)
             breakpoint()
             # self.logfile.filename may be a string or list of strings.
