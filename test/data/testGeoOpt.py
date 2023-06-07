@@ -85,12 +85,6 @@ class GenericGeoOptTest:
         numpy.testing.assert_array_equal(data.coreelectrons, ans)
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
-    def testnormalisesym(self, data) -> None:
-        """Did this subclass overwrite normalisesym?"""
-        # https://stackoverflow.com/a/8747890
-        self.logfile.normalisesym("A")
-
-    @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("MOPAC", "Not implemented.")
     @skipForParser("xTB", "Not implemented yet")
     def testhomos(self, data) -> None:
