@@ -151,8 +151,22 @@ class GAMESSDAT(logfileparser.Logfile):
         # H            0.84006   0.15994   0.88942   0.11058
 
         if "POPULATION ANALYSIS" in line:
-            # TODO
-            pass
+
+            self.metadata["population"] = []
+
+            line = next(inputfile)
+            
+            while line[0] != ' ':
+                fields = line.split()
+                atom_info = {
+                    "atom": fields[0],
+                    "charge": float(fields[1]),
+                    "spin": float(fields[2]),
+                    "net_charge": float(fields[3]),
+                    "net_spin": float(fields[4])
+                }
+                self.metadata["population"].append(atom_info)
+                line = next(inputfile).strip()
 
         # Extracting Moments at Point
 
