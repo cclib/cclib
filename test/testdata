@@ -281,7 +281,12 @@ SP        GAMESSUK    GenericSPTest         basicGAMESS-UK8.0           dvb_sp_k
 SP        GAMESS      GenericHFSPTest       basicFirefly8.0             dvb_sp.out
 SP        GAMESS      GenericSPTest         basicGAMESS-US2017          dvb_sp.out
 SP        GAMESS      GenericSPTest         basicGAMESS-US2018          dvb_sp.out
+<<<<<<< HEAD
 SP        GAMESSDAT   GenericSPTest         basicGAMESS-US2018          dvb_sp.dat
+=======
+SP        GAMESSDAT   GenericSPTest         basicGAMESS-US2018          water_ccd.dat
+SP        GAMESSDAT   GenericSPTest         basicGAMESS-US2018          water_mp2.dat
+>>>>>>> a34f0cfc (Add tests for GamessDat)
 SP        Gaussian    GaussianSPTest        basicGaussian09             dvb_sp.out
 SP        Gaussian    GaussianSPTest        basicGaussian16             dvb_sp.out
 SP        Gaussian    GaussianSPTest        basicGaussian16             dvb_sp_no.out
