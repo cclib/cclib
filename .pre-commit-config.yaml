@@ -66,15 +66,15 @@ repos:
       - id: check-yaml
       - id: check-added-large-files
   - repo: https://github.com/PyCQA/isort
-    rev: "5.10.1"
+    rev: "5.12.0"
     hooks:
       - id: isort
   - repo: https://github.com/psf/black
-    rev: "22.3.0"
+    rev: "23.3.0"
     hooks:
       - id: black
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: "v1.0.1"
+    rev: "v1.3.0"
     hooks:
       - id: mypy
         additional_dependencies:
