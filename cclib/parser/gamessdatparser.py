@@ -186,16 +186,16 @@ class GAMESSDAT(logfileparser.Logfile):
 
         # DIPOLE       1.007144  1.336525  0.000000
 
-        # if "DIPOLE" in line:
-        #     dipole_pattern = r"DIPOLE\s+([\d.-]+)\s+([\d.-]+)\s+([\d.-]+)"
-        #     dipole_match = re.match(dipole_pattern, line)
-            
-        #     if dipole_match:
-        #         self.metadata["Dipole"] = {
-        #             "X": float(dipole_match.group(1)),
-        #             "Y": float(dipole_match.group(2)),
-        #             "Z": float(dipole_match.group(3))
-        #         }
+        if line[1:7] == "DIPOLE":
+            line = next(inputfile).strip()
+            dipole_pattern = r"DIPOLE\s+([\d.-]+)\s+([\d.-]+)\s+([\d.-]+)"
+            match = re.search(dipole_pattern, line)
+            if match:
+                self.metadata["dipole"] = {
+                    "x": float(match.group(1)),
+                    "y": float(match.group(2)),
+                    "z": float(match.group(3))
+                }
         
         # Extracting MP2 Energy Value
 
