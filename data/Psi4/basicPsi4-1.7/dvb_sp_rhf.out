@@ -1,33 +1,41 @@
 
     -----------------------------------------------------------------------
           Psi4: An Open-Source Ab Initio Electronic Structure Package
-                               Psi4 1.3.1 release
+                               Psi4 1.7 release
 
-                         Git: Rev {HEAD} 2ce1c29 
-
-
-    R. M. Parrish, L. A. Burns, D. G. A. Smith, A. C. Simmonett,
-    A. E. DePrince III, E. G. Hohenstein, U. Bozkaya, A. Yu. Sokolov,
-    R. Di Remigio, R. M. Richard, J. F. Gonthier, A. M. James,
-    H. R. McAlexander, A. Kumar, M. Saitow, X. Wang, B. P. Pritchard,
-    P. Verma, H. F. Schaefer III, K. Patkowski, R. A. King, E. F. Valeev,
-    F. A. Evangelista, J. M. Turney, T. D. Crawford, and C. D. Sherrill,
-    J. Chem. Theory Comput. 13(7) pp 3185--3197 (2017).
-    (doi: 10.1021/acs.jctc.7b00174)
+                         Git: Rev {HEAD} 6ce35a5 
 
 
-                         Additional Contributions by
-    P. Kraus, H. Kruse, M. H. Lechner, M. C. Schieber, R. A. Shaw,
-    A. Alenaizan, R. Galvelis, Z. L. Glick, S. Lehtola, and J. P. Misiewicz
+    D. G. A. Smith, L. A. Burns, A. C. Simmonett, R. M. Parrish,
+    M. C. Schieber, R. Galvelis, P. Kraus, H. Kruse, R. Di Remigio,
+    A. Alenaizan, A. M. James, S. Lehtola, J. P. Misiewicz, M. Scheurer,
+    R. A. Shaw, J. B. Schriber, Y. Xie, Z. L. Glick, D. A. Sirianni,
+    J. S. O'Brien, J. M. Waldrop, A. Kumar, E. G. Hohenstein,
+    B. P. Pritchard, B. R. Brooks, H. F. Schaefer III, A. Yu. Sokolov,
+    K. Patkowski, A. E. DePrince III, U. Bozkaya, R. A. King,
+    F. A. Evangelista, J. M. Turney, T. D. Crawford, C. D. Sherrill,
+    J. Chem. Phys. 152(18) 184108 (2020). https://doi.org/10.1063/5.0006002
+
+                            Additional Code Authors
+    E. T. Seidl, C. L. Janssen, E. F. Valeev, M. L. Leininger,
+    J. F. Gonthier, R. M. Richard, H. R. McAlexander, M. Saitow, X. Wang,
+    P. Verma, M. H. Lechner, A. Jiang, S. Behnle, A. G. Heide,
+    M. F. Herbst, and D. L. Poole
+
+             Previous Authors, Complete List of Code Contributors,
+                       and Citations for Specific Modules
+    https://github.com/psi4/psi4/blob/master/codemeta.json
+    https://github.com/psi4/psi4/graphs/contributors
+    http://psicode.org/psi4manual/master/introduction.html#citing-psifour
 
     -----------------------------------------------------------------------
 
 
-    Psi4 started on: Saturday, 04 May 2019 12:24AM
+    Psi4 started on: Sunday, 11 June 2023 10:51PM
 
-    Process ID: 66816
+    Process ID: 69075
     Host:       osmium
-    PSIDATADIR: /home/eric/data/opt/apps/python/psi4conda/share/psi4
+    PSIDATADIR: /home/eric/.pyenv/versions/miniforge3-4.10.1-3/envs/psi4-dev/share/psi4
     Memory:     500.0 MiB
     Threads:    1
     
@@ -68,16 +76,18 @@ scf_e, scf_wfn = energy('scf', return_wfn=True)
 oeprop(scf_wfn, 'MULLIKEN_CHARGES', 'LOWDIN_CHARGES', 'MULTIPOLE(5)')
 --------------------------------------------------------------------------
 
+Scratch directory: /tmp/
+
 *** tstart() called on osmium
-*** at Sat May  4 00:24:19 2019
+*** at Sun Jun 11 22:51:07 2023
 
    => Loading Basis Set <=
 
     Name: STO-3G
     Role: ORBITAL
     Keyword: BASIS
-    atoms 1-6, 11-12, 15-16  entry C          line    61 file /home/eric/data/opt/apps/python/psi4conda/share/psi4/basis/sto-3g.gbs 
-    atoms 7-10, 13-14, 17-20 entry H          line    19 file /home/eric/data/opt/apps/python/psi4conda/share/psi4/basis/sto-3g.gbs 
+    atoms 1-6, 11-12, 15-16  entry C          line    61 file /home/eric/.pyenv/versions/miniforge3-4.10.1-3/envs/psi4-dev/share/psi4/basis/sto-3g.gbs 
+    atoms 7-10, 13-14, 17-20 entry H          line    19 file /home/eric/.pyenv/versions/miniforge3-4.10.1-3/envs/psi4-dev/share/psi4/basis/sto-3g.gbs 
 
 
          ---------------------------------------------------------
@@ -139,14 +149,14 @@ oeprop(scf_wfn, 'MULLIKEN_CHARGES', 'LOWDIN_CHARGES', 'MULTIPOLE(5)')
   Guess Type is SAD.
   Energy threshold   = 1.00e-06
   Density threshold  = 1.00e-06
-  Integral threshold = 0.00e+00
+  Integral threshold = 1.00e-12
 
   ==> Primary Basis <==
 
   Basis Set: STO-3G
     Blend: STO-3G
     Number of shells: 40
-    Number of basis function: 60
+    Number of basis functions: 60
     Number of Cartesian functions: 60
     Spherical Harmonics?: true
     Max angular momentum: 1
@@ -156,8 +166,8 @@ oeprop(scf_wfn, 'MULLIKEN_CHARGES', 'LOWDIN_CHARGES', 'MULTIPOLE(5)')
     Name: (STO-3G AUX)
     Role: JKFIT
     Keyword: DF_BASIS_SCF
-    atoms 1-6, 11-12, 15-16  entry C          line   203 file /home/eric/data/opt/apps/python/psi4conda/share/psi4/basis/def2-svp-jkfit.gbs 
-    atoms 7-10, 13-14, 17-20 entry H          line    23 file /home/eric/data/opt/apps/python/psi4conda/share/psi4/basis/def2-svp-jkfit.gbs 
+    atoms 1-6, 11-12, 15-16  entry C          line   198 file /home/eric/.pyenv/versions/miniforge3-4.10.1-3/envs/psi4-dev/share/psi4/basis/def2-universal-jkfit.gbs 
+    atoms 7-10, 13-14, 17-20 entry H          line    18 file /home/eric/.pyenv/versions/miniforge3-4.10.1-3/envs/psi4-dev/share/psi4/basis/def2-universal-jkfit.gbs 
 
   -AO BASIS SET INFORMATION:
     Name                   = STO-3G
@@ -299,19 +309,6 @@ oeprop(scf_wfn, 'MULLIKEN_CHARGES', 'LOWDIN_CHARGES', 'MULTIPOLE(5)')
                          0.16885540           0.44463454
     ****
 
-  ==> Pre-Iterations <==
-
-   -------------------------------------------------------
-    Irrep   Nso     Nmo     Nalpha   Nbeta   Ndocc  Nsocc
-   -------------------------------------------------------
-     Ag        25      25       0       0       0       0
-     Bg         5       5       0       0       0       0
-     Au         5       5       0       0       0       0
-     Bu        25      25       0       0       0       0
-   -------------------------------------------------------
-    Total      60      60      35      35      35       0
-   -------------------------------------------------------
-
   ==> Integral Setup <==
 
   DFHelper Memory: AOs need 0.031 GiB; user supplied 0.366 GiB. Using in-core AOs.
@@ -331,30 +328,44 @@ oeprop(scf_wfn, 'MULLIKEN_CHARGES', 'LOWDIN_CHARGES', 'MULTIPOLE(5)')
    => Auxiliary Basis Set <=
 
   Basis Set: (STO-3G AUX)
-    Blend: DEF2-SVP-JKFIT
+    Blend: DEF2-UNIVERSAL-JKFIT
     Number of shells: 310
-    Number of basis function: 930
+    Number of basis functions: 930
     Number of Cartesian functions: 1090
     Spherical Harmonics?: true
     Max angular momentum: 4
 
-  Minimum eigenvalue in the overlap matrix is 1.8147106803E-01.
-  Using Symmetric Orthogonalization.
+  Minimum eigenvalue in the overlap matrix is 1.8581922389E-01.
+  Reciprocal condition number of the overlap matrix is 7.9091442526E-02.
+    Using symmetric orthogonalization.
 
-  SCF Guess: Superposition of Atomic Densities via on-the-fly atomic UHF.
+  ==> Pre-Iterations <==
+
+  SCF Guess: Superposition of Atomic Densities via on-the-fly atomic UHF (no occupation information).
+
+   -------------------------
+    Irrep   Nso     Nmo    
+   -------------------------
+     Ag        25      25 
+     Bg         5       5 
+     Au         5       5 
+     Bu        25      25 
+   -------------------------
+    Total      60      60
+   -------------------------
 
   ==> Iterations <==
 
                            Total Energy        Delta E     RMS |[F,P]|
 
-   @DF-RHF iter SAD:  -372.47056553946283   -3.72471e+02   0.00000e+00 
-   @DF-RHF iter   1:  -379.75143611747291   -7.28087e+00   3.88904e-03 DIIS
-   @DF-RHF iter   2:  -379.76852818402728   -1.70921e-02   1.09122e-03 DIIS
-   @DF-RHF iter   3:  -379.76985290879338   -1.32472e-03   4.96086e-04 DIIS
-   @DF-RHF iter   4:  -379.77009942471813   -2.46516e-04   7.34173e-05 DIIS
-   @DF-RHF iter   5:  -379.77011073918823   -1.13145e-05   1.71715e-05 DIIS
-   @DF-RHF iter   6:  -379.77011148035746   -7.41169e-07   4.55112e-06 DIIS
-   @DF-RHF iter   7:  -379.77011151550613   -3.51487e-08   8.19717e-07 DIIS
+   @DF-RHF iter SAD:  -372.47056554136066   -3.72471e+02   0.00000e+00 
+   @DF-RHF iter   1:  -379.75143611938762   -7.28087e+00   3.88904e-03 DIIS/ADIIS
+   @DF-RHF iter   2:  -379.76852818594102   -1.70921e-02   1.09122e-03 DIIS/ADIIS
+   @DF-RHF iter   3:  -379.76985302669664   -1.32484e-03   4.95800e-04 DIIS/ADIIS
+   @DF-RHF iter   4:  -379.77009935854471   -2.46332e-04   7.34200e-05 DIIS
+   @DF-RHF iter   5:  -379.77011074115001   -1.13826e-05   1.71712e-05 DIIS
+   @DF-RHF iter   6:  -379.77011148227257   -7.41123e-07   4.55111e-06 DIIS
+   @DF-RHF iter   7:  -379.77011151741965   -3.51471e-08   8.19727e-07 DIIS
   Energy and wave function converged.
 
 
@@ -393,15 +404,17 @@ oeprop(scf_wfn, 'MULLIKEN_CHARGES', 'LOWDIN_CHARGES', 'MULTIPOLE(5)')
     Final Occupation by Irrep:
              Ag    Bg    Au    Bu 
     DOCC [    15,    3,    2,   15 ]
+    NA   [    15,    3,    2,   15 ]
+    NB   [    15,    3,    2,   15 ]
 
-  @DF-RHF Final Energy:  -379.77011151550613
+  @DF-RHF Final Energy:  -379.77011151741965
 
    => Energetics <=
 
     Nuclear Repulsion Energy =            445.9369798670570049
-    One-Electron Energy =               -1400.2211155145664634
-    Two-Electron Energy =                 574.5140241320033283
-    Total Energy =                       -379.7701115155060734
+    One-Electron Energy =               -1400.2211155122186028
+    Two-Electron Energy =                 574.5140241277418909
+    Total Energy =                       -379.7701115174196502
 
 Computation Completed
 
@@ -410,18 +423,20 @@ Properties will be evaluated at   0.000000,   0.000000,   0.000000 [a0]
 
 Properties computed using the SCF density matrix
 
-  Nuclear Dipole Moment: [e a0]
-     X:     0.0000      Y:     0.0000      Z:     0.0000
 
-  Electronic Dipole Moment: [e a0]
-     X:     0.0000      Y:     0.0000      Z:     0.0000
+ Multipole Moments:
 
-  Dipole Moment: [e a0]
-     X:     0.0000      Y:     0.0000      Z:     0.0000     Total:     0.0000
+ ------------------------------------------------------------------------------------
+     Multipole            Electronic (a.u.)      Nuclear  (a.u.)        Total (a.u.)
+ ------------------------------------------------------------------------------------
 
-  Dipole Moment: [D]
-     X:     0.0000      Y:     0.0000      Z:     0.0000     Total:     0.0000
+ L = 1.  Multiply by 2.5417464519 to convert [e a0] to [Debye]
+ Dipole X            :          0.0000000            0.0000000            0.0000000
+ Dipole Y            :          0.0000000            0.0000000            0.0000000
+ Dipole Z            :          0.0000000            0.0000000            0.0000000
+ Magnitude           :                                                    0.0000000
 
+ ------------------------------------------------------------------------------------
 
   ==> Molecular Orbitals <==
 
@@ -437,22 +452,22 @@ Properties computed using the SCF density matrix
  8    C2 p0         0.0000000    0.0000000    0.0000000    0.0000000    0.0000000
  9    C2 p+1        0.0006606   -0.0004484    0.0029445   -0.0029353   -0.0000780
  10   C2 p-1        0.0000020   -0.0000411   -0.0004548    0.0004527   -0.0036143
- 11   C3 s0         0.0058255    0.0032233   -0.0037002   -0.0062836    0.3763700
+ 11   C3 s0         0.0058255    0.0032233   -0.0037002   -0.0062836    0.3763702
  12   C3 s0        -0.0047666   -0.0046126   -0.0000710   -0.0001934    0.0092973
  13   C3 p0         0.0000000    0.0000000    0.0000000    0.0000000    0.0000000
  14   C3 p+1        0.0019911    0.0020213    0.0000267    0.0000115   -0.0023541
  15   C3 p-1        0.0024251    0.0024412    0.0000038    0.0000620    0.0000541
- 16   C4 s0        -0.0058255    0.0032233    0.0037002   -0.0062836   -0.3763700
+ 16   C4 s0        -0.0058255    0.0032233    0.0037002   -0.0062836   -0.3763702
  17   C4 s0         0.0047666   -0.0046126    0.0000710   -0.0001934   -0.0092973
  18   C4 p0         0.0000000    0.0000000    0.0000000    0.0000000    0.0000000
  19   C4 p+1        0.0019911   -0.0020213    0.0000267   -0.0000115   -0.0023541
  20   C4 p-1        0.0024251   -0.0024412    0.0000038   -0.0000620    0.0000541
- 21   C5 s0        -0.0058082    0.0032811    0.0024300   -0.0051461    0.5923784
+ 21   C5 s0        -0.0058082    0.0032811    0.0024300   -0.0051461    0.5923782
  22   C5 s0         0.0047271   -0.0045546   -0.0000150   -0.0000885    0.0187302
  23   C5 p0         0.0000000    0.0000000    0.0000000    0.0000000    0.0000000
  24   C5 p+1        0.0011089   -0.0011442   -0.0000006    0.0000191    0.0011211
  25   C5 p-1       -0.0029077    0.0029178   -0.0000159    0.0000652   -0.0007614
- 26   C6 s0         0.0058082    0.0032811   -0.0024300   -0.0051461   -0.5923784
+ 26   C6 s0         0.0058082    0.0032811   -0.0024300   -0.0051461   -0.5923782
  27   C6 s0        -0.0047271   -0.0045546    0.0000150   -0.0000885   -0.0187302
  28   C6 p0         0.0000000    0.0000000    0.0000000    0.0000000    0.0000000
  29   C6 p+1        0.0011089    0.0011442   -0.0000006   -0.0000191    0.0011211
@@ -499,29 +514,29 @@ Properties computed using the SCF density matrix
  2    C1 s0         0.0063417    0.0071423    0.0022484   -0.0002700    0.0002694
  3    C1 p0         0.0000000    0.0000000    0.0000000    0.0000000    0.0000000
  4    C1 p+1        0.0019437    0.0023714    0.0013420    0.0001223   -0.0001202
- 5    C1 p-1       -0.0016087    0.0004151    0.0033833   -0.0000525    0.0000519
+ 5    C1 p-1       -0.0016086    0.0004151    0.0033833   -0.0000525    0.0000519
  6    C2 s0         0.0034017   -0.0071808    0.0011516    0.0002729    0.0002410
  7    C2 s0         0.0063417   -0.0071423    0.0022484    0.0002700    0.0002694
  8    C2 p0         0.0000000    0.0000000    0.0000000    0.0000000    0.0000000
  9    C2 p+1       -0.0019437    0.0023714   -0.0013420    0.0001223    0.0001202
- 10   C2 p-1        0.0016087    0.0004151   -0.0033833   -0.0000525   -0.0000519
- 11   C3 s0        -0.3015648   -0.5920590   -0.6334899   -0.0002608    0.0004131
- 12   C3 s0        -0.0065258   -0.0242314   -0.0248796    0.0000123   -0.0000704
+ 10   C2 p-1        0.0016086    0.0004151   -0.0033833   -0.0000525   -0.0000519
+ 11   C3 s0        -0.3015651   -0.5920588   -0.6334898   -0.0002608    0.0004131
+ 12   C3 s0        -0.0065259   -0.0242314   -0.0248796    0.0000123   -0.0000704
  13   C3 p0         0.0000000    0.0000000    0.0000000    0.0000000    0.0000000
  14   C3 p+1        0.0027364   -0.0019524   -0.0016340   -0.0000622    0.0000161
  15   C3 p-1       -0.0003179    0.0009802    0.0007017   -0.0000113    0.0000198
- 16   C4 s0        -0.3015648    0.5920590   -0.6334899    0.0002608    0.0004131
- 17   C4 s0        -0.0065258    0.0242314   -0.0248796   -0.0000123   -0.0000704
+ 16   C4 s0        -0.3015651    0.5920588   -0.6334898    0.0002608    0.0004131
+ 17   C4 s0        -0.0065259    0.0242314   -0.0248796   -0.0000123   -0.0000704
  18   C4 p0         0.0000000    0.0000000    0.0000000    0.0000000    0.0000000
  19   C4 p+1       -0.0027364   -0.0019524    0.0016340   -0.0000622   -0.0000161
  20   C4 p-1        0.0003179    0.0009802   -0.0007017   -0.0000113   -0.0000198
- 21   C5 s0        -0.6337318    0.3758746    0.3010694    0.0010686    0.0010821
- 22   C5 s0        -0.0207878    0.0179886    0.0151850    0.0000011   -0.0000081
+ 21   C5 s0        -0.6337317    0.3758748    0.3010697    0.0010686    0.0010821
+ 22   C5 s0        -0.0207878    0.0179886    0.0151851    0.0000011   -0.0000081
  23   C5 p0         0.0000000    0.0000000    0.0000000    0.0000000    0.0000000
  24   C5 p+1       -0.0009692   -0.0029123   -0.0030772   -0.0000902   -0.0000832
  25   C5 p-1        0.0005410    0.0000048    0.0002311    0.0000062    0.0000017
- 26   C6 s0        -0.6337318   -0.3758746    0.3010694   -0.0010686    0.0010821
- 27   C6 s0        -0.0207878   -0.0179886    0.0151850   -0.0000011   -0.0000081
+ 26   C6 s0        -0.6337317   -0.3758748    0.3010697   -0.0010686    0.0010821
+ 27   C6 s0        -0.0207878   -0.0179886    0.0151851   -0.0000011   -0.0000081
  28   C6 p0         0.0000000    0.0000000    0.0000000    0.0000000    0.0000000
  29   C6 p+1        0.0009692   -0.0029123    0.0030772   -0.0000902    0.0000832
  30   C6 p-1       -0.0005410    0.0000048   -0.0002311    0.0000062   -0.0000017
@@ -964,7 +979,7 @@ Properties computed using the SCF density matrix
  59   H19 s0        0.0000000    0.0000000    0.0000000    0.0000000    0.0000000
  60   H20 s0        0.0000000    0.0000000    0.0000000    0.0000000    0.0000000
 
-            Ene     0.1990150    0.2685361    0.3088514    0.3971033    0.5217882
+            Ene     0.1990150    0.2685361    0.3088514    0.3971033    0.5217881
             Sym            Au           Au           Bg           Au           Bg
             Occ             0            0            0            0            0
 
@@ -1042,12 +1057,12 @@ Properties computed using the SCF density matrix
  1    C1 s0         0.0826802    0.0177367    0.1294651    0.0603013    0.0402038
  2    C1 s0        -0.4924088   -0.1140111   -0.7966666   -0.3631288   -0.2541523
  3    C1 p0         0.0000000    0.0000000    0.0000000    0.0000000    0.0000000
- 4    C1 p+1        0.0317486   -0.2581695   -0.0136289   -0.1141775   -0.0465708
+ 4    C1 p+1        0.0317486   -0.2581695   -0.0136289   -0.1141776   -0.0465708
  5    C1 p-1        0.1165026    0.1053452    0.0437331   -0.1399165   -0.3445856
  6    C2 s0        -0.0826802   -0.0177367    0.1294651   -0.0603013    0.0402038
  7    C2 s0         0.4924088    0.1140111   -0.7966666    0.3631288   -0.2541523
  8    C2 p0         0.0000000    0.0000000    0.0000000    0.0000000    0.0000000
- 9    C2 p+1        0.0317486   -0.2581695    0.0136289   -0.1141775    0.0465708
+ 9    C2 p+1        0.0317486   -0.2581695    0.0136289   -0.1141776    0.0465708
  10   C2 p-1        0.1165026    0.1053452   -0.0437331   -0.1399165    0.3445856
  11   C3 s0        -0.0762518   -0.0573675   -0.0700348   -0.0581397   -0.1135291
  12   C3 s0         0.4615271    0.3610614    0.4442007    0.3570857    0.7277617
@@ -1077,21 +1092,21 @@ Properties computed using the SCF density matrix
  36   C11 s0       -0.2602239    0.4673335    0.5705745   -0.4303572    0.2305791
  37   C11 p0        0.0000000    0.0000000    0.0000000    0.0000000    0.0000000
  38   C11 p+1       0.1902357   -0.0608882   -0.0977085   -0.1240332   -0.0745148
- 39   C11 p-1       0.1495012   -0.2242029   -0.1153357    0.0587047   -0.0376726
+ 39   C11 p-1       0.1495012   -0.2242029   -0.1153356    0.0587047   -0.0376726
  40   C12 s0       -0.0407385    0.0734236   -0.0930737   -0.0699981   -0.0328240
  41   C12 s0        0.2602239   -0.4673335    0.5705745    0.4303572    0.2305791
  42   C12 p0        0.0000000    0.0000000    0.0000000    0.0000000    0.0000000
  43   C12 p+1       0.1902357   -0.0608882    0.0977085   -0.1240332    0.0745148
- 44   C12 p-1       0.1495012   -0.2242029    0.1153357    0.0587047    0.0376726
+ 44   C12 p-1       0.1495012   -0.2242029    0.1153356    0.0587047    0.0376726
  45   H13 s0        0.1958454   -0.4380172   -0.3648133    0.2965769   -0.0871843
  46   H14 s0       -0.1958454    0.4380172   -0.3648133   -0.2965769   -0.0871843
  47   C15 s0        0.0834615   -0.0208728    0.0633575   -0.1104303   -0.0610055
- 48   C15 s0       -0.5333584    0.1416061   -0.3903688    0.7023406    0.3976396
+ 48   C15 s0       -0.5333584    0.1416061   -0.3903688    0.7023406    0.3976397
  49   C15 p0        0.0000000    0.0000000    0.0000000    0.0000000    0.0000000
  50   C15 p+1      -0.1181235    0.2910651   -0.0653468    0.0186921    0.3718680
  51   C15 p-1      -0.2637270   -0.0301699    0.0289588    0.1410493    0.1364846
  52   C16 s0       -0.0834615    0.0208728    0.0633575    0.1104303   -0.0610055
- 53   C16 s0        0.5333584   -0.1416061   -0.3903688   -0.7023406    0.3976396
+ 53   C16 s0        0.5333584   -0.1416061   -0.3903688   -0.7023406    0.3976397
  54   C16 p0        0.0000000    0.0000000    0.0000000    0.0000000    0.0000000
  55   C16 p+1      -0.1181235    0.2910651    0.0653468    0.0186921   -0.3718680
  56   C16 p-1      -0.2637270   -0.0301699   -0.0289588    0.1410493   -0.1364846
@@ -1225,12 +1240,12 @@ Properties computed using the SCF density matrix
  48   C15 s0       -0.2418031    0.3555141   -0.5269273    0.3055779    0.0784051
  49   C15 p0        0.0000000    0.0000000    0.0000000    0.0000000    0.0000000
  50   C15 p+1       0.5404851   -0.1806705    0.5349911   -0.3015005    0.0042433
- 51   C15 p-1      -0.1299434   -0.5845372    0.3913132   -0.2413928   -0.2169466
+ 51   C15 p-1      -0.1299434   -0.5845372    0.3913132   -0.2413928   -0.2169467
  52   C16 s0        0.0326673   -0.0463448   -0.0684489   -0.0382180    0.0088608
  53   C16 s0       -0.2418031    0.3555141    0.5269273    0.3055779   -0.0784051
  54   C16 p0        0.0000000    0.0000000    0.0000000    0.0000000    0.0000000
  55   C16 p+1      -0.5404851    0.1806705    0.5349911    0.3015005    0.0042433
- 56   C16 p-1       0.1299434    0.5845372    0.3913132    0.2413928   -0.2169466
+ 56   C16 p-1       0.1299434    0.5845372    0.3913132    0.2413928   -0.2169467
  57   H17 s0        0.2654392    0.2725520   -0.0114519    0.0313954    0.1367857
  58   H18 s0        0.2654392    0.2725520    0.0114519    0.0313954   -0.1367857
  59   H19 s0       -0.3204762   -0.1228658   -0.0963462    0.0465118   -0.0663295
@@ -1242,15 +1257,15 @@ Properties computed using the SCF density matrix
 
 
 
-*** tstop() called on osmium at Sat May  4 00:24:22 2019
+*** tstop() called on osmium at Sun Jun 11 22:51:09 2023
 Module time:
-	user time   =       2.70 seconds =       0.05 minutes
-	system time =       0.03 seconds =       0.00 minutes
-	total time  =          3 seconds =       0.05 minutes
+	user time   =       2.25 seconds =       0.04 minutes
+	system time =       0.04 seconds =       0.00 minutes
+	total time  =          2 seconds =       0.03 minutes
 Total time:
-	user time   =       2.70 seconds =       0.05 minutes
-	system time =       0.03 seconds =       0.00 minutes
-	total time  =          3 seconds =       0.05 minutes
+	user time   =       2.25 seconds =       0.04 minutes
+	system time =       0.04 seconds =       0.00 minutes
+	total time  =          2 seconds =       0.03 minutes
 
 
 Properties will be evaluated at   0.000000,   0.000000,   0.000000 [a0]
@@ -1259,23 +1274,27 @@ OEProp: No title given, name of density matrix used for the following properties
  Multipole Moments:
 
  ------------------------------------------------------------------------------------
-     Multipole             Electric (a.u.)       Nuclear  (a.u.)        Total (a.u.)
+     Multipole            Electronic (a.u.)      Nuclear  (a.u.)        Total (a.u.)
  ------------------------------------------------------------------------------------
 
- L = 1.  Multiply by 2.5417464519 to convert to Debye
+ L = 1.  Multiply by 2.5417464519 to convert [e a0] to [Debye]
  Dipole X            :          0.0000000            0.0000000            0.0000000
  Dipole Y            :          0.0000000            0.0000000            0.0000000
  Dipole Z            :          0.0000000            0.0000000            0.0000000
+ Magnitude           :                                                    0.0000000
 
- L = 2.  Multiply by 1.3450342976 to convert to Debye.ang
+ L = 2.  Multiply by 1.3450342976 to convert [e a0^2] to [Debye ang]
  Quadrupole XX       :      -1535.8925331         1496.8839879          -39.0085452
  Quadrupole XY       :        -11.5265690           11.4580037           -0.0685653
  Quadrupole XZ       :          0.0000000            0.0000000            0.0000000
  Quadrupole YY       :       -283.2387718          244.8754365          -38.3633354
  Quadrupole YZ       :          0.0000000            0.0000000            0.0000000
  Quadrupole ZZ       :        -43.5643397            0.0000000          -43.5643397
+ Traceless XX        :       -914.9939849          916.2975131            1.3035282
+ Traceless YY        :        337.6597764         -335.7110383            1.9487381
+ Traceless ZZ        :        577.3342085         -580.5864748           -3.2522663
 
- L = 3.  Multiply by 0.7117614979 to convert to Debye.ang^2
+ L = 3.  Multiply by 0.7117614979 to convert [e a0^3] to [Debye ang^2]
  Octupole XXX        :          0.0000000            0.0000000            0.0000000
  Octupole XXY        :          0.0000000            0.0000000            0.0000000
  Octupole XXZ        :          0.0000000            0.0000000            0.0000000
@@ -1287,24 +1306,24 @@ OEProp: No title given, name of density matrix used for the following properties
  Octupole YZZ        :          0.0000000            0.0000000            0.0000000
  Octupole ZZZ        :          0.0000000            0.0000000            0.0000000
 
- L = 4.  Multiply by 0.3766479641 to convert to Debye.ang^3
- Hexadecapole XXXX   :     -73574.8429894        68490.6488536        -5084.1941357
- Hexadecapole XXXY   :      -2528.4036771         2491.6209064          -36.7827707
+ L = 4.  Multiply by 0.3766479641 to convert [e a0^4] to [Debye ang^3]
+ Hexadecapole XXXX   :     -73574.8429909        68490.6488536        -5084.1941373
+ Hexadecapole XXXY   :      -2528.4036775         2491.6209064          -36.7827711
  Hexadecapole XXXZ   :          0.0000000            0.0000000            0.0000000
- Hexadecapole XXYY   :      -3640.8554078         2641.3398160         -999.5155919
+ Hexadecapole XXYY   :      -3640.8554078         2641.3398160         -999.5155918
  Hexadecapole XXYZ   :          0.0000000            0.0000000            0.0000000
  Hexadecapole XXZZ   :       -975.7102296            0.0000000         -975.7102296
- Hexadecapole XYYY   :         26.1846403          -48.3518189          -22.1671787
+ Hexadecapole XYYY   :         26.1846402          -48.3518189          -22.1671787
  Hexadecapole XYYZ   :          0.0000000            0.0000000            0.0000000
  Hexadecapole XYZZ   :         -7.1963908            0.0000000           -7.1963908
  Hexadecapole XZZZ   :          0.0000000            0.0000000            0.0000000
- Hexadecapole YYYY   :      -3004.6525366         2103.6746443         -900.9778924
+ Hexadecapole YYYY   :      -3004.6525366         2103.6746443         -900.9778923
  Hexadecapole YYYZ   :          0.0000000            0.0000000            0.0000000
  Hexadecapole YYZZ   :       -192.3816497            0.0000000         -192.3816497
  Hexadecapole YZZZ   :          0.0000000            0.0000000            0.0000000
  Hexadecapole ZZZZ   :       -126.3744328            0.0000000         -126.3744328
 
- L = 5.  Multiply by 0.1993135191 to convert to Debye.ang^4
+ L = 5.  Multiply by 0.1993135191 to convert [e a0^5] to [Debye ang^4]
  32-pole XXXXX       :          0.0000000            0.0000000            0.0000000
  32-pole XXXXY       :          0.0000000            0.0000000            0.0000000
  32-pole XXXXZ       :          0.0000000            0.0000000            0.0000000
@@ -1327,7 +1346,7 @@ OEProp: No title given, name of density matrix used for the following properties
  32-pole YZZZZ       :          0.0000000            0.0000000            0.0000000
  32-pole ZZZZZ       :          0.0000000            0.0000000            0.0000000
 
- --------------------------------------------------------------------------------
+ ------------------------------------------------------------------------------------
   Mulliken Charges: (a.u.)
    Center  Symbol    Alpha    Beta     Spin     Total
        1     C     2.99908  2.99908  0.00000  0.00184
@@ -1376,9 +1395,9 @@ OEProp: No title given, name of density matrix used for the following properties
       19     H     0.48407  0.48407  0.00000  0.03187
       20     H     0.48407  0.48407  0.00000  0.03187
 
-  Total alpha = 35.00000, Total beta = 35.00000, Total charge =  0.00000
+  Total alpha = 35.00000, Total beta = 35.00000, Total charge = -0.00000
 
-    Psi4 stopped on: Saturday, 04 May 2019 12:24AM
-    Psi4 wall time for execution: 0:00:02.83
+    Psi4 stopped on: Sunday, 11 June 2023 10:51PM
+    Psi4 wall time for execution: 0:00:02.43
 
 *** Psi4 exiting successfully. Buy a developer a beer!

@@ -1,33 +1,41 @@
 
     -----------------------------------------------------------------------
           Psi4: An Open-Source Ab Initio Electronic Structure Package
-                               Psi4 1.3.1 release
+                               Psi4 1.7 release
 
-                         Git: Rev {HEAD} 2ce1c29 
-
-
-    R. M. Parrish, L. A. Burns, D. G. A. Smith, A. C. Simmonett,
-    A. E. DePrince III, E. G. Hohenstein, U. Bozkaya, A. Yu. Sokolov,
-    R. Di Remigio, R. M. Richard, J. F. Gonthier, A. M. James,
-    H. R. McAlexander, A. Kumar, M. Saitow, X. Wang, B. P. Pritchard,
-    P. Verma, H. F. Schaefer III, K. Patkowski, R. A. King, E. F. Valeev,
-    F. A. Evangelista, J. M. Turney, T. D. Crawford, and C. D. Sherrill,
-    J. Chem. Theory Comput. 13(7) pp 3185--3197 (2017).
-    (doi: 10.1021/acs.jctc.7b00174)
+                         Git: Rev {HEAD} 6ce35a5 
 
 
-                         Additional Contributions by
-    P. Kraus, H. Kruse, M. H. Lechner, M. C. Schieber, R. A. Shaw,
-    A. Alenaizan, R. Galvelis, Z. L. Glick, S. Lehtola, and J. P. Misiewicz
+    D. G. A. Smith, L. A. Burns, A. C. Simmonett, R. M. Parrish,
+    M. C. Schieber, R. Galvelis, P. Kraus, H. Kruse, R. Di Remigio,
+    A. Alenaizan, A. M. James, S. Lehtola, J. P. Misiewicz, M. Scheurer,
+    R. A. Shaw, J. B. Schriber, Y. Xie, Z. L. Glick, D. A. Sirianni,
+    J. S. O'Brien, J. M. Waldrop, A. Kumar, E. G. Hohenstein,
+    B. P. Pritchard, B. R. Brooks, H. F. Schaefer III, A. Yu. Sokolov,
+    K. Patkowski, A. E. DePrince III, U. Bozkaya, R. A. King,
+    F. A. Evangelista, J. M. Turney, T. D. Crawford, C. D. Sherrill,
+    J. Chem. Phys. 152(18) 184108 (2020). https://doi.org/10.1063/5.0006002
+
+                            Additional Code Authors
+    E. T. Seidl, C. L. Janssen, E. F. Valeev, M. L. Leininger,
+    J. F. Gonthier, R. M. Richard, H. R. McAlexander, M. Saitow, X. Wang,
+    P. Verma, M. H. Lechner, A. Jiang, S. Behnle, A. G. Heide,
+    M. F. Herbst, and D. L. Poole
+
+             Previous Authors, Complete List of Code Contributors,
+                       and Citations for Specific Modules
+    https://github.com/psi4/psi4/blob/master/codemeta.json
+    https://github.com/psi4/psi4/graphs/contributors
+    http://psicode.org/psi4manual/master/introduction.html#citing-psifour
 
     -----------------------------------------------------------------------
 
 
-    Psi4 started on: Saturday, 04 May 2019 12:25AM
+    Psi4 started on: Sunday, 11 June 2023 10:51PM
 
-    Process ID: 68991
+    Process ID: 69090
     Host:       osmium
-    PSIDATADIR: /home/eric/data/opt/apps/python/psi4conda/share/psi4
+    PSIDATADIR: /home/eric/.pyenv/versions/miniforge3-4.10.1-3/envs/psi4-dev/share/psi4
     Memory:     500.0 MiB
     Threads:    1
     
@@ -47,18 +55,20 @@ set {
 
 energy('mp2')
 --------------------------------------------------------------------------
+
+Scratch directory: /tmp/
     SCF Algorithm Type (re)set to DF.
 
 *** tstart() called on osmium
-*** at Sat May  4 00:25:05 2019
+*** at Sun Jun 11 22:51:08 2023
 
    => Loading Basis Set <=
 
     Name: STO-3G
     Role: ORBITAL
     Keyword: BASIS
-    atoms 1   entry O          line    81 file /home/eric/data/opt/apps/python/psi4conda/share/psi4/basis/sto-3g.gbs 
-    atoms 2-3 entry H          line    19 file /home/eric/data/opt/apps/python/psi4conda/share/psi4/basis/sto-3g.gbs 
+    atoms 1   entry O          line    81 file /home/eric/.pyenv/versions/miniforge3-4.10.1-3/envs/psi4-dev/share/psi4/basis/sto-3g.gbs 
+    atoms 2-3 entry H          line    19 file /home/eric/.pyenv/versions/miniforge3-4.10.1-3/envs/psi4-dev/share/psi4/basis/sto-3g.gbs 
 
 
          ---------------------------------------------------------
@@ -103,14 +113,14 @@ energy('mp2')
   Guess Type is SAD.
   Energy threshold   = 1.00e-08
   Density threshold  = 1.00e-08
-  Integral threshold = 0.00e+00
+  Integral threshold = 1.00e-12
 
   ==> Primary Basis <==
 
   Basis Set: STO-3G
     Blend: STO-3G
     Number of shells: 5
-    Number of basis function: 7
+    Number of basis functions: 7
     Number of Cartesian functions: 7
     Spherical Harmonics?: true
     Max angular momentum: 1
@@ -120,21 +130,8 @@ energy('mp2')
     Name: (STO-3G AUX)
     Role: JKFIT
     Keyword: DF_BASIS_SCF
-    atoms 1   entry O          line   323 file /home/eric/data/opt/apps/python/psi4conda/share/psi4/basis/def2-svp-jkfit.gbs 
-    atoms 2-3 entry H          line    23 file /home/eric/data/opt/apps/python/psi4conda/share/psi4/basis/def2-svp-jkfit.gbs 
-
-  ==> Pre-Iterations <==
-
-   -------------------------------------------------------
-    Irrep   Nso     Nmo     Nalpha   Nbeta   Ndocc  Nsocc
-   -------------------------------------------------------
-     A1         4       4       0       0       0       0
-     A2         0       0       0       0       0       0
-     B1         1       1       0       0       0       0
-     B2         2       2       0       0       0       0
-   -------------------------------------------------------
-    Total       7       7       5       5       5       0
-   -------------------------------------------------------
+    atoms 1   entry O          line   318 file /home/eric/.pyenv/versions/miniforge3-4.10.1-3/envs/psi4-dev/share/psi4/basis/def2-universal-jkfit.gbs 
+    atoms 2-3 entry H          line    18 file /home/eric/.pyenv/versions/miniforge3-4.10.1-3/envs/psi4-dev/share/psi4/basis/def2-universal-jkfit.gbs 
 
   ==> Integral Setup <==
 
@@ -155,30 +152,44 @@ energy('mp2')
    => Auxiliary Basis Set <=
 
   Basis Set: (STO-3G AUX)
-    Blend: DEF2-SVP-JKFIT
+    Blend: DEF2-UNIVERSAL-JKFIT
     Number of shells: 37
-    Number of basis function: 113
+    Number of basis functions: 113
     Number of Cartesian functions: 133
     Spherical Harmonics?: true
     Max angular momentum: 4
 
-  Minimum eigenvalue in the overlap matrix is 3.6393051884E-01.
-  Using Symmetric Orthogonalization.
+  Minimum eigenvalue in the overlap matrix is 3.3370618791E-01.
+  Reciprocal condition number of the overlap matrix is 1.9580012703E-01.
+    Using symmetric orthogonalization.
 
-  SCF Guess: Superposition of Atomic Densities via on-the-fly atomic UHF.
+  ==> Pre-Iterations <==
+
+  SCF Guess: Superposition of Atomic Densities via on-the-fly atomic UHF (no occupation information).
+
+   -------------------------
+    Irrep   Nso     Nmo    
+   -------------------------
+     A1         4       4 
+     A2         0       0 
+     B1         1       1 
+     B2         2       2 
+   -------------------------
+    Total       7       7
+   -------------------------
 
   ==> Iterations <==
 
                            Total Energy        Delta E     RMS |[F,P]|
 
-   @DF-RHF iter SAD:   -74.14297592296049   -7.41430e+01   0.00000e+00 
-   @DF-RHF iter   1:   -74.91155100978759   -7.68575e-01   5.53247e-02 DIIS
-   @DF-RHF iter   2:   -74.96336303704244   -5.18120e-02   8.76069e-03 DIIS
-   @DF-RHF iter   3:   -74.96433643966647   -9.73403e-04   2.04101e-03 DIIS
-   @DF-RHF iter   4:   -74.96441565972897   -7.92201e-05   2.10448e-04 DIIS
-   @DF-RHF iter   5:   -74.96441712368183   -1.46395e-06   1.75896e-05 DIIS
-   @DF-RHF iter   6:   -74.96441713225917   -8.57735e-09   4.24058e-07 DIIS
-   @DF-RHF iter   7:   -74.96441713226380   -4.63274e-12   2.20860e-09 DIIS
+   @DF-RHF iter SAD:   -74.14297592295972   -7.41430e+01   0.00000e+00 
+   @DF-RHF iter   1:   -74.91155100978654   -7.68575e-01   5.53247e-02 DIIS/ADIIS
+   @DF-RHF iter   2:   -74.96336303704138   -5.18120e-02   8.76069e-03 DIIS/ADIIS
+   @DF-RHF iter   3:   -74.96433807964057   -9.75043e-04   2.01339e-03 DIIS/ADIIS
+   @DF-RHF iter   4:   -74.96441557381340   -7.74942e-05   2.15431e-04 DIIS/ADIIS
+   @DF-RHF iter   5:   -74.96441712314223   -1.54933e-06   1.80293e-05 DIIS
+   @DF-RHF iter   6:   -74.96441713225829   -9.11606e-09   4.15317e-07 DIIS
+   @DF-RHF iter   7:   -74.96441713226277   -4.47642e-12   2.08028e-09 DIIS
   Energy and wave function converged.
 
 
@@ -199,15 +210,17 @@ energy('mp2')
     Final Occupation by Irrep:
              A1    A2    B1    B2 
     DOCC [     3,    0,    1,    1 ]
+    NA   [     3,    0,    1,    1 ]
+    NB   [     3,    0,    1,    1 ]
 
-  @DF-RHF Final Energy:   -74.96441713226380
+  @DF-RHF Final Energy:   -74.96441713226277
 
    => Energetics <=
 
     Nuclear Repulsion Energy =              8.8870062608098763
-    One-Electron Energy =                -121.8398687279089074
-    Two-Electron Energy =                  37.9884453348352409
-    Total Energy =                        -74.9644171322638044
+    One-Electron Energy =                -121.8398687308066997
+    Two-Electron Energy =                  37.9884453377340705
+    Total Energy =                        -74.9644171322627528
 
 Computation Completed
 
@@ -216,31 +229,33 @@ Properties will be evaluated at   0.000000,   0.000000,   0.000000 [a0]
 
 Properties computed using the SCF density matrix
 
-  Nuclear Dipole Moment: [e a0]
-     X:     0.0000      Y:     0.0000      Z:     0.9917
 
-  Electronic Dipole Moment: [e a0]
-     X:     0.0000      Y:     0.0000      Z:    -0.3335
+ Multipole Moments:
 
-  Dipole Moment: [e a0]
-     X:     0.0000      Y:     0.0000      Z:     0.6583     Total:     0.6583
+ ------------------------------------------------------------------------------------
+     Multipole            Electronic (a.u.)      Nuclear  (a.u.)        Total (a.u.)
+ ------------------------------------------------------------------------------------
 
-  Dipole Moment: [D]
-     X:     0.0000      Y:     0.0000      Z:     1.6732     Total:     1.6732
+ L = 1.  Multiply by 2.5417464519 to convert [e a0] to [Debye]
+ Dipole X            :          0.0000000            0.0000000            0.0000000
+ Dipole Y            :          0.0000000            0.0000000            0.0000000
+ Dipole Z            :         -0.3334523            0.9917442            0.6582919
+ Magnitude           :                                                    0.6582919
 
+ ------------------------------------------------------------------------------------
 
-*** tstop() called on osmium at Sat May  4 00:25:06 2019
+*** tstop() called on osmium at Sun Jun 11 22:51:08 2023
 Module time:
-	user time   =       0.31 seconds =       0.01 minutes
+	user time   =       0.28 seconds =       0.00 minutes
 	system time =       0.00 seconds =       0.00 minutes
-	total time  =          1 seconds =       0.02 minutes
+	total time  =          0 seconds =       0.00 minutes
 Total time:
-	user time   =       0.31 seconds =       0.01 minutes
+	user time   =       0.28 seconds =       0.00 minutes
 	system time =       0.00 seconds =       0.00 minutes
-	total time  =          1 seconds =       0.02 minutes
+	total time  =          0 seconds =       0.00 minutes
 
 *** tstart() called on osmium
-*** at Sat May  4 00:25:06 2019
+*** at Sun Jun 11 22:51:08 2023
 
 
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
@@ -252,8 +267,8 @@ Total time:
     Name: (STO-3G AUX)
     Role: RIFIT
     Keyword: DF_BASIS_MP2
-    atoms 1   entry O          line   406 file /home/eric/data/opt/apps/python/psi4conda/share/psi4/basis/def2-qzvpp-ri.gbs 
-    atoms 2-3 entry H          line    24 file /home/eric/data/opt/apps/python/psi4conda/share/psi4/basis/def2-qzvpp-ri.gbs 
+    atoms 1   entry O          line   233 file /home/eric/.pyenv/versions/miniforge3-4.10.1-3/envs/psi4-dev/share/psi4/basis/def2-svp-ri.gbs 
+    atoms 2-3 entry H          line    22 file /home/eric/.pyenv/versions/miniforge3-4.10.1-3/envs/psi4-dev/share/psi4/basis/def2-svp-ri.gbs 
 
 	 --------------------------------------------------------
 	                          DF-MP2                         
@@ -267,15 +282,15 @@ Total time:
    => Auxiliary Basis Set <=
 
   Basis Set: (STO-3G AUX)
-    Blend: DEF2-QZVPP-RI
-    Number of shells: 65
-    Number of basis function: 253
-    Number of Cartesian functions: 333
+    Blend: DEF2-SVP-RI
+    Number of shells: 28
+    Number of basis functions: 76
+    Number of Cartesian functions: 85
     Spherical Harmonics?: true
-    Max angular momentum: 5
+    Max angular momentum: 3
 
 	 --------------------------------------------------------
-	                 NBF =     7, NAUX =   253
+	                 NBF =     7, NAUX =    76
 	 --------------------------------------------------------
 	   CLASS    FOCC     OCC    AOCC    AVIR     VIR    FVIR
 	   PAIRS       0       5       5       2       2       0
@@ -284,35 +299,35 @@ Total time:
 	-----------------------------------------------------------
 	 ==================> DF-MP2 Energies <==================== 
 	-----------------------------------------------------------
-	 Reference Energy          =     -74.9644171322638044 [Eh]
+	 Reference Energy          =     -74.9644171322627670 [Eh]
 	 Singles Energy            =      -0.0000000000000000 [Eh]
-	 Same-Spin Energy          =      -0.0021865372227280 [Eh]
-	 Opposite-Spin Energy      =      -0.0358629198241777 [Eh]
-	 Correlation Energy        =      -0.0380494570469056 [Eh]
-	 Total Energy              =     -75.0024665893107141 [Eh]
+	 Same-Spin Energy          =      -0.0021861282758613 [Eh]
+	 Opposite-Spin Energy      =      -0.0358524302098530 [Eh]
+	 Correlation Energy        =      -0.0380385584857143 [Eh]
+	 Total Energy              =     -75.0024556907484765 [Eh]
 	-----------------------------------------------------------
 	 ================> DF-SCS-MP2 Energies <================== 
 	-----------------------------------------------------------
 	 SCS Same-Spin Scale       =       0.3333333333333333 [-]
 	 SCS Opposite-Spin Scale   =       1.2000000000000000 [-]
-	 SCS Same-Spin Energy      =      -0.0007288457409093 [Eh]
-	 SCS Opposite-Spin Energy  =      -0.0430355037890132 [Eh]
-	 SCS Correlation Energy    =      -0.0437643495299225 [Eh]
-	 SCS Total Energy          =     -75.0081814817937271 [Eh]
+	 SCS Same-Spin Energy      =      -0.0007287094252871 [Eh]
+	 SCS Opposite-Spin Energy  =      -0.0430229162518236 [Eh]
+	 SCS Correlation Energy    =      -0.0437516256771107 [Eh]
+	 SCS Total Energy          =     -75.0081687579398846 [Eh]
 	-----------------------------------------------------------
 
 
-*** tstop() called on osmium at Sat May  4 00:25:06 2019
+*** tstop() called on osmium at Sun Jun 11 22:51:08 2023
 Module time:
-	user time   =       0.11 seconds =       0.00 minutes
+	user time   =       0.04 seconds =       0.00 minutes
 	system time =       0.00 seconds =       0.00 minutes
 	total time  =          0 seconds =       0.00 minutes
 Total time:
-	user time   =       0.43 seconds =       0.01 minutes
+	user time   =       0.32 seconds =       0.01 minutes
 	system time =       0.00 seconds =       0.00 minutes
-	total time  =          1 seconds =       0.02 minutes
+	total time  =          0 seconds =       0.00 minutes
 
-    Psi4 stopped on: Saturday, 04 May 2019 12:25AM
-    Psi4 wall time for execution: 0:00:00.45
+    Psi4 stopped on: Sunday, 11 June 2023 10:51PM
+    Psi4 wall time for execution: 0:00:00.42
 
 *** Psi4 exiting successfully. Buy a developer a beer!

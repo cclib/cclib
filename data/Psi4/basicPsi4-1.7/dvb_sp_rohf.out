@@ -1,33 +1,41 @@
 
     -----------------------------------------------------------------------
           Psi4: An Open-Source Ab Initio Electronic Structure Package
-                               Psi4 1.3.1 release
+                               Psi4 1.7 release
 
-                         Git: Rev {HEAD} 2ce1c29 
-
-
-    R. M. Parrish, L. A. Burns, D. G. A. Smith, A. C. Simmonett,
-    A. E. DePrince III, E. G. Hohenstein, U. Bozkaya, A. Yu. Sokolov,
-    R. Di Remigio, R. M. Richard, J. F. Gonthier, A. M. James,
-    H. R. McAlexander, A. Kumar, M. Saitow, X. Wang, B. P. Pritchard,
-    P. Verma, H. F. Schaefer III, K. Patkowski, R. A. King, E. F. Valeev,
-    F. A. Evangelista, J. M. Turney, T. D. Crawford, and C. D. Sherrill,
-    J. Chem. Theory Comput. 13(7) pp 3185--3197 (2017).
-    (doi: 10.1021/acs.jctc.7b00174)
+                         Git: Rev {HEAD} 6ce35a5 
 
 
-                         Additional Contributions by
-    P. Kraus, H. Kruse, M. H. Lechner, M. C. Schieber, R. A. Shaw,
-    A. Alenaizan, R. Galvelis, Z. L. Glick, S. Lehtola, and J. P. Misiewicz
+    D. G. A. Smith, L. A. Burns, A. C. Simmonett, R. M. Parrish,
+    M. C. Schieber, R. Galvelis, P. Kraus, H. Kruse, R. Di Remigio,
+    A. Alenaizan, A. M. James, S. Lehtola, J. P. Misiewicz, M. Scheurer,
+    R. A. Shaw, J. B. Schriber, Y. Xie, Z. L. Glick, D. A. Sirianni,
+    J. S. O'Brien, J. M. Waldrop, A. Kumar, E. G. Hohenstein,
+    B. P. Pritchard, B. R. Brooks, H. F. Schaefer III, A. Yu. Sokolov,
+    K. Patkowski, A. E. DePrince III, U. Bozkaya, R. A. King,
+    F. A. Evangelista, J. M. Turney, T. D. Crawford, C. D. Sherrill,
+    J. Chem. Phys. 152(18) 184108 (2020). https://doi.org/10.1063/5.0006002
+
+                            Additional Code Authors
+    E. T. Seidl, C. L. Janssen, E. F. Valeev, M. L. Leininger,
+    J. F. Gonthier, R. M. Richard, H. R. McAlexander, M. Saitow, X. Wang,
+    P. Verma, M. H. Lechner, A. Jiang, S. Behnle, A. G. Heide,
+    M. F. Herbst, and D. L. Poole
+
+             Previous Authors, Complete List of Code Contributors,
+                       and Citations for Specific Modules
+    https://github.com/psi4/psi4/blob/master/codemeta.json
+    https://github.com/psi4/psi4/graphs/contributors
+    http://psicode.org/psi4manual/master/introduction.html#citing-psifour
 
     -----------------------------------------------------------------------
 
 
-    Psi4 started on: Saturday, 04 May 2019 12:24AM
+    Psi4 started on: Sunday, 11 June 2023 10:51PM
 
-    Process ID: 67554
+    Process ID: 69077
     Host:       osmium
-    PSIDATADIR: /home/eric/data/opt/apps/python/psi4conda/share/psi4
+    PSIDATADIR: /home/eric/.pyenv/versions/miniforge3-4.10.1-3/envs/psi4-dev/share/psi4
     Memory:     500.0 MiB
     Threads:    1
     
@@ -69,16 +77,18 @@ scf_e, scf_wfn = energy('scf', return_wfn=True)
 oeprop(scf_wfn, 'MULLIKEN_CHARGES', 'LOWDIN_CHARGES', 'MULTIPOLE(5)')
 --------------------------------------------------------------------------
 
+Scratch directory: /tmp/
+
 *** tstart() called on osmium
-*** at Sat May  4 00:24:35 2019
+*** at Sun Jun 11 22:51:07 2023
 
    => Loading Basis Set <=
 
     Name: STO-3G
     Role: ORBITAL
     Keyword: BASIS
-    atoms 1-6, 11-12, 15-16  entry C          line    61 file /home/eric/data/opt/apps/python/psi4conda/share/psi4/basis/sto-3g.gbs 
-    atoms 7-10, 13-14, 17-20 entry H          line    19 file /home/eric/data/opt/apps/python/psi4conda/share/psi4/basis/sto-3g.gbs 
+    atoms 1-6, 11-12, 15-16  entry C          line    61 file /home/eric/.pyenv/versions/miniforge3-4.10.1-3/envs/psi4-dev/share/psi4/basis/sto-3g.gbs 
+    atoms 7-10, 13-14, 17-20 entry H          line    19 file /home/eric/.pyenv/versions/miniforge3-4.10.1-3/envs/psi4-dev/share/psi4/basis/sto-3g.gbs 
 
 
          ---------------------------------------------------------
@@ -140,14 +150,14 @@ oeprop(scf_wfn, 'MULLIKEN_CHARGES', 'LOWDIN_CHARGES', 'MULTIPOLE(5)')
   Guess Type is SAD.
   Energy threshold   = 1.00e-06
   Density threshold  = 1.00e-06
-  Integral threshold = 0.00e+00
+  Integral threshold = 1.00e-12
 
   ==> Primary Basis <==
 
   Basis Set: STO-3G
     Blend: STO-3G
     Number of shells: 40
-    Number of basis function: 60
+    Number of basis functions: 60
     Number of Cartesian functions: 60
     Spherical Harmonics?: true
     Max angular momentum: 1
@@ -157,8 +167,8 @@ oeprop(scf_wfn, 'MULLIKEN_CHARGES', 'LOWDIN_CHARGES', 'MULTIPOLE(5)')
     Name: (STO-3G AUX)
     Role: JKFIT
     Keyword: DF_BASIS_SCF
-    atoms 1-6, 11-12, 15-16  entry C          line   203 file /home/eric/data/opt/apps/python/psi4conda/share/psi4/basis/def2-svp-jkfit.gbs 
-    atoms 7-10, 13-14, 17-20 entry H          line    23 file /home/eric/data/opt/apps/python/psi4conda/share/psi4/basis/def2-svp-jkfit.gbs 
+    atoms 1-6, 11-12, 15-16  entry C          line   198 file /home/eric/.pyenv/versions/miniforge3-4.10.1-3/envs/psi4-dev/share/psi4/basis/def2-universal-jkfit.gbs 
+    atoms 7-10, 13-14, 17-20 entry H          line    18 file /home/eric/.pyenv/versions/miniforge3-4.10.1-3/envs/psi4-dev/share/psi4/basis/def2-universal-jkfit.gbs 
 
   -AO BASIS SET INFORMATION:
     Name                   = STO-3G
@@ -300,19 +310,6 @@ oeprop(scf_wfn, 'MULLIKEN_CHARGES', 'LOWDIN_CHARGES', 'MULTIPOLE(5)')
                          0.16885540           0.44463454
     ****
 
-  ==> Pre-Iterations <==
-
-   -------------------------------------------------------
-    Irrep   Nso     Nmo     Nalpha   Nbeta   Ndocc  Nsocc
-   -------------------------------------------------------
-     Ag        25      25       0       0       0       0
-     Bg         5       5       0       0       0       0
-     Au         5       5       0       0       0       0
-     Bu        25      25       0       0       0       0
-   -------------------------------------------------------
-    Total      60      60      35      34      34       1
-   -------------------------------------------------------
-
   ==> Integral Setup <==
 
   DFHelper Memory: AOs need 0.031 GiB; user supplied 0.366 GiB. Using in-core AOs.
@@ -332,33 +329,47 @@ oeprop(scf_wfn, 'MULLIKEN_CHARGES', 'LOWDIN_CHARGES', 'MULTIPOLE(5)')
    => Auxiliary Basis Set <=
 
   Basis Set: (STO-3G AUX)
-    Blend: DEF2-SVP-JKFIT
+    Blend: DEF2-UNIVERSAL-JKFIT
     Number of shells: 310
-    Number of basis function: 930
+    Number of basis functions: 930
     Number of Cartesian functions: 1090
     Spherical Harmonics?: true
     Max angular momentum: 4
 
-  Minimum eigenvalue in the overlap matrix is 1.8147106803E-01.
-  Using Symmetric Orthogonalization.
+  Minimum eigenvalue in the overlap matrix is 1.8581922389E-01.
+  Reciprocal condition number of the overlap matrix is 7.9091442526E-02.
+    Using symmetric orthogonalization.
 
-  SCF Guess: Superposition of Atomic Densities via on-the-fly atomic UHF.
+  ==> Pre-Iterations <==
+
+  SCF Guess: Superposition of Atomic Densities via on-the-fly atomic UHF (no occupation information).
+
+   -------------------------
+    Irrep   Nso     Nmo    
+   -------------------------
+     Ag        25      25 
+     Bg         5       5 
+     Au         5       5 
+     Bu        25      25 
+   -------------------------
+    Total      60      60
+   -------------------------
 
   ==> Iterations <==
 
                            Total Energy        Delta E     RMS |[F,P]|
 
-   @DF-ROHF iter SAD:  -372.47056553946288   -3.72471e+02   0.00000e+00 
-   @DF-ROHF iter   1:  -379.52538669697719   -7.05482e+00   4.51750e-03 DIIS
-   @DF-ROHF iter   2:  -379.56371405010066   -3.83274e-02   1.16237e-03 DIIS
-   @DF-ROHF iter   3:  -379.56690499994988   -3.19095e-03   6.56404e-04 DIIS
-   @DF-ROHF iter   4:  -379.56794527259854   -1.04027e-03   2.62260e-04 DIIS
-   @DF-ROHF iter   5:  -379.56849298239661   -5.47710e-04   1.19129e-04 DIIS
-   @DF-ROHF iter   6:  -379.56859196846665   -9.89861e-05   3.44614e-05 DIIS
-   @DF-ROHF iter   7:  -379.56859756664028   -5.59817e-06   7.01546e-06 DIIS
-   @DF-ROHF iter   8:  -379.56859771563177   -1.48991e-07   2.79635e-06 DIIS
-   @DF-ROHF iter   9:  -379.56859776182228   -4.61905e-08   1.50512e-06 DIIS
-   @DF-ROHF iter  10:  -379.56859777921704   -1.73948e-08   6.68057e-07 DIIS
+   @DF-ROHF iter SAD:  -372.47056554136077   -3.72471e+02   0.00000e+00 
+   @DF-ROHF iter   1:  -379.52538669883916   -7.05482e+00   4.51750e-03 DIIS
+   @DF-ROHF iter   2:  -379.56371405195773   -3.83274e-02   1.16237e-03 DIIS
+   @DF-ROHF iter   3:  -379.56690500180730   -3.19095e-03   6.56404e-04 DIIS
+   @DF-ROHF iter   4:  -379.56794527445504   -1.04027e-03   2.62260e-04 DIIS
+   @DF-ROHF iter   5:  -379.56849298425323   -5.47710e-04   1.19129e-04 DIIS
+   @DF-ROHF iter   6:  -379.56859197032293   -9.89861e-05   3.44614e-05 DIIS
+   @DF-ROHF iter   7:  -379.56859756849644   -5.59817e-06   7.01546e-06 DIIS
+   @DF-ROHF iter   8:  -379.56859771748873   -1.48992e-07   2.79635e-06 DIIS
+   @DF-ROHF iter   9:  -379.56859776367901   -4.61903e-08   1.50512e-06 DIIS
+   @DF-ROHF iter  10:  -379.56859778107355   -1.73945e-08   6.68057e-07 DIIS
   Energy and wave function converged.
 
 
@@ -402,15 +413,17 @@ oeprop(scf_wfn, 'MULLIKEN_CHARGES', 'LOWDIN_CHARGES', 'MULTIPOLE(5)')
              Ag    Bg    Au    Bu 
     DOCC [    15,    2,    2,   15 ]
     SOCC [     0,    1,    0,    0 ]
+    NA   [    15,    3,    2,   15 ]
+    NB   [    15,    2,    2,   15 ]
 
-  @DF-ROHF Final Energy:  -379.56859777921704
+  @DF-ROHF Final Energy:  -379.56859778107355
 
    => Energetics <=
 
     Nuclear Repulsion Energy =            445.9369798670570049
-    One-Electron Energy =               -1386.0237500151833956
-    Two-Electron Energy =                 560.5181723689092905
-    Total Energy =                       -379.5685977792170434
+    One-Electron Energy =               -1386.0237500156042643
+    Two-Electron Energy =                 560.5181723674736531
+    Total Energy =                       -379.5685977810735494
 
 Computation Completed
 
@@ -419,18 +432,20 @@ Properties will be evaluated at   0.000000,   0.000000,   0.000000 [a0]
 
 Properties computed using the SCF density matrix
 
-  Nuclear Dipole Moment: [e a0]
-     X:     0.0000      Y:     0.0000      Z:     0.0000
 
-  Electronic Dipole Moment: [e a0]
-     X:     0.0000      Y:     0.0000      Z:     0.0000
+ Multipole Moments:
 
-  Dipole Moment: [e a0]
-     X:     0.0000      Y:     0.0000      Z:     0.0000     Total:     0.0000
+ ------------------------------------------------------------------------------------
+     Multipole            Electronic (a.u.)      Nuclear  (a.u.)        Total (a.u.)
+ ------------------------------------------------------------------------------------
 
-  Dipole Moment: [D]
-     X:     0.0000      Y:     0.0000      Z:     0.0000     Total:     0.0000
+ L = 1.  Multiply by 2.5417464519 to convert [e a0] to [Debye]
+ Dipole X            :          0.0000000            0.0000000            0.0000000
+ Dipole Y            :          0.0000000            0.0000000            0.0000000
+ Dipole Z            :          0.0000000            0.0000000            0.0000000
+ Magnitude           :                                                    0.0000000
 
+ ------------------------------------------------------------------------------------
 
   ==> Molecular Orbitals <==
 
@@ -446,12 +461,12 @@ Properties computed using the SCF density matrix
  8    C2 p0         0.0000000    0.0000000    0.0000000    0.0000000    0.0000000
  9    C2 p+1        0.0008748   -0.0006530    0.0005229   -0.0016450    0.0023755
  10   C2 p-1       -0.0000440    0.0000037   -0.0034483    0.0023908    0.0013052
- 11   C3 s0         0.0011786    0.0006590    0.2187796   -0.1468932   -0.6666343
+ 11   C3 s0         0.0011786    0.0006590    0.2187797   -0.1468932   -0.6666343
  12   C3 s0        -0.0049649   -0.0046664    0.0030617   -0.0005973   -0.0256316
  13   C3 p0         0.0000000    0.0000000    0.0000000    0.0000000    0.0000000
  14   C3 p+1        0.0019371    0.0020089   -0.0027578    0.0030141   -0.0012660
  15   C3 p-1        0.0024268    0.0024357    0.0002339   -0.0004529    0.0011398
- 16   C4 s0        -0.0011786    0.0006590   -0.2187796   -0.1468932    0.6666343
+ 16   C4 s0        -0.0011786    0.0006590   -0.2187797   -0.1468932    0.6666343
  17   C4 s0         0.0049649   -0.0046664   -0.0030617   -0.0005973    0.0256316
  18   C4 p0         0.0000000    0.0000000    0.0000000    0.0000000    0.0000000
  19   C4 p+1        0.0019371   -0.0020089   -0.0027578   -0.0030141   -0.0012660
@@ -1251,15 +1266,15 @@ Properties computed using the SCF density matrix
 
 
 
-*** tstop() called on osmium at Sat May  4 00:24:37 2019
+*** tstop() called on osmium at Sun Jun 11 22:51:10 2023
 Module time:
-	user time   =       2.87 seconds =       0.05 minutes
-	system time =       0.04 seconds =       0.00 minutes
-	total time  =          2 seconds =       0.03 minutes
+	user time   =       2.42 seconds =       0.04 minutes
+	system time =       0.02 seconds =       0.00 minutes
+	total time  =          3 seconds =       0.05 minutes
 Total time:
-	user time   =       2.87 seconds =       0.05 minutes
-	system time =       0.04 seconds =       0.00 minutes
-	total time  =          2 seconds =       0.03 minutes
+	user time   =       2.42 seconds =       0.04 minutes
+	system time =       0.02 seconds =       0.00 minutes
+	total time  =          3 seconds =       0.05 minutes
 
 
 Properties will be evaluated at   0.000000,   0.000000,   0.000000 [a0]
@@ -1268,23 +1283,27 @@ OEProp: No title given, name of density matrix used for the following properties
  Multipole Moments:
 
  ------------------------------------------------------------------------------------
-     Multipole             Electric (a.u.)       Nuclear  (a.u.)        Total (a.u.)
+     Multipole            Electronic (a.u.)      Nuclear  (a.u.)        Total (a.u.)
  ------------------------------------------------------------------------------------
 
- L = 1.  Multiply by 2.5417464519 to convert to Debye
+ L = 1.  Multiply by 2.5417464519 to convert [e a0] to [Debye]
  Dipole X            :          0.0000000            0.0000000            0.0000000
  Dipole Y            :          0.0000000            0.0000000            0.0000000
  Dipole Z            :          0.0000000            0.0000000            0.0000000
+ Magnitude           :                                                    0.0000000
 
- L = 2.  Multiply by 1.3450342976 to convert to Debye.ang
+ L = 2.  Multiply by 1.3450342976 to convert [e a0^2] to [Debye ang]
  Quadrupole XX       :      -1506.7463152         1496.8839879           -9.8623273
  Quadrupole XY       :         -9.9450921           11.4580037            1.5129116
  Quadrupole XZ       :          0.0000000            0.0000000            0.0000000
  Quadrupole YY       :       -278.0444137          244.8754365          -33.1689773
  Quadrupole YZ       :          0.0000000            0.0000000            0.0000000
  Quadrupole ZZ       :        -41.9933881            0.0000000          -41.9933881
+ Traceless XX        :       -897.8182762          916.2975131           18.4792369
+ Traceless YY        :        330.8836253         -335.7110383           -4.8274130
+ Traceless ZZ        :        566.9346509         -580.5864748          -13.6518239
 
- L = 3.  Multiply by 0.7117614979 to convert to Debye.ang^2
+ L = 3.  Multiply by 0.7117614979 to convert [e a0^3] to [Debye ang^2]
  Octupole XXX        :          0.0000000            0.0000000            0.0000000
  Octupole XXY        :          0.0000000            0.0000000            0.0000000
  Octupole XXZ        :          0.0000000            0.0000000            0.0000000
@@ -1296,11 +1315,11 @@ OEProp: No title given, name of density matrix used for the following properties
  Octupole YZZ        :          0.0000000            0.0000000            0.0000000
  Octupole ZZZ        :          0.0000000            0.0000000            0.0000000
 
- L = 4.  Multiply by 0.3766479641 to convert to Debye.ang^3
+ L = 4.  Multiply by 0.3766479641 to convert [e a0^4] to [Debye ang^3]
  Hexadecapole XXXX   :     -71811.0207223        68490.6488536        -3320.3718687
  Hexadecapole XXXY   :      -2425.2916105         2491.6209064           66.3292959
  Hexadecapole XXXZ   :          0.0000000            0.0000000            0.0000000
- Hexadecapole XXYY   :      -3551.3057343         2641.3398160         -909.9659184
+ Hexadecapole XXYY   :      -3551.3057343         2641.3398160         -909.9659183
  Hexadecapole XXYZ   :          0.0000000            0.0000000            0.0000000
  Hexadecapole XXZZ   :       -934.6909219            0.0000000         -934.6909219
  Hexadecapole XYYY   :         27.4559324          -48.3518189          -20.8958865
@@ -1313,7 +1332,7 @@ OEProp: No title given, name of density matrix used for the following properties
  Hexadecapole YZZZ   :          0.0000000            0.0000000            0.0000000
  Hexadecapole ZZZZ   :       -120.8469531            0.0000000         -120.8469531
 
- L = 5.  Multiply by 0.1993135191 to convert to Debye.ang^4
+ L = 5.  Multiply by 0.1993135191 to convert [e a0^5] to [Debye ang^4]
  32-pole XXXXX       :          0.0000000            0.0000000            0.0000000
  32-pole XXXXY       :          0.0000000            0.0000000            0.0000000
  32-pole XXXXZ       :          0.0000000            0.0000000            0.0000000
@@ -1336,7 +1355,7 @@ OEProp: No title given, name of density matrix used for the following properties
  32-pole YZZZZ       :          0.0000000            0.0000000            0.0000000
  32-pole ZZZZZ       :          0.0000000            0.0000000            0.0000000
 
- --------------------------------------------------------------------------------
+ ------------------------------------------------------------------------------------
   Mulliken Charges: (a.u.)
    Center  Symbol    Alpha    Beta     Spin     Total
        1     C     3.06894  2.83312  0.23582  0.09794
@@ -1387,7 +1406,7 @@ OEProp: No title given, name of density matrix used for the following properties
 
   Total alpha = 35.00000, Total beta = 34.00000, Total charge =  1.00000
 
-    Psi4 stopped on: Saturday, 04 May 2019 12:24AM
-    Psi4 wall time for execution: 0:00:02.99
+    Psi4 stopped on: Sunday, 11 June 2023 10:51PM
+    Psi4 wall time for execution: 0:00:02.61
 
 *** Psi4 exiting successfully. Buy a developer a beer!
