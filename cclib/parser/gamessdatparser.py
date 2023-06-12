@@ -150,7 +150,7 @@ class GAMESSDAT(logfileparser.Logfile):
         # H            0.84006   0.15994   0.88942   0.11058
         # H            0.84006   0.15994   0.88942   0.11058
 
-        if "POPULATION ANALYSIS" in line:
+        if line[1:20] == "POPULATION ANALYSIS":
 
             self.metadata["population"] = []
 
@@ -167,22 +167,20 @@ class GAMESSDAT(logfileparser.Logfile):
                 }
                 self.metadata["population"].append(atom_info)
                 line = next(inputfile).strip()
+        
+        line = next(inputfile).strip()
 
         # Extracting Moments at Point
 
         # MOMENTS AT POINT    1 X,Y,Z=  0.075831  0.100631  0.000000
         # MP2 NATURAL ORBITALS, E(MP2)=      -75.0022821133
 
-        # if "MOMENTS AT POINT" in line:
-        #     coordinates_pattern = r"X,Y,Z=\s+([\d.-]+)\s+([\d.-]+)\s+([\d.-]+)"
-        #     coordinates_match = re.match(coordinates_pattern, line)
-            
-        #     if coordinates_match:
-        #         self.moments = [
-        #             float(coordinates_match.group(1)),
-        #             float(coordinates_match.group(2)),
-        #             float(coordinates_match.group(3))
-        #         ]
+        if line[1:17] == "MOMENTS AT POINT":
+            moment_line = line.split("=")[1].strip()
+            moment_values = moment_line.split()[1:]
+            self.moments = [float(value) for value in moment_values]
+
+        line = next(inputfile).strip()
 
         # Extracting Dipole
 
