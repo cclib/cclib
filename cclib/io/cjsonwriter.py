@@ -127,14 +127,14 @@ class CJSON(filewriter.Writer):
             cjson_dict['inputParameters'] = dict()         
             cclib_to_json_keys = {'theory':'methods'}
             for i in  ['run_date','basis_set','theory','dispersion','functional','grid','memory','processors','qm_program']:
-             if i in self.ccdata.metadata:
-                if i == 'run_date':
-                    cjson_dict['metadata'] = {'run_date':self.ccdata.metadata['run_date']}
-                else:
-                    if i == 'theory':
-                        cjson_dict['inputParameters'][cclib_to_json_keys[i]] = self.ccdata.metadata[i]
+                if i in self.ccdata.metadata:
+                    if i == 'run_date':
+                        cjson_dict['metadata'] = {'run_date':self.ccdata.metadata['run_date']}
                     else:
-                        cjson_dict['inputParameters'][i] = self.ccdata.metadata[i]
+                        if i == 'theory':
+                            cjson_dict['inputParameters'][cclib_to_json_keys[i]] = self.ccdata.metadata[i]
+                        else:
+                            cjson_dict['inputParameters'][i] = self.ccdata.metadata[i]
 
 
         # Bond attributes:
