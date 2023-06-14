@@ -787,11 +787,7 @@ class Psi4(logfileparser.Logfile):
             # IRC calculations currently aren't parsed properly for
             # optimization parameters.
             if hasattr(self, 'geovalues'):
-
-                if not hasattr(self, 'optdone'):
-                    self.optdone = []
-                self.optdone.append(len(self.geovalues))
-
+                self.append_attribute("optdone", len(self.geovalues))
                 assert hasattr(self, "optstatus") and len(self.optstatus) > 0
                 self.optstatus[-1] += data.ccData.OPT_DONE
 
