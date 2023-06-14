@@ -11,6 +11,7 @@ from collections import namedtuple
 import re
 
 import numpy
+from packaging.version import parse as parse_version
 
 from cclib.parser import data
 from cclib.parser import logfileparser
@@ -117,6 +118,7 @@ class Psi4(logfileparser.Logfile):
                 dev_flag = "" if "dev" in package_version else ".dev"
                 package_version = f"{package_version}{dev_flag}+{revision}"
             self.metadata["package_version"] = package_version
+            self.package_version = parse_version(package_version)
 
         # This will automatically change the section attribute for Psi4, when encountering
         # a line that <== looks like this ==>, to whatever is in between.
@@ -734,7 +736,13 @@ class Psi4(logfileparser.Logfile):
                 self.optstatus = []
             self.optstatus.append(data.ccData.OPT_UNKNOWN)
 
-            self.skip_lines(inputfile, ['b', 'units', 'b', 'comment', 'b', 'dash+tilde', 'header', 'dash+tilde'])
+            self.skip_lines(inputfile, ["b", "units"])
+            if self.package_version.minor >= 7:
+                self.skip_line(inputfile, "b")
+            self.skip_line(inputfile, "comment")
+            if self.package_version.minor >= 7:
+                self.skip_line(inputfile, "b")
+            self.skip_lines(inputfile, ["dash+tilde", "header", "dash+tilde"])
 
             # These are the position in the line at which numbers should start.
             starts = [27, 41, 55, 69, 83]
