@@ -1237,12 +1237,12 @@ class Psi4(logfileparser.Logfile):
         line = next(inputfile)
         assert 'Reduced mass' in line
         chomp = line.split()
-        vibrmasses = [utils.float(x) for x in chomp[3:]]
+        vibrmasses = [float(x) for x in chomp[3:]]
 
         line = next(inputfile)
         assert 'Force const' in line
         chomp = line.split()
-        vibfconsts = [utils.float(x) for x in chomp[3:]]
+        vibfconsts = [float(x) for x in chomp[3:]]
 
         line = next(inputfile)
         assert 'Turning point' in line
@@ -1253,7 +1253,7 @@ class Psi4(logfileparser.Logfile):
         line = next(inputfile)
         if 'IR activ' in line:
             chomp = line.split()
-            vibirs = [utils.float(x) for x in chomp[3:]]
+            vibirs = [float(x) for x in chomp[3:]]
             line = next(inputfile)
         else:
             vibirs = []
