@@ -2208,7 +2208,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             start, stop = 11, 26
         elif chargestype == 'hirshfeld':
             should_stop = lambda x: not bool(x.strip())
-            start, stop = 9, 17
+            start, stop = 9, 18
             self.skip_lines(
                 inputfile,
                 [
