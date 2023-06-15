@@ -127,21 +127,28 @@ class GAMESSDAT(logfileparser.Logfile):
         #  7  2-8.08915389E-01 8.08915850E-01
         #  $END   
 
-        # Extract vector information 
+        # Extract vector information
+        # For now it just splits the lines into numbers and appends as an 
+        # array of strings. It still needs
+        # After formatting, the extracted vectors will populate self.mocoeffs
 
         if line[0:5] == "$VEC":
 
             self.metadata["vectors"] = []
 
             while "$END" not in line:
+                
                 line = next(inputfile).strip()
-                fields = line.split()
-                vector_info = {
-                    "atom_index": int(fields[0]),
-                    "component": int(fields[1]),
-                    "values": [float(value) for value in fields[2:]]
-                }
-                self.metadata["vectors"].append(vector_info)
+                line_number = line.split()[0]
+
+                if not self.metadata["vectors"]:
+                    self.metadata["vectors"].append(line.split()[1:])
+
+                elif line_number == str(len(self.metadata["vectors"])):
+                    self.metadata["vectors"][-1].extend(line.split()[1:])
+
+                else:
+                    self.metadata["vectors"].append(line.split()[1:])
 
         # Extracting Population Analysis
 
@@ -207,3 +214,28 @@ class GAMESSDAT(logfileparser.Logfile):
             
         #     if energy_match:
         #         self.mpenergies = float(energy_match.group(1))
+
+
+        # Extracting Gaussian
+
+        # ----- TOP OF INPUT FILE FOR BADER'S AIMPAC PROGRAM -----
+        # water                                                                           
+        # GAUSSIAN              7 MOL ORBITALS     21 PRIMITIVES        3 NUCLEI
+        #   O    1    (CENTRE  1)   0.00000000  0.00000000  0.00000000  CHARGE =  8.0
+        #   H    2    (CENTRE  2)   1.87082873  0.00000000  0.00000000  CHARGE =  1.0
+        #   H    3    (CENTRE  3)  -0.51567032  1.79835585  0.00000000  CHARGE =  1.0
+
+        # Extracting Centre Assignments
+
+        # CENTRE ASSIGNMENTS    1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  2  2  2  3  3
+        # CENTRE ASSIGNMENTS    3
+        # TYPE ASSIGNMENTS      1  1  1  1  1  1  2  2  2  3  3  3  4  4  4  1  1  1  1  1
+        # TYPE ASSIGNMENTS      1
+
+        # Extracting Exponents
+
+        # EXPONENTS  1.3070932E+02 2.3808866E+01 6.4436083E+00 5.0331513E+00 1.1695961E+00
+        # EXPONENTS  3.8038896E-01 5.0331513E+00 1.1695961E+00 3.8038896E-01 5.0331513E+00
+        # EXPONENTS  1.1695961E+00 3.8038896E-01 5.0331513E+00 1.1695961E+00 3.8038896E-01
+        # EXPONENTS  3.4252509E+00 6.2391373E-01 1.6885540E-01 3.4252509E+00 6.2391373E-01
+        # EXPONENTS  1.6885540E-01
