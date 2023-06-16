@@ -201,17 +201,15 @@ class GAMESSDAT(logfileparser.Logfile):
                     "y": float(match.group(2)),
                     "z": float(match.group(3))
                 }
+                
+        line = next(inputfile).strip()
         
         # Extracting MP2 Energy Value
 
         # MP2 NATURAL ORBITALS, E(MP2)=      -75.0022821133
         
-        # if "E(MP2)=" in line:
-        #     energy_pattern = r"E\(MP2\)=\s+([\d.-]+)"
-        #     energy_match = re.search(energy_pattern, line)
-            
-        #     if energy_match:
-        #         self.mpenergies = float(energy_match.group(1))
+        if "E(MP2)=" in line:
+            self.mpenergies = float(line.split()[-1])
 
 
         # Extracting Gaussian
