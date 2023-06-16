@@ -128,27 +128,25 @@ class GAMESSDAT(logfileparser.Logfile):
         #  $END   
 
         # Extract vector information
-        # For now it just splits the lines into numbers and appends as an 
-        # array of strings. It still needs
         # After formatting, the extracted vectors will populate self.mocoeffs
 
         if line[0:5] == "$VEC":
 
-            self.metadata["vectors"] = []
-
             while "$END" not in line:
                 
                 line = next(inputfile).strip()
+                line = line.replace('-', ' -').replace('E -', 'E-')
+                vectors = [float(vec) for vec in line.split()[1:]]
                 line_number = line.split()[0]
 
-                if not self.metadata["vectors"]:
-                    self.metadata["vectors"].append(line.split()[1:])
+                if not self.mocoeffs:
+                    self.mocoeffs.append(vectors)
 
-                elif line_number == str(len(self.metadata["vectors"])):
-                    self.metadata["vectors"][-1].extend(line.split()[1:])
+                elif line_number == str(len(self.mocoeffs)):
+                    self.mocoeffs[-1].extend(vectors)
 
-                else:
-                    self.metadata["vectors"].append(line.split()[1:])
+                elif len(vectors) > 0:
+                    self.mocoeffs.append(vectors)
 
         # Extracting Population Analysis
 
