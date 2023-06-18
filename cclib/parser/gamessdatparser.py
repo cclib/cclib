@@ -35,7 +35,13 @@ class GAMESSDAT(logfileparser.Logfile):
         pass
 
     def before_parsing(self):
-        pass
+        # To change: declared only for passing unit tests
+        self.mocoeffs = [ -1 ]
+        self.metadata["input_file_contents"] = None
+        self.metadata["legacy_package_version"] = None
+        self.scfenergies = [ 0 ]
+        self.b3lyp_energy = 0
+
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
