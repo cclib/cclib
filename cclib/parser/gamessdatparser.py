@@ -64,22 +64,22 @@ class GAMESSDAT(logfileparser.Logfile):
             name = line.split('\n')[0].strip()
             self.metadata["name"] = name
 
-        # Extract atomic information
+            # Extract atomic information
 
-        atomic_data = []
-        line = next(inputfile)
-
-        while line.strip() != "$END":
-            parts = line.split()
-            if len(parts) >= 2:
-                symbol = parts[0]
-                mass = float(parts[1])
-                coordinates = [float(coord) for coord in parts[2:]]
-                atom_info = {"symbol": symbol, "mass": mass, "coordinates": coordinates}
-                atomic_data.append(atom_info)
+            atomic_data = []
             line = next(inputfile)
+
+            while line.strip() != "$END":
+                parts = line.split()
+                if len(parts) >= 2:
+                    symbol = parts[0]
+                    mass = float(parts[1])
+                    coordinates = [float(coord) for coord in parts[2:]]
+                    atom_info = {"symbol": symbol, "mass": mass, "coordinates": coordinates}
+                    atomic_data.append(atom_info)
+                line = next(inputfile)
         
-        self.metadata["atoms"] = atomic_data
+            self.metadata["atoms"] = atomic_data
 
         # Extract energy
 
@@ -87,26 +87,30 @@ class GAMESSDAT(logfileparser.Logfile):
         # water                                                                           
         # E(RHF)=      -74.9643287920, E(NUC)=    8.8870072224,   13 ITERS
 
-        while "E (RHF)" not in line:
-            line = next(inputfile)
+        # while "E(RHF)" not in line:
+        #     line = next(inputfile)
 
         # Extract E(RHF) value
 
-        if line.startswith("E(RHF)="):
-            rhf_value = float(line.split("=")[1].strip())
-            self.scfenergies = [ rhf_value ]
+        if "E(R" in line:
+            val_pattern = r"E\(R[^,]+"
+            match = re.search(val_pattern, line)
+            val = float(match.group().split(' ')[-1])
+            self.scfenergies = [ val ]
 
         # Extract E(NUC) value 
 
         if "E(NUC)=" in line:
-            nuc_value = float(line.split("=")[1].strip())
+            pattern_e_nuc = r"E\(NUC[^,]+"
+            match_e_nuc = re.search(pattern_e_nuc, line)
+            nuc_value = float(match_e_nuc.group().split(' ')[-1].strip())
             self.metadata["E_NUC"] = nuc_value
 
         # Extract number of ITERS 
 
-        if "ITERS" in line:
-            iters_value = int(line.split()[0])
-            self.metadata["ITERS"] = iters_value
+        # if "ITERS" in line:
+        #     iters_value = int(line.split()[-1])
+        #     self.metadata["ITERS"] = iters_value
 
         # Extract vectors
 
@@ -130,13 +134,15 @@ class GAMESSDAT(logfileparser.Logfile):
         # Extract vector information
         # After formatting, the extracted vectors will populate self.mocoeffs
 
-        if line[0:5] == "$VEC":
+        if line[1:5] == "$VEC":
+
+            self.mocoeffs = []
 
             while "$END" not in line:
                 
-                line = next(inputfile).strip()
-                line = line.replace('-', ' -').replace('E -', 'E-')
-                vectors = [float(vec) for vec in line.split()[1:]]
+                line = next(inputfile)
+                vec_line = line.replace('-', ' -').replace('E -', 'E-').strip()
+                vectors = [float(vec) for vec in vec_line.split()[1:]]
                 line_number = line.split()[0]
 
                 if not self.mocoeffs:
@@ -161,7 +167,7 @@ class GAMESSDAT(logfileparser.Logfile):
 
             line = next(inputfile)
             
-            while line[0] != ' ':
+            while 'MOMENTS AT POINT' not in line:
                 fields = line.split()
                 atom_info = {
                     "atom": fields[0],
@@ -173,7 +179,6 @@ class GAMESSDAT(logfileparser.Logfile):
                 self.metadata["population"].append(atom_info)
                 line = next(inputfile).strip()
         
-        line = next(inputfile).strip()
 
         # Extracting Moments at Point
 
@@ -185,7 +190,6 @@ class GAMESSDAT(logfileparser.Logfile):
             moment_values = moment_line.split()[1:]
             self.moments = [float(value) for value in moment_values]
 
-        line = next(inputfile).strip()
 
         # Extracting Dipole
 
@@ -202,7 +206,6 @@ class GAMESSDAT(logfileparser.Logfile):
                     "z": float(match.group(3))
                 }
                 
-        line = next(inputfile).strip()
         
         # Extracting MP2 Energy Value
 
