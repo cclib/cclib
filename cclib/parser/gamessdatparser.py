@@ -136,6 +136,43 @@ class GAMESSDAT(logfileparser.Logfile):
         #   H    2    (CENTRE  2)   1.87082873  0.00000000  0.00000000  CHARGE =  1.0
         #   H    3    (CENTRE  3)  -0.51567032  1.79835585  0.00000000  CHARGE =  1.0
 
+        if line[0:8] == "GAUSSIAN":
+            pattern_info = r"(\d+)\s+(\w+)\s+(\d+)\s+(\w+)\s+(\d+)\s+(\w+)"
+
+            match = re.match(pattern_info, line)
+
+            if match:
+                self.metadata['gaussian_version'] = int(match.group(1))
+                self.metadata['num_mol_orbitals'] = int(match.group(3))
+                self.metadata['num_primitives'] = int(match.group(5))
+                self.metadata['num_nuclei'] = int(match.group(7))
+
+            line = next(inputfile)
+
+            atom_info = []
+
+            while 'CENTRE' in line:
+
+                parts = line.split()
+                symbol = parts[0]
+                atom_number = int(parts[1])
+                centre_number = int(parts[3][:-1])
+                val1 = float(parts[4])
+                val2 = float(parts[5])
+                val3 = float(parts[6])
+                charge = float(parts[-1])
+
+                atom_info.append((symbol, atom_number, centre_number, val1, val2, val3, charge))
+
+                line = next(inputfile)
+                
+            self.metadata['atom_info'] = atom_info
+
+
+        
+
+
+
         # Extracting Centre Assignments
 
         # CENTRE ASSIGNMENTS    1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  2  2  2  3  3
