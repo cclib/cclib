@@ -812,9 +812,16 @@ class Psi4(logfileparser.Logfile):
         # Properties will be evaluated at   0.000000,   0.000000,   0.000000 [a0]
         #
         if "Properties will be evaluated at" in line.strip():
-            self.origin = numpy.array([float(x.strip(',')) for x in line.split()[-4:-1]])
-            assert line.split()[-1] in ["Bohr", "[a0]"]
-            self.origin = utils.convertor(self.origin, 'bohr', 'Angstrom')
+            tokens = line.split()
+            assert tokens[-1] in ["Bohr", "[a0]"]
+            self.set_attribute(
+                "origin",
+                utils.convertor(
+                    numpy.array([float(x.strip(',')) for x in line.split()[-4:-1]]),
+                    'bohr',
+                    'Angstrom'
+                )
+            )
 
         # The properties section print the molecular dipole moment:
         #
