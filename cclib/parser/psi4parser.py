@@ -174,14 +174,22 @@ class Psi4(logfileparser.Logfile):
             self.metadata['symmetry_detected'] = point_group_full
             self.metadata['symmetry_used'] = point_group_abelian
 
-        if (self.section == "Geometry") and ("Geometry (in Angstrom), charge" in line):
+        if (self.section == "Geometry") and ("Geometry (in" in line):
+            tokens = line.split()
 
-            assert line.split()[3] == "charge"
-            charge = int(line.split()[5].strip(','))
+            units = tokens[2][:-2]
+            assert units in ("Angstrom", "Bohr")
+            if units == "Bohr":
+                convert_coords = lambda x: utils.convertor(x, "bohr", "Angstrom")
+            else:
+                convert_coords = lambda x: x
+
+            assert tokens[3] == "charge"
+            charge = int(tokens[5].strip(','))
             self.set_attribute('charge', charge)
 
-            assert line.split()[6] == "multiplicity"
-            mult = int(line.split()[8].strip(':'))
+            assert tokens[6] == "multiplicity"
+            mult = int(tokens[8].strip(':'))
             self.set_attribute('mult', mult)
 
             self.skip_line(inputfile, "blank")
@@ -202,7 +210,9 @@ class Psi4(logfileparser.Logfile):
                 if len(el) > 1:
                     el = el[0] + el[1:].lower()
                 elements.append(el)
-                coords.append([float(x), float(y), float(z)])
+                coords.append(
+                    convert_coords(numpy.asarray([float(x), float(y), float(z)]))
+                )
                 # Newer versions of Psi4 print atomic masses.
                 if len(chomp) == 5:
                     atommasses.append(float(chomp[4]))
@@ -211,15 +221,12 @@ class Psi4(logfileparser.Logfile):
             # The 0 is to handle the presence of ghost atoms.
             self.set_attribute('atomnos', [self.table.number.get(el, 0) for el in elements])
 
-            if not hasattr(self, 'atomcoords'):
-                self.atomcoords = []
-
             # This condition discards any repeated coordinates that Psi print. For example,
             # geometry optimizations will print the coordinates at the beginning of and SCF
             # section and also at the start of the gradient calculation.
-            if len(self.atomcoords) == 0 \
-                or (self.atomcoords[-1] != coords and not hasattr(self, 'finite_difference')):
-                self.atomcoords.append(coords)
+            if not hasattr(self, "atomcoords") \
+                or (not numpy.array_equal(self.atomcoords[-1], coords) and not hasattr(self, 'finite_difference')):
+                self.append_attribute("atomcoords", coords)
 
             if len(atommasses) > 0:
                 if not hasattr(self, 'atommasses'):
