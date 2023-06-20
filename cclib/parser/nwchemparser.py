@@ -1281,10 +1281,7 @@ class NWChem(logfileparser.Logfile):
                 vibfreqs.append(float(line.split()[1]))
                 self.append_attribute("vibirs", float(line.split()[5]))
                 line = next(inputfile)  # next line
-<<<<<<< HEAD
             self.set_attribute("vibfreqs", vibfreqs)
-=======
-
         # properties related to symmetry
         if line.strip().find('symmetry #') != -1:
             symmno = int(line.strip().split()[-1][0:-1])
@@ -1303,10 +1300,9 @@ class NWChem(logfileparser.Logfile):
             while line.strip().startswith('B=') or line.strip().startswith('C='):
                 roconst.append(float(line.strip().split()[1])*29.9792458)
                 rotemp.append(float(line.strip().split()[4]))
-            self.set_attribute('roconst', roconst)
-            self.set_attribute('rotemp', rotemp)
+            self.set_attribute('rotconsts', roconst)
+            self.set_attribute('rottemp', rotemp)
 
->>>>>>> e8902e78 (1. NWChem fixes)
         # NWChem TD-DFT excited states transitions
         #
         # Have to deal with :
