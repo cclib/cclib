@@ -788,7 +788,7 @@ class Psi4(logfileparser.Logfile):
         # This message signals a converged optimization, in which case we want
         # to append the index for this step to optdone, which should be equal
         # to the number of geovalues gathered so far.
-        if "Optimization is complete!" in line:
+        if "Final optimized geometry and variables:" in line:
 
             # This is a workaround for Psi4.0/sample_opt-irc-2.out;
             # IRC calculations currently aren't parsed properly for
