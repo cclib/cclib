@@ -895,7 +895,11 @@ class Psi4(logfileparser.Logfile):
                 line = next(inputfile)
                 while line.strip():
 
-                    value = float(line.split()[-1])
+                    tokens = line.split()
+                    if tokens[0] == "Magnitude":
+                        line = next(inputfile)
+                        continue
+                    value = float(tokens[-1])
                     fromunits = f"ebohr{(rank > 1) * f'{int(rank)}'}"
                     tounits = (
                         f"Debye{(rank > 1) * '.ang'}{(rank > 2) * f'{int(rank - 1)}'}"
