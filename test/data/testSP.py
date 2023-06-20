@@ -208,7 +208,7 @@ class GenericSPTest(unittest.TestCase):
         )
 
     @skipForParser('FChk', 'Formatted Checkpoint files do not have a section for SCF energy')
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
+    @skipForParser('GAMESSDAT', 'The parser is still being developed')
     def testscfvaluetype(self):
         """Are scfvalues and its elements the right type??"""
         assert isinstance(self.data.scfvalues, list)

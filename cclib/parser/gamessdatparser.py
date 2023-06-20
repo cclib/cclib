@@ -19,7 +19,7 @@ class GAMESSDAT(logfileparser.Logfile):
     """A GAMESS .dat log file"""
 
     def __init__(self, *args, **kwargs):
-        super().__init__(logname="GAMESS .dat", *args, **kwargs)
+        super().__init__(logname="GAMESSDAT", *args, **kwargs)
 
     def __str__(self):
         """Return a string representation of the object."""
