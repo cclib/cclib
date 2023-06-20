@@ -841,22 +841,24 @@ class Psi4(logfileparser.Logfile):
         if (self.section == "Properties") and line.strip() == "Dipole Moment: (a.u.)":
 
             line = next(inputfile)
-            dipole = numpy.array([float(line.split()[1]), float(line.split()[3]), float(line.split()[5])])
-            dipole = utils.convertor(dipole, "ebohr", "Debye")
+            tokens = line.split()
+            dipole = utils.convertor(
+                numpy.array([float(tokens[1]), float(tokens[3]), float(tokens[5])]),
+                "ebohr",
+                "Debye"
+            )
 
             if not hasattr(self, 'moments'):
                 # Old versions of Psi4 don't print the origin; assume
                 # it's at zero.
                 if not hasattr(self, 'origin'):
-                    self.origin = numpy.array([0.0, 0.0, 0.0])
-                self.moments = [self.origin, dipole]
+                    self.set_attribute("origin", numpy.array([0.0, 0.0, 0.0]))
+                self.set_attribute("moments", [self.origin, dipole])
             else:
                 try:
                     assert numpy.all(self.moments[1] == dipole)
                 except AssertionError:
-                    self.logger.warning('Overwriting previous multipole moments with new values')
-                    self.logger.warning('This could be from post-HF properties or geometry optimization')
-                    self.moments = [self.origin, dipole]
+                    self.set_attribute("moments", [self.origin, dipole])
 
         # Higher multipole moments are printed separately, on demand, in lexicographical order.
         #
