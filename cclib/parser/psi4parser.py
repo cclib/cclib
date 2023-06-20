@@ -896,7 +896,7 @@ class Psi4(logfileparser.Logfile):
                 while line.strip():
 
                     tokens = line.split()
-                    if tokens[0] == "Magnitude":
+                    if tokens[0] in ("Magnitude", "Traceless"):
                         line = next(inputfile)
                         continue
                     value = float(tokens[-1])
@@ -914,7 +914,7 @@ class Psi4(logfileparser.Logfile):
                 line = next(inputfile)
 
             if not hasattr(self, 'moments'):
-                self.moments = moments
+                self.set_attribute("moments", moments)
             else:
                 for im, m in enumerate(moments):
                     if len(self.moments) <= im:
