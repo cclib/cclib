@@ -54,6 +54,9 @@ class ORCA(logfileparser.Logfile):
         # Used to estimate CPU time from wall time.
         self.num_cpu = 1
 
+        # The excited state multiplicity for post-HF excited states
+        self.mdci_et_mult = None
+
     def after_parsing(self):
         # ORCA doesn't add the dispersion energy to the "Total energy" (which
         # we parse), only to the "FINAL SINGLE POINT ENERGY" (which we don't
@@ -1203,7 +1206,8 @@ Dispersion correction           -0.016199959
 
             self.extend_attribute('etenergies', etenergies)
             self.extend_attribute('etsecs', etsecs)
-            self.extend_attribute('etsyms', etsyms)
+            if len(etsyms) > 0:
+                self.extend_attribute('etsyms', etsyms)
 
         # Parse the various absorption spectra for TDDFT and ROCIS.
         if 'ABSORPTION SPECTRUM' in line or 'ELECTRIC DIPOLE' in line:
@@ -1463,6 +1467,149 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 self.logger.warning("etenergies not parsed before ECD section, "
                                     "the output file may be malformed")
                 self.set_attribute("etenergies", etenergies)
+            
+        # Read higher-level excited states (EOM-CCSD etc).
+        # Multiplicity is in a different section to energies.
+        # We can only calculate one type of mult at a time.
+        if "Multiplicity                               ..." in line:
+            self.mdci_et_mult = line.split()[-1].capitalize()
+            
+        if any(x in line for x in ("CIS RESULTS", "ADC(2) RESULTS", "EOM-CCSD RESULTS", "STEOM-CCSD RESULTS")):
+            if self.mdci_et_mult is None and ( "EOM-CCSD" in line or "ADC(2)" in line ):
+                # These methods can only do singlets.
+                # Think this is safe?.
+                self.mdci_et_mult = "Singlet"
+            
+            # CIS prints orbital contributions different to everone else.
+            cis = "CIS RESULTS" in line
+            
+            etsecs = []
+            etenergies = []
+            etsyms = []
+            
+            self.skip_lines(inputfile, ['dashes', 'blank'])
+            line = next(inputfile)
+            while line.find("IROOT=") >= 0:
+                # ------------------
+                # STEOM-CCSD RESULTS
+                # ------------------
+                #
+                # IROOT=  1:  0.120159 au     3.270 eV   26371.8 cm**-1
+                #   Amplitude    Excitation
+                #    0.104201    61 ->  76
+                #    ...
+                #   -0.362075    69 ->  73
+                #   Ground state amplitude:  0.000000
+                # 
+                # Percentage Active Character     99.28
+                # 
+                #   Amplitude    Excitation in Canonical Basis
+                #   -0.158598    64 ->  72
+                #   ...
+                #   -0.111587    69 ->  75
+                # 
+                # IROOT=  2:  0.123788 au     3.368 eV   27168.4 cm**-1
+                #
+                # or:
+                #
+                #  ----------------------
+                #  EOM-CCSD RESULTS (RHS)
+                #  ----------------------
+                #
+                #   IROOT=  1: -0.001688 au    -0.046 eV    -370.5 cm**-1
+                #     Amplitude    Excitation
+                #     -0.693399     x ->  70
+                #   Percentage singles character=     93.46
+                #       
+                #   IROOT=  2:  0.061276 au     1.667 eV   13448.5 cm**-1
+                etenergies.append(float(line.split()[6]))
+                if self.mdci_et_mult is not None:
+                    etsyms.append(self.mdci_et_mult)
+                sec = []
+                # Header line.
+                # There is no header for CIS.
+                if not cis:
+                    line = next(inputfile)
+                # First orbital contribution line.
+                line = next(inputfile)
+                while "->" in line:
+                    coeff_split = line.split()
+                    # CIS prints coefficients after the orbitals, other modules are reversed.
+                    if not cis:
+                        contrib = coeff_split[0]
+                        start = coeff_split[1]
+                        end = coeff_split[3]
+                    else:
+                        # CIS looks like this:
+                        # 32 ->  37    0.037502 (-0.193653)
+                        # 34 ->  35    0.935796 ( 0.967365)
+                        # 34 ->  36    0.014167 (-0.119024)
+                        # Note that sometimes the coefficient has whitespace between the brackets, sometimes not.
+                        start = coeff_split[0]
+                        end = coeff_split[2]
+                        contrib = "".join(coeff_split[4:])[1:-1]
+                    
+                    try:
+                        # TODO: Unrestricted?
+                        sec.append([(int(start), 0), (int(end), 0), float(contrib)])
+                        
+                    except ValueError:
+                        # Sometimes we come across lines like:
+                        # 0.690372    69 -> x
+                        # Ignore these for now.
+                        pass
+                    
+                    line = next(inputfile)
+                
+                # Sort contributions so largest is first.
+                etsecs.append(sorted(sec, key = lambda sec_item: sec_item[2] **2, reverse = True))
+                
+                if "Ground state amplitude" in line:
+                    # Data currently not parsed. Just skip.
+                    line = self.next_filled_line(inputfile)
+                
+                if "Percentage singles character" in line:
+                    # Data currently not parsed. Just skip.
+                    line = self.next_filled_line(inputfile)
+                    
+                # (Possibly) blank line
+                if "IROOT=" in line:
+                    continue
+                elif line.strip() == "":
+                    line = self.next_filled_line(inputfile)
+                
+                if "Percentage Active Character " in line:
+                    # Data currently not parsed. Just skip.
+                    line = self.next_filled_line(inputfile)
+                    
+                if "Warning:: the state may have not converged with respect to active space" in line:
+                    # Skip this line and the next (which both contain warnings).
+                    self.logger.warning(line)
+                    line = next(inputfile)
+                    line = self.next_filled_line(inputfile)
+                
+                if "Amplitude    Excitation in Canonical Basis" in line:
+                    # Data currently not parsed. Just skip.
+                    # Header line.
+                    line = next(inputfile)
+                    while "->" in line:
+                        line = next(inputfile)
+                
+                    line = self.next_filled_line(inputfile)
+            
+            # High level excited states will calculate excited states at a number of levels iteratively.
+            # We only care about the highest, so overwrite anything from before.
+            self.set_attribute('etenergies', etenergies)
+            if sum(len(item) for item in etsecs) != 0:
+                self.set_attribute('etsecs', etsecs)
+            else:
+                self.del_attribute('etsecs')
+                
+            if len(etsyms) > 0:
+                self.set_attribute('etsyms', etsyms)
+            
+            else:
+                self.del_attribute('etsyms')
 
         # ---------------
         # CHEMICAL SHIFTS

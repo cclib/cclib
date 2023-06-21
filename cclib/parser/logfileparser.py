@@ -460,6 +460,14 @@ class Logfile(ABC):
                 )
 
         setattr(self, name, value)
+        
+    def del_attribute(self, name):
+        """Safely remove/delete an attribute, even if it does not exist."""
+        try:
+            delattr(self, name)
+            
+        except AttributeError:
+            pass
 
     def append_attribute(self, name: str, value: Any) -> None:
         """Appends a value to an attribute."""
@@ -551,6 +559,15 @@ class Logfile(ABC):
             lines.append(line)
 
         return lines
+    
+    @staticmethod
+    def next_filled_line(inputfile):
+        """Return the next line that contains something other than whitespace."""
+        while True:
+            line = next(inputfile)
+            
+            if line.strip() != "":
+                return line
 
     skip_line = lambda self, inputfile, expected: self.skip_lines(inputfile, [expected])
 

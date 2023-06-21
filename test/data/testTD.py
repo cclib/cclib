@@ -24,6 +24,7 @@ class GenericTDTest(unittest.TestCase):
 
     number = 5
     expected_l_max = 41000
+    expected_f_max = 0.67
     symmetries = [
             "Singlet-Bu",
             "Singlet-Bu",
@@ -31,6 +32,7 @@ class GenericTDTest(unittest.TestCase):
             "Singlet-Bu",
             "Singlet-Ag",
         ]
+    sumofsec = 1.0
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForLogfile('Turbomole/basicTurbomole7.4/CO_cc2_TD_trip', 'Oscillator strengths are not available for Turbomole triplets using ricc2 but are required for testenergies()')
@@ -49,7 +51,7 @@ class GenericTDTest(unittest.TestCase):
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
         assert len(self.data.etoscs) == self.number
-        assert abs(max(self.data.etoscs) - 0.67) < 0.1
+        assert abs(max(self.data.etoscs) - self.expected_f_max) < 0.1
 
     @skipForParser('FChk','The parser is still being developed so we skip this test')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
@@ -58,7 +60,7 @@ class GenericTDTest(unittest.TestCase):
         assert len(self.data.etsecs) == self.number
         lowestEtrans = self.data.etsecs[numpy.argmin(self.data.etenergies)]
         sumofsec = sum([z*z for (x, y, z) in lowestEtrans])
-        assert abs(sumofsec - 1.0) < 0.16
+        assert abs(sumofsec - self.sumofsec) < 0.16
 
     @skipForParser('FChk', 'This is true for calculations without symmetry, but not with?')
     @skipForParser('DALTON', 'This is true for calculations without symmetry, but not with?')
@@ -71,6 +73,9 @@ class GenericTDTest(unittest.TestCase):
             t[0][2][0] == self.data.homos[0] + 1
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')    
+    @skipForLogfile("ORCA/basicORCA5.0/dvb_adc2.log", "etsyms are not available for this method") 
+    @skipForLogfile("ORCA/basicORCA5.0/dvb_eom_ccsd.log", "etsyms are not available for this method") 
+    @skipForLogfile("ORCA/basicORCA5.0/dvb_pno_eom_ccsd.log", "etsyms are not available for this method") 
     def testsymsnumber(self):
         """Is the length of etsyms correct?"""
         assert len(self.data.etsyms) == self.number
@@ -86,7 +91,7 @@ class GenericTDTest(unittest.TestCase):
     @skipForParser('QChem', 'Q-Chem cannot calculate rotatory strengths')
     @skipForLogfile("ORCA/basicORCA4.2", "etsyms are only available in ORCA >= 5.0") 
     @skipForLogfile("ORCA/basicORCA4.1", "etsyms are only available in ORCA >= 5.0") 
-    @skipForLogfile("Gaussian/basicGaussian09", "symmetry is missing for this log file") 
+    @skipForLogfile("Gaussian/basicGaussian09", "symmetry is missing for this log file")
     def testsyms(self):
         """Are the values of etsyms correct?"""
         assert self.data.etsyms == self.symmetries
@@ -169,11 +174,7 @@ class JaguarTDDFTTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
 
     expected_l_max = 48000
-
-    def testoscs(self):
-        """Is the maximum of etoscs in the right range?"""
-        assert len(self.data.etoscs) == self.number
-        assert abs(max(self.data.etoscs) - 1.0) < 0.2
+    expected_f_max = 1.2
 
 class OrcaTDDFTTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
@@ -203,11 +204,7 @@ class QChemTDDFTTest(GenericTDTest):
 
     number = 10
     expected_l_max = 48000
-
-    def testoscs(self):
-        """Is the maximum of etoscs in the right range?"""
-        assert len(self.data.etoscs) == self.number
-        assert abs(max(self.data.etoscs) - 0.9) < 0.1
+    expected_f_max = 0.9
 
 
 class GenericTDDFTtrpTest(GenericTDTest):
@@ -226,13 +223,9 @@ class OrcaROCISTest(GenericTDTest):
     """Customized test for ROCIS"""
     number = 4
     expected_l_max = 2316970.8
+    expected_f_max = 0.015
     # per 1085, no VELOCITY DIPOLE MOMENTS are parsed
     n_spectra = 7
-
-    def testoscs(self):
-        """Is the maximum of etoscs in the right range?"""
-        assert len(self.data.etoscs) == self.number
-        assert abs(max(self.data.etoscs) - 0.015) < 0.1
 
     def testTransprop(self):
         """Check the number of spectra parsed"""
@@ -275,23 +268,8 @@ class TurbomoleTDTest(GenericTDTest):
     
     number = 10
     expected_l_max = 91432
-    symmetries = [
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        ]
-    
-    def testoscs(self):
-        """Is the maximum of etoscs in the right range?"""
-        assert len(self.data.etoscs) == self.number
-        assert abs(max(self.data.etoscs) - 0.19) < 0.1
+    expected_f_max = 0.19
+    symmetries = ["Singlet-A"] * 10
     
     @skipForLogfile('Turbomole/basicTurbomole7.4/CO_cc2_TD', 'There are no dipole moments in ricc2')
     def testetmagdipsshape(self):
@@ -303,68 +281,43 @@ class TurbomoleTDADC2Test(GenericTDTest):
     
     number = 10
     expected_l_max = 136329
-    symmetries = [
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        "Singlet-A",
-        ]
-    
-    def testoscs(self):
-        """Is the maximum of etoscs in the right range?"""
-        assert len(self.data.etoscs) == self.number
-        assert abs(max(self.data.etoscs) - 0.80) < 0.1
+    expected_f_max = 0.8
+    symmetries = ["Singlet-A"] * 10
 
 class TurbomoleTDTripTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
     
     number = 10
     expected_l_max = 51530
-    symmetries = [
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        ]
-
-    def testoscs(self):
-        """Is the maximum of etoscs in the right range?"""
-        assert len(self.data.etoscs) == self.number
-        assert abs(max(self.data.etoscs) - 0.84) < 0.1
+    expected_f_max = 0.84
+    symmetries = ["Triplet-A"] * 10
         
 class TurbomoleTDCC2TripTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
     # This test is for triplets with ricc2, which does not support oscillator strengths.
     
     number = 10
-    symmetries = [
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        "Triplet-A",
-        ]
+    symmetries = ["Triplet-A"] * 10
 
     def testenergies(self):
         """Is the l_max reasonable?"""
         assert len(self.data.etenergies) == self.number
+
+class OrcaETPostHFTest(GenericTDTest):
+    """Tests for post-HF excited states with ORCA."""
+    
+    number = 2
+    symmetries = ["Singlet", "Singlet"]
+    expected_f_max = 1.0
+    expected_l_max = 60000
+    # Not sure why this value != 1 for these methods?
+    # Perhaps remaining contributions were too small to print? 
+    sumofsec = 0.43
+    
+class OrcaSTEOMCCSDTest(OrcaETPostHFTest):
+    """Test for STEOM-CCSD with Orca."""
+    
+    sumofsec = 1.0
         
 
 if __name__ =="__main__":
