@@ -1,0 +1,13 @@
+ $contrl scftyp=rhf cityp=cis runtyp=energy exetyp=run
+         units=angs
+         AIMPAC=.t. $end
+ $basis  gbasis=sto ngauss=3 $end
+ $cis    hamtyp=dets nstate=10 istate=1 cisprp=.t. $end
+ $data
+water
+C1
+ O   8   0.000000    0.000000    0.000000
+ H   1   0.990000    0.000000    0.000000
+ H   1  -0.272881    0.951649    0.000000
+ $end
+ 

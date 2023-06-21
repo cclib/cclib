@@ -55,6 +55,7 @@ from cclib.parser import ADF
 from cclib.parser import DALTON
 from cclib.parser import FChk
 from cclib.parser import GAMESS
+from cclib.parser import GAMESSDAT
 from cclib.parser import GAMESSUK
 from cclib.parser import Gaussian
 from cclib.parser import Jaguar
