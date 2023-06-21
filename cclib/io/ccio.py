@@ -84,6 +84,7 @@ triggers = [
     (DALTON,    ["Dalton - An Electronic Structure Program"],       True),
     (FChk,      ["Number of atoms", "I"],                           True),
     (GAMESS,    ["GAMESS"],                                         False),
+    (GAMESS,    ["Firefly (PC GAMESS)"],                            True),
     (GAMESS,    ["GAMESS VERSION"],                                 True),
     (GAMESSUK,  ["G A M E S S - U K"],                              True),
     (GAMESSDAT, ["$DATA"],                                          True),
