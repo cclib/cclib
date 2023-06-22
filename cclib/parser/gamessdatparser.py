@@ -207,6 +207,16 @@ class GAMESSDAT(logfileparser.Logfile):
 
         # CENTRE ASSIGNMENTS    1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  2  2  2  3  3
         # CENTRE ASSIGNMENTS    3
+        
+        self.metadata["centre_assignments"] = []
+        
+        while line[0:18] == "CENTRE ASSIGNMENTS":
+            assignments_pattern = re.findall(r'\d+', line)
+            self.metadata["centre_assignments"].extend(assignments_pattern)
+            line = next(inputfile)
+
+        # Extracting Ttype Assignments
+
         # TYPE ASSIGNMENTS      1  1  1  1  1  1  2  2  2  3  3  3  4  4  4  1  1  1  1  1
         # TYPE ASSIGNMENTS      1
 
