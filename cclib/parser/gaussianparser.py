@@ -318,6 +318,11 @@ class Gaussian(logfileparser.Logfile):
         # Solvent information.
         # PCM (the default gaussian solvent method).
         if line[1:34] == "Polarizable Continuum Model (PCM)":
+            # Solvent parameters are unique to each solvent model,
+            # so they are packaged together to prevent clogging the namespace.
+            self.metadata['solvent_params'] = {
+            }
+            
             # Keep looking until dashed only.
             while set(line.strip()) != set("-"):
                 line = next(inputfile)
@@ -327,16 +332,17 @@ class Gaussian(logfileparser.Logfile):
                 if "Model" in line:
                     self.metadata['solvent_model'] = line.split()[-1][:-1]
                     
+                if "Atomic radii" in line:
+                    self.metadata['solvent_params']['radii'] = " ".join(line.split()[3:])[:-1]
+                    
                 # Solvent by keyword.
                 #  Solvent              : Toluene, Eps=   2.374100 Eps(inf)=   2.238315
                 elif "Solvent" in line:
                     # Capture the human readable name, as well as params.
                     self.metadata['solvent_name'] = line.split()[2][:-1]
                     
-                    self.metadata['solvent_params'] = {
-                        "epsilon": float(line.split()[4]),
-                        "epsilon_infinite": float(line.split()[6])
-                    }
+                    self.metadata['solvent_params']['epsilon'] = float(line.split()[4])
+                    self.metadata['solvent_params']['epsilon_infinite'] = float(line.split()[6])
                     
                     # If flat is preferable.
                     #self.metadata['solvent_epsilon'] = float(line.split()[4])
