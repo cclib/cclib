@@ -211,8 +211,8 @@ class GAMESSDAT(logfileparser.Logfile):
         self.metadata["centre_assignments"] = []
 
         while line[0:18] == "CENTRE ASSIGNMENTS":
-            assignments_pattern = re.findall(r'\d+', line)
-            self.metadata["centre_assignments"].extend(assignments_pattern)
+            centre_assignments = re.findall(r'\d+', line)
+            self.metadata["centre_assignments"].extend(centre_assignments)
             line = next(inputfile)
 
         # Extracting Ttype Assignments
@@ -223,8 +223,8 @@ class GAMESSDAT(logfileparser.Logfile):
         self.metadata["type_assignments"] = []
 
         while line[0:16] == "TYPE ASSIGNMENTS":
-            assignments_pattern = re.findall(r'\d+', line)
-            self.metadata["type_assignments"].extend(assignments_pattern)
+            type_assignments = re.findall(r'\d+', line)
+            self.metadata["type_assignments"].extend(type_assignments)
             line = next(inputfile)
 
         # Extracting Exponents
