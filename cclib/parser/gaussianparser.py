@@ -314,6 +314,34 @@ class Gaussian(logfileparser.Logfile):
         # Basis set name
         if line[1:15] == "Standard basis":
             self.metadata["basis_set"] = line.split()[2]
+            
+        # Solvent information.
+        # PCM (the default gaussian solvent method).
+        if line[1:34] == "Polarizable Continuum Model (PCM)":
+            # Keep looking until dashed only.
+            while set(line.strip()) != set("-"):
+                line = next(inputfile)
+                
+                # PCM has a few different subtypes.
+                # Model                : PCM.
+                if "Model" in line:
+                    self.metadata['solvent_model'] = line.split()[-1][:-1]
+                    
+                # Solvent by keyword.
+                #  Solvent              : Toluene, Eps=   2.374100 Eps(inf)=   2.238315
+                elif "Solvent" in line:
+                    # Capture the human readable name, as well as params.
+                    self.metadata['solvent_name'] = line.split()[2][:-1]
+                    
+                    self.metadata['solvent_params'] = {
+                        "epsilon": float(line.split()[4]),
+                        "epsilon_infinite": float(line.split()[6])
+                    }
+                    
+                    # If flat is preferable.
+                    #self.metadata['solvent_epsilon'] = float(line.split()[4])
+                    #self.metadata['solvent_epsilon_infinite'] = float(line.split()[6])
+                
 
         # Dipole moment
         # e.g. from G09
