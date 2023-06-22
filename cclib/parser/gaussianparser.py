@@ -347,7 +347,33 @@ class Gaussian(logfileparser.Logfile):
                     # If flat is preferable.
                     #self.metadata['solvent_epsilon'] = float(line.split()[4])
                     #self.metadata['solvent_epsilon_infinite'] = float(line.split()[6])
-                
+        
+        # Other solvent models are not so easy to parse (have less info).
+        # Reaction Field using a Density IsoSurface Boundary
+        if "Reaction Field using a Density IsoSurface Boundary" in line:
+            self.metadata['solvent_model'] = "IPCM"
+        
+        #  Epsi=   78.3000 Cont =    0.0010
+        if  "Epsi=" in line and "Cont =":
+            if "solvent_params" not in self.metadata:
+                self.metadata['solvent_params'] = {}
+            
+            # PLEASE REVIEW; I've guessed the meaning of these abbreviations.
+            self.metadata['solvent_params']['epsilon'] = float(line.split()[1])
+            self.metadata['solvent_params']['continuity'] = float(line.split()[4])
+        
+        #  Compute SCI-PCM surface.
+        #if line[1:25] == "Compute SCI-PCM surface.":
+        if "Compute SCI-PCM surface" in line:
+            self.metadata['solvent_model'] = "SCI-PCM"
+        
+        # For SCI-PCM.
+        # Dielectric constant of solvent =     2.374100"
+        if line[1:33] == "Dielectric constant of solvent =":
+            if "solvent_params" not in self.metadata:
+                self.metadata['solvent_params'] = {}
+            
+            self.metadata["solvent_params"]['epsilon'] = float(line.split()[2])
 
         # Dipole moment
         # e.g. from G09
@@ -820,7 +846,21 @@ class Gaussian(logfileparser.Logfile):
             while line.find("SCF Done") == -1:
 
                 self.updateprogress(inputfile, "QM convergence", self.fupdate)
-
+                
+                # SCI-PCM solvent info appears in each SCF section...
+                #  Compute SCI-PCM surface.
+                #if line[1:25] == "Compute SCI-PCM surface.":
+                if "Compute SCI-PCM surface" in line:
+                    self.metadata['solvent_model'] = "SCI-PCM"
+                
+                # For SCI-PCM.
+                # Dielectric constant of solvent =     2.374100"
+                if line[1:33] == "Dielectric constant of solvent =":
+                    if "solvent_params" not in self.metadata:
+                        self.metadata['solvent_params'] = {}
+                    
+                    self.metadata["solvent_params"]['epsilon'] = float(line.split()[-1])
+                
                 if line.find(' E=') == 0:
                     self.logger.debug(line)
 
