@@ -1,0 +1,72 @@
+$title
+water_ccsd_Single_Point_HF_Toluene_Pople_Basis_Sets_STO_3G
+$symmetry c1
+$redundant    file=coord
+$user-defined bonds    file=coord
+$coord    file=coord
+$optimize
+ internal   on
+ redundant  on
+ cartesian  off
+ global     off
+ basis      off
+$atoms
+o  1                                                                           \
+   basis =o STO-3G
+h  2-3                                                                         \
+   basis =h STO-3G
+$basis    file=basis
+$scfmo   file=mos
+$closed shells
+ a       1-5                                    ( 2 )
+$scfiterlimit      100
+$scfconv        7
+$thize     0.10000000E-04
+$thime        5
+$scfdamp   start=  0.300  step=  0.050  min=  0.100
+$scfdump
+$scfintunit
+ unit=30       size=0        file=twoint
+$scfdiis
+$maxcor   4768 MiB  per_core
+$scforbitalshift  automatic=.1
+$drvopt
+   cartesian  on
+   basis      off
+   global     off
+   hessian    on
+   dipole     on
+   nuclear polarizability
+$interconversion  off
+   qconv=1.d-7
+   maxiter=25
+$coordinateupdate
+   dqmax=0.3
+   interpolate  on
+   statistics    5
+$forceupdate
+   ahlrichs numgeo=0  mingeo=3 maxgeo=4 modus=<g|dq> dynamic fail=0.3
+   threig=0.005  reseig=0.005  thrbig=3.0  scale=1.00  damping=0.0
+$forceinit on
+   diag=default
+$energy    file=energy
+$grad    file=gradient
+$forceapprox    file=forceapprox
+$disp3 bj
+$denconv     0.10000000E-06
+$rundimensions
+   natoms=3
+   nbf(CAO)=7
+   nbf(AO)=7
+$last step     dscf
+$cosmo
+   epsilon= 2.3741
+   refind= 1.497
+$orbital_max_rnorm 0.86541926417715E-06
+$last SCF energy change = -74.972019
+$charge from dscf
+          0.000 (not to be modified here)
+$dipole from dscf
+  x    -0.00000017673180    y     0.00009009358478    z    -0.67836147412234    a.u.
+   | dipole | =    1.7242359288  debye
+$end

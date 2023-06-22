@@ -633,6 +633,56 @@ class GenericDispersionTest(unittest.TestCase):
 class FireflyDispersionTest(GenericDispersionTest):
     """Customized single-geometry dispersion correction unittest"""
     dispersionenergy = -0.4299821
+    
+
+class SolventMetadataTest(unittest.TestCase):
+    """Check we can parse implicit solvent data."""
+    
+    model = ""
+    # Toluene
+    epsilon = 2.3741
+    
+    def test_solvent_meta(self):
+        """Check"""
+        assert "solvent_model" in self.data.metadata
+        assert "solvent_params" in self.data.metadata
+        assert (self.data.metadata['solvent_params']['epsilon'] - self.epsilon) < 1.0e-4
+        
+class PCMMetadataTest(SolventMetadataTest):
+    """Check we can parse implicit solvent data."""
+
+    model = "PCM"
+    
+class SCIPCMMetadataTest(SolventMetadataTest):
+    """Check we can parse implicit solvent data."""
+
+    model = "SCI-PCM"
+    
+class IPCMMetadataTest(SolventMetadataTest):
+    """Check we can parse implicit solvent data."""
+
+    model = "IPCM"
+    epsilon = 78.3
+    
+class COSMOMetadataTest(SolventMetadataTest):
+    """Check we can parse implicit solvent data."""
+
+    model = "COSMO"
+
+class CPCMMetadataTest(SolventMetadataTest):
+    """Check we can parse implicit solvent data."""
+
+    model = "CPCM"
+    
+class CPCMCOSMOMetadataTest(SolventMetadataTest):
+    """Check we can parse implicit solvent data."""
+
+    model = "CPCM-COSMO"
+    
+class SMDMetadataTest(SolventMetadataTest):
+    """Check we can parse implicit solvent data."""
+
+    model = "SMD"
 
 
 if __name__ == "__main__":

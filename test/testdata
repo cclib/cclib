@@ -327,6 +327,15 @@ SP        Psi4        GenericDispersionTest basicPsi4-1.7               dvb_disp
 SP        QChem       GenericDispersionTest basicQChem5.1               dvb_dispersion_bp86_d3zero.out
 SP        QChem       GenericDispersionTest basicQChem5.4               dvb_dispersion_bp86_d3zero.out
 
+SP        Gaussian    PCMMetadataTest       basicGaussian16             water_pcm.log
+SP        Gaussian    SCIPCMMetadataTest    basicGaussian16             water_scipcm.log
+SP        Gaussian    IPCMMetadataTest      basicGaussian16             water_ipcm.log
+SP        Gaussian    SMDMetadataTest      basicGaussian16             water_smd.log
+SP        Turbomole   COSMOMetadataTest     basicTurbomole7.5           water_cosmo/basis      water_cosmo/control      water_cosmo/mos      water_cosmo/water.log      water_cosmo/coord
+SP        ORCA        CPCMMetadataTest      basicORCA5.0                water_cpcm.log
+SP        ORCA        CPCMCOSMOMetadataTest basicORCA5.0                water_cpcm_cosmo.log
+SP        ORCA        SMDMetadataTest       basicORCA5.0                water_smd.log
+
 SPun      ADF         GenericSPunTest       basicADF2007.01       dvb_un_sp.adfout
 SPun      ADF         GenericSPunTest       basicADF2013.01       dvb_un_sp.adfout
 SPun      DALTON      GenericROSPTest       basicDALTON-2013      dvb_sp_un_hf.out
