@@ -331,9 +331,12 @@ class Gaussian(logfileparser.Logfile):
                 # Model                : PCM.
                 if "Model" in line:
                     self.metadata['solvent_model'] = " ".join(line.split()[2:])[:-1]
-                    
-                elif "Atomic radii" in line:
-                    self.metadata['solvent_params']['radii'] = " ".join(line.split()[3:])[:-1]
+                
+                # Don't think this is necessary...    
+                # elif "Atomic radii" in line:
+                #    self.metadata['solvent_params']['radii'] = " ".join(line.split()[3:])[:-1]
+                elif "Atomic radii" in line and line.split()[-1] == "SMD-Coulomb.":
+                    self.metadata['solvent_model'] = "SMD"
                     
                 # Solvent by keyword.
                 #  Solvent              : Toluene, Eps=   2.374100 Eps(inf)=   2.238315
