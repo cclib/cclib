@@ -122,7 +122,7 @@ class GenericSPTest(unittest.TestCase):
     def testatomcharges_hirshfeld(self):
         """Do Hirshfeld atomic charges sum to roughly zero?"""
         charges = self.data.atomcharges["hirshfeld"]
-        assert abs(sum(charges)) < 5.0e-2
+        assert abs(sum(charges)) < 4.0e-3
 
     @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
     def testatomcoords(self):
