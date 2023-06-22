@@ -330,14 +330,19 @@ class Gaussian(logfileparser.Logfile):
                 # PCM has a few different subtypes.
                 # Model                : PCM.
                 if "Model" in line:
-                    self.metadata['solvent_model'] = line.split()[-1][:-1]
+                    self.metadata['solvent_model'] = " ".join(line.split()[2:])[:-1]
                     
-                if "Atomic radii" in line:
+                elif "Atomic radii" in line:
                     self.metadata['solvent_params']['radii'] = " ".join(line.split()[3:])[:-1]
                     
                 # Solvent by keyword.
                 #  Solvent              : Toluene, Eps=   2.374100 Eps(inf)=   2.238315
-                elif "Solvent" in line:
+                # Solvent by definition.
+                #  Solvent              : Generic,
+                #            Eps                           =   9.000000
+                #            Eps(infinity)                 =   2.000000
+
+                elif "Solvent" in line and "Eps=" in line and "Eps(inf)= " in line:
                     # Capture the human readable name, as well as params.
                     self.metadata['solvent_name'] = line.split()[2][:-1]
                     
@@ -347,6 +352,14 @@ class Gaussian(logfileparser.Logfile):
                     # If flat is preferable.
                     #self.metadata['solvent_epsilon'] = float(line.split()[4])
                     #self.metadata['solvent_epsilon_infinite'] = float(line.split()[6])
+                
+                elif "Eps(infinity)" in line:
+                    # Assume manually specified solvent.
+                    self.metadata['solvent_params']['epsilon_infinite'] = float(line.split()[-1])
+                    
+                elif "Eps" in line:
+                    # Assume manually specified solvent.
+                    self.metadata['solvent_params']['epsilon'] = float(line.split()[-1])
         
         # Other solvent models are not so easy to parse (have less info).
         # Reaction Field using a Density IsoSurface Boundary
