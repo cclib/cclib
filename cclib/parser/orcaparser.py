@@ -398,8 +398,8 @@ class ORCA(logfileparser.Logfile):
         # Performing Cholesky decomposition & store         ...        done! (  0.0s)
         # Overall time for CPCM initialization              ...                 0.0s
         if line.strip() == "CPCM SOLVATION MODEL":
-            # We can assume we're using CPCM if we see this line (although confusingly
-            # SMD uses it too, we can correct later).
+            # We can assume we're using CPCM if we see this line.
+            # SMD also uses this line, but we can update later.
             self.metadata['solvent_model'] = "CPCM"
             self.metadata['solvent_params'] = {}
             
@@ -422,7 +422,7 @@ class ORCA(logfileparser.Logfile):
                     self.metadata['solvent_params']['refractive_index'] = float(line.split()[-1])
                 
                 elif "SMD-CDS solvent descriptors" in line:
-                    self.metadata['solvent_model'] = "SMD"
+                    self.metadata['solvent_model'] = "SMD-CPCM"
                 
                 elif "Solvent:" in line:
                     # Only get this for SMD.

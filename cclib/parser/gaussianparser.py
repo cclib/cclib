@@ -852,7 +852,7 @@ class Gaussian(logfileparser.Logfile):
                 #  Compute SCI-PCM surface.
                 #if line[1:25] == "Compute SCI-PCM surface.":
                 if "Compute SCI-PCM surface" in line:
-                    self.metadata['solvent_model'] = "SCI-PCM"
+                    self.metadata['solvent_model'] = "SCIPCM"
                 
                 # For SCI-PCM.
                 # Dielectric constant of solvent =     2.374100"
