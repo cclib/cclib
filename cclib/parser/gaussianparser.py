@@ -370,9 +370,8 @@ class Gaussian(logfileparser.Logfile):
             if "solvent_params" not in self.metadata:
                 self.metadata['solvent_params'] = {}
             
-            # PLEASE REVIEW; I've guessed the meaning of these abbreviations.
             self.metadata['solvent_params']['epsilon'] = float(line.split()[1])
-            self.metadata['solvent_params']['continuity'] = float(line.split()[4])
+            self.metadata['solvent_params']['isovalue'] = float(line.split()[4])
         
         #  Compute SCI-PCM surface.
         #if line[1:25] == "Compute SCI-PCM surface.":
