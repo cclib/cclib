@@ -375,19 +375,6 @@ class Gaussian(logfileparser.Logfile):
             
             self.metadata['solvent_params']['epsilon'] = float(line.split()[1])
             self.metadata['solvent_params']['isovalue'] = float(line.split()[4])
-        
-        #  Compute SCI-PCM surface.
-        #if line[1:25] == "Compute SCI-PCM surface.":
-        if "Compute SCI-PCM surface" in line:
-            self.metadata['solvent_model'] = "SCIPCM"
-        
-        # For SCI-PCM.
-        # Dielectric constant of solvent =     2.374100"
-        if line[1:33] == "Dielectric constant of solvent =":
-            if "solvent_params" not in self.metadata:
-                self.metadata['solvent_params'] = {}
-            
-            self.metadata["solvent_params"]['epsilon'] = float(line.split()[2])
 
         # Dipole moment
         # e.g. from G09
