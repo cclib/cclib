@@ -1522,6 +1522,28 @@ class Gaussian(logfileparser.Logfile):
                     self.vibdispshp.extend(disps)
 
                 line = next(inputfile)
+                
+        # Metadata for excited states methods
+        #
+        # For HF/DFT level ES, this is our trigger line:
+        #  MDV=  1342177280 DFT=T DoStab=F Mixed=T DoRPA=F DoScal=F NonHer=F
+        # Comparing DFT=T/F and DoRPA=T/F allows us to distinguish CIS, RPA, TD-DFT and TDA.
+        if "MDV=" in line and "DFT=" in line and "DoRPA=" in line:
+            if "DFT=T" in line:
+                if "RPA=T" in line:
+                    method = "TD-DFT"
+                
+                else:
+                    method = "TDA"
+            
+            else:
+                if "RPA=T" in line:
+                    method = "RPA"
+                
+                else:
+                    method = "CIS"
+            
+            self.metadata["excited_states_method"] = method
 
         # Electronic transitions.
         if line[1:14] == "Excited State":
