@@ -351,10 +351,6 @@ class Gaussian(logfileparser.Logfile):
                     
                     self.metadata['solvent_params']['epsilon'] = float(line.split()[4])
                     self.metadata['solvent_params']['epsilon_infinite'] = float(line.split()[6])
-                    
-                    # If flat is preferable.
-                    #self.metadata['solvent_epsilon'] = float(line.split()[4])
-                    #self.metadata['solvent_epsilon_infinite'] = float(line.split()[6])
                 
                 elif "Eps(infinity)" in line:
                     # Assume manually specified solvent.
