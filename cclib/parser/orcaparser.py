@@ -1185,6 +1185,29 @@ Dispersion correction           -0.016199959
                 self.freeenergy = float(line.split()[5])
             else:
                 self.freeenergy = self.enthalpy - self.temperature * self.entropy
+        
+        # Excited state metadata.
+        if "ORCA TD-DFT/TDA CALCULATION" in line or "ORCA TD-DFT CALCULATION" in line:
+            # TDA or TD-DFT.
+            while "Tamm-Dancoff approximation" not in line:
+                line = next(inputfile)
+                
+            if line.split()[-1] == "operative":
+                self.metadata['excited_states_method'] = "TDA"
+            
+            else:
+                self.metadata['excited_states_method'] = "TD-DFT"
+        
+        elif "ORCA CIS CALCULATION" in line:
+            # CIS or RPA.
+            while "Tamm-Dancoff approximation" not in line:
+                line = next(inputfile)
+                
+            if line.split()[-1] == "operative":
+                self.metadata['excited_states_method'] = "CIS"
+            
+            else:
+                self.metadata['excited_states_method'] = "RPA"
                 
         if any(x in line
                for x in ("ORCA TD-DFT/TDA CALCULATION", "ORCA CIS CALCULATION")):
