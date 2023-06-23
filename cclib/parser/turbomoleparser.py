@@ -187,10 +187,8 @@ class Turbomole(logfileparser.Logfile):
                 elif "refind:" in line:
                     self.metadata['solvent_params']['refractive_index'] = float(line.split()[-1])
                 
-                # PLEASE REVIEW: Not sure what this is or what name would be suitable,
-                # guessing it's useful tho...
                 elif "fepsi:" in line:
-                    self.metadata['solvent_params']['fepsi'] = float(line.split()[-1])
+                    self.metadata['solvent_params']['f_epsilon'] = float(line.split()[-1])
         
         ## Orbital occupation info from dscf.
         #  orbitals $scfmo  will be written to file mos
