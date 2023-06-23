@@ -643,20 +643,19 @@ class SolventMetadataTest(unittest.TestCase):
     epsilon = 2.3741
     
     def test_solvent_meta(self):
-        """Check"""
-        assert "solvent_model" in self.data.metadata
-        assert "solvent_params" in self.data.metadata
+        """Check solvent metadata was parsed correctly"""
+        assert self.data.metadata['solvent_model'] == self.model
         assert (self.data.metadata['solvent_params']['epsilon'] - self.epsilon) < 1.0e-4
         
-class PCMMetadataTest(SolventMetadataTest):
+class IEFPCMMetadataTest(SolventMetadataTest):
     """Check we can parse implicit solvent data."""
 
-    model = "PCM"
+    model = "IEFPCM"
     
 class SCIPCMMetadataTest(SolventMetadataTest):
     """Check we can parse implicit solvent data."""
 
-    model = "SCI-PCM"
+    model = "SCIPCM"
     
 class IPCMMetadataTest(SolventMetadataTest):
     """Check we can parse implicit solvent data."""
@@ -679,10 +678,15 @@ class CPCMCOSMOMetadataTest(SolventMetadataTest):
 
     model = "CPCM-COSMO"
     
-class SMDMetadataTest(SolventMetadataTest):
+class SMDIEFPCMMetadataTest(SolventMetadataTest):
     """Check we can parse implicit solvent data."""
 
-    model = "SMD"
+    model = "SMD-IEFPCM"
+    
+class SMDCPCMMetadataTest(SolventMetadataTest):
+    """Check we can parse implicit solvent data."""
+
+    model = "SMD-CPCM"
 
 
 if __name__ == "__main__":
