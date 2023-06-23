@@ -331,12 +331,15 @@ class Gaussian(logfileparser.Logfile):
                 # Model                : PCM.
                 if "Model" in line:
                     self.metadata['solvent_model'] = " ".join(line.split()[2:])[:-1]
+                    
+                    if self.metadata['solvent_model'] == "PCM":
+                        self.metadata['solvent_model'] = "IEFPCM"
                 
                 # Don't think this is necessary...    
                 # elif "Atomic radii" in line:
                 #    self.metadata['solvent_params']['radii'] = " ".join(line.split()[3:])[:-1]
                 elif "Atomic radii" in line and line.split()[-1] == "SMD-Coulomb.":
-                    self.metadata['solvent_model'] = "SMD"
+                    self.metadata['solvent_model'] = "SMD-IEFPCM"
                     
                 # Solvent by keyword.
                 #  Solvent              : Toluene, Eps=   2.374100 Eps(inf)=   2.238315
@@ -376,7 +379,7 @@ class Gaussian(logfileparser.Logfile):
         #  Compute SCI-PCM surface.
         #if line[1:25] == "Compute SCI-PCM surface.":
         if "Compute SCI-PCM surface" in line:
-            self.metadata['solvent_model'] = "SCI-PCM"
+            self.metadata['solvent_model'] = "SCIPCM"
         
         # For SCI-PCM.
         # Dielectric constant of solvent =     2.374100"
