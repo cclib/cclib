@@ -1540,7 +1540,10 @@ class Gaussian(logfileparser.Logfile):
                     method = "CIS"
             
             self.metadata["excited_states_method"] = method
-
+        
+        if line.strip() == "EOM-CCSD":
+            self.metadata['excited_states_method'] = "EOM-CCSD"
+        
         # Electronic transitions.
         if line[1:14] == "Excited State":
 
