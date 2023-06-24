@@ -1095,10 +1095,10 @@ class Turbomole(logfileparser.Logfile):
 #         or "| sym | multi | state |          ADC(2) excitation energies    |  %t1   |  %t2   |" in line:
 #             #if "ADC(2)" in line:
         if "| sym | multi | state |" in  line and "|  %t1   |  %t2   |" in line:
-            self.metadata['excited_states_methd'] = line.split()[7]
+            self.metadata['excited_states_method'] = line.split()[7]
             
-            if self.metadata['excited_states_methd'] == "CCSD":
-                self.metadata['excited_states_methd'] = "EOM-CCSD"
+            if self.metadata['excited_states_method'][:3] == "CCS":
+                self.metadata['excited_states_method'] = "EOM-" + self.metadata['excited_states_method']
         
             self.skip_lines(inputfile, ["divider", "units", "divider"])
             line = next(inputfile)
