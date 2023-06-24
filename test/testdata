@@ -391,6 +391,7 @@ TD        GAMESS      GenericTDDFTtrpTest   basicGAMESS-US2017    dvb_td_trplet.
 TD        GAMESS      GenericTDDFTtrpTest   basicGAMESS-US2018    dvb_td_trplet.out
 TD        Gaussian    GaussianTDDFTTest     basicGaussian09       dvb_td.out
 TD        Gaussian    GaussianTDDFTTest     basicGaussian16       dvb_td.out
+TD        Gaussian    GaussianEOMCCSDTest   basicGaussian16       dvb_eomccsd.log
 TD        Jaguar      JaguarTDDFTTest       basicJaguar8.3        dvb_td.out
 TD        NWChem      GenericTDTest         basicNWChem7.0        dvb_td.out
 TD        ORCA        OrcaTDDFTTest         basicORCA4.1          dvb_td.out

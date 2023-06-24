@@ -55,6 +55,7 @@ class GenericTDTest(unittest.TestCase):
 
     @skipForParser('FChk','The parser is still being developed so we skip this test')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForLogfile("Gaussian/basicGaussian16/dvb_eomccsd.log", "Transitions are not yet parsed for EOM-CCSD")
     def testsecs(self):
         """Is the sum of etsecs close to 1?"""
         assert len(self.data.etsecs) == self.number
@@ -65,6 +66,7 @@ class GenericTDTest(unittest.TestCase):
     @skipForParser('FChk', 'This is true for calculations without symmetry, but not with?')
     @skipForParser('DALTON', 'This is true for calculations without symmetry, but not with?')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForLogfile("Gaussian/basicGaussian16/dvb_eomccsd.log", "Transitions are not yet parsed for EOM-CCSD")
     def testsecs_transition(self):
         """Is the lowest E transition from the HOMO or to the LUMO?"""
         lowestEtrans = self.data.etsecs[numpy.argmin(self.data.etenergies)]
@@ -318,6 +320,26 @@ class OrcaSTEOMCCSDTest(OrcaETPostHFTest):
     """Test for STEOM-CCSD with Orca."""
     
     sumofsec = 1.0
+    
+class GaussianEOMCCSDTest(GenericTDTest):
+    """Test for EOM-CCSD with Gaussian."""
+    
+    number = 10
+    expected_l_max = 61514.3
+    expected_f_max = 0.9802
+    symmetries = [
+            "Triplet-Bu",
+            "Triplet-Ag",
+            "Triplet-Bu",
+            "Singlet-Bu",
+            "Triplet-Bu",
+            
+            "Triplet-Bu",
+            "Singlet-Bu",
+            "Triplet-Ag",
+            "Triplet-Bu",
+            "Triplet-Ag",
+        ]
         
 
 if __name__ =="__main__":
