@@ -102,6 +102,10 @@ class Gaussian(logfileparser.Logfile):
         
         # Used to estimate wall times from CPU times.
         self.num_cpu = 1
+        
+        # For detecting when excited states reset (because of a new level of theory,
+        # or a new round in an optimisation etc).
+        self.last_et = 0
 
     def after_parsing(self):
         # atomcoords are parsed as a list of lists but it should be an array
@@ -1056,14 +1060,6 @@ class Gaussian(logfileparser.Logfile):
                 else:
                     newlist[i] = value
                 self.geotargets[i] = utils.float(parts[3])
-            # reset some parameters that are printed each iteration if the 
-            # optimization has not yet converged. For example, etenergies 
-            # (Issue #889) and similar properties are only reported for the
-            # final step of an optimization.
-            if not allconverged:
-                for reset_attr in ["etenergies", "etoscs", "etsyms", "etsecs", "etdips", "etveldips", "etmagdips"]:
-                    if hasattr(self, reset_attr):
-                        setattr(self, reset_attr, [])
 
             self.geovalues.append(newlist)
 
@@ -1548,11 +1544,19 @@ class Gaussian(logfileparser.Logfile):
         # Electronic transitions.
         if line[1:14] == "Excited State":
 
-            if not hasattr(self, "etenergies"):
+            # Excited State 1:
+            et_index = float(line.split()[2][:-1])
+
+            if not hasattr(self, "etenergies") \
+                or et_index <= self.last_et:
                 self.etenergies = []
                 self.etoscs = []
                 self.etsyms = []
                 self.etsecs = []
+            
+            # Keep track of the highest excited state, so we can detect when we enter a new
+            # section (the 'highest' excited state will be the same or lower as the last one).
+            self.last_et = et_index
 
             # Need to deal with lines like:
             # (restricted calc)
