@@ -879,6 +879,32 @@ class Turbomole(logfileparser.Logfile):
                 mp2energy = [utils.convertor(utils.float(line.split()[3]), 'hartree', 'eV')]
                 self.append_attribute('mpenergies', mp2energy)
                 self.metadata['methods'].append("MP2")
+                
+        # Excited state metadata.
+        # For escf (HF/DFT), there are (up to) two lines of interest.
+        #
+        #  CI SINGLES SINGLET-CALCULATION (TAMM-DANCOFF-APPROXIMATION)
+        #  
+        #              FOUND DFT-FLAG !
+        # or
+        # 
+        #  RPA SINGLET-EXCITATION-CALCULATION 
+        #  
+        #              FOUND DFT-FLAG !
+        #
+        # For plain HF (not DFT) the "FOUND DFT-FLAG !" will be missing.
+        if line.strip() == "CI SINGLES SINGLET-CALCULATION (TAMM-DANCOFF-APPROXIMATION)":
+            self.metadata['excited_states_method'] = "CIS"
+        
+        elif line.strip() == "RPA SINGLET-EXCITATION-CALCULATION":
+            self.metadata['excited_states_method'] = "RPA"
+            
+        elif line.strip() == "FOUND DFT-FLAG !":
+            if self.metadata['excited_states_method'] == "CIS":
+                self.metadata['excited_states_method'] = "TDA"
+            
+            else:
+                self.metadata['excited_states_method'] = "TD-DFT"
 
 
         # Excited state info from escf.
