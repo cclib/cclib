@@ -1091,8 +1091,15 @@ class Turbomole(logfileparser.Logfile):
         #  | a   |   1   |  10   |    0.5036295 |   13.70446 | 110533.909 |  93.51 |   6.49 |
         #  +================================================================================+
         # TODO: Perhaps need a more general way to look for lines like this?
-        if "| sym | multi | state |          CC2 excitation energies       |  %t1   |  %t2   |" in line \
-        or "| sym | multi | state |          ADC(2) excitation energies    |  %t1   |  %t2   |" in line:
+#         if "| sym | multi | state |          CC2 excitation energies       |  %t1   |  %t2   |" in line \
+#         or "| sym | multi | state |          ADC(2) excitation energies    |  %t1   |  %t2   |" in line:
+#             #if "ADC(2)" in line:
+        if "| sym | multi | state |" in  line and "|  %t1   |  %t2   |" in line:
+            self.metadata['excited_states_methd'] = line.split()[7]
+            
+            if self.metadata['excited_states_methd'] == "CCSD":
+                self.metadata['excited_states_methd'] = "EOM-CCSD"
+        
             self.skip_lines(inputfile, ["divider", "units", "divider"])
             line = next(inputfile)
             
