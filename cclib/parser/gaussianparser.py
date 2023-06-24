@@ -346,11 +346,13 @@ class Gaussian(logfileparser.Logfile):
                 #            Eps(infinity)                 =   2.000000
 
                 elif "Solvent" in line and "Eps=" in line and "Eps(inf)= " in line:
-                    # Capture the human readable name, as well as params.
-                    self.metadata['solvent_name'] = line.split()[2][:-1]
+                    split_line = line.split()
                     
-                    self.metadata['solvent_params']['epsilon'] = float(line.split()[4])
-                    self.metadata['solvent_params']['epsilon_infinite'] = float(line.split()[6])
+                    # Capture the human readable name, as well as params.
+                    self.metadata['solvent_name'] = split_line[2][:-1].lower()
+                    
+                    self.metadata['solvent_params']['epsilon'] = float(split_line[4])
+                    self.metadata['solvent_params']['epsilon_infinite'] = float(split_line[6])
                 
                 elif "Eps(infinity)" in line:
                     # Assume manually specified solvent.

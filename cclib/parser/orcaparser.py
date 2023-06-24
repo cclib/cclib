@@ -424,7 +424,7 @@ class ORCA(logfileparser.Logfile):
                 
                 elif "Solvent:" in line:
                     # Only get this for SMD.
-                    self.metadata['solvent_name'] = line.split()[-1]
+                    self.metadata['solvent_name'] = line.split()[-1].lower()
             
         
         # SCF convergence output begins with:
