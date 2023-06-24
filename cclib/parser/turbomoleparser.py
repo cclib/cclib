@@ -893,10 +893,10 @@ class Turbomole(logfileparser.Logfile):
         #              FOUND DFT-FLAG !
         #
         # For plain HF (not DFT) the "FOUND DFT-FLAG !" will be missing.
-        if line.strip() == "CI SINGLES SINGLET-CALCULATION (TAMM-DANCOFF-APPROXIMATION)":
+        if line.strip() in ("CI SINGLES SINGLET-CALCULATION (TAMM-DANCOFF-APPROXIMATION)", "CI SINGLES TRIPLET-CALCULATION (TAMM-DANCOFF-APPROXIMATION)"):
             self.metadata['excited_states_method'] = "CIS"
         
-        elif line.strip() == "RPA SINGLET-EXCITATION-CALCULATION":
+        elif line.strip() in ("RPA SINGLET-EXCITATION-CALCULATION", "RPA TRIPLET-EXCITATION-CALCULATION"):
             self.metadata['excited_states_method'] = "RPA"
             
         elif line.strip() == "FOUND DFT-FLAG !":
