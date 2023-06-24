@@ -33,6 +33,18 @@ class GenericTDTest(unittest.TestCase):
             "Singlet-Ag",
         ]
     sumofsec = 1.0
+    
+    @skipForParser('ADF', 'excited_states_method not yet implemented')
+    @skipForParser('DALTON', 'excited_states_method not yet implemented')
+    @skipForParser('FChk', 'etrotats are not yet implemented')
+    @skipForParser('GAMESS', 'excited_states_method not yet implemented')
+    @skipForParser('GAMESSUK', 'excited_states_method not yet implemented')
+    @skipForParser('Jaguar', 'excited_states_method not yet implemented')
+    @skipForParser('NWChem', 'excited_states_method not yet implemented')
+    @skipForParser('QChem', 'etrotats are not yet implemented')
+    def testmetadata(self):
+        """Did we parse an excited states method?"""
+        assert "excited_states_method" in self.data.metadata
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForLogfile('Turbomole/basicTurbomole7.4/CO_cc2_TD_trip', 'Oscillator strengths are not available for Turbomole triplets using ricc2 but are required for testenergies()')
