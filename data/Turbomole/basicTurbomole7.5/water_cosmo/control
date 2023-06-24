@@ -1,5 +1,5 @@
 $title
-water_ccsd_Single_Point_HF_Toluene_Pople_Basis_Sets_STO_3G
+water_Single_Point_HF_Toluene_Pople_Basis_Sets_STO_3G
 $symmetry c1
 $redundant    file=coord
 $user-defined bonds    file=coord
