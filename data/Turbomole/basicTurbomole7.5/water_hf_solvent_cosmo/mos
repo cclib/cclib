@@ -1,6 +1,6 @@
 $scfmo    scfconv=7   format(4d20.14)                                           
 # molecular orbitals of project :
-#  --->  water_ccsd_Single_Point_HF_Toluene_Pople_Basis_Sets_STO_3G  <---
+#  --->  water_Single_Point_HF_Toluene_Pople_Basis_Sets_STO_3G  <---
 # SCF total energy is      -74.9720190621 a.u.
 #
      1  a      eigenvalue=-.20236646831043D+02   nsaos=7                        

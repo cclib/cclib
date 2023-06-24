@@ -1,7 +1,7 @@
 Thu 27 Apr 10:39:32 BST 2023
 
  STATISTICS OUTPUT FOR PROJECT :
-   --->  water_ccsd_Single_Point_HF_Toluene_Pople_Basis_Sets_STO_3G  <---
+   --->  water_Single_Point_HF_Toluene_Pople_Basis_Sets_STO_3G  <---
 
  integral neglect threshold       :  0.48E-09
  integral storage threshold THIZE :  0.10E-04
