@@ -335,9 +335,6 @@ class Gaussian(logfileparser.Logfile):
                     if self.metadata['solvent_model'] == "PCM":
                         self.metadata['solvent_model'] = "IEFPCM"
                 
-                # Don't think this is necessary...    
-                # elif "Atomic radii" in line:
-                #    self.metadata['solvent_params']['radii'] = " ".join(line.split()[3:])[:-1]
                 elif "Atomic radii" in line and line.split()[-1] == "SMD-Coulomb.":
                     self.metadata['solvent_model'] = "SMD-IEFPCM"
                     
@@ -363,13 +360,11 @@ class Gaussian(logfileparser.Logfile):
                     # Assume manually specified solvent.
                     self.metadata['solvent_params']['epsilon'] = float(line.split()[-1])
         
-        # Other solvent models are not so easy to parse (have less info).
-        # Reaction Field using a Density IsoSurface Boundary
-        if "Reaction Field using a Density IsoSurface Boundary" in line:
+        elif "Reaction Field using a Density IsoSurface Boundary" in line:
             self.metadata['solvent_model'] = "IPCM"
         
         #  Epsi=   78.3000 Cont =    0.0010
-        if  "Epsi=" in line and "Cont =":
+        elif  "Epsi=" in line and "Cont =":
             if "solvent_params" not in self.metadata:
                 self.metadata['solvent_params'] = {}
             

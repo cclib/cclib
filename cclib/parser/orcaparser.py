@@ -412,8 +412,6 @@ class ORCA(logfileparser.Logfile):
                 if "Epsilon function type" in line:
                     if line.split()[-1] == "COSMO":
                         self.metadata['solvent_model'] = "CPCM-COSMO"
-                    # This might be a better way of capturing this?
-                    #self.metadata['solvent_params']['epsilon_function'] = line.split()[-1]
                 
                 elif "Epsilon" in line:
                     self.metadata['solvent_params']['epsilon'] = float(line.split()[-1])
