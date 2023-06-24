@@ -1187,7 +1187,7 @@ Dispersion correction           -0.016199959
                 self.freeenergy = self.enthalpy - self.temperature * self.entropy
         
         # Excited state metadata.
-        if "ORCA TD-DFT/TDA CALCULATION" in line or "ORCA TD-DFT CALCULATION" in line:
+        if line.strip() in ("ORCA TD-DFT/TDA CALCULATION", "ORCA TD-DFT CALCULATION"):
             # TDA or TD-DFT.
             while "Tamm-Dancoff approximation" not in line:
                 line = next(inputfile)
@@ -1198,7 +1198,7 @@ Dispersion correction           -0.016199959
             else:
                 self.metadata['excited_states_method'] = "TD-DFT"
         
-        elif "ORCA CIS CALCULATION" in line:
+        elif line.strip() == "ORCA CIS CALCULATION":
             # CIS or RPA.
             while "Tamm-Dancoff approximation" not in line:
                 line = next(inputfile)
@@ -1209,8 +1209,12 @@ Dispersion correction           -0.016199959
             else:
                 self.metadata['excited_states_method'] = "RPA"
                 
-        if any(x in line
-               for x in ("ORCA TD-DFT/TDA CALCULATION", "ORCA CIS CALCULATION")):
+        elif line.strip() == "ORCA ROCIS CALCULATION":
+            # Here we consider ROCIS the same as CIS (?)
+            self.metadata['excited_states_method'] = "CIS"
+            
+                
+        if line.strip() in ("ORCA TD-DFT/TDA CALCULATION", "ORCA CIS CALCULATION"):
             # Start of excited states, reset our attributes in case this is an optimised excited state calc
             # (or another type of calc where excited states are calculated multiple times).
             for attr in ("etenergies", "etsyms", "etoscs", "etsecs", "etrotats"):
