@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Development &mdash; cclib 1.7.2 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/increase_max_width.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Development parsed data" href="data_dev.html" />
+    <link rel="prev" title="Bridges to other packages" href="bridge.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="contents.html" class="icon icon-home">
+            cclib
+          </a>
+              <div class="version">
+                1.7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_install.html">How to install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_parse.html">How to parse and write</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">Parsed data (version 1.7.2)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_notes.html">Parsed data notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="methods.html">Calculation methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bridge.html">Bridges to other packages</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Development</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#basic-instructions">Basic instructions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cloning-cclib-from-github">Cloning cclib from GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#guidelines">Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#releasing-a-new-version">Releasing a new version</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#unit-tests">Unit tests</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#adding-a-new-program-version">Adding a new program version</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#regression-tests">Regression tests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#websites-related-to-cclib">Websites related to cclib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#developers">Developers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data_dev.html">Development parsed data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="contents.html">cclib</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="contents.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Development</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/cclib/cclib/blob/master/doc/sphinx/development.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="development">
+<h1>Development<a class="headerlink" href="#development" title="Permalink to this heading"></a></h1>
+<section id="basic-instructions">
+<h2>Basic instructions<a class="headerlink" href="#basic-instructions" title="Permalink to this heading"></a></h2>
+<p>The default cclib files distributed with a release, as described in <a class="reference external" href="how_to_install.html">How to install</a>, do not include any unit tests and logfiles necessary to run those tests. This section covers how to download the full source along with all test data and scripts, and how to use these for development and testing.</p>
+<section id="cloning-cclib-from-github">
+<h3>Cloning cclib from GitHub<a class="headerlink" href="#cloning-cclib-from-github" title="Permalink to this heading"></a></h3>
+<p>cclib is hosted by the fantastic people at <a class="reference external" href="https://github.com">GitHub</a> (previously at <a class="reference external" href="https://sourceforge.net">Sourceforge</a>) in a <a class="reference external" href="https://git-scm.com">git</a> repository. You can download a <a class="reference external" href="https://github.com/cclib/cclib/archive/master.zip">zipped archive</a> of the current development version (called <cite>master</cite>) for installation and testing or browse the available <a class="reference external" href="https://github.com/cclib/cclib/releases">releases</a>. In order to contribute any changes, however, you will need to create a local copy of the repository:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/cclib/cclib.git
+</pre></div>
+</div>
+</section>
+<section id="guidelines">
+<h3>Guidelines<a class="headerlink" href="#guidelines" title="Permalink to this heading"></a></h3>
+<p>We follow a typical GitHub collaborative model, relying on <a class="reference external" href="https://docs.github.com/en/github/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests">forks and pull requests</a>. In short, the development process consists of:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.github.com/en/get-started/quickstart/fork-a-repo">Creating your own fork</a> of cclib in order to develop</p></li>
+<li><p><a class="reference external" href="https://docs.github.com/en/github/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request">Creating a pull request</a> to contribute your changes</p></li>
+<li><p>Reviewing and merging open pull requests into master</p></li>
+<li><p>Using <a class="reference external" href="https://github.com/cclib/cclib/issues">issues</a> to plan and prioritize future work</p></li>
+</ul>
+<p>Here are some general guidelines for developers who are contributing code:</p>
+<ul class="simple">
+<li><p>All contributions should be reviewed by at least one core developer</p></li>
+<li><p>Contributions from a core developer need to be reviewed by another core developer</p></li>
+<li><p>Run and review the unit tests (see below) before submitting a pull request.</p></li>
+<li><p>There should normally not be more failed tests than before your changes.</p></li>
+<li><p>For larger changes or features that take some time to implement, <a class="reference external" href="https://docs.github.com/en/github/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-branches">using branches</a> is recommended.</p></li>
+</ul>
+</section>
+<section id="releasing-a-new-version">
+<h3>Releasing a new version<a class="headerlink" href="#releasing-a-new-version" title="Permalink to this heading"></a></h3>
+<p>The release cycle of cclib is irregular, with new versions being created as deemed necessary after significant changes or new features. We roughly follow semantic versioning with respect to the <a class="reference external" href="data.html">parsed attributes</a>.</p>
+<p>When creating a new release on GitHub, the typical procedure might include the following steps:</p>
+<ul class="simple">
+<li><p>Update the <a class="reference external" href="https://github.com/cclib/cclib/blob/master/CHANGELOG">CHANGELOG</a>, <a class="reference external" href="https://github.com/cclib/cclib/blob/master/ANNOUNCE">ANNOUNCE</a> and any other files that might change content with the new version</p></li>
+<li><p>Make sure that <a class="reference external" href="https://github.com/cclib/cclib/blob/master/setup.py">setup.py</a> has the right version number, as well as __version__ in <a class="reference external" href="https://github.com/cclib/cclib/blob/master/cclib/__init__.py">__init__.py</a> and any other relevant files</p></li>
+<li><p>Update the download and install instructions in the documentation, if appropriate</p></li>
+<li><p>Create a branch for the release, so that development can continue</p></li>
+<li><p>Run all tests for a final time and fix any remaining issues</p></li>
+<li><p>Tag the release (make sure to use an annotated tag using <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">-a</span></code>) and upload it (<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">push</span> <span class="pre">--tags</span></code>)</p></li>
+<li><p>Run <a class="reference external" href="https://github.com/cclib/cclib/blob/master/manifest.py">manifest.py</a> to update the MANIFEST file</p></li>
+<li><p>Create the source distributions (<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">sdist</span> <span class="pre">--formats=gztar,zip</span></code>) and Windows binary installers (<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">bdist_wininst</span></code>)</p></li>
+<li><p>Create a release on GitHub using the created tag (see <a class="reference external" href="https://docs.github.com/en/github/administering-a-repository/releasing-projects-on-github/managing-releases-in-a-repository">Creating releases</a>) and upload the source distributions and Windows binaries</p></li>
+<li><p>Email the users and developers mailing list with the message in <a class="reference external" href="https://github.com/cclib/cclib/blob/master/ANNOUNCE">ANNOUNCE</a></p></li>
+<li><p>Update the <a class="reference external" href="https://pypi.org/project/cclib/">Python package index</a>, normally done by <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">register</span></code></p></li>
+<li><p>For significant releases, if appropriate, send an email to the <a class="reference external" href="http://www.ccl.net">CCL list</a> and any mailing lists for computational chemistry packages supported by cclib</p></li>
+</ul>
+</section>
+</section>
+<section id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading"></a></h2>
+<p id="index-0">The <a class="reference external" href="https://github.com/cclib/cclib/tree/master/test">test directory</a>, which is not included in the default download, contains the test scripts that keep cclib reliable, and keep the developers sane. With any new commit or pull request to cclib on GitHub the tests are triggered and run with <a class="reference external" href="https://github.com/cclib/cclib/actions">GitHub Actions</a>.</p>
+<p>The input files for tests, which are logfiles from computational chemistry programs, are located in the <a class="reference external" href="https://github.com/cclib/cclib/tree/master/data">data directory</a>. These are a central part of cclib, and any progress should always be supported by corresponding tests. When a user opens an issue or reports a bug, it is prudent to write a test that reproduces the bug as well as fixing it. This ensures it will remain fixed in the future. Likewise, extending the coverage of data attributes to more programs should proceed in parallel with the growth of unit tests.</p>
+<section id="unit-tests">
+<span id="index-1"></span><h3>Unit tests<a class="headerlink" href="#unit-tests" title="Permalink to this heading"></a></h3>
+<p>Unit tests check that the parsers work correctly for typical calculation types on small molecules, usually water or 1,4-divinylbenzene (dvb) with <span class="math notranslate nohighlight">\(C_{\mathrm{2h}}\)</span> symmetry. The corresponding logfiles stored in folders like <code class="docutils literal notranslate"><span class="pre">data/NWChem/basicNWChem6.0</span></code> are intended to test logfiles for an approximate major version of a program, and are standardized for all supported programs to the extent possible. They are located alongside the code in the repository, but are not normally distributed with the source. Attributes are considered supported only if they are checked by at least one test, and the <a class="reference external" href="data_dev.html#details-of-current-implementation">table of attribute coverage</a> is generated automatically using this criterion.</p>
+<p>The job types currently included as unit tests:</p>
+<ul class="simple">
+<li><p>restricted and unrestricted single point energies for dvb (RHF/STO-3G <strong>and</strong> B3LYP/STO-3G)</p></li>
+<li><p>geometry optimization and scan for dvb (RHF/STO-3G and/or B3LYP/STO-3G)</p></li>
+<li><p>frequency calculation with IR intensities and Raman activities for dvb (RHF/STO-3G or B3LYP/STO-3G)</p></li>
+<li><p>single point energy for carbon atom using a large basis set such as aug-cc-pCVQZ</p></li>
+<li><p>Møller–Plesset and coupled cluster energies for water (STO-3G basis set)</p></li>
+<li><p>static polarizabilities for tryptophan (RHF/STO-3G)</p></li>
+</ul>
+<section id="adding-a-new-program-version">
+<h4>Adding a new program version<a class="headerlink" href="#adding-a-new-program-version" title="Permalink to this heading"></a></h4>
+<p>There are a few conventions when adding a new supported program version to the unit tests:
+* Two different recent versions are typically used in the unit tests. If there already are two, move the older version(s) the regression suite (see below).
+* When adding files for the new version, first copy the corresponding files for the last version already in cclib. Afterwards, check in files from the new program version as changes to the copied files. This procedure makes it easy to look at the differences introduced with the new version in git clients.</p>
+</section>
+</section>
+<section id="regression-tests">
+<span id="index-2"></span><h3>Regression tests<a class="headerlink" href="#regression-tests" title="Permalink to this heading"></a></h3>
+<p>Regression tests ensure that bugs, once fixed, stay fixed. These are real-life files that at some point broke a cclib parser, and are stored in folders like <code class="docutils literal notranslate"><span class="pre">data/regression/Jaguar/Jaguar6.4</span></code>. The files associated with regression tests are not stored stored together with the source code as they are often quite large. A separate repository on GitHub, <a class="reference external" href="https://github.com/cclib/cclib-data">cclib-data</a>, is used to track these files, and we do not distribute them with any releases.</p>
+<p>For every bug found in the parsers, there should be a corresponding regression test that tests this bug stays fixed. The process is automated by <a class="reference external" href="https://github.com/cclib/cclib/blob/master/test/regression.py">regression.py</a>, which runs through all of our test data, both the basic data and regression files, opens them, tries to parse, and runs any relevant regression tests defined for that file. New regression tests are added by creating a function <code class="docutils literal notranslate"><span class="pre">testMyFileName_out</span></code> according to the examples at the start of <a class="reference external" href="https://github.com/cclib/cclib/blob/master/test/regression.py">regression.py</a>.</p>
+<p>Using both the unit and regression tests, the line-by-line <a class="reference external" href="coverage/index.html">test coverage</a> shows which parts of cclib are touched by at least one test. When adding new features and tests, the GitHub Actions <a class="reference external" href="https://github.com/cclib/cclib/blob/master/.github/scripts/run_pytest.bash">testing script</a> can be run locally to generate the HTML coverage pages and ensure that the tests exercise the feature code.</p>
+</section>
+</section>
+<section id="websites-related-to-cclib">
+<h2>Websites related to cclib<a class="headerlink" href="#websites-related-to-cclib" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>The official <a class="reference external" href="https://github.com/cclib">cclib organization on github</a></p></li>
+<li><p>The <a class="reference external" href="https://sourceforge.net/projects/cclib/">cclib project page on Sourceforge</a> (inactive now)</p></li>
+<li><p>The <a class="reference external" href="https://github.com/cclib/cclib/actions">cclib page for GitHub Actions</a></p></li>
+<li><p>The <a class="reference external" href="https://pypi.org/project/cclib/">cclib entry on PyPI</a></p></li>
+<li><p>The <a class="reference external" href="https://libraries.io/pypi/cclib">cclib entry on libraries.io</a></p></li>
+<li><p>The <a class="reference external" href="https://www.openhub.net/p/cclib">cclib entry on Open Hub</a></p></li>
+</ul>
+</section>
+<section id="developers">
+<h2>Developers<a class="headerlink" href="#developers" title="Permalink to this heading"></a></h2>
+<p>Besides input from a number of people <a class="reference external" href="https://github.com/cclib/cclib/blob/master/THANKS">listed in the repository</a>, the following are core developers (in alphabetical order):</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/berquist">Eric Berquist</a></p></li>
+<li><p><a class="reference external" href="https://github.com/mscho527">Minsik Cho</a></p></li>
+<li><p><a class="reference external" href="https://github.com/amandadumi">Amanda Dumi</a></p></li>
+<li><p><a class="reference external" href="https://github.com/ghutchis">Geoff Hutchison</a></p></li>
+<li><p><a class="reference external" href="https://github.com/langner">Karol M. Langner</a></p></li>
+<li><p><a class="reference external" href="https://github.com/baoilleach">Noel O’Boyle</a> (retired)</p></li>
+<li><p><a class="reference external" href="https://github.com/ATenderholt">Adam Tenderholt</a></p></li>
+<li><p><a class="reference external" href="https://github.com/shivupa">Shiv Upadhyay</a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="bridge.html" class="btn btn-neutral float-left" title="Bridges to other packages" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="data_dev.html" class="btn btn-neutral float-right" title="Development parsed data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2014-2021, cclib Development Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

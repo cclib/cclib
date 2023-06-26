@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>&lt;no title&gt; &mdash; cclib 1.7.2 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/increase_max_width.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="contents.html" class="icon icon-home">
+            cclib
+          </a>
+              <div class="version">
+                1.7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_install.html">How to install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_parse.html">How to parse and write</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">Parsed data (version 1.7.2)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_notes.html">Parsed data notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="methods.html">Calculation methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bridge.html">Bridges to other packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_dev.html">Development parsed data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="contents.html">cclib</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="contents.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">&lt;no title&gt;</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/cclib/cclib/blob/master/doc/sphinx/attributes.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <blockquote>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Units</p></th>
+<th class="head"><p>Data type</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#aonames">aonames</a></p></td>
+<td><p>atomic orbital names</p></td>
+<td></td>
+<td><p>list of strings</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#aooverlaps">aooverlaps</a></p></td>
+<td><p>atomic orbital overlap matrix</p></td>
+<td></td>
+<td><p>array of rank 2</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#atombasis">atombasis</a></p></td>
+<td><p>indices of atomic orbitals on each atom</p></td>
+<td></td>
+<td><p>list of lists</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#atomcharges">atomcharges</a></p></td>
+<td><p>atomic partial charges</p></td>
+<td></td>
+<td><p>dict of arrays of rank 1</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#atomcoords">atomcoords</a></p></td>
+<td><p>atom coordinates</p></td>
+<td><p>angstroms</p></td>
+<td><p>array of rank 3</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#atommasses">atommasses</a></p></td>
+<td><p>atom masses</p></td>
+<td><p>daltons</p></td>
+<td><p>array of rank 1</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#atomnos">atomnos</a></p></td>
+<td><p>atomic numbers</p></td>
+<td></td>
+<td><p>array of rank 1</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#atomspins">atomspins</a></p></td>
+<td><p>atomic spin densities</p></td>
+<td></td>
+<td><p>dict of arrays of rank 1</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#ccenergies">ccenergies</a></p></td>
+<td><p>molecular energies with Coupled-Cluster corrections</p></td>
+<td><p>eV</p></td>
+<td><p>array of rank 2</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#charge">charge</a></p></td>
+<td><p>net charge of the system</p></td>
+<td></td>
+<td><p>integer</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#coreelectrons">coreelectrons</a></p></td>
+<td><p>number of core electrons in atom pseudopotentials</p></td>
+<td></td>
+<td><p>array of rank 1</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#dispersionenergies">dispersionenergies</a></p></td>
+<td><p>dispersion energy corrections</p></td>
+<td><p>eV</p></td>
+<td><p>array of rank 1</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#enthalpy">enthalpy</a></p></td>
+<td><p>sum of electronic and thermal enthalpies</p></td>
+<td><p>hartree/particle</p></td>
+<td><p>float</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#entropy">entropy</a></p></td>
+<td><p>entropy (float, hartree/</p></td>
+<td></td>
+<td><p>particle*kelvin</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#etenergies">etenergies</a></p></td>
+<td><p>energies of electronic transitions</p></td>
+<td><p>1/cm</p></td>
+<td><p>array of rank 1</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#etoscs">etoscs</a></p></td>
+<td><p>oscillator strengths of electronic transitions</p></td>
+<td></td>
+<td><p>array of rank 1</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#etdips">etdips</a></p></td>
+<td><p>electric transition dipoles of electronic transitions</p></td>
+<td><p>ebohr</p></td>
+<td><p>array of rank 2</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#etveldips">etveldips</a></p></td>
+<td><p>velocity-gauge electric transition dipoles of electronic transitions</p></td>
+<td><p>ebohr</p></td>
+<td><p>array of rank 2</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#etmagdips">etmagdips</a></p></td>
+<td><p>magnetic transition dipoles of electronic transitions</p></td>
+<td><p>ebohr</p></td>
+<td><p>array of rank 2</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#etrotats">etrotats</a></p></td>
+<td><p>rotatory strengths of electronic transitions</p></td>
+<td><p>??</p></td>
+<td><p>array of rank 1</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#etsecs">etsecs</a></p></td>
+<td><p>singly-excited configurations for electronic transitions</p></td>
+<td></td>
+<td><p>list of lists</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#etsyms">etsyms</a></p></td>
+<td><p>symmetries of electronic transitions</p></td>
+<td></td>
+<td><p>list of string</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#freeenergy">freeenergy</a></p></td>
+<td><p>sum of electronic and thermal free energies</p></td>
+<td><p>hartree/particle</p></td>
+<td><p>float</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#fonames">fonames</a></p></td>
+<td><p>fragment orbital names</p></td>
+<td></td>
+<td><p>list of strings</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#fooverlaps">fooverlaps</a></p></td>
+<td><p>fragment orbital overlap matrix</p></td>
+<td></td>
+<td><p>array of rank 2</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#fragnames">fragnames</a></p></td>
+<td><p>names of fragments</p></td>
+<td></td>
+<td><p>list of strings</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#frags">frags</a></p></td>
+<td><p>indices of atoms in a fragment</p></td>
+<td></td>
+<td><p>list of lists</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#gbasis">gbasis</a></p></td>
+<td><p>coefficients and exponents of Gaussian basis functions</p></td>
+<td></td>
+<td><p>PyQuante format</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#geotargets">geotargets</a></p></td>
+<td><p>targets for convergence of geometry optimization</p></td>
+<td></td>
+<td><p>array of rank 1</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#geovalues">geovalues</a></p></td>
+<td><p>current values for convergence of geometry optmization</p></td>
+<td></td>
+<td><p>array of rank 1</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#grads">grads</a></p></td>
+<td><p>current values of forces (gradients) in geometry optimization</p></td>
+<td></td>
+<td><p>array of rank 3</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#hessian">hessian</a></p></td>
+<td><p>elements of the force constant matrix</p></td>
+<td></td>
+<td><p>array of rank 1</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#homos">homos</a></p></td>
+<td><p>molecular orbital indices of HOMO(s)</p></td>
+<td></td>
+<td><p>array of rank 1</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#metadata">metadata</a></p></td>
+<td><p>various metadata about the package and computation</p></td>
+<td></td>
+<td><p>dict</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#mocoeffs">mocoeffs</a></p></td>
+<td><p>molecular orbital coefficients</p></td>
+<td></td>
+<td><p>list of arrays of rank 2</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#moenergies">moenergies</a></p></td>
+<td><p>molecular orbital energies</p></td>
+<td><p>eV</p></td>
+<td><p>list of arrays of rank 1</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#moments">moments</a></p></td>
+<td><p>molecular multipole moments</p></td>
+<td><p>a.u.</p></td>
+<td><p>list of arrays[]</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#mosyms">mosyms</a></p></td>
+<td><p>orbital symmetries</p></td>
+<td></td>
+<td><p>list of lists</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#mpenergies">mpenergies</a></p></td>
+<td><p>molecular electronic energies with Møller-Plesset corrections</p></td>
+<td><p>eV</p></td>
+<td><p>array of rank 2</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#mult">mult</a></p></td>
+<td><p>multiplicity of the system</p></td>
+<td></td>
+<td><p>integer</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#natom">natom</a></p></td>
+<td><p>number of atoms</p></td>
+<td></td>
+<td><p>integer</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#nbasis">nbasis</a></p></td>
+<td><p>number of basis functions</p></td>
+<td></td>
+<td><p>integer</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#nmo">nmo</a></p></td>
+<td><p>number of molecular orbitals</p></td>
+<td></td>
+<td><p>integer</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#nmrtensors">nmrtensors</a></p></td>
+<td><p>Nuclear magnetic resonance chemical shielding tensors</p></td>
+<td></td>
+<td><p>dict of dicts of array of rank 2</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#nocoeffs">nocoeffs</a></p></td>
+<td><p>natural orbital coefficients</p></td>
+<td></td>
+<td><p>array of rank 2</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#nooccnos">nooccnos</a></p></td>
+<td><p>natural orbital occupation numbers</p></td>
+<td></td>
+<td><p>array of rank 1</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#nsocoeffs">nsocoeffs</a></p></td>
+<td><p>natural spin orbital coefficients</p></td>
+<td></td>
+<td><p>list of array of rank 2</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#nsooccnos">nsooccnos</a></p></td>
+<td><p>natural spin orbital occupation numbers</p></td>
+<td></td>
+<td><p>list of array of rank 1</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#optdone">optdone</a></p></td>
+<td><p>flags whether an optimization has converged</p></td>
+<td></td>
+<td><p>Boolean</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#optstatus">optstatus</a></p></td>
+<td><p>optimization status for each set of atomic coordinates</p></td>
+<td></td>
+<td><p>array of rank 1</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#polarizabilities">polarizabilities</a></p></td>
+<td><p>(dipole) polarizabilities, static or dynamic</p></td>
+<td></td>
+<td><p>list of arrays of rank 2</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#pressure">pressure</a></p></td>
+<td><p>pressure used for Thermochemistry</p></td>
+<td><p>atm</p></td>
+<td><p>float</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#scancoords">scancoords</a></p></td>
+<td><p>geometries of each scan step</p></td>
+<td><p>angstroms</p></td>
+<td><p>array of rank 3</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#scanenergies">scanenergies</a></p></td>
+<td><p>energies of potential energy surface</p></td>
+<td></td>
+<td><p>list</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#scannames">scannames</a></p></td>
+<td><p>names of variables scanned</p></td>
+<td></td>
+<td><p>list of strings</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#scanparm">scanparm</a></p></td>
+<td><p>values of parameters in potential energy surface</p></td>
+<td></td>
+<td><p>list of tuples</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#scfenergies">scfenergies</a></p></td>
+<td><p>molecular electronic energies after SCF (Hartree-Fock, DFT)</p></td>
+<td><p>eV</p></td>
+<td><p>array of rank 1</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#scftargets">scftargets</a></p></td>
+<td><p>targets for convergence of the SCF</p></td>
+<td></td>
+<td><p>array of rank 2</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#scfvalues">scfvalues</a></p></td>
+<td><p>current values for convergence of the SCF</p></td>
+<td></td>
+<td><p>list of arrays of rank 2</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#temperature">temperature</a></p></td>
+<td><p>temperature used for Thermochemistry</p></td>
+<td><p>kelvin</p></td>
+<td><p>float</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#time">time</a></p></td>
+<td><p>time in molecular dynamics and other trajectories</p></td>
+<td><p>fs</p></td>
+<td><p>array of rank 1</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#transprop">transprop</a></p></td>
+<td><p>all absorption and emission spectra (dictionary {name:</p></td>
+<td><p>etoscs</p></td>
+<td><p>etenergies</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#vibanharms">vibanharms</a></p></td>
+<td><p>vibrational anharmonicity constants</p></td>
+<td><p>1/cm</p></td>
+<td><p>array of rank 2</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#vibdisps">vibdisps</a></p></td>
+<td><p>cartesian displacement vectors</p></td>
+<td><p>delta angstrom</p></td>
+<td><p>array of rank 3</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#vibfreqs">vibfreqs</a></p></td>
+<td><p>vibrational frequencies</p></td>
+<td><p>1/cm</p></td>
+<td><p>array of rank 1</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#vibfconsts">vibfconsts</a></p></td>
+<td><p>force constants of vibrations</p></td>
+<td><p>mDyne/angstrom</p></td>
+<td><p>array of rank 1</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#vibirs">vibirs</a></p></td>
+<td><p>IR intensities</p></td>
+<td><p>km/mol</p></td>
+<td><p>array of rank 1</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#vibramans">vibramans</a></p></td>
+<td><p>Raman activities</p></td>
+<td><p>A^4/Da</p></td>
+<td><p>array of rank 1</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#vibrmasses">vibrmasses</a></p></td>
+<td><p>reduced masses of vibrations</p></td>
+<td><p>daltons</p></td>
+<td><p>array of rank 1</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="data_notes.html#vibsyms">vibsyms</a></p></td>
+<td><p>symmetries of vibrations</p></td>
+<td></td>
+<td><p>list of strings</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="data_notes.html#zpve">zpve</a></p></td>
+<td><p>zero-point vibrational energy correction</p></td>
+<td><p>hartree/particle</p></td>
+<td><p>float</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2014-2021, cclib Development Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

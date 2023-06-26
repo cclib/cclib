@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parsed data notes &mdash; cclib 1.7.2 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/increase_max_width.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Calculation methods" href="methods.html" />
+    <link rel="prev" title="Parsed data (version 1.7.2)" href="data.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="contents.html" class="icon icon-home">
+            cclib
+          </a>
+              <div class="version">
+                1.7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_install.html">How to install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_parse.html">How to parse and write</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">Parsed data (version 1.7.2)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Parsed data notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#aonames">aonames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aooverlaps">aooverlaps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#atombasis">atombasis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#atomcharges">atomcharges</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#atomcoords">atomcoords</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#atommasses">atommasses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#atomnos">atomnos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#atomspins">atomspins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ccenergies">ccenergies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#charge">charge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#coreelectrons">coreelectrons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dispersionenergies">dispersionenergies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#etenergies">etenergies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#etoscs">etoscs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#etsecs">etsecs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#etsyms">etsyms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fonames">fonames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fooverlaps">fooverlaps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gbasis">gbasis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#geotargets">geotargets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#geovalues">geovalues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#grads">grads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hessian">hessian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#homos">homos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#metadata">metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mocoeffs">mocoeffs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#moenergies">moenergies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#moments">moments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mosyms">mosyms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mpenergies">mpenergies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mult">mult</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#natom">natom</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#nbasis">nbasis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#nmo">nmo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#nmrtensors">nmrtensors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#optdone">optdone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scancoords">scancoords</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scanenergies">scanenergies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scannames">scannames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scanparm">scanparm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scfenergies">scfenergies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scftargets">scftargets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scfvalues">scfvalues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vibdisps">vibdisps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vibfconsts">vibfconsts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vibrmasses">vibrmasses</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="methods.html">Calculation methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bridge.html">Bridges to other packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_dev.html">Development parsed data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="contents.html">cclib</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="contents.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Parsed data notes</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/cclib/cclib/blob/master/doc/sphinx/data_notes.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="parsed-data-notes">
+<span id="index-0"></span><h1>Parsed data notes<a class="headerlink" href="#parsed-data-notes" title="Permalink to this heading"></a></h1>
+<p>This is a list of descriptions and notes for all the data attributes currently parsed by cclib, either in the official release (1.7.2) or development branch. In particular, this page contains technical details about the interpretation of attributes, how to produce them in the various programs and examples in some cases. For a summary and details of the current implementation by the different parsers, please see the <a class="reference external" href="data.html">parsed data</a> page and its <a class="reference external" href="data_dev.html">development</a> version.</p>
+<section id="aonames">
+<h2>aonames<a class="headerlink" href="#aonames" title="Permalink to this heading"></a></h2>
+<p>This attribute contains the atomic orbital names. These are not normalised as the following examples show, although a reasonable attempt is made to get them close to each other. Users will need to know what each orbital is by knowing the basis set inside out, rather than relying on this data. Such is life, as GAMESS does not provide enough information.</p>
+<ul>
+<li><p>Gaussian gives names of the form:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s1">&#39;C1_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_2S&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_2PX&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_2PY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_2PZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C2_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;C2_2S&#39;</span><span class="p">,</span> <span class="s1">&#39;C2_2PX&#39;</span><span class="p">,</span> <span class="s1">&#39;C2_2PY&#39;</span><span class="p">,</span> <span class="s1">&#39;C2_2PZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C3_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;C3_2S&#39;</span><span class="p">,</span> <span class="s1">&#39;C3_2PX&#39;</span><span class="p">,</span> <span class="s1">&#39;C3_2PY&#39;</span><span class="p">,</span> <span class="s1">&#39;C3_2PZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C4_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;C4_2S&#39;</span><span class="p">,</span> <span class="s1">&#39;C4_2PX&#39;</span><span class="p">,</span> <span class="s1">&#39;C4_2PY&#39;</span><span class="p">,</span> <span class="s1">&#39;C4_2PZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C5_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;C5_2S&#39;</span><span class="p">,</span> <span class="s1">&#39;C5_2PX&#39;</span><span class="p">,</span> <span class="s1">&#39;C5_2PY&#39;</span><span class="p">,</span> <span class="s1">&#39;C5_2PZ&#39;</span><span class="p">,</span> <span class="s1">&#39;H6_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;H7_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;H8_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;C9_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;C9_2S&#39;</span><span class="p">,</span> <span class="s1">&#39;C9_2PX&#39;</span><span class="p">,</span> <span class="s1">&#39;C9_2PY&#39;</span><span class="p">,</span> <span class="s1">&#39;C9_2PZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C10_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;C10_2S&#39;</span><span class="p">,</span> <span class="s1">&#39;C10_2PX&#39;</span><span class="p">,</span> <span class="s1">&#39;C10_2PY&#39;</span><span class="p">,</span> <span class="s1">&#39;C10_2PZ&#39;</span><span class="p">,</span> <span class="s1">&#39;H11_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;H12_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;H13_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;C14_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;C14_2S&#39;</span><span class="p">,</span> <span class="s1">&#39;C14_2PX&#39;</span><span class="p">,</span> <span class="s1">&#39;C14_2PY&#39;</span><span class="p">,</span> <span class="s1">&#39;C14_2PZ&#39;</span><span class="p">,</span> <span class="s1">&#39;H15_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;C16_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;C16_2S&#39;</span><span class="p">,</span> <span class="s1">&#39;C16_2PX&#39;</span><span class="p">,</span> <span class="s1">&#39;C16_2PY&#39;</span><span class="p">,</span> <span class="s1">&#39;C16_2PZ&#39;</span><span class="p">,</span> <span class="s1">&#39;H17_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;H18_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;C19_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;C19_2S&#39;</span><span class="p">,</span> <span class="s1">&#39;C19_2PX&#39;</span><span class="p">,</span> <span class="s1">&#39;C19_2PY&#39;</span><span class="p">,</span> <span class="s1">&#39;C19_2PZ&#39;</span><span class="p">,</span> <span class="s1">&#39;H20_1S&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</li>
+<li><p>GAMESS gives names of the form:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s1">&#39;C1_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_2S&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_3X&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_3Y&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_3Z&#39;</span><span class="p">,</span> <span class="s1">&#39;C2_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;C2_2S&#39;</span><span class="p">,</span> <span class="s1">&#39;C2_3X&#39;</span><span class="p">,</span> <span class="s1">&#39;C2_3Y&#39;</span><span class="p">,</span> <span class="s1">&#39;C2_3Z&#39;</span><span class="p">,</span> <span class="s1">&#39;C3_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;C3_2S&#39;</span><span class="p">,</span> <span class="s1">&#39;C3_3X&#39;</span><span class="p">,</span> <span class="s1">&#39;C3_3Y&#39;</span><span class="p">,</span> <span class="s1">&#39;C3_3Z&#39;</span><span class="p">,</span> <span class="s1">&#39;C4_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;C4_2S&#39;</span><span class="p">,</span> <span class="s1">&#39;C4_3X&#39;</span><span class="p">,</span> <span class="s1">&#39;C4_3Y&#39;</span><span class="p">,</span> <span class="s1">&#39;C4_3Z&#39;</span><span class="p">,</span> <span class="s1">&#39;C5_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;C5_2S&#39;</span><span class="p">,</span> <span class="s1">&#39;C5_3X&#39;</span><span class="p">,</span> <span class="s1">&#39;C5_3Y&#39;</span><span class="p">,</span> <span class="s1">&#39;C5_3Z&#39;</span><span class="p">,</span> <span class="s1">&#39;C6_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;C6_2S&#39;</span><span class="p">,</span> <span class="s1">&#39;C6_3X&#39;</span><span class="p">,</span> <span class="s1">&#39;C6_3Y&#39;</span><span class="p">,</span> <span class="s1">&#39;C6_3Z&#39;</span><span class="p">,</span> <span class="s1">&#39;H7_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;H8_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;H9_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;H10_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;C11_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;C11_2S&#39;</span><span class="p">,</span> <span class="s1">&#39;C11_3X&#39;</span><span class="p">,</span> <span class="s1">&#39;C11_3Y&#39;</span><span class="p">,</span> <span class="s1">&#39;C11_3Z&#39;</span><span class="p">,</span> <span class="s1">&#39;C12_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;C12_2S&#39;</span><span class="p">,</span> <span class="s1">&#39;C12_3X&#39;</span><span class="p">,</span> <span class="s1">&#39;C12_3Y&#39;</span><span class="p">,</span> <span class="s1">&#39;C12_3Z&#39;</span><span class="p">,</span> <span class="s1">&#39;H13_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;H14_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;C15_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;C15_2S&#39;</span><span class="p">,</span> <span class="s1">&#39;C15_3X&#39;</span><span class="p">,</span> <span class="s1">&#39;C15_3Y&#39;</span><span class="p">,</span> <span class="s1">&#39;C15_3Z&#39;</span><span class="p">,</span> <span class="s1">&#39;C16_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;C16_2S&#39;</span><span class="p">,</span> <span class="s1">&#39;C16_3X&#39;</span><span class="p">,</span> <span class="s1">&#39;C16_3Y&#39;</span><span class="p">,</span> <span class="s1">&#39;C16_3Z&#39;</span><span class="p">,</span> <span class="s1">&#39;H17_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;H18_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;H19_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;H20_1S&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>And for a large basis set calculation on a single C atom:</p>
+<ul>
+<li><p>Gaussian:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s1">&#39;C1_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_2S&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_3S&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_4S&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_5S&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_6PX&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_6PY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_6PZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_7PX&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_7PY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_7PZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_8PX&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_8PY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_8PZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_9PX&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_9PY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_9PZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_10D 0&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_10D+1&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_10D-1&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_10D+2&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_10D-2&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_11D 0&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_11D+1&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_11D-1&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_11D+2&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_11D-2&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_12D 0&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_12D+1&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_12D-1&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_12D+2&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_12D-2&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_13F 0&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_13F+1&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_13F-1&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_13F+2&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_13F-2&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_13F+3&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_13F-3&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_14F 0&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_14F+1&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_14F-1&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_14F+2&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_14F-2&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_14F+3&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_14F-3&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_15G 0&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_15G+1&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_15G-1&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_15G+2&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_15G-2&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_15G+3&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_15G-3&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_15G+4&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_15G-4&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_16S&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_17PX&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_17PY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_17PZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_18D 0&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_18D+1&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_18D-1&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_18D+2&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_18D-2&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_19F 0&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_19F+1&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_19F-1&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_19F+2&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_19F-2&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_19F+3&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_19F-3&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_20G 0&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_20G+1&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_20G-1&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_20G+2&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_20G-2&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_20G+3&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_20G-3&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_20G+4&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_20G-4&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</li>
+<li><p>GAMESS:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s1">&#39;C1_1S&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_2S&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_3S&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_4S&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_5S&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_6X&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_6Y&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_6Z&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_7X&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_7Y&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_7Z&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_8X&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_8Y&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_8Z&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_9X&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_9Y&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_9Z&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_10XX&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_10YY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_10ZZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_10XY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_10XZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_10YZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_11XX&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_11YY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_11ZZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_11XY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_11XZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_11YZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_12XX&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_12YY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_12ZZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_12XY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_12XZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_12YZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_13XXX&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_13YYY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_13ZZZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_13XXY&#39;</span><span class="p">,</span><span class="s1">&#39;C1_13XXZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_13YYX&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_13YYZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_13ZZX&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_13ZZY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_13XYZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_14XXX&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_14YYY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_14ZZZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_14XXY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_14XXZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_14YYX&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_14YYZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_14ZZX&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_14ZZY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_14XYZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_15XXXX&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_15YYYY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_15ZZZZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_15XXXY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_15XXXZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_15YYYX&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_15YYYZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_15ZZZX&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_15ZZZY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_15XXYY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_15XXZZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_15YYZZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_15XXYZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_15YYXZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_15ZZXY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_16S&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_17S&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_18S&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_19X&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_19Y&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_19Z&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_20X&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_20Y&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_20Z&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_21X&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_21Y&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_21Z&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_22XX&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_22YY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_22ZZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_22XY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_22XZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_22YZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_23XX&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_23YY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_23ZZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_23XY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_23XZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_23YZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_24XXX&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_24YYY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_24ZZZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_24XXY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_24XXZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_24YYX&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_24YYZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_24ZZX&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_24ZZY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_24XYZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_25S&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_26X&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_26Y&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_26Z&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_27XX&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_27YY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_27ZZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_27XY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_27XZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_27YZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_28XXX&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_28YYY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_28ZZZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_28XXY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_28XXZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_28YYX&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_28YYZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_28ZZX&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_28ZZY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_28XYZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_29XXXX&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_29YYYY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_29ZZZZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_29XXXY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_29XXXZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_29YYYX&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_29YYYZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_29ZZZX&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_29ZZZY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_29XXYY&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_29XXZZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_29YYZZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_29XXYZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_29YYXZ&#39;</span><span class="p">,</span> <span class="s1">&#39;C1_29ZZXY&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="aooverlaps">
+<h2>aooverlaps<a class="headerlink" href="#aooverlaps" title="Permalink to this heading"></a></h2>
+<p>This is a 2-dimensional array which holds the numerical values of the overlap between basis functions (also called atomic orbitals). It is needed for most analyses like <a class="reference external" href="methods.html#mulliken-population-analysis-mpa">Mulliken</a>, <a class="reference external" href="methods.html#c-squared-population-analysis-cspa">C squared</a>, and <a class="reference external" href="methods.html#mayer-s-bond-orders">Mayer’s Bond Orders</a>. The indices of the matrix correspond to the basis functions of interest. This matrix is symmetric, so <code class="docutils literal notranslate"><span class="pre">aooverlaps[i,j]</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">aooverlaps[j,i]</span></code>.</p>
+<p>Some examples:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">aooverlaps[0,3]</span></code> is the overlap between the 1st and 4th basis function</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">aooverlaps[2,:]</span></code> is a 1-dimensional array containing the overlap between every basis function and the 3rd basis function</p></li>
+</ul>
+<p><strong>ADF</strong>: not present by default, printed when <cite>PRINT Smat</cite> is in the input; do not mistake with <a class="reference internal" href="#fooverlaps">fooverlaps</a>.</p>
+<p><strong>DALTON</strong>: no option to print as of version 2013.</p>
+<p><strong>Gaussian</strong>: <code class="docutils literal notranslate"><span class="pre">iop(3/33=1)</span></code> must be specified in the input file.</p>
+</section>
+<section id="atombasis">
+<h2>atombasis<a class="headerlink" href="#atombasis" title="Permalink to this heading"></a></h2>
+<p>The attribute <code class="docutils literal notranslate"><span class="pre">atombasis</span></code> is a list, each element being a list that contains the atomic orbital indices on the respective atom. For example, <code class="docutils literal notranslate"><span class="pre">atombasis[1]</span></code> will contain the indices of atomic orbitals on the second atom of the molecule.</p>
+</section>
+<section id="atomcharges">
+<span id="index-1"></span><h2>atomcharges<a class="headerlink" href="#atomcharges" title="Permalink to this heading"></a></h2>
+<p>The attribute <code class="docutils literal notranslate"><span class="pre">atomcharges</span></code> contains the atomic partial charges as taken from the output file. Since these charges are arbitrary and depend on the details of a population analysis, this attribute is dictionary containing any number of various atomic charges. The keys in this dictionary are strings naming the population analysis, and the values are arrays of rank 1 and contain the actual charges.</p>
+<p>Currently, cclib parses several different charge types depending on the program:</p>
+<blockquote>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>charge type</p></th>
+<th class="head"><p>name of key in <code class="docutils literal notranslate"><span class="pre">atomcharges</span></code></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Mulliken</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mulliken</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Löwdin</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">lowdin</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>NPA</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">natural</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://doi.org/10.1016/j.theochem.2010.06.011">APT</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">apt</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://doi.org/10.1002/jcc.540110311">CHELPG</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">chelpg</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://doi.org/10.1007/BF01113058">Hirshfeld</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">hirshfeld</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://doi.org/10.1021/ct200866d">CM5</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">cm5</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://doi.org/10.1002/jcc.540050204">ESP</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">esp</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://doi.org/10.1021/j100142a004">RESP</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">resp</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>In practice, these may differ somewhat from the values cclib calculates in the various <a class="reference external" href="methods.html">calculation methods</a>.</p>
+<p><strong>Gaussian</strong>: additional sections are present where the partial charge on each hydrogen is added into the heavy atom it is connected to (“charges with hydrogens summed into heavy atoms”).  For each charge schema (such as <code class="docutils literal notranslate"><span class="pre">mulliken</span></code>), a corresponding key with <code class="docutils literal notranslate"><span class="pre">_sum</span></code> appended will be present (<code class="docutils literal notranslate"><span class="pre">mulliken_sum</span></code>) with these charges, and hydrogens will be present but set to zero.</p>
+<p><strong>Molpro</strong>: use the <code class="docutils literal notranslate"><span class="pre">pop</span></code> command (see <a class="reference external" href="https://www.molpro.net/manual/doku.php?id=properties_and_expectation_values&amp;s[]=population&amp;s[]=analysis#calling_the_population_analysis_program_pop">https://www.molpro.net/manual/doku.php?id=properties_and_expectation_values&amp;s[]=population&amp;s[]=analysis#calling_the_population_analysis_program_pop</a>).</p>
+</section>
+<section id="atomcoords">
+<h2>atomcoords<a class="headerlink" href="#atomcoords" title="Permalink to this heading"></a></h2>
+<p>The attribute <code class="docutils literal notranslate"><span class="pre">atomcoords</span></code> contains the atomic coordinates as taken from the output file. This is an array of rank 3, with a shape (n,m,3) where n is 1 for a single point calculation and &gt;=1 for a geometry optimisation and m is the number of atoms.</p>
+<p><strong>Gaussian</strong>: for geometry optimisations, the “Standard orientation” sections are extracted.</p>
+<p><strong>Molpro</strong>: typically prints output about geometry optimisation in a separate logfile. So, both that and the initial output need to be passed to the cclib parser.</p>
+</section>
+<section id="atommasses">
+<h2>atommasses<a class="headerlink" href="#atommasses" title="Permalink to this heading"></a></h2>
+<p>The attribute <code class="docutils literal notranslate"><span class="pre">atommasses</span></code> contains the masses of all atoms in unified atomic mass units, or Daltons (Da). This is an array or rank 1.</p>
+</section>
+<section id="atomnos">
+<h2>atomnos<a class="headerlink" href="#atomnos" title="Permalink to this heading"></a></h2>
+<p>An array of integers for the atomic numbers, or the number of protons in the atom nuclei.</p>
+</section>
+<section id="atomspins">
+<h2>atomspins<a class="headerlink" href="#atomspins" title="Permalink to this heading"></a></h2>
+<p>The attribute <code class="docutils literal notranslate"><span class="pre">atomspins</span></code> contains the atomic spin densities as calculated in a population analysis and taken from the output file. Since these densities are arbitrary and depend on the particular population analysis, this attribute is dictionary. In analogy to <a class="reference internal" href="#atomcharges">atomcharges</a>, the keys in this dictionary are strings naming the population analysis, and the values are arrays of rank 1 and contain the actual spin densities.</p>
+<p>Currently, cclib parses Mulliken and Löwdin spin densities, whose respective dictionary keys are <code class="docutils literal notranslate"><span class="pre">mulliken</span></code> and <code class="docutils literal notranslate"><span class="pre">lowdin</span></code>.</p>
+</section>
+<section id="ccenergies">
+<span id="index-2"></span><h2>ccenergies<a class="headerlink" href="#ccenergies" title="Permalink to this heading"></a></h2>
+<p>A one-dimensional array holds the total molecule energies including Coupled Cluster corrections. The array’s length is 1 for single point calculations and larger for optimisations. Only the highest theory level is parsed into this attribute (for example, CCSD energies as opposed to CCD energies, or CCSD(T) as opposed to CCSD energies).</p>
+</section>
+<section id="charge">
+<h2>charge<a class="headerlink" href="#charge" title="Permalink to this heading"></a></h2>
+<p>Net charge of the calculated system, in units of <code class="docutils literal notranslate"><span class="pre">e</span></code>.</p>
+</section>
+<section id="coreelectrons">
+<h2>coreelectrons<a class="headerlink" href="#coreelectrons" title="Permalink to this heading"></a></h2>
+<p>The attribute <code class="docutils literal notranslate"><span class="pre">coreelectrons</span></code> contains the number of core electrons in each atom’s pseudopotentials. It is an array of rank 1, with as many integer elements as there are atoms.</p>
+</section>
+<section id="dispersionenergies">
+<h2>dispersionenergies<a class="headerlink" href="#dispersionenergies" title="Permalink to this heading"></a></h2>
+<p>This is a rank 1 array that contains the isolated dispersion energy for each geometry.  This will be populated for empirical models, such as those from Grimme that only depend on relative atomic positions.  For self-consistently determined corrections that are incorporated during SCF iterations, there is no separable dispersion energy contribution, so this attribute will not be present.</p>
+<p>However, in <em>all</em> cases the dispersion energy for a given geometry will also be a part of <a class="reference internal" href="#scfenergies">scfenergies</a>.</p>
+</section>
+<section id="etenergies">
+<h2>etenergies<a class="headerlink" href="#etenergies" title="Permalink to this heading"></a></h2>
+<p>This is a rank 1 array that contains the energies of electronic transitions from a reference state to the excited states of the molecule, in <code class="docutils literal notranslate"><span class="pre">cm&lt;sup&gt;-1&lt;/sup&gt;</span></code>. There should be as many elements to this array as there are excited states calculated. Any type of excited state calculation should provide output that can be parsed into this attribute.</p>
+</section>
+<section id="etoscs">
+<h2>etoscs<a class="headerlink" href="#etoscs" title="Permalink to this heading"></a></h2>
+<p>The attribute <code class="docutils literal notranslate"><span class="pre">etoscs</span></code> is a rank 1 array that contains the oscillator strengths of transitions from the reference (ground) state to the excited electronic states of the of the molecule. As for <a class="reference internal" href="#etenergies">etenergies</a> and other attributes related to excited states, there should as many elements in this array as there are excited states in the calculation.</p>
+</section>
+<section id="etsecs">
+<h2>etsecs<a class="headerlink" href="#etsecs" title="Permalink to this heading"></a></h2>
+<p>The singly-excited configurations that contribute to electronic transitions are stored in <code class="docutils literal notranslate"><span class="pre">etsecs</span></code>. It is a list (for each electronic transition from the reference ground state) of lists (for each singly-excited configuration) with three members each:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>a tuple (moindex, alpha/beta), which indicates the MO where the transition begins</p></li>
+<li><p>a tuple (moindex, alpha/beta), which indicates the MO where the transition ends</p></li>
+<li><p>a float (which can be negative), the coefficient of this singly-excited configuration</p></li>
+</ul>
+</div></blockquote>
+<p>In these tuples, the value of alpha/beta is 0 or 1, respectively. For a restricted calculation, this value is always 0, although some programs (GAMESS) sometimes print coefficients for both alpha and beta electrons.</p>
+<p>The excitation coefficient is always converted to its unnormalized value by cclib - so the sum of the squared coefficients of all alpha and beta excitations should be unity. It is important to keep in mind, however, that only the square of the excitation coefficient has a physical meaning, and its sign depends on the numerical procedures used by each program.</p>
+</section>
+<section id="etsyms">
+<h2>etsyms<a class="headerlink" href="#etsyms" title="Permalink to this heading"></a></h2>
+<p>The attributes <code class="docutils literal notranslate"><span class="pre">etsyms</span></code> is a list containing the symmetries (strings) of the excited states found in the calculation. As for <a class="reference internal" href="#etenergies">etenergies</a> and other attributes related to excited states, there should be as many elements in this list as there are excited states in the calculation.</p>
+<p>Note that while the symmetry descriptions start with the string <code class="docutils literal notranslate"><span class="pre">Singlet</span></code> or <code class="docutils literal notranslate"><span class="pre">Triplet</span></code>, the exact format differs between programs.</p>
+</section>
+<section id="fonames">
+<h2>fonames<a class="headerlink" href="#fonames" title="Permalink to this heading"></a></h2>
+<p>ADF uses symmetry-adapted fragment orbitals (SFOs) as its basis. These SFOs are generally orthonormal linear combinations of atomic orbitals. This makes it difficult to determine which individual atomic orbitals form the basis in calculations that have any symmetry. In addition, ADF allows “fragment” calculations which use the molecular orbitals of the fragments (FOs, or fragment orbitals) for building up the calculated molecular orbitals.</p>
+<p>The difficulty in handling the basis for a molecule with symmetry and the availability of extra information in the fragment calculations makes using <a class="reference internal" href="#aonames">aonames</a> (as specified for the other formats) inappropriate, except for certain circumstances. Therefore, an extra member called fonames is available for the adfparser.</p>
+<p>Some examples:</p>
+<p><code class="docutils literal notranslate"><span class="pre">C1+C4_1S+1S</span></code> - Orbitals from carbon 1 and carbon 4 can interact, and their <code class="docutils literal notranslate"><span class="pre">1S</span></code> orbitals mix in a positive manner</p>
+<p><code class="docutils literal notranslate"><span class="pre">C1+C4_1Px-1Px</span></code> - Orbitals from carbon 1 and carbon 4 can interact, and their <code class="docutils literal notranslate"><span class="pre">1Px</span></code> orbitals mix in a negative manner</p>
+<p><code class="docutils literal notranslate"><span class="pre">bdt1_37A</span></code> - Molecular orbital 37A from the fragment bdt1</p>
+<p><strong>ADF</strong>: There are no required inputfile options for fonames to be supported; however, if one wishes to have SFOs map directly to atomic basis functions, there are two requirements. First, the <code class="docutils literal notranslate"><span class="pre">Symmetry</span> <span class="pre">NOSYM</span></code> option must be given to force ADF to not linearly combine atomic orbitals into SFOs. Second, fragment calculations cannot be done (for obvious reasons). Also, it is suggested that <code class="docutils literal notranslate"><span class="pre">Eigval</span> <span class="pre">99999</span> <span class="pre">99999</span></code> be put into an <code class="docutils literal notranslate"><span class="pre">Eprint</span></code> block of the input file of a spin-restricted calculation so that every molecular orbital energy will be printed.</p>
+</section>
+<section id="fooverlaps">
+<h2>fooverlaps<a class="headerlink" href="#fooverlaps" title="Permalink to this heading"></a></h2>
+<p>This is a 2-dimensional array that holds numerical values for the spacial overlap between basis functions. It is very similar to <a class="reference internal" href="#aooverlaps">aooverlaps</a>, but differs because of the way ADF performs the calculation (see below for more details). The matrix indices correspond to the fragment orbitals; see the examples listed for <a class="reference internal" href="#aonames">aonames</a>.</p>
+<p><strong>Background</strong></p>
+<p>ADF uses symmetry-adapted fragment orbitals (SFOs) as its basis. These SFOs are generally orthonormal linear combinations of atomic orbitals. This makes it difficult to determine which individual atomic orbitals form the basis in calculations that have any symmetry. In addition, ADF allows “fragment” calculations which use the molecular orbitals of the fragments (FOs, or fragment orbitals) for building up the calculated molecular orbitals.</p>
+<p>The difficulty in handling the basis for a molecule with symmetry and the availability of extra information in the fragment calculations makes using aooverlaps (as specified for the other formats) inappropriate, except for certain circumstances. Therefore, an extra member called fooverlaps is available for the ADF parser.</p>
+<p><strong>ADF</strong>: There are no required inputfile options for fooverlaps to be supported; however, if one wishes to have SFOs map directly to atomic basis functions, there are two requirements. First, the <code class="docutils literal notranslate"><span class="pre">Symmetry</span> <span class="pre">NOSYM</span></code> option must be given to force ADF to not linearly combine atomic orbitals into SFOs. Second, fragment calculations cannot be done (for obvious reasons). Also, it is suggested that <code class="docutils literal notranslate"><span class="pre">Eigval</span> <span class="pre">99999</span> <span class="pre">99999</span></code> be put into an <code class="docutils literal notranslate"><span class="pre">Eprint</span></code> block of the input file of a spin-restricted calculation so that every molecular orbital energy will be printed.</p>
+</section>
+<section id="gbasis">
+<span id="index-3"></span><h2>gbasis<a class="headerlink" href="#gbasis" title="Permalink to this heading"></a></h2>
+<p>This attribute stores information about the Gaussian basis functions that were used in the calculation, per atom using the same conventions as <a class="reference external" href="http://pyquante.sourceforge.net/">PyQuante</a>. Specifically, <code class="docutils literal notranslate"><span class="pre">gbasis</span></code> is a list of lists iterating over atoms and Gaussian basis functions. The elements (basis functions) are tuples of length 2 consisting of orbital type (e.g. ‘S’, ‘P’ or ‘D’) and a list (per contracted GTO) of tuples of size 2 consisting of the exponent and coefficient. Confused? Well, here’s <code class="docutils literal notranslate"><span class="pre">gbasis</span></code> for a molecule consisting of a single C atom with a STO-3G basis:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="c1"># per atom</span>
+    <span class="p">[</span>
+        <span class="p">(</span><span class="s1">&#39;S&#39;</span><span class="p">,</span> <span class="p">[</span>
+            <span class="p">(</span><span class="mf">71.616837</span><span class="p">,</span> <span class="mf">0.154329</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">13.045096</span><span class="p">,</span> <span class="mf">0.535328</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">3.530512</span><span class="p">,</span> <span class="mf">0.444635</span><span class="p">),</span>
+            <span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;S&#39;</span><span class="p">,</span> <span class="p">[</span>
+            <span class="p">(</span><span class="mf">2.941249</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.099967</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">0.683483</span><span class="p">,</span> <span class="mf">0.399513</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">0.222290</span><span class="p">,</span> <span class="mf">0.700115</span><span class="p">),</span>
+            <span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;P&#39;</span><span class="p">,</span> <span class="p">[</span>
+            <span class="p">(</span><span class="mf">2.941249</span><span class="p">,</span> <span class="mf">0.155916</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">0.683483</span><span class="p">,</span> <span class="mf">0.607684</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">0.222290</span><span class="p">,</span> <span class="mf">0.391957</span><span class="p">),</span>
+            <span class="p">]),</span>
+    <span class="p">]</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>For D and F functions there is an important distinction between pure (5D, 7F) or Cartesian (6D, 10F) functions. PyQuante can only handle Cartesian functions, but we should extract this information in any case, and perhaps work to extend the PyQuante basis set format to include this.</p>
+<p><strong>Gaussian</strong>: the <a class="reference external" href="https://gaussian.com/gfinput/">GFINPUT</a> keyword should normally be used (<a class="reference external" href="https://gaussian.com/gfprint/">GFPRINT</a> gives equivalent information in a different format).</p>
+<p><strong>GAMESS/GAMESS-UK</strong>: no special keywords are required, but the basis is only available for symmetry inequivalent atoms. There does not seem to be any way to get GAMESS to say which atoms are related through symmetry. As a result, if you want to get basis set info for every atom, you need to reduce the symmetry to C1.</p>
+<p><strong>Jaguar</strong>: for more information see manual (for example at <a class="reference external" href="https://web.archive.org/web/20141117001641/http://yfaat.ch.huji.ac.il/jaguar-help/mand.html">https://web.archive.org/web/20141117001641/http://yfaat.ch.huji.ac.il/jaguar-help/mand.html</a>)</p>
+<p><strong>ORCA</strong>: include <code class="docutils literal notranslate"><span class="pre">Print[</span> <span class="pre">P_Basis</span> <span class="pre">]</span> <span class="pre">2</span></code> in the <code class="docutils literal notranslate"><span class="pre">output</span></code> block</p>
+</section>
+<section id="geotargets">
+<span id="index-4"></span><h2>geotargets<a class="headerlink" href="#geotargets" title="Permalink to this heading"></a></h2>
+<p>Geotargets are the target values of the criteria used to determine whether a geometry optimisation has converged. The targets are stored in an array of length <code class="docutils literal notranslate"><span class="pre">n</span></code>, where <code class="docutils literal notranslate"><span class="pre">n</span></code> is the number of targets, and the actual values of these criteria are stored for every optimisation step in the attribute <a class="reference internal" href="#geovalues">geovalues</a>. Note that cclib does not carry information about the meaning of these criteria, and it is up to the user to interpret the values properly for a particular program. Below we provide some details for several parsers, but it is always a good idea to refer to the source documentation.</p>
+<p>In some special cases, the values in <code class="docutils literal notranslate"><span class="pre">geotargets</span></code> will be <a class="reference external" href="https://numpy.org/doc/stable/user/misc.html#ieee-754-floating-point-special-values">numpy.inf</a>.</p>
+<p><strong>GAMESS UK</strong>: the criteria used for geometry convergence are based on the <code class="docutils literal notranslate"><span class="pre">TOL</span></code> parameter, which can be set using the <code class="docutils literal notranslate"><span class="pre">XTOLL</span></code> directive. The fault value of this parameter and the conditions required for convergence vary among the various optimisation strategies (see the <a class="reference external" href="https://web.archive.org/web/20190809095414/http://www.cfs.dl.ac.uk/docs/html/part4/node14.html">GAMESS-UK manual section on controlling optimisation</a> for details). In <code class="docutils literal notranslate"><span class="pre">OPTIMIZE</span></code> mode, <code class="docutils literal notranslate"><span class="pre">TOL</span></code> defaults to 0.003 and the conditions are,</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>maximum change in variables below TOL,</p></li>
+<li><p>average change in variables smaller than TOL * 2/3,</p></li>
+<li><p>maximum gradient below TOL * 1/4,</p></li>
+<li><p>average gradient below TOL * 1/6.</p></li>
+</ul>
+</div></blockquote>
+<p><strong>Jaguar</strong> has several geometry convergence criteria,</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>gconv1: maximum element of gradient (4.5E-04)</p></li>
+<li><p>gconv2: rms of gradient elements (3.0E-04)</p></li>
+<li><p>gconv5: maximum element of nuclear displacement (1.8E-03)</p></li>
+<li><p>gconv6: rms of nuclear displacement elements (1.2E-03)</p></li>
+<li><p>gconv7: difference between final energies from previous and current geometry optimisation iterations (5.0E-05)</p></li>
+</ul>
+</div></blockquote>
+<p>Note that a value for gconv7 is not available until the second iteration, so it is set to zero in the first element of <a class="reference internal" href="#geovalues">geovalues</a>.</p>
+<p><strong>Molpro</strong> has custom convergence criteria, as described in the <a class="reference external" href="https://www.molpro.net/manual/doku.php?id=geometry_optimization_optg#options_to_modify_convergence_criteria">manual</a>:</p>
+<blockquote>
+<div><p>The standard MOLPRO convergence criterion requires the maximum component of the gradient to be less than <span class="math notranslate nohighlight">\(3 \cdot 10^{-4}\)</span> [a.u.] and the maximum energy change to be less than <span class="math notranslate nohighlight">\(1 \cdot 10^{-6}\)</span> [H] or the maximum component of the gradient to be less than <span class="math notranslate nohighlight">\(3 \cdot 10^{-4}\)</span> [a.u.] and the maximum component of the step to be less than <span class="math notranslate nohighlight">\(3 \cdot 10^{-4}\)</span> [a.u.].</p>
+</div></blockquote>
+<p><strong>ORCA</strong> tracks the change in energy as well as RMS and maximum gradients and displacements. As of version 3.0, an optimisation is considered converged when all the tolerances are met, and there are four exceptions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the energy is within 25x the tolerance and all other criteria are met</p></li>
+<li><p>the gradients are overachieved (1/3 of the tolerance) and displacements are reasonable (at most 3x the tolerance)</p></li>
+<li><p>the displacements are overachieved (1/3 of the tolerance) and the gradients are reasonable (at most 3x the tolerance)</p></li>
+<li><p>the energy gradients and internal coordinates are converged (bond distances, angles, dihedrals and impropers)</p></li>
+</ul>
+</div></blockquote>
+<p><strong>Psi</strong> normally tracks five different values, as described <a class="reference external" href="https://psicode.org/psi4manual/master/optking.html#convergence-criteria">in the documentation</a>, but their use various depending on the strategy employed. The default strategy (QCHEM) check whether the maximum force is converged and if the maximum energy change or displacement is converged. Additionally, to aid with flat potential energy surfaces, convergence is as assumed when the root mean square force converged to 0.01 of its default target. Note that Psi print values even for targets that are not being used – in these cases the targets are parsed as <a class="reference external" href="https://numpy.org/doc/stable/user/misc.html#ieee-754-floating-point-special-values">numpy.inf</a> so that they can still be used (any value will be converged).</p>
+</section>
+<section id="geovalues">
+<span id="index-5"></span><h2>geovalues<a class="headerlink" href="#geovalues" title="Permalink to this heading"></a></h2>
+<p>These are the current values for the criteria used to determine whether a geometry has converged in the course of a geometry optimisation. It is an array of dimensions <code class="docutils literal notranslate"><span class="pre">m</span> <span class="pre">x</span> <span class="pre">n</span></code>, where <code class="docutils literal notranslate"><span class="pre">m</span></code> is the number of geometry optimisation iterations and <code class="docutils literal notranslate"><span class="pre">n</span></code> the number of target criteria.</p>
+<p>Note that many programs print atomic coordinates before and after a geometry optimisation, which means that there will not necessarily be <code class="docutils literal notranslate"><span class="pre">m</span></code> elements in <a class="reference internal" href="#atomcoords">atomcoords</a>.</p>
+<p>If the optimisation has finished successfully, the values in the last row should be smaller than the values in <a class="reference internal" href="#geotargets">geotargets</a> (unless the convergence criteria require otherwise).</p>
+</section>
+<section id="grads">
+<h2>grads<a class="headerlink" href="#grads" title="Permalink to this heading"></a></h2>
+<p>The attribute <code class="docutils literal notranslate"><span class="pre">grads</span></code> contains the forces on the atoms, that is, the negative gradient of the energy with respect to atomic coordinates in atomic units (Hartree / Bohr). <code class="docutils literal notranslate"><span class="pre">grads</span></code> is an array of rank 3, with dimensions <cite>n x m x 3</cite> where <cite>n</cite> is 1 for a single point calculation and <cite>&gt;=1</cite> for a geometry optimisation, <cite>m</cite> is the number of atoms and the last dimension contains the x, y and z components of the gradient. The orientation of <code class="docutils literal notranslate"><span class="pre">grads</span></code> corresponds to that of <a class="reference internal" href="#atomcoords">atomcoords</a>.</p>
+<p><strong>Gaussian</strong>: In calculations that include point-group symmetry, <code class="docutils literal notranslate"><span class="pre">grads</span></code> is converted to standard orientation to match the orientation of <code class="docutils literal notranslate"><span class="pre">atomcoords</span></code> and other quantities. Because of this, the <code class="docutils literal notranslate"><span class="pre">grads</span></code> group will differ from that printed in the output file by Gaussian (which is always in the input orientation). Calculations without symmetry (that is, with the <code class="docutils literal notranslate"><span class="pre">Symmetry=None</span></code> keyword) yield everything in the input orientation and in those cases <code class="docutils literal notranslate"><span class="pre">grads</span></code> should match exactly what is printed in the output file.</p>
+</section>
+<section id="hessian">
+<h2>hessian<a class="headerlink" href="#hessian" title="Permalink to this heading"></a></h2>
+<p>An array of rank 2 that contains the elements of the <a class="reference external" href="https://en.wikipedia.org/wiki/Hessian_matrix">hessian</a> or force constant matrix. The full symmetric <code class="docutils literal notranslate"><span class="pre">3N</span> <span class="pre">x</span> <span class="pre">3N</span></code> matrix is stored.</p>
+</section>
+<section id="homos">
+<span id="index-6"></span><h2>homos<a class="headerlink" href="#homos" title="Permalink to this heading"></a></h2>
+<p>A 1D array that holds the indexes of the highest occupied molecular orbitals (HOMOs), with one element for restricted and two elements for unrestricted calculations. These indexes can be applied to other attributes describing molecular orbitals, such as <a class="reference internal" href="#moenergies">moenergies</a> and <a class="reference internal" href="#mocoeffs">mocoeffs</a>. For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">data</span> <span class="o">=</span> <span class="n">cclib</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">ccread</span><span class="p">(</span><span class="s1">&#39;water_mp2&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;</span> <span class="n">last_occupied_energy</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">moenergies</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">data</span><span class="o">.</span><span class="n">homos</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>&gt;&gt; <strong>Note:</strong> All indexes in cclib start from zero, as per Python conventions. This applies to the contents of <code class="docutils literal notranslate"><span class="pre">homos</span></code> as well, which means <code class="docutils literal notranslate"><span class="pre">homos[0]</span></code> refers to the <em>index</em> of the HOMO when referencing other attributes and not the number of occupied orbitals.</p>
+</section>
+<section id="metadata">
+<span id="index-7"></span><h2>metadata<a class="headerlink" href="#metadata" title="Permalink to this heading"></a></h2>
+<p>A dictionary containing <a class="reference external" href="https://en.wikipedia.org/wiki/Metadata">metadata</a> (data about data) for the calculation. Currently, it can contain the following possible attributes, not all of which are implemented for each parser.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">basis_set</span></code>: A string with the name of the basis set, if it is printed anywhere as a standard name.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">coord_type</span></code>: For the <code class="docutils literal notranslate"><span class="pre">coords</span></code> field, a string for the representation of stored coordinates. Currently, it is one of <code class="docutils literal notranslate"><span class="pre">xyz</span></code>, <code class="docutils literal notranslate"><span class="pre">int</span></code>/<code class="docutils literal notranslate"><span class="pre">internal</span></code>, or <code class="docutils literal notranslate"><span class="pre">gzmat</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">coords</span></code>: A list of lists with shape <code class="docutils literal notranslate"><span class="pre">[natoms,</span> <span class="pre">4]</span></code> which contains the input coordinates (those found in the input file). The first column is the atomic symbol as a string, and the next three columns are floats. This is useful as many programs reorient coordinates for symmetry reasons.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cpu_time</span></code>: A list of datetime.timedeltas containing the CPU time of each calculation in the output.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">functional</span></code>: A string with the name of the density functional used.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">info</span></code>: A list of strings, each of which is an information or log message produced during a calculation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">input_file_contents</span></code>: A string containing the entire input file, if it is echoed back during the calculation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">input_file_name</span></code>: A string containing the name of the input file, with file extension. It may not contain the entire path to the file.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">keywords</span></code>: A list of strings corresponding to the keywords used in the input file, in the loose format used by ORCA.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">methods</span></code>: A list of strings containing each method used in order. Currently, the list may contain <code class="docutils literal notranslate"><span class="pre">HF</span></code>, <code class="docutils literal notranslate"><span class="pre">DFT</span></code>, <code class="docutils literal notranslate"><span class="pre">LMP2</span></code>/<code class="docutils literal notranslate"><span class="pre">DF-MP2</span></code>/<code class="docutils literal notranslate"><span class="pre">MP2</span></code>, <code class="docutils literal notranslate"><span class="pre">MP3</span></code>, <code class="docutils literal notranslate"><span class="pre">MP4</span></code>, <code class="docutils literal notranslate"><span class="pre">CCSD</span></code>, and/or <code class="docutils literal notranslate"><span class="pre">CCSD(T)</span></code>/<code class="docutils literal notranslate"><span class="pre">CCSD-T</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">package</span></code>: A string with the name of the quantum chemistry program used.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">package_version</span></code>: A string representation of the package version. It is formatted to allow comparison using relational operators.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">symmetry_detected</span></code>: A string representing the full or largest point group detected by the program.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">symmetry_used</span></code>: A string representing the point group used by the program for the calculation. This may be different from <code class="docutils literal notranslate"><span class="pre">symmetry_detected</span></code> if the full point group is non-abelian and the program can only take advantage of abelian groups. For example, when performing a calculation on benzene with symmetry turned on, <code class="docutils literal notranslate"><span class="pre">symmetry_detected</span></code> may be <code class="docutils literal notranslate"><span class="pre">d6h</span></code>, but <code class="docutils literal notranslate"><span class="pre">symmetry_used</span></code> is most likely <code class="docutils literal notranslate"><span class="pre">d2h</span></code>, since D2h is the largest abelian subgroup of D6h.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">success</span></code>: A boolean for whether or not the calculation completed properly.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">unrestricted</span></code>: A boolean for whether or not the calculation was performed with a unrestricted wavefunction.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">wall_time</span></code>: A list of datetime.timedeltas containing the wall time of each calculation in the output.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">warnings</span></code>: A list of strings, each of which is a warning produced during a calculation.</p></li>
+</ul>
+<p>The implementation and coverage of metadata is currently inconsistent. In the future, metadata may receive its own page similar to <a class="reference internal" href="data.html"><span class="doc">extracted data</span></a>.</p>
+</section>
+<section id="mocoeffs">
+<h2>mocoeffs<a class="headerlink" href="#mocoeffs" title="Permalink to this heading"></a></h2>
+<p>A list of rank 2 arrays containing the molecular orbital (MO) coefficients. The list is of length 1 for restricted calculations, but length 2 for unrestricted calculations. For the array(s) in the list, the first axis corresponds to molecular orbitals, and the second corresponds to basis functions.</p>
+<p>Examples:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">mocoeffs[0][2,5]</span></code> – The coefficient of the 6th basis function of the 3rd alpha molecular orbital</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mocoeffs[1][:,0]</span></code> – An array of the 1st basis function coefficients for the every beta molecular orbital</p></li>
+</ul>
+<p>Note: For restricted calculation, <code class="docutils literal notranslate"><span class="pre">mocoeffs</span></code> is still a list, but it only contains a single rank 2 array so you access the matrix with mocoeffs[0].</p>
+<p><strong>GAMESS-UK</strong> - the <a class="reference external" href="https://web.archive.org/web/20190809100513/http://www.cfs.dl.ac.uk/docs/html/part3/node8.html">FORMAT HIGH</a> directive needs to be included if you want information on all of the eigenvalues to be available. In versions before 8.0 for unrestricted calculations, <code class="docutils literal notranslate"><span class="pre">FORMAT</span> <span class="pre">HIGH</span></code> does not increase the number of orbitals for which the molecular orbital coefficents are printed, so that there may be more orbital information on the alpha orbitals compared to the beta orbitals, and as a result the extra beta molecular orbital coefficients for which information is not available will be padded out with zeros by cclib.</p>
+<p><strong>Molpro</strong> - does not print MO coefficients at all by default, and you must add in the input <code class="docutils literal notranslate"><span class="pre">GPRINT,ORBITALS</span></code>. What’s more, this prints only the occupied orbitals, and to get virtuals add also <code class="docutils literal notranslate"><span class="pre">ORBPTIN,NVIRT</span></code>, where <code class="docutils literal notranslate"><span class="pre">NVIRT</span></code> is how many virtuals to print (can be a large number like 99999 to print all).</p>
+</section>
+<section id="moenergies">
+<span id="index-8"></span><h2>moenergies<a class="headerlink" href="#moenergies" title="Permalink to this heading"></a></h2>
+<p>A list of rank 1 arrays containing the molecular orbital energies in eV. The list is of length 1 for restricted calculations, but length 2 for unrestricted calculations.</p>
+<p><strong>GAMESS-UK</strong>: similar to <a class="reference internal" href="#mocoeffs">mocoeffs</a>, the directive <a class="reference external" href="https://web.archive.org/web/20190809100513/http://www.cfs.dl.ac.uk/docs/html/part3/node8.html">FORMAT HIGH</a> needs to be used if you want all of the eigenvalues printed.</p>
+<p><strong>Jaguar</strong>: the first ten virtual orbitals are printed by default. In order to print more, use the <code class="docutils literal notranslate"><span class="pre">ipvirt</span></code> keyword, with <code class="docutils literal notranslate"><span class="pre">ipvirt=-1</span></code> printing all virtual orbitals.</p>
+</section>
+<section id="moments">
+<span id="index-9"></span><h2>moments<a class="headerlink" href="#moments" title="Permalink to this heading"></a></h2>
+<p>This attribute contains the dipole moment vector and any higher electrostatic multipole moments for the whole molecule. It comprises a list of one dimensional arrays,</p>
+<ul class="simple">
+<li><p>the first is the reference point used in the multipole expansion, which is normally the center of mass,</p></li>
+<li><p>the second is the dipole moment vector, in Debyes (<span class="math notranslate nohighlight">\(\mathbf{\mathrm{D}}\)</span>),</p></li>
+<li><p>the third array contains the raw molecular quadrupole moments in lexicographical order, that is the XX, XY, XZ, YY, YZ and ZZ moments, in Buckinghams (<span class="math notranslate nohighlight">\(\mathbf{\mathrm{B}}\)</span>),</p></li>
+<li><p>any further arrays contain the raw molecular multipole moments of higher rank, in lexicographical order and in units of <span class="math notranslate nohighlight">\(\mathbf{\mathrm{D}} \cdot Å^{L-1} = 10^{-10} \mathrm{esu} \cdot Å^L\)</span></p></li>
+</ul>
+<p>Note that by default cclib will provide the last moments printed, if several are printed in the course of a geometry optimisation or other job type involving several more than one geometry. For post-Hartree-Fock calculations, such as MP2 or coupled cluster, the uncorrelated moments are reported if none are printed for the final wavefunction.</p>
+</section>
+<section id="mosyms">
+<span id="index-10"></span><h2>mosyms<a class="headerlink" href="#mosyms" title="Permalink to this heading"></a></h2>
+<p>For unrestricted calculations, this is a list of two lists containing alpha and beta symmetries (i.e. <code class="docutils literal notranslate"><span class="pre">[[alpha_syms],[beta_syms]]</span></code>) containing strings for the orbital symmetries, arranged in order of energy. In a restricted calculation, there is only one nested list (<code class="docutils literal notranslate"><span class="pre">[[syms]]</span></code>).</p>
+<p>The symmetry labels are normalised and cclib reports standard symmetry names:</p>
+<blockquote>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>cclib</p></th>
+<th class="head"><p>ADF</p></th>
+<th class="head"><p>GAMESS</p></th>
+<th class="head"><p>GAMESS-UK</p></th>
+<th class="head"><p>Gaussian</p></th>
+<th class="head"><p>Jaguar</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>A</p></td>
+<td><p>A</p></td>
+<td><p>A</p></td>
+<td><p>a</p></td>
+<td><p>A</p></td>
+<td><p>A</p></td>
+</tr>
+<tr class="row-odd"><td><p>A1</p></td>
+<td><p>A1</p></td>
+<td><p>A1</p></td>
+<td><p>a1</p></td>
+<td><p>A1</p></td>
+<td><p>A1</p></td>
+</tr>
+<tr class="row-even"><td><p>Ag</p></td>
+<td><p>A.g</p></td>
+<td><p>AG</p></td>
+<td><p>ag</p></td>
+<td><p>AG</p></td>
+<td><p>Ag</p></td>
+</tr>
+<tr class="row-odd"><td><p>A’</p></td>
+<td><p>AA</p></td>
+<td><p>A’</p></td>
+<td><p>a’</p></td>
+<td><p>A’</p></td>
+<td><p>Ap</p></td>
+</tr>
+<tr class="row-even"><td><p>A”</p></td>
+<td><p>AAA</p></td>
+<td><p>A’ ‘</p></td>
+<td><p>a” or a’ ‘</p></td>
+<td><p>A”</p></td>
+<td><p>App</p></td>
+</tr>
+<tr class="row-odd"><td><p>A1’</p></td>
+<td><p>AA1</p></td>
+<td><p>A1’</p></td>
+<td><p>a1’</p></td>
+<td><p>A1’</p></td>
+<td><p>A1p</p></td>
+</tr>
+<tr class="row-even"><td><p>A1”</p></td>
+<td><p>AAA1</p></td>
+<td><p>A1”</p></td>
+<td><p>a1”</p></td>
+<td><p>A1”</p></td>
+<td><p>A1pp</p></td>
+</tr>
+<tr class="row-odd"><td><p>sigma</p></td>
+<td><p>Sigma</p></td>
+<td></td>
+<td></td>
+<td><p>SG</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>pi</p></td>
+<td><p>Pi</p></td>
+<td></td>
+<td></td>
+<td><p>PI</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>phi</p></td>
+<td><p>Phi</p></td>
+<td></td>
+<td></td>
+<td><p>PHI (inferred)</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>delta</p></td>
+<td><p>Delta</p></td>
+<td></td>
+<td></td>
+<td><p>DLTA but DLTU/DLTG</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>sigma.g</p></td>
+<td><p>Sigma.g</p></td>
+<td></td>
+<td></td>
+<td><p>SGG</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<ul class="simple">
+<li><p>ADF - the full list can be found <a class="reference external" href="http://www.scm.com/Doc/Doc2005.01/ADF/ADFUsersGuide/page339.html">here</a>.</p></li>
+<li><p>GAMESS-UK - to get the list, <code class="docutils literal notranslate"><span class="pre">grep</span> <span class="pre">&quot;data</span> <span class="pre">yr&quot;</span> <span class="pre">input.m</span></code> if you have access to the source. Note that for E, it’s split into “e1+” and “e1-” for instance.</p></li>
+<li><p>Jaguar - to get the list, look at the examples in <code class="docutils literal notranslate"><span class="pre">schrodinger/jaguar-whatever/samples</span></code> if you have access to Jaguar. Note that for E, it’s written as E1pp/Ap, for instance.</p></li>
+<li><p>NWChem - if molecular symmetry is turned off or set to C1, symmetry adaption for orbitals is also deactivated, and can be explicitly turned on with <cite>adapt on</cite> in the SCF block</p></li>
+</ul>
+<p>Developers:</p>
+<ul class="simple">
+<li><p>The tests for these functions live in <code class="docutils literal notranslate"><span class="pre">test/parser/testspecficparser.py</span></code>.</p></li>
+<li><p><a class="reference external" href="http://symmetry.jacobs-university.de/">These</a> character tables may be useful in determining the correspondence between the labels used by the comp chem package and the commonly-used symbols.</p></li>
+</ul>
+</section>
+<section id="mpenergies">
+<span id="index-11"></span><h2>mpenergies<a class="headerlink" href="#mpenergies" title="Permalink to this heading"></a></h2>
+<p>The attribute <code class="docutils literal notranslate"><span class="pre">mpenergies</span></code> holds the total molecule energies including Møller-Plesset correlation energy corrections in a two-dimensional array. The array’s shape is (n,L), where <code class="docutils literal notranslate"><span class="pre">n</span></code> is 1 for single point calculations and larger for optimisations, and <code class="docutils literal notranslate"><span class="pre">L</span></code> is the order at which the correction is truncated. The order of elements is ascending, so a single point MP5 calculation will yield mpenergies as <span class="math notranslate nohighlight">\(E_{MP2}, E_{MP3}, E_{MP4}, E_{MP5}\)</span>.</p>
+<p><strong>ADF</strong>: does not perform such calculations.</p>
+<p><strong>GAMESS</strong>: second-order corrections (MP2) are available in GAMESS-US, and MP2 through MP3 calculations in PC-GAMESS (use <code class="docutils literal notranslate"><span class="pre">mplevl=n</span></code> in the <code class="docutils literal notranslate"><span class="pre">$contrl</span></code> section).</p>
+<p><strong>GAMESS-UK</strong>: MP2 through MP3 corrections are available.</p>
+<p><strong>Gaussian</strong>: MP2 through MP5 energies are available using the <code class="docutils literal notranslate"><span class="pre">MP</span></code> keyword. For MP4 corrections, the energy with the most substitutions is used (SDTQ by default).</p>
+<p><strong>Jaguar</strong>: the LMP2 is available.</p>
+<p><strong>ORCA</strong>: MP2 and MP3 are available. The MP2 module can be called with the <code class="docutils literal notranslate"><span class="pre">MP2</span></code> keyword; while MP3 corrections are included in the matrix driven configuration interaction (MDCI) module through the <code class="docutils literal notranslate"><span class="pre">MP3</span></code> keyword.</p>
+</section>
+<section id="mult">
+<h2>mult<a class="headerlink" href="#mult" title="Permalink to this heading"></a></h2>
+<p>The attribute <code class="docutils literal notranslate"><span class="pre">mult</span></code> is an integer and represents the spin multiplicity of the calculated system, which in turn is the total spin plus one.</p>
+</section>
+<section id="natom">
+<h2>natom<a class="headerlink" href="#natom" title="Permalink to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">Natom</span></code> is an integer, the number of atoms treated in the calculation.</p>
+</section>
+<section id="nbasis">
+<span id="index-12"></span><h2>nbasis<a class="headerlink" href="#nbasis" title="Permalink to this heading"></a></h2>
+<p>An integer representing the number of basis functions used in the calculation.</p>
+</section>
+<section id="nmo">
+<span id="index-13"></span><h2>nmo<a class="headerlink" href="#nmo" title="Permalink to this heading"></a></h2>
+<p>The number of molecular orbitals in the calculation. It is an integer and is typically equal to <a class="reference internal" href="#nbasis">nbasis</a>, but may be less than this if a linear dependency was identified between the basis functions.</p>
+<p>Commands to get information on all orbitals:</p>
+<p><strong>GAMESS-UK</strong>: only usually prints information on the 5 lowest virtual orbitals. “FORMAT HIGH” should make it do this for all of the orbitals, although GAMESS-UK 7.0 has a bug that means that this only works for restricted calculations.</p>
+<p><strong>Jaguar</strong>: the first ten virtual orbitals are printed by default; in order to print more of them, use the <code class="docutils literal notranslate"><span class="pre">ipvirt</span></code> keyword in the input file, with <code class="docutils literal notranslate"><span class="pre">ipvirt=-1</span></code> printing all virtual orbitals (see the <a class="reference external" href="http://www.pdc.kth.se/doc/jaguar4.1/html/manual/mang.html#644675">manual</a> for more information).</p>
+</section>
+<section id="nmrtensors">
+<h2>nmrtensors<a class="headerlink" href="#nmrtensors" title="Permalink to this heading"></a></h2>
+<p>A dictionary where the keys zero-index the atomic center for which the chemical shielding tensor is calculated, and the values are themselves dictionaries containing the keys <code class="docutils literal notranslate"><span class="pre">total</span></code>, <code class="docutils literal notranslate"><span class="pre">paramagnetic</span></code>, and <code class="docutils literal notranslate"><span class="pre">diamagnetic</span></code>. These correspond to the total chemical shielding tensor and its separation into paramagnetic and diamagnetic components, where <span class="math notranslate nohighlight">\(\sigma_{K}^{\textrm{tot}} = \sigma_{K}^{\textrm{para}} + \sigma_{K}^{\textrm{dia}}\)</span> for a nucleus <span class="math notranslate nohighlight">\(K\)</span>.  Each tensor is represented as a 3-by-3 NumPy array. If no breakdown for paramagnetic and diamagnetic contributions to the chemical shielding is available, then only the <code class="docutils literal notranslate"><span class="pre">total</span></code> key will be present.</p>
+</section>
+<section id="optdone">
+<h2>optdone<a class="headerlink" href="#optdone" title="Permalink to this heading"></a></h2>
+<p>Flags whether a geometry optimisation has completed. Currently this attribute is a single Boolean value, which is set to True when the final <a class="reference internal" href="#atomcoords">atomcoords</a> represent a converged geometry optimisation. In the future, <code class="docutils literal notranslate"><span class="pre">optdone</span></code> will be a list that indexes which elements of <a class="reference internal" href="#atomcoords">atomcoords</a> represent converged geometries. This functionality can be used starting from version 1.3, from the command line by passing the <code class="docutils literal notranslate"><span class="pre">--future</span></code> option to <code class="docutils literal notranslate"><span class="pre">ccget</span></code>,</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>ccget<span class="w"> </span>optdone<span class="w"> </span>data/Gaussian/basicGaussian09/dvb_gopt.out
+Attempting<span class="w"> </span>to<span class="w"> </span>parse<span class="w"> </span>data/Gaussian/basicGaussian09/dvb_gopt.out
+optdone:
+True
+
+$<span class="w"> </span>ccget<span class="w"> </span>--future<span class="w"> </span>optdone<span class="w"> </span>data/Gaussian/basicGaussian09/dvb_gopt.out
+Attempting<span class="w"> </span>to<span class="w"> </span>parse<span class="w"> </span>data/Gaussian/basicGaussian09/dvb_gopt.out
+optdone:
+<span class="o">[</span><span class="m">4</span><span class="o">]</span>
+</pre></div>
+</div>
+<p>or by providing the corresponding argument to <code class="docutils literal notranslate"><span class="pre">ccopen</span></code>,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cclib.parser</span> <span class="kn">import</span> <span class="n">ccopen</span>
+<span class="n">parser</span> <span class="o">=</span> <span class="n">ccopen</span><span class="p">(</span><span class="s2">&quot;filename&quot;</span><span class="p">,</span> <span class="n">optdone_as_list</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># could also do future=True instead of optdone_as_list</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="scancoords">
+<h2>scancoords<a class="headerlink" href="#scancoords" title="Permalink to this heading"></a></h2>
+<p>An array containing the geometries for each step of shape <cite>(number of scan steps, number of atoms, 3)</cite>. In the case of an unrelaxed scan this is equivalent to <cite>atomcoords</cite>, however this is not the case for a relaxed scan as a geometry optimization is performed at each scan step.</p>
+</section>
+<section id="scanenergies">
+<h2>scanenergies<a class="headerlink" href="#scanenergies" title="Permalink to this heading"></a></h2>
+<p>A list containing the energies at each point of the scan. As with <cite>scancoords</cite>, <cite>scanenergies</cite> is only equivalent to <cite>[scf,mp,cc]energies</cite> in the case of an unrelaxed scan of the scf, mp, and/or cc potential energy surface.</p>
+</section>
+<section id="scannames">
+<h2>scannames<a class="headerlink" href="#scannames" title="Permalink to this heading"></a></h2>
+<p>A list containing the names of each parameter scanned.</p>
+</section>
+<section id="scanparm">
+<h2>scanparm<a class="headerlink" href="#scanparm" title="Permalink to this heading"></a></h2>
+<p>A list of lists where each list contains the values scanned for each parameter in <cite>scannames</cite>.</p>
+</section>
+<section id="scfenergies">
+<h2>scfenergies<a class="headerlink" href="#scfenergies" title="Permalink to this heading"></a></h2>
+<p>An array containing the converged SCF energies of the calculation, in eV. For an optimisation log file, there will be as many elements in this array as there were optimisation steps.</p>
+<p>If a dispersion correction of any form was used, it is part of the SCF energy and, in the event that it is separable, such as with D3 and similar empirical corrections, it is also available separately under <a class="reference internal" href="#dispersionenergies">dispersionenergies</a>.</p>
+<p>If any other corrections were present in calculating the SCF energy, in particular perturbative, empirical, or “single-shot” corrections, assume that they are <em>not</em> present in <code class="docutils literal notranslate"><span class="pre">scfenergies</span></code>.  Corrections included self-consistently, such as from implicit solvation models, should be present.  Check the parsed result carefully and, when in doubt, ask on the issue tracker.</p>
+<p><strong>Molpro</strong>: typically prints output about geometry optimisation in a separate logfile. So, both that and the initial output need to be passed to the cclib parser.</p>
+</section>
+<section id="scftargets">
+<h2>scftargets<a class="headerlink" href="#scftargets" title="Permalink to this heading"></a></h2>
+<p>Target thresholds for determining whether the current SCF run has converged, stored in a <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">x</span> <span class="pre">m</span></code> array, where <code class="docutils literal notranslate"><span class="pre">n</span></code> is the number of geometry optimisation steps (1 for a single point calculation) and <code class="docutils literal notranslate"><span class="pre">m</span></code> is the number of criteria. The criteria vary between programs, and depending on the program they may be constant for the whole of a geometry optimisation or they may change between optimisation steps. A more detailed description for each program follows.</p>
+<p><strong>ADF</strong>: There are two convergence criteria which are controlled by <code class="docutils literal notranslate"><span class="pre">SCFcnv</span></code> in the <a class="reference external" href="https://www.scm.com/doc/ADF/Input/SCF.html#main-options">CONVERGE subkey of the SCF block</a>.</p>
+<ul class="simple">
+<li><p>The maximum element of the commutator of the Fock matrix and P-matrix needs to be below <code class="docutils literal notranslate"><span class="pre">SCFcnv</span></code>.</p></li>
+<li><p>The norm of the same matrix needs to be below <code class="docutils literal notranslate"><span class="pre">10*SCFcnv</span></code>.</p></li>
+</ul>
+<p>This hard target is normally used for single point calculations and the last step of geometry optimisations, and it defaults to 1.0E-6. There is also a soft target <code class="docutils literal notranslate"><span class="pre">scfconv2</span></code> that defaults to 1.0E-3, which can be switched on and is used by ADF automatically in some cases such as the first step in a geometry optimization.</p>
+<p>For intermediate steps in a geometry optimisation the situation is more complicated and depends on the gradient and the integration accuracy. A post on the ADF user’s forum revealed that it is calculated as follows:</p>
+<div class="math notranslate nohighlight">
+\[\mathrm{new\,criteria} = max( \mathrm{SCFcnv}, \, min(\mathrm{old\,criteria}, \, \mathrm{grdmax}/30, 10^{-\mathrm{accint}})) ),\]</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">old</span> <span class="pre">criteria</span></code> is the initial value or from the previous geometry cycle, <code class="docutils literal notranslate"><span class="pre">grdmax</span></code> is the maximum gradient from the last geometry step and <code class="docutils literal notranslate"><span class="pre">accint</span></code> is the current integration accuracy.</p>
+<p><strong>GAMESS</strong>: Two criteria are, the maximum and root-mean-square (RMS) density matrix change, are used with a default starting value of 5.0E-05. It seems these values can change over the course of a geometry optimisation. ROHF calculations use SQCDF instead of the standard RMS change.</p>
+<p><strong>GAMESS-UK</strong>: According to <a class="reference external" href="https://web.archive.org/web/20190809100922/http://www.cfs.dl.ac.uk/docs/html/part4/node6.html">the manual</a>, convergence is determined by convergence of density matrix elements. The default value for SCF is 1E-5, but it appears to be 1E-7 for geoopts.</p>
+<p><strong>Gaussian</strong>: normally three criteria are used.</p>
+<ul class="simple">
+<li><p>The RMS change in the density matrix elements, with a default of 1.0E-4 (1.0E-8 for geo opts).</p></li>
+<li><p>Maximum change in the density matrix elements, with a default of 1.0E-2 (1.0E-6 for geo opts).</p></li>
+<li><p>The change in energy, with a default threshold of 5.0E-05 (1.0E-06 for geo opts).</p></li>
+</ul>
+<p><strong>Jaguar 4.2</strong>: The targets in Jaguar 4.2 (based on the manual) depend on whether the job is a geometry optimisation or not. For geometry optimisations and hyper/polarisability calculation, the RMS change in the density matrix elements is used as a criterion (controlled by the <code class="docutils literal notranslate"><span class="pre">dconv</span></code> keyword), with a default of 5.0E6.
+The energy convergence criterion (keyword <code class="docutils literal notranslate"><span class="pre">econv</span></code>) is ignored for geometry optimisation calculations but is used for SCF calculations, and the default in this case is 5.0E5, except for hyper/polarisability calcualtions where it is 1.0E6.</p>
+</section>
+<section id="scfvalues">
+<h2>scfvalues<a class="headerlink" href="#scfvalues" title="Permalink to this heading"></a></h2>
+<p>The attribute <code class="docutils literal notranslate"><span class="pre">scfvalues</span></code> is a list of arrays of dimension <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">x</span> <span class="pre">m</span></code> (one element for each step in a geometry optimisation), where <code class="docutils literal notranslate"><span class="pre">n</span></code> is the number of SCF cycles required for convergence and <code class="docutils literal notranslate"><span class="pre">m</span></code> is the number of SCF convergence target criteria. For some packages, you may need to include a directive to make sure that SCF convergence information is printed to the log file</p>
+<p><strong>Gaussian</strong>: requires the <a class="reference external" href="https://gaussian.com/route/">route section</a> to start with #P</p>
+<p><strong>GAMESS-UK</strong>: convergence information is printed only for the first optimisation step by default, but can be forced at all steps by adding <code class="docutils literal notranslate"><span class="pre">IPRINT</span> <span class="pre">SCF</span></code> to the input file.</p>
+</section>
+<section id="vibdisps">
+<h2>vibdisps<a class="headerlink" href="#vibdisps" title="Permalink to this heading"></a></h2>
+<p>The attribute <code class="docutils literal notranslate"><span class="pre">vibdisps</span></code> stores the Cartesian displacement vectors from the output of a vibrational frequency calculation. It is a rank 3 array having dimensions <code class="docutils literal notranslate"><span class="pre">M</span> <span class="pre">x</span> <span class="pre">N</span> <span class="pre">x</span> <span class="pre">3</span></code>, where <code class="docutils literal notranslate"><span class="pre">M</span></code> is the number of normal modes and <code class="docutils literal notranslate"><span class="pre">N</span></code> is the number of atoms. <code class="docutils literal notranslate"><span class="pre">M</span></code> is typically <code class="docutils literal notranslate"><span class="pre">3N-6</span></code> (<code class="docutils literal notranslate"><span class="pre">3N-5</span></code> for linear molecules).</p>
+</section>
+<section id="vibfconsts">
+<h2>vibfconsts<a class="headerlink" href="#vibfconsts" title="Permalink to this heading"></a></h2>
+<p>The attribute <code class="docutils literal notranslate"><span class="pre">vibrmasses</span></code> stores the force constants in <span class="math notranslate nohighlight">\(\mathrm{Å^4/Da}\)</span> from vibrational frequency calculation. It is a rank 1 array having dimension <code class="docutils literal notranslate"><span class="pre">M</span></code>, where <code class="docutils literal notranslate"><span class="pre">M</span></code> is the number of normal modes.</p>
+</section>
+<section id="vibrmasses">
+<h2>vibrmasses<a class="headerlink" href="#vibrmasses" title="Permalink to this heading"></a></h2>
+<p>The attribute <code class="docutils literal notranslate"><span class="pre">vibrmasses</span></code> stores the reduced masses in Daltons (Da) from vibrational frequency calculation. It is a rank 1 array having dimension <code class="docutils literal notranslate"><span class="pre">M</span></code>, where <code class="docutils literal notranslate"><span class="pre">M</span></code> is the number of normal modes.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="data.html" class="btn btn-neutral float-left" title="Parsed data (version 1.7.2)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="methods.html" class="btn btn-neutral float-right" title="Calculation methods" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2014-2021, cclib Development Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

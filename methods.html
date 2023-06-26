@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculation methods &mdash; cclib 1.7.2 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/increase_max_width.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Bridges to other packages" href="bridge.html" />
+    <link rel="prev" title="Parsed data notes" href="data_notes.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="contents.html" class="icon icon-home">
+            cclib
+          </a>
+              <div class="version">
+                1.7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_install.html">How to install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_parse.html">How to parse and write</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">Parsed data (version 1.7.2)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_notes.html">Parsed data notes</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Calculation methods</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#c-squared-population-analysis-cspa">C squared population analysis (CSPA)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#custom-fragments">Custom fragments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#custom-progress">Custom progress</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#mulliken-population-analysis-mpa">Mulliken population analysis (MPA)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Custom fragments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Custom progress</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#lowdin-population-analysis">Löwdin Population Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bickelhaupt-population-analysis">Bickelhaupt Population Analysis</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Custom fragments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">Custom progress</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#density-matrix-calculation">Density Matrix calculation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mayer-s-bond-orders">Mayer’s Bond Orders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#charge-decomposition-analysis">Charge Decomposition Analysis</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#bader-s-qtaim">Bader’s QTAIM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ddec6">DDEC6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hirshfeld-population-analysis">Hirshfeld Population Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#accessing-additional-methods-through-bridge">Accessing additional methods through bridge</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="bridge.html">Bridges to other packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_dev.html">Development parsed data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="contents.html">cclib</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="contents.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Calculation methods</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/cclib/cclib/blob/master/doc/sphinx/methods.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="calculation-methods">
+<span id="index-0"></span><h1>Calculation methods<a class="headerlink" href="#calculation-methods" title="Permalink to this heading"></a></h1>
+<p>The following methods in cclib allow further analysis of calculation output.</p>
+<section id="c-squared-population-analysis-cspa">
+<span id="index-1"></span><h2>C squared population analysis (CSPA)<a class="headerlink" href="#c-squared-population-analysis-cspa" title="Permalink to this heading"></a></h2>
+<p><strong>CSPA</strong> can be used to determine and interpret the electron density of a molecule. The contribution of the a-th atomic orbital to the i-th molecular orbital can be written in terms of the molecular orbital coefficients:</p>
+<div class="math notranslate nohighlight">
+\[\Phi_{ai} = \frac{c^2_{ai}}{\sum_k c^2_{ki}}\]</div>
+<p>The CSPA class available from cclib.method performs C-squared population analysis and can be used as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cclib.io</span> <span class="kn">import</span> <span class="n">ccread</span>
+<span class="kn">from</span> <span class="nn">cclib.method</span> <span class="kn">import</span> <span class="n">CSPA</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">ccread</span><span class="p">(</span><span class="s2">&quot;mycalc.out&quot;</span><span class="p">)</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">CSPA</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>After the <code class="docutils literal notranslate"><span class="pre">calculate()</span></code> method is called, the following attributes are available:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">aoresults</span></code> is a NumPy array[3] with spin, molecular orbital, and atomic/fragment orbitals as the axes (<code class="docutils literal notranslate"><span class="pre">aoresults[0][45][0]</span></code> gives the contribution of the 1st atomic/fragment orbital to the 46th alpha/restricted molecular orbital)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fragresults</span></code> is a NumPy array[3] with spin, molecular orbital, and atoms as the axes (<code class="docutils literal notranslate"><span class="pre">atomresults[1][23][4]</span></code> gives the contribution of the 5th atomic/fragment orbital to the 24th beta molecular orbital)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fragcharges</span></code> is a NumPy array[1] with the number of (partial) electrons in each atom (<code class="docutils literal notranslate"><span class="pre">atomcharges[2]</span></code> gives the number of electrons on the 3rd atom)</p></li>
+</ul>
+<section id="custom-fragments">
+<h3>Custom fragments<a class="headerlink" href="#custom-fragments" title="Permalink to this heading"></a></h3>
+<p>Calling the calculate method without an argument treats each atom as a fragment in the population analysis. An optional argument can be passed - a list of lists - containing the atomic orbital numbers to be included in each fragment. Calling with this additional argument is useful if one is more interested in the contributions of certain orbitals, such as metal d, to the molecular orbitals. For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cclib.io</span> <span class="kn">import</span> <span class="n">ccread</span>
+<span class="kn">from</span> <span class="nn">cclib.method</span> <span class="kn">import</span> <span class="n">CSPA</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">ccread</span><span class="p">(</span><span class="s2">&quot;mycalc.out&quot;</span><span class="p">)</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">CSPA</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">calculate</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">]])</span> <span class="c1"># fragment one is made from basis functions 0 - 4</span>
+                                                  <span class="c1"># fragment two is made from basis functions 5 &amp; 6</span>
+                                                  <span class="c1"># fragment three is made from basis functions 7 - 9</span>
+</pre></div>
+</div>
+</section>
+<section id="custom-progress">
+<h3>Custom progress<a class="headerlink" href="#custom-progress" title="Permalink to this heading"></a></h3>
+<p>The CSPA class also can take a progress class as an argument so that the progress of the calculation can be monitored:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cclib.method</span> <span class="kn">import</span> <span class="n">CSPA</span>
+<span class="kn">from</span> <span class="nn">cclib.parser</span> <span class="kn">import</span> <span class="n">Gaussian</span>
+<span class="kn">from</span> <span class="nn">cclib.progress</span> <span class="kn">import</span> <span class="n">TextProgress</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="n">progress</span> <span class="o">=</span> <span class="n">TextProgress</span><span class="p">()</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">Gaussian</span><span class="p">(</span><span class="s2">&quot;mycalc.out&quot;</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">progress</span><span class="p">)</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">CSPA</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">progress</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="mulliken-population-analysis-mpa">
+<span id="index-2"></span><h2>Mulliken population analysis (MPA)<a class="headerlink" href="#mulliken-population-analysis-mpa" title="Permalink to this heading"></a></h2>
+<p>MPA can be used to determine and interpret the electron density of a molecule. The contribution of the a-th atomic orbital to the i-th molecular orbital in this method is written in terms of the molecular orbital coefficients, c, and the overlap matrix, S:</p>
+<div class="math notranslate nohighlight">
+\[\Phi_{ai} = \sum_b c_{ai} c_{bi} S_{ab}\]</div>
+<p>The MPA class available from cclib.method performs Mulliken population analysis and can be used as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">cclib.method</span> <span class="kn">import</span> <span class="n">MPA</span>
+<span class="kn">from</span> <span class="nn">cclib.parser</span> <span class="kn">import</span> <span class="n">ccopen</span>
+
+<span class="n">d</span> <span class="o">=</span> <span class="n">ccopen</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">parse</span><span class="p">()</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">MPA</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>After the calculate() method is called, the following attributes are available:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">aoresults</span></code>: a three dimensional array with spin, molecular orbital, and atomic orbitals as the axes, so that <code class="docutils literal notranslate"><span class="pre">aoresults[0][45][0]</span></code> gives the contribution of the 1st atomic orbital to the 46th alpha/restricted molecular orbital,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fragresults</span></code>: a three dimensional array with spin, molecular orbital, and atoms as the axes, so that <code class="docutils literal notranslate"><span class="pre">fragresults[1][23][4]</span></code> gives the contribution of the 5th fragment orbitals to the 24th beta molecular orbital)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fragcharges</span></code>: a vector with the number of (partial) electrons in each fragment, so that <code class="docutils literal notranslate"><span class="pre">fragcharges[2]</span></code> gives the number of electrons in the 3rd fragment.</p></li>
+</ul>
+<section id="id1">
+<h3>Custom fragments<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
+<p>The calculate method chooses atoms as the fragments by default, and optionally accepts a list of lists containing the atomic orbital numbers (e.g. <code class="docutils literal notranslate"><span class="pre">[[0,</span> <span class="pre">1,</span> <span class="pre">2],</span> <span class="pre">[3,</span> <span class="pre">4,</span> <span class="pre">5,</span> <span class="pre">6],</span> <span class="pre">...]</span></code>) of arbitrary fragments. Calling it in this way is useful if one is more interested in the contributions of groups of atoms or even certain orbitals or orbital groups, such as metal d, to the molecular orbitals. In this case, fragresults and fragcharges reflect the chosen groups of atomic orbitals instead of atoms.</p>
+</section>
+<section id="id2">
+<h3>Custom progress<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h3>
+<p>The Mulliken class also can take a progress class as an argument so that the progress of the calculation can be monitored:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cclib.method</span> <span class="kn">import</span> <span class="n">MPA</span>
+<span class="kn">from</span> <span class="nn">cclib.parser</span> <span class="kn">import</span> <span class="n">ccopen</span>
+<span class="kn">from</span> <span class="nn">cclib.progress</span> <span class="kn">import</span> <span class="n">TextProgress</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="n">progress</span> <span class="o">=</span> <span class="n">TextProgress</span><span class="p">()</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">ccopen</span><span class="p">(</span><span class="s2">&quot;mycalc.out&quot;</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">progress</span><span class="p">)</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">MPA</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">progress</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="lowdin-population-analysis">
+<span id="index-3"></span><h2>Löwdin Population Analysis<a class="headerlink" href="#lowdin-population-analysis" title="Permalink to this heading"></a></h2>
+<p>The LPA class available from cclib.method performs Löwdin population analysis and can be used as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">cclib.method</span> <span class="kn">import</span> <span class="n">LPA</span>
+<span class="kn">from</span> <span class="nn">cclib.parser</span> <span class="kn">import</span> <span class="n">ccopen</span>
+
+<span class="n">d</span> <span class="o">=</span> <span class="n">ccopen</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">parse</span><span class="p">()</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">LPA</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="bickelhaupt-population-analysis">
+<span id="index-4"></span><h2>Bickelhaupt Population Analysis<a class="headerlink" href="#bickelhaupt-population-analysis" title="Permalink to this heading"></a></h2>
+<p>The Bickelhaupt class available from cclib.method performs Bickelhaupt population analysis that has been proposed in <em>Organometallics</em> 1996, 15, 13, 2923–2931. <a class="reference external" href="https://pubs.acs.org/doi/abs/10.1021/om950966x">doi:10.1021/om950966x</a></p>
+<p>The contribution of the a-th atomic orbital to the i-th molecular orbital in this method is written in terms of the molecular orbital coefficients, c, and the overlap matrix, S:</p>
+<div class="math notranslate nohighlight">
+\[\Phi_{ai,\alpha} = \sum_b w_{ab,\alpha} c_{ai,\alpha} c_{bi,\alpha} S_{ab}\]</div>
+<p>where the weights <span class="math notranslate nohighlight">\(w_{ab}\)</span> that are applied on the Mulliken atomic orbital contributions are defined as following when the coefficients of the molecular orbitals are substituted into equation 11 in the original article.</p>
+<div class="math notranslate nohighlight">
+\[w_{ab,\alpha} = 2 \frac{\sum_k c_{ak,\alpha}^2}{\sum_i c_{ai,\alpha}^2 + \sum_j c_{bj,\alpha}^2}\]</div>
+<p>In case of unrestricted calculations, <span class="math notranslate nohighlight">\(\alpha\)</span> charges and <span class="math notranslate nohighlight">\(\beta\)</span> charges are each determined to obtain total charge. In restricted calculations, <span class="math notranslate nohighlight">\(\alpha\)</span> subscript can be ignored since the coefficients are equivalent for both spin orbitals.</p>
+<p>The weights are introduced to replace the somewhat arbitrary partitioning of off-diagonal charges in the Mulliken population analysis, which divides the off-diagonal charges identically to both atoms. Bickelhaupt population analysis instead divides the off-diagonal elements based on the relative magnitude of diagonal elements.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">cclib.method</span> <span class="kn">import</span> <span class="n">Bickelhaupt</span>
+<span class="kn">from</span> <span class="nn">cclib.parser</span> <span class="kn">import</span> <span class="n">ccopen</span>
+
+<span class="n">d</span> <span class="o">=</span> <span class="n">ccopen</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">parse</span><span class="p">()</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">Bickelhaupt</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>After the calculate() method is called, the following attributes are available:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">aoresults</span></code>: a three dimensional array with spin, molecular orbital, and atomic orbitals as the axes, so that <code class="docutils literal notranslate"><span class="pre">aoresults[0][45][0]</span></code> gives the contribution of the 1st atomic orbital to the 46th alpha/restricted molecular orbital,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fragresults</span></code>: a three dimensional array with spin, molecular orbital, and atoms as the axes, so that <code class="docutils literal notranslate"><span class="pre">fragresults[1][23][4]</span></code> gives the contribution of the 5th fragment orbitals to the 24th beta molecular orbital)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fragcharges</span></code>: a vector with the number of (partial) electrons in each fragment, so that <code class="docutils literal notranslate"><span class="pre">fragcharges[2]</span></code> gives the number of electrons in the 3rd fragment.</p></li>
+</ul>
+<section id="id3">
+<h3>Custom fragments<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h3>
+<p>The calculate method chooses atoms as the fragments by default, and optionally accepts a list of lists containing the atomic orbital numbers (e.g. <code class="docutils literal notranslate"><span class="pre">[[0,</span> <span class="pre">1,</span> <span class="pre">2],</span> <span class="pre">[3,</span> <span class="pre">4,</span> <span class="pre">5,</span> <span class="pre">6],</span> <span class="pre">...]</span></code>) of arbitrary fragments. Calling it in this way is useful if one is more interested in the contributions of groups of atoms or even certain orbitals or orbital groups, such as metal d, to the molecular orbitals. In this case, fragresults and fragcharges reflect the chosen groups of atomic orbitals instead of atoms.</p>
+</section>
+<section id="id4">
+<h3>Custom progress<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h3>
+<p>The Bickelhaupt class also can take a progress class as an argument so that the progress of the calculation can be monitored:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cclib.method</span> <span class="kn">import</span> <span class="n">Bickelhaupt</span>
+<span class="kn">from</span> <span class="nn">cclib.parser</span> <span class="kn">import</span> <span class="n">ccopen</span>
+<span class="kn">from</span> <span class="nn">cclib.progress</span> <span class="kn">import</span> <span class="n">TextProgress</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="n">progress</span> <span class="o">=</span> <span class="n">TextProgress</span><span class="p">()</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">ccopen</span><span class="p">(</span><span class="s2">&quot;mycalc.out&quot;</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">progress</span><span class="p">)</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">Bickelhaupt</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">progress</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="density-matrix-calculation">
+<h2>Density Matrix calculation<a class="headerlink" href="#density-matrix-calculation" title="Permalink to this heading"></a></h2>
+<p>The Density class from cclib.method can be used to calculate the density matrix:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cclib.parser</span> <span class="kn">import</span> <span class="n">ccopen</span>
+<span class="kn">from</span> <span class="nn">cclib.method</span> <span class="kn">import</span> <span class="n">Density</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">ccopen</span><span class="p">(</span><span class="s2">&quot;myfile.out&quot;</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">()</span>
+
+<span class="n">d</span> <span class="o">=</span> <span class="n">Density</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">d</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>After <code class="docutils literal notranslate"><span class="pre">calculate()</span></code> is called, the density attribute is available. It is simply a NumPy array with three axes. The first axis is for the spin contributions, and the second and third axes are for the density matrix, which follows the standard definition.</p>
+</section>
+<section id="mayer-s-bond-orders">
+<h2>Mayer’s Bond Orders<a class="headerlink" href="#mayer-s-bond-orders" title="Permalink to this heading"></a></h2>
+<p>This method calculates the Mayer’s bond orders for a given molecule:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">cclib.parser</span> <span class="kn">import</span> <span class="n">ccopen</span>
+<span class="kn">from</span> <span class="nn">cclib.method</span> <span class="kn">import</span> <span class="n">MBO</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">ccopen</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">()</span>
+
+<span class="n">d</span> <span class="o">=</span> <span class="n">MBO</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">d</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>After <code class="docutils literal notranslate"><span class="pre">calculate()</span></code> is called, the fragresults attribute is available, which is a NumPy array of rank 3. The first axis is for contributions of each spin to the MBO, while the second and third correspond to the indices of the atoms.</p>
+</section>
+<section id="charge-decomposition-analysis">
+<h2>Charge Decomposition Analysis<a class="headerlink" href="#charge-decomposition-analysis" title="Permalink to this heading"></a></h2>
+<p>The Charge Decomposition Analysis (CDA) as developed by Gernot Frenking et al. is used to study the donor-acceptor interactions of a molecule in terms of two user-specified fragments.</p>
+<p>The CDA class available from cclib.method performs this analysis:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cclib.io</span> <span class="kn">import</span> <span class="n">ccopen</span>
+<span class="kn">from</span> <span class="nn">cclib.method</span> <span class="kn">import</span> <span class="n">CDA</span>
+
+<span class="n">molecule</span> <span class="o">=</span> <span class="n">ccopen</span><span class="p">(</span><span class="s2">&quot;molecule.log&quot;</span><span class="p">)</span>
+<span class="n">frag1</span> <span class="o">=</span> <span class="n">ccopen</span><span class="p">(</span><span class="s2">&quot;fragment1.log&quot;</span><span class="p">)</span>
+<span class="n">frag2</span> <span class="o">=</span> <span class="n">ccopen</span><span class="p">(</span><span class="s2">&quot;fragment2.log&quot;</span><span class="p">)</span>
+
+<span class="c1"># if using CDA from an interactive session, it&#39;s best</span>
+<span class="c1"># to parse the files at the same time in case they aren&#39;t</span>
+<span class="c1"># parsed immediately---go get a drink!</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">molecule</span><span class="o">.</span><span class="n">parse</span><span class="p">()</span>
+<span class="n">f1</span> <span class="o">=</span> <span class="n">frag1</span><span class="o">.</span><span class="n">parse</span><span class="p">()</span>
+<span class="n">f2</span> <span class="o">=</span> <span class="n">frag2</span><span class="o">.</span><span class="n">parse</span><span class="p">()</span>
+
+<span class="n">cda</span> <span class="o">=</span> <span class="n">CDA</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="n">cda</span><span class="o">.</span><span class="n">calculate</span><span class="p">([</span><span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>After <code class="docutils literal notranslate"><span class="pre">calculate()</span></code> finishes, there should be the donations, bdonations (back donation), and repulsions attributes to the cda instance. These attributes are simply lists of 1-dimensional NumPy arrays corresponding to the restricted or alpha/beta molecular orbitals of the entire molecule. Additionally, the CDA method involves transforming the atomic basis functions of the molecule into a basis using the molecular orbitals of the fragments so the attributes mocoeffs and fooverlaps are created and can be used in population analyses such as Mulliken or C-squared (see Fragment Analysis for more details).</p>
+<p>There is also a script provided by cclib that performs the CDA from a command-line:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cda molecule.log fragment1.log fragment2.log
+Charge decomposition analysis of molecule.log
+
+ MO#      d       b       r
+-----------------------------
+   1:  -0.000  -0.000  -0.000
+   2:  -0.000   0.002   0.000
+   3:  -0.001  -0.000   0.000
+   4:  -0.001  -0.026  -0.006
+   5:  -0.006   0.082   0.230
+   6:  -0.040   0.075   0.214
+   7:   0.001  -0.001   0.022
+   8:   0.001  -0.001   0.022
+   9:   0.054   0.342  -0.740
+  10:   0.087  -0.001  -0.039
+  11:   0.087  -0.001  -0.039
+------ HOMO - LUMO gap ------
+  12:   0.000   0.000   0.000
+  13:   0.000   0.000   0.000
+......
+</pre></div>
+</div>
+<section id="notes">
+<h3>Notes<a class="headerlink" href="#notes" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>Only molecular orbitals with non-zero occupancy will have a non-zero value.</p></li>
+<li><p>The absolute values of the calculated terms have no physical meaning and only the relative magnitudes, especially for the donation and back donation terms, are of any real value (Frenking, et al.)</p></li>
+<li><p>The atom coordinates in molecules and fragments must be the same, which is usually accomplished with an argument in the QM program (the NoSymm keyword in Gaussian, for instance).</p></li>
+<li><p>The current implementation has some subtle differences than the code from the Frenking group. The CDA class in cclib follows the formula outlined in one of Frenking’s CDA papers, but contains an extra factor of 2 to give results that agree with those from the original CDA program. It also doesn’t include negligible terms (on the order of 10^-6) that result from overlap between MOs on the same fragment that appears to be included in the Frenking code. Contact atenderholt (at) gmail (dot) com for discussion and more information.</p></li>
+</ul>
+</section>
+</section>
+<section id="bader-s-qtaim">
+<span id="index-5"></span><h2>Bader’s QTAIM<a class="headerlink" href="#bader-s-qtaim" title="Permalink to this heading"></a></h2>
+<p>Bader’s QTAIM charges define the border between the atoms in the molecule as a surface where each point on the surface has zero flux. In other words, the points on the surface of the Bader spaces satisfy the equation <span class="math notranslate nohighlight">\(\nabla \rho (r) \cdot n(r) = 0\)</span>. In cclib, numerical calculation of QTAIM charges through the algorithm proposed in <a class="reference external" href="http://theory.cm.utexas.edu/henkelman/code/bader/download/henkelman06_354.pdf">[Henkelman2006]</a>  is implemented.</p>
+<p>Calculating the Bader’s QTAIM charges in cclib follow similar steps as other population analysis methods. The following code provides an example of how QTAIM charges can be obtained.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cclib.method</span> <span class="kn">import</span> <span class="n">Bader</span>
+<span class="kn">from</span> <span class="nn">cclib.method</span> <span class="kn">import</span> <span class="n">Volume</span>
+<span class="kn">from</span> <span class="nn">cclib.parser</span> <span class="kn">import</span> <span class="n">ccopen</span>
+<span class="kn">from</span> <span class="nn">cclib.progress</span> <span class="kn">import</span> <span class="n">TextProgress</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="n">progress</span> <span class="o">=</span> <span class="n">TextProgress</span><span class="p">()</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">ccopen</span><span class="p">(</span><span class="s2">&quot;mycalc.out&quot;</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">progress</span><span class="p">)</span>
+
+<span class="c1"># Inputs for Volume object below are origin, top corner, and spacing</span>
+<span class="c1"># represented in Cartesian coordinates and in angstroms.</span>
+<span class="n">vol</span> <span class="o">=</span> <span class="n">Volume</span><span class="p">((</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mf">.1</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mf">.1</span><span class="p">))</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">Bader</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">vol</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>After the calculate() method is called, the following attributes are available:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">fragresults</span></code>: a three dimensional array x, y, and z coordinates from the Volume object as the axes, so that <code class="docutils literal notranslate"><span class="pre">fragresults[1][2][3]</span></code> gives the Bader space (in integers starting from 1) that the grid space in (0, 1, 2) position belongs to.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">matches</span></code>: a vector with the Bader space (integers starting from 1) that an atom is matched with.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fragcharges</span></code>: a vector with the number of (partial) electrons in each atom, so that <code class="docutils literal notranslate"><span class="pre">fragcharges[2]</span></code> gives the number of electrons in the 3rd atom.</p></li>
+</ul>
+<p>Since some computational chemistry packages support writing out charge densities as cube files during calculations, it is highly recommended to do so especially for larger systems.
+To calculate Bader charges from a cube file, a <code class="docutils literal notranslate"><span class="pre">Volume</span></code> object should be prepared by reading in a cube file and should be passed into a Bader object as shown below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cclib.method</span> <span class="kn">import</span> <span class="n">volume</span>
+<span class="kn">from</span> <span class="nn">cclib.method</span> <span class="kn">import</span> <span class="n">Bader</span>
+<span class="kn">from</span> <span class="nn">cclib.parser</span> <span class="kn">import</span> <span class="n">ccopen</span>
+<span class="kn">from</span> <span class="nn">cclib.progress</span> <span class="kn">import</span> <span class="n">TextProgress</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="n">progress</span> <span class="o">=</span> <span class="n">TextProgress</span><span class="p">()</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">ccopen</span><span class="p">(</span><span class="s2">&quot;mycalc.out&quot;</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">progress</span><span class="p">)</span>
+
+<span class="c1"># Read in from cube file</span>
+<span class="n">vol</span> <span class="o">=</span> <span class="n">volume</span><span class="o">.</span><span class="n">read_from_cube</span><span class="p">(</span><span class="s2">&quot;mycalc.cube&quot;</span><span class="p">)</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">Bader</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">vol</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="ddec6">
+<span id="index-6"></span><h2>DDEC6<a class="headerlink" href="#ddec6" title="Permalink to this heading"></a></h2>
+<p>DDEC6 is a Stockholder-like charge partitioning method introduced in <a class="reference external" href="https://doi.org/10.1039/C6RA04656H">[Manz2016]</a>. Proatom densities should be provided for DDEC6 method. Proatom densities generated <a class="footnote-reference brackets" href="#proatom" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> using <a class="reference external" href="http://theochem.github.io/horton/2.1.1/">horton</a> can be passed on as an argument for the constructor of the DDEC6 object. The DDEC6 algorithm requires many numerical integrations so a fine grid is necessary to obtain accurate results. Calculating the electron density on a fine grid using a Volume object is slow, therefore we recommend that electron densities are imported from cube files.</p>
+<p>Because a lot of numerical integrations are present in DDEC6 algorithm, fine grid is necessary to obtain satisfying results.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cclib.method</span> <span class="kn">import</span> <span class="n">DDEC6</span>
+<span class="kn">from</span> <span class="nn">cclib.method</span> <span class="kn">import</span> <span class="n">Volume</span>
+<span class="kn">from</span> <span class="nn">cclib.parser</span> <span class="kn">import</span> <span class="n">ccopen</span>
+<span class="kn">from</span> <span class="nn">cclib.progress</span> <span class="kn">import</span> <span class="n">TextProgress</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="n">progress</span> <span class="o">=</span> <span class="n">TextProgress</span><span class="p">()</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">ccopen</span><span class="p">(</span><span class="s2">&quot;mycalc.out&quot;</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">progress</span><span class="p">)</span>
+
+<span class="c1"># Inputs for Volume object below are origin, top corner, and spacing</span>
+<span class="c1"># represented in Cartesian coordinates and in angstroms.</span>
+<span class="n">vol</span> <span class="o">=</span> <span class="n">Volume</span><span class="p">((</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mf">.1</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mf">.1</span><span class="p">))</span>
+
+<span class="c1"># Alternatively, read in from cube file</span>
+<span class="n">vol</span> <span class="o">=</span> <span class="n">volume</span><span class="o">.</span><span class="n">read_from_cube</span><span class="p">(</span><span class="s2">&quot;mycalc.cube&quot;</span><span class="p">)</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">DDEC6</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">vol</span><span class="p">,</span> <span class="s1">&#39;/path/to/horton_proatom_density_directory&#39;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Third argument to the constructor of DDEC6 object points to the directory proatom densities are stored. The proatom densities can be generated by using <a class="reference external" href="http://theochem.github.io/horton/2.1.1/">horton</a> . Follow the steps described in horton <a class="reference external" href="http://theochem.github.io/horton/2.1.1/user_postproc_aim.html#horton-atomdb-py-build-a-pro-atom-database">documentation</a> for its <code class="docutils literal notranslate"><span class="pre">horton-atomdb.py</span></code> command.</p>
+<p>After the calculate() method is called, the following attributes are available:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">fragcharges</span></code>: a vector with the number of (partial) electrons in each atom, so that <code class="docutils literal notranslate"><span class="pre">fragcharges[2]</span></code> gives the number of electrons in the 3rd atom.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">refcharges</span></code>: a two dimensional array where the first index indicates whether the reference charges are from first step of DDEC6 algorithm or the second step. Second index refers to the atoms that the charges are assigned to and follows the same order as the order used by the input <code class="docutils literal notranslate"><span class="pre">ccData</span></code> object.</p></li>
+</ul>
+</section>
+<section id="hirshfeld-population-analysis">
+<span id="index-7"></span><h2>Hirshfeld Population Analysis<a class="headerlink" href="#hirshfeld-population-analysis" title="Permalink to this heading"></a></h2>
+<p>Hirshfeld Population Analysis is the most basic charge partitioning method among stockholder-type methods and was introduced initially in <a class="reference external" href="https://doi.org/10.1007/BF00549096">[Hirshfeld1977]</a>.
+In Hirshfeld method, proatom densities, which are charge densities of neutral atoms that comprise the given molecule, are used to calculate the weights that will be applied to partition charge densities on each grid point.
+Proatom densities can be generated <a class="footnote-reference brackets" href="#proatom" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> using <a class="reference external" href="http://theochem.github.io/horton/2.1.1/">horton</a> and can be passed on as an argument for the constructor of the Hirshfeld object. For Hirshfeld calculations, it is recommended that electron densities are imported from cube files.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cclib.method</span> <span class="kn">import</span> <span class="n">Hirshfeld</span>
+<span class="kn">from</span> <span class="nn">cclib.method</span> <span class="kn">import</span> <span class="n">Volume</span>
+<span class="kn">from</span> <span class="nn">cclib.parser</span> <span class="kn">import</span> <span class="n">ccopen</span>
+<span class="kn">from</span> <span class="nn">cclib.progress</span> <span class="kn">import</span> <span class="n">TextProgress</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="n">progress</span> <span class="o">=</span> <span class="n">TextProgress</span><span class="p">()</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">ccopen</span><span class="p">(</span><span class="s2">&quot;mycalc.out&quot;</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">progress</span><span class="p">)</span>
+
+<span class="c1"># Inputs for Volume object below are origin, top corner, and spacing</span>
+<span class="c1"># represented in Cartesian coordinates and in angstroms.</span>
+<span class="n">vol</span> <span class="o">=</span> <span class="n">Volume</span><span class="p">((</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mf">.1</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mf">.1</span><span class="p">))</span>
+
+<span class="c1"># Alternatively, read in from cube file</span>
+<span class="n">vol</span> <span class="o">=</span> <span class="n">volume</span><span class="o">.</span><span class="n">read_from_cube</span><span class="p">(</span><span class="s2">&quot;mycalc.cube&quot;</span><span class="p">)</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">Hirshfeld</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">vol</span><span class="p">,</span> <span class="s1">&#39;/path/to/horton_proatom_density_directory&#39;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Third argument to the constructor of Hirshfeld object points to the directory proatom densities are stored. The proatom densities can be generated by using <a class="reference external" href="http://theochem.github.io/horton/2.1.1/">horton</a> . Follow the steps described in horton <a class="reference external" href="http://theochem.github.io/horton/2.1.1/user_postproc_aim.html#horton-atomdb-py-build-a-pro-atom-database">documentation</a> for its <code class="docutils literal notranslate"><span class="pre">horton-atomdb.py</span></code> command.</p>
+<p>After the calculate() method is called, the following attributes are available:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">fragcharges</span></code>: a vector with the number of (partial) electrons in each atom, so that <code class="docutils literal notranslate"><span class="pre">fragcharges[2]</span></code> gives the number of electrons in the 3rd atom.</p></li>
+</ul>
+</section>
+<section id="accessing-additional-methods-through-bridge">
+<span id="index-8"></span><h2>Accessing additional methods through bridge<a class="headerlink" href="#accessing-additional-methods-through-bridge" title="Permalink to this heading"></a></h2>
+<p>Some other population analyses methods including Hirshfeld partial charges and Iterative Stockholder charges can be calculated using bridge functions implemented in cclib. For more information, refer to <a class="reference external" href="bridge.html">bridge</a> section of the documentation.</p>
+<p class="rubric">Footnotes</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="proatom" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id5">1</a>,<a role="doc-backlink" href="#id7">2</a>)</span>
+<p>To generate proatom densities from horton using Psi4, after generating Psi4 input files, add <code class="docutils literal notranslate"><span class="pre">mv</span> <span class="pre">*.molden</span> <span class="pre">atom.default.molden</span></code> on line 25 of <code class="docutils literal notranslate"><span class="pre">run_psi4.sh</span></code> before executing the script.</p>
+</aside>
+</aside>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="data_notes.html" class="btn btn-neutral float-left" title="Parsed data notes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="bridge.html" class="btn btn-neutral float-right" title="Bridges to other packages" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2014-2021, cclib Development Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

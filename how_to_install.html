@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to install &mdash; cclib 1.7.2 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/increase_max_width.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="How to parse and write" href="how_to_parse.html" />
+    <link rel="prev" title="Overview" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="contents.html" class="icon icon-home">
+            cclib
+          </a>
+              <div class="version">
+                1.7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Overview</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">How to install</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installing-using-pip">Installing using pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installing-using-a-system-package-manager">Installing using a system package manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#manual-download-and-install">Manual download and install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-next">What next?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_parse.html">How to parse and write</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">Parsed data (version 1.7.2)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_notes.html">Parsed data notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="methods.html">Calculation methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bridge.html">Bridges to other packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_dev.html">Development parsed data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="contents.html">cclib</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="contents.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">How to install</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/cclib/cclib/blob/master/doc/sphinx/how_to_install.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="how-to-install">
+<h1>How to install<a class="headerlink" href="#how-to-install" title="Permalink to this heading"></a></h1>
+<p>This page describes how to download, install and use the basic functionality of cclib.</p>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>Before you install cclib, you need to make sure that you have the following:</dt><dd><ul class="simple">
+<li><p>Python (at least version 3.7 is recommended)</p></li>
+<li><p>NumPy (at least version 1.15 is recommended)</p></li>
+</ul>
+</dd>
+</dl>
+<p>Python is an open-source programming language available from <a class="reference external" href="https://www.python.org">https://www.python.org</a>. It is available for Windows as well as being included in most Linux distributions. In Debian/Ubuntu it is installed as follows (as root):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>apt-get<span class="w"> </span>install<span class="w"> </span>python<span class="w"> </span>python-dev
+</pre></div>
+</div>
+<p>NumPy (Numerical Python) adds a fast array facility and linear algebra routines to Python. It is available from <a class="reference external" href="https://numpy.org/">https://numpy.org/</a>. Windows users should use the most recent NumPy installation for the Python version they have (e.g. numpy-1.0.3.1.win32-py2.4.exe for Python 2.4). Linux users are recommended to find a binary package for their distribution rather than compiling it themselves. In Debian/Ubuntu it is installed as follows (as root):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>apt-get<span class="w"> </span>install<span class="w"> </span>python-numpy
+</pre></div>
+</div>
+<p>To test whether Python is on the <code class="docutils literal notranslate"><span class="pre">PATH</span></code>, open a command prompt window and type:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python
+</pre></div>
+</div>
+<p>If Python is not on the <code class="docutils literal notranslate"><span class="pre">PATH</span></code> and you use Windows, add the full path to the directory containing it to the end of the <code class="docutils literal notranslate"><span class="pre">PATH</span></code> variable under Control Panel/System/Advanced Settings/Environment Variables. If you use Linux and Python is not on the <code class="docutils literal notranslate"><span class="pre">PATH</span></code>, put/edit the appropriate line in your .bashrc or similar startup file.</p>
+<p>To test that NumPy is working, try importing it at the Python prompt. You should see something similar to the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python
+Python 3.7.0 (default, Jul 15 2018, 10:44:58)
+[GCC 8.1.1 20180531] on linux
+Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+&gt;&gt;&gt; import numpy as np
+&gt;&gt;&gt; np.__version__
+&#39;1.15.0&#39;
+&gt;&gt;&gt;
+</pre></div>
+</div>
+<p>(To exit, press CTRL+D in Linux or CTRL+Z,Enter in Windows)</p>
+</section>
+<section id="installing-using-pip">
+<h2>Installing using pip<a class="headerlink" href="#installing-using-pip" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://pip.pypa.io/en/stable/">pip</a> is a command-line tool that often comes pre-packaged with Python distributions which can download packages from the <a class="reference external" href="https://pypi.org/">Python Package Index</a> (PyPI). To see if it’s installed, on Linux or macOS try:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ which pip
+</pre></div>
+</div>
+<p>and on Windows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cmd</span><span class="o">&gt;</span> <span class="n">where</span><span class="o">.</span><span class="n">exe</span> <span class="n">pip</span>
+</pre></div>
+</div>
+<p>The version of <a class="reference external" href="https://pypi.org/project/cclib/">cclib uploaded to PyPI</a> can then be installed globally using:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">cclib</span>
+</pre></div>
+</div>
+<p>or to your home directory using:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">user</span> <span class="n">cclib</span>
+</pre></div>
+</div>
+</section>
+<section id="installing-using-a-system-package-manager">
+<h2>Installing using a system package manager<a class="headerlink" href="#installing-using-a-system-package-manager" title="Permalink to this heading"></a></h2>
+<p>If you’re using <a class="reference external" href="https://www.debian.org">Debian GNU/Linux</a>, <a class="reference external" href="https://ubuntu.com/">Ubuntu</a>, or a similar distribution, there are official <a class="reference external" href="https://packages.debian.org/search?searchon=sourcenames&amp;keywords=cclib">cclib packages</a> that you can install via your package manager:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>apt<span class="w"> </span>install<span class="w"> </span>cclib
+</pre></div>
+</div>
+<p>There are in fact multiple packages, <a class="reference external" href="https://packages.debian.org/bullseye/python3-cclib">python3-cclib</a> containing the Python module, and <a class="reference external" href="https://packages.debian.org/bullseye/cclib">cclib</a> which installs the user scripts and depends on the Python module. If you also need to also install the unittests and logfiles we distribute, you will need to install the <a class="reference external" href="https://packages.debian.org/bullseye/cclib-data">cclib-data</a> package from the non-free repositories (due to license issues). Because of distribution release cycles, package manager versions of cclib may be out of date compared to the PyPI version.</p>
+</section>
+<section id="manual-download-and-install">
+<h2>Manual download and install<a class="headerlink" href="#manual-download-and-install" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>The source code of the newest release of cclib (version 1.7.2) is distributed as:</dt><dd><ul class="simple">
+<li><p>A .zip file: <a class="reference external" href="https://github.com/cclib/cclib/releases/download/v1.7.2/cclib-1.7.2.zip">https://github.com/cclib/cclib/releases/download/v1.7.2/cclib-1.7.2.zip</a></p></li>
+<li><p>A .tar.gz file: <a class="reference external" href="https://github.com/cclib/cclib/releases/download/v1.7.2/cclib-1.7.2.tar.gz">https://github.com/cclib/cclib/releases/download/v1.7.2/cclib-1.7.2.tar.gz</a></p></li>
+<li><p>Windows binary installers (see the <a class="reference external" href="https://github.com/cclib/cclib/releases/tag/v1.7">newest release page</a>)</p></li>
+</ul>
+</dd>
+</dl>
+<p>On Windows, if you choose to download the .exe files instead, you can install simply by double-clicking on the file. To uninstall, use the “Add and Remove Programs” menu in the Control Panel.</p>
+<p>None of these files include the tests and logfiles used for testing. In order to download all tests, we also provide source archives on the <a class="reference external" href="https://github.com/cclib/cclib/releases/tag/v1.7">newest release page</a>.</p>
+<p>If you are using the .zip or .tar.gz files, extract the contents of the file at an appropriate location, which we will call INSTALLDIR. Open a command prompt and change directory to INSTALLDIR. Next, run the following commands to install cclib:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>setup.py<span class="w"> </span>build
+python<span class="w"> </span>setup.py<span class="w"> </span>install<span class="w"> </span><span class="c1"># (as root)</span>
+</pre></div>
+</div>
+<p>or, if <a class="reference external" href="https://pip.pypa.io/en/stable/">pip</a> is available:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">.</span>
+</pre></div>
+</div>
+<p>To test, trying importing ‘’’cclib’’’ at the Python prompt. You should see something similar to the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python
+Python 3.7.0 (default, Jul 15 2018, 10:44:58)
+[GCC 8.1.1 20180531] on linux
+Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+&gt;&gt;&gt; import cclib
+&gt;&gt;&gt; cclib.__version__
+&#39;1.6.2&#39;
+&gt;&gt;&gt;
+</pre></div>
+</div>
+</section>
+<section id="what-next">
+<h2>What next?<a class="headerlink" href="#what-next" title="Permalink to this heading"></a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p>Read the list and specifications of the <a class="reference external" href="data.html">parsed data</a> and related <a class="reference external" href="data_notes.html">data notes</a></p></li>
+<li><p>Test the program using the test data files included in the full source distribution</p></li>
+<li><p>Run the unit and regression tests in the test directory (<code class="docutils literal notranslate"><span class="pre">testall.py</span></code> and <code class="docutils literal notranslate"><span class="pre">regression.py</span></code>)</p></li>
+<li><p>Send any questions to the cclib-users mailing list at <a class="reference external" href="https://sourceforge.net/projects/cclib/lists/cclib-users">https://sourceforge.net/projects/cclib/lists/cclib-users</a>.</p></li>
+<li><p>Write some computational chemistry algorithms using information parsed from cclib and donate the code to the project</p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="how_to_parse.html" class="btn btn-neutral float-right" title="How to parse and write" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2014-2021, cclib Development Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
