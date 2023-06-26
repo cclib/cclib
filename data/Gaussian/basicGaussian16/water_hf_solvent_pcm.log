@@ -1,9 +1,9 @@
  Entering Gaussian System, Link 0=g16
- Input=/gpfs1/home/osl/test/water_ccsd/Gaussian 16 Single Point HF Toluene Pople Basis Sets STO-3G/Input/water_ccsd.com
- Output=/gpfs1/home/osl/test/water_ccsd/Gaussian 16 Single Point HF Toluene Pople Basis Sets STO-3G/Output/water_ccsd.log
+ Input=/gpfs1/home/osl/test/water/Gaussian 16 Single Point HF Solvent Pople Basis Sets STO-3G/Input/water.com
+ Output=/gpfs1/home/osl/test/water/Gaussian 16 Single Point HF Solvent Pople Basis Sets STO-3G/Output/water.log
  Initial command:
- /gpfs1/apps/software/Gaussian16/AVX/g16/l1.exe "/scratch/tmp/osl/61db9a8a1fc54e918dc79d78df879c4b/Gau-24217.inp" -scrdir="/scratch/tmp/osl/61db9a8a1fc54e918dc79d78df879c4b/"
- Entering Link 1 = /gpfs1/apps/software/Gaussian16/AVX/g16/l1.exe PID=     24295.
+ /gpfs1/apps/software/Gaussian16/AVX/g16/l1.exe "/scratch/tmp/osl/bd82ffb0f7de425ca586f266569282ca/Gau-41463.inp" -scrdir="/scratch/tmp/osl/bd82ffb0f7de425ca586f266569282ca/"
+ Entering Link 1 = /gpfs1/apps/software/Gaussian16/AVX/g16/l1.exe PID=     41465.
   
  Copyright (c) 1988-2019, Gaussian, Inc.  All Rights Reserved.
   
@@ -76,34 +76,34 @@
  
  ******************************************
  Gaussian 16:  ES64L-G16RevC.01  3-Jul-2019
-                27-Apr-2023 
+                26-Jun-2023 
  ******************************************
- %Chk="water_ccsd.chk"
- %Rwf="water_ccsd.rwf"
- %NProcShared=2
- Will use up to    2 processors via shared memory.
- %Mem=10GB
+ %Chk="water.chk"
+ %Rwf="water.rwf"
+ %NProcShared=1
+ Will use up to    1 processors via shared memory.
+ %Mem=500MB
  ----------------------------------------------------------------------
  #p SP HF/STO-3G SCF=(DIIS) Symmetry=(Tight) SCRF=(PCM, Solvent=Toluene
- ) Population=(Regular) Density=(Current)
+ )
  ----------------------------------------------------------------------
- 1/30=1,38=1,172=1/1;
+ 1/38=1,172=1/1;
  2/12=2,40=1/2;
  3/6=3,11=9,25=1,30=1,70=2201,72=13/1,2,3;
  4//1;
  5/5=2,22=2,38=5,53=13/2;
- 6/22=-1,28=1/1;
+ 6/7=2,8=2,9=2,10=2,28=1/1;
  99/5=1,9=1/99;
- Leave Link    1 at Thu Apr 27 10:39:28 2023, MaxMem=  1342177280 cpu:               0.1 elap:               0.1
+ Leave Link    1 at Mon Jun 26 08:51:24 2023, MaxMem=    65536000 cpu:               0.0 elap:               0.1
  (Enter /gpfs1/apps/software/Gaussian16/AVX/g16/l101.exe)
- ----------------------------------------------------------
- water_ccsd_Single_Point_HF_Toluene_Pople_Basis_Sets_STO_3G
- ----------------------------------------------------------
+ -----------------------------------------------------
+ water_Single_Point_HF_Solvent_Pople_Basis_Sets_STO_3G
+ -----------------------------------------------------
  Symbolic Z-matrix:
  Charge =  0 Multiplicity = 1
- O                     0.        0.        0.11916 
- H                     0.        0.79065  -0.47664 
- H                     0.       -0.79065  -0.47664 
+ O                     0.       -0.11916   0. 
+ H                    -0.79065   0.47664   0. 
+ H                     0.79065   0.47664   0. 
  
  ITRead=  0  0  0
  MicOpt= -1 -1 -1
@@ -121,16 +121,16 @@
  NQMom=    0.0000000   0.0000000   0.0000000
  NMagM=    0.0000000   2.7928460   2.7928460
  AtZNuc=   8.0000000   1.0000000   1.0000000
- Leave Link  101 at Thu Apr 27 10:39:31 2023, MaxMem=  1342177280 cpu:               0.5 elap:               0.3
+ Leave Link  101 at Mon Jun 26 08:51:29 2023, MaxMem=    65536000 cpu:               0.2 elap:               0.5
  (Enter /gpfs1/apps/software/Gaussian16/AVX/g16/l202.exe)
                           Input orientation:                          
  ---------------------------------------------------------------------
  Center     Atomic      Atomic             Coordinates (Angstroms)
  Number     Number       Type             X           Y           Z
  ---------------------------------------------------------------------
-      1          8           0        0.000000    0.000000    0.119160
-      2          1           0        0.000000    0.790650   -0.476640
-      3          1           0        0.000000   -0.790650   -0.476640
+      1          8           0        0.000000   -0.119160    0.000000
+      2          1           0       -0.790650    0.476640    0.000000
+      3          1           0        0.790650    0.476640    0.000000
  ---------------------------------------------------------------------
                     Distance matrix (angstroms):
                     1          2          3
@@ -148,12 +148,12 @@
  Center     Atomic      Atomic             Coordinates (Angstroms)
  Number     Number       Type             X           Y           Z
  ---------------------------------------------------------------------
-      1          8           0        0.000000   -0.000000    0.119160
-      2          1           0        0.000000    0.790650   -0.476640
+      1          8           0        0.000000    0.000000    0.119160
+      2          1           0       -0.000000    0.790650   -0.476640
       3          1           0       -0.000000   -0.790650   -0.476640
  ---------------------------------------------------------------------
  Rotational constants (GHZ):         795.3283556         401.0823125         266.6242826
- Leave Link  202 at Thu Apr 27 10:39:33 2023, MaxMem=  1342177280 cpu:               0.1 elap:               0.1
+ Leave Link  202 at Mon Jun 26 08:51:32 2023, MaxMem=    65536000 cpu:               0.0 elap:               0.1
  (Enter /gpfs1/apps/software/Gaussian16/AVX/g16/l301.exe)
  Standard basis: STO-3G (5D, 7F)
  Ernie: Thresh=  0.10000D-02 Tol=  0.10000D-05 Strict=F.
@@ -196,8 +196,8 @@
  ------------------------------------------------------------------------------
  Spheres list:
  ISph  on   Nord     Re0    Alpha      Xe            Ye            Ze
-    1   O      1    1.7500  1.100      0.000000     -0.000000      0.119160
-    2   H      2    1.4430  1.100      0.000000      0.790650     -0.476640
+    1   O      1    1.7500  1.100      0.000000      0.000000      0.119160
+    2   H      2    1.4430  1.100     -0.000000      0.790650     -0.476640
     3   H      3    1.4430  1.100     -0.000000     -0.790650     -0.476640
  ------------------------------------------------------------------------------
  GePol: Number of generator spheres                  =       3
@@ -211,7 +211,7 @@
  GePol: Fraction of low-weight points (<1% of avg)   =       3.06%
  GePol: Cavity surface area                          =     56.337 Ang**2
  GePol: Cavity volume                                =     37.993 Ang**3
- Leave Link  301 at Thu Apr 27 10:39:36 2023, MaxMem=  1342177280 cpu:               0.4 elap:               0.4
+ Leave Link  301 at Mon Jun 26 08:51:34 2023, MaxMem=    65536000 cpu:               0.1 elap:               0.2
  (Enter /gpfs1/apps/software/Gaussian16/AVX/g16/l302.exe)
  NPDir=0 NMtPBC=     1 NCelOv=     1 NCel=       1 NClECP=     1 NCelD=      1
          NCelK=      1 NCelE2=     1 NClLst=     1 CellRange=     0.0.
@@ -219,10 +219,10 @@
  One-electron integral symmetry used in STVInt
  NBasis=     7 RedAO= T EigKep=  3.64D-01  NBF=     4     0     1     2
  NBsUse=     7 1.00D-06 EigRej= -1.00D+00 NBFU=     4     0     1     2
- Leave Link  302 at Thu Apr 27 10:39:38 2023, MaxMem=  1342177280 cpu:               0.2 elap:               0.1
+ Leave Link  302 at Mon Jun 26 08:51:36 2023, MaxMem=    65536000 cpu:               0.1 elap:               0.1
  (Enter /gpfs1/apps/software/Gaussian16/AVX/g16/l303.exe)
  DipDrv:  MaxL=1.
- Leave Link  303 at Thu Apr 27 10:39:40 2023, MaxMem=  1342177280 cpu:               0.1 elap:               0.1
+ Leave Link  303 at Mon Jun 26 08:51:40 2023, MaxMem=    65536000 cpu:               0.0 elap:               0.1
  (Enter /gpfs1/apps/software/Gaussian16/AVX/g16/l401.exe)
  ExpMin= 1.69D-01 ExpMax= 1.31D+02 ExpMxC= 1.31D+02 IAcc=3 IRadAn=         5 AccDes= 0.00D+00
  Harris functional with IExCor=  205 and IRadAn=       5 diagonalized for initial guess.
@@ -239,7 +239,7 @@
        Occupied  (A1) (A1) (B2) (A1) (B1)
        Virtual   (A1) (B2)
  The electronic state of the initial guess is 1-A1.
- Leave Link  401 at Thu Apr 27 10:39:45 2023, MaxMem=  1342177280 cpu:               0.7 elap:               0.6
+ Leave Link  401 at Mon Jun 26 08:51:44 2023, MaxMem=    65536000 cpu:               0.1 elap:               0.7
  (Enter /gpfs1/apps/software/Gaussian16/AVX/g16/l502.exe)
  Keep R1 ints in memory in symmetry-blocked form, NReq=1431257.
  FoFCou: FMM=F IPFlag=           0 FMFlag=           0 FMFlg1=           0
@@ -249,7 +249,7 @@
  Petite list used in FoFCou.
  Closed shell SCF:
  Using DIIS extrapolation, IDIIS=  1040.
- NGot=  1342177280 LenX=  1342175358 LenY=  1342174476
+ NGot=    65536000 LenX=    65534078 LenY=    65533196
  Requested convergence on RMS density matrix=1.00D-08 within 128 cycles.
  Requested convergence on MAX density matrix=1.00D-06.
  Requested convergence on             energy=1.00D-06.
@@ -257,13 +257,13 @@
 
  Cycle   1  Pass 1  IDiag  1:
  Inv3:  Mode=1 IEnd=      460992.
- Iteration    1 A*A^-1 deviation from unit magnitude is 1.78D-15 for    390.
- Iteration    1 A*A^-1 deviation from orthogonality  is 1.58D-15 for    258    119.
- Iteration    1 A^-1*A deviation from unit magnitude is 2.22D-15 for    390.
- Iteration    1 A^-1*A deviation from orthogonality  is 6.66D-16 for    346     17.
- E= -74.9155421926824    
+ Iteration    1 A*A^-1 deviation from unit magnitude is 2.44D-15 for    390.
+ Iteration    1 A*A^-1 deviation from orthogonality  is 9.30D-16 for    260    121.
+ Iteration    1 A^-1*A deviation from unit magnitude is 2.44D-15 for    390.
+ Iteration    1 A^-1*A deviation from orthogonality  is 8.33D-16 for    346     17.
+ E= -74.9155421926825    
  DIIS: error= 7.34D-02 at cycle   1 NSaved=   1.
- NSaved= 1 IEnMin= 1 EnMin= -74.9155421926824     IErMin= 1 ErrMin= 7.34D-02
+ NSaved= 1 IEnMin= 1 EnMin= -74.9155421926825     IErMin= 1 ErrMin= 7.34D-02
  ErrMax= 7.34D-02  0.00D+00 EMaxC= 1.00D-01 BMatC= 3.65D-02 BMatP= 3.65D-02
  IDIUse=3 WtCom= 2.66D-01 WtEn= 7.34D-01
  Coeff-Com:  0.100D+01
@@ -337,18 +337,18 @@
  NSaved= 7 IEnMin= 7 EnMin= -74.9663496977192     IErMin= 7 ErrMin= 1.69D-10
  ErrMax= 1.69D-10  0.00D+00 EMaxC= 1.00D-01 BMatC= 2.36D-19 BMatP= 3.99D-13
  IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
- Coeff-Com:  0.559D-10 0.794D-08 0.403D-06-0.473D-05 0.155D-04 0.131D-02
+ Coeff-Com:  0.554D-10 0.773D-08 0.409D-06-0.477D-05 0.156D-04 0.132D-02
  Coeff-Com:  0.999D+00
- Coeff:      0.559D-10 0.794D-08 0.403D-06-0.473D-05 0.155D-04 0.131D-02
+ Coeff:      0.554D-10 0.773D-08 0.409D-06-0.477D-05 0.156D-04 0.132D-02
  Coeff:      0.999D+00
  Gap=     0.963 Goal=   None    Shift=    0.000
- RMSDP=2.02D-10 MaxDP=6.38D-10 DE=-9.38D-13 OVMax= 0.00D+00
+ RMSDP=2.02D-10 MaxDP=6.38D-10 DE=-9.66D-13 OVMax= 0.00D+00
 
  Error on total polarization charges =  0.00103
  SCF Done:  E(RHF) =  -74.9663496977     A.U. after    7 cycles
             NFock=  7  Conv=0.20D-09     -V/T= 2.0058
  KE= 7.453111426423D+01 PE=-1.964038032336D+02 EE= 3.801935545189D+01
- Leave Link  502 at Thu Apr 27 10:39:50 2023, MaxMem=  1342177280 cpu:               1.0 elap:               0.8
+ Leave Link  502 at Mon Jun 26 08:51:48 2023, MaxMem=    65536000 cpu:               0.5 elap:               0.6
  (Enter /gpfs1/apps/software/Gaussian16/AVX/g16/l601.exe)
  Copying SCF densities to generalized density rwf, IOpCl= 0 IROHF=0.
 
@@ -364,60 +364,6 @@
  The electronic state is 1-A1.
  Alpha  occ. eigenvalues --  -20.24000  -1.24925  -0.60158  -0.44610  -0.38792
  Alpha virt. eigenvalues --    0.57460   0.71128
-     Molecular Orbital Coefficients:
-                           1         2         3         4         5
-                        (A1)--O   (A1)--O   (B2)--O   (A1)--O   (B1)--O
-     Eigenvalues --   -20.24000  -1.24925  -0.60158  -0.44610  -0.38792
-   1 1   O  1S          0.99420  -0.23456   0.00000  -0.09927   0.00000
-   2        2S          0.02594   0.84757   0.00000   0.51584   0.00000
-   3        2PX         0.00000   0.00000   0.00000   0.00000   1.00000
-   4        2PY         0.00000   0.00000   0.60587   0.00000   0.00000
-   5        2PZ        -0.00398  -0.11441   0.00000   0.77704   0.00000
-   6 2   H  1S         -0.00563   0.15553   0.44425  -0.28705   0.00000
-   7 3   H  1S         -0.00563   0.15553  -0.44425  -0.28705   0.00000
-                           6         7
-                        (A1)--V   (B2)--V
-     Eigenvalues --     0.57460   0.71128
-   1 1   O  1S         -0.12869   0.00000
-   2        2S          0.83427   0.00000
-   3        2PX         0.00000   0.00000
-   4        2PY         0.00000   0.97489
-   5        2PZ        -0.73010   0.00000
-   6 2   H  1S         -0.77673  -0.81008
-   7 3   H  1S         -0.77673   0.81008
-     Density Matrix:
-                           1         2         3         4         5
-   1 1   O  1S          2.10661
-   2        2S         -0.44846   1.97026
-   3        2PX         0.00000   0.00000   2.00000
-   4        2PY        -0.00000   0.00000   0.00000   0.73416
-   5        2PZ        -0.10852   0.60751  -0.00000   0.00000   1.23380
-   6 2   H  1S         -0.02716  -0.03278  -0.00000   0.53831  -0.48164
-   7 3   H  1S         -0.02716  -0.03278   0.00000  -0.53831  -0.48164
-                           6         7
-   6 2   H  1S          0.60795
-   7 3   H  1S         -0.18148   0.60795
-    Full Mulliken population analysis:
-                           1         2         3         4         5
-   1 1   O  1S          2.10661
-   2        2S         -0.10615   1.97026
-   3        2PX         0.00000   0.00000   2.00000
-   4        2PY         0.00000   0.00000   0.00000   0.73416
-   5        2PZ         0.00000   0.00000   0.00000   0.00000   1.23380
-   6 2   H  1S         -0.00136  -0.01487   0.00000   0.16415   0.11068
-   7 3   H  1S         -0.00136  -0.01487   0.00000   0.16415   0.11068
-                           6         7
-   6 2   H  1S          0.60795
-   7 3   H  1S         -0.04142   0.60795
-     Gross orbital populations:
-                           1
-   1 1   O  1S          1.99774
-   2        2S          1.83437
-   3        2PX         2.00000
-   4        2PY         1.06246
-   5        2PZ         1.45516
-   6 2   H  1S          0.82513
-   7 3   H  1S          0.82513
           Condensed to atoms (all electrons):
                1          2          3
      1  O    7.832524   0.258605   0.258605
@@ -456,35 +402,24 @@
  Symmetry A2   KE= 0.000000000000D+00
  Symmetry B1   KE= 5.057462452019D+00
  Symmetry B2   KE= 2.900137272868D+00
- Orbital energies and kinetic energies (alpha):
-                                 1                 2
-   1         (A1)--O         -20.240001         28.659610
-   2         (A1)--O          -1.249255          2.384683
-   3         (B2)--O          -0.601578          1.450069
-   4         (A1)--O          -0.446103          2.242464
-   5         (B1)--O          -0.387916          2.528731
-   6         (A1)--V           0.574603          2.697909
-   7         (B2)--V           0.711281          2.741094
- Total kinetic energy from orbitals= 7.453111426423D+01
  No NMR shielding tensors so no spin-rotation constants.
- Leave Link  601 at Thu Apr 27 10:39:52 2023, MaxMem=  1342177280 cpu:               0.3 elap:               0.3
+ Leave Link  601 at Mon Jun 26 08:51:51 2023, MaxMem=    65536000 cpu:               0.1 elap:               0.1
  (Enter /gpfs1/apps/software/Gaussian16/AVX/g16/l9999.exe)
  Unable to Open any file for archive entry.
- 1\1\GINC-KENNEDY107\SP\RHF\STO-3G\H2O1\OSL\27-Apr-2023\0\\#p SP HF/STO
- -3G SCF=(DIIS) Symmetry=(Tight) SCRF=(PCM, Solvent=Toluene) Population
- =(Regular) Density=(Current)\\water_ccsd_Single_Point_HF_Toluene_Pople
- _Basis_Sets_STO_3G\\0,1\O,0,0.,0.,0.11916\H,0,0.,0.79065,-0.47664\H,0,
- 0.,-0.79065,-0.47664\\Version=ES64L-G16RevC.01\State=1-A1\HF=-74.96634
- 97\RMSD=2.015e-10\Dipole=0.,0.,-0.6715129\Quadrupole=-0.6373715,0.7444
- 534,-0.1070819,0.,0.,0.\PG=C02V [C2(O1),SGV(H2)]\\@
+ 1\1\GINC-KENNEDY50\SP\RHF\STO-3G\H2O1\OSL\26-Jun-2023\0\\#p SP HF/STO-
+ 3G SCF=(DIIS) Symmetry=(Tight) SCRF=(PCM, Solvent=Toluene)\\water_Sing
+ le_Point_HF_Solvent_Pople_Basis_Sets_STO_3G\\0,1\O,0,0.,-0.11916,0.\H,
+ 0,-0.79065,0.47664,0.\H,0,0.79065,0.47664,0.\\Version=ES64L-G16RevC.01
+ \State=1-A1\HF=-74.9663497\RMSD=2.015e-10\Dipole=0.,0.6715129,0.\Quadr
+ upole=0.7444534,-0.1070819,-0.6373715,0.,0.,0.\PG=C02V [C2(O1),SGV(H2)
+ ]\\@
  The archive entry for this job was punched.
 
 
- ALTHOUGH J.J. COULD DIAGNOSE THE FAULTS OF AN
- APPARATUS WITH UNCANNY ACCURACY, IT WAS JUST AS
- WELL NOT TO LET HIM HANDLE IT.
-   -- GEORGE THOMPSON, ABOUT HIS FATHER
- Job cpu time:       0 days  0 hours  0 minutes  3.7 seconds.
- Elapsed time:       0 days  0 hours  0 minutes  2.9 seconds.
+ THE REAL VOYAGE OF DISCOVERY CONSISTS NOT IN SEEKING NEW LANDSCAPES 
+ BUT IN HAVING NEW EYES.
+                                                    -- MARCEL PROUST
+ Job cpu time:       0 days  0 hours  0 minutes  1.2 seconds.
+ Elapsed time:       0 days  0 hours  0 minutes  2.8 seconds.
  File lengths (MBytes):  RWF=     23 Int=      0 D2E=      0 Chk=      2 Scr=      2
- Normal termination of Gaussian 16 at Thu Apr 27 10:39:58 2023.
+ Normal termination of Gaussian 16 at Mon Jun 26 08:51:55 2023.

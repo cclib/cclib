@@ -1,5 +1,5 @@
 $title
-water_Single_Point_HF_Toluene_Pople_Basis_Sets_STO_3G
+water_Single_Point_HF_COSMO_Pople_Basis_Sets_STO_3G
 $symmetry c1
 $redundant    file=coord
 $user-defined bonds    file=coord
@@ -28,7 +28,7 @@ $scfdump
 $scfintunit
  unit=30       size=0        file=twoint
 $scfdiis
-$maxcor   4768 MiB  per_core
+$maxcor    477 MiB  per_core
 $scforbitalshift  automatic=.1
 $drvopt
    cartesian  on
@@ -62,11 +62,11 @@ $last step     dscf
 $cosmo
    epsilon= 2.3741
    refind= 1.497
-$orbital_max_rnorm 0.86541926417715E-06
+$orbital_max_rnorm 0.86540782038453E-06
 $last SCF energy change = -74.972019
 $charge from dscf
-          0.000 (not to be modified here)
+         -0.000 (not to be modified here)
 $dipole from dscf
-  x    -0.00000017673180    y     0.00009009358478    z    -0.67836147412234    a.u.
-   | dipole | =    1.7242359288  debye
+  x    -0.00008643277415    y     0.67836263993662    z    -0.00000020194699    a.u.
+   | dipole | =    1.7242388908  debye
 $end

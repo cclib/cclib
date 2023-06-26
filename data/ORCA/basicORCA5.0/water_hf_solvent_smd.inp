@@ -1,6 +1,6 @@
-! PBE0 NOCOSX NORI STO-3G TightSCF SP CPCM
-%Pal NProcs 8 end
-%MaxCore 2500
+! HF NOCOSX NORI STO-3G TightSCF SP CPCM
+%Pal NProcs 1 end
+%MaxCore 500
 %SCF
     AutoTRAH    True
     CNVDamp     False

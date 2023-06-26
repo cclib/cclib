@@ -158,9 +158,9 @@ INFO   : the flag for use of the SHARK integral package has been found!
                                        INPUT FILE
 ================================================================================
 NAME = water.inp
-|  1> ! PBE0 NOCOSX NORI STO-3G TightSCF SP CPCM
-|  2> %Pal NProcs 8 end
-|  3> %MaxCore 2500
+|  1> ! HF NOCOSX NORI STO-3G TightSCF SP CPCM
+|  2> %Pal NProcs 1 end
+|  3> %MaxCore 500
 |  4> %SCF
 |  5>     AutoTRAH    True
 |  6>     CNVDamp     False
@@ -223,18 +223,6 @@ There are 2 groups of distinct atoms
 Atom   0O    basis set group =>   1
 Atom   1H    basis set group =>   2
 Atom   2H    basis set group =>   2
---------------------------------------------------------------------------
-WARNING: There was an error initializing an OpenFabrics device.
-
-  Local host:   kennedy75
-  Local device: mlx5_0
---------------------------------------------------------------------------
-
-
-           ************************************************************
-           *        Program running with 8 parallel MPI-processes     *
-           *              working on a common directory               *
-           ************************************************************
 ------------------------------------------------------------------------------
                            ORCA GTO INTEGRAL CALCULATION
 ------------------------------------------------------------------------------
@@ -297,23 +285,9 @@ Primitive shell pairs kept                  ...       135
 Calculating one electron integrals          ... done (  0.0 sec)
 Calculating Nuclear repulsion               ... done (  0.0 sec) ENN=      8.887011893853 Eh
 
-SHARK setup successfully completed in   0.2 seconds
+SHARK setup successfully completed in   0.1 seconds
 
 Maximum memory used throughout the entire GTOINT-calculation: 3.9 MB
-[kennedy75:13567] 7 more processes have sent help message help-mpi-btl-openib.txt / error in device init
-[kennedy75:13567] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
---------------------------------------------------------------------------
-WARNING: There was an error initializing an OpenFabrics device.
-
-  Local host:   kennedy75
-  Local device: mlx5_0
---------------------------------------------------------------------------
-
-
-           ************************************************************
-           *        Program running with 8 parallel MPI-processes     *
-           *              working on a common directory               *
-           ************************************************************
 -------------------------------------------------------------------------------
                                  ORCA SCF
 -------------------------------------------------------------------------------
@@ -322,22 +296,7 @@ WARNING: There was an error initializing an OpenFabrics device.
 SCF SETTINGS
 ------------
 Hamiltonian:
- Density Functional     Method          .... DFT(GTOs)
- Exchange Functional    Exchange        .... PBE
-   PBE kappa parameter   XKappa         ....  0.804000
-   PBE mue parameter    XMuePBE         ....  0.219520
- Correlation Functional Correlation     .... PBE
-   PBE beta parameter  CBetaPBE         ....  0.066725
- LDA part of GGA corr.  LDAOpt          .... PW91-LDA
- Gradients option       PostSCFGGA      .... off
- Hybrid DFT is turned on
-   Fraction HF Exchange ScalHFX         ....  0.250000
-   Scaling of DF-GGA-X  ScalDFX         ....  0.750000
-   Scaling of DF-GGA-C  ScalDFC         ....  1.000000
-   Scaling of DF-LDA-C  ScalLDAC        ....  1.000000
-   Perturbative correction              ....  0.000000
-   Density functional embedding theory  .... OFF
-   NL short-range parameter             ....  6.900000
+ Ab initio Hamiltonian  Method          .... Hartree-Fock(GTOs)
 
 
 General Settings:
@@ -405,13 +364,13 @@ Convergence Tolerance:
 
 Diagonalization of the overlap matrix:
 Smallest eigenvalue                        ... 3.639e-01
-Time for diagonalization                   ...    0.001 sec
+Time for diagonalization                   ...    0.000 sec
 Threshold for overlap eigenvalues          ... 1.000e-08
 Number of eigenvalues below threshold      ... 0
-Time for construction of square roots      ...    0.005 sec
-Total time needed                          ...    0.013 sec
+Time for construction of square roots      ...    0.001 sec
+Total time needed                          ...    0.001 sec
 
-Time for model grid setup =    0.244 sec
+Time for model grid setup =    0.010 sec
 
 ------------------------------
 INITIAL GUESS: MODEL POTENTIAL
@@ -424,39 +383,13 @@ Starting the Coulomb interaction                   ... done (   0.0 sec)
 Reading the grid                                   ... done
 Mapping shells                                     ... done
 Starting the XC term evaluation                    ... done (   0.0 sec)
-  promolecular density results
-     # of electrons  =      9.999244910
-     EX              =     -8.717162575
-     EC              =     -0.314893885
-     EX+EC           =     -9.032056460
 Transforming the Hamiltonian                       ... done (   0.0 sec)
 Diagonalizing the Hamiltonian                      ... done (   0.0 sec)
 Back transforming the eigenvectors                 ... done (   0.0 sec)
 Now organizing SCF variables                       ... done
                       ------------------
-                      INITIAL GUESS DONE (   0.3 sec)
+                      INITIAL GUESS DONE (   0.0 sec)
                       ------------------
--------------------
-DFT GRID GENERATION
--------------------
-
-General Integration Accuracy     IntAcc      ... 4.388
-Radial Grid Type                 RadialGrid  ... OptM3 with GC (2021)
-Angular Grid (max. ang.)         AngularGrid ... 4 (Lebedev-302)
-Angular grid pruning method      GridPruning ... 4 (adaptive)
-Weight generation scheme         WeightScheme... Becke
-Basis function cutoff            BFCut       ... 1.0000e-11
-Integration weight cutoff        WCut        ... 1.0000e-14
-Angular grids for H and He will be reduced by one unit
-Partially contracted basis set               ... off
-Rotationally invariant grid construction     ... off
-
-Total number of grid points                  ...    12764
-Total number of batches                      ...      201
-Average number of points per batch           ...       63
-Average number of grid points per atom       ...     4255
-Time for grid setup =    0.071 sec
-
 
 --------------------
 CPCM SOLVATION MODEL
@@ -491,21 +424,21 @@ SCF ITERATIONS
 --------------
 ITER       Energy         Delta-E        Max-DP      RMS-DP      [F,P]
                ***  Starting incremental Fock matrix formation  ***
-  0    -75.1994777777   0.000000000000 0.32374979  0.08386475  0.1635311
-  1    -75.2476026820  -0.048124904286 0.08529317  0.02292829  0.0454006
+  0    -74.9092026522   0.000000000000 0.25168497  0.06037788  0.1681589
+  1    -74.9651965036  -0.055993851383 0.03046149  0.00879459  0.0216488
                                ***Turning on DIIS***
-  2    -75.2516920058  -0.004089323785 0.02716265  0.00748527  0.0138631
-  3    -75.2520714904  -0.000379484675 0.00497134  0.00127320  0.0043407
+  2    -74.9662076937  -0.001011190127 0.01121377  0.00241901  0.0041576
                       *** Initiating the SOSCF procedure ***
                            *** Shutting down DIIS ***
                       *** Re-Reading the Fockian *** 
                       *** Removing any level shift *** 
 ITER      Energy       Delta-E        Grad      Rot      Max-DP    RMS-DP
-  4    -75.25210835  -0.0000368623  0.000604  0.000604  0.001237  0.000295
+  3    -74.96981159  -0.0036038987  0.002486  0.002486  0.006114  0.001195
                *** Restarting incremental Fock matrix formation ***
-  5    -75.25211018  -0.0000018233  0.000201  0.000222  0.000526  0.000133
-  6    -75.25211022  -0.0000000448  0.000118  0.000077  0.000198  0.000055
-                  ***Gradient check signals convergence***
+  4    -74.96629454   0.0035170496  0.000629  0.000617  0.001564  0.000365
+  5    -74.96629577  -0.0000012266  0.000232  0.000392  0.001022  0.000238
+  6    -74.96629602  -0.0000002471  0.000028  0.000017  0.000044  0.000011
+                 **** Energy Check signals convergence ****
               ***Rediagonalizing the Fockian in SOSCF/NRSCF***
 
                *****************************************************
@@ -515,50 +448,41 @@ ITER      Energy       Delta-E        Grad      Rot      Max-DP    RMS-DP
 
 
 SMD CDS free energy correction energy :                -0.84258     Kcal/mol
-Total Energy after SMD CDS correction =               -75.253453000 Eh
+Total Energy after SMD CDS correction =               -74.967638761 Eh
 
 ----------------
 TOTAL SCF ENERGY
 ----------------
 
-Total Energy       :          -75.25345300 Eh           -2047.75056 eV
+Total Energy       :          -74.96763876 Eh           -2039.97316 eV
 
 Components:
 Nuclear Repulsion  :            8.88701189 Eh             241.82789 eV
-Electronic Energy  :          -84.14046489 Eh           -2289.57845 eV
-One Electron Energy:         -121.88089172 Eh           -3316.54767 eV
-Two Electron Energy:           37.74042683 Eh            1026.96922 eV
-CPCM Dielectric    :           -0.00193697 Eh              -0.05271 eV
+Electronic Energy  :          -83.85465065 Eh           -2281.80105 eV
+One Electron Energy:         -121.87232593 Eh           -3316.31459 eV
+Two Electron Energy:           38.01767528 Eh            1034.51354 eV
+CPCM Dielectric    :           -0.00200431 Eh              -0.05454 eV
 SMD CDS (Gcds)     :           -0.00134274 Eh              -0.03654 eV
 
 Virial components:
-Potential Energy   :         -149.80611932 Eh           -4076.43175 eV
-Kinetic Energy     :           74.55266632 Eh            2028.68119 eV
-Virial Ratio       :            2.00939989
+Potential Energy   :         -149.49878445 Eh           -4068.06874 eV
+Kinetic Energy     :           74.53114569 Eh            2028.09558 eV
+Virial Ratio       :            2.00585652
 
-
-DFT components:
-N(Alpha)           :        4.999999656336 electrons
-N(Beta)            :        4.999999656336 electrons
-N(Total)           :        9.999999312672 electrons
-E(X)               :       -6.753537353255 Eh       
-E(C)               :       -0.342110233269 Eh       
-E(XC)              :       -7.095647586524 Eh       
-DFET-embed. en.    :        0.000000000000 Eh       
 CPCM Solvation Model Properties:
-Surface-charge          :           -0.00072100
-Charge-correction       :            0.00000180 Eh               0.00005 eV
+Surface-charge          :           -0.00070640
+Charge-correction       :            0.00000175 Eh               0.00005 eV
 Free-energy (cav+disp)  :           -0.00134274 Eh              -0.03654 eV
 
 ---------------
 SCF CONVERGENCE
 ---------------
 
-  Last Energy change         ...   -3.6437e-08  Tolerance :   1.0000e-08
-  Last MAX-Density change    ...    5.8929e-06  Tolerance :   1.0000e-07
-  Last RMS-Density change    ...    1.5399e-06  Tolerance :   5.0000e-09
-  Last Orbital Gradient      ...    1.6113e-06  Tolerance :   1.0000e-05
-  Last Orbital Rotation      ...    2.6737e-06  Tolerance :   1.0000e-05
+  Last Energy change         ...   -2.1919e-09  Tolerance :   1.0000e-08
+  Last MAX-Density change    ...    1.5978e-05  Tolerance :   1.0000e-07
+  Last RMS-Density change    ...    3.9919e-06  Tolerance :   5.0000e-09
+  Last Orbital Gradient      ...    8.2045e-06  Tolerance :   1.0000e-05
+  Last Orbital Rotation      ...    6.7630e-06  Tolerance :   1.0000e-05
 
              **** THE GBW FILE WAS UPDATED (water.gbw) ****
              **** DENSITY water.scfp WAS UPDATED ****
@@ -570,13 +494,13 @@ ORBITAL ENERGIES
 ----------------
 
   NO   OCC          E(Eh)            E(eV) 
-   0   2.0000     -18.892911      -514.1022 
-   1   2.0000      -0.938295       -25.5323 
-   2   2.0000      -0.441240       -12.0067 
-   3   2.0000      -0.239564        -6.5189 
-   4   2.0000      -0.150944        -4.1074 
-   5   0.0000       0.350924         9.5491 
-   6   0.0000       0.466427        12.6921 
+   0   2.0000     -20.237056      -550.6783 
+   1   2.0000      -1.246411       -33.9166 
+   2   2.0000      -0.598689       -16.2912 
+   3   2.0000      -0.442943       -12.0531 
+   4   2.0000      -0.384938       -10.4747 
+   5   0.0000       0.577514        15.7150 
+   6   0.0000       0.714323        19.4377 
 
                     ********************************
                     * MULLIKEN POPULATION ANALYSIS *
@@ -585,20 +509,20 @@ ORBITAL ENERGIES
 -----------------------
 MULLIKEN ATOMIC CHARGES
 -----------------------
-   0 O :   -0.356885
-   1 H :    0.178443
-   2 H :    0.178443
-Sum of atomic charges:    0.0000000
+   0 O :   -0.349626
+   1 H :    0.174813
+   2 H :    0.174813
+Sum of atomic charges:   -0.0000000
 
 --------------------------------
 MULLIKEN REDUCED ORBITAL CHARGES
 --------------------------------
-  0 O s       :     3.853262  s :     3.853262
-      pz      :     2.000000  p :     4.503624
-      px      :     1.069899
-      py      :     1.433725
-  1 H s       :     0.821557  s :     0.821557
-  2 H s       :     0.821557  s :     0.821557
+  0 O s       :     3.832269  s :     3.832269
+      pz      :     2.000000  p :     4.517357
+      px      :     1.062396
+      py      :     1.454961
+  1 H s       :     0.825187  s :     0.825187
+  2 H s       :     0.825187  s :     0.825187
 
 
                      *******************************
@@ -608,19 +532,19 @@ MULLIKEN REDUCED ORBITAL CHARGES
 ----------------------
 LOEWDIN ATOMIC CHARGES
 ----------------------
-   0 O :   -0.251615
-   1 H :    0.125807
-   2 H :    0.125807
+   0 O :   -0.246751
+   1 H :    0.123375
+   2 H :    0.123375
 
 -------------------------------
 LOEWDIN REDUCED ORBITAL CHARGES
 -------------------------------
-  0 O s       :     3.710139  s :     3.710139
-      pz      :     2.000000  p :     4.541475
-      px      :     1.094730
-      py      :     1.446745
-  1 H s       :     0.874193  s :     0.874193
-  2 H s       :     0.874193  s :     0.874193
+  0 O s       :     3.691713  s :     3.691713
+      pz      :     2.000000  p :     4.555038
+      px      :     1.088210
+      py      :     1.466828
+  1 H s       :     0.876625  s :     0.876625
+  2 H s       :     0.876625  s :     0.876625
 
 
                       *****************************
@@ -635,44 +559,36 @@ LOEWDIN REDUCED ORBITAL CHARGES
   FA   - Mayer's free valence
 
   ATOM       NA         ZA         QA         VA         BVA        FA
-  0 O      8.3569     8.0000    -0.3569     1.9128     1.9128     0.0000
-  1 H      0.8216     1.0000     0.1784     0.9682     0.9682     0.0000
-  2 H      0.8216     1.0000     0.1784     0.9682     0.9682     0.0000
+  0 O      8.3496     8.0000    -0.3496     1.9136     1.9136    -0.0000
+  1 H      0.8252     1.0000     0.1748     0.9694     0.9694    -0.0000
+  2 H      0.8252     1.0000     0.1748     0.9694     0.9694    -0.0000
 
   Mayer bond orders larger than 0.100000
-B(  0-O ,  1-H ) :   0.9564 B(  0-O ,  2-H ) :   0.9564 
+B(  0-O ,  1-H ) :   0.9568 B(  0-O ,  2-H ) :   0.9568 
 
 -------
 TIMINGS
 -------
 
-Total SCF time: 0 days 0 hours 0 min 1 sec 
+Total SCF time: 0 days 0 hours 0 min 0 sec 
 
-Total time                  ....       1.196 sec
-Sum of individual times     ....       0.973 sec  ( 81.3%)
+Total time                  ....       0.407 sec
+Sum of individual times     ....       0.291 sec  ( 71.5%)
 
-Fock matrix formation       ....       0.597 sec  ( 50.0%)
-  XC integration            ....       0.215 sec  ( 36.0% of F)
-    Basis function eval.    ....       0.007 sec  (  3.4% of XC)
-    Density eval.           ....       0.004 sec  (  1.9% of XC)
-    XC-Functional eval.     ....       0.014 sec  (  6.7% of XC)
-    XC-Potential eval.      ....       0.001 sec  (  0.4% of XC)
-Diagonalization             ....       0.005 sec  (  0.4%)
-Density matrix formation    ....       0.001 sec  (  0.1%)
-Population analysis         ....       0.010 sec  (  0.8%)
-Initial guess               ....       0.027 sec  (  2.2%)
+Fock matrix formation       ....       0.270 sec  ( 66.3%)
+Diagonalization             ....       0.000 sec  (  0.0%)
+Density matrix formation    ....       0.000 sec  (  0.0%)
+Population analysis         ....       0.002 sec  (  0.6%)
+Initial guess               ....       0.007 sec  (  1.8%)
 Orbital Transformation      ....       0.000 sec  (  0.0%)
 Orbital Orthonormalization  ....       0.000 sec  (  0.0%)
-DIIS solution               ....       0.008 sec  (  0.7%)
-SOSCF solution              ....       0.010 sec  (  0.9%)
-Grid generation             ....       0.315 sec  ( 26.4%)
+DIIS solution               ....       0.000 sec  (  0.1%)
+SOSCF solution              ....       0.001 sec  (  0.2%)
 
-Maximum memory used throughout the entire SCF-calculation: 224.2 MB
-[kennedy75:13622] 7 more processes have sent help message help-mpi-btl-openib.txt / error in device init
-[kennedy75:13622] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+Maximum memory used throughout the entire SCF-calculation: 223.5 MB
 
 -------------------------   --------------------
-FINAL SINGLE POINT ENERGY       -75.253452999585
+FINAL SINGLE POINT ENERGY       -74.967638760929
 -------------------------   --------------------
 
 
@@ -701,13 +617,13 @@ The origin for moment calculation is the CENTER OF MASS  = ( 0.000000, -0.099183
 DIPOLE MOMENT
 -------------
                                 X             Y             Z
-Electronic contribution:      0.00000      -0.33464       0.00000
+Electronic contribution:      0.00000      -0.32060      -0.00000
 Nuclear contribution   :      0.00000       0.99183       0.00000
                         -----------------------------------------
-Total Dipole Moment    :      0.00000       0.65719       0.00000
+Total Dipole Moment    :      0.00000       0.67123      -0.00000
                         -----------------------------------------
-Magnitude (a.u.)       :      0.65719
-Magnitude (Debye)      :      1.67045
+Magnitude (a.u.)       :      0.67123
+Magnitude (Debye)      :      1.70614
 
 
 
@@ -719,23 +635,15 @@ Rotational constants in cm-1:    26.524832    13.376390     8.892121
 Rotational constants in MHz : 795194.445665 401014.082600 266579.081809 
 
  Dipole components along the rotational axes: 
-x,y,z [a.u.] :     0.000000     0.657192     0.000000 
-x,y,z [Debye]:     0.000000     1.670448     0.000000 
+x,y,z [a.u.] :     0.000000     0.671234    -0.000000 
+x,y,z [Debye]:     0.000000     1.706142    -0.000000 
 
  
---------------------------------------------------------------------------
-WARNING: There was an error initializing an OpenFabrics device.
-
-  Local host:   kennedy75
-  Local device: mlx5_0
---------------------------------------------------------------------------
-[kennedy75:13682] 7 more processes have sent help message help-mpi-btl-openib.txt / error in device init
-[kennedy75:13682] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
 
 Timings for individual modules:
 
-Sum of individual times         ...        9.998 sec (=   0.167 min)
-GTO integral calculation        ...        4.418 sec (=   0.074 min)  44.2 %
-SCF iterations                  ...        5.580 sec (=   0.093 min)  55.8 %
+Sum of individual times         ...        0.508 sec (=   0.008 min)
+GTO integral calculation        ...        0.086 sec (=   0.001 min)  16.9 %
+SCF iterations                  ...        0.422 sec (=   0.007 min)  83.1 %
                              ****ORCA TERMINATED NORMALLY****
-TOTAL RUN TIME: 0 days 0 hours 0 minutes 12 seconds 259 msec
+TOTAL RUN TIME: 0 days 0 hours 0 minutes 0 seconds 593 msec

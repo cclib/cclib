@@ -1,10 +1,8 @@
-%Chk="water.chk"
-%Rwf="water.rwf"
-%NProcShared=2
-%Mem=4GB
-#p SP PBE1PBE/STO-3G SCF=(DIIS) Symmetry=(Tight) SCRF=(IPCM, Solvent=Toluene) EmpiricalDispersion=(GD3BJ) Integral=(Ultrafine) Population=(Regular) Density=(Current)
+%NProcShared=1
+%Mem=500MB
+#p SP HF/STO-3G SCF=(DIIS) Symmetry=(Tight) SCRF=(IPCM, Solvent=Toluene)
 
-water_Single_Point_Singlet_PBE0__GD3BJ__Toluene_Pople_Basis_Sets_STO_3G
+water_Single_Point_HF_IPCM_Pople_Basis_Sets_STO_3G
 
 0, 1
 O          -0.00000        -0.11916         0.00000
