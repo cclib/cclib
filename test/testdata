@@ -328,6 +328,7 @@ SP        QChem       GenericDispersionTest basicQChem5.1               dvb_disp
 SP        QChem       GenericDispersionTest basicQChem5.4               dvb_dispersion_bp86_d3zero.out
 
 SP        Gaussian    IEFPCMMetadataTest    basicGaussian16             water_hf_solvent_pcm.log
+SP        Gaussian    CPCMMetadataTest      basicGaussian16             water_hf_solvent_cpcm.log
 SP        Gaussian    SCIPCMMetadataTest    basicGaussian16             water_hf_solvent_scipcm.log
 SP        Gaussian    IPCMMetadataTest      basicGaussian16             water_hf_solvent_ipcm.log
 SP        Gaussian    SMDIEFPCMMetadataTest basicGaussian16             water_hf_solvent_smd.log
