@@ -893,18 +893,29 @@ class Turbomole(logfileparser.Logfile):
         #              FOUND DFT-FLAG !
         #
         # For plain HF (not DFT) the "FOUND DFT-FLAG !" will be missing.
-        if line.strip() in ("CI SINGLES SINGLET-CALCULATION (TAMM-DANCOFF-APPROXIMATION)", "CI SINGLES TRIPLET-CALCULATION (TAMM-DANCOFF-APPROXIMATION)"):
-            self.metadata['excited_states_method'] = "CIS"
-        
-        elif line.strip() in ("RPA SINGLET-EXCITATION-CALCULATION", "RPA TRIPLET-EXCITATION-CALCULATION"):
-            self.metadata['excited_states_method'] = "RPA"
-            
-        elif line.strip() == "FOUND DFT-FLAG !":
-            if self.metadata['excited_states_method'] == "CIS":
-                self.metadata['excited_states_method'] = "TDA"
-            
+        if line.strip() in (
+            "CI SINGLES SINGLET-CALCULATION (TAMM-DANCOFF-APPROXIMATION)",
+            "CI SINGLES TRIPLET-CALCULATION (TAMM-DANCOFF-APPROXIMATION)",
+            "RPA SINGLET-EXCITATION-CALCULATION",
+             "RPA TRIPLET-EXCITATION-CALCULATION"
+        ):
+            line = next(inputfile)
+            line = next(inputfile)
+            if line.strip() == "FOUND DFT-FLAG !":
+                # TD-DFT and TDA
+                if "CI SINGLES" in line:
+                    self.metadata['excited_states_method'] = "TDA"
+                
+                else:
+                    self.metadata['excited_states_method'] = "TD-DFT"
+                
             else:
-                self.metadata['excited_states_method'] = "TD-DFT"
+                # RPA and CIS
+                if "CI SINGLES" in line:
+                    self.metadata['excited_states_method'] = "CIS"
+                
+                else:
+                    self.metadata['excited_states_method'] = "RPA"
 
 
         # Excited state info from escf.
