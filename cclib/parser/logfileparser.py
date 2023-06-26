@@ -340,7 +340,10 @@ class Logfile(ABC):
                     break
                 except Exception as e:
                     self.logger.error("Encountered error when parsing.")
-                    self.logger.error(f"Last line read: {inputfile.last_line}")
+                    
+                    # Not all input files support last_line.
+                    if hasattr(inputfile, "last_line"):
+                        self.logger.error(f"Last line read: {inputfile.last_line}")
                     raise
         
         finally:
