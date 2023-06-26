@@ -334,6 +334,9 @@ class Gaussian(logfileparser.Logfile):
                     
                     if self.metadata['solvent_model'] == "PCM":
                         self.metadata['solvent_model'] = "IEFPCM"
+                    
+                    elif self.metadata['solvent_model'] == "C-PCM":
+                        self.metadata['solvent_model'] = "CPCM"
                 
                 elif "Atomic radii" in line and line.split()[-1] == "SMD-Coulomb.":
                     self.metadata['solvent_model'] = "SMD-IEFPCM"
