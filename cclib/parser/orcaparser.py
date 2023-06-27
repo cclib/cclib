@@ -1187,27 +1187,29 @@ Dispersion correction           -0.016199959
                 self.freeenergy = self.enthalpy - self.temperature * self.entropy
         
         # Excited state metadata.
-        if line.strip() in ("ORCA TD-DFT/TDA CALCULATION", "ORCA TD-DFT CALCULATION"):
-            # TDA or TD-DFT.
+        if line.strip() in (
+            "ORCA TD-DFT/TDA CALCULATION",
+            "ORCA TD-DFT CALCULATION",
+            "ORCA CIS CALCULATION",
+            
+        ):
+            if "TD-DFT" in line:
+                method = "TD-DFT"
+            
+            else:
+                method = "RPA"
+            
             while "Tamm-Dancoff approximation" not in line:
                 line = next(inputfile)
                 
             if line.split()[-1] == "operative":
-                self.metadata['excited_states_method'] = "TDA"
-            
-            else:
-                self.metadata['excited_states_method'] = "TD-DFT"
-        
-        elif line.strip() == "ORCA CIS CALCULATION":
-            # CIS or RPA.
-            while "Tamm-Dancoff approximation" not in line:
-                line = next(inputfile)
+                if method == "TD-DFT":
+                    method = "TDA"
                 
-            if line.split()[-1] == "operative":
-                self.metadata['excited_states_method'] = "CIS"
-            
-            else:
-                self.metadata['excited_states_method'] = "RPA"
+                else:
+                    method = "CIS"
+                
+            self.metadata['excited_states_method'] = method
                 
         elif line.strip() == "ORCA ROCIS CALCULATION":
             # Here we consider ROCIS the same as CIS (?)
