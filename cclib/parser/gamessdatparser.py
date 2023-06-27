@@ -136,44 +136,10 @@ class GAMESSDAT(logfileparser.Logfile):
         if line[0:8] == "GAUSSIAN":
             parts = line.split()
 
-            self.metadata['num_mol_orbitals'] = int(parts[2])
-            self.metadata['num_primitives'] = int(parts[4])
-            self.metadata['num_nuclei'] = int(parts[6])
+            self.nmo    = int(parts[2])
+            self.nbasis = int(parts[4])
+            self.natom  = int(parts[6])
 
-            # Continue extracting
-            
-            #   O    1    (CENTRE  1)   0.00000000  0.00000000  0.00000000  CHARGE =  8.0
-            #   H    2    (CENTRE  2)   1.87082873  0.00000000  0.00000000  CHARGE =  1.0
-            #   H    3    (CENTRE  3)  -0.51567032  1.79835585  0.00000000  CHARGE =  1.0
-
-            line = next(inputfile)
-
-            atom_info = []
-
-            while 'CENTRE' in line:
-
-                parts = line.split()
-                symbol = parts[0]
-                atom_number = int(parts[1])
-                centre_number = int(parts[3][:-1])
-                val1 = float(parts[4])
-                val2 = float(parts[5])
-                val3 = float(parts[6])
-                charge = float(parts[-1])
-
-                atom_info.append((symbol, atom_number, centre_number, val1, val2, val3, charge))
-
-                line = next(inputfile)
-
-            self.metadata['atom_info'] = atom_info
-
-
-        if line[0:8] == "GAUSSIAN":
-            parts = line.split()
-
-            self.metadata['num_mol_orbitals'] = int(parts[2])
-            self.metadata['num_primitives'] = int(parts[4])
-            self.metadata['num_nuclei'] = int(parts[6])
 
             # Continue extracting
             
@@ -208,11 +174,11 @@ class GAMESSDAT(logfileparser.Logfile):
         # CENTRE ASSIGNMENTS    1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  2  2  2  3  3
         # CENTRE ASSIGNMENTS    3
         
-        self.metadata["centre_assignments"] = []
+        self.atombasis = []
 
         while line[0:18] == "CENTRE ASSIGNMENTS":
             centre_assignments = re.findall(r'\d+', line)
-            self.metadata["centre_assignments"].extend(centre_assignments)
+            self.atombasis.extend(centre_assignments)
             line = next(inputfile)
 
         # Extracting Ttype Assignments
