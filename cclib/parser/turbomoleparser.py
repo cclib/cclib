@@ -893,29 +893,31 @@ class Turbomole(logfileparser.Logfile):
         #              FOUND DFT-FLAG !
         #
         # For plain HF (not DFT) the "FOUND DFT-FLAG !" will be missing.
+        # The "FOUND DFT-FLAG !" line can be found in other places too,
+        # not just in escf...
         if line.strip() in (
             "CI SINGLES SINGLET-CALCULATION (TAMM-DANCOFF-APPROXIMATION)",
             "CI SINGLES TRIPLET-CALCULATION (TAMM-DANCOFF-APPROXIMATION)",
             "RPA SINGLET-EXCITATION-CALCULATION",
-             "RPA TRIPLET-EXCITATION-CALCULATION"
+            "RPA TRIPLET-EXCITATION-CALCULATION"
         ):
-            line = next(inputfile)
-            line = next(inputfile)
-            if line.strip() == "FOUND DFT-FLAG !":
-                # TD-DFT and TDA
-                if "CI SINGLES" in line:
-                    self.metadata['excited_states_method'] = "TDA"
-                
-                else:
-                    self.metadata['excited_states_method'] = "TD-DFT"
-                
+            if "CI SINGLES" in line:
+                method = "CIS"
+                    
             else:
-                # RPA and CIS
-                if "CI SINGLES" in line:
-                    self.metadata['excited_states_method'] = "CIS"
-                
+                method = "RPA"
+            
+            line = next(inputfile)
+            line = next(inputfile)
+            
+            if line.strip() == "FOUND DFT-FLAG !":
+                if method == "CIS":
+                    method = "TDA"
+                    
                 else:
-                    self.metadata['excited_states_method'] = "RPA"
+                    method = "TD-DFT"
+                    
+            self.metadata['excited_states_method'] = method
 
 
         # Excited state info from escf.
