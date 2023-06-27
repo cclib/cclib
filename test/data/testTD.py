@@ -36,12 +36,12 @@ class GenericTDTest(unittest.TestCase):
     
     @skipForParser('ADF', 'excited_states_method not yet implemented')
     @skipForParser('DALTON', 'excited_states_method not yet implemented')
-    @skipForParser('FChk', 'etrotats are not yet implemented')
+    @skipForParser('FChk', 'excited_states_method not yet implemented')
     @skipForParser('GAMESS', 'excited_states_method not yet implemented')
     @skipForParser('GAMESSUK', 'excited_states_method not yet implemented')
     @skipForParser('Jaguar', 'excited_states_method not yet implemented')
     @skipForParser('NWChem', 'excited_states_method not yet implemented')
-    @skipForParser('QChem', 'etrotats are not yet implemented')
+    @skipForParser('QChem', 'excited_states_method not yet implemented')
     def testmetadata(self):
         """Did we parse an excited states method?"""
         assert "excited_states_method" in self.data.metadata
@@ -96,13 +96,13 @@ class GenericTDTest(unittest.TestCase):
         
     
     @skipForParser('ADF', 'etrotats are not yet implemented')
-    @skipForParser('DALTON', 'etrotats are not yet implemented')
-    @skipForParser('FChk', 'etrotats are not yet implemented')
-    @skipForParser('GAMESS', 'etrotats are not yet implemented')
-    @skipForParser('GAMESSUK', 'etrotats are not yet implemented')
-    @skipForParser('Jaguar', 'etrotats are not yet implemented')
-    @skipForParser('NWChem', 'etrotats are not yet implemented')
-    @skipForParser('QChem', 'Q-Chem cannot calculate rotatory strengths')
+    @skipForParser('DALTON', 'etsyms are not yet implemented')
+    @skipForParser('FChk', 'etsyms are not yet implemented')
+    @skipForParser('GAMESS', 'etsyms are not yet implemented')
+    @skipForParser('GAMESSUK', 'etsyms are not yet implemented')
+    @skipForParser('Jaguar', 'etsyms are not yet implemented')
+    @skipForParser('NWChem', 'etsyms are not yet implemented')
+    @skipForParser('QChem', 'etrotats are not yet implemented')
     @skipForLogfile("ORCA/basicORCA4.2", "etsyms are only available in ORCA >= 5.0") 
     @skipForLogfile("ORCA/basicORCA4.1", "etsyms are only available in ORCA >= 5.0") 
     @skipForLogfile("Gaussian/basicGaussian09", "symmetry is missing for this log file")
