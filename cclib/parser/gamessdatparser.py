@@ -136,7 +136,7 @@ class GAMESSDAT(logfileparser.Logfile):
         if line[0:8] == "GAUSSIAN":
             parts = line.split()
 
-            self.nmo    = int(parts[2])
+            self.nmo    = int(parts[1])
             self.nbasis = int(parts[4])
             self.natom  = int(parts[6])
 
@@ -151,7 +151,7 @@ class GAMESSDAT(logfileparser.Logfile):
 
             atom_info = []
 
-            while 'CENTRE' in line:
+            while '(CENTRE' in line:
 
                 parts = line.split()
                 symbol = parts[0]
