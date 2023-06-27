@@ -14,6 +14,7 @@ import numpy
 from cclib.parser import logfileparser
 from cclib.parser import utils
 
+from cclib.parser.utils import PeriodicTable
 
 class GAMESSDAT(logfileparser.Logfile):
     """A GAMESS .dat log file"""
@@ -37,6 +38,8 @@ class GAMESSDAT(logfileparser.Logfile):
     def before_parsing(self):
         self.pt = utils.PeriodicTable()
         # To change: declared only for passing unit tests
+        self.periodic_table = utils.PeriodicTable()
+
         self.mocoeffs = [ -1 ]
         self.metadata["input_file_contents"] = None
         self.metadata["legacy_package_version"] = None
@@ -78,18 +81,28 @@ class GAMESSDAT(logfileparser.Logfile):
 
             # Extract atomic information
 
-            atomic_data = []
+            self.atomnos = []
+            self.atommasses = []
+            self.atomcoords = []
+
+            line = next(inputfile)
             line = next(inputfile)
 
-            while line.strip() != "$END":
-                parts = line.split()
-                if len(parts) >= 2:
-                    symbol = parts[0]
+            while "$END" not in line:
+                if len(line.strip()):
+
+                    parts = line.split()
+                    atomno = parts[0]
                     mass = float(parts[1])
                     coordinates = [float(coord) for coord in parts[2:]]
-                    atom_info = {"symbol": symbol, "mass": mass, "coordinates": coordinates}
-                    atomic_data.append(atom_info)
-                line = next(inputfile)
+
+                    symbol = self.periodic_table.element[atomno]
+
+                    self.atomnos.append(symbol)
+                    self.atommasses.append(mass)
+                    self.atomcoords.append(coordinates)
+
+                    line = next(inputfile)
         
             self.metadata["atoms"] = atomic_data
 
@@ -217,3 +230,55 @@ class GAMESSDAT(logfileparser.Logfile):
         # EXPONENTS  1.1695961E+00 3.8038896E-01 5.0331513E+00 1.1695961E+00 3.8038896E-01
         # EXPONENTS  3.4252509E+00 6.2391373E-01 1.6885540E-01 3.4252509E+00 6.2391373E-01
         # EXPONENTS  1.6885540E-01
+
+        self.metadata["exponents"] = []
+        
+        while line[0:] == 'EXPONENTS':
+            exponents = re.findall(r"[-+]?(?:\d*\.*\d+)", line)
+            self.metadata["exponents"].extend(exponents)
+            line = next(inputfile)
+
+        #   MO  1                     OCC NO =   2.00000000 ORB. ENERGY = -20.56547536
+        #   8.27318851E-01  1.52270833E+00  2.46402951E+00  3.23903576E+00  2.77810215E+00
+        #   9.49880307E-01 -1.29777421E-02 -5.79064323E-03  1.70998470E-02  2.67281545E-03
+        #   2.05926021E-03  9.04126150E-04  3.54694672E-03  2.73273124E-03  1.19981620E-03
+        #   0.00000000E+00  0.00000000E+00  0.00000000E+00  1.09508898E-03 -4.92215549E-05
+        #  -6.53191563E-05  0.00000000E+00 -4.28769380E-03 -4.28529767E-03 -4.29025488E-03
+        #   8.35523030E-06  0.00000000E+00  0.00000000E+00  3.26911333E-05  5.54503496E-05
+        #   6.31282631E-05 -5.28069901E-05  4.95765497E-04 -8.70177406E-06  0.00000000E+00
+        #   3.26910801E-05  5.54502594E-05  6.31281604E-05 -5.28070121E-05 -1.45016312E-04
+        #   4.74162199E-04  0.00000000E+00
+        # MO  2                     OCC NO =   2.00000000 ORB. ENERGY =  -1.32288835
+        #  -1.75781895E-01 -3.23532524E-01 -5.23536695E-01 -6.88203640E-01 -5.90268263E-01
+        #  -2.01822744E-01 -2.94878612E-01 -1.31574262E-01  3.88540558E-01  1.43700987E-01
+        #   1.10713864E-01  4.86093496E-02  1.90697728E-01  1.46922319E-01  6.45068118E-02
+        #   0.00000000E+00  0.00000000E+00  0.00000000E+00  1.16273118E-01  5.61500000E-03
+        #   7.45135762E-03  0.00000000E+00  8.86485030E-03  9.17061568E-03  1.40727166E-03
+        #   1.06632882E-03  0.00000000E+00  0.00000000E+00  2.90520499E-02  4.92777754E-02
+        #   5.61010055E-02  2.64903112E-03 -3.82656636E-02  3.19859639E-03  0.00000000E+00
+        #   2.90520559E-02  4.92777854E-02  5.61010170E-02  2.64903095E-03  1.36221368E-02
+        #  -3.59016685E-02  0.00000000E+00
+        # END DATA
+
+        self.metadata["mocoeffs"] = []
+
+        if line[0:3] == 'MO ':
+            while 'END OF INPUT FILE FOR BADER' not in line:
+                if 'MO' in line and 'OCC NO' in line and 'ORB. ENERGY' in line:
+                    line = next(inputfile)
+                    mo = []
+                    while 'MO' not in line and 'END DATA' not in line:
+                        mo.extend([float(x) for x in line.rsplit()])
+                        line = next(inputfile)
+                    self.metadata["mocoeffs"].append(mo)
+                elif "VIRIAL(-V/T)" in line:
+                    numbers = re.findall(r"[-+]?(?:\d*\.*\d+)", line)
+                    self.metadata["energy"] = numbers[-2]
+                    self.metadata["virial"] = numbers[-1]
+                    line = next(inputfile)
+                else:
+                    line = next(inputfile)
+        
+                
+
+
