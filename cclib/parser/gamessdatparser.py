@@ -233,7 +233,7 @@ class GAMESSDAT(logfileparser.Logfile):
 
         self.metadata["exponents"] = []
         
-        while line[0:] == 'EXPONENTS':
+        while line[0:9] == 'EXPONENTS':
             exponents = re.findall(r"[-+]?(?:\d*\.*\d+)", line)
             self.metadata["exponents"].extend(exponents)
             line = next(inputfile)
@@ -260,24 +260,24 @@ class GAMESSDAT(logfileparser.Logfile):
         #  -3.59016685E-02  0.00000000E+00
         # END DATA
 
-        self.metadata["mocoeffs"] = []
+        # self.metadata["mocoeffs"] = []
 
-        if line[0:3] == 'MO ':
-            while 'END OF INPUT FILE FOR BADER' not in line:
-                if 'MO' in line and 'OCC NO' in line and 'ORB. ENERGY' in line:
-                    line = next(inputfile)
-                    mo = []
-                    while 'MO' not in line and 'END DATA' not in line:
-                        mo.extend([float(x) for x in line.rsplit()])
-                        line = next(inputfile)
-                    self.metadata["mocoeffs"].append(mo)
-                elif "VIRIAL(-V/T)" in line:
-                    numbers = re.findall(r"[-+]?(?:\d*\.*\d+)", line)
-                    self.metadata["energy"] = numbers[-2]
-                    self.metadata["virial"] = numbers[-1]
-                    line = next(inputfile)
-                else:
-                    line = next(inputfile)
+        # if line[0:3] == 'MO ':
+        #     while 'END OF INPUT FILE FOR BADER' not in line:
+        #         if 'MO' in line and 'OCC NO' in line and 'ORB. ENERGY' in line:
+        #             line = next(inputfile)
+        #             mo = []
+        #             while 'MO' not in line and 'END DATA' not in line:
+        #                 mo.extend([float(x) for x in line.rsplit()])
+        #                 line = next(inputfile)
+        #             self.metadata["mocoeffs"].append(mo)
+        #         elif "VIRIAL(-V/T)" in line:
+        #             numbers = re.findall(r"[-+]?(?:\d*\.*\d+)", line)
+        #             self.metadata["energy"] = numbers[-2]
+        #             self.metadata["virial"] = numbers[-1]
+        #             line = next(inputfile)
+        #         else:
+        #             line = next(inputfile)
         
                 
 
