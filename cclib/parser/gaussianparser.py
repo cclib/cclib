@@ -850,7 +850,6 @@ class Gaussian(logfileparser.Logfile):
                 
                 # SCI-PCM solvent info appears in each SCF section...
                 #  Compute SCI-PCM surface.
-                #if line[1:25] == "Compute SCI-PCM surface.":
                 if "Compute SCI-PCM surface" in line:
                     self.metadata['solvent_model'] = "SCIPCM"
                 
