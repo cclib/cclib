@@ -314,6 +314,67 @@ class Gaussian(logfileparser.Logfile):
         # Basis set name
         if line[1:15] == "Standard basis":
             self.metadata["basis_set"] = line.split()[2]
+            
+        # Solvent information.
+        # PCM (the default gaussian solvent method).
+        if line[1:34] == "Polarizable Continuum Model (PCM)":
+            # Solvent parameters are unique to each solvent model,
+            # so they are packaged together to prevent clogging the namespace.
+            self.metadata['solvent_params'] = {
+            }
+            
+            # Keep looking until dashed only.
+            while set(line.strip()) != set("-"):
+                line = next(inputfile)
+                
+                # PCM has a few different subtypes.
+                # Model                : PCM.
+                if "Model" in line:
+                    self.metadata['solvent_model'] = " ".join(line.split()[2:])[:-1]
+                    
+                    if self.metadata['solvent_model'] == "PCM":
+                        self.metadata['solvent_model'] = "IEFPCM"
+                    
+                    elif self.metadata['solvent_model'] == "C-PCM":
+                        self.metadata['solvent_model'] = "CPCM"
+                
+                elif "Atomic radii" in line and line.split()[-1] == "SMD-Coulomb.":
+                    self.metadata['solvent_model'] = "SMD-IEFPCM"
+                    
+                # Solvent by keyword.
+                #  Solvent              : Toluene, Eps=   2.374100 Eps(inf)=   2.238315
+                # Solvent by definition.
+                #  Solvent              : Generic,
+                #            Eps                           =   9.000000
+                #            Eps(infinity)                 =   2.000000
+
+                elif "Solvent" in line and "Eps=" in line and "Eps(inf)= " in line:
+                    split_line = line.split()
+                    
+                    # Capture the human readable name, as well as params.
+                    self.metadata['solvent_name'] = split_line[2][:-1].lower()
+                    
+                    self.metadata['solvent_params']['epsilon'] = float(split_line[4])
+                    self.metadata['solvent_params']['epsilon_infinite'] = float(split_line[6])
+                
+                elif "Eps(infinity)" in line:
+                    # Assume manually specified solvent.
+                    self.metadata['solvent_params']['epsilon_infinite'] = float(line.split()[-1])
+                    
+                elif "Eps" in line:
+                    # Assume manually specified solvent.
+                    self.metadata['solvent_params']['epsilon'] = float(line.split()[-1])
+        
+        elif "Reaction Field using a Density IsoSurface Boundary" in line:
+            self.metadata['solvent_model'] = "IPCM"
+        
+        #  Epsi=   78.3000 Cont =    0.0010
+        elif  "Epsi=" in line and "Cont =":
+            if "solvent_params" not in self.metadata:
+                self.metadata['solvent_params'] = {}
+            
+            self.metadata['solvent_params']['epsilon'] = float(line.split()[1])
+            self.metadata['solvent_params']['isovalue'] = float(line.split()[4])
 
         # Dipole moment
         # e.g. from G09
@@ -786,7 +847,20 @@ class Gaussian(logfileparser.Logfile):
             while line.find("SCF Done") == -1:
 
                 self.updateprogress(inputfile, "QM convergence", self.fupdate)
-
+                
+                # SCI-PCM solvent info appears in each SCF section...
+                #  Compute SCI-PCM surface.
+                if "Compute SCI-PCM surface" in line:
+                    self.metadata['solvent_model'] = "SCIPCM"
+                
+                # For SCI-PCM.
+                # Dielectric constant of solvent =     2.374100"
+                if line[1:33] == "Dielectric constant of solvent =":
+                    if "solvent_params" not in self.metadata:
+                        self.metadata['solvent_params'] = {}
+                    
+                    self.metadata["solvent_params"]['epsilon'] = float(line.split()[-1])
+                
                 if line.find(' E=') == 0:
                     self.logger.debug(line)
 

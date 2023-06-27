@@ -165,6 +165,30 @@ class Turbomole(logfileparser.Logfile):
 
             # We have entered a new module (sub program); reset our success flag.
             self.metadata['success'] = False
+            
+        # Solvation.
+        if "COSMO switched on" in line:
+            self.metadata['solvent_model'] = "COSMO"
+            
+        elif "COSMO RESULTS" in line:
+            self.metadata['solvent_model'] = "COSMO"
+            line = next(inputfile)
+            line = next(inputfile)
+            
+            while set(line.strip()) != set("="):
+                line = next(inputfile)
+                
+                if "solvent_params" not in self.metadata:
+                    self.metadata['solvent_params'] = {}
+                
+                elif "epsilon:" in line:
+                    self.metadata['solvent_params']['epsilon'] = float(line.split()[-1])
+                    
+                elif "refind:" in line:
+                    self.metadata['solvent_params']['refractive_index'] = float(line.split()[-1])
+                
+                elif "fepsi:" in line:
+                    self.metadata['solvent_params']['f_epsilon'] = float(line.split()[-1])
         
         ## Orbital occupation info from dscf.
         #  orbitals $scfmo  will be written to file mos

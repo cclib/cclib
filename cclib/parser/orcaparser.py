@@ -377,6 +377,54 @@ class ORCA(logfileparser.Logfile):
             self.is_DFT = True
             # In theory we could also parse the functional from this section, 
             # but sadly ORCA doesn't print simple functional names.
+        
+        # --------------------
+        # CPCM SOLVATION MODEL
+        # --------------------
+        # CPCM parameters:
+        #   Epsilon                                         ...       2.3741
+        #   Refrac                                          ...       1.4970
+        #   Rsolv                                           ...       1.3000
+        #   Surface type                                    ... GAUSSIAN VDW
+        #   Epsilon function type                           ...         CPCM
+        # Radii:
+        #  Radius for O  used is    3.4469 Bohr (=   1.8240 Ang.)
+        #  Radius for H  used is    2.4944 Bohr (=   1.3200 Ang.)
+        # Calculating surface                               ...        done! (  0.0s)
+        # GEPOL surface points                              ...          244
+        # GEPOL Volume                                      ...     194.1477
+        # GEPOL Surface-area                                ...     165.6341
+        # Calculating surface distance matrix               ...        done! (  0.0s)
+        # Performing Cholesky decomposition & store         ...        done! (  0.0s)
+        # Overall time for CPCM initialization              ...                 0.0s
+        if line.strip() == "CPCM SOLVATION MODEL":
+            # We can assume we're using CPCM if we see this line.
+            # SMD also uses this line, but we can update later.
+            self.metadata['solvent_model'] = "CPCM"
+            self.metadata['solvent_params'] = {}
+            
+            line = next(inputfile)
+            line = next(inputfile)
+            
+            while set(line.strip()) != set("-"):
+                line = next(inputfile)
+                    
+                if "Epsilon function type" in line:
+                    if line.split()[-1] == "COSMO":
+                        self.metadata['solvent_model'] = "CPCM-COSMO"
+                
+                elif "Epsilon" in line:
+                    self.metadata['solvent_params']['epsilon'] = float(line.split()[-1])
+                    
+                elif "Refrac" in line:
+                    self.metadata['solvent_params']['refractive_index'] = float(line.split()[-1])
+                
+                elif "SMD-CDS solvent descriptors" in line:
+                    self.metadata['solvent_model'] = "SMD-CPCM"
+                
+                elif "Solvent:" in line:
+                    # Only get this for SMD.
+                    self.metadata['solvent_name'] = line.split()[-1].lower()
             
         
         # SCF convergence output begins with:
