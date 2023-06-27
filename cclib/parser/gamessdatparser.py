@@ -35,12 +35,18 @@ class GAMESSDAT(logfileparser.Logfile):
         pass
 
     def before_parsing(self):
+        self.pt = utils.PeriodicTable()
         # To change: declared only for passing unit tests
         self.mocoeffs = [ -1 ]
         self.metadata["input_file_contents"] = None
         self.metadata["legacy_package_version"] = None
         self.scfenergies = [ 0 ]
         self.b3lyp_energy = 0
+
+    # def after_parsing(self):
+    #     if hasattr(self, "atomcoords"):
+    #         self.atomcoords = numpy.array(self.atomcoords)
+        
 
 
     def extract(self, inputfile, line):
@@ -134,6 +140,7 @@ class GAMESSDAT(logfileparser.Logfile):
         # GAUSSIAN              7 MOL ORBITALS     21 PRIMITIVES        3 NUCLEI
 
         if line[0:8] == "GAUSSIAN":
+
             parts = line.split()
 
             self.nmo    = int(parts[1])
@@ -150,19 +157,29 @@ class GAMESSDAT(logfileparser.Logfile):
             line = next(inputfile)
 
             atom_info = []
-
+            self.atomcharges = dict()
+            self.atomcharges['CHANGENAME'] = []
+            self.atomnos = []
+            
             while '(CENTRE' in line:
 
                 parts = line.split()
+
                 symbol = parts[0]
-                atom_number = int(parts[1])
-                centre_number = int(parts[3][:-1])
+                atomno = self.pt.number[symbol]
+
+                # atom_number = int(parts[1])
+                # centre_number = int(parts[3][:-1])
                 val1 = float(parts[4])
                 val2 = float(parts[5])
                 val3 = float(parts[6])
+
                 charge = float(parts[-1])
 
-                atom_info.append((symbol, atom_number, centre_number, val1, val2, val3, charge))
+                atom_info.append((val1, val2, val3))
+                
+                self.atomnos.append(atomno)
+                self.atomcharges['CHANGENAME'].append(charge)
 
                 line = next(inputfile)
 
