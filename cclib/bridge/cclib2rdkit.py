@@ -14,18 +14,19 @@ _found_rdkit = find_package("rdkit")
 
 if _found_rdkit:
     from rdkit import Chem
+    # TODO this isn't working inside _check_rdkit() for some reason.
+    try:
+        from rdkit.Chem import rdDetermineBonds
+    except ImportError:
+        raise ImportError('This script requires RDKit version 2022.09 or later')
 
-def _check_rdkit():
+
+def _check_rdkit() -> None:
     if not _found_rdkit:
         raise ImportError("You must install `rdkit >= 2022.09` to use this function.")
-    else:
-        try:
-            from rdkit.Chem import rdDetermineBonds
-        except ImportError:
-            raise ImportError('This script requires RDKit version 2022.09 or later')
 
 
-def makerdkit(data, explicit=True):
+def makerdkit(data: ccData, explicit: bool = True) -> "Chem.Mol":
     """ Create rdkit Mol object from ccData object """
 
     _check_rdkit()
@@ -47,5 +48,6 @@ def makerdkit(data, explicit=True):
         return Chem.RemoveHs(bonded_mol, implicitOnly=False)
     else:
         return bonded_mol
+
 
 del find_package
