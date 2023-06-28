@@ -36,9 +36,8 @@ class GAMESSDAT(logfileparser.Logfile):
         pass
 
     def before_parsing(self):
-        self.pt = utils.PeriodicTable()
+        self.pt = PeriodicTable()
         # To change: declared only for passing unit tests
-        self.periodic_table = utils.PeriodicTable()
 
         self.mocoeffs = [ -1 ]
         self.metadata["input_file_contents"] = None
@@ -81,39 +80,30 @@ class GAMESSDAT(logfileparser.Logfile):
 
             # Extract atomic information
 
-            self.atomnos = []
             self.atommasses = []
-            self.atomcoords = []
+            # self.atomcoords = []
 
             line = next(inputfile)
-            line = next(inputfile)
 
-            while "$END" not in line:
-                if len(line.strip()):
+            while line.strip() != "$END":
+                parts = line.split()
+                if len(parts) >= 2:
 
-                    parts = line.split()
-                    atomno = parts[0]
-                    mass = float(parts[1])
+                    symbol      = parts[0]
+                    mass        = float(parts[1])
                     coordinates = [float(coord) for coord in parts[2:]]
 
-                    symbol = self.periodic_table.element[atomno]
-
-                    self.atomnos.append(symbol)
                     self.atommasses.append(mass)
-                    self.atomcoords.append(coordinates)
+                    # self.atomcoords.append(coordinates)
+                    
+                line = next(inputfile)
 
-                    line = next(inputfile)
-        
-            self.metadata["atoms"] = atomic_data
 
         # Extract energy
 
         # --- CLOSED SHELL ORBITALS --- GENERATED AT Mon Aug  5 13:05:47 2019
         # water                                                                           
         # E(RHF)=      -74.9643287920, E(NUC)=    8.8870072224,   13 ITERS
-
-        # while "E(RHF)" not in line:
-        #     line = next(inputfile)
 
         # Extract E(RHF) value
 
@@ -260,24 +250,24 @@ class GAMESSDAT(logfileparser.Logfile):
         #  -3.59016685E-02  0.00000000E+00
         # END DATA
 
-        # self.metadata["mocoeffs"] = []
+        self.metadata["mocoeffs"] = []
 
-        # if line[0:3] == 'MO ':
-        #     while 'END OF INPUT FILE FOR BADER' not in line:
-        #         if 'MO' in line and 'OCC NO' in line and 'ORB. ENERGY' in line:
-        #             line = next(inputfile)
-        #             mo = []
-        #             while 'MO' not in line and 'END DATA' not in line:
-        #                 mo.extend([float(x) for x in line.rsplit()])
-        #                 line = next(inputfile)
-        #             self.metadata["mocoeffs"].append(mo)
-        #         elif "VIRIAL(-V/T)" in line:
-        #             numbers = re.findall(r"[-+]?(?:\d*\.*\d+)", line)
-        #             self.metadata["energy"] = numbers[-2]
-        #             self.metadata["virial"] = numbers[-1]
-        #             line = next(inputfile)
-        #         else:
-        #             line = next(inputfile)
+        if line[0:3] == 'MO ':
+            while 'END OF INPUT FILE FOR BADER' not in line:
+                if 'MO' in line and 'OCC NO' in line and 'ORB. ENERGY' in line:
+                    line = next(inputfile)
+                    mo = []
+                    while 'MO' not in line and 'END DATA' not in line:
+                        mo.extend([float(x) for x in line.rsplit()])
+                        line = next(inputfile)
+                    self.metadata["mocoeffs"].append(mo)
+                elif "VIRIAL(-V/T)" in line:
+                    numbers = re.findall(r"[-+]?(?:\d*\.*\d+)", line)
+                    self.metadata["energy"] = numbers[-2]
+                    self.metadata["virial"] = numbers[-1]
+                    line = next(inputfile)
+                else:
+                    line = next(inputfile)
         
                 
 
