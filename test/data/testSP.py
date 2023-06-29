@@ -251,7 +251,6 @@ class GenericSPTest(unittest.TestCase):
         assert abs(self.data.moenergies[0][0]-self.b3lyp_moenergy) < self.b3lyp_moenergy_delta
 
     @skipForParser('DALTON', 'mocoeffs not implemented yet')
-    @skipForParser('GAMESSDAT', 'mocoeffs not implemented yet')
     @skipForLogfile('Jaguar/basicJaguar7', 'Data file does not contain enough information. Can we make a new one?')
     @skipForParser('Turbomole', 'Use of symmetry has reduced the number of mo coeffs')
     def testdimmocoeffs(self):
@@ -308,7 +307,6 @@ class GenericSPTest(unittest.TestCase):
         assert round(abs(self.data.aooverlaps[3, 0]), 7) == 0
         assert round(abs(self.data.aooverlaps[0, 3]), 7) == 0
 
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
     def testoptdone(self):
         """There should be no optdone attribute set."""
         assert not hasattr(self.data, 'optdone')
@@ -335,7 +333,6 @@ class GenericSPTest(unittest.TestCase):
         numpy.testing.assert_allclose(self.data.rotconsts[0], ref, rtol=0, atol=1.0e-3)
 
     @skipForParser('FChk', 'The parser is still being developed so we skip this test')
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
     @skipForParser('Gaussian', 'Logfile needs to be updated')
     @skipForParser('Jaguar', 'No dipole moments in the logfile')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
@@ -390,7 +387,7 @@ class GenericSPTest(unittest.TestCase):
 
     @skipForParser('ADF', 'reading basis set names is not implemented')
     @skipForParser('GAMESSUK', 'reading basis set names is not implemented')
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
+    @skipForParser('GAMESSDAT', 'reading basis set names is not implemented')
     @skipForParser('Molcas', 'reading basis set names is not implemented')
     @skipForParser('Psi4', 'reading basis set names is not implemented')
     def testmetadata_basis_set(self):
@@ -419,14 +416,12 @@ class GenericSPTest(unittest.TestCase):
         # must end in `dal`.
         assert "dvb_sp.in" in self.data.metadata["input_file_name"]
 
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
     def testmetadata_methods(self):
         """Does metadata have expected keys and values?"""
         # TODO implement and unify across parsers; current values are [],
         # ["HF"], ["RHF"], and ["DFT"]
         assert "methods" in self.data.metadata
 
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
     def testmetadata_package(self):
         """Does metadata have expected keys and values?"""
         # TODO How can the value be tested when the package name comes from
@@ -434,21 +429,21 @@ class GenericSPTest(unittest.TestCase):
         assert "package" in self.data.metadata
 
     @skipForParser('FChk', 'Formatted Checkpoint files do not have section for legacy package version')
-    @skipForParser('GAMESSDAT', 'Parser still in development')
+    @skipForParser('GAMESSDAT', 'Files do not contain information about the legacy package version')
     def testmetadata_legacy_package_version(self):
         """Does metadata have expected keys and values?"""
         # TODO Test specific values for each unit test.
         assert "legacy_package_version" in self.data.metadata
 
     @skipForParser('FChk', 'Formatted Checkpoint files do not have section for package version')
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
+    @skipForParser('GAMESSDAT', 'Files do not contain information about the package version')
     def testmetadata_package_version(self):
         """Does metadata have expected keys and values?"""
         # TODO Test specific values for each unit test.
         assert isinstance(packaging.version.parse(self.data.metadata["package_version"]), packaging.version.Version)
 
     @skipForParser('FChk', 'point group symmetry cannot be printed')
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
+    @skipForParser('GAMESSDAT', 'reading point group symmetry and name is not implemented')
     @skipForParser('Molcas', 'reading point group symmetry and name is not implemented')
     @skipForParser('Molpro', 'reading point group symmetry and name is not implemented')
     @skipForParser('Turbomole', 'reading point group symmetry and name is not implemented')
@@ -457,7 +452,7 @@ class GenericSPTest(unittest.TestCase):
         assert self.data.metadata["symmetry_detected"] == "c2h"
 
     @skipForParser('FChk', 'point group symmetry cannot be printed')
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
+    @skipForParser('GAMESSDAT', 'reading point group symmetry and name is not implemented')
     @skipForParser('Molcas', 'reading point group symmetry and name is not implemented')
     @skipForParser('Molpro', 'reading point group symmetry and name is not implemented')
     @skipForParser('Turbomole', 'reading point group symmetry and name is not implemented')
@@ -471,7 +466,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('GAMESS', 'reading cpu/wall time is not implemented for this parser') 
     @skipForParser('GAMESSUK', 'reading cpu/wall time is not implemented for this parser') 
     @skipForParser('GAMESSUS', 'reading cpu/wall time is not implemented for this parser') 
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
+    @skipForParser('GAMESSDAT', 'reading cpu/wall time is not implemented for this parser')
     @skipForParser('Jaguar', 'reading cpu/wall time is not implemented for this parser') 
     @skipForParser('Molcas', ' reading cpu/wall time is not implemented for this parser') 
     @skipForParser('Molpro', 'reading cpu/wall time is not implemented for this parser') 
@@ -500,12 +495,10 @@ class GenericHFSPTest(GenericSPTest):
     hf_moenergy = -300.43401785663235
 
     @skipForParser('FChk', 'Formatted Checkpoint files do not have a section for SCF energy')
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
     def testscfenergy(self):
         """Is the SCF energy within the target?"""
         assert abs(self.data.scfenergies[-1]-self.hf_scfenergy) < 6.5e-1
 
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
     def testfirstmoenergy(self):
         """Is the lowest energy molecular orbital within the target?"""
         assert abs(self.data.moenergies[0][0]-self.hf_moenergy) < 1.6e-1
@@ -524,7 +517,6 @@ class ADFSPTest(GenericSPTest):
     b3lyp_energy = -140
     b3lyp_moenergy = -269.6079423873336
 
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
     def testfoverlaps(self):
         """Are the dims and values of the fragment orbital overlap matrix correct?"""
 

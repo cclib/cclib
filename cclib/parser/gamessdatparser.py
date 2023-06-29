@@ -39,16 +39,10 @@ class GAMESSDAT(logfileparser.Logfile):
         self.pt = PeriodicTable()
         # To change: declared only for passing unit tests
 
-        self.mocoeffs = [ -1 ]
-        self.metadata["input_file_contents"] = None
-        self.metadata["legacy_package_version"] = None
-        self.scfenergies = [ 0 ]
-        self.b3lyp_energy = 0
-
-    # def after_parsing(self):
-    #     if hasattr(self, "atomcoords"):
-    #         self.atomcoords = numpy.array(self.atomcoords)
-        
+    def after_parsing(self):
+        if hasattr(self, "atomcoords"):
+            len_coords = len(self.atomcoords)
+            self.atomcoords = numpy.reshape(self.atomcoords, (1, len_coords, 3))
 
 
     def extract(self, inputfile, line):
@@ -81,20 +75,22 @@ class GAMESSDAT(logfileparser.Logfile):
             # Extract atomic information
 
             self.atommasses = []
-            # self.atomcoords = []
+            self.atomcoords = []
 
             line = next(inputfile)
 
             while line.strip() != "$END":
                 parts = line.split()
-                if len(parts) >= 2:
+                if len(parts) > 2:
 
                     symbol      = parts[0]
                     mass        = float(parts[1])
                     coordinates = [float(coord) for coord in parts[2:]]
 
+                    assert len(coordinates) == 3
+
                     self.atommasses.append(mass)
-                    # self.atomcoords.append(coordinates)
+                    self.atomcoords.append(coordinates)
                     
                 line = next(inputfile)
 
@@ -127,6 +123,48 @@ class GAMESSDAT(logfileparser.Logfile):
         #     iters_value = int(line.split()[-1])
         #     self.metadata["ITERS"] = iters_value
 
+        # Extract vectors
+
+        #  $VEC   
+        #  1  1 9.94202990E-01 2.59157151E-02 2.40311554E-03 3.18904296E-03 0.00000000E+00
+        #  1  2-5.62726478E-03-5.62726567E-03
+        #  2  1-2.34217935E-01 8.45881798E-01 7.04411127E-02 9.34785483E-02-0.00000000E+00
+        #  2  2 1.56449309E-01 1.56449336E-01
+        #  3  1-1.17687509E-08 6.36837896E-08 4.81820843E-01-3.63078078E-01 0.00000000E+00
+        #  3  2 4.46376801E-01-4.46376807E-01
+        #  4  1 1.00458159E-01-5.21395067E-01 4.65965488E-01 6.18357071E-01 0.00000000E+00
+        #  4  2 2.89063958E-01 2.89063907E-01
+        #  5  1-0.00000000E+00-0.00000000E+00-0.00000000E+00-0.00000000E+00 1.00000000E+00
+        #  5  2-0.00000000E+00-0.00000000E+00
+        #  6  1-1.28350522E-01 8.32525679E-01 4.40905546E-01 5.85101037E-01-0.00000000E+00
+        #  6  2-7.75800880E-01-7.75800504E-01
+        #  7  1 3.90260255E-08-2.79856684E-07 7.79855187E-01-5.87663268E-01 0.00000000E+00
+        #  7  2-8.08915389E-01 8.08915850E-01
+        #  $END   
+
+        # Extract vector information
+        # After formatting, the extracted vectors will populate self.mocoeffs
+
+        if line[1:5] == "$VEC":
+
+            self.metadata['vectors'] = []
+
+            while "$END" not in line:
+                
+                line = next(inputfile)
+                vec_line = line.replace('-', ' -').replace('E -', 'E-').strip()
+                vectors = [float(vec) for vec in vec_line.split()[1:]]
+                line_number = line.split()[0]
+
+                if not self.metadata['vectors']:
+                    self.metadata['vectors'].append(vectors)
+
+                elif line_number == str(len(self.metadata['vectors'])):
+                    self.metadata['vectors'][-1].extend(vectors)
+
+                elif len(vectors) > 0:
+                    self.metadata['vectors'].append(vectors)
+
         
         # Extracting MP2 Energy Value
 
@@ -134,6 +172,40 @@ class GAMESSDAT(logfileparser.Logfile):
         
         if "E(MP2)=" in line:
             self.mpenergies = float(line.split()[-1])
+
+        #  POPULATION ANALYSIS
+        # C            6.00435  -0.00435   5.99623   0.00377
+        # C            6.00435  -0.00435   5.99623   0.00377
+        # C            6.07658  -0.07658   6.04383  -0.04383
+        # C            6.07658  -0.07658   6.04383  -0.04383
+        # C            6.07696  -0.07696   6.04409  -0.04409
+        # C            6.07696  -0.07696   6.04409  -0.04409
+        # H            0.92217   0.07783   0.95790   0.04210
+        # H            0.92217   0.07783   0.95790   0.04210
+        # H            0.92084   0.07916   0.95636   0.04364
+        # H            0.92084   0.07916   0.95636   0.04364
+        # C            6.07622  -0.07622   6.03889  -0.03889
+        # C            6.07622  -0.07622   6.03889  -0.03889
+        # H            0.92346   0.07654   0.95907   0.04093
+        # H            0.92346   0.07654   0.95907   0.04093
+        # C            6.15454  -0.15454   6.09150  -0.09150
+        # C            6.15454  -0.15454   6.09150  -0.09150
+        # H            0.92403   0.07597   0.95707   0.04293
+        # H            0.92403   0.07597   0.95707   0.04293
+        # H            0.92086   0.07914   0.95507   0.04493
+        # H            0.92086   0.07914   0.95507   0.04493
+        #  MOMENTS AT POINT    1 X,Y,Z= -0.000000  0.000000  0.000000
+        #  DIPOLE       0.000000  0.000000  0.000000
+        # ----- TOP OF INPUT FILE FOR BADER'S AIMPAC PROGRAM -----
+
+        # Extract Moments and Dipole
+
+        if line[1:17] == 'MOMENTS AT POINT':
+            self.moments = [[ float(moment) for moment in line.split()[-3:] ]]
+
+            line = next(inputfile)
+
+            self.moments.append([ float(dipole) for dipole in line.split()[-3:] ])
 
 
         # Extracting Gaussian
@@ -201,7 +273,7 @@ class GAMESSDAT(logfileparser.Logfile):
             self.atombasis.extend(centre_assignments)
             line = next(inputfile)
 
-        # Extracting Ttype Assignments
+        # Extracting Type Assignments
 
         # TYPE ASSIGNMENTS      1  1  1  1  1  1  2  2  2  3  3  3  4  4  4  1  1  1  1  1
         # TYPE ASSIGNMENTS      1
@@ -250,7 +322,7 @@ class GAMESSDAT(logfileparser.Logfile):
         #  -3.59016685E-02  0.00000000E+00
         # END DATA
 
-        self.metadata["mocoeffs"] = []
+        self.mocoeffs = []
 
         if line[0:3] == 'MO ':
             while 'END OF INPUT FILE FOR BADER' not in line:
@@ -260,7 +332,7 @@ class GAMESSDAT(logfileparser.Logfile):
                     while 'MO' not in line and 'END DATA' not in line:
                         mo.extend([float(x) for x in line.rsplit()])
                         line = next(inputfile)
-                    self.metadata["mocoeffs"].append(mo)
+                    self.mocoeffs.append(mo)
                 elif "VIRIAL(-V/T)" in line:
                     numbers = re.findall(r"[-+]?(?:\d*\.*\d+)", line)
                     self.metadata["energy"] = numbers[-2]
@@ -268,6 +340,7 @@ class GAMESSDAT(logfileparser.Logfile):
                     line = next(inputfile)
                 else:
                     line = next(inputfile)
+            self.mocoeffs = [ self.mocoeffs ]
         
                 
 
