@@ -33,6 +33,7 @@ class GenericTDTest(unittest.TestCase):
             "Singlet-Ag",
         ]
     sumofsec = 1.0
+    method = "TD-DFT"
     
     @skipForParser('ADF', 'excited_states_method not yet implemented')
     @skipForParser('DALTON', 'excited_states_method not yet implemented')
@@ -44,7 +45,7 @@ class GenericTDTest(unittest.TestCase):
     @skipForParser('QChem', 'excited_states_method not yet implemented')
     def testmetadata(self):
         """Did we parse an excited states method?"""
-        assert "excited_states_method" in self.data.metadata
+        assert self.data.metadata['excited_states_method'] == self.method
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForLogfile('Turbomole/basicTurbomole7.4/CO_cc2_TD_trip', 'Oscillator strengths are not available for Turbomole triplets using ricc2 but are required for testenergies()')
@@ -207,6 +208,7 @@ class OrcaTDDFTTest(GenericTDTest):
             "Singlet-Bu",
             "Singlet-Ag",
         ]
+    method = "TDA"
 
     def testoscs(self):
         """Is the maximum of etoscs in the right range?"""
@@ -240,6 +242,9 @@ class OrcaROCISTest(GenericTDTest):
     expected_f_max = 0.015
     # per 1085, no VELOCITY DIPOLE MOMENTS are parsed
     n_spectra = 7
+    
+    # Do we want to parse ROCIS as its own method?
+    method = "CIS"
 
     def testTransprop(self):
         """Check the number of spectra parsed"""
@@ -297,6 +302,12 @@ class TurbomoleTDADC2Test(GenericTDTest):
     expected_l_max = 136329
     expected_f_max = 0.8
     symmetries = ["Singlet-A"] * 10
+    method = "ADC(2)"
+    
+class TurbomoleTDCC2Test(TurbomoleTDTest):
+    """Customized time-dependent HF/DFT unittest"""
+    
+    method = "CC2"
 
 class TurbomoleTDTripTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
@@ -305,6 +316,7 @@ class TurbomoleTDTripTest(GenericTDTest):
     expected_l_max = 51530
     expected_f_max = 0.84
     symmetries = ["Triplet-A"] * 10
+    method = "RPA"
         
 class TurbomoleTDCC2TripTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
@@ -312,6 +324,7 @@ class TurbomoleTDCC2TripTest(GenericTDTest):
     
     number = 10
     symmetries = ["Triplet-A"] * 10
+    method = "CC2"
 
     def testenergies(self):
         """Is the l_max reasonable?"""
@@ -327,11 +340,17 @@ class OrcaETPostHFTest(GenericTDTest):
     # Not sure why this value != 1 for these methods?
     # Perhaps remaining contributions were too small to print? 
     sumofsec = 0.43
+    method = "EOM-CCSD"
+    
+class OrcaADC2Test(OrcaETPostHFTest):
+    
+    method = "ADC(2)"
     
 class OrcaSTEOMCCSDTest(OrcaETPostHFTest):
     """Test for STEOM-CCSD with Orca."""
     
     sumofsec = 1.0
+    method = "STEOM-CCSD"
     
 class GaussianEOMCCSDTest(GenericTDTest):
     """Test for EOM-CCSD with Gaussian."""
@@ -352,6 +371,7 @@ class GaussianEOMCCSDTest(GenericTDTest):
             "Triplet-Bu",
             "Triplet-Ag",
         ]
+    method = "EOM-CCSD"
         
 
 if __name__ =="__main__":

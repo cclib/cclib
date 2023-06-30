@@ -400,7 +400,7 @@ TD        ORCA        OrcaTDDFTTest         basicORCA5.0          dvb_td.out
 TD        ORCA        OrcaROCISTest         basicORCA4.1          dvb_rocis.out
 TD        ORCA        OrcaROCISTest         basicORCA4.2          dvb_rocis.out
 TD        ORCA        OrcaROCISTest         basicORCA5.0          dvb_rocis.out
-TD        ORCA        OrcaETPostHFTest      basicORCA5.0          dvb_adc2.log
+TD        ORCA        OrcaADC2Test          basicORCA5.0          dvb_adc2.log
 TD        ORCA        OrcaETPostHFTest      basicORCA5.0          dvb_eom_ccsd.log
 TD        ORCA        OrcaETPostHFTest      basicORCA5.0          dvb_pno_eom_ccsd.log
 TD        ORCA        OrcaSTEOMCCSDTest     basicORCA5.0          dvb_steom_ccsd.log
@@ -409,8 +409,8 @@ TD        QChem       QChemTDDFTTest        basicQChem5.1         dvb_td.out
 TD        QChem       QChemTDDFTTest        basicQChem5.4         dvb_td.out
 TD        Turbomole   TurbomoleTDTest       basicTurbomole7.4     CO_TD/basis    CO_TD/control    CO_TD/mos    CO_TD/dscf.out    CO_TD/escf.out    CO_TD/coord
 TD        Turbomole   TurbomoleTDTripTest   basicTurbomole7.4     CO_TD_trip/basis    CO_TD_trip/control    CO_TD_trip/mos    CO_TD_trip/dscf.out    CO_TD_trip/escf.out    CO_TD_trip/coord
-TD        Turbomole   TurbomoleTDTest       basicTurbomole7.4     CO_cc2_TD/basis    CO_cc2_TD/control    CO_cc2_TD/mos    CO_cc2_TD/dscf.out    CO_cc2_TD/ricc2.out    CO_cc2_TD/coord
-TD        Turbomole   TurbomoleTDADC2Test       basicTurbomole7.4     CO_adc2_TD/basis    CO_adc2_TD/control    CO_adc2_TD/mos    CO_adc2_TD/CO.log    CO_adc2_TD/coord
+TD        Turbomole   TurbomoleTDCC2Test    basicTurbomole7.4     CO_cc2_TD/basis    CO_cc2_TD/control    CO_cc2_TD/mos    CO_cc2_TD/dscf.out    CO_cc2_TD/ricc2.out    CO_cc2_TD/coord
+TD        Turbomole   TurbomoleTDADC2Test   basicTurbomole7.4     CO_adc2_TD/basis    CO_adc2_TD/control    CO_adc2_TD/mos    CO_adc2_TD/CO.log    CO_adc2_TD/coord
 TD        Turbomole   TurbomoleTDCC2TripTest   basicTurbomole7.4  CO_cc2_TD_trip/basis    CO_cc2_TD_trip/control    CO_cc2_TD_trip/mos    CO_cc2_TD_trip/dscf.out    CO_cc2_TD_trip/ricc2.out    CO_cc2_TD_trip/coord
 
 TDun      Gaussian    GenericTDunTest       basicGaussian09       CO_TD_delta.log
