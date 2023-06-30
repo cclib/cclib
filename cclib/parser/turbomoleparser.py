@@ -65,6 +65,9 @@ class Turbomole(logfileparser.Logfile):
         self.hours_regex = re.compile(r"([0-9.]*) hours")
         self.minutes_regex = re.compile(r"([0-9.]*) minutes")
         self.seconds_regex = re.compile(r"([0-9.]*) seconds")
+        
+        # Assume we're using one thread if we're not told otherwise.
+        self.metadata['num_cpu'] = 1
     
     @classmethod
     def sort_input(self, file_names: typing.List[str]) -> typing.List:
@@ -108,7 +111,6 @@ class Turbomole(logfileparser.Logfile):
             sorted_list.extend(unknown_files)
         
         return sorted_list
-        
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -169,6 +171,17 @@ class Turbomole(logfileparser.Logfile):
         if line[3:11] == "nbf(AO)=":
             nmo = int(line.split('=')[1])
             self.set_attribute('nbasis', nmo)
+            
+        # Performance stuff.
+        if "OpenMP run-time library returned nthreads =" in line:
+            self.metadata['num_cpu'] = int(line.split()[-1])
+            
+            if hasattr(self, "memory_per_cpu"):
+                self.metadata['memory'] = self.memory_per_cpu * self.metadata['num_cpu']
+            
+        elif "$maxcor" in line and "per_core" in line:
+            # Turbomole helpfully prints the units here, but this seems to just be fluff and it's always MiB.
+            self.memory_per_cpu = int(line.split()[1]) * 1024 * 1024
                     
         # The DFT functional.
         # This information is printed by dscf but not in an easily parsable format, so we'll take it from the control file instead...
