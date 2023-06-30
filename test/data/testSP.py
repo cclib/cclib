@@ -64,7 +64,6 @@ class GenericSPTest(unittest.TestCase):
 
     @skipForParser('DALTON', 'DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now')
     @skipForParser('FChk', 'The parser is still being developed so we skip this test')
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
     @skipForLogfile('Jaguar/basicJaguar7', 'We did not print the atomic partial charges in the unit tests for this version')
     @skipForLogfile('Molpro/basicMolpro2006', "These tests were run a long time ago and since we don't have access to Molpro 2006 anymore, we can skip this test (it is tested in 2012)")
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
@@ -122,7 +121,6 @@ class GenericSPTest(unittest.TestCase):
         charges = self.data.atomcharges["hirshfeld"]
         assert abs(sum(charges)) < 4.0e-3
 
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
     def testatomcoords(self):
         """Are the dimensions of atomcoords 1 x natom x 3?"""
         expected_shape = (1, self.data.natom, 3)
@@ -230,13 +228,11 @@ class GenericSPTest(unittest.TestCase):
         """Are correct number of SCF convergence criteria being parsed?"""
         assert len(self.data.scftargets[0]) == self.num_scf_criteria
 
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
     def testlengthmoenergies(self):
         """Is the number of evalues equal to nmo?"""
         if hasattr(self.data, "moenergies"):
             assert len(self.data.moenergies[0]) == self.data.nmo
 
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
     def testtypemoenergies(self):
         """Is moenergies a list containing one numpy array?"""
         if hasattr(self.data, "moenergies"):
@@ -261,20 +257,17 @@ class GenericSPTest(unittest.TestCase):
             assert self.data.mocoeffs[0].shape == (self.data.nmo, self.data.nbasis)
 
     @skipForParser('DALTON', 'mocoeffs not implemented yet')
-    @skipForParser('GAMESSDAT', 'Parser still in development')
     @skipForLogfile('Jaguar/basicJaguar7', 'Data file does not contain enough information. Can we make a new one?')
     def testfornoormo(self):
         """Do we have NOs or MOs?"""
         assert hasattr(self.data, "nocoeffs") or hasattr(self.data, "mocoeffs")
 
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
     def testdimnoccnos(self):
         """Is the length of nooccnos equal to nmo?"""
         if hasattr(self.data, "nooccnos"):
             assert isinstance(self.data.nooccnos, numpy.ndarray)
             assert len(self.data.nooccnos) == self.data.nmo
 
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
     def testdimnocoeffs(self):
         """Are the dimensions of nocoeffs equal to nmo x nmo?"""
         if hasattr(self.data, "nocoeffs"):

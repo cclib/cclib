@@ -235,30 +235,34 @@ class GAMESSDAT(logfileparser.Logfile):
             self.atomcharges = dict()
             self.atomcharges['CHANGENAME'] = []
             self.atomnos = []
+            self.atomcoords = []
+
             
             while '(CENTRE' in line:
 
                 parts = line.split()
 
                 symbol = parts[0]
-                atomno = self.pt.number[symbol]
+                # atomno = self.pt.number[symbol]
 
                 # atom_number = int(parts[1])
                 # centre_number = int(parts[3][:-1])
-                val1 = float(parts[4])
-                val2 = float(parts[5])
-                val3 = float(parts[6])
+                # val1 = float(parts[4])
+                # val2 = float(parts[5])
+                # val3 = float(parts[6])
+                coords = [ float(n) for n in parts[4:7] ]
 
                 charge = float(parts[-1])
 
-                atom_info.append((val1, val2, val3))
+                # atom_info.append((val1, val2, val3))
                 
-                self.atomnos.append(atomno)
+                self.atomnos.append(charge)
                 self.atomcharges['CHANGENAME'].append(charge)
+                self.atomcoords.append(coords)
 
                 line = next(inputfile)
 
-            self.metadata['atom_info'] = atom_info
+            # self.metadata['atom_info'] = atom_info
 
 
         # Extracting Centre Assignments
@@ -342,6 +346,3 @@ class GAMESSDAT(logfileparser.Logfile):
                     line = next(inputfile)
             self.mocoeffs = [ self.mocoeffs ]
         
-                
-
-
