@@ -102,6 +102,10 @@ class Gaussian(logfileparser.Logfile):
         
         # Used to estimate wall times from CPU times.
         self.num_cpu = 1
+        
+        # For detecting when excited states reset (because of a new level of theory,
+        # or a new round in an optimisation etc).
+        self.last_et = 0
 
     def after_parsing(self):
         # atomcoords are parsed as a list of lists but it should be an array
@@ -1056,14 +1060,6 @@ class Gaussian(logfileparser.Logfile):
                 else:
                     newlist[i] = value
                 self.geotargets[i] = utils.float(parts[3])
-            # reset some parameters that are printed each iteration if the 
-            # optimization has not yet converged. For example, etenergies 
-            # (Issue #889) and similar properties are only reported for the
-            # final step of an optimization.
-            if not allconverged:
-                for reset_attr in ["etenergies", "etoscs", "etsyms", "etsecs", "etdips", "etveldips", "etmagdips"]:
-                    if hasattr(self, reset_attr):
-                        setattr(self, reset_attr, [])
 
             self.geovalues.append(newlist)
 
@@ -1522,15 +1518,48 @@ class Gaussian(logfileparser.Logfile):
                     self.vibdispshp.extend(disps)
 
                 line = next(inputfile)
-
+                
+        # Metadata for excited states methods
+        #
+        # For HF/DFT level ES, this is our trigger line:
+        #  MDV=  1342177280 DFT=T DoStab=F Mixed=T DoRPA=F DoScal=F NonHer=F
+        # Comparing DFT=T/F and DoRPA=T/F allows us to distinguish CIS, RPA, TD-DFT and TDA.
+        if "MDV=" in line and "DFT=" in line and "DoRPA=" in line:
+            if "DFT=T" in line:
+                if "RPA=T" in line:
+                    method = "TD-DFT"
+                
+                else:
+                    method = "TDA"
+            
+            else:
+                if "RPA=T" in line:
+                    method = "RPA"
+                
+                else:
+                    method = "CIS"
+            
+            self.metadata["excited_states_method"] = method
+        
+        if line.strip() == "EOM-CCSD":
+            self.metadata['excited_states_method'] = "EOM-CCSD"
+        
         # Electronic transitions.
         if line[1:14] == "Excited State":
 
-            if not hasattr(self, "etenergies"):
+            # Excited State 1:
+            et_index = float(line.split()[2][:-1])
+
+            if not hasattr(self, "etenergies") \
+                or et_index <= self.last_et:
                 self.etenergies = []
                 self.etoscs = []
                 self.etsyms = []
                 self.etsecs = []
+            
+            # Keep track of the highest excited state, so we can detect when we enter a new
+            # section (the 'highest' excited state will be the same or lower as the last one).
+            self.last_et = et_index
 
             # Need to deal with lines like:
             # (restricted calc)
@@ -1611,38 +1640,70 @@ class Gaussian(logfileparser.Logfile):
         # Ground to excited state Transition electric dipole moments (Au)
         # Ground to excited state transition velocity dipole Moments (Au)
         # so to look for a match, we will lower() everything.
+        #
+        # EOM-CCSD looks similar, but has more data.
+        #  ==============================================
+        # 
+        #          EOM-CCSD transition properties        
+        # 
+        #  ==============================================
+        #  Ground to excited state transition electric dipole moments (Au):
+        #        state          X           Y           Z        Dip. S.      Osc.
+        #          1         0.1021     -0.0000     -0.0000      0.0107      0.0030
+        #          2         0.0000      0.0000      0.0000      0.0000      0.0000
+        #  Excited to ground state transition electric dipole moments (Au):
+        #        state          X           Y           Z        Dip. S.      Osc.
+        #          1         0.1046     -0.0000     -0.0000      0.0107      0.0030
+        #          2         0.0000      0.0000      0.0000      0.0000      0.0000
+        #  Ground to excited state transition velocity dipole moments (Au):
+        #        state          X           Y           Z        Dip. S.      Osc.
+        #          1        -0.1351     -0.0000     -0.0000      0.0186      0.0296
+        #          2         0.0000      0.0000      0.0000      0.0000      0.0000
+        #  Excited to ground state transition velocity dipole moments (Au):
+        #        state          X           Y           Z        Dip. S.      Osc.
+        #          1        -0.1378     -0.0000     -0.0000      0.0186      0.0296
+        #          2        -0.0000      0.0000      0.0000      0.0000      0.0000
+        #  Ground to excited state transition magnetic dipole moments (Au):
+        #        state          X           Y           Z
+        #          1         0.0000      0.5361      0.0000
+        #          2        -0.0000      0.0000      0.6910
+        #  Excited to ground state transition magnetic dipole moments (Au):
+        #        state          X           Y           Z
+        #          1         0.0000      0.5473      0.0000
+        #          2        -0.0000     -0.0000      0.7057
 
         if line[1:51].lower() == "ground to excited state transition electric dipole":
-            if not hasattr(self, "etdips"):
-                self.etdips = []
-                self.etveldips = []
-                self.etmagdips = []
-            if self.etdips == []:
-                self.netroot = 0
-            etrootcount = 0  # to count number of et roots
+            # In EOM-CCSD we have multiple levels of theory, so we always want to reset.
+            self.etdips = []
+            self.etveldips = []
+            self.etmagdips = []
 
             # now loop over lines reading eteltrdips until we find eteltrdipvel
             line = next(inputfile)  # state          X ...
             line = next(inputfile)  # 1        -0.0001 ...
-            while line[1:40].lower() != "ground to excited state transition velo":
+            
+            # Older versions have fewer fields.
+            while len(line.split()) in [5,6]:
                 self.etdips.append(list(map(float, line.split()[1:4])))
-                etrootcount += 1
                 line = next(inputfile)
-            if not self.netroot:
-                self.netroot = etrootcount
-
+                
+        if line[1:51].lower() == "ground to excited state transition velocity dipole":
             # now loop over lines reading etveleltrdips until we find
             # etmagtrdip
             line = next(inputfile)  # state          X ...
             line = next(inputfile)  # 1        -0.0001 ...
-            while line[1:40].lower() != "ground to excited state transition magn":
+            
+            # Older versions have fewer fields.
+            while len(line.split()) in [5,6]:
                 self.etveldips.append(list(map(float, line.split()[1:4])))
                 line = next(inputfile)
+                
+        if line[1:51].lower() == "ground to excited state transition magnetic dipole":
 
             # now loop over lines while the line starts with at least 3 spaces
             line = next(inputfile)  # state          X ...
             line = next(inputfile)  # 1        -0.0001 ...
-            while line[0:3] == "   ":
+            while len(line.split()) == 4:
                 self.etmagdips.append(list(map(float, line.split()[1:4])))
                 line = next(inputfile)
 

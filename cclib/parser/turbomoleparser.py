@@ -879,6 +879,45 @@ class Turbomole(logfileparser.Logfile):
                 mp2energy = [utils.convertor(utils.float(line.split()[3]), 'hartree', 'eV')]
                 self.append_attribute('mpenergies', mp2energy)
                 self.metadata['methods'].append("MP2")
+                
+        # Excited state metadata.
+        # For escf (HF/DFT), there are (up to) two lines of interest.
+        #
+        #  CI SINGLES SINGLET-CALCULATION (TAMM-DANCOFF-APPROXIMATION)
+        #  
+        #              FOUND DFT-FLAG !
+        # or
+        # 
+        #  RPA SINGLET-EXCITATION-CALCULATION 
+        #  
+        #              FOUND DFT-FLAG !
+        #
+        # For plain HF (not DFT) the "FOUND DFT-FLAG !" will be missing.
+        # The "FOUND DFT-FLAG !" line can be found in other places too,
+        # not just in escf...
+        if line.strip() in (
+            "CI SINGLES SINGLET-CALCULATION (TAMM-DANCOFF-APPROXIMATION)",
+            "CI SINGLES TRIPLET-CALCULATION (TAMM-DANCOFF-APPROXIMATION)",
+            "RPA SINGLET-EXCITATION-CALCULATION",
+            "RPA TRIPLET-EXCITATION-CALCULATION"
+        ):
+            if "CI SINGLES" in line:
+                method = "CIS"
+                    
+            else:
+                method = "RPA"
+            
+            line = next(inputfile)
+            line = next(inputfile)
+            
+            if line.strip() == "FOUND DFT-FLAG !":
+                if method == "CIS":
+                    method = "TDA"
+                    
+                else:
+                    method = "TD-DFT"
+                    
+            self.metadata['excited_states_method'] = method
 
 
         # Excited state info from escf.
@@ -1064,9 +1103,12 @@ class Turbomole(logfileparser.Logfile):
         #  | a   |   1   |   9   |    0.4454969 |   12.12259 |  97775.273 |  94.26 |   5.74 |
         #  | a   |   1   |  10   |    0.5036295 |   13.70446 | 110533.909 |  93.51 |   6.49 |
         #  +================================================================================+
-        # TODO: Perhaps need a more general way to look for lines like this?
-        if "| sym | multi | state |          CC2 excitation energies       |  %t1   |  %t2   |" in line \
-        or "| sym | multi | state |          ADC(2) excitation energies    |  %t1   |  %t2   |" in line:
+        if "| sym | multi | state |" in  line and "|  %t1   |  %t2   |" in line:
+            self.metadata['excited_states_method'] = line.split()[7]
+            
+            if self.metadata['excited_states_method'][:3] == "CCS":
+                self.metadata['excited_states_method'] = "EOM-" + self.metadata['excited_states_method']
+        
             self.skip_lines(inputfile, ["divider", "units", "divider"])
             line = next(inputfile)
             

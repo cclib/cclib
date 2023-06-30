@@ -1185,9 +1185,38 @@ Dispersion correction           -0.016199959
                 self.freeenergy = float(line.split()[5])
             else:
                 self.freeenergy = self.enthalpy - self.temperature * self.entropy
+        
+        # Excited state metadata.
+        if line.strip() in (
+            "ORCA TD-DFT/TDA CALCULATION",
+            "ORCA TD-DFT CALCULATION",
+            "ORCA CIS CALCULATION",
+            
+        ):
+            if "TD-DFT" in line:
+                method = "TD-DFT"
+            
+            else:
+                method = "RPA"
+            
+            while "Tamm-Dancoff approximation" not in line:
+                line = next(inputfile)
                 
-        if any(x in line
-               for x in ("ORCA TD-DFT/TDA CALCULATION", "ORCA CIS CALCULATION")):
+            if line.split()[-1] == "operative":
+                if method == "TD-DFT":
+                    method = "TDA"
+                
+                else:
+                    method = "CIS"
+                
+            self.metadata['excited_states_method'] = method
+                
+        elif line.strip() == "ORCA ROCIS CALCULATION":
+            # Here we consider ROCIS the same as CIS (?)
+            self.metadata['excited_states_method'] = "CIS"
+            
+                
+        if line.strip() in ("ORCA TD-DFT/TDA CALCULATION", "ORCA CIS CALCULATION"):
             # Start of excited states, reset our attributes in case this is an optimised excited state calc
             # (or another type of calc where excited states are calculated multiple times).
             for attr in ("etenergies", "etsyms", "etoscs", "etsecs", "etrotats"):
@@ -1523,6 +1552,15 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             self.mdci_et_mult = line.split()[-1].capitalize()
             
         if any(x in line for x in ("CIS RESULTS", "ADC(2) RESULTS", "EOM-CCSD RESULTS", "STEOM-CCSD RESULTS")):
+            if "ADC(2)" in line:
+                self.metadata['excited_states_method'] = "ADC(2)"
+            
+            elif "STEOM-CCSD RESULTS" in line:
+                self.metadata['excited_states_method'] = "STEOM-CCSD"
+                
+            elif "EOM-CCSD RESULTS" in line:
+                self.metadata['excited_states_method'] = "EOM-CCSD"
+            
             if self.mdci_et_mult is None and ( "EOM-CCSD" in line or "ADC(2)" in line ):
                 # These methods can only do singlets.
                 # Think this is safe?.
