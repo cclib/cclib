@@ -52,7 +52,7 @@ class ORCA(logfileparser.Logfile):
         self.is_DFT = False
         
         # Used to estimate CPU time from wall time.
-        self.num_cpu = 1
+        self.metadata['num_cpu'] = 1
 
         # The excited state multiplicity for post-HF excited states
         self.mdci_et_mult = None
@@ -2368,7 +2368,26 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             # *        Program running with 4 parallel MPI-processes     *
             # *              working on a common directory               *
             # ************************************************************
-            self.num_cpu = int(line.split()[4])
+            self.metadata['num_cpu'] = int(line.split()[4])
+            
+            
+        elif "Memory available" in line:
+            split_line = line.split()
+            if len(split_line) == 5:
+                # This is the amount of memory, per cpu. The units are printed afterwards, although
+                # it always seems to be in MB...
+                #
+                # ORCA has a strange relationship with memory management. Some modules appear to be
+                # able to use the full allocated amount, some slightly less, some only half (?):
+                # Memory available                           ...   2500.00 MB
+                # Memory available                           ...   1250.00 MB
+                # Memory available                       ... 2291 MB
+                # To counter this, we'll always try and store the largest amount available.
+                if split_line[4] == "MB":
+                    memory = int(float(split_line[3]) * 1000 * 1000) * self.metadata['num_cpu']
+                
+                if memory > self.metadata.get("memory", 0):
+                    self.metadata['memory'] = memory
 
         if line[:15] == 'TOTAL RUN TIME:':
             # TOTAL RUN TIME: 0 days 0 hours 0 minutes 11 seconds 901 msec
@@ -2402,7 +2421,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 minutes = minutes,
                 seconds = seconds,
                 milliseconds = milliseconds
-            ) * self.num_cpu)
+            ) * self.metadata['num_cpu'])
             
 
     def parse_charge_section(self, line, inputfile, chargestype):
