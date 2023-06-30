@@ -216,6 +216,20 @@ class Gaussian(logfileparser.Logfile):
 
         if line.strip().startswith("Link1:  Proceeding to internal job step number"):
             self.new_internal_job()
+            
+        # Parse performance info.
+        if "Will use up to" in line and "processors via shared memory." in line:
+            self.metadata['num_cpu'] = int(line.split()[4])
+            
+        elif "Leave Link    1" in line and "MaxMem=" in line and "num_cpu" in self.metadata:
+            #Leave Link    1 at Wed Apr  4 10:49:19 2018, MaxMem=   805306368 cpu:               0.3 elap:               0.0
+            # Gaussian helpfully prints the total 'available' memory for us. There are, however a few caveates here:
+            # 1) This memory (in bytes) is per CPU
+            # 2) The total memory here (x num_cpu) will not equal the amount requested in %mem because Gaussian (probably erroneously)
+            #    interprets GB as gibibytes (1024 x 1024 x 1024 bytes) rather than gigabytes. This has the unfortunate consequence of
+            #    Gaussian assigning more memory than you probably expected.
+            memory_per_cpu = int(line[line.index("MaxMem="):].split()[1])
+            self.metadata['memory'] = memory_per_cpu * self.metadata['num_cpu']
 
         # This block contains some general information as well as coordinates,
         # which could be parsed in the future:
