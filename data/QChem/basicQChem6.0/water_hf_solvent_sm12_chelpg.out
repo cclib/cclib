@@ -1,0 +1,352 @@
+
+Running Job 1 of 1 water_hf_solvent_sm12_chelpg.in
+qchem water_hf_solvent_sm12_chelpg.in_1757774.0 /tmp/qchem/qchem1757774/ 0
+/home/eric/data/opt/apps/qchem/release/6.0.1.2/exe/qcprog.exe_s water_hf_solvent_sm12_chelpg.in_1757774.0 /tmp/qchem/qchem1757774/
+                  Welcome to Q-Chem
+     A Quantum Leap Into The Future Of Chemistry
+
+
+ Q-Chem 6.0, Q-Chem, Inc., Pleasanton, CA (2022)
+
+ E. Epifanovsky,  A. T. B. Gilbert,  Xintian Feng,  Joonho Lee,  Yuezhi Mao,  
+ N. Mardirossian,  P. Pokhilko,  A. White,  M. Wormit,  M. P. Coons,  
+ A. L. Dempwolff,  Zhengting Gan,  D. Hait,  P. R. Horn,  L. D. Jacobson,  
+ I. Kaliman,  J. Kussmann,  A. W. Lange,  Ka Un Lao,  D. S. Levine,  Jie Liu,  
+ S. C. McKenzie,  A. F. Morrison,  K. Nanda,  F. Plasser,  D. R. Rehn,  
+ M. L. Vidal,  Zhi-Qiang You,  Ying Zhu,  B. Alam,  B. Albrecht,  
+ A. Aldossary,  E. Alguire,  J. H. Andersen,  V. Athavale,  D. Barton,  
+ K. Begam,  A. Behn,  N. Bellonzi,  Y. A. Bernard,  E. J. Berquist,  
+ H. Burton,  A. Carreras,  K. Carter-Fenk,  Romit Chakraborty,  
+ Chandrima Chakravarty,  Junhan Chen,  A. D. Chien,  K. D. Closser,  
+ V. Cofer-Shabica,  L. Cunha,  S. Dasgupta,  Jia Deng,  M. de Wergifosse,  
+ M. Diedenhofen,  Hainam Do,  S. Ehlert,  Po-Tung Fang,  S. Fatehi,  
+ Qingguo Feng,  T. Friedhoff,  B. Ganoe,  J. Gayvert,  Qinghui Ge,  
+ G. Gidofalvi,  M. Goldey,  J. Gomes,  C. Gonzalez-Espinoza,  S. Gulania,  
+ A. Gunina,  J. A. Gyamfi,  M. W. D. Hanson-Heine,  P. H. P. Harbach,  
+ A. W. Hauser,  M. F. Herbst,  M. Hernandez Vera,  M. Hodecker,  
+ Z. C. Holden,  S. Houck,  Xunkun Huang,  Kerwin Hui,  B. C. Huynh,  
+ K. Ikeda,  M. Ivanov,  Hyunjun Ji,  Zuxin Jin,  Hanjie Jiang,  B. Kaduk,  
+ S. Kaehler,  R. Kang,  K. Khistyaev,  Jaehoon Kim,  Yongbin Kim,  
+ P. Klunzinger,  Z. Koczor-Benda,  Joong Hoon Koh,  D. Kosenkov,  
+ Saikiran Kotaru,  L. Koulias,  T. Kowalczyk,  C. M. Krauter,  K. Kue,  
+ A. Kunitsa,  T. Kus,  A. Landau,  K. V. Lawler,  D. Lefrancois,  S. Lehtola,  
+ Rain Li,  Shaozhi Li,  Yi-Pei Li,  Jiashu Liang,  M. Liebenthal,  
+ Hung-Hsuan Lin,  You-Sheng Lin,  Fenglai Liu,  Kuan-Yu Liu,  
+ M. Loipersberger,  A. Luenser,  C. Malbon,  A. Manjanath,  P. Manohar,  
+ E. Mansoor,  S. F. Manzer,  Shan-Ping Mao,  A. V. Marenich,  T. Markovich,  
+ S. Mason,  F. Matz,  S. A. Maurer,  P. F. McLaughlin,  M. F. S. J. Menger,  
+ J.-M. Mewes,  S. A. Mewes,  P. Morgante,  Mohammad Mostafanejad,  
+ J. W. Mullinax,  K. J. Oosterbaan,  G. Paran,  V. Parravicini,  
+ Alexander C. Paul,  Suranjan K. Paul,  F. Pavosevic,  Zheng Pei,  S. Prager,  
+ E. I. Proynov,  E. Ramos,  B. Rana,  A. E. Rask,  A. Rettig,  R. M. Richard,  
+ F. Rob,  E. Rossomme,  T. Scheele,  M. Scheurer,  M. Schneider,  
+ P. E. Schneider,  N. Sergueev,  S. M. Sharada,  Hengyuan Shen,  
+ W. Skomorowski,  D. W. Small,  C. J. Stein,  Yingli Su,  Yu-Chuan Su,  
+ E. J. Sundstrom,  Zhen Tao,  J. Thirman,  Hung-Yi Tsai,  T. Tsuchimochi,  
+ N. M. Tubman,  C. Utku,  S. P. Veccham,  O. Vydrov,  J. Wenzel,  
+ Jonathan Wong,  J. Witte,  A. Yamada,  Chou-Hsun Yang,  Kun Yao,  
+ S. Yeganeh,  S. R. Yost,  A. Zech,  F. Zeller,  Igor Ying Zhang,  
+ Xing Zhang,  Yu Zhang,  D. Zuev,  A. Aspuru-Guzik,  A. T. Bell,  
+ N. A. Besley,  K. B. Bravaya,  B. R. Brooks,  D. Casanova,  Jeng-Da Chai,  
+ Hsing-Ta Chen,  S. Coriani,  C. J. Cramer,  A. E. DePrince, III,  
+ R. A. DiStasio Jr.,  A. Dreuw,  B. D. Dunietz,  T. R. Furlani,  
+ W. A. Goddard III,  S. Grimme,  S. Hammes-Schiffer,  T. Head-Gordon,  
+ W. J. Hehre,  Chao-Ping Hsu,  T.-C. Jagau,  Yousung Jung,  A. Klamt,  
+ Jing Kong,  D. S. Lambrecht,  Xiangyuan Li,  WanZhen Liang,  N. J. Mayhall,  
+ C. W. McCurdy,  J. B. Neaton,  T. Neudecker,  C. Ochsenfeld,  
+ J. A. Parkhill,  R. Peverati,  V. A. Rassolov,  Haisheng Ren,  Yihan Shao,  
+ L. V. Slipchenko,  R. P. Steele,  J. E. Subotnik,  A. J. W. Thom,  
+ A. Tkatchenko,  D. G. Truhlar,  T. Van Voorhis,  Fan Wang,  
+ T. A. Wesolowski,  K. B. Whaley,  H. L. Woodcock III,  P. M. Zimmerman,  
+ S. Faraji,  P. M. W. Gill,  M. Head-Gordon,  J. M. Herbert,  A. I. Krylov
+
+ Contributors to earlier versions of Q-Chem not listed above: 
+ R. D. Adamson,  B. Austin,  R. Baer,  J. Baker,  G. J. O. Beran,  
+ K. Brandhorst,  S. T. Brown,  E. F. C. Byrd,  Arup K. Chakraborty,  
+ G. K. L. Chan,  Chun-Min Chang,  Yunqing Chen,  C.-L. Cheng,  
+ Siu Hung Chien,  D. M. Chipman,  D. L. Crittenden,  H. Dachsel,  
+ R. J. Doerksen,  A. D. Dutoi,  R. G. Edgar,  J. Fosso-Tande,  
+ L. Fusti-Molnar,  D. Ghosh,  A. Ghysels,  A. Golubeva-Zadorozhnaya,  
+ J. Gonthier,  M. S. Gordon,  S. R. Gwaltney,  G. Hawkins,  J. E. Herr,  
+ A. Heyden,  S. Hirata,  E. G. Hohenstein,  G. Kedziora,  F. J. Keil,  
+ C. Kelley,  Jihan Kim,  R. A. King,  R. Z. Khaliullin,  P. P. Korambath,  
+ W. Kurlancheek,  A. Laurent,  A. M. Lee,  M. S. Lee,  S. V. Levchenko,  
+ Ching Yeh Lin,  D. Liotard,  E. Livshits,  R. C. Lochan,  I. Lotan,  
+ L. A. Martinez-Martinez,  P. E. Maslen,  N. Nair,  D. P. O'Neill,  
+ D. Neuhauser,  E. Neuscamman,  C. M. Oana,  R. Olivares-Amaya,  R. Olson,  
+ T. M. Perrine,  B. Peters,  P. A. Pieniazek,  A. Prociuk,  Y. M. Rhee,  
+ J. Ritchie,  M. A. Rohrdanz,  E. Rosta,  N. J. Russ,  H. F. Schaefer III,  
+ M. W. Schmidt,  N. E. Schultz,  S. Sharma,  N. Shenvi,  C. D. Sherrill,  
+ A. C. Simmonett,  A. Sodt,  T. Stein,  D. Stuck,  K. S. Thanthiriwatte,  
+ V. Vanovschi,  L. Vogt,  Tao Wang,  A. Warshel,  M. A. Watson,  
+ C. F. Williams,  Q. Wu,  X. Xu,  Jun Yang,  W. Zhang,  Yan Zhao
+
+   Please cite Q-Chem as follows:
+  "Software for the frontiers of quantum chemistry:
+   An overview of developments in the Q-Chem 5 package"
+   J. Chem. Phys. 155, 084801 (2021)
+   https://doi.org/10.1063/5.0055522 (open access)
+
+ Q-Chem 6.0.0 for Intel X86 EM64T Linux
+
+ Parts of Q-Chem use Armadillo 9.900.5 (Nocturnal Misbehaviour).
+ http://arma.sourceforge.net/
+
+ Q-Chem begins on Sun Jun 25 15:08:25 2023  
+
+ Host: 
+0
+
+     Scratch files written to /tmp/qchem/qchem1757774//
+ Aug1822 |scratch|qcdevops|jenkins|workspace|build_RNUM 6466   
+ Processing $rem in /home/eric/data/opt/apps/qchem/release/6.0.1.2/config/preferences:
+ Processing $rem in /home/eric/.qchemrc:
+ Symmetry turned off for PCM/SM12/SMD calculation
+
+ Checking the input file for inconsistencies... 	...done.
+
+--------------------------------------------------------------
+User input:
+--------------------------------------------------------------
+$molecule
+0 1
+O
+H 1 R1
+H 1 R1 2 A1
+
+R1=0.99
+A1=106.0
+$end
+
+$rem
+method = hf
+basis = sto-3g
+gui = 2
+solvent_method = sm12
+$end
+
+$smx
+solvent toluene
+charges chelpg
+$end
+--------------------------------------------------------------
+ ----------------------------------------------------------------
+             Standard Nuclear Orientation (Angstroms)
+    I     Atom           X                Y                Z
+ ----------------------------------------------------------------
+    1      O       0.0000000000     0.0000000000     0.0000000000
+    2      H       0.0000000000     0.0000000000     0.9900000000
+    3      H       0.9516490790     0.0000000000    -0.2728809823
+ ----------------------------------------------------------------
+ Nuclear Repulsion Energy =           8.88700626 hartrees
+ There are        5 alpha and        5 beta electrons
+ Requested basis set is STO-3G
+ There are 4 shells and 7 basis functions
+
+ Total QAlloc Memory Limit   8000 MB
+ Mega-Array Size       188 MB
+ MEM_STATIC part       192 MB
+
+
+                       Distance Matrix (Angstroms)
+             O (  1)   H (  2)
+   H (  2)  0.990000
+   H (  3)  0.990000  1.581298
+ 
+ A cutoff of  1.0D-09 yielded     10 shell pairs
+ There are        34 function pairs
+ Smallest overlap matrix eigenvalue = 3.64E-01
+
+ Scale SEOQF with 1.000000e+00/1.000000e+00/1.000000e+00
+
+ Standard Electronic Orientation quadrupole field applied
+ Nucleus-field energy     =    -0.0000000008 hartrees
+ ================ Generating on-the-fly SAD Guess ================
+ Attempting to make child job directory: /tmp/qchem/qchem1757774//Frg1/
+ Attempting to make child job directory: /tmp/qchem/qchem1757774//Frg2/
+ Creating input file /tmp/qchem/qchem1757774/Frg1.input
+ using default PutDataFrgm: nothing
+ calling putenv with: QCSCRATCH=/tmp/qchem/qchem1757774/ 
+ calling putenv with: BRIANQC_ENABLE=0 
+ Spawning Job For Fragment 0
+ Done Job For Fragment 0
+ calling putenv with: QCSCRATCH=/tmp/qchem 
+ calling putenv with: QCTHREADS=1 
+ Creating input file /tmp/qchem/qchem1757774/Frg2.input
+ using default PutDataFrgm: nothing
+ calling putenv with: QCSCRATCH=/tmp/qchem/qchem1757774/ 
+ calling putenv with: BRIANQC_ENABLE=0 
+ Spawning Job For Fragment 1
+ Done Job For Fragment 1
+ calling putenv with: QCSCRATCH=/tmp/qchem 
+ calling putenv with: QCTHREADS=1 
+ Time for running child jobs:  CPU 0.00 s  wall 0.15 s
+ ============= Method Specific SAD Guess Constructed =============
+ Guess from on-the-fly superposition of atomic densities
+ Warning: Energy on first SCF cycle will be non-variational
+
+ -----------------------------------------------------------------------
+  General SCF calculation program by
+  Eric Jon Sundstrom, Paul Horn, Yuezhi Mao, Dmitri Zuev, Alec White,
+  David Stuck, Shaama M.S., Shane Yost, Joonho Lee, David Small,
+  Daniel Levine, Susi Lehtola, Hugh Burton, Evgeny Epifanovsky,
+  Bang C. Huynh
+ -----------------------------------------------------------------------
+ Hartree-Fock
+ 
+ SM12 calculation using ChElPG charges
+ Citation of the SM12 model:
+ Marenich, A.V.; Cramer, C.J.; Truhlar, D.G.
+ J. Chem. Theory Comput. 2013, 9, 609-612.
+ iSolventCode=         168
+ Solvent: toluene                                                         
+ 
+
+ Charges (in A.U.) from ChelpG fitting 
+ -----------------------------------------------
+ Center     Atomic                  ChelpG   
+ Number     Number                  Charge
+ -----------------------------------------------
+    1          8                   -0.011327
+    2          1                    0.005803
+    3          1                    0.005524
+ -----------------------------------------------
+ A restricted SCF calculation will be
+ performed using DIIS
+ SCF converges when DIIS error is below 1.0e-05
+ ---------------------------------------
+  Cycle       Energy         DIIS error
+ ---------------------------------------
+
+ Charges (in A.U.) from ChelpG fitting 
+ -----------------------------------------------
+ Center     Atomic                  ChelpG   
+ Number     Number                  Charge
+ -----------------------------------------------
+    1          8                   -0.946479
+    2          1                    0.473258
+    3          1                    0.473221
+ -----------------------------------------------
+    1     -74.6004034463      3.98e-01  
+
+ Charges (in A.U.) from ChelpG fitting 
+ -----------------------------------------------
+ Center     Atomic                  ChelpG   
+ Number     Number                  Charge
+ -----------------------------------------------
+    1          8                   -0.593357
+    2          1                    0.296674
+    3          1                    0.296683
+ -----------------------------------------------
+    2     -74.9230934430      6.48e-02  
+
+ Charges (in A.U.) from ChelpG fitting 
+ -----------------------------------------------
+ Center     Atomic                  ChelpG   
+ Number     Number                  Charge
+ -----------------------------------------------
+    1          8                   -0.603582
+    2          1                    0.301791
+    3          1                    0.301791
+ -----------------------------------------------
+    3     -74.9639904639      7.51e-03  
+
+ Charges (in A.U.) from ChelpG fitting 
+ -----------------------------------------------
+ Center     Atomic                  ChelpG   
+ Number     Number                  Charge
+ -----------------------------------------------
+    1          8                   -0.599962
+    2          1                    0.299983
+    3          1                    0.299980
+ -----------------------------------------------
+    4     -74.9642893194      1.54e-03  
+
+ Charges (in A.U.) from ChelpG fitting 
+ -----------------------------------------------
+ Center     Atomic                  ChelpG   
+ Number     Number                  Charge
+ -----------------------------------------------
+    1          8                   -0.599948
+    2          1                    0.299976
+    3          1                    0.299972
+ -----------------------------------------------
+    5     -74.9643105519      2.89e-05  
+    6     -74.9643104502      5.85e-06  Convergence criterion met
+ ---------------------------------------
+ SCF time:   CPU 0.10s  wall 0.00s 
+(1)  E-EN(liq) elect-nuc energy of solute                -74.964310450 a.u.
+(2)  G-P(liq) polarization free energy of solvation            -0.9898 kcal/mol
+(3)  G-ENP(liq) elect-nuc-pol free energy of system      -74.965887739 a.u.
+(4)  G-CDS(liq) cavity-dispersion-solvent structure 
+     free energy                                               -1.5361 kcal/mol
+(5)  G-P-CDS(liq) = G-P(liq) + G-CDS(liq) = (2) + (4)          -2.5258 kcal/mol
+(6)  G-S(liq) free energy of system = (1) + (5)          -74.968335631 a.u.
+ SCF   energy in the final basis set =      -74.9683356305
+ Total energy in the final basis set =      -74.9683356305
+ 
+ --------------------------------------------------------------
+ 
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+ 
+ Alpha MOs
+ -- Occupied --
+-20.2391  -1.2479  -0.6001  -0.4432  -0.3861
+ -- Virtual --
+  0.5742   0.7121
+ --------------------------------------------------------------
+ 
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 O                    -0.347583
+      2 H                     0.173791
+      3 H                     0.173791
+  ----------------------------------------
+  Sum of atomic charges =     0.000000
+
+         Ground-State ChElPG Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 O                    -0.599930
+      2 H                     0.299967
+      3 H                     0.299963
+  ----------------------------------------
+  Sum of atomic charges =     0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 0.0000
+    Dipole Moment (Debye)
+         X       1.3524      Y      -0.0000      Z       1.0191
+       Tot       1.6934
+    Quadrupole Moments (Debye-Ang)
+        XX      -4.7367     XY       0.0000     YY      -6.1179
+        XZ      -0.3528     YZ      -0.0000     ZZ      -4.5344
+    Octopole Moments (Debye-Ang^2)
+       XXX      -0.7848    XXY      -0.0000    XYY      -0.5903
+       YYY      -0.0000    XXZ      -0.7032    XYZ      -0.0000
+       YYZ      -0.4448    XZZ      -0.4978    YZZ      -0.0000
+       ZZZ      -0.2634
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX      -5.3598   XXXY       0.0000   XXYY      -1.6268
+      XYYY       0.0000   YYYY      -3.2572   XXXZ       0.1965
+      XXYZ      -0.0000   XYYZ       0.1702   YYYZ      -0.0000
+      XXZZ      -2.1640   XYZZ       0.0000   YYZZ      -1.7244
+      XZZZ       0.4889   YZZZ      -0.0000   ZZZZ      -5.7529
+ -----------------------------------------------------------------
+ Total job time:  0.31s(wall), 0.13s(cpu) 
+ Sun Jun 25 15:08:25 2023
+
+        *************************************************************
+        *                                                           *
+        *  Thank you very much for using Q-Chem.  Have a nice day.  *
+        *                                                           *
+        *************************************************************
+
+
