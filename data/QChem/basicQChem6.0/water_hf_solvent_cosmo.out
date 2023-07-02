@@ -1,7 +1,7 @@
 
 Running Job 1 of 1 water_hf_solvent_cosmo.in
-qchem water_hf_solvent_cosmo.in_1861446.0 /tmp/qchem/qchem1861446/ 0
-/home/eric/data/opt/apps/qchem/release/6.0.1.2/exe/qcprog.exe_s water_hf_solvent_cosmo.in_1861446.0 /tmp/qchem/qchem1861446/
+qchem water_hf_solvent_cosmo.in_1091776.0 /tmp/qchem/qchem1091776/ 0
+/home/eric/data/opt/apps/qchem/release/6.0.1.2/exe/qcprog.exe_s water_hf_solvent_cosmo.in_1091776.0 /tmp/qchem/qchem1091776/
                   Welcome to Q-Chem
      A Quantum Leap Into The Future Of Chemistry
 
@@ -92,12 +92,12 @@ qchem water_hf_solvent_cosmo.in_1861446.0 /tmp/qchem/qchem1861446/ 0
  Parts of Q-Chem use Armadillo 9.900.5 (Nocturnal Misbehaviour).
  http://arma.sourceforge.net/
 
- Q-Chem begins on Sun Jun 25 16:59:45 2023  
+ Q-Chem begins on Sun Jul  2 18:42:11 2023  
 
  Host: 
 0
 
-     Scratch files written to /tmp/qchem/qchem1861446//
+     Scratch files written to /tmp/qchem/qchem1091776//
  Aug1822 |scratch|qcdevops|jenkins|workspace|build_RNUM 6466   
  Processing $rem in /home/eric/data/opt/apps/qchem/release/6.0.1.2/config/preferences:
  Processing $rem in /home/eric/.qchemrc:
@@ -130,7 +130,7 @@ solvent_method = cosmo
 $end
 
 $solvent
-dielectric 2.40
+dielectric 2.3741
 $end
 --------------------------------------------------------------
  ----------------------------------------------------------------
@@ -191,7 +191,7 @@ $end
     5     -74.9643287507      2.83e-05  
     6     -74.9643287650      8.23e-06  Convergence criterion met
  ---------------------------------------
- SCF time:   CPU 0.02s  wall 0.00s 
+ SCF time:   CPU 0.03s  wall 0.00s 
  SCF   energy in the final basis set =      -74.9643287650
  Total energy in the final basis set =      -74.9643287650
  Hartree-Fock
@@ -200,7 +200,7 @@ $end
  IBasis=      130000
  USING 1082 GRID
  MICHARGE=           0
- Set epsilon to    2.40000009536743     
+ Set epsilon to    2.37409996986389     
 ==== cosmo data ====
 outfile: water_hf_solvent_cosmo.out.cosmo.0
 phsran:    0.00000D+00
@@ -211,8 +211,8 @@ routf:      0.8500000
 rsolv [a.u]:      2.4566438
 disex:     10.0000000
 disex2:   3538.4994457
-fepsi:      0.4827586
-eps :     2.4000001
+fepsi:      0.4780975
+eps :     2.3741000
 lcavity:     1
 nppa:  1082
 nspa:    92
@@ -225,8 +225,8 @@ Atom   Radius [a.u.] nuc. charge
     3      2.4566438    1
 === end cosmo data ===
  number of segments:          137
- f_epsilon=  0.482758637699304     
-Ediel:   -0.0031537
+ f_epsilon=  0.478097485916248     
+Ediel:   -0.0031233
  A restricted SCF calculation will be
  performed using Roothaan-Hall, DIIS
  SCF converges when DIIS error is below 1.0e-05
@@ -234,32 +234,32 @@ Ediel:   -0.0031537
   Cycle       Energy         DIIS error
  ---------------------------------------
  number of segments:          137
- f_epsilon=  0.482758637699304     
-Ediel:   -0.0033326
-    1     -74.9674824821      2.95e-03  Roothaan Step
+ f_epsilon=  0.478097485916248     
+Ediel:   -0.0032987
+    1     -74.9674520322      2.93e-03  Roothaan Step
  ---------------------------------------
   Cycle       Energy         DIIS error
  ---------------------------------------
  number of segments:          137
- f_epsilon=  0.482758637699304     
-Ediel:   -0.0033308
-    1     -74.9675696804      4.71e-04  
+ f_epsilon=  0.478097485916248     
+Ediel:   -0.0032969
+    1     -74.9675375339      4.67e-04  
  number of segments:          137
- f_epsilon=  0.482758637699304     
-Ediel:   -0.0033348
-    2     -74.9675717105      1.25e-04  
+ f_epsilon=  0.478097485916248     
+Ediel:   -0.0033008
+    2     -74.9675395251      1.24e-04  
  number of segments:          137
- f_epsilon=  0.482758637699304     
-Ediel:   -0.0033353
-    3     -74.9675719458      3.25e-05  
-    4     -74.9675719651      6.97e-06  Convergence criterion met
+ f_epsilon=  0.478097485916248     
+Ediel:   -0.0033013
+    3     -74.9675397555      3.23e-05  
+    4     -74.9675397745      6.91e-06  Convergence criterion met
  ---------------------------------------
- SCF time:   CPU 0.03s  wall 0.00s 
-before final oc correction, ETot:       -74.9675719651
+ SCF time:   CPU 0.06s  wall 0.00s 
+before final oc correction, ETot:       -74.9675397745
  number of outlayer segments:           92
-SCF energy after oc correction:       -74.9674761704
- SCF   energy in the final basis set =      -74.9674761704
- Total energy in the final basis set =      -74.9675719651
+SCF energy after oc correction:       -74.9674449099
+ SCF   energy in the final basis set =      -74.9674449099
+ Total energy in the final basis set =      -74.9675397745
  
  --------------------------------------------------------------
              Orbital Energies (a.u.) and Symmetries
@@ -286,9 +286,9 @@ SCF energy after oc correction:       -74.9674761704
 
      Atom                 Charge (a.u.)
   ----------------------------------------
-      1 O                    -0.355611
-      2 H                     0.177806
-      3 H                     0.177806
+      1 O                    -0.355449
+      2 H                     0.177724
+      3 H                     0.177724
   ----------------------------------------
   Sum of atomic charges =     0.000000
 
@@ -298,25 +298,25 @@ SCF energy after oc correction:       -74.9674761704
     Charge (ESU x 10^10)
                  0.0000
     Dipole Moment (Debye)
-         X       0.0000      Y      -0.0000      Z      -1.7249
-       Tot       1.7249
+         X       0.0000      Y      -0.0000      Z      -1.7244
+       Tot       1.7244
     Quadrupole Moments (Debye-Ang)
-        XX      -4.2375     XY       0.0000     YY      -6.1139
-        XZ      -0.0000     YZ      -0.0000     ZZ      -5.3953
+        XX      -4.2381     XY       0.0000     YY      -6.1140
+        XZ      -0.0000     YZ      -0.0000     ZZ      -5.3955
     Octopole Moments (Debye-Ang^2)
        XXX       0.0000    XXY      -0.0000    XYY       0.0000
-       YYY      -0.0000    XXZ      -0.6239    XYZ      -0.0000
-       YYZ       0.0049    XZZ       0.0000    YZZ      -0.0000
-       ZZZ      -0.1854
+       YYY      -0.0000    XXZ      -0.6235    XYZ      -0.0000
+       YYZ       0.0050    XZZ       0.0000    YZZ      -0.0000
+       ZZZ      -0.1850
     Hexadecapole Moments (Debye-Ang^3)
-      XXXX      -6.7211   XXXY       0.0000   XXYY      -1.8457
-      XYYY       0.0000   YYYY      -3.2525   XXXZ      -0.0000
+      XXXX      -6.7221   XXXY       0.0000   XXYY      -1.8458
+      XYYY      -0.0000   YYYY      -3.2526   XXXZ      -0.0000
       XXYZ      -0.0000   XYYZ      -0.0000   YYYZ      -0.0000
-      XXZZ      -1.7204   XYZZ       0.0000   YYZZ      -1.4060
-      XZZZ      -0.0000   YZZZ      -0.0000   ZZZZ      -4.9637
+      XXZZ      -1.7207   XYZZ       0.0000   YYZZ      -1.4061
+      XZZZ      -0.0000   YZZZ      -0.0000   ZZZZ      -4.9640
  -----------------------------------------------------------------
- Total job time:  0.10s(wall), 0.09s(cpu) 
- Sun Jun 25 16:59:45 2023
+ Total job time:  1.16s(wall), 0.13s(cpu) 
+ Sun Jul  2 18:42:12 2023
 
         *************************************************************
         *                                                           *

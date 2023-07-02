@@ -1,7 +1,7 @@
 
 Running Job 1 of 1 water_hf_solvent_onsager.in
-qchem water_hf_solvent_onsager.in_1860369.0 /tmp/qchem/qchem1860369/ 0
-/home/eric/data/opt/apps/qchem/release/6.0.1.2/exe/qcprog.exe_s water_hf_solvent_onsager.in_1860369.0 /tmp/qchem/qchem1860369/
+qchem water_hf_solvent_onsager.in_1091777.0 /tmp/qchem/qchem1091777/ 0
+/home/eric/data/opt/apps/qchem/release/6.0.1.2/exe/qcprog.exe_s water_hf_solvent_onsager.in_1091777.0 /tmp/qchem/qchem1091777/
                   Welcome to Q-Chem
      A Quantum Leap Into The Future Of Chemistry
 
@@ -92,12 +92,12 @@ qchem water_hf_solvent_onsager.in_1860369.0 /tmp/qchem/qchem1860369/ 0
  Parts of Q-Chem use Armadillo 9.900.5 (Nocturnal Misbehaviour).
  http://arma.sourceforge.net/
 
- Q-Chem begins on Sun Jun 25 16:57:15 2023  
+ Q-Chem begins on Sun Jul  2 18:42:11 2023  
 
  Host: 
 0
 
-     Scratch files written to /tmp/qchem/qchem1860369//
+     Scratch files written to /tmp/qchem/qchem1091777//
  Aug1822 |scratch|qcdevops|jenkins|workspace|build_RNUM 6466   
  Processing $rem in /home/eric/data/opt/apps/qchem/release/6.0.1.2/config/preferences:
  Processing $rem in /home/eric/.qchemrc:
@@ -126,7 +126,7 @@ $end
 
 $solvent
 cavityradius 4
-dielectric 2.40
+dielectric 2.3741
 $end
 --------------------------------------------------------------
  ----------------------------------------------------------------
@@ -178,7 +178,7 @@ $end
  Hartree-Fock
  Kirkwood-Onsager SCRF: 
  Maximum multipole order     = 15
- Solvent dielectric constant = 2.4000
+ Solvent dielectric constant = 2.3741
  Cavity radius               = 7.5589 bohr
  A restricted SCF calculation will be
  performed using DIIS
@@ -187,15 +187,15 @@ $end
   Cycle       Energy         DIIS error
  ---------------------------------------
     1     -74.6004034643      3.98e-01  
-    2     -74.9237919169      6.65e-02  
-    3     -74.9640965175      8.10e-03  
-    4     -74.9645616505      1.59e-03  
-    5     -74.9645852714      2.81e-05  
-    6     -74.9645852856      7.99e-06  Convergence criterion met
+    2     -74.9237855036      6.65e-02  
+    3     -74.9640939127      8.11e-03  
+    4     -74.9645591601      1.59e-03  
+    5     -74.9645827814      2.81e-05  
+    6     -74.9645827956      7.99e-06  Convergence criterion met
  ---------------------------------------
- SCF time:   CPU 0.02s  wall 0.00s 
- SCF   energy in the final basis set =      -74.9645852856
- Total energy in the final basis set =      -74.9645852856
+ SCF time:   CPU 0.05s  wall 0.00s 
+ SCF   energy in the final basis set =      -74.9645827956
+ Total energy in the final basis set =      -74.9645827956
  
  --------------------------------------------------------------
              Orbital Energies (a.u.) and Symmetries
@@ -222,9 +222,9 @@ $end
 
      Atom                 Charge (a.u.)
   ----------------------------------------
-      1 O                    -0.340580
-      2 H                     0.170290
-      3 H                     0.170290
+      1 O                    -0.340566
+      2 H                     0.170283
+      3 H                     0.170283
   ----------------------------------------
   Sum of atomic charges =     0.000000
 
@@ -232,27 +232,27 @@ $end
                     Cartesian Multipole Moments
  -----------------------------------------------------------------
     Charge (ESU x 10^10)
-                -0.0000
+                 0.0000
     Dipole Moment (Debye)
          X       0.0000      Y      -0.0000      Z      -1.6779
        Tot       1.6779
     Quadrupole Moments (Debye-Ang)
-        XX      -4.2902     XY       0.0000     YY      -6.1207
+        XX      -4.2902     XY      -0.0000     YY      -6.1207
         XZ      -0.0000     YZ      -0.0000     ZZ      -5.2396
     Octopole Moments (Debye-Ang^2)
        XXX       0.0000    XXY      -0.0000    XYY       0.0000
-       YYY      -0.0000    XXZ      -0.3630    XYZ      -0.0000
+       YYY      -0.0000    XXZ      -0.3629    XYZ      -0.0000
        YYZ       0.3341    XZZ       0.0000    YZZ      -0.0000
        ZZZ       0.6897
     Hexadecapole Moments (Debye-Ang^3)
-      XXXX      -6.8175   XXXY      -0.0000   XXYY      -1.8574
+      XXXX      -6.8176   XXXY      -0.0000   XXYY      -1.8574
       XYYY      -0.0000   YYYY      -3.2607   XXXZ      -0.0000
-      XXYZ      -0.0000   XYYZ      -0.0000   YYYZ      -0.0000
-      XXZZ      -1.6979   XYZZ      -0.0000   YYZZ      -1.4300
+      XXYZ       0.0000   XYYZ      -0.0000   YYYZ      -0.0000
+      XXZZ      -1.6980   XYZZ      -0.0000   YYZZ      -1.4300
       XZZZ      -0.0000   YZZZ      -0.0000   ZZZZ      -5.0510
  -----------------------------------------------------------------
- Total job time:  0.07s(wall), 0.06s(cpu) 
- Sun Jun 25 16:57:15 2023
+ Total job time:  1.09s(wall), 0.11s(cpu) 
+ Sun Jul  2 18:42:12 2023
 
         *************************************************************
         *                                                           *

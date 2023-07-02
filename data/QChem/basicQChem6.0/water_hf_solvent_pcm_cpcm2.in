@@ -16,7 +16,7 @@ $rem
 $end
 
 $solvent
-dielectric 2.40
+dielectric 2.3741
 $end
 
 $pcm

@@ -17,5 +17,5 @@ $end
 
 $solvent
 cavityradius 4
-dielectric 2.40
+dielectric 2.3741
 $end

@@ -1,7 +1,7 @@
 
-Running Job 1 of 1 water_hf_solvent_cpcm.in
-qchem water_hf_solvent_cpcm.in_1857511.0 /tmp/qchem/qchem1857511/ 0
-/home/eric/data/opt/apps/qchem/release/6.0.1.2/exe/qcprog.exe_s water_hf_solvent_cpcm.in_1857511.0 /tmp/qchem/qchem1857511/
+Running Job 1 of 1 water_hf_solvent_pcm_cpcm.in
+qchem water_hf_solvent_pcm_cpcm.in_1091779.0 /tmp/qchem/qchem1091779/ 0
+/home/eric/data/opt/apps/qchem/release/6.0.1.2/exe/qcprog.exe_s water_hf_solvent_pcm_cpcm.in_1091779.0 /tmp/qchem/qchem1091779/
                   Welcome to Q-Chem
      A Quantum Leap Into The Future Of Chemistry
 
@@ -92,12 +92,12 @@ qchem water_hf_solvent_cpcm.in_1857511.0 /tmp/qchem/qchem1857511/ 0
  Parts of Q-Chem use Armadillo 9.900.5 (Nocturnal Misbehaviour).
  http://arma.sourceforge.net/
 
- Q-Chem begins on Sun Jun 25 16:48:22 2023  
+ Q-Chem begins on Sun Jul  2 18:42:11 2023  
 
  Host: 
 0
 
-     Scratch files written to /tmp/qchem/qchem1857511//
+     Scratch files written to /tmp/qchem/qchem1091779//
  Aug1822 |scratch|qcdevops|jenkins|workspace|build_RNUM 6466   
  Processing $rem in /home/eric/data/opt/apps/qchem/release/6.0.1.2/config/preferences:
  Processing $rem in /home/eric/.qchemrc:
@@ -126,7 +126,7 @@ solvent_method = pcm
 $end
 
 $solvent
-dielectric 2.40
+dielectric 2.3741
 $end
 --------------------------------------------------------------
  ----------------------------------------------------------------
@@ -146,7 +146,7 @@ $end
  Mega-Array Size       188 MB
  MEM_STATIC part       192 MB
 
- Using C-PCM dielectric factor f(eps) = (eps-1)/eps = 0.583333
+ Using C-PCM dielectric factor f(eps) = (eps-1)/eps = 0.578788
  Discretize the solute cavity surface with Lebedev spheres
 	Using 110 Lebedev grid points for each H atom
 	Using 194 Lebedev grid points for other atoms
@@ -190,31 +190,31 @@ $end
   Cycle       Energy         DIIS error
  ---------------------------------------
     1     -74.6004034643      3.98e-01  
-    2     -74.9312843577      6.23e-02  
-    3     -74.9673260041      7.03e-03  
-    4     -74.9676892527      1.55e-03  
-    5     -74.9677119928      2.45e-05  
-    6     -74.9677120038      4.37e-06  Convergence criterion met
+    2     -74.9312208115      6.24e-02  
+    3     -74.9672982123      7.04e-03  
+    4     -74.9676620984      1.55e-03  
+    5     -74.9676848466      2.45e-05  
+    6     -74.9676848576      4.40e-06  Convergence criterion met
  ---------------------------------------
  SCF time:   CPU 0.05s  wall 0.00s 
 
 ************** Final PCM Free Energy Summary **************
- G_electrostatic  =      -0.00348448 hartree =      -2.18654574 kcal/mol
+ G_electrostatic  =      -0.00345572 hartree =      -2.16849981 kcal/mol
  G_cavitation     =       0.00000000 hartree =       0.00000000 kcal/mol
  G_dispersion     =       0.00000000 hartree =       0.00000000 kcal/mol
  G_repulsion      =       0.00000000 hartree =       0.00000000 kcal/mol
  --------------------------------------------------
  Non-electrostatic Free Energy =       0.00000000 hartree =       0.00000000 kcal/mol
- Total                         =      -0.00348448 hartree =      -2.18654574 kcal/mol
+ Total                         =      -0.00345572 hartree =      -2.16849981 kcal/mol
  --------------------------------------------------
- SCF Energy (H0 + V/2)                       =     -74.96771200 
- Solute Internal Energy (H0)                 =     -74.96422752 
- Total Free Energy (H0 + V/2 + non-elec)     =     -74.96771200 hartree
-                                             =  -47042.94930158 kcal/mol
+ SCF Energy (H0 + V/2)                       =     -74.96768486 
+ Solute Internal Energy (H0)                 =     -74.96422913 
+ Total Free Energy (H0 + V/2 + non-elec)     =     -74.96768486 hartree
+                                             =  -47042.93226709 kcal/mol
 ***********************************************************
 
- SCF   energy in the final basis set =      -74.9677120038
- Total energy in the final basis set =      -74.9677120038
+ SCF   energy in the final basis set =      -74.9676848576
+ Total energy in the final basis set =      -74.9676848576
  
  --------------------------------------------------------------
  
@@ -223,18 +223,18 @@ $end
  
  Alpha MOs
  -- Occupied --
--20.2354  -1.2462  -0.5983  -0.4441  -0.3856
+-20.2355  -1.2463  -0.5983  -0.4441  -0.3856
  -- Virtual --
-  0.5792   0.7153
+  0.5792   0.7152
  --------------------------------------------------------------
  
           Ground-State Mulliken Net Atomic Charges
 
      Atom                 Charge (a.u.)
   ----------------------------------------
-      1 O                    -0.356376
-      2 H                     0.178190
-      3 H                     0.178185
+      1 O                    -0.356238
+      2 H                     0.178122
+      3 H                     0.178116
   ----------------------------------------
   Sum of atomic charges =     0.000000
 
@@ -244,25 +244,25 @@ $end
     Charge (ESU x 10^10)
                  0.0000
     Dipole Moment (Debye)
-         X       1.3795      Y      -0.0000      Z       1.0396
-       Tot       1.7273
+         X       1.3792      Y      -0.0000      Z       1.0393
+       Tot       1.7269
     Quadrupole Moments (Debye-Ang)
-        XX      -4.7118     XY       0.0000     YY      -6.1135
-        XZ      -0.3594     YZ       0.0000     ZZ      -4.5056
+        XX      -4.7121     XY       0.0000     YY      -6.1136
+        XZ      -0.3593     YZ      -0.0000     ZZ      -4.5060
     Octopole Moments (Debye-Ang^2)
-       XXX      -0.7443    XXY      -0.0000    XYY      -0.5854
-       YYY      -0.0000    XXZ      -0.7066    XYZ      -0.0000
-       YYZ      -0.4411    XZZ      -0.4907    YZZ      -0.0000
-       ZZZ      -0.2239
+       XXX      -0.7448    XXY      -0.0000    XYY      -0.5855
+       YYY      -0.0000    XXZ      -0.7066    XYZ       0.0000
+       YYZ      -0.4412    XZZ      -0.4908    YZZ      -0.0000
+       ZZZ      -0.2245
     Hexadecapole Moments (Debye-Ang^3)
-      XXXX      -5.3047   XXXY       0.0000   XXYY      -1.6209
-      XYYY       0.0000   YYYY      -3.2521   XXXZ       0.1858
-      XXYZ       0.0000   XYYZ       0.1689   YYYZ       0.0000
-      XXZZ      -2.1513   XYZZ       0.0000   YYZZ      -1.7178
-      XZZZ       0.4848   YZZZ      -0.0000   ZZZZ      -5.6893
+      XXXX      -5.3055   XXXY       0.0000   XXYY      -1.6210
+      XYYY       0.0000   YYYY      -3.2522   XXXZ       0.1860
+      XXYZ      -0.0000   XYYZ       0.1690   YYYZ      -0.0000
+      XXZZ      -2.1515   XYZZ       0.0000   YYZZ      -1.7179
+      XZZZ       0.4849   YZZZ      -0.0000   ZZZZ      -5.6902
  -----------------------------------------------------------------
- Total job time:  0.53s(wall), 0.09s(cpu) 
- Sun Jun 25 16:48:22 2023
+ Total job time:  1.22s(wall), 0.08s(cpu) 
+ Sun Jul  2 18:42:12 2023
 
         *************************************************************
         *                                                           *
