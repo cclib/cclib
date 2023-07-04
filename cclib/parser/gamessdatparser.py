@@ -142,28 +142,42 @@ class GAMESSDAT(logfileparser.Logfile):
         #  7  2-8.08915389E-01 8.08915850E-01
         #  $END   
 
-        # Extract vector information
-        # After formatting, the extracted vectors will populate self.mocoeffs
+        # Extract vector information and populate mocoeffs.
+        # Also extract nbasis from here.
 
         if line[1:5] == "$VEC":
 
-            self.metadata['vectors'] = []
+            self.nbasis = None
+
+            self.mocoeffs = []
 
             while "$END" not in line:
                 
                 line = next(inputfile)
-                vec_line = line.replace('-', ' -').replace('E -', 'E-').strip()
-                vectors = [float(vec) for vec in vec_line.split()[1:]]
-                line_number = line.split()[0]
 
-                if not self.metadata['vectors']:
-                    self.metadata['vectors'].append(vectors)
+                if '$END' in line: return
 
-                elif line_number == str(len(self.metadata['vectors'])):
-                    self.metadata['vectors'][-1].extend(vectors)
+                moc_line = line.replace('-', ' -').replace('E -', 'E-').strip()
+                mocoeff = [float(m) for m in moc_line.split()[1:]]
+                atom_number = line.split()[0]
+                line_number = moc_line.split()[1]
 
-                elif len(vectors) > 0:
-                    self.metadata['vectors'].append(vectors)
+                if not self.mocoeffs:
+                    self.mocoeffs.append(mocoeff)
+
+                elif atom_number == str(len(self.mocoeffs)):
+                    self.mocoeffs[-1].extend(mocoeff)
+
+                elif len(mocoeff) > 0:
+                    self.mocoeffs.append(mocoeff)
+            
+                if atom_number.isdigit(): 
+                    self.nbasis = int(atom_number)
+                    self.nmo = int(line_number) * len(mocoeff)
+                
+
+
+            self.mocoeffs = [ self.mocoeffs ]
 
         
         # Extracting MP2 Energy Value
@@ -218,10 +232,8 @@ class GAMESSDAT(logfileparser.Logfile):
 
             parts = line.split()
 
-            self.nmo    = int(parts[1])
-            self.nbasis = int(parts[4])
+            # self.nmo    = int(parts[1])
             self.natom  = int(parts[6])
-
 
             # Continue extracting
             
@@ -231,9 +243,6 @@ class GAMESSDAT(logfileparser.Logfile):
 
             line = next(inputfile)
 
-            atom_info = []
-            self.atomcharges = dict()
-            self.atomcharges['CHANGENAME'] = []
             self.atomnos = []
             self.atomcoords = []
 
@@ -243,26 +252,18 @@ class GAMESSDAT(logfileparser.Logfile):
                 parts = line.split()
 
                 symbol = parts[0]
-                # atomno = self.pt.number[symbol]
+                atomno = self.pt.number[symbol]
 
                 # atom_number = int(parts[1])
                 # centre_number = int(parts[3][:-1])
-                # val1 = float(parts[4])
-                # val2 = float(parts[5])
-                # val3 = float(parts[6])
                 coords = [ float(n) for n in parts[4:7] ]
 
                 charge = float(parts[-1])
 
-                # atom_info.append((val1, val2, val3))
-                
-                self.atomnos.append(charge)
-                self.atomcharges['CHANGENAME'].append(charge)
+                self.atomnos.append(atomno)
                 self.atomcoords.append(coords)
 
                 line = next(inputfile)
-
-            # self.metadata['atom_info'] = atom_info
 
 
         # Extracting Centre Assignments
@@ -270,12 +271,26 @@ class GAMESSDAT(logfileparser.Logfile):
         # CENTRE ASSIGNMENTS    1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  2  2  2  3  3
         # CENTRE ASSIGNMENTS    3
         
-        self.atombasis = []
+        if line[0:18] == "CENTRE ASSIGNMENTS":
+            self.atombasis = []
+            current_number = 1
+            start_num, end_num = 0, 0
+            num = 1
 
-        while line[0:18] == "CENTRE ASSIGNMENTS":
-            centre_assignments = re.findall(r'\d+', line)
-            self.atombasis.extend(centre_assignments)
-            line = next(inputfile)
+            while line[0:18] == 'CENTRE ASSIGNMENTS':
+                numbers = [int(num) for num in line.split()[2:]]  # Adjusted the index to skip the first number
+                for num in numbers:
+                    if num != current_number:
+                        self.atombasis.append(list(range(start_num, end_num)))
+                        start_num = end_num
+                        current_number = num
+                    
+                    end_num += 1
+
+                line = next(inputfile)
+
+            if start_num > 0:
+                self.atombasis.append(list(range(start_num, end_num)))
 
         # Extracting Type Assignments
 
@@ -285,64 +300,6 @@ class GAMESSDAT(logfileparser.Logfile):
         self.metadata["type_assignments"] = []
 
         while line[0:16] == "TYPE ASSIGNMENTS":
-            type_assignments = re.findall(r'\d+', line)
+            type_assignments = [ int(n) for n in line.split()[2:] ]
             self.metadata["type_assignments"].extend(type_assignments)
             line = next(inputfile)
-
-        # Extracting Exponents
-
-        # EXPONENTS  1.3070932E+02 2.3808866E+01 6.4436083E+00 5.0331513E+00 1.1695961E+00
-        # EXPONENTS  3.8038896E-01 5.0331513E+00 1.1695961E+00 3.8038896E-01 5.0331513E+00
-        # EXPONENTS  1.1695961E+00 3.8038896E-01 5.0331513E+00 1.1695961E+00 3.8038896E-01
-        # EXPONENTS  3.4252509E+00 6.2391373E-01 1.6885540E-01 3.4252509E+00 6.2391373E-01
-        # EXPONENTS  1.6885540E-01
-
-        self.metadata["exponents"] = []
-        
-        while line[0:9] == 'EXPONENTS':
-            exponents = re.findall(r"[-+]?(?:\d*\.*\d+)", line)
-            self.metadata["exponents"].extend(exponents)
-            line = next(inputfile)
-
-        #   MO  1                     OCC NO =   2.00000000 ORB. ENERGY = -20.56547536
-        #   8.27318851E-01  1.52270833E+00  2.46402951E+00  3.23903576E+00  2.77810215E+00
-        #   9.49880307E-01 -1.29777421E-02 -5.79064323E-03  1.70998470E-02  2.67281545E-03
-        #   2.05926021E-03  9.04126150E-04  3.54694672E-03  2.73273124E-03  1.19981620E-03
-        #   0.00000000E+00  0.00000000E+00  0.00000000E+00  1.09508898E-03 -4.92215549E-05
-        #  -6.53191563E-05  0.00000000E+00 -4.28769380E-03 -4.28529767E-03 -4.29025488E-03
-        #   8.35523030E-06  0.00000000E+00  0.00000000E+00  3.26911333E-05  5.54503496E-05
-        #   6.31282631E-05 -5.28069901E-05  4.95765497E-04 -8.70177406E-06  0.00000000E+00
-        #   3.26910801E-05  5.54502594E-05  6.31281604E-05 -5.28070121E-05 -1.45016312E-04
-        #   4.74162199E-04  0.00000000E+00
-        # MO  2                     OCC NO =   2.00000000 ORB. ENERGY =  -1.32288835
-        #  -1.75781895E-01 -3.23532524E-01 -5.23536695E-01 -6.88203640E-01 -5.90268263E-01
-        #  -2.01822744E-01 -2.94878612E-01 -1.31574262E-01  3.88540558E-01  1.43700987E-01
-        #   1.10713864E-01  4.86093496E-02  1.90697728E-01  1.46922319E-01  6.45068118E-02
-        #   0.00000000E+00  0.00000000E+00  0.00000000E+00  1.16273118E-01  5.61500000E-03
-        #   7.45135762E-03  0.00000000E+00  8.86485030E-03  9.17061568E-03  1.40727166E-03
-        #   1.06632882E-03  0.00000000E+00  0.00000000E+00  2.90520499E-02  4.92777754E-02
-        #   5.61010055E-02  2.64903112E-03 -3.82656636E-02  3.19859639E-03  0.00000000E+00
-        #   2.90520559E-02  4.92777854E-02  5.61010170E-02  2.64903095E-03  1.36221368E-02
-        #  -3.59016685E-02  0.00000000E+00
-        # END DATA
-
-        self.mocoeffs = []
-
-        if line[0:3] == 'MO ':
-            while 'END OF INPUT FILE FOR BADER' not in line:
-                if 'MO' in line and 'OCC NO' in line and 'ORB. ENERGY' in line:
-                    line = next(inputfile)
-                    mo = []
-                    while 'MO' not in line and 'END DATA' not in line:
-                        mo.extend([float(x) for x in line.rsplit()])
-                        line = next(inputfile)
-                    self.mocoeffs.append(mo)
-                elif "VIRIAL(-V/T)" in line:
-                    numbers = re.findall(r"[-+]?(?:\d*\.*\d+)", line)
-                    self.metadata["energy"] = numbers[-2]
-                    self.metadata["virial"] = numbers[-1]
-                    line = next(inputfile)
-                else:
-                    line = next(inputfile)
-            self.mocoeffs = [ self.mocoeffs ]
-        

@@ -64,6 +64,7 @@ class GenericSPTest(unittest.TestCase):
 
     @skipForParser('DALTON', 'DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now')
     @skipForParser('FChk', 'The parser is still being developed so we skip this test')
+    @skipForParser('GAMESSDAT', 'We are not going to implement atom charges in this version.')
     @skipForLogfile('Jaguar/basicJaguar7', 'We did not print the atomic partial charges in the unit tests for this version')
     @skipForLogfile('Molpro/basicMolpro2006', "These tests were run a long time ago and since we don't have access to Molpro 2006 anymore, we can skip this test (it is tested in 2012)")
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
@@ -76,7 +77,7 @@ class GenericSPTest(unittest.TestCase):
 
     @skipForParser('DALTON', 'DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now')
     @skipForParser('FChk', 'The parser is still being developed so we skip this test')
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
+    @skipForParser('GAMESSDAT', 'Since we are not sure about the specific type of atom charges, it is best to skip the test for now.')
     @skipForLogfile('Jaguar/basicJaguar7', 'We did not print the atomic partial charges in the unit tests for this version')
     @skipForLogfile('Molpro/basicMolpro2006', "These tests were run a long time ago and since we don't have access to Molpro 2006 anymore, we can skip this test (it is tested in 2012)")
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
@@ -88,7 +89,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('ADF', 'Lowdin charges not present by default')
     @skipForParser('DALTON', 'DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now')
     @skipForParser('FChk', 'The parser is still being developed so we skip this test')
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
+    @skipForParser('GAMESSDAT', 'Since we are not sure about the specific type of atom charges, it is best to skip the test for now.')
     @skipForParser('Gaussian', 'Lowdin charges not present by default')
     @skipForParser('Jaguar', 'Lowdin charges not present by default')
     @skipForParser('NWChem', 'Lowdin charges not present by default')
@@ -107,7 +108,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('Gaussian', 'Hirshfeld charges not implemented')
     @skipForParser('GAMESS', 'Hirshfeld charges not implemented')
     @skipForParser('GAMESSUK', 'Hirshfeld charges not implemented')
-    @skipForParser('GAMESSDAT', 'Hirshfeld charges not implemented')
+    @skipForParser('GAMESSDAT', 'Since we are not sure about the specific type of atom charges, it is best to skip the test for now.')
     @skipForParser('Jaguar', 'Hirshfeld charges not implemented')
     @skipForParser('NWChem', 'Hirshfeld charges not implemented')
     @skipForParser('Molcas', 'Hirshfeld charges not implemented')
@@ -133,14 +134,13 @@ class GenericSPTest(unittest.TestCase):
         dev = abs(min_carbon_dist - 1.34)
         assert dev < 0.03, f"Minimum carbon dist is {min_carbon_dist:.2f} (not 1.34)"
 
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
+    @skipForParser('GAMESSDAT', 'Neither charge nor mult exists in the file.')
     @skipForParser('Molcas', 'missing mult')
     def testcharge_and_mult(self):
         """Are the charge and multiplicity correct?"""
         assert self.data.charge == 0
         assert self.data.mult == 1
 
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
     def testnbasis(self):
         """Is the number of basis set functions correct?"""
         count = sum([self.nbasisdict[n] for n in self.data.atomnos])
@@ -246,6 +246,7 @@ class GenericSPTest(unittest.TestCase):
         """Is the lowest energy molecular orbital within the target?"""
         assert abs(self.data.moenergies[0][0]-self.b3lyp_moenergy) < self.b3lyp_moenergy_delta
 
+    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
     @skipForParser('DALTON', 'mocoeffs not implemented yet')
     @skipForLogfile('Jaguar/basicJaguar7', 'Data file does not contain enough information. Can we make a new one?')
     @skipForParser('Turbomole', 'Use of symmetry has reduced the number of mo coeffs')
