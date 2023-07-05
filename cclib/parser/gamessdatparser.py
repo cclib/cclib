@@ -43,6 +43,9 @@ class GAMESSDAT(logfileparser.Logfile):
         if hasattr(self, "atomcoords"):
             len_coords = len(self.atomcoords)
             self.atomcoords = numpy.reshape(self.atomcoords, (1, len_coords, 3))
+        
+        if hasattr(self, "mocoeffs"):
+            self.mocoeffs = numpy.reshape(self.mocoeffs, (1, self.nmo, self.nbasis))
 
 
     def extract(self, inputfile, line):
@@ -91,6 +94,10 @@ class GAMESSDAT(logfileparser.Logfile):
 
                     self.atommasses.append(mass)
                     self.atomcoords.append(coordinates)
+                elif len(parts) == 2:
+                    basis_set = parts[0] + '-' + parts[1] + 'G'
+                    self.metadata['basis_set'] = basis_set
+
                     
                 line = next(inputfile)
 
@@ -147,35 +154,34 @@ class GAMESSDAT(logfileparser.Logfile):
 
         if line[1:5] == "$VEC":
 
-            self.nbasis = None
-
+            self.nbasis   = None
+            self.nmo      = 0
             self.mocoeffs = []
+
+            line = next(inputfile)
 
             while "$END" not in line:
                 
-                line = next(inputfile)
-
-                if '$END' in line: return
-
                 moc_line = line.replace('-', ' -').replace('E -', 'E-').strip()
-                mocoeff = [float(m) for m in moc_line.split()[1:]]
+                mocoeff = [float(m) for m in moc_line.split()[2:]]
                 atom_number = line.split()[0]
                 line_number = moc_line.split()[1]
 
-                if not self.mocoeffs:
-                    self.mocoeffs.append(mocoeff)
-
-                elif atom_number == str(len(self.mocoeffs)):
+                if atom_number == str(len(self.mocoeffs)):
                     self.mocoeffs[-1].extend(mocoeff)
 
                 elif len(mocoeff) > 0:
                     self.mocoeffs.append(mocoeff)
             
+                # Get last line as nbasis
                 if atom_number.isdigit(): 
                     self.nbasis = int(atom_number)
-                    self.nmo = int(line_number) * len(mocoeff)
-                
 
+                # Count nmos
+                if atom_number == '1':
+                    self.nmo += len(mocoeff)
+                
+                line = next(inputfile)
 
             self.mocoeffs = [ self.mocoeffs ]
 
@@ -245,7 +251,6 @@ class GAMESSDAT(logfileparser.Logfile):
 
             self.atomnos = []
             self.atomcoords = []
-
             
             while '(CENTRE' in line:
 
@@ -254,8 +259,6 @@ class GAMESSDAT(logfileparser.Logfile):
                 symbol = parts[0]
                 atomno = self.pt.number[symbol]
 
-                # atom_number = int(parts[1])
-                # centre_number = int(parts[3][:-1])
                 coords = [ float(n) for n in parts[4:7] ]
 
                 charge = float(parts[-1])
@@ -278,7 +281,7 @@ class GAMESSDAT(logfileparser.Logfile):
             num = 1
 
             while line[0:18] == 'CENTRE ASSIGNMENTS':
-                numbers = [int(num) for num in line.split()[2:]]  # Adjusted the index to skip the first number
+                numbers = [int(num) for num in line.split()[2:]]
                 for num in numbers:
                     if num != current_number:
                         self.atombasis.append(list(range(start_num, end_num)))

@@ -77,7 +77,7 @@ class GenericSPTest(unittest.TestCase):
 
     @skipForParser('DALTON', 'DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now')
     @skipForParser('FChk', 'The parser is still being developed so we skip this test')
-    @skipForParser('GAMESSDAT', 'Since we are not sure about the specific type of atom charges, it is best to skip the test for now.')
+    @skipForParser('GAMESSDAT', 'We are not sure about the specific type of atom charges, it is best to skip the test for now.')
     @skipForLogfile('Jaguar/basicJaguar7', 'We did not print the atomic partial charges in the unit tests for this version')
     @skipForLogfile('Molpro/basicMolpro2006', "These tests were run a long time ago and since we don't have access to Molpro 2006 anymore, we can skip this test (it is tested in 2012)")
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
@@ -89,7 +89,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('ADF', 'Lowdin charges not present by default')
     @skipForParser('DALTON', 'DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now')
     @skipForParser('FChk', 'The parser is still being developed so we skip this test')
-    @skipForParser('GAMESSDAT', 'Since we are not sure about the specific type of atom charges, it is best to skip the test for now.')
+    @skipForParser('GAMESSDAT', 'We are not sure about the specific type of atom charges, it is best to skip the test for now.')
     @skipForParser('Gaussian', 'Lowdin charges not present by default')
     @skipForParser('Jaguar', 'Lowdin charges not present by default')
     @skipForParser('NWChem', 'Lowdin charges not present by default')
@@ -108,7 +108,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('Gaussian', 'Hirshfeld charges not implemented')
     @skipForParser('GAMESS', 'Hirshfeld charges not implemented')
     @skipForParser('GAMESSUK', 'Hirshfeld charges not implemented')
-    @skipForParser('GAMESSDAT', 'Since we are not sure about the specific type of atom charges, it is best to skip the test for now.')
+    @skipForParser('GAMESSDAT', 'We are not sure about the specific type of atom charges, it is best to skip the test for now.')
     @skipForParser('Jaguar', 'Hirshfeld charges not implemented')
     @skipForParser('NWChem', 'Hirshfeld charges not implemented')
     @skipForParser('Molcas', 'Hirshfeld charges not implemented')
@@ -127,14 +127,14 @@ class GenericSPTest(unittest.TestCase):
         expected_shape = (1, self.data.natom, 3)
         assert self.data.atomcoords.shape == expected_shape
 
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
+    @skipForParser('GAMESSDAT', 'Vectors need some calculations to transform them. Current mm value is 2.54')
     def testatomcoords_units(self):
         """Are atomcoords consistent with Angstroms?"""
         min_carbon_dist = get_minimum_carbon_separation(self.data)
         dev = abs(min_carbon_dist - 1.34)
         assert dev < 0.03, f"Minimum carbon dist is {min_carbon_dist:.2f} (not 1.34)"
 
-    @skipForParser('GAMESSDAT', 'Neither charge nor mult exists in the file.')
+    @skipForParser('GAMESSDAT', 'Neither charge nor mult exists in the files.')
     @skipForParser('Molcas', 'missing mult')
     def testcharge_and_mult(self):
         """Are the charge and multiplicity correct?"""
@@ -147,7 +147,7 @@ class GenericSPTest(unittest.TestCase):
         assert self.data.nbasis == count
 
     @skipForParser('ADF', 'ADF parser does not extract atombasis')
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
+    @skipForParser('GAMESSDAT', 'Compatibility issues.')
     @skipForLogfile('Jaguar/basicJaguar7', 'Data file does not contain enough information. Can we make a new one?')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
@@ -165,7 +165,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser('FChk', 'Formatted checkpoint files do not have a section for atommasses')
     @skipForParser('GAMESS', 'atommasses not implemented yet')
     @skipForParser('GAMESSUK', 'atommasses not implemented yet')
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
+    @skipForParser('GAMESSDAT', 'Atommasses implemented, but it does not pass the test.')
     @skipForParser('Jaguar', 'atommasses not implemented yet')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Molpro', 'atommasses not implemented yet')
@@ -178,7 +178,6 @@ class GenericSPTest(unittest.TestCase):
         msg = f"Molecule mass: {mm:f} not {self.molecularmass:f} +- {self.mass_precision:f}mD"
         assert abs(mm-self.molecularmass) < self.mass_precision, msg
 
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testcoreelectrons(self):
         """Are the coreelectrons all 0?"""
@@ -186,7 +185,7 @@ class GenericSPTest(unittest.TestCase):
         numpy.testing.assert_array_equal(self.data.coreelectrons, ans)
 
     @skipForParser('FChk', 'Formatted checkpoint files do not have a section for symmetry')
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
+    @skipForParser('GAMESSDAT', 'Mosyms do not exist in the file')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Molpro', '?')
     def testsymlabels(self):
@@ -194,7 +193,7 @@ class GenericSPTest(unittest.TestCase):
         sumwronglabels = sum([x not in ['Ag', 'Bu', 'Au', 'Bg'] for x in self.data.mosyms[0]])
         assert sumwronglabels == 0
 
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
+    @skipForParser('GAMESSDAT', 'HOMO probably does not exist in the file.')
     def testhomos(self):
         """Is the index of the HOMO equal to 34?"""
         numpy.testing.assert_array_equal(
@@ -204,26 +203,26 @@ class GenericSPTest(unittest.TestCase):
         )
 
     @skipForParser('FChk', 'Formatted Checkpoint files do not have a section for SCF energy')
-    @skipForParser('GAMESSDAT', 'The parser is still being developed')
+    @skipForParser('GAMESSDAT', 'Scfvalues probably do not exist in the file')
     def testscfvaluetype(self):
         """Are scfvalues and its elements the right type??"""
         assert isinstance(self.data.scfvalues, list)
         assert isinstance(self.data.scfvalues[0], numpy.ndarray)
 
     @skipForParser('FChk', 'Formatted Checkpoint files do not have a section for SCF energy')
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
+    @skipForParser('GAMESSDAT', 'Scfenergies probably do not exist in the file')
     def testscfenergy(self):
         """Is the SCF energy within the target?"""
         assert abs(self.data.scfenergies[-1]-self.b3lyp_energy) < 40
 
     @skipForParser('FChk', 'Formatted Checkpoint files do not have a section for SCF convergence')
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
+    @skipForParser('GAMESSDAT', 'Scftargets probably do not exist in the file')
     def testscftargetdim(self):
         """Do the scf targets have the right dimensions?"""
         assert self.data.scftargets.shape == (len(self.data.scfvalues), len(self.data.scfvalues[0][0]))
 
     @skipForParser('FChk', 'Formatted Checkpoint files do not have a section for SCF convergence')
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
+    @skipForParser('GAMESSDAT', 'Scftargets probably do not exist in the file')
     def testscftargets(self):
         """Are correct number of SCF convergence criteria being parsed?"""
         assert len(self.data.scftargets[0]) == self.num_scf_criteria
@@ -239,14 +238,13 @@ class GenericSPTest(unittest.TestCase):
             assert isinstance(self.data.moenergies, list)
             assert isinstance(self.data.moenergies[0], numpy.ndarray)
 
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
+    @skipForParser('GAMESSDAT', 'Moenergies probably do not exist in the file')
     @skipForLogfile('Gaussian/basicGaussian16/dvb_sp_no.out', 'no energies for natural orbitals')
     @skipForLogfile('Turbomole/basicTurbomole5.9/dvb_sp_symm', 'delta of 7.4, everything else ok')
     def testfirstmoenergy(self):
         """Is the lowest energy molecular orbital within the target?"""
         assert abs(self.data.moenergies[0][0]-self.b3lyp_moenergy) < self.b3lyp_moenergy_delta
 
-    @skipForParser('GAMESSDAT', 'The parser is still being developed so we skip this test')
     @skipForParser('DALTON', 'mocoeffs not implemented yet')
     @skipForLogfile('Jaguar/basicJaguar7', 'Data file does not contain enough information. Can we make a new one?')
     @skipForParser('Turbomole', 'Use of symmetry has reduced the number of mo coeffs')
@@ -276,7 +274,7 @@ class GenericSPTest(unittest.TestCase):
             assert self.data.nocoeffs.shape == (self.data.nmo, self.data.nmo)
 
     @skipForParser('DALTON', 'To print: **INTEGRALS\n.PROPRI')
-    @skipForParser('GAMESSDAT','The parser is still being developed so we skip this test')
+    @skipForParser('GAMESSDAT','Aooverlaps probably do not exist in the file.')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Psi4', 'Psi4 does not currently have the option to print the overlap matrix')
     @skipForParser('QChem', 'QChem cannot print the overlap matrix')
@@ -381,7 +379,6 @@ class GenericSPTest(unittest.TestCase):
 
     @skipForParser('ADF', 'reading basis set names is not implemented')
     @skipForParser('GAMESSUK', 'reading basis set names is not implemented')
-    @skipForParser('GAMESSDAT', 'reading basis set names is not implemented')
     @skipForParser('Molcas', 'reading basis set names is not implemented')
     @skipForParser('Psi4', 'reading basis set names is not implemented')
     def testmetadata_basis_set(self):
@@ -437,7 +434,7 @@ class GenericSPTest(unittest.TestCase):
         assert isinstance(packaging.version.parse(self.data.metadata["package_version"]), packaging.version.Version)
 
     @skipForParser('FChk', 'point group symmetry cannot be printed')
-    @skipForParser('GAMESSDAT', 'reading point group symmetry and name is not implemented')
+    @skipForParser('GAMESSDAT', 'Files probably do not contain information about symmetry_detected')
     @skipForParser('Molcas', 'reading point group symmetry and name is not implemented')
     @skipForParser('Molpro', 'reading point group symmetry and name is not implemented')
     @skipForParser('Turbomole', 'reading point group symmetry and name is not implemented')
@@ -446,7 +443,7 @@ class GenericSPTest(unittest.TestCase):
         assert self.data.metadata["symmetry_detected"] == "c2h"
 
     @skipForParser('FChk', 'point group symmetry cannot be printed')
-    @skipForParser('GAMESSDAT', 'reading point group symmetry and name is not implemented')
+    @skipForParser('GAMESSDAT', 'Files probably do not contain information about symmetry_used')
     @skipForParser('Molcas', 'reading point group symmetry and name is not implemented')
     @skipForParser('Molpro', 'reading point group symmetry and name is not implemented')
     @skipForParser('Turbomole', 'reading point group symmetry and name is not implemented')
