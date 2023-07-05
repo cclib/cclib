@@ -17,6 +17,7 @@ from urllib.request import urlopen
 
 import cclib
 import pytest
+from _pytest.monkeypatch import MonkeyPatch
 
 
 __filedir__ = os.path.dirname(__file__)
@@ -62,7 +63,13 @@ class FileWrapperTest(unittest.TestCase):
 
     def test_stdin_seek(self):
         """We shouldn't be able to seek anywhere in standard input."""
-        # stdin is disabled by pytest, not sure if there's a way around this.
+        # stdin is disabled by pytest.
+        # the recommended way of emulating stdin is by doing this
+        monkeypatch = MonkeyPatch()
+        monkeypatch.setattr('sys.stdin', io.StringIO())
+        #
+        # but StringIO does support seeking, so doesn't work for our purposes.
+        
 #         wrapper = cclib.parser.logfileparser.FileWrapper(sys.stdin)
 #         with pytest.raises(IOError):
 #             wrapper.seek(0, 0)
@@ -71,26 +78,23 @@ class FileWrapperTest(unittest.TestCase):
 
     def test_data_stdin(self):
         """Check that the same attributes are parsed when a file is piped through standard input."""
-#         logfiles = [
-#             "data/ADF/basicADF2007.01/dvb_gopt.adfout",
-#             "data/GAMESS/basicGAMESS-US2017/C_bigbasis.out",
-#         ]
-#         get_attributes = lambda data: [a for a in data._attrlist if hasattr(data, a)]
-#         for lf in logfiles:
-#             path = f"{__datadir__}/{lf}"
-#             expected_attributes = get_attributes(cclib.io.ccread(path))
-#             with open(path) as handle:
-#                 contents = handle.read()
-#             # This is fix strings not being unicode in Python2.
-#             try:
-#                 stdin = io.StringIO(contents)
-#             except TypeError:
-#                 stdin = io.StringIO(unicode(contents))
-#             
-#             # Can't do this either, stdin is disabled.
-#             stdin.seek = sys.stdin.seek
-#             data = cclib.io.ccread(stdin)
-#             assert get_attributes(data) == expected_attributes
+        logfiles = [
+            "data/ADF/basicADF2007.01/dvb_gopt.adfout",
+            "data/GAMESS/basicGAMESS-US2017/C_bigbasis.out",
+        ]
+        get_attributes = lambda data: [a for a in data._attrlist if hasattr(data, a)]
+        for lf in logfiles:
+            path = f"{__datadir__}/{lf}"
+            expected_attributes = get_attributes(cclib.io.ccread(path))
+            with open(path) as handle:
+                contents = handle.read()
+
+            # stdin emulation
+            monkeypatch = MonkeyPatch()
+            monkeypatch.setattr('sys.stdin', io.StringIO(contents))
+            
+            data = cclib.io.ccread(sys.stdin)
+            assert get_attributes(data) == expected_attributes
 
 
 class LogfileTest(unittest.TestCase):
