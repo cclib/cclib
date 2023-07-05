@@ -147,7 +147,6 @@ class GenericSPTest(unittest.TestCase):
         assert self.data.nbasis == count
 
     @skipForParser('ADF', 'ADF parser does not extract atombasis')
-    @skipForParser('GAMESSDAT', 'Compatibility issues.')
     @skipForLogfile('Jaguar/basicJaguar7', 'Data file does not contain enough information. Can we make a new one?')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
@@ -193,7 +192,6 @@ class GenericSPTest(unittest.TestCase):
         sumwronglabels = sum([x not in ['Ag', 'Bu', 'Au', 'Bg'] for x in self.data.mosyms[0]])
         assert sumwronglabels == 0
 
-    @skipForParser('GAMESSDAT', 'HOMO probably does not exist in the file.')
     def testhomos(self):
         """Is the index of the HOMO equal to 34?"""
         numpy.testing.assert_array_equal(

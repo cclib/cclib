@@ -238,7 +238,7 @@ class GAMESSDAT(logfileparser.Logfile):
 
             parts = line.split()
 
-            # self.nmo    = int(parts[1])
+            self.homos  = [ int(parts[1]) - 1 ] # Unrestricted case for now, might need a change later on
             self.natom  = int(parts[6])
 
             # Continue extracting
@@ -284,6 +284,9 @@ class GAMESSDAT(logfileparser.Logfile):
                 numbers = [int(num) for num in line.split()[2:]]
                 for num in numbers:
                     if num != current_number:
+                        if 'basis_set' in self.metadata and self.metadata['basis_set'].lower() == 'sto-3g':
+                            diff = (end_num - start_num) // 3
+                            end_num = start_num + diff
                         self.atombasis.append(list(range(start_num, end_num)))
                         start_num = end_num
                         current_number = num
@@ -293,6 +296,9 @@ class GAMESSDAT(logfileparser.Logfile):
                 line = next(inputfile)
 
             if start_num > 0:
+                if 'basis_set' in self.metadata and self.metadata['basis_set'].lower() == 'sto-3g':
+                    diff = (end_num - start_num) // 3
+                    end_num = start_num + diff
                 self.atombasis.append(list(range(start_num, end_num)))
 
         # Extracting Type Assignments
