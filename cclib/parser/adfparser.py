@@ -14,6 +14,7 @@ import numpy
 
 from cclib.parser import logfileparser
 from cclib.parser import utils
+from cclib.parser.logfileparser import StopParsing
 
 
 class ADF(logfileparser.Logfile):
@@ -106,8 +107,9 @@ class ADF(logfileparser.Logfile):
         # not always be the best indicator.
         if line.strip() == "(INPUT FILE)" and hasattr(self, "scftargets"):
             self.logger.warning("Skipping remaining calculations")
-            inputfile.seek(0, 2)
-            return
+            #inputfile.seek(0, 2)
+            #return
+            raise StopParsing()
 
         # We also want to check to make sure we aren't parsing "Create" jobs,
         # which normally come before the calculation we actually want to parse.

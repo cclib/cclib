@@ -15,6 +15,7 @@ import numpy
 from cclib.parser import data
 from cclib.parser import logfileparser
 from cclib.parser import utils
+from cclib.parser.logfileparser import StopParsing
 
 
 class Gaussian(logfileparser.Logfile):
@@ -709,7 +710,8 @@ class Gaussian(logfileparser.Logfile):
         # all fragment, but that will happen in a newer version of cclib.
         if line[1:16] == "Fragment guess:" and getattr(self, 'nfragments', 0) > 1:
             if not "full" in line:
-                inputfile.seek(0, 2)
+                #inputfile.seek(0, 2)
+                raise StopParsing()
 
         # Another hack for regression Gaussian03/ortho_prod_freq.log, which is an ONIOM job.
         # Basically for now we stop parsing after the output for the real system, because

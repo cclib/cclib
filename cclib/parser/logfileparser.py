@@ -25,6 +25,11 @@ from cclib.parser.logfilewrapper import FileWrapper
 logging.logMultiprocessing = 0    
 
 
+class StopParsing(Exception):
+    """
+    An exception to signal that parsing should stop.
+    """
+
 class Logfile(ABC):
     """Abstract class for logfile objects.
 
@@ -162,6 +167,9 @@ class Logfile(ABC):
             #   in data._attrlist will be moved to final data object that is returned.
             try:
                 self.extract(self.inputfile, line)
+            except StopParsing:
+                # This is fine
+                break
             except StopIteration:
                 self.logger.error("Unexpectedly encountered end of logfile.")
                 break
