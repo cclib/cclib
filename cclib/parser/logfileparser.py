@@ -205,12 +205,12 @@ class Logfile(ABC):
         # assumed to be filenames. Otherwise, assume the source is a file-like object
         # if it has a read method, and we will try to use it like a stream.
         self.isfileinput = False
-        if isinstance(source, str):
+        if isinstance(source, str) or \
+            (isinstance(source, list) and all([isinstance(s, str) for s in source])):
+            # 'Source' is actually just a (list of) filename(s).
             self.filename = source
             self.isstream = False
-        elif isinstance(source, list) and all([isinstance(s, str) for s in source]):
-            self.filename = source
-            self.isstream = False
+        
         elif isinstance(source, fileinput.FileInput):
             self.filename = source
             self.isstream = False
