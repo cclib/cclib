@@ -22,7 +22,8 @@ import sys
 import numpy
 
 from cclib.parser import ccData
-from cclib.io import ccread, URL_PATTERN
+from cclib.parser.logfilewrapper import URL_PATTERN
+from cclib.io import ccread
 
 
 # Set up options for pretty-printing output.

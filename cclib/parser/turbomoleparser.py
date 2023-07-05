@@ -7,6 +7,7 @@
 import collections
 import scipy.constants
 from datetime import timedelta
+import pathlib
 
 """Parser for Turbomole output files."""
 
@@ -67,6 +68,48 @@ class Turbomole(logfileparser.Logfile):
 
         # A list of previous lines to allow look-behind functionality.
         self.last_lines = collections.deque([""] * 10, 10)
+        
+    def sort_input(self, file_objects):
+        """
+        If this parser expects multiple files to appear in a certain order, return that ordering.
+        """
+        sorting_order = {
+            'basis' : 0,
+            'control' : 1,
+            'mos' : 2,
+            'alpha' : 3,
+            'beta' : 4,
+            'job.last' : 5,
+            'coord' : 6,
+            'gradient' : 7,
+            'aoforce' : 8,
+        }
+        
+        known_files = []
+        unknown_files = {}
+        sorted_dict = {}
+        for file_name, file_object in file_objects.items():            
+            if file_name in sorting_order:
+                known_files.append([file_object, sorting_order[file_name]])
+                
+            elif re.match(r"^job\.[0-9]+$", file_name):
+                # Calling 'jobex -keep' will also write job.n files, where n ranges from 0 to inf.
+                # Numbered job files are inserted before job.last.
+                job_number = int(file_name[4:]) +1
+                job_order = float(f"{sorting_order['job.last'] - 1}.{job_number}")
+                known_files.append([file_object, job_order])
+            
+            else:
+                unknown_files[file_name] = file_object
+            
+        for i in sorted(known_files, key=lambda x: x[1]):
+            sorted_dict[i[0]] = file_objects[i[0]]
+            
+        if unknown_files:
+            sorted_dict.update(unknown_files)
+        
+        return sorted_dict
+        
 
     def __str__(self):
         """Return a string representation of the object."""

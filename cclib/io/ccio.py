@@ -6,16 +6,10 @@
 # the terms of the BSD 3-Clause License.
 """Tools for identifying, reading and writing files and streams."""
 
-import atexit
 import io
 import os
-import sys
-import re
 import pathlib
-from tempfile import NamedTemporaryFile
 from typing import Optional
-from urllib.request import urlopen
-from urllib.error import URLError
 
 from cclib.parser import data
 from cclib.parser import logfileparser
@@ -38,6 +32,7 @@ from cclib.parser.psi3parser import Psi3
 from cclib.parser.psi4parser import Psi4
 from cclib.parser.qchemparser import QChem
 from cclib.parser.turbomoleparser import Turbomole
+from cclib.parser.logfilewrapper import FileWrapper
 
 from cclib.io import cjsonreader
 from cclib.io import cjsonwriter
@@ -54,18 +49,6 @@ if _has_cclib2openbabel:
 _has_pandas = find_package("pandas")
 if _has_pandas:
     import pandas as pd
-
-# Regular expression for validating URLs
-URL_PATTERN = re.compile(
-
-    r'^(?:http|ftp)s?://'  # http:// or https://
-    r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'  # domain...
-    r'localhost|'  # localhost...
-    r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ...or ip
-    r'(?::\d+)?'  # optional port
-    r'(?:/?|[/?]\S+)$', re.IGNORECASE
-
-)
 
 # Parser choice is triggered by certain phrases occurring the logfile. Where these
 # strings are unique, we can set the parser and break. In other cases, the situation
@@ -191,121 +174,36 @@ def ccopen(source, *args, **kwargs):
       Molpro, MOPAC, NWChem, ORCA, Psi3, Psi/Psi4, QChem, CJSON or None
       (if it cannot figure it out or the file does not exist).
     """
-    inputfile = None
-    is_stream = False
-
-    # Check if source is a link or contains links. Retrieve their content.
-    # Try to open the logfile(s), using openlogfile, if the source is a string (filename)
-    # or list of filenames. If it can be read, assume it is an open file object/stream.
-    if isinstance(source, pathlib.PurePath):
-        source = str(source)
-    if isinstance(source, pathlib.PurePath)\
-            and all([isinstance(s, pathlib.PurePath) for s in source]):
-        source = [str(item) for item in source]
-    is_string = isinstance(source, str)
-    is_url = True if is_string and URL_PATTERN.match(source) else False
-    is_listofstrings = isinstance(source, list) and all([isinstance(s, str) for s in source])
-    if is_string or is_listofstrings:
-        # Process links from list (download contents into temporary location)
-        if is_listofstrings:
-            filelist = []
-            for filename in source:
-                if not URL_PATTERN.match(filename):
-                    filelist.append(filename)
-                else:
-                    try:
-                        response = urlopen(filename)
-                        tfile = NamedTemporaryFile(delete=False)
-                        tfile.write(response.read())
-                        # Close the file because Windows won't let open it second time
-                        tfile.close()
-                        filelist.append(tfile.name)
-                        # Delete temporary file when the program finishes
-                        atexit.register(os.remove, tfile.name)
-                    except (ValueError, URLError) as error:
-                        if not kwargs.get('quiet', False):
-                            (errno, strerror) = error.args
-                        return None
-            source = filelist
-
-        if not is_url:
-            try:
-                inputfile = logfileparser.openlogfile(source)
-            except IOError as error:
-                if not kwargs.get('quiet', False):
-                    (errno, strerror) = error.args
-                return None
-        else:
-            try:
-                response = urlopen(source)
-                is_stream = True
-
-                # Retrieve filename from URL if possible
-                filename = re.findall(r"\w+\.\w+", source.split('/')[-1])
-                filename = filename[0] if filename else ""
-
-                inputfile = logfileparser.openlogfile(filename, object=response.read())
-            except (ValueError, URLError) as error:
-                if not kwargs.get('quiet', False):
-                    (errno, strerror) = error.args
-                return None
-
-    elif hasattr(source, "read"):
-        inputfile = source
-        is_stream = True
-
-    # Streams are tricky since they don't have seek methods or seek won't work
-    # by design even if it is present. We solve this now by reading in the
-    # entire stream and using a StringIO buffer for parsing. This might be
-    # problematic for very large streams. Slow streams might also be an issue if
-    # the parsing is not instantaneous, but we'll deal with such edge cases
-    # as they arise. Ideally, in the future we'll create a class dedicated to
-    # dealing with these issues, supporting both files and streams.
-    if is_stream:
-        try:
-            inputfile.seek(0, 0)
-        except (AttributeError, IOError):
-            contents = inputfile.read()
-            try:
-                inputfile = io.StringIO(contents)
-            except:
-                inputfile = io.StringIO(unicode(contents))
-            inputfile.seek(0, 0)
+    if not isinstance(source, list):
+        source = [source]
+    inputfile = FileWrapper(*source)
 
     # Proceed to return an instance of the logfile parser only if the filetype
     # could be guessed. Need to make sure the input file is closed before creating
     # an instance, because parsers will handle opening/closing on their own.
     filetype = guess_filetype(inputfile)
+    
+    # Reset our position back to 0.
+    inputfile.reset()
 
     # If the input file isn't a standard compchem log file, try one of
     # the readers, falling back to Open Babel.
     if not filetype:
         if kwargs.get("cjson"):
             filetype = readerclasses['cjson']
-        elif source and not is_stream:
-            ext = os.path.splitext(source)[1][1:].lower()
+            
+        else:
+            # TODO: This assumes we only got a single file...
+            filename = list(inputfile.input_files)[0]
+            ext = pathlib.Path(filename).name[1:].lower()
+            
             for extension in readerclasses:
                 if ext == extension:
                     filetype = readerclasses[extension]
 
     # Proceed to return an instance of the logfile parser only if the filetype
-    # could be guessed. Need to make sure the input file is closed before creating
-    # an instance, because parsers will handle opening/closing on their own.
+    # could be guessed.
     if filetype:
-        # We're going to close and reopen below anyway, so this is just to avoid
-        # the missing seek method for fileinput.FileInput. In the long run
-        # we need to refactor to support for various input types in a more
-        # centralized fashion.
-        if is_listofstrings:
-            pass
-        else:
-            inputfile.seek(0, 0)
-        if not is_stream:
-            if is_listofstrings:
-                if filetype == Turbomole:
-                    source = sort_turbomole_outputs(source)
-            inputfile.close()
-            return filetype(source, *args, **kwargs)
         return filetype(inputfile, *args, **kwargs)
 
 
@@ -433,63 +331,6 @@ def _determine_output_format(outputtype, outputdest):
             raise UnknownOutputFormatError(extension)
 
     return outputclass
-
-def path_leaf(path):
-    """
-    Splits the path to give the filename. Works irrespective of '\'
-    or '/' appearing in the path and also with path ending with '/' or '\'.
-
-    Inputs:
-      path - a string path of a logfile.
-    Returns:
-      tail - 'directory/subdirectory/logfilename' will return 'logfilename'.
-      ntpath.basename(head) - 'directory/subdirectory/logfilename/' will return 'logfilename'.
-    """
-    head, tail = os.path.split(path)
-    return tail or os.path.basename(head)
-
-def sort_turbomole_outputs(filelist):
-    """
-    Sorts a list of inputs (or list of log files) according to the order
-    defined below. Just appends the unknown files in the end of the sorted list.
-
-    Inputs:
-      filelist - a list of Turbomole log files needed to be parsed.
-    Returns:
-      sorted_list - a sorted list of Turbomole files needed for proper parsing.
-    """
-    sorting_order = {
-        'basis' : 0,
-        'control' : 1,
-        'mos' : 2,
-        'alpha' : 3,
-        'beta' : 4,
-        'job.last' : 5,
-        'coord' : 6,
-        'gradient' : 7,
-        'aoforce' : 8,
-    }
-    
-    known_files = []
-    unknown_files = []
-    sorted_list = []
-    for fname in filelist:
-        filename = path_leaf(fname)
-        if filename in sorting_order:
-            known_files.append([fname, sorting_order[filename]])
-        elif re.match(r"^job\.[0-9]+$", filename):
-            # Calling 'jobex -keep' will also write job.n files, where n ranges from 0 to inf.
-            # Numbered job files are inserted before job.last.
-            job_number = int(filename[4:]) +1
-            job_order = float(f"{sorting_order['job.last'] - 1}.{job_number}")
-            known_files.append([fname, job_order])
-        else:
-            unknown_files.append(fname)
-    for i in sorted(known_files, key=lambda x: x[1]):
-        sorted_list.append(i[0])
-    if unknown_files:
-        sorted_list.extend(unknown_files)
-    return sorted_list
 
 
 def _check_pandas(found_pandas):
