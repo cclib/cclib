@@ -27,11 +27,11 @@ class Reader(ABC):
         if not isinstance(source, FileWrapper):
             source = FileWrapper(source)
         
-        self.file = source
+        self.inputfile = source
 
     def parse(self) -> None:
         """Read the raw contents of the source into the Reader."""
-        self.filecontents = self.file.read()
+        self.filecontents = self.inputfile.read()
 
     @abstractmethod
     def generate_repr(self) -> None:
