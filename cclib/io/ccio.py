@@ -141,7 +141,7 @@ def ccread(source: Union[str, typing.IO, FileWrapper, list], *args, **kwargs):
     Returns:
         a ccData object containing cclib data attributes
     """
-
+    log = None
     try:
         log = ccopen(source, *args, **kwargs)
         if log:
