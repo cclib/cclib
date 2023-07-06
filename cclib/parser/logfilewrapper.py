@@ -144,8 +144,8 @@ class FileWrapper:
     
         elif fileobject is not None:
             # Assuming that object is text file encoded in utf-8
-            #fileobject = io.StringIO(fileobject.decode(encoding, errors))
-            fileobject = io.TextIOWrapper(fileobject, encoding = encoding, errors = errors)
+            # If the file/stream has already been opened, we have no ability to handle decoding errors.
+            pass
             
         else:
             # Normal text file.
@@ -161,7 +161,8 @@ class FileWrapper:
         try:
             # TODO: Wasteful to make a list each iteration here...
             try:
-                line = next(list(self.input_files.values())[self.file_pointer])
+                file_list = list(self.input_files.values())
+                line = next(file_list[self.file_pointer])
                 self.last_lines.append(line)
                 return line
             
