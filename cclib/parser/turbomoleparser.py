@@ -69,7 +69,7 @@ class Turbomole(logfileparser.Logfile):
         # A list of previous lines to allow look-behind functionality.
         self.last_lines = collections.deque([""] * 10, 10)
         
-    def sort_input(self, file_objects):
+    def sort_input(self, file_names: list) -> list:
         """
         If this parser expects multiple files to appear in a certain order, return that ordering.
         """
@@ -86,29 +86,29 @@ class Turbomole(logfileparser.Logfile):
         }
         
         known_files = []
-        unknown_files = {}
-        sorted_dict = {}
-        for file_name, file_object in file_objects.items():            
+        unknown_files = []
+        sorted_list = []
+        for file_name in file_names:
             if file_name in sorting_order:
-                known_files.append([file_object, sorting_order[file_name]])
+                known_files.append([file_name, sorting_order[file_name]])
                 
             elif re.match(r"^job\.[0-9]+$", file_name):
                 # Calling 'jobex -keep' will also write job.n files, where n ranges from 0 to inf.
                 # Numbered job files are inserted before job.last.
                 job_number = int(file_name[4:]) +1
                 job_order = float(f"{sorting_order['job.last'] - 1}.{job_number}")
-                known_files.append([file_object, job_order])
+                known_files.append([file_name, job_order])
             
             else:
-                unknown_files[file_name] = file_object
+                unknown_files.append(file_name)
             
         for i in sorted(known_files, key=lambda x: x[1]):
-            sorted_dict[i[0]] = file_objects[i[0]]
+            sorted_list.append(i[0])
             
         if unknown_files:
-            sorted_dict.update(unknown_files)
+            sorted_list.extend(unknown_files)
         
-        return sorted_dict
+        return sorted_list
         
 
     def __str__(self):

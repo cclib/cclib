@@ -45,9 +45,6 @@ class FileWrapper:
     """Wrap any supported input file type."""
 
     def __init__(self, *sources) -> None:
-        # Each source can be a lot of different things, go through and process them now.
-        self.input_files = {}
-        
         # The total size of all our files.
         self.size = 0
         # Current 'byte' position in all our files.
@@ -68,6 +65,7 @@ class FileWrapper:
             else:
                 expanded_sources.append(source)
         
+        # Each source can be a lot of different things, go through and process them now.
         for source in expanded_sources:
             # 'open' the file. If the file is compressed, this function will uncompress it.
             # Likewise, appropriate decoding and error handling will be applied.
@@ -75,16 +73,14 @@ class FileWrapper:
             # If no file has been opened yet (source is a string-like), open it.
             filename, fileobject = self.open_log_file(source)
             
-            # open_log_file returns a pathlib.Path object, cast to str for compatibility.
-            self.input_files[str(filename)] = fileobject
-            
             # Move to the end of the file to determine how big it is.
             fileobject.seek(0, 2)
             size = fileobject.tell()
             fileobject.seek(0, 0)
             
             self.files.append(fileobject)
-            self.filenames.append(filename)
+            # open_log_file returns a pathlib.Path object, cast to str for compatibility.
+            self.filenames.append(str(filename))
             self.sizes.append(size)
         
         # Total number of bytes in all our files.
@@ -97,7 +93,31 @@ class FileWrapper:
         
     @property
     def file_name(self) -> str:
-        return ", ".join(self.input_files)
+        return ", ".join(self.filenames)
+    
+    def sort(self, order: list) -> None:
+        """
+        Sort the individual files that make up this FileWrapper.
+        
+        order is an ordered list of filenames.
+        """
+        # Reset all our streams.
+        self.reset()
+        
+        filenames = []
+        files = []
+        sizes = []
+        
+        # Reorder.
+        for filename in order:
+            index = self.filenames.index(filename)
+            filenames.append(filename)
+            files.append(self.files[index])
+            sizes.append(self.sizes[index])
+            
+        self.filenames = filenames
+        self.files = files
+        self.sizes = sizes
     
     @classmethod
     def open_log_file(
@@ -189,10 +209,8 @@ class FileWrapper:
         Get the next line from this log file.
         """
         try:
-            # TODO: Wasteful to make a list each iteration here...
             try:
-                file_list = list(self.input_files.values())
-                line = next(file_list[self.file_pointer])
+                line = next(self.files[self.file_pointer])
                 self.last_lines.append(line)
                 self.pos += len(line)
                 return line
@@ -237,8 +255,8 @@ class FileWrapper:
         """
         Close all open files.
         """
-        for input_file in self.input_files.values():
-            input_file.close()
+        for file in self.files:
+            file.close()
             
     def __del__(self) -> None:
         """
@@ -272,7 +290,7 @@ class FileWrapper:
     
     def reset(self):
         # Equivalent to seeking to 0 for all our files.
-        for file in self.input_files.values():
+        for file in self.files:
             file.seek(0,0)
             
         self.file_pointer = 0
@@ -280,7 +298,7 @@ class FileWrapper:
         
     def finish(self):
         # Equivalent to seeking to 2 for all our files.
-        for file in self.input_files.values():
+        for file in self.files:
             file.seek(0,2)
             
         self.file_pointer = len(self.files) -1

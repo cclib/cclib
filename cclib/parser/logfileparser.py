@@ -58,7 +58,7 @@ class Logfile(ABC):
             
         self.inputfile = source
         # If our parser needs a certain file ordering, set that now.
-        self.inputfile.input_files = self.sort_input(self.inputfile.input_files)
+        self.inputfile.sort(self.sort_input(self.inputfile.filenames))
 
         # Set up the logger.
         # Note that calling logging.getLogger() with one name always returns the same instance.
@@ -102,11 +102,11 @@ class Logfile(ABC):
     def filename(self):
         return self.inputfile.file_name
         
-    def sort_input(self, file_objects):
+    def sort_input(self, file_names: list) -> list:
         """
         If this parser expects multiple files to appear in a certain order, return that ordering.
         """
-        return file_objects
+        return file_names
 
     def __setattr__(self, name, value):
 
