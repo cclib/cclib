@@ -4,10 +4,8 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
-import collections
 import scipy.constants
 from datetime import timedelta
-import pathlib
 
 """Parser for Turbomole output files."""
 
@@ -65,9 +63,6 @@ class Turbomole(logfileparser.Logfile):
         self.hours_regex = re.compile(r"([0-9.]*) hours")
         self.minutes_regex = re.compile(r"([0-9.]*) minutes")
         self.seconds_regex = re.compile(r"([0-9.]*) seconds")
-
-        # A list of previous lines to allow look-behind functionality.
-        self.last_lines = collections.deque([""] * 10, 10)
         
     def sort_input(self, file_names: list) -> list:
         """
@@ -1006,10 +1001,10 @@ class Turbomole(logfileparser.Logfile):
         ## For UHF:
         #       occ. orbital   energy / eV   virt. orbital     energy / eV   |coeff.|^2*100
         #         7 a   alpha          -15.12     12 a   alpha            4.74       24.5
-        #         7 a   beta           -15.12     12 a   beta             4.74       24.5        
-        if "Excitation energy:" in line and "excitation" in self.last_lines[-5].split():
+        #         7 a   beta           -15.12     12 a   beta             4.74       24.5
+        if "Excitation energy:" in line and "excitation" in self.inputfile.last_lines[-6].split():
             # The irrep of the state is a few lines back.
-            symm_parts = self.last_lines[-5].split()
+            symm_parts = self.inputfile.last_lines[-6].split()
             # We don't always have the multiplicity available.
             if len(symm_parts) < 4:
                 # No mult.
@@ -1285,8 +1280,6 @@ class Turbomole(logfileparser.Logfile):
             self.metadata['wall_time'].append(self.duration_to_timedelta(line))
         
         # All done for this loop.
-        # Keep track of last lines.
-        self.last_lines.append(line)
             
         if ": all done  ****" in line:
             # End of module, set success flag.
