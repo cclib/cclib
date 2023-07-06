@@ -105,7 +105,7 @@ class FileWrapper:
         self.last_lines = collections.deque([""] * 10, 10)
         
     @property
-    def file_name(self):
+    def file_name(self) -> str:
         return ", ".join(self.input_files)
     
     @classmethod
@@ -154,7 +154,10 @@ class FileWrapper:
         
         return fileobject
 
-    def next(self):
+    def next(self) -> str:
+        """
+        Get the next line from this log file.
+        """
         try:
             # TODO: Wasteful to make a list each iteration here...
             try:
@@ -170,7 +173,10 @@ class FileWrapper:
             raise StopIteration()
     
     @property
-    def last_line(self):
+    def last_line(self) -> str:
+        """
+        Return the last line read by this parser.
+        """
         return self.last_lines[-1]
 
     def __next__(self):
@@ -178,11 +184,6 @@ class FileWrapper:
 
     def __iter__(self):
         return self
-        # This works great, but means we loose support for next() on this class.
-#         for file in self.input_files:
-#             for line in file:
-#                 self.last_lines.append(line)        
-#                 yield line
 
     def readline(self) -> str:
         """
@@ -199,8 +200,20 @@ class FileWrapper:
         return "".join(list(self))
 
     def close(self) -> None:
-        for input_file in self.input_files:
+        """
+        Close all open files.
+        """
+        for input_file in self.input_files.values():
             input_file.close()
+            
+    def __del__(self) -> None:
+        """
+        Make sure to close any open files when we go out of scope.
+        
+        Note that there is no guarantee when or if this function will get called;
+        user's should ensure to close their own files once they are finished with.
+        """
+        self.close()
 
     def seek(self, pos: int, ref: int) -> None:
         raise NotImplementedError("FileWrapper does not support seek()")
