@@ -10,6 +10,7 @@ import io
 import os
 import pathlib
 from typing import Optional
+import logging
 
 from cclib.parser import data
 from cclib.parser import logfileparser
@@ -161,7 +162,7 @@ def ccread(source, *args, **kwargs):
         return fallback(source)
 
 
-def ccopen(source, *args, **kwargs):
+def ccopen(source, *args, quiet = False, **kwargs):
     """Guess the identity of a particular log file and return an instance of it.
 
     Inputs:
@@ -174,37 +175,47 @@ def ccopen(source, *args, **kwargs):
       Molpro, MOPAC, NWChem, ORCA, Psi3, Psi/Psi4, QChem, CJSON or None
       (if it cannot figure it out or the file does not exist).
     """
-    if not isinstance(source, list):
+    if isinstance(source, str) or not hasattr(source, "__iter__"):
         source = [source]
-    inputfile = FileWrapper(*source)
-
-    # Proceed to return an instance of the logfile parser only if the filetype
-    # could be guessed. Need to make sure the input file is closed before creating
-    # an instance, because parsers will handle opening/closing on their own.
-    filetype = guess_filetype(inputfile)
+        
+    try:
+        inputfile = FileWrapper(*source)
     
-    # Reset our position back to 0.
-    inputfile.reset()
-
-    # If the input file isn't a standard compchem log file, try one of
-    # the readers, falling back to Open Babel.
-    if not filetype:
-        if kwargs.get("cjson"):
-            filetype = readerclasses['cjson']
+        # Proceed to return an instance of the logfile parser only if the filetype
+        # could be guessed. Need to make sure the input file is closed before creating
+        # an instance, because parsers will handle opening/closing on their own.
+        filetype = guess_filetype(inputfile)
+        
+        # Reset our position back to 0.
+        inputfile.reset()
+    
+        # If the input file isn't a standard compchem log file, try one of
+        # the readers, falling back to Open Babel.
+        if not filetype:
+            if kwargs.get("cjson"):
+                filetype = readerclasses['cjson']
+                
+            else:
+                # TODO: This assumes we only got a single file...
+                filename = list(inputfile.input_files)[0]
+                ext = pathlib.Path(filename).name[1:].lower()
+                
+                for extension in readerclasses:
+                    if ext == extension:
+                        filetype = readerclasses[extension]
+    
+        # Proceed to return an instance of the logfile parser only if the filetype
+        # could be guessed.
+        if filetype:
+                return filetype(inputfile, *args, **kwargs)
             
-        else:
-            # TODO: This assumes we only got a single file...
-            filename = list(inputfile.input_files)[0]
-            ext = pathlib.Path(filename).name[1:].lower()
-            
-            for extension in readerclasses:
-                if ext == extension:
-                    filetype = readerclasses[extension]
-
-    # Proceed to return an instance of the logfile parser only if the filetype
-    # could be guessed.
-    if filetype:
-        return filetype(inputfile, *args, **kwargs)
+    except Exception:
+        if not quiet:
+            raise
+        
+        # We're going to swallow this exception if quiet is True.
+        # This can hide a lot of errors, so we'll make sure to log it.
+        logging.error("Failed to open logfile", exc_info = True)
 
 
 def fallback(source):
