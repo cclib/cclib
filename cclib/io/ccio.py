@@ -162,7 +162,7 @@ def ccread(source, *args, **kwargs):
         return fallback(source)
 
 
-def ccopen(source, *args, quiet = False, **kwargs):
+def ccopen(source, *args, quiet = False, cjson = False, **kwargs):
     """Guess the identity of a particular log file and return an instance of it.
 
     Inputs:
@@ -192,7 +192,8 @@ def ccopen(source, *args, quiet = False, **kwargs):
         # If the input file isn't a standard compchem log file, try one of
         # the readers, falling back to Open Babel.
         if not filetype:
-            if kwargs.get("cjson"):
+            
+            if cjson:
                 filetype = readerclasses['cjson']
                 
             else:
