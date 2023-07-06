@@ -157,7 +157,9 @@ class FileWrapper:
         try:
             # TODO: Wasteful to make a list each iteration here...
             try:
-                return next(list(self.input_files.values())[self.file_pointer])
+                line = next(list(self.input_files.values())[self.file_pointer])
+                self.last_lines.append(line)
+                return line
             
             except StopIteration:
                 self.file_pointer += 1
