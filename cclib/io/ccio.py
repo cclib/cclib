@@ -171,31 +171,29 @@ def ccopen(source, *args, quiet = False, cjson = False, **kwargs):
         source = [source]
         
     try:
+        # Wrap our input with custom file object.
         inputfile = FileWrapper(*source)
-    
-        # Proceed to return an instance of the logfile parser only if the filetype
-        # could be guessed. Need to make sure the input file is closed before creating
-        # an instance, because parsers will handle opening/closing on their own.
-        filetype = guess_filetype(inputfile)
         
-        # Reset our position back to 0.
-        inputfile.reset()
+        if cjson:
+            filetype = readerclasses['cjson']
+        
+        else:
+            # Try and guess the parser we need.
+            filetype = guess_filetype(inputfile)
+        
+            # Reset our position back to 0.
+            inputfile.reset()
     
         # If the input file isn't a standard compchem log file, try one of
         # the readers, falling back to Open Babel.
         if not filetype:
+            # TODO: This assumes we only got a single file...
+            filename = list(inputfile.input_files)[0]
+            ext = pathlib.Path(filename).name[1:].lower()
             
-            if cjson:
-                filetype = readerclasses['cjson']
-                
-            else:
-                # TODO: This assumes we only got a single file...
-                filename = list(inputfile.input_files)[0]
-                ext = pathlib.Path(filename).name[1:].lower()
-                
-                for extension in readerclasses:
-                    if ext == extension:
-                        filetype = readerclasses[extension]
+            for extension in readerclasses:
+                if ext == extension:
+                    filetype = readerclasses[extension]
     
         # Proceed to return an instance of the logfile parser only if the filetype
         # could be guessed.
