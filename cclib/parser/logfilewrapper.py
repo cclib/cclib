@@ -59,42 +59,14 @@ class FileWrapper:
                 expanded_sources.append(source)
         
         for source in expanded_sources:
-            # What are you?
-            if isinstance(source, str) and URL_PATTERN.match(source):
-                # This file is a URL.
-                try:
-                    # Cache the file to a temp location.
-                    response = urlopen(source)
-                    tfile = NamedTemporaryFile(delete = True)
-                    tfile.write(response.read())
-                    tfile.seek(0,0)
-                    
-                    fileobject = tfile
-                    filename = source
-                    
-                except (ValueError, URLError) as error:
-                    # Maybe no need to raise a different exception?
-                    raise ValueError(
-                        "Encountered an error processing the URL '{}'".format(source)
-                    ) from error
-                
-            elif hasattr(source, "read") or hasattr(source, "readline"):
-                # This file is a file.
-                # We don't need to do anything.
-                fileobject = source
-                # Not sure what we're supposed to do if we don't have an available file name,
-                # probably ok.
-                filename = getattr(source, "name", f"stream {str(type(source))}")
-                
-            else:
-                fileobject = None
-                filename = source
-                
-            # Now 'open' the file. If the file is compressed, this function will uncompress it.
+            # 'open' the file. If the file is compressed, this function will uncompress it.
             # Likewise, appropriate decoding and error handling will be applied.
             #
             # If no file has been opened yet (source is a string-like), open it.
-            self.input_files[filename] = self.open_log_file(filename, fileobject = fileobject)
+            filename, fileobject = self.open_log_file(source)
+            
+            # open_log_file returns a pathlib.Path object, cast to str for compatibility.
+            self.input_files[str(filename)] = fileobject
         
         # TODO: Implement this for progress updating.
         self.size = None
@@ -111,15 +83,53 @@ class FileWrapper:
     @classmethod
     def open_log_file(
             self,
-            filename: str,
+            source,
             mode: str = "r",
             encoding: str = "utf-8",
             errors: str = "logerror",
-            fileobject: typing.Optional[typing.IO] = None
-        ) -> typing.IO:
+        ) -> typing.Tuple[str, typing.IO]:
         """
-        Open a possibly compressed file.
+        Open a possibly compressed file, returning both the filename of the file and an open file object.
         """
+        # First, work out what source is (could be a filename, a URL, an open file etc).
+        if isinstance(source, str) and URL_PATTERN.match(source):
+            # This file is a URL.
+            try:
+                # Cache the file to a temp location.
+                response = urlopen(source)
+                fileobject = NamedTemporaryFile(delete = True)
+                fileobject.write(response.read())
+                fileobject.seek(0,0)
+                
+                fileobject = io.TextIOWrapper(fileobject, encoding = encoding, errors = errors)
+                filename = source
+                
+            except (ValueError, URLError) as error:
+                # Maybe no need to raise a different exception?
+                raise ValueError(
+                    "Encountered an error processing the URL '{}'".format(source)
+                ) from error
+                
+        elif hasattr(source, "read") or hasattr(source, "readline"):
+            # This file is a file.
+            # If this file supports seek, we don't need to do anything.
+            # If not, we'll cache it to fill.
+            if not hasattr(source, "seek"):
+                fileobject = NamedTemporaryFile(delete = True)
+                fileobject.write(source.read())
+                fileobject.seek(0,0)
+                
+                fileobject = io.TextIOWrapper(fileobject, encoding = encoding, errors = errors)
+             
+            else:
+                fileobject = source
+            filename = getattr(source, "name", f"stream {str(type(source))}")
+            
+        else:
+            # This file is something else, assume we can open() it.
+            filename = source
+            fileobject = None
+        
         filename = pathlib.Path(filename)
         extension = filename.suffix
     
@@ -152,7 +162,7 @@ class FileWrapper:
             
             fileobject = open(filename, mode, encoding = encoding, errors = errors)
         
-        return fileobject
+        return filename, fileobject
 
     def next(self) -> str:
         """
