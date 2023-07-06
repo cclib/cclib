@@ -40,6 +40,7 @@ def logerror(error):
     
 codecs.register_error('logerror', logerror)
 
+
 class FileWrapper:
     """Wrap any supported input file type."""
 
