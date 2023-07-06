@@ -47,7 +47,17 @@ class FileWrapper:
     def __init__(self, *sources) -> None:
         # Each source can be a lot of different things, go through and process them now.
         self.input_files = {}
+        
+        # The total size of all our files.
+        self.size = 0
+        # Current 'byte' position in all our files.
+        self.pos = 0
+        # The current file position.
         self.file_pointer = 0
+        
+        self.filenames = []
+        self.files = []
+        self.sizes = []
         
         # First, check if we were given an unpacked list for backwards compatibility.
         expanded_sources = []
@@ -67,9 +77,18 @@ class FileWrapper:
             
             # open_log_file returns a pathlib.Path object, cast to str for compatibility.
             self.input_files[str(filename)] = fileobject
+            
+            # Move to the end of the file to determine how big it is.
+            fileobject.seek(0, 2)
+            size = fileobject.tell()
+            fileobject.seek(0, 0)
+            
+            self.files.append(fileobject)
+            self.filenames.append(filename)
+            self.sizes.append(size)
         
-        # TODO: Implement this for progress updating.
-        self.size = None
+        # Total number of bytes in all our files.
+        self.size = sum(self.sizes)
         
         # A short buffer of previously read lines.
         # This permits primitive 'look-behind' functionality in some parsers (see Turbomole).
@@ -113,8 +132,9 @@ class FileWrapper:
         elif hasattr(source, "read") or hasattr(source, "readline"):
             # This file is a file.
             # If this file supports seek, we don't need to do anything.
-            # If not, we'll cache it to fill.
-            if not hasattr(source, "seek"):
+            # If not, we'll cache it to file.
+            if not hasattr(source, "seek") or \
+            (hasattr(source, "seekable") and not source.seekable()):
                 fileobject = NamedTemporaryFile(delete = True)
                 fileobject.write(source.read())
                 fileobject.seek(0,0)
@@ -174,6 +194,7 @@ class FileWrapper:
                 file_list = list(self.input_files.values())
                 line = next(file_list[self.file_pointer])
                 self.last_lines.append(line)
+                self.pos += len(line)
                 return line
             
             except StopIteration:
@@ -196,12 +217,14 @@ class FileWrapper:
     def __iter__(self):
         return self
 
+    # TODO: support size parameter.
     def readline(self) -> str:
         """
         Read one line from this file.
         """
         return next(self)
     
+    # TODO: support size parameter.
     def read(self) -> str:
         """
         Read everything from this file.
@@ -222,12 +245,30 @@ class FileWrapper:
         Make sure to close any open files when we go out of scope.
         
         Note that there is no guarantee when or if this function will get called;
-        user's should ensure to close their own files once they are finished with.
+        user's should ensure to close their own files once they are finished with them.
         """
         self.close()
 
-    def seek(self, pos: int, ref: int) -> None:
-        raise NotImplementedError("FileWrapper does not support seek()")
+    def seek(self, offset: int, whence: int = 0) -> None:
+        if offset != 0 or whence not in (0,2):
+            raise NotImplementedError("FileWrapper only supports seeking to start or end")
+        
+        if whence == 0:
+            self.reset()
+        
+        elif whence == 2:
+            self.finish()
+
+#     def seek_from_current(self, offset):
+#         """
+#         Seek forwards or backwards based on the current position.
+#         """
+#         remainder = offset
+#         while remainder != 0:
+#             if remainder > 0:
+#                 # Seek forwards please.
+#                 file_size = self.sizes[self.file_pointer]
+            
     
     def reset(self):
         # Equivalent to seeking to 0 for all our files.
@@ -235,9 +276,12 @@ class FileWrapper:
             file.seek(0,0)
             
         self.file_pointer = 0
-    
-#     def peek_ahead(self):
-#         """
-#         Acquire a copy of this file object to read lines without advancing
-#         the file pointer of the original object. 
-#         """
+        self.pos = 0
+        
+    def finish(self):
+        # Equivalent to seeking to 2 for all our files.
+        for file in self.input_files.values():
+            file.seek(0,2)
+            
+        self.file_pointer = len(self.files) -1
+        self.pos = self.size
