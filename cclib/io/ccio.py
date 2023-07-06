@@ -109,25 +109,17 @@ class UnknownOutputFormatError(Exception):
 
 def guess_filetype(inputfile) -> Optional[logfileparser.Logfile]:
     """Try to guess the filetype by searching for trigger strings."""
-    if not inputfile:
-        return None
 
     filetype = None
-    if isinstance(inputfile, str):
-        for line in inputfile:
-            for parser, phrases, do_break in triggers:
-                if all([line.lower().find(p.lower()) >= 0 for p in phrases]):
-                    filetype = parser
-                    if do_break:
-                        return filetype
-    else:
-        for fname in inputfile:
-            for line in inputfile:
-                for parser, phrases, do_break in triggers:
-                    if all([line.lower().find(p.lower()) >= 0 for p in phrases]):
-                        filetype = parser
-                        if do_break:
-                            return filetype
+    print(inputfile)
+
+    for line in inputfile:
+        for parser, phrases, do_break in triggers:
+            if all([line.lower().find(p.lower()) >= 0 for p in phrases]):
+                filetype = parser
+                if do_break:
+                    return filetype
+    
     return filetype
 
 
