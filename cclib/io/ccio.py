@@ -182,7 +182,7 @@ def ccopen(
       Molpro, MOPAC, NWChem, ORCA, Psi3, Psi/Psi4, QChem, CJSON or None
       (if it cannot figure it out or the file does not exist).
     """
-    if isinstance(source, str) or not hasattr(source, "__iter__"):
+    if not isinstance(source, list):
         source = [source]
         
     inputfile = None
