@@ -181,6 +181,20 @@ class FileWrapper:
 #                 self.last_lines.append(line)        
 #                 yield line
 
+    def readline(self) -> str:
+        """
+        Read one line from this file.
+        """
+        return next(self)
+    
+    def read(self) -> str:
+        """
+        Read everything from this file.
+        
+        Be aware that this function will load the entire file into a single string.
+        """
+        return "".join(list(self))
+
     def close(self) -> None:
         for input_file in self.input_files:
             input_file.close()
