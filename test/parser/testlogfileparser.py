@@ -26,17 +26,29 @@ __datadir__ = os.path.join(__filepath__, "..", "..")
 
 class FileWrapperTest(unittest.TestCase):
 
+    def check_seek(self, wrapper):
+        """Check that a FileWrapper can seek properly"""
+        wrapper.seek(0, 2)
+        assert wrapper.pos == wrapper.size        
+        
+        wrapper.seek(0, 0)
+        assert wrapper.pos == 0
+        
+        with pytest.raises(NotImplementedError):
+            wrapper.seek(0, 1)
+
     def test_file_seek(self):
         """Can we seek anywhere in a file object?"""
         fpath = os.path.join(__datadir__,"data/ADF/basicADF2007.01/dvb_gopt.adfout")
         with open(fpath, 'r') as fobject:
             wrapper = cclib.parser.logfileparser.FileWrapper(fobject)
-            wrapper.seek(0, 0)
-            assert wrapper.pos == 0
-            wrapper.seek(10, 0)
-            assert wrapper.pos == 10
-            wrapper.seek(0, 2)
-            assert wrapper.pos == wrapper.size
+            self.check_seek(wrapper)
+#             wrapper.seek(0, 0)
+#             assert wrapper.pos == 0
+#             wrapper.seek(10, 0)
+#             assert wrapper.pos == 10
+#             wrapper.seek(0, 2)
+#             assert wrapper.pos == wrapper.size
 
     def test_url_seek(self):
         """Can we seek only to the end of an url stream?"""
@@ -44,22 +56,24 @@ class FileWrapperTest(unittest.TestCase):
         url = "https://raw.githubusercontent.com/cclib/cclib/master/data/ADF/basicADF2007.01/dvb_gopt.adfout"
         stream = urlopen(url)
         wrapper = cclib.parser.logfileparser.FileWrapper(stream)
+        
+        self.check_seek(wrapper)
 
-        # Unfortunately, the behavior of this wrapper differs between Python 2 and 3,
-        # so we need to diverge the assertions. We should try to keep the code as
-        # consistent as possible, but the Errors raised are actually different.
-        wrapper.seek(0, 2)
-        assert wrapper.pos == wrapper.size
-        if sys.version_info[0] == 2:
-            with pytest.raises(AttributeError):
-                wrapper.seek(0, 0)
-            with pytest.raises(AttributeError):
-                wrapper.seek(0, 1)
-        else:
-            with pytest.raises(io.UnsupportedOperation):
-                wrapper.seek(0, 0)
-            with pytest.raises(io.UnsupportedOperation):
-                wrapper.seek(0, 1)
+#         # Unfortunately, the behavior of this wrapper differs between Python 2 and 3,
+#         # so we need to diverge the assertions. We should try to keep the code as
+#         # consistent as possible, but the Errors raised are actually different.
+#         wrapper.seek(0, 2)
+#         assert wrapper.pos == wrapper.size
+#         if sys.version_info[0] == 2:
+#             with pytest.raises(AttributeError):
+#                 wrapper.seek(0, 0)
+#             with pytest.raises(AttributeError):
+#                 wrapper.seek(0, 1)
+#         else:
+#             with pytest.raises(io.UnsupportedOperation):
+#                 wrapper.seek(0, 0)
+#             with pytest.raises(io.UnsupportedOperation):
+#                 wrapper.seek(0, 1)
 
     def test_stdin_seek(self):
         """We shouldn't be able to seek anywhere in standard input."""
@@ -67,10 +81,9 @@ class FileWrapperTest(unittest.TestCase):
         # the recommended way of emulating stdin is by doing this
         monkeypatch = MonkeyPatch()
         monkeypatch.setattr('sys.stdin', io.StringIO())
-        #
-        # but StringIO does support seeking, so doesn't work for our purposes.
         
-#         wrapper = cclib.parser.logfileparser.FileWrapper(sys.stdin)
+        wrapper = cclib.parser.logfileparser.FileWrapper(sys.stdin)
+        self.check_seek(wrapper)
 #         with pytest.raises(IOError):
 #             wrapper.seek(0, 0)
 #         with pytest.raises(IOError):
