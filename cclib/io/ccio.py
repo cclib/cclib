@@ -111,7 +111,6 @@ def guess_filetype(inputfile) -> Optional[logfileparser.Logfile]:
     """Try to guess the filetype by searching for trigger strings."""
 
     filetype = None
-    print(inputfile)
 
     for line in inputfile:
         for parser, phrases, do_break in triggers:
