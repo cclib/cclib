@@ -140,20 +140,25 @@ def ccread(source, *args, **kwargs):
         a ccData object containing cclib data attributes
     """
 
-    log = ccopen(source, *args, **kwargs)
-    if log:
-        if kwargs.get("verbose", None):
-            print(f"Identified logfile to be in {log.logname} format")
-        # If the input file is a CJSON file and not a standard compchemlog file
-        cjson_as_input = kwargs.get("cjson", False)
-        if cjson_as_input:
-            return log.read_cjson()
+    try:
+        log = ccopen(source, *args, **kwargs)
+        if log:
+            if kwargs.get("verbose", None):
+                print(f"Identified logfile to be in {log.logname} format")
+            # If the input file is a CJSON file and not a standard compchemlog file
+            cjson_as_input = kwargs.get("cjson", False)
+            if cjson_as_input:
+                return log.read_cjson()
+            else:
+                return log.parse()
         else:
-            return log.parse()
-    else:
-        if kwargs.get('verbose', None):
-            print('Attempting to use fallback mechanism to read file')
-        return fallback(source)
+            if kwargs.get('verbose', None):
+                print('Attempting to use fallback mechanism to read file')
+            return fallback(source)
+    
+    finally:
+        if log:
+            log.inputfile.close()
 
 
 def ccopen(source, *args, quiet = False, cjson = False, **kwargs):
@@ -171,6 +176,8 @@ def ccopen(source, *args, quiet = False, cjson = False, **kwargs):
     """
     if isinstance(source, str) or not hasattr(source, "__iter__"):
         source = [source]
+        
+    inputfile = None
         
     try:
         # Wrap our input with custom file object.
@@ -201,18 +208,25 @@ def ccopen(source, *args, quiet = False, cjson = False, **kwargs):
         # could be guessed.
         if filetype:
                 return filetype(inputfile, *args, **kwargs)
+    
+        elif inputfile is not None:
+            inputfile.close()
+            # Stop us closing twice in the except block.
+            inputfile = None
+            
+        # If we get here, we've failed to identify the log file type.
+        raise ValueError("Unable to determine the type of logfile {}".format(source))
             
     except Exception:
+        if inputfile is not None:
+            inputfile.close()
+        
         if not quiet:
             raise
         
         # We're going to swallow this exception if quiet is True.
         # This can hide a lot of errors, so we'll make sure to log it.
         logging.error("Failed to open logfile", exc_info = True)
-        
-    # If we get here, we've failed to identify the log file type.
-    if not quiet:
-        raise ValueError("Unable to determine the type of logfile {}".format(source))
 
 
 def fallback(source):
