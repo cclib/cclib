@@ -9,8 +9,10 @@
 import io
 import os
 import pathlib
+import typing
 from typing import Optional
 import logging
+from typing import Union
 
 from cclib.parser import data
 from cclib.parser import logfileparser
@@ -125,7 +127,7 @@ def guess_filetype(inputfile) -> Optional[logfileparser.Logfile]:
     return filetype
 
 
-def ccread(source, *args, **kwargs):
+def ccread(source: Union[str, typing.IO, FileWrapper, list], *args, **kwargs):
     """Attempt to open and read computational chemistry data from a file.
 
     If the file is not appropriate for cclib parsers, a fallback mechanism
@@ -161,7 +163,13 @@ def ccread(source, *args, **kwargs):
             log.inputfile.close()
 
 
-def ccopen(source, *args, quiet = False, cjson = False, **kwargs):
+def ccopen(
+        source: Union[str, typing.IO, FileWrapper, list],
+        *args,
+        quiet = False,
+        cjson = False,
+        **kwargs
+    ):
     """Guess the identity of a particular log file and return an instance of it.
 
     Inputs:
