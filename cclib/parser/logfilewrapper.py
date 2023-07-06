@@ -67,6 +67,7 @@ class FileWrapper:
                     response = urlopen(source)
                     tfile = NamedTemporaryFile(delete = True)
                     tfile.write(response.read())
+                    tfile.seek(0,0)
                     
                     fileobject = tfile
                     filename = source
