@@ -14,6 +14,7 @@ import numpy
 from cclib.parser import logfileparser
 from cclib.parser import utils
 
+from cclib.parser.utils import PeriodicTable
 
 class GAMESSDAT(logfileparser.Logfile):
     """A GAMESS .dat log file"""
@@ -35,12 +36,16 @@ class GAMESSDAT(logfileparser.Logfile):
         pass
 
     def before_parsing(self):
+        self.pt = PeriodicTable()
         # To change: declared only for passing unit tests
-        self.mocoeffs = [ -1 ]
-        self.metadata["input_file_contents"] = None
-        self.metadata["legacy_package_version"] = None
-        self.scfenergies = [ 0 ]
-        self.b3lyp_energy = 0
+
+    def after_parsing(self):
+        if hasattr(self, "atomcoords"):
+            len_coords = len(self.atomcoords)
+            self.atomcoords = numpy.reshape(self.atomcoords, (1, len_coords, 3))
+        
+        if hasattr(self, "mocoeffs"):
+            self.mocoeffs = numpy.reshape(self.mocoeffs, (1, self.nmo, self.nbasis))
 
 
     def extract(self, inputfile, line):
@@ -72,29 +77,36 @@ class GAMESSDAT(logfileparser.Logfile):
 
             # Extract atomic information
 
-            atomic_data = []
+            self.atommasses = []
+            self.atomcoords = []
+
             line = next(inputfile)
 
             while line.strip() != "$END":
                 parts = line.split()
-                if len(parts) >= 2:
-                    symbol = parts[0]
-                    mass = float(parts[1])
+                if len(parts) > 2:
+
+                    symbol      = parts[0]
+                    mass        = float(parts[1])
                     coordinates = [float(coord) for coord in parts[2:]]
-                    atom_info = {"symbol": symbol, "mass": mass, "coordinates": coordinates}
-                    atomic_data.append(atom_info)
+
+                    assert len(coordinates) == 3
+
+                    self.atommasses.append(mass)
+                    self.atomcoords.append(coordinates)
+                elif len(parts) == 2:
+                    basis_set = parts[0] + '-' + parts[1] + 'G'
+                    self.metadata['basis_set'] = basis_set
+
+                    
                 line = next(inputfile)
-        
-            self.metadata["atoms"] = atomic_data
+
 
         # Extract energy
 
         # --- CLOSED SHELL ORBITALS --- GENERATED AT Mon Aug  5 13:05:47 2019
         # water                                                                           
         # E(RHF)=      -74.9643287920, E(NUC)=    8.8870072224,   13 ITERS
-
-        # while "E(RHF)" not in line:
-        #     line = next(inputfile)
 
         # Extract E(RHF) value
 
@@ -137,81 +149,42 @@ class GAMESSDAT(logfileparser.Logfile):
         #  7  2-8.08915389E-01 8.08915850E-01
         #  $END   
 
-        # Extract vector information
-        # After formatting, the extracted vectors will populate self.mocoeffs
+        # Extract vector information and populate mocoeffs.
+        # Also extract nbasis from here.
 
         if line[1:5] == "$VEC":
 
+            self.nbasis   = None
+            self.nmo      = 0
             self.mocoeffs = []
+
+            line = next(inputfile)
 
             while "$END" not in line:
                 
-                line = next(inputfile)
-                vec_line = line.replace('-', ' -').replace('E -', 'E-').strip()
-                vectors = [float(vec) for vec in vec_line.split()[1:]]
-                line_number = line.split()[0]
+                moc_line = line.replace('-', ' -').replace('E -', 'E-').strip()
+                mocoeff = [float(m) for m in moc_line.split()[2:]]
+                atom_number = line.split()[0]
+                line_number = moc_line.split()[1]
 
-                if not self.mocoeffs:
-                    self.mocoeffs.append(vectors)
+                if atom_number == str(len(self.mocoeffs)):
+                    self.mocoeffs[-1].extend(mocoeff)
 
-                elif line_number == str(len(self.mocoeffs)):
-                    self.mocoeffs[-1].extend(vectors)
-
-                elif len(vectors) > 0:
-                    self.mocoeffs.append(vectors)
-
-        # Extracting Population Analysis
-
-        #  POPULATION ANALYSIS
-        # O            8.31989  -0.31989   8.22116  -0.22116
-        # H            0.84006   0.15994   0.88942   0.11058
-        # H            0.84006   0.15994   0.88942   0.11058
-
-        if line[1:20] == "POPULATION ANALYSIS":
-
-            self.metadata["population"] = []
-
-            line = next(inputfile)
+                elif len(mocoeff) > 0:
+                    self.mocoeffs.append(mocoeff)
             
-            while 'MOMENTS AT POINT' not in line:
-                fields = line.split()
-                atom_info = {
-                    "atom": fields[0],
-                    "charge": float(fields[1]),
-                    "spin": float(fields[2]),
-                    "net_charge": float(fields[3]),
-                    "net_spin": float(fields[4])
-                }
-                self.metadata["population"].append(atom_info)
-                line = next(inputfile).strip()
-        
+                # Get last line as nbasis
+                if atom_number.isdigit(): 
+                    self.nbasis = int(atom_number)
 
-        # Extracting Moments at Point
-
-        # MOMENTS AT POINT    1 X,Y,Z=  0.075831  0.100631  0.000000
-        # MP2 NATURAL ORBITALS, E(MP2)=      -75.0022821133
-
-        if line[1:17] == "MOMENTS AT POINT":
-            moment_line = line.split("=")[1].strip()
-            moment_values = moment_line.split()[1:]
-            self.moments = [float(value) for value in moment_values]
-
-
-        # Extracting Dipole
-
-        # DIPOLE       1.007144  1.336525  0.000000
-
-        if line[1:7] == "DIPOLE":
-            line = next(inputfile).strip()
-            dipole_pattern = r"DIPOLE\s+([\d.-]+)\s+([\d.-]+)\s+([\d.-]+)"
-            match = re.search(dipole_pattern, line)
-            if match:
-                self.metadata["dipole"] = {
-                    "x": float(match.group(1)),
-                    "y": float(match.group(2)),
-                    "z": float(match.group(3))
-                }
+                # Count nmos
+                if atom_number == '1':
+                    self.nmo += len(mocoeff)
                 
+                line = next(inputfile)
+
+            self.mocoeffs = [ self.mocoeffs ]
+
         
         # Extracting MP2 Energy Value
 
@@ -220,27 +193,122 @@ class GAMESSDAT(logfileparser.Logfile):
         if "E(MP2)=" in line:
             self.mpenergies = float(line.split()[-1])
 
+        #  POPULATION ANALYSIS
+        # C            6.00435  -0.00435   5.99623   0.00377
+        # C            6.00435  -0.00435   5.99623   0.00377
+        # C            6.07658  -0.07658   6.04383  -0.04383
+        # C            6.07658  -0.07658   6.04383  -0.04383
+        # C            6.07696  -0.07696   6.04409  -0.04409
+        # C            6.07696  -0.07696   6.04409  -0.04409
+        # H            0.92217   0.07783   0.95790   0.04210
+        # H            0.92217   0.07783   0.95790   0.04210
+        # H            0.92084   0.07916   0.95636   0.04364
+        # H            0.92084   0.07916   0.95636   0.04364
+        # C            6.07622  -0.07622   6.03889  -0.03889
+        # C            6.07622  -0.07622   6.03889  -0.03889
+        # H            0.92346   0.07654   0.95907   0.04093
+        # H            0.92346   0.07654   0.95907   0.04093
+        # C            6.15454  -0.15454   6.09150  -0.09150
+        # C            6.15454  -0.15454   6.09150  -0.09150
+        # H            0.92403   0.07597   0.95707   0.04293
+        # H            0.92403   0.07597   0.95707   0.04293
+        # H            0.92086   0.07914   0.95507   0.04493
+        # H            0.92086   0.07914   0.95507   0.04493
+        #  MOMENTS AT POINT    1 X,Y,Z= -0.000000  0.000000  0.000000
+        #  DIPOLE       0.000000  0.000000  0.000000
+        # ----- TOP OF INPUT FILE FOR BADER'S AIMPAC PROGRAM -----
+
+        # Extract Moments and Dipole
+
+        if line[1:17] == 'MOMENTS AT POINT':
+            self.moments = [[ float(moment) for moment in line.split()[-3:] ]]
+
+            line = next(inputfile)
+
+            self.moments.append([ float(dipole) for dipole in line.split()[-3:] ])
+
 
         # Extracting Gaussian
 
         # ----- TOP OF INPUT FILE FOR BADER'S AIMPAC PROGRAM -----
         # water                                                                           
         # GAUSSIAN              7 MOL ORBITALS     21 PRIMITIVES        3 NUCLEI
-        #   O    1    (CENTRE  1)   0.00000000  0.00000000  0.00000000  CHARGE =  8.0
-        #   H    2    (CENTRE  2)   1.87082873  0.00000000  0.00000000  CHARGE =  1.0
-        #   H    3    (CENTRE  3)  -0.51567032  1.79835585  0.00000000  CHARGE =  1.0
+
+        if line[0:8] == "GAUSSIAN":
+
+            parts = line.split()
+
+            self.homos  = [ int(parts[1]) - 1 ] # Unrestricted case for now, might need a change later on
+            self.natom  = int(parts[6])
+
+            # Continue extracting
+            
+            #   O    1    (CENTRE  1)   0.00000000  0.00000000  0.00000000  CHARGE =  8.0
+            #   H    2    (CENTRE  2)   1.87082873  0.00000000  0.00000000  CHARGE =  1.0
+            #   H    3    (CENTRE  3)  -0.51567032  1.79835585  0.00000000  CHARGE =  1.0
+
+            line = next(inputfile)
+
+            self.atomnos = []
+            self.atomcoords = []
+            
+            while '(CENTRE' in line:
+
+                parts = line.split()
+
+                symbol = parts[0]
+                atomno = self.pt.number[symbol]
+
+                coords = [ float(n) for n in parts[4:7] ]
+
+                charge = float(parts[-1])
+
+                self.atomnos.append(atomno)
+                self.atomcoords.append(coords)
+
+                line = next(inputfile)
+
 
         # Extracting Centre Assignments
 
         # CENTRE ASSIGNMENTS    1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  2  2  2  3  3
         # CENTRE ASSIGNMENTS    3
+        
+        if line[0:18] == "CENTRE ASSIGNMENTS":
+            self.atombasis = []
+            current_number = 1
+            start_num, end_num = 0, 0
+            num = 1
+
+            while line[0:18] == 'CENTRE ASSIGNMENTS':
+                numbers = [int(num) for num in line.split()[2:]]
+                for num in numbers:
+                    if num != current_number:
+                        if 'basis_set' in self.metadata and self.metadata['basis_set'].lower() == 'sto-3g':
+                            diff = (end_num - start_num) // 3
+                            end_num = start_num + diff
+                        self.atombasis.append(list(range(start_num, end_num)))
+                        start_num = end_num
+                        current_number = num
+                    
+                    end_num += 1
+
+                line = next(inputfile)
+
+            if start_num > 0:
+                if 'basis_set' in self.metadata and self.metadata['basis_set'].lower() == 'sto-3g':
+                    diff = (end_num - start_num) // 3
+                    end_num = start_num + diff
+                self.atombasis.append(list(range(start_num, end_num)))
+
+        # Extracting Type Assignments
+
         # TYPE ASSIGNMENTS      1  1  1  1  1  1  2  2  2  3  3  3  4  4  4  1  1  1  1  1
         # TYPE ASSIGNMENTS      1
 
-        # Extracting Exponents
+        self.metadata["type_assignments"] = []
 
-        # EXPONENTS  1.3070932E+02 2.3808866E+01 6.4436083E+00 5.0331513E+00 1.1695961E+00
-        # EXPONENTS  3.8038896E-01 5.0331513E+00 1.1695961E+00 3.8038896E-01 5.0331513E+00
-        # EXPONENTS  1.1695961E+00 3.8038896E-01 5.0331513E+00 1.1695961E+00 3.8038896E-01
-        # EXPONENTS  3.4252509E+00 6.2391373E-01 1.6885540E-01 3.4252509E+00 6.2391373E-01
-        # EXPONENTS  1.6885540E-01
+        while line[0:16] == "TYPE ASSIGNMENTS":
+            type_assignments = [ int(n) for n in line.split()[2:] ]
+            self.metadata["type_assignments"].extend(type_assignments)
+            line = next(inputfile)
