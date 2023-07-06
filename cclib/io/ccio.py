@@ -207,6 +207,10 @@ def ccopen(source, *args, quiet = False, cjson = False, **kwargs):
         # We're going to swallow this exception if quiet is True.
         # This can hide a lot of errors, so we'll make sure to log it.
         logging.error("Failed to open logfile", exc_info = True)
+        
+    # If we get here, we've failed to identify the log file type.
+    if not quiet:
+        raise ValueError("Unable to determine the type of logfile {}".format(source))
 
 
 def fallback(source):
