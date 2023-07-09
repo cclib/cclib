@@ -47,4 +47,4 @@ jobs:
           destination-github-username: 'cclib'
           destination-repository-name: 'cclib.github.io'
           commit-message: See ORIGIN_COMMIT from $GITHUB_REF
-          target-branch: testing
+          target-branch: master
