@@ -50,3 +50,4 @@ jobs:
           FOLDER: "doc/sphinx/_build/html"
           SSH_PRIVATE_KEY: ${{ secrets.CCLIB_DOCS_KEY }}
           KNOWN_HOSTS_FILE: ./known_hosts
+          SQUASH_HISTORY: true
