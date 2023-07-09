@@ -39,15 +39,14 @@ jobs:
         run: cd doc && make default
       - name: Make a no jekyll file
         run: touch doc/sphinx/_build/html/.nojekyll
-      - name: Make known hosts file
-        run: |
-          ssh-keyscan github.com >> ./known_hosts
-      - name: Deploy
-        uses: s0/git-publish-subdir-action@develop
+      - name: Pushes to another repository
+        id: push_directory
+        uses: cpina/github-action-push-to-another-repository@main
         env:
-          REPO: git@github.com:cclib/cclib.github.io.git
-          BRANCH: testing
-          FOLDER: "doc/sphinx/_build/html"
-          KNOWN_HOSTS_FILE: ./known_hosts
-          SQUASH_HISTORY: true
-          SSH_PRIVATE_KEY: ${{ secrets.CCLIB_DOCS_KEY }}
+          SSH_DEPLOY_KEY: ${{ secrets.CCLIB_DOCS_KEY }}
+        with:
+          source-directory: doc/sphinx/_build/html
+          destination-github-username: 'cclib'
+          destination-repository-name: 'cclib.github.io'
+          commit-message: See ORIGIN_COMMIT from $GITHUB_REF
+          target-branch: testing
