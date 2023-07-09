@@ -3,11 +3,9 @@
 name: docs push
 
 # yamllint disable-line rule:truthy
-on: [push, pull_request]
-
-# on:
-#   push:
-#     branches: [master]
+on:
+  push:
+    branches: [master]
 
 jobs:
   push-docs:
