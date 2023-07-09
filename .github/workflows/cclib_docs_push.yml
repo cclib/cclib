@@ -39,6 +39,9 @@ jobs:
         run: cd doc && make default
       - name: Make a no jekyll file
         run: touch doc/sphinx/_build/html/.nojekyll
+      - name: Make known hosts file
+        run: |
+          ssh-keyscan github.com >> ~/.known_hosts
       - name: Deploy
         uses: s0/git-publish-subdir-action@develop
         env:
@@ -46,3 +49,4 @@ jobs:
           BRANCH: testing
           FOLDER: "doc/sphinx/_build/html"
           SSH_PRIVATE_KEY: ${{ secrets.CCLIB_DOCS_KEY }}
+          KNOWN_HOSTS_FILE: ~/.known_hosts
