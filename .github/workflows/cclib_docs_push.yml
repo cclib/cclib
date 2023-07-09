@@ -24,7 +24,7 @@ jobs:
     steps:
       - name: Installs for ssh-agent
         run: |
-          apt-get install -y openssh-client
+          apt-get update && apt-get install -y openssh-client
       - name: Checkout
         uses: actions/checkout@v3
       - name: Allow repo access (see https://github.com/actions/checkout/issues/760)
