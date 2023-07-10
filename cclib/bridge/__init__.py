@@ -29,4 +29,7 @@ if find_package("iodata"):
 
 if find_package("pyscf"):
     from cclib.bridge.cclib2pyscf import makepyscf, makepyscf_mos
+
+if find_package("rdkit"):
+    from cclib.bridge.cclib2rdkit import makerdkit
 del find_package

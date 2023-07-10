@@ -22,6 +22,8 @@ if sys.version_info[1] >= 4:
     from .bridge.testbiopython import *
 from .bridge.testopenbabel import *
 from .bridge.testpyquante import pyquante2Test
+from .bridge.testrdkit import RdkitTest
+
 
 if __name__ == "__main__":
     unittest.main()
