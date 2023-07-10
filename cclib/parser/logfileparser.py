@@ -482,7 +482,7 @@ class Logfile(ABC):
         if not hasattr(self, name):
             self.set_attribute(name, [])
 
-        if isinstance(getattr(self, name), list) and index:
+        if isinstance(getattr(self, name), list) and index is not None:
             getattr(self, name)[index].extend(values)
         else:
             getattr(self, name).extend(values)
