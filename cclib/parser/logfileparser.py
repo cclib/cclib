@@ -19,7 +19,7 @@ import random
 import sys
 import zipfile
 from abc import ABC, abstractmethod
-from typing import Any, Iterable, List, Union
+from typing import Any, Iterable, List, Union, Optional
 import codecs
 
 import numpy
@@ -476,12 +476,16 @@ class Logfile(ABC):
             self.set_attribute(name, [])
         getattr(self, name).append(value)
 
-    def extend_attribute(self, name: str, values: Iterable[Any]) -> None:
+    def extend_attribute(self, name: str, values: Iterable[Any], index: Optional[int] = None) -> None:
         """Appends an iterable of values to an attribute."""
         
         if not hasattr(self, name):
             self.set_attribute(name, [])
-        getattr(self, name).extend(values)
+
+        if isinstance(getattr(self, name), list) and index is not None:
+            getattr(self, name)[index].extend(values)
+        else:
+            getattr(self, name).extend(values)
 
     def _assign_coreelectrons_to_element(self, element: str, ncore: int,
                                          ncore_is_total_count: bool = False) -> None:
