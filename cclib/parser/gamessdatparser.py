@@ -147,8 +147,11 @@ class GAMESSDAT(logfileparser.Logfile):
 
         if line[1:5] == "$VEC":
 
-            self.nmo      = 0
-            self.mocoeffs = []
+            if not hasattr(self, 'nmo'):
+                self.nmo  = 0
+
+            if not hasattr(self, 'mocoeffs'):
+                self.mocoeffs = []
 
             line = next(inputfile)
 
@@ -164,10 +167,9 @@ class GAMESSDAT(logfileparser.Logfile):
                     float(line[65:65+15])
                 ]
                 mo_number   = line.split()[0]
-                line_number = line.replace('-', ' ').split()[1]
 
                 if mo_number == str(len(self.mocoeffs)):
-                    self.mocoeffs[-1].extend(mocoeff)
+                    self.extend_attribute("mocoeffs", mocoeff, -1)
 
                 elif len(mocoeff) > 0:
                     self.append_attribute("mocoeffs", mocoeff)
@@ -226,7 +228,7 @@ class GAMESSDAT(logfileparser.Logfile):
 
             line = next(inputfile)
 
-            self.moments.append([ float(dipole) for dipole in line.split()[-3:] ])
+            self.append_attribute('moments', [ float(dipole) for dipole in line.split()[-3:] ])
 
 
         # Extracting Gaussian
@@ -259,8 +261,6 @@ class GAMESSDAT(logfileparser.Logfile):
                 atomno = self.table.number[symbol]
 
                 coords = [ float(n) for n in parts[4:7] ]
-
-                charge = float(parts[-1])
 
                 self.append_attribute("atomnos", atomno)
                 self.append_attribute("atomcoords", coords)
