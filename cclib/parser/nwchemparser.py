@@ -60,7 +60,7 @@ class NWChem(logfileparser.Logfile):
                     ] = f"{self.metadata['package_version']}+{revision}"
 
         if "nproc" in line:
-            self.metadata['processors'] = line.split()[-1]
+            self.metadata['num_processors'] = line.split()[-1]
         if "Memory information" in line:
             line_count = 0 
             while 'total' not in line and line_count <=8:
@@ -375,10 +375,25 @@ class NWChem(logfileparser.Logfile):
             line = next(inputfile)
             line = next(inputfile)
             self.metadata["functional"] = line.split()[0]
-        
+
+
+        #      Grid Information
+        #      ----------------
+        #   Grid used for XC integration:  xfine
+        #   Radial quadrature: Mura-Knowles
+        #   Angular quadrature: Lebedev.
+        #   Tag              B.-S. Rad. Rad. Pts. Rad. Cut. Ang. Pts.
+        #   ---              ---------- --------- --------- ---------
+        #   C                   0.70      100          13.0      1454
+        #   H                   0.35      100          13.0      1202
+        #   Grid pruning is: on
+        #   Number of quadrature shells:  1000
+        #   Spatial weights used:  Erf1
+
         if "Grid Information" in line:
-            line = next(inputfile)
-            self.metadata["grid"] = line.split()[-1]
+            self.skip_line(inputfile, "dashes")
+            next(inputfile)
+            self.metadata["grid"] = next(inputfile).split()[-1]
 
         # If the full overlap matrix is printed, it looks like this:
         #
@@ -1287,19 +1302,18 @@ class NWChem(logfileparser.Logfile):
             symmno = int(line.strip().split()[-1][0:-1])
             self.set_attribute('symmno', symmno)
 
-        # Grab point group
-        if line.strip().find('symmetry detected') != -1:
-            point_group = line.strip().split()[0]
-            self.set_attribute('point_group', point_group)
-
         # Grab rotational constants (convert cm-1 to GHz)
         if line.strip().startswith('A='):
             roconst, rotemp = [], []
-            roconst.append(float(line.strip().split()[1])*29.9792458)
-            rotemp.append(float(line.strip().split()[4]))
+            split_line = line.split()
+            roconst.append(utils.convertor(float(split_line[1]),'wavenumber','Hz'))
+            rotemp.append(float(split_line)[4])
+            line=next(inputfile)
             while line.strip().startswith('B=') or line.strip().startswith('C='):
-                roconst.append(float(line.strip().split()[1])*29.9792458)
-                rotemp.append(float(line.strip().split()[4]))
+                split_line = line.split()
+                roconst.append(utils.convertor(float(split_line[1]),'wavenumber','Hz'))
+                rotemp.append(float(split_line)[4])
+                line=next(inputfile)
             self.set_attribute('rotconsts', roconst)
             self.set_attribute('rottemp', rotemp)
 
