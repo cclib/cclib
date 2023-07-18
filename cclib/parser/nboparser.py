@@ -141,5 +141,85 @@ class GAMESSDAT(logfileparser.Logfile):
 
                 line = next(inputfile)
 
-        
+        #                                  Natural Population
+        #  ---------------------------------------------------------
+        #    Core                       1.99998 ( 99.9990% of    2)
+        #    Valence                    7.97616 ( 99.7019% of    8)
+        #    Natural Minimal Basis      9.97614 ( 99.7614% of   10)
+        #    Natural Rydberg Basis      0.02386 (  0.2386% of   10)
+        #  ---------------------------------------------------------
 
+        
+        if 'Natural Population' in line:
+            
+            line = next(inputfile)
+            line = next(inputfile)
+            
+            core = float(line.split()[1])
+            # TODO append to attibutes
+            
+            line = next(inputfile)
+            
+            valence = float(line.split()[1])
+            # TODO append to attibutes
+            
+            line = next(inputfile)
+            
+            natural_minimal_basis = float(line.split()[3])
+            # TODO append to attibutes
+            
+            line = next(inputfile)
+            
+            natural_rydberg_basis = float(line.split()[3])
+            # TODO append to attibutes
+
+
+        #     Atom No         Natural Electron Configuration
+        #  ----------------------------------------------------------------------------
+        #       O  1      [core]2s( 1.75)2p( 5.17)3d( 0.01)
+        #       H  2            1s( 0.53)
+        #       H  3            1s( 0.53)
+
+        if 'Natural Electron Configuration' in line:
+            line = next(inputfile)
+            line = next(inputfile)
+            
+            while len(line.strip()):
+                configuration_line = line.split()
+                atom = configuration_line[0]
+                configuration = "".join(configuration_line[2:])
+                
+                # TODO append to attibutes
+
+                line = next(inputfile)
+
+
+        # NATURAL BOND ORBITAL ANALYSIS:
+
+        #                             Occupancies       Lewis Structure    Low   High
+        #          Max    Occ     -------------------  -----------------   occ   occ
+        #   Cycle  Ctr   Thresh    Lewis   non-Lewis     CR  BD  nC  LP    (L)   (NL)
+        #  ============================================================================
+        #     1     2     1.90     9.99255   0.00745      1   2   0   2     0      0
+        #  ----------------------------------------------------------------------------
+
+        if 'NATURAL BOND ORBITAL ANALYSIS' in line:
+            # Skip to the values
+            for _ in range(6):
+                line = next(inputfile)
+
+            nbo_analysis = line.split()
+            
+            cycle         = int(nbo_analysis[0])
+            max_ctr       = int(nbo_analysis[1])
+            occ_thresh    = float(nbo_analysis[2])
+            occ_lewis     = float(nbo_analysis[3])
+            occ_non_lewis = float(nbo_analysis[4])
+            lewis_cr      = float(nbo_analysis[5])
+            lewis_bd      = int(nbo_analysis[6])
+            lewis_nc      = int(nbo_analysis[7])
+            lewis_lp      = int(nbo_analysis[8])
+            low_occ       = int(nbo_analysis[9])
+            high_occ      = int(nbo_analysis[10])
+
+            # TODO append to attibutes
