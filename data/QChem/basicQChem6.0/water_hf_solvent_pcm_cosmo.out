@@ -1,7 +1,7 @@
 
-Running Job 1 of 1 water_hf_solvent_pcm_cosmo.in
-qchem water_hf_solvent_pcm_cosmo.in_1091778.0 /tmp/qchem/qchem1091778/ 0
-/home/eric/data/opt/apps/qchem/release/6.0.1.2/exe/qcprog.exe_s water_hf_solvent_pcm_cosmo.in_1091778.0 /tmp/qchem/qchem1091778/
+Running Job 1 of 1 water_hf_solvent_pcm_cpcm2.in
+qchem water_hf_solvent_pcm_cpcm2.in_1091781.0 /tmp/qchem/qchem1091781/ 0
+/home/eric/data/opt/apps/qchem/release/6.0.1.2/exe/qcprog.exe_s water_hf_solvent_pcm_cpcm2.in_1091781.0 /tmp/qchem/qchem1091781/
                   Welcome to Q-Chem
      A Quantum Leap Into The Future Of Chemistry
 
@@ -97,7 +97,7 @@ qchem water_hf_solvent_pcm_cosmo.in_1091778.0 /tmp/qchem/qchem1091778/ 0
  Host: 
 0
 
-     Scratch files written to /tmp/qchem/qchem1091778//
+     Scratch files written to /tmp/qchem/qchem1091781//
  Aug1822 |scratch|qcdevops|jenkins|workspace|build_RNUM 6466   
  Processing $rem in /home/eric/data/opt/apps/qchem/release/6.0.1.2/config/preferences:
  Processing $rem in /home/eric/.qchemrc:
@@ -130,7 +130,7 @@ dielectric 2.3741
 $end
 
 $pcm
-theory cosmo
+theory cpcm2
 $end
 --------------------------------------------------------------
  ----------------------------------------------------------------
@@ -150,7 +150,7 @@ $end
  Mega-Array Size       188 MB
  MEM_STATIC part       192 MB
 
- Using C-PCM dielectric factor f(eps) = (eps-1)/eps = 0.578788
+ Using C-PCM dielectric factor f(eps) = (eps-1)/(eps+0.5) = 0.478097
  Discretize the solute cavity surface with Lebedev spheres
 	Using 110 Lebedev grid points for each H atom
 	Using 194 Lebedev grid points for other atoms
@@ -186,7 +186,7 @@ $end
   Bang C. Huynh
  -----------------------------------------------------------------------
  Hartree-Fock
- C-PCM solvent model [f = (eps-1)/eps], solve by matrix inversion
+ C-PCM solvent model [f = (eps-1)/(eps+0.5)], solve by matrix inversion
  A restricted SCF calculation will be
  performed using DIIS
  SCF converges when DIIS error is below 1.0e-05
@@ -194,31 +194,31 @@ $end
   Cycle       Energy         DIIS error
  ---------------------------------------
     1     -74.6004034643      3.98e-01  
-    2     -74.9312208115      6.24e-02  
-    3     -74.9672982123      7.04e-03  
-    4     -74.9676620984      1.55e-03  
-    5     -74.9676848466      2.45e-05  
-    6     -74.9676848576      4.40e-06  Convergence criterion met
+    2     -74.9298131844      6.31e-02  
+    3     -74.9666848899      7.21e-03  
+    4     -74.9670638187      1.56e-03  
+    5     -74.9670867425      2.53e-05  
+    6     -74.9670867543      5.08e-06  Convergence criterion met
  ---------------------------------------
- SCF time:   CPU 0.09s  wall 0.00s 
+ SCF time:   CPU 0.07s  wall 0.00s 
 
 ************** Final PCM Free Energy Summary **************
- G_electrostatic  =      -0.00345572 hartree =      -2.16849981 kcal/mol
+ G_electrostatic  =      -0.00282537 hartree =      -1.77294519 kcal/mol
  G_cavitation     =       0.00000000 hartree =       0.00000000 kcal/mol
  G_dispersion     =       0.00000000 hartree =       0.00000000 kcal/mol
  G_repulsion      =       0.00000000 hartree =       0.00000000 kcal/mol
  --------------------------------------------------
  Non-electrostatic Free Energy =       0.00000000 hartree =       0.00000000 kcal/mol
- Total                         =      -0.00345572 hartree =      -2.16849981 kcal/mol
+ Total                         =      -0.00282537 hartree =      -1.77294519 kcal/mol
  --------------------------------------------------
- SCF Energy (H0 + V/2)                       =     -74.96768486 
- Solute Internal Energy (H0)                 =     -74.96422913 
- Total Free Energy (H0 + V/2 + non-elec)     =     -74.96768486 hartree
-                                             =  -47042.93226709 kcal/mol
+ SCF Energy (H0 + V/2)                       =     -74.96708675 
+ Solute Internal Energy (H0)                 =     -74.96426139 
+ Total Free Energy (H0 + V/2 + non-elec)     =     -74.96708675 hartree
+                                             =  -47042.55695158 kcal/mol
 ***********************************************************
 
- SCF   energy in the final basis set =      -74.9676848576
- Total energy in the final basis set =      -74.9676848576
+ SCF   energy in the final basis set =      -74.9670867543
+ Total energy in the final basis set =      -74.9670867543
  
  --------------------------------------------------------------
  
@@ -227,18 +227,18 @@ $end
  
  Alpha MOs
  -- Occupied --
--20.2355  -1.2463  -0.5983  -0.4441  -0.3856
+-20.2369  -1.2470  -0.5992  -0.4443  -0.3861
  -- Virtual --
-  0.5792   0.7152
+  0.5777   0.7140
  --------------------------------------------------------------
  
           Ground-State Mulliken Net Atomic Charges
 
      Atom                 Charge (a.u.)
   ----------------------------------------
-      1 O                    -0.356238
-      2 H                     0.178122
-      3 H                     0.178116
+      1 O                    -0.353211
+      2 H                     0.176607
+      3 H                     0.176603
   ----------------------------------------
   Sum of atomic charges =     0.000000
 
@@ -248,24 +248,24 @@ $end
     Charge (ESU x 10^10)
                  0.0000
     Dipole Moment (Debye)
-         X       1.3792      Y      -0.0000      Z       1.0393
-       Tot       1.7269
+         X       1.3716      Y       0.0000      Z       1.0336
+       Tot       1.7174
     Quadrupole Moments (Debye-Ang)
-        XX      -4.7121     XY       0.0000     YY      -6.1136
-        XZ      -0.3593     YZ      -0.0000     ZZ      -4.5060
+        XX      -4.7200     XY      -0.0000     YY      -6.1150
+        XZ      -0.3573     YZ      -0.0000     ZZ      -4.5151
     Octopole Moments (Debye-Ang^2)
-       XXX      -0.7448    XXY      -0.0000    XYY      -0.5855
-       YYY      -0.0000    XXZ      -0.7066    XYZ       0.0000
-       YYZ      -0.4412    XZZ      -0.4908    YZZ      -0.0000
-       ZZZ      -0.2245
+       XXX      -0.7569    XXY       0.0000    XYY      -0.5869
+       YYY       0.0000    XXZ      -0.7054    XYZ      -0.0000
+       YYZ      -0.4422    XZZ      -0.4928    YZZ       0.0000
+       ZZZ      -0.2362
     Hexadecapole Moments (Debye-Ang^3)
-      XXXX      -5.3055   XXXY       0.0000   XXYY      -1.6210
-      XYYY       0.0000   YYYY      -3.2522   XXXZ       0.1860
-      XXYZ      -0.0000   XYYZ       0.1690   YYYZ      -0.0000
-      XXZZ      -2.1515   XYZZ       0.0000   YYZZ      -1.7179
-      XZZZ       0.4849   YZZZ      -0.0000   ZZZZ      -5.6902
+      XXXX      -5.3224   XXXY      -0.0000   XXYY      -1.6229
+      XYYY      -0.0000   YYYY      -3.2538   XXXZ       0.1892
+      XXYZ      -0.0000   XYYZ       0.1693   YYYZ      -0.0000
+      XXZZ      -2.1555   XYZZ      -0.0000   YYZZ      -1.7200
+      XZZZ       0.4862   YZZZ      -0.0000   ZZZZ      -5.7097
  -----------------------------------------------------------------
- Total job time:  1.23s(wall), 0.13s(cpu) 
+ Total job time:  1.22s(wall), 0.11s(cpu) 
  Sun Jul  2 18:42:12 2023
 
         *************************************************************

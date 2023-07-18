@@ -20,5 +20,5 @@ dielectric 2.3741
 $end
 
 $pcm
-theory cosmo
+theory cpcm2
 $end
