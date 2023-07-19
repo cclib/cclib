@@ -39,7 +39,7 @@ def logerror(error):
     """
     Log a unicode decode/encode error to the logger and return a replacement character.
     """
-    logging.warning(str(error))
+    logging.getLogger("cclib").warning(str(error))
     
     # Return type is a tuple.
     # First item is a replacement character. Second is the position to continue from.

@@ -96,12 +96,12 @@ class Writer(ABC):
     def _make_openbabel_from_ccdata(self):
         """Create Open Babel and Pybel molecules from ccData."""
         if not hasattr(self.ccdata, 'charge'):
-            logging.warning("ccdata object does not have charge, setting to 0")
+            logging.getLogger("cclib").warning("ccdata object does not have charge, setting to 0")
             _charge = 0
         else:
             _charge = self.ccdata.charge
         if not hasattr(self.ccdata, 'mult'):
-            logging.warning("ccdata object does not have spin multiplicity, setting to 1")
+            logging.getLogger("cclib").warning("ccdata object does not have spin multiplicity, setting to 1")
             _mult = 1
         else:
             _mult = self.ccdata.mult

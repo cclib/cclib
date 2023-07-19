@@ -122,7 +122,7 @@ def guess_filetype(inputfile) -> Optional[logfileparser.Logfile]:
                         return filetype
     except Exception:
         # guess_filetype() is expected to be quiet by default...
-        logging.error("Failed to determine log file type", exc_info = True)
+        logging.getLogger("cclib").error("Failed to determine log file type", exc_info = True)
     
     return filetype
 
@@ -234,7 +234,7 @@ def ccopen(
         
         # We're going to swallow this exception if quiet is True.
         # This can hide a lot of errors, so we'll make sure to log it.
-        logging.error("Failed to open logfile", exc_info = True)
+        logging.getLogger("cclib").error("Failed to open logfile", exc_info = True)
 
 
 def fallback(source):
