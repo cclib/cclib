@@ -205,7 +205,7 @@ def ccopen(
         # the readers, falling back to Open Babel.
         if not filetype:
             # TODO: This assumes we only got a single file...
-            filename = list(inputfile.input_files)[0]
+            filename = list(inputfile.filenames)[0]
             ext = pathlib.Path(filename).name[1:].lower()
             
             for extension in readerclasses:
