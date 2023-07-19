@@ -1,0 +1,183 @@
+
+ *********************************** NBO 7.0 ***********************************
+             N A T U R A L   A T O M I C   O R B I T A L   A N D
+          N A T U R A L   B O N D   O R B I T A L   A N A L Y S I S
+ *************************** Eric Berquist (I102531) ***************************
+  (c) Copyright 1996-2021 Board of Regents of the University of Wisconsin System
+      on behalf of the Theoretical Chemistry Institute.  All rights reserved.
+
+          Cite this program [NBO 7.0.10 (8-Feb-2021)] as:
+
+          NBO 7.0.  E. D. Glendening, J. K. Badenhoop, A. E. Reed,
+          J. E. Carpenter, J. A. Bohmann, C. M. Morales, P. Karafiloglou,
+          C. R. Landis, and F. Weinhold, Theoretical Chemistry Institute,
+          University of Wisconsin, Madison, WI (2018)
+
+       /NPA    / : Natural Population Analysis
+       /NBO    / : Natural Bond Orbital Analysis
+       /AONBO  / : Checkpoint the AO to NBO transformation
+       /ARCHIVE/ : Write the archive file to lfn47
+
+ Job title: ORCA Job: ./water_mp2
+
+
+ NATURAL POPULATIONS:  Natural atomic orbital occupancies
+
+  NAO Atom No lang   Type(AO)    Occupancy      Energy
+ -------------------------------------------------------
+   1    O  1  s      Cor( 1s)     2.00000     -20.15343
+   2    O  1  s      Val( 2s)     1.74987      -1.00265
+   3    O  1  px     Val( 2p)     1.18641      -0.05649
+   4    O  1  py     Val( 2p)     1.97380      -0.38071
+   5    O  1  pz     Val( 2p)     1.48644      -0.20037
+
+   6    H  2  s      Val( 1s)     0.80174       0.08212
+
+   7    H  3  s      Val( 1s)     0.80174       0.08213
+
+
+ Summary of Natural Population Analysis:
+
+                                     Natural Population
+             Natural    ---------------------------------------------
+  Atom No    Charge        Core      Valence    Rydberg      Total
+ --------------------------------------------------------------------
+    O  1   -0.39652      2.00000     6.39652    0.00000     8.39652
+    H  2    0.19826      0.00000     0.80174    0.00000     0.80174
+    H  3    0.19826      0.00000     0.80174    0.00000     0.80174
+ ====================================================================
+ * Total *  0.00000      2.00000     8.00000    0.00000    10.00000
+
+                                 Natural Population
+ ---------------------------------------------------------
+   Core                       2.00000 (100.0000% of    2)
+   Valence                    8.00000 (100.0000% of    8)
+   Natural Minimal Basis     10.00000 (100.0000% of   10)
+   Natural Rydberg Basis      0.00000 (  0.0000% of   10)
+ ---------------------------------------------------------
+
+    Atom No         Natural Electron Configuration
+ ----------------------------------------------------------------------------
+      O  1      [core]2s( 1.75)2p( 4.65)
+      H  2            1s( 0.80)
+      H  3            1s( 0.80)
+
+
+ NATURAL BOND ORBITAL ANALYSIS:
+
+                            Occupancies       Lewis Structure    Low   High
+         Max    Occ     -------------------  -----------------   occ   occ
+  Cycle  Ctr   Thresh    Lewis   non-Lewis     CR  BD  nC  LP    (L)   (NL)
+ ============================================================================
+    1     2     1.90     9.99740   0.00260      1   2   0   2     0      0
+ ----------------------------------------------------------------------------
+
+ Structure accepted: No low occupancy Lewis orbitals
+
+ -------------------------------------------------------
+   Core                      2.00000 (100.000% of   2)
+   Valence Lewis             7.99740 ( 99.968% of   8)
+  ==================      =============================
+   Total Lewis               9.99740 ( 99.974% of  10)
+  -----------------------------------------------------
+   Valence non-Lewis         0.00260 (  0.026% of  10)
+   Rydberg non-Lewis         0.00000 (  0.000% of  10)
+  ==================      =============================
+   Total non-Lewis           0.00260 (  0.026% of  10)
+ -------------------------------------------------------
+
+
+     (Occupancy)   Bond orbital / Coefficients / Hybrids
+ ------------------ Lewis ------------------------------------------------------
+   1. (2.00000) CR ( 1) O  1            s(100.00%)
+                                         1.0000  0.0000  0.0000  0.0000  0.0000
+   2. (2.00000) LP ( 1) O  1            s( 20.67%)p 3.84( 79.33%)
+                                         0.0000  0.4547 -0.2012 -0.7599  0.4187
+   3. (2.00000) LP ( 2) O  1            s( 46.06%)p 1.17( 53.94%)
+                                         0.0000  0.6786 -0.0194  0.6242  0.3866
+   4. (1.99870) BD ( 1) O  1- H  2
+               ( 59.93%)   0.7741* O  1 s( 16.64%)p 5.01( 83.36%)
+                                         0.0000  0.4079  0.8088 -0.1811 -0.3829
+               ( 40.07%)   0.6330* H  2 s(100.00%)
+                                         1.0000
+   5. (1.99870) BD ( 1) O  1- H  3
+               ( 59.93%)   0.7741* O  1 s( 16.64%)p 5.01( 83.36%)
+                                         0.0000  0.4079 -0.5522 -0.0103 -0.7271
+               ( 40.07%)   0.6330* H  3 s(100.00%)
+                                         1.0000
+ ---------------- non-Lewis ----------------------------------------------------
+   6. (0.00130) BD*( 1) O  1- H  2
+               ( 40.07%)   0.6330* O  1 s( 16.64%)p 5.01( 83.36%)
+                                         0.0000 -0.4079 -0.8088  0.1811  0.3829
+               ( 59.93%)  -0.7741* H  2 s(100.00%)
+                                        -1.0000
+   7. (0.00130) BD*( 1) O  1- H  3
+               ( 40.07%)   0.6330* O  1 s( 16.64%)p 5.01( 83.36%)
+                                         0.0000 -0.4079  0.5522  0.0103  0.7271
+               ( 59.93%)  -0.7741* H  3 s(100.00%)
+                                        -1.0000
+
+
+ NHO DIRECTIONALITY AND BOND BENDING (deviation from line of nuclear centers at
+                                      the position of maximum hybrid amplitude)
+
+         [Thresholds for printing:  angular deviation  >  1.0 degree]
+                                    p- or d-character  > 25.0%
+                                    orbital occupancy  >  0.10e
+
+                        Line of Centers        Hybrid 1             Hybrid 2
+                        ---------------  -------------------  ------------------
+           NBO            Theta   Phi    Theta   Phi    Dev   Theta   Phi    Dev
+ ===============================================================================
+   2. LP ( 1) O  1          --     --     63.2  255.6   --      --     --    --
+   3. LP ( 2) O  1          --     --     60.1   91.1   --      --     --    --
+   4. BD ( 1) O  1- H  2  113.3  347.6   115.1  347.3   1.9     --     --    --
+   5. BD ( 1) O  1- H  3  141.3  180.5   143.1  181.2   1.9     --     --    --
+
+
+ SECOND ORDER PERTURBATION THEORY ANALYSIS OF FOCK MATRIX IN NBO BASIS
+
+     Threshold for printing:   0.50 kcal/mol
+                                                          E(2) E(NL)-E(L) F(L,NL)
+      Donor (L) NBO              Acceptor (NL) NBO      kcal/mol   a.u.    a.u.
+ ===============================================================================
+
+ within unit  1
+    4. BD ( 1) O  1- H  2       7. BD*( 1) O  1- H  3      1.20    1.47   0.037
+    5. BD ( 1) O  1- H  3       6. BD*( 1) O  1- H  2      1.20    1.47   0.037
+
+
+ NATURAL BOND ORBITALS (Summary):
+
+                                                     Principal Delocalizations
+           NBO                 Occupancy    Energy   (geminal,vicinal,remote)
+ ===============================================================================
+ Molecular unit  1  (H2O)
+ ------ Lewis --------------------------------------
+    1. CR ( 1) O  1             2.00000   -20.15343
+    2. LP ( 1) O  1             2.00000    -0.52344
+    3. LP ( 2) O  1             2.00000    -0.68619
+    4. BD ( 1) O  1- H  2       1.99870    -0.80079  7(g)
+    5. BD ( 1) O  1- H  3       1.99870    -0.80081  6(g)
+ ------ non-Lewis ----------------------------------
+    6. BD*( 1) O  1- H  2       0.00130     0.66761
+    7. BD*( 1) O  1- H  3       0.00130     0.66764
+          -------------------------------
+                 Total Lewis    9.99740  ( 99.9740%)
+           Valence non-Lewis    0.00260  (  0.0260%)
+           Rydberg non-Lewis    0.00000  (  0.0000%)
+          -------------------------------
+               Total unit  1   10.00000  (100.0000%)
+              Charge unit  1    0.00000
+
+ $CHOOSE
+   LONE 1 2 END
+   BOND S 1 2 S 1 3 END
+ $END
+
+ Checkpoint orbital transformation(s) sent to host program
+
+ NBO analysis completed in 0.01 CPU seconds (0 wall seconds)
+ Maximum scratch memory used by NBO was 145857 words (1.11 MB)
+Stopping NBO...Storing NBOs: ./water_mp2.nbo
+
