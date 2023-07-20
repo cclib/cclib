@@ -86,12 +86,6 @@ class GAMESSDAT(logfileparser.Logfile):
 
                     self.append_attribute("atommasses", mass)
 
-                elif len(parts) == 2:
-                    # To be changed later on
-                    if parts[0].lower() == 'sto' and parts[1] == '3': 
-                        basis_set = parts[0] + '-' + parts[1] + 'G'
-                        self.metadata['basis_set'] = basis_set
-
                 line = next(inputfile)
 
 
@@ -103,10 +97,8 @@ class GAMESSDAT(logfileparser.Logfile):
 
         # Extract E(RHF) value
 
-        if "E(R" in line:
-            scf_pattern = r"E\(R[^,]+"
-            scf_match = re.search(scf_pattern, line)
-            scf_energy = float(scf_match.group().split(' ')[-1])
+        if "E(" in line:
+            scf_energy = float(line.replace(',', '').split()[1])
             self.scfenergies = [ scf_energy ]
 
         # Extract E(NUC) value 
@@ -157,29 +149,24 @@ class GAMESSDAT(logfileparser.Logfile):
 
             while "$END" not in line:
                 
-                mocoeff = [
-                    float(line[0:2]), 
-                    float(line[2:5]), 
-                    float(line[5:5+15]), 
-                    float(line[20:20+15]), 
-                    float(line[35:35+15]), 
-                    float(line[50:50+15]), 
-                    float(line[65:65+15])
-                ]
-                mo_number   = line.split()[0]
-
+                mo_number   = line[0:2]
+                line = line[5:].rstrip()
+                fixed_width_size = 15
+                line_size = len(line)
+                mocoeff = [ float(line[i:i+fixed_width_size]) for i in range(0, line_size, fixed_width_size) ] 
+                
                 if mo_number == str(len(self.mocoeffs)):
-                    self.extend_attribute("mocoeffs", mocoeff, -1)
+                    self.extend_attribute("mocoeffs", mocoeff, -1)  
 
                 elif len(mocoeff) > 0:
                     self.append_attribute("mocoeffs", mocoeff)
-            
+
                 # Get last line as nbasis
                 if mo_number.isdigit(): 
                     self.set_attribute("nbasis", int(mo_number))
-
+            
                 # Count nmos
-                if mo_number == '1':
+                if mo_number == ' 1':
                     self.nmo += len(mocoeff)
                 
                 line = next(inputfile)
@@ -283,9 +270,8 @@ class GAMESSDAT(logfileparser.Logfile):
                 numbers = [int(num) for num in line.split()[2:]]
                 for num in numbers:
                     if num != current_number:
-                        if 'basis_set' in self.metadata and self.metadata['basis_set'].lower() == 'sto-3g':
-                            diff = (end_num - start_num) // 3
-                            end_num = start_num + diff
+                        diff = (end_num - start_num) // 3
+                        end_num = start_num + diff
                         self.append_attribute("atombasis", list(range(start_num, end_num)))
                         start_num = end_num
                         current_number = num
@@ -295,9 +281,8 @@ class GAMESSDAT(logfileparser.Logfile):
                 line = next(inputfile)
 
             if start_num > 0:
-                if 'basis_set' in self.metadata and self.metadata['basis_set'].lower() == 'sto-3g':
-                    diff = (end_num - start_num) // 3
-                    end_num = start_num + diff
+                diff = (end_num - start_num) // 3
+                end_num = start_num + diff
                 self.append_attribute("atombasis", list(range(start_num, end_num)))
 
         # Extracting Type Assignments
