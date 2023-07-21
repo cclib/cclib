@@ -160,8 +160,8 @@ def ccread(source: Union[str, typing.IO, FileWrapper, list], *args, **kwargs):
 def ccopen(
         source: Union[str, typing.IO, FileWrapper, list],
         *args,
-        quiet = False,
-        cjson = False,
+        quiet: bool = False,
+        cjson: bool = False,
         **kwargs
     ):
     """Guess the identity of a particular log file and return an instance of it.
