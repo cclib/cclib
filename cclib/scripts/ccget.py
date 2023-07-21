@@ -159,6 +159,11 @@ def ccget() -> None:
             name = f"{', '.join(filename[:-1])} and {filename[-1]}"
         else:
             name = filename
+        
+        # Set custom handles so we can actually change log-levels.
+        handler = logging.StreamHandler(sys.stderr)
+        handler.setFormatter(logging.Formatter("[%(name)s %(levelname)s] %(message)s"))
+        logging.getLogger("cclib").addHandler(handler)
 
         # The keyword dictionary are not used so much. but could be useful for
         # passing options downstream. For example, we might use --future for
@@ -166,9 +171,12 @@ def ccget() -> None:
         kwargs = {}
         if verbose:
             kwargs['loglevel'] = logging.INFO
+            logging.getLogger("cclib").setLevel(logging.INFO)
+        
         else:
             # TODO: Are we sure we want to ignore warnings by default?
             kwargs['loglevel'] = logging.ERROR
+            logging.getLogger("cclib").setLevel(logging.WARNING)
         
         if future:
             kwargs['future'] = True
