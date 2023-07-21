@@ -145,14 +145,9 @@ def ccread(source: Union[str, typing.IO, FileWrapper, list], *args, **kwargs):
     try:
         log = ccopen(source, *args, **kwargs)
         if log:
-            # If the input file is a CJSON file and not a standard compchemlog file
-            cjson_as_input = kwargs.get("cjson", False)
-            if cjson_as_input:
-                return log.read_cjson()
-            else:
-                return log.parse()
             logging.getLogger("cclib").info(f"Identified logfile to be in {log.logname} format")
 
+            return log.parse()
         else:
             logging.getLogger("cclib").info('Attempting to use fallback mechanism to read file')
             return fallback(source)
