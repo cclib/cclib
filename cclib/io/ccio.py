@@ -127,7 +127,11 @@ def guess_filetype(inputfile) -> Optional[logfileparser.Logfile]:
     return filetype
 
 
-def ccread(source: Union[str, typing.IO, FileWrapper, list], *args, **kwargs):
+def ccread(
+        source: Union[str, typing.IO, FileWrapper, typing.List[Union[str, typing.IO]]],
+        *args,
+        **kwargs
+    ):
     """Attempt to open and read computational chemistry data from a file.
 
     If the file is not appropriate for cclib parsers, a fallback mechanism
@@ -158,7 +162,7 @@ def ccread(source: Union[str, typing.IO, FileWrapper, list], *args, **kwargs):
 
 
 def ccopen(
-        source: Union[str, typing.IO, FileWrapper, list],
+        source: Union[str, typing.IO, FileWrapper, typing.List[Union[str, typing.IO]]],
         *args,
         quiet: bool = False,
         cjson: bool = False,

@@ -16,7 +16,10 @@ from cclib.parser.logfilewrapper import FileWrapper
 class Reader(ABC):
     """Abstract class for reader objects."""
 
-    def __init__(self, source: typing.Union[str, typing.IO, FileWrapper, list], *args, **kwargs) -> None:
+    def __init__(self,
+        source: typing.Union[str, typing.IO, FileWrapper, typing.List[typing.Union[str, typing.IO]]],
+        *args,
+        **kwargs)-> None:
         """Initialize the Reader object.
 
         This should be called by a subclass in its own __init__ method.

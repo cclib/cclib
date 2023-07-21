@@ -12,6 +12,7 @@ import random
 import sys
 from abc import ABC, abstractmethod
 from typing import Any, Iterable, List, Optional
+import typing
 
 import numpy
 
@@ -38,8 +39,13 @@ class Logfile(ABC):
         NWChem, ORCA, Psi, Q-Chem
     """
 
-    def __init__(self, source, loglevel: int = logging.ERROR, logname: str = "Log",
-                 logstream=sys.stderr, datatype=ccData_optdone_bool, **kwds):
+    def __init__(self,
+        source: typing.Union[str, typing.IO, FileWrapper, typing.List[typing.Union[str, typing.IO]]],
+        loglevel: int = logging.ERROR,
+        logname: str = "Log",
+        logstream=sys.stderr,
+        datatype=ccData_optdone_bool,
+        **kwds):
         """Initialise the Logfile object.
 
         This should be called by a subclass in its own __init__ method.
