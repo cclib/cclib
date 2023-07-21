@@ -139,9 +139,6 @@ class GAMESSDAT(logfileparser.Logfile):
 
         if line[1:5] == "$VEC":
 
-            if not hasattr(self, 'nmo'):
-                self.nmo  = 0
-
             if not hasattr(self, 'mocoeffs'):
                 self.mocoeffs = []
 
@@ -149,27 +146,25 @@ class GAMESSDAT(logfileparser.Logfile):
 
             while "$END" not in line:
                 
-                mo_number   = line[0:2]
+                mo_number = line[0:2].strip()
                 line = line[5:].rstrip()
                 fixed_width_size = 15
                 line_size = len(line)
-                mocoeff = [ float(line[i:i+fixed_width_size]) for i in range(0, line_size, fixed_width_size) ] 
+                mocoeff = [ float(line[i:i+fixed_width_size]) for i in range(0, line_size, fixed_width_size) ]
                 
                 if mo_number == str(len(self.mocoeffs)):
                     self.extend_attribute("mocoeffs", mocoeff, -1)  
 
                 elif len(mocoeff) > 0:
                     self.append_attribute("mocoeffs", mocoeff)
-
-                # Get last line as nbasis
-                if mo_number.isdigit(): 
-                    self.set_attribute("nbasis", int(mo_number))
-            
-                # Count nmos
-                if mo_number == ' 1':
-                    self.nmo += len(mocoeff)
                 
                 line = next(inputfile)
+
+            if not hasattr(self, 'nmo'):
+                self.set_attribute("nmo", len(self.mocoeffs[0]))
+
+            if not hasattr(self, 'nbasis'):
+                self.set_attribute("nbasis", len(self.mocoeffs))
 
             self.mocoeffs = [ self.mocoeffs ]
 
