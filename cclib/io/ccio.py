@@ -145,17 +145,16 @@ def ccread(source: Union[str, typing.IO, FileWrapper, list], *args, **kwargs):
     try:
         log = ccopen(source, *args, **kwargs)
         if log:
-            if kwargs.get("verbose", None):
-                print(f"Identified logfile to be in {log.logname} format")
             # If the input file is a CJSON file and not a standard compchemlog file
             cjson_as_input = kwargs.get("cjson", False)
             if cjson_as_input:
                 return log.read_cjson()
             else:
                 return log.parse()
+            logging.getLogger("cclib").info(f"Identified logfile to be in {log.logname} format")
+
         else:
-            if kwargs.get('verbose', None):
-                print('Attempting to use fallback mechanism to read file')
+            logging.getLogger("cclib").info('Attempting to use fallback mechanism to read file')
             return fallback(source)
     
     finally:
@@ -255,7 +254,9 @@ def fallback(source):
             if ext in pb.informats:
                 return cclib2openbabel.readfile(source, ext)
         else:
-            print("Could not import `openbabel`, fallback mechanism might not work.")
+            # This should be a warning, but warnings are currently disabled by default.
+            logging.getLogger("cclib").error(
+                "Could not import `openbabel`, fallback mechanism might not work.")
 
 
 def ccwrite(ccobj, outputtype=None, outputdest=None,
