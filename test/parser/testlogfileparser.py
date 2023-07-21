@@ -17,7 +17,7 @@ from urllib.request import urlopen
 
 import cclib
 import pytest
-from _pytest.monkeypatch import MonkeyPatch
+from pytest import MonkeyPatch
 
 
 __filedir__ = os.path.dirname(__file__)
