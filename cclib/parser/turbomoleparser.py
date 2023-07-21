@@ -10,6 +10,7 @@ from datetime import timedelta
 """Parser for Turbomole output files."""
 
 import re
+import typing
 
 import numpy
 
@@ -63,8 +64,9 @@ class Turbomole(logfileparser.Logfile):
         self.hours_regex = re.compile(r"([0-9.]*) hours")
         self.minutes_regex = re.compile(r"([0-9.]*) minutes")
         self.seconds_regex = re.compile(r"([0-9.]*) seconds")
-        
-    def sort_input(self, file_names: list) -> list:
+    
+    @classmethod
+    def sort_input(self, file_names: typing.List(str)) -> typing.List:
         """
         If this parser expects multiple files to appear in a certain order, return that ordering.
         """
