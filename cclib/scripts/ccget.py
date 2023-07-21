@@ -165,13 +165,14 @@ def ccget() -> None:
         # triggering experimental or alternative behavior (as with optdone).
         kwargs = {}
         if verbose:
-            kwargs['verbose'] = True
             kwargs['loglevel'] = logging.INFO
         else:
-            kwargs['verbose'] = False
+            # TODO: Are we sure we want to ignore warnings by default?
             kwargs['loglevel'] = logging.ERROR
+        
         if future:
             kwargs['future'] = True
+        
         if cjsonfile:
             kwargs['cjson'] = True
 
