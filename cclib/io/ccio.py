@@ -145,7 +145,7 @@ def ccread(source: Union[str, typing.IO, FileWrapper, list], *args, **kwargs):
     try:
         log = ccopen(source, *args, **kwargs)
         if log:
-            logging.getLogger("cclib").info(f"Identified logfile to be in {log.logname} format")
+            logging.getLogger("cclib").info("Identified logfile to be in {} format".format(type(log).__name__))
 
             return log.parse()
         else:
