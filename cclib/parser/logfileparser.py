@@ -47,7 +47,7 @@ class Logfile(ABC):
         Inputs:
             source - a logfile, list of logfiles, or stream with at least a read method
             loglevel - integer corresponding to a log level from the logging module
-            logname - name of the source logfile passed to this constructor
+            logname - name of the logging object to use for this parser
             logstream - where to output the logging information
             datatype - class to use for gathering data attributes
         """
