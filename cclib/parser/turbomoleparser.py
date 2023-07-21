@@ -66,7 +66,7 @@ class Turbomole(logfileparser.Logfile):
         self.seconds_regex = re.compile(r"([0-9.]*) seconds")
     
     @classmethod
-    def sort_input(self, file_names: typing.List(str)) -> typing.List:
+    def sort_input(self, file_names: typing.List[str]) -> typing.List:
         """
         If this parser expects multiple files to appear in a certain order, return that ordering.
         """

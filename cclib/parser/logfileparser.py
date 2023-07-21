@@ -109,7 +109,7 @@ class Logfile(ABC):
         return self.inputfile.file_name
     
     @classmethod
-    def sort_input(self, file_names: typing.List(str)) -> typing.List:
+    def sort_input(self, file_names: typing.List[str]) -> typing.List:
         """
         If this parser expects multiple files to appear in a certain order, return that ordering.
         """
