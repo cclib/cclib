@@ -175,7 +175,7 @@ def ccget() -> None:
         
         else:
             # TODO: Are we sure we want to ignore warnings by default?
-            kwargs['loglevel'] = logging.ERROR
+            kwargs['loglevel'] = logging.WARNING
             logging.getLogger("cclib").setLevel(logging.WARNING)
         
         if future:
