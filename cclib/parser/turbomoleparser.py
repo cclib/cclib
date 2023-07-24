@@ -11,6 +11,7 @@ from datetime import timedelta
 
 import re
 import typing
+from pathlib import Path
 
 import numpy
 
@@ -85,19 +86,20 @@ class Turbomole(logfileparser.Logfile):
         known_files = []
         unknown_files = []
         sorted_list = []
-        for file_name in file_names:
+        for file in file_names:
+            file_name = Path(file).name
             if file_name in sorting_order:
-                known_files.append([file_name, sorting_order[file_name]])
+                known_files.append([file, sorting_order[file_name]])
                 
             elif re.match(r"^job\.[0-9]+$", file_name):
                 # Calling 'jobex -keep' will also write job.n files, where n ranges from 0 to inf.
                 # Numbered job files are inserted before job.last.
                 job_number = int(file_name[4:]) +1
                 job_order = float(f"{sorting_order['job.last'] - 1}.{job_number}")
-                known_files.append([file_name, job_order])
+                known_files.append([file, job_order])
             
             else:
-                unknown_files.append(file_name)
+                unknown_files.append(file)
             
         for i in sorted(known_files, key=lambda x: x[1]):
             sorted_list.append(i[0])
