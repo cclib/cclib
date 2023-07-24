@@ -376,7 +376,7 @@ class GenericSPTest(unittest.TestCase):
                 assert m == 0.0
 
     @skipForParser('ADF', 'reading basis set names is not implemented')
-    @skipForParser('GAMESSDAT', 'Basis set not implemented i this version.')
+    @skipForParser('GAMESSDAT', 'Basis set not implemented in this version.')
     @skipForParser('GAMESSUK', 'reading basis set names is not implemented')
     @skipForParser('Molcas', 'reading basis set names is not implemented')
     @skipForParser('Psi4', 'reading basis set names is not implemented')
