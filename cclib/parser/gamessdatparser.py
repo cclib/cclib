@@ -29,15 +29,13 @@ class GAMESSDAT(logfileparser.Logfile):
     def __repr__(self):
         """Return a representation of the object."""
         return f'GAMESS .dat ("{self.filename}")'
-    
+
     def normalisesym(self, label):
         """Normalise the symmetries used by GAMESS .dat."""
-
         pass
 
     def before_parsing(self):
-        self.pt = PeriodicTable()
-        # To change: declared only for passing unit tests
+        pass
 
     def after_parsing(self):
         if hasattr(self, "atomcoords"):
@@ -77,9 +75,6 @@ class GAMESSDAT(logfileparser.Logfile):
 
             # Extract atomic information
 
-            self.atommasses = []
-            self.atomcoords = []
-
             line = next(inputfile)
 
             while line.strip() != "$END":
@@ -88,17 +83,9 @@ class GAMESSDAT(logfileparser.Logfile):
 
                     symbol      = parts[0]
                     mass        = float(parts[1])
-                    coordinates = [float(coord) for coord in parts[2:]]
 
-                    assert len(coordinates) == 3
+                    self.append_attribute("atommasses", mass)
 
-                    self.atommasses.append(mass)
-                    self.atomcoords.append(coordinates)
-                elif len(parts) == 2:
-                    basis_set = parts[0] + '-' + parts[1] + 'G'
-                    self.metadata['basis_set'] = basis_set
-
-                    
                 line = next(inputfile)
 
 
@@ -110,11 +97,9 @@ class GAMESSDAT(logfileparser.Logfile):
 
         # Extract E(RHF) value
 
-        if "E(R" in line:
-            val_pattern = r"E\(R[^,]+"
-            match = re.search(val_pattern, line)
-            val = float(match.group().split(' ')[-1])
-            self.scfenergies = [ val ]
+        if "E(" in line:
+            scf_energy = float(line.replace(',', '').split()[1])
+            self.scfenergies = [ scf_energy ]
 
         # Extract E(NUC) value 
 
@@ -154,34 +139,32 @@ class GAMESSDAT(logfileparser.Logfile):
 
         if line[1:5] == "$VEC":
 
-            self.nbasis   = None
-            self.nmo      = 0
-            self.mocoeffs = []
+            if not hasattr(self, 'mocoeffs'):
+                self.mocoeffs = []
 
             line = next(inputfile)
 
             while "$END" not in line:
                 
-                moc_line = line.replace('-', ' -').replace('E -', 'E-').strip()
-                mocoeff = [float(m) for m in moc_line.split()[2:]]
-                atom_number = line.split()[0]
-                line_number = moc_line.split()[1]
-
-                if atom_number == str(len(self.mocoeffs)):
-                    self.mocoeffs[-1].extend(mocoeff)
+                mo_number = line[0:2].strip()
+                line = line[5:].rstrip()
+                fixed_width_size = 15
+                line_size = len(line)
+                mocoeff = [ float(line[i:i+fixed_width_size]) for i in range(0, line_size, fixed_width_size) ]
+                
+                if mo_number == str(len(self.mocoeffs)):
+                    self.extend_attribute("mocoeffs", mocoeff, -1)  
 
                 elif len(mocoeff) > 0:
-                    self.mocoeffs.append(mocoeff)
-            
-                # Get last line as nbasis
-                if atom_number.isdigit(): 
-                    self.nbasis = int(atom_number)
-
-                # Count nmos
-                if atom_number == '1':
-                    self.nmo += len(mocoeff)
+                    self.append_attribute("mocoeffs", mocoeff)
                 
                 line = next(inputfile)
+
+            if not hasattr(self, 'nmo'):
+                self.set_attribute("nmo", len(self.mocoeffs[0]))
+
+            if not hasattr(self, 'nbasis'):
+                self.set_attribute("nbasis", len(self.mocoeffs))
 
             self.mocoeffs = [ self.mocoeffs ]
 
@@ -191,7 +174,8 @@ class GAMESSDAT(logfileparser.Logfile):
         # MP2 NATURAL ORBITALS, E(MP2)=      -75.0022821133
         
         if "E(MP2)=" in line:
-            self.mpenergies = float(line.split()[-1])
+            self.set_attribute("mpenergies", float(line.split()[-1]))
+
 
         #  POPULATION ANALYSIS
         # C            6.00435  -0.00435   5.99623   0.00377
@@ -221,11 +205,12 @@ class GAMESSDAT(logfileparser.Logfile):
         # Extract Moments and Dipole
 
         if line[1:17] == 'MOMENTS AT POINT':
+            
             self.moments = [[ float(moment) for moment in line.split()[-3:] ]]
 
             line = next(inputfile)
 
-            self.moments.append([ float(dipole) for dipole in line.split()[-3:] ])
+            self.append_attribute('moments', [ float(dipole) for dipole in line.split()[-3:] ])
 
 
         # Extracting Gaussian
@@ -240,6 +225,7 @@ class GAMESSDAT(logfileparser.Logfile):
 
             self.homos  = [ int(parts[1]) - 1 ] # Unrestricted case for now, might need a change later on
             self.natom  = int(parts[6])
+            
 
             # Continue extracting
             
@@ -248,23 +234,18 @@ class GAMESSDAT(logfileparser.Logfile):
             #   H    3    (CENTRE  3)  -0.51567032  1.79835585  0.00000000  CHARGE =  1.0
 
             line = next(inputfile)
-
-            self.atomnos = []
-            self.atomcoords = []
             
             while '(CENTRE' in line:
 
                 parts = line.split()
 
                 symbol = parts[0]
-                atomno = self.pt.number[symbol]
+                atomno = self.table.number[symbol]
 
                 coords = [ float(n) for n in parts[4:7] ]
 
-                charge = float(parts[-1])
-
-                self.atomnos.append(atomno)
-                self.atomcoords.append(coords)
+                self.append_attribute("atomnos", atomno)
+                self.append_attribute("atomcoords", coords)
 
                 line = next(inputfile)
 
@@ -275,7 +256,7 @@ class GAMESSDAT(logfileparser.Logfile):
         # CENTRE ASSIGNMENTS    3
         
         if line[0:18] == "CENTRE ASSIGNMENTS":
-            self.atombasis = []
+
             current_number = 1
             start_num, end_num = 0, 0
             num = 1
@@ -284,10 +265,9 @@ class GAMESSDAT(logfileparser.Logfile):
                 numbers = [int(num) for num in line.split()[2:]]
                 for num in numbers:
                     if num != current_number:
-                        if 'basis_set' in self.metadata and self.metadata['basis_set'].lower() == 'sto-3g':
-                            diff = (end_num - start_num) // 3
-                            end_num = start_num + diff
-                        self.atombasis.append(list(range(start_num, end_num)))
+                        diff = (end_num - start_num) // 3
+                        end_num = start_num + diff
+                        self.append_attribute("atombasis", list(range(start_num, end_num)))
                         start_num = end_num
                         current_number = num
                     
@@ -296,10 +276,9 @@ class GAMESSDAT(logfileparser.Logfile):
                 line = next(inputfile)
 
             if start_num > 0:
-                if 'basis_set' in self.metadata and self.metadata['basis_set'].lower() == 'sto-3g':
-                    diff = (end_num - start_num) // 3
-                    end_num = start_num + diff
-                self.atombasis.append(list(range(start_num, end_num)))
+                diff = (end_num - start_num) // 3
+                end_num = start_num + diff
+                self.append_attribute("atombasis", list(range(start_num, end_num)))
 
         # Extracting Type Assignments
 
