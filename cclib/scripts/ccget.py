@@ -22,7 +22,8 @@ import sys
 import numpy
 
 from cclib.parser import ccData
-from cclib.io import ccread, URL_PATTERN
+from cclib.parser.logfilewrapper import URL_PATTERN
+from cclib.io import ccread
 
 
 # Set up options for pretty-printing output.
@@ -113,7 +114,7 @@ def ccget() -> None:
             fuzzy_attr = difflib.get_close_matches(arg, ccData._attrlist, n=1, cutoff=0.85)
             if len(fuzzy_attr) > 0:
                 fuzzy_attr = fuzzy_attr[0]
-                logging.warning(
+                logging.getLogger("cclib").warning(
                     f"Attribute '{arg}' not found, but attribute '{fuzzy_attr}' is close. "
                     f"Using '{fuzzy_attr}' instead."
                 )
@@ -158,19 +159,28 @@ def ccget() -> None:
             name = f"{', '.join(filename[:-1])} and {filename[-1]}"
         else:
             name = filename
+        
+        # Set custom handles so we can actually change log-levels.
+        handler = logging.StreamHandler(sys.stderr)
+        handler.setFormatter(logging.Formatter("[%(name)s %(levelname)s] %(message)s"))
+        logging.getLogger("cclib").addHandler(handler)
 
         # The keyword dictionary are not used so much. but could be useful for
         # passing options downstream. For example, we might use --future for
         # triggering experimental or alternative behavior (as with optdone).
         kwargs = {}
         if verbose:
-            kwargs['verbose'] = True
             kwargs['loglevel'] = logging.INFO
+            logging.getLogger("cclib").setLevel(logging.INFO)
+        
         else:
-            kwargs['verbose'] = False
-            kwargs['loglevel'] = logging.ERROR
+            # TODO: Are we sure we want to ignore warnings by default?
+            kwargs['loglevel'] = logging.WARNING
+            logging.getLogger("cclib").setLevel(logging.WARNING)
+        
         if future:
             kwargs['future'] = True
+        
         if cjsonfile:
             kwargs['cjson'] = True
 

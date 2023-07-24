@@ -54,7 +54,7 @@ class ccgetTest(unittest.TestCase):
         ccread_call_args, ccread_call_kwargs = mock_ccread.call_args
         assert ccread_call_args[0] == INPUT_FILE
 
-    @mock.patch("logging.warning")
+    @mock.patch("logging.Logger.warning")
     @mock.patch(
         "cclib.scripts.ccget.sys.argv",
         ["ccget", "atomcoord", INPUT_FILE]

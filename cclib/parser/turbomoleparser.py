@@ -4,13 +4,14 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
-import collections
 import scipy.constants
 from datetime import timedelta
 
 """Parser for Turbomole output files."""
 
 import re
+import typing
+from pathlib import Path
 
 import numpy
 
@@ -64,9 +65,50 @@ class Turbomole(logfileparser.Logfile):
         self.hours_regex = re.compile(r"([0-9.]*) hours")
         self.minutes_regex = re.compile(r"([0-9.]*) minutes")
         self.seconds_regex = re.compile(r"([0-9.]*) seconds")
-
-        # A list of previous lines to allow look-behind functionality.
-        self.last_lines = collections.deque([""] * 10, 10)
+    
+    @classmethod
+    def sort_input(self, file_names: typing.List[str]) -> typing.List:
+        """
+        If this parser expects multiple files to appear in a certain order, return that ordering.
+        """
+        sorting_order = {
+            'basis' : 0,
+            'control' : 1,
+            'mos' : 2,
+            'alpha' : 3,
+            'beta' : 4,
+            'job.last' : 5,
+            'coord' : 6,
+            'gradient' : 7,
+            'aoforce' : 8,
+        }
+        
+        known_files = []
+        unknown_files = []
+        sorted_list = []
+        for file in file_names:
+            file_name = Path(file).name
+            if file_name in sorting_order:
+                known_files.append([file, sorting_order[file_name]])
+                
+            elif re.match(r"^job\.[0-9]+$", file_name):
+                # Calling 'jobex -keep' will also write job.n files, where n ranges from 0 to inf.
+                # Numbered job files are inserted before job.last.
+                job_number = int(file_name[4:]) +1
+                job_order = float(f"{sorting_order['job.last'] - 1}.{job_number}")
+                known_files.append([file, job_order])
+            
+            else:
+                unknown_files.append(file)
+            
+        for i in sorted(known_files, key=lambda x: x[1]):
+            sorted_list.append(i[0])
+            
+        if unknown_files:
+            sorted_list.extend(unknown_files)
+        
+        return sorted_list
+        
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -963,10 +1005,10 @@ class Turbomole(logfileparser.Logfile):
         ## For UHF:
         #       occ. orbital   energy / eV   virt. orbital     energy / eV   |coeff.|^2*100
         #         7 a   alpha          -15.12     12 a   alpha            4.74       24.5
-        #         7 a   beta           -15.12     12 a   beta             4.74       24.5        
-        if "Excitation energy:" in line and "excitation" in self.last_lines[-5].split():
+        #         7 a   beta           -15.12     12 a   beta             4.74       24.5
+        if "Excitation energy:" in line and "excitation" in self.inputfile.last_lines[-6].split():
             # The irrep of the state is a few lines back.
-            symm_parts = self.last_lines[-5].split()
+            symm_parts = self.inputfile.last_lines[-6].split()
             # We don't always have the multiplicity available.
             if len(symm_parts) < 4:
                 # No mult.
@@ -1242,8 +1284,6 @@ class Turbomole(logfileparser.Logfile):
             self.metadata['wall_time'].append(self.duration_to_timedelta(line))
         
         # All done for this loop.
-        # Keep track of last lines.
-        self.last_lines.append(line)
             
         if ": all done  ****" in line:
             # End of module, set success flag.

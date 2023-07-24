@@ -6,178 +6,30 @@
 # the terms of the BSD 3-Clause License.
 """Generic output file parser and related tools"""
 
-
-import typing
-import bz2
-import fileinput
-import gzip
 import inspect
-import io
 import logging
-import os
 import random
 import sys
-import zipfile
 from abc import ABC, abstractmethod
-from typing import Any, Iterable, List, Union, Optional
-import codecs
+from typing import Any, Iterable, List, Optional
+import typing
 
 import numpy
 
 from cclib.parser import utils
 from cclib.parser.data import ccData
 from cclib.parser.data import ccData_optdone_bool
+from cclib.parser.logfilewrapper import FileWrapper
 
 
 # This seems to avoid a problem with Avogadro.
-logging.logMultiprocessing = 0
+logging.logMultiprocessing = 0    
 
 
-class FileWrapper:
-    """Wrap a file-like object or stream with some custom tweaks"""
-
-    def __init__(self, source, pos: int = 0) -> None:
-
-        self.src = source
-
-        # Most file-like objects have seek and tell methods, but streams returned
-        # by urllib.urlopen in Python2 do not, which will raise an AttributeError
-        # in this code. On the other hand, in Python3 these methods do exist since
-        # urllib uses the stream class in the io library, but they raise a different
-        # error, namely io.UnsupportedOperation. That is why it is hard to be more
-        # specific with except block here.
-        try:
-            self.src.seek(0, 2)
-            self.size = self.src.tell()
-            self.src.seek(pos, 0)
-
-        except (AttributeError, IOError, io.UnsupportedOperation):
-            # Stream returned by urllib should have size information.
-            if hasattr(self.src, 'headers') and 'content-length' in self.src.headers:
-                self.size = int(self.src.headers['content-length'])
-            else:
-                self.size = pos
-
-        # Assume the position is what was passed to the constructor.
-        self.pos = pos
-        
-        self.last_line = None
-
-    def next(self):
-        line = next(self.src)
-        self.pos += len(line)
-        self.last_line = line
-        return line
-
-    def __next__(self):
-        return self.next()
-
-    def __iter__(self):
-        return self
-
-    def close(self) -> None:
-        self.src.close()
-
-    def seek(self, pos: int, ref: int) -> None:
-
-        # If we are seeking to end, we can emulate it usually. As explained above,
-        # we cannot be too specific with the except clause due to differences
-        # between Python2 and 3. Yet another reason to drop Python 2 soon!
-        try:
-            self.src.seek(pos, ref)
-        except:
-            if ref == 2:
-                self.src.read()
-            else:
-                raise
-
-        if ref == 0:
-            self.pos = pos
-        if ref == 1:
-            self.pos += pos
-        if ref == 2 and hasattr(self, 'size'):
-            self.pos = self.size
-
-
-def logerror(error):
+class StopParsing(Exception):
     """
-    Log a unicode decode/encode error to the logger and return a replacement character.
+    An exception to signal that parsing should stop.
     """
-    logging.warning(str(error))
-    
-    # Return type is a tuple.
-    # First item is a replacement character. Second is the position to continue from.
-    return (u'', error.start +1)
-    
-codecs.register_error('logerror', logerror)
-
-
-def opencompressedfile(filename: str, mode: str = "r", encoding: str = "utf-8", errors: str = "logerror", fileobject: typing.Optional[typing.IO] = None, wrap: bool = False) -> typing.IO:
-    """
-    Open a possibly compressed file.
-    
-    Fileobject is an option, existing and open file-like object which will be decoded and wrapped appropriately.
-    If wrap is True and file is a 'normal' file, wrap it in a FileWrapper object
-    """
-    
-    extension = os.path.splitext(filename)[1]
-
-    if extension == ".gz":
-        fileobject = io.TextIOWrapper(gzip.GzipFile(filename, mode, fileobj=fileobject), encoding = encoding, errors = errors)
-
-    elif extension == ".zip":
-        zip = zipfile.ZipFile(fileobject if fileobject else filename, mode)
-        assert len(zip.namelist()) == 1, "ERROR: Zip file contains more than 1 file"
-        fileobject = io.StringIO(zip.read(zip.namelist()[0]).decode(encoding, errors))
-
-    elif extension in ['.bz', '.bz2']:
-        # Module 'bz2' is not always importable.
-        assert bz2 is not None, "ERROR: module bz2 cannot be imported"
-        fileobject = io.TextIOWrapper(bz2.BZ2File(fileobject if fileobject else filename, mode), encoding = encoding, errors = errors)
-
-    elif fileobject is not None:
-        # Assuming that object is text file encoded in utf-8
-        fileobject = io.StringIO(fileobject.decode(encoding, errors))
-        
-    else:
-        # Normal text file.
-        
-        fileobject = open(filename, mode, encoding = encoding, errors = errors)
-        
-        if wrap:
-            fileobject = FileWrapper(fileobject)
-
-    # Ideally, all returned objects would be wrapped with FileWrapper (or none of them would be).
-    # This is not done because type-checking is done elsewhere in the code, which this could
-    # interfere with.
-    return fileobject
-
-
-def openlogfile(filename: Union[str, List[str]], object=None):
-    """Return a file object given a filename or if object specified decompresses it
-    if needed and wrap it up.
-
-    Given the filename or file object of a log file or a gzipped, zipped, or bzipped
-    log file, this function returns a file-like object.
-
-    Given a list of filenames, this function returns a FileInput object,
-    which can be used for seamless iteration without concatenation.
-    """
-    
-    # If there is a single string argument given.
-    if isinstance(filename, str):
-        return opencompressedfile(filename, fileobject = object, wrap = True)
-
-    elif hasattr(filename, "__iter__"):
-
-        # This is needed, because fileinput will assume stdin when filename is empty.
-        if len(filename) == 0:
-            return None
-        
-        # The 'errors' argument of fileinput.FileInput() looks like it should do what we want here,
-        # but it's only available in python3.10 and even then doesn't work properly in conjunction with openhook...
-        return fileinput.FileInput(filename, openhook = opencompressedfile)
-
 
 class Logfile(ABC):
     """Abstract class for logfile objects.
@@ -187,8 +39,13 @@ class Logfile(ABC):
         NWChem, ORCA, Psi, Q-Chem
     """
 
-    def __init__(self, source: Union[str, Iterable[str], fileinput.FileInput], loglevel: int = logging.ERROR, logname: str = "Log",
-                 logstream=sys.stderr, datatype=ccData_optdone_bool, **kwds):
+    def __init__(self,
+        source: typing.Union[str, typing.IO, FileWrapper, typing.List[typing.Union[str, typing.IO]]],
+        loglevel: int = logging.ERROR,
+        logname: str = "Log",
+        logstream=sys.stderr,
+        datatype=ccData_optdone_bool,
+        **kwds):
         """Initialise the Logfile object.
 
         This should be called by a subclass in its own __init__ method.
@@ -196,31 +53,18 @@ class Logfile(ABC):
         Inputs:
             source - a logfile, list of logfiles, or stream with at least a read method
             loglevel - integer corresponding to a log level from the logging module
-            logname - name of the source logfile passed to this constructor
+            logname - name of the logging object to use for this parser
             logstream - where to output the logging information
             datatype - class to use for gathering data attributes
         """
-
-        # Set the filename to source if it is a string or a list of strings, which are
-        # assumed to be filenames. Otherwise, assume the source is a file-like object
-        # if it has a read method, and we will try to use it like a stream.
-        self.isfileinput = False
-        if isinstance(source, str):
-            self.filename = source
-            self.isstream = False
-        elif isinstance(source, list) and all([isinstance(s, str) for s in source]):
-            self.filename = source
-            self.isstream = False
-        elif isinstance(source, fileinput.FileInput):
-            self.filename = source
-            self.isstream = False
-            self.isfileinput = True
-        elif hasattr(source, "read"):
-            self.filename = f"stream {str(type(source))}"
-            self.isstream = True
-            self.stream = source
-        else:
-            raise ValueError("Unexpected source type.")
+        if not isinstance(source, FileWrapper):
+            source = FileWrapper(source)
+            # Probably the wrong type given.
+            #raise TypeError("Source does not have an 'input_files' attribute, are you sure it inherits from FileWrapper?") from None
+            
+        self.inputfile = source
+        # If our parser needs a certain file ordering, set that now.
+        self.inputfile.sort(self.sort_input(self.inputfile.filenames))
 
         # Set up the logger.
         # Note that calling logging.getLogger() with one name always returns the same instance.
@@ -228,7 +72,7 @@ class Logfile(ABC):
         #   which means that care needs to be taken not to duplicate handlers.
         self.loglevel = loglevel
         self.logname = logname
-        self.logger = logging.getLogger(f"{self.logname} {self.filename}")
+        self.logger = logging.getLogger(f"{self.logname} {self.inputfile.file_name}")
         self.logger.setLevel(self.loglevel)
         if len(self.logger.handlers) == 0:
             handler = logging.StreamHandler(logstream)
@@ -259,6 +103,17 @@ class Logfile(ABC):
             self.datatype = ccData
         # Parsing of Natural Orbitals and Natural Spin Orbtials into one attribute
         self.unified_no_nso = kwds.get("future",False)
+        
+    @property
+    def filename(self):
+        return self.inputfile.file_name
+    
+    @classmethod
+    def sort_input(self, file_names: typing.List[str]) -> typing.List:
+        """
+        If this parser expects multiple files to appear in a certain order, return that ordering.
+        """
+        return file_names
 
     def __setattr__(self, name, value):
 
@@ -297,56 +152,41 @@ class Logfile(ABC):
         # The dict of self should be the same after parsing.
         _nodelete = list(set(self.__dict__.keys()))
 
-        # Initiate the FileInput object for the input files.
-        # Remember that self.filename can be a list of files.
-        inputfile = None
-        try:
-            if not self.isstream:
-                if not self.isfileinput:
-                    inputfile = openlogfile(self.filename)
-                else:
-                    inputfile = self.filename
-            else:
-                inputfile = FileWrapper(self.stream)
-    
-            # Intialize self.progress
-            # Not sure why we wouldn't want to keep track of progress just because we're reading
-            # from an archive?
-            #is_compressed = isinstance(inputfile, myGzipFile) or isinstance(inputfile, myBZ2File)
-            is_compressed = False
-            if progress and not (is_compressed):
-                self.progress = progress
-                self.progress.initialize(inputfile.size)
-                self.progress.step = 0
-            self.fupdate = fupdate
-            self.cupdate = cupdate
-    
-            # Maybe the sub-class has something to do before parsing.
-            self.before_parsing()
-    
-            # Loop over lines in the file object and call extract().
-            # This is where the actual parsing is done.
-            for line in inputfile:
-                self.updateprogress(inputfile, "Unsupported information", cupdate)
-    
-                # This call should check if the line begins a section of extracted data.
-                # If it does, it parses some lines and sets the relevant attributes (to self).
-                # Any attributes can be freely set and used across calls, however only those
-                #   in data._attrlist will be moved to final data object that is returned.
-                try:
-                    self.extract(inputfile, line)
-                except StopIteration:
-                    self.logger.error("Unexpectedly encountered end of logfile.")
-                    break
-                except Exception as e:
-                    self.logger.error("Encountered error when parsing.")
-                    self.logger.error(f"Last line read: {inputfile.last_line}")
-                    raise
-        
-        finally:
-            # Close input file object.
-            if not self.isstream and inputfile is not None:
-                inputfile.close()
+        # Intialize self.progress
+        if progress:
+            self.progress = progress
+            self.progress.initialize(self.inputfile.size)
+            self.progress.step = 0
+        self.fupdate = fupdate
+        self.cupdate = cupdate
+
+        # Maybe the sub-class has something to do before parsing.
+        self.before_parsing()
+
+        # Loop over lines in the file object and call extract().
+        # This is where the actual parsing is done.
+        for line in self.inputfile:
+            self.updateprogress(self.inputfile, "Unsupported information", cupdate)
+
+            # This call should check if the line begins a section of extracted data.
+            # If it does, it parses some lines and sets the relevant attributes (to self).
+            # Any attributes can be freely set and used across calls, however only those
+            #   in data._attrlist will be moved to final data object that is returned.
+            try:
+                self.extract(self.inputfile, line)
+            except StopParsing:
+                # This is fine
+                break
+            except StopIteration:
+                self.logger.error("Unexpectedly encountered end of logfile.")
+                break
+            except Exception as e:
+                self.logger.error("Encountered error when parsing.")
+                
+                # Not all input files support last_line.
+                if hasattr(self.inputfile, "last_line"):
+                    self.logger.error(f"Last line read: {self.inputfile.last_line}")
+                raise
 
         # Maybe the sub-class has something to do after parsing.
         self.after_parsing()
@@ -390,7 +230,7 @@ class Logfile(ABC):
 
         # Update self.progress as done.
         if hasattr(self, "progress"):
-            self.progress.update(inputfile.size, "Done")
+            self.progress.update(self.inputfile.size, "Done")
 
         return data
 
