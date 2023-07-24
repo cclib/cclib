@@ -5,7 +5,7 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
-"""Parser for GAMESS(US) .dat output files"""
+"""Parser for NBO output files"""
 
 
 import re
@@ -17,7 +17,7 @@ from cclib.parser import utils
 from cclib.parser.utils import PeriodicTable
 
 class NBO(logfileparser.Logfile):
-    """A GAMESS .dat log file"""
+    """A NBO log file"""
 
     def __init__(self, *args, **kwargs):
         super().__init__(logname="NBO", *args, **kwargs)
@@ -223,3 +223,65 @@ class NBO(logfileparser.Logfile):
             high_occ      = int(nbo_analysis[10])
 
             # TODO append to attibutes
+
+
+        #         NATURAL BOND ORBITALS (Summary):
+
+        #                                                      Principal Delocalizations
+        #            NBO                 Occupancy    Energy   (geminal,vicinal,remote)
+        #  ===============================================================================
+        #  Molecular unit  1  (H2O)
+        #  ------ Lewis --------------------------------------
+        #     1. CR ( 1) O  1             1.99998   -20.54367
+        #     2. LP ( 1) O  1             1.99764    -0.49214  18(v),22(v)
+        #     3. LP ( 2) O  1             1.99711    -0.76980  17(v),21(v)
+        #     4. BD ( 1) O  1- H  2       1.99891    -0.89832  23(v)
+        #     5. BD ( 1) O  1- H  3       1.99891    -0.89832  19(v)
+        #  ------ non-Lewis ----------------------------------
+        #     6. BD*( 1) O  1- H  2       0.00038     0.72889
+        #     7. BD*( 1) O  1- H  3       0.00038     0.72889
+        #     8. RY ( 1) O  1             0.00001     1.39675
+        #     9. RY ( 2) O  1             0.00000     1.92591
+        #    10. RY ( 3) O  1             0.00000     2.97200
+        #    11. RY ( 4) O  1             0.00000     3.08380
+        #    12. RY ( 5) O  1             0.00000     3.11162
+        #    13. RY ( 6) O  1             0.00000     3.15738
+        #    14. RY ( 7) O  1             0.00000     3.29348
+        #    15. RY ( 8) O  1             0.00000     1.20441
+        #    16. RY ( 9) O  1             0.00000     1.51316
+        #    17. RY ( 1) H  2             0.00152     0.74247
+        #    18. RY ( 2) H  2             0.00118     1.94640
+        #    19. RY ( 3) H  2             0.00064     1.74999
+        #    20. RY ( 4) H  2             0.00000     2.82233
+        #    21. RY ( 1) H  3             0.00152     0.74247
+        #    22. RY ( 2) H  3             0.00118     1.94640
+        #    23. RY ( 3) H  3             0.00064     1.74999
+        #    24. RY ( 4) H  3             0.00000     2.82233
+        #           -------------------------------
+        #                  Total Lewis    9.99255  ( 99.9255%)
+        #            Valence non-Lewis    0.00075  (  0.0075%)
+        #            Rydberg non-Lewis    0.00669  (  0.0669%)
+        #           -------------------------------
+        #                Total unit  1   10.00000  (100.0000%)
+        #               Charge unit  1    0.00000
+
+        if 'Principal Delocalizations' in line:
+            while ' Lewis ' not in line:
+                line = next(inputfile)
+            
+            line = next(inputfile)
+            
+            while '   ---' not in line:
+                if '-----' in line:
+                    line = next(inputfile)
+                
+                NBO = line[7:28].strip()
+                occupancy = float(line[30:40].strip())
+                energy = float(line[40:52].strip())
+                geminal, vicinal, remote = None, None, None
+
+                if len(line) > 52: geminal = line[53:58]
+                if len(line) > 58: vicinal = line[59:64]
+                if len(line) > 62: remote = line[65:70]
+                    
+                line = next(inputfile)
