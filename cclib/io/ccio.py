@@ -13,6 +13,7 @@ import typing
 from typing import Optional
 import logging
 from typing import Union
+import warnings
 
 from cclib.parser import data
 from cclib.parser import logfileparser
@@ -126,6 +127,25 @@ def guess_filetype(inputfile) -> Optional[logfileparser.Logfile]:
     
     return filetype
 
+def sort_turbomole_outputs(fileinputs):
+    """
+    Sorts a list of inputs (or list of log files) according to the order
+    required by the Turbomole parser for correct parsing. Unrecognised
+    files are appended to the end of the list in the same order they are
+    given.
+    
+    This function has been deprecated as of version 1.8; use:
+    cclib.parser.turbomoleparser.Turbomole.sort_input() instead
+
+    Inputs:
+      filelist - a list of Turbomole log files needed to be parsed.
+    Returns:
+      sorted_list - a sorted list of Turbomole files needed for proper parsing.
+    """
+    warnings.warn(
+        "sort_turbomole_outputs() has been deprecated as of v1.8; use: "+ \
+        "cclib.parser.turbomoleparser.Turbomole.sort_input() instead")
+    return Turbomole.sort_input(fileinputs)
 
 def ccread(
         source: Union[str, typing.IO, FileWrapper, typing.List[Union[str, typing.IO]]],
