@@ -619,7 +619,7 @@ class SolventMetadataTest(unittest.TestCase):
     
     model = ""
     # Toluene
-    epsilon = 2.3741
+    static_dielectric_constant = 2.3741
     
     def test_solvent_model(self) -> None:
         """Check solvent model was parsed correctly"""
@@ -628,12 +628,12 @@ class SolventMetadataTest(unittest.TestCase):
     @skipForLogfile("basicQChem6.0/water_hf_solvent_smd_iefpcm.out", "the internally-used dielectric constant isn't printed, only solvent name")
     def test_solvent_dielectric(self) -> None:
         """Check solvent dielectric was parsed correctly"""
-        assert abs(self.data.metadata['solvent_params']['epsilon'] - self.epsilon) < 1.0e-4
+        assert abs(self.data.metadata['solvent_params']['epsilon'] - self.static_dielectric_constant) < 1.0e-4
 
 
 class QChemSolventMetadataTest(SolventMetadataTest):
 
-    epsilon = 2.370
+    static_dielectric_constant = 2.370
         
 
 class IEFPCMMetadataTest(SolventMetadataTest):
@@ -650,7 +650,7 @@ class IPCMMetadataTest(SolventMetadataTest):
     """Check we can parse implicit solvent data."""
 
     model = "IPCM"
-    epsilon = 78.3
+    static_dielectric_constant = 78.3
     
 class COSMOMetadataTest(SolventMetadataTest):
     """Check we can parse implicit solvent data."""
