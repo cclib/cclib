@@ -48,54 +48,56 @@ class NBO(logfileparser.Logfile):
 
         ''' NATURAL POPULATIONS:  Natural atomic orbital occupancies
 
-        NAO Atom No lang   Type(AO)    Occupancy      Energy
-        -------------------------------------------------------
-        1    O  1  s      Cor( 1s)     1.99998     -20.54367
-        2    O  1  s      Val( 2s)     1.74925      -0.99433
-        3    O  1  s      Ryd( 3s)     0.00135       1.41731
-        4    O  1  px     Val( 2p)     1.43668      -0.30356
-        5    O  1  px     Ryd( 3p)     0.00246       1.32660
-        6    O  1  py     Val( 2p)     1.99548      -0.49006
-        7    O  1  py     Ryd( 3p)     0.00095       1.20360
-        8    O  1  pz     Val( 2p)     1.73514      -0.41093
-        9    O  1  pz     Ryd( 3p)     0.00034       1.24945
-        10    O  1  dxy    Ryd( 3d)     0.00000       3.11873
-        11    O  1  dxz    Ryd( 3d)     0.00359       3.69068
-        12    O  1  dyz    Ryd( 3d)     0.00121       3.07541
-        13    O  1  dx2y2  Ryd( 3d)     0.00101       3.43979
-        14    O  1  dz2    Ryd( 3d)     0.00133       3.14194
+            NAO Atom No lang   Type(AO)    Occupancy      Energy
+            -------------------------------------------------------
+            1    O  1  s      Cor( 1s)     1.99998     -20.54367
+            2    O  1  s      Val( 2s)     1.74925      -0.99433
+            3    O  1  s      Ryd( 3s)     0.00135       1.41731
+            4    O  1  px     Val( 2p)     1.43668      -0.30356
+            5    O  1  px     Ryd( 3p)     0.00246       1.32660
+            6    O  1  py     Val( 2p)     1.99548      -0.49006
+            7    O  1  py     Ryd( 3p)     0.00095       1.20360
+            8    O  1  pz     Val( 2p)     1.73514      -0.41093
+            9    O  1  pz     Ryd( 3p)     0.00034       1.24945
+            10    O  1  dxy    Ryd( 3d)     0.00000       3.11873
+            11    O  1  dxz    Ryd( 3d)     0.00359       3.69068
+            12    O  1  dyz    Ryd( 3d)     0.00121       3.07541
+            13    O  1  dx2y2  Ryd( 3d)     0.00101       3.43979
+            14    O  1  dz2    Ryd( 3d)     0.00133       3.14194
 
-        15    H  2  s      Val( 1s)     0.52980       0.25861
-        16    H  2  s      Ryd( 2s)     0.00136       0.45874
-        17    H  2  px     Ryd( 2p)     0.00209       2.60593
-        18    H  2  py     Ryd( 2p)     0.00118       1.94640
-        19    H  2  pz     Ryd( 2p)     0.00117       2.28805
+            15    H  2  s      Val( 1s)     0.52980       0.25861
+            16    H  2  s      Ryd( 2s)     0.00136       0.45874
+            17    H  2  px     Ryd( 2p)     0.00209       2.60593
+            18    H  2  py     Ryd( 2p)     0.00118       1.94640
+            19    H  2  pz     Ryd( 2p)     0.00117       2.28805
 
-        20    H  3  s      Val( 1s)     0.52980       0.25861
-        21    H  3  s      Ryd( 2s)     0.00136       0.45874
-        22    H  3  px     Ryd( 2p)     0.00209       2.60593
-        23    H  3  py     Ryd( 2p)     0.00118       1.94640
-        24    H  3  pz     Ryd( 2p)     0.00117       2.28805'''
+            20    H  3  s      Val( 1s)     0.52980       0.25861
+            21    H  3  s      Ryd( 2s)     0.00136       0.45874
+            22    H  3  px     Ryd( 2p)     0.00209       2.60593
+            23    H  3  py     Ryd( 2p)     0.00118       1.94640
+            24    H  3  pz     Ryd( 2p)     0.00117       2.28805
+
+
+            Summary of Natural Population Analysis:'''
 
         if 'NAO Atom No lang   Type(AO)    Occupancy      Energy' in line:
 
             line = next(inputfile)
             line = next(inputfile)
 
+            # Skip empty lines
             while 'Summary of Natural Population Analysis:' not in line:
                 if len(line.strip()) <= 0:
                     line = next(inputfile)
                     continue
                     
-                natural_population = line.split()
-
-                nao       = int(natural_population[0])
-                atom      = natural_population[1]
-                no        = int(natural_population[2])
-                lang      = natural_population[3]
-                type_ao   = natural_population[4] + natural_population[5]
-                occupancy = float(natural_population[6])
-                energy    = float(natural_population[7])
+                nao       = int(line[0:5].strip())
+                atom      = line[8:9]
+                no        = int(line[9:14].strip())
+                lang      = line[14:21].strip()
+                type_ao   = line[21:29]
+                occupancy = float(line[33:42])
+                energy    = float(line[47:56])
 
                 # TODO append to attibutes
                 # self.append_attribute('coreelectrons', core)
@@ -125,15 +127,13 @@ class NBO(logfileparser.Logfile):
             while '==============' not in line:
                 population_analysis = line.split()
                 
-                print(population_analysis)
-
-                atom = population_analysis[0]
-                no = int(population_analysis[1])
+                atom           = population_analysis[0]
+                no             = int(population_analysis[1])
                 natural_charge = float(population_analysis[2])
-                core = float(population_analysis[3])
-                valence = float(population_analysis[4])
-                rydberg = float(population_analysis[5])
-                total = float(population_analysis[6])
+                core           = float(population_analysis[3])
+                valence        = float(population_analysis[4])
+                rydberg        = float(population_analysis[5])
+                total          = float(population_analysis[6])
                                 
                 # TODO append to attibutes
                 #             
@@ -266,22 +266,25 @@ class NBO(logfileparser.Logfile):
         #               Charge unit  1    0.00000
 
         if 'Principal Delocalizations' in line:
+
             while ' Lewis ' not in line:
                 line = next(inputfile)
             
             line = next(inputfile)
             
             while '   ---' not in line:
+
                 if '-----' in line:
                     line = next(inputfile)
                 
-                NBO = line[7:28].strip()
+                nao       = line[7:28].strip()
                 occupancy = float(line[30:40].strip())
-                energy = float(line[40:52].strip())
+                energy    = float(line[40:52].strip())
+
                 geminal, vicinal, remote = None, None, None
 
                 if len(line) > 52: geminal = line[53:58]
                 if len(line) > 58: vicinal = line[59:64]
-                if len(line) > 62: remote = line[65:70]
+                if len(line) > 62: remote  = line[65:70]
                     
                 line = next(inputfile)
