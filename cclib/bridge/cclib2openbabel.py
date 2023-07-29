@@ -7,7 +7,7 @@
 
 """Bridge between cclib data and openbabel (http://openbabel.org)."""
 
-from typing import Set, Union
+from typing import Optional, Set, Union
 
 import numpy as np
 
@@ -51,19 +51,36 @@ def makecclib(mol: ob.OBMol) -> ccData:
     return ccData(attributes)
 
 
-def makeopenbabel(atomcoords: np.ndarray, atomnos: np.ndarray, charge: int = 0, mult: int = 1) -> ob.OBMol:
+def makeopenbabel(
+    *,
+    atomcoords: Optional[np.ndarray] = None,
+    atomnos: Optional[np.ndarray] = None,
+    charge: int = 0,
+    mult: int = 1,
+) -> ob.OBMol:
     """Create an Open Babel molecule."""
     _check_openbabel(_found_openbabel)
+    if atomcoords is None and atomnos is None:
+        raise RuntimeError("Must pass at least one of atomcoords or atomnos")
+    elif atomcoords is not None and atomnos is not None:
+        assert atomcoords.shape[1] == atomnos.shape[0]
+        natom = atomnos.shape[0]
+    elif atomcoords is None:
+        natom = atomnos.shape[0]
+    else:
+        natom = atomcoords.shape[1]
     obmol = ob.OBMol()
-    for i in range(len(atomnos)):
-        # Note that list(atomcoords[i]) is not equivalent!!!
-        # For now, only take the last geometry.
-        # TODO: option to export last geometry or all geometries?
-        coords = atomcoords[-1][i].tolist()
-        atomno = int(atomnos[i])
+    for i in range(natom):
         obatom = ob.OBAtom()
-        obatom.SetAtomicNum(atomno)
-        obatom.SetVector(*coords)
+        if atomcoords is not None:
+            # Note that list(atomcoords[i]) is not equivalent!!!
+            # For now, only take the last geometry.
+            # TODO: option to export last geometry or all geometries?
+            coords = atomcoords[-1][i].tolist()
+            obatom.SetVector(*coords)
+        if atomnos is not None:
+            atomno = int(atomnos[i])
+            obatom.SetAtomicNum(atomno)
         obmol.AddAtom(obatom)
     obmol.ConnectTheDots()
     obmol.PerceiveBondOrders()
@@ -72,16 +89,16 @@ def makeopenbabel(atomcoords: np.ndarray, atomnos: np.ndarray, charge: int = 0, 
     return obmol
 
 
-def readfile(fname: str, format: str) -> Union[ccData, Set]:
+def readfile(fname: str, fmt: str) -> Union[ccData, Set]:
     """Read a file with OpenBabel and extract cclib attributes."""
     _check_openbabel(_found_openbabel)
     obc = ob.OBConversion()
-    if obc.SetInFormat(format):
+    if obc.SetInFormat(fmt):
         mol = ob.OBMol()
         obc.ReadFile(mol, fname)
         return makecclib(mol)
     else:
-        print(f"Unable to load the {format} reader from OpenBabel.")
+        print(f"Unable to load the {fmt} reader from OpenBabel.")
         return {}
 
 
