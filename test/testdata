@@ -129,7 +129,10 @@ CI        QChem       QChemCISTest          basicQChem5.4         water_cis.out
 
 Core      ADF         ADFCoreTest           basicADF2007.01       MoOCl4-sp.adfout
 Core      ADF         ADFCoreTest           basicADF2013.01       MoOCl4-sp.adfout
+Core      FChk        GenericCoreTest       basicGaussian09       Mo4OCl4-sp.fchk
+Core      FChk        GenericCoreTest       basicGaussian16       Mo4OCl4-sp.fchk
 Core      FChk        GenericCoreTest       basicQChem5.2         MoOCl4_sp_modified.FChk
+Core      FChk        GenericCoreTest       basicQChem5.4         MoOCl4_sp.fchk
 Core      GAMESSUK    GenericCoreTest       basicGAMESS-UK7.0     MoOCl4-sp.out
 Core      GAMESSUK    GenericCoreTest       basicGAMESS-UK8.0     MoOCl4-sp.out
 Core      GAMESS      GenericCoreTest       basicGAMESS-US2017    MoOCl4-sp.out
