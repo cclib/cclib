@@ -46,7 +46,7 @@ class ccDataTest(unittest.TestCase):
         self._set_attributes(self.check_array, numpy.array([1,2,3]))
         self.data.listify()
         for attr in self.check_array:
-            self.assertIsInstance(getattr(self.data, attr), list)
+            assert isinstance(getattr(self.data, attr), list)
 
     def test_listify_arraylist(self):
         """Does the method convert lists of arrays as expected?"""
@@ -54,7 +54,7 @@ class ccDataTest(unittest.TestCase):
         self.data.listify()
         for attr in self.check_arrlist:
             for a in getattr(self.data, attr):
-                self.assertIsInstance(a, list)
+                assert isinstance(a, list)
 
     def test_listify_arraydict(self):
         """Does the method convert dicts of arrays as expected?"""
@@ -62,14 +62,14 @@ class ccDataTest(unittest.TestCase):
         self.data.listify()
         for attr in self.check_arrdict:
             for a in getattr(self.data, attr).values():
-                self.assertIsInstance(a, list)
+                assert isinstance(a, list)
 
     def test_arrayify_ndarray(self):
         """Does the method convert lists as expected?"""
         self._set_attributes(self.check_array, [1,2,3])
         self.data.arrayify()
         for attr in self.check_array:
-            self.assertIsInstance(getattr(self.data, attr), numpy.ndarray)
+            assert isinstance(getattr(self.data, attr), numpy.ndarray)
 
     def test_arrayify_arraylist(self):
         """Does the method convert lists of lists as expected?"""
@@ -77,7 +77,7 @@ class ccDataTest(unittest.TestCase):
         self.data.arrayify()
         for attr in self.check_arrlist:
             for a in getattr(self.data, attr):
-                self.assertIsInstance(a, numpy.ndarray)
+                assert isinstance(a, numpy.ndarray)
 
     def test_arrayify_arraydict(self):
         """Does the method convert dicts of lists as expected?"""
@@ -85,7 +85,7 @@ class ccDataTest(unittest.TestCase):
         self.data.arrayify()
         for attr in self.check_arrdict:
             for a in getattr(self.data, attr).values():
-                self.assertIsInstance(a, numpy.ndarray)
+                assert isinstance(a, numpy.ndarray)
 
 
 if __name__ == "__main__":

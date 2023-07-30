@@ -35,16 +35,13 @@ property
   quadrupole
   octupole
 end
+memory total 4 gb
 DFT
    xc B3LYP
    grid fine
    iterations 120
    mult 1
    direct
+   print none
 END
-TDDFT
-   nroots 5
-   singlet
-   notriplet
-END
-TASK TDDFT ENERGY 
+task DFT FREQUENCIES

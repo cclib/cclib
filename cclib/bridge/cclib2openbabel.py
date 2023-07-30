@@ -7,6 +7,10 @@
 
 """Bridge between cclib data and openbabel (http://openbabel.org)."""
 
+from typing import Set, Union
+
+import numpy as np
+
 from cclib.parser.data import ccData
 from cclib.parser.utils import find_package
 
@@ -20,12 +24,12 @@ if _found_openbabel:
         import openbabel as ob
 
 
-def _check_openbabel(found_openbabel):
+def _check_openbabel(found_openbabel: bool) -> None:
     if not found_openbabel:
         raise ImportError("You must install `openbabel` to use this function")
 
 
-def makecclib(mol):
+def makecclib(mol: ob.OBMol) -> ccData:
     """Create cclib attributes and return a ccData from an OpenBabel molecule.
 
     Beyond the numbers, masses and coordinates, we could also set the total charge
@@ -47,7 +51,7 @@ def makecclib(mol):
     return ccData(attributes)
 
 
-def makeopenbabel(atomcoords, atomnos, charge=0, mult=1):
+def makeopenbabel(atomcoords: np.ndarray, atomnos: np.ndarray, charge: int = 0, mult: int = 1) -> ob.OBMol:
     """Create an Open Babel molecule."""
     _check_openbabel(_found_openbabel)
     obmol = ob.OBMol()
@@ -68,7 +72,7 @@ def makeopenbabel(atomcoords, atomnos, charge=0, mult=1):
     return obmol
 
 
-def readfile(fname, format):
+def readfile(fname: str, format: str) -> Union[ccData, Set]:
     """Read a file with OpenBabel and extract cclib attributes."""
     _check_openbabel(_found_openbabel)
     obc = ob.OBConversion()

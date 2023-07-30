@@ -75,6 +75,7 @@ To calculate partial charges that require pro-atomic densities, follow the steps
 Then read in the densities as below to calculate Hirshfeld or Hirshfeld-like charges:
 
 .. _`Python interface`: https://theochem.github.io/horton/2.1.0/user_postproc_aim.html#python-interface-to-the-partitioning-code
+.. _`Building proatomic database`: https://theochem.github.io/horton/2.1.0/user_postproc_aim.html#horton-atomdb-py-build-a-pro-atom-database
 
 .. code-block:: python
 

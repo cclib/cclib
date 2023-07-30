@@ -1,0 +1,12 @@
+molecule water {
+0 1
+O
+H 1 0.99
+H 1 0.99 2 106.0
+}
+
+set {
+    basis sto-3g
+}
+
+energy('mp2')

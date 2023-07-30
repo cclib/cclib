@@ -11,7 +11,7 @@ import glob
 import os
 
 
-files = ['ANNOUNCE', 'CHANGELOG', 'INSTALL', 'LICENSE', 'README.md','THANKS',]
+files = ['ANNOUNCE', 'CHANGELOG', 'LICENSE', 'README.md', 'THANKS']
 files += ['setup.py']
 
 source = 'cclib'

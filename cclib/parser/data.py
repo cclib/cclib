@@ -9,6 +9,7 @@
 
 import logging
 from collections import namedtuple
+from typing import Any, Dict, List, Mapping, Optional
 
 import numpy
 
@@ -69,6 +70,7 @@ class ccData:
         nbasis -- number of basis functions (integer)
         nmo -- number of molecular orbitals (integer)
         nmrtensors -- Nuclear magnetic resonance chemical shielding tensors (dict of dicts of array[2])
+        nmrcouplingtensors -- Nuclear magnetic resonance spin-spin coupling tensors (dict of dicts of array[2])
         nocoeffs -- natural orbital coefficients (array[2])
         nooccnos -- natural orbital occupation numbers (array[1])
         nsocoeffs -- natural spin orbital coefficients (list of array[2])
@@ -77,6 +79,7 @@ class ccData:
         optstatus -- optimization status for each set of atomic coordinates (array[1])
         polarizabilities -- (dipole) polarizabilities, static or dynamic (list of arrays[2])
         pressure -- pressure used for Thermochemistry (float, atm)
+        rotconsts -- rotational constants (array[2], GHz)
         scancoords -- geometries of each scan step (array[3], angstroms)
         scanenergies -- energies of potential energy surface (list)
         scannames -- names of variables scanned (list of strings)
@@ -153,6 +156,7 @@ class ccData:
        "nbasis":           Attribute(int,              'basis number',                'properties:orbitals'),
        "nmo":              Attribute(int,              'MO number',                   'properties:orbitals'),
        "nmrtensors":       Attribute(dict,             'NMR chemical shielding tensors', 'properties:nmr'),
+       "nmrcouplingtensors":       Attribute(dict,             'NMR spin-spin coupling tensors', 'properties:nmr'),
        "nocoeffs":         Attribute(numpy.ndarray,    'TBD',                         'N/A'),
        "nooccnos":         Attribute(numpy.ndarray,    'TBD',                         'N/A'),
        "nsocoeffs":         Attribute(list,    'TBD',                         'N/A'),
@@ -161,6 +165,7 @@ class ccData:
        "optstatus":        Attribute(numpy.ndarray,    'status',                      'optimization'),
        "polarizabilities": Attribute(list,             'polarizabilities',            'N/A'),
        "pressure":         Attribute(float,            'pressure',                    'properties'),
+       "rotconsts":        Attribute(numpy.ndarray,    'rotational constants',        'atoms:coords:rotconsts'),
        "scancoords":       Attribute(numpy.ndarray,    'step geometry',               'optimization:scan'),
        "scanenergies":     Attribute(list,             'PES energies',                'optimization:scan'),
        "scannames":        Attribute(list,             'variable names',              'optimization:scan'),
@@ -205,7 +210,7 @@ class ccData:
     OPT_UNCONVERGED = 0b010
     OPT_DONE = 0b100
 
-    def __init__(self, attributes={}):
+    def __init__(self, attributes: Mapping[str, Any] = {}) -> None:
         """Initialize the cclibData object.
 
         Normally called in the parse() method of a Logfile subclass.
@@ -217,7 +222,7 @@ class ccData:
         if attributes:
             self.setattributes(attributes)
 
-    def listify(self):
+    def listify(self) -> None:
         """Converts all attributes that are arrays or lists/dicts of arrays to lists."""
 
         attrlist = [k for k in self._attrlist if hasattr(self, k)]
@@ -232,7 +237,7 @@ class ccData:
                 pairs = [(key, val.tolist()) for key, val in items]
                 setattr(self, k, dict(pairs))
 
-    def arrayify(self):
+    def arrayify(self) -> None:
         """Converts appropriate attributes to arrays or lists/dicts of arrays."""
 
         attrlist = [k for k in self._attrlist if hasattr(self, k)]
@@ -250,7 +255,7 @@ class ccData:
                 pairs = [(key, numpy.array(val, precision)) for key, val in items]
                 setattr(self, k, dict(pairs))
 
-    def getattributes(self, tolists=False):
+    def getattributes(self, tolists: bool = False) -> Dict[str, Any]:
         """Returns a dictionary of existing data attributes.
 
         Inputs:
@@ -267,7 +272,7 @@ class ccData:
             self.arrayify()
         return attributes
 
-    def setattributes(self, attributes):
+    def setattributes(self, attributes: Mapping[str, Any]) -> List[str]:
         """Sets data attributes given in a dictionary.
 
         Inputs:
@@ -291,7 +296,7 @@ class ccData:
 
         return invalid
 
-    def typecheck(self):
+    def typecheck(self) -> None:
         """Check the types of all attributes.
 
         If an attribute does not match the expected type, then attempt to
@@ -313,14 +318,14 @@ class ccData:
                     f"attribute {args[0]} is {args[1]} instead of {args[2]} and could not be converted"
                 )
 
-    def check_values(self, logger=logging):
+    def check_values(self, logger=logging) -> None:
         """Perform custom checks on the values of attributes."""
         if hasattr(self, "etenergies") and any(e < 0 for e in self.etenergies):
             negative_values = [e for e in self.etenergies if e < 0]
             msg = f"At least one excitation energy is negative. \nNegative values: {negative_values}\nFull etenergies: {self.etenergies}"
             logger.error(msg)
 
-    def write(self, filename=None, indices=None, *args, **kwargs):
+    def write(self, filename: Optional[str] = None, indices: Optional = None, *args, **kwargs) -> str:
         """Write parsed attributes to a file.
 
         Possible extensions:
@@ -334,23 +339,23 @@ class ccData:
                             *args, **kwargs)
         return outputstr
 
-    def writejson(self, filename=None, indices=None):
+    def writejson(self, filename: Optional[str] = None, indices=None):
         """Write parsed attributes to a JSON file."""
         return self.write(filename=filename, indices=indices,
                           outputtype='cjson')
 
-    def writecml(self, filename=None, indices=None):
+    def writecml(self, filename: Optional[str] = None, indices=None):
         """Write parsed attributes to a CML file."""
         return self.write(filename=filename, indices=indices,
                           outputtype='cml')
 
-    def writexyz(self, filename=None, indices=None):
+    def writexyz(self, filename: Optional[str] = None, indices=None):
         """Write parsed attributes to an XML file."""
         return self.write(filename=filename, indices=indices,
                           outputtype='xyz')
 
     @property
-    def converged_geometries(self):
+    def converged_geometries(self) -> numpy.ndarray:
         """
         Return all converged geometries.
 
@@ -366,7 +371,7 @@ class ccData:
             return self.atomcoords
 
     @property
-    def new_geometries(self):
+    def new_geometries(self) -> numpy.ndarray:
         """
         Return all starting geometries.
 
@@ -381,7 +386,7 @@ class ccData:
             return self.atomcoords
 
     @property
-    def unknown_geometries(self):
+    def unknown_geometries(self) -> numpy.ndarray:
         """
         Return all OPT_UNKNOWN geometries.
 
@@ -396,7 +401,7 @@ class ccData:
             return self.atomcoords
 
     @property
-    def unconverged_geometries(self):
+    def unconverged_geometries(self) -> numpy.ndarray:
         """
         Return all unconverged geometries.
 
@@ -411,11 +416,11 @@ class ccData:
             return self.atomcoords
 
     @property
-    def nelectrons(self):
+    def nelectrons(self) -> int:
         return Electrons(self).count()
 
     @property
-    def closed_shell(self):
+    def closed_shell(self) -> bool:
         return orbitals.Orbitals(self).closed_shell()
 
 

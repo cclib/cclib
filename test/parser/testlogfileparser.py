@@ -16,6 +16,8 @@ from unittest import mock
 from urllib.request import urlopen
 
 import cclib
+import pytest
+from pytest import MonkeyPatch
 
 
 __filedir__ = os.path.dirname(__file__)
@@ -24,17 +26,23 @@ __datadir__ = os.path.join(__filepath__, "..", "..")
 
 class FileWrapperTest(unittest.TestCase):
 
+    def check_seek(self, wrapper):
+        """Check that a FileWrapper can seek properly"""
+        wrapper.seek(0, 2)
+        assert wrapper.pos == wrapper.size        
+        
+        wrapper.seek(0, 0)
+        assert wrapper.pos == 0
+        
+        with pytest.raises(NotImplementedError):
+            wrapper.seek(0, 1)
+
     def test_file_seek(self):
         """Can we seek anywhere in a file object?"""
         fpath = os.path.join(__datadir__,"data/ADF/basicADF2007.01/dvb_gopt.adfout")
         with open(fpath, 'r') as fobject:
             wrapper = cclib.parser.logfileparser.FileWrapper(fobject)
-            wrapper.seek(0, 0)
-            self.assertEqual(wrapper.pos, 0)
-            wrapper.seek(10, 0)
-            self.assertEqual(wrapper.pos, 10)
-            wrapper.seek(0, 2)
-            self.assertEqual(wrapper.pos, wrapper.size)
+            self.check_seek(wrapper)
 
     def test_url_seek(self):
         """Can we seek only to the end of an url stream?"""
@@ -42,24 +50,18 @@ class FileWrapperTest(unittest.TestCase):
         url = "https://raw.githubusercontent.com/cclib/cclib/master/data/ADF/basicADF2007.01/dvb_gopt.adfout"
         stream = urlopen(url)
         wrapper = cclib.parser.logfileparser.FileWrapper(stream)
-
-        # Unfortunately, the behavior of this wrapper differs between Python 2 and 3,
-        # so we need to diverge the assertions. We should try to keep the code as
-        # consistent as possible, but the Errors raised are actually different.
-        wrapper.seek(0, 2)
-        self.assertEqual(wrapper.pos, wrapper.size)
-        if sys.version_info[0] == 2:
-            self.assertRaises(AttributeError, wrapper.seek, 0, 0)
-            self.assertRaises(AttributeError, wrapper.seek, 0, 1)
-        else:
-            self.assertRaises(io.UnsupportedOperation, wrapper.seek, 0, 0)
-            self.assertRaises(io.UnsupportedOperation, wrapper.seek, 0, 1)
+        
+        self.check_seek(wrapper)
 
     def test_stdin_seek(self):
         """We shouldn't be able to seek anywhere in standard input."""
+        # stdin is disabled by pytest.
+        # the recommended way of emulating stdin is by doing this
+        monkeypatch = MonkeyPatch()
+        monkeypatch.setattr('sys.stdin', io.StringIO())
+        
         wrapper = cclib.parser.logfileparser.FileWrapper(sys.stdin)
-        self.assertRaises(IOError, wrapper.seek, 0, 0)
-        self.assertRaises(IOError, wrapper.seek, 0, 1)
+        self.check_seek(wrapper)
 
     def test_data_stdin(self):
         """Check that the same attributes are parsed when a file is piped through standard input."""
@@ -73,14 +75,13 @@ class FileWrapperTest(unittest.TestCase):
             expected_attributes = get_attributes(cclib.io.ccread(path))
             with open(path) as handle:
                 contents = handle.read()
-            # This is fix strings not being unicode in Python2.
-            try:
-                stdin = io.StringIO(contents)
-            except TypeError:
-                stdin = io.StringIO(unicode(contents))
-            stdin.seek = sys.stdin.seek
-            data = cclib.io.ccread(stdin)
-            self.assertEqual(get_attributes(data), expected_attributes)
+
+            # stdin emulation
+            monkeypatch = MonkeyPatch()
+            monkeypatch.setattr('sys.stdin', io.StringIO(contents))
+            
+            data = cclib.io.ccread(sys.stdin)
+            assert get_attributes(data) == expected_attributes
 
 
 class LogfileTest(unittest.TestCase):
@@ -102,14 +103,7 @@ class LogfileTest(unittest.TestCase):
 
         parser.etenergies = [1, -1]
         parser.parse()
-        try:
-            parser.logger.error.assert_called_once()
-        except AttributeError:  # assert_called_once is not availible until python 3.6
-            self.assertEqual(
-                parser.logger.error.call_count,
-                1,
-                f"Expected mock to have been called once. Called {parser.logger.error.call_count} times.",
-            )
+        parser.logger.error.assert_called_once()
 
 
 if __name__ == "__main__":

@@ -7,7 +7,7 @@ Requirements
 ------------
 
 Before you install cclib, you need to make sure that you have the following:
- * Python (at least version 3.4 is recommended, although 2.7 is still tested)
+ * Python (at least version 3.7 is recommended)
  * NumPy (at least version 1.15 is recommended)
 
 Python is an open-source programming language available from https://www.python.org. It is available for Windows as well as being included in most Linux distributions. In Debian/Ubuntu it is installed as follows (as root):
@@ -69,27 +69,27 @@ or to your home directory using::
 Installing using a system package manager
 -----------------------------------------
 
-If you're using `Debian GNU/Linux`_, `Ubuntu`_, or a similar distribution, there are official `cclib packages`_ that you can install in any package manager (should as synaptic) or with one simple command:
+If you're using `Debian GNU/Linux`_, `Ubuntu`_, or a similar distribution, there are official `cclib packages`_ that you can install via your package manager:
 
 .. code-block:: bash
 
-    aptitude install cclib
+    apt install cclib
 
-There are in fact two packages, `python-cclib`_ containing the Python module, and `cclib`_ which installs just the user scripts. If you also need to also install the unittests and logfiles we distribute, you will need to install the `cclib-data`_ package from the non-free repositories (due to license issues). Because of distribution release cycles, package manager versions of cclib may be out of date compared to the PyPI version.
+There are in fact multiple packages, `python3-cclib`_ containing the Python module, and `cclib`_ which installs the user scripts and depends on the Python module. If you also need to also install the unittests and logfiles we distribute, you will need to install the `cclib-data`_ package from the non-free repositories (due to license issues). Because of distribution release cycles, package manager versions of cclib may be out of date compared to the PyPI version.
 
 .. _`Debian GNU/Linux`: https://www.debian.org
 .. _`Ubuntu`: https://ubuntu.com/
 .. _`cclib packages`: https://packages.debian.org/search?searchon=sourcenames&keywords=cclib
-.. _`python-cclib`: https://packages.debian.org/stretch/python-cclib
-.. _`cclib`: https://packages.debian.org/stretch/cclib
-.. _`cclib-data`: https://packages.debian.org/stretch/cclib-data
+.. _`python3-cclib`: https://packages.debian.org/bullseye/python3-cclib
+.. _`cclib`: https://packages.debian.org/bullseye/cclib
+.. _`cclib-data`: https://packages.debian.org/bullseye/cclib-data
 
 Manual download and install
 ---------------------------
 
 The source code of the newest release of cclib (version |release|) is distributed as:
- * A .zip file: https://github.com/cclib/cclib/releases/download/v1.7/cclib-1.7.zip
- * A .tar.gz file: https://github.com/cclib/cclib/releases/download/v1.7/cclib-1.7.tar.gz
+ * A .zip file: https://github.com/cclib/cclib/releases/download/v1.7.2/cclib-1.7.2.zip
+ * A .tar.gz file: https://github.com/cclib/cclib/releases/download/v1.7.2/cclib-1.7.2.tar.gz
  * Windows binary installers (see the `newest release page`_)
 
 On Windows, if you choose to download the .exe files instead, you can install simply by double-clicking on the file. To uninstall, use the "Add and Remove Programs" menu in the Control Panel.

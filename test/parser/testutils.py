@@ -17,9 +17,9 @@ class convertorTest(unittest.TestCase):
     def test_basic(self):
         """Are some basic conversions correct?"""
         convertor = cclib.parser.utils.convertor
-        self.assertAlmostEqual(convertor(1.89, "bohr", "Angstrom"), 1.0, places=3)
-        self.assertAlmostEqual(convertor(0.529, "Angstrom", "bohr"), 1.0, places=3)
-        self.assertAlmostEqual(convertor(627.5, "kcal/mol", "hartree"), 1.0, places=3)
+        assert round(abs(convertor(1.89, "bohr", "Angstrom") - 1.0), 3) == 0
+        assert round(abs(convertor(0.529, "Angstrom", "bohr") - 1.0), 3) == 0
+        assert round(abs(convertor(627.5, "kcal/mol", "hartree") - 1.0), 3) == 0
 
     def test_pairs(self):
         """Do flipped conversions correspond to each other?"""
@@ -34,11 +34,11 @@ class convertorTest(unittest.TestCase):
         for unit1, unit2 in pairs_proportional:
             conv1 = convertor(1.0, unit1, unit2)
             conv2 = 1.0 / convertor(1.0, unit2, unit1)
-            self.assertAlmostEqual((conv1 - conv2) / conv1, 0.0)
+            assert round(abs((conv1 - conv2) / conv1), 7) == 0
         for unit1, unit2 in pairs_inverse:
             conv1 = convertor(1.0, unit1, unit2)
             conv2 = convertor(1.0, unit2, unit1)
-            self.assertAlmostEqual((conv1 - conv2) / conv1, 0.0)
+            assert round(abs((conv1 - conv2) / conv1), 7) == 0
 
 
 class PeriodicTableTest(unittest.TestCase):
@@ -48,14 +48,14 @@ class PeriodicTableTest(unittest.TestCase):
 
     def test_elements(self):
         """Does the periodic table give correct elements?"""
-        self.assertEqual(self.pt.element[6], 'C')
-        self.assertEqual(self.pt.element[44], 'Ru')
-        self.assertIsNone(self.pt.element[0])
+        assert self.pt.element[6] == 'C'
+        assert self.pt.element[44] == 'Ru'
+        assert self.pt.element[0] is None
 
     def test_numbers(self):
         """Does the periodic table give correct atom numbers?"""
-        self.assertEqual(self.pt.number['C'], 6)
-        self.assertEqual(self.pt.number['Au'], 79)
+        assert self.pt.number['C'] == 6
+        assert self.pt.number['Au'] == 79
 
 
 if __name__ == "__main__":

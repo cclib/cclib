@@ -17,7 +17,7 @@ from test.test_data import getdatafile
 
 class PyscfTest(unittest.TestCase):
 
-    def setUp(self):
+    def setUp(self) -> None:
         super(PyscfTest, self).setUp()
         if not find_package("pyscf"):
             raise ImportError("Must install pyscf to run this test")
@@ -28,7 +28,7 @@ class PyscfTest(unittest.TestCase):
             "GAMESS", "basicGAMESS-US2018", ["dvb_un_sp.out"]
         )
 
-    def test_makepyscf(self):
+    def test_makepyscf(self) -> None:
         import pyscf
         from pyscf import dft
 
@@ -47,7 +47,7 @@ class PyscfTest(unittest.TestCase):
         pyscfmol2 = cclib2pyscf.makepyscf(self.data)
         assert pyscfmol2.basis == "sto-3g"
 
-    def test_makepyscf_mos(self):
+    def test_makepyscf_mos(self) -> None:
         pyscfmol = cclib2pyscf.makepyscf(self.data)
         mo_coeff, mo_occ, mo_syms, mo_energies = cclib2pyscf.makepyscf_mos(self.data,pyscfmol)
         assert np.allclose(mo_energies,convertor(np.array(self.data.moenergies),"eV","hartree"))

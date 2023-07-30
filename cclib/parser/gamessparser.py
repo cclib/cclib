@@ -373,10 +373,6 @@ class GAMESS(logfileparser.Logfile):
 
         # etsecs (used only for CIS runs for now)
         if line[1:14] == "EXCITED STATE":
-            if not hasattr(self, 'etsecs'):
-                self.etsecs = []
-            if not hasattr(self, 'etsyms'):
-                self.etsyms = []
             statenumber = int(line.split()[2])
             spin = int(float(line.split()[7]))
             if spin == 0:
@@ -384,10 +380,8 @@ class GAMESS(logfileparser.Logfile):
             if spin == 1:
                 sym = "Triplet"
             sym += '-' + line.split()[-1]
-            self.etsyms.append(sym)
-            # skip 5 lines
-            for i in range(5):
-                line = next(inputfile)
+            self.append_attribute("etsyms", sym)
+            self.skip_lines(inputfile, ["b", "d", "EXCITATION", "FROM TO", "d"])
             line = next(inputfile)
             CIScontribs = []
             while line.strip()[0] != "-":
@@ -406,13 +400,10 @@ class GAMESS(logfileparser.Logfile):
                 #    coeff /= numpy.sqrt(2.0)
                 CIScontribs.append([(fromMO, MOtype), (toMO, MOtype), coeff])
                 line = next(inputfile)
-            self.etsecs.append(CIScontribs)
+            self.append_attribute("etsecs", CIScontribs)
 
         # etoscs (used only for CIS runs now)
         if line[1:50] == "TRANSITION FROM THE GROUND STATE TO EXCITED STATE":
-            if not hasattr(self, "etoscs"):
-                self.etoscs = []
-
             # This was the suggested as a fix in issue #61, and it does allow
             # the parser to finish without crashing. However, it seems that
             # etoscs is shorter in this case than the other transition attributes,
@@ -421,11 +412,21 @@ class GAMESS(logfileparser.Logfile):
                 pass
             else:
                 statenumber = int(line.split()[-1])
-                # skip 7 lines
-                for i in range(8):
-                    line = next(inputfile)
+                self.skip_lines(
+                    inputfile,
+                    [
+                        "b",
+                        "MULTIPLICITIES",
+                        "STATE ENERGIES",
+                        "EXCITATION ENERGY",
+                        "X Y Z NORM",
+                        "TDIP a.u.",
+                        "TDIP D",
+                    ]
+                )
+                line = next(inputfile)
                 strength = float(line.split()[3])
-                self.etoscs.append(strength)
+                self.append_attribute("etoscs", strength)
 
         # TD-DFT for GAMESS-US.
         # The format for excitations has changed a bit between 2007 and 2012.
@@ -620,7 +621,7 @@ class GAMESS(logfileparser.Logfile):
             atomcoords = []
             line = next(inputfile)
 
-            for i in range(self.natom):
+            for _ in range(self.natom):
                 temp = line.strip().split()
                 atomcoords.append(list(map(float, temp[2:5])))
                 line = next(inputfile)
@@ -1033,7 +1034,9 @@ class GAMESS(logfileparser.Logfile):
         #   55  C  1 XYZ   0.000000   0.000000   0.000000   0.000000   0.000000
         #   56  C  1XXXX  -0.000014  -0.000067   0.000000   0.000000   0.000000
         #
-        if line.find("EIGENVECTORS") == 10 or line.find("MOLECULAR ORBITALS") == 10:
+        if line.find("EIGENVECTORS") == 10 or \
+           line.find("MOLECULAR ORBITALS") == 10 or \
+           line.find("INITIAL GUESS ORBITALS") == 30:
 
             # This is the stuff that we can read from these blocks.
             self.moenergies = [[]]
@@ -1048,7 +1051,7 @@ class GAMESS(logfileparser.Logfile):
             if not hasattr(self, "atombasis"):
                 self.atombasis = []
                 self.aonames = []
-                for i in range(self.natom):
+                for _ in range(self.natom):
                     self.atombasis.append([])
                 self.aonames = []
                 readatombasis = True
@@ -1230,7 +1233,8 @@ class GAMESS(logfileparser.Logfile):
         #    2  O  1  S    0.000000   0.754402   0.004472  -0.581970   0.000000
         # ...
         #
-        if line[10:30] == "CIS NATURAL ORBITALS":
+        if line[10:30] == "CIS NATURAL ORBITALS" or \
+           line[10:50] == "NATURAL ORBITALS IN ATOMIC ORBITAL BASIS":
 
             self.nocoeffs = numpy.zeros((self.nmo, self.nbasis), "d")
             self.nooccnos = []
@@ -1553,7 +1557,7 @@ class GAMESS(logfileparser.Logfile):
             match = re.search(r"P=(.*)PASCAL.", line)
             if match:
                 self.set_attribute('pressure', float(match.group(1))/1.01325e5)
-            self.skip_lines(
+            lines = self.skip_lines(
                 inputfile,
                 [
                     "ALL FREQUENCIES ARE SCALED",
@@ -1564,6 +1568,10 @@ class GAMESS(logfileparser.Logfile):
                     "rotational constants",
                 ]
             )
+            # Sometimes the volume is printed between the pressure and "ALL
+            # FREQUENCIES ARE SCALED".
+            if lines[0][:3] == " V=":
+                line = next(inputfile)
             line = next(inputfile)
             if "IMAGINARY FREQUENCY VIBRATION(S)" in line:
                 line = next(inputfile)
@@ -1573,6 +1581,33 @@ class GAMESS(logfileparser.Logfile):
             line = next(inputfile)
             assert "HARTREE/MOLECULE" in line
             self.set_attribute('zpve', float(line.split()[0]))
+
+        if line.strip() == "CARTESIAN FORCE CONSTANT MATRIX":
+            natom = self.natom
+            hessian = numpy.zeros((3 * natom, 3 * natom))
+            field_width = 9
+            starts = [20+i*field_width for i in range(6)]
+            self.skip_line(inputfile, "d")
+            mode_count = 0
+            nmodes_per_block = 2
+            while mode_count < natom:
+                lines = self.skip_lines(
+                    inputfile,
+                    ["b", "atom indices", "atom symbols", "XYZ header"]
+                )
+                # An odd number of atoms will lead to the final part having
+                # one column instead of two; handle it dynamically.
+                if len(lines[1].split()) == 1:
+                    starts = starts[:3]
+                mode_count += nmodes_per_block
+                imode_start = mode_count - nmodes_per_block
+                for iatom_remaining in range(mode_count - nmodes_per_block, natom):
+                    for icart in range(3):
+                        line = next(inputfile)
+                        hessian[iatom_remaining*3 + icart, imode_start:imode_start + len(starts)] = [
+                            float(line[start:start+field_width]) for start in starts
+                        ]
+            self.set_attribute("hessian", utils.symmetrize(hessian))
 
         if "KCAL/MOL  KCAL/MOL  KCAL/MOL CAL/MOL-K CAL/MOL-K CAL/MOL-K" in line:
             self.skip_lines(inputfile,["ELEC","TRANS","ROT","VIB"])

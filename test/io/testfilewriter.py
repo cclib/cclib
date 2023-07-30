@@ -12,6 +12,7 @@ import os
 import unittest
 
 import cclib
+import pytest
 
 
 __filedir__ = os.path.dirname(__file__)
@@ -27,7 +28,7 @@ class FileWriterTest(unittest.TestCase):
         # You cannot instantiate a class with abstract methods.
         fpath = os.path.join(__datadir__, "data/ADF/basicADF2007.01/dvb_gopt.adfout")
         data = cclib.io.ccread(fpath)
-        with self.assertRaises(TypeError):
+        with pytest.raises(TypeError):
             cclib.io.filewriter.Writer(data)
 
 

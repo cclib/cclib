@@ -20,28 +20,29 @@ from cclib.method.calculationmethod import MissingAttributeError
 from numpy.testing import assert_allclose
 
 from ..test_data import getdatafile
+import pytest
 
 
 class BaderTest(unittest.TestCase):
     """Bader's QTAIM method tests."""
 
-    def setUp(self):
+    def setUp(self) -> None:
         super(BaderTest, self).setUp()
         self.parse()
 
-    def parse(self):
+    def parse(self) -> None:
         self.data, self.logfile = getdatafile(Psi4, "basicPsi4-1.2.1", ["water_mp2.out"])
         self.volume = volume.Volume((-4, -4, -4), (4, 4, 4), (0.2, 0.2, 0.2))
 
-    def testmissingrequiredattributes(self):
+    def testmissingrequiredattributes(self) -> None:
         """Is an error raised when required attributes are missing?"""
         for missing_attribute in Bader.required_attrs:
             self.parse()
             delattr(self.data, missing_attribute)
-            with self.assertRaises(MissingAttributeError):
+            with pytest.raises(MissingAttributeError):
                 trialBader = Bader(self.data, self.volume)
 
-    def test_val(self):
+    def test_val(self) -> None:
         """Do the calculated values match with known values?
         """
 
@@ -54,7 +55,7 @@ class BaderTest(unittest.TestCase):
 
         assert_allclose(self.analysis.fragcharges, refData, atol=0.15)
 
-    def test_chgsum_hf(self):
+    def test_chgsum_hf(self) -> None:
         """Does the sum of charges equate to the number of electrons for a simple molecule?"""
 
         hfpath = os.path.join(os.path.dirname(os.path.realpath(__file__)), "hf.out")
@@ -63,9 +64,9 @@ class BaderTest(unittest.TestCase):
         analysis = Bader(data, vol)
         analysis.calculate()
 
-        self.assertAlmostEqual(numpy.sum(analysis.fragcharges), 10, delta=1)
+        assert abs(numpy.sum(analysis.fragcharges)-10) < 1
 
-    def test_symms_benzene(self):
+    def test_symms_benzene(self) -> None:
         """ Do the carbons in benzene ring get assigned with roughly equal charges?
         
             Discrepancy between carbons do exist in this test due to grid coarseness and limited
@@ -86,6 +87,4 @@ class BaderTest(unittest.TestCase):
         analysis = Bader(data, vol)
         analysis.calculate()
 
-        self.assertAlmostEqual(
-            analysis.fragcharges[0:6].max(), analysis.fragcharges[0:6].min(), delta=0.5
-        )
+        assert abs(analysis.fragcharges[0:6].max()-analysis.fragcharges[0:6].min()) < 0.5

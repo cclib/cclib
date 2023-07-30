@@ -10,12 +10,14 @@
 import importlib
 import re
 from itertools import accumulate
+from math import sqrt
+from typing import Iterable, List, Sequence, TypeVar
 
 import numpy
 import periodictable
 
 
-def find_package(package):
+def find_package(package: str) -> bool:
     """Check if a package exists without importing it.
 
     Derived from https://stackoverflow.com/a/14050282
@@ -29,7 +31,7 @@ if _found_scipy:
     import scipy.spatial
 
 
-def symmetrize(m, use_triangle='lower'):
+def symmetrize(m: numpy.ndarray, use_triangle: str = 'lower') -> numpy.ndarray:
     """Symmetrize a square NumPy array by reflecting one triangular
     section across the diagonal to the other.
     """
@@ -43,14 +45,15 @@ def symmetrize(m, use_triangle='lower'):
 
     dim = m.shape[0]
 
-    lower_indices = numpy.tril_indices(dim, k=-1)
-    upper_indices = numpy.triu_indices(dim, k=1)
-
     ms = m.copy()
 
     if use_triangle == 'lower':
+        lower_indices = numpy.tril_indices(dim, k=-1)
+        upper_indices = (lower_indices[1], lower_indices[0])
         ms[upper_indices] = ms[lower_indices]
     if use_triangle == 'upper':
+        upper_indices = numpy.triu_indices(dim, k=1)
+        lower_indices = (upper_indices[1], upper_indices[0])
         ms[lower_indices] = ms[upper_indices]
 
     return ms
@@ -59,7 +62,7 @@ def symmetrize(m, use_triangle='lower'):
 _BUILTIN_FLOAT = float
 
 
-def float(number):
+def float(number: str) -> float:
     """Convert a string to a float.
 
     This method should perform certain checks that are specific to cclib,
@@ -74,7 +77,7 @@ def float(number):
     return _BUILTIN_FLOAT(number.replace("D", "E"))
 
 
-def convertor(value, fromunits, tounits):
+def convertor(value: float, fromunits: str, tounits: str) -> float:
     """Convert from one set of units to another.
 
     Sources:
@@ -142,10 +145,10 @@ def convertor(value, fromunits, tounits):
 def _get_rmat_from_vecs(a, b):
     """Get rotation matrix from two 3D vectors, a and b
     Args:
-       a (np.ndaray): 3d vector with shape (3,0)
-       b (np.ndaray): 3d vector with shape (3,0)
+       a (numpy.ndarray): 3d vector with shape (3,0)
+       b (numpy.ndarray): 3d vector with shape (3,0)
     Returns:
-       np.ndarray
+       numpy.ndarray
     """
     a_ = (a / numpy.linalg.norm(a, 2))
     b_ = (b / numpy.linalg.norm(b, 2))
@@ -164,8 +167,8 @@ def get_rotation(a, b):
     If one atom positions, i.e (1,3) shape array, are given, it returns identify transformation
 
     Args:
-        a (np.ndarray): positions with shape(N,3)
-        b (np.ndarray): positions with shape(N,3)
+        a (numpy.ndarray): positions with shape(N,3)
+        b (numpy.ndarray): positions with shape(N,3)
     Returns:
         A scipy.spatial.transform.Rotation object
     """
@@ -218,7 +221,7 @@ def str_contains_only(string, chars):
 class PeriodicTable:
     """Allows conversion between element name and atomic no."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.element = [None]
         self.number = {}
         
@@ -233,11 +236,11 @@ class WidthSplitter:
     widths.
     """
 
-    def __init__(self, widths):
+    def __init__(self, widths: Sequence[int]) -> None:
         self.start_indices = [0] + list(accumulate(widths))[:-1]
         self.end_indices = list(accumulate(widths))
 
-    def split(self, line, truncate=True):
+    def split(self, line: str, truncate: bool = True) -> List[str]:
         """Split the given line using the field widths passed in on class
         initialization.
         """
@@ -249,3 +252,29 @@ class WidthSplitter:
             while len(elements) and elements[-1] == '':
                 elements.pop()
         return elements
+
+
+def _dim_from_tblock_size(x: int) -> int:
+    """Given the number of elements in a symmetric matrix lower triangle,
+    including the diagonal, compute the dimension (length of one side) of the
+    full matrix.
+    """
+    r1 = 0.5 * (sqrt(8*x + 1) - 1)
+    r2 = 0.5 * (-sqrt(8*x + 1) - 1)
+    m = max(r1, r2)
+    if _BUILTIN_FLOAT(round(m)) != m:
+        raise RuntimeError(
+            f"The number of elements ({x}) isn't possible for a matrix triangle"
+        )
+    return int(m)
+
+
+def block_to_matrix(block: numpy.ndarray) -> numpy.ndarray:
+    """Convert a flattened symmetric matrix lower triangle to its full
+    symmetrized form.
+    """
+    assert len(block.shape) == 1
+    dim = _dim_from_tblock_size(block.shape[0])
+    mat = numpy.empty(shape=(dim, dim), dtype=block.dtype)
+    mat[numpy.tril_indices_from(mat)] = block
+    return symmetrize(mat)

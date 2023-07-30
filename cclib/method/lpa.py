@@ -16,18 +16,18 @@ from cclib.method.population import Population
 
 class LPA(Population):
     """The Löwdin population analysis"""
-    def __init__(self, *args):
+    def __init__(self, *args) -> None:
         super().__init__(logname="LPA", *args)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"LPA of {self.data}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'LPA("{self.data}")'
 
-    def calculate(self, indices=None, x=0.5, fupdate=0.05):
+    def calculate(self, indices=None, x: float = 0.5, fupdate: float = 0.05) -> bool:
         """Perform a calculation of Löwdin population analysis.
 
         Inputs:

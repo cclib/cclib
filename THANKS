@@ -1,12 +1,17 @@
 Core developers:
 Eric J. Berquist
+Minsik Cho
+Amanda Dumi
+Felipe S. Schneider
 Geoff Hutchison
 Karol M. Langner
 Noel M. O'Boyle (retired)
 Adam L. Tenderholt
+Shiv Upadhyay
 
 Developers that have added at least ~1K SLOC:
 Sagar Gaur
+Oliver Lee
 Sanjeed Schamnad
 Kunal Sharma
 Casper Steinmann
@@ -17,31 +22,41 @@ Nuno Bandeira -- for bug reporting
 Björn Baumeier -- for bug reporting
 Dermot Brougham -- for bug reporting
 bwang2453 -- for patches and new features
+Javier Cerezo -- for patches
 Avril Coghlan -- for designing the cclib logo
 Ramon Crehuet -- for new features
+Michael D'Addario -- for fixes
 Björn Dahlgren -- for bug reporting
 Yafei Dai -- for bug reporting
 Abhishek Dey -- for bug reporting
 Matt Ernst -- for patches
 Clyde Fare -- for bug reporting and patches
+Elliot Farrar -- for fixes
+froessler -- for cleanups
 Christos Garoufalis -- for bug reporting
 Alessandro Genova - for patches and fixes
-Sagar Gaur -- for patches
 glideht -- for bug reporting
 Edward Holland -- for patches
 Karen Hemelsoet -- for bug reporting
 Ian Hovell -- for bug reporting
 Julien Idé -- for bug reporting
 csjacky -- for bug reporting
+Peter St. John -- for patches
 Russell Johnson -- for providing CCCBDB (NIST) logfiles
 Jerome Kieffer -- for bug reporting
+kuriba -- for patches
+Cyrille Lavigne - for documentation
 Greg Magoon -- for bug reporting and patches
+Alex Maldonado -- for fixes
 Scott McKechnie -- for bug reporting
 mkrompiec -- for contributing test files
 mwykes -- for bug reporting and patches
 Alexis Otero-Calvis -- for bug reporting
+Daniele Padula -- for patches
 Rob Paton -- for creating and running Jaguar test jobs
 Martin Peeks -- for patches
+Waylon Peng -- for fixes and improvements
+Mark Perri -- for patches
 Felix Plasser -- for fixes, patches and contributing files
 Martin Rahm -- for bug reporting
 Peter Reinholdt - for patches
@@ -50,18 +65,24 @@ Jaime Rodríguez-Guerra - for patches
 Tamilmani S -- for bug reporting
 Melchor Sanchez -- for bug reporting
 Alex Schild -- for ideas and contributing test files
-Felipe S. S. Schneider - for fixes
 Jen Schwartz -- for helping create and run Jaguar 6.0 test jobs
+shijunang -- for patches
+Chikashi Shinagawa -- for patches
+simonaxelrod -- for fixes
 Tiago Silva -- for bug reporting
+James E T Smith -- for fixes
 Pavel Solntsev -- for bug reporting
+srtlg -- for fixes
 Ben Stein -- for patches
 Maxim Stolyarchuk - for patches
 Adam Swanson -- for bug reporting
 Joe Townsend -- for contributing multiple GAMESS files to test on
-Shiv Upadhyay -- for patches and fixes
 Chengju Wang -- for bug reporting
-Andrew Warden -- for bug reporting
+Andrew Warden -- for bug reportint
+Hubert Weißmann -- for fixes
+Dustin Wheeler -- for fixes
 Samuel Wilson -- for bug reporting
+Dave Z. -- for patches
 Fedor Zhuravlev -- for patches
 
 Please let us know if we have omitted someone from this list.

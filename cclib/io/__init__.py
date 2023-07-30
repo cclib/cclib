@@ -25,4 +25,3 @@ from cclib.io.ccio import ccframe
 from cclib.io.ccio import ccopen
 from cclib.io.ccio import ccread
 from cclib.io.ccio import ccwrite
-from cclib.io.ccio import URL_PATTERN

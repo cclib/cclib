@@ -10,7 +10,11 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        container: ['shivupa/cclib-ci:py36', 'shivupa/cclib-ci:py37', 'shivupa/cclib-ci:py38']
+        container:
+          - 'shivupa/cclib-ci:py37-edge'
+          - 'shivupa/cclib-ci:py38-edge'
+          - 'shivupa/cclib-ci:py39-edge'
+          - 'shivupa/cclib-ci:py310-edge'
     container:
       image: ${{ matrix.container }}
     defaults:
@@ -18,10 +22,13 @@ jobs:
         shell: bash -eo pipefail -l {0}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+      - name: Allow repo access (see https://github.com/actions/checkout/issues/760)
+        run: |
+          git config --global --add safe.directory /__w/cclib/cclib
       - name: Prepare conda environment
         run: |
-          echo "/env/bin" >> $GITHUB_PATH
+          echo "/opt/conda/envs/cclib/bin" >> $GITHUB_PATH
       - name: Install cclib
         run: |
           python -m pip install .

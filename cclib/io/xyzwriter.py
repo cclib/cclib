@@ -8,14 +8,15 @@
 """A writer for XYZ (Cartesian coordinate) files."""
 
 from cclib.io import filewriter
+from cclib.parser.data import ccData
 
 
 class XYZ(filewriter.Writer):
     """A writer for XYZ (Cartesian coordinate) files."""
 
-    def __init__(self, ccdata, splitfiles=False,
-                 firstgeom=False, lastgeom=False, allgeom=False,
-                 *args, **kwargs):
+    def __init__(self, ccdata: ccData, splitfiles: bool = False,
+                 firstgeom: bool = False, lastgeom: bool = False, allgeom: bool = False,
+                 *args, **kwargs) -> None:
         """Initialize the XYZ writer object.
 
         Inputs:
@@ -36,7 +37,7 @@ class XYZ(filewriter.Writer):
         self.natom = str(self.ccdata.natom)
         self.element_list = [self.pt.element[Z] for Z in self.ccdata.atomnos]
 
-    def generate_repr(self):
+    def generate_repr(self) -> str:
         """Generate the XYZ representation of the logfile data."""
 
         # Options for output (to a single file):
@@ -75,7 +76,7 @@ class XYZ(filewriter.Writer):
 
         return '\n'.join(xyzblock)
 
-    def _xyz_from_ccdata(self, index):
+    def _xyz_from_ccdata(self, index: int) -> str:
         """Create an XYZ file of the geometry at the given index."""
 
         atomcoords = self.ccdata.atomcoords[index]

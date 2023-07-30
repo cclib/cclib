@@ -86,6 +86,7 @@ def generate_coverage():
         'QChem' : ['fonames', 'fooverlaps', 'fragnames', 'frags'],
     }
     not_possible = {
+        "NWChem": ["vibfconsts", "vibrmasses"],
         'Psi' : ['aooverlaps', 'vibirs'],
         'QChem' : ['aooverlaps', 'etrotats'],
     }

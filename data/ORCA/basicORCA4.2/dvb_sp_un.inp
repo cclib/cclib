@@ -5,6 +5,7 @@
  print[ p_basis ] 2
  print[ p_mos ] 1
  print[ p_overlap ] 1
+ print[ p_hirshfeld ] 1
  end 
 
 * xyz 1 2

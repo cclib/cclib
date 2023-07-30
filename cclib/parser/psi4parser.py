@@ -8,8 +8,10 @@
 """Parser for Psi4 output files."""
 
 from collections import namedtuple
+import re
 
 import numpy
+from packaging.version import parse as parse_version
 
 from cclib.parser import data
 from cclib.parser import logfileparser
@@ -43,6 +45,16 @@ class Psi4(logfileparser.Logfile):
         # There are also sometimes subsections within each section, denoted
         # with =>/<= rather than ==>/<==.
         self.subsection = None
+
+        # Regular expression for matching the start of an atomic charges
+        # section; the second format of the header (with square brackets) is
+        # for old Psi4 versions.
+        self.re_atomic_charges_header = re.compile(
+            r"^\s*(Mulliken|Lowdin|MBIS) Charges(:?: \(a\.u\.\)| \[a\.u\.\]:)"
+        )
+
+        self.ccsd_trigger = "* CCSD total energy"
+        self.ccsd_t_trigger = "* CCSD(T) total energy"
 
     def after_parsing(self):
         super(Psi4, self).after_parsing()
@@ -106,6 +118,7 @@ class Psi4(logfileparser.Logfile):
                 dev_flag = "" if "dev" in package_version else ".dev"
                 package_version = f"{package_version}{dev_flag}+{revision}"
             self.metadata["package_version"] = package_version
+            self.package_version = parse_version(package_version)
 
         # This will automatically change the section attribute for Psi4, when encountering
         # a line that <== looks like this ==>, to whatever is in between.
@@ -161,14 +174,22 @@ class Psi4(logfileparser.Logfile):
             self.metadata['symmetry_detected'] = point_group_full
             self.metadata['symmetry_used'] = point_group_abelian
 
-        if (self.section == "Geometry") and ("Geometry (in Angstrom), charge" in line):
+        if (self.section == "Geometry") and ("Geometry (in" in line):
+            tokens = line.split()
 
-            assert line.split()[3] == "charge"
-            charge = int(line.split()[5].strip(','))
+            units = tokens[2][:-2]
+            assert units in ("Angstrom", "Bohr")
+            if units == "Bohr":
+                convert_coords = lambda x: utils.convertor(x, "bohr", "Angstrom")
+            else:
+                convert_coords = lambda x: x
+
+            assert tokens[3] == "charge"
+            charge = int(tokens[5].strip(','))
             self.set_attribute('charge', charge)
 
-            assert line.split()[6] == "multiplicity"
-            mult = int(line.split()[8].strip(':'))
+            assert tokens[6] == "multiplicity"
+            mult = int(tokens[8].strip(':'))
             self.set_attribute('mult', mult)
 
             self.skip_line(inputfile, "blank")
@@ -189,7 +210,9 @@ class Psi4(logfileparser.Logfile):
                 if len(el) > 1:
                     el = el[0] + el[1:].lower()
                 elements.append(el)
-                coords.append([float(x), float(y), float(z)])
+                coords.append(
+                    convert_coords(numpy.asarray([float(x), float(y), float(z)]))
+                )
                 # Newer versions of Psi4 print atomic masses.
                 if len(chomp) == 5:
                     atommasses.append(float(chomp[4]))
@@ -198,15 +221,12 @@ class Psi4(logfileparser.Logfile):
             # The 0 is to handle the presence of ghost atoms.
             self.set_attribute('atomnos', [self.table.number.get(el, 0) for el in elements])
 
-            if not hasattr(self, 'atomcoords'):
-                self.atomcoords = []
-
             # This condition discards any repeated coordinates that Psi print. For example,
             # geometry optimizations will print the coordinates at the beginning of and SCF
             # section and also at the start of the gradient calculation.
-            if len(self.atomcoords) == 0 \
-                or (self.atomcoords[-1] != coords and not hasattr(self, 'finite_difference')):
-                self.atomcoords.append(coords)
+            if not hasattr(self, "atomcoords") \
+                or (not numpy.array_equal(self.atomcoords[-1], coords) and not hasattr(self, 'finite_difference')):
+                self.append_attribute("atomcoords", coords)
 
             if len(atommasses) > 0:
                 if not hasattr(self, 'atommasses'):
@@ -650,22 +670,21 @@ class Psi4(logfileparser.Logfile):
         #        1     C     2.99909  2.99909  0.00000  0.00182
         #        2     C     2.99909  2.99909  0.00000  0.00182
         # ...
-        for pop_type in ["Mulliken", "Lowdin"]:
-            if line.strip() == f"{pop_type} Charges: (a.u.)":
-                if not hasattr(self, 'atomcharges'):
-                    self.atomcharges = {}
-                header = next(inputfile)
+        atomic_charges_header = self.re_atomic_charges_header.search(line)
+        if atomic_charges_header is not None:
+            if not hasattr(self, 'atomcharges'):
+                self.atomcharges = {}
 
+            while "Center  Symbol    Alpha" not in line:
                 line = next(inputfile)
-                while not line.strip():
-                    line = next(inputfile)
+            line = next(inputfile)
 
-                charges = []
-                while line.strip():
-                    ch = float(line.split()[-1])
-                    charges.append(ch)
-                    line = next(inputfile)
-                self.atomcharges[pop_type.lower()] = charges
+            charges = []
+            while line.strip():
+                ch = float(line.split()[-1])
+                charges.append(ch)
+                line = next(inputfile)
+            self.atomcharges[atomic_charges_header.groups()[0].lower()] = charges
 
         # This is for the older conventional MP2 code in 4.0b5.
         mp_trigger = "MP2 Total Energy (a.u.)"
@@ -685,14 +704,16 @@ class Psi4(logfileparser.Logfile):
                 self.mpenergies = []
             self.mpenergies.append([mpenergy])
 
-        # Note this is just a start and needs to be modified for CCSD(T), etc.
-        ccsd_trigger = "* CCSD total energy"
-        if line.strip()[:len(ccsd_trigger)] == ccsd_trigger:
+        if line.lstrip().startswith(self.ccsd_trigger):
             self.metadata["methods"].append("CCSD")
             ccsd_energy = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
-            if not hasattr(self, "ccenergis"):
-                self.ccenergies = []
-            self.ccenergies.append(ccsd_energy)
+            self.append_attribute("ccenergies", ccsd_energy)
+
+        if line.strip().startswith(self.ccsd_t_trigger):
+            assert self.metadata["methods"][-1] == "CCSD"
+            self.metadata["methods"].append("CCSD(T)")
+            ccsd_t_energy = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
+            self.ccenergies[-1] = ccsd_t_energy
 
         # The geometry convergence targets and values are printed in a table, with the legends
         # describing the convergence annotation. Probably exact slicing of the line needs
@@ -700,18 +721,21 @@ class Psi4(logfileparser.Logfile):
         # a paritcular target it means they are not used (marked also with an 'o'), and in this case
         # we will set a value of numpy.inf so that any value will be smaller.
         #
-        #  ==> Convergence Check <==
-        #
+        #                               ==> Convergence Check <==                                  
+        #  
         #  Measures of convergence in internal coordinates in au.
+        #  
         #  Criteria marked as inactive (o), active & met (*), and active & unmet ( ).
-        #  ---------------------------------------------------------------------------------------------
-        #   Step     Total Energy     Delta E     MAX Force     RMS Force      MAX Disp      RMS Disp
-        #  ---------------------------------------------------------------------------------------------
-        #    Convergence Criteria    1.00e-06 *    3.00e-04 *             o    1.20e-03 *             o
-        #  ---------------------------------------------------------------------------------------------
-        #      2    -379.77675264   -7.79e-03      1.88e-02      4.37e-03 o    2.29e-02      6.76e-03 o  ~
-        #  ---------------------------------------------------------------------------------------------
+        #  
+        #  ----------------------------------------------------------------------------------------------
+        #     Step    Total Energy     Delta E     Max Force     RMS Force      Max Disp      RMS Disp
+        #  ----------------------------------------------------------------------------------------------
+        #    Convergence Criteria     1.00e-06 *    3.00e-04 *             o    1.20e-03 *             o
+        #  ----------------------------------------------------------------------------------------------
+        #       2    -379.77675264   -7.79e-03      1.88e-02      4.37e-03 o    2.29e-02      6.76e-03 o  ~
+        #  ----------------------------------------------------------------------------------------------
         #
+        
         if (self.section == "Convergence Check") and line.strip() == "==> Convergence Check <==" \
             and not hasattr(self, 'finite_difference'):
 
@@ -719,7 +743,13 @@ class Psi4(logfileparser.Logfile):
                 self.optstatus = []
             self.optstatus.append(data.ccData.OPT_UNKNOWN)
 
-            self.skip_lines(inputfile, ['b', 'units', 'comment', 'dash+tilde', 'header', 'dash+tilde'])
+            self.skip_lines(inputfile, ["b", "units"])
+            if self.package_version.minor >= 7:
+                self.skip_line(inputfile, "b")
+            self.skip_line(inputfile, "comment")
+            if self.package_version.minor >= 7:
+                self.skip_line(inputfile, "b")
+            self.skip_lines(inputfile, ["dash+tilde", "header", "dash+tilde"])
 
             # These are the position in the line at which numbers should start.
             starts = [27, 41, 55, 69, 83]
@@ -758,17 +788,13 @@ class Psi4(logfileparser.Logfile):
         # This message signals a converged optimization, in which case we want
         # to append the index for this step to optdone, which should be equal
         # to the number of geovalues gathered so far.
-        if "Optimization is complete!" in line:
+        if "Final optimized geometry and variables:" in line:
 
             # This is a workaround for Psi4.0/sample_opt-irc-2.out;
             # IRC calculations currently aren't parsed properly for
             # optimization parameters.
             if hasattr(self, 'geovalues'):
-
-                if not hasattr(self, 'optdone'):
-                    self.optdone = []
-                self.optdone.append(len(self.geovalues))
-
+                self.append_attribute("optdone", len(self.geovalues))
                 assert hasattr(self, "optstatus") and len(self.optstatus) > 0
                 self.optstatus[-1] += data.ccData.OPT_DONE
 
@@ -793,9 +819,16 @@ class Psi4(logfileparser.Logfile):
         # Properties will be evaluated at   0.000000,   0.000000,   0.000000 [a0]
         #
         if "Properties will be evaluated at" in line.strip():
-            self.origin = numpy.array([float(x.strip(',')) for x in line.split()[-4:-1]])
-            assert line.split()[-1] in ["Bohr", "[a0]"]
-            self.origin = utils.convertor(self.origin, 'bohr', 'Angstrom')
+            tokens = line.split()
+            assert tokens[-1] in ["Bohr", "[a0]"]
+            self.set_attribute(
+                "origin",
+                utils.convertor(
+                    numpy.array([float(x.strip(',')) for x in line.split()[-4:-1]]),
+                    'bohr',
+                    'Angstrom'
+                )
+            )
 
         # The properties section print the molecular dipole moment:
         #
@@ -815,22 +848,24 @@ class Psi4(logfileparser.Logfile):
         if (self.section == "Properties") and line.strip() == "Dipole Moment: (a.u.)":
 
             line = next(inputfile)
-            dipole = numpy.array([float(line.split()[1]), float(line.split()[3]), float(line.split()[5])])
-            dipole = utils.convertor(dipole, "ebohr", "Debye")
+            tokens = line.split()
+            dipole = utils.convertor(
+                numpy.array([float(tokens[1]), float(tokens[3]), float(tokens[5])]),
+                "ebohr",
+                "Debye"
+            )
 
             if not hasattr(self, 'moments'):
                 # Old versions of Psi4 don't print the origin; assume
                 # it's at zero.
                 if not hasattr(self, 'origin'):
-                    self.origin = numpy.array([0.0, 0.0, 0.0])
-                self.moments = [self.origin, dipole]
+                    self.set_attribute("origin", numpy.array([0.0, 0.0, 0.0]))
+                self.set_attribute("moments", [self.origin, dipole])
             else:
                 try:
                     assert numpy.all(self.moments[1] == dipole)
                 except AssertionError:
-                    self.logger.warning('Overwriting previous multipole moments with new values')
-                    self.logger.warning('This could be from post-HF properties or geometry optimization')
-                    self.moments = [self.origin, dipole]
+                    self.set_attribute("moments", [self.origin, dipole])
 
         # Higher multipole moments are printed separately, on demand, in lexicographical order.
         #
@@ -867,7 +902,11 @@ class Psi4(logfileparser.Logfile):
                 line = next(inputfile)
                 while line.strip():
 
-                    value = float(line.split()[-1])
+                    tokens = line.split()
+                    if tokens[0] in ("Magnitude", "Traceless"):
+                        line = next(inputfile)
+                        continue
+                    value = float(tokens[-1])
                     fromunits = f"ebohr{(rank > 1) * f'{int(rank)}'}"
                     tounits = (
                         f"Debye{(rank > 1) * '.ang'}{(rank > 2) * f'{int(rank - 1)}'}"
@@ -882,7 +921,7 @@ class Psi4(logfileparser.Logfile):
                 line = next(inputfile)
 
             if not hasattr(self, 'moments'):
-                self.moments = moments
+                self.set_attribute("moments", moments)
             else:
                 for im, m in enumerate(moments):
                     if len(self.moments) <= im:
@@ -917,11 +956,14 @@ class Psi4(logfileparser.Logfile):
                 for info in Psi4.GRADIENT_TYPES.values()
                 if info.header == line.strip()
             ][0]
-            gradient = self.parse_gradient(inputfile, gradient_skip_lines)
 
-            if not hasattr(self, 'grads'):
-                self.grads = []
-            self.grads.append(gradient)
+            self.append_attribute(
+                "grads",
+                self.parse_gradient(inputfile, gradient_skip_lines)
+            )
+
+        if line.strip() == "## Total Hessian (Symmetry 0) ##":
+            self.set_attribute("hessian", self.parse_hessian(inputfile))
 
         # OLD Normal mode output parser (PSI4 < 1)
 
@@ -1037,6 +1079,7 @@ class Psi4(logfileparser.Logfile):
             vibdisps = []
             vibrmasses = []
             vibfconsts = []
+            vibirs = []
 
             # Skip lines till the first Vibration block
             while not line.strip().startswith('Vibration'):
@@ -1047,12 +1090,13 @@ class Psi4(logfileparser.Logfile):
             while line.strip().startswith('Vibration'):
                 n = len(line.split()) - 1
                 n_modes += n
-                vibfreqs_, vibsyms_, vibdisps_, vibrmasses_, vibfconsts_ = self.parse_vibration(n, inputfile)
+                vibfreqs_, vibsyms_, vibdisps_, vibrmasses_, vibfconsts_, vibirs_ = self.parse_vibration(n, inputfile)
                 vibfreqs.extend(vibfreqs_)
                 vibsyms.extend(vibsyms_)
                 vibdisps.extend(vibdisps_)
                 vibrmasses.extend(vibrmasses_)
                 vibfconsts.extend(vibfconsts_)
+                vibirs.extend(vibirs_)
                 line = next(inputfile)
 
             # It looks like the symmetry of the normal mode may be missing 
@@ -1072,6 +1116,9 @@ class Psi4(logfileparser.Logfile):
 
             if len(vibdisps) == n_modes:
                 self.set_attribute('vibfconsts', vibfconsts)
+
+            if len(vibirs) == n_modes:
+                self.set_attribute('vibirs', vibirs)
 
         # Second one is 1.0, first one is 1.2 and newer
         if (self.section == "Thermochemistry Energy Analysis" and "Thermochemistry Energy Analysis" in line) \
@@ -1147,22 +1194,59 @@ class Psi4(logfileparser.Logfile):
             line = next(inputfile)
         return gradient
 
+    def parse_hessian(self, inputfile):
+        """Parse the geometric/molecular Hessian."""
+        line = next(inputfile)
+        tokens = line.split()
+        nrows, ncols = int(tokens[3]), int(tokens[5])
+        icol = 0
+        col_counter = ncols
+        n_max_cols = 5
+        hessian = numpy.empty((nrows, ncols))
+        while col_counter > 0:
+            self.skip_lines(inputfile, ["b", "column numbers", "b"])
+            for irow in range(nrows):
+                line = next(inputfile)
+                # 0:5 then 5:6
+                hessian[irow, icol:icol+n_max_cols] = [float(x) for x in line.split()[1:]]
+            if col_counter - n_max_cols < 0:
+                break
+            col_counter -= n_max_cols
+            icol += n_max_cols
+        return hessian
+
     @staticmethod
     def parse_vibration(n, inputfile):
 
-        #   Freq [cm^-1]                1501.9533           1501.9533           1501.9533
-        #   Irrep
-        #   Reduced mass [u]              1.1820              1.1820              1.1820
-        #   Force const [mDyne/A]         1.5710              1.5710              1.5710
-        #   Turning point v=0 [a0]        0.2604              0.2604              0.2604
-        #   RMS dev v=0 [a0 u^1/2]        0.2002              0.2002              0.2002
-        #   Char temp [K]               2160.9731           2160.9731           2160.9731
-        #   ----------------------------------------------------------------------------------
-        #       1   C               -0.00  0.01  0.13   -0.00 -0.13  0.01   -0.13  0.00 -0.00
-        #       2   H                0.33 -0.03 -0.38    0.02  0.60 -0.02    0.14 -0.01 -0.32
-        #       3   H               -0.32 -0.03 -0.37   -0.01  0.60 -0.01    0.15 -0.01  0.33
-        #       4   H                0.02  0.32 -0.36    0.01  0.16 -0.34    0.60 -0.01  0.01
-        #       5   H                0.02 -0.33 -0.39    0.01  0.13  0.31    0.60  0.01  0.01
+        #  Vibration                       1                   8                   9
+        #  Freq [cm^-1]                698.2090i           1675.6707           1675.6899
+        #  Irrep                           B2                  B1                  A1
+        #  Reduced mass [u]              1.1842              1.0783              1.0783
+        #  Force const [mDyne/A]        -0.3401              1.7838              1.7839
+        #  Turning point v=0 [a0]        0.0000              0.2581              0.2581
+        #  RMS dev v=0 [a0 u^1/2]        0.0000              0.1895              0.1895
+        #  IR activ [km/mol]            695.8115            139.3986            139.4122
+        #  Char temp [K]                 0.0000            2410.9171           2410.9446
+        #  ----------------------------------------------------------------------------------
+        #      1   O                0.00 -0.11  0.00   -0.07 -0.00 -0.00    0.00  0.00 -0.07
+        #      2   H               -0.00  0.57 -0.00    0.14  0.00  0.39    0.39 -0.00  0.59
+        #      3   H               -0.00  0.57  0.00    0.14  0.00 -0.39   -0.39 -0.00  0.59
+        #      4   H               -0.00  0.57 -0.00    0.81  0.00 -0.00   -0.00 -0.00 -0.08
+        #  
+        #  Vibration                       10                  11                  12
+        #  Freq [cm^-1]                3815.5756           4002.9095           4003.0866
+        #  Irrep                           A1                  B1                  A1
+        #  Reduced mass [u]              1.0078              1.0998              1.0998
+        #  Force const [mDyne/A]         8.6448             10.3828             10.3837
+        #  Turning point v=0 [a0]        0.1769              0.1654              0.1654
+        #  RMS dev v=0 [a0 u^1/2]        0.1256              0.1226              0.1226
+        #  IR activ [km/mol]             0.0003             759.5496            759.5086
+        #  Char temp [K]               5489.7637           5759.2955           5759.5504
+        #  ----------------------------------------------------------------------------------
+        #      1   O               -0.00 -0.00  0.00   -0.08  0.00  0.00   -0.00 -0.00 -0.08
+        #      2   H                0.50  0.00 -0.29    0.61  0.00 -0.35   -0.35 -0.00  0.21
+        #      3   H               -0.50  0.00 -0.29    0.61 -0.00  0.35    0.35  0.00  0.21
+        #      4   H                0.00  0.00  0.58    0.01  0.00 -0.00    0.00  0.00  0.81
 
         line = next(inputfile)
         assert 'Freq' in line
@@ -1177,12 +1261,12 @@ class Psi4(logfileparser.Logfile):
         line = next(inputfile)
         assert 'Reduced mass' in line
         chomp = line.split()
-        vibrmasses = [utils.float(x) for x in chomp[3:]]
+        vibrmasses = [float(x) for x in chomp[3:]]
 
         line = next(inputfile)
         assert 'Force const' in line
         chomp = line.split()
-        vibfconsts = [utils.float(x) for x in chomp[3:]]
+        vibfconsts = [float(x) for x in chomp[3:]]
 
         line = next(inputfile)
         assert 'Turning point' in line
@@ -1191,6 +1275,12 @@ class Psi4(logfileparser.Logfile):
         assert 'RMS dev' in line
 
         line = next(inputfile)
+        if 'IR activ' in line:
+            chomp = line.split()
+            vibirs = [float(x) for x in chomp[3:]]
+            line = next(inputfile)
+        else:
+            vibirs = []
         assert 'Char temp' in line
 
         line = next(inputfile)
@@ -1208,7 +1298,7 @@ class Psi4(logfileparser.Logfile):
 
             line = next(inputfile)
 
-        return vibfreqs, vibsyms, vibdisps, vibrmasses, vibfconsts
+        return vibfreqs, vibsyms, vibdisps, vibrmasses, vibfconsts, vibirs
 
     @staticmethod
     def parse_vibfreq(vibfreq):

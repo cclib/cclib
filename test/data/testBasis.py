@@ -38,14 +38,14 @@ class GenericBasisTest(unittest.TestCase):
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testgbasis(self):
         """Is gbasis the right length?"""
-        self.assertEqual(self.data.natom, len(self.data.gbasis))
+        assert self.data.natom == len(self.data.gbasis)
 
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testnames(self):
         """Are the name of basis set functions acceptable?"""
         for atom in self.data.gbasis:
             for fns in atom:
-                self.assertTrue(fns[0] in self.names, f"{fns[0]} not one of S or P")
+                assert fns[0] in self.names, f"{fns[0]} not one of S or P"
 
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testsizeofbasis(self):
@@ -57,14 +57,14 @@ class GenericBasisTest(unittest.TestCase):
             for (ftype, contraction) in atom:
                 total += multiple[ftype]
 
-        self.assertEqual(self.data.nbasis, total)
+        assert self.data.nbasis == total
 
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testcontractions(self):
         """Are the number of contractions on all atoms correct?"""
         for iatom, atom in enumerate(self.data.gbasis):
             atomno = self.data.atomnos[iatom]
-            self.assertEqual(len(atom), self.contractions[atomno])
+            assert len(atom) == self.contractions[atomno]
 
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testprimitives(self):
@@ -72,7 +72,7 @@ class GenericBasisTest(unittest.TestCase):
         for atom in self.data.gbasis:
             for ftype, contraction in atom:
                 for primitive in contraction:
-                    self.assertEqual(len(primitive), 2)
+                    assert len(primitive) == 2
 
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testcoeffs(self):
@@ -81,15 +81,15 @@ class GenericBasisTest(unittest.TestCase):
         for iatom,atom in enumerate(self.data.gbasis):
             if self.data.atomnos[iatom] == 1:
                 coeffs = atom[0][1]
-                self.assertAlmostEqual(coeffs[0][0], self.gbasis_H_1s_func0[0], 4)
-                self.assertAlmostEqual(coeffs[0][1], self.gbasis_H_1s_func0[1], 4)
+                assert round(abs(coeffs[0][0] - self.gbasis_H_1s_func0[0]), 4) == 0
+                assert round(abs(coeffs[0][1] - self.gbasis_H_1s_func0[1]), 4) == 0
             else:
                 s_coeffs = atom[1][1]
                 p_coeffs = atom[2][1]
-                self.assertAlmostEqual(s_coeffs[0][0], self.gbasis_C_2s_func0[0], 4)
-                self.assertAlmostEqual(p_coeffs[0][0], self.gbasis_C_2p_func0[0], 4)
-                self.assertAlmostEqual(s_coeffs[0][1], self.gbasis_C_2s_func0[1], 4)
-                self.assertAlmostEqual(p_coeffs[0][1], self.gbasis_C_2p_func0[1], 4)
+                assert round(abs(s_coeffs[0][0] - self.gbasis_C_2s_func0[0]), 4) == 0
+                assert round(abs(p_coeffs[0][0] - self.gbasis_C_2p_func0[0]), 4) == 0
+                assert round(abs(s_coeffs[0][1] - self.gbasis_C_2s_func0[1]), 4) == 0
+                assert round(abs(p_coeffs[0][1] - self.gbasis_C_2p_func0[1]), 4) == 0
 
 
 class JaguarBasisTest(GenericBasisTest):
@@ -110,12 +110,12 @@ class GenericBigBasisTest(GenericBasisTest):
     @unittest.skip('Write up a new test, and/or revise the one inherited.')
     def testcoeffs(self):
         """Are the basis set coefficients correct?"""
-        self.assertEqual(1, 1)
+        assert True
 
     @unittest.skip('# of contractions is 20 for VQZ, but 29 for CVQZ; unify files first.')
     def testcontractions(self):
         """"""
-        self.assertEqual(1, 1)
+        assert True
 
 
 class DALTONBigBasisTest(GenericBigBasisTest):

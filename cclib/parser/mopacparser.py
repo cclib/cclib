@@ -117,10 +117,10 @@ class MOPAC(logfileparser.Logfile):
             self.inputcoords = []
             self.inputatoms = []
 
-            blankline = inputfile.next()
+            blankline = next(inputfile)
 
             atomcoords = []
-            line = inputfile.next()
+            line = next(inputfile)
             while len(line.split()) > 6:
                 # MOPAC Version 14.019L 64BITS suddenly appends this block with
                 # "CARTESIAN COORDINATES" block with no blank line.
@@ -130,7 +130,7 @@ class MOPAC(logfileparser.Logfile):
                 yc = float(tokens[4])
                 zc = float(tokens[6])
                 atomcoords.append([xc, yc, zc])
-                line = inputfile.next()
+                line = next(inputfile)
 
             self.inputcoords.append(atomcoords)
 
@@ -170,16 +170,16 @@ class MOPAC(logfileparser.Logfile):
         # note that the last occurence of this in the thermochemistry section has reduced precision,
         # so we will want to use the 2nd to last instance
         if line[0:40] == '          ROTATIONAL CONSTANTS IN CM(-1)':
-            blankline = inputfile.next()
-            rotinfo = inputfile.next()
-            if not hasattr(self, "rotcons"):
-                self.rotcons = []
+            blankline = next(inputfile)
+            rotinfo = next(inputfile)
+            if not hasattr(self, "rotconsts"):
+                self.rotconsts = []
             broken = rotinfo.split()
             # leave the rotational constants in Hz
             a = float(broken[2])
             b = float(broken[5])
             c = float(broken[8])
-            self.rotcons.append([a, b, c])
+            self.rotconsts.append([a, b, c])
 
         # Start of the IR/Raman frequency section.
         # Example:
@@ -206,14 +206,14 @@ class MOPAC(logfileparser.Logfile):
                     self.vibsyms = []
                 self.vibsyms.append(sym)
 
-            line = inputfile.next()
+            line = next(inputfile)
             if 'FREQ' in line:
                 if not hasattr(self, 'vibfreqs'):
                     self.vibfreqs = []
                 freq = float(line.split()[1])
                 self.vibfreqs.append(freq)
 
-            line = inputfile.next()
+            line = next(inputfile)
             if 'T-DIPOLE' in line:
                 if not hasattr(self, 'vibirs'):
                     self.vibirs = []
@@ -221,11 +221,11 @@ class MOPAC(logfileparser.Logfile):
                 # transform to km/mol
                 self.vibirs.append(math.sqrt(tdipole))
 
-            line = inputfile.next()
+            line = next(inputfile)
             if 'TRAVEL' in line:
                 pass
 
-            line = inputfile.next()
+            line = next(inputfile)
             if 'RED. MASS' in line:
                 if not hasattr(self, 'vibrmasses'):
                     self.vibrmasses = []
@@ -241,10 +241,10 @@ class MOPAC(logfileparser.Logfile):
                 self.moenergies = [] # list of arrays
 
             energies = []
-            line = inputfile.next()
+            line = next(inputfile)
             while len(line.split()) > 0:
                 energies.extend([float(i) for i in line.split()])
-                line = inputfile.next()
+                line = next(inputfile)
             self.moenergies.append(energies)
 
         # todo:

@@ -16,6 +16,7 @@ import cclib
 from cclib.io.filewriter import MissingAttributeError
 from cclib.io.wfxwriter import _section
 from cclib.io.wfxwriter import _list_format
+import pytest
 
 __filedir__ = os.path.dirname(__file__)
 __filepath__ = os.path.realpath(__filedir__)
@@ -35,7 +36,7 @@ class WFXTest(unittest.TestCase):
             delattr(data, attr)
 
             # WFX files cannot be written if required attrs are missing.
-            with self.assertRaises(MissingAttributeError):
+            with pytest.raises(MissingAttributeError):
                 cclib.io.wfxwriter.WFXWriter(data)
 
     def test_no_of_prims(self):
@@ -57,7 +58,7 @@ class WFXTest(unittest.TestCase):
                     no_prims_ccdata += num_orb[prims[0].lower()]\
                                         * len(prims[1])
 
-            self.assertEqual(no_prims_writer, no_prims_ccdata)
+            assert no_prims_writer == no_prims_ccdata
 
     def test_mo_normalization(self):
         """Check if MO section is printed correctly."""
@@ -68,10 +69,10 @@ class WFXTest(unittest.TestCase):
 
         normalized_mocoeffs = wfx._normalized_mocoeffs()
         if len(data.homos) > 1:
-            self.assertEqual(len(normalized_mocoeffs), wfx._no_electrons())
+            assert len(normalized_mocoeffs) == wfx._no_electrons()
         else:
-            self.assertEqual(len(normalized_mocoeffs), wfx._no_of_mos())
-        self.assertEqual(len(normalized_mocoeffs[0]), wfx._no_of_prims())
+            assert len(normalized_mocoeffs) == wfx._no_of_mos()
+        assert len(normalized_mocoeffs[0]) == wfx._no_of_prims()
 
     def test_mo_normalization_dat(self):
         """Check if MOs are normalized as expected."""
@@ -106,7 +107,7 @@ class WFXTest(unittest.TestCase):
 
         for mo1, mo2 in zip(normalized_mocoeffs_dat, normalized_mocoeffs_wfx):
             for coeff1, coeff2 in zip(mo1, mo2):
-                self.assertTrue(-0.09 <= abs(coeff1) - abs(coeff2) <= 0.09)
+                assert -0.09 <= abs(coeff1) - abs(coeff2) <= 0.09
 
 
     def test_programs(self):
@@ -134,33 +135,32 @@ class WFXTest(unittest.TestCase):
             mos_prog = wfx_prog._no_of_mos()
 
             # Check if normalization matrix are matching.
-            self.assertAlmostEqual(max(np.array(norm_mat_prog) -
-                                       np.array(norm_mat_ref)), 0, places=5)
+            assert round(abs(max(np.array(norm_mat_prog) - np.array(norm_mat_ref))), 5) == 0
             # Check if number of orbitals to be printed are as expected.
-            self.assertEqual(mos_prog, mos_ref)
+            assert mos_prog == mos_ref
 
     def test_section_printing(self):
         """Check if wfx section printing works as expected."""
         float_section = _section('Test Section', 123.456)
         expected = ['<Test Section>', ' 123.456', '</Test Section>']
-        self.assertEqual(float_section, expected)
+        assert float_section == expected
 
         list_section = _section('Test Section', ['1', '2'])
         expected = ['<Test Section>', '1', '2', '</Test Section>']
-        self.assertEqual(list_section, expected)
+        assert list_section == expected
 
         str_section = _section('Test Section', 'Test Data')
         expected = ['<Test Section>', ' Test Data', '</Test Section>']
-        self.assertEqual(str_section, expected)
+        assert str_section == expected
 
     def test_list_format(self):
         """Check if list formatting works as expected."""
         odd_list = _list_format([1, 2, 3], 2, '%8.1E')
         odd_expected = [' 1.0E+00 2.0E+00', ' 3.0E+00']
-        self.assertEqual(odd_list, odd_expected)
+        assert odd_list == odd_expected
         even_list = _list_format([1, 2, 3, 4], 2, '%8.1E')
         even_expected = [' 1.0E+00 2.0E+00', ' 3.0E+00 4.0E+00']
-        self.assertEqual(even_list, even_expected)
+        assert even_list == even_expected
 
 
 if __name__ == "__main__":

@@ -18,6 +18,7 @@ from cclib.parser.adfparser import ADF
 from cclib.parser.daltonparser import DALTON
 from cclib.parser.fchkparser import FChk
 from cclib.parser.gamessparser import GAMESS
+from cclib.parser.gamessdatparser import GAMESSDAT
 from cclib.parser.gamessukparser import GAMESSUK
 from cclib.parser.gaussianparser import Gaussian
 from cclib.parser.jaguarparser import Jaguar

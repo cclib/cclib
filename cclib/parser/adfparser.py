@@ -14,6 +14,7 @@ import numpy
 
 from cclib.parser import logfileparser
 from cclib.parser import utils
+from cclib.parser.logfileparser import StopParsing
 
 
 class ADF(logfileparser.Logfile):
@@ -106,8 +107,7 @@ class ADF(logfileparser.Logfile):
         # not always be the best indicator.
         if line.strip() == "(INPUT FILE)" and hasattr(self, "scftargets"):
             self.logger.warning("Skipping remaining calculations")
-            inputfile.seek(0, 2)
-            return
+            raise StopParsing()
 
         # We also want to check to make sure we aren't parsing "Create" jobs,
         # which normally come before the calculation we actually want to parse.
@@ -166,7 +166,7 @@ class ADF(logfileparser.Logfile):
         # this with the previous block, if possible.
         if line[:6] == "Create":
             while line[:5] != "title" and "NO TITLE" not in line:
-                line = inputfile.next()
+                line = next(inputfile)
 
         if line[1:10] == "Symmetry:":
             info = line.split()
@@ -322,17 +322,17 @@ class ADF(logfileparser.Logfile):
 
             self.skip_line(inputfile, 'blank')
 
-            line = inputfile.next()
+            line = next(inputfile)
             while line.strip():
 
                 colline = line
                 assert colline.split()[0] == "column"
                 columns = [int(i) for i in colline.split()[1:]]
 
-                rowline = inputfile.next()
+                rowline = next(inputfile)
                 assert rowline.strip() == "row"
 
-                line = inputfile.next()
+                line = next(inputfile)
                 while line.strip():
 
                     i = int(line.split()[0])
@@ -342,9 +342,9 @@ class ADF(logfileparser.Logfile):
                         overlaps[k-1][i-1] = o
                         overlaps[i-1][k-1] = o
 
-                    line = inputfile.next()
+                    line = next(inputfile)
 
-                line = inputfile.next()
+                line = next(inputfile)
 
             # Now all values should be parsed, and so no Nones remaining.
             assert all([all([x is not None for x in ao]) for ao in overlaps])
@@ -954,23 +954,23 @@ class ADF(logfileparser.Logfile):
 #            # There will be some text, followed by a line:
 #            #       (power of) X  Y  Z  R     Alpha  on Atom
 #            while not line[1:11] == "(power of)":
-#                line = inputfile.next()
-#            dashes = inputfile.next()
-#            blank = inputfile.next()
-#            line = inputfile.next()
+#                line = next(inputfile)
+#            dashes = next(inputfile)
+#            blank = next(inputfile)
+#            line = next(inputfile)
 #            # There will be two blank lines when there are no more atom types.
 #            while line.strip() != "":
 #                atoms = [int(i)-1 for i in line.split()[1:]]
 #                for n in range(len(atoms)):
 #                    self.atombasis.append([])
-#                dashes = inputfile.next()
-#                line = inputfile.next()
+#                dashes = next(inputfile)
+#                line = next(inputfile)
 #                while line.strip() != "":
 #                    indices = [int(i)-1 for i in line.split()[5:]]
 #                    for i in range(len(indices)):
 #                        self.atombasis[atoms[i]].append(indices[i])
-#                    line = inputfile.next()
-#                line = inputfile.next()
+#                    line = next(inputfile)
+#                line = next(inputfile)
 
         if line[48:67] == "SFO MO coefficients":
 

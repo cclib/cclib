@@ -65,13 +65,35 @@ atomcharges
 
 The attribute ``atomcharges`` contains the atomic partial charges as taken from the output file. Since these charges are arbitrary and depend on the details of a population analysis, this attribute is dictionary containing any number of various atomic charges. The keys in this dictionary are strings naming the population analysis, and the values are arrays of rank 1 and contain the actual charges.
 
-Currently, cclib parses Mulliken, Löwdin, NPA and CHELPG charges, whose respective dictionary keys are ``mulliken``, ``lowdin``, ``natural`` and ``chelpg``.
+Currently, cclib parses several different charge types depending on the program:
+
+    ============ ==============================
+    charge type  name of key in ``atomcharges``
+    ============ ==============================
+    Mulliken     ``mulliken``
+    Löwdin       ``lowdin``
+    NPA          ``natural``
+    `APT`_       ``apt``
+    `CHELPG`_    ``chelpg``
+    `Hirshfeld`_ ``hirshfeld``
+    `CM5`_       ``cm5``
+    `ESP`_       ``esp``
+    `RESP`_      ``resp``
+    ============ ==============================
 
 In practice, these may differ somewhat from the values cclib calculates in the various `calculation methods`_.
+
+**Gaussian**: additional sections are present where the partial charge on each hydrogen is added into the heavy atom it is connected to ("charges with hydrogens summed into heavy atoms").  For each charge schema (such as ``mulliken``), a corresponding key with ``_sum`` appended will be present (``mulliken_sum``) with these charges, and hydrogens will be present but set to zero.
 
 **Molpro**: use the ``pop`` command (see https://www.molpro.net/manual/doku.php?id=properties_and_expectation_values&s[]=population&s[]=analysis#calling_the_population_analysis_program_pop).
 
 .. _`calculation methods`: methods.html
+.. _`APT`: https://doi.org/10.1016/j.theochem.2010.06.011
+.. _`CHELPG`: https://doi.org/10.1002/jcc.540110311
+.. _`Hirshfeld`: https://doi.org/10.1007/BF01113058
+.. _`CM5`: https://doi.org/10.1021/ct200866d
+.. _`ESP`: https://doi.org/10.1002/jcc.540050204
+.. _`RESP`: https://doi.org/10.1021/j100142a004
 
 atomcoords
 ----------
@@ -341,7 +363,7 @@ A dictionary containing metadata_ (data about data) for the calculation. Current
 * ``wall_time``: A list of datetime.timedeltas containing the wall time of each calculation in the output.  
 * ``warnings``: A list of strings, each of which is a warning produced during a calculation.
 
-The implementation and coverage of metadata is currently inconsistent. In the future, metadata may receive its own page similar to `extracted data`_.
+The implementation and coverage of metadata is currently inconsistent. In the future, metadata may receive its own page similar to :doc:`extracted data <data>`.
 
 .. _metadata: https://en.wikipedia.org/wiki/Metadata
 
@@ -417,7 +439,7 @@ The symmetry labels are normalised and cclib reports standard symmetry names:
     sigma.g Sigma.g                     SGG
     ======= ======= ======= ==========  ==================          ======
 
-* ADF - the full list can be found `here http://www.scm.com/Doc/Doc2005.01/ADF/ADFUsersGuide/page339.html`_.
+* ADF - the full list can be found `here <http://www.scm.com/Doc/Doc2005.01/ADF/ADFUsersGuide/page339.html>`_.
 * GAMESS-UK - to get the list, ``grep "data yr" input.m`` if you have access to the source. Note that for E, it's split into "e1+" and "e1-" for instance.
 * Jaguar - to get the list, look at the examples in ``schrodinger/jaguar-whatever/samples`` if you have access to Jaguar. Note that for E, it's written as E1pp/Ap, for instance.
 * NWChem - if molecular symmetry is turned off or set to C1, symmetry adaption for orbitals is also deactivated, and can be explicitly turned on with `adapt on` in the SCF block
@@ -425,7 +447,7 @@ The symmetry labels are normalised and cclib reports standard symmetry names:
 Developers:
 
 * The tests for these functions live in ``test/parser/testspecficparser.py``.
-* The character tables `here <http://symmetry.jacobs-university.de/>`_ may be useful in determining the correspondence between the labels used by the comp chem package and the commonly-used symbols.
+* `These <http://symmetry.jacobs-university.de/>`_ character tables may be useful in determining the correspondence between the labels used by the comp chem package and the commonly-used symbols.
 
 .. index::
     single: energy; mpenergies (attribute)

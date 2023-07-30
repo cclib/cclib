@@ -22,6 +22,7 @@ from cclib.method.calculationmethod import MissingAttributeError
 from numpy.testing import assert_allclose
 
 from ..test_data import getdatafile
+import pytest
 
 
 class HirshfeldTest(unittest.TestCase):
@@ -40,7 +41,7 @@ class HirshfeldTest(unittest.TestCase):
         for missing_attribute in Hirshfeld.required_attrs:
             self.parse()
             delattr(self.data, missing_attribute)
-            with self.assertRaises(MissingAttributeError):
+            with pytest.raises(MissingAttributeError):
                 trialBader = Hirshfeld(
                     self.data, self.volume, os.path.dirname(os.path.realpath(__file__))
                 )
@@ -115,8 +116,8 @@ class HirshfeldTest(unittest.TestCase):
         analysis = Hirshfeld(data, vol, os.path.dirname(os.path.realpath(__file__)))
         analysis.calculate()
 
-        self.assertAlmostEqual(numpy.sum(analysis.fragcharges), 0, delta=1e-2)
-        self.assertAlmostEqual(analysis.fragcharges[0], analysis.fragcharges[1], delta=1e-6)
+        assert abs(numpy.sum(analysis.fragcharges)-0) < 1e-2
+        assert abs(analysis.fragcharges[0]-analysis.fragcharges[1]) < 1e-6
 
     def test_chgsum_co(self):
         """ Are Hirshfeld charges for carbon monoxide reported as expected?
@@ -135,5 +136,5 @@ class HirshfeldTest(unittest.TestCase):
         analysis = Hirshfeld(data, vol, os.path.dirname(os.path.realpath(__file__)))
         analysis.calculate()
 
-        self.assertAlmostEqual(numpy.sum(analysis.fragcharges), 0, delta=1e-2)
+        assert abs(numpy.sum(analysis.fragcharges)) < 1e-2
         assert_allclose(analysis.fragcharges, [ 0.10590126, -0.11277786], atol=1e-3)

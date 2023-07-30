@@ -24,8 +24,8 @@ class VolumeTest(unittest.TestCase):
     def test_scinotation(self):
         """Does the scientific notation writer work as expected?"""
 
-        self.assertEqual(volume.scinotation(1.0 / 654), " 1.52905E-03")
-        self.assertEqual(volume.scinotation(-1.0 / 654), "-1.52905E-03")
+        assert volume.scinotation(1.0 / 654) == " 1.52905E-03"
+        assert volume.scinotation(-1.0 / 654) == "-1.52905E-03"
 
     def test_wavefunction(self):
         """Does the volume occupied by the HOMO integrate to the correct
@@ -41,8 +41,8 @@ class VolumeTest(unittest.TestCase):
         integral = wavefn.integrate()
         integral_square = wavefn.integrate_square()
 
-        self.assertAlmostEqual(integral, 0, delta=1e-6)  # not necessarily true for all wavefns
-        self.assertAlmostEqual(integral_square, 1.00, delta=1e-2)  # true for all wavefns
+        assert abs(integral) < 1e-6  # not necessarily true for all wavefns
+        assert abs(integral_square - 1.00) < 1e-2  # true for all wavefns
         print(integral, integral_square)
 
     def test_density(self):
@@ -59,7 +59,7 @@ class VolumeTest(unittest.TestCase):
         density = volume.electrondensity(data_sp, vol, frontierorbs)
         integral = density.integrate()
 
-        self.assertTrue(abs(integral - 8.00) < 1e-2)
+        assert abs(integral - 8.00) < 1e-2
         print("Combined Density of 4 Frontier orbitals=", integral)
 
     def test_cube(self):

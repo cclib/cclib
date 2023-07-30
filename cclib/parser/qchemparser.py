@@ -61,6 +61,12 @@ class QChem(logfileparser.Logfile):
         # Compile the dashes-and-or-spaces-only regex.
         self.re_dashes_and_spaces = re.compile(r'^[\s-]+$')
 
+        self.solvent_model_is_smd = False
+
+        self.re_solvent_model = re.compile(
+            r"([A-Z()\-]+)\ssolvent model(?:\s\[f = (\(eps-1\)\/(?:eps|\(eps\+0\.5\)))\])?, solve by"
+        )
+
         # Compile the regex for extracting the atomic index from an
         # aoname.
         self.re_atomindex = re.compile(r'(\d+)_')
@@ -601,6 +607,16 @@ cannot be determined. Rerun without `$molecule read`."""
                             self.user_input['molecule']['charge'] = charge
                             self.user_input['molecule']['mult'] = mult
 
+                    # Parsing of general sections.
+                    if line.startswith("$") and line.strip() != "$end":
+                        section_name = line.strip()[1:].lower()
+                        section = list()
+                        line = next(inputfile)
+                        while line.strip().lower() != "$end":
+                            section.append(line)
+                            line = next(inputfile)
+                        self.user_input[section_name] = section
+
                     line = next(inputfile).lower()
 
             # Point group symmetry.
@@ -708,6 +724,63 @@ cannot be determined. Rerun without `$molecule read`."""
                         self.possible_ecps[element] = ncore
                     line = next(inputfile)
 
+            # Solvation via SMD.  This usually appears twice, both times
+            # before knowing which underlying PCM is used, so we can't say
+            # anything about the complete model yet.
+            if line.strip() == "Citation of the SMD model:":
+                self.solvent_model_is_smd = True
+
+            if "solvent model" in line:
+                groups = self.re_solvent_model.search(line).groups()
+                solvent_model = groups[0]
+                if solvent_model == "C-PCM":
+                    feps_form = groups[1]
+                    if feps_form == "(eps-1)/(eps+0.5)":
+                        solvent_model = "CPCM-COSMO"
+                    elif feps_form == "(eps-1)/eps":
+                        solvent_model = "CPCM"
+                    else:
+                        self.logger.warning(
+                            "Cannot parse this form of f(eps) for PCM, assume CPCM: %s", feps_form
+                        )
+                elif solvent_model == "IEF-PCM":
+                    solvent_model = "IEFPCM"
+                elif solvent_model == "SS(V)PE":
+                    solvent_model = "SS(V)PE"
+                else:
+                    self.logger.warning(
+                        "Unknown PCM-based solvent model, setting it as-is: %s", solvent_model
+                    )
+                if self.solvent_model_is_smd:
+                    solvent_model = f"SMD-{solvent_model}"
+                self.metadata["solvent_model"] = solvent_model
+
+                # Aside from f(eps) for some models, older versions don't
+                # print the dielectric in the output, only in the echoed
+                # input.
+                if "solvent" in self.user_input:
+                    for input_line in self.user_input["solvent"]:
+                        tokens = input_line.split()
+                        key = tokens[0].lower()
+                        if key == "dielectric":
+                            # TODO obviate the need for this idiom
+                            if "solvent_params" not in self.metadata:
+                                self.metadata["solvent_params"] = dict()
+                            self.metadata["solvent_params"]["epsilon"] = float(tokens[1])
+                        elif key == "opticaldielectric":
+                            if "solvent_params" not in self.metadata:
+                                self.metadata["solvent_params"] = dict()
+                            self.metadata["solvent_params"]["epsilon_infinite"] = float(tokens[1])
+
+            if line.strip() == "==== cosmo data ====":
+                self.metadata["solvent_model"] = "COSMO"
+                while line.strip() != "=== end cosmo data ===":
+                    line = next(inputfile)
+                    if line.startswith("eps"):
+                        if "solvent_params" not in self.metadata:
+                            self.metadata["solvent_params"] = dict()
+                        self.metadata["solvent_params"]["epsilon"] = float(line.split()[2])
+
             if 'TIME STEP #' in line:
                 tokens = line.split()
                 self.append_attribute('time', float(tokens[8]))
@@ -804,6 +877,27 @@ cannot be determined. Rerun without `$molecule read`."""
                     if norbdisp is not None:
                         self.norbdisp_alpha = norbdisp
                         self.norbdisp_beta = norbdisp
+
+            if "Using C-PCM dielectric factor" in line:
+                # If not using a named solvent, the (static) dielectric factor
+                # epsilon has to be parsed from f(eps) here.  Don't use
+                # "C-PCM" as the name of the model, since the proper name will
+                # appear later (C-PCM, IEF-PCM, SS(V)PE, ...).
+                tokens = line.split()
+                assert len(tokens) == 9
+                feps_form = tokens[6]
+                feps = float(tokens[8])
+                eps = None
+                if feps_form == "(eps-1)/(eps+0.5)":
+                    eps = ((-0.5 * feps) - 1) / (feps - 1)
+                elif feps_form == "(eps-1)/eps":
+                    eps = 1.0 / (1.0 - feps)
+                else:
+                    self.logger.warning("Cannot parse this form of f(eps) for PCM: %s", feps_form)
+                if eps is not None:
+                    if "solvent_params" not in self.metadata:
+                        self.metadata["solvent_params"] = dict()
+                    self.metadata["solvent_params"]["epsilon"] = eps
 
             # Check for whether or not we're peforming an
             # (un)restricted calculation.
@@ -1368,8 +1462,14 @@ cannot be determined. Rerun without `$molecule read`."""
                 self.parse_charge_section(inputfile, 'mulliken')
             if 'Hirshfeld Atomic Charges' in line:
                 self.parse_charge_section(inputfile, 'hirshfeld')
+            if 'Charge Model 5' in line:
+                self.parse_charge_section(inputfile, 'cm5')
             if 'Ground-State ChElPG Net Atomic Charges' in line:
                 self.parse_charge_section(inputfile, 'chelpg')
+            if 'Merz-Kollman ESP Net Atomic Charges' in line:
+                self.parse_charge_section(inputfile, 'esp')
+            if 'Merz-Kollman RESP Net Atomic Charges' in line:
+                self.parse_charge_section(inputfile, 'resp')
 
             # Multipole moments are not printed in lexicographical order,
             # so we need to parse and sort them. The units seem OK, but there
@@ -1404,9 +1504,9 @@ cannot be determined. Rerun without `$molecule read`."""
 
                 # This line appears not by default, but only when
                 # `multipole_order` > 4:
-                line = inputfile.next()
+                line = next(inputfile)
                 if 'LMN = < X^L Y^M Z^N >' in line:
-                    line = inputfile.next()
+                    line = next(inputfile)
 
                 # The reference point is always the origin, although normally the molecule
                 # is moved so that the center of charge is at the origin.
@@ -1416,15 +1516,15 @@ cannot be determined. Rerun without `$molecule read`."""
                 # Watch out! This charge is in statcoulombs without the exponent!
                 # We should expect very good agreement, however Q-Chem prints
                 # the charge only with 5 digits, so expect 1e-4 accuracy.
-                charge_header = inputfile.next()
+                charge_header = next(inputfile)
                 assert charge_header.split()[0] == "Charge"
-                charge = float(inputfile.next().strip())
+                charge = float(next(inputfile).strip())
                 charge = utils.convertor(charge, 'statcoulomb', 'e') * 1e-10
                 # Allow this to change until fragment jobs are properly implemented.
                 # assert abs(charge - self.charge) < 1e-4
 
                 # This will make sure Debyes are used (not sure if it can be changed).
-                line = inputfile.next()
+                line = next(inputfile)
                 assert line.strip() == "Dipole Moment (Debye)"
 
                 while "-----" not in line:
@@ -1432,14 +1532,14 @@ cannot be determined. Rerun without `$molecule read`."""
                     # The current multipole element will be gathered here.
                     multipole = []
 
-                    line = inputfile.next()
+                    line = next(inputfile)
                     while ("-----" not in line) and ("Moment" not in line):
 
                         cols = line.split()
 
                         # The total (norm) is printed for dipole but not other multipoles.
                         if cols[0] == 'Tot':
-                            line = inputfile.next()
+                            line = next(inputfile)
                             continue
 
                         # Find and replace any 'stars' with NaN before moving on.
@@ -1468,7 +1568,7 @@ cannot be determined. Rerun without `$molecule read`."""
                                 m = cols[4*i + 3]
                                 multipole.append([lbl, m])
 
-                        line = inputfile.next()
+                        line = next(inputfile)
 
                     # Sort should use the first element when sorting lists,
                     # so this should simply work, and afterwards we just need

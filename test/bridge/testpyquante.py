@@ -16,34 +16,6 @@ from cclib.parser.utils import find_package
 from numpy.testing import assert_array_almost_equal
 
 
-class PyquanteTest(unittest.TestCase):
-    """Tests for the cclib2pyquante bridge in cclib."""
-
-    def setUp(self):
-        super(PyquanteTest, self).setUp()
-        if not find_package("PyQuante"):
-            raise ImportError("Must install PyQuante to run this test")
-
-        self.data, self.logfile = getdatafile("Gaussian", "basicGaussian16", ["water_ccsd.log"])
-
-    def test_makepyquante(self):
-        """Test older PyQuante bridge."""
-        from PyQuante.hartree_fock import hf
-        from PyQuante.Molecule import Molecule
-
-        reference = Molecule(
-            "h2o",
-            [(8, (0, 0, 0.119159)), (1, (0, 0.790649, -0.476637)), (1, (0, -0.790649, -0.476637)),],
-            units="Angstroms",
-        )
-        refen, reforbe, reforbs = hf(reference)
-
-        pyqmol = cclib2pyquante.makepyquante(self.data)
-        en, orbe, orbs = hf(pyqmol)
-
-        self.assertAlmostEqual(en, refen, delta=1.0e-6)
-
-
 class pyquante2Test(unittest.TestCase):
     """Tests for the cclib2pyquante bridge in cclib."""
 

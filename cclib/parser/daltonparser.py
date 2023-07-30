@@ -19,22 +19,22 @@ from cclib.parser import utils
 class DALTON(logfileparser.Logfile):
     """A DALTON log file."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(logname="DALTON", *args, **kwargs)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"DALTON log file {self.filename}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'DALTON("{self.filename}")'
 
-    def normalisesym(self, label):
+    def normalisesym(self, label: str) -> str:
         """DALTON does not require normalizing symmetry labels."""
         return label
 
-    def before_parsing(self):
+    def before_parsing(self) -> None:
 
         # Used to decide whether to wipe the atomcoords clean.
         self.firststdorient = True
@@ -530,7 +530,7 @@ class DALTON(logfileparser.Logfile):
 
             self.skip_lines(inputfile, ['d', 'b'])
 
-            line = inputfile.next()
+            line = next(inputfile)
             self.symcounts = [int(c) for c in line.split(':')[1].split()]
 
             self.symlabels = []
@@ -540,7 +540,7 @@ class DALTON(logfileparser.Logfile):
 
                 # If the number of orbitals for a symmetry is zero, the printout
                 # is different (see MP2 unittest logfile for an example).
-                line = inputfile.next()
+                line = next(inputfile)
 
                 if sc == 0:
                     assert "No orbitals in symmetry" in line
@@ -549,7 +549,7 @@ class DALTON(logfileparser.Logfile):
                     self.symlabels.append(line.split()[1])
                     self.skip_line(inputfile, 'blank')
                     for i in range(sc):
-                        orbital = inputfile.next()
+                        orbital = next(inputfile)
 
         if "Starting in Wave Function Section (SIRIUS)" in line:
             self.section = "SIRIUS"
@@ -1013,6 +1013,26 @@ class DALTON(logfileparser.Logfile):
                     dipole[i] = float(temp[2])  # store the Debye value
             if hasattr(self, 'moments'):
                 self.moments.append(dipole)
+
+        if line.strip() == "Molecular Hessian (au)":
+            self.skip_lines(inputfile, ["d", "b", "x y z header", "b"])
+            # Only the lower left triangle is printed.
+            hessian = numpy.zeros((3 * self.natom, 3 * self.natom))
+            icol = 0
+            max_ncols_per_block = 6
+            row_counter = self.natom
+            while row_counter > 0:
+                for irow in range(row_counter):
+                    for icoord in range(3):
+                        line = next(inputfile)
+                        nums = [float(x) for x in line.split()[2:]]
+                        assert 1 <= len(nums) <= max_ncols_per_block
+                        hessian[(3 * irow) + icoord, :len(nums)] = nums
+                    line = next(inputfile)
+                self.skip_lines(inputfile, ["b", "x y z header", "b"])
+                icol += max_ncols_per_block
+                row_counter -= 2
+            self.set_attribute("hessian", utils.symmetrize(hessian, "lower"))
 
         ## 'vibfreqs', 'vibirs', and 'vibsyms' appear in ABACUS.
         # Vibrational Frequencies and IR Intensities

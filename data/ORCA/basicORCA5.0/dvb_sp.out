@@ -130,8 +130,8 @@
    LAPACKE interface :  Fast linear algebra routines
    SCALAPACK package :  Parallel linear algebra routines
    Shared memory     :  Shared parallel matrices
-   BLAS/LAPACK       :  OpenBLAS 0.3.15  USE64BITINT DYNAMIC_ARCH NO_AFFINITY Haswell SINGLE_THREADED
-        Core in use  :  Haswell
+   BLAS/LAPACK       :  OpenBLAS 0.3.15  USE64BITINT DYNAMIC_ARCH NO_AFFINITY Zen SINGLE_THREADED
+        Core in use  :  Zen
    Copyright (c) 2011-2014, The OpenBLAS Project
 
 
@@ -167,35 +167,36 @@ NAME = dvb_sp.inp
 |  5>  print[ p_basis ] 2
 |  6>  print[ p_mos ] 1
 |  7>  print[ p_overlap ] 1
-|  8>  end 
-|  9> 
-| 10> * xyz 0 1
-| 11>  C       -1.4152533224   0.2302217854   0.0000000000
-| 12>  C        1.4152533224  -0.2302217854   0.0000000000
-| 13>  C       -0.4951331558   1.3144608674   0.0000000000
-| 14>  C        0.4951331558  -1.3144608674   0.0000000000
-| 15>  C        0.8894090436   1.0909493743   0.0000000000
-| 16>  C       -0.8894090436  -1.0909493743   0.0000000000
-| 17>  H       -0.8795511985   2.3437343748   0.0000000000
-| 18>  H        0.8795511985  -2.3437343748   0.0000000000
-| 19>  H        1.5779041557   1.9450061275   0.0000000000
-| 20>  H       -1.5779041557  -1.9450061275   0.0000000000
-| 21>  C        2.8845844962  -0.5210893778   0.0000000000
-| 22>  C       -2.8845844962   0.5210893778   0.0000000000
-| 23>  H        3.1403356810  -1.5919605685   0.0000000000
-| 24>  H       -3.1403356810   1.5919605685   0.0000000000
-| 25>  C        3.8800428103   0.3822535424   0.0000000000
-| 26>  C       -3.8800428103  -0.3822535424   0.0000000000
-| 27>  H        3.6946765858   1.4624389570   0.0000000000
-| 28>  H       -3.6946765858  -1.4624389570   0.0000000000
-| 29>  H        4.9316453546   0.0711049543   0.0000000000
-| 30>  H       -4.9316453546  -0.0711049543   0.0000000000
-| 31> *
-| 32> %pal
-| 33>  nprocs 4
-| 34> end
-| 35> 
-| 36>                          ****END OF INPUT****
+|  8>  print[ p_hirshfeld ] 1
+|  9>  end 
+| 10> 
+| 11> * xyz 0 1
+| 12>  C       -1.4152533224   0.2302217854   0.0000000000
+| 13>  C        1.4152533224  -0.2302217854   0.0000000000
+| 14>  C       -0.4951331558   1.3144608674   0.0000000000
+| 15>  C        0.4951331558  -1.3144608674   0.0000000000
+| 16>  C        0.8894090436   1.0909493743   0.0000000000
+| 17>  C       -0.8894090436  -1.0909493743   0.0000000000
+| 18>  H       -0.8795511985   2.3437343748   0.0000000000
+| 19>  H        0.8795511985  -2.3437343748   0.0000000000
+| 20>  H        1.5779041557   1.9450061275   0.0000000000
+| 21>  H       -1.5779041557  -1.9450061275   0.0000000000
+| 22>  C        2.8845844962  -0.5210893778   0.0000000000
+| 23>  C       -2.8845844962   0.5210893778   0.0000000000
+| 24>  H        3.1403356810  -1.5919605685   0.0000000000
+| 25>  H       -3.1403356810   1.5919605685   0.0000000000
+| 26>  C        3.8800428103   0.3822535424   0.0000000000
+| 27>  C       -3.8800428103  -0.3822535424   0.0000000000
+| 28>  H        3.6946765858   1.4624389570   0.0000000000
+| 29>  H       -3.6946765858  -1.4624389570   0.0000000000
+| 30>  H        4.9316453546   0.0711049543   0.0000000000
+| 31>  H       -4.9316453546  -0.0711049543   0.0000000000
+| 32> *
+| 33> %pal
+| 34>  nprocs 4
+| 35> end
+| 36> 
+| 37>                          ****END OF INPUT****
 ================================================================================
 
 ------------------------------------------------------------------------------
@@ -375,7 +376,7 @@ Atom          Symmetry-perfected Cartesians (x, y, z; au)
  18       9.319459109819    0.134368890392    0.000000000000
  19      -9.319459109819   -0.134368890392    0.000000000000
 
-New point group recognition code took 0.006 seconds.
+New point group recognition code took 0.069 seconds.
 
 ----------------------
 ASYMMETRIC UNIT IN C2h
@@ -792,7 +793,7 @@ Integral threshold                          ...     1.000000e-10
 Primitive cut-off                           ...     1.000000e-11
 Primitive pair pre-selection threshold      ...     1.000000e-11
 
-Calculating pre-screening integrals         ... done (  0.0 sec) Dimension = 40
+Calculating pre-screening integrals         ... done (  0.1 sec) Dimension = 40
 Organizing shell pair data                  ... done (  0.0 sec)
 Shell pair information
 Total number of shell pairs                 ...       820
@@ -804,10 +805,10 @@ Primitive shell pairs kept                  ...      4803
           la=1 lb=1:     55 shell pairs
 
 Calculating one electron integrals          ... done (  0.0 sec)
-Calculating RI/J V-Matrix + Cholesky decomp.... done (  0.0 sec)
+Calculating RI/J V-Matrix + Cholesky decomp.... done (  0.1 sec)
 Calculating Nuclear repulsion               ... done (  0.0 sec) ENN=    445.936977869861 Eh
 
-SHARK setup successfully completed in   0.1 seconds
+SHARK setup successfully completed in   0.3 seconds
 
 Maximum memory used throughout the entire GTOINT-calculation: 6.5 MB
 
@@ -922,12 +923,12 @@ Convergence Tolerance:
 
 Diagonalization of the overlap matrix:
 Smallest eigenvalue                        ... 1.815e-01
-Time for diagonalization                   ...    0.001 sec
+Time for diagonalization                   ...    0.029 sec
 Threshold for overlap eigenvalues          ... 1.000e-08
 Number of eigenvalues below threshold      ... 0
 Time for construction of square roots      ...    0.001 sec
 Producing symmetrization matrix            ... done (   0.000 sec)
-Total time needed                          ...    0.002 sec
+Total time needed                          ...    0.030 sec
 
 ----------------------
 SHARK INTEGRAL PACKAGE
@@ -1568,7 +1569,7 @@ OVERLAP MATRIX
      57       0.078684  -0.458513   0.000000   1.000000   0.000000   0.148966
      58       0.000000   0.000000   0.148966   0.000000   1.000000   0.000000
      59      -0.445868   0.131924   0.000000   0.148966   0.000000   1.000000
-Time for model grid setup =    0.071 sec
+Time for model grid setup =    0.098 sec
 
 ------------------------------
 INITIAL GUESS: MODEL POTENTIAL
@@ -1578,10 +1579,10 @@ Calculating cut-offs                               ... done
 Initializing the effective Hamiltonian             ... done
 Setting up the integral package (SHARK)            ... done
 Starting the Coulomb interaction                   ...     -> Generating integrals - 
-    -> L=0 0 :     0.005 sec done=     61850 skipped=      1520 prim-skipped=         0
-    -> L=1 0 :     0.005 sec done=     45320 skipped=       480 prim-skipped=         0
-    -> L=1 1 :     0.002 sec done=      8620 skipped=        20 prim-skipped=         0
-done (   0.0 sec)
+    -> L=0 0 :     0.026 sec done=     61850 skipped=      1520 prim-skipped=         0
+    -> L=1 0 :     0.006 sec done=     45320 skipped=       480 prim-skipped=         0
+    -> L=1 1 :     0.012 sec done=      8620 skipped=        20 prim-skipped=         0
+done (   0.1 sec)
 Reading the grid                                   ... done
 Mapping shells                                     ... done
 Starting the XC term evaluation                    ... done (   0.0 sec)
@@ -1601,7 +1602,7 @@ Irrep occupations for operator 0
     Au -    2
     Bu -   15
                       ------------------
-                      INITIAL GUESS DONE (   0.1 sec)
+                      INITIAL GUESS DONE (   0.2 sec)
                       ------------------
 -------------------
 DFT GRID GENERATION
@@ -1622,7 +1623,7 @@ Total number of grid points                  ...    92318
 Total number of batches                      ...     1450
 Average number of points per batch           ...       63
 Average number of grid points per atom       ...     4616
-Time for grid setup =    0.369 sec
+Time for grid setup =    0.354 sec
 
 --------------------
 COSX GRID GENERATION
@@ -1685,7 +1686,7 @@ Average number of points per batch           ...       63
 Average number of grid points per atom       ...     2799
 UseSFitting                                  ... on
 
-Time for X-Grid setup             =    0.291 sec
+Time for X-Grid setup             =    0.244 sec
 
 --------------
 SCF ITERATIONS
@@ -1694,29 +1695,29 @@ SCF ITERATIONS
 ==>> SHARK/AuxDens: NDens=1 Thresh =     1.000000e-10 TCut=    1.000000e-11 Lmax=1 LmaxAux=4
     -> Making Hermite density - ok     0.001 sec
     -> Making Aux-basis density - (lmax=1)
-    -> L=0 0:    0.008 sec done=     72676 ( 90.2%) skipped=      7907 
-    -> L=1 0:    0.009 sec done=     54330 ( 94.3%) skipped=      3270 
-    -> L=1 1:    0.003 sec done=     10800 (100.0%) skipped=         0 
+    -> L=0 0:    0.006 sec done=     72676 ( 90.2%) skipped=      7907 
+    -> L=1 0:    0.008 sec done=     54330 ( 94.3%) skipped=      3270 
+    -> L=1 1:    0.017 sec done=     10800 (100.0%) skipped=         0 
     -> Aux basis density formed in    0.0 sec
     -> Solving linear equations - ok (   0.0 sec)
         Auxbasis Hermite Density:
-        P|s>                     ...  0.000
-        P|p>                     ...  0.000
-        P|d>                     ...  0.000
-        P|f>                     ...  0.000
-        P|g>                     ...  0.000
+        P|s>                     ...   -nan
+        P|p>                     ...   -nan
+        P|d>                     ...   -nan
+        P|f>                     ...   -nan
+        P|g>                     ...   -nan
         Building the Coulomb matrix: 
         J|ss>                          ... done (  0.0 sec) ndone=   750552 nskipped1=     9359 nskipped2=    34046
         J|ps>                          ... done (  0.0 sec) ndone=   591038 nskipped1=     3634 nskipped2=    16280
         J|pp>                          ... done (  0.0 sec) ndone=   127366 nskipped1=       10 nskipped2=      940
         Coulomb matrix built in   0.0 sec
 
-        Total time for Split-RI-J                ...    0.043 sec
+        Total time for Split-RI-J                ...    0.080 sec
           (0) Prelude                            ...    0.000 sec
           (1) Hermite density                    ...    0.000 sec
           (2) Aux basis density                  ...    0.000 sec (inner=  0.0)
           (3) Linear equation solution           ...    0.000 sec
-          (4) J-Matrix construction              ...    0.015 sec (inner=  0.0)
+          (4) J-Matrix construction              ...    0.043 sec (inner=  0.0)
         ---------------------------------------------------------
 
                          ----------------------------
@@ -1733,38 +1734,38 @@ SCF ITERATIONS
    Correlation         :    -2.72812306
 
 ==>> SHARK/AuxDens: NDens=1 Thresh =     1.000000e-10 TCut=    1.000000e-11 Lmax=1 LmaxAux=4
-    -> Making Hermite density - ok     0.002 sec
+    -> Making Hermite density - ok     0.001 sec
     -> Making Aux-basis density - (lmax=1)
-    -> L=0 0:    0.008 sec done=     68427 ( 84.9%) skipped=     12156 
-    -> L=1 0:    0.009 sec done=     51924 ( 90.1%) skipped=      5676 
+    -> L=0 0:    0.006 sec done=     68427 ( 84.9%) skipped=     12156 
+    -> L=1 0:    0.008 sec done=     51924 ( 90.1%) skipped=      5676 
     -> L=1 1:    0.003 sec done=     10726 ( 99.3%) skipped=        74 
     -> Aux basis density formed in    0.0 sec
     -> Solving linear equations - ok (   0.0 sec)
         Auxbasis Hermite Density:
-        P|s>                     ...  0.000
-        P|p>                     ...  0.000
-        P|d>                     ...  0.000
-        P|f>                     ...  0.000
-        P|g>                     ...  0.000
+        P|s>                     ...   -nan
+        P|p>                     ...   -nan
+        P|d>                     ...   -nan
+        P|f>                     ...   -nan
+        P|g>                     ...   -nan
         Building the Coulomb matrix: 
         J|ss>                          ... done (  0.0 sec) ndone=   733028 nskipped1=    21381 nskipped2=    29120
         J|ps>                          ... done (  0.0 sec) ndone=   584538 nskipped1=     8432 nskipped2=    13782
         J|pp>                          ... done (  0.0 sec) ndone=   127054 nskipped1=      222 nskipped2=      892
         Coulomb matrix built in   0.0 sec
 
-        Total time for Split-RI-J                ...    0.043 sec
+        Total time for Split-RI-J                ...    0.036 sec
           (0) Prelude                            ...    0.000 sec
           (1) Hermite density                    ...    0.000 sec
           (2) Aux basis density                  ...    0.000 sec (inner=  0.0)
           (3) Linear equation solution           ...    0.000 sec
-          (4) J-Matrix construction              ...    0.015 sec (inner=  0.0)
+          (4) J-Matrix construction              ...    0.014 sec (inner=  0.0)
         ---------------------------------------------------------
 
                          ----------------------------
                          !        ITERATION     1   !
                          ----------------------------
-   Total Energy        :    -382.023499751027 Eh
-   Energy Change       :      -0.020705707280 Eh
+   Total Energy        :    -382.023499751028 Eh
+   Energy Change       :      -0.020705707281 Eh
    MAX-DP              :       0.033392366898
    RMS-DP              :       0.002519351157
    Actual Damping      :       0.7000
@@ -1776,29 +1777,29 @@ SCF ITERATIONS
 ==>> SHARK/AuxDens: NDens=1 Thresh =     1.000000e-10 TCut=    1.000000e-11 Lmax=1 LmaxAux=4
     -> Making Hermite density - ok     0.001 sec
     -> Making Aux-basis density - (lmax=1)
-    -> L=0 0:    0.008 sec done=     68017 ( 84.4%) skipped=     12566 
-    -> L=1 0:    0.009 sec done=     51712 ( 89.8%) skipped=      5888 
+    -> L=0 0:    0.005 sec done=     68017 ( 84.4%) skipped=     12566 
+    -> L=1 0:    0.008 sec done=     51712 ( 89.8%) skipped=      5888 
     -> L=1 1:    0.003 sec done=     10574 ( 97.9%) skipped=       226 
     -> Aux basis density formed in    0.0 sec
     -> Solving linear equations - ok (   0.0 sec)
         Auxbasis Hermite Density:
-        P|s>                     ...  0.000
-        P|p>                     ...  0.000
-        P|d>                     ...  0.000
-        P|f>                     ...  0.000
-        P|g>                     ...  0.000
+        P|s>                     ...   -nan
+        P|p>                     ...   -nan
+        P|d>                     ...   -nan
+        P|f>                     ...   -nan
+        P|g>                     ...   -nan
         Building the Coulomb matrix: 
         J|ss>                          ... done (  0.0 sec) ndone=   731106 nskipped1=    22629 nskipped2=    28894
         J|ps>                          ... done (  0.0 sec) ndone=   583668 nskipped1=     8928 nskipped2=    13624
         J|pp>                          ... done (  0.0 sec) ndone=   127018 nskipped1=      250 nskipped2=      892
         Coulomb matrix built in   0.0 sec
 
-        Total time for Split-RI-J                ...    0.042 sec
+        Total time for Split-RI-J                ...    0.035 sec
           (0) Prelude                            ...    0.000 sec
           (1) Hermite density                    ...    0.000 sec
           (2) Aux basis density                  ...    0.000 sec (inner=  0.0)
           (3) Linear equation solution           ...    0.000 sec
-          (4) J-Matrix construction              ...    0.015 sec (inner=  0.0)
+          (4) J-Matrix construction              ...    0.013 sec (inner=  0.0)
         ---------------------------------------------------------
                                ***Turning on DIIS***
 
@@ -1806,7 +1807,7 @@ SCF ITERATIONS
                          !        ITERATION     2   !
                          ----------------------------
    Total Energy        :    -382.034881163964 Eh
-   Energy Change       :      -0.011381412937 Eh
+   Energy Change       :      -0.011381412936 Eh
    MAX-DP              :       0.065472111145
    RMS-DP              :       0.004992135768
    Actual Damping      :       0.0000
@@ -1819,29 +1820,29 @@ SCF ITERATIONS
 ==>> SHARK/AuxDens: NDens=1 Thresh =     1.000000e-10 TCut=    1.000000e-11 Lmax=1 LmaxAux=4
     -> Making Hermite density - ok     0.001 sec
     -> Making Aux-basis density - (lmax=1)
-    -> L=0 0:    0.008 sec done=     69256 ( 85.9%) skipped=     11327 
-    -> L=1 0:    0.009 sec done=     52728 ( 91.5%) skipped=      4872 
+    -> L=0 0:    0.006 sec done=     69256 ( 85.9%) skipped=     11327 
+    -> L=1 0:    0.008 sec done=     52728 ( 91.5%) skipped=      4872 
     -> L=1 1:    0.003 sec done=     10766 ( 99.7%) skipped=        34 
     -> Aux basis density formed in    0.0 sec
     -> Solving linear equations - ok (   0.0 sec)
         Auxbasis Hermite Density:
-        P|s>                     ...  0.000
-        P|p>                     ...  0.000
-        P|d>                     ...  0.000
-        P|f>                     ...  0.000
-        P|g>                     ...  0.000
+        P|s>                     ...   -nan
+        P|p>                     ...   -nan
+        P|d>                     ...   -nan
+        P|f>                     ...   -nan
+        P|g>                     ...   -nan
         Building the Coulomb matrix: 
         J|ss>                          ... done (  0.0 sec) ndone=   736476 nskipped1=    18605 nskipped2=    29540
         J|ps>                          ... done (  0.0 sec) ndone=   586078 nskipped1=     7324 nskipped2=    14002
         J|pp>                          ... done (  0.0 sec) ndone=   127104 nskipped1=      184 nskipped2=      892
         Coulomb matrix built in   0.0 sec
 
-        Total time for Split-RI-J                ...    0.042 sec
+        Total time for Split-RI-J                ...    0.036 sec
           (0) Prelude                            ...    0.000 sec
           (1) Hermite density                    ...    0.000 sec
           (2) Aux basis density                  ...    0.000 sec (inner=  0.0)
           (3) Linear equation solution           ...    0.000 sec
-          (4) J-Matrix construction              ...    0.015 sec (inner=  0.0)
+          (4) J-Matrix construction              ...    0.013 sec (inner=  0.0)
         ---------------------------------------------------------
 
                          ----------------------------
@@ -1863,36 +1864,36 @@ SCF ITERATIONS
 ==>> SHARK/AuxDens: NDens=1 Thresh =     1.000000e-10 TCut=    1.000000e-11 Lmax=1 LmaxAux=4
     -> Making Hermite density - ok     0.001 sec
     -> Making Aux-basis density - (lmax=1)
-    -> L=0 0:    0.008 sec done=     66574 ( 82.6%) skipped=     14009 
-    -> L=1 0:    0.009 sec done=     51410 ( 89.3%) skipped=      6190 
+    -> L=0 0:    0.005 sec done=     66574 ( 82.6%) skipped=     14009 
+    -> L=1 0:    0.008 sec done=     51410 ( 89.3%) skipped=      6190 
     -> L=1 1:    0.003 sec done=     10574 ( 97.9%) skipped=       226 
     -> Aux basis density formed in    0.0 sec
     -> Solving linear equations - ok (   0.0 sec)
         Auxbasis Hermite Density:
-        P|s>                     ...  0.000
-        P|p>                     ...  0.000
-        P|d>                     ...  0.000
-        P|f>                     ...  0.000
-        P|g>                     ...  0.000
+        P|s>                     ...   -nan
+        P|p>                     ...   -nan
+        P|d>                     ...   -nan
+        P|f>                     ...   -nan
+        P|g>                     ...   -nan
         Building the Coulomb matrix: 
         J|ss>                          ... done (  0.0 sec) ndone=   728674 nskipped1=    25597 nskipped2=    29577
         J|ps>                          ... done (  0.0 sec) ndone=   582996 nskipped1=     9880 nskipped2=    13940
         J|pp>                          ... done (  0.0 sec) ndone=   126970 nskipped1=      288 nskipped2=      892
         Coulomb matrix built in   0.0 sec
 
-        Total time for Split-RI-J                ...    0.042 sec
+        Total time for Split-RI-J                ...    0.036 sec
           (0) Prelude                            ...    0.000 sec
           (1) Hermite density                    ...    0.000 sec
           (2) Aux basis density                  ...    0.000 sec (inner=  0.0)
           (3) Linear equation solution           ...    0.000 sec
-          (4) J-Matrix construction              ...    0.015 sec (inner=  0.0)
+          (4) J-Matrix construction              ...    0.014 sec (inner=  0.0)
         ---------------------------------------------------------
 
                          ----------------------------
                          !        ITERATION     4   !
                          ----------------------------
    Total Energy        :    -382.055003753950 Eh
-   Energy Change       :      -0.002480083455 Eh
+   Energy Change       :      -0.002480083456 Eh
    MAX-DP              :       0.005579544173
    RMS-DP              :       0.000391387115
    Actual Damping      :       0.0000
@@ -1907,29 +1908,29 @@ SCF ITERATIONS
 ==>> SHARK/AuxDens: NDens=1 Thresh =     1.000000e-10 TCut=    1.000000e-11 Lmax=1 LmaxAux=4
     -> Making Hermite density - ok     0.001 sec
     -> Making Aux-basis density - (lmax=1)
-    -> L=0 0:    0.007 sec done=     64648 ( 80.2%) skipped=     15935 
-    -> L=1 0:    0.009 sec done=     51240 ( 89.0%) skipped=      6360 
+    -> L=0 0:    0.006 sec done=     64648 ( 80.2%) skipped=     15935 
+    -> L=1 0:    0.008 sec done=     51240 ( 89.0%) skipped=      6360 
     -> L=1 1:    0.003 sec done=     10408 ( 96.4%) skipped=       392 
     -> Aux basis density formed in    0.0 sec
     -> Solving linear equations - ok (   0.0 sec)
         Auxbasis Hermite Density:
-        P|s>                     ...  0.000
-        P|p>                     ...  0.000
-        P|d>                     ...  0.000
-        P|f>                     ...  0.000
-        P|g>                     ...  0.000
+        P|s>                     ...   -nan
+        P|p>                     ...   -nan
+        P|d>                     ...   -nan
+        P|f>                     ...   -nan
+        P|g>                     ...   -nan
         Building the Coulomb matrix: 
         J|ss>                          ... done (  0.0 sec) ndone=   710962 nskipped1=    38641 nskipped2=    25652
         J|ps>                          ... done (  0.0 sec) ndone=   576820 nskipped1=    14178 nskipped2=    13050
         J|pp>                          ... done (  0.0 sec) ndone=   126713 nskipped1=      479 nskipped2=      874
         Coulomb matrix built in   0.0 sec
 
-        Total time for Split-RI-J                ...    0.041 sec
+        Total time for Split-RI-J                ...    0.036 sec
           (0) Prelude                            ...    0.000 sec
           (1) Hermite density                    ...    0.000 sec
           (2) Aux basis density                  ...    0.000 sec (inner=  0.0)
           (3) Linear equation solution           ...    0.000 sec
-          (4) J-Matrix construction              ...    0.015 sec (inner=  0.0)
+          (4) J-Matrix construction              ...    0.014 sec (inner=  0.0)
         ---------------------------------------------------------
                       *** Initiating the SOSCF procedure ***
                            *** Shutting down DIIS ***
@@ -1939,8 +1940,8 @@ SCF ITERATIONS
                          ----------------------------
                          !        ITERATION     5   !
                          ----------------------------
-   Total Energy        :    -382.055124917831 Eh
-   Energy Change       :      -0.000121163882 Eh
+   Total Energy        :    -382.055124917830 Eh
+   Energy Change       :      -0.000121163880 Eh
    MAX-DP              :       0.000959268580
    RMS-DP              :       0.000075816843
    Orbital gradient    :       0.000379770402
@@ -1954,36 +1955,36 @@ SCF ITERATIONS
 ==>> SHARK/AuxDens: NDens=1 Thresh =     1.000000e-10 TCut=    1.000000e-11 Lmax=1 LmaxAux=4
     -> Making Hermite density - ok     0.001 sec
     -> Making Aux-basis density - (lmax=1)
-    -> L=0 0:    0.008 sec done=     72492 ( 90.0%) skipped=      8091 
-    -> L=1 0:    0.009 sec done=     54348 ( 94.4%) skipped=      3252 
+    -> L=0 0:    0.006 sec done=     72492 ( 90.0%) skipped=      8091 
+    -> L=1 0:    0.008 sec done=     54348 ( 94.4%) skipped=      3252 
     -> L=1 1:    0.003 sec done=     10800 (100.0%) skipped=         0 
     -> Aux basis density formed in    0.0 sec
     -> Solving linear equations - ok (   0.0 sec)
         Auxbasis Hermite Density:
-        P|s>                     ...  0.000
-        P|p>                     ...  0.000
-        P|d>                     ...  0.000
-        P|f>                     ...  0.000
-        P|g>                     ...  0.000
+        P|s>                     ...   -nan
+        P|p>                     ...   -nan
+        P|d>                     ...   -nan
+        P|f>                     ...   -nan
+        P|g>                     ...   -nan
         Building the Coulomb matrix: 
         J|ss>                          ... done (  0.0 sec) ndone=   750486 nskipped1=     9349 nskipped2=    34046
         J|ps>                          ... done (  0.0 sec) ndone=   590912 nskipped1=     3688 nskipped2=    16280
         J|pp>                          ... done (  0.0 sec) ndone=   127366 nskipped1=       10 nskipped2=      940
         Coulomb matrix built in   0.0 sec
 
-        Total time for Split-RI-J                ...    0.042 sec
+        Total time for Split-RI-J                ...    0.038 sec
           (0) Prelude                            ...    0.000 sec
           (1) Hermite density                    ...    0.000 sec
           (2) Aux basis density                  ...    0.000 sec (inner=  0.0)
           (3) Linear equation solution           ...    0.000 sec
-          (4) J-Matrix construction              ...    0.015 sec (inner=  0.0)
+          (4) J-Matrix construction              ...    0.014 sec (inner=  0.0)
         ---------------------------------------------------------
 
                          ----------------------------
                          !        ITERATION     6   !
                          ----------------------------
    Total Energy        :    -382.055174493732 Eh
-   Energy Change       :      -0.000049575901 Eh
+   Energy Change       :      -0.000049575902 Eh
    MAX-DP              :       0.000919954205
    RMS-DP              :       0.000048563377
    Orbital gradient    :       0.000229105486
@@ -1994,38 +1995,38 @@ SCF ITERATIONS
    Correlation         :    -2.71781055
 
 ==>> SHARK/AuxDens: NDens=1 Thresh =     1.000000e-10 TCut=    1.000000e-11 Lmax=1 LmaxAux=4
-    -> Making Hermite density - ok     0.002 sec
+    -> Making Hermite density - ok     0.001 sec
     -> Making Aux-basis density - (lmax=1)
-    -> L=0 0:    0.007 sec done=     56552 ( 70.2%) skipped=     24031 
-    -> L=1 0:    0.009 sec done=     47158 ( 81.9%) skipped=     10442 
+    -> L=0 0:    0.005 sec done=     56552 ( 70.2%) skipped=     24031 
+    -> L=1 0:    0.007 sec done=     47158 ( 81.9%) skipped=     10442 
     -> L=1 1:    0.003 sec done=     10400 ( 96.3%) skipped=       400 
     -> Aux basis density formed in    0.0 sec
     -> Solving linear equations - ok (   0.0 sec)
         Auxbasis Hermite Density:
-        P|s>                     ...  0.000
-        P|p>                     ...  0.000
-        P|d>                     ...  0.000
-        P|f>                     ...  0.000
-        P|g>                     ...  0.000
+        P|s>                     ...   -nan
+        P|p>                     ...   -nan
+        P|d>                     ...   -nan
+        P|f>                     ...   -nan
+        P|g>                     ...   -nan
         Building the Coulomb matrix: 
         J|ss>                          ... done (  0.0 sec) ndone=   676815 nskipped1=    62391 nskipped2=    21446
         J|ps>                          ... done (  0.0 sec) ndone=   560864 nskipped1=    25544 nskipped2=    11792
         J|pp>                          ... done (  0.0 sec) ndone=   125892 nskipped1=     1092 nskipped2=      838
         Coulomb matrix built in   0.0 sec
 
-        Total time for Split-RI-J                ...    0.041 sec
+        Total time for Split-RI-J                ...    0.034 sec
           (0) Prelude                            ...    0.000 sec
           (1) Hermite density                    ...    0.000 sec
           (2) Aux basis density                  ...    0.000 sec (inner=  0.0)
           (3) Linear equation solution           ...    0.000 sec
-          (4) J-Matrix construction              ...    0.014 sec (inner=  0.0)
+          (4) J-Matrix construction              ...    0.013 sec (inner=  0.0)
         ---------------------------------------------------------
 
                          ----------------------------
                          !        ITERATION     7   !
                          ----------------------------
-   Total Energy        :    -382.055174601750 Eh
-   Energy Change       :      -0.000000108018 Eh
+   Total Energy        :    -382.055174601751 Eh
+   Energy Change       :      -0.000000108019 Eh
    MAX-DP              :       0.000653120850
    RMS-DP              :       0.000028022698
    Orbital gradient    :       0.000173709719
@@ -2038,35 +2039,35 @@ SCF ITERATIONS
 ==>> SHARK/AuxDens: NDens=1 Thresh =     1.000000e-10 TCut=    1.000000e-11 Lmax=1 LmaxAux=4
     -> Making Hermite density - ok     0.001 sec
     -> Making Aux-basis density - (lmax=1)
-    -> L=0 0:    0.007 sec done=     54736 ( 67.9%) skipped=     25847 
-    -> L=1 0:    0.009 sec done=     45998 ( 79.9%) skipped=     11602 
+    -> L=0 0:    0.005 sec done=     54736 ( 67.9%) skipped=     25847 
+    -> L=1 0:    0.008 sec done=     45998 ( 79.9%) skipped=     11602 
     -> L=1 1:    0.003 sec done=     10400 ( 96.3%) skipped=       400 
     -> Aux basis density formed in    0.0 sec
     -> Solving linear equations - ok (   0.0 sec)
         Auxbasis Hermite Density:
-        P|s>                     ...  0.000
-        P|p>                     ...  0.000
-        P|d>                     ...  0.000
-        P|f>                     ...  0.000
-        P|g>                     ...  0.000
+        P|s>                     ...   -nan
+        P|p>                     ...   -nan
+        P|d>                     ...   -nan
+        P|f>                     ...   -nan
+        P|g>                     ...   -nan
         Building the Coulomb matrix: 
         J|ss>                          ... done (  0.0 sec) ndone=   661245 nskipped1=    73751 nskipped2=    20088
         J|ps>                          ... done (  0.0 sec) ndone=   551472 nskipped1=    31906 nskipped2=    11428
         J|pp>                          ... done (  0.0 sec) ndone=   124751 nskipped1=     1987 nskipped2=      832
         Coulomb matrix built in   0.0 sec
 
-        Total time for Split-RI-J                ...    0.040 sec
+        Total time for Split-RI-J                ...    0.034 sec
           (0) Prelude                            ...    0.000 sec
           (1) Hermite density                    ...    0.000 sec
           (2) Aux basis density                  ...    0.000 sec (inner=  0.0)
           (3) Linear equation solution           ...    0.000 sec
-          (4) J-Matrix construction              ...    0.014 sec (inner=  0.0)
+          (4) J-Matrix construction              ...    0.013 sec (inner=  0.0)
         ---------------------------------------------------------
 
                          ----------------------------
                          !        ITERATION     8   !
                          ----------------------------
-   Total Energy        :    -382.055175085927 Eh
+   Total Energy        :    -382.055175085928 Eh
    Energy Change       :      -0.000000484177 Eh
    MAX-DP              :       0.000201464895
    RMS-DP              :       0.000013880570
@@ -2080,29 +2081,29 @@ SCF ITERATIONS
 ==>> SHARK/AuxDens: NDens=1 Thresh =     1.000000e-10 TCut=    1.000000e-11 Lmax=1 LmaxAux=4
     -> Making Hermite density - ok     0.001 sec
     -> Making Aux-basis density - (lmax=1)
-    -> L=0 0:    0.007 sec done=     54178 ( 67.2%) skipped=     26405 
-    -> L=1 0:    0.009 sec done=     45698 ( 79.3%) skipped=     11902 
+    -> L=0 0:    0.005 sec done=     54178 ( 67.2%) skipped=     26405 
+    -> L=1 0:    0.007 sec done=     45698 ( 79.3%) skipped=     11902 
     -> L=1 1:    0.003 sec done=     10400 ( 96.3%) skipped=       400 
     -> Aux basis density formed in    0.0 sec
     -> Solving linear equations - ok (   0.0 sec)
         Auxbasis Hermite Density:
-        P|s>                     ...  0.000
-        P|p>                     ...  0.000
-        P|d>                     ...  0.000
-        P|f>                     ...  0.000
-        P|g>                     ...  0.000
+        P|s>                     ...   -nan
+        P|p>                     ...   -nan
+        P|d>                     ...   -nan
+        P|f>                     ...   -nan
+        P|g>                     ...   -nan
         Building the Coulomb matrix: 
         J|ss>                          ... done (  0.0 sec) ndone=   659275 nskipped1=    75403 nskipped2=    19932
         J|ps>                          ... done (  0.0 sec) ndone=   550106 nskipped1=    32770 nskipped2=    11174
         J|pp>                          ... done (  0.0 sec) ndone=   124779 nskipped1=     1953 nskipped2=      796
         Coulomb matrix built in   0.0 sec
 
-        Total time for Split-RI-J                ...    0.040 sec
+        Total time for Split-RI-J                ...    0.033 sec
           (0) Prelude                            ...    0.000 sec
           (1) Hermite density                    ...    0.000 sec
           (2) Aux basis density                  ...    0.000 sec (inner=  0.0)
           (3) Linear equation solution           ...    0.000 sec
-          (4) J-Matrix construction              ...    0.014 sec (inner=  0.0)
+          (4) J-Matrix construction              ...    0.012 sec (inner=  0.0)
         ---------------------------------------------------------
                  **** Energy Check signals convergence ****
               ***Rediagonalizing the Fockian in SOSCF/NRSCF***
@@ -2116,7 +2117,7 @@ Old exchange energy                            =    -11.058893868 Eh
 New exchange energy                            =    -11.058827365 Eh
 Exchange energy change after final integration =      0.000066503 Eh
 Total energy after final integration           =   -382.055108614 Eh
-Final COS-X integration done in                =     0.776 sec
+Final COS-X integration done in                =     0.690 sec
 
 ----------------
 TOTAL SCF ENERGY
@@ -2150,9 +2151,9 @@ DFET-embed. en.    :        0.000000000000 Eh
 SCF CONVERGENCE
 ---------------
 
-  Last Energy change         ...   -3.0999e-08  Tolerance :   1.0000e-06
-  Last MAX-Density change    ...    2.7756e-15  Tolerance :   1.0000e-05
-  Last RMS-Density change    ...    1.1477e-16  Tolerance :   1.0000e-06
+  Last Energy change         ...   -3.1000e-08  Tolerance :   1.0000e-06
+  Last MAX-Density change    ...    3.5527e-15  Tolerance :   1.0000e-05
+  Last RMS-Density change    ...    1.3614e-16  Tolerance :   1.0000e-06
   Last Orbital Gradient      ...    3.6780e-05  Tolerance :   5.0000e-05
   Last Orbital Rotation      ...    3.7542e-05  Tolerance :   5.0000e-05
 
@@ -3526,19 +3527,19 @@ THRESHOLD FOR PRINTING IS 0.1%
   2 C      6.0764     6.0000    -0.0764     3.9693     3.9693     0.0000
   3 C      6.0764     6.0000    -0.0764     3.9693     3.9693     0.0000
   4 C      6.0768     6.0000    -0.0768     3.9701     3.9701    -0.0000
-  5 C      6.0768     6.0000    -0.0768     3.9701     3.9701     0.0000
-  6 H      0.9223     1.0000     0.0777     0.9940     0.9940     0.0000
+  5 C      6.0768     6.0000    -0.0768     3.9701     3.9701    -0.0000
+  6 H      0.9223     1.0000     0.0777     0.9940     0.9940    -0.0000
   7 H      0.9223     1.0000     0.0777     0.9940     0.9940     0.0000
-  8 H      0.9209     1.0000     0.0791     0.9937     0.9937     0.0000
+  8 H      0.9209     1.0000     0.0791     0.9937     0.9937    -0.0000
   9 H      0.9209     1.0000     0.0791     0.9937     0.9937     0.0000
- 10 C      6.0759     6.0000    -0.0759     3.9681     3.9681     0.0000
- 11 C      6.0759     6.0000    -0.0759     3.9681     3.9681     0.0000
+ 10 C      6.0759     6.0000    -0.0759     3.9681     3.9681    -0.0000
+ 11 C      6.0759     6.0000    -0.0759     3.9681     3.9681    -0.0000
  12 H      0.9236     1.0000     0.0764     0.9942     0.9942     0.0000
  13 H      0.9236     1.0000     0.0764     0.9942     0.9942     0.0000
  14 C      6.1544     6.0000    -0.1544     3.9649     3.9649    -0.0000
  15 C      6.1544     6.0000    -0.1544     3.9649     3.9649    -0.0000
  16 H      0.9241     1.0000     0.0759     0.9942     0.9942    -0.0000
- 17 H      0.9241     1.0000     0.0759     0.9942     0.9942     0.0000
+ 17 H      0.9241     1.0000     0.0759     0.9942     0.9942    -0.0000
  18 H      0.9210     1.0000     0.0790     0.9938     0.9938    -0.0000
  19 H      0.9210     1.0000     0.0790     0.9938     0.9938     0.0000
 
@@ -3552,32 +3553,64 @@ B( 11-C , 13-H ) :   0.9592 B( 11-C , 15-C ) :   1.9013 B( 14-C , 16-H ) :   0.9
 B( 14-C , 18-H ) :   0.9693 B( 15-C , 17-H ) :   0.9664 B( 15-C , 19-H ) :   0.9693 
 
 
+
+------------------
+HIRSHFELD ANALYSIS
+------------------
+
+Total integrated alpha density =     34.999915907
+Total integrated beta density  =     34.999915907
+
+  ATOM     CHARGE      SPIN    
+   0 C   -0.003419    0.000000
+   1 C   -0.003419    0.000000
+   2 C   -0.038200    0.000000
+   3 C   -0.038200    0.000000
+   4 C   -0.036945    0.000000
+   5 C   -0.036945    0.000000
+   6 H    0.039063    0.000000
+   7 H    0.039063    0.000000
+   8 H    0.039379    0.000000
+   9 H    0.039379    0.000000
+  10 C   -0.038248    0.000000
+  11 C   -0.038248    0.000000
+  12 H    0.037052    0.000000
+  13 H    0.037052    0.000000
+  14 C   -0.074799    0.000000
+  15 C   -0.074799    0.000000
+  16 H    0.037256    0.000000
+  17 H    0.037256    0.000000
+  18 H    0.038946    0.000000
+  19 H    0.038946    0.000000
+
+  TOTAL   0.000168    0.000000
+
 -------
 TIMINGS
 -------
 
-Total SCF time: 0 days 0 hours 0 min 5 sec 
+Total SCF time: 0 days 0 hours 0 min 4 sec 
 
-Total time                  ....       5.502 sec
-Sum of individual times     ....       5.430 sec  ( 98.7%)
+Total time                  ....       4.990 sec
+Sum of individual times     ....       4.866 sec  ( 97.5%)
 
-Fock matrix formation       ....       4.629 sec  ( 84.1%)
-  Split-RI-J                ....       0.550 sec  ( 11.9% of F)
-  Chain of spheres X        ....       3.172 sec  ( 68.5% of F)
-  XC integration            ....       0.899 sec  ( 19.4% of F)
-    Basis function eval.    ....       0.464 sec  ( 51.6% of XC)
-    Density eval.           ....       0.127 sec  ( 14.2% of XC)
-    XC-Functional eval.     ....       0.177 sec  ( 19.6% of XC)
-    XC-Potential eval.      ....       0.063 sec  (  7.0% of XC)
-Diagonalization             ....       0.008 sec  (  0.1%)
+Fock matrix formation       ....       3.978 sec  ( 79.7%)
+  Split-RI-J                ....       0.531 sec  ( 13.4% of F)
+  Chain of spheres X        ....       2.815 sec  ( 70.8% of F)
+  XC integration            ....       0.581 sec  ( 14.6% of F)
+    Basis function eval.    ....       0.260 sec  ( 44.8% of XC)
+    Density eval.           ....       0.119 sec  ( 20.5% of XC)
+    XC-Functional eval.     ....       0.083 sec  ( 14.3% of XC)
+    XC-Potential eval.      ....       0.051 sec  (  8.7% of XC)
+Diagonalization             ....       0.010 sec  (  0.2%)
 Density matrix formation    ....       0.001 sec  (  0.0%)
-Population analysis         ....       0.006 sec  (  0.1%)
-Initial guess               ....       0.045 sec  (  0.8%)
+Population analysis         ....       0.075 sec  (  1.5%)
+Initial guess               ....       0.091 sec  (  1.8%)
 Orbital Transformation      ....       0.000 sec  (  0.0%)
 Orbital Orthonormalization  ....       0.000 sec  (  0.0%)
-DIIS solution               ....       0.006 sec  (  0.1%)
-SOSCF solution              ....       0.004 sec  (  0.1%)
-Grid generation             ....       0.731 sec  ( 13.3%)
+DIIS solution               ....       0.010 sec  (  0.2%)
+SOSCF solution              ....       0.005 sec  (  0.1%)
+Grid generation             ....       0.696 sec  ( 13.9%)
 
 Maximum memory used throughout the entire SCF-calculation: 49.4 MB
 
@@ -3662,8 +3695,8 @@ x,y,z [Debye]:     0.000000    -0.000000     0.000000
 
 Timings for individual modules:
 
-Sum of individual times         ...        8.247 sec (=   0.137 min)
-GTO integral calculation        ...        1.447 sec (=   0.024 min)  17.5 %
-SCF iterations                  ...        6.800 sec (=   0.113 min)  82.5 %
+Sum of individual times         ...        6.159 sec (=   0.103 min)
+GTO integral calculation        ...        0.853 sec (=   0.014 min)  13.8 %
+SCF iterations                  ...        5.306 sec (=   0.088 min)  86.2 %
                              ****ORCA TERMINATED NORMALLY****
-TOTAL RUN TIME: 0 days 0 hours 0 minutes 9 seconds 615 msec
+TOTAL RUN TIME: 0 days 0 hours 0 minutes 7 seconds 8 msec
