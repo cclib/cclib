@@ -275,6 +275,17 @@ class FChk(logfileparser.Logfile):
                 etmagdips.append(etvalues[k:k+3])
             self.set_attribute('etmagdips',etmagdips)
 
+        if line[0:19] == "Excitation Energies":
+            count = int(line.split()[-1])
+            etenergies = self._parse_block(inputfile, count, float, "Excitation energies")
+            etenergies = [utils.convertor(e, "hartree", "wavenumber") for e in etenergies]
+            self.set_attribute("etenergies", etenergies)
+
+        if line[0:20] == "Oscillator Strengths":
+            count = int(line.split()[-1])
+            etoscs = self._parse_block(inputfile, count, float, "Oscillator Strengths")
+            self.set_attribute("etoscs", etoscs)
+
     def parse_aonames(self, line, inputfile):
         # e.g.: Shell types                                I   N=          28
         count = int(line.split()[-1])
