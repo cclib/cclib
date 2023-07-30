@@ -245,6 +245,7 @@ NMR       ORCA        GenericNMRTest        basicORCA5.0          dvb_nmr.out
 NMR       ORCA        GenericNMRCouplingTest        basicORCA5.0          dvb_coupling_nmr.out
 
 Polar     DALTON      ReferencePolarTest    basicDALTON-2015      Trp_polar_abalnr.out
+Polar     FChk        ReferencePolarTest    basicGaussian16       Trp_polar.fchk
 Polar     GAMESS      ReferencePolarTest    basicGAMESS-US2017    Trp_polar_tdhf.out
 Polar     GAMESS      ReferencePolarTest    basicGAMESS-US2018    Trp_polar_tdhf.out
 Polar     Gaussian    ReferencePolarTest    basicGaussian09       Trp_polar.log

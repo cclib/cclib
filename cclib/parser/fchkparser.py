@@ -185,6 +185,10 @@ class FChk(logfileparser.Logfile):
 
             self.set_attribute('grads', gradient)
 
+        if line[0:14] == "Polarizability":
+            polarizability = numpy.asarray(self._parse_block(inputfile, 6, float, "Polarizability"))
+            self.append_attribute("polarizabilities", utils.block_to_matrix(polarizability))
+
         if line[0:25] == 'Cartesian Force Constants':
             count = int(line.split()[-1])
             assert count == (3*self.natom*(3*self.natom+1))/2
