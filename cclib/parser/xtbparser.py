@@ -28,9 +28,9 @@ class XTB(logfileparser.Logfile):
         self.bondprop = {}
 
     def after_parsing(self):
-        if self.atomprop == {}:
+        if not self.atomprop:
             delattr(self, "atomprop")
-        if self.bondprop == {}:
+        if not self.bondprop:
             delattr(self, "bondprop")
 
     def extract(self, inputfile, line):
@@ -38,7 +38,6 @@ class XTB(logfileparser.Logfile):
         if '* xtb version' == line.strip()[:13]:
             version = line.split()[3]
             self.metadata["legacy_package_version"] = version
-            self.set_attribute('xtbversion', version)
         
         #   -------------------------------------------------
         #  |                Calculation Setup                |
@@ -154,9 +153,8 @@ class XTB(logfileparser.Logfile):
                 self.set_attribute('natom', len(atomnos))
                 self.set_attribute('atomnos', atomnos)
                 self.set_attribute("atomcoords", atomcoords)
-                #print(lines)
 
-            elif self.metadata["coord_type"] == 'sdf' or self.metadata["coord_type"] == 'mol':
+            elif self.metadata["coord_type"] in ("sdf", "mol"):
                 atomnos = []
                 atomcoords = []
                 # Ending criteria for sdf\mol is the END at the end of the coord block
@@ -502,4 +500,3 @@ class XTB(logfileparser.Logfile):
         # find if ended successfuly
         if '* finished run on' == line.strip()[:17]:
             self.metadata['success'] = True
-        return
