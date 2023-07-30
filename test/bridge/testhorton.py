@@ -27,13 +27,13 @@ class HortonTest(unittest.TestCase):
         super().setUp()
 
         self.data, self.logfile = getdatafile(
-            "Gaussian", "basicGaussian16", ["dvb_un_sp.fchk"]
+            "FChk", "basicGaussian16", ["dvb_un_sp.fchk"]
         )
         datadir = os.path.abspath(
             os.path.join(os.path.dirname(__file__), "..", "..", "data")
         )
         inputfile = os.path.join(
-            datadir, "Gaussian", "basicGaussian16", "dvb_un_sp.fchk"
+            datadir, "FChk", "basicGaussian16", "dvb_un_sp.fchk"
         )
 
         if not find_package("iodata"):
