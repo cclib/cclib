@@ -355,7 +355,10 @@ SPun      DALTON      GenericROSPTest       basicDALTON-2013      dvb_sp_un_hf.o
 SPun      DALTON      GenericROSPTest       basicDALTON-2013      dvb_sp_un_ks.out
 SPun      DALTON      GenericROSPTest       basicDALTON-2015      dvb_sp_un_hf.out
 SPun      DALTON      GenericROSPTest       basicDALTON-2015      dvb_sp_un_ks.out
+SPun      FChk        GenericSPunTest       basicGaussian09       dvb_un_sp.fchk
+SPun      FChk        GenericSPunTest       basicGaussian16       dvb_un_sp.fchk
 SPun      FChk        GenericSPunTest       basicQChem5.2         dvb_sp_un_modified.FChk
+SPun      FChk        GenericSPunTest       basicQChem5.4         dvb_sp_un.fchk
 SPun      GAMESSUK    GamessUK70SPunTest    basicGAMESS-UK7.0     dvb_un_sp_b.out
 SPun      GAMESSUK    GamessUK80SPunTest    basicGAMESS-UK8.0     dvb_un_sp_hf.out
 SPun      GAMESSUK    GamessUK80SPunTest    basicGAMESS-UK8.0     dvb_un_sp_ks.out
