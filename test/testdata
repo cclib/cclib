@@ -439,6 +439,9 @@ vib       ADF         ADFIRTest             basicADF2007.01       dvb_ir.adfout
 vib       ADF         ADFIRTest             basicADF2013.01       dvb_ir.adfout
 vib       DALTON      GenericIRTest         basicDALTON-2013      dvb_ir.out
 vib       DALTON      GenericIRTest         basicDALTON-2015      dvb_ir.out
+vib       FChk        GaussianIRTest        basicGaussian09       dvb_ir.fchk
+vib       FChk        GaussianIRTest        basicGaussian16       dvb_ir.fchk
+vib       FChk        QChemIRTest           basicQChem5.4         dvb_ir.fchk
 vib       GAMESSUK    GenericIRTest         basicGAMESS-UK7.0     dvb_ir.out
 vib       GAMESSUK    GenericIRTest         basicGAMESS-UK8.0     dvb_ir.out
 vib       GAMESS      FireflyIRTest         basicFirefly8.0       dvb_ir.out

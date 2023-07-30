@@ -193,6 +193,32 @@ class FChk(logfileparser.Logfile):
 
             self.set_attribute('hessian', utils.block_to_matrix(hessian))
 
+        if line[0:22] == "Number of Normal Modes":
+            self.set_attribute("nmode", int(line.split()[-1]))
+
+        if line[0:6] == "Vib-E2":
+            count = int(line.split()[-1])
+            le2 = self._parse_block(inputfile, count, float, "Vib-E2")
+            assert hasattr(self, "nmode")
+            nmode = self.nmode
+            self.set_attribute("vibfreqs", le2[:nmode])
+            le2 = le2[nmode:]
+            self.set_attribute("vibrmasses", le2[:nmode])
+            le2 = le2[nmode:]
+            self.set_attribute("vibfconsts", le2[:nmode])
+            le2 = le2[nmode:]
+            self.set_attribute("vibirs", le2[:nmode])
+            # The rest should be empty unless Raman or ROA were calculated.
+            le2 = le2[nmode:]
+
+        if line[0:9] == "Vib-Modes":
+            count = int(line.split()[-1])
+            vibdisps = numpy.asarray(self._parse_block(inputfile, count, float, "Vib-Modes"))
+            # indices from fast to slow are [xyz, atom, mode]
+            assert hasattr(self, "nmode")
+            assert count == 3 * self.natom * self.nmode
+            self.set_attribute("vibdisps", vibdisps.reshape(self.nmode, self.natom, 3))
+
         if line[0:13] == 'ETran scalars':
             count = int(line.split()[-1])
 
