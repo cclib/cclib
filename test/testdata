@@ -277,7 +277,10 @@ SP        DALTON      GenericHFSPTest       basicDALTON-2013            dvb_sp_h
 SP        DALTON      GenericSPTest         basicDALTON-2013            dvb_sp_ks.out
 SP        DALTON      GenericHFSPTest       basicDALTON-2015            dvb_sp_hf.out
 SP        DALTON      GenericSPTest         basicDALTON-2015            dvb_sp_ks.out
+SP        FChk        GenericSPTest         basicGaussian09             dvb_sp.fchk
+SP        FChk        GenericSPTest         basicGaussian16             dvb_sp.fchk
 SP        FChk        GenericSPTest         basicQChem5.2               dvb_sp_modified.FChk
+SP        FChk        GenericSPTest         basicQChem5.4               dvb_sp.fchk
 SP        GAMESSUK    GenericSPTest         basicGAMESS-UK7.0           dvb_sp_b.out
 SP        GAMESSUK    GenericHFSPTest       basicGAMESS-UK8.0           dvb_sp_hf.out
 SP        GAMESSUK    GenericSPTest         basicGAMESS-UK8.0           dvb_sp_ks.out

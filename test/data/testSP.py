@@ -272,6 +272,8 @@ class GenericSPTest(unittest.TestCase):
             assert self.data.nocoeffs.shape == (self.data.nmo, self.data.nmo)
 
     @skipForParser('DALTON', 'To print: **INTEGRALS\n.PROPRI')
+    @skipForLogfile('FChk/basicGaussian09', 'Only available in QChem')
+    @skipForLogfile('FChk/basicGaussian16', 'Only available in QChem')
     @skipForParser('GAMESSDAT','Aooverlaps probably do not exist in the file.')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Psi4', 'Psi4 does not currently have the option to print the overlap matrix')
