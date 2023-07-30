@@ -124,10 +124,10 @@ def guess_filetype(inputfile) -> Optional[logfileparser.Logfile]:
     """Try to guess the filetype by searching for trigger strings."""
     filetype = None
     logger = logging.getLogger("cclib")
-    if is_xyz(inputfile):
-        logger.info("Found XYZ file based on file extension")
-        return filetype
     try:
+        if isinstance(inputfile, FileWrapper) and is_xyz(inputfile):
+            logger.info("Found XYZ file based on file extension")
+            return filetype
         for line in inputfile:
             for parser, phrases, do_break in triggers:
                 if all([line.lower().find(p.lower()) >= 0 for p in phrases]):
