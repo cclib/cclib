@@ -213,7 +213,10 @@ class FChk(logfileparser.Logfile):
             le2 = le2[nmode:]
             self.set_attribute("vibirs", le2[:nmode])
             # The rest should be empty unless Raman or ROA were calculated.
-            le2 = le2[nmode:]
+            le2 = numpy.asarray(le2[nmode:])
+            if numpy.any(le2[:nmode] >= 1.0e-20):
+                self.set_attribute("vibramans", le2[:nmode])
+                le2 = le2[nmode:]
 
         if line[0:9] == "Vib-Modes":
             count = int(line.split()[-1])

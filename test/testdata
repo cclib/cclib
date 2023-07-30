@@ -471,6 +471,7 @@ vib       GAMESS      GenericIRimgTest      basicGAMESS-US2017    nh3_ts_ir.out
 vib       GAMESS      GenericIRimgTest      basicGAMESS-US2018    nh3_ts_ir.out
 
 vib       DALTON      DALTONRamanTest       basicDALTON-2013      dvb_raman.out
+vib       FChk        GaussianRamanTest     basicGaussian16       dvb_raman.fchk
 vib       GAMESSUK    GenericRamanTest      basicGAMESS-UK7.0     dvb_raman.out
 vib       GAMESSUK    GenericRamanTest      basicGAMESS-UK8.0     dvb_raman.out
 vib       GAMESS      GenericRamanTest      basicFirefly8.0       dvb_raman.out
