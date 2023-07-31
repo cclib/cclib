@@ -465,7 +465,7 @@ Calculate the nuclear repulsion energy using the snippet below:
 
     parser = cclib.io.ccopen("test.log")
     data = parser.parse()
-    nuclear = Nuclear.Nuclear(data)
+    nuclear = Nuclear(data)
 
     nre = nuclear.repulsion_energy()
     print(nre)
