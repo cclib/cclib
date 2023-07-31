@@ -84,8 +84,8 @@ class HortonTest(unittest.TestCase):
         cclibequiv = cclib2horton.makecclib(self.iodat)
 
         # Identify attributes that should be verified
-        check = ["mult", "coreelectrons"]  # float or int
-        checkArr = ["atomcoords", "atomnos", "mocoeffs"]  # one dimensional arrays
+        check = ["mult"]  # float or int
+        checkArr = ["atomcoords", "atomnos", "coreelectrons", "mocoeffs"]  # one dimensional arrays
         checkArrArr = ["polarizability"]  # two dimensional arrays
         checkChg = ["mulliken", "natural"]  # atomcharges attribute is dictionary with these keys
 
