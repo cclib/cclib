@@ -161,7 +161,8 @@ class GenericSPTest(unittest.TestCase):
         # Check if all are different (every orbital indexed once).
         assert len(set(all)) == len(all)
 
-    @skipForParser('FChk', 'Formatted checkpoint files do not have a section for atommasses')
+    @skipForLogfile("FChk/basicQChem5.2", "Q-Chem doesn't print SCF energy to fchk")
+    @skipForLogfile("FChk/basicQChem5.4", "Q-Chem doesn't print SCF energy to fchk")
     @skipForParser('GAMESS', 'atommasses not implemented yet')
     @skipForParser('GAMESSUK', 'atommasses not implemented yet')
     @skipForParser('GAMESSDAT', 'Atommasses implemented, but it does not pass the test.')
