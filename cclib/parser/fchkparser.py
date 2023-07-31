@@ -175,6 +175,12 @@ class FChk(logfileparser.Logfile):
 
             self.set_attribute('scfenergies', [utils.convertor(self.scfenergy,'hartree','eV')])
 
+        if line[0:16] == "Mulliken Charges":
+            count = int(line.split()[-1])
+            if not hasattr(self, "atomcharges"):
+                self.atomcharges = {}
+            self.atomcharges["mulliken"] = self._parse_block(inputfile, count, float, "Mulliken Charges")
+
         if line[0:18] == 'Cartesian Gradient':
             count = int(line.split()[-1])
             assert count == self.natom*3

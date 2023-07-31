@@ -76,7 +76,8 @@ class GenericSPTest(unittest.TestCase):
             assert len(charges) == natom, f"len(atomcharges['{atomcharge_type}']) = {len(charges)}, natom = {natom}"
 
     @skipForParser('DALTON', 'DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now')
-    @skipForParser('FChk', 'The parser is still being developed so we skip this test')
+    @skipForLogfile("FChk/basicQChem5.2", "not printed for Q-Chem")
+    @skipForLogfile("FChk/basicQChem5.4", "not printed for Q-Chem")
     @skipForParser('GAMESSDAT', 'We are not sure about the specific type of atom charges, it is best to skip the test for now.')
     @skipForLogfile('Jaguar/basicJaguar7', 'We did not print the atomic partial charges in the unit tests for this version')
     @skipForLogfile('Molpro/basicMolpro2006', "These tests were run a long time ago and since we don't have access to Molpro 2006 anymore, we can skip this test (it is tested in 2012)")
