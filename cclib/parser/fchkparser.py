@@ -106,6 +106,12 @@ class FChk(logfileparser.Logfile):
             coords.shape = (1, int(count / 3), 3)
             self.set_attribute('atomcoords', utils.convertor(coords, 'bohr', 'Angstrom'))
 
+        if line[0:10] == "SCF Energy":
+            self.set_attribute(
+                "scfenergies",
+                [utils.convertor(float(line.split()[-1]), "hartree", "eV")]
+            )
+
         if line[0:25] == 'Number of basis functions':
             self.set_attribute('nbasis', int(line.split()[-1]))
 

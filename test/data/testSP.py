@@ -207,7 +207,8 @@ class GenericSPTest(unittest.TestCase):
         assert isinstance(self.data.scfvalues, list)
         assert isinstance(self.data.scfvalues[0], numpy.ndarray)
 
-    @skipForParser('FChk', 'Formatted Checkpoint files do not have a section for SCF energy')
+    @skipForLogfile("FChk/basicQChem5.2", "Q-Chem doesn't print SCF energy to fchk")
+    @skipForLogfile("FChk/basicQChem5.4", "Q-Chem doesn't print SCF energy to fchk")
     @skipForParser('GAMESSDAT', 'Scfenergies probably do not exist in the file')
     def testscfenergy(self):
         """Is the SCF energy within the target?"""
