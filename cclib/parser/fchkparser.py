@@ -117,22 +117,14 @@ class FChk(logfileparser.Logfile):
 
         if line[0:14] == 'Overlap Matrix':
             count = int(line.split()[-1])
-
-            # triangle matrix, with number of elements in a row:
-            # 1 + 2 + 3 + .... + self.nbasis
-            assert count == (self.nbasis + 1) * self.nbasis / 2
-            raw_overlaps = self._parse_block(inputfile, count, float, 'Overlap Matrix')
-
-            # now turn into matrix
-            overlaps = numpy.zeros((self.nbasis, self.nbasis))
-            raw_index = 0
-            for row in range(self.nbasis):
-                for col in range(row + 1):
-                    overlaps[row, col] = raw_overlaps[raw_index]
-                    overlaps[col, row] = raw_overlaps[raw_index]
-                    raw_index += 1
-
-            self.set_attribute('aooverlaps', overlaps)
+            self.set_attribute(
+                "aooverlaps",
+                utils.block_to_matrix(
+                    numpy.asarray(
+                        self._parse_block(inputfile, count, float, "Overlap Matrix")
+                    )
+                )
+            )
 
         if line[0:31] == 'Number of independent functions':
             self.set_attribute('nmo', int(line.split()[-1]))
