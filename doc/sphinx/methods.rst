@@ -470,13 +470,6 @@ Calculate the nuclear repulsion energy using the snippet below:
     nre = nuclear.repulsion_energy()
     print(nre)
 
-The value can be also converted to Hartrees (to directly compare with Gaussian logfiles):
-
-.. code-block:: python
-    from cclib.parser.utils import convertor
-
-    print(convertor(nre, "bohr", "Angstrom"))
-
     
 Accessing additional methods through bridge
 -------------------------------------------
