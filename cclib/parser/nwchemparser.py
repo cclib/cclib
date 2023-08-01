@@ -389,7 +389,7 @@ class NWChem(logfileparser.Logfile):
         #   Spatial weights used:  Erf1
 
         if "Grid Information" in line:
-            self.skip_line(inputfile, "dashes")
+            self.skip_line(inputfile, 'dashes')
             next(inputfile)
             self.metadata["grid"] = next(inputfile).split()[-1]
 
@@ -1295,10 +1295,6 @@ class NWChem(logfileparser.Logfile):
                 self.append_attribute("vibirs", float(line.split()[5]))
                 line = next(inputfile)  # next line
             self.set_attribute("vibfreqs", vibfreqs)
-        # properties related to symmetry
-        if line.strip().find('symmetry #') != -1:
-            symmno = int(line.strip().split()[-1][0:-1])
-            self.set_attribute('symmno', symmno)
 
         # Grab rotational constants (convert cm-1 to GHz)
         if line.strip().startswith('A='):
