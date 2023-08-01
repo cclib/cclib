@@ -61,13 +61,11 @@ class NWChem(logfileparser.Logfile):
 
         if "nproc" in line:
             self.metadata['num_processors'] = line.split()[-1]
+        self.skip_lines(['d','b','heap','stack','global'])
         if "Memory information" in line:
-            line_count = 0 
-            while 'total' not in line and line_count <=8:
-                line = next(inputfile)
-                line_count += 1
-            if 'total' in line:
-                self.metadata['memory'] = line.split()[-2:]
+        self.skip_lines(['d','b','heap','stack','global'])
+        if 'total' in line:
+            self.metadata['memory'] = line.split()[-2:]
 
 
         # This is printed in the input module, so should always be the first coordinates,
