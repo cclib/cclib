@@ -26,7 +26,7 @@ class OpenbabelTest(unittest.TestCase):
             import openbabel
         atomnos = numpy.array([1, 8, 1], "i")
         atomcoords = numpy.array([[[-1., 1., 0.], [0., 0., 0.], [1., 1., 0.]]])
-        obmol = cclib2openbabel.makeopenbabel(atomcoords, atomnos)
+        obmol = cclib2openbabel.makeopenbabel(atomcoords=atomcoords, atomnos=atomnos)
         obconversion = openbabel.OBConversion()
         formatok = obconversion.SetOutFormat("inchi")
         assert obconversion.WriteString(obmol).strip() == "InChI=1S/H2O/h1H2"
@@ -37,13 +37,13 @@ class OpenbabelTest(unittest.TestCase):
         atomcoords = numpy.array([[[-1., 1., 0.], [0., 0., 0.], [1., 1., 0.]]])
 
         # makecclib(makeopenbabel(...))
-        obmol = cclib2openbabel.makeopenbabel(atomcoords, atomnos)
+        obmol = cclib2openbabel.makeopenbabel(atomcoords=atomcoords, atomnos=atomnos)
         data = cclib2openbabel.makecclib(obmol)
         numpy.testing.assert_allclose(data.atomcoords, atomcoords)
         numpy.testing.assert_allclose(data.atomnos, atomnos)
 
         # makeopenbabel(makecclib(...))
-        obmol = cclib2openbabel.makeopenbabel(data.atomcoords, data.atomnos)
+        obmol = cclib2openbabel.makeopenbabel(atomcoords=data.atomcoords, atomnos=data.atomnos)
         data = cclib2openbabel.makecclib(obmol)  # this line is just to make the test easier
         numpy.testing.assert_allclose(data.atomcoords, atomcoords)
         numpy.testing.assert_allclose(data.atomnos, atomnos)
