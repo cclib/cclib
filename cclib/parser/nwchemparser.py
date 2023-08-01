@@ -1296,7 +1296,7 @@ class NWChem(logfileparser.Logfile):
                 line = next(inputfile)  # next line
             self.set_attribute("vibfreqs", vibfreqs)
 
-        # Grab rotational constants (convert cm-1 to GHz)
+        # Grab rotational constants (convert cm-1 to Hz)
         if line.strip().startswith('A='):
             roconst, rotemp = [], []
             split_line = line.split()
