@@ -74,7 +74,7 @@ class NuclearTest(unittest.TestCase):
             output = f.read()
         line = re.search('Nuclear Repulsion Energy = .* hartrees', output).group()
         nre = float(line.split()[4])
-        nre = utils.convertor(nre, 'eV', 'hartree')
+        nre = utils.convertor(nre, 'hartree', 'eV')
         assert round(abs(nuclear.repulsion_energy() - nre), 7) == 0
 
     def test_principal_moments_of_inertia(self) -> None:
