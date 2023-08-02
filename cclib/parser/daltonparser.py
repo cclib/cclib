@@ -48,6 +48,11 @@ class DALTON(logfileparser.Logfile):
         # when the first line is BASIS, false for INTGRL/ATOMBASIS.
         self.basislibrary = True
 
+        # If there is a section header with "Cartesian Coordinates (a.u.)",
+        # the most general coordinates block, then we don't need to parse the
+        # geometry that gets printed with `.RUN PROPERTIES`.
+        self.has_cartesian_coordinates_block = False
+
     def parse_geometry(self, lines):
         """Parse DALTON geometry lines into an atomcoords array."""
 
@@ -357,6 +362,27 @@ class DALTON(logfileparser.Logfile):
             self.set_attribute('nbasis', int(line.split()[icont]))
 
             self.skip_line(inputfile, 'dashes')
+
+        if line.strip() == "Cartesian Coordinates (a.u.)":
+
+            self.has_cartesian_coordinates_block = True
+
+            self.skip_lines(inputfile, ["d", "b", "Total number of coordinates"])
+            line = next(inputfile)
+
+            atomcoords = []
+
+            while line.strip():
+                tokens = line.split()
+                if len(tokens) == 11:
+                    indices = [4, 7, 10]
+                else:
+                    assert len(tokens) == 13
+                    indices = [6, 9, 12]
+                atomcoords.append([utils.convertor(float(tokens[i]), "bohr", "Angstrom") for i in indices])
+                line = next(inputfile)
+
+            self.append_attribute("atomcoords", atomcoords)
 
         # The Gaussian exponents and contraction coefficients are printed for each primitive
         # and then the contraction information is printed separately (see below) Both segmented
@@ -891,10 +917,7 @@ class DALTON(logfileparser.Logfile):
         # C   _1     2.6543517307            0.0000000000            0.0000000000
         # ...
         #
-        if "Molecular geometry (au)" in line:
-
-            if not hasattr(self, "atomcoords"):
-                self.atomcoords = []
+        if "Molecular geometry (au)" in line and not self.has_cartesian_coordinates_block:
 
             if self.firststdorient:
                 self.firststdorient = False
@@ -903,7 +926,7 @@ class DALTON(logfileparser.Logfile):
 
             lines = [next(inputfile) for i in range(self.natom)]
             atomcoords = self.parse_geometry(lines)
-            self.atomcoords.append(atomcoords)
+            self.append_attribute("atomcoords", atomcoords)
 
         if "Optimization Control Center" in line:
             self.section = "OPT"
@@ -920,13 +943,14 @@ class DALTON(logfileparser.Logfile):
         # C   _1     1.3203201560            2.3174808341            0.0000000000
         # C   _2    -1.3203201560           -2.3174808341            0.0000000000
         # ...
-        if self.section == "OPT" and line.strip() == "Next geometry (au)":
+        if self.section == "OPT" and line.strip() == "Next geometry (au)" \
+           and not self.has_cartesian_coordinates_block:
 
             self.skip_lines(inputfile, ['d', 'b'])
 
             lines = [next(inputfile) for i in range(self.natom)]
             coords = self.parse_geometry(lines)
-            self.atomcoords.append(coords)
+            self.append_attribute("atomcoords", coords)
 
         # This section contains data for optdone and geovalues, although we could use
         # it to double check some atttributes that were parsed before.
