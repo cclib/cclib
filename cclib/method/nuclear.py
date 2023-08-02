@@ -15,6 +15,7 @@ import numpy as np
 from cclib.method.calculationmethod import Method
 from cclib.parser.utils import PeriodicTable
 from cclib.parser.utils import find_package
+from cclib.parser.utils import convertor
 
 _found_periodictable = find_package("periodictable")
 if _found_periodictable:
@@ -111,7 +112,7 @@ class Nuclear(Method):
                 zj = self.data.atomnos[j]
                 d = np.linalg.norm(ri-rj)
                 nre += zi*zj/d
-        return nre
+        return convertor(convertor(nre, "bohr", "Angstrom"), "hartree", "eV")
 
     def center_of_mass(self, atomcoords_index: int = -1) -> float:
         """Return the center of mass."""
