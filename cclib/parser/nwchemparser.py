@@ -61,9 +61,9 @@ class NWChem(logfileparser.Logfile):
 
         if "nproc" in line:
             self.metadata['num_processors'] = line.split()[-1]
-        self.skip_lines(['d','b','heap','stack','global'])
+        self.skip_lines(inputfile,['d','b','heap','stack','global'])
         if "Memory information" in line:
-        self.skip_lines(['d','b','heap','stack','global'])
+            self.skip_lines(inputfile,['d','b','heap','stack','global'])
         if 'total' in line:
             self.metadata['memory'] = line.split()[-2:]
 
