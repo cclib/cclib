@@ -23,7 +23,7 @@ __filepath__ = os.path.realpath(__filedir__)
 __datadir__ = os.path.join(__filepath__, "..", "..")
 
 
-class guess_fileypeTest(unittest.TestCase):
+class guess_filetypeTest(unittest.TestCase):
 
     def setUp(self):
         self.guess = cclib.io.ccio.guess_filetype

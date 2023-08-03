@@ -88,6 +88,7 @@ class GenericTDTest(unittest.TestCase):
             t[0][2][0] == self.data.homos[0] + 1
 
     @skipForParser('Molcas','The parser is still being developed so we skip this test')    
+    @skipForLogfile("FChk/basicQChem5.4", "etsyms are not yet implemented")
     @skipForLogfile("ORCA/basicORCA5.0/dvb_adc2.log", "etsyms are not available for this method") 
     @skipForLogfile("ORCA/basicORCA5.0/dvb_eom_ccsd.log", "etsyms are not available for this method") 
     @skipForLogfile("ORCA/basicORCA5.0/dvb_pno_eom_ccsd.log", "etsyms are not available for this method") 
@@ -103,10 +104,11 @@ class GenericTDTest(unittest.TestCase):
     @skipForParser('GAMESSUK', 'etsyms are not yet implemented')
     @skipForParser('Jaguar', 'etsyms are not yet implemented')
     @skipForParser('NWChem', 'etsyms are not yet implemented')
-    @skipForParser('QChem', 'etrotats are not yet implemented')
+    @skipForParser('QChem', 'etsyms are not yet implemented')
     @skipForLogfile("ORCA/basicORCA4.2", "etsyms are only available in ORCA >= 5.0") 
     @skipForLogfile("ORCA/basicORCA4.1", "etsyms are only available in ORCA >= 5.0") 
     @skipForLogfile("Gaussian/basicGaussian09", "symmetry is missing for this log file")
+    @skipForLogfile("FChk/basicQChem5.4", "etsyms are not yet implemented")
     def testsyms(self):
         """Are the values of etsyms correct?"""
         assert self.data.etsyms == self.symmetries
@@ -119,6 +121,9 @@ class GenericTDTest(unittest.TestCase):
     @skipForParser('Jaguar', 'etrotats are not yet implemented')
     @skipForParser('NWChem', 'etrotats are not yet implemented')
     @skipForParser('QChem', 'Q-Chem cannot calculate rotatory strengths')
+    @skipForLogfile("FChk/basicQChem5.4", "Q-Chem cannot calculate rotatory strengths")
+    @skipForLogfile("FChk/basicGaussian09", "etrotats are not available in fchk, only the main logfile")
+    @skipForLogfile("FChk/basicGaussian16", "etrotats are not available in fchk, only the main logfile")
     @skipForLogfile("Turbomole/basicTurbomole7.4/CO_cc2_TD", "Rotatory strengths are not currently available for ricc2")
     @skipForLogfile("Turbomole/basicTurbomole7.4/CO_adc2_TD", "Rotatory strengths are not currently available for ricc2")
     def testrotatsnumber(self):
@@ -163,10 +168,6 @@ class GaussianTDDFTTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
 
     expected_l_max = 48000
-
-    def testrotatsnumber(self):
-        """Is the length of etrotats correct?"""
-        assert len(self.data.etrotats) == self.number
 
     def testetdipsshape(self):
         """Is the shape of etdips correct?"""

@@ -27,13 +27,13 @@ class HortonTest(unittest.TestCase):
         super().setUp()
 
         self.data, self.logfile = getdatafile(
-            "Gaussian", "basicGaussian16", ["dvb_un_sp.fchk"]
+            "FChk", "basicGaussian16", ["dvb_un_sp.fchk"]
         )
         datadir = os.path.abspath(
             os.path.join(os.path.dirname(__file__), "..", "..", "data")
         )
         inputfile = os.path.join(
-            datadir, "Gaussian", "basicGaussian16", "dvb_un_sp.fchk"
+            datadir, "FChk", "basicGaussian16", "dvb_un_sp.fchk"
         )
 
         if not find_package("iodata"):
@@ -84,8 +84,8 @@ class HortonTest(unittest.TestCase):
         cclibequiv = cclib2horton.makecclib(self.iodat)
 
         # Identify attributes that should be verified
-        check = ["mult", "coreelectrons"]  # float or int
-        checkArr = ["atomcoords", "atomnos", "mocoeffs"]  # one dimensional arrays
+        check = ["mult"]  # float or int
+        checkArr = ["atomcoords", "atomnos", "coreelectrons", "mocoeffs"]  # one dimensional arrays
         checkArrArr = ["polarizability"]  # two dimensional arrays
         checkChg = ["mulliken", "natural"]  # atomcharges attribute is dictionary with these keys
 

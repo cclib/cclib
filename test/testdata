@@ -129,7 +129,10 @@ CI        QChem       QChemCISTest          basicQChem5.4         water_cis.out
 
 Core      ADF         ADFCoreTest           basicADF2007.01       MoOCl4-sp.adfout
 Core      ADF         ADFCoreTest           basicADF2013.01       MoOCl4-sp.adfout
+Core      FChk        GenericCoreTest       basicGaussian09       Mo4OCl4-sp.fchk
+Core      FChk        GenericCoreTest       basicGaussian16       Mo4OCl4-sp.fchk
 Core      FChk        GenericCoreTest       basicQChem5.2         MoOCl4_sp_modified.FChk
+Core      FChk        GenericCoreTest       basicQChem5.4         MoOCl4_sp.fchk
 Core      GAMESSUK    GenericCoreTest       basicGAMESS-UK7.0     MoOCl4-sp.out
 Core      GAMESSUK    GenericCoreTest       basicGAMESS-UK8.0     MoOCl4-sp.out
 Core      GAMESS      GenericCoreTest       basicGAMESS-US2017    MoOCl4-sp.out
@@ -242,6 +245,7 @@ NMR       ORCA        GenericNMRTest        basicORCA5.0          dvb_nmr.out
 NMR       ORCA        GenericNMRCouplingTest        basicORCA5.0          dvb_coupling_nmr.out
 
 Polar     DALTON      ReferencePolarTest    basicDALTON-2015      Trp_polar_abalnr.out
+Polar     FChk        ReferencePolarTest    basicGaussian16       Trp_polar.fchk
 Polar     GAMESS      ReferencePolarTest    basicGAMESS-US2017    Trp_polar_tdhf.out
 Polar     GAMESS      ReferencePolarTest    basicGAMESS-US2018    Trp_polar_tdhf.out
 Polar     Gaussian    ReferencePolarTest    basicGaussian09       Trp_polar.log
@@ -274,7 +278,10 @@ SP        DALTON      GenericHFSPTest       basicDALTON-2013            dvb_sp_h
 SP        DALTON      GenericSPTest         basicDALTON-2013            dvb_sp_ks.out
 SP        DALTON      GenericHFSPTest       basicDALTON-2015            dvb_sp_hf.out
 SP        DALTON      GenericSPTest         basicDALTON-2015            dvb_sp_ks.out
+SP        FChk        GenericSPTest         basicGaussian09             dvb_sp.fchk
+SP        FChk        GenericSPTest         basicGaussian16             dvb_sp.fchk
 SP        FChk        GenericSPTest         basicQChem5.2               dvb_sp_modified.FChk
+SP        FChk        GenericSPTest         basicQChem5.4               dvb_sp.fchk
 SP        GAMESSUK    GenericSPTest         basicGAMESS-UK7.0           dvb_sp_b.out
 SP        GAMESSUK    GenericHFSPTest       basicGAMESS-UK8.0           dvb_sp_hf.out
 SP        GAMESSUK    GenericSPTest         basicGAMESS-UK8.0           dvb_sp_ks.out
@@ -349,7 +356,10 @@ SPun      DALTON      GenericROSPTest       basicDALTON-2013      dvb_sp_un_hf.o
 SPun      DALTON      GenericROSPTest       basicDALTON-2013      dvb_sp_un_ks.out
 SPun      DALTON      GenericROSPTest       basicDALTON-2015      dvb_sp_un_hf.out
 SPun      DALTON      GenericROSPTest       basicDALTON-2015      dvb_sp_un_ks.out
+SPun      FChk        GenericSPunTest       basicGaussian09       dvb_un_sp.fchk
+SPun      FChk        GenericSPunTest       basicGaussian16       dvb_un_sp.fchk
 SPun      FChk        GenericSPunTest       basicQChem5.2         dvb_sp_un_modified.FChk
+SPun      FChk        GenericSPunTest       basicQChem5.4         dvb_sp_un.fchk
 SPun      GAMESSUK    GamessUK70SPunTest    basicGAMESS-UK7.0     dvb_un_sp_b.out
 SPun      GAMESSUK    GamessUK80SPunTest    basicGAMESS-UK8.0     dvb_un_sp_hf.out
 SPun      GAMESSUK    GamessUK80SPunTest    basicGAMESS-UK8.0     dvb_un_sp_ks.out
@@ -388,7 +398,9 @@ TD        ADF         ADFTDDFTTest          basicADF2007.01       dvb_td.adfout
 TD        ADF         ADFTDDFTTest          basicADF2013.01       dvb_td.adfout
 TD        DALTON      DALTONTDTest          basicDALTON-2013      dvb_td.out
 TD        DALTON      DALTONTDTest          basicDALTON-2015      dvb_td.out
-TD        FChk        GenericTDTest         basicGaussian16       dvb_td.fchk
+TD        FChk        GaussianTDDFTTest     basicGaussian09       dvb_td.fchk
+TD        FChk        GaussianTDDFTTest     basicGaussian16       dvb_td.fchk
+TD        FChk        QChemTDDFTTest        basicQChem5.4         dvb_td.fchk
 TD        GAMESS      GenericTDTest         basicFirefly8.0       dvb_td.out
 TD        GAMESS      GenericTDDFTtrpTest   basicFirefly8.0       dvb_td_trplet.out
 TD        GAMESS      GAMESSUSTDDFTTest     basicGAMESS-US2017    dvb_td.out
@@ -428,6 +440,9 @@ vib       ADF         ADFIRTest             basicADF2007.01       dvb_ir.adfout
 vib       ADF         ADFIRTest             basicADF2013.01       dvb_ir.adfout
 vib       DALTON      GenericIRTest         basicDALTON-2013      dvb_ir.out
 vib       DALTON      GenericIRTest         basicDALTON-2015      dvb_ir.out
+vib       FChk        GaussianIRTest        basicGaussian09       dvb_ir.fchk
+vib       FChk        GaussianIRTest        basicGaussian16       dvb_ir.fchk
+vib       FChk        QChemIRTest           basicQChem5.4         dvb_ir.fchk
 vib       GAMESSUK    GenericIRTest         basicGAMESS-UK7.0     dvb_ir.out
 vib       GAMESSUK    GenericIRTest         basicGAMESS-UK8.0     dvb_ir.out
 vib       GAMESS      FireflyIRTest         basicFirefly8.0       dvb_ir.out
@@ -456,6 +471,7 @@ vib       GAMESS      GenericIRimgTest      basicGAMESS-US2017    nh3_ts_ir.out
 vib       GAMESS      GenericIRimgTest      basicGAMESS-US2018    nh3_ts_ir.out
 
 vib       DALTON      DALTONRamanTest       basicDALTON-2013      dvb_raman.out
+vib       FChk        GaussianRamanTest     basicGaussian16       dvb_raman.fchk
 vib       GAMESSUK    GenericRamanTest      basicGAMESS-UK7.0     dvb_raman.out
 vib       GAMESSUK    GenericRamanTest      basicGAMESS-UK8.0     dvb_raman.out
 vib       GAMESS      GenericRamanTest      basicFirefly8.0       dvb_raman.out

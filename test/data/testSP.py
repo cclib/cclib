@@ -76,7 +76,8 @@ class GenericSPTest(unittest.TestCase):
             assert len(charges) == natom, f"len(atomcharges['{atomcharge_type}']) = {len(charges)}, natom = {natom}"
 
     @skipForParser('DALTON', 'DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now')
-    @skipForParser('FChk', 'The parser is still being developed so we skip this test')
+    @skipForLogfile("FChk/basicQChem5.2", "not printed for Q-Chem")
+    @skipForLogfile("FChk/basicQChem5.4", "not printed for Q-Chem")
     @skipForParser('GAMESSDAT', 'We are not sure about the specific type of atom charges, it is best to skip the test for now.')
     @skipForLogfile('Jaguar/basicJaguar7', 'We did not print the atomic partial charges in the unit tests for this version')
     @skipForLogfile('Molpro/basicMolpro2006', "These tests were run a long time ago and since we don't have access to Molpro 2006 anymore, we can skip this test (it is tested in 2012)")
@@ -161,7 +162,8 @@ class GenericSPTest(unittest.TestCase):
         # Check if all are different (every orbital indexed once).
         assert len(set(all)) == len(all)
 
-    @skipForParser('FChk', 'Formatted checkpoint files do not have a section for atommasses')
+    @skipForLogfile("FChk/basicQChem5.2", "Q-Chem doesn't print SCF energy to fchk")
+    @skipForLogfile("FChk/basicQChem5.4", "Q-Chem doesn't print SCF energy to fchk")
     @skipForParser('GAMESS', 'atommasses not implemented yet')
     @skipForParser('GAMESSUK', 'atommasses not implemented yet')
     @skipForParser('GAMESSDAT', 'Atommasses implemented, but it does not pass the test.')
@@ -207,7 +209,8 @@ class GenericSPTest(unittest.TestCase):
         assert isinstance(self.data.scfvalues, list)
         assert isinstance(self.data.scfvalues[0], numpy.ndarray)
 
-    @skipForParser('FChk', 'Formatted Checkpoint files do not have a section for SCF energy')
+    @skipForLogfile("FChk/basicQChem5.2", "Q-Chem doesn't print SCF energy to fchk")
+    @skipForLogfile("FChk/basicQChem5.4", "Q-Chem doesn't print SCF energy to fchk")
     @skipForParser('GAMESSDAT', 'Scfenergies probably do not exist in the file')
     def testscfenergy(self):
         """Is the SCF energy within the target?"""
@@ -272,6 +275,8 @@ class GenericSPTest(unittest.TestCase):
             assert self.data.nocoeffs.shape == (self.data.nmo, self.data.nmo)
 
     @skipForParser('DALTON', 'To print: **INTEGRALS\n.PROPRI')
+    @skipForLogfile('FChk/basicGaussian09', 'Only available in QChem')
+    @skipForLogfile('FChk/basicGaussian16', 'Only available in QChem')
     @skipForParser('GAMESSDAT','Aooverlaps probably do not exist in the file.')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Psi4', 'Psi4 does not currently have the option to print the overlap matrix')
