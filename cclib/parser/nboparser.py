@@ -82,6 +82,9 @@ class NBO(logfileparser.Logfile):
 
         if 'NAO Atom No lang   Type(AO)    Occupancy      Energy' in line:
 
+            if not hasattr(self, "npa"):
+                self.npa = []
+
             line = next(inputfile)
             line = next(inputfile)
 
@@ -99,10 +102,19 @@ class NBO(logfileparser.Logfile):
                 occupancy = float(line[33:42])
                 energy    = float(line[47:56])
 
+                npa_dict = {
+                    'nao': nao,
+                    'atom': atom,
+                    'no': no,
+                    'lang': lang,
+                    'type': type_ao,
+                    'occupancy': occupancy,
+                    'energy': energy
+                }
+
                 # TODO append to attibutes
-                # self.append_attribute('coreelectrons', core)
-                # 
-                # self.set_attribute('charge', sum(natural_charge))
+                
+                self.append_attribute('npa', npa_dict)
 
                 line = next(inputfile)
                     
@@ -120,6 +132,9 @@ class NBO(logfileparser.Logfile):
         * Total *  0.00000      1.99998     7.97616    0.02386    10.00000'''
 
         if '  Atom No    Charge' in line:
+
+            if not hasattr(self, "atomcharges"):
+                self.atomcharges = dict()
     
             line = next(inputfile)
             line = next(inputfile)
@@ -136,8 +151,11 @@ class NBO(logfileparser.Logfile):
                 total          = float(population_analysis[6])
                                 
                 # TODO append to attibutes
-                #             
-                # self.append_attribute('naos', nao)
+
+                if 'nbo' not in self.atomcharges:
+                    self.atomcharges["nbo"] = []
+
+                self.atomcharges["nbo"].append(natural_charge)
 
                 line = next(inputfile)
 
@@ -265,7 +283,11 @@ class NBO(logfileparser.Logfile):
         #                Total unit  1   10.00000  (100.0000%)
         #               Charge unit  1    0.00000
 
+
         if 'Principal Delocalizations' in line:
+
+            if not hasattr(self, "nbo"):
+                self.nbo = []
 
             while ' Lewis ' not in line:
                 line = next(inputfile)
@@ -286,5 +308,18 @@ class NBO(logfileparser.Logfile):
                 if len(line) > 52: geminal = line[53:58]
                 if len(line) > 58: vicinal = line[59:64]
                 if len(line) > 62: remote  = line[65:70]
+
+                nbo_dict = {
+                    'nao'      : nao,
+                    'occupancy': occupancy,
+                    'energy'   : energy,
+                    'delocalizations': {
+                        'geminal': geminal,
+                        'vicinal': vicinal,
+                        'remote' : remote
+                    }
+                }
+
+                self.append_attribute('nbo', nbo_dict)
                     
                 line = next(inputfile)
