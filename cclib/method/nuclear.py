@@ -14,8 +14,7 @@ import numpy as np
 
 from cclib.method.calculationmethod import Method
 from cclib.parser.utils import PeriodicTable
-from cclib.parser.utils import find_package
-from cclib.parser.utils import convertor
+from cclib.parser.utils import find_package, convertor
 
 _found_periodictable = find_package("periodictable")
 if _found_periodictable:
@@ -105,14 +104,15 @@ class Nuclear(Method):
         """Return the nuclear repulsion energy."""
         nre = 0.0
         for i in range(self.data.natom):
-            ri = self.data.atomcoords[atomcoords_index][i]
+            atomcoords = self.data.atomcoords[atomcoords_index]
+            ri = atomcoords[i]
             zi = self.data.atomnos[i]
             for j in range(i+1, self.data.natom):
-                rj = self.data.atomcoords[0][j]
+                rj = atomcoords[j]
                 zj = self.data.atomnos[j]
                 d = np.linalg.norm(ri-rj)
-                nre += zi*zj/d
-        return convertor(convertor(nre, "bohr", "Angstrom"), "hartree", "eV")
+                nre += zi * zj / convertor(d, "Angstrom", "bohr")
+        return convertor(nre, "hartree", "eV")
 
     def center_of_mass(self, atomcoords_index: int = -1) -> float:
         """Return the center of mass."""
