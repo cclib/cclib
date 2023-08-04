@@ -138,6 +138,8 @@ class NBO(logfileparser.Logfile):
     
             line = next(inputfile)
             line = next(inputfile)
+
+            charges = []
             
             while '==============' not in line:
                 population_analysis = line.split()
@@ -151,13 +153,11 @@ class NBO(logfileparser.Logfile):
                 total          = float(population_analysis[6])
                                 
                 # TODO append to attibutes
-
-                if 'nbo' not in self.atomcharges:
-                    self.atomcharges["nbo"] = []
-
-                self.atomcharges["nbo"].append(natural_charge)
+                charges.append(natural_charge)
 
                 line = next(inputfile)
+            
+            self.atomcharges["nbo"] = charges
 
         #                                  Natural Population
         #  ---------------------------------------------------------
