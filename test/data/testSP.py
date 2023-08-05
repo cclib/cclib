@@ -426,7 +426,8 @@ class GenericSPTest:
         numpy.testing.assert_equal(rotconsts, rotconsts[idx])
 
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
-    @skipForParser("FChk", "The parser is still being developed so we skip this test")
+    @skipForLogfile("FChk/basicGaussian09", "not printed for Gaussian")
+    @skipForLogfile("FChk/basicGaussian16", "not printed for Gaussian")
     @skipForParser("Gaussian", "Logfile needs to be updated")
     @skipForParser("Jaguar", "No dipole moments in the logfile")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")

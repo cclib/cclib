@@ -323,6 +323,39 @@ class FChk(logfileparser.Logfile):
             etoscs = self._parse_block(inputfile, count, float, "Oscillator Strengths")
             self.set_attribute("etoscs", etoscs)
 
+        if line[0:11] == "Dipole_Data":
+            assert not hasattr(self, "moments")
+            count = int(line.split()[-1])
+            self.logger.info("The origin for multipole moments isn't printed, so assume zero")
+            self.append_attribute("moments", [0.0, 0.0, 0.0])
+            self.append_attribute(
+                "moments", self._parse_block(inputfile, count, float, "Dipole moment")
+            )
+
+        if line[0:15] == "Quadrupole_Data":
+            assert hasattr(self, "moments")
+            assert len(self.moments) == 2
+            count = int(line.split()[-1])
+            self.append_attribute(
+                "moments", self._parse_block(inputfile, count, float, "Quadrupole moment")
+            )
+
+        if line[0:13] == "Octapole_Data":
+            assert hasattr(self, "moments")
+            assert len(self.moments) == 3
+            count = int(line.split()[-1])
+            self.append_attribute(
+                "moments", self._parse_block(inputfile, count, float, "Octupole moment")
+            )
+
+        if line[0:17] == "Hexadecapole_Data":
+            assert hasattr(self, "moments")
+            assert len(self.moments) == 4
+            count = int(line.split()[-1])
+            self.append_attribute(
+                "moments", self._parse_block(inputfile, count, float, "Hexadecapole moment")
+            )
+
     def parse_aonames(self, line, inputfile):
         # e.g.: Shell types                                I   N=          28
         count = int(line.split()[-1])
