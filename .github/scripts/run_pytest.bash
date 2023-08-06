@@ -10,3 +10,4 @@ pushd data
 bash ./regression_download.sh
 popd
 python -m pytest -v --capture=no --cov=cclib --cov-report=term --cov-report=xml:coverage-regression.xml --cov-append -k test_regression test/regression.py
+python -m pytest -v -s --cov=cclib --cov-report=term --cov-report=xml:coverage-regression.xml --cov-append test/regression_io.py

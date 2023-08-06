@@ -11,4 +11,5 @@ python -m test.test_parser &&
 python -m test.test_utils &&
 python -m test.test_data --terse &&
 cd data && bash regression_download.sh &&
-cd .. && python -m test.regression --traceback
+cd .. && python -m test.regression --traceback &&
+python -m test.regression_io
