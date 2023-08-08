@@ -110,11 +110,24 @@ class UnknownOutputFormatError(Exception):
     """Raised when an unknown output format is encountered."""
 
 
+def is_xyz(inputfile: FileWrapper) -> bool:
+    """Is the given inputfile actually an XYZ file?
+
+    The only way to determine this without reading the entire file is to
+    inspect the file extension.
+    """
+    return len(inputfile.filenames) == 1 and \
+        os.path.splitext(inputfile.filenames[0])[1].lower() == ".xyz"
+
+
 def guess_filetype(inputfile) -> Optional[logfileparser.Logfile]:
     """Try to guess the filetype by searching for trigger strings."""
-
     filetype = None
+    logger = logging.getLogger("cclib")
     try:
+        if isinstance(inputfile, FileWrapper) and is_xyz(inputfile):
+            logger.info("Found XYZ file based on file extension")
+            return filetype
         for line in inputfile:
             for parser, phrases, do_break in triggers:
                 if all([line.lower().find(p.lower()) >= 0 for p in phrases]):
@@ -123,7 +136,7 @@ def guess_filetype(inputfile) -> Optional[logfileparser.Logfile]:
                         return filetype
     except Exception:
         # guess_filetype() is expected to be quiet by default...
-        logging.getLogger("cclib").error("Failed to determine log file type", exc_info = True)
+        logger.error("Failed to determine log file type", exc_info = True)
     
     return filetype
 
@@ -168,12 +181,13 @@ def ccread(
     log = None
     try:
         log = ccopen(source, *args, **kwargs)
+        logger = logging.getLogger("cclib")
         if log:
-            logging.getLogger("cclib").info("Identified logfile to be in {} format".format(type(log).__name__))
+            logger.info("Identified logfile to be in {} format".format(type(log).__name__))
 
             return log.parse()
         else:
-            logging.getLogger("cclib").info('Attempting to use fallback mechanism to read file')
+            logger.info('Attempting to use fallback mechanism to read file')
             return fallback(source)
     
     finally:
@@ -204,6 +218,8 @@ def ccopen(
         source = [source]
         
     inputfile = None
+
+    logger = logging.getLogger("cclib")
         
     try:
         # Wrap our input with custom file object.
@@ -240,8 +256,10 @@ def ccopen(
             # Stop us closing twice in the except block.
             inputfile = None
             
-        # If we get here, we've failed to identify the log file type.
-        raise ValueError("Unable to determine the type of logfile {}".format(source))
+        logger.warning(
+            "Unable to determine the type of logfile %s, try the fallback mechanism",
+            source
+        )
             
     except Exception:
         if inputfile is not None:
@@ -252,7 +270,7 @@ def ccopen(
         
         # We're going to swallow this exception if quiet is True.
         # This can hide a lot of errors, so we'll make sure to log it.
-        logging.getLogger("cclib").error("Failed to open logfile", exc_info = True)
+        logger.error("Failed to open logfile", exc_info = True)
 
 
 def fallback(source):
