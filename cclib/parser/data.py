@@ -160,6 +160,7 @@ class ccData:
        "optdone":          Attribute(list,             'done',                        'optimization'),
        "optstatus":        Attribute(numpy.ndarray,    'status',                      'optimization'),
        "polarizabilities": Attribute(list,             'polarizabilities',            'N/A'),
+       "npa":              Attribute(list,             'natural population analysis', 'properties'),
        "pressure":         Attribute(float,            'pressure',                    'properties'),
        "rotconsts":        Attribute(numpy.ndarray,    'rotational constants',        'atoms:coords:rotconsts'),
        "scancoords":       Attribute(numpy.ndarray,    'step geometry',               'optimization:scan'),
@@ -193,10 +194,7 @@ class ccData:
     _listsofarrays = ['mocoeffs', 'moenergies', 'moments', 'polarizabilities', 'scfvalues']
 
     # Attributes that should be dictionaries of arrays (double precision).
-    _dictsofarrays = ["atomcharges", "atomspins"]
-    
-    # Attributes that should be dictionaries of dictionaries.
-    _dictsofdicts = []
+    _dictsofarrays = ["atomcharges", "atomspins", "npa"]
 
     # Possible statuses for optimization steps.
     # OPT_UNKNOWN is the default and means optimization is in progress.
