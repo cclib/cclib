@@ -25,7 +25,7 @@ To this end, cclib provides a number of bridges to help transfer data to other l
 as well as example methods that take parsed data as input.
 """
 
-__version__ = "1.7.2"
+__version__ = "1.8"
 
 from cclib import parser
 from cclib import progress
