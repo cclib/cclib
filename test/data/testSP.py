@@ -588,6 +588,10 @@ class OrcaSPTest(GenericSPTest):
     num_scf_criteria = 3
 
 
+class NBOSPTest(GenericSPTest):
+    """Customized restricted single point unittest"""
+
+
 class TurbomoleSPTest(GenericSPTest):
     """Customized restricted single point KS unittest"""
 

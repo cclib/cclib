@@ -316,6 +316,7 @@ SP        Psi4        PsiHFSPTest           basicPsi4-1.7               dvb_sp_r
 SP        Psi4        PsiSPTest             basicPsi4-1.7               dvb_sp_rks.out
 SP        QChem       GenericSPTest         basicQChem5.1               dvb_sp.out
 SP        QChem       GenericSPTest         basicQChem5.4               dvb_sp.out
+SP        NBO         NBOSPTest             basicNBO7.0                 basicORCA5.0/dvb_sp.out
 SP        Turbomole   TurbomoleSPTest       basicTurbomole5.9           dvb_sp_symm/mos       dvb_sp_symm/basis      dvb_sp_symm/control      dvb_sp_symm/dscf.out      dvb_sp_symm/coord
 SP        Turbomole   TurbomoleHFSPTest     basicTurbomole7.5           dvb_sp/basis      dvb_sp/control      dvb_sp/mos      dvb_sp/dscf.out      dvb_sp/coord
 SP        DALTON      GenericDispersionTest basicDALTON-2018            dvb_dispersion_bp86_d3zero.out
