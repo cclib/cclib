@@ -82,11 +82,10 @@ class NBO(logfileparser.Logfile):
 
         if 'NAO Atom No lang   Type(AO)    Occupancy      Energy' in line:
 
-            if not hasattr(self, "npa"):
-                self.npa = []
+            line = next(inputfile)
+            line = next(inputfile)
 
-            line = next(inputfile)
-            line = next(inputfile)
+            naos, atoms, nos, langs, types, occupancies, energies = [], [], [], [], [], [], []
 
             # Skip empty lines
             while 'Summary of Natural Population Analysis:' not in line:
@@ -102,21 +101,28 @@ class NBO(logfileparser.Logfile):
                 occupancy = float(line[33:42])
                 energy    = float(line[47:56])
 
-                npa_dict = {
-                    'nao': nao,
-                    'atom': atom,
-                    'no': no,
-                    'lang': lang,
-                    'type': type_ao,
-                    'occupancy': occupancy,
-                    'energy': energy
-                }
-
-                # TODO append to attibutes
-                
-                self.append_attribute('npa', npa_dict)
+                naos.append(nao)
+                atoms.append(atom)
+                nos.append(no)
+                langs.append(lang)
+                types.append(type_ao)
+                occupancies.append(occupancy)
+                energies.append(energy)
 
                 line = next(inputfile)
+            
+            npa_dict = {
+                'nao': naos,
+                'atom': atoms,
+                'no': nos,
+                'lang': langs,
+                'type': types,
+                'occupancy': occupancies,
+                'energy': energies
+            }
+
+            if not hasattr(self, "populations"):
+                self.set_attribute('populations', npa_dict)
                     
 
         ''' Summary of Natural Population Analysis:
