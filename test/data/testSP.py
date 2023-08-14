@@ -18,6 +18,7 @@ from common import get_minimum_carbon_separation
 
 from skip import skipForParser
 from skip import skipForLogfile
+from typing import List
 
 
 __filedir__ = os.path.realpath(os.path.dirname(__file__))
@@ -590,7 +591,15 @@ class OrcaSPTest(GenericSPTest):
 
 class NBOSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
-
+    def testpopulations(self):
+        assert self.data.populations.keys == list(['nao', 'atom', 'no', 'lang', 'type', 'occupancy', 'energy']) 
+        assert isinstance(self.data.populations['nao'], List[int])
+        assert isinstance(self.data.populations['atom'], List[str])
+        assert isinstance(self.data.populations['no'], List[int])
+        assert isinstance(self.data.populations['type'], List[str])
+        assert isinstance(self.data.populations['occupancy'], List[float])
+        assert isinstance(self.data.populations['energy'], List[float])
+        
 
 class TurbomoleSPTest(GenericSPTest):
     """Customized restricted single point KS unittest"""
