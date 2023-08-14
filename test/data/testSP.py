@@ -599,7 +599,13 @@ class NBOSPTest(GenericSPTest):
         assert isinstance(self.data.populations['type'], List[str])
         assert isinstance(self.data.populations['occupancy'], List[float])
         assert isinstance(self.data.populations['energy'], List[float])
-        
+
+    def testatomcharges(self):
+        """Are atomic charges consistent with natom?"""
+        key = "nbo"
+        charges = self.data.atomcharges[key]
+        natom = self.data.natom
+        assert len(charges) == natom, f"len(atomcharges['{key}']) = {len(charges)}, natom = {natom}"
 
 class TurbomoleSPTest(GenericSPTest):
     """Customized restricted single point KS unittest"""
