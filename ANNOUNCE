@@ -1,6 +1,6 @@
-On behalf of the cclib development team, we are pleased to announce the release of cclib 1.8, which is now available for download from https://cclib.github.io. This is a major update that includes Julia bindings, two new parsers (NBO and GAMESS dat files), several new attributes and multiple other improvements and fixes.
+On behalf of the cclib development team, we are pleased to announce the release of cclib 1.7.2, which is now available for download from https://cclib.github.io. This is a minor release with several small changes and improvements.
 
-cclib is an open source library, written in Python, for parsing and interpreting the results of computational chemistry packages. It currently parses output files from 15 different programs: ADF, DALTON, Firefly, GAMESS (US), GAMESS-UK, Gaussian, Jaguar, Molpro, MOLCAS, MOPAC, NBO, NWChem, ORCA, Psi, QChem and Turbomole.
+cclib is an open source library, written in Python, for parsing and interpreting the results of computational chemistry packages. It currently parses output files from 15 different programs: ADF, DALTON, Firefly, GAMESS (US), GAMESS-UK, Gaussian, Jaguar, Molpro, MOLCAS, MOPAC, NWChem, ORCA, Psi, QChem and Turbomole.
 
 Among other data, cclib extracts:
 
@@ -36,9 +36,6 @@ The cclib development team
 ———
 
 Summary of changes since last version:
-* Added Julia language bindings
-* Added parsers for NBO and GAMESS *.dat files
-* New attribute: nmrcouplingtensors for NMR spin-spin couplings
-* New attribute: rotconsts for rotational constants
-* New method: CM5 charges
-* Many improvements and fixes - see CHANGELOG for details
+* Dropping support for Python 2
+* SciPy is now a hard dependency for cclib
+* Several minor improvements and bug fixes - see CHANGELOG for details
