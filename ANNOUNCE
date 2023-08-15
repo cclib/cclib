@@ -1,6 +1,6 @@
-On behalf of the cclib development team, we are pleased to announce the release of cclib 1.7.2, which is now available for download from https://cclib.github.io. This is a minor release with several small changes and improvements.
+On behalf of the cclib development team, we are pleased to announce the release of cclib 1.8, which is now available for download from https://cclib.github.io. This is a major update that includes Julia bindings, two new parsers (NBO and GAMESS dat files), several new attributes and multiple other improvements and fixes.
 
-cclib is an open source library, written in Python, for parsing and interpreting the results of computational chemistry packages. It currently parses output files from 15 different programs: ADF, DALTON, Firefly, GAMESS (US), GAMESS-UK, Gaussian, Jaguar, Molpro, MOLCAS, MOPAC, NWChem, ORCA, Psi, QChem and Turbomole.
+cclib is an open source library, written in Python, for parsing and interpreting the results of computational chemistry packages. It currently parses output files from 15 different programs: ADF, DALTON, Firefly, GAMESS (US), GAMESS-UK, Gaussian, Jaguar, Molpro, MOLCAS, MOPAC, NBO, NWChem, ORCA, Psi, QChem and Turbomole.
 
 Among other data, cclib extracts:
 
@@ -9,33 +9,27 @@ Among other data, cclib extracts:
     * information about atomic and molecular orbitals
     * vibrational modes, excited states and transitions
     * charges, electrostatic moments and polarizabilities
-
 (For a complete list see https://cclib.github.io/data.html).
-
 cclib also provides some calculation methods for interpreting the electronic properties of molecules such as:
-
     * Mulliken, Lowdin, Stockholder type, Bader and other population analyses
     * Overlap population analysis
     * Mayer's bond orders
-
 (For a complete list see https://cclib.github.io/methods.html).
-
 For information on how to use cclib, see our documentation at https://cclib.github.io.
-
 If you need help, find a bug, want new features or have any questions, please send an email to our mailing list:
     https://lists.sourceforge.net/lists/listinfo/cclib-users
-
 If your published work uses cclib, please support its development by citing the following article:
     N. M. O'Boyle, A. L. Tenderholt, K. M. Langner, cclib: a library for package-independent computational chemistry algorithms, J. Comp. Chem. 29 (5), 839-845 (2008)
 You can also specifically reference this version of cclib as:
     Eric Berquist, Geoffrey Hutchison, Karol M. Langner, Noel M. O'Boyle, Adam L. Tenderholt, Shiv Upadhyay. Release of cclib version 1.7. 2020. https://dx.doi.org/10.5281/zenodo.4420433
-
 Regards,
 The cclib development team
-
 ———
 
 Summary of changes since last version:
-* Dropping support for Python 2
-* SciPy is now a hard dependency for cclib
-* Several minor improvements and bug fixes - see CHANGELOG for details
+* Added Julia language bindings
+* Added parsers for NBO and GAMESS *.dat files
+* New attribute: nmrcouplingtensors for NMR spin-spin couplings
+* New attribute: rotconsts for rotational constants
+* New method: CM5 charges
+* Many improvements and fixes - see CHANGELOG for details
