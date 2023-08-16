@@ -460,6 +460,7 @@ This method calculates various properties of nuclei based on the parsed data.
 Calculate the nuclear repulsion energy using the snippet below:
 
 .. code-block:: python
+
     import cclib
     from cclib.method import Nuclear
 
