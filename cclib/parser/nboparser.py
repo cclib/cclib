@@ -165,6 +165,9 @@ class NBO(logfileparser.Logfile):
             
             self.atomcharges["nbo"] = charges
 
+            if not hasattr(self, "natom"):
+                self.set_attribute('natom', len(self.atomcharges["nbo"]))
+
         #                                  Natural Population
         #  ---------------------------------------------------------
         #    Core                       1.99998 ( 99.9990% of    2)

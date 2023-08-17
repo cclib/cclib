@@ -600,6 +600,10 @@ class NBOSPTest(GenericSPTest):
         assert isinstance(self.data.populations['occupancy'], List[float])
         assert isinstance(self.data.populations['energy'], List[float])
 
+    def testnatom(self):
+        """Is the number of atoms equal to 3?"""
+        assert self.data.natom == 3
+
     def testatomcharges(self):
         """Are atomic charges consistent with natom?"""
         key = "nbo"

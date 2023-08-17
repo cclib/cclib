@@ -161,7 +161,7 @@ class ccData:
        "optdone":          Attribute(list,             'done',                        'optimization'),
        "optstatus":        Attribute(numpy.ndarray,    'status',                      'optimization'),
        "polarizabilities": Attribute(list,             'polarizabilities',            'N/A'),
-       "populations":      Attribute(list,             'natural population analysis', 'properties'),
+       "populations":      Attribute(dict,             'population analysis',         'properties'),
        "pressure":         Attribute(float,            'pressure',                    'properties'),
        "rotconsts":        Attribute(numpy.ndarray,    'rotational constants',        'atoms:coords:rotconsts'),
        "scancoords":       Attribute(numpy.ndarray,    'step geometry',               'optimization:scan'),
