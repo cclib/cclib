@@ -592,25 +592,26 @@ class OrcaSPTest(GenericSPTest):
 class NBOSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
     def testpopulations(self):
-        assert self.data.populations.keys == list(['nao', 'atom', 'no', 'lang', 'type', 'occupancy', 'energy']) 
-        assert isinstance(self.data.populations['nao'], List[int])
-        assert isinstance(self.data.populations['atom'], List[str])
-        assert isinstance(self.data.populations['no'], List[int])
-        assert isinstance(self.data.populations['type'], List[str])
-        assert isinstance(self.data.populations['occupancy'], List[float])
-        assert isinstance(self.data.populations['energy'], List[float])
+        expected_types = {
+            'nao': int,  'atom': str, 'no': int,
+            'lang': str, 'type': str, 
+            'occupancy': float,
+            'energy': float
+        }
+        assert self.data.populations.keys == list(expected_types.keys()) 
+        for (key, exp_type) in expected_types.items():
+            assert isinstance(self.data.populations[key], list)
+            assert isinstance(self.data.populations[key][0], exp_type)
+        
 
     def testnatom(self):
         """Is the number of atoms equal to 3?"""
         assert self.data.natom == 3
 
-    def testatomcharges(self):
+    def testatomchargesnbo(self):
         """Are atomic charges consistent with natom?"""
-        key = "nbo"
-        charges = self.data.atomcharges[key]
-        natom = self.data.natom
-        assert len(charges) == natom, f"len(atomcharges['{key}']) = {len(charges)}, natom = {natom}"
-
+        self.testatomcharges()
+        
 class TurbomoleSPTest(GenericSPTest):
     """Customized restricted single point KS unittest"""
 
