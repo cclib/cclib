@@ -76,7 +76,7 @@ class ccData:
         optdone -- flags whether an optimization has converged (Boolean)
         optstatus -- optimization status for each set of atomic coordinates (array[1])
         polarizabilities -- (dipole) polarizabilities, static or dynamic (list of arrays[2])
-        popultions -- NBO population analysis (dict)
+        populations -- population analyses (dict)
         pressure -- pressure used for Thermochemistry (float, atm)
         rotconsts -- rotational constants (array[2], GHz)
         scancoords -- geometries of each scan step (array[3], angstroms)
