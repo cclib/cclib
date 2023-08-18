@@ -592,16 +592,18 @@ class OrcaSPTest(GenericSPTest):
 class NBOSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
     def testpopulations(self):
+        population_key = 'npa'
+
         expected_types = {
             'nao': int,  'atom': str, 'no': int,
             'lang': str, 'type': str, 
             'occupancy': float,
             'energy': float
         }
-        assert self.data.populations.keys == list(expected_types.keys()) 
+        assert self.data.populations[population_key].keys == list(expected_types.keys()) 
         for (key, exp_type) in expected_types.items():
-            assert isinstance(self.data.populations[key], list)
-            assert isinstance(self.data.populations[key][0], exp_type)
+            assert isinstance(self.data.populations[population_key][key], list)
+            assert isinstance(self.data.populations[population_key][key][0], exp_type)
         
 
     def testnatom(self):

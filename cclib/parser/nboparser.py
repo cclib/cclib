@@ -87,6 +87,9 @@ class NBO(logfileparser.Logfile):
 
             naos, atoms, nos, langs, types, occupancies, energies = [], [], [], [], [], [], []
 
+            if not hasattr(self, "populations"):
+                self.populations = dict()
+            
             # Skip empty lines
             while 'Summary of Natural Population Analysis:' not in line:
                 if len(line.strip()) <= 0:
@@ -121,8 +124,7 @@ class NBO(logfileparser.Logfile):
                 'energy': energies
             }
 
-            if not hasattr(self, "populations"):
-                self.set_attribute('populations', npa_dict)
+            self.populations['npa'] = npa_dict
                     
 
         ''' Summary of Natural Population Analysis:
