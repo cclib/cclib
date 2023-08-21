@@ -604,15 +604,7 @@ class NBOSPTest(GenericSPTest):
         for (key, exp_type) in expected_types.items():
             assert isinstance(self.data.populations[population_key][key], list)
             assert isinstance(self.data.populations[population_key][key][0], exp_type)
-        
 
-    def testnatom(self):
-        """Is the number of atoms equal to 3?"""
-        assert self.data.natom == 3
-
-    def testatomchargesnbo(self):
-        """Are atomic charges consistent with natom?"""
-        self.testatomcharges()
         
 class TurbomoleSPTest(GenericSPTest):
     """Customized restricted single point KS unittest"""

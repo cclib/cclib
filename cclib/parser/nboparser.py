@@ -179,8 +179,8 @@ class NBO(logfileparser.Logfile):
         #  ---------------------------------------------------------
 
         
-        if 'Natural Population' in line:
-            
+        if line[33:51] == 'Natural Population':
+
             line = next(inputfile)
             line = next(inputfile)
             
@@ -307,28 +307,31 @@ class NBO(logfileparser.Logfile):
             
             while '   ---' not in line:
 
-                if '-----' in line:
+                if '-----' in line or len(line[7:28].strip()) < 1:
                     line = next(inputfile)
+                    continue
                 
                 nao       = line[7:28].strip()
                 occupancy = float(line[30:40].strip())
                 energy    = float(line[40:52].strip())
 
-                geminal, vicinal, remote = None, None, None
+                # TODO
+                # geminal, vicinal, remote = None, None, None
 
-                if len(line) > 52: geminal = line[53:58]
-                if len(line) > 58: vicinal = line[59:64]
-                if len(line) > 62: remote  = line[65:70]
+                # if len(line) > 52: geminal = line[53:58]
+                # if len(line) > 58: vicinal = line[59:64]
+                # if len(line) > 62: remote  = line[65:70]
 
                 nbo_dict = {
                     'nao'      : nao,
                     'occupancy': occupancy,
                     'energy'   : energy,
-                    'delocalizations': {
-                        'geminal': geminal,
-                        'vicinal': vicinal,
-                        'remote' : remote
-                    }
+                    # TODO
+                    # 'delocalizations': {
+                    #     'geminal': geminal,
+                    #     'vicinal': vicinal,
+                    #     'remote' : remote
+                    # }
                 }
 
                 self.append_attribute('nbo', nbo_dict)
