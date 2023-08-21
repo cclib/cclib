@@ -30,6 +30,7 @@ from cclib.parser.jaguarparser import Jaguar
 from cclib.parser.molcasparser import Molcas
 from cclib.parser.molproparser import Molpro
 from cclib.parser.mopacparser import MOPAC
+from cclib.parser.nboparser import NBO
 from cclib.parser.nwchemparser import NWChem
 from cclib.parser.orcaparser import ORCA
 from cclib.parser.psi3parser import Psi3
@@ -81,6 +82,7 @@ triggers = [
     (Molpro,    ["PROGRAM SYSTEM MOLPRO"],                          True),
     (Molpro,    ["1PROGRAM"],                                       False),
     (MOPAC,     ["MOPAC20"],                                        True),
+    (NBO,       ["N A T U R A L   A T O M I C   O R B I T A L   A N D"],                  True),
     (NWChem,    ["Northwest Computational Chemistry Package"],      True),
     (ORCA,      ["O   R   C   A"],                                  True),
     (Psi3,      ["PSI3: An Open-Source Ab Initio Electronic Structure Package"],          True),
