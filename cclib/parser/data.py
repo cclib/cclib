@@ -194,6 +194,9 @@ class ccData:
 
     # Attributes that should be dictionaries of arrays (double precision).
     _dictsofarrays = ["atomcharges", "atomspins"]
+    
+    # Attributes that should be dictionaries of dictionaries.
+    _dictsofdicts = []
 
     # Possible statuses for optimization steps.
     # OPT_UNKNOWN is the default and means optimization is in progress.
@@ -232,6 +235,10 @@ class ccData:
                 items = getattr(self, k).items()
                 pairs = [(key, val.tolist()) for key, val in items]
                 setattr(self, k, dict(pairs))
+            elif v == dict and k in self._dictsofdicts:
+                items = getattr(self, k).items()
+                pairs = [(key, {subkey: subval.tolist() for subkey, subval in val.items()}) for key, val in items]
+                setattr(self, k, dict(pairs))
 
     def arrayify(self) -> None:
         """Converts appropriate attributes to arrays or lists/dicts of arrays."""
@@ -249,6 +256,10 @@ class ccData:
             elif v == dict and k in self._dictsofarrays:
                 items = getattr(self, k).items()
                 pairs = [(key, numpy.array(val, precision)) for key, val in items]
+                setattr(self, k, dict(pairs))
+            elif v == dict and k in self._dictsofdicts:
+                items = getattr(self, k).items()
+                pairs = [(key, {subkey: numpy.array(subval, precision) if isinstance(subval, numpy.ndarray) else subval for subkey, subval in val.items()}) for key, val in items]
                 setattr(self, k, dict(pairs))
 
     def getattributes(self, tolists: bool = False) -> Dict[str, Any]:
