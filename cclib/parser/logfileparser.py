@@ -32,12 +32,7 @@ class StopParsing(Exception):
     """
 
 class Logfile(ABC):
-    """Abstract class for logfile objects.
-
-    Subclasses defined by cclib:
-        ADF, DALTON, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, MOPAC,
-        NWChem, ORCA, Psi, Q-Chem
-    """
+    """Abstract class for logfile objects."""
 
     def __init__(self,
         source: typing.Union[str, typing.IO, FileWrapper, typing.List[typing.Union[str, typing.IO]]],
