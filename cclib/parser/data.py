@@ -237,14 +237,16 @@ class ccData:
                 setattr(self, k, dict(pairs))
             elif v == dict and k in self._dictsofdicts:
                 items = getattr(self, k).items()
-                pairs = []
-                for key, val in items:
-                    for subkey, subval in val.items():
-                        subdict = {
+                pairs = [
+                    (
+                        key,
+                        {
                             subkey: subval.tolist()
                         }
-                        pair = (key, subdict)
-                        pairs.append(pair)
+                    )
+                    for key, val in items
+                    for subkey, subval in val.items()
+                ]
                 setattr(self, k, dict(pairs))
 
     def arrayify(self) -> None:
@@ -266,14 +268,16 @@ class ccData:
                 setattr(self, k, dict(pairs))
             elif v == dict and k in self._dictsofdicts:
                 items = getattr(self, k).items()
-                pairs = []
-                for key, val in items:
-                    for subkey, subval in val.items():
-                        subdict = {
+                pairs = [
+                    (
+                        key,
+                        {
                             subkey: numpy.array(subval, precision)
                         }
-                        pair = (key, subdict)
-                        pairs.append(pair)
+                    )
+                    for key, val in items
+                    for subkey, subval in val.items()
+                ]
                 setattr(self, k, dict(pairs))
 
     def getattributes(self, tolists: bool = False) -> Dict[str, Any]:
