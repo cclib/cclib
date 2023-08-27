@@ -21,7 +21,7 @@ If you need help, find a bug, want new features or have any questions, please se
 If your published work uses cclib, please support its development by citing the following article:
     N. M. O'Boyle, A. L. Tenderholt, K. M. Langner, cclib: a library for package-independent computational chemistry algorithms, J. Comp. Chem. 29 (5), 839-845 (2008)
 You can also specifically reference this version of cclib as:
-    Eric Berquist, Geoffrey Hutchison, Karol M. Langner, Noel M. O'Boyle, Adam L. Tenderholt, Shiv Upadhyay. Release of cclib version 1.7. 2020. https://doi.org/10.5281/zenodo.4420433
+    Eric Berquist, Amanda Dumi, Geoffrey Hutchison, Karol M. Langner, Oliver S. Lee, Noel M. O'Boyle, Felipe S. S. Schneider, Adam L. Tenderholt, Shiv Upadhyay. Release of cclib version 1.8. 2023. https://doi.org/10.5281/zenodo.8280878
 Regards,
 The cclib development team
 ———
