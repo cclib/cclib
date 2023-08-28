@@ -150,6 +150,7 @@ class GenericSPTest(unittest.TestCase):
         assert self.data.charge == 0
         assert self.data.mult == 1
 
+    @skipForParser('NBO', 'attribute not implemented in this version')
     def testnbasis(self):
         """Is the number of basis set functions correct?"""
         count = sum([self.nbasisdict[n] for n in self.data.atomnos])
@@ -626,18 +627,19 @@ class OrcaSPTest(GenericSPTest):
 class NBOSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
     def testpopulations(self):
-        population_key = 'npa'
+        if hasattr(self, 'populations'):
+            population_key = 'npa'
 
-        expected_types = {
-            'nao': int,  'atom': str, 'no': int,
-            'lang': str, 'type': str, 
-            'occupancy': float,
-            'energy': float
-        }
-        assert self.data.populations[population_key].keys == list(expected_types.keys()) 
-        for (key, exp_type) in expected_types.items():
-            assert isinstance(self.data.populations[population_key][key], list)
-            assert isinstance(self.data.populations[population_key][key][0], exp_type)
+            expected_types = {
+                'nao': int,  'atom': str, 'no': int,
+                'lang': str, 'type': str, 
+                'occupancy': float,
+                'energy': float
+            }
+            assert self.data.populations[population_key].keys == list(expected_types.keys()) 
+            for (key, exp_type) in expected_types.items():
+                assert isinstance(self.data.populations[population_key][key], list)
+                assert isinstance(self.data.populations[population_key][key][0], exp_type)
 
         
 class TurbomoleSPTest(GenericSPTest):

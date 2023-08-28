@@ -76,7 +76,6 @@ class ccData:
         optdone -- flags whether an optimization has converged (Boolean)
         optstatus -- optimization status for each set of atomic coordinates (array[1])
         polarizabilities -- (dipole) polarizabilities, static or dynamic (list of arrays[2])
-        populations -- population analyses (dict)
         pressure -- pressure used for Thermochemistry (float, atm)
         rotconsts -- rotational constants (array[2], GHz)
         scancoords -- geometries of each scan step (array[3], angstroms)
@@ -161,7 +160,6 @@ class ccData:
        "optdone":          Attribute(list,             'done',                        'optimization'),
        "optstatus":        Attribute(numpy.ndarray,    'status',                      'optimization'),
        "polarizabilities": Attribute(list,             'polarizabilities',            'N/A'),
-       "populations":      Attribute(dict,             'population analysis',         'properties'),
        "pressure":         Attribute(float,            'pressure',                    'properties'),
        "rotconsts":        Attribute(numpy.ndarray,    'rotational constants',        'atoms:coords:rotconsts'),
        "scancoords":       Attribute(numpy.ndarray,    'step geometry',               'optimization:scan'),
@@ -195,7 +193,10 @@ class ccData:
     _listsofarrays = ['mocoeffs', 'moenergies', 'moments', 'polarizabilities', 'scfvalues']
 
     # Attributes that should be dictionaries of arrays (double precision).
-    _dictsofarrays = ["atomcharges", "atomspins", "populations"]
+    _dictsofarrays = ["atomcharges", "atomspins"]
+    
+    # Attributes that should be dictionaries of dictionaries.
+    _dictsofdicts = ['populations']
 
     # Possible statuses for optimization steps.
     # OPT_UNKNOWN is the default and means optimization is in progress.
@@ -272,6 +273,8 @@ class ccData:
                         key,
                         {
                             subkey: numpy.array(subval, precision)
+                                    if isinstance(subval, (int, float))
+                                    else numpy.array(subval)
                         }
                     )
                     for key, val in items
