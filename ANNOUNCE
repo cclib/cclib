@@ -1,6 +1,6 @@
 On behalf of the cclib development team, we are pleased to announce the release of cclib 1.8, which is now available for download from https://cclib.github.io. This is a major update that includes Julia bindings (https://github.com/cclib/Cclib.jl), two new parsers (NBO and GAMESS dat files), several new attributes and multiple other improvements and fixes.
 
-cclib is an open source library, written in Python, for parsing and interpreting the results of computational chemistry packages. It currently parses output files from 16 different programs: ADF, DALTON, Firefly, GAMESS (US), GAMESS-UK, Gaussian, Jaguar, Molpro, MOLCAS, MOPAC, NBO, NWChem, ORCA, Psi, QChem and Turbomole.
+cclib is an open source library, written in Python, for parsing and interpreting the results of computational chemistry packages. It currently parses output files from 16 different programs: ADF, DALTON, Firefly, GAMESS (US), GAMESS-UK, Gaussian, Jaguar, Molpro, MOLCAS, MOPAC, NBO, NWChem, ORCA, Psi4, QChem and Turbomole.
 
 Among other data, cclib extracts:
 
@@ -21,7 +21,7 @@ If you need help, find a bug, want new features or have any questions, please se
 If your published work uses cclib, please support its development by citing the following article:
     N. M. O'Boyle, A. L. Tenderholt, K. M. Langner, cclib: a library for package-independent computational chemistry algorithms, J. Comp. Chem. 29 (5), 839-845 (2008)
 You can also specifically reference this version of cclib as:
-    Eric Berquist, Geoffrey Hutchison, Karol M. Langner, Noel M. O'Boyle, Adam L. Tenderholt, Shiv Upadhyay. Release of cclib version 1.7. 2020. https://doi.org/10.5281/zenodo.4420433
+    Eric Berquist, Amanda Dumi, Geoffrey Hutchison, Karol M. Langner, Oliver S. Lee, Noel M. O'Boyle, Felipe S. S. Schneider, Adam L. Tenderholt, Shiv Upadhyay. Release of cclib version 1.8. 2023. https://doi.org/10.5281/zenodo.8280878
 Regards,
 The cclib development team
 ———
