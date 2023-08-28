@@ -168,8 +168,9 @@ Besides input from a number of people `listed in the repository`_, the following
 * `Amanda Dumi`_
 * `Geoff Hutchison`_
 * `Karol M. Langner`_
+* `Oliver Lee`_
 * `Noel O'Boyle`_ (retired)
-* `Adam Tenderholt`_
+* `Adam Tenderholt`_ (retired)
 * `Shiv Upadhyay`_
 
 .. _`listed in the repository`: https://github.com/cclib/cclib/blob/master/THANKS
@@ -179,6 +180,7 @@ Besides input from a number of people `listed in the repository`_, the following
 .. _`Amanda Dumi`: https://github.com/amandadumi
 .. _`Geoff Hutchison`: https://github.com/ghutchis
 .. _`Karol M. Langner`: https://github.com/langner
+.. _`Oliver Lee`: https://github.com/oliver-s-lee
 .. _`Noel O'Boyle`: https://github.com/baoilleach
 .. _`Adam Tenderholt`: https://github.com/ATenderholt
 .. _`Shiv Upadhyay`: https://github.com/shivupa

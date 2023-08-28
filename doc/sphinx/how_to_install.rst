@@ -88,8 +88,8 @@ Manual download and install
 ---------------------------
 
 The source code of the newest release of cclib (version |release|) is distributed as:
- * A .zip file: https://github.com/cclib/cclib/releases/download/v1.7.2/cclib-1.7.2.zip
- * A .tar.gz file: https://github.com/cclib/cclib/releases/download/v1.7.2/cclib-1.7.2.tar.gz
+ * A .zip file: https://github.com/cclib/cclib/releases/download/v1.8/cclib-1.8.zip
+ * A .tar.gz file: https://github.com/cclib/cclib/releases/download/v1.8/cclib-1.8.tar.gz
  * Windows binary installers (see the `newest release page`_)
 
 On Windows, if you choose to download the .exe files instead, you can install simply by double-clicking on the file. To uninstall, use the "Add and Remove Programs" menu in the Control Panel.
