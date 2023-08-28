@@ -13,6 +13,7 @@ git+https://github.com/theochem/iodata.git@1.0.0a2
 
 # For building the documentation
 sphinx
+sphinx_rtd_theme
 
 # For testing
 pytest
