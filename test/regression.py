@@ -59,6 +59,7 @@ from cclib.parser import Jaguar
 from cclib.parser import Molcas
 from cclib.parser import Molpro
 from cclib.parser import MOPAC
+from cclib.parser import NBO
 from cclib.parser import NWChem
 from cclib.parser import ORCA
 from cclib.parser import Psi3

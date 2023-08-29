@@ -298,6 +298,7 @@ SP        Jaguar      JaguarSPTest          basicJaguar8.3              dvb_sp_k
 SP        Molcas      MolcasSPTest          basicOpenMolcas18.0         dvb_sp.out
 SP        Molpro      MolproSPTest          basicMolpro2006             dvb_sphf.out
 SP        Molpro      MolproSPTest          basicMolpro2012             dvb_sphf.out
+SP        NBO         NBOSPTest             basicNBO7.0/basicORCA5.0    dvb_sp.nbo.out
 SP        NWChem      GenericHFSPTest       basicNWChem6.0              dvb_sp_hf.out
 SP        NWChem      NWChemKSSPTest        basicNWChem6.0              dvb_sp_ks.out
 SP        NWChem      GenericHFSPTest       basicNWChem6.5              dvb_sp_hf.out

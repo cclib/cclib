@@ -196,7 +196,7 @@ class ccData:
     _dictsofarrays = ["atomcharges", "atomspins"]
     
     # Attributes that should be dictionaries of dictionaries.
-    _dictsofdicts = []
+    _dictsofdicts = ['populations']
 
     # Possible statuses for optimization steps.
     # OPT_UNKNOWN is the default and means optimization is in progress.
@@ -273,6 +273,8 @@ class ccData:
                         key,
                         {
                             subkey: numpy.array(subval, precision)
+                                    if isinstance(subval, (int, float))
+                                    else numpy.array(subval)
                         }
                     )
                     for key, val in items

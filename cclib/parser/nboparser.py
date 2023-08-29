@@ -82,12 +82,14 @@ class NBO(logfileparser.Logfile):
 
         if 'NAO Atom No lang   Type(AO)    Occupancy      Energy' in line:
 
-            if not hasattr(self, "npa"):
-                self.npa = []
-
             line = next(inputfile)
             line = next(inputfile)
 
+            naos, atoms, nos, langs, types, occupancies, energies = [], [], [], [], [], [], []
+
+            if not hasattr(self, "populations"):
+                self.populations = dict()
+            
             # Skip empty lines
             while 'Summary of Natural Population Analysis:' not in line:
                 if len(line.strip()) <= 0:
@@ -102,21 +104,27 @@ class NBO(logfileparser.Logfile):
                 occupancy = float(line[33:42])
                 energy    = float(line[47:56])
 
-                npa_dict = {
-                    'nao': nao,
-                    'atom': atom,
-                    'no': no,
-                    'lang': lang,
-                    'type': type_ao,
-                    'occupancy': occupancy,
-                    'energy': energy
-                }
-
-                # TODO append to attibutes
-                
-                self.append_attribute('npa', npa_dict)
+                naos.append(nao)
+                atoms.append(atom)
+                nos.append(no)
+                langs.append(lang)
+                types.append(type_ao)
+                occupancies.append(occupancy)
+                energies.append(energy)
 
                 line = next(inputfile)
+            
+            npa_dict = {
+                'nao': naos,
+                'atom': atoms,
+                'no': nos,
+                'lang': langs,
+                'type': types,
+                'occupancy': occupancies,
+                'energy': energies
+            }
+
+            self.populations['npa'] = npa_dict
                     
 
         ''' Summary of Natural Population Analysis:
@@ -159,6 +167,9 @@ class NBO(logfileparser.Logfile):
             
             self.atomcharges["nbo"] = charges
 
+            if not hasattr(self, "natom"):
+                self.set_attribute('natom', len(self.atomcharges["nbo"]))
+
         #                                  Natural Population
         #  ---------------------------------------------------------
         #    Core                       1.99998 ( 99.9990% of    2)
@@ -168,8 +179,8 @@ class NBO(logfileparser.Logfile):
         #  ---------------------------------------------------------
 
         
-        if 'Natural Population' in line:
-            
+        if line[33:51] == 'Natural Population':
+
             line = next(inputfile)
             line = next(inputfile)
             
@@ -296,28 +307,31 @@ class NBO(logfileparser.Logfile):
             
             while '   ---' not in line:
 
-                if '-----' in line:
+                if '-----' in line or len(line[7:28].strip()) < 1:
                     line = next(inputfile)
+                    continue
                 
                 nao       = line[7:28].strip()
                 occupancy = float(line[30:40].strip())
                 energy    = float(line[40:52].strip())
 
-                geminal, vicinal, remote = None, None, None
+                # TODO
+                # geminal, vicinal, remote = None, None, None
 
-                if len(line) > 52: geminal = line[53:58]
-                if len(line) > 58: vicinal = line[59:64]
-                if len(line) > 62: remote  = line[65:70]
+                # if len(line) > 52: geminal = line[53:58]
+                # if len(line) > 58: vicinal = line[59:64]
+                # if len(line) > 62: remote  = line[65:70]
 
                 nbo_dict = {
                     'nao'      : nao,
                     'occupancy': occupancy,
                     'energy'   : energy,
-                    'delocalizations': {
-                        'geminal': geminal,
-                        'vicinal': vicinal,
-                        'remote' : remote
-                    }
+                    # TODO
+                    # 'delocalizations': {
+                    #     'geminal': geminal,
+                    #     'vicinal': vicinal,
+                    #     'remote' : remote
+                    # }
                 }
 
                 self.append_attribute('nbo', nbo_dict)
