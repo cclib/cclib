@@ -73,12 +73,10 @@ attributes.rst: attributes.py $(SRC_PROD)/parser/data.py
 	@echo "Generating prod attributes..."
 	@$(MAKE) --no-print-directory checkout_prod
 	python attributes.py > $@
-	sed -i "/find cython becke routine/d" $@
 attributes_dev.rst: attributes.py $(SRC_DEV)/parser/data.py
 	@echo "Generating dev attributes..."
 	@$(MAKE) --no-print-directory checkout_dev
 	python attributes.py > $@
-	sed -i "/find cython becke routine/d" $@
 
 # Same as above, we need three layers of targets, since this script
 # especially takes some time as it performs all the tests.
@@ -88,12 +86,10 @@ coverage.rst: coverage.py $(wildcard $(SRC_PROD)/parser/*parser.py) $(wildcard $
 	@echo "Generating prod coverage..."
 	@$(MAKE) --no-print-directory checkout_prod
 	python coverage.py $(CCLIB_PROD) > $@
-	sed -i "/find cython becke routine/d" $@
 coverage_dev.rst: coverage.py $(wildcard $(SRC_DEV)/parser/*parser.py) $(wildcard $(CCLIB_DEV)/test/*.py)
 	@echo "Generating dev coverage..."
 	@$(MAKE) --no-print-directory checkout_dev
 	python coverage.py $(CCLIB_DEV) > $@
-	sed -i "/find cython becke routine/d" $@
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
