@@ -635,9 +635,9 @@ class NWChem(logfileparser.Logfile):
             self.append_attribute("dispersionenergies", dispersion)
             
         # type of dispersion
-        if line.strip().find('disp vdw 3') > -1:
+        if line.strip().find('DFT-D3 Model') > -1:
             self.metadata['dispersion'] = "D3"
-        if line.strip().find('disp vdw 4') > -1:
+        if line.strip().find('DFT-D3BJ Model') > -1:
             self.metadata['dispersion'] = "D3BJ"
 
         # The final MO orbitals are printed in a simple list, but apparently not for
