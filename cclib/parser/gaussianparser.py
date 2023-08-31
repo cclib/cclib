@@ -271,6 +271,26 @@ class Gaussian(logfileparser.Logfile):
             grid = grid_lookup[IRadAn]
             self.set_attribute('grid', grid)
 
+        # Extract <S**2> before and after spin annihilation
+        # <Sx>= 0.0000 <Sy>= 0.0000 <Sz>= 0.0000 <S**2>= 1.0237 S= 0.6286
+        # <L.S>= 0.000000000000E+00
+        # Annihilation of the first spin contaminant:
+        # S**2 before annihilation     1.0237,   after     0.2796
+        elif 'S**2 before annihilation' in line:
+            if not hasattr(self, 's2_after_anni'):
+                self.s2_afteranni = []
+                self.s2_beforeanni = []
+                self.s2_afteranni_fin = []
+                self.s2_beforeanni_fin = []
+            self.s2_afteranni.append(float(line.strip().split()[-1]))
+            self.s2_beforeanni.append(float(line.strip().split()[-3][:-1]))
+            self.s2_afteranni_fin = float(line.strip().split()[-1])
+            self.s2_beforeanni_fin = float(line.strip().split()[-3][:-1])
+            self.set_attribute('s2_after_anni', self.s2_afteranni)
+            self.set_attribute('s2_before_anni', self.s2_beforeanni)
+            self.set_attribute('s2_after_anni_fin', self.s2_afteranni_fin)
+            self.set_attribute('s2_before_anni_fin', self.s2_beforeanni_fin)
+
         if line.strip().startswith("Link1:  Proceeding to internal job step number"):
             self.new_internal_job()
             
