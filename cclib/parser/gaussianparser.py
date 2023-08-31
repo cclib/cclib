@@ -413,6 +413,24 @@ class Gaussian(logfileparser.Logfile):
             self.set_attribute('td_energy', self.td_energy)
             self.set_attribute('td_energy_fin', self.td_energy_fin)
 
+        # For G4 calculations look for G4 energies (Gaussian16a bug prints G4(0 K) as DE(HF)) --Brian modified to work for G16c-where bug is fixed.
+        #
+        # Temperature=              298.150000 Pressure=                      1.000000
+        # E(ZPE)=                     0.098682 E(Thermal)=                    0.103138
+        # E(CCSD(T))=              -231.530419 E(Empiric)=                   -0.104205
+        # DE(Plus)=                  -0.014015 DE(2DF)=                      -0.182003
+        # E(Delta-G3XP)=             -0.339213 DE(HF)=                       -0.022842
+        # G4(0 K)=                 -232.094014 G4 Energy=                  -232.089558
+        # G4 Enthalpy=             -232.088614 G4 Free Energy=             -232.121498
+
+        elif line.strip().startswith('E(ZPE)='): #Overwrite DFT ZPE with G4 ZPE
+            self.zero_point_corr = float(line.strip().split()[1])
+        elif line.strip().startswith('G4(0 K)'):
+            self.G4_energy = float(line.strip().split()[2])
+            self.G4_energy -= self.zero_point_corr #Remove G4 ZPE
+            self.G4_energy = utils.convertor(self.G4_energy, "hartree", "eV")
+            self.set_attribute('g4_energy', self.G4_energy)
+
         if line.strip().startswith("Link1:  Proceeding to internal job step number"):
             self.new_internal_job()
             
