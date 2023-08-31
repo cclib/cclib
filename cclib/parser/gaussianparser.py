@@ -999,7 +999,7 @@ class Gaussian(logfileparser.Logfile):
         # currently we don't support changes in system size or fragments in cclib. When we do,
         # we will want to parse the model systems, too, and that is what nmodels could track.
         if "ONIOM: generating point" in line and line.strip()[-13:] == 'model system.' and getattr(self, 'nmodels', 0) > 0:
-            while not line[1:30] == 'ONIOM: Integrating ONIOM file':
+            while not line[1:27] == 'ONIOM: calculating energy.':
                 line = next(inputfile)
 
         # With the gfinput keyword, the atomic basis set functions are:
