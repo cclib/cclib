@@ -302,6 +302,31 @@ class Gaussian(logfileparser.Logfile):
             symmno = int(line.strip().split()[3].split(".")[0])
             self.set_attribute('symmno', symmno)	
 
+        elif line.find('Rotational constants (GHZ):') > -1:
+            try:
+                roconst = [float(line.strip().replace(':', ' ').split()[3]),
+                                float(line.strip().replace(':', ' ').split()[4]),
+                                float(line.strip().replace(':', ' ').split()[5])]
+                self.set_attribute('roconst', roconst)
+            except ValueError:
+                if line.find('********') > -1:
+                    roconst = [float(line.strip().replace(':', ' ').split()[4]),
+                                    float(line.strip().replace(':', ' ').split()[5])]
+                    self.set_attribute('roconst', roconst)
+
+        elif line.find('Rotational temperature ') > -1:
+            rotemp = [float(line.strip().split()[3])]
+            self.set_attribute('rotemp', rotemp)
+        elif line.find('Rotational temperatures') > -1:
+            try:
+                rotemp = [float(line.strip().split()[3]), float(line.strip().split()[4]),
+                            float(line.strip().split()[5])]
+                self.set_attribute('rotemp', rotemp)
+            except ValueError:
+                if line.find('********') > -1:
+                    rotemp = [float(line.strip().split()[4]), float(line.strip().split()[5])]
+                    self.set_attribute('rotemp', rotemp)
+
         if line.strip().startswith("Link1:  Proceeding to internal job step number"):
             self.new_internal_job()
             
