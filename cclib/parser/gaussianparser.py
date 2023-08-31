@@ -431,6 +431,15 @@ class Gaussian(logfileparser.Logfile):
             self.G4_energy = utils.convertor(self.G4_energy, "hartree", "eV")
             self.set_attribute('g4_energy', self.G4_energy)
 
+        # For ONIOM calculations use the extrapolated value rather than SCF value
+        elif "ONIOM: extrapolated energy" in line:
+            if not hasattr(self, 'oniom_energy'):
+                self.oniom_energy = []
+            self.oniom_energy.append(utils.convertor(float(line.strip().split()[4]), "hartree", "eV"))
+            self.oniom_energy_fin = utils.convertor(float(line.strip().split()[4]), "hartree", "eV")
+            self.set_attribute('oniom_energy', self.oniom_energy)
+            self.set_attribute('oniom_energy_fin', self.oniom_energy_fin)
+
         if line.strip().startswith("Link1:  Proceeding to internal job step number"):
             self.new_internal_job()
             
