@@ -327,6 +327,49 @@ class Gaussian(logfileparser.Logfile):
                     rotemp = [float(line.strip().split()[4]), float(line.strip().split()[5])]
                     self.set_attribute('rotemp', rotemp)
 
+        # Detects how many times the calculation found a stationary point. This is important
+        # to detect a problem where Gaussian converges during the optimization step but the
+        # following frequency calculation does not converge (https://gaussian.com/faq3/)
+        #     -- Stationary point found.
+        if line.find('Stationary point found') > -1:
+            if not hasattr(self, 'times_converged'):
+                self.set_attribute('times_converged', 1)
+            else:
+                self.set_attribute('times_converged', 2)
+
+        # Extract NMR data
+        #  SCF GIAO Magnetic shielding tensor (ppm):
+        #     1  C    Isotropic =   136.4123   Anisotropy =    76.5152
+        # XX=   187.1326   YX=     5.1847   ZX=     0.0000
+        # XY=     4.4768   YY=   106.8859   ZY=     0.0000
+        # XZ=     0.0001   YZ=     0.0000   ZZ=   115.2183
+        # Eigenvalues:   106.5961   115.2183   187.4224
+        #     2  H    Isotropic =    28.1863   Anisotropy =     7.5535
+        # XX=    31.4332   YX=    -4.6376   ZX=     0.0000
+        # XY=    -1.4964   YY=    27.9636   ZY=     0.0000
+        # XZ=     0.0000   YZ=     0.0000   ZZ=    25.1622
+        # Eigenvalues:    25.1622    26.1748    33.2220
+        # End of Minotr F.D. properties file   721 does not exist.
+        # End of Minotr F.D. properties file   722 does not exist.
+        # End of Minotr F.D. properties file   788 does not exist.
+        #
+        # **********************************************************************
+        if 'SCF GIAO Magnetic shielding tensor (ppm)' in line:
+            line = inputfile.next()
+            nmr_iso = []
+            nmr_anis = []
+            nmr_eigen = []
+            while '*************************' not in line:
+                if 'Isotropic' in line:
+                    nmr_iso.append(float(line.split()[4]))
+                    nmr_anis.append(float(line.split()[7]))
+                elif 'Eigenvalues' in line:
+                    nmr_eigen.append([float(line.split()[1]), float(line.split()[2]), float(line.split()[3])])
+                line = inputfile.next()
+            self.set_attribute('nmr_iso', nmr_iso)
+            self.set_attribute('nmr_anis', nmr_anis)
+            self.set_attribute('nmr_eigen', nmr_eigen)
+
         if line.strip().startswith("Link1:  Proceeding to internal job step number"):
             self.new_internal_job()
             
