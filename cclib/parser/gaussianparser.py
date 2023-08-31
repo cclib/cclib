@@ -216,6 +216,7 @@ class Gaussian(logfileparser.Logfile):
                 "package_version"
             ] = f"{self.YEAR_SUFFIXES_TO_YEARS[year_suffix]}+{revision}"
             self.metadata["platform"] = platform
+            self.set_attribute('run_date', run_date)
 
         if line.strip().startswith("Link1:  Proceeding to internal job step number"):
             self.new_internal_job()

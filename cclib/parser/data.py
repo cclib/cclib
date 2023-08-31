@@ -162,6 +162,7 @@ class ccData:
        "polarizabilities": Attribute(list,             'polarizabilities',            'N/A'),
        "pressure":         Attribute(float,            'pressure',                    'properties'),
        "qm_program":       Attribute(str,              'QM program',                  'metadata'),
+       "run_date":         Attribute(str,              'run date',                    'metadata'),
        "rotconsts":        Attribute(numpy.ndarray,    'rotational constants',        'atoms:coords:rotconsts'),
        "scancoords":       Attribute(numpy.ndarray,    'step geometry',               'optimization:scan'),
        "scanenergies":     Attribute(list,             'PES energies',                'optimization:scan'),
