@@ -599,6 +599,7 @@ class Gaussian(logfileparser.Logfile):
         # Basis set name
         if line[1:15] == "Standard basis":
             self.metadata["basis_set"] = line.split()[2]
+            self.set_attribute('basis_set', line.split()[2])
             
         # Solvent information.
         # PCM (the default gaussian solvent method).

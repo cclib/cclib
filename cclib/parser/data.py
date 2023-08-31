@@ -116,6 +116,7 @@ class ccData:
        "atommasses":       Attribute(numpy.ndarray,    'mass',                        'atoms'),
        "atomnos":          Attribute(numpy.ndarray,    'number',                      'atoms:elements'),
        "atomspins":        Attribute(dict,             'spins',                       'atoms'),
+       "basis_set":        Attribute(str,              'basis set',                   'metadata'),
        "ccenergies":       Attribute(numpy.ndarray,    'coupled cluster',             'properties:energy'),
        "calc_type":        Attribute(str,              'ground or transition state',  'metadata'),
        "charge":           Attribute(int,              'charge',                      'properties'),
