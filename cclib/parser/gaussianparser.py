@@ -370,6 +370,36 @@ class Gaussian(logfileparser.Logfile):
             self.set_attribute('nmr_anis', nmr_anis)
             self.set_attribute('nmr_eigen', nmr_eigen)
 
+        # Extract Wiberg bond orders
+        #  Wiberg bond index matrix in the NAO basis:
+        #
+        #     Atom    1       2       3       4       5       6       7       8       9
+        #     ---- ------  ------  ------  ------  ------  ------  ------  ------  ------
+        # 1.  C  0.0000  1.0207  0.0078  0.0009  0.0002  0.0016  0.0005  0.0095  0.0024
+        # 2.  C  1.0207  0.0000  0.9907  0.0118  0.0063  0.0012  0.0039  0.0115  0.0089
+        # 3.  C  0.0078  0.9907  0.0000  0.9527  0.0217  0.0212  0.0232  1.0469  0.7798
+        # 4.  C  0.0009  0.0118  0.9527  0.0000  0.8700  0.8732  0.8783  0.0121  0.0096
+        # 5.  F  0.0002  0.0063  0.0217  0.8700  0.0000  0.0463  0.0453  0.0038  0.0017
+        # 6.  F  0.0016  0.0012  0.0212  0.8732  0.0463  0.0000  0.0469  0.0079  0.0037
+        # 7.  F  0.0005  0.0039  0.0232  0.8783  0.0453  0.0469  0.0000  0.0021  0.0074
+        # 8.  C  0.0095  0.0115  1.0469  0.0121  0.0038  0.0079  0.0021  0.0000  0.7958
+        # 9.  C  0.0024  0.0089  0.7798  0.0096  0.0017  0.0037  0.0074  0.7958  0.0000
+        if 'Wiberg bond index matrix' in line:
+            WBO_matrix = []
+            while not 'Wiberg bond index,' in line:
+                line = inputfile.next()
+                if 'Atom' in line:
+                    line = inputfile.next()
+                    line = inputfile.next()
+                    WBO_block = []
+                    while len(line) > 1:
+                        WBO_block.append(line.split()[2:])
+                        line = inputfile.next()
+                    WBO_block = numpy.array(WBO_block)
+                    WBO_block = WBO_block.transpose().tolist()
+                    WBO_matrix += WBO_block
+            self.set_attribute('WBO_matrix', WBO_matrix)
+
         if line.strip().startswith("Link1:  Proceeding to internal job step number"):
             self.new_internal_job()
             
