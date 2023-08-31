@@ -218,6 +218,25 @@ class Gaussian(logfileparser.Logfile):
             self.metadata["platform"] = platform
             self.set_attribute('run_date', run_date)
 
+        # Extract number of processors, memory, keywords line, solvation,
+        # empirical dispersion and type of system (ground or transition state)
+        # ******************************************
+        # %mem=24GB
+        # %nprocshared=12
+        # Will use up to   12 processors via shared memory.
+        # %chk=Int23.chk
+        # ----------------------------------------------------------------------
+        # # uM062X/Def2TZVP guess=read geom=check opt=(calcfc,ts,noeigen,maxstep
+        # =5) freq=noraman
+        # ----------------------------------------------------------------------
+        elif '%mem' in line:
+            mem = line.strip().split('=')[-1]
+            self.set_attribute('memory', mem)
+
+        elif '%nprocs' in line:
+            nprocs = int(line.strip().split('=')[-1])
+            self.set_attribute('processors', nprocs)
+
         if line.strip().startswith("Link1:  Proceeding to internal job step number"):
             self.new_internal_job()
             
