@@ -136,7 +136,6 @@ class ccData:
        "fooverlaps":       Attribute(numpy.ndarray,    'orbital overlap',             'fragments'),
        "fragnames":        Attribute(list,             'fragment names',              'fragments'),
        "frags":            Attribute(list,             'atom indices',                'fragments'),
-       "functional":       Attribute(str,              'functional',                  'metadata'),
        "g4_energy":        Attribute(float,            'G4 energy',                   'properties:energy'),
        "gbasis":           Attribute(list,             'basis functions',             'atoms:orbitals'),
        "geotargets":       Attribute(numpy.ndarray,    'geometric targets',           'optimization'),
