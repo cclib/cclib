@@ -925,11 +925,12 @@ class Gaussian(logfileparser.Logfile):
             if not hasattr(self, "atommasses"):
                 self.atommasses = []
 
-            line = next(inputfile)
-            while line[1:16] != "Leave Link  101":
-                if line[1:8] == "AtmWgt=":
-                    self.atommasses.extend(list(map(float, line.split()[1:])))
                 line = next(inputfile)
+                while line[1:16] != "Leave Link  101":
+                    if line[1:8] == "AtmWgt=":
+                        self.atommasses.extend(list(map(float, line.split()[1:])))
+                    line = next(inputfile)
+                self.molecular_mass = sum(self.atommasses)
 
         # Symmetry: point group
         if "Symmetry turned off" in line:

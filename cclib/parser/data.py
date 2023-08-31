@@ -150,6 +150,7 @@ class ccData:
        "metadata":         Attribute(dict,             'TBD',                         'N/A'),
        "mocoeffs":         Attribute(list,             'coeffs',                      'properties:orbitals'),
        "moenergies":       Attribute(list,             'energies',                    'properties:orbitals'),
+       "molecular_mass":   Attribute(float,            'molecular mass',              'properties'),
        "moments":          Attribute(list,             'total dipole moment',         'properties'),
        "mosyms":           Attribute(list,             'molecular orbital symmetry',  'properties:orbitals'),
        "mpenergies":       Attribute(numpy.ndarray,    'moller plesset',              'properties:energy'),
