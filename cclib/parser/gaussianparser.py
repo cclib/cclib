@@ -234,7 +234,6 @@ class Gaussian(logfileparser.Logfile):
 
         elif '%nprocs' in line:
             nprocs = int(line.strip().split('=')[-1])
-            self.set_attribute('processors', nprocs)
 
         elif '#' in line and not hasattr(self, 'keywords_line'):
             keywords_line = ''
