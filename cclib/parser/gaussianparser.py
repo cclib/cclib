@@ -291,6 +291,17 @@ class Gaussian(logfileparser.Logfile):
             self.set_attribute('s2_after_anni_fin', self.s2_afteranni_fin)
             self.set_attribute('s2_before_anni_fin', self.s2_beforeanni_fin)
 
+        # Extract symmetry point group
+        #  Full point group                 C1      NOp   1
+        elif 'Full point group' in line:
+            point_group = line.strip().split()[3]
+            self.set_attribute('point_group', point_group)
+
+        # Extract symmetry number, rotational constants and rotational temperatures
+        elif 'Rotational symmetry number' in line:
+            symmno = int(line.strip().split()[3].split(".")[0])
+            self.set_attribute('symmno', symmno)	
+
         if line.strip().startswith("Link1:  Proceeding to internal job step number"):
             self.new_internal_job()
             
