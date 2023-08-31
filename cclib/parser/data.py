@@ -170,7 +170,6 @@ class ccData:
        "point_group":      Attribute(str,              'symmetry point group',        'properties:rotational'),
        "polarizabilities": Attribute(list,             'polarizabilities',            'N/A'),
        "pressure":         Attribute(float,            'pressure',                    'properties'),
-       "processors":       Attribute(int,              'processors',                  'metadata'),
        "qm_program":       Attribute(str,              'QM program',                  'metadata'),
        "roconst":          Attribute(numpy.ndarray,    'rotational constants',        'properties:rotational'),
        "rotemp":           Attribute(numpy.ndarray,    'rotational temperatures',     'properties:rotational'),
