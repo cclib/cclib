@@ -231,7 +231,6 @@ class Gaussian(logfileparser.Logfile):
         # ----------------------------------------------------------------------
         elif '%mem' in line:
             mem = line.strip().split('=')[-1]
-            self.set_attribute('memory', mem)
 
         elif '%nprocs' in line:
             nprocs = int(line.strip().split('=')[-1])
