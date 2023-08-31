@@ -141,6 +141,7 @@ class ccData:
        "geotargets":       Attribute(numpy.ndarray,    'geometric targets',           'optimization'),
        "geovalues":        Attribute(numpy.ndarray,    'geometric values',            'optimization'),
        "grads":            Attribute(numpy.ndarray,    'TBD',                         'N/A'),
+       "grid":             Attribute(str,              'grid type',                   'metadata'),
        "hessian":          Attribute(numpy.ndarray,    'hessian matrix',              'vibrations'),
        "homos":            Attribute(numpy.ndarray,    'homos',                       'properties:orbitals'),
        "memory":           Attribute(str,              'memory',                      'metadata'),
