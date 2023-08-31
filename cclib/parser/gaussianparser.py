@@ -260,7 +260,7 @@ class Gaussian(logfileparser.Logfile):
                 calc_type = 'transition_state'
 
             self.set_attribute('solvation', qm_solv)
-            self.set_attribute('dispersion', qm_disp)
+            self.metadata["dispersion model"] = qm_disp
             self.set_attribute('calc_type', calc_type)
 
         # Extract grid type
@@ -269,7 +269,7 @@ class Gaussian(logfileparser.Logfile):
             grid_lookup = {1: 'sg1', 2: 'coarse', 4: 'fine', 5: 'ultrafine', 7: 'superfine'}
             IRadAn = int(line.strip().split()[-3])
             grid = grid_lookup[IRadAn]
-            self.set_attribute('grid', grid)
+            self.metadata["grid"] = grid
 
         # Extract <S**2> before and after spin annihilation
         # <Sx>= 0.0000 <Sy>= 0.0000 <Sz>= 0.0000 <S**2>= 1.0237 S= 0.6286
@@ -599,7 +599,6 @@ class Gaussian(logfileparser.Logfile):
         # Basis set name
         if line[1:15] == "Standard basis":
             self.metadata["basis_set"] = line.split()[2]
-            self.set_attribute('basis_set', line.split()[2])
             
         # Solvent information.
         # PCM (the default gaussian solvent method).
@@ -1228,11 +1227,9 @@ class Gaussian(logfileparser.Logfile):
             t1 = line.split()[2]
             if t1 == 'E(RHF)':
                 self.metadata["methods"].append("HF")
-                self.set_attribute('functional', 'HF')
             else:
                 self.metadata["methods"].append("DFT")
                 self.metadata["functional"] = t1[t1.index("(") + 2:t1.rindex(")")]
-                self.set_attribute('functional', t1[t1.index("(") + 2:t1.rindex(")")])
 
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
