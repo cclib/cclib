@@ -190,12 +190,15 @@ class Gaussian(logfileparser.Logfile):
         # Extract the version number: "Gaussian 09, Revision D.01"
         # becomes "09revisionD.01".
         if line.strip() == "Cite this work as:":
-            tokens = next(inputfile).split()
+            qm_program = next(inputfile)
+            tokens = qm_program.split()
             self.metadata["legacy_package_version"] = ''.join([
                 tokens[1][:-1],
                 'revision',
                 tokens[-1][:-1],
             ])
+
+            self.set_attribute('qm_program', qm_program[1:-2])
 
         # Extract the version number: "Gaussian 98: x86-Linux-G98RevA.11.3
         # 5-Feb-2002" becomes "1998+A.11.3", and "Gaussian 16:
