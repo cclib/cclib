@@ -120,7 +120,6 @@ class ccData:
        "calc_type":        Attribute(str,              'ground or transition state',  'metadata'),
        "charge":           Attribute(int,              'charge',                      'properties'),
        "coreelectrons":    Attribute(numpy.ndarray,    'core electrons',              'atoms'),
-       "dispersion":       Attribute(str,              'dispersion model',            'metadata'),
        "dispersionenergies":Attribute(numpy.ndarray,   'dispersion correction',       'properties:energy'),
        "enthalpy":         Attribute(float,            'enthalpy',                    'properties'),
        "entropy":          Attribute(float,            'entropy',                     'properties'),
