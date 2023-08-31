@@ -400,6 +400,19 @@ class Gaussian(logfileparser.Logfile):
                     WBO_matrix += WBO_block
             self.set_attribute('WBO_matrix', WBO_matrix)
 
+        # For TD calculations look for SCF energies of the first excited state:
+        # 
+        #  This state for optimization and/or second-order correction.
+        # Total Energy, E(TD-HF/TD-DFT) =  -149.392611305    
+        # Copying the excited state density for this state as the 1-particle RhoCI density.
+        elif 'E(TD-HF/TD-DFT)' in line:
+            if not hasattr(self, 'td_energy'):
+                self.td_energy = []
+            self.td_energy.append(utils.convertor(utils.float(line.strip().split()[-1]), "hartree", "eV"))
+            self.td_energy_fin = utils.convertor(utils.float(line.strip().split()[-1]), "hartree", "eV")
+            self.set_attribute('td_energy', self.td_energy)
+            self.set_attribute('td_energy_fin', self.td_energy_fin)
+
         if line.strip().startswith("Link1:  Proceeding to internal job step number"):
             self.new_internal_job()
             
