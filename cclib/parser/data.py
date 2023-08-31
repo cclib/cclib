@@ -143,7 +143,6 @@ class ccData:
        "grads":            Attribute(numpy.ndarray,    'TBD',                         'N/A'),
        "hessian":          Attribute(numpy.ndarray,    'hessian matrix',              'vibrations'),
        "homos":            Attribute(numpy.ndarray,    'homos',                       'properties:orbitals'),
-       "keywords_line":    Attribute(str,              'keywords line',               'metadata'),
        "memory":           Attribute(str,              'memory',                      'metadata'),
        "metadata":         Attribute(dict,             'TBD',                         'N/A'),
        "mocoeffs":         Attribute(list,             'coeffs',                      'properties:orbitals'),

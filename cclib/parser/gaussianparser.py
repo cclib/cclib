@@ -242,7 +242,7 @@ class Gaussian(logfileparser.Logfile):
             while '----------' not in line:
                 keywords_line += line.rstrip("\n")[1:]
                 line = next(inputfile)
-                self.set_attribute('keywords_line', keywords_line[2:])
+                self.metadata["keywords_line"] = keywords_line[2:]
             qm_solv,qm_disp = 'gas_phase','none'
             calc_type = 'ground_state'
             calcfc_found, ts_found = False, False
