@@ -1228,9 +1228,11 @@ class Gaussian(logfileparser.Logfile):
             t1 = line.split()[2]
             if t1 == 'E(RHF)':
                 self.metadata["methods"].append("HF")
+                self.set_attribute('functional', 'HF')
             else:
                 self.metadata["methods"].append("DFT")
                 self.metadata["functional"] = t1[t1.index("(") + 2:t1.rindex(")")]
+                self.set_attribute('functional', t1[t1.index("(") + 2:t1.rindex(")")])
 
             if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
@@ -2508,19 +2510,24 @@ class Gaussian(logfileparser.Logfile):
                         else:
                             extract_charges_spins(line,prop)
                         
-        if line.strip() == "Natural Population":
+        if "Natural Population" in line and line.strip().split()[0] == "Natural" and line.strip().split()[1] == "Population":
             if not hasattr(self, 'atomcharges'):
                 self.atomcharges = {}
+            if not hasattr(self, 'atomspins'):
+                self.atomspins = {}
             if "natural" not in self.atomcharges:
                 line1 = next(inputfile)
                 line2 = next(inputfile)
                 if line1.split()[0] == 'Natural' and line2.split()[2] == 'Charge':
                     dashes = next(inputfile)
                     charges = []
+                    spins = []
                     for i in range(self.natom):
                         nline = next(inputfile)
                         charges.append(float(nline.split()[2]))
+                        spins.append(float(nline.split()[-1]))
                     self.atomcharges["natural"] = charges
+                    self.atomspins["natural"] = spins
 
         # Combined Hirshfeld/CM5 is different enough that we don't try and
         # reuse extract_charges_spins, at least for now.
