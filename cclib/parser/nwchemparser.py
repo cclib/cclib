@@ -61,10 +61,8 @@ class NWChem(logfileparser.Logfile):
 
         if "nproc" in line:
             self.metadata['num_processors'] = line.split()[-1]
-        self.skip_lines(inputfile,['d','b','heap','stack','global'])
         if "Memory information" in line:
             self.skip_lines(inputfile,['d','b','heap','stack','global'])
-        if 'total' in line:
             self.metadata['memory'] = line.split()[-2:]
 
 
@@ -368,7 +366,7 @@ class NWChem(logfileparser.Logfile):
                 for attr in scftargetattrs:
                     delattr(self, attr)
 
-        # DFT functional and basis set information
+        # DFT functional information
         if "XC Information" in line:
             line = next(inputfile)
             line = next(inputfile)
@@ -390,7 +388,6 @@ class NWChem(logfileparser.Logfile):
 
         if "Grid Information" in line:
             self.skip_line(inputfile, 'dashes')
-            next(inputfile)
             self.metadata["grid"] = next(inputfile).split()[-1]
 
         # If the full overlap matrix is printed, it looks like this:
@@ -1301,13 +1298,12 @@ class NWChem(logfileparser.Logfile):
             roconst, rotemp = [], []
             split_line = line.split()
             roconst.append(utils.convertor(float(split_line[1]),'wavenumber','Hz'))
-            rotemp.append(float(split_line)[4])
+            rotemp.append(float(split_line[4]))
             line=next(inputfile)
             while line.strip().startswith('B=') or line.strip().startswith('C='):
                 split_line = line.split()
                 roconst.append(utils.convertor(float(split_line[1]),'wavenumber','Hz'))
-                rotemp.append(float(split_line)[4])
-                line=next(inputfile)
+                rotemp.append(float(split_line[4]))
             self.set_attribute('rotconsts', roconst)
             self.set_attribute('rottemp', rotemp)
 
