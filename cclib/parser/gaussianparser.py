@@ -214,7 +214,7 @@ class Gaussian(logfileparser.Logfile):
                 "package_version"
             ] = f"{self.YEAR_SUFFIXES_TO_YEARS[year_suffix]}+{revision}"
             self.metadata["platform"] = platform
-            self.metadata["run_date"] = run_date
+            self.metadata['date'] = datetime.datetime.strptime(run_date, "%d-%b-%Y")
 
         # Extract number of processors, memory, keywords line, solvation,
         # empirical dispersion and type of system (ground or transition state)
