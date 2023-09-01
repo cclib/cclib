@@ -278,16 +278,10 @@ class Gaussian(logfileparser.Logfile):
             if not hasattr(self, 's2_after_anni'):
                 self.s2_afteranni = []
                 self.s2_beforeanni = []
-                self.s2_afteranni_fin = []
-                self.s2_beforeanni_fin = []
             self.s2_afteranni.append(float(line.strip().split()[-1]))
             self.s2_beforeanni.append(float(line.strip().split()[-3][:-1]))
-            self.s2_afteranni_fin = float(line.strip().split()[-1])
-            self.s2_beforeanni_fin = float(line.strip().split()[-3][:-1])
             self.set_attribute('s2_after_anni', self.s2_afteranni)
             self.set_attribute('s2_before_anni', self.s2_beforeanni)
-            self.set_attribute('s2_after_anni_fin', self.s2_afteranni_fin)
-            self.set_attribute('s2_before_anni_fin', self.s2_beforeanni_fin)
 
         # Extract symmetry point group
         #  Full point group                 C1      NOp   1
