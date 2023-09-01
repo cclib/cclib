@@ -172,7 +172,6 @@ class ccData:
        "pressure":         Attribute(float,            'pressure',                    'properties'),
        "qm_program":       Attribute(str,              'QM program',                  'metadata'),
        "rotemp":           Attribute(numpy.ndarray,    'rotational temperatures',     'properties:rotational'),
-       "run_date":         Attribute(str,              'run date',                    'metadata'),
        "s2_after_anni":    Attribute(numpy.ndarray,    'S2 after annihilation',       'optimization'),
        "s2_after_anni_fin": Attribute(float,           'S2 after annihilation',       'properties'),
        "s2_before_anni":   Attribute(numpy.ndarray,    'S2 before annihilation',      'optimization'),
