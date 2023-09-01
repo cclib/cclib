@@ -171,7 +171,6 @@ class ccData:
        "polarizabilities": Attribute(list,             'polarizabilities',            'N/A'),
        "pressure":         Attribute(float,            'pressure',                    'properties'),
        "qm_program":       Attribute(str,              'QM program',                  'metadata'),
-       "roconst":          Attribute(numpy.ndarray,    'rotational constants',        'properties:rotational'),
        "rotemp":           Attribute(numpy.ndarray,    'rotational temperatures',     'properties:rotational'),
        "run_date":         Attribute(str,              'run date',                    'metadata'),
        "s2_after_anni":    Attribute(numpy.ndarray,    'S2 after annihilation',       'optimization'),
