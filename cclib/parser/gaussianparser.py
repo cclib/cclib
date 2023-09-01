@@ -270,13 +270,11 @@ class Gaussian(logfileparser.Logfile):
         # Annihilation of the first spin contaminant:
         # S**2 before annihilation     1.0237,   after     0.2796
         elif 'S**2 before annihilation' in line:
-            if not hasattr(self, 's2_after_anni'):
-                self.s2_afteranni = []
-                self.s2_beforeanni = []
-            self.s2_afteranni.append(float(line.strip().split()[-1]))
-            self.s2_beforeanni.append(float(line.strip().split()[-3][:-1]))
-            self.set_attribute('s2_after_anni', self.s2_afteranni)
-            self.set_attribute('s2_before_anni', self.s2_beforeanni)
+            if not hasattr(self, 'spinexpect'):
+                self.set_attribute('spinexpect', [])
+                self.set_attribute('spinexpectanni', [])
+            self.extend_attribute('spinexpectanni', float(line.strip().split()[-1]))
+            self.extend_attribute('spinexpect', float(line.strip().split()[-3][:-1]))
 
         # Extract symmetry point group
         #  Full point group                 C1      NOp   1
