@@ -289,7 +289,7 @@ class Gaussian(logfileparser.Logfile):
         # Extract symmetry number, rotational constants and rotational temperatures
         elif 'Rotational symmetry number' in line:
             symmno = int(line.strip().split()[3].split(".")[0])
-            self.set_attribute('symmno', symmno)
+            self.set_attribute('rotsymno', symmno)
 
         # Extract Rotational Constants
         # Example:
