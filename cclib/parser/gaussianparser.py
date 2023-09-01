@@ -339,19 +339,35 @@ class Gaussian(logfileparser.Logfile):
         # **********************************************************************
         if 'SCF GIAO Magnetic shielding tensor (ppm)' in line:
             line = inputfile.next()
-            nmr_iso = []
-            nmr_anis = []
-            nmr_eigen = []
+            self.nmrtensors = {}
             while '*************************' not in line:
                 if 'Isotropic' in line:
-                    nmr_iso.append(float(line.split()[4]))
-                    nmr_anis.append(float(line.split()[7]))
-                elif 'Eigenvalues' in line:
-                    nmr_eigen.append([float(line.split()[1]), float(line.split()[2]), float(line.split()[3])])
+                    split_line = line.split()
+                    atomno = int(split_line[0]) -1
+                    nmr_iso = float(split_line[4])
+                    nmr_anis = float(split_line[7])
+                    nmr_tensor = []
+                    
+                    # Get the tensor matrix (3x3)
+                    for _ in range(3):
+                        line = next(inputfile)
+                        split_line = line.split()
+                        nmr_tensor.append(
+                            [float(split_line[1]), float(split_line[3]), float(split_line[5])]
+                        )
+                    
+                    line = next(inputfile)
+                    split_line = line.split()
+                    nmr_eigen = [float(split_line[1]), float(split_line[2]), float(split_line[3])]
+                    # End of section, add to attribute.
+                    self.nmrtensors[atomno] = {
+                         "total": numpy.array(nmr_tensor),
+                         "isotropic": nmr_iso,
+                         "anisotropy" : nmr_anis,
+                         "eigenvalues": nmr_eigen
+                    }
                 line = inputfile.next()
-            self.set_attribute('nmr_iso', nmr_iso)
-            self.set_attribute('nmr_anis', nmr_anis)
-            self.set_attribute('nmr_eigen', nmr_eigen)
+
 
         # Extract Wiberg bond orders
         #  Wiberg bond index matrix in the NAO basis:
