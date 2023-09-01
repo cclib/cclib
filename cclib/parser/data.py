@@ -166,7 +166,6 @@ class ccData:
        "oniom_energy_fin": Attribute(float,            'ONIOM energy',                'properties:energy'),
        "optdone":          Attribute(list,             'done',                        'optimization'),
        "optstatus":        Attribute(numpy.ndarray,    'status',                      'optimization'),
-       "point_group":      Attribute(str,              'symmetry point group',        'properties:rotational'),
        "polarizabilities": Attribute(list,             'polarizabilities',            'N/A'),
        "pressure":         Attribute(float,            'pressure',                    'properties'),
        "rotemp":           Attribute(numpy.ndarray,    'rotational temperatures',     'properties:rotational'),

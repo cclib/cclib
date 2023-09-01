@@ -276,12 +276,6 @@ class Gaussian(logfileparser.Logfile):
             self.extend_attribute('spinexpectanni', float(line.strip().split()[-1]))
             self.extend_attribute('spinexpect', float(line.strip().split()[-3][:-1]))
 
-        # Extract symmetry point group
-        #  Full point group                 C1      NOp   1
-        elif 'Full point group' in line:
-            point_group = line.strip().split()[3]
-            self.set_attribute('point_group', point_group)
-
         # Extract symmetry number, rotational constants and rotational temperatures
         elif 'Rotational symmetry number' in line:
             symmno = int(line.strip().split()[3].split(".")[0])
