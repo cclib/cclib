@@ -182,7 +182,6 @@ class ccData:
        "scfenergies":      Attribute(numpy.ndarray,    'scf energies',                'optimization:scf'),
        "scftargets":       Attribute(numpy.ndarray,    'targets',                     'optimization:scf'),
        "scfvalues":        Attribute(list,             'values',                      'optimization:scf'),
-       "solvation":        Attribute(str,              'solvation',                   'metadata'),
        "symmno":           Attribute(int,              'symmetry number',             'properties:rotational'),
        "td_energy":        Attribute(list,             'TD energy',                   'optimization:TD'),
        "td_energy_fin":    Attribute(float,            'TD energy',                   'properties:energy'),

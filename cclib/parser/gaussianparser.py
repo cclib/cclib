@@ -241,7 +241,7 @@ class Gaussian(logfileparser.Logfile):
                 keywords_line += line.rstrip("\n")[1:]
                 line = next(inputfile)
                 self.metadata["keywords_line"] = keywords_line[2:]
-            qm_solv,qm_disp = 'gas_phase','none'
+            qm_disp = 'none'
             calc_type = 'ground_state'
             calcfc_found, ts_found = False, False
             for keyword in keywords_line.split():
@@ -250,14 +250,11 @@ class Gaussian(logfileparser.Logfile):
                         calcfc_found = True
                     if keyword.lower().find('ts') > -1:
                         ts_found = True
-                elif keyword.lower().startswith('scrf'):
-                    qm_solv = keyword
                 elif keyword.lower().startswith('emp'):
                     qm_disp = keyword
             if calcfc_found and ts_found:
                 calc_type = 'transition_state'
 
-            self.set_attribute('solvation', qm_solv)
             self.metadata["dispersion model"] = qm_disp
             self.set_attribute('calc_type', calc_type)
 
