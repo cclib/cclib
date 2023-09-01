@@ -117,7 +117,6 @@ class ccData:
        "atomnos":          Attribute(numpy.ndarray,    'number',                      'atoms:elements'),
        "atomspins":        Attribute(dict,             'spins',                       'atoms'),
        "ccenergies":       Attribute(numpy.ndarray,    'coupled cluster',             'properties:energy'),
-       "calc_type":        Attribute(str,              'ground or transition state',  'metadata'),
        "charge":           Attribute(int,              'charge',                      'properties'),
        "coreelectrons":    Attribute(numpy.ndarray,    'core electrons',              'atoms'),
        "dispersionenergies":Attribute(numpy.ndarray,   'dispersion correction',       'properties:energy'),

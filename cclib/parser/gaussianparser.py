@@ -254,7 +254,7 @@ class Gaussian(logfileparser.Logfile):
                 calc_type = 'transition_state'
 
             self.metadata["dispersion model"] = qm_disp
-            self.set_attribute('calc_type', calc_type)
+            self.metadata["calc_type"] = calc_type
 
         # Extract grid type
         # ExpMin= 9.52D-02 ExpMax= 1.36D+04 ExpMxC= 4.63D+02 IAcc=3 IRadAn=         5 AccDes= 0.00D+00
