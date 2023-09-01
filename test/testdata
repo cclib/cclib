@@ -11,6 +11,7 @@
 # a special keyword, and we can test both HF and DFT outputs. Gaussian is an
 # exception, as it has at least two different formats for printing basis set
 # information, and so we made dedicated unit test logfiles in that case.
+Basis     CFOUR       GenericBasisTest      basicCFOUR2.1         dvb_sp_rhf.out
 Basis     DALTON      GenericBasisTest      basicDALTON-2013      dvb_sp_hf.out
 Basis     DALTON      GenericBasisTest      basicDALTON-2015      dvb_sp_hf.out
 Basis     DALTON      GenericBasisTest      basicDALTON-2013      dvb_sp_ks.out
@@ -45,7 +46,7 @@ Basis     Psi4        GenericBasisTest      basicPsi4-1.7         dvb_sp_rhf.out
 Basis     Psi4        GenericBasisTest      basicPsi4-1.7         dvb_sp_rks.out
 Basis     QChem       GenericBasisTest      basicQChem5.1         dvb_sp.out
 Basis     QChem       GenericBasisTest      basicQChem5.4         dvb_sp.out
-Basis     CFOUR       GenericBasisTest      basicCFOUR2.1         dvb_sp_rhf.out
+Basis     CFOUR       GenericBasisTest      basicCFOUR2.1         C_bigbasis.out
 Basis     DALTON      DALTONBigBasisTest    basicDALTON-2013      C_bigbasis.out
 Basis     DALTON      DALTONBigBasisTest    basicDALTON-2015      C_bigbasis.out
 Basis     GAMESS      GenericBigBasisTest   basicFirefly8.0       C_bigbasis.out
@@ -65,7 +66,6 @@ Basis     Psi4        Psi4BigBasisTest      basicPsi4-1.3.1       C_bigbasis.out
 Basis     Psi4        Psi4BigBasisTest      basicPsi4-1.7         C_bigbasis.out
 Basis     QChem       QChemBigBasisTest     basicQChem5.1         C_bigbasis.out
 Basis     QChem       QChemBigBasisTest     basicQChem5.4         C_bigbasis.out
-Basis     CFOUR       GenericBasisTest      basicCFOUR2.1         C_bigbasis.out
 
 BOMD      Gaussian    GaussianBOMDTest      basicGaussian09       dvb_bomd.out
 BOMD      NWChem      GenericBOMDTest       basicNWChem6.6        dvb_bomd_ks.out
