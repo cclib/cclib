@@ -170,7 +170,6 @@ class ccData:
        "point_group":      Attribute(str,              'symmetry point group',        'properties:rotational'),
        "polarizabilities": Attribute(list,             'polarizabilities',            'N/A'),
        "pressure":         Attribute(float,            'pressure',                    'properties'),
-       "qm_program":       Attribute(str,              'QM program',                  'metadata'),
        "rotemp":           Attribute(numpy.ndarray,    'rotational temperatures',     'properties:rotational'),
        "s2_after_anni":    Attribute(numpy.ndarray,    'S2 after annihilation',       'optimization'),
        "s2_before_anni":   Attribute(numpy.ndarray,    'S2 before annihilation',      'optimization'),
@@ -183,7 +182,6 @@ class ccData:
        "scftargets":       Attribute(numpy.ndarray,    'targets',                     'optimization:scf'),
        "scfvalues":        Attribute(list,             'values',                      'optimization:scf'),
        "rotsymno":           Attribute(int,              'symmetry number',             'properties:rotational'),
-
        "td_energy":        Attribute(list,             'TD energy',                   'optimization:TD'),
        "td_energy_fin":    Attribute(float,            'TD energy',                   'properties:energy'),
        "temperature":      Attribute(float,            'temperature',                 'properties'),

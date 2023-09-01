@@ -198,8 +198,6 @@ class Gaussian(logfileparser.Logfile):
                 tokens[-1][:-1],
             ])
 
-            self.set_attribute('qm_program', qm_program[1:-2])
-
         # Extract the version number: "Gaussian 98: x86-Linux-G98RevA.11.3
         # 5-Feb-2002" becomes "1998+A.11.3", and "Gaussian 16:
         # ES64L-G16RevA.03 25-Dec-2016" becomes "2016+A.03".
