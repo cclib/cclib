@@ -298,32 +298,34 @@ class Gaussian(logfileparser.Logfile):
         # Extract symmetry number, rotational constants and rotational temperatures
         elif 'Rotational symmetry number' in line:
             symmno = int(line.strip().split()[3].split(".")[0])
-            self.set_attribute('symmno', symmno)	
+            self.set_attribute('symmno', symmno)
 
+        # Extract Rotational Constants
+        # Example:
+        # Rotational constants (GHZ):           3.13081     1.24272     0.88960
+        # OR for linear molecules:
+        # Rotational constants (GHZ): ************ 12.73690 12.73690
+        # Note: rotational constant will be converted to wavenumber units (1/cm) to standardize across parsers
         elif line.find('Rotational constants (GHZ):') > -1:
             try:
                 roconst = [float(line.strip().replace(':', ' ').split()[3]),
                                 float(line.strip().replace(':', ' ').split()[4]),
                                 float(line.strip().replace(':', ' ').split()[5])]
-                self.set_attribute('roconst', roconst)
             except ValueError:
                 if line.find('********') > -1:
                     roconst = [float(line.strip().replace(':', ' ').split()[4]),
                                     float(line.strip().replace(':', ' ').split()[5])]
-                    self.set_attribute('roconst', roconst)
+            self.append_attribute("rotconsts", roconst)
 
         elif line.find('Rotational temperature ') > -1:
             rotemp = [float(line.strip().split()[3])]
-            self.set_attribute('rotemp', rotemp)
         elif line.find('Rotational temperatures') > -1:
             try:
                 rotemp = [float(line.strip().split()[3]), float(line.strip().split()[4]),
                             float(line.strip().split()[5])]
-                self.set_attribute('rotemp', rotemp)
             except ValueError:
                 if line.find('********') > -1:
                     rotemp = [float(line.strip().split()[4]), float(line.strip().split()[5])]
-                    self.set_attribute('rotemp', rotemp)
 
         # Detects how many times the calculation found a stationary point. This is important
         # to detect a problem where Gaussian converges during the optimization step but the
@@ -2745,16 +2747,6 @@ class Gaussian(logfileparser.Logfile):
                 self.metadata[key].append(time)
             except:
                 pass
-
-        # Extract Rotational Constants
-        # Example:
-        # Rotational constants (GHZ):           3.13081     1.24272     0.88960
-        # OR for linear molecules:
-        # Rotational constants (GHZ): ************ 12.73690 12.73690
-        # Note: rotational constant will be converted to wavenumber units (1/cm) to standardize across parsers
-        if line[:28] == ' Rotational constants (GHZ):':
-            splits = line[28:].split()
-            self.append_attribute("rotconsts", [float(splits[i]) for i in (-3, -2, -1)])
 
         # Extract Molecular Mass (in amu)
         # Example:
