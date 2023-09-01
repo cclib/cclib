@@ -319,6 +319,7 @@ class Gaussian(logfileparser.Logfile):
 
         elif line.find('Rotational temperature ') > -1:
             rotemp = [float(line.strip().split()[3])]
+            self.append_attribute("rottemps", rotemp)
         elif line.find('Rotational temperatures') > -1:
             try:
                 rotemp = [float(line.strip().split()[3]), float(line.strip().split()[4]),
@@ -326,6 +327,7 @@ class Gaussian(logfileparser.Logfile):
             except ValueError:
                 if line.find('********') > -1:
                     rotemp = [float(line.strip().split()[4]), float(line.strip().split()[5])]
+            self.append_attribute("rottemps", rotemp)
 
         # Detects how many times the calculation found a stationary point. This is important
         # to detect a problem where Gaussian converges during the optimization step but the
