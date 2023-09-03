@@ -1644,6 +1644,8 @@ class Gaussian(logfileparser.Logfile):
         # from the normal block while the high-precision vibdisps, if present,
         # are used to overwrite default-precision vibdisps at the end of the parse.
         if line[1:14] == "Harmonic freq":  # This matches in both freq block types
+            # Indicate that we're doing a freq job.
+            self.freqdone = False
 
             self.updateprogress(inputfile, "Frequency Information", self.fupdate)
 
