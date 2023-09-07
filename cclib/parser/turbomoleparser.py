@@ -176,7 +176,8 @@ class Turbomole(logfileparser.Logfile):
         if "OpenMP run-time library returned nthreads =" in line:
             self.metadata['num_cpu'] = int(line.split()[-1])
         
-        elif (mem_match := re.match(r"^\$maxcor *([0-9.]*) *MiB *per_core$", line)):
+        mem_match = re.match(r"^\$maxcor *([0-9.]*) *MiB *per_core$", line)
+        if mem_match:
             # Turbomole helpfully prints the units here, but this seems to just be fluff and it's always MiB.
             self.memory_per_cpu = int(float(mem_match.groups()[0]) * 1024 * 1024)
                     
