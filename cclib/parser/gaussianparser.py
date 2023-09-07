@@ -234,7 +234,7 @@ class Gaussian(logfileparser.Logfile):
         elif line[1:6] == "%mem=":
             # The maximum amount of memory requested.
             # We need to do some unit juggling.
-            mem_str = line.strip()
+            mem_str = line.strip().upper()
             # No space is allowed between units, units can probably only be uppercase but convert anyway.
             # Supported units are: 'KB, MB, GB, TB, KW, MW, GW or TW'.
             # TODO: Good opportunity for case here in future.
