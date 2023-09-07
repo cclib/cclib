@@ -107,6 +107,10 @@ class ORCA(logfileparser.Logfile):
             for prop_name in props:
                 setattr(self, prop_name, props[prop_name])
             
+        # If we previously stored the mem per cpu, add the total mem now.
+        if hasattr(self, "mem_per_cpu"):
+            self.metadata['memory_available'] = int(self.mem_per_cpu * self.metadata['num_cpu'])
+            
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -204,6 +208,9 @@ class ORCA(logfileparser.Logfile):
                 # Keywords block
                 if line[0] == '!':
                     keywords += line[1:].split()
+                    
+                elif line[0:8] == "%MaxCore":
+                    self.mem_per_cpu = int(float(line.split()[-1]) * 1e6)
 
                 # Impossible to parse without knowing whether a keyword opens a new block
                 elif line[0] == '%':
@@ -2384,10 +2391,25 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                 # Memory available                       ... 2291 MB
                 # To counter this, we'll always try and store the largest amount available.
                 if split_line[4] == "MB":
-                    memory = int(float(split_line[3]) * 1000 * 1000) * self.metadata['num_cpu']
+                    memory = int(float(split_line[3]) * 1e6) * self.metadata['num_cpu']
                 
-                if memory > self.metadata.get("memory", 0):
-                    self.metadata['memory'] = memory
+                if memory > self.metadata.get("memory_available", 0):
+                    self.metadata['memory_available'] = memory
+                    
+        elif "Maximum memory used throughout the entire" in line:
+            # Memory used, making an educated guess that this is per CPU.
+            # This is probably also always in MB
+            mem_split = line.split()
+            memory = float(mem_split[-2])
+            mem_units = mem_split[-1]
+            
+            if mem_units == "MB":
+                memory *= 1e6
+                
+            memory *= self.metadata['num_cpu']
+            
+            if memory > self.metadata.get("memory_used", 0):
+                self.metadata['memory_used'] = int(memory)
 
         if line[:15] == 'TOTAL RUN TIME:':
             # TOTAL RUN TIME: 0 days 0 hours 0 minutes 11 seconds 901 msec
