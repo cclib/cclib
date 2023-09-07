@@ -210,7 +210,7 @@ class ORCA(logfileparser.Logfile):
                     keywords += line[1:].split()
                     
                 elif line[0:8] == "%MaxCore":
-                    self.mem_per_cpu = int(float(line.split()[-1]) * 1e6)
+                    self.mem_per_cpu = int(float(line.split()[1]) * 1e6)
 
                 # Impossible to parse without knowing whether a keyword opens a new block
                 elif line[0] == '%':
