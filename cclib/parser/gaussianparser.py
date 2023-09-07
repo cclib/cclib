@@ -229,7 +229,47 @@ class Gaussian(logfileparser.Logfile):
             #    interprets GB as gibibytes (1024 x 1024 x 1024 bytes) rather than gigabytes. This has the unfortunate consequence of
             #    Gaussian assigning more memory than you probably expected.
             memory_per_cpu = int(line[line.index("MaxMem="):].split()[1])
-            self.metadata['memory'] = memory_per_cpu * self.metadata['num_cpu']
+            self.metadata['memory_used'] = memory_per_cpu * self.metadata['num_cpu']
+            
+        elif line[1:6] == "%mem=":
+            # The maximum amount of memory requested.
+            # We need to do some unit juggling.
+            mem_str = line.strip()
+            # No space is allowed between units, units can probably only be uppercase but convert anyway.
+            # Supported units are: 'KB, MB, GB, TB, KW, MW, GW or TW'.
+            # TODO: Good opportunity for case here in future.
+            units = mem_str[-2:]
+            raw_mem = int(mem_str[5:-2])
+            # We are converting to bytes.
+            if units == "TB":
+                memory = raw_mem * 1e12
+            
+            elif units == "GB":
+                memory = raw_mem * 1e9
+            
+            elif units == "MB":
+                memory = raw_mem * 1e6
+            
+            elif units == "KB":
+                memory = raw_mem * 1e3
+            
+            elif units == "TW":
+                memory = raw_mem * 8e12
+            
+            elif units == "GW":
+                memory = raw_mem * 8e9
+            
+            elif units == "MW":
+                memory = raw_mem * 8e6
+            
+            elif units == "KW":
+                memory = raw_mem * 8e3
+                
+            else:
+                # No explicit units, default are single words (8-bytes)
+                memory = mem_str[5:] * 8
+                
+            self.metadata['memory_available'] = int(memory)
 
         # This block contains some general information as well as coordinates,
         # which could be parsed in the future:
