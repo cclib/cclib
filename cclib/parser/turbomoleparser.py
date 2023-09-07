@@ -176,9 +176,6 @@ class Turbomole(logfileparser.Logfile):
         if "OpenMP run-time library returned nthreads =" in line:
             self.metadata['num_cpu'] = int(line.split()[-1])
             
-            if hasattr(self, "memory_per_cpu"):
-                self.metadata['memory'] = self.memory_per_cpu * self.metadata['num_cpu']
-            
         elif "$maxcor" in line and "per_core" in line:
             # Turbomole helpfully prints the units here, but this seems to just be fluff and it's always MiB.
             self.memory_per_cpu = int(float(line.split()[1]) * 1024 * 1024)
@@ -1490,6 +1487,10 @@ class Turbomole(logfileparser.Logfile):
         # Set a flag if we stopped part way through an opt.
         if hasattr(self, "optstatus") and self.optstatus[-1] != data.ccData.OPT_DONE:
             self.optstatus[-1] += data.ccData.OPT_UNCONVERGED
+        
+        # Set memory from mem per cpu.
+        if hasattr(self, "memory_per_cpu"):
+            self.metadata['memory_available'] = int(self.memory_per_cpu * self.metadata['num_cpu'])
 
 
 class OldTurbomole(logfileparser.Logfile):
