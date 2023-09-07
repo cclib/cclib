@@ -175,10 +175,10 @@ class Turbomole(logfileparser.Logfile):
         # Performance stuff.
         if "OpenMP run-time library returned nthreads =" in line:
             self.metadata['num_cpu'] = int(line.split()[-1])
-            
-        elif "$maxcor" in line and "per_core" in line:
+        
+        elif (mem_match := re.match(r"^\$maxcor *([0-9.]*) *MiB *per_core$", line)):
             # Turbomole helpfully prints the units here, but this seems to just be fluff and it's always MiB.
-            self.memory_per_cpu = int(float(line.split()[1]) * 1024 * 1024)
+            self.memory_per_cpu = int(float(mem_match.groups()[0]) * 1024 * 1024)
                     
         # The DFT functional.
         # This information is printed by dscf but not in an easily parsable format, so we'll take it from the control file instead...
