@@ -2370,13 +2370,12 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
             self.skip_line(inputfile, 'blank')
             core_energy = float(next(inputfile).split()[3])
             
-        if "*        Program running with" in line  and "parallel MPI-processes     *" in line:
+        if "Program running with" in line  and "parallel MPI-processes" in line:
             # ************************************************************
             # *        Program running with 4 parallel MPI-processes     *
             # *              working on a common directory               *
             # ************************************************************
             self.metadata['num_cpu'] = int(line.split()[4])
-            
             
         elif "Memory available" in line:
             split_line = line.split()
