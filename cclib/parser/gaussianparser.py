@@ -2507,23 +2507,25 @@ class Gaussian(logfileparser.Logfile):
                         else:
                             extract_charges_spins(line,prop)
                         
-        if "Natural Population" in line and line.strip().split()[0] == "Natural" and line.strip().split()[1] == "Population":
+        if "Atom No Charge Core Valence Rydberg Total" in " ".join(line.split()):
             if not hasattr(self, 'atomcharges'):
                 self.atomcharges = {}
             if not hasattr(self, 'atomspins'):
                 self.atomspins = {}
             if "natural" not in self.atomcharges:
-                line1 = next(inputfile)
-                line2 = next(inputfile)
-                if line1.split()[0] == 'Natural' and line2.split()[2] == 'Charge':
-                    dashes = next(inputfile)
-                    charges = []
-                    spins = []
-                    for i in range(self.natom):
-                        nline = next(inputfile)
-                        charges.append(float(nline.split()[2]))
+                # Do we have atom spins (only open shell)?
+                have_spin = line.split()[-1] == "Density"
+
+                dashes = next(inputfile)
+                charges = []
+                spins = []
+                for i in range(self.natom):
+                    nline = next(inputfile)
+                    charges.append(float(nline.split()[2]))
+                    if have_spin:
                         spins.append(float(nline.split()[-1]))
-                    self.atomcharges["natural"] = charges
+                self.atomcharges["natural"] = charges
+                if have_spin:
                     self.atomspins["natural"] = spins
 
         # Combined Hirshfeld/CM5 is different enough that we don't try and
