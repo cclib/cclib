@@ -159,8 +159,6 @@ class ccData:
        "nooccnos":         Attribute(numpy.ndarray,    'TBD',                         'N/A'),
        "nsocoeffs":         Attribute(list,    'TBD',                         'N/A'),
        "nsooccnos":         Attribute(list,    'TBD',                         'N/A'),
-       "oniom_energy":     Attribute(list,             'ONIOM energy',                'optimization:ONIOM'),
-       "oniom_energy_fin": Attribute(float,            'ONIOM energy',                'properties:energy'),
        "optdone":          Attribute(list,             'done',                        'optimization'),
        "optstatus":        Attribute(numpy.ndarray,    'status',                      'optimization'),
        "polarizabilities": Attribute(list,             'polarizabilities',            'N/A'),
