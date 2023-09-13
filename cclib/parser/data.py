@@ -187,7 +187,8 @@ class ccData:
        "vibramans":        Attribute(numpy.ndarray,    'raman',                       'vibrations:intensities'),
        "vibrmasses":       Attribute(numpy.ndarray,    'reduced masses',              'vibrations'),
        "vibsyms":          Attribute(list,             'vibration symmetry',          'vibrations'),
-       "WBO_matrix":       Attribute(numpy.ndarray,    'WBO matrix',                  'properties:NBO'),
+       "bondorders":       Attribute(numpy.ndarray,    'bond orders',                  'properties'),
+
        "zpve":             Attribute(float,            'zero-point correction',       'properties:energies')
     }
 
