@@ -2506,27 +2506,30 @@ class Gaussian(logfileparser.Logfile):
                                 extract_charges_spins(line,prop)
                         else:
                             extract_charges_spins(line,prop)
-                        
-        if "Atom No Charge Core Valence Rydberg Total" in " ".join(line.split()):
-            if not hasattr(self, 'atomcharges'):
-                self.atomcharges = {}
-            if not hasattr(self, 'atomspins'):
-                self.atomspins = {}
-            if "natural" not in self.atomcharges:
-                # Do we have atom spins (only open shell)?
-                have_spin = line.split()[-1] == "Density"
+        
+        if " ".join(line.split()[:2]) == "Natural Population":
+            dashes = next(inputfile)
+            line = next(inputfile)
+            if "Atom No Charge Core Valence Rydberg Total" in " ".join(line.split()):
+                if not hasattr(self, 'atomcharges'):
+                    self.atomcharges = {}
+                if not hasattr(self, 'atomspins'):
+                    self.atomspins = {}
+                if "natural" not in self.atomcharges:
+                    # Do we have atom spins (only open shell)?
+                    have_spin = line.split()[-1] == "Density"
 
-                dashes = next(inputfile)
-                charges = []
-                spins = []
-                for i in range(self.natom):
-                    nline = next(inputfile)
-                    charges.append(float(nline.split()[2]))
+                    dashes = next(inputfile)
+                    charges = []
+                    spins = []
+                    for i in range(self.natom):
+                        nline = next(inputfile)
+                        charges.append(float(nline.split()[2]))
+                        if have_spin:
+                            spins.append(float(nline.split()[-1]))
+                    self.atomcharges["natural"] = charges
                     if have_spin:
-                        spins.append(float(nline.split()[-1]))
-                self.atomcharges["natural"] = charges
-                if have_spin:
-                    self.atomspins["natural"] = spins
+                        self.atomspins["natural"] = spins
 
         # Combined Hirshfeld/CM5 is different enough that we don't try and
         # reuse extract_charges_spins, at least for now.
