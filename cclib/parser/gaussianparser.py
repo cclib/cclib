@@ -288,14 +288,17 @@ class Gaussian(logfileparser.Logfile):
         # Rotational constants (GHZ): ************ 12.73690 12.73690
         # Note: rotational constant will be converted to wavenumber units (1/cm) to standardize across parsers
         elif line.find('Rotational constants (GHZ):') > -1:
-            try:
-                roconst = [float(line.strip().replace(':', ' ').split()[3]),
-                                float(line.strip().replace(':', ' ').split()[4]),
-                                float(line.strip().replace(':', ' ').split()[5])]
-            except ValueError:
-                if line.find('********') > -1:
-                    roconst = [float(line.strip().replace(':', ' ').split()[4]),
-                                    float(line.strip().replace(':', ' ').split()[5])]
+            # Replacing : with ' ' is to handle overflow cases like:
+            #  Rotational constants (GHZ):***************     11.1953814     11.1953785
+            split_line = line.strip().replace(':', ' ').split()
+            roconst = []
+            for value in split_line[-3:]:
+                try:
+                    roconst.append(float(value))
+                
+                except ValueError:
+                    roconst.append(numpy.nan)
+            
             self.append_attribute("rotconsts", roconst)
 
         elif line.find('Rotational temperature ') > -1:
