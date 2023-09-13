@@ -273,8 +273,8 @@ class Gaussian(logfileparser.Logfile):
             if not hasattr(self, 'spinexpect'):
                 self.set_attribute('spinexpect', [])
                 self.set_attribute('spinexpectanni', [])
-            self.extend_attribute('spinexpectanni', float(line.strip().split()[-1]))
-            self.extend_attribute('spinexpect', float(line.strip().split()[-3][:-1]))
+            self.append_attribute('spinexpectanni', float(line.strip().split()[-1]))
+            self.append_attribute('spinexpect', float(line.strip().split()[-3][:-1]))
 
         # Extract symmetry number, rotational constants and rotational temperatures
         elif 'Rotational symmetry number' in line:
