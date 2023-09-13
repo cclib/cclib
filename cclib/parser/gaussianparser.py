@@ -227,11 +227,6 @@ class Gaussian(logfileparser.Logfile):
         # # uM062X/Def2TZVP guess=read geom=check opt=(calcfc,ts,noeigen,maxstep
         # =5) freq=noraman
         # ----------------------------------------------------------------------
-        elif '%mem' in line:
-            mem = line.strip().split('=')[-1]
-
-        elif '%nprocs' in line:
-            nprocs = int(line.strip().split('=')[-1])
 
         elif '#' in line and not hasattr(self, 'keywords_line'):
             keywords_line = ''
