@@ -231,7 +231,7 @@ class Gaussian(logfileparser.Logfile):
             memory_per_cpu = int(line[line.index("MaxMem="):].split()[1])
             self.metadata['memory_used'] = memory_per_cpu * self.metadata['num_cpu']
             
-        elif line[1:6] == "%mem=":
+        elif line[1:6].lower() == "%mem=":
             # The maximum amount of memory requested.
             # We need to do some unit juggling.
             mem_str = line.strip().upper()
