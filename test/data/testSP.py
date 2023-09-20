@@ -746,6 +746,54 @@ class QChemSMDCPCMMetadataTest(QChemSolventMetadataTest, SMDCPCMMetadataTest):
     """Check we can parse implicit solvent data."""
 
 
+class GaussianPerformanceMetadataTest(unittest.TestCase):
+    """Check we can parse CPU/memory metadata."""
+      
+    def testmetadata_cpu(self):
+        """Does metadata have the expected number of CPUs used?"""
+        assert self.data.metadata['num_cpu'] == 1
+    def testmetadata_memory_available(self):
+        """Does metadata have the expected amount of memory?"""
+        # 400 MB
+        assert self.data.metadata['memory_available'] == 400000000
+    
+    def testmetadata_memory_used(self):
+        """Does metadata have the expected amount of memory?"""
+        assert self.data.metadata['memory_used'] == 52428800
+        
+class ORCAPerformanceMetadataTest(unittest.TestCase):
+    """Check we can parse CPU/memory metadata."""
+      
+    def testmetadata_cpu(self):
+        """Does metadata have the expected number of CPUs used?"""
+        assert self.data.metadata['num_cpu'] == 2
+    
+    def testmetadata_memory_available(self):
+        """Does metadata have the expected amount of memory?"""
+        # 400 MB
+        assert self.data.metadata['memory_available'] == 1000000000
+    
+    def testmetadata_memory_used(self):
+        """Does metadata have the expected amount of memory?"""
+        assert self.data.metadata['memory_used'] == 463000000
+        
+class TurbomolePerformanceMetadataTest(unittest.TestCase):
+    """Check we can parse CPU/memory metadata."""
+      
+    def testmetadata_cpu(self):
+        """Does metadata have the expected number of CPUs used?"""
+        assert self.data.metadata['num_cpu'] == 1
+    
+    def testmetadata_memory_available(self):
+        """Does metadata have the expected amount of memory?"""
+        assert self.data.metadata['memory_available'] == 524288000
+    
+    @skipForParser('Turbomole', 'memory used is not available for Turbomole')
+    def testmetadata_memory_used(self):
+        """Does metadata have the expected amount of memory?"""
+        assert self.data.metadata['memory_used'] == 0
+
+
 if __name__ == "__main__":
 
     import sys
