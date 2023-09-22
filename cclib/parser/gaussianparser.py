@@ -419,13 +419,19 @@ class Gaussian(logfileparser.Logfile):
         # G4(0 K)=                 -232.094014 G4 Energy=                  -232.089558
         # G4 Enthalpy=             -232.088614 G4 Free Energy=             -232.121498
 
-        elif line.strip().startswith('E(ZPE)='): #Overwrite DFT ZPE with G4 ZPE
+        elif line.strip().startswith('E(ZPE)='):
             self.zero_point_corr = float(line.strip().split()[1])
+        
         elif line.strip().startswith('G4(0 K)'):
-            self.G4_energy = float(line.strip().split()[2])
-            self.G4_energy -= self.zero_point_corr #Remove G4 ZPE
-            self.G4_energy = utils.convertor(self.G4_energy, "hartree", "eV")
-            self.set_attribute('g4_energy', self.G4_energy)
+            # Store G4 energy, with and without ZPE.
+            if not hasattr(self, "compenergies"):
+                self.compenergies = {}
+            
+            self.compenergies['G4_ZPE'] = utils.convertor(float(line.strip().split()[2]), "hartree", "eV")
+
+            if hasattr(self, "zero_point_corr"):
+                # Also without ZPE.
+                self.compenergies['G4'] = self.compenergies['G4_ZPE'] - utils.convertor(self.zero_point_corr, "hartree", "eV")
 
         # For ONIOM calculations use the extrapolated value rather than SCF value
         elif "ONIOM: extrapolated energy" in line:
