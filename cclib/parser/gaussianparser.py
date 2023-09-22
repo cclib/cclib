@@ -318,10 +318,8 @@ class Gaussian(logfileparser.Logfile):
         # following frequency calculation does not converge (https://gaussian.com/faq3/)
         #     -- Stationary point found.
         if line.find('Stationary point found') > -1:
-            if not hasattr(self, 'times_converged'):
-                self.set_attribute('times_converged', 1)
-            else:
-                self.set_attribute('times_converged', 2)
+            if hasattr(self, "freqconv"):
+                self.freqconv = True            
 
         # Extract NMR data
         #  SCF GIAO Magnetic shielding tensor (ppm):
@@ -1655,7 +1653,7 @@ class Gaussian(logfileparser.Logfile):
         # are used to overwrite default-precision vibdisps at the end of the parse.
         if line[1:14] == "Harmonic freq":  # This matches in both freq block types
             # Indicate that we're doing a freq job.
-            self.freqdone = False
+            self.freqconv = False
 
             self.updateprogress(inputfile, "Frequency Information", self.fupdate)
 

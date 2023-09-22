@@ -176,7 +176,7 @@ class ccData:
        "rotsymno":         Attribute(int,              'symmetry number',             'properties:rotational'),
        "temperature":      Attribute(float,            'temperature',                 'properties'),
        "time":             Attribute(numpy.ndarray,    'time',                        'N/A'),
-       "times_converged":  Attribute(numpy.ndarray,    'times converged',             'optimization'),
+       "freqconv":         Attribute(bool,             'done',                        'vibrations'),
        "transprop":        Attribute(dict,             'electronic transitions',      'transitions'),
        "vibanharms":       Attribute(numpy.ndarray,    'anharmonicity constants',     'vibrations'),
        "vibdisps":         Attribute(numpy.ndarray,    'displacement',                'vibrations'),
