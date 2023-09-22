@@ -228,7 +228,7 @@ class Gaussian(logfileparser.Logfile):
         # =5) freq=noraman
         # ----------------------------------------------------------------------
 
-        elif '#' in line and not hasattr(self, 'keywords_line'):
+        elif '#' in line and "keywords_line" not in self.metadata:
             keywords_line = ''
             while '----------' not in line:
                 keywords_line += line.rstrip("\n")[1:]
