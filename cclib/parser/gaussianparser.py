@@ -435,14 +435,15 @@ class Gaussian(logfileparser.Logfile):
 
         # For ONIOM calculations use the extrapolated value rather than SCF value
         elif "ONIOM: extrapolated energy" in line:
-            if not hasattr(self, 'oniom_energy'):
-                self.oniom_energy = []
-            self.oniom_energy.append(utils.convertor(float(line.strip().split()[4]), "hartree", "eV"))
-            self.oniom_energy_fin = utils.convertor(float(line.strip().split()[4]), "hartree", "eV")
-            self.set_attribute('oniom_energy', self.oniom_energy)
-            self.set_attribute('oniom_energy_fin', self.oniom_energy_fin)
+            if not hasattr(self, "compenergies"):
+                self.compenergies = {}
+            
+            if "ONIOM" not in self.compenergies:
+                self.compenergies["ONIOM"] = []
 
-        if line.strip().startswith("Link1:  Proceeding to internal job step number"):
+            self.compenergies['ONIOM'].append(utils.convertor(float(line.strip().split()[4]), "hartree", "eV"))
+
+        elif line.strip().startswith("Link1:  Proceeding to internal job step number"):
             self.new_internal_job()
             
         # Parse performance info.
