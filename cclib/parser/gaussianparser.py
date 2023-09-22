@@ -256,7 +256,10 @@ class Gaussian(logfileparser.Logfile):
         elif line[1:8] == 'ExpMin=' and "ExpMax=" in line:
             grid_lookup = {1: 'sg1', 2: 'coarse', 4: 'fine', 5: 'ultrafine', 7: 'superfine'}
             IRadAn = int(line.strip().split()[-3])
-            grid = grid_lookup[IRadAn]
+            try:
+                grid = grid_lookup[IRadAn]
+            except KeyError:
+                grid = "Grid {}".format(IRadAn)
             self.metadata["grid"] = grid
 
         # Extract <S**2> before and after spin annihilation
