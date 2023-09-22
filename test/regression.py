@@ -1892,6 +1892,10 @@ def testORCA_ORCA4_2_longer_input_out(logfile):
 def testORCA_ORCA4_2_casscf_out(logfile):
     """ORCA casscf input file (#1044)."""
     assert numpy.isclose(logfile.data.etenergies[0], 28271.0)
+    
+def testORCA_ORCA5_0_ADBNA_Me_Mes_MesCz_log(logfile):
+    """Check we can parse etsyms in difficult cases."""
+    assert hasattr(logfile.data, "etsyms")
 
 
 # PSI 3 #

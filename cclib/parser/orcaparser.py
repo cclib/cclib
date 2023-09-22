@@ -1471,7 +1471,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                     # We need to be careful about how we parse etenergies from these spectrum sections.
                     # First, and in most cases, energies printed here will be the same as those printed in 
                     # previous sections. The energies in cm-1 aught to match exactly to those parsed previously,
-                    # but other units may have rounding errors.
+                    # but other units may have rounding errors. Occasionally even cm-1 does not match exactly.
                     # Secondly, some methods (ROCIS, CASSCF, SOC to name a few) may only print their final excited state
                     # energies in this spectrum section, in which case the energies will not match those previously parsed
                     # (which will be from lower levels of theory that we're not interested in). This means we cannot simply
@@ -1488,7 +1488,7 @@ States  Energy Wavelength    D2        m2        Q2         D2+m2+Q2       D2/TO
                     # May want to use a smarter comparison?
                     elif len(etenergies) == len(self.etenergies) and \
                         all(
-                            [self.etenergies[index] == etenergy for
+                            [round(self.etenergies[index]) == round(etenergy) for
                             index, etenergy in enumerate(etenergies)]
                         ):
                         pass
