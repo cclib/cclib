@@ -163,7 +163,8 @@ class ccData:
        "optstatus":        Attribute(numpy.ndarray,    'status',                      'optimization'),
        "polarizabilities": Attribute(list,             'polarizabilities',            'N/A'),
        "pressure":         Attribute(float,            'pressure',                    'properties'),
-       "rotemp":           Attribute(numpy.ndarray,    'rotational temperatures',     'properties:rotational'),
+       "rottemps":           Attribute(numpy.ndarray,    'rotational temperatures',     'atoms:coords:rotconsts'),
+
        "spinexpectanni":   Attribute(numpy.ndarray,    'S2 after annihilation',       'optimization'),
        "spinexpect":       Attribute(numpy.ndarray,    'S2 before annihilation',      'optimization'),
        "rotconsts":        Attribute(numpy.ndarray,    'rotational constants',        'atoms:coords:rotconsts'),
