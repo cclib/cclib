@@ -264,12 +264,18 @@ class Gaussian(logfileparser.Logfile):
         # <L.S>= 0.000000000000E+00
         # Annihilation of the first spin contaminant:
         # S**2 before annihilation     1.0237,   after     0.2796
-        elif 'S**2 before annihilation' in line:
-            if not hasattr(self, 'spinexpect'):
-                self.set_attribute('spinexpect', [])
-                self.set_attribute('spinexpectanni', [])
-            self.append_attribute('spinexpectanni', float(line.strip().split()[-1]))
-            self.append_attribute('spinexpect', float(line.strip().split()[-3][:-1]))
+        elif 'S**2 before annihilation' in line and 'after' in line:
+            if not hasattr(self, 'spinsquared'):
+                self.set_attribute('spinsquared', {})
+            
+            for spin_type in ["scf_preannihilation", "scf_postannihilation", "scf"]:
+                if spin_type not in self.spinsquared:
+                    self.spinsquared[spin_type] = []
+
+            split_line = line.strip().split()
+            self.spinsquared['scf_preannihilation'].append(float(split_line[-1]))
+            self.spinsquared['scf_postannihilation'].append(float(split_line[-3][:-1]))
+            self.spinsquared['scf'].append(self.spinsquared['scf_postannihilation'][-1])
 
         # Extract symmetry number, rotational constants and rotational temperatures
         elif 'Rotational symmetry number' in line:
