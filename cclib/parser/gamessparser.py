@@ -1371,6 +1371,11 @@ class GAMESS(logfileparser.Logfile):
                 for i in range(self.nbasis - base):  # Fewer lines each time
                     line = next(inputfile)
                     temp = line.split()
+                    if len(temp[1]) == 4:
+                        element = temp[1][0:2]
+                        number = temp[1][2:]
+                        temp[1] = element
+                        temp.insert(2, number)
                     for j in range(4, len(temp)):
                         self.aooverlaps[base + j - 4, i + base] = float(temp[j])
                         self.aooverlaps[i + base, base + j - 4] = float(temp[j])
