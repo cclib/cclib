@@ -253,7 +253,7 @@ class Gaussian(logfileparser.Logfile):
 
         # Extract grid type
         # ExpMin= 9.52D-02 ExpMax= 1.36D+04 ExpMxC= 4.63D+02 IAcc=3 IRadAn=         5 AccDes= 0.00D+00
-        elif line[1:8] == 'ExpMin=':
+        elif line[1:8] == 'ExpMin=' and "ExpMax=" in line:
             grid_lookup = {1: 'sg1', 2: 'coarse', 4: 'fine', 5: 'ultrafine', 7: 'superfine'}
             IRadAn = int(line.strip().split()[-3])
             grid = grid_lookup[IRadAn]
