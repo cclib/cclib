@@ -793,6 +793,16 @@ class TurbomolePerformanceMetadataTest(unittest.TestCase):
         """Does metadata have the expected amount of memory?"""
         assert self.data.metadata['memory_used'] == 0
 
+class GenericG4Test(unittest.TestCase):
+    """Test class for parsing G4 calculations"""
+
+    def testg4energy(self):
+        """Can we correctly parse G4 energy?"""
+        assert abs(self.data.compenergies['G4'] - -2079.44800306) < 0.001
+
+    def testg4zpeenergy(self):
+        """Can we correctly parse G4 energy?"""
+        assert abs(self.data.compenergies['G4_ZPE'] - -2078.87495852) < 0.001
 
 if __name__ == "__main__":
 
