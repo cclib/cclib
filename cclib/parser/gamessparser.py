@@ -1370,15 +1370,16 @@ class GAMESS(logfileparser.Logfile):
 
                 for i in range(self.nbasis - base):  # Fewer lines each time
                     line = next(inputfile)
-                    temp = line.split()
-                    if len(temp[1]) == 4:
-                        element = temp[1][0:2]
-                        number = temp[1][2:]
-                        temp[1] = element
-                        temp.insert(2, number)
-                    for j in range(4, len(temp)):
-                        self.aooverlaps[base + j - 4, i + base] = float(temp[j])
-                        self.aooverlaps[i + base, base + j - 4] = float(temp[j])
+                    ovlp_line = line.split()
+                    # handle case of merged columns of two-character symbol and index
+                    if len(ovlp_line[1]) == 4:
+                        element = ovlp_line[1][0:2]
+                        number = ovlp_line[1][2:]
+                        ovlp_line[1] = element
+                        ovlp_line.insert(2, number)
+                    for j in range(4, len(ovlp_line)):
+                        self.aooverlaps[base + j - 4, i + base] = float(ovlp_line[j])
+                        self.aooverlaps[i + base, base + j - 4] = float(ovlp_line[j])
                 base += 5
 
         # ECP Pseudopotential information
