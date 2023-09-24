@@ -403,19 +403,6 @@ class Gaussian(logfileparser.Logfile):
                     WBO_matrix += WBO_block
             self.bondorders['wiberg'] = WBO_matrix
 
-        # For TD calculations look for SCF energies of the first excited state:
-        # 
-        #  This state for optimization and/or second-order correction.
-        # Total Energy, E(TD-HF/TD-DFT) =  -149.392611305    
-        # Copying the excited state density for this state as the 1-particle RhoCI density.
-        elif 'E(TD-HF/TD-DFT)' in line:
-            if not hasattr(self, 'td_energy'):
-                self.td_energy = []
-            self.td_energy.append(utils.convertor(utils.float(line.strip().split()[-1]), "hartree", "eV"))
-            self.td_energy_fin = utils.convertor(utils.float(line.strip().split()[-1]), "hartree", "eV")
-            self.set_attribute('td_energy', self.td_energy)
-            self.set_attribute('td_energy_fin', self.td_energy_fin)
-
         # For G4 calculations look for G4 energies (Gaussian16a bug prints G4(0 K) as DE(HF)) --Brian modified to work for G16c-where bug is fixed.
         #
         # Temperature=              298.150000 Pressure=                      1.000000
