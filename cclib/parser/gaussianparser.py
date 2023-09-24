@@ -388,20 +388,31 @@ class Gaussian(logfileparser.Logfile):
         # 8.  C  0.0095  0.0115  1.0469  0.0121  0.0038  0.0079  0.0021  0.0000  0.7958
         # 9.  C  0.0024  0.0089  0.7798  0.0096  0.0017  0.0037  0.0074  0.7958  0.0000
         if 'Wiberg bond index matrix' in line:
-            WBO_matrix = []
+            if not hasattr(self, "bondorders"):
+                self.bondorders = {}
+
+            self.bondorders["wiberg"] = {}
+
             while not 'Wiberg bond index,' in line:
                 line = inputfile.next()
+
                 if 'Atom' in line:
+                    # Save headers so we know which atoms are being bonded.
+                    atom_headers = [int(atomno) -1 for atomno in line.split()[1:]]
+
                     line = inputfile.next()
                     line = inputfile.next()
-                    WBO_block = []
+
                     while len(line) > 1:
-                        WBO_block.append(line.split()[2:])
+                        split_line = line.split()
+                        # The first number indicates the bonding atom.
+                        atomno = int(split_line[0][:-1]) -1
+                        
+                        for index, bond_order in enumerate(split_line[2:]):
+                            bond_order = float(bond_order)
+                            self.bondorders["wiberg"][frozenset([atom_headers[index], atomno])] = bond_order
+
                         line = inputfile.next()
-                    WBO_block = numpy.array(WBO_block)
-                    WBO_block = WBO_block.transpose().tolist()
-                    WBO_matrix += WBO_block
-            self.bondorders['wiberg'] = WBO_matrix
 
         # For G4 calculations look for G4 energies (Gaussian16a bug prints G4(0 K) as DE(HF)) --Brian modified to work for G16c-where bug is fixed.
         #
