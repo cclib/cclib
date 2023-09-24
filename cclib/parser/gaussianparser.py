@@ -401,7 +401,7 @@ class Gaussian(logfileparser.Logfile):
                     WBO_block = numpy.array(WBO_block)
                     WBO_block = WBO_block.transpose().tolist()
                     WBO_matrix += WBO_block
-            self.set_attribute('WBO_matrix', WBO_matrix)
+            self.bondorders['wiberg'] = WBO_matrix
 
         # For TD calculations look for SCF energies of the first excited state:
         # 
