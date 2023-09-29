@@ -161,8 +161,6 @@ class ccData:
        "optstatus":        Attribute(numpy.ndarray,    'status',                      'optimization'),
        "polarizabilities": Attribute(list,             'polarizabilities',            'N/A'),
        "pressure":         Attribute(float,            'pressure',                    'properties'),
-       "processors":       Attribute(int,              'processors',                  'metadata'),
-       "qm_program":       Attribute(str,              'QM program',                  'metadata'),
        "rotconsts":        Attribute(numpy.ndarray,    'rotational constants',        'atoms:coords:rotconsts'),
        "scancoords":       Attribute(numpy.ndarray,    'step geometry',               'optimization:scan'),
        "scanenergies":     Attribute(list,             'PES energies',                'optimization:scan'),

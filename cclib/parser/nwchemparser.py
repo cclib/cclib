@@ -60,7 +60,7 @@ class NWChem(logfileparser.Logfile):
                     ] = f"{self.metadata['package_version']}+{revision}"
 
         if "nproc" in line:
-            self.metadata['num_processors'] = line.split()[-1]
+            self.metadata['num_processors'] = int(line.split()[-1])
         if "Memory information" in line:
             self.skip_lines(inputfile,['d','b','heap','stack','global'])
             self.metadata['memory'] = line.split()[-2:]
@@ -633,9 +633,9 @@ class NWChem(logfileparser.Logfile):
             
         # type of dispersion
         if line.strip().find('DFT-D3 Model') > -1:
-            self.metadata['dispersion'] = "D3"
+            self.metadata['dispersion'] = "D3(0)"
         if line.strip().find('DFT-D3BJ Model') > -1:
-            self.metadata['dispersion'] = "D3BJ"
+            self.metadata['dispersion'] = "D3(BJ)"
 
         # The final MO orbitals are printed in a simple list, but apparently not for
         # DFT calcs, and often this list does not contain all MOs, so make sure to
