@@ -63,7 +63,7 @@ class NWChem(logfileparser.Logfile):
             self.metadata['num_processors'] = int(line.split()[-1])
         if "Memory information" in line:
             self.skip_lines(inputfile,['d','b','heap','stack','global'])
-            self.metadata['memory'] = line.split()[-2:]
+            self.metadata['memory'] = int(line.split()[2:])*8
 
 
         # This is printed in the input module, so should always be the first coordinates,
