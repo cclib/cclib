@@ -7,4 +7,4 @@
 
 """A driver for file and file-like objects that creates parsed content from standard chemical representations."""
 
-from cclib.driver.driver import ccdriver
+from cclib.driver.ccdriver import ccDriver
