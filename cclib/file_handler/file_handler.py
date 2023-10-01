@@ -210,6 +210,18 @@ class FileWrapper:
 
         return filename, fileobject
 
+    def __enter__(self):
+        """
+        Enter context.
+        """
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        """
+        Exit context
+        """
+        self.close()
+
     def next(self) -> str:
         """
         Get the next line from this log file.
@@ -247,6 +259,12 @@ class FileWrapper:
         Read one line from this file.
         """
         return next(self)
+
+    def readlines(self) -> typing.List[str]:
+        """
+        Read all the lines from this file.
+        """
+        return list(self)
 
     # TODO: support size parameter.
     def read(self) -> str:
