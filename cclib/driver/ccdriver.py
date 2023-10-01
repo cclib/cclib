@@ -14,7 +14,7 @@ import typing
 import warnings
 from typing import Optional, Union
 
-from cclib.parser import data, logfileparser
+from cclib.parser import data, file_handler
 from cclib.parser.utils import find_package
 
 # todo from cclib.io import cjsonreader
@@ -432,8 +432,8 @@ class ccDriver:
             loglevel - integer corresponding to a log level from the logging module
             logstream - where to output the logging information
         """
-        if not isinstance(source, FileWrapper):
-            source = FileWrapper(source)
+        if not isinstance(source, fileHandler):
+            source = fileHandler(source)
         self.combinator = combinator
         self.ccCollection = ccCollection(combinator)
         self.fileHandler = fileHandler()

@@ -47,7 +47,7 @@ def logerror(error):
 codecs.register_error("logerror", logerror)
 
 
-class FileWrapper:
+class fileHandler:
     """Wrap any supported input file type."""
 
     def __init__(self, *sources) -> None:
@@ -103,7 +103,7 @@ class FileWrapper:
 
     def sort(self, order: list) -> None:
         """
-        Sort the individual files that make up this FileWrapper.
+        Sort the individual files that make up this FileHandler.
 
         order is an ordered list of filenames.
         """
@@ -277,7 +277,7 @@ class FileWrapper:
 
     def seek(self, offset: int, whence: int = 0) -> None:
         if offset != 0 or whence not in (0, 2):
-            raise NotImplementedError("FileWrapper only supports seeking to start or end")
+            raise NotImplementedError("FileHandler only supports seeking to start or end")
 
         if whence == 0:
             self.reset()

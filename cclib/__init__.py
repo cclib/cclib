@@ -22,7 +22,7 @@ as well as example methods that take parsed data as input.
 __version__ = "1.8"
 
 # isort: off
-from cclib import parser, progress, method, bridge, io
+from cclib import parser, progress, method, bridge, io, file_handler, driver
 # isort: on
 
 # The test module can be imported if it was installed with cclib.
