@@ -26,6 +26,8 @@ from cclib import progress
 from cclib import method
 from cclib import bridge
 from cclib import io
+from cclib import file_handler
+from cclib import driver
 
 # The test module can be imported if it was installed with cclib.
 try:
