@@ -322,10 +322,14 @@ class Gaussian(logfileparser.Logfile):
             # Also, in older versions there is bo blank line (G98 regressions),
             # so we need to watch out for leaving the link.
             natom = 0
+            nfrozenatom = 0
             while line.split() and not "Variables" in line and not "Leave Link" in line:
                 natom += 1
+                if line.split()[1] == "-1":
+                    nfrozenatom += 1
                 line = next(inputfile)
             self.set_attribute("natom", natom)
+            self.set_attribute("nfrozenatom", nfrozenatom)
 
         # Continuing from above, there is not always a symbolic matrix, for example
         # if the Z-matrix was in the input file. In such cases, try to match the
@@ -1494,7 +1498,7 @@ class Gaussian(logfileparser.Logfile):
                     disps = []
                     if not hasattr(self, "nqmf"):
                         self.set_attribute("nqmf", self.natom)
-                    for n in range(self.nqmf):
+                    for n in range(self.nqmf - self.nfrozenatom):
                         line = next(inputfile)
                         numbers = [float(s) for s in line[10:].split()]
                         N = len(numbers) // 3
