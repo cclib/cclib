@@ -129,9 +129,9 @@ There are a few conventions when adding a new supported program version to the u
 Regression tests
 ~~~~~~~~~~~~~~~~
 
-Regression tests ensure that bugs, once fixed, stay fixed. These are real-life files that at some point broke a cclib parser, and are stored in folders like ``data/regression/Jaguar/Jaguar6.4``. The files associated with regression tests are not stored stored together with the source code as they are often quite large. A separate repository on GitHub, `cclib-data`_, is used to track these files, and we do not distribute them with any releases.
+Regression tests ensure that bugs, once fixed, stay fixed. These are real-life files that at some point broke a cclib parser and are stored in folders like ``data/regression/Jaguar/Jaguar6.4``. The files associated with regression tests are not stored together with the source code as they are often quite large. A separate repository on GitHub, `cclib-data`_, is used to track these files, and we do not distribute them with any releases.
 
-For every bug found in the parsers, there should be a corresponding regression test that tests this bug stays fixed. The process is automated by `regression.py`_, which runs through all of our test data, both the basic data and regression files, opens them, tries to parse, and runs any relevant regression tests defined for that file. New regression tests are added by creating a function ``testMyFileName_out`` according to the examples at the start of `regression.py`_.
+For every bug found in the parsers, there should be a corresponding regression test that tests if this bug stays fixed. The process is automated by `regression.py`_, which runs through all of our test data, both the basic data and regression files, opens them, tries to parse, and runs any relevant regression tests defined for that file. New regression tests are added by creating a function ``testMyFileName_out`` according to the examples at the start of `regression.py`_.
 
 Using both the unit and regression tests, the line-by-line `test coverage`_ shows which parts of cclib are touched by at least one test. When adding new features and tests, the GitHub Actions `testing script`_ can be run locally to generate the HTML coverage pages and ensure that the tests exercise the feature code.
 
