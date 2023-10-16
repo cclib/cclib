@@ -8,6 +8,7 @@
 
 import io
 import os
+import sys
 import pathlib
 import typing
 from typing import Optional
@@ -15,9 +16,9 @@ import logging
 from typing import Union
 import warnings
 
-from cclib.parser import data
-from cclib.parser import file_handler
-from cclib.parser.utils import find_package
+#from cclib.parser import data
+from cclib.file_handler import FileHandler
+#from cclib.parser.utils import find_package
 
 #todo from cclib.io import cjsonreader
 #todo from cclib.io import cjsonwriter
@@ -40,32 +41,31 @@ from cclib.parser.utils import find_package
 #   (parser, phrases, flag whether we should break)
 triggers_on = [
 
-    (ADF,       ["Amsterdam Density Functional"],                   True),
-    (DALTON,    ["Dalton - An Electronic Structure Program"],       True),
-    (FChk,      ["Number of atoms", "I"],                           True),
-    (GAMESS,    ["GAMESS"],                                         False),
-    (GAMESS,    ["Firefly (PC GAMESS)"],                            True),
-    (GAMESS,    ["GAMESS VERSION"],                                 True),
-    (GAMESSUK,  ["G A M E S S - U K"],                              True),
-    (GAMESSDAT, ["$DATA"],                                          True),
-    (Gaussian,  ["Gaussian, Inc."],                                 True),
-    (Jaguar,    ["Jaguar"],                                         True),
-    (Molcas,    ["MOLCAS"],                                         True),
-    (Molpro,    ["PROGRAM SYSTEM MOLPRO"],                          True),
-    (Molpro,    ["1PROGRAM"],                                       False),
-    (MOPAC,     ["MOPAC20"],                                        True),
-    (NBO,       ["N A T U R A L   A T O M I C   O R B I T A L   A N D"],                  True),
-    (NWChem,    ["Northwest Computational Chemistry Package"],      True),
-    (ORCA,      ["O   R   C   A"],                                  True),
-    (Psi3,      ["PSI3: An Open-Source Ab Initio Electronic Structure Package"],          True),
-    (Psi4,      ["Psi4: An Open-Source Ab Initio Electronic Structure Package"],          True),
-    (QChem,     ["A Quantum Leap Into The Future Of Chemistry"],    True),
-    (Turbomole, ["TURBOMOLE"],                                      True),
+    ("ADF",       ["Amsterdam Density Functional"],                   True),
+    ("DALTON",    ["Dalton - An Electronic Structure Program"],       True),
+    ("FChk",      ["Number of atoms", "I"],                           True),
+    ("GAMESS",    ["GAMESS"],                                         False),
+    ("GAMESS",    ["Firefly (PC GAMESS)"],                            True),
+    ("GAMESS",    ["GAMESS VERSION"],                                 True),
+    ("GAMESSUK",  ["G A M E S S - U K"],                              True),
+    ("GAMESSDAT", ["$DATA"],                                          True),
+    ("Gaussian",  ["Gaussian, Inc."],                                 True),
+    ("Jaguar",    ["Jaguar"],                                         True),
+    ("Molcas",    ["MOLCAS"],                                         True),
+    ("Molpro",    ["PROGRAM SYSTEM MOLPRO"],                          True),
+    ("Molpro",    ["1PROGRAM"],                                       False),
+    ("MOPAC",     ["MOPAC20"],                                        True),
+    ("NBO",       ["N A T U R A L   A T O M I C   O R B I T A L   A N D"],                  True),
+    ("NWChem",    ["Northwest Computational Chemistry Package"],      True),
+    ("ORCA",      ["O   R   C   A"],                                  True),
+    ("Psi4",      ["Psi4: An Open-Source Ab Initio Electronic Structure Package"],          True),
+    ("QChem",     ["A Quantum Leap Into The Future Of Chemistry"],    True),
+    ("Turbomole", ["TURBOMOLE"],                                      True),
 
 ]
 
-# todo triggers_off = [
-# todo 
+triggers_off = [
+
 # todo     (ADF,       ["Amsterdam Density Functional"],                   True),
 # todo     (DALTON,    ["Dalton - An Electronic Structure Program"],       True),
 # todo     (FChk,      ["Number of atoms", "I"],                           True),
@@ -74,7 +74,7 @@ triggers_on = [
 # todo     (GAMESS,    ["GAMESS VERSION"],                                 True),
 # todo     (GAMESSUK,  ["G A M E S S - U K"],                              True),
 # todo     (GAMESSDAT, ["$DATA"],                                          True),
-# todo     (Gaussian,  ["Gaussian, Inc."],                                 True),
+    ("Gaussian",  ["Normal Termination of Gaussian"],                        True),
 # todo     (Jaguar,    ["Jaguar"],                                         True),
 # todo     (Molcas,    ["MOLCAS"],                                         True),
 # todo     (Molpro,    ["PROGRAM SYSTEM MOLPRO"],                          True),
@@ -87,8 +87,8 @@ triggers_on = [
 # todo     (Psi4,      ["Psi4: An Open-Source Ab Initio Electronic Structure Package"],          True),
 # todo     (QChem,     ["A Quantum Leap Into The Future Of Chemistry"],    True),
 # todo     (Turbomole, ["TURBOMOLE"],                                      True),
-# todo 
-# todo ]
+
+]
 
 
 # todo readerclasses = {
@@ -414,11 +414,11 @@ triggers_on = [
 class ccDriver:
     """Driver for cclib. This takes in one or many file or file-like objects. Creates the datastructure ccCollection. Creates the stateful file handler. Handle the processing of a parsing combinator."""
     def __init__(self,
-        source: typing.Union[str, typing.IO, FileWrapper, typing.List[typing.Union[str, typing.IO]]],
+        source: typing.Union[str, typing.IO, FileHandler, typing.List[typing.Union[str, typing.IO]]],
+        combinator = None,
         loglevel: int = logging.ERROR,
         logname: str = "Log",
         logstream=sys.stderr,
-        datatype=ccData_optdone_bool,
         **kwds):
         """Initialise the ccDriver object.
 
@@ -430,23 +430,23 @@ class ccDriver:
             loglevel - integer corresponding to a log level from the logging module
             logstream - where to output the logging information
         """
-        if not isinstance(source, fileHandler):
-            source = fileHandler(source)
-        self.combinator = combinator
-        self.ccCollection = ccCollection(combinator)
-        self.fileHandler = fileHandler()
+        if not isinstance(source, FileHandler):
+            source = FileHandler(source)
+        self._combinator = combinator
+        self._ccCollection = ccCollection(combinator)
+        self._fileHandler = fileHandler()
 
         @property
-        def ccCollection:
-            return self.ccCollection
+        def ccCollection(self):
+            return self._ccCollection
 
         @property
-        def fileHandler:
-            return self.fileHandler
+        def fileHandler(self):
+            return self._fileHandler
 
         @property
-        def combinator:
-            return self.combinator
+        def combinator(self):
+            return self._combinator
 
         def process_combinator(combinator):
             """Process the combinator and populate the ccData object in the ccCollection"""
