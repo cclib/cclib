@@ -11,7 +11,7 @@ import logging
 from typing import Any, Dict, List, Mapping, Optional
 
 from cclib.method import Electrons, orbitals
-from cclib.parser.attribute import Attribute, _attributes
+from cclib.properties.property import Property, _properties
 
 import numpy
 
@@ -100,19 +100,23 @@ class ccData:
             the 11th molecular orbital is the HOMO
     """
 
+    # The expected types for all supported attributes.
+    # The json_key is the key name used for attributes in the CJSON/JSON format
+    # 'TBD' - To Be Decided are the key names of attributes which haven't been included in the cjson format
+
     # The name of all attributes can be generated from the dictionary above.
-    _attrlist = sorted(_attributes.keys())
+    _attrlist = sorted(_properties.keys())
 
     # Arrays are double precision by default, but these will be integer arrays.
     _intarrays = ["atomnos", "coreelectrons", "homos", "optstatus"]
 
-    # Attributes that should be lists of arrays (double precision).
+    # Propertys that should be lists of arrays (double precision).
     _listsofarrays = ["mocoeffs", "moenergies", "moments", "polarizabilities", "scfvalues"]
 
-    # Attributes that should be dictionaries of arrays (double precision).
+    # Propertys that should be dictionaries of arrays (double precision).
     _dictsofarrays = ["atomcharges", "atomspins"]
 
-    # Attributes that should be dictionaries of dictionaries.
+    # Propertys that should be dictionaries of dictionaries.
     _dictsofdicts = ["populations"]
 
     # Possible statuses for optimization steps.
@@ -135,6 +139,8 @@ class ccData:
             attributes - optional dictionary of attributes to load as data
         """
 
+        self._parsed_properties = dict()
+
         if attributes:
             self.setattributes(attributes)
 
@@ -143,7 +149,7 @@ class ccData:
 
         attrlist = [k for k in self._attrlist if hasattr(self, k)]
         for k in attrlist:
-            v = _attributes[k].type
+            v = _properties[k].type
             if v == numpy.ndarray:
                 setattr(self, k, getattr(self, k).tolist())
             elif v == list and k in self._listsofarrays:
@@ -166,7 +172,7 @@ class ccData:
 
         attrlist = [k for k in self._attrlist if hasattr(self, k)]
         for k in attrlist:
-            v = _attributes[k].type
+            v = _properties[k].type
             precision = "d"
             if k in self._intarrays:
                 precision = "i"
@@ -249,13 +255,13 @@ class ccData:
             # attr.typecheck()
 
             val = getattr(self, attr)
-            if type(val) == _attributes[attr].type:
+            if isinstance(val, _properties[attr].type):
                 continue
 
             try:
-                val = _attributes[attr].type(val)
+                val = _properties[attr].type(val)
             except ValueError:
-                args = (attr, type(val), _attributes[attr].type)
+                args = (attr, type(val), _properties[attr].type)
                 raise TypeError(
                     f"attribute {args[0]} is {args[1]} instead of {args[2]} and could not be converted"
                 )
@@ -367,27 +373,27 @@ class ccData:
         return orbitals.Orbitals(self).closed_shell()
 
     def __setattr__(self, name: str, value: Any) -> None:
-        if name in _attributes:
-            self._parsed_attributes[name] = value
+        if name in _properties:
+            self._parsed_properties[name] = value
         else:
             super().__setattr__(name, value)
 
     def __getattr__(self, name: str) -> Any:
         # If we couldn't find an attribute directly on the class, which, for
-        # an Attribute, should actually be a property, then it's not
+        # an Property, should actually be a property, then it's not
         # implemented as a property yet and is in our special attribute
         # container.
         try:
-            return self._parsed_attributes[name]
+            return self._parsed_properties[name]
         except KeyError:
-            raise AttributeError
+            raise PropertyError
 
     @property
     def aonames(self):
         try:
-            return self._parsed_attributes["aonames"]
+            return self._parsed_properties["aonames"]
         except KeyError:
-            raise AttributeError
+            raise PropertyError
 
     # @aonames.setter
     # def aonames(self, val):
@@ -399,7 +405,7 @@ class ccData_optdone_bool(ccData):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        _attributes["optdone"] = Attribute(bool, "done", "optimization")
+        _properties["optdone"] = Property(bool, "done", "optimization")
 
     def setattributes(self, *args, **kwargs):
         invalid = super().setattributes(*args, **kwargs)
