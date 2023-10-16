@@ -16,8 +16,7 @@ import numpy
 from cclib.method import Electrons
 from cclib.method import orbitals
 
-
-Attribute = namedtuple('Attribute', ['type', 'json_key', 'attribute_path'])
+from cclib.parser.attribute import Attribute, _attributes
 
 
 class ccData:
@@ -218,6 +217,8 @@ class ccData:
             attributes - optional dictionary of attributes to load as data
         """
 
+        self._parsed_attributes = dict()
+
         if attributes:
             self.setattributes(attributes)
 
@@ -226,7 +227,7 @@ class ccData:
 
         attrlist = [k for k in self._attrlist if hasattr(self, k)]
         for k in attrlist:
-            v = self._attributes[k].type
+            v = _attributes[k].type
             if v == numpy.ndarray:
                 setattr(self, k, getattr(self, k).tolist())
             elif v == list and k in self._listsofarrays:
@@ -254,7 +255,7 @@ class ccData:
 
         attrlist = [k for k in self._attrlist if hasattr(self, k)]
         for k in attrlist:
-            v = self._attributes[k].type
+            v = _attributes[k].type
             precision = 'd'
             if k in self._intarrays:
                 precision = 'i'
@@ -309,7 +310,7 @@ class ccData:
                       means they are not specified in self._attrlist
         """
 
-        if type(attributes) is not dict:
+        if not isinstance(attributes, dict):
             raise TypeError("attributes must be in a dictionary")
 
         valid = [a for a in attributes if a in self._attrlist]
@@ -332,15 +333,16 @@ class ccData:
 
         self.arrayify()
         for attr in [a for a in self._attrlist if hasattr(self, a)]:
+            # attr.typecheck()
 
             val = getattr(self, attr)
-            if type(val) == self._attributes[attr].type:
+            if isinstance(val, _attributes[attr].type):
                 continue
 
             try:
-                val = self._attributes[attr].type(val)
+                val = _attributes[attr].type(val)
             except ValueError:
-                args = (attr, type(val), self._attributes[attr].type)
+                args = (attr, type(val), _attributes[attr].type)
                 raise TypeError(
                     f"attribute {args[0]} is {args[1]} instead of {args[2]} and could not be converted"
                 )
@@ -450,13 +452,40 @@ class ccData:
     def closed_shell(self) -> bool:
         return orbitals.Orbitals(self).closed_shell()
 
+    def __setattr__(self, name: str, value: Any) -> None:
+        if name in _attributes:
+            self._parsed_attributes[name] = value
+        else:
+            super().__setattr__(name, value)
+
+    def __getattr__(self, name: str) -> Any:
+        # If we couldn't find an attribute directly on the class, which, for
+        # an Attribute, should actually be a property, then it's not
+        # implemented as a property yet and is in our special attribute
+        # container.
+        try:
+            return self._parsed_attributes[name]
+        except KeyError:
+            raise AttributeError
+
+    @property
+    def aonames(self):
+        try:
+            return self._parsed_attributes["aonames"]
+        except KeyError:
+            raise AttributeError
+
+    # @aonames.setter
+    # def aonames(self, val):
+    #     setattr(self, "aonames", val)
+
 
 class ccData_optdone_bool(ccData):
     """This is the version of ccData where optdone is a Boolean."""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._attributes["optdone"] = Attribute(bool, 'done', 'optimization')
+        _attributes["optdone"] = Attribute(bool, 'done', 'optimization')
 
     def setattributes(self, *args, **kwargs):
         invalid = super().setattributes(*args, **kwargs)
