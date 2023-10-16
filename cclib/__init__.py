@@ -20,17 +20,20 @@ as well as example methods that take parsed data as input.
 from cclib._version import __version__
 
 # isort: off
-from cclib import parser, progress, method, bridge, io, file_handler, driver
+# from cclib import parser, progress, method, bridge
+from cclib import io, file_handler, driver, properties
 # isort: on
 
 # The test module can be imported if it was installed with cclib.
-try:
-    from cclib import test
-except ImportError:
-    pass
+# todo try:
+# todo     from cclib import test
+# todo except ImportError:
+# todo     pass
 
 # The objects below constitute our public API. These names will not change
 # over time. Names in the sub-modules will typically also be backwards
 # compatible, but may sometimes change when code is moved around.
-ccopen = io.ccopen
-ccwrite = io.ccwrite
+# ccopen = io.ccopen
+# ccwrite = io.ccwrite
+
+ccDriver = driver.ccDriver

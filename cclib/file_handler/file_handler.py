@@ -45,7 +45,7 @@ def logerror(error):
 codecs.register_error("logerror", logerror)
 
 
-class fileHandler:
+class FileHandler:
     """Wrap any supported input file type."""
 
     def __init__(self, *sources) -> None:
