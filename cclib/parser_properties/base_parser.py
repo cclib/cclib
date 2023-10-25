@@ -1,8 +1,9 @@
+import abc
 from abc import ABC
 
 
 class base_parser(ABC):
     @staticmethod
-    @abstractmethod
+    @abc.abstractmethod
     def parse(file_handler, program, ccdata):
         return
