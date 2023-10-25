@@ -109,7 +109,7 @@ class ccData:
 
 
     # The name of all attributes can be generated from the dictionary above.
-    _attrlist = sorted(_properties.keys())
+    _attrlist = ["scfenergies"]#sorted(_properties.keys())
 
     # Arrays are double precision by default, but these will be integer arrays.
     _intarrays = ['atomnos', 'coreelectrons', 'homos', 'optstatus']
@@ -392,14 +392,17 @@ class ccData:
         try:
             return self._parsed_properties[name]
         except KeyError:
-            raise PropertyError
+            pass
+            #raise PropertyError
 
     @property
     def aonames(self):
         try:
             return self._parsed_properties["aonames"]
-        except KeyError:
-            raise PropertyError
+        except:
+            pass
+        #except KeyError:
+        #    raise PropertyError
 
     # @aonames.setter
     # def aonames(self, val):

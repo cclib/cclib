@@ -37,7 +37,8 @@ class ccCollection:
         # [
         #         [attrparser1, attrparser2, attrparser3, etc]
         # ]
-        assert len(self._combinator) == 1
+        if self._combinator != None:
+            assert len(self._combinator.job_list) == 1
 
     
 
