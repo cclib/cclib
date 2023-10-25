@@ -31,6 +31,7 @@ from cclib import collection
 from cclib import combinator
 from cclib import driver
 from cclib import properties
+from cclib import parser_properties
 
 # The test module can be imported if it was installed with cclib.
 #todo try:
