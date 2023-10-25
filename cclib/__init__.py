@@ -27,6 +27,8 @@ __version__ = "1.8"
 #from cclib import bridge
 from cclib import io
 from cclib import file_handler
+from cclib import collection
+from cclib import combinator
 from cclib import driver
 from cclib import properties
 

@@ -438,7 +438,7 @@ class ccDriver:
         self._fileHandler = source 
 
         @property
-        def ccCollection(self):
+        def cccollection(self):
             return self._ccCollection
 
         @property
@@ -452,4 +452,3 @@ class ccDriver:
         def process_combinator(combinator):
             """Process the combinator and populate the ccData object in the ccCollection"""
             pass
-
