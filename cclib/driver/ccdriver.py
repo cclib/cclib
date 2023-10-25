@@ -16,6 +16,7 @@ import warnings
 from typing import Optional, Union
 
 from cclib.collection import ccCollection
+from cclib.combinator import sp_combinator
 from cclib.file_handler import FileHandler
 
 # from cclib.parser.utils import find_package
@@ -48,7 +49,7 @@ triggers_on = [
     ("GAMESS", ["GAMESS VERSION"], True),
     ("GAMESSUK", ["G A M E S S - U K"], True),
     ("GAMESSDAT", ["$DATA"], True),
-    ("Gaussian", ["Gaussian, Inc."], True),
+    ("gaussian", ["Gaussian, Inc."], True),
     ("Jaguar", ["Jaguar"], True),
     ("Molcas", ["MOLCAS"], True),
     ("Molpro", ["PROGRAM SYSTEM MOLPRO"], True),
@@ -434,22 +435,58 @@ class ccDriver:
         """
         if not isinstance(source, FileHandler):
             source = FileHandler(source)
-        self._combinator = combinator
-        self._ccCollection = ccCollection(combinator)
+        if combinator is not None:
+            self._combinator = combinator
+        else:
+            self._combinator = sp_combinator()
+        self._ccCollection = ccCollection(self._combinator)
         self._fileHandler = source
+        self.identified_program = None
 
-        @property
-        def cccollection(self):
-            return self._ccCollection
+    @property
+    def cccollection(self):
+        return self._ccCollection
 
-        @property
-        def fileHandler(self):
-            return self._fileHandler
+    @property
+    def fileHandler(self):
+        return self._fileHandler
 
-        @property
-        def combinator(self):
-            return self._combinator
+    @property
+    def combinator(self):
+        return self._combinator
 
-        def process_combinator(combinator):
-            """Process the combinator and populate the ccData object in the ccCollection"""
-            pass
+    def process_combinator(self):
+        """Process the combinator and populate the ccData object in the ccCollection"""
+        self.identified_program = None
+        line = self._fileHandler.last_line
+        print(line)
+        while line := self._fileHandler.next():
+            print(line)
+            for program, phrases, do_break in triggers_on:
+                if all([line.lower().find(p.lower()) >= 0 for p in phrases]):
+                    if self.identified_program is None:
+                        self.identified_program = program
+                        print(program)
+                        if do_break:
+                            break
+                    else:
+                        # if a program is within a program this might mean things are ok but we proceed to a child node.. think about how to handle this?
+                        pass
+            for program, phrases, do_break in triggers_off:
+                if all([line.lower().find(p.lower()) >= 0 for p in phrases]):
+                    self.identified_program = None
+                    if do_break:
+                        break
+            if self.identified_program == None:
+                line = next(self._fileHandler)
+                continue
+            # right now combinator is just a list of list of subparsers (one node graph
+            for subparser in self._combinator.job_list[0]:
+                parsed_data = subparser.parse(
+                    self._fileHandler, self.identified_program, self._ccCollection
+                )
+                if parsed_data is not None:
+                    parsed_attribute_name = subparser.__name__
+                    print(parsed_attribute_name, parsed_data)
+                    # self._ccCollection._parsed_data[0].setattr(parsed_attribute_name, parsed_data)
+            line = self._fileHandler.next()
