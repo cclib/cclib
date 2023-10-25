@@ -450,6 +450,27 @@ After the calculate() method is called, the following attributes are available:
 
 .. index::
     single: methods; Accessing additional methods through bridge
+
+
+Nuclear Properties
+------------------
+
+This method calculates various properties of nuclei based on the parsed data.
+
+Calculate the nuclear repulsion energy using the snippet below:
+
+.. code-block:: python
+
+    import cclib
+    from cclib.method import Nuclear
+
+    parser = cclib.io.ccopen("test.log")
+    data = parser.parse()
+    nuclear = Nuclear(data)
+
+    nre = nuclear.repulsion_energy()
+    print(nre)
+
     
 Accessing additional methods through bridge
 -------------------------------------------

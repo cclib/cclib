@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2020, the cclib development team
+# Copyright (c) 2023, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -106,27 +106,25 @@ class FChk(logfileparser.Logfile):
             coords.shape = (1, int(count / 3), 3)
             self.set_attribute('atomcoords', utils.convertor(coords, 'bohr', 'Angstrom'))
 
+        if line[0:10] == "SCF Energy":
+            self.set_attribute(
+                "scfenergies",
+                [utils.convertor(float(line.split()[-1]), "hartree", "eV")]
+            )
+
         if line[0:25] == 'Number of basis functions':
             self.set_attribute('nbasis', int(line.split()[-1]))
 
         if line[0:14] == 'Overlap Matrix':
             count = int(line.split()[-1])
-
-            # triangle matrix, with number of elements in a row:
-            # 1 + 2 + 3 + .... + self.nbasis
-            assert count == (self.nbasis + 1) * self.nbasis / 2
-            raw_overlaps = self._parse_block(inputfile, count, float, 'Overlap Matrix')
-
-            # now turn into matrix
-            overlaps = numpy.zeros((self.nbasis, self.nbasis))
-            raw_index = 0
-            for row in range(self.nbasis):
-                for col in range(row + 1):
-                    overlaps[row, col] = raw_overlaps[raw_index]
-                    overlaps[col, row] = raw_overlaps[raw_index]
-                    raw_index += 1
-
-            self.set_attribute('aooverlaps', overlaps)
+            self.set_attribute(
+                "aooverlaps",
+                utils.block_to_matrix(
+                    numpy.asarray(
+                        self._parse_block(inputfile, count, float, "Overlap Matrix")
+                    )
+                )
+            )
 
         if line[0:31] == 'Number of independent functions':
             self.set_attribute('nmo', int(line.split()[-1]))
@@ -177,6 +175,12 @@ class FChk(logfileparser.Logfile):
 
             self.set_attribute('scfenergies', [utils.convertor(self.scfenergy,'hartree','eV')])
 
+        if line[0:16] == "Mulliken Charges":
+            count = int(line.split()[-1])
+            if not hasattr(self, "atomcharges"):
+                self.atomcharges = {}
+            self.atomcharges["mulliken"] = self._parse_block(inputfile, count, float, "Mulliken Charges")
+
         if line[0:18] == 'Cartesian Gradient':
             count = int(line.split()[-1])
             assert count == self.natom*3
@@ -185,6 +189,10 @@ class FChk(logfileparser.Logfile):
 
             self.set_attribute('grads', gradient)
 
+        if line[0:14] == "Polarizability":
+            polarizability = numpy.asarray(self._parse_block(inputfile, 6, float, "Polarizability"))
+            self.append_attribute("polarizabilities", utils.block_to_matrix(polarizability))
+
         if line[0:25] == 'Cartesian Force Constants':
             count = int(line.split()[-1])
             assert count == (3*self.natom*(3*self.natom+1))/2
@@ -192,6 +200,35 @@ class FChk(logfileparser.Logfile):
             hessian = numpy.array(self._parse_block(inputfile, count, float, 'Hessian'))
 
             self.set_attribute('hessian', utils.block_to_matrix(hessian))
+
+        if line[0:22] == "Number of Normal Modes":
+            self.set_attribute("nmode", int(line.split()[-1]))
+
+        if line[0:6] == "Vib-E2":
+            count = int(line.split()[-1])
+            le2 = self._parse_block(inputfile, count, float, "Vib-E2")
+            assert hasattr(self, "nmode")
+            nmode = self.nmode
+            self.set_attribute("vibfreqs", le2[:nmode])
+            le2 = le2[nmode:]
+            self.set_attribute("vibrmasses", le2[:nmode])
+            le2 = le2[nmode:]
+            self.set_attribute("vibfconsts", le2[:nmode])
+            le2 = le2[nmode:]
+            self.set_attribute("vibirs", le2[:nmode])
+            # The rest should be empty unless Raman or ROA were calculated.
+            le2 = numpy.asarray(le2[nmode:])
+            if numpy.any(le2[:nmode] >= 1.0e-20):
+                self.set_attribute("vibramans", le2[:nmode])
+                le2 = le2[nmode:]
+
+        if line[0:9] == "Vib-Modes":
+            count = int(line.split()[-1])
+            vibdisps = numpy.asarray(self._parse_block(inputfile, count, float, "Vib-Modes"))
+            # indices from fast to slow are [xyz, atom, mode]
+            assert hasattr(self, "nmode")
+            assert count == 3 * self.natom * self.nmode
+            self.set_attribute("vibdisps", vibdisps.reshape(self.nmode, self.natom, 3))
 
         if line[0:13] == 'ETran scalars':
             count = int(line.split()[-1])
@@ -274,6 +311,17 @@ class FChk(logfileparser.Logfile):
             for k in range(7,16*net,16):
                 etmagdips.append(etvalues[k:k+3])
             self.set_attribute('etmagdips',etmagdips)
+
+        if line[0:19] == "Excitation Energies":
+            count = int(line.split()[-1])
+            etenergies = self._parse_block(inputfile, count, float, "Excitation energies")
+            etenergies = [utils.convertor(e, "hartree", "wavenumber") for e in etenergies]
+            self.set_attribute("etenergies", etenergies)
+
+        if line[0:20] == "Oscillator Strengths":
+            count = int(line.split()[-1])
+            etoscs = self._parse_block(inputfile, count, float, "Oscillator Strengths")
+            self.set_attribute("etoscs", etoscs)
 
     def parse_aonames(self, line, inputfile):
         # e.g.: Shell types                                I   N=          28

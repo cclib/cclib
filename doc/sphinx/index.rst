@@ -12,23 +12,24 @@ The goals of cclib are centered around the reuse of data obtained from these pro
 Summary
 -------
 
-The current version is **cclib 1.7.2** (see the changelog_ for what's new). The following programs are supported and systematically tested at the versions given in parentheses:
+The current version is **cclib 1.8** (see the changelog_ for what's new). The following programs are supported and systematically tested at the versions given in parentheses:
 
 - ADF_ (versions 2007 and 2013)
 - DALTON_ (versions 2013 and 2015)
 - Firefly_, formerly known as PC GAMESS (version 8.0)
-- `GAMESS (US)`_ (versions 2014 and 2017)
+- `GAMESS (US)`_ (versions 2017 and 2018)
 - `GAMESS-UK`_ (versions 7.0 and 8.0)
 - Gaussian_ (versions 09 and 16)
 - Jaguar_ (versions 7.0 and 8.3)
 - Molcas_ (version 18.0)
 - Molpro_ (versions 2006 and 2012)
 - MOPAC_ (version 2016)
-- NWChem_ (versions 6.0, 6.1, 6.5 and 6.6)
-- ORCA_ (versions 4.0 and 4.1)
-- Psi4_ (versions 1.0 and 1.2.1)
-- `Q-Chem`_ (versions 4.2 and 5.1)
-- Turbomole_ (versions 5.9 and 7.2)
+- NBO_ (version 7.0)
+- NWChem_ (versions 6.0, 6.1, 6.5, 6.6, 6.8, and 7.0)
+- ORCA_ (versions 4.1, 4.2, and 5.0)
+- Psi4_ (versions 1.2.1, 1.3.1, and 1.7)
+- `Q-Chem`_ (versions 5.1, 5.4, and 6.0)
+- Turbomole_ (versions 5.9, 7.2, 7.4, and 7.5)
 
 Output files from other versions of the above programs may still work, and regression tests are always welcome. The following legacy parsers are still tested as regressions, but not actively maintained:
 
@@ -39,7 +40,7 @@ Many types of output data are parsed by cclib, including atom coordinates, orbit
 How to use cclib
 ----------------
 
-You can download the `source package for cclib 1.7.2`_ or the `current development version`_ (from the `GitHub repository`_). For information on packages available in various Linux distributions, installing the source code and requirements, as well as basic usage, the `How to install`_ is a good place to start.
+You can download the `source package for cclib 1.8`_ or the `current development version`_ (from the `GitHub repository`_). For information on packages available in various Linux distributions, installing the source code and requirements, as well as basic usage, the `How to install`_ is a good place to start.
 
 If you need further help, find a bug, need new features or have any question, please send email to the `mailing list`_ or submit an issue to the `tracker`_.
 
@@ -76,13 +77,14 @@ A record for the latest release is also available on Zenodo_.
 .. _Molcas: https://gitlab.com/Molcas/OpenMolcas
 .. _Molpro: https://www.molpro.net/
 .. _MOPAC: http://openmopac.net/
+.. _NBO: https://nbo7.chem.wisc.edu/
 .. _NWChem: https://nwchemgit.github.io/
 .. _ORCA: https://orcaforum.kofo.mpg.de/app.php/portal
 .. _Psi4: https://psicode.org/
 .. _`Q-Chem`: https://q-chem.com/
 .. _Turbomole: http://www.turbomole-gmbh.com/
 
-.. _`source package for cclib 1.7.2`: https://github.com/cclib/cclib/releases/download/v1.7.2/cclib-1.7.2.zip
+.. _`source package for cclib 1.8`: https://github.com/cclib/cclib/releases/download/v1.8/cclib-1.8.zip
 .. _`current development version`: https://github.com/cclib/cclib/archive/master.zip
 .. _`GitHub repository`: https://github.com/cclib/cclib
 .. _`mailing list`: https://groups.google.com/g/cclib
@@ -92,4 +94,4 @@ A record for the latest release is also available on Zenodo_.
 .. _QMForge: https://qmforge.net/
 .. _literature: https://doi.org/10.1021/jacs.5b05600
 .. _DOI: https://doi.org/10.1002/jcc.20823
-.. _Zenodo: https://zenodo.org/record/1407790
+.. _Zenodo: https://zenodo.org/record/8280878

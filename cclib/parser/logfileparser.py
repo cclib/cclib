@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2020, the cclib development team
+# Copyright (c) 2023, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -32,12 +32,7 @@ class StopParsing(Exception):
     """
 
 class Logfile(ABC):
-    """Abstract class for logfile objects.
-
-    Subclasses defined by cclib:
-        ADF, DALTON, GAMESS, GAMESSUK, Gaussian, Jaguar, Molpro, MOPAC,
-        NWChem, ORCA, Psi, Q-Chem
-    """
+    """Abstract class for logfile objects."""
 
     def __init__(self,
         source: typing.Union[str, typing.IO, FileWrapper, typing.List[typing.Union[str, typing.IO]]],

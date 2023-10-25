@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2023, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -25,6 +25,7 @@ from cclib.parser.jaguarparser import Jaguar
 from cclib.parser.molcasparser import Molcas
 from cclib.parser.molproparser import Molpro
 from cclib.parser.mopacparser import MOPAC
+from cclib.parser.nboparser import NBO
 from cclib.parser.nwchemparser import NWChem
 from cclib.parser.orcaparser import ORCA
 from cclib.parser.psi3parser import Psi3

@@ -2,20 +2,21 @@ Core developers:
 Eric J. Berquist
 Minsik Cho
 Amanda Dumi
-Felipe S. Schneider
+Felipe S. S. Schneider
 Geoff Hutchison
 Karol M. Langner
+Oliver Lee
 Noel M. O'Boyle (retired)
-Adam L. Tenderholt
+Adam L. Tenderholt (retired)
 Shiv Upadhyay
 
 Developers that have added at least ~1K SLOC:
 Sagar Gaur
-Oliver Lee
 Sanjeed Schamnad
 Kunal Sharma
 Casper Steinmann
 Jonathon Vandezande
+Weronika Zak
 
 We would like the thank all the following who have contributed to cclib:
 Nuno Bandeira -- for bug reporting
@@ -34,7 +35,8 @@ Clyde Fare -- for bug reporting and patches
 Elliot Farrar -- for fixes
 froessler -- for cleanups
 Christos Garoufalis -- for bug reporting
-Alessandro Genova - for patches and fixes
+Alessandro Genova -- for patches and fixes
+Victor Hugo Cano Gil -- for the Julia binding
 glideht -- for bug reporting
 Edward Holland -- for patches
 Karen Hemelsoet -- for bug reporting
@@ -49,15 +51,22 @@ Cyrille Lavigne - for documentation
 Greg Magoon -- for bug reporting and patches
 Alex Maldonado -- for fixes
 Scott McKechnie -- for bug reporting
+migatt -- for bug reporting and patches
 mkrompiec -- for contributing test files
 mwykes -- for bug reporting and patches
+NoviciusVulgaris -- for bug reporting
 Alexis Otero-Calvis -- for bug reporting
 Daniele Padula -- for patches
+Drew Parsons -- for bug reporting
 Rob Paton -- for creating and running Jaguar test jobs
+Mark Payne -- for new features
 Martin Peeks -- for patches
+Andrea Pellegrini -- for bug reporting
 Waylon Peng -- for fixes and improvements
 Mark Perri -- for patches
 Felix Plasser -- for fixes, patches and contributing files
+Sai Murali Karthik Putcha -- for new features
+Mariusz Radon -- for bug reporting
 Martin Rahm -- for bug reporting
 Peter Reinholdt - for patches
 Marius Retegan -- for bug reporting
@@ -70,6 +79,7 @@ shijunang -- for patches
 Chikashi Shinagawa -- for patches
 simonaxelrod -- for fixes
 Tiago Silva -- for bug reporting
+LoraSM -- for bug reporting
 James E T Smith -- for fixes
 Pavel Solntsev -- for bug reporting
 srtlg -- for fixes

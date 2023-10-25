@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2023, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -90,6 +90,11 @@ class GenericBasisTest(unittest.TestCase):
                 assert round(abs(p_coeffs[0][0] - self.gbasis_C_2p_func0[0]), 4) == 0
                 assert round(abs(s_coeffs[0][1] - self.gbasis_C_2s_func0[1]), 4) == 0
                 assert round(abs(p_coeffs[0][1] - self.gbasis_C_2p_func0[1]), 4) == 0
+
+    def testatomcoords(self):
+        """Are the dimensions of atomcoords 1 x natom x 3?"""
+        expected_shape = (1, self.data.natom, 3)
+        assert self.data.atomcoords.shape == expected_shape
 
 
 class JaguarBasisTest(GenericBasisTest):

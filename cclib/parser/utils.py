@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2020, the cclib development team
+# Copyright (c) 2023, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
 """Utilities often used by cclib parsers and scripts"""
 
-import importlib
 import re
 from itertools import accumulate
 from math import sqrt
@@ -22,7 +21,8 @@ def find_package(package: str) -> bool:
 
     Derived from https://stackoverflow.com/a/14050282
     """
-    module_spec = importlib.util.find_spec(package)
+    from importlib.util import find_spec
+    module_spec = find_spec(package)
     return module_spec is not None and module_spec.loader is not None
 
 

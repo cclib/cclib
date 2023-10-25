@@ -85,6 +85,11 @@ class NBO(logfileparser.Logfile):
             line = next(inputfile)
             line = next(inputfile)
 
+            naos, atoms, nos, langs, types, occupancies, energies = [], [], [], [], [], [], []
+
+            if not hasattr(self, "populations"):
+                self.populations = dict()
+            
             # Skip empty lines
             while 'Summary of Natural Population Analysis:' not in line:
                 if len(line.strip()) <= 0:
@@ -99,12 +104,27 @@ class NBO(logfileparser.Logfile):
                 occupancy = float(line[33:42])
                 energy    = float(line[47:56])
 
-                # TODO append to attibutes
-                # self.append_attribute('coreelectrons', core)
-                # 
-                # self.set_attribute('charge', sum(natural_charge))
+                naos.append(nao)
+                atoms.append(atom)
+                nos.append(no)
+                langs.append(lang)
+                types.append(type_ao)
+                occupancies.append(occupancy)
+                energies.append(energy)
 
                 line = next(inputfile)
+            
+            npa_dict = {
+                'nao': naos,
+                'atom': atoms,
+                'no': nos,
+                'lang': langs,
+                'type': types,
+                'occupancy': occupancies,
+                'energy': energies
+            }
+
+            self.populations['npa'] = npa_dict
                     
 
         ''' Summary of Natural Population Analysis:
@@ -120,9 +140,14 @@ class NBO(logfileparser.Logfile):
         * Total *  0.00000      1.99998     7.97616    0.02386    10.00000'''
 
         if '  Atom No    Charge' in line:
+
+            if not hasattr(self, "atomcharges"):
+                self.atomcharges = dict()
     
             line = next(inputfile)
             line = next(inputfile)
+
+            charges = []
             
             while '==============' not in line:
                 population_analysis = line.split()
@@ -136,10 +161,14 @@ class NBO(logfileparser.Logfile):
                 total          = float(population_analysis[6])
                                 
                 # TODO append to attibutes
-                #             
-                # self.append_attribute('naos', nao)
+                charges.append(natural_charge)
 
                 line = next(inputfile)
+            
+            self.atomcharges["nbo"] = charges
+
+            if not hasattr(self, "natom"):
+                self.set_attribute('natom', len(self.atomcharges["nbo"]))
 
         #                                  Natural Population
         #  ---------------------------------------------------------
@@ -150,8 +179,8 @@ class NBO(logfileparser.Logfile):
         #  ---------------------------------------------------------
 
         
-        if 'Natural Population' in line:
-            
+        if line[33:51] == 'Natural Population':
+
             line = next(inputfile)
             line = next(inputfile)
             
@@ -265,7 +294,11 @@ class NBO(logfileparser.Logfile):
         #                Total unit  1   10.00000  (100.0000%)
         #               Charge unit  1    0.00000
 
+
         if 'Principal Delocalizations' in line:
+
+            if not hasattr(self, "nbo"):
+                self.nbo = []
 
             while ' Lewis ' not in line:
                 line = next(inputfile)
@@ -274,17 +307,33 @@ class NBO(logfileparser.Logfile):
             
             while '   ---' not in line:
 
-                if '-----' in line:
+                if '-----' in line or len(line[7:28].strip()) < 1:
                     line = next(inputfile)
+                    continue
                 
                 nao       = line[7:28].strip()
                 occupancy = float(line[30:40].strip())
                 energy    = float(line[40:52].strip())
 
-                geminal, vicinal, remote = None, None, None
+                # TODO
+                # geminal, vicinal, remote = None, None, None
 
-                if len(line) > 52: geminal = line[53:58]
-                if len(line) > 58: vicinal = line[59:64]
-                if len(line) > 62: remote  = line[65:70]
+                # if len(line) > 52: geminal = line[53:58]
+                # if len(line) > 58: vicinal = line[59:64]
+                # if len(line) > 62: remote  = line[65:70]
+
+                nbo_dict = {
+                    'nao'      : nao,
+                    'occupancy': occupancy,
+                    'energy'   : energy,
+                    # TODO
+                    # 'delocalizations': {
+                    #     'geminal': geminal,
+                    #     'vicinal': vicinal,
+                    #     'remote' : remote
+                    # }
+                }
+
+                self.append_attribute('nbo', nbo_dict)
                     
                 line = next(inputfile)

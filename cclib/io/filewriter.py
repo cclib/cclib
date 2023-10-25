@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2018, the cclib development team
+# Copyright (c) 2023, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -95,18 +95,29 @@ class Writer(ABC):
 
     def _make_openbabel_from_ccdata(self):
         """Create Open Babel and Pybel molecules from ccData."""
+        logger = logging.getLogger("cclib")
+        if not hasattr(self.ccdata, "atomcoords"):
+            logger.warning("ccdata object does not have atomic coordinates, setting to None")
+            _atomcoords = None
+        else:
+            _atomcoords = self.ccdata.atomcoords
+        if not hasattr(self.ccdata, "atomnos"):
+            logger.warning("ccdata object does not have atomic numbers, setting to None")
+            _atomnos = None
+        else:
+            _atomnos = self.ccdata.atomnos
         if not hasattr(self.ccdata, 'charge'):
-            logging.getLogger("cclib").warning("ccdata object does not have charge, setting to 0")
+            logger.warning("ccdata object does not have charge, setting to 0")
             _charge = 0
         else:
             _charge = self.ccdata.charge
         if not hasattr(self.ccdata, 'mult'):
-            logging.getLogger("cclib").warning("ccdata object does not have spin multiplicity, setting to 1")
+            logger.warning("ccdata object does not have spin multiplicity, setting to 1")
             _mult = 1
         else:
             _mult = self.ccdata.mult
-        obmol = makeopenbabel(self.ccdata.atomcoords,
-                              self.ccdata.atomnos,
+        obmol = makeopenbabel(atomcoords=_atomcoords,
+                              atomnos=_atomnos,
                               charge=_charge,
                               mult=_mult)
         if self.jobfilename is not None:

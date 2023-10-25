@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2020, the cclib development team
+# Copyright (c) 2023, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -198,6 +198,9 @@ class ccData:
 
     # Attributes that should be dictionaries of arrays (double precision).
     _dictsofarrays = ["atomcharges", "atomspins"]
+    
+    # Attributes that should be dictionaries of dictionaries.
+    _dictsofdicts = ['populations']
 
     # Possible statuses for optimization steps.
     # OPT_UNKNOWN is the default and means optimization is in progress.
@@ -236,6 +239,19 @@ class ccData:
                 items = getattr(self, k).items()
                 pairs = [(key, val.tolist()) for key, val in items]
                 setattr(self, k, dict(pairs))
+            elif v == dict and k in self._dictsofdicts:
+                items = getattr(self, k).items()
+                pairs = [
+                    (
+                        key,
+                        {
+                            subkey: subval.tolist()
+                        }
+                    )
+                    for key, val in items
+                    for subkey, subval in val.items()
+                ]
+                setattr(self, k, dict(pairs))
 
     def arrayify(self) -> None:
         """Converts appropriate attributes to arrays or lists/dicts of arrays."""
@@ -253,6 +269,21 @@ class ccData:
             elif v == dict and k in self._dictsofarrays:
                 items = getattr(self, k).items()
                 pairs = [(key, numpy.array(val, precision)) for key, val in items]
+                setattr(self, k, dict(pairs))
+            elif v == dict and k in self._dictsofdicts:
+                items = getattr(self, k).items()
+                pairs = [
+                    (
+                        key,
+                        {
+                            subkey: numpy.array(subval, precision)
+                                    if isinstance(subval, (int, float))
+                                    else numpy.array(subval)
+                        }
+                    )
+                    for key, val in items
+                    for subkey, subval in val.items()
+                ]
                 setattr(self, k, dict(pairs))
 
     def getattributes(self, tolists: bool = False) -> Dict[str, Any]:

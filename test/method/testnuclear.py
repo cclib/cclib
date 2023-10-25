@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017, the cclib development team
+# Copyright (c) 2023, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -74,8 +74,8 @@ class NuclearTest(unittest.TestCase):
             output = f.read()
         line = re.search('Nuclear Repulsion Energy = .* hartrees', output).group()
         nre = float(line.split()[4])
-        nre = utils.convertor(nre, 'Angstrom', 'bohr')
-        assert round(abs(nuclear.repulsion_energy() - nre), 7) == 0
+        nre = utils.convertor(nre, 'hartree', 'eV')
+        assert round(abs(nuclear.repulsion_energy() - nre), 5) == 0
 
     def test_principal_moments_of_inertia(self) -> None:
         """Testing principal moments of inertia and the principal axes for one

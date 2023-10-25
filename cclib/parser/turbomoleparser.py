@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2020, the cclib development team
+# Copyright (c) 2023, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -65,6 +65,9 @@ class Turbomole(logfileparser.Logfile):
         self.hours_regex = re.compile(r"([0-9.]*) hours")
         self.minutes_regex = re.compile(r"([0-9.]*) minutes")
         self.seconds_regex = re.compile(r"([0-9.]*) seconds")
+        
+        # Assume we're using one thread if we're not told otherwise.
+        self.metadata['num_cpu'] = 1
     
     @classmethod
     def sort_input(self, file_names: typing.List[str]) -> typing.List:
@@ -108,7 +111,6 @@ class Turbomole(logfileparser.Logfile):
             sorted_list.extend(unknown_files)
         
         return sorted_list
-        
 
     def __str__(self):
         """Return a string representation of the object."""
@@ -169,6 +171,15 @@ class Turbomole(logfileparser.Logfile):
         if line[3:11] == "nbf(AO)=":
             nmo = int(line.split('=')[1])
             self.set_attribute('nbasis', nmo)
+            
+        # Performance stuff.
+        if "OpenMP run-time library returned nthreads =" in line:
+            self.metadata['num_cpu'] = int(line.split()[-1])
+        
+        mem_match = re.match(r"^\$maxcor *([0-9.]*) *MiB *per_core$", line)
+        if mem_match:
+            # Turbomole helpfully prints the units here, but this seems to just be fluff and it's always MiB.
+            self.memory_per_cpu = int(float(mem_match.groups()[0]) * 1024 * 1024)
                     
         # The DFT functional.
         # This information is printed by dscf but not in an easily parsable format, so we'll take it from the control file instead...
@@ -1477,6 +1488,10 @@ class Turbomole(logfileparser.Logfile):
         # Set a flag if we stopped part way through an opt.
         if hasattr(self, "optstatus") and self.optstatus[-1] != data.ccData.OPT_DONE:
             self.optstatus[-1] += data.ccData.OPT_UNCONVERGED
+        
+        # Set memory from mem per cpu.
+        if hasattr(self, "memory_per_cpu"):
+            self.metadata['memory_available'] = int(self.memory_per_cpu * self.metadata['num_cpu'])
 
 
 class OldTurbomole(logfileparser.Logfile):
