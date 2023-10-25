@@ -2,4 +2,11 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
-from cclib.combinator.combinator import combinator, sp_combinator
+import abc
+
+
+class base_parser(abc.ABC):
+    @staticmethod
+    @abc.abstractmethod
+    def parse(file_handler, program, ccdata):
+        return

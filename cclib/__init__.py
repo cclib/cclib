@@ -21,7 +21,7 @@ from cclib._version import __version__
 
 # isort: off
 # from cclib import parser, progress, method, bridge
-from cclib import io, file_handler, collection, combinator, driver, properties
+from cclib import io, file_handler, collection, combinator, driver, properties, parser_properties
 # isort: on
 
 # The test module can be imported if it was installed with cclib.
