@@ -6,18 +6,17 @@ from cclib.parser import logfileparser, utils
 import numpy
 
 
-class XTB(logfileparser.Logfile):
+class xTB(logfileparser.Logfile):
     def __init__(self, *args, **kwargs):
-        # Call the __init__ method of the superclass
-        super(XTB, self).__init__(logname="XTB", *args, **kwargs)
+        super().__init__(logname="xTB", *args, **kwargs)
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "XTB log file %s" % (self.filename)
+        return "xTB log file %s" % (self.filename)
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'XTB("%s")' % (self.filename)
+        return 'xTB("%s")' % (self.filename)
 
     def normalisesym(self, label):
         """xTB does not require normalizing symmetry labels."""
