@@ -18,6 +18,7 @@ import warnings
 
 #from cclib.parser import data
 from cclib.file_handler import FileHandler
+from cclib.collection import ccCollection
 #from cclib.parser.utils import find_package
 
 #todo from cclib.io import cjsonreader
@@ -434,7 +435,7 @@ class ccDriver:
             source = FileHandler(source)
         self._combinator = combinator
         self._ccCollection = ccCollection(combinator)
-        self._fileHandler = fileHandler()
+        self._fileHandler = source 
 
         @property
         def ccCollection(self):
