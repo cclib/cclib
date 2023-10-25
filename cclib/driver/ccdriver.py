@@ -439,7 +439,7 @@ class ccDriver:
         self._fileHandler = source
 
         @property
-        def ccCollection(self):
+        def cccollection(self):
             return self._ccCollection
 
         @property
