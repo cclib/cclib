@@ -6,6 +6,7 @@
 """Classes and tools for storing and handling parsed data"""
 
 import logging
+from collections import namedtuple
 from typing import Any, Dict, List, Mapping, Optional
 
 from cclib.method import Electrons, orbitals
@@ -103,7 +104,7 @@ class ccData:
     # 'TBD' - To Be Decided are the key names of attributes which haven't been included in the cjson format
 
     # The name of all attributes can be generated from the dictionary above.
-    _attrlist = sorted(_properties.keys())
+    _attrlist = ["scfenergies"]  # sorted(_properties.keys())
 
     # Arrays are double precision by default, but these will be integer arrays.
     _intarrays = ["atomnos", "coreelectrons", "homos", "optstatus"]
@@ -225,15 +226,13 @@ class ccData:
                       means they are not specified in self._attrlist
         """
 
-        if type(attributes) is not dict:
+        if not isinstance(attributes, dict):
             raise TypeError("attributes must be in a dictionary")
 
         valid = [a for a in attributes if a in self._attrlist]
         invalid = [a for a in attributes if a not in self._attrlist]
 
         for attr in valid:
-            # `attr` is the string/name
-            print(attr, type(attributes[attr]), attributes[attr])
             setattr(self, attr, attributes[attr])
 
         self.arrayify()
@@ -384,14 +383,17 @@ class ccData:
         try:
             return self._parsed_properties[name]
         except KeyError:
-            raise PropertyError
+            pass
+            # raise PropertyError
 
     @property
     def aonames(self):
         try:
             return self._parsed_properties["aonames"]
-        except KeyError:
-            raise PropertyError
+        except:
+            pass
+        # except KeyError:
+        #    raise PropertyError
 
     # @aonames.setter
     # def aonames(self, val):
