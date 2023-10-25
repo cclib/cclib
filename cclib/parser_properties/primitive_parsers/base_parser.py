@@ -2,7 +2,11 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
+from abc import ABC
 
-"""A hieararchical storage for parsed chemical data."""
 
-from cclib.collection.collection import ccCollection
+class base_parser(ABC):
+    @staticmethod
+    @abstractmethod
+    def parse(file_handler, program, ccdata):
+        return

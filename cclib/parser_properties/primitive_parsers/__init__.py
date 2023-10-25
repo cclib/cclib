@@ -2,7 +2,4 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
-
-"""A hieararchical storage for parsed chemical data."""
-
-from cclib.collection.collection import ccCollection
+from cclib.primitive_parsers.sp_parser import base_parser, sp_parser

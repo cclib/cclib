@@ -222,6 +222,13 @@ class FileHandler:
         """
         self.close()
 
+    def virtual_next(self):
+        """
+        For use with parsers to handle parsing
+        through a block of text without changing the state of fileHandler
+        """
+        self.virtual_file_pointer += 1
+
     def next(self) -> str:
         """
         Get the next line from this log file.
