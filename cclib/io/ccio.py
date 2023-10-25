@@ -37,7 +37,7 @@ from cclib.parser.psi3parser import Psi3
 from cclib.parser.psi4parser import Psi4
 from cclib.parser.qchemparser import QChem
 from cclib.parser.turbomoleparser import Turbomole
-from cclib.parser.xtbparser import XTB
+from cclib.parser.xtbparser import xTB
 from cclib.parser.logfilewrapper import FileWrapper
 
 from cclib.io import cjsonreader
@@ -90,7 +90,7 @@ triggers = [
     (Psi4,      ["Psi4: An Open-Source Ab Initio Electronic Structure Package"],          True),
     (QChem,     ["A Quantum Leap Into The Future Of Chemistry"],    True),
     (Turbomole, ["TURBOMOLE"],                                      True),
-    (XTB,       ["x T B"],                                          True),
+    (xTB,       ["x T B"],                                          True),
 
 ]
 
