@@ -13,9 +13,10 @@ import typing
 import warnings
 from typing import Optional, Union
 
+from cclib.collection import ccCollection
 from cclib.file_handler import FileHandler
-from cclib.parser import data, file_handler
-from cclib.parser.utils import find_package
+
+# from cclib.parser.utils import find_package
 
 # todo from cclib.io import cjsonreader
 # todo from cclib.io import cjsonwriter
@@ -433,7 +434,7 @@ class ccDriver:
             source = FileHandler(source)
         self._combinator = combinator
         self._ccCollection = ccCollection(combinator)
-        self._fileHandler = fileHandler()
+        self._fileHandler = source
 
         @property
         def ccCollection(self):
