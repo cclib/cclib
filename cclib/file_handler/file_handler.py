@@ -222,12 +222,44 @@ class FileHandler:
         """
         self.close()
 
+    def virtual_set(self):
+        """
+        For use with property parsers to handle parsing
+        through a block of text without changing the state of fileHandler.
+
+        Sets the virtual_file_pointer to the current file_pointer
+        """
+        self.virtual_reset_position = self.files[self.file_pointer].tell()
+
+    def virtual_reset(self):
+        """
+        For use with property parsers to handle parsing
+        through a block of text without changing the state of fileHandler.
+
+        Sets the virtual_file_pointer to the current file_pointer
+        """
+        if self.virtual_reset_position is None:
+            raise RuntimeError("virtual_set() must be called before reset and virtual_next")
+        self.files[self.file_pointer].seek(self.virtual_reset_position)
+        self.virtual_reset_position = None
+
     def virtual_next(self):
         """
-        For use with parsers to handle parsing
+        For use with property parsers to handle parsing
         through a block of text without changing the state of fileHandler
+
+        virtual_next will _not_ advance to the next file
         """
-        self.virtual_file_pointer += 1
+        if self.virtual_reset_position is None:
+            raise RuntimeError("virtual_set() must be called before reset and virtual_next")
+        try:
+            line = next(self.files[self.file_pointer])
+            self.last_lines.append(line)
+            self.pos += len(line)
+            return line
+        except:
+            # possibly raise a warning? but we are ok just reaching the end of a file for a subparser parsing
+            return
 
     def next(self) -> str:
         """
