@@ -3,20 +3,23 @@ from itertools import groupby
 
 from cclib.parser import logfileparser
 
-import numpy
+import numpy as np
 
 
 class XTB(logfileparser.Logfile):
+
+    """An output parser for the xTB code"""
+
     def __init__(self, *args, **kwargs):
         super().__init__(logname="xTB", *args, **kwargs)
 
     def __str__(self):
         """Return a string representation of the object."""
-        return "xTB log file %s" % (self.filename)
+        return f"xTB log file {self.filename}"
 
     def __repr__(self):
         """Return a representation of the object."""
-        return 'xTB("%s")' % (self.filename)
+        return f'xTB("{self.filename}")'
 
     def normalisesym(self, label):
         """xTB does not require normalizing symmetry labels."""
@@ -34,7 +37,7 @@ class XTB(logfileparser.Logfile):
 
     def extract(self, inputfile, line):
         # Extract xtb version
-        if "* xtb version" == line.strip()[:13]:
+        if line.strip()[:13] == "* xtb version":
             version = line.split()[3]
             self.metadata["legacy_package_version"] = version
 
@@ -52,16 +55,16 @@ class XTB(logfileparser.Logfile):
         #   spin                       :                   0.0
         #   first test random number   :      0.87181443679343
 
-        if "coordinate file" == line.strip()[:15]:
+        if line.strip()[:15] == "coordinate file":
             self.metadata["coord_type"] = line.split()[3].split(".")[-1].lower()
 
         # Grab total charge
-        if "charge" == line.strip()[:6]:
+        if line.strip()[:6] == "charge":
             charge = int(line.split()[2])
             self.set_attribute("charge", charge)
 
         # Multiplicity = Spin + 1
-        if "spin" == line.strip()[:4]:
+        if line.strip()[:4] == "spin":
             spin = float(line.split()[2]) + 1
             self.set_attribute("mult", spin)
 
@@ -82,7 +85,7 @@ class XTB(logfileparser.Logfile):
         #
         #   *** GEOMETRY OPTIMIZATION CONVERGED AFTER 1 ITERATIONS ***
 
-        if "CYCLE" == line.replace(".", "").strip()[:5]:
+        if line.replace(".", "").strip()[:5] == "CYCLE":
             scfenergies = []
             while (
                 line.strip()[4:41] != "GEOMETRY OPTIMIZATION CONVERGED AFTER"
@@ -137,7 +140,7 @@ class XTB(logfileparser.Logfile):
         #  15  1  1  0  0  0  0
         #  18 14  1  0  0  0  0
         # M  END
-        if "final structure" == line.strip()[:15]:
+        if line.strip()[:15] == "final structure":
             self.skip_line(inputfile, "=")
 
             if self.metadata["coord_type"] == "xyz":
@@ -159,7 +162,7 @@ class XTB(logfileparser.Logfile):
                 atomnos = []
                 atomcoords = []
                 # Ending criteria for sdf\mol is the END at the end of the coord block
-                while "END" != line.strip()[-3:]:
+                while line.strip()[-3:] != "END":
                     # Atoms block start with 3 blank spaces, bonds block starts with 1
                     if line[:3] == "   ":
                         x, y, z, atom = line.split()[:4]
@@ -169,9 +172,6 @@ class XTB(logfileparser.Logfile):
                 self.set_attribute("natom", len(atomnos))
                 self.set_attribute("atomnos", atomnos)
                 self.set_attribute("atomcoords", atomcoords)
-
-            else:
-                pass
 
         # Get Molecular Orbitals energies and HOMO index
         # xTB trunctaes the MO list so we need to take care of that.
@@ -214,7 +214,7 @@ class XTB(logfileparser.Logfile):
         #          Fermi-level           -0.3536781 Eh           -9.6241 eV
         #
 
-        if "* Orbital Energies and Occupations" == line.strip():
+        if line.strip() == "* Orbital Energies and Occupations":
             # Skip 4 lines to get to the table
             line = next(inputfile)
             line = next(inputfile)
@@ -278,7 +278,7 @@ class XTB(logfileparser.Logfile):
                 first_mo = int(monumbers[fixed_idx - 1])
                 last_mo = int(monumbers[fixed_idx + 1])
                 missing_mos_num = last_mo - first_mo - 1
-                na_list = [numpy.nan] * missing_mos_num
+                na_list = [np.nan] * missing_mos_num
 
                 if mooccnos[0][fixed_idx - 1] == 2:
                     twos_list = [2.0] * missing_mos_num
@@ -290,7 +290,7 @@ class XTB(logfileparser.Logfile):
                     )
                 monumbers = (
                     monumbers[:fixed_idx]
-                    + list(numpy.arange(first_mo + 1, last_mo))
+                    + list(np.arange(first_mo + 1, last_mo))
                     + monumbers[fixed_idx + 1 :]
                 )
                 moenergies[0] = moenergies[0][:fixed_idx] + na_list + moenergies[0][fixed_idx + 1 :]
@@ -308,7 +308,7 @@ class XTB(logfileparser.Logfile):
         # 17   1 H        0.927     0.059     2.210     2.325
         # 18   1 H        0.926     0.066     2.131     2.283
         #
-        if "#   Z" == line.strip()[:5]:
+        if line.strip()[:5] == "#   Z":
             line = next(inputfile)
             atom_convcn = []
             atom_q = []
@@ -361,7 +361,7 @@ class XTB(logfileparser.Logfile):
         #  ---------------------------------------------------------------------------
         #
 
-        if "Wiberg/Mayer (AO) data." == line.strip():
+        if line.strip() == "Wiberg/Mayer (AO) data.":
             # Skip 6 lines to get to the first line of data
             line = next(inputfile)
             line = next(inputfile)
@@ -378,7 +378,6 @@ class XTB(logfileparser.Logfile):
             ):
                 if line[5] != " ":
                     line_split = line.strip().split()
-                    new_atom_index = int(line_split[0]) - 1
                     wbo_total = float(line_split[3])
 
                     wbo.append([wbo_total])
@@ -415,23 +414,23 @@ class XTB(logfileparser.Logfile):
         #   - f(-)
         #   - f(0)
 
-        if "#        f(+)     f(-)     f(0)" == line.strip():
+        if line.strip() == "#        f(+)     f(-)     f(0)":
             line = next(inputfile)
             atom_fp = []
             atom_fn = []
             atom_fz = []
-            for i in range(self.natom):
+            for _ in range(self.natom):
                 try:
                     atom_fp.append(float(line[9:19]))
-                except:
+                except Exception:
                     atom_fp.append(-1000000.0)
                 try:
                     atom_fn.append(float(line[19:28]))
-                except:
+                except Exception:
                     atom_fn.append(-1000000.0)
                 try:
                     atom_fz.append(float(line[28:]))
-                except:
+                except Exception:
                     atom_fz.append(1000000.0)
                 line = next(inputfile)
 
@@ -467,16 +466,16 @@ class XTB(logfileparser.Logfile):
                 lmo_type = split[1]
                 try:
                     lmo_fii = float(split[2])
-                except:
+                except Exception:
                     lmo_fii = split[2]
                 try:
                     lmo_ncent = float(split[3])
-                except:
+                except Exception:
                     lmo_ncent = split[3]
 
                 lmo_cont = split[7:]
                 # if lmo_type in ['pi','LP']:
-                for i in range(int(len(lmo_cont) / 2)):
+                for i in range(len(lmo_cont) // 2):
                     if (
                         (lmo_type == "pi" and float(lmo_cont[2 * i - 1]) > 0.3)
                         or (lmo_type == "LP" and float(lmo_cont[2 * i - 1]) > 0.7)
@@ -504,9 +503,7 @@ class XTB(logfileparser.Logfile):
             ):
                 if key not in keys_list:
                     keys_list.append(key)
-                    temp_list = []
-                    for k in group:
-                        temp_list.append(k)
+                    temp_list = list(group)
                     # atom_cont = max(temp_list, key = lambda x: x['Contribution'])['Contribution']
                     atom_cont = sum(d["Contribution"] for d in temp_list) / len(temp_list)
                     # atom_fii = max(temp_list, key = lambda x: x['Fii/eV'])['Fii/eV']
@@ -519,5 +516,5 @@ class XTB(logfileparser.Logfile):
             self.atomprop["lmo"] = lmo_list_cleaned
 
         # find if ended successfuly
-        if "* finished run on" == line.strip()[:17]:
+        if line.strip()[:17] == "* finished run on":
             self.metadata["success"] = True
