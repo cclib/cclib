@@ -86,7 +86,7 @@ triggers = [
     (Psi4, ["Psi4: An Open-Source Ab Initio Electronic Structure Package"], True),
     (QChem, ["A Quantum Leap Into The Future Of Chemistry"], True),
     (Turbomole, ["TURBOMOLE"], True),
-    (xTB, ["x T B"], True),
+    (XTB, ["x T B"], True),
 ]
 
 readerclasses = {"cjson": cjsonreader.CJSON, "json": cjsonreader.CJSON, "xyz": xyzreader.XYZ}
