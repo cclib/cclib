@@ -1,6 +1,6 @@
 import re
 from itertools import groupby
-from typing import List, Optional
+from typing import List, Literal, Optional, Tuple
 
 from cclib.parser import logfileparser
 
@@ -134,9 +134,11 @@ class XTB(logfileparser.Logfile):
         geom_energy_match = re.search(r"\*\s+total energy\s+:\s+([-+]?\d+\.\d+)", line)
         return float(geom_energy_match.group(1)) if geom_energy_match else None
 
-    def _extract_final_structure(self, line: str) -> Optional[str]:
+    def _extract_symbol_coords(
+        self, line: str, mode: Literal["xyz", "mol", "sdf"] = "xyz"
+    ) -> Optional[Tuple[str, List[float, float, float]]]:
         """
-        Extract the final structure for a geometry optimization.
+        Extract the symbol and X, Y, Z coordinates.
 
         For XYZ files:
 
@@ -173,6 +175,18 @@ class XTB(logfileparser.Logfile):
          18 14  1  0  0  0  0
         M  END
         """
+        if mode == "xyz":
+            symbol_coords_match = re.search(r"[A-Z][a-z]?+\s+([-+]?\d+\.\d+\s*){3}", line)
+            if symbol_coords_match:
+                symbol, x, y, z = symbol_coords_match.group(0).split()
+                return symbol, [float(x), float(y), float(z)]
+
+        if mode in {"mol", "sdf"}:
+            symbol_coords_match = re.search(r"([-+]?\d+\.\d+\s+){3}[A-Z][a-z]?", line)
+            if symbol_coords_match:
+                x, y, z, symbol = symbol_coords_match.group(0).split()
+
+                return symbol, [float(x), float(y), float(z)]
 
     def _is_cycle_line(self, line: str) -> bool:
         """
@@ -207,6 +221,15 @@ class XTB(logfileparser.Logfile):
         """
         return bool(re.search(r"\*\s+finished run on", line))
 
+    def _is_end_of_structure_block(self, line: str, mode: Literal["xyz", "mol", "sdf"]) -> bool:
+        """
+        Extract if the line indicates the end of a structure block.
+        """
+        if mode == "xyz":
+            return bool(re.search(r"\w"))
+        elif mode in {"mol", "sdf"}:
+            return bool(re.search(r"M\s+END", line))
+
     def extract(self, inputfile: List[str], line: str) -> None:
         # Get the xTB version
         version = self._extract_version(line)
@@ -226,13 +249,10 @@ class XTB(logfileparser.Logfile):
         if charge:
             self.set_attribute("charge", charge)
 
-        # Get if it's a marker indicating that it's an optimization
-        is_geom_opt = self._is_cycle_line(line)
-
         # Cycle through the geometry steps to get the total energies,
         # if applicable
         scf_energies = []
-        if is_geom_opt:
+        if self._is_cycle_line(line):
             while not self._is_geom_end_line(line):
                 scf_energy = self._extract_geom_energy(line)
                 if scf_energy:
@@ -241,35 +261,22 @@ class XTB(logfileparser.Logfile):
 
         # Get the final geometry
         if "final structure:" in line:
-            if self.metadata["coord_type"] == "xyz":
-                atomnos = []
-                atomcoords = []
-                while not re.search(r"\w", line):
-                    # Atom criteria is <X> <Y> <Z> <Symbol> <...>
-                    symbol_coords_match = re.search(r"[A-Z][a-z]?+\s+([-+]?\d+\.\d+\s*){3}", line)
-                    if symbol_coords_match:
-                        x, y, z, symbol = symbol_coords_match.group(0).split()
-                        atomnos.append(self.table.number[symbol])
-                        atomcoords.append([float(x), float(y), float(z)])
-                    line = next(inputfile)
-                self.set_attribute("natom", len(atomnos))
-                self.set_attribute("atomnos", atomnos)
-                self.set_attribute("atomcoords", atomcoords)
+            atomnos = []
+            atomcoords = []
+            coord_type = self.metadata.get("coord_type")
 
-            elif self.metadata["coord_type"] in ("sdf", "mol"):
-                atomnos = []
-                atomcoords = []
-                # Ending criteria for sdf and mol is the END at the end of the coord block
-                while "END" not in line:
-                    # <X> <Y> <Z> <Symbol> <...>
-                    symbol_coords_match = re.search(r"([-+]?\d+\.\d+\s+){3}[A-Z][a-z]?", line)
-                    if symbol_coords_match:
-                        x, y, z, symbol = symbol_coords_match.group(0).split()
-                        atomnos.append(self.table.number[symbol])
-                        atomcoords.append([float(x), float(y), float(z)])
-                    line = next(inputfile)
+            while not self._is_end_of_structure_block(line, mode=coord_type):
+                symbol_coords = self._extract_symbol_coords(line)
+                if symbol_coords:
+                    symbol, coords = symbol_coords
+                    atomnos.append(self.table.number[symbol])
+                    atomcoords.append(coords)
+                line = next(inputfile)
+
+            if atomnos:
                 self.set_attribute("natom", len(atomnos))
                 self.set_attribute("atomnos", atomnos)
+            if atomcoords:
                 self.set_attribute("atomcoords", atomcoords)
 
         # Get Molecular Orbitals energies and HOMO index
