@@ -1,12 +1,12 @@
 import re
 from itertools import groupby
 
-from cclib.parser import logfileparser, utils
+from cclib.parser import logfileparser
 
 import numpy
 
 
-class xTB(logfileparser.Logfile):
+class XTB(logfileparser.Logfile):
     def __init__(self, *args, **kwargs):
         super().__init__(logname="xTB", *args, **kwargs)
 
