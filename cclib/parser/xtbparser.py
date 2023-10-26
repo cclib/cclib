@@ -205,7 +205,7 @@ class XTB(logfileparser.Logfile):
         if charge:
             self.set_attribute("charge", charge)
 
-        # Get if it's an optimization
+        # Get if it's a marker indicating that it's an optimization
         is_geom_opt = self._is_cycle_line(line)
 
         # Cycle through the gemoetry steps to get the total energies,
@@ -603,4 +603,6 @@ class XTB(logfileparser.Logfile):
             self.set_attribute("scfenergies", scf_energies)
 
         # find if job ended successfuly
-        self.metadata["success"] = self._is_finished(line)
+        is_finished = self._is_finished(line)
+        if is_finished:
+            self.metadata["success"] = True
