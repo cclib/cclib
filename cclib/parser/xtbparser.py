@@ -1,5 +1,6 @@
 import re
 from itertools import groupby
+from typing import List
 
 from cclib.parser import logfileparser
 
@@ -36,7 +37,7 @@ class XTB(logfileparser.Logfile):
         if not self.bondprop:
             delattr(self, "bondprop")
 
-    def extract(self, inputfile: list[str], line: str) -> None:
+    def extract(self, inputfile: List[str], line: str) -> None:
         # Extract xtb version
         if line.strip()[:13] == "* xtb version":
             version = line.split()[3]
