@@ -39,9 +39,9 @@ class XTB(logfileparser.Logfile):
 
     def extract(self, inputfile: List[str], line: str) -> None:
         # Extract xtb version
-        version_re = re.search(r"xtb version (\d+(\.\d+)+)", line)
-        if version_re:
-            version = version_re.group(1)
+        version_match = re.search(r"xtb version (\d+(\.\d+)+)", line)
+        if version_match:
+            version = version_match.group(1)
             self.metadata["legacy_package_version"] = version
 
         #   -------------------------------------------------
@@ -58,8 +58,9 @@ class XTB(logfileparser.Logfile):
         #   spin                       :                   0.0
         #   first test random number   :      0.87181443679343
 
-        if line.strip()[:15] == "coordinate file":
-            self.metadata["coord_type"] = line.split()[3].split(".")[-1].lower()
+        coordinate_file = re.search(r"coordinate file\s+:\s+(\S+)", line)
+        if coordinate_file:
+            self.metadata["coord_type"] = coordinate_file.group(1).split(".")[-1]
 
         # Grab total charge
         if line.strip()[:6] == "charge":
