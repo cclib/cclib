@@ -113,9 +113,9 @@ class XTB(logfileparser.Logfile):
         """
                 Extract the energies for a geometry step.
 
-                        ........................................................................
-                .............................. CYCLE    1 ..............................
-                ........................................................................
+        ........................................................................
+        .............................. CYCLE    1 ..............................
+        ........................................................................
 
                  iter      E             dE          RMSdq      gap      omega  full diag
                    1     -5.1048382 -0.510484E+01  0.417E-06   14.38       0.0  T
@@ -131,8 +131,60 @@ class XTB(logfileparser.Logfile):
                    *** GEOMETRY OPTIMIZATION CONVERGED AFTER 1 ITERATIONS ***
         """
 
-        geom_energy_match = re.search(r"\s+total energy\s+:\s+([-+]?\d+\.\d+)", line)
+        geom_energy_match = re.search(r"\*\s+total energy\s+:\s+([-+]?\d+\.\d+)", line)
         return float(geom_energy_match.group(1)) if geom_energy_match else None
+
+    def _extract_final_structure(self, line: str) -> Optional[str]:
+        """
+        Extract the final structure for a geometry optimization.
+
+        For XYZ files:
+
+        ================
+        final structure:
+        ================
+        3
+        xtb: 6.6.1 (8d0f1dd)
+        O            1.07015391331798       -0.01769828395654        0.04981203402603
+        H            2.02952514441169       -0.00813780275851        0.03338237327689
+        H            0.76845094227033        0.44031608671506       -0.73728440730292
+
+        For SDF/mol files:
+
+        """
+
+    def _is_cycle_line(self, line: str) -> bool:
+        """
+        Extract if the line indicates it is a geometry optimization.
+
+        ........................................................................
+        .............................. CYCLE    1 ..............................
+        ........................................................................
+        """
+
+        return bool(re.search(r"CYCLE\s+\d+", line))
+
+    def _is_geom_end_line(self, line: str) -> bool:
+        """
+        Extract if the line indicates the optimization is over.
+
+        *** GEOMETRY OPTIMIZATION CONVERGED AFTER 1 ITERATIONS ***
+
+        or
+
+        *** FAILED TO CONVERGE GEOMETRY OPTIMIZATION ***
+        """
+        return bool(re.search(r"\s+GEOMETRY OPTIMIZATION\s+", line))
+
+    def _is_finished(self, line: str) -> bool:
+        """
+        Extract if the job finished.
+
+        ------------------------------------------------------------------------
+        * finished run on 2023/10/26 at 13:18:28.705
+        ------------------------------------------------------------------------
+        """
+        return bool(re.search(r"\*\s+finished run on", line))
 
     def extract(self, inputfile: List[str], line: str) -> None:
         # Get the xTB version
@@ -153,100 +205,52 @@ class XTB(logfileparser.Logfile):
         if charge:
             self.set_attribute("charge", charge)
 
+        # Get if it's an optimization
+        is_geom_opt = self._is_cycle_line(line)
+
         # Cycle through the gemoetry steps to get the total energies,
         # if applicable
         scf_energies = []
-        if "CYCLE" in line:
-            while "*** GEOMETRY OPTIMIZATION" not in line:
-                line = next(inputfile)
+        if is_geom_opt:
+            while not self._is_geom_end_line(line):
                 scf_energy = self._extract_geom_energy(line)
                 if scf_energy:
                     scf_energies.append(scf_energy)
                 line = next(inputfile)
 
-        # Get the final total energy
-        final_energy = self._extract_final_energy(line)
+            # Get the final geometry
+            if line.strip()[:15] == "final structure":
+                self.skip_line(inputfile, "=")
 
-        # Patch the final total energy to be the last SCF energy
-        # since it is higher precision and also always available
-        if final_energy:
-            scf_energies = scf_energies[-1] if scf_energies else [final_energy]
+                if self.metadata["coord_type"] == "xyz":
+                    atomnos = []
+                    atomcoords = []
+                    for line in inputfile:
+                        # Ending criteria for xyz is a blank line at the end of the coords block
+                        if line == " \n":
+                            break
+                        if line[0].isupper():
+                            atom, x, y, z = line.split()
+                            atomnos.append(self.table.number[atom])
+                            atomcoords.append([float(x), float(y), float(z)])
+                    self.set_attribute("natom", len(atomnos))
+                    self.set_attribute("atomnos", atomnos)
+                    self.set_attribute("atomcoords", atomcoords)
 
-        self.set_attribute("scfenergies", scf_energies)
-
-        # Grab the optimized geometry
-        # xtb only gives the final optimized geometry
-        #
-        # For xyz input file - gives xyz output coords
-        #
-        # ================
-        # final structure:
-        # ================
-        # 18
-        # xtb: 6.3.0 (007a174)
-        # C        -1.06986995496938    0.00558244661493   -0.31957205560407
-        # O        -0.17255304749241   -0.97627397755570   -0.37573083147008
-        # ...
-        # H         1.66147402211077    1.54957926818092    0.61042104923243
-        # H         5.25469642314449   -2.38603632440806    0.38612072928186
-        # H         3.38728187535945   -4.19429919486669   -0.44692022446750
-        #
-        # For sdf\mol input file - gives sdf\mol output coords
-        #
-        # ================
-        # final structure:
-        # ================
-        # energy: -37.337374171651 gnorm: 0.000298918814 xtb: 6.4.0 (d4b70c2)
-        # xtb     01212213163D
-        # xtb: 6.4.1 (unknown)
-        # 18 19  0     0  0            999 V2000
-        #   -1.0699    0.0056   -0.3196 C   0  0  0  0  0  0  0  0  0  0  0  0
-        #   -0.1726   -0.9763   -0.3757 O   0  0  0  0  0  0  0  0  0  0  0  0
-        #   -0.4790    1.1791    0.0854 C   0  0  0  0  0  0  0  0  0  0  0  0
-        # ...
-        #    1.6615    1.5496    0.6104 H   0  0  0  0  0  0  0  0  0  0  0  0
-        #    5.2547   -2.3860    0.3861 H   0  0  0  0  0  0  0  0  0  0  0  0
-        #    3.3873   -4.1943   -0.4469 H   0  0  0  0  0  0  0  0  0  0  0  0
-        #  1  3  2  0  0  0  0
-        #  2  1  1  0  0  0  0
-        #  2  7  1  0  0  0  0
-        # ...
-        #  14 13  2  0  0  0  0
-        #  15  1  1  0  0  0  0
-        #  18 14  1  0  0  0  0
-        # M  END
-        if line.strip()[:15] == "final structure":
-            self.skip_line(inputfile, "=")
-
-            if self.metadata["coord_type"] == "xyz":
-                atomnos = []
-                atomcoords = []
-                for line in inputfile:
-                    # Ending criteria for xyz is a blank line at the end of the coords block
-                    if line == " \n":
-                        break
-                    if line[0].isupper():
-                        atom, x, y, z = line.split()
-                        atomnos.append(self.table.number[atom])
-                        atomcoords.append([float(x), float(y), float(z)])
-                self.set_attribute("natom", len(atomnos))
-                self.set_attribute("atomnos", atomnos)
-                self.set_attribute("atomcoords", atomcoords)
-
-            elif self.metadata["coord_type"] in ("sdf", "mol"):
-                atomnos = []
-                atomcoords = []
-                # Ending criteria for sdf\mol is the END at the end of the coord block
-                while line.strip()[-3:] != "END":
-                    # Atoms block start with 3 blank spaces, bonds block starts with 1
-                    if line[:3] == "   ":
-                        x, y, z, atom = line.split()[:4]
-                        atomnos.append(self.table.number[atom])
-                        atomcoords.append([float(x), float(y), float(z)])
-                    line = next(inputfile)
-                self.set_attribute("natom", len(atomnos))
-                self.set_attribute("atomnos", atomnos)
-                self.set_attribute("atomcoords", atomcoords)
+                elif self.metadata["coord_type"] in ("sdf", "mol"):
+                    atomnos = []
+                    atomcoords = []
+                    # Ending criteria for sdf\mol is the END at the end of the coord block
+                    while line.strip()[-3:] != "END":
+                        # Atoms block start with 3 blank spaces, bonds block starts with 1
+                        if line[:3] == "   ":
+                            x, y, z, atom = line.split()[:4]
+                            atomnos.append(self.table.number[atom])
+                            atomcoords.append([float(x), float(y), float(z)])
+                        line = next(inputfile)
+                    self.set_attribute("natom", len(atomnos))
+                    self.set_attribute("atomnos", atomnos)
+                    self.set_attribute("atomcoords", atomcoords)
 
         # Get Molecular Orbitals energies and HOMO index
         # xTB trunctaes the MO list so we need to take care of that.
@@ -587,6 +591,16 @@ class XTB(logfileparser.Logfile):
 
             self.atomprop["lmo"] = lmo_list_cleaned
 
-        # find if ended successfuly
-        if line.strip()[:17] == "* finished run on":
-            self.metadata["success"] = True
+        # Get the final total energy
+        final_energy = self._extract_final_energy(line)
+
+        # Patch the final total energy to be the last SCF energy
+        # since it is higher precision and also always available
+        if final_energy:
+            scf_energies = scf_energies[-1] if scf_energies else [final_energy]
+
+        if scf_energies:
+            self.set_attribute("scfenergies", scf_energies)
+
+        # find if job ended successfuly
+        self.metadata["success"] = self._is_finished(line)
