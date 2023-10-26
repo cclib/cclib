@@ -457,14 +457,11 @@ class ccDriver:
         """Process the combinator and populate the ccData object in the ccCollection"""
         self.identified_program = None
         line = self._fileHandler.last_line
-        print(line)
         while line := self._fileHandler.next():
-            print(line)
             for program, phrases, do_break in triggers_on:
                 if all([line.lower().find(p.lower()) >= 0 for p in phrases]):
                     if self.identified_program is None:
                         self.identified_program = program
-                        print(program)
                         if do_break:
                             break
                     else:
@@ -485,6 +482,7 @@ class ccDriver:
                 )
                 if parsed_data is not None:
                     parsed_attribute_name = subparser.__name__
-                    print(parsed_attribute_name, parsed_data)
-                    # self._ccCollection._parsed_data[0].setattr(parsed_attribute_name, parsed_data)
+                    self._ccCollection._parsed_data[0].__setattr__(
+                        parsed_attribute_name, parsed_data
+                    )
             line = self._fileHandler.next()
