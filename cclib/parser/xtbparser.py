@@ -150,7 +150,28 @@ class XTB(logfileparser.Logfile):
         H            0.76845094227033        0.44031608671506       -0.73728440730292
 
         For SDF/mol files:
-
+        ================
+        final structure:
+        ================
+        energy: -37.337374171651 gnorm: 0.000298918814 xtb: 6.4.0 (d4b70c2)
+        xtb     01212213163D
+        xtb: 6.4.1 (unknown)
+        18 19  0     0  0            999 V2000
+          -1.0699    0.0056   -0.3196 C   0  0  0  0  0  0  0  0  0  0  0  0
+          -0.1726   -0.9763   -0.3757 O   0  0  0  0  0  0  0  0  0  0  0  0
+          -0.4790    1.1791    0.0854 C   0  0  0  0  0  0  0  0  0  0  0  0
+        ...
+           1.6615    1.5496    0.6104 H   0  0  0  0  0  0  0  0  0  0  0  0
+           5.2547   -2.3860    0.3861 H   0  0  0  0  0  0  0  0  0  0  0  0
+           3.3873   -4.1943   -0.4469 H   0  0  0  0  0  0  0  0  0  0  0  0
+         1  3  2  0  0  0  0
+         2  1  1  0  0  0  0
+         2  7  1  0  0  0  0
+        ...
+         14 13  2  0  0  0  0
+         15  1  1  0  0  0  0
+         18 14  1  0  0  0  0
+        M  END
         """
 
     def _is_cycle_line(self, line: str) -> bool:
@@ -208,7 +229,7 @@ class XTB(logfileparser.Logfile):
         # Get if it's a marker indicating that it's an optimization
         is_geom_opt = self._is_cycle_line(line)
 
-        # Cycle through the gemoetry steps to get the total energies,
+        # Cycle through the geometry steps to get the total energies,
         # if applicable
         scf_energies = []
         if is_geom_opt:
@@ -218,39 +239,38 @@ class XTB(logfileparser.Logfile):
                     scf_energies.append(scf_energy)
                 line = next(inputfile)
 
-            # Get the final geometry
-            if line.strip()[:15] == "final structure":
-                self.skip_line(inputfile, "=")
+        # Get the final geometry
+        if "final structure:" in line:
+            if self.metadata["coord_type"] == "xyz":
+                atomnos = []
+                atomcoords = []
+                while not re.search(r"\w", line):
+                    # Atom criteria is <X> <Y> <Z> <Symbol> <...>
+                    symbol_coords_match = re.search(r"[A-Z][a-z]?+\s+([-+]?\d+\.\d+\s*){3}", line)
+                    if symbol_coords_match:
+                        x, y, z, symbol = symbol_coords_match.group(0).split()
+                        atomnos.append(self.table.number[symbol])
+                        atomcoords.append([float(x), float(y), float(z)])
+                    line = next(inputfile)
+                self.set_attribute("natom", len(atomnos))
+                self.set_attribute("atomnos", atomnos)
+                self.set_attribute("atomcoords", atomcoords)
 
-                if self.metadata["coord_type"] == "xyz":
-                    atomnos = []
-                    atomcoords = []
-                    for line in inputfile:
-                        # Ending criteria for xyz is a blank line at the end of the coords block
-                        if line == " \n":
-                            break
-                        if line[0].isupper():
-                            atom, x, y, z = line.split()
-                            atomnos.append(self.table.number[atom])
-                            atomcoords.append([float(x), float(y), float(z)])
-                    self.set_attribute("natom", len(atomnos))
-                    self.set_attribute("atomnos", atomnos)
-                    self.set_attribute("atomcoords", atomcoords)
-
-                elif self.metadata["coord_type"] in ("sdf", "mol"):
-                    atomnos = []
-                    atomcoords = []
-                    # Ending criteria for sdf\mol is the END at the end of the coord block
-                    while line.strip()[-3:] != "END":
-                        # Atoms block start with 3 blank spaces, bonds block starts with 1
-                        if line[:3] == "   ":
-                            x, y, z, atom = line.split()[:4]
-                            atomnos.append(self.table.number[atom])
-                            atomcoords.append([float(x), float(y), float(z)])
-                        line = next(inputfile)
-                    self.set_attribute("natom", len(atomnos))
-                    self.set_attribute("atomnos", atomnos)
-                    self.set_attribute("atomcoords", atomcoords)
+            elif self.metadata["coord_type"] in ("sdf", "mol"):
+                atomnos = []
+                atomcoords = []
+                # Ending criteria for sdf and mol is the END at the end of the coord block
+                while "END" not in line:
+                    # <X> <Y> <Z> <Symbol> <...>
+                    symbol_coords_match = re.search(r"([-+]?\d+\.\d+\s+){3}[A-Z][a-z]?", line)
+                    if symbol_coords_match:
+                        x, y, z, symbol = symbol_coords_match.group(0).split()
+                        atomnos.append(self.table.number[symbol])
+                        atomcoords.append([float(x), float(y), float(z)])
+                    line = next(inputfile)
+                self.set_attribute("natom", len(atomnos))
+                self.set_attribute("atomnos", atomnos)
+                self.set_attribute("atomcoords", atomcoords)
 
         # Get Molecular Orbitals energies and HOMO index
         # xTB trunctaes the MO list so we need to take care of that.
@@ -293,11 +313,11 @@ class XTB(logfileparser.Logfile):
         #          Fermi-level           -0.3536781 Eh           -9.6241 eV
         #
 
-        if line.strip() == "* Orbital Energies and Occupations":
+        if re.search(r"\*\s+Orbital Energies and Occupations", line):
             # Skip 4 lines to get to the table
-            line = next(inputfile)
-            line = next(inputfile)
-            line = next(inputfile)
+            next(inputfile)
+            next(inputfile)
+            next(inputfile)
             line = next(inputfile)
 
             mooccnos = [[]]
@@ -305,7 +325,7 @@ class XTB(logfileparser.Logfile):
             monumbers = []
 
             # Ending criteria is the dashed line at the end of the MO block.
-            while line.strip() != "-------------------------------------------------------------":
+            while not re.esearch("-----------", line):
                 line_split = line.split()
                 monumbers.append(line_split[0])
 
