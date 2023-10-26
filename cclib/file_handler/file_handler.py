@@ -219,7 +219,7 @@ class FileHandler:
 
         Sets the virtual_file_pointer to the current file_pointer
         """
-        self.virtual_reset_position = self.files[self.file_pointer].tell()
+        self.virtual_reset_position = self.pos
 
     def virtual_reset(self):
         """
@@ -267,7 +267,8 @@ class FileHandler:
                 return self.next()
 
         except IndexError:
-            raise StopIteration()
+            return False
+            # raise StopIteration()
 
     @property
     def last_line(self) -> str:

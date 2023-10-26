@@ -1,3 +1,4 @@
+from cclib.parser_properties import utils
 from cclib.parser_properties.base_parser import base_parser
 
 
@@ -11,9 +12,8 @@ class scfenergies(base_parser):
     @staticmethod
     def gaussian(file_handler, ccdata):
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
-        line = file_handler.last_line()
+        line = file_handler.last_line
         constructed_data = None
-        print(line)
         if line[1:9] == "SCF Done":
             constructed_data = utils.float(line.split()[4])
             return constructed_data
