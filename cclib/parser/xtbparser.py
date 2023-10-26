@@ -71,7 +71,7 @@ class XTB(logfileparser.Logfile):
         coordinate_file_match = re.search(r"coordinate file\s+:\s+(\S+)", line)
         return coordinate_file_match.group(1) if coordinate_file_match else None
 
-    def _extract_charge(self, line: str) -> Optional[str]:
+    def _extract_charge(self, line: str) -> Optional[int]:
         """
         Extract the total charge. It can always be found in the
         summary formatted as a float.
@@ -93,69 +93,86 @@ class XTB(logfileparser.Logfile):
          :: total charge              -0.000000000000 e     ::
          :::::::::::::::::::::::::::::::::::::::::::::::::::::
         """
-        charge_match_summary = re.search(r"total charge\s+([-+]?\d+\.\d+)", line)
-        return round(float(charge_match_summary.group(1))) if charge_match_summary else None
+        charge_match = re.search(r"total charge\s+([-+]?\d+\.\d+)", line)
+        return round(float(charge_match.group(1))) if charge_match else None
+
+    def _extract_final_energy(self, line: str) -> Optional[float]:
+        """
+        Extract the final total energy from the result table.
+
+           -------------------------------------------------
+          | TOTAL ENERGY               -5.070544323569 Eh   |
+          | GRADIENT NORM               0.000458081396 Eh/α |
+          | HOMO-LUMO GAP              14.381252816459 eV   |
+           -------------------------------------------------
+        """
+        total_energy_match = re.search(r"TOTAL ENERGY\s+([-+]?\d+\.\d+)", line)
+        return float(total_energy_match.group(1)) if total_energy_match else None
+
+    def _extract_geom_energy(self, line: str) -> Optional[float]:
+        """
+                Extract the energies for a geometry step.
+
+                        ........................................................................
+                .............................. CYCLE    1 ..............................
+                ........................................................................
+
+                 iter      E             dE          RMSdq      gap      omega  full diag
+                   1     -5.1048382 -0.510484E+01  0.417E-06   14.38       0.0  T
+                   2     -5.1048382  0.000000E+00  0.234E-06   14.38   24706.5  T
+                   3     -5.1048382  0.000000E+00  0.437E-07   14.38  100000.0  T
+                     SCC iter.                  ...        0 min,  0.005 sec
+                     gradient                   ...        0 min,  0.010 sec
+                 * total energy  :    -5.0705443 Eh     change       -0.4369838E-12 Eh
+                   gradient norm :     0.0004582 Eh/α   predicted     0.0000000E+00 (-100.00%)
+                   displ. norm   :     0.0005728 α      lambda       -0.1688374E-06
+                   maximum displ.:     0.0005029 α      in ANC's #2, #3, #1, ...
+
+                   *** GEOMETRY OPTIMIZATION CONVERGED AFTER 1 ITERATIONS ***
+        """
+
+        geom_energy_match = re.search(r"\s+total energy\s+:\s+([-+]?\d+\.\d+)", line)
+        return float(geom_energy_match.group(1)) if geom_energy_match else None
 
     def extract(self, inputfile: List[str], line: str) -> None:
+        # Get the xTB version
         version = self._extract_version(line)
         if version:
             self.metadata["legacy_package_version"] = version
 
+        # Get the coordinate file type
         coord_filename = self._extract_coord_file(line)
         if coord_filename:
             self.metadata["coord_type"] = coord_filename.split(".")[-1]
 
+        # TODO: How to handle mult...
+        # self.set_attribute("mult", mult)
+
+        # Get the net charge
         charge = self._extract_charge(line)
         if charge:
             self.set_attribute("charge", charge)
 
-        # Extract the multiplicity, which is spin + 1. This can be found in
-        # the calculation setup. If it's not there, it can also be specified
-        # via the --uhf flag like below. So, we consider both approaches.
-        # If neither is found, we assume a singlet.
-        #
-        #    -------------------------------------------------
-        #   |                Calculation Setup                |
-        #    -------------------------------------------------
-        #
-        #   program call               : xtb mol.xyz --spinpol --tblite --uhf 2 --verbose
-
-        mult = 1
-        spin_match_setup = re.search(r"spin\s+:\s+([-+]?\d+\.\d+)", line)
-        if spin_match_setup:
-            mult = round(float(spin_match_setup.group(1)) + 1)
-        self.set_attribute("mult", mult)
-
-        # Grabbing SCF energies from geometry optimization steps
-        #
-        # ........................................................................
-        # .............................. CYCLE    1 ..............................
-        # ........................................................................
-        #    1    -37.9590419 -0.379590E+02  0.116E-04    2.97       0.0  T
-        #    2    -37.9590419 -0.674305E-11  0.982E-05    2.97     240.0  T
-        #    3    -37.9590419 -0.129340E-09  0.425E-05    2.97     554.7  T
-        #      SCC iter.                  ...        0 min,  0.004 sec
-        #      gradient                   ...        0 min,  0.002 sec
-        #  * total energy  :   -37.3373741 Eh     change       -0.1278963E-08 Eh
-        #    gradient norm :     0.0004128 Eh/α   predicted     0.0000000E+00 (-100.00%)
-        #    displ. norm   :     0.0058476 α      lambda       -0.2852929E-06
-        #    maximum displ.:     0.0054052 α      in ANC's #1, #7, #3, ...
-        #
-        #   *** GEOMETRY OPTIMIZATION CONVERGED AFTER 1 ITERATIONS ***
-
-        if line.replace(".", "").strip()[:5] == "CYCLE":
-            scfenergies = []
-            while (
-                line.strip()[4:41] != "GEOMETRY OPTIMIZATION CONVERGED AFTER"
-                or line.strip()[4:44] != "FAILED TO CONVERGE GEOMETRY OPTIMIZATION"
-            ):
+        # Cycle through the gemoetry steps to get the total energies,
+        # if applicable
+        scf_energies = []
+        if "CYCLE" in line:
+            while "*** GEOMETRY OPTIMIZATION" not in line:
                 line = next(inputfile)
-                if line.strip()[2:14] == "total energy":
-                    energy = float(line.split()[4])
-                    scfenergies.append(energy)
-                if line.strip()[4:41] == "GEOMETRY OPTIMIZATION CONVERGED AFTER":
-                    break
-            self.set_attribute("scfenergies", scfenergies)
+                scf_energy = self._extract_geom_energy(line)
+                if scf_energy:
+                    scf_energies.append(scf_energy)
+                line = next(inputfile)
+
+        # Get the final total energy
+        final_energy = self._extract_final_energy(line)
+
+        # Patch the final total energy to be the last SCF energy
+        # since it is higher precision and also always available
+        if final_energy:
+            scf_energies = scf_energies[-1] if scf_energies else [final_energy]
+
+        self.set_attribute("scfenergies", scf_energies)
 
         # Grab the optimized geometry
         # xtb only gives the final optimized geometry
