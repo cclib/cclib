@@ -39,8 +39,9 @@ class XTB(logfileparser.Logfile):
 
     def extract(self, inputfile: List[str], line: str) -> None:
         # Extract xtb version
-        if line.strip()[:13] == "* xtb version":
-            version = line.split()[3]
+        version_re = re.search(r"xtb version (\d+(\.\d+)+)", line)
+        if version_re:
+            version = version_re.group(1)
             self.metadata["legacy_package_version"] = version
 
         #   -------------------------------------------------
