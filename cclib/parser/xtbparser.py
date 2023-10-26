@@ -135,7 +135,7 @@ class XTB(logfileparser.Logfile):
         return float(geom_energy_match.group(1)) if geom_energy_match else None
 
     def _extract_symbol_coords(
-        self, line: str, mode: Literal["xyz", "mol", "sdf"] = "xyz"
+        self, line: str, mode: Literal["xyz", "mol", "sdf"]
     ) -> Optional[Tuple[str, List[float, float, float]]]:
         """
         Extract the symbol and X, Y, Z coordinates.
@@ -265,8 +265,8 @@ class XTB(logfileparser.Logfile):
             atomcoords = []
             coord_type = self.metadata.get("coord_type")
 
-            while not self._is_end_of_structure_block(line, mode=coord_type):
-                symbol_coords = self._extract_symbol_coords(line)
+            while not self._is_end_of_structure_block(line, coord_type):
+                symbol_coords = self._extract_symbol_coords(line, coord_type)
                 if symbol_coords:
                     symbol, coords = symbol_coords
                     atomnos.append(self.table.number[symbol])
