@@ -1,6 +1,6 @@
 import re
 from itertools import groupby
-from typing import List
+from typing import List, Optional
 
 from cclib.parser import logfileparser
 
@@ -37,40 +37,94 @@ class XTB(logfileparser.Logfile):
         if not self.bondprop:
             delattr(self, "bondprop")
 
-    def extract(self, inputfile: List[str], line: str) -> None:
-        # Extract xtb version
+    def _extract_version(self, line: str) -> Optional[str]:
+        """
+        Extract xtb version from the following:
+
+              -----------------------------------------------------------
+             |                   =====================                   |
+             |                           x T B                           |
+             |                   =====================                   |
+             |                         S. Grimme                         |
+             |          Mulliken Center for Theoretical Chemistry        |
+             |                    University of Bonn                     |
+              -----------------------------------------------------------
+
+           * xtb version 6.6.1 (8d0f1dd) compiled by 'conda@1efc2f54142f' on 2023-08-01
+        """
+
         version_match = re.search(r"xtb version (\d+(\.\d+)+)", line)
-        if version_match:
-            version = version_match.group(1)
+        return version_match.group(1) if version_match else None
+
+    def _extract_coord_file(self, line: str) -> Optional[str]:
+        """
+        Extract the coordinate filename, from which we can strip out the type
+
+           -------------------------------------------------
+          |                Calculation Setup                |
+           -------------------------------------------------
+
+          program call               : xtb coord.xyz --opt
+          coordinate file            : coord.xyz
+          omp threads                :                    20
+        """
+        coordinate_file_match = re.search(r"coordinate file\s+:\s+(\S+)", line)
+        return coordinate_file_match.group(1) if coordinate_file_match else None
+
+    def _extract_charge(self, line: str) -> Optional[str]:
+        """
+        Extract the total charge. It can always be found in the
+        summary formatted as a float.
+
+         :::::::::::::::::::::::::::::::::::::::::::::::::::::
+         ::                     SUMMARY                     ::
+         :::::::::::::::::::::::::::::::::::::::::::::::::::::
+         :: total energy              -5.070544440612 Eh    ::
+         :: gradient norm              0.000057326562 Eh/a0 ::
+         :: HOMO-LUMO gap             14.391809984508 eV    ::
+         ::.................................................::
+         :: SCC energy                -5.104920280363 Eh    ::
+         :: -> isotropic ES            0.031458595179 Eh    ::
+         :: -> anisotropic ES          0.000396760551 Eh    ::
+         :: -> anisotropic XC         -0.000881430881 Eh    ::
+         :: -> dispersion             -0.000141085082 Eh    ::
+         :: repulsion energy           0.034375839725 Eh    ::
+         :: add. restraining           0.000000000000 Eh    ::
+         :: total charge              -0.000000000000 e     ::
+         :::::::::::::::::::::::::::::::::::::::::::::::::::::
+        """
+        charge_match_summary = re.search(r"total charge\s+([-+]?\d+\.\d+)", line)
+        return round(float(charge_match_summary.group(1))) if charge_match_summary else None
+
+    def extract(self, inputfile: List[str], line: str) -> None:
+        version = self._extract_version(line)
+        if version:
             self.metadata["legacy_package_version"] = version
 
-        #   -------------------------------------------------
-        #  |                Calculation Setup                |
-        #    -------------------------------------------------
-        #
-        #   program call               : <command>
-        #   hostname                   : <hostname>
-        #   coordinate file            : <filename>.<<filetype>
-        #   omp threads                :                    12
-        #   number of atoms            :                    18
-        #   number of electrons        :                    66
-        #   charge                     :                     0
-        #   spin                       :                   0.0
-        #   first test random number   :      0.87181443679343
+        coord_filename = self._extract_coord_file(line)
+        if coord_filename:
+            self.metadata["coord_type"] = coord_filename.split(".")[-1]
 
-        coordinate_file = re.search(r"coordinate file\s+:\s+(\S+)", line)
-        if coordinate_file:
-            self.metadata["coord_type"] = coordinate_file.group(1).split(".")[-1]
-
-        # Grab total charge
-        if line.strip()[:6] == "charge":
-            charge = int(line.split()[2])
+        charge = self._extract_charge(line)
+        if charge:
             self.set_attribute("charge", charge)
 
-        # Multiplicity = Spin + 1
-        if line.strip()[:4] == "spin":
-            spin = float(line.split()[2]) + 1
-            self.set_attribute("mult", spin)
+        # Extract the multiplicity, which is spin + 1. This can be found in
+        # the calculation setup. If it's not there, it can also be specified
+        # via the --uhf flag like below. So, we consider both approaches.
+        # If neither is found, we assume a singlet.
+        #
+        #    -------------------------------------------------
+        #   |                Calculation Setup                |
+        #    -------------------------------------------------
+        #
+        #   program call               : xtb mol.xyz --spinpol --tblite --uhf 2 --verbose
+
+        mult = 1
+        spin_match_setup = re.search(r"spin\s+:\s+([-+]?\d+\.\d+)", line)
+        if spin_match_setup:
+            mult = round(float(spin_match_setup.group(1)) + 1)
+        self.set_attribute("mult", mult)
 
         # Grabbing SCF energies from geometry optimization steps
         #
