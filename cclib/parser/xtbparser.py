@@ -7,7 +7,6 @@ import numpy as np
 
 
 class XTB(logfileparser.Logfile):
-
     """An output parser for the xTB code"""
 
     def __init__(self, *args, **kwargs):
