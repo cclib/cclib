@@ -8,7 +8,6 @@
 """Unit tests for parser ccio module."""
 
 import os
-import sys
 import tempfile
 import unittest
 from io import StringIO
@@ -55,6 +54,7 @@ class guess_filetypeTest(unittest.TestCase):
             == cclib.parser.Psi4
         )
         assert self.guess(["A Quantum Leap Into The Future Of Chemistry"]) == cclib.parser.QChem
+        assert self.guess(["x T B"]) == cclib.parser.XTB
 
 
 class ccreadTest(unittest.TestCase):

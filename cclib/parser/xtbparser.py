@@ -25,10 +25,12 @@ class XTB(logfileparser.Logfile):
         return label
 
     def before_parsing(self) -> None:
+        """Set attributes before parsing"""
         self.atomprop = {}
         self.bondprop = {}
 
     def after_parsing(self) -> None:
+        """Delete empty attributes after parsing"""
         if not self.atomprop:
             delattr(self, "atomprop")
         if not self.bondprop:
