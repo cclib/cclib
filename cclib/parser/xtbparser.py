@@ -41,16 +41,16 @@ class XTB(logfileparser.Logfile):
         """
         Extract xtb version from the following:
 
-              -----------------------------------------------------------
-             |                   =====================                   |
-             |                           x T B                           |
-             |                   =====================                   |
-             |                         S. Grimme                         |
-             |          Mulliken Center for Theoretical Chemistry        |
-             |                    University of Bonn                     |
-              -----------------------------------------------------------
+        -----------------------------------------------------------
+        |                   =====================                   |
+        |                           x T B                           |
+        |                   =====================                   |
+        |                         S. Grimme                         |
+        |          Mulliken Center for Theoretical Chemistry        |
+        |                    University of Bonn                     |
+        -----------------------------------------------------------
 
-           * xtb version 6.6.1 (8d0f1dd) compiled by 'conda@1efc2f54142f' on 2023-08-01
+        * xtb version 6.6.1 (8d0f1dd) compiled by 'conda@1efc2f54142f' on 2023-08-01
         """
 
         version_match = re.search(r"xtb version (\d+(\.\d+)+)", line)
@@ -60,13 +60,13 @@ class XTB(logfileparser.Logfile):
         """
         Extract the coordinate filename, from which we can strip out the type
 
-           -------------------------------------------------
-          |                Calculation Setup                |
-           -------------------------------------------------
+        -------------------------------------------------
+        |                Calculation Setup                |
+        -------------------------------------------------
 
-          program call               : xtb coord.xyz --opt
-          coordinate file            : coord.xyz
-          omp threads                :                    20
+        program call               : xtb coord.xyz --opt
+        coordinate file            : coord.xyz
+        omp threads                :                    20
         """
         coordinate_file_match = re.search(r"coordinate file\s+:\s+(\S+)", line)
         return coordinate_file_match.group(1) if coordinate_file_match else None
@@ -181,16 +181,19 @@ class XTB(logfileparser.Logfile):
                 symbol, x, y, z = symbol_coords_match.group(0).split()
                 return symbol, [float(x), float(y), float(z)]
 
-        if mode in {"mol", "sdf"}:
+        elif mode in {"mol", "sdf"}:
             symbol_coords_match = re.search(r"([-+]?\d+\.\d+\s+){3}[A-Z][a-z]?", line)
             if symbol_coords_match:
                 x, y, z, symbol = symbol_coords_match.group(0).split()
 
                 return symbol, [float(x), float(y), float(z)]
 
+        else:
+            raise ValueError(f"Unsupported coordinate file type: {mode}")
+
     def _is_cycle_line(self, line: str) -> bool:
         """
-        Extract if the line indicates it is a geometry optimization.
+        Extract if the line indicates it is a geometry optimization cycle.
 
         ........................................................................
         .............................. CYCLE    1 ..............................
@@ -224,11 +227,14 @@ class XTB(logfileparser.Logfile):
     def _is_end_of_structure_block(self, line: str, mode: Literal["xyz", "mol", "sdf"]) -> bool:
         """
         Extract if the line indicates the end of a structure block.
+        Refer to _extract_symbol_coords for examples of structure blocks.
         """
         if mode == "xyz":
             return bool(re.search(r"\w"))
         elif mode in {"mol", "sdf"}:
             return bool(re.search(r"M\s+END", line))
+        else:
+            raise ValueError(f"Unsupported coordinate file type: {mode}")
 
     def extract(self, inputfile: List[str], line: str) -> None:
         # Get the xTB version
@@ -621,15 +627,20 @@ class XTB(logfileparser.Logfile):
         # Get the final total energy
         final_energy = self._extract_final_energy(line)
 
-        # Patch the final total energy to be the last SCF energy
-        # since it is higher precision and also always available
         if final_energy:
-            scf_energies = scf_energies[-1] if scf_energies else [final_energy]
+            if scf_energies:
+                # Patch the final total energy to be the last SCF energy
+                # since it is higher precision and also always available
+                scf_energies[-1] = final_energy
+            else:
+                # We only have the final energy to store
+                scf_energies = [final_energy]
 
         if scf_energies:
             self.set_attribute("scfenergies", scf_energies)
 
-        # find if job ended successfuly
+        # Find if job ended successfuly
         is_finished = self._is_finished(line)
+
         if is_finished:
             self.metadata["success"] = True
