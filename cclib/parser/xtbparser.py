@@ -9,14 +9,14 @@ import numpy as np
 class XTB(logfileparser.Logfile):
     """An output parser for the xTB code"""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(logname="xTB", *args, **kwargs)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"xTB log file {self.filename}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'xTB("{self.filename}")'
 
@@ -24,17 +24,17 @@ class XTB(logfileparser.Logfile):
         """xTB does not require normalizing symmetry labels."""
         return label
 
-    def before_parsing(self):
+    def before_parsing(self) -> None:
         self.atomprop = {}
         self.bondprop = {}
 
-    def after_parsing(self):
+    def after_parsing(self) -> None:
         if not self.atomprop:
             delattr(self, "atomprop")
         if not self.bondprop:
             delattr(self, "bondprop")
 
-    def extract(self, inputfile, line):
+    def extract(self, inputfile: list[str], line: str) -> None:
         # Extract xtb version
         if line.strip()[:13] == "* xtb version":
             version = line.split()[3]
@@ -497,17 +497,14 @@ class XTB(logfileparser.Logfile):
             lmo_list = sorted(lmo_list, key=lambda x: (x["AtomIdx"], LMO_ORDER[x["LMO Type"]]))
             lmo_list_cleaned = []
             keys_list = []
-            for (key, key_len), group in groupby(
+            for (key, _), group in groupby(
                 lmo_list, key=lambda x: (x["AtomIdx"], LMO_ORDER[x["LMO Type"]])
             ):
                 if key not in keys_list:
                     keys_list.append(key)
                     temp_list = list(group)
-                    # atom_cont = max(temp_list, key = lambda x: x['Contribution'])['Contribution']
                     atom_cont = sum(d["Contribution"] for d in temp_list) / len(temp_list)
-                    # atom_fii = max(temp_list, key = lambda x: x['Fii/eV'])['Fii/eV']
                     atom_fii = sum(d["Fii/eV"] for d in temp_list) / len(temp_list)
-                    # atom_ncent = max(temp_list, key = lambda x: x['ncent'])['ncent']
                     atom_ncent = sum(d["ncent"] for d in temp_list) / len(temp_list)
                     lmo_code = LMO_ORDER[temp_list[0]["LMO Type"]]
                     lmo_list_cleaned.append([lmo_code, atom_cont, atom_fii, atom_ncent])
