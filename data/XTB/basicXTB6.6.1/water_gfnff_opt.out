@@ -76,7 +76,7 @@
    J. Seibert, P. Shushkov, S. Spicher, M. Stahn, M. Steiner, T. Strunk,
    J. Stückrath, T. Rose, and J. Unsleber
    
- * started run on 2023/10/26 at 11:27:33.470     
+ * started run on 2023/10/27 at 12:02:33.723     
 
            -------------------------------------------------
           |                Calculation Setup                |
@@ -113,14 +113,12 @@
           computing topology distances matrix with Floyd-Warshall algo ...
           making topology EEQ charges ...
           #fragments for EEQ constrain: 1
-          fragment charges from <charges> :  0.000
           ----------------------------------------
           generating topology and atomic info file ...
           pair mat ...
           computing topology distances matrix with Floyd-Warshall algo ...
           making topology EEQ charges ...
           #fragments for EEQ constrain: 1
-          fragment charges from <charges> :  0.000
           rings ...
           # BATM   0
           # H in HB   2
@@ -145,17 +143,17 @@
           Number of HB bonds (unbound hydrogen)   0
           Number of XB bonds                      0
 
- E+G (total)                   0 d,  0 h,  0 min,  0.002 sec
- distance/D3 list               ...        0 min,  0.000 sec (  0.079%)
- non bonded repulsion           ...        0 min,  0.000 sec (  5.918%)
- dCN                            ...        0 min,  0.000 sec (  0.164%)
- EEQ energy and q               ...        0 min,  0.000 sec ( 19.423%)
- D3                             ...        0 min,  0.000 sec ( 11.698%)
- EEQ gradient                   ...        0 min,  0.000 sec ( 14.755%)
- bonds                          ...        0 min,  0.000 sec ( 20.016%)
- bend and torsion               ...        0 min,  0.001 sec ( 26.058%)
- bonded ATM                     ...        0 min,  0.000 sec (  0.034%)
- HB/XB (incl list setup)        ...        0 min,  0.000 sec (  0.593%)
+ E+G (total)                   0 d,  0 h,  0 min,  0.012 sec
+ distance/D3 list               ...        0 min,  0.000 sec (  0.009%)
+ non bonded repulsion           ...        0 min,  0.003 sec ( 20.428%)
+ dCN                            ...        0 min,  0.000 sec (  0.044%)
+ EEQ energy and q               ...        0 min,  0.003 sec ( 21.818%)
+ D3                             ...        0 min,  0.001 sec (  6.746%)
+ EEQ gradient                   ...        0 min,  0.001 sec ( 10.965%)
+ bonds                          ...        0 min,  0.002 sec ( 14.871%)
+ bend and torsion               ...        0 min,  0.003 sec ( 24.731%)
+ bonded ATM                     ...        0 min,  0.000 sec (  0.011%)
+ HB/XB (incl list setup)        ...        0 min,  0.000 sec (  0.108%)
 
          :::::::::::::::::::::::::::::::::::::::::::::::::::::
          ::                     SUMMARY                     ::
@@ -217,7 +215,7 @@ Using GFN-FF Lindh-Hessian
 ........................................................................
 .............................. CYCLE    1 ..............................
 ........................................................................
-     iter. time                 ...        0 min,  0.002 sec
+     iter. time                 ...        0 min,  0.017 sec
  * total energy  :    -0.3274057 Eh     change        0.0000000E+00 Eh
    gradient norm :     0.0214559 Eh/α   predicted     0.0000000E+00 (    NaN%)
    displ. norm   :     0.0172209 α      lambda       -0.3330270E-03
@@ -226,7 +224,7 @@ Using GFN-FF Lindh-Hessian
 ........................................................................
 .............................. CYCLE    2 ..............................
 ........................................................................
-     iter. time                 ...        0 min,  0.002 sec
+     iter. time                 ...        0 min,  0.004 sec
  * total energy  :    -0.3276208 Eh     change       -0.2151748E-03 Eh
    gradient norm :     0.0072073 Eh/α   predicted    -0.1665631E-03 ( -22.59%)
    displ. norm   :     0.0068767 α      lambda       -0.4805112E-04
@@ -235,7 +233,7 @@ Using GFN-FF Lindh-Hessian
 ........................................................................
 .............................. CYCLE    3 ..............................
 ........................................................................
-     iter. time                 ...        0 min,  0.001 sec
+     iter. time                 ...        0 min,  0.003 sec
  * total energy  :    -0.3276478 Eh     change       -0.2696425E-04 Eh
    gradient norm :     0.0018065 Eh/α   predicted    -0.2402765E-04 ( -10.89%)
    displ. norm   :     0.0038551 α      lambda       -0.4595184E-05
@@ -244,7 +242,7 @@ Using GFN-FF Lindh-Hessian
 ........................................................................
 .............................. CYCLE    4 ..............................
 ........................................................................
-     iter. time                 ...        0 min,  0.001 sec
+     iter. time                 ...        0 min,  0.000 sec
  * total energy  :    -0.3276527 Eh     change       -0.4935594E-05 Eh
    gradient norm :     0.0010765 Eh/α   predicted    -0.2297783E-05 ( -53.44%)
    displ. norm   :     0.0062864 α      lambda       -0.4283970E-05
@@ -253,7 +251,7 @@ Using GFN-FF Lindh-Hessian
 ........................................................................
 .............................. CYCLE    5 ..............................
 ........................................................................
-     iter. time                 ...        0 min,  0.001 sec
+     iter. time                 ...        0 min,  0.000 sec
  * total energy  :    -0.3276561 Eh     change       -0.3349712E-05 Eh
    gradient norm :     0.0001085 Eh/α   predicted    -0.2142275E-05 ( -36.05%)
    displ. norm   :     0.0002657 α      lambda       -0.1354574E-07
@@ -264,18 +262,18 @@ Using GFN-FF Lindh-Hessian
 ------------------------------------------------------------------------
  total energy gain   :        -0.0002504 Eh       -0.1571 kcal/mol
  total RMSD          :         0.0137296 a0        0.0073 Å
- total power (kW/mol):        -0.1314978 (step)  -77.1160 (real)
+ total power (kW/mol):        -0.1314978 (step)   -9.6891 (real)
 ------------------------------------------------------------------------
 
- ANCopt (total)                0 d,  0 h,  0 min,  0.009 sec
- optimizer setup                ...        0 min,  0.000 sec (  0.497%)
- model hessian                  ...        0 min,  0.000 sec (  4.753%)
- ANC generation                 ...        0 min,  0.000 sec (  0.757%)
- coordinate transformation      ...        0 min,  0.000 sec (  0.097%)
- single point calculation       ...        0 min,  0.007 sec ( 83.244%)
- optimization log               ...        0 min,  0.000 sec (  1.147%)
- hessian update                 ...        0 min,  0.001 sec (  6.859%)
- rational function              ...        0 min,  0.000 sec (  0.918%)
+ ANCopt (total)                0 d,  0 h,  0 min,  0.068 sec
+ optimizer setup                ...        0 min,  0.007 sec ( 10.290%)
+ model hessian                  ...        0 min,  0.010 sec ( 14.556%)
+ ANC generation                 ...        0 min,  0.007 sec ( 10.875%)
+ coordinate transformation      ...        0 min,  0.000 sec (  0.029%)
+ single point calculation       ...        0 min,  0.024 sec ( 35.357%)
+ optimization log               ...        0 min,  0.000 sec (  0.302%)
+ hessian update                 ...        0 min,  0.001 sec (  1.365%)
+ rational function              ...        0 min,  0.017 sec ( 24.675%)
 
 ================
  final structure:
@@ -358,18 +356,18 @@ optimized geometry written to: xtbopt.xyz
 ########################################################################
 
 ------------------------------------------------------------------------
- * finished run on 2023/10/26 at 11:27:33.593     
+ * finished run on 2023/10/27 at 12:02:33.923     
 ------------------------------------------------------------------------
  total:
- * wall-time:     0 d,  0 h,  0 min,  0.122 sec
- *  cpu-time:     0 d,  0 h,  0 min,  2.055 sec
- * ratio c/w:    16.866 speedup
+ * wall-time:     0 d,  0 h,  0 min,  0.200 sec
+ *  cpu-time:     0 d,  0 h,  0 min,  3.810 sec
+ * ratio c/w:    19.093 speedup
  SCF:
- * wall-time:     0 d,  0 h,  0 min,  0.004 sec
- *  cpu-time:     0 d,  0 h,  0 min,  0.041 sec
- * ratio c/w:    11.047 speedup
+ * wall-time:     0 d,  0 h,  0 min,  0.019 sec
+ *  cpu-time:     0 d,  0 h,  0 min,  0.350 sec
+ * ratio c/w:    18.351 speedup
  ANC optimizer:
- * wall-time:     0 d,  0 h,  0 min,  0.010 sec
- *  cpu-time:     0 d,  0 h,  0 min,  0.107 sec
- * ratio c/w:    11.154 speedup
+ * wall-time:     0 d,  0 h,  0 min,  0.069 sec
+ *  cpu-time:     0 d,  0 h,  0 min,  1.331 sec
+ * ratio c/w:    19.173 speedup
 
