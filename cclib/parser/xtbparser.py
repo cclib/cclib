@@ -1,3 +1,4 @@
+from datetime import timedelta
 from typing import List, Literal, Optional, Tuple
 
 from cclib.parser import logfileparser, utils
@@ -73,6 +74,8 @@ class XTB(logfileparser.Logfile):
         Extract the total charge. It can always be found in the
         summary formatted as a float.
 
+        Format for GFN-xTB:
+
          :::::::::::::::::::::::::::::::::::::::::::::::::::::
          ::                     SUMMARY                     ::
          :::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -89,8 +92,41 @@ class XTB(logfileparser.Logfile):
          :: add. restraining           0.000000000000 Eh    ::
          :: total charge              -0.000000000000 e     ::
          :::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+         Format for GFN-FF:
+         :::::::::::::::::::::::::::::::::::::::::::::::::::::
+         ::                     SUMMARY                     ::
+         :::::::::::::::::::::::::::::::::::::::::::::::::::::
+         :: total energy              -0.327405667208 Eh    ::
+         :: gradient norm              0.021455947754 Eh/a0 ::
+         ::.................................................::
+         :: bond energy               -0.269813650323 Eh    ::
+         :: angle energy               0.001167514553 Eh    ::
+         :: torsion energy             0.000000000000 Eh    ::
+         :: repulsion energy           0.030786304642 Eh    ::
+         :: electrostat energy        -0.089406523183 Eh    ::
+         :: dispersion energy         -0.000139312897 Eh    ::
+         :: HB energy                  0.000000000000 Eh    ::
+         :: XB energy                  0.000000000000 Eh    ::
+         :: bonded atm energy          0.000000000000 Eh    ::
+         :: external energy            0.000000000000 Eh    ::
+         :: add. restraining           0.000000000000 Eh    ::
+         :: total charge              -0.000000000000 e     ::
+         ::.................................................::
+         :: atomisation energy         0.000000000000 Eh    ::
+         :::::::::::::::::::::::::::::::::::::::::::::::::::::
         """
         return round(float(line.split()[-3])) if "total charge" in line else None
+
+    def _extract_dispersion(self, line: str) -> Optional[float]:
+        """
+        Extraction the dispersion energy. Refer to the summary tables above.
+        """
+        return (
+            utils.convertor(float(line.split()[-3]), "hartree", "eV")
+            if "-> dispersion" in line or "dispersion energy" in line
+            else None
+        )
 
     def _extract_final_energy(self, line: str) -> Optional[float]:
         """
@@ -250,6 +286,67 @@ class XTB(logfileparser.Logfile):
         line_split = line.split()
         return float(line_split[4]) if len(line) == 6 else None
 
+    def _extract_wall_time(self, line: str) -> Optional[List[timedelta]]:
+        """
+        Extract the wall time.
+
+         * wall-time:     0 d,  0 h,  0 min,  0.091 sec
+        """
+        line_split = line.split()
+        return (
+            [
+                timedelta(
+                    days=float(line_split[2]),
+                    hours=float(line_split[4]),
+                    minutes=float(line_split[6]),
+                    seconds=float(line_split[8]),
+                )
+            ]
+            if "*" in line and "wall-time" in line
+            else None
+        )
+
+    def _extract_cpu_time(self, line: str) -> Optional[List[timedelta]]:
+        """
+        Extract the CPU time.
+
+         *  cpu-time:     0 d,  0 h,  0 min,  1.788 sec
+        """
+        line_split = line.split()
+        return (
+            [
+                timedelta(
+                    days=float(line_split[2]),
+                    hours=float(line_split[4]),
+                    minutes=float(line_split[6]),
+                    seconds=float(line_split[8]),
+                )
+            ]
+            if "*" in line and "cpu-time" in line
+            else None
+        )
+
+    # TODO: Get other headers.
+    def _extract_method(self, line: str) -> Optional[str]:
+        """
+        Extract the method.
+
+        Example 1:
+           -------------------------------------------------
+          |                 G F N 2 - x T B                 |
+           -------------------------------------------------
+
+        Example 2:
+           -------------------------------------------------
+          |                   G F N - F F                   |
+          |          A general generic force-field          |
+          |                  Version 1.0.3                  |
+           -------------------------------------------------
+        """
+        return (
+            "GFN2-xTB" if "G F N 2 - x T B" in line else "GFN-FF" if "G F N - F F" in line else None
+        )
+
     def _is_cycle_line(self, line: str) -> bool:
         """
         Determine if the line indicates it is a geometry optimization cycle.
@@ -333,19 +430,24 @@ class XTB(logfileparser.Logfile):
         if version := self._extract_version(line):
             self.metadata["package_version"] = version
 
+        if method := self._extract_method(line):
+            self.metadata["methods"] = [method]
+
         if coord_filename := self._extract_coord_file(line):
             self.metadata["coord_type"] = coord_filename.split(".")[-1]
 
         if charge := self._extract_charge(line):
             self.charge = charge
 
-        # Cycle through the geometry steps to get the total energies,
-        # if applicable
+        # Cycle through the geometry steps to get the energies
         scf_energies = []
+        dispersion_energies = []
         if self._is_cycle_line(line):
             while not self._is_geom_end_line(line):
                 if scf_energy := self._extract_geom_energy(line):
                     scf_energies.append(scf_energy)
+                if dispersion_energy := self._extract_dispersion(line):
+                    dispersion_energies.append(dispersion_energy)
                 line = next(inputfile)
 
             # Check if the geometry optimization was successful
@@ -442,12 +544,17 @@ class XTB(logfileparser.Logfile):
         if scf_energies:
             self.set_attribute("scfenergies", np.array(scf_energies))
 
+        if dispersion_energies:
+            self.set_attribute("dispersionenergies", np.array(dispersion_energies))
+
+        if wall_time := self._extract_wall_time(line):
+            self.metadata["wall_time"] = wall_time
+
+        if cpu_time := self._extract_cpu_time(line):
+            self.metadata["cpu_time"] = cpu_time
+
         if self._is_success(line):
             self.metadata["success"] = True
 
-        # TODO: atommasses
-        # TODO: dispersionenergies
         # TODO: vibfreqs etc.
         # TODO: enthalpy, entropy, freeenergy
-        # TODO: metadata.cpu_time, metadata.methods
-        # TODO: metadata.package, metadata.wall_time
