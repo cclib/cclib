@@ -347,6 +347,76 @@ class XTB(logfileparser.Logfile):
             "GFN2-xTB" if "G F N 2 - x T B" in line else "GFN-FF" if "G F N - F F" in line else None
         )
 
+    def _extract_symmetry(self, line: str) -> Optional[str]:
+        """
+        Extract symmetry.
+
+          ...................................................
+          :                      SETUP                      :
+          :.................................................:
+          :  # frequencies                           3      :
+          :  # imaginary freq.                       0      :
+          :  linear?                             false      :
+          :  only rotor calc.                    false      :
+          :  symmetry                              c2v      :
+        """
+        return line.split()[2] if ":" in line and "symmetry" in line else None
+
+    def _extract_enthalpy(self, line: str) -> Optional[float]:
+        """
+        Extract total enthalpy.
+
+           -------------------------------------------------
+          | TOTAL ENERGY               -5.070544323569 Eh   |
+          | TOTAL ENTHALPY             -5.046650511691 Eh   |
+          | TOTAL FREE ENERGY          -5.068050459618 Eh   |
+          | GRADIENT NORM               0.000458233996 Eh/α |
+          | HOMO-LUMO GAP              14.381259577706 eV   |
+           -------------------------------------------------
+        """
+        return (
+            utils.convertor(line.split()[3], "hartree", "eV") if "TOTAL ENTHALPY" in line else None
+        )
+
+    def _extract_entropy(self, line: str) -> Optional[float]:
+        """
+        Extract total entropy. See summary above.
+        """
+        return (
+            utils.convertor(line.split()[3], "hartree", "eV") if "TOTAL ENTROPY" in line else None
+        )
+
+    def _extract_free_energy(self, line: str) -> Optional[float]:
+        """
+        Extract total free energy. See summary above.
+        """
+        return (
+            utils.convertor(line.split()[4], "hartree", "eV")
+            if "TOTAL FREE ENERGY" in line
+            else None
+        )
+
+    def _extract_zpve(self, line: str) -> Optional[float]:
+        """
+        Extract ZPVE.
+
+         :::::::::::::::::::::::::::::::::::::::::::::::::::::
+         ::                  THERMODYNAMIC                  ::
+         :::::::::::::::::::::::::::::::::::::::::::::::::::::
+         :: total free energy          -5.068050459618 Eh   ::
+         ::.................................................::
+         :: total energy               -5.070544323569 Eh   ::
+         :: zero point energy           0.020112815395 Eh   ::
+         :: G(RRHO) w/o ZPVE           -0.017618951444 Eh   ::
+         :: G(RRHO) contrib.            0.002493863951 Eh   ::
+         :::::::::::::::::::::::::::::::::::::::::::::::::::::
+        """
+        return (
+            utils.convertor(line.split()[4], "hartree", "eV")
+            if "zero point energy" in line
+            else None
+        )
+
     def _is_cycle_line(self, line: str) -> bool:
         """
         Determine if the line indicates it is a geometry optimization cycle.
@@ -553,8 +623,20 @@ class XTB(logfileparser.Logfile):
         if cpu_time := self._extract_cpu_time(line):
             self.metadata["cpu_time"] = cpu_time
 
+        if symmetry := self._extract_symmetry(line):
+            self.metadata["symmetry_detected"] = symmetry
+            self.metadata["symmetry_used"] = symmetry
+
+        if zpve := self._extract_zpve(line):
+            self.zpve = zpve
+        if entropy := self._extract_entropy(line):
+            self.enthalpy = entropy
+        if enthalpy := self._extract_enthalpy(line):
+            self.enthalpy = enthalpy
+        if free_energy := self._extract_free_energy(line):
+            self.freenergy = free_energy
+
         if self._is_success(line):
             self.metadata["success"] = True
 
         # TODO: vibfreqs etc.
-        # TODO: enthalpy, entropy, freeenergy
