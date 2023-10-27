@@ -27,16 +27,12 @@ class XTB(logfileparser.Logfile):
         return label
 
     def before_parsing(self) -> None:
-        """Set attributes before parsing"""
-        self.atomprop = {}
-        self.bondprop = {}
+        """Acttions before parsing"""
+        pass
 
     def after_parsing(self) -> None:
-        """Delete empty attributes after parsing"""
-        if not self.atomprop:
-            delattr(self, "atomprop")
-        if not self.bondprop:
-            delattr(self, "bondprop")
+        """Actions after parsing"""
+        pass
 
     def _extract_version(self, line: str) -> Optional[str]:
         """
@@ -118,16 +114,6 @@ class XTB(logfileparser.Logfile):
          :::::::::::::::::::::::::::::::::::::::::::::::::::::
         """
         return round(float(line.split()[-3])) if "total charge" in line else None
-
-    def _extract_dispersion(self, line: str) -> Optional[float]:
-        """
-        Extraction the dispersion energy. Refer to the summary tables above.
-        """
-        return (
-            utils.convertor(float(line.split()[-3]), "hartree", "eV")
-            if "-> dispersion" in line or "dispersion energy" in line
-            else None
-        )
 
     def _extract_final_energy(self, line: str) -> Optional[float]:
         """
@@ -285,7 +271,7 @@ class XTB(logfileparser.Logfile):
         3   1 H        0.805     0.282     0.777     1.384
         """
         line_split = line.split()
-        return float(line_split[4]) if len(line) == 6 else None
+        return float(line_split[4]) if len(line_split) == 7 else None
 
     def _extract_wall_time(self, line: str) -> Optional[List[timedelta]]:
         """
@@ -563,35 +549,32 @@ class XTB(logfileparser.Logfile):
     def extract(self, inputfile: FileWrapper, line: str) -> None:
         # Initialize as False. Will be overwritten to True if/when appropriate.
         self.metadata["success"] = False
-        self.optstatus = False
-        self.optdone = False
 
-        if version := self._extract_version(line):
+        version = self._extract_version(line)
+        if version is not None:
             self.metadata["package_version"] = version
 
-        if method := self._extract_method(line):
-            self.metadata["methods"] = [method]
-
-        if coord_filename := self._extract_coord_file(line):
+        coord_filename = self._extract_coord_file(line)
+        if coord_filename is not None:
             self.metadata["coord_type"] = coord_filename.split(".")[-1]
 
-        if charge := self._extract_charge(line):
+        method = self._extract_method(line)
+        if method is not None:
+            self.metadata["methods"] = [method]
+
+        charge = self._extract_charge(line)
+        if charge is not None:
             self.charge = charge
 
         # Cycle through the geometry steps to get the energies
         scf_energies = []
-        dispersion_energies = []
         if self._is_cycle_line(line):
             while not self._is_geom_end_line(line):
-                if scf_energy := self._extract_geom_energy(line):
+                scf_energy = self._extract_geom_energy(line)
+                if scf_energy is not None:
                     scf_energies.append(scf_energy)
-                if dispersion_energy := self._extract_dispersion(line):
-                    dispersion_energies.append(dispersion_energy)
-                line = next(inputfile)
 
-            # Check if the geometry optimization was successful
-            if self._is_geom_opt_converged(line):
-                self.optdone = True
+                line = next(inputfile)
 
         # Get the final geometry
         if "final structure:" in line:
@@ -600,7 +583,8 @@ class XTB(logfileparser.Logfile):
             coord_type = self.metadata.get("coord_type")
 
             while not self._is_end_of_structure_block(line, coord_type):
-                if symbol_coords := self._extract_symbol_coords(line, coord_type):
+                symbol_coords = self._extract_symbol_coords(line, coord_type)
+                if symbol_coords is not None:
                     symbol, coords = symbol_coords
                     atomnos.append(self.table.number[symbol])
                     atomcoords.append(coords)
@@ -664,14 +648,15 @@ class XTB(logfileparser.Logfile):
             line = next(inputfile)
             while line != "\n":
                 q = self._extract_mulliken_charge(line)
-                if q:
+                if q is not None:
                     mullikens.append(q)
                 line = next(inputfile)
 
         if mullikens:
             self.atomcharges = {"mulliken": np.array(mullikens)}
 
-        if final_energy := self._extract_final_energy(line):
+        final_energy = self._extract_final_energy(line)
+        if final_energy is not None:
             if scf_energies:
                 # Patch the final total energy to be the last SCF energy
                 # since it is higher precision and also always available
@@ -681,12 +666,10 @@ class XTB(logfileparser.Logfile):
                 scf_energies = [final_energy]
 
         if scf_energies:
-            self.set_attribute("scfenergies", np.array(scf_energies))
+            self.scfenergies = np.array(scf_energies)
 
-        if dispersion_energies:
-            self.set_attribute("dispersionenergies", np.array(dispersion_energies))
-
-        if symmetry := self._extract_symmetry(line):
+        symmetry = self._extract_symmetry(line)
+        if symmetry is not None:
             self.metadata["symmetry_detected"] = symmetry
             self.metadata["symmetry_used"] = symmetry
 
@@ -699,25 +682,33 @@ class XTB(logfileparser.Logfile):
             vibirs = []
             vibramans = []
             while "reduced masses" not in line:
-                vibfreqs.extend(self._extract_frequencies(line))
+                freq_vals = self._extract_frequencies(line)
+                if freq_vals is not None:
+                    vibfreqs.extend(freq_vals)
                 line = next(inputfile)
                 if "------" in line:
                     break
             line = next(inputfile)
             while "IR intensities" not in line:
-                vibrmasses.extend(self._extract_reduced_masses(line))
+                mass_vals = self._extract_reduced_masses(line)
+                if mass_vals is not None:
+                    vibrmasses.extend(mass_vals)
                 line = next(inputfile)
                 if "------" in line:
                     break
             line = next(inputfile)
             while "Raman intensities" not in line:
-                vibirs.extend(self._extract_ir_intensities(line))
+                vibir_vals = self._extract_ir_intensities(line)
+                if vibir_vals is not None:
+                    vibirs.extend(vibir_vals)
                 line = next(inputfile)
                 if "------" in line:
                     break
             line = next(inputfile)
             while "output can be" not in line:
-                vibramans.extend(self._extract_raman_intensities(line))
+                vibraman_vals = self._extract_raman_intensities(line)
+                if vibraman_vals is not None:
+                    vibramans.extend(vibraman_vals)
                 line = next(inputfile)
                 if "------" in line:
                     break
@@ -731,19 +722,25 @@ class XTB(logfileparser.Logfile):
             if vibramans:
                 self.vibramans = np.array(vibramans)
 
-        if zpve := self._extract_zpve(line):
+        zpve = self._extract_zpve(line)
+        if zpve is not None:
             self.zpve = zpve
-        if entropy := self._extract_entropy(line):
+        entropy = self._extract_entropy(line)
+        if entropy is not None:
             self.enthalpy = entropy
-        if enthalpy := self._extract_enthalpy(line):
+        enthalpy = self._extract_enthalpy(line)
+        if enthalpy is not None:
             self.enthalpy = enthalpy
-        if free_energy := self._extract_free_energy(line):
+        free_energy = self._extract_free_energy(line)
+        if free_energy is not None:
             self.freenergy = free_energy
 
-        if wall_time := self._extract_wall_time(line):
+        wall_time = self._extract_wall_time(line)
+        if wall_time is not None:
             self.metadata["wall_time"] = wall_time
 
-        if cpu_time := self._extract_cpu_time(line):
+        cpu_time = self._extract_cpu_time(line)
+        if cpu_time is not None:
             self.metadata["cpu_time"] = cpu_time
 
         if self._is_success(line):
