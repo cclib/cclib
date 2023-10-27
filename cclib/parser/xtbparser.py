@@ -1,8 +1,6 @@
-import re
-from itertools import groupby
 from typing import List, Literal, Optional, Tuple
 
-from cclib.parser import logfileparser
+from cclib.parser import logfileparser, utils
 from cclib.parser.logfilewrapper import FileWrapper
 
 import numpy as np
@@ -104,7 +102,11 @@ class XTB(logfileparser.Logfile):
           | HOMO-LUMO GAP              14.381252816459 eV   |
            -------------------------------------------------
         """
-        return float(line.split()[3]) if "TOTAL ENERGY" in line else None
+        return (
+            utils.convertor(float(line.split()[3]), "hartree", "eV")
+            if "TOTAL ENERGY" in line
+            else None
+        )
 
     def _extract_geom_energy(self, line: str) -> Optional[float]:
         """
@@ -128,7 +130,11 @@ class XTB(logfileparser.Logfile):
                    *** GEOMETRY OPTIMIZATION CONVERGED AFTER 1 ITERATIONS ***
         """
 
-        return float(line.split()[4]) if "* total energy" in line else None
+        return (
+            utils.convertor(float(line.split()[4]), "hartree", "eV")
+            if "* total energy" in line
+            else None
+        )
 
     def _extract_symbol_coords(
         self, line: str, mode: Literal["xyz", "mol", "sdf"]
@@ -267,7 +273,7 @@ class XTB(logfileparser.Logfile):
         """
         return "***" in line and "GEOMETRY OPTIMIZATION" in line
 
-    def _is_finished(self, line: str) -> bool:
+    def _is_success(self, line: str) -> bool:
         """
         Determine if the job finished.
 
@@ -310,9 +316,22 @@ class XTB(logfileparser.Logfile):
         """
         return line.split()[0:4] == ["#", "Z", "covCN", "q"]
 
+    def _is_geom_opt_converged(self, line: str) -> bool:
+        """
+        Determine if the geometry optimization is converged.
+
+        *** GEOMETRY OPTIMIZATION CONVERGED AFTER 1 ITERATIONS ***
+        """
+        return "***" in line and "GEOMETRY OPTIMIZATION CONVERGED" in line
+
     def extract(self, inputfile: FileWrapper, line: str) -> None:
+        # Initialize as False. Will be overwritten to True if/when appropriate.
+        self.metadata["success"] = False
+        self.optstatus = False
+        self.optdone = False
+
         if version := self._extract_version(line):
-            self.metadata["legacy_package_version"] = version
+            self.metadata["package_version"] = version
 
         if coord_filename := self._extract_coord_file(line):
             self.metadata["coord_type"] = coord_filename.split(".")[-1]
@@ -328,6 +347,10 @@ class XTB(logfileparser.Logfile):
                 if scf_energy := self._extract_geom_energy(line):
                     scf_energies.append(scf_energy)
                 line = next(inputfile)
+
+            # Check if the geometry optimization was successful
+            if self._is_geom_opt_converged(line):
+                self.optdone = True
 
         # Get the final geometry
         if "final structure:" in line:
@@ -365,7 +388,6 @@ class XTB(logfileparser.Logfile):
             i = 0
             while "------" not in line:
                 orbital_info = self._extract_orbitals(line)
-                line_split = line.split()
 
                 if orbital_info:
                     orbital_idx = orbital_info[0] - 1
@@ -408,190 +430,6 @@ class XTB(logfileparser.Logfile):
         if mullikens:
             self.atomcharges = {"mulliken": np.array(mullikens)}
 
-        # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-        # Refactoring below
-        # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-
-        # Grabbing the Wiberg bond orders (WBO)
-        #
-        # Wiberg/Mayer (AO) data.
-        # largest (>0.10) Wiberg bond orders for each atom
-        #
-        #  ---------------------------------------------------------------------------
-        #      #   Z sym  total        # sym  WBO       # sym  WBO       # sym  WBO
-        #  ---------------------------------------------------------------------------
-        #      1   6 C    3.893 --     3 C    1.482     2 O    1.174    15 H    0.964
-        #                              7 C    0.116
-        #      2   8 O    2.471 --     1 C    1.174     7 C    1.096
-        #      3   6 C    3.982 --     1 C    1.482     6 C    1.254     4 C    1.103
-        #      4   6 C    3.951 --     5 N    2.811     3 C    1.103
-        #      5   7 N    3.010 --     4 C    2.811
-        #      6   6 C    3.982 --     7 C    1.505     3 C    1.254    16 H    0.970
-        #      7   6 C    3.913 --     6 C    1.505     8 C    1.116     2 O    1.096
-        #                              1 C    0.116
-        #      8   6 C    3.919 --    10 C    1.399     9 O    1.131     7 C    1.116
-        #                             14 C    0.115
-        #      9   8 O    2.468 --    14 C    1.133     8 C    1.131
-        #     10   6 C    3.979 --     8 C    1.399    13 C    1.240    11 C    1.119
-        #     11   6 C    3.952 --    12 N    2.789    10 C    1.119
-        #     12   7 N    2.997 --    11 C    2.789
-        #     13   6 C    3.982 --    14 C    1.611    10 C    1.240    17 H    0.973
-        #     14   6 C    3.895 --    13 C    1.611     9 O    1.133    18 H    0.964
-        #                              8 C    0.115
-        #     15   1 H    0.994 --     1 C    0.964
-        #     16   1 H    0.996 --     6 C    0.970
-        #     17   1 H    0.996 --    13 C    0.973
-        #     18   1 H    0.994 --    14 C    0.964
-        #  ---------------------------------------------------------------------------
-        #
-
-        if "Wiberg/Mayer (AO) data" in line:
-            # Skip 6 lines to get to the first line of data
-            next(inputfile)
-            next(inputfile)
-            next(inputfile)
-            next(inputfile)
-            next(inputfile)
-            line = next(inputfile)
-
-            wbo = []
-            # Iterating over lines until the end dashes line
-            while "------" not in line:
-                if line[5] != " ":
-                    line_split = line.strip().split()
-                    wbo_total = float(line_split[3])
-
-                    wbo.append([wbo_total])
-                    for i in range(0, len(line_split) - 5, 3):
-                        wbo_next = line_split[i + 5 : i + 8]
-                        wbo_idx = int(wbo_next[0]) - 1
-                        wbo_order = float(wbo_next[2])
-
-                        wbo[-1].append([wbo_idx, wbo_order])
-                else:
-                    line_split = line.strip().split()
-
-                    for i in range(0, len(line_split), 3):
-                        wbo_next = line_split[i : i + 3]
-                        wbo_idx = int(wbo_next[0]) - 1
-                        wbo_order = float(wbo_next[2])
-                        wbo[-1].append([wbo_idx, wbo_order])
-                line = next(inputfile)
-
-            self.bondprop["wbo"] = wbo
-
-        # Get Fukui Indecis for each atom
-        #    #        f(+)     f(-)     f(0)
-        #  1N      -0.075   -0.084   -0.080
-        #  2C      -0.021   -0.014   -0.018
-        #  3N      -0.084   -0.092   -0.088
-        # ....................
-        # 14H      -0.059   -0.057   -0.058
-        # 15H      -0.070   -0.065   -0.068
-        # 16H      -0.067   -0.064   -0.065
-        # Creates a list of lists the size of (n,3) where n is the number of atoms.
-        # Each atom had the following info, in that order:
-        #   - f(+)
-        #   - f(-)
-        #   - f(0)
-
-        if line.strip() == "#        f(+)     f(-)     f(0)":
-            line = next(inputfile)
-            atom_fp = []
-            atom_fn = []
-            atom_fz = []
-            for _ in range(self.natom):
-                try:
-                    atom_fp.append(float(line[9:19]))
-                except Exception:
-                    atom_fp.append(-1000000.0)
-                try:
-                    atom_fn.append(float(line[19:28]))
-                except Exception:
-                    atom_fn.append(-1000000.0)
-                try:
-                    atom_fz.append(float(line[28:]))
-                except Exception:
-                    atom_fz.append(1000000.0)
-                line = next(inputfile)
-
-            self.atomprop["fukui"] = [atom_fp, atom_fn, atom_fz]
-
-        # Get LMO data
-        #
-        #     LMO Fii/eV  ncent    charge center   contributions...
-        #     1 sigma -21.33   1.84  12.23319  -5.99934  -6.73018   13O :  0.64   12C :  0.37
-        #     2 sigma -21.05   1.82  11.03031  -5.52370  -7.69423   13O :  0.66   31H :  0.34
-        #     3 sigma -20.30   1.94  13.15771  -3.57423  -2.57537    7N :  0.58    6C :  0.42
-        #     4 sigma -20.29   1.94  13.85375  -4.46664   4.16798   11N :  0.56   10C :  0.45
-        # .......................
-        #    37 sigma -17.29   1.97  10.58062   1.21250  -3.64843    4C :  0.52   21H :  0.48
-        #    38 sigma -17.22   1.98  12.43345   1.40582  -2.52759    4C :  0.52   22H :  0.48
-        #    39 sigma -17.22   1.98  13.80996   3.97178  -5.25134    3C :  0.53   19H :  0.48
-        #    40 LP    -15.87   1.05  14.66884  -4.88820   5.98676   11N :  0.98
-        #    41 LP    -15.58   1.02  13.59986   8.28526  -4.78561    1N :  0.99
-        #
-        # Creates a list of lists size of (n,4) where n is the number of atoms.
-        # Each atom has the following info, in this order:
-        #   - Higest priority LMO type encoding (0 for LP, 1 for pi, 2 for delpi, 3 for sigma) - where 0 (LP) is the highest priority.
-        #   - Average contribution of the highest priority LMO
-        #   - Average Fii/eV of the highest priority LMO
-        #   - Average ncent of the highest priority LMO
-
-        if line.startswith(" LMO Fii/eV"):  # and 'donescf' in self.attributes.keys():
-            line = next(inputfile)
-            lmo_list = []
-            while line[:5].strip().isnumeric():
-                split = [x for x in re.split("\s+|:", line) if x != ""]
-                lmo_num = split[0]
-                lmo_type = split[1]
-                try:
-                    lmo_fii = float(split[2])
-                except Exception:
-                    lmo_fii = split[2]
-                try:
-                    lmo_ncent = float(split[3])
-                except Exception:
-                    lmo_ncent = split[3]
-
-                lmo_cont = split[7:]
-                # if lmo_type in ['pi','LP']:
-                for i in range(len(lmo_cont) // 2):
-                    if (
-                        (lmo_type == "pi" and float(lmo_cont[2 * i - 1]) > 0.3)
-                        or (lmo_type == "LP" and float(lmo_cont[2 * i - 1]) > 0.7)
-                        or (lmo_type in ["sigma", "delpi"])
-                    ):
-                        count_atoms = re.findall("(\d+|\D+)", lmo_cont[2 * i - 2])
-                        lmo_list.append(
-                            {
-                                "AtomIdx": int(count_atoms[0]),
-                                "Contribution": float(lmo_cont[2 * i - 1]),
-                                "LMO Num": lmo_num,
-                                "LMO Type": lmo_type,
-                                "Fii/eV": lmo_fii,
-                                "ncent": lmo_ncent,
-                            }
-                        )
-                line = next(inputfile)
-
-            LMO_ORDER = {"LP": 0, "pi": 1, "delpi": 2, "sigma": 3}
-            lmo_list = sorted(lmo_list, key=lambda x: (x["AtomIdx"], LMO_ORDER[x["LMO Type"]]))
-            lmo_list_cleaned = []
-            keys_list = []
-            for (key, _), group in groupby(
-                lmo_list, key=lambda x: (x["AtomIdx"], LMO_ORDER[x["LMO Type"]])
-            ):
-                if key not in keys_list:
-                    keys_list.append(key)
-                    temp_list = list(group)
-                    atom_cont = sum(d["Contribution"] for d in temp_list) / len(temp_list)
-                    atom_fii = sum(d["Fii/eV"] for d in temp_list) / len(temp_list)
-                    atom_ncent = sum(d["ncent"] for d in temp_list) / len(temp_list)
-                    lmo_code = LMO_ORDER[temp_list[0]["LMO Type"]]
-                    lmo_list_cleaned.append([lmo_code, atom_cont, atom_fii, atom_ncent])
-
-            self.atomprop["lmo"] = lmo_list_cleaned
         if final_energy := self._extract_final_energy(line):
             if scf_energies:
                 # Patch the final total energy to be the last SCF energy
@@ -602,7 +440,14 @@ class XTB(logfileparser.Logfile):
                 scf_energies = [final_energy]
 
         if scf_energies:
-            self.set_attribute("scfenergies", scf_energies)
+            self.set_attribute("scfenergies", np.array(scf_energies))
 
-        if self._is_finished(line):
+        if self._is_success(line):
             self.metadata["success"] = True
+
+        # TODO: atommasses
+        # TODO: dispersionenergies
+        # TODO: vibfreqs etc.
+        # TODO: enthalpy, entropy, freeenergy
+        # TODO: metadata.cpu_time, metadata.methods
+        # TODO: metadata.package, metadata.wall_time
