@@ -1,6 +1,6 @@
 import re
 from itertools import groupby
-from typing import List, Literal, Optional, Tuple
+from typing import List, Literal, Optional, Tuple, Union
 
 from cclib.parser import logfileparser
 
@@ -53,8 +53,7 @@ class XTB(logfileparser.Logfile):
         * xtb version 6.6.1 (8d0f1dd) compiled by 'conda@1efc2f54142f' on 2023-08-01
         """
 
-        version_match = re.search(r"xtb version (\d+(\.\d+)+)", line)
-        return version_match.group(1) if version_match else None
+        return line.split()[3] if "xtb version" in line else None
 
     def _extract_coord_file(self, line: str) -> Optional[str]:
         """
@@ -68,8 +67,7 @@ class XTB(logfileparser.Logfile):
         coordinate file            : coord.xyz
         omp threads                :                    20
         """
-        coordinate_file_match = re.search(r"coordinate file\s+:\s+(\S+)", line)
-        return coordinate_file_match.group(1) if coordinate_file_match else None
+        return line.split()[-1] if "coordinate file" in line else None
 
     def _extract_charge(self, line: str) -> Optional[int]:
         """
@@ -93,8 +91,7 @@ class XTB(logfileparser.Logfile):
          :: total charge              -0.000000000000 e     ::
          :::::::::::::::::::::::::::::::::::::::::::::::::::::
         """
-        charge_match = re.search(r"total charge\s+([-+]?\d+\.\d+)", line)
-        return round(float(charge_match.group(1))) if charge_match else None
+        return round(float(line.split()[-3])) if "total charge" in line else None
 
     def _extract_final_energy(self, line: str) -> Optional[float]:
         """
@@ -106,8 +103,7 @@ class XTB(logfileparser.Logfile):
           | HOMO-LUMO GAP              14.381252816459 eV   |
            -------------------------------------------------
         """
-        total_energy_match = re.search(r"TOTAL ENERGY\s+([-+]?\d+\.\d+)", line)
-        return float(total_energy_match.group(1)) if total_energy_match else None
+        return float(line.split()[3]) if "TOTAL ENERGY" in line else None
 
     def _extract_geom_energy(self, line: str) -> Optional[float]:
         """
@@ -131,8 +127,7 @@ class XTB(logfileparser.Logfile):
                    *** GEOMETRY OPTIMIZATION CONVERGED AFTER 1 ITERATIONS ***
         """
 
-        geom_energy_match = re.search(r"\*\s+total energy\s+:\s+([-+]?\d+\.\d+)", line)
-        return float(geom_energy_match.group(1)) if geom_energy_match else None
+        return float(line.split()[4]) if "* total energy" in line else None
 
     def _extract_symbol_coords(
         self, line: str, mode: Literal["xyz", "mol", "sdf"]
@@ -175,19 +170,13 @@ class XTB(logfileparser.Logfile):
          18 14  1  0  0  0  0
         M  END
         """
+        line_split = line.split()
         if mode == "xyz":
-            symbol_coords_match = re.search(r"[A-Z][a-z]?+\s+([-+]?\d+\.\d+\s*){3}", line)
-            if symbol_coords_match:
-                symbol, x, y, z = symbol_coords_match.group(0).split()
-                return symbol, [float(x), float(y), float(z)]
-
+            if line_split.isupper():
+                return line_split[0], [float(coord) for coord in line_split[1:]]
         elif mode in {"mol", "sdf"}:
-            symbol_coords_match = re.search(r"([-+]?\d+\.\d+\s+){3}[A-Z][a-z]?", line)
-            if symbol_coords_match:
-                x, y, z, symbol = symbol_coords_match.group(0).split()
-
-                return symbol, [float(x), float(y), float(z)]
-
+            if line_split[3].isupper():
+                return line_split[3], [float(coord) for coord in line_split[:3]]
         else:
             raise ValueError(f"Unsupported coordinate file type: {mode}")
 
@@ -200,7 +189,7 @@ class XTB(logfileparser.Logfile):
         ........................................................................
         """
 
-        return bool(re.search(r"CYCLE\s+\d+", line))
+        return bool("CYCLE" in line)
 
     def _is_geom_end_line(self, line: str) -> bool:
         """
@@ -212,7 +201,7 @@ class XTB(logfileparser.Logfile):
 
         *** FAILED TO CONVERGE GEOMETRY OPTIMIZATION ***
         """
-        return bool(re.search(r"\s+GEOMETRY OPTIMIZATION\s+", line))
+        return bool("***" in line and "GEOMETRY OPTIMIZATION" in line)
 
     def _is_finished(self, line: str) -> bool:
         """
@@ -222,7 +211,7 @@ class XTB(logfileparser.Logfile):
         * finished run on 2023/10/26 at 13:18:28.705
         ------------------------------------------------------------------------
         """
-        return bool(re.search(r"\*\s+finished run on", line))
+        return bool("* finished run" in line)
 
     def _is_end_of_structure_block(self, line: str, mode: Literal["xyz", "mol", "sdf"]) -> bool:
         """
@@ -230,11 +219,72 @@ class XTB(logfileparser.Logfile):
         Refer to _extract_symbol_coords for examples of structure blocks.
         """
         if mode == "xyz":
-            return bool(re.search(r"\w"))
+            return bool(line == "\n")
         elif mode in {"mol", "sdf"}:
-            return bool(re.search(r"M\s+END", line))
+            return bool("M" in line and "END" in line)
         else:
             raise ValueError(f"Unsupported coordinate file type: {mode}")
+
+    def _is_orbitals_line(self, line: str) -> bool:
+        """
+        Extract if the line indicates the start of a orbital block.
+
+        Note that xTB sometimes truncates this list depending on size.
+
+        * Orbital Energies and Occupations
+
+             #    Occupation            Energy/Eh            Energy/eV
+          -------------------------------------------------------------
+             1        2.0000           -0.7817342             -21.2721
+           ...           ...                  ...                  ...
+            21        2.0000           -0.5177364             -14.0883
+            22        2.0000           -0.5133906             -13.9701
+            23        2.0000           -0.5119411             -13.9306
+            24        2.0000           -0.5103339             -13.8869
+            25        2.0000           -0.5064217             -13.7804
+            26        2.0000           -0.4793904             -13.0449
+            27        2.0000           -0.4762317             -12.9589
+            28        2.0000           -0.4705819             -12.8052
+            29        2.0000           -0.4558376             -12.4040
+            30        2.0000           -0.4505134             -12.2591
+            31        2.0000           -0.4390552             -11.9473
+            32        2.0000           -0.4371482             -11.8954
+            33        2.0000           -0.4083272             -11.1111 (HOMO)
+            34                         -0.2990289              -8.1370 (LUMO)
+            35                         -0.2703399              -7.3563
+            36                         -0.2376187              -6.4659
+            37                         -0.2246900              -6.1141
+            38                         -0.2213822              -6.0241
+            39                         -0.2016539              -5.4873
+            40                         -0.1317437              -3.5849
+            41                         -0.1173862              -3.1942
+            42                          0.0207011               0.5633
+            43                          0.0378419               1.0297
+            44                          0.0843351               2.2949
+           ...                                ...                  ...
+            60                          1.1799189              32.1072
+          -------------------------------------------------------------
+                      HL-Gap            0.1092983 Eh            2.9742 eV
+                 Fermi-level           -0.3536781 Eh           -9.6241 eV
+        """
+        return bool("* Orbital Energies and Occupations" in line)
+
+    def _extract_orbitals(self, line: str) -> Union[Tuple[int, float, float, float], np.nan]:
+        """
+        Extract the orbital index, occupation, and energies.
+        """
+        line_split = line.split()
+        if "..." in line:
+            return np.nan
+        if "HOMO" in line or (len(line_split) == 4 and "MO" not in line):
+            return (
+                int(line_split[0]),
+                float(line_split[1]),
+                float(line_split[2]),
+                float(line_split[3]),
+            )
+        if "LUMO" in line or (len(line_split) == 3 and "MO" not in line):
+            return int(line_split[0]), 0.0, float(line_split[2]), float(line_split[3])
 
     def extract(self, inputfile: List[str], line: str) -> None:
         # Get the xTB version
@@ -285,48 +335,14 @@ class XTB(logfileparser.Logfile):
             if atomcoords:
                 self.set_attribute("atomcoords", atomcoords)
 
-        # Get Molecular Orbitals energies and HOMO index
-        # xTB trunctaes the MO list so we need to take care of that.
-        # Unkown energies will be given NaN as a value
-        #
-        # * Orbital Energies and Occupations
+        # TODO: natom and atomnos are not defined above for static calculations
+        # but are often reported in the log file.
 
-        #      #    Occupation            Energy/Eh            Energy/eV
-        #   -------------------------------------------------------------
-        #      1        2.0000           -0.7817342             -21.2721
-        #    ...           ...                  ...                  ...
-        #     21        2.0000           -0.5177364             -14.0883
-        #     22        2.0000           -0.5133906             -13.9701
-        #     23        2.0000           -0.5119411             -13.9306
-        #     24        2.0000           -0.5103339             -13.8869
-        #     25        2.0000           -0.5064217             -13.7804
-        #     26        2.0000           -0.4793904             -13.0449
-        #     27        2.0000           -0.4762317             -12.9589
-        #     28        2.0000           -0.4705819             -12.8052
-        #     29        2.0000           -0.4558376             -12.4040
-        #     30        2.0000           -0.4505134             -12.2591
-        #     31        2.0000           -0.4390552             -11.9473
-        #     32        2.0000           -0.4371482             -11.8954
-        #     33        2.0000           -0.4083272             -11.1111 (HOMO)
-        #     34                         -0.2990289              -8.1370 (LUMO)
-        #     35                         -0.2703399              -7.3563
-        #     36                         -0.2376187              -6.4659
-        #     37                         -0.2246900              -6.1141
-        #     38                         -0.2213822              -6.0241
-        #     39                         -0.2016539              -5.4873
-        #     40                         -0.1317437              -3.5849
-        #     41                         -0.1173862              -3.1942
-        #     42                          0.0207011               0.5633
-        #     43                          0.0378419               1.0297
-        #     44                          0.0843351               2.2949
-        #    ...                                ...                  ...
-        #     60                          1.1799189              32.1072
-        #   -------------------------------------------------------------
-        #               HL-Gap            0.1092983 Eh            2.9742 eV
-        #          Fermi-level           -0.3536781 Eh           -9.6241 eV
-        #
+        # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+        # Refactoring below
+        # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
-        if re.search(r"\*\s+Orbital Energies and Occupations", line):
+        if self._is_orbitals_line(line):
             # Skip 4 lines to get to the table
             next(inputfile)
             next(inputfile)
@@ -337,13 +353,18 @@ class XTB(logfileparser.Logfile):
             moenergies = [[]]
             monumbers = []
 
-            # Ending criteria is the dashed line at the end of the MO block.
-            while not re.esearch("-----------", line):
-                line_split = line.split()
-                monumbers.append(line_split[0])
+            while "------" not in line:
+                orbital_info = self._extract_orbitals(line)
+                if orbital_info is not None:
+                    monumbers.append(orbital_info[0])
+                    mooccnos.append(orbital_info[1])
+                    moenergies.append(orbital_info[2])
+                elif orbital_info is np.nan:
+                    monumbers.append(np.nan)
+                    mooccnos.append(np.nan)
+                    moenergies.append(np.nan)
 
-                # Parsing the lines before the LUMO line and the HOMO line itself.
-                # All MOs are occupied
+                # Parsing the lines before the LUMO line and the HOMO line itself
                 if (len(line_split) == 4 and line_split[-1] != "(LUMO)") or (len(line_split) == 5):
                     mooccnos[0].append(line_split[1])
                     moenergies[0].append(line_split[3])
@@ -370,44 +391,9 @@ class XTB(logfileparser.Logfile):
                 if monumber == "...":
                     fill_in_idx.append(idx)
                 else:
-                    monumbers[idx] = int(monumbers[idx])
+                    monumbers[idx] = monumbers[idx]
                     moenergies[0][idx] = float(moenergies[0][idx])
                     mooccnos[0][idx] = float(mooccnos[0][idx])
-
-            # Filling in the gaps since xTB truncates the list to include only
-            # the first and last MOs, and some number of MOs before and
-            # after the HOMO and LUMO.
-            #
-            # Electron occupency is assumed to be 2 for the missing values
-            # before the HOMO, and 0 for the missing values after the LUMO.
-            #
-            # NaN is put for the missing MO energies since we have no way
-            # to extrapolate them.
-
-            missing_mos_num = 0
-            for idx in fill_in_idx:
-                fixed_idx = idx + missing_mos_num
-                first_mo = int(monumbers[fixed_idx - 1])
-                last_mo = int(monumbers[fixed_idx + 1])
-                missing_mos_num = last_mo - first_mo - 1
-                na_list = [np.nan] * missing_mos_num
-
-                if mooccnos[0][fixed_idx - 1] == 2:
-                    twos_list = [2.0] * missing_mos_num
-                    mooccnos[0] = mooccnos[0][:fixed_idx] + twos_list + mooccnos[0][fixed_idx + 1 :]
-                else:
-                    zeros_list = [0.0] * missing_mos_num
-                    mooccnos[0] = (
-                        mooccnos[0][:fixed_idx] + zeros_list + mooccnos[0][fixed_idx + 1 :]
-                    )
-                monumbers = (
-                    monumbers[:fixed_idx]
-                    + list(np.arange(first_mo + 1, last_mo))
-                    + monumbers[fixed_idx + 1 :]
-                )
-                moenergies[0] = moenergies[0][:fixed_idx] + na_list + moenergies[0][fixed_idx + 1 :]
-
-                missing_mos_num -= 1
 
             self.set_attribute("moenergies", moenergies)
 
@@ -623,6 +609,9 @@ class XTB(logfileparser.Logfile):
                     lmo_list_cleaned.append([lmo_code, atom_cont, atom_fii, atom_ncent])
 
             self.atomprop["lmo"] = lmo_list_cleaned
+        # ^^^^^^^^^^^^^^^^^^^^^^^
+        # Refactoring above
+        # ^^^^^^^^^^^^^^^^^^^^^^^
 
         # Get the final total energy
         final_energy = self._extract_final_energy(line)
