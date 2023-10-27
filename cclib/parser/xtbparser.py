@@ -232,6 +232,18 @@ class XTB(logfileparser.Logfile):
         if "(LUMO)" in line or (len(line_split) == 3 and "MO" not in line):
             return int(line_split[0]), 0.0, float(line_split[3]), False
 
+    def _extract_mulliken_charge(self, line: str) -> Optional[float]:
+        """
+        Extract Mulliken charge.
+
+        #   Z          covCN         q      C6AA      α(0)
+        1   8 O        1.611    -0.565    24.356     6.661
+        2   1 H        0.805     0.282     0.777     1.384
+        3   1 H        0.805     0.282     0.777     1.384
+        """
+        line_split = line.split()
+        return float(line_split[4]) if len(line) == 6 else None
+
     def _is_cycle_line(self, line: str) -> bool:
         """
         Determine if the line indicates it is a geometry optimization cycle.
@@ -290,6 +302,14 @@ class XTB(logfileparser.Logfile):
         """
         return "* Orbital Energies and Occupations" in line
 
+    def _is_atomwise_properties(self, line: str) -> bool:
+        """
+        Determine if there are atom-wise properties.
+
+        #   Z          covCN         q      C6AA      α(0)
+        """
+        return line.split()[0:4] == ["#", "Z", "covCN", "q"]
+
     def extract(self, inputfile: FileWrapper, line: str) -> None:
         if version := self._extract_version(line):
             self.metadata["legacy_package_version"] = version
@@ -298,7 +318,7 @@ class XTB(logfileparser.Logfile):
             self.metadata["coord_type"] = coord_filename.split(".")[-1]
 
         if charge := self._extract_charge(line):
-            self.set_attribute("charge", charge)
+            self.charge = charge
 
         # Cycle through the geometry steps to get the total energies,
         # if applicable
@@ -323,10 +343,10 @@ class XTB(logfileparser.Logfile):
                 line = next(inputfile)
 
             if atomnos:
-                self.set_attribute("natom", len(atomnos))
-                self.set_attribute("atomnos", atomnos)
+                self.natom = len(atomnos)
+                self.atomnos = atomnos
             if atomcoords:
-                self.set_attribute("atomcoords", atomcoords)
+                self.atomcoords = atomcoords
 
         # TODO: natom and atomnos are not defined above for static calculations
         # but are often reported in the log file.
@@ -367,50 +387,30 @@ class XTB(logfileparser.Logfile):
                 i += 1
                 line = next(inputfile)
 
-            moenergies = [np.array(moenergies)]
-            mooccnos = np.array(mooccnos)
-            homos = np.array(homos)
-
             # TODO: Unrestricted calculations
             if moenergies:
-                self.set_attribute("moenergies", moenergies)
+                self.moenergies = [np.array(moenergies)]
             if mooccnos:
-                self.set_attribute("mooccnos", mooccnos)
+                self.mooccnos = np.array(mooccnos)
             if homos:
-                self.set_attribute("homos", homos)
+                self.homos = np.array(homos)
+
+        # TODO: Is "q" mulliken in xTB? Not specified in output...
+        mullikens = []
+        if self._is_atomwise_properties(line):
+            line = next(inputfile)
+            while line != "\n":
+                q = self._extract_mulliken_charge(line)
+                if q:
+                    mullikens.append(q)
+                line = next(inputfile)
+
+        if mullikens:
+            self.atomcharges = {"mulliken": np.array(mullikens)}
 
         # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
         # Refactoring below
         # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-
-        # Grabbing atomic properties: Coordination number CN, Atomic partial charge q, Dispersion coefficient C6, Polarizability alpha:
-        #
-        #  #   Z          covCN         q      C6AA      α(0)
-        #  1   6 C        3.056     0.087    26.011     8.364
-        #  2   8 O        1.729    -0.155    16.635     5.507
-        # ...
-        # 17   1 H        0.927     0.059     2.210     2.325
-        # 18   1 H        0.926     0.066     2.131     2.283
-        #
-        if line.strip()[:5] == "#   Z":
-            line = next(inputfile)
-            atom_convcn = []
-            atom_q = []
-            atom_c6aa = []
-            atom_alpha = []
-            while line.strip() != "":
-                line_split = line.strip().split()
-                atom_convcn.append(float(line_split[3]))
-                atom_q.append(float(line_split[4]))
-                atom_c6aa.append(float(line_split[5]))
-                atom_alpha.append(float(line_split[6]))
-
-                line = next(inputfile)
-
-            self.atomprop["convcn"] = atom_convcn
-            self.atomprop["q"] = atom_q
-            self.atomprop["c6aa"] = atom_c6aa
-            self.atomprop["alpha"] = atom_alpha
 
         # Grabbing the Wiberg bond orders (WBO)
         #
@@ -445,21 +445,18 @@ class XTB(logfileparser.Logfile):
         #  ---------------------------------------------------------------------------
         #
 
-        if line.strip() == "Wiberg/Mayer (AO) data.":
+        if "Wiberg/Mayer (AO) data" in line:
             # Skip 6 lines to get to the first line of data
-            line = next(inputfile)
-            line = next(inputfile)
-            line = next(inputfile)
-            line = next(inputfile)
-            line = next(inputfile)
+            next(inputfile)
+            next(inputfile)
+            next(inputfile)
+            next(inputfile)
+            next(inputfile)
             line = next(inputfile)
 
             wbo = []
             # Iterating over lines until the end dashes line
-            while (
-                line.strip()
-                != "---------------------------------------------------------------------------"
-            ):
+            while "------" not in line:
                 if line[5] != " ":
                     line_split = line.strip().split()
                     wbo_total = float(line_split[3])
