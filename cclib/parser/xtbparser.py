@@ -175,7 +175,7 @@ class XTB(logfileparser.Logfile):
 
     def _extract_symbol_coords(
         self, line: str, mode: Literal["xyz", "mol", "sdf"]
-    ) -> Optional[Tuple[str, List[float, float, float]]]:
+    ) -> Optional[Tuple[str, List[float]]]:
         """
         Extract the symbol and X, Y, Z coordinates.
 
@@ -273,7 +273,7 @@ class XTB(logfileparser.Logfile):
                 bool("(HOMO) in line"),
             )
         if "(LUMO)" in line or (len(line_split) == 3 and "MO" not in line):
-            return int(line_split[0]), 0.0, float(line_split[3]), False
+            return int(line_split[0]), 0.0, float(line_split[2]), False
 
     def _extract_mulliken_charge(self, line: str) -> Optional[float]:
         """
@@ -327,7 +327,6 @@ class XTB(logfileparser.Logfile):
             else None
         )
 
-    # TODO: Get other headers.
     def _extract_method(self, line: str) -> Optional[str]:
         """
         Extract the method.
