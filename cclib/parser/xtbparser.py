@@ -1,3 +1,4 @@
+import re
 from datetime import timedelta
 from typing import List, Literal, Optional, Tuple
 
@@ -331,12 +332,17 @@ class XTB(logfileparser.Logfile):
         """
         Extract the method.
 
-        Example 1:
+        GFN1-xTB:
+           -------------------------------------------------
+          |                 G F N 1 - x T B                 |
+           -------------------------------------------------
+
+        GFN2-xTB:
            -------------------------------------------------
           |                 G F N 2 - x T B                 |
            -------------------------------------------------
 
-        Example 2:
+        GFN-FF:
            -------------------------------------------------
           |                   G F N - F F                   |
           |          A general generic force-field          |
@@ -344,7 +350,13 @@ class XTB(logfileparser.Logfile):
            -------------------------------------------------
         """
         return (
-            "GFN2-xTB" if "G F N 2 - x T B" in line else "GFN-FF" if "G F N - F F" in line else None
+            "GFN2-xTB"
+            if "G F N 2 - x T B" in line
+            else "GFN1-xTB"
+            if "G F N 1 - x T B" in line
+            else "GFN-FF"
+            if "G F N - F F" in line
+            else None
         )
 
     def _extract_symmetry(self, line: str) -> Optional[str]:
@@ -416,6 +428,54 @@ class XTB(logfileparser.Logfile):
             if "zero point energy" in line
             else None
         )
+
+    def _extract_frequencies(self, line: str) -> Optional[List[float]]:
+        """
+        Extract the vibrational reduced masses.
+
+                -------------------------------------------------
+                |               Frequency Printout                |
+                -------------------------------------------------
+        projected vibrational frequencies (cm⁻¹)
+        eigval :       -0.00    -0.00    -0.00    -0.00    -0.00     0.00
+        eigval :     1540.46  3639.49  3648.56
+        reduced masses (amu)
+        1:  1.86   2:  5.89   3: 14.59   4: 10.55   5: 13.64   6:  1.69   7:  2.15   8:  1.57
+        9:  2.11
+        IR intensities (km·mol⁻¹)
+        1: 66.62   2:134.89   3: 70.64   4: 26.65   5: 33.14   6:142.60   7:133.08   8:  7.15
+        9: 16.13
+        Raman intensities (amu)
+        1:  0.00   2:  0.00   3:  0.00   4:  0.00   5:  0.00   6:  0.00   7:  0.00   8:  0.00
+        9:  0.00
+        output can be read by thermo (or use thermo option).
+        writing <g98.out> molden fake output.
+        recommended (thermochemical) frequency scaling factor: 1.0
+        """
+        match = re.findall(r"[-]?\d+\.\d+", line)
+        return [float(val) for val in match] if match else None
+
+    def _extract_reduced_masses(self, line: str) -> Optional[List[float]]:
+        """
+        Extract the vibrational reduced masses. See summary above.
+        """
+        match = re.findall(r"\d+\.\d+", line)
+        return [float(val) for val in match] if match else None
+
+    def _extract_ir_intensities(self, line: str) -> Optional[List[float]]:
+        """
+        Extract the vibrational reduced masses. See summary above.
+        """
+        match = re.findall(r"\d+\.\d+", line)
+        return [float(val) for val in match] if match else None
+
+    # TODO: Are these units correct? xTB reports amu, but cclib wants A^4/amu...?
+    def _extract_raman_intensities(self, line: str) -> Optional[List[float]]:
+        """
+        Extract Raman intensities. See summary above.
+        """
+        match = re.findall(r"\d+\.\d+", line)
+        return [float(val) for val in match] if match else None
 
     def _is_cycle_line(self, line: str) -> bool:
         """
@@ -490,6 +550,16 @@ class XTB(logfileparser.Logfile):
         *** GEOMETRY OPTIMIZATION CONVERGED AFTER 1 ITERATIONS ***
         """
         return "***" in line and "GEOMETRY OPTIMIZATION CONVERGED" in line
+
+    def _is_freq_printout(self, line: str) -> bool:
+        """
+        Determine if we are in the frequency printout.
+
+           -------------------------------------------------
+          |               Frequency Printout                |
+           -------------------------------------------------
+        """
+        return "Frequency Printout" in line
 
     def extract(self, inputfile: FileWrapper, line: str) -> None:
         # Initialize as False. Will be overwritten to True if/when appropriate.
@@ -617,15 +687,50 @@ class XTB(logfileparser.Logfile):
         if dispersion_energies:
             self.set_attribute("dispersionenergies", np.array(dispersion_energies))
 
-        if wall_time := self._extract_wall_time(line):
-            self.metadata["wall_time"] = wall_time
-
-        if cpu_time := self._extract_cpu_time(line):
-            self.metadata["cpu_time"] = cpu_time
-
         if symmetry := self._extract_symmetry(line):
             self.metadata["symmetry_detected"] = symmetry
             self.metadata["symmetry_used"] = symmetry
+
+        if self._is_freq_printout(line):
+            next(inputfile)
+            next(inputfile)
+            line = next(inputfile)
+            vibfreqs = []
+            vibrmasses = []
+            vibirs = []
+            vibramans = []
+            while "reduced masses" not in line:
+                vibfreqs.extend(self._extract_frequencies(line))
+                line = next(inputfile)
+                if "------" in line:
+                    break
+            line = next(inputfile)
+            while "IR intensities" not in line:
+                vibrmasses.extend(self._extract_reduced_masses(line))
+                line = next(inputfile)
+                if "------" in line:
+                    break
+            line = next(inputfile)
+            while "Raman intensities" not in line:
+                vibirs.extend(self._extract_ir_intensities(line))
+                line = next(inputfile)
+                if "------" in line:
+                    break
+            line = next(inputfile)
+            while "output can be" not in line:
+                vibramans.extend(self._extract_raman_intensities(line))
+                line = next(inputfile)
+                if "------" in line:
+                    break
+
+            if vibfreqs:
+                self.vibfreqs = np.array(vibfreqs)
+            if vibrmasses:
+                self.vibrmasses = np.array(vibrmasses)
+            if vibirs:
+                self.vibirs = np.array(vibirs)
+            if vibramans:
+                self.vibramans = np.array(vibramans)
 
         if zpve := self._extract_zpve(line):
             self.zpve = zpve
@@ -636,7 +741,11 @@ class XTB(logfileparser.Logfile):
         if free_energy := self._extract_free_energy(line):
             self.freenergy = free_energy
 
+        if wall_time := self._extract_wall_time(line):
+            self.metadata["wall_time"] = wall_time
+
+        if cpu_time := self._extract_cpu_time(line):
+            self.metadata["cpu_time"] = cpu_time
+
         if self._is_success(line):
             self.metadata["success"] = True
-
-        # TODO: vibfreqs etc.
