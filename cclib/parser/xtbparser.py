@@ -1,8 +1,9 @@
 import re
 from itertools import groupby
-from typing import List, Literal, Optional, Tuple, Union
+from typing import List, Literal, Optional, Tuple
 
 from cclib.parser import logfileparser
+from cclib.parser.logfilewrapper import FileWrapper
 
 import numpy as np
 
@@ -180,56 +181,9 @@ class XTB(logfileparser.Logfile):
         else:
             raise ValueError(f"Unsupported coordinate file type: {mode}")
 
-    def _is_cycle_line(self, line: str) -> bool:
+    def _extract_orbitals(self, line: str) -> Optional[Tuple[int, float, float, float]]:
         """
-        Extract if the line indicates it is a geometry optimization cycle.
-
-        ........................................................................
-        .............................. CYCLE    1 ..............................
-        ........................................................................
-        """
-
-        return bool("CYCLE" in line)
-
-    def _is_geom_end_line(self, line: str) -> bool:
-        """
-        Extract if the line indicates the optimization is over.
-
-        *** GEOMETRY OPTIMIZATION CONVERGED AFTER 1 ITERATIONS ***
-
-        or
-
-        *** FAILED TO CONVERGE GEOMETRY OPTIMIZATION ***
-        """
-        return bool("***" in line and "GEOMETRY OPTIMIZATION" in line)
-
-    def _is_finished(self, line: str) -> bool:
-        """
-        Extract if the job finished.
-
-        ------------------------------------------------------------------------
-        * finished run on 2023/10/26 at 13:18:28.705
-        ------------------------------------------------------------------------
-        """
-        return bool("* finished run" in line)
-
-    def _is_end_of_structure_block(self, line: str, mode: Literal["xyz", "mol", "sdf"]) -> bool:
-        """
-        Extract if the line indicates the end of a structure block.
-        Refer to _extract_symbol_coords for examples of structure blocks.
-        """
-        if mode == "xyz":
-            return bool(line == "\n")
-        elif mode in {"mol", "sdf"}:
-            return bool("M" in line and "END" in line)
-        else:
-            raise ValueError(f"Unsupported coordinate file type: {mode}")
-
-    def _is_orbitals_line(self, line: str) -> bool:
-        """
-        Extract if the line indicates the start of a orbital block.
-
-        Note that xTB sometimes truncates this list depending on size.
+        Extract the orbital index, occupation, and energies.
 
         * Orbital Energies and Occupations
 
@@ -267,42 +221,83 @@ class XTB(logfileparser.Logfile):
                       HL-Gap            0.1092983 Eh            2.9742 eV
                  Fermi-level           -0.3536781 Eh           -9.6241 eV
         """
-        return bool("* Orbital Energies and Occupations" in line)
-
-    def _extract_orbitals(self, line: str) -> Union[Tuple[int, float, float, float], np.nan]:
-        """
-        Extract the orbital index, occupation, and energies.
-        """
         line_split = line.split()
-        if "..." in line:
-            return np.nan
-        if "HOMO" in line or (len(line_split) == 4 and "MO" not in line):
+        if "(HOMO)" in line or (len(line_split) == 4 and "MO" not in line):
             return (
                 int(line_split[0]),
                 float(line_split[1]),
                 float(line_split[2]),
                 float(line_split[3]),
             )
-        if "LUMO" in line or (len(line_split) == 3 and "MO" not in line):
+        if "(LUMO)" in line or (len(line_split) == 3 and "MO" not in line):
             return int(line_split[0]), 0.0, float(line_split[2]), float(line_split[3])
 
-    def extract(self, inputfile: List[str], line: str) -> None:
-        # Get the xTB version
-        version = self._extract_version(line)
-        if version:
+    def _is_cycle_line(self, line: str) -> bool:
+        """
+        Determine if the line indicates it is a geometry optimization cycle.
+
+        ........................................................................
+        .............................. CYCLE    1 ..............................
+        ........................................................................
+        """
+
+        return "CYCLE" in line
+
+    def _is_geom_end_line(self, line: str) -> bool:
+        """
+        Determine if the line indicates the optimization is over.
+
+        *** GEOMETRY OPTIMIZATION CONVERGED AFTER 1 ITERATIONS ***
+
+        or
+
+        *** FAILED TO CONVERGE GEOMETRY OPTIMIZATION ***
+        """
+        return "***" in line and "GEOMETRY OPTIMIZATION" in line
+
+    def _is_finished(self, line: str) -> bool:
+        """
+        Determine if the job finished.
+
+        ------------------------------------------------------------------------
+        * finished run on 2023/10/26 at 13:18:28.705
+        ------------------------------------------------------------------------
+        """
+        return "* finished run" in line
+
+    def _is_end_of_structure_block(self, line: str, mode: Literal["xyz", "mol", "sdf"]) -> bool:
+        """
+        Determine if the line indicates the end of a structure block.
+        Refer to _extract_symbol_coords for examples of structure blocks.
+        """
+        if mode == "xyz":
+            return line == "\n"
+        elif mode in {"mol", "sdf"}:
+            return "M" in line and "END" in line
+        else:
+            raise ValueError(f"Unsupported coordinate file type: {mode}")
+
+    def _is_orbitals_line(self, line: str) -> bool:
+        """
+        Determine if the line indicates the start of a orbital block.
+
+        * Orbital Energies and Occupations
+
+             #    Occupation            Energy/Eh            Energy/eV
+          -------------------------------------------------------------
+             1        2.0000           -0.7817342             -21.2721
+           ...           ...                  ...                  ...
+        """
+        return "* Orbital Energies and Occupations" in line
+
+    def extract(self, inputfile: FileWrapper, line: str) -> None:
+        if version := self._extract_version(line):
             self.metadata["legacy_package_version"] = version
 
-        # Get the coordinate file type
-        coord_filename = self._extract_coord_file(line)
-        if coord_filename:
+        if coord_filename := self._extract_coord_file(line):
             self.metadata["coord_type"] = coord_filename.split(".")[-1]
 
-        # TODO: How to handle mult...
-        # self.set_attribute("mult", mult)
-
-        # Get the net charge
-        charge = self._extract_charge(line)
-        if charge:
+        if charge := self._extract_charge(line):
             self.set_attribute("charge", charge)
 
         # Cycle through the geometry steps to get the total energies,
@@ -310,8 +305,7 @@ class XTB(logfileparser.Logfile):
         scf_energies = []
         if self._is_cycle_line(line):
             while not self._is_geom_end_line(line):
-                scf_energy = self._extract_geom_energy(line)
-                if scf_energy:
+                if scf_energy := self._extract_geom_energy(line):
                     scf_energies.append(scf_energy)
                 line = next(inputfile)
 
@@ -322,8 +316,7 @@ class XTB(logfileparser.Logfile):
             coord_type = self.metadata.get("coord_type")
 
             while not self._is_end_of_structure_block(line, coord_type):
-                symbol_coords = self._extract_symbol_coords(line, coord_type)
-                if symbol_coords:
+                if symbol_coords := self._extract_symbol_coords(line, coord_type):
                     symbol, coords = symbol_coords
                     atomnos.append(self.table.number[symbol])
                     atomcoords.append(coords)
@@ -355,6 +348,8 @@ class XTB(logfileparser.Logfile):
 
             while "------" not in line:
                 orbital_info = self._extract_orbitals(line)
+                line_split = line.split()
+
                 if orbital_info is not None:
                     monumbers.append(orbital_info[0])
                     mooccnos.append(orbital_info[1])
@@ -609,14 +604,7 @@ class XTB(logfileparser.Logfile):
                     lmo_list_cleaned.append([lmo_code, atom_cont, atom_fii, atom_ncent])
 
             self.atomprop["lmo"] = lmo_list_cleaned
-        # ^^^^^^^^^^^^^^^^^^^^^^^
-        # Refactoring above
-        # ^^^^^^^^^^^^^^^^^^^^^^^
-
-        # Get the final total energy
-        final_energy = self._extract_final_energy(line)
-
-        if final_energy:
+        if final_energy := self._extract_final_energy(line):
             if scf_energies:
                 # Patch the final total energy to be the last SCF energy
                 # since it is higher precision and also always available
@@ -628,8 +616,5 @@ class XTB(logfileparser.Logfile):
         if scf_energies:
             self.set_attribute("scfenergies", scf_energies)
 
-        # Find if job ended successfuly
-        is_finished = self._is_finished(line)
-
-        if is_finished:
+        if is_finished := self._is_finished(line):
             self.metadata["success"] = True
