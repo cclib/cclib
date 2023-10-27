@@ -181,9 +181,9 @@ class XTB(logfileparser.Logfile):
         else:
             raise ValueError(f"Unsupported coordinate file type: {mode}")
 
-    def _extract_orbitals(self, line: str) -> Optional[Tuple[int, float, float, float]]:
+    def _extract_orbitals(self, line: str) -> Optional[Tuple[int, float, float, bool]]:
         """
-        Extract the orbital index, occupation, and energies.
+        Extract the orbital index, occupation, energy, and if it's the HOMO.
 
         * Orbital Energies and Occupations
 
@@ -226,11 +226,11 @@ class XTB(logfileparser.Logfile):
             return (
                 int(line_split[0]),
                 float(line_split[1]),
-                float(line_split[2]),
                 float(line_split[3]),
+                bool("(HOMO) in line"),
             )
         if "(LUMO)" in line or (len(line_split) == 3 and "MO" not in line):
-            return int(line_split[0]), 0.0, float(line_split[2]), float(line_split[3])
+            return int(line_split[0]), 0.0, float(line_split[3]), False
 
     def _is_cycle_line(self, line: str) -> bool:
         """
@@ -331,10 +331,6 @@ class XTB(logfileparser.Logfile):
         # TODO: natom and atomnos are not defined above for static calculations
         # but are often reported in the log file.
 
-        # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-        # Refactoring below
-        # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-
         if self._is_orbitals_line(line):
             # Skip 4 lines to get to the table
             next(inputfile)
@@ -342,55 +338,50 @@ class XTB(logfileparser.Logfile):
             next(inputfile)
             line = next(inputfile)
 
-            mooccnos = [[]]
-            moenergies = [[]]
-            monumbers = []
+            homos = []
+            mooccnos = []
+            moenergies = []
 
+            i = 0
             while "------" not in line:
                 orbital_info = self._extract_orbitals(line)
                 line_split = line.split()
 
-                if orbital_info is not None:
-                    monumbers.append(orbital_info[0])
-                    mooccnos.append(orbital_info[1])
-                    moenergies.append(orbital_info[2])
-                elif orbital_info is np.nan:
-                    monumbers.append(np.nan)
-                    mooccnos.append(np.nan)
-                    moenergies.append(np.nan)
+                if orbital_info:
+                    orbital_idx = orbital_info[0] - 1
+                    orbital_occ = orbital_info[1]
+                    orbital_energy = orbital_info[2]
+                    is_homo = orbital_info[3]
 
-                # Parsing the lines before the LUMO line and the HOMO line itself
-                if (len(line_split) == 4 and line_split[-1] != "(LUMO)") or (len(line_split) == 5):
-                    mooccnos[0].append(line_split[1])
-                    moenergies[0].append(line_split[3])
+                    # Account for "..." offset
+                    offset = orbital_idx - len(moenergies)
+                    if offset != 0:
+                        moenergies.extend([np.nan] * offset)
+                        mooccnos.extend([np.nan] * offset)
 
-                # For the LUMO line and after we assume 0 electrons
-                # Since they are not explicit
-                if len(line_split) == 3 or line_split[-1] == "(LUMO)":
-                    mooccnos[0].append(0.0)
-                    moenergies[0].append(line_split[2])
+                    moenergies.append(orbital_energy)
+                    mooccnos.append(orbital_occ)
+                    if is_homo:
+                        homos.append(orbital_idx)
 
-                # xTB gives the index of the HOMO
-                # Occupation can be not an integer which complicates the way
-                # to parse the HOMOs for unrestricted and openshell calculations.
-                # Keeping it this way for now.
-                if line_split[-1] == "(HOMO)" and not hasattr(self, "homos"):
-                    self.set_attribute("homos", [int(line_split[0]) - 1])
-
+                i += 1
                 line = next(inputfile)
 
-            # Find in index of the "..."
-            # And fixing the type of the rest of the values
-            fill_in_idx = []
-            for idx, monumber in enumerate(monumbers):
-                if monumber == "...":
-                    fill_in_idx.append(idx)
-                else:
-                    monumbers[idx] = monumbers[idx]
-                    moenergies[0][idx] = float(moenergies[0][idx])
-                    mooccnos[0][idx] = float(mooccnos[0][idx])
+            moenergies = [np.array(moenergies)]
+            mooccnos = np.array(mooccnos)
+            homos = np.array(homos)
 
-            self.set_attribute("moenergies", moenergies)
+            # TODO: Unrestricted calculations
+            if moenergies:
+                self.set_attribute("moenergies", moenergies)
+            if mooccnos:
+                self.set_attribute("mooccnos", mooccnos)
+            if homos:
+                self.set_attribute("homos", homos)
+
+        # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+        # Refactoring below
+        # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
         # Grabbing atomic properties: Coordination number CN, Atomic partial charge q, Dispersion coefficient C6, Polarizability alpha:
         #
@@ -616,5 +607,5 @@ class XTB(logfileparser.Logfile):
         if scf_energies:
             self.set_attribute("scfenergies", scf_energies)
 
-        if is_finished := self._is_finished(line):
+        if self._is_finished(line):
             self.metadata["success"] = True
