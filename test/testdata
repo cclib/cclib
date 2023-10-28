@@ -337,7 +337,6 @@ SP        QChem       GenericDispersionTest basicQChem5.4               dvb_disp
 SP        Gaussian    GaussianPerformanceMetadataTest basicGaussian16               dvb_sp.out
 SP        ORCA        ORCAPerformanceMetadataTest basicORCA5.0          dvb_perf.log
 SP        Turbomole   TurbomolePerformanceMetadataTest basicTurbomole7.5           dvb_sp/basis      dvb_sp/control      dvb_sp/mos      dvb_sp/dscf.out      dvb_sp/coord
-
 SP        Gaussian    IEFPCMMetadataTest    basicGaussian16             water_hf_solvent_pcm.log
 SP        Gaussian    CPCMMetadataTest      basicGaussian16             water_hf_solvent_cpcm.log
 SP        Gaussian    SCIPCMMetadataTest    basicGaussian16             water_hf_solvent_scipcm.log
@@ -353,6 +352,7 @@ SP        QChem       CPCMMetadataTest           basicQChem6.0               wat
 SP        QChem       IEFPCMMetadataTest         basicQChem6.0               water_hf_solvent_pcm_iefpcm.out
 SP        QChem       QChemSMDCPCMMetadataTest   basicQChem6.0               water_hf_solvent_smd_cpcm.out
 SP        QChem       SMDIEFPCMMetadataTest      basicQChem6.0               water_hf_solvent_smd_iefpcm.out
+SP        XTB         GenericSPTest              basicXTB6.6                 water_sp.out
 
 SPun      ADF         GenericSPunTest       basicADF2007.01       dvb_un_sp.adfout
 SPun      ADF         GenericSPunTest       basicADF2013.01       dvb_un_sp.adfout
