@@ -452,14 +452,6 @@ class XTB(logfileparser.Logfile):
         match = re.findall(r"\d+\.\d+", line)
         return [float(val) for val in match] if match else None
 
-    # TODO: Are these units correct? xTB reports amu, but cclib wants A^4/amu...?
-    def _extract_raman_intensities(self, line: str) -> Optional[List[float]]:
-        """
-        Extract Raman intensities. See summary above.
-        """
-        match = re.findall(r"\d+\.\d+", line)
-        return [float(val) for val in match] if match else None
-
     def _is_cycle_line(self, line: str) -> bool:
         """
         Determine if the line indicates it is a geometry optimization cycle.
@@ -678,7 +670,6 @@ class XTB(logfileparser.Logfile):
             vibfreqs = []
             vibrmasses = []
             vibirs = []
-            vibramans = []
             while "reduced masses" not in line:
                 freq_vals = self._extract_frequencies(line)
                 if freq_vals is not None:
@@ -695,21 +686,6 @@ class XTB(logfileparser.Logfile):
                 if "------" in line:
                     break
             line = next(inputfile)
-            while "Raman intensities" not in line:
-                vibir_vals = self._extract_ir_intensities(line)
-                if vibir_vals is not None:
-                    vibirs.extend(vibir_vals)
-                line = next(inputfile)
-                if "------" in line:
-                    break
-            line = next(inputfile)
-            while "output can be" not in line:
-                vibraman_vals = self._extract_raman_intensities(line)
-                if vibraman_vals is not None:
-                    vibramans.extend(vibraman_vals)
-                line = next(inputfile)
-                if "------" in line:
-                    break
 
             if vibfreqs:
                 self.vibfreqs = np.array(vibfreqs)
@@ -717,8 +693,6 @@ class XTB(logfileparser.Logfile):
                 self.vibrmasses = np.array(vibrmasses)
             if vibirs:
                 self.vibirs = np.array(vibirs)
-            if vibramans:
-                self.vibramans = np.array(vibramans)
 
         zpve = self._extract_zpve(line)
         if zpve is not None:
