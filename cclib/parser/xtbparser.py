@@ -247,7 +247,7 @@ class XTB(logfileparser.Logfile):
         line_split = line.split()
         return float(line_split[4]) if len(line_split) == 7 else None
 
-    def _extract_gfn1_mulliken_cm5_charges(self, line: str) -> Optional[tuple[float, float]]:
+    def _extract_gfn1_mulliken_cm5_charges(self, line: str) -> Optional[Tuple[float, float]]:
         """
         Extract Mulliken and CM5 charge for GFN1-xTB format.
 
