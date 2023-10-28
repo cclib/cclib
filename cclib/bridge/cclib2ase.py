@@ -85,12 +85,21 @@ def write_trajectory(filename, ccdata, popname="mulliken", index=None):
         atomspins = None
         if hasattr(ccdata, "atomspins"):
             atomspins = ccdata.atomspins[popname]
-        atoms = makease(
-            atomcoords,
-            ccdata.atomnos,
-            ccdata.atomcharges[popname],
-            atomspins,
-            ccdata.atommasses,
+        atomnos = ccdata.atomnos
+
+        try:
+            atomcharges = ccdata.atomcharges[popname]
+        except (AttributeError, KeyError):
+            atomcharges = None
+
+        atommasses = getattr(ccdata, "atommasses", None)
+        
+        atoms = makease( 
+            atomcoords, 
+            atomnos, 
+            atomcharges, 
+            atomspins, 
+            atommasses, 
         )
 
         properties = {}
