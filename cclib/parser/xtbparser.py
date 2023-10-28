@@ -666,7 +666,6 @@ class XTB(logfileparser.Logfile):
                 i += 1
                 line = next(inputfile)
 
-            # TODO: Unrestricted calculations
             if moenergies:
                 self.moenergies = [np.array(moenergies)]
             if mooccnos:
