@@ -82,16 +82,16 @@ def write_trajectory(filename, ccdata, popname="mulliken", index=None):
         if index is not None and i not in index:
             continue
 
-        atomspins = None
-        if hasattr(ccdata, "atomspins"):
+        try:
             atomspins = ccdata.atomspins[popname]
-        atomnos = ccdata.atomnos
-
+        except (AttributeError, KeyError):
+            atomspins = None
         try:
             atomcharges = ccdata.atomcharges[popname]
         except (AttributeError, KeyError):
             atomcharges = None
 
+        atomnos = ccdata.atomnos
         atommasses = getattr(ccdata, "atommasses", None)
         
         atoms = makease( 
