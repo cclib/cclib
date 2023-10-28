@@ -71,7 +71,6 @@ class XTB(logfileparser.Logfile):
         Extract the total charge. It can always be found in the
         summary formatted as a float.
 
-        Format for GFN-xTB:
 
          :::::::::::::::::::::::::::::::::::::::::::::::::::::
          ::                     SUMMARY                     ::
@@ -88,29 +87,6 @@ class XTB(logfileparser.Logfile):
          :: repulsion energy           0.034375839725 Eh    ::
          :: add. restraining           0.000000000000 Eh    ::
          :: total charge              -0.000000000000 e     ::
-         :::::::::::::::::::::::::::::::::::::::::::::::::::::
-
-         Format for GFN-FF:
-         :::::::::::::::::::::::::::::::::::::::::::::::::::::
-         ::                     SUMMARY                     ::
-         :::::::::::::::::::::::::::::::::::::::::::::::::::::
-         :: total energy              -0.327405667208 Eh    ::
-         :: gradient norm              0.021455947754 Eh/a0 ::
-         ::.................................................::
-         :: bond energy               -0.269813650323 Eh    ::
-         :: angle energy               0.001167514553 Eh    ::
-         :: torsion energy             0.000000000000 Eh    ::
-         :: repulsion energy           0.030786304642 Eh    ::
-         :: electrostat energy        -0.089406523183 Eh    ::
-         :: dispersion energy         -0.000139312897 Eh    ::
-         :: HB energy                  0.000000000000 Eh    ::
-         :: XB energy                  0.000000000000 Eh    ::
-         :: bonded atm energy          0.000000000000 Eh    ::
-         :: external energy            0.000000000000 Eh    ::
-         :: add. restraining           0.000000000000 Eh    ::
-         :: total charge              -0.000000000000 e     ::
-         ::.................................................::
-         :: atomisation energy         0.000000000000 Eh    ::
          :::::::::::::::::::::::::::::::::::::::::::::::::::::
         """
         return round(float(line.split()[-3])) if "total charge" in line else None
@@ -259,9 +235,9 @@ class XTB(logfileparser.Logfile):
         if "(LUMO)" in line or (len(line_split) == 3 and "MO" not in line):
             return int(line_split[0]), 0.0, float(line_split[2]), False
 
-    def _extract_mulliken_charge(self, line: str) -> Optional[float]:
+    def _extract_gfn2_mulliken_charge(self, line: str) -> Optional[float]:
         """
-        Extract Mulliken charge.
+        Extract Mulliken charge from GFN2-xTB format.
 
         #   Z          covCN         q      C6AA      α(0)
         1   8 O        1.611    -0.565    24.356     6.661
@@ -270,6 +246,18 @@ class XTB(logfileparser.Logfile):
         """
         line_split = line.split()
         return float(line_split[4]) if len(line_split) == 7 else None
+
+    def _extract_gfn1_mulliken_cm5_charges(self, line: str) -> Optional[tuple[float, float]]:
+        """
+        Extract Mulliken and CM5 charge for GFN1-xTB format.
+
+        Mulliken/CM5 charges         n(s)   n(p)   n(d)
+            1O    -0.67113 -1.00681   1.689  4.982  0.000
+            2H     0.33556  0.50340   0.664  0.000  0.000
+            3H     0.33556  0.50340   0.664  0.000  0.000
+        """
+        line_split = line.split()
+        return [float(line_split[1]), float(line_split[2])] if len(line_split) == 6 else None
 
     def _extract_wall_time(self, line: str) -> Optional[List[timedelta]]:
         """
@@ -510,13 +498,21 @@ class XTB(logfileparser.Logfile):
         """
         return "* Orbital Energies and Occupations" in line
 
-    def _is_atomwise_properties(self, line: str) -> bool:
+    def _is_gfn2_atom_charges(self, line: str) -> bool:
         """
-        Determine if there are atom-wise properties.
+        Determine if there are atom-wise GFN2 charges.
 
         #   Z          covCN         q      C6AA      α(0)
         """
         return line.split()[:4] == ["#", "Z", "covCN", "q"]
+
+    def _is_gfn1_atom_charges(self, line: str) -> bool:
+        """
+        Determine if there are atom-wise GFN1 charges.
+
+        Mulliken/CM5 charges         n(s)   n(p)   n(d)
+        """
+        return "Mulliken/CM5 charges" in line
 
     def _is_geom_opt_converged(self, line: str) -> bool:
         """
@@ -632,18 +628,30 @@ class XTB(logfileparser.Logfile):
             if homos:
                 self.homos = np.array(homos)
 
-        # TODO: Is "q" mulliken in xTB? Not specified in output...
-        mullikens = []
-        if self._is_atomwise_properties(line):
+        mulliken = []
+        cm5 = []
+        if self._is_gfn2_atom_charges(line):
             line = next(inputfile)
             while line != "\n":
-                q = self._extract_mulliken_charge(line)
+                q = self._extract_gfn2_mulliken_charge(line)
                 if q is not None:
-                    mullikens.append(q)
+                    mulliken.append(q)
+                line = next(inputfile)
+        if self._is_gfn1_atom_charges(line):
+            line = next(inputfile)
+            while line != "\n":
+                charges = self._extract_gfn1_mulliken_cm5_charges(line)
+                if charges is not None:
+                    mulliken.append(charges[0])
+                    cm5.append(charges[1])
                 line = next(inputfile)
 
-        if mullikens:
-            self.atomcharges = {"mulliken": np.array(mullikens)}
+        if mulliken or cm5:
+            self.atomcharges = {}
+        if mulliken:
+            self.atomcharges["mulliken"] = np.array(mulliken)
+        if cm5:
+            self.atomcharges["cm5"] = np.array(cm5)
 
         final_energy = self._extract_final_energy(line)
         if final_energy is not None:
