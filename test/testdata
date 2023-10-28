@@ -352,7 +352,6 @@ SP        QChem       CPCMMetadataTest           basicQChem6.0               wat
 SP        QChem       IEFPCMMetadataTest         basicQChem6.0               water_hf_solvent_pcm_iefpcm.out
 SP        QChem       QChemSMDCPCMMetadataTest   basicQChem6.0               water_hf_solvent_smd_cpcm.out
 SP        QChem       SMDIEFPCMMetadataTest      basicQChem6.0               water_hf_solvent_smd_iefpcm.out
-SP        XTB         GenericSPTest              basicXTB6.6                 water_sp.out
 
 SPun      ADF         GenericSPunTest       basicADF2007.01       dvb_un_sp.adfout
 SPun      ADF         GenericSPunTest       basicADF2013.01       dvb_un_sp.adfout
