@@ -330,6 +330,15 @@ class XTB(logfileparser.Logfile):
             else None
         )
 
+    def _extract_multiplicity(self, line: str) -> Optional[int]:
+        """
+        Extract the spin multiplicity (uhf+1). This is not present
+        anywhere in the log file unless the user specifies it via
+        a command-line argument. We do the best with what we're given.
+        """
+        match = re.search(r"(--uhf|-u) (\d+)", line)
+        return int(line.split(match.group(2))) + 1 if match else None
+
     def _extract_symmetry(self, line: str) -> Optional[str]:
         """
         Extract symmetry.
@@ -440,7 +449,16 @@ class XTB(logfileparser.Logfile):
         match = re.findall(r"\d+\.\d+", line)
         return [float(val) for val in match] if match else None
 
-    def _is_cycle_line(self, line: str) -> bool:
+    def _extract_program_call(self, line: str) -> Optional[List[str]]:
+        """
+        Extract the program call parameters. Note that this won't capture
+        the command if the user has supplied it via the xcontrol.
+
+        program call               : xtb coord.xyz --uhf 2 --spinpol --tblite
+        """
+        return line.split(":")[1].strip().split() if "program call" in line else None
+
+    def _is_geom_cycle_line(self, line: str) -> bool:
         """
         Determine if the line indicates it is a geometry optimization cycle.
 
@@ -532,14 +550,29 @@ class XTB(logfileparser.Logfile):
         """
         return "Frequency Printout" in line
 
+    def _is_warning(self, line: str) -> bool:
+        """
+        Determine if we are in the warning printout.
+
+        ########################################################################
+        [WARNING] Runtime exception occurred
+        -1- restart_readRestart: Multiplicity missmatch in restart file.
+        ########################################################################
+        """
+        return "[WARNING]" in line
+
     def extract(self, inputfile: FileWrapper, line: str) -> None:
-        # Initialize as False. Will be overwritten to True if/when appropriate.
         if self.metadata.get("success") is None:
+            # Initialize as False. Will be overwritten to True if/when appropriate.
             self.metadata["success"] = False
 
         version = self._extract_version(line)
         if version is not None:
             self.metadata["package_version"] = version
+
+        program_call = self._extract_program_call(line)
+        if program_call is not None:
+            self.metadata["keywords"] = program_call
 
         coord_filename = self._extract_coord_file(line)
         if coord_filename is not None:
@@ -553,9 +586,15 @@ class XTB(logfileparser.Logfile):
         if charge is not None:
             self.charge = charge
 
-        # Cycle through the geometry steps to get the energies
+        mult = self._extract_multiplicity(line)
+        if mult is not None:
+            self.mult = mult
+
+        # TODO: Use the `xtbopt.xyz` file for SCF energies instead since it has higher precision.
+        # But will need to be careful about what might happen if other formats are supplied,
+        # such as sdf or POSCAR.
         scf_energies = []
-        if self._is_cycle_line(line):
+        if self._is_geom_cycle_line(line):
             while not self._is_geom_end_line(line):
                 scf_energy = self._extract_geom_energy(line)
                 if scf_energy is not None:
@@ -563,7 +602,13 @@ class XTB(logfileparser.Logfile):
 
                 line = next(inputfile)
 
-        # Get the final geometry
+        # TODO: Parse hessian attribute from `hessian` file, if present.
+
+        # TODO: Use the `xtbopt.xyz` file instead since it has higher precision and
+        # has the coordinates for every geometry step. If it's not an optimization,
+        # can simply assume the structure is the same as that in the coordinate file.
+        # But will need to be careful about what might happen if other formats are supplied,
+        # such as sdf or POSCAR.
         if "final structure:" in line:
             atomnos = []
             atomcoords = []
@@ -583,8 +628,9 @@ class XTB(logfileparser.Logfile):
             if atomcoords:
                 self.atomcoords = atomcoords
 
-        # TODO: natom and atomnos are not defined above for static calculations
-        # but are often reported in the log file.
+        # TODO: Parse grads attribute from `gradient` file. It will only contain
+        # the final gradient, so we'll need to pad it with NaNs to match the
+        # number of geometry steps.
 
         if self._is_orbitals_line(line):
             # Skip 4 lines to get to the table
@@ -628,15 +674,9 @@ class XTB(logfileparser.Logfile):
             if homos:
                 self.homos = np.array(homos)
 
+        # TODO: Use `charges` file for Mulliken instead since it has higher precision.
         mulliken = []
         cm5 = []
-        if self._is_gfn2_atom_charges(line):
-            line = next(inputfile)
-            while line != "\n":
-                q = self._extract_gfn2_mulliken_charge(line)
-                if q is not None:
-                    mulliken.append(q)
-                line = next(inputfile)
         if self._is_gfn1_atom_charges(line):
             line = next(inputfile)
             while line != "\n":
@@ -644,6 +684,14 @@ class XTB(logfileparser.Logfile):
                 if charges is not None:
                     mulliken.append(charges[0])
                     cm5.append(charges[1])
+                line = next(inputfile)
+
+        if self._is_gfn2_atom_charges(line):
+            line = next(inputfile)
+            while line != "\n":
+                q = self._extract_gfn2_mulliken_charge(line)
+                if q is not None:
+                    mulliken.append(q)
                 line = next(inputfile)
 
         if mulliken or cm5:
@@ -660,7 +708,7 @@ class XTB(logfileparser.Logfile):
                 # since it is higher precision and also always available
                 scf_energies[-1] = final_energy
             else:
-                # We only have the final energy to store
+                # We only have the final energy to store (e.g. for static)
                 scf_energies = [final_energy]
 
         if scf_energies:
@@ -678,6 +726,7 @@ class XTB(logfileparser.Logfile):
             vibfreqs = []
             vibrmasses = []
             vibirs = []
+
             while "reduced masses" not in line:
                 freq_vals = self._extract_frequencies(line)
                 if freq_vals is not None:
@@ -685,7 +734,9 @@ class XTB(logfileparser.Logfile):
                 line = next(inputfile)
                 if "------" in line:
                     break
+
             line = next(inputfile)
+
             while "IR intensities" not in line:
                 mass_vals = self._extract_reduced_masses(line)
                 if mass_vals is not None:
@@ -693,7 +744,6 @@ class XTB(logfileparser.Logfile):
                 line = next(inputfile)
                 if "------" in line:
                     break
-            line = next(inputfile)
 
             if vibfreqs:
                 self.vibfreqs = np.array(vibfreqs)
@@ -705,15 +755,26 @@ class XTB(logfileparser.Logfile):
         zpve = self._extract_zpve(line)
         if zpve is not None:
             self.zpve = zpve
+
         entropy = self._extract_entropy(line)
         if entropy is not None:
             self.enthalpy = entropy
+
         enthalpy = self._extract_enthalpy(line)
         if enthalpy is not None:
             self.enthalpy = enthalpy
+
         free_energy = self._extract_free_energy(line)
         if free_energy is not None:
             self.freenergy = free_energy
+
+        warnings = []
+        if self._is_warning(line):
+            while "###" not in line:
+                warnings.append(line)
+                line = next(inputfile)
+        if warnings:
+            self.metadata["warnings"] = warnings
 
         wall_time = self._extract_wall_time(line)
         if wall_time is not None:
