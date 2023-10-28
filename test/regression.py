@@ -51,6 +51,7 @@ from cclib.parser import (
     MOPAC,
     NBO,
     ORCA,
+    XTB,
     FChk,
     Gaussian,
     Jaguar,
@@ -3612,6 +3613,8 @@ def test_regressions(
         for p in parser_names:
             filenames[p] = []
             pdir = os.path.join(regdir, get_program_dir(p))
+            if not os.path.exists(pdir):
+                continue
             for version in os.scandir(pdir):
                 if version.is_file():
                     continue
