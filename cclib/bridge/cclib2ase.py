@@ -31,7 +31,7 @@ def makease(
 
     ASE requires atomic partial charges and atomic spin densities rather than
     molecular charge and multiplicity, so we follow how other interfaces have
-    done (e.g., MOPAC, Gaussian and xTB) and require atomcharges and atomspins,
+    done (e.g., MOPAC, Gaussian and XTB) and require atomcharges and atomspins,
     or leave undefined.
 
     Inputs:
