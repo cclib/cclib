@@ -1,6 +1,6 @@
 import re
 from datetime import timedelta
-from typing import List, Literal, Optional, Tuple
+from typing import List, Optional, Tuple
 
 from cclib.parser import logfileparser, utils
 from cclib.parser.logfilewrapper import FileWrapper
@@ -159,9 +159,7 @@ class XTB(logfileparser.Logfile):
             else None
         )
 
-    def _extract_symbol_coords(
-        self, line: str, mode: Literal["xyz", "mol", "sdf"]
-    ) -> Optional[Tuple[str, List[float]]]:
+    def _extract_symbol_coords(self, line: str, mode: str) -> Optional[Tuple[str, List[float]]]:
         """
         Extract the symbol and X, Y, Z coordinates.
 
@@ -495,7 +493,7 @@ class XTB(logfileparser.Logfile):
         """
         return "* finished run" in line
 
-    def _is_end_of_structure_block(self, line: str, mode: Literal["xyz", "mol", "sdf"]) -> bool:
+    def _is_end_of_structure_block(self, line: str, mode: str) -> bool:
         """
         Determine if the line indicates the end of a structure block.
         Refer to _extract_symbol_coords for examples of structure blocks.
@@ -526,7 +524,7 @@ class XTB(logfileparser.Logfile):
 
         #   Z          covCN         q      C6AA      α(0)
         """
-        return line.split()[0:4] == ["#", "Z", "covCN", "q"]
+        return line.split()[:4] == ["#", "Z", "covCN", "q"]
 
     def _is_geom_opt_converged(self, line: str) -> bool:
         """
@@ -613,8 +611,7 @@ class XTB(logfileparser.Logfile):
             i = 0
             while "------" not in line:
                 orbital_info = self._extract_orbitals(line)
-
-                if orbital_info:
+                if orbital_info is not None:
                     orbital_idx = orbital_info[0] - 1
                     orbital_occ = orbital_info[1]
                     orbital_energy = orbital_info[2]
