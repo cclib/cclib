@@ -200,7 +200,7 @@ class XTB(logfileparser.Logfile):
         """
         line_split = line.split()
         if mode == "xyz":
-            if line_split.isupper():
+            if line_split[0].isupper():
                 return line_split[0], [float(coord) for coord in line_split[1:]]
         elif mode in {"mol", "sdf"}:
             if line_split[3].isupper():
