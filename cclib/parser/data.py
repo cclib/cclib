@@ -31,9 +31,7 @@ class ccData:
         atomcoords -- atom coordinates (array[3], angstroms)
         atommasses -- atom masses (array[1], daltons)
         atomnos -- atomic numbers (array[1])
-        atomprop -- atomic properties (dict)
         atomspins -- atomic spin densities (dict of arrays[1])
-        bondprop -- bond propetrties (dict)
         ccenergies -- molecular energies with Coupled-Cluster corrections (array[2], eV)
         charge -- net charge of the system (integer)
         coreelectrons -- number of core electrons in atom pseudopotentials (array[1])
@@ -117,9 +115,7 @@ class ccData:
        "atomcoords":       Attribute(numpy.ndarray,    'coords',                      'atoms:coords:3d'),
        "atommasses":       Attribute(numpy.ndarray,    'mass',                        'atoms'),
        "atomnos":          Attribute(numpy.ndarray,    'number',                      'atoms:elements'),
-       "atomprop":         Attribute(dict,             'atom properties',             'atopmprop'),
        "atomspins":        Attribute(dict,             'spins',                       'atoms'),
-       "bondprop":         Attribute(dict,             'bond properties',             'bondprop'),
        "ccenergies":       Attribute(numpy.ndarray,    'coupled cluster',             'properties:energy'),
        "charge":           Attribute(int,              'charge',                      'properties'),
        "coreelectrons":    Attribute(numpy.ndarray,    'core electrons',              'atoms'),
