@@ -546,7 +546,8 @@ class XTB(logfileparser.Logfile):
 
     def extract(self, inputfile: FileWrapper, line: str) -> None:
         # Initialize as False. Will be overwritten to True if/when appropriate.
-        self.metadata["success"] = False
+        if self.metadata.get("success") is None:
+            self.metadata["success"] = False
 
         version = self._extract_version(line)
         if version is not None:
