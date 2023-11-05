@@ -11,17 +11,19 @@ import bz2
 import gzip
 import zipfile
 import pathlib
+from typing import Any, Iterable, List, Optional
 from tempfile import NamedTemporaryFile
 from urllib.request import urlopen
 from urllib.error import URLError
 import collections
 import typing
 import re
+import inspect
 import io
 import logging
 import codecs
 
-
+from cclib.file_handler import utils
 # Regular expression for validating URLs
 URL_PATTERN = re.compile(
 
@@ -244,7 +246,7 @@ class FileHandler:
             raise RuntimeError("virtual_set() must be called before reset and virtual_next")
         try:
            line = next(self.files[self.file_pointer])
-           self.last_lines.append(line)
+        #    self.last_lines.append(line)# this will be changing state kinda, but maybe in helpful way?
            self.pos += len(line)
            return line
         except:
@@ -351,3 +353,57 @@ class FileHandler:
             
         self.file_pointer = len(self.files) -1
         self.pos = self.size
+
+    def skip_lines(self, sequence: Iterable[str],virtual=False) -> List[str]:
+        """Read trivial line types and check they are what they are supposed to be.
+
+        This function will read len(sequence) lines and do certain checks on them,
+        when the elements of sequence have the appropriate values. Currently the
+        following elements trigger checks:
+            'blank' or 'b'      - the line should be blank
+            'dashes' or 'd'     - the line should contain only dashes (or spaces)
+            'equals' or 'e'     - the line should contain only equal signs (or spaces)
+            'stars' or 's'      - the line should contain only stars (or spaces)
+        """
+        print('we are in skip lines')
+        expected_characters = {
+            '-': ['dashes', 'd'],
+            '=': ['equals', 'e'],
+            '*': ['stars', 's'],
+        }
+
+        lines = []
+        for expected in sequence:
+
+            # Read the line we want to skip.
+            line = next(self.files[self.file_pointer])
+
+            # Blank lines are perhaps the most common thing we want to check for.
+            if expected in ["blank", "b"]:
+                try:
+                    assert line.strip() == ""
+                except AssertionError:
+                    print("oh no, there is an issue")
+                    frame, fname, lno, funcname, funcline, index = inspect.getouterframes(inspect.currentframe())[1]
+                    parser = fname.split('/')[-1]
+                    msg = f"In {parser}, line {int(lno)}, line not blank as expected: {line.strip()}"
+
+            # All cases of heterogeneous lines can be dealt with by the same code.
+            for character, keys in expected_characters.items():
+                if expected in keys:
+                    try:
+                        assert utils.str_contains_only(line.strip(), [character, ' '])
+                    except AssertionError:
+                        print(f'line didn\'t only contain expected')
+                        frame, fname, lno, funcname, funcline, index = inspect.getouterframes(inspect.currentframe())[1]
+                        parser = fname.split('/')[-1]
+                        msg = f"In {parser}, line {int(lno)}, line not all {keys[0]} as expected: {line.strip()}"
+                        continue
+
+            # Save the skipped line, and we will return the whole list.
+            if not virtual:
+                self.last_lines.append(line)
+            self.pos += len(line)
+            line = next(self.files[self.file_pointer])
+        return line
+    

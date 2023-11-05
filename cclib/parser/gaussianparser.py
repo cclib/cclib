@@ -1122,7 +1122,7 @@ class Gaussian(logfileparser.Logfile):
         # Read in the cartesian energy gradients (forces) from a block like this:
         # -------------------------------------------------------------------
         # Center     Atomic                   Forces (Hartrees/Bohr)
-        # Number     Number              X              Y              Z
+        # Number     Number              X             Y              Z
         # -------------------------------------------------------------------
         # 1          1          -0.012534744   -0.021754635   -0.008346094
         # 2          6           0.018984731    0.032948887   -0.038003451

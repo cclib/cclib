@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 from cclib.parser_properties import scfenergies
+from cclib.parser_properties import atomcoords
+from cclib.parser_properties import atomnos
 
 @dataclass
 class combinator():
@@ -11,5 +13,5 @@ class combinator():
 class sp_combinator(combinator):
     def __init__(self):
         self.name = 'single_point'
-        self.job_list =  [[scfenergies]]
+        self.job_list =  [[scfenergies,atomcoords,atomnos]]
 
