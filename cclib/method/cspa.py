@@ -42,9 +42,8 @@ class CSPA(Population):
         # Determine number of steps, and whether process involves beta orbitals.
         unrestricted = (len(self.data.mocoeffs)==2)
         nbasis = self.data.nbasis
-        self.aoresults = []
         alpha = len(self.data.mocoeffs[0])
-        self.aoresults.append(numpy.zeros([alpha, nbasis], "d"))
+        self.aoresults = [numpy.zeros([alpha, nbasis], "d")]
         nstep = alpha
         if unrestricted:
             beta = len(self.data.mocoeffs[1])

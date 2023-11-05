@@ -187,7 +187,7 @@ class Nuclear(Method):
         rotghz = xthz * (bohr2ang ** 2) / (2 * xfamu * scipy.constants.giga)
         if units == 'ghz':
             conv = rotghz
-        if units == 'invcm':
+        elif units == 'invcm':
             ghz2invcm = scipy.constants.giga * scipy.constants.centi / scipy.constants.c
             conv = rotghz * ghz2invcm
         return conv / principal_moments

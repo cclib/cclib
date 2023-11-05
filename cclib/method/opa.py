@@ -16,10 +16,7 @@ from cclib.method.population import Population
 
 
 def func(x):
-    if x==1:
-        return 1
-    else:
-        return x+func(x-1)
+    return 1 if x==1 else x+func(x-1)
 
 
 class OPA(Population):
@@ -45,13 +42,9 @@ class OPA(Population):
             elif hasattr(self.data, "foonames"):
                 names = self.data.fonames
 
-            atoms = []
-            indices = []
-
             name = names[0].split('_')[0]
-            atoms.append(name)
-            indices.append([0])
-
+            atoms = [name]
+            indices = [[0]]
             for i in range(1, len(names)):
                 name = names[i].split('_')[0]
                 try:

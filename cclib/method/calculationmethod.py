@@ -62,9 +62,9 @@ class Method:
 
     def _check_required_attributes(self) -> None:
         """Check if required attributes are present in data."""
-        missing = [x for x in self.required_attrs
-                    if not hasattr(self.data, x)]
-        if missing:
+        if missing := [
+            x for x in self.required_attrs if not hasattr(self.data, x)
+        ]:
             missing = ' '.join(missing)
             raise MissingAttributeError(
                 f"Could not parse required attributes to use method: {missing}"

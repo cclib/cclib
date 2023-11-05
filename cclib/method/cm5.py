@@ -52,9 +52,7 @@ class CM5(Method):
 
         self.required_attrs = ("natom", "atomcoords", "atomnos")
 
-        if radii == "CorderoPyykko":
-            self.atomradius = _radii_cordero_pyykko(radii)
-        elif radii == "Cordero":
+        if radii in {"CorderoPyykko", "Cordero"}:
             self.atomradius = _radii_cordero_pyykko(radii)
         elif radii == "hokru":
             self.atomradius = _radii_hokru()
@@ -269,28 +267,112 @@ def _radii_cordero_pyykko(radii: str) -> np.ndarray:
 def _radii_hokru() -> np.ndarray:
     """Return the covalent radii found in
     https://github.com/hokru/cm5charges/blob/23f58b728e9f4af2306702c7cd48b1afb4b72b15/cm5.f90#L58."""
-    # fmt: off
-    atomradius = np.array([
-        # dummy
-        0.0,
-        # H He
-        0.32,0.37,
-        # Li     Be     B     C       N      O     F      Ne
-        1.30,0.99,0.84,0.75,0.71,0.64,0.60,0.62,
-        # Na    Mg     Al     Si     P      S       Cl     Ar
-        1.60,1.40,1.24,1.14,1.09,1.04,1.00,1.01,
-        # K      Ca     Sc     Ti     V      Cr      Mn     Fe     Co    Ni     Cu     Zn     Ga     Ge     As     Se     Br    Kr
-        2.00,1.74,1.59,1.48,1.44,1.30,1.29,1.24,1.18,1.17,1.22,1.20,1.23,1.20,1.20,1.18,1.17,1.24,
-        #  Rb    Sr     Y      Zr      Nb     Mo    Tc     Ru     Rh     Pd     Ag     Cd     In    Sn      Sb      Te     I     Xe
-        2.15,1.90,1.78,1.64,1.56,1.46,1.38,1.36,1.34,1.30,1.36,1.40,1.42,1.40,1.40,1.37,1.32,1.36,
-        # Cs Ba
-        2.38,2.06,
-        # La-Lu
-        1.94,1.84,1.90,1.73,1.86,1.85,1.83,1.82,1.81,1.80,1.79,1.77,1.77,1.78,1.74,
-        # Hf     Ta     W       Re     Os    Ir     Pt     Au     Hg     Ti     Pb     Bi     Po     At     Rn
-        1.64,1.58,1.50,1.41,1.36,1.32,1.30,1.64,1.88,1.48,1.45,1.50,1.42,1.47,1.46,
-        # Fr-Pu
-        2.42,2.11,2.01,1.90,1.84,1.83,1.80,1.80
-    ])
-    # fmt: on
-    return atomradius
+    return np.array(
+        [
+            # dummy
+            0.0,
+            # H He
+            0.32,
+            0.37,
+            # Li     Be     B     C       N      O     F      Ne
+            1.30,
+            0.99,
+            0.84,
+            0.75,
+            0.71,
+            0.64,
+            0.60,
+            0.62,
+            # Na    Mg     Al     Si     P      S       Cl     Ar
+            1.60,
+            1.40,
+            1.24,
+            1.14,
+            1.09,
+            1.04,
+            1.00,
+            1.01,
+            # K      Ca     Sc     Ti     V      Cr      Mn     Fe     Co    Ni     Cu     Zn     Ga     Ge     As     Se     Br    Kr
+            2.00,
+            1.74,
+            1.59,
+            1.48,
+            1.44,
+            1.30,
+            1.29,
+            1.24,
+            1.18,
+            1.17,
+            1.22,
+            1.20,
+            1.23,
+            1.20,
+            1.20,
+            1.18,
+            1.17,
+            1.24,
+            #  Rb    Sr     Y      Zr      Nb     Mo    Tc     Ru     Rh     Pd     Ag     Cd     In    Sn      Sb      Te     I     Xe
+            2.15,
+            1.90,
+            1.78,
+            1.64,
+            1.56,
+            1.46,
+            1.38,
+            1.36,
+            1.34,
+            1.30,
+            1.36,
+            1.40,
+            1.42,
+            1.40,
+            1.40,
+            1.37,
+            1.32,
+            1.36,
+            # Cs Ba
+            2.38,
+            2.06,
+            # La-Lu
+            1.94,
+            1.84,
+            1.90,
+            1.73,
+            1.86,
+            1.85,
+            1.83,
+            1.82,
+            1.81,
+            1.80,
+            1.79,
+            1.77,
+            1.77,
+            1.78,
+            1.74,
+            # Hf     Ta     W       Re     Os    Ir     Pt     Au     Hg     Ti     Pb     Bi     Po     At     Rn
+            1.64,
+            1.58,
+            1.50,
+            1.41,
+            1.36,
+            1.32,
+            1.30,
+            1.64,
+            1.88,
+            1.48,
+            1.45,
+            1.50,
+            1.42,
+            1.47,
+            1.46,
+            # Fr-Pu
+            2.42,
+            2.11,
+            2.01,
+            1.90,
+            1.84,
+            1.83,
+            1.80,
+            1.80,
+        ]
+    )

@@ -203,7 +203,7 @@ class DDEC6(Stockholder):
 
             if not self._update_kappa:
                 # Increment steps
-                steps = steps + 1
+                steps += 1
                 # Calculate G_A and H_A based on S4.3 in doi: 10.1039/c6ra04656h
                 self.reshape_G()
                 self.calculate_H()
@@ -246,7 +246,7 @@ class DDEC6(Stockholder):
             and numpy.any(numpy.diff(self.N_A)[-2] < 1e-5)  # change in N_A during last to
             # second cycle
         ):
-            self._kappa = [0.0 for x in self.data.atomnos]
+            self._kappa = [0.0 for _ in self.data.atomnos]
             return False
         else:
             return self._update_kappa

@@ -43,8 +43,7 @@ class MOLDEN(filewriter.Writer):
 
     def _title(self, path):
         """Return filename without extension to be used as title."""
-        title = os.path.basename(os.path.splitext(path)[0])
-        return title
+        return os.path.basename(os.path.splitext(path)[0])
 
     def _coords_from_ccdata(self, index):
         """Create [Atoms] section using geometry at the given index."""
@@ -53,7 +52,7 @@ class MOLDEN(filewriter.Writer):
             elements = [self.ghost if e is None else e for e in elements]
         elif None in elements:
             raise ValueError(
-                f"It seems that there is at least one ghost atom in these elements. Please use the ghost flag to specify a label for the ghost atoms."
+                "It seems that there is at least one ghost atom in these elements. Please use the ghost flag to specify a label for the ghost atoms."
             )
         atomcoords = self.ccdata.atomcoords[index]
         atomnos = self.ccdata.atomnos
@@ -85,8 +84,7 @@ class MOLDEN(filewriter.Writer):
             lines.append(f"{no + 1:3d} 0")
             for prims in basis:
                 lines.append(f"{prims[0].lower():s} {len(prims[1]):5d} 1.00")
-                for prim in prims[1]:
-                    lines.append(f"{prim[0]:15.9e} {prim[1]:15.9e}")
+                lines.extend(f"{prim[0]:15.9e} {prim[1]:15.9e}" for prim in prims[1])
             lines.append('')
         lines.append('')
         return lines
@@ -103,9 +101,7 @@ class MOLDEN(filewriter.Writer):
 
         lines = [f"scf-first    1 THROUGH   {len(self.ccdata.scfenergies)}"]
 
-        for scfenergy in self.ccdata.scfenergies:
-            lines.append(f"{scfenergy:15.6f}")
-
+        lines.extend(f"{scfenergy:15.6f}" for scfenergy in self.ccdata.scfenergies)
         return lines
 
     def _rearrange_mocoeffs(self, mocoeffs):
@@ -149,7 +145,7 @@ class MOLDEN(filewriter.Writer):
             occs = numpy.zeros((len(data.homos),len(energies[0])))
             occval = 2 // len(data.homos)
             for i in range(len(data.homos)):
-                occs[i][0:data.homos[i]+1] = occval
+                occs[i][:data.homos[i]+1] = occval
         elif self.naturalorbitals and hasattr(data, 'nooccnos') and hasattr(data, "nocoeffs"):
             energies = numpy.array([data.nooccnos])
             coeffs = numpy.array([data.nocoeffs])
@@ -186,15 +182,21 @@ class MOLDEN(filewriter.Writer):
         for i in range(len(mooccs)):
             for j in range(len(mooccs[i])):
                 restricted_spin_idx = i % len(mocoeffs)
-                lines.append(' Sym= {}'.format(mosyms[restricted_spin_idx][j]))
+                lines.append(f' Sym= {mosyms[restricted_spin_idx][j]}')
                 moenergy = utils.convertor(moenergies[restricted_spin_idx][j], 'eV', 'hartree')
-                lines.append(' Ene= {:10.4f}'.format(moenergy))
-                lines.append(' Spin= {}'.format(spin))
-                lines.append(' Occup= {:10.6f}'.format(mooccs[i][j]))
+                lines.extend(
+                    (
+                        ' Ene= {:10.4f}'.format(moenergy),
+                        f' Spin= {spin}',
+                        ' Occup= {:10.6f}'.format(mooccs[i][j]),
+                    )
+                )
                 # Rearrange mocoeffs according to Molden's lexicographical order.
                 mocoeffs[restricted_spin_idx][j] = self._rearrange_mocoeffs(mocoeffs[restricted_spin_idx][j])
-                for k, mocoeff in enumerate(mocoeffs[restricted_spin_idx][j]):
-                    lines.append('{:4d}  {:10.6f}'.format(k + 1, mocoeff))
+                lines.extend(
+                    '{:4d}  {:10.6f}'.format(k + 1, mocoeff)
+                    for k, mocoeff in enumerate(mocoeffs[restricted_spin_idx][j])
+                )
             spin = 'Beta'
         return lines
 
@@ -204,12 +206,11 @@ class MOLDEN(filewriter.Writer):
 
         if hasattr(self.ccdata, "vibfreqs"):
             vibfreqs = self.ccdata.vibfreqs
-            vibfreqs_lines = ["[FREQ]"]
-            vibfreqs_lines.extend([f"{vibfreq:16.8f}" for vibfreq in vibfreqs])
+            vibfreqs_lines = ["[FREQ]", *[f"{vibfreq:16.8f}" for vibfreq in vibfreqs]]
             lines.append("\n".join(vibfreqs_lines))
 
         if all(hasattr(self.ccdata, attrname) for attrname in ("atomcoords", "atomnos")) and \
-           any(hasattr(self.ccdata, attrname) for attrname in ("vibfreqs", "vibdisps", "vibirs")):
+               any(hasattr(self.ccdata, attrname) for attrname in ("vibfreqs", "vibdisps", "vibirs")):
             # Selecting the first set of coordinates works for when the
             # frequency calculation is done via finite difference, but not
             # with multi-part inputs, which there is currently no way of
@@ -217,10 +218,10 @@ class MOLDEN(filewriter.Writer):
             atomcoords = utils.convertor(self.ccdata.atomcoords[0], "Angstrom", "bohr")
             atomsyms = (self.pt.element[atomno] for atomno in self.ccdata.atomnos)
             atomcoords_lines = ["[FR-COORD]"]
-            for atomsym, atomcoord in zip(atomsyms, atomcoords):
-                atomcoords_lines.append(
-                    f"{atomsym:3s} {atomcoord[0]:15.8f} {atomcoord[1]:15.8f} {atomcoord[2]:15.8f}"
-                )
+            atomcoords_lines.extend(
+                f"{atomsym:3s} {atomcoord[0]:15.8f} {atomcoord[1]:15.8f} {atomcoord[2]:15.8f}"
+                for atomsym, atomcoord in zip(atomsyms, atomcoords)
+            )
             lines.append("\n".join(atomcoords_lines))
 
         if hasattr(self.ccdata, "vibdisps"):
@@ -259,9 +260,7 @@ class MOLDEN(filewriter.Writer):
 
         # Title of file.
         if self.jobfilename is not None:
-            molden_lines.append('[Title]')
-            molden_lines.append(self._title(self.jobfilename))
-
+            molden_lines.extend(('[Title]', self._title(self.jobfilename)))
         # Coordinates for the Electron Density/Molecular orbitals.
         # [Atoms] (Angs|AU)
         unit = "Angs"
@@ -344,11 +343,10 @@ class MoldenReformatter:
                 vals = [self.scinotation(i) for i in vals]
                 lines.append(' '.join(vals))
 
-            # Convert sp to s and p orbitals.
             elif 'sp' in line:
                 n_prim = int(line.split()[1])
-                new_s = [f"s {str(n_prim)} 1.00"]
-                new_p = [f"p {str(n_prim)} 1.00"]
+                new_s = [f"s {n_prim} 1.00"]
+                new_p = [f"p {n_prim} 1.00"]
                 while n_prim > 0:
                     n_prim -= 1
                     line = next(filelines).split()

@@ -95,22 +95,18 @@ def write_trajectory(filename, ccdata, popname="mulliken", index=None):
 
         properties = {}
         if hasattr(ccdata, "scfenergies"):
-            properties.update({"energy": ccdata.scfenergies[i]})
+            properties["energy"] = ccdata.scfenergies[i]
         if hasattr(ccdata, "grads"):
             try:
-                properties.update(
-                    {"forces": -ccdata.grads[i] * units.Hartree / units.Bohr}
-                )
+                properties["forces"] = -ccdata.grads[i] * units.Hartree / units.Bohr
             except IndexError:
                 pass
 
         if i == len(ccdata.atomcoords) - 1:  # last geometry
             if hasattr(ccdata, "moments"):
-                properties.update({"dipole": ccdata.moments[1] * units.Bohr})
+                properties["dipole"] = ccdata.moments[1] * units.Bohr
             if hasattr(ccdata, "free_energy"):
-                properties.update(
-                    {"free_energy": ccdata.freeenergy * units.Hartree}
-                )
+                properties["free_energy"] = ccdata.freeenergy * units.Hartree
 
         traj.write(atoms, **properties)
 

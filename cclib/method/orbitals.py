@@ -44,7 +44,4 @@ class Orbitals(Method):
 
         # Restricted open shell will have one set of MOs but two HOMO indices,
         # and the indices should be different (otherwise it's still closed shell).
-        if len(self.data.homos) == 2 and self.data.homos[0] != self.data.homos[1]:
-            return False
-
-        return True
+        return len(self.data.homos) != 2 or self.data.homos[0] == self.data.homos[1]

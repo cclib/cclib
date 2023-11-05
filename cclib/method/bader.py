@@ -117,75 +117,74 @@ class Bader(Method):
             if self.fragresults[xindex, yindex, zindex] != 0:
                 # index has already been assigned for this grid point
                 continue
-            else:
-                listcoord = []
-                local_max_reached = False
+            listcoord = []
+            local_max_reached = False
 
-                while not local_max_reached:
-                    # Here, `delta_rho` corresponds to equation 2,
-                    # and `grad_rho_dot_r` corresponds to equation 1 in the aforementioned
-                    # paper (doi:10.1016/j.commatsci.2005.04.010)
-                    delta_rho = (
-                        self.chgdensity.data[
-                            xindex - 1 : xindex + 2,
-                            yindex - 1 : yindex + 2,
-                            zindex - 1 : zindex + 2,
-                        ]
-                        - self.chgdensity.data[xindex, yindex, zindex]
-                    )
-                    grad_rho_dot_r = delta_rho / _griddist
-                    maxat = numpy.where(grad_rho_dot_r == numpy.amax(grad_rho_dot_r))
-
-                    directions = list(zip(maxat[0], maxat[1], maxat[2]))
-                    next_direction = [ind - 1 for ind in directions[0]]
-
-                    if len(directions) > 1:
-                        # when one or more directions indicate max grad (of 0), prioritize
-                        # to include all points in the Bader space
-                        if directions[0] == [1, 1, 1]:
-                            next_direction = [ind - 1 for ind in directions[1]]
-
-                    listcoord.append((xindex, yindex, zindex))
-                    bader_candidate_index = self.fragresults[
-                        xindex + next_direction[0],
-                        yindex + next_direction[1],
-                        zindex + next_direction[2],
+            while not local_max_reached:
+                # Here, `delta_rho` corresponds to equation 2,
+                # and `grad_rho_dot_r` corresponds to equation 1 in the aforementioned
+                # paper (doi:10.1016/j.commatsci.2005.04.010)
+                delta_rho = (
+                    self.chgdensity.data[
+                        xindex - 1 : xindex + 2,
+                        yindex - 1 : yindex + 2,
+                        zindex - 1 : zindex + 2,
                     ]
+                    - self.chgdensity.data[xindex, yindex, zindex]
+                )
+                grad_rho_dot_r = delta_rho / _griddist
+                maxat = numpy.where(grad_rho_dot_r == numpy.amax(grad_rho_dot_r))
 
-                    if bader_candidate_index != 0:
-                        # Path arrived at a point that has already been assigned with an index
-                        bader_index = bader_candidate_index
-                        listcoord = tuple(numpy.array(listcoord).T)
-                        self.fragresults[listcoord] = bader_index
+                directions = list(zip(maxat[0], maxat[1], maxat[2]))
+                next_direction = [ind - 1 for ind in directions[0]]
 
-                        local_max_reached = True
+                if len(directions) > 1:
+                    # when one or more directions indicate max grad (of 0), prioritize
+                    # to include all points in the Bader space
+                    if directions[0] == [1, 1, 1]:
+                        next_direction = [ind - 1 for ind in directions[1]]
 
-                    elif (
-                        next_direction == [0, 0, 0]
-                        or xindex + next_direction[0] == 0
-                        or xindex + next_direction[0] == (len(self.chgdensity.data) - 1)
-                        or yindex + next_direction[1] == 0
-                        or yindex + next_direction[1] == (len(self.chgdensity.data[0]) - 1)
-                        or zindex + next_direction[2] == 0
-                        or zindex + next_direction[2] == (len(self.chgdensity.data[0][0]) - 1)
-                    ):
-                        # When next_direction is [0, 0, 0] -- local maximum
-                        # Other conditions indicate that the path is heading out to edge of
-                        # the grid. Here, assign new Bader space to avoid exiting the grid.
-                        bader_index = next_index
-                        next_index += 1
+                listcoord.append((xindex, yindex, zindex))
+                bader_candidate_index = self.fragresults[
+                    xindex + next_direction[0],
+                    yindex + next_direction[1],
+                    zindex + next_direction[2],
+                ]
 
-                        listcoord = tuple(numpy.array(listcoord).T)
-                        self.fragresults[listcoord] = bader_index
+                if bader_candidate_index != 0:
+                    # Path arrived at a point that has already been assigned with an index
+                    bader_index = bader_candidate_index
+                    listcoord = tuple(numpy.array(listcoord).T)
+                    self.fragresults[listcoord] = bader_index
 
-                        local_max_reached = True
+                    local_max_reached = True
 
-                    else:
-                        # Advance to the next point according to the direction of
-                        # maximum gradient
-                        xindex += next_direction[0]
-                        yindex += next_direction[1]
-                        zindex += next_direction[2]
+                elif (
+                    next_direction == [0, 0, 0]
+                    or xindex + next_direction[0] == 0
+                    or xindex + next_direction[0] == (len(self.chgdensity.data) - 1)
+                    or yindex + next_direction[1] == 0
+                    or yindex + next_direction[1] == (len(self.chgdensity.data[0]) - 1)
+                    or zindex + next_direction[2] == 0
+                    or zindex + next_direction[2] == (len(self.chgdensity.data[0][0]) - 1)
+                ):
+                    # When next_direction is [0, 0, 0] -- local maximum
+                    # Other conditions indicate that the path is heading out to edge of
+                    # the grid. Here, assign new Bader space to avoid exiting the grid.
+                    bader_index = next_index
+                    next_index += 1
+
+                    listcoord = tuple(numpy.array(listcoord).T)
+                    self.fragresults[listcoord] = bader_index
+
+                    local_max_reached = True
+
+                else:
+                    # Advance to the next point according to the direction of
+                    # maximum gradient
+                    xindex += next_direction[0]
+                    yindex += next_direction[1]
+                    zindex += next_direction[2]
 
         # Now try to identify each Bader region to individual atom.
         # Try to find an area that captures enough representation

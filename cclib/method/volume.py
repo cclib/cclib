@@ -173,10 +173,10 @@ class Volume(object):
         self.topcorner = numpy.asarray(topcorner, dtype=float)
         self.spacing = numpy.asarray(spacing, dtype=float)
         self.numpts = []
-        for i in range(3):
-            self.numpts.append(
-                int((self.topcorner[i] - self.origin[i]) / self.spacing[i] + 1)
-            )
+        self.numpts.extend(
+            int((self.topcorner[i] - self.origin[i]) / self.spacing[i] + 1)
+            for i in range(3)
+        )
         self.data = numpy.zeros(tuple(self.numpts), "d")
 
     def __str__(self):
@@ -278,10 +278,7 @@ def scinotation(num):
     exponent = int(broken[1])
     if exponent < -99:
         return "  0.000E+00"
-    if exponent < 0:
-        sign = "-"
-    else:
-        sign = "+"
+    sign = "-" if exponent < 0 else "+"
     return (f"{broken[0]}E{sign}{broken[1][-2:]}").rjust(12)
 
 
@@ -408,10 +405,9 @@ def electrondensity(ccdata, volume, mocoeffslist):
         return electrondensity_spin(
             ccdata, volume, [mocoeffslist[0]]
         ) + electrondensity_spin(ccdata, volume, [mocoeffslist[1]])
-    else:
-        edens = electrondensity_spin(ccdata, volume, [mocoeffslist[0]])
-        edens.data *= 2
-        return edens
+    edens = electrondensity_spin(ccdata, volume, [mocoeffslist[0]])
+    edens.data *= 2
+    return edens
 
 
 def read_from_cube(filepath):

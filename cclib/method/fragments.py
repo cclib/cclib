@@ -89,11 +89,11 @@ class FragmentAnalysis(Method):
         for frag in fragments:
             size = frag.natom
             if self.data.atomcoords[0][last:last+size].tolist() != \
-                    frag.atomcoords[0].tolist():
+                        frag.atomcoords[0].tolist():
                 self.logger.error("Atom coordinates aren't aligned")
                 return False
             if self.data.atomnos[last:last+size].tolist() != \
-                    frag.atomnos.tolist():
+                        frag.atomnos.tolist():
                 self.logger.error("Elements don't match")
                 return False
 
@@ -113,10 +113,9 @@ class FragmentAnalysis(Method):
                 size = fragments[i].nbasis
                 if len(fragments[i].mocoeffs) == 1:
                     temp = numpy.transpose(fragments[i].mocoeffs[0])
-                    blockMatrix[pos:pos+size, pos:pos+size] = temp
                 else:
                     temp = numpy.transpose(fragments[i].mocoeffs[spin])
-                    blockMatrix[pos:pos+size, pos:pos+size] = temp
+                blockMatrix[pos:pos+size, pos:pos+size] = temp
                 pos += size
 
             # Invert and mutliply to result in fragment MOs as basis.

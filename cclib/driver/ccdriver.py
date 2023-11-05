@@ -434,12 +434,9 @@ class ccDriver:
         """
         if not isinstance(source, FileHandler):
             source = FileHandler(source)
-        if combinator is not None:
-            self._combinator = combinator
-        else:
-            self._combinator = sp_combinator()
+        self._combinator = combinator if combinator is not None else sp_combinator()
         self._ccCollection = ccCollection(self._combinator)
-        self._fileHandler = source 
+        self._fileHandler = source
         self.identified_program = None
 
     @property
@@ -460,20 +457,17 @@ class ccDriver:
         line = self._fileHandler.last_line
         while line := self._fileHandler.next():
             for program, phrases, do_break in triggers_on:
-                if all([line.lower().find(p.lower()) >= 0 for p in phrases]):
+                if all(line.lower().find(p.lower()) >= 0 for p in phrases):
                     if self.identified_program is None:
                         self.identified_program = program
                         if do_break:
                             break
-                    else:
-                        # if a program is within a program this might mean things are ok but we proceed to a child node.. think about how to handle this?
-                        pass
             for program, phrases, do_break in triggers_off:
-                if all([line.lower().find(p.lower()) >= 0 for p in phrases]):
+                if all(line.lower().find(p.lower()) >= 0 for p in phrases):
                     self.identified_program = None
                     if do_break:
                         break
-            if self.identified_program == None:
+            if self.identified_program is None:
                 line = next(self._fileHandler)
                 continue
             # right now combinator is just a list of list of subparsers (one node graph

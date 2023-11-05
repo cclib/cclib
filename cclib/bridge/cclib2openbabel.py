@@ -7,6 +7,7 @@
 
 """Bridge between cclib data and openbabel (http://openbabel.org)."""
 
+
 from typing import Optional, Set, Union
 
 import numpy as np
@@ -20,7 +21,7 @@ if _found_openbabel:
     # The `try` block is for OB >= 3.0, and `except` is for 2.4.x and older.
     try:
         from openbabel import openbabel as ob
-    except:
+    except Exception:
         import openbabel as ob
 
 
@@ -85,7 +86,7 @@ def makeopenbabel(
     obmol.ConnectTheDots()
     obmol.PerceiveBondOrders()
     obmol.SetTotalSpinMultiplicity(mult)
-    obmol.SetTotalCharge(int(charge))
+    obmol.SetTotalCharge(charge)
     return obmol
 
 

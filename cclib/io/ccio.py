@@ -132,14 +132,14 @@ def guess_filetype(inputfile) -> Optional[logfileparser.Logfile]:
             return filetype
         for line in inputfile:
             for parser, phrases, do_break in triggers:
-                if all([line.lower().find(p.lower()) >= 0 for p in phrases]):
+                if all(line.lower().find(p.lower()) >= 0 for p in phrases):
                     filetype = parser
                     if do_break:
                         return filetype
     except Exception:
         # guess_filetype() is expected to be quiet by default...
         logger.error("Failed to determine log file type", exc_info = True)
-    
+
     return filetype
 
 def sort_turbomole_outputs(fileinputs):
@@ -185,13 +185,13 @@ def ccread(
         log = ccopen(source, *args, **kwargs)
         logger = logging.getLogger("cclib")
         if log:
-            logger.info("Identified logfile to be in {} format".format(type(log).__name__))
+            logger.info(f"Identified logfile to be in {type(log).__name__} format")
 
             return log.parse()
         else:
             logger.info('Attempting to use fallback mechanism to read file')
             return fallback(source)
-    
+
     finally:
         if log:
             log.inputfile.close()
@@ -288,7 +288,7 @@ def fallback(source):
             # From OB 3.0 onward, Pybel is contained inside the OB module.
             try:
                 import openbabel.pybel as pb
-            except:
+            except Exception:
                 import pybel as pb
             if ext in pb.informats:
                 return cclib2openbabel.readfile(source, ext)
@@ -345,19 +345,16 @@ def ccwrite(ccobj, outputtype=None, outputdest=None,
                             *args, **kwargs)
     output = outputobj.generate_repr()
 
-    # If outputdest isn't None, write the output to disk.
-    if outputdest is not None:
-        if isinstance(outputdest, str):
-            with open(outputdest, 'w') as outputobj:
-                outputobj.write(output)
-        elif isinstance(outputdest, io.IOBase):
-            outputdest.write(output)
-        else:
-            raise ValueError
-    # If outputdest is None, return a string representation of the output.
-    else:
+    if outputdest is None:
         return output
 
+    if isinstance(outputdest, str):
+        with open(outputdest, 'w') as outputobj:
+            outputobj.write(output)
+    elif isinstance(outputdest, io.IOBase):
+        outputdest.write(output)
+    else:
+        raise ValueError
     if returnstr:
         return output
 
@@ -383,23 +380,16 @@ def _determine_output_format(outputtype, outputdest):
     # First check outputtype.
     if isinstance(outputtype, str):
         extension = outputtype.lower()
-        if extension in writerclasses:
-            outputclass = writerclasses[extension]
-        else:
-            raise UnknownOutputFormatError(extension)
+    elif isinstance(outputdest, str):
+        extension = os.path.splitext(outputdest)[1].lower()
+    elif isinstance(outputdest, io.IOBase):
+        extension = os.path.splitext(outputdest.name)[1].lower()
     else:
-        # Then checkout outputdest.
-        if isinstance(outputdest, str):
-            extension = os.path.splitext(outputdest)[1].lower()
-        elif isinstance(outputdest, io.IOBase):
-            extension = os.path.splitext(outputdest.name)[1].lower()
-        else:
-            raise UnknownOutputFormatError
-        if extension in writerclasses:
-            outputclass = writerclasses[extension]
-        else:
-            raise UnknownOutputFormatError(extension)
-
+        raise UnknownOutputFormatError
+    if extension in writerclasses:
+        outputclass = writerclasses[extension]
+    else:
+        raise UnknownOutputFormatError(extension)
     return outputclass
 
 

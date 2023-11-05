@@ -89,9 +89,8 @@ def _indent(elem, level=0):
             _indent(elem, level+1)
         if not elem.tail or not elem.tail.strip():
             elem.tail = i
-    else:
-        if level and (not elem.tail or not elem.tail.strip()):
-            elem.tail = i
+    elif level and (not elem.tail or not elem.tail.strip()):
+        elem.tail = i
 
 
 def _tostring(element, xml_declaration=True, encoding='utf-8', method='xml'):

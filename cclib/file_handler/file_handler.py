@@ -127,13 +127,7 @@ class FileHandler:
         self.sizes = sizes
     
     @classmethod
-    def open_log_file(
-            self,
-            source,
-            mode: str = "r",
-            encoding: str = "utf-8",
-            errors: str = "logerror",
-        ) -> typing.Tuple[str, typing.IO]:
+    def open_log_file(cls, source, mode: str = "r", encoding: str = "utf-8", errors: str = "logerror") -> typing.Tuple[str, typing.IO]:
         """
         Open a possibly compressed file, returning both the filename of the file and an open file object.
         """
@@ -146,69 +140,64 @@ class FileHandler:
                 fileobject = NamedTemporaryFile(delete = True)
                 fileobject.write(response.read())
                 fileobject.seek(0,0)
-                
+
                 fileobject = io.TextIOWrapper(fileobject, encoding = encoding, errors = errors)
                 filename = source
-                
+
             except (ValueError, URLError) as error:
                 # Maybe no need to raise a different exception?
                 raise ValueError(
-                    "Encountered an error processing the URL '{}'".format(source)
+                    f"Encountered an error processing the URL '{source}'"
                 ) from error
-                
+
         elif hasattr(source, "read") or hasattr(source, "readline"):
             # This file is a file.
             # If this file supports seek, we don't need to do anything.
             # If not, we'll cache it to file.
             if not hasattr(source, "seek") or \
-            (hasattr(source, "seekable") and not source.seekable()):
+                (hasattr(source, "seekable") and not source.seekable()):
                 fileobject = NamedTemporaryFile(delete = True)
                 fileobject.write(source.read())
                 fileobject.seek(0,0)
-                
+
                 fileobject = io.TextIOWrapper(fileobject, encoding = encoding, errors = errors)
-             
+
             else:
                 fileobject = source
             filename = getattr(source, "name", f"stream {str(type(source))}")
-            
+
         else:
             # This file is something else, assume we can open() it.
             filename = source
             fileobject = None
-        
+
         filename = pathlib.Path(filename)
         extension = filename.suffix
-    
+
         if extension == ".gz":
             fileobject = io.TextIOWrapper(gzip.GzipFile(filename, mode, fileobj = fileobject), encoding = encoding, errors = errors)
-    
+
         elif extension == ".zip":
             fileobject = zipfile.ZipFile(fileobject if fileobject else filename, mode)
             # TODO: Need to check that we're not leaving any open file objects here...
             # TODO: We should be able to handle multiple files...
             assert len(fileobject.namelist()) == 1, "ERROR: Zip file contains more than 1 file"
-            
+
             fileobject = io.TextIOWrapper(
                 fileobject.open(fileobject.namelist()[0]),
                 encoding = encoding, errors = errors
             )
-    
-        elif extension in ['.bz', '.bz2']:
+
+        elif extension in {'.bz', '.bz2'}:
             # Module 'bz2' is not always importable.
             assert bz2 is not None, "ERROR: module bz2 cannot be imported"
             fileobject = io.TextIOWrapper(bz2.BZ2File(fileobject if fileobject else filename, mode), encoding = encoding, errors = errors)
-    
-        elif fileobject is not None:
-            # Assuming that object is text file encoded in utf-8
-            # If the file/stream has already been opened, we have no ability to handle decoding errors.
-            pass
-            
-        else:
+
+        elif fileobject is None:
             # Normal text file.
-            
+
             fileobject = open(filename, mode, encoding = encoding, errors = errors)
-        
+
         return filename, fileobject
 
     def virtual_set(self):
@@ -243,11 +232,11 @@ class FileHandler:
         if self.virtual_reset_position is None:
             raise RuntimeError("virtual_set() must be called before reset and virtual_next")
         try:
-           line = next(self.files[self.file_pointer])
-           self.last_lines.append(line)
-           self.pos += len(line)
-           return line
-        except:
+            line = next(self.files[self.file_pointer])
+            self.last_lines.append(line)
+            self.pos += len(line)
+            return line
+        except Exception:
             # possibly raise a warning? but we are ok just reaching the end of a file for a subparser parsing
             return
 

@@ -33,15 +33,15 @@ class CJSON(filereader.Reader):
 
     def generate_repr(self, json_data) -> None:
         for k, v in ccData._attributes.items():
-            json_key = v.json_key
             attribute_path = v.attribute_path.split(":")
 
             if attribute_path[0] == 'N/A':
                 continue
 
-            levels = len(attribute_path)
             if attribute_path[0] in json_data:
                 l1_data_object = json_data[attribute_path[0]]
+                json_key = v.json_key
+                levels = len(attribute_path)
                 if levels == 1:
                     if json_key in l1_data_object:
                         self.representation[k] = l1_data_object[json_key]

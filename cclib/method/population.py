@@ -59,13 +59,9 @@ class Population(Method):
             elif hasattr(self.data, "fonames"):
                 names = self.data.fonames
 
-            atoms = []
-            indices = []
-
             name = names[0].split('_')[0]
-            atoms.append(name)
-            indices.append([0])
-
+            atoms = [name]
+            indices = [[0]]
             for i in range(1, len(names)):
                 name = names[i].split('_')[0]
                 try:
@@ -81,9 +77,7 @@ class Population(Method):
 
         # Build results numpy array[3].
         alpha = len(self.aoresults[0])
-        results = []
-        results.append(numpy.zeros([alpha, natoms], "d"))
-
+        results = [numpy.zeros([alpha, natoms], "d")]
         if len(self.aoresults) == 2:
             beta = len(self.aoresults[1])
             results.append(numpy.zeros([beta, natoms], "d"))

@@ -36,8 +36,9 @@ class MBO(Density):
             return False
 
         # Do we have the needed info in the ccData object?
-        if not (hasattr(self.data, "aooverlaps")
-                or hasattr(self.data, "fooverlaps")):
+        if not hasattr(self.data, "aooverlaps") and not hasattr(
+            self.data, "fooverlaps"
+        ):
             self.logger.error("Missing overlap matrix")
             return False #let the caller of function know we didn't finish
 
@@ -54,13 +55,9 @@ class MBO(Density):
                 self.logger.error("Missing aonames or fonames")
                 return False
 
-            atoms = []
-            indices = []
-
             name = names[0].split('_')[0]
-            atoms.append(name)
-            indices.append([0])
-
+            atoms = [name]
+            indices = [[0]]
             for i in range(1, len(names)):
                 name = names[i].split('_')[0]
                 try:
@@ -75,8 +72,7 @@ class MBO(Density):
         size = len(indices)
 
         # Determine number of steps, and whether process involves beta orbitals.
-        PS = []
-        PS.append(numpy.dot(self.density[0], overlaps))
+        PS = [numpy.dot(self.density[0], overlaps)]
         nstep = size**2 #approximately quadratic in size
         unrestricted = (len(self.data.mocoeffs) == 2)
         if unrestricted:

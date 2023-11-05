@@ -70,7 +70,7 @@ def _section(section_name, section_data):
         section = opening_tag + section_data + closing_tag
     elif isinstance(section_data, str):
         section = opening_tag + f" {section_data}".split("\n") + closing_tag
-    elif isinstance(section_data, int) or isinstance(section_data, float):
+    elif isinstance(section_data, (int, float)):
         section = opening_tag + [f" {str(section_data)}"] + closing_tag
     return section
 
@@ -171,11 +171,10 @@ class WFXWriter(filewriter.Writer):
         Nuclear coordinates in Bohr."""
         coord_template = WFX_FIELD_FMT * 3
         to_bohr = lambda x: utils.convertor(x, "Angstrom", "bohr")
-        nuc_coords = [
+        return [
             coord_template % tuple(to_bohr(coord))
             for coord in self.ccdata.atomcoords[-1]
         ]
-        return nuc_coords
 
     def _net_charge(self):
         """Section: Net Charge.
@@ -297,18 +296,17 @@ class WFXWriter(filewriter.Writer):
 
     def _mo_energies(self):
         """Section: Molecular Orbital Energies."""
-        mo_energies = []
         alpha_elctrons = self._no_alpha_electrons()
         beta_electrons = self._no_beta_electrons()
-        for mo_energy in self.ccdata.moenergies[0][:alpha_elctrons]:
-            mo_energies.append(
-                WFX_FIELD_FMT % (utils.convertor(mo_energy, "eV", "hartree"))
-            )
+        mo_energies = [
+            WFX_FIELD_FMT % (utils.convertor(mo_energy, "eV", "hartree"))
+            for mo_energy in self.ccdata.moenergies[0][:alpha_elctrons]
+        ]
         if self.ccdata.mult > 1:
-            for mo_energy in self.ccdata.moenergies[1][:beta_electrons]:
-                mo_energies.append(
-                    WFX_FIELD_FMT % (utils.convertor(mo_energy, "eV", "hartree"))
-                )
+            mo_energies.extend(
+                WFX_FIELD_FMT % (utils.convertor(mo_energy, "eV", "hartree"))
+                for mo_energy in self.ccdata.moenergies[1][:beta_electrons]
+            )
         return mo_energies
 
     def _mo_spin_types(self):
@@ -339,8 +337,7 @@ class WFXWriter(filewriter.Writer):
         L = _L[prim_type]
         M = _M[prim_type]
         norm_four = PI_CUBE_INV * 2**(4*L) * alpha**(3+2*L) / M
-        norm = numpy.power(norm_four, 1/4.0)
-        return norm
+        return numpy.power(norm_four, 1/4.0)
 
     def _rearrange_mocoeffs(self, mocoeffs):
         """Rearrange cartesian F functions in mocoeffs.
@@ -422,13 +419,13 @@ class WFXWriter(filewriter.Writer):
 
         prim_mocoeff = self._prim_mocoeff(mo_count)
 
-        norm_mocoeffs = []
-        for mo_num in range(self._nmos()):
-            norm_mocoeffs.append([norm_mat[i] *
-                                  prim_mocoeff[i + mo_num * len(prim_coeff)]
-                                  for i in range(len(prim_coeff))])
-
-        return norm_mocoeffs
+        return [
+            [
+                norm_mat[i] * prim_mocoeff[i + mo_num * len(prim_coeff)]
+                for i in range(len(prim_coeff))
+            ]
+            for mo_num in range(self._nmos())
+        ]
 
     def _mo_prim_coeffs(self):
         """Section: Molecular Orbital Primitive Coefficients."""
@@ -513,11 +510,11 @@ class WFXWriter(filewriter.Writer):
             try:
                 section_data = section_module()
                 wfx_lines.extend(_section(section_name, section_data))
-            except:
+            except Exception as e:
                 if section_required:
                     raise filewriter.MissingAttributeError(
                         f"Unable to write required wfx section: {section_name}"
-                    )
+                    ) from e
 
         wfx_lines.append('')
         return '\n'.join(wfx_lines)

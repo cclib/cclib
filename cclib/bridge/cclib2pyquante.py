@@ -32,9 +32,7 @@ def makepyquante(data):
 
     # Check required attributes.
     required_attrs = {"atomcoords", "atomnos"}
-    missing = [x for x in required_attrs if not hasattr(data, x)]
-
-    if missing:
+    if missing := [x for x in required_attrs if not hasattr(data, x)]:
         missing = " ".join(missing)
         raise MissingAttributeError(
             f"Could not create pyquante molecule due to missing attribute: {missing}"

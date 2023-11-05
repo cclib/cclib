@@ -40,19 +40,6 @@ class XYZ(filewriter.Writer):
     def generate_repr(self) -> str:
         """Generate the XYZ representation of the logfile data."""
 
-        # Options for output (to a single file):
-        # 1. Write all geometries from an optimization, which programs like VMD
-        #   can read in like a trajectory.
-        # 2. Write the final converged geometry, which for any job other than
-        #   a geometry optimization would be the single/only geometry.
-        # 3. Write the very first geometry, which for any job other than a
-        #   geometry optimization would be the single/only geometry.
-        # 4. Write the first and last geometries from a geometry optimization.
-        # 5. Write arbitrary structures via zero-based indexing.
-        # TODO: Options for output (to multiple files)
-
-        xyzblock = []
-
         lencoords = len(self.ccdata.atomcoords)
 
         # Collect the indices.
@@ -68,9 +55,7 @@ class XYZ(filewriter.Writer):
         indices = sorted(self.indices)
         if not indices:
             indices = [-1]
-        for i in indices:
-            xyzblock.append(self._xyz_from_ccdata(i))
-
+        xyzblock = [self._xyz_from_ccdata(i) for i in indices]
         # Ensure an extra newline at the very end.
         xyzblock.append('')
 
@@ -81,28 +66,23 @@ class XYZ(filewriter.Writer):
 
         atomcoords = self.ccdata.atomcoords[index]
         existing_comment = "" if "comments" not in self.ccdata.metadata \
-            else self.ccdata.metadata["comments"][index]
+                else self.ccdata.metadata["comments"][index]
 
         # Create a comment derived from the filename and the index.
-        if index == -1:
-            geometry_num = len(self.ccdata.atomcoords)
-        else:
-            geometry_num = index + 1
+        geometry_num = len(self.ccdata.atomcoords) if index == -1 else index + 1
         if self.jobfilename is not None:
             comment = f"{self.jobfilename}: Geometry {geometry_num}"
         else:
             comment = f"Geometry {geometry_num}"
-        # Wrap the geometry number part of the comment in square brackets,
-        # prefixing it with one previously parsed if it existed.
-        if existing_comment:
-            comment = f"{existing_comment} [{comment}]"
-        else:
-            comment = f"[{comment}]"
-
         atom_template = '{:3s} {:15.10f} {:15.10f} {:15.10f}'
-        block = []
-        block.append(self.natom)
-        block.append(comment)
-        for element, (x, y, z) in zip(self.element_list, atomcoords):
-            block.append(atom_template.format(element, x, y, z))
+        comment = (
+            f"{existing_comment} [{comment}]"
+            if existing_comment
+            else f"[{comment}]"
+        )
+        block = [self.natom, comment]
+        block.extend(
+            atom_template.format(element, x, y, z)
+            for element, (x, y, z) in zip(self.element_list, atomcoords)
+        )
         return '\n'.join(block)

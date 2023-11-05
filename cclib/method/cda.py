@@ -48,11 +48,7 @@ class CDA(FragmentAnalysis):
         repulsions = []
         residuals = []
 
-        if len(self.mocoeffs) == 2:
-            occs = 1
-        else:
-            occs = 2
-
+        occs = 1 if len(self.mocoeffs) == 2 else 2
         # Intialize progress if available.
         nstep = self.data.homos[0]
         if len(self.data.homos) == 2:
@@ -97,22 +93,22 @@ class CDA(FragmentAnalysis):
                 for k in range(0, homoa + 1):
                     for n in range(offset + homob + 1, self.data.nbasis):
                         donations[spin][i] += 2 * occs * self.mocoeffs[spin][i,k] \
-                                                * self.mocoeffs[spin][i,n] * fooverlaps[k][n]
+                                                    * self.mocoeffs[spin][i,n] * fooverlaps[k][n]
 
                 for l in range(offset, offset + homob + 1):
                     for m in range(homoa + 1, offset):
                         bdonations[spin][i] += 2 * occs * self.mocoeffs[spin][i,l] \
-                                                * self.mocoeffs[spin][i,m] * fooverlaps[l][m]
+                                                    * self.mocoeffs[spin][i,m] * fooverlaps[l][m]
 
                 for k in range(0, homoa + 1):
                     for m in range(offset, offset+homob + 1):
                         repulsions[spin][i] += 2 * occs * self.mocoeffs[spin][i,k] \
-                                                * self.mocoeffs[spin][i, m] * fooverlaps[k][m]
+                                                    * self.mocoeffs[spin][i, m] * fooverlaps[k][m]
 
                 for m in range(homoa + 1, offset):
                     for n in range(offset + homob + 1, self.data.nbasis):
                         residuals[spin][i] += 2 * occs * self.mocoeffs[spin][i,m] \
-                                                * self.mocoeffs[spin][i, n] * fooverlaps[m][n]
+                                                    * self.mocoeffs[spin][i, n] * fooverlaps[m][n]
 
                 step += 1
                 if self.progress and random.random() < cupdate:

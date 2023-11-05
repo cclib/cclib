@@ -31,8 +31,7 @@ def makepyscf(data, charge=0, mult=1):
     _check_pyscf(_found_pyscf)
     inputattrs = data.__dict__
     required_attrs = {"atomcoords", "atomnos"}
-    missing = [x for x in required_attrs if not hasattr(data, x)]
-    if missing:
+    if missing := [x for x in required_attrs if not hasattr(data, x)]:
         missing = " ".join(missing)
         raise MissingAttributeError(
             f"Could not create pyscf molecule due to missing attribute: {missing}"
@@ -54,12 +53,12 @@ def makepyscf(data, charge=0, mult=1):
         )  # find unique atoms
         for idx, i in enumerate(uatoms_idx):
             curr_atom_basis = data.gbasis[i]
-            for jdx, j in enumerate(curr_atom_basis):
+            for j in curr_atom_basis:
                 curr_l = j[0]
                 curr_e_prim = j[1]
                 new_list = [l_sym2num[f"{curr_l}"]]
                 new_list += curr_e_prim
-                if not f"{pt.element[uatoms[idx]]}" in basis:
+                if f"{pt.element[uatoms[idx]]}" not in basis:
                     basis[f"{pt.element[uatoms[idx]]}"] = [new_list]
                 else:
                     basis[f"{pt.element[uatoms[idx]]}"].append(new_list)

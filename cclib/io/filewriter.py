@@ -7,6 +7,7 @@
 
 """Generic file writer and related tools"""
 
+
 import logging
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
@@ -25,8 +26,7 @@ if _has_openbabel:
     try:
         from openbabel import openbabel as ob
         import openbabel.pybel as pb
-    # Open Babel 2.4.x and below
-    except:
+    except Exception:
         import openbabel as ob
         import pybel as pb
 
@@ -87,9 +87,9 @@ class Writer(ABC):
 
     def _check_required_attributes(self) -> None:
         """Check if required attributes are present in ccdata."""
-        missing = [x for x in self.required_attrs
-                   if not hasattr(self.ccdata, x)]
-        if missing:
+        if missing := [
+            x for x in self.required_attrs if not hasattr(self.ccdata, x)
+        ]:
             raise MissingAttributeError(
                 f"Could not parse required attributes to write file: {missing}")
 
@@ -129,12 +129,14 @@ class Writer(ABC):
         the index of the starting atom, the index of the ending atom,
         and the bond order.
         """
-        bond_connectivities = []
-        for obbond in ob.OBMolBondIter(obmol):
-            bond_connectivities.append((obbond.GetBeginAtom().GetIndex(),
-                                        obbond.GetEndAtom().GetIndex(),
-                                        obbond.GetBondOrder()))
-        return bond_connectivities
+        return [
+            (
+                obbond.GetBeginAtom().GetIndex(),
+                obbond.GetEndAtom().GetIndex(),
+                obbond.GetBondOrder(),
+            )
+            for obbond in ob.OBMolBondIter(obmol)
+        ]
 
     def _fix_indices(self) -> None:
         """Clean up the index container type and remove zero-based indices to
@@ -144,7 +146,7 @@ class Writer(ABC):
         if not self.indices:
             self.indices = set()
         elif not isinstance(self.indices, Iterable):
-            self.indices = set([self.indices])
+            self.indices = {self.indices}
         # This is the most likely place to get the number of
         # geometries from.
         if hasattr(self.ccdata, 'atomcoords'):

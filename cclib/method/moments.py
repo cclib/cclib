@@ -111,7 +111,7 @@ class Moments(Method):
         except KeyError as e:
             msg = ("charges coming from requested population analysis"
                    "scheme are not parsed")
-            raise ValueError(msg, e)
+            raise ValueError(msg, e) from e
 
         if isinstance(origin, Iterable) and not isinstance(origin, str):
             origin_pos = numpy.asarray(origin)
@@ -126,7 +126,7 @@ class Moments(Method):
                 except AttributeError as e:
                     msg = ("atomic masses were not parsed, consider provide "
                            "'masses' argument instead")
-                    raise ValueError(msg, e)
+                    raise ValueError(msg, e) from e
             origin_pos = numpy.average(coords, weights=atommasses, axis=0)
         else:
             raise ValueError(f"{origin} is invalid value for 'origin'")

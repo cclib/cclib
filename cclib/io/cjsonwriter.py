@@ -31,8 +31,7 @@ class CJSON(filewriter.Writer):
 
     def pathname(self, path):
         """Return filename without extension to be used as name."""
-        name = os.path.basename(os.path.splitext(path)[0])
-        return name
+        return os.path.basename(os.path.splitext(path)[0])
 
     def as_dict(self):
         """ Build a Python dict with the CJSON data"""
@@ -168,11 +167,10 @@ class NumpyAwareJSONEncoder(json.JSONEncoder):
     """
     def default(self, obj):
         if isinstance(obj, np.ndarray):
-            if obj.ndim == 1:
-                nan_list = obj.tolist()
-                return [None if np.isnan(x) else x for x in nan_list]
-            else:
+            if obj.ndim != 1:
                 return [self.default(obj[i]) for i in range(obj.shape[0])]
+            nan_list = obj.tolist()
+            return [None if np.isnan(x) else x for x in nan_list]
         return json.JSONEncoder.default(self, obj)
 
 
@@ -186,33 +184,30 @@ class JSONIndentEncoder(json.JSONEncoder):
     def encode(self, o):
         # Special Processing for lists
         if isinstance(o, (list, tuple)):
-            primitives_only = True
-            for item in o:
-                if isinstance(item, (list, tuple, dict)):
-                    primitives_only = False
-                    break
+            primitives_only = not any(isinstance(item, (list, tuple, dict)) for item in o)
             output = []
             if primitives_only:
-                for item in o:
-                    output.append(json.dumps(item, cls=NumpyAwareJSONEncoder))
+                output.extend(json.dumps(item, cls=NumpyAwareJSONEncoder) for item in o)
                 return "[ " + ", ".join(output) + " ]"
             else:
                 self.current_indent += self.indent
-                self.current_indent_str = "".join([" " for x in range(self.current_indent)])
-                for item in o:
-                    output.append(self.current_indent_str + self.encode(item))
+                self.current_indent_str = "".join([" " for _ in range(self.current_indent)])
+                output.extend(self.current_indent_str + self.encode(item) for item in o)
                 self.current_indent -= self.indent
-                self.current_indent_str = "".join([" " for x in range(self.current_indent)])
+                self.current_indent_str = "".join([" " for _ in range(self.current_indent)])
                 return "[\n" + ",\n".join(output) + "\n" + self.current_indent_str + "]"
         elif isinstance(o, dict):
-            output = []
             self.current_indent += self.indent
-            self.current_indent_str = "".join([" " for x in range(self.current_indent)])
-            for key, value in o.items():
-                output.append(self.current_indent_str + json.dumps(key, cls=NumpyAwareJSONEncoder) + ": " +
-                              str(self.encode(value)))
+            self.current_indent_str = "".join([" " for _ in range(self.current_indent)])
+            output = [
+                self.current_indent_str
+                + json.dumps(key, cls=NumpyAwareJSONEncoder)
+                + ": "
+                + str(self.encode(value))
+                for key, value in o.items()
+            ]
             self.current_indent -= self.indent
-            self.current_indent_str = "".join([" " for x in range(self.current_indent)])
+            self.current_indent_str = "".join([" " for _ in range(self.current_indent)])
             return "{\n" + ",\n".join(output) + "\n" + self.current_indent_str + "}"
         elif isinstance(o, np.generic):
             return json.dumps(o.item(), cls=NumpyAwareJSONEncoder)
