@@ -8,22 +8,21 @@
 # TOOD: This file belongs in cclib.io, but circular dependency issues mean it can't go there just now.
 
 import bz2
-import gzip
-import zipfile
-import pathlib
-from typing import Any, Iterable, List, Optional
-from tempfile import NamedTemporaryFile
-from urllib.request import urlopen
-from urllib.error import URLError
+from cclib.file_handler import utils
 import collections
-import typing
-import re
+import codecs
+import gzip
 import inspect
 import io
 import logging
-import codecs
+import zipfile
+import pathlib
+import re
+import typing 
+from tempfile import NamedTemporaryFile
+from urllib.request import urlopen
+from urllib.error import URLError
 
-from cclib.file_handler import utils
 # Regular expression for validating URLs
 URL_PATTERN = re.compile(
 
@@ -354,7 +353,7 @@ class FileHandler:
         self.file_pointer = len(self.files) -1
         self.pos = self.size
 
-    def skip_lines(self, sequence: Iterable[str],virtual=False) -> List[str]:
+    def skip_lines(self, sequence: typing.Iterable[str],virtual=False) -> typing.List[str]:
         """Read trivial line types and check they are what they are supposed to be.
 
         This function will read len(sequence) lines and do certain checks on them,
