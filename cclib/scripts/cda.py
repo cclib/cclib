@@ -27,10 +27,7 @@ def main() -> None:
     data3 = ccread(args.file3, loglevel=loglevel)
 
     fa = CDA(data1, None, loglevel)
-    retval = fa.calculate([data2, data3])
-
-    if retval:
-
+    if retval := fa.calculate([data2, data3]):
         print(f"Charge decomposition analysis of {args.file1}\n")
 
         if len(data1.homos) == 2:
@@ -54,7 +51,7 @@ def main() -> None:
 
                 if i == data1.homos[spin]:
                     print("------ HOMO - LUMO gap ------")
-                    
+
 
             print("-------------------------------------")
             print(

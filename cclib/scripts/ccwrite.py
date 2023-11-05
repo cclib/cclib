@@ -67,7 +67,7 @@ def main() -> None:
     for filename in filenames:
 
         # We might want to use this option in the near future.
-        ccopen_kwargs = dict()
+        ccopen_kwargs = {}
         if future:
             ccopen_kwargs['future'] = True
 
@@ -93,7 +93,7 @@ def main() -> None:
 
         # Write out to disk.
         outputdest = '.'.join([os.path.splitext(os.path.basename(filename))[0], outputtype])
-        ccwrite_kwargs = dict()
+        ccwrite_kwargs = {}
         if future:
             ccwrite_kwargs['future'] = True
         if ghost:

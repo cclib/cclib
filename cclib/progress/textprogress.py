@@ -35,9 +35,9 @@ class TextProgress:
         # so update
 
             mystr = "\r["
-            prog = int(self.progress / 10)
+            prog = self.progress // 10
             mystr += prog * "=" + (10-prog) * "-"
-            mystr += f"] {int(self.progress):3}%"
+            mystr += f"] {self.progress:3}%"
 
             if text:
                 mystr += f"    {text}"

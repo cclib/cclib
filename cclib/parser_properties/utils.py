@@ -38,9 +38,9 @@ def symmetrize(m: numpy.ndarray, use_triangle: str = 'lower') -> numpy.ndarray:
 
     if use_triangle not in ('lower', 'upper'):
         raise ValueError
-    if not len(m.shape) == 2:
+    if len(m.shape) != 2:
         raise ValueError
-    if not (m.shape[0] == m.shape[1]):
+    if m.shape[0] != m.shape[1]:
         raise ValueError
 
     dim = m.shape[0]
@@ -51,7 +51,7 @@ def symmetrize(m: numpy.ndarray, use_triangle: str = 'lower') -> numpy.ndarray:
         lower_indices = numpy.tril_indices(dim, k=-1)
         upper_indices = (lower_indices[1], lower_indices[0])
         ms[upper_indices] = ms[lower_indices]
-    if use_triangle == 'upper':
+    elif use_triangle == 'upper':
         upper_indices = numpy.triu_indices(dim, k=1)
         lower_indices = (upper_indices[1], upper_indices[0])
         ms[lower_indices] = ms[upper_indices]
@@ -159,8 +159,7 @@ def _get_rmat_from_vecs(a, b):
     vx = numpy.array([[0, -v[2], v[1]],
                     [v[2], 0, -v[0]],
                     [-v[1], v[0], 0]])
-    rmat = numpy.identity(3) + vx + numpy.matmul(vx, vx) * ((1-c)/s**2)
-    return rmat
+    return numpy.identity(3) + vx + numpy.matmul(vx, vx) * ((1-c)/s**2)
 
 def get_rotation(a, b):
     """Get rotation part for transforming a to b, where a and b are same positions with different orientations
@@ -188,7 +187,6 @@ def get_rotation(a, b):
             # in the case of linear molecule, e.g. O2, C2H2
             idx = numpy.argmax(numpy.linalg.norm(a_, ord=2, axis=1))
             rmat = _get_rmat_from_vecs(a_[idx], b_[idx])
-            r = scipy.spatial.transform.Rotation.from_dcm(rmat)
         else:
             # scipy.spatial.transform.Rotation.match_vectors has bug
             # Kabsch Algorithm
@@ -198,7 +196,7 @@ def get_rotation(a, b):
                 S[-1] = -S[-1]
                 V[:,-1] = -V[:,-1]
             rmat = numpy.dot(V, W)
-            r = scipy.spatial.transform.Rotation.from_dcm(rmat)
+        r = scipy.spatial.transform.Rotation.from_dcm(rmat)
     return r
 
 def skip_until_no_match(inputfile, regex):
@@ -216,7 +214,7 @@ def skip_until_no_match(inputfile, regex):
 def str_contains_only(string, chars):
     """Checks if string contains only the specified characters.
     """
-    return all([c in chars for c in string])
+    return all(c in chars for c in string)
 
 class PeriodicTable:
     """Allows conversion between element name and atomic no."""

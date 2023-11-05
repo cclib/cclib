@@ -86,9 +86,9 @@ class CM5(Method):
 
         alpha = 2.474  # Angstrom
 
-        for i in range(0, nat):
+        for i in range(nat):
             s = 0
-            for j in range(0, nat):
+            for j in range(nat):
                 if i != j:
                     rij = np.linalg.norm(np.subtract(xyz[i], xyz[j]))
                     # eq. (2) from doi:10.1021/ct200866d

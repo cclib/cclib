@@ -32,11 +32,11 @@ class _Property(ABC):
         if val:
             self._impl = val
             self.typecheck()
+        elif self._impl:
+            return self._impl
+
         else:
-            if not self._impl:
-                raise PropertyError("{} doesn't contain any data".format(type(self)))
-            else:
-                return self._impl
+            raise PropertyError(f"{type(self)} doesn't contain any data")
 
     def __str__(self):
         return str(self.__class__.__name__)
@@ -56,9 +56,13 @@ class _Property(ABC):
                 self._impl = np.asarray(self._impl)
             else:
                 self._impl = self.main_type(self._impl)
-        except ValueError:
+        except ValueError as e:
             args = (self.name, type(self._impl), self.main_type)
-            raise TypeError("attribute {} is {} instead of {} and could not be converted".format(*args))
+            raise TypeError(
+                "attribute {} is {} instead of {} and could not be converted".format(
+                    *args
+                )
+            ) from e
 
 
 class aonames(_Property):

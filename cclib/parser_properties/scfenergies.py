@@ -12,10 +12,7 @@ class scfenergies(base_parser):
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
         constructed_data = None
-        if line[1:9] == 'SCF Done':
-            constructed_data = utils.float(line.split()[4])
-            return constructed_data
-        return None
+        return utils.float(line.split()[4]) if line[1:9] == 'SCF Done' else None
 
     @staticmethod
     def parse(file_handler, program, ccdata):

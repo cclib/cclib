@@ -138,11 +138,8 @@ class Bader(Method):
                 directions = list(zip(maxat[0], maxat[1], maxat[2]))
                 next_direction = [ind - 1 for ind in directions[0]]
 
-                if len(directions) > 1:
-                    # when one or more directions indicate max grad (of 0), prioritize
-                    # to include all points in the Bader space
-                    if directions[0] == [1, 1, 1]:
-                        next_direction = [ind - 1 for ind in directions[1]]
+                if len(directions) > 1 and directions[0] == [1, 1, 1]:
+                    next_direction = [ind - 1 for ind in directions[1]]
 
                 listcoord.append((xindex, yindex, zindex))
                 bader_candidate_index = self.fragresults[

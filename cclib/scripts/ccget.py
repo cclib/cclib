@@ -123,25 +123,23 @@ def ccget() -> None:
             attrnames.append(arg)
         elif URL_PATTERN.match(arg) or os.path.isfile(arg):
             filenames.append(arg)
+        elif wildcardmatches := glob.glob(arg):
+            filenames.extend(wildcardmatches)
         else:
-            wildcardmatches = glob.glob(arg)
-            if wildcardmatches:
-                filenames.extend(wildcardmatches)
-            else:
-                print(f"{arg} is neither a filename nor an attribute name.")
-                parser.print_usage()
-                parser.exit(1)
+            print(f"{arg} is neither a filename nor an attribute name.")
+            parser.print_usage()
+            parser.exit(1)
 
     # Since there is some ambiguity to the correct number of arguments, check
     # that there is at least one filename (or two in multifile mode), and also
     # at least one attribute to parse if the -l option was not passed.
-    if len(filenames) == 0:
+    if not filenames:
         print("No logfiles given")
         parser.exit(1)
     if multifile and len(filenames) == 1:
         print("Expecting at least two logfiles in multifile mode")
         parser.exit(1)
-    if not showattr and len(attrnames) == 0:
+    if not showattr and not attrnames:
         print("No attributes given")
         parser.exit(1)
 
@@ -159,7 +157,7 @@ def ccget() -> None:
             name = f"{', '.join(filename[:-1])} and {filename[-1]}"
         else:
             name = filename
-        
+
         # Set custom handles so we can actually change log-levels.
         handler = logging.StreamHandler(sys.stderr)
         handler.setFormatter(logging.Formatter("[%(name)s %(levelname)s] %(message)s"))
@@ -172,15 +170,15 @@ def ccget() -> None:
         if verbose:
             kwargs['loglevel'] = logging.INFO
             logging.getLogger("cclib").setLevel(logging.INFO)
-        
+
         else:
             # TODO: Are we sure we want to ignore warnings by default?
             kwargs['loglevel'] = logging.WARNING
             logging.getLogger("cclib").setLevel(logging.WARNING)
-        
+
         if future:
             kwargs['future'] = True
-        
+
         if cjsonfile:
             kwargs['cjson'] = True
 
@@ -209,17 +207,16 @@ def ccget() -> None:
                     if attr in data:
                         print(f"{attr}:\n{data[attr]}")
                         continue
-                else:
-                    if hasattr(data, attr):
-                        print(attr)
-                        attr_val = getattr(data, attr)
-                        # List of attributes to be printed with new lines
-                        if attr in data._listsofarrays and full:
-                            for val in attr_val:
-                                pprint(val)
-                        else:
-                            pprint(attr_val)
-                        continue
+                elif hasattr(data, attr):
+                    print(attr)
+                    attr_val = getattr(data, attr)
+                    # List of attributes to be printed with new lines
+                    if attr in data._listsofarrays and full:
+                        for val in attr_val:
+                            pprint(val)
+                    else:
+                        pprint(attr_val)
+                    continue
 
                 print(f"Could not parse {attr} from this file.")
                 invalid = True
