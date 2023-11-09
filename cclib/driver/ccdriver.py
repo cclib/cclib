@@ -478,7 +478,7 @@ class ccDriver:
                 continue
             # right now combinator is just a list of list of subparsers (one node graph
             for subparser in self._combinator.job_list[0]:
-                parsed_data = subparser.parse(self._fileHandler, self.identified_program, self._ccCollection)
+                parsed_data = subparser.parse(self._fileHandler, self.identified_program, self._ccCollection._parsed_data[0])
                 if parsed_data is not None:
                     parsed_attribute_name = subparser.__name__
                     self._ccCollection._parsed_data[0].__setattr__(parsed_attribute_name, parsed_data)

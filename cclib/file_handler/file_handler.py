@@ -381,7 +381,6 @@ class FileHandler:
                 try:
                     assert line.strip() == ""
                 except AssertionError:
-                    print("oh no, there is an issue")
                     frame, fname, lno, funcname, funcline, index = inspect.getouterframes(inspect.currentframe())[1]
                     parser = fname.split('/')[-1]
                     msg = f"In {parser}, line {int(lno)}, line not blank as expected: {line.strip()}"

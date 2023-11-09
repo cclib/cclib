@@ -396,6 +396,13 @@ class ccData:
             #raise PropertyError
 
     @property
+    def atommasses(self):
+        try:
+            return self._parsed_properties["atommasses"]
+        except:
+            pass
+
+    @property
     def aonames(self):
         try:
             return self._parsed_properties["aonames"]
