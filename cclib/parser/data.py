@@ -118,6 +118,7 @@ class ccData:
        "atomspins":        Attribute(dict,             'spins',                       'atoms'),
        "ccenergies":       Attribute(numpy.ndarray,    'coupled cluster',             'properties:energy'),
        "charge":           Attribute(int,              'charge',                      'properties'),
+       "compenergies":     Attribute(dict,             'composite energies',          'properties:energy'),
        "coreelectrons":    Attribute(numpy.ndarray,    'core electrons',              'atoms'),
        "dispersionenergies":Attribute(numpy.ndarray,   'dispersion correction',       'properties:energy'),
        "enthalpy":         Attribute(float,            'enthalpy',                    'properties'),
@@ -161,6 +162,8 @@ class ccData:
        "optstatus":        Attribute(numpy.ndarray,    'status',                      'optimization'),
        "polarizabilities": Attribute(list,             'polarizabilities',            'N/A'),
        "pressure":         Attribute(float,            'pressure',                    'properties'),
+       "rottemps":         Attribute(numpy.ndarray,    'rotational temperatures',     'atoms:coords:rotconsts'),
+       "spinsquared":      Attribute(dict,             'S2',                          'optimization'),
        "rotconsts":        Attribute(numpy.ndarray,    'rotational constants',        'atoms:coords:rotconsts'),
        "scancoords":       Attribute(numpy.ndarray,    'step geometry',               'optimization:scan'),
        "scanenergies":     Attribute(list,             'PES energies',                'optimization:scan'),
@@ -169,8 +172,10 @@ class ccData:
        "scfenergies":      Attribute(numpy.ndarray,    'scf energies',                'optimization:scf'),
        "scftargets":       Attribute(numpy.ndarray,    'targets',                     'optimization:scf'),
        "scfvalues":        Attribute(list,             'values',                      'optimization:scf'),
+       "rotsymno":         Attribute(int,              'symmetry number',             'properties:rotational'),
        "temperature":      Attribute(float,            'temperature',                 'properties'),
        "time":             Attribute(numpy.ndarray,    'time',                        'N/A'),
+       "freqconv":         Attribute(bool,             'done',                        'vibrations'),
        "transprop":        Attribute(dict,             'electronic transitions',      'transitions'),
        "vibanharms":       Attribute(numpy.ndarray,    'anharmonicity constants',     'vibrations'),
        "vibdisps":         Attribute(numpy.ndarray,    'displacement',                'vibrations'),
@@ -180,6 +185,7 @@ class ccData:
        "vibramans":        Attribute(numpy.ndarray,    'raman',                       'vibrations:intensities'),
        "vibrmasses":       Attribute(numpy.ndarray,    'reduced masses',              'vibrations'),
        "vibsyms":          Attribute(list,             'vibration symmetry',          'vibrations'),
+       "bondorders":       Attribute(dict,             'bond orders',                 'properties'),
        "zpve":             Attribute(float,            'zero-point correction',       'properties:energies')
     }
 
