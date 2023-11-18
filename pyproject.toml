@@ -1,12 +1,87 @@
-[tool.black]
-line-length = 100
-target-version = ['py39']
+[tool.ruff]
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+    # User Specific Directories, which currently not tested
+    "test",
+    "doc"
 
-[tool.isort]
-profile = "black"
-# default is FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER
-# Placing third-party imports at the end makes their inclusion more obvious
-sections = ["FUTURE", "STDLIB", "FIRSTPARTY", "THIRDPARTY", "LOCALFOLDER"]
+]
+
+# Same as Black.
+line-length = 100
+indent-width = 4
+
+# Assume Python 3.8
+target-version = "py38"
+
+ignore = ["ANN101"] # annotations for self
+src = ["cclib"]
+
+# select = ["ALL"]
+
+
+[tool.ruff.per-file-ignores]
+"test/test*.py" = [
+    "PLR2004", # magic value comparison
+    "S101",    # use of assert detected
+    "TCH002",  # third party import (for pytest)
+]
+
+
+
+[tool.ruff.isort]
+
+known-first-party = ["cclib"]
+force-single-line = true
+lines-between-types = 1
+lines-after-imports = 2
+
+
+[tool.ruff.lint]
+# Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`)  codes by default.
+select = []
+ignore = []
+
+# Allow fix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = []
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.format]
+# Like Black, use double quotes for strings.
+quote-style = "double"
+
+# Like Black, indent with spaces, rather than tabs.
+indent-style = "space"
+
+# Like Black, respect magic trailing commas.
+skip-magic-trailing-comma = false
+
+# Like Black, automatically detect the appropriate line ending.
+line-ending = "auto"
 
 [tool.mypy]
 warn_redundant_casts = true
