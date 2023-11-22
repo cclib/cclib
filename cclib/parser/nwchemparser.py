@@ -59,6 +59,13 @@ class NWChem(logfileparser.Logfile):
                         "package_version"
                     ] = f"{self.metadata['package_version']}+{revision}"
 
+        if "nproc" in line:
+            self.metadata['num_processors'] = int(line.split()[-1])
+        if "Memory information" in line:
+            self.skip_lines(inputfile,['d','b','heap','stack','global'])
+            self.metadata['memory'] = int(line.split()[2:])*8
+
+
         # This is printed in the input module, so should always be the first coordinates,
         # and contains some basic information we want to parse as well. However, this is not
         # the only place where the coordinates are printed during geometry optimization,
@@ -359,11 +366,29 @@ class NWChem(logfileparser.Logfile):
                 for attr in scftargetattrs:
                     delattr(self, attr)
 
-        #DFT functional information
+        # DFT functional information
         if "XC Information" in line:
             line = next(inputfile)
             line = next(inputfile)
             self.metadata["functional"] = line.split()[0]
+
+
+        #      Grid Information
+        #      ----------------
+        #   Grid used for XC integration:  xfine
+        #   Radial quadrature: Mura-Knowles
+        #   Angular quadrature: Lebedev.
+        #   Tag              B.-S. Rad. Rad. Pts. Rad. Cut. Ang. Pts.
+        #   ---              ---------- --------- --------- ---------
+        #   C                   0.70      100          13.0      1454
+        #   H                   0.35      100          13.0      1202
+        #   Grid pruning is: on
+        #   Number of quadrature shells:  1000
+        #   Spatial weights used:  Erf1
+
+        if "Grid Information" in line:
+            self.skip_line(inputfile, 'dashes')
+            self.metadata["grid"] = next(inputfile).split()[-1]
 
         # If the full overlap matrix is printed, it looks like this:
         #
@@ -605,6 +630,12 @@ class NWChem(logfileparser.Logfile):
         if "Dispersion correction" in line:
             dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
             self.append_attribute("dispersionenergies", dispersion)
+            
+        # type of dispersion
+        if line.strip().find('DFT-D3 Model') > -1:
+            self.metadata['dispersion'] = "D3(0)"
+        if line.strip().find('DFT-D3BJ Model') > -1:
+            self.metadata['dispersion'] = "D3(BJ)"
 
         # The final MO orbitals are printed in a simple list, but apparently not for
         # DFT calcs, and often this list does not contain all MOs, so make sure to
@@ -1261,6 +1292,21 @@ class NWChem(logfileparser.Logfile):
                 self.append_attribute("vibirs", float(line.split()[5]))
                 line = next(inputfile)  # next line
             self.set_attribute("vibfreqs", vibfreqs)
+
+        # Grab rotational constants (convert cm-1 to Hz)
+        if line.strip().startswith('A='):
+            roconst, rotemp = [], []
+            split_line = line.split()
+            roconst.append(utils.convertor(float(split_line[1]),'wavenumber','Hz'))
+            rotemp.append(float(split_line[4]))
+            line=next(inputfile)
+            while line.strip().startswith('B=') or line.strip().startswith('C='):
+                split_line = line.split()
+                roconst.append(utils.convertor(float(split_line[1]),'wavenumber','Hz'))
+                rotemp.append(float(split_line[4]))
+            self.set_attribute('rotconsts', roconst)
+            self.set_attribute('rottemp', rotemp)
+
         # NWChem TD-DFT excited states transitions
         #
         # Have to deal with :
