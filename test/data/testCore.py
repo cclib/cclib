@@ -25,6 +25,7 @@ class GenericCoreTest(unittest.TestCase):
     coredict = {'Mo': 28, 'O':0, 'Cl':10}
     charge = -2
 
+    @skipForParser('CFOUR','The parser is still being developed so we skip this test')
     @skipForParser('FChk', 'Core electrons do not seem to be available')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testcorrect(self):
@@ -36,6 +37,7 @@ class GenericCoreTest(unittest.TestCase):
         ans = numpy.array(ans, "i")
         numpy.testing.assert_array_equal(self.data.coreelectrons, ans)
 
+    @skipForParser('CFOUR','The parser is still being developed so we skip this test')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testcharge(self):
         """Is the total charge correct?"""

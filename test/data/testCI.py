@@ -47,6 +47,7 @@ class GenericCISTest(unittest.TestCase):
 
     etsecs_precision = 0.0005
 
+    @skipForParser('CFOUR','The parser is still being developed so we skip this test')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testetenergiesvalues(self):
@@ -63,6 +64,7 @@ class GenericCISTest(unittest.TestCase):
             tripletdiff = triplets[:4] - self.etenergies1
             assert numpy.alltrue(tripletdiff < 50)
 
+    @skipForParser('CFOUR','The parser is still being developed so we skip this test')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testsecs(self):
@@ -71,6 +73,7 @@ class GenericCISTest(unittest.TestCase):
         sumofsec = sum([z*z for (x, y, z) in etsec])
         assert abs(sumofsec-1.0) < 0.02
 
+    @skipForParser('CFOUR','The parser is still being developed so we skip this test')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testetsecsvalues(self):

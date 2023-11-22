@@ -47,6 +47,7 @@ class GenericTDTest(unittest.TestCase):
         """Did we parse an excited states method?"""
         assert self.data.metadata['excited_states_method'] == self.method
 
+    @skipForParser('CFOUR','The parser is still being developed so we skip this test')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForLogfile('Turbomole/basicTurbomole7.4/CO_cc2_TD_trip', 'Oscillator strengths are not available for Turbomole triplets using ricc2 but are required for testenergies()')
     def testenergies(self):
@@ -59,6 +60,7 @@ class GenericTDTest(unittest.TestCase):
         idx_lambdamax = numpy.argmax(self.data.etoscs)
         assert abs(self.data.etenergies[idx_lambdamax] - self.expected_l_max) < 5000
 
+    @skipForParser('CFOUR','The parser is still being developed so we skip this test')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForLogfile("Turbomole/basicTurbomole7.4/CO_cc2_TD_trip", "Oscillator strengths are not available for triplets with Turbomole's ricc2")
     def testoscs(self):
@@ -66,6 +68,7 @@ class GenericTDTest(unittest.TestCase):
         assert len(self.data.etoscs) == self.number
         assert abs(max(self.data.etoscs) - self.expected_f_max) < 0.1
 
+    @skipForParser('CFOUR','The parser is still being developed so we skip this test')
     @skipForParser('FChk','The parser is still being developed so we skip this test')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForLogfile("Gaussian/basicGaussian16/dvb_eomccsd.log", "Transitions are not yet parsed for EOM-CCSD")
@@ -76,8 +79,9 @@ class GenericTDTest(unittest.TestCase):
         sumofsec = sum([z*z for (x, y, z) in lowestEtrans])
         assert abs(sumofsec - self.sumofsec) < 0.16
 
-    @skipForParser('FChk', 'This is true for calculations without symmetry, but not with?')
+    @skipForParser('CFOUR','The parser is still being developed so we skip this test')
     @skipForParser('DALTON', 'This is true for calculations without symmetry, but not with?')
+    @skipForParser('FChk', 'This is true for calculations without symmetry, but not with?')
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForLogfile("Gaussian/basicGaussian16/dvb_eomccsd.log", "Transitions are not yet parsed for EOM-CCSD")
     def testsecs_transition(self):
@@ -92,6 +96,8 @@ class GenericTDTest(unittest.TestCase):
     @skipForLogfile("ORCA/basicORCA5.0/dvb_adc2.log", "etsyms are not available for this method") 
     @skipForLogfile("ORCA/basicORCA5.0/dvb_eom_ccsd.log", "etsyms are not available for this method") 
     @skipForLogfile("ORCA/basicORCA5.0/dvb_pno_eom_ccsd.log", "etsyms are not available for this method") 
+    @skipForParser('CFOUR','The parser is still being developed so we skip this test')
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')    
     def testsymsnumber(self):
         """Is the length of etsyms correct?"""
         assert len(self.data.etsyms) == self.number
@@ -114,6 +120,7 @@ class GenericTDTest(unittest.TestCase):
         assert self.data.etsyms == self.symmetries
 
     @skipForParser('ADF', 'etrotats are not yet implemented')
+    @skipForParser('CFOUR','The parser is still being developed so we skip this test')
     @skipForParser('DALTON', 'etrotats are not yet implemented')
     @skipForParser('FChk', 'etrotats are not yet implemented')
     @skipForParser('GAMESS', 'etrotats are not yet implemented')
@@ -121,8 +128,6 @@ class GenericTDTest(unittest.TestCase):
     @skipForParser('Jaguar', 'etrotats are not yet implemented')
     @skipForParser('NWChem', 'etrotats are not yet implemented')
     @skipForParser('QChem', 'Q-Chem cannot calculate rotatory strengths')
-    @skipForLogfile("FChk/basicQChem5.4", "Q-Chem cannot calculate rotatory strengths")
-    @skipForLogfile("FChk/basicGaussian09", "etrotats are not available in fchk, only the main logfile")
     @skipForLogfile("FChk/basicGaussian16", "etrotats are not available in fchk, only the main logfile")
     @skipForLogfile("Turbomole/basicTurbomole7.4/CO_cc2_TD", "Rotatory strengths are not currently available for ricc2")
     @skipForLogfile("Turbomole/basicTurbomole7.4/CO_adc2_TD", "Rotatory strengths are not currently available for ricc2")
