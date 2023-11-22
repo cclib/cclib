@@ -123,6 +123,20 @@ class CJSON(filewriter.Writer):
             cjson_dict['atoms']['elements']['atom count'] = len(self.ccdata.atomnos)
             cjson_dict['atoms']['elements']['heavy atom count'] = len([x for x in self.ccdata.atomnos if x > 1])
 
+        if hasattr(self.ccdata, 'metadata'):
+            cjson_dict['inputParameters'] = dict()         
+            cclib_to_json_keys = {'theory':'methods'}
+            for i in  ['run_date','basis_set','theory','dispersion','functional','grid','memory','processors','qm_program']:
+                if i in self.ccdata.metadata:
+                    if i == 'run_date':
+                        cjson_dict['metadata'] = {'run_date':self.ccdata.metadata['run_date']}
+                    else:
+                        if i == 'theory':
+                            cjson_dict['inputParameters'][cclib_to_json_keys[i]] = self.ccdata.metadata[i]
+                        else:
+                            cjson_dict['inputParameters'][i] = self.ccdata.metadata[i]
+
+
         # Bond attributes:
         if _has_openbabel and (len(self.ccdata.atomnos) > 1):
             cjson_dict['bonds'] = dict()

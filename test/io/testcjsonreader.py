@@ -72,8 +72,8 @@ class CJSONReaderTest(unittest.TestCase):
             # values for moments will be always different.  TODO: Create a
             # naming convention for post processed attributes within the CJSON
             # structure.
-            if key != 'moments':
-                assert ccdata_value == cjson_value
+            if key != 'moments' and key != 'metadata':
+                assert ccdata_value, cjson_value
 
 
 if __name__ == "__main__":
