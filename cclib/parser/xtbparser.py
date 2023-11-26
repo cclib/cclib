@@ -225,6 +225,8 @@ class XTB(logfileparser.Logfile):
                  Fermi-level           -0.3536781 Eh           -9.6241 eV
         """
         line_split = line.split()
+        if set(line.strip()) == {" ", "."}:
+            return None
         if "(HOMO)" in line or (len(line_split) == 4 and "MO" not in line):
             return (
                 int(line_split[0]),
