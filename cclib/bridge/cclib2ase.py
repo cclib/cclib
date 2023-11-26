@@ -52,7 +52,7 @@ def makease(atomcoords, atomnos, atomcharges=None, atomspins=None, atommasses=No
 
 
 def write_trajectory(
-    filename, ccdata: ccData, popname: str = "mulliken", index: Optional[Sequence[int]] = None
+    filename: str, ccdata: ccData, popname: str = "mulliken", index: Optional[Sequence[int]] = None
 ) -> None:
     """Write an ASE Trajectory object from a ccData object.
 
