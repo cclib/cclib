@@ -339,7 +339,7 @@ class XTB(logfileparser.Logfile):
         a command-line argument. We do the best with what we're given.
         """
         match = re.search(r"(--uhf|-u) (\d+)", line)
-        return int(line.split(match.group(2))) + 1 if match else None
+        return None if match is None else int(match.group(2)) + 1
 
     def _extract_symmetry(self, line: str) -> Optional[str]:
         """
