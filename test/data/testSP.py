@@ -280,7 +280,6 @@ class GenericSPTest(unittest.TestCase):
     @skipForLogfile("FChk/basicQChem5.4", "Q-Chem doesn't print SCF energy to fchk")
     @skipForParser("GAMESSDAT", "Scfenergies probably do not exist in the file")
     @skipForParser("NBO", "attribute not implemented in this version")
-    @skipForParser("xTB", "not implemented yet")
     def testscfenergy(self):
         """Is the SCF energy within the target?"""
         assert abs(self.data.scfenergies[-1] - self.b3lyp_energy) < 40
@@ -748,6 +747,14 @@ class TurbomoleSPTest(GenericSPTest):
 
 class TurbomoleHFSPTest(TurbomoleSPTest, GenericHFSPTest):
     """Customized restricted single point HF unittest"""
+
+
+class XTBSPTest(GenericSPTest):
+    """Customized restricted single point unittest"""
+
+    def testscfenergy(self):
+        """Is the SCF energy within the target?"""
+        assert abs(self.data.scfenergies[-1] - -719.08641119) < 1.0e-6
 
 
 class GenericDispersionTest(unittest.TestCase):
