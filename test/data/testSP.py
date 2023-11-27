@@ -44,11 +44,13 @@ class GenericSPTest(unittest.TestCase):
     # Generally, one criteria for SCF energy convergence.
     num_scf_criteria = 1
 
+    @skipForParser("xTB", "not implemented yet")
     def testnatom(self):
         """Is the number of atoms equal to 20?"""
         assert self.data.natom == 20
 
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("xTB", "not implemented yet")
     def testatomnos(self):
         """Are the atomnos correct?"""
 
@@ -76,6 +78,7 @@ class GenericSPTest(unittest.TestCase):
         "These tests were run a long time ago and since we don't have access to Molpro 2006 anymore, we can skip this test (it is tested in 2012)",
     )
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
+    @skipForParser("xTB", "not implemented yet")
     def testatomcharges(self):
         """Are atomic charges consistent with natom?"""
         for atomcharge_type in self.data.atomcharges:
@@ -163,6 +166,7 @@ class GenericSPTest(unittest.TestCase):
         assert abs(sum(charges)) < 4.0e-3
 
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("xTB", "not implemented yet")
     def testatomcoords(self):
         """Are the dimensions of atomcoords 1 x natom x 3?"""
         expected_shape = (1, self.data.natom, 3)
@@ -172,6 +176,7 @@ class GenericSPTest(unittest.TestCase):
         "GAMESSDAT", "Vectors need some calculations to transform them. Current mm value is 2.54"
     )
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("xTB", "not implemented yet")
     def testatomcoords_units(self):
         """Are atomcoords consistent with Angstroms?"""
         min_carbon_dist = get_minimum_carbon_separation(self.data)
@@ -181,12 +186,14 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser("GAMESSDAT", "Neither charge nor mult exists in the files.")
     @skipForParser("Molcas", "missing mult")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("xTB", "not implemented yet")
     def testcharge_and_mult(self):
         """Are the charge and multiplicity correct?"""
         assert self.data.charge == 0
         assert self.data.mult == 1
 
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("xTB", "not implemented yet")
     def testnbasis(self):
         """Is the number of basis set functions correct?"""
         count = sum([self.nbasisdict[n] for n in self.data.atomnos])
@@ -200,6 +207,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
+    @skipForParser("xTB", "not implemented yet")
     def testatombasis(self):
         """Are the indices in atombasis the right amount and unique?"""
         all = []
@@ -223,6 +231,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForLogfile("Psi4/basicPsi4.0b5", "atommasses not implemented yet")
     @skipForParser("QChem", "atommasses not implemented yet")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
+    @skipForParser("xTB", "not implemented yet")
     def testatommasses(self):
         """Do the atom masses sum up to the molecular mass?"""
         mm = 1000 * sum(self.data.atommasses)
@@ -231,6 +240,7 @@ class GenericSPTest(unittest.TestCase):
 
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("xTB", "not implemented yet")
     def testcoreelectrons(self):
         """Are the coreelectrons all 0?"""
         ans = numpy.zeros(self.data.natom, "i")
@@ -248,6 +258,7 @@ class GenericSPTest(unittest.TestCase):
         assert sumwronglabels == 0
 
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("xTB", "not implemented yet")
     def testhomos(self):
         """Is the index of the HOMO equal to 34?"""
         numpy.testing.assert_array_equal(
@@ -269,6 +280,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForLogfile("FChk/basicQChem5.4", "Q-Chem doesn't print SCF energy to fchk")
     @skipForParser("GAMESSDAT", "Scfenergies probably do not exist in the file")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("xTB", "not implemented yet")
     def testscfenergy(self):
         """Is the SCF energy within the target?"""
         assert abs(self.data.scfenergies[-1] - self.b3lyp_energy) < 40
@@ -292,6 +304,7 @@ class GenericSPTest(unittest.TestCase):
         """Are correct number of SCF convergence criteria being parsed?"""
         assert len(self.data.scftargets[0]) == self.num_scf_criteria
 
+    @skipForParser("xTB", "not implemented yet")
     def testlengthmoenergies(self):
         """Is the number of evalues equal to nmo?"""
         if hasattr(self.data, "moenergies"):
@@ -307,6 +320,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForLogfile("Gaussian/basicGaussian16/dvb_sp_no.out", "no energies for natural orbitals")
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForLogfile("Turbomole/basicTurbomole5.9/dvb_sp_symm", "delta of 7.4, everything else ok")
+    @skipForParser("xTB", "not implemented yet")
     def testfirstmoenergy(self):
         """Is the lowest energy molecular orbital within the target?"""
         assert abs(self.data.moenergies[0][0] - self.b3lyp_moenergy) < self.b3lyp_moenergy_delta
@@ -359,6 +373,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser("Psi4", "Psi4 does not currently have the option to print the overlap matrix")
     @skipForParser("QChem", "QChem cannot print the overlap matrix")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
+    @skipForParser("xTB", "not implemented yet")
     def testaooverlaps(self):
         """Are the dims and values of the overlap matrix correct?"""
 
@@ -398,6 +413,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser("Psi4", "Not implemented yes")
     @skipForParser("QChem", "Not implemented yes")
     @skipForParser("Turbomole", "Not implemented yes")
+    @skipForParser("xTB", "not implemented yet")
     def testrotconsts(self):
         """A single geometry leads to single set of rotational constants."""
         assert self.data.rotconsts.shape == (1, 3)
@@ -410,6 +426,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser("Jaguar", "No dipole moments in the logfile")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("xTB", "not implemented yet")
     def testmoments(self):
         """Does the dipole and possible higher molecular moments look reasonable?"""
 
@@ -485,6 +502,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser("Psi4", "reading input file contents and name is not implemented")
     @skipForParser("QChem", "reading input file contents and name is not implemented")
     @skipForParser("Turbomole", "reading input file contents and name is not implemented")
+    @skipForParser("xTB", "not implemented yet")
     def testmetadata_input_file(self):
         """Does metadata have expected keys and values?"""
         assert "input_file_contents" in self.data.metadata
@@ -512,6 +530,7 @@ class GenericSPTest(unittest.TestCase):
     )
     @skipForParser("GAMESSDAT", "Files do not contain information about the legacy package version")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("xTB", "not implemented yet")
     def testmetadata_legacy_package_version(self):
         """Does metadata have expected keys and values?"""
         # TODO Test specific values for each unit test.
