@@ -128,6 +128,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser("Molpro", "Lowdin charges not present by default")
     @skipForParser("QChem", "Lowdin charges not present by default")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
+    @skipForParser("xTB", "not implemented yet")
     def testatomcharges_lowdin(self):
         """Do Lowdin atomic charges sum to zero?"""
         charges = self.data.atomcharges["lowdin"]
@@ -155,6 +156,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser("Psi4", "Hirshfeld charges not implemented")
     @skipForParser("QChem", "Hirshfeld charges not implemented")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
+    @skipForParser("xTB", "not implemented yet")
     def testatomcharges_hirshfeld(self):
         """Do Hirshfeld atomic charges sum to roughly zero?"""
         charges = self.data.atomcharges["hirshfeld"]
@@ -239,6 +241,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Molpro", "?")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("xTB", "not implemented yet")
     def testsymlabels(self):
         """Are all the symmetry labels either Ag/u or Bg/u?"""
         sumwronglabels = sum([x not in ["Ag", "Bu", "Au", "Bg"] for x in self.data.mosyms[0]])
@@ -256,6 +259,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser("FChk", "Formatted Checkpoint files do not have a section for SCF energy")
     @skipForParser("GAMESSDAT", "Scfvalues probably do not exist in the file")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("xTB", "not implemented yet")
     def testscfvaluetype(self):
         """Are scfvalues and its elements the right type??"""
         assert isinstance(self.data.scfvalues, list)
@@ -272,6 +276,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser("FChk", "Formatted Checkpoint files do not have a section for SCF convergence")
     @skipForParser("GAMESSDAT", "Scftargets probably do not exist in the file")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("xTB", "not implemented yet")
     def testscftargetdim(self):
         """Do the scf targets have the right dimensions?"""
         assert self.data.scftargets.shape == (
@@ -282,6 +287,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser("FChk", "Formatted Checkpoint files do not have a section for SCF convergence")
     @skipForParser("GAMESSDAT", "Scftargets probably do not exist in the file")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("xTB", "not implemented yet")
     def testscftargets(self):
         """Are correct number of SCF convergence criteria being parsed?"""
         assert len(self.data.scftargets[0]) == self.num_scf_criteria
@@ -325,6 +331,7 @@ class GenericSPTest(unittest.TestCase):
         "Data file does not contain enough information. Can we make a new one?",
     )
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("xTB", "not implemented yet")
     def testfornoormo(self):
         """Do we have NOs or MOs?"""
         assert hasattr(self.data, "nocoeffs") or hasattr(self.data, "mocoeffs")
@@ -458,6 +465,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser("Molcas", "reading basis set names is not implemented")
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("Psi4", "reading basis set names is not implemented")
+    @skipForParser("xTB", "not implemented yet")
     def testmetadata_basis_set(self):
         """Does metadata have expected keys and values?"""
         assert self.data.metadata["basis_set"].lower() == "sto-3g"
@@ -526,6 +534,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser("Molpro", "reading point group symmetry and name is not implemented")
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("Turbomole", "reading point group symmetry and name is not implemented")
+    @skipForParser("xTB", "not implemented yet")
     def testmetadata_symmetry_detected(self):
         """Does metadata have expected keys and values?"""
         assert self.data.metadata["symmetry_detected"] == "c2h"
@@ -536,6 +545,7 @@ class GenericSPTest(unittest.TestCase):
     @skipForParser("Molpro", "reading point group symmetry and name is not implemented")
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("Turbomole", "reading point group symmetry and name is not implemented")
+    @skipForParser("xTB", "not implemented yet")
     def testmetadata_symmetry_used(self):
         """Does metadata have expected keys and values?"""
         assert self.data.metadata["symmetry_used"] == "c2h"
