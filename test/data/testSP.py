@@ -10,7 +10,6 @@
 import datetime
 import os
 import unittest
-from typing import List
 
 import numpy
 import packaging
