@@ -139,7 +139,7 @@ class ccData:
         "fooverlaps": Attribute(numpy.ndarray, "orbital overlap", "fragments"),
         "fragnames": Attribute(list, "fragment names", "fragments"),
         "frags": Attribute(list, "atom indices", "fragments"),
-        "frozenatoms": Attribute(list, "atom indices", "optimization"),
+        "frozenatoms": Attribute(list, "frozen atom indices", "optimization"),
         "gbasis": Attribute(list, "basis functions", "atoms:orbitals"),
         "geotargets": Attribute(numpy.ndarray, "geometric targets", "optimization"),
         "geovalues": Attribute(numpy.ndarray, "geometric values", "optimization"),
