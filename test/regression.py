@@ -1336,6 +1336,30 @@ def testGaussian_Gaussian16_Ethane_mp5_log(logfile):
     assert len(logfile.data.mpenergies[0]) == 4
 
 
+def testGaussian_Gaussian16_frozen_atom_flags_log(logfile):
+    """For issue 1286, check to ensure that frozen atom flags were correctly parsed."""
+
+    assert hasattr(logfile.data, "vibdisps")
+    assert hasattr(logfile.data, "natom")
+    assert hasattr(logfile.data, "nfrozenatom")
+    assert hasattr(logfile.data, "frozenatoms")
+    assert logfile.data.natom == 237
+    assert logfile.data.nfrozenatom == 12
+    assert len(logfile.data.vibdisps) == logfile.data.natom - logfile.data.nfrozenatom
+    assert len(logfile.data.frozenatoms) == 12
+    assert logfile.data.frozenatoms == [1, 18, 19, 34, 35, 40, 45, 51, 57, 75, 84, 91]
+
+
+def testGaussian_Gaussian16_water_log(logfile):
+    """For issue 1286, check to ensure no frozen atom attributes."""
+
+    assert hasattr(logfile.data, "natom")
+    assert hasattr(logfile.data, "vibdisps")
+    assert len(logfile.data.vibdisps) == logfile.data.natom
+    assert not hasattr(logfile.data, "nfrozenatom")
+    assert not hasattr(logfile.data, "frozenatoms")
+
+
 # Jaguar #
 
 # It would be good to have an unconverged geometry optimization so that
