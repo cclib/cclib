@@ -120,7 +120,7 @@ class WidthSplitterTest:
         assert ref_not_truncated == tokens_not_truncated
 
 
-class SymmetrizeTest(unittest.TestCase):
+class SymmetrizeTest:
     def test_dim_from_tblock_size(self) -> None:
         assert utils._dim_from_tblock_size(1) == 1
         # This isn't possible until we fully move to pytest.
