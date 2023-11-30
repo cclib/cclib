@@ -1,5 +1,6 @@
 import re
 from datetime import timedelta
+from pathlib import Path
 from typing import List, Optional, Tuple
 
 from cclib.parser import logfileparser, utils
@@ -460,6 +461,22 @@ class XTB(logfileparser.Logfile):
         """
         return line.split(":")[1].strip().split() if "program call" in line else None
 
+    def _is_grad_line(self, line: str) -> bool:
+        """
+        Determine if the line indicates the start of a gradient block.
+
+        $grad
+        cycle =      1    SCF energy =    -5.07022228673   |dE/dxyz| =  0.018344
+            0.00000000000000      0.00000000000000      0.22537251707448      O
+            0.00000000000000      1.44231267762918     -0.90148817857181      H
+            0.00000000000000     -1.44231267762918     -0.90148817857181      H
+        -2.1622251133482E-18  -6.8038914104937E-19   1.4575740509670E-02
+        1.3737646915370E-18   2.9851383347507E-03  -7.2878702548350E-03
+        7.8846042181115E-19  -2.9851383347507E-03  -7.2878702548350E-03
+        $end
+        """
+        return "$grad" in line
+
     def _is_geom_cycle_line(self, line: str) -> bool:
         """
         Determine if the line indicates it is a geometry optimization cycle.
@@ -563,6 +580,32 @@ class XTB(logfileparser.Logfile):
         """
         return "[WARNING]" in line
 
+    def _is_hessian_line(self, line: str) -> bool:
+        """
+        Determine if we are in the hessian printout.
+
+         $hessian
+         0.0000000000   0.0000028532   0.0000013880  -0.0000000000  -0.0000008379
+         0.0000004206  -0.0000000000  -0.0000020154  -0.0000018086
+         0.0000028532   0.5449257576  -0.0000002564  -0.0000006835  -0.2724622120
+         0.2128719374  -0.0000021697  -0.2724635456  -0.2128716810
+         0.0000013880  -0.0000002564   0.3976267117   0.0000001891   0.1686647996
+        -0.1988140215  -0.0000015771  -0.1686645432  -0.1988126902
+        -0.0000000000  -0.0000006835   0.0000001891   0.0000000000   0.0000009555
+        -0.0000003616  -0.0000000000  -0.0000002719   0.0000001725
+        -0.0000008379  -0.2724622120   0.1686647996   0.0000009555   0.3096621370
+        -0.1907684616  -0.0000001176  -0.0371999250   0.0221036620
+         0.0000004206   0.2128719374  -0.1988140215  -0.0000003616  -0.1907684616
+         0.1825643728  -0.0000000590  -0.0221034758   0.0162496487
+        -0.0000000000  -0.0000021697  -0.0000015771  -0.0000000000  -0.0000001176
+        -0.0000000590   0.0000000000   0.0000022873   0.0000016361
+        -0.0000020154  -0.2724635456  -0.1686645432  -0.0000002719  -0.0371999250
+        -0.0221034758   0.0000022873   0.3096634705   0.1907680190
+        -0.0000018086  -0.2128716810  -0.1988126902   0.0000001725   0.0221036620
+         0.0162496487   0.0000016361   0.1907680190   0.1825630415
+        """
+        return "$hessian" in line
+
     def extract(self, inputfile: FileWrapper, line: str) -> None:
         if self.metadata.get("success") is None:
             # Initialize as False. Will be overwritten to True if/when appropriate.
@@ -604,8 +647,6 @@ class XTB(logfileparser.Logfile):
 
                 line = next(inputfile)
 
-        # TODO: Parse hessian attribute from `hessian` file, if present.
-
         # TODO: Use the `xtbopt.xyz` file instead since it has higher precision and
         # has the coordinates for every geometry step. If it's not an optimization,
         # can simply assume the structure is the same as that in the coordinate file.
@@ -629,10 +670,6 @@ class XTB(logfileparser.Logfile):
                 self.atomnos = atomnos
             if atomcoords:
                 self.atomcoords = atomcoords
-
-        # TODO: Parse grads attribute from `gradient` file. It will only contain
-        # the final gradient, so we'll need to pad it with NaNs to match the
-        # number of geometry steps.
 
         if self._is_orbitals_line(line):
             # Skip 4 lines to get to the table
@@ -787,3 +824,18 @@ class XTB(logfileparser.Logfile):
 
         if self._is_success(line):
             self.metadata["success"] = True
+
+        if self._is_grad_line(line):
+            grads = [[]]
+            while "$end" not in line:
+                if len(line.split()) == 3:
+                    grads[-1].append([float(v) for v in line.split()])
+                line = next(inputfile)
+            self.grads = np.array(grads)
+
+        if self._is_hessian_line(line):
+            hessian = []
+            while "$end" not in line:
+                hessian.extend([float(v) for v in line.split()])
+                line = next(inputfile)
+            self.hessian = hessian
