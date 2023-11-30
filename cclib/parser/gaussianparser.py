@@ -322,14 +322,20 @@ class Gaussian(logfileparser.Logfile):
             # Also, in older versions there is bo blank line (G98 regressions),
             # so we need to watch out for leaving the link.
             natom = 0
-            nfrozenatom = 0
+            nfrozenatom, frozenatoms = 0, []
             while line.split() and not "Variables" in line and not "Leave Link" in line:
                 natom += 1
-                if line.split()[1] == "-1":
-                    nfrozenatom += 1
+                try:
+                    if line.split()[1] == "-1":
+                        nfrozenatom += 1
+                        frozenatoms.append(natom)
+                except:
+                    pass
                 line = next(inputfile)
             self.set_attribute("natom", natom)
-            self.set_attribute("nfrozenatom", nfrozenatom)
+            if nfrozenatom > 0:
+                self.set_attribute("nfrozenatom", nfrozenatom)
+                self.set_attribute("frozenatoms", frozenatoms)
 
         # Continuing from above, there is not always a symbolic matrix, for example
         # if the Z-matrix was in the input file. In such cases, try to match the
@@ -370,6 +376,10 @@ class Gaussian(logfileparser.Logfile):
                 if match is not None:
                     nqmf = int(match.group(1))
                     if nqmf > 0:
+                        self.set_attribute("nqmf", nqmf)
+                if match is None:
+                    if hasattr(self, "nfrozenatom"):
+                        nqmf = self.natom - self.nfrozenatom
                         self.set_attribute("nqmf", nqmf)
 
         # Basis set name
@@ -1498,7 +1508,7 @@ class Gaussian(logfileparser.Logfile):
                     disps = []
                     if not hasattr(self, "nqmf"):
                         self.set_attribute("nqmf", self.natom)
-                    for n in range(self.nqmf - self.nfrozenatom):
+                    for n in range(self.nqmf):
                         line = next(inputfile)
                         numbers = [float(s) for s in line[10:].split()]
                         N = len(numbers) // 3
