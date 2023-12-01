@@ -80,10 +80,10 @@ class GenericBasisTest:
                 assert round(abs(s_coeffs[0][1] - self.gbasis_C_2s_func0[1]), 4) == 0
                 assert round(abs(p_coeffs[0][1] - self.gbasis_C_2p_func0[1]), 4) == 0
 
-    def testatomcoords(self):
+    def testatomcoords(self, data) -> None:
         """Are the dimensions of atomcoords 1 x natom x 3?"""
-        expected_shape = (1, self.data.natom, 3)
-        assert self.data.atomcoords.shape == expected_shape
+        expected_shape = (1, data.natom, 3)
+        assert data.atomcoords.shape == expected_shape
 
 
 class JaguarBasisTest(GenericBasisTest):

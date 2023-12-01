@@ -702,7 +702,7 @@ class OrcaSPTest(GenericSPTest):
 class NBOSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
 
-    def testpopulations(self):
+    def testpopulations(self, data) -> None:
         if hasattr(self, "populations"):
             population_key = "npa"
 
@@ -715,10 +715,10 @@ class NBOSPTest(GenericSPTest):
                 "occupancy": float,
                 "energy": float,
             }
-            assert self.data.populations[population_key].keys == list(expected_types.keys())
+            assert data.populations[population_key].keys == list(expected_types.keys())
             for key, exp_type in expected_types.items():
-                assert isinstance(self.data.populations[population_key][key], list)
-                assert isinstance(self.data.populations[population_key][key][0], exp_type)
+                assert isinstance(data.populations[population_key][key], list)
+                assert isinstance(data.populations[population_key][key][0], exp_type)
 
 
 class TurbomoleSPTest(GenericSPTest):
@@ -762,25 +762,25 @@ class FireflyDispersionTest(GenericDispersionTest):
     dispersionenergy = -0.4299821
 
 
-class SolventMetadataTest(unittest.TestCase):
+class SolventMetadataTest:
     """Check we can parse implicit solvent data."""
 
     model = ""
     # Toluene
     static_dielectric_constant = 2.3741
 
-    def test_solvent_model(self) -> None:
+    def test_solvent_model(self, data) -> None:
         """Check solvent model was parsed correctly"""
-        assert self.data.metadata["solvent_model"] == self.model
+        assert data.metadata["solvent_model"] == self.model
 
     @skipForLogfile(
         "basicQChem6.0/water_hf_solvent_smd_iefpcm.out",
         "the internally-used dielectric constant isn't printed, only solvent name",
     )
-    def test_solvent_dielectric(self) -> None:
+    def test_solvent_dielectric(self, data) -> None:
         """Check solvent dielectric was parsed correctly"""
         assert (
-            abs(self.data.metadata["solvent_params"]["epsilon"] - self.static_dielectric_constant)
+            abs(data.metadata["solvent_params"]["epsilon"] - self.static_dielectric_constant)
             < 1.0e-4
         )
 
@@ -846,52 +846,52 @@ class QChemSMDCPCMMetadataTest(QChemSolventMetadataTest, SMDCPCMMetadataTest):
     """Check we can parse implicit solvent data."""
 
 
-class GaussianPerformanceMetadataTest(unittest.TestCase):
+class GaussianPerformanceMetadataTest:
     """Check we can parse CPU/memory metadata."""
 
-    def testmetadata_cpu(self):
+    def testmetadata_cpu(self, data) -> None:
         """Does metadata have the expected number of CPUs used?"""
-        assert self.data.metadata["num_cpu"] == 1
+        assert data.metadata["num_cpu"] == 1
 
-    def testmetadata_memory_available(self):
+    def testmetadata_memory_available(self, data) -> None:
         """Does metadata have the expected amount of memory?"""
         # 400 MB
-        assert self.data.metadata["memory_available"] == 400000000
+        assert data.metadata["memory_available"] == 400000000
 
-    def testmetadata_memory_used(self):
+    def testmetadata_memory_used(self, data) -> None:
         """Does metadata have the expected amount of memory?"""
-        assert self.data.metadata["memory_used"] == 52428800
+        assert data.metadata["memory_used"] == 52428800
 
 
-class ORCAPerformanceMetadataTest(unittest.TestCase):
+class ORCAPerformanceMetadataTest:
     """Check we can parse CPU/memory metadata."""
 
-    def testmetadata_cpu(self):
+    def testmetadata_cpu(self, data) -> None:
         """Does metadata have the expected number of CPUs used?"""
-        assert self.data.metadata["num_cpu"] == 2
+        assert data.metadata["num_cpu"] == 2
 
-    def testmetadata_memory_available(self):
+    def testmetadata_memory_available(self, data) -> None:
         """Does metadata have the expected amount of memory?"""
         # 400 MB
-        assert self.data.metadata["memory_available"] == 1000000000
+        assert data.metadata["memory_available"] == 1000000000
 
-    def testmetadata_memory_used(self):
+    def testmetadata_memory_used(self, data) -> None:
         """Does metadata have the expected amount of memory?"""
-        assert self.data.metadata["memory_used"] == 463000000
+        assert data.metadata["memory_used"] == 463000000
 
 
-class TurbomolePerformanceMetadataTest(unittest.TestCase):
+class TurbomolePerformanceMetadataTest:
     """Check we can parse CPU/memory metadata."""
 
-    def testmetadata_cpu(self):
+    def testmetadata_cpu(self, data) -> None:
         """Does metadata have the expected number of CPUs used?"""
-        assert self.data.metadata["num_cpu"] == 1
+        assert data.metadata["num_cpu"] == 1
 
-    def testmetadata_memory_available(self):
+    def testmetadata_memory_available(self, data) -> None:
         """Does metadata have the expected amount of memory?"""
-        assert self.data.metadata["memory_available"] == 524288000
+        assert data.metadata["memory_available"] == 524288000
 
     @skipForParser("Turbomole", "memory used is not available for Turbomole")
-    def testmetadata_memory_used(self):
+    def testmetadata_memory_used(self, data) -> None:
         """Does metadata have the expected amount of memory?"""
-        assert self.data.metadata["memory_used"] == 0
+        assert data.metadata["memory_used"] == 0
