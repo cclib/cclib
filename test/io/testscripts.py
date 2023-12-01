@@ -90,7 +90,7 @@ class ccwriteTest:
 
 
 class ccframeTest:
-    def setUp(self) -> None:
+    def setup_method(self) -> None:
         # It would be best to test with Pandas and not a mock!
         if not hasattr(cclib.io.ccio, "pd"):
             cclib.io.ccio.pd = mock.MagicMock()
