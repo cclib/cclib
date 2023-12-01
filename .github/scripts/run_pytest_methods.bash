@@ -5,4 +5,4 @@
 
 set -euxo pipefail
 
-python -m pytest -v --capture=no --cov=cclib --cov-report=term --cov-report=xml:coverage-method.xml --terse test -k "test_method"
+python -m pytest -v -s --cov=cclib --cov-report=term --cov-report=xml:coverage-method.xml -k "test/method"
