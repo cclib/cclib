@@ -24,14 +24,13 @@ import codecs
 
 # Regular expression for validating URLs
 URL_PATTERN = re.compile(
-
-    r'^(?:http|ftp)s?://'  # http:// or https://
-    r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'  # domain...
-    r'localhost|'  # localhost...
-    r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ...or ip
-    r'(?::\d+)?'  # optional port
-    r'(?:/?|[/?]\S+)$', re.IGNORECASE
-
+    r"^(?:http|ftp)s?://"  # http:// or https://
+    r"(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|"  # domain...
+    r"localhost|"  # localhost...
+    r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"  # ...or ip
+    r"(?::\d+)?"  # optional port
+    r"(?:/?|[/?]\S+)$",
+    re.IGNORECASE,
 )
 
 
@@ -43,9 +42,10 @@ def logerror(error):
 
     # Return type is a tuple.
     # First item is a replacement character. Second is the position to continue from.
-    return (u'', error.start +1)
+    return ("", error.start + 1)
 
-codecs.register_error('logerror', logerror)
+
+codecs.register_error("logerror", logerror)
 
 
 class FileWrapper:
@@ -128,12 +128,8 @@ class FileWrapper:
 
     @classmethod
     def open_log_file(
-            self,
-            source,
-            mode: str = "r",
-            encoding: str = "utf-8",
-            errors: str = "logerror",
-        ) -> typing.Tuple[str, typing.IO]:
+        self, source, mode: str = "r", encoding: str = "utf-8", errors: str = "logerror"
+    ) -> typing.Tuple[str, typing.IO]:
         """
         Open a possibly compressed file, returning both the filename of the file and an open file object.
         """
@@ -143,11 +139,11 @@ class FileWrapper:
             try:
                 # Cache the file to a temp location.
                 response = urlopen(source)
-                fileobject = NamedTemporaryFile(delete = True)
+                fileobject = NamedTemporaryFile(delete=True)
                 fileobject.write(response.read())
-                fileobject.seek(0,0)
+                fileobject.seek(0, 0)
 
-                fileobject = io.TextIOWrapper(fileobject, encoding = encoding, errors = errors)
+                fileobject = io.TextIOWrapper(fileobject, encoding=encoding, errors=errors)
                 filename = source
 
             except (ValueError, URLError) as error:
@@ -160,13 +156,14 @@ class FileWrapper:
             # This file is a file.
             # If this file supports seek, we don't need to do anything.
             # If not, we'll cache it to file.
-            if not hasattr(source, "seek") or \
-            (hasattr(source, "seekable") and not source.seekable()):
-                fileobject = NamedTemporaryFile(delete = True)
+            if not hasattr(source, "seek") or (
+                hasattr(source, "seekable") and not source.seekable()
+            ):
+                fileobject = NamedTemporaryFile(delete=True)
                 fileobject.write(source.read())
-                fileobject.seek(0,0)
+                fileobject.seek(0, 0)
 
-                fileobject = io.TextIOWrapper(fileobject, encoding = encoding, errors = errors)
+                fileobject = io.TextIOWrapper(fileobject, encoding=encoding, errors=errors)
 
             else:
                 fileobject = source
@@ -181,7 +178,9 @@ class FileWrapper:
         extension = filename.suffix
 
         if extension == ".gz":
-            fileobject = io.TextIOWrapper(gzip.GzipFile(filename, mode, fileobj = fileobject), encoding = encoding, errors = errors)
+            fileobject = io.TextIOWrapper(
+                gzip.GzipFile(filename, mode, fileobj=fileobject), encoding=encoding, errors=errors
+            )
 
         elif extension == ".zip":
             fileobject = zipfile.ZipFile(fileobject if fileobject else filename, mode)
@@ -190,14 +189,17 @@ class FileWrapper:
             assert len(fileobject.namelist()) == 1, "ERROR: Zip file contains more than 1 file"
 
             fileobject = io.TextIOWrapper(
-                fileobject.open(fileobject.namelist()[0]),
-                encoding = encoding, errors = errors
+                fileobject.open(fileobject.namelist()[0]), encoding=encoding, errors=errors
             )
 
-        elif extension in ['.bz', '.bz2']:
+        elif extension in [".bz", ".bz2"]:
             # Module 'bz2' is not always importable.
             assert bz2 is not None, "ERROR: module bz2 cannot be imported"
-            fileobject = io.TextIOWrapper(bz2.BZ2File(fileobject if fileobject else filename, mode), encoding = encoding, errors = errors)
+            fileobject = io.TextIOWrapper(
+                bz2.BZ2File(fileobject if fileobject else filename, mode),
+                encoding=encoding,
+                errors=errors,
+            )
 
         elif fileobject is not None:
             # Assuming that object is text file encoded in utf-8
@@ -207,7 +209,7 @@ class FileWrapper:
         else:
             # Normal text file.
 
-            fileobject = open(filename, mode, encoding = encoding, errors = errors)
+            fileobject = open(filename, mode, encoding=encoding, errors=errors)
 
         return filename, fileobject
 
@@ -275,7 +277,7 @@ class FileWrapper:
         self.close()
 
     def seek(self, offset: int, whence: int = 0) -> None:
-        if offset != 0 or whence not in (0,2):
+        if offset != 0 or whence not in (0, 2):
             raise NotImplementedError("FileWrapper only supports seeking to start or end")
 
         if whence == 0:
@@ -284,21 +286,20 @@ class FileWrapper:
         elif whence == 2:
             self.finish()
 
-#     def seek_from_current(self, offset):
-#         """
-#         Seek forwards or backwards based on the current position.
-#         """
-#         remainder = offset
-#         while remainder != 0:
-#             if remainder > 0:
-#                 # Seek forwards please.
-#                 file_size = self.sizes[self.file_pointer]
-
+    #     def seek_from_current(self, offset):
+    #         """
+    #         Seek forwards or backwards based on the current position.
+    #         """
+    #         remainder = offset
+    #         while remainder != 0:
+    #             if remainder > 0:
+    #                 # Seek forwards please.
+    #                 file_size = self.sizes[self.file_pointer]
 
     def reset(self):
         # Equivalent to seeking to 0 for all our files.
         for file in self.files:
-            file.seek(0,0)
+            file.seek(0, 0)
 
         self.file_pointer = 0
         self.pos = 0
@@ -306,7 +307,7 @@ class FileWrapper:
     def finish(self):
         # Equivalent to seeking to 2 for all our files.
         for file in self.files:
-            file.seek(0,2)
+            file.seek(0, 2)
 
-        self.file_pointer = len(self.files) -1
+        self.file_pointer = len(self.files) - 1
         self.pos = self.size

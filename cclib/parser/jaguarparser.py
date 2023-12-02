@@ -42,7 +42,6 @@ class Jaguar(logfileparser.Logfile):
         return ans
 
     def before_parsing(self):
-
         # We need to track whether we are inside geometry optimization in order
         # to parse SCF targets/values correctly.
         self.geoopt = False
@@ -53,7 +52,7 @@ class Jaguar(logfileparser.Logfile):
         # This is to make sure we always have optdone after geometry optimizations,
         # even if it is to be empty for unconverged runs. We have yet to test this
         # with a regression for Jaguar, though.
-        if self.geoopt and not hasattr(self, 'optdone'):
+        if self.geoopt and not hasattr(self, "optdone"):
             self.optdone = []
 
     def extract(self, inputfile, line):
@@ -73,8 +72,8 @@ class Jaguar(logfileparser.Logfile):
 
         # Extract charge and multiplicity
         if line[2:22] == "net molecular charge":
-            self.set_attribute('charge', int(line.split()[-1]))
-            self.set_attribute('mult', int(next(inputfile).split()[-1]))
+            self.set_attribute("charge", int(line.split()[-1]))
+            self.set_attribute("mult", int(next(inputfile).split()[-1]))
 
         # The Gaussian basis set information is printed before the geometry, and we need
         # to do some indexing to get this into cclib format, because fn increments
@@ -100,8 +99,7 @@ class Jaguar(logfileparser.Logfile):
         # ...
         #
         if line.strip() == "Gaussian basis set information":
-
-            self.skip_lines(inputfile, ['b', 'renorm', 'header', 'd'])
+            self.skip_lines(inputfile, ["b", "renorm", "header", "d"])
 
             # This is probably the only place we can get this information from Jaguar.
             self.gbasis = []
@@ -110,9 +108,7 @@ class Jaguar(logfileparser.Logfile):
             line = next(inputfile)
             fn_per_atom = []
             while line.strip():
-
                 if len(line.split()) > 3:
-
                     aname = line.split()[0]
                     fn = int(line.split()[1])
                     prim = int(line.split()[2])
@@ -129,8 +125,8 @@ class Jaguar(logfileparser.Logfile):
                         self.gbasis.append([])
 
                     # Remember that fn is repeated when functions are contracted.
-                    if not fn-1 in atombasis[-1]:
-                        atombasis[-1].append(fn-1)
+                    if not fn - 1 in atombasis[-1]:
+                        atombasis[-1].append(fn - 1)
 
                     # Here we use fn only to know when a new contraction is encountered,
                     # so we don't need to decrement it, and we don't even use all values.
@@ -139,27 +135,26 @@ class Jaguar(logfileparser.Logfile):
                     # those for X*, making things a bit easier.
                     if not fn in fn_per_atom:
                         fn_per_atom.append(fn)
-                        label = {'S': 'S', 'X': 'P', 'XX': 'D', 'XXX': 'F'}[L]
+                        label = {"S": "S", "X": "P", "XX": "D", "XXX": "F"}[L]
                         self.gbasis[-1].append((label, []))
                     igbasis = fn_per_atom.index(fn)
                     self.gbasis[-1][igbasis][1].append([z, coef])
 
                 else:
-
                     fn = int(line.split()[0])
                     L = line.split()[1]
 
                     # Some AO indices are only printed in these lines, for L > 0.
-                    if not fn-1 in atombasis[-1]:
-                        atombasis[-1].append(fn-1)
+                    if not fn - 1 in atombasis[-1]:
+                        atombasis[-1].append(fn - 1)
 
                 line = next(inputfile)
 
             # The indices for atombasis can also be read later from the molecular orbital output.
-            self.set_attribute('atombasis', atombasis)
+            self.set_attribute("atombasis", atombasis)
 
             # This length of atombasis should always be the number of atoms.
-            self.set_attribute('natom', len(self.atombasis))
+            self.set_attribute("natom", len(self.atombasis))
 
         #  Effective Core Potential
         #
@@ -184,8 +179,7 @@ class Jaguar(logfileparser.Logfile):
         #                    1   94.8130000  -10.0000000
         # ...
         if line.strip() == "Effective Core Potential":
-
-            self.skip_line(inputfile, 'blank')
+            self.skip_line(inputfile, "blank")
             line = next(inputfile)
             assert line.split()[0] == "Atom"
             assert " ".join(line.split()[1:]) == "Electrons represented by ECP"
@@ -202,11 +196,15 @@ class Jaguar(logfileparser.Logfile):
             while "Point Group used:" not in line:
                 line = next(inputfile)
             point_group_abelian = line.split()[3].lower()
-            self.metadata['symmetry_detected'] = point_group_full
-            self.metadata['symmetry_used'] = point_group_abelian
+            self.metadata["symmetry_detected"] = point_group_full
+            self.metadata["symmetry_used"] = point_group_abelian
 
-        if line[2:14] == "new geometry" or line[1:21] == "Symmetrized geometry" or line.find("Input geometry") > 0:
-        # Get the atom coordinates
+        if (
+            line[2:14] == "new geometry"
+            or line[1:21] == "Symmetrized geometry"
+            or line.find("Input geometry") > 0
+        ):
+            # Get the atom coordinates
             if not hasattr(self, "atomcoords") or line[1:21] == "Symmetrized geometry":
                 # Wipe the "Input geometry" if "Symmetrized geometry" present
                 self.atomcoords = []
@@ -224,7 +222,7 @@ class Jaguar(logfileparser.Logfile):
                 line = next(inputfile)
             self.atomcoords.append(atomcoords)
             self.atomnos = numpy.array(atomnos, "i")
-            self.set_attribute('natom', len(atomcoords))
+            self.set_attribute("natom", len(atomcoords))
 
         # Hartree-Fock energy after SCF
         if line[1:18] == "SCFE: SCF energy:":
@@ -246,29 +244,29 @@ class Jaguar(logfileparser.Logfile):
             self.mpenergies[-1].append(lmp2energy)
 
         if line[15:45] == "Geometry optimization complete":
-            if not hasattr(self, 'optdone'):
+            if not hasattr(self, "optdone"):
                 self.optdone = []
             self.optdone.append(len(self.geovalues) - 1)
 
         if line.find("number of occupied orbitals") > 0:
-        # Get number of MOs
+            # Get number of MOs
             occs = int(line.split()[-1])
             line = next(inputfile)
             virts = int(line.split()[-1])
             self.nmo = occs + virts
-            self.homos = numpy.array([occs-1], "i")
+            self.homos = numpy.array([occs - 1], "i")
 
             self.unrestrictedflag = False
 
         if line[1:28] == "number of occupied orbitals":
-            self.homos = numpy.array([float(line.strip().split()[-1])-1], "i")
+            self.homos = numpy.array([float(line.strip().split()[-1]) - 1], "i")
 
         if line[2:27] == "number of basis functions":
             nbasis = int(line.strip().split()[-1])
-            self.set_attribute('nbasis', nbasis)
+            self.set_attribute("nbasis", nbasis)
 
         if line.find("number of alpha occupied orb") > 0:
-        # Get number of MOs for an unrestricted calc
+            # Get number of MOs for an unrestricted calc
 
             aoccs = int(line.split()[-1])
             line = next(inputfile)
@@ -279,28 +277,28 @@ class Jaguar(logfileparser.Logfile):
             bvirt = int(line.split()[-1])
 
             self.nmo = aoccs + avirts
-            self.homos = numpy.array([aoccs-1, boccs-1], "i")
+            self.homos = numpy.array([aoccs - 1, boccs - 1], "i")
             self.unrestrictedflag = True
 
         if line[0:4] == "etot":
-        # Get SCF convergence information
+            # Get SCF convergence information
             if not hasattr(self, "scfvalues"):
                 self.scfvalues = []
-                self.scftargets = [[5E-5, 5E-6]]
+                self.scftargets = [[5e-5, 5e-6]]
             values = []
             while line[0:4] == "etot":
-        # Jaguar 4.2
-        # etot   1  N  N  0  N  -382.08751886450           2.3E-03  1.4E-01
-        # etot   2  Y  Y  0  N  -382.27486023153  1.9E-01  1.4E-03  5.7E-02
-        # Jaguar 6.5
-        # etot   1  N  N  0  N    -382.08751881733           2.3E-03  1.4E-01
-        # etot   2  Y  Y  0  N    -382.27486018708  1.9E-01  1.4E-03  5.7E-02
+                # Jaguar 4.2
+                # etot   1  N  N  0  N  -382.08751886450           2.3E-03  1.4E-01
+                # etot   2  Y  Y  0  N  -382.27486023153  1.9E-01  1.4E-03  5.7E-02
+                # Jaguar 6.5
+                # etot   1  N  N  0  N    -382.08751881733           2.3E-03  1.4E-01
+                # etot   2  Y  Y  0  N    -382.27486018708  1.9E-01  1.4E-03  5.7E-02
                 temp = line.split()[7:]
                 if len(temp) == 3:
                     denergy = float(temp[0])
                 else:
                     denergy = 0  # Should really be greater than target value
-                                 # or should we just ignore the values in this line
+                    # or should we just ignore the values in this line
                 ddensity = float(temp[-2])
                 maxdiiserr = float(temp[-1])
                 if not self.geoopt:
@@ -331,7 +329,6 @@ class Jaguar(logfileparser.Logfile):
         #     ...
         # Presence of 'Orbital energies' is enough to catch all versions.
         if "Orbital energies" in line:
-
             # Parsing results is identical for restricted/unrestricted
             #   calculations, just assert later that alpha/beta order is OK.
             spin = int(line[2:6] == "Beta")
@@ -342,24 +339,24 @@ class Jaguar(logfileparser.Logfile):
             if not hasattr(self, "moenergies"):
                 self.moenergies = []
             if issyms and not hasattr(self, "mosyms"):
-                    self.mosyms = []
+                self.mosyms = []
 
             # Grow moeneriges/mosyms and make sure they are empty when
             #   parsed multiple times - currently cclib returns only
             #   the final output (ex. in a geomtry optimization).
-            if len(self.moenergies) < spin+1:
+            if len(self.moenergies) < spin + 1:
                 self.moenergies.append([])
             self.moenergies[spin] = []
             if issyms:
-                if len(self.mosyms) < spin+1:
+                if len(self.mosyms) < spin + 1:
                     self.mosyms.append([])
                 self.mosyms[spin] = []
 
             line = next(inputfile).split()
             while len(line) > 0:
                 if issyms:
-                    energies = [float(line[2*i]) for i in range(len(line)//2)]
-                    syms = [line[2*i+1] for i in range(len(line)//2)]
+                    energies = [float(line[2 * i]) for i in range(len(line) // 2)]
+                    syms = [line[2 * i + 1] for i in range(len(line) // 2)]
                 else:
                     energies = [float(e) for e in line]
                 energies = [utils.convertor(e, "hartree", "eV") for e in energies]
@@ -390,10 +387,11 @@ class Jaguar(logfileparser.Logfile):
         #    2 C1               S    0.02527   0.02518   0.00380   0.00374   0.00371
         # ...
         #
-        if line.find("Occupied + virtual Orbitals- final wvfn") > 0 or \
-           line.find("occupied + virtual orbitals: final wave function") > 0:
-
-            self.skip_lines(inputfile, ['b', 's', 'b', 'b'])
+        if (
+            line.find("Occupied + virtual Orbitals- final wvfn") > 0
+            or line.find("occupied + virtual orbitals: final wave function") > 0
+        ):
+            self.skip_lines(inputfile, ["b", "s", "b", "b"])
 
             if not hasattr(self, "mocoeffs"):
                 self.mocoeffs = []
@@ -415,13 +413,13 @@ class Jaguar(logfileparser.Logfile):
                 mocoeffs = numpy.zeros((len(self.moenergies[s]), self.nbasis), "d")
 
                 if s == 1:  # beta case
-                    self.skip_lines(inputfile, ['s', 'b', 'title', 'b', 's', 'b', 'b'])
+                    self.skip_lines(inputfile, ["s", "b", "title", "b", "s", "b", "b"])
 
                 for k in range(0, len(self.moenergies[s]), 5):
                     self.updateprogress(inputfile, "Coefficients")
 
                     # All known version have a line with indices followed by the eigenvalues.
-                    self.skip_lines(inputfile, ['numbers', 'eigens'])
+                    self.skip_lines(inputfile, ["numbers", "eigens"])
 
                     # Newer version also have a line with occupation numbers here.
                     line = next(inputfile)
@@ -429,7 +427,6 @@ class Jaguar(logfileparser.Logfile):
                         line = next(inputfile)
 
                     for i in range(self.nbasis):
-
                         info = line.split()
 
                         # Fill atombasis only first time around.
@@ -440,7 +437,7 @@ class Jaguar(logfileparser.Logfile):
                                 atomno = int(atom[2:])
                             else:
                                 atomno = int(atom[1:])
-                            self.atombasis[atomno-1].append(orbno-1)
+                            self.atombasis[atomno - 1].append(orbno - 1)
 
                         if not hasattr(self, "aonames"):
                             if lastatom != info[1]:
@@ -448,24 +445,29 @@ class Jaguar(logfileparser.Logfile):
                                 pcount = 3
                                 dcount = 6  # six d orbitals in Jaguar
 
-                            if info[2] == 'S':
+                            if info[2] == "S":
                                 aonames.append(f"{info[1]}_{int(scount)}{info[2]}")
                                 scount += 1
 
-                            if info[2] == 'X' or info[2] == 'Y' or info[2] == 'Z':
+                            if info[2] == "X" or info[2] == "Y" or info[2] == "Z":
                                 aonames.append(f"{info[1]}_{int(pcount / 3)}P{info[2]}")
                                 pcount += 1
 
-                            if info[2] == 'XX' or info[2] == 'YY' or info[2] == 'ZZ' or \
-                               info[2] == 'XY' or info[2] == 'XZ' or info[2] == 'YZ':
-
+                            if (
+                                info[2] == "XX"
+                                or info[2] == "YY"
+                                or info[2] == "ZZ"
+                                or info[2] == "XY"
+                                or info[2] == "XZ"
+                                or info[2] == "YZ"
+                            ):
                                 aonames.append(f"{info[1]}_{int(dcount / 6)}D{info[2]}")
                                 dcount += 1
 
                             lastatom = info[1]
 
                         for j in range(len(info[3:])):
-                            mocoeffs[j+k, i] = float(info[3+j])
+                            mocoeffs[j + k, i] = float(info[3 + j])
 
                         line = next(inputfile)
 
@@ -483,8 +485,7 @@ class Jaguar(logfileparser.Logfile):
         # Atom       H6           H7           H8           C9           C10
         # ...
         if line.strip() == "Atomic charges from Mulliken population analysis:":
-
-            if not hasattr(self, 'atomcharges'):
+            if not hasattr(self, "atomcharges"):
                 self.atomcharges = {}
 
             charges = []
@@ -498,10 +499,9 @@ class Jaguar(logfileparser.Logfile):
                 self.skip_line(inputfile, "blank")
                 line = next(inputfile)
 
-            self.atomcharges['mulliken'] = charges
+            self.atomcharges["mulliken"] = charges
 
         if (line[2:6] == "olap") or (line.strip() == "overlap matrix:"):
-
             if line[6] == "-":
                 return
                 # This was continue (in loop) before parser refactoring.
@@ -511,12 +511,12 @@ class Jaguar(logfileparser.Logfile):
             for i in range(0, self.nbasis, 5):
                 self.updateprogress(inputfile, "Overlap")
 
-                self.skip_lines(inputfile, ['b', 'header'])
+                self.skip_lines(inputfile, ["b", "header"])
 
                 for j in range(i, self.nbasis):
                     temp = list(map(float, next(inputfile).split()[1:]))
-                    self.aooverlaps[j, i:(i+len(temp))] = temp
-                    self.aooverlaps[i:(i+len(temp)), j] = temp
+                    self.aooverlaps[j, i : (i + len(temp))] = temp
+                    self.aooverlaps[i : (i + len(temp)), j] = temp
 
         if line[2:24] == "start of program geopt":
             if not self.geoopt:
@@ -527,7 +527,7 @@ class Jaguar(logfileparser.Logfile):
                     self.scfvalues[0] = [[x[0]] for x in self.scfvalues[0]]
                 self.geoopt = True
             else:
-                self.scftargets.append([5E-5])
+                self.scftargets.append([5e-5])
 
         # Get Geometry Opt convergence information
         #
@@ -549,7 +549,6 @@ class Jaguar(logfileparser.Logfile):
         #  displacement rms:        4.6567E-03 .  (  1.2000E-03 )
         #
         if line[2:28] == "geometry optimization step":
-
             if not hasattr(self, "geovalues"):
                 self.geovalues = []
                 self.geotargets = numpy.zeros(5, "d")
@@ -612,8 +611,7 @@ class Jaguar(logfileparser.Logfile):
         # This is a complete ouput, some files will not have intensities,
         #   and older Jaguar versions sometimes skip the symmetries.
         if line[2:23] == "start of program freq":
-
-            self.skip_line(inputfile, 'blank')
+            self.skip_line(inputfile, "blank")
 
             # Version 8.3 has two blank lines here, earlier versions just one.
             line = next(inputfile)
@@ -637,9 +635,8 @@ class Jaguar(logfileparser.Logfile):
             # but in general it would be better to bound this loop more strictly.
             freqs = next(inputfile)
             while freqs.strip() and not "imaginary frequencies" in freqs:
-
                 # Number of modes (columns printed in this block).
-                nmodes = len(freqs.split())-1
+                nmodes = len(freqs.split()) - 1
 
                 # Append the frequencies.
                 self.vibfreqs.extend(list(map(float, freqs.split()[1:])))
@@ -679,7 +676,7 @@ class Jaguar(logfileparser.Logfile):
 
                 self.vibdisps.extend(q[:nmodes])
 
-                self.skip_line(inputfile, 'blank')
+                self.skip_line(inputfile, "blank")
                 freqs = next(inputfile)
 
             # Convert new data to arrays.
@@ -716,8 +713,7 @@ class Jaguar(logfileparser.Logfile):
             while "zero point energy" not in line:
                 line = next(inputfile)
             self.set_attribute(
-                "zpve",
-                utils.convertor(float(line.split()[-2]), "kcal/mol", "hartree")
+                "zpve", utils.convertor(float(line.split()[-2]), "kcal/mol", "hartree")
             )
 
         # Parse excited state output (for CIS calculations).
@@ -734,15 +730,15 @@ class Jaguar(logfileparser.Logfile):
             etenergy = utils.convertor(etenergy, "eV", "wavenumber")
             self.etenergies.append(etenergy)
 
-            self.skip_lines(inputfile, ['line', 'line', 'line', 'line'])
+            self.skip_lines(inputfile, ["line", "line", "line", "line"])
 
             line = next(inputfile)
             self.etsecs.append([])
             # Jaguar calculates only singlet states.
-            self.etsyms.append('Singlet-A')
+            self.etsyms.append("Singlet-A")
             while line.strip() != "":
-                fromMO = int(line.split()[0])-1
-                toMO = int(line.split()[2])-1
+                fromMO = int(line.split()[0]) - 1
+                toMO = int(line.split()[2]) - 1
                 coeff = float(line.split()[-1])
                 self.etsecs[-1].append([(fromMO, 0), (toMO, 0), coeff])
                 line = next(inputfile)
@@ -752,6 +748,5 @@ class Jaguar(logfileparser.Logfile):
             strength = float(line.split()[-1])
             self.etoscs.append(strength)
 
-        if line[:20] == ' Total elapsed time:' \
-                or line[:18] == ' Total cpu seconds':
-            self.metadata['success'] = True
+        if line[:20] == " Total elapsed time:" or line[:18] == " Total cpu seconds":
+            self.metadata["success"] = True

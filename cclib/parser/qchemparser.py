@@ -38,7 +38,6 @@ class QChem(logfileparser.Logfile):
         return label
 
     def before_parsing(self):
-
         # Keep track of whether or not we're performing an
         # (un)restricted calculation.
         self.unrestricted = False
@@ -50,16 +49,16 @@ class QChem(logfileparser.Logfile):
         # These headers identify when a fragment section is
         # entered/exited.
         self.fragment_section_headers = (
-            'Guess MOs from converged MOs on fragments',
-            'CP correction for fragment',
+            "Guess MOs from converged MOs on fragments",
+            "CP correction for fragment",
         )
         self.supersystem_section_headers = (
-            'Done with SCF on isolated fragments',
-            'Done with counterpoise correction on fragments',
+            "Done with SCF on isolated fragments",
+            "Done with counterpoise correction on fragments",
         )
 
         # Compile the dashes-and-or-spaces-only regex.
-        self.re_dashes_and_spaces = re.compile(r'^[\s-]+$')
+        self.re_dashes_and_spaces = re.compile(r"^[\s-]+$")
 
         self.solvent_model_is_smd = False
 
@@ -69,13 +68,15 @@ class QChem(logfileparser.Logfile):
 
         # Compile the regex for extracting the atomic index from an
         # aoname.
-        self.re_atomindex = re.compile(r'(\d+)_')
+        self.re_atomindex = re.compile(r"(\d+)_")
 
         # QChem changed the number of spaces from version 5.1 to 5.2
         # D(   35) --> V(    3) amplitude =  0.0644
         # S(  1) --> V(  1) amplitude = -0.1628 alpha
         # D(189) --> S(  1) amplitude = -0.0120 beta
-        self.re_tddft = re.compile(r'([SD])\( *(\d+)\) --> ([VS])\( *(\d+)\) amplitude = *([^ ]*)( (alpha|beta))?')
+        self.re_tddft = re.compile(
+            r"([SD])\( *(\d+)\) --> ([VS])\( *(\d+)\) amplitude = *([^ ]*)( (alpha|beta))?"
+        )
 
         # A maximum of 6 columns per block when printing matrices. The
         # Fock matrix is 4.
@@ -99,26 +100,29 @@ class QChem(logfileparser.Logfile):
         self.norbdisp_alpha_aonames = self.norbdisp_beta_aonames = 5
 
         self.alpha_mo_coefficient_headers = (
-            'RESTRICTED (RHF) MOLECULAR ORBITAL COEFFICIENTS',
-            'ALPHA MOLECULAR ORBITAL COEFFICIENTS'
+            "RESTRICTED (RHF) MOLECULAR ORBITAL COEFFICIENTS",
+            "ALPHA MOLECULAR ORBITAL COEFFICIENTS",
         )
 
         self.gradient_headers = (
-            'Full Analytical Gradient',
-            'Gradient of SCF Energy',
-            'Gradient of MP2 Energy',
+            "Full Analytical Gradient",
+            "Gradient of SCF Energy",
+            "Gradient of MP2 Energy",
         )
 
-        self.hessian_headers = (
-            'Hessian of the SCF Energy',
-            'Final Hessian.',
-        )
+        self.hessian_headers = ("Hessian of the SCF Energy", "Final Hessian.")
 
         self.wfn_method = [
-            'HF',
-            'MP2', 'RI-MP2', 'LOCAL_MP2', 'MP4',
-            'CCD', 'CCSD', 'CCSD(T)',
-            'QCISD', 'QCISD(T)'
+            "HF",
+            "MP2",
+            "RI-MP2",
+            "LOCAL_MP2",
+            "MP4",
+            "CCD",
+            "CCSD",
+            "CCSD(T)",
+            "QCISD",
+            "QCISD(T)",
         ]
 
     def after_parsing(self):
@@ -131,8 +135,7 @@ class QChem(logfileparser.Logfile):
         # all others with different lengths.
         if len(self.atomcoords) > 1:
             correctlen = len(self.atomcoords[0])
-            self.atomcoords[:] = [coords for coords in self.atomcoords
-                                  if len(coords) == correctlen]
+            self.atomcoords[:] = [coords for coords in self.atomcoords if len(coords) == correctlen]
         # At the moment, there is no similar correction for other properties!
 
         # QChem does not print all MO coefficients by default, but rather
@@ -140,7 +143,7 @@ class QChem(logfileparser.Logfile):
         # other cases where coefficient are missing, but different ones, this
         # general afterthought might not be appropriate and the fix will
         # need to be done while parsing.
-        if hasattr(self, 'mocoeffs'):
+        if hasattr(self, "mocoeffs"):
             for im in range(len(self.mocoeffs)):
                 _nmo, _nbasis = self.mocoeffs[im].shape
                 if (_nmo, _nbasis) != (self.nmo, self.nbasis):
@@ -152,12 +155,12 @@ class QChem(logfileparser.Logfile):
         # When parsing the 'MOLECULAR ORBITAL COEFFICIENTS' block for
         # `aonames`, Q-Chem doesn't print the principal quantum number
         # for each shell; this needs to be added.
-        if hasattr(self, 'aonames') and hasattr(self, 'atombasis'):
-            angmom = ('', 'S', 'P', 'D', 'F', 'G', 'H', 'I')
+        if hasattr(self, "aonames") and hasattr(self, "atombasis"):
+            angmom = ("", "S", "P", "D", "F", "G", "H", "I")
             for atom in self.atombasis:
                 bfcounts = dict()
                 for bfindex in atom:
-                    atomname, bfname = self.aonames[bfindex].split('_')
+                    atomname, bfname = self.aonames[bfindex].split("_")
                     # Keep track of how many times each shell type has
                     # appeared.
                     if bfname in bfcounts:
@@ -172,12 +175,12 @@ class QChem(logfileparser.Logfile):
                     self.aonames[bfindex] = "_".join([atomname, newbfname])
 
         # Assign the number of core electrons replaced by ECPs.
-        if hasattr(self, 'user_input') and self.user_input.get('rem') is not None:
-            if self.user_input['rem'].get('ecp') is not None:
-                ecp_is_gen = (self.user_input['rem']['ecp'] == 'gen')
+        if hasattr(self, "user_input") and self.user_input.get("rem") is not None:
+            if self.user_input["rem"].get("ecp") is not None:
+                ecp_is_gen = self.user_input["rem"]["ecp"] == "gen"
                 if ecp_is_gen:
-                    assert 'ecp' in self.user_input
-                has_iprint = hasattr(self, 'possible_ecps')
+                    assert "ecp" in self.user_input
+                has_iprint = hasattr(self, "possible_ecps")
 
                 if not ecp_is_gen and not has_iprint:
                     msg = """ECPs are present, but the number of core \
@@ -186,24 +189,23 @@ coreelectrons."""
                     self.logger.warning(msg)
                     self.incorrect_coreelectrons = True
                 elif ecp_is_gen and not has_iprint:
-                    nmissing = sum(ncore == 0
-                                   for (_, _, ncore) in self.user_input['ecp'])
+                    nmissing = sum(ncore == 0 for (_, _, ncore) in self.user_input["ecp"])
                     if nmissing > 1:
                         msg = """ECPs are present, but coreelectrons can only \
 be guessed for one element at most. Rerun with "iprint >= 100" to get \
 coreelectrons."""
                         self.logger.warning(msg)
                         self.incorrect_coreelectrons = True
-                    elif self.user_input['molecule'].get('charge') is None:
+                    elif self.user_input["molecule"].get("charge") is None:
                         msg = """ECPs are present, but the total charge \
 cannot be determined. Rerun without `$molecule read`."""
                         self.logger.warning(msg)
                         self.incorrect_coreelectrons = True
                     else:
-                        user_charge = self.user_input['molecule']['charge']
+                        user_charge = self.user_input["molecule"]["charge"]
                         # First, assign the entries given
                         # explicitly.
-                        for entry in self.user_input['ecp']:
+                        for entry in self.user_input["ecp"]:
                             element, _, ncore = entry
                             if ncore > 0:
                                 self._assign_coreelectrons_to_element(element, ncore)
@@ -213,17 +215,16 @@ cannot be determined. Rerun without `$molecule read`."""
                         # assigned ECP centers. Filter out the
                         # remaining entries, of which there should
                         # only be one.
-                        core_sum = self.coreelectrons.sum() if hasattr(self, 'coreelectrons') else 0
+                        core_sum = self.coreelectrons.sum() if hasattr(self, "coreelectrons") else 0
                         remainder = self.charge - user_charge - core_sum
-                        entries = [entry
-                                   for entry in self.user_input['ecp']
-                                   if entry[2] == 0]
+                        entries = [entry for entry in self.user_input["ecp"] if entry[2] == 0]
                         if len(entries) != 0:
                             assert len(entries) == 1
                             element, _, ncore = entries[0]
                             assert ncore == 0
                             self._assign_coreelectrons_to_element(
-                                    element, remainder, ncore_is_total_count=True)
+                                element, remainder, ncore_is_total_count=True
+                            )
                 elif not ecp_is_gen and has_iprint:
                     atomsymbols = [self.table.element[atomno] for atomno in self.atomnos]
                     for i in range(self.natom):
@@ -231,7 +232,7 @@ cannot be determined. Rerun without `$molecule read`."""
                             self.coreelectrons[i] = self.possible_ecps[atomsymbols[i]]
                 else:
                     assert ecp_is_gen and has_iprint
-                    for entry in self.user_input['ecp']:
+                    for entry in self.user_input["ecp"]:
                         element, _, ncore = entry
                         # If ncore is non-zero, then it must be
                         # user-defined, and we take that
@@ -242,29 +243,29 @@ cannot be determined. Rerun without `$molecule read`."""
 
         # Check to see if the charge is consistent with the input
         # section. It may not be if using an ECP.
-        if hasattr(self, 'user_input'):
-            if self.user_input.get('molecule') is not None:
-                user_charge = self.user_input['molecule'].get('charge')
+        if hasattr(self, "user_input"):
+            if self.user_input.get("molecule") is not None:
+                user_charge = self.user_input["molecule"].get("charge")
                 if user_charge is not None:
-                    self.set_attribute('charge', user_charge)
+                    self.set_attribute("charge", user_charge)
 
     def parse_charge_section(self, inputfile, chargetype):
         """Parse the population analysis charge block."""
-        self.skip_line(inputfile, 'blank')
+        self.skip_line(inputfile, "blank")
         line = next(inputfile)
         has_spins = False
-        if 'Spin' in line:
-            if not hasattr(self, 'atomspins'):
+        if "Spin" in line:
+            if not hasattr(self, "atomspins"):
                 self.atomspins = dict()
             has_spins = True
             spins = []
-        self.skip_line(inputfile, 'dashes')
-        if not hasattr(self, 'atomcharges'):
+        self.skip_line(inputfile, "dashes")
+        if not hasattr(self, "atomcharges"):
             self.atomcharges = dict()
         charges = []
         line = next(inputfile)
 
-        while list(set(line.strip())) != ['-']:
+        while list(set(line.strip())) != ["-"]:
             elements = line.split()
             charge = utils.float(elements[2])
             charges.append(charge)
@@ -288,13 +289,13 @@ cannot be determined. Rerun without `$molecule read`."""
         colcounter = 0
         while colcounter < ncols:
             # If the line is just the column header (indices)...
-            if line[:5].strip() == '':
+            if line[:5].strip() == "":
                 line = next(inputfile)
             rowcounter = 0
             while rowcounter < nrows:
                 row = list(map(float, line.split()[1:]))
                 assert len(row) == min(ncolsblock, (ncols - colcounter))
-                nparray[rowcounter][colcounter:colcounter + ncolsblock] = row
+                nparray[rowcounter][colcounter : colcounter + ncolsblock] = row
                 line = next(inputfile)
                 rowcounter += 1
             colcounter += ncolsblock
@@ -308,7 +309,7 @@ cannot be determined. Rerun without `$molecule read`."""
         and the 'MOLECULAR ORBITAL COEFFICIENTS' block, use a second
         which handles `aonames`.
         """
-        bigmom = ('d', 'f', 'g', 'h')
+        bigmom = ("d", "f", "g", "h")
         nparray = numpy.empty(shape=(nrows, ncols))
         line = next(inputfile)
         assert len(line.split()) == min(self.ncolsblock, ncols)
@@ -316,10 +317,10 @@ cannot be determined. Rerun without `$molecule read`."""
         split_fixed = utils.WidthSplitter((4, 4, 4, 6, 10, 10, 10, 10, 10, 10))
         while colcounter < ncols:
             # If the line is just the column header (indices)...
-            if line[:5].strip() == '':
+            if line[:5].strip() == "":
                 line = next(inputfile)
             # Do nothing for now.
-            if 'eigenvalues' in line:
+            if "eigenvalues" in line:
                 line = next(inputfile)
             rowcounter = 0
             while rowcounter < nrows:
@@ -331,7 +332,7 @@ cannot be determined. Rerun without `$molecule read`."""
                         # more than one atom of any element in the
                         # molecule.
                         offset = 1
-                        if row[2] != '':
+                        if row[2] != "":
                             name = self.atommap.get(row[1] + str(row[2]))
                         else:
                             name = self.atommap.get(f"{row[1]}1")
@@ -339,11 +340,11 @@ cannot be determined. Rerun without `$molecule read`."""
                         # m_l when using spherical functions.
                         shell = row[2 + offset]
                         if shell in bigmom:
-                            shell = ''.join([shell, row[3 + offset]])
-                        aoname = ''.join([name, '_', shell.upper()])
+                            shell = "".join([shell, row[3 + offset]])
+                        aoname = "".join([name, "_", shell.upper()])
                         self.aonames.append(aoname)
-                row = list(map(float, row[-min(self.ncolsblock, (ncols - colcounter)):]))
-                nparray[rowcounter][colcounter:colcounter + self.ncolsblock] = row
+                row = list(map(float, row[-min(self.ncolsblock, (ncols - colcounter)) :]))
+                nparray[rowcounter][colcounter : colcounter + self.ncolsblock] = row
                 line = next(inputfile)
                 rowcounter += 1
             colcounter += self.ncolsblock
@@ -364,11 +365,12 @@ cannot be determined. Rerun without `$molecule read`."""
         line = next(inputfile)
 
         # The end of the block is either a blank line or only dashes.
-        while not self.re_dashes_and_spaces.search(line) \
-              and not 'Warning : Irrep of orbital' in line:
-            if 'Occupied' in line or 'Virtual' in line:
+        while (
+            not self.re_dashes_and_spaces.search(line) and not "Warning : Irrep of orbital" in line
+        ):
+            if "Occupied" in line or "Virtual" in line:
                 # A nice trick to find where the HOMO is.
-                if 'Virtual' in line:
+                if "Virtual" in line:
                     homo = len(energies) - 1
                 line = next(inputfile)
             tokens = line.split()
@@ -379,7 +381,7 @@ cannot be determined. Rerun without `$molecule read`."""
             else:
                 for e in tokens:
                     try:
-                        energy = utils.convertor(utils.float(e), 'hartree', 'eV')
+                        energy = utils.convertor(utils.float(e), "hartree", "eV")
                     except ValueError:
                         energy = numpy.nan
                     energies.append(energy)
@@ -391,7 +393,6 @@ cannot be determined. Rerun without `$molecule read`."""
 
         return energies, symbols, homo
 
-
     def generate_atom_map(self):
         """Generate the map to go from Q-Chem atom numbering:
         'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'H1', 'H2', 'H3', 'H4', 'C7', ...
@@ -401,17 +402,17 @@ cannot be determined. Rerun without `$molecule read`."""
         """
 
         # Generate the desired order.
-        order_proper = [element + str(num)
-                        for element, num in zip(self.atomelements,
-                                                itertools.count(start=1))]
+        order_proper = [
+            element + str(num) for element, num in zip(self.atomelements, itertools.count(start=1))
+        ]
         # We need separate counters for each element.
-        element_counters = {element: itertools.count(start=1)
-                            for element in set(self.atomelements)}
+        element_counters = {element: itertools.count(start=1) for element in set(self.atomelements)}
         # Generate the Q-Chem printed order.
-        order_qchem = [element + str(next(element_counters[element]))
-                       for element in self.atomelements]
+        order_qchem = [
+            element + str(next(element_counters[element])) for element in self.atomelements
+        ]
         # Combine the orders into a mapping.
-        atommap = {k: v for k, v, in zip(order_qchem, order_proper)}
+        atommap = {k: v for k, v in zip(order_qchem, order_proper)}
         return atommap
 
     def generate_formula_histogram(self):
@@ -432,7 +433,10 @@ cannot be determined. Rerun without `$molecule read`."""
 
         # Extract the version number and optionally the version
         # control info.
-        if any(version_trigger in line for version_trigger in ("Q-Chem", "Unrecognized platform", "Version")):
+        if any(
+            version_trigger in line
+            for version_trigger in ("Q-Chem", "Unrecognized platform", "Version")
+        ):
             # Part 1 matches
             #   - `Q-Chem 4.3.0 for Intel X86 EM64T Linux`
             # Part 2 matches
@@ -446,7 +450,7 @@ cannot be determined. Rerun without `$molecule read`."""
                 r"Q-Chem\s([\d\.]*)\sfor|"
                 r"Unrecognized platform!!!\s([\d\.]*)\b|"
                 r"Version\s([\d\.]*)\s*$",
-                line
+                line,
             )
             if match:
                 groups = [s for s in match.groups() if s is not None]
@@ -480,27 +484,23 @@ cannot be determined. Rerun without `$molecule read`."""
             self.is_fragment_section = False
 
         if not self.is_fragment_section:
-
             # If the input section is repeated back, parse the $rem and
             # $molecule sections.
-            if line[0:11] == 'User input:':
+            if line[0:11] == "User input:":
                 self.user_input = dict()
-                self.skip_line(inputfile, 'd')
-                while list(set(line.strip())) != ['-']:
+                self.skip_line(inputfile, "d")
+                while list(set(line.strip())) != ["-"]:
+                    if line.strip().lower() == "$rem":
+                        self.user_input["rem"] = dict()
 
-                    if line.strip().lower() == '$rem':
-
-                        self.user_input['rem'] = dict()
-
-                        while line.strip().lower() != '$end':
-
+                        while line.strip().lower() != "$end":
                             line = next(inputfile).lower()
-                            if line.strip() == '$end':
+                            if line.strip() == "$end":
                                 break
                             # Apparently calculations can run without
                             # a matching $end...this terminates the
                             # user input section no matter what.
-                            if line.strip() == ('-' * 62):
+                            if line.strip() == ("-" * 62):
                                 break
 
                             tokens = line.split()
@@ -515,43 +515,40 @@ cannot be determined. Rerun without `$molecule read`."""
                             #     ecp = gen only on first chlorine
                             assert len(tokens) >= 2
                             keyword = tokens[0]
-                            if tokens[1] == '=':
+                            if tokens[1] == "=":
                                 option = tokens[2]
                             else:
                                 option = tokens[1]
-                            self.user_input['rem'][keyword] = option
+                            self.user_input["rem"][keyword] = option
 
-                            if keyword == 'method':
+                            if keyword == "method":
                                 method = option.upper()
                                 if method in self.wfn_method:
                                     self.metadata["methods"].append(method)
                                 else:
-                                    self.metadata["methods"].append('DFT')
+                                    self.metadata["methods"].append("DFT")
                                     self.metadata["functional"] = method
 
-                            if keyword == 'exchange':
-                                self.metadata["methods"].append('DFT')
+                            if keyword == "exchange":
+                                self.metadata["methods"].append("DFT")
                                 self.metadata["functional"] = option
 
-                            if keyword == 'print_orbitals':
+                            if keyword == "print_orbitals":
                                 # Stay with the default value if a number isn't
                                 # specified.
-                                if option in ('true', 'false'):
+                                if option in ("true", "false"):
                                     continue
                                 else:
                                     norbdisp_aonames = int(option)
                                     self.norbdisp_alpha_aonames = norbdisp_aonames
                                     self.norbdisp_beta_aonames = norbdisp_aonames
 
-                    if line.strip().lower() == '$ecp':
-
-                        self.user_input['ecp'] = []
+                    if line.strip().lower() == "$ecp":
+                        self.user_input["ecp"] = []
                         line = next(inputfile)
 
-                        while line.strip().lower() != '$end':
-
-                            while list(set(line.strip())) != ['*']:
-
+                        while line.strip().lower() != "$end":
+                            while list(set(line.strip())) != ["*"]:
                                 # Parse the element for this ECP
                                 # entry. If only the element is on
                                 # this line, or the 2nd token is 0, it
@@ -582,30 +579,29 @@ cannot be determined. Rerun without `$molecule read`."""
                                     ncore = int(tokens[2])
                                     # Don't parse the remainder of the
                                     # ECP definition.
-                                    while list(set(line.strip())) != ['*']:
+                                    while list(set(line.strip())) != ["*"]:
                                         line = next(inputfile)
 
                                 entry = (element, index, ncore)
-                                self.user_input['ecp'].append(entry)
+                                self.user_input["ecp"].append(entry)
 
                                 line = next(inputfile)
 
-                                if line.strip().lower() == '$end':
+                                if line.strip().lower() == "$end":
                                     break
 
-                    if line.strip().lower() == '$molecule':
-
-                        self.user_input['molecule'] = dict()
+                    if line.strip().lower() == "$molecule":
+                        self.user_input["molecule"] = dict()
                         line = next(inputfile)
 
                         # Don't read the molecule, only the
                         # supersystem charge and multiplicity.
-                        if line.split()[0].lower() == 'read':
+                        if line.split()[0].lower() == "read":
                             pass
                         else:
                             charge, mult = [int(x) for x in line.split()]
-                            self.user_input['molecule']['charge'] = charge
-                            self.user_input['molecule']['mult'] = mult
+                            self.user_input["molecule"]["charge"] = charge
+                            self.user_input["molecule"]["mult"] = mult
 
                     # Parsing of general sections.
                     if line.startswith("$") and line.strip() != "$end":
@@ -620,27 +616,27 @@ cannot be determined. Rerun without `$molecule read`."""
                     line = next(inputfile).lower()
 
             # Point group symmetry.
-            if 'Molecular Point Group' in line:
+            if "Molecular Point Group" in line:
                 point_group_full = line.split()[3].lower()
-                self.metadata['symmetry_detected'] = point_group_full
+                self.metadata["symmetry_detected"] = point_group_full
                 line = next(inputfile)
-                if 'Largest Abelian Subgroup' in line:
+                if "Largest Abelian Subgroup" in line:
                     point_group_abelian = line.split()[3].lower()
-                    self.metadata['symmetry_used'] = point_group_abelian
+                    self.metadata["symmetry_used"] = point_group_abelian
 
             # Parse the basis set name
-            if 'Requested basis set' in line:
+            if "Requested basis set" in line:
                 self.metadata["basis_set"] = line.split()[-1]
 
             # Parse the general basis for `gbasis`, in the style used by
             # Gaussian.
-            if 'Basis set in general basis input format:' in line:
-                self.skip_lines(inputfile, ['d', '$basis'])
+            if "Basis set in general basis input format:" in line:
+                self.skip_lines(inputfile, ["d", "$basis"])
                 line = next(inputfile)
-                if not hasattr(self, 'gbasis'):
+                if not hasattr(self, "gbasis"):
                     self.gbasis = []
                 # The end of the general basis block.
-                while '$end' not in line:
+                while "$end" not in line:
                     atom = []
                     # 1. Contains element symbol and atomic index of
                     # basis functions; if 0, applies to all atoms of
@@ -648,7 +644,7 @@ cannot be determined. Rerun without `$molecule read`."""
                     assert len(line.split()) == 2
                     line = next(inputfile)
                     # The end of each atomic block.
-                    while '****' not in line:
+                    while "****" not in line:
                         # 2. Contains the type of basis function {S, SP,
                         # P, D, F, G, H, ...}, the number of primitives,
                         # and the weight of the final contracted function.
@@ -665,7 +661,7 @@ cannot be determined. Rerun without `$molecule read`."""
                         # are for both S- and P-type basis functions but
                         # with separate contraction coefficients,
                         # resulting in three columns.
-                        if bftype == 'SP':
+                        if bftype == "SP":
                             primitives_S = []
                             primitives_P = []
                         else:
@@ -675,7 +671,7 @@ cannot be determined. Rerun without `$molecule read`."""
                         for iprim in range(nprim):
                             primsplitline = line.split()
                             exponent = float(primsplitline[0])
-                            if bftype == 'SP':
+                            if bftype == "SP":
                                 assert len(primsplitline) == 3
                                 coefficient_S = float(primsplitline[1])
                                 coefficient_P = float(primsplitline[2])
@@ -686,9 +682,9 @@ cannot be determined. Rerun without `$molecule read`."""
                                 coefficient = float(primsplitline[1])
                                 primitives.append((exponent, coefficient))
                             line = next(inputfile)
-                        if bftype == 'SP':
-                            bf_S = ('S', primitives_S)
-                            bf_P = ('P', primitives_P)
+                        if bftype == "SP":
+                            bf_S = ("S", primitives_S)
+                            bf_P = ("P", primitives_P)
                             atom.append(bf_S)
                             atom.append(bf_P)
                         else:
@@ -700,8 +696,7 @@ cannot be determined. Rerun without `$molecule read`."""
                     self.gbasis.append(atom)
                     line = next(inputfile)
 
-            if line.strip() == 'The following effective core potentials will be applied':
-
+            if line.strip() == "The following effective core potentials will be applied":
                 # Keep track of all elements that may have an ECP on
                 # them. *Which* centers have an ECP can't be
                 # determined here, so just take the number of valence
@@ -713,11 +708,11 @@ cannot be determined. Rerun without `$molecule read`."""
 
                 split_fixed = utils.WidthSplitter((4, 13, 20, 2, 14, 14))
 
-                self.skip_lines(inputfile, ['d', 'header', 'header', 'd'])
+                self.skip_lines(inputfile, ["d", "header", "header", "d"])
                 line = next(inputfile)
-                while list(set(line.strip())) != ['-']:
+                while list(set(line.strip())) != ["-"]:
                     tokens = split_fixed.split(line)
-                    if tokens[0] != '':
+                    if tokens[0] != "":
                         element = tokens[0]
                         valence = int(tokens[1])
                         ncore = self.table.number[element] - valence
@@ -781,37 +776,37 @@ cannot be determined. Rerun without `$molecule read`."""
                             self.metadata["solvent_params"] = dict()
                         self.metadata["solvent_params"]["epsilon"] = float(line.split()[2])
 
-            if 'TIME STEP #' in line:
+            if "TIME STEP #" in line:
                 tokens = line.split()
-                self.append_attribute('time', float(tokens[8]))
+                self.append_attribute("time", float(tokens[8]))
 
             if line.strip() == "Adding empirical dispersion correction":
                 while "energy" not in line:
                     line = next(inputfile)
                 self.append_attribute(
                     "dispersionenergies",
-                    utils.convertor(utils.float(line.split()[-2]), "hartree", "eV")
+                    utils.convertor(utils.float(line.split()[-2]), "hartree", "eV"),
                 )
 
             # Extract the atomic numbers and coordinates of the atoms.
-            if 'Standard Nuclear Orientation' in line:
+            if "Standard Nuclear Orientation" in line:
                 if "Angstroms" in line:
                     convertor = lambda x: x
-                elif 'Bohr' in line:
-                    convertor = lambda x: utils.convertor(x, 'bohr', 'Angstrom')
+                elif "Bohr" in line:
+                    convertor = lambda x: utils.convertor(x, "bohr", "Angstrom")
                 else:
                     raise ValueError(f"Unknown units in coordinate header: {line}")
-                self.skip_lines(inputfile, ['cols', 'dashes'])
+                self.skip_lines(inputfile, ["cols", "dashes"])
                 atomelements = []
                 atomcoords = []
                 line = next(inputfile)
-                while list(set(line.strip())) != ['-']:
+                while list(set(line.strip())) != ["-"]:
                     entry = line.split()
                     atomelements.append(entry[1])
                     atomcoords.append([convertor(float(value)) for value in entry[2:]])
                     line = next(inputfile)
 
-                self.append_attribute('atomcoords', atomcoords)
+                self.append_attribute("atomcoords", atomcoords)
 
                 # We calculate and handle atomnos no matter what, since in
                 # the case of fragment calculations the atoms may change,
@@ -820,7 +815,7 @@ cannot be determined. Rerun without `$molecule read`."""
                 self.atomelements = []
                 for atomelement in atomelements:
                     self.atomelements.append(atomelement)
-                    if atomelement == 'GH':
+                    if atomelement == "GH":
                         self.atomnos.append(0)
                     else:
                         self.atomnos.append(self.table.number[atomelement])
@@ -830,12 +825,12 @@ cannot be determined. Rerun without `$molecule read`."""
 
             # Number of electrons.
             # Useful for determining the number of occupied/virtual orbitals.
-            if 'Nuclear Repulsion Energy' in line:
+            if "Nuclear Repulsion Energy" in line:
                 line = next(inputfile)
-                nelec_re_string = r'There are(\s+[0-9]+) alpha and(\s+[0-9]+) beta electrons'
+                nelec_re_string = r"There are(\s+[0-9]+) alpha and(\s+[0-9]+) beta electrons"
                 match = re.findall(nelec_re_string, line.strip())
-                self.set_attribute('nalpha', int(match[0][0].strip()))
-                self.set_attribute('nbeta', int(match[0][1].strip()))
+                self.set_attribute("nalpha", int(match[0][0].strip()))
+                self.set_attribute("nbeta", int(match[0][1].strip()))
                 self.norbdisp_alpha += self.nalpha
                 self.norbdisp_alpha_aonames += self.nalpha
                 self.norbdisp_beta += self.nbeta
@@ -844,17 +839,17 @@ cannot be determined. Rerun without `$molecule read`."""
                 # total spin of the system.
                 S = (self.nalpha - self.nbeta) / 2
                 mult = int(2 * S + 1)
-                self.set_attribute('mult', mult)
+                self.set_attribute("mult", mult)
                 # Calculate the molecular charge as the difference between
                 # the atomic numbers and the number of electrons.
-                if hasattr(self, 'atomnos'):
+                if hasattr(self, "atomnos"):
                     charge = sum(self.atomnos) - (self.nalpha + self.nbeta)
-                    self.set_attribute('charge', charge)
+                    self.set_attribute("charge", charge)
 
             # Number of basis functions.
-            if 'basis functions' in line:
-                if not hasattr(self, 'nbasis'):
-                    self.set_attribute('nbasis', int(line.split()[-3]))
+            if "basis functions" in line:
+                if not hasattr(self, "nbasis"):
+                    self.set_attribute("nbasis", int(line.split()[-3]))
                     # In the case that there are fewer basis functions
                     # (and therefore MOs) than default number of MOs
                     # displayed, reset the display values.
@@ -901,12 +896,12 @@ cannot be determined. Rerun without `$molecule read`."""
 
             # Check for whether or not we're peforming an
             # (un)restricted calculation.
-            if 'calculation will be' in line:
-                if ' restricted' in line:
+            if "calculation will be" in line:
+                if " restricted" in line:
                     self.unrestricted = False
-                if 'unrestricted' in line:
+                if "unrestricted" in line:
                     self.unrestricted = True
-                if hasattr(self, 'nalpha') and hasattr(self, 'nbeta'):
+                if hasattr(self, "nalpha") and hasattr(self, "nbeta"):
                     if self.nalpha != self.nbeta:
                         self.unrestricted = True
                         self.is_rohf = True
@@ -922,31 +917,24 @@ cannot be determined. Rerun without `$molecule read`."""
             #    3    -382.2939780242      3.37E-03
             # ...
             #
-            scf_success_messages = (
-                'Convergence criterion met',
-                'corrected energy'
-            )
-            scf_failure_messages = (
-                'SCF failed to converge',
-                'Convergence failure'
-            )
-            if 'SCF converges when ' in line:
-                if not hasattr(self, 'scftargets'):
+            scf_success_messages = ("Convergence criterion met", "corrected energy")
+            scf_failure_messages = ("SCF failed to converge", "Convergence failure")
+            if "SCF converges when " in line:
+                if not hasattr(self, "scftargets"):
                     self.scftargets = []
                 target = float(line.split()[-1])
                 self.scftargets.append([target])
 
                 # We should have the header between dashes now,
                 # but sometimes there are lines before the first dashes.
-                while not 'Cycle       Energy' in line:
+                while not "Cycle       Energy" in line:
                     line = next(inputfile)
-                self.skip_line(inputfile, 'd')
+                self.skip_line(inputfile, "d")
 
                 values = []
                 iter_counter = 1
                 line = next(inputfile)
                 while not any(message in line for message in scf_success_messages):
-
                     # Some trickery to avoid a lot of printing that can occur
                     # between each SCF iteration.
                     entry = line.split()
@@ -978,7 +966,7 @@ cannot be determined. Rerun without `$molecule read`."""
                     if any(message in line for message in scf_failure_messages):
                         break
 
-                if not hasattr(self, 'scfvalues'):
+                if not hasattr(self, "scfvalues"):
                     self.scfvalues = []
                 self.scfvalues.append(numpy.array(values))
 
@@ -988,32 +976,36 @@ cannot be determined. Rerun without `$molecule read`."""
             # `scf_final_print = 2``) rather than the combined
             # aonames/mocoeffs/moenergies block (which comes from
             # `print_orbitals = true`).
-            if 'Final Alpha MO Coefficients' in line:
-                if not hasattr(self, 'mocoeffs'):
+            if "Final Alpha MO Coefficients" in line:
+                if not hasattr(self, "mocoeffs"):
                     self.mocoeffs = []
-                mocoeffs = QChem.parse_matrix(inputfile, self.nbasis, self.norbdisp_alpha, self.ncolsblock)
+                mocoeffs = QChem.parse_matrix(
+                    inputfile, self.nbasis, self.norbdisp_alpha, self.ncolsblock
+                )
                 self.mocoeffs.append(mocoeffs.transpose())
 
-            if 'Final Beta MO Coefficients' in line:
-                mocoeffs = QChem.parse_matrix(inputfile, self.nbasis, self.norbdisp_beta, self.ncolsblock)
+            if "Final Beta MO Coefficients" in line:
+                mocoeffs = QChem.parse_matrix(
+                    inputfile, self.nbasis, self.norbdisp_beta, self.ncolsblock
+                )
                 self.mocoeffs.append(mocoeffs.transpose())
 
-            if 'Total energy in the final basis set' in line:
-                if not hasattr(self, 'scfenergies'):
+            if "Total energy in the final basis set" in line:
+                if not hasattr(self, "scfenergies"):
                     self.scfenergies = []
                 scfenergy = float(line.split()[-1])
-                self.scfenergies.append(utils.convertor(scfenergy, 'hartree', 'eV'))
+                self.scfenergies.append(utils.convertor(scfenergy, "hartree", "eV"))
 
             # Geometry optimization.
 
-            if 'Maximum     Tolerance    Cnvgd?' in line:
+            if "Maximum     Tolerance    Cnvgd?" in line:
                 line_g = next(inputfile).split()[1:3]
                 line_d = next(inputfile).split()[1:3]
                 line_e = next(inputfile).split()[2:4]
 
-                if not hasattr(self, 'geotargets'):
+                if not hasattr(self, "geotargets"):
                     self.geotargets = [line_g[1], line_d[1], utils.float(line_e[1])]
-                if not hasattr(self, 'geovalues'):
+                if not hasattr(self, "geovalues"):
                     self.geovalues = []
                 maxg = utils.float(line_g[0])
                 maxd = utils.float(line_d[0])
@@ -1021,13 +1013,13 @@ cannot be determined. Rerun without `$molecule read`."""
                 geovalues = [maxg, maxd, ediff]
                 self.geovalues.append(geovalues)
 
-            if '**  OPTIMIZATION CONVERGED  **' in line:
-                if not hasattr(self, 'optdone'):
+            if "**  OPTIMIZATION CONVERGED  **" in line:
+                if not hasattr(self, "optdone"):
                     self.optdone = []
                 self.optdone.append(len(self.atomcoords))
 
-            if '**  MAXIMUM OPTIMIZATION CYCLES REACHED  **' in line:
-                if not hasattr(self, 'optdone'):
+            if "**  MAXIMUM OPTIMIZATION CYCLES REACHED  **" in line:
+                if not hasattr(self, "optdone"):
                     self.optdone = []
 
             # Moller-Plesset corrections.
@@ -1043,16 +1035,16 @@ cannot be determined. Rerun without `$molecule read`."""
             # MP4 and variants are handled by ccman.
 
             # This is the MP2/cdman case.
-            if 'MP2         total energy' in line:
-                if not hasattr(self, 'mpenergies'):
+            if "MP2         total energy" in line:
+                if not hasattr(self, "mpenergies"):
                     self.mpenergies = []
                 mp2energy = float(line.split()[4])
-                mp2energy = utils.convertor(mp2energy, 'hartree', 'eV')
+                mp2energy = utils.convertor(mp2energy, "hartree", "eV")
                 self.mpenergies.append([mp2energy])
 
             # This is the MP3/ccman2 case.
-            if line[1:11] == 'MP2 energy' and line[12:19] != 'read as':
-                if not hasattr(self, 'mpenergies'):
+            if line[1:11] == "MP2 energy" and line[12:19] != "read as":
+                if not hasattr(self, "mpenergies"):
                     self.mpenergies = []
                 mpenergies = []
                 mp2energy = float(line.split()[3])
@@ -1060,65 +1052,62 @@ cannot be determined. Rerun without `$molecule read`."""
                 line = next(inputfile)
                 line = next(inputfile)
                 # Just a safe check.
-                if 'MP3 energy' in line:
+                if "MP3 energy" in line:
                     mp3energy = float(line.split()[3])
                     mpenergies.append(mp3energy)
-                mpenergies = [utils.convertor(mpe, 'hartree', 'eV')
-                              for mpe in mpenergies]
+                mpenergies = [utils.convertor(mpe, "hartree", "eV") for mpe in mpenergies]
                 self.mpenergies.append(mpenergies)
 
             # This is the MP4/ccman case.
-            if 'EHF' in line:
-                if not hasattr(self, 'mpenergies'):
+            if "EHF" in line:
+                if not hasattr(self, "mpenergies"):
                     self.mpenergies = []
                 mpenergies = []
 
-                while list(set(line.strip())) != ['-']:
-
-                    if 'EMP2' in line:
+                while list(set(line.strip())) != ["-"]:
+                    if "EMP2" in line:
                         mp2energy = float(line.split()[2])
                         mpenergies.append(mp2energy)
-                    if 'EMP3' in line:
+                    if "EMP3" in line:
                         mp3energy = float(line.split()[2])
                         mpenergies.append(mp3energy)
-                    if 'EMP4SDQ' in line:
+                    if "EMP4SDQ" in line:
                         mp4sdqenergy = float(line.split()[2])
                         mpenergies.append(mp4sdqenergy)
                     # This is really MP4SD(T)Q.
-                    if 'EMP4 ' in line:
+                    if "EMP4 " in line:
                         mp4sdtqenergy = float(line.split()[2])
                         mpenergies.append(mp4sdtqenergy)
 
                     line = next(inputfile)
 
-                mpenergies = [utils.convertor(mpe, 'hartree', 'eV')
-                              for mpe in mpenergies]
+                mpenergies = [utils.convertor(mpe, "hartree", "eV") for mpe in mpenergies]
                 self.mpenergies.append(mpenergies)
 
             # Coupled cluster corrections.
             # Hopefully we only have to deal with ccman2 here.
 
-            if 'CCD total energy' in line:
-                if not hasattr(self, 'ccenergies'):
+            if "CCD total energy" in line:
+                if not hasattr(self, "ccenergies"):
                     self.ccenergies = []
                 ccdenergy = float(line.split()[-1])
-                ccdenergy = utils.convertor(ccdenergy, 'hartree', 'eV')
+                ccdenergy = utils.convertor(ccdenergy, "hartree", "eV")
                 self.ccenergies.append(ccdenergy)
-            if 'CCSD total energy' in line:
+            if "CCSD total energy" in line:
                 has_triples = False
-                if not hasattr(self, 'ccenergies'):
+                if not hasattr(self, "ccenergies"):
                     self.ccenergies = []
                 ccsdenergy = float(line.split()[-1])
                 # Make sure we aren't actually doing CCSD(T).
                 line = next(inputfile)
                 line = next(inputfile)
-                if 'CCSD(T) total energy' in line:
+                if "CCSD(T) total energy" in line:
                     has_triples = True
                     ccsdtenergy = float(line.split()[-1])
-                    ccsdtenergy = utils.convertor(ccsdtenergy, 'hartree', 'eV')
+                    ccsdtenergy = utils.convertor(ccsdtenergy, "hartree", "eV")
                     self.ccenergies.append(ccsdtenergy)
                 if not has_triples:
-                    ccsdenergy = utils.convertor(ccsdenergy, 'hartree', 'eV')
+                    ccsdenergy = utils.convertor(ccsdenergy, "hartree", "eV")
                     self.ccenergies.append(ccsdenergy)
 
             if line[:11] == " CCSD  T1^2":
@@ -1127,8 +1116,7 @@ cannot be determined. Rerun without `$molecule read`."""
                 self.metadata["t1_diagnostic"] = t1_norm / math.sqrt(2 * (self.nalpha + self.nbeta))
 
             # Electronic transitions. Works for both CIS and TDDFT.
-            if 'Excitation Energies' in line:
-
+            if "Excitation Energies" in line:
                 # Restricted:
                 # ---------------------------------------------------
                 #         TDDFT/TDA Excitation Energies
@@ -1152,38 +1140,39 @@ cannot be determined. Rerun without `$molecule read`."""
                 #    S(  1) --> V(  1) amplitude = -0.3105 alpha
                 #    D( 34) --> S(  1) amplitude =  0.9322 beta
 
-                self.skip_lines(inputfile, ['dashes', 'blank'])
+                self.skip_lines(inputfile, ["dashes", "blank"])
                 line = next(inputfile)
 
                 etenergies = []
                 etsyms = []
                 etoscs = []
                 etsecs = []
-                spinmap = {'alpha': 0, 'beta': 1}
+                spinmap = {"alpha": 0, "beta": 1}
 
-                while list(set(line.strip())) != ['-']:
-
+                while list(set(line.strip())) != ["-"]:
                     # Take the total energy for the state and subtract from the
                     # ground state energy, rather than just the EE;
                     # this will be more accurate.
-                    if 'Total energy for state' in line:
-                        energy = utils.convertor(float(line.split()[5]), 'hartree', 'wavenumber')
-                        etenergy = energy - utils.convertor(self.scfenergies[-1], 'eV', 'wavenumber')
+                    if "Total energy for state" in line:
+                        energy = utils.convertor(float(line.split()[5]), "hartree", "wavenumber")
+                        etenergy = energy - utils.convertor(
+                            self.scfenergies[-1], "eV", "wavenumber"
+                        )
                         etenergies.append(etenergy)
                     # if 'excitation energy' in line:
                     #     etenergy = utils.convertor(float(line.split()[-1]), 'eV', 'wavenumber')
                     #     etenergies.append(etenergy)
-                    if 'Multiplicity' in line:
+                    if "Multiplicity" in line:
                         etsym = line.split()[1]
                         etsyms.append(etsym)
-                    if 'Strength' in line:
+                    if "Strength" in line:
                         strength = float(line.split()[-1])
                         etoscs.append(strength)
 
                     # This is the list of transitions.
-                    if 'amplitude' in line:
+                    if "amplitude" in line:
                         sec = []
-                        while line.strip() != '':
+                        while line.strip() != "":
                             re_match = self.re_tddft.search(line)
                             if self.unrestricted:
                                 spin = spinmap[re_match.group(7)]
@@ -1196,8 +1185,8 @@ cannot be determined. Rerun without `$molecule read`."""
                             # or deexcitation (see #154 for details). For deexcitations,
                             # we will need to reverse the MO indices. Note also that Q-Chem
                             # starts reindexing virtual orbitals at 1.
-                            if line[5] == '(':
-                                ttype = 'X'
+                            if line[5] == "(":
+                                ttype = "X"
                             else:
                                 assert line[5] == ":"
                                 ttype = line[4]
@@ -1205,8 +1194,8 @@ cannot be determined. Rerun without `$molecule read`."""
                             # get start and end indices of contribution
                             # as the numbers written in parentheses:
                             index_pattern = re.compile(r"\(( *\d+)\)")
-                            indices=index_pattern.findall(line)
-                            #assert len(indices)==2 # there must always be a 'start' and 'end' index.
+                            indices = index_pattern.findall(line)
+                            # assert len(indices)==2 # there must always be a 'start' and 'end' index.
 
                             if self.unrestricted:
                                 # Here are three different countings:
@@ -1216,12 +1205,12 @@ cannot be determined. Rerun without `$molecule read`."""
                                 # from or to which the excitation can go:
 
                                 # this is supposed to be the standard case:
-                                n_minor=self.nbeta
-                                n_major=self.nalpha
+                                n_minor = self.nbeta
+                                n_major = self.nalpha
                                 # but this also can appear
                                 if self.nbeta > self.nalpha:
-                                   n_minor=self.nalpha
-                                   n_major=self.nbeta
+                                    n_minor = self.nalpha
+                                    n_major = self.nbeta
 
                                 # split 'line' by '(' to get three strings due to double occurence of '('.
                                 # From the first and second string (i.e. before the parentheses), take the last character.
@@ -1231,7 +1220,7 @@ cannot be determined. Rerun without `$molecule read`."""
                                     startidx = int(indices[0]) - 1 + n_minor
                                     assert startidx < n_major
                                 else:
-                                    startidx=-15
+                                    startidx = -15
                                     assert "invalid from_occ"
 
                                 if re_match.group(3) == "S":
@@ -1250,9 +1239,9 @@ cannot be determined. Rerun without `$molecule read`."""
 
                             start = (startidx, spin)
                             end = (endidx, spin)
-                            if ttype == 'X':
+                            if ttype == "X":
                                 sec.append([start, end, contrib])
-                            elif ttype == 'Y':
+                            elif ttype == "Y":
                                 sec.append([end, start, contrib])
                             else:
                                 raise ValueError(f"Unknown transition type: {ttype}")
@@ -1261,33 +1250,34 @@ cannot be determined. Rerun without `$molecule read`."""
 
                     line = next(inputfile)
 
-                self.set_attribute('etenergies', etenergies)
-                self.set_attribute('etsyms', etsyms)
-                self.set_attribute('etoscs', etoscs)
-                self.set_attribute('etsecs', etsecs)
+                self.set_attribute("etenergies", etenergies)
+                self.set_attribute("etsyms", etsyms)
+                self.set_attribute("etoscs", etoscs)
+                self.set_attribute("etsecs", etsecs)
 
             # Static and dynamic polarizability from mopropman.
-            if 'Polarizability (a.u.)' in line:
-                if not hasattr(self, 'polarizabilities'):
+            if "Polarizability (a.u.)" in line:
+                if not hasattr(self, "polarizabilities"):
                     self.polarizabilities = []
-                while 'Full Tensor' not in line:
+                while "Full Tensor" not in line:
                     line = next(inputfile)
-                self.skip_line(inputfile, 'blank')
+                self.skip_line(inputfile, "blank")
                 polarizability = [next(inputfile).split() for _ in range(3)]
                 self.polarizabilities.append(numpy.array(polarizability))
 
             # Static polarizability from finite difference or
             # responseman.
-            if line.strip() in ('Static polarizability tensor [a.u.]',
-                                'Polarizability tensor      [a.u.]'):
-                if not hasattr(self, 'polarizabilities'):
+            if line.strip() in (
+                "Static polarizability tensor [a.u.]",
+                "Polarizability tensor      [a.u.]",
+            ):
+                if not hasattr(self, "polarizabilities"):
                     self.polarizabilities = []
                 polarizability = [next(inputfile).split() for _ in range(3)]
                 self.polarizabilities.append(numpy.array(polarizability))
 
             # Molecular orbital energies and symmetries.
-            if line.strip() == 'Orbital Energies (a.u.) and Symmetries':
-
+            if line.strip() == "Orbital Energies (a.u.) and Symmetries":
                 #  --------------------------------------------------------------
                 #              Orbital Energies (a.u.) and Symmetries
                 #  --------------------------------------------------------------
@@ -1337,29 +1327,36 @@ cannot be determined. Rerun without `$molecule read`."""
                 #  25 Bu
                 #  --------------------------------------------------------------
 
-                self.skip_line(inputfile, 'dashes')
+                self.skip_line(inputfile, "dashes")
                 line = next(inputfile)
-                energies_alpha, symbols_alpha, homo_alpha = self.parse_orbital_energies_and_symmetries(inputfile)
+                (
+                    energies_alpha,
+                    symbols_alpha,
+                    homo_alpha,
+                ) = self.parse_orbital_energies_and_symmetries(inputfile)
                 # Only look at the second block if doing an unrestricted calculation.
                 # This might be a problem for ROHF/ROKS.
                 if self.unrestricted:
-                    energies_beta, symbols_beta, homo_beta = self.parse_orbital_energies_and_symmetries(inputfile)
+                    (
+                        energies_beta,
+                        symbols_beta,
+                        homo_beta,
+                    ) = self.parse_orbital_energies_and_symmetries(inputfile)
 
                 # For now, only keep the last set of MO energies, even though it is
                 # printed at every step of geometry optimizations and fragment jobs.
-                self.set_attribute('moenergies', [numpy.array(energies_alpha)])
-                self.set_attribute('homos', [homo_alpha])
-                self.set_attribute('mosyms', [symbols_alpha])
+                self.set_attribute("moenergies", [numpy.array(energies_alpha)])
+                self.set_attribute("homos", [homo_alpha])
+                self.set_attribute("mosyms", [symbols_alpha])
                 if self.unrestricted:
                     self.moenergies.append(numpy.array(energies_beta))
                     self.homos.append(homo_beta)
                     self.mosyms.append(symbols_beta)
 
-                self.set_attribute('nmo', len(self.moenergies[0]))
+                self.set_attribute("nmo", len(self.moenergies[0]))
 
             # Molecular orbital energies, no symmetries.
-            if line.strip() == 'Orbital Energies (a.u.)':
-
+            if line.strip() == "Orbital Energies (a.u.)":
                 # In the case of no orbital symmetries, the beta spin block is not
                 # present for restricted calculations.
 
@@ -1393,23 +1390,27 @@ cannot be determined. Rerun without `$molecule read`."""
                 #   0.138
                 #  --------------------------------------------------------------
 
-                self.skip_line(inputfile, 'dashes')
+                self.skip_line(inputfile, "dashes")
                 line = next(inputfile)
-                energies_alpha, _, homo_alpha = self.parse_orbital_energies_and_symmetries(inputfile)
+                energies_alpha, _, homo_alpha = self.parse_orbital_energies_and_symmetries(
+                    inputfile
+                )
                 # Only look at the second block if doing an unrestricted calculation.
                 # This might be a problem for ROHF/ROKS.
                 if self.unrestricted:
-                    energies_beta, _, homo_beta = self.parse_orbital_energies_and_symmetries(inputfile)
+                    energies_beta, _, homo_beta = self.parse_orbital_energies_and_symmetries(
+                        inputfile
+                    )
 
                 # For now, only keep the last set of MO energies, even though it is
                 # printed at every step of geometry optimizations and fragment jobs.
-                self.set_attribute('moenergies', [numpy.array(energies_alpha)])
-                self.set_attribute('homos', [homo_alpha])
+                self.set_attribute("moenergies", [numpy.array(energies_alpha)])
+                self.set_attribute("homos", [homo_alpha])
                 if self.unrestricted:
                     self.moenergies.append(numpy.array(energies_beta))
                     self.homos.append(homo_beta)
 
-                self.set_attribute('nmo', len(self.moenergies[0]))
+                self.set_attribute("nmo", len(self.moenergies[0]))
 
             # Molecular orbital coefficients.
 
@@ -1417,27 +1418,27 @@ cannot be determined. Rerun without `$molecule read`."""
             # precision than `scf_final_print >= 2` for `mocoeffs`, but
             # important for `aonames` and `atombasis`.
 
-            if any(header in line
-                   for header in self.alpha_mo_coefficient_headers):
-
+            if any(header in line for header in self.alpha_mo_coefficient_headers):
                 # If we've asked to display more virtual orbitals than
                 # there are MOs present in the molecule, fix that now.
-                if hasattr(self, 'nmo') and hasattr(self, 'nalpha') and hasattr(self, 'nbeta'):
+                if hasattr(self, "nmo") and hasattr(self, "nalpha") and hasattr(self, "nbeta"):
                     self.norbdisp_alpha_aonames = min(self.norbdisp_alpha_aonames, self.nmo)
                     self.norbdisp_beta_aonames = min(self.norbdisp_beta_aonames, self.nmo)
 
-                if not hasattr(self, 'mocoeffs'):
+                if not hasattr(self, "mocoeffs"):
                     self.mocoeffs = []
-                if not hasattr(self, 'atombasis'):
+                if not hasattr(self, "atombasis"):
                     self.atombasis = []
                     for n in range(self.natom):
                         self.atombasis.append([])
-                if not hasattr(self, 'aonames'):
+                if not hasattr(self, "aonames"):
                     self.aonames = []
                 # We could also attempt to parse `moenergies` here, but
                 # nothing is gained by it.
 
-                mocoeffs = self.parse_matrix_aonames(inputfile, self.nbasis, self.norbdisp_alpha_aonames)
+                mocoeffs = self.parse_matrix_aonames(
+                    inputfile, self.nbasis, self.norbdisp_alpha_aonames
+                )
                 # Only use these MO coefficients if we don't have them
                 # from `scf_final_print`.
                 if len(self.mocoeffs) == 0:
@@ -1450,26 +1451,27 @@ cannot be determined. Rerun without `$molecule read`."""
                     self.atombasis[atomindex].append(aoindex)
                 assert len(self.atombasis) == len(self.atomnos)
 
-            if 'BETA  MOLECULAR ORBITAL COEFFICIENTS' in line:
-
-                mocoeffs = self.parse_matrix_aonames(inputfile, self.nbasis, self.norbdisp_beta_aonames)
+            if "BETA  MOLECULAR ORBITAL COEFFICIENTS" in line:
+                mocoeffs = self.parse_matrix_aonames(
+                    inputfile, self.nbasis, self.norbdisp_beta_aonames
+                )
                 if len(self.mocoeffs) == 1:
                     self.mocoeffs.append(mocoeffs.transpose())
 
             # Population analysis.
 
-            if 'Ground-State Mulliken Net Atomic Charges' in line:
-                self.parse_charge_section(inputfile, 'mulliken')
-            if 'Hirshfeld Atomic Charges' in line:
-                self.parse_charge_section(inputfile, 'hirshfeld')
-            if 'Charge Model 5' in line:
-                self.parse_charge_section(inputfile, 'cm5')
-            if 'Ground-State ChElPG Net Atomic Charges' in line:
-                self.parse_charge_section(inputfile, 'chelpg')
-            if 'Merz-Kollman ESP Net Atomic Charges' in line:
-                self.parse_charge_section(inputfile, 'esp')
-            if 'Merz-Kollman RESP Net Atomic Charges' in line:
-                self.parse_charge_section(inputfile, 'resp')
+            if "Ground-State Mulliken Net Atomic Charges" in line:
+                self.parse_charge_section(inputfile, "mulliken")
+            if "Hirshfeld Atomic Charges" in line:
+                self.parse_charge_section(inputfile, "hirshfeld")
+            if "Charge Model 5" in line:
+                self.parse_charge_section(inputfile, "cm5")
+            if "Ground-State ChElPG Net Atomic Charges" in line:
+                self.parse_charge_section(inputfile, "chelpg")
+            if "Merz-Kollman ESP Net Atomic Charges" in line:
+                self.parse_charge_section(inputfile, "esp")
+            if "Merz-Kollman RESP Net Atomic Charges" in line:
+                self.parse_charge_section(inputfile, "resp")
 
             # Multipole moments are not printed in lexicographical order,
             # so we need to parse and sort them. The units seem OK, but there
@@ -1501,11 +1503,10 @@ cannot be determined. Rerun without `$molecule read`."""
             # -----------------------------------------------------------------
             #
             if "Cartesian Multipole Moments" in line:
-
                 # This line appears not by default, but only when
                 # `multipole_order` > 4:
                 line = next(inputfile)
-                if 'LMN = < X^L Y^M Z^N >' in line:
+                if "LMN = < X^L Y^M Z^N >" in line:
                     line = next(inputfile)
 
                 # The reference point is always the origin, although normally the molecule
@@ -1519,7 +1520,7 @@ cannot be determined. Rerun without `$molecule read`."""
                 charge_header = next(inputfile)
                 assert charge_header.split()[0] == "Charge"
                 charge = float(next(inputfile).strip())
-                charge = utils.convertor(charge, 'statcoulomb', 'e') * 1e-10
+                charge = utils.convertor(charge, "statcoulomb", "e") * 1e-10
                 # Allow this to change until fragment jobs are properly implemented.
                 # assert abs(charge - self.charge) < 1e-4
 
@@ -1528,23 +1529,21 @@ cannot be determined. Rerun without `$molecule read`."""
                 assert line.strip() == "Dipole Moment (Debye)"
 
                 while "-----" not in line:
-
                     # The current multipole element will be gathered here.
                     multipole = []
 
                     line = next(inputfile)
                     while ("-----" not in line) and ("Moment" not in line):
-
                         cols = line.split()
 
                         # The total (norm) is printed for dipole but not other multipoles.
-                        if cols[0] == 'Tot':
+                        if cols[0] == "Tot":
                             line = next(inputfile)
                             continue
 
                         # Find and replace any 'stars' with NaN before moving on.
                         for i in range(len(cols)):
-                            if '***' in cols[i]:
+                            if "***" in cols[i]:
                                 cols[i] = numpy.nan
 
                         # The moments come in pairs (label followed by value) up to the 9-th order,
@@ -1552,20 +1551,24 @@ cannot be determined. Rerun without `$molecule read`."""
                         # in each coordinate. Above the 9-th order, ranks are not always single digits,
                         # so there are spaces between them, which means moments come in quartets.
                         if len(self.moments) < 5:
-                            for i in range(len(cols)//2):
-                                lbl = cols[2*i]
-                                m = cols[2*i + 1]
+                            for i in range(len(cols) // 2):
+                                lbl = cols[2 * i]
+                                m = cols[2 * i + 1]
                                 multipole.append([lbl, m])
                         elif len(self.moments) < 10:
-                            for i in range(len(cols)//2):
-                                lbl = cols[2*i]
-                                lbl = 'X'*int(lbl[0]) + 'Y'*int(lbl[1]) + 'Z'*int(lbl[2])
-                                m = cols[2*i + 1]
+                            for i in range(len(cols) // 2):
+                                lbl = cols[2 * i]
+                                lbl = "X" * int(lbl[0]) + "Y" * int(lbl[1]) + "Z" * int(lbl[2])
+                                m = cols[2 * i + 1]
                                 multipole.append([lbl, m])
                         else:
-                            for i in range(len(cols)//4):
-                                lbl = 'X'*int(cols[4*i]) + 'Y'*int(cols[4*i + 1]) + 'Z'*int(cols[4*i + 2])
-                                m = cols[4*i + 3]
+                            for i in range(len(cols) // 4):
+                                lbl = (
+                                    "X" * int(cols[4 * i])
+                                    + "Y" * int(cols[4 * i + 1])
+                                    + "Z" * int(cols[4 * i + 2])
+                                )
+                                m = cols[4 * i + 3]
                                 multipole.append([lbl, m])
 
                         line = next(inputfile)
@@ -1580,9 +1583,9 @@ cannot be determined. Rerun without `$molecule read`."""
             # For `method = force` or geometry optimizations,
             # the gradient is printed.
             if any(header in line for header in self.gradient_headers):
-                if not hasattr(self, 'grads'):
+                if not hasattr(self, "grads"):
                     self.grads = []
-                if 'SCF' in line:
+                if "SCF" in line:
                     ncolsblock = self.ncolsblock
                 else:
                     ncolsblock = 5
@@ -1590,11 +1593,11 @@ cannot be determined. Rerun without `$molecule read`."""
                 self.grads.append(grad.T)
 
             # (Static) polarizability from frequency calculations.
-            if 'Polarizability Matrix (a.u.)' in line:
-                if not hasattr(self, 'polarizabilities'):
+            if "Polarizability Matrix (a.u.)" in line:
+                if not hasattr(self, "polarizabilities"):
                     self.polarizabilities = []
                 polarizability = []
-                self.skip_line(inputfile, 'index header')
+                self.skip_line(inputfile, "index header")
                 for _ in range(3):
                     line = next(inputfile)
                     ss = line.strip()[1:]
@@ -1605,14 +1608,13 @@ cannot be determined. Rerun without `$molecule read`."""
             # For IR-related jobs, the Hessian is printed (dim: 3*natom, 3*natom).
             # Note that this is *not* the mass-weighted Hessian.
             if any(header in line for header in self.hessian_headers):
-                dim = 3*self.natom
+                dim = 3 * self.natom
                 self.set_attribute(
                     "hessian", QChem.parse_matrix(inputfile, dim, dim, self.ncolsblock)
                 )
 
             # Start of the IR/Raman frequency section.
-            if 'VIBRATIONAL ANALYSIS' in line:
-
+            if "VIBRATIONAL ANALYSIS" in line:
                 vibfreqs = []
                 vibfconsts = []
                 vibrmasses = []
@@ -1620,7 +1622,7 @@ cannot be determined. Rerun without `$molecule read`."""
                 vibramans = []
                 vibdisps = []
 
-                while 'STANDARD THERMODYNAMIC QUANTITIES' not in line:
+                while "STANDARD THERMODYNAMIC QUANTITIES" not in line:
                     ## IR, optional Raman:
                     #
                     # **********************************************************************
@@ -1660,23 +1662,23 @@ cannot be determined. Rerun without `$molecule read`."""
                     # in Q-Chem.
                     # if not hasattr(self, 'vibsyms'):
                     #     self.vibsyms = []
-                    if 'Frequency:' in line:
+                    if "Frequency:" in line:
                         vibfreqs.extend(map(float, line.split()[1:]))
 
-                    if 'Force Cnst:' in line:
+                    if "Force Cnst:" in line:
                         vibfconsts.extend(map(float, line.split()[2:]))
 
-                    if 'Red. Mass' in line:
+                    if "Red. Mass" in line:
                         vibrmasses.extend(map(float, line.split()[2:]))
 
-                    if 'IR Intens:' in line:
+                    if "IR Intens:" in line:
                         vibirs.extend(map(float, line.split()[2:]))
 
-                    if 'Raman Intens:' in line:
+                    if "Raman Intens:" in line:
                         vibramans.extend(map(float, line.split()[2:]))
 
                     # This is the start of the displacement block.
-                    if line.split()[0:3] == ['X', 'Y', 'Z']:
+                    if line.split()[0:3] == ["X", "Y", "Z"]:
                         disps = []
                         for k in range(self.natom):
                             line = next(inputfile)
@@ -1686,7 +1688,7 @@ cannot be determined. Rerun without `$molecule read`."""
                                 for n in range(N):
                                     disps.append([])
                             for n in range(N):
-                                disps[n].append(numbers[3*n:(3*n)+3])
+                                disps[n].append(numbers[3 * n : (3 * n) + 3])
                         vibdisps.extend(disps)
 
                     line = next(inputfile)
@@ -1717,74 +1719,70 @@ cannot be determined. Rerun without `$molecule read`."""
                 if vibdisps:
                     self.set_attribute("vibdisps", vibdisps)
 
-            if 'STANDARD THERMODYNAMIC QUANTITIES AT' in line:
-
-                if not hasattr(self, 'temperature'):
+            if "STANDARD THERMODYNAMIC QUANTITIES AT" in line:
+                if not hasattr(self, "temperature"):
                     self.temperature = float(line.split()[4])
                 # Not supported yet.
-                if not hasattr(self, 'pressure'):
+                if not hasattr(self, "pressure"):
                     self.pressure = float(line.split()[7])
-                self.skip_line(inputfile, 'blank')
+                self.skip_line(inputfile, "blank")
 
                 line = next(inputfile)
                 if self.natom == 1:
-                    assert 'Translational Enthalpy' in line
+                    assert "Translational Enthalpy" in line
                 else:
-                    assert 'Imaginary Frequencies' in line
+                    assert "Imaginary Frequencies" in line
                     line = next(inputfile)
                     # Not supported yet.
-                    assert 'Zero point vibrational energy' in line
-                    if not hasattr(self, 'zpe'):
+                    assert "Zero point vibrational energy" in line
+                    if not hasattr(self, "zpe"):
                         # Convert from kcal/mol to Hartree/particle.
-                        self.zpve = utils.convertor(float(line.split()[4]),
-                                                    'kcal/mol', 'hartree')
+                        self.zpve = utils.convertor(float(line.split()[4]), "kcal/mol", "hartree")
                     atommasses = []
-                    while 'Translational Enthalpy' not in line:
-                        if 'Has Mass' in line:
+                    while "Translational Enthalpy" not in line:
+                        if "Has Mass" in line:
                             atommass = float(line.split()[6])
                             atommasses.append(atommass)
                         line = next(inputfile)
-                    if not hasattr(self, 'atommasses'):
+                    if not hasattr(self, "atommasses"):
                         self.atommasses = numpy.array(atommasses)
 
                 while line.strip():
                     line = next(inputfile)
 
                 line = next(inputfile)
-                assert 'Total Enthalpy' in line
-                if not hasattr(self, 'enthalpy'):
+                assert "Total Enthalpy" in line
+                if not hasattr(self, "enthalpy"):
                     enthalpy = float(line.split()[2])
-                    self.enthalpy = utils.convertor(enthalpy,
-                                                    'kcal/mol', 'hartree')
+                    self.enthalpy = utils.convertor(enthalpy, "kcal/mol", "hartree")
                 line = next(inputfile)
-                assert 'Total Entropy' in line
-                if not hasattr(self, 'entropy'):
+                assert "Total Entropy" in line
+                if not hasattr(self, "entropy"):
                     entropy = float(line.split()[2]) / 1000
                     # This is the *temperature dependent* entropy.
-                    self.entropy = utils.convertor(entropy,
-                                                   'kcal/mol', 'hartree')
-                if not hasattr(self, 'freeenergy'):
+                    self.entropy = utils.convertor(entropy, "kcal/mol", "hartree")
+                if not hasattr(self, "freeenergy"):
                     self.freeenergy = self.enthalpy - self.entropy * self.temperature
 
         # Extract total elapsed (wall) and CPU job times
-        if line[:16] == ' Total job time:':
-            self.metadata['success'] = True
+        if line[:16] == " Total job time:":
+            self.metadata["success"] = True
             # create empty list for the times to be stored in
             if not "wall_time" in self.metadata:
-                self.metadata['wall_time'] = []
+                self.metadata["wall_time"] = []
             if not "cpu_time" in self.metadata:
-                self.metadata['cpu_time'] = []
+                self.metadata["cpu_time"] = []
             # the line format is " Total job time:  120.37s(wall), 2251.02s(cpu)" at the end of each job ran.
             # first split the line by white space
             try:
                 a = line.split()
                 # next split the second to last entry at the 's' to pull wall time
                 # cast as a float for use in timedelta data structure
-                wall_td = datetime.timedelta(seconds=float(a[-2].split('s')[0]))
+                wall_td = datetime.timedelta(seconds=float(a[-2].split("s")[0]))
                 # next split the last entry at the 's' to pull cpu time
                 # cast as a float for use in timedelta data structure
-                cpu_td = datetime.timedelta(seconds=float(a[-1].split('s')[0]))
-                self.metadata['wall_time'].append(wall_td)
-                self.metadata['cpu_time'].append(cpu_td)
+                cpu_td = datetime.timedelta(seconds=float(a[-1].split("s")[0]))
+                self.metadata["wall_time"].append(wall_td)
+                self.metadata["cpu_time"].append(cpu_td)
             except:
                 pass

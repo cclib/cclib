@@ -19,34 +19,36 @@ from cclib.parser import logfileparser
 from cclib.parser import utils
 from cclib.parser import data
 
+
 class AtomBasis:
     def __init__(self, atname, basis_name, inputfile):
-        self.symmetries=[]
-        self.coefficients=[]
-        self.atname=atname
-        self.basis_name=basis_name
+        self.symmetries = []
+        self.coefficients = []
+        self.atname = atname
+        self.basis_name = basis_name
 
         self.parse_basis(inputfile)
 
     def parse_basis(self, inputfile):
-        i=0
-        line=next(inputfile)
+        i = 0
+        line = next(inputfile)
 
-        while(line[0]!="*"):
-            (nbasis_text, symm)=line.split()
+        while line[0] != "*":
+            (nbasis_text, symm) = line.split()
             self.symmetries.append(symm)
 
-            nbasis=int(nbasis_text)
-            coeff_arr=numpy.zeros((nbasis, 2), float)
+            nbasis = int(nbasis_text)
+            coeff_arr = numpy.zeros((nbasis, 2), float)
 
             for j in range(0, nbasis, 1):
-                line=next(inputfile)
-                (e1_text, e2_text)=line.split()
-                coeff_arr[j][0]=float(e1_text)
-                coeff_arr[j][1]=float(e2_text)
+                line = next(inputfile)
+                (e1_text, e2_text) = line.split()
+                coeff_arr[j][0] = float(e1_text)
+                coeff_arr[j][1] = float(e2_text)
 
             self.coefficients.append(coeff_arr)
-            line=next(inputfile)
+            line = next(inputfile)
+
 
 class Turbomole(logfileparser.Logfile):
     """A Turbomole log file."""
@@ -58,7 +60,9 @@ class Turbomole(logfileparser.Logfile):
         self.is_DFT = False
 
         # A Regex that we use to extract version info.
-        self.version_regex = re.compile(r"TURBOMOLE(?: rev\.)? V([\d]+)[.-]([\d]+)(?:[.-]([\d]))?(?: \( ?([0-9A-z]+) ?\))?")
+        self.version_regex = re.compile(
+            r"TURBOMOLE(?: rev\.)? V([\d]+)[.-]([\d]+)(?:[.-]([\d]))?(?: \( ?([0-9A-z]+) ?\))?"
+        )
 
         # Regexes for parsing timings.
         self.days_regex = re.compile(r"([0-9.]*) days")
@@ -67,7 +71,7 @@ class Turbomole(logfileparser.Logfile):
         self.seconds_regex = re.compile(r"([0-9.]*) seconds")
 
         # Assume we're using one thread if we're not told otherwise.
-        self.metadata['num_cpu'] = 1
+        self.metadata["num_cpu"] = 1
 
     @classmethod
     def sort_input(self, file_names: typing.List[str]) -> typing.List:
@@ -75,15 +79,15 @@ class Turbomole(logfileparser.Logfile):
         If this parser expects multiple files to appear in a certain order, return that ordering.
         """
         sorting_order = {
-            'basis' : 0,
-            'control' : 1,
-            'mos' : 2,
-            'alpha' : 3,
-            'beta' : 4,
-            'job.last' : 5,
-            'coord' : 6,
-            'gradient' : 7,
-            'aoforce' : 8,
+            "basis": 0,
+            "control": 1,
+            "mos": 2,
+            "alpha": 3,
+            "beta": 4,
+            "job.last": 5,
+            "coord": 6,
+            "gradient": 7,
+            "aoforce": 8,
         }
 
         known_files = []
@@ -97,7 +101,7 @@ class Turbomole(logfileparser.Logfile):
             elif re.match(r"^job\.[0-9]+$", file_name):
                 # Calling 'jobex -keep' will also write job.n files, where n ranges from 0 to inf.
                 # Numbered job files are inserted before job.last.
-                job_number = int(file_name[4:]) +1
+                job_number = int(file_name[4:]) + 1
                 job_order = float(f"{sorting_order['job.last'] - 1}.{job_number}")
                 known_files.append([file, job_order])
 
@@ -130,7 +134,6 @@ class Turbomole(logfileparser.Logfile):
         return label.capitalize()
 
     def before_parsing(self):
-
         self.periodic_table = utils.PeriodicTable()
 
     @staticmethod
@@ -144,13 +147,13 @@ class Turbomole(logfileparser.Logfile):
         f3 = line[40:60]
         f4 = line[60:80]
 
-        if(len(f4) > 1):
+        if len(f4) > 1:
             return [float(f1), float(f2), float(f3), float(f4)]
-        if(len(f3) > 1):
+        if len(f3) > 1:
             return [float(f1), float(f2), float(f3)]
-        if(len(f2) > 1):
+        if len(f2) > 1:
             return [float(f1), float(f2)]
-        if(len(f1) > 1):
+        if len(f1) > 1:
             return [float(f1)]
 
     def extract(self, inputfile, line):
@@ -165,16 +168,16 @@ class Turbomole(logfileparser.Logfile):
         #   nbf(AO)=60
         #   dim(trafo[SAO<-->AO/CAO])=60
         #   rhfshells=1
-        if line[3:10]=="natoms=":
-            self.natom=int(line[10:])
+        if line[3:10] == "natoms=":
+            self.natom = int(line[10:])
 
         if line[3:11] == "nbf(AO)=":
-            nmo = int(line.split('=')[1])
-            self.set_attribute('nbasis', nmo)
+            nmo = int(line.split("=")[1])
+            self.set_attribute("nbasis", nmo)
 
         # Performance stuff.
         if "OpenMP run-time library returned nthreads =" in line:
-            self.metadata['num_cpu'] = int(line.split()[-1])
+            self.metadata["num_cpu"] = int(line.split()[-1])
 
         mem_match = re.match(r"^\$maxcor *([0-9.]*) *MiB *per_core$", line)
         if mem_match:
@@ -186,7 +189,7 @@ class Turbomole(logfileparser.Logfile):
         # Additionally, turbomole stores functional names in lower case. This looks odd, so we'll convert to uppercase (?)
         # We are parsing this section from the control file.
         if line[3:13] == "functional":
-            self.metadata['functional'] = line.split()[1].upper()
+            self.metadata["functional"] = line.split()[1].upper()
             self.is_DFT = True
 
         # Information about DFT is also printed by dscf in the main .log file.
@@ -206,7 +209,13 @@ class Turbomole(logfileparser.Logfile):
             # - TURBOMOLE rev. V7.4.1 (2bfdd732)
             # - TURBOMOLE V7.2 ( 21471 ) 11 Oct 2017 at 17:04:51
             # - TURBOMOLE V5-9-0 29 Nov 2006 at 22:06:41
-            version = ".".join([version_part for version_part in version_match.group(1,2,3) if version_part is not None])
+            version = ".".join(
+                [
+                    version_part
+                    for version_part in version_match.group(1, 2, 3)
+                    if version_part is not None
+                ]
+            )
 
             # We may also have a build ID.
             build_id = version_match.group(4)
@@ -217,14 +226,14 @@ class Turbomole(logfileparser.Logfile):
             )
 
             # We have entered a new module (sub program); reset our success flag.
-            self.metadata['success'] = False
+            self.metadata["success"] = False
 
         # Solvation.
         if "COSMO switched on" in line:
-            self.metadata['solvent_model'] = "COSMO"
+            self.metadata["solvent_model"] = "COSMO"
 
         elif "COSMO RESULTS" in line:
-            self.metadata['solvent_model'] = "COSMO"
+            self.metadata["solvent_model"] = "COSMO"
             line = next(inputfile)
             line = next(inputfile)
 
@@ -232,16 +241,16 @@ class Turbomole(logfileparser.Logfile):
                 line = next(inputfile)
 
                 if "solvent_params" not in self.metadata:
-                    self.metadata['solvent_params'] = {}
+                    self.metadata["solvent_params"] = {}
 
                 elif "epsilon:" in line:
-                    self.metadata['solvent_params']['epsilon'] = float(line.split()[-1])
+                    self.metadata["solvent_params"]["epsilon"] = float(line.split()[-1])
 
                 elif "refind:" in line:
-                    self.metadata['solvent_params']['refractive_index'] = float(line.split()[-1])
+                    self.metadata["solvent_params"]["refractive_index"] = float(line.split()[-1])
 
                 elif "fepsi:" in line:
-                    self.metadata['solvent_params']['f_epsilon'] = float(line.split()[-1])
+                    self.metadata["solvent_params"]["f_epsilon"] = float(line.split()[-1])
 
         ## Orbital occupation info from dscf.
         #  orbitals $scfmo  will be written to file mos
@@ -291,7 +300,7 @@ class Turbomole(logfileparser.Logfile):
                 if len(orbitals) > 0:
                     homo = self.determine_homo(self.mosyms[0], orbitals)
                     if not hasattr(self, "homos"):
-                        self.set_attribute('homos', [homo])
+                        self.set_attribute("homos", [homo])
                     else:
                         self.homos[0] = homo
 
@@ -300,7 +309,7 @@ class Turbomole(logfileparser.Logfile):
                 if len(orbitals) > 0:
                     homo = self.determine_homo(self.mosyms[1], orbitals)
                     if not hasattr(self, "homos"):
-                        self.set_attribute('homos', [homo])
+                        self.set_attribute("homos", [homo])
                     elif len(self.homos) == 1:
                         self.homos.append(homo)
                     else:
@@ -345,11 +354,13 @@ class Turbomole(logfileparser.Logfile):
             # This indicates the start of a new dipole section.
             # Safe to overwrite any old dipoles.
             parts = line.split()
-            self.moments = [[
-                utils.convertor(float(parts[-3]), "bohr", "Angstrom"),
-                utils.convertor(float(parts[-2]), "bohr", "Angstrom"),
-                utils.convertor(float(parts[-1]), "bohr", "Angstrom")
-            ]]
+            self.moments = [
+                [
+                    utils.convertor(float(parts[-3]), "bohr", "Angstrom"),
+                    utils.convertor(float(parts[-2]), "bohr", "Angstrom"),
+                    utils.convertor(float(parts[-1]), "bohr", "Angstrom"),
+                ]
+            ]
 
         if "nuc           elec       ->  total" in line:
             line = next(inputfile)
@@ -374,32 +385,32 @@ class Turbomole(logfileparser.Logfile):
             line = next(inputfile)
             if set(line.strip()) == {"-"}:
                 line = next(inputfile)
-                x_coord =  utils.convertor(float(line.split()[-1]), "ebohr", "Debye")
+                x_coord = utils.convertor(float(line.split()[-1]), "ebohr", "Debye")
                 line = next(inputfile)
-                y_coord =  utils.convertor(float(line.split()[-1]), "ebohr", "Debye")
+                y_coord = utils.convertor(float(line.split()[-1]), "ebohr", "Debye")
                 line = next(inputfile)
-                z_coord =  utils.convertor(float(line.split()[-1]), "ebohr", "Debye")
+                z_coord = utils.convertor(float(line.split()[-1]), "ebohr", "Debye")
 
                 # Assume 0,0,0 as origin if not given.
                 if not hasattr(self, "moments"):
-                    self.moments = [[0,0,0]]
+                    self.moments = [[0, 0, 0]]
                 self.moments.append([x_coord, y_coord, z_coord])
 
         if line.strip() == "quadrupole moment":
             line = next(inputfile)
             if set(line.strip()) == {"-"}:
                 line = next(inputfile)
-                xx_coord  = utils.convertor(float(line.split()[-1]), "ebohr2", "Buckingham")
+                xx_coord = utils.convertor(float(line.split()[-1]), "ebohr2", "Buckingham")
                 line = next(inputfile)
-                yy_coord  = utils.convertor(float(line.split()[-1]), "ebohr2", "Buckingham")
+                yy_coord = utils.convertor(float(line.split()[-1]), "ebohr2", "Buckingham")
                 line = next(inputfile)
-                zz_coord  = utils.convertor(float(line.split()[-1]), "ebohr2", "Buckingham")
+                zz_coord = utils.convertor(float(line.split()[-1]), "ebohr2", "Buckingham")
                 line = next(inputfile)
-                xy_coord  = utils.convertor(float(line.split()[-1]), "ebohr2", "Buckingham")
+                xy_coord = utils.convertor(float(line.split()[-1]), "ebohr2", "Buckingham")
                 line = next(inputfile)
-                xz_coord  = utils.convertor(float(line.split()[-1]), "ebohr2", "Buckingham")
+                xz_coord = utils.convertor(float(line.split()[-1]), "ebohr2", "Buckingham")
                 line = next(inputfile)
-                yz_coord  = utils.convertor(float(line.split()[-1]), "ebohr2", "Buckingham")
+                yz_coord = utils.convertor(float(line.split()[-1]), "ebohr2", "Buckingham")
                 self.moments.append([xx_coord, xy_coord, xz_coord, yy_coord, yz_coord, zz_coord])
 
         ## Basis set info from dscf.
@@ -504,12 +515,13 @@ class Turbomole(logfileparser.Logfile):
             line = next(inputfile)
             while len(line.split()) == 5:
                 atomnos.append(self.periodic_table.number[line.split()[-4].capitalize()])
-                atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom")
-                                   for x in line.split()[-3:]])
+                atomcoords.append(
+                    [utils.convertor(float(x), "bohr", "Angstrom") for x in line.split()[-3:]]
+                )
                 line = next(inputfile)
 
-            self.set_attribute('atomnos', atomnos)
-            self.set_attribute('natom', len(atomcoords))
+            self.set_attribute("atomnos", atomnos)
+            self.set_attribute("natom", len(atomcoords))
             self.append_attribute("grads", atomcoords)
 
         ## Atomic coordinates in job.last:
@@ -524,7 +536,7 @@ class Turbomole(logfileparser.Logfile):
         #     0.92683848   -0.00007460    2.49592179    c      3    6.000    0     0
         #     2.69176331   -0.00007127    0.44712612    c      3    6.000    0     0
         #     1.69851645   -0.00007331   -2.06488947    c      3    6.000    0     0
-        #...
+        # ...
         #    -7.04373606    0.00092244    2.74543891    h      1    1.000    0     0
         #    -9.36352819    0.00017229    0.07445322    h      1    1.000    0     0
         #    -0.92683849   -0.00007461   -2.49592179    c      3    6.000    0     0
@@ -549,8 +561,8 @@ class Turbomole(logfileparser.Logfile):
         # This is very annoying, but not disastrous as it is likely the coordinates from this step will have been already printed
         # from another module, so we can just ignore sections like this.
         try:
-            if 'Atomic coordinate, charge and isotop information' in line:
-                while 'atomic coordinates' not in line:
+            if "Atomic coordinate, charge and isotop information" in line:
+                while "atomic coordinates" not in line:
                     line = next(inputfile)
 
                 atomcoords = []
@@ -558,18 +570,19 @@ class Turbomole(logfileparser.Logfile):
                 line = next(inputfile)
                 while len(line.split()) >= 3:
                     atomnos.append(self.periodic_table.number[line.split()[3].capitalize()])
-                    atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom")
-                                       for x in line.split()[:3]])
+                    atomcoords.append(
+                        [utils.convertor(float(x), "bohr", "Angstrom") for x in line.split()[:3]]
+                    )
                     line = next(inputfile)
 
                 # Check the coordinates we just parsed are not already in atomcoords.
-                if not hasattr(self, 'atomcoords') or self.atomcoords[-1] != atomcoords:
-                    self.append_attribute('atomcoords', atomcoords)
-                    self.set_attribute('atomnos', atomnos)
-                    self.set_attribute('natom', len(atomcoords))
+                if not hasattr(self, "atomcoords") or self.atomcoords[-1] != atomcoords:
+                    self.append_attribute("atomcoords", atomcoords)
+                    self.set_attribute("atomnos", atomnos)
+                    self.set_attribute("natom", len(atomcoords))
         except Exception as e:
             # Something went wrong, check to see if the coord line we parsed was garbage, or if something else happened.
-            if set(line.strip()).issubset({' ', '.'}):
+            if set(line.strip()).issubset({" ", "."}):
                 # This line is a truncated coord line, we can skip this coord section.
                 pass
             else:
@@ -628,14 +641,13 @@ class Turbomole(logfileparser.Logfile):
 
             if all(convergence):
                 # This iteration has converged.
-                self.append_attribute("optdone", len(self.geovalues) -1)
+                self.append_attribute("optdone", len(self.geovalues) - 1)
                 self.optstatus[-1] += data.ccData.OPT_DONE
             else:
                 # Not converged.
-                if not hasattr(self, 'optdone'):
+                if not hasattr(self, "optdone"):
                     self.set_attribute("optdone", [])
-                #self.optstatus[-1] += data.ccData.OPT_UNCONVERGED
-
+                # self.optstatus[-1] += data.ccData.OPT_UNCONVERGED
 
         # Frequency values in aoforce.out
         #        mode               7        8        9       10       11       12
@@ -658,38 +670,36 @@ class Turbomole(logfileparser.Logfile):
         #
         # reduced mass(g/mol)     3.315    2.518    2.061    3.358    3.191    2.323
 
-        if 'NORMAL MODES and VIBRATIONAL FREQUENCIES (cm**(-1))' in line:
+        if "NORMAL MODES and VIBRATIONAL FREQUENCIES (cm**(-1))" in line:
             has_raman = False
-            while line[7:11] != 'mode':
+            while line[7:11] != "mode":
                 line = next(inputfile)
                 if line.startswith(" differential RAMAN cross sections"):
                     has_raman = True
             vibfreqs, vibsyms, vibirs, vibdisps, vibrmasses = [], [], [], [], []
-            while 'all done  ****' not in line:
-
-                if line.strip().startswith('mode'):
-                    self.skip_line(inputfile, 'b')
+            while "all done  ****" not in line:
+                if line.strip().startswith("mode"):
+                    self.skip_line(inputfile, "b")
                     line = next(inputfile)
-                    assert line.strip().startswith('frequency')
-                    freqs = [float(i.replace('i', '-')) for i in line.split()[1:]]
+                    assert line.strip().startswith("frequency")
+                    freqs = [float(i.replace("i", "-")) for i in line.split()[1:]]
                     vibfreqs.extend(freqs)
-                    self.skip_lines(inputfile, ['b'])
+                    self.skip_lines(inputfile, ["b"])
                     line = next(inputfile)
-                    assert line.strip().startswith('symmetry')
+                    assert line.strip().startswith("symmetry")
                     syms = [self.normalisesym(sym) for sym in line.split()[1:]]
                     vibsyms.extend(syms)
 
-                    self.skip_lines(inputfile, ['b', 'IR', 'dDIP/dQ'])
+                    self.skip_lines(inputfile, ["b", "IR", "dDIP/dQ"])
                     line = next(inputfile)
-                    assert line.strip().startswith('intensity (km/mol)')
+                    assert line.strip().startswith("intensity (km/mol)")
                     irs = [utils.float(f) for f in line.split()[2:]]
                     vibirs.extend(irs)
 
-                    self.skip_lines(inputfile, ['intensity %', 'b', 'RAMAN'])
+                    self.skip_lines(inputfile, ["intensity %", "b", "RAMAN"])
                     if has_raman:
                         self.skip_lines(
-                            inputfile,
-                            ['(par,par)', '(ort,ort)', '(ort,unpol)', 'depol. ratio']
+                            inputfile, ["(par,par)", "(ort,ort)", "(ort,unpol)", "depol. ratio"]
                         )
                     line = next(inputfile)
                     assert not line.strip()
@@ -712,7 +722,7 @@ class Turbomole(logfileparser.Logfile):
                         vibdisps.append(disps)
 
                     line = next(inputfile)
-                    assert line.startswith('reduced mass(g/mol)')
+                    assert line.startswith("reduced mass(g/mol)")
                     rmasses = [utils.float(f) for f in line.split()[2:]]
                     vibrmasses.extend(rmasses)
 
@@ -721,11 +731,11 @@ class Turbomole(logfileparser.Logfile):
 
                 line = next(inputfile)
 
-            self.set_attribute('vibfreqs', vibfreqs)
-            self.set_attribute('vibsyms', vibsyms)
-            self.set_attribute('vibirs', vibirs)
-            self.set_attribute('vibdisps', vibdisps)
-            self.set_attribute('vibrmasses', vibrmasses)
+            self.set_attribute("vibfreqs", vibfreqs)
+            self.set_attribute("vibsyms", vibsyms)
+            self.set_attribute("vibirs", vibirs)
+            self.set_attribute("vibdisps", vibdisps)
+            self.set_attribute("vibrmasses", vibrmasses)
 
         # In this section we are parsing mocoeffs and moenergies from
         # the files like: mos, alpha and beta.
@@ -738,13 +748,13 @@ class Turbomole(logfileparser.Logfile):
         # ...
         # ...
         # $end
-        if (line.startswith('$scfmo') or line.startswith('$uhfmo')) and line.find('scfconv') > 0:
-            if line.strip().startswith('$uhfmo_alpha'):
+        if (line.startswith("$scfmo") or line.startswith("$uhfmo")) and line.find("scfconv") > 0:
+            if line.strip().startswith("$uhfmo_alpha"):
                 self.unrestricted = True
 
             # Need to skip the first line to start with lines starting with '#'.
             line = next(inputfile)
-            while line.strip().startswith('#') and not line.find('eigenvalue') > 0:
+            while line.strip().startswith("#") and not line.find("eigenvalue") > 0:
                 line = next(inputfile)
 
             moirreps = []
@@ -752,23 +762,25 @@ class Turbomole(logfileparser.Logfile):
             mocoeffs = []
             mosyms = []
 
-            while not line.strip().startswith('$'):
+            while not line.strip().startswith("$"):
                 number, sym = line.split()[:2]
                 number = int(number)
                 sym = self.normalisesym(sym)
 
-                info = re.match(r".*eigenvalue=(?P<moenergy>[0-9D\.+-]{20})\s+nsaos=(?P<count>\d+).*", line)
-                eigenvalue = utils.float(info.group('moenergy'))
-                orbital_energy = utils.convertor(eigenvalue, 'hartree', 'eV')
+                info = re.match(
+                    r".*eigenvalue=(?P<moenergy>[0-9D\.+-]{20})\s+nsaos=(?P<count>\d+).*", line
+                )
+                eigenvalue = utils.float(info.group("moenergy"))
+                orbital_energy = utils.convertor(eigenvalue, "hartree", "eV")
 
                 moenergies.append(orbital_energy)
                 mosyms.append(sym)
                 moirreps.append((number, sym))
 
                 single_coeffs = []
-                nsaos = int(info.group('count'))
+                nsaos = int(info.group("count"))
 
-                while(len(single_coeffs) < nsaos):
+                while len(single_coeffs) < nsaos:
                     line = next(inputfile)
                     single_coeffs.extend(Turbomole.split_molines(line))
 
@@ -782,7 +794,7 @@ class Turbomole(logfileparser.Logfile):
 
             # We now need to sort our orbitals (because Turbomole groups them by symm).
             mos = list(zip(moenergies, mocoeffs, mosyms, moirreps))
-            mos.sort(key = lambda mo: mo[0])
+            mos.sort(key=lambda mo: mo[0])
             moenergies, mocoeffs, mosyms, moirreps = zip(*mos)
 
             # MO irreps is not actually recognised as a cclib attribute,
@@ -824,46 +836,54 @@ class Turbomole(logfileparser.Logfile):
         #                 :  virial theorem    =      1.98255043001  :
         #                 :  wavefunction norm =      1.00000000000  :
         #                  ..........................................
-        if 'scf convergence criterion' in line:
+        if "scf convergence criterion" in line:
             total_energy_threshold = utils.float(line.split()[-1])
             one_electron_energy_threshold = utils.float(next(inputfile).split()[-1])
             scftargets = [total_energy_threshold, one_electron_energy_threshold]
-            self.append_attribute('scftargets', scftargets)
+            self.append_attribute("scftargets", scftargets)
 
             # Get ready for SCF iteration energies.
             self.iter_energy = []
             self.iter_one_elec_energy = []
 
-        if 'ITERATION  ENERGY' in line:
-            while 'convergence criteria satisfied' not in line:
+        if "ITERATION  ENERGY" in line:
+            while "convergence criteria satisfied" not in line:
                 # nbasis
                 # Doesn't appear to do anything, number of basis functions does not appear in this section?
-                #if  "number of basis functions" in line:
+                # if  "number of basis functions" in line:
                 #    self.set_attribute("nbasis", int(line.split()[-1]))
 
-                if 'ITERATION  ENERGY' in line:
+                if "ITERATION  ENERGY" in line:
                     line = next(inputfile)
                     info = line.split()
                     self.iter_energy.append(utils.float(info[1]))
                     self.iter_one_elec_energy.append(utils.float(info[2]))
                 line = next(inputfile)
 
-            assert len(self.iter_energy) == len(self.iter_one_elec_energy), \
-                'Different number of values found for total energy and one electron energy.'
-            scfvalues = [[x - y, a - b] for x, y, a, b in
-                         zip(self.iter_energy[1:], self.iter_energy[:-1], self.iter_one_elec_energy[1:], self.iter_one_elec_energy[:-1])]
-            self.append_attribute('scfvalues', scfvalues)
-            while 'total energy' not in line:
+            assert len(self.iter_energy) == len(
+                self.iter_one_elec_energy
+            ), "Different number of values found for total energy and one electron energy."
+            scfvalues = [
+                [x - y, a - b]
+                for x, y, a, b in zip(
+                    self.iter_energy[1:],
+                    self.iter_energy[:-1],
+                    self.iter_one_elec_energy[1:],
+                    self.iter_one_elec_energy[:-1],
+                )
+            ]
+            self.append_attribute("scfvalues", scfvalues)
+            while "total energy" not in line:
                 line = next(inputfile)
 
-            scfenergy = utils.convertor(utils.float(line.split()[4]), 'hartree', 'eV')
-            self.append_attribute('scfenergies', scfenergy)
+            scfenergy = utils.convertor(utils.float(line.split()[4]), "hartree", "eV")
+            self.append_attribute("scfenergies", scfenergy)
 
             # We need to determine whether this is a HF or DFT energy for metadata.
             if self.is_DFT:
-                self.metadata['methods'].append("DFT")
+                self.metadata["methods"].append("DFT")
             else:
-                self.metadata['methods'].append("HF")
+                self.metadata["methods"].append("HF")
 
         #  **********************************************************************
         #  *                                                                    *
@@ -886,19 +906,18 @@ class Turbomole(logfileparser.Logfile):
         #  *   D1 diagnostic                           :      0.0132            *
         #  *                                                                    *
         #  **********************************************************************
-        if 'Final CCSD energy' in line or 'Final CC2 energy' in line:
+        if "Final CCSD energy" in line or "Final CC2 energy" in line:
             self.append_attribute(
-                'ccenergies',
-                utils.convertor(utils.float(line.split()[5]), 'hartree', 'eV')
+                "ccenergies", utils.convertor(utils.float(line.split()[5]), "hartree", "eV")
             )
-            self.metadata['methods'].append("CCSD")
+            self.metadata["methods"].append("CCSD")
 
         # Look for MP energies.
-        for mp_level in range(2,6):
+        for mp_level in range(2, 6):
             if f"Final MP{mp_level} energy" in line:
-                mpenergy = utils.convertor(utils.float(line.split()[5]), 'hartree', 'eV')
+                mpenergy = utils.convertor(utils.float(line.split()[5]), "hartree", "eV")
                 if mp_level == 2:
-                    self.append_attribute('mpenergies', [mpenergy])
+                    self.append_attribute("mpenergies", [mpenergy])
                 else:
                     self.mpenergies[-1].append(mpenergy)
                 self.metadata["methods"].append(f"MP{mp_level}")
@@ -912,12 +931,12 @@ class Turbomole(logfileparser.Logfile):
         #  *     (MP2-energy evaluated from T2 amplitudes)     *
         #  *                                                   *
         #  *****************************************************
-        if 'MP2-energy' in line:
+        if "MP2-energy" in line:
             line = next(inputfile)
-            if 'total' in line:
-                mp2energy = [utils.convertor(utils.float(line.split()[3]), 'hartree', 'eV')]
-                self.append_attribute('mpenergies', mp2energy)
-                self.metadata['methods'].append("MP2")
+            if "total" in line:
+                mp2energy = [utils.convertor(utils.float(line.split()[3]), "hartree", "eV")]
+                self.append_attribute("mpenergies", mp2energy)
+                self.metadata["methods"].append("MP2")
 
         # Support for the now outdated (?) rimp2
         # ------------------------------------------------
@@ -929,9 +948,9 @@ class Turbomole(logfileparser.Logfile):
         if not hasattr(self, "mpenergies"):
             if "Method          :  MP2" in line:
                 line = next(inputfile)
-                mp2energy = [utils.convertor(utils.float(line.split()[3]), 'hartree', 'eV')]
-                self.append_attribute('mpenergies', mp2energy)
-                self.metadata['methods'].append("MP2")
+                mp2energy = [utils.convertor(utils.float(line.split()[3]), "hartree", "eV")]
+                self.append_attribute("mpenergies", mp2energy)
+                self.metadata["methods"].append("MP2")
 
         # Excited state metadata.
         # For escf (HF/DFT), there are (up to) two lines of interest.
@@ -952,7 +971,7 @@ class Turbomole(logfileparser.Logfile):
             "CI SINGLES SINGLET-CALCULATION (TAMM-DANCOFF-APPROXIMATION)",
             "CI SINGLES TRIPLET-CALCULATION (TAMM-DANCOFF-APPROXIMATION)",
             "RPA SINGLET-EXCITATION-CALCULATION",
-            "RPA TRIPLET-EXCITATION-CALCULATION"
+            "RPA TRIPLET-EXCITATION-CALCULATION",
         ):
             if "CI SINGLES" in line:
                 method = "CIS"
@@ -970,8 +989,7 @@ class Turbomole(logfileparser.Logfile):
                 else:
                     method = "TD-DFT"
 
-            self.metadata['excited_states_method'] = method
-
+            self.metadata["excited_states_method"] = method
 
         # Excited state info from escf.
         #                          1 singlet a excitation
@@ -1031,7 +1049,7 @@ class Turbomole(logfileparser.Logfile):
             self.append_attribute("etsyms", symmetry)
 
             # Energy should be in cm-1...
-            energy = utils.convertor(utils.float(line.split()[-1]), 'hartree', 'wavenumber')
+            energy = utils.convertor(utils.float(line.split()[-1]), "hartree", "wavenumber")
             self.append_attribute("etenergies", energy)
 
             # Oscillator strength.
@@ -1055,7 +1073,7 @@ class Turbomole(logfileparser.Logfile):
             line = next(inputfile)
 
             # We can't get transitions if we don't have any orbitals.
-            if hasattr(self, 'moirreps'):
+            if hasattr(self, "moirreps"):
                 transitions = []
 
                 while len(line.split()) > 0:
@@ -1088,20 +1106,18 @@ class Turbomole(logfileparser.Logfile):
                     # Finally, get our coefficient.
                     # Sadly, Turbomole only prints |coeff.|^2*100, so we can't determine whether
                     # the coefficient is negative or positive...
-                    coeff = (utils.float(parts[-1]) /100) ** 0.5
+                    coeff = (utils.float(parts[-1]) / 100) ** 0.5
 
                     # Add to list.
-                    transitions.append((
-                        (start_MO, start_AB),
-                        (end_MO, end_AB),
-                        coeff
-                    ))
+                    transitions.append(((start_MO, start_AB), (end_MO, end_AB), coeff))
 
                     # Go again.
                     line = next(inputfile)
 
                 # Print a warning because we're missing the sign (+/-) of etsecs.
-                self.logger.warning("The sign (+/-) of the coefficient for singly-excited configurations is not available")
+                self.logger.warning(
+                    "The sign (+/-) of the coefficient for singly-excited configurations is not available"
+                )
                 self.append_attribute("etsecs", transitions)
 
             # Transition dipoles.
@@ -1135,9 +1151,9 @@ class Turbomole(logfileparser.Logfile):
             # where a is the fine structure constant (~ 1/137) (Thanks to Uwe Huniar for this info).
             # Weirdly, this conversion does not seem to exactly match the bohr-magneton value
             # printed by turbomole...
-            self.append_attribute("etmagdips", [i / (0.5 * scipy.constants.alpha) for i in (tmdm_x, tmdm_y, tmdm_z)])
-
-
+            self.append_attribute(
+                "etmagdips", [i / (0.5 * scipy.constants.alpha) for i in (tmdm_x, tmdm_y, tmdm_z)]
+            )
 
         # Excitation energies with ricc2.
         #  +================================================================================+
@@ -1156,11 +1172,13 @@ class Turbomole(logfileparser.Logfile):
         #  | a   |   1   |   9   |    0.4454969 |   12.12259 |  97775.273 |  94.26 |   5.74 |
         #  | a   |   1   |  10   |    0.5036295 |   13.70446 | 110533.909 |  93.51 |   6.49 |
         #  +================================================================================+
-        if "| sym | multi | state |" in  line and "|  %t1   |  %t2   |" in line:
-            self.metadata['excited_states_method'] = line.split()[7]
+        if "| sym | multi | state |" in line and "|  %t1   |  %t2   |" in line:
+            self.metadata["excited_states_method"] = line.split()[7]
 
-            if self.metadata['excited_states_method'][:3] == "CCS":
-                self.metadata['excited_states_method'] = "EOM-" + self.metadata['excited_states_method']
+            if self.metadata["excited_states_method"][:3] == "CCS":
+                self.metadata["excited_states_method"] = (
+                    "EOM-" + self.metadata["excited_states_method"]
+                )
 
             self.skip_lines(inputfile, ["divider", "units", "divider"])
             line = next(inputfile)
@@ -1237,7 +1255,7 @@ class Turbomole(logfileparser.Logfile):
                 # Determine our start orbital.
                 # Unlike the HF/DFT level excited states printed by escf, ricc2 prints
                 # the orbital index directly.
-                start_MO = int(parts[3]) -1
+                start_MO = int(parts[3]) - 1
 
                 # Get alpha/beta, deleting "alpha" or "beta" from the line so our
                 # indexes are aligned for both RHF and UHF.
@@ -1251,7 +1269,7 @@ class Turbomole(logfileparser.Logfile):
                     start_AB = 0
 
                 # And end orbital.
-                end_MO = int(parts[7]) -1
+                end_MO = int(parts[7]) - 1
 
                 if parts[8] == "(b)":
                     end_AB = 1
@@ -1264,11 +1282,7 @@ class Turbomole(logfileparser.Logfile):
                 coeff = utils.float(parts[-3])
 
                 # Add to list.
-                transitions.append((
-                    (start_MO, start_AB),
-                    (end_MO, end_AB),
-                    coeff
-                ))
+                transitions.append(((start_MO, start_AB), (end_MO, end_AB), coeff))
 
                 # Go again.
                 line = next(inputfile)
@@ -1286,42 +1300,42 @@ class Turbomole(logfileparser.Logfile):
         # Parse timings.
         if "total  cpu-time :" in line:
             if "cpu_time" not in self.metadata:
-                self.metadata['cpu_time'] = []
-            self.metadata['cpu_time'].append(self.duration_to_timedelta(line))
+                self.metadata["cpu_time"] = []
+            self.metadata["cpu_time"].append(self.duration_to_timedelta(line))
 
         if "total wall-time :" in line:
             if "wall_time" not in self.metadata:
-                self.metadata['wall_time'] = []
-            self.metadata['wall_time'].append(self.duration_to_timedelta(line))
+                self.metadata["wall_time"] = []
+            self.metadata["wall_time"].append(self.duration_to_timedelta(line))
 
         # All done for this loop.
 
         if ": all done  ****" in line:
             # End of module, set success flag.
-            self.metadata['success'] = True
+            self.metadata["success"] = True
 
     def duration_to_timedelta(self, duration_str):
         """
         Convert a Turbomole duration string into an equivalent timedelta object.
         """
-        time_parts = {'days': 0, 'hours': 0, 'minutes': 0, 'seconds': 0}
+        time_parts = {"days": 0, "hours": 0, "minutes": 0, "seconds": 0}
 
         for time_part in time_parts:
             # Use regex to look for each part in the string.
-            match = getattr(self, time_part + '_regex').search(duration_str)
+            match = getattr(self, time_part + "_regex").search(duration_str)
             if match:
                 time_parts[time_part] = float(match.group(1))
 
         # Build a timedelta from our parts.
         duration = timedelta(
-            days = time_parts['days'],
-            hours = time_parts['hours'],
-            minutes = time_parts['minutes'],
-            milliseconds = time_parts['seconds'] * 1000)
+            days=time_parts["days"],
+            hours=time_parts["hours"],
+            minutes=time_parts["minutes"],
+            milliseconds=time_parts["seconds"] * 1000,
+        )
 
         # All done.
         return duration
-
 
     def split_irrep(self, irrep):
         """
@@ -1418,14 +1432,21 @@ class Turbomole(logfileparser.Logfile):
             occupations.extend([0.0] * (len(irreps) - len(occupations)))
 
             # Add to list.
-            orbitals.extend([
-                 {'irrep': irrep, 'energy_H': energy_H, 'energy_eV': energy_eV, 'occupancy': occupation}
-                 for irrep, energy_H, energy_eV, occupation
-                 in zip(irreps, energies_hartree, energies_eV, occupations)
-            ])
+            orbitals.extend(
+                [
+                    {
+                        "irrep": irrep,
+                        "energy_H": energy_H,
+                        "energy_eV": energy_eV,
+                        "occupancy": occupation,
+                    }
+                    for irrep, energy_H, energy_eV, occupation in zip(
+                        irreps, energies_hartree, energies_eV, occupations
+                    )
+                ]
+            )
 
         return orbitals, line
-
 
     def determine_homo(self, mosyms, dscf_mos):
         """
@@ -1452,9 +1473,9 @@ class Turbomole(logfileparser.Logfile):
         # We now need to determine which orbital with occupancy is highest.
         homo = 0
         for mo in dscf_mos:
-            if mo['occupancy'] > 0:
+            if mo["occupancy"] > 0:
                 # This orbital has electrons, determine its position out of all orbitals.
-                index = irreps.index(self.split_irrep(mo['irrep']))
+                index = irreps.index(self.split_irrep(mo["irrep"]))
                 if index > homo:
                     homo = index
 
@@ -1472,7 +1493,7 @@ class Turbomole(logfileparser.Logfile):
             i += 1
 
     def after_parsing(self):
-        if hasattr(self, 'vibfreqs'):
+        if hasattr(self, "vibfreqs"):
             self.deleting_modes(self.vibfreqs, self.vibdisps, self.vibirs, self.vibrmasses)
 
         # Try and determine our multiplicity from our orbitals.
@@ -1483,7 +1504,7 @@ class Turbomole(logfileparser.Logfile):
             else:
                 # Unrestricted, the difference in homos should tell us the no. of unpaired e-.
                 unpaired_e = abs(self.homos[0] - self.homos[1])
-                self.set_attribute("mult", unpaired_e +1)
+                self.set_attribute("mult", unpaired_e + 1)
 
         # Set a flag if we stopped part way through an opt.
         if hasattr(self, "optstatus") and self.optstatus[-1] != data.ccData.OPT_DONE:
@@ -1491,7 +1512,7 @@ class Turbomole(logfileparser.Logfile):
 
         # Set memory from mem per cpu.
         if hasattr(self, "memory_per_cpu"):
-            self.metadata['memory_available'] = int(self.memory_per_cpu * self.metadata['num_cpu'])
+            self.metadata["memory_available"] = int(self.memory_per_cpu * self.metadata["num_cpu"])
 
 
 class OldTurbomole(logfileparser.Logfile):
@@ -1511,93 +1532,93 @@ class OldTurbomole(logfileparser.Logfile):
     def atlist(self, atstr):
         # turn atstr from atoms section into array
 
-        fields=atstr.split(',')
-        list=[]
+        fields = atstr.split(",")
+        list = []
         for f in fields:
-            if(f.find('-')!=-1):
-                rangefields=f.split('-')
-                start=int(rangefields[0])
-                end=int(rangefields[1])
+            if f.find("-") != -1:
+                rangefields = f.split("-")
+                start = int(rangefields[0])
+                end = int(rangefields[1])
 
-                for j in range(start, end+1, 1):
-                    list.append(j-1)
+                for j in range(start, end + 1, 1):
+                    list.append(j - 1)
             else:
-                list.append(int(f)-1)
-        return(list)
+                list.append(int(f) - 1)
+        return list
 
     def normalisesym(self, label):
         """Normalise the symmetries used by Turbomole."""
         return ans
 
     def before_parsing(self):
-        self.geoopt = False # Is this a GeoOpt? Needed for SCF targets/values.
+        self.geoopt = False  # Is this a GeoOpt? Needed for SCF targets/values.
 
     def split_molines(self, inline):
-        line=inline.replace("D", "E")
-        f1=line[0:20]
-        f2=line[20:40]
-        f3=line[40:60]
-        f4=line[60:80]
+        line = inline.replace("D", "E")
+        f1 = line[0:20]
+        f2 = line[20:40]
+        f3 = line[40:60]
+        f4 = line[60:80]
 
-        if(len(f4)>1):
-            return( (float(f1), float(f2), float(f3), float(f4)) )
-        if(len(f3)>1):
-            return( (float(f1), float(f2), float(f3)) )
-        if(len(f2)>1):
-            return( (float(f1), float(f2)) )
-        if(len(f1)>1):
-            return([float(f1)])
+        if len(f4) > 1:
+            return (float(f1), float(f2), float(f3), float(f4))
+        if len(f3) > 1:
+            return (float(f1), float(f2), float(f3))
+        if len(f2) > 1:
+            return (float(f1), float(f2))
+        if len(f1) > 1:
+            return [float(f1)]
         return
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
-        if line[3:11]=="nbf(AO)=":
-            nmo=int(line[11:])
-            self.nbasis=nmo
-            self.nmo=nmo
-        if line[3:9]=="nshell":
-            temp=line.split('=')
-            homos=int(temp[1])
+        if line[3:11] == "nbf(AO)=":
+            nmo = int(line[11:])
+            self.nbasis = nmo
+            self.nmo = nmo
+        if line[3:9] == "nshell":
+            temp = line.split("=")
+            homos = int(temp[1])
 
         if line[0:6] == "$basis":
             print("Found basis")
-            self.basis_lib=[]
+            self.basis_lib = []
             line = next(inputfile)
             line = next(inputfile)
 
-            while line[0] != '*' and line[0] != '$':
-                temp=line.split()
+            while line[0] != "*" and line[0] != "$":
+                temp = line.split()
                 line = next(inputfile)
-                while line[0]=="#":
+                while line[0] == "#":
                     line = next(inputfile)
                 self.basis_lib.append(AtomBasis(temp[0], temp[1], inputfile))
                 line = next(inputfile)
         if line == "$ecp\n":
-            self.ecp_lib=[]
+            self.ecp_lib = []
 
             line = next(inputfile)
             line = next(inputfile)
 
-            while line[0] != '*' and line[0] != '$':
-                fields=line.split()
-                atname=fields[0]
-                ecpname=fields[1]
+            while line[0] != "*" and line[0] != "$":
+                fields = line.split()
+                atname = fields[0]
+                ecpname = fields[1]
                 line = next(inputfile)
                 line = next(inputfile)
-                fields=line.split()
+                fields = line.split()
                 ncore = int(fields[2])
 
-                while line[0] != '*':
+                while line[0] != "*":
                     line = next(inputfile)
                 self.ecp_lib.append([atname, ecpname, ncore])
 
         if line[0:6] == "$coord":
             if line[0:11] == "$coordinate":
-#                print "Breaking"
+                #                print "Breaking"
                 return
 
-#            print "Found coords"
+            #            print "Found coords"
             self.atomcoords = []
             self.atomnos = []
             atomcoords = []
@@ -1605,15 +1626,16 @@ class OldTurbomole(logfileparser.Logfile):
 
             line = next(inputfile)
             if line[0:5] == "$user":
-#                print "Breaking"
+                #                print "Breaking"
                 return
 
             while line[0] != "$":
                 temp = line.split()
-                atsym=temp[3].capitalize()
+                atsym = temp[3].capitalize()
                 atomnos.append(self.table.number[atsym])
-                atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom")
-                                   for x in temp[0:3]])
+                atomcoords.append(
+                    [utils.convertor(float(x), "bohr", "Angstrom") for x in temp[0:3]]
+                )
                 line = next(inputfile)
             self.atomcoords.append(atomcoords)
             self.atomnos = numpy.array(atomnos, "i")
@@ -1628,11 +1650,12 @@ class OldTurbomole(logfileparser.Logfile):
                 temp = line.split()
                 atsym = temp[3].capitalize()
                 atomnos.append(self.table.number[atsym])
-                atomcoords.append([utils.convertor(float(x), "bohr", "Angstrom")
-                                    for x in temp[0:3]])
+                atomcoords.append(
+                    [utils.convertor(float(x), "bohr", "Angstrom") for x in temp[0:3]]
+                )
                 line = next(inputfile)
 
-            if not hasattr(self,"atomcoords"):
+            if not hasattr(self, "atomcoords"):
                 self.atomcoords = []
 
             self.atomcoords.append(atomcoords)
@@ -1641,274 +1664,222 @@ class OldTurbomole(logfileparser.Logfile):
         if line[0:6] == "$atoms":
             print("parsing atoms")
             line = next(inputfile)
-            self.atomlist=[]
-            while line[0]!="$":
-                temp=line.split()
-                at=temp[0]
-                atnosstr=temp[1]
+            self.atomlist = []
+            while line[0] != "$":
+                temp = line.split()
+                at = temp[0]
+                atnosstr = temp[1]
                 while atnosstr[-1] == ",":
                     line = next(inputfile)
-                    temp=line.split()
-                    atnosstr=atnosstr+temp[0]
-#                print "Debug:", atnosstr
-                atlist=self.atlist(atnosstr)
+                    temp = line.split()
+                    atnosstr = atnosstr + temp[0]
+                #                print "Debug:", atnosstr
+                atlist = self.atlist(atnosstr)
 
                 line = next(inputfile)
 
-                temp=line.split()
-#                print "Debug basisname (temp):",temp
-                basisname=temp[2]
-                ecpname=''
+                temp = line.split()
+                #                print "Debug basisname (temp):",temp
+                basisname = temp[2]
+                ecpname = ""
                 line = next(inputfile)
-                while(line.find('jbas')!=-1 or line.find('ecp')!=-1 or
-                      line.find('jkbas')!=-1):
-                    if line.find('ecp')!=-1:
-                        temp=line.split()
-                        ecpname=temp[2]
+                while line.find("jbas") != -1 or line.find("ecp") != -1 or line.find("jkbas") != -1:
+                    if line.find("ecp") != -1:
+                        temp = line.split()
+                        ecpname = temp[2]
                     line = next(inputfile)
 
-                self.atomlist.append( (at, basisname, ecpname, atlist))
+                self.atomlist.append((at, basisname, ecpname, atlist))
 
-# I have no idea what this does, so "comment" out
-        if line[3:10]=="natoms=":
-#        if 0:
+        # I have no idea what this does, so "comment" out
+        if line[3:10] == "natoms=":
+            #        if 0:
 
-            self.natom=int(line[10:])
+            self.natom = int(line[10:])
 
-            basistable=[]
+            basistable = []
 
             for i in range(0, self.natom, 1):
                 for j in range(0, len(self.atomlist), 1):
                     for k in range(0, len(self.atomlist[j][3]), 1):
-                        if self.atomlist[j][3][k]==i:
-                            basistable.append((self.atomlist[j][0],
-                                                   self.atomlist[j][1],
-                                               self.atomlist[j][2]))
-            self.aonames=[]
-            counter=1
+                        if self.atomlist[j][3][k] == i:
+                            basistable.append(
+                                (self.atomlist[j][0], self.atomlist[j][1], self.atomlist[j][2])
+                            )
+            self.aonames = []
+            counter = 1
             for a, b, c in basistable:
-                ncore=0
+                ncore = 0
                 if len(c) > 0:
                     for i in range(0, len(self.ecp_lib), 1):
-                        if self.ecp_lib[i][0]==a and \
-                           self.ecp_lib[i][1]==c:
-                            ncore=self.ecp_lib[i][2]
+                        if self.ecp_lib[i][0] == a and self.ecp_lib[i][1] == c:
+                            ncore = self.ecp_lib[i][2]
 
                 for i in range(0, len(self.basis_lib), 1):
-                    if self.basis_lib[i].atname==a and self.basis_lib[i].basis_name==b:
-                        pa=a.capitalize()
-                        basis=self.basis_lib[i]
+                    if self.basis_lib[i].atname == a and self.basis_lib[i].basis_name == b:
+                        pa = a.capitalize()
+                        basis = self.basis_lib[i]
 
-                        s_counter=1
-                        p_counter=2
-                        d_counter=3
-                        f_counter=4
-                        g_counter=5
-# this is a really ugly piece of code to assign the right labels to
-# basis functions on atoms with an ecp
+                        s_counter = 1
+                        p_counter = 2
+                        d_counter = 3
+                        f_counter = 4
+                        g_counter = 5
+                        # this is a really ugly piece of code to assign the right labels to
+                        # basis functions on atoms with an ecp
                         if ncore == 2:
-                            s_counter=2
+                            s_counter = 2
                         elif ncore == 10:
-                            s_counter=3
-                            p_counter=3
+                            s_counter = 3
+                            p_counter = 3
                         elif ncore == 18:
-                            s_counter=4
-                            p_counter=4
+                            s_counter = 4
+                            p_counter = 4
                         elif ncore == 28:
-                            s_counter=4
-                            p_counter=4
-                            d_counter=4
+                            s_counter = 4
+                            p_counter = 4
+                            d_counter = 4
                         elif ncore == 36:
-                            s_counter=5
-                            p_counter=5
-                            d_counter=5
+                            s_counter = 5
+                            p_counter = 5
+                            d_counter = 5
                         elif ncore == 46:
-                            s_counter=5
-                            p_counter=5
-                            d_counter=6
+                            s_counter = 5
+                            p_counter = 5
+                            d_counter = 6
 
                         for j in range(0, len(basis.symmetries), 1):
                             if basis.symmetries[j] == "s":
-                                self.aonames.append(
-                                    f"{pa}{int(counter)}_{int(s_counter)}{'S'}"
-                                )
+                                self.aonames.append(f"{pa}{int(counter)}_{int(s_counter)}{'S'}")
                                 s_counter = s_counter + 1
                             elif basis.symmetries[j] == "p":
-                                self.aonames.append(
-                                    f"{pa}{int(counter)}_{int(p_counter)}{'PX'}"
-                                )
-                                self.aonames.append(
-                                    f"{pa}{int(counter)}_{int(p_counter)}{'PY'}"
-                                )
-                                self.aonames.append(
-                                    f"{pa}{int(counter)}_{int(p_counter)}{'PZ'}"
-                                )
+                                self.aonames.append(f"{pa}{int(counter)}_{int(p_counter)}{'PX'}")
+                                self.aonames.append(f"{pa}{int(counter)}_{int(p_counter)}{'PY'}")
+                                self.aonames.append(f"{pa}{int(counter)}_{int(p_counter)}{'PZ'}")
                                 p_counter = p_counter + 1
                             elif basis.symmetries[j] == "d":
-                                self.aonames.append(
-                                    f"{pa}{int(counter)}_{int(d_counter)}{'D 0'}"
-                                )
-                                self.aonames.append(
-                                    f"{pa}{int(counter)}_{int(d_counter)}{'D+1'}"
-                                )
-                                self.aonames.append(
-                                    f"{pa}{int(counter)}_{int(d_counter)}{'D-1'}"
-                                )
-                                self.aonames.append(
-                                    f"{pa}{int(counter)}_{int(d_counter)}{'D+2'}"
-                                )
-                                self.aonames.append(
-                                    f"{pa}{int(counter)}_{int(d_counter)}{'D-2'}"
-                                )
+                                self.aonames.append(f"{pa}{int(counter)}_{int(d_counter)}{'D 0'}")
+                                self.aonames.append(f"{pa}{int(counter)}_{int(d_counter)}{'D+1'}")
+                                self.aonames.append(f"{pa}{int(counter)}_{int(d_counter)}{'D-1'}")
+                                self.aonames.append(f"{pa}{int(counter)}_{int(d_counter)}{'D+2'}")
+                                self.aonames.append(f"{pa}{int(counter)}_{int(d_counter)}{'D-2'}")
                                 d_counter = d_counter + 1
                             elif basis.symmetries[j] == "f":
-                                self.aonames.append(
-                                    f"{pa}{int(counter)}_{int(f_counter)}{'F 0'}"
-                                )
-                                self.aonames.append(
-                                    f"{pa}{int(counter)}_{int(f_counter)}{'F+1'}"
-                                )
-                                self.aonames.append(
-                                    f"{pa}{int(counter)}_{int(f_counter)}{'F-1'}"
-                                )
-                                self.aonames.append(
-                                    f"{pa}{int(counter)}_{int(f_counter)}{'F+2'}"
-                                )
-                                self.aonames.append(
-                                    f"{pa}{int(counter)}_{int(f_counter)}{'F-2'}"
-                                )
-                                self.aonames.append(
-                                    f"{pa}{int(counter)}_{int(f_counter)}{'F+3'}"
-                                )
-                                self.aonames.append(
-                                    f"{pa}{int(counter)}_{int(f_counter)}{'F-3'}"
-                                )
+                                self.aonames.append(f"{pa}{int(counter)}_{int(f_counter)}{'F 0'}")
+                                self.aonames.append(f"{pa}{int(counter)}_{int(f_counter)}{'F+1'}")
+                                self.aonames.append(f"{pa}{int(counter)}_{int(f_counter)}{'F-1'}")
+                                self.aonames.append(f"{pa}{int(counter)}_{int(f_counter)}{'F+2'}")
+                                self.aonames.append(f"{pa}{int(counter)}_{int(f_counter)}{'F-2'}")
+                                self.aonames.append(f"{pa}{int(counter)}_{int(f_counter)}{'F+3'}")
+                                self.aonames.append(f"{pa}{int(counter)}_{int(f_counter)}{'F-3'}")
                             elif basis.symmetries[j] == "g":
-                                self.aonames.append(
-                                    f"{pa}{int(counter)}_{int(f_counter)}{'G 0'}"
-                                )
-                                self.aonames.append(
-                                    f"{pa}{int(counter)}_{int(f_counter)}{'G+1'}"
-                                )
-                                self.aonames.append(
-                                    f"{pa}{int(counter)}_{int(f_counter)}{'G-1'}"
-                                )
-                                self.aonames.append(
-                                    f"{pa}{int(counter)}_{int(g_counter)}{'G+2'}"
-                                )
-                                self.aonames.append(
-                                    f"{pa}{int(counter)}_{int(g_counter)}{'G-2'}"
-                                )
-                                self.aonames.append(
-                                    f"{pa}{int(counter)}_{int(g_counter)}{'G+3'}"
-                                )
-                                self.aonames.append(
-                                    f"{pa}{int(counter)}_{int(g_counter)}{'G-3'}"
-                                )
-                                self.aonames.append(
-                                    f"{pa}{int(counter)}_{int(g_counter)}{'G+4'}"
-                                )
-                                self.aonames.append(
-                                    f"{pa}{int(counter)}_{int(g_counter)}{'G-4'}"
-                                )
+                                self.aonames.append(f"{pa}{int(counter)}_{int(f_counter)}{'G 0'}")
+                                self.aonames.append(f"{pa}{int(counter)}_{int(f_counter)}{'G+1'}")
+                                self.aonames.append(f"{pa}{int(counter)}_{int(f_counter)}{'G-1'}")
+                                self.aonames.append(f"{pa}{int(counter)}_{int(g_counter)}{'G+2'}")
+                                self.aonames.append(f"{pa}{int(counter)}_{int(g_counter)}{'G-2'}")
+                                self.aonames.append(f"{pa}{int(counter)}_{int(g_counter)}{'G+3'}")
+                                self.aonames.append(f"{pa}{int(counter)}_{int(g_counter)}{'G-3'}")
+                                self.aonames.append(f"{pa}{int(counter)}_{int(g_counter)}{'G+4'}")
+                                self.aonames.append(f"{pa}{int(counter)}_{int(g_counter)}{'G-4'}")
                         break
-                counter=counter+1
+                counter = counter + 1
 
-        if line=="$closed shells\n":
+        if line == "$closed shells\n":
             line = next(inputfile)
             temp = line.split()
             occs = int(temp[1][2:])
-            self.homos = numpy.array([occs-1], "i")
+            self.homos = numpy.array([occs - 1], "i")
 
         if line == "$alpha shells\n":
             line = next(inputfile)
             temp = line.split()
             occ_a = int(temp[1][2:])
-            line = next(inputfile) # should be $beta shells
-            line = next(inputfile) # the beta occs
+            line = next(inputfile)  # should be $beta shells
+            line = next(inputfile)  # the beta occs
             temp = line.split()
             occ_b = int(temp[1][2:])
-            self.homos = numpy.array([occ_a-1,occ_b-1], "i")
+            self.homos = numpy.array([occ_a - 1, occ_b - 1], "i")
 
-        if line[12:24]=="OVERLAP(CAO)":
+        if line[12:24] == "OVERLAP(CAO)":
             line = next(inputfile)
             line = next(inputfile)
-            overlaparray=[]
-            self.aooverlaps=numpy.zeros( (self.nbasis, self.nbasis), "d")
+            overlaparray = []
+            self.aooverlaps = numpy.zeros((self.nbasis, self.nbasis), "d")
             while line != "       ----------------------\n":
-                temp=line.split()
+                temp = line.split()
                 overlaparray.extend(map(float, temp))
                 line = next(inputfile)
-            counter=0
+            counter = 0
 
             for i in range(0, self.nbasis, 1):
-                for j in range(0, i+1, 1):
-                    self.aooverlaps[i][j]=overlaparray[counter]
-                    self.aooverlaps[j][i]=overlaparray[counter]
-                    counter=counter+1
+                for j in range(0, i + 1, 1):
+                    self.aooverlaps[i][j] = overlaparray[counter]
+                    self.aooverlaps[j][i] = overlaparray[counter]
+                    counter = counter + 1
 
-        if ( line[0:6] == "$scfmo" or line[0:12] == "$uhfmo_alpha" ) and line.find("scf") > 0:
+        if (line[0:6] == "$scfmo" or line[0:12] == "$uhfmo_alpha") and line.find("scf") > 0:
             temp = line.split()
 
             if temp[1][0:7] == "scfdump":
-#                self.logger.warning("SCF not converged?")
+                #                self.logger.warning("SCF not converged?")
                 print("SCF not converged?!")
 
-            if line[0:12] == "$uhfmo_alpha": # if unrestricted, create flag saying so
+            if line[0:12] == "$uhfmo_alpha":  # if unrestricted, create flag saying so
                 unrestricted = 1
             else:
                 unrestricted = 0
 
-            self.moenergies=[]
-            self.mocoeffs=[]
+            self.moenergies = []
+            self.mocoeffs = []
 
-            for spin in range(unrestricted + 1): # make sure we cover all instances
+            for spin in range(unrestricted + 1):  # make sure we cover all instances
                 title = next(inputfile)
-                while(title[0] == "#"):
+                while title[0] == "#":
                     title = next(inputfile)
 
-#                mocoeffs = numpy.zeros((self.nbasis, self.nbasis), "d")
+                #                mocoeffs = numpy.zeros((self.nbasis, self.nbasis), "d")
                 moenergies = []
-                moarray=[]
+                moarray = []
 
                 if spin == 1 and title[0:11] == "$uhfmo_beta":
                     title = next(inputfile)
                     while title[0] == "#":
                         title = next(inputfile)
 
-                while(title[0] != '$'):
-                    temp=title.split()
+                while title[0] != "$":
+                    temp = title.split()
 
-                    orb_symm=temp[1]
+                    orb_symm = temp[1]
 
                     try:
                         energy = float(temp[2][11:].replace("D", "E"))
                     except ValueError:
                         print(spin, ": ", title)
 
-                    orb_en = utils.convertor(energy,"hartree","eV")
+                    orb_en = utils.convertor(energy, "hartree", "eV")
 
                     moenergies.append(orb_en)
                     single_mo = []
 
-                    while(len(single_mo)<self.nbasis):
+                    while len(single_mo) < self.nbasis:
                         self.updateprogress(inputfile, "Coefficients", self.cupdate)
                         title = next(inputfile)
-                        lines_coeffs=self.split_molines(title)
+                        lines_coeffs = self.split_molines(title)
                         single_mo.extend(lines_coeffs)
 
                     moarray.append(single_mo)
                     title = next(inputfile)
 
-#                for i in range(0, len(moarray), 1):
-#                    for j in range(0, self.nbasis, 1):
-#                        try:
-#                            mocoeffs[i][j]=moarray[i][j]
-#                        except IndexError:
-#                            print "Index Error in mocoeffs.", spin, i, j
-#                            break
+                #                for i in range(0, len(moarray), 1):
+                #                    for j in range(0, self.nbasis, 1):
+                #                        try:
+                #                            mocoeffs[i][j]=moarray[i][j]
+                #                        except IndexError:
+                #                            print "Index Error in mocoeffs.", spin, i, j
+                #                            break
 
-                mocoeffs = numpy.array(moarray,"d")
+                mocoeffs = numpy.array(moarray, "d")
                 self.mocoeffs.append(mocoeffs)
                 self.moenergies.append(moenergies)
 
@@ -1918,89 +1889,88 @@ class OldTurbomole(logfileparser.Logfile):
             self.vibsyms = []
             self.vibdisps = []
 
-#            while line[3:31] != "****  force : all done  ****":
+        #            while line[3:31] != "****  force : all done  ****":
 
         if line[12:26] == "ATOMIC WEIGHTS":
-#begin parsing atomic weights
-           self.vibmasses=[]
-           line=next(inputfile) # lines =======
-           line=next(inputfile) # notes
-           line=next(inputfile) # start reading
-           temp=line.split()
-           while(len(temp) > 0):
+            # begin parsing atomic weights
+            self.vibmasses = []
+            line = next(inputfile)  # lines =======
+            line = next(inputfile)  # notes
+            line = next(inputfile)  # start reading
+            temp = line.split()
+            while len(temp) > 0:
                 self.vibmasses.append(float(temp[2]))
-                line=next(inputfile)
-                temp=line.split()
+                line = next(inputfile)
+                temp = line.split()
 
         if line[5:14] == "frequency":
-            if not hasattr(self,"vibfreqs"):
+            if not hasattr(self, "vibfreqs"):
                 self.vibfreqs = []
                 self.vibfreqs = []
                 self.vibsyms = []
                 self.vibdisps = []
                 self.vibirs = []
 
-            temp=line.replace("i","-").split()
+            temp = line.replace("i", "-").split()
 
             freqs = [utils.float(f) for f in temp[1:]]
             self.vibfreqs.extend(freqs)
 
-            line=next(inputfile)
-            line=next(inputfile)
+            line = next(inputfile)
+            line = next(inputfile)
 
-            syms=line.split()
+            syms = line.split()
             self.vibsyms.extend(syms[1:])
 
-            line=next(inputfile)
-            line=next(inputfile)
-            line=next(inputfile)
-            line=next(inputfile)
+            line = next(inputfile)
+            line = next(inputfile)
+            line = next(inputfile)
+            line = next(inputfile)
 
-            temp=line.split()
+            temp = line.split()
             irs = [utils.float(f) for f in temp[2:]]
             self.vibirs.extend(irs)
 
-            line=next(inputfile)
-            line=next(inputfile)
-            line=next(inputfile)
-            line=next(inputfile)
+            line = next(inputfile)
+            line = next(inputfile)
+            line = next(inputfile)
+            line = next(inputfile)
 
-            x=[]
-            y=[]
-            z=[]
+            x = []
+            y = []
+            z = []
 
-            line=next(inputfile)
+            line = next(inputfile)
             while len(line) > 1:
-                temp=line.split()
+                temp = line.split()
                 x.append(map(float, temp[3:]))
 
-                line=next(inputfile)
-                temp=line.split()
+                line = next(inputfile)
+                temp = line.split()
                 y.append(map(float, temp[1:]))
 
-                line=next(inputfile)
-                temp=line.split()
+                line = next(inputfile)
+                temp = line.split()
                 z.append(map(float, temp[1:]))
-                line=next(inputfile)
+                line = next(inputfile)
 
-# build xyz vectors for each mode
+            # build xyz vectors for each mode
 
             for i in range(0, len(x[0]), 1):
-                disp=[]
+                disp = []
                 for j in range(0, len(x), 1):
-                    disp.append( [x[j][i], y[j][i], z[j][i]])
+                    disp.append([x[j][i], y[j][i], z[j][i]])
                 self.vibdisps.append(disp)
 
-#        line=next(inputfile)
+    #        line=next(inputfile)
 
     def after_parsing(self):
-
         # delete all frequencies that correspond to translations or rotations
 
-        if hasattr(self,"vibfreqs"):
+        if hasattr(self, "vibfreqs"):
             i = 0
             while i < len(self.vibfreqs):
-                if self.vibfreqs[i]==0.0:
+                if self.vibfreqs[i] == 0.0:
                     del self.vibfreqs[i]
                     del self.vibdisps[i]
                     del self.vibirs[i]

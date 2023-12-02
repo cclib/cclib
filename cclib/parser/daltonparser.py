@@ -35,7 +35,6 @@ class DALTON(logfileparser.Logfile):
         return label
 
     def before_parsing(self) -> None:
-
         # Used to decide whether to wipe the atomcoords clean.
         self.firststdorient = True
 
@@ -58,7 +57,6 @@ class DALTON(logfileparser.Logfile):
 
         coords = []
         for lin in lines:
-
             # Without symmetry there are simply four columns, and with symmetry
             # an extra label is printed after the atom type.
             cols = lin.split()
@@ -68,7 +66,7 @@ class DALTON(logfileparser.Logfile):
                 xyz = cols[1:]
 
             # The assumption is that DALTON always print in atomic units.
-            xyz = [utils.convertor(float(x), 'bohr', 'Angstrom') for x in xyz]
+            xyz = [utils.convertor(float(x), "bohr", "Angstrom") for x in xyz]
             coords.append(xyz)
 
         return coords
@@ -100,9 +98,11 @@ class DALTON(logfileparser.Logfile):
         #                            release Dalton2018.alpha (2018)
         #                            release Dalton2019.alpha (2018)
         if line[4:30] == "This is output from DALTON":
-            rs = (r"from DALTON \(?(?:Release|release)?\s?(?:Dalton)?"
-                  r"(\d+\.?[\w\d\-]*)"
-                  r"(?:[\s,]\(?)?")
+            rs = (
+                r"from DALTON \(?(?:Release|release)?\s?(?:Dalton)?"
+                r"(\d+\.?[\w\d\-]*)"
+                r"(?:[\s,]\(?)?"
+            )
             match = re.search(rs, line)
             if match:
                 package_version = match.groups()[0]
@@ -117,7 +117,7 @@ class DALTON(logfileparser.Logfile):
 
         # Is the basis set from a single library file, or is it
         # manually specified? See before_parsing().
-        if line[:6] == 'INTGRL'or line[:9] == 'ATOMBASIS':
+        if line[:6] == "INTGRL" or line[:9] == "ATOMBASIS":
             self.basislibrary = False
 
         # This section at the start of geometry optimization jobs gives us information
@@ -142,8 +142,7 @@ class DALTON(logfileparser.Logfile):
         # Number of convergence criteria set to     :   2
         #
         if line.strip()[:25] == "Convergence threshold for":
-
-            if not hasattr(self, 'geotargets'):
+            if not hasattr(self, "geotargets"):
                 self.geotargets = []
                 self.geotargets_names = []
 
@@ -156,26 +155,25 @@ class DALTON(logfileparser.Logfile):
         # Main location of symmetry information (point group, ordering
         # of irreducible representations).
         if line.strip() == "SYMGRP: Point group information":
-
-            self.skip_lines(inputfile, ['d', 'b'])
+            self.skip_lines(inputfile, ["d", "b"])
             line = next(inputfile)
-            if 'Point group:' in line:
+            if "Point group:" in line:
                 point_group_detected = line.split()[-1].lower()
                 point_group_used = point_group_detected
             else:
-                assert 'Full point group is:' in line
+                assert "Full point group is:" in line
                 point_group_detected = re.sub(r"\W", "", line.split()[-1]).lower()
                 line = next(inputfile)
-                assert 'Represented as:' in line
+                assert "Represented as:" in line
                 point_group_used = re.sub(r"\W", "", line.split()[-1]).lower()
-                self.skip_line(inputfile, 'b')
+                self.skip_line(inputfile, "b")
                 line = next(inputfile)
-                if 'The irrep name for each symmetry:' in line:
+                if "The irrep name for each symmetry:" in line:
                     irreps = [self.normalisesym(irrep) for irrep in line.split()[8:][1::2]]
                     self.symlabels = irreps
 
-            self.metadata['symmetry_detected'] = point_group_detected
-            self.metadata['symmetry_used'] = point_group_used
+            self.metadata["symmetry_detected"] = point_group_detected
+            self.metadata["symmetry_used"] = point_group_used
 
         # This is probably the first place where atomic symmetry labels are printed,
         # somewhere afer the SYMGRP point group information section. We need to know
@@ -209,8 +207,7 @@ class DALTON(logfileparser.Logfile):
         #                           H   _2      1.007825
         #
         if line.strip() == "Isotopic Masses":
-
-            self.skip_lines(inputfile, ['d', 'b'])
+            self.skip_lines(inputfile, ["d", "b"])
 
             # Since some symmetry labels may be missing, read in all lines first.
             lines = []
@@ -230,7 +227,7 @@ class DALTON(logfileparser.Logfile):
             symmetry_atoms = []
             atommasses = []
             for cols in lines:
-                cols0 = ''.join([i for i in cols[0] if not i.isdigit()]) #remove numbers
+                cols0 = "".join([i for i in cols[0] if not i.isdigit()])  # remove numbers
                 atomnos.append(self.table.number[cols0])
                 if len(cols) == 3:
                     symmetry_atoms.append(int(cols[1][1]))
@@ -238,11 +235,11 @@ class DALTON(logfileparser.Logfile):
                 else:
                     atommasses.append(float(cols[1]))
 
-            self.set_attribute('atomnos', atomnos)
-            self.set_attribute('atommasses', atommasses)
+            self.set_attribute("atomnos", atomnos)
+            self.set_attribute("atommasses", atommasses)
 
-            self.set_attribute('natom', len(atomnos))
-            self.set_attribute('natom', len(atommasses))
+            self.set_attribute("natom", len(atomnos))
+            self.set_attribute("natom", len(atommasses))
 
             # Save this for later if there were any labels.
             self.symmetry_atoms = symmetry_atoms or None
@@ -276,8 +273,7 @@ class DALTON(logfileparser.Logfile):
         #  Threshold for neglecting AO integrals:  1.00D-12
         #
         if line.strip() == "Atoms and basis sets":
-
-            self.skip_lines(inputfile, ['d', 'b'])
+            self.skip_lines(inputfile, ["d", "b"])
 
             line = next(inputfile)
             assert "Number of atom types" in line
@@ -291,12 +287,12 @@ class DALTON(logfileparser.Logfile):
             # basis set library, the "Basis set used" line doesn't
             # appear.
             if not self.basislibrary:
-                self.skip_line(inputfile, 'b')
+                self.skip_line(inputfile, "b")
             else:
-                #self.skip_lines(inputfile, ['b', 'basisname', 'b'])
+                # self.skip_lines(inputfile, ['b', 'basisname', 'b'])
                 line = next(inputfile)
                 line = next(inputfile)
-                self.metadata["basis_set"] = line.split()[4].strip('\"')
+                self.metadata["basis_set"] = line.split()[4].strip('"')
                 line = next(inputfile)
 
             line = next(inputfile)
@@ -304,17 +300,16 @@ class DALTON(logfileparser.Logfile):
 
             # Detecting which columns things are in will be somewhat more robust
             # to formatting changes in the future.
-            iatoms = cols.index('atoms')
-            icharge = cols.index('charge')
-            icont = cols.index('cont')
+            iatoms = cols.index("atoms")
+            icharge = cols.index("charge")
+            icont = cols.index("cont")
 
-            self.skip_line(inputfile, 'dashes')
+            self.skip_line(inputfile, "dashes")
 
             atomnos = []
             atombasis = []
             nbasis = 0
             for itype in range(self.ntypes):
-
                 line = next(inputfile)
                 cols = line.split()
 
@@ -325,7 +320,6 @@ class DALTON(logfileparser.Logfile):
                 cont = int(cols[icont])
 
                 for at in range(atoms):
-
                     atomnos.append(charge)
 
                     # If symmetry atoms are present, these will have basis functions
@@ -333,38 +327,38 @@ class DALTON(logfileparser.Logfile):
                     # practical purposes cclib can assume the ordering in atombasis
                     # follows this out-of order scheme to match the output.
                     if self.symmetry_atoms:
-
                         # So we extend atombasis only for the unique atoms (with a
                         # symmetry index of 1), interleaving the basis functions
                         # for this atoms with basis functions for all symmetry atoms.
                         if self.symmetry_atoms[at] == 1:
                             nsyms = 1
-                            while (at + nsyms < self.natom) and self.symmetry_atoms[at + nsyms] == nsyms + 1:
+                            while (at + nsyms < self.natom) and self.symmetry_atoms[
+                                at + nsyms
+                            ] == nsyms + 1:
                                 nsyms += 1
                             for isym in range(nsyms):
                                 istart = nbasis + isym
-                                iend = nbasis + cont*nsyms + isym
+                                iend = nbasis + cont * nsyms + isym
                                 atombasis.append(list(range(istart, iend, nsyms)))
-                            nbasis += cont*nsyms
+                            nbasis += cont * nsyms
 
                     else:
                         atombasis.append(list(range(nbasis, nbasis + cont)))
                         nbasis += cont
 
-            self.set_attribute('atomnos', atomnos)
-            self.set_attribute('atombasis', atombasis)
-            self.set_attribute('nbasis', nbasis)
+            self.set_attribute("atomnos", atomnos)
+            self.set_attribute("atombasis", atombasis)
+            self.set_attribute("nbasis", nbasis)
 
-            self.skip_line(inputfile, 'dashes')
+            self.skip_line(inputfile, "dashes")
 
             line = next(inputfile)
-            self.set_attribute('natom', int(line.split()[iatoms]))
-            self.set_attribute('nbasis', int(line.split()[icont]))
+            self.set_attribute("natom", int(line.split()[iatoms]))
+            self.set_attribute("nbasis", int(line.split()[icont]))
 
-            self.skip_line(inputfile, 'dashes')
+            self.skip_line(inputfile, "dashes")
 
         if line.strip() == "Cartesian Coordinates (a.u.)":
-
             self.has_cartesian_coordinates_block = True
 
             self.skip_lines(inputfile, ["d", "b", "Total number of coordinates"])
@@ -379,7 +373,9 @@ class DALTON(logfileparser.Logfile):
                 else:
                     assert len(tokens) == 13
                     indices = [6, 9, 12]
-                atomcoords.append([utils.convertor(float(tokens[i]), "bohr", "Angstrom") for i in indices])
+                atomcoords.append(
+                    [utils.convertor(float(tokens[i]), "bohr", "Angstrom") for i in indices]
+                )
                 line = next(inputfile)
 
             self.append_attribute("atomcoords", atomcoords)
@@ -413,8 +409,7 @@ class DALTON(logfileparser.Logfile):
         # ...
         #
         if line.strip() == "Orbital exponents and contraction coefficients":
-
-            self.skip_lines(inputfile, ['d', 'b', 'b'])
+            self.skip_lines(inputfile, ["d", "b", "b"])
 
             # Here we simply want to save the numbers defining each primitive for later use,
             # where the first number is the exponent, and the rest are coefficients which
@@ -425,11 +420,9 @@ class DALTON(logfileparser.Logfile):
             prims = []
             line = next(inputfile)
             while line.strip():
-
                 # Each contraction/section is separated by a blank line, and at the very
                 # end there is an extra blank line.
                 while line.strip():
-
                     # For generalized contraction it is typical to see the coefficients wrapped
                     # to new lines, so we must collect them until we are sure a primitive starts.
                     if line[:30].strip():
@@ -468,8 +461,7 @@ class DALTON(logfileparser.Logfile):
         # ...
         #
         if line.strip() == "Contracted Orbitals":
-
-            self.skip_lines(inputfile, ['d', 'b'])
+            self.skip_lines(inputfile, ["d", "b"])
 
             # This is the reverse of atombasis, so that we can easily map from a basis functions
             # to the corresponding atom for use in the loop below.
@@ -487,7 +479,6 @@ class DALTON(logfileparser.Logfile):
             orbitalcount = {}
 
             for ibasis in range(self.nbasis):
-
                 line = next(inputfile)
                 cols = line.split()
 
@@ -499,7 +490,7 @@ class DALTON(logfileparser.Logfile):
                 # of this section seems to be fixed (although columns can be missing). Notice how
                 # We subtract one from the primitive indices here already to match cclib's
                 # way of counting from zero in atombasis.
-                if '#' in line:
+                if "#" in line:
                     sym = cols[2]
                     orbital = cols[3]
                     prims = [int(i) - 1 for i in cols[4:]]
@@ -532,9 +523,9 @@ class DALTON(logfileparser.Logfile):
                 if contraction not in gbasis[iatom]:
                     gbasis[iatom].append(contraction)
 
-            self.skip_line(inputfile, 'blank')
+            self.skip_line(inputfile, "blank")
 
-            self.set_attribute('gbasis', gbasis)
+            self.set_attribute("gbasis", gbasis)
 
         # Since DALTON sometimes uses symmetry labels (Ag, Au, etc.) and sometimes
         # just the symmetry group index, we need to parse and keep a mapping between
@@ -553,16 +544,14 @@ class DALTON(logfileparser.Logfile):
         # ...
         #
         if line.strip() == "Symmetry Orbitals":
-
-            self.skip_lines(inputfile, ['d', 'b'])
+            self.skip_lines(inputfile, ["d", "b"])
 
             line = next(inputfile)
-            self.symcounts = [int(c) for c in line.split(':')[1].split()]
+            self.symcounts = [int(c) for c in line.split(":")[1].split()]
 
             self.symlabels = []
             for sc in self.symcounts:
-
-                self.skip_lines(inputfile, ['b', 'b'])
+                self.skip_lines(inputfile, ["b", "b"])
 
                 # If the number of orbitals for a symmetry is zero, the printout
                 # is different (see MP2 unittest logfile for an example).
@@ -573,7 +562,7 @@ class DALTON(logfileparser.Logfile):
                 else:
                     assert line.split()[0] == "Symmetry"
                     self.symlabels.append(line.split()[1])
-                    self.skip_line(inputfile, 'blank')
+                    self.skip_line(inputfile, "blank")
                     for i in range(sc):
                         orbital = next(inputfile)
 
@@ -608,7 +597,7 @@ class DALTON(logfileparser.Logfile):
             if "@" in chomp:
                 index = 5
             self.set_attribute("nbasis", int(chomp[index]))
-            self.nmo_per_symmetry = list(map(int, chomp[index+2:]))
+            self.nmo_per_symmetry = list(map(int, chomp[index + 2 :]))
             assert self.nbasis == sum(self.nmo_per_symmetry)
         if "Threshold for SCF convergence" in line:
             if not hasattr(self, "scftargets"):
@@ -631,11 +620,11 @@ class DALTON(logfileparser.Logfile):
         # ...
         #
         if line.strip() == "Wave function specification":
-            self.skip_line(inputfile, 'e')
+            self.skip_line(inputfile, "e")
             line = next(inputfile)
             # Must be a coupled cluster calculation.
-            if line.strip() == '':
-                self.skip_lines(inputfile, ['b', 'Coupled Cluster', 'b'])
+            if line.strip() == "":
+                self.skip_lines(inputfile, ["b", "Coupled Cluster", "b"])
             else:
                 assert "wave function" in line.lower()
             line = next(inputfile)
@@ -647,7 +636,7 @@ class DALTON(logfileparser.Logfile):
             line = next(inputfile)
             assert "Total charge of the molecule" in line
             self.set_attribute("charge", int(line.split()[-1]))
-            self.skip_line(inputfile, 'b')
+            self.skip_line(inputfile, "b")
             line = next(inputfile)
             assert "Spin multiplicity and 2 M_S" in line
             self.set_attribute("mult", int(line.split()[-2]))
@@ -655,8 +644,8 @@ class DALTON(logfileparser.Logfile):
             if self.mult != 1:
                 self.metadata["unrestricted"] = True
 
-            if not hasattr(self, 'homos'):
-                self.set_attribute('homos', [(self.paired_electrons // 2) - 1])
+            if not hasattr(self, "homos"):
+                self.set_attribute("homos", [(self.paired_electrons // 2) - 1])
                 if self.unpaired_electrons > 0:
                     self.homos.append(self.homos[0])
                     self.homos[0] += self.unpaired_electrons
@@ -690,7 +679,6 @@ class DALTON(logfileparser.Logfile):
         #
         # With and without symmetry, the "Total energy" line is shifted a little.
         if self.section == "SIRIUS" and "Iter" in line and "Total energy" in line:
-
             iteration = 0
             converged = False
             values = []
@@ -698,11 +686,10 @@ class DALTON(logfileparser.Logfile):
                 self.scfvalues = []
 
             while not converged:
-
                 try:
                     line = next(inputfile)
                 except StopIteration:
-                    self.logger.warning('File terminated before end of last SCF!')
+                    self.logger.warning("File terminated before end of last SCF!")
                     break
 
                 # each iteration is bracketed by "-------------"
@@ -763,7 +750,6 @@ class DALTON(logfileparser.Logfile):
         # ...
         #
         if self.section == "SIRIUS" and "*** SCF orbital energy analysis ***" in line:
-
             # to get ALL orbital energies, the .PRINTLEVELS keyword needs
             # to be at least 0,10 (up from 0,5). I know, obvious, right?
             # this, however, will conflict with the scfvalues output that
@@ -772,7 +758,7 @@ class DALTON(logfileparser.Logfile):
             mosyms = []
             moenergies = []
 
-            self.skip_line(inputfile, 'blank')
+            self.skip_line(inputfile, "blank")
             line = next(inputfile)
 
             # There is some extra text between the section header and
@@ -785,11 +771,10 @@ class DALTON(logfileparser.Logfile):
             occupations = [int(o) for o in line.split()[3:]]
             nsym = len(occupations)
 
-            self.skip_lines(inputfile, ['b', 'header', 'b'])
+            self.skip_lines(inputfile, ["b", "header", "b"])
 
             # now parse nsym symmetries
             for isym in range(nsym):
-
                 # For unoccupied symmetries, nothing is printed here.
                 if occupations[isym] == 0:
                     continue
@@ -807,20 +792,20 @@ class DALTON(logfileparser.Logfile):
                 # not just the index. In the latter case, we depend on the labels
                 # being read earlier into the list `symlabels`. Finally, if no symlabels
                 # were read that implies there is only one symmetry, namely A.
-                if 'A' in cols[1] or 'B' in cols[1]:
+                if "A" in cols[1] or "B" in cols[1]:
                     sym = self.normalisesym(cols[1])
                     energies = [float(t) for t in cols[2:]]
                 else:
-                    if hasattr(self, 'symlabels'):
+                    if hasattr(self, "symlabels"):
                         sym = self.normalisesym(self.symlabels[int(cols[0]) - 1])
                     else:
-                        assert cols[0] == '1'
+                        assert cols[0] == "1"
                         sym = "A"
                     energies = [float(t) for t in cols[1:]]
 
                 while len(energies) > 0:
                     moenergies.extend(energies)
-                    mosyms.extend(len(energies)*[sym])
+                    mosyms.extend(len(energies) * [sym])
                     line = next(inputfile)
                     energies = [float(col) for col in line.split()]
 
@@ -830,14 +815,16 @@ class DALTON(logfileparser.Logfile):
             moenergies, mosyms = zip(*sdata)
 
             self.moenergies = [[]]
-            self.moenergies[0] = [utils.convertor(moenergy, 'hartree', 'eV') for moenergy in moenergies]
+            self.moenergies[0] = [
+                utils.convertor(moenergy, "hartree", "eV") for moenergy in moenergies
+            ]
             self.mosyms = [[]]
             self.mosyms[0] = mosyms
 
             if not hasattr(self, "nmo"):
                 self.nmo = self.nbasis
                 if len(self.moenergies[0]) != self.nmo:
-                    self.set_attribute('nmo', len(self.moenergies[0]))
+                    self.set_attribute("nmo", len(self.moenergies[0]))
 
         #                       .-----------------------------------.
         #                       | >>> Final results from SIRIUS <<< |
@@ -855,7 +842,9 @@ class DALTON(logfileparser.Logfile):
         # @    Final gradient norm:           0.000003746706
         # ...
         #
-        if "Final HF energy" in line and not (hasattr(self, "mpenergies") or hasattr(self, "ccenergies")):
+        if "Final HF energy" in line and not (
+            hasattr(self, "mpenergies") or hasattr(self, "ccenergies")
+        ):
             self.metadata["methods"].append("HF")
         if "Final DFT energy" in line:
             self.metadata["methods"].append("DFT")
@@ -870,7 +859,7 @@ class DALTON(logfileparser.Logfile):
 
         if "@   = MP2 second order energy" in line:
             self.metadata["methods"].append("MP2")
-            energ = utils.convertor(float(line.split()[-1]), 'hartree', 'eV')
+            energ = utils.convertor(float(line.split()[-1]), "hartree", "eV")
             if not hasattr(self, "mpenergies"):
                 self.mpenergies = []
             self.mpenergies.append([])
@@ -884,11 +873,12 @@ class DALTON(logfileparser.Logfile):
             while "END OF COUPLED CLUSTER CALCULATION" not in line:
                 if "Total MP2   energy" in line:
                     # If **WAVE FUNCTIONS\n.MP2 was specified, don't double-add this.
-                    if not hasattr(self, "mpenergies") or \
-                       not len(self.mpenergies) == len(self.scfenergies):
+                    if not hasattr(self, "mpenergies") or not len(self.mpenergies) == len(
+                        self.scfenergies
+                    ):
                         self.append_attribute(
                             "mpenergies",
-                            [utils.convertor(float(line.split()[-1]), "hartree", "eV")]
+                            [utils.convertor(float(line.split()[-1]), "hartree", "eV")],
                         )
                 if "Total CCSD  energy:" in line:
                     self.metadata["methods"].append("CCSD")
@@ -918,11 +908,10 @@ class DALTON(logfileparser.Logfile):
         # ...
         #
         if "Molecular geometry (au)" in line and not self.has_cartesian_coordinates_block:
-
             if self.firststdorient:
                 self.firststdorient = False
 
-            self.skip_lines(inputfile, ['d', 'b'])
+            self.skip_lines(inputfile, ["d", "b"])
 
             lines = [next(inputfile) for i in range(self.natom)]
             atomcoords = self.parse_geometry(lines)
@@ -943,10 +932,12 @@ class DALTON(logfileparser.Logfile):
         # C   _1     1.3203201560            2.3174808341            0.0000000000
         # C   _2    -1.3203201560           -2.3174808341            0.0000000000
         # ...
-        if self.section == "OPT" and line.strip() == "Next geometry (au)" \
-           and not self.has_cartesian_coordinates_block:
-
-            self.skip_lines(inputfile, ['d', 'b'])
+        if (
+            self.section == "OPT"
+            and line.strip() == "Next geometry (au)"
+            and not self.has_cartesian_coordinates_block
+        ):
+            self.skip_lines(inputfile, ["d", "b"])
 
             lines = [next(inputfile) for i in range(self.natom)]
             coords = self.parse_geometry(lines)
@@ -970,17 +961,16 @@ class DALTON(logfileparser.Logfile):
         # Total Hessian index            :       0
         #
         if self.section == "OPT" and line.strip() == "Optimization information":
-
-            self.skip_lines(inputfile, ['d', 'b'])
+            self.skip_lines(inputfile, ["d", "b"])
 
             line = next(inputfile)
-            assert 'Iteration number' in line
+            assert "Iteration number" in line
             iteration = int(line.split()[-1])
             line = next(inputfile)
-            assert 'End of optimization' in line
-            if not hasattr(self, 'optdone'):
+            assert "End of optimization" in line
+            if not hasattr(self, "optdone"):
                 self.optdone = []
-            self.optdone.append(line.split()[-1] == 'T')
+            self.optdone.append(line.split()[-1] == "T")
 
             # We need a way to map between lines here and the targets stated at the
             # beginning of the file in 'Chosen parameters for *OPTIMI (see above),
@@ -990,14 +980,14 @@ class DALTON(logfileparser.Logfile):
             # exception for the energy at iteration zero where there is no gradient,
             # and take the total energy for geovalues.
             targets_labels = {
-                'gradient': 'Norm of gradient',
-                'energy': 'Energy change from last',
-                'step': 'Norm of step',
+                "gradient": "Norm of gradient",
+                "energy": "Energy change from last",
+                "step": "Norm of step",
             }
             values = [numpy.nan] * len(self.geotargets)
             while line.strip():
                 if iteration == 0 and "Energy at this geometry" in line:
-                    index = self.geotargets_names.index('energy')
+                    index = self.geotargets_names.index("energy")
                     values[index] = utils.float(line.split()[-1])
                 for tgt, lbl in targets_labels.items():
                     if lbl in line and tgt in self.geotargets_names:
@@ -1009,7 +999,7 @@ class DALTON(logfileparser.Logfile):
             # we don't want artificial NaNs getting into cclib. Instead, fix the dictionary
             # to make things work.
             if not numpy.nan in values:
-                if not hasattr(self, 'geovalues'):
+                if not hasattr(self, "geovalues"):
                     self.geovalues = []
                 self.geovalues.append(values)
 
@@ -1018,7 +1008,7 @@ class DALTON(logfileparser.Logfile):
         if "Center-of-mass coordinates (a.u.):" in line:
             temp = line.split()
             reference = [utils.convertor(float(temp[i]), "bohr", "Angstrom") for i in [3, 4, 5]]
-            if not hasattr(self, 'moments'):
+            if not hasattr(self, "moments"):
                 self.moments = [reference]
 
         # -------------------------------------------------
@@ -1035,7 +1025,7 @@ class DALTON(logfileparser.Logfile):
                 temp = line.split()
                 for i in range(3):
                     dipole[i] = float(temp[2])  # store the Debye value
-            if hasattr(self, 'moments'):
+            if hasattr(self, "moments"):
                 self.moments.append(dipole)
 
         if line.strip() == "Molecular Hessian (au)":
@@ -1051,7 +1041,7 @@ class DALTON(logfileparser.Logfile):
                         line = next(inputfile)
                         nums = [float(x) for x in line.split()[2:]]
                         assert 1 <= len(nums) <= max_ncols_per_block
-                        hessian[(3 * irow) + icoord, :len(nums)] = nums
+                        hessian[(3 * irow) + icoord, : len(nums)] = nums
                     line = next(inputfile)
                 self.skip_lines(inputfile, ["b", "x y z header", "b"])
                 icol += max_ncols_per_block
@@ -1070,14 +1060,13 @@ class DALTON(logfileparser.Logfile):
         #  2      A      3546.67    0.016160      0.024   0.0006
         # ...
         if "Vibrational Frequencies and IR Intensities" in line:
-
-            self.skip_lines(inputfile, ['dashes', 'blank'])
+            self.skip_lines(inputfile, ["dashes", "blank"])
             line = next(inputfile)
             assert line.strip() == "mode   irrep        frequency             IR intensity"
-            self.skip_line(inputfile, 'equals')
+            self.skip_line(inputfile, "equals")
             line = next(inputfile)
             assert line.strip() == "cm-1       hartrees     km/mol   (D/A)**2/amu"
-            self.skip_line(inputfile, 'dashes')
+            self.skip_line(inputfile, "dashes")
             line = next(inputfile)
 
             # The normal modes are in order of decreasing IR
@@ -1103,7 +1092,7 @@ class DALTON(logfileparser.Logfile):
             self.vibsyms = [normalmode[2] for normalmode in vibdata]
 
             # Now extract the normal mode displacements.
-            self.skip_lines(inputfile, ['b', 'b'])
+            self.skip_lines(inputfile, ["b", "b"])
             line = next(inputfile)
             assert line.strip() == "Normal Coordinates (bohrs*amu**(1/2)):"
 
@@ -1121,7 +1110,7 @@ class DALTON(logfileparser.Logfile):
             #   C      x    0.000319   -0.000315   -0.002038    0.000003    0.001600
             #   C      y    0.000157   -0.000150    0.001448    0.003717    0.002577
             # ...
-            self.skip_line(inputfile, 'd')
+            self.skip_line(inputfile, "d")
             line = next(inputfile)
 
             vibdisps = numpy.empty(shape=(len(self.vibirs), self.natom, 3))
@@ -1133,7 +1122,7 @@ class DALTON(logfileparser.Logfile):
                 line = next(inputfile)
                 # Use the header with the normal mode indices and
                 # frequencies to update where we are.
-                ndisps_block = (len(line.split()) // 2)
+                ndisps_block = len(line.split()) // 2
                 mode_min, mode_max = ndisps, ndisps + ndisps_block
                 # Skip a line of dashes and a blank line.
                 line = next(inputfile)
@@ -1141,7 +1130,7 @@ class DALTON(logfileparser.Logfile):
                 for w in range(self.natom):
                     for coord in range(3):
                         line = next(inputfile)
-                        vibdisps[mode_min:mode_max, w, coord] = [float(i) for i in  line.split()[2:]]
+                        vibdisps[mode_min:mode_max, w, coord] = [float(i) for i in line.split()[2:]]
                     # Skip a blank line.
                     line = next(inputfile)
                 ndisps += ndisps_block
@@ -1159,11 +1148,13 @@ class DALTON(logfileparser.Logfile):
         #    1   3546.72    0.379364   16.900089   84.671721   50.700268    0.598786
         #    2   3546.67    0.000000    0.000000    0.000000    0.000000    0.599550
         if "Raman related properties for freq." in line:
-
-            self.skip_lines(inputfile, ['d', 'b'])
+            self.skip_lines(inputfile, ["d", "b"])
             line = next(inputfile)
-            assert line[1:76] == "Mode    Freq.     Alpha**2   Beta(a)**2   Pol.Int.   Depol.Int.  Dep. Ratio"
-            self.skip_line(inputfile, 'b')
+            assert (
+                line[1:76]
+                == "Mode    Freq.     Alpha**2   Beta(a)**2   Pol.Int.   Depol.Int.  Dep. Ratio"
+            )
+            self.skip_line(inputfile, "b")
             line = next(inputfile)
 
             vibramans = []
@@ -1180,8 +1171,7 @@ class DALTON(logfileparser.Logfile):
 
         if line.strip() == "Total Molecular Energy":
             self.skip_lines(
-                inputfile,
-                ["d", "b", "electronic     vibrational           total    energy", "b"]
+                inputfile, ["d", "b", "electronic     vibrational           total    energy", "b"]
             )
             tokens = next(inputfile).split()
             assert tokens[3] == "Hartrees"
@@ -1189,24 +1179,24 @@ class DALTON(logfileparser.Logfile):
 
         # Static polarizability from **PROPERTIES/.POLARI.
         if line.strip() == "Static polarizabilities (au)":
-            if not hasattr(self, 'polarizabilities'):
+            if not hasattr(self, "polarizabilities"):
                 self.polarizabilities = []
             polarizability = []
-            self.skip_lines(inputfile, ['d', 'b', 'directions', 'b'])
+            self.skip_lines(inputfile, ["d", "b", "directions", "b"])
             for _ in range(3):
                 line = next(inputfile)
                 # Separate possibly unspaced huge negative polarizability tensor
                 # element and the left adjacent column from each other.
-                line = line.replace('-', ' -')
+                line = line.replace("-", " -")
                 polarizability.append(line.split()[1:])
             self.polarizabilities.append(numpy.array(polarizability))
 
         # Static and dynamic polarizability from **PROPERTIES/.ALPHA/*ABALNR.
         if "Polarizability tensor for frequency" in line:
-            if not hasattr(self, 'polarizabilities'):
+            if not hasattr(self, "polarizabilities"):
                 self.polarizabilities = []
             polarizability = []
-            self.skip_lines(inputfile, ['d', 'directions', 'b'])
+            self.skip_lines(inputfile, ["d", "directions", "b"])
             for _ in range(3):
                 line = next(inputfile)
                 polarizability.append(line.split()[1:])
@@ -1219,10 +1209,9 @@ class DALTON(logfileparser.Logfile):
         # This section is *very* general and will need to be expanded later.
         # For now, only form the matrix from dipole (length gauge) values.
         if "@ FREQUENCY INDEPENDENT SECOND ORDER PROPERTIES" in line:
+            coord_to_idx = {"X": 0, "Y": 1, "Z": 2}
 
-            coord_to_idx = {'X': 0, 'Y': 1, 'Z': 2}
-
-            self.skip_line(inputfile, 'b')
+            self.skip_line(inputfile, "b")
             line = next(inputfile)
 
             polarizability_diplen = numpy.empty(shape=(3, 3)) * numpy.nan
@@ -1230,14 +1219,14 @@ class DALTON(logfileparser.Logfile):
                 tokens = line.split()
                 if line.count("DIPLEN") == 2:
                     assert len(tokens) == 8
-                    if not hasattr(self, 'polarizabilities'):
+                    if not hasattr(self, "polarizabilities"):
                         self.polarizabilities = []
                     i, j = coord_to_idx[tokens[2][0]], coord_to_idx[tokens[4][0]]
                     polarizability_diplen[i, j] = utils.float(tokens[7])
                 line = next(inputfile)
 
-            polarizability_diplen = utils.symmetrize(polarizability_diplen, use_triangle='upper')
-            if hasattr(self, 'polarizabilities'):
+            polarizability_diplen = utils.symmetrize(polarizability_diplen, use_triangle="upper")
+            if hasattr(self, "polarizabilities"):
                 self.polarizabilities.append(polarizability_diplen)
 
         ## Electronic excitations: single residues of the linear response
@@ -1268,7 +1257,6 @@ class DALTON(logfileparser.Logfile):
         #          308        57(4)  28(2)        0.4829593728       -0.0024872024        0.6830076950       -0.0035174354
         #          ...
         if "Linear Response single residue calculation" in line:
-
             etsyms = []
             etenergies = []
             etsecs = []
@@ -1278,7 +1266,6 @@ class DALTON(logfileparser.Logfile):
             symmap = {"T": "Triplet", "F": "Singlet"}
 
             while "End of Dynamic Property Section (RESPONS)" not in line:
-
                 line = next(inputfile)
 
                 if "Operator symmetry" in line:
@@ -1311,14 +1298,17 @@ class DALTON(logfileparser.Logfile):
                 # `test/regression.py/testDALTON_DALTON_2013_dvb_td_normalprint_out`.
                 if "Eigenvector for state no." in line:
                     assert int(line.split()[4]) == excited_state_num_in_sym
-                    self.skip_lines(inputfile, [
-                        "b",
-                        "Response orbital operator symmetry",
-                        "only scaled elements",
-                        "b",
-                        "Index(r,s)",
-                        "d"
-                    ])
+                    self.skip_lines(
+                        inputfile,
+                        [
+                            "b",
+                            "Response orbital operator symmetry",
+                            "only scaled elements",
+                            "b",
+                            "Index(r,s)",
+                            "d",
+                        ],
+                    )
                     line = next(inputfile)
                     etsec = []
                     while line.strip():
@@ -1352,8 +1342,8 @@ class DALTON(logfileparser.Logfile):
                 # symmetry, not oscillator strength.
                 self.set_attribute("etoscs", [etoscs[k] for k in sorted(etoscs.keys())])
 
-        if line[:37] == ' >>>> Total wall time used in DALTON:':
-            self.metadata['success'] = True
+        if line[:37] == " >>>> Total wall time used in DALTON:":
+            self.metadata["success"] = True
 
         # TODO:
         # aonames

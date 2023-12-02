@@ -16,6 +16,7 @@ from cclib.parser import utils
 
 from cclib.parser.utils import PeriodicTable
 
+
 class NBO(logfileparser.Logfile):
     """A NBO log file"""
 
@@ -36,17 +37,15 @@ class NBO(logfileparser.Logfile):
         pass
 
     def before_parsing(self):
-
         pass
 
     def after_parsing(self):
-
         pass
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
-        ''' NATURAL POPULATIONS:  Natural atomic orbital occupancies
+        """ NATURAL POPULATIONS:  Natural atomic orbital occupancies
 
             NAO Atom No lang   Type(AO)    Occupancy      Energy
             -------------------------------------------------------
@@ -78,10 +77,9 @@ class NBO(logfileparser.Logfile):
             24    H  3  pz     Ryd( 2p)     0.00117       2.28805
 
 
-            Summary of Natural Population Analysis:'''
+            Summary of Natural Population Analysis:"""
 
-        if 'NAO Atom No lang   Type(AO)    Occupancy      Energy' in line:
-
+        if "NAO Atom No lang   Type(AO)    Occupancy      Energy" in line:
             line = next(inputfile)
             line = next(inputfile)
 
@@ -91,18 +89,18 @@ class NBO(logfileparser.Logfile):
                 self.populations = dict()
 
             # Skip empty lines
-            while 'Summary of Natural Population Analysis:' not in line:
+            while "Summary of Natural Population Analysis:" not in line:
                 if len(line.strip()) <= 0:
                     line = next(inputfile)
                     continue
 
-                nao       = int(line[0:5].strip())
-                atom      = line[8:9]
-                no        = int(line[9:14].strip())
-                lang      = line[14:21].strip()
-                type_ao   = line[21:29]
+                nao = int(line[0:5].strip())
+                atom = line[8:9]
+                no = int(line[9:14].strip())
+                lang = line[14:21].strip()
+                type_ao = line[21:29]
                 occupancy = float(line[33:42])
-                energy    = float(line[47:56])
+                energy = float(line[47:56])
 
                 naos.append(nao)
                 atoms.append(atom)
@@ -115,19 +113,18 @@ class NBO(logfileparser.Logfile):
                 line = next(inputfile)
 
             npa_dict = {
-                'nao': naos,
-                'atom': atoms,
-                'no': nos,
-                'lang': langs,
-                'type': types,
-                'occupancy': occupancies,
-                'energy': energies
+                "nao": naos,
+                "atom": atoms,
+                "no": nos,
+                "lang": langs,
+                "type": types,
+                "occupancy": occupancies,
+                "energy": energies,
             }
 
-            self.populations['npa'] = npa_dict
+            self.populations["npa"] = npa_dict
 
-
-        ''' Summary of Natural Population Analysis:
+        """ Summary of Natural Population Analysis:
 
                                             Natural Population
                     Natural    ---------------------------------------------
@@ -137,10 +134,9 @@ class NBO(logfileparser.Logfile):
             H  2    0.46439      0.00000     0.52980    0.00581     0.53561
             H  3    0.46439      0.00000     0.52980    0.00581     0.53561
         ====================================================================
-        * Total *  0.00000      1.99998     7.97616    0.02386    10.00000'''
+        * Total *  0.00000      1.99998     7.97616    0.02386    10.00000"""
 
-        if '  Atom No    Charge' in line:
-
+        if "  Atom No    Charge" in line:
             if not hasattr(self, "atomcharges"):
                 self.atomcharges = dict()
 
@@ -149,16 +145,16 @@ class NBO(logfileparser.Logfile):
 
             charges = []
 
-            while '==============' not in line:
+            while "==============" not in line:
                 population_analysis = line.split()
 
-                atom           = population_analysis[0]
-                no             = int(population_analysis[1])
+                atom = population_analysis[0]
+                no = int(population_analysis[1])
                 natural_charge = float(population_analysis[2])
-                core           = float(population_analysis[3])
-                valence        = float(population_analysis[4])
-                rydberg        = float(population_analysis[5])
-                total          = float(population_analysis[6])
+                core = float(population_analysis[3])
+                valence = float(population_analysis[4])
+                rydberg = float(population_analysis[5])
+                total = float(population_analysis[6])
 
                 # TODO append to attibutes
                 charges.append(natural_charge)
@@ -168,7 +164,7 @@ class NBO(logfileparser.Logfile):
             self.atomcharges["nbo"] = charges
 
             if not hasattr(self, "natom"):
-                self.set_attribute('natom', len(self.atomcharges["nbo"]))
+                self.set_attribute("natom", len(self.atomcharges["nbo"]))
 
         #                                  Natural Population
         #  ---------------------------------------------------------
@@ -178,9 +174,7 @@ class NBO(logfileparser.Logfile):
         #    Natural Rydberg Basis      0.02386 (  0.2386% of   10)
         #  ---------------------------------------------------------
 
-
-        if line[33:51] == 'Natural Population':
-
+        if line[33:51] == "Natural Population":
             line = next(inputfile)
             line = next(inputfile)
 
@@ -202,14 +196,13 @@ class NBO(logfileparser.Logfile):
             natural_rydberg_basis = float(line.split()[3])
             # TODO append to attibutes
 
-
         #     Atom No         Natural Electron Configuration
         #  ----------------------------------------------------------------------------
         #       O  1      [core]2s( 1.75)2p( 5.17)3d( 0.01)
         #       H  2            1s( 0.53)
         #       H  3            1s( 0.53)
 
-        if 'Natural Electron Configuration' in line:
+        if "Natural Electron Configuration" in line:
             line = next(inputfile)
             line = next(inputfile)
 
@@ -222,7 +215,6 @@ class NBO(logfileparser.Logfile):
 
                 line = next(inputfile)
 
-
         # NATURAL BOND ORBITAL ANALYSIS:
 
         #                             Occupancies       Lewis Structure    Low   High
@@ -232,27 +224,26 @@ class NBO(logfileparser.Logfile):
         #     1     2     1.90     9.99255   0.00745      1   2   0   2     0      0
         #  ----------------------------------------------------------------------------
 
-        if 'NATURAL BOND ORBITAL ANALYSIS' in line:
+        if "NATURAL BOND ORBITAL ANALYSIS" in line:
             # Skip to the values
             for _ in range(6):
                 line = next(inputfile)
 
             nbo_analysis = line.split()
 
-            cycle         = int(nbo_analysis[0])
-            max_ctr       = int(nbo_analysis[1])
-            occ_thresh    = float(nbo_analysis[2])
-            occ_lewis     = float(nbo_analysis[3])
+            cycle = int(nbo_analysis[0])
+            max_ctr = int(nbo_analysis[1])
+            occ_thresh = float(nbo_analysis[2])
+            occ_lewis = float(nbo_analysis[3])
             occ_non_lewis = float(nbo_analysis[4])
-            lewis_cr      = float(nbo_analysis[5])
-            lewis_bd      = int(nbo_analysis[6])
-            lewis_nc      = int(nbo_analysis[7])
-            lewis_lp      = int(nbo_analysis[8])
-            low_occ       = int(nbo_analysis[9])
-            high_occ      = int(nbo_analysis[10])
+            lewis_cr = float(nbo_analysis[5])
+            lewis_bd = int(nbo_analysis[6])
+            lewis_nc = int(nbo_analysis[7])
+            lewis_lp = int(nbo_analysis[8])
+            low_occ = int(nbo_analysis[9])
+            high_occ = int(nbo_analysis[10])
 
             # TODO append to attibutes
-
 
         #         NATURAL BOND ORBITALS (Summary):
 
@@ -294,26 +285,23 @@ class NBO(logfileparser.Logfile):
         #                Total unit  1   10.00000  (100.0000%)
         #               Charge unit  1    0.00000
 
-
-        if 'Principal Delocalizations' in line:
-
+        if "Principal Delocalizations" in line:
             if not hasattr(self, "nbo"):
                 self.nbo = []
 
-            while ' Lewis ' not in line:
+            while " Lewis " not in line:
                 line = next(inputfile)
 
             line = next(inputfile)
 
-            while '   ---' not in line:
-
-                if '-----' in line or len(line[7:28].strip()) < 1:
+            while "   ---" not in line:
+                if "-----" in line or len(line[7:28].strip()) < 1:
                     line = next(inputfile)
                     continue
 
-                nao       = line[7:28].strip()
+                nao = line[7:28].strip()
                 occupancy = float(line[30:40].strip())
-                energy    = float(line[40:52].strip())
+                energy = float(line[40:52].strip())
 
                 # TODO
                 # geminal, vicinal, remote = None, None, None
@@ -323,9 +311,9 @@ class NBO(logfileparser.Logfile):
                 # if len(line) > 62: remote  = line[65:70]
 
                 nbo_dict = {
-                    'nao'      : nao,
-                    'occupancy': occupancy,
-                    'energy'   : energy,
+                    "nao": nao,
+                    "occupancy": occupancy,
+                    "energy": energy,
                     # TODO
                     # 'delocalizations': {
                     #     'geminal': geminal,
@@ -334,6 +322,6 @@ class NBO(logfileparser.Logfile):
                     # }
                 }
 
-                self.append_attribute('nbo', nbo_dict)
+                self.append_attribute("nbo", nbo_dict)
 
                 line = next(inputfile)
