@@ -16,6 +16,7 @@ from cclib.parser.utils import PeriodicTable
 import numpy
 
 
+
 class GAMESSDAT(logfileparser.Logfile):
     """A GAMESS .dat log file"""
 

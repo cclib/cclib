@@ -16,6 +16,7 @@ from cclib.parser.utils import PeriodicTable
 import numpy
 
 
+
 class NBO(logfileparser.Logfile):
     """A NBO log file"""
 

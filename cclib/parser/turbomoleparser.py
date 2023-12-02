@@ -19,6 +19,7 @@ from cclib.parser import data, logfileparser, utils
 import numpy
 
 
+
 class AtomBasis:
     def __init__(self, atname, basis_name, inputfile):
         self.symmetries = []

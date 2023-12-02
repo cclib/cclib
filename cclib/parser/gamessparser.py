@@ -1373,6 +1373,7 @@ class GAMESS(logfileparser.Logfile):
 
                 for i in range(self.nbasis - base):  # Fewer lines each time
                     line = next(inputfile)
+<<<<<<< HEAD
                     ovlp_line = line.split()
                     # handle case of merged columns of two-character symbol and index
                     if len(ovlp_line[1]) == 4:
@@ -1383,6 +1384,12 @@ class GAMESS(logfileparser.Logfile):
                     for j in range(4, len(ovlp_line)):
                         self.aooverlaps[base + j - 4, i + base] = float(ovlp_line[j])
                         self.aooverlaps[i + base, base + j - 4] = float(ovlp_line[j])
+=======
+                    temp = line.split()
+                    for j in range(4, len(temp)):
+                        self.aooverlaps[base + j - 4, i + base] = float(temp[j])
+                        self.aooverlaps[i + base, base + j - 4] = float(temp[j])
+>>>>>>> 04b3e469 (apply ruff to cclib/parser)
                 base += 5
 
         # ECP Pseudopotential information
