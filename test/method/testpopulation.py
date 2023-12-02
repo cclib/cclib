@@ -27,7 +27,7 @@ import pytest
 
 class PopulationTest(unittest.TestCase):
     """Generic population method tests."""
-    
+
     methods = (CSPA, LPA, MPA, OPA, Bickelhaupt)
 
     def parse(self) -> None:
@@ -128,47 +128,47 @@ class GaussianCSPATest(unittest.TestCase):
 
 class GaussianBickelhauptTest(unittest.TestCase):
     """Bickelhaupt Population Analysis test"""
-    
+
     def setUp(self) -> None:
         super(GaussianBickelhauptTest, self).setUp()
         self.data, self.logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_un_sp.log"])
         self.analysis = Bickelhaupt(self.data)
         self.analysis.logger.setLevel(0)
         self.analysis.calculate()
-    
+
     def testsumcharges(self) -> None:
         """Do the Bickelhaupt charges sum up to the total formal charge?"""
         formalcharge = sum(self.data.atomnos) - self.data.charge
         totalpopulation = sum(self.analysis.fragcharges)
         assert abs(totalpopulation-formalcharge) < 1.0e-3
-        
+
     def testsumspins(self) -> None:
         """Do the Bickelhaupt spins sum up to the total formal spin?"""
         formalspin = self.data.homos[0] - self.data.homos[1]
         totalspin = sum(self.analysis.fragspins)
         assert abs(totalspin-formalspin) < 1.0e-3
-    
+
     def test_dvb_sp(self) -> None:
         """Testing Bickelhaupt charges (restricted) against outputs from Multiwfn."""
         data, logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_sp.out"])
         bpa = Bickelhaupt(data)
         bpa.logger.setLevel(logging.ERROR)
         bpa.calculate()
-        
+
         e_bpa = numpy.loadtxt(f"{os.path.dirname(os.path.realpath(__file__))}/dvb_sp.bpa")
         assert numpy.all(bpa.fragcharges >= e_bpa - 0.05)
         assert numpy.all(bpa.fragcharges <= e_bpa + 0.05)
-        
+
     def test_dvb_un_sp(self) -> None:
         """Testing Bickelhaupt charges (unrestricted) against outputs from Multiwfn."""
         data, logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_un_sp.log"])
         bpa = Bickelhaupt(data)
         bpa.logger.setLevel(logging.ERROR)
         bpa.calculate()
-        
+
         e_bpaalpha = numpy.loadtxt(f"{os.path.dirname(os.path.realpath(__file__))}/dvb_un_sp.bpa")
         e_bpaspin = numpy.loadtxt(f"{os.path.dirname(os.path.realpath(__file__))}/dvb_un_sp.bpaspin")
-        
+
         assert numpy.all(bpa.fragcharges >= e_bpaalpha - 0.05)
         assert numpy.all(bpa.fragcharges <= e_bpaalpha + 0.05)
         assert numpy.all(bpa.fragspins >= e_bpaspin - 0.05)

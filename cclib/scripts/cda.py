@@ -54,7 +54,7 @@ def main() -> None:
 
                 if i == data1.homos[spin]:
                     print("------ HOMO - LUMO gap ------")
-                    
+
 
             print("-------------------------------------")
             print(

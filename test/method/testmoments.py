@@ -23,7 +23,7 @@ class TestIdealizedInputs(unittest.TestCase):
         'atomcharges': {'mulliken': [-1, 1]},
         'atomnos': [1, 1]
     }
-    
+
     @mock.patch('cclib.parser.ccData', spec=True)
     def test_dipole_moment(self, mock):
         mock.configure_mock(**self.linear_dipole_attrs)

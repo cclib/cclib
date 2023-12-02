@@ -802,7 +802,7 @@ def testGAMESS_UK_GAMESS_UK8_0_stopiter_gamessuk_hf_out(logfile):
 
 
 # Gaussian #
-    
+
 def testGaussian_Gaussian98_C_bigmult_log(logfile):
     """
     This file failed first becuase it had a double digit multiplicity.
@@ -1038,7 +1038,7 @@ def testGaussian_Gaussian09_2D_PES_all_converged_log(logfile):
     assert isinstance(
         parse_version(logfile.data.metadata["package_version"]), Version
     )
-    
+
     # The energies printed in the scan summary are misformated.
     assert numpy.all(numpy.isnan(logfile.data.scanenergies))
 
@@ -1245,7 +1245,7 @@ def testGaussian_Gaussian09_issue1150_log(logfile):
     assert logfile.metadata['symmetry_detected'] == 'c1'
 
 def testGaussian_Gaussian16_H3_natcharge_log(logfile):
-    """A calculation with natural charges calculated. Test issue 1055 where 
+    """A calculation with natural charges calculated. Test issue 1055 where
     only the beta set of charges was parsed rather than the spin independent"""
 
     assert isinstance(logfile.data.atomcharges, dict)
@@ -1297,21 +1297,21 @@ def testGaussian_Gaussian16_issue962_log(logfile):
     """For issue 962, this shouldn't have scftargets but should parse fully"""
 
     assert not hasattr(logfile.data, "scftargets")
-    
+
 def testGaussian_Gaussian16_C01_CC_log(logfile):
     """For issue 1110, check parsing of ccenergies in newer Gaussian version"""
 
     assert hasattr(logfile.data, "ccenergies")
-    
+
 def testGaussian_Gaussian16_Ethane_mp5_log(logfile):
     """For issue 1163, check we can parse a log file that has MPn in its description."""
-    
+
     # This issue is about failing to parse if certain strings are present in the Gaussian log file description section.
     # Check we can still parse MP energies up to MP5
     assert hasattr(logfile.data, "mpenergies")
     assert len(logfile.data.mpenergies) == 1
     assert len(logfile.data.mpenergies[0]) == 4
-    
+
 
 # Jaguar #
 
@@ -1878,8 +1878,8 @@ def testORCA_ORCA4_2_water_dlpno_ccsd_out(logfile):
         E(CORR)(weak-pairs)                        ...      0.000000000
         E(CORR)(corrected)                         ...     -0.049905771
         E(TOT)                                     ...    -75.013480013
-        Singles Norm <S|S>**1/2                    ...      0.013957180  
-        T1 diagnostic                              ...      0.004934608  
+        Singles Norm <S|S>**1/2                    ...      0.013957180
+        T1 diagnostic                              ...      0.004934608
     """
     assert hasattr(logfile.data, 'ccenergies')
 
@@ -1892,7 +1892,7 @@ def testORCA_ORCA4_2_longer_input_out(logfile):
 def testORCA_ORCA4_2_casscf_out(logfile):
     """ORCA casscf input file (#1044)."""
     assert numpy.isclose(logfile.data.etenergies[0], 28271.0)
-    
+
 def testORCA_ORCA5_0_ADBNA_Me_Mes_MesCz_log(logfile):
     """Check we can parse etsyms in difficult cases."""
     assert hasattr(logfile.data, "etsyms")
@@ -3289,9 +3289,9 @@ class OrcaTDDFTTest_error(OrcaTDDFTTest):
         """These values used to be less accurate, probably due to wrong coordinates."""
         assert len(self.data.etoscs) == self.number
         assert abs(max(self.data.etoscs) - 1.0) < 0.2
-        
+
 class OrcaTDDFTTest_pre5(OrcaTDDFTTest):
-    
+
     symmetries = [
             "Triplet",
             "Triplet",
@@ -3307,7 +3307,7 @@ class OrcaTDDFTTest_pre5(OrcaTDDFTTest):
 
 
 class OrcaTDDFTTest_pre1085(OrcaTDDFTTest_pre5):
-    
+
     def testoscs(self):
         """These values changed in the electric dipole osc strengths prior to Orca 4.0. See PR1085"""
         assert len(self.data.etoscs) == self.number

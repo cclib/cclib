@@ -66,7 +66,7 @@ class GenericUnrelaxedScanTest(unittest.TestCase):
 
     # extra indices
     extra = 0
-    
+
     @skipForParser("Jaguar", "Not implemented")
     def testscannames(self):
         assert isinstance(self.data.scannames, list)
@@ -75,7 +75,7 @@ class GenericUnrelaxedScanTest(unittest.TestCase):
     @skipForParser("Jaguar", "Not implemented")
     def testscanenergies(self):
         assert isinstance(self.data.scanenergies, list)
-        
+
         # This checks the order of magnitude, and unit conversion if nothing else.
         numpy.testing.assert_array_less(numpy.array(self.data.scanenergies), -10000)
 
@@ -95,14 +95,14 @@ class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
 
     # extra indices
     extra = 0
-    
+
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
     def testnumindices(self):
         """Do the number of indices match number of scan points."""
         assert len(self.data.optdone) == 12 + self.extra
 
-    @skipForParser("Jaguar", "Does not work as expected")    
+    @skipForParser("Jaguar", "Does not work as expected")
     @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForParser("ORCA", "Does not work as expected")
     @skipForParser('Turbomole','The parser is still being developed so we skip this test')
@@ -137,7 +137,7 @@ class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
     @skipForParser("ORCA", "Not implemented")
     def testscanenergies(self):
         assert isinstance(self.data.scanenergies, list)
-        
+
         # This checks the order of magnitude, and unit conversion if nothing else.
         numpy.testing.assert_array_less(numpy.array(self.data.scanenergies), -10000)
 

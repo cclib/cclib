@@ -36,7 +36,7 @@ class Electrons(Method):
     def beta(self):
         """Number of beta electrons"""
         return self.data.homos[-1] + 1
-        
+
     def count(self, core=False):
         """Returns the electron count in system.
 

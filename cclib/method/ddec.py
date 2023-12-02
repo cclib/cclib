@@ -56,7 +56,7 @@ class DDEC6(Stockholder):
                 (directory containing atoms.h5 in horton or c2_001_001_000_400_075.txt in chargemol)
                 convergence_level -- convergence level to use for conditioning densities in step 3
                 max_iteration -- maximum iteration to optimize phi in step 3-6
-            
+
             Note:
                 Proatom densities are used in DDEC6 algorithm in a similar way to other stockholder
                 partitioning methods. They are used as references to appropriately partition the
@@ -254,7 +254,7 @@ class DDEC6(Stockholder):
     def calculate_reference_charges(self):
         """ Calculate reference charges from proatom density and molecular density
             [STEP 1 and 2]
-            
+
             Function returns calculated reference charges, localized charges, and stockholder
             charges.
         """
@@ -532,7 +532,7 @@ class DDEC6(Stockholder):
 
     def reshape_G(self):
         """ Calculate G_A(r_A) and reshape densities
-        
+
             This is a quantity introduced in DDEC6 as a constraint preventing the tails from being
             too diffuse.
             [STEP 4-7]
@@ -582,7 +582,7 @@ class DDEC6(Stockholder):
 
     def calculate_H(self):
         """ Calculate H_A(r_A)
-            
+
             This is a quantity introduced in DDEC6 as a constraint preventing the tails from being
             too contracted.
             [STEP 4-7]
@@ -696,13 +696,13 @@ class DDEC6(Stockholder):
     def _converge_phi(self, phiA, superscript, atomi):
         """ Update phi until it is positive.
             This is used in step 3 (for phi_A^I) and in steps 4-6 (for phi_A^II).
-            
+
             --- Inputs ---
             phiA            Either phi_A^I or phi_A^II
             superscript     1 when calculating phi_I (STEP 3)
                             2 when calculating phi_II (STEPS 4-6)
             atomi           Index of target atom as in ccData object
-            
+
             Refer to Equation S101, Figure S1 and S3 for an overview.
         """
         # Initial value of bigphi is zero (Equation S100)
@@ -749,13 +749,13 @@ class DDEC6(Stockholder):
     def _parabolic_fit(self, pseudodensity, superscript, atomi):
         """ Optimize phi using parabolic fitting.
             This is used in step 3 (for phi_A^I) and in steps 4-6 (for phi_A^II).
-            
+
             --- Inputs ---
             phiA            Either phi_A^I or phi_A^II
             superscript     1 when calculating phi_I (STEP 3)
                             2 when calculating phi_II (STEPS 4-6)
             atomi           Index of target atom as in ccData object
-            
+
             Refer to Figure S1 and S3 for an overview.
         """
         # Set update methods for phi_A^I or phi_A^II

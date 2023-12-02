@@ -93,13 +93,13 @@ def write_trajectory(filename, ccdata, popname="mulliken", index=None):
 
         atomnos = ccdata.atomnos
         atommasses = getattr(ccdata, "atommasses", None)
-        
-        atoms = makease( 
-            atomcoords, 
-            atomnos, 
-            atomcharges, 
-            atomspins, 
-            atommasses, 
+
+        atoms = makease(
+            atomcoords,
+            atomnos,
+            atomcharges,
+            atomspins,
+            atommasses,
         )
 
         properties = {}

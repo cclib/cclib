@@ -23,7 +23,7 @@ class pyquante2Test(unittest.TestCase):
         super(pyquante2Test, self).setUp()
         if not find_package("pyquante2"):
             raise ImportError("Must install pyquante2 to run this test")
-            
+
         self.data, self.logfile = getdatafile("Gaussian", "basicGaussian16", ["water_ccsd.log"])
 
     def test_makepyquante(self):

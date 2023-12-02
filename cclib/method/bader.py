@@ -70,7 +70,7 @@ class Bader(Method):
     def calculate(self, indices=None, fupdate=0.05):
         """Calculate Bader's QTAIM charges using on-grid algorithm proposed by Henkelman group
            in doi:10.1016/j.commatsci.2005.04.010
-           
+
            Cartesian, uniformly spaced grids are assumed for this function.
            """
 

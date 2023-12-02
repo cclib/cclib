@@ -23,7 +23,7 @@ from cclib.parser.logfilewrapper import FileWrapper
 
 
 # This seems to avoid a problem with Avogadro.
-logging.logMultiprocessing = 0    
+logging.logMultiprocessing = 0
 
 
 class StopParsing(Exception):
@@ -56,7 +56,7 @@ class Logfile(ABC):
             source = FileWrapper(source)
             # Probably the wrong type given.
             #raise TypeError("Source does not have an 'input_files' attribute, are you sure it inherits from FileWrapper?") from None
-            
+
         self.inputfile = source
         # If our parser needs a certain file ordering, set that now.
         self.inputfile.sort(self.sort_input(self.inputfile.filenames))
@@ -98,11 +98,11 @@ class Logfile(ABC):
             self.datatype = ccData
         # Parsing of Natural Orbitals and Natural Spin Orbtials into one attribute
         self.unified_no_nso = kwds.get("future",False)
-        
+
     @property
     def filename(self):
         return self.inputfile.file_name
-    
+
     @classmethod
     def sort_input(self, file_names: typing.List[str]) -> typing.List:
         """
@@ -177,7 +177,7 @@ class Logfile(ABC):
                 break
             except Exception as e:
                 self.logger.error("Encountered error when parsing.")
-                
+
                 # Not all input files support last_line.
                 if hasattr(self.inputfile, "last_line"):
                     self.logger.error(f"Last line read: {self.inputfile.last_line}")
@@ -275,7 +275,7 @@ class Logfile(ABC):
 
         Note that this can be used for scalars and lists alike, whenever we want
         to set a value for an attribute.
-        
+
         Parameters
         ----------
         name: str
@@ -295,12 +295,12 @@ class Logfile(ABC):
                 )
 
         setattr(self, name, value)
-        
+
     def del_attribute(self, name):
         """Safely remove/delete an attribute, even if it does not exist."""
         try:
             delattr(self, name)
-            
+
         except AttributeError:
             pass
 
@@ -313,7 +313,7 @@ class Logfile(ABC):
 
     def extend_attribute(self, name: str, values: Iterable[Any], index: Optional[int] = None) -> None:
         """Appends an iterable of values to an attribute."""
-        
+
         if not hasattr(self, name):
             self.set_attribute(name, [])
 
@@ -398,13 +398,13 @@ class Logfile(ABC):
             lines.append(line)
 
         return lines
-    
+
     @staticmethod
     def next_filled_line(inputfile):
         """Return the next line that contains something other than whitespace."""
         while True:
             line = next(inputfile)
-            
+
             if line.strip() != "":
                 return line
 

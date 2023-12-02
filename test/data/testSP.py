@@ -490,18 +490,18 @@ class GenericSPTest(unittest.TestCase):
         assert self.data.metadata["symmetry_used"] == "c2h"
 
     @skipForParser('ADF', 'reading cpu/wall time is not implemented for this parser')
-    @skipForParser('DALTON', 'reading cpu/wall time is not implemented for this parser') 
-    @skipForParser('FChk', 'reading cpu/wall time is not implemented for this parser') 
-    @skipForParser('GAMESS', 'reading cpu/wall time is not implemented for this parser') 
-    @skipForParser('GAMESSUK', 'reading cpu/wall time is not implemented for this parser') 
-    @skipForParser('GAMESSUS', 'reading cpu/wall time is not implemented for this parser') 
+    @skipForParser('DALTON', 'reading cpu/wall time is not implemented for this parser')
+    @skipForParser('FChk', 'reading cpu/wall time is not implemented for this parser')
+    @skipForParser('GAMESS', 'reading cpu/wall time is not implemented for this parser')
+    @skipForParser('GAMESSUK', 'reading cpu/wall time is not implemented for this parser')
+    @skipForParser('GAMESSUS', 'reading cpu/wall time is not implemented for this parser')
     @skipForParser('GAMESSDAT', 'reading cpu/wall time is not implemented for this parser')
-    @skipForParser('Jaguar', 'reading cpu/wall time is not implemented for this parser') 
-    @skipForParser('Molcas', ' reading cpu/wall time is not implemented for this parser') 
-    @skipForParser('Molpro', 'reading cpu/wall time is not implemented for this parser') 
+    @skipForParser('Jaguar', 'reading cpu/wall time is not implemented for this parser')
+    @skipForParser('Molcas', ' reading cpu/wall time is not implemented for this parser')
+    @skipForParser('Molpro', 'reading cpu/wall time is not implemented for this parser')
     @skipForParser('NBO', 'attribute not implemented in this version')
-    @skipForParser('NWChem', 'reading cpu/wall time is not implemented for this parser')  
-    @skipForParser('Psi3', 'reading cpu/wall time is not implemented for this parser') 
+    @skipForParser('NWChem', 'reading cpu/wall time is not implemented for this parser')
+    @skipForParser('Psi3', 'reading cpu/wall time is not implemented for this parser')
     @skipForParser('Psi4', 'reading cpu/wall time is not implemented for this parser')
     def testmetadata_times(self):
         """Does metadata have expected keys and values of correct types?"""
@@ -632,21 +632,21 @@ class NBOSPTest(GenericSPTest):
 
             expected_types = {
                 'nao': int,  'atom': str, 'no': int,
-                'lang': str, 'type': str, 
+                'lang': str, 'type': str,
                 'occupancy': float,
                 'energy': float
             }
-            assert self.data.populations[population_key].keys == list(expected_types.keys()) 
+            assert self.data.populations[population_key].keys == list(expected_types.keys())
             for (key, exp_type) in expected_types.items():
                 assert isinstance(self.data.populations[population_key][key], list)
                 assert isinstance(self.data.populations[population_key][key][0], exp_type)
 
-        
+
 class TurbomoleSPTest(GenericSPTest):
     """Customized restricted single point KS unittest"""
 
     num_scf_criteria = 2
-    
+
     def testmetadata_basis_set(self):
         """Does metadata have expected keys and values?"""
         # One of our test cases used sto-3g hondo
@@ -672,15 +672,15 @@ class GenericDispersionTest(unittest.TestCase):
 class FireflyDispersionTest(GenericDispersionTest):
     """Customized single-geometry dispersion correction unittest"""
     dispersionenergy = -0.4299821
-    
+
 
 class SolventMetadataTest(unittest.TestCase):
     """Check we can parse implicit solvent data."""
-    
+
     model = ""
     # Toluene
     static_dielectric_constant = 2.3741
-    
+
     def test_solvent_model(self) -> None:
         """Check solvent model was parsed correctly"""
         assert self.data.metadata['solvent_model'] == self.model
@@ -694,24 +694,24 @@ class SolventMetadataTest(unittest.TestCase):
 class QChemSolventMetadataTest(SolventMetadataTest):
 
     static_dielectric_constant = 2.370
-        
+
 
 class IEFPCMMetadataTest(SolventMetadataTest):
     """Check we can parse implicit solvent data."""
 
     model = "IEFPCM"
-    
+
 class SCIPCMMetadataTest(SolventMetadataTest):
     """Check we can parse implicit solvent data."""
 
     model = "SCIPCM"
-    
+
 class IPCMMetadataTest(SolventMetadataTest):
     """Check we can parse implicit solvent data."""
 
     model = "IPCM"
     static_dielectric_constant = 78.3
-    
+
 class COSMOMetadataTest(SolventMetadataTest):
     """Check we can parse implicit solvent data."""
 
@@ -721,17 +721,17 @@ class CPCMMetadataTest(SolventMetadataTest):
     """Check we can parse implicit solvent data."""
 
     model = "CPCM"
-    
+
 class CPCMCOSMOMetadataTest(SolventMetadataTest):
     """Check we can parse implicit solvent data."""
 
     model = "CPCM-COSMO"
-    
+
 class SMDIEFPCMMetadataTest(SolventMetadataTest):
     """Check we can parse implicit solvent data."""
 
     model = "SMD-IEFPCM"
-    
+
 class SMDCPCMMetadataTest(SolventMetadataTest):
     """Check we can parse implicit solvent data."""
 
@@ -748,7 +748,7 @@ class QChemSMDCPCMMetadataTest(QChemSolventMetadataTest, SMDCPCMMetadataTest):
 
 class GaussianPerformanceMetadataTest(unittest.TestCase):
     """Check we can parse CPU/memory metadata."""
-      
+
     def testmetadata_cpu(self):
         """Does metadata have the expected number of CPUs used?"""
         assert self.data.metadata['num_cpu'] == 1
@@ -756,38 +756,38 @@ class GaussianPerformanceMetadataTest(unittest.TestCase):
         """Does metadata have the expected amount of memory?"""
         # 400 MB
         assert self.data.metadata['memory_available'] == 400000000
-    
+
     def testmetadata_memory_used(self):
         """Does metadata have the expected amount of memory?"""
         assert self.data.metadata['memory_used'] == 52428800
-        
+
 class ORCAPerformanceMetadataTest(unittest.TestCase):
     """Check we can parse CPU/memory metadata."""
-      
+
     def testmetadata_cpu(self):
         """Does metadata have the expected number of CPUs used?"""
         assert self.data.metadata['num_cpu'] == 2
-    
+
     def testmetadata_memory_available(self):
         """Does metadata have the expected amount of memory?"""
         # 400 MB
         assert self.data.metadata['memory_available'] == 1000000000
-    
+
     def testmetadata_memory_used(self):
         """Does metadata have the expected amount of memory?"""
         assert self.data.metadata['memory_used'] == 463000000
-        
+
 class TurbomolePerformanceMetadataTest(unittest.TestCase):
     """Check we can parse CPU/memory metadata."""
-      
+
     def testmetadata_cpu(self):
         """Does metadata have the expected number of CPUs used?"""
         assert self.data.metadata['num_cpu'] == 1
-    
+
     def testmetadata_memory_available(self):
         """Does metadata have the expected amount of memory?"""
         assert self.data.metadata['memory_available'] == 524288000
-    
+
     @skipForParser('Turbomole', 'memory used is not available for Turbomole')
     def testmetadata_memory_used(self):
         """Does metadata have the expected amount of memory?"""

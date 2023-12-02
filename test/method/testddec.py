@@ -92,7 +92,7 @@ class DDEC6Test(unittest.TestCase):
     def test_water_charges(self) -> None:
         """Are charges and quantities in each step of DDEC6 algorithm calculated correctly
         for water?
-        
+
         Here, values are compared against `chargemol` calculations.
         Due to the differences in basis set used for calculation and slightly different integration
         grid, some discrepancy is inevitable in the comparison.
@@ -167,9 +167,9 @@ class DDEC6Test(unittest.TestCase):
     @pytest.mark.skipif(sys.version_info > (3, 8), reason="This test doesn't converge with newer psi4 versions availiable with python >3.8")
     def test_chgsum_h2(self) -> None:
         """ Are DDEC6 charges for hydrogen atoms in nonpolar H2 small as expected?
-        
+
             Using much denser grid (spacing of 0.1 rather than 0.2 which is the cube file included
-            in the test) gives [0.00046066, 0.00046066]. 
+            in the test) gives [0.00046066, 0.00046066].
         """
 
         self.parse("h2")
@@ -181,10 +181,10 @@ class DDEC6Test(unittest.TestCase):
 
     def test_chgsum_co(self) -> None:
         """ Are DDEC6 charges for carbon monoxide reported as expected?
-        
+
             Deviation from a total of zero (-0.00682) occurs because the integrated value of total
             density (14.006876594937234) is slightly larger than # of electrons.
-            
+
             Using a finer grid reduces this discrepancy.
         """
 
@@ -200,10 +200,10 @@ class DDEC6Test(unittest.TestCase):
 
     def test_chg_nh3(self) -> None:
         """ Are DDEC6 charges for ammonia reported as expected?
-        
+
             Deviation from a total of zero (0.026545) occurs because the integrated value of total
             density (9.973453129261163) is slightly smaller than number of electrons.
-            
+
             Using a finer grid reduces this discrepancy.
         """
 

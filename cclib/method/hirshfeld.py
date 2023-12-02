@@ -67,7 +67,7 @@ class Hirshfeld(Stockholder):
 
     def _cartesian_dist(self, pt1, pt2):
         """Small utility function that calculates Euclidian distance between two points.
-        
+
         Arguments pt1 and pt2 are NumPy arrays representing points in Cartesian coordinates.
         """
         return numpy.sqrt(numpy.dot(pt1 - pt2, pt1 - pt2))
