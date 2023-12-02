@@ -7,22 +7,17 @@
 
 """Test the Nuclear method in cclib"""
 
-import sys
+import logging
 import os
 import re
-import logging
+import sys
 import unittest
 from typing import Sequence
 
-import numpy as np
-
 from cclib.method import Nuclear
-from cclib.parser import ccData
-from cclib.parser import DALTON
-from cclib.parser import Gaussian
-from cclib.parser import Molcas
-from cclib.parser import QChem
-from cclib.parser import utils
+from cclib.parser import DALTON, Gaussian, Molcas, QChem, ccData, utils
+
+import numpy as np
 
 sys.path.insert(1, "..")
 

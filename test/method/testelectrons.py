@@ -11,8 +11,7 @@ import sys
 import unittest
 
 from cclib.method import Electrons
-from cclib.parser import Gaussian
-from cclib.parser import QChem
+from cclib.parser import Gaussian, QChem
 
 sys.path.insert(1, "..")
 

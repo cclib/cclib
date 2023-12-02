@@ -10,10 +10,10 @@
 import logging
 from typing import Optional
 
-import numpy
-
 from cclib.method.calculationmethod import Method, MissingAttributeError
 from cclib.progress import Progress
+
+import numpy
 
 
 class Population(Method):

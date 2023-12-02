@@ -10,10 +10,10 @@
 import sys
 from collections.abc import Iterable
 
-import numpy
-
-from cclib.parser.utils import convertor
 from cclib.method.calculationmethod import Method
+from cclib.parser.utils import convertor
+
+import numpy
 
 
 class Moments(Method):

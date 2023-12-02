@@ -9,12 +9,11 @@
 
 
 import re
-import numpy
 
-from cclib.parser import logfileparser
-from cclib.parser import utils
-
+from cclib.parser import logfileparser, utils
 from cclib.parser.utils import PeriodicTable
+
+import numpy
 
 
 class GAMESSDAT(logfileparser.Logfile):

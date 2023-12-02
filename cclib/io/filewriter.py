@@ -12,11 +12,10 @@ from abc import ABC, abstractmethod
 from collections.abc import Iterable
 from typing import List, Optional, Tuple
 
-import numpy
-
 from cclib.parser.data import ccData
-from cclib.parser.utils import PeriodicTable
-from cclib.parser.utils import find_package
+from cclib.parser.utils import PeriodicTable, find_package
+
+import numpy
 
 _has_openbabel = find_package("openbabel")
 if _has_openbabel:
@@ -24,8 +23,8 @@ if _has_openbabel:
 
     # Open Babel 3.0 and above
     try:
-        from openbabel import openbabel as ob
         import openbabel.pybel as pb
+        from openbabel import openbabel as ob
     # Open Babel 2.4.x and below
     except:
         import openbabel as ob

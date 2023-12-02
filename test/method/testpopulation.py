@@ -7,22 +7,23 @@
 
 """Test the various population analyses (MPA, LPA, CSPA, Bickelhaupt) in cclib"""
 
-import sys
-import os
 import logging
+import os
+import sys
 import unittest
 from typing import Type
 
-import numpy
-
 from cclib.method import CSPA, LPA, MPA, OPA, Bickelhaupt
-from cclib.method.calculationmethod import MissingAttributeError, Method
+from cclib.method.calculationmethod import Method, MissingAttributeError
 from cclib.parser import Gaussian
+
+import numpy
 
 sys.path.insert(1, "..")
 
-from ..test_data import getdatafile
 import pytest
+
+from ..test_data import getdatafile
 
 
 class PopulationTest(unittest.TestCase):

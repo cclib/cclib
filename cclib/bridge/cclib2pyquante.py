@@ -7,9 +7,9 @@
 
 """Bridge for using cclib data in PyQuante (http://pyquante.sourceforge.net)."""
 
-import numpy
-
 from cclib.parser.utils import find_package
+
+import numpy
 
 
 class MissingAttributeError(Exception):

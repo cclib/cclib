@@ -8,13 +8,13 @@ import logging
 import os
 import sys
 from pathlib import Path
+from test.test_data import all_modules, all_parsers, module_names, parser_names
 from typing import Dict, Mapping
 
-import pytest
-
-from test.test_data import all_modules, all_parsers, module_names, parser_names
 from cclib.io import ccopen
 from cclib.parser.logfileparser import Logfile
+
+import pytest
 
 version_major = sys.version_info.major
 

@@ -10,11 +10,9 @@
 
 import re
 
+from cclib.parser import logfileparser, utils
+
 import numpy
-
-
-from cclib.parser import logfileparser
-from cclib.parser import utils
 
 
 class GAMESS(logfileparser.Logfile):

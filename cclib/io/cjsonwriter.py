@@ -7,13 +7,14 @@
 
 """A writer for chemical JSON (CJSON) files."""
 
-import os.path
 import json
-import numpy as np
+import os.path
 
 from cclib.io import filewriter
 from cclib.parser.data import ccData
 from cclib.parser.utils import find_package
+
+import numpy as np
 
 _has_openbabel = find_package("openbabel")
 

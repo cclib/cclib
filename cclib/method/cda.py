@@ -9,9 +9,9 @@
 
 import random
 
-import numpy
-
 from cclib.method.fragments import FragmentAnalysis
+
+import numpy
 
 
 class CDA(FragmentAnalysis):

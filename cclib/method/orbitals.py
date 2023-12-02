@@ -10,10 +10,10 @@
 import logging
 from typing import Optional
 
-import numpy
-
 from cclib.method.calculationmethod import Method
 from cclib.progress import Progress
+
+import numpy
 
 
 class Orbitals(Method):

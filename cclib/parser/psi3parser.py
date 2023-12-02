@@ -7,10 +7,9 @@
 
 """Parser for Psi3 output files."""
 
-import numpy
+from cclib.parser import logfileparser, utils
 
-from cclib.parser import logfileparser
-from cclib.parser import utils
+import numpy
 
 
 class Psi3(logfileparser.Logfile):

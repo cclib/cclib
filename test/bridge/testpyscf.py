@@ -6,13 +6,12 @@
 # the terms of the BSD 3-Clause License.
 
 import unittest
-
-import numpy as np
+from test.test_data import getdatafile
 
 from cclib.bridge import cclib2pyscf
-from cclib.parser.utils import find_package, convertor
+from cclib.parser.utils import convertor, find_package
 
-from test.test_data import getdatafile
+import numpy as np
 
 
 class PyscfTest(unittest.TestCase):

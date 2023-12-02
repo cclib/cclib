@@ -7,15 +7,13 @@
 
 """Parser for Psi4 output files."""
 
-from collections import namedtuple
 import re
+from collections import namedtuple
+
+from cclib.parser import data, logfileparser, utils
 
 import numpy
 from packaging.version import parse as parse_version
-
-from cclib.parser import data
-from cclib.parser import logfileparser
-from cclib.parser import utils
 
 
 class Psi4(logfileparser.Logfile):

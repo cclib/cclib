@@ -9,10 +9,10 @@
 
 import random
 
-import numpy
-
 from cclib.method.calculationmethod import Method
 from cclib.method.population import Population
+
+import numpy
 
 
 def func(x):

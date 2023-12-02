@@ -3,9 +3,9 @@
 """Generate the attributes.rst and attributes_dev.rst files from the
 ccData docstring that describes attributes."""
 
-from docs_common import check_cclib
-
 import cclib
+
+from docs_common import check_cclib
 
 check_cclib(cclib)
 

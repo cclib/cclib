@@ -10,16 +10,15 @@
 import os
 import sys
 import unittest
-import pytest
 from typing import Optional
 
-import numpy
-
-from cclib.method import DDEC6, volume
-from cclib.parser import Psi4
 from cclib.io import ccread
+from cclib.method import DDEC6, volume
 from cclib.method.calculationmethod import MissingAttributeError
+from cclib.parser import Psi4
 
+import numpy
+import pytest
 from numpy.testing import assert_allclose
 
 from ..test_data import getdatafile

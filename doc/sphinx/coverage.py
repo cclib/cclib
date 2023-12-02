@@ -10,10 +10,10 @@
 import os
 import sys
 
-from docs_common import check_cclib
-
 # Import cclib and check we are using the version from a subdirectory.
 import cclib
+
+from docs_common import check_cclib
 
 check_cclib(cclib)
 
@@ -39,8 +39,8 @@ def generate_coverage():
     thispath = os.path.dirname(os.path.realpath(__file__))
     sys.path.insert(1, os.path.join(thispath, testpath))
 
-    from test.test_data import all_modules, all_parsers, parser_names, DataSuite
     import inspect
+    from test.test_data import DataSuite, all_modules, all_parsers, parser_names
 
     ds_args = inspect.getfullargspec(DataSuite.__init__).args
     logpath = f"{thispath}/coverage.tests.log"

@@ -9,9 +9,9 @@
 
 import logging
 
-import numpy
-
 from cclib.method.calculationmethod import Method
+
+import numpy
 
 
 class Electrons(Method):

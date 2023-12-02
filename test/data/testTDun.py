@@ -11,9 +11,7 @@ import os
 import unittest
 
 import numpy
-
-from skip import skipForParser
-from skip import skipForLogfile
+from skip import skipForLogfile, skipForParser
 
 __filedir__ = os.path.realpath(os.path.dirname(__file__))
 

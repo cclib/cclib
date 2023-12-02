@@ -33,41 +33,41 @@ inside the data directory, like so:
     python -m test.regression Gaussian/Gaussian03/borane-opt.log
 """
 
+import datetime
 import glob
 import logging
 import os
 import sys
 import traceback
 import unittest
-import datetime
-import numpy
-from packaging.version import parse as parse_version
-from packaging.version import Version
-
-from cclib.parser.utils import convertor
-
-from cclib.parser import ccData
-
-from cclib.parser import ADF
-from cclib.parser import DALTON
-from cclib.parser import FChk
-from cclib.parser import GAMESS
-from cclib.parser import GAMESSDAT
-from cclib.parser import GAMESSUK
-from cclib.parser import Gaussian
-from cclib.parser import Jaguar
-from cclib.parser import Molcas
-from cclib.parser import Molpro
-from cclib.parser import MOPAC
-from cclib.parser import NBO
-from cclib.parser import NWChem
-from cclib.parser import ORCA
-from cclib.parser import Psi3
-from cclib.parser import Psi4
-from cclib.parser import QChem
-from cclib.parser import Turbomole
 
 from cclib.io import ccopen, ccread, moldenwriter
+from cclib.parser import (
+    ADF,
+    DALTON,
+    GAMESS,
+    GAMESSDAT,
+    GAMESSUK,
+    MOPAC,
+    NBO,
+    ORCA,
+    FChk,
+    Gaussian,
+    Jaguar,
+    Molcas,
+    Molpro,
+    NWChem,
+    Psi3,
+    Psi4,
+    QChem,
+    Turbomole,
+    ccData,
+)
+from cclib.parser.utils import convertor
+
+import numpy
+from packaging.version import Version
+from packaging.version import parse as parse_version
 
 # This assume that the cclib-data repository is located at a specific location
 # within the cclib repository. It would be better to figure out a more natural
@@ -76,8 +76,6 @@ test_dir = f"{os.path.realpath(os.path.dirname(__file__))}/../../test"
 # This is safer than sys.path.append, and isn't sys.path.insert(0, ...) so
 # virtualenvs work properly. See https://stackoverflow.com/q/10095037.
 sys.path.insert(1, os.path.abspath(test_dir))
-from .test_data import parser_names
-from .test_data import get_program_dir
 from .data.testBasis import (
     GaussianBigBasisTest,
     GenericBasisTest,
@@ -91,19 +89,28 @@ from .data.testBOMD import GenericBOMDTest
 from .data.testCC import GenericCCTest
 from .data.testCI import GAMESSCISTest, GaussianCISTest, GenericCISTest, QChemCISTest
 from .data.testCore import ADFCoreTest, GenericCoreTest
-from .data.testGeoOpt import ADFGeoOptTest, GenericGeoOptTest, OrcaGeoOptTest, Psi4GeoOptTest
+
+# fmt: off
+from .data.testGeoOpt import (
+    ADFGeoOptTest,
+    GenericGeoOptTest,
+    OrcaGeoOptTest,
+    Psi4GeoOptTest,
+)
+
+# fmt: on
 from .data.testMP import (
     GaussianMP2Test,
     GaussianMP3Test,
-    GaussianMP4SDTQTest,
     GaussianMP4SDQTest,
+    GaussianMP4SDTQTest,
     GenericMP2Test,
     GenericMP3Test,
     GenericMP4SDQTest,
     GenericMP4SDTQTest,
-    QChemMP4SDTQTest,
-    QChemMP4SDQTest,
     GenericMP5Test,
+    QChemMP4SDQTest,
+    QChemMP4SDTQTest,
 )
 from .data.testPolar import GenericPolarTest, ReferencePolarTest
 from .data.testScan import GaussianRelaxedScanTest, OrcaRelaxedScanTest
@@ -118,13 +125,22 @@ from .data.testSP import (
     PsiHFSPTest,
     PsiSPTest,
 )
-from .data.testSPun import GaussianSPunTest, GenericROSPTest, GenericSPunTest, JaguarSPunTest
+
+# fmt: off
+from .data.testSPun import (
+    GaussianSPunTest,
+    GenericROSPTest,
+    GenericSPunTest,
+    JaguarSPunTest,
+)
+
+# fmt: on
 from .data.testTD import (
     DALTONTDTest,
     GAMESSUSTDDFTTest,
     GaussianTDDFTTest,
-    GenericTDTest,
     GenericTDDFTtrpTest,
+    GenericTDTest,
     OrcaROCIS40Test,
     OrcaTDDFTTest,
     QChemTDDFTTest,
@@ -146,7 +162,7 @@ from .data.testvib import (
     QChemIRTest,
     QChemRamanTest,
 )
-
+from .test_data import get_program_dir, parser_names
 
 # We need this to point to files relative to this script.
 __filedir__ = os.path.abspath(os.path.dirname(__file__))

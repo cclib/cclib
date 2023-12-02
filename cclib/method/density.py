@@ -10,9 +10,9 @@
 import logging
 import random
 
-import numpy
-
 from cclib.method.calculationmethod import Method
+
+import numpy
 
 
 class Density(Method):

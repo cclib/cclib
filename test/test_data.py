@@ -16,7 +16,6 @@ from typing import List, Optional, Type, Union
 
 import cclib
 
-
 __filedir__ = os.path.realpath(os.path.dirname(__file__))
 
 

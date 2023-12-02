@@ -7,15 +7,16 @@
 
 """Test the CDA method in cclib"""
 
-import sys
 import logging
+import sys
 import unittest
 
 sys.path.insert(1, "..")
 
-from ..test_data import getdatafile
 from cclib.method import CDA
 from cclib.parser import Gaussian
+
+from ..test_data import getdatafile
 
 
 def main(log: bool = True) -> CDA:

@@ -4,8 +4,9 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
-import scipy.constants
 from datetime import timedelta
+
+import scipy.constants
 
 """Parser for Turbomole output files."""
 
@@ -13,11 +14,9 @@ import re
 import typing
 from pathlib import Path
 
-import numpy
+from cclib.parser import data, logfileparser, utils
 
-from cclib.parser import logfileparser
-from cclib.parser import utils
-from cclib.parser import data
+import numpy
 
 
 class AtomBasis:

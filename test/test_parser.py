@@ -17,6 +17,5 @@ from .parser.testlogfileparser import *
 from .parser.testspecificparsers import *
 from .parser.testutils import *
 
-
 if __name__ == "__main__":
     unittest.main()

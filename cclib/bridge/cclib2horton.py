@@ -7,9 +7,10 @@
 
 """Bridge for using cclib data in horton (http://theochem.github.io/horton)."""
 
-import numpy
 from cclib.parser.data import ccData
 from cclib.parser.utils import convertor, find_package
+
+import numpy
 
 _found_iodata = find_package("iodata")
 

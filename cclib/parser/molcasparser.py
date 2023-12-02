@@ -10,10 +10,9 @@
 import re
 import string
 
-import numpy
+from cclib.parser import logfileparser, utils
 
-from cclib.parser import logfileparser
-from cclib.parser import utils
+import numpy
 
 
 class Molcas(logfileparser.Logfile):

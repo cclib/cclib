@@ -8,19 +8,18 @@
 # TOOD: This file belongs in cclib.io, but circular dependency issues mean it can't go there just now.
 
 import bz2
-import gzip
-import zipfile
-import pathlib
-from tempfile import NamedTemporaryFile
-from urllib.request import urlopen
-from urllib.error import URLError
+import codecs
 import collections
-import typing
-import re
+import gzip
 import io
 import logging
-import codecs
-
+import pathlib
+import re
+import typing
+import zipfile
+from tempfile import NamedTemporaryFile
+from urllib.error import URLError
+from urllib.request import urlopen
 
 # Regular expression for validating URLs
 URL_PATTERN = re.compile(

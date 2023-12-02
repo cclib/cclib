@@ -12,8 +12,8 @@ import unittest
 
 import cclib
 from cclib.io.filewriter import MissingAttributeError
-from cclib.io.moldenwriter import MoldenReformatter
-from cclib.io.moldenwriter import round_molden
+from cclib.io.moldenwriter import MoldenReformatter, round_molden
+
 import numpy
 import pytest
 

@@ -7,18 +7,17 @@
 
 """Stockholder partitioning based on cclib data."""
 
-import numpy
 import logging
 import math
 import os
+from typing import Optional, Sequence, Tuple
 
 from cclib.method.calculationmethod import Method
 from cclib.method.volume import electrondensity_spin
-from cclib.parser.utils import convertor
-from cclib.parser.utils import find_package
+from cclib.parser.utils import convertor, find_package
 from cclib.progress import Progress
 
-from typing import Optional, Sequence, Tuple
+import numpy
 
 
 class MissingInputError(Exception):

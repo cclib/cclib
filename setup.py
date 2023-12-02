@@ -14,7 +14,6 @@ algorithms in a package-independent manner.
 
 import setuptools
 
-
 # Chosen from http://www.python.org/pypi?:action=list_classifiers
 classifiers = """Development Status :: 5 - Production/Stable
 Environment :: Console

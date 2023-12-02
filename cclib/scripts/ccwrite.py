@@ -11,9 +11,8 @@ import logging
 import os.path
 import sys
 
+from cclib.io import ccopen, ccwrite
 from cclib.parser import ccData
-from cclib.io import ccopen
-from cclib.io import ccwrite
 
 
 def main() -> None:

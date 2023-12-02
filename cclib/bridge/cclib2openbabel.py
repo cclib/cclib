@@ -9,10 +9,10 @@
 
 from typing import Optional, Set, Union
 
-import numpy as np
-
 from cclib.parser.data import ccData
 from cclib.parser.utils import find_package
+
+import numpy as np
 
 _found_openbabel = find_package("openbabel")
 if _found_openbabel:

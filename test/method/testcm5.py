@@ -9,10 +9,10 @@
 
 import unittest
 
-import numpy as np
-
 from cclib.method import CM5
 from cclib.parser import QChem
+
+import numpy as np
 
 from ..test_data import getdatafile
 

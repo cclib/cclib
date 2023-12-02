@@ -12,8 +12,7 @@ import os.path
 import sys
 from typing import Iterable, Optional
 
-from cclib.io import ccopen
-from cclib.io import ccframe
+from cclib.io import ccframe, ccopen
 from cclib.parser.utils import find_package
 
 _has_pandas = find_package("pandas")

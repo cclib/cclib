@@ -10,13 +10,13 @@
 import os
 import sys
 import tempfile
-from io import StringIO
 import unittest
+from io import StringIO
 from unittest import mock
 
 import cclib
-import pytest
 
+import pytest
 
 __filedir__ = os.path.dirname(__file__)
 __filepath__ = os.path.realpath(__filedir__)

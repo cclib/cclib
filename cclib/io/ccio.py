@@ -7,26 +7,32 @@
 """Tools for identifying, reading and writing files and streams."""
 
 import io
+import logging
 import os
 import pathlib
 import typing
-from typing import Optional
-import logging
-from typing import Union
 import warnings
+from typing import Optional, Union
 
-from cclib.parser import data
-from cclib.parser import logfileparser
-from cclib.parser.utils import find_package
-
+from cclib.io import (
+    cjsonreader,
+    cjsonwriter,
+    cmlwriter,
+    moldenwriter,
+    wfxwriter,
+    xyzreader,
+    xyzwriter,
+)
+from cclib.parser import data, logfileparser
 from cclib.parser.adfparser import ADF
 from cclib.parser.daltonparser import DALTON
 from cclib.parser.fchkparser import FChk
-from cclib.parser.gamessparser import GAMESS
 from cclib.parser.gamessdatparser import GAMESSDAT
+from cclib.parser.gamessparser import GAMESS
 from cclib.parser.gamessukparser import GAMESSUK
 from cclib.parser.gaussianparser import Gaussian
 from cclib.parser.jaguarparser import Jaguar
+from cclib.parser.logfilewrapper import FileWrapper
 from cclib.parser.molcasparser import Molcas
 from cclib.parser.molproparser import Molpro
 from cclib.parser.mopacparser import MOPAC
@@ -37,15 +43,7 @@ from cclib.parser.psi3parser import Psi3
 from cclib.parser.psi4parser import Psi4
 from cclib.parser.qchemparser import QChem
 from cclib.parser.turbomoleparser import Turbomole
-from cclib.parser.logfilewrapper import FileWrapper
-
-from cclib.io import cjsonreader
-from cclib.io import cjsonwriter
-from cclib.io import cmlwriter
-from cclib.io import moldenwriter
-from cclib.io import wfxwriter
-from cclib.io import xyzreader
-from cclib.io import xyzwriter
+from cclib.parser.utils import find_package
 
 _has_cclib2openbabel = find_package("openbabel")
 if _has_cclib2openbabel:

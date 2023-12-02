@@ -8,10 +8,10 @@
 """Test NMR logfiles in cclib."""
 
 import os
-import numpy
 import unittest
-import pytest
 
+import numpy
+import pytest
 from skip import skipForParser
 
 __filedir__ = os.path.realpath(os.path.dirname(__file__))

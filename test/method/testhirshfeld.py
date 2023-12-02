@@ -7,22 +7,21 @@
 
 """Test the Hirshfeld Method in cclib"""
 
-import sys
-import os
 import logging
+import os
+import sys
 import unittest
 
-import numpy
-
-from cclib.method import Hirshfeld, volume
-from cclib.parser import Psi4
 from cclib.io import ccread
+from cclib.method import Hirshfeld, volume
 from cclib.method.calculationmethod import MissingAttributeError
+from cclib.parser import Psi4
 
+import numpy
+import pytest
 from numpy.testing import assert_allclose
 
 from ..test_data import getdatafile
-import pytest
 
 
 class HirshfeldTest(unittest.TestCase):

@@ -13,14 +13,12 @@
 # https://github.com/ben-albrecht/cclib/blob/master/cclib/parser/mopacparser.py
 # Merged and modernized by Geoff Hutchison
 
-import re
 import math
+import re
+
+from cclib.parser import data, logfileparser, utils
 
 import numpy
-
-from cclib.parser import data
-from cclib.parser import logfileparser
-from cclib.parser import utils
 
 
 def symbol2int(symbol):

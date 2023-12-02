@@ -10,11 +10,10 @@
 import os
 import unittest
 
-import numpy
 import cclib
 
+import numpy
 from skip import skipForParser
-
 
 __filedir__ = os.path.realpath(os.path.dirname(__file__))
 

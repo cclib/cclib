@@ -9,22 +9,21 @@
 """Script for loading data from computational chemistry files."""
 
 
+import difflib
 import glob
 import logging
 import os.path
-import difflib
-from functools import partial
-from pprint import pprint
 
 # This is needed for testing purposes only.
 import sys
+from functools import partial
+from pprint import pprint
 
-import numpy
-
+from cclib.io import ccread
 from cclib.parser import ccData
 from cclib.parser.logfilewrapper import URL_PATTERN
-from cclib.io import ccread
 
+import numpy
 
 # Set up options for pretty-printing output.
 pprint = partial(pprint, width=120, compact=True)

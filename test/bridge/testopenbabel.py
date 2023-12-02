@@ -8,9 +8,9 @@
 import os
 import unittest
 
-import numpy
-
 from cclib.bridge import cclib2openbabel
+
+import numpy
 
 
 class OpenbabelTest(unittest.TestCase):
