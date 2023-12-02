@@ -10,10 +10,9 @@
 
 import itertools
 
-import numpy
+from cclib.parser import logfileparser, utils
 
-from cclib.parser import logfileparser
-from cclib.parser import utils
+import numpy
 
 
 def create_atomic_orbital_names(orbitals):

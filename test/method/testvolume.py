@@ -7,17 +7,20 @@
 
 """Test the Volume and related methods in cclib"""
 
-import os, sys
+import os
+import sys
 import unittest
-import numpy
 
 from cclib.method import volume
 from cclib.parser import Gaussian, Psi4
 
+import numpy
+
 sys.path.insert(1, "..")
 
-from ..test_data import getdatafile
 from numpy.testing import assert_allclose
+
+from ..test_data import getdatafile
 
 
 class VolumeTest(unittest.TestCase):

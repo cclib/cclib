@@ -7,10 +7,10 @@
 
 import unittest
 
-import numpy
-
 from cclib.bridge import cclib2biopython
 from cclib.parser.utils import find_package
+
+import numpy
 
 
 class BiopythonTest(unittest.TestCase):

@@ -9,10 +9,9 @@
 
 import copy
 
-import numpy
+from cclib.parser.utils import convertor, find_package
 
-from cclib.parser.utils import convertor
-from cclib.parser.utils import find_package
+import numpy
 
 """ In the dictionary sym2powerlist below, each element is a list that contain the combinations of
     powers that are applied to x, y, and z in the equation for the gaussian primitives --

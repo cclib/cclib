@@ -8,15 +8,14 @@
 """Parser for ORCA output files"""
 
 
+import datetime
 import re
 from itertools import zip_longest
-import datetime
+
+from cclib.parser import logfileparser, utils
 
 import numpy
 from packaging.version import parse as parse_version
-
-from cclib.parser import logfileparser
-from cclib.parser import utils
 
 
 class ORCA(logfileparser.Logfile):

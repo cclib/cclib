@@ -11,11 +11,9 @@ import logging
 from collections import namedtuple
 from typing import Any, Dict, List, Mapping, Optional
 
+from cclib.method import Electrons, orbitals
+
 import numpy
-
-from cclib.method import Electrons
-from cclib.method import orbitals
-
 
 Attribute = namedtuple("Attribute", ["type", "json_key", "attribute_path"])
 

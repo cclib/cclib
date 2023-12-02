@@ -10,16 +10,12 @@
 import datetime
 import os
 import unittest
+from typing import List
 
 import numpy
 import packaging
-
 from common import get_minimum_carbon_separation
-
-from skip import skipForParser
-from skip import skipForLogfile
-from typing import List
-
+from skip import skipForLogfile, skipForParser
 
 __filedir__ = os.path.realpath(os.path.dirname(__file__))
 

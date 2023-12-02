@@ -10,11 +10,10 @@
 import itertools
 import re
 
-import numpy
-
-from cclib.parser import logfileparser
-from cclib.parser import utils
+from cclib.parser import logfileparser, utils
 from cclib.parser.logfileparser import StopParsing
+
+import numpy
 
 
 class ADF(logfileparser.Logfile):

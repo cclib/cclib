@@ -7,16 +7,16 @@
 
 """Bridge for using cclib data in ASE (https://wiki.fysik.dtu.dk/ase/)."""
 
-import numpy as np
-
 from cclib.parser.data import ccData
 from cclib.parser.utils import find_package
+
+import numpy as np
 
 _found_ase = find_package("ase")
 if _found_ase:
     from ase import Atoms, units
-    from ase.io.trajectory import Trajectory
     from ase.calculators.calculator import PropertyNotImplementedError
+    from ase.io.trajectory import Trajectory
 
 
 def _check_ase(found_ase):

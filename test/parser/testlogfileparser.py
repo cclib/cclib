@@ -16,9 +16,9 @@ from unittest import mock
 from urllib.request import urlopen
 
 import cclib
+
 import pytest
 from pytest import MonkeyPatch
-
 
 __filedir__ = os.path.dirname(__file__)
 __filepath__ = os.path.realpath(__filedir__)

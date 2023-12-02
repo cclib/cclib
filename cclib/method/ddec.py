@@ -7,20 +7,19 @@
 
 """Calculation of DDEC charges based on data parsed by cclib."""
 import copy
-import random
-import numpy
 import logging
 import math
 import os
+import random
 import sys
+from typing import List
 
 from cclib.method.calculationmethod import Method
 from cclib.method.stockholder import Stockholder
 from cclib.method.volume import electrondensity_spin
-from cclib.parser.utils import convertor
-from cclib.parser.utils import find_package
+from cclib.parser.utils import convertor, find_package
 
-from typing import List
+import numpy
 
 
 class MissingInputError(Exception):

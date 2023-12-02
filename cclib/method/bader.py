@@ -7,14 +7,15 @@
 
 """Calculation of Bader's QTAIM charges based on data parsed by cclib."""
 import copy
-import random
-import numpy
 import logging
 import math
+import random
 
 from cclib.method.calculationmethod import Method
 from cclib.method.volume import electrondensity_spin
 from cclib.parser.utils import convertor
+
+import numpy
 
 # Distance between two adjacent grids (sqrt[2] or sqrt[3] for uniform Cartesian grid).
 _griddist = numpy.array(

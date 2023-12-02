@@ -12,10 +12,10 @@ The description of charges is from https://doi.org/10.1021/ct200866d.
 
 import logging
 
+from cclib.method.calculationmethod import Method
+
 import numpy as np
 import periodictable.covalent_radius as covalent_radius
-
-from cclib.method.calculationmethod import Method
 
 
 class CM5(Method):

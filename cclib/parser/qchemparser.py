@@ -7,16 +7,16 @@
 
 """Parser for Q-Chem output files"""
 
+import datetime
 import itertools
 import math
 import re
-import datetime
+
+from cclib.parser import logfileparser, utils
+
 import numpy
-
-from packaging.version import parse as parse_version, Version
-
-from cclib.parser import logfileparser
-from cclib.parser import utils
+from packaging.version import Version
+from packaging.version import parse as parse_version
 
 
 class QChem(logfileparser.Logfile):

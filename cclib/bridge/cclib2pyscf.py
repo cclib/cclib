@@ -7,7 +7,8 @@
 
 """Bridge for using cclib data in PySCF (https://github.com/pyscf/pyscf)."""
 
-from cclib.parser.utils import find_package, PeriodicTable, convertor
+from cclib.parser.utils import PeriodicTable, convertor, find_package
+
 import numpy as np
 
 l_sym2num = {"S": 0, "P": 1, "D": 2, "F": 3, "G": 4}

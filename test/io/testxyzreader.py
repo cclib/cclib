@@ -10,10 +10,9 @@
 import os
 import unittest
 
-import numpy as np
-
 import cclib
 
+import numpy as np
 
 __filedir__ = os.path.dirname(__file__)
 __filepath__ = os.path.realpath(__filedir__)

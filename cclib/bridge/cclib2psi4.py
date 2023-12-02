@@ -7,9 +7,9 @@
 
 """Bridge for using cclib data in Psi4 (http://www.psicode.org/)."""
 
-import numpy as np
-
 from cclib.parser.utils import find_package
+
+import numpy as np
 
 _found_psi4 = find_package("psi4")
 if _found_psi4:

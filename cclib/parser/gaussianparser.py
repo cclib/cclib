@@ -8,14 +8,13 @@
 """Parser for Gaussian output files"""
 
 
-import re
 import datetime
-import numpy
+import re
 
-from cclib.parser import data
-from cclib.parser import logfileparser
-from cclib.parser import utils
+from cclib.parser import data, logfileparser, utils
 from cclib.parser.logfileparser import StopParsing
+
+import numpy
 
 
 class Gaussian(logfileparser.Logfile):

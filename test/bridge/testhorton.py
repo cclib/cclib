@@ -5,15 +5,17 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
+import os
+import sys
 import unittest
-import os, sys
-import numpy
 
 from cclib.bridge import cclib2horton
-from ..test_data import getdatafile
 from cclib.parser.utils import find_package
 
+import numpy
 from numpy.testing import assert_array_almost_equal
+
+from ..test_data import getdatafile
 
 
 class HortonTest(unittest.TestCase):
@@ -34,8 +36,8 @@ class HortonTest(unittest.TestCase):
             raise ImportError("Must install iodata to run this test")
 
         from iodata import IOData
-        from iodata.orbitals import MolecularOrbitals
         from iodata.api import load_one
+        from iodata.orbitals import MolecularOrbitals
 
         self._hortonver = 3
 

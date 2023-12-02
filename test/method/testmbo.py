@@ -7,15 +7,15 @@
 
 """Test the MBO method in cclib"""
 
-import sys
-import os
 import logging
+import os
+import sys
 import unittest
-
-import numpy
 
 from cclib.method import MBO
 from cclib.parser import Gaussian
+
+import numpy
 
 sys.path.insert(1, "..")
 

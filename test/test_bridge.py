@@ -13,13 +13,14 @@ import unittest
 sys.path.insert(1, "bridge")
 
 if sys.version_info[1] >= 6:
+    from .bridge.testhorton import HortonTest
     from .bridge.testpsi4 import *
     from .bridge.testpyscf import *
-    from .bridge.testhorton import HortonTest
 if sys.version_info[1] >= 5:
     from .bridge.testase import *
 if sys.version_info[1] >= 4:
     from .bridge.testbiopython import *
+
 from .bridge.testopenbabel import *
 from .bridge.testpyquante import pyquante2Test
 

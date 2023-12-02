@@ -11,8 +11,8 @@ import unittest
 from unittest import mock
 
 import cclib
-import pytest
 
+import pytest
 
 __filedir__ = os.path.dirname(__file__)
 __filepath__ = os.path.realpath(__filedir__)

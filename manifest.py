@@ -11,7 +11,6 @@ import glob
 import os
 from pathlib import Path
 
-
 files = ["ANNOUNCE", "CHANGELOG", "LICENSE", "README.md", "THANKS"]
 files += ["pyproject.toml", "setup.py"]
 

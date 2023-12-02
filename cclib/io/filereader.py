@@ -7,8 +7,8 @@
 
 """Generic file reader and related tools"""
 
-from abc import ABC, abstractmethod
 import typing
+from abc import ABC, abstractmethod
 
 from cclib.parser.logfilewrapper import FileWrapper
 

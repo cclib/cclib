@@ -7,7 +7,7 @@
 
 from typing import Any, Optional, Union
 
-from PyQt4 import QtGui, QtCore
+from PyQt4 import QtCore, QtGui
 
 
 class Qt4Progress(QtGui.QProgressDialog):

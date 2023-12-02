@@ -9,13 +9,12 @@
 
 import os
 import unittest
-import numpy as np
 
 import cclib
-
 from cclib.io.filewriter import MissingAttributeError
-from cclib.io.wfxwriter import _section
-from cclib.io.wfxwriter import _list_format
+from cclib.io.wfxwriter import _list_format, _section
+
+import numpy as np
 import pytest
 
 __filedir__ = os.path.dirname(__file__)

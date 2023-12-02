@@ -7,14 +7,15 @@
 
 """A writer for MOLDEN format files."""
 
-import os.path
-import math
 import decimal
-import numpy
+import math
+import os.path
 from itertools import zip_longest
 
-from cclib.parser import utils
 from cclib.io import filewriter
+from cclib.parser import utils
+
+import numpy
 
 
 def round_molden(num, p=6):

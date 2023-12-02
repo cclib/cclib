@@ -9,9 +9,9 @@
 
 import random
 
-import numpy
-
 from cclib.method.density import Density
+
+import numpy
 
 
 class MBO(Density):

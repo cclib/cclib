@@ -8,10 +8,9 @@
 """Parser for Formatted Checkpoint files"""
 
 
-import numpy
+from cclib.parser import logfileparser, utils
 
-from cclib.parser import logfileparser
-from cclib.parser import utils
+import numpy
 
 SHELL_ORBITALS = {
     0: ["S"],

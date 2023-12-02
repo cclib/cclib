@@ -10,17 +10,15 @@ import inspect
 import logging
 import random
 import sys
+import typing
 from abc import ABC, abstractmethod
 from typing import Any, Iterable, List, Optional
-import typing
-
-import numpy
 
 from cclib.parser import utils
-from cclib.parser.data import ccData
-from cclib.parser.data import ccData_optdone_bool
+from cclib.parser.data import ccData, ccData_optdone_bool
 from cclib.parser.logfilewrapper import FileWrapper
 
+import numpy
 
 # This seems to avoid a problem with Avogadro.
 logging.logMultiprocessing = 0

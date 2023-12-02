@@ -9,9 +9,9 @@
 
 import random
 
-import numpy
-
 from cclib.method.population import Population
+
+import numpy
 
 
 class CSPA(Population):

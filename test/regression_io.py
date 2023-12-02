@@ -5,12 +5,10 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
+import unittest
 from pathlib import Path
 
-import unittest
-
 import cclib
-
 
 __filedir__ = Path(__file__).parent
 __filepath__ = Path(__filedir__).resolve()

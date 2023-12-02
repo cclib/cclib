@@ -10,11 +10,10 @@
 import logging
 from typing import Tuple
 
-import numpy as np
-
 from cclib.method.calculationmethod import Method
-from cclib.parser.utils import PeriodicTable
-from cclib.parser.utils import find_package, convertor
+from cclib.parser.utils import PeriodicTable, convertor, find_package
+
+import numpy as np
 
 _found_periodictable = find_package("periodictable")
 if _found_periodictable:

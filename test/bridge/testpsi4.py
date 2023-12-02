@@ -7,10 +7,10 @@
 
 import unittest
 
-import numpy as np
-
 from cclib.bridge import cclib2psi4
 from cclib.parser.utils import find_package
+
+import numpy as np
 
 
 class Psi4Test(unittest.TestCase):
