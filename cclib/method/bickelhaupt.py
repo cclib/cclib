@@ -9,9 +9,9 @@
 
 import random
 
-import numpy
-
 from cclib.method.population import Population
+
+import numpy
 
 
 class Bickelhaupt(Population):
@@ -117,9 +117,7 @@ class Bickelhaupt(Population):
             beta = numpy.zeros([size], "d")
 
         for spin in range(len(self.fragresults)):
-
             for i in range(self.data.homos[spin] + 1):
-
                 temp = numpy.reshape(self.fragresults[spin][i], (size,))
                 self.fragcharges = self.fragcharges + temp
                 if spin == 0:

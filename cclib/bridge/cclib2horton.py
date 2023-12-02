@@ -7,9 +7,10 @@
 
 """Bridge for using cclib data in horton (http://theochem.github.io/horton)."""
 
-import numpy
 from cclib.parser.data import ccData
 from cclib.parser.utils import convertor, find_package
+
+import numpy
 
 _found_iodata = find_package("iodata")
 
@@ -26,7 +27,7 @@ def check_horton():
 
 
 def makehorton(data):
-    """ Create horton IOData object from ccData object """
+    """Create horton IOData object from ccData object"""
 
     check_horton()
     attributes = {}
@@ -52,7 +53,7 @@ def makehorton(data):
             # 0's (unoccupied). Beta orbitals follow directly after alpha orbitals, forming
             # 1D array.
             "occs": numpy.concatenate(
-                (numpy.ones(data.homos[0]), numpy.zeros(data.nmo - data.homos[0])),
+                (numpy.ones(data.homos[0]), numpy.zeros(data.nmo - data.homos[0]))
             ),
             "coeffs": data.mocoeffs[0].T,
             "energies": None,
@@ -62,26 +63,16 @@ def makehorton(data):
         if len(data.mocoeffs) == 2:
             moattr["kind"] = "unrestricted"
             moattr["norbb"] = data.nmo
-            moattr["coeffs"] = numpy.concatenate(
-                (moattr["coeffs"], data.mocoeffs[1].T),
-                axis=1
-            )
+            moattr["coeffs"] = numpy.concatenate((moattr["coeffs"], data.mocoeffs[1].T), axis=1)
             moattr["occs"] = numpy.concatenate(
-                    (
-                        moattr["occs"],
-                        numpy.ones(data.homos[1]),
-                        numpy.zeros(data.nmo - data.homos[1]),
-                    )
+                (moattr["occs"], numpy.ones(data.homos[1]), numpy.zeros(data.nmo - data.homos[1]))
             )
         # Then construct MolecularOrbitals object
         attributes["mo"] = MolecularOrbitals(**moattr)
     # if multiplicity known; float / should not be set when mocoeffs present
     # Refer to IOData code:
     # https://github.com/theochem/iodata/blob/b36513d162f99b57264005583701c6987037839c/iodata/iodata.py#L174
-    if (
-        hasattr(data, "mult")
-        and not hasattr(data, "mocoeffs")
-    ):
+    if hasattr(data, "mult") and not hasattr(data, "mocoeffs"):
         attributes["spinpol"] = data.mult - 1  # horton has 2S+1, iodata has 2S
     # if pseudopotentials exist; numpy.ndarray (size natom)
     if hasattr(data, "coreelectrons"):
@@ -94,7 +85,7 @@ def makehorton(data):
 
 
 def makecclib(iodat):
-    """ Create cclib ccData object from horton IOData object """
+    """Create cclib ccData object from horton IOData object"""
 
     check_horton()
     attributes = {}
@@ -107,9 +98,9 @@ def makecclib(iodat):
         attributes["atomcoords"] = [convertor(iodat.atcoords, "bohr", "Angstrom")]
     if hasattr(iodat, "mo") and hasattr(iodat.mo, "norba"):
         # MO coefficient should be transposed to match the dimensions.
-        attributes["mocoeffs"] = [iodat.mo.coeffs[:, :iodat.mo.norba].T]
+        attributes["mocoeffs"] = [iodat.mo.coeffs[:, : iodat.mo.norba].T]
         if iodat.mo.kind == "unrestricted":
-            attributes["mocoeffs"].append(iodat.mo.coeffs[:, iodat.mo.norba:].T)
+            attributes["mocoeffs"].append(iodat.mo.coeffs[:, iodat.mo.norba :].T)
     if hasattr(iodat, "spinpol") and isinstance(iodat.spinpol, int):
         # IOData stores 2S, ccData stores 2S+1.
         attributes["mult"] = iodat.spinpol + 1

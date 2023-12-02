@@ -10,20 +10,18 @@ import inspect
 import logging
 import random
 import sys
+import typing
 from abc import ABC, abstractmethod
 from typing import Any, Iterable, List, Optional
-import typing
+
+from cclib.parser import utils
+from cclib.parser.data import ccData, ccData_optdone_bool
+from cclib.parser.logfilewrapper import FileWrapper
 
 import numpy
 
-from cclib.parser import utils
-from cclib.parser.data import ccData
-from cclib.parser.data import ccData_optdone_bool
-from cclib.parser.logfilewrapper import FileWrapper
-
-
 # This seems to avoid a problem with Avogadro.
-logging.logMultiprocessing = 0    
+logging.logMultiprocessing = 0
 
 
 class StopParsing(Exception):
@@ -31,16 +29,21 @@ class StopParsing(Exception):
     An exception to signal that parsing should stop.
     """
 
+
 class Logfile(ABC):
     """Abstract class for logfile objects."""
 
-    def __init__(self,
-        source: typing.Union[str, typing.IO, FileWrapper, typing.List[typing.Union[str, typing.IO]]],
+    def __init__(
+        self,
+        source: typing.Union[
+            str, typing.IO, FileWrapper, typing.List[typing.Union[str, typing.IO]]
+        ],
         loglevel: int = logging.ERROR,
         logname: str = "Log",
         logstream=sys.stderr,
         datatype=ccData_optdone_bool,
-        **kwds):
+        **kwds,
+    ):
         """Initialise the Logfile object.
 
         This should be called by a subclass in its own __init__ method.
@@ -55,8 +58,8 @@ class Logfile(ABC):
         if not isinstance(source, FileWrapper):
             source = FileWrapper(source)
             # Probably the wrong type given.
-            #raise TypeError("Source does not have an 'input_files' attribute, are you sure it inherits from FileWrapper?") from None
-            
+            # raise TypeError("Source does not have an 'input_files' attribute, are you sure it inherits from FileWrapper?") from None
+
         self.inputfile = source
         # If our parser needs a certain file ordering, set that now.
         self.inputfile.sort(self.sort_input(self.inputfile.filenames))
@@ -80,8 +83,7 @@ class Logfile(ABC):
             self.metadata["package"] = self.logname
             self.metadata["methods"] = []
             # Indicate if the computation has completed successfully
-            self.metadata['success'] = False
-
+            self.metadata["success"] = False
 
         # Periodic table of elements.
         self.table = utils.PeriodicTable()
@@ -97,12 +99,12 @@ class Logfile(ABC):
         if optdone_as_list:
             self.datatype = ccData
         # Parsing of Natural Orbitals and Natural Spin Orbtials into one attribute
-        self.unified_no_nso = kwds.get("future",False)
-        
+        self.unified_no_nso = kwds.get("future", False)
+
     @property
     def filename(self):
         return self.inputfile.file_name
-    
+
     @classmethod
     def sort_input(self, file_names: typing.List[str]) -> typing.List:
         """
@@ -111,10 +113,8 @@ class Logfile(ABC):
         return file_names
 
     def __setattr__(self, name, value):
-
         # Send info to logger if the attribute is in the list of attributes.
         if name in ccData._attrlist and hasattr(self, "logger"):
-
             # Call logger.info() only if the attribute is new.
             if not hasattr(self, name):
                 if type(value) in [numpy.ndarray, list]:
@@ -131,13 +131,9 @@ class Logfile(ABC):
         # Check that the sub-class has an extract attribute,
         #  that is callable with the proper number of arguemnts.
         if not hasattr(self, "extract"):
-            raise AttributeError(
-                f"Class {self.__class__.__name__} has no extract() method."
-            )
+            raise AttributeError(f"Class {self.__class__.__name__} has no extract() method.")
         if not callable(self.extract):
-            raise AttributeError(
-                f"Method {self.__class__.__name__}._extract not callable."
-            )
+            raise AttributeError(f"Method {self.__class__.__name__}._extract not callable.")
         if len(inspect.getfullargspec(self.extract)[0]) != 3:
             raise AttributeError(
                 f"Method {self.__class__.__name__}._extract takes wrong number of arguments."
@@ -177,7 +173,7 @@ class Logfile(ABC):
                 break
             except Exception as e:
                 self.logger.error("Encountered error when parsing.")
-                
+
                 # Not all input files support last_line.
                 if hasattr(self.inputfile, "last_line"):
                     self.logger.error(f"Last line read: {self.inputfile.last_line}")
@@ -189,7 +185,7 @@ class Logfile(ABC):
         # If atomcoords were not parsed, but some input coordinates were ("inputcoords").
         # This is originally from the Gaussian parser, a regression fix.
         if not hasattr(self, "atomcoords") and hasattr(self, "inputcoords"):
-            self.atomcoords = numpy.array(self.inputcoords, 'd')
+            self.atomcoords = numpy.array(self.inputcoords, "d")
 
         # Set nmo if not set already - to nbasis.
         if not hasattr(self, "nmo") and hasattr(self, "nbasis"):
@@ -275,7 +271,7 @@ class Logfile(ABC):
 
         Note that this can be used for scalars and lists alike, whenever we want
         to set a value for an attribute.
-        
+
         Parameters
         ----------
         name: str
@@ -295,12 +291,12 @@ class Logfile(ABC):
                 )
 
         setattr(self, name, value)
-        
+
     def del_attribute(self, name):
         """Safely remove/delete an attribute, even if it does not exist."""
         try:
             delattr(self, name)
-            
+
         except AttributeError:
             pass
 
@@ -311,9 +307,11 @@ class Logfile(ABC):
             self.set_attribute(name, [])
         getattr(self, name).append(value)
 
-    def extend_attribute(self, name: str, values: Iterable[Any], index: Optional[int] = None) -> None:
+    def extend_attribute(
+        self, name: str, values: Iterable[Any], index: Optional[int] = None
+    ) -> None:
         """Appends an iterable of values to an attribute."""
-        
+
         if not hasattr(self, name):
             self.set_attribute(name, [])
 
@@ -322,8 +320,9 @@ class Logfile(ABC):
         else:
             getattr(self, name).extend(values)
 
-    def _assign_coreelectrons_to_element(self, element: str, ncore: int,
-                                         ncore_is_total_count: bool = False) -> None:
+    def _assign_coreelectrons_to_element(
+        self, element: str, ncore: int, ncore_is_total_count: bool = False
+    ) -> None:
         """Assign core electrons to all instances of the element.
 
         It's usually reasonable to do this for all atoms of a given element,
@@ -344,8 +343,8 @@ class Logfile(ABC):
         if ncore_is_total_count:
             ncore = ncore // len(indices)
 
-        if not hasattr(self, 'coreelectrons'):
-            self.coreelectrons = numpy.zeros(self.natom, 'i')
+        if not hasattr(self, "coreelectrons"):
+            self.coreelectrons = numpy.zeros(self.natom, "i")
         self.coreelectrons[indices] = ncore
 
     def skip_lines(self, inputfile, sequence: Iterable[str]) -> List[str]:
@@ -360,15 +359,10 @@ class Logfile(ABC):
             'stars' or 's'      - the line should contain only stars (or spaces)
         """
 
-        expected_characters = {
-            '-': ['dashes', 'd'],
-            '=': ['equals', 'e'],
-            '*': ['stars', 's'],
-        }
+        expected_characters = {"-": ["dashes", "d"], "=": ["equals", "e"], "*": ["stars", "s"]}
 
         lines = []
         for expected in sequence:
-
             # Read the line we want to skip.
             line = next(inputfile)
 
@@ -377,19 +371,25 @@ class Logfile(ABC):
                 try:
                     assert line.strip() == ""
                 except AssertionError:
-                    frame, fname, lno, funcname, funcline, index = inspect.getouterframes(inspect.currentframe())[1]
-                    parser = fname.split('/')[-1]
-                    msg = f"In {parser}, line {int(lno)}, line not blank as expected: {line.strip()}"
+                    frame, fname, lno, funcname, funcline, index = inspect.getouterframes(
+                        inspect.currentframe()
+                    )[1]
+                    parser = fname.split("/")[-1]
+                    msg = (
+                        f"In {parser}, line {int(lno)}, line not blank as expected: {line.strip()}"
+                    )
                     self.logger.warning(msg)
 
             # All cases of heterogeneous lines can be dealt with by the same code.
             for character, keys in expected_characters.items():
                 if expected in keys:
                     try:
-                        assert utils.str_contains_only(line.strip(), [character, ' '])
+                        assert utils.str_contains_only(line.strip(), [character, " "])
                     except AssertionError:
-                        frame, fname, lno, funcname, funcline, index = inspect.getouterframes(inspect.currentframe())[1]
-                        parser = fname.split('/')[-1]
+                        frame, fname, lno, funcname, funcline, index = inspect.getouterframes(
+                            inspect.currentframe()
+                        )[1]
+                        parser = fname.split("/")[-1]
                         msg = f"In {parser}, line {int(lno)}, line not all {keys[0]} as expected: {line.strip()}"
                         self.logger.warning(msg)
                         continue
@@ -398,15 +398,14 @@ class Logfile(ABC):
             lines.append(line)
 
         return lines
-    
+
     @staticmethod
     def next_filled_line(inputfile):
         """Return the next line that contains something other than whitespace."""
         while True:
             line = next(inputfile)
-            
+
             if line.strip() != "":
                 return line
 
     skip_line = lambda self, inputfile, expected: self.skip_lines(inputfile, [expected])
-

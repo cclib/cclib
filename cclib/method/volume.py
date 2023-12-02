@@ -9,10 +9,9 @@
 
 import copy
 
-import numpy
+from cclib.parser.utils import convertor, find_package
 
-from cclib.parser.utils import convertor
-from cclib.parser.utils import find_package
+import numpy
 
 """ In the dictionary sym2powerlist below, each element is a list that contain the combinations of
     powers that are applied to x, y, and z in the equation for the gaussian primitives --
@@ -143,9 +142,7 @@ if _found_pyvtk:
 
 def _check_pyquante():
     if (not _found_pyquante) and (not _found_pyquante2):
-        raise ImportError(
-            "You must install `pyquante2` or `PyQuante` to use this function."
-        )
+        raise ImportError("You must install `pyquante2` or `PyQuante` to use this function.")
 
 
 def _check_pyvtk(found_pyvtk):
@@ -168,15 +165,12 @@ class Volume(object):
     """
 
     def __init__(self, origin, topcorner, spacing):
-
         self.origin = numpy.asarray(origin, dtype=float)
         self.topcorner = numpy.asarray(topcorner, dtype=float)
         self.spacing = numpy.asarray(spacing, dtype=float)
         self.numpts = []
         for i in range(3):
-            self.numpts.append(
-                int((self.topcorner[i] - self.origin[i]) / self.spacing[i] + 1)
-            )
+            self.numpts.append(int((self.topcorner[i] - self.origin[i]) / self.spacing[i] + 1))
         self.data = numpy.zeros(tuple(self.numpts), "d")
 
     def __str__(self):
@@ -188,10 +182,7 @@ class Volume(object):
 
         fformat = fformat.lower()
 
-        writers = {
-            "vtk": self.writeasvtk,
-            "cube": self.writeascube,
-        }
+        writers = {"vtk": self.writeasvtk, "cube": self.writeascube}
 
         if fformat not in writers:
             raise RuntimeError("File format must be either VTK or Cube")
@@ -319,9 +310,7 @@ def wavefunction(ccdata, volume, mocoeffs):
     wavefn.data = numpy.zeros(wavefn.data.shape, "d")
 
     x, y, z = getGrid(wavefn)
-    gridpoints = numpy.asanyarray(
-        tuple((xp, yp, zp) for xp in x for yp in y for zp in z)
-    )
+    gridpoints = numpy.asanyarray(tuple((xp, yp, zp) for xp in x for yp in y for zp in z))
 
     # PyQuante & pyquante2
     for bs in range(len(bfs)):
@@ -353,9 +342,7 @@ def electrondensity_spin(ccdata, volume, mocoeffslist):
 
     Note: mocoeffs is a list of NumPy arrays. The list will be of length 1.
     """
-    assert (
-        len(mocoeffslist) == 1
-    ), "mocoeffslist input to the function should have length of 1."
+    assert len(mocoeffslist) == 1, "mocoeffslist input to the function should have length of 1."
     _check_pyquante()
     bfs = getbfs(ccdata)
 
@@ -363,9 +350,7 @@ def electrondensity_spin(ccdata, volume, mocoeffslist):
     density.data = numpy.zeros(density.data.shape, "d")
 
     x, y, z = getGrid(density)
-    gridpoints = numpy.asanyarray(
-        tuple((xp, yp, zp) for xp in x for yp in y for zp in z)
-    )
+    gridpoints = numpy.asanyarray(tuple((xp, yp, zp) for xp in x for yp in y for zp in z))
 
     # For occupied orbitals
     # `mocoeff` and `gbasis` in ccdata object is ordered in a way `homos` can specify which orbital
@@ -378,7 +363,7 @@ def electrondensity_spin(ccdata, volume, mocoeffslist):
                     wavefn += numpy.resize(
                         pyamp(bfs, bs, gridpoints) * mocoeff[bs], density.data.shape
                     )
-            density.data += wavefn ** 2
+            density.data += wavefn**2
     return density
 
 
@@ -405,9 +390,9 @@ def electrondensity(ccdata, volume, mocoeffslist):
     """
 
     if len(mocoeffslist) == 2:
-        return electrondensity_spin(
-            ccdata, volume, [mocoeffslist[0]]
-        ) + electrondensity_spin(ccdata, volume, [mocoeffslist[1]])
+        return electrondensity_spin(ccdata, volume, [mocoeffslist[0]]) + electrondensity_spin(
+            ccdata, volume, [mocoeffslist[1]]
+        )
     else:
         edens = electrondensity_spin(ccdata, volume, [mocoeffslist[0]])
         edens.data *= 2

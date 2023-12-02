@@ -7,20 +7,19 @@
 
 """Calculation of DDEC charges based on data parsed by cclib."""
 import copy
-import random
-import numpy
 import logging
 import math
 import os
+import random
 import sys
+from typing import List
 
 from cclib.method.calculationmethod import Method
 from cclib.method.stockholder import Stockholder
 from cclib.method.volume import electrondensity_spin
-from cclib.parser.utils import convertor
-from cclib.parser.utils import find_package
+from cclib.parser.utils import convertor, find_package
 
-from typing import List
+import numpy
 
 
 class MissingInputError(Exception):
@@ -48,24 +47,24 @@ class DDEC6(Stockholder):
         loglevel=logging.INFO,
         logname="Log",
     ):
-        """ Initialize DDEC6 object.
-            Inputs are:
-                data -- ccData object that describe target molecule.
-                volume -- Volume object that describe target Cartesian grid.
-                proatom_path -- path to proatom densities
-                (directory containing atoms.h5 in horton or c2_001_001_000_400_075.txt in chargemol)
-                convergence_level -- convergence level to use for conditioning densities in step 3
-                max_iteration -- maximum iteration to optimize phi in step 3-6
-            
-            Note:
-                Proatom densities are used in DDEC6 algorithm in a similar way to other stockholder
-                partitioning methods. They are used as references to appropriately partition the
-                total densities (which is the density stored in cube files). Proatom densities are
-                densities obtained for single atom or ion in a radial grid that originates from
-                the atom or ion.
-                In DDEC6 algorithm, stockholder partitioning is heavily modified to ensure that the
-                total densities that are partitioned resemble the proatom densities and to prevent
-                the numerical algorithm from failing to converge.
+        """Initialize DDEC6 object.
+        Inputs are:
+            data -- ccData object that describe target molecule.
+            volume -- Volume object that describe target Cartesian grid.
+            proatom_path -- path to proatom densities
+            (directory containing atoms.h5 in horton or c2_001_001_000_400_075.txt in chargemol)
+            convergence_level -- convergence level to use for conditioning densities in step 3
+            max_iteration -- maximum iteration to optimize phi in step 3-6
+
+        Note:
+            Proatom densities are used in DDEC6 algorithm in a similar way to other stockholder
+            partitioning methods. They are used as references to appropriately partition the
+            total densities (which is the density stored in cube files). Proatom densities are
+            densities obtained for single atom or ion in a radial grid that originates from
+            the atom or ion.
+            In DDEC6 algorithm, stockholder partitioning is heavily modified to ensure that the
+            total densities that are partitioned resemble the proatom densities and to prevent
+            the numerical algorithm from failing to converge.
         """
         super().__init__(data, volume, proatom_path, progress, loglevel, logname)
 
@@ -88,12 +87,15 @@ class DDEC6(Stockholder):
         super()._check_required_attributes()
 
     def _cartesian_dist(self, pt1, pt2):
-        """ Small utility function that calculates Euclidian distance between two points
-            pt1 and pt2 are numpy arrays representing a point in Cartesian coordinates. """
+        """Small utility function that calculates Euclidian distance between two points
+        pt1 and pt2 are numpy arrays representing a point in Cartesian coordinates."""
         return numpy.sqrt(numpy.dot(pt1 - pt2, pt1 - pt2))
 
     def _read_proatom(
-        self, directory, atom_num, charge  # type = str  # type = int  # type = float
+        self,
+        directory,
+        atom_num,
+        charge,  # type = str  # type = int  # type = float
     ):
         return super()._read_proatom(directory, atom_num, charge)
 
@@ -109,7 +111,6 @@ class DDEC6(Stockholder):
         self.logger.info(
             f"Total charge density in the grid is {integrated_density}. If this does not match what is expected, using a finer grid may help."
         )
-
 
         # * STEP 1 *
         # Carry out step 1 of DDEC6 algorithm [Determining reference charge value]
@@ -235,8 +236,8 @@ class DDEC6(Stockholder):
         self.fragcharges = numpy.array(self.data.atomnos - self.N_A[-1], dtype=float)
 
     def _check_kappa(self):
-        """ Return whether kappa needs to be updated or not based on Figure S4.2
-            of doi: 10.1039/c6ra04656h
+        """Return whether kappa needs to be updated or not based on Figure S4.2
+        of doi: 10.1039/c6ra04656h
         """
         if numpy.any([x if x < -1e-5 else 0 for x in self.N_A[-1]]):
             return True
@@ -252,11 +253,11 @@ class DDEC6(Stockholder):
             return self._update_kappa
 
     def calculate_reference_charges(self):
-        """ Calculate reference charges from proatom density and molecular density
-            [STEP 1 and 2]
-            
-            Function returns calculated reference charges, localized charges, and stockholder
-            charges.
+        """Calculate reference charges from proatom density and molecular density
+        [STEP 1 and 2]
+
+        Function returns calculated reference charges, localized charges, and stockholder
+        charges.
         """
         # Generator object to iterate over the grid
         ngridx, ngridy, ngridz = self.charge_density.data.shape
@@ -267,12 +268,7 @@ class DDEC6(Stockholder):
         self.closest_r_index = numpy.zeros(grid_shape, dtype=int)
 
         indices = numpy.asanyarray(
-            tuple(
-                (x, y, z)
-                for x in range(ngridx)
-                for y in range(ngridy)
-                for z in range(ngridz)
-            )
+            tuple((x, y, z) for x in range(ngridx) for y in range(ngridy) for z in range(ngridz))
         )
         coordinates = self.charge_density.coordinates(indices)
 
@@ -280,9 +276,10 @@ class DDEC6(Stockholder):
             # Distance of the grid from atom grid
             self.closest_r_index[atomi] = numpy.argmin(
                 numpy.abs(
-                    self.radial_grid_r[atomi][..., numpy.newaxis] - numpy.linalg.norm(self.data.atomcoords[-1][atomi] - coordinates, axis=1)
+                    self.radial_grid_r[atomi][..., numpy.newaxis]
+                    - numpy.linalg.norm(self.data.atomcoords[-1][atomi] - coordinates, axis=1)
                 ),
-                axis=0
+                axis=0,
             ).reshape((ngridx, ngridy, ngridz))
 
             # Equation 54 in doi: 10.1039/c6ra04656h
@@ -317,8 +314,8 @@ class DDEC6(Stockholder):
         return reference_charges, localizedcharges, stockholdercharges
 
     def condition_densities(self):
-        """ Calculate conditioned densities
-            [STEP 3]
+        """Calculate conditioned densities
+        [STEP 3]
         """
         # Generator object to iterate over the grid
         ngridx, ngridy, ngridz = self.charge_density.data.shape
@@ -327,9 +324,7 @@ class DDEC6(Stockholder):
 
         for atomi in range(self.data.natom):
             # rho_ref -- Equation 41 in doi: 10.1039/c6ra04656h
-            self._rho_ref += self.proatom_density[atomi][
-                self.closest_r_index[atomi]
-            ]
+            self._rho_ref += self.proatom_density[atomi][self.closest_r_index[atomi]]
 
         self._candidates_bigPhi = []
         self._candidates_phi = []
@@ -395,9 +390,7 @@ class DDEC6(Stockholder):
 
         # rho_cond -- equation 65 in doi: 10.1039/c6ra04656h
         for atomi in range(self.data.natom):
-            self.rho_cond.data += self._cond_density[atomi][
-                self.closest_r_index[atomi]
-            ]
+            self.rho_cond.data += self._cond_density[atomi][self.closest_r_index[atomi]]
 
         rho_cond_sqrt = numpy.sqrt(self.rho_cond.data)
 
@@ -405,9 +398,7 @@ class DDEC6(Stockholder):
             self.tau.append(numpy.zeros_like(self.proatom_density[atomi], dtype=float))
             # leftterm is the first spherical average term in equation 66.
             # <rho^cond_A(r_A) / sqrt(rho^cond(r))>
-            self._rho_cond_cartesian[atomi] = self._cond_density[atomi][
-                self.closest_r_index[atomi]
-            ]
+            self._rho_cond_cartesian[atomi] = self._cond_density[atomi][self.closest_r_index[atomi]]
             self._leftterm[atomi] = self._rho_cond_cartesian[atomi] / rho_cond_sqrt
             for radiusi in range(len(self.tau[atomi])):
                 grid_filter = self.closest_r_index[atomi] == radiusi
@@ -458,8 +449,8 @@ class DDEC6(Stockholder):
         return ya
 
     def _calculate_w_and_u(self):
-        """ Calculate weights placed on each integration grid point
-            [STEP 4-7]
+        """Calculate weights placed on each integration grid point
+        [STEP 4-7]
         """
         # From equation 67, w_A(r_A) = self._cond_density
         # From equation 8, W(r) = self.rho_cond for the rest of this function
@@ -531,11 +522,11 @@ class DDEC6(Stockholder):
         return N_A
 
     def reshape_G(self):
-        """ Calculate G_A(r_A) and reshape densities
-        
-            This is a quantity introduced in DDEC6 as a constraint preventing the tails from being
-            too diffuse.
-            [STEP 4-7]
+        """Calculate G_A(r_A) and reshape densities
+
+        This is a quantity introduced in DDEC6 as a constraint preventing the tails from being
+        too diffuse.
+        [STEP 4-7]
         """
         self._candidates_bigPhi = []
         self._candidates_phi = []
@@ -581,11 +572,11 @@ class DDEC6(Stockholder):
             self._g[atomi] = self._update_phiaii(self.rho_wavg[atomi], bigphiAII[atomi], atomi)[1]
 
     def calculate_H(self):
-        """ Calculate H_A(r_A)
-            
-            This is a quantity introduced in DDEC6 as a constraint preventing the tails from being
-            too contracted.
-            [STEP 4-7]
+        """Calculate H_A(r_A)
+
+        This is a quantity introduced in DDEC6 as a constraint preventing the tails from being
+        too contracted.
+        [STEP 4-7]
         """
         self._h = []
         for atomi in range(len(self._g)):
@@ -686,24 +677,20 @@ class DDEC6(Stockholder):
         )
 
         for atomi in range(self.data.natom):
-            self.rho_cond.data += self._cond_density[atomi][
-                self.closest_r_index[atomi]
-            ]
-            self._rho_cond_cartesian[atomi] = self._cond_density[atomi][
-                self.closest_r_index[atomi]
-            ]
+            self.rho_cond.data += self._cond_density[atomi][self.closest_r_index[atomi]]
+            self._rho_cond_cartesian[atomi] = self._cond_density[atomi][self.closest_r_index[atomi]]
 
     def _converge_phi(self, phiA, superscript, atomi):
-        """ Update phi until it is positive.
-            This is used in step 3 (for phi_A^I) and in steps 4-6 (for phi_A^II).
-            
-            --- Inputs ---
-            phiA            Either phi_A^I or phi_A^II
-            superscript     1 when calculating phi_I (STEP 3)
-                            2 when calculating phi_II (STEPS 4-6)
-            atomi           Index of target atom as in ccData object
-            
-            Refer to Equation S101, Figure S1 and S3 for an overview.
+        """Update phi until it is positive.
+        This is used in step 3 (for phi_A^I) and in steps 4-6 (for phi_A^II).
+
+        --- Inputs ---
+        phiA            Either phi_A^I or phi_A^II
+        superscript     1 when calculating phi_I (STEP 3)
+                        2 when calculating phi_II (STEPS 4-6)
+        atomi           Index of target atom as in ccData object
+
+        Refer to Equation S101, Figure S1 and S3 for an overview.
         """
         # Initial value of bigphi is zero (Equation S100)
         bigphiA = 0.0
@@ -747,16 +734,16 @@ class DDEC6(Stockholder):
         return candidates_phi, candidates_bigphi
 
     def _parabolic_fit(self, pseudodensity, superscript, atomi):
-        """ Optimize phi using parabolic fitting.
-            This is used in step 3 (for phi_A^I) and in steps 4-6 (for phi_A^II).
-            
-            --- Inputs ---
-            phiA            Either phi_A^I or phi_A^II
-            superscript     1 when calculating phi_I (STEP 3)
-                            2 when calculating phi_II (STEPS 4-6)
-            atomi           Index of target atom as in ccData object
-            
-            Refer to Figure S1 and S3 for an overview.
+        """Optimize phi using parabolic fitting.
+        This is used in step 3 (for phi_A^I) and in steps 4-6 (for phi_A^II).
+
+        --- Inputs ---
+        phiA            Either phi_A^I or phi_A^II
+        superscript     1 when calculating phi_I (STEP 3)
+                        2 when calculating phi_II (STEPS 4-6)
+        atomi           Index of target atom as in ccData object
+
+        Refer to Figure S1 and S3 for an overview.
         """
         # Set update methods for phi_A^I or phi_A^II
         if superscript == 1:
@@ -850,7 +837,7 @@ class DDEC6(Stockholder):
                 # the first candidiate phi values are evaluated.
                 corphi = update(pseudodensity, corbigPhi, atomi)[0]
                 self._candidates_bigPhi[atomi] = numpy.array(
-                    [lowerbigPhi, midbigPhi, upperbigPhi, roots.max(), roots.min(), corbigPhi,],
+                    [lowerbigPhi, midbigPhi, upperbigPhi, roots.max(), roots.min(), corbigPhi],
                     dtype=float,
                 )
                 self._candidates_phi[atomi] = numpy.array(

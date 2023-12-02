@@ -10,10 +10,11 @@
 import os
 import sys
 
-from docs_common import check_cclib
-
 # Import cclib and check we are using the version from a subdirectory.
 import cclib
+
+from docs_common import check_cclib
+
 check_cclib(cclib)
 
 
@@ -27,10 +28,10 @@ def generate_coverage():
     # Change directory to where tests are and add it to the path. Because there are
     # separate directories for different branches/versions, and we use a symlink to
     # point to the one we want, we need to test the real path this link resolves to.
-    if "cclib_prod" in os.path.realpath('cclib'):
+    if "cclib_prod" in os.path.realpath("cclib"):
         testpath = "_build/cclib_prod"
     else:
-        assert "cclib_dev" in os.path.realpath('cclib')
+        assert "cclib_dev" in os.path.realpath("cclib")
         testpath = "_build/cclib_dev"
 
     os.chdir(testpath)
@@ -38,8 +39,9 @@ def generate_coverage():
     thispath = os.path.dirname(os.path.realpath(__file__))
     sys.path.insert(1, os.path.join(thispath, testpath))
 
-    from test.test_data import (all_modules, all_parsers, parser_names, DataSuite)
     import inspect
+    from test.test_data import DataSuite, all_modules, all_parsers, parser_names
+
     ds_args = inspect.getfullargspec(DataSuite.__init__).args
     logpath = f"{thispath}/coverage.tests.log"
     try:
@@ -48,10 +50,10 @@ def generate_coverage():
             sys.stdout = flog
             alltests = {}
             for p in parser_names:
-                assert 'parsers' in ds_args
+                assert "parsers" in ds_args
                 suite = DataSuite(parsers={p: all_parsers[p]}, modules=all_modules, stream=flog)
                 suite.testall()
-                alltests[p] = [{'data': t.data} for t in suite.alltests]
+                alltests[p] = [{"data": t.data} for t in suite.alltests]
             sys.stdout = stdout_backup
     except Exception as e:
         print("Unit tests did not run correctly. Check log file for errors:")
@@ -73,22 +75,22 @@ def generate_coverage():
 
     # Eventually we want to move this to cclib, too.
     not_applicable = {
-        'ADF' : ['aonames', 'ccenergies', 'mpenergies'],
-        'DALTON' : ['fonames', 'fooverlaps', 'fragnames', 'frags'],
-        'GAMESS' : ['fonames', 'fooverlaps', 'fragnames', 'frags'],
-        'GAMESSUK' : ['fonames', 'fooverlaps', 'fragnames', 'frags'],
-        'Gaussian' : ['fonames', 'fooverlaps', 'fragnames', 'frags'],
-        'Jaguar' : ['fonames', 'fooverlaps', 'fragnames', 'frags'],
-        'Molpro' : ['fonames', 'fooverlaps', 'fragnames', 'frags'],
-        'NWChem' : ['fonames', 'fooverlaps', 'fragnames', 'frags'],
-        'ORCA' : ['fonames', 'fooverlaps', 'fragnames', 'frags'],
-        'Psi' : ['fonames', 'fooverlaps', 'fragnames', 'frags'],
-        'QChem' : ['fonames', 'fooverlaps', 'fragnames', 'frags'],
+        "ADF": ["aonames", "ccenergies", "mpenergies"],
+        "DALTON": ["fonames", "fooverlaps", "fragnames", "frags"],
+        "GAMESS": ["fonames", "fooverlaps", "fragnames", "frags"],
+        "GAMESSUK": ["fonames", "fooverlaps", "fragnames", "frags"],
+        "Gaussian": ["fonames", "fooverlaps", "fragnames", "frags"],
+        "Jaguar": ["fonames", "fooverlaps", "fragnames", "frags"],
+        "Molpro": ["fonames", "fooverlaps", "fragnames", "frags"],
+        "NWChem": ["fonames", "fooverlaps", "fragnames", "frags"],
+        "ORCA": ["fonames", "fooverlaps", "fragnames", "frags"],
+        "Psi": ["fonames", "fooverlaps", "fragnames", "frags"],
+        "QChem": ["fonames", "fooverlaps", "fragnames", "frags"],
     }
     not_possible = {
         "NWChem": ["vibfconsts", "vibrmasses"],
-        'Psi' : ['aooverlaps', 'vibirs'],
-        'QChem' : ['aooverlaps', 'etrotats'],
+        "Psi": ["aooverlaps", "vibirs"],
+        "QChem": ["aooverlaps", "etrotats"],
     }
 
     # For each attribute, get a list of Boolean values for each parser that flags
@@ -96,7 +98,7 @@ def generate_coverage():
     # T/D appropriately, with the exception of attributes that have been explicitely
     # designated as N/A.
     for attr in attributes:
-        parsed = [any([attr in t['data'].__dict__ for t in alltests[p]]) for p in parser_names]
+        parsed = [any([attr in t["data"].__dict__ for t in alltests[p]]) for p in parser_names]
         for ip, p in enumerate(parsed):
             if p:
                 parsed[ip] = "√"
@@ -116,6 +118,7 @@ def generate_coverage():
         lines.append(f".. _`{attr}`: data_notes.html#{attr}")
 
     return "\n".join(lines)
+
 
 if __name__ == "__main__":
     print(generate_coverage())

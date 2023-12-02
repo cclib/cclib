@@ -7,21 +7,22 @@
 
 """Calculation of Bader's QTAIM charges based on data parsed by cclib."""
 import copy
-import random
-import numpy
 import logging
 import math
+import random
 
 from cclib.method.calculationmethod import Method
 from cclib.method.volume import electrondensity_spin
 from cclib.parser.utils import convertor
 
+import numpy
+
 # Distance between two adjacent grids (sqrt[2] or sqrt[3] for uniform Cartesian grid).
 _griddist = numpy.array(
     [
-        [[1.73205, 1.41421, 1.73205], [1.41421, 1, 1.41421], [1.73205, 1.41421, 1.73205],],
+        [[1.73205, 1.41421, 1.73205], [1.41421, 1, 1.41421], [1.73205, 1.41421, 1.73205]],
         [[1.41421, 1, 1.41421], [1, 1, 1], [1.41421, 1, 1.41421]],
-        [[1.73205, 1.41421, 1.73205], [1.41421, 1, 1.41421], [1.73205, 1.41421, 1.73205],],
+        [[1.73205, 1.41421, 1.73205], [1.41421, 1, 1.41421], [1.73205, 1.41421, 1.73205]],
     ],
     dtype=float,
 )
@@ -32,8 +33,8 @@ class MissingInputError(Exception):
 
 
 def __cartesian_dist(pt1, pt2):
-    """ Small utility function that calculates Euclidian distance between two points
-        pt1 and pt2 are numpy arrays representing a point in Cartesian coordinates. """
+    """Small utility function that calculates Euclidian distance between two points
+    pt1 and pt2 are numpy arrays representing a point in Cartesian coordinates."""
     return numpy.sqrt(numpy.einsum("ij,ij->j", pt1 - pt2, pt1 - pt2))
 
 
@@ -69,10 +70,10 @@ class Bader(Method):
 
     def calculate(self, indices=None, fupdate=0.05):
         """Calculate Bader's QTAIM charges using on-grid algorithm proposed by Henkelman group
-           in doi:10.1016/j.commatsci.2005.04.010
-           
-           Cartesian, uniformly spaced grids are assumed for this function.
-           """
+        in doi:10.1016/j.commatsci.2005.04.010
+
+        Cartesian, uniformly spaced grids are assumed for this function.
+        """
 
         # Obtain charge densities on the grid if it does not contain one.
         if not numpy.any(self.volume.data):

@@ -7,15 +7,16 @@
 
 """Test the CDA method in cclib"""
 
-import sys
 import logging
+import sys
 import unittest
 
 sys.path.insert(1, "..")
 
-from ..test_data import getdatafile
 from cclib.method import CDA
 from cclib.parser import Gaussian
+
+from ..test_data import getdatafile
 
 
 def main(log: bool = True) -> CDA:
@@ -38,7 +39,6 @@ def printResults() -> None:
 
     spin = 0
     for i in range(len(fa.donations[0])):
-
         print(
             f"{int(i):2}: {fa.donations[spin][i]:7.3f} {fa.bdonations[spin][i]:7.3f} {fa.repulsions[spin][i]:7.3f}"
         )
@@ -51,7 +51,6 @@ def printResults() -> None:
 
 
 class CDATest(unittest.TestCase):
-
     def runTest(self) -> None:
         """Testing CDA results against Frenking's code"""
         fa = main(log=False)

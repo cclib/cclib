@@ -12,10 +12,10 @@ The description of charges is from https://doi.org/10.1021/ct200866d.
 
 import logging
 
+from cclib.method.calculationmethod import Method
+
 import numpy as np
 import periodictable.covalent_radius as covalent_radius
-
-from cclib.method.calculationmethod import Method
 
 
 class CM5(Method):
@@ -47,7 +47,10 @@ class CM5(Method):
     loglevel : int, default logging.INFO
     logname : str
     """
-    def __init__(self, data, radii: str = "hokru", progress=None, loglevel=logging.INFO, logname="Log"):
+
+    def __init__(
+        self, data, radii: str = "hokru", progress=None, loglevel=logging.INFO, logname="Log"
+    ):
         super().__init__(data, progress, loglevel, logname)
 
         self.required_attrs = ("natom", "atomcoords", "atomnos")
@@ -94,9 +97,7 @@ class CM5(Method):
                 if i != j:
                     rij = np.linalg.norm(np.subtract(xyz[i], xyz[j]))
                     # eq. (2) from doi:10.1021/ct200866d
-                    bij = np.exp(
-                        -alpha * (rij - self.atomradius[z[i]] - self.atomradius[z[j]])
-                    )
+                    bij = np.exp(-alpha * (rij - self.atomradius[z[i]] - self.atomradius[z[j]]))
                     tij = _tij(z[i], z[j], extended=extended)
                     s += tij * bij
             qcm5[i] = hirshfeld_charges[i] + s

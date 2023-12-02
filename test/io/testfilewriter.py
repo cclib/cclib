@@ -12,8 +12,8 @@ import os
 import unittest
 
 import cclib
-import pytest
 
+import pytest
 
 __filedir__ = os.path.dirname(__file__)
 __filepath__ = os.path.realpath(__filedir__)
@@ -21,7 +21,6 @@ __datadir__ = os.path.join(__filepath__, "..", "..")
 
 
 class FileWriterTest(unittest.TestCase):
-
     def test_init(self):
         """Does the class initialize properly?"""
 

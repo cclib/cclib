@@ -21,11 +21,9 @@ as well as example methods that take parsed data as input.
 
 __version__ = "1.8"
 
-from cclib import parser
-from cclib import progress
-from cclib import method
-from cclib import bridge
-from cclib import io
+# isort: off
+from cclib import parser, progress, method, bridge, io
+# isort: on
 
 # The test module can be imported if it was installed with cclib.
 try:

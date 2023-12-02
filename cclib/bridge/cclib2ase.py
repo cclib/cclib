@@ -7,16 +7,16 @@
 
 """Bridge for using cclib data in ASE (https://wiki.fysik.dtu.dk/ase/)."""
 
-import numpy as np
-
 from cclib.parser.data import ccData
 from cclib.parser.utils import find_package
+
+import numpy as np
 
 _found_ase = find_package("ase")
 if _found_ase:
     from ase import Atoms, units
-    from ase.io.trajectory import Trajectory
     from ase.calculators.calculator import PropertyNotImplementedError
+    from ase.io.trajectory import Trajectory
 
 
 def _check_ase(found_ase):
@@ -24,9 +24,7 @@ def _check_ase(found_ase):
         raise ImportError("You must install `ase` to use this function")
 
 
-def makease(
-    atomcoords, atomnos, atomcharges=None, atomspins=None, atommasses=None
-):
+def makease(atomcoords, atomnos, atomcharges=None, atomspins=None, atommasses=None):
     """Create an ASE Atoms object from cclib attributes.
 
     ASE requires atomic partial charges and atomic spin densities rather than
@@ -93,23 +91,15 @@ def write_trajectory(filename, ccdata, popname="mulliken", index=None):
 
         atomnos = ccdata.atomnos
         atommasses = getattr(ccdata, "atommasses", None)
-        
-        atoms = makease( 
-            atomcoords, 
-            atomnos, 
-            atomcharges, 
-            atomspins, 
-            atommasses, 
-        )
+
+        atoms = makease(atomcoords, atomnos, atomcharges, atomspins, atommasses)
 
         properties = {}
         if hasattr(ccdata, "scfenergies"):
             properties.update({"energy": ccdata.scfenergies[i]})
         if hasattr(ccdata, "grads"):
             try:
-                properties.update(
-                    {"forces": -ccdata.grads[i] * units.Hartree / units.Bohr}
-                )
+                properties.update({"forces": -ccdata.grads[i] * units.Hartree / units.Bohr})
             except IndexError:
                 pass
 
@@ -117,9 +107,7 @@ def write_trajectory(filename, ccdata, popname="mulliken", index=None):
             if hasattr(ccdata, "moments"):
                 properties.update({"dipole": ccdata.moments[1] * units.Bohr})
             if hasattr(ccdata, "free_energy"):
-                properties.update(
-                    {"free_energy": ccdata.freeenergy * units.Hartree}
-                )
+                properties.update({"free_energy": ccdata.freeenergy * units.Hartree})
 
         traj.write(atoms, **properties)
 
@@ -211,9 +199,7 @@ def makecclib(atoms, popname="mulliken"):
     try:
         attributes["atomspins"] = {popname: atoms.get_magnetic_moments()}
     except (PropertyNotImplementedError, RuntimeError):
-        attributes["atomspins"] = {
-            popname: atoms.get_initial_magnetic_moments()
-        }
+        attributes["atomspins"] = {popname: atoms.get_initial_magnetic_moments()}
 
     # the following is how ASE determines charge and multiplicity from initial
     # charges and initial magnetic moments in its Gaussian interface
@@ -226,22 +212,15 @@ def makecclib(atoms, popname="mulliken"):
     except RuntimeError:
         pass
     try:
-        attributes["grads"] = (
-            -np.array([atoms.get_forces()]) * units.Bohr / units.Hartree
-        )
+        attributes["grads"] = -np.array([atoms.get_forces()]) * units.Bohr / units.Hartree
     except RuntimeError:
         pass
     try:
-        attributes["moments"] = [
-            atoms.get_center_of_mass(),
-            atoms.get_dipole_moment() / units.Bohr,
-        ]
+        attributes["moments"] = [atoms.get_center_of_mass(), atoms.get_dipole_moment() / units.Bohr]
     except RuntimeError:
         pass
     try:
-        attributes["freeenergy"] = (
-            atoms.get_potential_energy(force_consistent=True) / units.Hartree
-        )
+        attributes["freeenergy"] = atoms.get_potential_energy(force_consistent=True) / units.Hartree
     except RuntimeError:
         pass
 

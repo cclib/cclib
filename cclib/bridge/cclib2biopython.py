@@ -8,10 +8,9 @@
 
 from typing import List
 
-import numpy as np
+from cclib.parser.utils import PeriodicTable, find_package
 
-from cclib.parser.utils import PeriodicTable
-from cclib.parser.utils import find_package
+import numpy as np
 
 _found_biopython = find_package("Bio")
 if _found_biopython:

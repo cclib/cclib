@@ -10,10 +10,9 @@
 import re
 import string
 
-import numpy
+from cclib.parser import logfileparser, utils
 
-from cclib.parser import logfileparser
-from cclib.parser import utils
+import numpy
 
 
 class Molcas(logfileparser.Logfile):
@@ -64,10 +63,10 @@ class Molcas(logfileparser.Logfile):
     def before_parsing(self):
         # Compile the regex for extracting the element symbol from the
         # atom label in the "Molecular structure info" block.
-        self.re_atomelement = re.compile(r'([a-zA-Z]+)\d?')
+        self.re_atomelement = re.compile(r"([a-zA-Z]+)\d?")
 
         # Compile the dashes-and-or-spaces-only regex.
-        self.re_dashes_and_spaces = re.compile(r'^[\s-]+$')
+        self.re_dashes_and_spaces = re.compile(r"^[\s-]+$")
 
         # Molcas can do multiple calculations in one job, and each one
         # starts from the gateway module. Onle parse the first.
@@ -107,31 +106,31 @@ class Molcas(logfileparser.Logfile):
         #      Center  Label                x              y              z                     x              y              z
         #         1      C1               0.526628      -2.582937       0.000000              0.278679      -1.366832       0.000000
         #         2      C2               2.500165      -0.834760       0.000000              1.323030      -0.441736       0.000000
-        if line[25:63] == 'Cartesian Coordinates / Bohr, Angstrom':
-            if not hasattr(self, 'atomnos'):
+        if line[25:63] == "Cartesian Coordinates / Bohr, Angstrom":
+            if not hasattr(self, "atomnos"):
                 self.atomnos = []
 
-            self.skip_lines(inputfile, ['stars', 'blank', 'header'])
+            self.skip_lines(inputfile, ["stars", "blank", "header"])
 
             line = next(inputfile)
 
             atomelements = []
             atomcoords = []
 
-            while line.strip() not in ('', '--'):
+            while line.strip() not in ("", "--"):
                 sline = line.split()
                 atomelement = sline[1].rstrip(string.digits).title()
                 atomelements.append(atomelement)
                 atomcoords.append(list(map(float, sline[5:])))
                 line = next(inputfile)
 
-            self.append_attribute('atomcoords', atomcoords)
+            self.append_attribute("atomcoords", atomcoords)
 
             if self.atomnos == []:
                 self.atomnos = [self.table.number[ae.title()] for ae in atomelements]
 
-            if not hasattr(self, 'natom'):
-                self.set_attribute('natom', len(self.atomnos))
+            if not hasattr(self, "natom"):
+                self.set_attribute("natom", len(self.atomnos))
 
         ## This section is present when executing &SCF.
         #  ++    Orbital specifications:
@@ -146,26 +145,25 @@ class Molcas(logfileparser.Logfile):
         #  Total number of orbitals      80
         #  Number of basis functions     80
         #  --
-        if line[:29] == '++    Orbital specifications:':
-
-            self.skip_lines(inputfile, ['dashes', 'blank'])
+        if line[:29] == "++    Orbital specifications:":
+            self.skip_lines(inputfile, ["dashes", "blank"])
             line = next(inputfile)
 
             symmetry_count = 1
-            while not line.startswith('--'):
-                if line.strip().startswith('Symmetry species'):
+            while not line.startswith("--"):
+                if line.strip().startswith("Symmetry species"):
                     symmetry_count = int(line.split()[-1])
-                if line.strip().startswith('Total number of orbitals'):
+                if line.strip().startswith("Total number of orbitals"):
                     nmos = line.split()[-symmetry_count:]
-                    self.set_attribute('nmo', sum(map(int, nmos)))
-                if line.strip().startswith('Number of basis functions'):
+                    self.set_attribute("nmo", sum(map(int, nmos)))
+                if line.strip().startswith("Number of basis functions"):
                     nbasis = line.split()[-symmetry_count:]
-                    self.set_attribute('nbasis', sum(map(int, nbasis)))
+                    self.set_attribute("nbasis", sum(map(int, nbasis)))
 
                 line = next(inputfile)
 
-        if line.strip().startswith(('Molecular charge', 'Total molecular charge')):
-            self.set_attribute('charge', int(float(line.split()[-1])))
+        if line.strip().startswith(("Molecular charge", "Total molecular charge")):
+            self.set_attribute("charge", int(float(line.split()[-1])))
 
         #  ++    Molecular charges:
         #  ------------------
@@ -211,25 +209,24 @@ class Molcas(logfileparser.Logfile):
         #  Total electronic charge=    6.000000
 
         #  Total            charge=    0.000000
-        #--
-        if line[:24] == '++    Molecular charges:':
-
+        # --
+        if line[:24] == "++    Molecular charges:":
             atomcharges = []
 
-            while line[6:29] != 'Total electronic charge':
+            while line[6:29] != "Total electronic charge":
                 line = next(inputfile)
-                if line[6:9] == 'N-E':
+                if line[6:9] == "N-E":
                     atomcharges.extend(map(float, line.split()[1:]))
 
             # Molcas only performs Mulliken population analysis.
-            self.set_attribute('atomcharges', {'mulliken': atomcharges})
+            self.set_attribute("atomcharges", {"mulliken": atomcharges})
 
             # Ensure the charge printed here is identical to the
             # charge printed before entering the SCF.
-            self.skip_line(inputfile, 'blank')
+            self.skip_line(inputfile, "blank")
             line = next(inputfile)
-            assert line[6:30] == 'Total            charge='
-            if hasattr(self, 'charge'):
+            assert line[6:30] == "Total            charge="
+            if hasattr(self, "charge"):
                 assert int(float(line.split()[2])) == self.charge
 
         # This section is present when executing &SCF
@@ -245,11 +242,11 @@ class Molcas(logfileparser.Logfile):
         # *****************************************************************************************************************************
 
         # ::    Total SCF energy                                -37.6045426484
-        if line[:22] == '::    Total SCF energy' or line[:25] == '::    Total KS-DFT energy':
-            if not hasattr(self, 'scfenergies'):
+        if line[:22] == "::    Total SCF energy" or line[:25] == "::    Total KS-DFT energy":
+            if not hasattr(self, "scfenergies"):
                 self.scfenergies = []
             scfenergy = float(line.split()[-1])
-            self.scfenergies.append(utils.convertor(scfenergy, 'hartree', 'eV'))
+            self.scfenergies.append(utils.convertor(scfenergy, "hartree", "eV"))
 
         ## Parsing the scftargets in this section
         #  ++    Optimization specifications:
@@ -267,24 +264,23 @@ class Molcas(logfileparser.Logfile):
         #  Threshold at which DIIS is turned on       0.15E+00
         #  Threshold at which QNR/C2DIIS is turned on 0.75E-01
         #  Threshold for Norm(delta) (QNR/C2DIIS)     0.20E-04
-        if line[:34] == '++    Optimization specifications:':
-            self.skip_lines(inputfile, ['d', 'b'])
+        if line[:34] == "++    Optimization specifications:":
+            self.skip_lines(inputfile, ["d", "b"])
             line = next(inputfile)
-            if line.strip().startswith('SCF'):
+            if line.strip().startswith("SCF"):
                 scftargets = []
-                self.skip_lines(inputfile,
-                                ['Minimized', 'Number', 'Maximum', 'Maximum'])
+                self.skip_lines(inputfile, ["Minimized", "Number", "Maximum", "Maximum"])
                 lines = [next(inputfile) for i in range(7)]
                 targets = [
-                    'Threshold for SCF energy change',
-                    'Threshold for density matrix',
-                    'Threshold for Fock matrix',
-                    'Threshold for Norm(delta)',
+                    "Threshold for SCF energy change",
+                    "Threshold for density matrix",
+                    "Threshold for Fock matrix",
+                    "Threshold for Norm(delta)",
                 ]
                 for y in targets:
                     scftargets.extend([float(x.split()[-1]) for x in lines if y in x])
 
-                self.append_attribute('scftargets', scftargets)
+                self.append_attribute("scftargets", scftargets)
 
         #  ++ Convergence information
         #                                     SCF        iterations: Energy and convergence statistics
@@ -299,34 +295,43 @@ class Molcas(logfileparser.Logfile):
         # ...
         #           Convergence after 26 Macro Iterations
         # --
-        if line[46:91] == 'iterations: Energy and convergence statistics':
+        if line[46:91] == "iterations: Energy and convergence statistics":
+            self.skip_line(inputfile, "blank")
 
-            self.skip_line(inputfile, 'blank')
-
-            while line.split() != ['Energy', 'Energy', 'Energy', 'Change', 'Delta', 'Norm', 'in', 'Sec.']:
+            while line.split() != [
+                "Energy",
+                "Energy",
+                "Energy",
+                "Change",
+                "Delta",
+                "Norm",
+                "in",
+                "Sec.",
+            ]:
                 line = next(inputfile)
 
-            iteration_regex = (r"^([0-9]+)"                                  # Iter
-                               r"( [ \-0-9]*\.[0-9]{6,9})"                   # Tot. SCF Energy
-                               r"( [ \-0-9]*\.[0-9]{6,9})"                   # One-electron Energy
-                               r"( [ \-0-9]*\.[0-9]{6,9})"                   # Two-electron Energy
-                               r"( [ \-0-9]*\.[0-9]{2}E[\-\+][0-9]{2}\*?)"   # Energy Change
-                               r"( [ \-0-9]*\.[0-9]{2}E[\-\+][0-9]{2}\*?)"   # Max Dij or Delta Norm
-                               r"( [ \-0-9]*\.[0-9]{2}E[\-\+][0-9]{2}\*?)"   # Max Fij
-                               r"( [ \-0-9]*\.[0-9]{2}E[\-\+][0-9]{2}\*?)"   # DNorm
-                               r"( [ \-0-9]*\.[0-9]{2}E[\-\+][0-9]{2}\*?)"   # TNorm
-                               r"( [ A-Za-z0-9]*)"                           # AccCon
-                               r"( [ \.0-9]*)$")                             # Time in Sec.
+            iteration_regex = (
+                r"^([0-9]+)"  # Iter
+                r"( [ \-0-9]*\.[0-9]{6,9})"  # Tot. SCF Energy
+                r"( [ \-0-9]*\.[0-9]{6,9})"  # One-electron Energy
+                r"( [ \-0-9]*\.[0-9]{6,9})"  # Two-electron Energy
+                r"( [ \-0-9]*\.[0-9]{2}E[\-\+][0-9]{2}\*?)"  # Energy Change
+                r"( [ \-0-9]*\.[0-9]{2}E[\-\+][0-9]{2}\*?)"  # Max Dij or Delta Norm
+                r"( [ \-0-9]*\.[0-9]{2}E[\-\+][0-9]{2}\*?)"  # Max Fij
+                r"( [ \-0-9]*\.[0-9]{2}E[\-\+][0-9]{2}\*?)"  # DNorm
+                r"( [ \-0-9]*\.[0-9]{2}E[\-\+][0-9]{2}\*?)"  # TNorm
+                r"( [ A-Za-z0-9]*)"  # AccCon
+                r"( [ \.0-9]*)$"
+            )  # Time in Sec.
 
             scfvalues = []
             line = next(inputfile)
             while not line.strip().startswith("Convergence"):
-
                 match = re.match(iteration_regex, line.strip())
                 if match:
                     groups = match.groups()
                     cols = [g.strip() for g in match.groups()]
-                    cols = [c.replace('*', '') for c in cols]
+                    cols = [c.replace("*", "") for c in cols]
 
                     energy = float(cols[4])
                     density = float(cols[5])
@@ -335,12 +340,12 @@ class Molcas(logfileparser.Logfile):
                     scfvalues.append([energy, density, fock, dnorm])
 
                 if line.strip() == "--":
-                    self.logger.warning('File terminated before end of last SCF!')
+                    self.logger.warning("File terminated before end of last SCF!")
                     break
 
                 line = next(inputfile)
 
-            self.append_attribute('scfvalues', scfvalues)
+            self.append_attribute("scfvalues", scfvalues)
 
         #  Harmonic frequencies in cm-1
         #
@@ -369,40 +374,38 @@ class Molcas(logfileparser.Logfile):
         #
         #
         # ++ Thermochemistry
-        if line[1:29] == 'Harmonic frequencies in cm-1':
-
-            self.skip_line(inputfile, 'blank')
+        if line[1:29] == "Harmonic frequencies in cm-1":
+            self.skip_line(inputfile, "blank")
             line = next(inputfile)
 
-            while 'Thermochemistry' not in line:
-
-                if 'Frequency:' in line:
-                    if not hasattr(self, 'vibfreqs'):
+            while "Thermochemistry" not in line:
+                if "Frequency:" in line:
+                    if not hasattr(self, "vibfreqs"):
                         self.vibfreqs = []
-                    vibfreqs = [float(i.replace('i', '-')) for i in line.split()[1:]]
+                    vibfreqs = [float(i.replace("i", "-")) for i in line.split()[1:]]
                     self.vibfreqs.extend(vibfreqs)
 
-                if 'Intensity:' in line:
-                    if not hasattr(self, 'vibirs'):
+                if "Intensity:" in line:
+                    if not hasattr(self, "vibirs"):
                         self.vibirs = []
                     vibirs = map(float, line.split()[1:])
                     self.vibirs.extend(vibirs)
 
-                if 'Red.' in line:
-                    if not hasattr(self, 'vibrmasses'):
+                if "Red." in line:
+                    if not hasattr(self, "vibrmasses"):
                         self.vibrmasses = []
                     vibrmasses = map(float, line.split()[2:])
                     self.vibrmasses.extend(vibrmasses)
 
-                    self.skip_line(inputfile, 'blank')
+                    self.skip_line(inputfile, "blank")
                     line = next(inputfile)
-                    if not hasattr(self, 'vibdisps'):
+                    if not hasattr(self, "vibdisps"):
                         self.vibdisps = []
                     disps = []
-                    for n in range(3*self.natom):
+                    for n in range(3 * self.natom):
                         numbers = [float(s) for s in line[17:].split()]
                         # The atomindex should start at 0 instead of 1.
-                        atomindex = int(re.search(r'\d+$', line.split()[0]).group()) - 1
+                        atomindex = int(re.search(r"\d+$", line.split()[0]).group()) - 1
                         numbermodes = len(numbers)
                         if len(disps) == 0:
                             # Appends empty array of the following
@@ -462,8 +465,7 @@ class Molcas(logfileparser.Logfile):
         #  --
         #
         #  ++    Isotopic shifts:
-        if line[4:19] == 'THERMOCHEMISTRY':
-
+        if line[4:19] == "THERMOCHEMISTRY":
             while "ZPVE" not in line:
                 line = next(inputfile)
             self.set_attribute("zpve", float(line.split()[3]))
@@ -475,19 +477,20 @@ class Molcas(logfileparser.Logfile):
             enthalpy_values = []
             free_energy_values = []
 
-            while 'Isotopic' not in line:
-
-                if line[1:12] == 'Temperature':
+            while "Isotopic" not in line:
+                if line[1:12] == "Temperature":
                     temperature_values.append(float(line.split()[2]))
                     pressure_values.append(float(line.split()[6]))
 
-                if line[1:48] == 'Molecular Partition Function and Molar Entropy:':
-                    while 'TOTAL' not in line:
+                if line[1:48] == "Molecular Partition Function and Molar Entropy:":
+                    while "TOTAL" not in line:
                         line = next(inputfile)
                     # Molcas reports entropy values in kcal/mol*K but actually writes them in cal/mol*K
-                    entropy_values.append(utils.convertor(float(line.split()[2]), 'kcal/mol', 'hartree') / 1000)
+                    entropy_values.append(
+                        utils.convertor(float(line.split()[2]), "kcal/mol", "hartree") / 1000
+                    )
 
-                if line[1:40] == 'Sum of energy and thermal contributions':
+                if line[1:40] == "Sum of energy and thermal contributions":
                     internal_energy_values.append(float(next(inputfile).split()[2]))
                     enthalpy_values.append(float(next(inputfile).split()[1]))
                     free_energy_values.append(float(next(inputfile).split()[3]))
@@ -501,25 +504,25 @@ class Molcas(logfileparser.Logfile):
             if 298.15 in temperature_values:
                 index = temperature_values.index(298.15)
 
-            self.set_attribute('temperature', temperature_values[index])
+            self.set_attribute("temperature", temperature_values[index])
             if len(temperature_values) > 1:
-                self.logger.warning('More than 1 values of temperature found')
+                self.logger.warning("More than 1 values of temperature found")
 
-            self.set_attribute('pressure', pressure_values[index])
+            self.set_attribute("pressure", pressure_values[index])
             if len(pressure_values) > 1:
-                self.logger.warning('More than 1 values of pressure found')
+                self.logger.warning("More than 1 values of pressure found")
 
-            self.set_attribute('entropy', entropy_values[index])
+            self.set_attribute("entropy", entropy_values[index])
             if len(entropy_values) > 1:
-                self.logger.warning('More than 1 values of entropy found')
+                self.logger.warning("More than 1 values of entropy found")
 
-            self.set_attribute('enthalpy', enthalpy_values[index])
+            self.set_attribute("enthalpy", enthalpy_values[index])
             if len(enthalpy_values) > 1:
-                self.logger.warning('More than 1 values of enthalpy found')
+                self.logger.warning("More than 1 values of enthalpy found")
 
-            self.set_attribute('freeenergy', free_energy_values[index])
+            self.set_attribute("freeenergy", free_energy_values[index])
             if len(free_energy_values) > 1:
-                self.logger.warning('More than 1 values of freeenergy found')
+                self.logger.warning("More than 1 values of freeenergy found")
 
         ## Parsing Geometrical Optimization attributes in this section.
         #  ++       Slapaf input parameters:
@@ -555,20 +558,20 @@ class Molcas(logfileparser.Logfile):
         #   +-----+----------------------------------+----------------------------------+
         #   + Max + 1.2039E-01  1.8000E-03     No    + 1.6711E-04  4.5000E-04     Yes   +
         #   +-----+----------------------------------+----------------------------------+
-        if 'Convergence criterion on energy change' in line:
+        if "Convergence criterion on energy change" in line:
             self.energy_threshold = float(line.split()[6])
             # If energy change threshold equals zero,
             # then energy change is not a criteria for convergence.
             if self.energy_threshold == 0:
                 self.energy_threshold = numpy.inf
 
-        if 'Energy Statistics for Geometry Optimization' in line:
-            if not hasattr(self, 'geovalues'):
+        if "Energy Statistics for Geometry Optimization" in line:
+            if not hasattr(self, "geovalues"):
                 self.geovalues = []
 
-            self.skip_lines(inputfile, ['stars', 'header'])
+            self.skip_lines(inputfile, ["stars", "header"])
             line = next(inputfile)
-            assert 'Iter      Energy       Change     Norm' in line
+            assert "Iter      Energy       Change     Norm" in line
             # A variable keeping track of ongoing iteration.
             iter_number = len(self.geovalues) + 1
             # Iterate till blank line.
@@ -580,13 +583,13 @@ class Molcas(logfileparser.Logfile):
             # Along with energy change, RMS and Max values of change in
             # Cartesian Diaplacement and Gradients are used as optimization
             # criteria.
-            self.skip_lines(inputfile, ['border', 'header', 'header', 'border'])
+            self.skip_lines(inputfile, ["border", "header", "header", "border"])
             line = next(inputfile)
-            assert '+ RMS +' in line
+            assert "+ RMS +" in line
             line_rms = line.split()
             line = next(inputfile)
             line_max = next(inputfile).split()
-            if not hasattr(self, 'geotargets'):
+            if not hasattr(self, "geotargets"):
                 # The attribute geotargets is an array consisting of the following
                 # values: [Energy threshold, Max Gradient threshold, RMS Gradient threshold, \
                 #          Max Displacements threshold, RMS Displacements threshold].
@@ -594,13 +597,26 @@ class Molcas(logfileparser.Logfile):
                 rms_gradient_threshold = float(line_rms[8])
                 max_displacement_threshold = float(line_max[4])
                 rms_displacement_threshold = float(line_rms[4])
-                self.geotargets = [self.energy_threshold, max_gradient_threshold, rms_gradient_threshold, max_displacement_threshold, rms_displacement_threshold]
+                self.geotargets = [
+                    self.energy_threshold,
+                    max_gradient_threshold,
+                    rms_gradient_threshold,
+                    max_displacement_threshold,
+                    rms_displacement_threshold,
+                ]
 
             max_gradient_change = float(line_max[7])
             rms_gradient_change = float(line_rms[7])
             max_displacement_change = float(line_max[3])
             rms_displacement_change = float(line_rms[3])
-            self.geovalues[iter_number - 1].extend([max_gradient_change, rms_gradient_change, max_displacement_change, rms_displacement_change])
+            self.geovalues[iter_number - 1].extend(
+                [
+                    max_gradient_change,
+                    rms_gradient_change,
+                    max_displacement_change,
+                    rms_displacement_change,
+                ]
+            )
 
         #   *********************************************************
         #   * Nuclear coordinates for the next iteration / Angstrom *
@@ -615,8 +631,8 @@ class Molcas(logfileparser.Logfile):
         #    H20             -1.432030       -3.721047       -0.039835
         #
         #  --
-        if 'Nuclear coordinates for the next iteration / Angstrom' in line:
-            self.skip_lines(inputfile, ['s', 'header'])
+        if "Nuclear coordinates for the next iteration / Angstrom" in line:
+            self.skip_lines(inputfile, ["s", "header"])
             line = next(inputfile)
 
             atomcoords = []
@@ -628,7 +644,8 @@ class Molcas(logfileparser.Logfile):
                 self.atomcoords.append(atomcoords)
             else:
                 self.logger.warning(
-                        f"Parsed coordinates not consistent with previous, skipping. This could be due to symmetry being turned on during the job. Length was {len(self.atomcoords[-1])}, now found {len(atomcoords)}. New coordinates: {str(atomcoords)}")
+                    f"Parsed coordinates not consistent with previous, skipping. This could be due to symmetry being turned on during the job. Length was {len(self.atomcoords[-1])}, now found {len(atomcoords)}. New coordinates: {str(atomcoords)}"
+                )
 
         #  **********************************************************************************************************************
         #  *                                    Energy Statistics for Geometry Optimization                                     *
@@ -650,8 +667,8 @@ class Molcas(logfileparser.Logfile):
         #   +-----+----------------------------------+----------------------------------+
         #
         #   Geometry is converged in  23 iterations to a Minimum Structure
-        if 'Geometry is converged' in line:
-            if not hasattr(self, 'optdone'):
+        if "Geometry is converged" in line:
+            if not hasattr(self, "optdone"):
                 self.optdone = []
             self.optdone.append(len(self.atomcoords))
 
@@ -666,8 +683,8 @@ class Molcas(logfileparser.Logfile):
         # ...
         #    H19             -0.021315       -4.934913       -0.029666
         #    H20             -1.431994       -3.721026       -0.041078
-        if 'Nuclear coordinates of the final structure / Angstrom' in line:
-            self.skip_lines(inputfile, ['s', 'header'])
+        if "Nuclear coordinates of the final structure / Angstrom" in line:
+            self.skip_lines(inputfile, ["s", "header"])
             line = next(inputfile)
 
             atomcoords = []
@@ -680,13 +697,14 @@ class Molcas(logfileparser.Logfile):
                 self.atomcoords.append(atomcoords)
             else:
                 self.logger.error(
-                        f'Number of atoms ({len(atomcoords)}) in parsed atom coordinates is smaller than previously ({int(self.natom)}), possibly due to symmetry. Ignoring these coordinates.')
+                    f"Number of atoms ({len(atomcoords)}) in parsed atom coordinates is smaller than previously ({int(self.natom)}), possibly due to symmetry. Ignoring these coordinates."
+                )
 
         ## Parsing Molecular Gradients attributes in this section.
         # ()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
-        # 
+        #
         #                                               &ALASKA
-        # 
+        #
         #                                    only a single process is used
         #                        available to each process: 2.0 GB of memory, 1 thread
         # ()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
@@ -697,10 +715,10 @@ class Molcas(logfileparser.Logfile):
         #  *              Molecular gradients               *
         #  *                                                *
         #  **************************************************
-        # 
-        #   Irreducible representation: a  
+        #
+        #   Irreducible representation: a
         #  ---------------------------------------------------------
-        #                      X             Y             Z        
+        #                      X             Y             Z
         #  ---------------------------------------------------------
         #   C1               -0.00009983   -0.00003043    0.00001004
         #   ...
@@ -708,12 +726,12 @@ class Molcas(logfileparser.Logfile):
         #  ---------------------------------------------------
         # WARNING: "Molecular gradients, after ESPF" is found for ESPF QM/MM calculations
         if "Molecular gradients " in line:
-
             if not hasattr(self, "grads"):
                 self.grads = []
 
-            self.skip_lines(inputfile, ['stars', 'stars', 'blank', 'header',
-                                        'dashes', 'header', 'dashes'])
+            self.skip_lines(
+                inputfile, ["stars", "stars", "blank", "header", "dashes", "header", "dashes"]
+            )
 
             grads = []
             line = next(inputfile)
@@ -722,14 +740,14 @@ class Molcas(logfileparser.Logfile):
                 grads.append(tmpgrads)
                 line = next(inputfile)
 
-            self.append_attribute('grads', grads)
+            self.append_attribute("grads", grads)
 
         # This code here works, but QM/MM gradients are printed after QM ones.
         # Maybe another attribute is needed to store them to have both.
         if "Molecular gradients, after ESPF" in line:
-
-            self.skip_lines(inputfile, ['stars', 'stars', 'blank', 'header',
-                                        'dashes', 'header', 'dashes'])
+            self.skip_lines(
+                inputfile, ["stars", "stars", "blank", "header", "dashes", "header", "dashes"]
+            )
 
             grads = []
             line = next(inputfile)
@@ -762,71 +780,72 @@ class Molcas(logfileparser.Logfile):
         #         59 H19   1s     -0.2473
         #         60 H20   1s      0.1835
         #  --
-        if '++    Molecular orbitals:' in line:
-
-            self.skip_lines(inputfile, ['d', 'b'])
+        if "++    Molecular orbitals:" in line:
+            self.skip_lines(inputfile, ["d", "b"])
             line = next(inputfile)
 
             # We don't currently support parsing natural orbitals or active space orbitals.
-            if 'Natural orbitals' not in line and "Pseudonatural" not in line:
-                self.skip_line(inputfile, 'b')
+            if "Natural orbitals" not in line and "Pseudonatural" not in line:
+                self.skip_line(inputfile, "b")
 
                 # Symmetry is not currently supported, so this line can have one form.
-                while 'Molecular orbitals for symmetry species 1: a' not in line.strip():
+                while "Molecular orbitals for symmetry species 1: a" not in line.strip():
                     line = next(inputfile)
 
                 # Symmetry is not currently supported, so this line can have one form.
-                if line.strip() != 'Molecular orbitals for symmetry species 1: a':
+                if line.strip() != "Molecular orbitals for symmetry species 1: a":
                     return
-                
+
                 line = next(inputfile)
                 moenergies = []
                 homos = 0
                 mocoeffs = []
-                while line[:2] != '--':
+                while line[:2] != "--":
                     line = next(inputfile)
-                    if line.strip().startswith('Orbital'):
+                    if line.strip().startswith("Orbital"):
                         orbital_index = line.split()[1:]
                         for i in orbital_index:
                             mocoeffs.append([])
 
-                    if 'Energy' in line:
-                        energies = [utils.convertor(float(x), 'hartree', 'eV') for x in line.split()[1:]]
+                    if "Energy" in line:
+                        energies = [
+                            utils.convertor(float(x), "hartree", "eV") for x in line.split()[1:]
+                        ]
                         moenergies.extend(energies)
 
-                    if 'Occ. No.' in line:
+                    if "Occ. No." in line:
                         for i in line.split()[2:]:
                             if float(i) != 0:
                                 homos += 1
 
                     aonames = []
                     tokens = line.split()
-                    if tokens and tokens[0] == '1':
-                        while tokens and tokens[0] != '--':
+                    if tokens and tokens[0] == "1":
+                        while tokens and tokens[0] != "--":
                             aonames.append(f"{tokens[1]}_{tokens[2]}")
                             info = tokens[3:]
                             j = 0
                             for i in orbital_index:
-                                mocoeffs[int(i)-1].append(float(info[j]))
+                                mocoeffs[int(i) - 1].append(float(info[j]))
                                 j += 1
                             line = next(inputfile)
                             tokens = line.split()
-                        self.set_attribute('aonames', aonames)
+                        self.set_attribute("aonames", aonames)
 
                 if len(moenergies) != self.nmo:
                     moenergies.extend([numpy.nan for x in range(self.nmo - len(moenergies))])
 
-                self.append_attribute('moenergies', moenergies)
+                self.append_attribute("moenergies", moenergies)
 
-                if not hasattr(self, 'homos'):
+                if not hasattr(self, "homos"):
                     self.homos = []
-                self.homos.extend([homos-1])
+                self.homos.extend([homos - 1])
 
                 while len(mocoeffs) < self.nmo:
                     nan_array = [numpy.nan for i in range(self.nbasis)]
                     mocoeffs.append(nan_array)
 
-                self.append_attribute('mocoeffs', mocoeffs)
+                self.append_attribute("mocoeffs", mocoeffs)
 
         ## Parsing MP energy from the &MBPT2 module.
         #  Conventional algorithm used...
@@ -843,10 +862,10 @@ class Molcas(logfileparser.Logfile):
         #         Zeroth-order energy (E0)             =      -36.8202538520 a.u.
         #
         #         Shanks-type energy S1(E)             =      -75.0009150108 a.u.
-        if 'Total MBPT2 energy' in line:
+        if "Total MBPT2 energy" in line:
             mpenergies = []
-            mpenergies.append(utils.convertor(utils.float(line.split()[4]), 'hartree', 'eV'))
-            if not hasattr(self, 'mpenergies'):
+            mpenergies.append(utils.convertor(utils.float(line.split()[4]), "hartree", "eV"))
+            if not hasattr(self, "mpenergies"):
                 self.mpenergies = []
             self.mpenergies.append(mpenergies)
 
@@ -866,16 +885,16 @@ class Molcas(logfileparser.Logfile):
         #
         #      Total energy (diff) :     -75.01515936      -0.00000007
         #      Correlation energy  :        -0.0507029554992
-        if 'Start Module: ccsdt' in line:
-            self.skip_lines(inputfile, ['b', '()', 'b'])
+        if "Start Module: ccsdt" in line:
+            self.skip_lines(inputfile, ["b", "()", "b"])
             line = next(inputfile)
-            if '&CCSDT' in line:
-                while not line.strip().startswith('Total energy (diff)'):
+            if "&CCSDT" in line:
+                while not line.strip().startswith("Total energy (diff)"):
                     line = next(inputfile)
 
-                ccenergies = utils.convertor(utils.float(line.split()[4]), 'hartree', 'eV')
-                if not hasattr(self, 'ccenergies'):
-                    self.ccenergies= []
+                ccenergies = utils.convertor(utils.float(line.split()[4]), "hartree", "eV")
+                if not hasattr(self, "ccenergies"):
+                    self.ccenergies = []
                 self.ccenergies.append(ccenergies)
 
         #  ++    Primitive basis info:
@@ -887,9 +906,9 @@ class Molcas(logfileparser.Logfile):
         #                      *****************************************************
         #
         #
-        #   Basis set:C.AUG-CC-PVQZ.........                                                          
+        #   Basis set:C.AUG-CC-PVQZ.........
         #
-        #                    Type         
+        #                    Type
         #                     s
         #             No.      Exponent    Contraction Coefficients
         #             1  0.339800000D+05   0.000091  -0.000019   0.000000   0.000000   0.000000   0.000000
@@ -902,22 +921,22 @@ class Molcas(logfileparser.Logfile):
         #   Number of basis functions                              80
         #
         #  --
-        if line.startswith('++    Primitive basis info:'):
-            self.skip_lines(inputfile, ['d', 'b', 'b', 's', 'header', 's', 'b'])
+        if line.startswith("++    Primitive basis info:"):
+            self.skip_lines(inputfile, ["d", "b", "b", "s", "header", "s", "b"])
             line = next(inputfile)
             gbasis_array = []
-            while '--' not in line and '****' not in line:
-                if 'Basis set:' in line:
-                    basis_element_patterns = re.findall(r'Basis set:([A-Za-z]{1,2})\.', line)
+            while "--" not in line and "****" not in line:
+                if "Basis set:" in line:
+                    basis_element_patterns = re.findall(r"Basis set:([A-Za-z]{1,2})\.", line)
                     assert len(basis_element_patterns) == 1
                     basis_element = basis_element_patterns[0].title()
                     gbasis_array.append((basis_element, []))
 
-                if 'Type' in line:
+                if "Type" in line:
                     line = next(inputfile)
                     shell_type = line.split()[0].upper()
 
-                    self.skip_line(inputfile, 'headers')
+                    self.skip_line(inputfile, "headers")
                     line = next(inputfile)
 
                     exponents = []
@@ -965,23 +984,23 @@ class Molcas(logfileparser.Logfile):
         #
         #   MO                 0.0006141610       -0.0006141610        0.0979067106
         #  --
-        if '++    Basis set information:' in line:
+        if "++    Basis set information:" in line:
             self.core_array = []
             basis_element = None
             ncore = 0
 
-            while line[:2] != '--':
-                if 'Basis set label' in line:
+            while line[:2] != "--":
+                if "Basis set label" in line:
                     try:
-                        basis_element = line.split()[3].split('.')[0]
+                        basis_element = line.split()[3].split(".")[0]
                         basis_element = basis_element[0] + basis_element[1:].lower()
                     except:
-                        self.logger.warning('Basis set label is missing!')
-                        basis_element = ''
-                if 'valence basis set:' in line.lower():
-                    self.skip_line(inputfile, 'd')
+                        self.logger.warning("Basis set label is missing!")
+                        basis_element = ""
+                if "valence basis set:" in line.lower():
+                    self.skip_line(inputfile, "d")
                     line = next(inputfile)
-                    if 'Associated Effective Charge' in line:
+                    if "Associated Effective Charge" in line:
                         effective_charge = float(line.split()[3])
                         actual_charge = float(next(inputfile).split()[3])
                         element = self.table.element[int(actual_charge)]
@@ -993,7 +1012,7 @@ class Molcas(logfileparser.Logfile):
 
                 if basis_element and ncore:
                     self.core_array.append((basis_element, ncore))
-                    basis_element = ''
+                    basis_element = ""
                     ncore = 0
 
                 line = next(inputfile)

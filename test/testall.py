@@ -10,13 +10,11 @@
 import unittest
 
 from . import test_data
-
 from .test_bridge import *
 from .test_io import *
 from .test_method import *
 from .test_parser import *
 from .test_utils import *
-
 
 if __name__ == "__main__":
     print("Running unit tests for data...")

@@ -308,7 +308,7 @@ Notes
 
 .. index::
     single: methods; Bader's QTAIM
-    
+
 Bader's QTAIM
 ----------------
 
@@ -350,7 +350,7 @@ To calculate Bader charges from a cube file, a ``Volume`` object should be prepa
     from cclib.parser import ccopen
     from cclib.progress import TextProgress
     import logging
-    
+
     progress = TextProgress()
     d = ccopen("mycalc.out", logging.ERROR).parse(progress)
 
@@ -363,7 +363,7 @@ To calculate Bader charges from a cube file, a ``Volume`` object should be prepa
 
 .. index::
     single: methods; DDEC6
-    
+
 DDEC6
 ----------------
 
@@ -407,7 +407,7 @@ After the calculate() method is called, the following attributes are available:
 
 .. index::
     single: methods; Hirshfeld Population Analysis
-    
+
 Hirshfeld Population Analysis
 -----------------------------
 
@@ -471,7 +471,7 @@ Calculate the nuclear repulsion energy using the snippet below:
     nre = nuclear.repulsion_energy()
     print(nre)
 
-    
+
 Accessing additional methods through bridge
 -------------------------------------------
 

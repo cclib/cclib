@@ -7,13 +7,13 @@
 
 import unittest
 
-import numpy
-
 from cclib.bridge import cclib2pyquante
-from ..test_data import getdatafile
 from cclib.parser.utils import find_package
 
+import numpy
 from numpy.testing import assert_array_almost_equal
+
+from ..test_data import getdatafile
 
 
 class pyquante2Test(unittest.TestCase):
@@ -23,12 +23,12 @@ class pyquante2Test(unittest.TestCase):
         super(pyquante2Test, self).setUp()
         if not find_package("pyquante2"):
             raise ImportError("Must install pyquante2 to run this test")
-            
+
         self.data, self.logfile = getdatafile("Gaussian", "basicGaussian16", ["water_ccsd.log"])
 
     def test_makepyquante(self):
         # Test pyquante2 bridge
-        from pyquante2 import molecule, rhf, h2o, basisset
+        from pyquante2 import basisset, h2o, molecule, rhf
 
         bfs = basisset(h2o)
         # Copied from water_ccsd.log

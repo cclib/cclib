@@ -22,72 +22,91 @@ class GenericMP2Test(unittest.TestCase):
 
     def testsizeandshape(self):
         """(MP2) Are the dimensions of mpenergies correct?"""
-        assert self.data.mpenergies.shape == \
-                         (len(self.data.scfenergies), self.level-1)
+        assert self.data.mpenergies.shape == (len(self.data.scfenergies), self.level - 1)
 
     def testsign(self):
         """Are the Moller-Plesset corrections negative?"""
         if self.level == 2:
-            corrections = self.data.mpenergies[:,0] - self.data.scfenergies
+            corrections = self.data.mpenergies[:, 0] - self.data.scfenergies
         else:
-            corrections = self.data.mpenergies[:,self.level-2] - self.data.mpenergies[:,self.level-3]
+            corrections = (
+                self.data.mpenergies[:, self.level - 2] - self.data.mpenergies[:, self.level - 3]
+            )
         assert numpy.alltrue(corrections < 0.0)
+
 
 class GenericMP3Test(GenericMP2Test):
     """Generic MP3 unittest"""
+
     level = 3
+
 
 class GenericMP4SDQTest(GenericMP2Test):
     """Generic MP4(SDQ) unittest"""
+
     level = 4
+
 
 class GenericMP4SDTQTest(GenericMP2Test):
     """Generic MP4(SDTQ) unittest"""
+
     level = 4
+
 
 class GenericMP5Test(GenericMP2Test):
     """Generic MP5 unittest"""
+
     level = 5
 
 
 class GaussianMP2Test(GenericMP2Test):
     """Customized MP2 unittest"""
-        
+
     def testnocoeffs(self):
         """Are natural orbital coefficients the right size?"""
         assert self.data.nocoeffs.shape == (self.data.nmo, self.data.nbasis)
 
     def testnocoeffs(self):
         """Are natural orbital occupation numbers the right size?"""
-        assert self.data.nooccnos.shape == (self.data.nmo, )
+        assert self.data.nooccnos.shape == (self.data.nmo,)
+
 
 class GaussianMP3Test(GenericMP2Test):
     """Customized MP3 unittest"""
+
     level = 3
+
 
 class GaussianMP4SDQTest(GenericMP2Test):
     """Customized MP4-SDQ unittest"""
+
     level = 4
+
 
 class GaussianMP4SDTQTest(GenericMP2Test):
     """Customized MP4-SDTQ unittest"""
+
     level = 4
 
 
 class QChemMP4SDQTest(GenericMP2Test):
     """Customized MP4-SDQ unittest"""
+
     level = 4
+
 
 class QChemMP4SDTQTest(GenericMP2Test):
     """Customized MP4-SD(T)Q unittest"""
+
     level = 5
 
 
-if __name__=="__main__":
-
+if __name__ == "__main__":
     import sys
+
     sys.path.insert(1, os.path.join(__filedir__, ".."))
 
     from test_data import DataSuite
-    suite = DataSuite(['MP'])
+
+    suite = DataSuite(["MP"])
     suite.testall()

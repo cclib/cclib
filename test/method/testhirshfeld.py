@@ -7,22 +7,21 @@
 
 """Test the Hirshfeld Method in cclib"""
 
-import sys
-import os
 import logging
+import os
+import sys
 import unittest
 
-import numpy
-
-from cclib.method import Hirshfeld, volume
-from cclib.parser import Psi4
 from cclib.io import ccread
+from cclib.method import Hirshfeld, volume
 from cclib.method.calculationmethod import MissingAttributeError
+from cclib.parser import Psi4
 
+import numpy
+import pytest
 from numpy.testing import assert_allclose
 
 from ..test_data import getdatafile
-import pytest
 
 
 class HirshfeldTest(unittest.TestCase):
@@ -50,7 +49,9 @@ class HirshfeldTest(unittest.TestCase):
         """Are proatom densities imported correctly?"""
 
         self.parse()
-        self.analysis = Hirshfeld(self.data, self.volume, os.path.dirname(os.path.realpath(__file__)))
+        self.analysis = Hirshfeld(
+            self.data, self.volume, os.path.dirname(os.path.realpath(__file__))
+        )
 
         refH_den = [
             2.66407645e-01,
@@ -86,12 +87,12 @@ class HirshfeldTest(unittest.TestCase):
         assert_allclose(self.analysis.proatom_density[2][0:5], refH_den, rtol=1e-3)
 
     def test_water_charges(self):
-        """ Are Hirshfeld charges calculated correctly for water?
-        
-            Note. Table 1 in doi:10.1007/BF01113058 reports Hirshfeld charge for Hydrogen atom as
-                  0.11 when STO-3G basis set was used and
-                  0.18 when 6-311G** basis set was used.
-                  Here, Psi4 calculation was done using STO-3G.
+        """Are Hirshfeld charges calculated correctly for water?
+
+        Note. Table 1 in doi:10.1007/BF01113058 reports Hirshfeld charge for Hydrogen atom as
+              0.11 when STO-3G basis set was used and
+              0.18 when 6-311G** basis set was used.
+              Here, Psi4 calculation was done using STO-3G.
         """
 
         self.parse()
@@ -104,11 +105,10 @@ class HirshfeldTest(unittest.TestCase):
         analysis.calculate()
 
         # Check assigned charges
-        assert_allclose(analysis.fragcharges, [-0.29084274,  0.14357639,  0.14357639], atol=0.1)
+        assert_allclose(analysis.fragcharges, [-0.29084274, 0.14357639, 0.14357639], atol=0.1)
 
     def test_chgsum_h2(self):
-        """ Are Hirshfeld charges for hydrogen atoms in nonpolar H2 small as expected?
-        """
+        """Are Hirshfeld charges for hydrogen atoms in nonpolar H2 small as expected?"""
 
         h2path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "h2.out")
         data = ccread(h2path)
@@ -116,16 +116,16 @@ class HirshfeldTest(unittest.TestCase):
         analysis = Hirshfeld(data, vol, os.path.dirname(os.path.realpath(__file__)))
         analysis.calculate()
 
-        assert abs(numpy.sum(analysis.fragcharges)-0) < 1e-2
-        assert abs(analysis.fragcharges[0]-analysis.fragcharges[1]) < 1e-6
+        assert abs(numpy.sum(analysis.fragcharges) - 0) < 1e-2
+        assert abs(analysis.fragcharges[0] - analysis.fragcharges[1]) < 1e-6
 
     def test_chgsum_co(self):
-        """ Are Hirshfeld charges for carbon monoxide reported as expected?
-        
-            Note. Table 1 in doi:10.1007/BF01113058 reports Hirshfeld charge for Carbon atom as
-                  0.06 when STO-3G basis set was used and
-                  0.14 when 6-311G** basis set was used.
-                  Here, Psi4 calculation was done using STO-3G.
+        """Are Hirshfeld charges for carbon monoxide reported as expected?
+
+        Note. Table 1 in doi:10.1007/BF01113058 reports Hirshfeld charge for Carbon atom as
+              0.06 when STO-3G basis set was used and
+              0.14 when 6-311G** basis set was used.
+              Here, Psi4 calculation was done using STO-3G.
         """
 
         copath = os.path.join(os.path.dirname(os.path.realpath(__file__)), "co.out")
@@ -137,4 +137,4 @@ class HirshfeldTest(unittest.TestCase):
         analysis.calculate()
 
         assert abs(numpy.sum(analysis.fragcharges)) < 1e-2
-        assert_allclose(analysis.fragcharges, [ 0.10590126, -0.11277786], atol=1e-3)
+        assert_allclose(analysis.fragcharges, [0.10590126, -0.11277786], atol=1e-3)

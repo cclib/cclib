@@ -3,9 +3,10 @@
 """Generate the attributes.rst and attributes_dev.rst files from the
 ccData docstring that describes attributes."""
 
+import cclib
+
 from docs_common import check_cclib
 
-import cclib
 check_cclib(cclib)
 
 
@@ -23,7 +24,7 @@ def generate_attributes():
     # Need to parse the ccData docstring, since only that currently
     # contains all the information needed for this table.
     data_doc = cclib.parser.data.ccData.__doc__
-    attributes = [line for line in data_doc.split('\n') if line[:8].strip() == '']
+    attributes = [line for line in data_doc.split("\n") if line[:8].strip() == ""]
     attributes = [line for line in attributes if "--" in line]
 
     names = []
@@ -32,20 +33,20 @@ def generate_attributes():
     types = []
     for line in attributes:
         # There is always a double dash after the name.
-        attr, desc = line.strip().split(' -- ')
+        attr, desc = line.strip().split(" -- ")
 
         # The type and unit are in parentheses, but these
         # are not always the only parentheses on the line.
-        other = desc.split('(')[-1]
-        desc = desc[:-len(other)-1].strip()
-        other = other.split(')')[0]
+        other = desc.split("(")[-1]
+        desc = desc[: -len(other) - 1].strip()
+        other = other.split(")")[0]
 
         # Furthermore, the unit is not always there.
         if "," in other:
             atype, aunit = other.split(", ")
         else:
             atype = other
-            aunit = ''
+            aunit = ""
 
         for i in range(1, 4):
             atype = atype.replace(f"[{int(i)}]", f" of rank {int(i)}")
@@ -90,6 +91,7 @@ def generate_attributes():
         lines.append(f".. _`{n}`: data_notes.html#{n}")
 
     return "\n".join(lines)
+
 
 if __name__ == "__main__":
     print(generate_attributes())
