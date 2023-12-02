@@ -34,7 +34,7 @@ class PopulationTest(unittest.TestCase):
         self.data, self.logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_un_sp.log"])
 
     def calculate(self, method_class: Type[Method]) -> None:
-        if not hasattr(self, 'data'):
+        if not hasattr(self, "data"):
             self.parse()
         self.analysis = method_class(self.data)
         self.analysis.logger.setLevel(0)
@@ -74,13 +74,13 @@ class GaussianMPATest(unittest.TestCase):
         """Do the Mulliken charges sum up to the total formal charge?"""
         formalcharge = sum(self.data.atomnos) - self.data.charge
         totalpopulation = sum(self.analysis.fragcharges)
-        assert abs(totalpopulation-formalcharge) < 1.0e-3
+        assert abs(totalpopulation - formalcharge) < 1.0e-3
 
     def testsumspins(self) -> None:
         """Do the Mulliken spins sum up to the total formal spin?"""
         formalspin = self.data.homos[0] - self.data.homos[1]
         totalspin = sum(self.analysis.fragspins)
-        assert abs(totalspin-formalspin) < 1.0e-3
+        assert abs(totalspin - formalspin) < 1.0e-3
 
 
 class GaussianLPATest(unittest.TestCase):
@@ -96,13 +96,13 @@ class GaussianLPATest(unittest.TestCase):
         """Do the Lowdin charges sum up to the total formal charge?"""
         formalcharge = sum(self.data.atomnos) - self.data.charge
         totalpopulation = sum(self.analysis.fragcharges)
-        assert abs(totalpopulation-formalcharge) < 0.001
+        assert abs(totalpopulation - formalcharge) < 0.001
 
     def testsumspins(self) -> None:
         """Do the Lowdin spins sum up to the total formal spin?"""
         formalspin = self.data.homos[0] - self.data.homos[1]
         totalspin = sum(self.analysis.fragspins)
-        assert abs(totalspin-formalspin) < 1.0e-3
+        assert abs(totalspin - formalspin) < 1.0e-3
 
 
 class GaussianCSPATest(unittest.TestCase):
@@ -118,13 +118,14 @@ class GaussianCSPATest(unittest.TestCase):
         """Do the CSPA charges sum up to the total formal charge?"""
         formalcharge = sum(self.data.atomnos) - self.data.charge
         totalpopulation = sum(self.analysis.fragcharges)
-        assert abs(totalpopulation-formalcharge) < 1.0e-3
+        assert abs(totalpopulation - formalcharge) < 1.0e-3
 
     def testsumspins(self) -> None:
         """Do the CSPA spins sum up to the total formal spin?"""
         formalspin = self.data.homos[0] - self.data.homos[1]
         totalspin = sum(self.analysis.fragspins)
-        assert abs(totalspin-formalspin) < 1.0e-3
+        assert abs(totalspin - formalspin) < 1.0e-3
+
 
 class GaussianBickelhauptTest(unittest.TestCase):
     """Bickelhaupt Population Analysis test"""
@@ -140,13 +141,13 @@ class GaussianBickelhauptTest(unittest.TestCase):
         """Do the Bickelhaupt charges sum up to the total formal charge?"""
         formalcharge = sum(self.data.atomnos) - self.data.charge
         totalpopulation = sum(self.analysis.fragcharges)
-        assert abs(totalpopulation-formalcharge) < 1.0e-3
+        assert abs(totalpopulation - formalcharge) < 1.0e-3
 
     def testsumspins(self) -> None:
         """Do the Bickelhaupt spins sum up to the total formal spin?"""
         formalspin = self.data.homos[0] - self.data.homos[1]
         totalspin = sum(self.analysis.fragspins)
-        assert abs(totalspin-formalspin) < 1.0e-3
+        assert abs(totalspin - formalspin) < 1.0e-3
 
     def test_dvb_sp(self) -> None:
         """Testing Bickelhaupt charges (restricted) against outputs from Multiwfn."""
@@ -167,12 +168,15 @@ class GaussianBickelhauptTest(unittest.TestCase):
         bpa.calculate()
 
         e_bpaalpha = numpy.loadtxt(f"{os.path.dirname(os.path.realpath(__file__))}/dvb_un_sp.bpa")
-        e_bpaspin = numpy.loadtxt(f"{os.path.dirname(os.path.realpath(__file__))}/dvb_un_sp.bpaspin")
+        e_bpaspin = numpy.loadtxt(
+            f"{os.path.dirname(os.path.realpath(__file__))}/dvb_un_sp.bpaspin"
+        )
 
         assert numpy.all(bpa.fragcharges >= e_bpaalpha - 0.05)
         assert numpy.all(bpa.fragcharges <= e_bpaalpha + 0.05)
         assert numpy.all(bpa.fragspins >= e_bpaspin - 0.05)
         assert numpy.all(bpa.fragspins <= e_bpaspin + 0.05)
+
 
 tests = [GaussianMPATest, GaussianLPATest, GaussianCSPATest, GaussianBickelhauptTest]
 

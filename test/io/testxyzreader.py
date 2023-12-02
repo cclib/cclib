@@ -21,10 +21,8 @@ __datadir__ = os.path.join(__filepath__, "..", "..")
 
 
 class XYZReaderTest(unittest.TestCase):
-
     def test_attributes_one(self):
-        """Is an XYZ file with a single geometry read into a ccData properly?
-        """
+        """Is an XYZ file with a single geometry read into a ccData properly?"""
         fpath = os.path.join(__datadir__, "test/bridge/uracil.xyz")
         xyz = cclib.io.xyzreader.XYZ(fpath)
         data = xyz.parse()
@@ -37,8 +35,7 @@ class XYZReaderTest(unittest.TestCase):
         assert data.atomcoords.shape == (1, 12, 3)
 
     def test_attributes_two(self):
-        """Is an XYZ file with a two geometries read into a ccData properly?
-        """
+        """Is an XYZ file with a two geometries read into a ccData properly?"""
         fpath = os.path.join(__filedir__, "data/uracil_two.xyz")
         xyz = cclib.io.xyzreader.XYZ(fpath)
         data = xyz.parse()

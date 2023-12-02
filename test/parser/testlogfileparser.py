@@ -24,8 +24,8 @@ __filedir__ = os.path.dirname(__file__)
 __filepath__ = os.path.realpath(__filedir__)
 __datadir__ = os.path.join(__filepath__, "..", "..")
 
-class FileWrapperTest(unittest.TestCase):
 
+class FileWrapperTest(unittest.TestCase):
     def check_seek(self, wrapper):
         """Check that a FileWrapper can seek properly"""
         wrapper.seek(0, 2)
@@ -39,8 +39,8 @@ class FileWrapperTest(unittest.TestCase):
 
     def test_file_seek(self):
         """Can we seek anywhere in a file object?"""
-        fpath = os.path.join(__datadir__,"data/ADF/basicADF2007.01/dvb_gopt.adfout")
-        with open(fpath, 'r') as fobject:
+        fpath = os.path.join(__datadir__, "data/ADF/basicADF2007.01/dvb_gopt.adfout")
+        with open(fpath, "r") as fobject:
             wrapper = cclib.parser.logfileparser.FileWrapper(fobject)
             self.check_seek(wrapper)
 
@@ -58,7 +58,7 @@ class FileWrapperTest(unittest.TestCase):
         # stdin is disabled by pytest.
         # the recommended way of emulating stdin is by doing this
         monkeypatch = MonkeyPatch()
-        monkeypatch.setattr('sys.stdin', io.StringIO())
+        monkeypatch.setattr("sys.stdin", io.StringIO())
 
         wrapper = cclib.parser.logfileparser.FileWrapper(sys.stdin)
         self.check_seek(wrapper)
@@ -78,7 +78,7 @@ class FileWrapperTest(unittest.TestCase):
 
             # stdin emulation
             monkeypatch = MonkeyPatch()
-            monkeypatch.setattr('sys.stdin', io.StringIO(contents))
+            monkeypatch.setattr("sys.stdin", io.StringIO(contents))
 
             data = cclib.io.ccread(sys.stdin)
             assert get_attributes(data) == expected_attributes

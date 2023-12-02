@@ -19,7 +19,7 @@ class Electrons(Method):
 
     def __init__(self, data, progress=None, loglevel=logging.INFO, logname="Log"):
         super().__init__(data, progress, loglevel, logname)
-        self.required_attrs = ('atomnos','charge','coreelectrons','homos')
+        self.required_attrs = ("atomnos", "charge", "coreelectrons", "homos")
 
     def __str__(self):
         """Returns a string representation of the object."""

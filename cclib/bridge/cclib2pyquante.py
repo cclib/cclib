@@ -45,10 +45,7 @@ def makepyquante(data):
     moldesc = numpy.insert(data.atomcoords[-1], 0, data.atomnos, 1).tolist()
 
     return molecule(
-        [tuple(x) for x in moldesc],
-        units="Angstroms",
-        charge=data.charge,
-        multiplicity=data.mult,
+        [tuple(x) for x in moldesc], units="Angstroms", charge=data.charge, multiplicity=data.mult
     )
 
 

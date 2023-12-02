@@ -24,6 +24,7 @@ from numpy.testing import assert_allclose
 
 from ..test_data import getdatafile
 
+
 class DDEC6Test(unittest.TestCase):
     """DDEC6 method tests."""
 
@@ -127,11 +128,16 @@ class DDEC6Test(unittest.TestCase):
         assert_allclose(analysis.reference_charges[1], [-0.831591, 0.415430, 0.416161], rtol=0.20)
         # STEP 3
         # Check integrated charge density (rho^cond(r)) on grid with integrated values (=nelec).
-        assert abs(analysis.charge_density.integrate()-analysis.rho_cond.integrate()) < 1
+        assert abs(analysis.charge_density.integrate() - analysis.rho_cond.integrate()) < 1
         for atomi in range(len(analysis.data.atomnos)):
-            assert abs(analysis._integrate_from_radial([analysis._cond_density[atomi]], [atomi])
-                + analysis.reference_charges[-1][atomi]-analysis.data.atomnos[atomi]) < \
-                0.5
+            assert (
+                abs(
+                    analysis._integrate_from_radial([analysis._cond_density[atomi]], [atomi])
+                    + analysis.reference_charges[-1][atomi]
+                    - analysis.data.atomnos[atomi]
+                )
+                < 0.5
+            )
         # Also compare with data from `chargemol`
         # discrepancy comes from the fact that `chargemol` grid and `horton` grid do not exactly match
         assert_allclose(
@@ -164,12 +170,15 @@ class DDEC6Test(unittest.TestCase):
         # Check assigned charges
         assert_allclose(analysis.fragcharges, [-0.757097, 0.378410, 0.378687], atol=0.2)
 
-    @pytest.mark.skipif(sys.version_info > (3, 8), reason="This test doesn't converge with newer psi4 versions availiable with python >3.8")
+    @pytest.mark.skipif(
+        sys.version_info > (3, 8),
+        reason="This test doesn't converge with newer psi4 versions availiable with python >3.8",
+    )
     def test_chgsum_h2(self) -> None:
-        """ Are DDEC6 charges for hydrogen atoms in nonpolar H2 small as expected?
+        """Are DDEC6 charges for hydrogen atoms in nonpolar H2 small as expected?
 
-            Using much denser grid (spacing of 0.1 rather than 0.2 which is the cube file included
-            in the test) gives [0.00046066, 0.00046066].
+        Using much denser grid (spacing of 0.1 rather than 0.2 which is the cube file included
+        in the test) gives [0.00046066, 0.00046066].
         """
 
         self.parse("h2")
@@ -177,15 +186,15 @@ class DDEC6Test(unittest.TestCase):
         analysis = DDEC6(self.data, vol, os.path.dirname(os.path.realpath(__file__)))
         analysis.calculate()
 
-        assert abs(analysis.fragcharges[0]-analysis.fragcharges[1]) < 1e-12
+        assert abs(analysis.fragcharges[0] - analysis.fragcharges[1]) < 1e-12
 
     def test_chgsum_co(self) -> None:
-        """ Are DDEC6 charges for carbon monoxide reported as expected?
+        """Are DDEC6 charges for carbon monoxide reported as expected?
 
-            Deviation from a total of zero (-0.00682) occurs because the integrated value of total
-            density (14.006876594937234) is slightly larger than # of electrons.
+        Deviation from a total of zero (-0.00682) occurs because the integrated value of total
+        density (14.006876594937234) is slightly larger than # of electrons.
 
-            Using a finer grid reduces this discrepancy.
+        Using a finer grid reduces this discrepancy.
         """
 
         self.parse("co")
@@ -195,16 +204,16 @@ class DDEC6Test(unittest.TestCase):
         analysis = DDEC6(self.data, imported_vol, os.path.dirname(os.path.realpath(__file__)))
         analysis.calculate()
 
-        assert abs(numpy.sum(analysis.fragcharges)-0) < 1e-2
+        assert abs(numpy.sum(analysis.fragcharges) - 0) < 1e-2
         assert_allclose(analysis.fragcharges, [0.13221636, -0.13903595], atol=1e-3)
 
     def test_chg_nh3(self) -> None:
-        """ Are DDEC6 charges for ammonia reported as expected?
+        """Are DDEC6 charges for ammonia reported as expected?
 
-            Deviation from a total of zero (0.026545) occurs because the integrated value of total
-            density (9.973453129261163) is slightly smaller than number of electrons.
+        Deviation from a total of zero (0.026545) occurs because the integrated value of total
+        density (9.973453129261163) is slightly smaller than number of electrons.
 
-            Using a finer grid reduces this discrepancy.
+        Using a finer grid reduces this discrepancy.
         """
 
         self.parse("nh3")

@@ -14,9 +14,16 @@ from cclib.parser.data import ccData
 class XYZ(filewriter.Writer):
     """A writer for XYZ (Cartesian coordinate) files."""
 
-    def __init__(self, ccdata: ccData, splitfiles: bool = False,
-                 firstgeom: bool = False, lastgeom: bool = False, allgeom: bool = False,
-                 *args, **kwargs) -> None:
+    def __init__(
+        self,
+        ccdata: ccData,
+        splitfiles: bool = False,
+        firstgeom: bool = False,
+        lastgeom: bool = False,
+        allgeom: bool = False,
+        *args,
+        **kwargs,
+    ) -> None:
         """Initialize the XYZ writer object.
 
         Inputs:
@@ -28,7 +35,7 @@ class XYZ(filewriter.Writer):
         """
         super().__init__(ccdata, *args, **kwargs)
 
-        self.required_attrs = ('natom', 'atomcoords', 'atomnos')
+        self.required_attrs = ("natom", "atomcoords", "atomnos")
 
         self.do_firstgeom = firstgeom
         self.do_lastgeom = lastgeom
@@ -72,16 +79,19 @@ class XYZ(filewriter.Writer):
             xyzblock.append(self._xyz_from_ccdata(i))
 
         # Ensure an extra newline at the very end.
-        xyzblock.append('')
+        xyzblock.append("")
 
-        return '\n'.join(xyzblock)
+        return "\n".join(xyzblock)
 
     def _xyz_from_ccdata(self, index: int) -> str:
         """Create an XYZ file of the geometry at the given index."""
 
         atomcoords = self.ccdata.atomcoords[index]
-        existing_comment = "" if "comments" not in self.ccdata.metadata \
+        existing_comment = (
+            ""
+            if "comments" not in self.ccdata.metadata
             else self.ccdata.metadata["comments"][index]
+        )
 
         # Create a comment derived from the filename and the index.
         if index == -1:
@@ -99,10 +109,10 @@ class XYZ(filewriter.Writer):
         else:
             comment = f"[{comment}]"
 
-        atom_template = '{:3s} {:15.10f} {:15.10f} {:15.10f}'
+        atom_template = "{:3s} {:15.10f} {:15.10f} {:15.10f}"
         block = []
         block.append(self.natom)
         block.append(comment)
         for element, (x, y, z) in zip(self.element_list, atomcoords):
             block.append(atom_template.format(element, x, y, z))
-        return '\n'.join(block)
+        return "\n".join(block)

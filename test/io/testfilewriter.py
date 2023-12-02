@@ -21,7 +21,6 @@ __datadir__ = os.path.join(__filepath__, "..", "..")
 
 
 class FileWriterTest(unittest.TestCase):
-
     def test_init(self):
         """Does the class initialize properly?"""
 

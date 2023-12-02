@@ -12,46 +12,81 @@ import unittest
 
 
 class NormalisesymTest(unittest.TestCase):
-
     # Not needed: DALTON, MOPAC, NWChem, ORCA, QChem
 
     def test_normalisesym_adf(self):
         from cclib.parser.adfparser import ADF
+
         sym = ADF(io.StringIO("dummyfile")).normalisesym
-        labels = ['A', 's', 'A1', 'A1.g', 'Sigma', 'Pi', 'Delta', 'Phi', 'Sigma.g', 'A.g', 'AA', 'AAA', 'EE1', 'EEE1']
-        ref = ['A', 's', 'A1', 'A1g', 'sigma', 'pi', 'delta', 'phi', 'sigma.g', 'Ag', "A'", 'A"', "E1'", 'E1"']
+        labels = [
+            "A",
+            "s",
+            "A1",
+            "A1.g",
+            "Sigma",
+            "Pi",
+            "Delta",
+            "Phi",
+            "Sigma.g",
+            "A.g",
+            "AA",
+            "AAA",
+            "EE1",
+            "EEE1",
+        ]
+        ref = [
+            "A",
+            "s",
+            "A1",
+            "A1g",
+            "sigma",
+            "pi",
+            "delta",
+            "phi",
+            "sigma.g",
+            "Ag",
+            "A'",
+            'A"',
+            "E1'",
+            'E1"',
+        ]
         assert list(map(sym, labels)) == ref
 
     def test_normalisesym_gamess(self):
         from cclib.parser.gamessparser import GAMESS
+
         sym = GAMESS(io.StringIO("dummyfile")).normalisesym
-        labels = ['A', 'A1', 'A1G', "A'", "A''", "AG"]
-        ref = ['A', 'A1', 'A1g', "A'", 'A"', 'Ag']
+        labels = ["A", "A1", "A1G", "A'", "A''", "AG"]
+        ref = ["A", "A1", "A1g", "A'", 'A"', "Ag"]
         assert list(map(sym, labels)) == ref
 
     def test_normalisesym_gamessuk(self):
         from cclib.parser.gamessukparser import GAMESSUK
+
         sym = GAMESSUK(io.StringIO("dummyfile")).normalisesym
-        labels = ['a', 'a1', 'ag', "a'", 'a"', "a''", "a1''", 'a1"', "e1+", "e1-"]
-        ref = ['A', 'A1', 'Ag', "A'", 'A"', 'A"', 'A1"', 'A1"', 'E1', 'E1']
+        labels = ["a", "a1", "ag", "a'", 'a"', "a''", "a1''", 'a1"', "e1+", "e1-"]
+        ref = ["A", "A1", "Ag", "A'", 'A"', 'A"', 'A1"', 'A1"', "E1", "E1"]
         assert list(map(sym, labels)) == ref
 
     def test_normalisesym_gaussian(self):
         from cclib.parser.gaussianparser import Gaussian
+
         sym = Gaussian(io.StringIO("dummyfile")).normalisesym
-        labels = ['A1', 'AG', 'A1G', "SG", "PI", "PHI", "DLTA", 'DLTU', 'SGG']
-        ref = ['A1', 'Ag', 'A1g', 'sigma', 'pi', 'phi', 'delta', 'delta.u', 'sigma.g']
+        labels = ["A1", "AG", "A1G", "SG", "PI", "PHI", "DLTA", "DLTU", "SGG"]
+        ref = ["A1", "Ag", "A1g", "sigma", "pi", "phi", "delta", "delta.u", "sigma.g"]
         assert list(map(sym, labels)) == ref
 
     def test_normalisesym_jaguar(self):
         from cclib.parser.jaguarparser import Jaguar
+
         sym = Jaguar(io.StringIO("dummyfile")).normalisesym
-        labels = ['A', 'A1', 'Ag', 'Ap', 'App', "A1p", "A1pp", "E1pp/Ap"]
-        ref = ['A', 'A1', 'Ag', "A'", 'A"', "A1'", 'A1"', 'E1"']
+        labels = ["A", "A1", "Ag", "Ap", "App", "A1p", "A1pp", "E1pp/Ap"]
+        ref = ["A", "A1", "Ag", "A'", 'A"', "A1'", 'A1"', 'E1"']
         assert list(map(sym, labels)) == ref
 
     def test_normalisesym_molcas(self):
         from cclib.parser.molcasparser import Molcas
+
         sym = Molcas(io.StringIO("dummyfile")).normalisesym
         labels = ["a", "a1", "ag"]
         ref = ["A", "A1", "Ag"]
@@ -59,6 +94,7 @@ class NormalisesymTest(unittest.TestCase):
 
     def test_normalisesym_molpro(self):
         from cclib.parser.molproparser import Molpro
+
         sym = Molpro(io.StringIO("dummyfile")).normalisesym
         labels = ["A`", "A``"]
         ref = ["A'", "A''"]
@@ -66,6 +102,7 @@ class NormalisesymTest(unittest.TestCase):
 
     def test_normalisesym_psi4(self):
         from cclib.parser.psi4parser import Psi4
+
         sym = Psi4(io.StringIO("dummyfile")).normalisesym
         labels = ["Ap", "App"]
         ref = ["A'", 'A"']
@@ -73,10 +110,12 @@ class NormalisesymTest(unittest.TestCase):
 
     def test_normalisesym_turbomole(self):
         from cclib.parser.turbomoleparser import Turbomole
+
         sym = Turbomole(io.StringIO("dummyfile")).normalisesym
         labels = ["a", "a1", "ag"]
         ref = ["A", "A1", "Ag"]
         assert list(map(sym, labels)) == ref
+
 
 if __name__ == "__main__":
     unittest.main()

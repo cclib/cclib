@@ -12,27 +12,19 @@ from typing import Dict, Mapping
 
 import pytest
 
-from test.test_data import (
-    all_modules,
-    all_parsers,
-    module_names,
-    parser_names,
-)
+from test.test_data import all_modules, all_parsers, module_names, parser_names
 from cclib.io import ccopen
 from cclib.parser.logfileparser import Logfile
 
 version_major = sys.version_info.major
 
 # Paths that should be ignored for all Python versions.
-paths_ignore_allver = [
-    'cclib/progress/qt4progress.py',
-]
+paths_ignore_allver = ["cclib/progress/qt4progress.py"]
 
 
 def match_path(path, partial_paths) -> bool:
     """Does the given path contain any of the stubs in partial_paths?"""
-    return any(partial_path in str(path)
-               for partial_path in partial_paths)
+    return any(partial_path in str(path) for partial_path in partial_paths)
 
 
 def pytest_ignore_collect(path, config) -> bool:
@@ -55,9 +47,9 @@ def pytest_generate_tests(metafunc) -> None:
         metafunc.parametrize("modules", [{p: all_modules[p] for p in module_names}])
         metafunc.parametrize("terse", [metafunc.config.getoption("--terse")])
         metafunc.parametrize("silent", [metafunc.config.getoption("--silent")])
-        metafunc.parametrize("loglevel",
-                             [logging.DEBUG if metafunc.config.getoption("--debug")
-                              else logging.ERROR])
+        metafunc.parametrize(
+            "loglevel", [logging.DEBUG if metafunc.config.getoption("--debug") else logging.ERROR]
+        )
         metafunc.parametrize("summary", [True])
         metafunc.parametrize("visual_tests", [True])
 
@@ -77,7 +69,7 @@ def normalisefilename(filename: str) -> str:
     ans = []
     for y in filename:
         x = y.lower()
-        if (x >= 'a' and x <= 'z') or (x >= '0' and x <= '9'):
+        if (x >= "a" and x <= "z") or (x >= "0" and x <= "9"):
             ans.append(y)
         else:
             ans.append("_")
@@ -93,13 +85,9 @@ def filenames() -> Dict[str, Path]:
     __regression_dir__ = (__filedir__ / ".." / "data" / "regression").resolve()
     regfile = __regression_dir__ / "regressionfiles.txt"
     regfilenames = [
-        os.sep.join(x.strip().split("/"))
-        for x in regfile.read_text(encoding="utf-8").splitlines()
+        os.sep.join(x.strip().split("/")) for x in regfile.read_text(encoding="utf-8").splitlines()
     ]
-    return {
-        normalisefilename(filename): __regression_dir__ / filename
-        for filename in regfilenames
-    }
+    return {normalisefilename(filename): __regression_dir__ / filename for filename in regfilenames}
 
 
 @pytest.fixture
@@ -113,8 +101,8 @@ def filename(request, filenames: Mapping[str, Path]) -> Path:
     Most tests require a parse and should use the logfile fixture.
     """
     prefix = "testnoparse"
-    assert request.node.name[:len(prefix)] == prefix
-    normalized_name = request.node.name[len(prefix):]
+    assert request.node.name[: len(prefix)] == prefix
+    normalized_name = request.node.name[len(prefix) :]
     if normalized_name in filenames:
         return filenames[normalized_name]
     # Allow explicitly skipped tests through.
@@ -144,8 +132,8 @@ def logfile(request, filenames: Mapping[str, Path]) -> Logfile:
     parse the corresponding data and return the logfile with data attached.
     """
     prefix = "test"
-    assert request.node.name[:len(prefix)] == prefix
-    normalized_name = request.node.name[len(prefix):]
+    assert request.node.name[: len(prefix)] == prefix
+    normalized_name = request.node.name[len(prefix) :]
     if normalized_name in filenames:
         return get_parsed_logfile(filenames, normalized_name)
     # Workaround (?) for locations that are full directories (e.g. Turbomole)

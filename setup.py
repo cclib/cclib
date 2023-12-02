@@ -29,7 +29,6 @@ Topic :: Software Development :: Libraries :: Python Modules"""
 
 
 def setup_cclib():
-
     doclines = __doc__.split("\n")
 
     setuptools.setup(
@@ -45,25 +44,20 @@ def setup_cclib():
         long_description="\n".join(doclines[2:]),
         classifiers=classifiers.split("\n"),
         platforms=["Any."],
-        packages=setuptools.find_packages(exclude=['*test*']),
+        packages=setuptools.find_packages(exclude=["*test*"]),
         entry_points={
-            'console_scripts': [
-                'ccframe=cclib.scripts.ccframe:main',
-                'ccget=cclib.scripts.ccget:ccget',
-                'ccwrite=cclib.scripts.ccwrite:main',
-                'cda=cclib.scripts.cda:main'
+            "console_scripts": [
+                "ccframe=cclib.scripts.ccframe:main",
+                "ccget=cclib.scripts.ccget:ccget",
+                "ccwrite=cclib.scripts.ccwrite:main",
+                "cda=cclib.scripts.cda:main",
             ]
         },
-        install_requires=[
-            "packaging>=19.0",
-            "numpy",
-            "periodictable",
-            "scipy>=1.2.0",
-        ],
+        install_requires=["packaging>=19.0", "numpy", "periodictable", "scipy>=1.2.0"],
         # py.typed
         zip_safe=False,
     )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     setup_cclib()

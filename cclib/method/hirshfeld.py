@@ -37,20 +37,14 @@ class Hirshfeld(Stockholder):
     required_attrs = ("homos", "mocoeffs", "nbasis", "gbasis")
 
     def __init__(
-        self,
-        data,
-        volume,
-        proatom_path=None,
-        progress=None,
-        loglevel=logging.INFO,
-        logname="Log",
+        self, data, volume, proatom_path=None, progress=None, loglevel=logging.INFO, logname="Log"
     ):
-        """ Initialize Hirshfeld object.
-            Inputs are:
-                data -- ccData object that describe target molecule.
-                volume -- Volume object that describe target Cartesian grid.
-                proatom_path -- path to proatom densities
-                (directory containing atoms.h5 in horton or c2_001_001_000_400_075.txt in chargemol)
+        """Initialize Hirshfeld object.
+        Inputs are:
+            data -- ccData object that describe target molecule.
+            volume -- Volume object that describe target Cartesian grid.
+            proatom_path -- path to proatom densities
+            (directory containing atoms.h5 in horton or c2_001_001_000_400_075.txt in chargemol)
         """
         super().__init__(data, volume, proatom_path, progress, loglevel, logname)
 
@@ -73,7 +67,10 @@ class Hirshfeld(Stockholder):
         return numpy.sqrt(numpy.dot(pt1 - pt2, pt1 - pt2))
 
     def _read_proatom(
-        self, directory, atom_num, charge  # type = str  # type = int  # type = float
+        self,
+        directory,
+        atom_num,
+        charge,  # type = str  # type = int  # type = float
     ):
         return super()._read_proatom(directory, atom_num, charge)
 

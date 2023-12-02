@@ -40,12 +40,12 @@ class Stockholder(Method):
         loglevel: int = logging.INFO,
         logname: str = "Log",
     ) -> None:
-        """ Initialize Stockholder-type method object.
-            Inputs are:
-                data -- ccData object that describe target molecule.
-                volume -- Volume object that describe target Cartesian grid.
-                proatom_path -- path to proatom densities
-                (directory containing atoms.h5 in horton or c2_001_001_000_400_075.txt in chargemol)
+        """Initialize Stockholder-type method object.
+        Inputs are:
+            data -- ccData object that describe target molecule.
+            volume -- Volume object that describe target Cartesian grid.
+            proatom_path -- path to proatom densities
+            (directory containing atoms.h5 in horton or c2_001_001_000_400_075.txt in chargemol)
         """
         super().__init__(data, progress, loglevel, logname)
 
@@ -96,12 +96,10 @@ class Stockholder(Method):
         charge_ceil = int(math.ceil(charge))
 
         chargemol_path_floor = os.path.join(
-            directory,
-            f"c2_{atom_num:03d}_{atom_num:03d}_{atom_num - charge_floor:03d}_500_100.txt",
+            directory, f"c2_{atom_num:03d}_{atom_num:03d}_{atom_num - charge_floor:03d}_500_100.txt"
         )
         chargemol_path_ceil = os.path.join(
-            directory,
-            f"c2_{atom_num:03d}_{atom_num:03d}_{atom_num - charge_ceil:03d}_500_100.txt",
+            directory, f"c2_{atom_num:03d}_{atom_num:03d}_{atom_num - charge_ceil:03d}_500_100.txt"
         )
         horton_path = os.path.join(directory, "atoms.h5")
 
@@ -194,10 +192,12 @@ class Stockholder(Method):
 
         return density, radiusgrid
 
-    def calculate(self, indices: Optional[Sequence[Sequence[int]]] = None, fupdate: float = 0.05) -> None:
-        """ Charge density on a Cartesian grid is a common routine required for Stockholder-type
-            and related methods. This abstract class prepares the grid if input Volume object
-            is empty.
+    def calculate(
+        self, indices: Optional[Sequence[Sequence[int]]] = None, fupdate: float = 0.05
+    ) -> None:
+        """Charge density on a Cartesian grid is a common routine required for Stockholder-type
+        and related methods. This abstract class prepares the grid if input Volume object
+        is empty.
         """
         # Obtain charge densities on the grid if it does not contain one.
         if not numpy.any(self.volume.data):

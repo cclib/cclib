@@ -19,11 +19,16 @@ from cclib.progress import Progress
 class Orbitals(Method):
     """A class for orbital related methods."""
 
-    def __init__(self, data, progress: Optional[Progress] = None, \
-                 loglevel: int = logging.INFO, logname: str = "Log") -> None:
+    def __init__(
+        self,
+        data,
+        progress: Optional[Progress] = None,
+        loglevel: int = logging.INFO,
+        logname: str = "Log",
+    ) -> None:
         super().__init__(data, progress, loglevel, logname)
 
-        self.required_attrs = ('mocoeffs','moenergies','homos')
+        self.required_attrs = ("mocoeffs", "moenergies", "homos")
         self.fragresults = None
 
     def __str__(self) -> str:

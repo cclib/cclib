@@ -92,7 +92,7 @@ class VolumeTest(unittest.TestCase):
 
     def test_roundtrip_cube(self):
         """Write a cube file and then read it back. Check if the volume object contains
-           identical information on each grid point"""
+        identical information on each grid point"""
 
         data, logfile = getdatafile(Psi4, "basicPsi4-1.2.1", ["water_mp2.out"])
         vol = volume.Volume((-1, -1, -1), (1, 1, 1), (0.4, 0.4, 0.4))
