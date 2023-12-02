@@ -6,7 +6,7 @@ repos:
       - id: check-hooks-apply
       - id: check-useless-excludes
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: "v4.4.0"
+    rev: "v4.5.0"
     hooks:
       - id: trailing-whitespace
         exclude: |
@@ -122,13 +122,10 @@ repos:
       - id: check-toml
       - id: check-added-large-files
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    # Ruff version.
-    rev: v0.1.5
+    rev: v0.1.6
     hooks:
-      # Run the linter.
       - id: ruff
         args: [ --fix ]
-      # Run the formatter.
       - id: ruff-format
   # - repo: https://github.com/pre-commit/mirrors-mypy
   #   rev: "v1.3.0"
