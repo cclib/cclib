@@ -1,0 +1,14 @@
+## https://github.com/cclib/cclib/pull/1307
+# remove trailing whitespace
+37740d43064bc13445b19ff2d3c5f1154f202896
+# fix end of file
+8f3fbf7d1fc060a3c8522343dd103604bd946e5d
+# fix line endings to be LF
+7b2e8701dcb1a1a6c437919b185be78a35c3e2a5
+# ruff for all but cclib/parser
+e986fd9bb37ca0113707f88f6fea7f2318671cdd
+# ruff for cclib/parser
+04b3e4694e001e4b91457674a490b723e17af2b7
+# isort
+3c499da3e44e4a8ae983407c0f07c71996d202d8
+06e54bd1eb663dd948973037f336d5190f4734ce
