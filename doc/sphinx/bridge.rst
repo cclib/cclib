@@ -111,4 +111,3 @@ Then read in the densities as below to calculate Hirshfeld or Hirshfeld-like cha
     print(wpart['charges'])
 
 ..
-

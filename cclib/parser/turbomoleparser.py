@@ -2007,4 +2007,3 @@ class OldTurbomole(logfileparser.Logfile):
                     del self.vibsyms[i]
                     i -= 1
                 i += 1
-

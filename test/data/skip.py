@@ -33,5 +33,3 @@ def skipForLogfile(fragment, msg: str):
                 testfunc(self, *args, **kwargs)
         return testwrapper
     return testdecorator
-
-

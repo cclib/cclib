@@ -427,4 +427,3 @@ class TurbomoleGeoOptTest(GenericGeoOptTest):
         for i in range(1, len(self.data.optstatus)-1):
             assert self.data.optstatus[i] == self.data.OPT_UNKNOWN
         assert self.data.optstatus[-1] == self.data.OPT_DONE
-
