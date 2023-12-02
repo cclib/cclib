@@ -23,41 +23,47 @@ class GenericTDunTest(unittest.TestCase):
 
     number = 24
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     def testenergiesnumber(self):
         """Is the length of etenergies correct?"""
         assert len(self.data.etenergies) == self.number
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForLogfile("Turbomole/basicTurbomole7.4/CO_cc2_TD_un", "Oscillator strengths are not available for triplets with Turbomole's ricc2")
+    @skipForParser("Molcas", "The parser is still being developed so we skip this test")
+    @skipForLogfile(
+        "Turbomole/basicTurbomole7.4/CO_cc2_TD_un",
+        "Oscillator strengths are not available for triplets with Turbomole's ricc2",
+    )
     def testoscsnumber(self):
         """Is the length of eotscs correct?"""
         assert len(self.data.etoscs) == self.number
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForLogfile("Turbomole/basicTurbomole7.4/CO_cc2_TD", "Rotatory strengths are not currently available for ricc2")
+    @skipForParser("Molcas", "The parser is still being developed so we skip this test")
+    @skipForLogfile(
+        "Turbomole/basicTurbomole7.4/CO_cc2_TD",
+        "Rotatory strengths are not currently available for ricc2",
+    )
     def testrotatsnumber(self):
         """Is the length of etrotats correct?"""
         assert len(self.data.etrotats) == self.number
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     def testsecsnumber(self):
         """Is the length of etsecs correct?"""
         assert len(self.data.etsecs) == self.number
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
+    @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     def testsymsnumber(self):
         """Is the length of etsyms correct?"""
         assert len(self.data.etsyms) == self.number
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')
-    @skipForParser('Turbomole', 'Turbomole etsyms are not available for UHF')
+    @skipForParser("Molcas", "The parser is still being developed so we skip this test")
+    @skipForParser("Turbomole", "Turbomole etsyms are not available for UHF")
     def testsyms(self):
         """Is etsyms populated by singlets and triplets 50/50?"""
         singlets = [sym for sym in self.data.etsyms if "Singlet" in sym]
         triplets = [sym for sym in self.data.etsyms if "Triplet" in sym]
-        assert len(singlets) == self.number/2
-        assert len(triplets) == self.number/2
+        assert len(singlets) == self.number / 2
+        assert len(triplets) == self.number / 2
 
 
 class TurbomoleTDunTest(GenericTDunTest):
@@ -66,12 +72,12 @@ class TurbomoleTDunTest(GenericTDunTest):
     number = 10
 
 
-
-if __name__=="__main__":
-
+if __name__ == "__main__":
     import sys
+
     sys.path.insert(1, os.path.join(__filedir__, ".."))
 
     from test_data import DataSuite
-    suite = DataSuite(['TDun'])
+
+    suite = DataSuite(["TDun"])
     suite.testall()

@@ -20,7 +20,6 @@ from ..test_data import getdatafile
 
 
 class ElectronsTest(unittest.TestCase):
-
     def test_count(self):
         """Test electron count for logfiles without pseudopotentials."""
         data, logfile = getdatafile(QChem, "basicQChem5.4", ["water_mp4sdq.out"])
@@ -52,6 +51,7 @@ class ElectronsTest(unittest.TestCase):
         data, logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_un_sp.log"])
         assert Electrons(data).alpha() == 35
         assert Electrons(data).beta() == 34
+
 
 if __name__ == "__main__":
     unittest.TextTestRunner(verbosity=2).run(unittest.makeSuite(ElectronsTest))

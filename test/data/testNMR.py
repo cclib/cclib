@@ -36,9 +36,11 @@ class GenericNMRTest(unittest.TestCase):
         tensor = self.data.nmrtensors[0]
         total = 0.0
         for t_type in ("diamagnetic", "paramagnetic"):
-            total += sum(numpy.linalg.eigvals(tensor[t_type])) / len(numpy.linalg.eigvals(tensor[t_type]))
+            total += sum(numpy.linalg.eigvals(tensor[t_type])) / len(
+                numpy.linalg.eigvals(tensor[t_type])
+            )
 
-        assert total == pytest.approx(tensor['isotropic'], abs = 3)
+        assert total == pytest.approx(tensor["isotropic"], abs=3)
 
 
 class GenericNMRCouplingTest(unittest.TestCase):
@@ -46,7 +48,14 @@ class GenericNMRCouplingTest(unittest.TestCase):
 
     def testkeys(self):
         """Check dictionary keys are ints."""
-        assert all(set([all((type(key[0]) == int, type(key[1]) == int)) for key in self.data.nmrcouplingtensors.keys()]))
+        assert all(
+            set(
+                [
+                    all((type(key[0]) == int, type(key[1]) == int))
+                    for key in self.data.nmrcouplingtensors.keys()
+                ]
+            )
+        )
 
         assert all(
             [
@@ -61,17 +70,26 @@ class GenericNMRCouplingTest(unittest.TestCase):
         assert len(self.data.nmrcouplingtensors) == 139
         tensor = list(list(self.data.nmrcouplingtensors.values())[0].values())[0]
         assert len(tensor) == 7
-        assert tensor['total'].shape == (3, 3)
+        assert tensor["total"].shape == (3, 3)
 
     def testisotropic(self):
         """Check the total isotropic value matches the computed value."""
         tensor = list(list(self.data.nmrcouplingtensors.values())[0].values())[0]
         # Check the total isotropic value matches the computed value.
         total = 0.0
-        for t_type in ("diamagnetic", "paramagnetic", "fermi", "spin-dipolar", "spin-dipolar-fermi"):
-            total += sum(numpy.linalg.eigvals(tensor[t_type])) / len(numpy.linalg.eigvals(tensor[t_type]))
+        for t_type in (
+            "diamagnetic",
+            "paramagnetic",
+            "fermi",
+            "spin-dipolar",
+            "spin-dipolar-fermi",
+        ):
+            total += sum(numpy.linalg.eigvals(tensor[t_type])) / len(
+                numpy.linalg.eigvals(tensor[t_type])
+            )
 
-        assert total == pytest.approx(tensor['isotropic'], abs = 3)
+        assert total == pytest.approx(tensor["isotropic"], abs=3)
+
 
 if __name__ == "__main__":
     import sys
@@ -80,5 +98,5 @@ if __name__ == "__main__":
 
     from test_data import DataSuite
 
-    suite = DataSuite(['NMR'])
+    suite = DataSuite(["NMR"])
     suite.testall()

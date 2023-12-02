@@ -35,19 +35,19 @@ class CJSON(filewriter.Writer):
         return name
 
     def as_dict(self):
-        """ Build a Python dict with the CJSON data"""
+        """Build a Python dict with the CJSON data"""
         cjson_dict = dict()
         # Need to decide on a number format.
-        cjson_dict['chemical json'] = 0
+        cjson_dict["chemical json"] = 0
         if self.jobfilename is not None:
-            cjson_dict['name'] = self.pathname(self.jobfilename)
+            cjson_dict["name"] = self.pathname(self.jobfilename)
 
         # These are properties that can be collected using Open Babel.
         if _has_openbabel:
-            cjson_dict['smiles'] = self.pbmol.write('smiles')
-            cjson_dict['inchi'] = self.pbmol.write('inchi')
-            cjson_dict['inchikey'] = self.pbmol.write('inchikey')
-            cjson_dict['formula'] = self.pbmol.formula
+            cjson_dict["smiles"] = self.pbmol.write("smiles")
+            cjson_dict["inchi"] = self.pbmol.write("inchi")
+            cjson_dict["inchikey"] = self.pbmol.write("inchikey")
+            cjson_dict["formula"] = self.pbmol.formula
         # TODO Incorporate unit cell information.
 
         # Iterate through the attribute list present in ccData. Depending on
@@ -62,7 +62,7 @@ class CJSON(filewriter.Writer):
             levels = len(attribute_path)
 
             # The attributes which haven't been included in the CJSON format.
-            if attribute_path[0] == 'N/A':
+            if attribute_path[0] == "N/A":
                 continue
 
             if attribute_path[0] not in cjson_dict:
@@ -71,14 +71,18 @@ class CJSON(filewriter.Writer):
 
             # 'moments' and 'atomcoords' key will contain processed data
             # obtained from the output file. TODO rewrite this
-            if attribute_name in ('moments', 'atomcoords'):
-                if attribute_name == 'moments':
+            if attribute_name in ("moments", "atomcoords"):
+                if attribute_name == "moments":
                     dipole_moment = self._calculate_total_dipole_moment()
                     if dipole_moment is not None:
-                        cjson_dict['properties'][ccData._attributes['moments'].json_key] = dipole_moment
+                        cjson_dict["properties"][
+                            ccData._attributes["moments"].json_key
+                        ] = dipole_moment
                 else:
-                    cjson_dict['atoms']['coords'] = dict()
-                    cjson_dict['atoms']['coords']['3d'] = self.ccdata.atomcoords[-1].flatten().tolist()
+                    cjson_dict["atoms"]["coords"] = dict()
+                    cjson_dict["atoms"]["coords"]["3d"] = (
+                        self.ccdata.atomcoords[-1].flatten().tolist()
+                    )
                 continue
 
             if levels == 1:
@@ -97,12 +101,12 @@ class CJSON(filewriter.Writer):
                     self.set_JSON_attribute(l3_data_object, attribute_name)
 
         # Attributes which are not directly obtained from the output files.
-        if hasattr(self.ccdata, 'moenergies') and hasattr(self.ccdata, 'homos'):
-            if 'energy' not in cjson_dict['properties']:
-                cjson_dict['properties']['energy'] = dict()
+        if hasattr(self.ccdata, "moenergies") and hasattr(self.ccdata, "homos"):
+            if "energy" not in cjson_dict["properties"]:
+                cjson_dict["properties"]["energy"] = dict()
 
-            cjson_dict['properties']['energy']['alpha'] = dict()
-            cjson_dict['properties']['energy']['beta'] = dict()
+            cjson_dict["properties"]["energy"]["alpha"] = dict()
+            cjson_dict["properties"]["energy"]["beta"] = dict()
 
             homo_idx_alpha = int(self.ccdata.homos[0])
             homo_idx_beta = int(self.ccdata.homos[-1])
@@ -113,29 +117,31 @@ class CJSON(filewriter.Writer):
             energy_beta_lumo = self.ccdata.moenergies[-1][homo_idx_beta + 1]
             energy_beta_gap = energy_beta_lumo - energy_beta_homo
 
-            cjson_dict['properties']['energy']['alpha']['homo'] = energy_alpha_homo
-            cjson_dict['properties']['energy']['alpha']['gap'] = energy_alpha_gap
-            cjson_dict['properties']['energy']['beta']['homo'] = energy_beta_homo
-            cjson_dict['properties']['energy']['beta']['gap'] = energy_beta_gap
-            cjson_dict['properties']['energy']['total'] = self.ccdata.scfenergies[-1]
+            cjson_dict["properties"]["energy"]["alpha"]["homo"] = energy_alpha_homo
+            cjson_dict["properties"]["energy"]["alpha"]["gap"] = energy_alpha_gap
+            cjson_dict["properties"]["energy"]["beta"]["homo"] = energy_beta_homo
+            cjson_dict["properties"]["energy"]["beta"]["gap"] = energy_beta_gap
+            cjson_dict["properties"]["energy"]["total"] = self.ccdata.scfenergies[-1]
 
-        if hasattr(self.ccdata, 'atomnos'):
-            cjson_dict['atoms']['elements']['atom count'] = len(self.ccdata.atomnos)
-            cjson_dict['atoms']['elements']['heavy atom count'] = len([x for x in self.ccdata.atomnos if x > 1])
+        if hasattr(self.ccdata, "atomnos"):
+            cjson_dict["atoms"]["elements"]["atom count"] = len(self.ccdata.atomnos)
+            cjson_dict["atoms"]["elements"]["heavy atom count"] = len(
+                [x for x in self.ccdata.atomnos if x > 1]
+            )
 
         # Bond attributes:
         if _has_openbabel and (len(self.ccdata.atomnos) > 1):
-            cjson_dict['bonds'] = dict()
-            cjson_dict['bonds']['connections'] = dict()
-            cjson_dict['bonds']['connections']['index'] = []
+            cjson_dict["bonds"] = dict()
+            cjson_dict["bonds"]["connections"] = dict()
+            cjson_dict["bonds"]["connections"]["index"] = []
             for bond in self.bond_connectivities:
-                cjson_dict['bonds']['connections']['index'].append(bond[0])
-                cjson_dict['bonds']['connections']['index'].append(bond[1])
-            cjson_dict['bonds']['order'] = [bond[2] for bond in self.bond_connectivities]
+                cjson_dict["bonds"]["connections"]["index"].append(bond[0])
+                cjson_dict["bonds"]["connections"]["index"].append(bond[1])
+            cjson_dict["bonds"]["order"] = [bond[2] for bond in self.bond_connectivities]
 
         if _has_openbabel:
-            cjson_dict['properties']['molecular mass'] = self.pbmol.molwt
-            cjson_dict['diagram'] = self.pbmol.write(format='svg')
+            cjson_dict["properties"]["molecular mass"] = self.pbmol.molwt
+            cjson_dict["diagram"] = self.pbmol.write(format="svg")
         return cjson_dict
 
     def generate_repr(self):
@@ -162,10 +168,11 @@ class CJSON(filewriter.Writer):
 
 class NumpyAwareJSONEncoder(json.JSONEncoder):
     """A encoder for numpy.ndarray's obtained from the cclib attributes.
-       For all other types the json default encoder is called.
-       Do Not rename the 'default' method as it is required to be implemented
-       by any subclass of the json.JSONEncoder
+    For all other types the json default encoder is called.
+    Do Not rename the 'default' method as it is required to be implemented
+    by any subclass of the json.JSONEncoder
     """
+
     def default(self, obj):
         if isinstance(obj, np.ndarray):
             if obj.ndim == 1:
@@ -177,7 +184,6 @@ class NumpyAwareJSONEncoder(json.JSONEncoder):
 
 
 class JSONIndentEncoder(json.JSONEncoder):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.current_indent = 0
@@ -209,8 +215,12 @@ class JSONIndentEncoder(json.JSONEncoder):
             self.current_indent += self.indent
             self.current_indent_str = "".join([" " for x in range(self.current_indent)])
             for key, value in o.items():
-                output.append(self.current_indent_str + json.dumps(key, cls=NumpyAwareJSONEncoder) + ": " +
-                              str(self.encode(value)))
+                output.append(
+                    self.current_indent_str
+                    + json.dumps(key, cls=NumpyAwareJSONEncoder)
+                    + ": "
+                    + str(self.encode(value))
+                )
             self.current_indent -= self.indent
             self.current_indent_str = "".join([" " for x in range(self.current_indent)])
             return "{\n" + ",\n".join(output) + "\n" + self.current_indent_str + "}"

@@ -35,9 +35,9 @@ class MPA(Population):
         self.logger.info("Creating attribute aoresults: [array[2]]")
         nbasis = self.data.nbasis
         alpha = len(self.data.mocoeffs[0])
-        self.aoresults = [ numpy.zeros([alpha, nbasis], "d") ]
+        self.aoresults = [numpy.zeros([alpha, nbasis], "d")]
         nstep = alpha
-        unrestricted = (len(self.data.mocoeffs) == 2)
+        unrestricted = len(self.data.mocoeffs) == 2
         if unrestricted:
             beta = len(self.data.mocoeffs[1])
             self.aoresults.append(numpy.zeros([beta, nbasis], "d"))
@@ -49,9 +49,7 @@ class MPA(Population):
 
         step = 0
         for spin in range(len(self.data.mocoeffs)):
-
             for i in range(len(self.data.mocoeffs[spin])):
-
                 if self.progress and random.random() < fupdate:
                     self.progress.update(step, "Mulliken Population Analysis")
 
@@ -94,9 +92,7 @@ class MPA(Population):
             beta = numpy.zeros([size], "d")
 
         for spin in range(len(self.fragresults)):
-
             for i in range(self.data.homos[spin] + 1):
-
                 temp = numpy.reshape(self.fragresults[spin][i], (size,))
                 self.fragcharges = numpy.add(self.fragcharges, temp)
                 if spin == 0:

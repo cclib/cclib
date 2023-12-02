@@ -22,12 +22,26 @@ __filedir__ = os.path.realpath(os.path.dirname(__file__))
 
 # We need this in Python3 for importing things from the same directory
 # within the unit test files.
-sys.path.insert(1, os.path.join(__filedir__, 'data'))
+sys.path.insert(1, os.path.join(__filedir__, "data"))
 
 
 parser_names = [
-    "ADF", "DALTON", "FChk", "GAMESS", "GAMESSDAT", "GAMESSUK", "Gaussian", "Jaguar",
-     "Molpro", "Molcas", "MOPAC", "NBO", "NWChem", "ORCA", "Psi4", "QChem",
+    "ADF",
+    "DALTON",
+    "FChk",
+    "GAMESS",
+    "GAMESSDAT",
+    "GAMESSUK",
+    "Gaussian",
+    "Jaguar",
+    "Molpro",
+    "Molcas",
+    "MOPAC",
+    "NBO",
+    "NWChem",
+    "ORCA",
+    "Psi4",
+    "QChem",
     "Turbomole",
 ]
 all_parsers = {name: getattr(cclib.parser, name) for name in parser_names}
@@ -38,13 +52,24 @@ legacy_parser_names = ["Psi3"]
 
 
 module_names = [
-    "SP", "SPun", "GeoOpt", "Basis", "Core",    # Basic calculations.
-    "MP", "CC", "CI", "TD", "TDun",             # Post-SCF calculations.
-    "BOMD", "NMR", "Polar", "Scan", "vib"       # Other property calculations.
+    "SP",
+    "SPun",
+    "GeoOpt",
+    "Basis",
+    "Core",  # Basic calculations.
+    "MP",
+    "CC",
+    "CI",
+    "TD",
+    "TDun",  # Post-SCF calculations.
+    "BOMD",
+    "NMR",
+    "Polar",
+    "Scan",
+    "vib",  # Other property calculations.
 ]
 all_modules = {
-    tn: importlib.import_module(f".data.test{tn}", package="test")
-    for tn in module_names
+    tn: importlib.import_module(f".data.test{tn}", package="test") for tn in module_names
 }
 
 
@@ -56,14 +81,14 @@ def gettestdata():
         lines = testdatafile.readlines()
 
     # Remove blank lines and those starting with '#'.
-    lines = [line for line in lines if (line.strip() and line[0] != '#')]
+    lines = [line for line in lines if (line.strip() and line[0] != "#")]
 
     # Remove comment at end of lines (everything after a '#').
-    lines = [line.split('#')[0] for line in lines]
+    lines = [line.split("#")[0] for line in lines]
 
     # Transform remaining lines into dictionaries.
     cols = [line.split() for line in lines]
-    labels = ('module', 'parser', 'class', 'subdir', 'files')
+    labels = ("module", "parser", "class", "subdir", "files")
     testdata = [dict(zip(labels, (c[0], c[1], c[2], c[3], c[4:]))) for c in cols]
 
     return testdata
@@ -80,7 +105,14 @@ def get_program_dir(parser_name: str) -> str:
     return parser_name
 
 
-def getdatafile(parser: Union[str, Type[cclib.parser.logfileparser.Logfile]], subdir, files, stream=None, loglevel: int = logging.ERROR, datatype: Optional[Type[cclib.parser.data.ccData]] = None):
+def getdatafile(
+    parser: Union[str, Type[cclib.parser.logfileparser.Logfile]],
+    subdir,
+    files,
+    stream=None,
+    loglevel: int = logging.ERROR,
+    datatype: Optional[Type[cclib.parser.data.ccData]] = None,
+):
     """Returns a parsed logfile.
 
     Inputs:
@@ -110,8 +142,9 @@ def getdatafile(parser: Union[str, Type[cclib.parser.logfileparser.Logfile]], su
         inputs = inputs[0]
 
     stream = stream or sys.stdout
-    logfile = parser(inputs, logstream=stream, loglevel=loglevel,
-                     datatype=datatype or cclib.parser.data.ccData)
+    logfile = parser(
+        inputs, logstream=stream, loglevel=loglevel, datatype=datatype or cclib.parser.data.ccData
+    )
 
     data = logfile.parse()
     return data, logfile
@@ -119,8 +152,8 @@ def getdatafile(parser: Union[str, Type[cclib.parser.logfileparser.Logfile]], su
 
 def ccdata_getattribute_with_coverage(self, attr):
     """A bookkeeping version of __getattribute__ for ccData objects."""
-    if attr != '_attrlist' and attr in self._attrlist:
-        if not hasattr(self, 'coverage'):
+    if attr != "_attrlist" and attr in self._attrlist:
+        if not hasattr(self, "coverage"):
             self.coverage = {}
         self.coverage[attr] = self.coverage.get(attr, 0) + 1
     return object.__getattribute__(self, attr)
@@ -134,8 +167,15 @@ class DataSuite:
     subdirectory, and do some basic bookkeeping.
     """
 
-    def __init__(self, parsers, modules, terse: bool = False, silent: bool = False, loglevel: int = logging.ERROR, stream=sys.stdout) -> None:
-
+    def __init__(
+        self,
+        parsers,
+        modules,
+        terse: bool = False,
+        silent: bool = False,
+        loglevel: int = logging.ERROR,
+        stream=sys.stdout,
+    ) -> None:
         self.parsers = parsers
         self.modules = modules
         self.terse = terse or silent
@@ -145,8 +185,8 @@ class DataSuite:
 
         # Load the test data and filter with parsers and modules.
         self.testdata = gettestdata()
-        self.testdata = [td for td in self.testdata if td['parser'] in self.parsers]
-        self.testdata = [td for td in self.testdata if td['module'] in self.modules]
+        self.testdata = [td for td in self.testdata if td["parser"] in self.parsers]
+        self.testdata = [td for td in self.testdata if td["module"] in self.modules]
 
         # We want to gather the unit tests and results in several lists/dicts,
         # in order to easily generate summaries at the end.
@@ -164,24 +204,27 @@ class DataSuite:
 
         stream_test = self.stream
         if self.terse:
-            devnull = open(os.devnull, 'w')
+            devnull = open(os.devnull, "w")
             stream_test = devnull
 
         for td in self.testdata:
+            module = self.modules[td["module"]]
+            parser = self.parsers[td["parser"]]
+            test = getattr(module, td["class"])
 
-            module = self.modules[td['module']]
-            parser = self.parsers[td['parser']]
-            test = getattr(module, td['class'])
-
-            description = ''
+            description = ""
             if not self.silent:
                 print("", file=stream_test)
                 description = f"{td['subdir']}/{','.join(td['files'])}: {test.__doc__}"
                 print(f"*** {description} ***", file=self.stream)
 
             test.data, test.logfile = getdatafile(
-                parser, td['subdir'], td['files'], stream=self.stream, loglevel=self.loglevel,
-                datatype=test.datatype if hasattr(test, 'datatype') else None
+                parser,
+                td["subdir"],
+                td["files"],
+                stream=self.stream,
+                loglevel=self.loglevel,
+                datatype=test.datatype if hasattr(test, "datatype") else None,
             )
 
             # By overriding __getattribute__ temporarily with a custom method, we collect
@@ -198,15 +241,13 @@ class DataSuite:
             # back to its original value. Note that we are setting the class method.
             test.data.__class__.__getattribute__ = object.__getattribute__
 
-            self.perpackage[td['parser']][0] += results.testsRun
-            self.perpackage[td['parser']][1] += len(results.errors)
-            self.perpackage[td['parser']][2] += len(results.failures)
-            self.perpackage[td['parser']][3] += len(getattr(results, 'skipped', []))
+            self.perpackage[td["parser"]][0] += results.testsRun
+            self.perpackage[td["parser"]][1] += len(results.errors)
+            self.perpackage[td["parser"]][2] += len(results.failures)
+            self.perpackage[td["parser"]][3] += len(getattr(results, "skipped", []))
 
             self.alltests.append(test)
-            self.errors.extend(
-                [f"{description}\n{''.join(map(str, e))}" for e in results.errors]
-            )
+            self.errors.extend([f"{description}\n{''.join(map(str, e))}" for e in results.errors])
             self.failures.extend(
                 [f"{description}\n{''.join(map(str, f))}" for f in results.failures]
             )
@@ -230,12 +271,16 @@ class DataSuite:
         print("\n********* SUMMARY PER PACKAGE ****************", file=self.stream)
         names = sorted(self.perpackage.keys())
         total = [0, 0, 0, 0]
-        print(" "*14, "\t".join(["Total", "Passed", "Failed", "Errors", "Skipped"]), file=self.stream)
+        print(
+            " " * 14,
+            "\t".join(["Total", "Passed", "Failed", "Errors", "Skipped"]),
+            file=self.stream,
+        )
 
         fmt = "%3d\t%3d\t%3d\t%3d\t%3d"
         for name in names:
             l = self.perpackage[name]
-            args = (l[0], l[0]-l[1]-l[2]-l[3], l[2], l[1], l[3])
+            args = (l[0], l[0] - l[1] - l[2] - l[3], l[2], l[1], l[3])
             print(name.ljust(15), fmt % args, file=self.stream)
             for i in range(4):
                 total[i] += l[i]
@@ -250,28 +295,28 @@ class DataSuite:
         """These are not formal tests -- but they should be eyeballed."""
 
         parsers_to_test = {
-            'ADF2013.01' : getdatafile('ADF', "basicADF2013.01", ["dvb_gopt.adfout"])[0],
-            'DALTON2015' : getdatafile('DALTON', "basicDALTON-2015", ["dvb_gopt_ks.out"])[0],
-            'Firefly8.0' : getdatafile('GAMESS', "basicFirefly8.0", ["dvb_gopt_a.out"])[0],
-            'Gaussian16' : getdatafile('Gaussian', "basicGaussian16", ["dvb_gopt.out"])[0],
-            'GAMESS-US2018' : getdatafile('GAMESS', "basicGAMESS-US2018", ["dvb_gopt_a.out"])[0],
-            'Jaguar8.0' : getdatafile('Jaguar', "basicJaguar8.3", ["dvb_gopt_ks.out"])[0],
-            'Molpro2012' : getdatafile('Molpro', "basicMolpro2012", ["dvb_gopt.out", "dvb_gopt.log"])[0],
+            "ADF2013.01": getdatafile("ADF", "basicADF2013.01", ["dvb_gopt.adfout"])[0],
+            "DALTON2015": getdatafile("DALTON", "basicDALTON-2015", ["dvb_gopt_ks.out"])[0],
+            "Firefly8.0": getdatafile("GAMESS", "basicFirefly8.0", ["dvb_gopt_a.out"])[0],
+            "Gaussian16": getdatafile("Gaussian", "basicGaussian16", ["dvb_gopt.out"])[0],
+            "GAMESS-US2018": getdatafile("GAMESS", "basicGAMESS-US2018", ["dvb_gopt_a.out"])[0],
+            "Jaguar8.0": getdatafile("Jaguar", "basicJaguar8.3", ["dvb_gopt_ks.out"])[0],
+            "Molpro2012": getdatafile(
+                "Molpro", "basicMolpro2012", ["dvb_gopt.out", "dvb_gopt.log"]
+            )[0],
             # Note that it doesn't make sense to put MOPAC here, as it
             # is a semiempirical-only program.
-            'NWChem6.5' : getdatafile('NWChem', "basicNWChem6.5", ["dvb_gopt_ks.out"])[0],
-            'ORCA4.2' : getdatafile('ORCA', "basicORCA4.2", ["dvb_gopt.out"])[0],
-            'Psi4-1.3.1' : getdatafile('Psi4', "basicPsi4-1.3.1", ["dvb_gopt_rks.out"])[0],
-            'QChem5.4' : getdatafile('QChem', "basicQChem5.4", ["dvb_gopt.out"])[0],
+            "NWChem6.5": getdatafile("NWChem", "basicNWChem6.5", ["dvb_gopt_ks.out"])[0],
+            "ORCA4.2": getdatafile("ORCA", "basicORCA4.2", ["dvb_gopt.out"])[0],
+            "Psi4-1.3.1": getdatafile("Psi4", "basicPsi4-1.3.1", ["dvb_gopt_rks.out"])[0],
+            "QChem5.4": getdatafile("QChem", "basicQChem5.4", ["dvb_gopt.out"])[0],
         }
         parser_names = sorted(parsers_to_test.keys())
         output = [parsers_to_test[pn] for pn in parser_names]
 
         print("\n*** Visual tests ***", file=self.stream)
         print("MO energies of optimised dvb", file=self.stream)
-        print(
-            "      ", "".join([f"{pn:12s}" for pn in parser_names]), file=self.stream
-        )
+        print("      ", "".join([f"{pn:12s}" for pn in parser_names]), file=self.stream)
         print(
             "HOMO",
             "   ".join([f"{out.moenergies[0][out.homos[0]]:+9.4f}" for out in output]),
@@ -279,9 +324,7 @@ class DataSuite:
         )
         print(
             "LUMO",
-            "   ".join(
-                [f"{out.moenergies[0][out.homos[0] + 1]:+9.4f}" for out in output]
-            ),
+            "   ".join([f"{out.moenergies[0][out.homos[0] + 1]:+9.4f}" for out in output]),
             file=self.stream,
         )
         print(
@@ -296,7 +339,9 @@ class DataSuite:
         )
 
 
-def test_all(parsers, modules, terse: bool, silent: bool, loglevel: int, summary: bool, visual_tests: bool) -> None:
+def test_all(
+    parsers, modules, terse: bool, silent: bool, loglevel: int, summary: bool, visual_tests: bool
+) -> None:
     parsers = parsers or all_parsers
     modules = modules or all_modules
     data_suite = DataSuite(parsers, modules, terse=terse, silent=silent, loglevel=loglevel)
@@ -310,7 +355,6 @@ def test_all(parsers, modules, terse: bool, silent: bool, loglevel: int, summary
 
 
 if __name__ == "__main__":
-
     import argparse
 
     parser = argparse.ArgumentParser()
@@ -322,7 +366,7 @@ if __name__ == "__main__":
         "parser_or_module",
         nargs="*",
         help="Limit the test to the packages/parsers passed as arguments. "
-             "No arguments implies all parsers."
+        "No arguments implies all parsers.",
     )
 
     args = parser.parse_args()
@@ -330,9 +374,15 @@ if __name__ == "__main__":
     loglevel = logging.DEBUG if args.debug else logging.ERROR
 
     # No matching parsers/modules implies all of them.
-    parsers = {p: all_parsers[p] for p in parser_names
-               if p in args.parser_or_module} or None
-    modules = {m: all_modules[m] for m in module_names
-               if m in args.parser_or_module} or None
+    parsers = {p: all_parsers[p] for p in parser_names if p in args.parser_or_module} or None
+    modules = {m: all_modules[m] for m in module_names if m in args.parser_or_module} or None
 
-    test_all(parsers, modules, terse=args.terse, silent=args.silent, loglevel=loglevel, summary=True, visual_tests=True)
+    test_all(
+        parsers,
+        modules,
+        terse=args.terse,
+        silent=args.silent,
+        loglevel=loglevel,
+        summary=True,
+        visual_tests=True,
+    )

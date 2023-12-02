@@ -67,44 +67,38 @@ if _has_pandas:
 # The triggers are defined by the tuples in the list below like so:
 #   (parser, phrases, flag whether we should break)
 triggers = [
-
-    (ADF,       ["Amsterdam Density Functional"],                   True),
-    (DALTON,    ["Dalton - An Electronic Structure Program"],       True),
-    (FChk,      ["Number of atoms", "I"],                           True),
-    (GAMESS,    ["GAMESS"],                                         False),
-    (GAMESS,    ["Firefly (PC GAMESS)"],                            True),
-    (GAMESS,    ["GAMESS VERSION"],                                 True),
-    (GAMESSUK,  ["G A M E S S - U K"],                              True),
-    (GAMESSDAT, ["$DATA"],                                          True),
-    (Gaussian,  ["Gaussian, Inc."],                                 True),
-    (Jaguar,    ["Jaguar"],                                         True),
-    (Molcas,    ["MOLCAS"],                                         True),
-    (Molpro,    ["PROGRAM SYSTEM MOLPRO"],                          True),
-    (Molpro,    ["1PROGRAM"],                                       False),
-    (MOPAC,     ["MOPAC20"],                                        True),
-    (NBO,       ["N A T U R A L   A T O M I C   O R B I T A L   A N D"],                  True),
-    (NWChem,    ["Northwest Computational Chemistry Package"],      True),
-    (ORCA,      ["O   R   C   A"],                                  True),
-    (Psi3,      ["PSI3: An Open-Source Ab Initio Electronic Structure Package"],          True),
-    (Psi4,      ["Psi4: An Open-Source Ab Initio Electronic Structure Package"],          True),
-    (QChem,     ["A Quantum Leap Into The Future Of Chemistry"],    True),
-    (Turbomole, ["TURBOMOLE"],                                      True),
-
+    (ADF, ["Amsterdam Density Functional"], True),
+    (DALTON, ["Dalton - An Electronic Structure Program"], True),
+    (FChk, ["Number of atoms", "I"], True),
+    (GAMESS, ["GAMESS"], False),
+    (GAMESS, ["Firefly (PC GAMESS)"], True),
+    (GAMESS, ["GAMESS VERSION"], True),
+    (GAMESSUK, ["G A M E S S - U K"], True),
+    (GAMESSDAT, ["$DATA"], True),
+    (Gaussian, ["Gaussian, Inc."], True),
+    (Jaguar, ["Jaguar"], True),
+    (Molcas, ["MOLCAS"], True),
+    (Molpro, ["PROGRAM SYSTEM MOLPRO"], True),
+    (Molpro, ["1PROGRAM"], False),
+    (MOPAC, ["MOPAC20"], True),
+    (NBO, ["N A T U R A L   A T O M I C   O R B I T A L   A N D"], True),
+    (NWChem, ["Northwest Computational Chemistry Package"], True),
+    (ORCA, ["O   R   C   A"], True),
+    (Psi3, ["PSI3: An Open-Source Ab Initio Electronic Structure Package"], True),
+    (Psi4, ["Psi4: An Open-Source Ab Initio Electronic Structure Package"], True),
+    (QChem, ["A Quantum Leap Into The Future Of Chemistry"], True),
+    (Turbomole, ["TURBOMOLE"], True),
 ]
 
-readerclasses = {
-    'cjson': cjsonreader.CJSON,
-    'json': cjsonreader.CJSON,
-    'xyz': xyzreader.XYZ,
-}
+readerclasses = {"cjson": cjsonreader.CJSON, "json": cjsonreader.CJSON, "xyz": xyzreader.XYZ}
 
 writerclasses = {
-    'cjson': cjsonwriter.CJSON,
-    'json': cjsonwriter.CJSON,
-    'cml': cmlwriter.CML,
-    'molden': moldenwriter.MOLDEN,
-    'wfx': wfxwriter.WFXWriter,
-    'xyz': xyzwriter.XYZ,
+    "cjson": cjsonwriter.CJSON,
+    "json": cjsonwriter.CJSON,
+    "cml": cmlwriter.CML,
+    "molden": moldenwriter.MOLDEN,
+    "wfx": wfxwriter.WFXWriter,
+    "xyz": xyzwriter.XYZ,
 }
 
 
@@ -118,8 +112,10 @@ def is_xyz(inputfile: FileWrapper) -> bool:
     The only way to determine this without reading the entire file is to
     inspect the file extension.
     """
-    return len(inputfile.filenames) == 1 and \
-        os.path.splitext(inputfile.filenames[0])[1].lower() == ".xyz"
+    return (
+        len(inputfile.filenames) == 1
+        and os.path.splitext(inputfile.filenames[0])[1].lower() == ".xyz"
+    )
 
 
 def guess_filetype(inputfile) -> Optional[logfileparser.Logfile]:
@@ -138,9 +134,10 @@ def guess_filetype(inputfile) -> Optional[logfileparser.Logfile]:
                         return filetype
     except Exception:
         # guess_filetype() is expected to be quiet by default...
-        logger.error("Failed to determine log file type", exc_info = True)
+        logger.error("Failed to determine log file type", exc_info=True)
 
     return filetype
+
 
 def sort_turbomole_outputs(fileinputs):
     """
@@ -158,15 +155,15 @@ def sort_turbomole_outputs(fileinputs):
       sorted_list - a sorted list of Turbomole files needed for proper parsing.
     """
     warnings.warn(
-        "sort_turbomole_outputs() has been deprecated as of v1.8; use: "+ \
-        "cclib.parser.turbomoleparser.Turbomole.sort_input() instead")
+        "sort_turbomole_outputs() has been deprecated as of v1.8; use: "
+        + "cclib.parser.turbomoleparser.Turbomole.sort_input() instead"
+    )
     return Turbomole.sort_input(fileinputs)
 
+
 def ccread(
-        source: Union[str, typing.IO, FileWrapper, typing.List[Union[str, typing.IO]]],
-        *args,
-        **kwargs
-    ):
+    source: Union[str, typing.IO, FileWrapper, typing.List[Union[str, typing.IO]]], *args, **kwargs
+):
     """Attempt to open and read computational chemistry data from a file.
 
     If the file is not appropriate for cclib parsers, a fallback mechanism
@@ -189,7 +186,7 @@ def ccread(
 
             return log.parse()
         else:
-            logger.info('Attempting to use fallback mechanism to read file')
+            logger.info("Attempting to use fallback mechanism to read file")
             return fallback(source)
 
     finally:
@@ -198,12 +195,12 @@ def ccread(
 
 
 def ccopen(
-        source: Union[str, typing.IO, FileWrapper, typing.List[Union[str, typing.IO]]],
-        *args,
-        quiet: bool = False,
-        cjson: bool = False,
-        **kwargs
-    ):
+    source: Union[str, typing.IO, FileWrapper, typing.List[Union[str, typing.IO]]],
+    *args,
+    quiet: bool = False,
+    cjson: bool = False,
+    **kwargs,
+):
     """Guess the identity of a particular log file and return an instance of it.
 
     Inputs:
@@ -228,7 +225,7 @@ def ccopen(
         inputfile = FileWrapper(*source)
 
         if cjson:
-            filetype = readerclasses['cjson']
+            filetype = readerclasses["cjson"]
 
         else:
             # Try and guess the parser we need.
@@ -251,7 +248,7 @@ def ccopen(
         # Proceed to return an instance of the logfile parser only if the filetype
         # could be guessed.
         if filetype:
-                return filetype(inputfile, *args, **kwargs)
+            return filetype(inputfile, *args, **kwargs)
 
         elif inputfile is not None:
             inputfile.close()
@@ -259,8 +256,7 @@ def ccopen(
             inputfile = None
 
         logger.warning(
-            "Unable to determine the type of logfile %s, try the fallback mechanism",
-            source
+            "Unable to determine the type of logfile %s, try the fallback mechanism", source
         )
 
     except Exception:
@@ -272,7 +268,7 @@ def ccopen(
 
         # We're going to swallow this exception if quiet is True.
         # This can hide a lot of errors, so we'll make sure to log it.
-        logger.error("Failed to open logfile", exc_info = True)
+        logger.error("Failed to open logfile", exc_info=True)
 
 
 def fallback(source):
@@ -295,12 +291,20 @@ def fallback(source):
         else:
             # This should be a warning, but warnings are currently disabled by default.
             logging.getLogger("cclib").error(
-                "Could not import `openbabel`, fallback mechanism might not work.")
+                "Could not import `openbabel`, fallback mechanism might not work."
+            )
 
 
-def ccwrite(ccobj, outputtype=None, outputdest=None,
-            indices=None, terse=False, returnstr=False,
-            *args, **kwargs):
+def ccwrite(
+    ccobj,
+    outputtype=None,
+    outputdest=None,
+    indices=None,
+    terse=False,
+    returnstr=False,
+    *args,
+    **kwargs,
+):
     """Write the parsed data from an outputfile to a standard chemical
     representation.
 
@@ -335,20 +339,20 @@ def ccwrite(ccobj, outputtype=None, outputdest=None,
 
     # If the logfile name has been passed in through kwargs (such as
     # in the ccwrite script), make sure it has precedence.
-    if 'jobfilename' in kwargs:
-        jobfilename = kwargs['jobfilename']
+    if "jobfilename" in kwargs:
+        jobfilename = kwargs["jobfilename"]
         # Avoid passing multiple times into the main call.
-        del kwargs['jobfilename']
+        del kwargs["jobfilename"]
 
-    outputobj = outputclass(ccdata, jobfilename=jobfilename,
-                            indices=indices, terse=terse,
-                            *args, **kwargs)
+    outputobj = outputclass(
+        ccdata, jobfilename=jobfilename, indices=indices, terse=terse, *args, **kwargs
+    )
     output = outputobj.generate_repr()
 
     # If outputdest isn't None, write the output to disk.
     if outputdest is not None:
         if isinstance(outputdest, str):
-            with open(outputdest, 'w') as outputobj:
+            with open(outputdest, "w") as outputobj:
                 outputobj.write(output)
         elif isinstance(outputdest, io.IOBase):
             outputdest.write(output)
@@ -433,9 +437,7 @@ def ccframe(ccobjs, *args, **kwargs):
             raise ValueError
 
         attributes = ccdata.getattributes()
-        attributes.update({
-            'jobfilename': jobfilename
-        })
+        attributes.update({"jobfilename": jobfilename})
 
         logfiles.append(pd.Series(attributes))
     return pd.DataFrame(logfiles)

@@ -10,9 +10,7 @@ from typing import Optional, Union
 
 
 class TextProgress:
-
     def __init__(self) -> None:
-
         self.nstep = 0
         self.text = None
         self.oldprogress = 0
@@ -20,23 +18,21 @@ class TextProgress:
         self.calls = 0
 
     def initialize(self, nstep: Union[float, int], text: Optional[str] = None) -> None:
-
         self.nstep = float(nstep)
         self.text = text
 
-        #sys.stdout.write("\n")
+        # sys.stdout.write("\n")
 
     def update(self, step: Union[float, int], text: Optional[str] = None) -> None:
-
         self.progress = int(step * 100 / self.nstep)
 
-        if self.progress/2 >= self.oldprogress/2 + 1 or self.text != text:
-        # just went through at least an interval of ten, ie. from 39 to 41,
-        # so update
+        if self.progress / 2 >= self.oldprogress / 2 + 1 or self.text != text:
+            # just went through at least an interval of ten, ie. from 39 to 41,
+            # so update
 
             mystr = "\r["
             prog = int(self.progress / 10)
-            mystr += prog * "=" + (10-prog) * "-"
+            mystr += prog * "=" + (10 - prog) * "-"
             mystr += f"] {int(self.progress):3}%"
 
             if text:

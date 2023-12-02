@@ -25,7 +25,7 @@ class OpenbabelTest(unittest.TestCase):
         except:
             import openbabel
         atomnos = numpy.array([1, 8, 1], "i")
-        atomcoords = numpy.array([[[-1., 1., 0.], [0., 0., 0.], [1., 1., 0.]]])
+        atomcoords = numpy.array([[[-1.0, 1.0, 0.0], [0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]])
         obmol = cclib2openbabel.makeopenbabel(atomcoords=atomcoords, atomnos=atomnos)
         obconversion = openbabel.OBConversion()
         formatok = obconversion.SetOutFormat("inchi")
@@ -34,7 +34,7 @@ class OpenbabelTest(unittest.TestCase):
     def test_makeopenbabel_and_makecclib(self) -> None:
         """Ensure that makeopenbabel and makecclib are inverse of each other"""
         atomnos = numpy.array([1, 8, 1], "i")
-        atomcoords = numpy.array([[[-1., 1., 0.], [0., 0., 0.], [1., 1., 0.]]])
+        atomcoords = numpy.array([[[-1.0, 1.0, 0.0], [0.0, 0.0, 0.0], [1.0, 1.0, 0.0]]])
 
         # makecclib(makeopenbabel(...))
         obmol = cclib2openbabel.makeopenbabel(atomcoords=atomcoords, atomnos=atomnos)

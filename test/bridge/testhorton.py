@@ -26,15 +26,9 @@ class HortonTest(unittest.TestCase):
     def setUp(self):
         super().setUp()
 
-        self.data, self.logfile = getdatafile(
-            "FChk", "basicGaussian16", ["dvb_un_sp.fchk"]
-        )
-        datadir = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), "..", "..", "data")
-        )
-        inputfile = os.path.join(
-            datadir, "FChk", "basicGaussian16", "dvb_un_sp.fchk"
-        )
+        self.data, self.logfile = getdatafile("FChk", "basicGaussian16", ["dvb_un_sp.fchk"])
+        datadir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data"))
+        inputfile = os.path.join(datadir, "FChk", "basicGaussian16", "dvb_un_sp.fchk")
 
         if not find_package("iodata"):
             raise ImportError("Must install iodata to run this test")
@@ -48,7 +42,7 @@ class HortonTest(unittest.TestCase):
         self.iodat = load_one(filename=inputfile)
 
     def test_makehorton(self):
-        """ Check that the bridge from cclib to horton works correctly """
+        """Check that the bridge from cclib to horton works correctly"""
         # First use `makehorton` function to generate IOData object converted from cclib ccData
         hortonequiv = cclib2horton.makehorton(self.data)
 
@@ -65,7 +59,7 @@ class HortonTest(unittest.TestCase):
                 and getattr(self.iodat, attr) is not None
                 and getattr(hortonequiv, attr) is not None
             ):
-                assert abs(getattr(self.iodat, attr)-getattr(hortonequiv, attr)) < 1.0e-3
+                assert abs(getattr(self.iodat, attr) - getattr(hortonequiv, attr)) < 1.0e-3
 
         for attr in checkArr:
             if (
@@ -79,7 +73,7 @@ class HortonTest(unittest.TestCase):
                 )
 
     def test_makecclib(self):
-        """ Check that the bridge from horton to cclib works correctly """
+        """Check that the bridge from horton to cclib works correctly"""
         # First use `makecclib` function to generate ccData object converted from horton IOData
         cclibequiv = cclib2horton.makecclib(self.iodat)
 
@@ -91,7 +85,7 @@ class HortonTest(unittest.TestCase):
 
         for attr in check:
             if hasattr(self.data, attr) and hasattr(cclibequiv, attr):
-                assert abs(getattr(self.data, attr)-getattr(cclibequiv, attr)) < 1.0e-3
+                assert abs(getattr(self.data, attr) - getattr(cclibequiv, attr)) < 1.0e-3
 
         for attr in checkArr:
             if hasattr(self.data, attr) and hasattr(cclibequiv, attr):
@@ -109,9 +103,7 @@ class HortonTest(unittest.TestCase):
             for chg in checkChg:
                 if chg in self.data.atomcharges and chg in cclibequiv.atomcharges:
                     assert_array_almost_equal(
-                        self.data.atomcharges[chg][0],
-                        cclibequiv.atomcharges[chg][0],
-                        decimal=3,
+                        self.data.atomcharges[chg][0], cclibequiv.atomcharges[chg][0], decimal=3
                     )
 
 

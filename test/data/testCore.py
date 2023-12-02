@@ -22,11 +22,11 @@ __filedir__ = os.path.realpath(os.path.dirname(__file__))
 class GenericCoreTest(unittest.TestCase):
     """Generic core electrons unittest"""
 
-    coredict = {'Mo': 28, 'O':0, 'Cl':10}
+    coredict = {"Mo": 28, "O": 0, "Cl": 10}
     charge = -2
 
-    @skipForParser('FChk', 'Core electrons do not seem to be available')
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForParser("FChk", "Core electrons do not seem to be available")
+    @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     def testcorrect(self):
         """Is coreelectrons equal to what it should be?"""
         pt = PeriodicTable()
@@ -36,7 +36,7 @@ class GenericCoreTest(unittest.TestCase):
         ans = numpy.array(ans, "i")
         numpy.testing.assert_array_equal(self.data.coreelectrons, ans)
 
-    @skipForParser('Turbomole','The parser is still being developed so we skip this test')
+    @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     def testcharge(self):
         """Is the total charge correct?"""
         assert self.data.charge == self.charge
@@ -47,7 +47,7 @@ class ADFCoreTest(GenericCoreTest):
 
     # For some reason ADF does not have a core in this test for chlorine atoms.
     # This might be fixable in the input.
-    coredict = {'Mo': 28, 'O':0, 'Cl':0}
+    coredict = {"Mo": 28, "O": 0, "Cl": 0}
 
     # These calculations were run on the neutral complex.
     charge = 0
@@ -57,14 +57,15 @@ class JaguarCoreTest(GenericCoreTest):
     """Customized core electrons unittest"""
 
     # This test was done using LanL2DZ instead of the smaller variant.
-    coredict = {'Mo': 36, 'O':0, 'Cl':10}
+    coredict = {"Mo": 36, "O": 0, "Cl": 10}
 
 
-if __name__=="__main__":
-
+if __name__ == "__main__":
     import sys
+
     sys.path.insert(1, os.path.join(__filedir__, ".."))
 
     from test_data import DataSuite
-    suite = DataSuite(['Suite'])
+
+    suite = DataSuite(["Suite"])
     suite.testall()
