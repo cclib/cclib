@@ -721,12 +721,12 @@ class Psi4(logfileparser.Logfile):
         # a paritcular target it means they are not used (marked also with an 'o'), and in this case
         # we will set a value of numpy.inf so that any value will be smaller.
         #
-        #                               ==> Convergence Check <==                                  
-        #  
+        #                               ==> Convergence Check <==
+        #
         #  Measures of convergence in internal coordinates in au.
-        #  
+        #
         #  Criteria marked as inactive (o), active & met (*), and active & unmet ( ).
-        #  
+        #
         #  ----------------------------------------------------------------------------------------------
         #     Step    Total Energy     Delta E     Max Force     RMS Force      Max Disp      RMS Disp
         #  ----------------------------------------------------------------------------------------------
@@ -735,7 +735,7 @@ class Psi4(logfileparser.Logfile):
         #       2    -379.77675264   -7.79e-03      1.88e-02      4.37e-03 o    2.29e-02      6.76e-03 o  ~
         #  ----------------------------------------------------------------------------------------------
         #
-        
+
         if (self.section == "Convergence Check") and line.strip() == "==> Convergence Check <==" \
             and not hasattr(self, 'finite_difference'):
 
@@ -1099,7 +1099,7 @@ class Psi4(logfileparser.Logfile):
                 vibirs.extend(vibirs_)
                 line = next(inputfile)
 
-            # It looks like the symmetry of the normal mode may be missing 
+            # It looks like the symmetry of the normal mode may be missing
             # from some / most. Only include them if they are there for all
 
             if len(vibfreqs) == n_modes:
@@ -1232,7 +1232,7 @@ class Psi4(logfileparser.Logfile):
         #      2   H               -0.00  0.57 -0.00    0.14  0.00  0.39    0.39 -0.00  0.59
         #      3   H               -0.00  0.57  0.00    0.14  0.00 -0.39   -0.39 -0.00  0.59
         #      4   H               -0.00  0.57 -0.00    0.81  0.00 -0.00   -0.00 -0.00 -0.08
-        #  
+        #
         #  Vibration                       10                  11                  12
         #  Freq [cm^-1]                3815.5756           4002.9095           4003.0866
         #  Irrep                           A1                  B1                  A1

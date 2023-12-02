@@ -139,7 +139,7 @@ def guess_filetype(inputfile) -> Optional[logfileparser.Logfile]:
     except Exception:
         # guess_filetype() is expected to be quiet by default...
         logger.error("Failed to determine log file type", exc_info = True)
-    
+
     return filetype
 
 def sort_turbomole_outputs(fileinputs):
@@ -148,7 +148,7 @@ def sort_turbomole_outputs(fileinputs):
     required by the Turbomole parser for correct parsing. Unrecognised
     files are appended to the end of the list in the same order they are
     given.
-    
+
     This function has been deprecated as of version 1.8; use:
     cclib.parser.turbomoleparser.Turbomole.sort_input() instead
 
@@ -191,7 +191,7 @@ def ccread(
         else:
             logger.info('Attempting to use fallback mechanism to read file')
             return fallback(source)
-    
+
     finally:
         if log:
             log.inputfile.close()
@@ -218,58 +218,58 @@ def ccopen(
     """
     if not isinstance(source, list):
         source = [source]
-        
+
     inputfile = None
 
     logger = logging.getLogger("cclib")
-        
+
     try:
         # Wrap our input with custom file object.
         inputfile = FileWrapper(*source)
-        
+
         if cjson:
             filetype = readerclasses['cjson']
-        
+
         else:
             # Try and guess the parser we need.
             filetype = guess_filetype(inputfile)
-        
+
             # Reset our position back to 0.
             inputfile.reset()
-    
+
         # If the input file isn't a standard compchem log file, try one of
         # the readers, falling back to Open Babel.
         if not filetype:
             # TODO: This assumes we only got a single file...
             filename = list(inputfile.filenames)[0]
             ext = pathlib.Path(filename).name[1:].lower()
-            
+
             for extension in readerclasses:
                 if ext == extension:
                     filetype = readerclasses[extension]
-    
+
         # Proceed to return an instance of the logfile parser only if the filetype
         # could be guessed.
         if filetype:
                 return filetype(inputfile, *args, **kwargs)
-    
+
         elif inputfile is not None:
             inputfile.close()
             # Stop us closing twice in the except block.
             inputfile = None
-            
+
         logger.warning(
             "Unable to determine the type of logfile %s, try the fallback mechanism",
             source
         )
-            
+
     except Exception:
         if inputfile is not None:
             inputfile.close()
-        
+
         if not quiet:
             raise
-        
+
         # We're going to swallow this exception if quiet is True.
         # This can hide a lot of errors, so we'll make sure to log it.
         logger.error("Failed to open logfile", exc_info = True)

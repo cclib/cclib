@@ -1527,7 +1527,7 @@ class GAMESS(logfileparser.Logfile):
         #    1017.15677   380.85747   277.10144
         #       7 -      9 VIBRATIONAL MODES ARE USED IN THERMOCHEMISTRY.
         #  THE HARMONIC ZERO POINT ENERGY IS (SCALED BY   1.000)
-        #         0.020711 HARTREE/MOLECULE     4545.618665 CM**-1/MOLECULE 
+        #         0.020711 HARTREE/MOLECULE     4545.618665 CM**-1/MOLECULE
         #        12.996589 KCAL/MOL               54.377728 KJ/MOL
 
         #                Q               LN Q
@@ -1553,7 +1553,7 @@ class GAMESS(logfileparser.Logfile):
         #  ROT.       0.889     0.889    -2.623     2.981     2.981    11.777
         #  VIB.      12.999    12.999    12.996     0.071     0.071     0.011
         #  TOTAL     14.777    15.369     1.536     6.032     8.020    46.396
-        #  VIB. THERMAL CORRECTION E(T)-E(0) = H(T)-H(0) =         2.885 CAL/MOL        
+        #  VIB. THERMAL CORRECTION E(T)-E(0) = H(T)-H(0) =         2.885 CAL/MOL
 
         if "THERMOCHEMISTRY AT T=" in line:
             match = re.search(r"THERMOCHEMISTRY AT T=(.*)K", line)

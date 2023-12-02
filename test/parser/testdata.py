@@ -64,7 +64,7 @@ class ccDataTest(unittest.TestCase):
         for attr in self.check_arrdict:
             for a in getattr(self.data, attr).values():
                 assert isinstance(a, list)
-    
+
     def test_listify_dictdict(self):
         """Does the method convert dicts of dicts as expected?"""
         self._set_attributes(self.check_dictdict, {1:{1: [1,2,3], 2: [4,5,6]}, 2:{3:[7, 8, 9], 4:[10, 11, 12]}})
@@ -96,7 +96,7 @@ class ccDataTest(unittest.TestCase):
         for attr in self.check_arrdict:
             for a in getattr(self.data, attr).values():
                 assert isinstance(a, numpy.ndarray)
-    
+
     def test_arrayify_dictdict(self):
         """Does the method convert dicts of lists as expected?"""
         self._set_attributes(self.check_dictdict, {1:{1: [1,2,3], 2: [4,5,6]}, 2:{3:[7, 8, 9], 4:[10, 11, 12]}})

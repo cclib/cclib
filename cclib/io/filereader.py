@@ -29,7 +29,7 @@ class Reader(ABC):
         """
         if not isinstance(source, FileWrapper):
             source = FileWrapper(source)
-        
+
         self.inputfile = source
 
     def parse(self) -> None:

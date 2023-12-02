@@ -68,7 +68,7 @@ class BaderTest(unittest.TestCase):
 
     def test_symms_benzene(self) -> None:
         """ Do the carbons in benzene ring get assigned with roughly equal charges?
-        
+
             Discrepancy between carbons do exist in this test due to grid coarseness and limited
             size of the grid. One can do a larger test, for example, using 160x170x80 size grid to
             obtain [5.63728706, 5.89862956, 5.73956182, 5.63728706, 5.73963179, 5.8996759].

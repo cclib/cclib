@@ -159,7 +159,7 @@ def ccget() -> None:
             name = f"{', '.join(filename[:-1])} and {filename[-1]}"
         else:
             name = filename
-        
+
         # Set custom handles so we can actually change log-levels.
         handler = logging.StreamHandler(sys.stderr)
         handler.setFormatter(logging.Formatter("[%(name)s %(levelname)s] %(message)s"))
@@ -172,15 +172,15 @@ def ccget() -> None:
         if verbose:
             kwargs['loglevel'] = logging.INFO
             logging.getLogger("cclib").setLevel(logging.INFO)
-        
+
         else:
             # TODO: Are we sure we want to ignore warnings by default?
             kwargs['loglevel'] = logging.WARNING
             logging.getLogger("cclib").setLevel(logging.WARNING)
-        
+
         if future:
             kwargs['future'] = True
-        
+
         if cjsonfile:
             kwargs['cjson'] = True
 

@@ -80,7 +80,7 @@ class DALTON(logfileparser.Logfile):
         # number.
         #
         # Example strings that at least the major version is parsed from:
-        #                            
+        #
         # This is output from DALTON 2013.2
         #                            2013.4
         #                            2014.0
@@ -449,7 +449,7 @@ class DALTON(logfileparser.Logfile):
         # This is the corresponding section to the primitive definitions parsed above, so we
         # assume those numbers are available in the variable 'primitives'. Here we read in the
         # indicies of primitives, which we use to construct gbasis.
-        # 
+        #
         #  Contracted Orbitals
         #  -------------------
         #
@@ -1111,7 +1111,7 @@ class DALTON(logfileparser.Logfile):
             # --------------------------------------
             #
             #
-            #               1  3547     2  3547     3  3474     4  3471     5  3451 
+            #               1  3547     2  3547     3  3474     4  3471     5  3451
             # ----------------------------------------------------------------------
             #
             #   C      x   -0.000319   -0.000314    0.002038    0.000003   -0.001599
@@ -1154,7 +1154,7 @@ class DALTON(logfileparser.Logfile):
         #     Raman related properties for freq.  0.000000 au  = Infinity nm
         #     ---------------------------------------------------------------
         #
-        # Mode    Freq.     Alpha**2   Beta(a)**2   Pol.Int.   Depol.Int.  Dep. Ratio 
+        # Mode    Freq.     Alpha**2   Beta(a)**2   Pol.Int.   Depol.Int.  Dep. Ratio
         #
         #    1   3546.72    0.379364   16.900089   84.671721   50.700268    0.598786
         #    2   3546.67    0.000000    0.000000    0.000000    0.000000    0.599550
@@ -1252,10 +1252,10 @@ class DALTON(logfileparser.Logfile):
         #
         # @ Total energy :      -381.85462     au
         #
-        # @ Operator type:    XDIPLEN 
+        # @ Operator type:    XDIPLEN
         # @ Oscillator strength (LENGTH)   :  8.93558787E-03  (Transition moment :  0.26144181     )
         #
-        # @ Operator type:    YDIPLEN 
+        # @ Operator type:    YDIPLEN
         # @ Oscillator strength (LENGTH)   :  0.15204812      (Transition moment :   1.0784599     )
         #
         #  Eigenvector for state no.  1

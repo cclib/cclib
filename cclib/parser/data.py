@@ -194,7 +194,7 @@ class ccData:
 
     # Attributes that should be dictionaries of arrays (double precision).
     _dictsofarrays = ["atomcharges", "atomspins"]
-    
+
     # Attributes that should be dictionaries of dictionaries.
     _dictsofdicts = ['populations']
 

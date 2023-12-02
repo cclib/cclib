@@ -255,7 +255,7 @@ class FChk(logfileparser.Logfile):
 
             # The extracted property does not contain the actual irrep label
             # (contrarily to that extracted from the Gaussian log)
-            # After this, 'Etran sym' appears (and would need to be parsed), 
+            # After this, 'Etran sym' appears (and would need to be parsed),
             # but at least in Gaussian this contains only zeroes regardless of the irrep.
 
             self.set_attribute('etsyms', etsyms)

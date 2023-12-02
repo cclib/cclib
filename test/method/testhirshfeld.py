@@ -87,7 +87,7 @@ class HirshfeldTest(unittest.TestCase):
 
     def test_water_charges(self):
         """ Are Hirshfeld charges calculated correctly for water?
-        
+
             Note. Table 1 in doi:10.1007/BF01113058 reports Hirshfeld charge for Hydrogen atom as
                   0.11 when STO-3G basis set was used and
                   0.18 when 6-311G** basis set was used.
@@ -121,7 +121,7 @@ class HirshfeldTest(unittest.TestCase):
 
     def test_chgsum_co(self):
         """ Are Hirshfeld charges for carbon monoxide reported as expected?
-        
+
             Note. Table 1 in doi:10.1007/BF01113058 reports Hirshfeld charge for Carbon atom as
                   0.06 when STO-3G basis set was used and
                   0.14 when 6-311G** basis set was used.

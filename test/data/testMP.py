@@ -52,7 +52,7 @@ class GenericMP5Test(GenericMP2Test):
 
 class GaussianMP2Test(GenericMP2Test):
     """Customized MP2 unittest"""
-        
+
     def testnocoeffs(self):
         """Are natural orbital coefficients the right size?"""
         assert self.data.nocoeffs.shape == (self.data.nmo, self.data.nbasis)

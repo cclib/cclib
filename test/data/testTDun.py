@@ -62,7 +62,7 @@ class GenericTDunTest(unittest.TestCase):
 
 class TurbomoleTDunTest(GenericTDunTest):
     """Customized time-dependent unrestricted HF/DFT unittest"""
-    
+
     number = 10
 
 

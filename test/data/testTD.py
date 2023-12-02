@@ -34,7 +34,7 @@ class GenericTDTest(unittest.TestCase):
         ]
     sumofsec = 1.0
     method = "TD-DFT"
-    
+
     @skipForParser('ADF', 'excited_states_method not yet implemented')
     @skipForParser('DALTON', 'excited_states_method not yet implemented')
     @skipForParser('FChk', 'excited_states_method not yet implemented')
@@ -87,16 +87,16 @@ class GenericTDTest(unittest.TestCase):
         assert t[0][1][0] == self.data.homos[0] or \
             t[0][2][0] == self.data.homos[0] + 1
 
-    @skipForParser('Molcas','The parser is still being developed so we skip this test')    
+    @skipForParser('Molcas','The parser is still being developed so we skip this test')
     @skipForLogfile("FChk/basicQChem5.4", "etsyms are not yet implemented")
-    @skipForLogfile("ORCA/basicORCA5.0/dvb_adc2.log", "etsyms are not available for this method") 
-    @skipForLogfile("ORCA/basicORCA5.0/dvb_eom_ccsd.log", "etsyms are not available for this method") 
-    @skipForLogfile("ORCA/basicORCA5.0/dvb_pno_eom_ccsd.log", "etsyms are not available for this method") 
+    @skipForLogfile("ORCA/basicORCA5.0/dvb_adc2.log", "etsyms are not available for this method")
+    @skipForLogfile("ORCA/basicORCA5.0/dvb_eom_ccsd.log", "etsyms are not available for this method")
+    @skipForLogfile("ORCA/basicORCA5.0/dvb_pno_eom_ccsd.log", "etsyms are not available for this method")
     def testsymsnumber(self):
         """Is the length of etsyms correct?"""
         assert len(self.data.etsyms) == self.number
-        
-    
+
+
     @skipForParser('ADF', 'etrotats are not yet implemented')
     @skipForParser('DALTON', 'etsyms are not yet implemented')
     @skipForParser('FChk', 'etsyms are not yet implemented')
@@ -105,8 +105,8 @@ class GenericTDTest(unittest.TestCase):
     @skipForParser('Jaguar', 'etsyms are not yet implemented')
     @skipForParser('NWChem', 'etsyms are not yet implemented')
     @skipForParser('QChem', 'etsyms are not yet implemented')
-    @skipForLogfile("ORCA/basicORCA4.2", "etsyms are only available in ORCA >= 5.0") 
-    @skipForLogfile("ORCA/basicORCA4.1", "etsyms are only available in ORCA >= 5.0") 
+    @skipForLogfile("ORCA/basicORCA4.2", "etsyms are only available in ORCA >= 5.0")
+    @skipForLogfile("ORCA/basicORCA4.1", "etsyms are only available in ORCA >= 5.0")
     @skipForLogfile("Gaussian/basicGaussian09", "symmetry is missing for this log file")
     @skipForLogfile("FChk/basicQChem5.4", "etsyms are not yet implemented")
     def testsyms(self):
@@ -129,7 +129,7 @@ class GenericTDTest(unittest.TestCase):
     def testrotatsnumber(self):
         """Is the length of etrotats correct?"""
         assert len(self.data.etrotats) == self.number
-    
+
     @skipForParser('ADF', 'optstate is not yet implemented')
     @skipForParser('DALTON', 'optstate are not yet implemented')
     @skipForParser('FChk', 'optstate are not yet implemented')
@@ -243,7 +243,7 @@ class OrcaROCISTest(GenericTDTest):
     expected_f_max = 0.015
     # per 1085, no VELOCITY DIPOLE MOMENTS are parsed
     n_spectra = 7
-    
+
     # Do we want to parse ROCIS as its own method?
     method = "CIS"
 
@@ -268,7 +268,7 @@ class OrcaROCISTest(GenericTDTest):
     def testrotatsnumber(self):
         """ROCIS does not calculate rotatory strengths"""
         pass
-    
+
     def testsyms(self):
         """ROCIS does not show symmetries"""
         pass
@@ -285,12 +285,12 @@ class OrcaROCIS40Test(OrcaROCISTest):
 
 class TurbomoleTDTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
-    
+
     number = 10
     expected_l_max = 91432
     expected_f_max = 0.19
     symmetries = ["Singlet-A"] * 10
-    
+
     @skipForLogfile('Turbomole/basicTurbomole7.4/CO_cc2_TD', 'There are no dipole moments in ricc2')
     def testetmagdipsshape(self):
         """Is the shape of etmagdips correct?"""
@@ -298,31 +298,31 @@ class TurbomoleTDTest(GenericTDTest):
 
 class TurbomoleTDADC2Test(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
-    
+
     number = 10
     expected_l_max = 136329
     expected_f_max = 0.8
     symmetries = ["Singlet-A"] * 10
     method = "ADC(2)"
-    
+
 class TurbomoleTDCC2Test(TurbomoleTDTest):
     """Customized time-dependent HF/DFT unittest"""
-    
+
     method = "CC2"
 
 class TurbomoleTDTripTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
-    
+
     number = 10
     expected_l_max = 51530
     expected_f_max = 0.84
     symmetries = ["Triplet-A"] * 10
     method = "RPA"
-        
+
 class TurbomoleTDCC2TripTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
     # This test is for triplets with ricc2, which does not support oscillator strengths.
-    
+
     number = 10
     symmetries = ["Triplet-A"] * 10
     method = "CC2"
@@ -333,29 +333,29 @@ class TurbomoleTDCC2TripTest(GenericTDTest):
 
 class OrcaETPostHFTest(GenericTDTest):
     """Tests for post-HF excited states with ORCA."""
-    
+
     number = 2
     symmetries = ["Singlet", "Singlet"]
     expected_f_max = 1.0
     expected_l_max = 60000
     # Not sure why this value != 1 for these methods?
-    # Perhaps remaining contributions were too small to print? 
+    # Perhaps remaining contributions were too small to print?
     sumofsec = 0.43
     method = "EOM-CCSD"
-    
+
 class OrcaADC2Test(OrcaETPostHFTest):
-    
+
     method = "ADC(2)"
-    
+
 class OrcaSTEOMCCSDTest(OrcaETPostHFTest):
     """Test for STEOM-CCSD with Orca."""
-    
+
     sumofsec = 1.0
     method = "STEOM-CCSD"
-    
+
 class GaussianEOMCCSDTest(GenericTDTest):
     """Test for EOM-CCSD with Gaussian."""
-    
+
     number = 10
     expected_l_max = 61514.3
     expected_f_max = 0.9802
@@ -365,7 +365,7 @@ class GaussianEOMCCSDTest(GenericTDTest):
             "Triplet-Bu",
             "Singlet-Bu",
             "Triplet-Bu",
-            
+
             "Triplet-Bu",
             "Singlet-Bu",
             "Triplet-Ag",
@@ -373,7 +373,7 @@ class GaussianEOMCCSDTest(GenericTDTest):
             "Triplet-Ag",
         ]
     method = "EOM-CCSD"
-        
+
 
 if __name__ =="__main__":
 
@@ -383,4 +383,4 @@ if __name__ =="__main__":
     from test_data import DataSuite
     suite = DataSuite(['TD'])
     suite.testall()
-    
+

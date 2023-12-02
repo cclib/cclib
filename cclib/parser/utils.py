@@ -224,7 +224,7 @@ class PeriodicTable:
     def __init__(self) -> None:
         self.element = [None]
         self.number = {}
-        
+
         for e in periodictable.elements:
             if e.symbol != 'n':
                 self.element.append(e.symbol)

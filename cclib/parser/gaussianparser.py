@@ -100,10 +100,10 @@ class Gaussian(logfileparser.Logfile):
         # Do we have high-precision polarizabilities printed from a
         # dedicated `polar` job? If so, avoid duplicate parsing.
         self.hp_polarizabilities = False
-        
+
         # Used to estimate wall times from CPU times.
         self.num_cpu = 1
-        
+
         # For detecting when excited states reset (because of a new level of theory,
         # or a new round in an optimisation etc).
         self.last_et = 0
@@ -172,17 +172,17 @@ class Gaussian(logfileparser.Logfile):
                 rotation = utils.get_rotation(numpy.array(inputcoord), numpy.array(atomcoord))
                 grads_std.append(rotation.apply(grad))
             self.set_attribute('grads', numpy.array(grads_std))
-        
+
         if hasattr(self, "ccenergy"):
             self.append_attribute("ccenergies", utils.convertor(self.ccenergy, "hartree", "eV"))
             del self.ccenergy
-            
+
         # If we have cpu times but no wall-times, we can calculate the later based on the number of CPUs used.
         if "cpu_time" in self.metadata and "wall_time" not in self.metadata:
             self.metadata['wall_time'] = []
             for cpu_time in self.metadata['cpu_time']:
                 self.metadata['wall_time'].append(cpu_time / self.num_cpu)
-            
+
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -216,11 +216,11 @@ class Gaussian(logfileparser.Logfile):
 
         if line.strip().startswith("Link1:  Proceeding to internal job step number"):
             self.new_internal_job()
-            
+
         # Parse performance info.
         if "Will use up to" in line and "processors via shared memory." in line:
             self.metadata['num_cpu'] = int(line.split()[4])
-            
+
         elif "Leave Link    1" in line and "MaxMem=" in line and "num_cpu" in self.metadata:
             #Leave Link    1 at Wed Apr  4 10:49:19 2018, MaxMem=   805306368 cpu:               0.3 elap:               0.0
             # Gaussian helpfully prints the total 'available' memory for us. There are, however a few caveates here:
@@ -230,7 +230,7 @@ class Gaussian(logfileparser.Logfile):
             #    Gaussian assigning more memory than you probably expected.
             memory_per_cpu = int(line[line.index("MaxMem="):].split()[1])
             self.metadata['memory_used'] = memory_per_cpu * self.metadata['num_cpu']
-            
+
         elif line[1:6].lower() == "%mem=":
             # The maximum amount of memory requested.
             # We need to do some unit juggling.
@@ -243,32 +243,32 @@ class Gaussian(logfileparser.Logfile):
             # We are converting to bytes.
             if units == "TB":
                 memory = raw_mem * 1e12
-            
+
             elif units == "GB":
                 memory = raw_mem * 1e9
-            
+
             elif units == "MB":
                 memory = raw_mem * 1e6
-            
+
             elif units == "KB":
                 memory = raw_mem * 1e3
-            
+
             elif units == "TW":
                 memory = raw_mem * 8e12
-            
+
             elif units == "GW":
                 memory = raw_mem * 8e9
-            
+
             elif units == "MW":
                 memory = raw_mem * 8e6
-            
+
             elif units == "KW":
                 memory = raw_mem * 8e3
-                
+
             else:
                 # No explicit units, default are single words (8-bytes)
                 memory = mem_str[5:] * 8
-                
+
             self.metadata['memory_available'] = int(memory)
 
         # This block contains some general information as well as coordinates,
@@ -373,7 +373,7 @@ class Gaussian(logfileparser.Logfile):
         # Basis set name
         if line[1:15] == "Standard basis":
             self.metadata["basis_set"] = line.split()[2]
-            
+
         # Solvent information.
         # PCM (the default gaussian solvent method).
         if line[1:34] == "Polarizable Continuum Model (PCM)":
@@ -381,25 +381,25 @@ class Gaussian(logfileparser.Logfile):
             # so they are packaged together to prevent clogging the namespace.
             self.metadata['solvent_params'] = {
             }
-            
+
             # Keep looking until dashed only.
             while set(line.strip()) != set("-"):
                 line = next(inputfile)
-                
+
                 # PCM has a few different subtypes.
                 # Model                : PCM.
                 if "Model" in line:
                     self.metadata['solvent_model'] = " ".join(line.split()[2:])[:-1]
-                    
+
                     if self.metadata['solvent_model'] == "PCM":
                         self.metadata['solvent_model'] = "IEFPCM"
-                    
+
                     elif self.metadata['solvent_model'] == "C-PCM":
                         self.metadata['solvent_model'] = "CPCM"
-                
+
                 elif "Atomic radii" in line and line.split()[-1] == "SMD-Coulomb.":
                     self.metadata['solvent_model'] = "SMD-IEFPCM"
-                    
+
                 # Solvent by keyword.
                 #  Solvent              : Toluene, Eps=   2.374100 Eps(inf)=   2.238315
                 # Solvent by definition.
@@ -409,29 +409,29 @@ class Gaussian(logfileparser.Logfile):
 
                 elif "Solvent" in line and "Eps=" in line and "Eps(inf)= " in line:
                     split_line = line.split()
-                    
+
                     # Capture the human readable name, as well as params.
                     self.metadata['solvent_name'] = split_line[2][:-1].lower()
-                    
+
                     self.metadata['solvent_params']['epsilon'] = float(split_line[4])
                     self.metadata['solvent_params']['epsilon_infinite'] = float(split_line[6])
-                
+
                 elif "Eps(infinity)" in line:
                     # Assume manually specified solvent.
                     self.metadata['solvent_params']['epsilon_infinite'] = float(line.split()[-1])
-                    
+
                 elif "Eps" in line:
                     # Assume manually specified solvent.
                     self.metadata['solvent_params']['epsilon'] = float(line.split()[-1])
-        
+
         elif "Reaction Field using a Density IsoSurface Boundary" in line:
             self.metadata['solvent_model'] = "IPCM"
-        
+
         #  Epsi=   78.3000 Cont =    0.0010
         elif  "Epsi=" in line and "Cont =":
             if "solvent_params" not in self.metadata:
                 self.metadata['solvent_params'] = {}
-            
+
             self.metadata['solvent_params']['epsilon'] = float(line.split()[1])
             self.metadata['solvent_params']['isovalue'] = float(line.split()[4])
 
@@ -906,20 +906,20 @@ class Gaussian(logfileparser.Logfile):
             while line.find("SCF Done") == -1:
 
                 self.updateprogress(inputfile, "QM convergence", self.fupdate)
-                
+
                 # SCI-PCM solvent info appears in each SCF section...
                 #  Compute SCI-PCM surface.
                 if "Compute SCI-PCM surface" in line:
                     self.metadata['solvent_model'] = "SCIPCM"
-                
+
                 # For SCI-PCM.
                 # Dielectric constant of solvent =     2.374100"
                 if line[1:33] == "Dielectric constant of solvent =":
                     if "solvent_params" not in self.metadata:
                         self.metadata['solvent_params'] = {}
-                    
+
                     self.metadata["solvent_params"]['epsilon'] = float(line.split()[-1])
-                
+
                 if line.find(' E=') == 0:
                     self.logger.debug(line)
 
@@ -1252,7 +1252,7 @@ class Gaussian(logfileparser.Logfile):
             scanparm = [[] for _ in range(len(self.scannames))]
             while len(scanenergies) != self.scan_length:
                 line = next(inputfile)
-                indices = [int(i) for i in line.split()]           
+                indices = [int(i) for i in line.split()]
                 widths = [10]*len(indices)
                 splitter = utils.WidthSplitter(widths)
 
@@ -1573,7 +1573,7 @@ class Gaussian(logfileparser.Logfile):
                     self.vibdispshp.extend(disps)
 
                 line = next(inputfile)
-                
+
         # Metadata for excited states methods
         #
         # For HF/DFT level ES, this is our trigger line:
@@ -1583,22 +1583,22 @@ class Gaussian(logfileparser.Logfile):
             if "DFT=T" in line:
                 if "RPA=T" in line:
                     method = "TD-DFT"
-                
+
                 else:
                     method = "TDA"
-            
+
             else:
                 if "RPA=T" in line:
                     method = "RPA"
-                
+
                 else:
                     method = "CIS"
-            
+
             self.metadata["excited_states_method"] = method
-        
+
         if line.strip() == "EOM-CCSD":
             self.metadata['excited_states_method'] = "EOM-CCSD"
-        
+
         # Electronic transitions.
         if line[1:14] == "Excited State":
 
@@ -1611,7 +1611,7 @@ class Gaussian(logfileparser.Logfile):
                 self.etoscs = []
                 self.etsyms = []
                 self.etsecs = []
-            
+
             # Keep track of the highest excited state, so we can detect when we enter a new
             # section (the 'highest' excited state will be the same or lower as the last one).
             self.last_et = et_index
@@ -1660,13 +1660,13 @@ class Gaussian(logfileparser.Logfile):
                 CIScontrib.append([(fromMO, frommoindex), (toMO, tomoindex), percent])
                 line = next(inputfile)
             self.etsecs.append(CIScontrib)
-            
+
             # Skip over 'de-excitation' contributions (these are typically hidden but can be revealed
             # by iop(9/40=2)).
             while line.find(" <-") >= 0:
                 # These are not processed atm.
                 line = next(inputfile)
-            
+
             # Check if this state is our 'state of interest' (for optimisations etc).
             if "This state for optimization and/or second-order correction" in line:
                 # Index to the current excited state.
@@ -1698,9 +1698,9 @@ class Gaussian(logfileparser.Logfile):
         #
         # EOM-CCSD looks similar, but has more data.
         #  ==============================================
-        # 
-        #          EOM-CCSD transition properties        
-        # 
+        #
+        #          EOM-CCSD transition properties
+        #
         #  ==============================================
         #  Ground to excited state transition electric dipole moments (Au):
         #        state          X           Y           Z        Dip. S.      Osc.
@@ -1736,23 +1736,23 @@ class Gaussian(logfileparser.Logfile):
             # now loop over lines reading eteltrdips until we find eteltrdipvel
             line = next(inputfile)  # state          X ...
             line = next(inputfile)  # 1        -0.0001 ...
-            
+
             # Older versions have fewer fields.
             while len(line.split()) in [5,6]:
                 self.etdips.append(list(map(float, line.split()[1:4])))
                 line = next(inputfile)
-                
+
         if line[1:51].lower() == "ground to excited state transition velocity dipole":
             # now loop over lines reading etveleltrdips until we find
             # etmagtrdip
             line = next(inputfile)  # state          X ...
             line = next(inputfile)  # 1        -0.0001 ...
-            
+
             # Older versions have fewer fields.
             while len(line.split()) in [5,6]:
                 self.etveldips.append(list(map(float, line.split()[1:4])))
                 line = next(inputfile)
-                
+
         if line[1:51].lower() == "ground to excited state transition magnetic dipole":
 
             # now loop over lines while the line starts with at least 3 spaces
@@ -1923,7 +1923,7 @@ class Gaussian(logfileparser.Logfile):
                 self.updateprogress(inputfile, "Coefficients", self.fupdate)
 
                 colmNames = next(inputfile)
-                
+
                 if any(name in colmNames for name in ["Density Matrix:", "DENSITY MATRIX.", "Beta Molecular Orbital Coefficients"]):
                     # Reached end of mocoeff section early, this implies pop was not full.
                     self.popregular = True
@@ -2165,9 +2165,9 @@ class Gaussian(logfileparser.Logfile):
         #
         # APT and Lowdin charges are also displayed in this way.
         def extract_charges_spins(line,prop):
-            """Extracts atomic charges and spin densities into 
+            """Extracts atomic charges and spin densities into
                self.atomcharges and self.atomspins dictionaries.
-    
+
             Inputs:
                 line - line header marking the beginning of a
                 particular set of charges or spins.
@@ -2184,12 +2184,12 @@ class Gaussian(logfileparser.Logfile):
             charges = []
             spins = []
             is_sum = 'summed' in line
-            # Iterate over each line and append values to a list 
-            # based on whether they are charges or spins. 
+            # Iterate over each line and append values to a list
+            # based on whether they are charges or spins.
             if is_sum:
                 for i in self.atomnos:
                     # currently bug exists where files with translation vectors report
-                    # an extra atom with atomnumber -2 in self.atomnos, so must ignore 
+                    # an extra atom with atomnumber -2 in self.atomnos, so must ignore
                     # this by passing whenever i in self.atomnos == -2.
                     if i == -2:
                         pass
@@ -2204,8 +2204,8 @@ class Gaussian(logfileparser.Logfile):
                             spins.append(float(0))
                     else:
                         nline = next(inputfile)
-                        # Some older versions of Gaussian already include 
-                        # hydrogens with value 0 for summed charges or 
+                        # Some older versions of Gaussian already include
+                        # hydrogens with value 0 for summed charges or
                         # spins, so these should be ignored.
                         while nline.split()[1] == "H":
                             nline = next(inputfile)
@@ -2230,10 +2230,10 @@ class Gaussian(logfileparser.Logfile):
                                 spins.append(float(split_line[3]))
                         elif has_spin:
                             spins.append(float(split_line[2]))
-            # When the charge type is not given explicitly we 
-            # must find it from the bottom line, which always 
+            # When the charge type is not given explicitly we
+            # must find it from the bottom line, which always
             # has the format: "Sum of Mulliken charges=   0.00000"
-            # so we can extract the type by splitting each 
+            # so we can extract the type by splitting each
             # line until we get a valid charge type.
             while prop.lower() not in ["mulliken","lowdin","apt"]:
                 nline = next(inputfile)
@@ -2262,7 +2262,7 @@ class Gaussian(logfileparser.Logfile):
         " atomic spin densities:",
         " charges and spin densities with hydrogens summed into heavy atoms:",
         " charges and spin densities:"]
-        
+
         if hasattr(self, "atomnos"):
         # Combine props and headers to find lines heading lists
         # of atom charges or spins.
@@ -2272,14 +2272,14 @@ class Gaussian(logfileparser.Logfile):
                         # When we use "atomic" as the property, only
                         # extract if the charge type isn't given explicity.
                         # This prevents us from reading some lines twice.
-                        # e.g. "Mulliken atomic charges:" is caught by 
+                        # e.g. "Mulliken atomic charges:" is caught by
                         # "mulliken atomic charges:" and " atomic charges:"
                         if prop == "atomic":
                             if not "mulliken" in line.lower() and not "lowdin" in line.lower() and not "apt" in line.lower():
                                 extract_charges_spins(line,prop)
                         else:
                             extract_charges_spins(line,prop)
-                        
+
         if line.strip() == "Natural Population":
             if not hasattr(self, 'atomcharges'):
                 self.atomcharges = {}
@@ -2400,13 +2400,13 @@ class Gaussian(logfileparser.Logfile):
                     # G16 C01 changes polarizability printing
                     # Sample:
                     #       Exact polarizability:      68.238       6.777     143.018       0.000       0.000      11.343
-                    polarizability[indices] = [utils.float(x) for x in 
+                    polarizability[indices] = [utils.float(x) for x in
                                                [line[23:35], line[35:47], line[47:59], line[59:71], line[71:83], line[83:95]]]
                 except:
                     # G16A03 and older
                     # Sample:
                     #       Exact polarizability:  68.238  -6.777 143.018   0.000   0.000  11.343
-                    polarizability[indices] = [utils.float(x) for x in 
+                    polarizability[indices] = [utils.float(x) for x in
                                                [line[23:31], line[31:39], line[39:47], line[47:55], line[55:63], line[63:71]]]
                 polarizability = utils.symmetrize(polarizability, use_triangle='lower')
                 self.polarizabilities.append(polarizability)
@@ -2482,7 +2482,7 @@ class Gaussian(logfileparser.Logfile):
                 if not hasattr(self, 'optdone'):
                     self.optdone = []
                 self.optdone.append(len(self.optstatus) - 1)
-                
+
         # Save num CPUs incase we have an old version of Gaussian which doesn't print wall times.
         if "Will use up to" in line:
             self.num_cpu = int(line.split()[4])

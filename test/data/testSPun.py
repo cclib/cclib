@@ -203,7 +203,7 @@ class GaussianSPunTest(GenericSPunTest):
         assert len(spins) == self.data.natom
         assert abs(sum(spins)-1.0) < 0.001
 
-            
+
 class JaguarSPunTest(GenericSPunTest):
     """Customized unrestricted single point unittest"""
 

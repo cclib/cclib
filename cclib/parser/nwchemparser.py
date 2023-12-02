@@ -1306,7 +1306,7 @@ class NWChem(logfileparser.Logfile):
                 "etenergies", utils.convertor(utils.float(line.split()[-2]), "eV", "wavenumber")
             )
             self.append_attribute("etsyms", str.join(" ", line.split()[2:-4]))
-        
+
             self.skip_lines(inputfile, ["dashes"])
             line = next(inputfile)
             if "Spin forbidden" not in line:

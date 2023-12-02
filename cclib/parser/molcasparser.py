@@ -684,9 +684,9 @@ class Molcas(logfileparser.Logfile):
 
         ## Parsing Molecular Gradients attributes in this section.
         # ()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
-        # 
+        #
         #                                               &ALASKA
-        # 
+        #
         #                                    only a single process is used
         #                        available to each process: 2.0 GB of memory, 1 thread
         # ()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
@@ -697,10 +697,10 @@ class Molcas(logfileparser.Logfile):
         #  *              Molecular gradients               *
         #  *                                                *
         #  **************************************************
-        # 
-        #   Irreducible representation: a  
+        #
+        #   Irreducible representation: a
         #  ---------------------------------------------------------
-        #                      X             Y             Z        
+        #                      X             Y             Z
         #  ---------------------------------------------------------
         #   C1               -0.00009983   -0.00003043    0.00001004
         #   ...
@@ -778,7 +778,7 @@ class Molcas(logfileparser.Logfile):
                 # Symmetry is not currently supported, so this line can have one form.
                 if line.strip() != 'Molecular orbitals for symmetry species 1: a':
                     return
-                
+
                 line = next(inputfile)
                 moenergies = []
                 homos = 0
@@ -887,9 +887,9 @@ class Molcas(logfileparser.Logfile):
         #                      *****************************************************
         #
         #
-        #   Basis set:C.AUG-CC-PVQZ.........                                                          
+        #   Basis set:C.AUG-CC-PVQZ.........
         #
-        #                    Type         
+        #                    Type
         #                     s
         #             No.      Exponent    Contraction Coefficients
         #             1  0.339800000D+05   0.000091  -0.000019   0.000000   0.000000   0.000000   0.000000

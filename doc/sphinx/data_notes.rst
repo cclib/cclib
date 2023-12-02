@@ -347,7 +347,7 @@ A dictionary containing metadata_ (data about data) for the calculation. Current
 * ``basis_set``: A string with the name of the basis set, if it is printed anywhere as a standard name.
 * ``coord_type``: For the ``coords`` field, a string for the representation of stored coordinates. Currently, it is one of ``xyz``, ``int``/``internal``, or ``gzmat``.
 * ``coords``: A list of lists with shape ``[natoms, 4]`` which contains the input coordinates (those found in the input file). The first column is the atomic symbol as a string, and the next three columns are floats. This is useful as many programs reorient coordinates for symmetry reasons.
-* ``cpu_time``: A list of datetime.timedeltas containing the CPU time of each calculation in the output.  
+* ``cpu_time``: A list of datetime.timedeltas containing the CPU time of each calculation in the output.
 * ``functional``: A string with the name of the density functional used.
 * ``info``: A list of strings, each of which is an information or log message produced during a calculation.
 * ``input_file_contents``: A string containing the entire input file, if it is echoed back during the calculation.
@@ -360,7 +360,7 @@ A dictionary containing metadata_ (data about data) for the calculation. Current
 * ``symmetry_used``: A string representing the point group used by the program for the calculation. This may be different from ``symmetry_detected`` if the full point group is non-abelian and the program can only take advantage of abelian groups. For example, when performing a calculation on benzene with symmetry turned on, ``symmetry_detected`` may be ``d6h``, but ``symmetry_used`` is most likely ``d2h``, since D2h is the largest abelian subgroup of D6h.
 * ``success``: A boolean for whether or not the calculation completed properly.
 * ``unrestricted``: A boolean for whether or not the calculation was performed with a unrestricted wavefunction.
-* ``wall_time``: A list of datetime.timedeltas containing the wall time of each calculation in the output.  
+* ``wall_time``: A list of datetime.timedeltas containing the wall time of each calculation in the output.
 * ``warnings``: A list of strings, each of which is a warning produced during a calculation.
 
 The implementation and coverage of metadata is currently inconsistent. In the future, metadata may receive its own page similar to :doc:`extracted data <data>`.
@@ -551,7 +551,7 @@ A list containing the names of each parameter scanned.
 scanparm
 --------
 
-A list of lists where each list contains the values scanned for each parameter in `scannames`. 
+A list of lists where each list contains the values scanned for each parameter in `scannames`.
 
 scfenergies
 -----------

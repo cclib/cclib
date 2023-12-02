@@ -171,7 +171,7 @@ class GenericGeoOptTest(unittest.TestCase):
     @skipForParser("ORCA", "Not implemented.")
     @skipForParser("QChem", "Not implemented.")
     def testoptstatus(self):
-        """Is optstatus consistent with geovalues and reasonable?"""       
+        """Is optstatus consistent with geovalues and reasonable?"""
         assert len(self.data.optstatus) == len(self.data.geovalues)
         assert self.data.optstatus[0] == self.data.OPT_NEW
         for i in range(1, len(self.data.optstatus)-1):
@@ -385,7 +385,7 @@ if __name__=="__main__":
 
 class TurbomoleKeepGeoOptTest(GenericGeoOptTest):
     """Customized geometry optimization unittest"""
-    
+
     # In Turbomole, each optimisation step is written to its own file,
     # (job.1, job.2 ... job.last) and consists of three (or more)
     # submodule steps:
@@ -412,19 +412,19 @@ class TurbomoleKeepGeoOptTest(GenericGeoOptTest):
     # The test data was called with jobex -keep.
     extracoords = 1
     extrascfs = 1
-    
+
 class TurbomoleGeoOptTest(GenericGeoOptTest):
     """Customized geometry optimization unittest"""
-    
+
     # The test data was not called with jobex -keep.
     extracoords = 1
     extrascfs = 0
-    
+
     def testoptstatus(self):
-        """Is optstatus consistent with geovalues and reasonable?""" 
+        """Is optstatus consistent with geovalues and reasonable?"""
         assert len(self.data.optstatus) == len(self.data.geovalues)
         # We only have the final energy available, so there's no point looking for OPT_NEW.
         for i in range(1, len(self.data.optstatus)-1):
             assert self.data.optstatus[i] == self.data.OPT_UNKNOWN
         assert self.data.optstatus[-1] == self.data.OPT_DONE
-    
+

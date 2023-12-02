@@ -1209,7 +1209,7 @@ cannot be determined. Rerun without `$molecule read`."""
                             #assert len(indices)==2 # there must always be a 'start' and 'end' index.
 
                             if self.unrestricted:
-                                # Here are three different countings: 
+                                # Here are three different countings:
                                 # The 'D'oubly occupied orbitals,
                                 # the 'S'ingly occupied (i.e. index > self.nbeta) and
                                 # the 'V'irtual orbitals (index > self.nalpha)
@@ -1218,7 +1218,7 @@ cannot be determined. Rerun without `$molecule read`."""
                                 # this is supposed to be the standard case:
                                 n_minor=self.nbeta
                                 n_major=self.nalpha
-                                # but this also can appear 
+                                # but this also can appear
                                 if self.nbeta > self.nalpha:
                                    n_minor=self.nalpha
                                    n_major=self.nbeta
@@ -1774,7 +1774,7 @@ cannot be determined. Rerun without `$molecule read`."""
                 self.metadata['wall_time'] = []
             if not "cpu_time" in self.metadata:
                 self.metadata['cpu_time'] = []
-            # the line format is " Total job time:  120.37s(wall), 2251.02s(cpu)" at the end of each job ran. 
+            # the line format is " Total job time:  120.37s(wall), 2251.02s(cpu)" at the end of each job ran.
             # first split the line by white space
             try:
                 a = line.split()
