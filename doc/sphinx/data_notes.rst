@@ -624,4 +624,3 @@ vibrmasses
 ----------
 
 The attribute ``vibrmasses`` stores the reduced masses in Daltons (Da) from vibrational frequency calculation. It is a rank 1 array having dimension ``M``, where ``M`` is the number of normal modes.
-

@@ -409,4 +409,3 @@ class Logfile(ABC):
                 return line
 
     skip_line = lambda self, inputfile, expected: self.skip_lines(inputfile, [expected])
-

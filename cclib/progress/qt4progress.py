@@ -40,4 +40,3 @@ class Qt4Progress(QtGui.QProgressDialog):
             self.setLabelText(text)
         self.setValue(step)
         self.loop.processEvents(QtCore.QEventLoop.ExcludeUserInputEvents)
-
