@@ -298,7 +298,7 @@ Bugfixes:
 Changes in cclib-1.4:
 
 Features:
-    * New parser: cclib can now parse DALTON files 
+    * New parser: cclib can now parse DALTON files
     * New parser: cclib can now parse ORCA files
     * New attribute optstatus for status during geometry optimizations and scans
     * Extract atommasses for GAMESS-US (Sagar Gaur)
@@ -499,7 +499,7 @@ Features:
 	* New method: Charge Decomposition Analysis (CDA) for studying
 	electron donation, back donation, and repulsion between fragments
 	in a molecule
-	* New method: Fragment Analysis for studing bonding interactions 
+	* New method: Fragment Analysis for studing bonding interactions
 	between two or more fragments in a molecule
 	* New method: Ability to calculate the electron density or
 	wavefunction
@@ -532,7 +532,7 @@ Bugfixes
 	* ADF parser: The following bugs have been fixed
 	P/D orbitals for single atoms not handled correctly
 	Problem parsing homos in unrestricted calculations
-	Problem skipping the Create sections in certain calculations  
+	Problem skipping the Create sections in certain calculations
 	* Gaussian parser: The following bugs have been fixed
 	Parser failed if standard orientation not found
 	* ccget: aooverlaps not included when using --list option
@@ -567,13 +567,13 @@ Changes in cclib-0.5:
 
 Features
 	* src/scripts/ccget: Added handling of multiple filenames.
-	  
+
 	  It's now possible to use ccget as follows:
 	  ccget *.log
-	  
+
 	  This is a good way of checking out whether cclib is able to
 	  parse all of the files in a given directory.
-	  
+
 	  Also possible is:
 	  ccget homos *.log
 
@@ -590,7 +590,7 @@ Bugfixes
 	  Mo5Obdt2-c2v-opt.adfout example, which had to do with the SFOs
 	  being made of more than two combinations of atoms (4, because of
 	  rotation in c2v point group).
-	  
+
 	  At least one error is still present with atomcoords. It looks
 	  like non-coordinate integers are being parsed as well, which
 	  makes some of the atomcoords list have more than the 3 values

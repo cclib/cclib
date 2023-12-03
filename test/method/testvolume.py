@@ -7,17 +7,20 @@
 
 """Test the Volume and related methods in cclib"""
 
-import os, sys
+import os
+import sys
 import unittest
-import numpy
 
 from cclib.method import volume
 from cclib.parser import Gaussian, Psi4
 
+import numpy
+
 sys.path.insert(1, "..")
 
-from ..test_data import getdatafile
 from numpy.testing import assert_allclose
+
+from ..test_data import getdatafile
 
 
 class VolumeTest(unittest.TestCase):
@@ -92,7 +95,7 @@ class VolumeTest(unittest.TestCase):
 
     def test_roundtrip_cube(self):
         """Write a cube file and then read it back. Check if the volume object contains
-           identical information on each grid point"""
+        identical information on each grid point"""
 
         data, logfile = getdatafile(Psi4, "basicPsi4-1.2.1", ["water_mp2.out"])
         vol = volume.Volume((-1, -1, -1), (1, 1, 1), (0.4, 0.4, 0.4))

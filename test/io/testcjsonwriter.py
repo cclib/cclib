@@ -40,16 +40,16 @@ class CJSONWriterTest(unittest.TestCase):
 
         # The data available in the cjson and ccdata objects should be equal.
         json_data = json.loads(cjson)
-        number_of_atoms = json_data['properties']['number of atoms']
+        number_of_atoms = json_data["properties"]["number of atoms"]
         assert number_of_atoms == data.natom
 
-        dipole_moment = json_data['properties']['total dipole moment']
+        dipole_moment = json_data["properties"]["total dipole moment"]
         assert round(abs(dipole_moment - sqrt(sum(data.moments[1] ** 2))), 7) == 0
 
         # Ensure the bond connectivity index starts from 0
-        bonds = json_data.get('bonds', None)
+        bonds = json_data.get("bonds", None)
         assert bonds is not None
-        indices = bonds['connections']['index']
+        indices = bonds["connections"]["index"]
         assert min(indices) == 0
         assert max(indices) < number_of_atoms
 
@@ -61,7 +61,7 @@ class CJSONWriterTest(unittest.TestCase):
         cjson = cclib.io.cjsonwriter.CJSON(data).generate_repr()
 
         json_data = json.loads(cjson)
-        assert round(abs(json_data["properties"]['total dipole moment']), 7) == 0
+        assert round(abs(json_data["properties"]["total dipole moment"]), 7) == 0
 
     def test_missing_dipole_moment(self):
         """Does the CJSON writer handle missing properties correctly?"""

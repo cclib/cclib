@@ -43,13 +43,13 @@ An example code below demonstrates how Becke charges can be calculated based on 
     from cclib.method.density import Density
     from cclib.bridge.cclib2horton import makehorton
     from cclib.parser import ccopen
-    
+
     from horton import BeckeMolGrid, getgobasis, BeckeWPart
     from horton.matrix.dense import DenseTwoIndex
 
     d = ccopen(sys.argv[1]).parse()
     ht = makehorton(d)
-    
+
     # Calculate density matrix using cclib
     dens = Density(d)
     dens.calculate()
@@ -61,7 +61,7 @@ An example code below demonstrates how Becke charges can be calculated based on 
 
     # Define Gaussian basis set
     gob = get_gobasis(ht.coordinates, ht.numbers, default = 'STO-3G')
-    
+
     # Partition charges
     wpart = BeckeWPart(ht.coordinates, ht.numbers, ht.pseudo_numbers, grid, moldens, local=True)
     wpart.do_charges()
@@ -82,14 +82,14 @@ Then read in the densities as below to calculate Hirshfeld or Hirshfeld-like cha
     from cclib.method.density import Density
     from cclib.bridge.cclib2horton import makehorton
     from cclib.parser import ccopen
-    
+
     from horton import BeckeMolGrid, getgobasis, HirshfeldWPart
     from horton.matrix.dense import DenseTwoIndex
     from horton.part.proatomdb import ProAtomDB
 
     d = ccopen(sys.argv[1]).parse()
     ht = makehorton(d)
-    
+
     # Calculate density matrix using cclib
     dens = Density(d)
     dens.calculate()
@@ -101,7 +101,7 @@ Then read in the densities as below to calculate Hirshfeld or Hirshfeld-like cha
 
     # Define Gaussian basis set
     gob = get_gobasis(ht.coordinates, ht.numbers, default = 'STO-3G')
-    
+
     # Read in pro-atomic density database
     db = ProAtomDB.from_file('atoms.h5')
 
@@ -111,4 +111,3 @@ Then read in the densities as below to calculate Hirshfeld or Hirshfeld-like cha
     print(wpart['charges'])
 
 ..
-

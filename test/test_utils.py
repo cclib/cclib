@@ -34,7 +34,6 @@ class FloatTest(unittest.TestCase):
 
 
 class ConvertorTest(unittest.TestCase):
-
     def test_convertor(self) -> None:
         assert f"{utils.convertor(8.0, 'eV', 'wavenumber'):.3f}" == "64524.354"
 
@@ -43,12 +42,9 @@ class GetRotationTest(unittest.TestCase):
     delta = 1e-14
 
     def setUp(self) -> None:
-        self.r = scipy.spatial.transform.Rotation.from_euler('xyz', [15, 25, 35], degrees=True)
+        self.r = scipy.spatial.transform.Rotation.from_euler("xyz", [15, 25, 35], degrees=True)
         self.t = numpy.array([-1, 0, 2])
-        self.a = numpy.array([[1., 1., 1.],
-                              [0., 1., 2.],
-                              [0., 0., 0.],
-                              [0., 0., 4.]])
+        self.a = numpy.array([[1.0, 1.0, 1.0], [0.0, 1.0, 2.0], [0.0, 0.0, 0.0], [0.0, 0.0, 4.0]])
         self.b = self.r.apply(self.a + self.t)
 
     def test_default(self) -> None:
@@ -73,32 +69,45 @@ class GetRotationTest(unittest.TestCase):
         a1 = self.a[:1]
         b1 = self.b[:1]
         if hasattr(self.r, "as_matrix"):
-            numpy.testing.assert_allclose(numpy.eye(3), utils.get_rotation(a1, b1).as_matrix(), atol=self.delta)
+            numpy.testing.assert_allclose(
+                numpy.eye(3), utils.get_rotation(a1, b1).as_matrix(), atol=self.delta
+            )
         else:
-            numpy.testing.assert_allclose(numpy.eye(3), utils.get_rotation(a1, b1).as_dcm(), atol=self.delta)
+            numpy.testing.assert_allclose(
+                numpy.eye(3), utils.get_rotation(a1, b1).as_dcm(), atol=self.delta
+            )
 
 
 class PeriodicTableTest(unittest.TestCase):
-
     def setUp(self) -> None:
         self.t = utils.PeriodicTable()
 
     def test_periodictable(self) -> None:
-        assert self.t.element[6] == 'C'
-        assert self.t.number['C'] == 6
-        assert self.t.element[44] == 'Ru'
-        assert self.t.number['Au'] == 79
+        assert self.t.element[6] == "C"
+        assert self.t.number["C"] == 6
+        assert self.t.element[44] == "Ru"
+        assert self.t.number["Au"] == 79
 
 
 class WidthSplitterTest(unittest.TestCase):
-
     def test_default(self) -> None:
         """Does the splitter remove empty fields by default properly?"""
         fixed_splitter = utils.WidthSplitter((4, 3, 5, 6, 10, 10, 10, 10, 10, 10))
         line_full = "  60  H 10  s        0.14639   0.00000   0.00000  -0.00000  -0.00000   0.00000"
         line_truncated = "   1  C 1   s       -0.00000  -0.00000   0.00000"
-        ref_full = ['60', 'H', '10', 's', '0.14639', '0.00000', '0.00000', '-0.00000', '-0.00000', '0.00000']
-        ref_truncated = ['1', 'C', '1', 's', '-0.00000', '-0.00000', '0.00000']
+        ref_full = [
+            "60",
+            "H",
+            "10",
+            "s",
+            "0.14639",
+            "0.00000",
+            "0.00000",
+            "-0.00000",
+            "-0.00000",
+            "0.00000",
+        ]
+        ref_truncated = ["1", "C", "1", "s", "-0.00000", "-0.00000", "0.00000"]
         tokens_full = fixed_splitter.split(line_full)
         tokens_truncated = fixed_splitter.split(line_truncated)
         assert ref_full == tokens_full
@@ -108,13 +117,12 @@ class WidthSplitterTest(unittest.TestCase):
         """Does the splitter return even the empty fields when asked?"""
         fixed_splitter = utils.WidthSplitter((4, 3, 5, 6, 10, 10, 10, 10, 10, 10))
         line = "   1  C 1   s       -0.00000  -0.00000   0.00000"
-        ref_not_truncated = ['1', 'C', '1', 's', '-0.00000', '-0.00000', '0.00000', '', '', '']
+        ref_not_truncated = ["1", "C", "1", "s", "-0.00000", "-0.00000", "0.00000", "", "", ""]
         tokens_not_truncated = fixed_splitter.split(line, truncate=False)
         assert ref_not_truncated == tokens_not_truncated
 
 
 class SymmetrizeTest(unittest.TestCase):
-
     def test_dim_from_tblock_size(self) -> None:
         assert utils._dim_from_tblock_size(1) == 1
         # This isn't possible until we fully move to pytest.
@@ -133,17 +141,12 @@ class SymmetrizeTest(unittest.TestCase):
         numpy.testing.assert_equal(utils.block_to_matrix(inp), ref)
 
     def test_symmetrize(self) -> None:
-        inp = numpy.array([[1, 9, 7],
-                           [4, 8, 3],
-                           [6, 2, 5]], dtype=int)
-        ref_lower = numpy.array([[1, 4, 6],
-                                 [4, 8, 2],
-                                 [6, 2, 5]], dtype=int)
-        ref_upper = numpy.array([[1, 9, 7],
-                                 [9, 8, 3],
-                                 [7, 3, 5]], dtype=int)
+        inp = numpy.array([[1, 9, 7], [4, 8, 3], [6, 2, 5]], dtype=int)
+        ref_lower = numpy.array([[1, 4, 6], [4, 8, 2], [6, 2, 5]], dtype=int)
+        ref_upper = numpy.array([[1, 9, 7], [9, 8, 3], [7, 3, 5]], dtype=int)
         numpy.testing.assert_equal(utils.symmetrize(inp, "lower"), ref_lower)
         numpy.testing.assert_equal(utils.symmetrize(inp, "upper"), ref_upper)
+
 
 if __name__ == "__main__":
     unittest.main()

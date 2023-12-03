@@ -9,9 +9,9 @@
 
 import itertools
 
-import numpy
-
 from cclib.parser.data import ccData
+
+import numpy
 
 
 def get_minimum_carbon_separation(data: ccData) -> float:

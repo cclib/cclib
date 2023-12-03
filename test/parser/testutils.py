@@ -13,7 +13,6 @@ import cclib
 
 
 class convertorTest(unittest.TestCase):
-
     def test_basic(self):
         """Are some basic conversions correct?"""
         convertor = cclib.parser.utils.convertor
@@ -27,8 +26,12 @@ class convertorTest(unittest.TestCase):
         convertor = cclib.parser.utils.convertor
 
         pairs_proportional = (
-            ("Angstrom", "bohr"), ("wavenumber", "eV"),
-            ("wavenumber", "kcal/mol"), ("eV", "kJ/mol"), ("coulomb", "e"))
+            ("Angstrom", "bohr"),
+            ("wavenumber", "eV"),
+            ("wavenumber", "kcal/mol"),
+            ("eV", "kJ/mol"),
+            ("coulomb", "e"),
+        )
         pairs_inverse = (("nm", "wavenumber"),)
 
         for unit1, unit2 in pairs_proportional:
@@ -42,20 +45,19 @@ class convertorTest(unittest.TestCase):
 
 
 class PeriodicTableTest(unittest.TestCase):
-
     def setUp(self):
         self.pt = cclib.parser.utils.PeriodicTable()
 
     def test_elements(self):
         """Does the periodic table give correct elements?"""
-        assert self.pt.element[6] == 'C'
-        assert self.pt.element[44] == 'Ru'
+        assert self.pt.element[6] == "C"
+        assert self.pt.element[44] == "Ru"
         assert self.pt.element[0] is None
 
     def test_numbers(self):
         """Does the periodic table give correct atom numbers?"""
-        assert self.pt.number['C'] == 6
-        assert self.pt.number['Au'] == 79
+        assert self.pt.number["C"] == 6
+        assert self.pt.number["Au"] == 79
 
 
 if __name__ == "__main__":

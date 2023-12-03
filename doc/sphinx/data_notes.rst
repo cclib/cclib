@@ -149,7 +149,7 @@ However, in *all* cases the dispersion energy for a given geometry will also be 
 etenergies
 ----------
 
-This is a rank 1 array that contains the energies of electronic transitions from a reference state to the excited states of the molecule, in ``cm<sup>-1</sup>``. There should be as many elements to this array as there are excited states calculated. Any type of excited state calculation should provide output that can be parsed into this attribute.
+This is a rank 1 array that contains the energies of electronic transitions from a reference state to the excited states of the molecule, in hartree. There should be as many elements to this array as there are excited states calculated. Any type of excited state calculation should provide output that can be parsed into this attribute.
 
 etoscs
 ------
@@ -347,7 +347,7 @@ A dictionary containing metadata_ (data about data) for the calculation. Current
 * ``basis_set``: A string with the name of the basis set, if it is printed anywhere as a standard name.
 * ``coord_type``: For the ``coords`` field, a string for the representation of stored coordinates. Currently, it is one of ``xyz``, ``int``/``internal``, or ``gzmat``.
 * ``coords``: A list of lists with shape ``[natoms, 4]`` which contains the input coordinates (those found in the input file). The first column is the atomic symbol as a string, and the next three columns are floats. This is useful as many programs reorient coordinates for symmetry reasons.
-* ``cpu_time``: A list of datetime.timedeltas containing the CPU time of each calculation in the output.  
+* ``cpu_time``: A list of datetime.timedeltas containing the CPU time of each calculation in the output.
 * ``functional``: A string with the name of the density functional used.
 * ``info``: A list of strings, each of which is an information or log message produced during a calculation.
 * ``input_file_contents``: A string containing the entire input file, if it is echoed back during the calculation.
@@ -360,7 +360,7 @@ A dictionary containing metadata_ (data about data) for the calculation. Current
 * ``symmetry_used``: A string representing the point group used by the program for the calculation. This may be different from ``symmetry_detected`` if the full point group is non-abelian and the program can only take advantage of abelian groups. For example, when performing a calculation on benzene with symmetry turned on, ``symmetry_detected`` may be ``d6h``, but ``symmetry_used`` is most likely ``d2h``, since D2h is the largest abelian subgroup of D6h.
 * ``success``: A boolean for whether or not the calculation completed properly.
 * ``unrestricted``: A boolean for whether or not the calculation was performed with a unrestricted wavefunction.
-* ``wall_time``: A list of datetime.timedeltas containing the wall time of each calculation in the output.  
+* ``wall_time``: A list of datetime.timedeltas containing the wall time of each calculation in the output.
 * ``warnings``: A list of strings, each of which is a warning produced during a calculation.
 
 The implementation and coverage of metadata is currently inconsistent. In the future, metadata may receive its own page similar to :doc:`extracted data <data>`.
@@ -389,7 +389,7 @@ Note: For restricted calculation, ``mocoeffs`` is still a list, but it only cont
 moenergies
 ----------
 
-A list of rank 1 arrays containing the molecular orbital energies in eV. The list is of length 1 for restricted calculations, but length 2 for unrestricted calculations.
+A list of rank 1 arrays containing the molecular orbital energies in hartree. The list is of length 1 for restricted calculations, but length 2 for unrestricted calculations.
 
 **GAMESS-UK**: similar to `mocoeffs`_, the directive `FORMAT HIGH`_ needs to be used if you want all of the eigenvalues printed.
 
@@ -511,7 +511,7 @@ A dictionary where the keys zero-index the atomic center for which the chemical 
 optdone
 -------
 
-Flags whether a geometry optimisation has completed. Currently this attribute is a single Boolean value, which is set to True when the final `atomcoords`_ represent a converged geometry optimisation. In the future, ``optdone`` will be a list that indexes which elements of `atomcoords`_ represent converged geometries. This functionality can be used starting from version 1.3, from the command line by passing the ``--future`` option to ``ccget``,
+Flags whether a geometry optimisation has completed. Currently this attribute is a single Boolean value, which is set to True when the final `atomcoords`_ represent a converged geometry optimisation. In the future, ``optdone`` will be a list that indexes which elements of `atomcoords`_ represent converged geometries. This functionality can be used from the command line by passing the ``--future`` option to ``ccget``,
 
 .. code-block:: bash
 
@@ -541,7 +541,7 @@ An array containing the geometries for each step of shape `(number of scan steps
 scanenergies
 ------------
 
-A list containing the energies at each point of the scan. As with `scancoords`, `scanenergies` is only equivalent to `[scf,mp,cc]energies` in the case of an unrelaxed scan of the scf, mp, and/or cc potential energy surface.
+A list containing the energies at each point of the scan. As with `scancoords`, `scanenergies` is only equivalent to `[scf,mp,cc]energies` in the case of an unrelaxed scan of the SCF, MP, and/or CC potential energy surface.
 
 scannames
 ---------
@@ -551,12 +551,12 @@ A list containing the names of each parameter scanned.
 scanparm
 --------
 
-A list of lists where each list contains the values scanned for each parameter in `scannames`. 
+A list of lists where each list contains the values scanned for each parameter in `scannames`.
 
 scfenergies
 -----------
 
-An array containing the converged SCF energies of the calculation, in eV. For an optimisation log file, there will be as many elements in this array as there were optimisation steps.
+An array containing the converged SCF energies of the calculation, in hartree. For an optimisation log file, there will be as many elements in this array as there were optimisation steps.
 
 If a dispersion correction of any form was used, it is part of the SCF energy and, in the event that it is separable, such as with D3 and similar empirical corrections, it is also available separately under `dispersionenergies`_.
 
@@ -624,4 +624,3 @@ vibrmasses
 ----------
 
 The attribute ``vibrmasses`` stores the reduced masses in Daltons (Da) from vibrational frequency calculation. It is a rank 1 array having dimension ``M``, where ``M`` is the number of normal modes.
-

@@ -1,86 +1,144 @@
 ---
-fail_fast: true
+fail_fast: false
 repos:
+  - repo: meta
+    hooks:
+      - id: check-hooks-apply
+      - id: check-useless-excludes
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: "v4.4.0"
+    rev: "v4.5.0"
     hooks:
       - id: trailing-whitespace
         exclude: |
-          (?x)^(
-              data/ADF|
-              data/DALTON|
-              data/FChk|
-              data/GAMESS|
-              data/Gaussian|
-              data/Jaguar|
-              data/Molcas|
-              data/Molpro|
-              data/MOPAC|
-              data/NWChem|
-              data/ORCA|
-              data/Psi4|
-              data/QChem|
-              data/regression|
-              data/Turbomole
+          (?x)(
+              \.bpa$|
+              \.bpaspin$|
+              \.cube$|
+              \.in$|
+              \.inp$|
+              \.molden$|
+              \.out$|
+              ^data/ADF|
+              ^data/DALTON|
+              ^data/FChk|
+              ^data/GAMESS|
+              ^data/Gaussian|
+              ^data/Jaguar|
+              ^data/Molcas|
+              ^data/Molpro|
+              ^data/MOPAC|
+              ^data/NBO|
+              ^data/NWChem|
+              ^data/ORCA|
+              ^data/Psi4|
+              ^data/QChem|
+              ^data/regression|
+              ^data/Turbomole
           )
       - id: end-of-file-fixer
         exclude: |
-          (?x)^(
-              data/ADF|
-              data/DALTON|
-              data/FChk|
-              data/GAMESS|
-              data/Gaussian|
-              data/Jaguar|
-              data/Molcas|
-              data/Molpro|
-              data/MOPAC|
-              data/NWChem|
-              data/ORCA|
-              data/Psi4|
-              data/QChem|
-              data/regression|
-              data/Turbomole
+          (?x)(
+              \.bpa$|
+              \.bpaspin$|
+              \.cube$|
+              \.in$|
+              \.inp$|
+              \.molden$|
+              \.out$|
+              ^data/ADF|
+              ^data/DALTON|
+              ^data/FChk|
+              ^data/GAMESS|
+              ^data/Gaussian|
+              ^data/Jaguar|
+              ^data/Molcas|
+              ^data/Molpro|
+              ^data/MOPAC|
+              ^data/NBO|
+              ^data/NWChem|
+              ^data/ORCA|
+              ^data/Psi4|
+              ^data/QChem|
+              ^data/regression|
+              ^data/Turbomole
           )
       - id: fix-byte-order-marker
         exclude: |
-          (?x)^(
-              data/ADF|
-              data/DALTON|
-              data/FChk|
-              data/GAMESS|
-              data/Gaussian|
-              data/Jaguar|
-              data/Molcas|
-              data/Molpro|
-              data/MOPAC|
-              data/NWChem|
-              data/ORCA|
-              data/Psi4|
-              data/QChem|
-              data/regression|
-              data/Turbomole
+          (?x)(
+              \.bpa$|
+              \.bpaspin$|
+              \.cube$|
+              \.in$|
+              \.inp$|
+              \.molden$|
+              \.out$|
+              ^data/ADF|
+              ^data/DALTON|
+              ^data/FChk|
+              ^data/GAMESS|
+              ^data/Gaussian|
+              ^data/Jaguar|
+              ^data/Molcas|
+              ^data/Molpro|
+              ^data/MOPAC|
+              ^data/NBO|
+              ^data/NWChem|
+              ^data/ORCA|
+              ^data/Psi4|
+              ^data/QChem|
+              ^data/regression|
+              ^data/Turbomole
+          )
+      - id: mixed-line-ending
+        exclude: |
+          (?x)(
+              \.bpa$|
+              \.bpaspn$|
+              \.cube$|
+              \.in$|
+              \.inp$|
+              \.molden$|
+              \.out$|
+              ^data/ADF|
+              ^data/DALTON|
+              ^data/FChk|
+              ^data/GAMESS|
+              ^data/Gaussian|
+              ^data/Jaguar|
+              ^data/Molcas|
+              ^data/Molpro|
+              ^data/MOPAC|
+              ^data/NBO|
+              ^data/NWChem|
+              ^data/ORCA|
+              ^data/Psi4|
+              ^data/QChem|
+              ^data/regression|
+              ^data/Turbomole
           )
       - id: check-merge-conflict
       - id: check-json
       - id: check-yaml
+      - id: check-toml
       - id: check-added-large-files
   - repo: https://github.com/PyCQA/isort
     rev: "5.12.0"
     hooks:
       - id: isort
-  - repo: https://github.com/psf/black
-    rev: "23.3.0"
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.1.6
     hooks:
-      - id: black
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: "v1.3.0"
-    hooks:
-      - id: mypy
-        additional_dependencies:
-          - numpy
-          - packaging
-          - pandas-stubs
-          # - scipy
-          - types-setuptools
-        args: []
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+  # - repo: https://github.com/pre-commit/mirrors-mypy
+  #   rev: "v1.3.0"
+  #   hooks:
+  #     - id: mypy
+  #       additional_dependencies:
+  #         - numpy
+  #         - packaging
+  #         - pandas-stubs
+  #         # - scipy
+  #         - types-setuptools
+  #       args: []

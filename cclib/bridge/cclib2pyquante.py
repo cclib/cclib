@@ -7,9 +7,9 @@
 
 """Bridge for using cclib data in PyQuante (http://pyquante.sourceforge.net)."""
 
-import numpy
-
 from cclib.parser.utils import find_package
+
+import numpy
 
 
 class MissingAttributeError(Exception):
@@ -45,10 +45,7 @@ def makepyquante(data):
     moldesc = numpy.insert(data.atomcoords[-1], 0, data.atomnos, 1).tolist()
 
     return molecule(
-        [tuple(x) for x in moldesc],
-        units="Angstroms",
-        charge=data.charge,
-        multiplicity=data.mult,
+        [tuple(x) for x in moldesc], units="Angstroms", charge=data.charge, multiplicity=data.mult
     )
 
 

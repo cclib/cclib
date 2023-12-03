@@ -7,26 +7,32 @@
 """Tools for identifying, reading and writing files and streams."""
 
 import io
+import logging
 import os
 import pathlib
 import typing
-from typing import Optional
-import logging
-from typing import Union
 import warnings
+from typing import Optional, Union
 
-from cclib.parser import data
-from cclib.parser import logfileparser
-from cclib.parser.utils import find_package
-
+from cclib.io import (
+    cjsonreader,
+    cjsonwriter,
+    cmlwriter,
+    moldenwriter,
+    wfxwriter,
+    xyzreader,
+    xyzwriter,
+)
+from cclib.parser import data, logfileparser
 from cclib.parser.adfparser import ADF
 from cclib.parser.daltonparser import DALTON
 from cclib.parser.fchkparser import FChk
-from cclib.parser.gamessparser import GAMESS
 from cclib.parser.gamessdatparser import GAMESSDAT
+from cclib.parser.gamessparser import GAMESS
 from cclib.parser.gamessukparser import GAMESSUK
 from cclib.parser.gaussianparser import Gaussian
 from cclib.parser.jaguarparser import Jaguar
+from cclib.parser.logfilewrapper import FileWrapper
 from cclib.parser.molcasparser import Molcas
 from cclib.parser.molproparser import Molpro
 from cclib.parser.mopacparser import MOPAC
@@ -37,15 +43,7 @@ from cclib.parser.psi3parser import Psi3
 from cclib.parser.psi4parser import Psi4
 from cclib.parser.qchemparser import QChem
 from cclib.parser.turbomoleparser import Turbomole
-from cclib.parser.logfilewrapper import FileWrapper
-
-from cclib.io import cjsonreader
-from cclib.io import cjsonwriter
-from cclib.io import cmlwriter
-from cclib.io import moldenwriter
-from cclib.io import wfxwriter
-from cclib.io import xyzreader
-from cclib.io import xyzwriter
+from cclib.parser.utils import find_package
 
 _has_cclib2openbabel = find_package("openbabel")
 if _has_cclib2openbabel:
@@ -67,44 +65,38 @@ if _has_pandas:
 # The triggers are defined by the tuples in the list below like so:
 #   (parser, phrases, flag whether we should break)
 triggers = [
-
-    (ADF,       ["Amsterdam Density Functional"],                   True),
-    (DALTON,    ["Dalton - An Electronic Structure Program"],       True),
-    (FChk,      ["Number of atoms", "I"],                           True),
-    (GAMESS,    ["GAMESS"],                                         False),
-    (GAMESS,    ["Firefly (PC GAMESS)"],                            True),
-    (GAMESS,    ["GAMESS VERSION"],                                 True),
-    (GAMESSUK,  ["G A M E S S - U K"],                              True),
-    (GAMESSDAT, ["$DATA"],                                          True),
-    (Gaussian,  ["Gaussian, Inc."],                                 True),
-    (Jaguar,    ["Jaguar"],                                         True),
-    (Molcas,    ["MOLCAS"],                                         True),
-    (Molpro,    ["PROGRAM SYSTEM MOLPRO"],                          True),
-    (Molpro,    ["1PROGRAM"],                                       False),
-    (MOPAC,     ["MOPAC20"],                                        True),
-    (NBO,       ["N A T U R A L   A T O M I C   O R B I T A L   A N D"],                  True),
-    (NWChem,    ["Northwest Computational Chemistry Package"],      True),
-    (ORCA,      ["O   R   C   A"],                                  True),
-    (Psi3,      ["PSI3: An Open-Source Ab Initio Electronic Structure Package"],          True),
-    (Psi4,      ["Psi4: An Open-Source Ab Initio Electronic Structure Package"],          True),
-    (QChem,     ["A Quantum Leap Into The Future Of Chemistry"],    True),
-    (Turbomole, ["TURBOMOLE"],                                      True),
-
+    (ADF, ["Amsterdam Density Functional"], True),
+    (DALTON, ["Dalton - An Electronic Structure Program"], True),
+    (FChk, ["Number of atoms", "I"], True),
+    (GAMESS, ["GAMESS"], False),
+    (GAMESS, ["Firefly (PC GAMESS)"], True),
+    (GAMESS, ["GAMESS VERSION"], True),
+    (GAMESSUK, ["G A M E S S - U K"], True),
+    (GAMESSDAT, ["$DATA"], True),
+    (Gaussian, ["Gaussian, Inc."], True),
+    (Jaguar, ["Jaguar"], True),
+    (Molcas, ["MOLCAS"], True),
+    (Molpro, ["PROGRAM SYSTEM MOLPRO"], True),
+    (Molpro, ["1PROGRAM"], False),
+    (MOPAC, ["MOPAC20"], True),
+    (NBO, ["N A T U R A L   A T O M I C   O R B I T A L   A N D"], True),
+    (NWChem, ["Northwest Computational Chemistry Package"], True),
+    (ORCA, ["O   R   C   A"], True),
+    (Psi3, ["PSI3: An Open-Source Ab Initio Electronic Structure Package"], True),
+    (Psi4, ["Psi4: An Open-Source Ab Initio Electronic Structure Package"], True),
+    (QChem, ["A Quantum Leap Into The Future Of Chemistry"], True),
+    (Turbomole, ["TURBOMOLE"], True),
 ]
 
-readerclasses = {
-    'cjson': cjsonreader.CJSON,
-    'json': cjsonreader.CJSON,
-    'xyz': xyzreader.XYZ,
-}
+readerclasses = {"cjson": cjsonreader.CJSON, "json": cjsonreader.CJSON, "xyz": xyzreader.XYZ}
 
 writerclasses = {
-    'cjson': cjsonwriter.CJSON,
-    'json': cjsonwriter.CJSON,
-    'cml': cmlwriter.CML,
-    'molden': moldenwriter.MOLDEN,
-    'wfx': wfxwriter.WFXWriter,
-    'xyz': xyzwriter.XYZ,
+    "cjson": cjsonwriter.CJSON,
+    "json": cjsonwriter.CJSON,
+    "cml": cmlwriter.CML,
+    "molden": moldenwriter.MOLDEN,
+    "wfx": wfxwriter.WFXWriter,
+    "xyz": xyzwriter.XYZ,
 }
 
 
@@ -118,8 +110,10 @@ def is_xyz(inputfile: FileWrapper) -> bool:
     The only way to determine this without reading the entire file is to
     inspect the file extension.
     """
-    return len(inputfile.filenames) == 1 and \
-        os.path.splitext(inputfile.filenames[0])[1].lower() == ".xyz"
+    return (
+        len(inputfile.filenames) == 1
+        and os.path.splitext(inputfile.filenames[0])[1].lower() == ".xyz"
+    )
 
 
 def guess_filetype(inputfile) -> Optional[logfileparser.Logfile]:
@@ -138,9 +132,10 @@ def guess_filetype(inputfile) -> Optional[logfileparser.Logfile]:
                         return filetype
     except Exception:
         # guess_filetype() is expected to be quiet by default...
-        logger.error("Failed to determine log file type", exc_info = True)
-    
+        logger.error("Failed to determine log file type", exc_info=True)
+
     return filetype
+
 
 def sort_turbomole_outputs(fileinputs):
     """
@@ -148,7 +143,7 @@ def sort_turbomole_outputs(fileinputs):
     required by the Turbomole parser for correct parsing. Unrecognised
     files are appended to the end of the list in the same order they are
     given.
-    
+
     This function has been deprecated as of version 1.8; use:
     cclib.parser.turbomoleparser.Turbomole.sort_input() instead
 
@@ -158,15 +153,15 @@ def sort_turbomole_outputs(fileinputs):
       sorted_list - a sorted list of Turbomole files needed for proper parsing.
     """
     warnings.warn(
-        "sort_turbomole_outputs() has been deprecated as of v1.8; use: "+ \
-        "cclib.parser.turbomoleparser.Turbomole.sort_input() instead")
+        "sort_turbomole_outputs() has been deprecated as of v1.8; use: "
+        + "cclib.parser.turbomoleparser.Turbomole.sort_input() instead"
+    )
     return Turbomole.sort_input(fileinputs)
 
+
 def ccread(
-        source: Union[str, typing.IO, FileWrapper, typing.List[Union[str, typing.IO]]],
-        *args,
-        **kwargs
-    ):
+    source: Union[str, typing.IO, FileWrapper, typing.List[Union[str, typing.IO]]], *args, **kwargs
+):
     """Attempt to open and read computational chemistry data from a file.
 
     If the file is not appropriate for cclib parsers, a fallback mechanism
@@ -189,21 +184,21 @@ def ccread(
 
             return log.parse()
         else:
-            logger.info('Attempting to use fallback mechanism to read file')
+            logger.info("Attempting to use fallback mechanism to read file")
             return fallback(source)
-    
+
     finally:
         if log:
             log.inputfile.close()
 
 
 def ccopen(
-        source: Union[str, typing.IO, FileWrapper, typing.List[Union[str, typing.IO]]],
-        *args,
-        quiet: bool = False,
-        cjson: bool = False,
-        **kwargs
-    ):
+    source: Union[str, typing.IO, FileWrapper, typing.List[Union[str, typing.IO]]],
+    *args,
+    quiet: bool = False,
+    cjson: bool = False,
+    **kwargs,
+):
     """Guess the identity of a particular log file and return an instance of it.
 
     Inputs:
@@ -218,61 +213,60 @@ def ccopen(
     """
     if not isinstance(source, list):
         source = [source]
-        
+
     inputfile = None
 
     logger = logging.getLogger("cclib")
-        
+
     try:
         # Wrap our input with custom file object.
         inputfile = FileWrapper(*source)
-        
+
         if cjson:
-            filetype = readerclasses['cjson']
-        
+            filetype = readerclasses["cjson"]
+
         else:
             # Try and guess the parser we need.
             filetype = guess_filetype(inputfile)
-        
+
             # Reset our position back to 0.
             inputfile.reset()
-    
+
         # If the input file isn't a standard compchem log file, try one of
         # the readers, falling back to Open Babel.
         if not filetype:
             # TODO: This assumes we only got a single file...
             filename = list(inputfile.filenames)[0]
             ext = pathlib.Path(filename).name[1:].lower()
-            
+
             for extension in readerclasses:
                 if ext == extension:
                     filetype = readerclasses[extension]
-    
+
         # Proceed to return an instance of the logfile parser only if the filetype
         # could be guessed.
         if filetype:
-                return filetype(inputfile, *args, **kwargs)
-    
+            return filetype(inputfile, *args, **kwargs)
+
         elif inputfile is not None:
             inputfile.close()
             # Stop us closing twice in the except block.
             inputfile = None
-            
+
         logger.warning(
-            "Unable to determine the type of logfile %s, try the fallback mechanism",
-            source
+            "Unable to determine the type of logfile %s, try the fallback mechanism", source
         )
-            
+
     except Exception:
         if inputfile is not None:
             inputfile.close()
-        
+
         if not quiet:
             raise
-        
+
         # We're going to swallow this exception if quiet is True.
         # This can hide a lot of errors, so we'll make sure to log it.
-        logger.error("Failed to open logfile", exc_info = True)
+        logger.error("Failed to open logfile", exc_info=True)
 
 
 def fallback(source):
@@ -295,12 +289,20 @@ def fallback(source):
         else:
             # This should be a warning, but warnings are currently disabled by default.
             logging.getLogger("cclib").error(
-                "Could not import `openbabel`, fallback mechanism might not work.")
+                "Could not import `openbabel`, fallback mechanism might not work."
+            )
 
 
-def ccwrite(ccobj, outputtype=None, outputdest=None,
-            indices=None, terse=False, returnstr=False,
-            *args, **kwargs):
+def ccwrite(
+    ccobj,
+    outputtype=None,
+    outputdest=None,
+    indices=None,
+    terse=False,
+    returnstr=False,
+    *args,
+    **kwargs,
+):
     """Write the parsed data from an outputfile to a standard chemical
     representation.
 
@@ -335,20 +337,20 @@ def ccwrite(ccobj, outputtype=None, outputdest=None,
 
     # If the logfile name has been passed in through kwargs (such as
     # in the ccwrite script), make sure it has precedence.
-    if 'jobfilename' in kwargs:
-        jobfilename = kwargs['jobfilename']
+    if "jobfilename" in kwargs:
+        jobfilename = kwargs["jobfilename"]
         # Avoid passing multiple times into the main call.
-        del kwargs['jobfilename']
+        del kwargs["jobfilename"]
 
-    outputobj = outputclass(ccdata, jobfilename=jobfilename,
-                            indices=indices, terse=terse,
-                            *args, **kwargs)
+    outputobj = outputclass(
+        ccdata, jobfilename=jobfilename, indices=indices, terse=terse, *args, **kwargs
+    )
     output = outputobj.generate_repr()
 
     # If outputdest isn't None, write the output to disk.
     if outputdest is not None:
         if isinstance(outputdest, str):
-            with open(outputdest, 'w') as outputobj:
+            with open(outputdest, "w") as outputobj:
                 outputobj.write(output)
         elif isinstance(outputdest, io.IOBase):
             outputdest.write(output)
@@ -433,13 +435,10 @@ def ccframe(ccobjs, *args, **kwargs):
             raise ValueError
 
         attributes = ccdata.getattributes()
-        attributes.update({
-            'jobfilename': jobfilename
-        })
+        attributes.update({"jobfilename": jobfilename})
 
         logfiles.append(pd.Series(attributes))
     return pd.DataFrame(logfiles)
 
 
 del find_package
-

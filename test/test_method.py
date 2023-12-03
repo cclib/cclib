@@ -25,6 +25,5 @@ from .method.testorbitals import *
 from .method.testpopulation import *
 from .method.testvolume import *
 
-
 if __name__ == "__main__":
     unittest.main()

@@ -12,19 +12,19 @@ from abc import ABC, abstractmethod
 from collections.abc import Iterable
 from typing import List, Optional, Tuple
 
-import numpy
-
 from cclib.parser.data import ccData
-from cclib.parser.utils import PeriodicTable
-from cclib.parser.utils import find_package
+from cclib.parser.utils import PeriodicTable, find_package
+
+import numpy
 
 _has_openbabel = find_package("openbabel")
 if _has_openbabel:
     from cclib.bridge import makeopenbabel
+
     # Open Babel 3.0 and above
     try:
-        from openbabel import openbabel as ob
         import openbabel.pybel as pb
+        from openbabel import openbabel as ob
     # Open Babel 2.4.x and below
     except:
         import openbabel as ob
@@ -40,8 +40,15 @@ class Writer(ABC):
 
     required_attrs: Tuple[str] = ()
 
-    def __init__(self, ccdata: ccData, jobfilename: Optional[str] = None, indices=None, terse: bool = False,
-                 *args, **kwargs) -> None:
+    def __init__(
+        self,
+        ccdata: ccData,
+        jobfilename: Optional[str] = None,
+        indices=None,
+        terse: bool = False,
+        *args,
+        **kwargs,
+    ) -> None:
         """Initialize the Writer object.
 
         This should be called by a subclass in its own __init__ method.
@@ -81,17 +88,17 @@ class Writer(ABC):
         """Calculate the total dipole moment."""
 
         # ccdata.moments may exist, but only contain center-of-mass coordinates
-        if len(getattr(self.ccdata, 'moments', [])) > 1:
+        if len(getattr(self.ccdata, "moments", [])) > 1:
             return numpy.linalg.norm(self.ccdata.moments[1])
         return None
 
     def _check_required_attributes(self) -> None:
         """Check if required attributes are present in ccdata."""
-        missing = [x for x in self.required_attrs
-                   if not hasattr(self.ccdata, x)]
+        missing = [x for x in self.required_attrs if not hasattr(self.ccdata, x)]
         if missing:
             raise MissingAttributeError(
-                f"Could not parse required attributes to write file: {missing}")
+                f"Could not parse required attributes to write file: {missing}"
+            )
 
     def _make_openbabel_from_ccdata(self):
         """Create Open Babel and Pybel molecules from ccData."""
@@ -106,23 +113,21 @@ class Writer(ABC):
             _atomnos = None
         else:
             _atomnos = self.ccdata.atomnos
-        if not hasattr(self.ccdata, 'charge'):
+        if not hasattr(self.ccdata, "charge"):
             logger.warning("ccdata object does not have charge, setting to 0")
             _charge = 0
         else:
             _charge = self.ccdata.charge
-        if not hasattr(self.ccdata, 'mult'):
+        if not hasattr(self.ccdata, "mult"):
             logger.warning("ccdata object does not have spin multiplicity, setting to 1")
             _mult = 1
         else:
             _mult = self.ccdata.mult
-        obmol = makeopenbabel(atomcoords=_atomcoords,
-                              atomnos=_atomnos,
-                              charge=_charge,
-                              mult=_mult)
+        obmol = makeopenbabel(atomcoords=_atomcoords, atomnos=_atomnos, charge=_charge, mult=_mult)
         if self.jobfilename is not None:
             obmol.SetTitle(self.jobfilename)
         return (obmol, pb.Molecule(obmol))
+
     def _make_bond_connectivity_from_openbabel(self, obmol) -> List[Tuple[int, int, int]]:
         """Based upon the Open Babel/Pybel molecule, create a list of tuples
         to represent bonding information, where the three integers are
@@ -131,9 +136,13 @@ class Writer(ABC):
         """
         bond_connectivities = []
         for obbond in ob.OBMolBondIter(obmol):
-            bond_connectivities.append((obbond.GetBeginAtom().GetIndex(),
-                                        obbond.GetEndAtom().GetIndex(),
-                                        obbond.GetBondOrder()))
+            bond_connectivities.append(
+                (
+                    obbond.GetBeginAtom().GetIndex(),
+                    obbond.GetEndAtom().GetIndex(),
+                    obbond.GetBondOrder(),
+                )
+            )
         return bond_connectivities
 
     def _fix_indices(self) -> None:
@@ -147,7 +156,7 @@ class Writer(ABC):
             self.indices = set([self.indices])
         # This is the most likely place to get the number of
         # geometries from.
-        if hasattr(self.ccdata, 'atomcoords'):
+        if hasattr(self.ccdata, "atomcoords"):
             lencoords = len(self.ccdata.atomcoords)
             indices = set()
             for i in self.indices:

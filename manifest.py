@@ -11,16 +11,15 @@ import glob
 import os
 from pathlib import Path
 
+files = ["ANNOUNCE", "CHANGELOG", "LICENSE", "README.md", "THANKS"]
+files += ["pyproject.toml", "setup.py"]
 
-files = ['ANNOUNCE', 'CHANGELOG', 'LICENSE', 'README.md', 'THANKS']
-files += ['pyproject.toml', 'setup.py']
-
-source = 'cclib'
+source = "cclib"
 files.extend([os.path.join(source, fname) for fname in ["__init__.py", "py.typed"]])
 
-folders = ['bridge', 'io', 'method', 'parser', 'progress']
+folders = ["bridge", "io", "method", "parser", "progress"]
 for folder in folders:
-    files.extend(glob.glob(os.path.join(source, folder, '*.py')))
+    files.extend(glob.glob(os.path.join(source, folder, "*.py")))
 
 for f in files:
     if not os.path.isfile(f):

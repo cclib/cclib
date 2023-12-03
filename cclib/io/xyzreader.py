@@ -30,7 +30,7 @@ class XYZ(filereader.Reader):
     def generate_repr(self) -> None:
         """Convert the raw contents of the source into the internal representation."""
 
-        assert hasattr(self, 'filecontents')
+        assert hasattr(self, "filecontents")
 
         it = iter(self.filecontents.splitlines())
 
@@ -46,10 +46,9 @@ class XYZ(filereader.Reader):
         comments = []
 
         while True:
-
             try:
                 line = next(it)
-                if line.strip() == '':
+                if line.strip() == "":
                     line = next(it)
                 tokens = line.split()
                 assert len(tokens) >= 1
@@ -75,10 +74,10 @@ class XYZ(filereader.Reader):
                 break
 
         attributes = {
-            'natom': natom,
-            'atomnos': atomnos,
-            'atomcoords': all_atomcoords,
-            'metadata': {"comments": comments},
+            "natom": natom,
+            "atomnos": atomnos,
+            "atomcoords": all_atomcoords,
+            "metadata": {"comments": comments},
         }
 
         self.data = ccData(attributes)

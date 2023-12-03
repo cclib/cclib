@@ -30,7 +30,6 @@ def main() -> None:
     retval = fa.calculate([data2, data3])
 
     if retval:
-
         print(f"Charge decomposition analysis of {args.file1}\n")
 
         if len(data1.homos) == 2:
@@ -41,20 +40,17 @@ def main() -> None:
         print("-------------------------------------")
 
         for spin in range(len(data1.homos)):
-
             if spin == 1:
                 print("\nBETA SPIN:")
                 print("==========")
 
             for i in range(len(fa.donations[spin])):
-
                 print(
                     f"{int(i + 1):4}: {fa.donations[spin][i]:7.3f} {fa.bdonations[spin][i]:7.3f} {fa.repulsions[spin][i]:7.3f} {fa.residuals[spin][i]:7.3f}"
                 )
 
                 if i == data1.homos[spin]:
                     print("------ HOMO - LUMO gap ------")
-                    
 
             print("-------------------------------------")
             print(
@@ -62,5 +58,5 @@ def main() -> None:
             )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

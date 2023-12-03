@@ -8,9 +8,12 @@
 import sys
 
 from cclib.progress.textprogress import TextProgress
+
 Progress = TextProgress
 
-if 'PyQt4' in list(sys.modules.keys()):
-    from cclib.progress.qt4progress import Qt4Progress
+if "PyQt4" in list(sys.modules.keys()):
     from typing import Union
+
+    from cclib.progress.qt4progress import Qt4Progress
+
     Progress = Union[TextProgress, Qt4Progress]

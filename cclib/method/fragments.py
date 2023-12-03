@@ -11,6 +11,7 @@ import logging
 import random
 
 import numpy
+
 numpy.inv = numpy.linalg.inv
 
 from cclib.method.calculationmethod import Method
@@ -18,8 +19,8 @@ from cclib.method.calculationmethod import Method
 
 class FragmentAnalysis(Method):
     """Convert a molecule's basis functions from atomic-based to fragment MO-based"""
-    def __init__(self, data, progress=None, loglevel=logging.INFO,
-                 logname="FragmentAnalysis of"):
+
+    def __init__(self, data, progress=None, loglevel=logging.INFO, logname="FragmentAnalysis of"):
         super().__init__(data, progress, loglevel, logname)
         self.parsed = False
 
@@ -32,13 +33,12 @@ class FragmentAnalysis(Method):
         return f'Fragment molecular basis("{self.data}")'
 
     def calculate(self, fragments, cupdate=0.05):
-
         nFragBasis = 0
         nFragAlpha = 0
         nFragBeta = 0
         self.fonames = []
 
-        unrestricted = ( len(self.data.mocoeffs) == 2 )
+        unrestricted = len(self.data.mocoeffs) == 2
 
         self.logger.info("Creating attribute fonames[]")
 
@@ -47,13 +47,13 @@ class FragmentAnalysis(Method):
             nFragBasis += fragments[j].nbasis
             nFragAlpha += fragments[j].homos[0] + 1
             if unrestricted and len(fragments[j].homos) == 1:
-                nFragBeta += fragments[j].homos[0] + 1 #assume restricted fragment
+                nFragBeta += fragments[j].homos[0] + 1  # assume restricted fragment
             elif unrestricted and len(fragments[j].homos) == 2:
-                nFragBeta += fragments[j].homos[1] + 1 #assume unrestricted fragment
+                nFragBeta += fragments[j].homos[1] + 1  # assume unrestricted fragment
 
-            #assign fonames based on fragment name and MO number
+            # assign fonames based on fragment name and MO number
             for i in range(fragments[j].nbasis):
-                if hasattr(fragments[j],"name"):
+                if hasattr(fragments[j], "name"):
                     self.fonames.append(f"{fragments[j].name}_{int(i + 1)}")
                 else:
                     self.fonames.append(f"noname{int(j)}_{int(i + 1)}")
@@ -88,12 +88,10 @@ class FragmentAnalysis(Method):
         last = 0
         for frag in fragments:
             size = frag.natom
-            if self.data.atomcoords[0][last:last+size].tolist() != \
-                    frag.atomcoords[0].tolist():
+            if self.data.atomcoords[0][last : last + size].tolist() != frag.atomcoords[0].tolist():
                 self.logger.error("Atom coordinates aren't aligned")
                 return False
-            if self.data.atomnos[last:last+size].tolist() != \
-                    frag.atomnos.tolist():
+            if self.data.atomnos[last : last + size].tolist() != frag.atomnos.tolist():
                 self.logger.error("Elements don't match")
                 return False
 
@@ -104,7 +102,7 @@ class FragmentAnalysis(Method):
         self.logger.info("Creating mocoeffs in new fragment MO basis: mocoeffs[]")
 
         for spin in range(len(self.data.mocoeffs)):
-            blockMatrix = numpy.zeros((nBasis,nBasis), "d")
+            blockMatrix = numpy.zeros((nBasis, nBasis), "d")
             pos = 0
 
             # Build up block-diagonal matrix from fragment mocoeffs.
@@ -113,10 +111,10 @@ class FragmentAnalysis(Method):
                 size = fragments[i].nbasis
                 if len(fragments[i].mocoeffs) == 1:
                     temp = numpy.transpose(fragments[i].mocoeffs[0])
-                    blockMatrix[pos:pos+size, pos:pos+size] = temp
+                    blockMatrix[pos : pos + size, pos : pos + size] = temp
                 else:
                     temp = numpy.transpose(fragments[i].mocoeffs[spin])
-                    blockMatrix[pos:pos+size, pos:pos+size] = temp
+                    blockMatrix[pos : pos + size, pos : pos + size] = temp
                 pos += size
 
             # Invert and mutliply to result in fragment MOs as basis.

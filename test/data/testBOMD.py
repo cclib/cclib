@@ -10,7 +10,6 @@
 import os
 import unittest
 
-
 __filedir__ = os.path.realpath(os.path.dirname(__file__))
 
 
@@ -27,7 +26,7 @@ class GenericBOMDTest(unittest.TestCase):
         """Are the number of parsed energies consistent with the number of MD
         steps?
         """
-        assert self.data.scfenergies.shape == (self.nenergies, )
+        assert self.data.scfenergies.shape == (self.nenergies,)
 
     def testdimatomcoords(self):
         """Are the number of parsed geometries consistent with the number of
@@ -39,7 +38,7 @@ class GenericBOMDTest(unittest.TestCase):
         """Are the number of time points consistent with the number of MD
         steps?
         """
-        assert self.data.time.shape == (self.nsteps, )
+        assert self.data.time.shape == (self.nsteps,)
 
 
 class GaussianBOMDTest(GenericBOMDTest):
@@ -50,11 +49,12 @@ class GaussianBOMDTest(GenericBOMDTest):
     nenergies = 35
 
 
-if __name__=="__main__":
-
+if __name__ == "__main__":
     import sys
+
     sys.path.append(os.path.join(__filedir__, ".."))
 
     from test_data import DataSuite
-    suite = DataSuite(['BOMD'])
+
+    suite = DataSuite(["BOMD"])
     suite.testall()

@@ -10,23 +10,28 @@
 import logging
 from typing import Optional
 
-import numpy
-
 from cclib.method.calculationmethod import Method, MissingAttributeError
 from cclib.progress import Progress
+
+import numpy
 
 
 class Population(Method):
     """An abstract base class for population-type methods."""
 
     # All of these are typically required for population analyses.
-    required_attrs = ('homos', 'mocoeffs', 'nbasis')
+    required_attrs = ("homos", "mocoeffs", "nbasis")
 
     # At least one of these are typically required.
-    overlap_attributes = ('aooverlaps', 'fooverlaps')
+    overlap_attributes = ("aooverlaps", "fooverlaps")
 
-    def __init__(self, data: "cclib.parser.data.ccData", progress: Optional[Progress] = None,
-                 loglevel: int = logging.INFO, logname: str = "Log") -> None:
+    def __init__(
+        self,
+        data: "cclib.parser.data.ccData",
+        progress: Optional[Progress] = None,
+        loglevel: int = logging.INFO,
+        logname: str = "Log",
+    ) -> None:
         super().__init__(data, progress, loglevel, logname)
 
         self.fragresults = None
@@ -42,17 +47,18 @@ class Population(Method):
     def _check_required_attributes(self) -> None:
         super()._check_required_attributes()
 
-        if self.overlap_attributes and not any(hasattr(self.data, a) for a in self.overlap_attributes):
+        if self.overlap_attributes and not any(
+            hasattr(self.data, a) for a in self.overlap_attributes
+        ):
             raise MissingAttributeError(
-                    'Need overlap matrix (aooverlaps or fooverlaps attribute) for Population methods')
+                "Need overlap matrix (aooverlaps or fooverlaps attribute) for Population methods"
+            )
 
     def partition(self, indices=None) -> bool:
-
         if not hasattr(self, "aoresults"):
             self.calculate()
 
         if not indices:
-
             # Build list of groups of orbitals in each atom for atomresults.
             if hasattr(self.data, "aonames"):
                 names = self.data.aonames
@@ -62,15 +68,15 @@ class Population(Method):
             atoms = []
             indices = []
 
-            name = names[0].split('_')[0]
+            name = names[0].split("_")[0]
             atoms.append(name)
             indices.append([0])
 
             for i in range(1, len(names)):
-                name = names[i].split('_')[0]
+                name = names[i].split("_")[0]
                 try:
                     index = atoms.index(name)
-                except ValueError: #not found in atom list
+                except ValueError:  # not found in atom list
                     atoms.append(name)
                     indices.append([i])
                 else:
@@ -91,11 +97,8 @@ class Population(Method):
         # For each spin, splice numpy array at ao index,
         #   and add to correct result row.
         for spin in range(len(results)):
-
-            for i in range(natoms): # Number of groups.
-
-                for j in range(len(indices[i])): # For each group.
-
+            for i in range(natoms):  # Number of groups.
+                for j in range(len(indices[i])):  # For each group.
                     temp = self.aoresults[spin][:, indices[i][j]]
                     results[spin][:, i] = numpy.add(results[spin][:, i], temp)
 

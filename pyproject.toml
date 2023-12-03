@@ -1,12 +1,32 @@
-[tool.black]
-line-length = 100
-target-version = ['py39']
+# [project]
+# requires-python = ">=3.8"
 
 [tool.isort]
 profile = "black"
 # default is FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER
 # Placing third-party imports at the end makes their inclusion more obvious
 sections = ["FUTURE", "STDLIB", "FIRSTPARTY", "THIRDPARTY", "LOCALFOLDER"]
+
+[tool.ruff]
+line-length = 100
+src = ["cclib"]
+
+[tool.ruff.format]
+skip-magic-trailing-comma = true
+
+[tool.ruff.lint]
+select = []
+
+[tool.ruff.lint.isort]
+lines-after-imports = 2
+section-order = ["future", "standard-library", "first-party", "third-party", "local-folder"]
+
+[tool.ruff.per-file-ignores]
+"test/test*.py" = [
+    "PLR2004", # magic value comparison
+    "S101",    # use of assert detected
+    "TCH002",  # third party import (for pytest)
+]
 
 [tool.mypy]
 warn_redundant_casts = true

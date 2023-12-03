@@ -9,10 +9,10 @@
 
 from typing import Optional, Set, Union
 
-import numpy as np
-
 from cclib.parser.data import ccData
 from cclib.parser.utils import find_package
+
+import numpy as np
 
 _found_openbabel = find_package("openbabel")
 if _found_openbabel:
@@ -37,17 +37,12 @@ def makecclib(mol: ob.OBMol) -> ccData:
     so it is better to assume that would not be correct.
     """
     _check_openbabel(_found_openbabel)
-    attributes = {
-        'atomcoords':   [],
-        'atommasses':   [],
-        'atomnos':      [],
-        'natom':        mol.NumAtoms(),
-    }
+    attributes = {"atomcoords": [], "atommasses": [], "atomnos": [], "natom": mol.NumAtoms()}
     for atom in ob.OBMolAtomIter(mol):
-        attributes['atomcoords'].append([atom.GetX(), atom.GetY(), atom.GetZ()])
-        attributes['atommasses'].append(atom.GetAtomicMass())
-        attributes['atomnos'].append(atom.GetAtomicNum())
-    attributes['atomcoords'] = [attributes['atomcoords']]
+        attributes["atomcoords"].append([atom.GetX(), atom.GetY(), atom.GetZ()])
+        attributes["atommasses"].append(atom.GetAtomicMass())
+        attributes["atomnos"].append(atom.GetAtomicNum())
+    attributes["atomcoords"] = [attributes["atomcoords"]]
     return ccData(attributes)
 
 
