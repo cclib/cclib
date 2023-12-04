@@ -3,6 +3,12 @@ name = "cclib"
 version = "1.8"
 description = "parsers and algorithms for computational chemistry"
 readme = "README.md"
+authors = [
+    {name = "cclib development team", email = "cclib@googlegroups.com"}
+]
+maintainers = [
+    {name = "cclib development team", email = "cclib@googlegroups.com"}
+]
 license = {file = "LICENSE"}
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -23,6 +29,12 @@ dependencies = [
     "periodictable",
     "scipy>=1.2.0",
 ]
+
+[project.urls]
+"Bug Tracker" = "https://github.com/cclib/cclib/issues"
+Changelog = "https://github.com/cclib/cclib/blob/master/doc/sphinx/changelog.rst"
+Documentation = "http://cclib.github.io/"
+Homepage = "https://github.com/cclib/cclib"
 
 [project.scripts]
 ccframe = "cclib.scripts.ccframe:main"
