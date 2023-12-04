@@ -2,12 +2,15 @@
 
 from __future__ import print_function
 
-import sys, os
 import logging
-import numpy as np
+import os
+import sys
+
 from cclib.io import ccopen
-from nms import nmsgenerator
 from data import element_masses, element_symbols
+
+import numpy as np
+from nms import nmsgenerator
 
 
 def nms_ts(n):
@@ -20,17 +23,22 @@ def nms_ts(n):
         temperature (float): thermal energy to populate normal normal_modes
         samples     (int):   number of samples to consider (ignored)
     """
-    stable =  {1: (2000.0, 500),
-               2: (1500.0, 450),
-               3: (1000.0, 425),
-               4: ( 600.0, 400),
-               5: ( 600.0, 200),
-               6: ( 600.0,  30),
-               7: ( 600.0,  20),
-               8: ( 450.0,   5),
-               9: ( 450.0,   3)}
-    if n in stable: return stable[n]
-    else: return (400, 2)
+    stable = {
+        1: (2000.0, 500),
+        2: (1500.0, 450),
+        3: (1000.0, 425),
+        4: (600.0, 400),
+        5: (600.0, 200),
+        6: (600.0, 30),
+        7: (600.0, 20),
+        8: (450.0, 5),
+        9: (450.0, 3),
+    }
+    if n in stable:
+        return stable[n]
+    else:
+        return (400, 2)
+
 
 # read through a bunch of files on the command-line
 for arg in sys.argv[1:]:
@@ -50,15 +58,15 @@ for arg in sys.argv[1:]:
 
     # get the last geometry from a geometry optimization
     # should end up as an ndarray (N, 3)
-    xyz = np.asarray(molecule.atomcoords[-1]).reshape(-1,3)
+    xyz = np.asarray(molecule.atomcoords[-1]).reshape(-1, 3)
 
     # vibrational frequencies (remove any zeros, e.g., translations, rotations)
     freq = np.asarray(molecule.vibfreqs)
-    freq = freq[freq !=0.0] # should now be an array of size (3N-6,)
+    freq = freq[freq != 0.0]  # should now be an array of size (3N-6,)
 
     # get flattened normal modes and reshape to (3N, 3N)
     # ensure they're in (CartesianCoordinate, ModeNumber)
-    nmo = np.asarray(molecule.vibdisps).reshape(-1, xyz.shape[0]*3) # [3N, 3N]
+    nmo = np.asarray(molecule.vibdisps).reshape(-1, xyz.shape[0] * 3)  # [3N, 3N]
     # orca filters out translations and rotations
     # they appear as modes with all-zero components
     # so please remove them
@@ -76,10 +84,10 @@ for arg in sys.argv[1:]:
     for i in range(100):
         energy, rxyz = g.get_random_structure(100)
         # print an xyz file
-        xyzstr = '{}\n{}\n'.format(len(rxyz), energy)
+        xyzstr = "{}\n{}\n".format(len(rxyz), energy)
         for l, x in zip(labels, rxyz):
-            xyzstr += '{} {} {} {}\n'.format(element_symbols[l], *x)
+            xyzstr += "{} {} {} {}\n".format(element_symbols[l], *x)
 
-        new_name = '{}.xyz'.format(i)
-        with open(new_name, 'w') as f:
+        new_name = "{}.xyz".format(i)
+        with open(new_name, "w") as f:
             f.write(xyzstr)

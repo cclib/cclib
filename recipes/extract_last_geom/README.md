@@ -48,4 +48,3 @@ options:
   -h, --help      show this help message and exit
   --fragment      Is this a QChem Fragment calculation?
 ```
-

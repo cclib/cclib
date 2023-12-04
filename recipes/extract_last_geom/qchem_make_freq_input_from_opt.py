@@ -15,6 +15,9 @@ import re
 from collections import OrderedDict
 from copy import deepcopy
 
+import cclib
+from cclib.parser.utils import PeriodicTable
+
 from qchem_make_opt_input_from_opt import (
     form_molecule_section,
     form_molecule_section_from_fragments,
@@ -22,9 +25,6 @@ from qchem_make_opt_input_from_opt import (
     parse_fragments_from_molecule,
     parse_user_input,
 )
-
-import cclib
-from cclib.parser.utils import PeriodicTable
 
 
 def template_input_freq(molecule, **rem_keywords):
@@ -45,9 +45,7 @@ $end
 $molecule
 {molecule}
 $end
-""".format(
-        rem_str=rem_str, molecule=molecule
-    )
+""".format(rem_str=rem_str, molecule=molecule)
 
 
 def clean_up_rem(rem, do_fragment=False):
@@ -78,10 +76,7 @@ def clean_up_rem(rem, do_fragment=False):
     # If we aren't doing a fragment calculation at all, certain
     # keywords need to be removed.
     else:
-        keywords_to_remove = (
-            "frgm_method",
-            "frgm_lpcorr",
-        )
+        keywords_to_remove = ("frgm_method", "frgm_lpcorr")
         for k in keywords_to_remove:
             if k in newrem:
                 del newrem[k]
@@ -127,7 +122,6 @@ def parse_rem_section(outputfilename):
 
 
 if __name__ == "__main__":
-
     args = getargs()
 
     pt = PeriodicTable()
@@ -135,7 +129,6 @@ if __name__ == "__main__":
     s = "{:3s} {:15.10f} {:15.10f} {:15.10f}"
 
     for outputfilename in args.outputfilename:
-
         job = cclib.io.ccopen(outputfilename)
         assert isinstance(job, cclib.parser.qchemparser.QChem)
         try:

@@ -9,16 +9,16 @@ cclib. Name is the same stub, with the file extension replaced by
 
 import os.path
 
+import cclib
+from cclib.io import ccopen
+from cclib.parser.utils import PeriodicTable
+
 from qchem_make_opt_input_from_opt import (
     form_molecule_section,
     form_molecule_section_from_fragments,
     parse_fragments_from_molecule,
     parse_user_input,
 )
-
-import cclib
-from cclib.io import ccopen
-from cclib.parser.utils import PeriodicTable
 
 
 def getargs():
@@ -31,20 +31,22 @@ def getargs():
     parser.add_argument("outputfilename", nargs="+")
 
     parser.add_argument("--fragment", action="store_true", help="Is this a fragment calculation?")
-    parser.add_argument("--trajectory", action="store_true", help="Should all geometries from the outputfile be saved?")
+    parser.add_argument(
+        "--trajectory",
+        action="store_true",
+        help="Should all geometries from the outputfile be saved?",
+    )
     parser.add_argument("--suffix", help="output geometry format.")
 
     return parser.parse_args()
 
 
 if __name__ == "__main__":
-
     args = getargs()
 
     pt = PeriodicTable()
 
     for outputfilename in args.outputfilename:
-
         # We don't use ccread in order to later dispatch on the type
         job = ccopen(outputfilename)
         try:

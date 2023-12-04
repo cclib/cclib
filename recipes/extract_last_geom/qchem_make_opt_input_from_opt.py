@@ -122,7 +122,7 @@ def form_molecule_section_from_fragments(
 
     from itertools import count
 
-    for (charge, multiplicity, idx_iter) in zip(charges[1:], multiplicities[1:], count(0)):
+    for charge, multiplicity, idx_iter in zip(charges[1:], multiplicities[1:], count(0)):
         molecule_section.append("--")
         molecule_section.append("{} {}".format(charge, multiplicity))
         idx_start = start_indices[idx_iter]
@@ -146,23 +146,18 @@ def form_molecule_section(elements, geometry, charge, multiplicity):
     s = "{:3s} {:15.10f} {:15.10f} {:15.10f}"
     molecule_section = ["{} {}".format(charge, multiplicity)]
 
-    for (
-        element,
-        coords,
-    ) in zip(elements, geometry):
+    for element, coords in zip(elements, geometry):
         molecule_section.append(s.format(element, *coords))
 
     return molecule_section
 
 
 if __name__ == "__main__":
-
     args = getargs()
 
     pt = PeriodicTable()
 
     for outputfilename in args.outputfilename:
-
         job = cclib.io.ccopen(outputfilename)
         assert isinstance(job, cclib.parser.qchemparser.QChem)
         try:

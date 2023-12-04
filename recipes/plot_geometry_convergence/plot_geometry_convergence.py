@@ -7,15 +7,16 @@ parameters change over the course of the optimization.
 
 
 import matplotlib as mpl
-mpl.use('Agg')
-import matplotlib.pyplot as plt
 
+mpl.use("Agg")
 import argparse
 import os.path
 
 import cclib
 from cclib.io import ccopen
 from cclib.parser import utils
+
+import matplotlib.pyplot as plt
 
 
 def main():
@@ -24,13 +25,17 @@ def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument("compchemfilename", nargs="+")
-    parser.add_argument("--scaling-energy-change", type=float, default=10.0, help="Factor to scale the energy change by")
+    parser.add_argument(
+        "--scaling-energy-change",
+        type=float,
+        default=10.0,
+        help="Factor to scale the energy change by",
+    )
 
     args = parser.parse_args()
     compchemfilenames = args.compchemfilename
 
     for compchemfilename in compchemfilenames:
-
         stub = os.path.splitext(compchemfilename)[0]
 
         job = ccopen(compchemfilename)
@@ -39,7 +44,6 @@ def main():
         fig, ax = plt.subplots()
 
         if type(job) == cclib.parser.qchemparser.QChem:
-
             scfenergies = [
                 utils.convertor(scfenergy, "eV", "hartree") for scfenergy in data.scfenergies
             ]
@@ -65,7 +69,6 @@ def main():
             ax.set_xlim((steps[0], steps[-1]))
 
         elif type(job) == cclib.parser.orcaparser.ORCA:
-
             pass
 
         else:
