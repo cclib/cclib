@@ -1,5 +1,62 @@
-# [project]
-# requires-python = ">=3.8"
+[project]
+name = "cclib"
+version = "1.8"
+description = "parsers and algorithms for computational chemistry"
+readme = "README.md"
+license = {file = "LICENSE"}
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Topic :: Scientific/Engineering :: Chemistry",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+requires-python = ">=3.7"
+dependencies = [
+    "numpy",
+    "packaging>=19.0",
+    "periodictable",
+    "scipy>=1.2.0",
+]
+
+[project.scripts]
+ccframe = "cclib.scripts.ccframe:main"
+ccget = "cclib.scripts.ccget:ccget"
+ccwrite = "cclib.scripts.ccwrite:main"
+cda = "cclib.scripts.cda:main"
+
+[project.optional-dependencies]
+bridges = [
+    "ase>=3.21",
+    "biopython==1.76",
+    "openbabel",
+    "pyquante2 @ git+https://github.com/cclib/pyquante2.git@github-actions-ci",
+    "pyscf<2.3",
+    "qc-iodata @ git+https://github.com/theochem/iodata.git@1.0.0a2",
+]
+dev = [
+    "sphinx",
+    "sphinx_rtd_theme",
+    "pytest",
+    "coverage",
+    "pytest-cov",
+]
+all = ["cclib[bridges,dev]"]
+
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+zip-safe = false
+
+[tool.setuptools.packages.find]
+where = ["cclib"]
 
 [tool.isort]
 profile = "black"
