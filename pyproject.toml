@@ -52,14 +52,17 @@ bridges = [
     "pyscf<2.3",
     "qc-iodata @ git+https://github.com/theochem/iodata.git@1.0.0a2",
 ]
-dev = [
+docs = [
     "sphinx",
     "sphinx_rtd_theme",
+]
+test = [
     "pytest",
     "coverage",
     "pytest-cov",
 ]
-all = ["cclib[bridges,dev]"]
+dev = ["cclib[bridges,docs,test]"]
+all = ["cclib[bridges]"]
 
 [build-system]
 requires = ["setuptools >= 61.0"]
