@@ -144,7 +144,7 @@ def get_program_dir(parser_name: str) -> str:
     return parser_name
 
 
-_CACHE = {}
+_CACHE: Dict[str, ccData] = {}
 
 
 @pytest.fixture(scope="session")
@@ -154,7 +154,10 @@ def data(request) -> ccData:
     if first not in _CACHE:
         logfile = ccopen([str(f) for f in files])
         data = logfile.parse()
-        data.filenames = logfile.filename
+        filenames = logfile.filename
+        if not isinstance(filenames, list):
+            filenames = [filenames]
+        data.filenames = filenames
         data.parsername = logfile.logname
         _CACHE[first] = data
     return _CACHE[first]
