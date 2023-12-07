@@ -18,23 +18,6 @@ import pytest
 
 version_major = sys.version_info.major
 
-# Paths that should be ignored for all Python versions.
-paths_ignore_allver = ["cclib/progress/qt4progress.py"]
-
-
-def match_path(path, partial_paths) -> bool:
-    """Does the given path contain any of the stubs in partial_paths?"""
-    return any(partial_path in str(path) for partial_path in partial_paths)
-
-
-def pytest_ignore_collect(path, config) -> bool:
-    """pytest automatically runs this on every discovered path. If this
-    returns True for a given path, pytest will ignore it.
-    """
-    if match_path(path, paths_ignore_allver):
-        return True
-    return False
-
 
 def pytest_addoption(parser):
     parser.addoption("--terse", action="store_true")
