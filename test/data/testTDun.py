@@ -7,10 +7,7 @@
 
 """Test single point, unrestricted time-dependent logfiles in cclib"""
 
-import os
-import unittest
 
-import numpy
 from skip import skipForLogfile, skipForParser
 
 

@@ -8,7 +8,6 @@
 """Test the Nuclear method in cclib"""
 
 import logging
-import os
 import re
 import sys
 import unittest

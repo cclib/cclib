@@ -9,7 +9,6 @@
 
 import os
 import sys
-import unittest
 from typing import Optional
 
 from cclib.io import ccread

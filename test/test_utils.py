@@ -10,7 +10,6 @@
 from cclib.parser import utils
 
 import numpy
-import pytest
 import scipy.spatial.transform
 
 

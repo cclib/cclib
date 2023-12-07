@@ -7,10 +7,7 @@
 
 """Test the Hirshfeld Method in cclib"""
 
-import logging
 import os
-import sys
-import unittest
 
 from cclib.io import ccread
 from cclib.method import Hirshfeld, volume

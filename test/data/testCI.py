@@ -8,7 +8,6 @@
 """Test configuration interaction (CI) logfiles in cclib"""
 
 import numpy
-from skip import skipForParser
 
 
 class GenericCISTest:

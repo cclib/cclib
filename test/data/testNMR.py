@@ -7,12 +7,9 @@
 
 """Test NMR logfiles in cclib."""
 
-import os
-import unittest
 
 import numpy
 import pytest
-from skip import skipForParser
 
 
 class GenericNMRTest:

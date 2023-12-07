@@ -23,7 +23,6 @@ class PyscfTest(unittest.TestCase):
         self.udata, self.ulogfile = getdatafile("Gaussian", "basicGaussian16", ["dvb_un_sp.log"])
 
     def test_makepyscf(self) -> None:
-        import pyscf
         from pyscf import dft
 
         refen = convertor(self.data.scfenergies[-1], "eV", "hartree")  # value in eVs

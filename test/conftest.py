@@ -7,7 +7,6 @@ https://docs.pytest.org/en/latest/contents.html
 import os
 import sys
 from pathlib import Path
-from test.test_data import all_modules, all_parsers, module_names, parser_names
 from typing import Dict, List, Mapping, Union
 
 from cclib.io import ccopen

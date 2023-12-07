@@ -6,8 +6,6 @@
 # the terms of the BSD 3-Clause License.
 
 import os
-import sys
-import unittest
 
 from cclib.bridge import cclib2horton
 from cclib.parser.utils import find_package
@@ -33,9 +31,7 @@ class HortonTest:
         if not find_package("iodata"):
             raise ImportError("Must install iodata to run this test")
 
-        from iodata import IOData
         from iodata.api import load_one
-        from iodata.orbitals import MolecularOrbitals
 
         self._hortonver = 3
 

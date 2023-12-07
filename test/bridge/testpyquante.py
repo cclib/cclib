@@ -5,12 +5,10 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
-import unittest
 
 from cclib.bridge import cclib2pyquante
 from cclib.parser.utils import find_package
 
-import numpy
 from numpy.testing import assert_array_almost_equal
 
 from ..test_data import getdatafile

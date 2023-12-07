@@ -7,15 +7,10 @@
 
 """Test the various population analyses (MPA, LPA, CSPA) in cclib"""
 
-import logging
-import os
 import sys
-import unittest
 
 from cclib.method import Orbitals
 from cclib.parser import Gaussian, Psi4
-
-import numpy
 
 sys.path.insert(1, "..")
 

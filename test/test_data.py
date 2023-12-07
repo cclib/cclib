@@ -7,7 +7,6 @@
 
 """Run data tests for cclib."""
 
-import importlib
 import logging
 import os
 import sys

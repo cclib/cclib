@@ -7,7 +7,6 @@
 
 """Unit tests for general file writer."""
 
-import inspect
 import os
 import unittest
 
