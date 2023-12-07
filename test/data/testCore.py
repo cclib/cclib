@@ -7,15 +7,13 @@
 
 """Test logfiles with core electron data in cclib"""
 
-import unittest
-
 from cclib.parser.utils import PeriodicTable
 
 import numpy
 from skip import skipForParser
 
 
-class GenericCoreTest(unittest.TestCase):
+class GenericCoreTest:
     """Generic core electrons unittest"""
 
     coredict = {"Mo": 28, "O": 0, "Cl": 10}
