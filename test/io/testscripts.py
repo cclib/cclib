@@ -24,7 +24,7 @@ CJSON_OUTPUT_FILENAME = "dvb_gopt.cjson"
 
 @mock.patch("cclib.scripts.ccget.ccread")
 class ccgetTest:
-    def setUp(self) -> None:
+    def setup_method(self) -> None:
         try:
             from cclib.scripts import ccget
         except ImportError:
@@ -64,7 +64,7 @@ class ccgetTest:
 
 @mock.patch("cclib.scripts.ccwrite.ccwrite")
 class ccwriteTest:
-    def setUp(self) -> None:
+    def setup_method(self) -> None:
         try:
             from cclib.scripts import ccwrite
         except ImportError:
