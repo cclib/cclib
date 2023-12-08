@@ -65,7 +65,6 @@ warn_unused_ignores = true
 module = [
     "Bio.PDB.Atom",
     "Bio.PDB.Superimposer",
-    "PyQt4",
     "PyQuante.CGBF",
     "PyQuante.Molecule",
     "PyQuante.hartree_fock",
