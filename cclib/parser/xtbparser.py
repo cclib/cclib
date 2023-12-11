@@ -136,6 +136,7 @@ class XTB(logfileparser.Logfile):
             else None
         )
 
+    # TODO: Add support for POSCAR format.
     def _extract_symbol_coords(self, line: str, mode: str) -> Optional[Tuple[str, List[float]]]:
         """
         Extract the symbol and X, Y, Z coordinates.
@@ -459,7 +460,9 @@ class XTB(logfileparser.Logfile):
         """
         Extract the temperature.
 
-         298.15  VIB   1.00                    2.605      0.065      0.010
+        temp. (K)  partition function   enthalpy   heat capacity  entropy
+                                        cal/mol     cal/K/mol   cal/K/mol   J/K/mol
+        298.15  VIB   1.00                    2.605      0.065      0.010
         """
         return float(line.split()[0]) if "VIB" in line else None
 
