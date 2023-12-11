@@ -375,16 +375,6 @@ class XTB(logfileparser.Logfile):
             else None
         )
 
-    def _extract_entropy(self, line: str) -> Optional[float]:
-        """
-        Extract total entropy. See summary above.
-        """
-        return (
-            utils.convertor(float(line.split()[3]), "hartree", "eV")
-            if "TOTAL ENTROPY" in line
-            else None
-        )
-
     def _extract_free_energy(self, line: str) -> Optional[float]:
         """
         Extract total free energy. See summary above.
@@ -798,17 +788,13 @@ class XTB(logfileparser.Logfile):
         if zpve is not None:
             self.zpve = zpve
 
-        entropy = self._extract_entropy(line)
-        if entropy is not None:
-            self.enthalpy = entropy
-
         enthalpy = self._extract_enthalpy(line)
         if enthalpy is not None:
             self.enthalpy = enthalpy
 
         free_energy = self._extract_free_energy(line)
         if free_energy is not None:
-            self.freenergy = free_energy
+            self.freeenergy = free_energy
 
         warnings = []
         if self._is_warning(line):
