@@ -643,14 +643,17 @@ class XTB(logfileparser.Logfile):
         # TODO: Use the `xtbopt.xyz` file for SCF energies if available since it has higher precision.
         # But will need to be careful about what might happen if other formats are supplied,
         # such as sdf or POSCAR.
-        scf_energies = []
+        if not hasattr(self, "scfenergies"):
+            self.scfenergies = []
         if self._is_geom_cycle_line(line):
+            scf_energies = []
             while not self._is_geom_end_line(line):
                 scf_energy = self._extract_geom_energy(line)
                 if scf_energy is not None:
                     scf_energies.append(scf_energy)
 
                 line = next(inputfile)
+            self.scfenergies.extend(scf_energies)
 
         # TODO: Use the `xtbopt.xyz` file if available since it has higher precision and
         # has the coordinates for every geometry step. If it's not an optimization,
@@ -746,16 +749,13 @@ class XTB(logfileparser.Logfile):
 
         final_energy = self._extract_final_energy(line)
         if final_energy is not None:
-            if scf_energies:
+            if self.scfenergies:
                 # Patch the final total energy to be the last SCF energy
                 # since it is higher precision and also always available
-                scf_energies[-1] = final_energy
+                self.scfenergies[-1] = final_energy
             else:
                 # We only have the final energy to store (e.g. for static)
-                scf_energies = [final_energy]
-
-        if scf_energies:
-            self.scfenergies = np.array(scf_energies)
+                self.scfenergies = [final_energy]
 
         symmetry = self._extract_symmetry(line)
         if symmetry is not None:
