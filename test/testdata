@@ -320,7 +320,7 @@ SP        QChem       GenericSPTest         basicQChem5.1               dvb_sp.o
 SP        QChem       GenericSPTest         basicQChem5.4               dvb_sp.out
 SP        Turbomole   TurbomoleSPTest       basicTurbomole5.9           dvb_sp_symm/mos       dvb_sp_symm/basis      dvb_sp_symm/control      dvb_sp_symm/dscf.out      dvb_sp_symm/coord
 SP        Turbomole   TurbomoleHFSPTest     basicTurbomole7.5           dvb_sp/basis      dvb_sp/control      dvb_sp/mos      dvb_sp/dscf.out      dvb_sp/coord
-SP        XTB         XTBSPTest             basicXTB6.6.0/dvb_sp        charges  dvb_sp.out  wbo
+SP        XTB         XTBSPTest             basicXTB6.6.1/dvb_sp        charges  dvb_sp.out  wbo
 SP        DALTON      GenericDispersionTest basicDALTON-2018            dvb_dispersion_bp86_d3zero.out
 SP        GAMESS      FireflyDispersionTest basicFirefly8.1             dvb_dispersion_bp86_d3zero.out
 SP        GAMESS      GenericDispersionTest basicGAMESS-US2018          dvb_dispersion_bp86_d3zero.out
