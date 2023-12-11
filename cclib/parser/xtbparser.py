@@ -455,6 +455,14 @@ class XTB(logfileparser.Logfile):
         """
         return line.split(":")[1].strip().split() if "program call" in line else None
 
+    def _extract_temperature(self, line: str) -> Optional[float]:
+        """
+        Extract the temperature.
+
+         298.15  VIB   1.00                    2.605      0.065      0.010
+        """
+        return float(line.split()[0]) if "VIB" in line else None
+
     def _is_grad_line(self, line: str) -> bool:
         """
         Determine if the line indicates the start of a gradient block.
@@ -795,6 +803,10 @@ class XTB(logfileparser.Logfile):
         free_energy = self._extract_free_energy(line)
         if free_energy is not None:
             self.freeenergy = free_energy
+
+        temperature = self._extract_temperature(line)
+        if temperature is not None:
+            self.temperature = temperature
 
         warnings = []
         if self._is_warning(line):
