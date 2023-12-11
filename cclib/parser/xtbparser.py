@@ -370,7 +370,9 @@ class XTB(logfileparser.Logfile):
            -------------------------------------------------
         """
         return (
-            utils.convertor(line.split()[3], "hartree", "eV") if "TOTAL ENTHALPY" in line else None
+            utils.convertor(float(line.split()[3]), "hartree", "eV")
+            if "TOTAL ENTHALPY" in line
+            else None
         )
 
     def _extract_entropy(self, line: str) -> Optional[float]:
@@ -378,7 +380,9 @@ class XTB(logfileparser.Logfile):
         Extract total entropy. See summary above.
         """
         return (
-            utils.convertor(line.split()[3], "hartree", "eV") if "TOTAL ENTROPY" in line else None
+            utils.convertor(float(line.split()[3]), "hartree", "eV")
+            if "TOTAL ENTROPY" in line
+            else None
         )
 
     def _extract_free_energy(self, line: str) -> Optional[float]:
@@ -386,7 +390,7 @@ class XTB(logfileparser.Logfile):
         Extract total free energy. See summary above.
         """
         return (
-            utils.convertor(line.split()[4], "hartree", "eV")
+            utils.convertor(float(line.split()[4]), "hartree", "eV")
             if "TOTAL FREE ENERGY" in line
             else None
         )
@@ -407,7 +411,7 @@ class XTB(logfileparser.Logfile):
          :::::::::::::::::::::::::::::::::::::::::::::::::::::
         """
         return (
-            utils.convertor(line.split()[4], "hartree", "eV")
+            utils.convertor(float(line.split()[4]), "hartree", "eV")
             if "zero point energy" in line
             else None
         )
@@ -635,7 +639,7 @@ class XTB(logfileparser.Logfile):
         if mult is not None:
             self.mult = mult
 
-        # TODO: Use the `xtbopt.xyz` file for SCF energies instead since it has higher precision.
+        # TODO: Use the `xtbopt.xyz` file for SCF energies if available since it has higher precision.
         # But will need to be careful about what might happen if other formats are supplied,
         # such as sdf or POSCAR.
         scf_energies = []
@@ -647,7 +651,7 @@ class XTB(logfileparser.Logfile):
 
                 line = next(inputfile)
 
-        # TODO: Use the `xtbopt.xyz` file instead since it has higher precision and
+        # TODO: Use the `xtbopt.xyz` file if available since it has higher precision and
         # has the coordinates for every geometry step. If it's not an optimization,
         # can simply assume the structure is the same as that in the coordinate file.
         # But will need to be careful about what might happen if other formats are supplied,
@@ -712,7 +716,7 @@ class XTB(logfileparser.Logfile):
             if homos:
                 self.homos = np.array(homos)
 
-        # TODO: Use `charges` file for Mulliken instead since it has higher precision.
+        # TODO: Use `charges` file for Mulliken if available since it has higher precision.
         mulliken = []
         cm5 = []
         if self._is_gfn1_atom_charges(line):
@@ -833,9 +837,13 @@ class XTB(logfileparser.Logfile):
                 line = next(inputfile)
             self.grads = np.array(grads)
 
-        if self._is_hessian_line(line):
-            hessian = []
-            while "$end" not in line:
-                hessian.extend([float(v) for v in line.split()])
-                line = next(inputfile)
-            self.hessian = hessian
+        # TODO: Implement `hessian` parser, but this requires self.natom
+        # to always be available. Also, cclib complains about hitting the EOF.
+        #
+        # if self._is_hessian_line(line):
+        #     line = next(inputfile)
+        #     hessian = []
+        #     while line != "\n":
+        #         hessian.extend([float(v) for v in line.split()])
+        #         line = next(inputfile)
+        #     self.hessian = np.reshape(hessian, 3*self.natom, 3*self.natom)
