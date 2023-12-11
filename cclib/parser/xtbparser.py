@@ -660,6 +660,8 @@ class XTB(logfileparser.Logfile):
         # can simply assume the structure is the same as that in the coordinate file.
         # But will need to be careful about what might happen if other formats are supplied,
         # such as sdf or POSCAR.
+        if not hasattr(self, "atomcoords"):
+            self.atomcoords = [[]]
         if "final structure:" in line:
             atomnos = []
             atomcoords = []
@@ -677,7 +679,7 @@ class XTB(logfileparser.Logfile):
                 self.natom = len(atomnos)
                 self.atomnos = atomnos
             if atomcoords:
-                self.atomcoords = atomcoords
+                self.atomcoords[-1] = atomcoords
 
         if self._is_orbitals_line(line):
             # Skip 4 lines to get to the table
