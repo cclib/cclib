@@ -256,7 +256,7 @@ class GenericSPTest(unittest.TestCase):
         assert sumwronglabels == 0
 
     @skipForParser("NBO", "attribute not implemented in this version")
-    @skipForParser("xTB", "not implemented yet")
+    @skipForParser("xTB", "xTB does not print them all")
     def testhomos(self):
         """Is the index of the HOMO equal to 34?"""
         numpy.testing.assert_array_equal(
