@@ -1,9 +1,12 @@
 packaging>=19.0
 numpy
+periodictable
+
+# io
+git+https://github.com/cclib/QCSchema.git@make-pip-installable
 
 # methods
 scipy>=1.2.0
-periodictable
 
 # bridges
 biopython==1.76
