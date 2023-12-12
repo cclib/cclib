@@ -43,7 +43,6 @@ class GenericSPTest(unittest.TestCase):
     # Generally, one criteria for SCF energy convergence.
     num_scf_criteria = 1
 
-    @skipForParser("xTB", "not implemented yet")
     def testnatom(self):
         """Is the number of atoms equal to 20?"""
         assert self.data.natom == 20

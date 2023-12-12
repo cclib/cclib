@@ -72,6 +72,7 @@ class GenericGeoOptTest(unittest.TestCase):
         assert dev < 0.15, f"Minimum carbon dist is {min_carbon_dist:.2f} (not 1.34)"
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
+    @skipForParser("xTB", "Not implemented yet")
     def testcharge_and_mult(self):
         """Are the charge and multiplicity correct?"""
         assert self.data.charge == 0
@@ -98,6 +99,7 @@ class GenericGeoOptTest(unittest.TestCase):
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("MOPAC", "Not implemented.")
+    @skipForParser("xTB", "Not implemented yet")
     def testhomos(self):
         """Is the index of the HOMO equal to 34?"""
         ref = numpy.array([34], "i")
@@ -119,6 +121,7 @@ class GenericGeoOptTest(unittest.TestCase):
         msg = f"Final SCF energy: {scf:f} not {int(ref)} +- {int(tol)}eV"
         assert abs(scf - ref) < 40, msg
 
+    @skipForParser("xTB", "Not implemented yet")
     def testscfenergydim(self):
         """Is the number of SCF energies consistent with atomcoords?"""
         count_scfenergies = self.data.scfenergies.shape[0] - self.extrascfs
@@ -387,6 +390,14 @@ class Psi4GeoOptTest(GenericGeoOptTest):
 
         conv = values[1] < targets[1] and (values[0] < targets[0] or values[3] < targets[3])
         assert conv
+
+
+class XTBGeoOptTest(GenericGeoOptTest):
+    """Customized restricted single point unittest"""
+
+    def testscfenergy(self):
+        """Is the SCF energy within the target?"""
+        assert abs(self.data.scfenergies[-1] - -719.42119585) < 1.0e-6
 
 
 if __name__ == "__main__":

@@ -239,7 +239,7 @@ class XTB(logfileparser.Logfile):
         if "(LUMO)" in line or (len(line_split) == 3 and "MO" not in line):
             return int(line_split[0]), 0.0, float(line_split[2]), False
 
-    def _extract_gfn2_mulliken_charge(self, line: str) -> Optional[float]:
+    def _extract_gfn2_mulliken_charge(self, line: str) -> Optional[Tuple[float, int]]:
         """
         Extract Mulliken charge from GFN2-xTB format.
 
@@ -249,7 +249,7 @@ class XTB(logfileparser.Logfile):
         3   1 H        0.805     0.282     0.777     1.384
         """
         line_split = line.split()
-        return float(line_split[4]) if len(line_split) == 7 else None
+        return (float(line_split[4]), line_split[1]) if len(line_split) == 7 else None
 
     def _extract_gfn1_mulliken_cm5_charges(self, line: str) -> Optional[Tuple[float, float]]:
         """
@@ -442,7 +442,7 @@ class XTB(logfileparser.Logfile):
 
     def _extract_ir_intensities(self, line: str) -> Optional[List[float]]:
         """
-        Extract the vibrational reduced masses. See summary above.
+        Extract the IR intensities. See summary above.
         """
         match = re.findall(r"\d+\.\d+", line)
         return [float(val) for val in match] if match else None
@@ -735,19 +735,26 @@ class XTB(logfileparser.Logfile):
                 line = next(inputfile)
 
         if self._is_gfn2_atom_charges(line):
+            atomnos = []
             line = next(inputfile)
             while line != "\n":
-                q = self._extract_gfn2_mulliken_charge(line)
+                q, Z = self._extract_gfn2_mulliken_charge(line)
                 if q is not None:
                     mulliken.append(q)
+                if Z is not None:
+                    atomnos.append(Z)
                 line = next(inputfile)
+            self.atomnos = atomnos
+            self.natom = len(self.atomnos)
 
         if mulliken or cm5:
             self.atomcharges = {}
         if mulliken:
             self.atomcharges["mulliken"] = np.array(mulliken)
+            self.natom = len(mulliken)
         if cm5:
             self.atomcharges["cm5"] = np.array(cm5)
+            self.natom = len(cm5)
 
         final_energy = self._extract_final_energy(line)
         if final_energy is not None:
@@ -777,8 +784,6 @@ class XTB(logfileparser.Logfile):
                 if freq_vals is not None:
                     vibfreqs.extend(freq_vals)
                 line = next(inputfile)
-                if "------" in line:
-                    break
 
             line = next(inputfile)
 
@@ -787,8 +792,12 @@ class XTB(logfileparser.Logfile):
                 if mass_vals is not None:
                     vibrmasses.extend(mass_vals)
                 line = next(inputfile)
-                if "------" in line:
-                    break
+
+            while "Raman intensities" not in line:
+                vibir = self._extract_ir_intensities(line)
+                if vibir is not None:
+                    vibirs.extend(vibir)
+                line = next(inputfile)
 
             if vibfreqs:
                 self.vibfreqs = np.array(vibfreqs)
@@ -840,13 +849,14 @@ class XTB(logfileparser.Logfile):
                 line = next(inputfile)
             self.grads = np.array(grads)
 
-        # TODO: Implement `hessian` parser, but this requires self.natom
-        # to always be available. Also, cclib complains about hitting the EOF.
-        #
-        # if self._is_hessian_line(line):
-        #     line = next(inputfile)
-        #     hessian = []
-        #     while line != "\n":
-        #         hessian.extend([float(v) for v in line.split()])
-        #         line = next(inputfile)
-        #     self.hessian = np.reshape(hessian, 3*self.natom, 3*self.natom)
+        # TODO:
+        # 1) Ensure `hessian` is always read last in
+        # provided list to ensure `self.natom` is set.
+        # 2) Make cclib not made about reaching EOF.
+        if self._is_hessian_line(line):
+            line = next(inputfile)
+            hessian = []
+            while line != "\n":
+                hessian.extend([float(v) for v in line.split()])
+                line = next(inputfile)
+            self.hessian = np.reshape(hessian, 3 * self.natom, 3 * self.natom)
