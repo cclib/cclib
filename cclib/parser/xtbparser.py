@@ -69,14 +69,12 @@ class XTB(logfileparser.Logfile):
         if not hasattr(self, "scfenergies"):
             self.set_attribute("scfenergies", [])
         if _is_geom_cycle_line(line):
-            scf_energies = []
             while not _is_geom_end_line(line):
                 scf_energy = _extract_geom_energy(line)
                 if scf_energy is not None:
-                    scf_energies.append(scf_energy)
+                    self.append_attribute("scfenergies", scf_energy)
 
                 line = next(inputfile)
-            self.scfenergies.extend(scf_energies)
 
         # TODO: Use the `xtbopt.xyz` file if available since it has higher precision and
         # has the coordinates for every geometry step. If it's not an optimization,
@@ -101,6 +99,7 @@ class XTB(logfileparser.Logfile):
             if atomnos:
                 self.set_attribute("natom", len(atomnos))
                 self.set_attribute("atomnos", atomnos)
+
             if atomcoords:
                 self.atomcoords[-1] = atomcoords
 
@@ -183,13 +182,13 @@ class XTB(logfileparser.Logfile):
 
         final_energy = _extract_final_energy(line)
         if final_energy is not None:
-            if self.scfenergies:
+            if getattr(self, "scfenergies"):
                 # Patch the final total energy to be the last SCF energy
                 # since it is higher precision and also always available
                 self.scfenergies[-1] = final_energy
             else:
                 # We only have the final energy to store (e.g. for static)
-                self.scfenergies = [final_energy]
+                self.set_attribute("scfenergies", [final_energy])
 
         symmetry = _extract_symmetry(line)
         if symmetry is not None:
