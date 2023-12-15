@@ -66,8 +66,6 @@ class XTB(logfileparser.Logfile):
         # TODO: Use the `xtbopt.xyz` file for SCF energies if available since it has higher precision.
         # But will need to be careful about what might happen if other formats are supplied,
         # such as sdf or POSCAR.
-        if not hasattr(self, "scfenergies"):
-            self.set_attribute("scfenergies", [])
         if _is_geom_cycle_line(line):
             while not _is_geom_end_line(line):
                 scf_energy = _extract_geom_energy(line)
@@ -182,7 +180,7 @@ class XTB(logfileparser.Logfile):
 
         final_energy = _extract_final_energy(line)
         if final_energy is not None:
-            if getattr(self, "scfenergies"):
+            if hasattr(self, "scfenergies"):
                 # Patch the final total energy to be the last SCF energy
                 # since it is higher precision and also always available
                 self.scfenergies[-1] = final_energy
