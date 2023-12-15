@@ -58,11 +58,11 @@ class XTB(logfileparser.Logfile):
 
         charge = _extract_charge(line)
         if charge is not None:
-            self.charge = charge
+            self.set_attribute("charge", charge)
 
         mult = _extract_multiplicity(line)
         if mult is not None:
-            self.mult = mult
+            self.set_attribute("mult", mult)
 
         # TODO: Use the `xtbopt.xyz` file for SCF energies if available since it has higher precision.
         # But will need to be careful about what might happen if other formats are supplied,
@@ -140,11 +140,11 @@ class XTB(logfileparser.Logfile):
                 line = next(inputfile)
 
             if moenergies:
-                self.moenergies = [np.array(moenergies)]
+                self.set_attribute("moenergies", [np.array(moenergies)])
             if mooccnos:
-                self.mooccnos = np.array(mooccnos)
+                self.set_attribute("mooccnos", np.array(mooccnos))
             if homos:
-                self.homos = np.array(homos)
+                self.set_attribute("homos", np.array(homos))
 
         # TODO: Use `charges` file for Mulliken if available since it has higher precision.
         mulliken = []
@@ -168,17 +168,19 @@ class XTB(logfileparser.Logfile):
                 if Z is not None:
                     atomnos.append(Z)
                 line = next(inputfile)
-            self.atomnos = atomnos
-            self.natom = len(self.atomnos)
+            self.set_attribute("atomnos", atomnos)
+            self.set_attribute("natom", len(self.atomnos))
 
-        if mulliken or cm5:
-            self.atomcharges = {}
+        atomcharges = {}
         if mulliken:
-            self.atomcharges["mulliken"] = np.array(mulliken)
-            self.natom = len(mulliken)
+            atomcharges["mulliken"] = np.array(mulliken)
+            self.set_attribute("natom", len(mulliken))
         if cm5:
-            self.atomcharges["cm5"] = np.array(cm5)
-            self.natom = len(cm5)
+            atomcharges["cm5"] = np.array(cm5)
+            self.set_attribute("natom", len(cm5))
+
+        if atomcharges:
+            self.set_attribute("atomcharges", atomcharges)
 
         final_energy = _extract_final_energy(line)
         if final_energy is not None:
@@ -224,27 +226,27 @@ class XTB(logfileparser.Logfile):
                 line = next(inputfile)
 
             if vibfreqs:
-                self.vibfreqs = np.array(vibfreqs)
+                self.set_attribute("vibfreqs", np.array(vibfreqs))
             if vibrmasses:
-                self.vibrmasses = np.array(vibrmasses)
+                self.set_attribute("vibrmasses", np.array(vibrmasses))
             if vibirs:
-                self.vibirs = np.array(vibirs)
+                self.set_attribute("vibirs", np.array(vibirs))
 
         zpve = _extract_zpve(line)
         if zpve is not None:
-            self.zpve = zpve
+            self.set_attribute("zpve", zpve)
 
         enthalpy = _extract_enthalpy(line)
         if enthalpy is not None:
-            self.enthalpy = enthalpy
+            self.set_attribute("enthalpy", enthalpy)
 
         free_energy = _extract_free_energy(line)
         if free_energy is not None:
-            self.freeenergy = free_energy
+            self.set_attribute("freeenergy", free_energy)
 
         temperature = _extract_temperature(line)
         if temperature is not None:
-            self.temperature = temperature
+            self.set_attribute("temperature", temperature)
 
         warnings = []
         if _is_warning(line):
@@ -271,7 +273,7 @@ class XTB(logfileparser.Logfile):
                 if len(line.split()) == 3:
                     grads[-1].append([float(v) for v in line.split()])
                 line = next(inputfile)
-            self.grads = np.array(grads)
+            self.set_attribute("grads", np.array(grads))
 
         # TODO:
         # 1) Ensure `hessian` is always read last in
@@ -283,7 +285,7 @@ class XTB(logfileparser.Logfile):
             while line != "\n":
                 hessian.extend([float(v) for v in line.split()])
                 line = next(inputfile)
-            self.hessian = np.reshape(hessian, 3 * self.natom, 3 * self.natom)
+            self.set_attribute("hessian", np.reshape(hessian, 3 * self.natom, 3 * self.natom))
 
 
 def _extract_version(line: str) -> Optional[str]:
