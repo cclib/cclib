@@ -60,7 +60,6 @@ class GenericIRTest(unittest.TestCase):
 
     @skipForLogfile("FChk/basicGaussian09", "not printed in older versions than 16")
     @skipForLogfile("FChk/basicQChem5.4", "not printed")
-    @skipForLogfile("xTB", "custom value used below")
     def testfreqval(self) -> None:
         """Is the highest freq value 3630 +/- 200 wavenumber?"""
         assert abs(max(self.data.vibfreqs) - 3630) < 200
