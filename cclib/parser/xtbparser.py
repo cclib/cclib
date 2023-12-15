@@ -1,6 +1,5 @@
 import re
 from datetime import timedelta
-from pathlib import Path
 from typing import List, Optional, Tuple
 
 from cclib.parser import logfileparser, utils
