@@ -852,7 +852,7 @@ class XTB(logfileparser.Logfile):
         # TODO:
         # 1) Ensure `hessian` is always read last in
         # provided list to ensure `self.natom` is set.
-        # 2) Make cclib not made about reaching EOF.
+        # 2) Make cclib not mad about reaching EOF.
         if self._is_hessian_line(line):
             line = next(inputfile)
             hessian = []
