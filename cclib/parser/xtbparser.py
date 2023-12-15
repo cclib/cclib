@@ -67,7 +67,7 @@ class XTB(logfileparser.Logfile):
         # But will need to be careful about what might happen if other formats are supplied,
         # such as sdf or POSCAR.
         if not hasattr(self, "scfenergies"):
-            self.scfenergies = []
+            self.set_attribute("scfenergies", [])
         if _is_geom_cycle_line(line):
             scf_energies = []
             while not _is_geom_end_line(line):
@@ -84,7 +84,7 @@ class XTB(logfileparser.Logfile):
         # But will need to be careful about what might happen if other formats are supplied,
         # such as sdf or POSCAR.
         if not hasattr(self, "atomcoords"):
-            self.atomcoords = [[]]
+            self.set_attribute("atomcoords", [[]])
         if "final structure:" in line:
             atomnos = []
             atomcoords = []
@@ -99,8 +99,8 @@ class XTB(logfileparser.Logfile):
                 line = next(inputfile)
 
             if atomnos:
-                self.natom = len(atomnos)
-                self.atomnos = atomnos
+                self.set_attribute("natom", len(atomnos))
+                self.set_attribute("atomnos", atomnos)
             if atomcoords:
                 self.atomcoords[-1] = atomcoords
 
