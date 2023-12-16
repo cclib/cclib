@@ -107,7 +107,7 @@ def write_trajectory(filename, ccdata, popname="mulliken", index=None):
             if hasattr(ccdata, "moments"):
                 properties.update({"dipole": ccdata.moments[1] * units.Bohr})
             if hasattr(ccdata, "freeenergy"):
-                properties.update({"freeenergy": ccdata.freeenergy * units.Hartree})
+                properties.update({"free_energy": ccdata.freeenergy * units.Hartree})
 
         traj.write(atoms, **properties)
 
