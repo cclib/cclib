@@ -7,6 +7,8 @@
 
 """Bridge for using cclib data in ASE (https://wiki.fysik.dtu.dk/ase/)."""
 
+from typing import Optional, Sequence
+
 from cclib.parser.data import ccData
 from cclib.parser.utils import find_package
 
@@ -19,12 +21,12 @@ if _found_ase:
     from ase.io.trajectory import Trajectory
 
 
-def _check_ase(found_ase):
+def _check_ase(found_ase: bool) -> None:
     if not found_ase:
         raise ImportError("You must install `ase` to use this function")
 
 
-def makease(atomcoords, atomnos, atomcharges=None, atomspins=None, atommasses=None):
+def makease(atomcoords, atomnos, atomcharges=None, atomspins=None, atommasses=None) -> "Atoms":
     """Create an ASE Atoms object from cclib attributes.
 
     ASE requires atomic partial charges and atomic spin densities rather than
@@ -49,7 +51,9 @@ def makease(atomcoords, atomnos, atomcharges=None, atomspins=None, atommasses=No
     )
 
 
-def write_trajectory(filename, ccdata, popname="mulliken", index=None):
+def write_trajectory(
+    filename, ccdata: ccData, popname: str = "mulliken", index: Optional[Sequence[int]] = None
+) -> None:
     """Write an ASE Trajectory object from a ccData object.
 
     We try to write the following properties: atomcoords, atomnos, atomcharges,
@@ -106,13 +110,13 @@ def write_trajectory(filename, ccdata, popname="mulliken", index=None):
         if i == len(ccdata.atomcoords) - 1:  # last geometry
             if hasattr(ccdata, "moments"):
                 properties.update({"dipole": ccdata.moments[1] * units.Bohr})
-            if hasattr(ccdata, "free_energy"):
+            if hasattr(ccdata, "freeenergy"):
                 properties.update({"free_energy": ccdata.freeenergy * units.Hartree})
 
         traj.write(atoms, **properties)
 
 
-def read_trajectory(filename):
+def read_trajectory(filename) -> ccData:
     """Read an ASE Trajectory object and return a ccData object.
 
     The returned object has everything write_trajectory writes, plus natom,
@@ -167,7 +171,7 @@ def read_trajectory(filename):
     return ccData(attributes)
 
 
-def makecclib(atoms, popname="mulliken"):
+def makecclib(atoms: "Atoms", popname: str = "mulliken") -> ccData:
     """Create cclib attributes and return a ccData from an ASE Atoms object.
 
     Available data (such as forces/gradients and potential energy/free
