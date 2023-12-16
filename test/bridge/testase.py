@@ -168,9 +168,9 @@ class ASETest(unittest.TestCase):
         assert np.allclose(trajdata.charge, data.charge, atol=1e-5)
         assert np.allclose(trajdata.mult, data.mult)
         assert np.allclose(trajdata.moments, data.moments)
+        assert np.allclose(trajdata.freeenergy, data.freeenergy)
 
         # No temperature here.
-        # No freeenergy here.
 
         assert np.allclose(trajdata.atomcharges["mulliken"], data.atomcharges["mulliken"])
         # No atomspins here.
