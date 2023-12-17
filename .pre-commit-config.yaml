@@ -33,7 +33,8 @@ repos:
               ^data/Psi4|
               ^data/QChem|
               ^data/regression|
-              ^data/Turbomole
+              ^data/Turbomole|
+              ^data/XTB
           )
       - id: end-of-file-fixer
         exclude: |
@@ -60,7 +61,8 @@ repos:
               ^data/Psi4|
               ^data/QChem|
               ^data/regression|
-              ^data/Turbomole
+              ^data/Turbomole|
+              ^data/XTB
           )
       - id: fix-byte-order-marker
         exclude: |
@@ -87,7 +89,8 @@ repos:
               ^data/Psi4|
               ^data/QChem|
               ^data/regression|
-              ^data/Turbomole
+              ^data/Turbomole|
+              ^data/XTB
           )
       - id: mixed-line-ending
         exclude: |
@@ -114,7 +117,8 @@ repos:
               ^data/Psi4|
               ^data/QChem|
               ^data/regression|
-              ^data/Turbomole
+              ^data/Turbomole|
+              ^data/XTB
           )
       - id: check-merge-conflict
       - id: check-json

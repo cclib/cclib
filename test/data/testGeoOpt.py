@@ -72,12 +72,14 @@ class GenericGeoOptTest(unittest.TestCase):
         assert dev < 0.15, f"Minimum carbon dist is {min_carbon_dist:.2f} (not 1.34)"
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
+    @skipForParser("xTB", "Not implemented yet")
     def testcharge_and_mult(self):
         """Are the charge and multiplicity correct?"""
         assert self.data.charge == 0
         assert self.data.mult == 1
 
     @skipForParser("MOPAC", "Not implemented.")
+    @skipForParser("xTB", "not implemented yet")
     def testnbasis(self):
         """Is the number of basis set functions correct?"""
         count = sum([self.nbasisdict[n] for n in self.data.atomnos])
@@ -97,6 +99,7 @@ class GenericGeoOptTest(unittest.TestCase):
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("MOPAC", "Not implemented.")
+    @skipForParser("xTB", "Not implemented yet")
     def testhomos(self):
         """Is the index of the HOMO equal to 34?"""
         ref = numpy.array([34], "i")
@@ -104,6 +107,7 @@ class GenericGeoOptTest(unittest.TestCase):
         numpy.testing.assert_array_equal(self.data.homos, ref, msg)
 
     @skipForParser("MOPAC", "The scfvalues attribute is not parsed yet")
+    @skipForParser("xTB", "not implemented yet")
     def testscfvaluetype(self):
         """Are scfvalues and its elements the right type?"""
         assert isinstance(self.data.scfvalues, list)
@@ -117,6 +121,7 @@ class GenericGeoOptTest(unittest.TestCase):
         msg = f"Final SCF energy: {scf:f} not {int(ref)} +- {int(tol)}eV"
         assert abs(scf - ref) < 40, msg
 
+    @skipForParser("xTB", "Not implemented yet")
     def testscfenergydim(self):
         """Is the number of SCF energies consistent with atomcoords?"""
         count_scfenergies = self.data.scfenergies.shape[0] - self.extrascfs
@@ -124,6 +129,7 @@ class GenericGeoOptTest(unittest.TestCase):
         assert count_scfenergies == count_atomcoords
 
     @skipForParser("MOPAC", "The scftargets attribute is not parsed yet")
+    @skipForParser("xTB", "not implemented yet")
     def testscftargetdim(self):
         """Do the scf targets have the right dimensions?"""
         dim_scftargets = self.data.scftargets.shape
@@ -131,6 +137,7 @@ class GenericGeoOptTest(unittest.TestCase):
         assert dim_scftargets == dim_scfvalues
 
     @skipForParser("MOPAC", "Not implemented.")
+    @skipForParser("xTB", "not implemented yet")
     def testgeovalues_atomcoords(self):
         """Are atomcoords consistent with geovalues?"""
         count_geovalues = len(self.data.geovalues)
@@ -139,6 +146,7 @@ class GenericGeoOptTest(unittest.TestCase):
         assert count_geovalues == count_coords, msg
 
     @skipForParser("MOPAC", "Not implemented.")
+    @skipForParser("xTB", "not implemented yet")
     def testgeovalues_scfvalues(self):
         """Are scfvalues consistent with geovalues?"""
         count_scfvalues = len(self.data.scfvalues) - self.extrascfs
@@ -146,6 +154,7 @@ class GenericGeoOptTest(unittest.TestCase):
         assert count_scfvalues == count_geovalues
 
     @skipForParser("MOPAC", "Not implemented.")
+    @skipForParser("xTB", "not implemented yet")
     def testgeotargets(self):
         """Do the geo targets have the right dimensions?"""
         dim_geotargets = self.data.geotargets.shape
@@ -153,6 +162,7 @@ class GenericGeoOptTest(unittest.TestCase):
         assert dim_geotargets == dim_geovalues
 
     @skipForParser("MOPAC", "Not implemented.")
+    @skipForParser("xTB", "not implemented yet")
     def testoptdone(self):
         """Has the geometry converged and set optdone to True?"""
         assert self.data.optdone
@@ -169,6 +179,7 @@ class GenericGeoOptTest(unittest.TestCase):
     @skipForParser("NWChem", "Not implemented.")
     @skipForParser("ORCA", "Not implemented.")
     @skipForParser("QChem", "Not implemented.")
+    @skipForParser("xTB", "not implemented yet")
     def testoptstatus(self):
         """Is optstatus consistent with geovalues and reasonable?"""
         assert len(self.data.optstatus) == len(self.data.geovalues)
@@ -191,6 +202,7 @@ class GenericGeoOptTest(unittest.TestCase):
     @skipForParser("Psi4", "Not implemented yet")
     @skipForParser("QChem", "Not implemented yet")
     @skipForParser("Turbomole", "Not implemented yet")
+    @skipForParser("xTB", "not implemented yet")
     def testrotconsts(self):
         """Each geometry leads to a row in the rotational constants entry."""
         assert self.data.rotconsts.shape == (len(self.data.atomcoords), 3)
@@ -209,6 +221,7 @@ class GenericGeoOptTest(unittest.TestCase):
     @skipForParser("Jaguar", "Not implemented.")
     @skipForParser("MOPAC", "Not implemented.")
     @skipForParser("NWChem", "Not implemented.")
+    @skipForParser("xTB", "not implemented yet")
     def testgradsdim(self):
         """Do the grads have the right dimensions?"""
         assert self.data.grads.shape == (len(self.data.geovalues), self.data.natom, 3)
@@ -377,6 +390,14 @@ class Psi4GeoOptTest(GenericGeoOptTest):
 
         conv = values[1] < targets[1] and (values[0] < targets[0] or values[3] < targets[3])
         assert conv
+
+
+class XTBGeoOptTest(GenericGeoOptTest):
+    """Customized restricted single point unittest"""
+
+    def testscfenergy(self):
+        """Is the SCF energy within the target?"""
+        assert abs(self.data.scfenergies[-1] - -719.42119585) < 1.0e-6
 
 
 if __name__ == "__main__":

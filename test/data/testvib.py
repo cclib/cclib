@@ -38,6 +38,7 @@ class GenericIRTest(unittest.TestCase):
 
     @skipForLogfile("FChk/basicGaussian09", "not printed in older versions than 16")
     @skipForLogfile("FChk/basicQChem5.4", "not printed")
+    @skipForParser("xTB", "Custom treatment")
     def testvibdisps(self) -> None:
         """Are the dimensions of vibdisps consistent with numvib x N x 3"""
         assert len(self.data.vibfreqs) == self.numvib
@@ -79,6 +80,7 @@ class GenericIRTest(unittest.TestCase):
     @skipForParser("NWChem", "Not implemented for this parser")
     @skipForParser("ORCA", "ORCA cannot print force constants")
     @skipForParser("Turbomole", "Turbomole cannot print force constants")
+    @skipForParser("xTB", "xTB does not print force constants")
     @skipForLogfile("Jaguar/Jaguar4.2", "Data file does not contain force constants")
     @skipForLogfile(
         "Psi4/Psi4-1.0", "Data file contains vibrational info with cartesian coordinates"
@@ -121,6 +123,7 @@ class GenericIRTest(unittest.TestCase):
         "QChem/basicQChem5.4/dvb_ir.out", "needs to be rerun with print level turned up"
     )
     @skipForParser("Turbomole", "not implemented yet")
+    @skipForParser("xTB", "not implemented yet")
     def testhessian(self):
         """Are the dimensions of the molecular Hessian correct?"""
         assert self.data.hessian.shape == (3 * self.data.natom, 3 * self.data.natom)
@@ -436,6 +439,25 @@ class TurbomoleIRTest(GenericIRTest):
 
     # ???
     zpve = 0.1725
+
+
+class XTBIRTest(GenericIRTest):
+    """Customized vibrational frequency unittest"""
+
+    zpve = 4.3874784471
+    max_reduced_mass = 11.43
+
+    def setUp(self) -> None:
+        """Initialize the number of vibrational frequencies on a per molecule basis"""
+        self.numvib = 3 * len(self.data.atomnos)
+
+    def testfreqval(self) -> None:
+        """Is the highest freq value 3131.43 wavenumber?"""
+        assert abs(max(self.data.vibfreqs) - 3131.43) < 10
+
+    def testvibrmasses(self) -> None:
+        """Is the maximum reduced mass 11.43 +/- 0.1 daltons?"""
+        assert abs(max(self.data.vibrmasses) - self.max_reduced_mass) < 0.1
 
 
 class GenericIRimgTest(unittest.TestCase):
