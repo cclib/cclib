@@ -2344,22 +2344,18 @@ class Gaussian(logfileparser.Logfile):
         # matrix.
         if line[1:26] == "SCF Polarizability for W=":
             self.hp_polarizabilities = True
-            if not hasattr(self, "polarizabilities"):
-                self.polarizabilities = []
             polarizability = numpy.zeros(shape=(3, 3))
             self.skip_line(inputfile, "directions")
             for i in range(3):
                 line = next(inputfile)
                 polarizability[i, : i + 1] = [utils.float(x) for x in line.split()[1:]]
-
-            polarizability = utils.symmetrize(polarizability, use_triangle="lower")
-            self.polarizabilities.append(polarizability)
+            self.append_attribute(
+                "polarizabilities", utils.symmetrize(polarizability, use_triangle="lower")
+            )
 
         # Static polarizability (from `freq`), lower triangular matrix.
         if line[1:16] == "Polarizability=":
             self.hp_polarizabilities = True
-            if not hasattr(self, "polarizabilities"):
-                self.polarizabilities = []
             polarizability = numpy.zeros(shape=(3, 3))
             polarizability_list = []
             polarizability_list.extend([line[16:31], line[31:46], line[46:61]])
@@ -2367,16 +2363,15 @@ class Gaussian(logfileparser.Logfile):
             polarizability_list.extend([line[16:31], line[31:46], line[46:61]])
             indices = numpy.tril_indices(3)
             polarizability[indices] = [utils.float(x) for x in polarizability_list]
-            polarizability = utils.symmetrize(polarizability, use_triangle="lower")
-            self.polarizabilities.append(polarizability)
+            self.append_attribute(
+                "polarizabilities", utils.symmetrize(polarizability, use_triangle="lower")
+            )
 
         # Static polarizability, compressed into a single line from
         # terse printing.
         # Order is XX, YX, YY, ZX, ZY, ZZ (lower triangle).
         if line[2:23] == "Exact polarizability:":
             if not self.hp_polarizabilities:
-                if not hasattr(self, "polarizabilities"):
-                    self.polarizabilities = []
                 polarizability = numpy.zeros(shape=(3, 3))
                 indices = numpy.tril_indices(3)
                 try:
@@ -2409,8 +2404,9 @@ class Gaussian(logfileparser.Logfile):
                             line[63:71],
                         ]
                     ]
-                polarizability = utils.symmetrize(polarizability, use_triangle="lower")
-                self.polarizabilities.append(polarizability)
+                self.append_attribute(
+                    "polarizabilities", utils.symmetrize(polarizability, use_triangle="lower")
+                )
 
         # IRC Computation convergence checks.
         #
