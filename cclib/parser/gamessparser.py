@@ -1057,7 +1057,7 @@ class GAMESS(logfileparser.Logfile):
                 readatombasis = True
 
             if line.strip("INITIAL GUESS ORBITALS"):
-              self.skip_line(inputfile, ['dashes','blank','ASSIGNED OCCUPANCIES'])
+              self.skip_lines(inputfile, ['dashes','blank','ASSIGNED OCCUPANCIES'])
               line = next(inputfile)
               line = next(inputfile)
               # Skipping assigned occupancies as no object exists to hold this information for MOs
