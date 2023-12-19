@@ -1063,7 +1063,7 @@ class GAMESS(logfileparser.Logfile):
               # Skipping assigned occupancies as no object exists to hold this information for MOs
               if line.strip() == 'ASSIGNED OCCUPANCIES':
                 line = next(inputfile)
-                for i in range(int(numpy.ceil(self.nmo/5.))):
+                for _ in range(math.ceil(self.nmo/5.)):
                     next(inputfile)
                     
             for base in range(0, self.nmo, 5):
