@@ -422,17 +422,17 @@ class XTBIRTest(GenericIRTest):
     zpve = 4.3874784471
     max_reduced_mass = 11.43
 
-    def setUp(self) -> None:
+    def setup_method(self, data) -> None:
         """Initialize the number of vibrational frequencies on a per molecule basis"""
-        self.numvib = 3 * len(self.data.atomnos)
+        self.numvib = 3 * len(data.atomnos)
 
-    def testfreqval(self) -> None:
+    def testfreqval(self, data) -> None:
         """Is the highest freq value 3131.43 wavenumber?"""
-        assert abs(max(self.data.vibfreqs) - 3131.43) < 10
+        assert abs(max(data.vibfreqs) - 3131.43) < 10
 
-    def testvibrmasses(self) -> None:
+    def testvibrmasses(self, data) -> None:
         """Is the maximum reduced mass 11.43 +/- 0.1 daltons?"""
-        assert abs(max(self.data.vibrmasses) - self.max_reduced_mass) < 0.1
+        assert abs(max(data.vibrmasses) - self.max_reduced_mass) < 0.1
 
 
 class GenericIRimgTest:

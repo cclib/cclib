@@ -382,9 +382,9 @@ class Psi4GeoOptTest(GenericGeoOptTest):
 class XTBGeoOptTest(GenericGeoOptTest):
     """Customized restricted single point unittest"""
 
-    def testscfenergy(self):
+    def testscfenergy(self, data) -> None:
         """Is the SCF energy within the target?"""
-        assert abs(self.data.scfenergies[-1] - -719.42119585) < 1.0e-6
+        assert abs(data.scfenergies[-1] - -719.42119585) < 1.0e-6
 
 
 class TurbomoleKeepGeoOptTest(GenericGeoOptTest):
