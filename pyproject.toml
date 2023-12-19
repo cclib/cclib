@@ -1,5 +1,78 @@
-# [project]
-# requires-python = ">=3.8"
+[project]
+name = "cclib"
+version = "1.8"
+description = "parsers and algorithms for computational chemistry"
+readme = "README.md"
+authors = [
+    {name = "cclib development team", email = "cclib@googlegroups.com"}
+]
+maintainers = [
+    {name = "cclib development team", email = "cclib@googlegroups.com"}
+]
+license = {file = "LICENSE"}
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Topic :: Scientific/Engineering :: Chemistry",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+requires-python = ">=3.7"
+dependencies = [
+    "numpy",
+    "packaging>=19.0",
+    "periodictable",
+    "scipy>=1.2.0",
+]
+
+[project.urls]
+"Bug Tracker" = "https://github.com/cclib/cclib/issues"
+Changelog = "https://github.com/cclib/cclib/blob/master/doc/sphinx/changelog.rst"
+Documentation = "http://cclib.github.io/"
+Homepage = "https://github.com/cclib/cclib"
+
+[project.scripts]
+ccframe = "cclib.scripts.ccframe:main"
+ccget = "cclib.scripts.ccget:ccget"
+ccwrite = "cclib.scripts.ccwrite:main"
+cda = "cclib.scripts.cda:main"
+
+[project.optional-dependencies]
+bridges = [
+    "ase>=3.21",
+    "biopython==1.76",
+    "openbabel",
+    "pandas",
+    "pyquante2 @ git+https://github.com/cclib/pyquante2.git@github-actions-ci",
+    "pyscf<2.3",
+    "qc-iodata @ git+https://github.com/theochem/iodata.git@1.0.0a2",
+]
+docs = [
+    "sphinx",
+    "sphinx_rtd_theme",
+]
+test = [
+    "pytest",
+    "coverage",
+    "pytest-cov",
+]
+dev = ["cclib[bridges,docs,test]"]
+all = ["cclib[bridges]"]
+
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+zip-safe = false
+
+[tool.setuptools.packages.find]
+where = ["cclib"]
 
 [tool.isort]
 profile = "black"
