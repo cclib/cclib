@@ -28,6 +28,14 @@ def skipForParser(parser: str, msg: str):
                     pytest.skip(reason=f"{parser}: {msg}")
                 else:
                     testfunc(self, data, numvib)
+        elif "extra" in func_args:
+
+            def tstwrapper(self, data, extra) -> None:
+                # breakpoint()
+                if data.parsername == parser:
+                    pytest.skip(reason=f"{parser}: {msg}")
+                else:
+                    testfunc(self, data, extra)
         else:
 
             def tstwrapper(self, data) -> None:
@@ -57,6 +65,14 @@ def skipForLogfile(fragment: str, msg: str):
                     pytest.skip(reason=f"{fragment}: {msg}")
                 else:
                     testfunc(self, data, numvib)
+        elif "extra" in func_args:
+
+            def tstwrapper(self, data, extra) -> None:
+                # breakpoint()
+                if any(fragment in filename for filename in data.filenames):
+                    pytest.skip(reason=f"{fragment}: {msg}")
+                else:
+                    testfunc(self, data, extra)
         else:
 
             def tstwrapper(self, data) -> None:

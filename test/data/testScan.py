@@ -10,6 +10,7 @@
 import cclib
 
 import numpy
+import pytest
 from skip import skipForParser
 
 OPT_DONE = cclib.parser.data.ccData.OPT_DONE
@@ -58,8 +59,10 @@ class GenericRelaxedScanTest_optdone_bool:
 class GenericUnrelaxedScanTest:
     """Generic unrelaxed potential energy surface scan unittest."""
 
-    # extra indices
-    extra = 0
+    @pytest.fixture
+    def extra(self) -> int:
+        """extra indices"""
+        return 0
 
     @skipForParser("Jaguar", "Not implemented")
     def testscannames(self, data) -> None:
@@ -87,14 +90,11 @@ class GenericUnrelaxedScanTest:
 class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
     """Generic relaxed potential energy surface scan unittest."""
 
-    # extra indices
-    extra = 0
-
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    def testnumindices(self, data) -> None:
+    def testnumindices(self, data, extra) -> None:
         """Do the number of indices match number of scan points."""
-        assert len(data.optdone) == 12 + self.extra
+        assert len(data.optdone) == 12 + extra
 
     @skipForParser("Jaguar", "Does not work as expected")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
@@ -149,22 +149,34 @@ class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
 class GaussianUnrelaxedScanTest(GenericUnrelaxedScanTest):
     """Customized unrelaxed potential energy surface scan unittest"""
 
-    extra = 1
+    @pytest.fixture
+    def extra(self) -> int:
+        """extra indices"""
+        return 1
 
 
 class GaussianRelaxedScanTest(GenericRelaxedScanTest):
     """Customized relaxed potential energy surface scan unittest"""
 
-    extra = 1
+    @pytest.fixture
+    def extra(self) -> int:
+        """extra indices"""
+        return 1
 
 
 class JaguarRelaxedScanTest(GenericRelaxedScanTest):
     """Customized relaxed potential energy surface scan unittest"""
 
-    extra = 1
+    @pytest.fixture
+    def extra(self) -> int:
+        """extra indices"""
+        return 1
 
 
 class OrcaRelaxedScanTest(GenericRelaxedScanTest):
     """Customized relaxed potential energy surface scan unittest"""
 
-    extra = 1
+    @pytest.fixture
+    def extra(self) -> int:
+        """extra indices"""
+        return 1
