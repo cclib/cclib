@@ -7,6 +7,7 @@
 
 """Test logfiles with vibration output in cclib"""
 
+import pytest
 from skip import skipForLogfile, skipForParser
 
 
@@ -23,9 +24,10 @@ class GenericIRTest:
     # reference zero-point correction from Gaussian 16 dvb_ir.out
     zpve = 0.1771
 
-    def setup_method(self, data) -> None:
+    @pytest.fixture
+    def numvib(data) -> int:
         """Initialize the number of vibrational frequencies on a per molecule basis"""
-        self.numvib = 3 * len(data.atomnos) - 6
+        return 3 * len(data.atomnos) - 6
 
     def testbasics(self, data) -> None:
         """Are basic attributes correct?"""
@@ -34,24 +36,24 @@ class GenericIRTest:
     @skipForLogfile("FChk/basicGaussian09", "not printed in older versions than 16")
     @skipForLogfile("FChk/basicQChem5.4", "not printed")
     @skipForParser("xTB", "Custom treatment")
-    def testvibdisps(self, data) -> None:
+    def testvibdisps(self, data, numvib) -> None:
         """Are the dimensions of vibdisps consistent with numvib x N x 3"""
-        assert len(data.vibfreqs) == self.numvib
-        assert data.vibdisps.shape == (self.numvib, len(data.atomnos), 3)
+        assert len(data.vibfreqs) == numvib
+        assert data.vibdisps.shape == (numvib, len(data.atomnos), 3)
 
     @skipForLogfile("FChk/basicGaussian09", "not printed in older versions than 16")
     @skipForLogfile("FChk/basicQChem5.4", "not printed")
-    def testlengths(self, data) -> None:
+    def testlengths(self, data, numvib) -> None:
         """Are the lengths of vibfreqs and vibirs (and if present, vibsyms, vibfconnsts and vibrmasses) correct?"""
-        assert len(data.vibfreqs) == self.numvib
+        assert len(data.vibfreqs) == numvib
         if hasattr(data, "vibirs"):
-            assert len(data.vibirs) == self.numvib
+            assert len(data.vibirs) == numvib
         if hasattr(data, "vibsyms"):
-            assert len(data.vibsyms) == self.numvib
+            assert len(data.vibsyms) == numvib
         if hasattr(data, "vibfconsts"):
-            assert len(data.vibfconsts) == self.numvib
+            assert len(data.vibfconsts) == numvib
         if hasattr(data, "vibrmasses"):
-            assert len(data.vibrmasses) == self.numvib
+            assert len(data.vibrmasses) == numvib
 
     @skipForLogfile("FChk/basicGaussian09", "not printed in older versions than 16")
     @skipForLogfile("FChk/basicQChem5.4", "not printed")
@@ -145,9 +147,9 @@ class GaussianIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
     @skipForParser("FChk", "not printed")
-    def testvibsyms(self, data) -> None:
+    def testvibsyms(self, data, numvib) -> None:
         """Is the length of vibsyms correct?"""
-        assert len(data.vibsyms) == self.numvib
+        assert len(data.vibsyms) == numvib
 
     @skipForParser("FChk", "not printed")
     def testzeropointcorrection(self, data) -> None:
@@ -190,7 +192,7 @@ class GaussianIRTest(GenericIRTest):
         """Does G = H - TS hold"""
         assert (
             round(
-                abs(data.enthalpy - data.temperature * data.entropy - self.data.freeenergy),
+                abs(data.enthalpy - data.temperature * data.entropy - data.freeenergy),
                 self.freeenergy_places,
             )
             == 0
@@ -204,9 +206,9 @@ class JaguarIRTest(GenericIRTest):
     max_force_constant = 3.7
     max_reduced_mass = 2.3
 
-    def testvibsyms(self, data) -> None:
+    def testvibsyms(self, data, numvib) -> None:
         """Is the length of vibsyms correct?"""
-        assert len(data.vibsyms) == self.numvib
+        assert len(data.vibsyms) == numvib
 
 
 class MolcasIRTest(GenericIRTest):
@@ -233,11 +235,11 @@ class MolcasIRTest(GenericIRTest):
 
     def testenthalpy(self, data) -> None:
         """Is the enthalpy reasonable"""
-        assert round(abs(-382.11385 - self.data.enthalpy), self.enthalpy_places) == 0
+        assert round(abs(-382.11385 - data.enthalpy), self.enthalpy_places) == 0
 
     def testfreeenergy(self, data) -> None:
         """Is the freeenergy reasonable"""
-        assert round(abs(-382.153812 - self.data.freeenergy), self.freeenergy_places) == 0
+        assert round(abs(-382.153812 - data.freeenergy), self.freeenergy_places) == 0
 
     def testfreeenergyconsistency(self, data) -> None:
         """Does G = H - TS hold"""
@@ -253,9 +255,10 @@ class MolcasIRTest(GenericIRTest):
 class NWChemIRTest(GenericIRTest):
     """Generic imaginary vibrational frequency unittest"""
 
-    def setup_method(self, data) -> None:
+    @pytest.fixture
+    def numvib(data) -> int:
         """Initialize the number of vibrational frequencies on a per molecule basis"""
-        self.numvib = 3 * len(data.atomnos)
+        return 3 * len(data.atomnos)
 
 
 class OrcaIRTest(GenericIRTest):
@@ -422,9 +425,10 @@ class XTBIRTest(GenericIRTest):
     zpve = 4.3874784471
     max_reduced_mass = 11.43
 
-    def setup_method(self, data) -> None:
+    @pytest.fixture
+    def numvib(data) -> int:
         """Initialize the number of vibrational frequencies on a per molecule basis"""
-        self.numvib = 3 * len(data.atomnos)
+        return 3 * len(data.atomnos)
 
     def testfreqval(self, data) -> None:
         """Is the highest freq value 3131.43 wavenumber?"""
@@ -438,18 +442,19 @@ class XTBIRTest(GenericIRTest):
 class GenericIRimgTest:
     """Generic imaginary vibrational frequency unittest"""
 
-    def setup_method(self, data) -> None:
+    @pytest.fixture
+    def numvib(data) -> int:
         """Initialize the number of vibrational frequencies on a per molecule basis"""
-        self.numvib = 3 * len(data.atomnos) - 6
+        return 3 * len(data.atomnos) - 6
 
-    def testvibdisps(self, data) -> None:
+    def testvibdisps(self, data, numvib) -> None:
         """Are the dimensions of vibdisps consistent with numvib x N x 3"""
-        assert data.vibdisps.shape == (self.numvib, len(data.atomnos), 3)
+        assert data.vibdisps.shape == (numvib, len(data.atomnos), 3)
 
-    def testlengths(self, data) -> None:
+    def testlengths(self, data, numvib) -> None:
         """Are the lengths of vibfreqs and vibirs correct?"""
-        assert len(data.vibfreqs) == self.numvib
-        assert len(data.vibirs) == self.numvib
+        assert len(data.vibfreqs) == numvib
+        assert len(data.vibirs) == numvib
 
     def testfreqval(self, data) -> None:
         """Is the lowest freq value negative?"""
@@ -469,13 +474,14 @@ class GenericRamanTest:
     # This value is in amu.
     max_raman_intensity = 575
 
-    def setup_method(self, data) -> None:
+    @pytest.fixture
+    def numvib(data) -> int:
         """Initialize the number of vibrational frequencies on a per molecule basis"""
-        self.numvib = 3 * len(data.atomnos) - 6
+        return 3 * len(data.atomnos) - 6
 
-    def testlengths(self, data) -> None:
+    def testlengths(self, data, numvib) -> None:
         """Is the length of vibramans correct?"""
-        assert len(data.vibramans) == self.numvib
+        assert len(data.vibramans) == numvib
 
     # The tolerance for this number has been increased, since ORCA
     # failed to make it inside +/-5, but it would be nice in the future
