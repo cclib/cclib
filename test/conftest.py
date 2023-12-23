@@ -163,7 +163,7 @@ def data(request) -> ccData:
     return _CACHE[first]
 
 
-def pytest_generate_tests(metafunc: pytest.Metafunc) -> None:
+def pytest_generate_tests(metafunc: "pytest.Metafunc") -> None:
     module_components = metafunc.module.__name__.split(".")
     if module_components[:2] == ["test", "data"]:
         target_class = metafunc.cls.__name__
