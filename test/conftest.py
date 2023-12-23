@@ -85,7 +85,7 @@ def get_parsed_logfile(regression_filenames: Mapping[str, Path], normalized_name
     if fn.is_dir():
         # TODO List[Path] not allowed yet by ccopen?
         fn = [str(x) for x in sorted(fn.iterdir())]
-    lfile = ccopen(fn)
+    lfile = ccopen(fn, future=True)
     lfile.data = lfile.parse()
     return lfile
 
@@ -152,7 +152,7 @@ def data(request) -> ccData:
     files = request.param
     first = files[0]
     if first not in _CACHE:
-        logfile = ccopen([str(f) for f in files])
+        logfile = ccopen([str(f) for f in files], future=True)
         data = logfile.parse()
         filenames = logfile.filename
         if not isinstance(filenames, list):
