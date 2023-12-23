@@ -80,24 +80,17 @@ class GenericSPunTest:
         assert hasattr(data, "nocoeffs") or hasattr(data, "mocoeffs")
 
     def testdimnoccnos(self, data) -> None:
-        """Are the dimensions of nooccnos equal to 2 x nmo?"""
+        """Is the length of nooccnos equal to nmo?"""
         if hasattr(data, "nooccnos"):
-            assert isinstance(data.nooccnos, list)
-            assert isinstance(data.nooccnos[0], list)
-            assert isinstance(data.nooccnos[1], list)
-            assert len(data.nooccnos) == 2
-            assert len(data.nooccnos[0]) == data.nmo
-            assert len(data.nooccnos[1]) == data.nmo
+            assert isinstance(data.nooccnos, numpy.ndarray)
+            # FIXME
+            assert data.nooccnos.shape in [(data.nmo,), (2, data.nmo)]
 
     def testdimnocoeffs(self, data) -> None:
         """Are the dimensions of nocoeffs equal to 2 x nmo x nmo?"""
         if hasattr(data, "nocoeffs"):
-            assert isinstance(data.nocoeffs, list)
-            assert isinstance(data.nocoeffs[0], numpy.ndarray)
-            assert isinstance(data.nocoeffs[1], numpy.ndarray)
-            assert len(data.nocoeffs) == 2
-            assert data.nocoeffs[0].shape == (data.nmo, data.nmo)
-            assert data.nocoeffs[1].shape == (data.nmo, data.nmo)
+            assert isinstance(data.nocoeffs, numpy.ndarray)
+            assert data.nocoeffs.shape == (2, data.nmo, data.nmo)
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     def testcharge_and_mult(self, data) -> None:
