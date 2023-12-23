@@ -119,12 +119,6 @@ class GenericTDTest:
     @skipForParser("QChem", "Q-Chem cannot calculate rotatory strengths")
     @skipForLogfile("FChk/basicQChem5.4", "Q-Chem cannot calculate rotatory strengths")
     @skipForLogfile(
-        "FChk/basicGaussian09", "etrotats are not available in fchk, only the main logfile"
-    )
-    @skipForLogfile(
-        "FChk/basicGaussian16", "etrotats are not available in fchk, only the main logfile"
-    )
-    @skipForLogfile(
         "Turbomole/basicTurbomole7.4/CO_cc2_TD",
         "Rotatory strengths are not currently available for ricc2",
     )
@@ -177,6 +171,12 @@ class GaussianTDDFTTest(GenericTDTest):
 
     expected_l_max = 48000
 
+    @skipForLogfile(
+        "FChk/basicGaussian09", "etrotats are not available in fchk, only the main logfile"
+    )
+    @skipForLogfile(
+        "FChk/basicGaussian16", "etrotats are not available in fchk, only the main logfile"
+    )
     def testrotatsnumber(self, data) -> None:
         """Is the length of etrotats correct?"""
         assert len(data.etrotats) == self.number
