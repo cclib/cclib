@@ -8,7 +8,6 @@
 """Test single point logfiles in cclib."""
 
 import datetime
-import unittest
 
 import numpy
 import packaging
