@@ -75,29 +75,29 @@ class GenericSPunTest:
 
     @skipForParser("Jaguar", "Data file does not contain enough information")
     @skipForParser("DALTON", "mocoeffs not implemented yet")
-    def testfornsoormo(self, data) -> None:
-        """Do we have NSOs or MOs?"""
-        assert hasattr(data, "nsocoeffs") or hasattr(data, "mocoeffs")
+    def testfornoormo(self, data) -> None:
+        """Do we have NOs or MOs?"""
+        assert hasattr(data, "nocoeffs") or hasattr(data, "mocoeffs")
 
-    def testdimnsoccnos(self, data) -> None:
-        """Are the dimensions of nsooccnos equal to 2 x nmo?"""
-        if hasattr(data, "nsooccnos"):
-            assert isinstance(data.nsooccnos, list)
-            assert isinstance(data.nsooccnos[0], list)
-            assert isinstance(data.nsooccnos[1], list)
-            assert len(data.nsooccnos) == 2
-            assert len(data.nsooccnos[0]) == data.nmo
-            assert len(data.nsooccnos[1]) == data.nmo
+    def testdimnoccnos(self, data) -> None:
+        """Are the dimensions of nooccnos equal to 2 x nmo?"""
+        if hasattr(data, "nooccnos"):
+            assert isinstance(data.nooccnos, list)
+            assert isinstance(data.nooccnos[0], list)
+            assert isinstance(data.nooccnos[1], list)
+            assert len(data.nooccnos) == 2
+            assert len(data.nooccnos[0]) == data.nmo
+            assert len(data.nooccnos[1]) == data.nmo
 
-    def testdimnsocoeffs(self, data) -> None:
-        """Are the dimensions of nsocoeffs equal to 2 x nmo x nmo?"""
-        if hasattr(data, "nsocoeffs"):
-            assert isinstance(data.nsocoeffs, list)
-            assert isinstance(data.nsocoeffs[0], numpy.ndarray)
-            assert isinstance(data.nsocoeffs[1], numpy.ndarray)
-            assert len(data.nsocoeffs) == 2
-            assert data.nsocoeffs[0].shape == (data.nmo, data.nmo)
-            assert data.nsocoeffs[1].shape == (data.nmo, data.nmo)
+    def testdimnocoeffs(self, data) -> None:
+        """Are the dimensions of nocoeffs equal to 2 x nmo x nmo?"""
+        if hasattr(data, "nocoeffs"):
+            assert isinstance(data.nocoeffs, list)
+            assert isinstance(data.nocoeffs[0], numpy.ndarray)
+            assert isinstance(data.nocoeffs[1], numpy.ndarray)
+            assert len(data.nocoeffs) == 2
+            assert data.nocoeffs[0].shape == (data.nmo, data.nmo)
+            assert data.nocoeffs[1].shape == (data.nmo, data.nmo)
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     def testcharge_and_mult(self, data) -> None:
