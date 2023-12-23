@@ -67,6 +67,7 @@ from cclib.parser import (
 from cclib.parser.utils import convertor
 
 import numpy
+import pytest
 from packaging.version import Version
 from packaging.version import parse as parse_version
 
@@ -2864,29 +2865,29 @@ def normalisefilename(filename):
 
 
 class ADFGeoOptTest_noscfvalues(ADFGeoOptTest):
-    @unittest.skip("Cannot parse scfvalues from this file.")
+    @pytest.mark.skip("Cannot parse scfvalues from this file.")
     def testgeovalues_scfvalues(self):
         """SCF cycles were not printed here."""
 
-    @unittest.skip("Cannot parse scfvalues from this file.")
+    @pytest.mark.skip("Cannot parse scfvalues from this file.")
     def testscftargetdim(self):
         """SCF cycles were not printed here."""
 
-    @unittest.skip("Cannot parse scfvalues from this file.")
+    @pytest.mark.skip("Cannot parse scfvalues from this file.")
     def testscfvaluetype(self):
         """SCF cycles were not printed here."""
 
 
 class ADFSPTest_noscfvalues(ADFSPTest):
-    @unittest.skip("Cannot parse scfvalues from this file.")
+    @pytest.mark.skip("Cannot parse scfvalues from this file.")
     def testscftargetdim(self):
         """SCF cycles were not printed here."""
 
-    @unittest.skip("Cannot parse scfvalues from this file.")
+    @pytest.mark.skip("Cannot parse scfvalues from this file.")
     def testscfvaluetype(self):
         """SCF cycles were not printed here."""
 
-    @unittest.skip("Cannot parse aooverlaps from this file.")
+    @pytest.mark.skip("Cannot parse aooverlaps from this file.")
     def testaooverlaps(self):
         """AO overlaps were not printed here."""
 
@@ -2896,21 +2897,21 @@ class ADFSPTest_nosyms(ADFSPTest, GenericSPTest):
     foverlap11 = 0.99999
     foverlap22 = 0.99999
 
-    @unittest.skip("Symmetry labels were not printed here")
+    @pytest.mark.skip("Symmetry labels were not printed here")
     def testsymlabels(self):
         """Symmetry labels were not printed here."""
 
 
 class ADFSPTest_nosyms_noscfvalues(ADFSPTest_nosyms):
-    @unittest.skip("Cannot parse scfvalues from this file.")
+    @pytest.mark.skip("Cannot parse scfvalues from this file.")
     def testscftargetdim(self):
         """SCF cycles were not printed here."""
 
-    @unittest.skip("Cannot parse scfvalues from this file.")
+    @pytest.mark.skip("Cannot parse scfvalues from this file.")
     def testscfvaluetype(self):
         """SCF cycles were not printed here."""
 
-    @unittest.skip("Cannot parse aooverlaps from this file.")
+    @pytest.mark.skip("Cannot parse aooverlaps from this file.")
     def testaooverlaps(self):
         """AO overlaps were not printed here."""
 
@@ -2931,19 +2932,19 @@ class ADFSPTest_nosyms_valence(ADFSPTest_nosyms):
 
 
 class ADFSPTest_nosyms_valence_noscfvalues(ADFSPTest_nosyms_valence):
-    @unittest.skip("Cannot parse scfvalues from this file.")
+    @pytest.mark.skip("Cannot parse scfvalues from this file.")
     def testscftargetdim(self):
         """SCF cycles were not printed here."""
 
-    @unittest.skip("Cannot parse scfvalues from this file.")
+    @pytest.mark.skip("Cannot parse scfvalues from this file.")
     def testscfvaluetype(self):
         """SCF cycles were not printed here."""
 
-    @unittest.skip("Cannot parse moenergies from this file.")
+    @pytest.mark.skip("Cannot parse moenergies from this file.")
     def testfirstmoenergy(self):
         """MO energies were not printed here."""
 
-    @unittest.skip("Cannot parse aooverlaps from this file.")
+    @pytest.mark.skip("Cannot parse aooverlaps from this file.")
     def testaooverlaps(self):
         """AO overlaps were not printed here."""
 
@@ -2986,11 +2987,11 @@ class DALTONHFSPTest_nosymmetry(DALTONSPTest_nosymmetry, GenericHFSPTest):
 
 
 class DALTONTDTest_noetsecs(DALTONTDTest):
-    @unittest.skip("etsecs cannot be parsed from this file")
+    @pytest.mark.skip("etsecs cannot be parsed from this file")
     def testsecs(self):
         pass
 
-    @unittest.skip("etsecs cannot be parsed from this file")
+    @pytest.mark.skip("etsecs cannot be parsed from this file")
     def testsecs_transition(self):
         pass
 
@@ -3008,13 +3009,13 @@ class GAMESSUSSPunTest_charge0(GenericSPunTest):
         charges = self.data.atomcharges["mulliken"]
         assert abs(sum(charges)) < 0.001
 
-    @unittest.skip("HOMOs were incorrect due to charge being wrong")
+    @pytest.mark.skip("HOMOs were incorrect due to charge being wrong")
     def testhomos(self):
         """HOMOs were incorrect due to charge being wrong."""
 
 
 class GAMESSUSIRTest_ts(GenericIRimgTest):
-    @unittest.skip("This is a transition state with different intensities")
+    @pytest.mark.skip("This is a transition state with different intensities")
     def testirintens(self):
         """This is a transition state with different intensities."""
 
@@ -3022,13 +3023,13 @@ class GAMESSUSIRTest_ts(GenericIRimgTest):
 class GAMESSUSCISTest_dets(GenericCISTest):
     nstates = 10
 
-    @unittest.skip("This gives unexpected coeficcients, also for current unit tests.")
+    @pytest.mark.skip("This gives unexpected coeficcients, also for current unit tests.")
     def testetsecsvalues(self):
         """This gives unexpected coeficcients, also for current unit tests."""
 
 
 class GAMESSSPTest_noaooverlaps(GenericSPTest):
-    @unittest.skip("Cannot parse aooverlaps from this file.")
+    @pytest.mark.skip("Cannot parse aooverlaps from this file.")
     def testaooverlaps(self):
         """aooverlaps were not printed here."""
 
@@ -3037,17 +3038,17 @@ class GAMESSSPTest_noaooverlaps(GenericSPTest):
 
 
 class GaussianSPunTest_nomosyms(GaussianSPunTest):
-    @unittest.skip("Cannot parse mosyms from this file.")
+    @pytest.mark.skip("Cannot parse mosyms from this file.")
     def testmosyms(self):
         """mosyms were not printed here."""
 
 
 class GaussianSPunTest_nonaturalorbitals(GaussianCISTest):
-    @unittest.skip("Cannot parse natrual orbitals from this file.")
+    @pytest.mark.skip("Cannot parse natrual orbitals from this file.")
     def testnocoeffs(self):
         """natural orbitals were not printed here."""
 
-    @unittest.skip("Cannot parse natrual orbital occupation numbers from this file.")
+    @pytest.mark.skip("Cannot parse natrual orbital occupation numbers from this file.")
     def testnooccnos(self):
         """natural orbital occupation numbers were not printed here."""
 
@@ -3074,15 +3075,15 @@ class GaussianPolarTest(ReferencePolarTest):
 class JaguarSPTest_noatomcharges(JaguarSPTest):
     """Atomic partial charges were not printed in old Jaguar unit tests."""
 
-    @unittest.skip("Cannot parse atomcharges from this file.")
+    @pytest.mark.skip("Cannot parse atomcharges from this file.")
     def testatomcharges(self):
         """Are atomic charges consistent with natom?"""
 
-    @unittest.skip("Cannot parse atomcharges from this file.")
+    @pytest.mark.skip("Cannot parse atomcharges from this file.")
     def testatomcharges_mulliken(self):
         """Do Mulliken atomic charges sum to zero?"""
 
-    @unittest.skip("Cannot parse atomcharges from this file.")
+    @pytest.mark.skip("Cannot parse atomcharges from this file.")
     def testatomcharges_lowdin(self):
         """Do Lowdin atomic charges sum to zero?"""
 
@@ -3101,7 +3102,7 @@ class JaguarSPTest_6_31gss(JaguarSPTest_noatomcharges):
 
 
 class JaguarSPTest_6_31gss_nomosyms(JaguarSPTest_6_31gss):
-    @unittest.skip("Cannot parse mosyms from this file.")
+    @pytest.mark.skip("Cannot parse mosyms from this file.")
     def testsymlabels(self):
         """mosyms were not printed here."""
 
@@ -3115,7 +3116,7 @@ class JaguarSPTest_6_31gss_nomosyms(JaguarSPTest_6_31gss):
 
 
 class JaguarSPunTest_nomosyms(JaguarSPunTest):
-    @unittest.skip("Cannot parse mosyms from this file.")
+    @pytest.mark.skip("Cannot parse mosyms from this file.")
     def testmosyms(self):
         """mosyms were not printed here."""
 
@@ -3127,7 +3128,7 @@ class JaguarSPunTest_nmo_all(JaguarSPunTest):
 
 
 class JaguarSPunTest_nmo_all_nomosyms(JaguarSPunTest_nmo_all):
-    @unittest.skip("Cannot parse mosyms from this file.")
+    @pytest.mark.skip("Cannot parse mosyms from this file.")
     def testmosyms(self):
         """mosyms were not printed here."""
 
@@ -3143,19 +3144,19 @@ class JaguarSPTest_nmo45(JaguarSPTest_noatomcharges):
         """Without special options, Jaguar only print Homo+10 orbital energies."""
         assert len(self.data.moenergies[0]) == 45
 
-    @unittest.skip("Cannot parse mos from this file.")
+    @pytest.mark.skip("Cannot parse mos from this file.")
     def testfornoormo(self):
         """mos were not printed here."""
 
-    @unittest.skip("Cannot parse scftargets from this file.")
+    @pytest.mark.skip("Cannot parse scftargets from this file.")
     def testscftargets(self):
         """scftargets were not parsed correctly here."""
 
-    @unittest.skip("Cannot parse atomcharges from this file.")
+    @pytest.mark.skip("Cannot parse atomcharges from this file.")
     def testatomcharges(self):
         """atomcharges were not parsed correctly here."""
 
-    @unittest.skip("Cannot parse atombasis from this file.")
+    @pytest.mark.skip("Cannot parse atombasis from this file.")
     def testatombasis(self):
         """atombasis was not parsed correctly here."""
 
@@ -3173,19 +3174,19 @@ class JaguarGeoOptTest_nmo45(GenericGeoOptTest):
 
 
 class JaguarGeoOptTest_nmo45_nogeo(JaguarGeoOptTest_nmo45):
-    @unittest.skip("Cannot parse geotargets from this file.")
+    @pytest.mark.skip("Cannot parse geotargets from this file.")
     def testgeotargets(self):
         """geotargets were not printed here."""
 
-    @unittest.skip("Cannot parse geovalues from this file.")
+    @pytest.mark.skip("Cannot parse geovalues from this file.")
     def testgeovalues_atomcoords(self):
         """geovalues were not printed here."""
 
-    @unittest.skip("Cannot parse geovalues from this file.")
+    @pytest.mark.skip("Cannot parse geovalues from this file.")
     def testgeovalues_scfvalues(self):
         """geovalues were not printed here."""
 
-    @unittest.skip("Cannot parse optdone from this file.")
+    @pytest.mark.skip("Cannot parse optdone from this file.")
     def testoptdone(self):
         """optdone does not exist for this file."""
 
@@ -3196,19 +3197,19 @@ class JaguarGeoOptTest_6_31gss(GenericGeoOptTest):
 
 
 class MolcasBigBasisTest_nogbasis(MolcasBigBasisTest):
-    @unittest.skip("gbasis was not printed in this output file")
+    @pytest.mark.skip("gbasis was not printed in this output file")
     def testgbasis(self):
         """gbasis was not parsed for this file"""
 
-    @unittest.skip("gbasis was not printed in this output file")
+    @pytest.mark.skip("gbasis was not printed in this output file")
     def testnames(self):
         """gbasis was not parsed for this file"""
 
-    @unittest.skip("gbasis was not printed in this output file")
+    @pytest.mark.skip("gbasis was not printed in this output file")
     def testprimitives(self):
         """gbasis was not parsed for this file"""
 
-    @unittest.skip("gbasis was not printed in this output file")
+    @pytest.mark.skip("gbasis was not printed in this output file")
     def testsizeofbasis(self):
         """gbasis was not parsed for this file"""
 
@@ -3226,7 +3227,7 @@ class MolproBigBasisTest_cart(MolproBigBasisTest):
 class OrcaSPTest_nohirshfeld(OrcaSPTest):
     """Versions pre-5.0 did not specify calculating Hirshfeld atomic charges."""
 
-    @unittest.skip("atomcharges['hirshfeld'] were not calculated")
+    @pytest.mark.skip("atomcharges['hirshfeld'] were not calculated")
     def testatomcharges_hirshfeld(test):
         """Hirshfeld atomic charges were not calculated"""
 
@@ -3247,7 +3248,7 @@ class OrcaSPTest_3_21g(OrcaSPTest):
     overlap01 = 0.19
     molecularmass = 130190
 
-    @unittest.skip("This calculation has no symmetry.")
+    @pytest.mark.skip("This calculation has no symmetry.")
     def testsymlabels(self):
         """This calculation has no symmetry."""
 
@@ -3275,7 +3276,7 @@ class OrcaSPunTest_charge0(GenericSPunTest):
         charges = self.data.atomcharges["mulliken"]
         assert abs(sum(charges)) < 0.001
 
-    @unittest.skip("HOMOs were incorrect due to charge being wrong.")
+    @pytest.mark.skip("HOMOs were incorrect due to charge being wrong.")
     def testhomos(self):
         """HOMOs were incorrect due to charge being wrong."""
 
@@ -3332,11 +3333,11 @@ class OrcaIRTest_old(OrcaIRTest):
     entropy_places = 2
     freeenergy_places = -1
 
-    @unittest.skip("These values were wrong due to wrong input coordinates.")
+    @pytest.mark.skip("These values were wrong due to wrong input coordinates.")
     def testfreqval(self):
         """These values were wrong due to wrong input coordinates."""
 
-    @unittest.skip("These values were wrong due to wrong input coordinates.")
+    @pytest.mark.skip("These values were wrong due to wrong input coordinates.")
     def testirintens(self):
         """These values were wrong due to wrong input coordinates."""
 
@@ -3351,19 +3352,19 @@ class Psi3SPTest(GenericSPTest):
     # that a SALC calculation is done instead of a full LCAO.
     b3lyp_energy = -10300
 
-    @unittest.skip("atommasses not implemented yet")
+    @pytest.mark.skip("atommasses not implemented yet")
     def testatommasses(self):
         pass
 
-    @unittest.skip("Psi3 did not print partial atomic charges")
+    @pytest.mark.skip("Psi3 did not print partial atomic charges")
     def testatomcharges(self):
         pass
 
-    @unittest.skip("MO coefficients are printed separately for each SALC")
+    @pytest.mark.skip("MO coefficients are printed separately for each SALC")
     def testfornoormo(self):
         pass
 
-    @unittest.skip("MO coefficients are printed separately for each SALC")
+    @pytest.mark.skip("MO coefficients are printed separately for each SALC")
     def testdimmocoeffs(self):
         pass
 
@@ -3372,13 +3373,13 @@ class Psi3SPTest(GenericSPTest):
 
 
 class PsiSPTest_noatommasses(PsiSPTest):
-    @unittest.skip("atommasses were not printed in this file.")
+    @pytest.mark.skip("atommasses were not printed in this file.")
     def testatommasses(self):
         """These values are not present in this output file."""
 
 
 class PsiHFSPTest_noatommasses(PsiHFSPTest):
-    @unittest.skip("atommasses were not printed in this file.")
+    @pytest.mark.skip("atommasses were not printed in this file.")
     def testatommasses(self):
         """These values are not present in this output file."""
 
