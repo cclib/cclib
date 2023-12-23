@@ -25,7 +25,7 @@ class GenericIRTest:
     zpve = 0.1771
 
     @pytest.fixture
-    def numvib(data) -> int:
+    def numvib(self, data) -> int:
         """Initialize the number of vibrational frequencies on a per molecule basis"""
         return 3 * len(data.atomnos) - 6
 
@@ -256,7 +256,7 @@ class NWChemIRTest(GenericIRTest):
     """Generic imaginary vibrational frequency unittest"""
 
     @pytest.fixture
-    def numvib(data) -> int:
+    def numvib(self, data) -> int:
         """Initialize the number of vibrational frequencies on a per molecule basis"""
         return 3 * len(data.atomnos)
 
@@ -426,7 +426,7 @@ class XTBIRTest(GenericIRTest):
     max_reduced_mass = 11.43
 
     @pytest.fixture
-    def numvib(data) -> int:
+    def numvib(self, data) -> int:
         """Initialize the number of vibrational frequencies on a per molecule basis"""
         return 3 * len(data.atomnos)
 
@@ -443,7 +443,7 @@ class GenericIRimgTest:
     """Generic imaginary vibrational frequency unittest"""
 
     @pytest.fixture
-    def numvib(data) -> int:
+    def numvib(self, data) -> int:
         """Initialize the number of vibrational frequencies on a per molecule basis"""
         return 3 * len(data.atomnos) - 6
 
@@ -475,7 +475,7 @@ class GenericRamanTest:
     max_raman_intensity = 575
 
     @pytest.fixture
-    def numvib(data) -> int:
+    def numvib(self, data) -> int:
         """Initialize the number of vibrational frequencies on a per molecule basis"""
         return 3 * len(data.atomnos) - 6
 
