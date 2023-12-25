@@ -6,8 +6,9 @@ https://docs.pytest.org/en/latest/contents.html
 
 import os
 import sys
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Mapping, Union
+from typing import Dict, Iterable, List, Mapping, Optional, Union
 
 from cclib.io import ccopen
 from cclib.parser.data import ccData
@@ -40,18 +41,43 @@ def normalisefilename(filename: str) -> str:
     return "".join(ans)
 
 
+@dataclass(frozen=True)
+class Regression:
+    filename: Path
+    normalisedfilename: str
+    tests: Optional[List[str]]
+
+
 @pytest.fixture(scope="session")
-def regression_filenames() -> Dict[str, Path]:
-    """Map normalized filenames suitable for test function names to their
-    absolute location on the filesystem.
-    """
+def regression_entries() -> List[Regression]:
     __filedir__ = Path(__file__).resolve().parent
     __regression_dir__ = (__filedir__ / ".." / "data" / "regression").resolve()
     regfile = __regression_dir__ / "regressionfiles.txt"
-    regfilenames = [
-        os.sep.join(x.strip().split("/")) for x in regfile.read_text(encoding="utf-8").splitlines()
-    ]
-    return {normalisefilename(filename): __regression_dir__ / filename for filename in regfilenames}
+    contents = [line.split() for line in regfile.read_text(encoding="utf-8").splitlines()]
+    entries = list()
+    for tokens in contents:
+        assert len(tokens) >= 2
+        filename = os.sep.join(tokens[0].split("/"))
+        normed = normalisefilename(filename)
+        # TODO error checking once format is more formalized
+        if tokens[1] == "None":
+            tests = None
+        else:
+            tests = tokens[1:]
+        entries.append(
+            Regression(
+                filename=__regression_dir__ / filename, normalisedfilename=normed, tests=tests
+            )
+        )
+    return entries
+
+
+@pytest.fixture(scope="session")
+def regression_filenames(regression_entries: Iterable[Regression]) -> Dict[str, Path]:
+    """Map normalized filenames suitable for test function names to their
+    absolute location on the filesystem.
+    """
+    return {entry.normalisedfilename: entry.filename for entry in regression_entries}
 
 
 @pytest.fixture
