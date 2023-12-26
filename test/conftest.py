@@ -48,28 +48,33 @@ class Regression:
     tests: Optional[List[str]]
 
 
-@pytest.fixture(scope="session")
-def regression_entries() -> List[Regression]:
+def make_regression_entries() -> List[Regression]:
+    entries = list()
     __filedir__ = Path(__file__).resolve().parent
     __regression_dir__ = (__filedir__ / ".." / "data" / "regression").resolve()
     regfile = __regression_dir__ / "regressionfiles.txt"
-    contents = [line.split() for line in regfile.read_text(encoding="utf-8").splitlines()]
-    entries = list()
-    for tokens in contents:
-        assert len(tokens) >= 2
-        filename = os.sep.join(tokens[0].split("/"))
-        normed = normalisefilename(filename)
-        # TODO error checking once format is more formalized
-        if tokens[1] == "None":
-            tests = None
-        else:
-            tests = tokens[1:]
-        entries.append(
-            Regression(
-                filename=__regression_dir__ / filename, normalisedfilename=normed, tests=tests
+    if regfile.exists():
+        contents = [line.split() for line in regfile.read_text(encoding="utf-8").splitlines()]
+        for tokens in contents:
+            assert len(tokens) >= 2
+            filename = os.sep.join(tokens[0].split("/"))
+            normed = normalisefilename(filename)
+            # TODO error checking once format is more formalized
+            if tokens[1] == "None":
+                tests = None
+            else:
+                tests = tokens[1:]
+            entries.append(
+                Regression(
+                    filename=__regression_dir__ / filename, normalisedfilename=normed, tests=tests
+                )
             )
-        )
     return entries
+
+
+@pytest.fixture(scope="session")
+def regression_entries() -> List[Regression]:
+    return make_regression_entries()
 
 
 @pytest.fixture(scope="session")
@@ -157,6 +162,8 @@ def gettestdata() -> List[Dict[str, Union[str, List[str]]]]:
 
 
 _TESTDATA = gettestdata()
+_REGRESSIONDATA = make_regression_entries()
+_REGRESSION_CLS_ENTRIES = [entry for entry in _REGRESSIONDATA if entry.tests is not None]
 
 
 def get_program_dir(parser_name: str) -> str:
@@ -203,4 +210,21 @@ def pytest_generate_tests(metafunc: "pytest.Metafunc") -> None:
             files = [subdir / fn for fn in m["files"]]
             filegroups.append(files)
             ids.append(str(files[0].relative_to(datadir)))
+        metafunc.parametrize(argnames="data", argvalues=filegroups, ids=ids, indirect=True)
+    elif module_components[:2] == ["test", "regression"] and metafunc.cls is not None:
+        target_class = metafunc.cls.__name__
+        matches = [entry for entry in _REGRESSION_CLS_ENTRIES if target_class in entry.tests]
+        filegroups = []
+        ids = []
+        for mtch in matches:
+            if not mtch.filename.exists():
+                raise RuntimeError(f"{mtch.filename} doesn't exist")
+            if mtch.filename.is_dir():
+                files = sorted(mtch.filename.glob("*"))
+            else:
+                files = [mtch.filename]
+            filegroups.append(files)
+            # TODO factor out of loop
+            regressiondir = (mtch.filename / ".." / ".." / "..").resolve()
+            ids.append(str(mtch.filename.relative_to(regressiondir)))
         metafunc.parametrize(argnames="data", argvalues=filegroups, ids=ids, indirect=True)

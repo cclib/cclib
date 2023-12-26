@@ -42,28 +42,7 @@ import traceback
 import unittest
 
 from cclib.io import ccopen, ccread, moldenwriter
-from cclib.parser import (
-    ADF,
-    DALTON,
-    GAMESS,
-    GAMESSDAT,
-    GAMESSUK,
-    MOPAC,
-    NBO,
-    ORCA,
-    XTB,
-    FChk,
-    Gaussian,
-    Jaguar,
-    Molcas,
-    Molpro,
-    NWChem,
-    Psi3,
-    Psi4,
-    QChem,
-    Turbomole,
-    ccData,
-)
+from cclib.parser import DALTON, Gaussian, ccData
 from cclib.parser.utils import convertor
 
 import numpy
@@ -78,92 +57,30 @@ test_dir = f"{os.path.realpath(os.path.dirname(__file__))}/../../test"
 # This is safer than sys.path.append, and isn't sys.path.insert(0, ...) so
 # virtualenvs work properly. See https://stackoverflow.com/q/10095037.
 sys.path.insert(1, os.path.abspath(test_dir))
-from .data.testBasis import (
-    GaussianBigBasisTest,
-    GenericBasisTest,
-    GenericBigBasisTest,
-    MolcasBigBasisTest,
-    MolproBigBasisTest,
-    Psi4BigBasisTest,
-    QChemBigBasisTest,
-)
-from .data.testBOMD import GenericBOMDTest
-from .data.testCC import GenericCCTest
-from .data.testCI import GAMESSCISTest, GaussianCISTest, GenericCISTest, QChemCISTest
-from .data.testCore import ADFCoreTest, GenericCoreTest
+from .data.testBasis import GenericBigBasisTest, MolcasBigBasisTest, MolproBigBasisTest
+from .data.testCI import GaussianCISTest, GenericCISTest
 
 # fmt: off
-from .data.testGeoOpt import (
-    ADFGeoOptTest,
-    GenericGeoOptTest,
-    OrcaGeoOptTest,
-    Psi4GeoOptTest,
-)
+from .data.testGeoOpt import ADFGeoOptTest, GenericGeoOptTest, OrcaGeoOptTest
 
 # fmt: on
-from .data.testMP import (
-    GaussianMP2Test,
-    GaussianMP3Test,
-    GaussianMP4SDQTest,
-    GaussianMP4SDTQTest,
-    GenericMP2Test,
-    GenericMP3Test,
-    GenericMP4SDQTest,
-    GenericMP4SDTQTest,
-    GenericMP5Test,
-    QChemMP4SDQTest,
-    QChemMP4SDTQTest,
-)
-from .data.testPolar import GenericPolarTest, ReferencePolarTest
-from .data.testScan import GaussianRelaxedScanTest, OrcaRelaxedScanTest
+from .data.testPolar import ReferencePolarTest
 from .data.testSP import (
     ADFSPTest,
-    GaussianSPTest,
     GenericHFSPTest,
     GenericSPTest,
     JaguarSPTest,
-    MolcasSPTest,
     OrcaSPTest,
     PsiHFSPTest,
     PsiSPTest,
 )
 
 # fmt: off
-from .data.testSPun import (
-    GaussianSPunTest,
-    GenericROSPTest,
-    GenericSPunTest,
-    JaguarSPunTest,
-)
+from .data.testSPun import GaussianSPunTest, GenericSPunTest, JaguarSPunTest
 
 # fmt: on
-from .data.testTD import (
-    DALTONTDTest,
-    GAMESSUSTDDFTTest,
-    GaussianTDDFTTest,
-    GenericTDDFTtrpTest,
-    GenericTDTest,
-    OrcaROCIS40Test,
-    OrcaTDDFTTest,
-    QChemTDDFTTest,
-)
-from .data.testTDun import GenericTDunTest
-from .data.testvib import (
-    ADFIRTest,
-    FireflyIRTest,
-    GamessIRTest,
-    GaussianIRTest,
-    GaussianRamanTest,
-    GenericIRimgTest,
-    GenericIRTest,
-    GenericRamanTest,
-    JaguarIRTest,
-    OrcaIRTest,
-    OrcaRamanTest,
-    Psi4IRTest,
-    QChemIRTest,
-    QChemRamanTest,
-)
+from .data.testTD import DALTONTDTest, OrcaTDDFTTest
+from .data.testvib import GenericIRimgTest, OrcaIRTest
 from .test_data import get_program_dir, parser_names
 
 # We need this to point to files relative to this script.
@@ -2866,29 +2783,29 @@ def normalisefilename(filename):
 
 class ADFGeoOptTest_noscfvalues(ADFGeoOptTest):
     @pytest.mark.skip("Cannot parse scfvalues from this file.")
-    def testgeovalues_scfvalues(self):
+    def testgeovalues_scfvalues(self, data) -> None:
         """SCF cycles were not printed here."""
 
     @pytest.mark.skip("Cannot parse scfvalues from this file.")
-    def testscftargetdim(self):
+    def testscftargetdim(self, data) -> None:
         """SCF cycles were not printed here."""
 
     @pytest.mark.skip("Cannot parse scfvalues from this file.")
-    def testscfvaluetype(self):
+    def testscfvaluetype(self, data) -> None:
         """SCF cycles were not printed here."""
 
 
 class ADFSPTest_noscfvalues(ADFSPTest):
     @pytest.mark.skip("Cannot parse scfvalues from this file.")
-    def testscftargetdim(self):
+    def testscftargetdim(self, data) -> None:
         """SCF cycles were not printed here."""
 
     @pytest.mark.skip("Cannot parse scfvalues from this file.")
-    def testscfvaluetype(self):
+    def testscfvaluetype(self, data) -> None:
         """SCF cycles were not printed here."""
 
     @pytest.mark.skip("Cannot parse aooverlaps from this file.")
-    def testaooverlaps(self):
+    def testaooverlaps(self, data) -> None:
         """AO overlaps were not printed here."""
 
 
@@ -2898,63 +2815,63 @@ class ADFSPTest_nosyms(ADFSPTest, GenericSPTest):
     foverlap22 = 0.99999
 
     @pytest.mark.skip("Symmetry labels were not printed here")
-    def testsymlabels(self):
+    def testsymlabels(self, data) -> None:
         """Symmetry labels were not printed here."""
 
 
 class ADFSPTest_nosyms_noscfvalues(ADFSPTest_nosyms):
     @pytest.mark.skip("Cannot parse scfvalues from this file.")
-    def testscftargetdim(self):
+    def testscftargetdim(self, data) -> None:
         """SCF cycles were not printed here."""
 
     @pytest.mark.skip("Cannot parse scfvalues from this file.")
-    def testscfvaluetype(self):
+    def testscfvaluetype(self, data) -> None:
         """SCF cycles were not printed here."""
 
     @pytest.mark.skip("Cannot parse aooverlaps from this file.")
-    def testaooverlaps(self):
+    def testaooverlaps(self, data) -> None:
         """AO overlaps were not printed here."""
 
-    def testmetadata_symmetry_detected(self):
+    def testmetadata_symmetry_detected(self, data) -> None:
         """Symmetry is completely turned off and not even detected."""
-        assert self.data.metadata["symmetry_detected"] == "c1"
+        assert data.metadata["symmetry_detected"] == "c1"
 
-    def testmetadata_symmetry_used(self):
+    def testmetadata_symmetry_used(self, data) -> None:
         """Symmetry is completely turned off and not even detected."""
-        assert self.data.metadata["symmetry_used"] == "c1"
+        assert data.metadata["symmetry_used"] == "c1"
 
 
 class ADFSPTest_nosyms_valence(ADFSPTest_nosyms):
-    def testlengthmoenergies(self):
+    def testlengthmoenergies(self, data) -> None:
         """Only valence orbital energies were printed here."""
-        assert len(self.data.moenergies[0]) == 45
-        assert self.data.moenergies[0][0] == 99999.0
+        assert len(data.moenergies[0]) == 45
+        assert data.moenergies[0][0] == 99999.0
 
 
 class ADFSPTest_nosyms_valence_noscfvalues(ADFSPTest_nosyms_valence):
     @pytest.mark.skip("Cannot parse scfvalues from this file.")
-    def testscftargetdim(self):
+    def testscftargetdim(self, data) -> None:
         """SCF cycles were not printed here."""
 
     @pytest.mark.skip("Cannot parse scfvalues from this file.")
-    def testscfvaluetype(self):
+    def testscfvaluetype(self, data) -> None:
         """SCF cycles were not printed here."""
 
     @pytest.mark.skip("Cannot parse moenergies from this file.")
-    def testfirstmoenergy(self):
+    def testfirstmoenergy(self, data) -> None:
         """MO energies were not printed here."""
 
     @pytest.mark.skip("Cannot parse aooverlaps from this file.")
-    def testaooverlaps(self):
+    def testaooverlaps(self, data) -> None:
         """AO overlaps were not printed here."""
 
-    def testmetadata_symmetry_detected(self):
+    def testmetadata_symmetry_detected(self, data) -> None:
         """Symmetry is completely turned off and not even detected."""
-        assert self.data.metadata["symmetry_detected"] == "c1"
+        assert data.metadata["symmetry_detected"] == "c1"
 
-    def testmetadata_symmetry_used(self):
+    def testmetadata_symmetry_used(self, data) -> None:
         """Symmetry is completely turned off and not even detected."""
-        assert self.data.metadata["symmetry_used"] == "c1"
+        assert data.metadata["symmetry_used"] == "c1"
 
 
 # DALTON #
@@ -2966,20 +2883,20 @@ class DALTONBigBasisTest_aug_cc_pCVQZ(GenericBigBasisTest):
 
 
 class DALTONSPTest_nosymmetry(GenericSPTest):
-    def testsymlabels(self):
+    def testsymlabels(self, data) -> None:
         """Are all the symmetry labels either Ag/u or Bg/u?"""
         # A calculation without symmetry, meaning it belongs to the C1 point
         # group, only has the `A` irreducible representation.
-        sumwronglabels = sum(x not in {"A"} for x in self.data.mosyms[0])
+        sumwronglabels = sum(x not in {"A"} for x in data.mosyms[0])
         assert sumwronglabels == 0
 
-    def testmetadata_symmetry_detected(self):
+    def testmetadata_symmetry_detected(self, data) -> None:
         """Does metadata have expected keys and values?"""
-        assert self.data.metadata["symmetry_detected"] == "c1"
+        assert data.metadata["symmetry_detected"] == "c1"
 
-    def testmetadata_symmetry_used(self):
+    def testmetadata_symmetry_used(self, data) -> None:
         """Does metadata have expected keys and values?"""
-        assert self.data.metadata["symmetry_used"] == "c1"
+        assert data.metadata["symmetry_used"] == "c1"
 
 
 class DALTONHFSPTest_nosymmetry(DALTONSPTest_nosymmetry, GenericHFSPTest):
@@ -2988,11 +2905,11 @@ class DALTONHFSPTest_nosymmetry(DALTONSPTest_nosymmetry, GenericHFSPTest):
 
 class DALTONTDTest_noetsecs(DALTONTDTest):
     @pytest.mark.skip("etsecs cannot be parsed from this file")
-    def testsecs(self):
+    def testsecs(self, data) -> None:
         pass
 
     @pytest.mark.skip("etsecs cannot be parsed from this file")
-    def testsecs_transition(self):
+    def testsecs_transition(self, data) -> None:
         pass
 
 
@@ -3000,23 +2917,23 @@ class DALTONTDTest_noetsecs(DALTONTDTest):
 
 
 class GAMESSUSSPunTest_charge0(GenericSPunTest):
-    def testcharge_and_mult(self):
+    def testcharge_and_mult(self, data) -> None:
         """The charge in the input was wrong."""
-        assert self.data.charge == 0
+        assert data.charge == 0
 
-    def testatomcharges_mulliken(self):
+    def testatomcharges_mulliken(self, data) -> None:
         """The charge in the input was wrong."""
-        charges = self.data.atomcharges["mulliken"]
+        charges = data.atomcharges["mulliken"]
         assert abs(sum(charges)) < 0.001
 
     @pytest.mark.skip("HOMOs were incorrect due to charge being wrong")
-    def testhomos(self):
+    def testhomos(self, data) -> None:
         """HOMOs were incorrect due to charge being wrong."""
 
 
 class GAMESSUSIRTest_ts(GenericIRimgTest):
     @pytest.mark.skip("This is a transition state with different intensities")
-    def testirintens(self):
+    def testirintens(self, data) -> None:
         """This is a transition state with different intensities."""
 
 
@@ -3024,13 +2941,13 @@ class GAMESSUSCISTest_dets(GenericCISTest):
     nstates = 10
 
     @pytest.mark.skip("This gives unexpected coeficcients, also for current unit tests.")
-    def testetsecsvalues(self):
+    def testetsecsvalues(self, data) -> None:
         """This gives unexpected coeficcients, also for current unit tests."""
 
 
 class GAMESSSPTest_noaooverlaps(GenericSPTest):
     @pytest.mark.skip("Cannot parse aooverlaps from this file.")
-    def testaooverlaps(self):
+    def testaooverlaps(self, data) -> None:
         """aooverlaps were not printed here."""
 
 
@@ -3039,17 +2956,17 @@ class GAMESSSPTest_noaooverlaps(GenericSPTest):
 
 class GaussianSPunTest_nomosyms(GaussianSPunTest):
     @pytest.mark.skip("Cannot parse mosyms from this file.")
-    def testmosyms(self):
+    def testmosyms(self, data) -> None:
         """mosyms were not printed here."""
 
 
 class GaussianSPunTest_nonaturalorbitals(GaussianCISTest):
     @pytest.mark.skip("Cannot parse natrual orbitals from this file.")
-    def testnocoeffs(self):
+    def testnocoeffs(self, data) -> None:
         """natural orbitals were not printed here."""
 
     @pytest.mark.skip("Cannot parse natrual orbital occupation numbers from this file.")
-    def testnooccnos(self):
+    def testnooccnos(self, data) -> None:
         """natural orbital occupation numbers were not printed here."""
 
 
@@ -3076,15 +2993,15 @@ class JaguarSPTest_noatomcharges(JaguarSPTest):
     """Atomic partial charges were not printed in old Jaguar unit tests."""
 
     @pytest.mark.skip("Cannot parse atomcharges from this file.")
-    def testatomcharges(self):
+    def testatomcharges(self, data) -> None:
         """Are atomic charges consistent with natom?"""
 
     @pytest.mark.skip("Cannot parse atomcharges from this file.")
-    def testatomcharges_mulliken(self):
+    def testatomcharges_mulliken(self, data) -> None:
         """Do Mulliken atomic charges sum to zero?"""
 
     @pytest.mark.skip("Cannot parse atomcharges from this file.")
-    def testatomcharges_lowdin(self):
+    def testatomcharges_lowdin(self, data) -> None:
         """Do Lowdin atomic charges sum to zero?"""
 
 
@@ -3096,98 +3013,98 @@ class JaguarSPTest_6_31gss(JaguarSPTest_noatomcharges):
     b3lyp_moenergy = -277.610006052399
     overlap01 = 0.22
 
-    def testmetadata_basis_set(self):
+    def testmetadata_basis_set(self, data) -> None:
         """This calculation did not use STO-3G for the basis set."""
-        assert self.data.metadata["basis_set"].lower() == "6-31g**"
+        assert data.metadata["basis_set"].lower() == "6-31g**"
 
 
 class JaguarSPTest_6_31gss_nomosyms(JaguarSPTest_6_31gss):
     @pytest.mark.skip("Cannot parse mosyms from this file.")
-    def testsymlabels(self):
+    def testsymlabels(self, data) -> None:
         """mosyms were not printed here."""
 
-    def testmetadata_symmetry_detected(self):
+    def testmetadata_symmetry_detected(self, data) -> None:
         """This calculation has symmetry detected but disabled."""
-        assert self.data.metadata["symmetry_detected"] == "c2h"
+        assert data.metadata["symmetry_detected"] == "c2h"
 
-    def testmetadata_symmetry_used(self):
+    def testmetadata_symmetry_used(self, data) -> None:
         """This calculation has symmetry detected but disabled."""
-        assert self.data.metadata["symmetry_used"] == "c1"
+        assert data.metadata["symmetry_used"] == "c1"
 
 
 class JaguarSPunTest_nomosyms(JaguarSPunTest):
     @pytest.mark.skip("Cannot parse mosyms from this file.")
-    def testmosyms(self):
+    def testmosyms(self, data) -> None:
         """mosyms were not printed here."""
 
 
 class JaguarSPunTest_nmo_all(JaguarSPunTest):
-    def testmoenergies(self):
+    def testmoenergies(self, data) -> None:
         """Some tests printed all MO energies apparently."""
-        assert len(self.data.moenergies[0]) == self.data.nmo
+        assert len(data.moenergies[0]) == data.nmo
 
 
 class JaguarSPunTest_nmo_all_nomosyms(JaguarSPunTest_nmo_all):
     @pytest.mark.skip("Cannot parse mosyms from this file.")
-    def testmosyms(self):
+    def testmosyms(self, data) -> None:
         """mosyms were not printed here."""
 
 
 class JaguarGeoOptTest_nmo45(GenericGeoOptTest):
-    def testlengthmoenergies(self):
+    def testlengthmoenergies(self, data) -> None:
         """Without special options, Jaguar only print Homo+10 orbital energies."""
-        assert len(self.data.moenergies[0]) == 45
+        assert len(data.moenergies[0]) == 45
 
 
 class JaguarSPTest_nmo45(JaguarSPTest_noatomcharges):
-    def testlengthmoenergies(self):
+    def testlengthmoenergies(self, data) -> None:
         """Without special options, Jaguar only print Homo+10 orbital energies."""
-        assert len(self.data.moenergies[0]) == 45
+        assert len(data.moenergies[0]) == 45
 
     @pytest.mark.skip("Cannot parse mos from this file.")
-    def testfornoormo(self):
+    def testfornoormo(self, data) -> None:
         """mos were not printed here."""
 
     @pytest.mark.skip("Cannot parse scftargets from this file.")
-    def testscftargets(self):
+    def testscftargets(self, data) -> None:
         """scftargets were not parsed correctly here."""
 
     @pytest.mark.skip("Cannot parse atomcharges from this file.")
-    def testatomcharges(self):
+    def testatomcharges(self, data) -> None:
         """atomcharges were not parsed correctly here."""
 
     @pytest.mark.skip("Cannot parse atombasis from this file.")
-    def testatombasis(self):
+    def testatombasis(self, data) -> None:
         """atombasis was not parsed correctly here."""
 
 
 class JaguarSPunTest_nmo45(GenericSPunTest):
-    def testlengthmoenergies(self):
+    def testlengthmoenergies(self, data) -> None:
         """Without special options, Jaguar only print Homo+10 orbital energies."""
-        assert len(self.data.moenergies[0]) == 45
+        assert len(data.moenergies[0]) == 45
 
 
 class JaguarGeoOptTest_nmo45(GenericGeoOptTest):
-    def testlengthmoenergies(self):
+    def testlengthmoenergies(self, data) -> None:
         """Without special options, Jaguar only print Homo+10 orbital energies."""
-        assert len(self.data.moenergies[0]) == 45
+        assert len(data.moenergies[0]) == 45
 
 
 class JaguarGeoOptTest_nmo45_nogeo(JaguarGeoOptTest_nmo45):
     @pytest.mark.skip("Cannot parse geotargets from this file.")
-    def testgeotargets(self):
+    def testgeotargets(self, data) -> None:
         """geotargets were not printed here."""
 
     @pytest.mark.skip("Cannot parse geovalues from this file.")
-    def testgeovalues_atomcoords(self):
+    def testgeovalues_atomcoords(self, data) -> None:
         """geovalues were not printed here."""
 
     @pytest.mark.skip("Cannot parse geovalues from this file.")
-    def testgeovalues_scfvalues(self):
+    def testgeovalues_scfvalues(self, data) -> None:
         """geovalues were not printed here."""
 
     @pytest.mark.skip("Cannot parse optdone from this file.")
-    def testoptdone(self):
+    def testoptdone(self, data) -> None:
         """optdone does not exist for this file."""
 
 
@@ -3198,19 +3115,19 @@ class JaguarGeoOptTest_6_31gss(GenericGeoOptTest):
 
 class MolcasBigBasisTest_nogbasis(MolcasBigBasisTest):
     @pytest.mark.skip("gbasis was not printed in this output file")
-    def testgbasis(self):
+    def testgbasis(self, data) -> None:
         """gbasis was not parsed for this file"""
 
     @pytest.mark.skip("gbasis was not printed in this output file")
-    def testnames(self):
+    def testnames(self, data) -> None:
         """gbasis was not parsed for this file"""
 
     @pytest.mark.skip("gbasis was not printed in this output file")
-    def testprimitives(self):
+    def testprimitives(self, data) -> None:
         """gbasis was not parsed for this file"""
 
     @pytest.mark.skip("gbasis was not printed in this output file")
-    def testsizeofbasis(self):
+    def testsizeofbasis(self, data) -> None:
         """gbasis was not parsed for this file"""
 
 
@@ -3228,7 +3145,7 @@ class OrcaSPTest_nohirshfeld(OrcaSPTest):
     """Versions pre-5.0 did not specify calculating Hirshfeld atomic charges."""
 
     @pytest.mark.skip("atomcharges['hirshfeld'] were not calculated")
-    def testatomcharges_hirshfeld(test):
+    def testatomcharges_hirshfeld(self, data) -> None:
         """Hirshfeld atomic charges were not calculated"""
 
 
@@ -3237,8 +3154,8 @@ class OrcaSPTest_nobasis(OrcaSPTest_nohirshfeld):
     from repeating the input file.
     """
 
-    def testmetadata_basis_set(self):
-        assert "basis_set" not in self.data.metadata
+    def testmetadata_basis_set(self, data) -> None:
+        assert "basis_set" not in data.metadata
 
 
 class OrcaSPTest_3_21g(OrcaSPTest):
@@ -3249,16 +3166,16 @@ class OrcaSPTest_3_21g(OrcaSPTest):
     molecularmass = 130190
 
     @pytest.mark.skip("This calculation has no symmetry.")
-    def testsymlabels(self):
+    def testsymlabels(self, data) -> None:
         """This calculation has no symmetry."""
 
-    def testmetadata_symmetry_detected(self):
+    def testmetadata_symmetry_detected(self, data) -> None:
         """This calculation has no symmetry."""
-        assert "symmetry_detected" not in self.data.metadata
+        assert "symmetry_detected" not in data.metadata
 
-    def testmetadata_symmetry_used(self):
+    def testmetadata_symmetry_used(self, data) -> None:
         """This calculation has no symmetry."""
-        assert "symmetry_used" not in self.data.metadata
+        assert "symmetry_used" not in data.metadata
 
 
 class OrcaGeoOptTest_3_21g(OrcaGeoOptTest):
@@ -3267,29 +3184,29 @@ class OrcaGeoOptTest_3_21g(OrcaGeoOptTest):
 
 
 class OrcaSPunTest_charge0(GenericSPunTest):
-    def testcharge_and_mult(self):
+    def testcharge_and_mult(self, data) -> None:
         """The charge in the input was wrong."""
-        assert self.data.charge == 0
+        assert data.charge == 0
 
-    def testatomcharges_mulliken(self):
+    def testatomcharges_mulliken(self, data) -> None:
         """The charge in the input was wrong."""
-        charges = self.data.atomcharges["mulliken"]
+        charges = data.atomcharges["mulliken"]
         assert abs(sum(charges)) < 0.001
 
     @pytest.mark.skip("HOMOs were incorrect due to charge being wrong.")
-    def testhomos(self):
+    def testhomos(self, data) -> None:
         """HOMOs were incorrect due to charge being wrong."""
 
-    def testorbitals(self):
+    def testorbitals(self, data) -> None:
         """Closed-shell calculation run as open-shell."""
-        assert self.data.closed_shell
+        assert data.closed_shell
 
 
 class OrcaTDDFTTest_error(OrcaTDDFTTest):
-    def testoscs(self):
+    def testoscs(self, data) -> None:
         """These values used to be less accurate, probably due to wrong coordinates."""
-        assert len(self.data.etoscs) == self.number
-        assert abs(max(self.data.etoscs) - 1.0) < 0.2
+        assert len(data.etoscs) == self.number
+        assert abs(max(data.etoscs) - 1.0) < 0.2
 
 
 class OrcaTDDFTTest_pre5(OrcaTDDFTTest):
@@ -3308,10 +3225,10 @@ class OrcaTDDFTTest_pre5(OrcaTDDFTTest):
 
 
 class OrcaTDDFTTest_pre1085(OrcaTDDFTTest_pre5):
-    def testoscs(self):
+    def testoscs(self, data) -> None:
         """These values changed in the electric dipole osc strengths prior to Orca 4.0. See PR1085"""
-        assert len(self.data.etoscs) == self.number
-        assert abs(max(self.data.etoscs) - 0.94) < 0.2
+        assert len(data.etoscs) == self.number
+        assert abs(max(data.etoscs) - 0.94) < 0.2
 
 
 class OrcaIRTest_old_coordsOK(OrcaIRTest):
@@ -3334,11 +3251,11 @@ class OrcaIRTest_old(OrcaIRTest):
     freeenergy_places = -1
 
     @pytest.mark.skip("These values were wrong due to wrong input coordinates.")
-    def testfreqval(self):
+    def testfreqval(self, data) -> None:
         """These values were wrong due to wrong input coordinates."""
 
     @pytest.mark.skip("These values were wrong due to wrong input coordinates.")
-    def testirintens(self):
+    def testirintens(self, data) -> None:
         """These values were wrong due to wrong input coordinates."""
 
 
@@ -3353,19 +3270,19 @@ class Psi3SPTest(GenericSPTest):
     b3lyp_energy = -10300
 
     @pytest.mark.skip("atommasses not implemented yet")
-    def testatommasses(self):
+    def testatommasses(self, data) -> None:
         pass
 
     @pytest.mark.skip("Psi3 did not print partial atomic charges")
-    def testatomcharges(self):
+    def testatomcharges(self, data) -> None:
         pass
 
     @pytest.mark.skip("MO coefficients are printed separately for each SALC")
-    def testfornoormo(self):
+    def testfornoormo(self, data) -> None:
         pass
 
     @pytest.mark.skip("MO coefficients are printed separately for each SALC")
-    def testdimmocoeffs(self):
+    def testdimmocoeffs(self, data) -> None:
         pass
 
 
@@ -3374,221 +3291,14 @@ class Psi3SPTest(GenericSPTest):
 
 class PsiSPTest_noatommasses(PsiSPTest):
     @pytest.mark.skip("atommasses were not printed in this file.")
-    def testatommasses(self):
+    def testatommasses(self, data) -> None:
         """These values are not present in this output file."""
 
 
 class PsiHFSPTest_noatommasses(PsiHFSPTest):
     @pytest.mark.skip("atommasses were not printed in this file.")
-    def testatommasses(self):
+    def testatommasses(self, data) -> None:
         """These values are not present in this output file."""
-
-
-old_unittests = [
-    ("ADF/ADF2004.01/MoOCl4-sp.adfout", ADFCoreTest),
-    ("ADF/ADF2004.01/dvb_gopt.adfout", ADFGeoOptTest_noscfvalues),
-    ("ADF/ADF2004.01/dvb_gopt_b.adfout", ADFGeoOptTest),
-    ("ADF/ADF2004.01/dvb_sp.adfout", ADFSPTest_noscfvalues),
-    ("ADF/ADF2004.01/dvb_sp_b.adfout", ADFSPTest_noscfvalues),
-    ("ADF/ADF2004.01/dvb_sp_c.adfout", ADFSPTest_nosyms_valence_noscfvalues),
-    ("ADF/ADF2004.01/dvb_sp_d.adfout", ADFSPTest_nosyms_noscfvalues),
-    ("ADF/ADF2004.01/dvb_un_sp.adfout", GenericSPunTest),
-    ("ADF/ADF2004.01/dvb_un_sp_c.adfout", GenericSPunTest),
-    ("ADF/ADF2004.01/dvb_ir.adfout", ADFIRTest),
-    ("ADF/ADF2006.01/dvb_gopt.adfout", ADFGeoOptTest_noscfvalues),
-    ("ADF/ADF2013.01/dvb_gopt_b_fullscf.adfout", ADFGeoOptTest),
-    ("ADF/ADF2014.01/dvb_gopt_b_fullscf.out", ADFGeoOptTest),
-    ("DALTON/DALTON-2013/C_bigbasis.aug-cc-pCVQZ.out", DALTONBigBasisTest_aug_cc_pCVQZ),
-    ("DALTON/DALTON-2013/b3lyp_energy_dvb_sp_nosym.out", DALTONSPTest_nosymmetry),
-    ("DALTON/DALTON-2013/dvb_sp_hf_nosym.out", DALTONHFSPTest_nosymmetry),
-    ("DALTON/DALTON-2013/dvb_td_normalprint.out", DALTONTDTest_noetsecs),
-    ("DALTON/DALTON-2013/sp_b3lyp_dvb.out", GenericSPTest),
-    ("DALTON/DALTON-2015/dvb_td_normalprint.out", DALTONTDTest_noetsecs),
-    ("DALTON/DALTON-2015/trithiolane_polar_abalnr.out", GaussianPolarTest),
-    ("DALTON/DALTON-2015/trithiolane_polar_response.out", GaussianPolarTest),
-    ("DALTON/DALTON-2015/trithiolane_polar_static.out", GaussianPolarTest),
-    ("DALTON/DALTON-2015/Trp_polar_response.out", ReferencePolarTest),
-    ("DALTON/DALTON-2015/Trp_polar_static.out", ReferencePolarTest),
-    ("GAMESS/GAMESS-US2005/water_ccd_2005.06.27.r3.out", GenericCCTest),
-    ("GAMESS/GAMESS-US2005/water_ccsd_2005.06.27.r3.out", GenericCCTest),
-    ("GAMESS/GAMESS-US2005/water_ccsd(t)_2005.06.27.r3.out", GenericCCTest),
-    ("GAMESS/GAMESS-US2005/water_cis_dets_2005.06.27.r3.out", GAMESSUSCISTest_dets),
-    ("GAMESS/GAMESS-US2005/water_cis_saps_2005.06.27.r3.out", GenericCISTest),
-    ("GAMESS/GAMESS-US2005/MoOCl4-sp_2005.06.27.r3.out", GenericCoreTest),
-    ("GAMESS/GAMESS-US2005/water_mp2_2005.06.27.r3.out", GenericMP2Test),
-    ("GAMESS/GAMESS-US2006/C_bigbasis_2006.02.22.r3.out", GenericBigBasisTest),
-    ("GAMESS/GAMESS-US2006/dvb_gopt_a_2006.02.22.r2.out", GenericGeoOptTest),
-    ("GAMESS/GAMESS-US2006/dvb_sp_2006.02.22.r2.out", GenericSPTest),
-    ("GAMESS/GAMESS-US2006/dvb_un_sp_2006.02.22.r2.out", GenericSPunTest),
-    ("GAMESS/GAMESS-US2006/dvb_ir.2006.02.22.r2.out", GenericIRTest),
-    ("GAMESS/GAMESS-US2006/nh3_ts_ir.2006.2.22.r2.out", GAMESSUSIRTest_ts),
-    ("GAMESS/GAMESS-US2010/dvb_gopt.log", GenericGeoOptTest),
-    ("GAMESS/GAMESS-US2010/dvb_sp.log", GAMESSSPTest_noaooverlaps),
-    ("GAMESS/GAMESS-US2010/dvb_sp_un.log", GAMESSUSSPunTest_charge0),
-    ("GAMESS/GAMESS-US2010/dvb_td.log", GAMESSUSTDDFTTest),
-    ("GAMESS/GAMESS-US2010/dvb_ir.log", GenericIRTest),
-    ("GAMESS/GAMESS-US2014/Trp_polar_freq.out", ReferencePolarTest),
-    ("GAMESS/GAMESS-US2014/trithiolane_polar_freq.out", GaussianPolarTest),
-    ("GAMESS/GAMESS-US2014/trithiolane_polar_tdhf.out", GenericPolarTest),
-    ("GAMESS/GAMESS-US2014/C_bigbasis.out", GenericBigBasisTest),
-    ("GAMESS/GAMESS-US2014/dvb_gopt_a.out", GenericGeoOptTest),
-    ("GAMESS/GAMESS-US2014/dvb_ir.out", GamessIRTest),
-    ("GAMESS/GAMESS-US2014/dvb_sp.out", GenericBasisTest),
-    ("GAMESS/GAMESS-US2014/dvb_sp.out", GenericSPTest),
-    ("GAMESS/GAMESS-US2014/dvb_td.out", GAMESSUSTDDFTTest),
-    ("GAMESS/GAMESS-US2014/dvb_td_trplet.out", GenericTDDFTtrpTest),
-    ("GAMESS/GAMESS-US2014/dvb_un_sp.out", GenericSPunTest),
-    ("GAMESS/GAMESS-US2014/MoOCl4-sp.out", GenericCoreTest),
-    ("GAMESS/GAMESS-US2014/nh3_ts_ir.out", GenericIRimgTest),
-    ("GAMESS/GAMESS-US2014/water_ccd.out", GenericCCTest),
-    ("GAMESS/GAMESS-US2014/water_ccsd.out", GenericCCTest),
-    ("GAMESS/GAMESS-US2014/water_ccsd(t).out", GenericCCTest),
-    ("GAMESS/GAMESS-US2014/water_cis_saps.out", GAMESSCISTest),
-    ("GAMESS/GAMESS-US2014/water_mp2.out", GenericMP2Test),
-    ("GAMESS/PCGAMESS/C_bigbasis.out", GenericBigBasisTest),
-    ("GAMESS/PCGAMESS/dvb_gopt_b.out", GenericGeoOptTest),
-    ("GAMESS/PCGAMESS/dvb_ir.out", FireflyIRTest),
-    ("GAMESS/PCGAMESS/dvb_raman.out", GenericRamanTest),
-    ("GAMESS/PCGAMESS/dvb_sp.out", GenericHFSPTest),
-    ("GAMESS/PCGAMESS/dvb_td.out", GenericTDTest),
-    ("GAMESS/PCGAMESS/dvb_td_trplet.out", GenericTDDFTtrpTest),
-    ("GAMESS/PCGAMESS/dvb_un_sp.out", GenericSPunTest),
-    ("GAMESS/PCGAMESS/water_mp2.out", GenericMP2Test),
-    ("GAMESS/PCGAMESS/water_mp3.out", GenericMP3Test),
-    ("GAMESS/PCGAMESS/water_mp4.out", GenericMP4SDQTest),
-    ("GAMESS/PCGAMESS/water_mp4_sdtq.out", GenericMP4SDTQTest),
-    ("GAMESS/WinGAMESS/dvb_td_2007.03.24.r1.out", GAMESSUSTDDFTTest),
-    ("Gaussian/Gaussian03/CO_TD_delta.log", GenericTDunTest),
-    ("Gaussian/Gaussian03/C_bigbasis.out", GaussianBigBasisTest),
-    ("Gaussian/Gaussian03/dvb_gopt.out", GenericGeoOptTest),
-    ("Gaussian/Gaussian03/dvb_ir.out", GaussianIRTest),
-    ("Gaussian/Gaussian03/dvb_raman.out", GaussianRamanTest),
-    ("Gaussian/Gaussian03/dvb_sp.out", GaussianSPTest),
-    ("Gaussian/Gaussian03/dvb_sp_basis.log", GenericBasisTest),
-    ("Gaussian/Gaussian03/dvb_sp_basis_b.log", GenericBasisTest),
-    ("Gaussian/Gaussian03/dvb_td.out", GaussianTDDFTTest),
-    ("Gaussian/Gaussian03/dvb_un_sp.out", GaussianSPunTest_nomosyms),
-    ("Gaussian/Gaussian03/dvb_un_sp_b.log", GaussianSPunTest),
-    ("Gaussian/Gaussian03/Mo4OCl4-sp.log", GenericCoreTest),
-    ("Gaussian/Gaussian03/water_ccd.log", GenericCCTest),
-    ("Gaussian/Gaussian03/water_ccsd(t).log", GenericCCTest),
-    ("Gaussian/Gaussian03/water_ccsd.log", GenericCCTest),
-    ("Gaussian/Gaussian03/water_cis.log", GaussianSPunTest_nonaturalorbitals),
-    ("Gaussian/Gaussian03/water_cisd.log", GaussianSPunTest_nonaturalorbitals),
-    ("Gaussian/Gaussian03/water_mp2.log", GaussianMP2Test),
-    ("Gaussian/Gaussian03/water_mp3.log", GaussianMP3Test),
-    ("Gaussian/Gaussian03/water_mp4.log", GaussianMP4SDTQTest),
-    ("Gaussian/Gaussian03/water_mp4sdq.log", GaussianMP4SDQTest),
-    ("Gaussian/Gaussian03/water_mp5.log", GenericMP5Test),
-    ("Gaussian/Gaussian09/dvb_gopt_revA.02.out", GenericGeoOptTest),
-    ("Gaussian/Gaussian09/dvb_ir_revA.02.out", GaussianIRTest),
-    ("Gaussian/Gaussian09/dvb_raman_revA.02.out", GaussianRamanTest),
-    ("Gaussian/Gaussian09/dvb_scan_revA.02.log", GaussianRelaxedScanTest),
-    ("Gaussian/Gaussian09/dvb_sp_basis_b_gfprint.log", GenericBasisTest),
-    ("Gaussian/Gaussian09/dvb_sp_basis_gfinput.log", GenericBasisTest),
-    ("Gaussian/Gaussian09/dvb_sp_revA.02.out", GaussianSPTest),
-    ("Gaussian/Gaussian09/dvb_td_revA.02.out", GaussianTDDFTTest),
-    ("Gaussian/Gaussian09/dvb_un_sp_revA.02.log", GaussianSPunTest_nomosyms),
-    ("Gaussian/Gaussian09/dvb_un_sp_b_revA.02.log", GaussianSPunTest),
-    ("Gaussian/Gaussian09/trithiolane_polar.log", GaussianPolarTest),
-    ("Jaguar/Jaguar4.2/dvb_gopt.out", JaguarGeoOptTest_nmo45),
-    ("Jaguar/Jaguar4.2/dvb_gopt_b.out", GenericGeoOptTest),
-    ("Jaguar/Jaguar4.2/dvb_sp.out", JaguarSPTest_nmo45),
-    ("Jaguar/Jaguar4.2/dvb_sp_b.out", JaguarSPTest_nmo45),
-    ("Jaguar/Jaguar4.2/dvb_un_sp.out", JaguarSPunTest_nmo_all_nomosyms),
-    ("Jaguar/Jaguar4.2/dvb_ir.out", JaguarIRTest),
-    ("Jaguar/Jaguar6.0/dvb_gopt.out", JaguarGeoOptTest_6_31gss),
-    ("Jaguar/Jaguar6.0/dvb_sp.out", JaguarSPTest_6_31gss_nomosyms),
-    ("Jaguar/Jaguar6.0/dvb_un_sp.out", JaguarSPunTest_nmo_all_nomosyms),
-    ("Jaguar/Jaguar6.5/dvb_gopt.out", JaguarGeoOptTest_nmo45),
-    ("Jaguar/Jaguar6.5/dvb_sp.out", JaguarSPTest_nmo45),
-    ("Jaguar/Jaguar6.5/dvb_un_sp.out", JaguarSPunTest_nomosyms),
-    ("Jaguar/Jaguar6.5/dvb_ir.out", JaguarIRTest),
-    ("Molcas/Molcas8.0/dvb_sp.out", MolcasSPTest),
-    ("Molcas/Molcas8.0/dvb_sp_un.out", GenericSPunTest),
-    ("Molcas/Molcas8.0/C_bigbasis.out", MolcasBigBasisTest_nogbasis),
-    ("Molpro/Molpro2006/C_bigbasis_cart.out", MolproBigBasisTest_cart),
-    ("Molpro/Molpro2012/trithiolane_polar.out", GenericPolarTest),
-    ("NWChem/NWChem6.6/trithiolane_polar.out", GaussianPolarTest),
-    ("ORCA/ORCA2.8/dvb_gopt.out", OrcaGeoOptTest),
-    ("ORCA/ORCA2.8/dvb_sp.out", GenericBasisTest),
-    ("ORCA/ORCA2.8/dvb_sp.out", OrcaSPTest_nobasis),
-    ("ORCA/ORCA2.8/dvb_sp_un.out", OrcaSPunTest_charge0),
-    ("ORCA/ORCA2.8/dvb_td.out", OrcaTDDFTTest_pre1085),
-    ("ORCA/ORCA2.8/dvb_ir.out", OrcaIRTest_old),
-    ("ORCA/ORCA2.9/dvb_gopt.out", OrcaGeoOptTest),
-    ("ORCA/ORCA2.9/dvb_ir.out", OrcaIRTest),
-    ("ORCA/ORCA2.9/dvb_raman.out", GenericRamanTest),
-    ("ORCA/ORCA2.9/dvb_scan.out", OrcaRelaxedScanTest),
-    ("ORCA/ORCA2.9/dvb_sp.out", GenericBasisTest),
-    ("ORCA/ORCA2.9/dvb_sp.out", OrcaSPTest_nobasis),
-    ("ORCA/ORCA2.9/dvb_sp_un.out", GenericSPunTest),
-    ("ORCA/ORCA2.9/dvb_td.out", OrcaTDDFTTest_pre1085),
-    ("ORCA/ORCA3.0/dvb_bomd.out", GenericBOMDTest),
-    ("ORCA/ORCA3.0/dvb_gopt.out", OrcaGeoOptTest),
-    ("ORCA/ORCA3.0/dvb_ir.out", OrcaIRTest),
-    ("ORCA/ORCA3.0/dvb_raman.out", GenericRamanTest),
-    ("ORCA/ORCA3.0/dvb_scan.out", OrcaRelaxedScanTest),
-    ("ORCA/ORCA3.0/dvb_sp_un.out", GenericSPunTest),
-    ("ORCA/ORCA3.0/dvb_sp.out", GenericBasisTest),
-    ("ORCA/ORCA3.0/dvb_sp.out", OrcaSPTest_nobasis),
-    ("ORCA/ORCA3.0/dvb_td.out", OrcaTDDFTTest_pre1085),
-    ("ORCA/ORCA3.0/Trp_polar.out", ReferencePolarTest),
-    ("ORCA/ORCA3.0/trithiolane_polar.out", GaussianPolarTest),
-    ("ORCA/ORCA4.0/dvb_sp.out", GenericBasisTest),
-    ("ORCA/ORCA4.0/dvb_gopt.out", OrcaGeoOptTest),
-    ("ORCA/ORCA4.0/Trp_polar.out", ReferencePolarTest),
-    ("ORCA/ORCA4.0/dvb_sp.out", OrcaSPTest_nohirshfeld),
-    ("ORCA/ORCA4.0/dvb_sp_un.out", GenericSPunTest),
-    ("ORCA/ORCA4.0/dvb_td.out", OrcaTDDFTTest_pre5),
-    ("ORCA/ORCA4.0/dvb_rocis.out", OrcaROCIS40Test),
-    ("ORCA/ORCA4.0/dvb_ir.out", GenericIRTest),
-    ("ORCA/ORCA4.0/dvb_raman.out", OrcaRamanTest),
-    ("Psi3/Psi3.4/dvb_sp_hf.out", Psi3SPTest),
-    ("Psi4/Psi4-1.0/C_bigbasis.out", Psi4BigBasisTest),
-    ("Psi4/Psi4-1.0/dvb_gopt_rhf.out", Psi4GeoOptTest),
-    ("Psi4/Psi4-1.0/dvb_gopt_rks.out", Psi4GeoOptTest),
-    ("Psi4/Psi4-1.0/dvb_ir_rhf.out", Psi4IRTest),
-    ("Psi4/Psi4-1.0/dvb_sp_rhf.out", PsiHFSPTest_noatommasses),
-    ("Psi4/Psi4-1.0/dvb_sp_rks.out", PsiSPTest_noatommasses),
-    ("Psi4/Psi4-1.0/dvb_sp_rohf.out", GenericROSPTest),
-    ("Psi4/Psi4-1.0/dvb_sp_uhf.out", GenericSPunTest),
-    ("Psi4/Psi4-1.0/dvb_sp_uks.out", GenericSPunTest),
-    ("Psi4/Psi4-1.0/water_ccsd(t).out", GenericCCTest),
-    ("Psi4/Psi4-1.0/water_ccsd.out", GenericCCTest),
-    ("Psi4/Psi4-1.0/water_mp2.out", GenericMP2Test),
-    ("Psi4/Psi4-beta5/C_bigbasis.out", GenericBigBasisTest),
-    ("Psi4/Psi4-beta5/dvb_gopt_hf.out", Psi4GeoOptTest),
-    ("Psi4/Psi4-beta5/dvb_sp_hf.out", GenericBasisTest),
-    ("Psi4/Psi4-beta5/dvb_sp_hf.out", PsiHFSPTest_noatommasses),
-    ("Psi4/Psi4-beta5/dvb_sp_ks.out", GenericBasisTest),
-    ("Psi4/Psi4-beta5/dvb_sp_ks.out", PsiSPTest_noatommasses),
-    ("Psi4/Psi4-beta5/water_ccsd.out", GenericCCTest),
-    ("Psi4/Psi4-beta5/water_mp2.out", GenericMP2Test),
-    ("QChem/QChem4.2/C_bigbasis.out", QChemBigBasisTest),
-    ("QChem/QChem4.2/MoOCl4_sp.out", GenericCoreTest),
-    ("QChem/QChem4.2/Trp_polar.out", ReferencePolarTest),
-    ("QChem/QChem4.2/dvb_bomd.out", GenericBOMDTest),
-    ("QChem/QChem4.2/dvb_gopt.out", GenericGeoOptTest),
-    ("QChem/QChem4.2/dvb_ir.out", QChemIRTest),
-    ("QChem/QChem4.2/dvb_raman.out", QChemRamanTest),
-    ("QChem/QChem4.2/dvb_sp.out", GenericSPTest),
-    ("QChem/QChem4.2/dvb_sp_un.out", GenericSPunTest),
-    ("QChem/QChem4.2/dvb_td.out", QChemTDDFTTest),
-    ("QChem/QChem4.2/water_ccd.out", GenericCCTest),
-    ("QChem/QChem4.2/water_ccsd(t).out", GenericCCTest),
-    ("QChem/QChem4.2/water_ccsd.out", GenericCCTest),
-    ("QChem/QChem4.2/water_cis.out", QChemCISTest),
-    ("QChem/QChem4.2/water_mp2.out", GenericMP2Test),
-    ("QChem/QChem4.2/water_mp3.out", GenericMP3Test),
-    ("QChem/QChem4.2/water_mp4.out", QChemMP4SDTQTest),
-    ("QChem/QChem4.2/water_mp4sdq.out", QChemMP4SDQTest),
-    ("QChem/QChem4.2/Trp_freq.out", ReferencePolarTest),
-    ("QChem/QChem4.2/trithiolane_polar.out", GaussianPolarTest),
-    ("QChem/QChem4.2/trithiolane_freq.out", GaussianPolarTest),
-    ("QChem/QChem4.4/Trp_polar_ideriv1.out", ReferencePolarTest),
-    ("QChem/QChem4.4/Trp_polar_response.out", ReferencePolarTest),
-]
 
 
 def make_regression_from_old_unittest(test_class):
@@ -3603,7 +3313,7 @@ def make_regression_from_old_unittest(test_class):
     return old_unit_test
 
 
-def test_regressions(
+def todoremove_regressions(
     which=[], opt_traceback=True, regdir=__regression_dir__, loglevel=logging.ERROR
 ):
     # Build a list of regression files that can be found. If there is a directory
@@ -3654,10 +3364,10 @@ def test_regressions(
             missing_in_list.append(fn)
 
     # Create the regression test functions from logfiles that were old unittests.
-    for path, test_class in old_unittests:
-        funcname = f"test{normalisefilename(path)}"
-        func = make_regression_from_old_unittest(test_class)
-        globals()[funcname] = func
+    # for path, test_class in old_unittests:
+    #     funcname = f"test{normalisefilename(path)}"
+    #     func = make_regression_from_old_unittest(test_class)
+    #     globals()[funcname] = func
 
     # Gather orphaned tests - functions starting with 'test' and not corresponding
     # to any regression file name.
@@ -3811,24 +3521,3 @@ def test_regressions(
 
     if failures + errors > 0:
         sys.exit(1)
-
-
-if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument("--traceback", action="store_true")
-    parser.add_argument("--debug", action="store_true")
-    parser.add_argument(
-        "parser_or_module",
-        nargs="*",
-        help="Limit the test to the packages/parsers passed as arguments. "
-        "No arguments implies all parsers.",
-    )
-
-    args = parser.parse_args()
-
-    loglevel = logging.DEBUG if args.debug else logging.ERROR
-
-    test_regressions(args.parser_or_module, args.traceback, loglevel=loglevel)
