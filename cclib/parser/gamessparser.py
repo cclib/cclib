@@ -1068,16 +1068,19 @@ class GAMESS(logfileparser.Logfile):
                 self.aonames = []
                 readatombasis = True
 
-            if line.strip("INITIAL GUESS ORBITALS"):
-              self.skip_lines(inputfile, ['dashes','blank','ASSIGNED OCCUPANCIES'])
-              line = next(inputfile)
-              line = next(inputfile)
-              # Skipping assigned occupancies as no object exists to hold this information for MOs
-              if line.strip() == 'ASSIGNED OCCUPANCIES':
+            if line.find("INITIAL GUESS ORBITALS") == 30:
+                self.skip_lines(inputfile, ["dashes", "blank"])
                 line = next(inputfile)
+                # Skipping assigned occupancies as no object exists to hold this information for MOs
+                # GAMESS US
+                #   65  CU12  S    0.000000   0.000001   0.000004  -0.000002   0.000001
+                if line.strip() == "ASSIGNED OCCUPANCIES":
+                    line = next(inputfile)
                 for _ in range(math.ceil(self.nmo/5.)):
-                    next(inputfile)
-                    
+                        line = next(inputfile)
+            else:
+                self.skip_line(inputfile, "dashes")
+
             for base in range(0, self.nmo, 5):
                 self.updateprogress(inputfile, "Coefficients")
 
