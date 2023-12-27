@@ -568,7 +568,6 @@ class GenericSPTest:
     @skipForParser("Molpro", "reading cpu/wall time is not implemented for this parser")
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("NWChem", "reading cpu/wall time is not implemented for this parser")
-    @skipForParser("Psi3", "reading cpu/wall time is not implemented for this parser")
     @skipForParser("Psi4", "reading cpu/wall time is not implemented for this parser")
     def testmetadata_times(self, data) -> None:
         """Does metadata have expected keys and values of correct types?"""

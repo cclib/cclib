@@ -3265,11 +3265,25 @@ class Psi3SPTest(GenericSPTest):
     # that a SALC calculation is done instead of a full LCAO.
     b3lyp_energy = -10300
 
+    b3lyp_moenergy = -301.6614
+
+    @pytest.mark.skip("atomcharges not implemented for Psi3")
+    def testatomcharges_mulliken(self, data: "ccData") -> None:
+        pass
+
+    @pytest.mark.skip("atomcharges not implemented for Psi3")
+    def testatomcharges_lowdin(self, data: "ccData") -> None:
+        pass
+
+    @pytest.mark.skip("atomcharges not implemented for Psi3")
+    def testatomcharges_hirshfeld(self, data: "ccData") -> None:
+        pass
+
     @pytest.mark.skip("atommasses not implemented yet")
     def testatommasses(self, data: "ccData") -> None:
         pass
 
-    @pytest.mark.skip("Psi3 did not print partial atomic charges")
+    @pytest.mark.skip("atomcharges not implemented for Psi3")
     def testatomcharges(self, data: "ccData") -> None:
         pass
 
@@ -3279,6 +3293,30 @@ class Psi3SPTest(GenericSPTest):
 
     @pytest.mark.skip("MO coefficients are printed separately for each SALC")
     def testdimmocoeffs(self, data: "ccData") -> None:
+        pass
+
+    @pytest.mark.skip("Psi3 does not currently have the option to print the overlap matrix")
+    def testaooverlaps(self, data: "ccData") -> None:
+        pass
+
+    @pytest.mark.skip("reading rotational constants is not implemented for Psi3")
+    def testrotconsts(self, data: "ccData") -> None:
+        pass
+
+    @pytest.mark.skip("reading basis set is not implemented for Psi3")
+    def testmetadata_basis_set(self, data: "ccData") -> None:
+        pass
+
+    @pytest.mark.skip("reading input file is not implemented for Psi3")
+    def testmetadata_input_file(self, data: "ccData") -> None:
+        pass
+
+    @pytest.mark.skip("reading unformatted package version is not implemented for Psi3")
+    def testmetadata_legacy_package_version(self, data: "ccData") -> None:
+        pass
+
+    @pytest.mark.skip("reading cpu/wall time is not implemented for Psi3")
+    def testmetadata_times(self, data: "ccData") -> None:
         pass
 
 
