@@ -18,10 +18,11 @@ import re
 import typing
 import zipfile
 from tempfile import NamedTemporaryFile
-from cclib.file_handler import utils
 from typing import Any, Iterable, List, Optional
 from urllib.error import URLError
 from urllib.request import urlopen
+
+from cclib.file_handler import utils
 
 # Regular expression for validating URLs
 URL_PATTERN = re.compile(
@@ -353,8 +354,7 @@ class FileHandler:
         self.file_pointer = len(self.files) - 1
         self.pos = self.size
 
-
-    def skip_lines(self, sequence: Iterable[str],virtual=False) -> List[str]:
+    def skip_lines(self, sequence: Iterable[str], virtual=False) -> List[str]:
         """Read trivial line types and check they are what they are supposed to be.
 
         This function will read len(sequence) lines and do certain checks on them,
@@ -408,5 +408,3 @@ class FileHandler:
             lines.append(line)
 
         return lines
-
-

@@ -13,4 +13,14 @@ class combinator:
 class sp_combinator(combinator):
     def __init__(self):
         self.name = "single_point"
-        self.job_list = [[cprops.scfenergies,cprops.nmo,cprops.atommasses,cprops.charge,cprops.nbasis,cprops.atommasses,cprops.atomcoords]]
+        self.job_list = [
+            [
+                cprops.scfenergies,
+                cprops.nmo,
+                cprops.atommasses,
+                cprops.charge,
+                cprops.nbasis,
+                cprops.atommasses,
+                cprops.atomcoords,
+            ]
+        ]
