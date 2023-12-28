@@ -21,7 +21,7 @@ class charge(base_parser):
         line = file_handler.last_line
         constructed_data = None
         if line[1:7] == "Charge":
-            constructed_data = line.split()[2]
+            constructed_data = int(line.split()[2])
             return constructed_data
         return None
 

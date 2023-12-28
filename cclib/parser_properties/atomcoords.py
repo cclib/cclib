@@ -22,6 +22,7 @@ class atomcoords(base_parser):
         constructed_data = None
         if line.strip() == "Standard orientation:":
             line = file_handler.skip_lines(["d", "Center", "Number", "d"], virtual=True)
+            line = file_handler.next()
             constructed_data = []
             atomcoords = []
             while list(set(line.strip())) != ["-"]:
