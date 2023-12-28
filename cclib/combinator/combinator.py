@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from cclib.parser_properties import scfenergies
+import cclib.parser_properties as cprops
 
 
 @dataclass
@@ -13,4 +13,4 @@ class combinator:
 class sp_combinator(combinator):
     def __init__(self):
         self.name = "single_point"
-        self.job_list = [[scfenergies]]
+        self.job_list = [[cprops.scfenergies,cprops.nmo,cprops.atommasses,cprops.charge,cprops.nbasis,cprops.atommasses,cprops.atomcoords]]
