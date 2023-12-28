@@ -34,14 +34,11 @@ inside the data directory, like so:
 """
 
 import datetime
-import glob
 import logging
 import os
 import sys
-import traceback
-import unittest
 
-from cclib.io import ccopen, ccread, moldenwriter
+from cclib.io import ccread, moldenwriter
 from cclib.parser import DALTON, Gaussian, ccData
 from cclib.parser.utils import convertor
 
@@ -81,7 +78,6 @@ from .data.testSPun import GaussianSPunTest, GenericSPunTest, JaguarSPunTest
 # fmt: on
 from .data.testTD import DALTONTDTest, OrcaTDDFTTest
 from .data.testvib import GenericIRimgTest, OrcaIRTest
-from .test_data import get_program_dir, parser_names
 
 # We need this to point to files relative to this script.
 __filedir__ = os.path.abspath(os.path.dirname(__file__))
@@ -369,6 +365,7 @@ def testDALTON_DALTON_2016_Trp_polar_response_diplnx_out(logfile):
     """Check that only the xx component of polarizability is defined and
     all others are NaN even after parsing a previous file with full tensor.
     """
+    # TODO replace with looking at file location from fixture?
     full_tens_path = os.path.join(__regression_dir__, "DALTON/DALTON-2015/Trp_polar_response.out")
     DALTON(full_tens_path, loglevel=logging.ERROR).parse()
     assert hasattr(logfile.data, "polarizabilities")
@@ -2735,39 +2732,6 @@ def testnoparseGaussian_Gaussian09_coeffs_log(filename):
     assert data.aonames[0] == "Mn1_1S"
 
 
-def flatten(seq):
-    """Converts a list of lists [of lists] to a single flattened list.
-
-    Taken from the web.
-    """
-    res = []
-    for item in seq:
-        if isinstance(item, (tuple, list)):
-            res.extend(flatten(item))
-        else:
-            res.append(item)
-    return res
-
-
-def normalisefilename(filename):
-    """Replace all non-alphanumeric symbols by underscores.
-
-    >>> from . import regression
-    >>> for x in [ "Gaussian/Gaussian03/Mo4OSibdt2-opt.log" ]:
-    ...     print(regression.normalisefilename(x))
-    ...
-    Gaussian_Gaussian03_Mo4OSibdt2_opt_log
-    """
-    ans = []
-    for y in filename:
-        x = y.lower()
-        if (x >= "a" and x <= "z") or (x >= "0" and x <= "9"):
-            ans.append(y)
-        else:
-            ans.append("_")
-    return "".join(ans)
-
-
 # When a unit test is removed or replaced by a newer version, we normally want
 # the old logfile to become a regression, namely to run the unit test as part of
 # the regression suite. To this end, add the logfile path to the dictionary
@@ -3333,225 +3297,3 @@ class PsiHFSPTest_noatommasses(PsiHFSPTest):
     @pytest.mark.skip("atommasses were not printed in this file.")
     def testatommasses(self, data: "ccData") -> None:
         """These values are not present in this output file."""
-
-
-def make_regression_from_old_unittest(test_class):
-    """Return a regression test function from an old unit test logfile."""
-
-    def old_unit_test(logfile):
-        test_class.logfile = logfile
-        test_class.data = logfile.data
-        devnull = open(os.devnull, "w")
-        return unittest.TextTestRunner(stream=devnull).run(unittest.makeSuite(test_class))
-
-    return old_unit_test
-
-
-def todoremove_regressions(
-    which=[], opt_traceback=True, regdir=__regression_dir__, loglevel=logging.ERROR
-):
-    # Build a list of regression files that can be found. If there is a directory
-    # on the third level, then treat all files within it as one job.
-    try:
-        filenames = {}
-        for p in parser_names:
-            filenames[p] = []
-            pdir = os.path.join(regdir, get_program_dir(p))
-            if not os.path.exists(pdir):
-                continue
-            for version in os.scandir(pdir):
-                if version.is_file():
-                    continue
-
-                for job in os.listdir(version.path):
-                    path = os.path.join(version.path, job)
-                    if os.path.isdir(path):
-                        filenames[p].append(os.path.join(path, "*"))
-                    else:
-                        filenames[p].append(path)
-    except OSError as e:
-        print(e)
-        print("\nERROR: At least one program direcory is missing.")
-        print("Run 'git pull' or regression_download.sh in cclib to update.")
-        sys.exit(1)
-
-    # This file should contain the paths to all regresssion test files we have gathered
-    # over the years. It is not really necessary, since we can discover them on the disk,
-    # but we keep it as a legacy and a way to track the regression tests.
-    regfile = open(os.path.join(regdir, "regressionfiles.txt"), "r")
-    regfilenames = [os.sep.join(x.strip().split("/")) for x in regfile.readlines()]
-    regfile.close()
-
-    # We will want to print a warning if you haven't downloaded all of the regression
-    # test files, or when, vice versa, not all of the regression test files found on disk
-    # are included in filenames. However, gather that data here and print the warnings
-    # at the end so that we test all available files and the messages are displayed
-    # prominently at the end.
-    missing_on_disk = []
-    missing_in_list = []
-    for fn in regfilenames:
-        if not os.path.exists(os.path.join(regdir, fn)):
-            missing_on_disk.append(fn)
-    for fn in glob.glob(os.path.join(regdir, "*", "*", "*")):
-        fn = fn.replace(regdir, "").strip("/")
-        if fn not in regfilenames:
-            missing_in_list.append(fn)
-
-    # Create the regression test functions from logfiles that were old unittests.
-    # for path, test_class in old_unittests:
-    #     funcname = f"test{normalisefilename(path)}"
-    #     func = make_regression_from_old_unittest(test_class)
-    #     globals()[funcname] = func
-
-    # Gather orphaned tests - functions starting with 'test' and not corresponding
-    # to any regression file name.
-    orphaned_tests = []
-    for pn in parser_names:
-        prefix = f"test{pn}_{pn}"
-        tests = [fn for fn in globals() if fn[: len(prefix)] == prefix]
-        normalized = [normalisefilename(fn.replace(__regression_dir__, "")) for fn in filenames[pn]]
-        orphaned = [t for t in tests if t[4:] not in normalized]
-        orphaned_tests.extend(orphaned)
-
-    # Assume that if a string is not a parser name it'll be a relative
-    # path to a specific logfile.
-    # TODO: filter out things that are not parsers or files, and maybe
-    # raise an error in that case as well.
-    which_parsers = [w for w in which if w in parser_names]
-    which_filenames = [w for w in which if w not in which_parsers]
-
-    failures = errors = total = 0
-    for pn in parser_names:
-        parser_class = eval(pn)
-
-        # Continue to next iteration if we are limiting the regression and the current
-        #   name was not explicitely chosen (that is, passed as an argument).
-        if which_parsers and pn not in which_parsers:
-            continue
-
-        parser_total = 0
-        current_filenames = filenames[pn]
-        current_filenames.sort()
-        for fname in current_filenames:
-            relative_path = fname[len(regdir) :]
-            if which_filenames and relative_path not in which_filenames:
-                continue
-
-            parser_total += 1
-            if parser_total == 1:
-                print(f"Are the {pn} files ccopened and parsed correctly?")
-
-            total += 1
-            print(f"  {fname} ...", end=" ")
-
-            # Check if there is a test (needs to be an appropriately named function).
-            # If not, there can also be a test that does not assume the file is
-            # correctly parsed (for fragments, for example), and these test need
-            # to be additionaly prepended with 'testnoparse'.
-            test_this = test_noparse = False
-            fname_norm = normalisefilename(fname.replace(__regression_dir__, ""))
-
-            funcname = f"test{fname_norm}"
-            test_this = funcname in globals()
-
-            funcname_noparse = f"testnoparse{fname_norm}"
-            test_noparse = not test_this and funcname_noparse in globals()
-
-            if not test_noparse:
-                datatype = parser_class.datatype if hasattr(parser_class, "datatype") else ccData
-                job_filenames = glob.glob(fname)
-                try:
-                    if len(job_filenames) == 1:
-                        logfile = ccopen(job_filenames[0], datatype=datatype, loglevel=loglevel)
-                    else:
-                        logfile = ccopen(job_filenames, datatype=datatype, loglevel=loglevel)
-                except Exception as e:
-                    errors += 1
-                    print("ccopen error: ", e)
-                    if opt_traceback:
-                        print(traceback.format_exc())
-                else:
-                    if type(logfile) == parser_class:
-                        try:
-                            logfile.data = logfile.parse()
-                        except KeyboardInterrupt:
-                            sys.exit(1)
-                        except Exception as e:
-                            print("parse error:", e)
-                            errors += 1
-                            if opt_traceback:
-                                print(traceback.format_exc())
-                        else:
-                            if test_this:
-                                try:
-                                    res = eval(funcname)(logfile)
-                                    if res and len(res.failures) > 0:
-                                        failures += len(res.failures)
-                                        print(f"{len(res.failures)} test(s) failed")
-                                        if opt_traceback:
-                                            for f in res.failures:
-                                                print("Failure for", f[0])
-                                                print(f[1])
-                                        continue
-                                    elif res and len(res.errors) > 0:
-                                        errors += len(res.errors)
-                                        print(f"{len(res.errors):d} test(s) had errors")
-                                        if opt_traceback:
-                                            for f in res.errors:
-                                                print("Error for", f[0])
-                                                print(f[1])
-                                        continue
-                                except AssertionError:
-                                    print("test failed")
-                                    failures += 1
-                                    if opt_traceback:
-                                        print(traceback.format_exc())
-                                else:
-                                    print("parsed and tested")
-                            else:
-                                print("parsed")
-                    else:
-                        print("ccopen failed")
-                        failures += 1
-            else:
-                try:
-                    eval(funcname_noparse)(fname)
-                except AssertionError:
-                    print("test failed")
-                    failures += 1
-                except:
-                    print("parse error")
-                    errors += 1
-                    if opt_traceback:
-                        print(traceback.format_exc())
-                else:
-                    print("test passed")
-
-        if parser_total:
-            print()
-
-    print(f"Total: {int(total)}   Failed: {int(failures)}  Errors: {int(errors)}")
-    if not opt_traceback and failures + errors > 0:
-        print("\nFor more information on failures/errors, add --traceback as an argument.")
-
-    # Show these warnings at the end, so that they're easy to notice. Notice that the lists
-    # were populated at the beginning of this function.
-    if len(missing_on_disk) > 0:
-        print(f"\nWARNING: You are missing {len(missing_on_disk)} regression file(s).")
-        print("Run regression_download.sh in the ../data directory to update.")
-        print("Missing files:")
-        print("\n".join(missing_on_disk))
-    if len(missing_in_list) > 0:
-        print(
-            f"\nWARNING: The list in 'regressionfiles.txt' is missing {len(missing_in_list)} file(s)."
-        )
-        print("Add these files paths to the list and commit the change.")
-        print("Missing files:")
-        print("\n".join(missing_in_list))
-    if len(orphaned_tests) > 0:
-        print(f"\nWARNING: There are {len(orphaned_tests)} orphaned regression test functions.")
-        print("Please make sure these function names correspond to regression files:")
-        print("\n".join(orphaned_tests))
-
-    if failures + errors > 0:
-        sys.exit(1)

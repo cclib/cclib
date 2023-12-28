@@ -28,9 +28,6 @@ def normalisefilename(filename: str) -> str:
     ...
     Gaussian_Gaussian03_Mo4OSibdt2_opt_log
     """
-    # TODO This is duplicated from test/regression.py, where it can be removed
-    # after all (dynamically generated) regression tests are converted to run
-    # via pytest.
     ans = []
     for y in filename:
         x = y.lower()
