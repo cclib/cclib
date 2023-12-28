@@ -76,7 +76,7 @@ from .data.testSP import (
 from .data.testSPun import GaussianSPunTest, GenericSPunTest, JaguarSPunTest
 
 # fmt: on
-from .data.testTD import DALTONTDTest, OrcaTDDFTTest
+from .data.testTD import DALTONTDTest, OrcaROCISTest, OrcaTDDFTTest
 from .data.testvib import GenericIRimgTest, GenericIRTest
 
 # We need this to point to files relative to this script.
@@ -3099,6 +3099,16 @@ class MolproBigBasisTest_cart(MolproBigBasisTest):
 
 
 # ORCA #
+
+
+class OrcaROCIS40Test(OrcaROCISTest):
+    """Customized test for ROCIS"""
+
+    # In ORCA 4.0, an additional spectrum ("COMBINED ELECTRIC DIPOLE +
+    # MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM (Origin Independent,
+    # Length Representation)") was present that is not in ORCA 4.1.
+    # Changed via 1085. VELOCITY DIPOLE MOMENTS are not parsed.
+    n_spectra = 8
 
 
 class OrcaSPTest_nohirshfeld(OrcaSPTest):

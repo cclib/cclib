@@ -306,16 +306,6 @@ class OrcaROCISTest(GenericTDTest):
         pass
 
 
-class OrcaROCIS40Test(OrcaROCISTest):
-    """Customized test for ROCIS"""
-
-    # In ORCA 4.0, an additional spectrum ("COMBINED ELECTRIC DIPOLE +
-    # MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM (Origin Independent,
-    # Length Representation)") was present that is not in ORCA 4.1.
-    # Changed via 1085. VELOCITY DIPOLE MOMENTS are not parsed.
-    n_spectra = 8
-
-
 class TurbomoleTDTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
 
