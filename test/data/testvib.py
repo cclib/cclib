@@ -261,48 +261,6 @@ class NWChemIRTest(GenericIRTest):
         return 3 * len(data.atomnos)
 
 
-class OrcaIRTest(GenericIRTest):
-    """Customized vibrational frequency unittest"""
-
-    # ORCA has a bug in the intensities for version < 4.0
-    max_IR_intensity = 215
-    zpve = 0.1921
-
-    enthalpy_places = 3
-    entropy_places = 6
-    freeenergy_places = 3
-
-    def testtemperature(self, data) -> None:
-        """Is the temperature 298.15 K?"""
-        assert round(abs(298.15 - data.temperature), 7) == 0
-
-    def testpressure(self, data) -> None:
-        """Is the pressure 1 atm?"""
-        assert round(abs(1 - data.pressure), 7) == 0
-
-    def testenthalpy(self, data) -> None:
-        """Is the enthalpy reasonable"""
-        assert round(abs(-381.85224835 - data.enthalpy), self.enthalpy_places) == 0
-
-    def testentropy(self, data) -> None:
-        """Is the entropy reasonable"""
-        assert round(abs(0.00012080325339594164 - data.entropy), self.entropy_places) == 0
-
-    def testfreeenergy(self, data) -> None:
-        """Is the freeenergy reasonable"""
-        assert round(abs(-381.88826585 - data.freeenergy), self.freeenergy_places) == 0
-
-    def testfreeenergyconsistency(self, data) -> None:
-        """Does G = H - TS hold"""
-        assert (
-            round(
-                abs(data.enthalpy - data.temperature * data.entropy - data.freeenergy),
-                self.freeenergy_places,
-            )
-            == 0
-        )
-
-
 class QChemIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 

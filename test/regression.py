@@ -77,7 +77,7 @@ from .data.testSPun import GaussianSPunTest, GenericSPunTest, JaguarSPunTest
 
 # fmt: on
 from .data.testTD import DALTONTDTest, OrcaTDDFTTest
-from .data.testvib import GenericIRimgTest, OrcaIRTest
+from .data.testvib import GenericIRimgTest, GenericIRTest
 
 # We need this to point to files relative to this script.
 __filedir__ = os.path.abspath(os.path.dirname(__file__))
@@ -3189,6 +3189,48 @@ class OrcaTDDFTTest_pre1085(OrcaTDDFTTest_pre5):
         """These values changed in the electric dipole osc strengths prior to Orca 4.0. See PR1085"""
         assert len(data.etoscs) == self.number
         assert abs(max(data.etoscs) - 0.94) < 0.2
+
+
+class OrcaIRTest(GenericIRTest):
+    """Customized vibrational frequency unittest"""
+
+    # ORCA has a bug in the intensities for version < 4.0
+    max_IR_intensity = 215
+    zpve = 0.1921
+
+    enthalpy_places = 3
+    entropy_places = 6
+    freeenergy_places = 3
+
+    def testtemperature(self, data) -> None:
+        """Is the temperature 298.15 K?"""
+        assert round(abs(298.15 - data.temperature), 7) == 0
+
+    def testpressure(self, data) -> None:
+        """Is the pressure 1 atm?"""
+        assert round(abs(1 - data.pressure), 7) == 0
+
+    def testenthalpy(self, data) -> None:
+        """Is the enthalpy reasonable"""
+        assert round(abs(-381.85224835 - data.enthalpy), self.enthalpy_places) == 0
+
+    def testentropy(self, data) -> None:
+        """Is the entropy reasonable"""
+        assert round(abs(0.00012080325339594164 - data.entropy), self.entropy_places) == 0
+
+    def testfreeenergy(self, data) -> None:
+        """Is the freeenergy reasonable"""
+        assert round(abs(-381.88826585 - data.freeenergy), self.freeenergy_places) == 0
+
+    def testfreeenergyconsistency(self, data) -> None:
+        """Does G = H - TS hold"""
+        assert (
+            round(
+                abs(data.enthalpy - data.temperature * data.entropy - data.freeenergy),
+                self.freeenergy_places,
+            )
+            == 0
+        )
 
 
 class OrcaIRTest_old_coordsOK(OrcaIRTest):
