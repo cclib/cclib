@@ -140,12 +140,3 @@ class JaguarRelaxedScanTest(GenericRelaxedScanTest):
     def extra(self) -> int:
         """extra indices"""
         return 1
-
-
-class OrcaRelaxedScanTest(GenericRelaxedScanTest):
-    """Customized relaxed potential energy surface scan unittest"""
-
-    @pytest.fixture
-    def extra(self) -> int:
-        """extra indices"""
-        return 1

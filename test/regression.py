@@ -62,6 +62,7 @@ from .data.testGeoOpt import ADFGeoOptTest, GenericGeoOptTest, OrcaGeoOptTest
 
 # fmt: on
 from .data.testPolar import ReferencePolarTest
+from .data.testScan import GenericRelaxedScanTest
 from .data.testSP import (
     ADFSPTest,
     GenericHFSPTest,
@@ -3099,6 +3100,15 @@ class MolproBigBasisTest_cart(MolproBigBasisTest):
 
 
 # ORCA #
+
+
+class OrcaRelaxedScanTest(GenericRelaxedScanTest):
+    """Customized relaxed potential energy surface scan unittest"""
+
+    @pytest.fixture
+    def extra(self) -> int:
+        """extra indices"""
+        return 1
 
 
 class OrcaROCIS40Test(OrcaROCISTest):
