@@ -22,7 +22,6 @@ class sp_combinator(combinator):
                 cprops.atommasses,
                 cprops.mosyms,
                 cprops.nmo,
-                cprops.atombasis
-
+                cprops.atombasis,
             ]
         ]

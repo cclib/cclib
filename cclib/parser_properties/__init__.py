@@ -6,6 +6,4 @@ from cclib.parser_properties.charge import charge
 from cclib.parser_properties.mosyms import mosyms
 from cclib.parser_properties.nbasis import nbasis
 from cclib.parser_properties.nmo import nmo
-from cclib.parser_properties.nbasis import nbasis
-from cclib.parser_properties.nmo import nmo
 from cclib.parser_properties.scfenergies import scfenergies

@@ -36,7 +36,7 @@ class mosyms(base_parser):
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
         constructed_data = None
-        if line[1:20] == "Orbital symmetries:": 
+        if line[1:20] == "Orbital symmetries:":
             line = file_handler.virtual_next()
             constructed_data = [[]]
             unres = False
