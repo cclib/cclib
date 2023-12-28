@@ -196,6 +196,40 @@ def data(request) -> ccData:
     return _CACHE[first]
 
 
+def pytest_collection_modifyitems(session, config, items) -> None:
+    """
+    Official docstring:  Called after collection has been performed. May filter or re-order the items in-place.
+
+    For us, that means:
+
+      - All tests get marked with whatever their containing subdirectory is
+        (is_parser, is_data, is_method, ...).  This is because `-k` does not
+        operate on filenames, only function/class/method names, and many of
+        these names do not contain the general category of feature we want to
+        group by during testing.
+    """
+    rootdir = Path(config.rootdir)
+    test_basedir = rootdir / "test"
+    for item in items:
+        try:
+            test_subpath = item.path.relative_to(test_basedir)
+            mark_name = f"is_{str(test_subpath.parent)}"
+            item.add_marker(mark_name)
+        except ValueError:
+            # Not being a subpath is ok, that just means it isn't a test file.
+            pass
+
+
+def pytest_configure(config) -> None:
+    """Automatically add a marker named for each test subdirectory, prefixed with `is_`."""
+    rootdir = Path(config.rootdir)
+    test_basedir = rootdir / "test"
+    for path in test_basedir.glob("*"):
+        if path.is_dir() and "__pycache__" not in str(path):
+            mark_name = f"is_{path.stem}"
+            config.addinivalue_line("markers", mark_name)
+
+
 def pytest_generate_tests(metafunc: "pytest.Metafunc") -> None:
     module_components = metafunc.module.__name__.split(".")
     if module_components[:2] == ["test", "data"]:
