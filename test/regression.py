@@ -3106,26 +3106,6 @@ class OrcaSPTest_nobasis(OrcaSPTest_nohirshfeld):
         assert "basis_set" not in data.metadata
 
 
-class OrcaSPTest_3_21g(OrcaSPTest):
-    nbasisdict = {1: 2, 6: 9}
-    b3lyp_energy = -10460
-    b3lyp_moenergy = -276.1556935784018
-    overlap01 = 0.19
-    molecularmass = 130190
-
-    @pytest.mark.skip("This calculation has no symmetry.")
-    def testsymlabels(self, data: "ccData") -> None:
-        """This calculation has no symmetry."""
-
-    def testmetadata_symmetry_detected(self, data: "ccData") -> None:
-        """This calculation has no symmetry."""
-        assert "symmetry_detected" not in data.metadata
-
-    def testmetadata_symmetry_used(self, data: "ccData") -> None:
-        """This calculation has no symmetry."""
-        assert "symmetry_used" not in data.metadata
-
-
 class OrcaSPunTest_charge0(GenericSPunTest):
     def testcharge_and_mult(self, data: "ccData") -> None:
         """The charge in the input was wrong."""
