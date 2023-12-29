@@ -67,6 +67,8 @@ jobs:
           name: python-package-distributions
           path: dist/
   check-installation:
+    needs:
+      - run-tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-python@v4
