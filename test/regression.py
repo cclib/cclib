@@ -3051,24 +3051,6 @@ class JaguarGeoOptTest_nmo45(GenericGeoOptTest):
         assert len(data.moenergies[0]) == 45
 
 
-class JaguarGeoOptTest_nmo45_nogeo(JaguarGeoOptTest_nmo45):
-    @pytest.mark.skip("Cannot parse geotargets from this file.")
-    def testgeotargets(self, data: "ccData") -> None:
-        """geotargets were not printed here."""
-
-    @pytest.mark.skip("Cannot parse geovalues from this file.")
-    def testgeovalues_atomcoords(self, data: "ccData") -> None:
-        """geovalues were not printed here."""
-
-    @pytest.mark.skip("Cannot parse geovalues from this file.")
-    def testgeovalues_scfvalues(self, data: "ccData") -> None:
-        """geovalues were not printed here."""
-
-    @pytest.mark.skip("Cannot parse optdone from this file.")
-    def testoptdone(self, data: "ccData") -> None:
-        """optdone does not exist for this file."""
-
-
 class JaguarGeoOptTest_6_31gss(GenericGeoOptTest):
     nbasisdict = {1: 5, 6: 15}
     b3lyp_energy = -10530
@@ -3180,13 +3162,6 @@ class OrcaSPunTest_charge0(GenericSPunTest):
     def testorbitals(self, data: "ccData") -> None:
         """Closed-shell calculation run as open-shell."""
         assert data.closed_shell
-
-
-class OrcaTDDFTTest_error(OrcaTDDFTTest):
-    def testoscs(self, data: "ccData") -> None:
-        """These values used to be less accurate, probably due to wrong coordinates."""
-        assert len(data.etoscs) == self.number
-        assert abs(max(data.etoscs) - 1.0) < 0.2
 
 
 class OrcaTDDFTTest_pre5(OrcaTDDFTTest):
