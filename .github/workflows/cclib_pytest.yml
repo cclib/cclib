@@ -66,8 +66,7 @@ jobs:
         with:
           name: python-package-distributions
           path: dist/
-        # TODO not sure why this doesn't work
-        # if: matrix.container == 'shivupa/cclib-ci:py310'
+        if: matrix.container == 'shivupa/cclib-ci:py310-edge'
   check-installation:
     needs:
       - run-tests
