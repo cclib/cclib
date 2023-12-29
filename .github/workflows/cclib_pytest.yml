@@ -54,7 +54,7 @@ jobs:
           name: codecov-cclib
           fail_ci_if_error: true
           verbose: false
-        if: matrix.container == 'shivupa/cclib-ci:py37'
+        if: matrix.container == 'shivupa/cclib-ci:py310-edge'
       - name: Install pypa/build
         run: |
           python -m pip install build
