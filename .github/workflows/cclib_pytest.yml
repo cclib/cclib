@@ -66,10 +66,15 @@ jobs:
         with:
           name: python-package-distributions
           path: dist/
+        # TODO not sure why this doesn't work
+        # if: matrix.container == 'shivupa/cclib-ci:py310'
   check-installation:
     needs:
       - run-tests
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        install-method: [wheel, source]
     steps:
       - uses: actions/setup-python@v4
         with:
@@ -78,3 +83,18 @@ jobs:
         with:
           name: python-package-distributions
           path: dist/
+      - name: Update environment
+        run: |
+          python -m pip install -U setuptools pip
+      - name: Install cclib (wheel)
+        run: |
+          python -m pip install dist/*.whl
+        if: matrix.install-method == 'wheel'
+      - name: Install cclib (source)
+        run: |
+          python -m pip install dist/*.tar.gz
+        if: matrix.install-method == 'source'
+      - name: Check cclib install
+        run: |
+          cd ~
+          python -c 'import cclib'
