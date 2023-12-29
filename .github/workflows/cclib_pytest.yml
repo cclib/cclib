@@ -66,3 +66,13 @@ jobs:
         with:
           name: python-package-distributions
           path: dist/
+  check-installation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+      - uses: actions/download-artifact@v3
+        with:
+          name: python-package-distributions
+          path: dist/
