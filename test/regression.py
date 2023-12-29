@@ -56,11 +56,7 @@ test_dir = f"{os.path.realpath(os.path.dirname(__file__))}/../../test"
 sys.path.insert(1, os.path.abspath(test_dir))
 from .data.testBasis import GenericBigBasisTest, MolcasBigBasisTest, MolproBigBasisTest
 from .data.testCI import GaussianCISTest, GenericCISTest
-
-# fmt: off
-from .data.testGeoOpt import ADFGeoOptTest, GenericGeoOptTest, OrcaGeoOptTest
-
-# fmt: on
+from .data.testGeoOpt import ADFGeoOptTest, GenericGeoOptTest
 from .data.testPolar import ReferencePolarTest
 from .data.testScan import GenericRelaxedScanTest
 from .data.testSP import (
@@ -72,11 +68,7 @@ from .data.testSP import (
     PsiHFSPTest,
     PsiSPTest,
 )
-
-# fmt: off
 from .data.testSPun import GaussianSPunTest, GenericSPunTest, JaguarSPunTest
-
-# fmt: on
 from .data.testTD import DALTONTDTest, OrcaROCISTest, OrcaTDDFTTest
 from .data.testvib import GenericIRimgTest, GenericIRTest
 
@@ -3132,11 +3124,6 @@ class OrcaSPTest_3_21g(OrcaSPTest):
     def testmetadata_symmetry_used(self, data: "ccData") -> None:
         """This calculation has no symmetry."""
         assert "symmetry_used" not in data.metadata
-
-
-class OrcaGeoOptTest_3_21g(OrcaGeoOptTest):
-    nbasisdict = {1: 2, 6: 9}
-    b3lyp_energy = -10460
 
 
 class OrcaSPunTest_charge0(GenericSPunTest):
