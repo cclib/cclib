@@ -125,6 +125,12 @@ repos:
       - id: check-yaml
       - id: check-toml
       - id: check-added-large-files
+      - id: no-commit-to-branch
+        args: [--branch, main, --branch, master]
+  - repo: https://github.com/Mateusz-Grzelinski/actionlint-py
+    rev: "v1.6.26.11"
+    hooks:
+      - id: actionlint
   - repo: https://github.com/PyCQA/isort
     rev: "5.13.2"
     hooks:
