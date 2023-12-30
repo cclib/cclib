@@ -48,7 +48,7 @@ jobs:
         run: |
           bash .github/scripts/run_pytest_methods.bash
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           files: ./coverage-unit.xml,./coverage-regression.xml,./coverage-method.xml
           name: codecov-cclib
