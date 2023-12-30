@@ -1075,9 +1075,16 @@ class GAMESS(logfileparser.Logfile):
                 # GAMESS US
                 #   65  CU12  S    0.000000   0.000001   0.000004  -0.000002   0.000001
                 if line.strip() == "ASSIGNED OCCUPANCIES":
+                    if not hasattr(self,'mooccnos'):
+                        self.mooccnos = [[]]
+                    else:
+                        self.mooccnos.append([])
                     line = next(inputfile)
-                for _ in range(math.ceil(self.nmo/5.)):
+                for _ in range(int(numpy.ceil(self.nmo/5.))):
                         line = next(inputfile)
+                        occs = [float(i) for i in line.split()]
+                        self.mooccnos[-1].extend(occs)
+                print(self.mooccnos)
             else:
                 self.skip_line(inputfile, "dashes")
 
@@ -1303,7 +1310,6 @@ class GAMESS(logfileparser.Logfile):
             homos.append(int(line.split()[-1]) - 1)
 
             self.set_attribute("homos", homos)
-
         if line.find("SYMMETRIES FOR INITIAL GUESS ORBITALS FOLLOW") >= 0:
             # Not unrestricted, so lop off the second index.
             # In case the search string above was not used (ex. FMO in exam38),
