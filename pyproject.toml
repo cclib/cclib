@@ -49,7 +49,7 @@ bridges = [
     "openbabel",
     "pandas",
     "pyquante2 @ git+https://github.com/cclib/pyquante2.git@github-actions-ci",
-    "pyscf<2.3",
+    "pyscf<2.5",
     "qc-iodata @ git+https://github.com/theochem/iodata.git@1.0.0a2",
 ]
 docs = [
