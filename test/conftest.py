@@ -16,8 +16,6 @@ from cclib.parser.logfileparser import Logfile
 
 import pytest
 
-version_major = sys.version_info.major
-
 
 def normalisefilename(filename: str) -> str:
     """Replace all non-alphanumeric symbols by underscores.
