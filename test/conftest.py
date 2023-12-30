@@ -8,7 +8,7 @@ import os
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Iterable, List, Mapping, Optional, Union
+from typing import Dict, List, Mapping, Optional, Union
 
 from cclib.io import ccopen
 from cclib.parser.data import ccData
@@ -68,16 +68,11 @@ def make_regression_entries() -> List[Regression]:
 
 
 @pytest.fixture(scope="session")
-def regression_entries() -> List[Regression]:
-    return make_regression_entries()
-
-
-@pytest.fixture(scope="session")
-def regression_filenames(regression_entries: Iterable[Regression]) -> Dict[str, Path]:
+def regression_filenames() -> Dict[str, Path]:
     """Map normalized filenames suitable for test function names to their
     absolute location on the filesystem.
     """
-    return {entry.normalisedfilename: entry.filename for entry in regression_entries}
+    return {entry.normalisedfilename: entry.filename for entry in make_regression_entries()}
 
 
 @pytest.fixture
