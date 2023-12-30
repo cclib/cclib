@@ -16,7 +16,7 @@ class mosyms(base_parser):
     known_codes = ["gaussian"]
 
     @staticmethod
-    def normalisesym(label):
+    def gaussian_normalisesym(label):
         """Use standard symmetry labels instead of Gaussian labels.
 
         To normalise:
