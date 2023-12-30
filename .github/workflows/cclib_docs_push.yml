@@ -24,7 +24,7 @@ jobs:
         run: |
           apt-get update && apt-get install -y openssh-client
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Allow repo access (see https://github.com/actions/checkout/issues/760)
         run: |
           git config --global --add safe.directory /__w/cclib/cclib
