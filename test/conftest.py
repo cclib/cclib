@@ -236,9 +236,9 @@ def pytest_generate_tests(metafunc: "pytest.Metafunc") -> None:
         ids = []
         basedir = (Path(__file__) / ".." / "..").resolve()
         datadir = basedir / "data"
-        for m in matches:
-            subdir = datadir / get_program_dir(m["parser"]) / m["subdir"]
-            files = [subdir / fn for fn in m["files"]]
+        for mtch in matches:
+            subdir = datadir / get_program_dir(mtch["parser"]) / mtch["subdir"]
+            files = [subdir / fn for fn in mtch["files"]]
             filegroups.append(files)
             ids.append(str(files[0].relative_to(datadir)))
         metafunc.parametrize(argnames="data", argvalues=filegroups, ids=ids, indirect=True)
