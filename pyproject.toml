@@ -45,7 +45,7 @@ cda = "cclib.scripts.cda:main"
 [project.optional-dependencies]
 bridges = [
     "ase>=3.21",
-    "biopython==1.76",
+    "biopython==1.82",
     "openbabel",
     "pandas",
     "pyquante2 @ git+https://github.com/cclib/pyquante2.git@github-actions-ci",
