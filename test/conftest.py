@@ -198,7 +198,7 @@ def pytest_collection_modifyitems(session, config, items) -> None:
         these names do not contain the general category of feature we want to
         group by during testing.
     """
-    rootdir = Path(config.rootdir)
+    rootdir = config.rootpath
     test_basedir = rootdir / "test"
     for item in items:
         try:
@@ -212,7 +212,7 @@ def pytest_collection_modifyitems(session, config, items) -> None:
 
 def pytest_configure(config) -> None:
     """Automatically add a marker named for each test subdirectory, prefixed with `is_`."""
-    rootdir = Path(config.rootdir)
+    rootdir = config.rootpath
     test_basedir = rootdir / "test"
     for path in test_basedir.glob("*"):
         if path.is_dir() and "__pycache__" not in str(path):
