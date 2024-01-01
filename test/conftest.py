@@ -43,12 +43,11 @@ class Regression:
     tests: Optional[List[str]]
 
 
-def make_regression_entries() -> List[Regression]:
+def read_regressionfiles_txt(regression_dir: Path) -> List[Regression]:
+    """Create a Regression for every entry in regressionfiles.txt."""
     entries = list()
-    __filedir__ = Path(__file__).resolve().parent
-    __regression_dir__ = (__filedir__ / ".." / "data" / "regression").resolve()
-    regfile = __regression_dir__ / "regressionfiles.txt"
-    if regfile.exists():
+    regfile = regression_dir / "regressionfiles.txt"
+    if regfile.is_file():
         contents = [line.split() for line in regfile.read_text(encoding="utf-8").splitlines()]
         for tokens in contents:
             assert len(tokens) >= 2
@@ -61,10 +60,17 @@ def make_regression_entries() -> List[Regression]:
                 tests = tokens[1:]
             entries.append(
                 Regression(
-                    filename=__regression_dir__ / filename, normalisedfilename=normed, tests=tests
+                    filename=regression_dir / filename, normalisedfilename=normed, tests=tests
                 )
             )
     return entries
+
+
+def make_regression_entries() -> List[Regression]:
+    """Create a Regression for every entry in regressionfiles.txt."""
+    __filedir__ = Path(__file__).resolve().parent
+    __regression_dir__ = (__filedir__ / ".." / "data" / "regression").resolve()
+    return read_regressionfiles_txt(__regression_dir__)
 
 
 @pytest.fixture(scope="session")
