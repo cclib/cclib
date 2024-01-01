@@ -8,7 +8,7 @@ import os
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Mapping, Optional, Union
+from typing import Dict, Iterator, List, Mapping, Optional, Tuple, Union
 
 from cclib.io import ccopen
 from cclib.parser.data import ccData
@@ -38,9 +38,54 @@ def normalisefilename(filename: str) -> str:
 
 @dataclass(frozen=True)
 class Regression:
+    """Representation of a regression."""
+
+    # The fully-resolved location of the output file or directory of files to parse.
     filename: Path
+    # The name of the outputfile transformed by `normalisefilename` for use as
+    # part of a function (not class) in regression.py for testing, if one exists.
     normalisedfilename: str
-    tests: Optional[List[str]]
+    # Names of test classes (not functions) present in `regression.py`, either
+    # defined there or imported (TODO), that should be parameterized with a
+    # parsed `ccData` object, just like in the main unit tests.  Each test
+    # class must exist: no automatic generation is done.
+    tests: Optional[Tuple[str, ...]]
+    # Testing via implicit discovery of functions and explicit listing of
+    # classes is independent: the requested test classes given above may be
+    # present but a special test function with the matching normalized name
+    # may not be, and vice-versa.
+    #
+    # In the event that neither are present, TODO
+
+
+class RegressionItem(pytest.Item):
+    def __init__(self, *, regression: Regression, **kwargs) -> None:
+        super().__init__(**kwargs)
+        self.regression = regression
+
+    def runtest(self) -> None:
+        filename = self.regression.filename
+        if filename.is_file():
+            files = [str(filename)]
+        elif filename.is_dir():
+            files = [str(x) for x in sorted(filename.iterdir())]
+        else:
+            raise RuntimeError
+        lfile = ccopen(files, future=True)
+        data = lfile.parse()
+        assert self.regression not in _REGCACHE
+        _REGCACHE[self.regression] = data
+
+
+class RegressionFile(pytest.File):
+    def collect(self) -> Iterator[RegressionItem]:
+        rootdir = self.config.rootpath
+        regression_dir = rootdir / "data" / "regression"
+        regressions = read_regressionfiles_txt(regression_dir)
+        for regression in regressions:
+            yield RegressionItem.from_parent(
+                self, name=f"parse{regression.normalisedfilename}", regression=regression
+            )
 
 
 def read_regressionfiles_txt(regression_dir: Path) -> List[Regression]:
@@ -57,7 +102,7 @@ def read_regressionfiles_txt(regression_dir: Path) -> List[Regression]:
             if tokens[1] == "None":
                 tests = None
             else:
-                tests = tokens[1:]
+                tests = tuple(tokens[1:])
             entries.append(
                 Regression(
                     filename=regression_dir / filename, normalisedfilename=normed, tests=tests
@@ -99,7 +144,7 @@ def filename(request, regression_filenames: Mapping[str, Path]) -> Path:
     # Allow explicitly skipped tests through.
     if "__unittest_skip__" in request.node.keywords:
         return None  # type: ignore
-    raise RuntimeError
+    raise RuntimeError(f"file not found for {normalized_name}")
 
 
 def get_parsed_logfile(regression_filenames: Mapping[str, Path], normalized_name: str) -> Logfile:
@@ -113,6 +158,7 @@ def get_parsed_logfile(regression_filenames: Mapping[str, Path], normalized_name
         # TODO List[Path] not allowed yet by ccopen?
         fn = [str(x) for x in sorted(fn.iterdir())]
     lfile = ccopen(fn, future=True)
+    # TODO switch to cache
     lfile.data = lfile.parse()
     return lfile
 
@@ -133,7 +179,7 @@ def logfile(request, regression_filenames: Mapping[str, Path]) -> Logfile:
     # Allow explicitly skipped tests through.
     if "__unittest_skip__" in request.node.keywords:
         return None  # type: ignore
-    raise RuntimeError
+    raise RuntimeError(f"file not found for {normalized_name}")
 
 
 def gettestdata() -> List[Dict[str, Union[str, List[str]]]]:
@@ -174,6 +220,7 @@ def get_program_dir(parser_name: str) -> str:
 
 
 _CACHE: Dict[str, ccData] = {}
+_REGCACHE: Dict[Regression, ccData] = {}
 
 
 @pytest.fixture(scope="session")
@@ -190,6 +237,18 @@ def data(request) -> ccData:
         data.parsername = logfile.logname
         _CACHE[first] = data
     return _CACHE[first]
+
+
+def pytest_collect_file(file_path: Path, parent) -> Optional[pytest.Collector]:
+    # Ensure that each file specified in regressionfiles.txt is parsed, even
+    # if a function- or class-based test doesn't exist for it.
+    if file_path.name.startswith("regression"):
+        # Only collect (and therefore run) if explicitly asked for
+        # regression*.py.
+        config = parent.config
+        params = config.invocation_params
+        if any(arg for arg in params.args if arg in str(file_path)):
+            return RegressionFile.from_parent(parent, path=file_path)
 
 
 def pytest_collection_modifyitems(session, config, items) -> None:
