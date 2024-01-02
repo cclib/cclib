@@ -15,6 +15,7 @@ from cclib.parser.data import ccData
 from cclib.parser.logfileparser import Logfile
 
 import pytest
+import yaml
 
 
 def normalisefilename(filename: str) -> str:
@@ -42,6 +43,7 @@ class Regression:
 
     # The fully-resolved location of the output file or directory of files to parse.
     loc_entry: Path
+    all_files: Tuple[Path, ...]
     # The name of the outputfile transformed by `normalisefilename` for use as
     # part of a function (not class) in regression.py for testing, if one exists.
     normalisedfilename: str
@@ -50,6 +52,8 @@ class Regression:
     # parsed `ccData` object, just like in the main unit tests.  Each test
     # class must exist: no automatic generation is done.
     tests: Optional[Tuple[str, ...]]
+    # Should this regression entry be parsed?
+    parse: bool
     # Testing via implicit discovery of functions and explicit listing of
     # classes is independent: the requested test classes given above may be
     # present but a special test function with the matching normalized name
@@ -72,9 +76,10 @@ class RegressionItem(pytest.Item):
         else:
             raise RuntimeError
         lfile = ccopen(files, future=True)
-        data = lfile.parse()
-        assert self.regression not in _REGCACHE
-        _REGCACHE[self.regression] = data
+        if self.regression.parse:
+            data = lfile.parse()
+            assert self.regression not in _REGCACHE
+            _REGCACHE[self.regression] = data
 
 
 class RegressionFile(pytest.File):
@@ -91,7 +96,7 @@ class RegressionFile(pytest.File):
 def read_regressionfiles_txt(regression_dir: Path) -> List[Regression]:
     """Create a Regression for every entry in regressionfiles.txt."""
     entries = list()
-    regfile = regression_dir / "regressionfiles.txt"
+    regfile = regression_dir / "regressionfiles_withtests.txt"
     if regfile.is_file():
         contents = [line.split() for line in regfile.read_text(encoding="utf-8").splitlines()]
         for tokens in contents:
@@ -105,7 +110,11 @@ def read_regressionfiles_txt(regression_dir: Path) -> List[Regression]:
                 tests = tuple(tokens[1:])
             entries.append(
                 Regression(
-                    loc_entry=regression_dir / filename, normalisedfilename=normed, tests=tests
+                    loc_entry=regression_dir / filename,
+                    all_files=(),
+                    normalisedfilename=normed,
+                    tests=tests,
+                    parse=True,
                 )
             )
     return entries
