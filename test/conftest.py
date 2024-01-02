@@ -120,22 +120,19 @@ def read_regressionfiles_txt(regression_dir: Path) -> List[Regression]:
 
 
 def make_regression_entries() -> List[Regression]:
-    """Create a Regression for every entry in regressionfiles.txt."""
+    """Create a Regression for every entry in regressionfiles.yaml."""
     __filedir__ = Path(__file__).resolve().parent
     __regression_dir__ = (__filedir__ / ".." / "data" / "regression").resolve()
     return read_regressionfiles_txt(__regression_dir__)
 
 
 @pytest.fixture(scope="session")
-def regression_filenames() -> Dict[str, Path]:
-    """Map normalized filenames suitable for test function names to their
-    absolute location on the filesystem.
-    """
-    return {entry.normalisedfilename: entry.loc_entry for entry in make_regression_entries()}
+def regression_entries() -> Dict[str, Regression]:
+    return {entry.normalisedfilename: entry for entry in make_regression_entries()}
 
 
 @pytest.fixture
-def filename(request, regression_filenames: Mapping[str, Path]) -> Path:
+def filename(request, regression_entries: Mapping[str, Regression]) -> Path:
     """For a test function whose name corresponds to a normalized filename,
     get the absolution location on the filesystem of the corresponding test
     data.
@@ -147,43 +144,42 @@ def filename(request, regression_filenames: Mapping[str, Path]) -> Path:
     prefix = "testnoparse"
     assert request.node.name[: len(prefix)] == prefix
     normalized_name = request.node.name[len(prefix) :]
-    if normalized_name in regression_filenames:
-        return regression_filenames[normalized_name]
+    if normalized_name in regression_entries:
+        return regression_entries[normalized_name].loc_entry
     # Allow explicitly skipped tests through.
     if "__unittest_skip__" in request.node.keywords:
         return None  # type: ignore
     raise RuntimeError(f"file not found for {normalized_name}")
 
 
-def get_parsed_logfile(regression_filenames: Mapping[str, Path], normalized_name: str) -> Logfile:
+def get_parsed_logfile(
+    regression_entries: Mapping[str, Regression], normalized_name: str
+) -> Logfile:
     """For a normalized filename suitable for a test function name and a
     mapping of these names to the absolute locations on the filesystem of
     their test files, parse the test file and return its data on the logfile
     instance.
     """
-    fn = regression_filenames[normalized_name]
-    if fn.is_dir():
-        # TODO List[Path] not allowed yet by ccopen?
-        fn = [str(x) for x in sorted(fn.iterdir())]
-    lfile = ccopen(fn, future=True)
+    # TODO List[Path] not allowed yet by ccopen?
+    lfile = ccopen([str(fn) for fn in regression_entries[normalized_name].all_files], future=True)
     # TODO switch to cache
     lfile.data = lfile.parse()
     return lfile
 
 
 @pytest.fixture
-def logfile(request, regression_filenames: Mapping[str, Path]) -> Logfile:
+def logfile(request, regression_entries: Mapping[str, Regression]) -> Logfile:
     """For a test function whose name corresponds to a normalized filename,
     parse the corresponding data and return the logfile with data attached.
     """
     prefix = "test"
     assert request.node.name[: len(prefix)] == prefix
     normalized_name = request.node.name[len(prefix) :]
-    if normalized_name in regression_filenames:
-        return get_parsed_logfile(regression_filenames, normalized_name)
+    if normalized_name in regression_entries:
+        return get_parsed_logfile(regression_entries, normalized_name)
     # Workaround (?) for locations that are full directories (e.g. Turbomole)
-    if normalized_name.endswith("__") and normalized_name[:-2] in regression_filenames:
-        return get_parsed_logfile(regression_filenames, normalized_name[:-2])
+    if normalized_name.endswith("__") and normalized_name[:-2] in regression_entries:
+        return get_parsed_logfile(regression_entries, normalized_name[:-2])
     # Allow explicitly skipped tests through.
     if "__unittest_skip__" in request.node.keywords:
         return None  # type: ignore
