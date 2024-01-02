@@ -68,14 +68,7 @@ class RegressionItem(pytest.Item):
         self.regression = regression
 
     def runtest(self) -> None:
-        filename = self.regression.loc_entry
-        if filename.is_file():
-            files = [str(filename)]
-        elif filename.is_dir():
-            files = [str(x) for x in sorted(filename.iterdir())]
-        else:
-            raise RuntimeError
-        lfile = ccopen(files, future=True)
+        lfile = ccopen([str(x) for x in self.regression.all_files], future=True)
         if self.regression.parse:
             data = lfile.parse()
             assert self.regression not in _REGCACHE
@@ -108,10 +101,16 @@ def read_regressionfiles_txt(regression_dir: Path) -> List[Regression]:
                 tests = None
             else:
                 tests = tuple(tokens[1:])
+            loc_full = regression_dir / filename
+            assert loc_full.exists()
+            if loc_full.is_dir():
+                all_files = tuple(sorted(loc_full.iterdir()))
+            else:
+                all_files = (loc_full,)
             entries.append(
                 Regression(
-                    loc_entry=regression_dir / filename,
-                    all_files=(),
+                    loc_entry=Path(filename),
+                    all_files=all_files,
                     normalisedfilename=normed,
                     tests=tests,
                     parse=True,
