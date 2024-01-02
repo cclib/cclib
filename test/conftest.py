@@ -41,7 +41,7 @@ class Regression:
     """Representation of a regression."""
 
     # The fully-resolved location of the output file or directory of files to parse.
-    filename: Path
+    loc_entry: Path
     # The name of the outputfile transformed by `normalisefilename` for use as
     # part of a function (not class) in regression.py for testing, if one exists.
     normalisedfilename: str
@@ -64,7 +64,7 @@ class RegressionItem(pytest.Item):
         self.regression = regression
 
     def runtest(self) -> None:
-        filename = self.regression.filename
+        filename = self.regression.loc_entry
         if filename.is_file():
             files = [str(filename)]
         elif filename.is_dir():
@@ -105,7 +105,7 @@ def read_regressionfiles_txt(regression_dir: Path) -> List[Regression]:
                 tests = tuple(tokens[1:])
             entries.append(
                 Regression(
-                    filename=regression_dir / filename, normalisedfilename=normed, tests=tests
+                    loc_entry=regression_dir / filename, normalisedfilename=normed, tests=tests
                 )
             )
     return entries
@@ -123,7 +123,7 @@ def regression_filenames() -> Dict[str, Path]:
     """Map normalized filenames suitable for test function names to their
     absolute location on the filesystem.
     """
-    return {entry.normalisedfilename: entry.filename for entry in make_regression_entries()}
+    return {entry.normalisedfilename: entry.loc_entry for entry in make_regression_entries()}
 
 
 @pytest.fixture
@@ -306,14 +306,14 @@ def pytest_generate_tests(metafunc: "pytest.Metafunc") -> None:
         filegroups = []
         ids = []
         for mtch in matches:
-            if not mtch.filename.exists():
-                raise RuntimeError(f"{mtch.filename} doesn't exist")
-            if mtch.filename.is_dir():
-                files = sorted(mtch.filename.glob("*"))
+            if not mtch.loc_entry.exists():
+                raise RuntimeError(f"{mtch.loc_entry} doesn't exist")
+            if mtch.loc_entry.is_dir():
+                files = sorted(mtch.loc_entry.glob("*"))
             else:
-                files = [mtch.filename]
+                files = [mtch.loc_entry]
             filegroups.append(files)
             # TODO factor out of loop
-            regressiondir = (mtch.filename / ".." / ".." / "..").resolve()
-            ids.append(str(mtch.filename.relative_to(regressiondir)))
+            regressiondir = (mtch.loc_entry / ".." / ".." / "..").resolve()
+            ids.append(str(mtch.loc_entry.relative_to(regressiondir)))
         metafunc.parametrize(argnames="data", argvalues=filegroups, ids=ids, indirect=True)
