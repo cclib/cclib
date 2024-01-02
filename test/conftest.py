@@ -292,28 +292,28 @@ def pytest_generate_tests(metafunc: "pytest.Metafunc") -> None:
         matches = [entry for entry in _TESTDATA if entry["class"] == target_class]
         filegroups = []
         ids = []
-        basedir = (Path(__file__) / ".." / "..").resolve()
-        datadir = basedir / "data"
+        data_basedir = metafunc.config.rootpath / "data"
         for mtch in matches:
-            subdir = datadir / get_program_dir(mtch["parser"]) / mtch["subdir"]
+            subdir = data_basedir / get_program_dir(mtch["parser"]) / mtch["subdir"]
             files = [subdir / fn for fn in mtch["files"]]
             filegroups.append(files)
-            ids.append(str(files[0].relative_to(datadir)))
+            ids.append(str(files[0].relative_to(data_basedir)))
         metafunc.parametrize(argnames="data", argvalues=filegroups, ids=ids, indirect=True)
     elif module_components[:2] == ["test", "regression"] and metafunc.cls is not None:
+        # TODO rewrite to use Regressions
         target_class = metafunc.cls.__name__
         matches = [entry for entry in _REGRESSION_CLS_ENTRIES if target_class in entry.tests]
         filegroups = []
         ids = []
+        regression_basedir = metafunc.config.rootpath / "data" / "regression"
         for mtch in matches:
-            if not mtch.loc_entry.exists():
-                raise RuntimeError(f"{mtch.loc_entry} doesn't exist")
-            if mtch.loc_entry.is_dir():
-                files = sorted(mtch.loc_entry.glob("*"))
+            loc_entry = regression_basedir / mtch.loc_entry
+            if not loc_entry.exists():
+                raise RuntimeError(f"{loc_entry} doesn't exist")
+            if loc_entry.is_dir():
+                files = sorted(loc_entry.glob("*"))
             else:
-                files = [mtch.loc_entry]
+                files = [loc_entry]
             filegroups.append(files)
-            # TODO factor out of loop
-            regressiondir = (mtch.loc_entry / ".." / ".." / "..").resolve()
-            ids.append(str(mtch.loc_entry.relative_to(regressiondir)))
+            ids.append(str(mtch.loc_entry))
         metafunc.parametrize(argnames="data", argvalues=filegroups, ids=ids, indirect=True)
