@@ -35,8 +35,8 @@ inside the data directory, like so:
 
 import datetime
 import logging
-import os
 import sys
+from pathlib import Path
 
 from cclib.io import ccread, moldenwriter
 from cclib.parser import DALTON, Gaussian, ccData
@@ -50,10 +50,13 @@ from packaging.version import parse as parse_version
 # This assume that the cclib-data repository is located at a specific location
 # within the cclib repository. It would be better to figure out a more natural
 # way to import the relevant tests from cclib here.
-test_dir = f"{os.path.realpath(os.path.dirname(__file__))}/../../test"
+#
 # This is safer than sys.path.append, and isn't sys.path.insert(0, ...) so
 # virtualenvs work properly. See https://stackoverflow.com/q/10095037.
-sys.path.insert(1, os.path.abspath(test_dir))
+base_dir = (Path(__file__) / ".." / "..").resolve()
+__regression_dir__ = base_dir / "data" / "regression"
+__filedir__ = base_dir / "test"
+sys.path.insert(1, str(__filedir__))
 from .data.testBasis import GenericBigBasisTest, MolcasBigBasisTest, MolproBigBasisTest
 from .data.testCI import GaussianCISTest, GenericCISTest
 from .data.testGeoOpt import ADFGeoOptTest, GenericGeoOptTest
@@ -71,11 +74,6 @@ from .data.testSP import (
 from .data.testSPun import GaussianSPunTest, GenericSPunTest, JaguarSPunTest
 from .data.testTD import DALTONTDTest, OrcaROCISTest, OrcaTDDFTTest
 from .data.testvib import GenericIRimgTest, GenericIRTest
-
-# We need this to point to files relative to this script.
-__filedir__ = os.path.abspath(os.path.dirname(__file__))
-__regression_dir__ = os.path.join(__filedir__, "../data/regression/")
-
 
 # The following regression test functions were manually written, because they
 # contain custom checks that were determined on a per-file basis. Care needs to be taken
@@ -359,7 +357,7 @@ def testDALTON_DALTON_2016_Trp_polar_response_diplnx_out(logfile):
     all others are NaN even after parsing a previous file with full tensor.
     """
     # TODO replace with looking at file location from fixture?
-    full_tens_path = os.path.join(__regression_dir__, "DALTON/DALTON-2015/Trp_polar_response.out")
+    full_tens_path = __regression_dir__ / "DALTON" / "DALTON-2015" / "Trp_polar_response.out"
     DALTON(full_tens_path, loglevel=logging.ERROR).parse()
     assert hasattr(logfile.data, "polarizabilities")
     assert abs(logfile.data.polarizabilities[0][0, 0] - 95.11540019) < 1.0e-8
@@ -682,7 +680,7 @@ def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out(logfile):
 
 def testnoparseGAMESS_WinGAMESS_H2O_def2SVPD_triplet_2019_06_30_R1_out(filename):
     """Check if the molden writer can handle an unrestricted case"""
-    data = ccread(os.path.join(__filedir__, filename))
+    data = ccread(__filedir__ / filename)
     writer = moldenwriter.MOLDEN(data)
     (
         mosyms,
@@ -2715,7 +2713,7 @@ def testnoparseGaussian_Gaussian09_coeffs_log(filename):
     parsing, we set some attributes of the parser so that it all goes smoothly.
     """
 
-    parser = Gaussian(os.path.join(__filedir__, filename), loglevel=logging.ERROR)
+    parser = Gaussian(__filedir__ / filename, loglevel=logging.ERROR)
     parser.nmo = 5
     parser.nbasis = 1128
 
