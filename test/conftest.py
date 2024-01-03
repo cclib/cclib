@@ -249,7 +249,7 @@ def data(request) -> ccData:
 def pytest_collect_file(file_path: Path, parent) -> Optional[pytest.Collector]:
     # Ensure that each file specified in regressionfiles.txt is parsed, even
     # if a function- or class-based test doesn't exist for it.
-    if file_path.name.startswith("regression"):
+    if file_path.name == "regression.py":
         # Only collect (and therefore run) if explicitly asked for
         # regression*.py.
         config = parent.config
