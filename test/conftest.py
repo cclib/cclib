@@ -68,12 +68,8 @@ class RegressionItem(pytest.Item):
         self.regression = regression
 
     def runtest(self) -> None:
-        lfile = ccopen([str(x) for x in self.regression.all_files], future=True)
-        if self.regression.parse:
-            data = lfile.parse()
-            lfile.data = data
-            assert self.regression not in _REGCACHE
-            _REGCACHE[self.regression] = lfile
+        if self.regression not in _REGCACHE:
+            _REGCACHE[self.regression] = parse(self.regression)
 
 
 class RegressionFile(pytest.File):
@@ -156,6 +152,14 @@ def filename(request, regression_entries: Mapping[str, Regression]) -> Path:
     raise RuntimeError(f"file not found for {normalized_name}")
 
 
+def parse(regression: Regression) -> Logfile:
+    lfile = ccopen([str(x) for x in regression.all_files], future=True)
+    if regression.parse:
+        data = lfile.parse()
+        lfile.data = data
+    return lfile
+
+
 def get_parsed_logfile(
     regression_entries: Mapping[str, Regression], normalized_name: str
 ) -> Logfile:
@@ -165,12 +169,10 @@ def get_parsed_logfile(
     instance.
     """
     assert normalized_name in regression_entries
-    if regression_entries[normalized_name] not in _REGCACHE:
-        lfile = ccopen([str(x) for x in regression_entries[normalized_name].all_files], future=True)
-        data = lfile.parse()
-        lfile.data = data
-        _REGCACHE[regression_entries[normalized_name]] = lfile
-    return _REGCACHE[regression_entries[normalized_name]]
+    regression = regression_entries[normalized_name]
+    if regression not in _REGCACHE:
+        _REGCACHE[regression] = parse(regression)
+    return _REGCACHE[regression]
 
 
 @pytest.fixture
