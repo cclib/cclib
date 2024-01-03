@@ -71,8 +71,9 @@ class RegressionItem(pytest.Item):
         lfile = ccopen([str(x) for x in self.regression.all_files], future=True)
         if self.regression.parse:
             data = lfile.parse()
+            lfile.data = data
             assert self.regression not in _REGCACHE
-            _REGCACHE[self.regression] = data
+            _REGCACHE[self.regression] = lfile
 
 
 class RegressionFile(pytest.File):
@@ -163,11 +164,9 @@ def get_parsed_logfile(
     their test files, parse the test file and return its data on the logfile
     instance.
     """
-    # TODO List[Path] not allowed yet by ccopen?
-    lfile = ccopen([str(fn) for fn in regression_entries[normalized_name].all_files], future=True)
-    # TODO switch to cache
-    lfile.data = lfile.parse()
-    return lfile
+    assert normalized_name in regression_entries
+    assert regression_entries[normalized_name] in _REGCACHE
+    return _REGCACHE[regression_entries[normalized_name]]
 
 
 @pytest.fixture
@@ -227,7 +226,7 @@ def get_program_dir(parser_name: str) -> str:
 
 
 _CACHE: Dict[str, ccData] = {}
-_REGCACHE: Dict[Regression, ccData] = {}
+_REGCACHE: Dict[Regression, Logfile] = {}
 
 
 @pytest.fixture(scope="session")
