@@ -165,7 +165,11 @@ def get_parsed_logfile(
     instance.
     """
     assert normalized_name in regression_entries
-    assert regression_entries[normalized_name] in _REGCACHE
+    if regression_entries[normalized_name] not in _REGCACHE:
+        lfile = ccopen([str(x) for x in regression_entries[normalized_name].all_files], future=True)
+        data = lfile.parse()
+        lfile.data = data
+        _REGCACHE[regression_entries[normalized_name]] = lfile
     return _REGCACHE[regression_entries[normalized_name]]
 
 
