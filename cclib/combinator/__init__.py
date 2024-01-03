@@ -1,1 +1,1 @@
-from cclib.combinator.combinator import combinator, sp_combinator
+from cclib.combinator.combinator import combinator, auto_combinator
