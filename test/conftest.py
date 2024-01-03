@@ -79,51 +79,49 @@ class RegressionFile(pytest.File):
     def collect(self) -> Iterator[RegressionItem]:
         rootdir = self.config.rootpath
         regression_dir = rootdir / "data" / "regression"
-        regressions = read_regressionfiles_txt(regression_dir)
+        regressions = read_regressionfiles_yaml(regression_dir)
         for regression in regressions:
             yield RegressionItem.from_parent(
                 self, name=f"parse{regression.normalisedfilename}", regression=regression
             )
 
 
-def read_regressionfiles_txt(regression_dir: Path) -> List[Regression]:
+def read_regressionfiles_yaml(regression_dir: Path) -> List[Regression]:
     """Create a Regression for every entry in regressionfiles.txt."""
-    entries = list()
-    regfile = regression_dir / "regressionfiles_withtests.txt"
+    regressions = list()
+    regfile = regression_dir / "regressionfiles.yaml"
     if regfile.is_file():
-        contents = [line.split() for line in regfile.read_text(encoding="utf-8").splitlines()]
-        for tokens in contents:
-            assert len(tokens) >= 2
-            filename = os.sep.join(tokens[0].split("/"))
-            normed = normalisefilename(filename)
-            # TODO error checking once format is more formalized
-            if tokens[1] == "None":
-                tests = None
-            else:
-                tests = tuple(tokens[1:])
-            loc_full = regression_dir / filename
+        entries = yaml.safe_load(regfile.read_text(encoding="utf-8"))
+        assert set(entries.keys()) == {"regressions"}
+        for entry in entries["regressions"]:
+            loc_entry = os.sep.join(entry["loc_entry"].split("/"))
+            normed = normalisefilename(loc_entry)
+            tests = entry.get("tests", None)
+            if tests is not None:
+                tests = tuple(tests)
+            loc_full = regression_dir / loc_entry
             assert loc_full.exists()
             if loc_full.is_dir():
                 all_files = tuple(sorted(loc_full.iterdir()))
             else:
                 all_files = (loc_full,)
-            entries.append(
+            regressions.append(
                 Regression(
-                    loc_entry=Path(filename),
+                    loc_entry=Path(loc_entry),
                     all_files=all_files,
                     normalisedfilename=normed,
                     tests=tests,
-                    parse=True,
+                    parse=entry.get("parse", True),
                 )
             )
-    return entries
+    return regressions
 
 
 def make_regression_entries() -> List[Regression]:
     """Create a Regression for every entry in regressionfiles.yaml."""
     __filedir__ = Path(__file__).resolve().parent
     __regression_dir__ = (__filedir__ / ".." / "data" / "regression").resolve()
-    return read_regressionfiles_txt(__regression_dir__)
+    return read_regressionfiles_yaml(__regression_dir__)
 
 
 @pytest.fixture(scope="session")
@@ -145,7 +143,12 @@ def filename(request, regression_entries: Mapping[str, Regression]) -> Path:
     assert request.node.name[: len(prefix)] == prefix
     normalized_name = request.node.name[len(prefix) :]
     if normalized_name in regression_entries:
-        return regression_entries[normalized_name].loc_entry
+        return (
+            request.config.rootpath
+            / "data"
+            / "regression"
+            / regression_entries[normalized_name].loc_entry
+        )
     # Allow explicitly skipped tests through.
     if "__unittest_skip__" in request.node.keywords:
         return None  # type: ignore
