@@ -16,25 +16,25 @@ class mult(base_parser):
     known_codes = ["gaussian", "psi4"]
 
     @staticmethod
-    def gaussian(file_handler, ccdata) -> list | None:
+    def gaussian(file_handler, ccdata) -> dict | None:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
         if line.find("Multiplicity") > 0:
             constructed_data = int(line.split()[5])
-            return constructed_data
+            return {mult.__name__: constructed_data}
         return None
 
     @staticmethod
-    def psi4(file_handler, ccdata) -> list | None:
+    def psi4(file_handler, ccdata) -> dict | None:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
         if line[2:16].lower() == "multiplicity =":
             constructed_data = int(line.split()[-1])
-            return constructed_data
+            return {mult.__name__: constructed_data}
         return None
 
     @staticmethod
-    def parse(file_handler, program: str, ccdata) -> list | None:
+    def parse(file_handler, program: str, ccdata) -> dict | None:
         constructed_data = None
         if program in mult.known_codes:
             file_handler.virtual_set()

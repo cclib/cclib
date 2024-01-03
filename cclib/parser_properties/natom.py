@@ -16,16 +16,16 @@ class natom(base_parser):
     known_codes = ["psi4"]
 
     @staticmethod
-    def psi4(file_handler, ccdata) -> int | None:
+    def psi4(file_handler, ccdata) -> dict | None:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         dependency_list = ["atomnos"]
         if base_parser.check_dependencies(dependency_list, ccdata, "natom"):
-            return len(ccdata.atomnos)
+            return {natom.__name__: len(ccdata.atomnos)}
 
         return None
 
     @staticmethod
-    def parse(file_handler, program: str, ccdata) -> int | None:
+    def parse(file_handler, program: str, ccdata) -> dict | None:
         constructed_data = None
         if program in natom.known_codes:
             file_handler.virtual_set()

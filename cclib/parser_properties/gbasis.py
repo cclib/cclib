@@ -16,21 +16,18 @@ class gbasis(base_parser):
     known_codes = ["psi4"]
 
     @staticmethod
-    def psi4(file_handler, ccdata) -> list | None:
+    def psi4(file_handler, ccdata) -> dict | None:
         dependency_list = ["natom", "atomnos"]
         line = file_handler.last_line
         if line.strip() == "==> AO Basis Functions <==":
             if base_parser.check_dependencies(dependency_list, ccdata, "gbasis"):
-
-                def get_symmetry_atom_basis(gbasis):
+                def get_symmetry_atom_basis(parsed_gbasis):
                     """Get symmetry atom by replicating the last atom in gbasis of the same element."""
-
-                    missing_index = len(gbasis)
+                    missing_index = len(parsed_gbasis)
                     missing_atomno = ccdata.atomnos[missing_index]
-
-                    ngbasis = len(gbasis)
+                    ngbasis = len(parsed_gbasis)
                     last_same = ngbasis - ccdata.atomnos[:ngbasis][::-1].index(missing_atomno) - 1
-                    return gbasis[last_same]
+                    return parsed_gbasis[last_same]
 
                 dfact = lambda n: (n <= 0) or n * dfact(n - 2)
 
@@ -54,7 +51,7 @@ class gbasis(base_parser):
 
                 file_handler.skip_lines(["b", "basisname"], virtual=True)
                 line = file_handler.virtual_next()
-                gbasis = []
+                parsed_gbasis = []
                 file_handler.skip_lines(["stars"], virtual=True)
                 line = file_handler.virtual_next()
                 while line.strip():
@@ -65,10 +62,10 @@ class gbasis(base_parser):
                     # This is the code that adds missing atoms when symmetry atoms are excluded
                     # from the basis set printout. Again, this will work only if all atoms of
                     # the same element use the same basis set.
-                    while index > len(gbasis) + 1:
-                        gbasis.append(get_symmetry_atom_basis(gbasis))
+                    while index > len(parsed_gbasis) + 1:
+                        parsed_gbasis.append(get_symmetry_atom_basis(parsed_gbasis))
 
-                    gbasis.append([])
+                    parsed_gbasis.append([])
                     line = file_handler.virtual_next()
                     while line.find("*") == -1:
                         # The shell type and primitive count is in the first line.
@@ -93,7 +90,7 @@ class gbasis(base_parser):
 
                         primitives = [tuple(p) for p in primitives]
                         shell = [shell_type, primitives]
-                        gbasis[-1].append(shell)
+                        parsed_gbasis[-1].append(shell)
 
                         line = file_handler.virtual_next()
 
@@ -101,14 +98,15 @@ class gbasis(base_parser):
 
                 # We will also need to add symmetry atoms that are missing from the input
                 # at the end of this block, if the symmetry atoms are last.
-                while len(gbasis) < ccdata.natom:
-                    gbasis.append(get_symmetry_atom_basis(gbasis))
+                while len(parsed_gbasis) < ccdata.natom:
+                    parsed_gbasis.append(get_symmetry_atom_basis(parsed_gbasis))
 
-                return gbasis
+                constructed_data = {gbasis.__name__: parsed_gbasis}
+                return constructed_data
         return None
 
     @staticmethod
-    def parse(file_handler, program: str, ccdata) -> list | None:
+    def parse(file_handler, program: str, ccdata) -> dict | None:
         constructed_data = None
         if program in gbasis.known_codes:
             file_handler.virtual_set()
