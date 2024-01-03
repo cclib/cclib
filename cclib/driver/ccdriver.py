@@ -14,8 +14,9 @@ import warnings
 from typing import Optional, Union
 
 from cclib.collection import ccCollection
-from cclib.combinator import sp_combinator
+from cclib.combinator import auto_combinator
 from cclib.file_handler import FileHandler
+from cclib.tree import Tree
 
 # from cclib.parser.utils import find_package
 
@@ -415,6 +416,7 @@ class ccDriver:
         source: typing.Union[
             str, typing.IO, FileHandler, typing.List[typing.Union[str, typing.IO]]
         ],
+        tree=None,
         combinator=None,
         loglevel: int = logging.ERROR,
         logname: str = "Log",
@@ -433,11 +435,18 @@ class ccDriver:
         """
         if not isinstance(source, FileHandler):
             source = FileHandler(source)
-        if combinator is not None:
-            self._combinator = combinator
-        else:
-            self._combinator = sp_combinator()
-        self._ccCollection = ccCollection(self._combinator)
+
+        self._combinator = combinator
+        self._tree = tree
+        if self._tree is None:
+            # default to single job
+            self._tree = Tree()
+            self._tree.add_root()
+
+        if self._combinator is None:
+            self._combinator = auto_combinator(tree)
+        # TODO pass graph here
+        self._ccCollection = ccCollection(self._combinator, self._tree)
         self._fileHandler = source
         self.identified_program = None
 
@@ -453,11 +462,17 @@ class ccDriver:
     def combinator(self):
         return self._combinator
 
+    @property
+    def tree(self):
+        return self._tree
+
     def process_combinator(self):
         """Process the combinator and populate the ccData object in the ccCollection"""
         self.identified_program = None
         line = self._fileHandler.last_line
+        current_idx = self._tree.get_next_idx()
         while line := self._fileHandler.next():
+            # print(line)
             for program, phrases, do_break in triggers_on:
                 if all([line.lower().find(p.lower()) >= 0 for p in phrases]):
                     if self.identified_program is None:
@@ -466,25 +481,26 @@ class ccDriver:
                             break
                     else:
                         # if a program is within a program this might mean things are ok but we proceed to a child node.. think about how to handle this?
-                        pass
+                        current_idx = self._tree.get_next_idx()
             for program, phrases, do_break in triggers_off:
                 if all([line.lower().find(p.lower()) >= 0 for p in phrases]):
                     self.identified_program = None
+                    current_idx = self._tree.get_next_idx()
                     if do_break:
                         break
             if self.identified_program == None:
                 line = next(self._fileHandler)
                 continue
-            # right now combinator is just a list of list of subparsers (one node graph
-            which_cccollection = 0  # TODO temp holder to work with first ccdata object which is all that is present in single point calculation, will change as graph is implemented
-            for subparser in self._combinator.job_list[0]:
+            # right now combinator is just a list of list of subparsers, tree idxs access what list of parsers we are using
+            for subparser in self._combinator.job_list[current_idx]:
                 parsed_data = subparser.parse(
                     self._fileHandler,
                     self.identified_program,
-                    self._ccCollection._parsed_data[which_cccollection],
+                    self._ccCollection._parsed_data[current_idx],
                 )
+                print(parsed_data)
                 if parsed_data is not None:
                     parsed_attribute_name = subparser.__name__
-                    self._ccCollection._parsed_data[0].__setattr__(
+                    self._ccCollection._parsed_data[current_idx].__setattr__(
                         parsed_attribute_name, parsed_data
                     )
