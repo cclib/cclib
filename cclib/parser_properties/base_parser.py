@@ -11,9 +11,9 @@ class base_parser(ABC):
     @staticmethod
     def check_dependencies(dependency_list, ccdata, current_property):
         for i in dependency_list:
-             if not hasattr(ccdata, i):
-                  raise Warning(
-                      f"to parse {current_property}, ccdata required dependency of {i} which is not present"
-                  )
-                  return False
+            if not hasattr(ccdata, i):
+                raise Warning(
+                    f"to parse {current_property}, ccdata required dependency of {i} which is not present"
+                )
+                return False
         return True
