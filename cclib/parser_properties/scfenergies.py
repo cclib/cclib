@@ -7,7 +7,7 @@ class scfenergies(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["gaussian","psi4"]
+    known_codes = ["gaussian", "psi4"]
 
     @staticmethod
     def gaussian(file_handler, ccdata):

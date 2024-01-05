@@ -82,7 +82,7 @@ triggers_off = [
     # todo     (NWChem,    ["Northwest Computational Chemistry Package"],      True),
     # todo     (ORCA,      ["O   R   C   A"],                                  True),
     # todo     (Psi3,      ["PSI3: An Open-Source Ab Initio Electronic Structure Package"],          True),
-   ("psi4",      ["Psi4 exiting successfully. Buy a developer a beer!"],          True),
+    ("psi4", ["Psi4 exiting successfully. Buy a developer a beer!"], True),
     # todo     (QChem,     ["A Quantum Leap Into The Future Of Chemistry"],    True),
     # todo     (Turbomole, ["TURBOMOLE"],                                      True),
 ]
@@ -460,7 +460,7 @@ class ccDriver:
         self.identified_program = None
         line = self._fileHandler.last_line
         while line := self._fileHandler.next():
-            #print(line)
+            # print(line)
             for program, phrases, do_break in triggers_on:
                 if all([line.lower().find(p.lower()) >= 0 for p in phrases]):
                     if self.identified_program is None:
