@@ -16,7 +16,8 @@ class sp_combinator(combinator):
         self.job_list = [
             [
                 cprops.scfenergies,
-                cprops.atommasses,
+                cprops.atomcoords,
+                cprops.atomnos,
                 cprops.atomnos,
                 cprops.charge,
                 cprops.mult,
