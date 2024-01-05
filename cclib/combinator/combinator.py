@@ -21,6 +21,7 @@ class sp_combinator(combinator):
             [
                 cprops.scfenergies,
                 cprops.atommasses,
+                cprops.atomnos,
                 cprops.charge,
                 cprops.mult,
                 cprops.nbasis,
