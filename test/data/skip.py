@@ -18,12 +18,9 @@ def skipForParser(parser: str, msg: str):
 
     def tstdecorator(testfunc: Callable) -> Callable[[], None]:
         func_args = list(signature(testfunc).parameters.keys())
-        # if "testvib" in str(testfunc):
-        #     breakpoint()
         if "numvib" in func_args:
 
             def tstwrapper(self, data, numvib) -> None:
-                # breakpoint()
                 if data.parsername == parser:
                     pytest.skip(reason=f"{parser}: {msg}")
                 else:
@@ -31,7 +28,6 @@ def skipForParser(parser: str, msg: str):
         elif "extra" in func_args:
 
             def tstwrapper(self, data, extra) -> None:
-                # breakpoint()
                 if data.parsername == parser:
                     pytest.skip(reason=f"{parser}: {msg}")
                 else:
@@ -39,7 +35,6 @@ def skipForParser(parser: str, msg: str):
         else:
 
             def tstwrapper(self, data) -> None:
-                # breakpoint()
                 if data.parsername == parser:
                     pytest.skip(reason=f"{parser}: {msg}")
                 else:
@@ -55,12 +50,9 @@ def skipForLogfile(fragment: str, msg: str):
 
     def tstdecorator(testfunc: Callable) -> Callable[[], None]:
         func_args = list(signature(testfunc).parameters.keys())
-        # if "testvib" in str(testfunc):
-        #     breakpoint()
         if "numvib" in func_args:
 
             def tstwrapper(self, data, numvib) -> None:
-                # breakpoint()
                 if any(fragment in filename for filename in data.filenames):
                     pytest.skip(reason=f"{fragment}: {msg}")
                 else:
@@ -68,7 +60,6 @@ def skipForLogfile(fragment: str, msg: str):
         elif "extra" in func_args:
 
             def tstwrapper(self, data, extra) -> None:
-                # breakpoint()
                 if any(fragment in filename for filename in data.filenames):
                     pytest.skip(reason=f"{fragment}: {msg}")
                 else:
@@ -76,7 +67,6 @@ def skipForLogfile(fragment: str, msg: str):
         else:
 
             def tstwrapper(self, data) -> None:
-                # breakpoint()
                 if any(fragment in filename for filename in data.filenames):
                     pytest.skip(reason=f"{fragment}: {msg}")
                 else:

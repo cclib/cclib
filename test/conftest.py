@@ -39,30 +39,58 @@ def normalisefilename(filename: str) -> str:
 
 @dataclass(frozen=True)
 class Regression:
-    """Representation of a regression."""
+    """Representation of a regression.
 
-    # The fully-resolved location of the output file or directory of files to parse.
+    A regression, at a minimum, consists of one or more outputs
+    from a run of a computational chemistry program.
+    These outputs are either
+    - old unit tests or
+    - one-offs that failed to parse or did parse but presented incorrect results.
+
+    There are three kinds of testing that are currently performed:
+    - Parsing the file without erroring
+    - Testing the output with test classes, used for old unit tests
+    - Testing the output with a standalone function, used for one-offs
+
+    All regressions must have an entry in `regressionfiles.yaml`,
+    found in the cclib-data repository, where each dictionary under
+    the top-level `regressions` key must contain `loc_entry` and
+    optionally contain `tests` and `parse`, all described below.
+
+    All the kinds of testing are independent of each other;
+    in particular, using the test classes or functions does not require parsing.
+    In order to parse a regression, `parse` must be true.
+    In order to test using classes, the name of each class must be added to `tests`.
+    In order to test using a function, a function must exist whose name starts
+    with either 'test' or 'testnoparse' followed by the contents of `normalisedfilename`.
+    """
+
+    # The non-fully-resolved location of the output file or directory of files to parse.
     loc_entry: Path
+    # The fully-resolved location of all files to parse.
+    # For example, Turbomole output is spread over multiple files.
     all_files: Tuple[Path, ...]
-    # The name of the outputfile transformed by `normalisefilename` for use as
-    # part of a function (not class) in regression.py for testing, if one exists.
+    # The name of the output file transformed by `normalisefilename` for use as
+    # part of a function (not class) in regression.py for testing,
+    # if such a function exists.
     normalisedfilename: str
-    # Names of test classes (not functions) present in `regression.py`, either
-    # defined there or imported (TODO), that should be parameterized with a
-    # parsed `ccData` object, just like in the main unit tests.  Each test
-    # class must exist: no automatic generation is done.
+    # Names of test classes (not functions) present in `regression.py`,
+    # either defined there or imported from the unit test suite,
+    # that should be parameterized with a parsed `ccData` object,
+    # just like in the main unit tests.
+    # Each test class must exist: no automatic generation is done.
     tests: Optional[Tuple[str, ...]]
     # Should this regression entry be parsed?
+    # - If true (default), the regression will be parsed even if
+    #   no test classes were requested and no test function was defined.
+    # - If false, the regression files are still collected into a Logfile
+    #   but parsing is not performed.
     parse: bool
-    # Testing via implicit discovery of functions and explicit listing of
-    # classes is independent: the requested test classes given above may be
-    # present but a special test function with the matching normalized name
-    # may not be, and vice-versa.
-    #
-    # In the event that neither are present, TODO
 
 
 class RegressionItem(pytest.Item):
+    """A pytest item, representing a single pytest test, that parses a regression."""
+
     def __init__(self, *, regression: Regression, **kwargs) -> None:
         super().__init__(**kwargs)
         self.regression = regression
@@ -73,6 +101,10 @@ class RegressionItem(pytest.Item):
 
 
 class RegressionFile(pytest.File):
+    """A pytest collector that ensures all requested regressions can be parsed
+    when regression.py is collected, even if no tests are defined for that regression.
+    """
+
     def collect(self) -> Iterator[RegressionItem]:
         rootdir = self.config.rootpath
         regression_dir = rootdir / "data" / "regression"
@@ -84,7 +116,7 @@ class RegressionFile(pytest.File):
 
 
 def read_regressionfiles_yaml(regression_dir: Path) -> List[Regression]:
-    """Create a Regression for every entry in regressionfiles.txt."""
+    """Create a Regression for every entry in regressionfiles.yaml."""
     regressions = list()
     regfile = regression_dir / "regressionfiles.yaml"
     if regfile.is_file():
@@ -92,7 +124,6 @@ def read_regressionfiles_yaml(regression_dir: Path) -> List[Regression]:
         assert set(entries.keys()) == {"regressions"}
         for entry in entries["regressions"]:
             loc_entry = os.sep.join(entry["loc_entry"].split("/"))
-            normed = normalisefilename(loc_entry)
             tests = entry.get("tests", None)
             if tests is not None:
                 tests = tuple(tests)
@@ -106,7 +137,7 @@ def read_regressionfiles_yaml(regression_dir: Path) -> List[Regression]:
                 Regression(
                     loc_entry=Path(loc_entry),
                     all_files=all_files,
-                    normalisedfilename=normed,
+                    normalisedfilename=normalisefilename(loc_entry),
                     tests=tests,
                     parse=entry.get("parse", True),
                 )
@@ -122,29 +153,30 @@ def make_regression_entries() -> List[Regression]:
 
 
 @pytest.fixture(scope="session")
-def regression_entries() -> Dict[str, Regression]:
+def _regression_entries() -> Dict[str, Regression]:
+    """Not meant to be used in test code outside of conftest.py."""
     return {entry.normalisedfilename: entry for entry in make_regression_entries()}
 
 
 @pytest.fixture
-def filename(request, regression_entries: Mapping[str, Regression]) -> Path:
+def filename(request, _regression_entries: Mapping[str, Regression]) -> Path:
     """For a test function whose name corresponds to a normalized filename,
-    get the absolution location on the filesystem of the corresponding test
-    data.
+    starting with 'testnoparse', get the absolute location on the filesystem
+    of the corresponding test data.
 
     The only tests that can use this fixture are those marked as 'noparse',
     which typically instantiate the logfile object manually for manipulation.
-    Most tests require a parse and should use the logfile fixture.
+    Most tests require a parse and should use the `logfile` fixture.
     """
     prefix = "testnoparse"
     assert request.node.name[: len(prefix)] == prefix
     normalized_name = request.node.name[len(prefix) :]
-    if normalized_name in regression_entries:
+    if normalized_name in _regression_entries:
         return (
             request.config.rootpath
             / "data"
             / "regression"
-            / regression_entries[normalized_name].loc_entry
+            / _regression_entries[normalized_name].loc_entry
         )
     # Allow explicitly skipped tests through.
     if "__unittest_skip__" in request.node.keywords:
@@ -153,6 +185,9 @@ def filename(request, regression_entries: Mapping[str, Regression]) -> Path:
 
 
 def parse(regression: Regression) -> Logfile:
+    """Collect the contents of a Regression into a Logfile,
+    optionally parsing the logfile.
+    """
     lfile = ccopen([str(x) for x in regression.all_files], future=True)
     if regression.parse:
         data = lfile.parse()
@@ -176,18 +211,19 @@ def get_parsed_logfile(
 
 
 @pytest.fixture
-def logfile(request, regression_entries: Mapping[str, Regression]) -> Logfile:
+def logfile(request, _regression_entries: Mapping[str, Regression]) -> Logfile:
     """For a test function whose name corresponds to a normalized filename,
-    parse the corresponding data and return the logfile with data attached.
+    starting with 'test', parse the corresponding data and return the logfile
+    with data attached.
     """
     prefix = "test"
     assert request.node.name[: len(prefix)] == prefix
     normalized_name = request.node.name[len(prefix) :]
-    if normalized_name in regression_entries:
-        return get_parsed_logfile(regression_entries, normalized_name)
+    if normalized_name in _regression_entries:
+        return get_parsed_logfile(_regression_entries, normalized_name)
     # Workaround (?) for locations that are full directories (e.g. Turbomole)
-    if normalized_name.endswith("__") and normalized_name[:-2] in regression_entries:
-        return get_parsed_logfile(regression_entries, normalized_name[:-2])
+    if normalized_name.endswith("__") and normalized_name[:-2] in _regression_entries:
+        return get_parsed_logfile(_regression_entries, normalized_name[:-2])
     # Allow explicitly skipped tests through.
     if "__unittest_skip__" in request.node.keywords:
         return None  # type: ignore
@@ -195,11 +231,9 @@ def logfile(request, regression_entries: Mapping[str, Regression]) -> Logfile:
 
 
 def gettestdata() -> List[Dict[str, Union[str, List[str]]]]:
-    """Return a dict of the test file data."""
+    """Return a dict of the unit test file data."""
 
-    testdatadir = Path(__file__).resolve().parent
-    with open(testdatadir / "testdata", encoding="utf-8") as testdatafile:
-        lines = testdatafile.readlines()
+    lines = (Path(__file__).resolve().parent / "testdata").read_text(encoding="utf-8").splitlines()
 
     # Remove blank lines and those starting with '#'.
     lines = [line for line in lines if (line.strip() and line[0] != "#")]
@@ -231,12 +265,19 @@ def get_program_dir(parser_name: str) -> str:
     return parser_name
 
 
+# A naive caching system so that parsed unit and regression tests are not
+# re-parsed.  This is necessary since not all code in conftest.py that
+# requires parsed results can take advantage of session-scoped fixtures.
 _CACHE: Dict[str, ccData] = {}
+# Each logfile, if Regression.parse == True, will have a `.data` member.
 _REGCACHE: Dict[Regression, Logfile] = {}
 
 
 @pytest.fixture(scope="session")
 def data(request) -> ccData:
+    """Parse a unit test, placing the filenames and parser name
+    on the data instance.
+    """
     files = request.param
     first = files[0]
     if first not in _CACHE:
@@ -252,20 +293,26 @@ def data(request) -> ccData:
 
 
 def pytest_collect_file(file_path: Path, parent) -> Optional[pytest.Collector]:
-    # Ensure that each file specified in regressionfiles.txt is parsed, even
-    # if a function- or class-based test doesn't exist for it.
+    """Ensure that each regression specified in regressionfiles.yaml is parsed,
+    even if a function- or class-based test doesn't exist for it,
+    as long as the regression isn't explicitly marked to not parse.
+    """
     if file_path.name == "regression.py":
         # Only collect (and therefore run) if explicitly asked for
-        # regression*.py.
+        # regression.py.
+        #
+        # If regression_io.py or future files ever want to separate parsing
+        # from testing, this condition will need to be changed.
         config = parent.config
         params = config.invocation_params
         if any(arg for arg in params.args if arg in str(file_path)):
             return RegressionFile.from_parent(parent, path=file_path)
 
 
-def pytest_collection_modifyitems(session, config, items) -> None:
+def pytest_collection_modifyitems(config, items) -> None:
     """
-    Official docstring:  Called after collection has been performed. May filter or re-order the items in-place.
+    Official docstring:  Called after collection has been performed.
+    May filter or re-order the items in-place.
 
     For us, that means:
 
@@ -298,6 +345,9 @@ def pytest_configure(config) -> None:
 
 
 def pytest_generate_tests(metafunc: "pytest.Metafunc") -> None:
+    """For class-based tests that accept the data fixture, ensure they are parameterized
+    over all requested unit and regression test entries.
+    """
     module_components = metafunc.module.__name__.split(".")
     if module_components[:2] == ["test", "data"]:
         target_class = metafunc.cls.__name__

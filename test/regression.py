@@ -10,7 +10,7 @@
 The intention here is to make it easy to add new datafiles as bugs
 are fixed and to write specific tests in the form of test functions.
 
-In short, the file called regressionfiles.txt contains a list of regression
+In short, the file called regressionfiles.yaml contains a list of regression
 logfiles, which is compared to the files found on disk. All these files
 should be parsed correctly, and if there is an appropriately named function
 defined, that function will be used as a test.
@@ -20,17 +20,17 @@ have been moved here from the cclib repository when newer versions
 became available. We still want those logfiles to parse and test correctly,
 although sometimes special modification will be needed.
 
-To run the doctest, run `python -m test.regression` from the top level
-directory in the cclib repository.
+To run all the tests, run `python -m pytest test/regression.py` from the
+top level directory in the cclib repository.
 
-Running all regression can take anywhere from 10-20s to several minutes
-depending in your hardware. To aid debugging, there are two ways to limit
-which regressions to parse and test. You can limit the test to a specific
-parse, for example:
-    python -m test.regression Gaussian
-You can also limit a run to a single output file, using it's relative path
+Running all regressions can take anywhere from 10-20s to several minutes
+depending in your hardware. To aid debugging, you can limit which regressions
+to parse and test using the standard pytest `-k` flag. For example, to limit
+the test to a specific parser:
+    python -m pytest test/regression.py -k 'Gaussian'
+You can also limit a run to a single output file using its 'normalized' name
 inside the data directory, like so:
-    python -m test.regression Gaussian/Gaussian03/borane-opt.log
+    python -m pytest test/regression.py -k 'Gaussian_Gaussian03_borane_opt_log'
 """
 
 import datetime
