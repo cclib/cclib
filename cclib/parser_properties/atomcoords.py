@@ -9,7 +9,7 @@ class atomcoords(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["gaussian","psi4"]
+    known_codes = ["gaussian", "psi4"]
 
     @staticmethod
     def gaussian(file_handler, ccdata):
@@ -27,19 +27,19 @@ class atomcoords(base_parser):
             constructed_data.append(atomcoords)
             return constructed_data
         return None
-    
+
     def psi4(file_handler, ccdata):
         line = file_handler.last_line
         if "Geometry (in " in line:
-            ## I am not handling units here, i think this should be done on the ccdata object and not the parser as mentioned in #1124 
+            ## I am not handling units here, i think this should be done on the ccdata object and not the parser as mentioned in #1124
             ## but will need a way to indicate which units are stored i guess. hm.
             tokens = line.split()
             units = tokens[2][:-2]
             assert units in ("Angstrom", "Bohr")
-            file_handler.skip_lines(["blank"],virtual=True)
+            file_handler.skip_lines(["blank"], virtual=True)
             line = file_handler.virtual_next()
             if line.split()[0] == "Center":
-                file_handler.skip_lines(["dashes"],virtual=True)
+                file_handler.skip_lines(["dashes"], virtual=True)
                 line = file_handler.virtual_next()
             constructed_data = []
             while line.strip():
