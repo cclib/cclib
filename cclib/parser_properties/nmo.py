@@ -28,7 +28,7 @@ class nmo(base_parser):
             constructed_data = int(line.split("=")[1].split()[0])
             return constructed_data
         return None
-
+  
     @staticmethod
     def parse(file_handler, program: str, ccdata) -> int | None:
         constructed_data = None

@@ -9,13 +9,12 @@ class nbasis(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["gaussian"]
+    known_codes = ["gaussian","psi4"]
 
     @staticmethod
     def gaussian(file_handler, ccdata) -> int | None:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
-        constructed_data = None
         if line[1:7] == "NBasis" or line[4:10] == "NBasis":
             # For counterpoise fragment, skip these lines.
             #
@@ -38,6 +37,18 @@ class nbasis(base_parser):
                     )
             return constructed_data
         return None
+    
+    def psi4(file_handler, ccdata) -> int | None:
+        # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
+        line = file_handler.last_line
+        if "Primary Basis" in line:
+            file_handler.skip_lines(["Basis Set", "Blend", "Number of","Number"],virtual=True)
+            line = file_handler.virtual_next()
+            nbasis = int(line.split()[-1])
+            constructed_data = nbasis
+            return constructed_data
+        return None
+    
 
     @staticmethod
     def parse(file_handler, program: str, ccdata) -> int | None:

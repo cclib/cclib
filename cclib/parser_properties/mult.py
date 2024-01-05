@@ -9,15 +9,23 @@ class mult(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["gaussian"]
+    known_codes = ["gaussian","psi4"]
 
     @staticmethod
     def gaussian(file_handler, ccdata) -> list | None:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
-        constructed_data = None
         if line.find("Multiplicity") > 0:
-            constructed_data = line.split()[5]
+            constructed_data = int(line.split()[5])
+            return constructed_data
+        return None
+
+    @staticmethod
+    def psi4(file_handler, ccdata) -> list | None:
+        # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
+        line = file_handler.last_line
+        if line[2:16].lower() == "multiplicity =":
+            constructed_data = int(line.split()[-1])
             return constructed_data
         return None
 
