@@ -18,8 +18,11 @@ import re
 import typing
 import zipfile
 from tempfile import NamedTemporaryFile
+from typing import Any, Iterable, List, Optional
 from urllib.error import URLError
 from urllib.request import urlopen
+
+from cclib.file_handler import utils
 
 # Regular expression for validating URLs
 URL_PATTERN = re.compile(
@@ -350,3 +353,58 @@ class FileHandler:
 
         self.file_pointer = len(self.files) - 1
         self.pos = self.size
+
+    def skip_lines(self, sequence: Iterable[str], virtual=False) -> List[str]:
+        """Read trivial line types and check they are what they are supposed to be.
+
+        This function will read len(sequence) lines and do certain checks on them,
+        when the elements of sequence have the appropriate values. Currently the
+        following elements trigger checks:
+            'blank' or 'b'      - the line should be blank
+            'dashes' or 'd'     - the line should contain only dashes (or spaces)
+            'equals' or 'e'     - the line should contain only equal signs (or spaces)
+            'stars' or 's'      - the line should contain only stars (or spaces)
+        """
+
+        expected_characters = {"-": ["dashes", "d"], "=": ["equals", "e"], "*": ["stars", "s"]}
+
+        lines = []
+        for expected in sequence:
+            # Read the line we want to skip.
+            if virtual:
+                line = self.virtual_next()
+            else:
+                line = self.next()
+
+            # Blank lines are perhaps the most common thing we want to check for.
+            if expected in ["blank", "b"]:
+                try:
+                    assert line.strip() == ""
+                except AssertionError:
+                    frame, fname, lno, funcname, funcline, index = inspect.getouterframes(
+                        inspect.currentframe()
+                    )[1]
+                    parser = fname.split("/")[-1]
+                    msg = (
+                        f"In {parser}, line {int(lno)}, line not blank as expected: {line.strip()}"
+                    )
+                    self.logger.warning(msg)
+
+            # All cases of heterogeneous lines can be dealt with by the same code.
+            for character, keys in expected_characters.items():
+                if expected in keys:
+                    try:
+                        assert utils.str_contains_only(line.strip(), [character, " "])
+                    except AssertionError:
+                        frame, fname, lno, funcname, funcline, index = inspect.getouterframes(
+                            inspect.currentframe()
+                        )[1]
+                        parser = fname.split("/")[-1]
+                        msg = f"In {parser}, line {int(lno)}, line not all {keys[0]} as expected: {line.strip()}"
+                        self.logger.warning(msg)
+                        continue
+
+            # Save the skipped line, and we will return the whole list.
+            lines.append(line)
+
+        return lines
