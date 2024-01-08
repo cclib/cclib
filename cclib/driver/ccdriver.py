@@ -476,13 +476,16 @@ class ccDriver:
                 line = next(self._fileHandler)
                 continue
             # right now combinator is just a list of list of subparsers (one node graph
+            which_cccollection = 0  # TODO temp holder to work with first ccdata object which is all that is present in single point calculation, will change as graph is implemented
             for subparser in self._combinator.job_list[0]:
+                # print(subparser)
                 parsed_data = subparser.parse(
-                    self._fileHandler, self.identified_program, self._ccCollection
+                    self._fileHandler,
+                    self.identified_program,
+                    self._ccCollection._parsed_data[which_cccollection],
                 )
                 if parsed_data is not None:
                     parsed_attribute_name = subparser.__name__
                     self._ccCollection._parsed_data[0].__setattr__(
                         parsed_attribute_name, parsed_data
                     )
-            line = self._fileHandler.next()
