@@ -19,8 +19,8 @@ class PyscfTest(unittest.TestCase):
         super(PyscfTest, self).setUp()
         if not find_package("pyscf"):
             raise ImportError("Must install pyscf to run this test")
-        self.data, self.logfile = getdatafile("GAMESS", "basicGAMESS-US2018", ["dvb_sp.out"])
-        self.udata, self.ulogfile = getdatafile("GAMESS", "basicGAMESS-US2018", ["dvb_un_sp.out"])
+        self.data, self.logfile = getdatafile("Gaussian", "basicGaussian16", ["dvb_sp.out"])
+        self.udata, self.ulogfile = getdatafile("Gaussian", "basicGaussian16", ["dvb_un_sp.log"])
 
     def test_makepyscf(self) -> None:
         import pyscf
