@@ -71,6 +71,9 @@ class Tree(basetree):
         if idx is not None:
             self._curr_node_idx = idx
 
+        if idx is not None:
+            self._curr_node_idx = idx
+
         # try to go deeper on current node
         curr_node_children = self.get_children_idx(self._curr_node_idx)
         if len(curr_node_children) != 0 and self._visited_children_idx[self._curr_node_idx] != len(
