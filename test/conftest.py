@@ -327,8 +327,10 @@ def pytest_collection_modifyitems(config, items) -> None:
     for item in items:
         try:
             test_subpath = item.path.relative_to(test_basedir)
-            mark_name = f"is_{str(test_subpath.parent)}"
-            item.add_marker(mark_name)
+            parent = str(test_subpath.parent)
+            if parent != ".":
+                mark_name = f"is_{parent}"
+                item.add_marker(mark_name)
         except ValueError:
             # Not being a subpath is ok, that just means it isn't a test file.
             pass
