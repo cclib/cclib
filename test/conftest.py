@@ -4,8 +4,9 @@ See the pytest documentation for more details:
 https://docs.pytest.org/en/latest/contents.html
 """
 
+import json
 import os
-import sys
+from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterator, List, Mapping, Optional, Tuple, Union
@@ -268,6 +269,9 @@ def get_program_dir(parser_name: str) -> str:
 # A naive caching system so that parsed unit and regression tests are not
 # re-parsed.  This is necessary since not all code in conftest.py that
 # requires parsed results can take advantage of session-scoped fixtures.
+#
+# TODO see if this can be replaced with
+# https://docs.pytest.org/en/latest/how-to/writing_hook_functions.html#storing-data-on-items-across-hook-functions
 _CACHE: Dict[str, ccData] = {}
 # Each logfile, if Regression.parse == True, will have a `.data` member.
 _REGCACHE: Dict[Regression, Logfile] = {}
@@ -381,3 +385,29 @@ def pytest_generate_tests(metafunc: "pytest.Metafunc") -> None:
             filegroups.append(files)
             ids.append(str(mtch.loc_entry))
         metafunc.parametrize(argnames="data", argvalues=filegroups, ids=ids, indirect=True)
+
+
+_EXCLUDE = {"filenames", "parsername"}
+
+
+def pytest_sessionfinish(session: "pytest.Session") -> None:
+    """Write out coverage information used for building docs.
+
+    The coverage data is a dictionary that maps each parser name to
+    all the attribute names created across that parser's unit tests.
+
+    We place coverage collection here rather than in a pytest reporting hook since
+    this seems to be the only relevant global hook that runs at the end of a test session.
+    """
+    if _CACHE:
+        coverage_accumulate = defaultdict(set)
+        for data in _CACHE.values():
+            coverage_accumulate[data.__dict__["parsername"]].update(data.__dict__.keys())
+        for parsername in coverage_accumulate:
+            coverage_accumulate[parsername] -= _EXCLUDE
+        coverage = {
+            parsername: sorted(attributenames)
+            for parsername, attributenames in coverage_accumulate.items()
+        }
+        coverage_dir = pytest.Cache.cache_dir_from_config(session.config)
+        (coverage_dir / "coverage_unit.json").write_text(json.dumps(coverage), encoding="utf-8")
