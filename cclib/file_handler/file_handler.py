@@ -258,7 +258,6 @@ class FileHandler:
             raise RuntimeError("virtual_set() must be called before reset and virtual_next")
         try:
             line = next(self.files[self.file_pointer])
-            self.last_lines.append(line)
             self.pos += len(line)
             return line
         except:
