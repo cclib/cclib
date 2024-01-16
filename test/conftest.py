@@ -260,7 +260,7 @@ def get_program_dir(parser_name: str) -> str:
 
     In at least one case (GAMESS-UK) the directory is named differently.
     """
-
+    # This is duplicated from test/test_data.py.
     if parser_name == "GAMESSUK":
         return "GAMESS-UK"
     return parser_name
@@ -292,6 +292,7 @@ def data(request) -> ccData:
             filenames = [filenames]
         data.filenames = filenames
         data.parsername = logfile.logname
+        data.parserclassname = str(logfile.__class__).split(".")[-1][:-2]
         _CACHE[first] = data
     return _CACHE[first]
 
@@ -387,7 +388,7 @@ def pytest_generate_tests(metafunc: "pytest.Metafunc") -> None:
         metafunc.parametrize(argnames="data", argvalues=filegroups, ids=ids, indirect=True)
 
 
-_EXCLUDE = {"filenames", "parsername"}
+_EXCLUDE = {"filenames", "parserclassname", "parsername"}
 
 
 def pytest_sessionfinish(session: "pytest.Session") -> None:
@@ -395,6 +396,7 @@ def pytest_sessionfinish(session: "pytest.Session") -> None:
 
     The coverage data is a dictionary that maps each parser name to
     all the attribute names created across that parser's unit tests.
+    Strictly speaking, it is the parser's class name, not the 'logname'.
 
     We place coverage collection here rather than in a pytest reporting hook since
     this seems to be the only relevant global hook that runs at the end of a test session.
@@ -402,12 +404,12 @@ def pytest_sessionfinish(session: "pytest.Session") -> None:
     if _CACHE:
         coverage_accumulate = defaultdict(set)
         for data in _CACHE.values():
-            coverage_accumulate[data.__dict__["parsername"]].update(data.__dict__.keys())
-        for parsername in coverage_accumulate:
-            coverage_accumulate[parsername] -= _EXCLUDE
+            coverage_accumulate[data.__dict__["parserclassname"]].update(data.__dict__.keys())
+        for parserclassname in coverage_accumulate:
+            coverage_accumulate[parserclassname] -= _EXCLUDE
         coverage = {
-            parsername: sorted(attributenames)
-            for parsername, attributenames in coverage_accumulate.items()
+            parserclassname: sorted(attributenames)
+            for parserclassname, attributenames in coverage_accumulate.items()
         }
         coverage_dir = pytest.Cache.cache_dir_from_config(session.config)
         (coverage_dir / "coverage_unit.json").write_text(json.dumps(coverage), encoding="utf-8")

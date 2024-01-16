@@ -7,60 +7,91 @@
 
 """Generate the coverage.rst and coverage.rst files from test results."""
 
+import argparse
+import itertools
+import json
 import os
 import sys
+from pathlib import Path
 
 # Import cclib and check we are using the version from a subdirectory.
 import cclib
 
-from docs_common import check_cclib
 
-check_cclib(cclib)
-
-
-def generate_coverage():
+def generate_coverage(cclib_base_dir: Path) -> str:
     """Generate a string containing a reStructuredTest table
     representation of which parsers support which attributes, based on
     test results.
     """
     lines = []
 
-    # Change directory to where tests are and add it to the path. Because there are
-    # separate directories for different branches/versions, and we use a symlink to
-    # point to the one we want, we need to test the real path this link resolves to.
-    if "cclib_prod" in os.path.realpath("cclib"):
-        testpath = "_build/cclib_prod"
-    else:
-        assert "cclib_dev" in os.path.realpath("cclib")
-        testpath = "_build/cclib_dev"
+    os.chdir(cclib_base_dir)
 
-    os.chdir(testpath)
+    thispath = Path(__file__).parent
+    # TODO this isn't correct but doesn't seem to hurt things right now.
+    sys.path.insert(1, os.path.join(thispath, cclib_base_dir))
 
-    thispath = os.path.dirname(os.path.realpath(__file__))
-    sys.path.insert(1, os.path.join(thispath, testpath))
+    logpath = thispath / "coverage.tests.log"
 
-    import inspect
-    from test.test_data import DataSuite, all_modules, all_parsers, parser_names
+    from test.test_data import all_parsers, parser_names
 
-    ds_args = inspect.getfullargspec(DataSuite.__init__).args
-    logpath = f"{thispath}/coverage.tests.log"
     try:
+        # unittest-based testing
+        import inspect
+        from test.test_data import DataSuite, all_modules
+
+        ds_args = inspect.getfullargspec(DataSuite.__init__).args
+        try:
+            with open(logpath, "w") as flog:
+                stdout_backup = sys.stdout
+                sys.stdout = flog
+                alltests = {}
+                for p in parser_names:
+                    assert "parsers" in ds_args
+                    suite = DataSuite(parsers={p: all_parsers[p]}, modules=all_modules, stream=flog)
+                    suite.testall()
+                    alltests[p] = [{"data": t.data} for t in suite.alltests]
+                sys.stdout = stdout_backup
+        except Exception as e:
+            print("Unit tests did not run correctly. Check log file for errors:")
+            with open(logpath) as fh:
+                print(fh.read())
+            print(e)
+            sys.exit(1)
+        coverage = {
+            parser_name: set(
+                itertools.chain.from_iterable(
+                    [datadict["data"].__dict__.keys() for datadict in alltests[parser_name]]
+                )
+            )
+            for parser_name in alltests
+        }
+    except ImportError:
+        # pytest-based testing
+        import pytest
+
+        class CaptureCoverageDir:
+            def pytest_sessionfinish(self, session: "pytest.Session") -> None:
+                # See conftest.py.
+                self.coverage_dir = pytest.Cache.cache_dir_from_config(session.config)
+
+        capture_coverage_dir = CaptureCoverageDir()
         with open(logpath, "w") as flog:
             stdout_backup = sys.stdout
             sys.stdout = flog
-            alltests = {}
-            for p in parser_names:
-                assert "parsers" in ds_args
-                suite = DataSuite(parsers={p: all_parsers[p]}, modules=all_modules, stream=flog)
-                suite.testall()
-                alltests[p] = [{"data": t.data} for t in suite.alltests]
+            # Ignore one or more checked-out cclib source trees under doc/sphinx/,
+            # since there will be conftest.py multiple detection issues.
+            # TODO specify in pytest config?
+            retcode = pytest.main(["--ignore=doc", "-m", "is_data"], plugins=[capture_coverage_dir])
             sys.stdout = stdout_backup
-    except Exception as e:
-        print("Unit tests did not run correctly. Check log file for errors:")
-        with open(logpath) as fh:
-            print(fh.read())
-        print(e)
-        sys.exit(1)
+        if retcode != 0:
+            print("Unit tests did not run correctly. Check log file for errors:")
+            with open(logpath) as fh:
+                print(fh.read())
+            sys.exit(1)
+        coverage = json.loads(
+            (capture_coverage_dir.coverage_dir / "coverage_unit.json").read_text(encoding="utf-8")
+        )
 
     attributes = sorted(cclib.parser.data.ccData._attrlist)
 
@@ -84,12 +115,12 @@ def generate_coverage():
         "Molpro": ["fonames", "fooverlaps", "fragnames", "frags"],
         "NWChem": ["fonames", "fooverlaps", "fragnames", "frags"],
         "ORCA": ["fonames", "fooverlaps", "fragnames", "frags"],
-        "Psi": ["fonames", "fooverlaps", "fragnames", "frags"],
+        "Psi4": ["fonames", "fooverlaps", "fragnames", "frags"],
         "QChem": ["fonames", "fooverlaps", "fragnames", "frags"],
     }
     not_possible = {
         "NWChem": ["vibfconsts", "vibrmasses"],
-        "Psi": ["aooverlaps", "vibirs"],
+        "Psi4": ["aooverlaps", "vibirs"],
         "QChem": ["aooverlaps", "etrotats"],
     }
 
@@ -98,7 +129,7 @@ def generate_coverage():
     # T/D appropriately, with the exception of attributes that have been explicitely
     # designated as N/A.
     for attr in attributes:
-        parsed = [any([attr in t["data"].__dict__ for t in alltests[p]]) for p in parser_names]
+        parsed = [attr in coverage[p] for p in parser_names]
         for ip, p in enumerate(parsed):
             if p:
                 parsed[ip] = "√"
@@ -121,4 +152,7 @@ def generate_coverage():
 
 
 if __name__ == "__main__":
-    print(generate_coverage())
+    parser = argparse.ArgumentParser()
+    parser.add_argument("cclib_base_dir", type=Path)
+    args = parser.parse_args()
+    print(generate_coverage(args.cclib_base_dir))
