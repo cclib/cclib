@@ -23,6 +23,7 @@ class sp_combinator(combinator):
                 cprops.mult,
                 cprops.nbasis,
                 cprops.atommasses,
+                cprops.mocoeffs,
                 cprops.mosyms,
                 cprops.nmo,
                 cprops.atombasis,
