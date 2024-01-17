@@ -662,7 +662,7 @@ class Psi4(logfileparser.Logfile):
                 self.skip_lines(inputfile, ["b", "b"])
                 indices = next(inputfile)
 
-            if not hasattr(self, "mocoeffs"):
+            if not getattr(self, "mocoeffs"):
                 self.mocoeffs = []
             self.mocoeffs.append(mocoeffs)
 
