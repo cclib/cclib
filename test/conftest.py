@@ -111,9 +111,13 @@ class RegressionFile(pytest.File):
         regression_dir = rootdir / "data" / "regression"
         regressions = read_regressionfiles_yaml(regression_dir)
         for regression in regressions:
-            yield RegressionItem.from_parent(
-                self, name=f"parse{regression.normalisedfilename}", regression=regression
-            )
+            # It's not sufficient to check for this inside
+            # RegressionItem.runtest(), because then the test will show as
+            # passing even though it was never parsed.
+            if regression.parse:
+                yield RegressionItem.from_parent(
+                    self, name=f"parse{regression.normalisedfilename}", regression=regression
+                )
 
 
 def read_regressionfiles_yaml(regression_dir: Path) -> List[Regression]:

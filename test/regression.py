@@ -57,23 +57,80 @@ base_dir = (Path(__file__) / ".." / "..").resolve()
 __regression_dir__ = base_dir / "data" / "regression"
 __filedir__ = base_dir / "test"
 sys.path.insert(1, str(__filedir__))
-from .data.testBasis import GenericBigBasisTest, MolcasBigBasisTest, MolproBigBasisTest
-from .data.testCI import GaussianCISTest, GenericCISTest
-from .data.testGeoOpt import ADFGeoOptTest, GenericGeoOptTest
-from .data.testPolar import ReferencePolarTest
-from .data.testScan import GenericRelaxedScanTest
+# TODO There are many seemingly unused test imports here so that pytest can
+# parameterize them with the desired files from
+# cclib-data/regressionfiles.yaml.  If one is removed, the regression tests
+# that depend on the imported test class will simply not run rather than fail.
+# A future solution is to modify the pytest conftest.py so that all requested
+# tests in regressionfiles.yaml are automatically collected without needing
+# additional imports.
+from .data.testBasis import (
+    GaussianBigBasisTest,
+    GenericBasisTest,
+    GenericBigBasisTest,
+    MolcasBigBasisTest,
+    MolproBigBasisTest,
+    Psi4BigBasisTest,
+    QChemBigBasisTest,
+)
+from .data.testBOMD import GenericBOMDTest
+from .data.testCC import GenericCCTest
+from .data.testCI import GAMESSCISTest, GaussianCISTest, GenericCISTest, QChemCISTest
+from .data.testCore import ADFCoreTest, GenericCoreTest
+from .data.testGeoOpt import ADFGeoOptTest, GenericGeoOptTest, OrcaGeoOptTest, Psi4GeoOptTest
+from .data.testMP import (
+    GaussianMP2Test,
+    GaussianMP3Test,
+    GaussianMP4SDQTest,
+    GaussianMP4SDTQTest,
+    GenericMP2Test,
+    GenericMP3Test,
+    GenericMP4SDQTest,
+    GenericMP4SDTQTest,
+    GenericMP5Test,
+    QChemMP4SDQTest,
+    QChemMP4SDTQTest,
+)
+from .data.testPolar import GenericPolarTest, ReferencePolarTest
+from .data.testScan import GaussianRelaxedScanTest, GenericRelaxedScanTest
 from .data.testSP import (
     ADFSPTest,
+    GaussianSPTest,
     GenericHFSPTest,
     GenericSPTest,
     JaguarSPTest,
+    MolcasSPTest,
     OrcaSPTest,
     PsiHFSPTest,
     PsiSPTest,
 )
-from .data.testSPun import GaussianSPunTest, GenericSPunTest, JaguarSPunTest
-from .data.testTD import DALTONTDTest, OrcaROCISTest, OrcaTDDFTTest
-from .data.testvib import GenericIRimgTest, GenericIRTest
+from .data.testSPun import GaussianSPunTest, GenericROSPTest, GenericSPunTest, JaguarSPunTest
+from .data.testTD import (
+    DALTONTDTest,
+    GAMESSUSTDDFTTest,
+    GaussianTDDFTTest,
+    GenericTDDFTtrpTest,
+    GenericTDTest,
+    OrcaROCISTest,
+    OrcaTDDFTTest,
+    QChemTDDFTTest,
+)
+from .data.testTDun import GenericTDunTest
+from .data.testvib import (
+    ADFIRTest,
+    FireflyIRTest,
+    GamessIRTest,
+    GaussianIRTest,
+    GaussianRamanTest,
+    GenericIRimgTest,
+    GenericIRTest,
+    GenericRamanTest,
+    JaguarIRTest,
+    OrcaRamanTest,
+    Psi4IRTest,
+    QChemIRTest,
+    QChemRamanTest,
+)
 
 # The following regression test functions were manually written, because they
 # contain custom checks that were determined on a per-file basis. Care needs to be taken
