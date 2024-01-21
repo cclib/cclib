@@ -9,11 +9,11 @@ on:
 
 jobs:
   push-docs:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         container:
-          - 'shivupa/cclib-ci:py310-edge'
+          - 'shivupa/cclib-ci:py311-edge'
     container:
       image: ${{ matrix.container }}
     defaults:
