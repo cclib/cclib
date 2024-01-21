@@ -7,7 +7,6 @@
 
 """Test the Moments method in cclib"""
 
-import unittest
 from unittest import mock
 
 from cclib.method import Moments
@@ -17,7 +16,7 @@ import pytest
 from numpy.testing import assert_almost_equal, assert_equal
 
 
-class TestIdealizedInputs(unittest.TestCase):
+class TestIdealizedInputs:
     linear_dipole_attrs = {
         "atomcoords": np.array([[[-1, 0, 0], [1, 0, 0]]]),
         "atomcharges": {"mulliken": [-1, 1]},
@@ -31,7 +30,7 @@ class TestIdealizedInputs(unittest.TestCase):
         x = Moments(mock).calculate()[1]
         assert_almost_equal(x / 4.80320425, [2, 0, 0])
 
-    @unittest.skip("This does not pass for some reason.")
+    @pytest.mark.skip("This does not pass for some reason.")
     @mock.patch("cclib.parser.ccData", spec=True)
     def test_nonzero_quadrupole_moment(self, mock):
         mock.atomcoords = np.array([[[-1, 0, 0], [0, 0, 0], [1, 0, 0]]])
@@ -119,8 +118,3 @@ class TestIdealizedInputs(unittest.TestCase):
 
         a, b = m.results["mulliken"][1], m.results["lowdin"][1]
         assert not np.array_equal(a, b)
-
-
-if __name__ == "__main__":
-    suite = unittest.makeSuite(TestIdealizedInputs)
-    unittest.TextTestRunner(verbosity=2).run(suite)
