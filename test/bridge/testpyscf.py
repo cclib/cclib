@@ -14,11 +14,12 @@ import numpy as np
 
 
 class PyscfTest:
-    def setUp(self) -> None:
+    @classmethod
+    def setup_class(cls) -> None:
         if not find_package("pyscf"):
             raise ImportError("Must install pyscf to run this test")
-        self.data, self.logfile = getdatafile("Gaussian", "basicGaussian16", ["dvb_sp.out"])
-        self.udata, self.ulogfile = getdatafile("Gaussian", "basicGaussian16", ["dvb_un_sp.log"])
+        cls.data, cls.logfile = getdatafile("Gaussian", "basicGaussian16", ["dvb_sp.out"])
+        cls.udata, cls.ulogfile = getdatafile("Gaussian", "basicGaussian16", ["dvb_un_sp.log"])
 
     def test_makepyscf(self) -> None:
         from pyscf import dft
