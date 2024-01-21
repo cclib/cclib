@@ -10,7 +10,6 @@
 import logging
 import re
 import sys
-import unittest
 from typing import Sequence
 
 from cclib.method import Nuclear
@@ -23,7 +22,7 @@ sys.path.insert(1, "..")
 from ..test_data import getdatafile
 
 
-class NuclearTest(unittest.TestCase):
+class NuclearTest:
     def test_stoichiometry(self) -> None:
         """Testing stoichoimetry generation."""
         data = ccData()
@@ -164,7 +163,3 @@ class NuclearTest(unittest.TestCase):
         rotconsts_invcm = sorted(nuclear.rotational_constants("invcm"))
         np.testing.assert_allclose(rotconsts_ghz, ref_ghz, rtol=0, atol=1.0e-4)
         np.testing.assert_allclose(rotconsts_invcm, ref_invcm, rtol=0, atol=1.0e-4)
-
-
-if __name__ == "__main__":
-    unittest.TextTestRunner(verbosity=2).run(unittest.makeSuite(NuclearTest))

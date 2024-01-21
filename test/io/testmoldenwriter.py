@@ -8,7 +8,6 @@
 """Unit tests for Molden writer."""
 
 import os
-import unittest
 
 import cclib
 from cclib.io.filewriter import MissingAttributeError
@@ -22,7 +21,7 @@ __datadir__ = os.path.join(__filepath__, "..", "..")
 __testdir__ = __filedir__
 
 
-class MOLDENTest(unittest.TestCase):
+class MOLDENTest:
     def test_missing_attribute_error(self):
         """Check if MissingAttributeError is raised as expected."""
         fpath = os.path.join(__datadir__, "data/GAMESS/basicGAMESS-US2018/dvb_un_sp.out")
@@ -144,7 +143,3 @@ class MOLDENTest(unittest.TestCase):
             molden_out_formatted = MoldenReformatter(molden_out).reformat()
             # Assert if reformatted files from both writers are same.
             assert molden_out_formatted == cclib_out_formatted
-
-
-if __name__ == "__main__":
-    unittest.main()

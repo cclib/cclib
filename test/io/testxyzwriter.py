@@ -8,7 +8,6 @@
 """Unit tests for XYZ writer."""
 
 import os
-import unittest
 
 import cclib
 from cclib.parser import QChem
@@ -20,7 +19,7 @@ __filepath__ = os.path.realpath(__filedir__)
 __datadir__ = os.path.join(__filepath__, "..", "..")
 
 
-class XYZWriterTest(unittest.TestCase):
+class XYZWriterTest:
     def test_init(self):
         """Does the class initialize correctly?"""
         fpath = os.path.join(__datadir__, "data/ADF/basicADF2007.01/dvb_gopt.adfout")
@@ -81,7 +80,3 @@ class XYZWriterTest(unittest.TestCase):
         data, _ = getdatafile(QChem, "basicQChem5.1", ["dvb_sp.out"])
         writer = cclib.io.xyzwriter.XYZ(data)
         _ = writer.generate_repr()
-
-
-if __name__ == "__main__":
-    unittest.main()

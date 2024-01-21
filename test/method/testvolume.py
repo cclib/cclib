@@ -9,7 +9,6 @@
 
 import os
 import sys
-import unittest
 
 from cclib.method import volume
 from cclib.parser import Gaussian, Psi4
@@ -23,7 +22,7 @@ from numpy.testing import assert_allclose
 from ..test_data import getdatafile
 
 
-class VolumeTest(unittest.TestCase):
+class VolumeTest:
     def test_scinotation(self):
         """Does the scientific notation writer work as expected?"""
 

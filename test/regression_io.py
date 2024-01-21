@@ -5,7 +5,6 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
-import unittest
 from pathlib import Path
 
 import cclib
@@ -15,7 +14,7 @@ __filepath__ = Path(__filedir__).resolve()
 __regdir__ = (__filepath__ / ".." / "data" / "regression").resolve()
 
 
-class XYZRegressionTests(unittest.TestCase):
+class XYZRegressionTests:
     def test_xyz_not_turbomole(self):
         """Ensure XYZ file isn't misrecognized as a Turbomole file.
 
@@ -29,7 +28,3 @@ class XYZRegressionTests(unittest.TestCase):
         # ccread tries alternative file reading mechanisms.
         data = cclib.io.ccread(str(fpath))
         assert set(data.getattributes().keys()) == {"atomcoords", "atommasses", "atomnos", "natom"}
-
-
-if __name__ == "__main__":
-    unittest.main()

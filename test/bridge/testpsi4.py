@@ -5,15 +5,13 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
-import unittest
-
 from cclib.bridge import cclib2psi4
 from cclib.parser.utils import find_package
 
 import numpy as np
 
 
-class Psi4Test(unittest.TestCase):
+class Psi4Test:
     """Tests for the cclib2psi4 bridge in cclib."""
 
     def test_makepsi4(self):
@@ -32,7 +30,3 @@ class Psi4Test(unittest.TestCase):
         en = energy("scf/6-31G**", molecule=psi4mol)
         ref = -75.824754602
         assert abs(en - ref) < 1.0e-6
-
-
-if __name__ == "__main__":
-    unittest.main()
