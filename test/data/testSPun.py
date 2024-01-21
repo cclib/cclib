@@ -20,9 +20,7 @@ class GenericSPunTest:
 
     def testatomnos(self, data) -> None:
         """Are the atomnos correct?"""
-        assert numpy.alltrue(
-            [numpy.issubdtype(atomno, numpy.signedinteger) for atomno in data.atomnos]
-        )
+        assert numpy.all([numpy.issubdtype(atomno, numpy.signedinteger) for atomno in data.atomnos])
         assert data.atomnos.shape == (20,)
         assert sum(data.atomnos == 6) + sum(data.atomnos == 1) == 20
 

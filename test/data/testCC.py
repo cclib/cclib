@@ -23,7 +23,7 @@ class GenericCCTest:
     def testsign(self, data) -> None:
         """Are the coupled cluster corrections negative?"""
         corrections = data.ccenergies - data.scfenergies
-        assert numpy.alltrue(corrections < 0.0)
+        assert numpy.all(corrections < 0.0)
 
 
 class GenericCC2Test(GenericCCTest):

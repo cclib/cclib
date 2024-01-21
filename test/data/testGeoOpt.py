@@ -43,7 +43,7 @@ class GenericGeoOptTest:
         # self.assertEqual(data.atomnos.dtype.char, 'i')
 
         atomnos_types = [numpy.issubdtype(atomno, numpy.signedinteger) for atomno in data.atomnos]
-        assert numpy.alltrue(atomnos_types)
+        assert numpy.all(atomnos_types)
 
         assert data.atomnos.shape == (20,)
 
@@ -249,7 +249,7 @@ class GaussianGeoOptTest(GenericGeoOptTest):
     def testgradsorientation(self, data) -> None:
         """Are the orientations for grads and atomcoords are same?"""
         # since z-coordinates of atomcoords are all 0 for dvb, z-values of grads should be all 0
-        assert numpy.alltrue(numpy.abs(data.grads[:, :, 2]) < 1e-14)
+        assert numpy.all(numpy.abs(data.grads[:, :, 2]) < 1e-14)
 
 
 class MolcasGeoOptTest(GenericGeoOptTest):

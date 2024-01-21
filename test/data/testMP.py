@@ -25,7 +25,7 @@ class GenericMP2Test:
             corrections = data.mpenergies[:, 0] - data.scfenergies
         else:
             corrections = data.mpenergies[:, self.level - 2] - data.mpenergies[:, self.level - 3]
-        assert numpy.alltrue(corrections < 0.0)
+        assert numpy.all(corrections < 0.0)
 
 
 class GenericMP3Test(GenericMP2Test):
