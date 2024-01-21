@@ -7,7 +7,6 @@
 """Unit tests for main scripts (ccget, ccwrite)."""
 
 import os
-import unittest
 from unittest import mock
 
 import cclib
@@ -24,8 +23,8 @@ CJSON_OUTPUT_FILENAME = "dvb_gopt.cjson"
 
 
 @mock.patch("cclib.scripts.ccget.ccread")
-class ccgetTest(unittest.TestCase):
-    def setUp(self) -> None:
+class ccgetTest:
+    def setup_method(self) -> None:
         try:
             from cclib.scripts import ccget
         except ImportError:
@@ -64,8 +63,8 @@ class ccgetTest(unittest.TestCase):
 
 
 @mock.patch("cclib.scripts.ccwrite.ccwrite")
-class ccwriteTest(unittest.TestCase):
-    def setUp(self) -> None:
+class ccwriteTest:
+    def setup_method(self) -> None:
         try:
             from cclib.scripts import ccwrite
         except ImportError:
@@ -90,8 +89,8 @@ class ccwriteTest(unittest.TestCase):
         assert ccwrite_call_args[2] == CJSON_OUTPUT_FILENAME
 
 
-class ccframeTest(unittest.TestCase):
-    def setUp(self) -> None:
+class ccframeTest:
+    def setup_method(self) -> None:
         # It would be best to test with Pandas and not a mock!
         if not hasattr(cclib.io.ccio, "pd"):
             cclib.io.ccio.pd = mock.MagicMock()
@@ -122,7 +121,3 @@ class ccframeTest(unittest.TestCase):
                 # TODO: this is what we really should be testing
                 pass
             assert newline[0][0] == "\n"
-
-
-if __name__ == "__main__":
-    unittest.main()

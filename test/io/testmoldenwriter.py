@@ -14,7 +14,6 @@ import cclib
 from cclib.io.filewriter import MissingAttributeError
 from cclib.io.moldenwriter import MoldenReformatter, round_molden
 
-import numpy
 import pytest
 
 __filedir__ = os.path.dirname(__file__)

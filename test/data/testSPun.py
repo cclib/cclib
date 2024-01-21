@@ -7,29 +7,24 @@
 
 """Test unrestrictied single point logfiles in cclib"""
 
-import os
-import unittest
-
 import numpy
-from skip import skipForLogfile, skipForParser
-
-__filedir__ = os.path.realpath(os.path.dirname(__file__))
+from skip import skipForParser
 
 
-class GenericSPunTest(unittest.TestCase):
+class GenericSPunTest:
     """Generic unrestricted single point unittest"""
 
-    def testnatom(self):
+    def testnatom(self, data) -> None:
         """Is the number of atoms equal to 20?"""
-        assert self.data.natom == 20
+        assert data.natom == 20
 
-    def testatomnos(self):
+    def testatomnos(self, data) -> None:
         """Are the atomnos correct?"""
         assert numpy.alltrue(
-            [numpy.issubdtype(atomno, numpy.signedinteger) for atomno in self.data.atomnos]
+            [numpy.issubdtype(atomno, numpy.signedinteger) for atomno in data.atomnos]
         )
-        assert self.data.atomnos.shape == (20,)
-        assert sum(self.data.atomnos == 6) + sum(self.data.atomnos == 1) == 20
+        assert data.atomnos.shape == (20,)
+        assert sum(data.atomnos == 6) + sum(data.atomnos == 1) == 20
 
     @skipForParser("ADF", "???")
     @skipForParser(
@@ -41,11 +36,11 @@ class GenericSPunTest(unittest.TestCase):
     @skipForParser("Molcas", "Length is zero for some reason")
     @skipForParser("Molpro", "???")
     @skipForParser("Turbomole", "???")
-    def testatomcharges(self):
+    def testatomcharges(self, data) -> None:
         """Are atomic charges consistent with natom?"""
-        for atomcharge_type in self.data.atomcharges:
-            charges = self.data.atomcharges[atomcharge_type]
-            natom = self.data.natom
+        for atomcharge_type in data.atomcharges:
+            charges = data.atomcharges[atomcharge_type]
+            natom = data.natom
             assert (
                 len(charges) == natom
             ), f"len(atomcharges['{atomcharge_type}']) = {len(charges)}, natom = {natom}"
@@ -60,76 +55,69 @@ class GenericSPunTest(unittest.TestCase):
     @skipForParser("Molcas", "Length is zero for some reason")
     @skipForParser("Molpro", "???")
     @skipForParser("Turbomole", "???")
-    def testatomcharges_mulliken(self):
+    def testatomcharges_mulliken(self, data) -> None:
         """Do Mulliken atomic charges sum to positive one?"""
-        charges = self.data.atomcharges["mulliken"]
+        charges = data.atomcharges["mulliken"]
         assert abs(sum(charges) - 1.0) < 1.0e-2
 
-    def testatomcoords(self):
+    def testatomcoords(self, data) -> None:
         """Are the dimensions of atomcoords 1 x natom x 3?"""
-        assert self.data.atomcoords.shape == (1, self.data.natom, 3)
+        assert data.atomcoords.shape == (1, data.natom, 3)
 
     @skipForParser("Jaguar", "Data file does not contain enough information")
-    def testdimmocoeffs(self):
+    def testdimmocoeffs(self, data) -> None:
         """Are the dimensions of mocoeffs equal to 2 x nmo x nbasis?"""
-        if hasattr(self.data, "mocoeffs"):
-            assert isinstance(self.data.mocoeffs, list)
-            assert len(self.data.mocoeffs) == 2
-            assert self.data.mocoeffs[0].shape == (self.data.nmo, self.data.nbasis)
-            assert self.data.mocoeffs[1].shape == (self.data.nmo, self.data.nbasis)
+        if hasattr(data, "mocoeffs"):
+            assert isinstance(data.mocoeffs, list)
+            assert len(data.mocoeffs) == 2
+            assert data.mocoeffs[0].shape == (data.nmo, data.nbasis)
+            assert data.mocoeffs[1].shape == (data.nmo, data.nbasis)
 
     @skipForParser("Jaguar", "Data file does not contain enough information")
     @skipForParser("DALTON", "mocoeffs not implemented yet")
-    def testfornsoormo(self):
-        """Do we have NSOs or MOs?"""
-        assert hasattr(self.data, "nsocoeffs") or hasattr(self.data, "mocoeffs")
+    def testfornoormo(self, data) -> None:
+        """Do we have NOs or MOs?"""
+        assert hasattr(data, "nocoeffs") or hasattr(data, "mocoeffs")
 
-    def testdimnsoccnos(self):
-        """Are the dimensions of nsooccnos equal to 2 x nmo?"""
-        if hasattr(self.data, "nsooccnos"):
-            assert isinstance(self.data.nsooccnos, list)
-            assert isinstance(self.data.nsooccnos[0], list)
-            assert isinstance(self.data.nsooccnos[1], list)
-            assert len(self.data.nsooccnos) == 2
-            assert len(self.data.nsooccnos[0]) == self.data.nmo
-            assert len(self.data.nsooccnos[1]) == self.data.nmo
+    def testdimnoccnos(self, data) -> None:
+        """Is the length of nooccnos equal to nmo?"""
+        if hasattr(data, "nooccnos"):
+            assert isinstance(data.nooccnos, numpy.ndarray)
+            # FIXME
+            assert data.nooccnos.shape in [(data.nmo,), (2, data.nmo)]
 
-    def testdimnsocoeffs(self):
-        """Are the dimensions of nsocoeffs equal to 2 x nmo x nmo?"""
-        if hasattr(self.data, "nsocoeffs"):
-            assert isinstance(self.data.nsocoeffs, list)
-            assert isinstance(self.data.nsocoeffs[0], numpy.ndarray)
-            assert isinstance(self.data.nsocoeffs[1], numpy.ndarray)
-            assert len(self.data.nsocoeffs) == 2
-            assert self.data.nsocoeffs[0].shape == (self.data.nmo, self.data.nmo)
-            assert self.data.nsocoeffs[1].shape == (self.data.nmo, self.data.nmo)
+    def testdimnocoeffs(self, data) -> None:
+        """Are the dimensions of nocoeffs equal to 2 x nmo x nmo?"""
+        if hasattr(data, "nocoeffs"):
+            assert isinstance(data.nocoeffs, numpy.ndarray)
+            assert data.nocoeffs.shape == (2, data.nmo, data.nmo)
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
-    def testcharge_and_mult(self):
+    def testcharge_and_mult(self, data) -> None:
         """Are the charge and multiplicity correct?"""
-        assert self.data.charge == 1
-        assert self.data.mult == 2
+        assert data.charge == 1
+        assert data.mult == 2
 
-    def testhomos(self):
+    def testhomos(self, data) -> None:
         """Are the homos correct?"""
-        msg = f"{numpy.array_repr(self.data.homos)} != array([34,33],'i')"
-        numpy.testing.assert_array_equal(self.data.homos, numpy.array([34, 33], "i"), msg)
+        msg = f"{numpy.array_repr(data.homos)} != array([34,33],'i')"
+        numpy.testing.assert_array_equal(data.homos, numpy.array([34, 33], "i"), msg)
 
-    def testmoenergies(self):
+    def testmoenergies(self, data) -> None:
         """Are the dims of the moenergies equals to 2 x nmo?"""
-        if hasattr(self.data, "moenergies"):
-            assert len(self.data.moenergies) == 2
-            assert len(self.data.moenergies[0]) == self.data.nmo
-            assert len(self.data.moenergies[1]) == self.data.nmo
+        if hasattr(data, "moenergies"):
+            assert len(data.moenergies) == 2
+            assert len(data.moenergies[0]) == data.nmo
+            assert len(data.moenergies[1]) == data.nmo
 
     @skipForParser("FChk", "Fchk files do not have a section for symmetry")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Molpro", "?")
     @skipForParser("ORCA", "ORCA has no support for symmetry yet")
-    def testmosyms(self):
+    def testmosyms(self, data) -> None:
         """Are the dims of the mosyms equals to 2 x nmo?"""
-        shape = (len(self.data.mosyms), len(self.data.mosyms[0]))
-        assert shape == (2, self.data.nmo)
+        shape = (len(data.mosyms), len(data.mosyms[0]))
+        assert shape == (2, data.nmo)
 
 
 class GenericROSPTest(GenericSPunTest):
@@ -138,101 +126,90 @@ class GenericROSPTest(GenericSPunTest):
     @skipForParser("DALTON", "mocoeffs not implemented yet")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    def testdimmocoeffs(self):
+    def testdimmocoeffs(self, data) -> None:
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis?"""
-        assert isinstance(self.data.mocoeffs, list)
-        assert len(self.data.mocoeffs) == 1
-        assert self.data.mocoeffs[0].shape == (self.data.nmo, self.data.nbasis)
+        assert isinstance(data.mocoeffs, list)
+        assert len(data.mocoeffs) == 1
+        assert data.mocoeffs[0].shape == (data.nmo, data.nbasis)
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    def testhomos(self):
+    def testhomos(self, data) -> None:
         """Are the HOMO indices equal to 34 and 33 (one more alpha electron
         than beta electron)?
         """
-        msg = f"{numpy.array_repr(self.data.homos)} != array([34, 33], 'i')"
-        numpy.testing.assert_array_equal(self.data.homos, numpy.array([34, 33], "i"), msg)
+        msg = f"{numpy.array_repr(data.homos)} != array([34, 33], 'i')"
+        numpy.testing.assert_array_equal(data.homos, numpy.array([34, 33], "i"), msg)
 
     @skipForParser("QChem", "prints 2 sets of different MO energies?")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    def testmoenergies(self):
+    def testmoenergies(self, data) -> None:
         """Are the dims of the moenergies equals to 1 x nmo?"""
-        assert len(self.data.moenergies) == 1
-        assert len(self.data.moenergies[0]) == self.data.nmo
+        assert len(data.moenergies) == 1
+        assert len(data.moenergies[0]) == data.nmo
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    def testmosyms(self):
+    def testmosyms(self, data) -> None:
         """Are the dims of the mosyms equals to 1 x nmo?"""
-        shape = (len(self.data.mosyms), len(self.data.mosyms[0]))
-        assert shape == (1, self.data.nmo)
+        shape = (len(data.mosyms), len(data.mosyms[0]))
+        assert shape == (1, data.nmo)
 
 
 class GamessUK70SPunTest(GenericSPunTest):
     """Customized unrestricted single point unittest"""
 
-    def testdimmocoeffs(self):
+    def testdimmocoeffs(self, data) -> None:
         """Are the dimensions of mocoeffs equal to 2 x (homos+6) x nbasis?"""
 
-        assert isinstance(self.data.mocoeffs, list)
-        assert len(self.data.mocoeffs) == 2
+        assert isinstance(data.mocoeffs, list)
+        assert len(data.mocoeffs) == 2
 
         # This is only an issue in version 7.0 (and before?), since in the version 8.0
         # logfile all eigenvectors are happily printed.
-        shape_alpha = (self.data.homos[0] + 6, self.data.nbasis)
-        shape_beta = (self.data.homos[1] + 6, self.data.nbasis)
-        assert self.data.mocoeffs[0].shape == shape_alpha
-        assert self.data.mocoeffs[1].shape == shape_beta
+        shape_alpha = (data.homos[0] + 6, data.nbasis)
+        shape_beta = (data.homos[1] + 6, data.nbasis)
+        assert data.mocoeffs[0].shape == shape_alpha
+        assert data.mocoeffs[1].shape == shape_beta
 
-    def testnooccnos(self):
+    def testnooccnos(self, data) -> None:
         """Are natural orbital occupation numbers the right size?"""
-        assert self.data.nooccnos.shape == (self.data.nmo,)
+        assert data.nooccnos.shape == (data.nmo,)
 
 
 class GamessUK80SPunTest(GenericSPunTest):
     """Customized unrestricted single point unittest"""
 
-    def testnooccnos(self):
+    def testnooccnos(self, data) -> None:
         """Are natural orbital occupation numbers the right size?"""
-        assert self.data.nooccnos.shape == (self.data.nmo,)
+        assert data.nooccnos.shape == (data.nmo,)
 
 
 class GaussianSPunTest(GenericSPunTest):
     """Customized unrestricted single point unittest"""
 
-    def testatomspins(self):
+    def testatomspins(self, data) -> None:
         """Are atomic spins from Mulliken population analysis consistent with
         natom and sum to one (doublet)?
         """
-        spins = self.data.atomspins["mulliken"]
-        assert len(spins) == self.data.natom
+        spins = data.atomspins["mulliken"]
+        assert len(spins) == data.natom
         assert abs(sum(spins) - 1.0) < 0.001
 
 
 class JaguarSPunTest(GenericSPunTest):
     """Customized unrestricted single point unittest"""
 
-    def testmoenergies(self):
+    def testmoenergies(self, data) -> None:
         """Are the dims of the moenergies equal to 2 x homos+11?"""
-        assert len(self.data.moenergies) == 2
-        assert len(self.data.moenergies[0]) == self.data.homos[0] + 11
-        assert len(self.data.moenergies[1]) == self.data.homos[1] + 11
+        assert len(data.moenergies) == 2
+        assert len(data.moenergies[0]) == data.homos[0] + 11
+        assert len(data.moenergies[1]) == data.homos[1] + 11
 
-    def testmosyms(self):
+    def testmosyms(self, data) -> None:
         """Are the dims of the mosyms equals to 2 x nmo?"""
-        shape0 = (len(self.data.mosyms), len(self.data.mosyms[0]))
-        shape1 = (len(self.data.mosyms), len(self.data.mosyms[1]))
-        assert shape0 == (2, self.data.homos[0] + 11)
-        assert shape1 == (2, self.data.homos[1] + 11)
-
-
-if __name__ == "__main__":
-    import sys
-
-    sys.path.insert(1, os.path.join(__filedir__, ".."))
-
-    from test_data import DataSuite
-
-    suite = DataSuite(["SPun"])
-    suite.testall()
+        shape0 = (len(data.mosyms), len(data.mosyms[0]))
+        shape1 = (len(data.mosyms), len(data.mosyms[1]))
+        assert shape0 == (2, data.homos[0] + 11)
+        assert shape1 == (2, data.homos[1] + 11)

@@ -261,12 +261,9 @@ Polar     ORCA        ReferencePolarTest    basicORCA5.0          Trp_polar.out
 Polar     QChem       ReferencePolarTest    basicQChem5.1         Trp_polar.out
 Polar     QChem       ReferencePolarTest    basicQChem5.4         Trp_polar.out
 
-Scan      Gaussian     GenericRelaxedScanTest_optdone_bool   basicGaussian09       dvb_scan.log
 Scan      Gaussian     GaussianRelaxedScanTest               basicGaussian09       dvb_scan.log
-Scan      Gaussian     GenericRelaxedScanTest_optdone_bool   basicGaussian16       dvb_scan_relaxed.log
 Scan      Gaussian     GaussianRelaxedScanTest               basicGaussian16       dvb_scan_relaxed.log
 Scan      Gaussian     GaussianUnrelaxedScanTest             basicGaussian16       dvb_scan_unrelaxed.log
-Scan      Jaguar       GenericRelaxedScanTest_optdone_bool   basicJaguar8.3        dvb_scan.out
 Scan      Jaguar       JaguarRelaxedScanTest                 basicJaguar8.3        dvb_scan.out
 Scan      ORCA         GenericRelaxedScanTest                basicORCA4.2          dvb_scan.out
 Scan      ORCA         GenericUnrelaxedScanTest              basicORCA4.2          dvb_scan_unrelaxed.out
@@ -353,7 +350,7 @@ SP        QChem       CPCMCOSMOMetadataTest      basicQChem6.0               wat
 SP        QChem       CPCMMetadataTest           basicQChem6.0               water_hf_solvent_pcm_cpcm.out
 SP        QChem       IEFPCMMetadataTest         basicQChem6.0               water_hf_solvent_pcm_iefpcm.out
 SP        QChem       QChemSMDCPCMMetadataTest   basicQChem6.0               water_hf_solvent_smd_cpcm.out
-SP        QChem       SMDIEFPCMMetadataTest      basicQChem6.0               water_hf_solvent_smd_iefpcm.out
+SP        QChem       QChemSMDIEFPCMMetadataTest      basicQChem6.0               water_hf_solvent_smd_iefpcm.out
 
 SPun      ADF         GenericSPunTest       basicADF2007.01       dvb_un_sp.adfout
 SPun      ADF         GenericSPunTest       basicADF2013.01       dvb_un_sp.adfout

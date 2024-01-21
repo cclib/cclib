@@ -7,48 +7,43 @@
 
 """Test the various population analyses (MPA, LPA, CSPA) in cclib"""
 
-import logging
-import os
 import sys
-import unittest
 
 from cclib.method import Orbitals
 from cclib.parser import Gaussian, Psi4
-
-import numpy
 
 sys.path.insert(1, "..")
 
 from ..test_data import getdatafile
 
 
-class RestrictedCalculationTest(unittest.TestCase):
+class RestrictedCalculationTest:
     """Check retricted calculation."""
 
-    def setUp(self):
+    def setup_method(self) -> None:
         self.data, self.logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_sp.out"])
 
-    def test_closed_shell(self):
+    def test_closed_shell(self) -> None:
         assert Orbitals(self.data).closed_shell()
 
 
-class UnrestrictedCalculationTest(unittest.TestCase):
+class UnrestrictedCalculationTest:
     """Check unrestricted calculation."""
 
-    def setUp(self):
+    def setup_method(self) -> None:
         self.data, self.logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_un_sp.log"])
 
-    def test_closed_shell(self):
+    def test_closed_shell(self) -> None:
         assert not Orbitals(self.data).closed_shell()
 
 
-class RestrictedOpenShellCalculationTest(unittest.TestCase):
+class RestrictedOpenShellCalculationTest:
     """Check restricted open shell calcualtion."""
 
-    def setUp(self):
+    def setup_method(self) -> None:
         self.data, self.logfile = getdatafile(Psi4, "basicPsi4-1.3.1", ["dvb_sp_rohf.out"])
 
-    def test_closed_shel(self):
+    def test_closed_shel(self) -> None:
         assert not Orbitals(self.data).closed_shell()
 
 
@@ -57,9 +52,3 @@ class RestrictedOpenShellCalculationTest(unittest.TestCase):
 
 
 tests = [RestrictedCalculationTest, UnrestrictedCalculationTest]
-
-
-if __name__ == "__main__":
-    for test in tests:
-        thistest = unittest.makeSuite(test)
-        unittest.TextTestRunner(verbosity=2).run(thistest)

@@ -7,35 +7,71 @@
 
 """Tools for skipping data tests in cclib."""
 
+from inspect import signature
+from typing import Callable
 
-def skipForParser(parser, msg: str):
+import pytest
+
+
+def skipForParser(parser: str, msg: str):
     """Return a decorator that skips the test for specified parser."""
 
-    def testdecorator(testfunc):
-        def testwrapper(self, *args, **kwargs):
-            if self.logfile.logname == parser:
-                self.skipTest(msg)
-            else:
-                testfunc(self, *args, **kwargs)
+    def tstdecorator(testfunc: Callable) -> Callable[[], None]:
+        func_args = list(signature(testfunc).parameters.keys())
+        if "numvib" in func_args:
 
-        return testwrapper
+            def tstwrapper(self, data, numvib) -> None:
+                if data.parsername == parser:
+                    pytest.skip(reason=f"{parser}: {msg}")
+                else:
+                    testfunc(self, data, numvib)
+        elif "extra" in func_args:
 
-    return testdecorator
+            def tstwrapper(self, data, extra) -> None:
+                if data.parsername == parser:
+                    pytest.skip(reason=f"{parser}: {msg}")
+                else:
+                    testfunc(self, data, extra)
+        else:
+
+            def tstwrapper(self, data) -> None:
+                if data.parsername == parser:
+                    pytest.skip(reason=f"{parser}: {msg}")
+                else:
+                    testfunc(self, data)
+
+        return tstwrapper
+
+    return tstdecorator
 
 
-def skipForLogfile(fragment, msg: str):
+def skipForLogfile(fragment: str, msg: str):
     """Return a decorator that skips the test for logfiles containing fragment."""
 
-    def testdecorator(testfunc):
-        def testwrapper(self, *args, **kwargs):
-            # self.logfile.filename may be a string or list of strings.
-            if fragment in self.logfile.filename or any(
-                fragment in filename for filename in self.logfile.filename
-            ):
-                self.skipTest(msg)
-            else:
-                testfunc(self, *args, **kwargs)
+    def tstdecorator(testfunc: Callable) -> Callable[[], None]:
+        func_args = list(signature(testfunc).parameters.keys())
+        if "numvib" in func_args:
 
-        return testwrapper
+            def tstwrapper(self, data, numvib) -> None:
+                if any(fragment in filename for filename in data.filenames):
+                    pytest.skip(reason=f"{fragment}: {msg}")
+                else:
+                    testfunc(self, data, numvib)
+        elif "extra" in func_args:
 
-    return testdecorator
+            def tstwrapper(self, data, extra) -> None:
+                if any(fragment in filename for filename in data.filenames):
+                    pytest.skip(reason=f"{fragment}: {msg}")
+                else:
+                    testfunc(self, data, extra)
+        else:
+
+            def tstwrapper(self, data) -> None:
+                if any(fragment in filename for filename in data.filenames):
+                    pytest.skip(reason=f"{fragment}: {msg}")
+                else:
+                    testfunc(self, data)
+
+        return tstwrapper
+
+    return tstdecorator

@@ -7,15 +7,13 @@
 
 """Unit tests for utilities."""
 
-import unittest
-
 from cclib.parser import utils
 
 import numpy
 import scipy.spatial.transform
 
 
-class FloatTest(unittest.TestCase):
+class FloatTest:
     def test_float_basic(self) -> None:
         """Are floats converted from strings correctly?"""
         assert utils.float("0.0") == 0.0
@@ -33,19 +31,20 @@ class FloatTest(unittest.TestCase):
         assert numpy.isnan(utils.float("*****"))
 
 
-class ConvertorTest(unittest.TestCase):
+class ConvertorTest:
     def test_convertor(self) -> None:
         assert f"{utils.convertor(8.0, 'eV', 'wavenumber'):.3f}" == "64524.354"
 
 
-class GetRotationTest(unittest.TestCase):
+class GetRotationTest:
     delta = 1e-14
 
-    def setUp(self) -> None:
-        self.r = scipy.spatial.transform.Rotation.from_euler("xyz", [15, 25, 35], degrees=True)
-        self.t = numpy.array([-1, 0, 2])
-        self.a = numpy.array([[1.0, 1.0, 1.0], [0.0, 1.0, 2.0], [0.0, 0.0, 0.0], [0.0, 0.0, 4.0]])
-        self.b = self.r.apply(self.a + self.t)
+    @classmethod
+    def setup_class(cls) -> None:
+        cls.r = scipy.spatial.transform.Rotation.from_euler("xyz", [15, 25, 35], degrees=True)
+        cls.t = numpy.array([-1, 0, 2])
+        cls.a = numpy.array([[1.0, 1.0, 1.0], [0.0, 1.0, 2.0], [0.0, 0.0, 0.0], [0.0, 0.0, 4.0]])
+        cls.b = cls.r.apply(cls.a + cls.t)
 
     def test_default(self) -> None:
         """Is the rotation is correct?"""
@@ -78,18 +77,16 @@ class GetRotationTest(unittest.TestCase):
             )
 
 
-class PeriodicTableTest(unittest.TestCase):
-    def setUp(self) -> None:
-        self.t = utils.PeriodicTable()
-
+class PeriodicTableTest:
     def test_periodictable(self) -> None:
-        assert self.t.element[6] == "C"
-        assert self.t.number["C"] == 6
-        assert self.t.element[44] == "Ru"
-        assert self.t.number["Au"] == 79
+        t = utils.PeriodicTable()
+        assert t.element[6] == "C"
+        assert t.number["C"] == 6
+        assert t.element[44] == "Ru"
+        assert t.number["Au"] == 79
 
 
-class WidthSplitterTest(unittest.TestCase):
+class WidthSplitterTest:
     def test_default(self) -> None:
         """Does the splitter remove empty fields by default properly?"""
         fixed_splitter = utils.WidthSplitter((4, 3, 5, 6, 10, 10, 10, 10, 10, 10))
@@ -122,7 +119,7 @@ class WidthSplitterTest(unittest.TestCase):
         assert ref_not_truncated == tokens_not_truncated
 
 
-class SymmetrizeTest(unittest.TestCase):
+class SymmetrizeTest:
     def test_dim_from_tblock_size(self) -> None:
         assert utils._dim_from_tblock_size(1) == 1
         # This isn't possible until we fully move to pytest.
@@ -146,7 +143,3 @@ class SymmetrizeTest(unittest.TestCase):
         ref_upper = numpy.array([[1, 9, 7], [9, 8, 3], [7, 3, 5]], dtype=int)
         numpy.testing.assert_equal(utils.symmetrize(inp, "lower"), ref_lower)
         numpy.testing.assert_equal(utils.symmetrize(inp, "upper"), ref_upper)
-
-
-if __name__ == "__main__":
-    unittest.main()

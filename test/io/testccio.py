@@ -9,7 +9,6 @@
 
 import os
 import tempfile
-import unittest
 from io import StringIO
 from unittest import mock
 
@@ -22,18 +21,18 @@ __filepath__ = os.path.realpath(__filedir__)
 __datadir__ = os.path.join(__filepath__, "..", "..")
 
 
-class guess_filetypeTest(unittest.TestCase):
-    def setUp(self):
+class guess_filetypeTest:
+    def setup_method(self) -> None:
         self.guess = cclib.io.ccio.guess_filetype
 
-    def test_fail(self):
+    def test_fail(self) -> None:
         """Does the function fail as expected?"""
         assert self.guess([]) is None
         assert self.guess(None) is None
         assert self.guess(os.devnull) is None
         assert self.guess(["test", "random", "quantum chemistry"]) is None
 
-    def test_programs(self):
+    def test_programs(self) -> None:
         """Does the function catch programs as expected?"""
         assert self.guess(["Amsterdam Density Functional"]) == cclib.parser.ADF
         assert self.guess(["Dalton - An Electronic Structure Program"]) == cclib.parser.DALTON
@@ -57,19 +56,19 @@ class guess_filetypeTest(unittest.TestCase):
         assert self.guess(["x T B"]) == cclib.parser.XTB
 
 
-class ccreadTest(unittest.TestCase):
-    def setUp(self):
+class ccreadTest:
+    def setup_method(self) -> None:
         self.ccread = cclib.io.ccio.ccread
 
-    def test_fail(self):
+    def test_fail(self) -> None:
         """Does the function fail as expected?"""
         assert self.ccread("", quiet=True) is None
         assert self.ccread([], quiet=True) is None
         assert self.ccread(None, quiet=True) is None
 
 
-class ccopenTest(unittest.TestCase):
-    def setUp(self):
+class ccopenTest:
+    def setup_method(self) -> None:
         self.ccopen = cclib.io.ccio.ccopen
 
     def test_ccopen_fail(self):
@@ -114,7 +113,7 @@ class ccopenTest(unittest.TestCase):
             [base_url + fname for fname in filenames]
         ).parse().getattributes(tolists=True)
 
-    @unittest.skip("This should also work if cjsonreader supported streams.")
+    @pytest.mark.skip("This should also work if cjsonreader supported streams.")
     def test_cjson(self):
         """Do we get a CJSON object then keyword argument used?"""
         assert isinstance(self.ccopen(StringIO(""), cjson=True), cclib.io.cjsonreader.CJSON)
@@ -141,12 +140,12 @@ class ccopenTest(unittest.TestCase):
         assert self.ccopen([file_path, file_path]) is not None
 
 
-class _determine_output_formatTest(unittest.TestCase):
-    def setUp(self):
+class _determine_output_formatTest:
+    def setup_method(self) -> None:
         self._determine_output_format = cclib.io.ccio._determine_output_format
         self.UnknownOutputFormatError = cclib.io.ccio.UnknownOutputFormatError
 
-    def test_outputclass(self):
+    def test_outputclass(self) -> None:
         """Does the function determine output class as expected."""
         outputtype = "xyz"
         outputdest = "file.xyz"
@@ -158,22 +157,18 @@ class _determine_output_formatTest(unittest.TestCase):
             self._determine_output_format(None, None)
 
 
-class fallbackTest(unittest.TestCase):
-    def setUp(self):
+class fallbackTest:
+    def setup_method(self) -> None:
         self.fallback = cclib.io.ccio.fallback
 
-    def test_fallback_fail(self):
+    def test_fallback_fail(self) -> None:
         """Does the function fail as expected?"""
         assert self.fallback(None) is None
 
 
-class ccframeTest(unittest.TestCase):
+class ccframeTest:
     @mock.patch("cclib.io.ccio._has_pandas", False)
-    def test_ccframe_call_without_pandas(self):
+    def test_ccframe_call_without_pandas(self) -> None:
         """Does ccframe fails cleanly if Pandas can't be imported?"""
         with pytest.raises(ImportError, match="You must install `pandas` to use this function"):
             cclib.io.ccio.ccframe([])
-
-
-if __name__ == "__main__":
-    unittest.main()

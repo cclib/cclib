@@ -11,7 +11,6 @@ jobs:
     strategy:
       matrix:
         container:
-          - 'shivupa/cclib-ci:py37-edge'
           - 'shivupa/cclib-ci:py38-edge'
           - 'shivupa/cclib-ci:py39-edge'
           - 'shivupa/cclib-ci:py310-edge'
@@ -42,11 +41,11 @@ jobs:
       - name: Test core code with pytest
         run: |
           env | sort
-          bash .github/scripts/run_pytest.bash
+          bash .github/scripts/run_pytest.bash 2
       - name: Test methods with pytest
         if: steps.filter.outputs.methods == 'true'
         run: |
-          bash .github/scripts/run_pytest_methods.bash
+          bash .github/scripts/run_pytest_methods.bash 2
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:

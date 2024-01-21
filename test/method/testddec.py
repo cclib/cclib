@@ -9,7 +9,6 @@
 
 import os
 import sys
-import unittest
 from typing import Optional
 
 from cclib.io import ccread
@@ -24,11 +23,10 @@ from numpy.testing import assert_allclose
 from ..test_data import getdatafile
 
 
-class DDEC6Test(unittest.TestCase):
+class DDEC6Test:
     """DDEC6 method tests."""
 
-    def setUp(self) -> None:
-        super(DDEC6Test, self).setUp()
+    def setup_method(self) -> None:
         self.parse()
 
     def parse(self, molecule_name: Optional[str] = None) -> None:

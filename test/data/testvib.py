@@ -7,15 +7,11 @@
 
 """Test logfiles with vibration output in cclib"""
 
-import os
-import unittest
-
+import pytest
 from skip import skipForLogfile, skipForParser
 
-__filedir__ = os.path.realpath(os.path.dirname(__file__))
 
-
-class GenericIRTest(unittest.TestCase):
+class GenericIRTest:
     """Generic vibrational frequency unittest"""
 
     # Unit tests should normally give this value for the largest IR intensity.
@@ -28,48 +24,49 @@ class GenericIRTest(unittest.TestCase):
     # reference zero-point correction from Gaussian 16 dvb_ir.out
     zpve = 0.1771
 
-    def setUp(self) -> None:
+    @pytest.fixture
+    def numvib(self, data) -> int:
         """Initialize the number of vibrational frequencies on a per molecule basis"""
-        self.numvib = 3 * len(self.data.atomnos) - 6
+        return 3 * len(data.atomnos) - 6
 
-    def testbasics(self) -> None:
+    def testbasics(self, data) -> None:
         """Are basic attributes correct?"""
-        assert self.data.natom == 20
+        assert data.natom == 20
 
     @skipForLogfile("FChk/basicGaussian09", "not printed in older versions than 16")
     @skipForLogfile("FChk/basicQChem5.4", "not printed")
     @skipForParser("xTB", "Custom treatment")
-    def testvibdisps(self) -> None:
+    def testvibdisps(self, data, numvib) -> None:
         """Are the dimensions of vibdisps consistent with numvib x N x 3"""
-        assert len(self.data.vibfreqs) == self.numvib
-        assert self.data.vibdisps.shape == (self.numvib, len(self.data.atomnos), 3)
+        assert len(data.vibfreqs) == numvib
+        assert data.vibdisps.shape == (numvib, len(data.atomnos), 3)
 
     @skipForLogfile("FChk/basicGaussian09", "not printed in older versions than 16")
     @skipForLogfile("FChk/basicQChem5.4", "not printed")
-    def testlengths(self) -> None:
+    def testlengths(self, data, numvib) -> None:
         """Are the lengths of vibfreqs and vibirs (and if present, vibsyms, vibfconnsts and vibrmasses) correct?"""
-        assert len(self.data.vibfreqs) == self.numvib
-        if hasattr(self.data, "vibirs"):
-            assert len(self.data.vibirs) == self.numvib
-        if hasattr(self.data, "vibsyms"):
-            assert len(self.data.vibsyms) == self.numvib
-        if hasattr(self.data, "vibfconsts"):
-            assert len(self.data.vibfconsts) == self.numvib
-        if hasattr(self.data, "vibrmasses"):
-            assert len(self.data.vibrmasses) == self.numvib
+        assert len(data.vibfreqs) == numvib
+        if hasattr(data, "vibirs"):
+            assert len(data.vibirs) == numvib
+        if hasattr(data, "vibsyms"):
+            assert len(data.vibsyms) == numvib
+        if hasattr(data, "vibfconsts"):
+            assert len(data.vibfconsts) == numvib
+        if hasattr(data, "vibrmasses"):
+            assert len(data.vibrmasses) == numvib
 
     @skipForLogfile("FChk/basicGaussian09", "not printed in older versions than 16")
     @skipForLogfile("FChk/basicQChem5.4", "not printed")
-    def testfreqval(self) -> None:
+    def testfreqval(self, data) -> None:
         """Is the highest freq value 3630 +/- 200 wavenumber?"""
-        assert abs(max(self.data.vibfreqs) - 3630) < 200
+        assert abs(max(data.vibfreqs) - 3630) < 200
 
     @skipForParser("Psi4", "Psi cannot print IR intensities")
     @skipForLogfile("FChk/basicGaussian09", "not printed in older versions than 16")
     @skipForLogfile("FChk/basicQChem5.4", "not printed")
-    def testirintens(self) -> None:
+    def testirintens(self, data) -> None:
         """Is the maximum IR intensity 100 +/- 10 km/mol?"""
-        assert abs(max(self.data.vibirs) - self.max_IR_intensity) < 10
+        assert abs(max(data.vibirs) - self.max_IR_intensity) < 10
 
     @skipForParser("ADF", "ADF cannot print force constants")
     @skipForParser("DALTON", "DALTON cannot print force constants")
@@ -81,15 +78,15 @@ class GenericIRTest(unittest.TestCase):
     @skipForParser("ORCA", "ORCA cannot print force constants")
     @skipForParser("Turbomole", "Turbomole cannot print force constants")
     @skipForParser("xTB", "xTB does not print force constants")
+    @skipForLogfile("FChk/basicGaussian09", "not printed in older versions than 16")
+    @skipForLogfile("FChk/basicQChem5.4", "not printed")
     @skipForLogfile("Jaguar/Jaguar4.2", "Data file does not contain force constants")
     @skipForLogfile(
         "Psi4/Psi4-1.0", "Data file contains vibrational info with cartesian coordinates"
     )
-    @skipForLogfile("FChk/basicGaussian09", "not printed in older versions than 16")
-    @skipForLogfile("FChk/basicQChem5.4", "not printed")
-    def testvibfconsts(self) -> None:
+    def testvibfconsts(self, data) -> None:
         """Is the maximum force constant 10. +/- 0.1 mDyn/angstrom?"""
-        assert abs(max(self.data.vibfconsts) - self.max_force_constant) < 0.1
+        assert abs(max(data.vibfconsts) - self.max_force_constant) < 0.1
 
     @skipForParser("ADF", "ADF cannot print reduced masses")
     @skipForParser("DALTON", "DALTON cannot print reduced masses")
@@ -97,19 +94,19 @@ class GenericIRTest(unittest.TestCase):
     @skipForParser("Molpro", "Molpro cannot print reduced masses")
     @skipForParser("NWChem", "Not implemented for this parser")
     @skipForParser("ORCA", "ORCA cannot print reduced masses")
-    @skipForLogfile("GAMESS/PCGAMESS", "Data file does not contain reduced masses")
-    @skipForLogfile("Psi4/Psi4-1.0", "Data file does not contain reduced masses")
     @skipForLogfile("FChk/basicGaussian09", "not printed in older versions than 16")
     @skipForLogfile("FChk/basicQChem5.4", "not printed")
-    def testvibrmasses(self) -> None:
+    @skipForLogfile("GAMESS/PCGAMESS", "Data file does not contain reduced masses")
+    @skipForLogfile("Psi4/Psi4-1.0", "Data file does not contain reduced masses")
+    def testvibrmasses(self, data) -> None:
         """Is the maximum reduced mass 6.9 +/- 0.1 daltons?"""
-        assert abs(max(self.data.vibrmasses) - self.max_reduced_mass) < 0.1
+        assert abs(max(data.vibrmasses) - self.max_reduced_mass) < 0.1
 
     @skipForParser("FChk", "not printed")
     @skipForParser("Psi3", "not implemented yet")
-    def testzeropointcorrection(self) -> None:
+    def testzeropointcorrection(self, data) -> None:
         """Is the zero-point correction correct?"""
-        assert abs(self.data.zpve - self.zpve) < 1.0e-3
+        assert abs(data.zpve - self.zpve) < 1.0e-3
 
     @skipForParser("ADF", "not implemented yet")
     @skipForParser("GAMESSUK", "not implemented yet")
@@ -124,18 +121,18 @@ class GenericIRTest(unittest.TestCase):
     )
     @skipForParser("Turbomole", "not implemented yet")
     @skipForParser("xTB", "not implemented yet")
-    def testhessian(self):
+    def testhessian(self, data) -> None:
         """Are the dimensions of the molecular Hessian correct?"""
-        assert self.data.hessian.shape == (3 * self.data.natom, 3 * self.data.natom)
+        assert data.hessian.shape == (3 * data.natom, 3 * data.natom)
 
 
 class ADFIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
     # ???
-    def testzeropointcorrection(self) -> None:
+    def testzeropointcorrection(self, data) -> None:
         """Is the zero-point correction correct?"""
-        assert abs(self.data.zpve - self.zpve) < 1.0e-2
+        assert abs(data.zpve - self.zpve) < 1.0e-2
 
 
 class FireflyIRTest(GenericIRTest):
@@ -150,56 +147,52 @@ class GaussianIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
     @skipForParser("FChk", "not printed")
-    def testvibsyms(self) -> None:
+    def testvibsyms(self, data, numvib) -> None:
         """Is the length of vibsyms correct?"""
-        assert len(self.data.vibsyms) == self.numvib
+        assert len(data.vibsyms) == numvib
 
     @skipForParser("FChk", "not printed")
-    def testzeropointcorrection(self) -> None:
+    def testzeropointcorrection(self, data) -> None:
         # reference zero-point correction from dvb_ir.out
         zpve = 0.1771
         """Is the zero-point correction correct?"""
-        assert abs(self.data.zpve - zpve) < 0.001
+        assert abs(data.zpve - zpve) < 0.001
 
     entropy_places = 6
     enthalpy_places = 3
     freeenergy_places = 3
 
     @skipForParser("FChk", "not printed")
-    def testtemperature(self) -> None:
+    def testtemperature(self, data) -> None:
         """Is the temperature 298.15 K?"""
-        assert round(abs(298.15 - self.data.temperature), 7) == 0
+        assert round(abs(298.15 - data.temperature), 7) == 0
 
     @skipForParser("FChk", "not printed")
-    def testpressure(self) -> None:
+    def testpressure(self, data) -> None:
         """Is the pressure 1 atm?"""
-        assert round(abs(1 - self.data.pressure), 7) == 0
+        assert round(abs(1 - data.pressure), 7) == 0
 
     @skipForParser("FChk", "not printed")
-    def testentropy(self) -> None:
+    def testentropy(self, data) -> None:
         """Is the entropy reasonable"""
-        assert round(abs(0.0001462623335480945 - self.data.entropy), self.entropy_places) == 0
+        assert round(abs(0.0001462623335480945 - data.entropy), self.entropy_places) == 0
 
     @skipForParser("FChk", "not printed")
-    def testenthalpy(self) -> None:
+    def testenthalpy(self, data) -> None:
         """Is the enthalpy reasonable"""
-        assert round(abs(-382.12130688525264 - self.data.enthalpy), self.enthalpy_places) == 0
+        assert round(abs(-382.12130688525264 - data.enthalpy), self.enthalpy_places) == 0
 
     @skipForParser("FChk", "not printed")
-    def testfreeenergy(self) -> None:
+    def testfreeenergy(self, data) -> None:
         """Is the freeenergy reasonable"""
-        assert round(abs(-382.164915 - self.data.freeenergy), self.freeenergy_places) == 0
+        assert round(abs(-382.164915 - data.freeenergy), self.freeenergy_places) == 0
 
     @skipForParser("FChk", "not printed")
-    def testfreeenergyconsistency(self) -> None:
+    def testfreeenergyconsistency(self, data) -> None:
         """Does G = H - TS hold"""
         assert (
             round(
-                abs(
-                    self.data.enthalpy
-                    - self.data.temperature * self.data.entropy
-                    - self.data.freeenergy
-                ),
+                abs(data.enthalpy - data.temperature * data.entropy - data.freeenergy),
                 self.freeenergy_places,
             )
             == 0
@@ -213,9 +206,9 @@ class JaguarIRTest(GenericIRTest):
     max_force_constant = 3.7
     max_reduced_mass = 2.3
 
-    def testvibsyms(self) -> None:
+    def testvibsyms(self, data, numvib) -> None:
         """Is the length of vibsyms correct?"""
-        assert len(self.data.vibsyms) == self.numvib
+        assert len(data.vibsyms) == numvib
 
 
 class MolcasIRTest(GenericIRTest):
@@ -228,35 +221,31 @@ class MolcasIRTest(GenericIRTest):
     enthalpy_places = 3
     freeenergy_places = 3
 
-    def testtemperature(self) -> None:
+    def testtemperature(self, data) -> None:
         """Is the temperature 298.15 K?"""
-        assert round(abs(298.15 - self.data.temperature), 7) == 0
+        assert round(abs(298.15 - data.temperature), 7) == 0
 
-    def testpressure(self) -> None:
+    def testpressure(self, data) -> None:
         """Is the pressure 1 atm?"""
-        assert round(abs(1 - self.data.pressure), 7) == 0
+        assert round(abs(1 - data.pressure), 7) == 0
 
-    def testentropy(self) -> None:
+    def testentropy(self, data) -> None:
         """Is the entropy reasonable"""
-        assert round(abs(0.00013403320476271246 - self.data.entropy), self.entropy_places) == 0
+        assert round(abs(0.00013403320476271246 - data.entropy), self.entropy_places) == 0
 
-    def testenthalpy(self) -> None:
+    def testenthalpy(self, data) -> None:
         """Is the enthalpy reasonable"""
-        assert round(abs(-382.11385 - self.data.enthalpy), self.enthalpy_places) == 0
+        assert round(abs(-382.11385 - data.enthalpy), self.enthalpy_places) == 0
 
-    def testfreeenergy(self) -> None:
+    def testfreeenergy(self, data) -> None:
         """Is the freeenergy reasonable"""
-        assert round(abs(-382.153812 - self.data.freeenergy), self.freeenergy_places) == 0
+        assert round(abs(-382.153812 - data.freeenergy), self.freeenergy_places) == 0
 
-    def testfreeenergyconsistency(self) -> None:
+    def testfreeenergyconsistency(self, data) -> None:
         """Does G = H - TS hold"""
         assert (
             round(
-                abs(
-                    self.data.enthalpy
-                    - self.data.temperature * self.data.entropy
-                    - self.data.freeenergy
-                ),
+                abs(data.enthalpy - data.temperature * data.entropy - data.freeenergy),
                 self.freeenergy_places,
             )
             == 0
@@ -266,55 +255,10 @@ class MolcasIRTest(GenericIRTest):
 class NWChemIRTest(GenericIRTest):
     """Generic imaginary vibrational frequency unittest"""
 
-    def setUp(self) -> None:
+    @pytest.fixture
+    def numvib(self, data) -> int:
         """Initialize the number of vibrational frequencies on a per molecule basis"""
-        self.numvib = 3 * len(self.data.atomnos)
-
-
-class OrcaIRTest(GenericIRTest):
-    """Customized vibrational frequency unittest"""
-
-    # ORCA has a bug in the intensities for version < 4.0
-    max_IR_intensity = 215
-    zpve = 0.1921
-
-    enthalpy_places = 3
-    entropy_places = 6
-    freeenergy_places = 3
-
-    def testtemperature(self) -> None:
-        """Is the temperature 298.15 K?"""
-        assert round(abs(298.15 - self.data.temperature), 7) == 0
-
-    def testpressure(self) -> None:
-        """Is the pressure 1 atm?"""
-        assert round(abs(1 - self.data.pressure), 7) == 0
-
-    def testenthalpy(self) -> None:
-        """Is the enthalpy reasonable"""
-        assert round(abs(-381.85224835 - self.data.enthalpy), self.enthalpy_places) == 0
-
-    def testentropy(self) -> None:
-        """Is the entropy reasonable"""
-        assert round(abs(0.00012080325339594164 - self.data.entropy), self.entropy_places) == 0
-
-    def testfreeenergy(self) -> None:
-        """Is the freeenergy reasonable"""
-        assert round(abs(-381.88826585 - self.data.freeenergy), self.freeenergy_places) == 0
-
-    def testfreeenergyconsistency(self) -> None:
-        """Does G = H - TS hold"""
-        assert (
-            round(
-                abs(
-                    self.data.enthalpy
-                    - self.data.temperature * self.data.entropy
-                    - self.data.freeenergy
-                ),
-                self.freeenergy_places,
-            )
-            == 0
-        )
+        return 3 * len(data.atomnos)
 
 
 class QChemIRTest(GenericIRTest):
@@ -325,52 +269,48 @@ class QChemIRTest(GenericIRTest):
     freeenergy_places = 3
 
     @skipForParser("FChk", "not printed")
-    def testtemperature(self) -> None:
+    def testtemperature(self, data) -> None:
         """Is the temperature 298.15 K?"""
-        assert 298.15 == self.data.temperature
+        assert 298.15 == data.temperature
 
     @skipForParser("FChk", "not printed")
-    def testpressure(self) -> None:
+    def testpressure(self, data) -> None:
         """Is the pressure 1 atm?"""
-        assert round(abs(1 - self.data.pressure), 7) == 0
+        assert round(abs(1 - data.pressure), 7) == 0
 
     @skipForParser("FChk", "not printed")
-    def testenthalpy(self) -> None:
+    def testenthalpy(self, data) -> None:
         """Is the enthalpy reasonable"""
-        assert round(abs(0.1871270552135131 - self.data.enthalpy), self.enthalpy_places) == 0
+        assert round(abs(0.1871270552135131 - data.enthalpy), self.enthalpy_places) == 0
 
     @skipForParser("FChk", "not printed")
-    def testentropy(self) -> None:
+    def testentropy(self, data) -> None:
         """Is the entropy reasonable"""
-        assert round(abs(0.00014667348271900577 - self.data.entropy), self.entropy_places) == 0
+        assert round(abs(0.00014667348271900577 - data.entropy), self.entropy_places) == 0
 
     @skipForParser("FChk", "not printed")
-    def testfreeenergy(self) -> None:
+    def testfreeenergy(self, data) -> None:
         """Is the freeenergy reasonable"""
-        assert round(abs(0.14339635634084155 - self.data.freeenergy), self.freeenergy_places) == 0
+        assert round(abs(0.14339635634084155 - data.freeenergy), self.freeenergy_places) == 0
 
     # Molecular mass of DVB in mD.
     molecularmass = 130078.25
 
     @skipForParser("FChk", "not printed")
-    def testatommasses(self) -> None:
+    def testatommasses(self, data) -> None:
         """Do the atom masses sum up to the molecular mass (130078.25+-0.1mD)?"""
-        mm = 1000 * sum(self.data.atommasses)
+        mm = 1000 * sum(data.atommasses)
         assert abs(mm - 130078.25) < 0.1, f"Molecule mass: {mm:f} not 130078 +- 0.1mD"
 
-    def testhessian(self) -> None:
+    def testhessian(self, data) -> None:
         """Do the frequencies from the Hessian match the printed frequencies?"""
 
     @skipForParser("FChk", "not printed")
-    def testfreeenergyconsistency(self) -> None:
+    def testfreeenergyconsistency(self, data) -> None:
         """Does G = H - TS hold"""
         assert (
             round(
-                abs(
-                    self.data.enthalpy
-                    - self.data.temperature * self.data.entropy
-                    - self.data.freeenergy
-                ),
+                abs(data.enthalpy - data.temperature * data.entropy - data.freeenergy),
                 self.freeenergy_places,
             )
             == 0
@@ -386,40 +326,36 @@ class GamessIRTest(GenericIRTest):
     entropy_places = 6
     freeenergy_places = 3
 
-    def testatommasses(self) -> None:
+    def testatommasses(self, data) -> None:
         """Do the atom masses sum up to the molecular mass (130078.25+-0.1mD)?"""
-        mm = 1000 * sum(self.data.atommasses)
+        mm = 1000 * sum(data.atommasses)
         assert abs(mm - 130078.25) < 0.1, f"Molecule mass: {mm:f} not 130078 +- 0.1mD"
 
-    def testtemperature(self) -> None:
+    def testtemperature(self, data) -> None:
         """Is the temperature 298.15 K?"""
-        assert round(abs(298.15 - self.data.temperature), 7) == 0
+        assert round(abs(298.15 - data.temperature), 7) == 0
 
-    def testpressure(self) -> None:
+    def testpressure(self, data) -> None:
         """Is the pressure 1 atm?"""
-        assert round(abs(1 - self.data.pressure), 7) == 0
+        assert round(abs(1 - data.pressure), 7) == 0
 
-    def testenthalpy(self) -> None:
+    def testenthalpy(self, data) -> None:
         """Is the enthalpy reasonable"""
-        assert round(abs(-381.86372805188300 - self.data.enthalpy), self.enthalpy_places) == 0
+        assert round(abs(-381.86372805188300 - data.enthalpy), self.enthalpy_places) == 0
 
-    def testentropy(self) -> None:
+    def testentropy(self, data) -> None:
         """Is the entropy reasonable"""
-        assert round(abs(0.00014875961938 - self.data.entropy), self.entropy_places) == 0
+        assert round(abs(0.00014875961938 - data.entropy), self.entropy_places) == 0
 
-    def testfreeenergy(self) -> None:
+    def testfreeenergy(self, data) -> None:
         """Is the freeenergy reasonable"""
-        assert round(abs(-381.90808120060200 - self.data.freeenergy), self.freeenergy_places) == 0
+        assert round(abs(-381.90808120060200 - data.freeenergy), self.freeenergy_places) == 0
 
-    def testfreeenergyconsistency(self) -> None:
+    def testfreeenergyconsistency(self, data) -> None:
         """Does G = H - TS hold"""
         assert (
             round(
-                abs(
-                    self.data.enthalpy
-                    - self.data.temperature * self.data.entropy
-                    - self.data.freeenergy
-                ),
+                abs(data.enthalpy - data.temperature * data.entropy - data.freeenergy),
                 self.freeenergy_places,
             )
             == 0
@@ -447,60 +383,63 @@ class XTBIRTest(GenericIRTest):
     zpve = 4.3874784471
     max_reduced_mass = 11.43
 
-    def setUp(self) -> None:
+    @pytest.fixture
+    def numvib(self, data) -> int:
         """Initialize the number of vibrational frequencies on a per molecule basis"""
-        self.numvib = 3 * len(self.data.atomnos)
+        return 3 * len(data.atomnos)
 
-    def testfreqval(self) -> None:
+    def testfreqval(self, data) -> None:
         """Is the highest freq value 3131.43 wavenumber?"""
-        assert abs(max(self.data.vibfreqs) - 3131.43) < 10
+        assert abs(max(data.vibfreqs) - 3131.43) < 10
 
-    def testvibrmasses(self) -> None:
+    def testvibrmasses(self, data) -> None:
         """Is the maximum reduced mass 11.43 +/- 0.1 daltons?"""
-        assert abs(max(self.data.vibrmasses) - self.max_reduced_mass) < 0.1
+        assert abs(max(data.vibrmasses) - self.max_reduced_mass) < 0.1
 
 
-class GenericIRimgTest(unittest.TestCase):
+class GenericIRimgTest:
     """Generic imaginary vibrational frequency unittest"""
 
-    def setUp(self) -> None:
+    @pytest.fixture
+    def numvib(self, data) -> int:
         """Initialize the number of vibrational frequencies on a per molecule basis"""
-        self.numvib = 3 * len(self.data.atomnos) - 6
+        return 3 * len(data.atomnos) - 6
 
-    def testvibdisps(self) -> None:
+    def testvibdisps(self, data, numvib) -> None:
         """Are the dimensions of vibdisps consistent with numvib x N x 3"""
-        assert self.data.vibdisps.shape == (self.numvib, len(self.data.atomnos), 3)
+        assert data.vibdisps.shape == (numvib, len(data.atomnos), 3)
 
-    def testlengths(self) -> None:
+    def testlengths(self, data, numvib) -> None:
         """Are the lengths of vibfreqs and vibirs correct?"""
-        assert len(self.data.vibfreqs) == self.numvib
-        assert len(self.data.vibirs) == self.numvib
+        assert len(data.vibfreqs) == numvib
+        assert len(data.vibirs) == numvib
 
-    def testfreqval(self) -> None:
+    def testfreqval(self, data) -> None:
         """Is the lowest freq value negative?"""
-        assert self.data.vibfreqs[0] < 0
+        assert data.vibfreqs[0] < 0
 
 
-##    def testmaxvibdisps(self):
+##    def testmaxvibdisps(self, data) -> None:
 ##        """What is the maximum value of displacement for a H vs a C?"""
-##        Cvibdisps = compress(self.data.atomnos==6, self.data.vibdisps, 1)
-##        Hvibdisps = compress(self.data.atomnos==1, self.data.vibdisps, 1)
+##        Cvibdisps = compress(data.atomnos==6, data.vibdisps, 1)
+##        Hvibdisps = compress(data.atomnos==1, data.vibdisps, 1)
 ##        self.assertEqual(max(abs(Cvibdisps).flat), 1.0)
 
 
-class GenericRamanTest(unittest.TestCase):
+class GenericRamanTest:
     """Generic Raman unittest"""
 
     # This value is in amu.
     max_raman_intensity = 575
 
-    def setUp(self) -> None:
+    @pytest.fixture
+    def numvib(self, data) -> int:
         """Initialize the number of vibrational frequencies on a per molecule basis"""
-        self.numvib = 3 * len(self.data.atomnos) - 6
+        return 3 * len(data.atomnos) - 6
 
-    def testlengths(self) -> None:
+    def testlengths(self, data, numvib) -> None:
         """Is the length of vibramans correct?"""
-        assert len(self.data.vibramans) == self.numvib
+        assert len(data.vibramans) == numvib
 
     # The tolerance for this number has been increased, since ORCA
     # failed to make it inside +/-5, but it would be nice in the future
@@ -511,18 +450,18 @@ class GenericRamanTest(unittest.TestCase):
     # of all want to succeed in parsing, but would also like to remain
     # as comparable between programs as possible (for these tests).
     # Note also that this value is adjusted for Gaussian and DALTON - why?
-    def testramanintens(self) -> None:
+    def testramanintens(self, data) -> None:
         """Is the maximum Raman intensity correct?"""
-        assert abs(max(self.data.vibramans) - self.max_raman_intensity) < 8
+        assert abs(max(data.vibramans) - self.max_raman_intensity) < 8
 
         # We used to test this, but it seems to vary wildly between
         # programs... perhaps we could use it if we knew why...
-        # self.assertInside(self.data.vibramans[1], 2.6872, 0.0001)
+        # self.assertInside(data.vibramans[1], 2.6872, 0.0001)
 
-    def testvibdisps(self) -> None:
+    def testvibdisps(self, data) -> None:
         """Is the length and value of vibdisps correct?"""
-        assert hasattr(self.data, "vibdisps")
-        assert len(self.data.vibdisps) == 54
+        assert hasattr(data, "vibdisps")
+        assert len(data.vibdisps) == 54
 
 
 class DALTONRamanTest(GenericRamanTest):
@@ -547,14 +486,3 @@ class QChemRamanTest(GenericRamanTest):
     """Customized Raman unittest"""
 
     max_raman_intensity = 588
-
-
-if __name__ == "__main__":
-    import sys
-
-    sys.path.insert(1, os.path.join(__filedir__, ".."))
-
-    from test_data import DataSuite
-
-    suite = DataSuite(["vib"])
-    suite.testall()

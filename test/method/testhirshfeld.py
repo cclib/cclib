@@ -7,10 +7,7 @@
 
 """Test the Hirshfeld Method in cclib"""
 
-import logging
 import os
-import sys
-import unittest
 
 from cclib.io import ccread
 from cclib.method import Hirshfeld, volume
@@ -24,14 +21,13 @@ from numpy.testing import assert_allclose
 from ..test_data import getdatafile
 
 
-class HirshfeldTest(unittest.TestCase):
+class HirshfeldTest:
     """Hirshfeld method tests."""
 
-    def setUp(self):
-        super(HirshfeldTest, self).setUp()
+    def setup_method(self) -> None:
         self.parse()
 
-    def parse(self):
+    def parse(self) -> None:
         self.data, self.logfile = getdatafile(Psi4, "basicPsi4-1.2.1", ["water_mp2.out"])
         self.volume = volume.Volume((-4, -4, -4), (4, 4, 4), (0.2, 0.2, 0.2))
 

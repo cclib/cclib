@@ -9,7 +9,7 @@
 
 import argparse
 import os.path
-import sys
+import sys  # noqa: F401
 from typing import Iterable, Optional
 
 from cclib.io import ccframe, ccopen
