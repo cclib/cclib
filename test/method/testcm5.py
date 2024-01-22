@@ -7,7 +7,6 @@
 
 """Test the CM5 method in cclib"""
 
-import unittest
 
 from cclib.method import CM5
 from cclib.parser import QChem
@@ -17,7 +16,7 @@ import numpy as np
 from ..test_data import getdatafile
 
 
-class CM5Test(unittest.TestCase):
+class CM5Test:
     """Tests for Charge Model 5 (CM5) calculations."""
 
     def testcm5restricted(self):

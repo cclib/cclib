@@ -8,7 +8,6 @@
 """Unit tests for wfx writer."""
 
 import os
-import unittest
 
 import cclib
 from cclib.io.filewriter import MissingAttributeError
@@ -22,7 +21,7 @@ __filepath__ = os.path.realpath(__filedir__)
 __datadir__ = os.path.join(__filepath__, "..", "..")
 
 
-class WFXTest(unittest.TestCase):
+class WFXTest:
     def test_missing_attribute_error(self):
         """Check if MissingAttributeError is raised as expected."""
         fpath = os.path.join(__datadir__, "data/GAMESS/basicGAMESS-US2017/C_bigbasis.out")
@@ -151,7 +150,3 @@ class WFXTest(unittest.TestCase):
         even_list = _list_format([1, 2, 3, 4], 2, "%8.1E")
         even_expected = [" 1.0E+00 2.0E+00", " 3.0E+00 4.0E+00"]
         assert even_list == even_expected
-
-
-if __name__ == "__main__":
-    unittest.main()

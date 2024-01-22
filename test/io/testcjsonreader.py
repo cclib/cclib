@@ -9,7 +9,6 @@
 
 import os
 import tempfile
-import unittest
 
 import cclib
 
@@ -20,7 +19,7 @@ __filepath__ = os.path.realpath(__filedir__)
 __datadir__ = os.path.join(__filepath__, "..", "..")
 
 
-class CJSONReaderTest(unittest.TestCase):
+class CJSONReaderTest:
     """Unit tests for the CJSON reader."""
 
     def test_cjson_read(self):
@@ -75,7 +74,3 @@ class CJSONReaderTest(unittest.TestCase):
             # structure.
             if key != "moments":
                 assert ccdata_value == cjson_value
-
-
-if __name__ == "__main__":
-    unittest.main()

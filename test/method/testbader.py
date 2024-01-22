@@ -8,7 +8,6 @@
 """Test the various population analyses (MPA, LPA, CSPA, Bickelhaupt) in cclib"""
 
 import os
-import unittest
 
 from cclib.io import ccread
 from cclib.method import Bader, volume
@@ -22,7 +21,7 @@ from numpy.testing import assert_allclose
 from ..test_data import getdatafile
 
 
-class BaderTest(unittest.TestCase):
+class BaderTest:
     """Bader's QTAIM method tests."""
 
     def setUp(self) -> None:

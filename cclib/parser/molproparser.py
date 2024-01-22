@@ -209,7 +209,7 @@ class Molpro(logfileparser.Logfile):
                     try:
                         c = float(p)
                     except ValueError as detail:
-                        self.logger.warn(f"setting coeff element to zero: {detail}")
+                        self.logger.warning(f"setting coeff element to zero: {detail}")
                         c = 0.0
                     coeff.append(c)
                 coeffs.extend(coeff)

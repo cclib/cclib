@@ -10,7 +10,6 @@
 import logging
 import os
 import sys
-import unittest
 
 from cclib.method import MBO
 from cclib.parser import Gaussian
@@ -22,7 +21,7 @@ sys.path.insert(1, "..")
 from ..test_data import getdatafile
 
 
-class MBOTest(unittest.TestCase):
+class MBOTest:
     def test_mbo_sp(self):
         """Testing Mayer bond orders for restricted single point."""
 
@@ -47,7 +46,3 @@ class MBOTest(unittest.TestCase):
         bond_orders = mbo.fragresults[0] + mbo.fragresults[1]
         assert numpy.all(bond_orders >= e_mbo - 0.30)
         assert numpy.all(bond_orders <= e_mbo + 0.30)
-
-
-if __name__ == "__main__":
-    unittest.TextTestRunner(verbosity=2).run(unittest.makeSuite(MBOTest))

@@ -7,7 +7,6 @@
 
 """Tests for the cclib2ase bridge in cclib."""
 
-import unittest
 
 from cclib import ccopen
 from cclib.bridge import cclib2ase
@@ -23,11 +22,8 @@ from ase import Atoms
 from ase.calculators.emt import EMT
 
 
-class ASETest(unittest.TestCase):
+class ASETest:
     """Tests for the cclib2ase bridge in cclib."""
-
-    def setUp(self):
-        super(ASETest, self).setUp()
 
     def test_makease_allows_optimization(self):
         """Ensure makease works from direct input."""
@@ -223,7 +219,3 @@ class ASETest(unittest.TestCase):
         assert np.allclose(trajdata.natom, 3)
         assert np.allclose(trajdata.charge, 0)
         assert np.allclose(trajdata.mult, 1)
-
-
-if __name__ == "__main__":
-    unittest.main()

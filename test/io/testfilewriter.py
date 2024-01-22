@@ -8,7 +8,6 @@
 """Unit tests for general file writer."""
 
 import os
-import unittest
 
 import cclib
 
@@ -19,7 +18,7 @@ __filepath__ = os.path.realpath(__filedir__)
 __datadir__ = os.path.join(__filepath__, "..", "..")
 
 
-class FileWriterTest(unittest.TestCase):
+class FileWriterTest:
     def test_init(self):
         """Does the class initialize properly?"""
 
@@ -28,7 +27,3 @@ class FileWriterTest(unittest.TestCase):
         data = cclib.io.ccread(fpath)
         with pytest.raises(TypeError):
             cclib.io.filewriter.Writer(data)
-
-
-if __name__ == "__main__":
-    unittest.main()

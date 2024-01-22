@@ -11,7 +11,6 @@ import io
 import os
 import sys
 import tempfile
-import unittest
 from unittest import mock
 from urllib.request import urlopen
 
@@ -25,7 +24,7 @@ __filepath__ = os.path.realpath(__filedir__)
 __datadir__ = os.path.join(__filepath__, "..", "..")
 
 
-class FileWrapperTest(unittest.TestCase):
+class FileWrapperTest:
     def check_seek(self, wrapper):
         """Check that a FileWrapper can seek properly"""
         wrapper.seek(0, 2)
@@ -84,7 +83,7 @@ class FileWrapperTest(unittest.TestCase):
             assert get_attributes(data) == expected_attributes
 
 
-class LogfileTest(unittest.TestCase):
+class LogfileTest:
     """Unit tests for the Logfile class."""
 
     def test_parse_check_values(self):
@@ -104,7 +103,3 @@ class LogfileTest(unittest.TestCase):
         parser.etenergies = [1, -1]
         parser.parse()
         parser.logger.error.assert_called_once()
-
-
-if __name__ == "__main__":
-    unittest.main()

@@ -47,11 +47,11 @@ class GenericCISTest:
         triplets = [data.etenergies[i] for i in indices1]
         # All programs do singlets.
         singletdiff = singlets[:4] - self.etenergies0
-        assert numpy.alltrue(singletdiff < 50)
+        assert numpy.all(singletdiff < 50)
         # Not all programs do triplets (i.e. Jaguar).
         if len(triplets) >= 4:
             tripletdiff = triplets[:4] - self.etenergies1
-            assert numpy.alltrue(tripletdiff < 50)
+            assert numpy.all(tripletdiff < 50)
 
     def testsecs(self, data) -> None:
         """Is the sum of etsecs close to 1?"""

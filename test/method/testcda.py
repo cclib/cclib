@@ -9,7 +9,6 @@
 
 import logging
 import sys
-import unittest
 
 sys.path.insert(1, "..")
 
@@ -50,7 +49,7 @@ def printResults() -> None:
     print("\n\n")
 
 
-class CDATest(unittest.TestCase):
+class CDATest:
     def runTest(self) -> None:
         """Testing CDA results against Frenking's code"""
         fa = main(log=False)
@@ -66,4 +65,3 @@ class CDATest(unittest.TestCase):
 
 if __name__ == "__main__":
     printResults()
-    unittest.TextTestRunner(verbosity=2).run(unittest.makeSuite(CDATest))

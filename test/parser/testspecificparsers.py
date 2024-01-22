@@ -8,10 +8,9 @@
 """Unit tests for specific parser behaviors, such as overriden methods."""
 
 import io
-import unittest
 
 
-class NormalisesymTest(unittest.TestCase):
+class NormalisesymTest:
     # Not needed: DALTON, MOPAC, NWChem, ORCA, QChem
 
     def test_normalisesym_adf(self):
@@ -115,7 +114,3 @@ class NormalisesymTest(unittest.TestCase):
         labels = ["a", "a1", "ag"]
         ref = ["A", "A1", "Ag"]
         assert list(map(sym, labels)) == ref
-
-
-if __name__ == "__main__":
-    unittest.main()

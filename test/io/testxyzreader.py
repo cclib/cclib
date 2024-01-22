@@ -8,7 +8,6 @@
 """Unit tests for XYZ reader."""
 
 import os
-import unittest
 
 import cclib
 
@@ -19,7 +18,7 @@ __filepath__ = os.path.realpath(__filedir__)
 __datadir__ = os.path.join(__filepath__, "..", "..")
 
 
-class XYZReaderTest(unittest.TestCase):
+class XYZReaderTest:
     def test_attributes_one(self):
         """Is an XYZ file with a single geometry read into a ccData properly?"""
         fpath = os.path.join(__datadir__, "test/bridge/uracil.xyz")
@@ -46,7 +45,3 @@ class XYZReaderTest(unittest.TestCase):
 
         assert data.atomcoords.shape == (2, 12, 3)
         assert data.metadata["comments"] == ["uracil", "	Energy:     -97.0646597"]
-
-
-if __name__ == "__main__":
-    unittest.main()

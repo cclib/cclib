@@ -9,7 +9,6 @@
 
 import json
 import os
-import unittest
 from math import sqrt
 
 import cclib
@@ -19,7 +18,7 @@ __filepath__ = os.path.realpath(__filedir__)
 __datadir__ = os.path.join(__filepath__, "..", "..")
 
 
-class CJSONWriterTest(unittest.TestCase):
+class CJSONWriterTest:
     """Unit tests for the CJSON writer."""
 
     def test_init(self):
@@ -73,7 +72,3 @@ class CJSONWriterTest(unittest.TestCase):
 
         json_data = json.loads(cjson)
         assert "total dipole moment" not in json_data["properties"]
-
-
-if __name__ == "__main__":
-    unittest.main()

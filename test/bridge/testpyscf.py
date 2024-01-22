@@ -5,7 +5,6 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
-import unittest
 from test.test_data import getdatafile
 
 from cclib.bridge import cclib2pyscf
@@ -14,13 +13,13 @@ from cclib.parser.utils import convertor, find_package
 import numpy as np
 
 
-class PyscfTest(unittest.TestCase):
-    def setUp(self) -> None:
-        super(PyscfTest, self).setUp()
+class PyscfTest:
+    @classmethod
+    def setup_class(cls) -> None:
         if not find_package("pyscf"):
             raise ImportError("Must install pyscf to run this test")
-        self.data, self.logfile = getdatafile("Gaussian", "basicGaussian16", ["dvb_sp.out"])
-        self.udata, self.ulogfile = getdatafile("Gaussian", "basicGaussian16", ["dvb_un_sp.log"])
+        cls.data, cls.logfile = getdatafile("Gaussian", "basicGaussian16", ["dvb_sp.out"])
+        cls.udata, cls.ulogfile = getdatafile("Gaussian", "basicGaussian16", ["dvb_un_sp.log"])
 
     def test_makepyscf(self) -> None:
         from pyscf import dft
@@ -56,8 +55,3 @@ class PyscfTest(unittest.TestCase):
         assert np.allclose(mo_coeff[0][0][0], self.udata.mocoeffs[0][0][0])
         # check a random middle MO coefficient
         assert np.allclose(mo_coeff[0][0][10], self.udata.mocoeffs[0][10][0])
-
-
-if __name__ == "__main__":
-    unittest.main()
-    PyscfTest.test_makepyscf_from_mos()

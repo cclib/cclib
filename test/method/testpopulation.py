@@ -10,7 +10,6 @@
 import logging
 import os
 import sys
-import unittest
 from typing import Type
 
 from cclib.method import CSPA, LPA, MPA, OPA, Bickelhaupt
@@ -26,7 +25,7 @@ import pytest
 from ..test_data import getdatafile
 
 
-class PopulationTest(unittest.TestCase):
+class PopulationTest:
     """Generic population method tests."""
 
     methods = (CSPA, LPA, MPA, OPA, Bickelhaupt)
@@ -62,7 +61,7 @@ class PopulationTest(unittest.TestCase):
                     self.calculate(method_class)
 
 
-class GaussianMPATest(unittest.TestCase):
+class GaussianMPATest:
     """Mulliken Population Analysis test"""
 
     def setUp(self) -> None:
@@ -84,7 +83,7 @@ class GaussianMPATest(unittest.TestCase):
         assert abs(totalspin - formalspin) < 1.0e-3
 
 
-class GaussianLPATest(unittest.TestCase):
+class GaussianLPATest:
     """Lowdin Population Analysis test"""
 
     def setUp(self) -> None:
@@ -106,7 +105,7 @@ class GaussianLPATest(unittest.TestCase):
         assert abs(totalspin - formalspin) < 1.0e-3
 
 
-class GaussianCSPATest(unittest.TestCase):
+class GaussianCSPATest:
     """C-squared Population Analysis test"""
 
     def setUp(self) -> None:
@@ -128,7 +127,7 @@ class GaussianCSPATest(unittest.TestCase):
         assert abs(totalspin - formalspin) < 1.0e-3
 
 
-class GaussianBickelhauptTest(unittest.TestCase):
+class GaussianBickelhauptTest:
     """Bickelhaupt Population Analysis test"""
 
     def setUp(self) -> None:
@@ -177,12 +176,3 @@ class GaussianBickelhauptTest(unittest.TestCase):
         assert numpy.all(bpa.fragcharges <= e_bpaalpha + 0.05)
         assert numpy.all(bpa.fragspins >= e_bpaspin - 0.05)
         assert numpy.all(bpa.fragspins <= e_bpaspin + 0.05)
-
-
-tests = [GaussianMPATest, GaussianLPATest, GaussianCSPATest, GaussianBickelhauptTest]
-
-
-if __name__ == "__main__":
-    for test in tests:
-        thistest = unittest.makeSuite(test)
-        unittest.TextTestRunner(verbosity=2).run(thistest)
