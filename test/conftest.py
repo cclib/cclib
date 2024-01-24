@@ -1,3 +1,8 @@
+# Copyright (c) 2024, the cclib development team
+#
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
+
 """test/conftest.py: dynamic testing configuration for pytest
 
 See the pytest documentation for more details:
