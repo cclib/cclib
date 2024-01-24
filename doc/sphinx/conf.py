@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+# Copyright (c) 2024, the cclib development team
+#
+# This file is part of cclib (http://cclib.github.io) and is distributed under
+# the terms of the BSD 3-Clause License.
+
 #
 # cclib documentation build configuration file, created by
 # sphinx-quickstart on Thu Jan 30 14:44:27 2014.
@@ -49,7 +54,7 @@ master_doc = "contents"
 
 # General information about the project.
 project = "cclib"
-copyright = "2014-2021, cclib Development Team"
+copyright = "2014-2024, cclib Development Team"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
