@@ -1,5 +1,3 @@
-## -*- coding: utf-8 -*-
-#
 # Copyright (c) 2024, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
