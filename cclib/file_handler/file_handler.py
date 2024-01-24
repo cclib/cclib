@@ -9,6 +9,7 @@ import bz2
 import codecs
 import collections
 import gzip
+import inspect
 import io
 import logging
 import pathlib
@@ -257,7 +258,6 @@ class FileHandler:
             raise RuntimeError("virtual_set() must be called before reset and virtual_next")
         try:
             line = next(self.files[self.file_pointer])
-            self.last_lines.append(line)
             self.pos += len(line)
             return line
         except:
@@ -404,7 +404,7 @@ class FileHandler:
                     msg = (
                         f"In {parser}, line {int(lno)}, line not blank as expected: {line.strip()}"
                     )
-                    self.logger.warning(msg)
+                    # self.logger.warning(msg)
 
             # All cases of heterogeneous lines can be dealt with by the same code.
             for character, keys in expected_characters.items():
@@ -417,7 +417,7 @@ class FileHandler:
                         )[1]
                         parser = fname.split("/")[-1]
                         msg = f"In {parser}, line {int(lno)}, line not all {keys[0]} as expected: {line.strip()}"
-                        self.logger.warning(msg)
+                        # self.logger.warning(msg)
                         continue
 
             # Save the skipped line, and we will return the whole list.
