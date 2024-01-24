@@ -58,7 +58,7 @@ triggers_on = [
     ("NBO", ["N A T U R A L   A T O M I C   O R B I T A L   A N D"], True),
     ("NWChem", ["Northwest Computational Chemistry Package"], True),
     ("ORCA", ["O   R   C   A"], True),
-    ("Psi4", ["Psi4: An Open-Source Ab Initio Electronic Structure Package"], True),
+    ("psi4", ["Psi4: An Open-Source Ab Initio Electronic Structure Package"], True),
     ("QChem", ["A Quantum Leap Into The Future Of Chemistry"], True),
     ("Turbomole", ["TURBOMOLE"], True),
 ]
@@ -72,7 +72,7 @@ triggers_off = [
     # todo     (GAMESS,    ["GAMESS VERSION"],                                 True),
     # todo     (GAMESSUK,  ["G A M E S S - U K"],                              True),
     # todo     (GAMESSDAT, ["$DATA"],                                          True),
-    ("Gaussian", ["Normal Termination of Gaussian"], True)
+    ("gaussian", ["Normal Termination of Gaussian"], True),
     # todo     (Jaguar,    ["Jaguar"],                                         True),
     # todo     (Molcas,    ["MOLCAS"],                                         True),
     # todo     (Molpro,    ["PROGRAM SYSTEM MOLPRO"],                          True),
@@ -82,7 +82,7 @@ triggers_off = [
     # todo     (NWChem,    ["Northwest Computational Chemistry Package"],      True),
     # todo     (ORCA,      ["O   R   C   A"],                                  True),
     # todo     (Psi3,      ["PSI3: An Open-Source Ab Initio Electronic Structure Package"],          True),
-    # todo     (Psi4,      ["Psi4: An Open-Source Ab Initio Electronic Structure Package"],          True),
+    ("psi4", ["Psi4 exiting successfully. Buy a developer a beer!"], True),
     # todo     (QChem,     ["A Quantum Leap Into The Future Of Chemistry"],    True),
     # todo     (Turbomole, ["TURBOMOLE"],                                      True),
 ]
@@ -480,7 +480,6 @@ class ccDriver:
             # right now combinator is just a list of list of subparsers (one node graph
             which_cccollection = 0  # TODO temp holder to work with first ccdata object which is all that is present in single point calculation, will change as graph is implemented
             for subparser in self._combinator.job_list[0]:
-                # print(subparser)
                 parsed_data = subparser.parse(
                     self._fileHandler,
                     self.identified_program,
