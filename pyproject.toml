@@ -1,6 +1,6 @@
 [project]
 name = "cclib"
-version = "1.8"
+version = "1.8.1"
 description = "parsers and algorithms for computational chemistry"
 readme = "README.md"
 authors = [
