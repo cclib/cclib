@@ -10,6 +10,6 @@ from cclib.parser_properties.mocoeffs import mocoeffs
 from cclib.parser_properties.mosyms import mosyms
 from cclib.parser_properties.mult import mult
 from cclib.parser_properties.nbasis import nbasis
-from cclib.parser_properties.nmo import natom
+from cclib.parser_properties.natom import natom
 from cclib.parser_properties.nmo import nmo
 from cclib.parser_properties.scfenergies import scfenergies

@@ -15,9 +15,7 @@ class gbasis(base_parser):
     def psi4(file_handler, ccdata) -> list | None:
         dependency_list = ["natom"]
         line = file_handler.last_line
-        print(line)
         if line.strip() == "==> AO Basis Functions <==":
-            print("found line")
             if base_parser.check_dependencies(dependency_list,ccdata,"gbasis"):
                 def get_symmetry_atom_basis(gbasis):
                     """Get symmetry atom by replicating the last atom in gbasis of the same element."""
