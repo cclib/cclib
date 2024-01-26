@@ -29,6 +29,7 @@ class atomnos(base_parser):
             return constructed_data
         return None
 
+    @staticmethod
     def psi4(file_handler, ccdata) -> list | None:
         table = utils.PeriodicTable()
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
@@ -43,6 +44,7 @@ class atomnos(base_parser):
                     element = element[0] + element[1:].lower()
                 constructed_data.append(table.number[element])
                 line = file_handler.virtual_next()
+                print(line)
             return constructed_data
         return None
 
