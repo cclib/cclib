@@ -109,7 +109,7 @@ Changes in cclib-1.7.1
 **Bugfixes**
 
 * Improved parsing and testing enthalpy and freeenergy (Felipe Schneider)
-* Fixed parsing ONION output for Gaussian (Elliot Farrar)
+* Fixed parsing ONIOM output for Gaussian (Elliot Farrar)
 * Fixed parsing of GAMESS logfiles with more than 100 SCF iterations (simonaxelrod)
 * Fixed parsing of very long (10K+) ORCA logfiles (Alex Maldonado)
 * Fixed parsing of Turbomole outputs that don't compute SCF energies (Oliver Lee)
@@ -447,7 +447,7 @@ Changes in cclib-1.2
 * Ignore Unicode errors in logfiles
 * Handle Gaussian jobs with terse output (basis set count not reported)
 * Handle Gaussian jobs using IndoGuess (Scott McKechnie)
-* Handle Gaussian file with irregular ONION gradients (Tamilmani S)
+* Handle Gaussian file with irregular ONIOM gradients (Tamilmani S)
 * Handle ORCA file with SCF convergence issue (Melchor Sanchez)
 * Handle Gaussian file with problematic IRC output (Clyde Fare)
 * Handle ORCA file with AM1 output (Julien Idé)
