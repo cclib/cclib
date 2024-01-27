@@ -14,10 +14,10 @@ class natom(base_parser):
     @staticmethod
     def psi4(file_handler, ccdata) -> int | None:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
-        dependency_list = ['atomnos']
+        dependency_list = ["atomnos"]
         if base_parser.check_dependencies(dependency_list, ccdata, "natom"):
             return len(ccdata.atomnos)
-            
+
         return None
 
     @staticmethod

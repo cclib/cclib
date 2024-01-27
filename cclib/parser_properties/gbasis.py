@@ -13,10 +13,11 @@ class gbasis(base_parser):
 
     @staticmethod
     def psi4(file_handler, ccdata) -> list | None:
-        dependency_list = ["natom","atomnos"]
+        dependency_list = ["natom", "atomnos"]
         line = file_handler.last_line
         if line.strip() == "==> AO Basis Functions <==":
-            if base_parser.check_dependencies(dependency_list,ccdata,"gbasis"):
+            if base_parser.check_dependencies(dependency_list, ccdata, "gbasis"):
+
                 def get_symmetry_atom_basis(gbasis):
                     """Get symmetry atom by replicating the last atom in gbasis of the same element."""
 
@@ -26,19 +27,21 @@ class gbasis(base_parser):
                     ngbasis = len(gbasis)
                     last_same = ngbasis - ccdata.atomnos[:ngbasis][::-1].index(missing_atomno) - 1
                     return gbasis[last_same]
-                
+
                 dfact = lambda n: (n <= 0) or n * dfact(n - 2)
 
                 # Early beta versions of Psi4 normalize basis function
                 # coefficients when printing.
-                version_4_beta = False # don't know what to do with this yet. will have to add to ccdata maybe (psi4 specific metadata?).
+                version_4_beta = False  # don't know what to do with this yet. will have to add to ccdata maybe (psi4 specific metadata?).
                 if version_4_beta:
 
                     def get_normalization_factor(exp, lx, ly, lz):
                         norm_s = (2 * exp / numpy.pi) ** 0.75
                         if lx + ly + lz > 0:
                             nom = (4 * exp) ** ((lx + ly + lz) / 2.0)
-                            den = numpy.sqrt(dfact(2 * lx - 1) * dfact(2 * ly - 1) * dfact(2 * lz - 1))
+                            den = numpy.sqrt(
+                                dfact(2 * lx - 1) * dfact(2 * ly - 1) * dfact(2 * lz - 1)
+                            )
                             return norm_s * nom / den
                         else:
                             return norm_s
@@ -60,7 +63,7 @@ class gbasis(base_parser):
                     # the same element use the same basis set.
                     while index > len(gbasis) + 1:
                         gbasis.append(get_symmetry_atom_basis(gbasis))
-                
+
                     gbasis.append([])
                     line = file_handler.virtual_next()
                     while line.find("*") == -1:
@@ -99,11 +102,6 @@ class gbasis(base_parser):
 
                 return gbasis
         return None
-
-
-
-                
-
 
     @staticmethod
     def parse(file_handler, program: str, ccdata) -> list | None:

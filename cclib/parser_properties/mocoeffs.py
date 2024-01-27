@@ -46,16 +46,15 @@ class mocoeffs(base_parser):
                 line = file_handler.virtual_next()
                 line = file_handler.virtual_next()
                 line = file_handler.virtual_next()
-                file_handler.skip_lines(["b","b"], virtual=True)
+                file_handler.skip_lines(["b", "b"], virtual=True)
                 indices = file_handler.virtual_next()
 
             if getattr(ccdata, "mocoeffs") != None:
-                extended_mocoeffs  = [ccdata.mocoeffs,mocoeffs]
+                extended_mocoeffs = [ccdata.mocoeffs, mocoeffs]
                 return extended_mocoeffs
             else:
                 return mocoeffs
         return None
-
 
     @staticmethod
     def parse(file_handler, program: str, ccdata) -> list | None:

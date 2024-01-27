@@ -27,6 +27,6 @@ class sp_combinator(combinator):
                 cprops.mosyms,
                 cprops.nmo,
                 cprops.natom,
-                cprops.gbasis, # after natom due to dependency inpsi4
+                cprops.gbasis,  # after natom due to dependency inpsi4
             ]
         ]

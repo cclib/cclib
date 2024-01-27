@@ -11,6 +11,6 @@ class base_parser(ABC):
     @staticmethod
     def check_dependencies(dependency_list, ccdata, current_property):
         for i in dependency_list:
-            if getattr(ccdata, i)==None:
+            if getattr(ccdata, i) == None:
                 return False
         return True
