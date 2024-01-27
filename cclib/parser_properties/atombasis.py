@@ -79,7 +79,8 @@ class atombasis(base_parser):
         constructed_data = None
         if program in atombasis.known_codes:
             file_handler.virtual_set()
-            program_parser = getattr(atombasis, program) constructed_data = program_parser(file_handler, ccdata)
+            program_parser = getattr(atombasis, program) 
+            constructed_data = program_parser(file_handler, ccdata)
             file_handler.virtual_reset()
 
 
