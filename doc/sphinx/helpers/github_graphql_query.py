@@ -26,6 +26,9 @@ def execute_query(queryfile: Path) -> str:
     return result.text
 
 
+FILTER_AUTHORS = {"dependabot", "pre-commit-ci", "pre-commit-ci[bot]"}
+
+
 def transform_author(item: MutableMapping[str, Any]) -> None:
     """Flatten the author field on an item.
 

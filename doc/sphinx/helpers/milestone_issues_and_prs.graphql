@@ -4,7 +4,7 @@ query {
       nodes {
         title
         url
-        issues(states: [CLOSED],first: 100) {
+        issues(states: [CLOSED], first: 100) {
           nodes {
             title
             url
@@ -32,6 +32,30 @@ query {
                 number
                 author {
                   login
+                }
+              }
+            }
+            # For collecting authorship.
+            commits(first: 100) {
+              nodes {
+                commit {
+                  authors(first: 5) {
+                    nodes {
+                      name
+                      user {
+                        login
+                      }
+                    }
+                  }
+                  # Assume that the authors did most of the work, even in the
+                  # event of a gnarly rebase.
+                  #
+                  # committer {
+                  #   name
+                  #   user {
+                  #     login
+                  #   }
+                  # }
                 }
               }
             }

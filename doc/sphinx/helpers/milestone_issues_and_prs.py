@@ -6,7 +6,7 @@ import json
 import sys
 from pathlib import Path
 
-from github_graphql_query import execute_query, transform_author
+from github_graphql_query import FILTER_AUTHORS, execute_query, transform_author
 
 if __name__ == "__main__":
     raw = execute_query(Path("milestone_issues_and_prs.graphql"))
@@ -29,6 +29,15 @@ if __name__ == "__main__":
         transform_author(pull_request)
         for closing_issue in pull_request["closingIssuesReferences"]["nodes"]:
             transform_author(closing_issue)
+        # collect all authors from commits
+        all_authors = set()
+        commits = [item["commit"] for item in pull_request["commits"]["nodes"]]
+        for commit in commits:
+            authors = commit["authors"]["nodes"]
+            for author in authors:
+                all_authors.add(author["user"]["login"])
+        all_authors.add(pull_request["author"])
+        pull_request["authors"] = all_authors - FILTER_AUTHORS
         # flatten nodes
         pull_request["closingIssuesReferences"] = pull_request["closingIssuesReferences"]["nodes"]
 
@@ -46,9 +55,11 @@ if __name__ == "__main__":
         lines.append(f"    * {issue['title']} (#{issue['number']})")
     lines.append("Pull requests")
     for pull_request in pull_requests:
-        author = pull_request["author"]
-        if author not in ("dependabot", "pre-commit-ci"):
-            lines.append(f"    * {pull_request['title']} ({author}, #{pull_request['number']})")
+        if pull_request["author"] not in FILTER_AUTHORS:
+            authors = pull_request["authors"]
+            lines.append(
+                f"    * {pull_request['title']} ({', '.join(sorted(authors))}, #{pull_request['number']})"
+            )
             closing_issues = pull_request["closingIssuesReferences"]
             for issue in closing_issues:
                 lines.append(f"        * {issue['title']} (#{issue['number']})")
