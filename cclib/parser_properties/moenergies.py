@@ -13,7 +13,7 @@ class atombasis(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["gaussian", "psi4"]
+    known_codes = ["gaussian"]
 
     @staticmethod
     def gaussian(file_handler, ccdata) -> list | None:
@@ -50,6 +50,7 @@ class atombasis(base_parser):
                                 constructed_data.append(atombasis)
                             atombasis = []
                         atombasis.append(i)
+
                     atombasis.append(i)
             return constructed_data
         return None
@@ -65,11 +66,14 @@ class atombasis(base_parser):
                 constructed_data = []
                 atombasis_pos = 0
                 while line.strip():
+                    element = line.split()[1]
+                    if len(element) > 1:
+                        element = element[0] + element[1:].lower()
                     ao_count = 0
                     shells = line.split("//")[1].split()
                     for s in shells:
-                        count, basistype = s
-                        multiplier = 3 * (basistype == "p") or 1
+                        count, type = s
+                        multiplier = 3 * (type == "p") or 1
                         ao_count += multiplier * int(count)
                     if len(constructed_data) > 0:
                         atombasis_pos = constructed_data[-1][-1] + 1
@@ -86,5 +90,4 @@ class atombasis(base_parser):
             program_parser = getattr(atombasis, program)
             constructed_data = program_parser(file_handler, ccdata)
             file_handler.virtual_reset()
-
         return constructed_data
