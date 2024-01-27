@@ -235,6 +235,7 @@ class FileHandler:
         if self.virtual_reset_position is None:
             raise RuntimeError("virtual_set() must be called before reset and virtual_next")
         self.files[self.file_pointer].seek(self.virtual_reset_position)
+        self.pos = self.virtual_reset_position
         self.virtual_reset_position = None
 
     def virtual_next(self):

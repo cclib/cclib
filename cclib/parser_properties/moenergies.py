@@ -9,7 +9,7 @@ class atombasis(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["gaussian", "psi4"]
+    known_codes = ["gaussian"]
 
     @staticmethod
     def gaussian(file_handler, ccdata) -> list | None:
@@ -46,41 +46,46 @@ class atombasis(base_parser):
                                 constructed_data.append(atombasis)
                             atombasis = []
                         atombasis.append(i)
+
                     atombasis.append(i)
             return constructed_data
         return None
 
+
     @staticmethod
     def psi4(file_handler, ccdata) -> list | None:
         dependency_list = ["nmo", "nbasis"]
-        if getattr(ccdata, "atombasis") == None:
+        if getattr(ccdata,'atombasis') == None:
             line = file_handler.last_line
             if line.strip() == "-Contraction Scheme:":
                 file_handler.skip_lines(["headers", "d"], virtual=True)
                 line = file_handler.virtual_next()
                 constructed_data = []
-                atombasis_pos = 0
+                atombasis_pos = 0 
                 while line.strip():
-                    ao_count = 0
+                    element = line.split()[1]
+                    if len(element) > 1:
+                        element = element[0] + element[1:].lower()
+                    ao_count = 0 
                     shells = line.split("//")[1].split()
                     for s in shells:
-                        count, basistype = s
-                        multiplier = 3 * (basistype == "p") or 1
+                        count,type = s
+                        multiplier = 3* (type=="p") or 1
                         ao_count += multiplier * int(count)
                     if len(constructed_data) > 0:
-                        atombasis_pos = constructed_data[-1][-1] + 1
-                    constructed_data.append(list(range(atombasis_pos, atombasis_pos + ao_count)))
+                        atombasis_pos = constructed_data[-1][-1] +1
+                    constructed_data.append(list(range(atombasis_pos,atombasis_pos+ao_count)))
                     line = file_handler.virtual_next()
                 return constructed_data
         return None
+
 
     @staticmethod
     def parse(file_handler, program: str, ccdata) -> list | None:
         constructed_data = None
         if program in atombasis.known_codes:
             file_handler.virtual_set()
-            program_parser = getattr(atombasis, program) constructed_data = program_parser(file_handler, ccdata)
+            program_parser = getattr(atombasis, program)
+            constructed_data = program_parser(file_handler, ccdata)
             file_handler.virtual_reset()
-
-
         return constructed_data

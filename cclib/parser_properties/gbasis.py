@@ -13,7 +13,7 @@ class gbasis(base_parser):
 
     @staticmethod
     def psi4(file_handler, ccdata) -> list | None:
-        dependency_list = ["natom"]
+        dependency_list = ["natom","atomnos"]
         line = file_handler.last_line
         if line.strip() == "==> AO Basis Functions <==":
             if base_parser.check_dependencies(dependency_list,ccdata,"gbasis"):
@@ -21,10 +21,10 @@ class gbasis(base_parser):
                     """Get symmetry atom by replicating the last atom in gbasis of the same element."""
 
                     missing_index = len(gbasis)
-                    missing_atomno = self.atomnos[missing_index]
+                    missing_atomno = ccdata.atomnos[missing_index]
 
                     ngbasis = len(gbasis)
-                    last_same = ngbasis - self.atomnos[:ngbasis][::-1].index(missing_atomno) - 1
+                    last_same = ngbasis - ccdata.atomnos[:ngbasis][::-1].index(missing_atomno) - 1
                     return gbasis[last_same]
                 
                 dfact = lambda n: (n <= 0) or n * dfact(n - 2)
