@@ -1,0 +1,43 @@
+query {
+  repository(owner: "cclib", name: "cclib") {
+    milestones(query: "v1.8.1", first: 1) {
+      nodes {
+        title
+        url
+        issues(states: [CLOSED],first: 100) {
+          nodes {
+            title
+            url
+            number
+            author {
+              login
+            }
+          }
+        }
+        pullRequests(states: [CLOSED, MERGED], first: 100) {
+          nodes {
+            title
+            url
+            number
+            state
+            author {
+              login
+            }
+            closingIssuesReferences(first: 100) {
+              # The items on each node here should be kept in sync with those
+              # in the outermost "issues" query.
+              nodes {
+                title
+                url
+                number
+                author {
+                  login
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
