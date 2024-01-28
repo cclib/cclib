@@ -53,7 +53,29 @@ Releasing a new version
 
 The release cycle of cclib is irregular, with new versions being created as deemed necessary after significant changes or new features. We roughly follow semantic versioning with respect to the `parsed attributes`_.
 
-When creating a new release on GitHub, the typical procedure might include the following steps:
+When creating a new release on GitHub, start by creating a new issue based on the following template that provides a high-level overview of the steps to take.
+
+.. code-block:: md
+
+    This is to track the work to be done for release v1.8.1:
+
+    - [ ] Migrate non-urgent issues/PRs to the 2.0 label ([2.0 list](https://github.com/cclib/cclib/issues?q=is%3Aopen+is%3Aissue+milestone%3Av2.0))
+    - [ ] Close out remaining PRs and issues ([PRs](https://github.com/cclib/cclib/pulls?q=is%3Aopen+is%3Apr+milestone%3Av1.8.1), [issues](https://github.com/cclib/cclib/issues?q=is%3Aopen+is%3Aissue+milestone%3Av1.8.1))
+    - [ ] Create `release-1.8.1` branch ([branch](https://github.com/cclib/cclib/tree/release-1.8.1))
+    - [ ] Bump version, update changelog, docs and other files (TODO)
+    - [ ] Create a v1.8.1 tag for the release
+    - [ ] Update release tag to HEAD on release branch
+    - [ ] Create a draft release from the v1.8.1 tag
+    - [ ] Attach source tar and zip archives to release on GitHub
+    - [ ] When ready, publish the draft release (https://github.com/cclib/cclib/releases/tag/v1.8.1)
+    - [ ] Upload new version to PyPI (https://pypi.org/project/cclib/1.8.1/)
+    - [ ] Make sure conda picks up the change (https://github.com/conda-forge/cclib-feedstock/pull/TODO)
+    - [ ] Update Zenodo if a major or minor version (https://zenodo.org/record/TODO)
+    - [ ] Make sure Zenodo parts of documentation get updated (https://github.com/cclib/cclib/pull/TODO)
+    - [ ] Merge the `release-1.8.1` branch back into master (https://github.com/cclib/cclib/pull/TODO)
+    - [ ] Send email to MLs
+
+An example of a past finished release is `1.8`_.
 
 * Update the `CHANGELOG`_, `ANNOUNCE`_ and any other files that might change content with the new version
 * Make sure that `setup.py`_ has the right version number, as well as __version__ in `__init__.py`_ and any other relevant files
@@ -69,6 +91,8 @@ When creating a new release on GitHub, the typical procedure might include the f
 * For significant releases, if appropriate, send an email to the `CCL list`_ and any mailing lists for computational chemistry packages supported by cclib
 
 .. _`parsed attributes`: data.html
+
+.. _`1.8`: https://github.com/cclib/cclib/issues/1249
 
 .. _`ANNOUNCE`: https://github.com/cclib/cclib/blob/master/ANNOUNCE
 .. _`Python package index`: https://pypi.org/project/cclib/
