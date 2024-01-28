@@ -22,6 +22,7 @@ clean:
 	-rm -rf attributes*.rst
 	-rm -rf coverage*.rst
 
+# When releasing a new version, this can't be updated until after the tag is pushed.
 PRODUCTION_VERSION = v1.8
 CCLIB_PROD = $(BUILDDIR)/cclib_prod
 CCLIB_DEV = $(realpath $(SOURCEDIR)/../..)
