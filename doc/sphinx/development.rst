@@ -12,14 +12,13 @@ The default cclib files distributed with a release, as described in `How to inst
 Cloning cclib from GitHub
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-cclib is hosted by the fantastic people at `GitHub`_ (previously at `Sourceforge`_) in a `git`_ repository. You can download a `zipped archive`_ of the current development version (called ``master``) for installation and testing or browse the available `releases`_. In order to contribute any changes, however, you will need to create a local copy of the repository:
+cclib is hosted by the fantastic people at `GitHub`_ in a `git`_ repository. You can download a `zipped archive`_ of the current development version (called ``master``) for installation and testing or browse the available `releases`_. In order to contribute any changes, however, you will need to create a local copy of the repository:
 
 .. code-block:: bash
 
     git clone https://github.com/cclib/cclib.git
 
 .. _`GitHub`: https://github.com
-.. _`Sourceforge`: https://sourceforge.net
 .. _`git`: https://git-scm.com
 .. _`zipped archive`: https://github.com/cclib/cclib/archive/master.zip
 .. _`releases`: https://github.com/cclib/cclib/releases
@@ -145,14 +144,12 @@ Websites related to cclib
 =========================
 
 * The official `cclib organization on github`_
-* The `cclib project page on Sourceforge`_ (inactive now)
 * The `cclib page for GitHub Actions`_
 * The `cclib entry on PyPI`_
 * The `cclib entry on libraries.io`_
 * The `cclib entry on Open Hub`_
 
 .. _`cclib organization on github`: https://github.com/cclib
-.. _`cclib project page on Sourceforge`: https://sourceforge.net/projects/cclib/
 .. _`cclib page for GitHub Actions`: https://github.com/cclib/cclib/actions
 .. _`cclib entry on PyPI`: https://pypi.org/project/cclib/
 .. _`cclib entry on libraries.io`: https://libraries.io/pypi/cclib

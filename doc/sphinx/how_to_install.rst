@@ -126,7 +126,7 @@ What next?
  * Read the list and specifications of the `parsed data`_ and related `data notes`_
  * Test the program using the test data files included in the full source distribution
  * Run the unit and regression tests in the test directory (``testall.py`` and ``regression.py``)
- * Send any questions to the cclib-users mailing list at https://sourceforge.net/projects/cclib/lists/cclib-users.
+ * Send any questions to the cclib-users mailing list at https://groups.google.com/g/cclib.
  * Write some computational chemistry algorithms using information parsed from cclib and donate the code to the project
 
 .. _`parsed data`: data.html
