@@ -41,6 +41,8 @@ if __name__ == "__main__":
         # flatten nodes
         pull_request["closingIssuesReferences"] = pull_request["closingIssuesReferences"]["nodes"]
 
+    all_closing_issues = set()
+
     for pull_request in pull_requests:
         for closing_issue in pull_request["closingIssuesReferences"]:
             if closing_issue not in issues:
@@ -48,6 +50,10 @@ if __name__ == "__main__":
                     f"PR {pull_request['url']} contains something not in issue list: {closing_issue}",
                     file=sys.stderr,
                 )
+            # all_closing_issues.add(tuple(sorted(closing_issue.items())))
+
+    all_issues = set(tuple(tuple(sorted(x.items())) for x in issues))
+    issues_without_pr = all_issues - all_closing_issues
 
     lines = list()
     lines.append("Issues")

@@ -7,6 +7,7 @@ Geoff Hutchison
 Karol M. Langner
 Oliver Lee
 Noel M. O'Boyle (retired)
+Andrew S. Rosen
 Adam L. Tenderholt (retired)
 Shiv Upadhyay
 
@@ -25,6 +26,7 @@ Dermot Brougham -- for bug reporting
 bwang2453 -- for patches and new features
 Javier Cerezo -- for patches
 Avril Coghlan -- for designing the cclib logo
+computerscienceiscool -- for documentation
 Ramon Crehuet -- for new features
 Michael D'Addario -- for fixes
 Björn Dahlgren -- for bug reporting
@@ -38,6 +40,7 @@ Christos Garoufalis -- for bug reporting
 Alessandro Genova -- for patches and fixes
 Victor Hugo Cano Gil -- for the Julia binding
 glideht -- for bug reporting
+Anselm Hahn -- for code cleanup
 Edward Holland -- for patches
 Karen Hemelsoet -- for bug reporting
 Ian Hovell -- for bug reporting
@@ -47,7 +50,7 @@ Peter St. John -- for patches
 Russell Johnson -- for providing CCCBDB (NIST) logfiles
 Jerome Kieffer -- for bug reporting
 kuriba -- for patches
-Cyrille Lavigne - for documentation
+Cyrille Lavigne -- for documentation
 Greg Magoon -- for bug reporting and patches
 Alex Maldonado -- for fixes
 Scott McKechnie -- for bug reporting
@@ -88,7 +91,7 @@ Maxim Stolyarchuk - for patches
 Adam Swanson -- for bug reporting
 Joe Townsend -- for contributing multiple GAMESS files to test on
 Chengju Wang -- for bug reporting
-Andrew Warden -- for bug reportint
+Andrew Warden -- for bug reporting
 Hubert Weißmann -- for fixes
 Dustin Wheeler -- for fixes
 Samuel Wilson -- for bug reporting
