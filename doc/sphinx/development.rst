@@ -12,7 +12,7 @@ The default cclib files distributed with a release, as described in `How to inst
 Cloning cclib from GitHub
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-cclib is hosted by the fantastic people at `GitHub`_ (previously at `Sourceforge`_) in a `git`_ repository. You can download a `zipped archive`_ of the current development version (called `master`) for installation and testing or browse the available `releases`_. In order to contribute any changes, however, you will need to create a local copy of the repository:
+cclib is hosted by the fantastic people at `GitHub`_ (previously at `Sourceforge`_) in a `git`_ repository. You can download a `zipped archive`_ of the current development version (called ``master``) for installation and testing or browse the available `releases`_. In order to contribute any changes, however, you will need to create a local copy of the repository:
 
 .. code-block:: bash
 

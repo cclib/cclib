@@ -42,7 +42,7 @@ Some examples:
 * ``aooverlaps[0,3]`` is the overlap between the 1st and 4th basis function
 * ``aooverlaps[2,:]`` is a 1-dimensional array containing the overlap between every basis function and the 3rd basis function
 
-**ADF**: not present by default, printed when `PRINT Smat` is in the input; do not mistake with `fooverlaps`_.
+**ADF**: not present by default, printed when ``PRINT Smat`` is in the input; do not mistake with `fooverlaps`_.
 
 **DALTON**: no option to print as of version 2013.
 
@@ -312,14 +312,14 @@ If the optimisation has finished successfully, the values in the last row should
 
 grads
 -----
-The attribute ``grads`` contains the forces on the atoms, that is, the negative gradient of the energy with respect to atomic coordinates in atomic units (Hartree / Bohr). ``grads`` is an array of rank 3, with dimensions `n x m x 3` where `n` is 1 for a single point calculation and `>=1` for a geometry optimisation, `m` is the number of atoms and the last dimension contains the x, y and z components of the gradient. The orientation of ``grads`` corresponds to that of `atomcoords`_.
+The attribute ``grads`` contains the forces on the atoms, that is, the negative gradient of the energy with respect to atomic coordinates in atomic units (Hartree / Bohr). ``grads`` is an array of rank 3, with dimensions ``[n, m, 3]`` where ``n`` is 1 for a single point calculation and ``>=1`` for a geometry optimisation, ``m`` is the number of atoms and the last dimension contains the x, y and z components of the gradient. The orientation of ``grads`` corresponds to that of `atomcoords`_.
 
 **Gaussian**: In calculations that include point-group symmetry, ``grads`` is converted to standard orientation to match the orientation of ``atomcoords`` and other quantities. Because of this, the ``grads`` group will differ from that printed in the output file by Gaussian (which is always in the input orientation). Calculations without symmetry (that is, with the ``Symmetry=None`` keyword) yield everything in the input orientation and in those cases ``grads`` should match exactly what is printed in the output file.
 
 hessian
 -------
 
-An array of rank 2 that contains the elements of the `hessian <https://en.wikipedia.org/wiki/Hessian_matrix>`_ or force constant matrix. The full symmetric ``3N x 3N`` matrix is stored.
+An array of rank 2 that contains the elements of the `hessian <https://en.wikipedia.org/wiki/Hessian_matrix>`_ or force constant matrix. The full symmetric ``[3N, 3N]`` matrix is stored.
 
 .. index::
     single: molecular orbitals; homos (attribute)
@@ -442,7 +442,7 @@ The symmetry labels are normalised and cclib reports standard symmetry names:
 * ADF - the full list can be found `here <http://www.scm.com/Doc/Doc2005.01/ADF/ADFUsersGuide/page339.html>`_.
 * GAMESS-UK - to get the list, ``grep "data yr" input.m`` if you have access to the source. Note that for E, it's split into "e1+" and "e1-" for instance.
 * Jaguar - to get the list, look at the examples in ``schrodinger/jaguar-whatever/samples`` if you have access to Jaguar. Note that for E, it's written as E1pp/Ap, for instance.
-* NWChem - if molecular symmetry is turned off or set to C1, symmetry adaption for orbitals is also deactivated, and can be explicitly turned on with `adapt on` in the SCF block
+* NWChem - if molecular symmetry is turned off or set to C1, symmetry adaption for orbitals is also deactivated, and can be explicitly turned on with ``adapt on`` in the SCF block
 
 Developers:
 
@@ -477,7 +477,7 @@ The attribute ``mult`` is an integer and represents the spin multiplicity of the
 natom
 -----
 
-``Natom`` is an integer, the number of atoms treated in the calculation.
+An integer representing the number of atoms treated in the calculation.
 
 .. index::
     single: basis sets; nbasis (attribute)
@@ -536,12 +536,12 @@ or by providing the corresponding argument to ``ccopen``,
 scancoords
 ----------
 
-An array containing the geometries for each step of shape `(number of scan steps, number of atoms, 3)`. In the case of an unrelaxed scan this is equivalent to `atomcoords`, however this is not the case for a relaxed scan as a geometry optimization is performed at each scan step.
+An array containing the geometries for each step of shape ``[number of scan steps, number of atoms, 3]``. In the case of an unrelaxed scan this is equivalent to `atomcoords`_, however this is not the case for a relaxed scan as a geometry optimization is performed at each scan step.
 
 scanenergies
 ------------
 
-A list containing the energies at each point of the scan. As with `scancoords`, `scanenergies` is only equivalent to `[scf,mp,cc]energies` in the case of an unrelaxed scan of the scf, mp, and/or cc potential energy surface.
+A list containing the energies at each point of the scan. As with `scancoords`_, ``scanenergies`` is only equivalent to ``{scf,mp,cc}energies`` in the case of an unrelaxed scan of the scf, mp, and/or cc potential energy surface.
 
 scannames
 ---------
@@ -551,7 +551,7 @@ A list containing the names of each parameter scanned.
 scanparm
 --------
 
-A list of lists where each list contains the values scanned for each parameter in `scannames`.
+A list of lists where each list contains the values scanned for each parameter in `scannames`_.
 
 scfenergies
 -----------
@@ -604,7 +604,7 @@ scfvalues
 
 The attribute ``scfvalues`` is a list of arrays of dimension ``n x m`` (one element for each step in a geometry optimisation), where ``n`` is the number of SCF cycles required for convergence and ``m`` is the number of SCF convergence target criteria. For some packages, you may need to include a directive to make sure that SCF convergence information is printed to the log file
 
-**Gaussian**: requires the `route section`_ to start with #P
+**Gaussian**: requires the `route section`_ to start with ``#P``
 
 .. _`route section`: https://gaussian.com/route/
 
@@ -613,7 +613,7 @@ The attribute ``scfvalues`` is a list of arrays of dimension ``n x m`` (one elem
 vibdisps
 --------
 
-The attribute ``vibdisps`` stores the Cartesian displacement vectors from the output of a vibrational frequency calculation. It is a rank 3 array having dimensions ``M x N x 3``, where ``M`` is the number of normal modes and ``N`` is the number of atoms. ``M`` is typically ``3N-6`` (``3N-5`` for linear molecules).
+The attribute ``vibdisps`` stores the Cartesian displacement vectors from the output of a vibrational frequency calculation. It is a rank 3 array having dimensions ``[M, N, 3]``, where ``M`` is the number of normal modes and ``N`` is the number of atoms. ``M`` is typically ``3N-6`` (``3N-5`` for linear molecules).
 
 vibfconsts
 ----------

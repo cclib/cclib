@@ -31,7 +31,7 @@ A newer command, ``ccread``, combines both the format detection and parsing step
 
   There are 3 atoms and 7 MOs
 
-The `data` object above contains all the information cclib was able to to parse from the output file, available as attributes on the object:
+The ``data`` object above contains all the information cclib was able to to parse from the output file, available as attributes on the object:
 
 .. code-block:: python
 
