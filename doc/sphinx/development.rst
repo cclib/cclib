@@ -24,7 +24,7 @@ cclib is hosted by the fantastic people at `GitHub`_ in a `git`_ repository. You
 .. _`releases`: https://github.com/cclib/cclib/releases
 
 Guidelines
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~
 
 We follow a typical GitHub collaborative model, relying on `forks and pull requests`_. In short, the development process consists of:
 

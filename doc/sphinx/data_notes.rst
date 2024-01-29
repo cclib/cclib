@@ -331,8 +331,8 @@ A 1D array that holds the indexes of the highest occupied molecular orbitals (HO
 
 .. code-block:: python
 
-  >> data = cclib.io.ccread('water_mp2')
-  >> last_occupied_energy = data.moenergies[0][data.homos[0]]
+    data = cclib.io.ccread('water_mp2')
+    last_occupied_energy = data.moenergies[0][data.homos[0]]
 
 >> **Note:** All indexes in cclib start from zero, as per Python conventions. This applies to the contents of ``homos`` as well, which means ``homos[0]`` refers to the *index* of the HOMO when referencing other attributes and not the number of occupied orbitals.
 
