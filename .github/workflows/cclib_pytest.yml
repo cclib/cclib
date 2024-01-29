@@ -33,7 +33,7 @@ jobs:
         run: |
           python -m pip install .
       - name: Filter code
-        uses: dorny/paths-filter@v2
+        uses: dorny/paths-filter@v3
         id: filter
         with:
           filters: |
