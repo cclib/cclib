@@ -30,7 +30,7 @@ We follow a typical GitHub collaborative model, relying on `forks and pull reque
 
 * `Creating your own fork`_ of cclib in order to develop
 * `Creating a pull request`_ to contribute your changes
-* Reviewing and merging open pull requests into master
+* Reviewing and merging open pull requests (PRs) into the main branch
 * Using `issues`_ to plan and prioritize future work
 
 .. _`forks and pull requests`: https://docs.github.com/en/github/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests
@@ -163,6 +163,21 @@ Using both the unit and regression tests, the line-by-line `test coverage`_ show
 
 .. _`test coverage`: coverage/index.html
 .. _`testing script`: https://github.com/cclib/cclib/blob/master/.github/scripts/run_pytest.bash
+
+Code conventions
+================
+
+* All aspects of code formatting are handled automatically by a combination of `isort <https://pycqa.github.io/isort/>`_ and `ruff <https://docs.astral.sh/ruff/>`_.  Formatting is enforced by running `pre-commit <https://pre-commit.com/>`_ on all PRs.  We encourage contributors to also run pre-commit locally.
+  * Non-functional changes to code are ideally in separate PRs.  This makes PRs quicker to review and merge.
+* Print output is controlled via Python's standard logging library and levels.  Any output that might be presentable to the user, from detecting that there may have been a problem with the calculation to general debug-type printing, should use the logger with an appropriate log level.  Be generous with logging rather than erring on the side of caution.  See `this issue <https://github.com/cclib/cclib/issues/237>`_ for historical information.
+* Setting parsed attributes inside a parser's ``extract`` method is fundamentally identical to setting attributes on a basic Python object (``self.myattr = thing``).
+
+Documentation
+~~~~~~~~~~~~~
+
+All new functions should contain a docstring in `NumPy style <https://numpydoc.readthedocs.io/en/latest/format.html>`_.  A docstring should focus on the user-facing interaction and purpose of a function rather than any implementation details.  Additional code comments may also be necessary; `here <http://antirez.com/news/124>`_ are some general guidelines for writing code comments.
+
+Larger features, such as adding a new parser, method, or bridge, may also warrant additional high-level documentation in these pages.  Please reach out to us about this if you have questions, or we may ask for some as part of discussion on an issue or PR.
 
 Websites related to cclib
 =========================
