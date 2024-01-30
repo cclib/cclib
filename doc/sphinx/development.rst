@@ -137,7 +137,35 @@ The job types currently included as unit tests:
 * Møller–Plesset and coupled cluster energies for water (STO-3G basis set)
 * static polarizabilities for tryptophan (RHF/STO-3G)
 
+In addition to the above unit tests for data, there are also unit tests for each bridge, calculation method, IO format, and helper utilities, all located inside the `tests <https://github.com/cclib/cclib/tree/master/test>`_ directory, with each category receiving its own subdirectory.
+
 .. _`table of attribute coverage`: data_dev.html#details-of-current-implementation
+
+Adding a new attribute
+----------------------
+
+Definitions of attributes (`mocoefs`_, `natom`_, etc.) are located inside the `ccdata <https://github.com/cclib/cclib/blob/0aff0e0d4791f88483c90a63a62e2768794588e9/cclib/parser/data.py#L21>`_ class. Use existing attributes for guidance.
+
+1. Add a line containing the attribute name, a short description of the attribute, the type and shape (if not a scalar quantity) of the attribute, and relevant units to the docstring.
+2. Add an `entry <https://github.com/cclib/cclib/blob/0aff0e0d4791f88483c90a63a62e2768794588e9/cclib/parser/data.py#L108>`_ for the code representation of an attribute.
+3. Some attributes require additional processing into certain container or data types; `available processing rules and their descriptions <https://github.com/cclib/cclib/blob/0aff0e0d4791f88483c90a63a62e2768794588e9/cclib/parser/data.py#L191>`_ are below the attribute entries.
+
+Without these modifications, saving the parsed attribute will appear to work inside the parser, but will be filtered out by ``ccData.setattributes`` before the ``ccData`` instance is returned. (This also means that arbitrary attributes can be set on and used from ``self`` inside a parser and they will be automatically cleaned up.)
+
+Once the above is complete, and the new attribute is parsed and saved inside at least one parser, a new unit test should be added.
+
+Adding a new unit test
+----------------------
+
+Navigate to the relevant subdirectory of the ``tests`` directory. All filenames containing unit tests must start with ``test``. Generally, each file containing an implementation in the cclib source has a matching test file. The exception is parsers, for which there are some program-specific tests, but most relevant are the ``data`` tests that are grouped by attribute.
+
+Examples of how unit tests are written are those for `population methods <https://github.com/cclib/cclib/blob/master/test/method/testpopulation.py>`_ or the `MOLDEN writer <https://github.com/cclib/cclib/blob/master/test/io/testmoldenwriter.py>`_.
+* A class whose name ends in ``Test`` is used to hold test methods. Many test files only contain a single test class, but others contain multiple, usually specialized for a specific program or method. An example is having a basic ``PopulationTest`` but more specific ``GaussianBickelhauptTest`` and ``GaussianMPA`` classes for checking the results specific to Bickelhaupt and Mulliken population analyses.
+* Each method in a test class is meant for testing a single logical piece of functionality. Common checks are for whether or not the dimensions of calculated quantities are consistent and for certain chemical or physical invariants to hold, such as the total charge from a population analysis summing to the total formal charge of a system.
+
+Adding a new unit test for an attribute requires all of the above but TODO
+
+To use the
 
 Adding a new program version
 ----------------------------
@@ -163,6 +191,8 @@ Using both the unit and regression tests, the line-by-line `test coverage`_ show
 
 .. _`test coverage`: coverage/index.html
 .. _`testing script`: https://github.com/cclib/cclib/blob/master/.github/scripts/run_pytest.bash
+
+Adding a new regression test
 
 Code conventions
 ================
