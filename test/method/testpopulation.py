@@ -30,12 +30,9 @@ class PopulationTest:
 
     methods = (CSPA, LPA, MPA, OPA, Bickelhaupt)
 
-    def parse(self) -> None:
-        self.data, self.logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_un_sp.log"])
-
     def calculate(self, method_class: Type[Method]) -> None:
         if not hasattr(self, "data"):
-            self.parse()
+            self.data = parse()
         self.analysis = method_class(self.data)
         self.analysis.logger.setLevel(0)
         self.analysis.calculate()
@@ -43,7 +40,7 @@ class PopulationTest:
     def testmissingrequiredattributes(self) -> None:
         """Is an error raised when required attributes are missing?"""
         for missing_attribute in MPA.required_attrs:
-            self.parse()
+            self.data = parse()
             delattr(self.data, missing_attribute)
             for method_class in self.methods:
                 with pytest.raises(MissingAttributeError):
@@ -51,7 +48,7 @@ class PopulationTest:
 
     def testmissingoverlaps(self) -> None:
         """Is an error raised when no overlaps are available?"""
-        self.parse()
+        self.data = parse()
         for overlap_attribute in MPA.overlap_attributes:
             if hasattr(self.data, overlap_attribute):
                 delattr(self.data, overlap_attribute)
@@ -64,11 +61,12 @@ class PopulationTest:
 class GaussianMPATest:
     """Mulliken Population Analysis test"""
 
-    def setUp(self) -> None:
-        self.data, self.logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_un_sp.log"])
-        self.analysis = MPA(self.data)
-        self.analysis.logger.setLevel(0)
-        self.analysis.calculate()
+    @classmethod
+    def setup_class(cls) -> None:
+        cls.data = parse()
+        cls.analysis = MPA(cls.data)
+        cls.analysis.logger.setLevel(0)
+        cls.analysis.calculate()
 
     def testsumcharges(self) -> None:
         """Do the Mulliken charges sum up to the total formal charge?"""
@@ -86,11 +84,12 @@ class GaussianMPATest:
 class GaussianLPATest:
     """Lowdin Population Analysis test"""
 
-    def setUp(self) -> None:
-        self.data, self.logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_un_sp.log"])
-        self.analysis = LPA(self.data)
-        self.analysis.logger.setLevel(0)
-        self.analysis.calculate()
+    @classmethod
+    def setup_class(cls) -> None:
+        cls.data = parse()
+        cls.analysis = LPA(cls.data)
+        cls.analysis.logger.setLevel(0)
+        cls.analysis.calculate()
 
     def testsumcharges(self) -> None:
         """Do the Lowdin charges sum up to the total formal charge?"""
@@ -108,11 +107,12 @@ class GaussianLPATest:
 class GaussianCSPATest:
     """C-squared Population Analysis test"""
 
-    def setUp(self) -> None:
-        self.data, self.logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_un_sp.log"])
-        self.analysis = CSPA(self.data)
-        self.analysis.logger.setLevel(0)
-        self.analysis.calculate()
+    @classmethod
+    def setup_class(cls) -> None:
+        cls.data = parse()
+        cls.analysis = CSPA(cls.data)
+        cls.analysis.logger.setLevel(0)
+        cls.analysis.calculate()
 
     def testsumcharges(self) -> None:
         """Do the CSPA charges sum up to the total formal charge?"""
@@ -130,12 +130,12 @@ class GaussianCSPATest:
 class GaussianBickelhauptTest:
     """Bickelhaupt Population Analysis test"""
 
-    def setUp(self) -> None:
-        super(GaussianBickelhauptTest, self).setUp()
-        self.data, self.logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_un_sp.log"])
-        self.analysis = Bickelhaupt(self.data)
-        self.analysis.logger.setLevel(0)
-        self.analysis.calculate()
+    @classmethod
+    def setup_class(cls) -> None:
+        cls.data = parse()
+        cls.analysis = Bickelhaupt(cls.data)
+        cls.analysis.logger.setLevel(0)
+        cls.analysis.calculate()
 
     def testsumcharges(self) -> None:
         """Do the Bickelhaupt charges sum up to the total formal charge?"""
@@ -151,7 +151,7 @@ class GaussianBickelhauptTest:
 
     def test_dvb_sp(self) -> None:
         """Testing Bickelhaupt charges (restricted) against outputs from Multiwfn."""
-        data, logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_sp.out"])
+        data, _ = getdatafile(Gaussian, "basicGaussian09", ["dvb_sp.out"])
         bpa = Bickelhaupt(data)
         bpa.logger.setLevel(logging.ERROR)
         bpa.calculate()
@@ -162,7 +162,7 @@ class GaussianBickelhauptTest:
 
     def test_dvb_un_sp(self) -> None:
         """Testing Bickelhaupt charges (unrestricted) against outputs from Multiwfn."""
-        data, logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_un_sp.log"])
+        data = parse()
         bpa = Bickelhaupt(data)
         bpa.logger.setLevel(logging.ERROR)
         bpa.calculate()
@@ -176,3 +176,8 @@ class GaussianBickelhauptTest:
         assert numpy.all(bpa.fragcharges <= e_bpaalpha + 0.05)
         assert numpy.all(bpa.fragspins >= e_bpaspin - 0.05)
         assert numpy.all(bpa.fragspins <= e_bpaspin + 0.05)
+
+
+def parse():
+    data, _ = getdatafile(Gaussian, "basicGaussian09", ["dvb_un_sp.log"])
+    return data
