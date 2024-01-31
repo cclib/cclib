@@ -39,6 +39,7 @@ jobs:
           filters: |
             methods:
               - 'cclib/cclib/method/**'
+              - 'test/method/**'
       - name: Test core code with pytest
         run: |
           env | sort
