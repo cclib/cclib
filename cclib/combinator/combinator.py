@@ -27,8 +27,10 @@ class sp_combinator(combinator):
                 cprops.mult,
                 cprops.nbasis,
                 cprops.atommasses,
+                cprops.mocoeffs,
                 cprops.mosyms,
                 cprops.nmo,
-                cprops.atombasis,
+                cprops.natom,
+                cprops.gbasis,  # after natom due to dependency inpsi4
             ]
         ]
