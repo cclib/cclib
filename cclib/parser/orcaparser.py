@@ -2189,7 +2189,6 @@ Dispersion correction           -0.016199959
         #
         # TODO: add quadrupole moment parsing, which can be optionally calculated with ORCA
 
-        self.reference = numpy.zeros(3)
         # the origin/reference might be printed in multiple places in the output file
         # depending on the calculation type
         if line.startswith("The origin for moment calculation is"):
