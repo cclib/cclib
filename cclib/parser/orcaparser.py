@@ -2165,10 +2165,13 @@ Dispersion correction           -0.016199959
         if line.startswith("CHELPG Charges"):
             self.parse_charge_section(line, inputfile, "chelpg")
 
+        # The center of mass is used as the origin
         # It is not stated explicitely, but the dipole moment components printed by ORCA
-        # seem to be in atomic units, so they will need to be converted. Also, they
-        # are most probably calculated with respect to the origin .
-        #
+        # seem to be in atomic units, so they will need to be converted.
+            
+        # example:
+        # The origin for moment calculation is the CENTER OF MASS  = (-1.651256, -1.258772 -1.572312)
+
         # -------------
         # DIPOLE MOMENT
         # -------------
@@ -2181,12 +2184,19 @@ Dispersion correction           -0.016199959
         # Magnitude (a.u.)       :      0.00000
         # Magnitude (Debye)      :      0.00000
         #
-        if line.strip() == "DIPOLE MOMENT":
-            self.skip_lines(inputfile, ["d", "XYZ", "electronic", "nuclear", "d"])
+        # TODO: add quadrupole moment parsing, which can be optionally calculated with ORCA
+
+        if line.startswith("The origin for moment calculation is"):
+
+            tmp_reference = line.split()[-3:]
+            reference_x = float(tmp_reference[0].replace("(", "").replace(",", ""))
+            reference_y = float(tmp_reference[1])
+            reference_z = float(tmp_reference[2].replace(")", ""))
+            reference = numpy.array([reference_x, reference_y, reference_z])  
+            self.skip_lines(inputfile, ["b", "d", "DIPOLEMOMENT", "d", "XYZ", "electronic", "nuclear", "d"])
             total = next(inputfile)
             assert "Total Dipole Moment" in total
 
-            reference = [0.0, 0.0, 0.0]
             dipole = numpy.array([float(d) for d in total.split()[-3:]])
             dipole = utils.convertor(dipole, "ebohr", "Debye")
 
