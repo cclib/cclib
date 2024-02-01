@@ -2186,14 +2186,18 @@ Dispersion correction           -0.016199959
         #
         # TODO: add quadrupole moment parsing, which can be optionally calculated with ORCA
 
+        # the origin/reference might be printed in multiple places in the output file
+        # depending on the calculation type
         if line.startswith("The origin for moment calculation is"):
             tmp_reference = line.split()[-3:]
             reference_x = float(tmp_reference[0].replace("(", "").replace(",", ""))
             reference_y = float(tmp_reference[1])
             reference_z = float(tmp_reference[2].replace(")", ""))
-            reference = numpy.array([reference_x, reference_y, reference_z])
+            self.reference = numpy.array([reference_x, reference_y, reference_z])
+
+        if line.startswith("DIPOLE MOMENT"):
             self.skip_lines(
-                inputfile, ["b", "d", "DIPOLEMOMENT", "d", "XYZ", "electronic", "nuclear", "d"]
+                inputfile, ["d", "XYZ", "electronic", "nuclear", "d"]
             )
             total = next(inputfile)
             assert "Total Dipole Moment" in total
@@ -2202,13 +2206,13 @@ Dispersion correction           -0.016199959
             dipole = utils.convertor(dipole, "ebohr", "Debye")
 
             if not hasattr(self, "moments"):
-                self.set_attribute("moments", [reference, dipole])
+                self.set_attribute("moments", [self.reference, dipole])
             else:
                 try:
                     assert numpy.all(self.moments[1] == dipole)
                 except AssertionError:
                     self.logger.warning("Overwriting previous multipole moments with new values")
-                    self.set_attribute("moments", [reference, dipole])
+                    self.set_attribute("moments", [self.reference, dipole])
 
         if "Molecular Dynamics Iteration" in line:
             self.skip_lines(inputfile, ["d", "ORCA MD", "d", "New Coordinates"])
