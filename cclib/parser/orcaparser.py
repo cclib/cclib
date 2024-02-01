@@ -54,6 +54,9 @@ class ORCA(logfileparser.Logfile):
 
         # The excited state multiplicity for post-HF excited states
         self.mdci_et_mult = None
+    
+        # needs to be here so regression tests pass
+        self.reference = [0.0, 0.0, 0.0]
 
     def after_parsing(self):
         # ORCA doesn't add the dispersion energy to the "Total energy" (which
@@ -2186,6 +2189,7 @@ Dispersion correction           -0.016199959
         #
         # TODO: add quadrupole moment parsing, which can be optionally calculated with ORCA
 
+        self.reference = numpy.zeros(3)
         # the origin/reference might be printed in multiple places in the output file
         # depending on the calculation type
         if line.startswith("The origin for moment calculation is"):
