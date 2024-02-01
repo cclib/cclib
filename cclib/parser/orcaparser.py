@@ -2196,9 +2196,7 @@ Dispersion correction           -0.016199959
             self.reference = numpy.array([reference_x, reference_y, reference_z])
 
         if line.startswith("DIPOLE MOMENT"):
-            self.skip_lines(
-                inputfile, ["d", "XYZ", "electronic", "nuclear", "d"]
-            )
+            self.skip_lines(inputfile, ["d", "XYZ", "electronic", "nuclear", "d"])
             total = next(inputfile)
             assert "Total Dipole Moment" in total
 
