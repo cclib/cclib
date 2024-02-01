@@ -54,7 +54,7 @@ class ORCA(logfileparser.Logfile):
 
         # The excited state multiplicity for post-HF excited states
         self.mdci_et_mult = None
-    
+
         # needs to be here so regression tests pass
         self.reference = [0.0, 0.0, 0.0]
 
