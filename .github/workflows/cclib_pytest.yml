@@ -55,6 +55,8 @@ jobs:
           name: codecov-cclib
           fail_ci_if_error: true
           verbose: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         if: matrix.container == 'shivupa/cclib-ci:py311-edge'
       - name: Install pypa/build
         run: |
