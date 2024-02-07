@@ -163,9 +163,13 @@ Examples of how unit tests are written are those for `population methods <https:
 * A class whose name ends in ``Test`` is used to hold test methods. Many test files only contain a single test class, but others contain multiple, usually specialized for a specific program or method. An example is having a basic ``PopulationTest`` but more specific ``GaussianBickelhauptTest`` and ``GaussianMPA`` classes for checking the results specific to Bickelhaupt and Mulliken population analyses.
 * Each method in a test class is meant for testing a single logical piece of functionality. Common checks are for whether or not the dimensions of calculated quantities are consistent and for certain chemical or physical invariants to hold, such as the total charge from a population analysis summing to the total formal charge of a system.
 
-Adding a new unit test for an attribute requires all of the above but TODO
+Adding a unit test for a new attribute or new methods on an existing data unit test class requires all of the above with the addition of:
+* An entry in the `testdata`_ file that matches the output for a program at a specific version with the test class the output should be used with. An output may be used with multiple tests and a test may be used for many different outputs: there are no restrictions.
+* Each method should, after ``self``, take an argument called ``data`` that corresponds to a parsed ``ccData`` instance.
+  * ``data`` is a pytest fixture; other test classes may have their own local fixtures defined. All cclib-specific but general fixtures are located in the `pytest runtime configuration`_.
 
-To use the
+.. _`testdata`: https://github.com/cclib/cclib/blob/master/test/testdata
+.. _`pytest runtime configuration`: https://github.com/cclib/cclib/blob/master/test/conftest.py
 
 Adding a new program version
 ----------------------------
@@ -193,6 +197,7 @@ Using both the unit and regression tests, the line-by-line `test coverage`_ show
 .. _`testing script`: https://github.com/cclib/cclib/blob/master/.github/scripts/run_pytest.bash
 
 Adding a new regression test
+----------------------------
 
 Code conventions
 ================
