@@ -66,6 +66,10 @@ jobs:
       - name: Build distribution packages (binary wheel and source tarball)
         run: |
           python -m build
+      - name: Check packages with twine
+        run: |
+          python -m pip install twine
+          python -m twine check dist/*
       - name: Store the distribution packages
         uses: actions/upload-artifact@v4
         with:
@@ -133,6 +137,7 @@ jobs:
           repository-url: https://test.pypi.org/legacy/
 
   publish-to-pypi:
+    name: Publish Python distribution to PyPI
     needs:
       - check-installation
     if: startsWith(github.ref, 'refs/tags/')  # only publish to PyPI on tag pushes
