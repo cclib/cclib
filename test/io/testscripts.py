@@ -7,15 +7,14 @@
 """Unit tests for main scripts (ccget, ccwrite)."""
 
 import os
+from test.conftest import get_program_dir, gettestdata
+from test.io.testccio import BASE_URL, URL_FILES
 from unittest import mock
 
 import cclib
 from cclib.io import ccread, ccwrite
 
 import pytest
-
-from test.io.testccio import URL_FILES, BASE_URL
-from test.conftest import gettestdata, get_program_dir
 
 __filedir__ = os.path.dirname(__file__)
 __filepath__ = os.path.realpath(__filedir__)
@@ -25,7 +24,8 @@ __datadir__ = os.path.join(__filepath__, "..", "..", "data")
 INPUT_FILE = os.path.join(__datadir__, "Gaussian/basicGaussian16/dvb_sp.out")
 CJSON_OUTPUT_FILENAME = "dvb_sp.cjson"
 
-@mock.patch("cclib.scripts.ccget.ccread", wraps = ccread)
+
+@mock.patch("cclib.scripts.ccget.ccread", wraps=ccread)
 class ccgetTest:
     def setup_method(self) -> None:
         try:
@@ -67,37 +67,35 @@ class ccgetTest:
     @mock.patch("cclib.scripts.ccget.sys.argv", ["ccget", "metadata", BASE_URL + URL_FILES[0]])
     def test_ccread_url(self, mock_ccread) -> None:
         self.main()
-    
+
     @mock.patch("cclib.scripts.ccget.sys.argv", ["ccget", "metadata", "http://fo.bar"])
     def test_ccread_bad_url(self, mock_ccread) -> None:
         with pytest.raises(Exception):
             self.main()
-    
+
     @pytest.mark.parametrize("file_path", gettestdata())
     def test_all(self, mock_ccread, file_path):
-        if file_path['parser'] == "Psi3":
+        if file_path["parser"] == "Psi3":
             pytest.skip("Psi3 is not yet supported")
         # Build a list of files.
         input_files = [
             os.path.join(
-                __datadir__,
-                get_program_dir(file_path['parser']),
-                file_path['subdir'],
-                file_name)
-            for file_name in file_path['files']
+                __datadir__, get_program_dir(file_path["parser"]), file_path["subdir"], file_name
+            )
+            for file_name in file_path["files"]
         ]
-        
+
         sig = ["ccget"]
         if len(input_files) > 1:
             sig.append("--multi")
         sig.extend(input_files)
         sig.append("metadata")
-        
+
         with mock.patch("cclib.scripts.ccget.sys.argv", sig):
             self.main()
 
 
-@mock.patch("cclib.scripts.ccwrite.ccwrite", wraps = ccwrite)
+@mock.patch("cclib.scripts.ccwrite.ccwrite", wraps=ccwrite)
 class ccwriteTest:
     def setup_method(self) -> None:
         try:
@@ -117,7 +115,7 @@ class ccwriteTest:
     def test_ccwrite_call(self, mock_ccwrite, tmp_path, monkeypatch) -> None:
         """is ccwrite called with the given parameters?"""
         monkeypatch.chdir(tmp_path)
-        
+
         self.main()
 
         assert mock_ccwrite.call_count == 1

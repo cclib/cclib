@@ -22,10 +22,7 @@ __datadir__ = os.path.join(__filepath__, "..", "..")
 
 
 BASE_URL = "https://raw.githubusercontent.com/cclib/cclib/master/data/"
-URL_FILES = [
-    "QChem/basicQChem5.1/dvb_td.out",
-    "Molpro/basicMolpro2012/h2o_mp2.out"
-]
+URL_FILES = ["QChem/basicQChem5.1/dvb_td.out", "Molpro/basicMolpro2012/h2o_mp2.out"]
 
 
 class guess_filetypeTest:
