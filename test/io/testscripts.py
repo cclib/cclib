@@ -15,6 +15,7 @@ from cclib.io import ccread, ccwrite
 import pytest
 
 from test.io.testccio import URL_FILES, BASE_URL
+from test.conftest import gettestdata, get_program_dir
 
 __filedir__ = os.path.dirname(__file__)
 __filepath__ = os.path.realpath(__filedir__)
@@ -70,6 +71,27 @@ class ccgetTest:
     @mock.patch("cclib.scripts.ccget.sys.argv", ["ccget", "metadata", "http://fo.bar"])
     def test_ccread_bad_url(self, mock_ccread) -> None:
         with pytest.raises(Exception):
+            self.main()
+    
+    @pytest.mark.parametrize("file_path", gettestdata())
+    def test_all(self, mock_ccread, file_path):
+        # Build a list of files.
+        input_files = [
+            os.path.join(
+                __datadir__,
+                get_program_dir(file_path['parser']),
+                file_path['subdir'],
+                file_name)
+            for file_name in file_path['files']
+        ]
+        
+        sig = ["ccget"]
+        if len(input_files) > 1:
+            sig.append("--multi")
+        sig.extend(input_files)
+        sig.append("metadata")
+        
+        with mock.patch("cclib.scripts.ccget.sys.argv", sig):
             self.main()
 
 
