@@ -211,13 +211,13 @@ class FileWrapper:
             fileobject = open(filename, mode, encoding=encoding, errors=errors)
 
         return filename, fileobject
-    
+
     def __enter__(self):
         """
         Enter context.
         """
         return self
-    
+
     def __exit__(self, exc_type, exc_value, traceback):
         """
         Exit context
@@ -261,7 +261,7 @@ class FileWrapper:
         Read one line from this file.
         """
         return next(self)
-    
+
     def readlines(self) -> str:
         """
         Read all the lines from this file.

@@ -104,8 +104,8 @@ class VolumeTest:
         density_recovered = volume.read_from_cube("coarsewater.cube")
 
         assert_allclose(density.data, density_recovered.data, rtol=0.05)
-    
+
     def test_zip_cube(self):
         """Check we can read from a zipped file."""
-        data =  volume.read_from_cube(f"{os.path.dirname(os.path.realpath(__file__))}/co.cube.zip")
+        data = volume.read_from_cube(f"{os.path.dirname(os.path.realpath(__file__))}/co.cube.zip")
         assert len(data.data) > 0
