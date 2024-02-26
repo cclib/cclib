@@ -95,6 +95,7 @@ class ccframeTest:
         if not hasattr(cclib.io.ccio, "pd"):
             cclib.io.ccio.pd = mock.MagicMock()
 
+    @mock.patch("cclib.scripts.ccframe.sys.argv", ["ccframe"])
     def test_main_empty_argv(self) -> None:
         """Does main() fail as expected if called without arguments?"""
         with pytest.raises(SystemExit):
