@@ -21,6 +21,13 @@ __filepath__ = os.path.realpath(__filedir__)
 __datadir__ = os.path.join(__filepath__, "..", "..")
 
 
+BASE_URL = "https://raw.githubusercontent.com/cclib/cclib/master/data/"
+URL_FILES = [
+    "QChem/basicQChem5.1/dvb_td.out",
+    "Molpro/basicMolpro2012/h2o_mp2.out"
+]
+
+
 class guess_filetypeTest:
     def setup_method(self) -> None:
         self.guess = cclib.io.ccio.guess_filetype
@@ -95,22 +102,19 @@ class ccopenTest:
     def test_url_io(self):
         """Does the function works with URLs such good as with filenames?"""
         fpath = os.path.join(__datadir__, "data")
-        base_url = "https://raw.githubusercontent.com/cclib/cclib/master/data/"
-        filenames = ["QChem/basicQChem5.1/dvb_td.out", "Molpro/basicMolpro2012/h2o_mp2.out"]
-        for fname in filenames:
+        for fname in URL_FILES:
             assert self.ccopen(os.path.join(fpath, fname)).parse().getattributes(
                 tolists=True
-            ) == self.ccopen(base_url + fname).parse().getattributes(tolists=True)
+            ) == self.ccopen(BASE_URL + fname).parse().getattributes(tolists=True)
 
     def test_multi_url_io(self):
         """Does the function works with multiple URLs such good as with multiple filenames?"""
         fpath = os.path.join(__datadir__, "data")
-        base_url = "https://raw.githubusercontent.com/cclib/cclib/master/data/"
         filenames = ["Molpro/basicMolpro2012/dvb_gopt.out", "Molpro/basicMolpro2012/dvb_gopt.log"]
         assert self.ccopen(
             [os.path.join(fpath, fname) for fname in filenames]
         ).parse().getattributes(tolists=True) == self.ccopen(
-            [base_url + fname for fname in filenames]
+            [BASE_URL + fname for fname in filenames]
         ).parse().getattributes(tolists=True)
 
     @pytest.mark.skip("This should also work if cjsonreader supported streams.")

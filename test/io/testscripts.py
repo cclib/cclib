@@ -14,6 +14,8 @@ from cclib.io import ccread, ccwrite
 
 import pytest
 
+from test.io.testccio import URL_FILES, BASE_URL
+
 __filedir__ = os.path.dirname(__file__)
 __filepath__ = os.path.realpath(__filedir__)
 __datadir__ = os.path.join(__filepath__, "..", "..", "data")
@@ -60,6 +62,15 @@ class ccgetTest:
         assert mock_ccread.call_count == 1
         ccread_call_args, ccread_call_kwargs = mock_ccread.call_args
         assert ccread_call_args[0] == INPUT_FILE
+
+    @mock.patch("cclib.scripts.ccget.sys.argv", ["ccget", "metadata", BASE_URL + URL_FILES[0]])
+    def test_ccread_url(self, mock_ccread) -> None:
+        self.main()
+    
+    @mock.patch("cclib.scripts.ccget.sys.argv", ["ccget", "metadata", "http://fo.bar"])
+    def test_ccread_bad_url(self, mock_ccread) -> None:
+        with pytest.raises(Exception):
+            self.main()
 
 
 @mock.patch("cclib.scripts.ccwrite.ccwrite", wraps = ccwrite)
