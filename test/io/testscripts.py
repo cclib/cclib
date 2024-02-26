@@ -19,9 +19,8 @@ __filepath__ = os.path.realpath(__filedir__)
 __datadir__ = os.path.join(__filepath__, "..", "..", "data")
 
 
-INPUT_FILE = os.path.join(__datadir__, "ADF/basicADF2007.01/dvb_gopt.adfout")
-CJSON_OUTPUT_FILENAME = "dvb_gopt.cjson"
-
+INPUT_FILE = os.path.join(__datadir__, "Gaussian/basicGaussian16/dvb_sp.out")
+CJSON_OUTPUT_FILENAME = "dvb_sp.cjson"
 
 @mock.patch("cclib.scripts.ccget.ccread", wraps = ccread)
 class ccgetTest:
