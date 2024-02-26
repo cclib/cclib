@@ -2798,14 +2798,14 @@ Dispersion correction           -0.016199959
         # among other things.
         while not "Last Energy change" in line:
             line = next(inputfile)
-        
+
         deltaE_value = float(line.split()[4])
         deltaE_target = float(line.split()[7])
         maxDP_value = None
         rmsDP_value = None
         maxDP_target = None
         rmsDP_target = None
-        
+
         line = next(inputfile)
         if "Last MAX-Density change" in line:
             maxDP_value = float(line.split()[4])
@@ -2817,7 +2817,7 @@ Dispersion correction           -0.016199959
             else:
                 rmsDP_value = None
                 rmsDP_target = None
-                
+
         self.scfvalues[-1].append([deltaE_value, maxDP_value, rmsDP_value])
         self.scftargets.append([deltaE_target, maxDP_target, rmsDP_target])
 
