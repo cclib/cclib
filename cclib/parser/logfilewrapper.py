@@ -261,6 +261,12 @@ class FileWrapper:
         Read one line from this file.
         """
         return next(self)
+    
+    def readlines(self) -> str:
+        """
+        Read all the lines from this file.
+        """
+        return list(self)
 
     # TODO: support size parameter.
     def read(self) -> str:
