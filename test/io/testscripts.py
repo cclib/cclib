@@ -112,8 +112,10 @@ class ccwriteTest:
             self.main()
 
     @mock.patch("cclib.scripts.ccwrite.sys.argv", ["ccwrite", "cjson", INPUT_FILE])
-    def test_ccwrite_call(self, mock_ccwrite) -> None:
+    def test_ccwrite_call(self, mock_ccwrite, tmp_path, monkeypatch) -> None:
         """is ccwrite called with the given parameters?"""
+        monkeypatch.chdir(tmp_path)
+        
         self.main()
 
         assert mock_ccwrite.call_count == 1
