@@ -10,6 +10,7 @@ import os
 from unittest import mock
 
 import cclib
+from cclib.io import ccread, ccwrite
 
 import pytest
 
@@ -22,7 +23,7 @@ INPUT_FILE = os.path.join(__datadir__, "ADF/basicADF2007.01/dvb_gopt.adfout")
 CJSON_OUTPUT_FILENAME = "dvb_gopt.cjson"
 
 
-@mock.patch("cclib.scripts.ccget.ccread")
+@mock.patch("cclib.scripts.ccget.ccread", wraps = ccread)
 class ccgetTest:
     def setup_method(self) -> None:
         try:
@@ -62,7 +63,7 @@ class ccgetTest:
         assert ccread_call_args[0] == INPUT_FILE
 
 
-@mock.patch("cclib.scripts.ccwrite.ccwrite")
+@mock.patch("cclib.scripts.ccwrite.ccwrite", wraps = ccwrite)
 class ccwriteTest:
     def setup_method(self) -> None:
         try:
