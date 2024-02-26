@@ -75,6 +75,8 @@ class ccgetTest:
     
     @pytest.mark.parametrize("file_path", gettestdata())
     def test_all(self, mock_ccread, file_path):
+        if file_path['parser'] == "Psi3":
+            pytest.skip("Psi3 is not yet supported")
         # Build a list of files.
         input_files = [
             os.path.join(
