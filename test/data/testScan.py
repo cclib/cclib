@@ -30,37 +30,6 @@ def is_optdone(optstatus_value) -> bool:
     return optstatus_value & OPT_DONE == OPT_DONE
 
 
-class GenericRelaxedScanTest_optdone_bool(unittest.TestCase):
-    """Generic relaxed potential energy surface scan unittest."""
-
-    datatype = cclib.parser.data.ccData_optdone_bool
-
-    @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    @skipForParser("Molcas", "The parser is still being developed so we skip this test")
-    def testoptdone(self):
-        """Is the optimization finished?"""
-        assert isinstance(self.data.optdone, bool)
-        assert self.data.optdone
-
-    @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    @skipForParser("Molcas", "The parser is still being developed so we skip this test")
-    def testindices(self):
-        """Do the indices match the results from geovalues."""
-        assert self.data.optdone and numpy.all(self.data.geovalues[-1] <= self.data.geotargets)
-
-    @skipForParser("Jaguar", "Not implemented")
-    @skipForParser("Molcas", "The parser is still being developed so we skip this test")
-    @skipForParser("ORCA", "Not implemented")
-    @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    def testoptstatus(self):
-        """Does optstatus contain expected values?"""
-
-        # The input and final coordinates were at a stationary points.
-        assert is_optnew(self.data.optstatus[0])
-        assert is_optdone(self.data.optstatus[0])
-        assert is_optdone(self.data.optstatus[-1])
-
-
 class GenericUnrelaxedScanTest(unittest.TestCase):
     """Generic unrelaxed potential energy surface scan unittest."""
 
