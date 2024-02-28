@@ -12,6 +12,11 @@ concurrency:
   group: test-${{github.ref}}-${{github.event.pull_request.number || github.run_number}}
   cancel-in-progress: true
 
+# For now always take the "reduced" form of the version, even for those
+# actions runs that do not push to a package index.
+env:
+  VERSIONINGIT_FOR_PACKAGE_INDEX: true
+
 jobs:
 
   run-tests:

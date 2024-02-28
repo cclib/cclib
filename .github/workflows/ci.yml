@@ -13,8 +13,11 @@ concurrency:
 jobs:
   unit-tests:
     uses: ./.github/workflows/test_and_package.yml
-  all:
+  publish:
     needs: [unit-tests]
+    uses: ./.github/workflows/publish.yml
+  all:
+    needs: [unit-tests, publish]
     runs-on: ubuntu-22.04
     steps:
       - name: Success
