@@ -26,9 +26,10 @@ CJSON_OUTPUT_FILENAME = "dvb_sp.cjson"
 
 # List of log files to test parsing with.
 # Take one log file for each parser version.
-TEST_FILES = list({
-    path_dict['parser'] + path_dict['subdir']: path_dict for path_dict in gettestdata()
-}.values())
+TEST_FILES = list(
+    {path_dict["parser"] + path_dict["subdir"]: path_dict for path_dict in gettestdata()}.values()
+)
+
 
 @mock.patch("cclib.scripts.ccget.ccread", wraps=ccread)
 class ccgetTest:
@@ -78,10 +79,16 @@ class ccgetTest:
         with pytest.raises(Exception):
             self.main()
 
-    @pytest.mark.parametrize("file_path", TEST_FILES, ids=[
-        "{}/{}/{}".format(file_path["parser"], file_path["subdir"], ",".join(file_path["files"]))
-        for file_path in TEST_FILES
-    ])
+    @pytest.mark.parametrize(
+        "file_path",
+        TEST_FILES,
+        ids=[
+            "{}/{}/{}".format(
+                file_path["parser"], file_path["subdir"], ",".join(file_path["files"])
+            )
+            for file_path in TEST_FILES
+        ],
+    )
     def test_all(self, mock_ccread, file_path):
         if file_path["parser"] == "Psi3":
             pytest.skip("Psi3 is not yet supported")
