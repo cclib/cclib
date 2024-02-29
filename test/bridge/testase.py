@@ -130,8 +130,8 @@ class ASETest:
         """Ensure write and read trajectory files with single structures."""
         # An open-shell single point calculation.
         data = ccopen("data/ORCA/basicORCA4.2/dvb_sp_un.out").parse()
-        cclib2ase.write_trajectory(Path(tmp_path, "dvb_sp_un.traj"), data)
-        trajdata = cclib2ase.read_trajectory(Path(tmp_path, "dvb_sp_un.traj"))
+        cclib2ase.write_trajectory(tmp_path / "dvb_sp_un.traj", data)
+        trajdata = cclib2ase.read_trajectory(tmp_path / "dvb_sp_un.traj")
 
         assert np.allclose(trajdata.atomcoords, data.atomcoords)
         assert np.allclose(trajdata.scfenergies, data.scfenergies)
