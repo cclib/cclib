@@ -24,6 +24,7 @@ __datadir__ = os.path.join(__filepath__, "..", "..", "data")
 INPUT_FILE = os.path.join(__datadir__, "Gaussian/basicGaussian16/dvb_sp.out")
 CJSON_OUTPUT_FILENAME = "dvb_sp.cjson"
 
+TEST_FILES = gettestdata()
 
 @mock.patch("cclib.scripts.ccget.ccread", wraps=ccread)
 class ccgetTest:
@@ -73,7 +74,10 @@ class ccgetTest:
         with pytest.raises(Exception):
             self.main()
 
-    @pytest.mark.parametrize("file_path", gettestdata())
+    @pytest.mark.parametrize("file_path", TEST_FILES, ids=[
+        "{}/{}/{}".format(file_path["parser"], file_path["subdir"], ",".join(file_path["files"]))
+        for file_path in TEST_FILES
+    ])
     def test_all(self, mock_ccread, file_path):
         if file_path["parser"] == "Psi3":
             pytest.skip("Psi3 is not yet supported")
