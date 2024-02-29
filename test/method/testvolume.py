@@ -76,7 +76,7 @@ class VolumeTest:
         # First six rows are information about the coordinates of the grid and comments.
         tmp = []
 
-        with open(f"{os.path.dirname(os.path.realpath(__file__))}/water_mp2.cube") as f:
+        with open(Path(__file__).resolve().parent / "water_mp2.cube") as f:
             lines = f.readlines()
             for line in lines[6 : len(lines)]:
                 tmp.extend(line.split())
