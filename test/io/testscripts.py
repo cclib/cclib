@@ -24,7 +24,11 @@ __datadir__ = os.path.join(__filepath__, "..", "..", "data")
 INPUT_FILE = os.path.join(__datadir__, "Gaussian/basicGaussian16/dvb_sp.out")
 CJSON_OUTPUT_FILENAME = "dvb_sp.cjson"
 
-TEST_FILES = gettestdata()
+# List of log files to test parsing with.
+# Take one log file for each parser version.
+TEST_FILES = list({
+    path_dict['parser'] + path_dict['subdir']: path_dict for path_dict in gettestdata()
+}.values())
 
 @mock.patch("cclib.scripts.ccget.ccread", wraps=ccread)
 class ccgetTest:
