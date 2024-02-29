@@ -7,8 +7,6 @@
 
 """Tests for the cclib2ase bridge in cclib."""
 
-from pathlib import Path
-
 from cclib import ccopen
 from cclib.bridge import cclib2ase
 from cclib.parser.utils import find_package
@@ -152,8 +150,8 @@ class ASETest:
 
         # A closed-shell single structure frequency calculation.
         data = ccopen("data/ORCA/basicORCA4.2/dvb_ir.out").parse()
-        cclib2ase.write_trajectory(Path(tmp_path, "dvb_ir.traj"), data)
-        trajdata = cclib2ase.read_trajectory(Path(tmp_path, "dvb_ir.traj"))
+        cclib2ase.write_trajectory(tmp_path / "dvb_ir.traj", data)
+        trajdata = cclib2ase.read_trajectory(tmp_path / "dvb_ir.traj")
 
         assert np.allclose(trajdata.atomcoords, data.atomcoords)
         assert np.allclose(trajdata.scfenergies, data.scfenergies)
@@ -176,8 +174,8 @@ class ASETest:
         """Ensure write and read trajectory files with optimizations."""
         # Geometry optimization.
         data = ccopen("data/ORCA/basicORCA4.2/dvb_gopt.out").parse()
-        cclib2ase.write_trajectory(Path(tmp_path, "dvb_gopt.traj"), data)
-        trajdata = cclib2ase.read_trajectory(Path(tmp_path, "dvb_gopt.traj"))
+        cclib2ase.write_trajectory(tmp_path / "dvb_gopt.traj", data)
+        trajdata = cclib2ase.read_trajectory(tmp_path / "dvb_gopt.traj")
 
         assert np.allclose(trajdata.atomcoords, data.atomcoords)
         assert np.allclose(trajdata.scfenergies, data.scfenergies)
