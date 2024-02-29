@@ -7,6 +7,7 @@
 
 """Tests for the cclib2ase bridge in cclib."""
 
+from pathlib import Path
 
 from cclib import ccopen
 from cclib.bridge import cclib2ase
@@ -125,12 +126,12 @@ class ASETest:
         assert np.isclose(ase_data.natom, len(data.atomnos))
         assert np.isclose(ase_data.temperature, 0)
 
-    def test_write_and_read_trivial_trajectories(self):
+    def test_write_and_read_trivial_trajectories(self, tmp_path):
         """Ensure write and read trajectory files with single structures."""
         # An open-shell single point calculation.
         data = ccopen("data/ORCA/basicORCA4.2/dvb_sp_un.out").parse()
-        cclib2ase.write_trajectory("dvb_sp_un.traj", data)
-        trajdata = cclib2ase.read_trajectory("dvb_sp_un.traj")
+        cclib2ase.write_trajectory(Path(tmp_path, "dvb_sp_un.traj"), data)
+        trajdata = cclib2ase.read_trajectory(Path(tmp_path, "dvb_sp_un.traj"))
 
         assert np.allclose(trajdata.atomcoords, data.atomcoords)
         assert np.allclose(trajdata.scfenergies, data.scfenergies)
@@ -151,8 +152,8 @@ class ASETest:
 
         # A closed-shell single structure frequency calculation.
         data = ccopen("data/ORCA/basicORCA4.2/dvb_ir.out").parse()
-        cclib2ase.write_trajectory("dvb_ir.traj", data)
-        trajdata = cclib2ase.read_trajectory("dvb_ir.traj")
+        cclib2ase.write_trajectory(Path(tmp_path, "dvb_ir.traj"), data)
+        trajdata = cclib2ase.read_trajectory(Path(tmp_path, "dvb_ir.traj"))
 
         assert np.allclose(trajdata.atomcoords, data.atomcoords)
         assert np.allclose(trajdata.scfenergies, data.scfenergies)
@@ -171,12 +172,12 @@ class ASETest:
         assert np.allclose(trajdata.atomcharges["mulliken"], data.atomcharges["mulliken"])
         # No atomspins here.
 
-    def test_write_and_read_opt_trajectories(self):
+    def test_write_and_read_opt_trajectories(self, tmp_path):
         """Ensure write and read trajectory files with optimizations."""
         # Geometry optimization.
         data = ccopen("data/ORCA/basicORCA4.2/dvb_gopt.out").parse()
-        cclib2ase.write_trajectory("dvb_gopt.traj", data)
-        trajdata = cclib2ase.read_trajectory("dvb_gopt.traj")
+        cclib2ase.write_trajectory(Path(tmp_path, "dvb_gopt.traj"), data)
+        trajdata = cclib2ase.read_trajectory(Path(tmp_path, "dvb_gopt.traj"))
 
         assert np.allclose(trajdata.atomcoords, data.atomcoords)
         assert np.allclose(trajdata.scfenergies, data.scfenergies)
