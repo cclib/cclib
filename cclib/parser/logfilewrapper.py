@@ -262,7 +262,7 @@ class FileWrapper:
         """
         return next(self)
 
-    def readlines(self) -> str:
+    def readlines(self) -> List[str]:
         """
         Read all the lines from this file.
         """
