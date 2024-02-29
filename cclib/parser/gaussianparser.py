@@ -224,12 +224,16 @@ class Gaussian(logfileparser.Logfile):
 
         elif "Leave Link    1" in line and "MaxMem=" in line and "num_cpu" in self.metadata:
             # Leave Link    1 at Wed Apr  4 10:49:19 2018, MaxMem=   805306368 cpu:               0.3 elap:               0.0
-            # Gaussian helpfully prints the total 'available' memory for us. There are, however a few caveates here:
+            # Gaussian helpfully prints the total 'available' memory for us. There are, however a few caveats here:
             # 1) This memory (in bytes) is per CPU
             # 2) The total memory here (x num_cpu) will not equal the amount requested in %mem because Gaussian (probably erroneously)
             #    interprets GB as gibibytes (1024 x 1024 x 1024 bytes) rather than gigabytes. This has the unfortunate consequence of
             #    Gaussian assigning more memory than you probably expected.
-            memory_per_cpu = int(line[line.index("MaxMem=") :].split()[1])
+            #
+            # MaxMem can appear with or without whitespace:
+            # MaxMem=  805306368
+            # MaxMem=174483046400
+            memory_per_cpu = int(re.search(r"MaxMem=\s*(\d+)", line).group(1))
             self.metadata["memory_used"] = memory_per_cpu * self.metadata["num_cpu"]
 
         elif line[1:6].lower() == "%mem=":
