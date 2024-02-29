@@ -7,10 +7,10 @@
 """Unit tests for main scripts (ccget, ccwrite)."""
 
 import os
+from pathlib import Path
 from test.conftest import get_program_dir, gettestdata
 from test.io.testccio import BASE_URL, URL_FILES
 from unittest import mock
-from pathlib import Path
 
 import cclib
 from cclib.io import ccread, ccwrite
@@ -80,7 +80,6 @@ class ccgetTest:
         with pytest.raises(Exception):
             self.main()
 
-
     @pytest.mark.parametrize(
         "file_path",
         TEST_FILES,
@@ -92,14 +91,18 @@ class ccgetTest:
         ],
     )
     def test_all(self, mock_ccread, file_path):
-        
         if file_path["parser"] == "Psi3":
             pytest.skip("Psi3 is not yet supported")
         # Build a list of files.
         input_files = [
-            str(Path(
-                __datadir__, get_program_dir(file_path["parser"]), file_path["subdir"], file_name
-            ).resolve())
+            str(
+                Path(
+                    __datadir__,
+                    get_program_dir(file_path["parser"]),
+                    file_path["subdir"],
+                    file_name,
+                ).resolve()
+            )
             for file_name in file_path["files"]
         ]
 
