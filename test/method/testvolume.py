@@ -9,6 +9,7 @@
 
 import os
 import sys
+from pathlib import Path
 
 from cclib.method import volume
 from cclib.parser import Gaussian, Psi4
