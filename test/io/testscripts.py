@@ -22,7 +22,7 @@ __filepath__ = os.path.realpath(__filedir__)
 __datadir__ = os.path.join(__filepath__, "..", "..", "data")
 
 
-INPUT_FILE = Path(__datadir__) / "Gaussian" / "basicGaussian16" / "dvb_sp.out"
+INPUT_FILE = str(Path(__datadir__) / "Gaussian" / "basicGaussian16" / "dvb_sp.out")
 CJSON_OUTPUT_FILENAME = "dvb_sp.cjson"
 
 # List of log files to test parsing with.
