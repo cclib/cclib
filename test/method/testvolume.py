@@ -107,5 +107,5 @@ class VolumeTest:
 
     def test_zip_cube(self):
         """Check we can read from a zipped file."""
-        data = volume.read_from_cube(f"{os.path.dirname(os.path.realpath(__file__))}/co.cube.zip")
+        data = volume.read_from_cube(Path(__file__).resolve().parent / "co.cube.zip")
         assert len(data.data) > 0
