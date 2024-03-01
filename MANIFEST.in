@@ -1,0 +1,3 @@
+include ANNOUNCE
+include THANKS
+prune test
