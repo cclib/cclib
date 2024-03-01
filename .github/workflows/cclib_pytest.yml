@@ -23,6 +23,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # so versioningit can figure out the version
+          fetch-depth: 0
+          fetch-tags: true
       - name: Allow repo access (see https://github.com/actions/checkout/issues/760)
         run: |
           git config --global --add safe.directory /__w/cclib/cclib
@@ -97,4 +101,5 @@ jobs:
       - name: Check cclib install
         run: |
           cd ~
+          python -c 'import cclib; print(cclib.__version__)'
           python -c 'from cclib.io import ccread; data = ccread("https://raw.githubusercontent.com/cclib/cclib-data/master/Gaussian/Gaussian16/water.log"); print(data.zpve)'
