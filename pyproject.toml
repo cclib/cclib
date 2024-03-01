@@ -1,6 +1,6 @@
 [project]
 name = "cclib"
-version = "1.8.1"
+dynamic = ["version"]
 description = "parsers and algorithms for computational chemistry"
 readme = "README.md"
 authors = [
@@ -65,7 +65,7 @@ dev = ["cclib[bridges,docs,test]"]
 all = ["cclib[bridges]"]
 
 [build-system]
-requires = ["setuptools >= 61.0"]
+requires = ["setuptools >= 61.0", "versioningit~=2.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
@@ -171,3 +171,16 @@ module = [
     "common",
 ]
 ignore_missing_imports = true
+
+[tool.versioningit.format]
+method = {module = "versioningit_override", value = "cclib_format", module-dir = "cclib"}
+
+[tool.versioningit.template-fields.version-tuple]
+pep440 = true
+
+[tool.versioningit.vcs]
+method = "git"
+match = ["v*"]
+
+[tool.versioningit.write]
+file = "cclib/_version.py"
