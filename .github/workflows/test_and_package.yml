@@ -1,11 +1,24 @@
 ---
 # yamllint disable rule:line-length
-name: run tests and coverage
+name: run tests and create installable packages
 
 # yamllint disable-line rule:truthy
-on: [push, pull_request]
+# yamllint disable-line rule:truthy
+on:
+  workflow_dispatch:
+  workflow_call:
+
+concurrency:
+  group: test-${{github.ref}}-${{github.event.pull_request.number || github.run_number}}
+  cancel-in-progress: true
+
+# For now always take the "reduced" form of the version, even for those
+# actions runs that do not push to a package index.
+env:
+  VERSIONINGIT_FOR_PACKAGE_INDEX: true
 
 jobs:
+
   run-tests:
     runs-on: ubuntu-22.04
     strategy:
@@ -65,12 +78,20 @@ jobs:
       - name: Build distribution packages (binary wheel and source tarball)
         run: |
           python -m build
+      - name: Check packages with twine
+        run: |
+          python -m pip install twine
+          python -m twine check dist/*
       - name: Store the distribution packages
         uses: actions/upload-artifact@v4
         with:
           name: python-package-distributions
           path: dist/
         if: matrix.container == 'shivupa/cclib-ci:py311-edge'
+
+  # We check the installation using all Python versions using the packages
+  # created from a single version, since the packages are platform and version
+  # independent.
   check-installation:
     needs:
       - run-tests
@@ -78,10 +99,16 @@ jobs:
     strategy:
       matrix:
         install-method: [wheel, source]
+        python-version:
+          - 3.8
+          - 3.9
+          - "3.10"
+          - 3.11
+          - 3.12
     steps:
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.x"
+          python-version: ${{ matrix.python-version }}
       - name: Download the distribution packages
         uses: actions/download-artifact@v4
         with:
@@ -90,11 +117,11 @@ jobs:
       - name: Update environment
         run: |
           python -m pip install -U setuptools pip
-      - name: Install cclib (wheel)
+      - name: Install from wheel
         run: |
           python -m pip install dist/*.whl
         if: matrix.install-method == 'wheel'
-      - name: Install cclib (source)
+      - name: Install from source
         run: |
           python -m pip install dist/*.tar.gz
         if: matrix.install-method == 'source'

@@ -3,7 +3,7 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8280878.svg)](https://doi.org/10.5281/zenodo.8280878)
 [![PyPI version](http://img.shields.io/pypi/v/cclib.svg?style=flat)](https://pypi.python.org/pypi/cclib)
 [![GitHub release](https://img.shields.io/github/release/cclib/cclib.svg?style=flat)](https://github.com/cclib/cclib/releases)
-[![build status](https://github.com/cclib/cclib/actions/workflows/cclib_pytest.yml/badge.svg?branch=master)](https://github.com/cclib/cclib/actions/workflows/cclib_pytest.yml)
+[![build status](https://github.com/cclib/cclib/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/cclib/cclib/actions/workflows/cclib_pytest.yml)
 [![license](http://img.shields.io/badge/license-BSD-blue.svg?style=flat)](https://github.com/cclib/cclib/blob/master/LICENSE)
 
 <img src="./logo.png" alt="cclib logo" width="100" />
