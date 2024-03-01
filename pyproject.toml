@@ -173,7 +173,7 @@ module = [
 ignore_missing_imports = true
 
 [tool.versioningit.format]
-method = {module = "versioningit_override", value = "cclib_format", module-dir = "cclib"}
+method = {module = "versioningit_override", value = "cclib_format", module-dir = "tools"}
 
 [tool.versioningit.template-fields.version-tuple]
 pep440 = true
