@@ -8,7 +8,7 @@
 
     flake-utils.url = "github:numtide/flake-utils";
   };
-  
+
   nixConfig = {
     bash-prompt = "\\[\\e[0;1;38;5;214m\\]cclib\\[\\e[0;1m\\]:\\[\\e[0;1;38;5;39m\\]\\w\\[\\e[0;1m\\]$ \\[\\e[0m\\]";
   };
