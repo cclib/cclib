@@ -12,4 +12,5 @@ timer.dat
 .DS_Store
 venv
 .idea
+/.pre-commit-config.yaml
 .direnv
