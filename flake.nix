@@ -39,6 +39,8 @@
                 coverage
                 sphinx
                 sphinx-rtd-theme
+                identify
+                cfgv
               ] ++ p.cclib.nativeBuildInputs
               ++ p.cclib.propagatedBuildInputs
               );
@@ -48,6 +50,9 @@
                 pyEnv
                 black
                 pre-commit
+                ruff
+                actionlint
+                isort
               ];
             };
 
