@@ -53,7 +53,7 @@ jobs:
     runs-on: ubuntu-22.04
 
     # only publish on release/versioned tag pushes
-    if: startsWith(github.ref, 'refs/tags/release-')
+    if: startsWith(github.ref, 'refs/tags/v')
 
     environment:
       name: pypi
