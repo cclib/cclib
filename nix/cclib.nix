@@ -56,6 +56,6 @@ buildPythonPackage rec {
   meta = with lib; {
     description = "Parsers and algorithms for computational chemistry logfiles ";
     license = licenses.bsd3;
-    maintainers = with maintainers; [ sheepforc3 ];
+    maintainers = with maintainers; [ sheepforce ];
   };
 }
