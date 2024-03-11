@@ -12,3 +12,4 @@ timer.dat
 .DS_Store
 venv
 .idea
+.direnv
