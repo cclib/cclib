@@ -142,9 +142,9 @@ In addition to the above unit tests for data, there are also unit tests for each
 .. _`table of attribute coverage`: data_dev.html#details-of-current-implementation
 
 Adding a new attribute
-----------------------
+^^^^^^^^^^^^^^^^^^^^^^
 
-Definitions of attributes (`mocoefs`_, `natom`_, etc.) are located inside the `ccdata <https://github.com/cclib/cclib/blob/0aff0e0d4791f88483c90a63a62e2768794588e9/cclib/parser/data.py#L21>`_ class. Use existing attributes for guidance.
+Definitions of attributes (``mocoefs``, ``natom``, etc.) are located inside the `ccdata <https://github.com/cclib/cclib/blob/0aff0e0d4791f88483c90a63a62e2768794588e9/cclib/parser/data.py#L21>`_ class. Use existing attributes for guidance.
 
 1. Add a line containing the attribute name, a short description of the attribute, the type and shape (if not a scalar quantity) of the attribute, and relevant units to the docstring.
 2. Add an `entry <https://github.com/cclib/cclib/blob/0aff0e0d4791f88483c90a63a62e2768794588e9/cclib/parser/data.py#L108>`_ for the code representation of an attribute.
@@ -155,24 +155,27 @@ Without these modifications, saving the parsed attribute will appear to work ins
 Once the above is complete, and the new attribute is parsed and saved inside at least one parser, a new unit test should be added.
 
 Adding a new unit test
-----------------------
+^^^^^^^^^^^^^^^^^^^^^^
 
 Navigate to the relevant subdirectory of the ``tests`` directory. All filenames containing unit tests must start with ``test``. Generally, each file containing an implementation in the cclib source has a matching test file. The exception is parsers, for which there are some program-specific tests, but most relevant are the ``data`` tests that are grouped by attribute.
 
 Examples of how unit tests are written are those for `population methods <https://github.com/cclib/cclib/blob/master/test/method/testpopulation.py>`_ or the `MOLDEN writer <https://github.com/cclib/cclib/blob/master/test/io/testmoldenwriter.py>`_.
+
 * A class whose name ends in ``Test`` is used to hold test methods. Many test files only contain a single test class, but others contain multiple, usually specialized for a specific program or method. An example is having a basic ``PopulationTest`` but more specific ``GaussianBickelhauptTest`` and ``GaussianMPA`` classes for checking the results specific to Bickelhaupt and Mulliken population analyses.
 * Each method in a test class is meant for testing a single logical piece of functionality. Common checks are for whether or not the dimensions of calculated quantities are consistent and for certain chemical or physical invariants to hold, such as the total charge from a population analysis summing to the total formal charge of a system.
 
 Adding a unit test for a new attribute or new methods on an existing data unit test class requires all of the above with the addition of:
+
 * An entry in the `testdata`_ file that matches the output for a program at a specific version with the test class the output should be used with. An output may be used with multiple tests and a test may be used for many different outputs: there are no restrictions.
 * Each method should, after ``self``, take an argument called ``data`` that corresponds to a parsed ``ccData`` instance.
+
   * ``data`` is a pytest fixture; other test classes may have their own local fixtures defined. All cclib-specific but general fixtures are located in the `pytest runtime configuration`_.
 
 .. _`testdata`: https://github.com/cclib/cclib/blob/master/test/testdata
 .. _`pytest runtime configuration`: https://github.com/cclib/cclib/blob/master/test/conftest.py
 
 Adding a new program version
-----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 There are a few conventions when adding a new supported program version to the unit tests:
 * Two different recent versions are typically used in the unit tests. If there already are two, move the older version(s) the regression suite (see below).
@@ -197,7 +200,7 @@ Using both the unit and regression tests, the line-by-line `test coverage`_ show
 .. _`testing script`: https://github.com/cclib/cclib/blob/master/.github/scripts/run_pytest.bash
 
 Adding a new regression test
-----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Code conventions
 ================
