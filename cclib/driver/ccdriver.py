@@ -17,8 +17,8 @@ from typing import Optional, Union
 
 from cclib.collection import ccCollection
 from cclib.combinator import auto_combinator
-from cclib.tree import Tree
 from cclib.file_handler import FileHandler
+from cclib.tree import Tree
 
 # from cclib.parser.utils import find_package
 

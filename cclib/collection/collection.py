@@ -29,12 +29,11 @@ class ccCollection:
         #         ccData[attr1, attr2]
         # ]
 
-
         self._combinator = combinator
         self._tree = tree
         self._parsed_data = [ccData() for i in range(self._tree.num_nodes)]
         # [
         #         [attrparser1, attrparser2, attrparser3, etc]
         # ]
-        #if self._combinator != None:
+        # if self._combinator != None:
         #    assert len(self._combinator.job_list) == 1

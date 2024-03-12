@@ -1,1 +1,1 @@
-from cclib.tree.tree import basetree, Tree
+from cclib.tree.tree import Tree, basetree
