@@ -241,6 +241,7 @@ Besides input from a number of people `listed in the repository`_, the following
 * `Karol M. Langner`_
 * `Oliver Lee`_
 * `Noel O'Boyle`_ (retired)
+* `Felipe S. S. Schneider`_
 * `Adam Tenderholt`_ (retired)
 * `Shiv Upadhyay`_
 
@@ -253,5 +254,6 @@ Besides input from a number of people `listed in the repository`_, the following
 .. _`Karol M. Langner`: https://github.com/langner
 .. _`Oliver Lee`: https://github.com/oliver-s-lee
 .. _`Noel O'Boyle`: https://github.com/baoilleach
+.. _`Felipe S. S. Schneider`: https://github.com/schneiderfelipe
 .. _`Adam Tenderholt`: https://github.com/ATenderholt
 .. _`Shiv Upadhyay`: https://github.com/shivupa
