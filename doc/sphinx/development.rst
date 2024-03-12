@@ -208,7 +208,7 @@ Regression tests
 
 Regression tests ensure that bugs, once fixed, stay fixed. These are real-life files that at some point broke a cclib parser and are stored in folders like ``data/regression/Jaguar/Jaguar6.4``. The files associated with regression tests are not stored together with the source code as they are often quite large. A separate repository on GitHub, `cclib-data`_, is used to track these files, and we do not distribute them with any releases.
 
-For every bug found in the parsers, there should be a corresponding regression test that tests if this bug stays fixed. The process is automated by `regression.py`_, which runs through all of our test data, both the basic data and regression files, opens them, tries to parse, and runs any relevant regression tests defined for that file. New regression tests are added by creating a function ``testMyFileName_out`` according to the examples at the start of `regression.py`_.
+For every bug found in the parsers, there should be a corresponding regression test that tests if this bug stays fixed. The process is automated by `regression.py`_, which runs through all of our test data, both the basic data and regression files, opens them, tries to parse, and runs any relevant regression tests defined for that file.
 
 Using both the unit and regression tests, the line-by-line `test coverage`_ shows which parts of cclib are touched by at least one test. When adding new features and tests, the GitHub Actions `testing script`_ can be run locally to generate the HTML coverage pages and ensure that the tests exercise the feature code.
 
@@ -220,6 +220,18 @@ Using both the unit and regression tests, the line-by-line `test coverage`_ show
 
 Adding a new regression test
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A regression test consists of one or more output files and optionally a test function or class.
+
+New regression tests are added by creating entries in `regressionfiles.yaml`_. There are three kinds of tests:
+
+* A regression may be parsed, but specific attributes on the regression are not checked: no test function or class is added.
+* A regression may be parsed and also explicitly tested.
+* A regression may be explicitly tested but not parsed (this is uncommon).
+
+More details, such as where to place regression data, how to control parsing, and what to name the optional tests are available in the `pytest config <https://github.com/cclib/cclib/blob/07590622dbd571c31f8b874697ce024908345d9a/test/conftest.py#L43>`_ and at the top of `regressionfiles.yaml`_.
+
+.. _`regressionfiles.yaml`: https://github.com/cclib/cclib-data/blob/master/regressionfiles.yaml
 
 Code conventions
 ================
