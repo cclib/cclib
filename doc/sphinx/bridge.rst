@@ -12,11 +12,10 @@ The following bridges in cclib allow using the parsed data to perform further an
 horton
 ------
 
-`Horton`_ bridge in cclib supports conversion of cclib's ccData object to horton's IOData object and vice versa. This bridge is useful in performing additional population analyses using the data parsed using cclib.
+The horton bridge in cclib supports conversion of cclib's ccData object to horton's IOData object and vice versa. This bridge is useful in performing additional population analyses using the data parsed using cclib.
 Before invoking the bridge function, ccData object should be prepared first by reading in previous calculations, following the procedures introduced in `how to parse`_ section.
 Then, ``ccData`` object can be passed into the bridge function ``makehorton``. Following code block is an example that performs the conversion:
 
-.. _`Horton`: http://theochem.github.io/horton/2.1.1/
 .. _`how to parse`: how_to_parse.html
 
 .. code-block:: python
@@ -74,7 +73,6 @@ An example code below demonstrates how Hirshfeld charges can be calculated based
 To calculate partial charges that require pro-atomic densities, follow the steps in `Building proatomic database`_ section in horton documentation.
 Then read in the densities as below to calculate Hirshfeld or Hirshfeld-like charges:
 
-.. _`Python interface`: https://theochem.github.io/horton/2.1.0/user_postproc_aim.html#python-interface-to-the-partitioning-code
 .. _`Building proatomic database`: https://theochem.github.io/horton/2.1.0/user_postproc_aim.html#horton-atomdb-py-build-a-pro-atom-database
 
 .. code-block:: python

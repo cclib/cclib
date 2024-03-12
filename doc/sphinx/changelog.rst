@@ -141,7 +141,7 @@ Changes in cclib-1.7.1
 
 **Bugfixes**
 
-* Improved parsing and testing enthalpy and freeenergy (Felipe Schneider)
+* Improved parsing and testing enthalpy and freeenergy (Felipe S. S. Schneider)
 * Fixed parsing ONIOM output for Gaussian (Elliot Farrar)
 * Fixed parsing of GAMESS logfiles with more than 100 SCF iterations (simonaxelrod)
 * Fixed parsing of very long (10K+) ORCA logfiles (Alex Maldonado)
@@ -268,7 +268,7 @@ Changes in cclib-1.6
 
 * New parser: cclib can now parse Molcas files (Kunal Sharma)
 * New parser: cclib can now parse Turbomole files (Christopher Rowley, Kunal Sharma)
-* New script: ccframe writes data table files from logfiles (Felipe Schneider)
+* New script: ccframe writes data table files from logfiles (Felipe S. S. Schneider)
 * New method: stoichiometry builds the chemical formula of a system (Jaime Rodríguez-Guerra)
 * Support package version in metadata for most parsers
 * Support time attribute and BOMD output in Gaussian, NWChem, ORCA and QChem

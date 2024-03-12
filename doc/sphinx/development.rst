@@ -12,26 +12,44 @@ The default cclib files distributed with a release, as described in `How to inst
 Cloning cclib from GitHub
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-cclib is hosted by the fantastic people at `GitHub`_ (previously at `Sourceforge`_) in a `git`_ repository. You can download a `zipped archive`_ of the current development version (called `master`) for installation and testing or browse the available `releases`_. In order to contribute any changes, however, you will need to create a local copy of the repository:
+cclib is hosted by the fantastic people at `GitHub`_ in a `git`_ repository. You can download a `zipped archive`_ of the current development version (called ``master``) for installation and testing or browse the available `releases`_. In order to contribute any changes, however, you will need to create a local copy of the repository:
 
 .. code-block:: bash
 
     git clone https://github.com/cclib/cclib.git
 
+If you would like to contribute fixes, it is more likely that you want to fork the repository (see guidelines below) and clone that.
+
 .. _`GitHub`: https://github.com
-.. _`Sourceforge`: https://sourceforge.net
 .. _`git`: https://git-scm.com
 .. _`zipped archive`: https://github.com/cclib/cclib/archive/master.zip
 .. _`releases`: https://github.com/cclib/cclib/releases
 
+Installation and running tests
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Once you have a copy of cclib,
+
+#. Create a virtual environment using a either `venv`_ or `conda`_ then activate it
+#. Install cclib in development mode with all dependencies: ``cd /location/of/cclib; python -m pip install -e '.[dev]'``
+#. To run unit tests, ``python -m pytest``
+#. To run regression tests, ``python -m pytest test/regression.py`` (requires `cclib-data download`_)
+
+You may not be interested in running all tests because they take too much time (some calculation methods), require a dependency not immediately available (primarily Psi4), or simply aren't relevant for the code you'll touch. Call `pytest`_ with the ``-k`` flag to select a subset of tests. Using the ``--co`` flag will show the names of matching tests without actually running them.
+
+.. _`venv`: https://docs.python.org/3/library/venv.html
+.. _`conda`: https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html#creating-environments
+.. _`cclib-data download`: https://github.com/cclib/cclib/blob/07590622dbd571c31f8b874697ce024908345d9a/data/regression_download.sh
+.. _`pytest`: https://docs.pytest.org/en/latest/how-to/usage.html
+
 Guidelines
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~
 
 We follow a typical GitHub collaborative model, relying on `forks and pull requests`_. In short, the development process consists of:
 
 * `Creating your own fork`_ of cclib in order to develop
 * `Creating a pull request`_ to contribute your changes
-* Reviewing and merging open pull requests into master
+* Reviewing and merging open pull requests (PRs) into the main branch
 * Using `issues`_ to plan and prioritize future work
 
 .. _`forks and pull requests`: https://docs.github.com/en/github/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests
@@ -54,7 +72,29 @@ Releasing a new version
 
 The release cycle of cclib is irregular, with new versions being created as deemed necessary after significant changes or new features. We roughly follow semantic versioning with respect to the `parsed attributes`_.
 
-When creating a new release on GitHub, the typical procedure might include the following steps:
+When creating a new release on GitHub, start by creating a new issue based on the following template that provides a high-level overview of the steps to take.
+
+.. code-block:: md
+
+    This is to track the work to be done for release v1.8.1:
+
+    - [ ] Migrate non-urgent issues/PRs to the 2.0 label ([2.0 list](https://github.com/cclib/cclib/issues?q=is%3Aopen+is%3Aissue+milestone%3Av2.0))
+    - [ ] Close out remaining PRs and issues ([PRs](https://github.com/cclib/cclib/pulls?q=is%3Aopen+is%3Apr+milestone%3Av1.8.1), [issues](https://github.com/cclib/cclib/issues?q=is%3Aopen+is%3Aissue+milestone%3Av1.8.1))
+    - [ ] Create `release-1.8.1` branch ([branch](https://github.com/cclib/cclib/tree/release-1.8.1))
+    - [ ] Bump version, update changelog, docs and other files (TODO)
+    - [ ] Create a v1.8.1 tag for the release
+    - [ ] Update release tag to HEAD on release branch
+    - [ ] Create a draft release from the v1.8.1 tag
+    - [ ] Attach source tar and zip archives to release on GitHub
+    - [ ] When ready, publish the draft release (https://github.com/cclib/cclib/releases/tag/v1.8.1)
+    - [ ] Upload new version to PyPI (https://pypi.org/project/cclib/1.8.1/)
+    - [ ] Make sure conda picks up the change (https://github.com/conda-forge/cclib-feedstock/pull/TODO)
+    - [ ] Update Zenodo if a major or minor version (https://zenodo.org/record/TODO)
+    - [ ] Make sure Zenodo parts of documentation get updated (https://github.com/cclib/cclib/pull/TODO)
+    - [ ] Merge the `release-1.8.1` branch back into master (https://github.com/cclib/cclib/pull/TODO)
+    - [ ] Send email to MLs
+
+An example of a past finished release is `1.8`_.
 
 * Update the `CHANGELOG`_, `ANNOUNCE`_ and any other files that might change content with the new version
 * Make sure that `setup.py`_ has the right version number, as well as __version__ in `__init__.py`_ and any other relevant files
@@ -70,6 +110,8 @@ When creating a new release on GitHub, the typical procedure might include the f
 * For significant releases, if appropriate, send an email to the `CCL list`_ and any mailing lists for computational chemistry packages supported by cclib
 
 .. _`parsed attributes`: data.html
+
+.. _`1.8`: https://github.com/cclib/cclib/issues/1249
 
 .. _`ANNOUNCE`: https://github.com/cclib/cclib/blob/master/ANNOUNCE
 .. _`Python package index`: https://pypi.org/project/cclib/
@@ -114,10 +156,45 @@ The job types currently included as unit tests:
 * Møller–Plesset and coupled cluster energies for water (STO-3G basis set)
 * static polarizabilities for tryptophan (RHF/STO-3G)
 
+In addition to the above unit tests for data, there are also unit tests for each bridge, calculation method, IO format, and helper utilities, all located inside the `tests <https://github.com/cclib/cclib/tree/master/test>`_ directory, with each category receiving its own subdirectory.
+
 .. _`table of attribute coverage`: data_dev.html#details-of-current-implementation
 
+Adding a new attribute
+^^^^^^^^^^^^^^^^^^^^^^
+
+Definitions of attributes (``mocoeffs``, ``natom``, etc.) are located inside the `ccdata <https://github.com/cclib/cclib/blob/0aff0e0d4791f88483c90a63a62e2768794588e9/cclib/parser/data.py#L21>`_ class. Use existing attributes for guidance.
+
+#. Add a line containing the attribute name, a short description of the attribute, the type and shape (if not a scalar quantity) of the attribute, and relevant units to the docstring.
+#. Add an `entry <https://github.com/cclib/cclib/blob/0aff0e0d4791f88483c90a63a62e2768794588e9/cclib/parser/data.py#L108>`_ for the code representation of an attribute.
+#. Some attributes require additional processing into certain container or data types; `available processing rules and their descriptions <https://github.com/cclib/cclib/blob/0aff0e0d4791f88483c90a63a62e2768794588e9/cclib/parser/data.py#L191>`_ are below the attribute entries.
+
+Without these modifications, saving the parsed attribute will appear to work inside the parser, but will be filtered out by ``ccData.setattributes`` before the ``ccData`` instance is returned. (This also means that arbitrary attributes can be set on and used from ``self`` inside a parser and they will be automatically cleaned up.)
+
+Once the above is complete, and the new attribute is parsed and saved inside at least one parser, a new unit test should be added.
+
+Adding a new unit test
+^^^^^^^^^^^^^^^^^^^^^^
+
+Navigate to the relevant subdirectory of the ``tests`` directory. All filenames containing unit tests must start with ``test``. Generally, each file containing an implementation in the cclib source has a matching test file. The exception is parsers, for which there are some program-specific tests, but most relevant are the ``data`` tests that are grouped by attribute.
+
+Examples of how unit tests are written are those for `population methods <https://github.com/cclib/cclib/blob/master/test/method/testpopulation.py>`_ or the `MOLDEN writer <https://github.com/cclib/cclib/blob/master/test/io/testmoldenwriter.py>`_.
+
+* A class whose name ends in ``Test`` is used to hold test methods. Many test files only contain a single test class, but others contain multiple, usually specialized for a specific program or method. An example is having a basic ``PopulationTest`` but more specific ``GaussianBickelhauptTest`` and ``GaussianMPA`` classes for checking the results specific to Bickelhaupt and Mulliken population analyses.
+* Each method in a test class is meant for testing a single logical piece of functionality. Common checks are for whether or not the dimensions of calculated quantities are consistent and for certain chemical or physical invariants to hold, such as the total charge from a population analysis summing to the total formal charge of a system.
+
+Adding a unit test for a new attribute or new methods on an existing data unit test class requires all of the above with the addition of:
+
+* An entry in the `testdata`_ file that matches the output for a program at a specific version with the test class the output should be used with. An output may be used with multiple tests and a test may be used for many different outputs: there are no restrictions.
+* Each method should, after ``self``, take an argument called ``data`` that corresponds to a parsed ``ccData`` instance.
+
+  * ``data`` is a pytest fixture; other test classes may have their own local fixtures defined. All cclib-specific but general fixtures are located in the `pytest runtime configuration`_.
+
+.. _`testdata`: https://github.com/cclib/cclib/blob/master/test/testdata
+.. _`pytest runtime configuration`: https://github.com/cclib/cclib/blob/master/test/conftest.py
+
 Adding a new program version
-----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 There are a few conventions when adding a new supported program version to the unit tests:
 * Two different recent versions are typically used in the unit tests. If there already are two, move the older version(s) the regression suite (see below).
@@ -131,7 +208,7 @@ Regression tests
 
 Regression tests ensure that bugs, once fixed, stay fixed. These are real-life files that at some point broke a cclib parser and are stored in folders like ``data/regression/Jaguar/Jaguar6.4``. The files associated with regression tests are not stored together with the source code as they are often quite large. A separate repository on GitHub, `cclib-data`_, is used to track these files, and we do not distribute them with any releases.
 
-For every bug found in the parsers, there should be a corresponding regression test that tests if this bug stays fixed. The process is automated by `regression.py`_, which runs through all of our test data, both the basic data and regression files, opens them, tries to parse, and runs any relevant regression tests defined for that file. New regression tests are added by creating a function ``testMyFileName_out`` according to the examples at the start of `regression.py`_.
+For every bug found in the parsers, there should be a corresponding regression test that tests if this bug stays fixed. The process is automated by `regression.py`_, which runs through all of our test data, both the basic data and regression files, opens them, tries to parse, and runs any relevant regression tests defined for that file.
 
 Using both the unit and regression tests, the line-by-line `test coverage`_ shows which parts of cclib are touched by at least one test. When adding new features and tests, the GitHub Actions `testing script`_ can be run locally to generate the HTML coverage pages and ensure that the tests exercise the feature code.
 
@@ -141,18 +218,46 @@ Using both the unit and regression tests, the line-by-line `test coverage`_ show
 .. _`test coverage`: coverage/index.html
 .. _`testing script`: https://github.com/cclib/cclib/blob/master/.github/scripts/run_pytest.bash
 
+Adding a new regression test
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A regression test consists of one or more output files and optionally a test function or class.
+
+New regression tests are added by creating entries in `regressionfiles.yaml`_. There are three kinds of tests:
+
+* A regression may be parsed, but specific attributes on the regression are not checked: no test function or class is added.
+* A regression may be parsed and also explicitly tested.
+* A regression may be explicitly tested but not parsed (this is uncommon).
+
+More details, such as where to place regression data, how to control parsing, and what to name the optional tests are available in the `pytest config <https://github.com/cclib/cclib/blob/07590622dbd571c31f8b874697ce024908345d9a/test/conftest.py#L43>`_ and at the top of `regressionfiles.yaml`_.
+
+.. _`regressionfiles.yaml`: https://github.com/cclib/cclib-data/blob/master/regressionfiles.yaml
+
+Code conventions
+================
+
+* All aspects of code formatting are handled automatically by a combination of `isort <https://pycqa.github.io/isort/>`_ and `ruff <https://docs.astral.sh/ruff/>`_.  Formatting is enforced by running `pre-commit <https://pre-commit.com/>`_ on all PRs.  We encourage contributors to also run pre-commit locally.
+  * Non-functional changes to code are ideally in separate PRs.  This makes PRs quicker to review and merge.
+* Print output is controlled via Python's standard logging library and levels.  Any output that might be presentable to the user, from detecting that there may have been a problem with the calculation to general debug-type printing, should use the logger with an appropriate log level.  Be generous with logging rather than erring on the side of caution.  See `this issue <https://github.com/cclib/cclib/issues/237>`_ for historical information.
+* Setting parsed attributes inside a parser's ``extract`` method is fundamentally identical to setting attributes on a basic Python object (``self.myattr = thing``).
+
+Documentation
+~~~~~~~~~~~~~
+
+All new functions should contain a docstring in `NumPy style <https://numpydoc.readthedocs.io/en/latest/format.html>`_.  A docstring should focus on the user-facing interaction and purpose of a function rather than any implementation details.  Additional code comments may also be necessary; `here <http://antirez.com/news/124>`_ are some general guidelines for writing code comments.
+
+Larger features, such as adding a new parser, method, or bridge, may also warrant additional high-level documentation in these pages.  Please reach out to us about this if you have questions, or we may ask for some as part of discussion on an issue or PR.
+
 Websites related to cclib
 =========================
 
 * The official `cclib organization on github`_
-* The `cclib project page on Sourceforge`_ (inactive now)
 * The `cclib page for GitHub Actions`_
 * The `cclib entry on PyPI`_
 * The `cclib entry on libraries.io`_
 * The `cclib entry on Open Hub`_
 
 .. _`cclib organization on github`: https://github.com/cclib
-.. _`cclib project page on Sourceforge`: https://sourceforge.net/projects/cclib/
 .. _`cclib page for GitHub Actions`: https://github.com/cclib/cclib/actions
 .. _`cclib entry on PyPI`: https://pypi.org/project/cclib/
 .. _`cclib entry on libraries.io`: https://libraries.io/pypi/cclib
@@ -170,6 +275,7 @@ Besides input from a number of people `listed in the repository`_, the following
 * `Karol M. Langner`_
 * `Oliver Lee`_
 * `Noel O'Boyle`_ (retired)
+* `Felipe S. S. Schneider`_
 * `Adam Tenderholt`_ (retired)
 * `Shiv Upadhyay`_
 
@@ -182,5 +288,6 @@ Besides input from a number of people `listed in the repository`_, the following
 .. _`Karol M. Langner`: https://github.com/langner
 .. _`Oliver Lee`: https://github.com/oliver-s-lee
 .. _`Noel O'Boyle`: https://github.com/baoilleach
+.. _`Felipe S. S. Schneider`: https://github.com/schneiderfelipe
 .. _`Adam Tenderholt`: https://github.com/ATenderholt
 .. _`Shiv Upadhyay`: https://github.com/shivupa
