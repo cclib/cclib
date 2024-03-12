@@ -163,7 +163,7 @@ In addition to the above unit tests for data, there are also unit tests for each
 Adding a new attribute
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Definitions of attributes (``mocoefs``, ``natom``, etc.) are located inside the `ccdata <https://github.com/cclib/cclib/blob/0aff0e0d4791f88483c90a63a62e2768794588e9/cclib/parser/data.py#L21>`_ class. Use existing attributes for guidance.
+Definitions of attributes (``mocoeffs``, ``natom``, etc.) are located inside the `ccdata <https://github.com/cclib/cclib/blob/0aff0e0d4791f88483c90a63a62e2768794588e9/cclib/parser/data.py#L21>`_ class. Use existing attributes for guidance.
 
 #. Add a line containing the attribute name, a short description of the attribute, the type and shape (if not a scalar quantity) of the attribute, and relevant units to the docstring.
 #. Add an `entry <https://github.com/cclib/cclib/blob/0aff0e0d4791f88483c90a63a62e2768794588e9/cclib/parser/data.py#L108>`_ for the code representation of an attribute.
