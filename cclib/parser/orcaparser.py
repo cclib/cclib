@@ -7,7 +7,6 @@
 
 """Parser for ORCA output files"""
 
-
 import datetime
 import re
 from itertools import zip_longest

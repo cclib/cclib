@@ -7,7 +7,6 @@
 
 """Test NMR logfiles in cclib."""
 
-
 import numpy
 import pytest
 

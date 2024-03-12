@@ -6,6 +6,7 @@
 # the terms of the BSD 3-Clause License.
 
 """Calculation of Bader's QTAIM charges based on data parsed by cclib."""
+
 import logging
 
 from cclib.method.calculationmethod import Method

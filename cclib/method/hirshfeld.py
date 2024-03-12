@@ -6,6 +6,7 @@
 # the terms of the BSD 3-Clause License.
 
 """Calculation of Hirshfeld charges based on data parsed by cclib."""
+
 import copy
 import logging
 import math

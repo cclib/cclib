@@ -7,7 +7,6 @@
 
 """Parser for GAMESS(US) .dat output files"""
 
-
 import re
 
 from cclib.parser import logfileparser, utils

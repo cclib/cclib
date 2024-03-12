@@ -7,7 +7,6 @@
 
 """Parser for Gaussian output files"""
 
-
 import datetime
 import re
 
@@ -210,9 +209,9 @@ class Gaussian(logfileparser.Logfile):
             platform = "-".join(platform_full_version_tokens[:-1])
             year_suffix = full_version[1:3]
             revision = full_version[6:]
-            self.metadata[
-                "package_version"
-            ] = f"{self.YEAR_SUFFIXES_TO_YEARS[year_suffix]}+{revision}"
+            self.metadata["package_version"] = (
+                f"{self.YEAR_SUFFIXES_TO_YEARS[year_suffix]}+{revision}"
+            )
             self.metadata["platform"] = platform
 
         if line.strip().startswith("Link1:  Proceeding to internal job step number"):
