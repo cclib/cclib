@@ -48,7 +48,6 @@ bridges = [
     "biopython",
     "openbabel",
     "pandas",
-    "pyquante2 @ git+https://github.com/cclib/pyquante2.git@github-actions-ci",
     "pyscf",
     "qc-iodata>=1.0.0a2",
 ]
