@@ -18,10 +18,29 @@ cclib is hosted by the fantastic people at `GitHub`_ in a `git`_ repository. You
 
     git clone https://github.com/cclib/cclib.git
 
+If you would like to contribute fixes, it is more likely that you want to fork the repository (see guidelines below) and clone that.
+
 .. _`GitHub`: https://github.com
 .. _`git`: https://git-scm.com
 .. _`zipped archive`: https://github.com/cclib/cclib/archive/master.zip
 .. _`releases`: https://github.com/cclib/cclib/releases
+
+Installation and running tests
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Once you have a copy of cclib,
+
+#. Create a virtual environment using a either `venv`_ or `conda`_ then activate it
+#. Install cclib in development mode with all dependencies: ``cd /location/of/cclib; python -m pip install -e '.[dev]'``
+#. To run unit tests, ``python -m pytest``
+#. To run regression tests, ``python -m pytest test/regression.py`` (requires `cclib-data download`_)
+
+You may not be interested in running all tests because they take too much time (some calculation methods), require a dependency not immediately available (primarily Psi4), or simply aren't relevant for the code you'll touch. Call `pytest`_ with the ``-k`` flag to select a subset of tests. Using the ``--co`` flag will show the names of matching tests without actually running them.
+
+.. _`venv`: https://docs.python.org/3/library/venv.html
+.. _`conda`: https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html#creating-environments
+.. _`cclib-data download`: https://github.com/cclib/cclib/blob/07590622dbd571c31f8b874697ce024908345d9a/data/regression_download.sh
+.. _`pytest`: https://docs.pytest.org/en/latest/how-to/usage.html
 
 Guidelines
 ~~~~~~~~~~
@@ -146,9 +165,9 @@ Adding a new attribute
 
 Definitions of attributes (``mocoefs``, ``natom``, etc.) are located inside the `ccdata <https://github.com/cclib/cclib/blob/0aff0e0d4791f88483c90a63a62e2768794588e9/cclib/parser/data.py#L21>`_ class. Use existing attributes for guidance.
 
-1. Add a line containing the attribute name, a short description of the attribute, the type and shape (if not a scalar quantity) of the attribute, and relevant units to the docstring.
-2. Add an `entry <https://github.com/cclib/cclib/blob/0aff0e0d4791f88483c90a63a62e2768794588e9/cclib/parser/data.py#L108>`_ for the code representation of an attribute.
-3. Some attributes require additional processing into certain container or data types; `available processing rules and their descriptions <https://github.com/cclib/cclib/blob/0aff0e0d4791f88483c90a63a62e2768794588e9/cclib/parser/data.py#L191>`_ are below the attribute entries.
+#. Add a line containing the attribute name, a short description of the attribute, the type and shape (if not a scalar quantity) of the attribute, and relevant units to the docstring.
+#. Add an `entry <https://github.com/cclib/cclib/blob/0aff0e0d4791f88483c90a63a62e2768794588e9/cclib/parser/data.py#L108>`_ for the code representation of an attribute.
+#. Some attributes require additional processing into certain container or data types; `available processing rules and their descriptions <https://github.com/cclib/cclib/blob/0aff0e0d4791f88483c90a63a62e2768794588e9/cclib/parser/data.py#L191>`_ are below the attribute entries.
 
 Without these modifications, saving the parsed attribute will appear to work inside the parser, but will be filtered out by ``ccData.setattributes`` before the ``ccData`` instance is returned. (This also means that arbitrary attributes can be set on and used from ``self`` inside a parser and they will be automatically cleaned up.)
 
