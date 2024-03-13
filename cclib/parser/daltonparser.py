@@ -7,7 +7,6 @@
 
 """Parser for DALTON output files"""
 
-
 import re
 
 from cclib.parser import logfileparser, utils

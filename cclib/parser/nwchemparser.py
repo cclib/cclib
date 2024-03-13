@@ -7,7 +7,6 @@
 
 """Parser for NWChem output files"""
 
-
 import itertools
 import re
 
@@ -54,9 +53,9 @@ class NWChem(logfileparser.Logfile):
             if "nwchem revision" in line:
                 revision = line.split()[3].split("-")[-1]
                 if revision != "N/A":
-                    self.metadata[
-                        "package_version"
-                    ] = f"{self.metadata['package_version']}+{revision}"
+                    self.metadata["package_version"] = (
+                        f"{self.metadata['package_version']}+{revision}"
+                    )
 
         # This is printed in the input module, so should always be the first coordinates,
         # and contains some basic information we want to parse as well. However, this is not

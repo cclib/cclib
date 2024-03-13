@@ -739,12 +739,9 @@ def testnoparseGAMESS_WinGAMESS_H2O_def2SVPD_triplet_2019_06_30_R1_out(filename)
     """Check if the molden writer can handle an unrestricted case"""
     data = ccread(__filedir__ / filename)
     writer = moldenwriter.MOLDEN(data)
-    (
-        mosyms,
-        moenergies,
-        mooccs,
-        mocoeffs,
-    ) = writer._syms_energies_occs_coeffs_from_ccdata_for_moldenwriter()
+    (mosyms, moenergies, mooccs, mocoeffs) = (
+        writer._syms_energies_occs_coeffs_from_ccdata_for_moldenwriter()
+    )
     molden_lines = writer._mo_from_ccdata(mosyms, moenergies, mooccs, mocoeffs)
     # Check size of Atoms section.
     assert len(molden_lines) == (data.nbasis + 4) * (data.nmo * 2)

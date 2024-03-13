@@ -7,7 +7,6 @@
 
 """Test the CM5 method in cclib"""
 
-
 from cclib.method import CM5
 from cclib.parser import QChem
 

@@ -7,7 +7,6 @@
 
 """Parser for Formatted Checkpoint files"""
 
-
 from cclib.parser import logfileparser, utils
 
 import numpy

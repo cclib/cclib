@@ -6,6 +6,7 @@
 # the terms of the BSD 3-Clause License.
 
 """Calculation of DDEC charges based on data parsed by cclib."""
+
 import copy
 import logging
 import math
@@ -110,11 +111,9 @@ class DDEC6(Stockholder):
         # Carry out step 1 of DDEC6 algorithm [Determining reference charge value]
         # Refer to equations 49-57 in doi: 10.1039/c6ra04656h
         self.logger.info("Creating first reference charges. (Step 1/7)")
-        (
-            reference_charges,
-            localized_charges,
-            stockholder_charges,
-        ) = self.calculate_reference_charges()
+        (reference_charges, localized_charges, stockholder_charges) = (
+            self.calculate_reference_charges()
+        )
         self.reference_charges = [reference_charges]
         self._localized_charges = [localized_charges]
         self._stockholder_charges = [stockholder_charges]

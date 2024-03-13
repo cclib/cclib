@@ -469,9 +469,9 @@ cannot be determined. Rerun without `$molecule read`."""
                 and hasattr(self, "parsed_svn_revision")
                 and not self.parsed_svn_revision
             ):
-                self.metadata[
-                    "package_version"
-                ] = f"{self.metadata['package_version']}dev+{svn_branch}-{svn_revision}"
+                self.metadata["package_version"] = (
+                    f"{self.metadata['package_version']}dev+{svn_branch}-{svn_revision}"
+                )
                 parsed_version = parse_version(self.metadata["package_version"])
                 assert isinstance(parsed_version, Version)
                 self.set_attribute("package_version", parsed_version)
@@ -1329,19 +1329,15 @@ cannot be determined. Rerun without `$molecule read`."""
 
                 self.skip_line(inputfile, "dashes")
                 line = next(inputfile)
-                (
-                    energies_alpha,
-                    symbols_alpha,
-                    homo_alpha,
-                ) = self.parse_orbital_energies_and_symmetries(inputfile)
+                (energies_alpha, symbols_alpha, homo_alpha) = (
+                    self.parse_orbital_energies_and_symmetries(inputfile)
+                )
                 # Only look at the second block if doing an unrestricted calculation.
                 # This might be a problem for ROHF/ROKS.
                 if self.unrestricted:
-                    (
-                        energies_beta,
-                        symbols_beta,
-                        homo_beta,
-                    ) = self.parse_orbital_energies_and_symmetries(inputfile)
+                    (energies_beta, symbols_beta, homo_beta) = (
+                        self.parse_orbital_energies_and_symmetries(inputfile)
+                    )
 
                 # For now, only keep the last set of MO energies, even though it is
                 # printed at every step of geometry optimizations and fragment jobs.
