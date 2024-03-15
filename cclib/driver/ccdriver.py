@@ -448,7 +448,7 @@ class ccDriver:
         # TODO pass graph here
         self._ccCollection = ccCollection(self._combinator, self._tree)
         self._fileHandler = source
-        self.identified_program = None
+        self._identified_program = []
 
     @property
     def cccollection(self):
@@ -466,6 +466,22 @@ class ccDriver:
     def tree(self):
         return self._tree
 
+    @property
+    def identified_program(self):
+        if not self._identified_program:
+            return None
+        else:
+            return self._identified_program[-1]
+
+    @identified_program.setter
+    def identified_program(self, in_prog):
+        if in_prog is None:
+            if self._identified_program:
+                self._identified_program.pop()
+        else:
+            self._identified_program.append(in_prog)
+        print(self._identified_program)
+
     def process_combinator(self):
         """Process the combinator and populate the ccData object in the ccCollection"""
         self.identified_program = None
@@ -482,6 +498,10 @@ class ccDriver:
                     else:
                         # if a program is within a program this might mean things are ok but we proceed to a child node.. think about how to handle this?
                         current_idx = self._tree.get_next_idx()
+                        self.identified_program = program
+                        print(self.identified_program)
+                        if do_break:
+                            break
             for program, phrases, do_break in triggers_off:
                 if all([line.lower().find(p.lower()) >= 0 for p in phrases]):
                     self.identified_program = None
@@ -498,7 +518,8 @@ class ccDriver:
                     self.identified_program,
                     self._ccCollection._parsed_data[current_idx],
                 )
-                print(parsed_data)
+                if parsed_data is not None:
+                    print(parsed_data)
                 if parsed_data is not None:
                     parsed_attribute_name = subparser.__name__
                     self._ccCollection._parsed_data[current_idx].__setattr__(
