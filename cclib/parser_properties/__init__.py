@@ -4,6 +4,7 @@
 # the terms of the BSD 3-Clause License.
 from cclib.parser_properties import utils
 from cclib.parser_properties.atombasis import atombasis
+from cclib.parser_properties.atomcharges import atomcharges
 from cclib.parser_properties.atomcoords import atomcoords
 from cclib.parser_properties.atommasses import atommasses
 from cclib.parser_properties.atomnos import atomnos

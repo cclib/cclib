@@ -19,10 +19,12 @@ def orca_parse_charge_section(file_handler, chargestype):
       what type of charge we're dealing with, must be one of
       'mulliken', 'lowdin', 'chelpg' or 'hirshfeld'
     """
+    atomcharges = dict()
+    atomspins = dict()
     line = file_handler.last_line
     has_spins = "AND SPIN POPULATIONS" in line
 
-    self.skip_line(inputfile, "dashes")
+    file_handler.skip_lines(["dashes"], virtual=True)
 
     # depending on chargestype, decide when to stop parsing lines
     # start, stop - indices for slicing lines and grabbing values
@@ -39,9 +41,9 @@ def orca_parse_charge_section(file_handler, chargestype):
     elif chargestype == "hirshfeld":
         should_stop = lambda x: not bool(x.strip())
         start, stop = 9, 18
-        self.skip_lines(
-            inputfile,
+        file_handler.skip_lines(
             ["d", "b", "Total integrated alpha density", "Total integrated beta density", "header"],
+            virtual=True,
         )
     else:
         raise RuntimeError(f"unknown chargestype: {chargestype}")
@@ -49,18 +51,19 @@ def orca_parse_charge_section(file_handler, chargestype):
     charges = []
     spins = []
 
-    line = next(inputfile)
+    line = file_handler.virtual_next()
     while not should_stop(line):
         # Don't add point charges or embedding potentials.
         if "Q :" not in line:
             charges.append(float(line[start:stop]))
             if has_spins:
                 spins.append(float(line[stop:]))
-        line = next(inputfile)
+        line = file_handler.virtual_next()
 
-    self.atomcharges[chargestype] = charges
+    atomcharges[chargestype] = charges
     if has_spins:
-        self.atomspins[chargestype] = spins
+        atomspins[chargestype] = spins
+    return atomcharges, atomspins
 
 
 class atomcharges(base_parser):
@@ -68,40 +71,85 @@ class atomcharges(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["orca", "NBO"]
+    known_codes = ["ORCA", "NBO"]
 
     @staticmethod
-    def orca(file_handler, ccdata) -> list | None:
+    def ORCA(file_handler, ccdata) -> list | None:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
-        constructed_data = None
-        if line.strip() == "Isotopes and Nuclear Properties:":
-            constructed_data = []
-            line = file_handler.virtual_next()
-            while line[1:16] != "Leave Link  101":
-                if line[1:8] == "AtmWgt=":
-                    constructed_data.extend(list(map(float, line.split()[1:])))
-                line = file_handler.virtual_next()
-            return constructed_data
-        return None
+        constructed_charge_data = None
+        constructed_spin_data = None
+
+        # ORCA will print atomic charges along with the spin populations,
+        #   so care must be taken about choosing the proper column.
+        # Population analyses are performed usually only at the end
+        #   of a geometry optimization or other run, so we want to
+        #   leave just the final atom charges.
+        # Here is an example for Mulliken charges:
+        # --------------------------------------------
+        # MULLIKEN ATOMIC CHARGES AND SPIN POPULATIONS
+        # --------------------------------------------
+        #    0 H :    0.126447    0.002622
+        #    1 C :   -0.613018   -0.029484
+        #    2 H :    0.189146    0.015452
+        #    3 H :    0.320041    0.037434
+        # ...
+        # Sum of atomic charges         :   -0.0000000
+        # Sum of atomic spin populations:    1.0000000
+        if line[:23] == "MULLIKEN ATOMIC CHARGES":
+            constructed_charge_data, constructed_spin_data = orca_parse_charge_section(
+                file_handler, "mulliken"
+            )
+        # Things are the same for Lowdin populations, except that the sums
+        #   are not printed (there is a blank line at the end).
+        if line[:22] == "LOEWDIN ATOMIC CHARGES":
+            constructed_charge_data, constructed_spin_data = orca_parse_charge_section(
+                file_handler, "lowdin"
+            )
+        # ------------------
+        # HIRSHFELD ANALYSIS
+        # ------------------
+        #
+        # Total integrated alpha density =    142.999988722
+        # Total integrated beta density  =    142.999988722
+        #
+        #   ATOM     CHARGE      SPIN
+        #    0 H    0.157924    0.000000
+        #    1 O   -0.209542    0.000000
+        #    2 C    0.030659    0.000000
+        # ...
+        #   TOTAL  -0.999977    0.000000
+        if line[:18] == "HIRSHFELD ANALYSIS":
+            constructed_charge_data, constructed_spin_data = orca_parse_charge_section(
+                file_handler, "hirshfeld"
+            )
+        # CHELPG Charges
+        # --------------------------------
+        #  0   C   :       0.363939
+        #  1   H   :       0.025695
+        # ...
+        # --------------------------------
+        # Total charge:    -0.000000
+        # --------------------------------
+        if line.startswith("CHELPG Charges"):
+            constructed_charge_data, constructed_spin_data = orca_parse_charge_section(
+                file_handler, "chelpg"
+            )
+        # TODO handle atomspins
+        return constructed_charge_data
 
     @staticmethod
     def NBO(file_handler, ccdata) -> list | None:
+        atomcharges = dict()
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         charges = None
         line = file_handler.last_line
         if "  Atom No    Charge" in line:
-            if not hasattr(self, "atomcharges"):
-                self.atomcharges = dict()
-
-            line = file_handler.virtual_next()
-            line = file_handler.virtual_next()
-
             parsed_charges = []
-
+            line = file_handler.virtual_next()
+            line = file_handler.virtual_next()
             while "==============" not in line:
                 population_analysis = line.split()
-
                 atom = population_analysis[0]
                 no = int(population_analysis[1])
                 natural_charge = float(population_analysis[2])
@@ -111,10 +159,9 @@ class atomcharges(base_parser):
                 total = float(population_analysis[6])
                 parsed_charges.append(natural_charge)
                 line = file_handler.virtual_next()
-
-            self.atomcharges["nbo"] = parsed_charges
-        if parsed_charges != []:
-            charges = parsed_charges
+            atomcharges["nbo"] = parsed_charges
+        if atomcharges != dict():
+            charges = atomcharges
         return charges
 
     @staticmethod
