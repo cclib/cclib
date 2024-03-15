@@ -79,7 +79,7 @@ triggers_off = [
     # todo     (MOPAC,     ["MOPAC20"],                                        True),
     # todo     (NBO,       ["N A T U R A L   A T O M I C   O R B I T A L   A N D"],                  True),
     # todo     (NWChem,    ["Northwest Computational Chemistry Package"],      True),
-    # todo     (ORCA,      ["O   R   C   A"],                                  True),
+    ("ORCA", ["****ORCA TERMINATED NORMALLY****"], True),
     # todo     (Psi3,      ["PSI3: An Open-Source Ab Initio Electronic Structure Package"],          True),
     ("psi4", ["Psi4 exiting successfully. Buy a developer a beer!"], True),
     # todo     (QChem,     ["A Quantum Leap Into The Future Of Chemistry"],    True),
