@@ -12,7 +12,7 @@
 # they can use:
 #         from cclib.parser import Gaussian
 
-from cclib.parser.data import ccData
+# from cclib.parser.data import ccData
 
 # This allows users to type:
 #         from cclib.parser import ccopen

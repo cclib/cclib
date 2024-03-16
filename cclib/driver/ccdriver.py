@@ -480,7 +480,6 @@ class ccDriver:
                 self._identified_program.pop()
         else:
             self._identified_program.append(in_prog)
-        print(self._identified_program)
 
     def process_combinator(self):
         """Process the combinator and populate the ccData object in the ccCollection"""
@@ -499,7 +498,6 @@ class ccDriver:
                         # if a program is within a program this might mean things are ok but we proceed to a child node.. think about how to handle this?
                         current_idx = self._tree.get_next_idx()
                         self.identified_program = program
-                        print(self.identified_program)
                         if do_break:
                             break
             for program, phrases, do_break in triggers_off:

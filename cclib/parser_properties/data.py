@@ -104,7 +104,7 @@ class ccData:
     # 'TBD' - To Be Decided are the key names of attributes which haven't been included in the cjson format
 
     # The name of all attributes can be generated from the dictionary above.
-    _attrlist = ["scfenergies"]  # sorted(_properties.keys())
+    _attrlist = sorted(_properties.keys())
 
     # Arrays are double precision by default, but these will be integer arrays.
     _intarrays = ["atomnos", "coreelectrons", "homos", "optstatus"]
@@ -226,17 +226,20 @@ class ccData:
                       means they are not specified in self._attrlist
         """
 
+        print("SHIV")
         if not isinstance(attributes, dict):
             raise TypeError("attributes must be in a dictionary")
 
         valid = [a for a in attributes if a in self._attrlist]
         invalid = [a for a in attributes if a not in self._attrlist]
+        print(self._attrlist)
+        print(valid)
 
         for attr in valid:
             setattr(self, attr, attributes[attr])
 
-        self.arrayify()
-        self.typecheck()
+        # self.arrayify()
+        # self.typecheck()
 
         return invalid
 

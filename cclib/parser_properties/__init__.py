@@ -10,6 +10,7 @@ from cclib.parser_properties.atommasses import atommasses
 from cclib.parser_properties.atomnos import atomnos
 from cclib.parser_properties.base_parser import base_parser
 from cclib.parser_properties.charge import charge
+from cclib.parser_properties.data import ccData
 from cclib.parser_properties.gbasis import gbasis
 from cclib.parser_properties.mocoeffs import mocoeffs
 from cclib.parser_properties.mosyms import mosyms
