@@ -13,6 +13,7 @@ class atommasses(base_parser):
     Docstring? Units?
     """
 
+    _attribute_name = "atommasses"
     known_codes = ["gaussian"]
 
     @staticmethod
@@ -27,7 +28,7 @@ class atommasses(base_parser):
                 if line[1:8] == "AtmWgt=":
                     constructed_data.extend(list(map(float, line.split()[1:])))
                 line = file_handler.virtual_next()
-            return constructed_data
+            return {_attribute_name: constructed_data}
         return None
 
     @staticmethod

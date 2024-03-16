@@ -136,7 +136,20 @@ class atomcharges(base_parser):
                 file_handler, "chelpg"
             )
         # TODO handle atomspins
-        return constructed_charge_data
+        constructed_data = dict()
+        if constructed_charge_data:
+            if ccdata.atomcharges:
+                constructed_data["atomcharges"] = {**ccdata.atomcharges, **constructed_charge_data}
+            else:
+                constructed_data["atomcharges"] = {**constructed_charge_data}
+        if constructed_spin_data:
+            if ccdata.atomspins:
+                constructed_data["atomspins"] = {**ccdata.atomspins, **constructed_spin_data}
+            else:
+                constructed_data["atomspins"] = {**constructed_spin_data}
+        if constructed_data:
+            return constructed_data
+        return None
 
     @staticmethod
     def NBO(file_handler, ccdata) -> list | None:
@@ -160,9 +173,14 @@ class atomcharges(base_parser):
                 parsed_charges.append(natural_charge)
                 line = file_handler.virtual_next()
             atomcharges["nbo"] = parsed_charges
+        constructed_data = dict()
         if atomcharges != dict():
-            charges = atomcharges
-        return charges
+            if ccdata.atomcharges:
+                constructed_data["atomcharges"] = {**ccdata.atomcharges, **atomcharges}
+            else:
+                constructed_data["atomcharges"] = {**atomcharges}
+            return constructed_data
+        return None
 
     @staticmethod
     def parse(file_handler, program: str, ccdata) -> list | None:

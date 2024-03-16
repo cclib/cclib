@@ -13,10 +13,11 @@ class mocoeffs(base_parser):
     Docstring? Units?
     """
 
+    _attribute_name = "mocoeffs"
     known_codes = ["psi4"]
 
     @staticmethod
-    def psi4(file_handler, ccdata) -> list | None:
+    def psi4(file_handler, ccdata) -> dict | None:
         line = file_handler.last_line
         if "Molecular Orbitals" in line:
             file_handler.skip_lines(["b"], virtual=True)
@@ -53,11 +54,11 @@ class mocoeffs(base_parser):
                 file_handler.skip_lines(["b", "b"], virtual=True)
                 indices = file_handler.virtual_next()
 
-            if getattr(ccdata, "mocoeffs") != None:
+            if hasattr(ccdata, "mocoeffs") and getattr(ccdata, "mocoeffs") != None:
                 extended_mocoeffs = [ccdata.mocoeffs, mocoeffs]
-                return extended_mocoeffs
+                return {_attribute_name: extended_mocoeffs}
             else:
-                return mocoeffs
+                return {_attribute_name: mocoeffs}
         return None
 
     @staticmethod

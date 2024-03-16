@@ -13,10 +13,11 @@ class atomnos(base_parser):
     Docstring? Units?
     """
 
+    _attribute_name = "atomnos"
     known_codes = ["gaussian", "psi4"]
 
     @staticmethod
-    def gaussian(file_handler, ccdata) -> list | None:
+    def gaussian(file_handler, ccdata) -> dict | None:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
         if line.strip() == "Standard orientation:":
@@ -26,11 +27,11 @@ class atomnos(base_parser):
                 broken = line.split()
                 constructed_data.append(int(broken[1]))
                 line = file_handler.virtual_next()
-            return constructed_data
+            return {_attribute_name: constructed_data}
         return None
 
     @staticmethod
-    def psi4(file_handler, ccdata) -> list | None:
+    def psi4(file_handler, ccdata) -> dict | None:
         table = utils.PeriodicTable()
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
@@ -44,11 +45,11 @@ class atomnos(base_parser):
                     element = element[0] + element[1:].lower()
                 constructed_data.append(table.number[element])
                 line = file_handler.virtual_next()
-            return constructed_data
+            return {self.__name__: constructed_data}
         return None
 
     @staticmethod
-    def parse(file_handler, program: str, ccdata) -> list | None:
+    def parse(file_handler, program: str, ccdata) -> dict | None:
         constructed_data = None
         if program in atomnos.known_codes:
             file_handler.virtual_set()

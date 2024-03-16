@@ -13,10 +13,11 @@ class gbasis(base_parser):
     Docstring? Units?
     """
 
+    _attribute_name = "gbasis"
     known_codes = ["psi4"]
 
     @staticmethod
-    def psi4(file_handler, ccdata) -> list | None:
+    def psi4(file_handler, ccdata) -> dict | None:
         dependency_list = ["natom", "atomnos"]
         line = file_handler.last_line
         if line.strip() == "==> AO Basis Functions <==":
@@ -104,11 +105,12 @@ class gbasis(base_parser):
                 while len(gbasis) < ccdata.natom:
                     gbasis.append(get_symmetry_atom_basis(gbasis))
 
-                return gbasis
+                constructed_data = {_attribute_name: gbasis}
+                return constructed_data
         return None
 
     @staticmethod
-    def parse(file_handler, program: str, ccdata) -> list | None:
+    def parse(file_handler, program: str, ccdata) -> dict | None:
         constructed_data = None
         if program in gbasis.known_codes:
             file_handler.virtual_set()

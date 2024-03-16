@@ -226,14 +226,11 @@ class ccData:
                       means they are not specified in self._attrlist
         """
 
-        print("SHIV")
         if not isinstance(attributes, dict):
             raise TypeError("attributes must be in a dictionary")
 
         valid = [a for a in attributes if a in self._attrlist]
         invalid = [a for a in attributes if a not in self._attrlist]
-        print(self._attrlist)
-        print(valid)
 
         for attr in valid:
             setattr(self, attr, attributes[attr])
