@@ -32,7 +32,7 @@ class charge(base_parser):
         line = file_handler.last_line
         if line[2:16].lower() == "charge       =":
             constructed_charge = int(line.split()[-1])
-            constructed_data = {self.__name__: constructed_charge}
+            constructed_data = {_attribute_name: constructed_charge}
             return constructed_data
         return None
 
