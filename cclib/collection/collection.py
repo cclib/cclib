@@ -35,3 +35,7 @@ class ccCollection:
         # ]
         # if self._combinator != None:
         #    assert len(self._combinator.job_list) == 1
+
+    @property
+    def parsed_data(self):
+        return self._parsed_data

@@ -514,12 +514,8 @@ class ccDriver:
                 parsed_data = subparser.parse(
                     self._fileHandler,
                     self.identified_program,
-                    self._ccCollection._parsed_data[current_idx],
+                    self._ccCollection.parsed_data[current_idx],
                 )
                 if parsed_data is not None:
-                    print(parsed_data)
-                if parsed_data is not None:
-                    parsed_attribute_name = subparser.__name__
-                    self._ccCollection._parsed_data[current_idx].__setattr__(
-                        parsed_attribute_name, parsed_data
-                    )
+                    self._ccCollection.parsed_data[current_idx].setattributes(parsed_data)
+        return self._ccCollection
