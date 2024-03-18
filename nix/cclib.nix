@@ -19,7 +19,7 @@
 
 buildPythonPackage rec {
   pname = "cclib";
-  version = "1.8";
+  version = "1.8.1";
 
   src = lib.cleanSource ../.;
 
