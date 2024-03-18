@@ -46,17 +46,17 @@ class Molcas(logfileparser.Logfile):
             # distinction between development and release builds in their
             # version cycle.
             if "tag" in self.metadata and "revision" in self.metadata:
-                self.metadata[
-                    "package_version"
-                ] = f"{self.metadata['package_version']}+{self.metadata['tag']}.{self.metadata['revision']}"
+                self.metadata["package_version"] = (
+                    f"{self.metadata['package_version']}+{self.metadata['tag']}.{self.metadata['revision']}"
+                )
             elif "tag" in self.metadata:
-                self.metadata[
-                    "package_version"
-                ] = f"{self.metadata['package_version']}+{self.metadata['tag']}"
+                self.metadata["package_version"] = (
+                    f"{self.metadata['package_version']}+{self.metadata['tag']}"
+                )
             elif "revision" in self.metadata:
-                self.metadata[
-                    "package_version"
-                ] = f"{self.metadata['package_version']}+{self.metadata['revision']}"
+                self.metadata["package_version"] = (
+                    f"{self.metadata['package_version']}+{self.metadata['revision']}"
+                )
 
     def before_parsing(self):
         # Compile the regex for extracting the element symbol from the

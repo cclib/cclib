@@ -5,7 +5,6 @@
 
 """Parser for Molpro output files"""
 
-
 import itertools
 
 from cclib.parser import logfileparser, utils

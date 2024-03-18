@@ -13,3 +13,4 @@ timer.dat
 venv
 .idea
 cclib/_version.py
+.direnv

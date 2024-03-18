@@ -7,7 +7,6 @@
 
 """Script for loading data from computational chemistry files."""
 
-
 import difflib
 import glob
 import logging

@@ -1084,14 +1084,9 @@ class Psi4(logfileparser.Logfile):
             while line.strip().startswith("Vibration"):
                 n = len(line.split()) - 1
                 n_modes += n
-                (
-                    vibfreqs_,
-                    vibsyms_,
-                    vibdisps_,
-                    vibrmasses_,
-                    vibfconsts_,
-                    vibirs_,
-                ) = self.parse_vibration(n, inputfile)
+                (vibfreqs_, vibsyms_, vibdisps_, vibrmasses_, vibfconsts_, vibirs_) = (
+                    self.parse_vibration(n, inputfile)
+                )
                 vibfreqs.extend(vibfreqs_)
                 vibsyms.extend(vibsyms_)
                 vibdisps.extend(vibdisps_)

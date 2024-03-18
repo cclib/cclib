@@ -77,12 +77,9 @@ class MOLDENTest:
         for i in range(data.mult):
             size_mo_ccdata += len(data.moenergies[i]) * (len(data.mocoeffs[i][0]) + extra)
         # Filter blank lines.
-        (
-            mosyms,
-            moenergies,
-            mooccs,
-            mocoeffs,
-        ) = writer._syms_energies_occs_coeffs_from_ccdata_for_moldenwriter()
+        (mosyms, moenergies, mooccs, mocoeffs) = (
+            writer._syms_energies_occs_coeffs_from_ccdata_for_moldenwriter()
+        )
         size_mo_writer = len(
             list(filter(None, writer._mo_from_ccdata(mosyms, moenergies, mooccs, mocoeffs)))
         )
@@ -98,12 +95,9 @@ class MOLDENTest:
         extra = 4
         size_no_ccdata += len(data.nooccnos) * (len(data.nocoeffs[0]) + extra)
         # Filter blank lines.
-        (
-            nosyms,
-            noenergies,
-            nooccs,
-            nocoeffs,
-        ) = writer._syms_energies_occs_coeffs_from_ccdata_for_moldenwriter()
+        (nosyms, noenergies, nooccs, nocoeffs) = (
+            writer._syms_energies_occs_coeffs_from_ccdata_for_moldenwriter()
+        )
         size_no_writer = len(
             list(filter(None, writer._mo_from_ccdata(nosyms, noenergies, nooccs, nocoeffs)))
         )

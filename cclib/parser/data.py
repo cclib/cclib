@@ -69,7 +69,7 @@ class ccData:
         nooccnos -- natural orbital occupation numbers (array[1])
         nsocoeffs -- natural spin orbital coefficients (list of array[2])
         nsooccnos -- natural spin orbital occupation numbers (list of array[1])
-        optdone -- flags whether an optimization has converged (Boolean)
+        optdone -- flags whether an optimization has converged (List)
         optstatus -- optimization status for each set of atomic coordinates (array[1])
         polarizabilities -- (dipole) polarizabilities, static or dynamic (list of arrays[2])
         pressure -- pressure used for Thermochemistry (float, atm)

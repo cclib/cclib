@@ -4,14 +4,11 @@
 # the terms of the BSD 3-Clause License.
 
 """Calculation of Bader's QTAIM charges based on data parsed by cclib."""
-import copy
+
 import logging
-import math
-import random
 
 from cclib.method.calculationmethod import Method
 from cclib.method.volume import electrondensity_spin
-from cclib.parser.utils import convertor
 
 import numpy
 

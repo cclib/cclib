@@ -5,7 +5,6 @@
 
 """Parser for Gaussian output files"""
 
-
 import datetime
 import re
 
@@ -208,9 +207,9 @@ class Gaussian(logfileparser.Logfile):
             platform = "-".join(platform_full_version_tokens[:-1])
             year_suffix = full_version[1:3]
             revision = full_version[6:]
-            self.metadata[
-                "package_version"
-            ] = f"{self.YEAR_SUFFIXES_TO_YEARS[year_suffix]}+{revision}"
+            self.metadata["package_version"] = (
+                f"{self.YEAR_SUFFIXES_TO_YEARS[year_suffix]}+{revision}"
+            )
             self.metadata["platform"] = platform
 
         if line.strip().startswith("Link1:  Proceeding to internal job step number"):
@@ -222,12 +221,16 @@ class Gaussian(logfileparser.Logfile):
 
         elif "Leave Link    1" in line and "MaxMem=" in line and "num_cpu" in self.metadata:
             # Leave Link    1 at Wed Apr  4 10:49:19 2018, MaxMem=   805306368 cpu:               0.3 elap:               0.0
-            # Gaussian helpfully prints the total 'available' memory for us. There are, however a few caveates here:
+            # Gaussian helpfully prints the total 'available' memory for us. There are, however a few caveats here:
             # 1) This memory (in bytes) is per CPU
             # 2) The total memory here (x num_cpu) will not equal the amount requested in %mem because Gaussian (probably erroneously)
             #    interprets GB as gibibytes (1024 x 1024 x 1024 bytes) rather than gigabytes. This has the unfortunate consequence of
             #    Gaussian assigning more memory than you probably expected.
-            memory_per_cpu = int(line[line.index("MaxMem=") :].split()[1])
+            #
+            # MaxMem can appear with or without whitespace:
+            # MaxMem=  805306368
+            # MaxMem=174483046400
+            memory_per_cpu = int(re.search(r"MaxMem=\s*(\d+)", line).group(1))
             self.metadata["memory_used"] = memory_per_cpu * self.metadata["num_cpu"]
 
         elif line[1:6].lower() == "%mem=":

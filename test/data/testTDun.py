@@ -5,7 +5,6 @@
 
 """Test single point, unrestricted time-dependent logfiles in cclib"""
 
-
 from skip import skipForLogfile, skipForParser
 
 

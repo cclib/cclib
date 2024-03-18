@@ -7,6 +7,7 @@
 
 import copy
 
+from cclib.parser.logfilewrapper import FileWrapper
 from cclib.parser.utils import convertor, find_package
 
 import numpy
@@ -409,7 +410,7 @@ def read_from_cube(filepath):
         vol -- Volume object filled with data from cube file
     """
 
-    with open(filepath) as f:
+    with FileWrapper(filepath) as f:
         lines = f.readlines()
 
         # First two lines are comments

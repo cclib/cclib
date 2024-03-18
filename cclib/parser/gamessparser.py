@@ -5,7 +5,6 @@
 
 """Parser for GAMESS(US) output files"""
 
-
 import re
 
 from cclib.parser import logfileparser, utils

@@ -5,7 +5,6 @@
 
 """Parser for ORCA output files"""
 
-
 import datetime
 import re
 from itertools import zip_longest
@@ -52,6 +51,9 @@ class ORCA(logfileparser.Logfile):
 
         # The excited state multiplicity for post-HF excited states
         self.mdci_et_mult = None
+
+        # needs to be here so regression tests pass
+        self.reference = [0.0, 0.0, 0.0]
 
     def after_parsing(self):
         # ORCA doesn't add the dispersion energy to the "Total energy" (which
@@ -2163,10 +2165,13 @@ Dispersion correction           -0.016199959
         if line.startswith("CHELPG Charges"):
             self.parse_charge_section(line, inputfile, "chelpg")
 
+        # The center of mass is used as the origin
         # It is not stated explicitely, but the dipole moment components printed by ORCA
-        # seem to be in atomic units, so they will need to be converted. Also, they
-        # are most probably calculated with respect to the origin .
-        #
+        # seem to be in atomic units, so they will need to be converted.
+
+        # example:
+        # The origin for moment calculation is the CENTER OF MASS  = (-1.651256, -1.258772 -1.572312)
+
         # -------------
         # DIPOLE MOMENT
         # -------------
@@ -2179,23 +2184,33 @@ Dispersion correction           -0.016199959
         # Magnitude (a.u.)       :      0.00000
         # Magnitude (Debye)      :      0.00000
         #
-        if line.strip() == "DIPOLE MOMENT":
+        # TODO: add quadrupole moment parsing, which can be optionally calculated with ORCA
+
+        # the origin/reference might be printed in multiple places in the output file
+        # depending on the calculation type
+        if line.startswith("The origin for moment calculation is"):
+            tmp_reference = line.split()[-3:]
+            reference_x = float(tmp_reference[0].replace("(", "").replace(",", ""))
+            reference_y = float(tmp_reference[1])
+            reference_z = float(tmp_reference[2].replace(")", ""))
+            self.reference = numpy.array([reference_x, reference_y, reference_z])
+
+        if line.startswith("DIPOLE MOMENT"):
             self.skip_lines(inputfile, ["d", "XYZ", "electronic", "nuclear", "d"])
             total = next(inputfile)
             assert "Total Dipole Moment" in total
 
-            reference = [0.0, 0.0, 0.0]
             dipole = numpy.array([float(d) for d in total.split()[-3:]])
             dipole = utils.convertor(dipole, "ebohr", "Debye")
 
             if not hasattr(self, "moments"):
-                self.set_attribute("moments", [reference, dipole])
+                self.set_attribute("moments", [self.reference, dipole])
             else:
                 try:
                     assert numpy.all(self.moments[1] == dipole)
                 except AssertionError:
                     self.logger.warning("Overwriting previous multipole moments with new values")
-                    self.set_attribute("moments", [reference, dipole])
+                    self.set_attribute("moments", [self.reference, dipole])
 
         if "Molecular Dynamics Iteration" in line:
             self.skip_lines(inputfile, ["d", "ORCA MD", "d", "New Coordinates"])
@@ -2775,14 +2790,19 @@ Dispersion correction           -0.016199959
     # end of parse_scf_expanded_format
 
     def _append_scfvalues_scftargets(self, inputfile, line):
-        # The SCF convergence targets are always printed after this, but apparently
-        # not all of them always -- for example the RMS Density is missing for geometry
-        # optimization steps. So, assume the previous value is still valid if it is
-        # not found. For additional certainty, assert that the other targets are unchanged.
+        # The SCF convergence targets are always printed in this next section
+        # but which targets are available depends on the SCF method in use,
+        # among other things.
         while not "Last Energy change" in line:
             line = next(inputfile)
+
         deltaE_value = float(line.split()[4])
         deltaE_target = float(line.split()[7])
+        maxDP_value = None
+        rmsDP_value = None
+        maxDP_target = None
+        rmsDP_target = None
+
         line = next(inputfile)
         if "Last MAX-Density change" in line:
             maxDP_value = float(line.split()[4])
@@ -2792,12 +2812,11 @@ Dispersion correction           -0.016199959
                 rmsDP_value = float(line.split()[4])
                 rmsDP_target = float(line.split()[7])
             else:
-                rmsDP_value = self.scfvalues[-1][-1][2]
-                rmsDP_target = self.scftargets[-1][2]
-                assert deltaE_target == self.scftargets[-1][0]
-                assert maxDP_target == self.scftargets[-1][1]
-            self.scfvalues[-1].append([deltaE_value, maxDP_value, rmsDP_value])
-            self.scftargets.append([deltaE_target, maxDP_target, rmsDP_target])
+                rmsDP_value = None
+                rmsDP_target = None
+
+        self.scfvalues[-1].append([deltaE_value, maxDP_value, rmsDP_value])
+        self.scftargets.append([deltaE_target, maxDP_target, rmsDP_target])
 
 
 _METHODS_SEMIEMPIRICAL = {"AM1", "MNDO", "PM3", "ZINDO/1", "ZINDO/S"}

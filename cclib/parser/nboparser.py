@@ -5,7 +5,6 @@
 
 """Parser for NBO output files"""
 
-
 import re
 
 from cclib.parser import logfileparser, utils

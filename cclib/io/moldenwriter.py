@@ -269,12 +269,9 @@ class MOLDEN(filewriter.Writer):
         index = -1
         molden_lines.extend(self._coords_from_ccdata(index))
 
-        (
-            mosyms,
-            moenergies,
-            mooccs,
-            mocoeffs,
-        ) = self._syms_energies_occs_coeffs_from_ccdata_for_moldenwriter()
+        (mosyms, moenergies, mooccs, mocoeffs) = (
+            self._syms_energies_occs_coeffs_from_ccdata_for_moldenwriter()
+        )
 
         if hasattr(self.ccdata, "gbasis"):
             molden_lines.append("[GTO]")
