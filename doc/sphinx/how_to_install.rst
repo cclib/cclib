@@ -88,8 +88,8 @@ Manual download and install
 ---------------------------
 
 The source code of the newest release of cclib (version |release|) is distributed as:
- * A .zip file: https://github.com/cclib/cclib/releases/download/v1.8/cclib-1.8.zip
- * A .tar.gz file: https://github.com/cclib/cclib/releases/download/v1.8/cclib-1.8.tar.gz
+ * A .zip file: https://github.com/cclib/cclib/releases/download/v1.8.1/cclib-1.8.1.zip
+ * A .tar.gz file: https://github.com/cclib/cclib/releases/download/v1.8.1/cclib-1.8.1.tar.gz
  * Windows binary installers (see the `newest release page`_)
 
 On Windows, if you choose to download the .exe files instead, you can install simply by double-clicking on the file. To uninstall, use the "Add and Remove Programs" menu in the Control Panel.
@@ -118,7 +118,7 @@ To test, trying importing '''cclib''' at the Python prompt. You should see somet
     '1.6.2'
     >>>
 
-.. _`newest release page`: https://github.com/cclib/cclib/releases/tag/v1.7
+.. _`newest release page`: https://github.com/cclib/cclib/releases/tag/v1.8.1
 
 What next?
 ----------
@@ -126,7 +126,7 @@ What next?
  * Read the list and specifications of the `parsed data`_ and related `data notes`_
  * Test the program using the test data files included in the full source distribution
  * Run the unit and regression tests in the test directory (``testall.py`` and ``regression.py``)
- * Send any questions to the cclib-users mailing list at https://sourceforge.net/projects/cclib/lists/cclib-users.
+ * Send any questions to the cclib-users mailing list at https://groups.google.com/g/cclib.
  * Write some computational chemistry algorithms using information parsed from cclib and donate the code to the project
 
 .. _`parsed data`: data.html

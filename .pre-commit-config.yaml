@@ -125,6 +125,8 @@ repos:
       - id: check-yaml
       - id: check-toml
       - id: check-added-large-files
+      - id: fix-encoding-pragma
+        args: [--remove]
       - id: no-commit-to-branch
         args: [--branch, main, --branch, master]
   - repo: https://github.com/Mateusz-Grzelinski/actionlint-py
@@ -152,3 +154,19 @@ repos:
   #         # - scipy
   #         - types-setuptools
   #       args: []
+  - repo: https://github.com/Lucas-C/pre-commit-hooks
+    rev: v1.5.4
+    hooks:
+      - id: insert-license
+        files: \.py$
+        args:
+          - --license-filepath
+          - .github/license_header.txt
+          - --use-current-year
+          - --no-extra-eol
+  - repo: https://github.com/pre-commit/pygrep-hooks
+    rev: "v1.10.0"
+    hooks:
+      - id: rst-backticks
+      - id: rst-directive-colons
+      - id: rst-inline-touching-normal

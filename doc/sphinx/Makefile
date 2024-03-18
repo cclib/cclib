@@ -22,7 +22,8 @@ clean:
 	-rm -rf attributes*.rst
 	-rm -rf coverage*.rst
 
-PRODUCTION_VERSION = v1.8
+# When releasing a new version, this can't be updated until after the tag is pushed.
+PRODUCTION_VERSION = v1.8.1
 CCLIB_PROD = $(BUILDDIR)/cclib_prod
 CCLIB_DEV = $(realpath $(SOURCEDIR)/../..)
 SRC_PROD = $(CCLIB_PROD)/cclib

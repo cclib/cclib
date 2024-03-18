@@ -2,7 +2,13 @@
 name: build and test nix package
 
 # yamllint disable-line rule:truthy
-on: [push, pull_request]
+on:
+  workflow_dispatch:
+  workflow_call:
+
+concurrency:
+  group: nix-${{github.ref}}-${{github.event.pull_request.number || github.run_number}}
+  cancel-in-progress: true
 
 jobs:
   nix-build:

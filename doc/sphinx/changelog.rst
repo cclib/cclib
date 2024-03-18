@@ -4,6 +4,41 @@
 Changelog
 =========
 
+Changes in cclib-1.8.1
+----------------------
+
+**Features**
+
+    * New parser: xTB (Andrew S. Rosen, Omri Abarbanel, #789, #1129, #1296)
+    * Support parsing number of CPUs and memory used for Gaussian, ORCA, and Turbomole (#1271, #1277)
+    * New attributes for the NBO parser (Weronika Zak, #1012, #1251)
+    * Remove obsolete Qt4Progress (#1285, #1315)
+    * Only keep the Sphinx version of the changelog (#1254, #1352)
+    * Stop using Read the Docs (#1267, #1312)
+    * Don't require specific versions of PySCF and Biopython optional dependencies (#1344)
+
+**Bugfixes**
+
+    * Fix parsing aooverlaps from GAMESS (#1278)
+    * Fix ORCA excited states sometimes not being printed identically across sections (#1276)
+    * Make writing ASE objects more robust to missing cclib attributes (Andrew S. Rosen, #1299, #1300)
+    * Fix writing freeenergy to ASE objects (Andrew S. Rosen, #1319, #1320)
+
+**Developer facing changes**
+
+    * Completely migrate from ``unittest`` to ``pytest`` (#648, #649, #766, #1309, #1346)
+    * Apply and enforce ruff for code formatting using pre-commit (Anselm Hahn, #536, #1122, #1303, #1306, #1307, #1310)
+    * Migrate to ``pyproject.toml`` from ``setup.py`` for package installation (#833, #1180, #1311, #1327, #1328, #1382)
+    * Handle nested dictionaries in setting attributes (Weronika Zak, #1257, #1258)
+    * Update developer guidelines (#1355)
+    * Drop 3.7 and add 3.11 to test suite (#1305)
+    * Automate versioning and pushing releases to PyPI (#1363, #1373, #1374)
+    * Add Dependabot for keeping GitHub Actions up to date (#1329, #1337)
+    * Update copyright years to 2024 with pre-commit enforcement (#1349)
+    * Remove obsolete UTF-8 pragmas in Python files (#1350)
+    * Fix warning about missing file for a Q-Chem regression test (#1338)
+    * Continuous integration fixes for pyquante2 (#997, #1263, #1301, #1304)
+
 Changes in cclib-1.8
 --------------------
 
@@ -108,8 +143,8 @@ Changes in cclib-1.7.1
 
 **Bugfixes**
 
-* Improved parsing and testing enthalpy and freeenergy (Felipe Schneider)
-* Fixed parsing ONION output for Gaussian (Elliot Farrar)
+* Improved parsing and testing enthalpy and freeenergy (Felipe S. S. Schneider)
+* Fixed parsing ONIOM output for Gaussian (Elliot Farrar)
 * Fixed parsing of GAMESS logfiles with more than 100 SCF iterations (simonaxelrod)
 * Fixed parsing of very long (10K+) ORCA logfiles (Alex Maldonado)
 * Fixed parsing of Turbomole outputs that don't compute SCF energies (Oliver Lee)
@@ -235,7 +270,7 @@ Changes in cclib-1.6
 
 * New parser: cclib can now parse Molcas files (Kunal Sharma)
 * New parser: cclib can now parse Turbomole files (Christopher Rowley, Kunal Sharma)
-* New script: ccframe writes data table files from logfiles (Felipe Schneider)
+* New script: ccframe writes data table files from logfiles (Felipe S. S. Schneider)
 * New method: stoichiometry builds the chemical formula of a system (Jaime Rodríguez-Guerra)
 * Support package version in metadata for most parsers
 * Support time attribute and BOMD output in Gaussian, NWChem, ORCA and QChem
@@ -447,7 +482,7 @@ Changes in cclib-1.2
 * Ignore Unicode errors in logfiles
 * Handle Gaussian jobs with terse output (basis set count not reported)
 * Handle Gaussian jobs using IndoGuess (Scott McKechnie)
-* Handle Gaussian file with irregular ONION gradients (Tamilmani S)
+* Handle Gaussian file with irregular ONIOM gradients (Tamilmani S)
 * Handle ORCA file with SCF convergence issue (Melchor Sanchez)
 * Handle Gaussian file with problematic IRC output (Clyde Fare)
 * Handle ORCA file with AM1 output (Julien Idé)

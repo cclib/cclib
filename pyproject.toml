@@ -1,6 +1,6 @@
 [project]
 name = "cclib"
-version = "1.8"
+dynamic = ["version"]
 description = "parsers and algorithms for computational chemistry"
 readme = "README.md"
 authors = [
@@ -48,9 +48,8 @@ bridges = [
     "biopython",
     "openbabel",
     "pandas",
-    "pyquante2 @ git+https://github.com/cclib/pyquante2.git@github-actions-ci",
     "pyscf",
-    "qc-iodata @ git+https://github.com/theochem/iodata.git@1.0.0a2",
+    "qc-iodata>=1.0.0a2",
 ]
 docs = [
     "sphinx",
@@ -65,7 +64,7 @@ dev = ["cclib[bridges,docs,test]"]
 all = ["cclib[bridges]"]
 
 [build-system]
-requires = ["setuptools >= 61.0"]
+requires = ["setuptools >= 61.0", "versioningit~=2.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
@@ -171,3 +170,16 @@ module = [
     "common",
 ]
 ignore_missing_imports = true
+
+[tool.versioningit.format]
+method = {module = "versioningit_override", value = "cclib_format", module-dir = "tools"}
+
+[tool.versioningit.template-fields.version-tuple]
+pep440 = true
+
+[tool.versioningit.vcs]
+method = "git"
+match = ["v*"]
+
+[tool.versioningit.write]
+file = "cclib/_version.py"

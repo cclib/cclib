@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-#
-# Copyright (c) 2023, the cclib development team
+# Copyright (c) 2024, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -19,7 +17,7 @@ To this end, cclib provides a number of bridges to help transfer data to other l
 as well as example methods that take parsed data as input.
 """
 
-__version__ = "1.8"
+from cclib._version import __version__
 
 # isort: off
 from cclib import parser, progress, method, bridge, io
