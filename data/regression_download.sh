@@ -21,5 +21,5 @@ if [ -d regression/.git ]; then
     fi
 else
     echo "Downloading repository of regression files..."
-    git clone -b release-1.8.1 https://github.com/cclib/cclib-data.git regression
+    git clone https://github.com/cclib/cclib-data.git regression
 fi
