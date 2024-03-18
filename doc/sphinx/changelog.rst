@@ -28,9 +28,11 @@ Changes in cclib-1.8.1
 
     * Completely migrate from ``unittest`` to ``pytest`` (#648, #649, #766, #1309, #1346)
     * Apply and enforce ruff for code formatting using pre-commit (Anselm Hahn, #536, #1122, #1303, #1306, #1307, #1310)
-    * Migrate to ``pyproject.toml`` from ``setup.py`` for package installation (#833, #1180, #1311, #1327, #1328)
+    * Migrate to ``pyproject.toml`` from ``setup.py`` for package installation (#833, #1180, #1311, #1327, #1328, #1382)
     * Handle nested dictionaries in setting attributes (Weronika Zak, #1257, #1258)
+    * Update developer guidelines (#1355)
     * Drop 3.7 and add 3.11 to test suite (#1305)
+    * Automate versioning and pushing releases to PyPI (#1363, #1373, #1374)
     * Add Dependabot for keeping GitHub Actions up to date (#1329, #1337)
     * Update copyright years to 2024 with pre-commit enforcement (#1349)
     * Remove obsolete UTF-8 pragmas in Python files (#1350)

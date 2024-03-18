@@ -70,4 +70,4 @@ if __name__ == "__main__":
             for issue in closing_issues:
                 lines.append(f"        * {issue['title']} (#{issue['number']})")
 
-    print("\n".join(lines))
+    print("\n".join(line.replace("`", "``") for line in lines))
