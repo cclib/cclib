@@ -11,10 +11,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  nix:
+    uses: ./.github/workflows/nix.yml
   unit-tests:
     uses: ./.github/workflows/test_and_package.yml
   publish:
-    needs: [unit-tests]
+    needs: [nix, unit-tests]
     uses: ./.github/workflows/publish.yml
   all:
     needs: [unit-tests, publish]

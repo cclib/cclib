@@ -3,7 +3,6 @@
 name: run tests and create installable packages
 
 # yamllint disable-line rule:truthy
-# yamllint disable-line rule:truthy
 on:
   workflow_dispatch:
   workflow_call:
