@@ -9,7 +9,7 @@ import logging
 from collections import namedtuple
 from typing import Any, Dict, List, Mapping, Optional
 
-from cclib.parser import ccData
+from cclib.parser_properties import ccData
 
 import numpy
 
@@ -35,3 +35,7 @@ class ccCollection:
         # ]
         # if self._combinator != None:
         #    assert len(self._combinator.job_list) == 1
+
+    @property
+    def parsed_data(self):
+        return self._parsed_data

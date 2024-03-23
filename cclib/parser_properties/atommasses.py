@@ -27,7 +27,7 @@ class atommasses(base_parser):
                 if line[1:8] == "AtmWgt=":
                     constructed_data.extend(list(map(float, line.split()[1:])))
                 line = file_handler.virtual_next()
-            return constructed_data
+            return {atommasses.__name__: constructed_data}
         return None
 
     @staticmethod

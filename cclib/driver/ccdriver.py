@@ -79,7 +79,7 @@ triggers_off = [
     # todo     (MOPAC,     ["MOPAC20"],                                        True),
     # todo     (NBO,       ["N A T U R A L   A T O M I C   O R B I T A L   A N D"],                  True),
     # todo     (NWChem,    ["Northwest Computational Chemistry Package"],      True),
-    # todo     (ORCA,      ["O   R   C   A"],                                  True),
+    ("ORCA", ["****ORCA TERMINATED NORMALLY****"], True),
     # todo     (Psi3,      ["PSI3: An Open-Source Ab Initio Electronic Structure Package"],          True),
     ("psi4", ["Psi4 exiting successfully. Buy a developer a beer!"], True),
     # todo     (QChem,     ["A Quantum Leap Into The Future Of Chemistry"],    True),
@@ -444,11 +444,11 @@ class ccDriver:
             self._tree.add_root()
 
         if self._combinator is None:
-            self._combinator = auto_combinator(tree)
+            self._combinator = auto_combinator(self._tree)
         # TODO pass graph here
         self._ccCollection = ccCollection(self._combinator, self._tree)
         self._fileHandler = source
-        self.identified_program = None
+        self._identified_program = []
 
     @property
     def cccollection(self):
@@ -466,6 +466,21 @@ class ccDriver:
     def tree(self):
         return self._tree
 
+    @property
+    def identified_program(self):
+        if not self._identified_program:
+            return None
+        else:
+            return self._identified_program[-1]
+
+    @identified_program.setter
+    def identified_program(self, in_prog):
+        if in_prog is None:
+            if self._identified_program:
+                self._identified_program.pop()
+        else:
+            self._identified_program.append(in_prog)
+
     def process_combinator(self):
         """Process the combinator and populate the ccData object in the ccCollection"""
         self.identified_program = None
@@ -482,6 +497,9 @@ class ccDriver:
                     else:
                         # if a program is within a program this might mean things are ok but we proceed to a child node.. think about how to handle this?
                         current_idx = self._tree.get_next_idx()
+                        self.identified_program = program
+                        if do_break:
+                            break
             for program, phrases, do_break in triggers_off:
                 if all([line.lower().find(p.lower()) >= 0 for p in phrases]):
                     self.identified_program = None
@@ -496,11 +514,8 @@ class ccDriver:
                 parsed_data = subparser.parse(
                     self._fileHandler,
                     self.identified_program,
-                    self._ccCollection._parsed_data[current_idx],
+                    self._ccCollection.parsed_data[current_idx],
                 )
-                print(parsed_data)
                 if parsed_data is not None:
-                    parsed_attribute_name = subparser.__name__
-                    self._ccCollection._parsed_data[current_idx].__setattr__(
-                        parsed_attribute_name, parsed_data
-                    )
+                    self._ccCollection.parsed_data[current_idx].setattributes(parsed_data)
+        return self._ccCollection

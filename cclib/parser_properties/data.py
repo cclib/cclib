@@ -104,7 +104,7 @@ class ccData:
     # 'TBD' - To Be Decided are the key names of attributes which haven't been included in the cjson format
 
     # The name of all attributes can be generated from the dictionary above.
-    _attrlist = ["scfenergies"]  # sorted(_properties.keys())
+    _attrlist = sorted(_properties.keys())
 
     # Arrays are double precision by default, but these will be integer arrays.
     _intarrays = ["atomnos", "coreelectrons", "homos", "optstatus"]
@@ -235,8 +235,8 @@ class ccData:
         for attr in valid:
             setattr(self, attr, attributes[attr])
 
-        self.arrayify()
-        self.typecheck()
+        # self.arrayify()
+        # self.typecheck()
 
         return invalid
 
