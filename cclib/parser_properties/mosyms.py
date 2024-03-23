@@ -33,7 +33,6 @@ class mosyms(base_parser):
     Docstring? Units?
     """
 
-    _attribute_name = "mosyms"
     known_codes = ["gaussian"]
 
     @staticmethod
@@ -70,7 +69,7 @@ class mosyms(base_parser):
             # and will occasionally drop some without warning. We can infer the number,
             # however, from the MO symmetries printed here. Specifically, this fixes
             # regression Gaussian/Gaussian09/dvb_sp_terse.log (#23 on github).
-            return {_attribute_name: constructed_data}
+            return {mosyms.__name__: constructed_data}
         return None
 
     @staticmethod

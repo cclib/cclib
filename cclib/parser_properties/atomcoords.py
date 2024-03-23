@@ -13,7 +13,6 @@ class atomcoords(base_parser):
     Docstring? Units?
     """
 
-    _attribute_name = "atomcoords"
     known_codes = ["gaussian", "psi4"]
 
     @staticmethod
@@ -24,13 +23,13 @@ class atomcoords(base_parser):
             line = file_handler.skip_lines(["d", "Center", "Number", "d"], virtual=True)
             line = file_handler.virtual_next()
             constructed_atomcoords = []
-            atomcoords = []
+            curr_atomcoords = []
             while list(set(line.strip())) != ["-"]:
                 broken = line.split()
-                atomcoords.append(np.asarray(map(float, broken[-3:])))
+                curr_atomcoords.append(np.asarray(map(float, broken[-3:])))
                 line = file_handler.virtual_next()
             constructed_atomcoords.append(atomcoords)
-            constructed_data = {_attribute_name: constructed_atomcoords}
+            constructed_data = {atomcoords.__name__: constructed_atomcoords}
             return constructed_data
         return None
 
@@ -54,7 +53,7 @@ class atomcoords(base_parser):
                 _el, x, y, z = chomp[:4]
                 constructed_atomcoords.append(np.asarray([float(x), float(y), float(z)]))
                 line = file_handler.virtual_next()
-            constructed_data = {_attribute_name: constructed_atomcoords}
+            constructed_data = {atomcoords.__name__: constructed_atomcoords}
             return constructed_data
         return None
 

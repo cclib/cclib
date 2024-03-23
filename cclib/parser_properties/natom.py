@@ -13,7 +13,6 @@ class natom(base_parser):
     Docstring? Units?
     """
 
-    _attribute_name = "natom"
     known_codes = ["psi4"]
 
     @staticmethod
@@ -21,7 +20,7 @@ class natom(base_parser):
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         dependency_list = ["atomnos"]
         if base_parser.check_dependencies(dependency_list, ccdata, "natom"):
-            return {_attribute_name: len(ccdata.atomnos)}
+            return {natom.__name__: len(ccdata.atomnos)}
 
         return None
 

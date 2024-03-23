@@ -13,7 +13,6 @@ class mocoeffs(base_parser):
     Docstring? Units?
     """
 
-    _attribute_name = "mocoeffs"
     known_codes = ["psi4"]
 
     @staticmethod
@@ -56,9 +55,9 @@ class mocoeffs(base_parser):
 
             if hasattr(ccdata, "mocoeffs") and getattr(ccdata, "mocoeffs") != None:
                 extended_mocoeffs = [ccdata.mocoeffs, mocoeffs]
-                return {_attribute_name: extended_mocoeffs}
+                return {mocoeffs.__name__: extended_mocoeffs}
             else:
-                return {_attribute_name: mocoeffs}
+                return {mocoeffs.__name__: mocoeffs}
         return None
 
     @staticmethod

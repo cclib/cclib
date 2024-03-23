@@ -444,7 +444,7 @@ class ccDriver:
             self._tree.add_root()
 
         if self._combinator is None:
-            self._combinator = auto_combinator(tree)
+            self._combinator = auto_combinator(self._tree)
         # TODO pass graph here
         self._ccCollection = ccCollection(self._combinator, self._tree)
         self._fileHandler = source

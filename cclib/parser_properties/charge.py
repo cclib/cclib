@@ -13,7 +13,6 @@ class charge(base_parser):
     Docstring? Units?
     """
 
-    _attribute_name = "charge"
     known_codes = ["gaussian", "psi4"]
 
     @staticmethod
@@ -22,7 +21,7 @@ class charge(base_parser):
         line = file_handler.last_line
         if line[1:7] == "Charge":
             constructed_charge = int(line.split()[2])
-            constructed_data = {_attribute_name: constructed_charge}
+            constructed_data = {charge.__name__: constructed_charge}
             return constructed_data
         return None
 
@@ -32,7 +31,7 @@ class charge(base_parser):
         line = file_handler.last_line
         if line[2:16].lower() == "charge       =":
             constructed_charge = int(line.split()[-1])
-            constructed_data = {_attribute_name: constructed_charge}
+            constructed_data = {charge.__name__: constructed_charge}
             return constructed_data
         return None
 

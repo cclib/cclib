@@ -13,7 +13,6 @@ class atombasis(base_parser):
     Docstring? Units?
     """
 
-    _attribute_name = "atombasis"
     known_codes = ["gaussian", "psi4"]
 
     @staticmethod
@@ -37,7 +36,7 @@ class atombasis(base_parser):
             symmetries = file_handler.virtual_next()
             eigenvalues = file_handler.virtual_next()
             base = 0
-            atombasis = []
+            curr_atombasis = []
             for base in range(0, ccdata.nmo, 5):
                 for i in range(ccdata.nbasis):
                     line = file_handler.virtual_next()
@@ -48,11 +47,11 @@ class atombasis(base_parser):
                         parts = line[:start_of_basis_fn_name].split()
                         if len(parts) > 1:  # New atom
                             if i > 0:
-                                constructed_atombasis.append(atombasis)
-                            atombasis = []
-                        atombasis.append(i)
-                    atombasis.append(i)
-            constructed_data = {_attribute_name: constructed_atombasis}
+                                constructed_atombasis.append(curr_atombasis)
+                            curr_atombasis = []
+                        curr_atombasis.append(i)
+                    curr_atombasis.append(i)
+            constructed_data = {atombasis.__name__: constructed_atombasis}
             return constructed_data
         return None
 
@@ -79,7 +78,7 @@ class atombasis(base_parser):
                         list(range(atombasis_pos, atombasis_pos + ao_count))
                     )
                     line = file_handler.virtual_next()
-                constructed_data = {_attribute_name: constructed_atombasis}
+                constructed_data = {atombasis.__name__: constructed_atombasis}
                 return constructed_data
         return None
 

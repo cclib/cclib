@@ -13,7 +13,6 @@ class nmo(base_parser):
     Docstring? Units?
     """
 
-    _attribute_name = "nmo"
     known_codes = ["gaussian"]
 
     @staticmethod
@@ -31,7 +30,7 @@ class nmo(base_parser):
             # if ccdata.oniom:
             #   return
             constructed_data = int(line.split("=")[1].split()[0])
-            return {_attribute_name: constructed_data}
+            return {nmo.__name__: constructed_data}
         return None
 
     @staticmethod

@@ -13,7 +13,6 @@ class atomnos(base_parser):
     Docstring? Units?
     """
 
-    _attribute_name = "atomnos"
     known_codes = ["gaussian", "psi4"]
 
     @staticmethod
@@ -21,13 +20,14 @@ class atomnos(base_parser):
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
         if line.strip() == "Standard orientation:":
-            line = file_handler.skip_lines(["d", "Center", "Number", "d"], virtual=True)
+            file_handler.skip_lines(["d", "Center", "Number", "d"], virtual=True)
+            line = file_handler.virtual_next()
             constructed_data = []
             while list(set(line.strip())) != ["-"]:
                 broken = line.split()
                 constructed_data.append(int(broken[1]))
                 line = file_handler.virtual_next()
-            return {_attribute_name: constructed_data}
+            return {atomnos.__name__: constructed_data}
         return None
 
     @staticmethod
@@ -45,7 +45,7 @@ class atomnos(base_parser):
                     element = element[0] + element[1:].lower()
                 constructed_data.append(table.number[element])
                 line = file_handler.virtual_next()
-            return {_attribute_name: constructed_data}
+            return {atomnos.__name__: constructed_data}
         return None
 
     @staticmethod

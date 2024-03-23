@@ -13,7 +13,6 @@ class mult(base_parser):
     Docstring? Units?
     """
 
-    _attribute_name = "mult"
     known_codes = ["gaussian", "psi4"]
 
     @staticmethod
@@ -22,7 +21,7 @@ class mult(base_parser):
         line = file_handler.last_line
         if line.find("Multiplicity") > 0:
             constructed_data = int(line.split()[5])
-            return {_attribute_name: constructed_data}
+            return {mult.__name__: constructed_data}
         return None
 
     @staticmethod
@@ -31,7 +30,7 @@ class mult(base_parser):
         line = file_handler.last_line
         if line[2:16].lower() == "multiplicity =":
             constructed_data = int(line.split()[-1])
-            return {_attribute_name: constructed_data}
+            return {mult.__name__: constructed_data}
         return None
 
     @staticmethod
