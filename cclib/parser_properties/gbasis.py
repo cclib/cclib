@@ -21,6 +21,7 @@ class gbasis(base_parser):
         line = file_handler.last_line
         if line.strip() == "==> AO Basis Functions <==":
             if base_parser.check_dependencies(dependency_list, ccdata, "gbasis"):
+
                 def get_symmetry_atom_basis(parsed_gbasis):
                     """Get symmetry atom by replicating the last atom in gbasis of the same element."""
                     missing_index = len(parsed_gbasis)
