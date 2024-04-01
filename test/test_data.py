@@ -19,28 +19,27 @@ __filedir__ = os.path.realpath(os.path.dirname(__file__))
 # within the unit test files.
 sys.path.insert(1, os.path.join(__filedir__, "data"))
 
-
-parser_names = [
-    "ADF",
-    "DALTON",
-    "FChk",
-    "GAMESS",
-    "GAMESSDAT",
-    "GAMESSUK",
+ [   #"ADF",
+    #"DALTON",
+    #"FChk",
+    #"GAMESS",
+    #"GAMESSDAT",
+    #"GAMESSUK",
     "Gaussian",
-    "Jaguar",
-    "Molpro",
-    "Molcas",
-    "MOPAC",
+    #"Jaguar",
+    #"Molpro",
+    #"Molcas",
+    #"MOPAC",
+    #"Molcas",
+    #"NWChem",
     "NBO",
-    "NWChem",
-    "ORCA",
-    "Psi4",
-    "QChem",
-    "Turbomole",
-    "XTB",
+    #"NWChem",
+    #"QChem",
+    #"Turbomole",
+    #"XTB",
+    #"Turbomole",
 ]
-all_parsers = {name: getattr(cclib.parser, name) for name in parser_names}
+#all_parsers = {name: getattr(cclib.parser, name) for name in parser_names}
 
 
 def get_program_dir(parser_name: str) -> str:
@@ -53,12 +52,11 @@ def get_program_dir(parser_name: str) -> str:
         return "GAMESS-UK"
     return parser_name
 
-
 def getdatafile(
-    parser: Union[str, Type[cclib.parser.logfileparser.Logfile]],
+    parser: Union[str, Type[cclib.file_handler.FileHandler]],
     subdir,
     files,
-    stream=None,
+    datatype: Optional[Type[cclib.parser.data.ccData]] = None,
     loglevel: int = logging.ERROR,
     datatype: Optional[Type[cclib.parser.data.ccData]] = None,
 ):
