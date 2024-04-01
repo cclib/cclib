@@ -16,7 +16,7 @@ class nmo(base_parser):
     known_codes = ["gaussian"]
 
     @staticmethod
-    def gaussian(file_handler, ccdata) -> int | None:
+    def gaussian(file_handler, ccdata) -> dict | None:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
         constructed_data = None
@@ -30,11 +30,11 @@ class nmo(base_parser):
             # if ccdata.oniom:
             #   return
             constructed_data = int(line.split("=")[1].split()[0])
-            return constructed_data
+            return {nmo.__name__: constructed_data}
         return None
 
     @staticmethod
-    def parse(file_handler, program: str, ccdata) -> int | None:
+    def parse(file_handler, program: str, ccdata) -> dict | None:
         constructed_data = None
         if program in nmo.known_codes:
             file_handler.virtual_set()
