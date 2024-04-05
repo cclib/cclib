@@ -250,5 +250,5 @@ class MOPAC(logfileparser.Logfile):
         # Example:
         # NET ATOMIC CHARGES
 
-        if line[:16] == "== MOPAC DONE ==":
+        if line[1:17] == "== MOPAC DONE ==":
             self.metadata["success"] = True
