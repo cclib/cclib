@@ -112,6 +112,10 @@ class FChk(logfileparser.Logfile):
         if line[0:31] == "Number of independent functions":
             self.set_attribute("nmo", int(line.split()[-1]))
 
+        if line[0:10] == "Job Status":
+            job_status = int(line.split()[-1])
+            self.metadata["success"] = job_status == 1
+
         if line[0:21] == "Alpha MO coefficients":
             count = int(line.split()[-1])
             assert count == self.nbasis * self.nmo
