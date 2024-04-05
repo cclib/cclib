@@ -131,7 +131,7 @@ Core      ADF         ADFCoreTest           basicADF2007.01       MoOCl4-sp.adfo
 Core      ADF         ADFCoreTest           basicADF2013.01       MoOCl4-sp.adfout
 Core      FChk        GenericCoreTest       basicGaussian09       Mo4OCl4-sp.fchk
 Core      FChk        GenericCoreTest       basicGaussian16       Mo4OCl4-sp.fchk
-Core      FChk        GenericCoreTest       basicQChem5.2         MoOCl4_sp_modified.FChk
+Core      FChk        GenericCoreTest       basicQChem5.2         MoOCl4_sp_modified.fchk
 Core      FChk        GenericCoreTest       basicQChem5.4         MoOCl4_sp.fchk
 Core      GAMESSUK    GenericCoreTest       basicGAMESS-UK7.0     MoOCl4-sp.out
 Core      GAMESSUK    GenericCoreTest       basicGAMESS-UK8.0     MoOCl4-sp.out
@@ -278,7 +278,7 @@ SP        DALTON      GenericHFSPTest       basicDALTON-2015            dvb_sp_h
 SP        DALTON      GenericSPTest         basicDALTON-2015            dvb_sp_ks.out
 SP        FChk        GenericSPTest         basicGaussian09             dvb_sp.fchk
 SP        FChk        GenericSPTest         basicGaussian16             dvb_sp.fchk
-SP        FChk        GenericSPTest         basicQChem5.2               dvb_sp_modified.FChk
+SP        FChk        GenericSPTest         basicQChem5.2               dvb_sp_modified.fchk
 SP        FChk        GenericSPTest         basicQChem5.4               dvb_sp.fchk
 SP        GAMESSUK    GenericSPTest         basicGAMESS-UK7.0           dvb_sp_b.out
 SP        GAMESSUK    GenericHFSPTest       basicGAMESS-UK8.0           dvb_sp_hf.out
@@ -360,7 +360,7 @@ SPun      DALTON      GenericROSPTest       basicDALTON-2015      dvb_sp_un_hf.o
 SPun      DALTON      GenericROSPTest       basicDALTON-2015      dvb_sp_un_ks.out
 SPun      FChk        GenericSPunTest       basicGaussian09       dvb_un_sp.fchk
 SPun      FChk        GenericSPunTest       basicGaussian16       dvb_un_sp.fchk
-SPun      FChk        GenericSPunTest       basicQChem5.2         dvb_sp_un_modified.FChk
+SPun      FChk        GenericSPunTest       basicQChem5.2         dvb_sp_un_modified.fchk
 SPun      FChk        GenericSPunTest       basicQChem5.4         dvb_sp_un.fchk
 SPun      GAMESSUK    GamessUK70SPunTest    basicGAMESS-UK7.0     dvb_un_sp_b.out
 SPun      GAMESSUK    GamessUK80SPunTest    basicGAMESS-UK8.0     dvb_un_sp_hf.out
