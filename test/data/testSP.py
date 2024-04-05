@@ -530,6 +530,17 @@ class GenericSPTest:
             packaging.version.parse(data.metadata["package_version"]), packaging.version.Version
         )
 
+    @skipForLogfile("Molcas/basicOpenMolcas18.0/dvb_sp.out", "not implemented yet")
+    @skipForLogfile("NBO/basicNBO7.0/basicORCA5.0/dvb_sp.nbo.out", "TODO impossible to determine?")
+    @skipForLogfile("FChk/basicGaussian09/dvb_sp.fchk", "impossible to determine")
+    @skipForLogfile("FChk/basicQChem5.2/dvb_sp_modified.fchk", "impossible to determine")
+    @skipForLogfile("FChk/basicQChem5.4/dvb_sp.fchk", "impossible to determine")
+    @skipForLogfile("GAMESSDAT/basicGAMESS-US2018/dvb_sp.dat", "TODO impossible to determine?")
+    def testmetadata_success(self, data) -> None:
+        """Does metadata have expected keys and values?"""
+        assert "success" in data.metadata
+        assert data.metadata["success"]
+
     @skipForParser("FChk", "point group symmetry cannot be printed")
     @skipForParser("GAMESSDAT", "Files probably do not contain information about symmetry_detected")
     @skipForParser("Molcas", "reading point group symmetry and name is not implemented")
