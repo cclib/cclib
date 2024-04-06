@@ -1234,7 +1234,7 @@ class Gaussian(logfileparser.Logfile):
                 assert len(eigenvalues) == len(indices)
                 scanenergies.extend(eigenvalues)
 
-                for _, name in enumerate(self.scannames_all):
+                for name in self.scannames_all:
                     line = next(inputfile)
                     assert line.split()[0] == name
                     if name in self.scannames_scanned:
