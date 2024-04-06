@@ -6,7 +6,7 @@
 from test.test_data import getdatafile
 
 from cclib.bridge import cclib2pyscf
-from cclib.parser.utils import convertor, find_package
+from cclib.parser.utils import find_package
 
 import numpy as np
 
@@ -22,7 +22,7 @@ class PyscfTest:
     def test_makepyscf(self) -> None:
         from pyscf import dft
 
-        refen = convertor(self.data.scfenergies[-1], "eV", "hartree")  # value in eVs
+        refen = self.data.scfenergies[-1]
         pyscfmol = cclib2pyscf.makepyscf(self.data)
         pyscfmol.cart = True
         pyscfmol.verbose = 0
@@ -31,7 +31,7 @@ class PyscfTest:
         mhf = dft.RKS(pyscfmol)
         mhf.xc = "b3lyp"
         en = mhf.kernel()
-        assert abs(en - refen) < 1.0e-4
+        assert abs(en - refen) < 5.0e-5
         # check that default basis is returned if basis is not present.
         del self.data.gbasis
         pyscfmol2 = cclib2pyscf.makepyscf(self.data)
