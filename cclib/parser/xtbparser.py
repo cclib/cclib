@@ -7,7 +7,7 @@ import re
 from datetime import timedelta
 from typing import List, Optional, Tuple
 
-from cclib.parser import logfileparser, utils
+from cclib.parser import logfileparser
 from cclib.parser.logfilewrapper import FileWrapper
 from cclib.parser.utils import convertor
 
@@ -364,9 +364,7 @@ def _extract_final_energy(line: str) -> Optional[float]:
         | HOMO-LUMO GAP              14.381252816459 eV   |
         -------------------------------------------------
     """
-    return (
-        utils.convertor(float(line.split()[3]), "hartree", "eV") if "TOTAL ENERGY" in line else None
-    )
+    return float(line.split()[3]) if "TOTAL ENERGY" in line else None
 
 
 def _extract_geom_energy(line: str) -> Optional[float]:
@@ -391,11 +389,7 @@ def _extract_geom_energy(line: str) -> Optional[float]:
         *** GEOMETRY OPTIMIZATION CONVERGED AFTER 1 ITERATIONS ***
     """
 
-    return (
-        utils.convertor(float(line.split()[4]), "hartree", "eV")
-        if "* total energy" in line
-        else None
-    )
+    return float(line.split()[4]) if "* total energy" in line else None
 
 
 # TODO: Add support for POSCAR format.
