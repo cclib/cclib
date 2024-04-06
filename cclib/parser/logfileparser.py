@@ -212,39 +212,6 @@ class Logfile(ABC):
         if hasattr(self, "progress"):
             self.progress.update(self.inputfile.size, "Done")
 
-        # https://github.com/cclib/cclib/issues/89
-        if not self.future:
-            attrs_for_ev = ["scfenergies", "dispersionenergies", "mpenergies", "ccenergies"]
-            attrs_for_wavenumbers = ["etenergies"]
-            if hasattr(data, "moenergies"):
-                moenergies = getattr(data, "moenergies")
-                setattr(
-                    data,
-                    "moenergies",
-                    [
-                        utils.convertor(moenergies_spin, "hartree", "eV")
-                        for moenergies_spin in moenergies
-                    ],
-                )
-            if hasattr(data, "scanenergies"):
-                scanenergies = getattr(data, "scanenergies")
-                setattr(
-                    data,
-                    "scanenergies",
-                    [
-                        utils.convertor(scanenergy_step, "hartree", "eV")
-                        for scanenergy_step in scanenergies
-                    ],
-                )
-            for attr_name in attrs_for_ev:
-                if hasattr(data, attr_name):
-                    attr = getattr(data, attr_name)
-                    setattr(data, attr_name, utils.convertor(attr, "hartree", "eV"))
-            for attr_name in attrs_for_wavenumbers:
-                if hasattr(data, attr_name):
-                    attr = getattr(data, attr_name)
-                    setattr(data, attr_name, utils.convertor(attr, "hartree", "wavenumber"))
-
         return data
 
     def before_parsing(self) -> None:
