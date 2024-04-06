@@ -175,7 +175,7 @@ class Gaussian(logfileparser.Logfile):
             self.set_attribute("grads", numpy.array(grads_std))
 
         if hasattr(self, "ccenergy"):
-            self.append_attribute("ccenergies", utils.convertor(self.ccenergy, "hartree", "eV"))
+            self.append_attribute("ccenergies", self.ccenergy)
             del self.ccenergy
 
         # If we have cpu times but no wall-times, we can calculate the later based on the number of CPUs used.

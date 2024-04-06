@@ -755,7 +755,7 @@ Dispersion correction           -0.016199959
 
         # Most of the "TRIPLES CORRECTION" correction block can be ignored.
         if line[:10] == "E(CCSD(T))":
-            self.ccenergies[-1] = utils.convertor(float(line.split()[-1]), "hartree", "eV")
+            self.ccenergies[-1] = float(line.split()[-1])
             assert self.metadata["methods"][-1] == "CCSD"
             self.metadata["methods"].append("CCSD(T)")
 
