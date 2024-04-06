@@ -964,9 +964,8 @@ class DALTON(logfileparser.Logfile):
             iteration = int(line.split()[-1])
             line = next(inputfile)
             assert "End of optimization" in line
-            if not hasattr(self, "optdone"):
-                self.optdone = []
-            self.optdone.append(line.split()[-1] == "T")
+            if line.split()[-1] == "T":
+                self.append_attribute("optdone", iteration - 1)
 
             # We need a way to map between lines here and the targets stated at the
             # beginning of the file in 'Chosen parameters for *OPTIMI (see above),
