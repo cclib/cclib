@@ -100,9 +100,7 @@ class FChk(logfileparser.Logfile):
             self.set_attribute("atomcoords", utils.convertor(coords, "bohr", "Angstrom"))
 
         if line[0:10] == "SCF Energy":
-            self.set_attribute(
-                "scfenergies", [utils.convertor(float(line.split()[-1]), "hartree", "eV")]
-            )
+            self.set_attribute("scfenergies", float(line.split()[-1]))
 
         if line[0:25] == "Number of basis functions":
             self.set_attribute("nbasis", int(line.split()[-1]))
@@ -318,7 +316,6 @@ class FChk(logfileparser.Logfile):
         if line[0:19] == "Excitation Energies":
             count = int(line.split()[-1])
             etenergies = self._parse_block(inputfile, count, float, "Excitation energies")
-            etenergies = [utils.convertor(e, "hartree", "wavenumber") for e in etenergies]
             self.set_attribute("etenergies", etenergies)
 
         if line[0:20] == "Oscillator Strengths":
