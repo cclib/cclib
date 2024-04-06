@@ -150,7 +150,14 @@ class GenericGeoOptTest:
     @skipForParser("xTB", "not implemented yet")
     def testoptdone(self, data) -> None:
         """Has the geometry converged and set optdone to True?"""
-        assert data.optdone
+        assert isinstance(data.optdone, list)
+        assert len(data.optdone) == 1
+        assert all(isinstance(val, int) for val in data.optdone)
+
+    @skipForParser("MOPAC", "Not implemented.")
+    @skipForParser("xTB", "not implemented yet")
+    def testgeoconverged(self, data) -> None:
+        """Has the geometry converged and set optdone to True?"""
         assert numpy.all(numpy.abs(data.geovalues[-1]) <= data.geotargets)
 
     @skipForParser("ADF", "Not implemented.")
@@ -234,9 +241,8 @@ class DALTONGeoOptTest(GenericGeoOptTest):
     # Although DALTON generally has three criteria for convergence, it normally only
     # requires two of them to end a geometry optimization. This is printed in the output
     # and can probably be tweaked in the input, but we don't parsed that in cclib.
-    def testoptdone(self, data) -> None:
+    def testgeoconverged(self, data) -> None:
         """Has the geometry converged and set optdone to True?"""
-        assert data.optdone
         convergence = numpy.abs(data.geovalues[-1]) <= data.geotargets
         assert sum(convergence) >= 2
 
@@ -281,9 +287,8 @@ class MolproGeoOptTest(GenericGeoOptTest):
     # It is also possible to use the convergency criterion of (...)
     #
     # Source: https://www.molpro.net/info/2012.1/doc/manual/node592.html
-    def testoptdone(self, data) -> None:
+    def testgeoconverged(self, data) -> None:
         """Has the geometry converged and set optdone to True?"""
-        assert data.optdone
         target_e, target_g, target_s = data.geotargets
         value_e, value_g, value_s = data.geovalues[-1]
         converged = (value_e < target_e and value_g < target_g) or (
@@ -326,10 +331,8 @@ class OrcaGeoOptTest(GenericGeoOptTest):
     #   4) energy, gradients and angles are converged (displacements not considered)
     # All these exceptions are signaleld in the output with some comments, and here
     # we include the first three exceptions for the pruposes of the unit test.
-    def testoptdone(self, data) -> None:
+    def testgeoconverged(self, data) -> None:
         """Has the geometry converged and set optdone to True?"""
-
-        assert data.optdone
 
         targets = data.geotargets
         values = numpy.abs(data.geovalues[-1])
@@ -360,10 +363,8 @@ class Psi4GeoOptTest(GenericGeoOptTest):
     #     http://sirius.chem.vt.edu/psi4manual/latest/optking.html
     # and the default is to check that the max. force is converged and if the max energy change
     # or dispalcement is converged. This is in fact what is tested below.
-    def testoptdone(self, data) -> None:
+    def testgeoconverged(self, data) -> None:
         """Has the geometry converged and set optdone to True?"""
-
-        assert data.optdone
 
         targets = data.geotargets
         values = numpy.abs(data.geovalues[-1])
