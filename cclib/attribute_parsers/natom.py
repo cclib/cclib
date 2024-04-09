@@ -13,7 +13,20 @@ class natom(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["psi4", "qchem"]
+    known_codes = ["gaussian", "psi4","qchem"]
+
+    @staticmethod
+    def gaussian(file_handler,ccdata):
+        # The remaining part will allow us to get the atom count.
+        # When coordinates are given, there is a blank line at the end, but if
+        # there is a Z-matrix here, there will also be variables and we need to
+        # stop at those to get the right atom count.
+        # Also, in older versions there is bo blank line (G98 regressions),
+        # so we need to watch out for leaving the link.
+        dependency_list = ["atomnos"]
+        line = file_handler.last_line
+        if base_parser.check_dependencies(dependency_list, ccdata, "natom"):
+            return {natom.__name__: len(ccdata.atomnos)}
 
     @staticmethod
     def psi4(file_handler, ccdata) -> dict | None:

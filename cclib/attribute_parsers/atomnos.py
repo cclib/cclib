@@ -23,6 +23,8 @@ class atomnos(base_parser):
             file_handler.skip_lines(["d", "Center", "Number", "d"], virtual=True)
             line = file_handler.virtual_next()
             constructed_data = []
+            # print('line in file is')
+            # print(line)
             while list(set(line.strip())) != ["-"]:
                 broken = line.split()
                 constructed_data.append(int(broken[1]))

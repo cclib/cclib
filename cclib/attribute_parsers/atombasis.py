@@ -34,12 +34,12 @@ class atombasis(base_parser):
             beta = False
             if line[5:40] == "Beta Molecular Orbital Coefficients":
                 beta = True
-            colNames = file_handler.virtual_next()
-            symmetries = file_handler.virtual_next()
-            eigenvalues = file_handler.virtual_next()
             base = 0
             curr_atombasis = []
             for base in range(0, ccdata.nmo, 5):
+                colNames = file_handler.virtual_next()
+                symmetries = file_handler.virtual_next()
+                eigenvalues = file_handler.virtual_next()
                 for i in range(ccdata.nbasis):
                     line = file_handler.virtual_next()
                     if i == 0:
@@ -52,7 +52,8 @@ class atombasis(base_parser):
                                 constructed_atombasis.append(curr_atombasis)
                             curr_atombasis = []
                         curr_atombasis.append(i)
-                    curr_atombasis.append(i)
+                if base == 0 and not beta:  # Just do this the first time 'round
+                    constructed_atombasis.append(curr_atombasis)
             constructed_data = {atombasis.__name__: constructed_atombasis}
             return constructed_data
         return None

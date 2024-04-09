@@ -18,14 +18,17 @@ DEFAULT_PARSERS = [
     cprops.atomcoords,
     cprops.atomcharges,
     cprops.atomnos,
-    cprops.atomnos,
+    cprops.coreelectrons,
     cprops.charge,
     cprops.mult,
+    cprops.natom,
+    cprops.coreelectrons, # dependncy on natom
     cprops.nbasis,
     cprops.atommasses,
     cprops.mosyms,
     cprops.nmo,
     cprops.atombasis,
+    cprops.scftargets,
 ]
 
 

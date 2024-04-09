@@ -22,14 +22,14 @@ class atomcoords(base_parser):
         if line.strip() == "Standard orientation:":
             line = file_handler.skip_lines(["d", "Center", "Number", "d"], virtual=True)
             line = file_handler.virtual_next()
-            constructed_atomcoords = []
+            constructed_atomcoords =  []
             curr_atomcoords = []
             while list(set(line.strip())) != ["-"]:
                 broken = line.split()
-                curr_atomcoords.append(np.asarray(map(float, broken[-3:])))
+                curr_atomcoords.append(list(map(float, broken[-3:])))
                 line = file_handler.virtual_next()
-            constructed_atomcoords.append(atomcoords)
-            constructed_data = {atomcoords.__name__: constructed_atomcoords}
+            constructed_atomcoords.append(curr_atomcoords)
+            constructed_data = {atomcoords.__name__: np.array(constructed_atomcoords)}
             return constructed_data
         return None
 
