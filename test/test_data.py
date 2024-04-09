@@ -19,7 +19,7 @@ __filedir__ = os.path.realpath(os.path.dirname(__file__))
 # within the unit test files.
 sys.path.insert(1, os.path.join(__filedir__, "data"))
 
- [   #"ADF",
+[   #"ADF",
     #"DALTON",
     #"FChk",
     #"GAMESS",
@@ -56,9 +56,8 @@ def getdatafile(
     parser: Union[str, Type[cclib.file_handler.FileHandler]],
     subdir,
     files,
-    datatype: Optional[Type[cclib.parser.data.ccData]] = None,
     loglevel: int = logging.ERROR,
-    datatype: Optional[Type[cclib.parser.data.ccData]] = None,
+    datatype: Optional[Type[cclib.parser_properties.data.ccData]] = None,
 ):
     """Returns a parsed logfile.
 
