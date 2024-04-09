@@ -4,6 +4,7 @@
 # the terms of the BSD 3-Clause License.
 from cclib.parser_properties import utils
 from cclib.parser_properties.base_parser import base_parser
+import re
 
 import numpy as np
 
@@ -13,7 +14,7 @@ class atombasis(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["gaussian", "psi4"]
+    known_codes = ["gaussian", "psi4", "qchem"]
 
     @staticmethod
     def gaussian(file_handler, ccdata) -> dict | None:
@@ -80,6 +81,32 @@ class atombasis(base_parser):
                     line = file_handler.virtual_next()
                 constructed_data = {atombasis.__name__: constructed_atombasis}
                 return constructed_data
+        return None
+
+    @staticmethod
+    def qchem(file_handler, ccdata) -> dict | None:
+        # This block comes from `print_orbitals = true/{int}`. Less
+        # precision than `scf_final_print >= 2` for `mocoeffs`, but
+        # important for `aonames` and `atombasis`.
+        alpha_mo_coefficient_headers = []
+        qchem_re_atomindex = re.compile(r"(\d+)_")
+
+        dependency_list = ["aonames", "atomnos", "nbasis", "natom"]
+        line = file_handler.last_line
+        if any(header in line for header in alpha_mo_coefficient_headers):
+            if base_parser.check_dependencies(dependency_list, ccdata, "atombasis"):
+                constructed_atombasis = []
+                for n in range(ccdata.natom):
+                    constructed_atombasis.append([])
+                # Go back through `aonames` to create `atombasis`.
+                assert len(ccdata.aonames) == ccdata.nbasis
+                for aoindex, aoname in enumerate(ccdata.aonames):
+                    atomindex = int(qchem_re_atomindex.search(aoname).groups()[0]) - 1
+                    constructed_atombasis.atombasis[atomindex].append(aoindex)
+                assert len(self.atombasis) == len(self.atomnos)
+                if not hasattr(ccdata, "atombasis"):
+                    constructed_data = {atombasis.__name__: constructed_atombasis}
+                    return constructed_data
         return None
 
     @staticmethod
