@@ -19,27 +19,27 @@ __filedir__ = os.path.realpath(os.path.dirname(__file__))
 # within the unit test files.
 sys.path.insert(1, os.path.join(__filedir__, "data"))
 
-[   #"ADF",
-    #"DALTON",
-    #"FChk",
-    #"GAMESS",
-    #"GAMESSDAT",
-    #"GAMESSUK",
+[  # "ADF",
+    # "DALTON",
+    # "FChk",
+    # "GAMESS",
+    # "GAMESSDAT",
+    # "GAMESSUK",
     "Gaussian",
-    #"Jaguar",
-    #"Molpro",
-    #"Molcas",
-    #"MOPAC",
-    #"Molcas",
-    #"NWChem",
+    # "Jaguar",
+    # "Molpro",
+    # "Molcas",
+    # "MOPAC",
+    # "Molcas",
+    # "NWChem",
     "NBO",
-    #"NWChem",
-    #"QChem",
-    #"Turbomole",
-    #"XTB",
-    #"Turbomole",
+    # "NWChem",
+    # "QChem",
+    # "Turbomole",
+    # "XTB",
+    # "Turbomole",
 ]
-#all_parsers = {name: getattr(cclib.parser, name) for name in parser_names}
+# all_parsers = {name: getattr(cclib.parser, name) for name in parser_names}
 
 
 def get_program_dir(parser_name: str) -> str:
@@ -51,6 +51,7 @@ def get_program_dir(parser_name: str) -> str:
     if parser_name == "GAMESSUK":
         return "GAMESS-UK"
     return parser_name
+
 
 def getdatafile(
     parser: Union[str, Type[cclib.file_handler.FileHandler]],

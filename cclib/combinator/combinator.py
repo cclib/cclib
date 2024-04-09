@@ -22,7 +22,7 @@ DEFAULT_PARSERS = [
     cprops.charge,
     cprops.mult,
     cprops.natom,
-    cprops.coreelectrons, # dependncy on natom
+    cprops.coreelectrons,  # dependncy on natom
     cprops.nbasis,
     cprops.atommasses,
     cprops.mosyms,

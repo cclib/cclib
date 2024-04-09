@@ -15,6 +15,6 @@ class base_parser(abc.ABC):
     def check_dependencies(dependency_list, ccdata, current_property):
         for i in dependency_list:
             prop = ccdata.__getattr__(i)
-            if  prop is None:
+            if prop is None:
                 return False
         return True

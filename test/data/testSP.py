@@ -47,11 +47,20 @@ class GenericSPTest:
         """Are the atomnos correct?"""
 
         # The nuclear charges should be integer values in a NumPy array.
-        assert numpy.all([numpy.issubdtype(atomno, numpy.signedinteger) for atomno in data._ccCollection._parsed_data[0].atomnos])
+        assert numpy.all(
+            [
+                numpy.issubdtype(atomno, numpy.signedinteger)
+                for atomno in data._ccCollection._parsed_data[0].atomnos
+            ]
+        )
         # assert data._ccCollection._parsed_data[0].atomnos.dtype.char == "i"
 
         assert data._ccCollection._parsed_data[0].atomnos.shape == (20,)
-        assert sum(data._ccCollection._parsed_data[0].atomnos == 6) + sum(data._ccCollection._parsed_data[0].atomnos == 1) == 20
+        assert (
+            sum(data._ccCollection._parsed_data[0].atomnos == 6)
+            + sum(data._ccCollection._parsed_data[0].atomnos == 1)
+            == 20
+        )
 
     @skipForParser(
         "DALTON",
@@ -248,7 +257,12 @@ class GenericSPTest:
     @skipForParser("xTB", "not implemented yet")
     def testsymlabels(self, data) -> None:
         """Are all the symmetry labels either Ag/u or Bg/u?"""
-        sumwronglabels = sum([x not in ["Ag", "Bu", "Au", "Bg"] for x in data._ccCollection._parsed_data[0].mosyms[0]])
+        sumwronglabels = sum(
+            [
+                x not in ["Ag", "Bu", "Au", "Bg"]
+                for x in data._ccCollection._parsed_data[0].mosyms[0]
+            ]
+        )
         assert sumwronglabels == 0
 
     @skipForParser("NBO", "attribute not implemented in this version")
@@ -256,7 +270,9 @@ class GenericSPTest:
     def testhomos(self, data) -> None:
         """Is the index of the HOMO equal to 34?"""
         numpy.testing.assert_array_equal(
-            data._ccCollection._parsed_data[0].homos, numpy.array([34], "i"), f"{numpy.array_repr(data._ccCollection._parsed_data[0].homos)} != array([34],'i')"
+            data._ccCollection._parsed_data[0].homos,
+            numpy.array([34], "i"),
+            f"{numpy.array_repr(data._ccCollection._parsed_data[0].homos)} != array([34],'i')",
         )
 
     @skipForParser("FChk", "Formatted Checkpoint files do not have a section for SCF energy")
@@ -282,7 +298,10 @@ class GenericSPTest:
     @skipForParser("xTB", "not implemented yet")
     def testscftargetdim(self, data) -> None:
         """Do the scf targets have the right dimensions?"""
-        assert data._ccCollection._parsed_data[0].scftargets.shape == (len(data._ccCollection._parsed_data[0].scfvalues), len(data._ccCollection._parsed_data[0].scfvalues[0][0]))
+        assert data._ccCollection._parsed_data[0].scftargets.shape == (
+            len(data._ccCollection._parsed_data[0].scfvalues),
+            len(data._ccCollection._parsed_data[0].scfvalues[0][0]),
+        )
 
     @skipForParser("FChk", "Formatted Checkpoint files do not have a section for SCF convergence")
     @skipForParser("GAMESSDAT", "Scftargets probably do not exist in the file")
@@ -311,7 +330,10 @@ class GenericSPTest:
     @skipForParser("xTB", "not implemented yet")
     def testfirstmoenergy(self, data) -> None:
         """Is the lowest energy molecular orbital within the target?"""
-        assert abs(data._ccCollection._parsed_data[0].moenergies[0][0] - self.b3lyp_moenergy) < self.b3lyp_moenergy_delta
+        assert (
+            abs(data._ccCollection._parsed_data[0].moenergies[0][0] - self.b3lyp_moenergy)
+            < self.b3lyp_moenergy_delta
+        )
 
     @skipForParser("DALTON", "mocoeffs not implemented yet")
     @skipForLogfile(
@@ -325,7 +347,10 @@ class GenericSPTest:
         if hasattr(data, "mocoeffs"):
             assert isinstance(data._ccCollection._parsed_data[0].mocoeffs, list)
             assert len(data._ccCollection._parsed_data[0].mocoeffs) == 1
-            assert data._ccCollection._parsed_data[0].mocoeffs[0].shape == (data._ccCollection._parsed_data[0].nmo, data._ccCollection._parsed_data[0].nbasis)
+            assert data._ccCollection._parsed_data[0].mocoeffs[0].shape == (
+                data._ccCollection._parsed_data[0].nmo,
+                data._ccCollection._parsed_data[0].nbasis,
+            )
 
     @skipForParser("DALTON", "mocoeffs not implemented yet")
     @skipForLogfile(
@@ -336,21 +361,29 @@ class GenericSPTest:
     @skipForParser("xTB", "not implemented yet")
     def testfornoormo(self, data) -> None:
         """Do we have NOs or MOs?"""
-        assert hasattr(data._ccCollection._parsed_data[0], "nocoeffs") or hasattr(data._ccCollection._parsed_data[0], "mocoeffs")
+        assert hasattr(data._ccCollection._parsed_data[0], "nocoeffs") or hasattr(
+            data._ccCollection._parsed_data[0], "mocoeffs"
+        )
 
     @skipForParser("NBO", "attribute not implemented in this version")
     def testdimnoccnos(self, data) -> None:
         """Is the length of nooccnos equal to nmo?"""
         if hasattr(data, "nooccnos"):
             assert isinstance(data._ccCollection._parsed_data[0].nooccnos, numpy.ndarray)
-            assert len(data._ccCollection._parsed_data[0].nooccnos) == data._ccCollection._parsed_data[0].nmo
+            assert (
+                len(data._ccCollection._parsed_data[0].nooccnos)
+                == data._ccCollection._parsed_data[0].nmo
+            )
 
     @skipForParser("NBO", "attribute not implemented in this version")
     def testdimnocoeffs(self, data) -> None:
         """Are the dimensions of nocoeffs equal to nmo x nmo?"""
         if hasattr(data, "nocoeffs"):
             assert isinstance(data._ccCollection._parsed_data[0].nocoeffs, numpy.ndarray)
-            assert data.nocoeffs.shape == (data._ccCollection._parsed_data[0].nmo, data._ccCollection._parsed_data[0].nmo)
+            assert data.nocoeffs.shape == (
+                data._ccCollection._parsed_data[0].nmo,
+                data._ccCollection._parsed_data[0].nmo,
+            )
 
     @skipForParser("DALTON", "To print: **INTEGRALS\n.PROPRI")
     @skipForLogfile("FChk/basicGaussian09", "Only available in QChem")
@@ -531,7 +564,8 @@ class GenericSPTest:
         """Does metadata have expected keys and values?"""
         # TODO Test specific values for each unit test.
         assert isinstance(
-            packaging.version.parse(data._ccCollection._parsed_data[0].metadata["package_version"]), packaging.version.Version
+            packaging.version.parse(data._ccCollection._parsed_data[0].metadata["package_version"]),
+            packaging.version.Version,
         )
 
     @skipForParser("FChk", "point group symmetry cannot be printed")
@@ -580,7 +614,8 @@ class GenericSPTest:
         if "cpu_time" in data._ccCollection._parsed_data[0].metadata:
             assert data._ccCollection._parsed_data[0].metadata["cpu_time"]
             assert all(
-                isinstance(cpu_time, datetime.timedelta) for cpu_time in data._ccCollection._parsed_data[0].metadata["cpu_time"]
+                isinstance(cpu_time, datetime.timedelta)
+                for cpu_time in data._ccCollection._parsed_data[0].metadata["cpu_time"]
             )
 
 
@@ -713,10 +748,16 @@ class NBOSPTest(GenericSPTest):
                 "occupancy": float,
                 "energy": float,
             }
-            assert data._ccCollection._parsed_data[0].populations[population_key].keys == list(expected_types.keys())
+            assert data._ccCollection._parsed_data[0].populations[population_key].keys == list(
+                expected_types.keys()
+            )
             for key, exp_type in expected_types.items():
-                assert isinstance(data._ccCollection._parsed_data[0].populations[population_key][key], list)
-                assert isinstance(data._ccCollection._parsed_data[0].populations[population_key][key][0], exp_type)
+                assert isinstance(
+                    data._ccCollection._parsed_data[0].populations[population_key][key], list
+                )
+                assert isinstance(
+                    data._ccCollection._parsed_data[0].populations[population_key][key][0], exp_type
+                )
 
 
 class TurbomoleSPTest(GenericSPTest):
@@ -727,7 +768,10 @@ class TurbomoleSPTest(GenericSPTest):
     def testmetadata_basis_set(self, data) -> None:
         """Does metadata have expected keys and values?"""
         # One of our test cases used sto-3g hondo
-        valid_basis = data._ccCollection._parsed_data[0].metadata["basis_set"].lower() in ("sto-3g", "sto-3g hondo")
+        valid_basis = data._ccCollection._parsed_data[0].metadata["basis_set"].lower() in (
+            "sto-3g",
+            "sto-3g hondo",
+        )
         assert valid_basis
 
 
@@ -751,7 +795,10 @@ class GenericDispersionTest:
     def testdispersionenergies(self, data) -> None:
         """Is the dispersion energy parsed correctly?"""
         assert len(data._ccCollection._parsed_data[0].dispersionenergies) == 1
-        assert abs(data._ccCollection._parsed_data[0].dispersionenergies[0] - self.dispersionenergy) < 2.0e-7
+        assert (
+            abs(data._ccCollection._parsed_data[0].dispersionenergies[0] - self.dispersionenergy)
+            < 2.0e-7
+        )
 
 
 class FireflyDispersionTest(GenericDispersionTest):
@@ -778,7 +825,10 @@ class SolventMetadataTest:
     def test_solvent_dielectric(self, data) -> None:
         """Check solvent dielectric was parsed correctly"""
         assert (
-            abs(data._ccCollection._parsed_data[0].metadata["solvent_params"]["epsilon"] - self.static_dielectric_constant)
+            abs(
+                data._ccCollection._parsed_data[0].metadata["solvent_params"]["epsilon"]
+                - self.static_dielectric_constant
+            )
             < 1.0e-4
         )
 

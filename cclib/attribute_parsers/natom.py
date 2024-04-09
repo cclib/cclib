@@ -16,7 +16,7 @@ class natom(base_parser):
     known_codes = ["gaussian", "psi4","qchem"]
 
     @staticmethod
-    def gaussian(file_handler,ccdata):
+    def gaussian(file_handler, ccdata):
         # The remaining part will allow us to get the atom count.
         # When coordinates are given, there is a blank line at the end, but if
         # there is a Z-matrix here, there will also be variables and we need to

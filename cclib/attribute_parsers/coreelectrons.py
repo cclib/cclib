@@ -28,7 +28,7 @@ class coreelectrons(base_parser):
                 if line.find("Centers:") < 0:
                     return
                     # This was continue before parser refactoring.
-                 # continue
+                # continue
 
                 # Needs to handle code like the following:
                 #
@@ -46,7 +46,7 @@ class coreelectrons(base_parser):
                 while line.find("Centers:") >= 0:
                     temp = line[10:]
                     for i in range(0, len(temp) - 3, 3):
-                       centers.append(int(temp[i : i + 3]))
+                        centers.append(int(temp[i : i + 3]))
                     line = file_handler.virtual_next()
                 centers.sort()  # Not always in increasing order
 

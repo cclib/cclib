@@ -16,9 +16,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterator, List, Mapping, Optional, Tuple, Union
 
+from cclib.file_handler import FileHandler
 from cclib.io import ccopen
 from cclib.parser_properties.data import ccData
-from cclib.file_handler import FileHandler
 
 import pytest
 import yaml
@@ -301,7 +301,7 @@ def data(request) -> ccData:
             filenames = [filenames]
         ccdriver_instance._fileHandler.filenames = filenames
         ccdriver_instance.parsername = ccdriver_instance.identified_program
-        #cc.parserclassname = str(ccdriver_instance.__class__).split(".")[-1][:-2]
+        # cc.parserclassname = str(ccdriver_instance.__class__).split(".")[-1][:-2]
         _CACHE[first] = ccdriver_instance
     return _CACHE[first]
 
@@ -412,13 +412,13 @@ def pytest_sessionfinish(session: "pytest.Session") -> None:
     """
     if _CACHE:
         coverage_accumulate = defaultdict(set)
-        #for data in _CACHE.values():
+        # for data in _CACHE.values():
         #    coverage_accumulate[data.__dict__["parserclassname"]].update(data.__dict__.keys())
-        #for parserclassname in coverage_accumulate:
-         #   coverage_accumulate[parserclassname] -= _EXCLUDE
-        #coverage = {
+        # for parserclassname in coverage_accumulate:
+        #   coverage_accumulate[parserclassname] -= _EXCLUDE
+        # coverage = {
         #    parserclassname: sorted(attributenames)
         #    for parserclassname, attributenames in coverage_accumulate.items()
-        #}
-        #coverage_dir = pytest.Cache.cache_dir_from_config(session.config)
-        #(coverage_dir / "coverage_unit.json").write_text(json.dumps(coverage), encoding="utf-8")
+        # }
+        # coverage_dir = pytest.Cache.cache_dir_from_config(session.config)
+        # (coverage_dir / "coverage_unit.json").write_text(json.dumps(coverage), encoding="utf-8")

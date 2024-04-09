@@ -13,4 +13,3 @@
 # information, and so we made dedicated unit test logfiles in that case.
 
 SP        Gaussian    GaussianSPTest        basicGaussian16             dvb_sp.out
-

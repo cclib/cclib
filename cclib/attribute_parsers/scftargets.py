@@ -26,7 +26,7 @@ class scftargets(base_parser):
                 constructed_scftargets = []
 
             curr_scftargets = []
-            
+
             # The RMS density matrix.
             curr_scftargets.append(utils.float(line.split("=")[1].split()[0]))
             line = file_handler.virtual_next()
@@ -37,19 +37,19 @@ class scftargets(base_parser):
             # For G03, there's also the energy (not for G98).
             if line[1:10] == "Requested":
                 curr_scftargets.append(utils.float(line.strip().split("=")[1][:-1]))
-            
+
             constructed_scftargets.append(curr_scftargets)
             return {scftargets.__name__: constructed_scftargets}
-        
+
         # Extract SCF convergence information (QM calcs).
         if line[1:10] == "Cycle   1":
             constructed_scftargets = ccdata.scftargets
             if constructed_scftargets is None:
                 constructed_scftargets = []
-            
+
         if line[1:4] == "It=":
             curr_scftargets = numpy.array([1e-7], "d")  # This is the target value for the rms
-            
+
             if line.find(" Energy") == 0:
                 constructed_scftargets = curr_scftargets
 
