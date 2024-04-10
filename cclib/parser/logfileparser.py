@@ -77,9 +77,7 @@ class Logfile(ABC):
 
         # Set up the metadata.
         if not hasattr(self, "metadata"):
-            self.metadata = {}
-            self.metadata["package"] = self.logname
-            self.metadata["methods"] = []
+            self.metadata = {"package": self.logname, "methods": []}
 
         # Periodic table of elements.
         self.table = utils.PeriodicTable()

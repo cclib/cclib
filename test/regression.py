@@ -558,6 +558,31 @@ def testDALTON_DALTON_2018_tdpbe_normal_sym_out(logfile):
     )
 
 
+# Formatted checkpoint #
+
+
+def testFChk_Gaussian03_dvb_gopt_unconverged_fchk(logfile):
+    metadata = logfile.data.metadata
+    assert metadata["package"] == "FChk[Gaussian]"
+
+
+def testFChk_Gaussian16_dvb_gopt_unconverged_fchk(logfile):
+    metadata = logfile.data.metadata
+    assert metadata["package"] == "FChk[Gaussian]"
+
+
+def testFChk_QChem5_3_dvb_gopt_unconverged_in_fchk(logfile):
+    metadata = logfile.data.metadata
+    assert metadata["package"] == "FChk[QChem]"
+
+
+def testFChk_QChem5_3_dvb_sp_unconverged_in_fchk(logfile):
+    metadata = logfile.data.metadata
+    assert metadata["package"] == "FChk[QChem]"
+    assert "success" in metadata
+    assert not metadata["success"]
+
+
 # Firefly #
 
 
