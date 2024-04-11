@@ -383,7 +383,7 @@ class FChk(logfileparser.Logfile):
         ), f"Length of atombasis != natom: {len(atombasis)} != {self.natom}"
         self.set_attribute("atombasis", atombasis)
 
-    def after_parsing(self):
+    def after_parsing(self) -> None:
         """Correct data or do parser-specific validation after parsing is finished."""
 
         # Q-Chem will write the fchk file no matter what happens to the
@@ -393,21 +393,24 @@ class FChk(logfileparser.Logfile):
             self.success = False
 
         if hasattr(self, "program"):
+            unknown_jobtype = False
             self.metadata["package"] = f"FChk[{self.program}]"
             if self.program == "Gaussian":
-                assert self.jobtype in ("sp", "freq", "fopt", "scan")
+                unknown_jobtype = self.jobtype not in ("sp", "freq", "fopt", "scan")
                 if self.jobtype == "sp":
                     self.success = True
             elif self.program == "Psi4":
-                assert self.jobtype in ("sp", "force")
+                unknown_jobtype = self.jobtype not in ("sp", "force")
                 # The calculation will halt before making it to the fchk(wfn,
                 # ...) call in the input file, so the file's existence always
                 # signifies success.
                 self.success = True
             elif self.program == "QChem":
-                assert self.jobtype in ("sp", "freq", "force", "fopt")
+                unknown_jobtype = self.jobtype not in ("sp", "freq", "force", "fopt")
             else:
                 self.logger.info(f"Unknown originating program for fchk file: {self.program}")
+            if unknown_jobtype:
+                self.logger.info(f"Unknown job type for fchk file: {self.jobtype}")
         else:
             self.logger.info("Couldn't determine originating program for fchk file")
 
