@@ -530,7 +530,6 @@ class GenericSPTest:
             packaging.version.parse(data.metadata["package_version"]), packaging.version.Version
         )
 
-    @skipForLogfile("Molcas/basicOpenMolcas18.0/dvb_sp.out", "not implemented yet")
     @skipForLogfile("NBO/basicNBO7.0/basicORCA5.0/dvb_sp.nbo.out", "TODO impossible to determine?")
     @skipForLogfile("FChk/basicGaussian09/dvb_sp.fchk", "impossible to determine")
     @skipForLogfile("FChk/basicQChem5.2/dvb_sp_modified.fchk", "impossible to determine")
