@@ -558,6 +558,40 @@ def testDALTON_DALTON_2018_tdpbe_normal_sym_out(logfile):
     )
 
 
+# Formatted checkpoint #
+
+
+def testFChk_Gaussian03_dvb_gopt_unconverged_fchk(logfile):
+    metadata = logfile.data.metadata
+    assert metadata["package"] == "FChk[Gaussian]"
+    # Impossible to determined based upon current parsed data
+    assert "success" not in metadata
+
+
+def testFChk_Gaussian16_dvb_gopt_unconverged_fchk(logfile):
+    metadata = logfile.data.metadata
+    assert metadata["package"] == "FChk[Gaussian]"
+    # >= g16 has "Job Status"
+    assert "success" in metadata
+    assert not metadata["success"]
+
+
+def testFChk_QChem5_3_dvb_gopt_unconverged_in_fchk(logfile):
+    metadata = logfile.data.metadata
+    assert metadata["package"] == "FChk[QChem]"
+    # Determined because mocoeffs are missing
+    assert "success" in metadata
+    assert not metadata["success"]
+
+
+def testFChk_QChem5_3_dvb_sp_unconverged_in_fchk(logfile):
+    metadata = logfile.data.metadata
+    assert metadata["package"] == "FChk[QChem]"
+    # Determined because mocoeffs are missing
+    assert "success" in metadata
+    assert not metadata["success"]
+
+
 # Firefly #
 
 

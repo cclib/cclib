@@ -310,6 +310,11 @@ class Psi3(logfileparser.Logfile):
             else:
                 assert self.moments[1] == dipole
 
+        # TODO not sure if this line also appears in failed calculations,
+        # since we don't have any to check.
+        if line.strip() == "PSI3 Computation Completed":
+            self.metadata["success"] = True
+
     def _parse_mosyms_moenergies(self, inputfile, spinidx):
         """Parse molecular orbital symmetries and energies from the
         'Post-Iterations' section.

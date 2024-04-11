@@ -65,12 +65,14 @@ jobs:
         run: |
           bash .github/scripts/run_pytest_methods.bash 2
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           files: ./coverage-unit.xml,./coverage-regression.xml,./coverage-method.xml
           name: codecov-cclib
-          fail_ci_if_error: true
+          fail_ci_if_error: false
           verbose: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         if: matrix.container == 'shivupa/cclib-ci:py311-edge'
       - name: Install pypa/build
         run: |

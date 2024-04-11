@@ -72,6 +72,8 @@ class Molcas(logfileparser.Logfile):
         # ccData object and return an iterator - something for 2.x
         self.gateway_module_count = 0
 
+        self.success_headers = ("Happy landing!", "RC_ALL_IS_WELL")
+
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
@@ -1014,3 +1016,6 @@ class Molcas(logfileparser.Logfile):
                     ncore = 0
 
                 line = next(inputfile)
+
+        if any(candidate in line for candidate in self.success_headers):
+            self.metadata["success"] = True
