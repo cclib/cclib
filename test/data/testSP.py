@@ -690,7 +690,10 @@ class Jaguar7SPTest(JaguarSPTest):
     # Jaguar prints only 10 virtual MOs by default. Can we re-run with full output?
     def testlengthmoenergies(self, data) -> None:
         """Is the number of evalues equal to the number of occ. MOs + 10?"""
-        assert len(data._ccCollection._parsed_data[0].moenergies[0]) == data._ccCollection._parsed_data[0].homos[0] + 11
+        assert (
+            len(data._ccCollection._parsed_data[0].moenergies[0])
+            == data._ccCollection._parsed_data[0].homos[0] + 11
+        )
 
 
 class MolcasSPTest(GenericSPTest):

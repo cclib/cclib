@@ -20,35 +20,36 @@ class moenergies(base_parser):
         line = file_handler.last_line
         if line[1:6] == "Alpha" and line.find("eigenvalues") >= 0:
             # For counterpoise fragments, skip these lines.
-         if getattr(ccdata,"moenergies") is None:
-            constructed_moenergies = [[]]
-            while line.find("Alpha") == 1:
-                part = line[28:]
-                i = 0
-                while i * 10 + 4 < len(part):
-                    s = part[i * 10 : (i + 1) * 10]
-                    try:
-                        x = utils.float(s)
-                    except ValueError:
-                        x = np.nan
-                    constructed_moenergies[0].append(utils.convertor(x, "hartree", "eV"))
-                    i += 1
-                line = file_handler.virtual_next()
-            if line.find("Beta") == 2:
-                constructed_moenergies.append([])
+            if getattr(ccdata, "moenergies") is None:
+                constructed_moenergies = [[]]
+                while line.find("Alpha") == 1:
+                    part = line[28:]
+                    i = 0
+                    while i * 10 + 4 < len(part):
+                        s = part[i * 10 : (i + 1) * 10]
+                        try:
+                            x = utils.float(s)
+                        except ValueError:
+                            x = np.nan
+                        constructed_moenergies[0].append(utils.convertor(x, "hartree", "eV"))
+                        i += 1
+                    line = file_handler.virtual_next()
+                if line.find("Beta") == 2:
+                    constructed_moenergies.append([])
 
-            while line.find("Beta") == 2:
+                while line.find("Beta") == 2:
+                    part = line[28:]
+                    i = 0
+                    while i * 10 + 4 < len(part):
+                        x = part[i * 10 : (i + 1) * 10]
+                        constructed_moenergies[1].append(
+                            utils.convertor(utils.float(x), "hartree", "eV")
+                        )
+                        i += 1
+                    line = file_handler.virtual_next()
 
-                part = line[28:]
-                i = 0
-                while i * 10 + 4 < len(part):
-                    x = part[i * 10 : (i + 1) * 10]
-                    constructed_moenergies[1].append(utils.convertor(utils.float(x), "hartree", "eV"))
-                    i += 1
-                line = file_handler.virtual_next()
-
-            constructed_moenergies = [np.array(x, "d") for x in constructed_moenergies]
-            return {moenergies.__name__:constructed_moenergies}
+                constructed_moenergies = [np.array(x, "d") for x in constructed_moenergies]
+                return {moenergies.__name__: constructed_moenergies}
         return None
 
     @staticmethod

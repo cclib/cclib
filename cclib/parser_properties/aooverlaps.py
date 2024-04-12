@@ -26,8 +26,8 @@ class aooverlaps(base_parser):
         line = file_handler.last_line
         if line[1:4] == "***" and (line[5:12] == "Overlap" or line[8:15] == "Overlap"):
             # Ensure that this is the main calc and not a fragment
-            #if ccdata.counterpoise != 0:
-             #   return
+            # if ccdata.counterpoise != 0:
+            #   return
             constructed_aooverlaps = np.zeros((ccdata.nbasis, ccdata.nbasis), "d")
             # Overlap integrals for basis fn#1 are in aooverlaps[0]
             base = 0
@@ -42,8 +42,7 @@ class aooverlaps(base_parser):
                         constructed_aooverlaps[i + base, base + j] = k
                 base += 5
                 colmNames = file_handler.virtual_next()
-            return {aooverlaps.__name__:constructed_aooverlaps}
-
+            return {aooverlaps.__name__: constructed_aooverlaps}
 
     @staticmethod
     def parse(file_handler, program: str, ccdata) -> dict | None:
