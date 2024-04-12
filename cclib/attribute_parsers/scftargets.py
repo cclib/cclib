@@ -4,6 +4,7 @@
 # the terms of the BSD 3-Clause License.
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
+from typing import Optional
 
 
 class scftargets(base_parser):
@@ -14,7 +15,7 @@ class scftargets(base_parser):
     known_codes = ["gaussian"]
 
     @staticmethod
-    def gaussian(file_handler, ccdata) -> dict | None:
+    def gaussian(file_handler, ccdata) ->  Optional[dict]:
         line = file_handler.last_line
         if not ccdata.BOMD and line[1:44] == "Requested convergence on RMS density matrix":
             constructed_scftargets = ccdata.scftargets
@@ -57,7 +58,7 @@ class scftargets(base_parser):
         return None
 
     @staticmethod
-    def parse(file_handler, program, ccdata) -> dict | None:
+    def parse(file_handler, program, ccdata) ->  Optional[dict]:
         constructed_data = None
         if program in scftargets.known_codes:
             file_handler.virtual_set()

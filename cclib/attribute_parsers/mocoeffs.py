@@ -6,6 +6,7 @@ from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
 
 import numpy as np
+from typing import Optional
 
 
 class mocoeffs(base_parser):
@@ -16,7 +17,7 @@ class mocoeffs(base_parser):
     known_codes = ["psi4"]
 
     @staticmethod
-    def psi4(file_handler, ccdata) -> dict | None:
+    def psi4(file_handler, ccdata) -> Optional[dict]:
         line = file_handler.last_line
         if "Molecular Orbitals" in line:
             file_handler.skip_lines(["b"], virtual=True)
@@ -61,7 +62,7 @@ class mocoeffs(base_parser):
         return None
 
     @staticmethod
-    def parse(file_handler, program: str, ccdata) -> list | None:
+    def parse(file_handler, program: str, ccdata) ->  Optional[dict]:
         constructed_data = None
         if program in mocoeffs.known_codes:
             file_handler.virtual_set()

@@ -6,6 +6,7 @@ from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
 
 import numpy as np
+from typing import Optional
 
 
 class charge(base_parser):
@@ -16,7 +17,7 @@ class charge(base_parser):
     known_codes = ["gaussian", "psi4", "qchem"]
 
     @staticmethod
-    def gaussian(file_handler, ccdata) -> dict | None:
+    def gaussian(file_handler, ccdata) -> Optional[dict]:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
         if line[1:7] == "Charge":
@@ -26,7 +27,7 @@ class charge(base_parser):
         return None
 
     @staticmethod
-    def psi4(file_handler, ccdata) -> list | None:
+    def psi4(file_handler, ccdata) -> Optional[dict]:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
         if line[2:16].lower() == "charge       =":
@@ -58,7 +59,7 @@ class charge(base_parser):
         return constructed_data
 
     @staticmethod
-    def parse(file_handler, program: str, ccdata) -> dict | None:
+    def parse(file_handler, program: str, ccdata) -> Optional[dict]:
         constructed_data = None
         if program in charge.known_codes:
             file_handler.virtual_set()

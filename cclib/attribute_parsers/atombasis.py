@@ -6,6 +6,7 @@ import re
 
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
+from typing import Optional
 
 import numpy as np
 
@@ -18,7 +19,7 @@ class atombasis(base_parser):
     known_codes = ["gaussian", "psi4", "qchem"]
 
     @staticmethod
-    def gaussian(file_handler, ccdata) -> dict | None:
+    def gaussian(file_handler, ccdata) -> Optional[dict]:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         dependency_list = ["nmo", "nbasis"]
         line = file_handler.last_line
@@ -59,7 +60,7 @@ class atombasis(base_parser):
         return None
 
     @staticmethod
-    def psi4(file_handler, ccdata) -> dict | None:
+    def psi4(file_handler, ccdata) -> Optional[dict]:
         dependency_list = ["nmo", "nbasis"]
         if getattr(ccdata, "atombasis") == None:
             line = file_handler.last_line
@@ -112,7 +113,7 @@ class atombasis(base_parser):
         return None
 
     @staticmethod
-    def parse(file_handler, program: str, ccdata) -> dict | None:
+    def parse(file_handler, program: str, ccdata) -> Optional[dict]:
         constructed_data = None
         if program in atombasis.known_codes:
             file_handler.virtual_set()

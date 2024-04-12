@@ -6,6 +6,7 @@ from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
 
 import numpy as np
+from typing import Optional
 
 
 class nbasis(base_parser):
@@ -16,8 +17,7 @@ class nbasis(base_parser):
     known_codes = ["gaussian", "psi4", "qchem"]
 
     @staticmethod
-    def gaussian(file_handler, ccdata) -> dict | None:
-        # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
+    def gaussian(file_handler, ccdata) ->  Optional[dict]:
         line = file_handler.last_line
         if line[1:7] == "NBasis" or line[4:10] == "NBasis":
             # For counterpoise fragment, skip these lines.
@@ -43,7 +43,7 @@ class nbasis(base_parser):
         return None
 
     @staticmethod
-    def psi4(file_handler, ccdata) -> int | None:
+    def psi4(file_handler, ccdata) -> Optional[dict]:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
         if "Primary Basis" in line:
@@ -67,7 +67,7 @@ class nbasis(base_parser):
         return constructed_data
 
     @staticmethod
-    def parse(file_handler, program: str, ccdata) -> int | None:
+    def parse(file_handler, program: str, ccdata) -> Optional[dict]:
         constructed_data = None
         if program in nbasis.known_codes:
             file_handler.virtual_set()

@@ -4,6 +4,7 @@
 # the terms of the BSD 3-Clause License.
 from cclib.parser_properties import utils
 from cclib.parser_properties.base_parser import base_parser
+from typing import Optional
 
 import numpy as np
 
@@ -16,7 +17,7 @@ class aooverlaps(base_parser):
     known_codes = ["gaussian"]
 
     @staticmethod
-    def gaussian(file_handler, ccdata) -> dict | None:
+    def gaussian(file_handler, ccdata) -> Optional[dict]:
         # Molecular orbital overlap matrix.
         # Has to deal with lines such as:
         #   *** Overlap ***
@@ -45,7 +46,7 @@ class aooverlaps(base_parser):
             return {aooverlaps.__name__: constructed_aooverlaps}
 
     @staticmethod
-    def parse(file_handler, program: str, ccdata) -> dict | None:
+    def parse(file_handler, program: str, ccdata) -> Optional[dict]:
         constructed_data = None
         if program in aooverlaps.known_codes:
             file_handler.virtual_set()

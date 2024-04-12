@@ -6,6 +6,7 @@ from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
 
 import numpy as np
+from typing import Optional
 
 
 class atomnos(base_parser):
@@ -16,7 +17,7 @@ class atomnos(base_parser):
     known_codes = ["gaussian", "psi4", "qchem"]
 
     @staticmethod
-    def gaussian(file_handler, ccdata) -> dict | None:
+    def gaussian(file_handler, ccdata) -> Optional[dict]:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
         if line.strip() == "Standard orientation:":
@@ -33,7 +34,7 @@ class atomnos(base_parser):
         return None
 
     @staticmethod
-    def psi4(file_handler, ccdata) -> dict | None:
+    def psi4(file_handler, ccdata) -> Optional[dict]:
         table = utils.PeriodicTable()
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
@@ -79,7 +80,7 @@ class atomnos(base_parser):
         return constructed_data
 
     @staticmethod
-    def parse(file_handler, program: str, ccdata) -> dict | None:
+    def parse(file_handler, program: str, ccdata) -> Optional[dict]:
         constructed_data = None
         if program in atomnos.known_codes:
             file_handler.virtual_set()

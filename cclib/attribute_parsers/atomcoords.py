@@ -6,6 +6,7 @@ from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
 
 import numpy as np
+from typing import Optional
 
 
 class atomcoords(base_parser):
@@ -16,7 +17,7 @@ class atomcoords(base_parser):
     known_codes = ["gaussian", "psi4", "qchem"]
 
     @staticmethod
-    def gaussian(file_handler, ccdata) -> dict | None:
+    def gaussian(file_handler, ccdata) -> Optional[dict]:
         line = file_handler.last_line
         constructed_data = None
         if line.strip() == "Standard orientation:":
@@ -34,7 +35,7 @@ class atomcoords(base_parser):
         return None
 
     @staticmethod
-    def psi4(file_handler, ccdata) -> dict | None:
+    def psi4(file_handler, ccdata) -> Optional[dict]:
         line = file_handler.last_line
         if "Geometry (in " in line:
             ## I am not handling units here, i think this should be done on the ccdata object and not the parser as mentioned in #1124
@@ -82,7 +83,7 @@ class atomcoords(base_parser):
             return constructed_data
 
     @staticmethod
-    def parse(file_handler, program: str, ccdata) -> dict | None:
+    def parse(file_handler, program: str, ccdata) -> Optional[dict]:
         constructed_data = None
         if program in atomcoords.known_codes:
             file_handler.virtual_set()

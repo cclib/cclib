@@ -6,6 +6,7 @@ from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
 
 import numpy as np
+from typing import Optional
 
 
 class coreelectrons(base_parser):
@@ -16,7 +17,7 @@ class coreelectrons(base_parser):
     known_codes = ["gaussian"]
 
     @staticmethod
-    def gaussian(file_handler, ccdata) -> dict | None:
+    def gaussian(file_handler, ccdata) -> Optional[dict]:
         dependency_list = ["natom"]
         line = file_handler.last_line
         if base_parser.check_dependencies(dependency_list, ccdata, "coreelectrons"):
@@ -65,7 +66,7 @@ class coreelectrons(base_parser):
         return None
 
     @staticmethod
-    def parse(file_handler, program: str, ccdata) -> dict | None:
+    def parse(file_handler, program: str, ccdata) -> Optional[dict]:
         constructed_data = None
         if program in coreelectrons.known_codes:
             file_handler.virtual_set()

@@ -6,6 +6,7 @@ from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
 
 import numpy as np
+from typing import Optional
 
 
 def gaussian_normalizesym(label):
@@ -79,7 +80,7 @@ class mosyms(base_parser):
     known_codes = ["gaussian", "qchem"]
 
     @staticmethod
-    def gaussian(file_handler, ccdata) -> dict | None:
+    def gaussian(file_handler, ccdata) -> Optional[dict]:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
         constructed_data = None
@@ -194,7 +195,7 @@ class mosyms(base_parser):
         return parsed_data
 
     @staticmethod
-    def parse(file_handler, program: str, ccdata) -> dict | None:
+    def parse(file_handler, program: str, ccdata) -> Optional[dict]:
         constructed_data = None
         if program in mosyms.known_codes:
             file_handler.virtual_set()

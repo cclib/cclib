@@ -6,6 +6,7 @@ from cclib.parser_properties import utils
 from cclib.parser_properties.base_parser import base_parser
 
 import numpy as np
+from typing import Optional
 
 
 class moenergies(base_parser):
@@ -16,7 +17,7 @@ class moenergies(base_parser):
     known_codes = ["gaussian"]
 
     @staticmethod
-    def gaussian(file_handler, ccdata) -> dict | None:
+    def gaussian(file_handler, ccdata) -> Optional[dict]:
         line = file_handler.last_line
         if line[1:6] == "Alpha" and line.find("eigenvalues") >= 0:
             # For counterpoise fragments, skip these lines.
@@ -53,7 +54,7 @@ class moenergies(base_parser):
         return None
 
     @staticmethod
-    def parse(file_handler, program: str, ccdata) -> dict | None:
+    def parse(file_handler, program: str, ccdata) -> Optional[dict]:
         constructed_data = None
         if program in moenergies.known_codes:
             file_handler.virtual_set()

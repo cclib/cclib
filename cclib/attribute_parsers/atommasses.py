@@ -6,6 +6,7 @@ from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
 
 import numpy as np
+from typing import Optional
 
 
 class atommasses(base_parser):
@@ -16,7 +17,7 @@ class atommasses(base_parser):
     known_codes = ["gaussian", "qchem"]
 
     @staticmethod
-    def gaussian(file_handler, ccdata) -> list | None:
+    def gaussian(file_handler, ccdata) -> Optional[dict]:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
         constructed_data = None
@@ -54,7 +55,7 @@ class atommasses(base_parser):
         return None
 
     @staticmethod
-    def parse(file_handler, program: str, ccdata) -> list | None:
+    def parse(file_handler, program: str, ccdata) -> Optional[dict]:
         constructed_data = None
         if program in atommasses.known_codes:
             file_handler.virtual_set()
