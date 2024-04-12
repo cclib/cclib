@@ -8,6 +8,7 @@
 import datetime
 import re
 from itertools import zip_longest
+from typing import Callable, Optional, Tuple
 
 from cclib.parser import logfileparser, utils
 
@@ -1307,11 +1308,11 @@ Dispersion correction           -0.016199959
 
             # Standard header, occasionally changes
             header = ["d", "header", "header", "d"]
-            energy_intensity = None
+            energy_intensity: Optional[Callable[[str], Tuple[float, float]]] = None
 
             if line == "ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS":
 
-                def energy_intensity(line):
+                def energy_intensity(line: str) -> Tuple[float, float]:
                     """TDDFT and related methods standard method of output
                     -----------------------------------------------------------------------------
                              ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS
@@ -1338,7 +1339,7 @@ Dispersion correction           -0.016199959
                 == "COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM (origin adjusted)"
             ):
 
-                def energy_intensity(line):
+                def energy_intensity(line: str) -> Tuple[float, float]:
                     """TDDFT with DoQuad == True
                     ------------------------------------------------------------------------------------------------------
                                     COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM
@@ -1367,7 +1368,7 @@ Dispersion correction           -0.016199959
                 == "COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM (Origin Independent, Length Representation)"
             ):
 
-                def energy_intensity(line):
+                def energy_intensity(line: str) -> Tuple[float, float]:
                     """TDDFT with doQuad == True (Origin Independent Length Representation)
                     -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
                                                         COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM (Origin Independent, Length Representation)
@@ -1387,7 +1388,7 @@ Dispersion correction           -0.016199959
                 line[6:23] == "EMISSION SPECTRUM" or line[6:25] == "ABSORPTION SPECTRUM"
             ):
 
-                def energy_intensity(line):
+                def energy_intensity(line: str) -> Tuple[float, float]:
                     """X-Ray from XES (emission or absorption, electric or velocity dipole moments)
                     -------------------------------------------------------------------------------------
                               X-RAY ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS
@@ -1406,7 +1407,7 @@ Dispersion correction           -0.016199959
             ):
                 header = ["header", "d", "header", "d", "header", "header", "d"]
 
-                def energy_intensity(line):
+                def energy_intensity(line: str) -> Tuple[float, float]:
                     """XAS with quadrupole (origin adjusted)
                     -------------------------------------------------------------------------------------------------------------------------------
                               COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE X-RAY ABSORPTION SPECTRUM
@@ -1437,7 +1438,7 @@ Dispersion correction           -0.016199959
 
             elif line[:55] == "SPIN ORBIT CORRECTED ABSORPTION SPECTRUM VIA TRANSITION":
 
-                def energy_intensity(line):
+                def energy_intensity(line: str) -> Tuple[float, float]:
                     """ROCIS dipole approximation with SOC == True (electric or velocity dipole moments)
                     -------------------------------------------------------------------------------
                     SPIN ORBIT CORRECTED ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS
@@ -1460,7 +1461,7 @@ Dispersion correction           -0.016199959
                 == "SOC CORRECTED COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM"
             ):
 
-                def energy_intensity(line):
+                def energy_intensity(line: str) -> Tuple[float, float]:
                     """ROCIS with DoQuad = True and SOC = True (also does origin adjusted)
                     ------------------------------------------------------------------------------------------------------
                               ROCIS COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM
@@ -1491,7 +1492,7 @@ Dispersion correction           -0.016199959
                 self.metadata["package_version"]
             ).release > (2, 6):
 
-                def energy_intensity(line):
+                def energy_intensity(line: str) -> Tuple[float, float]:
                     """CASSCF absorption spectrum
                     ------------------------------------------------------------------------------------------
                                                     ABSORPTION SPECTRUM
@@ -1529,6 +1530,7 @@ Dispersion correction           -0.016199959
             if not hasattr(self, "transprop"):
                 self.transprop = {}
 
+            # A spectrum section was found, so a function for parsing the energy and intensity is available.
             if energy_intensity is not None:
                 etenergies = []
                 etoscs = []
@@ -1537,8 +1539,8 @@ Dispersion correction           -0.016199959
                 # other times they are blank (other than a new line)
                 while len(line.strip("-")) > 2:
                     energy, intensity = energy_intensity(line)
-                    etenergies.append(float(energy))
-                    etoscs.append(float(intensity))
+                    etenergies.append(energy)
+                    etoscs.append(intensity)
 
                     line = next(inputfile)
 
