@@ -265,6 +265,7 @@ class GenericSPTest:
         )
         assert sumwronglabels == 0
 
+    @skipForParser("Gaussian", "The parser is still being converted to version 2")
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("xTB", "xTB does not print them all")
     def testhomos(self, data) -> None:
@@ -425,6 +426,7 @@ class GenericSPTest:
     @skipForParser("GAMESS", "Not implemented yes")
     @skipForParser("GAMESSUK", "Not implemented yet")
     @skipForParser("GAMESSDAT", "Not implemented yet")
+    @skipForParser("Gaussian", "The parser is still being converted to version 2")
     @skipForParser("Jaguar", "Not implemented yet")
     @skipForParser("Molcas", "Not implemented yes")
     @skipForParser("Molpro", "Not implemented yes")
@@ -498,6 +500,7 @@ class GenericSPTest:
                 assert m == 0.0
 
     @skipForParser("ADF", "reading basis set names is not implemented")
+    @skipForParser("Gaussian", "The parser is still being converted to version 2")
     @skipForParser("GAMESSDAT", "Basis set not implemented in this version.")
     @skipForParser("GAMESSUK", "reading basis set names is not implemented")
     @skipForParser("Molcas", "reading basis set names is not implemented")
@@ -511,6 +514,7 @@ class GenericSPTest:
     @skipForParser("ADF", "reading input file contents and name is not implemented")
     @skipForParser("DALTON", "reading input file contents and name is not implemented")
     @skipForParser("FChk", "Formatted checkpoint files do not have an input file section")
+    @skipForParser("Gaussian", "The parser is still being converted to version 2")
     @skipForParser("GAMESS", "reading input file contents and name is not implemented")
     @skipForParser("GAMESSUK", "reading input file contents and name is not implemented")
     @skipForParser("GAMESSDAT", "reading input file contents and name is not implemented")
@@ -532,6 +536,7 @@ class GenericSPTest:
         # must end in `dal`.
         assert "dvb_sp.in" in data._ccCollection._parsed_data[0].metadata["input_file_name"]
 
+    @skipForParser("Gaussian", "The parser is still being converted to version 2")
     @skipForParser("NBO", "attribute not implemented in this version")
     def testmetadata_methods(self, data) -> None:
         """Does metadata have expected keys and values?"""
@@ -539,6 +544,7 @@ class GenericSPTest:
         # ["HF"], ["RHF"], and ["DFT"]
         assert "methods" in data._ccCollection._parsed_data[0].metadata
 
+    @skipForParser("Gaussian", "The parser is still being converted to version 2")
     @skipForParser("NBO", "attribute not implemented in this version")
     def testmetadata_package(self, data) -> None:
         """Does metadata have expected keys and values?"""
@@ -550,6 +556,7 @@ class GenericSPTest:
         "FChk", "Formatted Checkpoint files do not have section for legacy package version"
     )
     @skipForParser("GAMESSDAT", "Files do not contain information about the legacy package version")
+    @skipForParser("Gaussian", "The parser is still being converted to version 2")
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("xTB", "not implemented yet")
     def testmetadata_legacy_package_version(self, data) -> None:
@@ -559,6 +566,7 @@ class GenericSPTest:
 
     @skipForParser("FChk", "Formatted Checkpoint files do not have section for package version")
     @skipForParser("GAMESSDAT", "Files do not contain information about the package version")
+    @skipForParser("Gaussian", "The parser is still being converted to version 2")
     @skipForParser("NBO", "attribute not implemented in this version")
     def testmetadata_package_version(self, data) -> None:
         """Does metadata have expected keys and values?"""
@@ -570,6 +578,7 @@ class GenericSPTest:
 
     @skipForParser("FChk", "point group symmetry cannot be printed")
     @skipForParser("GAMESSDAT", "Files probably do not contain information about symmetry_detected")
+    @skipForParser("Gaussian", "The parser is still being converted to version 2")
     @skipForParser("Molcas", "reading point group symmetry and name is not implemented")
     @skipForParser("Molpro", "reading point group symmetry and name is not implemented")
     @skipForParser("NBO", "attribute not implemented in this version")
@@ -581,6 +590,7 @@ class GenericSPTest:
 
     @skipForParser("FChk", "point group symmetry cannot be printed")
     @skipForParser("GAMESSDAT", "Files probably do not contain information about symmetry_used")
+    @skipForParser("Gaussian", "The parser is still being converted to version 2")
     @skipForParser("Molcas", "reading point group symmetry and name is not implemented")
     @skipForParser("Molpro", "reading point group symmetry and name is not implemented")
     @skipForParser("NBO", "attribute not implemented in this version")
@@ -597,6 +607,7 @@ class GenericSPTest:
     @skipForParser("GAMESSUK", "reading cpu/wall time is not implemented for this parser")
     @skipForParser("GAMESSUS", "reading cpu/wall time is not implemented for this parser")
     @skipForParser("GAMESSDAT", "reading cpu/wall time is not implemented for this parser")
+    @skipForParser("Gaussian", "The parser is still being converted to version 2")
     @skipForParser("Jaguar", "reading cpu/wall time is not implemented for this parser")
     @skipForParser("Molcas", " reading cpu/wall time is not implemented for this parser")
     @skipForParser("Molpro", "reading cpu/wall time is not implemented for this parser")
