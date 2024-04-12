@@ -2,11 +2,12 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
+from typing import Optional
+
 from cclib.parser_properties import utils
 from cclib.parser_properties.base_parser import base_parser
 
 import numpy as np
-from typing import Optional
 
 
 class moenergies(base_parser):

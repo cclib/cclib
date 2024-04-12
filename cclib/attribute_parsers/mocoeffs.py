@@ -4,9 +4,8 @@
 # the terms of the BSD 3-Clause License.
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
-
-import numpy as np
 from typing import Optional
+import numpy as np
 
 
 class mocoeffs(base_parser):
@@ -62,7 +61,7 @@ class mocoeffs(base_parser):
         return None
 
     @staticmethod
-    def parse(file_handler, program: str, ccdata) ->  Optional[dict]:
+    def parse(file_handler, program: str, ccdata) -> Optional[dict]:
         constructed_data = None
         if program in mocoeffs.known_codes:
             file_handler.virtual_set()

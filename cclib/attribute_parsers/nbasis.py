@@ -4,9 +4,8 @@
 # the terms of the BSD 3-Clause License.
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
-
-import numpy as np
 from typing import Optional
+import numpy as np
 
 
 class nbasis(base_parser):
@@ -17,7 +16,7 @@ class nbasis(base_parser):
     known_codes = ["gaussian", "psi4", "qchem"]
 
     @staticmethod
-    def gaussian(file_handler, ccdata) ->  Optional[dict]:
+    def gaussian(file_handler, ccdata) -> Optional[dict]:
         line = file_handler.last_line
         if line[1:7] == "NBasis" or line[4:10] == "NBasis":
             # For counterpoise fragment, skip these lines.
