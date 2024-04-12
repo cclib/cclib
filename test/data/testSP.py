@@ -397,8 +397,8 @@ class GenericSPTest:
     @skipForParser("xTB", "not implemented yet")
     def testaooverlaps(self, data) -> None:
         """Are the dims and values of the overlap matrix correct?"""
-
-        assert data.aooverlaps.shape == (data.nbasis, data.nbasis)
+        nbasis = data._ccCollection._parsed_data[0].nbasis
+        assert data._ccCollection._parsed_data[0].aooverlaps.shape == (nbasis, nbasis)
 
         # The matrix is symmetric.
         row = data._ccCollection._parsed_data[0].aooverlaps[0, :]
@@ -406,7 +406,7 @@ class GenericSPTest:
         assert sum(col - row) == 0.0
 
         # All values on diagonal should be exactly one.
-        for i in range(data.nbasis):
+        for i in range(nbasis):
             assert data._ccCollection._parsed_data[0].aooverlaps[i, i] == 1.0
 
         # Check some additional values that don't seem to move around between programs.
@@ -690,7 +690,7 @@ class Jaguar7SPTest(JaguarSPTest):
     # Jaguar prints only 10 virtual MOs by default. Can we re-run with full output?
     def testlengthmoenergies(self, data) -> None:
         """Is the number of evalues equal to the number of occ. MOs + 10?"""
-        assert len(data._ccCollection._parsed_data[0].moenergies[0]) == data.homos[0] + 11
+        assert len(data._ccCollection._parsed_data[0].moenergies[0]) == data._ccCollection._parsed_data[0].homos[0] + 11
 
 
 class MolcasSPTest(GenericSPTest):

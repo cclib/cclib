@@ -3,6 +3,7 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 from cclib.parser_properties import utils
+from cclib.parser_properties.aooverlaps import aooverlaps
 from cclib.parser_properties.atombasis import atombasis
 from cclib.parser_properties.atomcharges import atomcharges
 from cclib.parser_properties.atomcoords import atomcoords
@@ -14,6 +15,7 @@ from cclib.parser_properties.coreelectrons import coreelectrons
 from cclib.parser_properties.data import ccData
 from cclib.parser_properties.gbasis import gbasis
 from cclib.parser_properties.mocoeffs import mocoeffs
+from cclib.parser_properties.moenergies import moenergies
 from cclib.parser_properties.mosyms import mosyms
 from cclib.parser_properties.mult import mult
 from cclib.parser_properties.natom import natom

@@ -21,9 +21,11 @@ DEFAULT_PARSERS = [
     cprops.coreelectrons,
     cprops.charge,
     cprops.mult,
+    cprops.moenergies,
     cprops.natom,
     cprops.coreelectrons,  # dependncy on natom
     cprops.nbasis,
+    cprops.aooverlaps,
     cprops.atommasses,
     cprops.mosyms,
     cprops.nmo,
