@@ -101,9 +101,9 @@ class ORCA(logfileparser.Logfile):
                     # Check this property and etenergies are the same length (otherwise we can accidentally and silently truncate a list that's too long).
                     if len(getattr(self, prop_name)) != len(self.etenergies):
                         raise Exception(
-                            "Parsed different number of {} ({}) than etenergies ({})".format(
-                                prop_name, len(getattr(self, prop_name)), len(self.etenergies)
-                            )
+                            f"Parsed different number of {prop_name} "
+                            f"({len(getattr(self, prop_name))}) than "
+                            f"etenergies ({len(self.etenergies)})"
                         )
 
                     # Reorder based on our mapping.
@@ -1573,7 +1573,7 @@ Dispersion correction           -0.016199959
                     # Thirdly, SOC prints spin-mixed excited state spectra. This is interesting, but does not match the
                     # number of states or symmetry of data parsed in previous sections, so is not used to overwrite etenergies.
 
-                    # If we have no previously parsed etnergies, there's nothing to worry about.
+                    # If we have no previously parsed etenergies, there's nothing to worry about.
                     if not hasattr(self, "etenergies"):
                         self.set_attribute("etenergies", etenergies)
 
@@ -1641,7 +1641,7 @@ Dispersion correction           -0.016199959
             self.set_attribute("etrotats", etrotats)
             if not hasattr(self, "etenergies"):
                 self.logger.warning(
-                    "etenergies not parsed before ECD section, " "the output file may be malformed"
+                    "etenergies not parsed before ECD section, the output file may be malformed"
                 )
                 self.set_attribute("etenergies", etenergies)
 
@@ -1711,7 +1711,7 @@ Dispersion correction           -0.016199959
                 #   Percentage singles character=     93.46
                 #
                 #   IROOT=  2:  0.061276 au     1.667 eV   13448.5 cm**-1
-                etenergies.append(float(line.split()[6]))
+                etenergies.append(float(line.split()[2]))
                 if self.mdci_et_mult is not None:
                     etsyms.append(self.mdci_et_mult)
                 sec = []
