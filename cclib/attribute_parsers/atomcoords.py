@@ -18,7 +18,6 @@ class atomcoords(base_parser):
     @staticmethod
     def gaussian(file_handler, ccdata) -> Optional[dict]:
         line = file_handler.last_line
-        constructed_data = None
         if line.strip() == "Standard orientation:":
             line = file_handler.skip_lines(["d", "Center", "Number", "d"], virtual=True)
             line = file_handler.virtual_next()
@@ -29,8 +28,7 @@ class atomcoords(base_parser):
                 curr_atomcoords.append(list(map(float, broken[-3:])))
                 line = file_handler.virtual_next()
             constructed_atomcoords.append(curr_atomcoords)
-            constructed_data = {atomcoords.__name__: np.array(constructed_atomcoords)}
-            return constructed_data
+            return {atomcoords.__name__: np.array(constructed_atomcoords)}
         return None
 
     @staticmethod

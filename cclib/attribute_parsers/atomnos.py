@@ -29,7 +29,7 @@ class atomnos(base_parser):
                 broken = line.split()
                 constructed_data.append(int(broken[1]))
                 line = file_handler.virtual_next()
-            return {atomnos.__name__: constructed_data}
+            return {atomnos.__name__: np.array(constructed_data)}
         return None
 
     @staticmethod

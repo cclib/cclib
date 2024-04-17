@@ -23,3 +23,4 @@ from cclib.parser_properties.nbasis import nbasis
 from cclib.parser_properties.nmo import nmo
 from cclib.parser_properties.scfenergies import scfenergies
 from cclib.parser_properties.scftargets import scftargets
+from cclib.parser_properties.scfvalues import scfvalues

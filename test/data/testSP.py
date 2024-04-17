@@ -49,7 +49,7 @@ class GenericSPTest:
         # The nuclear charges should be integer values in a NumPy array.
         assert numpy.all(
             [
-                numpy.issubdtype(atomno, numpy.signedinteger)
+                numpy.issubdtype(type(atomno), numpy.signedinteger)
                 for atomno in data._ccCollection._parsed_data[0].atomnos
             ]
         )

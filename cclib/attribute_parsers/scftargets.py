@@ -5,7 +5,7 @@
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
 from typing import Optional
-
+import numpy as np
 
 class scftargets(base_parser):
     """
@@ -17,9 +17,11 @@ class scftargets(base_parser):
     @staticmethod
     def gaussian(file_handler, ccdata) -> Optional[dict]:
         line = file_handler.last_line
-        if not ccdata.BOMD and line[1:44] == "Requested convergence on RMS density matrix":
+        if ccdata.BOMD is None and line[1:44] == "Requested convergence on RMS density matrix":
+            print("in scf targets")
             constructed_scftargets = ccdata.scftargets
             if constructed_scftargets is None:
+                print("is none")
                 constructed_scftargets = []
             elif type(ccdata.scftargets) == type(numpy.array([])):
                 # This case can happen with ONIOM which are mixed SCF
@@ -31,8 +33,10 @@ class scftargets(base_parser):
             # The RMS density matrix.
             curr_scftargets.append(utils.float(line.split("=")[1].split()[0]))
             line = file_handler.virtual_next()
+            print("adding info")
             # The MAX density matrix.
             curr_scftargets.append(utils.float(line.strip().split("=")[1][:-1]))
+            print(curr_scftargets)
             line = file_handler.virtual_next()
 
             # For G03, there's also the energy (not for G98).
@@ -40,7 +44,7 @@ class scftargets(base_parser):
                 curr_scftargets.append(utils.float(line.strip().split("=")[1][:-1]))
 
             constructed_scftargets.append(curr_scftargets)
-            return {scftargets.__name__: constructed_scftargets}
+            return {scftargets.__name__: np.array(constructed_scftargets)}
 
         # Extract SCF convergence information (QM calcs).
         if line[1:10] == "Cycle   1":
