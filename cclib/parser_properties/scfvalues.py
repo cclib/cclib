@@ -3,13 +3,14 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
+import re
+from typing import Optional
+
 from cclib.parser_properties import utils
 from cclib.parser_properties.base_parser import base_parser
 
-
 import numpy as np
-import re
-from typing import Optional
+
 
 # Extract only well-formed numbers in scientific notation.
 class scfvalues(base_parser):
@@ -44,10 +45,7 @@ class scfvalues(base_parser):
 
                     matches = re_scinot.findall(line)
                     matches = {match[0]: utils.float(match[1]) for match in matches}
-                    scfvalues_step = [
-                        matches.get("RMSDP", np.nan),
-                        matches.get("MaxDP", np.nan),
-                    ]
+                    scfvalues_step = [matches.get("RMSDP", np.nan), matches.get("MaxDP", np.nan)]
                     if (ccdata.scftargets is not None) and len(ccdata.scftargets[0]) == 3:
                         scfvalues_step.append(matches.get("DE", np.nan))
                     this_scfvalue.append(scfvalues_step)
@@ -58,7 +56,7 @@ class scfvalues(base_parser):
                     break
             constructed_scfvalues.append(np.array(this_scfvalue))
 
-            return {scfvalues.__name__:constructed_scfvalues}
+            return {scfvalues.__name__: constructed_scfvalues}
         return None
 
     @staticmethod
