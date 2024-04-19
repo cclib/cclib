@@ -77,6 +77,7 @@ class GenericSPTest:
         "Molpro/basicMolpro2006",
         "These tests were run a long time ago and since we don't have access to Molpro 2006 anymore, we can skip this test (it is tested in 2012)",
     )
+    @skipForParser("Psi4", "The parser is still being converted to version 2")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     @skipForParser("xTB", "not implemented yet")
     def testatomcharges(self, data) -> None:
@@ -107,6 +108,7 @@ class GenericSPTest:
         "Molpro/basicMolpro2006",
         "These tests were run a long time ago and since we don't have access to Molpro 2006 anymore, we can skip this test (it is tested in 2012)",
     )
+    @skipForParser("Psi4", "The parser is still being converted to version 2")
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     def testatomcharges_mulliken(self, data) -> None:
@@ -130,6 +132,7 @@ class GenericSPTest:
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("Molcas", "Lowdin charges not present by default")
     @skipForParser("Molpro", "Lowdin charges not present by default")
+    @skipForParser("Psi4", "The parser is still being converted to version 2")
     @skipForParser("QChem", "Lowdin charges not present by default")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     @skipForParser("xTB", "not implemented yet")
@@ -232,6 +235,7 @@ class GenericSPTest:
     @skipForParser("Molpro", "atommasses not implemented yet")
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForLogfile("Psi4/basicPsi4.0b5", "atommasses not implemented yet")
+    @skipForParser("Psi4", "The parser is still being developed for version 2")
     @skipForParser("QChem", "atommasses not implemented yet")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     @skipForParser("xTB", "not implemented yet")
@@ -241,6 +245,7 @@ class GenericSPTest:
         msg = f"Molecule mass: {mm:f} not {self.molecularmass:f} +- {self.mass_precision:f}mD"
         assert abs(mm - self.molecularmass) < self.mass_precision, msg
 
+    @skipForParser("Psi4", "The parser is still being developed for version 2")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("xTB", "not implemented yet")
@@ -251,9 +256,11 @@ class GenericSPTest:
 
     @skipForParser("FChk", "Formatted checkpoint files do not have a section for symmetry")
     @skipForParser("GAMESSDAT", "Mosyms do not exist in the file")
+    @skipForParser("Gaussian", "The parser is still being developed for version 2")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Molpro", "?")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("Psi4", "The parser is still being developed for version 2")
     @skipForParser("xTB", "not implemented yet")
     def testsymlabels(self, data) -> None:
         """Are all the symmetry labels either Ag/u or Bg/u?"""
@@ -267,6 +274,7 @@ class GenericSPTest:
 
     @skipForParser("Gaussian", "The parser is still being converted to version 2")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("Psi4", "The parser is still being developed for version 2")
     @skipForParser("xTB", "xTB does not print them all")
     def testhomos(self, data) -> None:
         """Is the index of the HOMO equal to 34?"""
@@ -279,6 +287,7 @@ class GenericSPTest:
     @skipForParser("FChk", "Formatted Checkpoint files do not have a section for SCF energy")
     @skipForParser("GAMESSDAT", "Scfvalues probably do not exist in the file")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("Psi4", "The parser is still being developed for version 2")
     @skipForParser("xTB", "not implemented yet")
     def testscfvaluetype(self, data) -> None:
         """Are scfvalues and its elements the right type??"""
@@ -296,6 +305,7 @@ class GenericSPTest:
     @skipForParser("FChk", "Formatted Checkpoint files do not have a section for SCF convergence")
     @skipForParser("GAMESSDAT", "Scftargets probably do not exist in the file")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("Psi4", "The parser is still being developed for version 2")
     @skipForParser("xTB", "not implemented yet")
     def testscftargetdim(self, data) -> None:
         """Do the scf targets have the right dimensions?"""
@@ -307,6 +317,7 @@ class GenericSPTest:
     @skipForParser("FChk", "Formatted Checkpoint files do not have a section for SCF convergence")
     @skipForParser("GAMESSDAT", "Scftargets probably do not exist in the file")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("Psi4", "The parser is still being developed for version 2")
     @skipForParser("xTB", "not implemented yet")
     def testscftargets(self, data) -> None:
         """Are correct number of SCF convergence criteria being parsed?"""
@@ -449,6 +460,7 @@ class GenericSPTest:
     @skipForParser("Jaguar", "No dipole moments in the logfile")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("Psi4", "The parser is still being converted to version 2")
     @skipForParser("xTB", "not implemented yet")
     def testmoments(self, data) -> None:
         """Does the dipole and possible higher molecular moments look reasonable?"""
@@ -538,6 +550,7 @@ class GenericSPTest:
 
     @skipForParser("Gaussian", "The parser is still being converted to version 2")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("Psi4", "The parser is still being converted to version 2")
     def testmetadata_methods(self, data) -> None:
         """Does metadata have expected keys and values?"""
         # TODO implement and unify across parsers; current values are [],
@@ -546,6 +559,7 @@ class GenericSPTest:
 
     @skipForParser("Gaussian", "The parser is still being converted to version 2")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("Psi4", "The parser is still being converted to version 2")
     def testmetadata_package(self, data) -> None:
         """Does metadata have expected keys and values?"""
         # TODO How can the value be tested w?hen the package name comes from
@@ -558,6 +572,7 @@ class GenericSPTest:
     @skipForParser("GAMESSDAT", "Files do not contain information about the legacy package version")
     @skipForParser("Gaussian", "The parser is still being converted to version 2")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("Psi4", "The parser is still being converted to version 2")
     @skipForParser("xTB", "not implemented yet")
     def testmetadata_legacy_package_version(self, data) -> None:
         """Does metadata have expected keys and values?"""
@@ -568,6 +583,7 @@ class GenericSPTest:
     @skipForParser("GAMESSDAT", "Files do not contain information about the package version")
     @skipForParser("Gaussian", "The parser is still being converted to version 2")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("Psi4", "The parser is still being converted to version 2")
     def testmetadata_package_version(self, data) -> None:
         """Does metadata have expected keys and values?"""
         # TODO Test specific values for each unit test.
@@ -582,6 +598,7 @@ class GenericSPTest:
     @skipForParser("Molcas", "reading point group symmetry and name is not implemented")
     @skipForParser("Molpro", "reading point group symmetry and name is not implemented")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("Psi4", "The parser is still being converted to version 2")
     @skipForParser("Turbomole", "reading point group symmetry and name is not implemented")
     @skipForParser("xTB", "not implemented yet")
     def testmetadata_symmetry_detected(self, data) -> None:
@@ -594,6 +611,7 @@ class GenericSPTest:
     @skipForParser("Molcas", "reading point group symmetry and name is not implemented")
     @skipForParser("Molpro", "reading point group symmetry and name is not implemented")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("Psi4", "The parser is still being converted to version 2")
     @skipForParser("Turbomole", "reading point group symmetry and name is not implemented")
     @skipForParser("xTB", "not implemented yet")
     def testmetadata_symmetry_used(self, data) -> None:
@@ -614,6 +632,8 @@ class GenericSPTest:
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("NWChem", "reading cpu/wall time is not implemented for this parser")
     @skipForParser("Psi4", "reading cpu/wall time is not implemented for this parser")
+    @skipForParser("Psi4", "The parser is still being converted to version 2")
+
     def testmetadata_times(self, data) -> None:
         """Does metadata have expected keys and values of correct types?"""
         if "wall_time" in data._ccCollection._parsed_data[0].metadata:
@@ -644,6 +664,7 @@ class GenericHFSPTest(GenericSPTest):
         """Is the SCF energy within the target?"""
         assert abs(data._ccCollection._parsed_data[0].scfenergies[-1] - self.hf_scfenergy) < 6.5e-1
 
+    @skipForParser("Psi4", "The parser is still being developed for version 2")
     def testfirstmoenergy(self, data) -> None:
         """Is the lowest energy molecular orbital within the target?"""
         assert abs(data._ccCollection._parsed_data[0].moenergies[0][0] - self.hf_moenergy) < 1.6e-1

@@ -27,7 +27,8 @@ class scfenergies(base_parser):
     def psi4(file_handler, ccdata) -> Optional[dict]:
         line = file_handler.last_line
         if "Final Energy" in line:
-            constructed_data = float(line.split()[-1])
+            print('made it here')
+            constructed_data = utils.convertor(utils.float(line.split()[-1]), "hartree", "eV")
             return {scfenergies.__name__: [constructed_data]}
         return None
 

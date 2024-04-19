@@ -77,8 +77,8 @@ class atombasis(base_parser):
                         count, basistype = s
                         multiplier = 3 * (basistype == "p") or 1
                         ao_count += multiplier * int(count)
-                    if len(constructed_data) > 0:
-                        atombasis_pos = constructed_data[-1][-1] + 1
+                    if len(constructed_atombasis) > 0:
+                        atombasis_pos = constructed_atombasis[-1][-1] + 1
                     constructed_atombasis.append(
                         list(range(atombasis_pos, atombasis_pos + ao_count))
                     )

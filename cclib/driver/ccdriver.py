@@ -488,17 +488,18 @@ class ccDriver:
         line = self._fileHandler.last_line
         current_idx = self._tree.get_next_idx()
         while line := self._fileHandler.next():
-            # print(line)
             for program, phrases, do_break in triggers_on:
                 if all([line.lower().find(p.lower()) >= 0 for p in phrases]):
                     if self.identified_program is None:
                         self.identified_program = program
+                        self._ccCollection.parsed_data[0].setattributes({'metadata':{'identified_program':program}})
                         if do_break:
                             break
                     else:
                         # if a program is within a program this might mean things are ok but we proceed to a child node.. think about how to handle this?
                         current_idx = self._tree.get_next_idx()
                         self.identified_program = program
+                        self._ccCollection.parsed_data[current_idx].setattributes({'metadata':{'identified_program':program}})
                         if do_break:
                             break
             for program, phrases, do_break in triggers_off:
