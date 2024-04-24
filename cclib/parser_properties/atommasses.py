@@ -13,7 +13,7 @@ class atommasses(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["gaussian"]
+    known_codes = ["gaussian", "qchem"]
 
     @staticmethod
     def gaussian(file_handler, ccdata) -> list | None:
@@ -28,6 +28,29 @@ class atommasses(base_parser):
                     constructed_data.extend(list(map(float, line.split()[1:])))
                 line = file_handler.virtual_next()
             return {atommasses.__name__: constructed_data}
+        return None
+
+    @staticmethod
+    def qchem(file_handler, ccdata) -> list | None:
+        # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
+        line = file_handler.last_line
+        constructed_data = None
+        if "STANDARD THERMODYNAMIC QUANTITIES AT" in line:
+            file_handler.skip_lines(["blank"], virtual=True)
+            line = file_handler.virtual_next()
+            if ccdata.natom == 1:
+                assert "Translational Enthalpy" in line
+            else:
+                assert "Imaginary Frequencies" in line
+                line = file_handler.virtual_next()
+                constructed_data = []
+                while "Translational Enthalpy" not in line:
+                    if "Has Mass" in line:
+                        atommass = float(line.split()[6])
+                        atommasses.append(atommass)
+                    line = file_handler.virtual_next()
+                if not hasattr(self, "atommasses"):
+                    return {atommasses.__name__: numpy.array(atommasses)}
         return None
 
     @staticmethod
