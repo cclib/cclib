@@ -28,12 +28,55 @@ def gaussian_normalizesym(label):
     return ans
 
 
+def qchem_parse_orbital_energies_and_symmetries(file_handler):
+    """Parse the 'Orbital Energies (a.u.)' block appearing after SCF converges,
+    which optionally includes MO symmetries. Based upon the
+    Occupied/Virtual labeling, the HOMO is also parsed.
+    """
+    re_dashes_and_spaces = re.compile(r"^[\s-]+$")
+    energies = []
+    symbols = []
+
+    line = next(inputfile)
+    line = file_handler.virtual_next()
+    # Sometimes Q-Chem gets a little confused...
+    while "MOs" not in line:
+        line = file_handler.virtual_next()
+    line = file_handler.virtual_next()
+
+    # The end of the block is either a blank line or only dashes.
+    while not re_dashes_and_spaces.search(line) and not "Warning : Irrep of orbital" in line:
+        if "Occupied" in line or "Virtual" in line:
+            # A nice trick to find where the HOMO is.
+            if "Virtual" in line:
+                homo = len(energies) - 1
+            line = file_handler.virtual_next()
+        tokens = line.split()
+        # If the line contains letters, it must be the MO
+        # symmetries. Otherwise, it's the energies.
+        if re.search("[a-zA-Z]", line):
+            symbols.extend(tokens[1::2])
+        else:
+            for e in tokens:
+                try:
+                    energy = utils.convertor(utils.float(e), "hartree", "eV")
+                except ValueError:
+                    energy = numpy.nan
+                energies.append(energy)
+        line = file_handler.virtual_next()
+
+    # MO symmetries are either not present or there is one for each MO
+    # (energy).
+    assert len(symbols) in (0, len(energies))
+    return energies, symbols, homo
+
+
 class mosyms(base_parser):
     """
     Docstring? Units?
     """
 
-    known_codes = ["gaussian"]
+    known_codes = ["gaussian", "qchem"]
 
     @staticmethod
     def gaussian(file_handler, ccdata) -> dict | None:
@@ -71,6 +114,84 @@ class mosyms(base_parser):
             # regression Gaussian/Gaussian09/dvb_sp_terse.log (#23 on github).
             return {mosyms.__name__: constructed_data}
         return None
+
+    @staticmethod
+    def qchem(file_handler, ccdata) -> dict | None:
+        line = file_handler.last_line
+        parsed_data = None
+        # Molecular orbital energies and symmetries.
+        if line.strip() == "Orbital Energies (a.u.) and Symmetries":
+            #  --------------------------------------------------------------
+            #              Orbital Energies (a.u.) and Symmetries
+            #  --------------------------------------------------------------
+            #
+            #  Alpha MOs, Restricted
+            #  -- Occupied --
+            # -10.018 -10.018 -10.008 -10.008 -10.007 -10.007 -10.006 -10.005
+            #   1 Bu    1 Ag    2 Bu    2 Ag    3 Bu    3 Ag    4 Bu    4 Ag
+            #  -9.992  -9.992  -0.818  -0.755  -0.721  -0.704  -0.670  -0.585
+            #   5 Ag    5 Bu    6 Ag    6 Bu    7 Ag    7 Bu    8 Bu    8 Ag
+            #  -0.561  -0.532  -0.512  -0.462  -0.439  -0.410  -0.400  -0.397
+            #   9 Ag    9 Bu   10 Ag   11 Ag   10 Bu   11 Bu   12 Bu   12 Ag
+            #  -0.376  -0.358  -0.349  -0.330  -0.305  -0.295  -0.281  -0.263
+            #  13 Bu   14 Bu   13 Ag    1 Au   15 Bu   14 Ag   15 Ag    1 Bg
+            #  -0.216  -0.198  -0.160
+            #   2 Au    2 Bg    3 Bg
+            #  -- Virtual --
+            #   0.050   0.091   0.116   0.181   0.280   0.319   0.330   0.365
+            #   3 Au    4 Au    4 Bg    5 Au    5 Bg   16 Ag   16 Bu   17 Bu
+            #   0.370   0.413   0.416   0.422   0.446   0.469   0.496   0.539
+            #  17 Ag   18 Bu   18 Ag   19 Bu   19 Ag   20 Bu   20 Ag   21 Ag
+            #   0.571   0.587   0.610   0.627   0.646   0.693   0.743   0.806
+            #  21 Bu   22 Ag   22 Bu   23 Bu   23 Ag   24 Ag   24 Bu   25 Ag
+            #   0.816
+            #  25 Bu
+            #
+            #  Beta MOs, Restricted
+            #  -- Occupied --
+            # -10.018 -10.018 -10.008 -10.008 -10.007 -10.007 -10.006 -10.005
+            #   1 Bu    1 Ag    2 Bu    2 Ag    3 Bu    3 Ag    4 Bu    4 Ag
+            #  -9.992  -9.992  -0.818  -0.755  -0.721  -0.704  -0.670  -0.585
+            #   5 Ag    5 Bu    6 Ag    6 Bu    7 Ag    7 Bu    8 Bu    8 Ag
+            #  -0.561  -0.532  -0.512  -0.462  -0.439  -0.410  -0.400  -0.397
+            #   9 Ag    9 Bu   10 Ag   11 Ag   10 Bu   11 Bu   12 Bu   12 Ag
+            #  -0.376  -0.358  -0.349  -0.330  -0.305  -0.295  -0.281  -0.263
+            #  13 Bu   14 Bu   13 Ag    1 Au   15 Bu   14 Ag   15 Ag    1 Bg
+            #  -0.216  -0.198  -0.160
+            #   2 Au    2 Bg    3 Bg
+            #  -- Virtual --
+            #   0.050   0.091   0.116   0.181   0.280   0.319   0.330   0.365
+            #   3 Au    4 Au    4 Bg    5 Au    5 Bg   16 Ag   16 Bu   17 Bu
+            #   0.370   0.413   0.416   0.422   0.446   0.469   0.496   0.539
+            #  17 Ag   18 Bu   18 Ag   19 Bu   19 Ag   20 Bu   20 Ag   21 Ag
+            #   0.571   0.587   0.610   0.627   0.646   0.693   0.743   0.806
+            #  21 Bu   22 Ag   22 Bu   23 Bu   23 Ag   24 Ag   24 Bu   25 Ag
+            #   0.816
+            #  25 Bu
+            #  --------------------------------------------------------------
+
+            file_handler.skip_lines(["dashes"], virtual=True)
+            line = file_handler.virtual_next()
+            (energies_alpha, symbols_alpha, homo_alpha) = (
+                qchem_parse_orbital_energies_and_symmetries(file_handler)
+            )
+            # Only look at the second block if doing an unrestricted calculation.
+            # This might be a problem for ROHF/ROKS.
+            # TODO check metadata if unrestricted and then parse beta
+            # if self.unrestricted:
+            #    (energies_beta, symbols_beta, homo_beta) = (
+            #        qchem_parse_orbital_energies_and_symmetries(file_handler)
+            #    )
+
+            # For now, only keep the last set of MO energies, even though it is
+            # printed at every step of geometry optimizations and fragment jobs.
+            parsed_data = {mosyms.__name__: [symbols_alpha]}
+
+            # if self.unrestricted:
+            #    self.moenergies.append(numpy.array(energies_beta))
+            #    self.homos.append(homo_beta)
+            #    self.mosyms.append(symbols_beta)
+        return parsed_data
 
     @staticmethod
     def parse(file_handler, program: str, ccdata) -> dict | None:
