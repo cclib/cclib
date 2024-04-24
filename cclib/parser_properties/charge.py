@@ -36,6 +36,33 @@ class charge(base_parser):
         return None
 
     @staticmethod
+    def qchem(file_handler, ccdata) -> dict | None:
+        # TODO: ecp charge may be different!
+        dependency_list = ["atomnos"]
+        line = file_handler.last_line
+        constructed_data = None
+        if base_parser.check_dependencies(dependency_list, ccdata, "natom"):
+            # Number of electrons.
+            # Useful for determining the number of occupied/virtual orbitals.
+            if "Nuclear Repulsion Energy" in line:
+                line = file_handler.virtual_next()
+                nelec_re_string = r"There are(\s+[0-9]+) alpha and(\s+[0-9]+) beta electrons"
+                match = re.findall(nelec_re_string, line.strip())
+                nalpha_elec = int(match[0][0].strip())
+                nbeta_elec = int(match[0][1].strip())
+                # Calculate the spin multiplicity (2S + 1), where S is the
+                # total spin of the system.
+                S = (self.nalpha - self.nbeta) / 2
+                mult = int(2 * S + 1)
+                self.set_attribute("mult", mult)
+                # Calculate the molecular charge as the difference between
+                # the atomic numbers and the number of electrons.
+                if hasattr(self, "atomnos"):
+                    constructed_charge = sum(ccdata.atomnos) - (nalpha_elec + nbeta_elec)
+                constructed_data = {charge.__name__: constructed_charge}
+        return constructed_data
+
+    @staticmethod
     def parse(file_handler, program: str, ccdata) -> dict | None:
         constructed_data = None
         if program in charge.known_codes:
