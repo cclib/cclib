@@ -1033,16 +1033,13 @@ class Psi4(logfileparser.Logfile):
                 assert abs(vibfreq - _vibfreq) < 1.0e-2
                 line = next(inputfile)
                 assert "Force constant:" in line
-                if not hasattr(self, "vibfconsts"):
-                    self.vibfconsts = []
-                self.vibfconsts.append(
-                    utils.convertor(float(line.split()[2]), "hartree/bohr2", "mDyne/angstrom")
+                self.append_attribute(
+                    "vibfconsts",
+                    utils.convertor(float(line.split()[2]), "hartree/bohr2", "mDyne/angstrom"),
                 )
                 line = next(inputfile)
                 assert "X       Y       Z           mass" in line
                 line = next(inputfile)
-                if not hasattr(self, "vibdisps"):
-                    self.vibdisps = []
                 normal_mode_disps = []
                 # for k in range(self.natom):
                 while line.strip():
@@ -1054,7 +1051,7 @@ class Psi4(logfileparser.Logfile):
                     atommass = float(chomp[4])
                     normal_mode_disps.append(atomcoords)
                     line = next(inputfile)
-                self.vibdisps.append(normal_mode_disps)
+                self.append_attribute("vibdisps", normal_mode_disps)
                 line = next(inputfile)
 
         # NEW Normal mode output parser (PSI4 >= 1)
