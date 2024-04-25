@@ -1160,10 +1160,7 @@ class Psi4(logfileparser.Logfile):
                     self.metadata["t1_diagnostic"] = value
                 line = next(inputfile)
 
-        if (
-            line[:54] == "*** Psi4 exiting successfully. Buy a developer a beer!"
-            or line[:54] == "*** PSI4 exiting successfully. Buy a developer a beer!"
-        ):
+        if line[7:54] == "4 exiting successfully. Buy a developer a beer!":
             self.metadata["success"] = True
 
     def _parse_mosyms_moenergies(self, inputfile, spinidx):
