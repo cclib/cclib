@@ -812,10 +812,7 @@ class ADF(logfileparser.Logfile):
             line = next(inputfile)
             assert "Entropy" in line
             self.set_attribute(
-                "entropy",
-                utils.convertor(
-                    float(line.split()[6]) * self.temperature / 1000, "kcal/mol", "hartree"
-                ),
+                "entropy", utils.convertor(float(line.split()[6]) / 1000, "kcal/mol", "hartree")
             )
             line = next(inputfile)
             assert "Internal Energy" in line

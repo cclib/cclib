@@ -218,6 +218,9 @@ class ADFIRTest(GenericIRTest):
 
     # ???
     zpve_thresh = 1.0e-2
+    entropy = 0.00013953096105839138
+
+    entropy_places = 4
 
 
 class FireflyIRTest(GenericIRTest):
