@@ -219,7 +219,13 @@ class Logfile(ABC):
 
     def after_parsing(self) -> None:
         """Correct data or do parser-specific validation after parsing is finished."""
-        pass
+        if (
+            hasattr(self, "enthalpy")
+            and hasattr(self, "entropy")
+            and hasattr(self, "temperature")
+            and not hasattr(self, "freeenergy")
+        ):
+            self.set_attribute("freeenergy", self.enthalpy - self.entropy * self.temperature)
 
     def updateprogress(self, inputfile, msg: str, xupdate: float = 0.05) -> None:
         """Update progress."""
