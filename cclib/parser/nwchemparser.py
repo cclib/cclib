@@ -1230,7 +1230,7 @@ class NWChem(logfileparser.Logfile):
 
         # extract vibrational frequencies (in cm-1)
         if line.strip() == "Normal Eigenvalue ||           Projected Infra Red Intensities":
-            self.skip_lines(inputfile, ["units", "d"])  # units, dashes
+            self.skip_lines(inputfile, ["units", "dashes and pipes"])
             line = next(inputfile)  # first line of data
             vibfreqs = []
             while set(line.strip()) != {"-"}:
