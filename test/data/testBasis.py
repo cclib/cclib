@@ -30,7 +30,7 @@ class GenericBasisTest:
 
     def testgbasis(self, data) -> None:
         """Is gbasis the right length?"""
-        assert data.natom == len(data.gbasis)
+        assert data._ccCollection._parsed_data[0].natom == len(data._ccCollection._parsed_data[0].gbasis)
 
     def testnames(self, data) -> None:
         """Are the name of basis set functions acceptable?"""
