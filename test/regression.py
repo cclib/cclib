@@ -2882,7 +2882,7 @@ class ADFSPTest_nosyms_valence(ADFSPTest_nosyms):
     def testlengthmoenergies(self, data: "ccData") -> None:
         """Only valence orbital energies were printed here."""
         assert len(data.moenergies[0]) == 45
-        assert data.moenergies[0][0] == 99999.0
+        assert numpy.isnan(data.moenergies[0][0])
 
 
 class ADFSPTest_nosyms_valence_noscfvalues(ADFSPTest_nosyms_valence):
