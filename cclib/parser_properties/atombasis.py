@@ -2,9 +2,10 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
+import re
+
 from cclib.parser_properties import utils
 from cclib.parser_properties.base_parser import base_parser
-import re
 
 import numpy as np
 
