@@ -56,6 +56,7 @@ class ORCA(logfileparser.Logfile):
         self.reference = [0.0, 0.0, 0.0]
 
     def after_parsing(self):
+        super().after_parsing()
         # ORCA doesn't add the dispersion energy to the "Total energy" (which
         # we parse), only to the "FINAL SINGLE POINT ENERGY" (which we don't
         # parse).
@@ -1161,8 +1162,8 @@ Dispersion correction           -0.016199959
         """
         if line.strip().startswith("THERMOCHEMISTRY AT"):
             self.skip_lines(inputfile, ["dashes", "blank"])
-            self.temperature = float(next(inputfile).split()[2])
-            self.pressure = float(next(inputfile).split()[2])
+            self.set_attribute("temperature", float(next(inputfile).split()[2]))
+            self.set_attribute("pressure", float(next(inputfile).split()[2]))
             total_mass = float(next(inputfile).split()[3])
 
             # Vibrations, rotations, and translations
@@ -1186,9 +1187,10 @@ Dispersion correction           -0.016199959
             # For a single atom, ORCA provides the total free energy or inner energy
             # which includes a spurious vibrational correction (see #817 for details).
             if self.natom > 1:
-                self.enthalpy = float(next(inputfile).split()[3])
+                enthalpy = float(next(inputfile).split()[3])
             else:
-                self.enthalpy = self.electronic_energy + thermal_translational_correction
+                enthalpy = self.electronic_energy + thermal_translational_correction
+            self.set_attribute("enthalpy", enthalpy)
 
             # Entropy
             while line[:18] != "Electronic entropy":
@@ -1201,9 +1203,10 @@ Dispersion correction           -0.016199959
 
             # ORCA prints -inf for single atom entropy.
             if self.natom > 1:
-                self.entropy = float(next(inputfile).split()[4]) / self.temperature
+                entropy = float(next(inputfile).split()[4]) / self.temperature
             else:
-                self.entropy = (electronic_entropy + translational_entropy) / self.temperature
+                entropy = (electronic_entropy + translational_entropy) / self.temperature
+            self.set_attribute("entropy", entropy)
 
             while (line[:25] != "Final Gibbs free enthalpy") and (
                 line[:23] != "Final Gibbs free energy"
@@ -1211,11 +1214,10 @@ Dispersion correction           -0.016199959
                 line = next(inputfile)
             self.skip_lines(inputfile, ["dashes"])
 
-            # ORCA prints -inf for single atom free energy.
+            # ORCA prints -inf for single atom free energy, in which case it
+            # will be computed after parsing.
             if self.natom > 1:
-                self.freeenergy = float(line.split()[5])
-            else:
-                self.freeenergy = self.enthalpy - self.temperature * self.entropy
+                self.set_attribute("freeenergy", float(line.split()[5]))
 
         # Excited state metadata.
         if line.strip() in (
