@@ -35,7 +35,7 @@ class atomcoords(base_parser):
     def psi4(file_handler, ccdata) -> Optional[dict]:
         line = file_handler.last_line
         if "Geometry (in " in line:
-            if getattr(ccdata,'atomcoords') is None:
+            if getattr(ccdata, "atomcoords") is None:
                 constructed_data = []
             ## I am not handling units here, i think this should be done on the ccdata object and not the parser as mentioned in #1124
             ## but will need a way to indicate which units are stored i guess. hm.
@@ -53,7 +53,7 @@ class atomcoords(base_parser):
                 _el, x, y, z = chomp[:4]
                 constructed_atomcoords.append(np.asarray([float(x), float(y), float(z)]))
                 line = file_handler.virtual_next()
-            constructed_data.append(constructed_atomcoords) 
+            constructed_data.append(constructed_atomcoords)
             return {atomcoords.__name__: np.array(constructed_data)}
         return None
 

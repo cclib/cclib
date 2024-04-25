@@ -633,7 +633,6 @@ class GenericSPTest:
     @skipForParser("NWChem", "reading cpu/wall time is not implemented for this parser")
     @skipForParser("Psi4", "reading cpu/wall time is not implemented for this parser")
     @skipForParser("Psi4", "The parser is still being converted to version 2")
-
     def testmetadata_times(self, data) -> None:
         """Does metadata have expected keys and values of correct types?"""
         if "wall_time" in data._ccCollection._parsed_data[0].metadata:

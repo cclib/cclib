@@ -18,9 +18,18 @@ class GenericSPunTest:
 
     def testatomnos(self, data) -> None:
         """Are the atomnos correct?"""
-        assert numpy.all([numpy.issubdtype(atomno, numpy.signedinteger) for atomno in data._ccCollection._parsed_data[0].atomnos])
+        assert numpy.all(
+            [
+                numpy.issubdtype(atomno, numpy.signedinteger)
+                for atomno in data._ccCollection._parsed_data[0].atomnos
+            ]
+        )
         assert data._ccCollection._parsed_data[0].atomnos.shape == (20,)
-        assert sum(data._ccCollection._parsed_data[0].atomnos == 6) + sum(data._ccCollection._parsed_data[0].atomnos == 1) == 20
+        assert (
+            sum(data._ccCollection._parsed_data[0].atomnos == 6)
+            + sum(data._ccCollection._parsed_data[0].atomnos == 1)
+            == 20
+        )
 
     @skipForParser("ADF", "???")
     @skipForParser(
@@ -62,7 +71,11 @@ class GenericSPunTest:
 
     def testatomcoords(self, data) -> None:
         """Are the dimensions of atomcoords 1 x natom x 3?"""
-        assert data._ccCollection._parsed_data[0].atomcoords.shape == (1, data._ccCollection._parsed_data[0].natom, 3)
+        assert data._ccCollection._parsed_data[0].atomcoords.shape == (
+            1,
+            data._ccCollection._parsed_data[0].natom,
+            3,
+        )
 
     @skipForParser("Jaguar", "Data file does not contain enough information")
     def testdimmocoeffs(self, data) -> None:
@@ -70,15 +83,22 @@ class GenericSPunTest:
         if hasattr(data, "mocoeffs"):
             assert isinstance(data.mocoeffs, list)
             assert len(data.mocoeffs) == 2
-            assert data._ccCollection._parsed_data[0].mocoeffs[0].shape == (data._ccCollection._parsed_data[0].nmo, data._ccCollection._parsed_data[0].nbasis)
-            assert data._ccCollection._parsed_data[0].mocoeffs[1].shape == (data._ccCollection._parsed_data[0].nmo, data._ccCollection._parsed_data[0].nbasis)
+            assert data._ccCollection._parsed_data[0].mocoeffs[0].shape == (
+                data._ccCollection._parsed_data[0].nmo,
+                data._ccCollection._parsed_data[0].nbasis,
+            )
+            assert data._ccCollection._parsed_data[0].mocoeffs[1].shape == (
+                data._ccCollection._parsed_data[0].nmo,
+                data._ccCollection._parsed_data[0].nbasis,
+            )
 
     @skipForParser("Jaguar", "Data file does not contain enough information")
     @skipForParser("DALTON", "mocoeffs not implemented yet")
     def testfornoormo(self, data) -> None:
         """Do we have NOs or MOs?"""
-        assert hasattr(data._ccCollection._parsed_data[0], "nocoeffs") or hasattr(data._ccCollection._parsed_data[0], "mocoeffs")
-
+        assert hasattr(data._ccCollection._parsed_data[0], "nocoeffs") or hasattr(
+            data._ccCollection._parsed_data[0], "mocoeffs"
+        )
 
     @skipForParser("Gaussian", "The parser is still being developed for version 2")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
@@ -87,7 +107,10 @@ class GenericSPunTest:
         if hasattr(data._ccCollection._parsed_data[0], "nooccnos"):
             assert isinstance(data._ccCollection._parsed_data[0].nooccnos, numpy.ndarray)
             # FIXME
-            assert data._ccCollection._parsed_data[0].nooccnos.shape in [(data._ccCollection._parsed_data[0].nmo,), (2, data._ccCollection._parsed_data[0].nmo)]
+            assert data._ccCollection._parsed_data[0].nooccnos.shape in [
+                (data._ccCollection._parsed_data[0].nmo,),
+                (2, data._ccCollection._parsed_data[0].nmo),
+            ]
 
     @skipForParser("Gaussian", "The parser is still being developed for version 2")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
@@ -95,7 +118,11 @@ class GenericSPunTest:
         """Are the dimensions of nocoeffs equal to 2 x nmo x nmo?"""
         if hasattr(data._ccCollection._parsed_data[0], "nocoeffs"):
             assert isinstance(data._ccCollection._parsed_data[0].nocoeffs, numpy.ndarray)
-            assert data.nocoeffs.shape == (2, data._ccCollection._parsed_data[0].nmo, data._ccCollection._parsed_data[0].nmo)
+            assert data.nocoeffs.shape == (
+                2,
+                data._ccCollection._parsed_data[0].nmo,
+                data._ccCollection._parsed_data[0].nmo,
+            )
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     def testcharge_and_mult(self, data) -> None:
@@ -108,14 +135,22 @@ class GenericSPunTest:
     def testhomos(self, data) -> None:
         """Are the homos correct?"""
         msg = f"{numpy.array_repr(data._ccCollection._parsed_data[0].homos)} != array([34,33],'i')"
-        numpy.testing.assert_array_equal(data._ccCollection._parsed_data[0].homos, numpy.array([34, 33], "i"), msg)
+        numpy.testing.assert_array_equal(
+            data._ccCollection._parsed_data[0].homos, numpy.array([34, 33], "i"), msg
+        )
 
     def testmoenergies(self, data) -> None:
         """Are the dims of the moenergies equals to 2 x nmo?"""
         if hasattr(data, "moenergies"):
             assert len(data._ccCollection._parsed_data[0].moenergies) == 2
-            assert len(data._ccCollection._parsed_data[0].moenergies[0]) == data._ccCollection._parsed_data[0].nmo
-            assert len(data._ccCollection._parsed_data[0].moenergies[1]) == data._ccCollection._parsed_data[0].nmo
+            assert (
+                len(data._ccCollection._parsed_data[0].moenergies[0])
+                == data._ccCollection._parsed_data[0].nmo
+            )
+            assert (
+                len(data._ccCollection._parsed_data[0].moenergies[1])
+                == data._ccCollection._parsed_data[0].nmo
+            )
 
     @skipForParser("FChk", "Fchk files do not have a section for symmetry")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
@@ -124,7 +159,10 @@ class GenericSPunTest:
     @skipForParser("Psi4", "The parser is still being developed for version 2")
     def testmosyms(self, data) -> None:
         """Are the dims of the mosyms equals to 2 x nmo?"""
-        shape = (len(data._ccCollection._parsed_data[0].mosyms), len(data._ccCollection._parsed_data[0].mosyms[0]))
+        shape = (
+            len(data._ccCollection._parsed_data[0].mosyms),
+            len(data._ccCollection._parsed_data[0].mosyms[0]),
+        )
         assert shape == (2, data._ccCollection._parsed_data[0].nmo)
 
 
@@ -138,7 +176,10 @@ class GenericROSPTest(GenericSPunTest):
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis?"""
         assert isinstance(data._ccCollection._parsed_data[0].mocoeffs, list)
         assert len(data._ccCollection._parsed_data[0].mocoeffs) == 1
-        assert data._ccCollection._parsed_data[0].mocoeffs[0].shape == (data._ccCollection._parsed_data[0].nmo, data._ccCollection._parsed_data[0].nbasis)
+        assert data._ccCollection._parsed_data[0].mocoeffs[0].shape == (
+            data._ccCollection._parsed_data[0].nmo,
+            data._ccCollection._parsed_data[0].nbasis,
+        )
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
@@ -146,8 +187,12 @@ class GenericROSPTest(GenericSPunTest):
         """Are the HOMO indices equal to 34 and 33 (one more alpha electron
         than beta electron)?
         """
-        msg = f"{numpy.array_repr(data._ccCollection._parsed_data[0].homos)} != array([34, 33], 'i')"
-        numpy.testing.assert_array_equal(data._ccCollection._parsed_data[0].homos, numpy.array([34, 33], "i"), msg)
+        msg = (
+            f"{numpy.array_repr(data._ccCollection._parsed_data[0].homos)} != array([34, 33], 'i')"
+        )
+        numpy.testing.assert_array_equal(
+            data._ccCollection._parsed_data[0].homos, numpy.array([34, 33], "i"), msg
+        )
 
     @skipForParser("QChem", "prints 2 sets of different MO energies?")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
@@ -155,13 +200,19 @@ class GenericROSPTest(GenericSPunTest):
     def testmoenergies(self, data) -> None:
         """Are the dims of the moenergies equals to 1 x nmo?"""
         assert len(data._ccCollection._parsed_data[0].moenergies) == 1
-        assert len(data._ccCollection._parsed_data[0].moenergies[0]) == data._ccCollection._parsed_data[0].nmo
+        assert (
+            len(data._ccCollection._parsed_data[0].moenergies[0])
+            == data._ccCollection._parsed_data[0].nmo
+        )
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     def testmosyms(self, data) -> None:
         """Are the dims of the mosyms equals to 1 x nmo?"""
-        shape = (len(data._ccCollection._parsed_data[0].mosyms), len(data._ccCollection._parsed_data[0].mosyms[0]))
+        shape = (
+            len(data._ccCollection._parsed_data[0].mosyms),
+            len(data._ccCollection._parsed_data[0].mosyms[0]),
+        )
         assert shape == (1, data._ccCollection._parsed_data[0].nmo)
 
 
@@ -176,14 +227,22 @@ class GamessUK70SPunTest(GenericSPunTest):
 
         # This is only an issue in version 7.0 (and before?), since in the version 8.0
         # logfile all eigenvectors are happily printed.
-        shape_alpha = (data._ccCollection._parsed_data[0].homos[0] + 6, data._ccCollection._parsed_data[0].nbasis)
-        shape_beta = (data._ccCollection._parsed_data[0].homos[1] + 6, data._ccCollection._parsed_data[0].nbasis)
+        shape_alpha = (
+            data._ccCollection._parsed_data[0].homos[0] + 6,
+            data._ccCollection._parsed_data[0].nbasis,
+        )
+        shape_beta = (
+            data._ccCollection._parsed_data[0].homos[1] + 6,
+            data._ccCollection._parsed_data[0].nbasis,
+        )
         assert data._ccCollection._parsed_data[0].mocoeffs[0].shape == shape_alpha
         assert data._ccCollection._parsed_data[0].mocoeffs[1].shape == shape_beta
 
     def testnooccnos(self, data) -> None:
         """Are natural orbital occupation numbers the right size?"""
-        assert data._ccCollection._parsed_data[0].nooccnos.shape == (data._ccCollection._parsed_data[0].nmo,)
+        assert data._ccCollection._parsed_data[0].nooccnos.shape == (
+            data._ccCollection._parsed_data[0].nmo,
+        )
 
 
 class GamessUK80SPunTest(GenericSPunTest):

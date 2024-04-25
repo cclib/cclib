@@ -20,21 +20,30 @@ def skipForParser(parser: str, msg: str):
         if "numvib" in func_args:
 
             def tstwrapper(self, data, numvib) -> None:
-                if any(data._ccCollection._parsed_data[0].metadata['identified_program'] == parser.lower()):
+                if any(
+                    data._ccCollection._parsed_data[0].metadata["identified_program"]
+                    == parser.lower()
+                ):
                     pytest.skip(reason=f"{parser}: {msg}")
                 else:
                     testfunc(self, data, numvib)
         elif "extra" in func_args:
 
             def tstwrapper(self, data, extra) -> None:
-                if data._ccCollection._parsed_data[0].metadata['identified_program'] == parser.lower():
+                if (
+                    data._ccCollection._parsed_data[0].metadata["identified_program"]
+                    == parser.lower()
+                ):
                     pytest.skip(reason=f"{parser}: {msg}")
                 else:
                     testfunc(self, data, extra)
         else:
 
             def tstwrapper(self, data) -> None:
-                if data._ccCollection._parsed_data[0].metadata['identified_program'] == parser.lower():
+                if (
+                    data._ccCollection._parsed_data[0].metadata["identified_program"]
+                    == parser.lower()
+                ):
                     pytest.skip(reason=f"{parser}: {msg}")
                 else:
                     testfunc(self, data)
