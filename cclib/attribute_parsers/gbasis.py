@@ -19,7 +19,7 @@ class gbasis(base_parser):
     def gaussian(file_handler, ccdata) -> Optional[dict]:
         dependency_list = ["natom", "gbasis"]
         line = file_handler.last_line
-                # With the gfinput keyword, the atomic basis set functions are:
+        # With the gfinput keyword, the atomic basis set functions are:
         #
         # AO basis set in the form of general basis input (Overlap normalization):
         #  1 0
@@ -59,7 +59,9 @@ class gbasis(base_parser):
             gfprint = True
             atom_line = file_handler.virtual_next()
             gfprint = atom_line.split()[0] == "Atom"
-            gfinput = not gfprint # this may need to be it's own parser if its used for other properties
+            gfinput = (
+                not gfprint
+            )  # this may need to be it's own parser if its used for other properties
 
             # Note how the shell information is on a separate line for gfinput,
             # whereas for gfprint it is on the same line as atom information.
@@ -109,8 +111,9 @@ class gbasis(base_parser):
                         shell_line = file_handler.virtual_next()
                     else:
                         shell_line = line
-            return {gbasis.__name__:parsed_gbasis}
+            return {gbasis.__name__: parsed_gbasis}
         return None
+
     @staticmethod
     def psi4(file_handler, ccdata) -> Optional[dict]:
         dependency_list = ["natom", "atomnos"]
