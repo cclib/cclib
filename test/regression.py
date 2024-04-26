@@ -38,7 +38,6 @@ from pathlib import Path
 
 from cclib.io import ccread, moldenwriter
 from cclib.parser import DALTON, Gaussian, ccData
-from cclib.parser.utils import convertor
 
 import numpy
 import pytest
@@ -652,7 +651,7 @@ def testGAMESS_GAMESS_US2008_N2_UMP2_out(logfile):
     """Check that the new format for GAMESS MP2 is parsed."""
     assert hasattr(logfile.data, "mpenergies")
     assert len(logfile.data.mpenergies) == 1
-    assert abs(logfile.data.mpenergies[0] + 2975.97) < 0.01
+    assert abs(logfile.data.mpenergies[0] - -109.3647999161) < 1.0e-10
 
     assert logfile.data.metadata["legacy_package_version"] == "2008R1"
     assert logfile.data.metadata["package_version"] == "2008.r1"
@@ -663,7 +662,7 @@ def testGAMESS_GAMESS_US2008_N2_ROMP2_out(logfile):
     """Check that the new format for GAMESS MP2 is parsed."""
     assert hasattr(logfile.data, "mpenergies")
     assert len(logfile.data.mpenergies) == 1
-    assert abs(logfile.data.mpenergies[0] + 2975.97) < 0.01
+    assert abs(logfile.data.mpenergies[0] - -109.3647999184) < 1.0e-10
 
     assert logfile.data.metadata["package_version"] == "2008.r1"
 
@@ -672,7 +671,7 @@ def testGAMESS_GAMESS_US2009_open_shell_ccsd_test_log(logfile):
     """Parse ccenergies from open shell CCSD calculations."""
     assert hasattr(logfile.data, "ccenergies")
     assert len(logfile.data.ccenergies) == 1
-    assert abs(logfile.data.ccenergies[0] + 3501.50) < 0.01
+    assert abs(logfile.data.ccenergies[0] - -128.6777922565) < 1.0e-10
 
     assert logfile.data.metadata["legacy_package_version"] == "2009R3"
     assert logfile.data.metadata["package_version"] == "2009.r3"
@@ -683,7 +682,7 @@ def testGAMESS_GAMESS_US2009_paulo_h2o_mp2_out(logfile):
     """Check that the new format for GAMESS MP2 is parsed."""
     assert hasattr(logfile.data, "mpenergies")
     assert len(logfile.data.mpenergies) == 1
-    assert abs(logfile.data.mpenergies[0] + 2072.13) < 0.01
+    assert abs(logfile.data.mpenergies[0] - -76.1492222841) < 1.0e-10
 
     assert logfile.data.metadata["package_version"] == "2009.r3"
 
@@ -757,7 +756,9 @@ def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out(logfile):
     idx_lambdamax = [i for i, x in enumerate(logfile.data.etoscs) if x == max(logfile.data.etoscs)][
         0
     ]
-    assert abs(logfile.data.etenergies[idx_lambdamax] - 24500) < 100
+    assert (
+        abs(logfile.data.etenergies[idx_lambdamax] - (-381.9320539243 - -382.0432999970)) < 1.0e-5
+    )
     assert len(logfile.data.etoscs) == number
     assert abs(max(logfile.data.etoscs) - 0.0) < 0.01
     assert len(logfile.data.etsecs) == number
@@ -1050,7 +1051,7 @@ def testGaussian_Gaussian09_2D_PES_one_unconverged_log(logfile):
 def testGaussian_Gaussian09_534_out(logfile):
     """Previously, caused etenergies parsing to fail."""
     assert logfile.data.etsyms[0] == "Singlet-?Sym"
-    assert abs(logfile.data.etenergies[0] - 20920.55328) < 1.0
+    assert abs(logfile.data.etenergies[0] - 0.09532039604871197) < 1.0e-5
 
     assert logfile.data.metadata["legacy_package_version"] == "09revisionA.02"
     assert logfile.data.metadata["package_version"] == "2009+A.02"
@@ -1094,7 +1095,7 @@ def testGaussian_Gaussian09_dvb_lowdin_log(logfile):
 def testGaussian_Gaussian09_Dahlgren_TS_log(logfile):
     """Failed to parse ccenergies for a variety of reasons"""
     assert hasattr(logfile.data, "ccenergies")
-    assert abs(logfile.data.ccenergies[0] - (-11819.96506609)) < 0.001
+    assert abs(logfile.data.ccenergies[0] - (-434.37573219)) < 1.0e-6
 
     assert logfile.data.metadata["package_version"] == "2009+A.02"
 
@@ -1670,8 +1671,8 @@ def testORCA_ORCA2_9_job_out(logfile):
 def testORCA_ORCA2_9_qmspeedtest_hf_out(logfile):
     """Check precision of SCF energies (cclib/cclib#210)."""
     energy = logfile.data.scfenergies[-1]
-    expected = -17542.5188694
-    assert abs(energy - expected) < 10**-6
+    expected = -644.675706036271
+    assert abs(energy - expected) < 1.0e-8
 
     assert logfile.data.metadata["legacy_package_version"] == "2.9.1"
     assert logfile.data.metadata["package_version"] == "2.9.1"
@@ -1901,7 +1902,7 @@ def testORCA_ORCA4_2_longer_input_out(logfile):
 
 def testORCA_ORCA4_2_casscf_out(logfile):
     """ORCA casscf input file (#1044)."""
-    assert numpy.isclose(logfile.data.etenergies[0], 28271.0)
+    assert numpy.isclose(logfile.data.etenergies[0], 0.128812)
 
 
 def testORCA_ORCA5_0_ADBNA_Me_Mes_MesCz_log(logfile):
@@ -2014,7 +2015,7 @@ def testQChem_QChem4_2_CH3___Na__RS_out(logfile):
 
     # Fragments: A, B, RS_CP(A), RS_CP(B), Full
     assert len(logfile.data.scfenergies) == 1
-    scfenergy = convertor(-201.9388745658, "hartree", "eV")
+    scfenergy = -201.9388745658
     assert abs(logfile.data.scfenergies[0] - scfenergy) < 1.0e-10
 
     assert logfile.data.nbasis == logfile.data.nmo == 40
@@ -2047,7 +2048,7 @@ def testQChem_QChem4_2_CH3___Na__RS_SCF_out(logfile):
 
     # Fragments: A, B, RS_CP(A), RS_CP(B), SCF_CP(A), SCF_CP(B), Full
     assert len(logfile.data.scfenergies) == 1
-    scfenergy = convertor(-201.9396979324, "hartree", "eV")
+    scfenergy = -201.9396979324
     assert abs(logfile.data.scfenergies[0] - scfenergy) < 1.0e-10
 
     assert logfile.data.nbasis == logfile.data.nmo == 40
@@ -2078,7 +2079,7 @@ def testQChem_QChem4_2_CH4___Na__out(logfile):
 
     # Fragments: A, B, Full
     assert len(logfile.data.scfenergies) == 1
-    scfenergy = convertor(-202.6119443654, "hartree", "eV")
+    scfenergy = -202.6119443654
     assert abs(logfile.data.scfenergies[0] - scfenergy) < 1.0e-10
 
     assert logfile.data.nbasis == logfile.data.nmo == 42
@@ -2108,7 +2109,7 @@ def testQChem_QChem4_2_CH3___Na__RS_SCF_noprint_out(logfile):
     assert len(logfile.data.atomnos) == 5
 
     assert len(logfile.data.scfenergies) == 1
-    scfenergy = convertor(-201.9396979324, "hartree", "eV")
+    scfenergy = -201.9396979324
     assert abs(logfile.data.scfenergies[0] - scfenergy) < 1.0e-10
 
     assert logfile.data.nbasis == logfile.data.nmo == 40
@@ -2138,7 +2139,7 @@ def testQChem_QChem4_2_CH3___Na__RS_noprint_out(logfile):
     assert len(logfile.data.atomnos) == 5
 
     assert len(logfile.data.scfenergies) == 1
-    scfenergy = convertor(-201.9388582085, "hartree", "eV")
+    scfenergy = -201.9388582085
     assert abs(logfile.data.scfenergies[0] - scfenergy) < 1.0e-10
 
     assert logfile.data.nbasis == logfile.data.nmo == 40
@@ -2166,7 +2167,7 @@ def testQChem_QChem4_2_CH4___Na__noprint_out(logfile):
     assert len(logfile.data.atomnos) == 6
 
     assert len(logfile.data.scfenergies) == 1
-    scfenergy = convertor(-202.6119443654, "hartree", "eV")
+    scfenergy = -202.6119443654
     assert abs(logfile.data.scfenergies[0] - scfenergy) < 1.0e-10
 
     assert logfile.data.nbasis == logfile.data.nmo == 42
@@ -2711,14 +2712,8 @@ def testQChem_QChem5_0_argon_out(logfile):
     assert len(logfile.data.etenergies) == nroots
     state_0_energy = -526.6323968555
     state_1_energy = -526.14663738
-    assert logfile.data.scfenergies[0] == convertor(state_0_energy, "hartree", "eV")
-    assert (
-        abs(
-            logfile.data.etenergies[0]
-            - convertor(state_1_energy - state_0_energy, "hartree", "wavenumber")
-        )
-        < 1.0e-1
-    )
+    assert logfile.data.scfenergies[0] == state_0_energy
+    assert abs(logfile.data.etenergies[0] - (state_1_energy - state_0_energy)) < 1.0e-1
 
 
 def testQChem_QChem5_0_Si_out(logfile):
@@ -3057,8 +3052,8 @@ class JaguarSPTest_6_31gss(JaguarSPTest_noatomcharges):
     """AO counts and some values are different in 6-31G** compared to STO-3G."""
 
     nbasisdict = {1: 5, 6: 15}
-    b3lyp_energy = -10530
-    b3lyp_moenergy = -277.610006052399
+    scfenergy = -387.06414443
+    moenergy = -10.20198
     overlap01 = 0.22
 
     def testmetadata_basis_set(self, data: "ccData") -> None:
@@ -3134,7 +3129,7 @@ class JaguarGeoOptTest_nmo45(GenericGeoOptTest):
 
 class JaguarGeoOptTest_6_31gss(GenericGeoOptTest):
     nbasisdict = {1: 5, 6: 15}
-    b3lyp_energy = -10530
+    scfenergy = -387.064207
 
 
 class MolcasBigBasisTest_nogbasis(MolcasBigBasisTest):
@@ -3281,14 +3276,13 @@ class OrcaIRTest_old(OrcaIRTest_pre4):
 # PSI3 #
 
 
-class Psi3SPTest(GenericSPTest):
+class Psi3SPTest(GenericHFSPTest):
     """Customized restricted single point HF/KS unittest"""
 
     # The final energy is also a bit higher here, I think due to the fact
     # that a SALC calculation is done instead of a full LCAO.
-    b3lyp_energy = -10300
-
-    b3lyp_moenergy = -301.6614
+    scfenergy = -378.895220030994
+    moenergy = -11.085851
 
     @pytest.mark.skip("atomcharges not implemented for Psi3")
     def testatomcharges_mulliken(self, data: "ccData") -> None:
