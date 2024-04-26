@@ -19,6 +19,8 @@ Basis     Psi4        GenericBasisTest      basicPsi4-1.3.1       dvb_sp_rhf.out
 Basis     Psi4        GenericBasisTest      basicPsi4-1.3.1       dvb_sp_rks.out
 Basis     Psi4        GenericBasisTest      basicPsi4-1.7         dvb_sp_rhf.out
 Basis     Psi4        GenericBasisTest      basicPsi4-1.7         dvb_sp_rks.out
+Basis     Gaussian    GenericBasisTest      basicGaussian09       dvb_sp.out
+Basis     Gaussian    GenericBasisTest      basicGaussian16       dvb_sp.out
 
 SP        Gaussian    GaussianSPTest        basicGaussian16       dvb_sp.out
 SP        Psi4        PsiHFSPTest           basicPsi4-1.3.1       dvb_sp_rhf.out
