@@ -1746,9 +1746,11 @@ cannot be determined. Rerun without `$molecule read`."""
 
                 line = next(inputfile)
                 assert "Total Enthalpy" in line
-                if not hasattr(self, "enthalpy"):
-                    enthalpy = float(line.split()[2])
-                    self.enthalpy = utils.convertor(enthalpy, "kcal/mol", "hartree")
+                self.set_attribute(
+                    "enthalpy",
+                    utils.convertor(float(line.split()[2]), "kcal/mol", "hartree")
+                    + utils.convertor(self.scfenergies[-1], "eV", "hartree"),
+                )
                 line = next(inputfile)
                 assert "Total Entropy" in line
                 if not hasattr(self, "entropy"):
