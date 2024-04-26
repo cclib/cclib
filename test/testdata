@@ -22,8 +22,18 @@ Basis     Psi4        GenericBasisTest      basicPsi4-1.7         dvb_sp_rks.out
 Basis     Gaussian    GenericBasisTest      basicGaussian09       dvb_sp.out
 Basis     Gaussian    GenericBasisTest      basicGaussian16       dvb_sp.out
 
+Basis     Gaussian    GaussianBigBasisTest  basicGaussian09       C_bigbasis.out
+Basis     Gaussian    GaussianBigBasisTest  basicGaussian16       C_bigbasis.out
+Basis     Psi4        Psi4BigBasisTest      basicPsi4-1.2.1       C_bigbasis.out
+Basis     Psi4        Psi4BigBasisTest      basicPsi4-1.3.1       C_bigbasis.out
+Basis     Psi4        Psi4BigBasisTest      basicPsi4-1.7         C_bigbasis.out
+
+Core      Gaussian    GenericCoreTest       basicGaussian09       Mo4OCl4-sp.log
+Core      Gaussian    GenericCoreTest       basicGaussian16       Mo4OCl4-sp.log
+
 SP        Gaussian    GaussianSPTest        basicGaussian16       dvb_sp.out
 SP        Psi4        PsiHFSPTest           basicPsi4-1.3.1       dvb_sp_rhf.out
 SPun      Gaussian    GaussianSPunTest      basicGaussian09       dvb_un_sp_b.log
 SPun      Gaussian    GaussianSPunTest      basicGaussian16       dvb_un_sp_b.log
 SPun        Psi4      GenericSPunTest       basicPsi4-1.3.1       dvb_sp_uhf.out
+
