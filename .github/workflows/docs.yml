@@ -4,8 +4,12 @@ name: docs push
 
 # yamllint disable-line rule:truthy
 on:
-  push:
-    branches: [master]
+  workflow_dispatch:
+  workflow_call:
+
+concurrency:
+  group: docs-${{github.ref}}-${{github.event.pull_request.number || github.run_number}}
+  cancel-in-progress: true
 
 jobs:
   push-docs:
@@ -52,3 +56,4 @@ jobs:
           destination-repository-name: 'cclib.github.io'
           commit-message: See ORIGIN_COMMIT from $GITHUB_REF
           target-branch: master
+        if: github.ref == 'refs/heads/master'
