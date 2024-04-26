@@ -1636,17 +1636,14 @@ class GAMESS(logfileparser.Logfile):
             line = next(inputfile)  # TOTAL
             thermoValues = line.split()
 
-            if hasattr(self, "scfenergies"):
-                electronicEnergy = utils.convertor(self.scfenergies[-1], "eV", "hartree")
-            else:
-                electronicEnergy = 0  # GAMESS  prints thermochemistry at the end, so it should have a value for this already
+            electronic_energy = utils.convertor(self.scfenergies[0], "eV", "hartree")
             self.set_attribute(
                 "enthalpy",
-                electronicEnergy + utils.convertor(float(thermoValues[2]), "kcal/mol", "hartree"),
+                electronic_energy + utils.convertor(float(thermoValues[2]), "kcal/mol", "hartree"),
             )
             self.set_attribute(
                 "freeenergy",
-                electronicEnergy + utils.convertor(float(thermoValues[3]), "kcal/mol", "hartree"),
+                electronic_energy + utils.convertor(float(thermoValues[3]), "kcal/mol", "hartree"),
             )
             self.set_attribute(
                 "entropy", utils.convertor(float(thermoValues[6]) / 1000.0, "kcal/mol", "hartree")
