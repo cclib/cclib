@@ -47,7 +47,7 @@ class atomnos(base_parser):
                     element = element[0] + element[1:].lower()
                 constructed_data.append(table.number[element])
                 line = file_handler.virtual_next()
-            return {atomnos.__name__: constructed_data}
+            return {atomnos.__name__: np.array(constructed_data)}
         return None
 
     @staticmethod

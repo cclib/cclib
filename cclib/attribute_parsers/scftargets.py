@@ -18,10 +18,8 @@ class scftargets(base_parser):
     def gaussian(file_handler, ccdata) -> Optional[dict]:
         line = file_handler.last_line
         if ccdata.BOMD is None and line[1:44] == "Requested convergence on RMS density matrix":
-            print("in scf targets")
             constructed_scftargets = ccdata.scftargets
             if constructed_scftargets is None:
-                print("is none")
                 constructed_scftargets = []
             elif type(ccdata.scftargets) == type(numpy.array([])):
                 # This case can happen with ONIOM which are mixed SCF
@@ -33,7 +31,6 @@ class scftargets(base_parser):
             # The RMS density matrix.
             curr_scftargets.append(utils.float(line.split("=")[1].split()[0]))
             line = file_handler.virtual_next()
-            print("adding info")
             # The MAX density matrix.
             curr_scftargets.append(utils.float(line.strip().split("=")[1][:-1]))
             print(curr_scftargets)

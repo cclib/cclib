@@ -126,7 +126,10 @@ class gbasis(base_parser):
                     missing_index = len(parsed_gbasis)
                     missing_atomno = ccdata.atomnos[missing_index]
                     ngbasis = len(parsed_gbasis)
-                    last_same = ngbasis - ccdata.atomnos[:ngbasis][::-1].index(missing_atomno) - 1
+                    print(missing_atomno)
+                    print(ccdata.atomnos)
+                    print(np.where(ccdata.atomnos[:ngbasis][::-1]==missing_atomno)[0][0])
+                    last_same = ngbasis - np.where(ccdata.atomnos[:ngbasis][::-1]==missing_atomno)[0][0] - 1
                     return parsed_gbasis[last_same]
 
                 dfact = lambda n: (n <= 0) or n * dfact(n - 2)

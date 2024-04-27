@@ -338,6 +338,7 @@ class GenericSPTest:
     @skipForParser("GAMESSDAT", "Moenergies probably do not exist in the file")
     @skipForLogfile("Gaussian/basicGaussian16/dvb_sp_no.out", "no energies for natural orbitals")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("Psi4", "The parser is still being developed for version 2")
     @skipForLogfile("Turbomole/basicTurbomole5.9/dvb_sp_symm", "delta of 7.4, everything else ok")
     @skipForParser("xTB", "not implemented yet")
     def testfirstmoenergy(self, data) -> None:

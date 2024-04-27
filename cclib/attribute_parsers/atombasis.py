@@ -58,6 +58,58 @@ class atombasis(base_parser):
                     constructed_atombasis.append(curr_atombasis)
             constructed_data = {atombasis.__name__: constructed_atombasis}
             return constructed_data
+        # Natural orbital coefficients (nocoeffs) and occupation numbers (nooccnos),
+        # which are respectively define the eigenvectors and eigenvalues of the
+        # diagonalized one-electron density matrix. These orbitals are formed after
+        # configuration interaction (CI) calculations, but not only. Similarly to mocoeffs,
+        # we can parse and check aonames and atombasis here.
+        #
+        #     Natural Orbital Coefficients:
+        #                           1         2         3         4         5
+        #     Eigenvalues --     2.01580   2.00363   2.00000   2.00000   1.00000
+        #   1 1   O  1S          0.00000  -0.15731  -0.28062   0.97330   0.00000
+        #   2        2S          0.00000   0.75440   0.57746   0.07245   0.00000
+        # ...
+        #
+        def natural_orbital_single_spin_parsing(fh):
+            coeffs = np.zeros((ccdata.nmo, ccdata.nbasis), "d")
+            this_atombasis = []
+            for base in range(0, ccdata.nmo, 5):
+                colmNames = fh.virtual_next()
+                eigenvalues = fh.virtual_next()
+                for i in range(ccdata.nbasis):
+                    line = fh.virtual_next()
+                    # Just do this the first time 'round.
+                    if base == 0:
+                        parts = line[:12].split()
+                        # New atom.
+                        if len(parts) > 1:
+                            if i > 0:
+                                this_atombasis.append(basisonatom)
+                            basisonatom = []
+                        orbital = line[11:20].strip()
+                        basisonatom.append(i)
+                    part = line[21:].replace("D", "E").rstrip()
+                    temp = []
+                    for j in range(0, len(part), 10):
+                        temp.append(float(part[j : j + 10]))
+                # Do the last update of atombasis.
+                if base == 0:
+                    this_atombasis.append(basisonatom)
+            return this_atombasis
+
+        if line[5:33] == "Natural Orbital Coefficients":
+            parsed_atombasis = natural_orbital_single_spin_parsing(file_handler)
+            return {atombasis.__name__: parsed_atombasis}
+
+        if line[5:39] == "Alpha Natural Orbital Coefficients":
+            parsed_atombasis = natural_orbital_single_spin_parsing(file_handler)
+            print(atombasis.__name__)
+            return {atombasis.__name__: parsed_atombasis}
+        if line[5:38] == "Beta Natural Orbital Coefficients":
+            parsed_atombasis = natural_orbital_single_spin_parsing(file_handler)
+            return {atombasis.__name__: parsed_atombasis}
+
         return None
 
     @staticmethod
