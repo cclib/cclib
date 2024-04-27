@@ -58,6 +58,7 @@ class atombasis(base_parser):
                     constructed_atombasis.append(curr_atombasis)
             constructed_data = {atombasis.__name__: constructed_atombasis}
             return constructed_data
+
         # Natural orbital coefficients (nocoeffs) and occupation numbers (nooccnos),
         # which are respectively define the eigenvectors and eigenvalues of the
         # diagonalized one-electron density matrix. These orbitals are formed after
