@@ -360,12 +360,23 @@ class GamessIRTest(GenericIRTest):
         )
 
 
-class Psi4IRTest(GenericIRTest):
+class Psi4HFIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
-    # RHF is used for Psi4 IR test data instead of B3LYP
+    max_IR_intensity = 146
     max_force_constant = 9.37
+
     zpve = 0.1917
+    entropy = 0.00013229523
+    enthalpy = -379.57027841
+    freeenergy = -379.60972224
+
+
+class Psi4KSIRTest(GenericIRTest):
+    """Customized vibrational frequency unittest"""
+
+    enthalpy_places = 2
+    freeenergy_places = 2
 
 
 class TurbomoleIRTest(GenericIRTest):

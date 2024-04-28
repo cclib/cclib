@@ -462,10 +462,10 @@ vib       NWChem      NWChemIRTest          basicNWChem7.0        dvb_ir.out
 vib       ORCA        GenericIRTest         basicORCA4.1          dvb_ir.out
 vib       ORCA        GenericIRTest         basicORCA4.2          dvb_ir.out
 vib       ORCA        GenericIRTest         basicORCA5.0          dvb_ir.out
-vib       Psi4        Psi4IRTest            basicPsi4-1.2.1       dvb_ir_rhf.out
-vib       Psi4        Psi4IRTest            basicPsi4-1.3.1       dvb_ir_rhf.out
-vib       Psi4        Psi4IRTest            basicPsi4-1.7         dvb_ir_rhf.out
-vib       Psi4        GenericIRTest         basicPsi4-1.7         dvb_ir_rks.out
+vib       Psi4        Psi4HFIRTest          basicPsi4-1.2.1       dvb_ir_rhf.out
+vib       Psi4        Psi4HFIRTest          basicPsi4-1.3.1       dvb_ir_rhf.out
+vib       Psi4        Psi4HFIRTest          basicPsi4-1.7         dvb_ir_rhf.out
+vib       Psi4        Psi4KSIRTest          basicPsi4-1.7         dvb_ir_rks.out
 vib       QChem       QChemIRTest           basicQChem5.1         dvb_ir.out
 vib       QChem       QChemIRTest           basicQChem5.4         dvb_ir.out
 vib       Turbomole   TurbomoleIRTest       basicTurbomole5.9     dvb_ir/basis            dvb_ir/control            dvb_ir/mos            dvb_ir/aoforce.out
