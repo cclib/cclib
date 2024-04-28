@@ -580,7 +580,7 @@ class ADF(logfileparser.Logfile):
 
             # handle case where MO information up to a certain orbital are missing
             while int(info[0]) - 1 != len(self.moenergies[0]):
-                self.moenergies[0].append(99999)
+                self.moenergies[0].append(numpy.nan)
                 self.mosyms[0].append("A")
 
             homoA = None
