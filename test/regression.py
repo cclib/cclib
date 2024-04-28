@@ -125,10 +125,9 @@ from .data.testvib import (
     GenericRamanTest,
     JaguarIRTest,
     OrcaRamanTest,
-    Psi4IRTest,
-    QChemIRTest,
-    QChemRamanTest,
 )
+from .data.testvib import Psi4HFIRTest as Psi4IRTest
+from .data.testvib import QChemIRTest, QChemRamanTest
 
 # The following regression test functions were manually written, because they
 # contain custom checks that were determined on a per-file basis. Care needs to be taken
