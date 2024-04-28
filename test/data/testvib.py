@@ -20,6 +20,7 @@ class GenericIRTest:
 
     # Unit tests may give these values for the largest force constant and reduced mass, respectively.
     max_force_constant = 10.0
+    force_constant_thresh = 0.1
     max_reduced_mass = 6.9
 
     # reference zero-point correction from Gaussian 16 dvb_ir.out
@@ -95,7 +96,7 @@ class GenericIRTest:
     )
     def testvibfconsts(self, data) -> None:
         """Is the maximum force constant 10. +/- 0.1 mDyn/angstrom?"""
-        assert abs(max(data.vibfconsts) - self.max_force_constant) < 0.1
+        assert abs(max(data.vibfconsts) - self.max_force_constant) < self.force_constant_thresh
 
     @skipForParser("ADF", "ADF cannot print reduced masses")
     @skipForParser("DALTON", "DALTON cannot print reduced masses")
