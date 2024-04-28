@@ -1184,9 +1184,9 @@ class NWChem(logfileparser.Logfile):
         # - Rotational                     =    2.979 cal/mol-K
         # - Vibrational                    =   97.716 cal/mol-K
         if line[1:12] == "Temperature":
-            self.set_attribute("temperature", utils.float(line.split()[2][:-1]))
+            self.set_attribute("temperature", float(line.split()[2][:-1]))
         if line[1:28] == "frequency scaling parameter":
-            self.set_attribute("pressure", utils.float(line.split()[4]))
+            self.set_attribute("pressure", float(line.split()[4]))
         if line[1:31] == "Thermal correction to Enthalpy" and hasattr(self, "scfenergies"):
             self.set_attribute(
                 "enthalpy",
@@ -1203,8 +1203,7 @@ class NWChem(logfileparser.Logfile):
             )
         if line[1:14] == "Total Entropy":
             self.set_attribute(
-                "entropy",
-                utils.convertor(1e-3 * utils.float(line.split()[3]), "kcal/mol", "hartree"),
+                "entropy", utils.convertor(1e-3 * float(line.split()[3]), "kcal/mol", "hartree")
             )
 
         if line.strip() == "(Projected Frequencies expressed in cm-1)":
@@ -1231,13 +1230,14 @@ class NWChem(logfileparser.Logfile):
 
         # extract vibrational frequencies (in cm-1)
         if line.strip() == "Normal Eigenvalue ||           Projected Infra Red Intensities":
-            self.skip_lines(inputfile, ["units", "d"])  # units, dashes
+            self.skip_lines(inputfile, ["units", "dashes and pipes"])
             line = next(inputfile)  # first line of data
             vibfreqs = []
-            while set(line.strip()[:-1]) != {"-"}:
-                vibfreqs.append(float(line.split()[1]))
-                self.append_attribute("vibirs", float(line.split()[5]))
-                line = next(inputfile)  # next line
+            while set(line.strip()) != {"-"}:
+                tokens = line.split()
+                vibfreqs.append(float(tokens[1]))
+                self.append_attribute("vibirs", float(tokens[5]))
+                line = next(inputfile)
             self.set_attribute("vibfreqs", vibfreqs)
         # NWChem TD-DFT excited states transitions
         #
