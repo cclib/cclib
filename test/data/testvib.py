@@ -186,7 +186,6 @@ class GenericIRTest:
     @skipForParser("FChk", "not printed")
     @skipForParser("GAMESSUK", "not implemented yet")
     @skipForParser("Molpro", "not implemented yet")
-    @skipForParser("NWChem", "not printed directly")
     @skipForParser("Turbomole", "not implemented yet")
     def testfreeenergy(self, data) -> None:
         """Is the freeenergy reasonable"""
@@ -197,7 +196,6 @@ class GenericIRTest:
     @skipForParser("FChk", "not printed")
     @skipForParser("GAMESSUK", "not implemented yet")
     @skipForParser("Molpro", "not implemented yet")
-    @skipForParser("NWChem", "not printed directly")
     @skipForParser("Turbomole", "not implemented yet")
     def testfreeenergyconsistency(self, data) -> None:
         """Does G = H - TS hold"""
