@@ -711,6 +711,47 @@ class Jaguar(logfileparser.Logfile):
             self.set_attribute(
                 "zpve", utils.convertor(float(line.split()[-2]), "kcal/mol", "hartree")
             )
+            line = next(inputfile)
+            # version >= 6.5
+            if "is not included in" in line:
+                self.skip_lines(inputfile, ["b", "b"])
+                line = next(inputfile)
+                self.set_attribute("temperature", float(line.split()[2]))
+                self.skip_lines(
+                    inputfile,
+                    ["b", "header", "dashes and spaces", "trans.", "rot.", "vib.", "elec."],
+                )
+                line = next(inputfile)
+                self.set_attribute(
+                    "entropy", utils.convertor(float(line.split()[3]) / 1000, "kcal/mol", "hartree")
+                )
+                self.skip_lines(inputfile, ["b", "Total internal energy"])
+                line = next(inputfile)
+                self.set_attribute("enthalpy", float(line.split()[-2]))
+                line = next(inputfile)
+                self.set_attribute("freeenergy", float(line.split()[-2]))
+            else:
+                self.skip_lines(inputfile, ["header", "0K thermo"])
+                tokens = next(inputfile).split()
+                self.set_attribute("temperature", float(tokens[0]))
+                self.set_attribute(
+                    "entropy", utils.convertor(float(tokens[2]) / 1000, "kcal/mol", "hartree")
+                )
+                # For such an old version it looks like only finite difference
+                # via gradient is available, so assume the first SCF energy is
+                # the stationary point.
+                self.set_attribute(
+                    "enthalpy",
+                    utils.convertor(float(tokens[3]), "kcal/mol", "hartree")
+                    + self.zpve
+                    + self.scfenergies[0],
+                )
+                self.set_attribute(
+                    "freeenergy",
+                    utils.convertor(float(tokens[4]), "kcal/mol", "hartree")
+                    + self.zpve
+                    + self.scfenergies[0],
+                )
 
         # Parse excited state output (for CIS calculations).
         # Jaguar calculates only singlet states.
