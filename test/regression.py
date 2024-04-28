@@ -2967,6 +2967,11 @@ class GAMESSUSSPunTest_charge0(GenericSPunTest):
         """HOMOs were incorrect due to charge being wrong."""
 
 
+class GamessIRTest_old(GamessIRTest):
+    entropy_places = 5
+    freeenergy_places = 2
+
+
 class GAMESSUSIRTest_ts(GenericIRimgTest):
     @pytest.mark.skip("This is a transition state with different intensities")
     def testirintens(self, data: "ccData") -> None:
