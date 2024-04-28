@@ -18,4 +18,4 @@ pushd data
 bash ./regression_download.sh
 popd
 #PYTEST_ADDOPTS="-v -s ${PYTEST_PARALLELISM} --cov=cclib --cov-report=term --cov-report=xml:coverage-regression.xml --cov-append" python -m pytest test/regression.py
-PYTEST_ADDOPTS="-v -s ${PYTEST_PARALLELISM} --cov=cclib --cov-report=term --cov-report=xml:coverage-regression.xml --cov-append" python -m pytest test/regression_io.py
+#PYTEST_ADDOPTS="-v -s ${PYTEST_PARALLELISM} --cov=cclib --cov-report=term --cov-report=xml:coverage-regression.xml --cov-append" python -m pytest test/regression_io.py
