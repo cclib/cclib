@@ -95,7 +95,6 @@ class GenericIRTest:
     @skipForParser("xTB", "xTB does not print force constants")
     @skipForLogfile("FChk/basicGaussian09", "not printed in older versions than 16")
     @skipForLogfile("FChk/basicQChem5.4", "not printed")
-    @skipForLogfile("Jaguar/Jaguar4.2", "Data file does not contain force constants")
     @skipForLogfile(
         "Psi4/Psi4-1.0", "Data file contains vibrational info with cartesian coordinates"
     )
@@ -145,7 +144,6 @@ class GenericIRTest:
 
     @skipForParser("DALTON", "not implemented yet")
     @skipForParser("FChk", "not printed")
-    @skipForParser("Jaguar", "not implemented yet")
     @skipForParser("Molpro", "not implemented yet")
     @skipForParser("Psi4", "not implemented yet")
     @skipForParser("Turbomole", "not implemented yet")
@@ -177,7 +175,6 @@ class GenericIRTest:
     @skipForParser("ADF", "not implemented yet")
     @skipForParser("DALTON", "not implemented yet")
     @skipForParser("FChk", "not printed")
-    @skipForParser("Jaguar", "not implemented yet")
     @skipForParser("GAMESSUK", "not implemented yet")
     @skipForParser("Molpro", "not implemented yet")
     @skipForParser("Psi4", "not implemented yet")
@@ -190,7 +187,6 @@ class GenericIRTest:
     @skipForParser("DALTON", "not implemented yet")
     @skipForParser("FChk", "not printed")
     @skipForParser("GAMESSUK", "not implemented yet")
-    @skipForParser("Jaguar", "not implemented yet")
     @skipForParser("Molpro", "not implemented yet")
     @skipForParser("NWChem", "not printed directly")
     @skipForParser("Psi4", "not implemented yet")
@@ -203,7 +199,6 @@ class GenericIRTest:
     @skipForParser("DALTON", "not implemented yet")
     @skipForParser("FChk", "not printed")
     @skipForParser("GAMESSUK", "not implemented yet")
-    @skipForParser("Jaguar", "not implemented yet")
     @skipForParser("Molpro", "not implemented yet")
     @skipForParser("NWChem", "not printed directly")
     @skipForParser("Psi4", "not implemented yet")
@@ -271,6 +266,8 @@ class JaguarIRTest(GenericIRTest):
     # Jagur outputs vibrational info with cartesian coordinates
     max_force_constant = 3.7
     max_reduced_mass = 2.3
+
+    freeenergy_places = 2
 
     def testvibsyms(self, data, numvib) -> None:
         """Is the length of vibsyms correct?"""
