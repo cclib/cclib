@@ -76,9 +76,14 @@ class GenericIRTest:
         """Does the highest frequency value match?"""
         assert abs(max(data.vibfreqs) - self.highest_freq) < self.highest_freq_thresh
 
-    @skipForParser("Psi4", "Psi cannot print IR intensities")
     @skipForLogfile("FChk/basicGaussian09", "not printed in older versions than 16")
     @skipForLogfile("FChk/basicQChem5.4", "not printed")
+    @skipForLogfile(
+        "Psi4/basicPsi4-1.2.1/dvb_ir_rhf.out", "not implemented in versions older than 1.7"
+    )
+    @skipForLogfile(
+        "Psi4/basicPsi4-1.3.1/dvb_ir_rhf.out", "not implemented in versions older than 1.7"
+    )
     def testirintens(self, data) -> None:
         """Is the maximum IR intensity 100 +/- 10 km/mol?"""
         assert abs(max(data.vibirs) - self.max_IR_intensity) < 10
@@ -95,9 +100,6 @@ class GenericIRTest:
     @skipForParser("xTB", "xTB does not print force constants")
     @skipForLogfile("FChk/basicGaussian09", "not printed in older versions than 16")
     @skipForLogfile("FChk/basicQChem5.4", "not printed")
-    @skipForLogfile(
-        "Psi4/Psi4-1.0", "Data file contains vibrational info with cartesian coordinates"
-    )
     def testvibfconsts(self, data) -> None:
         """Is the maximum force constant 10. +/- 0.1 mDyn/angstrom?"""
         assert abs(max(data.vibfconsts) - self.max_force_constant) < self.force_constant_thresh
@@ -111,7 +113,6 @@ class GenericIRTest:
     @skipForLogfile("FChk/basicGaussian09", "not printed in older versions than 16")
     @skipForLogfile("FChk/basicQChem5.4", "not printed")
     @skipForLogfile("GAMESS/PCGAMESS", "Data file does not contain reduced masses")
-    @skipForLogfile("Psi4/Psi4-1.0", "Data file does not contain reduced masses")
     def testvibrmasses(self, data) -> None:
         """Is the maximum reduced mass 6.9 +/- 0.1 daltons?"""
         assert abs(max(data.vibrmasses) - self.max_reduced_mass) < 0.1
@@ -145,7 +146,6 @@ class GenericIRTest:
     @skipForParser("DALTON", "not implemented yet")
     @skipForParser("FChk", "not printed")
     @skipForParser("Molpro", "not implemented yet")
-    @skipForParser("Psi4", "not implemented yet")
     @skipForParser("Turbomole", "not implemented yet")
     def testtemperature(self, data) -> None:
         """Is the temperature 298.15 K?"""
@@ -166,7 +166,6 @@ class GenericIRTest:
     @skipForParser("Jaguar", "not implemented yet")
     @skipForParser("GAMESSUK", "not implemented yet")
     @skipForParser("Molpro", "not implemented yet")
-    @skipForParser("Psi4", "not implemented yet")
     @skipForParser("Turbomole", "not implemented yet")
     def testentropy(self, data) -> None:
         """Is the entropy reasonable"""
@@ -177,7 +176,6 @@ class GenericIRTest:
     @skipForParser("FChk", "not printed")
     @skipForParser("GAMESSUK", "not implemented yet")
     @skipForParser("Molpro", "not implemented yet")
-    @skipForParser("Psi4", "not implemented yet")
     @skipForParser("Turbomole", "not implemented yet")
     def testenthalpy(self, data) -> None:
         """Is the enthalpy reasonable"""
@@ -189,7 +187,6 @@ class GenericIRTest:
     @skipForParser("GAMESSUK", "not implemented yet")
     @skipForParser("Molpro", "not implemented yet")
     @skipForParser("NWChem", "not printed directly")
-    @skipForParser("Psi4", "not implemented yet")
     @skipForParser("Turbomole", "not implemented yet")
     def testfreeenergy(self, data) -> None:
         """Is the freeenergy reasonable"""
@@ -201,7 +198,6 @@ class GenericIRTest:
     @skipForParser("GAMESSUK", "not implemented yet")
     @skipForParser("Molpro", "not implemented yet")
     @skipForParser("NWChem", "not printed directly")
-    @skipForParser("Psi4", "not implemented yet")
     @skipForParser("Turbomole", "not implemented yet")
     def testfreeenergyconsistency(self, data) -> None:
         """Does G = H - TS hold"""
