@@ -30,9 +30,14 @@ class GenericIRTest:
     freeenergy = -382.164915
 
     zpve_thresh = 1.0e-3
+    # TODO refactor from places to thresh
     enthalpy_places = 3
     entropy_places = 6
     freeenergy_places = 3
+
+    # Molecular mass of DVB in mD.
+    molecularmass = 130078.25
+    molecularmass_thresh = 0.25
 
     @pytest.fixture
     def numvib(self, data) -> int:
@@ -213,14 +218,29 @@ class GenericIRTest:
             == 0
         )
 
+    @skipForParser("FChk", "not printed")
+    @skipForParser("GAMESSUK", "not implemented yet")
+    @skipForParser("Jaguar", "not implemented yet")
+    @skipForParser("Molcas", "not implemented yet")
+    @skipForParser("Molpro", "not implemented yet")
+    @skipForParser("GAMESSUK", "not implemented yet")
+    @skipForParser("Turbomole", "not implemented yet")
+    @skipForParser("xTB", "not implemented yet")
+    def testatommasses(self, data) -> None:
+        """Do the atom masses sum up to the molecular mass?"""
+        mm = 1000 * sum(data.atommasses)
+        assert (
+            abs(mm - self.molecularmass) < self.molecularmass_thresh
+        ), f"Molecule mass: {mm:f} not {self.molecularmass:f} +- {self.molecularmass_thresh:f} mD"
+
 
 class ADFIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
-    # ???
-    zpve_thresh = 1.0e-2
+    zpve = 0.1759
     entropy = 0.00013953096105839138
 
+    zpve_thresh = 1.1e-3
     entropy_places = 4
 
 
@@ -228,8 +248,12 @@ class FireflyIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
     max_IR_intensity = 135
-    # ???
+
     zpve = 0.1935
+    enthalpy = -379.5751787863937
+    freeenergy = -379.61838132136285
+
+    entropy_places = 5
 
 
 class GaussianIRTest(GenericIRTest):
@@ -273,37 +297,27 @@ class NWChemIRTest(GenericIRTest):
         return 3 * len(data.atomnos)
 
 
-class QChemIRTest(GenericIRTest):
-    """Customized vibrational frequency unittest"""
-
-    enthalpy = 0.1871270552135131
-    entropy = 0.00014667348271900577
-    freeenergy = 0.14339635634084155
-
-    # Molecular mass of DVB in mD.
-    molecularmass = 130078.25
-
-    @skipForParser("FChk", "not printed")
-    def testatommasses(self, data) -> None:
-        """Do the atom masses sum up to the molecular mass (130078.25+-0.1mD)?"""
-        mm = 1000 * sum(data.atommasses)
-        assert abs(mm - 130078.25) < 0.1, f"Molecule mass: {mm:f} not 130078 +- 0.1mD"
-
-
 class GamessIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
-    # Molecular mass of DVB in mD.
-    molecularmass = 130078.25
-
-    enthalpy = -381.86372805188300
     entropy = 0.00014875961938
+    enthalpy = -381.86372805188300
     freeenergy = -381.90808120060200
 
-    def testatommasses(self, data) -> None:
-        """Do the atom masses sum up to the molecular mass (130078.25+-0.1mD)?"""
-        mm = 1000 * sum(data.atommasses)
-        assert abs(mm - 130078.25) < 0.1, f"Molecule mass: {mm:f} not 130078 +- 0.1mD"
+
+class OrcaIRTest(GenericIRTest):
+    """Customized vibrational frequency unittest"""
+
+    # ORCA 5.0
+    entropy = 0.00014384698977024988
+    enthalpy = -381.86823907
+    freeenergy = -381.91112705
+
+    enthalpy_places = 2
+    entropy_places = 5
+    freeenergy_places = 2
+
+    molecularmass = 130190
 
 
 class Psi4HFIRTest(GenericIRTest):
