@@ -124,6 +124,7 @@ from .data.testvib import (
     GenericIRTest,
     GenericRamanTest,
     JaguarIRTest,
+    OrcaIRTest,
     OrcaRamanTest,
     Psi4HFIRTest,
     QChemRamanTest,
@@ -3241,49 +3242,23 @@ class OrcaTDDFTTest_pre1085(OrcaTDDFTTest_pre5):
         assert abs(max(data.etoscs) - 0.94) < 0.2
 
 
-class OrcaIRTest(GenericIRTest):
+class OrcaIRTest_pre4(OrcaIRTest):
     """Customized vibrational frequency unittest"""
 
     # ORCA has a bug in the intensities for version < 4.0
     max_IR_intensity = 215
     zpve = 0.1921
 
+    entropy = 0.00012080325339594164
+    enthalpy = -381.85224835
+    freeenergy = -381.88826585
+
     enthalpy_places = 3
     entropy_places = 6
     freeenergy_places = 3
 
-    def testtemperature(self, data) -> None:
-        """Is the temperature 298.15 K?"""
-        assert round(abs(298.15 - data.temperature), 7) == 0
 
-    def testpressure(self, data) -> None:
-        """Is the pressure 1 atm?"""
-        assert round(abs(1 - data.pressure), 7) == 0
-
-    def testenthalpy(self, data) -> None:
-        """Is the enthalpy reasonable"""
-        assert round(abs(-381.85224835 - data.enthalpy), self.enthalpy_places) == 0
-
-    def testentropy(self, data) -> None:
-        """Is the entropy reasonable"""
-        assert round(abs(0.00012080325339594164 - data.entropy), self.entropy_places) == 0
-
-    def testfreeenergy(self, data) -> None:
-        """Is the freeenergy reasonable"""
-        assert round(abs(-381.88826585 - data.freeenergy), self.freeenergy_places) == 0
-
-    def testfreeenergyconsistency(self, data) -> None:
-        """Does G = H - TS hold"""
-        assert (
-            round(
-                abs(data.enthalpy - data.temperature * data.entropy - data.freeenergy),
-                self.freeenergy_places,
-            )
-            == 0
-        )
-
-
-class OrcaIRTest_old(OrcaIRTest):
+class OrcaIRTest_old(OrcaIRTest_pre4):
     """The frequency part of this calculation didn't finish, but went ahead and
     printed incomplete and incorrect results anyway.
     """
