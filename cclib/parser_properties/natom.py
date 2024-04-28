@@ -13,7 +13,7 @@ class natom(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["psi4"]
+    known_codes = ["psi4", "qchem"]
 
     @staticmethod
     def psi4(file_handler, ccdata) -> dict | None:
@@ -21,7 +21,14 @@ class natom(base_parser):
         dependency_list = ["atomnos"]
         if base_parser.check_dependencies(dependency_list, ccdata, "natom"):
             return {natom.__name__: len(ccdata.atomnos)}
+        return None
 
+    @staticmethod
+    def qchem(file_handler, ccdata) -> dict | None:
+        # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
+        dependency_list = ["atomnos"]
+        if base_parser.check_dependencies(dependency_list, ccdata, "natom"):
+            return {natom.__name__: len(ccdata.atomnos)}
         return None
 
     @staticmethod

@@ -66,12 +66,42 @@ def orca_parse_charge_section(file_handler, chargestype):
     return atomcharges, atomspins
 
 
+def qchem_parse_charge_section(file_handler, chargetype):
+    """Parse the population analysis charge block."""
+    atomcharges = dict()
+    atomspins = dict()
+    charges = []
+    spins = []
+    line = file_handler.last_line
+    file_handler.skip_lines(["blank"], virtual=True)
+    line = file_handler.virtual_next()
+    has_spins = False
+    if "Spin" in line:
+        has_spins = True
+    file_handler.skip_lines(["dashes"], virtual=True)
+    line = file_handler.virtual_next()
+
+    while list(set(line.strip())) != ["-"]:
+        elements = line.split()
+        charge = utils.float(elements[2])
+        charges.append(charge)
+        if has_spins:
+            spin = utils.float(elements[3])
+            spins.append(spin)
+        line = file_handler.virtual_next()
+
+    atomcharges[chargetype] = charges
+    if has_spins:
+        atomspins[chargestype] = spins
+    return atomcharges, atomspins
+
+
 class atomcharges(base_parser):
     """
     Docstring? Units?
     """
 
-    known_codes = ["ORCA", "NBO"]
+    known_codes = ["ORCA", "NBO", "qchem"]
 
     @staticmethod
     def ORCA(file_handler, ccdata) -> list | None:
@@ -179,6 +209,51 @@ class atomcharges(base_parser):
                 constructed_data["atomcharges"] = {**ccdata.atomcharges, **atomcharges}
             else:
                 constructed_data["atomcharges"] = {**atomcharges}
+            return constructed_data
+        return None
+
+    @staticmethod
+    def qchem(file_handler, ccdata) -> list | None:
+        line = file_handler.last_line
+        constructed_charge_data = None
+        constructed_spin_data = None
+        constructed_data = dict()
+        if "Ground-State Mulliken Net Atomic Charges" in line:
+            constructed_charge_data, constructed_spin_data = qchem_parse_charge_section(
+                inputfile, "mulliken"
+            )
+        if "Hirshfeld Atomic Charges" in line:
+            constructed_charge_data, constructed_spin_data = qchem_parse_charge_section(
+                inputfile, "hirshfeld"
+            )
+        if "Charge Model 5" in line:
+            constructed_charge_data, constructed_spin_data = qchem_parse_charge_section(
+                inputfile, "cm5"
+            )
+        if "Ground-State ChElPG Net Atomic Charges" in line:
+            constructed_charge_data, constructed_spin_data = qchem_parse_charge_section(
+                inputfile, "chelpg"
+            )
+        if "Merz-Kollman ESP Net Atomic Charges" in line:
+            constructed_charge_data, constructed_spin_data = qchem_parse_charge_section(
+                inputfile, "esp"
+            )
+        if "Merz-Kollman RESP Net Atomic Charges" in line:
+            constructed_charge_data, constructed_spin_data = qchem_parse_charge_section(
+                inputfile, "resp"
+            )
+        constructed_data = dict()
+        if constructed_charge_data:
+            if ccdata.atomcharges:
+                constructed_data["atomcharges"] = {**ccdata.atomcharges, **constructed_charge_data}
+            else:
+                constructed_data["atomcharges"] = {**constructed_charge_data}
+        if constructed_spin_data:
+            if ccdata.atomspins:
+                constructed_data["atomspins"] = {**ccdata.atomspins, **constructed_spin_data}
+            else:
+                constructed_data["atomspins"] = {**constructed_spin_data}
+        if constructed_data:
             return constructed_data
         return None
 

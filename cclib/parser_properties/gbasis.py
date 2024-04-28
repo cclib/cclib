@@ -13,7 +13,7 @@ class gbasis(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["psi4"]
+    known_codes = ["psi4", "qchem"]
 
     @staticmethod
     def psi4(file_handler, ccdata) -> dict | None:
@@ -105,6 +105,79 @@ class gbasis(base_parser):
                 constructed_data = {gbasis.__name__: parsed_gbasis}
                 return constructed_data
         return None
+
+    @staticmethod
+    def qchem(file_handler, ccdata) -> dict | None:
+        constructed_data = None
+        line = file_handler.last_line
+        parsed_gbasis = []
+        # Parse the general basis for `gbasis`, in the style used by Gaussian.
+        if "Basis set in general basis input format:" in line:
+            file_handler.skip_lines(["d", "$basis"], virtual=True)
+            line = file_handler.virtual_next()
+            # The end of the general basis block.
+            while "$end" not in line:
+                atom = []
+                # 1. Contains element symbol and atomic index of
+                # basis functions; if 0, applies to all atoms of
+                # same element.
+                assert len(line.split()) == 2
+                line = file_handler.virtual_next()
+                # The end of each atomic block.
+                while "****" not in line:
+                    # 2. Contains the type of basis function {S, SP,
+                    # P, D, F, G, H, ...}, the number of primitives,
+                    # and the weight of the final contracted function.
+                    bfsplitline = line.split()
+                    assert len(bfsplitline) == 3
+                    bftype = bfsplitline[0]
+                    nprim = int(bfsplitline[1])
+                    line = file_handler.virtual_next()
+                    # 3. The primitive basis functions that compose
+                    # the contracted basis function; there are `nprim`
+                    # of them. The first value is the exponent, and
+                    # the second value is the contraction
+                    # coefficient. If `bftype == 'SP'`, the primitives
+                    # are for both S- and P-type basis functions but
+                    # with separate contraction coefficients,
+                    # resulting in three columns.
+                    if bftype == "SP":
+                        primitives_S = []
+                        primitives_P = []
+                    else:
+                        primitives = []
+                    # For each primitive in the contracted basis
+                    # function...
+                    for iprim in range(nprim):
+                        primsplitline = line.split()
+                        exponent = float(primsplitline[0])
+                        if bftype == "SP":
+                            assert len(primsplitline) == 3
+                            coefficient_S = float(primsplitline[1])
+                            coefficient_P = float(primsplitline[2])
+                            primitives_S.append((exponent, coefficient_S))
+                            primitives_P.append((exponent, coefficient_P))
+                        else:
+                            assert len(primsplitline) == 2
+                            coefficient = float(primsplitline[1])
+                            primitives.append((exponent, coefficient))
+                        line = file_handler.virtual_next()
+                    if bftype == "SP":
+                        bf_S = ("S", primitives_S)
+                        bf_P = ("P", primitives_P)
+                        atom.append(bf_S)
+                        atom.append(bf_P)
+                    else:
+                        bf = (bftype, primitives)
+                        atom.append(bf)
+                    # Move to the next contracted basis function
+                    # as long as we don't hit the '****' atom
+                    # delimiter.
+                parsed_gbasis.append(atom)
+                line = file_handler.virtual_next()
+        if len(parsed_gbasis) > 0:
+            constructed_data = {gbasis.__name__: parsed_gbasis}
+        return constructed_data
 
     @staticmethod
     def parse(file_handler, program: str, ccdata) -> dict | None:

@@ -11,7 +11,7 @@ class scfenergies(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["gaussian", "psi4"]
+    known_codes = ["gaussian", "psi4", "qchem"]
 
     @staticmethod
     def gaussian(file_handler, ccdata) -> dict | None:
@@ -29,6 +29,18 @@ class scfenergies(base_parser):
             constructed_data = float(line.split()[-1])
             return {scfenergies.__name__: constructed_data}
         return None
+
+    @staticmethod
+    def qchem(file_handler, ccdata) -> dict | None:
+        line = file_handler.last_line
+        constructed_scfenergies = None
+        constructed_data = None
+        if "Total energy in the final basis set" in line:
+            constructed_scfenergies = float(line.split()[-1])
+            # self.scfenergies.append(utils.convertor(scfenergy, "hartree", "eV"))
+        if constructed_scfenergies is not None:
+            constructed_data = {scfenergies.__name__: constructed_data}
+        return constructed_data
 
     @staticmethod
     def parse(file_handler, program, ccdata) -> dict | None:

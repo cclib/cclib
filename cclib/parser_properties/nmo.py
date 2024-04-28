@@ -13,7 +13,7 @@ class nmo(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["gaussian"]
+    known_codes = ["gaussian", "qchem"]
 
     @staticmethod
     def gaussian(file_handler, ccdata) -> dict | None:
@@ -31,6 +31,13 @@ class nmo(base_parser):
             #   return
             constructed_data = int(line.split("=")[1].split()[0])
             return {nmo.__name__: constructed_data}
+        return None
+
+    @staticmethod
+    def qchem(file_handler, ccdata) -> dict | None:
+        dependency_list = ["moenergies"]
+        if base_parser.check_dependencies(dependency_list, ccdata, "nmo"):
+            return {nmo.__name__: len(ccdata.monergies[0])}
         return None
 
     @staticmethod

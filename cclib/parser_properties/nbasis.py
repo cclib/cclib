@@ -13,7 +13,7 @@ class nbasis(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["gaussian", "psi4"]
+    known_codes = ["gaussian", "psi4", "qchem"]
 
     @staticmethod
     def gaussian(file_handler, ccdata) -> dict | None:
@@ -52,6 +52,19 @@ class nbasis(base_parser):
             constructed_data = int(line.split()[-1])
             return {nbasis.__name__: constructed_data}
         return None
+
+    @staticmethod
+    def qchem(file_handler, ccdata) -> int | None:
+        # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
+        line = file_handler.last_line
+        constructed_nbasis = None
+        constructed_data = None
+        if "basis functions" in line:
+            if not hasattr(self, "nbasis"):
+                constructed_nbasis = int(line.split()[-3])
+        if constructed_nbasis is not None:
+            constructed_data = {nbasis.__name__: constructed_nbasis}
+        return constructed_data
 
     @staticmethod
     def parse(file_handler, program: str, ccdata) -> int | None:
