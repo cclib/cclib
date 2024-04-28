@@ -3025,6 +3025,12 @@ class GaussianPolarTest(ReferencePolarTest):
 # Jaguar #
 
 
+class JaguarIRTest_v42(JaguarIRTest):
+    @pytest.mark.skip("Data file does not contain force constants")
+    def testvibfconsts(self, data: "ccData") -> None:
+        pass
+
+
 class JaguarSPTest_noatomcharges(JaguarSPTest):
     """Atomic partial charges were not printed in old Jaguar unit tests."""
 
