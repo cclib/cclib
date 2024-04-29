@@ -18,7 +18,7 @@ from typing import Dict, Iterator, List, Mapping, Optional, Tuple, Union
 
 from cclib.file_handler import FileHandler
 from cclib.io import ccopen
-from cclib.parser_properties.data import ccData
+from cclib.attribute_parsers.data import ccData
 
 import pytest
 import yaml

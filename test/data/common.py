@@ -7,7 +7,7 @@
 
 import itertools
 
-from cclib.parser_properties.data import ccData
+from cclib.attribute_parsers.data import ccData
 
 import numpy
 

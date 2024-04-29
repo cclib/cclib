@@ -18,7 +18,6 @@ DEFAULT_PARSERS = [
     cprops.atomcoords,
     cprops.atomcharges,
     cprops.atomnos,
-    cprops.coreelectrons,
     cprops.charge,
     cprops.mult,
     cprops.moenergies,
