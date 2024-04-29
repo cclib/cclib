@@ -2,8 +2,8 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
-from cclib.parser_properties import utils
-from cclib.parser_properties.base_parser import base_parser
+from cclib.attribute_parsers import utils
+from cclib.attribute_parsers.base_parser import base_parser
 
 
 class scfenergies(base_parser):

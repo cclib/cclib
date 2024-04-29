@@ -4,7 +4,7 @@
 # the terms of the BSD 3-Clause License.
 from dataclasses import dataclass
 
-import cclib.parser_properties as cprops
+import cclib.attribute_parsers as cprops
 
 
 @dataclass

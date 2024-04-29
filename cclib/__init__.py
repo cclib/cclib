@@ -27,8 +27,8 @@ from cclib import (
     collection,
     combinator,
     driver,
-    properties,
-    parser_properties,
+    attributes,
+    attribute_parsers,
     tree,
 )
 # isort: on

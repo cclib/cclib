@@ -9,7 +9,7 @@ import logging
 from collections import namedtuple
 from typing import Any, Dict, List, Mapping, Optional
 
-from cclib.parser_properties import ccData
+from cclib.attribute_parsers import ccData
 
 import numpy
 
