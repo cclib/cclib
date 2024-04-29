@@ -826,6 +826,7 @@ class GenericDispersionTest:
     """Generic single-geometry dispersion correction unittest"""
 
     dispersionenergy = -0.4005496
+
     @skipForParser("QChem", "this property has yet to be ported for version 2")
     def testdispersionenergies(self, data) -> None:
         """Is the dispersion energy parsed correctly?"""
