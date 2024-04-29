@@ -9,8 +9,8 @@ import logging
 from collections import namedtuple
 from typing import Any, Dict, List, Mapping, Optional
 
-from cclib.method import Electrons, orbitals
 from cclib.attributes.attribute import Attribute, _attributes
+from cclib.method import Electrons, orbitals
 
 import numpy
 
