@@ -130,4 +130,4 @@ jobs:
         run: |
           cd ~
           python -c 'import cclib; print(cclib.__version__)'
-          python -c 'from cclib.io import ccread; data = ccread("https://raw.githubusercontent.com/cclib/cclib-data/master/Gaussian/Gaussian16/water.log"); print(data.zpve)'
+          python -c 'from cclib.io import ccread; data = ccread("https://raw.githubusercontent.com/amandadumi/cclib/master/data/Gaussian/basicGaussian16/dvb_sp.out"); print(data._parsed_data[0].scfenergies)'
