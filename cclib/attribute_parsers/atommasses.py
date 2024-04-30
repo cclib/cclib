@@ -33,7 +33,7 @@ class atommasses(base_parser):
         return None
 
     @staticmethod
-    def qchem(file_handler, ccdata) -> list | None:
+    def qchem(file_handler, ccdata) -> Optional[dict]:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
         constructed_data = None

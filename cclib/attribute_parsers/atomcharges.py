@@ -215,7 +215,7 @@ class atomcharges(base_parser):
         return None
 
     @staticmethod
-    def qchem(file_handler, ccdata) -> list | None:
+    def qchem(file_handler, ccdata) -> Optional[dict]:
         line = file_handler.last_line
         constructed_charge_data = None
         constructed_spin_data = None
