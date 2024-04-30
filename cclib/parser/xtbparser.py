@@ -9,6 +9,7 @@ from typing import List, Optional, Tuple
 
 from cclib.parser import logfileparser, utils
 from cclib.parser.logfilewrapper import FileWrapper
+from cclib.parser.utils import convertor
 
 import numpy as np
 
@@ -248,6 +249,10 @@ class XTB(logfileparser.Logfile):
         temperature = _extract_temperature(line)
         if temperature is not None:
             self.set_attribute("temperature", temperature)
+
+        entropy = _extract_entropy(line)
+        if entropy is not None:
+            self.set_attribute("entropy", entropy)
 
         warnings = []
         if _is_warning(line):
@@ -636,22 +641,14 @@ def _extract_enthalpy(line: str) -> Optional[float]:
         | HOMO-LUMO GAP              14.381259577706 eV   |
         -------------------------------------------------
     """
-    return (
-        utils.convertor(float(line.split()[3]), "hartree", "eV")
-        if "TOTAL ENTHALPY" in line
-        else None
-    )
+    return float(line.split()[3]) if "TOTAL ENTHALPY" in line else None
 
 
 def _extract_free_energy(line: str) -> Optional[float]:
     """
     Extract total free energy. See summary above.
     """
-    return (
-        utils.convertor(float(line.split()[4]), "hartree", "eV")
-        if "TOTAL FREE ENERGY" in line
-        else None
-    )
+    return float(line.split()[4]) if "TOTAL FREE ENERGY" in line else None
 
 
 def _extract_zpve(line: str) -> Optional[float]:
@@ -669,11 +666,7 @@ def _extract_zpve(line: str) -> Optional[float]:
         :: G(RRHO) contrib.            0.002493863951 Eh   ::
         :::::::::::::::::::::::::::::::::::::::::::::::::::::
     """
-    return (
-        utils.convertor(float(line.split()[4]), "hartree", "eV")
-        if "zero point energy" in line
-        else None
-    )
+    return float(line.split()[4]) if "zero point energy" in line else None
 
 
 def _extract_frequencies(line: str) -> Optional[List[float]]:
@@ -738,6 +731,26 @@ def _extract_temperature(line: str) -> Optional[float]:
     298.15  VIB   1.00                    2.605      0.065      0.010
     """
     return float(line.split()[0]) if "VIB" in line else None
+
+
+def _extract_entropy(line: str) -> Optional[float]:
+    """
+    Extract the entropy.
+
+      temp. (K)  partition function   enthalpy   heat capacity  entropy
+                                      cal/mol     cal/K/mol   cal/K/mol   J/K/mol
+    298.15  VIB  0.106E+04             4242.661     28.588     25.206
+            ROT  0.299E+06              888.752      2.981     28.034
+            INT  0.316E+09             5131.414     31.568     53.239
+            TR   0.144E+28             1481.254      4.968     40.486
+            TOT                        6612.6676    36.5366    93.7254   392.1473
+
+          T/K    H(0)-H(T)+PV         H(T)/Eh          T*S/Eh         G(T)/Eh
+      ------------------------------------------------------------------------
+       298.15    0.105380E-01    0.171775E+00    0.445320E-01    0.127243E+00
+    """
+    if line.strip().startswith("TOT"):
+        return convertor(float(line.split()[3]) / 1000, "kcal/mol", "hartree")
 
 
 def _is_grad_line(line: str) -> bool:

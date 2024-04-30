@@ -94,7 +94,7 @@ select = []
 lines-after-imports = 2
 section-order = ["future", "standard-library", "first-party", "third-party", "local-folder"]
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "test/test*.py" = [
     "PLR2004", # magic value comparison
     "S101",    # use of assert detected

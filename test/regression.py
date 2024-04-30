@@ -124,10 +124,11 @@ from .data.testvib import (
     GenericIRTest,
     GenericRamanTest,
     JaguarIRTest,
+    OrcaIRTest,
     OrcaRamanTest,
+    Psi4HFIRTest,
+    QChemRamanTest,
 )
-from .data.testvib import Psi4HFIRTest as Psi4IRTest
-from .data.testvib import QChemIRTest, QChemRamanTest
 
 # The following regression test functions were manually written, because they
 # contain custom checks that were determined on a per-file basis. Care needs to be taken
@@ -2967,6 +2968,11 @@ class GAMESSUSSPunTest_charge0(GenericSPunTest):
         """HOMOs were incorrect due to charge being wrong."""
 
 
+class GamessIRTest_old(GamessIRTest):
+    entropy_places = 5
+    freeenergy_places = 2
+
+
 class GAMESSUSIRTest_ts(GenericIRimgTest):
     @pytest.mark.skip("This is a transition state with different intensities")
     def testirintens(self, data: "ccData") -> None:
@@ -3023,6 +3029,12 @@ class GaussianPolarTest(ReferencePolarTest):
 
 
 # Jaguar #
+
+
+class JaguarIRTest_v42(JaguarIRTest):
+    @pytest.mark.skip("Data file does not contain force constants")
+    def testvibfconsts(self, data: "ccData") -> None:
+        pass
 
 
 class JaguarSPTest_noatomcharges(JaguarSPTest):
@@ -3230,49 +3242,23 @@ class OrcaTDDFTTest_pre1085(OrcaTDDFTTest_pre5):
         assert abs(max(data.etoscs) - 0.94) < 0.2
 
 
-class OrcaIRTest(GenericIRTest):
+class OrcaIRTest_pre4(OrcaIRTest):
     """Customized vibrational frequency unittest"""
 
     # ORCA has a bug in the intensities for version < 4.0
     max_IR_intensity = 215
     zpve = 0.1921
 
+    entropy = 0.00012080325339594164
+    enthalpy = -381.85224835
+    freeenergy = -381.88826585
+
     enthalpy_places = 3
     entropy_places = 6
     freeenergy_places = 3
 
-    def testtemperature(self, data) -> None:
-        """Is the temperature 298.15 K?"""
-        assert round(abs(298.15 - data.temperature), 7) == 0
 
-    def testpressure(self, data) -> None:
-        """Is the pressure 1 atm?"""
-        assert round(abs(1 - data.pressure), 7) == 0
-
-    def testenthalpy(self, data) -> None:
-        """Is the enthalpy reasonable"""
-        assert round(abs(-381.85224835 - data.enthalpy), self.enthalpy_places) == 0
-
-    def testentropy(self, data) -> None:
-        """Is the entropy reasonable"""
-        assert round(abs(0.00012080325339594164 - data.entropy), self.entropy_places) == 0
-
-    def testfreeenergy(self, data) -> None:
-        """Is the freeenergy reasonable"""
-        assert round(abs(-381.88826585 - data.freeenergy), self.freeenergy_places) == 0
-
-    def testfreeenergyconsistency(self, data) -> None:
-        """Does G = H - TS hold"""
-        assert (
-            round(
-                abs(data.enthalpy - data.temperature * data.entropy - data.freeenergy),
-                self.freeenergy_places,
-            )
-            == 0
-        )
-
-
-class OrcaIRTest_old(OrcaIRTest):
+class OrcaIRTest_old(OrcaIRTest_pre4):
     """The frequency part of this calculation didn't finish, but went ahead and
     printed incomplete and incorrect results anyway.
     """
@@ -3370,3 +3356,18 @@ class PsiHFSPTest_noatommasses(PsiHFSPTest):
     @pytest.mark.skip("atommasses were not printed in this file.")
     def testatommasses(self, data: "ccData") -> None:
         """These values are not present in this output file."""
+
+
+class Psi4HFIRTest_v1(Psi4HFIRTest):
+    max_force_constant = 7.981
+
+    enthalpy_places = 2
+    freeenergy_places = 2
+
+    @pytest.mark.skip("not implemented in versions older than 1.7")
+    def testirintens(self, data: "ccData") -> None:
+        pass
+
+    @pytest.mark.skip("not implemented in versions older than 1.2")
+    def testvibrmasses(self, data: "ccData") -> None:
+        pass

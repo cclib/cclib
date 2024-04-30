@@ -740,17 +740,18 @@ class Jaguar(logfileparser.Logfile):
                 # For such an old version it looks like only finite difference
                 # via gradient is available, so assume the first SCF energy is
                 # the stationary point.
+                electronic_energy = utils.convertor(self.scfenergies[0], "eV", "hartree")
                 self.set_attribute(
                     "enthalpy",
                     utils.convertor(float(tokens[3]), "kcal/mol", "hartree")
                     + self.zpve
-                    + self.scfenergies[0],
+                    + electronic_energy,
                 )
                 self.set_attribute(
                     "freeenergy",
                     utils.convertor(float(tokens[4]), "kcal/mol", "hartree")
                     + self.zpve
-                    + self.scfenergies[0],
+                    + electronic_energy,
                 )
 
         # Parse excited state output (for CIS calculations).

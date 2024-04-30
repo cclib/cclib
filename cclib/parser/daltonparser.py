@@ -1346,10 +1346,7 @@ class DALTON(logfileparser.Logfile):
         # atomcharges
         # atomspins
         # coreelectrons
-        # enthalpy
-        # entropy
         # etrotats
-        # freeenergy
         # grads
         # hessian
         # mocoeffs
@@ -1359,11 +1356,4 @@ class DALTON(logfileparser.Logfile):
         # scanenergies
         # scannames
         # scanparm
-        # temperature
         # vibanharms
-
-        # N/A:
-        # fonames
-        # fooverlaps
-        # fragnames
-        # frags
