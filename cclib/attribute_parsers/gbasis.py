@@ -216,7 +216,7 @@ class gbasis(base_parser):
         return None
 
     @staticmethod
-    def qchem(file_handler, ccdata) -> dict | None:
+    def qchem(file_handler, ccdata) -> Optional[dict]:
         constructed_data = None
         line = file_handler.last_line
         parsed_gbasis = []

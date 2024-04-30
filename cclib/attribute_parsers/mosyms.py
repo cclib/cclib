@@ -118,7 +118,7 @@ class mosyms(base_parser):
         return None
 
     @staticmethod
-    def qchem(file_handler, ccdata) -> dict | None:
+    def qchem(file_handler, ccdata) -> Optional[dict]:
         line = file_handler.last_line
         parsed_data = None
         # Molecular orbital energies and symmetries.

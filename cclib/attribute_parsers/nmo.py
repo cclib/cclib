@@ -36,7 +36,7 @@ class nmo(base_parser):
         return None
 
     @staticmethod
-    def qchem(file_handler, ccdata) -> dict | None:
+    def qchem(file_handler, ccdata) -> Optional[dict]:
         dependency_list = ["moenergies"]
         if base_parser.check_dependencies(dependency_list, ccdata, "nmo"):
             return {nmo.__name__: len(ccdata.monergies[0])}

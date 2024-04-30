@@ -53,7 +53,7 @@ class atomnos(base_parser):
         return None
 
     @staticmethod
-    def qchem(file_handler, ccdata) -> dict | None:
+    def qchem(file_handler, ccdata) -> Optional[dict]:
         table = utils.PeriodicTable()
         constructed_data = None
         # Extract the atomic numbers

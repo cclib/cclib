@@ -36,7 +36,7 @@ class mult(base_parser):
         return None
 
     @staticmethod
-    def qchem(file_handler, ccdata) -> dict | None:
+    def qchem(file_handler, ccdata) -> Optional[dict]:
         # TODO: ecp charge may be different!
         line = file_handler.last_line
         constructed_data = None
