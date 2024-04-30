@@ -2,6 +2,8 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
+from typing import Optional
+
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
 
@@ -104,7 +106,7 @@ class atomcharges(base_parser):
     known_codes = ["ORCA", "NBO", "qchem"]
 
     @staticmethod
-    def ORCA(file_handler, ccdata) -> list | None:
+    def ORCA(file_handler, ccdata) -> Optional[dict]:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
         constructed_charge_data = None
@@ -182,7 +184,7 @@ class atomcharges(base_parser):
         return None
 
     @staticmethod
-    def NBO(file_handler, ccdata) -> list | None:
+    def NBO(file_handler, ccdata) -> Optional[dict]:
         atomcharges = dict()
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         charges = None
@@ -213,7 +215,7 @@ class atomcharges(base_parser):
         return None
 
     @staticmethod
-    def qchem(file_handler, ccdata) -> list | None:
+    def qchem(file_handler, ccdata) -> Optional[dict]:
         line = file_handler.last_line
         constructed_charge_data = None
         constructed_spin_data = None
@@ -258,7 +260,7 @@ class atomcharges(base_parser):
         return None
 
     @staticmethod
-    def parse(file_handler, program: str, ccdata) -> list | None:
+    def parse(file_handler, program: str, ccdata) -> Optional[dict]:
         constructed_data = None
         if program in atomcharges.known_codes:
             file_handler.virtual_set()

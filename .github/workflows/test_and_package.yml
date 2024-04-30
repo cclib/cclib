@@ -65,13 +65,14 @@ jobs:
         run: |
           bash .github/scripts/run_pytest_methods.bash 2
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           files: ./coverage-unit.xml,./coverage-regression.xml,./coverage-method.xml
           name: codecov-cclib
-          fail_ci_if_error: true
+          fail_ci_if_error: false
           verbose: false
-        if: matrix.container == 'shivupa/cclib-ci:py311-edge'
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       - name: Install pypa/build
         run: |
           python -m pip install build
@@ -129,4 +130,4 @@ jobs:
         run: |
           cd ~
           python -c 'import cclib; print(cclib.__version__)'
-          python -c 'from cclib.io import ccread; data = ccread("https://raw.githubusercontent.com/cclib/cclib-data/master/Gaussian/Gaussian16/water.log"); print(data.zpve)'
+          python -c 'from cclib.io import ccread; data = ccread("https://raw.githubusercontent.com/amandadumi/cclib/master/data/Gaussian/basicGaussian16/dvb_sp.out"); print(data._parsed_data[0].scfenergies)'

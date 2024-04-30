@@ -2,6 +2,8 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
+from typing import Optional
+
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
 
@@ -16,22 +18,24 @@ class atomnos(base_parser):
     known_codes = ["gaussian", "psi4", "qchem"]
 
     @staticmethod
-    def gaussian(file_handler, ccdata) -> dict | None:
+    def gaussian(file_handler, ccdata) -> Optional[dict]:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
         if line.strip() == "Standard orientation:":
             file_handler.skip_lines(["d", "Center", "Number", "d"], virtual=True)
             line = file_handler.virtual_next()
             constructed_data = []
+            # print('line in file is')
+            # print(line)
             while list(set(line.strip())) != ["-"]:
                 broken = line.split()
                 constructed_data.append(int(broken[1]))
                 line = file_handler.virtual_next()
-            return {atomnos.__name__: constructed_data}
+            return {atomnos.__name__: np.array(constructed_data)}
         return None
 
     @staticmethod
-    def psi4(file_handler, ccdata) -> dict | None:
+    def psi4(file_handler, ccdata) -> Optional[dict]:
         table = utils.PeriodicTable()
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
@@ -45,11 +49,11 @@ class atomnos(base_parser):
                     element = element[0] + element[1:].lower()
                 constructed_data.append(table.number[element])
                 line = file_handler.virtual_next()
-            return {atomnos.__name__: constructed_data}
+            return {atomnos.__name__: np.array(constructed_data)}
         return None
 
     @staticmethod
-    def qchem(file_handler, ccdata) -> dict | None:
+    def qchem(file_handler, ccdata) -> Optional[dict]:
         table = utils.PeriodicTable()
         constructed_data = None
         # Extract the atomic numbers
@@ -77,7 +81,7 @@ class atomnos(base_parser):
         return constructed_data
 
     @staticmethod
-    def parse(file_handler, program: str, ccdata) -> dict | None:
+    def parse(file_handler, program: str, ccdata) -> Optional[dict]:
         constructed_data = None
         if program in atomnos.known_codes:
             file_handler.virtual_set()

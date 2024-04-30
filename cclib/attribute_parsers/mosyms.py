@@ -2,6 +2,8 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
+from typing import Optional
+
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
 
@@ -79,7 +81,7 @@ class mosyms(base_parser):
     known_codes = ["gaussian", "qchem"]
 
     @staticmethod
-    def gaussian(file_handler, ccdata) -> dict | None:
+    def gaussian(file_handler, ccdata) -> Optional[dict]:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
         constructed_data = None
@@ -105,7 +107,7 @@ class mosyms(base_parser):
                 while len(line) > 18 and line[17] == "(":
                     parts = line[17:].split()
                     for x in parts:
-                        constructed_data[1].append(gaussian_normalisesym(x.strip("()")))
+                        constructed_data[1].append(gaussian_normalizesym(x.strip("()")))
                         i += 1
                     line = file_handler.virtual_next()
             # Some calculations won't explicitly print the number of basis sets used,
@@ -116,7 +118,7 @@ class mosyms(base_parser):
         return None
 
     @staticmethod
-    def qchem(file_handler, ccdata) -> dict | None:
+    def qchem(file_handler, ccdata) -> Optional[dict]:
         line = file_handler.last_line
         parsed_data = None
         # Molecular orbital energies and symmetries.
@@ -194,7 +196,7 @@ class mosyms(base_parser):
         return parsed_data
 
     @staticmethod
-    def parse(file_handler, program: str, ccdata) -> dict | None:
+    def parse(file_handler, program: str, ccdata) -> Optional[dict]:
         constructed_data = None
         if program in mosyms.known_codes:
             file_handler.virtual_set()

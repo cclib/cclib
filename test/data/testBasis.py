@@ -30,11 +30,13 @@ class GenericBasisTest:
 
     def testgbasis(self, data) -> None:
         """Is gbasis the right length?"""
-        assert data.natom == len(data.gbasis)
+        assert data._ccCollection._parsed_data[0].natom == len(
+            data._ccCollection._parsed_data[0].gbasis
+        )
 
     def testnames(self, data) -> None:
         """Are the name of basis set functions acceptable?"""
-        for atom in data.gbasis:
+        for atom in data._ccCollection._parsed_data[0].gbasis:
             for fns in atom:
                 assert fns[0] in self.names, f"{fns[0]} not one of S or P"
 
@@ -43,21 +45,21 @@ class GenericBasisTest:
 
         total = 0
         multiple = self.multiple_spher if self.spherical else self.multiple
-        for atom in data.gbasis:
+        for atom in data._ccCollection._parsed_data[0].gbasis:
             for ftype, contraction in atom:
                 total += multiple[ftype]
 
-        assert data.nbasis == total
+        assert data._ccCollection._parsed_data[0].nbasis == total
 
     def testcontractions(self, data) -> None:
         """Are the number of contractions on all atoms correct?"""
-        for iatom, atom in enumerate(data.gbasis):
-            atomno = data.atomnos[iatom]
+        for iatom, atom in enumerate(data._ccCollection._parsed_data[0].gbasis):
+            atomno = data._ccCollection._parsed_data[0].atomnos[iatom]
             assert len(atom) == self.contractions[atomno]
 
     def testprimitives(self, data) -> None:
         """Are all primitives 2-tuples?"""
-        for atom in data.gbasis:
+        for atom in data._ccCollection._parsed_data[0].gbasis:
             for ftype, contraction in atom:
                 for primitive in contraction:
                     assert len(primitive) == 2
@@ -65,8 +67,8 @@ class GenericBasisTest:
     def testcoeffs(self, data) -> None:
         """Are the atomic basis set exponents and coefficients correct?"""
 
-        for iatom, atom in enumerate(data.gbasis):
-            if data.atomnos[iatom] == 1:
+        for iatom, atom in enumerate(data._ccCollection._parsed_data[0].gbasis):
+            if data._ccCollection._parsed_data[0].atomnos[iatom] == 1:
                 coeffs = atom[0][1]
                 assert round(abs(coeffs[0][0] - self.gbasis_H_1s_func0[0]), 4) == 0
                 assert round(abs(coeffs[0][1] - self.gbasis_H_1s_func0[1]), 4) == 0
@@ -80,8 +82,8 @@ class GenericBasisTest:
 
     def testatomcoords(self, data) -> None:
         """Are the dimensions of atomcoords 1 x natom x 3?"""
-        expected_shape = (1, data.natom, 3)
-        assert data.atomcoords.shape == expected_shape
+        expected_shape = (1, data._ccCollection._parsed_data[0].natom, 3)
+        assert data._ccCollection._parsed_data[0].atomcoords.shape == expected_shape
 
 
 class JaguarBasisTest(GenericBasisTest):

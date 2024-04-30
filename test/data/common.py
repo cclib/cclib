@@ -7,7 +7,7 @@
 
 import itertools
 
-from cclib.parser.data import ccData
+from cclib.attribute_parsers.data import ccData
 
 import numpy
 
@@ -18,7 +18,7 @@ def get_minimum_carbon_separation(data: ccData) -> float:
     Note that atomcoords is 3D, and we will take the minimum
     over all coordinates and combinations of carbon atoms.
     """
-
+    data = data._ccCollection._parsed_data[0]
     icarbons = numpy.arange(data.natom)[data.atomnos == 6]
     mindist = 999
     for i, j in itertools.combinations(icarbons, 2):

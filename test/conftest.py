@@ -16,9 +16,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterator, List, Mapping, Optional, Tuple, Union
 
+from cclib.attribute_parsers.data import ccData
+from cclib.file_handler import FileHandler
 from cclib.io import ccopen
-from cclib.parser.data import ccData
-from cclib.parser.logfileparser import Logfile
 
 import pytest
 import yaml
@@ -194,20 +194,20 @@ def filename(request, _regression_entries: Mapping[str, Regression]) -> Path:
     raise RuntimeError(f"file not found for {normalized_name}")
 
 
-def parse(regression: Regression) -> Logfile:
+def parse(regression: Regression) -> FileHandler:
     """Collect the contents of a Regression into a Logfile,
     optionally parsing the logfile.
     """
     lfile = ccopen([str(x) for x in regression.all_files], future=True)
     if regression.parse:
-        data = lfile.parse()
+        data = lfile.process_combinator()
         lfile.data = data
     return lfile
 
 
 def get_parsed_logfile(
     regression_entries: Mapping[str, Regression], normalized_name: str
-) -> Logfile:
+) -> FileHandler:
     """For a normalized filename suitable for a test function name and a
     mapping of these names to the absolute locations on the filesystem of
     their test files, parse the test file and return its data on the logfile
@@ -221,7 +221,7 @@ def get_parsed_logfile(
 
 
 @pytest.fixture
-def logfile(request, _regression_entries: Mapping[str, Regression]) -> Logfile:
+def logfile(request, _regression_entries: Mapping[str, Regression]) -> FileHandler:
     """For a test function whose name corresponds to a normalized filename,
     starting with 'test', parse the corresponding data and return the logfile
     with data attached.
@@ -283,7 +283,7 @@ def get_program_dir(parser_name: str) -> str:
 # https://docs.pytest.org/en/latest/how-to/writing_hook_functions.html#storing-data-on-items-across-hook-functions
 _CACHE: Dict[str, ccData] = {}
 # Each logfile, if Regression.parse == True, will have a `.data` member.
-_REGCACHE: Dict[Regression, Logfile] = {}
+_REGCACHE: Dict[Regression, FileHandler] = {}
 
 
 @pytest.fixture(scope="session")
@@ -294,15 +294,15 @@ def data(request) -> ccData:
     files = request.param
     first = files[0]
     if first not in _CACHE:
-        logfile = ccopen([str(f) for f in files], future=True)
-        data = logfile.parse()
-        filenames = logfile.filename
+        ccdriver_instance = ccopen([str(f) for f in files], future=True)
+        ccdriver_instance.process_combinator()
+        filenames = ccdriver_instance._fileHandler.filenames
         if not isinstance(filenames, list):
             filenames = [filenames]
-        data.filenames = filenames
-        data.parsername = logfile.logname
-        data.parserclassname = str(logfile.__class__).split(".")[-1][:-2]
-        _CACHE[first] = data
+        ccdriver_instance._fileHandler.filenames = filenames
+        ccdriver_instance.parsername = ccdriver_instance.identified_program
+        # cc.parserclassname = str(ccdriver_instance.__class__).split(".")[-1][:-2]
+        _CACHE[first] = ccdriver_instance
     return _CACHE[first]
 
 
@@ -412,13 +412,13 @@ def pytest_sessionfinish(session: "pytest.Session") -> None:
     """
     if _CACHE:
         coverage_accumulate = defaultdict(set)
-        for data in _CACHE.values():
-            coverage_accumulate[data.__dict__["parserclassname"]].update(data.__dict__.keys())
-        for parserclassname in coverage_accumulate:
-            coverage_accumulate[parserclassname] -= _EXCLUDE
-        coverage = {
-            parserclassname: sorted(attributenames)
-            for parserclassname, attributenames in coverage_accumulate.items()
-        }
-        coverage_dir = pytest.Cache.cache_dir_from_config(session.config)
-        (coverage_dir / "coverage_unit.json").write_text(json.dumps(coverage), encoding="utf-8")
+        # for data in _CACHE.values():
+        #    coverage_accumulate[data.__dict__["parserclassname"]].update(data.__dict__.keys())
+        # for parserclassname in coverage_accumulate:
+        #   coverage_accumulate[parserclassname] -= _EXCLUDE
+        # coverage = {
+        #    parserclassname: sorted(attributenames)
+        #    for parserclassname, attributenames in coverage_accumulate.items()
+        # }
+        # coverage_dir = pytest.Cache.cache_dir_from_config(session.config)
+        # (coverage_dir / "coverage_unit.json").write_text(json.dumps(coverage), encoding="utf-8")

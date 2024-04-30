@@ -135,7 +135,6 @@ def ccread(
     if not isinstance(source, list):
         source = [source]
 
-    print("we are in correct function")
     a = ccDriver(source)
     a.process_combinator()
     return a._ccCollection
@@ -161,7 +160,6 @@ def ccopen(
     if not isinstance(source, list):
         source = [source]
 
-    print("we are in correct function")
     ccdriver_inst = ccDriver(source)
     return ccdriver_inst
 

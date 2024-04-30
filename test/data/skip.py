@@ -16,24 +16,34 @@ def skipForParser(parser: str, msg: str):
 
     def tstdecorator(testfunc: Callable) -> Callable[[], None]:
         func_args = list(signature(testfunc).parameters.keys())
+        print(func_args)
         if "numvib" in func_args:
 
             def tstwrapper(self, data, numvib) -> None:
-                if data.parsername == parser:
+                if any(
+                    data._ccCollection._parsed_data[0].metadata["identified_program"]
+                    == parser.lower()
+                ):
                     pytest.skip(reason=f"{parser}: {msg}")
                 else:
                     testfunc(self, data, numvib)
         elif "extra" in func_args:
 
             def tstwrapper(self, data, extra) -> None:
-                if data.parsername == parser:
+                if (
+                    data._ccCollection._parsed_data[0].metadata["identified_program"]
+                    == parser.lower()
+                ):
                     pytest.skip(reason=f"{parser}: {msg}")
                 else:
                     testfunc(self, data, extra)
         else:
 
             def tstwrapper(self, data) -> None:
-                if data.parsername == parser:
+                if (
+                    data._ccCollection._parsed_data[0].metadata["identified_program"]
+                    == parser.lower()
+                ):
                     pytest.skip(reason=f"{parser}: {msg}")
                 else:
                     testfunc(self, data)
@@ -51,21 +61,22 @@ def skipForLogfile(fragment: str, msg: str):
         if "numvib" in func_args:
 
             def tstwrapper(self, data, numvib) -> None:
-                if any(fragment in filename for filename in data.filenames):
+                if any(fragment in filename for filename in data._fileHandler.filenames):
                     pytest.skip(reason=f"{fragment}: {msg}")
                 else:
                     testfunc(self, data, numvib)
         elif "extra" in func_args:
 
             def tstwrapper(self, data, extra) -> None:
-                if any(fragment in filename for filename in data.filenames):
+                if any(fragment in filename for filename in data._fileHandler.filenames):
                     pytest.skip(reason=f"{fragment}: {msg}")
                 else:
                     testfunc(self, data, extra)
         else:
 
             def tstwrapper(self, data) -> None:
-                if any(fragment in filename for filename in data.filenames):
+                print(data._fileHandler)
+                if any(fragment in filename for filename in data._fileHandler.filenames):
                     pytest.skip(reason=f"{fragment}: {msg}")
                 else:
                     testfunc(self, data)

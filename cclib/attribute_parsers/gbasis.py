@@ -2,6 +2,9 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
+import re
+from typing import Optional
+
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
 
@@ -13,10 +16,109 @@ class gbasis(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["psi4", "qchem"]
+    known_codes = ["gaussian", "psi4", "qchem"]
 
     @staticmethod
-    def psi4(file_handler, ccdata) -> dict | None:
+    def gaussian(file_handler, ccdata) -> Optional[dict]:
+        dependency_list = ["natom", "gbasis"]
+        line = file_handler.last_line
+        # With the gfinput keyword, the atomic basis set functions are:
+        #
+        # AO basis set in the form of general basis input (Overlap normalization):
+        #  1 0
+        # S   3 1.00       0.000000000000
+        #      0.7161683735D+02  0.1543289673D+00
+        #      0.1304509632D+02  0.5353281423D+00
+        #      0.3530512160D+01  0.4446345422D+00
+        # SP   3 1.00       0.000000000000
+        #      0.2941249355D+01 -0.9996722919D-01  0.1559162750D+00
+        #      0.6834830964D+00  0.3995128261D+00  0.6076837186D+00
+        #      0.2222899159D+00  0.7001154689D+00  0.3919573931D+00
+        # ****
+        #  2 0
+        # S   3 1.00       0.000000000000
+        #      0.7161683735D+02  0.1543289673D+00
+        # ...
+        #
+        # The same is also printed when the gfprint keyword is used, but the
+        # interstitial lines differ and there are no stars between atoms:
+        #
+        # AO basis set (Overlap normalization):
+        # Atom C1       Shell     1 S   3     bf    1 -     1          0.509245180608         -2.664678875191          0.000000000000
+        #       0.7161683735D+02  0.1543289673D+00
+        #       0.1304509632D+02  0.5353281423D+00
+        #       0.3530512160D+01  0.4446345422D+00
+        # Atom C1       Shell     2 SP   3    bf    2 -     5          0.509245180608         -2.664678875191          0.000000000000
+        #       0.2941249355D+01 -0.9996722919D-01  0.1559162750D+00
+        # ...
+
+        # ONIOM calculations result basis sets reported for atoms that are not in order of atom number which breaks this code (line 390 relies on atoms coming in order)
+        if line[1:13] == "AO basis set" and not ccdata.oniom:
+            parsed_gbasis = []
+
+            # For counterpoise fragment calcualtions, skip these lines.
+            if ccdata.counterpoise is not None:
+                return
+            gfprint = True
+            atom_line = file_handler.virtual_next()
+            gfprint = atom_line.split()[0] == "Atom"
+            gfinput = (
+                not gfprint
+            )  # this may need to be it's own parser if its used for other properties
+
+            # Note how the shell information is on a separate line for gfinput,
+            # whereas for gfprint it is on the same line as atom information.
+            if gfinput:
+                shell_line = file_handler.virtual_next()
+
+            shell = []
+            while len(parsed_gbasis) < ccdata.natom:
+                if gfprint:
+                    cols = atom_line.split()
+                    subshells = cols[4]
+                    ngauss = int(cols[5])
+                else:
+                    cols = shell_line.split()
+                    subshells = cols[0]
+                    ngauss = int(cols[1])
+
+                parameters = []
+                for ig in range(ngauss):
+                    line = file_handler.virtual_next()
+                    parameters.append(list(map(utils.float, line.split())))
+                for iss, ss in enumerate(subshells):
+                    contractions = []
+                    for param in parameters:
+                        exponent = param[0]
+                        coefficient = param[iss + 1]
+                        contractions.append((exponent, coefficient))
+                    subshell = (ss, contractions)
+                    shell.append(subshell)
+
+                if gfprint:
+                    line = file_handler.virtual_next()
+                    if line.split()[0] == "Atom":
+                        atomnum = int(re.sub(r"\D", "", line.split()[1]))
+                        if atomnum == len(parsed_gbasis) + 2:
+                            parsed_gbasis.append(shell)
+                            shell = []
+                        atom_line = line
+                    else:
+                        parsed_gbasis.append(shell)
+                else:
+                    line = file_handler.virtual_next()
+                    if line.strip() == "****":
+                        parsed_gbasis.append(shell)
+                        shell = []
+                        atom_line = file_handler.virtual_next()
+                        shell_line = file_handler.virtual_next()
+                    else:
+                        shell_line = line
+            return {gbasis.__name__: parsed_gbasis}
+        return None
+
+    @staticmethod
+    def psi4(file_handler, ccdata) -> Optional[dict]:
         dependency_list = ["natom", "atomnos"]
         line = file_handler.last_line
         if line.strip() == "==> AO Basis Functions <==":
@@ -27,7 +129,14 @@ class gbasis(base_parser):
                     missing_index = len(parsed_gbasis)
                     missing_atomno = ccdata.atomnos[missing_index]
                     ngbasis = len(parsed_gbasis)
-                    last_same = ngbasis - ccdata.atomnos[:ngbasis][::-1].index(missing_atomno) - 1
+                    print(missing_atomno)
+                    print(ccdata.atomnos)
+                    print(np.where(ccdata.atomnos[:ngbasis][::-1] == missing_atomno)[0][0])
+                    last_same = (
+                        ngbasis
+                        - np.where(ccdata.atomnos[:ngbasis][::-1] == missing_atomno)[0][0]
+                        - 1
+                    )
                     return parsed_gbasis[last_same]
 
                 dfact = lambda n: (n <= 0) or n * dfact(n - 2)
@@ -107,7 +216,7 @@ class gbasis(base_parser):
         return None
 
     @staticmethod
-    def qchem(file_handler, ccdata) -> dict | None:
+    def qchem(file_handler, ccdata) -> Optional[dict]:
         constructed_data = None
         line = file_handler.last_line
         parsed_gbasis = []
@@ -180,7 +289,7 @@ class gbasis(base_parser):
         return constructed_data
 
     @staticmethod
-    def parse(file_handler, program: str, ccdata) -> dict | None:
+    def parse(file_handler, program: str, ccdata) -> Optional[dict]:
         constructed_data = None
         if program in gbasis.known_codes:
             file_handler.virtual_set()
