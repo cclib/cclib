@@ -125,9 +125,9 @@ from .data.testvib import (
     GenericRamanTest,
     JaguarIRTest,
     OrcaRamanTest,
+    Psi4HFIRTest,
+    QChemRamanTest,
 )
-from .data.testvib import Psi4HFIRTest as Psi4IRTest
-from .data.testvib import QChemIRTest, QChemRamanTest
 
 # The following regression test functions were manually written, because they
 # contain custom checks that were determined on a per-file basis. Care needs to be taken
@@ -3370,3 +3370,18 @@ class PsiHFSPTest_noatommasses(PsiHFSPTest):
     @pytest.mark.skip("atommasses were not printed in this file.")
     def testatommasses(self, data: "ccData") -> None:
         """These values are not present in this output file."""
+
+
+class Psi4HFIRTest_v1(Psi4HFIRTest):
+    max_force_constant = 7.981
+
+    enthalpy_places = 2
+    freeenergy_places = 2
+
+    @pytest.mark.skip("not implemented in versions older than 1.7")
+    def testirintens(self, data: "ccData") -> None:
+        pass
+
+    @pytest.mark.skip("not implemented in versions older than 1.2")
+    def testvibrmasses(self, data: "ccData") -> None:
+        pass
