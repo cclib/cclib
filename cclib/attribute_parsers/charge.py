@@ -38,7 +38,7 @@ class charge(base_parser):
         return None
 
     @staticmethod
-    def qchem(file_handler, ccdata) -> dict | None:
+    def qchem(file_handler, ccdata) -> Optional[dict]:
         # TODO: ecp charge may be different!
         dependency_list = ["atomnos"]
         line = file_handler.last_line

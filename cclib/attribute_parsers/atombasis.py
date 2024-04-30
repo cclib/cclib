@@ -140,7 +140,7 @@ class atombasis(base_parser):
         return None
 
     @staticmethod
-    def qchem(file_handler, ccdata) -> dict | None:
+    def qchem(file_handler, ccdata) -> Optional[dict]:
         # This block comes from `print_orbitals = true/{int}`. Less
         # precision than `scf_final_print >= 2` for `mocoeffs`, but
         # important for `aonames` and `atombasis`.

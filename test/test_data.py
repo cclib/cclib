@@ -58,7 +58,7 @@ def getdatafile(
     subdir,
     files,
     loglevel: int = logging.ERROR,
-    datatype: Optional[Type[cclib.parser_properties.data.ccData]] = None,
+    datatype: Optional[Type[cclib.attribute_parsers.data.ccData]] = None,
 ):
     """Returns a parsed logfile.
 

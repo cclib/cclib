@@ -60,7 +60,7 @@ class atomcoords(base_parser):
         return None
 
     @staticmethod
-    def qchem(file_handler, ccdata) -> dict | None:
+    def qchem(file_handler, ccdata) -> Optional[dict]:
         # Extract the atomic numbers and coordinates of the atoms.
         # TODO: afterparsing for geometries
         line = file_handler.last_line

@@ -19,3 +19,10 @@ from cclib.attribute_parsers.natom import natom
 from cclib.attribute_parsers.nbasis import nbasis
 from cclib.attribute_parsers.nmo import nmo
 from cclib.attribute_parsers.scfenergies import scfenergies
+from cclib.attribute_parsers.nbasis import nbasis
+from cclib.attribute_parsers.nmo import nmo
+from cclib.attribute_parsers.moenergies import moenergies
+from cclib.attribute_parsers.scftargets import scftargets
+from cclib.attribute_parsers.scfvalues import scfvalues
+from cclib.attribute_parsers.aooverlaps import aooverlaps
+from cclib.attribute_parsers.coreelectrons import coreelectrons
