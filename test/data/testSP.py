@@ -23,13 +23,14 @@ class GenericSPTest:
     # In STO-3G, H has 1, C has 5 (1 S and 4 SP).
     nbasisdict = {1: 1, 6: 5}
 
-    # Approximate B3LYP energy of dvb after SCF in STO-3G.
-    b3lyp_energy = -10365
+    # Approximate B3LYP energy of dvb after SCF in STO-3G (Gaussian 16).
+    scfenergy = -382.308266602
+    scfenergy_delta = 3.0e-1
 
     # Approximate energy of the innermost molecular orbital of DVB with
-    # B3LYP/STO-3G (from Q-Chem 5.4).
-    b3lyp_moenergy = -272.60365543
-    b3lyp_moenergy_delta = 7.55e-2
+    # B3LYP/STO-3G (from Q-Chem 5.4 fchk).
+    moenergy = -10.0179353
+    moenergy_delta = 3.0e-3
 
     # Overlap first two atomic orbitals.
     overlap01 = 0.24
@@ -270,7 +271,7 @@ class GenericSPTest:
     @skipForParser("NBO", "attribute not implemented in this version")
     def testscfenergy(self, data) -> None:
         """Is the SCF energy within the target?"""
-        assert abs(data.scfenergies[-1] - self.b3lyp_energy) < 40
+        assert abs(data.scfenergies[-1] - self.scfenergy) < self.scfenergy_delta
 
     @skipForParser("FChk", "Formatted Checkpoint files do not have a section for SCF convergence")
     @skipForParser("GAMESSDAT", "Scftargets probably do not exist in the file")
@@ -307,7 +308,7 @@ class GenericSPTest:
     @skipForParser("xTB", "not implemented yet")
     def testfirstmoenergy(self, data) -> None:
         """Is the lowest energy molecular orbital within the target?"""
-        assert abs(data.moenergies[0][0] - self.b3lyp_moenergy) < self.b3lyp_moenergy_delta
+        assert abs(data.moenergies[0][0] - self.moenergy) < self.moenergy_delta
 
     @skipForParser("DALTON", "mocoeffs not implemented yet")
     @skipForLogfile(
@@ -592,21 +593,13 @@ class GenericSPTest:
 
 class GenericHFSPTest(GenericSPTest):
     # Approximate HF energy of dvb after SCF in STO-3G (from DALTON 2015).
-    hf_scfenergy = -10334.03948035995
+    scfenergy = -379.7689629312
+    scfenergy_delta = 6.5e-1
 
     # Approximate energy of the innermost molecular orbital of DVB with
     # HF/STO-3G (from Psi4 1.3.1).
-    hf_moenergy = -300.43401785663235
-
-    @skipForParser("FChk", "Formatted Checkpoint files do not have a section for SCF energy")
-    @skipForParser("NBO", "attribute not implemented in this version")
-    def testscfenergy(self, data) -> None:
-        """Is the SCF energy within the target?"""
-        assert abs(data.scfenergies[-1] - self.hf_scfenergy) < 6.5e-1
-
-    def testfirstmoenergy(self, data) -> None:
-        """Is the lowest energy molecular orbital within the target?"""
-        assert abs(data.moenergies[0][0] - self.hf_moenergy) < 1.6e-1
+    moenergy = -11.0407466
+    moenergy_delta = 1.6e-1
 
 
 class ADFSPTest(GenericSPTest):
@@ -619,8 +612,9 @@ class ADFSPTest(GenericSPTest):
     foverlap11 = 1.02672
     foverlap22 = 1.03585
     num_scf_criteria = 2
-    b3lyp_energy = -140
-    b3lyp_moenergy = -269.6079423873336
+    # 2013.1/dvb_sp_b.adfout
+    scfenergy = -5.162850967929650
+    moenergy = -9.9079095713775
 
     def testfoverlaps(self, data) -> None:
         """Are the dims and values of the fragment orbital overlap matrix correct?"""
@@ -698,7 +692,7 @@ class OrcaSPTest(GenericSPTest):
     # Orca has different weights for the masses
     molecularmass = 130190
 
-    b3lyp_moenergy_delta = 1.2e-1
+    moenergy_delta = 1.2e-1
 
     num_scf_criteria = 3
 
@@ -746,13 +740,14 @@ class XTBSPTest(GenericSPTest):
 
     def testscfenergy(self, data) -> None:
         """Is the SCF energy within the target?"""
-        assert abs(data.scfenergies[-1] - -719.08641119) < 1.0e-6
+        assert abs(data.scfenergies[-1] - -26.425939358406) < 1.0e-6
 
 
 class GenericDispersionTest:
     """Generic single-geometry dispersion correction unittest"""
 
-    dispersionenergy = -0.4005496
+    # Q-Chem 5.4
+    dispersionenergy = -0.0147199319
 
     def testdispersionenergies(self, data) -> None:
         """Is the dispersion energy parsed correctly?"""
@@ -763,7 +758,8 @@ class GenericDispersionTest:
 class FireflyDispersionTest(GenericDispersionTest):
     """Customized single-geometry dispersion correction unittest"""
 
-    dispersionenergy = -0.4299821
+    # Firefly 8.1
+    dispersionenergy = -0.015801551434377520
 
 
 class SolventMetadataTest:

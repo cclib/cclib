@@ -400,11 +400,7 @@ class ADF(logfileparser.Logfile):
         # for them, too, even if it repeats the last "Geometry Convergence Tests"
         # section (but it's usually a bit different).
         if line[:21] == "Total Bonding Energy:":
-            if not hasattr(self, "scfenergies"):
-                self.scfenergies = []
-
-            energy = utils.convertor(float(line.split()[3]), "hartree", "eV")
-            self.scfenergies.append(energy)
+            self.append_attribute("scfenergies", float(line.split()[3]))
 
         if line[51:65] == "Final Geometry":
             self.finalgeometry = self.GETLAST
@@ -422,9 +418,7 @@ class ADF(logfileparser.Logfile):
                 atomcoords.append(list(map(float, line.split()[5:8])))
                 line = next(inputfile)
 
-            if not hasattr(self, "atomcoords"):
-                self.atomcoords = []
-            self.atomcoords.append(atomcoords)
+            self.append_attribute("atomcoords", atomcoords)
 
             # Don't get any more coordinates in this case.
             # KML: I think we could combine this with optdone (see below).
@@ -457,16 +451,11 @@ class ADF(logfileparser.Logfile):
                 self.geovalues = []
                 self.geotargets = numpy.array([0.0, 0.0, 0.0, 0.0, 0.0], "d")
 
-            if not hasattr(self, "scfenergies"):
-                self.scfenergies = []
-
             self.skip_lines(inputfile, ["e", "b"])
 
             energies_old = next(inputfile)
             energies_new = next(inputfile)
-            self.scfenergies.append(
-                utils.convertor(float(energies_new.split()[-1]), "hartree", "eV")
-            )
+            self.append_attribute("scfenergies", float(energies_new.split()[-1]))
 
             self.skip_lines(inputfile, ["b", "convergence", "units", "b", "header", "d"])
 
@@ -517,9 +506,7 @@ class ADF(logfileparser.Logfile):
 
             # The convergence message is inline in this block, not later as it was before.
             if "** CONVERGED **" in line:
-                if not hasattr(self, "optdone"):
-                    self.optdone = []
-                self.optdone.append(len(self.geovalues) - 1)
+                self.append_attribute("optdone", len(self.geovalues) - 1)
 
             self.skip_line(inputfile, "dashes")
 
@@ -532,11 +519,7 @@ class ADF(logfileparser.Logfile):
             cart_step_max = next(inputfile)
             cart_step_rms = next(inputfile)
 
-            if not hasattr(self, "scfenergies"):
-                self.scfenergies = []
-
-            energy = utils.convertor(float(current_energy.split()[-2]), "hartree", "eV")
-            self.scfenergies.append(energy)
+            self.append_attribute("scfenergies", float(current_energy.split()[-2]))
 
             if not hasattr(self, "geotargets"):
                 self.geotargets = numpy.array([0.0, 0.0, 0.0, 0.0, 0.0], "d")
@@ -588,7 +571,7 @@ class ADF(logfileparser.Logfile):
             while len(line) > 10:
                 info = line.split()
                 self.mosyms[0].append("A")
-                self.moenergies[0].append(utils.convertor(float(info[2]), "hartree", "eV"))
+                self.moenergies[0].append(float(info[2]))
                 if info[1] == "0.000" and not hasattr(self, "homos"):
                     self.set_attribute("homos", [len(self.moenergies[0]) - 2])
                 line = next(inputfile)
@@ -617,12 +600,12 @@ class ADF(logfileparser.Logfile):
                 info = line.split()
                 if info[2] == "A":
                     self.mosyms[0].append("A")
-                    moenergies[0].append(utils.convertor(float(info[4]), "hartree", "eV"))
+                    moenergies[0].append(float(info[4]))
                     if info[3] != "0.00":
                         homoa = len(moenergies[0]) - 1
                 elif info[2] == "B":
                     self.mosyms[1].append("A")
-                    moenergies[1].append(utils.convertor(float(info[4]), "hartree", "eV"))
+                    moenergies[1].append(float(info[4]))
                     if info[3] != "0.00":
                         homob = len(moenergies[1]) - 1
                 else:
@@ -664,7 +647,7 @@ class ADF(logfileparser.Logfile):
                     count = multiple.get(info[0], 1)
                     for repeat in range(count):  # i.e. add E's twice, T's thrice
                         self.mosyms[0].append(self.normalisesym(info[0]))
-                        self.moenergies[0].append(utils.convertor(float(info[3]), "hartree", "eV"))
+                        self.moenergies[0].append(float(info[3]))
 
                         sym = info[0]
                         if count > 1:  # add additional sym label
@@ -690,9 +673,7 @@ class ADF(logfileparser.Logfile):
                     if info[2] == "A":
                         for repeat in range(count):  # i.e. add E's twice, T's thrice
                             self.mosyms[0].append(self.normalisesym(info[0]))
-                            self.moenergies[0].append(
-                                utils.convertor(float(info[4]), "hartree", "eV")
-                            )
+                            self.moenergies[0].append(float(info[4]))
 
                             sym = info[0]
                             if count > 1:  # add additional sym label
@@ -712,9 +693,7 @@ class ADF(logfileparser.Logfile):
                     if info[2] == "B":
                         for repeat in range(count):  # i.e. add E's twice, T's thrice
                             self.mosyms[1].append(self.normalisesym(info[0]))
-                            self.moenergies[1].append(
-                                utils.convertor(float(info[4]), "hartree", "eV")
-                            )
+                            self.moenergies[1].append(float(info[4]))
 
                             sym = info[0]
                             if count > 1:  # add additional sym label
@@ -1083,7 +1062,7 @@ class ADF(logfileparser.Logfile):
             line = next(inputfile)
             while len(line) > 2:
                 info = line.split()
-                etenergies.append(utils.convertor(float(info[2]), "eV", "wavenumber"))
+                etenergies.append(float(info[1]))
                 etoscs.append(float(info[3]))
                 etsyms.append(symm)
                 line = next(inputfile)

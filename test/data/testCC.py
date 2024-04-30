@@ -26,7 +26,7 @@ class GenericCCTest:
 
 class GenericCC2Test(GenericCCTest):
     # Turbomole 7.4
-    corr_energy = -1.1508051574141973
+    corr_energy = -0.0422913114
 
     def testenergycc2(self, data) -> None:
         """Is the CC2 correlation energy within the target?"""
@@ -38,7 +38,7 @@ class GenericCC2Test(GenericCCTest):
 
 class GenericCCDTest(GenericCCTest):
     # Q-Chem 5.4
-    corr_energy = -1.4435403900740766
+    corr_energy = -0.05304913
 
     def testenergyccd(self, data) -> None:
         """Is the CCD correlation energy within the target?"""
@@ -50,7 +50,7 @@ class GenericCCDTest(GenericCCTest):
 
 class GenericCCSDTest(GenericCCTest):
     # Q-Chem 5.4
-    corr_energy = -1.4518567335733223
+    corr_energy = -0.05335475
 
     def testenergyccsd(self, data) -> None:
         """Is the CCSD correlation energy within the target?"""
@@ -62,7 +62,7 @@ class GenericCCSDTest(GenericCCTest):
 
 class GenericCCSDPTTest(GenericCCTest):
     # Q-Chem 5.4
-    corr_energy = -1.4539460237174353
+    corr_energy = -0.05335475 + -0.00007679
 
     def testenergyccsdpt(self, data) -> None:
         """Is the CCSD(T) correlation energy within the target?"""
@@ -74,67 +74,67 @@ class GenericCCSDPTTest(GenericCCTest):
 
 class DALTONCCSDPTTest(GenericCCSDPTTest):
     # DALTON 2015
-    corr_energy = -0.39526637011522325
+    corr_energy = -73.4491137256 - -73.4345879538
 
 
 class GamessCCDTest(GenericCCDTest):
     # GAMESS-US 2018
-    corr_energy = -5.633089378137811
+    corr_energy = -0.2070122255
 
 
 class GamessCCSDTest(GenericCCSDTest):
     # GAMESS-US 2018
-    corr_energy = -5.655488429741581
+    corr_energy = -0.2078353755
 
 
 class GamessCCSDPTTest(GenericCCSDPTTest):
     # GAMESS-US 2018
-    corr_energy = -5.734634247949089
+    corr_energy = -0.2107439309
 
 
 class MolcasCCSDTest(GenericCCSDTest):
     # OpenMolcas 18.0
-    corr_energy = -1.3796976452617855
+    corr_energy = -0.0507029554992
 
 
 class MolproCCDTest(GenericCCDTest):
     # Molpro 2012
-    corr_energy = -5.76891848850255
+    corr_energy = -0.212003853457
 
 
 class MolproCCSDTest(GenericCCSDTest):
     # Molpro 2012
-    corr_energy = -5.790734939563208
+    corr_energy = -0.212805593281
 
 
 class MolproCCSDPTTest(GenericCCSDPTTest):
     # Molpro 2012
-    corr_energy = -5.876248590504929
+    corr_energy = -0.215948162128
 
 
 class NWChemCCSDPTTest(GenericCCSDPTTest):
     # NWChem 7.0
-    corr_energy = -1.4559748390679488
+    corr_energy = -0.053506090792006
 
 
 class OrcaCCSDTest(GenericCCSDTest):
     # ORCA 5.0
-    corr_energy = -1.3582212909295777
+    corr_energy = -0.049913571
 
 
 class OrcaCCSDPTTest(GenericCCSDPTTest):
     # ORCA 5.0
-    corr_energy = -1.360085161959887
+    corr_energy = -0.049982067
 
 
 class Psi4CCSDTest(GenericCCSDTest):
     # Psi4 1.3.1
-    corr_energy = -1.4538882732524598
+    corr_energy = -0.053429410909519
 
 
 class Psi4CCSDPTTest(GenericCCSDPTTest):
     # Psi4 1.3.1
-    corr_energy = -1.4559754695608262
+    corr_energy = -0.053429410909519 + -0.000076703052954
 
 
 class TurbomoleCCSDTest(GenericCCSDTest):
@@ -142,4 +142,4 @@ class TurbomoleCCSDTest(GenericCCSDTest):
     rel_thresh = 5.0e-3
 
     # Turbomole 7.4
-    corr_energy = -1.3877950772714485
+    corr_energy = -0.0510005307

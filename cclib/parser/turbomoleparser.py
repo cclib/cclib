@@ -768,9 +768,8 @@ class Turbomole(logfileparser.Logfile):
                     r".*eigenvalue=(?P<moenergy>[0-9D\.+-]{20})\s+nsaos=(?P<count>\d+).*", line
                 )
                 eigenvalue = utils.float(info.group("moenergy"))
-                orbital_energy = utils.convertor(eigenvalue, "hartree", "eV")
 
-                moenergies.append(orbital_energy)
+                moenergies.append(eigenvalue)
                 mosyms.append(sym)
                 moirreps.append((number, sym))
 
@@ -873,8 +872,7 @@ class Turbomole(logfileparser.Logfile):
             while "total energy" not in line:
                 line = next(inputfile)
 
-            scfenergy = utils.convertor(utils.float(line.split()[4]), "hartree", "eV")
-            self.append_attribute("scfenergies", scfenergy)
+            self.append_attribute("scfenergies", utils.float(line.split()[4]))
 
             # We need to determine whether this is a HF or DFT energy for metadata.
             if self.is_DFT:
@@ -904,15 +902,13 @@ class Turbomole(logfileparser.Logfile):
         #  *                                                                    *
         #  **********************************************************************
         if "Final CCSD energy" in line or "Final CC2 energy" in line:
-            self.append_attribute(
-                "ccenergies", utils.convertor(utils.float(line.split()[5]), "hartree", "eV")
-            )
+            self.append_attribute("ccenergies", utils.float(line.split()[5]))
             self.metadata["methods"].append("CCSD")
 
         # Look for MP energies.
         for mp_level in range(2, 6):
             if f"Final MP{mp_level} energy" in line:
-                mpenergy = utils.convertor(utils.float(line.split()[5]), "hartree", "eV")
+                mpenergy = utils.float(line.split()[5])
                 if mp_level == 2:
                     self.append_attribute("mpenergies", [mpenergy])
                 else:
@@ -931,8 +927,7 @@ class Turbomole(logfileparser.Logfile):
         if "MP2-energy" in line:
             line = next(inputfile)
             if "total" in line:
-                mp2energy = [utils.convertor(utils.float(line.split()[3]), "hartree", "eV")]
-                self.append_attribute("mpenergies", mp2energy)
+                self.append_attribute("mpenergies", [utils.float(line.split()[3])])
                 self.metadata["methods"].append("MP2")
 
         # Support for the now outdated (?) rimp2
@@ -945,8 +940,7 @@ class Turbomole(logfileparser.Logfile):
         if not hasattr(self, "mpenergies"):
             if "Method          :  MP2" in line:
                 line = next(inputfile)
-                mp2energy = [utils.convertor(utils.float(line.split()[3]), "hartree", "eV")]
-                self.append_attribute("mpenergies", mp2energy)
+                self.append_attribute("mpenergies", [utils.float(line.split()[3])])
                 self.metadata["methods"].append("MP2")
 
         # Excited state metadata.
@@ -1045,9 +1039,7 @@ class Turbomole(logfileparser.Logfile):
             symmetry = f"{mult}-{symm_parts[-2].capitalize()}"
             self.append_attribute("etsyms", symmetry)
 
-            # Energy should be in cm-1...
-            energy = utils.convertor(utils.float(line.split()[-1]), "hartree", "wavenumber")
-            self.append_attribute("etenergies", energy)
+            self.append_attribute("etenergies", utils.float(line.split()[-1]))
 
             # Oscillator strength.
             while "length representation:" not in line:
@@ -1205,7 +1197,7 @@ class Turbomole(logfileparser.Logfile):
                 symmetry = f"{mult}-{parts[1].capitalize()}"
                 self.append_attribute("etsyms", symmetry)
 
-                energy = utils.float(parts[6])
+                energy = utils.float(parts[4])
                 self.append_attribute("etenergies", energy)
 
                 # Go again.
@@ -1854,9 +1846,7 @@ class OldTurbomole(logfileparser.Logfile):
                     except ValueError:
                         print(spin, ": ", title)
 
-                    orb_en = utils.convertor(energy, "hartree", "eV")
-
-                    moenergies.append(orb_en)
+                    moenergies.append(energy)
                     single_mo = []
 
                     while len(single_mo) < self.nbasis:

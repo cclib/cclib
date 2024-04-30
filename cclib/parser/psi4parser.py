@@ -581,15 +581,11 @@ class Psi4(logfileparser.Logfile):
             and "Final Energy:" in line
             and not hasattr(self, "finite_difference")
         ):
-            e = float(line.split()[3])
-            if not hasattr(self, "scfenergies"):
-                self.scfenergies = []
-            self.scfenergies.append(utils.convertor(e, "hartree", "eV"))
+            self.append_attribute("scfenergies", float(line.split()[3]))
 
         if self.subsection == "Energetics":
             if "Empirical Dispersion Energy" in line:
-                dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
-                self.append_attribute("dispersionenergies", dispersion)
+                self.append_attribute("dispersionenergies", float(line.split()[-1]))
 
         #   ==> Molecular Orbitals <==
         #
@@ -695,30 +691,22 @@ class Psi4(logfileparser.Logfile):
         mp_trigger = "MP2 Total Energy (a.u.)"
         if line.strip()[: len(mp_trigger)] == mp_trigger:
             self.metadata["methods"].append("MP2")
-            mpenergy = utils.convertor(float(line.split()[-1]), "hartree", "eV")
-            if not hasattr(self, "mpenergies"):
-                self.mpenergies = []
-            self.mpenergies.append([mpenergy])
+            self.append_attribute("mpenergies", [float(line.split()[-1])])
         # This is for the newer DF-MP2 code in 4.0.
         if "DF-MP2 Energies" in line:
             self.metadata["methods"].append("DF-MP2")
             while "Total Energy" not in line:
                 line = next(inputfile)
-            mpenergy = utils.convertor(float(line.split()[3]), "hartree", "eV")
-            if not hasattr(self, "mpenergies"):
-                self.mpenergies = []
-            self.mpenergies.append([mpenergy])
+            self.append_attribute("mpenergies", [float(line.split()[3])])
 
         if line.lstrip().startswith(self.ccsd_trigger):
             self.metadata["methods"].append("CCSD")
-            ccsd_energy = utils.convertor(float(line.split()[-1]), "hartree", "eV")
-            self.append_attribute("ccenergies", ccsd_energy)
+            self.append_attribute("ccenergies", float(line.split()[-1]))
 
         if line.strip().startswith(self.ccsd_t_trigger):
             assert self.metadata["methods"][-1] == "CCSD"
             self.metadata["methods"].append("CCSD(T)")
-            ccsd_t_energy = utils.convertor(float(line.split()[-1]), "hartree", "eV")
-            self.ccenergies[-1] = ccsd_t_energy
+            self.ccenergies[-1] = float(line.split()[-1])
 
         # The geometry convergence targets and values are printed in a table, with the legends
         # describing the convergence annotation. Probably exact slicing of the line needs
@@ -1237,7 +1225,7 @@ class Psi4(logfileparser.Logfile):
         while line.strip():
             for i in range(len(line.split()) // 2):
                 self.mosyms[spinidx].append(line.split()[i * 2][-2:])
-                moenergy = utils.convertor(float(line.split()[i * 2 + 1]), "hartree", "eV")
+                moenergy = float(line.split()[i * 2 + 1])
                 self.moenergies[spinidx].append(moenergy)
             line = next(inputfile)
         return

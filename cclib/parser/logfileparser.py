@@ -86,8 +86,9 @@ class Logfile(ABC):
         # normally be ccData or a subclass of it.
         self.datatype = datatype
 
+        self.future = kwds.get("future", False)
         # Parsing of Natural Orbitals and Natural Spin Orbtials into one attribute
-        self.unified_no_nso = kwds.get("future", False)
+        self.unified_no_nso = self.future
 
     @property
     def filename(self):

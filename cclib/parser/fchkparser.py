@@ -100,9 +100,7 @@ class FChk(logfileparser.Logfile):
             self.set_attribute("atomcoords", utils.convertor(coords, "bohr", "Angstrom"))
 
         if line[0:10] == "SCF Energy":
-            self.set_attribute(
-                "scfenergies", [utils.convertor(float(line.split()[-1]), "hartree", "eV")]
-            )
+            self.set_attribute("scfenergies", float(line.split()[-1]))
 
         if line[0:25] == "Number of basis functions":
             self.set_attribute("nbasis", int(line.split()[-1]))
@@ -143,7 +141,7 @@ class FChk(logfileparser.Logfile):
             assert count == self.nmo
 
             energies = numpy.array(self._parse_block(inputfile, count, float, "Alpha MO Energies"))
-            self.set_attribute("moenergies", [utils.convertor(energies, "hartree", "eV")])
+            self.set_attribute("moenergies", [energies])
 
         if line[0:20] == "Beta MO coefficients":
             count = int(line.split()[-1])
@@ -158,7 +156,7 @@ class FChk(logfileparser.Logfile):
             assert count == self.nmo
 
             energies = numpy.array(self._parse_block(inputfile, count, float, "Alpha MO Energies"))
-            self.append_attribute("moenergies", utils.convertor(energies, "hartree", "eV"))
+            self.append_attribute("moenergies", energies)
 
         if line[0:11] == "Shell types":
             self.parse_aonames(line, inputfile)
@@ -174,7 +172,7 @@ class FChk(logfileparser.Logfile):
         if line[0:10] == "SCF Energy":
             self.scfenergy = float(line.split()[-1])
 
-            self.set_attribute("scfenergies", [utils.convertor(self.scfenergy, "hartree", "eV")])
+            self.set_attribute("scfenergies", [self.scfenergy])
 
         if line[0:16] == "Mulliken Charges":
             count = int(line.split()[-1])
@@ -286,8 +284,7 @@ class FChk(logfileparser.Logfile):
             etvalues = self._parse_block(inputfile, count, float, "ET Values")
 
             # ETr energies (1/cm)
-            etenergies_au = [e_es - self.scfenergy for e_es in etvalues[0 : net * 16 : 16]]
-            etenergies = [utils.convertor(etr, "hartree", "wavenumber") for etr in etenergies_au]
+            etenergies = [e_es - self.scfenergy for e_es in etvalues[0 : net * 16 : 16]]
             self.set_attribute("etenergies", etenergies)
 
             # ETr dipoles (length-gauge)
@@ -300,7 +297,7 @@ class FChk(logfileparser.Logfile):
             # oscs = 2/3 * Etr(au) * dip²(au)
             etoscs = [
                 2.0 / 3.0 * e * numpy.linalg.norm(numpy.array(dip)) ** 2
-                for e, dip in zip(etenergies_au, etdips)
+                for e, dip in zip(etenergies, etdips)
             ]
             self.set_attribute("etoscs", etoscs)
 
@@ -319,7 +316,6 @@ class FChk(logfileparser.Logfile):
         if line[0:19] == "Excitation Energies":
             count = int(line.split()[-1])
             etenergies = self._parse_block(inputfile, count, float, "Excitation energies")
-            etenergies = [utils.convertor(e, "hartree", "wavenumber") for e in etenergies]
             self.set_attribute("etenergies", etenergies)
 
         if line[0:20] == "Oscillator Strengths":
