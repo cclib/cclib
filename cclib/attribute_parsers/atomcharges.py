@@ -8,6 +8,7 @@ from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
 
 import numpy as np
+import re
 
 
 def orca_parse_charge_section(file_handler, chargestype):
@@ -103,7 +104,7 @@ class atomcharges(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["ORCA", "NBO", "qchem"]
+    known_codes = ["ORCA", "NBO", "psi4", "qchem"]
 
     @staticmethod
     def ORCA(file_handler, ccdata) -> Optional[dict]:
@@ -258,6 +259,39 @@ class atomcharges(base_parser):
         if constructed_data:
             return constructed_data
         return None
+
+
+
+    def psi4(file_handler,ccdata):
+        # The formats for Mulliken and Lowdin atomic charges are the same, just with
+        # the name changes, so use the same code for both.
+        #
+        # Properties computed using the SCF density density matrix
+        #   Mulliken Charges: (a.u.)
+        #    Center  Symbol    Alpha    Beta     Spin     Total
+        #        1     C     2.99909  2.99909  0.00000  0.00182
+        #        2     C     2.99909  2.99909  0.00000  0.00182
+        # ...
+        line = file_handler.last_line
+        atomic_charges_header = re.compile(
+            r"^\s*(Mulliken|Lowdin|MBIS) Charges(:?: \(a\.u\.\)| \[a\.u\.\]:)"
+        ).search(line)
+        if atomic_charges_header is not None:
+            if getattr(ccdata, "atomcharges") is None:
+                this_atomcharges = {}
+            else:
+                this_atomcharges = ccdata.atomcharges
+            while "Center  Symbol    Alpha" not in line:
+                line = file_handler.virtual_next()
+            line = file_handler.virtual_next()
+
+            charges = []
+            while line.strip():
+                ch = float(line.split()[-1])
+                charges.append(ch)
+                line = file_handler.virtual_next()
+            this_atomcharges[atomic_charges_header.groups()[0].lower()] = charges
+            return({atomcharges.__name__:this_atomcharges})
 
     @staticmethod
     def parse(file_handler, program: str, ccdata) -> Optional[dict]:

@@ -186,7 +186,7 @@ class mosyms(base_parser):
             #    )
 
             # For now, only keep the last set of MO energies, even though it is
-            # printed at every step of geometry optimizations and fragment jobs.
+            # ed at every step of geometry optimizations and fragment jobs.
             parsed_data = {mosyms.__name__: [symbols_alpha]}
 
             # if self.unrestricted:

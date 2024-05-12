@@ -236,7 +236,6 @@ class GenericSPTest:
     @skipForParser("Molpro", "atommasses not implemented yet")
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForLogfile("Psi4/basicPsi4.0b5", "atommasses not implemented yet")
-    @skipForParser("Psi4", "The parser is still being developed for version 2")
     @skipForParser("QChem", "atommasses not implemented yet")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     @skipForParser("xTB", "not implemented yet")

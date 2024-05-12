@@ -104,7 +104,6 @@ class atombasis(base_parser):
 
         if line[5:39] == "Alpha Natural Orbital Coefficients":
             parsed_atombasis = natural_orbital_single_spin_parsing(file_handler)
-            print(atombasis.__name__)
             return {atombasis.__name__: parsed_atombasis}
         if line[5:38] == "Beta Natural Orbital Coefficients":
             parsed_atombasis = natural_orbital_single_spin_parsing(file_handler)
