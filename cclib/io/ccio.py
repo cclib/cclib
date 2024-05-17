@@ -135,9 +135,9 @@ def ccread(
     if not isinstance(source, list):
         source = [source]
 
-    a = ccDriver(source)
+    a = ccDriver(source, **kwargs)
     a.process_combinator()
-    return a._ccCollection
+    return a._ccCollection._parsed_data
 
 
 def ccopen(
