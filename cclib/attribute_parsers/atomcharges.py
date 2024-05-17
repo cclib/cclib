@@ -2,13 +2,13 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
+import re
 from typing import Optional
 
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
 
 import numpy as np
-import re
 
 
 def orca_parse_charge_section(file_handler, chargestype):
@@ -260,9 +260,7 @@ class atomcharges(base_parser):
             return constructed_data
         return None
 
-
-
-    def psi4(file_handler,ccdata):
+    def psi4(file_handler, ccdata):
         # The formats for Mulliken and Lowdin atomic charges are the same, just with
         # the name changes, so use the same code for both.
         #
@@ -291,7 +289,7 @@ class atomcharges(base_parser):
                 charges.append(ch)
                 line = file_handler.virtual_next()
             this_atomcharges[atomic_charges_header.groups()[0].lower()] = charges
-            return({atomcharges.__name__:this_atomcharges})
+            return {atomcharges.__name__: this_atomcharges}
 
     @staticmethod
     def parse(file_handler, program: str, ccdata) -> Optional[dict]:

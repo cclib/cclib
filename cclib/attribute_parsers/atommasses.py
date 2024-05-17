@@ -33,14 +33,14 @@ class atommasses(base_parser):
         return None
 
     @staticmethod
-    def psi4(file_handler,ccdata) -> Optional[dict]:
+    def psi4(file_handler, ccdata) -> Optional[dict]:
         line = file_handler.last_line
         if "Geometry (in" in line:
-            this_atommasses=[]
-            file_handler.skip_lines(["blank"],virtual=True)
+            this_atommasses = []
+            file_handler.skip_lines(["blank"], virtual=True)
             line = file_handler.virtual_next()
             if line.split()[0] == "Center":
-                file_handler.skip_lines(["dashes"],virtual=True)
+                file_handler.skip_lines(["dashes"], virtual=True)
                 line = file_handler.virtual_next()
             while line.strip():
                 chomp = line.split()
@@ -48,7 +48,7 @@ class atommasses(base_parser):
                 if len(chomp) == 5:
                     this_atommasses.append(float(chomp[4]))
                 line = file_handler.virtual_next()
-            return({atommasses.__name__:this_atommasses})
+            return {atommasses.__name__: this_atommasses}
         return None
 
     @staticmethod
@@ -73,8 +73,6 @@ class atommasses(base_parser):
                 if not hasattr(self, "atommasses"):
                     return {atommasses.__name__: numpy.array(atommasses)}
         return None
-
-    
 
     @staticmethod
     def parse(file_handler, program: str, ccdata) -> Optional[dict]:

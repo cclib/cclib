@@ -15,7 +15,7 @@ class scftargets(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["gaussian","psi4"]
+    known_codes = ["gaussian", "psi4"]
 
     @staticmethod
     def gaussian(file_handler, ccdata) -> Optional[dict]:
@@ -63,10 +63,8 @@ class scftargets(base_parser):
     @staticmethod
     def psi4(file_handler, ccdata) -> Optional[dict]:
         line = file_handler.last_line
-        if ( (line.strip() == "==> Algorithm <==")
-            and (getattr(ccdata, "finite_difference") is None)
-        ):
-            file_handler.skip_lines(["blank"],virtual=True)
+        if (line.strip() == "==> Algorithm <==") and (getattr(ccdata, "finite_difference") is None):
+            file_handler.skip_lines(["blank"], virtual=True)
             line = file_handler.virtual_next()
             while line.strip():
                 if "Energy threshold" in line:
@@ -81,10 +79,11 @@ class scftargets(base_parser):
                 this_scftargers = ccdata.scftargets
             this_scftargets.append([etarget, dtarget])
 
-            return {scftargets.__name__:this_scftargets}
+            return {scftargets.__name__: this_scftargets}
         return None
 
         # This section prints contraction information before the atomic basis set functions and
+
     @staticmethod
     def parse(file_handler, program, ccdata) -> Optional[dict]:
         constructed_data = None
