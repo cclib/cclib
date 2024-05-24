@@ -1,4 +1,3 @@
-
 # Copyright (c) 2024, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
@@ -10,31 +9,31 @@ from cclib.attribute_parsers.base_parser import base_parser
 
 import numpy as np
 
+
 class dispersionenergies(base_parser):
     """
     Docstring? Units?
     """
-    
+
     @staticmethod
     def psi4(file_handler, ccdata) -> Optional[dict]:
         ccsd_trigger = "* CCSD total energy"
         ccsd_t_trigger = "* CCSD(T) total energy"
         line = file_handler.last_line
-        if getattr(ccdata,"dispersionenergies") is None:
+        if getattr(ccdata, "dispersionenergies") is None:
             this_dispersionenergies = []
         else:
             this_dispersionenergies = ccdata.dispoersionenergies
         if "Empirical Dispersion Energy" in line:
             dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
             this_dispersionenergies.append(dispersion)
-            return {dispersionenergies.__name__: np.array(this_dispersionenergies)} 
+            return {dispersionenergies.__name__: np.array(this_dispersionenergies)}
         return None
-        
 
         # The geometry convergence targets and values are printed in a table, with the legends
 
-
     known_codes = ["psi4"]
+
     @staticmethod
     def parse(file_handler, program, ccdata) -> Optional[dict]:
         constructed_data = None
