@@ -76,7 +76,7 @@ class scftargets(base_parser):
             if getattr(ccdata, "scftargets") is None:
                 this_scftargets = []
             else:
-                this_scftargers = ccdata.scftargets
+                this_scftargets = ccdata.scftargets
             this_scftargets.append([etarget, dtarget])
 
             return {scftargets.__name__: this_scftargets}
