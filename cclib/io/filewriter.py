@@ -26,11 +26,11 @@ if _has_openbabel:
     # Open Babel 2.4.x and below
     except:
         import openbabel as ob
-        
+
         # There's no guarantee pybel is also available...
         try:
             import pybel as pb
-        
+
         except ModuleNotFoundError:
             _has_openbabel = False
 
