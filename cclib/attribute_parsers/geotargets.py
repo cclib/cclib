@@ -27,7 +27,7 @@ class geotargets(base_parser):
             this_geotargets = []
             file_handler.skip_lines(["b", "units"])
             if ccdata.package_version.minor >= 7:
-                file_handler.self.skip_line(["b"])
+                file_handler.skip_lines(["b"])
             file_handler.skip_lines(["comment"])
             if ccdata.package_version.minor >= 7:
                 file_handler.skip_lines(["b"])
@@ -43,7 +43,7 @@ class geotargets(base_parser):
                 else:
                     this_geotargets.append(numpy.inf)
 
-            file_handler.skip_line(, "dashes")
+            file_handler.skip_lines(["dashes"])
 
             values = file_handler.virtual_next()
             step = int(values.split()[0])
