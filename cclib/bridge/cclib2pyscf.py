@@ -113,7 +113,7 @@ def makepyscf_mos(ccdata, mol):
     return mo_coeffs, mo_occ, mo_syms, mo_energies
 
 
-def makecclib(method) -> ccData:
+def makecclib(method, etmethod=None) -> ccData:
     """Create cclib attributes and return a ccData from a PySCF method object.
 
     The method object should naturally have already performed some sort of
@@ -142,6 +142,18 @@ def makecclib(method) -> ccData:
     attributes["coreelectrons"] = [
         mol.atom_nelec_core(i) for i in range(0, len(attributes["atomnos"]))
     ]
+
+    # Excited states.
+    if etmethod:
+        attributes["etenergies"] = etmethod.e
+        attributes["etoscs"] = etmethod.oscillator_strength(
+            gauge="length"
+        )  # or do we want velocity?
+        # etmethod.analyse() prints real symmetries, so they must be available somehwere...
+        attributes["etsyms"] = [
+            "Singlet" if etmethod.singlet else "Triplet"
+            for i in range(0, len(attributes["atomnos"]))
+        ]
 
     return ccData(attributes)
 
