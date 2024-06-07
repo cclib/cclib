@@ -5,6 +5,7 @@
 
 """Bridge for using cclib data in PySCF (https://github.com/pyscf/pyscf)."""
 
+from cclib.parser.data import ccData
 from cclib.parser.utils import PeriodicTable, convertor, find_package
 
 import numpy as np
@@ -110,6 +111,39 @@ def makepyscf_mos(ccdata, mol):
             else:
                 mo_syms = np.full_like(ccdata.moenergies, "A", dtype=str)
     return mo_coeffs, mo_occ, mo_syms, mo_energies
+
+
+def makecclib(method) -> ccData:
+    """Create cclib attributes and return a ccData from a PySCF method object.
+
+    The method object should naturally have already performed some sort of
+    calculation.
+
+    Inputs:
+        atoms - an instance of ASE `Atoms`
+        popname - population analysis to use for atomic partial charges and
+            atomic spin densities. Molecular charge and multiplicity are
+            evaluated from them.
+    """
+    _check_pyscf(_found_pyscf)
+    attributes = []
+
+    mol = method.mol
+    ptable = PeriodicTable()
+
+    # Atoms.
+    attributes["atomcoords"] = mol.atom_coords("Angstrom")
+    attributes["atomnos"] = [ptable.number[element] for element in mol.elements]
+    # attributes["atomcharges"] = mol.atom_charges() # is this the right type of atom charge?
+    attributes["atommasses"] = mol.atom_mass_list(isotope_avg=True)
+
+    attributes["charge"] = mol.charge
+    attributes["multiplicity"] = mol.multiplicity
+    attributes["coreelectrons"] = [
+        mol.atom_nelec_core(i) for i in range(0, len(attributes["atomnos"]))
+    ]
+
+    return ccData(attributes)
 
 
 del find_package
