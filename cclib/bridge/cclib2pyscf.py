@@ -159,36 +159,90 @@ def _makecclib(scf, mp=None, cc=None, et=None) -> ccData:
         mol.atom_nelec_core(i) for i in range(0, len(attributes["atomnos"]))
     ]
 
+    # Total energies.
+    attributes["scfenergies"] = [scf.e_tot]
+    if mp:
+        attributes["mpenergies"] = [mp.e_tot]
+    if cc:
+        attributes["ccenergies"] = [cc.e_tot]
+
+    # Orbitals.
+    if scf.istype("UHF"):
+        nocc = [np.count_nonzero(scf.mo_occ[0] != 0), np.count_nonzero(scf.mo_occ[1] != 0)]
+        attributes["moenergies"] = [
+            convertor(scf.mo_energy[0], "hartree", "eV"),
+            convertor(scf.mo_energy[1], "hartree", "eV"),
+        ]
+        attributes["homos"] = [nocc[0] - 1, nocc[1] - 1]
+
+    else:
+        nocc = [np.count_nonzero(scf.mo_occ != 0)]
+        attributes["moenergies"] = [convertor(scf.mo_energy, "hartree", "eV")]
+        attributes["homos"] = [nocc[0] - 1]
+
+    # Orbital coeffs.
+    attributes["mocoeffs"] = scf.mo_coeff
+
+    # Orbital symmetries.
+    if scf.mol.symmetry:
+        # Symmetry labels are in scf.mol.irrep_name, symmetry ids are in scf.mol.irrep_id
+        symmetry_mapping = {
+            symm_id: symm_name for symm_id, symm_name in zip(scf.mol.irrep_id, scf.mol.irrep_name)
+        }
+
+        orbsyms = scf.get_orbsym() if scf.istype("UHF") else [scf.get_orbsym()]
+
+        attributes["mosyms"] = []
+        for alpha_beta in range(0, (len(attributes["moenergies"]))):
+            attributes["mosyms"].append(
+                [symmetry_mapping[symm_id] for symm_id in orbsyms[alpha_beta]]
+            )
+
     # Excited states.
-    if etmethod:
-        attributes["etenergies"] = etmethod.e
-        attributes["etoscs"] = etmethod.oscillator_strength(
-            gauge="length"
-        )  # or do we want velocity?
-        # etmethod.analyse() prints real symmetries, so they must be available somehwere...
+    if et:
+        attributes["etenergies"] = et.e
+        attributes["etoscs"] = et.oscillator_strength(gauge="length")  # or do we want velocity?
+        # et.analyse() prints real symmetries, so they must be available somewhere...
         attributes["etsyms"] = [
-            "Singlet" if etmethod.singlet else "Triplet"
-            for i in range(0, len(attributes["atomnos"]))
+            "Singlet" if et.singlet else "Triplet" for i in range(0, len(attributes["atomnos"]))
         ]
 
         # Orbital contributions.
         # In PySCF, occupied and virtual orbital indices are stored separately.
         attributes["etsecs"] = []
-        nocc = np.count_nonzero(method.mo_occ == 2)
-        for index in range(0, len(etmethod.e)):
+
+        for index in range(0, len(et.e)):
             attributes["etsecs"].append([])
 
             # Assuming x are excitations, y are de-excitations.
             # y is ignored for now.
-            x, y = etmethod.xy[index]
+            x, y = et.xy[index]
 
-            # Flatten the x matrix.
-            # The first index is the occupied orbital, the second is the virtual (both 0 indexed):
-            o_indices, v_indices = np.where(x)
-            for occupied, virtual in zip(o_indices, v_indices):
-                attributes["etsecs"][index].append(
-                    [(occupied, 0), (nocc + virtual, 0), x[occupied, virtual]]
-                )
+            if not scf.istype("UHF"):
+                # Flatten the x matrix.
+                # The first index is the occupied orbital, the second is the virtual (both 0 indexed):
+                o_indices, v_indices = np.where(x)
+                for occupied, virtual in zip(o_indices, v_indices):
+                    attributes["etsecs"][index].append(
+                        [(occupied, 0), (nocc + virtual, 0), x[occupied, virtual]]
+                    )
+
+            else:
+                # Flatten the x matrix.
+                # The first index is the occupied orbital, the second is the virtual (both 0 indexed):
+                # Alpha -> alpha
+                o_indices, v_indices = np.where(x[0])
+                for occupied, virtual in zip(o_indices, v_indices):
+                    attributes["etsecs"][index].append(
+                        [(occupied, 0), (nocc[0] + virtual, 0), x[0][occupied, virtual]]
+                    )
+
+                # Beta -> Beta
+                o_indices, v_indices = np.where(x[1])
+                for occupied, virtual in zip(o_indices, v_indices):
+                    attributes["etsecs"][index].append(
+                        [(occupied, 1), (nocc[1] + virtual, 1), x[1][occupied, virtual]]
+                    )
 
     return ccData(attributes)
 
