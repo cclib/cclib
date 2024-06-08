@@ -113,22 +113,38 @@ def makepyscf_mos(ccdata, mol):
     return mo_coeffs, mo_occ, mo_syms, mo_energies
 
 
-def makecclib(method, etmethod=None) -> ccData:
+def makecclib(method) -> ccData:
     """Create cclib attributes and return a ccData from a PySCF method object.
 
     The method object should naturally have already performed some sort of
     calculation.
 
     Inputs:
-        atoms - an instance of ASE `Atoms`
-        popname - population analysis to use for atomic partial charges and
-            atomic spin densities. Molecular charge and multiplicity are
-            evaluated from them.
+        method - an instance of PySCF `StreamObject`
+        etmethod - an instance of PySCF ``
+    """
+    # TOOD:
+    scf = method
+    mp = None
+    cc = None
+    et = None
+    return _makecclib(scf, mp, cc, et)
+
+
+def _makecclib(scf, mp=None, cc=None, et=None) -> ccData:
+    """Create cclib attributes and return a ccData from a PySCF method object.
+
+    The method object should naturally have already performed some sort of
+    calculation.
+
+    Inputs:
+        method - an instance of PySCF `StreamObject`
+        et - an instance of PySCF ``
     """
     _check_pyscf(_found_pyscf)
     attributes = {}
 
-    mol = method.mol
+    mol = scf.mol
     ptable = PeriodicTable()
 
     # Atoms.
