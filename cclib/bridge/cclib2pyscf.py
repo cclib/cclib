@@ -126,7 +126,7 @@ def makecclib(method, etmethod=None) -> ccData:
             evaluated from them.
     """
     _check_pyscf(_found_pyscf)
-    attributes = []
+    attributes = {}
 
     mol = method.mol
     ptable = PeriodicTable()
