@@ -155,6 +155,25 @@ def makecclib(method, etmethod=None) -> ccData:
             for i in range(0, len(attributes["atomnos"]))
         ]
 
+        # Orbital contributions.
+        # In PySCF, occupied and virtual orbital indices are stored separately.
+        attributes["etsecs"] = []
+        nocc = np.count_nonzero(method.mo_occ == 2)
+        for index in range(0, len(etmethod.e)):
+            attributes["etsecs"].append([])
+
+            # Assuming x are excitations, y are de-excitations.
+            # y is ignored for now.
+            x, y = etmethod.xy[index]
+
+            # Flatten the x matrix.
+            # The first index is the occupied orbital, the second is the virtual (both 0 indexed):
+            o_indices, v_indices = np.where(x)
+            for occupied, virtual in zip(o_indices, v_indices):
+                attributes["etsecs"][index].append(
+                    [(occupied, 0), (nocc + virtual, 0), x[occupied, virtual]]
+                )
+
     return ccData(attributes)
 
 
