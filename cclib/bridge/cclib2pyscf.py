@@ -173,7 +173,7 @@ def _makecclib(scf, mp=None, cc=None, ccsd_t=None, et=None, hess=None, freq=None
     attributes["atommasses"] = mol.atom_mass_list(isotope_avg=True)
 
     attributes["charge"] = mol.charge
-    attributes["multiplicity"] = mol.multiplicity
+    attributes["mult"] = mol.multiplicity
     attributes["coreelectrons"] = [
         mol.atom_nelec_core(i) for i in range(0, len(attributes["atomnos"]))
     ]
