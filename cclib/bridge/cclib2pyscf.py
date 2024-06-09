@@ -20,6 +20,7 @@ class MissingAttributeError(Exception):
 _found_pyscf = find_package("pyscf")
 if _found_pyscf:
     from pyscf import gto
+    import pyscf
 
 
 def _check_pyscf(found_pyscf):
@@ -133,6 +134,7 @@ def _makecclib(
         scf,
         mp = None,
         cc = None,
+        ccsd_t = None,
         et = None,
         hess = None,
         freq = None
@@ -146,6 +148,7 @@ def _makecclib(
         scf - an instance of a PySCF SCF method (RHF, UHF, RKS, UKS etc.).
         mp - an instance of a PySCF MPn method.
         cc - an instance of a PySCF CC method.
+        ccsd_t - CCSD(T) correction to the CCSD energy.
         et - an instance of a PySCF excited states method (TD, TDA etc.).
         hess - an instance of a PySCF hessian method. For IR wavelengths/
                intensities, use an Infrared instance from pyscf.prop.infrared.*
@@ -159,6 +162,15 @@ def _makecclib(
     
     # TODO: A sanity check that all the supplied methods use the same mol object?
     
+    # Metadata.
+    attributes["metadata"] = {
+        'package': "PySCF",
+        'package_version': pyscf.__version__,
+        # TODO: What if using a non-standard basis set?
+        'basis_set': mol.basis,
+        'methods': []
+    }
+    
     # Atoms.
     attributes["atomcoords"] = mol.atom_coords("Angstrom")
     attributes["atomnos"] = [ptable.number[element] for element in mol.elements]
@@ -171,13 +183,34 @@ def _makecclib(
     
     # Total energies.
     attributes["scfenergies"] = [scf.e_tot]
+    attributes["metadata"]["success"] = scf.converged
+    attributes["metadata"]["methods"].append("DFT" if scf.istype("KS") else "HF")
+    if hasattr(scf, "xc"):
+        attributes["metadata"]["functional"] = scf.xc
+    
     if mp:
         attributes["mpenergies"] = [mp.e_tot]
+        attributes["metadata"]["success"] = mp.converged
+        attributes["metadata"]["methods"].append("MP2")
+    
     if cc:
         attributes["ccenergies"] = [cc.e_tot]
+        attributes["metadata"]["success"] = cc.converged
+        if cc.cc2:
+            ccmethod = "CC2"
+        
+        elif ccsd_t:
+            ccmethod = "CCSD(T)"
+        
+        else:
+            ccmethod = "CCSD"
+        
+        attributes["metadata"]["methods"].append(ccmethod)
     
     # Orbitals.
     if scf.istype("UHF"):
+        attributes["metadata"]["unrestricted"] = True
+        
         nocc = [
             np.count_nonzero(scf.mo_occ[0] != 0),
             np.count_nonzero(scf.mo_occ[1] != 0)
@@ -214,6 +247,7 @@ def _makecclib(
     
     # Excited states.
     if et:
+        attributes["metadata"]["success"] = et.converged
         attributes["etenergies"] = et.e
         attributes["etoscs"] = et.oscillator_strength(gauge = "length") # or do we want velocity?
         # et.analyse() prints real symmetries, so they must be available somewhere...
@@ -264,6 +298,7 @@ def _makecclib(
     
     # Hessian/frequencies
     if hess:
+        attributes["metadata"]["success"] = hess.converged
         pass
         # TODO: Don't know enough to work out what this is
         # cclib wants a rank 2 array, pyscf gives us a rank 4 array?
