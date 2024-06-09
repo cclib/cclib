@@ -131,21 +131,28 @@ def makecclib(method) -> ccData:
     return _makecclib(scf, mp, cc, et)
 
 
-def _makecclib(scf, mp=None, cc=None, et=None) -> ccData:
+def _makecclib(scf, mp=None, cc=None, et=None, hess=None, freq=None) -> ccData:
     """Create cclib attributes and return a ccData from a PySCF method object.
 
     The method object should naturally have already performed some sort of
     calculation.
 
     Inputs:
-        method - an instance of PySCF `StreamObject`
-        et - an instance of PySCF ``
+        scf - an instance of a PySCF SCF method (RHF, UHF, RKS, UKS etc.).
+        mp - an instance of a PySCF MPn method.
+        cc - an instance of a PySCF CC method.
+        et - an instance of a PySCF excited states method (TD, TDA etc.).
+        hess - an instance of a PySCF hessian method. For IR wavelengths/
+               intensities, use an Infrared instance from pyscf.prop.infrared.*
+
     """
     _check_pyscf(_found_pyscf)
     attributes = {}
 
     mol = scf.mol
     ptable = PeriodicTable()
+
+    # TODO: A sanity check that all the supplied methods use the same mol object?
 
     # Atoms.
     attributes["atomcoords"] = mol.atom_coords("Angstrom")
@@ -243,6 +250,25 @@ def _makecclib(scf, mp=None, cc=None, et=None) -> ccData:
                     attributes["etsecs"][index].append(
                         [(occupied, 1), (nocc[1] + virtual, 1), x[1][occupied, virtual]]
                     )
+
+    # Hessian/frequencies
+    if hess:
+        pass
+        # TODO: Don't know enough to work out what this is
+        # cclib wants a rank 2 array, pyscf gives us a rank 4 array?
+        # Dimensions appear to be natoms x natoms x 3 x 3
+        # attributes["hessian"] = hess.de
+
+    if hasattr(hess, "vib_dict"):
+        # Freq data, a dict with 'freq_error', 'freq_au', 'freq_wavenumber', 'norm_mode', 'reduced_mass',
+        # 'vib_temperature', 'force_const_au', 'force_const_dyne'
+        # TODO: This can include imaginary numbers, convert to 'negative' frequencies?
+        attributes["vibfreqs"] = hess.vib_dict["freq_wavenumber"]
+        # TODO: Check these units.
+        attributes["vibfconsts"] = hess.vib_dict["force_const_dyne"]
+        attributes["vibrmasses"] = hess.vib_dict["reduced_mass"]
+        # TODO: Units?
+        attributes["vibirs"] = hess.ir_inten
 
     return ccData(attributes)
 
