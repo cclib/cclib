@@ -302,6 +302,8 @@ def _makecclib(scf, mp=None, cc=None, ccsd_t=None, et=None, hess=None, freq=None
         # TODO: Check these units.
         attributes["vibfconsts"] = hess.vib_dict["force_const_dyne"]
         attributes["vibrmasses"] = hess.vib_dict["reduced_mass"]
+
+    if hasattr(hess, "ir_inten"):
         # TODO: Units?
         attributes["vibirs"] = hess.ir_inten
 
