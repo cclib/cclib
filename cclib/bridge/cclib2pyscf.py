@@ -179,6 +179,7 @@ def _makecclib(scf, mp=None, cc=None, ccsd_t=None, et=None, hess=None, freq=None
     ]
 
     # Total energies.
+    # TODO: Can't find if intermediate energies are stored anywhere...
     attributes["scfenergies"] = [scf.e_tot]
     attributes["metadata"]["success"] = scf.converged
     attributes["metadata"]["methods"].append("DFT" if scf.istype("KS") else "HF")
@@ -214,14 +215,18 @@ def _makecclib(scf, mp=None, cc=None, ccsd_t=None, et=None, hess=None, freq=None
             convertor(scf.mo_energy[1], "hartree", "eV"),
         ]
         attributes["homos"] = [nocc[0] - 1, nocc[1] - 1]
+        attributes["mocoeffs"] = scf.mo_coeff
 
     else:
+        attributes["metadata"]["unrestricted"] = False
+
         nocc = [np.count_nonzero(scf.mo_occ != 0)]
         attributes["moenergies"] = [convertor(scf.mo_energy, "hartree", "eV")]
         attributes["homos"] = [nocc[0] - 1]
+        # Orbital coeffs.
+        attributes["mocoeffs"] = [scf.mo_coeff]
 
-    # Orbital coeffs.
-    attributes["mocoeffs"] = scf.mo_coeff
+    attributes["nmo"] = len(attributes["moenergies"][0])
 
     # Orbital symmetries.
     if scf.mol.symmetry:
