@@ -172,7 +172,7 @@ def _makecclib(
     }
     
     # Atoms.
-    attributes["atomcoords"] = mol.atom_coords("Angstrom")
+    attributes["atomcoords"] = [mol.atom_coords("Angstrom")]
     attributes["natoms"] = len(attributes["atomcoords"])
     attributes["atomnos"] = [ptable.number[element] for element in mol.elements]
     # attributes["atomcharges"] = mol.atom_charges() # is this the right type of atom charge?
