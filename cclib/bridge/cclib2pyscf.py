@@ -229,7 +229,8 @@ def _makecclib(scf, mp=None, cc=None, ccsd_t=None, et=None, hess=None, freq=None
     attributes["nmo"] = len(attributes["moenergies"][0])
 
     # Orbital symmetries.
-    if scf.mol.symmetry:
+    # if scf.mol.symmetry:
+    if hasattr(scf, "get_orbsym"):
         # Symmetry labels are in scf.mol.irrep_name, symmetry ids are in scf.mol.irrep_id
         symmetry_mapping = {
             symm_id: symm_name for symm_id, symm_name in zip(scf.mol.irrep_id, scf.mol.irrep_name)
