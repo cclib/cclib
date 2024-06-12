@@ -17,12 +17,11 @@ class geotargets(base_parser):
 
     known_codes = ["psi4"]
 
-
     @staticmethod
     def psi4(file_handler, ccdata) -> Optional[dict]:
         line = file_handler.last_line
-        if ((line.strip() == "==> Convergence Check <==")
-            and (getattr(ccdata, "finite_difference") is None)
+        if (line.strip() == "==> Convergence Check <==") and (
+            getattr(ccdata, "finite_difference") is None
         ):
             this_geotargets = []
             file_handler.skip_lines(["b", "units"])
@@ -80,10 +79,11 @@ class geotargets(base_parser):
                 this_scftargers = ccdata.scftargets
             this_scftargets.append([etarget, dtarget])
 
-            return {geotargets.__name__:this_scftargets}
+            return {geotargets.__name__: this_scftargets}
         return None
 
         # This section prints contraction information before the atomic basis set functions and
+
     @staticmethod
     def parse(file_handler, program, ccdata) -> Optional[dict]:
         constructed_data = None
