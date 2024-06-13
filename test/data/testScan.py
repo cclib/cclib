@@ -41,7 +41,7 @@ class GenericUnrelaxedScanTest:
         assert isinstance(data.scanenergies, list)
 
         # This checks the order of magnitude, and unit conversion if nothing else.
-        numpy.testing.assert_array_less(numpy.array(data.scanenergies), -10000)
+        numpy.testing.assert_array_less(numpy.array(data.scanenergies), -378)
 
     @skipForParser("ORCA", "Not implemented")
     @skipForParser("Jaguar", "Not implemented")
@@ -93,14 +93,6 @@ class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
     @skipForParser("Jaguar", "Not implemented")
     def testscannames(self, data) -> None:
         assert isinstance(data.scannames, list)
-
-    @skipForParser("Jaguar", "Not implemented")
-    @skipForParser("ORCA", "Not implemented")
-    def testscanenergies(self, data) -> None:
-        assert isinstance(data.scanenergies, list)
-
-        # This checks the order of magnitude, and unit conversion if nothing else.
-        numpy.testing.assert_array_less(numpy.array(data.scanenergies), -10000)
 
     @skipForParser("Jaguar", "Not implemented")
     @skipForParser("ORCA", "Not implemented")

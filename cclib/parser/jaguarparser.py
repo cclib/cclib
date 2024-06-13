@@ -223,26 +223,16 @@ class Jaguar(logfileparser.Logfile):
         # Hartree-Fock energy after SCF
         if line[1:18] == "SCFE: SCF energy:":
             self.metadata["methods"].append("HF")
-            if not hasattr(self, "scfenergies"):
-                self.scfenergies = []
             temp = line.strip().split()
-            scfenergy = float(temp[temp.index("hartrees") - 1])
-            scfenergy = utils.convertor(scfenergy, "hartree", "eV")
-            self.scfenergies.append(scfenergy)
+            self.append_attribute("scfenergies", float(temp[temp.index("hartrees") - 1]))
 
         # Energy after LMP2 correction
         if line[1:18] == "Total LMP2 Energy":
             self.metadata["methods"].append("LMP2")
-            if not hasattr(self, "mpenergies"):
-                self.mpenergies = [[]]
-            lmp2energy = float(line.split()[-1])
-            lmp2energy = utils.convertor(lmp2energy, "hartree", "eV")
-            self.mpenergies[-1].append(lmp2energy)
+            self.append_attribute("mpenergies", [float(line.split()[-1])])
 
         if line[15:45] == "Geometry optimization complete":
-            if not hasattr(self, "optdone"):
-                self.optdone = []
-            self.optdone.append(len(self.geovalues) - 1)
+            self.append_attribute("optdone", len(self.geovalues) - 1)
 
         if line.find("number of occupied orbitals") > 0:
             # Get number of MOs
@@ -355,7 +345,6 @@ class Jaguar(logfileparser.Logfile):
                     syms = [line[2 * i + 1] for i in range(len(line) // 2)]
                 else:
                     energies = [float(e) for e in line]
-                energies = [utils.convertor(e, "hartree", "eV") for e in energies]
                 self.moenergies[spin].extend(energies)
                 if issyms:
                     syms = [self.normalisesym(s) for s in syms]
@@ -711,20 +700,60 @@ class Jaguar(logfileparser.Logfile):
             self.set_attribute(
                 "zpve", utils.convertor(float(line.split()[-2]), "kcal/mol", "hartree")
             )
+            line = next(inputfile)
+            # version >= 6.5
+            if "is not included in" in line:
+                self.skip_lines(inputfile, ["b", "b"])
+                line = next(inputfile)
+                self.set_attribute("temperature", float(line.split()[2]))
+                self.skip_lines(
+                    inputfile,
+                    ["b", "header", "dashes and spaces", "trans.", "rot.", "vib.", "elec."],
+                )
+                line = next(inputfile)
+                self.set_attribute(
+                    "entropy", utils.convertor(float(line.split()[3]) / 1000, "kcal/mol", "hartree")
+                )
+                self.skip_lines(inputfile, ["b", "Total internal energy"])
+                line = next(inputfile)
+                self.set_attribute("enthalpy", float(line.split()[-2]))
+                line = next(inputfile)
+                self.set_attribute("freeenergy", float(line.split()[-2]))
+            else:
+                self.skip_lines(inputfile, ["header", "0K thermo"])
+                tokens = next(inputfile).split()
+                self.set_attribute("temperature", float(tokens[0]))
+                self.set_attribute(
+                    "entropy", utils.convertor(float(tokens[2]) / 1000, "kcal/mol", "hartree")
+                )
+                # For such an old version it looks like only finite difference
+                # via gradient is available, so assume the first SCF energy is
+                # the stationary point.
+                electronic_energy = self.scfenergies[0]
+                self.set_attribute(
+                    "enthalpy",
+                    utils.convertor(float(tokens[3]), "kcal/mol", "hartree")
+                    + self.zpve
+                    + electronic_energy,
+                )
+                self.set_attribute(
+                    "freeenergy",
+                    utils.convertor(float(tokens[4]), "kcal/mol", "hartree")
+                    + self.zpve
+                    + electronic_energy,
+                )
 
         # Parse excited state output (for CIS calculations).
         # Jaguar calculates only singlet states.
         if line[2:15] == "Excited State":
-            if not hasattr(self, "etenergies"):
-                self.etenergies = []
             if not hasattr(self, "etoscs"):
                 self.etoscs = []
             if not hasattr(self, "etsecs"):
                 self.etsecs = []
                 self.etsyms = []
-            etenergy = float(line.split()[3])
-            etenergy = utils.convertor(etenergy, "eV", "wavenumber")
-            self.etenergies.append(etenergy)
+            self.append_attribute(
+                "etenergies", utils.convertor(float(line.split()[3]), "eV", "hartree")
+            )
 
             self.skip_lines(inputfile, ["line", "line", "line", "line"])
 

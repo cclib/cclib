@@ -249,10 +249,7 @@ class Psi3(logfileparser.Logfile):
         # the orbital energies, but the label is different. Psi4 also
         # does DFT, and the label is also different in that case.
         if "* SCF total energy" in line:
-            e = float(line.split()[-1])
-            if not hasattr(self, "scfenergies"):
-                self.scfenergies = []
-            self.scfenergies.append(utils.convertor(e, "hartree", "eV"))
+            self.append_attribute("scfenergies", float(line.split()[-1]))
 
         # We can also get some higher moments in Psi3, although here the dipole is not printed
         # separately and the order is not lexicographical. However, the numbers seem
@@ -310,6 +307,11 @@ class Psi3(logfileparser.Logfile):
             else:
                 assert self.moments[1] == dipole
 
+        # TODO not sure if this line also appears in failed calculations,
+        # since we don't have any to check.
+        if line.strip() == "PSI3 Computation Completed":
+            self.metadata["success"] = True
+
     def _parse_mosyms_moenergies(self, inputfile, spinidx):
         """Parse molecular orbital symmetries and energies from the
         'Post-Iterations' section.
@@ -318,7 +320,6 @@ class Psi3(logfileparser.Logfile):
         while line.strip():
             for i in range(len(line.split()) // 2):
                 self.mosyms[spinidx].append(line.split()[i * 2][-2:])
-                moenergy = utils.convertor(float(line.split()[i * 2 + 1]), "hartree", "eV")
-                self.moenergies[spinidx].append(moenergy)
+                self.moenergies[spinidx].append(float(line.split()[i * 2 + 1]))
             line = next(inputfile)
         return

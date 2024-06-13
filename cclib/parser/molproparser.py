@@ -189,9 +189,7 @@ class Molpro(logfileparser.Logfile):
             while line.strip() != "":
                 if line[:31].rstrip():
                     tokens = line.split()
-                    moenergy = float(tokens[2])
-                    moenergy = utils.convertor(moenergy, "hartree", "eV")
-                    moenergies.append(moenergy)
+                    moenergies.append(float(tokens[2]))
                     if self.naturalorbitals:
                         occno = float(tokens[1])
                         occnos.append(occno)
@@ -491,15 +489,11 @@ class Molpro(logfileparser.Logfile):
             self.scfvalues.append(numpy.array(scfvalues))
 
         if "dispersion correction" in line and line.strip() != "dispersion correction activated":
-            dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
-            self.append_attribute("dispersionenergies", dispersion)
+            self.append_attribute("dispersionenergies", float(line.split()[-1]))
 
         # SCF result - RHF/UHF and DFT (RKS) energies.
         if line[1:5] in ["!RHF", "!UHF", "!RKS"] and line[16:22].lower() == "energy":
-            if not hasattr(self, "scfenergies"):
-                self.scfenergies = []
-            scfenergy = float(line.split()[4])
-            self.scfenergies.append(utils.convertor(scfenergy, "hartree", "eV"))
+            self.append_attribute("scfenergies", float(line.split()[4]))
 
             # We are now done with SCF cycle (after a few lines).
             self.insidescf = False
@@ -507,29 +501,19 @@ class Molpro(logfileparser.Logfile):
         # MP2 energies.
         if line[1:5] == "!MP2":
             self.metadata["methods"].append("MP2")
-
-            if not hasattr(self, "mpenergies"):
-                self.mpenergies = []
-            mp2energy = float(line.split()[-1])
-            mp2energy = utils.convertor(mp2energy, "hartree", "eV")
-            self.mpenergies.append([mp2energy])
+            self.append_attribute("mpenergies", [float(line.split()[-1])])
 
         # MP2 energies if MP3 or MP4 is also calculated.
         if line[1:5] == "MP2:":
             self.metadata["methods"].append("MP2")
-            if not hasattr(self, "mpenergies"):
-                self.mpenergies = []
-            mp2energy = float(line.split()[2])
-            mp2energy = utils.convertor(mp2energy, "hartree", "eV")
-            self.mpenergies.append([mp2energy])
+            self.append_attribute("mpenergies", [float(line.split()[2])])
 
         # MP3 (D) and MP4 (DQ or SDQ) energies.
         if line[1:8] == "MP3(D):":
             self.metadata["methods"].append("MP3")
             mp3energy = float(line.split()[2])
-            mp2energy = utils.convertor(mp3energy, "hartree", "eV")
             line = next(inputfile)
-            self.mpenergies[-1].append(mp2energy)
+            self.mpenergies[-1].append(mp3energy)
             if line[1:9] == "MP4(DQ):":
                 self.metadata["methods"].append("MP4")
                 mp4energy = float(line.split()[2])
@@ -537,23 +521,19 @@ class Molpro(logfileparser.Logfile):
                 if line[1:10] == "MP4(SDQ):":
                     self.metadata["methods"].append("MP4")
                     mp4energy = float(line.split()[2])
-                mp4energy = utils.convertor(mp4energy, "hartree", "eV")
                 self.mpenergies[-1].append(mp4energy)
 
         # The CCSD program operates all closed-shel coupled cluster runs.
         if line[1:15] == "PROGRAM * CCSD":
             self.metadata["methods"].append("CCSD")
-            if not hasattr(self, "ccenergies"):
-                self.ccenergies = []
             while line[1:20] != "Program statistics:":
                 if line[71:84] == "T1 diagnostic":
                     self.metadata["t1_diagnostic"] = float(line.split()[-1])
                 # The last energy (most exact) will be read last and thus saved.
                 if line[1:5] == "!CCD" or line[1:6] == "!CCSD" or line[1:9] == "!CCSD(T)":
                     ccenergy = float(line.split()[-1])
-                    ccenergy = utils.convertor(ccenergy, "hartree", "eV")
                 line = next(inputfile)
-            self.ccenergies.append(ccenergy)
+            self.append_attribute("ccenergies", ccenergy)
 
         # Read the occupancy (index of HOMO s).
         # For restricted calculations, there is one line here. For unrestricted, two:

@@ -1,4 +1,3 @@
-start dvb
 title "Divinylbenzene in STO-3G basis set"
 
 geometry units angstroms
@@ -42,6 +41,5 @@ DFT
    iterations 120
    mult 1
    direct
-   print none
 END
 task DFT FREQUENCIES

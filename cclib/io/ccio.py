@@ -178,7 +178,10 @@ def ccopen(
 #             try:
 #                 import openbabel.pybel as pb
 #             except:
-#                 import pybel as pb
+#                 try:
+#                     import pybel as pb
+#                 except:
+#                     return
 #             if ext in pb.informats:
 #                 return cclib2openbabel.readfile(source, ext)
 #         else:

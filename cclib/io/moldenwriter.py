@@ -184,7 +184,7 @@ class MOLDEN(filewriter.Writer):
             for j in range(len(mooccs[i])):
                 restricted_spin_idx = i % len(mocoeffs)
                 lines.append(" Sym= {}".format(mosyms[restricted_spin_idx][j]))
-                moenergy = utils.convertor(moenergies[restricted_spin_idx][j], "eV", "hartree")
+                moenergy = moenergies[restricted_spin_idx][j]
                 lines.append(" Ene= {:10.4f}".format(moenergy))
                 lines.append(" Spin= {}".format(spin))
                 lines.append(" Occup= {:10.6f}".format(mooccs[i][j]))

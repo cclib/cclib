@@ -33,7 +33,7 @@ class moenergies(base_parser):
                             x = utils.float(s)
                         except ValueError:
                             x = np.nan
-                        constructed_moenergies[0].append(utils.convertor(x, "hartree", "eV"))
+                        constructed_moenergies[0].append(x)
                         i += 1
                     line = file_handler.virtual_next()
                 if line.find("Beta") == 2:
@@ -44,9 +44,7 @@ class moenergies(base_parser):
                     i = 0
                     while i * 10 + 4 < len(part):
                         x = part[i * 10 : (i + 1) * 10]
-                        constructed_moenergies[1].append(
-                            utils.convertor(utils.float(x), "hartree", "eV")
-                        )
+                        constructed_moenergies[1].append(utils.float(x))
                         i += 1
                     line = file_handler.virtual_next()
 
