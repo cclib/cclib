@@ -39,19 +39,19 @@ jobs:
       - name: Prepare conda environment
         run: |
           echo "/opt/conda/envs/cclib/bin" >> "${GITHUB_PATH}"
-      - name: Build docs
-        run: cd doc && make default
-      - name: Make a no jekyll file
-        run: touch doc/sphinx/_build/html/.nojekyll
-      - name: Pushes to another repository
-        id: push_directory
-        uses: cpina/github-action-push-to-another-repository@main
-        env:
-          SSH_DEPLOY_KEY: ${{ secrets.CCLIB_DOCS_KEY }}
-        with:
-          source-directory: doc/sphinx/_build/html
-          destination-github-username: 'cclib'
-          destination-repository-name: 'cclib.github.io'
-          commit-message: See ORIGIN_COMMIT from $GITHUB_REF
-          target-branch: master
-        if: github.ref == 'refs/heads/master'
+      # - name: Build docs
+      #   run: cd doc && make default
+      # - name: Make a no jekyll file
+      #   run: touch doc/sphinx/_build/html/.nojekyll
+      # - name: Pushes to another repository
+      #   id: push_directory
+      #   uses: cpina/github-action-push-to-another-repository@main
+      #   env:
+      #     SSH_DEPLOY_KEY: ${{ secrets.CCLIB_DOCS_KEY }}
+      #   with:
+      #     source-directory: doc/sphinx/_build/html
+      #     destination-github-username: 'cclib'
+      #     destination-repository-name: 'cclib.github.io'
+      #     commit-message: See ORIGIN_COMMIT from $GITHUB_REF
+      #     target-branch: master
+      #   if: github.ref == 'refs/heads/master'
