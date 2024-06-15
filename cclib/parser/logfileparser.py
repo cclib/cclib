@@ -13,7 +13,7 @@ from abc import ABC, abstractmethod
 from typing import Any, Iterable, List, Optional
 
 from cclib.parser import utils
-from cclib.parser.data import ccData, ccData_optdone_bool
+from cclib.parser.data import ccData
 from cclib.parser.logfilewrapper import FileWrapper
 
 import numpy
@@ -39,7 +39,7 @@ class Logfile(ABC):
         loglevel: int = logging.ERROR,
         logname: str = "Log",
         logstream=sys.stderr,
-        datatype=ccData_optdone_bool,
+        datatype=ccData,
         **kwds,
     ):
         """Initialise the Logfile object.
@@ -77,11 +77,7 @@ class Logfile(ABC):
 
         # Set up the metadata.
         if not hasattr(self, "metadata"):
-            self.metadata = {}
-            self.metadata["package"] = self.logname
-            self.metadata["methods"] = []
-            # Indicate if the computation has completed successfully
-            self.metadata["success"] = False
+            self.metadata = {"package": self.logname, "methods": []}
 
         # Periodic table of elements.
         self.table = utils.PeriodicTable()
@@ -90,14 +86,9 @@ class Logfile(ABC):
         # normally be ccData or a subclass of it.
         self.datatype = datatype
 
-        # Change the class used if we want optdone to be a list or if the 'future' option
-        # is used, which might have more consequences in the future.
-        optdone_as_list = kwds.get("optdone_as_list", False) or kwds.get("future", False)
-        optdone_as_list = optdone_as_list if isinstance(optdone_as_list, bool) else False
-        if optdone_as_list:
-            self.datatype = ccData
+        self.future = kwds.get("future", False)
         # Parsing of Natural Orbitals and Natural Spin Orbtials into one attribute
-        self.unified_no_nso = kwds.get("future", False)
+        self.unified_no_nso = self.future
 
     @property
     def filename(self):
@@ -229,7 +220,13 @@ class Logfile(ABC):
 
     def after_parsing(self) -> None:
         """Correct data or do parser-specific validation after parsing is finished."""
-        pass
+        if (
+            hasattr(self, "enthalpy")
+            and hasattr(self, "entropy")
+            and hasattr(self, "temperature")
+            and not hasattr(self, "freeenergy")
+        ):
+            self.set_attribute("freeenergy", self.enthalpy - self.entropy * self.temperature)
 
     def updateprogress(self, inputfile, msg: str, xupdate: float = 0.05) -> None:
         """Update progress."""

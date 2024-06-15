@@ -16,8 +16,11 @@ jobs:
   unit-tests:
     uses: ./.github/workflows/test_and_package.yml
     secrets: inherit
+  docs:
+    uses: ./.github/workflows/docs.yml
+    secrets: inherit
   publish:
-    needs: [nix, unit-tests]
+    needs: [nix, unit-tests, docs]
     uses: ./.github/workflows/publish.yml
   all:
     needs: [unit-tests, publish]

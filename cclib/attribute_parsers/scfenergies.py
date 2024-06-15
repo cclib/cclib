@@ -20,7 +20,7 @@ class scfenergies(base_parser):
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
         if line[1:9] == "SCF Done":
-            constructed_data = utils.convertor(utils.float(line.split()[4]), "hartree", "eV")
+            constructed_data = utils.float(line.split()[4])
             return {scfenergies.__name__: [constructed_data]}
         return None
 
@@ -28,8 +28,7 @@ class scfenergies(base_parser):
     def psi4(file_handler, ccdata) -> Optional[dict]:
         line = file_handler.last_line
         if "Final Energy" in line:
-            print("made it here")
-            constructed_data = utils.convertor(utils.float(line.split()[-1]), "hartree", "eV")
+            constructed_data = float(line.split()[3])
             return {scfenergies.__name__: [constructed_data]}
         return None
 

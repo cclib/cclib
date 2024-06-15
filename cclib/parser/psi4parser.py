@@ -581,15 +581,11 @@ class Psi4(logfileparser.Logfile):
             and "Final Energy:" in line
             and not hasattr(self, "finite_difference")
         ):
-            e = float(line.split()[3])
-            if not hasattr(self, "scfenergies"):
-                self.scfenergies = []
-            self.scfenergies.append(utils.convertor(e, "hartree", "eV"))
+            self.append_attribute("scfenergies", float(line.split()[3]))
 
         if self.subsection == "Energetics":
             if "Empirical Dispersion Energy" in line:
-                dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
-                self.append_attribute("dispersionenergies", dispersion)
+                self.append_attribute("dispersionenergies", float(line.split()[-1]))
 
         #   ==> Molecular Orbitals <==
         #
@@ -695,30 +691,22 @@ class Psi4(logfileparser.Logfile):
         mp_trigger = "MP2 Total Energy (a.u.)"
         if line.strip()[: len(mp_trigger)] == mp_trigger:
             self.metadata["methods"].append("MP2")
-            mpenergy = utils.convertor(float(line.split()[-1]), "hartree", "eV")
-            if not hasattr(self, "mpenergies"):
-                self.mpenergies = []
-            self.mpenergies.append([mpenergy])
+            self.append_attribute("mpenergies", [float(line.split()[-1])])
         # This is for the newer DF-MP2 code in 4.0.
         if "DF-MP2 Energies" in line:
             self.metadata["methods"].append("DF-MP2")
             while "Total Energy" not in line:
                 line = next(inputfile)
-            mpenergy = utils.convertor(float(line.split()[3]), "hartree", "eV")
-            if not hasattr(self, "mpenergies"):
-                self.mpenergies = []
-            self.mpenergies.append([mpenergy])
+            self.append_attribute("mpenergies", [float(line.split()[3])])
 
         if line.lstrip().startswith(self.ccsd_trigger):
             self.metadata["methods"].append("CCSD")
-            ccsd_energy = utils.convertor(float(line.split()[-1]), "hartree", "eV")
-            self.append_attribute("ccenergies", ccsd_energy)
+            self.append_attribute("ccenergies", float(line.split()[-1]))
 
         if line.strip().startswith(self.ccsd_t_trigger):
             assert self.metadata["methods"][-1] == "CCSD"
             self.metadata["methods"].append("CCSD(T)")
-            ccsd_t_energy = utils.convertor(float(line.split()[-1]), "hartree", "eV")
-            self.ccenergies[-1] = ccsd_t_energy
+            self.ccenergies[-1] = float(line.split()[-1])
 
         # The geometry convergence targets and values are printed in a table, with the legends
         # describing the convergence annotation. Probably exact slicing of the line needs
@@ -1033,16 +1021,13 @@ class Psi4(logfileparser.Logfile):
                 assert abs(vibfreq - _vibfreq) < 1.0e-2
                 line = next(inputfile)
                 assert "Force constant:" in line
-                if not hasattr(self, "vibfconsts"):
-                    self.vibfconsts = []
-                self.vibfconsts.append(
-                    utils.convertor(float(line.split()[2]), "hartree/bohr2", "mDyne/angstrom")
+                self.append_attribute(
+                    "vibfconsts",
+                    utils.convertor(float(line.split()[2]), "hartree/bohr2", "mDyne/angstrom"),
                 )
                 line = next(inputfile)
                 assert "X       Y       Z           mass" in line
                 line = next(inputfile)
-                if not hasattr(self, "vibdisps"):
-                    self.vibdisps = []
                 normal_mode_disps = []
                 # for k in range(self.natom):
                 while line.strip():
@@ -1054,7 +1039,7 @@ class Psi4(logfileparser.Logfile):
                     atommass = float(chomp[4])
                     normal_mode_disps.append(atomcoords)
                     line = next(inputfile)
-                self.vibdisps.append(normal_mode_disps)
+                self.append_attribute("vibdisps", normal_mode_disps)
                 line = next(inputfile)
 
         # NEW Normal mode output parser (PSI4 >= 1)
@@ -1067,7 +1052,10 @@ class Psi4(logfileparser.Logfile):
         #   Vibration                       10                  11                  12
         #   ...
 
-        if line.strip() == "==> Harmonic Vibrational Analysis <==":
+        if (
+            self.section == "Harmonic Vibrational Analysis"
+            and "Harmonic Vibrational Analysis" in line
+        ):
             vibsyms = []
             vibfreqs = []
             vibdisps = []
@@ -1079,11 +1067,12 @@ class Psi4(logfileparser.Logfile):
             while not line.strip().startswith("Vibration"):
                 line = next(inputfile)
 
-            n_modes = 0
+            n_modes = 3 * len(self.atomnos) - 6
+            n_modes_counter = 0
             # Parse all the Vibration blocks
-            while line.strip().startswith("Vibration"):
+            while True:
                 n = len(line.split()) - 1
-                n_modes += n
+                n_modes_counter += n
                 (vibfreqs_, vibsyms_, vibdisps_, vibrmasses_, vibfconsts_, vibirs_) = (
                     self.parse_vibration(n, inputfile)
                 )
@@ -1093,7 +1082,10 @@ class Psi4(logfileparser.Logfile):
                 vibrmasses.extend(vibrmasses_)
                 vibfconsts.extend(vibfconsts_)
                 vibirs.extend(vibirs_)
-                line = next(inputfile)
+                if n_modes_counter < n_modes:
+                    line = next(inputfile)
+                else:
+                    break
 
             # It looks like the symmetry of the normal mode may be missing
             # from some / most. Only include them if they are there for all
@@ -1116,6 +1108,24 @@ class Psi4(logfileparser.Logfile):
             if len(vibirs) == n_modes:
                 self.set_attribute("vibirs", vibirs)
 
+        if (self.section == "Components" and "Components" in line) or (
+            self.section == "Thermochemistry Components" and "Thermochemistry Components" in line
+        ):
+            self.skip_lines(
+                inputfile,
+                [
+                    "b",
+                    "Entropy S",
+                    "Electronic S",
+                    "Translational S",
+                    "Rotational S",
+                    "Vibrational S",
+                ],
+            )
+            line = next(inputfile)
+            assert "Total S" in line
+            self.set_attribute("entropy", float(line.split()[8]) / 1.0e3)
+
         # Second one is 1.0, first one is 1.2 and newer
         if (
             self.section == "Thermochemistry Energy Analysis"
@@ -1137,6 +1147,50 @@ class Psi4(logfileparser.Logfile):
             line = next(inputfile)
             assert "Vibrational ZPE" in line
             self.set_attribute("zpve", float(line.split()[6]))
+            self.skip_lines(
+                inputfile,
+                [
+                    "Correction ZPE",
+                    "Total ZPE",
+                    "b",
+                    "Thermal Energy, E (includes ZPE)",
+                    "Electronic E",
+                    "Translational E",
+                    "Rotational E",
+                    "Vibrational E",
+                    "Correction E",
+                    "Total E, Electronic energy",
+                    "b",
+                    "Enthalpy, H_trans = E_trans + k_B * T",
+                    "Electronic H",
+                    "Translational H",
+                    "Rotational H",
+                    "Vibrational H",
+                    "Correction H",
+                ],
+            )
+            line = next(inputfile)
+            assert "Total H, Enthalpy" in line
+            tokens = line.split()
+            self.set_attribute("temperature", float(tokens[4]))
+            self.set_attribute("enthalpy", float(tokens[6]))
+            self.skip_lines(
+                inputfile,
+                [
+                    "b",
+                    "Gibbs free energy, G = H - T * S",
+                    "Electronic G",
+                    "Translational G",
+                    "Rotational G",
+                    "Vibrational G",
+                    "Correction G",
+                ],
+            )
+            line = next(inputfile)
+            assert "Total G, Free enthalpy" in line
+            tokens = line.split()
+            self.set_attribute("temperature", float(tokens[5]))
+            self.set_attribute("freeenergy", float(tokens[7]))
 
         # If finite difference is used to compute forces (i.e. by displacing
         # slightly all the atoms), a series of additional scf calculations is
@@ -1160,10 +1214,7 @@ class Psi4(logfileparser.Logfile):
                     self.metadata["t1_diagnostic"] = value
                 line = next(inputfile)
 
-        if (
-            line[:54] == "*** Psi4 exiting successfully. Buy a developer a beer!"
-            or line[:54] == "*** PSI4 exiting successfully. Buy a developer a beer!"
-        ):
+        if line[7:54] == "4 exiting successfully. Buy a developer a beer!":
             self.metadata["success"] = True
 
     def _parse_mosyms_moenergies(self, inputfile, spinidx):
@@ -1174,7 +1225,7 @@ class Psi4(logfileparser.Logfile):
         while line.strip():
             for i in range(len(line.split()) // 2):
                 self.mosyms[spinidx].append(line.split()[i * 2][-2:])
-                moenergy = utils.convertor(float(line.split()[i * 2 + 1]), "hartree", "eV")
+                moenergy = float(line.split()[i * 2 + 1])
                 self.moenergies[spinidx].append(moenergy)
             line = next(inputfile)
         return

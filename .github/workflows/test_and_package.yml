@@ -44,7 +44,7 @@ jobs:
           git config --global --add safe.directory /__w/cclib/cclib
       - name: Prepare conda environment
         run: |
-          echo "/opt/conda/envs/cclib/bin" >> $GITHUB_PATH
+          echo "/opt/conda/envs/cclib/bin" >> "${GITHUB_PATH}"
       - name: Install cclib
         run: |
           python -m pip install .
@@ -73,6 +73,7 @@ jobs:
           verbose: false
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        if: matrix.container == 'shivupa/cclib-ci:py311-edge'
       - name: Install pypa/build
         run: |
           python -m pip install build
@@ -130,4 +131,4 @@ jobs:
         run: |
           cd ~
           python -c 'import cclib; print(cclib.__version__)'
-          python -c 'from cclib.io import ccread; data = ccread("https://raw.githubusercontent.com/amandadumi/cclib/master/data/Gaussian/basicGaussian16/dvb_sp.out"); print(data[0].scfenergies)'
+          python -c 'from cclib.io import ccread; data = ccread("https://raw.githubusercontent.com/cclib/cclib/main/data/Gaussian/basicGaussian16/dvb_sp.out"); print(data[0].scfenergies)'

@@ -13,7 +13,8 @@ class GenericTDTest:
     """Generic time-dependent HF/DFT unittest"""
 
     number = 5
-    expected_l_max = 41000
+    # ???
+    expected_l_max = 0.18680974536292055
     expected_f_max = 0.67
     symmetries = ["Singlet-Bu", "Singlet-Bu", "Singlet-Ag", "Singlet-Bu", "Singlet-Ag"]
     sumofsec = 1.0
@@ -43,7 +44,7 @@ class GenericTDTest:
         # Note that if all oscillator strengths are zero (like for triplets)
         # then this will simply pick out the first energy.
         idx_lambdamax = numpy.argmax(data.etoscs)
-        assert abs(data.etenergies[idx_lambdamax] - self.expected_l_max) < 5000
+        assert abs(data.etenergies[idx_lambdamax] - self.expected_l_max) < 0.022781676263770798
 
     @skipForLogfile(
         "Turbomole/basicTurbomole7.4/CO_cc2_TD_trip",
@@ -167,7 +168,7 @@ class DALTONTDTest(GenericTDTest):
 class GaussianTDDFTTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
 
-    expected_l_max = 48000
+    expected_l_max = 0.21870409213219966
 
     @skipForLogfile(
         "FChk/basicGaussian09", "etrotats are not available in fchk, only the main logfile"
@@ -201,7 +202,7 @@ class GAMESSUSTDDFTTest(GenericTDTest):
 class JaguarTDDFTTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
 
-    expected_l_max = 48000
+    expected_l_max = 0.21870409213219966
     expected_f_max = 1.2
 
     def testoscs(self, data) -> None:
@@ -214,7 +215,7 @@ class OrcaTDDFTTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
 
     number = 10
-    expected_l_max = 48000
+    expected_l_max = 0.21870409213219966
     symmetries = [
         "Triplet-Bu",
         "Triplet-Ag",
@@ -239,7 +240,7 @@ class QChemTDDFTTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
 
     number = 10
-    expected_l_max = 48000
+    expected_l_max = 0.21870409213219966
     expected_f_max = 0.9
 
     def testoscs(self, data) -> None:
@@ -252,7 +253,7 @@ class GenericTDDFTtrpTest(GenericTDTest):
     """Generic time-dependent HF/DFT (triplet) unittest"""
 
     number = 5
-    expected_l_max = 24500
+    expected_l_max = 0.11163021369247692
 
     def testoscs(self, data) -> None:
         """Triplet excitations should be disallowed."""
@@ -264,7 +265,7 @@ class OrcaROCISTest(GenericTDTest):
     """Customized test for ROCIS"""
 
     number = 4
-    expected_l_max = 2316970.8
+    expected_l_max = 10.55689555
     expected_f_max = 0.015
     # per 1085, no VELOCITY DIPOLE MOMENTS are parsed
     n_spectra = 7
@@ -308,7 +309,7 @@ class TurbomoleTDTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
 
     number = 10
-    expected_l_max = 91432
+    expected_l_max = 0.4165966608093103
     expected_f_max = 0.19
     symmetries = ["Singlet-A"] * 10
 
@@ -327,7 +328,7 @@ class TurbomoleTDADC2Test(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
 
     number = 10
-    expected_l_max = 136329
+    expected_l_max = 0.6211579
     expected_f_max = 0.8
     symmetries = ["Singlet-A"] * 10
     method = "ADC(2)"
@@ -343,7 +344,7 @@ class TurbomoleTDTripTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
 
     number = 10
-    expected_l_max = 51530
+    expected_l_max = 0.2347872184128124
     expected_f_max = 0.84
     symmetries = ["Triplet-A"] * 10
     method = "RPA"
@@ -374,7 +375,7 @@ class OrcaETPostHFTest(GenericTDTest):
     number = 2
     symmetries = ["Singlet", "Singlet"]
     expected_f_max = 1.0
-    expected_l_max = 60000
+    expected_l_max = 0.27338011516524957
     # Not sure why this value != 1 for these methods?
     # Perhaps remaining contributions were too small to print?
     sumofsec = 0.43
@@ -396,7 +397,7 @@ class GaussianEOMCCSDTest(GenericTDTest):
     """Test for EOM-CCSD with Gaussian."""
 
     number = 10
-    expected_l_max = 61514.3
+    expected_l_max = 0.2802797426880702
     expected_f_max = 0.9802
     symmetries = [
         "Triplet-Bu",

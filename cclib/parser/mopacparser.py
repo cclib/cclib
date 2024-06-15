@@ -145,13 +145,13 @@ class MOPAC(logfileparser.Logfile):
             mult = self.spinstate[line.split()[1]]
             self.set_attribute("mult", mult)
 
-        # Read energy (in kcal/mol, converted to eV)
+        # Read energy (in kcal/mol)
         #
         # FINAL HEAT OF FORMATION =       -333.88606 KCAL =   -1396.97927 KJ
         if "FINAL HEAT OF FORMATION =" in line:
-            if not hasattr(self, "scfenergies"):
-                self.scfenergies = []
-            self.scfenergies.append(utils.convertor(utils.float(line.split()[5]), "kcal/mol", "eV"))
+            self.append_attribute(
+                "scfenergies", utils.convertor(utils.float(line.split()[5]), "kcal/mol", "hartree")
+            )
 
         # Molecular mass parsing (units will be amu)
         #
@@ -250,5 +250,5 @@ class MOPAC(logfileparser.Logfile):
         # Example:
         # NET ATOMIC CHARGES
 
-        if line[:16] == "== MOPAC DONE ==":
+        if line[1:17] == "== MOPAC DONE ==":
             self.metadata["success"] = True

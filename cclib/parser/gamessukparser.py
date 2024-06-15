@@ -389,10 +389,7 @@ class GAMESSUK(logfileparser.Logfile):
             self.scfvalues.append(scfvalues)
 
         if line[10:22] == "total energy" and len(line.split()) == 3:
-            if not hasattr(self, "scfenergies"):
-                self.scfenergies = []
-            scfenergy = utils.convertor(float(line.split()[-1]), "hartree", "eV")
-            self.scfenergies.append(scfenergy)
+            self.append_attribute("scfenergies", float(line.split()[-1]))
 
         # Total energies after Moller-Plesset corrections
         # Second order correction is always first, so its first occurance
@@ -409,11 +406,11 @@ class GAMESSUK(logfileparser.Logfile):
             self.mpenergies.append([])
             self.mp2correction = utils.float(line.split()[-1])
             self.mp2energy = self.scfenergies[-1] + self.mp2correction
-            self.mpenergies[-1].append(utils.convertor(self.mp2energy, "hartree", "eV"))
+            self.mpenergies[-1].append(self.mp2energy)
         if line[10:41] == "third order perturbation energy":
             self.mp3correction = utils.float(line.split()[-1])
             self.mp3energy = self.mp2energy + self.mp3correction
-            self.mpenergies[-1].append(utils.convertor(self.mp3energy, "hartree", "eV"))
+            self.mpenergies[-1].append(self.mp3energy)
 
         if line[40:59] == "molecular basis set":
             self.gbasis = []
@@ -613,7 +610,7 @@ class GAMESSUK(logfileparser.Logfile):
 
             while line.strip() and line != equals:  # May end with a blank or equals
                 temp = line.strip().split()
-                moenergies.append(utils.convertor(float(temp[2]), "hartree", "eV"))
+                moenergies.append(float(temp[2]))
                 line = next(inputfile)
             self.nmo = len(moenergies)
             if self.betamoenergies:
