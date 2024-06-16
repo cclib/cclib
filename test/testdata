@@ -102,12 +102,12 @@ BOMD      QChem       GenericBOMDTest       basicQChem5.4         dvb_bomd.out
 # CC        ORCA        OrcaCCSDPTTest        basicORCA4.2          water_ccsd_t.out
 # CC        ORCA        OrcaCCSDTest          basicORCA5.0          water_ccsd.out
 # CC        ORCA        OrcaCCSDPTTest        basicORCA5.0          water_ccsd_t.out
-# CC        Psi4        Psi4CCSDTest          basicPsi4-1.2.1       water_ccsd.out
-# CC        Psi4        Psi4CCSDPTTest        basicPsi4-1.2.1       water_ccsd(t).out
-# CC        Psi4        Psi4CCSDTest          basicPsi4-1.3.1       water_ccsd.out
-# CC        Psi4        Psi4CCSDPTTest        basicPsi4-1.3.1       water_ccsd(t).out
-# CC        Psi4        Psi4CCSDTest          basicPsi4-1.7         water_ccsd.out
-# CC        Psi4        Psi4CCSDPTTest        basicPsi4-1.7         water_ccsd(t).out
+CC        Psi4        Psi4CCSDTest          basicPsi4-1.2.1       water_ccsd.out
+CC        Psi4        Psi4CCSDPTTest        basicPsi4-1.2.1       water_ccsd(t).out
+CC        Psi4        Psi4CCSDTest          basicPsi4-1.3.1       water_ccsd.out
+CC        Psi4        Psi4CCSDPTTest        basicPsi4-1.3.1       water_ccsd(t).out
+CC        Psi4        Psi4CCSDTest          basicPsi4-1.7         water_ccsd.out
+CC        Psi4        Psi4CCSDPTTest        basicPsi4-1.7         water_ccsd(t).out
 # CC        QChem       GenericCCDTest        basicQChem5.1         water_ccd.out
 # CC        QChem       GenericCCSDTest       basicQChem5.1         water_ccsd.out
 # CC        QChem       GenericCCSDPTTest     basicQChem5.1         water_ccsd(t).out

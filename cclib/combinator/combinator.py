@@ -19,6 +19,8 @@ DEFAULT_PARSERS = [
     cprops.atomcharges,
     cprops.atomnos,
     cprops.charge,
+    cprops.ccenergies,
+    cprops.dispersionenergies,
     cprops.mult,
     cprops.moenergies,
     cprops.natom,

@@ -10,9 +10,11 @@ from cclib.attribute_parsers.atomcoords import atomcoords
 from cclib.attribute_parsers.atommasses import atommasses
 from cclib.attribute_parsers.atomnos import atomnos
 from cclib.attribute_parsers.base_parser import base_parser
+from cclib.attribute_parsers.ccenergies import ccenergies
 from cclib.attribute_parsers.charge import charge
 from cclib.attribute_parsers.coreelectrons import coreelectrons
 from cclib.attribute_parsers.data import ccData
+from cclib.attribute_parsers.dispersionenergies import dispersionenergies
 from cclib.attribute_parsers.gbasis import gbasis
 from cclib.attribute_parsers.mocoeffs import mocoeffs
 from cclib.attribute_parsers.moenergies import moenergies
