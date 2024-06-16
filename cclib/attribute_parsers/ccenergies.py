@@ -29,8 +29,8 @@ class ccenergies(base_parser):
             return {ccenergies.__name__: np.array(this_ccenergies)}
         if line.strip().startswith(ccsd_t_trigger):
             # Not sure how to deal with metadata  yet
-            #assert ccdata.metadata["methods"][-1] == "CCSD"
-            #self.metadata["methods"].append("CCSD(T)")
+            # assert ccdata.metadata["methods"][-1] == "CCSD"
+            # self.metadata["methods"].append("CCSD(T)")
             this_ccenergies[-1] = float(line.split()[-1])
             return {ccenergies.__name__: np.array(this_ccenergies)}
         return None
