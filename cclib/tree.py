@@ -2,52 +2,41 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
-from abc import ABC
+from dataclasses import dataclass, field
+from typing import List, Optional
 
 
-# in case we have other types of graphs
-class basetree(ABC):
-    """Base class for trees"""
+@dataclass
+class Tree:
+    _root_node: Optional[int] = None
+    _children: List[List[int]] = field(default_factory=list)
+    _parent: List[Optional[int]] = field(default_factory=list)
+    _visited_children_idx: List[int] = field(default_factory=list)
+    _curr_node_idx: Optional[int] = None
 
-    # @abc.abstractmethod
-    # def to_be_defined():
-    #    pass
+    num_nodes: int = 0
 
-
-class Tree(basetree):
-    _root_node = None
-    _children = []
-    _parent = []
-    _visited_children_idx = []
-    _curr_node_idx = None
-
-    num_nodes = 0
-
-    def __init__(self):
-        pass
-
-    # list init?
-    def add_root(self):
+    def add_root(self) -> None:
         self._root_node = 0
         self.num_nodes += 1
         self._children.append([])
         self._parent.append(None)
         self._visited_children_idx.append(0)
 
-    def add_child(self, idx):
+    def add_child(self, idx: int) -> None:
         self._children[idx].append(self.num_nodes)
         self._parent.append(idx)
         self._children.append([])
         self.num_nodes += 1
 
-    def get_root_idx(self):
+    def get_root_idx(self) -> Optional[int]:
         return self._root_node
 
-    def get_children_idx(self, idx):
+    def get_children_idx(self, idx: int) -> List[int]:
         """Returns the index of all the children"""
         return self._children[idx]
 
-    def get_parent_idxs(self, idx):
+    def get_parent_idxs(self, idx: int) -> List[int]:
         """Returns all parents of a node"""
         parents = []
         curr_par = self._parent[idx]
@@ -55,13 +44,13 @@ class Tree(basetree):
             return parents
         else:
             parents.append(curr_par)
-        while curr_par != None:
+        while curr_par is not None:
             curr_par = self._parent[curr_par]
             if curr_par is not None:
                 parents.append(curr_par)
         return parents
 
-    def get_next_idx(self, idx=None):
+    def get_next_idx(self, idx: Optional[int] = None) -> Optional[int]:
         """Returns the index of the next node to visit in a depth first search"""
         if self._curr_node_idx is None:
             # just starting the walk, start at root
@@ -73,9 +62,8 @@ class Tree(basetree):
 
         # try to go deeper on current node
         curr_node_children = self.get_children_idx(self._curr_node_idx)
-        if len(curr_node_children) != 0 and self._visited_children_idx[self._curr_node_idx] != len(
-            curr_node_children
-        ):
+        nchildren = len(curr_node_children)
+        if nchildren and self._visited_children_idx[self._curr_node_idx] != nchildren:
             new_node_idx = curr_node_children[self._visited_children_idx[self._curr_node_idx]]
             self._visited_children_idx[self._curr_node_idx] += 1
             self._curr_node_idx = new_node_idx
