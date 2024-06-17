@@ -13,21 +13,23 @@ class Tree:
     _parent: List[Optional[int]] = field(default_factory=list)
     _visited_children_idx: List[int] = field(default_factory=list)
     _curr_node_idx: Optional[int] = None
+    _num_nodes: int = 0
 
-    num_nodes: int = 0
+    def __len__(self) -> int:
+        return self._num_nodes
 
     def add_root(self) -> None:
         self._root_node = 0
-        self.num_nodes += 1
+        self._num_nodes += 1
         self._children.append([])
         self._parent.append(None)
         self._visited_children_idx.append(0)
 
     def add_child(self, idx: int) -> None:
-        self._children[idx].append(self.num_nodes)
+        self._children[idx].append(self._num_nodes)
         self._parent.append(idx)
         self._children.append([])
-        self.num_nodes += 1
+        self._num_nodes += 1
 
     def get_root_idx(self) -> Optional[int]:
         return self._root_node

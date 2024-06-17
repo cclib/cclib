@@ -12,7 +12,7 @@ class TreeTest:
     def test_tree_init(self) -> None:
         """Create a new tree but don't add anything to it (no nodes)"""
         tree = Tree()
-        assert tree.num_nodes == 0
+        assert len(tree) == 0
         assert tree.get_root_idx() is None
         assert tree.get_next_idx() is None
         # repeated call doesn't change state
@@ -22,7 +22,7 @@ class TreeTest:
         """Tree with only a root node"""
         tree = Tree()
         tree.add_root()
-        assert tree.num_nodes == 1
+        assert len(tree) == 1
         root_idx = tree.get_root_idx()
         assert root_idx == 0
         # TODO doesn't seem correct
@@ -49,7 +49,7 @@ class TreeTest:
         assert tree.get_children_idx(root_idx) == []
         tree.add_child(root_idx)
         assert tree.get_children_idx(root_idx) == [1]
-        assert tree.num_nodes == 2
+        assert len(tree) == 2
         # TODO doesn't seem correct
         assert tree.get_next_idx() == 0
         # ah, it's the iterator
@@ -71,7 +71,7 @@ class TreeTest:
         assert tree.get_children_idx(root_idx) == [1]
         tree.add_child(root_idx)
         assert tree.get_children_idx(root_idx) == [1, 2]
-        assert tree.num_nodes == 3
+        assert len(tree) == 3
         assert tree.get_next_idx() == 0
         assert tree.get_next_idx() == 1
         assert tree.get_next_idx() == 2
@@ -97,7 +97,7 @@ class TreeTest:
         tree.add_child(1)
         assert tree.get_children_idx(root_idx) == [1]
         assert tree.get_children_idx(1) == [2]
-        assert tree.num_nodes == 3
+        assert len(tree) == 3
         assert tree.get_next_idx() == 0
         assert tree.get_next_idx() == 1
         # list index out of range

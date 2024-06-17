@@ -29,7 +29,7 @@ class ccCollection:
 
         self._combinator = combinator
         self._tree = tree
-        self._parsed_data = [ccData() for i in range(self._tree.num_nodes)]
+        self._parsed_data = [ccData() for i in range(len(self._tree))]
         # [
         #         [attrparser1, attrparser2, attrparser3, etc]
         # ]
