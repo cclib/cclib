@@ -167,7 +167,8 @@ def _makecclib(
         'package': "PySCF",
         'package_version': pyscf.__version__,
         # TODO: What if using a non-standard basis set?
-        'basis_set': mol.basis,
+        #'basis_set': mol.basis,
+        'basis_set': ", ".join(set(mol.basis.values())),
         'methods': []
     }
     
