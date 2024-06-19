@@ -39,9 +39,9 @@ class TreeTest:
 
     def test_tree_add_root_one_child(self) -> None:
         """Root with one direct child"""
-        # a
+        # 0
         # |
-        # b
+        # 1
         tree = Tree()
         tree.add_root()
         root_idx = tree.get_root_idx()
@@ -61,9 +61,9 @@ class TreeTest:
 
     def test_tree_add_root_two_children(self) -> None:
         """Root with two direct children"""
-        #   a
+        #   0
         #  / \
-        # b   c
+        # 1   2
         tree = Tree()
         tree.add_root()
         root_idx = tree.get_root_idx()
@@ -89,11 +89,11 @@ class TreeTest:
 
     def test_tree_add_root_two_children_linear(self) -> None:
         """Root with one child that itself has one child"""
-        # a
+        # 0
         # |
-        # b
+        # 1
         # |
-        # c
+        # 2
         tree = Tree()
         tree.add_root()
         root_idx = tree.get_root_idx()
@@ -118,11 +118,11 @@ class TreeTest:
         # assert tree.get_next_idx() == 0
 
     def test_tree_three_layers_left(self) -> None:
-        #     a
+        #     0
         #    / \
-        #   b   c
+        #   1   2
         #  /
-        # d
+        # 3
         tree = Tree()
         tree.add_root()
         root_idx = tree.get_root_idx()
@@ -150,11 +150,11 @@ class TreeTest:
         # assert tree.get_next_idx() == 0
 
     def test_tree_three_layers_right(self) -> None:
-        #     a
+        #     0
         #    / \
-        #   b   c
+        #   1   2
         #        \
-        #         d
+        #         3
         tree = Tree()
         tree.add_root()
         root_idx = tree.get_root_idx()
@@ -181,11 +181,11 @@ class TreeTest:
         # assert tree.get_next_idx() == 0
 
     def test_tree_three_layers_both(self) -> None:
-        #     a
+        #     0
         #    / \
-        #   b   c
+        #   1   2
         #  /     \
-        # d       e
+        # 3       4
         tree = Tree()
         tree.add_root()
         root_idx = tree.get_root_idx()
@@ -211,11 +211,11 @@ class TreeTest:
 
     def test_tree_three_layers_both_swap(self) -> None:
         """Same as test_tree_three_layers_both but change the order in which leaves are added."""
-        #     a
+        #     0
         #    / \
-        #   b   c
+        #   1   2
         #  /     \
-        # e       d
+        # 4       3
         tree = Tree()
         tree.add_root()
         root_idx = tree.get_root_idx()
@@ -240,11 +240,11 @@ class TreeTest:
         # assert tree.get_next_idx() == 2
 
     def test_tree_three_layers_double_left(self) -> None:
-        #     a
+        #     0
         #    / \
-        #   b   c
+        #   1   2
         #  / \
-        # d   e
+        # 3   4
         tree = Tree()
         tree.add_root()
         root_idx = tree.get_root_idx()
