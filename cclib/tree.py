@@ -16,6 +16,7 @@ class Tree:
     _num_nodes: int = 0
 
     def __len__(self) -> int:
+        """The length in our tree implementation is the total number of nodes it contains."""
         return self._num_nodes
 
     def add_root(self) -> None:

@@ -49,6 +49,8 @@ class TreeTest:
         assert tree.get_children_idx(root_idx) == []
         tree.add_child(root_idx)
         assert tree.get_children_idx(root_idx) == [1]
+        assert tree.get_children_idx(1) == []
+        assert tree.get_parent_idxs(1) == [0]
         assert len(tree) == 2
         # TODO doesn't seem correct
         assert tree.get_next_idx() == 0
@@ -69,8 +71,14 @@ class TreeTest:
         assert tree.get_children_idx(root_idx) == []
         tree.add_child(root_idx)
         assert tree.get_children_idx(root_idx) == [1]
+        assert tree.get_children_idx(1) == []
         tree.add_child(root_idx)
         assert tree.get_children_idx(root_idx) == [1, 2]
+        assert tree.get_children_idx(1) == []
+        assert tree.get_children_idx(2) == []
+        assert tree.get_parent_idxs(root_idx) == []
+        assert tree.get_parent_idxs(1) == [0]
+        assert tree.get_parent_idxs(2) == [0]
         assert len(tree) == 3
         assert tree.get_next_idx() == 0
         assert tree.get_next_idx() == 1
@@ -97,6 +105,9 @@ class TreeTest:
         tree.add_child(1)
         assert tree.get_children_idx(root_idx) == [1]
         assert tree.get_children_idx(1) == [2]
+        assert tree.get_children_idx(2) == []
+        assert tree.get_parent_idxs(1) == [0]
+        assert tree.get_parent_idxs(2) == [1, 0]
         assert len(tree) == 3
         assert tree.get_next_idx() == 0
         assert tree.get_next_idx() == 1
@@ -112,7 +123,22 @@ class TreeTest:
         #   b   c
         #  /
         # d
-        pass
+        tree = Tree()
+        tree.add_root()
+        root_idx = tree.get_root_idx()
+        assert root_idx == 0
+        tree.add_child(root_idx)
+        tree.add_child(root_idx)
+        # TODO add_child should return the index it created
+        tree.add_child(1)
+        assert len(tree) == 4
+        assert tree.get_children_idx(root_idx) == [1, 2]
+        assert tree.get_children_idx(1) == [3]
+        assert tree.get_children_idx(2) == []
+        assert tree.get_children_idx(3) == []
+        assert tree.get_parent_idxs(1) == [0]
+        assert tree.get_parent_idxs(2) == [0]
+        assert tree.get_parent_idxs(3) == [1, 0]
 
     def test_tree_three_layers_right(self) -> None:
         #     a
@@ -120,7 +146,21 @@ class TreeTest:
         #   b   c
         #        \
         #         d
-        pass
+        tree = Tree()
+        tree.add_root()
+        root_idx = tree.get_root_idx()
+        assert root_idx == 0
+        tree.add_child(root_idx)
+        tree.add_child(root_idx)
+        tree.add_child(2)
+        assert len(tree) == 4
+        assert tree.get_children_idx(root_idx) == [1, 2]
+        assert tree.get_children_idx(1) == []
+        assert tree.get_children_idx(2) == [3]
+        assert tree.get_children_idx(3) == []
+        assert tree.get_parent_idxs(1) == [0]
+        assert tree.get_parent_idxs(2) == [0]
+        assert tree.get_parent_idxs(3) == [2, 0]
 
     def test_tree_three_layers_both(self) -> None:
         #     a
@@ -128,7 +168,24 @@ class TreeTest:
         #   b   c
         #  /     \
         # d       e
-        pass
+        tree = Tree()
+        tree.add_root()
+        root_idx = tree.get_root_idx()
+        assert root_idx == 0
+        tree.add_child(root_idx)
+        tree.add_child(root_idx)
+        tree.add_child(1)
+        tree.add_child(2)
+        assert len(tree) == 5
+        assert tree.get_children_idx(root_idx) == [1, 2]
+        assert tree.get_children_idx(1) == [3]
+        assert tree.get_children_idx(2) == [4]
+        assert tree.get_children_idx(3) == []
+        assert tree.get_children_idx(4) == []
+        assert tree.get_parent_idxs(1) == [0]
+        assert tree.get_parent_idxs(2) == [0]
+        assert tree.get_parent_idxs(3) == [1, 0]
+        assert tree.get_parent_idxs(4) == [2, 0]
 
     def test_tree_three_layers_double_left(self) -> None:
         #     a
@@ -136,4 +193,21 @@ class TreeTest:
         #   b   c
         #  / \
         # d   e
-        pass
+        tree = Tree()
+        tree.add_root()
+        root_idx = tree.get_root_idx()
+        assert root_idx == 0
+        tree.add_child(root_idx)
+        tree.add_child(root_idx)
+        tree.add_child(1)
+        tree.add_child(1)
+        assert len(tree) == 5
+        assert tree.get_children_idx(root_idx) == [1, 2]
+        assert tree.get_children_idx(1) == [3, 4]
+        assert tree.get_children_idx(2) == []
+        assert tree.get_children_idx(3) == []
+        assert tree.get_children_idx(4) == []
+        assert tree.get_parent_idxs(1) == [0]
+        assert tree.get_parent_idxs(2) == [0]
+        assert tree.get_parent_idxs(3) == [1, 0]
+        assert tree.get_parent_idxs(4) == [1, 0]
