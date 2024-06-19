@@ -8,12 +8,15 @@
 import datetime
 import re
 from itertools import chain, zip_longest
-from typing import Callable, Optional, Tuple
+from typing import TYPE_CHECKING, Callable, List, Optional, Tuple
 
 from cclib.parser import data, logfileparser, utils
 
 import numpy
 from packaging.version import parse as parse_version
+
+if TYPE_CHECKING:
+    from cclib.parser.logfilewrapper import FileWrapper
 
 
 class ORCA(logfileparser.Logfile):
@@ -22,19 +25,19 @@ class ORCA(logfileparser.Logfile):
     def __init__(self, *args, **kwargs):
         super().__init__(logname="ORCA", *args, **kwargs)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"ORCA log file {self.filename}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'ORCA("{self.filename}")'
 
-    def normalisesym(self, label):
+    def normalisesym(self, label: str) -> str:
         """ORCA does not require normalizing symmetry labels."""
         return label
 
-    def before_parsing(self):
+    def before_parsing(self) -> None:
         self.uses_symmetry = False
 
         # A geometry optimization is started only when
@@ -107,7 +110,7 @@ class ORCA(logfileparser.Logfile):
             for prop_name in props:
                 setattr(self, prop_name, props[prop_name])
 
-    def after_parsing(self):
+    def after_parsing(self) -> None:
         super().after_parsing()
         # ORCA doesn't add the dispersion energy to the "Total energy" (which
         # we parse), only to the "FINAL SINGLE POINT ENERGY" (which we don't
@@ -143,7 +146,7 @@ class ORCA(logfileparser.Logfile):
         if hasattr(self, "mem_per_cpu"):
             self.metadata["memory_available"] = int(self.mem_per_cpu * self.metadata["num_cpu"])
 
-    def extract(self, inputfile, line):
+    def extract(self, inputfile: "FileWrapper", line: str) -> None:
         """Extract information from the file object inputfile."""
 
         # Extract the version number.
@@ -2938,7 +2941,7 @@ Dispersion correction           -0.016199959
         self.metadata["symmetry_detected"] = point_group_full
         self.metadata["symmetry_used"] = point_group_abelian
 
-    def parse_charge_section(self, line, inputfile, chargestype):
+    def parse_charge_section(self, line: str, inputfile: "FileWrapper", chargestype: str) -> None:
         """Parse a charge section, modifies class in place
 
         Parameters
@@ -3016,8 +3019,8 @@ Dispersion correction           -0.016199959
         if has_spins:
             self.atomspins[chargestype] = spins
 
-    def parse_scf_condensed_format(self, inputfile, splitline):
-        """"""
+    def parse_scf_condensed_format(self, inputfile: "FileWrapper", splitline: List[str]) -> None:
+        """Parse the SCF convergence information in condensed format"""
         # Possible formats:
         # Orca 5:
         # ITER       Energy         Delta-E        Max-DP      RMS-DP      [F,P]     Damp
@@ -3129,7 +3132,7 @@ Dispersion correction           -0.016199959
                 self.logger.warning(f"File terminated before end of last SCF! Last Max-DP: {maxDP}")
                 break
 
-    def parse_scf_expanded_format(self, inputfile, line):
+    def parse_scf_expanded_format(self, inputfile: "FileWrapper", line: str) -> None:
         """Parse SCF convergence when in expanded format."""
 
         # The following is an example of the format
@@ -3196,11 +3199,7 @@ Dispersion correction           -0.016199959
                 rmsDP = float(rmsDP_line[2])
                 self.scfvalues[-1].append([deltaE, maxDP, rmsDP])
 
-        return
-
-    # end of parse_scf_expanded_format
-
-    def _append_scfvalues_scftargets(self, inputfile, line):
+    def _append_scfvalues_scftargets(self, inputfile: "FileWrapper", line: str) -> None:
         # The SCF convergence targets are always printed in this next section
         # but which targets are available depends on the SCF method in use,
         # among other things.

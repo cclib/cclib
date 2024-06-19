@@ -41,7 +41,7 @@ class Logfile(ABC):
         logstream=sys.stderr,
         datatype=ccData_optdone_bool,
         **kwds,
-    ):
+    ) -> None:
         """Initialise the Logfile object.
 
         This should be called by a subclass in its own __init__ method.
@@ -97,7 +97,7 @@ class Logfile(ABC):
         self.unified_no_nso = self.future
 
     @property
-    def filename(self):
+    def filename(self) -> str:
         return self.inputfile.file_name
 
     @classmethod
@@ -107,7 +107,7 @@ class Logfile(ABC):
         """
         return file_names
 
-    def __setattr__(self, name, value):
+    def __setattr__(self, name: str, value) -> None:
         # Send info to logger if the attribute is in the list of attributes.
         if name in ccData._attrlist and hasattr(self, "logger"):
             # Call logger.info() only if the attribute is new.
@@ -283,7 +283,7 @@ class Logfile(ABC):
                 self.progress.step = newstep
 
     @abstractmethod
-    def normalisesym(self, symlabel: str) -> None:
+    def normalisesym(self, symlabel: str) -> str:
         """Standardise the symmetry labels between parsers."""
 
     def new_internal_job(self) -> None:
@@ -387,7 +387,7 @@ class Logfile(ABC):
             self.coreelectrons = numpy.zeros(self.natom, "i")
         self.coreelectrons[indices] = ncore
 
-    def skip_lines(self, inputfile, sequence: Iterable[str]) -> List[str]:
+    def skip_lines(self, inputfile: "FileWrapper", sequence: Iterable[str]) -> List[str]:
         """Read trivial line types and check they are what they are supposed to be.
 
         This function will read len(sequence) lines and do certain checks on them,
@@ -444,7 +444,7 @@ class Logfile(ABC):
         return lines
 
     @staticmethod
-    def next_filled_line(inputfile):
+    def next_filled_line(inputfile: "FileWrapper") -> str:
         """Return the next line that contains something other than whitespace."""
         while True:
             line = next(inputfile)

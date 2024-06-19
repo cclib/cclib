@@ -20,7 +20,7 @@ __datadir__ = os.path.join(__filepath__, "..", "..")
 class CJSONReaderTest:
     """Unit tests for the CJSON reader."""
 
-    def test_cjson_read(self):
+    def test_cjson_read(self) -> None:
         """File->ccData->CJSON->attribute_dict, the attributes within ccData and attribute_dict
         should be the same."""
         fpath = os.path.join(__datadir__, "data/ADF/basicADF2007.01/dvb_gopt.adfout")

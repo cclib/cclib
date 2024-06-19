@@ -6,10 +6,14 @@
 """Parser for Jaguar output files"""
 
 import re
+from typing import TYPE_CHECKING
 
 from cclib.parser import data, logfileparser, utils
 
 import numpy
+
+if TYPE_CHECKING:
+    from cclib.parser.logfilewrapper import FileWrapper
 
 
 class Jaguar(logfileparser.Logfile):
@@ -18,15 +22,15 @@ class Jaguar(logfileparser.Logfile):
     def __init__(self, *args, **kwargs):
         super().__init__(logname="Jaguar", *args, **kwargs)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"Jaguar output file {self.filename}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'Jaguar("{self.filename}")'
 
-    def normalisesym(self, label):
+    def normalisesym(self, label: str) -> str:
         """Normalise the symmetries used by Jaguar.
 
         To normalise, three rules need to be applied:
@@ -37,12 +41,12 @@ class Jaguar(logfileparser.Logfile):
         ans = label.split("/")[0].replace("pp", '"').replace("p", "'")
         return ans
 
-    def before_parsing(self):
+    def before_parsing(self) -> None:
         # We need to track whether we are inside geometry optimization in order
         # to parse SCF targets/values correctly.
         self.geoopt = False
 
-    def after_parsing(self):
+    def after_parsing(self) -> None:
         super().after_parsing()
 
         # This is to make sure we always have optdone after geometry optimizations,
@@ -51,7 +55,7 @@ class Jaguar(logfileparser.Logfile):
         if self.geoopt and not hasattr(self, "optdone"):
             self.optdone = []
 
-    def extract(self, inputfile, line):
+    def extract(self, inputfile: "FileWrapper", line: str) -> None:
         """Extract information from the file object inputfile."""
 
         # Extract the package version number.
