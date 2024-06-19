@@ -9,6 +9,7 @@ import decimal
 import math
 import os.path
 from itertools import zip_longest
+from typing import List, Union
 
 from cclib.io import filewriter
 from cclib.parser import utils
@@ -16,12 +17,12 @@ from cclib.parser import utils
 import numpy
 
 
-def round_molden(num, p=6):
+def round_molden(num: Union[int, float], p: int = 6) -> float:
     """Molden style number rounding in [Atoms] section."""
     # Digit at pth position after dot.
     p_digit = math.floor(abs(num) * 10**p) % 10
     # If the 6th digit after dot is greater than 5, but is not 7,
-    # round the number upto 6th place.
+    # round the number up to 6th place.
     # Else truncate at 6th digit after dot.
     if p_digit > 5 and p_digit != 7:
         return round(num, p)
@@ -40,12 +41,12 @@ class MOLDEN(filewriter.Writer):
 
     required_attrs = ("atomcoords", "atomnos", "natom")
 
-    def _title(self, path):
+    def _title(self, path: str) -> str:
         """Return filename without extension to be used as title."""
         title = os.path.basename(os.path.splitext(path)[0])
         return title
 
-    def _coords_from_ccdata(self, index):
+    def _coords_from_ccdata(self, index: int) -> List[str]:
         """Create [Atoms] section using geometry at the given index."""
         elements = [self.pt.element[Z] for Z in self.ccdata.atomnos]
         if self.ghost is not None:
@@ -65,7 +66,7 @@ class MOLDEN(filewriter.Writer):
 
         return lines
 
-    def _gto_from_ccdata(self):
+    def _gto_from_ccdata(self) -> List[str]:
         """Create [GTO] section using gbasis.
 
         atom_sequence_number1 0
@@ -89,7 +90,7 @@ class MOLDEN(filewriter.Writer):
         lines.append("")
         return lines
 
-    def _scfconv_from_ccdata(self):
+    def _scfconv_from_ccdata(self) -> List[str]:
         """Create [SCFCONV] section using gbasis.
 
         scf-first    1 THROUGH   12
@@ -164,7 +165,7 @@ class MOLDEN(filewriter.Writer):
 
         return syms, energies, occs, coeffs
 
-    def _mo_from_ccdata(self, mosyms, moenergies, mooccs, mocoeffs):
+    def _mo_from_ccdata(self, mosyms, moenergies, mooccs, mocoeffs) -> List[str]:
         """Create [MO] section.
 
         Sym= symmetry_label_1
@@ -197,7 +198,7 @@ class MOLDEN(filewriter.Writer):
             spin = "Beta"
         return lines
 
-    def _freq_from_ccdata(self):
+    def _freq_from_ccdata(self) -> List[str]:
         lines = []
 
         if hasattr(self.ccdata, "vibfreqs"):
@@ -251,7 +252,7 @@ class MOLDEN(filewriter.Writer):
 
         return lines
 
-    def generate_repr(self):
+    def generate_repr(self) -> str:
         """Generate the MOLDEN representation of the logfile data."""
 
         molden_lines = ["[Molden Format]"]
@@ -297,17 +298,17 @@ class MOLDEN(filewriter.Writer):
 class MoldenReformatter:
     """Reformat Molden output files."""
 
-    def __init__(self, filestring):
+    def __init__(self, filestring) -> None:
         self.filestring = filestring
 
-    def scinotation(self, num):
+    def scinotation(self, num: str) -> str:
         """Convert Molden style number formatting to scientific notation.
         0.9910616900D+02 --> 9.910617e+01
         """
         num = num.replace("D", "e")
         return f"{decimal.Decimal(num):.9e}"
 
-    def reformat(self):
+    def reformat(self) -> str:
         """Reformat Molden output file to:
         - use scientific notation,
         - split sp molecular orbitals to s and p, and

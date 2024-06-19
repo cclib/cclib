@@ -39,7 +39,7 @@ class Bader(Method):
     # All of these are required for QTAIM charges.
     required_attrs = ("homos", "mocoeffs", "nbasis", "gbasis")
 
-    def __init__(self, data, volume, progress=None, loglevel=logging.INFO, logname="Log"):
+    def __init__(self, data, volume, progress=None, loglevel=logging.INFO, logname="Log") -> None:
         super().__init__(data, progress, loglevel, logname)
 
         self.volume = volume
@@ -52,18 +52,18 @@ class Bader(Method):
                 "It looks like pseudopotentials were used to generate this output. Please note that the Bader charges may not be accurate and may report unexpected results. Consult the original paper (doi:10.1016/j.commatsci.2005.04.010) for more information."
             )
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"Bader's QTAIM charges of {self.data}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f"Bader({self.data})"
 
-    def _check_required_attributes(self):
+    def _check_required_attributes(self) -> None:
         super()._check_required_attributes()
 
-    def calculate(self, indices=None, fupdate=0.05):
+    def calculate(self, indices=None, fupdate: float = 0.05) -> bool:
         """Calculate Bader's QTAIM charges using on-grid algorithm proposed by Henkelman group
         in doi:10.1016/j.commatsci.2005.04.010
 

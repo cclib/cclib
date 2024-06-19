@@ -12,7 +12,7 @@ import numpy as np
 class Psi4Test:
     """Tests for the cclib2psi4 bridge in cclib."""
 
-    def test_makepsi4(self):
+    def test_makepsi4(self) -> None:
         if not find_package("psi4"):
             raise ImportError("Must install psi4 to run this test")
 

@@ -6,7 +6,7 @@
 """A writer for wfx format files."""
 
 import os.path
-from typing import List
+from typing import List, Tuple
 
 from cclib.io import filewriter
 from cclib.parser import utils
@@ -57,7 +57,7 @@ _M = dict(
 )
 
 
-def _section(section_name, section_data):
+def _section(section_name: str, section_data) -> str:
     """Add opening/closing section_name tags to data."""
     opening_tag = [f"<{section_name}>"]
     closing_tag = [f"</{section_name}>"]
@@ -72,7 +72,7 @@ def _section(section_name, section_data):
     return section
 
 
-def _list_format(data, per_line, style=WFX_FIELD_FMT):
+def _list_format(data, per_line, style: str = WFX_FIELD_FMT) -> List[str]:
     """Format lists for pretty print."""
     template = style * per_line
     leftover = len(data) % per_line
@@ -181,16 +181,16 @@ class WFXWriter(filewriter.Writer):
         ]
         return nuc_coords
 
-    def _net_charge(self):
+    def _net_charge(self) -> str:
         """Section: Net Charge.
         Net charge on molecule."""
         return WFX_FIELD_FMT % self.ccdata.charge
 
-    def _no_electrons(self):
+    def _no_electrons(self) -> int:
         """Section: Number of Electrons."""
         return int(self.ccdata.nelectrons)
 
-    def _no_alpha_electrons(self):
+    def _no_alpha_electrons(self) -> int:
         """Section: Number of Alpha Electrons."""
         no_electrons = (
             numpy.sum(self.ccdata.atomnos - self.ccdata.coreelectrons) - self.ccdata.charge
@@ -198,11 +198,11 @@ class WFXWriter(filewriter.Writer):
         no_alpha = (no_electrons + (self.ccdata.mult - 1)) // 2
         return int(no_alpha)
 
-    def _no_beta_electrons(self):
+    def _no_beta_electrons(self) -> int:
         """Section: Number of Beta Electrons."""
         return int(self.ccdata.nelectrons - self._no_alpha_electrons())
 
-    def _spin_mult(self):
+    def _spin_mult(self) -> int:
         """Section: Electronic Spin Multiplicity"""
         return self.ccdata.mult
 
@@ -319,7 +319,7 @@ class WFXWriter(filewriter.Writer):
             spin_types += ["Alpha"] * alpha + ["Beta"] * beta
         return spin_types
 
-    def _normalize(self, prim_type, alpha=1.0):
+    def _normalize(self, prim_type, alpha: float = 1.0) -> float:
         """Normalization factor for Cartesian Gaussian Functions.
 
         N**4 = (2/pi)**3 * 2**(l+m+n) * alpha**(3 + 2(l+m+n)) /
@@ -358,7 +358,7 @@ class WFXWriter(filewriter.Writer):
 
         return mocoeffs
 
-    def _norm_mat(self):
+    def _norm_mat(self) -> Tuple[List[float], List[int], List[int]]:
         """Calculate normalization matrix for normalizing MOcoeffs."""
         alpha = []
         prim_coeff = []

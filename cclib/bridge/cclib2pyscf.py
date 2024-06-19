@@ -8,7 +8,7 @@
 import functools
 import itertools
 import logging
-from typing import Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
 from cclib.parser.data import ccData
 from cclib.parser.utils import PeriodicTable, convertor, find_package
@@ -51,12 +51,16 @@ if _found_pyscf:
         pyscf_prop = None
 
 
-def _check_pyscf(found_pyscf):
+def _check_pyscf(found_pyscf: bool) -> None:
     if not found_pyscf:
         raise ImportError("You must install `pyscf` to use this function")
 
 
-def makepyscf(data, charge=0, mult=1):
+if TYPE_CHECKING:
+    from pyscf import gto
+
+
+def makepyscf(data: ccData, charge: int = 0, mult: int = 1) -> "gto.Mole":
     """Create a Pyscf Molecule."""
     _check_pyscf(_found_pyscf)
     required_attrs = {"atomcoords", "atomnos"}

@@ -5,9 +5,14 @@
 
 """Test logfiles with vibration output in cclib"""
 
+from typing import TYPE_CHECKING
+
 import numpy as np
 import pytest
 from skip import skipForLogfile, skipForParser
+
+if TYPE_CHECKING:
+    from cclib.parser.data import ccData
 
 
 class GenericIRTest:
@@ -45,11 +50,11 @@ class GenericIRTest:
     rotconsts = [4.6266363, 0.6849065, 0.5965900]
 
     @pytest.fixture
-    def numvib(self, data) -> int:
+    def numvib(self, data: "ccData") -> int:
         """Initialize the number of vibrational frequencies on a per molecule basis"""
         return 3 * len(data.atomnos) - 6
 
-    def testbasics(self, data) -> None:
+    def testbasics(self, data: "ccData") -> None:
         """Are basic attributes correct?"""
         assert data.natom == 20
 
@@ -57,14 +62,14 @@ class GenericIRTest:
     @skipForLogfile("FChk/basicQChem5.4", "not printed")
     @skipForParser("PySCF", "not implemented yet")
     @skipForParser("xTB", "Custom treatment")
-    def testvibdisps(self, data, numvib) -> None:
+    def testvibdisps(self, data: "ccData", numvib: int) -> None:
         """Are the dimensions of vibdisps consistent with numvib x N x 3"""
         assert len(data.vibfreqs) == numvib
         assert data.vibdisps.shape == (numvib, len(data.atomnos), 3)
 
     @skipForLogfile("FChk/basicGaussian09", "not printed in older versions than 16")
     @skipForLogfile("FChk/basicQChem5.4", "not printed")
-    def testlengths(self, data, numvib) -> None:
+    def testlengths(self, data: "ccData", numvib: int) -> None:
         """Are the lengths of vibfreqs and vibirs (and if present, vibsyms, vibfconnsts and vibrmasses) correct?"""
         assert len(data.vibfreqs) == numvib
         if hasattr(data, "vibirs"):
@@ -78,7 +83,7 @@ class GenericIRTest:
 
     @skipForLogfile("FChk/basicGaussian09", "not printed in older versions than 16")
     @skipForLogfile("FChk/basicQChem5.4", "not printed")
-    def testfreqval(self, data) -> None:
+    def testfreqval(self, data: "ccData") -> None:
         """Does the highest frequency value match?"""
         assert abs(max(data.vibfreqs) - self.highest_freq) < self.highest_freq_thresh
 
@@ -90,7 +95,7 @@ class GenericIRTest:
     @skipForLogfile(
         "Psi4/basicPsi4-1.3.1/dvb_ir_rhf.out", "not implemented in versions older than 1.7"
     )
-    def testirintens(self, data) -> None:
+    def testirintens(self, data: "ccData") -> None:
         """Is the maximum IR intensity 100 +/- 10 km/mol?"""
         assert abs(max(data.vibirs) - self.max_IR_intensity) < 10
 
@@ -107,7 +112,7 @@ class GenericIRTest:
     @skipForParser("xTB", "xTB does not print force constants")
     @skipForLogfile("FChk/basicGaussian09", "not printed in older versions than 16")
     @skipForLogfile("FChk/basicQChem5.4", "not printed")
-    def testvibfconsts(self, data) -> None:
+    def testvibfconsts(self, data: "ccData") -> None:
         """Is the maximum force constant 10. +/- 0.1 mDyn/angstrom?"""
         assert abs(max(data.vibfconsts) - self.max_force_constant) < self.force_constant_thresh
 
@@ -121,14 +126,14 @@ class GenericIRTest:
     @skipForLogfile("FChk/basicGaussian09", "not printed in older versions than 16")
     @skipForLogfile("FChk/basicQChem5.4", "not printed")
     @skipForLogfile("GAMESS/PCGAMESS", "Data file does not contain reduced masses")
-    def testvibrmasses(self, data) -> None:
+    def testvibrmasses(self, data: "ccData") -> None:
         """Is the maximum reduced mass 6.9 +/- 0.1 daltons?"""
         assert abs(max(data.vibrmasses) - self.max_reduced_mass) < 0.1
 
     @skipForParser("FChk", "not printed")
     @skipForParser("Psi3", "not implemented yet")
     @skipForParser("PySCF", "not implemented yet")
-    def testzeropointcorrection(self, data) -> None:
+    def testzeropointcorrection(self, data: "ccData") -> None:
         """Is the zero-point correction correct?"""
         assert abs(data.zpve - self.zpve) < self.zpve_thresh
 
@@ -147,11 +152,11 @@ class GenericIRTest:
     @skipForParser("Turbomole", "not implemented yet")
     @skipForParser("PySCF", "not implemented yet")
     @skipForParser("xTB", "not implemented yet")
-    def testhessian(self, data) -> None:
+    def testhessian(self, data: "ccData") -> None:
         """Are the dimensions of the molecular Hessian correct?"""
         assert data.hessian.shape == (3 * data.natom, 3 * data.natom)
 
-    def testhessian_frequencies(self, data) -> None:
+    def testhessian_frequencies(self, data: "ccData") -> None:
         """Do the frequencies from the Hessian match the printed frequencies?"""
 
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
@@ -160,7 +165,7 @@ class GenericIRTest:
     @skipForParser("Molpro", "not implemented yet")
     @skipForParser("PySCF", "not implemented yet")
     @skipForParser("Turbomole", "not implemented yet")
-    def testtemperature(self, data) -> None:
+    def testtemperature(self, data: "ccData") -> None:
         """Is the temperature 298.15 K?"""
         assert round(abs(298.15 - data.temperature), 7) == 0
 
@@ -172,7 +177,7 @@ class GenericIRTest:
     @skipForParser("PySCF", "not implemented yet")
     @skipForParser("Turbomole", "not implemented yet")
     @skipForParser("xTB", "not printed")
-    def testpressure(self, data) -> None:
+    def testpressure(self, data: "ccData") -> None:
         """Is the pressure 1 atm?"""
         assert round(abs(1 - data.pressure), 7) == 0
 
@@ -184,7 +189,7 @@ class GenericIRTest:
     @skipForParser("Molpro", "not implemented yet")
     @skipForParser("PySCF", "not implemented yet")
     @skipForParser("Turbomole", "not implemented yet")
-    def testentropy(self, data) -> None:
+    def testentropy(self, data: "ccData") -> None:
         """Is the entropy reasonable"""
         assert round(abs(self.entropy - data.entropy), self.entropy_places) == 0
 
@@ -196,7 +201,7 @@ class GenericIRTest:
     @skipForParser("Molpro", "not implemented yet")
     @skipForParser("PySCF", "not implemented yet")
     @skipForParser("Turbomole", "not implemented yet")
-    def testenthalpy(self, data) -> None:
+    def testenthalpy(self, data: "ccData") -> None:
         """Is the enthalpy reasonable"""
         assert round(abs(self.enthalpy - data.enthalpy), self.enthalpy_places) == 0
 
@@ -208,7 +213,7 @@ class GenericIRTest:
     @skipForParser("Molpro", "not implemented yet")
     @skipForParser("PySCF", "not implemented yet")
     @skipForParser("Turbomole", "not implemented yet")
-    def testfreeenergy(self, data) -> None:
+    def testfreeenergy(self, data: "ccData") -> None:
         """Is the freeenergy reasonable"""
         assert round(abs(self.freeenergy - data.freeenergy), self.freeenergy_places) == 0
 
@@ -220,7 +225,7 @@ class GenericIRTest:
     @skipForParser("Molpro", "not implemented yet")
     @skipForParser("PySCF", "not implemented yet")
     @skipForParser("Turbomole", "not implemented yet")
-    def testfreeenergyconsistency(self, data) -> None:
+    def testfreeenergyconsistency(self, data: "ccData") -> None:
         """Does G = H - TS hold"""
         assert (
             round(
@@ -239,7 +244,7 @@ class GenericIRTest:
     @skipForParser("GAMESSUK", "not implemented yet")
     @skipForParser("Turbomole", "not implemented yet")
     @skipForParser("xTB", "not implemented yet")
-    def testatommasses(self, data) -> None:
+    def testatommasses(self, data: "ccData") -> None:
         """Do the atom masses sum up to the molecular mass?"""
         mm = 1000 * sum(data.atommasses)
         assert abs(mm - self.molecularmass) < self.molecularmass_thresh, (
@@ -316,7 +321,7 @@ class GaussianIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
     @skipForParser("FChk", "not printed")
-    def testvibsyms(self, data, numvib) -> None:
+    def testvibsyms(self, data: "ccData", numvib: int) -> None:
         """Is the length of vibsyms correct?"""
         assert len(data.vibsyms) == numvib
 
@@ -330,7 +335,7 @@ class JaguarIRTest(GenericIRTest):
 
     freeenergy_places = 2
 
-    def testvibsyms(self, data, numvib) -> None:
+    def testvibsyms(self, data: "ccData", numvib: int) -> None:
         """Is the length of vibsyms correct?"""
         assert len(data.vibsyms) == numvib
 
@@ -353,7 +358,7 @@ class NWChemIRTest(GenericIRTest):
     """Generic imaginary vibrational frequency unittest"""
 
     @pytest.fixture
-    def numvib(self, data) -> int:
+    def numvib(self, data: "ccData") -> int:
         """Initialize the number of vibrational frequencies on a per molecule basis"""
         return 3 * len(data.atomnos)
 
@@ -432,7 +437,7 @@ class XTBIRTest(GenericIRTest):
     max_reduced_mass = 11.43
 
     @pytest.fixture
-    def numvib(self, data) -> int:
+    def numvib(self, data: "ccData") -> int:
         """Initialize the number of vibrational frequencies on a per molecule basis"""
         return 3 * len(data.atomnos)
 
@@ -441,25 +446,25 @@ class GenericIRimgTest:
     """Generic imaginary vibrational frequency unittest"""
 
     @pytest.fixture
-    def numvib(self, data) -> int:
+    def numvib(self, data: "ccData") -> int:
         """Initialize the number of vibrational frequencies on a per molecule basis"""
         return 3 * len(data.atomnos) - 6
 
-    def testvibdisps(self, data, numvib) -> None:
+    def testvibdisps(self, data: "ccData", numvib: int) -> None:
         """Are the dimensions of vibdisps consistent with numvib x N x 3"""
         assert data.vibdisps.shape == (numvib, len(data.atomnos), 3)
 
-    def testlengths(self, data, numvib) -> None:
+    def testlengths(self, data: "ccData", numvib: int) -> None:
         """Are the lengths of vibfreqs and vibirs correct?"""
         assert len(data.vibfreqs) == numvib
         assert len(data.vibirs) == numvib
 
-    def testfreqval(self, data) -> None:
+    def testfreqval(self, data: "ccData") -> None:
         """Is the lowest freq value negative?"""
         assert data.vibfreqs[0] < 0
 
 
-##    def testmaxvibdisps(self, data) -> None:
+##    def testmaxvibdisps(self, data: "ccData") -> None:
 ##        """What is the maximum value of displacement for a H vs a C?"""
 ##        Cvibdisps = compress(data.atomnos==6, data.vibdisps, 1)
 ##        Hvibdisps = compress(data.atomnos==1, data.vibdisps, 1)
@@ -473,11 +478,11 @@ class GenericRamanTest:
     max_raman_intensity = 575
 
     @pytest.fixture
-    def numvib(self, data) -> int:
+    def numvib(self, data: "ccData") -> int:
         """Initialize the number of vibrational frequencies on a per molecule basis"""
         return 3 * len(data.atomnos) - 6
 
-    def testlengths(self, data, numvib) -> None:
+    def testlengths(self, data: "ccData", numvib: int) -> None:
         """Is the length of vibramans correct?"""
         assert len(data.vibramans) == numvib
 
@@ -490,7 +495,7 @@ class GenericRamanTest:
     # of all want to succeed in parsing, but would also like to remain
     # as comparable between programs as possible (for these tests).
     # Note also that this value is adjusted for Gaussian and DALTON - why?
-    def testramanintens(self, data) -> None:
+    def testramanintens(self, data: "ccData") -> None:
         """Is the maximum Raman intensity correct?"""
         assert abs(max(data.vibramans) - self.max_raman_intensity) < 8
 
@@ -498,7 +503,7 @@ class GenericRamanTest:
         # programs... perhaps we could use it if we knew why...
         # self.assertInside(data.vibramans[1], 2.6872, 0.0001)
 
-    def testvibdisps(self, data) -> None:
+    def testvibdisps(self, data: "ccData") -> None:
         """Is the length and value of vibdisps correct?"""
         assert hasattr(data, "vibdisps")
         assert len(data.vibdisps) == 54

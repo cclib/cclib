@@ -16,7 +16,7 @@ from ..test_data import getdatafile
 class CM5Test:
     """Tests for Charge Model 5 (CM5) calculations."""
 
-    def testcm5restricted(self):
+    def testcm5restricted(self) -> None:
         """Check that our computed CM5 charges match those parsed from a
         restricted calculation.
         """
@@ -25,7 +25,7 @@ class CM5Test:
         ref = data.atomcharges["cm5"]
         np.testing.assert_allclose(res, ref, atol=1.0e-6)
 
-    def testcm5unrestricted(self):
+    def testcm5unrestricted(self) -> None:
         """Check that our computed CM5 charges match those parsed from an
         unrestricted calculation.
         """

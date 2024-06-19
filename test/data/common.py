@@ -6,19 +6,21 @@
 """Functions used across multiple data tests."""
 
 import itertools
-
-from cclib.parser.data import ccData
+from typing import TYPE_CHECKING
 
 import numpy
 
+if TYPE_CHECKING:
+    from cclib.parser.data import ccData
 
-def get_minimum_carbon_separation(data: ccData) -> float:
+
+def get_minimum_carbon_separation(data: "ccData") -> float:
     """Returns minimum carbon distance for any coordinates.
 
     Note that atomcoords is 3D, and we will take the minimum
     over all coordinates and combinations of carbon atoms.
     """
-
+    # mypy: disable-error-code="attr-defined"
     icarbons = numpy.arange(data.natom)[data.atomnos == 6]
     mindist = 999
     for i, j in itertools.combinations(icarbons, 2):

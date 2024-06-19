@@ -12,11 +12,11 @@ import numpy
 class BiopythonTest:
     """Tests for the cclib2biopython bridge in cclib."""
 
-    def setup_method(self):
+    def setup_method(self) -> None:
         if not find_package("Bio"):
             raise ImportError("Must install biopython to run this test")
 
-    def test_makebiopython(self):
+    def test_makebiopython(self) -> None:
         from Bio.PDB.Superimposer import Superimposer
 
         atomnos = numpy.array([1, 8, 1], "i")

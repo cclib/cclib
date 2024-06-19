@@ -5,8 +5,13 @@
 
 """Test logfiles with (non)linear response output in cclib"""
 
+from typing import TYPE_CHECKING
+
 import numpy
 from skip import skipForParser
+
+if TYPE_CHECKING:
+    from cclib.parser.data import ccData
 
 
 class GenericPolarTest:
@@ -15,7 +20,7 @@ class GenericPolarTest:
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    def testshape(self, data) -> None:
+    def testshape(self, data: "ccData") -> None:
         """Is the dimension of the polarizability tensor 3 x 3?"""
         assert len(data.polarizabilities) == 1
         assert data.polarizabilities[0].shape == (3, 3)
@@ -33,7 +38,7 @@ class ReferencePolarTest(GenericPolarTest):
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    def testisotropic(self, data) -> None:
+    def testisotropic(self, data: "ccData") -> None:
         """Is the isotropic polarizability (average of the diagonal elements)
         +/- 0.01 from a reference?
         """
@@ -43,7 +48,7 @@ class ReferencePolarTest(GenericPolarTest):
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    def testprincomponents(self, data) -> None:
+    def testprincomponents(self, data: "ccData") -> None:
         """Are each of the principal components (eigenvalues) of the
         polarizability tensor +/- 0.01 from a reference?
         """
