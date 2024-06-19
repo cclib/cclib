@@ -105,3 +105,35 @@ class TreeTest:
         # assert tree.get_next_idx() == 0
         # assert tree.get_next_idx() == 0
         # assert tree.get_next_idx() == 0
+
+    def test_tree_three_layers_left(self) -> None:
+        #     a
+        #    / \
+        #   b   c
+        #  /
+        # d
+        pass
+
+    def test_tree_three_layers_right(self) -> None:
+        #     a
+        #    / \
+        #   b   c
+        #        \
+        #         d
+        pass
+
+    def test_tree_three_layers_both(self) -> None:
+        #     a
+        #    / \
+        #   b   c
+        #  /     \
+        # d       e
+        pass
+
+    def test_tree_three_layers_double_left(self) -> None:
+        #     a
+        #    / \
+        #   b   c
+        #  / \
+        # d   e
+        pass
