@@ -139,6 +139,15 @@ class TreeTest:
         assert tree.get_parent_idxs(1) == [0]
         assert tree.get_parent_idxs(2) == [0]
         assert tree.get_parent_idxs(3) == [1, 0]
+        assert tree.get_next_idx() == 0
+        assert tree.get_next_idx() == 1
+        # list index out of range
+        # assert tree.get_next_idx() == 2
+        # assert tree.get_next_idx() == 3
+        # assert tree.get_next_idx() == 0
+        # assert tree.get_next_idx() == 0
+        # assert tree.get_next_idx() == 0
+        # assert tree.get_next_idx() == 0
 
     def test_tree_three_layers_right(self) -> None:
         #     a
@@ -161,6 +170,15 @@ class TreeTest:
         assert tree.get_parent_idxs(1) == [0]
         assert tree.get_parent_idxs(2) == [0]
         assert tree.get_parent_idxs(3) == [2, 0]
+        assert tree.get_next_idx() == 0
+        assert tree.get_next_idx() == 1
+        assert tree.get_next_idx() == 2
+        # list index out of range
+        # assert tree.get_next_idx() == 3
+        # assert tree.get_next_idx() == 0
+        # assert tree.get_next_idx() == 0
+        # assert tree.get_next_idx() == 0
+        # assert tree.get_next_idx() == 0
 
     def test_tree_three_layers_both(self) -> None:
         #     a
@@ -186,6 +204,10 @@ class TreeTest:
         assert tree.get_parent_idxs(2) == [0]
         assert tree.get_parent_idxs(3) == [1, 0]
         assert tree.get_parent_idxs(4) == [2, 0]
+        assert tree.get_next_idx() == 0
+        assert tree.get_next_idx() == 1
+        # list index out of range
+        # assert tree.get_next_idx() == 2
 
     def test_tree_three_layers_double_left(self) -> None:
         #     a
@@ -211,3 +233,7 @@ class TreeTest:
         assert tree.get_parent_idxs(2) == [0]
         assert tree.get_parent_idxs(3) == [1, 0]
         assert tree.get_parent_idxs(4) == [1, 0]
+        assert tree.get_next_idx() == 0
+        assert tree.get_next_idx() == 1
+        # list index out of range
+        # assert tree.get_next_idx() == 2
