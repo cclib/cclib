@@ -41,7 +41,7 @@ class Tree:
 
     def get_parent_idxs(self, idx: int) -> List[int]:
         """Returns all parents of a node"""
-        parents = []
+        parents: List[int] = []
         curr_par = self._parent[idx]
         if curr_par is None:
             return parents
