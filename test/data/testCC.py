@@ -5,10 +5,15 @@
 
 """Test coupled cluster logfiles"""
 
+from typing import TYPE_CHECKING
+
 from cclib.parser import utils
 
 import numpy
 import pytest
+
+if TYPE_CHECKING:
+    from cclib.parser.data import ccData
 
 
 class GenericCCTest:
@@ -16,11 +21,11 @@ class GenericCCTest:
 
     rel_thresh = 1.0e-4
 
-    def testsizeandshape(self, data) -> None:
+    def testsizeandshape(self, data: "ccData") -> None:
         """Are the dimensions of ccenergies correct?"""
         assert data.ccenergies.shape == (len(data.scfenergies),)
 
-    def testsign(self, data) -> None:
+    def testsign(self, data: "ccData") -> None:
         """Are the coupled cluster corrections negative?"""
         corrections = data.ccenergies - data.scfenergies
         assert numpy.all(corrections < 0.0)
@@ -30,7 +35,7 @@ class GenericCC2Test(GenericCCTest):
     # Turbomole 7.4
     corr_energy = -0.0422913114
 
-    def testenergycc2(self, data) -> None:
+    def testenergycc2(self, data: "ccData") -> None:
         """Is the CC2 correlation energy within the target?"""
         e_scf = data.scfenergies[0]
         e_cc = data.ccenergies[0]
@@ -44,7 +49,7 @@ class GenericCCDTest(GenericCCTest):
     # Q-Chem 5.4
     corr_energy = -0.05304913
 
-    def testenergyccd(self, data) -> None:
+    def testenergyccd(self, data: "ccData") -> None:
         """Is the CCD correlation energy within the target?"""
         e_scf = data.scfenergies[0]
         e_cc = data.ccenergies[0]
@@ -58,7 +63,7 @@ class GenericCCSDTest(GenericCCTest):
     # Q-Chem 5.4
     corr_energy = -0.05335475
 
-    def testenergyccsd(self, data) -> None:
+    def testenergyccsd(self, data: "ccData") -> None:
         """Is the CCSD correlation energy within the target?"""
         e_scf = data.scfenergies[0]
         e_cc = data.ccenergies[0]
@@ -72,7 +77,7 @@ class GenericCCSDPTTest(GenericCCTest):
     # Q-Chem 5.4
     corr_energy = -0.05335475 + -0.00007679
 
-    def testenergyccsdpt(self, data) -> None:
+    def testenergyccsdpt(self, data: "ccData") -> None:
         """Is the CCSD(T) correlation energy within the target?"""
         e_scf = data.scfenergies[0]
         e_cc = data.ccenergies[0]

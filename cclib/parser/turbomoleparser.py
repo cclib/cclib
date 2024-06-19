@@ -6,18 +6,21 @@
 """Parser for Turbomole output files."""
 
 import re
-import typing
 from datetime import timedelta
 from pathlib import Path
+from typing import TYPE_CHECKING, List
 
 from cclib.parser import data, logfileparser, utils
 
 import numpy
 import scipy.constants
 
+if TYPE_CHECKING:
+    from cclib.parser.logfilewrapper import FileWrapper
+
 
 class AtomBasis:
-    def __init__(self, atname, basis_name, inputfile):
+    def __init__(self, atname: str, basis_name: str, inputfile: "FileWrapper") -> None:
         self.symmetries = []
         self.coefficients = []
         self.atname = atname
@@ -25,7 +28,7 @@ class AtomBasis:
 
         self.parse_basis(inputfile)
 
-    def parse_basis(self, inputfile):
+    def parse_basis(self, inputfile: "FileWrapper") -> None:
         line = next(inputfile)
 
         while line[0] != "*":
@@ -48,7 +51,7 @@ class AtomBasis:
 class Turbomole(logfileparser.Logfile):
     """A Turbomole log file."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(logname="Turbomole", *args, **kwargs)
 
         # Flag for whether this calc is DFT.
@@ -69,7 +72,7 @@ class Turbomole(logfileparser.Logfile):
         self.metadata["num_cpu"] = 1
 
     @classmethod
-    def sort_input(self, file_names: typing.List[str]) -> typing.List:
+    def sort_input(self, file_names: List[str]) -> List[str]:
         """
         If this parser expects multiple files to appear in a certain order, return that ordering.
         """
@@ -111,15 +114,15 @@ class Turbomole(logfileparser.Logfile):
 
         return sorted_list
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"Turbomole output file {self.filename}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'Turbomole("{self.filename}")'
 
-    def normalisesym(self, label):
+    def normalisesym(self, label: str) -> str:
         """Normalise the symmetries used by Turbomole.
 
         The labels are standardized except for the first character being lowercase.
@@ -132,7 +135,7 @@ class Turbomole(logfileparser.Logfile):
         self.periodic_table = utils.PeriodicTable()
 
     @staticmethod
-    def split_molines(inline):
+    def split_molines(inline: str) -> List[float]:
         """Splits the lines containing mocoeffs (each of length 20)
         and converts them to float correctly.
         """
@@ -151,7 +154,7 @@ class Turbomole(logfileparser.Logfile):
         if len(f1) > 1:
             return [float(f1)]
 
-    def extract(self, inputfile, line):
+    def extract(self, inputfile: "FileWrapper", line: str) -> None:
         """Extract information from the file object inputfile."""
 
         ## This information is in the control file.
