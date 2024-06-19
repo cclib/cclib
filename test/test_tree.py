@@ -209,6 +209,36 @@ class TreeTest:
         # list index out of range
         # assert tree.get_next_idx() == 2
 
+    def test_tree_three_layers_both_swap(self) -> None:
+        """Same as test_tree_three_layers_both but change the order in which leaves are added."""
+        #     a
+        #    / \
+        #   b   c
+        #  /     \
+        # e       d
+        tree = Tree()
+        tree.add_root()
+        root_idx = tree.get_root_idx()
+        assert root_idx == 0
+        tree.add_child(root_idx)
+        tree.add_child(root_idx)
+        tree.add_child(2)
+        tree.add_child(1)
+        assert len(tree) == 5
+        assert tree.get_children_idx(root_idx) == [1, 2]
+        assert tree.get_children_idx(1) == [4]
+        assert tree.get_children_idx(2) == [3]
+        assert tree.get_children_idx(3) == []
+        assert tree.get_children_idx(4) == []
+        assert tree.get_parent_idxs(1) == [0]
+        assert tree.get_parent_idxs(2) == [0]
+        assert tree.get_parent_idxs(3) == [2, 0]
+        assert tree.get_parent_idxs(4) == [1, 0]
+        assert tree.get_next_idx() == 0
+        assert tree.get_next_idx() == 1
+        # list index out of range
+        # assert tree.get_next_idx() == 2
+
     def test_tree_three_layers_double_left(self) -> None:
         #     a
         #    / \
