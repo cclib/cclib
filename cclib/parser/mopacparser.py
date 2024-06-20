@@ -170,14 +170,12 @@ class MOPAC(logfileparser.Logfile):
         if line[0:40] == "          ROTATIONAL CONSTANTS IN CM(-1)":
             blankline = next(inputfile)
             rotinfo = next(inputfile)
-            if not hasattr(self, "rotconsts"):
-                self.rotconsts = []
             broken = rotinfo.split()
             # leave the rotational constants in Hz
             a = float(broken[2])
             b = float(broken[5])
             c = float(broken[8])
-            self.rotconsts.append([a, b, c])
+            self.append_attribute("rotconsts", [a, b, c])
 
         # Start of the IR/Raman frequency section.
         # Example:

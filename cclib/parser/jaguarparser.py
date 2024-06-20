@@ -239,13 +239,13 @@ class Jaguar(logfileparser.Logfile):
             occs = int(line.split()[-1])
             line = next(inputfile)
             virts = int(line.split()[-1])
-            self.nmo = occs + virts
-            self.homos = numpy.array([occs - 1], "i")
 
-            self.unrestrictedflag = False
+            self.set_attribute("nmo", occs + virts)
+            self.set_attribute("homos", numpy.array([occs - 1], "i"))
+            self.set_attribute("unrestrictedflag", False)
 
         if line[1:28] == "number of occupied orbitals":
-            self.homos = numpy.array([float(line.strip().split()[-1]) - 1], "i")
+            self.set_attribute("homos", numpy.array([float(line.strip().split()[-1]) - 1], "i"))
 
         if line[2:27] == "number of basis functions":
             nbasis = int(line.strip().split()[-1])
@@ -262,14 +262,13 @@ class Jaguar(logfileparser.Logfile):
             line = next(inputfile)
             bvirt = int(line.split()[-1])
 
-            self.nmo = aoccs + avirts
-            self.homos = numpy.array([aoccs - 1, boccs - 1], "i")
-            self.unrestrictedflag = True
+            self.set_attribute("nmo", aoccs + avirts)
+            self.set_attribute("homos", numpy.array([aoccs - 1, boccs - 1], "i"))
+            self.set_attribute("unrestrictedflag", True)
 
         if line[0:4] == "etot":
             # Get SCF convergence information
             if not hasattr(self, "scfvalues"):
-                self.scfvalues = []
                 self.scftargets = [[5e-5, 5e-6]]
             values = []
             while line[0:4] == "etot":
@@ -298,7 +297,7 @@ class Jaguar(logfileparser.Logfile):
                         "File terminated before end of last SCF! Last error: %f", maxdiiserr
                     )
                     break
-            self.scfvalues.append(values)
+            self.append_attribute("scfvalues", values)
 
         # MO energies and symmetries.
         # Jaguar 7.0: provides energies and symmetries for both

@@ -2655,10 +2655,7 @@ Dispersion correction           -0.016199959
         assert line[2] == "Delta-E"
         assert line[3] == "Max-DP"
 
-        if not hasattr(self, "scfvalues"):
-            self.scfvalues = []
-
-        self.scfvalues.append([])
+        self.append_attribute("scfvalues", [])
 
         # Try to keep track of the converger (NR, DIIS, SOSCF, etc.).
         diis_active = True
