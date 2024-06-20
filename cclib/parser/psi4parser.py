@@ -52,7 +52,7 @@ class Psi4(logfileparser.Logfile):
         self.ccsd_t_trigger = "* CCSD(T) total energy"
 
     def after_parsing(self):
-        super(Psi4, self).after_parsing()
+        super().after_parsing()
 
         # Newer versions of Psi4 don't explicitly print the number of atoms.
         if not hasattr(self, "natom"):
@@ -80,7 +80,7 @@ class Psi4(logfileparser.Logfile):
             ["Irrep num and total size", "b", "123", "b"],
         ),
     }
-    GRADIENT_HEADERS = set([gradient_type.header for gradient_type in GRADIENT_TYPES.values()])
+    GRADIENT_HEADERS = {gradient_type.header for gradient_type in GRADIENT_TYPES.values()}
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""

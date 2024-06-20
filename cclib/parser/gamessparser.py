@@ -494,7 +494,7 @@ class GAMESS(logfileparser.Logfile):
                     else:
                         i_occ_vir = [0, 1]
                         i_coeff = 2
-                    fromMO, toMO = [int(cols[i]) - 1 for i in i_occ_vir]
+                    fromMO, toMO = (int(cols[i]) - 1 for i in i_occ_vir)
                     coeff = float(cols[i_coeff])
                     CIScontribs.append([(fromMO, 0), (toMO, 0), coeff])
                     line = next(inputfile)

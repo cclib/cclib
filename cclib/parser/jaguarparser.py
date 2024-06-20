@@ -43,7 +43,7 @@ class Jaguar(logfileparser.Logfile):
         self.geoopt = False
 
     def after_parsing(self):
-        super(Jaguar, self).after_parsing()
+        super().after_parsing()
 
         # This is to make sure we always have optdone after geometry optimizations,
         # even if it is to be empty for unconverged runs. We have yet to test this

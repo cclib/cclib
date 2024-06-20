@@ -12,7 +12,7 @@ from cclib.parser.utils import convertor, find_package
 
 import numpy
 
-""" In the dictionary sym2powerlist below, each element is a list that contain the combinations of
+r""" In the dictionary sym2powerlist below, each element is a list that contain the combinations of
     powers that are applied to x, y, and z in the equation for the gaussian primitives --
     \psi (x, y, z) = x^a * y^b * z^c * exp(-\lambda * r^2)
 """
@@ -149,7 +149,7 @@ def _check_pyvtk(found_pyvtk):
         raise ImportError("You must install `pyvtk` to use this function.")
 
 
-class Volume(object):
+class Volume:
     """Represent a volume in space.
 
     Required parameters:

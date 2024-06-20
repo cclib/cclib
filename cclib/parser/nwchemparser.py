@@ -1323,7 +1323,7 @@ class NWChem(logfileparser.Logfile):
 
     def after_parsing(self):
         """NWChem-specific routines for after parsing a file."""
-        super(NWChem, self).after_parsing()
+        super().after_parsing()
 
         # Expand self.shells into a proper aonames attribute.
         #

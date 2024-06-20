@@ -284,9 +284,9 @@ class DDEC6(Stockholder):
         stockholder_bigW = numpy.sum(stockholder_w, axis=0)
         localized_bigW = numpy.sum(localized_w, axis=0)
 
-        reference_charges = numpy.zeros((self.data.natom))
-        localizedcharges = numpy.zeros((self.data.natom))
-        stockholdercharges = numpy.zeros((self.data.natom))
+        reference_charges = numpy.zeros(self.data.natom)
+        localizedcharges = numpy.zeros(self.data.natom)
+        stockholdercharges = numpy.zeros(self.data.natom)
 
         for atomi in range(self.data.natom):
             # Equation 52 and 51 in doi: 10.1039/c6ra04656h
