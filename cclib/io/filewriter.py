@@ -157,7 +157,7 @@ class Writer(ABC):
         if not self.indices:
             self.indices = set()
         elif not isinstance(self.indices, Iterable):
-            self.indices = set([self.indices])
+            self.indices = {self.indices}
         # This is the most likely place to get the number of
         # geometries from.
         if hasattr(self.ccdata, "atomcoords"):

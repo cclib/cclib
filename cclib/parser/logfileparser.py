@@ -259,7 +259,7 @@ class Logfile(ABC):
 
     def hasattrs(self, names: Iterable[str]) -> bool:
         """Does this logfile have all the given attributes?"""
-        return all((hasattr(self, name) for name in names))
+        return all(hasattr(self, name) for name in names)
 
     def set_attribute(self, name: str, value: Any, check_change: bool = True) -> None:
         """Set an attribute and perform an optional check when it already exists.

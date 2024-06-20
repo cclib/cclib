@@ -113,7 +113,7 @@ class Hirshfeld(Stockholder):
         # radial distance from center of atom chi.
         stockholder_bigW = numpy.sum(stockholder_w, axis=0)
 
-        self.fragcharges = numpy.zeros((self.data.natom))
+        self.fragcharges = numpy.zeros(self.data.natom)
         self.logger.info("Creating fragcharges: array[1]")
 
         for atomi in range(self.data.natom):

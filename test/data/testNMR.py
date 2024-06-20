@@ -14,7 +14,7 @@ class GenericNMRTest:
 
     def testkeys(self, data) -> None:
         """Check dictionary keys are ints."""
-        key_types = set([type(key) for key in data.nmrtensors.keys()])
+        key_types = {type(key) for key in data.nmrtensors.keys()}
         assert len(key_types) == 1 and int in key_types
 
     def testsize(self, data) -> None:
@@ -41,12 +41,10 @@ class GenericNMRCouplingTest:
     def testkeys(self, data) -> None:
         """Check dictionary keys are ints."""
         assert all(
-            set(
-                [
-                    all((type(key[0]) == int, type(key[1]) == int))
-                    for key in data.nmrcouplingtensors.keys()
-                ]
-            )
+            {
+                all((type(key[0]) == int, type(key[1]) == int))
+                for key in data.nmrcouplingtensors.keys()
+            }
         )
 
         assert all(

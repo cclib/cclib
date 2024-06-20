@@ -124,7 +124,7 @@ class QChem(logfileparser.Logfile):
         ]
 
     def after_parsing(self):
-        super(QChem, self).after_parsing()
+        super().after_parsing()
 
         # If parsing a fragment job, each of the geometries appended to
         # `atomcoords` may be of different lengths, which will prevent
@@ -597,7 +597,7 @@ cannot be determined. Rerun without `$molecule read`."""
                         if line.split()[0].lower() == "read":
                             pass
                         else:
-                            charge, mult = [int(x) for x in line.split()]
+                            charge, mult = (int(x) for x in line.split())
                             self.user_input["molecule"]["charge"] = charge
                             self.user_input["molecule"]["mult"] = mult
 

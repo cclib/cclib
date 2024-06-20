@@ -1322,9 +1322,9 @@ Dispersion correction           -0.016199959
                     -----------------------------------------------------------------------------
                        1 5184116.7      1.9   0.040578220   0.00258  -0.05076  -0.00000  -0.00000"""
                     try:
-                        state, energy, wavelength, intensity, t2, tx, ty, tz = [
+                        state, energy, wavelength, intensity, t2, tx, ty, tz = (
                             utils.float(x) for x in line.split()
-                        ]
+                        )
                     except ValueError as e:
                         # Must be spin forbidden and thus no intensity
                         energy = utils.float(line.split()[1])
@@ -1359,7 +1359,7 @@ Dispersion correction           -0.016199959
                         d2_contrib,
                         m2_contrib,
                         q2_contrib,
-                    ) = [utils.float(x) for x in line.split()]
+                    ) = (utils.float(x) for x in line.split())
                     energy = utils.convertor(energy, "wavenumber", "hartree")
                     return energy, intensity
 
@@ -1448,9 +1448,9 @@ Dispersion correction           -0.016199959
                     -------------------------------------------------------------------------------
                      0  1       0.0      0.0   0.000000000   0.00000   0.00000   0.00000   0.00000
                      0  2 5184116.4      1.9   0.020288451   0.00258   0.05076   0.00003   0.00000"""
-                    state, state2, energy, wavelength, intensity, t2, tx, ty, tz = [
+                    state, state2, energy, wavelength, intensity, t2, tx, ty, tz = (
                         utils.float(x) for x in line.split()
-                    ]
+                    )
                     energy = utils.convertor(energy, "wavenumber", "hartree")
                     return energy, intensity
 
@@ -1483,7 +1483,7 @@ Dispersion correction           -0.016199959
                         d2_contrib,
                         m2_contrib,
                         q2_contrib,
-                    ) = [utils.float(x) for x in line.split()]
+                    ) = (utils.float(x) for x in line.split())
                     energy = utils.convertor(energy, "wavenumber", "hartree")
                     return energy, intensity
 
@@ -1635,7 +1635,7 @@ Dispersion correction           -0.016199959
                     etrotat, mx, my, mz = 0.0, 0.0, 0.0, 0.0
                     etenergy_wavenumber = utils.float(tokens[-4])
                 else:
-                    etrotat, mx, my, mz = [utils.float(t) for t in tokens[-4:]]
+                    etrotat, mx, my, mz = (utils.float(t) for t in tokens[-4:])
                     etenergy_wavenumber = utils.float(tokens[-6])
                 etenergies.append(utils.convertor(etenergy_wavenumber, "wavenumber", "hartree"))
                 etrotats.append(etrotat)
