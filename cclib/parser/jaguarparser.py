@@ -295,7 +295,7 @@ class Jaguar(logfileparser.Logfile):
                     line = next(inputfile)
                 except StopIteration:
                     self.logger.warning(
-                        f"File terminated before end of last SCF! Last error: {maxdiiserr}"
+                        "File terminated before end of last SCF! Last error: %f", maxdiiserr
                     )
                     break
             self.scfvalues.append(values)

@@ -945,7 +945,7 @@ cannot be determined. Rerun without `$molecule read`."""
                     # Is this the end of the file for some reason?
                     except StopIteration:
                         self.logger.warning(
-                            f"File terminated before end of last SCF! Last error: {error}"
+                            "File terminated before end of last SCF! Last error: %f", error
                         )
                         break
 

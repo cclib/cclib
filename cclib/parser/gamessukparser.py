@@ -383,7 +383,7 @@ class GAMESSUK(logfileparser.Logfile):
                     line = next(inputfile)
                 except StopIteration:
                     self.logger.warning(
-                        f"File terminated before end of last SCF! Last tester: {line.split()[5]}"
+                        "File terminated before end of last SCF! Last tester: %s", line.split()[5]
                     )
                     break
             self.scfvalues.append(scfvalues)

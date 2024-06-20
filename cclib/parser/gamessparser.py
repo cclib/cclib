@@ -809,9 +809,10 @@ class GAMESS(logfileparser.Logfile):
                     self.set_attribute("atommasses", atommasses)
 
                 if "THIS IS NOT A STATIONARY POINT" in line:
-                    msg = "\n   This is not a stationary point on the molecular PES"
-                    msg += "\n   The vibrational analysis is not valid!!!"
-                    self.logger.warning(msg)
+                    self.logger.warning(
+                        "\n   This is not a stationary point on the molecular PES"
+                        "\n   The vibrational analysis is not valid!!!"
+                    )
                 if "* * * WARNING, MODE" in line:
                     line1 = line.strip()
                     line2 = next(inputfile).strip()
@@ -1460,8 +1461,8 @@ class GAMESS(logfileparser.Logfile):
                 try:
                     assert self.moments[1] == dipole
                 except AssertionError:
-                    self.logger.warning("Overwriting previous multipole moments with new values")
                     self.logger.warning(
+                        "Overwriting previous multipole moments with new values; "
                         "This could be from post-HF properties or geometry optimization"
                     )
                     self.moments = [reference, dipole]

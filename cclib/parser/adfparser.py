@@ -558,8 +558,8 @@ class ADF(logfileparser.Logfile):
             line = next(inputfile)
             info = line.split()
 
-            if not info[0] == "1":
-                self.logger.warning(f"MO info up to #{info[0]} is missing")
+            if info[0] != "1":
+                self.logger.warning("MO info up to #%s is missing", info[0])
 
             # handle case where MO information up to a certain orbital are missing
             while int(info[0]) - 1 != len(self.moenergies[0]):

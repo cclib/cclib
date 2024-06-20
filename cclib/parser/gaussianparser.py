@@ -579,7 +579,9 @@ class Gaussian(logfileparser.Logfile):
                         numpy.testing.assert_equal(self.moments[4], hexadecapole)
                     except AssertionError:
                         self.logger.warning(
-                            f"Attribute hexadecapole changed value ({self.moments[4]} -> {hexadecapole})"
+                            "Attribute hexadecapole changed value (%s -> %s)",
+                            self.moments[4],
+                            hexadecapole,
                         )
                     self.append_attribute("moments", hexadecapole)
 
@@ -1091,7 +1093,8 @@ class Gaussian(logfileparser.Logfile):
                     value = utils.float(parts[2])
                 except ValueError:
                     self.logger.error(
-                        f"Problem parsing the value for geometry optimisation: {parts[2]} is not a number."
+                        "Problem parsing the value for geometry optimisation: %s is not a number.",
+                        parts[2],
                     )
                 else:
                     newlist[i] = value
@@ -1802,7 +1805,9 @@ class Gaussian(logfileparser.Logfile):
                     assert nbasis == self.nbasis
                 except AssertionError:
                     self.logger.warning(
-                        f"Number of basis functions (nbasis) has changed from {int(self.nbasis)} to {int(nbasis)}"
+                        "Number of basis functions (nbasis) has changed from %s to %s",
+                        self.nbasis,
+                        nbasis,
                     )
             self.nbasis = nbasis
 

@@ -429,7 +429,8 @@ class NWChem(logfileparser.Logfile):
                         # Is this the end of the file for some reason?
                         except StopIteration:
                             self.logger.warning(
-                                f"File terminated before end of last SCF! Last gradient norm: {gnorm}"
+                                "File terminated before end of last SCF! Last gradient norm: %f",
+                                gnorm,
                             )
                             break
                     if not hasattr(self, "scfvalues"):
@@ -490,7 +491,7 @@ class NWChem(logfileparser.Logfile):
                 # Is this the end of the file for some reason?
                 except StopIteration:
                     self.logger.warning(
-                        f"File terminated before end of last SCF! Last error: {diis}"
+                        "File terminated before end of last SCF! Last error: %f", diis
                     )
                     break
 
@@ -623,7 +624,7 @@ class NWChem(logfileparser.Logfile):
                     sym = sym[0].upper() + sym[1:]
                     if self.mosyms[0][index]:
                         if self.mosyms[0][index] != sym:
-                            self.logger.warning(f"Symmetry of MO {int(index + 1)} has changed")
+                            self.logger.warning("Symmetry of MO %d has changed", index + 1)
                     self.mosyms[0][index] = sym
                 line = next(inputfile)
 
@@ -1393,8 +1394,7 @@ class NWChem(logfileparser.Logfile):
                 shell_text = self.shells[element]
             except KeyError:
                 del self.aonames
-                msg = "Cannot determine aonames for at least one atom."
-                self.logger.warning(msg)
+                self.logger.warning("Cannot determine aonames for at least one atom.")
                 break
 
             prefix = f"{element}{int(i + 1)}_"  # (e.g. C1_)
