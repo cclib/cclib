@@ -372,7 +372,7 @@ class Turbomole(logfileparser.Logfile):
                 # Check we won't loose information converting to int.
                 if total_charge != total_charge_int:
                     self.logger.warning(
-                        f"Converting non integer total charge '{total_charge}' to integer"
+                        "Converting non integer total charge '%f' to integer", total_charge
                     )
 
                 # Set regardless.

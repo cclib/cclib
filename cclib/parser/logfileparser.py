@@ -107,9 +107,9 @@ class Logfile(ABC):
             # Call logger.info() only if the attribute is new.
             if not hasattr(self, name):
                 if type(value) in [numpy.ndarray, list]:
-                    self.logger.info(f"Creating attribute {name}[]")
+                    self.logger.info("Creating attribute %s[]", name)
                 else:
-                    self.logger.info(f"Creating attribute {name}: {str(value)}")
+                    self.logger.info("Creating attribute %s: %s", name, value)
 
         # Set the attribute.
         object.__setattr__(self, name, value)
@@ -165,7 +165,7 @@ class Logfile(ABC):
 
                 # Not all input files support last_line.
                 if hasattr(self.inputfile, "last_line"):
-                    self.logger.error(f"Last line read: {self.inputfile.last_line}")
+                    self.logger.error("Last line read: %s", self.inputfile.last_line)
                 raise
 
         # Maybe the sub-class has something to do after parsing.
@@ -282,7 +282,7 @@ class Logfile(ABC):
                 numpy.testing.assert_equal(getattr(self, name), value)
             except AssertionError:
                 self.logger.warning(
-                    f"Attribute {name} changed value ({getattr(self, name)} -> {value})"
+                    "Attribute %s changed value (%s -> %s)", name, getattr(self, name), value
                 )
 
         setattr(self, name, value)
@@ -370,10 +370,9 @@ class Logfile(ABC):
                         inspect.currentframe()
                     )[1]
                     parser = fname.split("/")[-1]
-                    msg = (
-                        f"In {parser}, line {int(lno)}, line not blank as expected: {line.strip()}"
+                    self.logger.warning(
+                        "In %s, line %d, line not blank as expected: %s", parser, lno, line.strip()
                     )
-                    self.logger.warning(msg)
 
             # All cases of heterogeneous lines can be dealt with by the same code.
             for character, keys in expected_characters.items():
@@ -385,8 +384,13 @@ class Logfile(ABC):
                             inspect.currentframe()
                         )[1]
                         parser = fname.split("/")[-1]
-                        msg = f"In {parser}, line {int(lno)}, line not all {keys[0]} as expected: {line.strip()}"
-                        self.logger.warning(msg)
+                        self.logger.warning(
+                            "In %s, line %d, line not all %s as expected: %s",
+                            parser,
+                            lno,
+                            keys[0],
+                            line.strip(),
+                        )
                         continue
 
             # Save the skipped line, and we will return the whole list.

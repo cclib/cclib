@@ -204,7 +204,7 @@ class Molpro(logfileparser.Logfile):
                     try:
                         c = float(p)
                     except ValueError as detail:
-                        self.logger.warning(f"setting coeff element to zero: {detail}")
+                        self.logger.warning("setting coeff element to zero: %s", detail)
                         c = 0.0
                     coeff.append(c)
                 coeffs.extend(coeff)
@@ -483,7 +483,7 @@ class Molpro(logfileparser.Logfile):
                     line = next(inputfile)
                 except StopIteration:
                     self.logger.warning(
-                        f"File terminated before end of last SCF! Last gradient: {grad}"
+                        "File terminated before end of last SCF! Last gradient: %f", grad
                     )
                     break
             self.scfvalues.append(numpy.array(scfvalues))

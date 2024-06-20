@@ -641,7 +641,10 @@ class Molcas(logfileparser.Logfile):
                 self.atomcoords.append(atomcoords)
             else:
                 self.logger.warning(
-                    f"Parsed coordinates not consistent with previous, skipping. This could be due to symmetry being turned on during the job. Length was {len(self.atomcoords[-1])}, now found {len(atomcoords)}. New coordinates: {str(atomcoords)}"
+                    "Parsed coordinates not consistent with previous, skipping. This could be due to symmetry being turned on during the job. Length was %d, now found %d. New coordinates: %s",
+                    len(self.atomcoords[-1]),
+                    len(atomcoords),
+                    atomcoords,
                 )
 
         #  **********************************************************************************************************************
@@ -694,7 +697,9 @@ class Molcas(logfileparser.Logfile):
                 self.atomcoords.append(atomcoords)
             else:
                 self.logger.error(
-                    f"Number of atoms ({len(atomcoords)}) in parsed atom coordinates is smaller than previously ({int(self.natom)}), possibly due to symmetry. Ignoring these coordinates."
+                    "Number of atoms (%d) in parsed atom coordinates is smaller than previously (%d), possibly due to symmetry. Ignoring these coordinates.",
+                    len(atomcoords),
+                    int(self.natom),
                 )
 
         ## Parsing Molecular Gradients attributes in this section.

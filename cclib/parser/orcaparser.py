@@ -2059,8 +2059,10 @@ Dispersion correction           -0.016199959
         if line[:11] == "IR SPECTRUM":
             package_version = self.metadata.get("package_version", None)
             if package_version is None:
-                self.logger.warning("package_version has not been set, assuming 5.x.x")
                 package_version = "5.x.x"
+                self.logger.warning(
+                    "package_version has not been set, assuming %s", package_version
+                )
             major_version = int(package_version[0])
             if major_version <= 4:
                 self.skip_lines(inputfile, ["d", "b", "header", "d"])
