@@ -36,7 +36,6 @@ class scftargets(base_parser):
             line = file_handler.virtual_next()
             # The MAX density matrix.
             curr_scftargets.append(utils.float(line.strip().split("=")[1][:-1]))
-            print(curr_scftargets)
             line = file_handler.virtual_next()
 
             # For G03, there's also the energy (not for G98).
