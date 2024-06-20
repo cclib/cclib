@@ -1465,7 +1465,7 @@ class GAMESS(logfileparser.Logfile):
                         "Overwriting previous multipole moments with new values; "
                         "This could be from post-HF properties or geometry optimization"
                     )
-                    self.moments = [reference, dipole]
+                    self.set_attribute("moments", [reference, dipole])
 
         # Static polarizability from a harmonic frequency calculation
         # with $CPHF/POLAR=.TRUE.
