@@ -59,6 +59,7 @@ test = [
     "pytest",
     "coverage",
     "pytest-cov",
+    "pyyaml",
 ]
 dev = ["cclib[bridges,docs,test]"]
 all = ["cclib[bridges]"]
