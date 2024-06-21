@@ -44,7 +44,7 @@ jobs:
           git config --global --add safe.directory /__w/cclib/cclib
       - name: Prepare conda environment
         run: |
-          echo "/opt/conda/envs/cclib/bin" >> $GITHUB_PATH
+          echo "/opt/conda/envs/cclib/bin" >> "${GITHUB_PATH}"
       - name: Install cclib
         run: |
           python -m pip install .
@@ -102,6 +102,7 @@ jobs:
       matrix:
         install-method: [wheel, source]
         python-version:
+          - 3.7
           - 3.8
           - 3.9
           - "3.10"

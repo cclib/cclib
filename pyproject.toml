@@ -59,12 +59,13 @@ test = [
     "pytest",
     "coverage",
     "pytest-cov",
+    "pyyaml",
 ]
 dev = ["cclib[bridges,docs,test]"]
 all = ["cclib[bridges]"]
 
 [build-system]
-requires = ["setuptools >= 61.0", "versioningit~=2.0"]
+requires = ["setuptools >= 61.0", "versioningit>=2.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
