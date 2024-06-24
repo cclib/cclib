@@ -175,8 +175,6 @@ class GenericSPTest:
     def testatomcoords(self, data) -> None:
         """Are the dimensions of atomcoords 1 x natom x 3?"""
         expected_shape = (1, data._ccCollection._parsed_data[0].natom, 3)
-        print("atomcoords are")
-        print(data._ccCollection._parsed_data[0].atomcoords)
         assert data._ccCollection._parsed_data[0].atomcoords.shape == expected_shape
 
     @skipForParser(

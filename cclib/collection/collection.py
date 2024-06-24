@@ -5,17 +5,19 @@
 
 """Classes for hierarchical storage of parsed data."""
 
-import logging
-from collections import namedtuple
-from typing import Any, Dict, List, Mapping, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Mapping, Optional
 
 from cclib.attribute_parsers import ccData
 
-import numpy
+if TYPE_CHECKING:
+    from cclib.combinator import combinator
+    from cclib.tree import Tree
 
 
 class ccCollection:
-    def __init__(self, combinator=None, tree=None) -> None:
+    def __init__(
+        self, combinator: Optional["combinator"] = None, tree: Optional["Tree"] = None
+    ) -> None:
         """Initialize the ccCollection object.
 
         Inputs:
@@ -29,7 +31,7 @@ class ccCollection:
 
         self._combinator = combinator
         self._tree = tree
-        self._parsed_data = [ccData() for i in range(self._tree.num_nodes)]
+        self._parsed_data = [ccData() for i in range(len(self._tree))]
         # [
         #         [attrparser1, attrparser2, attrparser3, etc]
         # ]
@@ -37,5 +39,5 @@ class ccCollection:
         #    assert len(self._combinator.job_list) == 1
 
     @property
-    def parsed_data(self):
+    def parsed_data(self) -> List[ccData]:
         return self._parsed_data

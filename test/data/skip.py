@@ -16,7 +16,6 @@ def skipForParser(parser: str, msg: str):
 
     def tstdecorator(testfunc: Callable) -> Callable[[], None]:
         func_args = list(signature(testfunc).parameters.keys())
-        print(func_args)
         if "numvib" in func_args:
 
             def tstwrapper(self, data, numvib) -> None:
@@ -75,7 +74,6 @@ def skipForLogfile(fragment: str, msg: str):
         else:
 
             def tstwrapper(self, data) -> None:
-                print(data._fileHandler)
                 if any(fragment in filename for filename in data._fileHandler.filenames):
                     pytest.skip(reason=f"{fragment}: {msg}")
                 else:

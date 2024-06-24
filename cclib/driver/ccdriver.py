@@ -11,12 +11,15 @@ import pathlib
 import sys
 import typing
 import warnings
-from typing import Optional, Union
+from typing import TYPE_CHECKING, List, Optional, Union
 
 from cclib.collection import ccCollection
 from cclib.combinator import auto_combinator
 from cclib.file_handler import FileHandler
 from cclib.tree import Tree
+
+if TYPE_CHECKING:
+    from cclib.combinator import combinator
 
 # from cclib.parser.utils import find_package
 
@@ -416,8 +419,8 @@ class ccDriver:
         source: typing.Union[
             str, typing.IO, FileHandler, typing.List[typing.Union[str, typing.IO]]
         ],
-        tree=None,
-        combinator=None,
+        tree: Optional[Tree] = None,
+        combinator: "combinator" = None,
         loglevel: int = logging.ERROR,
         logname: str = "Log",
         logstream=sys.stderr,
@@ -445,10 +448,9 @@ class ccDriver:
 
         if self._combinator is None:
             self._combinator = auto_combinator(self._tree)
-        # TODO pass graph here
         self._ccCollection = ccCollection(self._combinator, self._tree)
         self._fileHandler = source
-        self._identified_program = []
+        self._identified_program: List[str] = []
 
     @property
     def cccollection(self):
@@ -459,22 +461,22 @@ class ccDriver:
         return self._fileHandler
 
     @property
-    def combinator(self):
+    def combinator(self) -> "combinator":
         return self._combinator
 
     @property
-    def tree(self):
+    def tree(self) -> Tree:
         return self._tree
 
     @property
-    def identified_program(self):
+    def identified_program(self) -> Optional[str]:
         if not self._identified_program:
             return None
         else:
             return self._identified_program[-1]
 
     @identified_program.setter
-    def identified_program(self, in_prog):
+    def identified_program(self, in_prog: Optional[str]) -> None:
         if in_prog is None:
             if self._identified_program:
                 self._identified_program.pop()
