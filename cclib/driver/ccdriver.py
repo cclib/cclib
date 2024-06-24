@@ -440,11 +440,11 @@ class ccDriver:
             source = FileHandler(source)
 
         self._combinator = combinator
-        self._tree = tree
-        if self._tree is None:
+        if tree is None:
             # default to single job
-            self._tree = Tree()
-            self._tree.add_root()
+            tree = Tree()
+            tree.add_root()
+        self._tree = tree
 
         if self._combinator is None:
             self._combinator = auto_combinator(self._tree)
