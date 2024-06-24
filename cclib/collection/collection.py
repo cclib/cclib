@@ -10,13 +10,13 @@ from typing import TYPE_CHECKING, Any, Dict, List, Mapping, Optional
 from cclib.attribute_parsers import ccData
 
 if TYPE_CHECKING:
-    from cclib.combinator import combinator
+    from cclib.combinator import Combinator
     from cclib.tree import Tree
 
 
 class ccCollection:
     def __init__(
-        self, combinator: Optional["combinator"] = None, tree: Optional["Tree"] = None
+        self, combinator: Optional["Combinator"] = None, tree: Optional["Tree"] = None
     ) -> None:
         """Initialize the ccCollection object.
 

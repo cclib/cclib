@@ -14,12 +14,12 @@ import warnings
 from typing import TYPE_CHECKING, List, Optional, Union
 
 from cclib.collection import ccCollection
-from cclib.combinator import auto_combinator
+from cclib.combinator import AutoCombinator
 from cclib.file_handler import FileHandler
 from cclib.tree import Tree
 
 if TYPE_CHECKING:
-    from cclib.combinator import combinator
+    from cclib.combinator import Combinator
 
 # from cclib.parser.utils import find_package
 
@@ -420,7 +420,7 @@ class ccDriver:
             str, typing.IO, FileHandler, typing.List[typing.Union[str, typing.IO]]
         ],
         tree: Optional[Tree] = None,
-        combinator: "combinator" = None,
+        combinator: Optional["Combinator"] = None,
         loglevel: int = logging.ERROR,
         logname: str = "Log",
         logstream=sys.stderr,
@@ -446,8 +446,10 @@ class ccDriver:
             tree.add_root()
         self._tree = tree
 
-        if self._combinator is None:
-            self._combinator = auto_combinator(self._tree)
+        if combinator is None:
+            combinator = AutoCombinator(self._tree)
+        self._combinator = combinator
+
         self._ccCollection = ccCollection(self._combinator, self._tree)
         self._fileHandler = source
         self._identified_program: List[str] = []
@@ -461,7 +463,7 @@ class ccDriver:
         return self._fileHandler
 
     @property
-    def combinator(self) -> "combinator":
+    def combinator(self) -> "Combinator":
         return self._combinator
 
     @property
