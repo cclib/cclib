@@ -455,7 +455,7 @@ class ccDriver:
         self._identified_program: List[str] = []
 
     @property
-    def cccollection(self):
+    def cccollection(self) -> ccCollection:
         return self._ccCollection
 
     @property
@@ -485,37 +485,32 @@ class ccDriver:
         else:
             self._identified_program.append(in_prog)
 
-    def process_combinator(self):
+    def process_combinator(self) -> ccCollection:
         """Process the combinator and populate the ccData object in the ccCollection"""
         self.identified_program = None
         line = self._fileHandler.last_line
         current_idx = self._tree.get_next_idx()
         while line := self._fileHandler.next():
             for program, phrases, do_break in triggers_on:
-                if all([line.lower().find(p.lower()) >= 0 for p in phrases]):
+                if all([line.lower().find(phrase.lower()) >= 0 for phrase in phrases]):
                     if self.identified_program is None:
-                        self.identified_program = program
-                        self._ccCollection.parsed_data[0].setattributes(
-                            {"metadata": {"identified_program": program}}
-                        )
-                        if do_break:
-                            break
+                        current_idx = 0
                     else:
                         # if a program is within a program this might mean things are ok but we proceed to a child node.. think about how to handle this?
                         current_idx = self._tree.get_next_idx()
-                        self.identified_program = program
-                        self._ccCollection.parsed_data[current_idx].setattributes(
-                            {"metadata": {"identified_program": program}}
-                        )
-                        if do_break:
-                            break
+                    self.identified_program = program
+                    self._ccCollection.parsed_data[current_idx].setattributes(
+                        {"metadata": {"identified_program": program}}
+                    )
+                    if do_break:
+                        break
             for program, phrases, do_break in triggers_off:
-                if all([line.lower().find(p.lower()) >= 0 for p in phrases]):
+                if all([line.lower().find(phrase.lower()) >= 0 for phrase in phrases]):
                     self.identified_program = None
                     current_idx = self._tree.get_next_idx()
                     if do_break:
                         break
-            if self.identified_program == None:
+            if self.identified_program is None:
                 line = next(self._fileHandler)
                 continue
             # right now combinator is just a list of list of subparsers, tree idxs access what list of parsers we are using
