@@ -499,6 +499,7 @@ class ccDriver:
                     else:
                         # if a program is within a program this might mean things are ok but we proceed to a child node.. think about how to handle this?
                         current_idx = self._tree.get_next_idx()
+                        assert current_idx is not None
                     self.identified_program = program
                     self._ccCollection.parsed_data[current_idx].setattributes(
                         {"metadata": {"identified_program": program}}
@@ -514,6 +515,7 @@ class ccDriver:
             if self.identified_program is None:
                 line = next(self._fileHandler)
                 continue
+            assert current_idx is not None
             # right now combinator is just a list of list of subparsers, tree idxs access what list of parsers we are using
             for subparser in self._combinator.job_list[current_idx]:
                 parsed_data = subparser.parse(
