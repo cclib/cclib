@@ -21,7 +21,7 @@ from typing import Any, Iterable, List, Optional
 from urllib.error import URLError
 from urllib.request import urlopen
 
-from cclib.file_handler import utils
+from cclib.parser import utils
 
 # Regular expression for validating URLs
 URL_PATTERN = re.compile(

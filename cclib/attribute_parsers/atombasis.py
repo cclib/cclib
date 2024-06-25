@@ -5,8 +5,8 @@
 import re
 from typing import Optional
 
-from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
+from cclib.parser import utils
 
 import numpy as np
 
