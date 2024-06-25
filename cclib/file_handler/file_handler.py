@@ -14,10 +14,9 @@ import io
 import logging
 import pathlib
 import re
-import typing
 import zipfile
 from tempfile import NamedTemporaryFile
-from typing import Any, Iterable, List, Optional
+from typing import IO, Any, Iterable, List, Optional, Tuple
 from urllib.error import URLError
 from urllib.request import urlopen
 
@@ -69,7 +68,6 @@ class FileHandler:
         for source in sources:
             if isinstance(source, list):
                 expanded_sources.extend(source)
-
             else:
                 expanded_sources.append(source)
 
@@ -130,7 +128,7 @@ class FileHandler:
     @classmethod
     def open_log_file(
         self, source, mode: str = "r", encoding: str = "utf-8", errors: str = "logerror"
-    ) -> typing.Tuple[str, typing.IO]:
+    ) -> Tuple[str, IO]:
         """
         Open a possibly compressed file, returning both the filename of the file and an open file object.
         """
@@ -304,7 +302,7 @@ class FileHandler:
         """
         return next(self)
 
-    def readlines(self) -> typing.List[str]:
+    def readlines(self) -> List[str]:
         """
         Read all the lines from this file.
         """
