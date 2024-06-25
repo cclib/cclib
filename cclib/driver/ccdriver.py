@@ -486,11 +486,12 @@ class ccDriver:
             self._identified_program.append(in_prog)
 
     def process_combinator(self) -> ccCollection:
-        """Process the combinator and populate the ccData object in the ccCollection"""
+        """Process the combinator and populate the ccData objects in the ccCollection"""
         self.identified_program = None
         line = self._fileHandler.last_line
         current_idx = self._tree.get_next_idx()
-        while line := self._fileHandler.next():
+        # TODO for line in self._fileHandler:
+        while line := next(self._fileHandler):
             for program, phrases, do_break in triggers_on:
                 if all([line.lower().find(phrase.lower()) >= 0 for phrase in phrases]):
                     if self.identified_program is None:

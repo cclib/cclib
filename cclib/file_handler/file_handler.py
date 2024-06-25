@@ -224,7 +224,7 @@ class FileHandler:
         """
         self.close()
 
-    def virtual_set(self):
+    def virtual_set(self) -> None:
         """
         For use with property parsers to handle parsing
         through a block of text without changing the state of fileHandler.
@@ -233,7 +233,7 @@ class FileHandler:
         """
         self.virtual_reset_position = self.pos
 
-    def virtual_reset(self):
+    def virtual_reset(self) -> None:
         """
         For use with property parsers to handle parsing
         through a block of text without changing the state of fileHandler.
@@ -246,7 +246,7 @@ class FileHandler:
         self.pos = self.virtual_reset_position
         self.virtual_reset_position = None
 
-    def virtual_next(self):
+    def virtual_next(self) -> str:
         """
         For use with property parsers to handle parsing
         through a block of text without changing the state of fileHandler
@@ -263,7 +263,7 @@ class FileHandler:
             # possibly raise a warning? but we are ok just reaching the end of a file for a subparser parsing
             return
 
-    def next(self) -> str:
+    def __next__(self) -> str:
         """
         Get the next line from this log file.
         """
@@ -276,11 +276,11 @@ class FileHandler:
 
             except StopIteration:
                 self.file_pointer += 1
-                return self.next()
+                return next(self)
 
         except IndexError:
-            return False
             # raise StopIteration()
+            return False
 
     @property
     def last_line(self) -> str:
@@ -288,9 +288,6 @@ class FileHandler:
         Return the last line read by this parser.
         """
         return self.last_lines[-1]
-
-    def __next__(self):
-        return self.next()
 
     def __iter__(self):
         return self
@@ -353,7 +350,7 @@ class FileHandler:
     #                 # Seek forwards please.
     #                 file_size = self.sizes[self.file_pointer]
 
-    def reset(self):
+    def reset(self) -> None:
         # Equivalent to seeking to 0 for all our files.
         for file in self.files:
             file.seek(0, 0)
@@ -361,7 +358,7 @@ class FileHandler:
         self.file_pointer = 0
         self.pos = 0
 
-    def finish(self):
+    def finish(self) -> None:
         # Equivalent to seeking to 2 for all our files.
         for file in self.files:
             file.seek(0, 2)
@@ -369,7 +366,7 @@ class FileHandler:
         self.file_pointer = len(self.files) - 1
         self.pos = self.size
 
-    def skip_lines(self, sequence: Iterable[str], virtual=False) -> List[str]:
+    def skip_lines(self, sequence: Iterable[str], virtual: bool = False) -> List[str]:
         """Read trivial line types and check they are what they are supposed to be.
 
         This function will read len(sequence) lines and do certain checks on them,
@@ -389,7 +386,7 @@ class FileHandler:
             if virtual:
                 line = self.virtual_next()
             else:
-                line = self.next()
+                line = next(self)
 
             # Blank lines are perhaps the most common thing we want to check for.
             if expected in ["blank", "b"]:
