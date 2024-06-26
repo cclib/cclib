@@ -42,7 +42,7 @@ if TYPE_CHECKING:
 #
 # The triggers are defined by the tuples in the list below like so:
 #   (parser, phrases, flag whether we should break)
-triggers_on = [
+TRIGGERS_ON = [
     ("ADF", ["Amsterdam Density Functional"], True),
     ("DALTON", ["Dalton - An Electronic Structure Program"], True),
     ("FChk", ["Number of atoms", "I"], True),
@@ -65,7 +65,7 @@ triggers_on = [
     ("Turbomole", ["TURBOMOLE"], True),
 ]
 
-triggers_off = [
+TRIGGERS_OFF = [
     # todo     (ADF,       ["Amsterdam Density Functional"],                   True),
     # todo     (DALTON,    ["Dalton - An Electronic Structure Program"],       True),
     # todo     (FChk,      ["Number of atoms", "I"],                           True),
@@ -487,12 +487,23 @@ class ccDriver:
 
     def process_combinator(self) -> ccCollection:
         """Process the combinator and populate the ccData objects in the ccCollection"""
+        # Current:
+        #
+        # The object is already initialized with the tree and corresponding number of ccData instances in the collection.
+        # Loop over all the lines in the (combined) file.  For each line...
+        #   Look for triggers that start programs,  For each that matches, set the program on the ccData instance for that node, increasing the node counter.
+        #   Look for triggers that stop programs.  For each that matches, increase the node counter.
+        #   Run each parser in the combinator for the node id on the discovered program.
+        #
+        # Future:
+        #
+        # Loop over all the lines in the (combined) file.
         self.identified_program = None
         line = self._fileHandler.last_line
         current_idx = self._tree.get_next_idx()
         # TODO for line in self._fileHandler:
         while line := next(self._fileHandler):
-            for program, phrases, do_break in triggers_on:
+            for program, phrases, do_break in TRIGGERS_ON:
                 if all([line.lower().find(phrase.lower()) >= 0 for phrase in phrases]):
                     if self.identified_program is None:
                         current_idx = 0
@@ -506,7 +517,7 @@ class ccDriver:
                     )
                     if do_break:
                         break
-            for program, phrases, do_break in triggers_off:
+            for program, phrases, do_break in TRIGGERS_OFF:
                 if all([line.lower().find(phrase.lower()) >= 0 for phrase in phrases]):
                     self.identified_program = None
                     current_idx = self._tree.get_next_idx()

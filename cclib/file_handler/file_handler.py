@@ -97,6 +97,8 @@ class FileHandler:
         # Init with 10 empty strings (empty lines).
         self.last_lines = collections.deque([""] * 10, 10)
 
+        self.virtual_reset_position: Optional[int] = None
+
     @property
     def file_name(self) -> str:
         return ", ".join(self.filenames)
@@ -227,7 +229,7 @@ class FileHandler:
     def virtual_set(self) -> None:
         """
         For use with property parsers to handle parsing
-        through a block of text without changing the state of fileHandler.
+        through a block of text without changing the state of the handler.
 
         Sets the virtual_file_pointer to the current file_pointer
         """
@@ -236,12 +238,14 @@ class FileHandler:
     def virtual_reset(self) -> None:
         """
         For use with property parsers to handle parsing
-        through a block of text without changing the state of fileHandler.
+        through a block of text without changing the state of the handler.
 
         Sets the virtual_file_pointer to the current file_pointer
         """
         if self.virtual_reset_position is None:
-            raise RuntimeError("virtual_set() must be called before reset and virtual_next")
+            raise RuntimeError(
+                "virtual_set() must be called before virtual_reset() and virtual_next()"
+            )
         self.files[self.file_pointer].seek(self.virtual_reset_position)
         self.pos = self.virtual_reset_position
         self.virtual_reset_position = None
@@ -249,7 +253,7 @@ class FileHandler:
     def virtual_next(self) -> str:
         """
         For use with property parsers to handle parsing
-        through a block of text without changing the state of fileHandler
+        through a block of text without changing the state of the handler
 
         virtual_next will _not_ advance to the next file
         """
