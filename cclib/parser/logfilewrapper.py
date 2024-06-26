@@ -13,6 +13,7 @@ import io
 import logging
 import pathlib
 import re
+import sys
 import typing
 import zipfile
 from collections.abc import Iterator
@@ -45,8 +46,13 @@ def logerror(error):
 
 codecs.register_error("logerror", logerror)
 
+if sys.version_info.minor > 8:
+    FileWrapperBase = Iterator[str]
+else:
+    FileWrapperBase = Iterator
 
-class FileWrapper(Iterator[str]):
+
+class FileWrapper(FileWrapperBase):
     """Wrap any supported input file type."""
 
     def __init__(self, *sources) -> None:
