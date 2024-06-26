@@ -47,6 +47,7 @@ class ccData:
         fooverlaps -- fragment orbital overlap matrix (array[2])
         fragnames -- names of fragments (list of strings)
         frags -- indices of atoms in a fragment (list of lists)
+        frozenatoms -- indices of atoms with Gaussian -1 frozen atom flags, 1 indexed (list of integers)
         gbasis -- coefficients and exponents of Gaussian basis functions (PyQuante format)
         geotargets -- targets for convergence of geometry optimization (array[1])
         geovalues -- current values for convergence of geometry optmization (array[1])
@@ -62,6 +63,7 @@ class ccData:
         mult -- multiplicity of the system (integer)
         natom -- number of atoms (integer)
         nbasis -- number of basis functions (integer)
+        nfrozenatom -- number of atoms with -1 Gaussian frozen flag in molecule specification (integer)
         nmo -- number of molecular orbitals (integer)
         nmrtensors -- Nuclear magnetic resonance chemical shielding tensors (dict of dicts of array[2])
         nmrcouplingtensors -- Nuclear magnetic resonance spin-spin coupling tensors (dict of dicts of array[2])
@@ -135,6 +137,7 @@ class ccData:
         "fooverlaps": Attribute(numpy.ndarray, "orbital overlap", "fragments"),
         "fragnames": Attribute(list, "fragment names", "fragments"),
         "frags": Attribute(list, "atom indices", "fragments"),
+        "frozenatoms": Attribute(list, "frozen atom indices", "optimization"),
         "gbasis": Attribute(list, "basis functions", "atoms:orbitals"),
         "geotargets": Attribute(numpy.ndarray, "geometric targets", "optimization"),
         "geovalues": Attribute(numpy.ndarray, "geometric values", "optimization"),
@@ -150,6 +153,7 @@ class ccData:
         "mult": Attribute(int, "multiplicity", "properties"),
         "natom": Attribute(int, "number of atoms", "properties"),
         "nbasis": Attribute(int, "basis number", "properties:orbitals"),
+        "nfrozenatom": Attribute(int, "number of frozen atoms", "optimization"),
         "nmo": Attribute(int, "MO number", "properties:orbitals"),
         "nmrtensors": Attribute(dict, "NMR chemical shielding tensors", "properties:nmr"),
         "nmrcouplingtensors": Attribute(dict, "NMR spin-spin coupling tensors", "properties:nmr"),
@@ -187,7 +191,7 @@ class ccData:
     _attrlist = sorted(_attributes.keys())
 
     # Arrays are double precision by default, but these will be integer arrays.
-    _intarrays = ["atomnos", "coreelectrons", "homos", "optstatus"]
+    _intarrays = ["atomnos", "coreelectrons", "frozenatoms", "homos", "optstatus"]
 
     # Attributes that should be lists of arrays (double precision).
     _listsofarrays = ["mocoeffs", "moenergies", "moments", "polarizabilities", "scfvalues"]
