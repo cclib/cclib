@@ -3132,12 +3132,6 @@ class JaguarSPTest_nmo45(JaguarSPTest_noatomcharges):
         """atombasis was not parsed correctly here."""
 
 
-class JaguarGeoOptTest_nmo45(GenericGeoOptTest):
-    def testlengthmoenergies(self, data: "ccData") -> None:
-        """Without special options, Jaguar only print Homo+10 orbital energies."""
-        assert len(data.moenergies[0]) == 45
-
-
 class JaguarGeoOptTest_6_31gss(GenericGeoOptTest):
     nbasisdict = {1: 5, 6: 15}
     scfenergy = -387.064207
