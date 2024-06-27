@@ -173,9 +173,13 @@ class Psi4(logfileparser.Logfile):
             units = tokens[2][:-2]
             assert units in ("Angstrom", "Bohr")
             if units == "Bohr":
-                convert_coords = lambda x: utils.convertor(x, "bohr", "Angstrom")
+
+                def convert_coords(x: numpy.ndarray) -> numpy.ndarray:
+                    return utils.convertor(x, "bohr", "Angstrom")
             else:
-                convert_coords = lambda x: x
+
+                def convert_coords(x: numpy.ndarray) -> numpy.ndarray:
+                    return x
 
             assert tokens[3] == "charge"
             charge = int(tokens[5].strip(","))
@@ -338,7 +342,8 @@ class Psi4(logfileparser.Logfile):
                 last_same = ngbasis - self.atomnos[:ngbasis][::-1].index(missing_atomno) - 1
                 return gbasis[last_same]
 
-            dfact = lambda n: (n <= 0) or n * dfact(n - 2)
+            def dfact(n: int) -> int:
+                return n <= 0 or n * dfact(n - 2)
 
             # Early beta versions of Psi4 normalize basis function
             # coefficients when printing.
@@ -353,7 +358,9 @@ class Psi4(logfileparser.Logfile):
                     else:
                         return norm_s
             else:
-                get_normalization_factor = lambda exp, lx, ly, lz: 1
+
+                def get_normalization_factor(exp: float, lx: int, ly: int, lz: int) -> float:
+                    return 1.0
 
             self.skip_lines(inputfile, ["b", "basisname"])
 
