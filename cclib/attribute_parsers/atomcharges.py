@@ -104,7 +104,7 @@ class atomcharges(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["ORCA", "NBO", "psi4", "qchem"]
+    known_codes = ["orca", "nbo", "psi4", "qchem"]
 
     @staticmethod
     def ORCA(file_handler, ccdata) -> Optional[dict]:
