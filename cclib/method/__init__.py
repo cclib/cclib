@@ -5,6 +5,7 @@
 
 """Example analyses and calculations based on data parsed by cclib."""
 
+# ruff: noqa: F401
 from cclib.method.bader import Bader
 from cclib.method.bickelhaupt import Bickelhaupt
 from cclib.method.cda import CDA
