@@ -14,7 +14,7 @@
 import math
 import re
 
-from cclib.parser import data, logfileparser, utils
+from cclib.parser import logfileparser, utils
 
 import numpy
 

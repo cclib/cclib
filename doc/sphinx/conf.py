@@ -15,9 +15,6 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import os
-import sys
-
 
 # this adds the styling ccs to increase the content max width
 # previously there was a large blank space on the right side of the screen

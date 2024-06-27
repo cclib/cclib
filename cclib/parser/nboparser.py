@@ -5,12 +5,7 @@
 
 """Parser for NBO output files"""
 
-import re
-
-from cclib.parser import logfileparser, utils
-from cclib.parser.utils import PeriodicTable
-
-import numpy
+from cclib.parser import logfileparser
 
 
 class NBO(logfileparser.Logfile):

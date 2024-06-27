@@ -8,7 +8,7 @@
 import re
 from itertools import accumulate
 from math import sqrt
-from typing import Iterable, List, Sequence, TypeVar
+from typing import List, Sequence
 
 import numpy
 import periodictable
