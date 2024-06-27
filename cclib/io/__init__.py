@@ -5,6 +5,7 @@
 
 """Contains all writers for standard chemical representations."""
 
+# ruff: noqa: F401
 # This allows users to type:
 #   from cclib.io import ccframe
 #   from cclib.io import ccopen
