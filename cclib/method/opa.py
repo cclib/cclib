@@ -5,9 +5,6 @@
 
 """Calculation of overlap population analysis based on cclib data."""
 
-import random
-
-from cclib.method.calculationmethod import Method
 from cclib.method.population import Population
 
 import numpy
