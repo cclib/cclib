@@ -31,6 +31,7 @@ inside the data directory, like so:
     python -m pytest test/regression.py -k 'Gaussian_Gaussian03_borane_opt_log'
 """
 
+# ruff: noqa: E402, F401
 import datetime
 import logging
 import sys
