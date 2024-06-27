@@ -786,9 +786,13 @@ cannot be determined. Rerun without `$molecule read`."""
             # Extract the atomic numbers and coordinates of the atoms.
             if "Standard Nuclear Orientation" in line:
                 if "Angstroms" in line:
-                    convertor = lambda x: x
+
+                    def convertor(x: float) -> float:
+                        return x
                 elif "Bohr" in line:
-                    convertor = lambda x: utils.convertor(x, "bohr", "Angstrom")
+
+                    def convertor(x: float) -> float:
+                        return utils.convertor(x, "bohr", "Angstrom")
                 else:
                     raise ValueError(f"Unknown units in coordinate header: {line}")
                 self.skip_lines(inputfile, ["cols", "dashes"])
