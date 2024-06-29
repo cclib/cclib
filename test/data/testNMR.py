@@ -28,9 +28,8 @@ class GenericNMRTest:
         tensor = data.nmrtensors[0]
         total = 0.0
         for t_type in ("diamagnetic", "paramagnetic"):
-            total += sum(numpy.linalg.eigvals(tensor[t_type])) / len(
-                numpy.linalg.eigvals(tensor[t_type])
-            )
+            eigvals = numpy.linalg.eigvals(tensor[t_type])
+            total += numpy.mean(eigvals)
 
         assert total == pytest.approx(tensor["isotropic"], abs=3)
 
@@ -74,8 +73,7 @@ class GenericNMRCouplingTest:
             "spin-dipolar",
             "spin-dipolar-fermi",
         ):
-            total += sum(numpy.linalg.eigvals(tensor[t_type])) / len(
-                numpy.linalg.eigvals(tensor[t_type])
-            )
+            eigvals = numpy.linalg.eigvals(tensor[t_type])
+            total += numpy.mean(eigvals)
 
         assert total == pytest.approx(tensor["isotropic"], abs=3)
