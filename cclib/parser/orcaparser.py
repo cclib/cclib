@@ -253,7 +253,7 @@ class ORCA(logfileparser.Logfile):
                                     float(angle),
                                     float(dihedral),
                                 ]
-                            except:
+                            except:  # noqa: E722
                                 return [
                                     atom,
                                     int(a1),

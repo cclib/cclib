@@ -99,7 +99,7 @@ class CDA(FragmentAnalysis):
                             * fooverlaps[k][n]
                         )
 
-                for l in range(offset, offset + homob + 1):
+                for l in range(offset, offset + homob + 1):  # noqa: E741
                     for m in range(homoa + 1, offset):
                         bdonations[spin][i] += (
                             2

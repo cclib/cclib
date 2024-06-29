@@ -24,7 +24,7 @@ if _has_openbabel:
         import openbabel.pybel as pb
         from openbabel import openbabel as ob
     # Open Babel 2.4.x and below
-    except:
+    except:  # noqa: E722
         import openbabel as ob
 
         # There's no guarantee pybel is also available...

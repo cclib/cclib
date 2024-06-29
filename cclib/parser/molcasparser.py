@@ -986,7 +986,7 @@ class Molcas(logfileparser.Logfile):
                     try:
                         basis_element = line.split()[3].split(".")[0]
                         basis_element = basis_element[0] + basis_element[1:].lower()
-                    except:
+                    except:  # noqa: E722
                         self.logger.warning("Basis set label is missing!")
                         basis_element = ""
                 if "valence basis set:" in line.lower():

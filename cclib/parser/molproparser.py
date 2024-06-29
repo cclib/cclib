@@ -360,19 +360,19 @@ class Molpro(logfileparser.Logfile):
                     # update the dict if something unexpected comes up.
                     funcbasis = None
                     for fb, names in self.atomic_orbital_names.items():
-                        if functype in names:
+                        if functype in names:  # noqa: F821
                             funcbasis = fb
                     assert funcbasis
 
                     # There is a separate basis function for each column of contraction coefficients. Since all
                     # atomic orbitals for a subshell will have the same parameters, we can simply check if
                     # the function tuple is already in gbasis[i] before adding it.
-                    for i in range(len(coefficients[0])):
+                    for i in range(len(coefficients[0])):  # noqa: F821
                         func = (funcbasis, [])
-                        for j in range(len(exponents)):
-                            func[1].append((exponents[j], coefficients[j][i]))
-                        if func not in gbasis[funcatom - 1]:
-                            gbasis[funcatom - 1].append(func)
+                        for j in range(len(exponents)):  # noqa: F821
+                            func[1].append((exponents[j], coefficients[j][i]))  # noqa: F821
+                        if func not in gbasis[funcatom - 1]:  # noqa: F821
+                            gbasis[funcatom - 1].append(func)  # noqa: F821
 
                 # If it is a new type, set up the variables for the next shell(s). An exception is symmetry functions,
                 # which we want to copy from the previous function and don't have a new number on the line. For them,
@@ -807,7 +807,7 @@ class Molpro(logfileparser.Logfile):
             while line.strip():
                 try:
                     list(map(float, line.strip().split()[2:]))
-                except:
+                except:  # noqa: E722
                     line = next(inputfile)
                 line.strip().split()[1:]
                 hess.extend([list(map(float, line.strip().split()[1:]))])
@@ -826,7 +826,7 @@ class Molpro(logfileparser.Logfile):
                     break
                 if k >= lig:
                     k = len(tmp[-1])
-            for l in tmp:
+            for l in tmp:  # noqa: E741
                 hessian += l
 
             self.set_attribute("hessian", hessian)

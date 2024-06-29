@@ -261,6 +261,6 @@ context = {
 }
 
 if "html_context" in globals():
-    html_context.update(context)
+    html_context.update(context)  # noqa: F821
 else:
     html_context = context
