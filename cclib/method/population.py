@@ -81,7 +81,6 @@ class Population(Method):
                     indices[index].append(i)
 
         natoms = len(indices)
-        nmocoeffs = len(self.aoresults[0])
 
         # Build results numpy array[3].
         alpha = len(self.aoresults[0])
