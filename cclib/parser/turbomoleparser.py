@@ -2,19 +2,18 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
-from datetime import timedelta
-
-import scipy.constants
 
 """Parser for Turbomole output files."""
 
 import re
 import typing
+from datetime import timedelta
 from pathlib import Path
 
 from cclib.parser import data, logfileparser, utils
 
 import numpy
+import scipy.constants
 
 
 class AtomBasis:
