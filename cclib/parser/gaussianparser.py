@@ -1088,7 +1088,7 @@ class Gaussian(logfileparser.Logfile):
                 self.logger.debug(line)
                 parts = line.split()
                 if "NO" in parts[-1]:
-                    allconverged = False
+                    allconverged = False  # noqa: F841
                 try:
                     value = utils.float(parts[2])
                 except ValueError:
@@ -1913,7 +1913,7 @@ class Gaussian(logfileparser.Logfile):
                     self.logger.warning("Molecular coefficients header found but no coefficients.")
                     break
 
-                symmetries = next(inputfile)
+                symmetries = next(inputfile)  # noqa: F841
                 eigenvalues = next(inputfile)
                 for i in range(self.nbasis):
                     line = next(inputfile)
@@ -1965,7 +1965,7 @@ class Gaussian(logfileparser.Logfile):
             atombasis = []
             for base in range(0, self.nmo, 5):
                 self.updateprogress(inputfile, updateprogress_title, self.fupdate)
-                colmNames = next(inputfile)
+                self.skip_line(inputfile, "column numbers")
                 eigenvalues = next(inputfile)
                 occnos.extend(map(float, eigenvalues.split()[2:]))
                 for i in range(self.nbasis):
@@ -2274,9 +2274,9 @@ class Gaussian(logfileparser.Logfile):
                 line1 = next(inputfile)
                 line2 = next(inputfile)
                 if line1.split()[0] == "Natural" and line2.split()[2] == "Charge":
-                    dashes = next(inputfile)
+                    self.skip_line(inputfile, "d")
                     charges = []
-                    for i in range(self.natom):
+                    for _ in range(self.natom):
                         nline = next(inputfile)
                         charges.append(float(nline.split()[2]))
                     self.atomcharges["natural"] = charges

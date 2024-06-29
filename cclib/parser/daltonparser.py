@@ -495,7 +495,7 @@ class DALTON(logfileparser.Logfile):
                     orbital = cols[2]
                     prims = [int(i) - 1 for i in cols[3:]]
 
-                shell = orbital[0]
+                shell = orbital[0]  # noqa: F841
                 subshell = orbital[1].upper()
 
                 iatom = basisatoms[ibasis]
@@ -760,7 +760,7 @@ class DALTON(logfileparser.Logfile):
             # the number of electrons for open-shell calculations.
             while "Number of electrons" not in line:
                 line = next(inputfile)
-            nelectrons = int(line.split()[-1])
+            nelectrons = int(line.split()[-1])  # noqa: F841
 
             line = next(inputfile)
             occupations = [int(o) for o in line.split()[3:]]

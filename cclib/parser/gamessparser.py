@@ -193,7 +193,7 @@ class GAMESS(logfileparser.Logfile):
         # Symmetry: ordering of irreducible representations
         if line.strip() == "DIMENSIONS OF THE SYMMETRY SUBSPACES ARE":
             line = next(inputfile)
-            symlabels = [self.normalisesym(label) for label in line.split()[::3]]
+            symlabels = [self.normalisesym(label) for label in line.split()[::3]]  # noqa: F841
 
         # We are looking for this line:
         #           PARAMETERS CONTROLLING GEOMETRY SEARCH ARE
@@ -389,7 +389,7 @@ class GAMESS(logfileparser.Logfile):
             if "OPTICALLY" in line:
                 pass
             else:
-                statenumber = int(line.split()[-1])
+                statenumber = int(line.split()[-1])  # noqa: F841
                 self.skip_lines(
                     inputfile,
                     [
@@ -882,7 +882,7 @@ class GAMESS(logfileparser.Logfile):
                         self.vibramans = []
                     ramanIntensity = line.strip().split()
                     self.vibramans.extend(list(map(float, ramanIntensity[2:])))
-                    depolar = next(inputfile)
+                    depolar = next(inputfile)  # noqa: F841
                     line = next(inputfile)
 
                 # This line seems always to be blank.
@@ -1062,7 +1062,7 @@ class GAMESS(logfileparser.Logfile):
 
                 # This is for regression CdtetraM1B3LYP.
                 if "ALPHA SET" in numbers:
-                    blank = next(inputfile)
+                    self.skip_line(inputfile, "b")
                     numbers = next(inputfile)
 
                 # If not all coefficients are printed, the logfile will go right to
@@ -1107,7 +1107,6 @@ class GAMESS(logfileparser.Logfile):
 
                     # Fill atombasis and aonames only first time around
                     if readatombasis and base == 0:
-                        aonames = []
                         start = line[:17].strip()
                         m = p.search(start)
 
@@ -1175,10 +1174,10 @@ class GAMESS(logfileparser.Logfile):
 
             # Covers label with both dashes and stars (like regression CdtetraM1B3LYP).
             if "BETA SET" in line:
-                self.mocoeffs.append(numpy.zeros((self.nmo, self.nbasis), "d"))
-                self.moenergies.append([])
-                self.mosyms.append([])
-                blank = next(inputfile)
+                self.append_attribute("mocoeffs", numpy.zeros((self.nmo, self.nbasis), "d"))
+                self.append_attribute("moenergies", [])
+                self.append_attribute("mosyms", [])
+                self.skip_line(inputfile, "b")
                 line = next(inputfile)
 
                 # Sometimes EIGENVECTORS is missing, so rely on dashes to signal it.
@@ -1357,15 +1356,15 @@ class GAMESS(logfileparser.Logfile):
 
             header = next(inputfile)
             while header.split()[0] == "PARAMETERS":
-                name = header[17:25]
+                element_symbol_dash_ecp = header[17:25]  # noqa: F841
                 atomnum = int(header[34:40])
-                # The pseudopotnetial is given explicitely
+                # The pseudopotential is given explicitly
                 if header[40:50] == "WITH ZCORE":
                     zcore = int(header[50:55])
-                    lmax = int(header[63:67])
+                    lmax = int(header[63:67])  # noqa: F841
                     self.coreelectrons[atomnum - 1] = zcore
-                # The pseudopotnetial is copied from another atom
-                if header[40:55] == "ARE THE SAME AS":
+                # The pseudopotential is copied from another atom
+                elif header[40:55] == "ARE THE SAME AS":
                     atomcopy = int(header[60:])
                     self.coreelectrons[atomnum - 1] = self.coreelectrons[atomcopy - 1]
                 line = next(inputfile)
@@ -1396,7 +1395,7 @@ class GAMESS(logfileparser.Logfile):
             # so let's get a flag out of that circumstance.
             doubles_printed = line.strip() == ""
             if doubles_printed:
-                title = next(inputfile)
+                self.skip_line(inputfile, "TOTAL MULLIKEN AND LOWDIN ATOMIC POPULATIONS")
                 header = next(inputfile)
                 line = next(inputfile)
 
@@ -1430,7 +1429,7 @@ class GAMESS(logfileparser.Logfile):
 
             # The old PC-GAMESS prints memory assignment information here.
             if "MEMORY ASSIGNMENT" in line:
-                memory_assignment = next(inputfile)
+                self.skip_line(inputfile, "IELM IEMW IDENSA IDENSB LAST")
                 line = next(inputfile)
 
             # If something else ever comes up, we should get a signal from this assert.

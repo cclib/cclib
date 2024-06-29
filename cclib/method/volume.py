@@ -416,7 +416,7 @@ def read_from_cube(filepath):
         # First two lines are comments
         # Lines 3-6 specify the grid in Cartesian coordinates
         # Line 3 -- [Number of atoms] [Origin x] [Origin y] [Origin z]
-        natom = (int)(lines[2].split()[0])
+        natom = int(lines[2].split()[0])  # noqa: F841
         originx, originy, originz = numpy.asanyarray(lines[2].split()[1:], dtype=float)
 
         # Line 4, 5, 6 -- [Number of Grid Points] [Spacing x] [Spacing y], [Spacing z]

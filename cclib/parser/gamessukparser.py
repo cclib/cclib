@@ -273,8 +273,7 @@ class GAMESSUK(logfileparser.Logfile):
                 self.vibfreqs = []
                 self.vibirs = []
 
-            units = next(inputfile)
-            xyz = next(inputfile)
+            self.skip_lines(inputfile, ["debyes debyes**2 km/mole", "x y z"])
             equals = next(inputfile)
             line = next(inputfile)
             while line != equals:
@@ -418,14 +417,12 @@ class GAMESSUK(logfileparser.Logfile):
             while line.find("contraction coefficients") < 0:
                 line = next(inputfile)
             equals = next(inputfile)
-            blank = next(inputfile)
-            atomname = next(inputfile)
+            self.skip_lines(inputfile, ["b", "atomsym"])
             basisregexp = re.compile(r"\d*(\D+)")  # Get everything after any digits
             shellcounter = 1
             while line != equals:
                 gbasis = []  # Stores basis sets on one atom
-                blank = next(inputfile)
-                blank = next(inputfile)
+                self.skip_lines(inputfile, ["b", "b"])
                 line = next(inputfile)
                 shellno = int(line.split()[0])
                 shellgap = shellno - shellcounter
@@ -523,7 +520,7 @@ class GAMESSUK(logfileparser.Logfile):
         if line.strip() == "Number of orbitals belonging to irreps of this group":
             self.skip_line(inputfile, "d")
             line = next(inputfile)
-            irreps = [self.normalisesym(irrep) for irrep in line.split()[::2]]
+            irreps = [self.normalisesym(irrep) for irrep in line.split()[::2]]  # noqa: F841
 
         if line[50:62] == "eigenvectors":
             # Mocoeffs...can get evalues from here too
@@ -531,7 +528,7 @@ class GAMESSUK(logfileparser.Logfile):
             if not hasattr(self, "mocoeffs"):
                 self.aonames = []
                 aonames = []
-            minus = next(inputfile)
+            self.skip_line(inputfile, "e")
 
             mocoeffs = numpy.zeros((self.nmo, self.nbasis), "d")
             readatombasis = False

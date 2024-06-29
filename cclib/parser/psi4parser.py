@@ -567,11 +567,11 @@ class Psi4(logfileparser.Logfile):
             line = next(inputfile)
             assert line.strip() == "Final Occupation by Irrep:"
             line = next(inputfile)
-            irreps = line.split()
+            irreps = line.split()  # noqa: F841
             line = next(inputfile)
             tokens = line.split()
             assert tokens[0] == "DOCC"
-            docc = sum([int(x.replace(",", "")) for x in tokens[2:-1]])
+            docc = sum([int(x.replace(",", "")) for x in tokens[2:-1]])  # noqa: F841
             line = next(inputfile)
             if line.strip():
                 tokens = line.split()
@@ -652,15 +652,15 @@ class Psi4(logfileparser.Logfile):
                 while line.strip():
                     chomp = line.split()
                     m = len(chomp)
-                    iao = int(chomp[0])
+                    iao = int(chomp[0])  # noqa: F841
                     coeffs = [float(c) for c in chomp[m - n :]]
                     for i, c in enumerate(coeffs):
                         mocoeffs[indices[i] - 1].append(c)
                     line = next(inputfile)
 
-                energies = next(inputfile)
-                symmetries = next(inputfile)
-                occupancies = next(inputfile)
+                energies = next(inputfile)  # noqa: F841
+                symmetries = next(inputfile)  # noqa: F841
+                occupancies = next(inputfile)  # noqa: F841
 
                 self.skip_lines(inputfile, ["b", "b"])
                 indices = next(inputfile)
@@ -1040,10 +1040,10 @@ class Psi4(logfileparser.Logfile):
                 while line.strip():
                     chomp = line.split()
                     # Do nothing with this for now.
-                    atomsym = chomp[0]
+                    atomsym = chomp[0]  # noqa: F841
                     atomcoords = [float(x) for x in chomp[1:4]]
                     # Do nothing with this for now.
-                    atommass = float(chomp[4])
+                    atommass = float(chomp[4])  # noqa: F841
                     normal_mode_disps.append(atomcoords)
                     line = next(inputfile)
                 self.append_attribute("vibdisps", normal_mode_disps)

@@ -115,7 +115,7 @@ class MOPAC(logfileparser.Logfile):
             self.inputcoords = []
             self.inputatoms = []
 
-            blankline = next(inputfile)
+            self.skip_line(inputfile, "b")
 
             atomcoords = []
             line = next(inputfile)
@@ -168,9 +168,8 @@ class MOPAC(logfileparser.Logfile):
         # note that the last occurence of this in the thermochemistry section has reduced precision,
         # so we will want to use the 2nd to last instance
         if line[0:40] == "          ROTATIONAL CONSTANTS IN CM(-1)":
-            blankline = next(inputfile)
-            rotinfo = next(inputfile)
-            broken = rotinfo.split()
+            self.skip_line(inputfile, "b")
+            broken = next(inputfile).split()
             # leave the rotational constants in Hz
             a = float(broken[2])
             b = float(broken[5])

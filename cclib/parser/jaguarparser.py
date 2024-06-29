@@ -105,7 +105,7 @@ class Jaguar(logfileparser.Logfile):
             fn_per_atom = []
             while line.strip():
                 if len(line.split()) > 3:
-                    aname = line.split()[0]
+                    aname = line.split()[0]  # noqa: F841
                     fn = int(line.split()[1])
                     prim = int(line.split()[2])
                     L = line.split()[3]
@@ -207,8 +207,7 @@ class Jaguar(logfileparser.Logfile):
             p = re.compile(r"(\D+)\d+")  # One/more letters followed by a number
             atomcoords = []
             atomnos = []
-            angstrom = next(inputfile)
-            title = next(inputfile)
+            self.skip_lines(inputfile, ["angstroms", "header"])
             line = next(inputfile)
             while line.strip():
                 temp = line.split()
@@ -260,7 +259,7 @@ class Jaguar(logfileparser.Logfile):
             line = next(inputfile)
             boccs = int(line.split()[-1])
             line = next(inputfile)
-            bvirt = int(line.split()[-1])
+            bvirt = int(line.split()[-1])  # noqa: F841
 
             self.set_attribute("nmo", aoccs + avirts)
             self.set_attribute("homos", numpy.array([aoccs - 1, boccs - 1], "i"))
@@ -539,7 +538,7 @@ class Jaguar(logfileparser.Logfile):
 
             gopt_step = int(line.split()[-1])
 
-            energy = next(inputfile)
+            energy = next(inputfile)  # noqa: F841
             blank = next(inputfile)
 
             # A quick hack for messages that show up right after the energy
