@@ -42,14 +42,14 @@ class GenericNMRCouplingTest:
         """Check dictionary keys are ints."""
         assert all(
             {
-                all((type(key[0]) == int, type(key[1]) == int))
+                all((isinstance(key[0], int), isinstance(key[1], int)))
                 for key in data.nmrcouplingtensors.keys()
             }
         )
 
         assert all(
             [
-                all((type(isotopekey[0]) == int, type(isotopekey[1]) == int))
+                all((isinstance(isotopekey[0], int), isinstance(isotopekey[1], int)))
                 for isotopes in data.nmrcouplingtensors.values()
                 for isotopekey in isotopes.keys()
             ]

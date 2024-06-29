@@ -2032,9 +2032,9 @@ def testQChem_QChem4_2_CH3___Na__RS_out(logfile):
     assert logfile.data.nbasis == logfile.data.nmo == 40
     assert len(logfile.data.moenergies[0]) == 40
     assert len(logfile.data.moenergies[1]) == 40
-    assert type(logfile.data.moenergies) == type([])
-    assert type(logfile.data.moenergies[0]) == type(numpy.array([]))
-    assert type(logfile.data.moenergies[1]) == type(numpy.array([]))
+    assert isinstance(logfile.data.moenergies, list)
+    assert isinstance(logfile.data.moenergies[0], numpy.ndarray)
+    assert isinstance(logfile.data.moenergies[1], numpy.ndarray)
 
 
 def testQChem_QChem4_2_CH3___Na__RS_SCF_out(logfile):
@@ -2065,9 +2065,9 @@ def testQChem_QChem4_2_CH3___Na__RS_SCF_out(logfile):
     assert logfile.data.nbasis == logfile.data.nmo == 40
     assert len(logfile.data.moenergies[0]) == 40
     assert len(logfile.data.moenergies[1]) == 40
-    assert type(logfile.data.moenergies) == type([])
-    assert type(logfile.data.moenergies[0]) == type(numpy.array([]))
-    assert type(logfile.data.moenergies[1]) == type(numpy.array([]))
+    assert isinstance(logfile.data.moenergies, list)
+    assert isinstance(logfile.data.moenergies[0], numpy.ndarray)
+    assert isinstance(logfile.data.moenergies[1], numpy.ndarray)
 
 
 def testQChem_QChem4_2_CH4___Na__out(logfile):
@@ -2095,8 +2095,8 @@ def testQChem_QChem4_2_CH4___Na__out(logfile):
 
     assert logfile.data.nbasis == logfile.data.nmo == 42
     assert len(logfile.data.moenergies[0]) == 42
-    assert type(logfile.data.moenergies) == type([])
-    assert type(logfile.data.moenergies[0]) == type(numpy.array([]))
+    assert isinstance(logfile.data.moenergies, list)
+    assert isinstance(logfile.data.moenergies[0], numpy.ndarray)
 
 
 def testQChem_QChem4_2_CH3___Na__RS_SCF_noprint_out(logfile):
@@ -2126,9 +2126,9 @@ def testQChem_QChem4_2_CH3___Na__RS_SCF_noprint_out(logfile):
     assert logfile.data.nbasis == logfile.data.nmo == 40
     assert len(logfile.data.moenergies[0]) == 40
     assert len(logfile.data.moenergies[1]) == 40
-    assert type(logfile.data.moenergies) == type([])
-    assert type(logfile.data.moenergies[0]) == type(numpy.array([]))
-    assert type(logfile.data.moenergies[1]) == type(numpy.array([]))
+    assert isinstance(logfile.data.moenergies, list)
+    assert isinstance(logfile.data.moenergies[0], numpy.ndarray)
+    assert isinstance(logfile.data.moenergies[1], numpy.ndarray)
 
 
 def testQChem_QChem4_2_CH3___Na__RS_noprint_out(logfile):
@@ -2156,9 +2156,9 @@ def testQChem_QChem4_2_CH3___Na__RS_noprint_out(logfile):
     assert logfile.data.nbasis == logfile.data.nmo == 40
     assert len(logfile.data.moenergies[0]) == 40
     assert len(logfile.data.moenergies[1]) == 40
-    assert type(logfile.data.moenergies) == type([])
-    assert type(logfile.data.moenergies[0]) == type(numpy.array([]))
-    assert type(logfile.data.moenergies[1]) == type(numpy.array([]))
+    assert isinstance(logfile.data.moenergies, list)
+    assert isinstance(logfile.data.moenergies[0], numpy.ndarray)
+    assert isinstance(logfile.data.moenergies[1], numpy.ndarray)
 
 
 def testQChem_QChem4_2_CH4___Na__noprint_out(logfile):
@@ -2183,8 +2183,8 @@ def testQChem_QChem4_2_CH4___Na__noprint_out(logfile):
 
     assert logfile.data.nbasis == logfile.data.nmo == 42
     assert len(logfile.data.moenergies[0]) == 42
-    assert type(logfile.data.moenergies) == type([])
-    assert type(logfile.data.moenergies[0]) == type(numpy.array([]))
+    assert isinstance(logfile.data.moenergies, list)
+    assert isinstance(logfile.data.moenergies[0], numpy.ndarray)
 
 
 def testQChem_QChem4_2_CO2_out(logfile):
