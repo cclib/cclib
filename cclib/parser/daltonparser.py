@@ -213,9 +213,9 @@ class DALTON(logfileparser.Logfile):
                 line = next(inputfile)
 
             # Split lines into columsn and dd any missing symmetry labels, if needed.
-            lines = [l.split() for l in lines]
-            if any([len(l) == 3 for l in lines]):
-                for il, l in enumerate(lines):
+            lines = [l.split() for l in lines]  # noqa: E741
+            if any([len(l) == 3 for l in lines]):  # noqa: E741
+                for il, l in enumerate(lines):  # noqa: E741
                     if len(l) == 2:
                         lines[il] = [l[0], "_1", l[1]]
 

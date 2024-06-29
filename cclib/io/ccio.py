@@ -282,10 +282,10 @@ def fallback(source):
             # From OB 3.0 onward, Pybel is contained inside the OB module.
             try:
                 import openbabel.pybel as pb
-            except:
+            except:  # noqa: E722
                 try:
                     import pybel as pb
-                except:
+                except:  # noqa: E722
                     return
             if ext in pb.informats:
                 return cclib2openbabel.readfile(source, ext)

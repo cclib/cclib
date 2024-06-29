@@ -135,8 +135,8 @@ if _found_pyquante2:
 
 _found_pyvtk = find_package("pyvtk")
 if _found_pyvtk:
-    from pyvtk import *
-    from pyvtk.DataSetAttr import *
+    from pyvtk import *  # noqa: F403
+    from pyvtk.DataSetAttr import *  # noqa: F403
 
 
 def _check_pyquante():
@@ -195,10 +195,10 @@ class Volume:
             numpy.arange(self.data.shape[1]),
             numpy.arange(self.data.shape[0]),
         )
-        v = VtkData(
-            RectilinearGrid(*ranges),
+        v = VtkData(  # noqa: F405
+            RectilinearGrid(*ranges),  # noqa: F405
             "Test",
-            PointData(Scalars(self.data.ravel(), "from cclib", "default")),
+            PointData(Scalars(self.data.ravel(), "from cclib", "default")),  # noqa: F405
         )
         v.tofile(filename)
 

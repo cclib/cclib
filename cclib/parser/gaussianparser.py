@@ -1924,7 +1924,7 @@ class Gaussian(logfileparser.Logfile):
                         parts = line[:start_of_basis_fn_name].split()
                         if len(parts) > 1:  # New atom
                             if i > 0:
-                                self.atombasis.append(atombasis)
+                                self.atombasis.append(atombasis)  # noqa: F821
                             atombasis = []
                             atomname = f"{parts[2]}{parts[1]}"
                         orbital = line[start_of_basis_fn_name:20].strip()
@@ -1976,7 +1976,7 @@ class Gaussian(logfileparser.Logfile):
                         # New atom.
                         if len(parts) > 1:
                             if i > 0:
-                                atombasis.append(basisonatom)
+                                atombasis.append(basisonatom)  # noqa: F821
                             basisonatom = []
                             atomname = f"{parts[2]}{parts[1]}"
                         orbital = line[11:20].strip()
@@ -2398,7 +2398,7 @@ class Gaussian(logfileparser.Logfile):
                             line[83:95],
                         ]
                     ]
-                except:
+                except:  # noqa: E722
                     # G16A03 and older
                     # Sample:
                     #       Exact polarizability:  68.238  -6.777 143.018   0.000   0.000  11.343
@@ -2518,7 +2518,7 @@ class Gaussian(logfileparser.Logfile):
                     seconds=float(split_line[n + 6]),
                 )
                 self.metadata[key].append(time)
-            except:
+            except:  # noqa: E722
                 pass
 
         # Extract Rotational Constants

@@ -1083,7 +1083,7 @@ class GAMESS(logfileparser.Logfile):
                 # Eigenvalues for these orbitals (in hartrees).
                 try:
                     self.moenergies[0].extend([float(x) for x in line.split()])
-                except:
+                except:  # noqa: E722
                     self.logger.warning("MO section found but could not be parsed!")
                     break
 

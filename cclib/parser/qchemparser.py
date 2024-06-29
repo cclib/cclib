@@ -1752,5 +1752,5 @@ cannot be determined. Rerun without `$molecule read`."""
                 cpu_td = datetime.timedelta(seconds=float(a[-1].split("s")[0]))
                 self.metadata["wall_time"].append(wall_td)
                 self.metadata["cpu_time"].append(cpu_td)
-            except:
+            except:  # noqa: E722
                 pass

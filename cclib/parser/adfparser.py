@@ -48,7 +48,7 @@ class ADF(logfileparser.Logfile):
             temp = f'{ans[0]}"'
             ans = temp
 
-        l = len(ans)
+        l = len(ans)  # noqa: E741
         if (
             l > 1 and ans[0] == ans[1]
         ):  # Python only tests the second condition if the first is true

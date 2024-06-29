@@ -501,7 +501,7 @@ class WFXWriter(filewriter.Writer):
             try:
                 section_data = section_module()
                 wfx_lines.extend(_section(section_name, section_data))
-            except:
+            except:  # noqa: E722
                 if section_required:
                     raise filewriter.MissingAttributeError(
                         f"Unable to write required wfx section: {section_name}"
