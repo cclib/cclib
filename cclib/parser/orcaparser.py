@@ -2594,16 +2594,28 @@ Dispersion correction           -0.016199959
         # start, stop - indices for slicing lines and grabbing values
         # should_stop: when to stop parsing
         if chargestype == "mulliken":
-            should_stop = lambda x: x.startswith("Sum of atomic charges")
+
+            def should_stop(x: str) -> bool:
+                return x.startswith("Sum of atomic charges")
+
             start, stop = 8, 20
         elif chargestype == "lowdin":
-            should_stop = lambda x: not bool(x.strip())
+
+            def should_stop(x: str) -> bool:
+                return not bool(x.strip())
+
             start, stop = 8, 20
         elif chargestype == "chelpg":
-            should_stop = lambda x: x.startswith("---")
+
+            def should_stop(x: str) -> bool:
+                return x.startswith("---")
+
             start, stop = 11, 26
         elif chargestype == "hirshfeld":
-            should_stop = lambda x: not bool(x.strip())
+
+            def should_stop(x: str) -> bool:
+                return not bool(x.strip())
+
             start, stop = 9, 18
             self.skip_lines(
                 inputfile,
