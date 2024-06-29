@@ -31,7 +31,9 @@ class NWChem(logfileparser.Logfile):
         """NWChem does not require normalizing symmetry labels."""
         return label
 
-    name2element = lambda self, lbl: "".join(itertools.takewhile(str.isalpha, str(lbl)))
+    @staticmethod
+    def name2element(lbl: str) -> str:
+        return "".join(itertools.takewhile(str.isalpha, str(lbl)))
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
