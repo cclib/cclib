@@ -771,9 +771,7 @@ _attributes = {
     "etenergies": Attribute(np.ndarray, "electronic transitions", "transitions"),
     "etoscs": Attribute(np.ndarray, "oscillator strength", "transitions"),
     "etdips": Attribute(np.ndarray, "electic transition dipoles", "transitions"),
-    "etveldips": Attribute(
-        np.ndarray, "velocity-gauge electric transition dipoles", "transitions"
-    ),
+    "etveldips": Attribute(np.ndarray, "velocity-gauge electric transition dipoles", "transitions"),
     "etmagdips": Attribute(np.ndarray, "magnetic transition dipoles", "transitions"),
     "etrotats": Attribute(np.ndarray, "rotatory strength", "transitions"),
     "etsecs": Attribute(list, "one excited config", "transitions"),
