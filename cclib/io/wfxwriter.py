@@ -172,7 +172,10 @@ class WFXWriter(filewriter.Writer):
         """Section: Nuclear Cartesian Coordinates.
         Nuclear coordinates in Bohr."""
         coord_template = WFX_FIELD_FMT * 3
-        to_bohr = lambda x: utils.convertor(x, "Angstrom", "bohr")
+
+        def to_bohr(x: float) -> float:
+            return utils.convertor(x, "Angstrom", "bohr")
+
         nuc_coords = [
             coord_template % tuple(to_bohr(coord)) for coord in self.ccdata.atomcoords[-1]
         ]
