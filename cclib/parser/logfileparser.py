@@ -407,4 +407,5 @@ class Logfile(ABC):
             if line.strip() != "":
                 return line
 
-    skip_line = lambda self, inputfile, expected: self.skip_lines(inputfile, [expected])
+    def skip_line(self, inputfile: "FileWrapper", expected: str) -> List[str]:
+        return self.skip_lines(inputfile, [expected])
