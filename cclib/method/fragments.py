@@ -7,11 +7,11 @@
 
 import logging
 
+from cclib.method.calculationmethod import Method
+
 import numpy
 
 numpy.inv = numpy.linalg.inv
-
-from cclib.method.calculationmethod import Method
 
 
 class FragmentAnalysis(Method):
