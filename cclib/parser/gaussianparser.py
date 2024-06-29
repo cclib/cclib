@@ -885,7 +885,7 @@ class Gaussian(logfileparser.Logfile):
                 self.scftargets = []
             # The following can happen with ONIOM which are mixed SCF
             # and semi-empirical
-            if type(self.scftargets) == type(numpy.array([])):
+            if isinstance(self.scftargets, numpy.ndarray):
                 self.scftargets = []
 
             scftargets = []
