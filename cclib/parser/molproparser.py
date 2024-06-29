@@ -343,7 +343,7 @@ class Molpro(logfileparser.Logfile):
                 # or indentation size. However, we will rely on explicit slices since not all components
                 # are always available. In fact, components not being there has some meaning (see below).
                 line_nr = line[1:6].strip()
-                line_sym = line[7:9].strip()
+                line_sym = line[7:9].strip()  # noqa: F841
                 line_nuc = line[11:15].strip()
                 line_type = line[16:22].strip()
                 line_exp = line[25:38].strip()

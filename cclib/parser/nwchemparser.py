@@ -535,7 +535,7 @@ class NWChem(logfileparser.Logfile):
             self.skip_line(inputfile, "dashes")
             self.linesearch = False
         if line[0] == "@" and line.split()[1] == "Step":
-            at_and_dashes = next(inputfile)
+            self.skip_line(inputfile, "at and dashes")
             line = next(inputfile)
             tokens = line.split()
             assert int(tokens[1]) == self.geostep == 0
@@ -834,7 +834,11 @@ class NWChem(logfileparser.Logfile):
         # by default, but they are printed by this modules later on. They are also print
         # for Hartree-Fock runs, though, so in that case make sure they are consistent.
         if line.strip() == "Mulliken population analysis":
-            self.skip_lines(inputfile, ["d", "b", "total_overlap_population", "b"])
+            skipped_lines = self.skip_lines(inputfile, ["d", "b", "total_overlap_population"])
+            if "overlap population" in skipped_lines[2]:
+                self.skip_line(inputfile, "b")
+            elif "shell population" in skipped_lines[2]:
+                self.skip_line(inputfile, "d")
 
             overlaps = []
             line = next(inputfile)

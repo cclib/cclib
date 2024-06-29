@@ -327,8 +327,7 @@ class Molcas(logfileparser.Logfile):
                 match = re.match(iteration_regex, line.strip())
                 if match:
                     groups = match.groups()
-                    cols = [g.strip() for g in match.groups()]
-                    cols = [c.replace("*", "") for c in cols]
+                    cols = [g.strip().replace("*", "") for g in groups]
 
                     energy = float(cols[4])
                     density = float(cols[5])
@@ -933,7 +932,6 @@ class Molcas(logfileparser.Logfile):
 
                     exponents = []
                     coefficients = []
-                    func_array = []
                     while line.split():
                         exponents.append(utils.float(line.split()[1]))
                         coefficients.append([utils.float(i) for i in line.split()[2:]])

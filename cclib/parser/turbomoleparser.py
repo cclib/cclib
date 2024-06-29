@@ -26,7 +26,6 @@ class AtomBasis:
         self.parse_basis(inputfile)
 
     def parse_basis(self, inputfile):
-        i = 0
         line = next(inputfile)
 
         while line[0] != "*":
@@ -1567,7 +1566,7 @@ class OldTurbomole(logfileparser.Logfile):
             self.nmo = nmo
         if line[3:9] == "nshell":
             temp = line.split("=")
-            homos = int(temp[1])
+            homos = int(temp[1])  # noqa: F841
 
         if line[0:6] == "$basis":
             print("Found basis")
@@ -1838,7 +1837,7 @@ class OldTurbomole(logfileparser.Logfile):
                 while title[0] != "$":
                     temp = title.split()
 
-                    orb_symm = temp[1]
+                    orb_symm = temp[1]  # noqa: F841
 
                     try:
                         energy = float(temp[2][11:].replace("D", "E"))

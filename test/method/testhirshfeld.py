@@ -35,7 +35,7 @@ class HirshfeldTest:
             self.parse()
             delattr(self.data, missing_attribute)
             with pytest.raises(MissingAttributeError):
-                trialBader = Hirshfeld(
+                trialBader = Hirshfeld(  # noqa: F841
                     self.data, self.volume, os.path.dirname(os.path.realpath(__file__))
                 )
 
@@ -54,7 +54,7 @@ class HirshfeldTest:
             2.66407612e-01,
             2.66407322e-01,
         ]  # Hydrogen first five densities
-        refH_r = [
+        refH_r = [  # noqa: F841
             1.17745807e-07,
             4.05209491e-06,
             3.21078677e-05,
@@ -68,7 +68,7 @@ class HirshfeldTest:
             2.98258487e02,
             2.98258290e02,
         ]  # Oxygen first five densities
-        refO_r = [
+        refO_r = [  # noqa: F841
             5.70916728e-09,
             1.97130512e-07,
             1.56506399e-06,
