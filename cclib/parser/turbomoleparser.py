@@ -1533,9 +1533,9 @@ class OldTurbomole(logfileparser.Logfile):
                 list.append(int(f) - 1)
         return list
 
-    def normalisesym(self, label):
+    def normalisesym(self, symlabel: str) -> str:
         """Normalise the symmetries used by Turbomole."""
-        return ans
+        return symlabel
 
     def before_parsing(self):
         self.geoopt = False  # Is this a GeoOpt? Needed for SCF targets/values.
