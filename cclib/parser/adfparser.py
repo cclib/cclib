@@ -113,7 +113,7 @@ class ADF(logfileparser.Logfile):
             while True:
                 self.updateprogress(inputfile, "Unsupported Information", self.fupdate)
                 line = next(inputfile) if line.strip() == "(INPUT FILE)" else None
-                if line and not line[:6] in ("Create", "create"):
+                if line and line[:6] not in ("Create", "create"):
                     break
                 line = next(inputfile)
 
@@ -844,7 +844,7 @@ class ADF(logfileparser.Logfile):
                     info = line.split()
 
                     # index0 index1 occ2 energy3/4 fragname5 coeff6 orbnum7 orbname8 fragname9
-                    if not sym in list(self.start_indeces.keys()):
+                    if sym not in list(self.start_indeces.keys()):
                         # have we already set the start index for this symmetry?
                         self.start_indeces[sym] = int(info[1])
 
@@ -1002,7 +1002,7 @@ class ADF(logfileparser.Logfile):
                     # The table can end with a blank line or "1".
                     row = 0
                     line = next(inputfile)
-                    while not line.strip() in ["", "1"]:
+                    while line.strip() not in ["", "1"]:
                         info = line.split()
 
                         if int(info[0]) < self.start_indeces[sym]:

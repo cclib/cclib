@@ -55,7 +55,7 @@ def makepyscf(data, charge=0, mult=1):
                 curr_e_prim = j[1]
                 new_list = [l_sym2num[f"{curr_l}"]]
                 new_list += curr_e_prim
-                if not f"{pt.element[uatoms[idx]]}" in basis:
+                if f"{pt.element[uatoms[idx]]}" not in basis:
                     basis[f"{pt.element[uatoms[idx]]}"] = [new_list]
                 else:
                     basis[f"{pt.element[uatoms[idx]]}"].append(new_list)

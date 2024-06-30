@@ -336,7 +336,7 @@ class Gaussian(logfileparser.Logfile):
             # Also, in older versions there is bo blank line (G98 regressions),
             # so we need to watch out for leaving the link.
             natom = 0
-            while line.split() and not "Variables" in line and not "Leave Link" in line:
+            while line.split() and "Variables" not in line and "Leave Link" not in line:
                 natom += 1
                 line = next(inputfile)
             self.set_attribute("natom", natom)
@@ -352,7 +352,7 @@ class Gaussian(logfileparser.Logfile):
             self.updateprogress(inputfile, "Charge and Multiplicity", self.fupdate)
 
             if line.split()[-1] == "supermolecule" or (
-                not "fragment" in line and not "model system" in line
+                "fragment" not in line and "model system" not in line
             ):
                 regex = r".*=(.*)Mul.*=\s*-?(\d+).*"
                 match = re.match(regex, line)
@@ -674,7 +674,7 @@ class Gaussian(logfileparser.Logfile):
 
             atomcoords = []
             line = next(inputfile)
-            while not "MW cartesian" in line:
+            while "MW cartesian" not in line:
                 broken = line.split()
                 atomcoords.append(list(map(utils.float, (broken[3], broken[5], broken[7]))))
                 #    self.inputatoms.append(int(broken[1]))
@@ -769,7 +769,7 @@ class Gaussian(logfileparser.Logfile):
         # Eventually we want to make this more general, or even better parse the output for
         # all fragment, but that will happen in a newer version of cclib.
         if line[1:16] == "Fragment guess:" and getattr(self, "nfragments", 0) > 1:
-            if not "full" in line:
+            if "full" not in line:
                 raise StopParsing()
 
         # Another hack for regression Gaussian03/ortho_prod_freq.log, which is an ONIOM job.
@@ -2259,9 +2259,9 @@ class Gaussian(logfileparser.Logfile):
                         # "mulliken atomic charges:" and " atomic charges:"
                         if prop == "atomic":
                             if (
-                                not "mulliken" in line.lower()
-                                and not "lowdin" in line.lower()
-                                and not "apt" in line.lower()
+                                "mulliken" not in line.lower()
+                                and "lowdin" not in line.lower()
+                                and "apt" not in line.lower()
                             ):
                                 extract_charges_spins(line, prop)
                         else:
@@ -2495,9 +2495,9 @@ class Gaussian(logfileparser.Logfile):
         # Extract total elapsed (wall) and CPU job times
         if line[:14] == " Elapsed time:" or line[:14] == " Job cpu time:":
             # create empty list for the times to be stored in
-            if line[:14] == " Elapsed time:" and not "wall_time" in self.metadata:
+            if line[:14] == " Elapsed time:" and "wall_time" not in self.metadata:
                 self.metadata["wall_time"] = []
-            if line[:14] == " Job cpu time:" and not "cpu_time" in self.metadata:
+            if line[:14] == " Job cpu time:" and "cpu_time" not in self.metadata:
                 self.metadata["cpu_time"] = []
             # the line format is " Elapsed time:       0 days  0 hours  0 minutes 47.5 seconds." at the end of each job ran.
             # the line format is " Job cpu time:       0 days  0 hours  8 minutes 45.7 seconds." at the end of each job ran.

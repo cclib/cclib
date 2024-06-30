@@ -121,7 +121,7 @@ class Jaguar(logfileparser.Logfile):
                         self.gbasis.append([])
 
                     # Remember that fn is repeated when functions are contracted.
-                    if not fn - 1 in atombasis[-1]:
+                    if fn - 1 not in atombasis[-1]:
                         atombasis[-1].append(fn - 1)
 
                     # Here we use fn only to know when a new contraction is encountered,
@@ -129,7 +129,7 @@ class Jaguar(logfileparser.Logfile):
                     # What's more, since we only wish to save the parameters for each subshell
                     # once, we don't even need to consider lines for orbitals other than
                     # those for X*, making things a bit easier.
-                    if not fn in fn_per_atom:
+                    if fn not in fn_per_atom:
                         fn_per_atom.append(fn)
                         label = {"S": "S", "X": "P", "XX": "D", "XXX": "F"}[L]
                         self.gbasis[-1].append((label, []))
@@ -141,7 +141,7 @@ class Jaguar(logfileparser.Logfile):
                     L = line.split()[1]
 
                     # Some AO indices are only printed in these lines, for L > 0.
-                    if not fn - 1 in atombasis[-1]:
+                    if fn - 1 not in atombasis[-1]:
                         atombasis[-1].append(fn - 1)
 
                 line = next(inputfile)
@@ -618,7 +618,7 @@ class Jaguar(logfileparser.Logfile):
             # which could be caught. This is not true in newer version (including 8.3),
             # but in general it would be better to bound this loop more strictly.
             freqs = next(inputfile)
-            while freqs.strip() and not "imaginary frequencies" in freqs:
+            while freqs.strip() and "imaginary frequencies" not in freqs:
                 # Number of modes (columns printed in this block).
                 nmodes = len(freqs.split()) - 1
 

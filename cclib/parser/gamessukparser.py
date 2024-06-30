@@ -688,7 +688,7 @@ class GAMESSUK(logfileparser.Logfile):
             if not hasattr(self, "atomcharges"):
                 self.atomcharges = {}
 
-            while not "total gross population on atoms" in line:
+            while "total gross population on atoms" not in line:
                 line = next(inputfile)
 
             self.skip_line(inputfile, "blank")

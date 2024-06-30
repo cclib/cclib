@@ -364,7 +364,7 @@ cannot be determined. Rerun without `$molecule read`."""
 
         # The end of the block is either a blank line or only dashes.
         while (
-            not self.re_dashes_and_spaces.search(line) and not "Warning : Irrep of orbital" in line
+            not self.re_dashes_and_spaces.search(line) and "Warning : Irrep of orbital" not in line
         ):
             if "Occupied" in line or "Virtual" in line:
                 # A nice trick to find where the HOMO is.
@@ -922,7 +922,7 @@ cannot be determined. Rerun without `$molecule read`."""
 
                 # We should have the header between dashes now,
                 # but sometimes there are lines before the first dashes.
-                while not "Cycle       Energy" in line:
+                while "Cycle       Energy" not in line:
                     line = next(inputfile)
                 self.skip_line(inputfile, "d")
 
@@ -1732,9 +1732,9 @@ cannot be determined. Rerun without `$molecule read`."""
         if line[:16] == " Total job time:":
             self.metadata["success"] = True
             # create empty list for the times to be stored in
-            if not "wall_time" in self.metadata:
+            if "wall_time" not in self.metadata:
                 self.metadata["wall_time"] = []
-            if not "cpu_time" in self.metadata:
+            if "cpu_time" not in self.metadata:
                 self.metadata["cpu_time"] = []
             # the line format is " Total job time:  120.37s(wall), 2251.02s(cpu)" at the end of each job ran.
             # first split the line by white space

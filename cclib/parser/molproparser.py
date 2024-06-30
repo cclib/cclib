@@ -149,7 +149,7 @@ class Molpro(logfileparser.Logfile):
 
         # Besides a double blank line, stop when the next orbitals are encountered for unrestricted jobs
         # or if there are stars on the line which always signifies the end of the block.
-        while line.strip() and (not "ORBITALS" in line) and (not set(line.strip()) == {"*"}):
+        while line.strip() and ("ORBITALS" not in line) and (not set(line.strip()) == {"*"}):
             # The function names are normally printed just once, but if symmetry is used then each irrep
             # has its own mocoeff block with a preceding list of names.
             is_aonames = line[:25].strip() == ""
@@ -660,7 +660,7 @@ class Molpro(logfileparser.Logfile):
             # Newer version of Molpro (at least for 2012) print and additional column
             # with the timing information for each step. Otherwise, the history looks the same.
             headers = next(inputfile).split()
-            if not len(headers) in (10, 11):
+            if len(headers) not in (10, 11):
                 return
 
             # Although criteria can be changed, the printed format should not change.
