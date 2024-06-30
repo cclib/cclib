@@ -402,7 +402,7 @@ class NWChem(logfileparser.Logfile):
             if hasattr(self, "linesearch") and self.linesearch:
                 return
 
-            while not "Final" in line:
+            while "Final" not in line:
                 # Only the norm of the orbital gradient is used to test convergence.
                 if line[:22] == " Convergence threshold":
                     target = float(line.split()[-1])
@@ -1272,7 +1272,7 @@ class NWChem(logfileparser.Logfile):
             line = next(inputfile)
             if "Spin forbidden" not in line:
                 # find Dipole Oscillator Strength
-                while not ("Dipole Oscillator Strength" in line):
+                while "Dipole Oscillator Strength" not in line:
                     line = next(inputfile)
                 etoscs = utils.float(line.split()[-1])
                 # in case of magnetic contribution replace, replace Dipole Oscillator Strength with Total Oscillator Strength

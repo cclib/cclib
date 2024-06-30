@@ -786,7 +786,7 @@ class GAMESS(logfileparser.Logfile):
             # Need to get to the modes line, which is often preceeded by
             # a list of atomic weights and some possible warnings.
             # Pass the warnings to the logger if they are there.
-            while not "MODES" in line:
+            while "MODES" not in line:
                 self.updateprogress(inputfile, "Frequency Information")
 
                 line = next(inputfile)
@@ -838,7 +838,7 @@ class GAMESS(logfileparser.Logfile):
             while not line.strip() or not re.search(" {26,}1", line) is not None:
                 line = next(inputfile)
 
-            while not "SAYVETZ" in line:
+            while "SAYVETZ" not in line:
                 self.updateprogress(inputfile, "Frequency Information")
 
                 # Note: there may be imaginary frequencies like this (which we make negative):

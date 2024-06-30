@@ -52,7 +52,7 @@ class MOLDEN(filewriter.Writer):
             elements = [self.ghost if e is None else e for e in elements]
         elif None in elements:
             raise ValueError(
-                f"It seems that there is at least one ghost atom in these elements. Please use the ghost flag to specify a label for the ghost atoms."
+                "It seems that there is at least one ghost atom in these elements. Please use the ghost flag to specify a label for the ghost atoms."
             )
         atomcoords = self.ccdata.atomcoords[index]
         atomnos = self.ccdata.atomnos

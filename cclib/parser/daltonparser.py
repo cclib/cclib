@@ -981,7 +981,7 @@ class DALTON(logfileparser.Logfile):
             # If we're missing something above, throw away the partial geovalues since
             # we don't want artificial NaNs getting into cclib. Instead, fix the dictionary
             # to make things work.
-            if not numpy.nan in values:
+            if numpy.nan not in values:
                 if not hasattr(self, "geovalues"):
                     self.geovalues = []
                 self.geovalues.append(values)
@@ -1001,7 +1001,7 @@ class DALTON(logfileparser.Logfile):
             line = next(inputfile)
             line = next(inputfile)
             line = next(inputfile)
-            if not "zero by symmetry" in line:
+            if "zero by symmetry" not in line:
                 line = next(inputfile)
 
                 line = next(inputfile)

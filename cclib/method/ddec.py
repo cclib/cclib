@@ -187,7 +187,7 @@ class DDEC6(Stockholder):
         steps = 5
         self._update_kappa = False
         while steps < 7:
-            self.logger.info(f"Optimizing grid weights. (Step %d/7)", steps)
+            self.logger.info("Optimizing grid weights. (Step %d/7)", steps)
             self.N_A.append(self._calculate_w_and_u())
 
             # Determine whether kappa needs to be updated or not based on Figure S4.2

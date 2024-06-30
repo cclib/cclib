@@ -527,7 +527,7 @@ class ORCA(logfileparser.Logfile):
             if not hasattr(self, "scftargets"):
                 self.scftargets = []
 
-            while not "Total Energy       :" in line:
+            while "Total Energy       :" not in line:
                 line = next(inputfile)
             self.append_attribute("scfenergies", utils.float(line.split()[3]))
             if self.is_DFT:
@@ -1325,7 +1325,7 @@ Dispersion correction           -0.016199959
                         state, energy, wavelength, intensity, t2, tx, ty, tz = (
                             utils.float(x) for x in line.split()
                         )
-                    except ValueError as e:
+                    except ValueError:
                         # Must be spin forbidden and thus no intensity
                         energy = utils.float(line.split()[1])
                         intensity = 0
@@ -2787,7 +2787,7 @@ Dispersion correction           -0.016199959
         # The SCF convergence targets are always printed in this next section
         # but which targets are available depends on the SCF method in use,
         # among other things.
-        while not "Last Energy change" in line:
+        while "Last Energy change" not in line:
             line = next(inputfile)
 
         deltaE_value = float(line.split()[4])

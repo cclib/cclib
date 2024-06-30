@@ -160,7 +160,7 @@ class Logfile(ABC):
             except StopIteration:
                 self.logger.error("Unexpectedly encountered end of logfile.")
                 break
-            except Exception as e:
+            except Exception:
                 self.logger.error("Encountered error when parsing.")
 
                 # Not all input files support last_line.
@@ -202,7 +202,7 @@ class Logfile(ABC):
         # Delete all temporary attributes (including cclib attributes).
         # All attributes should have been moved to a data object, which will be returned.
         for attr in list(self.__dict__.keys()):
-            if not attr in _nodelete:
+            if attr not in _nodelete:
                 self.__delattr__(attr)
 
         # Perform final checks on values of attributes.
