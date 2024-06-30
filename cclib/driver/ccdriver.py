@@ -494,10 +494,14 @@ class ccDriver:
         #   Look for triggers that start programs,  For each that matches, set the program on the ccData instance for that node, increasing the node counter.
         #   Look for triggers that stop programs.  For each that matches, increase the node counter.
         #   Run each parser in the combinator for the node id on the discovered program.
+        #     parser -> parse() -> program_parse_method() -> returns data to go on collection's current ccData
         #
         # Future:
         #
-        # Loop over all the lines in the (combined) file.
+        # Loop over all the lines in the (combined) file.  For each line...
+        #   Look for a program trigger.
+        #     If the trigger is to start a program
+        #     If the trigger is to stop a program
         self.identified_program = None
         line = self._fileHandler.last_line
         current_idx = self._tree.get_next_idx()
