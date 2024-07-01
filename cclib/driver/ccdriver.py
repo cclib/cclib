@@ -498,10 +498,23 @@ class ccDriver:
         #
         # Future:
         #
+        # Create an empty tree.
+        # [maybe] Create a (empty) stack for indices into the tree. (TODO what indices?)
         # Loop over all the lines in the (combined) file.  For each line...
         #   Look for a program trigger.
-        #     If the trigger is to start a program
-        #     If the trigger is to stop a program
+        #     If the trigger matches and is to start a program,
+        #       Create new ccData instance and append it to collection
+        #       <update ccData reference to new>
+        #     Elif the trigger matches and is to stop a program,
+        #       <update ccData reference to previous>
+        #     Else,
+        #       continue
+        #   Run each parser in the combinator for the current ccData
+        #
+        # At this point we have a linear sequence of ccData instances that need to be arranged into a hierarchical tree.
+        # The structure of the tree is determined by the job run and the
+        # program (Psi4 BSSE, Psi4 SAPT, Q-Chem EDA, Psi4 MBE, Q-Chem MBE,
+        # Gaussian ONIOM, ...).
         self.identified_program = None
         line = self._fileHandler.last_line
         current_idx = self._tree.get_next_idx()
