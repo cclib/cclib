@@ -68,7 +68,7 @@ class Gaussian(logfileparser.Logfile):
 
     def before_parsing(self):
         self.re_platform_and_version = re.compile(
-            r"\ Gaussian\ (\d{2}):\ {2}(\w*\ ?\w*(?:-\w*)?)-G(\d{2})Rev([A-Z]\.\d{1,2}(?:\.\d)?)\ *(\d{1,2}-[A-Z][a-z]{2}-\d{4})"
+            r"\ Gaussian\ (?P<year>\d{2}):\ {2}(?P<platform>\w*\ ?\w*(?:-\w*)?)-G(?P<year_suffix>\d{2})Rev(?P<revision>[A-Z]\.\d{1,2}(?:\.\d)?)\ *(?P<compile_date>\d{1,2}-[A-Z][a-z]{2}-\d{4})"
         )
 
         # Calculations use point group symmetry by default.
@@ -206,17 +206,14 @@ class Gaussian(logfileparser.Logfile):
             self.skip_lines(inputfile, ["b", "s"])
             mtch = self.re_platform_and_version.match(next(inputfile))
             if mtch is not None:
-                groups = mtch.groups()
-                if len(groups) != 5:
-                    raise RuntimeError
-                year, platform, year_suffix, revision, compile_date = groups
-                if year != year_suffix:
-                    raise RuntimeError
+                groupdict = mtch.groupdict()
+                year_suffix = groupdict["year_suffix"]
+                revision = groupdict["revision"]
+                self.metadata["package_version"] = (
+                    f"{self.YEAR_SUFFIXES_TO_YEARS[year_suffix]}+{revision}"
+                )
+                self.metadata["platform"] = groupdict["platform"]
             run_date = next(inputfile).strip()
-            self.metadata["package_version"] = (
-                f"{self.YEAR_SUFFIXES_TO_YEARS[year_suffix]}+{revision}"
-            )
-            self.metadata["platform"] = platform
 
         if line.strip().startswith("Link1:  Proceeding to internal job step number"):
             self.new_internal_job()
