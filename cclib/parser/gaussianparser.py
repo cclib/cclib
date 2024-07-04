@@ -67,8 +67,18 @@ class Gaussian(logfileparser.Logfile):
     }
 
     def before_parsing(self):
+        # Examples:
+        #  Gaussian 16:  Apple M1-G16RevC.02  7-Dec-2021
+        #  Gaussian 16:  ES64L-G16RevC.01  3-Jul-2019
+        #  Gaussian 98:  IBM-RS6000-G98RevA.7 11-Apr-1999
+        #  Gaussian 98:  SGI64-G98RevA.7 11-Apr-1999
         self.re_platform_and_version = re.compile(
-            r"\ Gaussian\ (?P<year>\d{2}):\ {2}(?P<platform>\w*\ ?\w*(?:-\w*)?)-G(?P<year_suffix>\d{2})Rev(?P<revision>[A-Z]\.\d{1,2}(?:\.\d)?)\ *(?P<compile_date>\d{1,2}-[A-Z][a-z]{2}-\d{4})"
+            r"""
+            \ Gaussian\ (?P<year>\d{2}):\ {2}
+            (?P<platform>\w*\ ?\w*(?:-\w*)?)-G(?P<year_suffix>\d{2})Rev(?P<revision>[A-Z]\.\d{1,2}(?:\.\d)?)\ *
+            (?P<compile_date>\d{1,2}-[A-Z][a-z]{2}-\d{4})
+            """,
+            re.VERBOSE,
         )
 
         # Calculations use point group symmetry by default.
