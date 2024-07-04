@@ -67,6 +67,10 @@ class Gaussian(logfileparser.Logfile):
     }
 
     def before_parsing(self):
+        self.re_platform_and_version = re.compile(
+            r"\ Gaussian\ (\d{2}):\ {2}(\w*\ ?\w*(?:-\w*)?)-G(\d{2})Rev([A-Z]\.\d{1,2}(?:\.\d)?)\ *(\d{1,2}-[A-Z][a-z]{2}-\d{4})"
+        )
+
         # Calculations use point group symmetry by default.
         self.uses_symmetry = True
 
@@ -200,13 +204,15 @@ class Gaussian(logfileparser.Logfile):
         # ES64L-G16RevA.03 25-Dec-2016" becomes "2016+A.03".
         if "Gaussian, Inc.," in line:
             self.skip_lines(inputfile, ["b", "s"])
-            _, _, platform_full_version, compile_date = next(inputfile).split()
+            mtch = self.re_platform_and_version.match(next(inputfile))
+            if mtch is not None:
+                groups = mtch.groups()
+                if len(groups) != 5:
+                    raise RuntimeError
+                year, platform, year_suffix, revision, compile_date = groups
+                if year != year_suffix:
+                    raise RuntimeError
             run_date = next(inputfile).strip()
-            platform_full_version_tokens = platform_full_version.split("-")
-            full_version = platform_full_version_tokens[-1]
-            platform = "-".join(platform_full_version_tokens[:-1])
-            year_suffix = full_version[1:3]
-            revision = full_version[6:]
             self.metadata["package_version"] = (
                 f"{self.YEAR_SUFFIXES_TO_YEARS[year_suffix]}+{revision}"
             )

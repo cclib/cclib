@@ -1253,6 +1253,16 @@ def testGaussian_Gaussian09_issue1150_log(logfile):
     assert logfile.metadata["symmetry_detected"] == "c1"
 
 
+def testGaussian_Gaussian16_co_pbe1pbe_631ppGss_log(logfile):
+    """A calculation where the platform couldn't be parsed."""
+    # *********************************************
+    # Gaussian 16:  Apple M1-G16RevC.02  7-Dec-2021
+    #                   6-Mar-2024
+    # *********************************************
+    assert logfile.metadata["package_version"] == "2016+C.02"
+    assert logfile.metadata["platform"] == "Apple M1"
+
+
 def testGaussian_Gaussian16_H3_natcharge_log(logfile):
     """A calculation with natural charges calculated. Test issue 1055 where
     only the beta set of charges was parsed rather than the spin independent"""
