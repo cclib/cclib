@@ -11,6 +11,7 @@ import pathlib
 import sys
 import typing
 import warnings
+from enum import Enum, auto
 from typing import TYPE_CHECKING, List, Optional, Union
 
 from cclib.collection import ccCollection
@@ -30,6 +31,25 @@ if TYPE_CHECKING:
 # todo from cclib.io import wfxwriter
 # todo from cclib.io import xyzreader
 # todo from cclib.io import xyzwriter
+
+from dataclasses import dataclass
+
+
+class TriggerType(Enum):
+    ON = auto()
+    OFF = auto()
+
+
+@dataclass(kw_only=True)
+class Trigger:
+    program: str
+    trigger_strings: List[str]
+    do_break: bool
+    type: TriggerType
+
+    def trigger_matches(self, line: str) -> bool:
+        return all([line.lower().find(phrase.lower()) >= 0 for phrase in self.trigger_strings])
+
 
 # Parser choice is triggered by certain phrases occurring the logfile. Where these
 # strings are unique, we can set the parser and break. In other cases, the situation
@@ -87,6 +107,37 @@ TRIGGERS_OFF = [
     ("psi4", ["Psi4 exiting successfully. Buy a developer a beer!"], True),
     # todo     (QChem,     ["A Quantum Leap Into The Future Of Chemistry"],    True),
     # todo     (Turbomole, ["TURBOMOLE"],                                      True),
+]
+
+TRIGGERS = [
+    Trigger(
+        program="gaussian", trigger_strings=["Gaussian, Inc."], do_break=True, type=TriggerType.ON
+    ),
+    Trigger(program="orca", trigger_strings=["O   R   C   A"], do_break=True, type=TriggerType.ON),
+    Trigger(
+        program="psi4",
+        trigger_strings=["Psi4: An Open-Source Ab Initio Electronic Structure Package"],
+        do_break=True,
+        type=TriggerType.ON,
+    ),
+    Trigger(
+        program="gaussian",
+        trigger_strings=["Normal Termination of Gaussian"],
+        do_break=True,
+        type=TriggerType.OFF,
+    ),
+    Trigger(
+        program="orca",
+        trigger_strings=["****ORCA TERMINATED NORMALLY****"],
+        do_break=True,
+        type=TriggerType.OFF,
+    ),
+    Trigger(
+        program="psi4",
+        trigger_strings=["Psi4 exiting successfully. Buy a developer a beer!"],
+        do_break=True,
+        type=TriggerType.OFF,
+    ),
 ]
 
 
