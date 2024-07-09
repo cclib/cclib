@@ -40,7 +40,8 @@ class TriggerType(Enum):
     OFF = auto()
 
 
-@dataclass(kw_only=True)
+# TODO possibly replace with attrs so we can always use kw_only
+@dataclass
 class Trigger:
     program: str
     trigger_strings: List[str]
