@@ -107,7 +107,7 @@ class atomcharges(base_parser):
     known_codes = ["orca", "nbo", "psi4", "qchem"]
 
     @staticmethod
-    def ORCA(file_handler, ccdata) -> Optional[dict]:
+    def orca(file_handler, ccdata) -> Optional[dict]:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
         constructed_charge_data = None
