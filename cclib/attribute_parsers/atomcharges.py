@@ -185,7 +185,7 @@ class atomcharges(base_parser):
         return None
 
     @staticmethod
-    def NBO(file_handler, ccdata) -> Optional[dict]:
+    def nbo(file_handler, ccdata) -> Optional[dict]:
         atomcharges = dict()
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         charges = None
