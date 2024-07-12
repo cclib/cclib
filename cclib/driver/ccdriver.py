@@ -568,10 +568,10 @@ class ccDriver:
         # program (Psi4 BSSE, Psi4 SAPT, Q-Chem EDA, Psi4 MBE, Q-Chem MBE,
         # Gaussian ONIOM, ...).
         self.identified_program = None
-        line = self._fileHandler.last_line
+        line = next(self._fileHandler)
         current_idx = self._tree.get_next_idx()
         # TODO for line in self._fileHandler:
-        while line := next(self._fileHandler):
+        while line:
             for program, phrases, do_break in TRIGGERS_ON:
                 if all([line.lower().find(phrase.lower()) >= 0 for phrase in phrases]):
                     if self.identified_program is None:
@@ -605,4 +605,5 @@ class ccDriver:
                 )
                 if parsed_data is not None:
                     self._ccCollection.parsed_data[current_idx].setattributes(parsed_data)
+            line = next(self._fileHandler)
         return self._ccCollection
