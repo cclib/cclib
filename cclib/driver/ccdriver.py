@@ -48,7 +48,7 @@ class Trigger:
     do_break: bool
     type: TriggerType
 
-    def trigger_matches(self, line: str) -> bool:
+    def matches(self, line: str) -> bool:
         return all([line.lower().find(phrase.lower()) >= 0 for phrase in self.trigger_strings])
 
 
@@ -63,56 +63,63 @@ class Trigger:
 #
 # The triggers are defined by the tuples in the list below like so:
 #   (parser, phrases, flag whether we should break)
-TRIGGERS_ON = [
-    ("adf", ["Amsterdam Density Functional"], True),
-    ("dalton", ["Dalton - An Electronic Structure Program"], True),
-    ("fchk", ["Number of atoms", "I"], True),
-    ("gamess", ["GAMESS"], False),
-    ("gamess", ["Firefly (PC GAMESS)"], True),
-    ("gamess", ["GAMESS VERSION"], True),
-    ("gamessuk", ["G A M E S S - U K"], True),
-    ("gamessdat", ["$DATA"], True),
-    ("gaussian", ["Gaussian, Inc."], True),
-    ("jaguar", ["Jaguar"], True),
-    ("molcas", ["MOLCAS"], True),
-    ("molpro", ["PROGRAM SYSTEM MOLPRO"], True),
-    ("molpro", ["1PROGRAM"], False),
-    ("mopac", ["MOPAC20"], True),
-    ("nbo", ["N A T U R A L   A T O M I C   O R B I T A L   A N D"], True),
-    ("nwchem", ["Northwest Computational Chemistry Package"], True),
-    ("orca", ["O   R   C   A"], True),
-    ("psi4", ["Psi4: An Open-Source Ab Initio Electronic Structure Package"], True),
-    ("qchem", ["A Quantum Leap Into The Future Of Chemistry"], True),
-    ("turbomole", ["TURBOMOLE"], True),
-]
-
-TRIGGERS_OFF = [
-    # todo     (ADF,       ["Amsterdam Density Functional"],                   True),
-    # todo     (DALTON,    ["Dalton - An Electronic Structure Program"],       True),
-    # todo     (FChk,      ["Number of atoms", "I"],                           True),
-    # todo     (GAMESS,    ["GAMESS"],                                         False),
-    # todo     (GAMESS,    ["Firefly (PC GAMESS)"],                            True),
-    # todo     (GAMESS,    ["GAMESS VERSION"],                                 True),
-    # todo     (GAMESSUK,  ["G A M E S S - U K"],                              True),
-    # todo     (GAMESSDAT, ["$DATA"],                                          True),
-    ("gaussian", ["Normal Termination of Gaussian"], True),
-    # todo     (Jaguar,    ["Jaguar"],                                         True),
-    # todo     (Molcas,    ["MOLCAS"],                                         True),
-    # todo     (Molpro,    ["PROGRAM SYSTEM MOLPRO"],                          True),
-    # todo     (Molpro,    ["1PROGRAM"],                                       False),
-    # todo     (MOPAC,     ["MOPAC20"],                                        True),
-    # todo     (NBO,       ["N A T U R A L   A T O M I C   O R B I T A L   A N D"],                  True),
-    # todo     (NWChem,    ["Northwest Computational Chemistry Package"],      True),
-    ("orca", ["****ORCA TERMINATED NORMALLY****"], True),
-    # todo     (Psi3,      ["PSI3: An Open-Source Ab Initio Electronic Structure Package"],          True),
-    ("psi4", ["Psi4 exiting successfully. Buy a developer a beer!"], True),
-    # todo     (QChem,     ["A Quantum Leap Into The Future Of Chemistry"],    True),
-    # todo     (Turbomole, ["TURBOMOLE"],                                      True),
-]
-
 TRIGGERS = [
     Trigger(
+        program="adf",
+        trigger_strings=["Amsterdam Density Functional"],
+        do_break=True,
+        type=TriggerType.ON,
+    ),
+    Trigger(
+        program="dalton",
+        trigger_strings=["Dalton - An Electronic Structure Program"],
+        do_break=True,
+        type=TriggerType.ON,
+    ),
+    Trigger(
+        program="fchk", trigger_strings=["Number of atoms", "I"], do_break=True, type=TriggerType.ON
+    ),
+    Trigger(program="gamess", trigger_strings=["GAMESS"], do_break=False, type=TriggerType.ON),
+    Trigger(
+        program="gamess",
+        trigger_strings=["Firefly (PC GAMESS)"],
+        do_break=True,
+        type=TriggerType.ON,
+    ),
+    Trigger(
+        program="gamess", trigger_strings=["GAMESS VERSION"], do_break=True, type=TriggerType.ON
+    ),
+    Trigger(
+        program="gamessuk",
+        trigger_strings=["G A M E S S - U K"],
+        do_break=True,
+        type=TriggerType.ON,
+    ),
+    Trigger(program="gamessdat", trigger_strings=["$DATA"], do_break=True, type=TriggerType.ON),
+    Trigger(
         program="gaussian", trigger_strings=["Gaussian, Inc."], do_break=True, type=TriggerType.ON
+    ),
+    Trigger(program="jaguar", trigger_strings=["Jaguar"], do_break=True, type=TriggerType.ON),
+    Trigger(program="molcas", trigger_strings=["MOLCAS"], do_break=True, type=TriggerType.ON),
+    Trigger(
+        program="molpro",
+        trigger_strings=["PROGRAM SYSTEM MOLPRO"],
+        do_break=True,
+        type=TriggerType.ON,
+    ),
+    Trigger(program="molpro", trigger_strings=["1PROGRAM"], do_break=False, type=TriggerType.ON),
+    Trigger(program="mopac", trigger_strings=["MOPAC20"], do_break=True, type=TriggerType.ON),
+    Trigger(
+        program="nbo",
+        trigger_strings=["N A T U R A L   A T O M I C   O R B I T A L   A N D"],
+        do_break=True,
+        type=TriggerType.ON,
+    ),
+    Trigger(
+        program="nwchem",
+        trigger_strings=["Northwest Computational Chemistry Package"],
+        do_break=True,
+        type=TriggerType.ON,
     ),
     Trigger(program="orca", trigger_strings=["O   R   C   A"], do_break=True, type=TriggerType.ON),
     Trigger(
@@ -121,6 +128,13 @@ TRIGGERS = [
         do_break=True,
         type=TriggerType.ON,
     ),
+    Trigger(
+        program="qchem",
+        trigger_strings=["A Quantum Leap Into The Future Of Chemistry"],
+        do_break=True,
+        type=TriggerType.ON,
+    ),
+    Trigger(program="turbomole", trigger_strings=["TURBOMOLE"], do_break=True, type=TriggerType.ON),
     Trigger(
         program="gaussian",
         trigger_strings=["Normal Termination of Gaussian"],
@@ -572,26 +586,26 @@ class ccDriver:
         current_idx = self._tree.get_next_idx()
         # TODO for line in self._fileHandler:
         while line:
-            for program, phrases, do_break in TRIGGERS_ON:
-                if all([line.lower().find(phrase.lower()) >= 0 for phrase in phrases]):
-                    if self.identified_program is None:
-                        current_idx = 0
-                    else:
-                        # if a program is within a program this might mean things are ok but we proceed to a child node.. think about how to handle this?
+            for trigger in TRIGGERS:
+                if trigger.matches(line):
+                    if trigger.type == TriggerType.ON:
+                        if self.identified_program is None:
+                            current_idx = 0
+                        else:
+                            # if a program is within a program this might mean things are ok but we proceed to a child node.. think about how to handle this?
+                            current_idx = self._tree.get_next_idx()
+                            assert current_idx is not None
+                        self.identified_program = trigger.program
+                        self._ccCollection.parsed_data[current_idx].setattributes(
+                            {"metadata": {"identified_program": trigger.program}}
+                        )
+                        if trigger.do_break:
+                            break
+                    elif trigger.type == TriggerType.OFF:
+                        self.identified_program = None
                         current_idx = self._tree.get_next_idx()
-                        assert current_idx is not None
-                    self.identified_program = program
-                    self._ccCollection.parsed_data[current_idx].setattributes(
-                        {"metadata": {"identified_program": program}}
-                    )
-                    if do_break:
-                        break
-            for program, phrases, do_break in TRIGGERS_OFF:
-                if all([line.lower().find(phrase.lower()) >= 0 for phrase in phrases]):
-                    self.identified_program = None
-                    current_idx = self._tree.get_next_idx()
-                    if do_break:
-                        break
+                        if trigger.do_break:
+                            break
             if self.identified_program is None:
                 line = next(self._fileHandler)
                 continue
