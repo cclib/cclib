@@ -67,6 +67,20 @@ class Gaussian(logfileparser.Logfile):
     }
 
     def before_parsing(self):
+        # Examples:
+        #  Gaussian 16:  Apple M1-G16RevC.02  7-Dec-2021
+        #  Gaussian 16:  ES64L-G16RevC.01  3-Jul-2019
+        #  Gaussian 98:  IBM-RS6000-G98RevA.7 11-Apr-1999
+        #  Gaussian 98:  SGI64-G98RevA.7 11-Apr-1999
+        self.re_platform_and_version = re.compile(
+            r"""
+            \ Gaussian\ (?P<year>\d{2}):\ {2}
+            (?P<platform>\w*\ ?\w*(?:-\w*)?)-G(?P<year_suffix>\d{2})Rev(?P<revision>[A-Z]\.\d{1,2}(?:\.\d)?)\ *
+            (?P<compile_date>\d{1,2}-[A-Z][a-z]{2}-\d{4})
+            """,
+            re.VERBOSE,
+        )
+
         # Calculations use point group symmetry by default.
         self.uses_symmetry = True
 
@@ -200,17 +214,16 @@ class Gaussian(logfileparser.Logfile):
         # ES64L-G16RevA.03 25-Dec-2016" becomes "2016+A.03".
         if "Gaussian, Inc.," in line:
             self.skip_lines(inputfile, ["b", "s"])
-            _, _, platform_full_version, compile_date = next(inputfile).split()
+            mtch = self.re_platform_and_version.match(next(inputfile))
+            if mtch is not None:
+                groupdict = mtch.groupdict()
+                year_suffix = groupdict["year_suffix"]
+                revision = groupdict["revision"]
+                self.metadata["package_version"] = (
+                    f"{self.YEAR_SUFFIXES_TO_YEARS[year_suffix]}+{revision}"
+                )
+                self.metadata["platform"] = groupdict["platform"]
             run_date = next(inputfile).strip()
-            platform_full_version_tokens = platform_full_version.split("-")
-            full_version = platform_full_version_tokens[-1]
-            platform = "-".join(platform_full_version_tokens[:-1])
-            year_suffix = full_version[1:3]
-            revision = full_version[6:]
-            self.metadata["package_version"] = (
-                f"{self.YEAR_SUFFIXES_TO_YEARS[year_suffix]}+{revision}"
-            )
-            self.metadata["platform"] = platform
 
         if line.strip().startswith("Link1:  Proceeding to internal job step number"):
             self.new_internal_job()
