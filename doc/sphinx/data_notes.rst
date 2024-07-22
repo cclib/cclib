@@ -523,7 +523,7 @@ A list of integers representing the status of each step in an optimisation. The 
     * ``OPT_DONE = 0b010 = 2`` is set for the last step of an optimisation that converged.
     * ``OPT_UNCONVERGED = 0b100 = 4`` is set for every unconverged step (e.g. should be mutually exclusive with ``OPT_DONE``)
 
-So, to robustly check if step `i` has converged, one should check ``data.optstatus[i] & OPT_DONE`` instead of ``data.optstatus[i] == OPT_DONE``.
+So, to robustly check if step ``i`` has converged, one should check ``data.optstatus[i] & OPT_DONE`` instead of ``data.optstatus[i] == OPT_DONE``.
 
 scancoords
 ----------
