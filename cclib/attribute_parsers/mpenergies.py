@@ -39,7 +39,6 @@ class mpenergies(base_parser):
             return {mpenergies.__name__: this_mpenergies}
         return None
 
-
     @staticmethod
     def parse(file_handler, program: str, ccdata) -> Optional[dict]:
         constructed_data = None
