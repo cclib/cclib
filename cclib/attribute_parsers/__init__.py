@@ -19,6 +19,7 @@ from cclib.attribute_parsers.gbasis import gbasis
 from cclib.attribute_parsers.mocoeffs import mocoeffs
 from cclib.attribute_parsers.moenergies import moenergies
 from cclib.attribute_parsers.mosyms import mosyms
+from cclib.attribute_parsers.mpenergies import mpenergies
 from cclib.attribute_parsers.mult import mult
 from cclib.attribute_parsers.natom import natom
 from cclib.attribute_parsers.nbasis import nbasis
