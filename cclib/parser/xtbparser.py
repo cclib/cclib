@@ -434,10 +434,10 @@ def _extract_symbol_coords(line: str, mode: str) -> Optional[Tuple[str, List[flo
     """
     line_split = line.split()
     if mode == "xyz":
-        if line_split[0].isupper():
+        if line_split[0].istitle():
             return line_split[0], [float(coord) for coord in line_split[1:]]
     elif mode in {"mol", "sdf"}:
-        if line_split[3].isupper():
+        if line_split[3].istitle():
             return line_split[3], [float(coord) for coord in line_split[:3]]
     else:
         raise ValueError(f"Unsupported coordinate file type: {mode}")
