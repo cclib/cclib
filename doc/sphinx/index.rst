@@ -51,7 +51,7 @@ The code behind cclib was started as a collaboration between Noel O'Boyle, Adam 
 
 If you use cclib (version 2.0+) in your scientific work, please support our work by adding a reference to the following article:
 
-|           E\. Berquist, A\.Dumi, S\. Upadhyay, O\.D\. Abarbanel, M\. Cho, S\. Gaur, V\. Hugo Cano Gil, G\.R\. Hutchinson, O\.S\. Lee, A\.S\. Rosen, S\. Schamnad, F\.S\.S Schneider, C\. Steinmann, M\. Stolyarchuk, J\.E\. Vandezande, W\. Zak, K\.M\. Langner, *cclib 2.0: An updated architecture for interoperable computational chemistry*, J. Chem. Phys. 161, 042501, **2024** (DOI_).
+|           E\. Berquist, A\. Dumi, S\. Upadhyay, O\. D\. Abarbanel, M\. Cho, S\. Gaur, V\. Hugo Cano Gil, G\. R\. Hutchinson, O\. S\. Lee, A\. S\. Rosen, S\. Schamnad, F\. S\. S\. Schneider, C\. Steinmann, M\. Stolyarchuk, J\. E\. Vandezande, W\. Zak, K\. M\. Langner, *cclib 2.0: An updated architecture for interoperable computational chemistry*, J. Chem. Phys. 161, 042501, **2024** (DOI_).
 |
 
 An older reference for version 1.x is also available:
