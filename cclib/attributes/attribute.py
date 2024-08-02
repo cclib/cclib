@@ -36,10 +36,10 @@ class _Attribute(ABC):
             else:
                 return self._impl
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.__class__.__name__)
 
-    def typecheck(self):
+    def typecheck(self) -> None:
         """Check the types of all attributes.
 
         If an attribute does not match the expected type, then attempt to
@@ -61,7 +61,7 @@ class _Attribute(ABC):
             )
 
 
-class aonames(_Attribute):
+class Aonames(_Attribute):
     """atomic orbital names (list of strings)"""
 
     def __init__(self, *args, **kwargs):
@@ -70,7 +70,7 @@ class aonames(_Attribute):
         )
 
 
-class aooverlaps(_Attribute):
+class Aooverlaps(_Attribute):
     """atomic orbital overlap matrix (array[2])"""
 
     def __init__(self, *args, **kwargs):
@@ -79,7 +79,7 @@ class aooverlaps(_Attribute):
         )
 
 
-class atombasis(_Attribute):
+class Atombasis(_Attribute):
     """indices of atomic orbitals on each atom (list of lists)"""
 
     def __init__(self, *args, **kwargs):
@@ -88,7 +88,7 @@ class atombasis(_Attribute):
         )
 
 
-class atomcharges(_Attribute):
+class Atomcharges(_Attribute):
     """atomic partial charges (dict of arrays[1])"""
 
     # Attributes that should be dictionaries of arrays (double precision).
@@ -100,7 +100,7 @@ class atomcharges(_Attribute):
         )
 
 
-class atomcoords(_Attribute):
+class Atomcoords(_Attribute):
     """atom coordinates (array[3], angstroms)"""
 
     def __init__(self, *args, **kwargs):
@@ -109,14 +109,14 @@ class atomcoords(_Attribute):
         )
 
 
-class atommasses(_Attribute):
+class Atommasses(_Attribute):
     """atom masses (array[1], daltons)"""
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__("atommasses", np.ndarray, "mass", "atoms", *args, **kwargs)
 
 
-class atomnos(_Attribute):
+class Atomnos(_Attribute):
     """atomic numbers (array[1])"""
 
     # Arrays are double precision by default, but these will be integer arrays.
@@ -128,7 +128,7 @@ class atomnos(_Attribute):
         )
 
 
-class atomspins(_Attribute):
+class Atomspins(_Attribute):
     """atomic spin densities (dict of arrays[1])"""
 
     # Attributes that should be dictionaries of arrays (double precision).
@@ -138,8 +138,8 @@ class atomspins(_Attribute):
         super(type(self), self).__init__("atomspins", dict, "spins", "atoms", *args, **kwargs)
 
 
-class ccenergies(_Attribute):
-    """molecular energies with Coupled-Cluster corrections (array[2], eV)"""
+class Ccenergies(_Attribute):
+    """molecular energies with Coupled-Cluster corrections (array[2], hartree)"""
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__(
@@ -147,14 +147,14 @@ class ccenergies(_Attribute):
         )
 
 
-class charge(_Attribute):
+class Charge(_Attribute):
     """net charge of the system (integer)"""
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__("charge", int, "charge", "properties", *args, **kwargs)
 
 
-class coreelectrons(_Attribute):
+class Coreelectrons(_Attribute):
     """number of core electrons in atom pseudopotentials (array[1])"""
 
     # Arrays are double precision by default, but these will be integer arrays.
@@ -166,8 +166,8 @@ class coreelectrons(_Attribute):
         )
 
 
-class dispersionenergies(_Attribute):
-    """a molecular dispersion energy corrections (array[1], eV)"""
+class Dispersionenergies(_Attribute):
+    """a molecular dispersion energy corrections (array[1], hartree)"""
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__(
@@ -180,7 +180,7 @@ class dispersionenergies(_Attribute):
         )
 
 
-class enthalpy(_Attribute):
+class Enthalpy(_Attribute):
     """sum of electronic and thermal enthalpies (float, hartree/particle)"""
 
     def __init__(self, *args, **kwargs):
@@ -189,15 +189,15 @@ class enthalpy(_Attribute):
         )
 
 
-class entropy(_Attribute):
+class Entropy(_Attribute):
     """entropy (float, hartree/particle)"""
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__("entropy", float, "entropy", "properties", *args, **kwargs)
 
 
-class etenergies(_Attribute):
-    """energies of electronic transitions (array[1], 1/cm)"""
+class Etenergies(_Attribute):
+    """energies of electronic transitions (array[1], hartree)"""
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__(
@@ -205,7 +205,7 @@ class etenergies(_Attribute):
         )
 
 
-class etoscs(_Attribute):
+class Etoscs(_Attribute):
     """oscillator strengths of electronic transitions (array[1])"""
 
     def __init__(self, *args, **kwargs):
@@ -214,7 +214,7 @@ class etoscs(_Attribute):
         )
 
 
-class etdips(_Attribute):
+class Etdips(_Attribute):
     """electric transition dipoles of electronic transitions (array[2], ebohr)"""
 
     def __init__(self, *args, **kwargs):
@@ -223,7 +223,7 @@ class etdips(_Attribute):
         )
 
 
-class etveldips(_Attribute):
+class Etveldips(_Attribute):
     """velocity-gauge electric transition dipoles of electronic transitions (array[2], ebohr)"""
 
     def __init__(self, *args, **kwargs):
@@ -237,7 +237,7 @@ class etveldips(_Attribute):
         )
 
 
-class etmagdips(_Attribute):
+class Etmagdips(_Attribute):
     """magnetic transition dipoles of electronic transitions (array[2], ebohr)"""
 
     def __init__(self, *args, **kwargs):
@@ -246,7 +246,7 @@ class etmagdips(_Attribute):
         )
 
 
-class etrotats(_Attribute):
+class Etrotats(_Attribute):
     """rotatory strengths of electronic transitions (array[1], ??)"""
 
     def __init__(self, *args, **kwargs):
@@ -255,7 +255,7 @@ class etrotats(_Attribute):
         )
 
 
-class etsecs(_Attribute):
+class Etsecs(_Attribute):
     """singly-excited configurations for electronic transitions (list of lists)"""
 
     def __init__(self, *args, **kwargs):
@@ -264,14 +264,14 @@ class etsecs(_Attribute):
         )
 
 
-class etsyms(_Attribute):
+class Etsyms(_Attribute):
     """symmetries of electronic transitions (list of string)"""
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__("etsyms", list, "symmetry", "transitions", *args, **kwargs)
 
 
-class freeenergy(_Attribute):
+class Freeenergy(_Attribute):
     """sum of electronic and thermal free energies (float, hartree/particle)"""
 
     def __init__(self, *args, **kwargs):
@@ -280,7 +280,7 @@ class freeenergy(_Attribute):
         )
 
 
-class fonames(_Attribute):
+class Fonames(_Attribute):
     """fragment orbital names (list of strings)"""
 
     def __init__(self, *args, **kwargs):
@@ -289,7 +289,7 @@ class fonames(_Attribute):
         )
 
 
-class fooverlaps(_Attribute):
+class Fooverlaps(_Attribute):
     """fragment orbital overlap matrix (array[2])"""
 
     def __init__(self, *args, **kwargs):
@@ -298,7 +298,7 @@ class fooverlaps(_Attribute):
         )
 
 
-class fragnames(_Attribute):
+class Fragnames(_Attribute):
     """names of fragments (list of strings)"""
 
     def __init__(self, *args, **kwargs):
@@ -307,7 +307,7 @@ class fragnames(_Attribute):
         )
 
 
-class frags(_Attribute):
+class Frags(_Attribute):
     """indices of atoms in a fragment (list of lists)"""
 
     def __init__(self, *args, **kwargs):
@@ -316,7 +316,7 @@ class frags(_Attribute):
         )
 
 
-class gbasis(_Attribute):
+class Gbasis(_Attribute):
     """coefficients and exponents of Gaussian basis functions (PyQuante format)"""
 
     def __init__(self, *args, **kwargs):
@@ -325,7 +325,7 @@ class gbasis(_Attribute):
         )
 
 
-class geotargets(_Attribute):
+class Geotargets(_Attribute):
     """targets for convergence of geometry optimization (array[1])"""
 
     def __init__(self, *args, **kwargs):
@@ -334,7 +334,7 @@ class geotargets(_Attribute):
         )
 
 
-class geovalues(_Attribute):
+class Geovalues(_Attribute):
     """current values for convergence of geometry optmization (array[1])"""
 
     def __init__(self, *args, **kwargs):
@@ -343,14 +343,14 @@ class geovalues(_Attribute):
         )
 
 
-class grads(_Attribute):
+class Grads(_Attribute):
     """current values of forces (gradients) in geometry optimization (array[3])"""
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__("grads", np.ndarray, "TBD", "N/A", *args, **kwargs)
 
 
-class hessian(_Attribute):
+class Hessian(_Attribute):
     """elements of the force constant matrix (array[1])"""
 
     def __init__(self, *args, **kwargs):
@@ -359,7 +359,7 @@ class hessian(_Attribute):
         )
 
 
-class homos(_Attribute):
+class Homos(_Attribute):
     """molecular orbital indices of HOMO(s) (array[1])"""
 
     # Arrays are double precision by default, but these will be integer arrays.
@@ -371,14 +371,14 @@ class homos(_Attribute):
         )
 
 
-class metadata(_Attribute):
+class Metadata(_Attribute):
     """various metadata about the package and computation (dict)"""
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__("metadata", dict, "TBD", "N/A", *args, **kwargs)
 
 
-class mocoeffs(_Attribute):
+class Mocoeffs(_Attribute):
     """molecular orbital coefficients (list of arrays[2])"""
 
     # Attributes that should be lists of arrays (double precision).
@@ -390,8 +390,8 @@ class mocoeffs(_Attribute):
         )
 
 
-class moenergies(_Attribute):
-    """molecular orbital energies (list of arrays[1], eV)"""
+class Moenergies(_Attribute):
+    """molecular orbital energies (list of arrays[1], hartree)"""
 
     # Attributes that should be lists of arrays (double precision).
     _listsofarrays = ["mocoeffs", "moenergies", "moments", "polarizabilities", "scfvalues"]
@@ -402,7 +402,7 @@ class moenergies(_Attribute):
         )
 
 
-class moments(_Attribute):
+class Moments(_Attribute):
     """molecular multipole moments (list of arrays[], a.u.)"""
 
     # Attributes that should be lists of arrays (double precision).
@@ -414,7 +414,7 @@ class moments(_Attribute):
         )
 
 
-class mosyms(_Attribute):
+class Mosyms(_Attribute):
     """orbital symmetries (list of lists)"""
 
     def __init__(self, *args, **kwargs):
@@ -423,8 +423,8 @@ class mosyms(_Attribute):
         )
 
 
-class mpenergies(_Attribute):
-    """molecular electronic energies with Møller-Plesset corrections (array[2], eV)"""
+class Mpenergies(_Attribute):
+    """molecular electronic energies with Møller-Plesset corrections (array[2], hartree)"""
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__(
@@ -432,14 +432,14 @@ class mpenergies(_Attribute):
         )
 
 
-class mult(_Attribute):
+class Mult(_Attribute):
     """multiplicity of the system (integer)"""
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__("mult", int, "multiplicity", "properties", *args, **kwargs)
 
 
-class natom(_Attribute):
+class Natom(_Attribute):
     """number of atoms (integer)"""
 
     def __init__(self, *args, **kwargs):
@@ -448,7 +448,7 @@ class natom(_Attribute):
         )
 
 
-class nbasis(_Attribute):
+class Nbasis(_Attribute):
     """number of basis functions (integer)"""
 
     def __init__(self, *args, **kwargs):
@@ -457,7 +457,7 @@ class nbasis(_Attribute):
         )
 
 
-class nmo(_Attribute):
+class Nmo(_Attribute):
     """number of molecular orbitals (integer)"""
 
     def __init__(self, *args, **kwargs):
@@ -466,7 +466,7 @@ class nmo(_Attribute):
         )
 
 
-class nmrtensors(_Attribute):
+class Nmrtensors(_Attribute):
     """Nuclear magnetic resonance chemical shielding tensors (dict of dicts of array[2])"""
 
     def __init__(self, *args, **kwargs):
@@ -475,42 +475,51 @@ class nmrtensors(_Attribute):
         )
 
 
-class nocoeffs(_Attribute):
+class Nmrcouplingtensors(_Attribute):
+    """Nuclear magnetic resonance spin-spin coupling tensors (dict of dicts of array[2])"""
+
+    def __init__(self, *args, **kwargs):
+        super(type(self), self).__init__(
+            "nmr", int, "NMR spin-spin coupling tensors", "properties:nmr", *args, **kwargs
+        )
+
+
+class Nocoeffs(_Attribute):
     """natural orbital coefficients (array[2])"""
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__("nocoeffs", np.ndarray, "TBD", "N/A", *args, **kwargs)
 
 
-class nooccnos(_Attribute):
+class Nooccnos(_Attribute):
     """natural orbital occupation numbers (array[1])"""
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__("nooccnos", np.ndarray, "TBD", "N/A", *args, **kwargs)
 
 
-class nsocoeffs(_Attribute):
+class Nsocoeffs(_Attribute):
     """natural spin orbital coefficients (list of array[2])"""
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__("nsocoeffs", list, "TBD", "N/A", *args, **kwargs)
 
 
-class nsooccnos(_Attribute):
+class Nsooccnos(_Attribute):
     """natural spin orbital occupation numbers (list of array[1])"""
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__("nsooccnos", list, "TBD", "N/A", *args, **kwargs)
 
 
-class optdone(_Attribute):
+class Optdone(_Attribute):
     """flags whether an optimization has converged (Boolean)"""
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__("optdone", bool, "done", "optimization", *args, **kwargs)
 
 
-class optstatus(_Attribute):
+class Optstatus(_Attribute):
     """optimization status for each set of atomic coordinates (array[1])"""
 
     # Arrays are double precision by default, but these will be integer arrays.
@@ -522,7 +531,7 @@ class optstatus(_Attribute):
         )
 
 
-class polarizabilities(_Attribute):
+class Polarizabilities(_Attribute):
     """(dipole) polarizabilities, static or dynamic (list of arrays[2])"""
 
     # Attributes that should be lists of arrays (double precision).
@@ -534,7 +543,7 @@ class polarizabilities(_Attribute):
         )
 
 
-class pressure(_Attribute):
+class Pressure(_Attribute):
     """temperature used for Thermochemistry (float, atm)"""
 
     def __init__(self, *args, **kwargs):
@@ -543,7 +552,7 @@ class pressure(_Attribute):
         )
 
 
-class rotconsts(_Attribute):
+class Rotconsts(_Attribute):
     """rotational constants (array[2], GHz)"""
 
     def __init__(self, *args, **kwargs):
@@ -557,7 +566,7 @@ class rotconsts(_Attribute):
         )
 
 
-class scancoords(_Attribute):
+class Scancoords(_Attribute):
     """geometries of each scan step (array[3], angstroms)"""
 
     def __init__(self, *args, **kwargs):
@@ -566,7 +575,7 @@ class scancoords(_Attribute):
         )
 
 
-class scanenergies(_Attribute):
+class Scanenergies(_Attribute):
     """energies of potential energy surface (list)"""
 
     def __init__(self, *args, **kwargs):
@@ -575,7 +584,7 @@ class scanenergies(_Attribute):
         )
 
 
-class scannames(_Attribute):
+class Scannames(_Attribute):
     """names of varaibles scanned (list of strings)"""
 
     def __init__(self, *args, **kwargs):
@@ -584,7 +593,7 @@ class scannames(_Attribute):
         )
 
 
-class scanparm(_Attribute):
+class Scanparm(_Attribute):
     """values of parameters in potential energy surface (list of tuples)"""
 
     def __init__(self, *args, **kwargs):
@@ -593,7 +602,7 @@ class scanparm(_Attribute):
         )
 
 
-class scfenergies(_Attribute):
+class Scfenergies(_Attribute):
     """molecular electronic energies after SCF (Hartree-Fock, DFT) (array[1], eV)"""
 
     def __init__(self, *args, **kwargs):
@@ -602,7 +611,7 @@ class scfenergies(_Attribute):
         )
 
 
-class scftargets(_Attribute):
+class Scftargets(_Attribute):
     """targets for convergence of the SCF (array[2])"""
 
     def __init__(self, *args, **kwargs):
@@ -611,7 +620,7 @@ class scftargets(_Attribute):
         )
 
 
-class scfvalues(_Attribute):
+class Scfvalues(_Attribute):
     """current values for convergence of the SCF (list of arrays[2])"""
 
     # Attributes that should be lists of arrays (double precision).
@@ -623,7 +632,7 @@ class scfvalues(_Attribute):
         )
 
 
-class temperature(_Attribute):
+class Temperature(_Attribute):
     """temperature used for Thermochemistry (float, kelvin)"""
 
     def __init__(self, *args, **kwargs):
@@ -632,14 +641,14 @@ class temperature(_Attribute):
         )
 
 
-class time(_Attribute):
+class Time(_Attribute):
     """time in molecular dynamics and other trajectories (array[1], fs)"""
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__("time", np.ndarray, "time", "N/A", *args, **kwargs)
 
 
-class transprop(_Attribute):
+class Transprop(_Attribute):
     """all absorption and emission spectra (dictionary {name:(etenergies, etoscs)})
 
     WARNING: this attribute is not standardized and is liable to change in cclib 2.0
@@ -651,7 +660,7 @@ class transprop(_Attribute):
         )
 
 
-class vibanharms(_Attribute):
+class Vibanharms(_Attribute):
     """vibrational anharmonicity constants (array[2], 1/cm)"""
 
     def __init__(self, *args, **kwargs):
@@ -660,7 +669,7 @@ class vibanharms(_Attribute):
         )
 
 
-class vibdisps(_Attribute):
+class Vibdisps(_Attribute):
     """cartesian displacement vectors (array[3], delta angstrom)"""
 
     def __init__(self, *args, **kwargs):
@@ -669,7 +678,7 @@ class vibdisps(_Attribute):
         )
 
 
-class vibfreqs(_Attribute):
+class Vibfreqs(_Attribute):
     """vibrational frequencies (array[1], 1/cm)"""
 
     def __init__(self, *args, **kwargs):
@@ -678,7 +687,16 @@ class vibfreqs(_Attribute):
         )
 
 
-class vibirs(_Attribute):
+class Vibfconsts(_Attribute):
+    """force constants of vibrations (array[1], mDyne/angstrom)"""
+
+    def __init__(self, *args, **kwargs):
+        super(type(self), self).__init__(
+            "vibfreqs", np.ndarray, "force constants", "vibrations", *args, **kwargs
+        )
+
+
+class Vibirs(_Attribute):
     """IR intensities (array[1], km/mol)"""
 
     def __init__(self, *args, **kwargs):
@@ -687,7 +705,7 @@ class vibirs(_Attribute):
         )
 
 
-class vibramans(_Attribute):
+class Vibramans(_Attribute):
     """Raman intensities (array[1], A^4/Da)"""
 
     def __init__(self, *args, **kwargs):
@@ -696,7 +714,7 @@ class vibramans(_Attribute):
         )
 
 
-class vibrmasses(_Attribute):
+class Vibrmasses(_Attribute):
     """reduced masses of vibrations (array[1], daltons)"""
 
     def __init__(self, *args, **kwargs):
@@ -705,7 +723,7 @@ class vibrmasses(_Attribute):
         )
 
 
-class vibsyms(_Attribute):
+class Vibsyms(_Attribute):
     """symmetries of vibrations (list of strings)"""
 
     def __init__(self, *args, **kwargs):
@@ -714,7 +732,7 @@ class vibsyms(_Attribute):
         )
 
 
-class zpve(_Attribute):
+class Zpve(_Attribute):
     """zero-point vibrational energy correction (float, hartree/particle)"""
 
     def __init__(self, *args, **kwargs):
@@ -780,6 +798,7 @@ _attributes = {
     "nbasis": Attribute(int, "basis number", "properties:orbitals"),
     "nmo": Attribute(int, "MO number", "properties:orbitals"),
     "nmrtensors": Attribute(dict, "NMR chemical shielding tensors", "properties:nmr"),
+    "nmrcouplingtensors": Attribute(dict, "NMR spin-spin coupling tensors", "properties:nmr"),
     "nocoeffs": Attribute(np.ndarray, "TBD", "N/A"),
     "nooccnos": Attribute(np.ndarray, "TBD", "N/A"),
     "nsocoeffs": Attribute(list, "TBD", "N/A"),
