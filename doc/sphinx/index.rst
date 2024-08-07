@@ -49,9 +49,14 @@ About cclib
 
 The code behind cclib was started as a collaboration between Noel O'Boyle, Adam Tenderholt and Karol M. Langner (see page about Development_ for details) and is licensed under the `BSD 3-clause license`_. Other developers are encouraged to contribute to this open source project -- send an email to the `mailing list`_. Applications that use cclib include GaussSum_ and QMForge_. It has also been used in the literature_.
 
-If you use cclib in your scientific work, please support our work by adding a reference to the following article:
+If you use cclib (version 2.0+) in your scientific work, please support our work by adding a reference to the following article:
 
-|           N\. M\. O'Boyle, A\. L\. Tenderholt, K\. M\. Langner, *cclib: a library for package-independent computational chemistry algorithms*, J. Comp. Chem. 29 (5), pp. 839-845, **2008** (DOI_).
+|           E\. Berquist, A\. Dumi, S\. Upadhyay, O\. D\. Abarbanel, M\. Cho, S\. Gaur, V\. Hugo Cano Gil, G\. R\. Hutchinson, O\. S\. Lee, A\. S\. Rosen, S\. Schamnad, F\. S\. S\. Schneider, C\. Steinmann, M\. Stolyarchuk, J\. E\. Vandezande, W\. Zak, K\. M\. Langner, *cclib 2.0: An updated architecture for interoperable computational chemistry*, J. Chem. Phys. 161, 042501, **2024** (DOI_).
+|
+
+An older reference for version 1.x is also available:
+
+|           N\. M\. O'Boyle, A\. L\. Tenderholt, K\. M\. Langner, *cclib: a library for package-independent computational chemistry algorithms*, J. Comp. Chem. 29 (5), pp. 839-845, **2008** (DOI-old_).
 |
 
 A record for the latest release is also available on Zenodo_.
@@ -93,5 +98,6 @@ A record for the latest release is also available on Zenodo_.
 .. _GaussSum: http://gausssum.sourceforge.net/
 .. _QMForge: https://qmforge.net/
 .. _literature: https://doi.org/10.1021/jacs.5b05600
-.. _DOI: https://doi.org/10.1002/jcc.20823
+.. _DOI: https://doi.org/10.1063/5.0216778
+.. _DOI-old: https://doi.org/10.1002/jcc.20823
 .. _Zenodo: https://zenodo.org/record/8280878

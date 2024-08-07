@@ -8,7 +8,8 @@ See https://github.com/cclib/cclib/issues/1395 for more information.
 - We do not expect to make any further tagged or versioned releases on the `master` branch.
 - This message will disappear when the final release of 2.0, after any alphas/release candidates/etc. is made.
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8280878.svg)](https://doi.org/10.5281/zenodo.8280878)
+[![Paper](https://img.shields.io/badge/Paper-10.1063/5.0216778-blue)](https://doi.org/10.1063/5.0216778)
+[![Zenodo](https://zenodo.org/badge/DOI/10.5281/zenodo.8280878.svg)](https://doi.org/10.5281/zenodo.8280878)
 [![PyPI version](http://img.shields.io/pypi/v/cclib.svg?style=flat)](https://pypi.python.org/pypi/cclib)
 [![GitHub release](https://img.shields.io/github/release/cclib/cclib.svg?style=flat)](https://github.com/cclib/cclib/releases)
 [![build status](https://github.com/cclib/cclib/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/cclib/cclib/actions/workflows/ci.yml)
