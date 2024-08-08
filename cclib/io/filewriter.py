@@ -24,7 +24,7 @@ if _has_openbabel:
         import openbabel.pybel as pb
         from openbabel import openbabel as ob
     # Open Babel 2.4.x and below
-    except:
+    except:  # noqa: E722
         import openbabel as ob
 
         # There's no guarantee pybel is also available...
@@ -157,7 +157,7 @@ class Writer(ABC):
         if not self.indices:
             self.indices = set()
         elif not isinstance(self.indices, Iterable):
-            self.indices = set([self.indices])
+            self.indices = {self.indices}
         # This is the most likely place to get the number of
         # geometries from.
         if hasattr(self.ccdata, "atomcoords"):

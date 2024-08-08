@@ -7,8 +7,7 @@
 
 import re
 
-from cclib.parser import logfileparser, utils
-from cclib.parser.utils import PeriodicTable
+from cclib.parser import logfileparser
 
 import numpy
 

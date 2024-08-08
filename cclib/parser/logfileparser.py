@@ -107,9 +107,9 @@ class Logfile(ABC):
             # Call logger.info() only if the attribute is new.
             if not hasattr(self, name):
                 if type(value) in [numpy.ndarray, list]:
-                    self.logger.info(f"Creating attribute {name}[]")
+                    self.logger.info("Creating attribute %s[]", name)
                 else:
-                    self.logger.info(f"Creating attribute {name}: {str(value)}")
+                    self.logger.info("Creating attribute %s: %s", name, value)
 
         # Set the attribute.
         object.__setattr__(self, name, value)
@@ -160,12 +160,12 @@ class Logfile(ABC):
             except StopIteration:
                 self.logger.error("Unexpectedly encountered end of logfile.")
                 break
-            except Exception as e:
+            except Exception:
                 self.logger.error("Encountered error when parsing.")
 
                 # Not all input files support last_line.
                 if hasattr(self.inputfile, "last_line"):
-                    self.logger.error(f"Last line read: {self.inputfile.last_line}")
+                    self.logger.error("Last line read: %s", self.inputfile.last_line)
                 raise
 
         # Maybe the sub-class has something to do after parsing.
@@ -202,7 +202,7 @@ class Logfile(ABC):
         # Delete all temporary attributes (including cclib attributes).
         # All attributes should have been moved to a data object, which will be returned.
         for attr in list(self.__dict__.keys()):
-            if not attr in _nodelete:
+            if attr not in _nodelete:
                 self.__delattr__(attr)
 
         # Perform final checks on values of attributes.
@@ -259,7 +259,7 @@ class Logfile(ABC):
 
     def hasattrs(self, names: Iterable[str]) -> bool:
         """Does this logfile have all the given attributes?"""
-        return all((hasattr(self, name) for name in names))
+        return all(hasattr(self, name) for name in names)
 
     def set_attribute(self, name: str, value: Any, check_change: bool = True) -> None:
         """Set an attribute and perform an optional check when it already exists.
@@ -282,7 +282,7 @@ class Logfile(ABC):
                 numpy.testing.assert_equal(getattr(self, name), value)
             except AssertionError:
                 self.logger.warning(
-                    f"Attribute {name} changed value ({getattr(self, name)} -> {value})"
+                    "Attribute %s changed value (%s -> %s)", name, getattr(self, name), value
                 )
 
         setattr(self, name, value)
@@ -370,10 +370,9 @@ class Logfile(ABC):
                         inspect.currentframe()
                     )[1]
                     parser = fname.split("/")[-1]
-                    msg = (
-                        f"In {parser}, line {int(lno)}, line not blank as expected: {line.strip()}"
+                    self.logger.warning(
+                        "In %s, line %d, line not blank as expected: %s", parser, lno, line.strip()
                     )
-                    self.logger.warning(msg)
 
             # All cases of heterogeneous lines can be dealt with by the same code.
             for character, keys in expected_characters.items():
@@ -385,8 +384,13 @@ class Logfile(ABC):
                             inspect.currentframe()
                         )[1]
                         parser = fname.split("/")[-1]
-                        msg = f"In {parser}, line {int(lno)}, line not all {keys[0]} as expected: {line.strip()}"
-                        self.logger.warning(msg)
+                        self.logger.warning(
+                            "In %s, line %d, line not all %s as expected: %s",
+                            parser,
+                            lno,
+                            keys[0],
+                            line.strip(),
+                        )
                         continue
 
             # Save the skipped line, and we will return the whole list.
@@ -403,4 +407,5 @@ class Logfile(ABC):
             if line.strip() != "":
                 return line
 
-    skip_line = lambda self, inputfile, expected: self.skip_lines(inputfile, [expected])
+    def skip_line(self, inputfile: "FileWrapper", expected: str) -> List[str]:
+        return self.skip_lines(inputfile, [expected])

@@ -5,18 +5,9 @@
 
 """Calculation of Hirshfeld charges based on data parsed by cclib."""
 
-import copy
 import logging
-import math
-import os
-import random
-import sys
-from typing import List
 
-from cclib.method.calculationmethod import Method
 from cclib.method.stockholder import Stockholder
-from cclib.method.volume import electrondensity_spin
-from cclib.parser.utils import find_package
 
 import numpy
 
@@ -113,7 +104,7 @@ class Hirshfeld(Stockholder):
         # radial distance from center of atom chi.
         stockholder_bigW = numpy.sum(stockholder_w, axis=0)
 
-        self.fragcharges = numpy.zeros((self.data.natom))
+        self.fragcharges = numpy.zeros(self.data.natom)
         self.logger.info("Creating fragcharges: array[1]")
 
         for atomi in range(self.data.natom):

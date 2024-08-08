@@ -223,7 +223,7 @@ class Gaussian(logfileparser.Logfile):
                     f"{self.YEAR_SUFFIXES_TO_YEARS[year_suffix]}+{revision}"
                 )
                 self.metadata["platform"] = groupdict["platform"]
-            run_date = next(inputfile).strip()
+            run_date = next(inputfile).strip()  # noqa: F841
 
         if line.strip().startswith("Link1:  Proceeding to internal job step number"):
             self.new_internal_job()
@@ -336,7 +336,7 @@ class Gaussian(logfileparser.Logfile):
             # Also, in older versions there is bo blank line (G98 regressions),
             # so we need to watch out for leaving the link.
             natom = 0
-            while line.split() and not "Variables" in line and not "Leave Link" in line:
+            while line.split() and "Variables" not in line and "Leave Link" not in line:
                 natom += 1
                 line = next(inputfile)
             self.set_attribute("natom", natom)
@@ -352,7 +352,7 @@ class Gaussian(logfileparser.Logfile):
             self.updateprogress(inputfile, "Charge and Multiplicity", self.fupdate)
 
             if line.split()[-1] == "supermolecule" or (
-                not "fragment" in line and not "model system" in line
+                "fragment" not in line and "model system" not in line
             ):
                 regex = r".*=(.*)Mul.*=\s*-?(\d+).*"
                 match = re.match(regex, line)
@@ -579,7 +579,9 @@ class Gaussian(logfileparser.Logfile):
                         numpy.testing.assert_equal(self.moments[4], hexadecapole)
                     except AssertionError:
                         self.logger.warning(
-                            f"Attribute hexadecapole changed value ({self.moments[4]} -> {hexadecapole})"
+                            "Attribute hexadecapole changed value (%s -> %s)",
+                            self.moments[4],
+                            hexadecapole,
                         )
                     self.append_attribute("moments", hexadecapole)
 
@@ -672,7 +674,7 @@ class Gaussian(logfileparser.Logfile):
 
             atomcoords = []
             line = next(inputfile)
-            while not "MW cartesian" in line:
+            while "MW cartesian" not in line:
                 broken = line.split()
                 atomcoords.append(list(map(utils.float, (broken[3], broken[5], broken[7]))))
                 #    self.inputatoms.append(int(broken[1]))
@@ -767,7 +769,7 @@ class Gaussian(logfileparser.Logfile):
         # Eventually we want to make this more general, or even better parse the output for
         # all fragment, but that will happen in a newer version of cclib.
         if line[1:16] == "Fragment guess:" and getattr(self, "nfragments", 0) > 1:
-            if not "full" in line:
+            if "full" not in line:
                 raise StopParsing()
 
         # Another hack for regression Gaussian03/ortho_prod_freq.log, which is an ONIOM job.
@@ -883,7 +885,7 @@ class Gaussian(logfileparser.Logfile):
                 self.scftargets = []
             # The following can happen with ONIOM which are mixed SCF
             # and semi-empirical
-            if type(self.scftargets) == type(numpy.array([])):
+            if isinstance(self.scftargets, numpy.ndarray):
                 self.scftargets = []
 
             scftargets = []
@@ -1086,12 +1088,13 @@ class Gaussian(logfileparser.Logfile):
                 self.logger.debug(line)
                 parts = line.split()
                 if "NO" in parts[-1]:
-                    allconverged = False
+                    allconverged = False  # noqa: F841
                 try:
                     value = utils.float(parts[2])
                 except ValueError:
                     self.logger.error(
-                        f"Problem parsing the value for geometry optimisation: {parts[2]} is not a number."
+                        "Problem parsing the value for geometry optimisation: %s is not a number.",
+                        parts[2],
                     )
                 else:
                     newlist[i] = value
@@ -1595,7 +1598,7 @@ class Gaussian(logfileparser.Logfile):
             self.append_attribute("etoscs", utils.float(line.split("f=")[-1].split()[0]))
             # Fix Gaussian's weird capitalisation.
             mult, symm = groups[0].strip().split("-")
-            self.append_attribute("etsyms", "{}-{}".format(mult, self.normalisesym(symm)))
+            self.append_attribute("etsyms", f"{mult}-{self.normalisesym(symm)}")
 
             line = next(inputfile)
 
@@ -1802,7 +1805,9 @@ class Gaussian(logfileparser.Logfile):
                     assert nbasis == self.nbasis
                 except AssertionError:
                     self.logger.warning(
-                        f"Number of basis functions (nbasis) has changed from {int(self.nbasis)} to {int(nbasis)}"
+                        "Number of basis functions (nbasis) has changed from %s to %s",
+                        self.nbasis,
+                        nbasis,
                     )
             self.nbasis = nbasis
 
@@ -1908,7 +1913,7 @@ class Gaussian(logfileparser.Logfile):
                     self.logger.warning("Molecular coefficients header found but no coefficients.")
                     break
 
-                symmetries = next(inputfile)
+                symmetries = next(inputfile)  # noqa: F841
                 eigenvalues = next(inputfile)
                 for i in range(self.nbasis):
                     line = next(inputfile)
@@ -1919,7 +1924,7 @@ class Gaussian(logfileparser.Logfile):
                         parts = line[:start_of_basis_fn_name].split()
                         if len(parts) > 1:  # New atom
                             if i > 0:
-                                self.atombasis.append(atombasis)
+                                self.atombasis.append(atombasis)  # noqa: F821
                             atombasis = []
                             atomname = f"{parts[2]}{parts[1]}"
                         orbital = line[start_of_basis_fn_name:20].strip()
@@ -1960,7 +1965,7 @@ class Gaussian(logfileparser.Logfile):
             atombasis = []
             for base in range(0, self.nmo, 5):
                 self.updateprogress(inputfile, updateprogress_title, self.fupdate)
-                colmNames = next(inputfile)
+                self.skip_line(inputfile, "column numbers")
                 eigenvalues = next(inputfile)
                 occnos.extend(map(float, eigenvalues.split()[2:]))
                 for i in range(self.nbasis):
@@ -1971,7 +1976,7 @@ class Gaussian(logfileparser.Logfile):
                         # New atom.
                         if len(parts) > 1:
                             if i > 0:
-                                atombasis.append(basisonatom)
+                                atombasis.append(basisonatom)  # noqa: F821
                             basisonatom = []
                             atomname = f"{parts[2]}{parts[1]}"
                         orbital = line[11:20].strip()
@@ -2254,9 +2259,9 @@ class Gaussian(logfileparser.Logfile):
                         # "mulliken atomic charges:" and " atomic charges:"
                         if prop == "atomic":
                             if (
-                                not "mulliken" in line.lower()
-                                and not "lowdin" in line.lower()
-                                and not "apt" in line.lower()
+                                "mulliken" not in line.lower()
+                                and "lowdin" not in line.lower()
+                                and "apt" not in line.lower()
                             ):
                                 extract_charges_spins(line, prop)
                         else:
@@ -2269,9 +2274,9 @@ class Gaussian(logfileparser.Logfile):
                 line1 = next(inputfile)
                 line2 = next(inputfile)
                 if line1.split()[0] == "Natural" and line2.split()[2] == "Charge":
-                    dashes = next(inputfile)
+                    self.skip_line(inputfile, "d")
                     charges = []
-                    for i in range(self.natom):
+                    for _ in range(self.natom):
                         nline = next(inputfile)
                         charges.append(float(nline.split()[2]))
                     self.atomcharges["natural"] = charges
@@ -2393,7 +2398,7 @@ class Gaussian(logfileparser.Logfile):
                             line[83:95],
                         ]
                     ]
-                except:
+                except:  # noqa: E722
                     # G16A03 and older
                     # Sample:
                     #       Exact polarizability:  68.238  -6.777 143.018   0.000   0.000  11.343
@@ -2490,9 +2495,9 @@ class Gaussian(logfileparser.Logfile):
         # Extract total elapsed (wall) and CPU job times
         if line[:14] == " Elapsed time:" or line[:14] == " Job cpu time:":
             # create empty list for the times to be stored in
-            if line[:14] == " Elapsed time:" and not "wall_time" in self.metadata:
+            if line[:14] == " Elapsed time:" and "wall_time" not in self.metadata:
                 self.metadata["wall_time"] = []
-            if line[:14] == " Job cpu time:" and not "cpu_time" in self.metadata:
+            if line[:14] == " Job cpu time:" and "cpu_time" not in self.metadata:
                 self.metadata["cpu_time"] = []
             # the line format is " Elapsed time:       0 days  0 hours  0 minutes 47.5 seconds." at the end of each job ran.
             # the line format is " Job cpu time:       0 days  0 hours  8 minutes 45.7 seconds." at the end of each job ran.
@@ -2513,7 +2518,7 @@ class Gaussian(logfileparser.Logfile):
                     seconds=float(split_line[n + 6]),
                 )
                 self.metadata[key].append(time)
-            except:
+            except:  # noqa: E722
                 pass
 
         # Extract Rotational Constants

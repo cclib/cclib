@@ -57,7 +57,7 @@ class GaussianMP2Test(GenericMP2Test):
         """Are natural orbital coefficients the right size?"""
         assert data.nocoeffs.shape == (data.nmo, data.nbasis)
 
-    def testnocoeffs(self, data) -> None:
+    def testnooccnos(self, data) -> None:
         """Are natural orbital occupation numbers the right size?"""
         assert data.nooccnos.shape == (data.nmo,)
 

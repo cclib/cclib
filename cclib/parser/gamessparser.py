@@ -193,7 +193,7 @@ class GAMESS(logfileparser.Logfile):
         # Symmetry: ordering of irreducible representations
         if line.strip() == "DIMENSIONS OF THE SYMMETRY SUBSPACES ARE":
             line = next(inputfile)
-            symlabels = [self.normalisesym(label) for label in line.split()[::3]]
+            symlabels = [self.normalisesym(label) for label in line.split()[::3]]  # noqa: F841
 
         # We are looking for this line:
         #           PARAMETERS CONTROLLING GEOMETRY SEARCH ARE
@@ -389,7 +389,7 @@ class GAMESS(logfileparser.Logfile):
             if "OPTICALLY" in line:
                 pass
             else:
-                statenumber = int(line.split()[-1])
+                statenumber = int(line.split()[-1])  # noqa: F841
                 self.skip_lines(
                     inputfile,
                     [
@@ -494,7 +494,7 @@ class GAMESS(logfileparser.Logfile):
                     else:
                         i_occ_vir = [0, 1]
                         i_coeff = 2
-                    fromMO, toMO = [int(cols[i]) - 1 for i in i_occ_vir]
+                    fromMO, toMO = (int(cols[i]) - 1 for i in i_occ_vir)
                     coeff = float(cols[i_coeff])
                     CIScontribs.append([(fromMO, 0), (toMO, 0), coeff])
                     line = next(inputfile)
@@ -786,7 +786,7 @@ class GAMESS(logfileparser.Logfile):
             # Need to get to the modes line, which is often preceeded by
             # a list of atomic weights and some possible warnings.
             # Pass the warnings to the logger if they are there.
-            while not "MODES" in line:
+            while "MODES" not in line:
                 self.updateprogress(inputfile, "Frequency Information")
 
                 line = next(inputfile)
@@ -809,9 +809,10 @@ class GAMESS(logfileparser.Logfile):
                     self.set_attribute("atommasses", atommasses)
 
                 if "THIS IS NOT A STATIONARY POINT" in line:
-                    msg = "\n   This is not a stationary point on the molecular PES"
-                    msg += "\n   The vibrational analysis is not valid!!!"
-                    self.logger.warning(msg)
+                    self.logger.warning(
+                        "\n   This is not a stationary point on the molecular PES"
+                        "\n   The vibrational analysis is not valid!!!"
+                    )
                 if "* * * WARNING, MODE" in line:
                     line1 = line.strip()
                     line2 = next(inputfile).strip()
@@ -837,7 +838,7 @@ class GAMESS(logfileparser.Logfile):
             while not line.strip() or not re.search(" {26,}1", line) is not None:
                 line = next(inputfile)
 
-            while not "SAYVETZ" in line:
+            while "SAYVETZ" not in line:
                 self.updateprogress(inputfile, "Frequency Information")
 
                 # Note: there may be imaginary frequencies like this (which we make negative):
@@ -881,7 +882,7 @@ class GAMESS(logfileparser.Logfile):
                         self.vibramans = []
                     ramanIntensity = line.strip().split()
                     self.vibramans.extend(list(map(float, ramanIntensity[2:])))
-                    depolar = next(inputfile)
+                    depolar = next(inputfile)  # noqa: F841
                     line = next(inputfile)
 
                 # This line seems always to be blank.
@@ -1061,7 +1062,7 @@ class GAMESS(logfileparser.Logfile):
 
                 # This is for regression CdtetraM1B3LYP.
                 if "ALPHA SET" in numbers:
-                    blank = next(inputfile)
+                    self.skip_line(inputfile, "b")
                     numbers = next(inputfile)
 
                 # If not all coefficients are printed, the logfile will go right to
@@ -1082,7 +1083,7 @@ class GAMESS(logfileparser.Logfile):
                 # Eigenvalues for these orbitals (in hartrees).
                 try:
                     self.moenergies[0].extend([float(x) for x in line.split()])
-                except:
+                except:  # noqa: E722
                     self.logger.warning("MO section found but could not be parsed!")
                     break
 
@@ -1106,7 +1107,6 @@ class GAMESS(logfileparser.Logfile):
 
                     # Fill atombasis and aonames only first time around
                     if readatombasis and base == 0:
-                        aonames = []
                         start = line[:17].strip()
                         m = p.search(start)
 
@@ -1174,10 +1174,10 @@ class GAMESS(logfileparser.Logfile):
 
             # Covers label with both dashes and stars (like regression CdtetraM1B3LYP).
             if "BETA SET" in line:
-                self.mocoeffs.append(numpy.zeros((self.nmo, self.nbasis), "d"))
-                self.moenergies.append([])
-                self.mosyms.append([])
-                blank = next(inputfile)
+                self.append_attribute("mocoeffs", numpy.zeros((self.nmo, self.nbasis), "d"))
+                self.append_attribute("moenergies", [])
+                self.append_attribute("mosyms", [])
+                self.skip_line(inputfile, "b")
                 line = next(inputfile)
 
                 # Sometimes EIGENVECTORS is missing, so rely on dashes to signal it.
@@ -1356,15 +1356,15 @@ class GAMESS(logfileparser.Logfile):
 
             header = next(inputfile)
             while header.split()[0] == "PARAMETERS":
-                name = header[17:25]
+                element_symbol_dash_ecp = header[17:25]  # noqa: F841
                 atomnum = int(header[34:40])
-                # The pseudopotnetial is given explicitely
+                # The pseudopotential is given explicitly
                 if header[40:50] == "WITH ZCORE":
                     zcore = int(header[50:55])
-                    lmax = int(header[63:67])
+                    lmax = int(header[63:67])  # noqa: F841
                     self.coreelectrons[atomnum - 1] = zcore
-                # The pseudopotnetial is copied from another atom
-                if header[40:55] == "ARE THE SAME AS":
+                # The pseudopotential is copied from another atom
+                elif header[40:55] == "ARE THE SAME AS":
                     atomcopy = int(header[60:])
                     self.coreelectrons[atomnum - 1] = self.coreelectrons[atomcopy - 1]
                 line = next(inputfile)
@@ -1395,7 +1395,7 @@ class GAMESS(logfileparser.Logfile):
             # so let's get a flag out of that circumstance.
             doubles_printed = line.strip() == ""
             if doubles_printed:
-                title = next(inputfile)
+                self.skip_line(inputfile, "TOTAL MULLIKEN AND LOWDIN ATOMIC POPULATIONS")
                 header = next(inputfile)
                 line = next(inputfile)
 
@@ -1429,7 +1429,7 @@ class GAMESS(logfileparser.Logfile):
 
             # The old PC-GAMESS prints memory assignment information here.
             if "MEMORY ASSIGNMENT" in line:
-                memory_assignment = next(inputfile)
+                self.skip_line(inputfile, "IELM IEMW IDENSA IDENSB LAST")
                 line = next(inputfile)
 
             # If something else ever comes up, we should get a signal from this assert.
@@ -1460,11 +1460,11 @@ class GAMESS(logfileparser.Logfile):
                 try:
                     assert self.moments[1] == dipole
                 except AssertionError:
-                    self.logger.warning("Overwriting previous multipole moments with new values")
                     self.logger.warning(
+                        "Overwriting previous multipole moments with new values; "
                         "This could be from post-HF properties or geometry optimization"
                     )
-                    self.moments = [reference, dipole]
+                    self.set_attribute("moments", [reference, dipole])
 
         # Static polarizability from a harmonic frequency calculation
         # with $CPHF/POLAR=.TRUE.

@@ -5,12 +5,7 @@
 
 """Parser for NBO output files"""
 
-import re
-
-from cclib.parser import logfileparser, utils
-from cclib.parser.utils import PeriodicTable
-
-import numpy
+from cclib.parser import logfileparser
 
 
 class NBO(logfileparser.Logfile):
@@ -149,8 +144,8 @@ class NBO(logfileparser.Logfile):
                 natural_charge = float(population_analysis[2])
                 core = float(population_analysis[3])
                 valence = float(population_analysis[4])
-                rydberg = float(population_analysis[5])
-                total = float(population_analysis[6])
+                rydberg = float(population_analysis[5])  # noqa: F841
+                total = float(population_analysis[6])  # noqa: F841
 
                 # TODO append to attibutes
                 charges.append(natural_charge)
@@ -174,22 +169,22 @@ class NBO(logfileparser.Logfile):
             line = next(inputfile)
             line = next(inputfile)
 
-            core = float(line.split()[1])
+            core = float(line.split()[1])  # noqa: F841
             # TODO append to attibutes
 
             line = next(inputfile)
 
-            valence = float(line.split()[1])
+            valence = float(line.split()[1])  # noqa: F841
             # TODO append to attibutes
 
             line = next(inputfile)
 
-            natural_minimal_basis = float(line.split()[3])
+            natural_minimal_basis = float(line.split()[3])  # noqa: F841
             # TODO append to attibutes
 
             line = next(inputfile)
 
-            natural_rydberg_basis = float(line.split()[3])
+            natural_rydberg_basis = float(line.split()[3])  # noqa: F841
             # TODO append to attibutes
 
         #     Atom No         Natural Electron Configuration
@@ -205,7 +200,7 @@ class NBO(logfileparser.Logfile):
             while len(line.strip()):
                 configuration_line = line.split()
                 atom = configuration_line[0]
-                configuration = "".join(configuration_line[2:])
+                configuration = "".join(configuration_line[2:])  # noqa: F841
 
                 # TODO append to attibutes
 
@@ -227,17 +222,17 @@ class NBO(logfileparser.Logfile):
 
             nbo_analysis = line.split()
 
-            cycle = int(nbo_analysis[0])
-            max_ctr = int(nbo_analysis[1])
-            occ_thresh = float(nbo_analysis[2])
-            occ_lewis = float(nbo_analysis[3])
-            occ_non_lewis = float(nbo_analysis[4])
-            lewis_cr = float(nbo_analysis[5])
-            lewis_bd = int(nbo_analysis[6])
-            lewis_nc = int(nbo_analysis[7])
-            lewis_lp = int(nbo_analysis[8])
-            low_occ = int(nbo_analysis[9])
-            high_occ = int(nbo_analysis[10])
+            cycle = int(nbo_analysis[0])  # noqa: F841
+            max_ctr = int(nbo_analysis[1])  # noqa: F841
+            occ_thresh = float(nbo_analysis[2])  # noqa: F841
+            occ_lewis = float(nbo_analysis[3])  # noqa: F841
+            occ_non_lewis = float(nbo_analysis[4])  # noqa: F841
+            lewis_cr = float(nbo_analysis[5])  # noqa: F841
+            lewis_bd = int(nbo_analysis[6])  # noqa: F841
+            lewis_nc = int(nbo_analysis[7])  # noqa: F841
+            lewis_lp = int(nbo_analysis[8])  # noqa: F841
+            low_occ = int(nbo_analysis[9])  # noqa: F841
+            high_occ = int(nbo_analysis[10])  # noqa: F841
 
             # TODO append to attibutes
 

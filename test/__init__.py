@@ -5,6 +5,7 @@
 
 """Unit tests and parser data tests for cclib."""
 
+# ruff: noqa: F401
 from test import test_data
 
-from .data import *
+from .data import *  # noqa: F403

@@ -12,7 +12,7 @@ from cclib.parser.utils import convertor, find_package
 
 import numpy
 
-""" In the dictionary sym2powerlist below, each element is a list that contain the combinations of
+r""" In the dictionary sym2powerlist below, each element is a list that contain the combinations of
     powers that are applied to x, y, and z in the equation for the gaussian primitives --
     \psi (x, y, z) = x^a * y^b * z^c * exp(-\lambda * r^2)
 """
@@ -135,8 +135,8 @@ if _found_pyquante2:
 
 _found_pyvtk = find_package("pyvtk")
 if _found_pyvtk:
-    from pyvtk import *
-    from pyvtk.DataSetAttr import *
+    from pyvtk import *  # noqa: F403
+    from pyvtk.DataSetAttr import *  # noqa: F403
 
 
 def _check_pyquante():
@@ -149,7 +149,7 @@ def _check_pyvtk(found_pyvtk):
         raise ImportError("You must install `pyvtk` to use this function.")
 
 
-class Volume(object):
+class Volume:
     """Represent a volume in space.
 
     Required parameters:
@@ -195,10 +195,10 @@ class Volume(object):
             numpy.arange(self.data.shape[1]),
             numpy.arange(self.data.shape[0]),
         )
-        v = VtkData(
-            RectilinearGrid(*ranges),
+        v = VtkData(  # noqa: F405
+            RectilinearGrid(*ranges),  # noqa: F405
             "Test",
-            PointData(Scalars(self.data.ravel(), "from cclib", "default")),
+            PointData(Scalars(self.data.ravel(), "from cclib", "default")),  # noqa: F405
         )
         v.tofile(filename)
 
@@ -416,7 +416,7 @@ def read_from_cube(filepath):
         # First two lines are comments
         # Lines 3-6 specify the grid in Cartesian coordinates
         # Line 3 -- [Number of atoms] [Origin x] [Origin y] [Origin z]
-        natom = (int)(lines[2].split()[0])
+        natom = int(lines[2].split()[0])  # noqa: F841
         originx, originy, originz = numpy.asanyarray(lines[2].split()[1:], dtype=float)
 
         # Line 4, 5, 6 -- [Number of Grid Points] [Spacing x] [Spacing y], [Spacing z]

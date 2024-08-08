@@ -26,6 +26,7 @@ class OpenbabelTest:
         obmol = cclib2openbabel.makeopenbabel(atomcoords=atomcoords, atomnos=atomnos)
         obconversion = openbabel.OBConversion()
         formatok = obconversion.SetOutFormat("inchi")
+        assert formatok
         assert obconversion.WriteString(obmol).strip() == "InChI=1S/H2O/h1H2"
 
     def test_makeopenbabel_and_makecclib(self) -> None:

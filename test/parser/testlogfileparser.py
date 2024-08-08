@@ -37,7 +37,7 @@ class FileWrapperTest:
     def test_file_seek(self):
         """Can we seek anywhere in a file object?"""
         fpath = os.path.join(__datadir__, "data/ADF/basicADF2007.01/dvb_gopt.adfout")
-        with open(fpath, "r") as fobject:
+        with open(fpath) as fobject:
             wrapper = cclib.parser.logfileparser.FileWrapper(fobject)
             self.check_seek(wrapper)
 
@@ -66,10 +66,15 @@ class FileWrapperTest:
             "data/ADF/basicADF2007.01/dvb_gopt.adfout",
             "data/GAMESS/basicGAMESS-US2017/C_bigbasis.out",
         ]
-        get_attributes = lambda data: [a for a in data._attrlist if hasattr(data, a)]
+
+        def get_attributes(data):
+            return [a for a in data._attrlist if hasattr(data, a)]
+
         for lf in logfiles:
             path = f"{__datadir__}/{lf}"
-            expected_attributes = get_attributes(cclib.io.ccread(path))
+            data = cclib.io.ccread(path)
+            assert data is not None
+            expected_attributes = get_attributes(data)
             with open(path) as handle:
                 contents = handle.read()
 
@@ -78,6 +83,7 @@ class FileWrapperTest:
             monkeypatch.setattr("sys.stdin", io.StringIO(contents))
 
             data = cclib.io.ccread(sys.stdin)
+            assert data is not None
             assert get_attributes(data) == expected_attributes
 
 

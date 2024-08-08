@@ -52,7 +52,7 @@ class MOLDEN(filewriter.Writer):
             elements = [self.ghost if e is None else e for e in elements]
         elif None in elements:
             raise ValueError(
-                f"It seems that there is at least one ghost atom in these elements. Please use the ghost flag to specify a label for the ghost atoms."
+                "It seems that there is at least one ghost atom in these elements. Please use the ghost flag to specify a label for the ghost atoms."
             )
         atomcoords = self.ccdata.atomcoords[index]
         atomnos = self.ccdata.atomnos
@@ -183,17 +183,17 @@ class MOLDEN(filewriter.Writer):
         for i in range(len(mooccs)):
             for j in range(len(mooccs[i])):
                 restricted_spin_idx = i % len(mocoeffs)
-                lines.append(" Sym= {}".format(mosyms[restricted_spin_idx][j]))
+                lines.append(f" Sym= {mosyms[restricted_spin_idx][j]}")
                 moenergy = moenergies[restricted_spin_idx][j]
-                lines.append(" Ene= {:10.4f}".format(moenergy))
-                lines.append(" Spin= {}".format(spin))
-                lines.append(" Occup= {:10.6f}".format(mooccs[i][j]))
+                lines.append(f" Ene= {moenergy:10.4f}")
+                lines.append(f" Spin= {spin}")
+                lines.append(f" Occup= {mooccs[i][j]:10.6f}")
                 # Rearrange mocoeffs according to Molden's lexicographical order.
                 mocoeffs[restricted_spin_idx][j] = self._rearrange_mocoeffs(
                     mocoeffs[restricted_spin_idx][j]
                 )
                 for k, mocoeff in enumerate(mocoeffs[restricted_spin_idx][j]):
-                    lines.append("{:4d}  {:10.6f}".format(k + 1, mocoeff))
+                    lines.append(f"{k + 1:4d}  {mocoeff:10.6f}")
             spin = "Beta"
         return lines
 

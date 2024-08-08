@@ -6,12 +6,15 @@
 """Population analyses based on cclib data."""
 
 import logging
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 from cclib.method.calculationmethod import Method, MissingAttributeError
 from cclib.progress import Progress
 
 import numpy
+
+if TYPE_CHECKING:
+    from cclib.parser.data import ccData
 
 
 class Population(Method):
@@ -25,7 +28,7 @@ class Population(Method):
 
     def __init__(
         self,
-        data: "cclib.parser.data.ccData",
+        data: "ccData",
         progress: Optional[Progress] = None,
         loglevel: int = logging.INFO,
         logname: str = "Log",
@@ -81,7 +84,6 @@ class Population(Method):
                     indices[index].append(i)
 
         natoms = len(indices)
-        nmocoeffs = len(self.aoresults[0])
 
         # Build results numpy array[3].
         alpha = len(self.aoresults[0])

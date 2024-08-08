@@ -5,7 +5,6 @@
 
 """Test the Volume and related methods in cclib"""
 
-import os
 import sys
 from pathlib import Path
 

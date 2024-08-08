@@ -18,7 +18,7 @@ if _found_openbabel:
     # The `try` block is for OB >= 3.0, and `except` is for 2.4.x and older.
     try:
         from openbabel import openbabel as ob
-    except:
+    except:  # noqa: E722
         import openbabel as ob
 
 
