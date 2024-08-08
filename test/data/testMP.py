@@ -15,14 +15,23 @@ class GenericMP2Test:
 
     def testsizeandshape(self, data) -> None:
         """(MP2) Are the dimensions of mpenergies correct?"""
-        assert data.mpenergies.shape == (len(data.scfenergies), self.level - 1)
+        assert data._ccCollection._parsed_data[0].mpenergies.shape == (
+            len(data._ccCollection._parsed_data[0].scfenergies),
+            self.level - 1,
+        )
 
     def testsign(self, data) -> None:
         """Are the Moller-Plesset corrections negative?"""
         if self.level == 2:
-            corrections = data.mpenergies[:, 0] - data.scfenergies
+            corrections = (
+                data._ccCollection._parsed_data[0].mpenergies[:, 0]
+                - data._ccCollection._parsed_data[0].scfenergies
+            )
         else:
-            corrections = data.mpenergies[:, self.level - 2] - data.mpenergies[:, self.level - 3]
+            corrections = (
+                data._ccCollection._parsed_data[0].mpenergies[:, self.level - 2]
+                - data._ccCollection._parsed_data[0].mpenergies[:, self.level - 3]
+            )
         assert numpy.all(corrections < 0.0)
 
 
