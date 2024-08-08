@@ -14,14 +14,13 @@ import io
 import logging
 import pathlib
 import re
-import typing
 import zipfile
 from tempfile import NamedTemporaryFile
-from typing import Any, Iterable, List, Optional
+from typing import IO, Any, Iterable, List, Optional, Tuple
 from urllib.error import URLError
 from urllib.request import urlopen
 
-from cclib.file_handler import utils
+from cclib.parser import utils
 
 # Regular expression for validating URLs
 URL_PATTERN = re.compile(
@@ -69,7 +68,6 @@ class FileHandler:
         for source in sources:
             if isinstance(source, list):
                 expanded_sources.extend(source)
-
             else:
                 expanded_sources.append(source)
 
@@ -98,6 +96,8 @@ class FileHandler:
         # This permits primitive 'look-behind' functionality in some parsers (see Turbomole).
         # Init with 10 empty strings (empty lines).
         self.last_lines = collections.deque([""] * 10, 10)
+
+        self.virtual_reset_position: Optional[int] = None
 
     @property
     def file_name(self) -> str:
@@ -130,7 +130,7 @@ class FileHandler:
     @classmethod
     def open_log_file(
         self, source, mode: str = "r", encoding: str = "utf-8", errors: str = "logerror"
-    ) -> typing.Tuple[str, typing.IO]:
+    ) -> Tuple[str, IO]:
         """
         Open a possibly compressed file, returning both the filename of the file and an open file object.
         """
@@ -226,32 +226,34 @@ class FileHandler:
         """
         self.close()
 
-    def virtual_set(self):
+    def virtual_set(self) -> None:
         """
         For use with property parsers to handle parsing
-        through a block of text without changing the state of fileHandler.
+        through a block of text without changing the state of the handler.
 
         Sets the virtual_file_pointer to the current file_pointer
         """
         self.virtual_reset_position = self.pos
 
-    def virtual_reset(self):
+    def virtual_reset(self) -> None:
         """
         For use with property parsers to handle parsing
-        through a block of text without changing the state of fileHandler.
+        through a block of text without changing the state of the handler.
 
         Sets the virtual_file_pointer to the current file_pointer
         """
         if self.virtual_reset_position is None:
-            raise RuntimeError("virtual_set() must be called before reset and virtual_next")
+            raise RuntimeError(
+                "virtual_set() must be called before virtual_reset() and virtual_next()"
+            )
         self.files[self.file_pointer].seek(self.virtual_reset_position)
         self.pos = self.virtual_reset_position
         self.virtual_reset_position = None
 
-    def virtual_next(self):
+    def virtual_next(self) -> str:
         """
         For use with property parsers to handle parsing
-        through a block of text without changing the state of fileHandler
+        through a block of text without changing the state of the handler
 
         virtual_next will _not_ advance to the next file
         """
@@ -265,7 +267,7 @@ class FileHandler:
             # possibly raise a warning? but we are ok just reaching the end of a file for a subparser parsing
             return
 
-    def next(self) -> str:
+    def __next__(self) -> str:
         """
         Get the next line from this log file.
         """
@@ -278,11 +280,11 @@ class FileHandler:
 
             except StopIteration:
                 self.file_pointer += 1
-                return self.next()
+                return next(self)
 
         except IndexError:
-            return False
             # raise StopIteration()
+            return False
 
     @property
     def last_line(self) -> str:
@@ -290,9 +292,6 @@ class FileHandler:
         Return the last line read by this parser.
         """
         return self.last_lines[-1]
-
-    def __next__(self):
-        return self.next()
 
     def __iter__(self):
         return self
@@ -304,7 +303,7 @@ class FileHandler:
         """
         return next(self)
 
-    def readlines(self) -> typing.List[str]:
+    def readlines(self) -> List[str]:
         """
         Read all the lines from this file.
         """
@@ -355,7 +354,7 @@ class FileHandler:
     #                 # Seek forwards please.
     #                 file_size = self.sizes[self.file_pointer]
 
-    def reset(self):
+    def reset(self) -> None:
         # Equivalent to seeking to 0 for all our files.
         for file in self.files:
             file.seek(0, 0)
@@ -363,7 +362,7 @@ class FileHandler:
         self.file_pointer = 0
         self.pos = 0
 
-    def finish(self):
+    def finish(self) -> None:
         # Equivalent to seeking to 2 for all our files.
         for file in self.files:
             file.seek(0, 2)
@@ -371,7 +370,7 @@ class FileHandler:
         self.file_pointer = len(self.files) - 1
         self.pos = self.size
 
-    def skip_lines(self, sequence: Iterable[str], virtual=False) -> List[str]:
+    def skip_lines(self, sequence: Iterable[str], virtual: bool = False) -> List[str]:
         """Read trivial line types and check they are what they are supposed to be.
 
         This function will read len(sequence) lines and do certain checks on them,
@@ -391,7 +390,7 @@ class FileHandler:
             if virtual:
                 line = self.virtual_next()
             else:
-                line = self.next()
+                line = next(self)
 
             # Blank lines are perhaps the most common thing we want to check for.
             if expected in ["blank", "b"]:

@@ -11,15 +11,16 @@ import pathlib
 import sys
 import typing
 import warnings
+from enum import Enum, auto
 from typing import TYPE_CHECKING, List, Optional, Union
 
 from cclib.collection import ccCollection
-from cclib.combinator import auto_combinator
+from cclib.combinator import AutoCombinator
 from cclib.file_handler import FileHandler
 from cclib.tree import Tree
 
 if TYPE_CHECKING:
-    from cclib.combinator import combinator
+    from cclib.combinator import Combinator
 
 # from cclib.parser.utils import find_package
 
@@ -30,6 +31,26 @@ if TYPE_CHECKING:
 # todo from cclib.io import wfxwriter
 # todo from cclib.io import xyzreader
 # todo from cclib.io import xyzwriter
+
+from dataclasses import dataclass
+
+
+class TriggerType(Enum):
+    ON = auto()
+    OFF = auto()
+
+
+# TODO possibly replace with attrs so we can always use kw_only
+@dataclass
+class Trigger:
+    program: str
+    trigger_strings: List[str]
+    do_break: bool
+    type: TriggerType
+
+    def matches(self, line: str) -> bool:
+        return all([line.lower().find(phrase.lower()) >= 0 for phrase in self.trigger_strings])
+
 
 # Parser choice is triggered by certain phrases occurring the logfile. Where these
 # strings are unique, we can set the parser and break. In other cases, the situation
@@ -42,51 +63,96 @@ if TYPE_CHECKING:
 #
 # The triggers are defined by the tuples in the list below like so:
 #   (parser, phrases, flag whether we should break)
-triggers_on = [
-    ("ADF", ["Amsterdam Density Functional"], True),
-    ("DALTON", ["Dalton - An Electronic Structure Program"], True),
-    ("FChk", ["Number of atoms", "I"], True),
-    ("GAMESS", ["GAMESS"], False),
-    ("GAMESS", ["Firefly (PC GAMESS)"], True),
-    ("GAMESS", ["GAMESS VERSION"], True),
-    ("GAMESSUK", ["G A M E S S - U K"], True),
-    ("GAMESSDAT", ["$DATA"], True),
-    ("gaussian", ["Gaussian, Inc."], True),
-    ("Jaguar", ["Jaguar"], True),
-    ("Molcas", ["MOLCAS"], True),
-    ("Molpro", ["PROGRAM SYSTEM MOLPRO"], True),
-    ("Molpro", ["1PROGRAM"], False),
-    ("MOPAC", ["MOPAC20"], True),
-    ("NBO", ["N A T U R A L   A T O M I C   O R B I T A L   A N D"], True),
-    ("NWChem", ["Northwest Computational Chemistry Package"], True),
-    ("ORCA", ["O   R   C   A"], True),
-    ("psi4", ["Psi4: An Open-Source Ab Initio Electronic Structure Package"], True),
-    ("QChem", ["A Quantum Leap Into The Future Of Chemistry"], True),
-    ("Turbomole", ["TURBOMOLE"], True),
-]
-
-triggers_off = [
-    # todo     (ADF,       ["Amsterdam Density Functional"],                   True),
-    # todo     (DALTON,    ["Dalton - An Electronic Structure Program"],       True),
-    # todo     (FChk,      ["Number of atoms", "I"],                           True),
-    # todo     (GAMESS,    ["GAMESS"],                                         False),
-    # todo     (GAMESS,    ["Firefly (PC GAMESS)"],                            True),
-    # todo     (GAMESS,    ["GAMESS VERSION"],                                 True),
-    # todo     (GAMESSUK,  ["G A M E S S - U K"],                              True),
-    # todo     (GAMESSDAT, ["$DATA"],                                          True),
-    ("gaussian", ["Normal Termination of Gaussian"], True),
-    # todo     (Jaguar,    ["Jaguar"],                                         True),
-    # todo     (Molcas,    ["MOLCAS"],                                         True),
-    # todo     (Molpro,    ["PROGRAM SYSTEM MOLPRO"],                          True),
-    # todo     (Molpro,    ["1PROGRAM"],                                       False),
-    # todo     (MOPAC,     ["MOPAC20"],                                        True),
-    # todo     (NBO,       ["N A T U R A L   A T O M I C   O R B I T A L   A N D"],                  True),
-    # todo     (NWChem,    ["Northwest Computational Chemistry Package"],      True),
-    ("ORCA", ["****ORCA TERMINATED NORMALLY****"], True),
-    # todo     (Psi3,      ["PSI3: An Open-Source Ab Initio Electronic Structure Package"],          True),
-    ("psi4", ["Psi4 exiting successfully. Buy a developer a beer!"], True),
-    # todo     (QChem,     ["A Quantum Leap Into The Future Of Chemistry"],    True),
-    # todo     (Turbomole, ["TURBOMOLE"],                                      True),
+TRIGGERS = [
+    Trigger(
+        program="adf",
+        trigger_strings=["Amsterdam Density Functional"],
+        do_break=True,
+        type=TriggerType.ON,
+    ),
+    Trigger(
+        program="dalton",
+        trigger_strings=["Dalton - An Electronic Structure Program"],
+        do_break=True,
+        type=TriggerType.ON,
+    ),
+    Trigger(
+        program="fchk", trigger_strings=["Number of atoms", "I"], do_break=True, type=TriggerType.ON
+    ),
+    Trigger(program="gamess", trigger_strings=["GAMESS"], do_break=False, type=TriggerType.ON),
+    Trigger(
+        program="gamess",
+        trigger_strings=["Firefly (PC GAMESS)"],
+        do_break=True,
+        type=TriggerType.ON,
+    ),
+    Trigger(
+        program="gamess", trigger_strings=["GAMESS VERSION"], do_break=True, type=TriggerType.ON
+    ),
+    Trigger(
+        program="gamessuk",
+        trigger_strings=["G A M E S S - U K"],
+        do_break=True,
+        type=TriggerType.ON,
+    ),
+    Trigger(program="gamessdat", trigger_strings=["$DATA"], do_break=True, type=TriggerType.ON),
+    Trigger(
+        program="gaussian", trigger_strings=["Gaussian, Inc."], do_break=True, type=TriggerType.ON
+    ),
+    Trigger(program="jaguar", trigger_strings=["Jaguar"], do_break=True, type=TriggerType.ON),
+    Trigger(program="molcas", trigger_strings=["MOLCAS"], do_break=True, type=TriggerType.ON),
+    Trigger(
+        program="molpro",
+        trigger_strings=["PROGRAM SYSTEM MOLPRO"],
+        do_break=True,
+        type=TriggerType.ON,
+    ),
+    Trigger(program="molpro", trigger_strings=["1PROGRAM"], do_break=False, type=TriggerType.ON),
+    Trigger(program="mopac", trigger_strings=["MOPAC20"], do_break=True, type=TriggerType.ON),
+    Trigger(
+        program="nbo",
+        trigger_strings=["N A T U R A L   A T O M I C   O R B I T A L   A N D"],
+        do_break=True,
+        type=TriggerType.ON,
+    ),
+    Trigger(
+        program="nwchem",
+        trigger_strings=["Northwest Computational Chemistry Package"],
+        do_break=True,
+        type=TriggerType.ON,
+    ),
+    Trigger(program="orca", trigger_strings=["O   R   C   A"], do_break=True, type=TriggerType.ON),
+    Trigger(
+        program="psi4",
+        trigger_strings=["Psi4: An Open-Source Ab Initio Electronic Structure Package"],
+        do_break=True,
+        type=TriggerType.ON,
+    ),
+    Trigger(
+        program="qchem",
+        trigger_strings=["A Quantum Leap Into The Future Of Chemistry"],
+        do_break=True,
+        type=TriggerType.ON,
+    ),
+    Trigger(program="turbomole", trigger_strings=["TURBOMOLE"], do_break=True, type=TriggerType.ON),
+    Trigger(
+        program="gaussian",
+        trigger_strings=["Normal Termination of Gaussian"],
+        do_break=True,
+        type=TriggerType.OFF,
+    ),
+    Trigger(
+        program="orca",
+        trigger_strings=["****ORCA TERMINATED NORMALLY****"],
+        do_break=True,
+        type=TriggerType.OFF,
+    ),
+    Trigger(
+        program="psi4",
+        trigger_strings=["Psi4 exiting successfully. Buy a developer a beer!"],
+        do_break=True,
+        type=TriggerType.OFF,
+    ),
 ]
 
 
@@ -420,7 +486,7 @@ class ccDriver:
             str, typing.IO, FileHandler, typing.List[typing.Union[str, typing.IO]]
         ],
         tree: Optional[Tree] = None,
-        combinator: "combinator" = None,
+        combinator: Optional["Combinator"] = None,
         loglevel: int = logging.ERROR,
         logname: str = "Log",
         logstream=sys.stderr,
@@ -440,20 +506,22 @@ class ccDriver:
             source = FileHandler(source)
 
         self._combinator = combinator
-        self._tree = tree
-        if self._tree is None:
+        if tree is None:
             # default to single job
-            self._tree = Tree()
-            self._tree.add_root()
+            tree = Tree()
+            tree.add_root()
+        self._tree = tree
 
-        if self._combinator is None:
-            self._combinator = auto_combinator(self._tree)
+        if combinator is None:
+            combinator = AutoCombinator(self._tree)
+        self._combinator = combinator
+
         self._ccCollection = ccCollection(self._combinator, self._tree)
         self._fileHandler = source
         self._identified_program: List[str] = []
 
     @property
-    def cccollection(self):
+    def cccollection(self) -> ccCollection:
         return self._ccCollection
 
     @property
@@ -461,7 +529,7 @@ class ccDriver:
         return self._fileHandler
 
     @property
-    def combinator(self) -> "combinator":
+    def combinator(self) -> "Combinator":
         return self._combinator
 
     @property
@@ -483,39 +551,65 @@ class ccDriver:
         else:
             self._identified_program.append(in_prog)
 
-    def process_combinator(self):
-        """Process the combinator and populate the ccData object in the ccCollection"""
+    def process_combinator(self) -> ccCollection:
+        """Process the combinator and populate the ccData objects in the ccCollection"""
+        # Current:
+        #
+        # The object is already initialized with the tree and corresponding number of ccData instances in the collection.
+        # Loop over all the lines in the (combined) file.  For each line...
+        #   Look for triggers that start programs,  For each that matches, set the program on the ccData instance for that node, increasing the node counter.
+        #   Look for triggers that stop programs.  For each that matches, increase the node counter.
+        #   Run each parser in the combinator for the node id on the discovered program.
+        #     parser -> parse() -> program_parse_method() -> returns data to go on collection's current ccData
+        #
+        # Future:
+        #
+        # Create an empty tree.
+        # [maybe] Create a (empty) stack for indices into the tree. (TODO what indices?)
+        # Loop over all the lines in the (combined) file.  For each line...
+        #   Look for a program trigger.
+        #     If the trigger matches and is to start a program,
+        #       Create new ccData instance and append it to collection
+        #       <update ccData reference to new>
+        #     Elif the trigger matches and is to stop a program,
+        #       <update ccData reference to previous>
+        #     Else,
+        #       continue
+        #   Run each parser in the combinator for the current ccData
+        #
+        # At this point we have a linear sequence of ccData instances that need to be arranged into a hierarchical tree.
+        # The structure of the tree is determined by the job run and the
+        # program (Psi4 BSSE, Psi4 SAPT, Q-Chem EDA, Psi4 MBE, Q-Chem MBE,
+        # Gaussian ONIOM, ...).
         self.identified_program = None
-        line = self._fileHandler.last_line
+        line = next(self._fileHandler)
         current_idx = self._tree.get_next_idx()
-        while line := self._fileHandler.next():
-            for program, phrases, do_break in triggers_on:
-                if all([line.lower().find(p.lower()) >= 0 for p in phrases]):
-                    if self.identified_program is None:
-                        self.identified_program = program
-                        self._ccCollection.parsed_data[0].setattributes(
-                            {"metadata": {"identified_program": program}}
-                        )
-                        if do_break:
-                            break
-                    else:
-                        # if a program is within a program this might mean things are ok but we proceed to a child node.. think about how to handle this?
-                        current_idx = self._tree.get_next_idx()
-                        self.identified_program = program
+        # TODO for line in self._fileHandler:
+        while line:
+            for trigger in TRIGGERS:
+                if trigger.matches(line):
+                    if trigger.type == TriggerType.ON:
+                        if self.identified_program is None:
+                            current_idx = 0
+                        else:
+                            # if a program is within a program this might mean things are ok but we proceed to a child node.. think about how to handle this?
+                            current_idx = self._tree.get_next_idx()
+                            assert current_idx is not None
+                        self.identified_program = trigger.program
                         self._ccCollection.parsed_data[current_idx].setattributes(
-                            {"metadata": {"identified_program": program}}
+                            {"metadata": {"identified_program": trigger.program}}
                         )
-                        if do_break:
+                        if trigger.do_break:
                             break
-            for program, phrases, do_break in triggers_off:
-                if all([line.lower().find(p.lower()) >= 0 for p in phrases]):
-                    self.identified_program = None
-                    current_idx = self._tree.get_next_idx()
-                    if do_break:
-                        break
-            if self.identified_program == None:
+                    elif trigger.type == TriggerType.OFF:
+                        self.identified_program = None
+                        current_idx = self._tree.get_next_idx()
+                        if trigger.do_break:
+                            break
+            if self.identified_program is None:
                 line = next(self._fileHandler)
                 continue
+            assert current_idx is not None
             # right now combinator is just a list of list of subparsers, tree idxs access what list of parsers we are using
             for subparser in self._combinator.job_list[current_idx]:
                 parsed_data = subparser.parse(
@@ -525,4 +619,5 @@ class ccDriver:
                 )
                 if parsed_data is not None:
                     self._ccCollection.parsed_data[current_idx].setattributes(parsed_data)
+            line = next(self._fileHandler)
         return self._ccCollection

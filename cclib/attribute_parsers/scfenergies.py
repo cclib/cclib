@@ -4,8 +4,8 @@
 # the terms of the BSD 3-Clause License.
 from typing import Optional
 
-from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
+from cclib.parser import utils
 
 
 class scfenergies(base_parser):
@@ -39,7 +39,6 @@ class scfenergies(base_parser):
         constructed_data = None
         if "Total energy in the final basis set" in line:
             constructed_scfenergies = float(line.split()[-1])
-            # self.scfenergies.append(utils.convertor(scfenergy, "hartree", "eV"))
         if constructed_scfenergies is not None:
             constructed_data = {scfenergies.__name__: constructed_data}
         return constructed_data

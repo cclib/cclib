@@ -5,8 +5,8 @@
 import re
 from typing import Optional
 
-from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
+from cclib.parser import utils
 
 import numpy as np
 
@@ -104,10 +104,10 @@ class atomcharges(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["ORCA", "NBO", "psi4", "qchem"]
+    known_codes = ["orca", "nbo", "psi4", "qchem"]
 
     @staticmethod
-    def ORCA(file_handler, ccdata) -> Optional[dict]:
+    def orca(file_handler, ccdata) -> Optional[dict]:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
         constructed_charge_data = None
@@ -185,7 +185,7 @@ class atomcharges(base_parser):
         return None
 
     @staticmethod
-    def NBO(file_handler, ccdata) -> Optional[dict]:
+    def nbo(file_handler, ccdata) -> Optional[dict]:
         atomcharges = dict()
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         charges = None
