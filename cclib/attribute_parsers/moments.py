@@ -28,7 +28,7 @@ class moments(base_parser):
                 "ebohr",
                 "Debye",
             )
-            
+
             # AED: I don't know how to handle this in version 2 yet
             # this line below is an ugly fix to always assume the origin is at zero until i figure it out.
 
@@ -36,8 +36,8 @@ class moments(base_parser):
             if getattr(ccdata, "moments") is None:
                 # Old versions of Psi4 don't print the origin; assume
                 # it's at zero.
-                if getattr(ccdata, "origin") is None: 
-                # AED: I don't know how to handle this in version 2 yet
+                if getattr(ccdata, "origin") is None:
+                    # AED: I don't know how to handle this in version 2 yet
                     origin = numpy.array([0.0, 0.0, 0.0])
                 return {moments.__name__: [origin, dipole]}
             else:
