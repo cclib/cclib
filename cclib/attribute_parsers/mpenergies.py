@@ -36,7 +36,7 @@ class mpenergies(base_parser):
             if getattr(ccdata, "mpenergies") is None:
                 this_mpenergies = []
             this_mpenergies.append([mpenergy])
-            return {mpenergies.__name__: this_mpenergies}
+            return {mpenergies.__name__: np.array(this_mpenergies)}
         return None
 
     @staticmethod
