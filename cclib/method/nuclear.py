@@ -81,7 +81,10 @@ class Nuclear(Method):
         counts = {el: elements.count(el) for el in set(elements)}
 
         formula = ""
-        elcount = lambda el, c: f"{el}{int(c)}" if c > 1 else el
+
+        def elcount(el: str, c: int) -> str:
+            return f"{el}{int(c)}" if c > 1 else el
+
         if "C" in elements:
             formula += elcount("C", counts["C"])
             counts.pop("C")

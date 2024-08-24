@@ -29,7 +29,6 @@ def _check_pyscf(found_pyscf):
 def makepyscf(data, charge=0, mult=1):
     """Create a Pyscf Molecule."""
     _check_pyscf(_found_pyscf)
-    inputattrs = data.__dict__
     required_attrs = {"atomcoords", "atomnos"}
     missing = [x for x in required_attrs if not hasattr(data, x)]
     if missing:
@@ -55,7 +54,7 @@ def makepyscf(data, charge=0, mult=1):
                 curr_e_prim = j[1]
                 new_list = [l_sym2num[f"{curr_l}"]]
                 new_list += curr_e_prim
-                if not f"{pt.element[uatoms[idx]]}" in basis:
+                if f"{pt.element[uatoms[idx]]}" not in basis:
                     basis[f"{pt.element[uatoms[idx]]}"] = [new_list]
                 else:
                     basis[f"{pt.element[uatoms[idx]]}"].append(new_list)

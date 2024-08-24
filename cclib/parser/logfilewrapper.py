@@ -152,9 +152,7 @@ class FileWrapper(FileWrapperBase):
 
             except (ValueError, URLError) as error:
                 # Maybe no need to raise a different exception?
-                raise ValueError(
-                    "Encountered an error processing the URL '{}'".format(source)
-                ) from error
+                raise ValueError(f"Encountered an error processing the URL '{source}'") from error
 
         elif hasattr(source, "read") or hasattr(source, "readline"):
             # This file is a file.

@@ -227,15 +227,15 @@ class ccData:
         attrlist = [k for k in self._attrlist if hasattr(self, k)]
         for k in attrlist:
             v = self._attributes[k].type
-            if v == numpy.ndarray:
+            if v is numpy.ndarray:
                 setattr(self, k, getattr(self, k).tolist())
-            elif v == list and k in self._listsofarrays:
+            elif v is list and k in self._listsofarrays:
                 setattr(self, k, [x.tolist() for x in getattr(self, k)])
-            elif v == dict and k in self._dictsofarrays:
+            elif v is dict and k in self._dictsofarrays:
                 items = getattr(self, k).items()
                 pairs = [(key, val.tolist()) for key, val in items]
                 setattr(self, k, dict(pairs))
-            elif v == dict and k in self._dictsofdicts:
+            elif v is dict and k in self._dictsofdicts:
                 items = getattr(self, k).items()
                 pairs = [
                     (key, {subkey: subval.tolist()})
@@ -253,15 +253,15 @@ class ccData:
             precision = "d"
             if k in self._intarrays:
                 precision = "i"
-            if v == numpy.ndarray:
+            if v is numpy.ndarray:
                 setattr(self, k, numpy.array(getattr(self, k), precision))
-            elif v == list and k in self._listsofarrays:
+            elif v is list and k in self._listsofarrays:
                 setattr(self, k, [numpy.array(x, precision) for x in getattr(self, k)])
-            elif v == dict and k in self._dictsofarrays:
+            elif v is dict and k in self._dictsofarrays:
                 items = getattr(self, k).items()
                 pairs = [(key, numpy.array(val, precision)) for key, val in items]
                 setattr(self, k, dict(pairs))
-            elif v == dict and k in self._dictsofdicts:
+            elif v is dict and k in self._dictsofdicts:
                 items = getattr(self, k).items()
                 pairs = [
                     (
@@ -304,7 +304,7 @@ class ccData:
                       means they are not specified in self._attrlist
         """
 
-        if type(attributes) is not dict:
+        if not isinstance(attributes, dict):
             raise TypeError("attributes must be in a dictionary")
 
         valid = [a for a in attributes if a in self._attrlist]
@@ -328,7 +328,7 @@ class ccData:
         self.arrayify()
         for attr in [a for a in self._attrlist if hasattr(self, a)]:
             val = getattr(self, attr)
-            if type(val) == self._attributes[attr].type:
+            if type(val) is self._attributes[attr].type:
                 continue
 
             try:

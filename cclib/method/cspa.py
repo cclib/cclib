@@ -62,7 +62,6 @@ class CSPA(Population):
                 submocoeffs = self.data.mocoeffs[spin][i]
                 scale = numpy.inner(submocoeffs, submocoeffs)
                 tempcoeffs = numpy.multiply(submocoeffs, submocoeffs)
-                tempvec = tempcoeffs / scale
                 self.aoresults[spin][i] = numpy.divide(tempcoeffs, scale).astype("d")
 
                 step += 1

@@ -14,7 +14,7 @@ class GenericNMRTest:
 
     def testkeys(self, data) -> None:
         """Check dictionary keys are ints."""
-        key_types = set([type(key) for key in data.nmrtensors.keys()])
+        key_types = {type(key) for key in data.nmrtensors.keys()}
         assert len(key_types) == 1 and int in key_types
 
     def testsize(self, data) -> None:
@@ -28,9 +28,8 @@ class GenericNMRTest:
         tensor = data.nmrtensors[0]
         total = 0.0
         for t_type in ("diamagnetic", "paramagnetic"):
-            total += sum(numpy.linalg.eigvals(tensor[t_type])) / len(
-                numpy.linalg.eigvals(tensor[t_type])
-            )
+            eigvals = numpy.linalg.eigvals(tensor[t_type])
+            total += numpy.mean(eigvals)
 
         assert total == pytest.approx(tensor["isotropic"], abs=3)
 
@@ -41,17 +40,15 @@ class GenericNMRCouplingTest:
     def testkeys(self, data) -> None:
         """Check dictionary keys are ints."""
         assert all(
-            set(
-                [
-                    all((type(key[0]) == int, type(key[1]) == int))
-                    for key in data.nmrcouplingtensors.keys()
-                ]
-            )
+            {
+                all((isinstance(key[0], int), isinstance(key[1], int)))
+                for key in data.nmrcouplingtensors.keys()
+            }
         )
 
         assert all(
             [
-                all((type(isotopekey[0]) == int, type(isotopekey[1]) == int))
+                all((isinstance(isotopekey[0], int), isinstance(isotopekey[1], int)))
                 for isotopes in data.nmrcouplingtensors.values()
                 for isotopekey in isotopes.keys()
             ]
@@ -76,8 +73,7 @@ class GenericNMRCouplingTest:
             "spin-dipolar",
             "spin-dipolar-fermi",
         ):
-            total += sum(numpy.linalg.eigvals(tensor[t_type])) / len(
-                numpy.linalg.eigvals(tensor[t_type])
-            )
+            eigvals = numpy.linalg.eigvals(tensor[t_type])
+            total += numpy.mean(eigvals)
 
         assert total == pytest.approx(tensor["isotropic"], abs=3)

@@ -180,7 +180,7 @@ def ccread(
         log = ccopen(source, *args, **kwargs)
         logger = logging.getLogger("cclib")
         if log:
-            logger.info("Identified logfile to be in {} format".format(type(log).__name__))
+            logger.info("Identified logfile to be in %s format", type(log).__name__)
 
             return log.parse()
         else:
@@ -282,10 +282,10 @@ def fallback(source):
             # From OB 3.0 onward, Pybel is contained inside the OB module.
             try:
                 import openbabel.pybel as pb
-            except:
+            except:  # noqa: E722
                 try:
                     import pybel as pb
-                except:
+                except:  # noqa: E722
                     return
             if ext in pb.informats:
                 return cclib2openbabel.readfile(source, ext)

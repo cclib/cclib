@@ -61,7 +61,6 @@ class CDA(FragmentAnalysis):
         step = 0
         for spin in range(len(self.mocoeffs)):
             size = len(self.mocoeffs[spin])
-            homo = self.data.homos[spin]
 
             if len(fragments[0].homos) == 2:
                 homoa = fragments[0].homos[spin]
@@ -99,7 +98,7 @@ class CDA(FragmentAnalysis):
                             * fooverlaps[k][n]
                         )
 
-                for l in range(offset, offset + homob + 1):
+                for l in range(offset, offset + homob + 1):  # noqa: E741
                     for m in range(homoa + 1, offset):
                         bdonations[spin][i] += (
                             2

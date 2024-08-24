@@ -9,8 +9,6 @@ import logging
 
 from cclib.method.calculationmethod import Method
 
-import numpy
-
 
 class Electrons(Method):
     """A container for methods pertaining to electrons."""
