@@ -24,6 +24,7 @@ jobs:
           name: nix-qchem
       # Checkout of the current head in the working dir
       - uses: actions/checkout@v4
-      # Build the nix package
-      - name: Build nix package
+      - name: Check nix flake
         run: nix flake check -L
+      - name: Build nix package
+        run: nix build -L
