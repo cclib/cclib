@@ -265,8 +265,10 @@ def _makecclib(
 
     # Excited states.
     if et:
-        attributes["metadata"]["success"] = et.converged
-        attributes["etenergies"] = et.e
+        # PySCF tracks convergence for each state which is great.
+        attributes["metadata"]["success"] = all(et.converged)
+        # In cclib 1.x, 'energies' are actually expected to be cm-1. In 2.x, this will change to Hartree.
+        attributes["etenergies"] = [convertor(hartree, "hartree", "wavenumber") for hartree in et.e]
         attributes["etoscs"] = et.oscillator_strength(gauge="length")  # or do we want velocity?
         # et.analyse() prints real symmetries, so they must be available somewhere...
         attributes["etsyms"] = [
