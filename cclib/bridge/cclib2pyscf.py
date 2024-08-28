@@ -278,7 +278,7 @@ def _makecclib(
         attributes["etenergies"] = [convertor(hartree, "hartree", "wavenumber") for hartree in et.e]
         attributes["etoscs"] = et.oscillator_strength(gauge = "length") # or do we want velocity?
         # et.analyse() prints real symmetries, so they must be available somewhere...
-        attributes["etsyms"] = ["Singlet" if et.singlet else "Triplet" for i in range(0, len(attributes["atomnos"])) ]
+        attributes["etsyms"] = ["Singlet" if et.singlet else "Triplet" for i in range(0, len(attributes["etenergies"])) ]
         
         # Orbital contributions.
         # In PySCF, occupied and virtual orbital indices are stored separately.
@@ -298,7 +298,7 @@ def _makecclib(
                 for occupied, virtual in zip(o_indices, v_indices):
                     attributes["etsecs"][index].append([
                         (occupied, 0),
-                        (nocc + virtual, 0),
+                        (nocc[0] + virtual, 0),
                         x[occupied, virtual]
                     ])
             
