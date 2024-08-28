@@ -189,7 +189,7 @@ def _makecclib(
     # Total energies.
     attributes["scfenergies"] = [scf.e_tot]
     attributes["metadata"]["success"] = scf.converged
-    attributes["metadata"]["methods"].append("DFT" if scf.istype("KS") else "HF")
+    attributes["metadata"]["methods"].append("DFT" if hasattr(scf, "xc") else "HF")
     if hasattr(scf, "xc"):
         attributes["metadata"]["functional"] = scf.xc
 
