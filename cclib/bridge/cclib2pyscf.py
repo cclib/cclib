@@ -174,7 +174,7 @@ def _makecclib(
     }
     
     # Atoms.
-    if opt:
+    if not opt:
         attributes["atomcoords"] = [mol.atom_coords("Angstrom")]
     
     else:
