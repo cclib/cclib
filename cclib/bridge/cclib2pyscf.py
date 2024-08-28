@@ -124,7 +124,7 @@ def makecclib(method) -> ccData:
         method - an instance of PySCF `StreamObject`
         etmethod - an instance of PySCF ``
     """
-    # TOOD:
+    # TODO:
     scf = method
     mp = None
     cc = None
@@ -132,7 +132,9 @@ def makecclib(method) -> ccData:
     return _makecclib(scf, mp, cc, et)
 
 
-def _makecclib(scf, mp=None, cc=None, ccsd_t=None, et=None, hess=None, freq=None) -> ccData:
+def _makecclib(
+    scf, mp=None, cc=None, ccsd_t=None, et=None, hess=None, freq=None, opt=None
+) -> ccData:
     """Create cclib attributes and return a ccData from a PySCF method object.
 
     The method object should naturally have already performed some sort of
@@ -167,7 +169,12 @@ def _makecclib(scf, mp=None, cc=None, ccsd_t=None, et=None, hess=None, freq=None
     }
 
     # Atoms.
-    attributes["atomcoords"] = [mol.atom_coords("Angstrom")]
+    if opt:
+        attributes["atomcoords"] = [mol.atom_coords("Angstrom")]
+
+    else:
+        attributes["atomcoords"] = [step["coords"] for step in opt]
+
     attributes["natoms"] = len(attributes["atomcoords"])
     attributes["atomnos"] = [ptable.number[element] for element in mol.elements]
     # attributes["atomcharges"] = mol.atom_charges() # is this the right type of atom charge?
@@ -180,7 +187,6 @@ def _makecclib(scf, mp=None, cc=None, ccsd_t=None, et=None, hess=None, freq=None
     ]
 
     # Total energies.
-    # TODO: Can't find if intermediate energies are stored anywhere...
     attributes["scfenergies"] = [scf.e_tot]
     attributes["metadata"]["success"] = scf.converged
     attributes["metadata"]["methods"].append("DFT" if scf.istype("KS") else "HF")
@@ -205,6 +211,18 @@ def _makecclib(scf, mp=None, cc=None, ccsd_t=None, et=None, hess=None, freq=None
             ccmethod = "CCSD"
 
         attributes["metadata"]["methods"].append(ccmethod)
+
+    # It's not immediately clear from the intermediate optimisation steps what level of theory the energy corresponds to,
+    # we have to be smart based on what we asked for.
+    if opt:
+        if cc:
+            attributes["ccenergies"] = [step["energy"] for step in opt]
+
+        elif mp:
+            attributes["mpenergies"] = [step["energy"] for step in opt]
+
+        else:
+            attributes["scfenergies"] = [step["energy"] for step in opt]
 
     # Orbitals.
     if scf.istype("UHF"):
