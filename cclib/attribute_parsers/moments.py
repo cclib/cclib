@@ -24,9 +24,7 @@ class moments(base_parser):
             line = file_handler.virtual_next()
             tokens = line.split()
             dipole = utils.convertor(
-                np.array([float(tokens[1]), float(tokens[3]), float(tokens[5])]),
-                "ebohr",
-                "Debye",
+                np.array([float(tokens[1]), float(tokens[3]), float(tokens[5])]), "ebohr", "Debye"
             )
 
             # AED: I don't know how to handle this in version 2 yet
@@ -82,7 +80,6 @@ class moments(base_parser):
             else:
                 for im, m in enumerate(this_moments):
                     if len(ccdata.moments) <= im:
-                        
                         this_moments.append(m)
                     else:
                         assert np.allclose(this_moments[im], m, atol=1.0e4)
