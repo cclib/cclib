@@ -7,7 +7,7 @@ from typing import Optional
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
 
-import numpy
+import numpy as np
 
 
 class moments(base_parser):
@@ -24,27 +24,65 @@ class moments(base_parser):
             line = file_handler.virtual_next()
             tokens = line.split()
             dipole = utils.convertor(
-                numpy.array([float(tokens[1]), float(tokens[3]), float(tokens[5])]),
-                "ebohr",
-                "Debye",
+                np.array([float(tokens[1]), float(tokens[3]), float(tokens[5])]), "ebohr", "Debye"
             )
 
             # AED: I don't know how to handle this in version 2 yet
             # this line below is an ugly fix to always assume the origin is at zero until i figure it out.
 
-            origin = numpy.array([0.0, 0.0, 0.0])
+            origin = np.array([0.0, 0.0, 0.0])
             if getattr(ccdata, "moments") is None:
                 # Old versions of Psi4 don't print the origin; assume
                 # it's at zero.
                 if getattr(ccdata, "origin") is None:
                     # AED: I don't know how to handle this in version 2 yet
-                    origin = numpy.array([0.0, 0.0, 0.0])
+                    origin = np.array([0.0, 0.0, 0.0])
                 return {moments.__name__: [origin, dipole]}
             else:
                 try:
-                    assert numpy.all(ccdata.moments[1] == dipole)
+                    assert np.all(ccdata.moments[1] == dipole)
                 except AssertionError:
                     return {moments.__name__: [origin, dipole]}
+
+        if line.strip() == "Multipole Moments:":
+            origin = np.array([0.0, 0.0, 0.0])
+            file_handler.skip_lines(["b", "d", "header", "d", "b"])
+
+            # The reference used here should have been printed somewhere
+            # before the properties and parsed above.
+            this_moments = [origin]
+
+            line = file_handler.virtual_next()
+            while "----------" not in line.strip():
+                rank = int(line.split()[2].strip("."))
+
+                multipole = []
+                line = file_handler.virtual_next()
+                while line.strip():
+                    tokens = line.split()
+                    if tokens[0] in ("Magnitude", "Traceless"):
+                        line = file_handler.virtual_next()
+                        continue
+                    value = float(tokens[-1])
+                    fromunits = f"ebohr{(rank > 1) * f'{int(rank)}'}"
+                    tounits = f"Debye{(rank > 1) * '.ang'}{(rank > 2) * f'{int(rank - 1)}'}"
+                    value = utils.convertor(value, fromunits, tounits)
+                    multipole.append(value)
+
+                    line = file_handler.virtual_next()
+
+                multipole = np.array(multipole)
+                this_moments.append(multipole)
+                line = file_handler.virtual_next()
+
+            if getattr(ccdata, "moments") is None:
+                return {moments.__name__: this_moments}
+            else:
+                for im, m in enumerate(this_moments):
+                    if len(ccdata.moments) <= im:
+                        this_moments.append(m)
+                    else:
+                        assert np.allclose(this_moments[im], m, atol=1.0e4)
         return None
 
     @staticmethod
