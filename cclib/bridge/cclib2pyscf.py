@@ -146,8 +146,8 @@ def _makecclib(
         cc - an instance of a PySCF CC method.
         ccsd_t - CCSD(T) correction to the CCSD energy.
         et - an instance of a PySCF excited states method (TD, TDA etc.).
-        hess - an instance of a PySCF hessian method. For IR wavelengths/
-               intensities, use an Infrared instance from pyscf.prop.infrared.*
+        hess - an instance of a PySCF hessian method.
+        freq - an instance of an Infrared analysis class from pyscf.prop.infrared.*
 
     """
     _check_pyscf(_found_pyscf)
@@ -314,25 +314,26 @@ def _makecclib(
 
     # Hessian/frequencies
     if hess:
-        attributes["metadata"]["success"] = hess.converged
+        # This doesn't seem to exist?
+        # attributes["metadata"]["success"] = hess.converged
         pass
         # TODO: Don't know enough to work out what this is
         # cclib wants a rank 2 array, pyscf gives us a rank 4 array?
         # Dimensions appear to be natoms x natoms x 3 x 3
         # attributes["hessian"] = hess.de
 
-    if hasattr(hess, "vib_dict"):
+    if freq:
         # Freq data, a dict with 'freq_error', 'freq_au', 'freq_wavenumber', 'norm_mode', 'reduced_mass',
         # 'vib_temperature', 'force_const_au', 'force_const_dyne'
         # TODO: This can include imaginary numbers, convert to 'negative' frequencies?
-        attributes["vibfreqs"] = hess.vib_dict["freq_wavenumber"]
+        attributes["vibfreqs"] = freq.vib_dict["freq_wavenumber"]
         # TODO: Check these units.
-        attributes["vibfconsts"] = hess.vib_dict["force_const_dyne"]
-        attributes["vibrmasses"] = hess.vib_dict["reduced_mass"]
+        attributes["vibfconsts"] = freq.vib_dict["force_const_dyne"]
+        attributes["vibrmasses"] = freq.vib_dict["reduced_mass"]
 
-    if hasattr(hess, "ir_inten"):
-        # TODO: Units?
-        attributes["vibirs"] = hess.ir_inten
+        if hasattr(freq, "ir_inten"):
+            # TODO: Units?
+            attributes["vibirs"] = freq.ir_inten
 
     return ccData(attributes)
 
