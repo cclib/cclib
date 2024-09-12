@@ -5,6 +5,8 @@
 
 """Bridge for using cclib data in PySCF (https://github.com/pyscf/pyscf)."""
 
+import itertools
+
 from cclib.parser.data import ccData
 from cclib.parser.utils import PeriodicTable, convertor, find_package
 
@@ -137,17 +139,17 @@ def _makecclib(
 ) -> ccData:
     """Create cclib attributes and return a ccData from a PySCF method object.
 
-    The method object should naturally have already performed some sort of
-    calculation.
-
     Inputs:
         scf - an instance of a PySCF SCF method (RHF, UHF, RKS, UKS etc.).
         mp - an instance of a PySCF MPn method.
         cc - an instance of a PySCF CC method.
         ccsd_t - CCSD(T) correction to the CCSD energy.
-        et - an instance of a PySCF excited states method (TD, TDA etc.).
+        et - a list of instances of PySCF excited states methods (TD, TDA etc.).
+              both singlet and triplet calculating methods can be passed simultaneously.
         hess - an instance of a PySCF hessian method.
         freq - an instance of an Infrared analysis class from pyscf.prop.infrared.*
+        opt  - for an optimisation, a list of dictionaries containing the 'energy', 'gradients', and 'coords'
+          at each opt step (including the last)
 
     """
     _check_pyscf(_found_pyscf)
@@ -264,27 +266,51 @@ def _makecclib(
             )
 
     # Excited states.
-    if et:
+    if len(et) > 0:
         # PySCF tracks convergence for each state which is great.
-        attributes["metadata"]["success"] = all(et.converged)
+        attributes["metadata"]["success"] = all(
+            itertools.chain(*(etmethod.converged for etmethod in et))
+        )
+
         # In cclib 1.x, 'energies' are actually expected to be cm-1. In 2.x, this will change to Hartree.
-        attributes["etenergies"] = [convertor(hartree, "hartree", "wavenumber") for hartree in et.e]
-        attributes["etoscs"] = et.oscillator_strength(gauge="length")  # or do we want velocity?
-        # et.analyse() prints real symmetries, so they must be available somewhere...
-        attributes["etsyms"] = [
-            "Singlet" if et.singlet else "Triplet" for i in range(0, len(attributes["etenergies"]))
+        attributes["etenergies"] = [
+            convertor(hartree, "hartree", "wavenumber")
+            for hartree in itertools.chain(*(etmethod.e for etmethod in et))
         ]
+        attributes["etoscs"] = list(
+            itertools.chain(*(etmethod.oscillator_strength(gauge="length") for etmethod in et))
+        )  # or do we want velocity?
+        # et.analyse() prints real symmetries, so they must be available somewhere...
+
+        attributes["etsyms"] = []
+        for etmethod in et:
+            # From from pyscf/pyscf/tdscf/rhf.py
+            # import pyscf.symm
+            # orbsym = scf.get_orbsym()
+            # x_sym = pyscf.symm.direct_prod(orbsym[mo_occ==2], orbsym[mo_occ==0], mol.groupname)
+
+            # Need to be careful in interpreting the multiplicity of the excited state.
+            if etmethod.singlet and mol.multiplicity != 2:
+                et_mult = "Singlet"
+
+            elif etmethod.singlet:
+                et_mult = "Doublet"
+
+            else:
+                et_mult = "Triplet"
+
+            attributes["etsyms"].extend([et_mult for i in range(len(etmethod.e))])
 
         # Orbital contributions.
         # In PySCF, occupied and virtual orbital indices are stored separately.
         attributes["etsecs"] = []
 
-        for index in range(0, len(et.e)):
+        for index in range(len(attributes["etenergies"])):
             attributes["etsecs"].append([])
 
             # Assuming x are excitations, y are de-excitations.
             # y is ignored for now.
-            x, y = et.xy[index]
+            x, y = list(itertools.chain(*(etmethod.xy for etmethod in et)))[index]
 
             if not scf.istype("UHF"):
                 # Flatten the x matrix.
