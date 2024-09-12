@@ -2,7 +2,7 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
-from pyscf import gto, scf
+from pyscf import dft, gto
 
 
 def calculate():
@@ -34,6 +34,7 @@ def calculate():
         symmetry=True,
     )
 
-    method = scf.RHF(mol)
+    method = dft.RKS(mol)
+    method.xc = "b3lyp"
     method.kernel()
     return method
