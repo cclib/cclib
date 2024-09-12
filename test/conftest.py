@@ -301,7 +301,7 @@ def data(request) -> ccData:
             # TODO: a smarter check?
             # PySCF.
             logfile = cclib2pyscf.makecclib
-            filenames = files
+            filenames = [str(file) for file in files]
 
             # Import the given file so we can run it
             # Adapted from https://stackoverflow.com/questions/67631/how-can-i-import-a-module-dynamically-given-the-full-path
