@@ -231,7 +231,7 @@ def cclibfrommethods(
     else:
         attributes["atomcoords"] = [step["coords"] for step in opt]
 
-    attributes["natom"] = len(attributes["atomcoords"])
+    attributes["natom"] = len(mol.atom_coords("Angstrom"))
     attributes["atomnos"] = [ptable.number[element] for element in mol.elements]
     # attributes["atomcharges"] = mol.atom_charges() # is this the right type of atom charge?
     attributes["atommasses"] = mol.atom_mass_list(isotope_avg=True)
