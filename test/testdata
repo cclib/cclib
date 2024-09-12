@@ -45,6 +45,7 @@ Basis     Psi4        GenericBasisTest      basicPsi4-1.7         dvb_sp_rhf.out
 Basis     Psi4        GenericBasisTest      basicPsi4-1.7         dvb_sp_rks.out
 Basis     QChem       GenericBasisTest      basicQChem5.1         dvb_sp.out
 Basis     QChem       GenericBasisTest      basicQChem5.4         dvb_sp.out
+Basis     PySCF       GenericBasisTest      basicPySCF2.6         dvb_sp.py
 
 Basis     DALTON      DALTONBigBasisTest    basicDALTON-2013      C_bigbasis.out
 Basis     DALTON      DALTONBigBasisTest    basicDALTON-2015      C_bigbasis.out

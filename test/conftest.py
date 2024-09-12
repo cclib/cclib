@@ -2,6 +2,7 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
+from cclib.bridge import cclib2pyscf
 
 """test/conftest.py: dynamic testing configuration for pytest
 
@@ -294,13 +295,36 @@ def data(request) -> ccData:
     files = request.param
     first = files[0]
     if first not in _CACHE:
-        logfile = ccopen([str(f) for f in files], future=True)
-        data = logfile.parse()
-        filenames = logfile.filename
+        # For 'normal' log files we use ccopen to parse.
+        # For pseudo parsers (like PySCF) we use a different mechanism.
+        if "PySCF" in str(first):
+            # TODO: a smarter check?
+            # PySCF.
+            logfile = cclib2pyscf.makecclib
+            filenames = files
+            
+            # Import the given file so we can run it
+            # Adapted from https://stackoverflow.com/questions/67631/how-can-i-import-a-module-dynamically-given-the-full-path
+            import importlib.util
+            spec = importlib.util.spec_from_file_location("module.name", first)
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            
+            # Run the exposed calculate() method and 'parse'.
+            method = module.calculate()
+            data = logfile(method)
+            data.parsername = "PySCF"
+        else:
+            # Normal logfiles.
+            # logfile is really the parser.
+            logfile = ccopen([str(f) for f in files], future=True)
+            data = logfile.parse()
+            filenames = logfile.filename
+            data.parsername = logfile.logname
+        
         if not isinstance(filenames, list):
             filenames = [filenames]
         data.filenames = filenames
-        data.parsername = logfile.logname
         data.parserclassname = str(logfile.__class__).split(".")[-1][:-2]
         _CACHE[first] = data
     return _CACHE[first]
