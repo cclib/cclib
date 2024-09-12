@@ -22,6 +22,11 @@ class MissingAttributeError(Exception):
 _found_pyscf = find_package("pyscf")
 if _found_pyscf:
     import pyscf
+    import pyscf.cc.ccsd
+    import pyscf.mp.mp2
+    import pyscf.prop.infrared.rhf
+    import pyscf.scf.hf
+    import pyscf.tdscf.rhf
     from pyscf import gto
 
 
@@ -116,26 +121,73 @@ def makepyscf_mos(ccdata, mol):
     return mo_coeffs, mo_occ, mo_syms, mo_energies
 
 
-def makecclib(method) -> ccData:
-    """Create cclib attributes and return a ccData from a PySCF method object.
+def makecclib(method, ccsdt=None, opt_steps=None) -> ccData:
+    """Create cclib attributes and return a ccData from a PySCF calculation.
 
-    The method object should naturally have already performed some sort of
-    calculation.
+    PySCF calculation results are stored in method objects, with each object representing a different part of the
+    calculation. For example, you may have separate methods for the HF and MP parts of an MP2 calculation.
+    This function will try to intelligently guess which methods you have available.
+    If you already know which method objects correspond to which levels of theory, use cclibfrommethods() instead.
 
     Inputs:
-        method - an instance of PySCF `StreamObject`
-        etmethod - an instance of PySCF ``
+        method - an instance of a PySCF method object that has already performed a calculation
+        ccsdt - for CCSD(T), the (T) correction energy to the CC energy
+        opt_steps - for an optimisation, a list of dictionaries containing the 'energy', 'gradients', and 'coords'
+          at each opt step (including the last)
     """
-    # TODO:
-    scf = method
-    mp = None
-    cc = None
-    et = None
-    return _makecclib(scf, mp, cc, et)
+    _check_pyscf(_found_pyscf)
+    # What is our level of theory?
+    scf, mp, cc, hess, freq, et = None, None, None, None, None, None
+
+    # Assume the method is a base CC method (SCF, MP, CC etc.) unless we can prove otherwise.
+    base_method = method
+
+    if isinstance(method, pyscf.prop.infrared.rhf.Infrared):
+        # Vibrational frequencies.
+        base_method = method.base
+        hess = method.mf_hess
+        freq = method
+
+    elif isinstance(method, pyscf.tdscf.rhf.TDBase):
+        # Excited states.
+        # TODO: What about multiple excited states?
+        base_method = method._scf
+        et = [method]
+
+    if isinstance(base_method, pyscf.scf.hf.SCF) or isinstance(
+        base_method, pyscf.scf.hf.KohnShamDFT
+    ):
+        scf = base_method
+
+    elif isinstance(base_method, pyscf.mp.mp2.MP2):
+        mp = base_method
+        scf = base_method._scf
+
+    elif isinstance(base_method, pyscf.cc.ccsd.CCSDBase):
+        cc = base_method
+        scf = base_method._scf
+
+    else:
+        # Panic.
+        raise ValueError(
+            f"Could not determine level of theory of base method '{type(base_method.__name__)}'"
+        )
+
+    return cclibfrommethods(
+        scf=scf, mp=mp, cc=cc, ccsdt=ccsdt, hess=hess, freq=freq, opt=opt_steps, et=et
+    )
 
 
-def _makecclib(
-    scf, mp=None, cc=None, ccsd_t=None, et=None, hess=None, freq=None, opt=None
+def cclibfrommethods(
+    # TODO: Types
+    scf,
+    mp=None,
+    cc=None,
+    ccsd_t=None,
+    et=None,
+    hess=None,
+    freq=None,
+    opt=None,
 ) -> ccData:
     """Create cclib attributes and return a ccData from a PySCF method object.
 
