@@ -23,6 +23,7 @@ _found_pyscf = find_package("pyscf")
 if _found_pyscf:
     import pyscf
     import pyscf.cc.ccsd
+    import pyscf.data.elements
     import pyscf.mp.mp2
     import pyscf.prop.infrared.rhf
     import pyscf.scf.hf
@@ -234,7 +235,14 @@ def cclibfrommethods(
     attributes["natom"] = len(mol.atom_coords("Angstrom"))
     attributes["atomnos"] = [ptable.number[element] for element in mol.elements]
     # attributes["atomcharges"] = mol.atom_charges() # is this the right type of atom charge?
-    attributes["atommasses"] = mol.atom_mass_list(isotope_avg=True)
+
+    # mol.atom_mass_list() does what it sounds like, and you can choose between average or exact mass with
+    # atom_mass_list(isotope_avg = True | False). However, isotope_avg = False (what we want) strangely only returns
+    # an integer mass. This is probably a PySCF bug.
+    # Fortunately, PySCF ships a table of single isotope masses (COMMON_ISOTOPE_MASSES), so we'll just use that.
+    attributes["atommasses"] = [
+        pyscf.data.elements.COMMON_ISOTOPE_MASSES[atom_no] for atom_no in attributes["atomnos"]
+    ]
 
     attributes["charge"] = mol.charge
     attributes["mult"] = mol.multiplicity
