@@ -2,7 +2,7 @@ from pyscf import gto, scf
 
 def calculate():
     # This is DVB.
-    mol = gto.Mole(atom = """
+    mol = gto.M(atom = """
     C          1.43386       -0.00000        0.00000
     C         -1.43386        0.00000        0.00000
     C          0.69976       -1.21791        0.00000
@@ -23,7 +23,7 @@ def calculate():
     H          3.41193        2.03669        0.00000
     H         -4.85625       -0.86201        0.00000
     H          4.85625        0.86201        0.00000
-    """, basis = "STO-3G")
+    """, basis = "STO-3G", symmetry = True)
 
     method = scf.RHF(mol)
     method.kernel()
