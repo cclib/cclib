@@ -121,7 +121,7 @@ def makepyscf_mos(ccdata, mol):
     return mo_coeffs, mo_occ, mo_syms, mo_energies
 
 
-def makecclib(method, ccsdt=None, opt_steps=None) -> ccData:
+def makecclib(method, ccsd_t=None, opt_steps=None) -> ccData:
     """Create cclib attributes and return a ccData from a PySCF calculation.
 
     PySCF calculation results are stored in method objects, with each object representing a different part of the
@@ -131,7 +131,7 @@ def makecclib(method, ccsdt=None, opt_steps=None) -> ccData:
 
     Inputs:
         method - an instance of a PySCF method object that has already performed a calculation
-        ccsdt - for CCSD(T), the (T) correction energy to the CC energy
+        ccsd_t - for CCSD(T), the (T) correction energy to the CC energy
         opt_steps - for an optimisation, a list of dictionaries containing the 'energy', 'gradients', and 'coords'
           at each opt step (including the last)
     """
@@ -174,7 +174,7 @@ def makecclib(method, ccsdt=None, opt_steps=None) -> ccData:
         )
 
     return cclibfrommethods(
-        scf=scf, mp=mp, cc=cc, ccsdt=ccsdt, hess=hess, freq=freq, opt=opt_steps, et=et
+        scf=scf, mp=mp, cc=cc, ccsd_t=ccsd_t, hess=hess, freq=freq, opt=opt_steps, et=et
     )
 
 
