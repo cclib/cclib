@@ -224,6 +224,42 @@ def cclibfrommethods(
         "methods": [],
     }
 
+    # GBasis.
+    attributes["gbasis"] = []
+    for atom_index in range(len(mol.atom_coords("Angstrom"))):
+        # Shell types are found mol.bas_angular()
+        # Basis exponents are found in mol.bas_exp()
+        # Contraction coefficients are found in mol.bas_ctr_coeff()
+        # Each function take an index (the orbital). The latter two return a list (of equal length)
+        # for each contracted GTO.
+        # However, bas_ctr_coeff() returns a list for each contracted orbital (which is normally of length 1).
+        # Presumably this is to support SP type orbitals (with one exponent and multiple coefficients), but
+        # it's not clear if this type of orbital is actually supported in PySCF?
+        #
+        # bas_angular returns the quantum number (index). We can convert this to a label using ANGULARMAP
+        # (hopefully this is stable).
+        #
+        # The orbital indices for each atom can be found in mol.atom_shell_ids(), which takes
+        # the atom index as argument.
+        atom_basis = []
+        for basis_index in mol.atom_shell_ids(atom_index):
+            atom_basis.append(
+                (
+                    # Orbital label (S, P, D etc.)
+                    pyscf.lib.parameters.ANGULAR[mol.bas_angular(basis_index)].upper(),
+                    list(
+                        zip(
+                            # Exponent.
+                            mol.bas_exp(basis_index),
+                            # Coefficient, unpacked into a single item.
+                            # TODO: What do if multiple coefficients are present?
+                            [coeff_list[0] for coeff_list in mol.bas_ctr_coeff(basis_index)],
+                        )
+                    ),
+                )
+            )
+        attributes["gbasis"].append(atom_basis)
+
     # Atoms.
     if not opt:
         attributes["atomcoords"] = [mol.atom_coords("Angstrom")]
