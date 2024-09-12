@@ -2,7 +2,6 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
-from cclib.bridge import cclib2pyscf
 
 """test/conftest.py: dynamic testing configuration for pytest
 
@@ -20,6 +19,7 @@ from typing import Dict, Iterator, List, Mapping, Optional, Tuple, Union
 from cclib.io import ccopen
 from cclib.parser.data import ccData
 from cclib.parser.logfileparser import Logfile
+from cclib.bridge import cclib2pyscf
 
 import pytest
 import yaml
