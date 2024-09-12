@@ -72,6 +72,7 @@ class GenericSPTest:
     )
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     @skipForParser("xTB", "not implemented yet")
+    @skipForParser("PySCF", "population analysis requires an additional calc step")
     def testatomcharges(self, data) -> None:
         """Are atomic charges consistent with natom?"""
         for atomcharge_type in data.atomcharges:
@@ -101,6 +102,7 @@ class GenericSPTest:
     )
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
+    @skipForParser("PySCF", "population analysis requires an additional calc step")
     def testatomcharges_mulliken(self, data) -> None:
         """Do Mulliken atomic charges sum to zero?"""
         charges = data.atomcharges["mulliken"]
@@ -125,6 +127,7 @@ class GenericSPTest:
     @skipForParser("QChem", "Lowdin charges not present by default")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     @skipForParser("xTB", "not implemented yet")
+    @skipForParser("PySCF", "population analysis requires an additional calc step")
     def testatomcharges_lowdin(self, data) -> None:
         """Do Lowdin atomic charges sum to zero?"""
         charges = data.atomcharges["lowdin"]
@@ -153,6 +156,7 @@ class GenericSPTest:
     @skipForParser("QChem", "Hirshfeld charges not implemented")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     @skipForParser("xTB", "not implemented yet")
+    @skipForParser("PySCF", "population analysis requires an additional calc step")
     def testatomcharges_hirshfeld(self, data) -> None:
         """Do Hirshfeld atomic charges sum to roughly zero?"""
         charges = data.atomcharges["hirshfeld"]
