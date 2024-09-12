@@ -224,7 +224,25 @@ def cclibfrommethods(
         "methods": [],
     }
 
-    # GBasis.
+    # Atoms.
+    if not opt:
+        attributes["atomcoords"] = [mol.atom_coords("Angstrom")]
+
+    else:
+        attributes["atomcoords"] = [step["coords"] for step in opt]
+
+    attributes["natom"] = len(mol.atom_coords("Angstrom"))
+    attributes["atomnos"] = [ptable.number[element] for element in mol.elements]
+    # attributes["atomcharges"] = mol.atom_charges() # is this the right type of atom charge?
+    attributes["atommasses"] = mol.atom_mass_list(isotope_avg=True)
+
+    attributes["charge"] = mol.charge
+    attributes["mult"] = mol.multiplicity
+    attributes["coreelectrons"] = [
+        mol.atom_nelec_core(i) for i in range(0, len(attributes["atomnos"]))
+    ]
+
+    # Atomic orbitals and gbasis
     attributes["gbasis"] = []
     for atom_index in range(len(mol.atom_coords("Angstrom"))):
         # Shell types are found mol.bas_angular()
@@ -260,39 +278,45 @@ def cclibfrommethods(
             )
         attributes["gbasis"].append(atom_basis)
 
-    # Atoms.
-    if not opt:
-        attributes["atomcoords"] = [mol.atom_coords("Angstrom")]
+    attributes["nbasis"] = mol.nao
 
-    else:
-        attributes["atomcoords"] = [step["coords"] for step in opt]
-
-    attributes["natom"] = len(mol.atom_coords("Angstrom"))
-    attributes["atomnos"] = [ptable.number[element] for element in mol.elements]
-    # attributes["atomcharges"] = mol.atom_charges() # is this the right type of atom charge?
-    attributes["atommasses"] = mol.atom_mass_list(isotope_avg=True)
-
-    attributes["charge"] = mol.charge
-    attributes["mult"] = mol.multiplicity
-    attributes["coreelectrons"] = [
-        mol.atom_nelec_core(i) for i in range(0, len(attributes["atomnos"]))
+    # mol.ao_labels() and aonames have almost the same format, just need to tweak a bit.
+    attributes["aonames"] = [
+        f"{atom_label}{atom_index + 1}_{shell.upper()}{xyz.upper()}"
+        for atom_index, atom_label, shell, xyz in mol.ao_labels(False)
     ]
 
+    # Build atombasis from ao_labels()
+    ao_map = [atom_index for atom_index, atom_label, shell, xyz in mol.ao_labels(False)]
+    attributes["atombasis"] = [
+        [
+            basis_index
+            for basis_index, basis_atom_index in enumerate(ao_map)
+            if basis_atom_index == atom_index
+        ]
+        for atom_index in range(attributes["natom"])
+    ]
+
+    # get_ovlp() looks like it has the correct format for aooverlaps already.
+    attributes["aooverlaps"] = scf.get_ovlp()
+
     # Total energies.
-    attributes["scfenergies"] = [scf.e_tot]
+    attributes["scfenergies"] = [convertor(scf.e_tot, "hartree", "eV")]
     attributes["metadata"]["success"] = scf.converged
     attributes["metadata"]["methods"].append("DFT" if hasattr(scf, "xc") else "HF")
     if hasattr(scf, "xc"):
         attributes["metadata"]["functional"] = scf.xc
 
     if mp:
-        attributes["mpenergies"] = [mp.e_tot]
+        attributes["mpenergies"] = [convertor(mp.e_tot, "hartree", "eV")]
         attributes["metadata"]["success"] = mp.converged
         attributes["metadata"]["methods"].append("MP2")
 
     if cc:
         # We have to manually add in the CCSD(T) correction energy.
-        attributes["ccenergies"] = [(cc.e_tot + ccsd_t) if ccsd_t else cc.e_tot]
+        attributes["ccenergies"] = [
+            convertor((cc.e_tot + ccsd_t) if ccsd_t else cc.e_tot, "hartree", "eV")
+        ]
         attributes["metadata"]["success"] = cc.converged
         if cc.cc2:
             ccmethod = "CC2"
@@ -309,13 +333,13 @@ def cclibfrommethods(
     # we have to be smart based on what we asked for.
     if opt:
         if cc:
-            attributes["ccenergies"] = [step["energy"] for step in opt]
+            attributes["ccenergies"] = [convertor(step["energy"], "hartree", "eV") for step in opt]
 
         elif mp:
-            attributes["mpenergies"] = [step["energy"] for step in opt]
+            attributes["mpenergies"] = [convertor(step["energy"], "hartree", "eV") for step in opt]
 
         else:
-            attributes["scfenergies"] = [step["energy"] for step in opt]
+            attributes["scfenergies"] = [convertor(step["energy"], "hartree", "eV") for step in opt]
 
     # Orbitals.
     if scf.istype("UHF"):
@@ -338,7 +362,6 @@ def cclibfrommethods(
         # Orbital coeffs.
         attributes["mocoeffs"] = [scf.mo_coeff]
 
-    attributes["nbasis"] = mol.nao
     attributes["nmo"] = len(attributes["moenergies"][0])
 
     # Orbital symmetries.
