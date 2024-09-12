@@ -218,7 +218,9 @@ def cclibfrommethods(
         "package_version": pyscf.__version__,
         # TODO: What if using a non-standard basis set?
         #'basis_set': mol.basis,
-        "basis_set": ", ".join(set(mol.basis.values())),
+        "basis_set": mol.basis
+        if isinstance(mol.basis, str)
+        else ", ".join(set(mol.basis.values())),
         "methods": [],
     }
 
