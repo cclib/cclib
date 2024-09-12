@@ -217,6 +217,7 @@ def cclibfrommethods(
     attributes["metadata"] = {
         "package": "PySCF",
         "package_version": pyscf.__version__,
+        "legacy_package_version": pyscf.__version__,
         # TODO: What if using a non-standard basis set?
         #'basis_set': mol.basis,
         "basis_set": mol.basis
