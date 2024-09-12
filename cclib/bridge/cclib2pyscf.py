@@ -338,6 +338,7 @@ def cclibfrommethods(
         # Orbital coeffs.
         attributes["mocoeffs"] = [scf.mo_coeff]
 
+    attributes["nbasis"] = mol.nao
     attributes["nmo"] = len(attributes["moenergies"][0])
 
     # Orbital symmetries.
