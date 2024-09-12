@@ -222,7 +222,9 @@ def cclibfrommethods(
         # TODO: What if using a non-standard basis set?
         #'basis_set': mol.basis,
         'basis_set': mol.basis if isinstance(mol.basis, str) else ", ".join(set(mol.basis.values())),
-        'methods': []
+        'methods': [],
+        'symmetry_detected': mol.topgroup.lower(),
+        'symmetry_used': mol.groupname.lower()
     }
     
     # Atoms.
