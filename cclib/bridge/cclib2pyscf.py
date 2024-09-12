@@ -253,7 +253,8 @@ def cclibfrommethods(
         attributes["metadata"]["methods"].append("MP2")
 
     if cc:
-        attributes["ccenergies"] = [cc.e_tot]
+        # We have to manually add in the CCSD(T) correction energy.
+        attributes["ccenergies"] = [(cc.e_tot + ccsd_t) if ccsd_t else cc.e_tot]
         attributes["metadata"]["success"] = cc.converged
         if cc.cc2:
             ccmethod = "CC2"
