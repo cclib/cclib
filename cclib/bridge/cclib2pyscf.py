@@ -137,7 +137,7 @@ def makecclib(method, ccsd_t=None, opt_steps=None) -> ccData:
     """
     _check_pyscf(_found_pyscf)
     # What is our level of theory?
-    scf, mp, cc, hess, freq, et = None, None, None, None, None, None
+    scf, mp, cc, hess, freq, et = None, None, None, None, None, []
 
     # Assume the method is a base CC method (SCF, MP, CC etc.) unless we can prove otherwise.
     base_method = method
@@ -184,7 +184,7 @@ def cclibfrommethods(
     mp=None,
     cc=None,
     ccsd_t=None,
-    et=None,
+    et=[],
     hess=None,
     freq=None,
     opt=None,
