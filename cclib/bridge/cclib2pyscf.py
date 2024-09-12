@@ -224,6 +224,8 @@ def cclibfrommethods(
         if isinstance(mol.basis, str)
         else ", ".join(set(mol.basis.values())),
         "methods": [],
+        "symmetry_detected": mol.topgroup.lower(),
+        "symmetry_used": mol.groupname.lower(),
     }
 
     # Atoms.
