@@ -1,4 +1,4 @@
-from pyscf import gto, scf
+from pyscf import gto, dft
 
 def calculate():
     # This is DVB.
@@ -25,6 +25,7 @@ def calculate():
     H          4.85625        0.86201        0.00000
     """, basis = "STO-3G", symmetry = True)
 
-    method = scf.RHF(mol)
+    method = dft.RKS(mol)
+    method.xc = 'b3lyp'
     method.kernel()
     return method
