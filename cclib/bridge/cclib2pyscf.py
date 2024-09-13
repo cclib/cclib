@@ -426,6 +426,19 @@ def cclibfrommethods(
                 [symmetry_mapping[symm_id] for symm_id in orbsyms[alpha_beta]]
             )
 
+    # Dipole moments.
+    #
+    scf_density_matrix = scf.make_rdm1(scf.mo_coeff, scf.mo_occ)
+    # PySCF uses 0,0,0 as the origin, but this might not correspond to the centre of mass?
+    origin = (0, 0, 0)
+    attributes["moments"] = [origin, scf.dip_moment(scf.mol, scf_density_matrix, origin=origin)]
+
+    # Quadrupole moments are new (introduced ~ August 2024) and not yet widely available.
+    if hasattr(scf, "quad_moment"):
+        attributes["moments"].append(
+            scf.quad_moment(scf.mol, scf_density_matrix, origin=origin, unit="DebyeAngstrom")
+        )
+
     # Excited states.
     if len(et) > 0:
         # PySCF tracks convergence for each state which is great.
