@@ -230,11 +230,7 @@ class OrcaTDDFTTest(GenericTDTest):
         "Singlet-Ag",
     ]
     method = "TDA"
-
-    def testoscs(self, data) -> None:
-        """Is the maximum of etoscs in the right range?"""
-        assert len(data.etoscs) == self.number
-        assert abs(max(data.etoscs) - 1.17) < 0.01
+    expected_f_max = 1.17
 
 
 class QChemTDDFTTest(GenericTDTest):
@@ -393,3 +389,11 @@ class GaussianEOMCCSDTest(GenericTDTest):
         "Triplet-Ag",
     ]
     method = "EOM-CCSD"
+
+
+class PySCFTDTest(GenericTDTest):
+    # No symmetry labels for PySCF yet.
+    symmetries = ["Singlet", "Singlet", "Singlet", "Singlet", "Singlet"]
+    method = "TDA"
+
+    expected_f_max = 1.17
