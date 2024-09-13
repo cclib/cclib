@@ -10,6 +10,7 @@ from cclib.parser.data import ccData
 
 import numpy as np
 import itertools
+import functools
 
 l_sym2num = {"S": 0, "P": 1, "D": 2, "F": 3, "G": 4}
 
@@ -29,6 +30,7 @@ if _found_pyscf:
     import pyscf.prop.infrared.rhf
     import pyscf.tdscf.rhf
     import pyscf.data.elements
+    import pyscf.hessian.thermo
 
 
 def _check_pyscf(found_pyscf):
@@ -250,6 +252,16 @@ def cclibfrommethods(
     # an integer mass. This is probably a PySCF bug.
     # Fortunately, PySCF ships a table of single isotope masses (COMMON_ISOTOPE_MASSES), so we'll just use that.
     attributes["atommasses"] = [pyscf.data.elements.COMMON_ISOTOPE_MASSES[atom_no] for atom_no in attributes["atomnos"]]
+    
+    converter = functools.partial(convertor, fromunits = "Angstrom",  tounits = "bohr")
+    bohr_coords = [[list(map(converter, ang_coords)) for ang_coords in opt_step] for opt_step in attributes["atomcoords"]]
+    
+    attributes["rotconsts"] = [
+        pyscf.hessian.thermo.rotation_const(np.array(attributes["atommasses"]), opt_coords)
+        for opt_coords
+        # rotation_const expects atom positions in Bohr nor Angstrom.
+        in bohr_coords
+    ]
     
     attributes["charge"] = mol.charge
     attributes["mult"] = mol.multiplicity
