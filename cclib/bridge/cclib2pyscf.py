@@ -230,15 +230,16 @@ def cclibfrommethods(
 
     # Metadata.
     attributes["metadata"] = {
-        "package": "PySCF",
-        "package_version": pyscf.__version__,
-        "legacy_package_version": pyscf.__version__,
         # TODO: What if using a non-standard basis set?
         #'basis_set': mol.basis,
         "basis_set": mol.basis
         if isinstance(mol.basis, str)
         else ", ".join(set(mol.basis.values())),
+        "input_file_contents": mol.tostring(),
+        "legacy_package_version": pyscf.__version__,
         "methods": [],
+        "package": "PySCF",
+        "package_version": pyscf.__version__,
         "symmetry_detected": mol.topgroup.lower(),
         "symmetry_used": mol.groupname.lower(),
     }
