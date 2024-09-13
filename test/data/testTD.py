@@ -398,3 +398,4 @@ class PySCFTDTest(GenericTDTest):
     method = "TDA"
     
     expected_f_max = 1.17
+    expected_l_max = 48000
