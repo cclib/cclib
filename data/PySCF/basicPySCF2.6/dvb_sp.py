@@ -24,8 +24,21 @@ def calculate():
     H         -4.85625       -0.86201        0.00000
     H          4.85625        0.86201        0.00000
     """, basis = "STO-3G", symmetry = True)
+    
+    scf_steps = []
+    def store_intermediate(_locals):
+        scf_steps.append({
+            "e_tot": _locals["e_tot"],
+            "norm_gorb": _locals["norm_gorb"],
+            "conv_tol": _locals["conv_tol"],
+            "conv_tol_grad": _locals["conv_tol_grad"],
+        })
 
     method = dft.RKS(mol)
+    method.callback = store_intermediate
     method.xc = 'b3lyp'
     method.kernel()
-    return method
+    return {
+        'method': method,
+        'scf_steps': [scf_steps],
+    }
