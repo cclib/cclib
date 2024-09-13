@@ -98,7 +98,7 @@ class GenericTDTest:
         """Is the length of etsyms correct?"""
         assert len(data.etsyms) == self.number
 
-    @skipForParser("ADF", "etrotats are not yet implemented")
+    @skipForParser("ADF", "etsyms are not yet implemented")
     @skipForParser("DALTON", "etsyms are not yet implemented")
     @skipForParser("FChk", "etsyms are not yet implemented")
     @skipForParser("GAMESS", "etsyms are not yet implemented")
