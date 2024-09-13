@@ -497,16 +497,16 @@ def cclibfrommethods(
             # Assuming x are excitations, y are de-excitations.
             # y is ignored for now.
             x, y = list(itertools.chain(*(etmethod.xy for etmethod in et)))[index]
-            
-            # The coefficients of x (and presumably also y) are normalised to 0.5,
-            # but we expect 1.0
-            # Renormalize.
-            # Taken from pyscf.tdscf.rhf.get_nto()
-            #
-            # Would appreciate someone checking this makes sense?
-            x *= 1. / np.linalg.norm(x)
              
             if not scf.istype("UHF"):
+                # The coefficients of x (and presumably also y) are normalised to 0.5,
+                # but we expect 1.0
+                # Renormalize.
+                # Taken from pyscf.tdscf.rhf.get_nto()
+                #
+                # Would appreciate someone checking this makes sense?
+                x *= 1. / np.linalg.norm(x)
+                
                 # Flatten the x matrix.
                 # The first index is the occupied orbital, the second is the virtual (both 0 indexed):
                 o_indices, v_indices = np.where(x)
@@ -518,6 +518,10 @@ def cclibfrommethods(
                     ])
              
             else:
+                x = [x[0], x[1]]
+                x[0] *= 1. / np.linalg.norm(x[0])
+                x[1] *= 1. / np.linalg.norm(x[1])
+                
                 # Flatten the x matrix.
                 # The first index is the occupied orbital, the second is the virtual (both 0 indexed):
                 # Alpha -> alpha
