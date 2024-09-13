@@ -435,6 +435,7 @@ TD        Turbomole   TurbomoleTDTripTest   basicTurbomole7.4     CO_TD_trip/bas
 TD        Turbomole   TurbomoleTDCC2Test    basicTurbomole7.4     CO_cc2_TD/basis    CO_cc2_TD/control    CO_cc2_TD/mos    CO_cc2_TD/dscf.out    CO_cc2_TD/ricc2.out    CO_cc2_TD/coord
 TD        Turbomole   TurbomoleTDADC2Test   basicTurbomole7.4     CO_adc2_TD/basis    CO_adc2_TD/control    CO_adc2_TD/mos    CO_adc2_TD/CO.log    CO_adc2_TD/coord
 TD        Turbomole   TurbomoleTDCC2TripTest   basicTurbomole7.4  CO_cc2_TD_trip/basis    CO_cc2_TD_trip/control    CO_cc2_TD_trip/mos    CO_cc2_TD_trip/dscf.out    CO_cc2_TD_trip/ricc2.out    CO_cc2_TD_trip/coord
+TD        PySCF       PySCFTDTest           basicPySCF2.6         dvb_td.py
 
 TDun      Gaussian    GenericTDunTest       basicGaussian09       CO_TD_delta.log
 TDun      Gaussian    GenericTDunTest       basicGaussian16       CO_TD_delta.log
