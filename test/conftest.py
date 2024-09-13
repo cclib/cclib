@@ -311,8 +311,8 @@ def data(request) -> ccData:
             spec.loader.exec_module(module)
             
             # Run the exposed calculate() method and 'parse'.
-            method = module.calculate()
-            data = logfile(method)
+            res = module.calculate()
+            data = logfile(**res)
             data.parsername = "PySCF"
         else:
             # Normal logfiles.
