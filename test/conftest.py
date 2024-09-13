@@ -313,7 +313,8 @@ def data(request) -> ccData:
 
             # Run the exposed calculate() method and 'parse'.
             res = module.calculate()
-            data = logfile(**res)
+            methods = res.pop("methods")
+            data = logfile(*methods, **res)
             data.parsername = "PySCF"
         else:
             # Normal logfiles.

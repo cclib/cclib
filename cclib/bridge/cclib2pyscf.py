@@ -124,7 +124,7 @@ def makepyscf_mos(ccdata, mol):
     return mo_coeffs, mo_occ, mo_syms, mo_energies
 
 
-def makecclib(method, ccsd_t=None, scf_steps=[], opt_steps=[]) -> ccData:
+def makecclib(*methods, ccsd_t=None, scf_steps=[], opt_steps=[]) -> ccData:
     """Create cclib attributes and return a ccData from a PySCF calculation.
 
     PySCF calculation results are stored in method objects, with each object representing a different part of the
@@ -144,39 +144,40 @@ def makecclib(method, ccsd_t=None, scf_steps=[], opt_steps=[]) -> ccData:
     # What is our level of theory?
     scf, mp, cc, hess, freq, et = None, None, None, None, None, []
 
-    # Assume the method is a base CC method (SCF, MP, CC etc.) unless we can prove otherwise.
-    base_method = method
+    for method in methods:
+        # Assume the method is a base CC method (SCF, MP, CC etc.) unless we can prove otherwise.
+        base_method = method
 
-    if isinstance(method, pyscf.prop.infrared.rhf.Infrared):
-        # Vibrational frequencies.
-        base_method = method.base
-        hess = method.mf_hess
-        freq = method
+        if isinstance(method, pyscf.prop.infrared.rhf.Infrared):
+            # Vibrational frequencies.
+            base_method = method.base
+            hess = method.mf_hess
+            freq = method
 
-    elif isinstance(method, pyscf.tdscf.rhf.TDBase):
-        # Excited states.
-        # TODO: What about multiple excited states?
-        base_method = method._scf
-        et = [method]
+        elif isinstance(method, pyscf.tdscf.rhf.TDBase):
+            # Excited states.
+            # TODO: What about multiple excited states?
+            base_method = method._scf
+            et.append(method)
 
-    if isinstance(base_method, pyscf.scf.hf.SCF) or isinstance(
-        base_method, pyscf.scf.hf.KohnShamDFT
-    ):
-        scf = base_method
+        if isinstance(base_method, pyscf.scf.hf.SCF) or isinstance(
+            base_method, pyscf.scf.hf.KohnShamDFT
+        ):
+            scf = base_method
 
-    elif isinstance(base_method, pyscf.mp.mp2.MP2):
-        mp = base_method
-        scf = base_method._scf
+        elif isinstance(base_method, pyscf.mp.mp2.MP2):
+            mp = base_method
+            scf = base_method._scf
 
-    elif isinstance(base_method, pyscf.cc.ccsd.CCSDBase):
-        cc = base_method
-        scf = base_method._scf
+        elif isinstance(base_method, pyscf.cc.ccsd.CCSDBase):
+            cc = base_method
+            scf = base_method._scf
 
-    else:
-        # Panic.
-        raise ValueError(
-            f"Could not determine level of theory of base method '{type(base_method.__name__)}'"
-        )
+        else:
+            # Panic.
+            raise ValueError(
+                f"Could not determine level of theory of base method '{type(base_method.__name__)}'"
+            )
 
     return cclibfrommethods(
         scf=scf,
