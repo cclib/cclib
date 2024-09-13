@@ -489,6 +489,21 @@ def cclibfrommethods(
 
         attributes["etsyms"] = []
         for etmethod in et:
+            if isinstance(etmethod, pyscf.tdscf.rks.TDA):
+                attributes["metadata"]["excited_states_method"] = "TDA"
+
+            elif isinstance(etmethod, pyscf.tdscf.rks.TDDFT):
+                attributes["metadata"]["excited_states_method"] = "TD-DFT"
+
+            elif isinstance(etmethod, pyscf.tdscf.rhf.TDA):
+                attributes["metadata"]["excited_states_method"] = "CIS"
+
+            elif isinstance(etmethod, pyscf.tdscf.rhf.TDHF):
+                attributes["metadata"]["excited_states_method"] = "RPA"
+
+            else:
+                attributes["metadata"]["excited_states_method"] = type(etmethod).__name__
+
             # From from pyscf/pyscf/tdscf/rhf.py
             # import pyscf.symm
             # orbsym = scf.get_orbsym()
