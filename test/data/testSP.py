@@ -745,6 +745,12 @@ class TurbomoleHFSPTest(TurbomoleSPTest, GenericHFSPTest):
     """Customized restricted single point HF unittest"""
 
 
+class PySCFSPTest(GenericSPTest):
+    """Customized single point PySCF test"""
+
+    num_scf_criteria = 2
+
+
 class XTBSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
 
