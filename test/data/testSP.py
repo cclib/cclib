@@ -748,6 +748,21 @@ class PySCFSPTest(GenericSPTest):
 
     num_scf_criteria = 2
 
+    def testmetadata_input_file(self, data) -> None:
+        """Does metadata have expected keys and values?"""
+        assert "input_file_contents" in data.metadata
+        # PySCF doesn't really have a concept of an input file
+        # assert "dvb_sp.in" in data.metadata["input_file_name"]
+
+    def testrotconsts(self, data) -> None:
+        """A single geometry leads to single set of rotational constants."""
+        assert data.rotconsts.shape == (1, 3)
+
+        # PySCF produces different constants compared to Gaussian (probably
+        # because we're using slightly different isotope masses).
+        ref = [4.617831, 0.685761, 0.597091]
+        numpy.testing.assert_allclose(data.rotconsts[0], ref, rtol=0, atol=1.0e-3)
+
 
 class XTBSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
