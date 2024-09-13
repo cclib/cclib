@@ -5,6 +5,7 @@
 
 """Bridge for using cclib data in PySCF (https://github.com/pyscf/pyscf)."""
 
+import functools
 import itertools
 
 from cclib.parser.data import ccData
@@ -24,6 +25,7 @@ if _found_pyscf:
     import pyscf
     import pyscf.cc.ccsd
     import pyscf.data.elements
+    import pyscf.hessian.thermo
     import pyscf.mp.mp2
     import pyscf.prop.infrared.rhf
     import pyscf.scf.hf
@@ -258,6 +260,19 @@ def cclibfrommethods(
     # Fortunately, PySCF ships a table of single isotope masses (COMMON_ISOTOPE_MASSES), so we'll just use that.
     attributes["atommasses"] = [
         pyscf.data.elements.COMMON_ISOTOPE_MASSES[atom_no] for atom_no in attributes["atomnos"]
+    ]
+
+    converter = functools.partial(convertor, fromunits="Angstrom", tounits="bohr")
+    bohr_coords = [
+        [list(map(converter, ang_coords)) for ang_coords in opt_step]
+        for opt_step in attributes["atomcoords"]
+    ]
+
+    attributes["rotconsts"] = [
+        pyscf.hessian.thermo.rotation_const(np.array(attributes["atommasses"]), opt_coords)
+        for opt_coords
+        # rotation_const expects atom positions in Bohr nor Angstrom.
+        in bohr_coords
     ]
 
     attributes["charge"] = mol.charge
