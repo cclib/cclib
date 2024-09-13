@@ -501,6 +501,8 @@ def cclibfrommethods(
             # but we expect 1.0
             # Renormalize.
             # Taken from pyscf.tdscf.rhf.get_nto()
+            #
+            # Would appreciate someone checking this makes sense?
             x *= 1. / np.linalg.norm(x)
              
             if not scf.istype("UHF"):
