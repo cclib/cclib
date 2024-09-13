@@ -439,6 +439,16 @@ def cclibfrommethods(
             scf.quad_moment(scf.mol, scf_density_matrix, origin=origin, unit="DebyeAngstrom")
         )
 
+    # Mulliken.
+    mulliken_pop, mulliken_charges = scf.mulliken_pop(
+        scf.mol, scf_density_matrix, s=attributes["aooverlaps"]
+    )
+    # PySCF describes this as 'Mulliken population analysis, based on meta-Lowdin AOs', is this what we want?
+    lowdin_pop, lowdin_charges = scf.mulliken_meta(
+        scf.mol, scf_density_matrix, s=attributes["aooverlaps"]
+    )
+    attributes["atomcharges"] = {"mulliken": mulliken_charges, "lowdin": lowdin_charges}
+
     # Excited states.
     if len(et) > 0:
         # PySCF tracks convergence for each state which is great.
