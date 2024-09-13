@@ -50,4 +50,4 @@ def calculate():
     method.callback = store_intermediate
     method.xc = "b3lyp"
     method.kernel()
-    return {"method": method, "scf_steps": [scf_steps]}
+    return {"methods": [method], "scf_steps": [scf_steps]}

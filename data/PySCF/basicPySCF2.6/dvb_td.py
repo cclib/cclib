@@ -60,7 +60,7 @@ def calculate():
 
     assert all(tdm.converged)
 
-    return {"method": tdm, "scf_steps": [scf_steps]}
+    return {"methods": [tdm], "scf_steps": [scf_steps]}
 
 
 if __name__ == "__main__":
