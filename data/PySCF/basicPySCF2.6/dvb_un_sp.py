@@ -39,6 +39,6 @@ def calculate():
     method.xc = 'b3lyp'
     method.kernel()
     return {
-        'method': method,
+        'methods': [method],
         'scf_steps': [scf_steps],
     }
