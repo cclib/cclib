@@ -122,7 +122,7 @@ def makepyscf_mos(ccdata, mol):
     return mo_coeffs, mo_occ, mo_syms, mo_energies
 
 
-def makecclib(method, ccsd_t=None, opt_steps=None) -> ccData:
+def makecclib(method, ccsd_t=None, scf_steps=[], opt_steps=[]) -> ccData:
     """Create cclib attributes and return a ccData from a PySCF calculation.
 
     PySCF calculation results are stored in method objects, with each object representing a different part of the
@@ -133,6 +133,8 @@ def makecclib(method, ccsd_t=None, opt_steps=None) -> ccData:
     Inputs:
         method - an instance of a PySCF method object that has already performed a calculation
         ccsd_t - for CCSD(T), the (T) correction energy to the CC energy
+        scf_steps - a list (per optimisation step) of lists (per SCF cycle) of dictionaries containing the results (and targets)
+          of each SCF cycle. Each dict should contain at least 'e_tot', 'norm_gorb', 'conv_tol', and 'conv_tol_grad'.
         opt_steps - for an optimisation, a list of dictionaries containing the 'energy', 'gradients', and 'coords'
           at each opt step (including the last)
     """
@@ -175,7 +177,15 @@ def makecclib(method, ccsd_t=None, opt_steps=None) -> ccData:
         )
 
     return cclibfrommethods(
-        scf=scf, mp=mp, cc=cc, ccsd_t=ccsd_t, hess=hess, freq=freq, opt=opt_steps, et=et
+        scf=scf,
+        mp=mp,
+        cc=cc,
+        ccsd_t=ccsd_t,
+        hess=hess,
+        freq=freq,
+        scf_steps=scf_steps,
+        opt_steps=opt_steps,
+        et=et,
     )
 
 
@@ -188,7 +198,8 @@ def cclibfrommethods(
     et=[],
     hess=None,
     freq=None,
-    opt=None,
+    scf_steps=[],
+    opt_steps=[],
 ) -> ccData:
     """Create cclib attributes and return a ccData from a PySCF method object.
 
@@ -201,7 +212,9 @@ def cclibfrommethods(
               both singlet and triplet calculating methods can be passed simultaneously.
         hess - an instance of a PySCF hessian method.
         freq - an instance of an Infrared analysis class from pyscf.prop.infrared.*
-        opt  - for an optimisation, a list of dictionaries containing the 'energy', 'gradients', and 'coords'
+        scf_steps - a list (per optimisation step) of lists (per SCF cycle) of dictionaries containing the results (and targets)
+          of each SCF cycle. Each dict should contain at least 'e_tot', 'norm_gorb', 'conv_tol', and 'conv_tol_grad'.
+        opt_steps  - for an optimisation, a list of dictionaries containing the 'energy', 'gradients', and 'coords'
           at each opt step (including the last)
 
     """
@@ -229,11 +242,11 @@ def cclibfrommethods(
     }
 
     # Atoms.
-    if not opt:
+    if not opt_steps:
         attributes["atomcoords"] = [mol.atom_coords("Angstrom")]
 
     else:
-        attributes["atomcoords"] = [step["coords"] for step in opt]
+        attributes["atomcoords"] = [step["coords"] for step in opt_steps]
 
     attributes["natom"] = len(mol.atom_coords("Angstrom"))
     attributes["atomnos"] = [ptable.number[element] for element in mol.elements]
@@ -342,15 +355,37 @@ def cclibfrommethods(
 
     # It's not immediately clear from the intermediate optimisation steps what level of theory the energy corresponds to,
     # we have to be smart based on what we asked for.
-    if opt:
+    if opt_steps:
         if cc:
-            attributes["ccenergies"] = [convertor(step["energy"], "hartree", "eV") for step in opt]
+            attributes["ccenergies"] = [
+                convertor(step["energy"], "hartree", "eV") for step in opt_steps
+            ]
 
         elif mp:
-            attributes["mpenergies"] = [convertor(step["energy"], "hartree", "eV") for step in opt]
+            attributes["mpenergies"] = [
+                convertor(step["energy"], "hartree", "eV") for step in opt_steps
+            ]
 
         else:
-            attributes["scfenergies"] = [convertor(step["energy"], "hartree", "eV") for step in opt]
+            attributes["scfenergies"] = [
+                convertor(step["energy"], "hartree", "eV") for step in opt_steps
+            ]
+
+    if scf_steps:
+        # scf_steps contains all the info we need for scfvalues and scftargets, just need to unpack it.
+        # TODO: scfvalues/scftargets should probably use a dicts to describe each convergence criteria,
+        # but this is not specific to PySCF.
+        attributes["scfvalues"] = []
+        attributes["scftargets"] = []
+        for opt_step in scf_steps:
+            if len(opt_step) > 0:
+                attributes["scftargets"].append(
+                    (opt_step[0]["conv_tol"], opt_step[0]["conv_tol_grad"])
+                )
+                attributes["scfvalues"].append([])
+
+            for scf_step in opt_step:
+                attributes["scfvalues"][-1].append((scf_step["e_tot"], scf_step["norm_gorb"]))
 
     # Orbitals.
     if scf.istype("UHF"):
