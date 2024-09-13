@@ -423,24 +423,23 @@ def cclibfrommethods(
     origin = (0,0,0)
     attributes["moments"] = [
         origin,
-        scf.dip_moment(scf.mol, scf_density_matrix, origin = origin),
+        scf.dip_moment(scf.mol, scf_density_matrix, origin = origin, verbose = 2),
     ]
     
     # Quadrupole moments are new (introduced ~ August 2024) and not yet widely available.
     if hasattr(scf, 'quad_moment'):
         attributes["moments"].append(
-            scf.quad_moment(scf.mol, scf_density_matrix, origin = origin, unit = 'DebyeAngstrom')
+            scf.quad_moment(scf.mol, scf_density_matrix, origin = origin, unit = 'DebyeAngstrom', verbose = 2)
         )
         
     # Mulliken.
-    mulliken_pop, mulliken_charges = scf.mulliken_pop(scf.mol, scf_density_matrix, s = attributes["aooverlaps"])
+    mulliken_pop, mulliken_charges = scf.mulliken_pop(scf.mol, scf_density_matrix, s = attributes["aooverlaps"], verbose = 2)
     # PySCF describes this as 'Mulliken population analysis, based on meta-Lowdin AOs', is this what we want?
-    lowdin_pop, lowdin_charges = scf.mulliken_meta(scf.mol, scf_density_matrix, s = attributes["aooverlaps"])
+    lowdin_pop, lowdin_charges = scf.mulliken_meta(scf.mol, scf_density_matrix, s = attributes["aooverlaps"], verbose = 2)
     attributes["atomcharges"] = {
         'mulliken': mulliken_charges,
         'lowdin': lowdin_charges
     }
-    
     
     # Excited states.
     if len(et) > 0:
