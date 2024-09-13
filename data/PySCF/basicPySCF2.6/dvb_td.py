@@ -50,7 +50,7 @@ def calculate():
     assert all(tdm.converged)
     
     return {
-        'method': tdm,
+        'methods': [tdm],
         'scf_steps': [scf_steps],
     }
     
