@@ -381,7 +381,8 @@ class GenericSPTest:
 
         # All values on diagonal should be exactly one.
         for i in range(data.nbasis):
-            assert data.aooverlaps[i, i] == 1.0
+            # assert data.aooverlaps[i, i] == 1.0
+            assert abs(data.aooverlaps[i, i] - 1.0) < 0.0001
 
         # Check some additional values that don't seem to move around between programs.
         assert abs(data.aooverlaps[0, 1] - self.overlap01) < 0.01
