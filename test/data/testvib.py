@@ -119,6 +119,7 @@ class GenericIRTest:
 
     @skipForParser("FChk", "not printed")
     @skipForParser("Psi3", "not implemented yet")
+    @skipForParser("PySCF", "not implemented yet")
     def testzeropointcorrection(self, data) -> None:
         """Is the zero-point correction correct?"""
         assert abs(data.zpve - self.zpve) < self.zpve_thresh
