@@ -118,6 +118,7 @@ CC        QChem       GenericCCSDPTTest     basicQChem5.4         water_ccsd(t).
 CC        Turbomole   TurbomoleCCSDTest     basicTurbomole7.2     water_ccsd/basis      water_ccsd/control      water_ccsd/mos      water_ccsd/dscf.out      water_ccsd/ccsdf12.out
 CC        Turbomole   TurbomoleCCSDTest     basicTurbomole7.4     water_ccsd/basis      water_ccsd/control      water_ccsd/mos      water_ccsd/dscf.out      water_ccsd/ccsdf12.out
 CC        Turbomole   GenericCC2Test        basicTurbomole7.4     water_cc2/basis      water_cc2/control      water_cc2/mos      water_cc2/dscf.out      water_cc2/ricc2.out
+CC        PySCF       PySCFCCSDTest         basicPySCF2.6         water_ccsd.py
 
 CI        GAMESS      GAMESSCISTest         basicGAMESS-US2017    water_cis_saps.out
 CI        GAMESS      GAMESSCISTest         basicGAMESS-US2018    water_cis_saps.out
@@ -242,6 +243,7 @@ MP        Turbomole   GenericMP2Test        basicTurbomole7.4     water_mp2/basi
 MP        Turbomole   GenericMP2Test        basicTurbomole7.4     water_mp2_rimp2/basis    water_mp2_rimp2/control    water_mp2_rimp2/coord    water_mp2_rimp2/mos    water_mp2_rimp2/dscf.out    water_mp2_rimp2/rimp2.out
 MP        Turbomole   GenericMP2Test        basicTurbomole7.4     water_mp2_ricc2/basis    water_mp2_ricc2/control    water_mp2_ricc2/coord    water_mp2_ricc2/mos    water_mp2_ricc2/dscf.out    water_mp2_ricc2/ricc2.out
 MP        Turbomole   GenericMP3Test        basicTurbomole7.4     water_mp3/basis    water_mp3/control    water_mp3/coord    water_mp3/mos    water_mp3/dscf.out    water_mp3/ccsdf12.out
+MP        PySCF       GenericMP2Test        basicPySCF2.6         water_mp2.py
 
 NMR       ORCA        GenericNMRTest        basicORCA4.1          dvb_nmr.out
 NMR       ORCA        GenericNMRTest        basicORCA4.2          dvb_nmr.out
