@@ -123,7 +123,7 @@ def makepyscf_mos(ccdata, mol):
                 mo_syms = np.full_like(ccdata.moenergies, "A", dtype=str)
     return mo_coeffs, mo_occ, mo_syms, mo_energies
 
-def makecclib(*methods, ccsd_t = None, scf_steps = [], opt_steps = []) -> ccData:
+def makecclib(*methods, ccsd_t = None, scf_steps = [], opt_steps = [], opt_failed = False) -> ccData:
     """Create cclib attributes and return a ccData from a PySCF calculation.
 
     PySCF calculation results are stored in method objects, with each object representing a different part of the
@@ -138,6 +138,7 @@ def makecclib(*methods, ccsd_t = None, scf_steps = [], opt_steps = []) -> ccData
           of each SCF cycle. Each dict should contain at least 'e_tot', 'norm_gorb', 'conv_tol', and 'conv_tol_grad'.
         opt_steps - for an optimisation, a list of dictionaries containing the 'energy', 'gradients', and 'coords'
           at each opt step (including the last)
+        opt_failed - set to true when parsing an optimisation that failed to converge
     """
     _check_pyscf(_found_pyscf)
     # What is our level of theory?
@@ -183,7 +184,8 @@ def makecclib(*methods, ccsd_t = None, scf_steps = [], opt_steps = []) -> ccData
         freq = freq,
         scf_steps = scf_steps,
         opt_steps = opt_steps,
-        et = et
+        et = et,
+        opt_failed = opt_failed
     )
     
 def cclibfrommethods(
@@ -196,7 +198,8 @@ def cclibfrommethods(
         hess = None,
         freq = None,
         scf_steps = [],
-        opt_steps = []
+        opt_steps = [],
+        opt_failed = False
     ) -> ccData:
     """Create cclib attributes and return a ccData from a PySCF method object.
 
@@ -213,6 +216,7 @@ def cclibfrommethods(
           of each SCF cycle. Each dict should contain at least 'e_tot', 'norm_gorb', 'conv_tol', and 'conv_tol_grad'.
         opt_steps  - for an optimisation, a list of dictionaries containing the 'energy', 'gradients', and 'coords'
           at each opt step (including the last)
+        opt_failed - set to true when parsing an optimisation that failed to converge
         
     """
     _check_pyscf(_found_pyscf)
@@ -347,12 +351,28 @@ def cclibfrommethods(
     if opt_steps:
         if cc:
             attributes["ccenergies"] = [convertor(step['energy'], "hartree",  "eV") for step in opt_steps]
+            opt_e = attributes["ccenergies"]
         
         elif mp:
-            attributes["mpenergies"] = [convertor(step['energy'], "hartree",  "eV") for step in opt_steps]
+            attributes["mpenergies"] = [[convertor(step['energy'], "hartree",  "eV")] for step in opt_steps]
+            opt_e = attributes["mpenergies"]
         
         else:
             attributes["scfenergies"] = [convertor(step['energy'], "hartree",  "eV") for step in opt_steps]
+            opt_e = attributes["scfenergies"]
+        
+        
+        attributes['optstatus'] = [ccData.OPT_UNKNOWN for _ in attributes['atomcoords']]
+        attributes['optstatus'][0] = ccData.OPT_NEW
+        
+        # Only energy for now.
+        attributes['geovalues'] = [[energy] for energy in opt_e]
+        
+        # This is obviously not ideal, but due to the way PySCF handles optimisations (ie, it doesn't handle them directly)
+        # it's difficult to come up with something better...
+        if not opt_failed:
+            attributes['optdone'] = [len(attributes['atomcoords']) - 1]
+            attributes['optstatus'][-1] = ccData.OPT_DONE
             
     if scf_steps:
         # scf_steps contains all the info we need for scfvalues and scftargets, just need to unpack it.
@@ -544,8 +564,6 @@ def cclibfrommethods(
     
     # Hessian/frequencies
     if hess:
-        # This doesn't seem to exist?
-        #attributes["metadata"]["success"] = hess.converged
         pass
         # TODO: Don't know enough to work out what this is
         # cclib wants a rank 2 array, pyscf gives us a rank 4 array?
@@ -560,6 +578,11 @@ def cclibfrommethods(
         # TODO: Check these units.
         attributes['vibfconsts'] = freq.vib_dict['force_const_dyne']
         attributes['vibrmasses'] = freq.vib_dict['reduced_mass']
+        
+        # freq.de probably contains something useful, but not sure what.
+        # The Infrared module is sadly less well documented that the other code. 
+        # apparently de is a "3-dim tensor: (atom number, atom coordinate components, dipole components)"
+        # maybe one of these is vibdisps?
     
         if hasattr(freq, 'ir_inten'):
             # TODO: Units?
