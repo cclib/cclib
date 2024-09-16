@@ -353,8 +353,7 @@ def cclibfrommethods(
         attributes["metadata"]["functional"] = scf.xc
 
     if mp:
-        attributes["mpenergies"] = [convertor(mp.e_tot, "hartree", "eV")]
-        attributes["metadata"]["success"] = mp.converged
+        attributes["mpenergies"] = [[convertor(mp.e_tot, "hartree", "eV")]]
         attributes["metadata"]["methods"].append("MP2")
 
     if cc:
