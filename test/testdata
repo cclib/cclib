@@ -186,6 +186,8 @@ GeoOpt    QChem       GenericGeoOptTest     basicQChem5.4         dvb_gopt.out
 GeoOpt    Turbomole   TurbomoleGeoOptTest   basicTurbomole5.9     dvb_gopt/basis      dvb_gopt/control      dvb_gopt/mos      dvb_gopt/job.last
 GeoOpt    Turbomole   TurbomoleKeepGeoOptTest   basicTurbomole7.5     dvb_gopt/basis      dvb_gopt/control      dvb_gopt/mos      dvb_gopt/job.0      dvb_gopt/job.1      dvb_gopt/job.2      dvb_gopt/job.3      dvb_gopt/job.4      dvb_gopt/job.5     dvb_gopt/job.last
 GeoOpt    XTB         XTBGeoOptTest     basicXTB6.6.1/dvb_opt       dvb_opt.out gradient
+GeoOpt    PySCF       GenericGeoOptTest     basicPySCF2.6         dvb_gopt_bern.py
+GeoOpt    PySCF       GenericGeoOptTest     basicPySCF2.6         dvb_gopt_tric.py
 
 MP        DALTON      GenericMP2Test        basicDALTON-2013      water_mp2.out
 MP        DALTON      GenericMP2Test        basicDALTON-2015      water_mp2.out
