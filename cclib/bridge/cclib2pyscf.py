@@ -249,6 +249,11 @@ def cclibfrommethods(
         "symmetry_used": mol.groupname.lower(),
     }
 
+    # Solvent.
+    if hasattr(scf, "with_solvent"):
+        attributes["metadata"]["solvent_model"] = scf.with_solvent.method.replace("-", "")
+        attributes["metadata"]["solvent_params"] = {"epsilon": scf.with_solvent.eps}
+
     # Atoms.
     if not opt_steps:
         attributes["atomcoords"] = [mol.atom_coords("Angstrom")]
