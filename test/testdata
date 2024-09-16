@@ -119,6 +119,7 @@ CC        Turbomole   TurbomoleCCSDTest     basicTurbomole7.2     water_ccsd/bas
 CC        Turbomole   TurbomoleCCSDTest     basicTurbomole7.4     water_ccsd/basis      water_ccsd/control      water_ccsd/mos      water_ccsd/dscf.out      water_ccsd/ccsdf12.out
 CC        Turbomole   GenericCC2Test        basicTurbomole7.4     water_cc2/basis      water_cc2/control      water_cc2/mos      water_cc2/dscf.out      water_cc2/ricc2.out
 CC        PySCF       PySCFCCSDTest         basicPySCF2.6         water_ccsd.py
+CC        PySCF       PySCFCCSDPTTest       basicPySCF2.6         water_ccsd(t).py
 
 CI        GAMESS      GAMESSCISTest         basicGAMESS-US2017    water_cis_saps.out
 CI        GAMESS      GAMESSCISTest         basicGAMESS-US2018    water_cis_saps.out
