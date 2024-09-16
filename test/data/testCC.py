@@ -148,3 +148,8 @@ class PySCFCCSDTest(GenericCCSDTest):
     
     # PySCF 2.6
     corr_energy = -1.453898756
+    
+class PySCFCCSDPTTest(GenericCCSDPTTest):
+    
+    # PySCF 2.6
+    corr_energy = -1.4559860
