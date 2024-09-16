@@ -479,6 +479,7 @@ vib       QChem       GenericIRTest         basicQChem5.1         dvb_ir.out
 vib       QChem       GenericIRTest         basicQChem5.4         dvb_ir.out
 vib       Turbomole   TurbomoleIRTest       basicTurbomole5.9     dvb_ir/basis            dvb_ir/control            dvb_ir/mos            dvb_ir/aoforce.out
 vib       XTB         XTBIRTest             basicXTB6.6.1/dvb_ir  dvb_ir.out
+vib       PySCF       GenericIRTest         basicPySCF2.6         dvb_ir.py
 
 vib       GAMESS      GenericIRimgTest      basicGAMESS-US2017    nh3_ts_ir.out
 vib       GAMESS      GenericIRimgTest      basicGAMESS-US2018    nh3_ts_ir.out
