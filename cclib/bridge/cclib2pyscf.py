@@ -22,15 +22,20 @@ class MissingAttributeError(Exception):
 
 _found_pyscf = find_package("pyscf")
 if _found_pyscf:
-    import pyscf
     import pyscf.cc.ccsd
     import pyscf.data.elements
+    import pyscf.gto
     import pyscf.hessian.thermo
     import pyscf.mp.mp2
-    import pyscf.prop.infrared.rhf
     import pyscf.scf.hf
     import pyscf.tdscf.rhf
-    from pyscf import gto
+
+    # This is an optional install.
+    try:
+        import pyscf.prop as pyscf_prop
+
+    except ModuleNotFoundError:
+        pyscf_prop = None
 
 
 def _check_pyscf(found_pyscf):
@@ -48,7 +53,7 @@ def makepyscf(data, charge=0, mult=1):
         raise MissingAttributeError(
             f"Could not create pyscf molecule due to missing attribute: {missing}"
         )
-    mol = gto.Mole(
+    mol = pyscf.gto.Mole(
         atom=[[f"{data.atomnos[i]}", data.atomcoords[-1][i]] for i in range(data.natom)],
         unit="Angstrom",
         charge=charge,
@@ -149,7 +154,7 @@ def makecclib(*methods, ccsd_t=None, scf_steps=[], opt_steps=[], opt_failed=Fals
         # Assume the method is a base CC method (SCF, MP, CC etc.) unless we can prove otherwise.
         base_method = method
 
-        if isinstance(method, pyscf.prop.infrared.rhf.Infrared):
+        if pyscf_prop is not None and isinstance(method, pyscf_prop.infrared.rhf.Infrared):
             # Vibrational frequencies.
             base_method = method.base
             hess = method.mf_hess
