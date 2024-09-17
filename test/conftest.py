@@ -307,7 +307,7 @@ def data(request) -> ccData:
             # Adapted from https://stackoverflow.com/questions/67631/how-can-i-import-a-module-dynamically-given-the-full-path
             import importlib.util
 
-            spec = importlib.util.spec_from_file_location("module.name", first)
+            spec = importlib.util.spec_from_file_location(first.name, first)
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
 
