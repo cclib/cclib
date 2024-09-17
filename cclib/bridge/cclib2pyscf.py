@@ -273,9 +273,9 @@ def cclibfrommethods(
         pyscf.data.elements.COMMON_ISOTOPE_MASSES[atom_no] for atom_no in attributes["atomnos"]
     ]
 
-    converter = functools.partial(convertor, fromunits="Angstrom", tounits="bohr")
+    coord_convertor = functools.partial(convertor, fromunits="Angstrom", tounits="bohr")
     bohr_coords = [
-        [list(map(converter, ang_coords)) for ang_coords in opt_step]
+        [list(map(coord_convertor, ang_coords)) for ang_coords in opt_step]
         for opt_step in attributes["atomcoords"]
     ]
 
@@ -351,21 +351,19 @@ def cclibfrommethods(
     attributes["aooverlaps"] = scf.get_ovlp()
 
     # Total energies.
-    attributes["scfenergies"] = [convertor(scf.e_tot, "hartree", "eV")]
+    attributes["scfenergies"] = [scf.e_tot]
     attributes["metadata"]["success"] = scf.converged
     attributes["metadata"]["methods"].append("DFT" if hasattr(scf, "xc") else "HF")
     if hasattr(scf, "xc"):
         attributes["metadata"]["functional"] = scf.xc
 
     if mp:
-        attributes["mpenergies"] = [[convertor(mp.e_tot, "hartree", "eV")]]
+        attributes["mpenergies"] = [[mp.e_tot]]
         attributes["metadata"]["methods"].append("MP2")
 
     if cc:
         # We have to manually add in the CCSD(T) correction energy.
-        attributes["ccenergies"] = [
-            convertor((cc.e_tot + ccsd_t) if ccsd_t else cc.e_tot, "hartree", "eV")
-        ]
+        attributes["ccenergies"] = [(cc.e_tot + ccsd_t) if ccsd_t else cc.e_tot]
         attributes["metadata"]["success"] = cc.converged
         if cc.cc2:
             ccmethod = "CC2"
@@ -382,21 +380,15 @@ def cclibfrommethods(
     # we have to be smart based on what we asked for.
     if opt_steps:
         if cc:
-            attributes["ccenergies"] = [
-                convertor(step["energy"], "hartree", "eV") for step in opt_steps
-            ]
+            attributes["ccenergies"] = [step["energy"] for step in opt_steps]
             opt_e = attributes["ccenergies"]
 
         elif mp:
-            attributes["mpenergies"] = [
-                [convertor(step["energy"], "hartree", "eV")] for step in opt_steps
-            ]
+            attributes["mpenergies"] = [[step["energy"]] for step in opt_steps]
             opt_e = attributes["mpenergies"]
 
         else:
-            attributes["scfenergies"] = [
-                convertor(step["energy"], "hartree", "eV") for step in opt_steps
-            ]
+            attributes["scfenergies"] = [step["energy"] for step in opt_steps]
             opt_e = attributes["scfenergies"]
 
         attributes["optstatus"] = [ccData.OPT_UNKNOWN for _ in attributes["atomcoords"]]
@@ -432,10 +424,7 @@ def cclibfrommethods(
         attributes["metadata"]["unrestricted"] = True
 
         nocc = [np.count_nonzero(scf.mo_occ[0] != 0), np.count_nonzero(scf.mo_occ[1] != 0)]
-        attributes["moenergies"] = [
-            convertor(scf.mo_energy[0], "hartree", "eV"),
-            convertor(scf.mo_energy[1], "hartree", "eV"),
-        ]
+        attributes["moenergies"] = [scf.mo_energy[0], scf.mo_energy[1]]
         attributes["homos"] = [nocc[0] - 1, nocc[1] - 1]
         attributes["mocoeffs"] = scf.mo_coeff
 
@@ -443,7 +432,7 @@ def cclibfrommethods(
         attributes["metadata"]["unrestricted"] = False
 
         nocc = [np.count_nonzero(scf.mo_occ != 0)]
-        attributes["moenergies"] = [convertor(scf.mo_energy, "hartree", "eV")]
+        attributes["moenergies"] = [scf.mo_energy]
         attributes["homos"] = [nocc[0] - 1]
         # Orbital coeffs.
         attributes["mocoeffs"] = [scf.mo_coeff]
@@ -502,10 +491,7 @@ def cclibfrommethods(
         )
 
         # In cclib 1.x, 'energies' are actually expected to be cm-1. In 2.x, this will change to Hartree.
-        attributes["etenergies"] = [
-            convertor(hartree, "hartree", "wavenumber")
-            for hartree in itertools.chain(*(etmethod.e for etmethod in et))
-        ]
+        attributes["etenergies"] = list(itertools.chain(*(etmethod.e for etmethod in et)))
         attributes["etoscs"] = list(
             itertools.chain(*(etmethod.oscillator_strength(gauge="length") for etmethod in et))
         )  # or do we want velocity?
