@@ -51,6 +51,7 @@ class GenericIRTest:
     @skipForLogfile("FChk/basicGaussian09", "not printed in older versions than 16")
     @skipForLogfile("FChk/basicQChem5.4", "not printed")
     @skipForParser("xTB", "Custom treatment")
+    @skipForParser("PySCF", "not implemented yet")
     def testvibdisps(self, data, numvib) -> None:
         """Are the dimensions of vibdisps consistent with numvib x N x 3"""
         assert len(data.vibfreqs) == numvib
