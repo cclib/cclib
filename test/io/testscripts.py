@@ -93,7 +93,7 @@ class ccgetTest:
             pytest.skip("Psi3 is not yet supported")
         if file_path["parser"] == "PySCF":
             pytest.skip("PySCF cannot be parsed in this way")
-        
+
         # Build a list of files.
         input_files = [
             str(

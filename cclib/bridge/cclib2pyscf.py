@@ -22,18 +22,18 @@ class MissingAttributeError(Exception):
 
 _found_pyscf = find_package("pyscf")
 if _found_pyscf:
-    import pyscf.gto
     import pyscf.cc.ccsd
     import pyscf.data.elements
+    import pyscf.gto
     import pyscf.hessian.thermo
     import pyscf.mp.mp2
     import pyscf.scf.hf
     import pyscf.tdscf.rhf
-    
+
     # This is an optional install.
     try:
         import pyscf.prop as pyscf_prop
-    
+
     except ModuleNotFoundError:
         pyscf_prop = None
 
