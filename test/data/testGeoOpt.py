@@ -158,6 +158,7 @@ class GenericGeoOptTest:
 
     @skipForParser("MOPAC", "Not implemented.")
     @skipForParser("xTB", "not implemented yet")
+    @skipForParser("PySCF", "geotargets not implemented yet")
     def testgeoconverged(self, data) -> None:
         """Has the geometry converged and set optdone to True?"""
         assert numpy.all(numpy.abs(data.geovalues[-1]) <= data.geotargets)
