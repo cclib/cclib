@@ -29,6 +29,8 @@ dependencies = [
     "periodictable",
     "scipy>=1.2.0",
     "pyscf-properties @ git+https://github.com/pyscf/properties",
+    "pyberny",
+    "geometric"
 ]
 
 [project.urls]
