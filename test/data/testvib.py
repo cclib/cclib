@@ -138,6 +138,7 @@ class GenericIRTest:
     )
     @skipForParser("Turbomole", "not implemented yet")
     @skipForParser("xTB", "not implemented yet")
+    @skipForParser("PySCF", "not implemented yet")
     def testhessian(self, data) -> None:
         """Are the dimensions of the molecular Hessian correct?"""
         assert data.hessian.shape == (3 * data.natom, 3 * data.natom)
