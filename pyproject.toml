@@ -28,6 +28,7 @@ dependencies = [
     "packaging>=19.0",
     "periodictable",
     "scipy>=1.2.0",
+    "pyscf-properties @ git+https://github.com/pyscf/properties",
 ]
 
 [project.urls]
@@ -49,6 +50,7 @@ bridges = [
     "openbabel",
     "pandas",
     "pyscf",
+    "pyscf-properties @ git+https://github.com/pyscf/properties",
     "qc-iodata>=1.0.0a2",
 ]
 docs = [
@@ -60,6 +62,8 @@ test = [
     "coverage",
     "pytest-cov",
     "pyyaml",
+    "pyscf",
+    "pyscf-properties @ git+https://github.com/pyscf/properties",
 ]
 dev = ["cclib[bridges,docs,test]"]
 all = ["cclib[bridges]"]
