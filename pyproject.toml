@@ -28,9 +28,6 @@ dependencies = [
     "packaging>=19.0",
     "periodictable",
     "scipy>=1.2.0",
-    "pyscf-properties @ git+https://github.com/pyscf/properties",
-    "pyberny",
-    "geometric"
 ]
 
 [project.urls]
@@ -66,6 +63,8 @@ test = [
     "pyyaml",
     "pyscf",
     "pyscf-properties @ git+https://github.com/pyscf/properties",
+    "pyberny",
+    "geometric"
 ]
 dev = ["cclib[bridges,docs,test]"]
 all = ["cclib[bridges]"]
