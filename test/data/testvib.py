@@ -150,6 +150,7 @@ class GenericIRTest:
     @skipForParser("FChk", "not printed")
     @skipForParser("Molpro", "not implemented yet")
     @skipForParser("Turbomole", "not implemented yet")
+    @skipForParser("PySCF", "not implemented yet")
     def testtemperature(self, data) -> None:
         """Is the temperature 298.15 K?"""
         assert round(abs(298.15 - data.temperature), 7) == 0
@@ -160,6 +161,7 @@ class GenericIRTest:
     @skipForParser("Psi4", "not implemented yet")
     @skipForParser("xTB", "not printed")
     @skipForParser("Turbomole", "not implemented yet")
+    @skipForParser("PySCF", "not implemented yet")
     def testpressure(self, data) -> None:
         """Is the pressure 1 atm?"""
         assert round(abs(1 - data.pressure), 7) == 0
@@ -170,6 +172,7 @@ class GenericIRTest:
     @skipForParser("GAMESSUK", "not implemented yet")
     @skipForParser("Molpro", "not implemented yet")
     @skipForParser("Turbomole", "not implemented yet")
+    @skipForParser("PySCF", "not implemented yet")
     def testentropy(self, data) -> None:
         """Is the entropy reasonable"""
         assert round(abs(self.entropy - data.entropy), self.entropy_places) == 0
@@ -180,6 +183,7 @@ class GenericIRTest:
     @skipForParser("GAMESSUK", "not implemented yet")
     @skipForParser("Molpro", "not implemented yet")
     @skipForParser("Turbomole", "not implemented yet")
+    @skipForParser("PySCF", "not implemented yet")
     def testenthalpy(self, data) -> None:
         """Is the enthalpy reasonable"""
         assert round(abs(self.enthalpy - data.enthalpy), self.enthalpy_places) == 0
@@ -190,6 +194,7 @@ class GenericIRTest:
     @skipForParser("GAMESSUK", "not implemented yet")
     @skipForParser("Molpro", "not implemented yet")
     @skipForParser("Turbomole", "not implemented yet")
+    @skipForParser("PySCF", "not implemented yet")
     def testfreeenergy(self, data) -> None:
         """Is the freeenergy reasonable"""
         assert round(abs(self.freeenergy - data.freeenergy), self.freeenergy_places) == 0
@@ -200,6 +205,7 @@ class GenericIRTest:
     @skipForParser("GAMESSUK", "not implemented yet")
     @skipForParser("Molpro", "not implemented yet")
     @skipForParser("Turbomole", "not implemented yet")
+    @skipForParser("PySCF", "not implemented yet")
     def testfreeenergyconsistency(self, data) -> None:
         """Does G = H - TS hold"""
         assert (

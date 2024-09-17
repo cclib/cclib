@@ -157,9 +157,9 @@ class TurbomoleCCSDTest(GenericCCSDTest):
 
 class PySCFCCSDTest(GenericCCSDTest):
     # PySCF 2.6
-    corr_energy = -1.453898756
+    corr_energy = -0.053429798261439
 
 
 class PySCFCCSDPTTest(GenericCCSDPTTest):
     # PySCF 2.6
-    corr_energy = -1.4559860
+    corr_energy = -0.05350650307
