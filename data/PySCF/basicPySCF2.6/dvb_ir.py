@@ -40,7 +40,7 @@ def calculate():
     method.xc = 'b3lyp'
     method.kernel()
     
-    irm = infrared.rhf.Infrared(method)
+    irm = infrared.rks.Infrared(method)
     irm.kernel()
     
     return {
