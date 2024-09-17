@@ -68,7 +68,7 @@ def calculate():
             }
         )
 
-    _mol_eq = optimize(method, callback=store_opt, maxsteps=100)
+    optimize(method, callback=store_opt, maxsteps=100)
 
     # Unflatten the SCF cycle list.
     scf_map = [index for index, scf_step in enumerate(scf_steps) if scf_step["cycle"] == 0] + [
