@@ -5,12 +5,13 @@
 
 """Bridge for using cclib data in PySCF (https://github.com/pyscf/pyscf)."""
 
-from cclib.parser.utils import PeriodicTable, convertor, find_package
+import functools
+import itertools
+
 from cclib.parser.data import ccData
+from cclib.parser.utils import PeriodicTable, convertor, find_package
 
 import numpy as np
-import itertools
-import functools
 
 l_sym2num = {"S": 0, "P": 1, "D": 2, "F": 3, "G": 4}
 
@@ -21,16 +22,15 @@ class MissingAttributeError(Exception):
 
 _found_pyscf = find_package("pyscf")
 if _found_pyscf:
-    from pyscf import gto
     import pyscf
-    
-    import pyscf.scf.hf
-    import pyscf.mp.mp2
     import pyscf.cc.ccsd
-    import pyscf.prop.infrared.rhf
-    import pyscf.tdscf.rhf
     import pyscf.data.elements
     import pyscf.hessian.thermo
+    import pyscf.mp.mp2
+    import pyscf.prop.infrared.rhf
+    import pyscf.scf.hf
+    import pyscf.tdscf.rhf
+    from pyscf import gto
 
 
 def _check_pyscf(found_pyscf):
@@ -123,7 +123,8 @@ def makepyscf_mos(ccdata, mol):
                 mo_syms = np.full_like(ccdata.moenergies, "A", dtype=str)
     return mo_coeffs, mo_occ, mo_syms, mo_energies
 
-def makecclib(*methods, ccsd_t = None, scf_steps = [], opt_steps = [], opt_failed = False) -> ccData:
+
+def makecclib(*methods, ccsd_t=None, scf_steps=[], opt_steps=[], opt_failed=False) -> ccData:
     """Create cclib attributes and return a ccData from a PySCF calculation.
 
     PySCF calculation results are stored in method objects, with each object representing a different part of the
@@ -143,64 +144,69 @@ def makecclib(*methods, ccsd_t = None, scf_steps = [], opt_steps = [], opt_faile
     _check_pyscf(_found_pyscf)
     # What is our level of theory?
     scf, mp, cc, hess, freq, et = None, None, None, None, None, []
-    
+
     for method in methods:
         # Assume the method is a base CC method (SCF, MP, CC etc.) unless we can prove otherwise.
         base_method = method
-    
+
         if isinstance(method, pyscf.prop.infrared.rhf.Infrared):
             # Vibrational frequencies.
             base_method = method.base
             hess = method.mf_hess
             freq = method
-        
+
         elif isinstance(method, pyscf.tdscf.rhf.TDBase):
             # Excited states.
             # TODO: What about multiple excited states?
             base_method = method._scf
             et.append(method)
-        
-        if isinstance(base_method, pyscf.scf.hf.SCF) or isinstance(base_method, pyscf.scf.hf.KohnShamDFT):
+
+        if isinstance(base_method, pyscf.scf.hf.SCF) or isinstance(
+            base_method, pyscf.scf.hf.KohnShamDFT
+        ):
             scf = base_method
-        
+
         elif isinstance(base_method, pyscf.mp.mp2.MP2):
             mp = base_method
             scf = base_method._scf
-        
+
         elif isinstance(base_method, pyscf.cc.ccsd.CCSDBase):
             cc = base_method
             scf = base_method._scf
-    
+
         else:
             # Panic.
-            raise ValueError("Could not determine level of theory of base method '{}'".format(type(base_method.__name__)))
-    
+            raise ValueError(
+                f"Could not determine level of theory of base method '{type(base_method.__name__)}'"
+            )
+
     return cclibfrommethods(
-        scf = scf,
-        mp = mp,
-        cc = cc,
-        ccsd_t = ccsd_t,
-        hess = hess,
-        freq = freq,
-        scf_steps = scf_steps,
-        opt_steps = opt_steps,
-        et = et,
-        opt_failed = opt_failed
+        scf=scf,
+        mp=mp,
+        cc=cc,
+        ccsd_t=ccsd_t,
+        hess=hess,
+        freq=freq,
+        scf_steps=scf_steps,
+        opt_steps=opt_steps,
+        et=et,
+        opt_failed=opt_failed,
     )
-    
+
+
 def cclibfrommethods(
-        # TODO: Types
-        scf,
-        mp = None,
-        cc = None,
-        ccsd_t = None,
-        et = [],
-        hess = None,
-        freq = None,
-        scf_steps = [],
-        opt_steps = [],
-        opt_failed = False
-    ) -> ccData:
+    # TODO: Types
+    scf,
+    mp=None,
+    cc=None,
+    ccsd_t=None,
+    et=[],
+    hess=None,
+    freq=None,
+    scf_steps=[],
+    opt_steps=[],
+    opt_failed=False,
+) -> ccData:
     """Create cclib attributes and return a ccData from a PySCF method object.
 
     Inputs:
@@ -217,69 +223,75 @@ def cclibfrommethods(
         opt_steps  - for an optimisation, a list of dictionaries containing the 'energy', 'gradients', and 'coords'
           at each opt step (including the last)
         opt_failed - set to true when parsing an optimisation that failed to converge
-        
+
     """
     _check_pyscf(_found_pyscf)
     attributes = {}
-    
+
     mol = scf.mol
     ptable = PeriodicTable()
-    
+
     # TODO: A sanity check that all the supplied methods use the same mol object?
-    
+
     # Metadata.
     attributes["metadata"] = {
         # TODO: What if using a non-standard basis set?
         #'basis_set': mol.basis,
-        'basis_set': mol.basis if isinstance(mol.basis, str) else ", ".join(set(mol.basis.values())),
-        'input_file_contents': mol.tostring(),
-        'legacy_package_version': pyscf.__version__,
-        'methods': [],
-        'package': "PySCF",
-        'package_version': pyscf.__version__,
-        'symmetry_detected': mol.topgroup.lower(),
-        'symmetry_used': mol.groupname.lower()
+        "basis_set": mol.basis
+        if isinstance(mol.basis, str)
+        else ", ".join(set(mol.basis.values())),
+        "input_file_contents": mol.tostring(),
+        "legacy_package_version": pyscf.__version__,
+        "methods": [],
+        "package": "PySCF",
+        "package_version": pyscf.__version__,
+        "symmetry_detected": mol.topgroup.lower(),
+        "symmetry_used": mol.groupname.lower(),
     }
-    
+
     # Solvent.
-    if hasattr(scf, 'with_solvent'):
+    if hasattr(scf, "with_solvent"):
         attributes["metadata"]["solvent_model"] = scf.with_solvent.method.replace("-", "")
-        attributes["metadata"]["solvent_params"] = {
-            "epsilon": scf.with_solvent.eps
-        }
-    
+        attributes["metadata"]["solvent_params"] = {"epsilon": scf.with_solvent.eps}
+
     # Atoms.
     if not opt_steps:
         attributes["atomcoords"] = [mol.atom_coords("Angstrom")]
-    
+
     else:
-        attributes["atomcoords"] = [step['coords'] for step in opt_steps]
-    
-    
+        attributes["atomcoords"] = [step["coords"] for step in opt_steps]
+
     attributes["natom"] = len(mol.atom_coords("Angstrom"))
     attributes["atomnos"] = [ptable.number[element] for element in mol.elements]
     # attributes["atomcharges"] = mol.atom_charges() # is this the right type of atom charge?
-    
+
     # mol.atom_mass_list() does what it sounds like, and you can choose between average or exact mass with
-    # atom_mass_list(isotope_avg = True | False). However, isotope_avg = False (what we want) strangely only returns 
+    # atom_mass_list(isotope_avg = True | False). However, isotope_avg = False (what we want) strangely only returns
     # an integer mass. This is probably a PySCF bug.
     # Fortunately, PySCF ships a table of single isotope masses (COMMON_ISOTOPE_MASSES), so we'll just use that.
-    attributes["atommasses"] = [pyscf.data.elements.COMMON_ISOTOPE_MASSES[atom_no] for atom_no in attributes["atomnos"]]
-    
-    coord_convertor = functools.partial(convertor, fromunits = "Angstrom",  tounits = "bohr")
-    bohr_coords = [[list(map(coord_convertor, ang_coords)) for ang_coords in opt_step] for opt_step in attributes["atomcoords"]]
-    
+    attributes["atommasses"] = [
+        pyscf.data.elements.COMMON_ISOTOPE_MASSES[atom_no] for atom_no in attributes["atomnos"]
+    ]
+
+    coord_convertor = functools.partial(convertor, fromunits="Angstrom", tounits="bohr")
+    bohr_coords = [
+        [list(map(coord_convertor, ang_coords)) for ang_coords in opt_step]
+        for opt_step in attributes["atomcoords"]
+    ]
+
     attributes["rotconsts"] = [
         pyscf.hessian.thermo.rotation_const(np.array(attributes["atommasses"]), opt_coords)
         for opt_coords
         # rotation_const expects atom positions in Bohr nor Angstrom.
         in bohr_coords
     ]
-    
+
     attributes["charge"] = mol.charge
     attributes["mult"] = mol.multiplicity
-    attributes["coreelectrons"] = [mol.atom_nelec_core(i) for i in range(0, len(attributes["atomnos"]))]
-    
+    attributes["coreelectrons"] = [
+        mol.atom_nelec_core(i) for i in range(0, len(attributes["atomnos"]))
+    ]
+
     # Atomic orbitals and gbasis
     attributes["gbasis"] = []
     for atom_index in range(len(mol.atom_coords("Angstrom"))):
@@ -300,86 +312,97 @@ def cclibfrommethods(
         atom_basis = []
         for basis_index in mol.atom_shell_ids(atom_index):
             atom_basis.append(
-                (   
+                (
                     # Orbital label (S, P, D etc.)
-                    pyscf.lib.parameters.ANGULAR[mol.bas_angular(basis_index)].upper(), 
-                    list(zip(
-                        # Exponent.
-                        mol.bas_exp(basis_index),
-                        # Coefficient, unpacked into a single item.
-                        # TODO: What do if multiple coefficients are present?
-                        [coeff_list[0] for coeff_list in mol.bas_ctr_coeff(basis_index)]
-                    ))
+                    pyscf.lib.parameters.ANGULAR[mol.bas_angular(basis_index)].upper(),
+                    list(
+                        zip(
+                            # Exponent.
+                            mol.bas_exp(basis_index),
+                            # Coefficient, unpacked into a single item.
+                            # TODO: What do if multiple coefficients are present?
+                            [coeff_list[0] for coeff_list in mol.bas_ctr_coeff(basis_index)],
+                        )
+                    ),
                 )
             )
         attributes["gbasis"].append(atom_basis)
-        
+
     attributes["nbasis"] = mol.nao
-    
+
     # mol.ao_labels() and aonames have almost the same format, just need to tweak a bit.
-    attributes["aonames"] = ["{}{}_{}{}".format(atom_label, atom_index+1, shell.upper(), xyz.upper()) for atom_index, atom_label, shell, xyz in mol.ao_labels(False)]
-    
+    attributes["aonames"] = [
+        f"{atom_label}{atom_index+1}_{shell.upper()}{xyz.upper()}"
+        for atom_index, atom_label, shell, xyz in mol.ao_labels(False)
+    ]
+
     # Build atombasis from ao_labels()
     ao_map = [atom_index for atom_index, atom_label, shell, xyz in mol.ao_labels(False)]
-    attributes["atombasis"] = [[basis_index for basis_index, basis_atom_index in enumerate(ao_map) if basis_atom_index == atom_index] for atom_index in range(attributes["natom"])]
+    attributes["atombasis"] = [
+        [
+            basis_index
+            for basis_index, basis_atom_index in enumerate(ao_map)
+            if basis_atom_index == atom_index
+        ]
+        for atom_index in range(attributes["natom"])
+    ]
 
     # get_ovlp() looks like it has the correct format for aooverlaps already.
     attributes["aooverlaps"] = scf.get_ovlp()
-    
+
     # Total energies.
     attributes["scfenergies"] = [scf.e_tot]
     attributes["metadata"]["success"] = scf.converged
     attributes["metadata"]["methods"].append("DFT" if hasattr(scf, "xc") else "HF")
     if hasattr(scf, "xc"):
         attributes["metadata"]["functional"] = scf.xc
-    
+
     if mp:
         attributes["mpenergies"] = [[mp.e_tot]]
         attributes["metadata"]["methods"].append("MP2")
-    
+
     if cc:
         # We have to manually add in the CCSD(T) correction energy.
         attributes["ccenergies"] = [(cc.e_tot + ccsd_t) if ccsd_t else cc.e_tot]
         attributes["metadata"]["success"] = cc.converged
         if cc.cc2:
             ccmethod = "CC2"
-        
+
         elif ccsd_t:
             ccmethod = "CCSD(T)"
-        
+
         else:
             ccmethod = "CCSD"
-        
+
         attributes["metadata"]["methods"].append(ccmethod)
-        
+
     # It's not immediately clear from the intermediate optimisation steps what level of theory the energy corresponds to,
     # we have to be smart based on what we asked for.
     if opt_steps:
         if cc:
-            attributes["ccenergies"] = [step['energy'] for step in opt_steps]
+            attributes["ccenergies"] = [step["energy"] for step in opt_steps]
             opt_e = attributes["ccenergies"]
-        
+
         elif mp:
-            attributes["mpenergies"] = [[step['energy']] for step in opt_steps]
+            attributes["mpenergies"] = [[step["energy"]] for step in opt_steps]
             opt_e = attributes["mpenergies"]
-        
+
         else:
-            attributes["scfenergies"] = [step['energy'] for step in opt_steps]
+            attributes["scfenergies"] = [step["energy"] for step in opt_steps]
             opt_e = attributes["scfenergies"]
-        
-        
-        attributes['optstatus'] = [ccData.OPT_UNKNOWN for _ in attributes['atomcoords']]
-        attributes['optstatus'][0] = ccData.OPT_NEW
-        
+
+        attributes["optstatus"] = [ccData.OPT_UNKNOWN for _ in attributes["atomcoords"]]
+        attributes["optstatus"][0] = ccData.OPT_NEW
+
         # Only energy for now.
-        attributes['geovalues'] = [[energy] for energy in opt_e]
-        
+        attributes["geovalues"] = [[energy] for energy in opt_e]
+
         # This is obviously not ideal, but due to the way PySCF handles optimisations (ie, it doesn't handle them directly)
         # it's difficult to come up with something better...
         if not opt_failed:
-            attributes['optdone'] = [len(attributes['atomcoords']) - 1]
-            attributes['optstatus'][-1] = ccData.OPT_DONE
-            
+            attributes["optdone"] = [len(attributes["atomcoords"]) - 1]
+            attributes["optstatus"][-1] = ccData.OPT_DONE
+
     if scf_steps:
         # scf_steps contains all the info we need for scfvalues and scftargets, just need to unpack it.
         # TODO: scfvalues/scftargets should probably use a dicts to describe each convergence criteria,
@@ -388,142 +411,137 @@ def cclibfrommethods(
         attributes["scftargets"] = []
         for opt_step in scf_steps:
             if len(opt_step) > 0:
-                attributes["scftargets"].append((
-                    opt_step[0]['conv_tol'],
-                    opt_step[0]['conv_tol_grad']
-                ))
+                attributes["scftargets"].append(
+                    (opt_step[0]["conv_tol"], opt_step[0]["conv_tol_grad"])
+                )
                 attributes["scfvalues"].append([])
-            
+
             for scf_step in opt_step:
-                attributes["scfvalues"][-1].append((
-                    scf_step['e_tot'],
-                    scf_step['norm_gorb']
-                ))
-            
+                attributes["scfvalues"][-1].append((scf_step["e_tot"], scf_step["norm_gorb"]))
+
     # Orbitals.
     if scf.istype("UHF"):
         attributes["metadata"]["unrestricted"] = True
-        
-        nocc = [
-            np.count_nonzero(scf.mo_occ[0] != 0),
-            np.count_nonzero(scf.mo_occ[1] != 0)
-        ]
-        attributes["moenergies"] = [
-            scf.mo_energy[0],
-            scf.mo_energy[1],
-        ]
-        attributes["homos"] = [
-            nocc[0] -1,
-            nocc[1] -1,
-        ]
+
+        nocc = [np.count_nonzero(scf.mo_occ[0] != 0), np.count_nonzero(scf.mo_occ[1] != 0)]
+        attributes["moenergies"] = [scf.mo_energy[0], scf.mo_energy[1]]
+        attributes["homos"] = [nocc[0] - 1, nocc[1] - 1]
         attributes["mocoeffs"] = scf.mo_coeff
-    
+
     else:
         attributes["metadata"]["unrestricted"] = False
-        
+
         nocc = [np.count_nonzero(scf.mo_occ != 0)]
         attributes["moenergies"] = [scf.mo_energy]
-        attributes["homos"] = [nocc[0] -1]
+        attributes["homos"] = [nocc[0] - 1]
         # Orbital coeffs.
         attributes["mocoeffs"] = [scf.mo_coeff]
-    
+
     attributes["nmo"] = len(attributes["moenergies"][0])
-    
+
     # Orbital symmetries.
-    #if scf.mol.symmetry:
-    if hasattr(scf, 'get_orbsym'):
+    # if scf.mol.symmetry:
+    if hasattr(scf, "get_orbsym"):
         # Symmetry labels are in scf.mol.irrep_name, symmetry ids are in scf.mol.irrep_id
-        symmetry_mapping = {symm_id: symm_name for symm_id, symm_name in zip(scf.mol.irrep_id, scf.mol.irrep_name)}
-        
+        symmetry_mapping = {
+            symm_id: symm_name for symm_id, symm_name in zip(scf.mol.irrep_id, scf.mol.irrep_name)
+        }
+
         orbsyms = scf.get_orbsym() if scf.istype("UHF") else [scf.get_orbsym()]
-        
+
         attributes["mosyms"] = []
         for alpha_beta in range(0, (len(attributes["moenergies"]))):
-            attributes["mosyms"].append([
-                symmetry_mapping[symm_id] for symm_id in orbsyms[alpha_beta]
-            ])
-    
+            attributes["mosyms"].append(
+                [symmetry_mapping[symm_id] for symm_id in orbsyms[alpha_beta]]
+            )
+
     # Dipole moments.
     #
     scf_density_matrix = scf.make_rdm1(scf.mo_coeff, scf.mo_occ)
     # PySCF uses 0,0,0 as the origin, but this might not correspond to the centre of mass?
-    origin = (0,0,0)
+    origin = (0, 0, 0)
     attributes["moments"] = [
         origin,
-        scf.dip_moment(scf.mol, scf_density_matrix, origin = origin, verbose = 2),
+        scf.dip_moment(scf.mol, scf_density_matrix, origin=origin, verbose=2),
     ]
-    
+
     # Quadrupole moments are new (introduced ~ August 2024) and not yet widely available.
-    if hasattr(scf, 'quad_moment'):
+    if hasattr(scf, "quad_moment"):
         attributes["moments"].append(
-            scf.quad_moment(scf.mol, scf_density_matrix, origin = origin, unit = 'DebyeAngstrom', verbose = 2)
+            scf.quad_moment(
+                scf.mol, scf_density_matrix, origin=origin, unit="DebyeAngstrom", verbose=2
+            )
         )
-        
+
     # Mulliken.
-    mulliken_pop, mulliken_charges = scf.mulliken_pop(scf.mol, scf_density_matrix, s = attributes["aooverlaps"], verbose = 2)
+    mulliken_pop, mulliken_charges = scf.mulliken_pop(
+        scf.mol, scf_density_matrix, s=attributes["aooverlaps"], verbose=2
+    )
     # PySCF describes this as 'Mulliken population analysis, based on meta-Lowdin AOs', is this what we want?
-    lowdin_pop, lowdin_charges = scf.mulliken_meta(scf.mol, scf_density_matrix, s = attributes["aooverlaps"], verbose = 2)
-    attributes["atomcharges"] = {
-        'mulliken': mulliken_charges,
-        'lowdin': lowdin_charges
-    }
-    
+    lowdin_pop, lowdin_charges = scf.mulliken_meta(
+        scf.mol, scf_density_matrix, s=attributes["aooverlaps"], verbose=2
+    )
+    attributes["atomcharges"] = {"mulliken": mulliken_charges, "lowdin": lowdin_charges}
+
     # Excited states.
     if len(et) > 0:
         # PySCF tracks convergence for each state which is great.
-        attributes["metadata"]["success"] = all(itertools.chain(*(etmethod.converged for etmethod in et)))
-            
+        attributes["metadata"]["success"] = all(
+            itertools.chain(*(etmethod.converged for etmethod in et))
+        )
+
         # In cclib 1.x, 'energies' are actually expected to be cm-1. In 2.x, this will change to Hartree.
         attributes["etenergies"] = list(itertools.chain(*(etmethod.e for etmethod in et)))
-        attributes["etoscs"] = list(itertools.chain(*(etmethod.oscillator_strength(gauge = "length")  for etmethod in et)))# or do we want velocity?
+        attributes["etoscs"] = list(
+            itertools.chain(*(etmethod.oscillator_strength(gauge="length") for etmethod in et))
+        )  # or do we want velocity?
         # et.analyse() prints real symmetries, so they must be available somewhere...
-        
-        
+
         attributes["etsyms"] = []
         for etmethod in et:
             if isinstance(etmethod, pyscf.tdscf.rks.TDA):
                 attributes["metadata"]["excited_states_method"] = "TDA"
-            
+
             elif isinstance(etmethod, pyscf.tdscf.rks.TDDFT):
                 attributes["metadata"]["excited_states_method"] = "TD-DFT"
-            
+
             elif isinstance(etmethod, pyscf.tdscf.rhf.TDA):
                 attributes["metadata"]["excited_states_method"] = "CIS"
-            
+
             elif isinstance(etmethod, pyscf.tdscf.rhf.TDHF):
                 attributes["metadata"]["excited_states_method"] = "RPA"
-            
+
             else:
                 attributes["metadata"]["excited_states_method"] = type(etmethod).__name__
-            
+
             # From from pyscf/pyscf/tdscf/rhf.py
-            #import pyscf.symm
-            #orbsym = scf.get_orbsym()
-            #x_sym = pyscf.symm.direct_prod(orbsym[mo_occ==2], orbsym[mo_occ==0], mol.groupname)
-            
+            # import pyscf.symm
+            # orbsym = scf.get_orbsym()
+            # x_sym = pyscf.symm.direct_prod(orbsym[mo_occ==2], orbsym[mo_occ==0], mol.groupname)
+
             # Need to be careful in interpreting the multiplicity of the excited state.
             if etmethod.singlet and mol.multiplicity != 2:
                 et_mult = "Singlet"
-            
+
             elif etmethod.singlet:
                 et_mult = "Doublet"
-            
+
             else:
                 et_mult = "Triplet"
-            
+
             attributes["etsyms"].extend([et_mult for i in range(len(etmethod.e))])
-        
+
         # Orbital contributions.
         # In PySCF, occupied and virtual orbital indices are stored separately.
         attributes["etsecs"] = []
-        
+
         for index in range(len(attributes["etenergies"])):
             attributes["etsecs"].append([])
-             
+
             # Assuming x are excitations, y are de-excitations.
             # y is ignored for now.
             x, y = list(itertools.chain(*(etmethod.xy for etmethod in et)))[index]
-             
+
             if not scf.istype("UHF"):
                 # The coefficients of x (and presumably also y) are normalised to 0.5,
                 # but we expect 1.0
@@ -531,69 +549,64 @@ def cclibfrommethods(
                 # Taken from pyscf.tdscf.rhf.get_nto()
                 #
                 # Would appreciate someone checking this makes sense?
-                x *= 1. / np.linalg.norm(x)
-                
+                x *= 1.0 / np.linalg.norm(x)
+
                 # Flatten the x matrix.
                 # The first index is the occupied orbital, the second is the virtual (both 0 indexed):
                 o_indices, v_indices = np.where(x)
                 for occupied, virtual in zip(o_indices, v_indices):
-                    attributes["etsecs"][index].append([
-                        (occupied, 0),
-                        (nocc[0] + virtual, 0),
-                        x[occupied, virtual]
-                    ])
-             
+                    attributes["etsecs"][index].append(
+                        [(occupied, 0), (nocc[0] + virtual, 0), x[occupied, virtual]]
+                    )
+
             else:
                 x = [x[0], x[1]]
-                x[0] *= 1. / np.linalg.norm(x[0])
-                x[1] *= 1. / np.linalg.norm(x[1])
-                
+                x[0] *= 1.0 / np.linalg.norm(x[0])
+                x[1] *= 1.0 / np.linalg.norm(x[1])
+
                 # Flatten the x matrix.
                 # The first index is the occupied orbital, the second is the virtual (both 0 indexed):
                 # Alpha -> alpha
                 o_indices, v_indices = np.where(x[0])
                 for occupied, virtual in zip(o_indices, v_indices):
-                    attributes["etsecs"][index].append([
-                        (occupied, 0),
-                        (nocc[0] + virtual, 0),
-                        x[0][occupied, virtual]
-                    ])
-                 
+                    attributes["etsecs"][index].append(
+                        [(occupied, 0), (nocc[0] + virtual, 0), x[0][occupied, virtual]]
+                    )
+
                 # Beta -> Beta
                 o_indices, v_indices = np.where(x[1])
                 for occupied, virtual in zip(o_indices, v_indices):
-                    attributes["etsecs"][index].append([
-                        (occupied, 1),
-                        (nocc[1] + virtual, 1),
-                        x[1][occupied, virtual]
-                    ])
-    
+                    attributes["etsecs"][index].append(
+                        [(occupied, 1), (nocc[1] + virtual, 1), x[1][occupied, virtual]]
+                    )
+
     # Hessian/frequencies
     if hess:
         pass
         # TODO: Don't know enough to work out what this is
         # cclib wants a rank 2 array, pyscf gives us a rank 4 array?
         # Dimensions appear to be natoms x natoms x 3 x 3
-        #attributes["hessian"] = hess.de
-        
+        # attributes["hessian"] = hess.de
+
     if freq:
         # Freq data, a dict with 'freq_error', 'freq_au', 'freq_wavenumber', 'norm_mode', 'reduced_mass',
         # 'vib_temperature', 'force_const_au', 'force_const_dyne'
         # TODO: This can include imaginary numbers, convert to 'negative' frequencies?
-        attributes["vibfreqs"] = freq.vib_dict['freq_wavenumber']
+        attributes["vibfreqs"] = freq.vib_dict["freq_wavenumber"]
         # TODO: Check these units.
-        attributes['vibfconsts'] = freq.vib_dict['force_const_dyne']
-        attributes['vibrmasses'] = freq.vib_dict['reduced_mass']
-        
+        attributes["vibfconsts"] = freq.vib_dict["force_const_dyne"]
+        attributes["vibrmasses"] = freq.vib_dict["reduced_mass"]
+
         # freq.de probably contains something useful, but not sure what.
-        # The Infrared module is sadly less well documented that the other code. 
+        # The Infrared module is sadly less well documented that the other code.
         # apparently de is a "3-dim tensor: (atom number, atom coordinate components, dipole components)"
         # maybe one of these is vibdisps?
-    
-        if hasattr(freq, 'ir_inten'):
+
+        if hasattr(freq, "ir_inten"):
             # TODO: Units?
-            attributes['vibirs'] = freq.ir_inten
+            attributes["vibirs"] = freq.ir_inten
 
     return ccData(attributes)
+
 
 del find_package
