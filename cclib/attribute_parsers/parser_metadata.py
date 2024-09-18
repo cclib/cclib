@@ -9,13 +9,15 @@ from cclib.attribute_parsers.base_parser import base_parser
 
 import numpy as np
 
+
 class parser_metadata(base_parser):
     """
-    A temporary variable 
+    A temporary variable
     """
+
     known_codes = ["psi4"]
 
-    def psi4(file_handler,ccdata):
+    def psi4(file_handler, ccdata):
         line = file_handler.last_line
         if "Properties will be evaluated at" in line.strip():
             if getattr(ccdata, "parser_metadata"):
@@ -25,12 +27,9 @@ class parser_metadata(base_parser):
             tokens = line.split()
             assert tokens[-1] in ["Bohr", "[a0]"]
             this_metadata["origin"] = utils.convertor(
-                    np.array([float(x.strip(",")) for x in line.split()[-4:-1]]),
-                    "bohr",
-                    "Angstrom",
-                )
+                np.array([float(x.strip(",")) for x in line.split()[-4:-1]]), "bohr", "Angstrom"
+            )
             return {parser_metadata.__name__: this_metadata}
-
 
     @staticmethod
     def parse(file_handler, program: str, ccdata) -> Optional[dict]:

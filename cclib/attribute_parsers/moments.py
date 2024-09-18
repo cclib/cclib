@@ -19,15 +19,17 @@ class moments(base_parser):
 
     @staticmethod
     def psi4(file_handler, ccdata) -> Optional[dict]:
-        dependency_list = ['parser_metadata[\'origin\']']
+        dependency_list = ["parser_metadata['origin']"]
         line = file_handler.last_line
         if line.strip() == "Dipole Moment: (a.u.)":
-            print('found dipole line')
+            print("found dipole line")
             if base_parser.check_dependencies(dependency_list, ccdata, "moments"):
                 line = file_handler.virtual_next()
                 tokens = line.split()
                 dipole = utils.convertor(
-                    np.array([float(tokens[1]), float(tokens[3]), float(tokens[5])]), "ebohr", "Debye"
+                    np.array([float(tokens[1]), float(tokens[3]), float(tokens[5])]),
+                    "ebohr",
+                    "Debye",
                 )
 
                 # AED: I don't know how to handle this in version 2 yet
@@ -35,9 +37,9 @@ class moments(base_parser):
                 if getattr(ccdata, "moments") is None:
                     # Old versions of Psi4 don't print the origin; assume
                     # it's at zero.
-                    if 'origin' in ccdata.parser_metadata:
+                    if "origin" in ccdata.parser_metadata:
                         # AED: I don't know how to handle this in version 2 yet
-                        origin = ccdata.parser_metadata['origin'] 
+                        origin = ccdata.parser_metadata["origin"]
                     else:
                         origin = numpy.array([0.0, 0.0, 0.0])
 
