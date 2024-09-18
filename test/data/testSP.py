@@ -868,14 +868,15 @@ class QChemSMDIEFPCMMetadataTest(QChemSolventMetadataTest, SMDIEFPCMMetadataTest
 class QChemSMDCPCMMetadataTest(QChemSolventMetadataTest, SMDCPCMMetadataTest):
     """Check we can parse implicit solvent data."""
 
+
 class GenericPerformanceMetadataTest:
     """Check we can parse CPU/memory metadata."""
-    
+
     num_cpu = 1
     # 400 MB.
     memory_available = 400000000
     memory_used = 0
-    
+
     def testmetadata_cpu(self, data) -> None:
         """Does metadata have the expected number of CPUs used?"""
         assert data.metadata["num_cpu"] == self.num_cpu
@@ -889,9 +890,10 @@ class GenericPerformanceMetadataTest:
         """Does metadata have the expected amount of memory?"""
         assert data.metadata["memory_used"] == self.memory_used
 
+
 class GaussianPerformanceMetadataTest(GenericPerformanceMetadataTest):
     """Check we can parse CPU/memory metadata."""
-    
+
     num_cpu = 2
     memory_available = 400000000
     memory_used = 52428800
@@ -899,7 +901,7 @@ class GaussianPerformanceMetadataTest(GenericPerformanceMetadataTest):
 
 class ORCAPerformanceMetadataTest(GenericPerformanceMetadataTest):
     """Check we can parse CPU/memory metadata."""
-    
+
     num_cpu = 2
     memory_available = 1000000000
     memory_used = 463000000
@@ -907,13 +909,12 @@ class ORCAPerformanceMetadataTest(GenericPerformanceMetadataTest):
 
 class TurbomolePerformanceMetadataTest(GenericPerformanceMetadataTest):
     """Check we can parse CPU/memory metadata."""
-    
+
     num_cpu = 1
     memory_available = 524288000
     memory_used = 0
-    
+
 
 class PySCFPerformanceMetadataTest(GenericPerformanceMetadataTest):
-    
     num_cpu = 8
     memory_available = 400 * 1000 * 1000
