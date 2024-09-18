@@ -15,21 +15,14 @@ def calculate():
         Cl        -2.42025       -0.00000       -0.41620
         Cl         0.00000        2.42024       -0.41620
         """,
-        basis= {
-            "Mo": "lanl2dz",
-            "Cl": "lanl2dz",
-            "O": "6-31G*"
-        },
-        ecp= {
-            "Mo": "lanl2dz",
-            "Cl": "lanl2dz",
-        },
+        basis={"Mo": "lanl2dz", "Cl": "lanl2dz", "O": "6-31G*"},
+        ecp={"Mo": "lanl2dz", "Cl": "lanl2dz"},
         symmetry=True,
-        charge=-2
+        charge=-2,
     )
-    
+
     scf_steps = []
-    
+
     def store_intermediate(_locals):
         scf_steps.append(
             {
@@ -39,12 +32,13 @@ def calculate():
                 "conv_tol_grad": _locals["conv_tol_grad"],
             }
         )
-    
+
     method = dft.RKS(mol)
     method.callback = store_intermediate
     method.xc = "b3lyp"
     method.kernel()
     return {"methods": [method], "scf_steps": [scf_steps]}
+
 
 if __name__ == "__main__":
     calculate()
