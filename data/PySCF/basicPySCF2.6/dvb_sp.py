@@ -2,7 +2,7 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
-from pyscf import dft, gto
+from pyscf import dft, gto, lib
 
 
 def calculate():
@@ -32,7 +32,11 @@ def calculate():
     """,
         basis="STO-3G",
         symmetry=True,
+        # MB
+        max_memory=400,
     )
+
+    lib.num_threads(8)
 
     scf_steps = []
 
