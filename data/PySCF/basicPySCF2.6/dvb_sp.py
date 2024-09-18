@@ -33,9 +33,9 @@ def calculate():
         basis="STO-3G",
         symmetry=True,
         # MB
-        max_memory = 400
+        max_memory=400,
     )
-    
+
     lib.num_threads(8)
 
     scf_steps = []
