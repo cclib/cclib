@@ -146,6 +146,7 @@ Core      Jaguar      JaguarCoreTest        basicJaguar8.3        MoOCl4-sp.out
 Core      Molcas      GenericCoreTest       basicOpenMolcas18.0   MoOCl4_sp.out
 Core      QChem       GenericCoreTest       basicQChem5.1         MoOCl4_sp.out
 Core      QChem       GenericCoreTest       basicQChem5.4         MoOCl4_sp.out
+Core      PySCF       GenericCoreTest       basicPySCF2.6         MoOCl4_sp.py
 
 GeoOpt    ADF         ADFGeoOptTest         basicADF2007.01       dvb_gopt_b.adfout
 GeoOpt    ADF         ADFGeoOptTest         basicADF2013.01       dvb_gopt_b.adfout
