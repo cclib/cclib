@@ -877,52 +877,52 @@ class QChemSMDCPCMMetadataTest(QChemSolventMetadataTest, SMDCPCMMetadataTest):
     """Check we can parse implicit solvent data."""
 
 
-class GaussianPerformanceMetadataTest:
+class GenericPerformanceMetadataTest:
     """Check we can parse CPU/memory metadata."""
+
+    num_cpu = 1
+    # 400 MB.
+    memory_available = 400000000
+    memory_used = 0
 
     def testmetadata_cpu(self, data) -> None:
         """Does metadata have the expected number of CPUs used?"""
-        assert data.metadata["num_cpu"] == 1
+        assert data.metadata["num_cpu"] == self.num_cpu
 
     def testmetadata_memory_available(self, data) -> None:
         """Does metadata have the expected amount of memory?"""
-        # 400 MB
-        assert data.metadata["memory_available"] == 400000000
+        assert data.metadata["memory_available"] == self.memory_available
 
+    @skipForParser("PySCF", "not available for PySCF")
     def testmetadata_memory_used(self, data) -> None:
         """Does metadata have the expected amount of memory?"""
-        assert data.metadata["memory_used"] == 52428800
+        assert data.metadata["memory_used"] == self.memory_used
 
 
-class ORCAPerformanceMetadataTest:
+class GaussianPerformanceMetadataTest(GenericPerformanceMetadataTest):
     """Check we can parse CPU/memory metadata."""
 
-    def testmetadata_cpu(self, data) -> None:
-        """Does metadata have the expected number of CPUs used?"""
-        assert data.metadata["num_cpu"] == 2
-
-    def testmetadata_memory_available(self, data) -> None:
-        """Does metadata have the expected amount of memory?"""
-        # 400 MB
-        assert data.metadata["memory_available"] == 1000000000
-
-    def testmetadata_memory_used(self, data) -> None:
-        """Does metadata have the expected amount of memory?"""
-        assert data.metadata["memory_used"] == 463000000
+    num_cpu = 2
+    memory_available = 400000000
+    memory_used = 52428800
 
 
-class TurbomolePerformanceMetadataTest:
+class ORCAPerformanceMetadataTest(GenericPerformanceMetadataTest):
     """Check we can parse CPU/memory metadata."""
 
-    def testmetadata_cpu(self, data) -> None:
-        """Does metadata have the expected number of CPUs used?"""
-        assert data.metadata["num_cpu"] == 1
+    num_cpu = 2
+    memory_available = 1000000000
+    memory_used = 463000000
 
-    def testmetadata_memory_available(self, data) -> None:
-        """Does metadata have the expected amount of memory?"""
-        assert data.metadata["memory_available"] == 524288000
 
-    @skipForParser("Turbomole", "memory used is not available for Turbomole")
-    def testmetadata_memory_used(self, data) -> None:
-        """Does metadata have the expected amount of memory?"""
-        assert data.metadata["memory_used"] == 0
+class TurbomolePerformanceMetadataTest(GenericPerformanceMetadataTest):
+    """Check we can parse CPU/memory metadata."""
+
+    num_cpu = 1
+    memory_available = 524288000
+    memory_used = 0
+
+
+class PySCFPerformanceMetadataTest(GenericPerformanceMetadataTest):
+    num_cpu = 8
+    memory_available = 400 * 1000 * 1000

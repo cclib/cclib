@@ -247,6 +247,8 @@ def cclibfrommethods(
         else ", ".join(set(mol.basis.values())),
         "input_file_contents": mol.tostring(),
         "legacy_package_version": pyscf.__version__,
+        "memory_available": mol.max_memory * 1000 * 1000,
+        "num_cpu": pyscf.lib.num_threads(),
         "methods": [],
         "package": "PySCF",
         "package_version": pyscf.__version__,
