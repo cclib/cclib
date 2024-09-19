@@ -894,6 +894,7 @@ class GenericPerformanceMetadataTest:
         assert data.metadata["memory_available"] == self.memory_available
 
     @skipForParser("PySCF", "not available for PySCF")
+    @skipForParser("Turbomole", "not available for Turbomole")
     def testmetadata_memory_used(self, data) -> None:
         """Does metadata have the expected amount of memory?"""
         assert data.metadata["memory_used"] == self.memory_used
@@ -902,7 +903,7 @@ class GenericPerformanceMetadataTest:
 class GaussianPerformanceMetadataTest(GenericPerformanceMetadataTest):
     """Check we can parse CPU/memory metadata."""
 
-    num_cpu = 2
+    num_cpu = 1
     memory_available = 400000000
     memory_used = 52428800
 
