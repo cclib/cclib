@@ -1876,6 +1876,10 @@ def testORCA_ORCA4_2_casscf_out(logfile):
 def testORCA_ORCA5_0_ADBNA_Me_Mes_MesCz_log(logfile):
     """Check we can parse etsyms in difficult cases."""
     assert hasattr(logfile.data, "etsyms")
+    
+def testORCA_ORCA5_0_Benzene_opt_etsyms_log(logfile):
+    """Check we can parse etsyms in opt + excited states calc."""
+    assert hasattr(logfile.data, "etsyms")
 
 
 # PSI 3 #
