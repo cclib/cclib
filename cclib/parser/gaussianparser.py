@@ -187,16 +187,17 @@ class Gaussian(logfileparser.Logfile):
         # Some calculation types don't use consistent MP levels throughout.
         # For example, EOM-CCSD + opt prints MP3 and MP4 energies for the first iteration only.
         # However, mpenergies needs to be homogeneous, so we need to do something about it.
-        max_mp = max((len(mp_e) for mp_e in self.mpenergies))
-        mp_energies = []
-        for index, energy in enumerate(self.mpenergies):
-            if len(energy) != max_mp:
-                self.logger.warning("MP energies of order {} are incomplete and will be ignored".format(index+2))
+        if hasattr(self, "mpenergies"):
+            max_mp = max((len(mp_e) for mp_e in self.mpenergies))
+            mp_energies = []
+            for index, energy in enumerate(self.mpenergies):
+                if len(energy) != max_mp:
+                    self.logger.warning("MP energies of order {} are incomplete and will be ignored".format(index+2))
+                
+                else:
+                    mp_energies.append(energy)
             
-            else:
-                mp_energies.append(energy)
-        
-        self.mpenergies = mp_energies
+            self.mpenergies = mp_energies
         
 
     def extract(self, inputfile, line):
