@@ -52,7 +52,7 @@ class Psi4(logfileparser.Logfile):
         self.ccsd_t_trigger = "* CCSD(T) total energy"
 
     def after_parsing(self):
-        super(Psi4, self).after_parsing()
+        super().after_parsing()
 
         # Newer versions of Psi4 don't explicitly print the number of atoms.
         if not hasattr(self, "natom"):
@@ -80,7 +80,7 @@ class Psi4(logfileparser.Logfile):
             ["Irrep num and total size", "b", "123", "b"],
         ),
     }
-    GRADIENT_HEADERS = set([gradient_type.header for gradient_type in GRADIENT_TYPES.values()])
+    GRADIENT_HEADERS = {gradient_type.header for gradient_type in GRADIENT_TYPES.values()}
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -173,9 +173,13 @@ class Psi4(logfileparser.Logfile):
             units = tokens[2][:-2]
             assert units in ("Angstrom", "Bohr")
             if units == "Bohr":
-                convert_coords = lambda x: utils.convertor(x, "bohr", "Angstrom")
+
+                def convert_coords(x: numpy.ndarray) -> numpy.ndarray:
+                    return utils.convertor(x, "bohr", "Angstrom")
             else:
-                convert_coords = lambda x: x
+
+                def convert_coords(x: numpy.ndarray) -> numpy.ndarray:
+                    return x
 
             assert tokens[3] == "charge"
             charge = int(tokens[5].strip(","))
@@ -338,13 +342,14 @@ class Psi4(logfileparser.Logfile):
                 last_same = ngbasis - self.atomnos[:ngbasis][::-1].index(missing_atomno) - 1
                 return gbasis[last_same]
 
-            dfact = lambda n: (n <= 0) or n * dfact(n - 2)
+            def dfact(n: int) -> int:
+                return n <= 0 or n * dfact(n - 2)
 
             # Early beta versions of Psi4 normalize basis function
             # coefficients when printing.
             if self.version_4_beta:
 
-                def get_normalization_factor(exp, lx, ly, lz):
+                def get_normalization_factor(exp: float, lx: int, ly: int, lz: int) -> float:
                     norm_s = (2 * exp / numpy.pi) ** 0.75
                     if lx + ly + lz > 0:
                         nom = (4 * exp) ** ((lx + ly + lz) / 2.0)
@@ -353,7 +358,9 @@ class Psi4(logfileparser.Logfile):
                     else:
                         return norm_s
             else:
-                get_normalization_factor = lambda exp, lx, ly, lz: 1
+
+                def get_normalization_factor(exp: float, lx: int, ly: int, lz: int) -> float:
+                    return 1.0
 
             self.skip_lines(inputfile, ["b", "basisname"])
 
@@ -560,11 +567,11 @@ class Psi4(logfileparser.Logfile):
             line = next(inputfile)
             assert line.strip() == "Final Occupation by Irrep:"
             line = next(inputfile)
-            irreps = line.split()
+            irreps = line.split()  # noqa: F841
             line = next(inputfile)
             tokens = line.split()
             assert tokens[0] == "DOCC"
-            docc = sum([int(x.replace(",", "")) for x in tokens[2:-1]])
+            docc = sum([int(x.replace(",", "")) for x in tokens[2:-1]])  # noqa: F841
             line = next(inputfile)
             if line.strip():
                 tokens = line.split()
@@ -645,15 +652,15 @@ class Psi4(logfileparser.Logfile):
                 while line.strip():
                     chomp = line.split()
                     m = len(chomp)
-                    iao = int(chomp[0])
+                    iao = int(chomp[0])  # noqa: F841
                     coeffs = [float(c) for c in chomp[m - n :]]
                     for i, c in enumerate(coeffs):
                         mocoeffs[indices[i] - 1].append(c)
                     line = next(inputfile)
 
-                energies = next(inputfile)
-                symmetries = next(inputfile)
-                occupancies = next(inputfile)
+                energies = next(inputfile)  # noqa: F841
+                symmetries = next(inputfile)  # noqa: F841
+                occupancies = next(inputfile)  # noqa: F841
 
                 self.skip_lines(inputfile, ["b", "b"])
                 indices = next(inputfile)
@@ -1033,10 +1040,10 @@ class Psi4(logfileparser.Logfile):
                 while line.strip():
                     chomp = line.split()
                     # Do nothing with this for now.
-                    atomsym = chomp[0]
+                    atomsym = chomp[0]  # noqa: F841
                     atomcoords = [float(x) for x in chomp[1:4]]
                     # Do nothing with this for now.
-                    atommass = float(chomp[4])
+                    atommass = float(chomp[4])  # noqa: F841
                     normal_mode_disps.append(atomcoords)
                     line = next(inputfile)
                 self.append_attribute("vibdisps", normal_mode_disps)

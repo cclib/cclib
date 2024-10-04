@@ -5,6 +5,7 @@
 
 """Contains all writers for standard chemical representations."""
 
+# ruff: noqa: F401
 # todo from cclib.io.cjsonreader import CJSON as CJSONReader
 # todo from cclib.io.cjsonwriter import CJSON as CJSONWriter
 # todo from cclib.io.cmlwriter import CML

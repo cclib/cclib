@@ -59,12 +59,16 @@ test = [
     "pytest",
     "coverage",
     "pytest-cov",
+    "pyyaml",
 ]
 dev = ["cclib[bridges,docs,test]"]
 all = ["cclib[bridges]"]
 
 [build-system]
-requires = ["setuptools >= 61.0", "versioningit~=2.0"]
+requires = [
+    "setuptools>=61.0",
+    "versioningit>=2.0",
+]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
@@ -83,12 +87,13 @@ sections = ["FUTURE", "STDLIB", "FIRSTPARTY", "THIRDPARTY", "LOCALFOLDER"]
 [tool.ruff]
 line-length = 100
 src = ["cclib"]
+target-version = "py37"
 
 [tool.ruff.format]
 skip-magic-trailing-comma = true
 
 [tool.ruff.lint]
-select = []
+
 
 [tool.ruff.lint.isort]
 lines-after-imports = 2

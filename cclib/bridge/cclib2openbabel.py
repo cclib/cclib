@@ -18,7 +18,7 @@ if _found_openbabel:
     # The `try` block is for OB >= 3.0, and `except` is for 2.4.x and older.
     try:
         from openbabel import openbabel as ob
-    except:
+    except:  # noqa: E722
         import openbabel as ob
 
 
@@ -27,7 +27,7 @@ def _check_openbabel(found_openbabel: bool) -> None:
         raise ImportError("You must install `openbabel` to use this function")
 
 
-def makecclib(mol: ob.OBMol) -> ccData:
+def makecclib(mol: "ob.OBMol") -> ccData:
     """Create cclib attributes and return a ccData from an OpenBabel molecule.
 
     Beyond the numbers, masses and coordinates, we could also set the total charge
@@ -50,7 +50,7 @@ def makeopenbabel(
     atomnos: Optional[np.ndarray] = None,
     charge: int = 0,
     mult: int = 1,
-) -> ob.OBMol:
+) -> "ob.OBMol":
     """Create an Open Babel molecule."""
     _check_openbabel(_found_openbabel)
     if atomcoords is None and atomnos is None:

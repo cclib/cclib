@@ -2,12 +2,10 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
+import re
 from typing import Optional
 
-from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
-
-import numpy as np
 
 
 class mult(base_parser):
@@ -52,7 +50,7 @@ class mult(base_parser):
             # total spin of the system.
             S = (nalpha_elec - nbeta_elec) / 2
             constructed_mult = int(2 * S + 1)
-            self.set_attribute("mult", mult)
+            self.set_attribute("mult", mult)  # noqa: F821
             constructed_data = {mult.__name__: constructed_mult}
         return constructed_data
 

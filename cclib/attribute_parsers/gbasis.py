@@ -20,7 +20,7 @@ class gbasis(base_parser):
 
     @staticmethod
     def gaussian(file_handler, ccdata) -> Optional[dict]:
-        dependency_list = ["natom", "gbasis"]
+        dependency_list = ["natom", "gbasis"]  # noqa: F841
         line = file_handler.last_line
         # With the gfinput keyword, the atomic basis set functions are:
         #
@@ -136,25 +136,26 @@ class gbasis(base_parser):
                     )
                     return parsed_gbasis[last_same]
 
-                dfact = lambda n: (n <= 0) or n * dfact(n - 2)
+                def dfact(n: int) -> int:
+                    return n <= 0 or n * dfact(n - 2)
 
                 # Early beta versions of Psi4 normalize basis function
                 # coefficients when printing.
                 version_4_beta = False  # don't know what to do with this yet. will have to add to ccdata maybe (psi4 specific metadata?).
                 if version_4_beta:
 
-                    def get_normalization_factor(exp, lx, ly, lz):
-                        norm_s = (2 * exp / numpy.pi) ** 0.75
+                    def get_normalization_factor(exp: float, lx: int, ly: int, lz: int) -> float:
+                        norm_s = (2 * exp / np.pi) ** 0.75
                         if lx + ly + lz > 0:
                             nom = (4 * exp) ** ((lx + ly + lz) / 2.0)
-                            den = numpy.sqrt(
-                                dfact(2 * lx - 1) * dfact(2 * ly - 1) * dfact(2 * lz - 1)
-                            )
+                            den = np.sqrt(dfact(2 * lx - 1) * dfact(2 * ly - 1) * dfact(2 * lz - 1))
                             return norm_s * nom / den
                         else:
                             return norm_s
                 else:
-                    get_normalization_factor = lambda exp, lx, ly, lz: 1
+
+                    def get_normalization_factor(exp: float, lx: int, ly: int, lz: int) -> float:
+                        return 1.0
 
                 file_handler.skip_lines(["b", "basisname"], virtual=True)
                 line = file_handler.virtual_next()

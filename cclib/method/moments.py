@@ -5,7 +5,6 @@
 
 """Calculation of electric multipole moments based on data parsed by cclib."""
 
-import sys
 from collections.abc import Iterable
 
 from cclib.method.calculationmethod import Method

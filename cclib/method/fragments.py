@@ -6,13 +6,12 @@
 """Fragment analysis based on parsed ADF data."""
 
 import logging
-import random
+
+from cclib.method.calculationmethod import Method
 
 import numpy
 
 numpy.inv = numpy.linalg.inv
-
-from cclib.method.calculationmethod import Method
 
 
 class FragmentAnalysis(Method):

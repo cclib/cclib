@@ -24,7 +24,7 @@ class scftargets(base_parser):
             constructed_scftargets = ccdata.scftargets
             if constructed_scftargets is None:
                 constructed_scftargets = []
-            elif type(ccdata.scftargets) == type(numpy.array([])):
+            elif isinstance(ccdata.scftargets, np.ndarray):
                 # This case can happen with ONIOM which are mixed SCF
                 # and semi-empirical
                 constructed_scftargets = []
@@ -52,7 +52,7 @@ class scftargets(base_parser):
                 constructed_scftargets = []
 
         if line[1:4] == "It=":
-            curr_scftargets = numpy.array([1e-7], "d")  # This is the target value for the rms
+            curr_scftargets = np.array([1e-7], "d")  # This is the target value for the rms
 
             if line.find(" Energy") == 0:
                 constructed_scftargets = curr_scftargets

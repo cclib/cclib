@@ -165,7 +165,7 @@ class GenericSPTest:
     @skipForParser("QChem", "Hirshfeld charges not implemented")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     @skipForParser("xTB", "not implemented yet")
-    def testatomcharges_hirshfeld(self, ccdriver) -> None:
+    def testatomcharges_hirshfeld(self, data) -> None:
         """Do Hirshfeld atomic charges sum to roughly zero?"""
         charges = data._ccCollection._parsed_data[0].atomcharges["hirshfeld"]
         assert abs(sum(charges)) < 4.0e-3

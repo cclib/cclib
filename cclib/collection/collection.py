@@ -5,7 +5,7 @@
 
 """Classes for hierarchical storage of parsed data."""
 
-from typing import TYPE_CHECKING, Any, Dict, List, Mapping, Optional
+from typing import TYPE_CHECKING, List, Optional
 
 from cclib.attribute_parsers import ccData
 

@@ -4,10 +4,7 @@
 # the terms of the BSD 3-Clause License.
 from typing import Optional
 
-from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
-
-import numpy as np
 
 
 class nbasis(base_parser):
@@ -61,7 +58,7 @@ class nbasis(base_parser):
         constructed_nbasis = None
         constructed_data = None
         if "basis functions" in line:
-            if not hasattr(self, "nbasis"):
+            if not hasattr(self, "nbasis"):  # noqa: F821
                 constructed_nbasis = int(line.split()[-3])
         if constructed_nbasis is not None:
             constructed_data = {nbasis.__name__: constructed_nbasis}

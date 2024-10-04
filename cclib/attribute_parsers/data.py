@@ -6,10 +6,9 @@
 """Classes and tools for storing and handling parsed data"""
 
 import logging
-from collections import namedtuple
 from typing import Any, Dict, List, Mapping, Optional
 
-from cclib.attributes.attribute import Attribute, _attributes
+from cclib.attributes.attribute import _attributes
 from cclib.method import Electrons, orbitals
 
 import numpy
@@ -149,15 +148,15 @@ class ccData:
         attrlist = [k for k in self._attrlist if hasattr(self, k)]
         for k in attrlist:
             v = _attributes[k].type
-            if v == numpy.ndarray:
+            if v is numpy.ndarray:
                 setattr(self, k, getattr(self, k).tolist())
-            elif v == list and k in self._listsofarrays:
+            elif v is list and k in self._listsofarrays:
                 setattr(self, k, [x.tolist() for x in getattr(self, k)])
-            elif v == dict and k in self._dictsofarrays:
+            elif v is dict and k in self._dictsofarrays:
                 items = getattr(self, k).items()
                 pairs = [(key, val.tolist()) for key, val in items]
                 setattr(self, k, dict(pairs))
-            elif v == dict and k in self._dictsofdicts:
+            elif v is dict and k in self._dictsofdicts:
                 items = getattr(self, k).items()
                 pairs = [
                     (key, {subkey: subval.tolist()})
@@ -175,15 +174,15 @@ class ccData:
             precision = "d"
             if k in self._intarrays:
                 precision = "i"
-            if v == numpy.ndarray:
+            if v is numpy.ndarray:
                 setattr(self, k, numpy.array(getattr(self, k), precision))
-            elif v == list and k in self._listsofarrays:
+            elif v is list and k in self._listsofarrays:
                 setattr(self, k, [numpy.array(x, precision) for x in getattr(self, k)])
-            elif v == dict and k in self._dictsofarrays:
+            elif v is dict and k in self._dictsofarrays:
                 items = getattr(self, k).items()
                 pairs = [(key, numpy.array(val, precision)) for key, val in items]
                 setattr(self, k, dict(pairs))
-            elif v == dict and k in self._dictsofdicts:
+            elif v is dict and k in self._dictsofdicts:
                 items = getattr(self, k).items()
                 pairs = [
                     (
@@ -390,7 +389,7 @@ class ccData:
     def aonames(self):
         try:
             return self._parsed_attributes["aonames"]
-        except:
+        except:  # noqa: E722
             pass
         # except KeyError:
         #    raise AttributeError

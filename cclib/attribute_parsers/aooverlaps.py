@@ -4,7 +4,6 @@
 # the terms of the BSD 3-Clause License.
 from typing import Optional
 
-from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
 
 import numpy as np
@@ -33,7 +32,7 @@ class aooverlaps(base_parser):
             constructed_aooverlaps = np.zeros((ccdata.nbasis, ccdata.nbasis), "d")
             # Overlap integrals for basis fn#1 are in aooverlaps[0]
             base = 0
-            colmNames = file_handler.virtual_next()
+            colmNames = file_handler.virtual_next()  # noqa: F841
             while base < ccdata.nbasis:
                 for i in range(ccdata.nbasis - base):  # Fewer lines this time
                     line = file_handler.virtual_next()
@@ -43,7 +42,7 @@ class aooverlaps(base_parser):
                         constructed_aooverlaps[base + j, i + base] = k
                         constructed_aooverlaps[i + base, base + j] = k
                 base += 5
-                colmNames = file_handler.virtual_next()
+                colmNames = file_handler.virtual_next()  # noqa: F841
             return {aooverlaps.__name__: constructed_aooverlaps}
 
     @staticmethod

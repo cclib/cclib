@@ -5,4 +5,4 @@
 
 """A driver for file and file-like objects that creates parsed content from standard chemical representations."""
 
-from cclib.file_handler.file_handler import FileHandler
+from cclib.file_handler.file_handler import FileHandler  # noqa: F401

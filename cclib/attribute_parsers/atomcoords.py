@@ -66,21 +66,25 @@ class atomcoords(base_parser):
         line = file_handler.last_line
         if "Standard Nuclear Orientation" in line:
             if "Angstroms" in line:
-                convertor = lambda x: x
+
+                def convertor(x: float) -> float:
+                    return x
             elif "Bohr" in line:
-                convertor = lambda x: utils.convertor(x, "bohr", "Angstrom")
+
+                def convertor(x: float) -> float:
+                    return utils.convertor(x, "bohr", "Angstrom")
             else:
                 raise ValueError(f"Unknown units in coordinate header: {line}")
             file_handler.skip_lines(["cols", "dashes"], virtual=True)
             atomelements = []
             atomcoords = []
-            line = next(inputfile)
+            line = next(inputfile)  # noqa: F821
             while list(set(line.strip())) != ["-"]:
                 entry = line.split()
                 atomelements.append(entry[1])
                 atomcoords.append([convertor(float(value)) for value in entry[2:]])
                 line = file_handler.virtual_next()
-            constructed_data = {atomcoords.__name__: constructed_atomcoords}
+            constructed_data = {atomcoords.__name__: constructed_atomcoords}  # noqa: F821
             return constructed_data
 
     @staticmethod

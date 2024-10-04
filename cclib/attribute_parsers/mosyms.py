@@ -2,6 +2,7 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
+import re
 from typing import Optional
 
 from cclib.attribute_parsers import utils
@@ -39,7 +40,7 @@ def qchem_parse_orbital_energies_and_symmetries(file_handler):
     energies = []
     symbols = []
 
-    line = next(inputfile)
+    line = next(inputfile)  # noqa: F821
     line = file_handler.virtual_next()
     # Sometimes Q-Chem gets a little confused...
     while "MOs" not in line:
@@ -47,7 +48,7 @@ def qchem_parse_orbital_energies_and_symmetries(file_handler):
     line = file_handler.virtual_next()
 
     # The end of the block is either a blank line or only dashes.
-    while not re_dashes_and_spaces.search(line) and not "Warning : Irrep of orbital" in line:
+    while not re_dashes_and_spaces.search(line) and "Warning : Irrep of orbital" not in line:
         if "Occupied" in line or "Virtual" in line:
             # A nice trick to find where the HOMO is.
             if "Virtual" in line:
@@ -63,7 +64,7 @@ def qchem_parse_orbital_energies_and_symmetries(file_handler):
                 try:
                     energy = utils.convertor(utils.float(e), "hartree", "eV")
                 except ValueError:
-                    energy = numpy.nan
+                    energy = np.nan
                 energies.append(energy)
         line = file_handler.virtual_next()
 
@@ -190,7 +191,7 @@ class mosyms(base_parser):
             parsed_data = {mosyms.__name__: [symbols_alpha]}
 
             # if self.unrestricted:
-            #    self.moenergies.append(numpy.array(energies_beta))
+            #    self.moenergies.append(np.array(energies_beta))
             #    self.homos.append(homo_beta)
             #    self.mosyms.append(symbols_beta)
         return parsed_data

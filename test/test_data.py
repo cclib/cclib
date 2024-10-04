@@ -77,7 +77,7 @@ def getdatafile(
 
     # Convert any string into the parser object we will be using.
     if isinstance(parser, str):
-        parser = all_parsers[parser]
+        parser = all_parsers[parser]  # noqa: F821
 
     datadir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "data"))
     programdir = os.path.join(get_program_dir(parser.__name__), subdir)
@@ -88,7 +88,7 @@ def getdatafile(
     if len(inputs) == 1:
         inputs = inputs[0]
 
-    stream = stream or sys.stdout
+    stream = stream or sys.stdout  # noqa: F821
     logfile = parser(
         inputs, logstream=stream, loglevel=loglevel, datatype=datatype or cclib.parser.data.ccData
     )

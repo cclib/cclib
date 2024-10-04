@@ -2,19 +2,18 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
-from datetime import timedelta
-
-import scipy.constants
 
 """Parser for Turbomole output files."""
 
 import re
 import typing
+from datetime import timedelta
 from pathlib import Path
 
 from cclib.parser import data, logfileparser, utils
 
 import numpy
+import scipy.constants
 
 
 class AtomBasis:
@@ -27,7 +26,6 @@ class AtomBasis:
         self.parse_basis(inputfile)
 
     def parse_basis(self, inputfile):
-        i = 0
         line = next(inputfile)
 
         while line[0] != "*":
@@ -372,7 +370,7 @@ class Turbomole(logfileparser.Logfile):
                 # Check we won't loose information converting to int.
                 if total_charge != total_charge_int:
                     self.logger.warning(
-                        f"Converting non integer total charge '{total_charge}' to integer"
+                        "Converting non integer total charge '%f' to integer", total_charge
                     )
 
                 # Set regardless.
@@ -1535,9 +1533,9 @@ class OldTurbomole(logfileparser.Logfile):
                 list.append(int(f) - 1)
         return list
 
-    def normalisesym(self, label):
+    def normalisesym(self, symlabel: str) -> str:
         """Normalise the symmetries used by Turbomole."""
-        return ans
+        return symlabel
 
     def before_parsing(self):
         self.geoopt = False  # Is this a GeoOpt? Needed for SCF targets/values.
@@ -1568,7 +1566,7 @@ class OldTurbomole(logfileparser.Logfile):
             self.nmo = nmo
         if line[3:9] == "nshell":
             temp = line.split("=")
-            homos = int(temp[1])
+            homos = int(temp[1])  # noqa: F841
 
         if line[0:6] == "$basis":
             print("Found basis")
@@ -1839,7 +1837,7 @@ class OldTurbomole(logfileparser.Logfile):
                 while title[0] != "$":
                     temp = title.split()
 
-                    orb_symm = temp[1]
+                    orb_symm = temp[1]  # noqa: F841
 
                     try:
                         energy = float(temp[2][11:].replace("D", "E"))

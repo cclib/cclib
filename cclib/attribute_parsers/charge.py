@@ -2,12 +2,10 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
+import re
 from typing import Optional
 
-from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
-
-import numpy as np
 
 
 class charge(base_parser):
@@ -54,7 +52,7 @@ class charge(base_parser):
                 nbeta_elec = int(match[0][1].strip())
                 # Calculate the molecular charge as the difference between
                 # the atomic numbers and the number of electrons.
-                if hasattr(self, "atomnos"):
+                if hasattr(self, "atomnos"):  # noqa: F821
                     constructed_charge = sum(ccdata.atomnos) - (nalpha_elec + nbeta_elec)
                 constructed_data = {charge.__name__: constructed_charge}
         return constructed_data

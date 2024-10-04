@@ -172,7 +172,10 @@ class WFXWriter(filewriter.Writer):
         """Section: Nuclear Cartesian Coordinates.
         Nuclear coordinates in Bohr."""
         coord_template = WFX_FIELD_FMT * 3
-        to_bohr = lambda x: utils.convertor(x, "Angstrom", "bohr")
+
+        def to_bohr(x: float) -> float:
+            return utils.convertor(x, "Angstrom", "bohr")
+
         nuc_coords = [
             coord_template % tuple(to_bohr(coord)) for coord in self.ccdata.atomcoords[-1]
         ]
@@ -501,7 +504,7 @@ class WFXWriter(filewriter.Writer):
             try:
                 section_data = section_module()
                 wfx_lines.extend(_section(section_name, section_data))
-            except:
+            except:  # noqa: E722
                 if section_required:
                     raise filewriter.MissingAttributeError(
                         f"Unable to write required wfx section: {section_name}"

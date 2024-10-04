@@ -4,7 +4,6 @@
 # the terms of the BSD 3-Clause License.
 from typing import Optional
 
-from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
 
 import numpy as np
@@ -55,7 +54,6 @@ class atommasses(base_parser):
     def qchem(file_handler, ccdata) -> Optional[dict]:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
-        constructed_data = None
         if "STANDARD THERMODYNAMIC QUANTITIES AT" in line:
             file_handler.skip_lines(["blank"], virtual=True)
             line = file_handler.virtual_next()
@@ -64,14 +62,13 @@ class atommasses(base_parser):
             else:
                 assert "Imaginary Frequencies" in line
                 line = file_handler.virtual_next()
-                constructed_data = []
                 while "Translational Enthalpy" not in line:
                     if "Has Mass" in line:
                         atommass = float(line.split()[6])
                         atommasses.append(atommass)
                     line = file_handler.virtual_next()
-                if not hasattr(self, "atommasses"):
-                    return {atommasses.__name__: numpy.array(atommasses)}
+                if not hasattr(self, "atommasses"):  # noqa: F821
+                    return {atommasses.__name__: np.array(atommasses)}
         return None
 
     @staticmethod

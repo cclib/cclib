@@ -149,7 +149,7 @@ class Molpro(logfileparser.Logfile):
 
         # Besides a double blank line, stop when the next orbitals are encountered for unrestricted jobs
         # or if there are stars on the line which always signifies the end of the block.
-        while line.strip() and (not "ORBITALS" in line) and (not set(line.strip()) == {"*"}):
+        while line.strip() and ("ORBITALS" not in line) and (not set(line.strip()) == {"*"}):
             # The function names are normally printed just once, but if symmetry is used then each irrep
             # has its own mocoeff block with a preceding list of names.
             is_aonames = line[:25].strip() == ""
@@ -204,7 +204,7 @@ class Molpro(logfileparser.Logfile):
                     try:
                         c = float(p)
                     except ValueError as detail:
-                        self.logger.warning(f"setting coeff element to zero: {detail}")
+                        self.logger.warning("setting coeff element to zero: %s", detail)
                         c = 0.0
                     coeff.append(c)
                 coeffs.extend(coeff)
@@ -343,7 +343,7 @@ class Molpro(logfileparser.Logfile):
                 # or indentation size. However, we will rely on explicit slices since not all components
                 # are always available. In fact, components not being there has some meaning (see below).
                 line_nr = line[1:6].strip()
-                line_sym = line[7:9].strip()
+                line_sym = line[7:9].strip()  # noqa: F841
                 line_nuc = line[11:15].strip()
                 line_type = line[16:22].strip()
                 line_exp = line[25:38].strip()
@@ -360,19 +360,19 @@ class Molpro(logfileparser.Logfile):
                     # update the dict if something unexpected comes up.
                     funcbasis = None
                     for fb, names in self.atomic_orbital_names.items():
-                        if functype in names:
+                        if functype in names:  # noqa: F821
                             funcbasis = fb
                     assert funcbasis
 
                     # There is a separate basis function for each column of contraction coefficients. Since all
                     # atomic orbitals for a subshell will have the same parameters, we can simply check if
                     # the function tuple is already in gbasis[i] before adding it.
-                    for i in range(len(coefficients[0])):
+                    for i in range(len(coefficients[0])):  # noqa: F821
                         func = (funcbasis, [])
-                        for j in range(len(exponents)):
-                            func[1].append((exponents[j], coefficients[j][i]))
-                        if func not in gbasis[funcatom - 1]:
-                            gbasis[funcatom - 1].append(func)
+                        for j in range(len(exponents)):  # noqa: F821
+                            func[1].append((exponents[j], coefficients[j][i]))  # noqa: F821
+                        if func not in gbasis[funcatom - 1]:  # noqa: F821
+                            gbasis[funcatom - 1].append(func)  # noqa: F821
 
                 # If it is a new type, set up the variables for the next shell(s). An exception is symmetry functions,
                 # which we want to copy from the previous function and don't have a new number on the line. For them,
@@ -483,7 +483,7 @@ class Molpro(logfileparser.Logfile):
                     line = next(inputfile)
                 except StopIteration:
                     self.logger.warning(
-                        f"File terminated before end of last SCF! Last gradient: {grad}"
+                        "File terminated before end of last SCF! Last gradient: %f", grad
                     )
                     break
             self.scfvalues.append(numpy.array(scfvalues))
@@ -660,7 +660,7 @@ class Molpro(logfileparser.Logfile):
             # Newer version of Molpro (at least for 2012) print and additional column
             # with the timing information for each step. Otherwise, the history looks the same.
             headers = next(inputfile).split()
-            if not len(headers) in (10, 11):
+            if len(headers) not in (10, 11):
                 return
 
             # Although criteria can be changed, the printed format should not change.
@@ -807,7 +807,7 @@ class Molpro(logfileparser.Logfile):
             while line.strip():
                 try:
                     list(map(float, line.strip().split()[2:]))
-                except:
+                except:  # noqa: E722
                     line = next(inputfile)
                 line.strip().split()[1:]
                 hess.extend([list(map(float, line.strip().split()[1:]))])
@@ -826,7 +826,7 @@ class Molpro(logfileparser.Logfile):
                     break
                 if k >= lig:
                     k = len(tmp[-1])
-            for l in tmp:
+            for l in tmp:  # noqa: E741
                 hessian += l
 
             self.set_attribute("hessian", hessian)

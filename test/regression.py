@@ -31,6 +31,7 @@ inside the data directory, like so:
     python -m pytest test/regression.py -k 'Gaussian_Gaussian03_borane_opt_log'
 """
 
+# ruff: noqa: E402, F401
 import datetime
 import logging
 import sys
@@ -1253,6 +1254,16 @@ def testGaussian_Gaussian09_issue1150_log(logfile):
     assert logfile.metadata["symmetry_detected"] == "c1"
 
 
+def testGaussian_Gaussian16_co_pbe1pbe_631ppGss_log(logfile):
+    """A calculation where the platform couldn't be parsed."""
+    # *********************************************
+    # Gaussian 16:  Apple M1-G16RevC.02  7-Dec-2021
+    #                   6-Mar-2024
+    # *********************************************
+    assert logfile.metadata["package_version"] == "2016+C.02"
+    assert logfile.metadata["platform"] == "Apple M1"
+
+
 def testGaussian_Gaussian16_H3_natcharge_log(logfile):
     """A calculation with natural charges calculated. Test issue 1055 where
     only the beta set of charges was parsed rather than the spin independent"""
@@ -2021,9 +2032,9 @@ def testQChem_QChem4_2_CH3___Na__RS_out(logfile):
     assert logfile.data.nbasis == logfile.data.nmo == 40
     assert len(logfile.data.moenergies[0]) == 40
     assert len(logfile.data.moenergies[1]) == 40
-    assert type(logfile.data.moenergies) == type([])
-    assert type(logfile.data.moenergies[0]) == type(numpy.array([]))
-    assert type(logfile.data.moenergies[1]) == type(numpy.array([]))
+    assert isinstance(logfile.data.moenergies, list)
+    assert isinstance(logfile.data.moenergies[0], numpy.ndarray)
+    assert isinstance(logfile.data.moenergies[1], numpy.ndarray)
 
 
 def testQChem_QChem4_2_CH3___Na__RS_SCF_out(logfile):
@@ -2054,9 +2065,9 @@ def testQChem_QChem4_2_CH3___Na__RS_SCF_out(logfile):
     assert logfile.data.nbasis == logfile.data.nmo == 40
     assert len(logfile.data.moenergies[0]) == 40
     assert len(logfile.data.moenergies[1]) == 40
-    assert type(logfile.data.moenergies) == type([])
-    assert type(logfile.data.moenergies[0]) == type(numpy.array([]))
-    assert type(logfile.data.moenergies[1]) == type(numpy.array([]))
+    assert isinstance(logfile.data.moenergies, list)
+    assert isinstance(logfile.data.moenergies[0], numpy.ndarray)
+    assert isinstance(logfile.data.moenergies[1], numpy.ndarray)
 
 
 def testQChem_QChem4_2_CH4___Na__out(logfile):
@@ -2084,8 +2095,8 @@ def testQChem_QChem4_2_CH4___Na__out(logfile):
 
     assert logfile.data.nbasis == logfile.data.nmo == 42
     assert len(logfile.data.moenergies[0]) == 42
-    assert type(logfile.data.moenergies) == type([])
-    assert type(logfile.data.moenergies[0]) == type(numpy.array([]))
+    assert isinstance(logfile.data.moenergies, list)
+    assert isinstance(logfile.data.moenergies[0], numpy.ndarray)
 
 
 def testQChem_QChem4_2_CH3___Na__RS_SCF_noprint_out(logfile):
@@ -2115,9 +2126,9 @@ def testQChem_QChem4_2_CH3___Na__RS_SCF_noprint_out(logfile):
     assert logfile.data.nbasis == logfile.data.nmo == 40
     assert len(logfile.data.moenergies[0]) == 40
     assert len(logfile.data.moenergies[1]) == 40
-    assert type(logfile.data.moenergies) == type([])
-    assert type(logfile.data.moenergies[0]) == type(numpy.array([]))
-    assert type(logfile.data.moenergies[1]) == type(numpy.array([]))
+    assert isinstance(logfile.data.moenergies, list)
+    assert isinstance(logfile.data.moenergies[0], numpy.ndarray)
+    assert isinstance(logfile.data.moenergies[1], numpy.ndarray)
 
 
 def testQChem_QChem4_2_CH3___Na__RS_noprint_out(logfile):
@@ -2145,9 +2156,9 @@ def testQChem_QChem4_2_CH3___Na__RS_noprint_out(logfile):
     assert logfile.data.nbasis == logfile.data.nmo == 40
     assert len(logfile.data.moenergies[0]) == 40
     assert len(logfile.data.moenergies[1]) == 40
-    assert type(logfile.data.moenergies) == type([])
-    assert type(logfile.data.moenergies[0]) == type(numpy.array([]))
-    assert type(logfile.data.moenergies[1]) == type(numpy.array([]))
+    assert isinstance(logfile.data.moenergies, list)
+    assert isinstance(logfile.data.moenergies[0], numpy.ndarray)
+    assert isinstance(logfile.data.moenergies[1], numpy.ndarray)
 
 
 def testQChem_QChem4_2_CH4___Na__noprint_out(logfile):
@@ -2172,8 +2183,8 @@ def testQChem_QChem4_2_CH4___Na__noprint_out(logfile):
 
     assert logfile.data.nbasis == logfile.data.nmo == 42
     assert len(logfile.data.moenergies[0]) == 42
-    assert type(logfile.data.moenergies) == type([])
-    assert type(logfile.data.moenergies[0]) == type(numpy.array([]))
+    assert isinstance(logfile.data.moenergies, list)
+    assert isinstance(logfile.data.moenergies[0], numpy.ndarray)
 
 
 def testQChem_QChem4_2_CO2_out(logfile):
@@ -3119,12 +3130,6 @@ class JaguarSPTest_nmo45(JaguarSPTest_noatomcharges):
     @pytest.mark.skip("Cannot parse atombasis from this file.")
     def testatombasis(self, data: "ccData") -> None:
         """atombasis was not parsed correctly here."""
-
-
-class JaguarGeoOptTest_nmo45(GenericGeoOptTest):
-    def testlengthmoenergies(self, data: "ccData") -> None:
-        """Without special options, Jaguar only print Homo+10 orbital energies."""
-        assert len(data.moenergies[0]) == 45
 
 
 class JaguarGeoOptTest_6_31gss(GenericGeoOptTest):

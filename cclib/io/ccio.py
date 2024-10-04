@@ -4,13 +4,8 @@
 # the terms of the BSD 3-Clause License.
 """Tools for identifying, reading and writing files and streams."""
 
-import io
-import logging
-import os
-import pathlib
 import typing
-import warnings
-from typing import Optional, Union
+from typing import Union
 
 # from cclib.io import (
 #    cjsonreader,
@@ -177,10 +172,10 @@ def ccopen(
 #             # From OB 3.0 onward, Pybel is contained inside the OB module.
 #             try:
 #                 import openbabel.pybel as pb
-#             except:
+#             except:  # noqa: E722
 #                 try:
 #                     import pybel as pb
-#                 except:
+#                 except:  # noqa: E722
 #                     return
 #             if ext in pb.informats:
 #                 return cclib2openbabel.readfile(source, ext)

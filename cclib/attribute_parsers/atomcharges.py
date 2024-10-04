@@ -8,8 +8,6 @@ from typing import Optional
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
 
-import numpy as np
-
 
 def orca_parse_charge_section(file_handler, chargestype):
     """Parse a charge section
@@ -33,16 +31,28 @@ def orca_parse_charge_section(file_handler, chargestype):
     # start, stop - indices for slicing lines and grabbing values
     # should_stop: when to stop parsing
     if chargestype == "mulliken":
-        should_stop = lambda x: x.startswith("Sum of atomic charges")
+
+        def should_stop(x: str) -> bool:
+            return x.startswith("Sum of atomic charges")
+
         start, stop = 8, 20
     elif chargestype == "lowdin":
-        should_stop = lambda x: not bool(x.strip())
+
+        def should_stop(x: str) -> bool:
+            return not bool(x.strip())
+
         start, stop = 8, 20
     elif chargestype == "chelpg":
-        should_stop = lambda x: x.startswith("---")
+
+        def should_stop(x: str) -> bool:
+            return x.startswith("---")
+
         start, stop = 11, 26
     elif chargestype == "hirshfeld":
-        should_stop = lambda x: not bool(x.strip())
+
+        def should_stop(x: str) -> bool:
+            return not bool(x.strip())
+
         start, stop = 9, 18
         file_handler.skip_lines(
             ["d", "b", "Total integrated alpha density", "Total integrated beta density", "header"],
@@ -95,7 +105,7 @@ def qchem_parse_charge_section(file_handler, chargetype):
 
     atomcharges[chargetype] = charges
     if has_spins:
-        atomspins[chargestype] = spins
+        atomspins[chargestype] = spins  # noqa: F821
     return atomcharges, atomspins
 
 
@@ -188,7 +198,7 @@ class atomcharges(base_parser):
     def NBO(file_handler, ccdata) -> Optional[dict]:
         atomcharges = dict()
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
-        charges = None
+        charges = None  # noqa: F841
         line = file_handler.last_line
         if "  Atom No    Charge" in line:
             parsed_charges = []
@@ -196,13 +206,13 @@ class atomcharges(base_parser):
             line = file_handler.virtual_next()
             while "==============" not in line:
                 population_analysis = line.split()
-                atom = population_analysis[0]
-                no = int(population_analysis[1])
+                atom = population_analysis[0]  # noqa: F841
+                no = int(population_analysis[1])  # noqa: F841
                 natural_charge = float(population_analysis[2])
-                core = float(population_analysis[3])
-                valence = float(population_analysis[4])
-                rydberg = float(population_analysis[5])
-                total = float(population_analysis[6])
+                core = float(population_analysis[3])  # noqa: F841
+                valence = float(population_analysis[4])  # noqa: F841
+                rydberg = float(population_analysis[5])  # noqa: F841
+                total = float(population_analysis[6])  # noqa: F841
                 parsed_charges.append(natural_charge)
                 line = file_handler.virtual_next()
             atomcharges["nbo"] = parsed_charges
@@ -223,27 +233,34 @@ class atomcharges(base_parser):
         constructed_data = dict()
         if "Ground-State Mulliken Net Atomic Charges" in line:
             constructed_charge_data, constructed_spin_data = qchem_parse_charge_section(
-                inputfile, "mulliken"
+                inputfile,  # noqa: F821
+                "mulliken",
             )
         if "Hirshfeld Atomic Charges" in line:
             constructed_charge_data, constructed_spin_data = qchem_parse_charge_section(
-                inputfile, "hirshfeld"
+                inputfile,  # noqa: F821
+                "hirshfeld",
             )
         if "Charge Model 5" in line:
             constructed_charge_data, constructed_spin_data = qchem_parse_charge_section(
-                inputfile, "cm5"
+                inputfile,  # noqa: F821
+                "cm5",
             )
         if "Ground-State ChElPG Net Atomic Charges" in line:
             constructed_charge_data, constructed_spin_data = qchem_parse_charge_section(
-                inputfile, "chelpg"
+                inputfile,  # noqa: F821
+                "chelpg",
+                1,
             )
         if "Merz-Kollman ESP Net Atomic Charges" in line:
             constructed_charge_data, constructed_spin_data = qchem_parse_charge_section(
-                inputfile, "esp"
+                inputfile,  # noqa: F821
+                "esp",
             )
         if "Merz-Kollman RESP Net Atomic Charges" in line:
             constructed_charge_data, constructed_spin_data = qchem_parse_charge_section(
-                inputfile, "resp"
+                inputfile,  # noqa: F821
+                "resp",
             )
         constructed_data = dict()
         if constructed_charge_data:

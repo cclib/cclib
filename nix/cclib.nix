@@ -25,11 +25,19 @@ buildPythonPackage rec {
 
   pyproject = true;
 
-  nativeBuildInputs = [
+  build-system = [
     setuptools
   ];
 
-  propagatedBuildInputs = [
+  postPatch = ''
+    # Upstream uses versioningit to set the version
+    sed -i "/versioningit>=/d" pyproject.toml
+    sed -i '/^name =.*/a version = "${version}"' pyproject.toml
+    sed -i "/dynamic =/d" pyproject.toml
+    echo '__version__ = "${version}"' > cclib/_version.py
+  '';
+
+  dependencies = [
     numpy
     scipy
     periodictable
@@ -47,15 +55,18 @@ buildPythonPackage rec {
 
   checkInputs = [ pytestCheckHook ];
 
+  pythonImportsCheck = [ "cclib" ];
+
   disabledTests = [
-    "test_url_io"
+    "test_ccread_url"
     "test_multi_url_io"
+    "test_url_io"
     "test_url_seek"
   ];
 
   meta = with lib; {
-    description = "Parsers and algorithms for computational chemistry logfiles ";
+    description = "Parsers and algorithms for computational chemistry logfiles";
     license = licenses.bsd3;
-    maintainers = with maintainers; [ sheepforce ];
+    maintainers = with maintainers; [ berquist sheepforce ];
   };
 }
