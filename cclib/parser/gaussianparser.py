@@ -198,6 +198,23 @@ class Gaussian(logfileparser.Logfile):
             for cpu_time in self.metadata["cpu_time"]:
                 self.metadata["wall_time"].append(cpu_time / self.num_cpu)
 
+        # Some calculation types don't use consistent MP levels throughout.
+        # For example, EOM-CCSD + opt prints MP3 and MP4 energies for the first iteration only.
+        # However, mpenergies needs to be homogeneous, so we need to do something about it.
+        if hasattr(self, "mpenergies"):
+            max_mp = max(len(mp_e) for mp_e in self.mpenergies)
+            mp_energies = []
+            for index, energy in enumerate(self.mpenergies):
+                if len(energy) != max_mp:
+                    self.logger.warning(
+                        "MP energies of order %d are incomplete and will be ignored", index + 2
+                    )
+
+                else:
+                    mp_energies.append(energy)
+
+            self.set_attribute("mpenergies", mp_energies)
+
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
