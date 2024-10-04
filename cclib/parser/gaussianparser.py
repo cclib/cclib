@@ -193,7 +193,7 @@ class Gaussian(logfileparser.Logfile):
             for index, energy in enumerate(self.mpenergies):
                 if len(energy) != max_mp:
                     self.logger.warning(
-                        f"MP energies of order {index+2} are incomplete and will be ignored"
+                        "MP energies of order %d are incomplete and will be ignored", index + 2
                     )
 
                 else:
