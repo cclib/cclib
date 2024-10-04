@@ -484,7 +484,8 @@ class ccDriver:
         self.identified_program = None
         line = self._fileHandler.last_line
         current_idx = self._tree.get_next_idx()
-        while line := next(self._fileHandler):
+        line = next(self._fileHandler)
+        while line:
             for program, phrases, do_break in triggers_on:
                 if all([line.lower().find(p.lower()) >= 0 for p in phrases]):
                     if self.identified_program is None:
@@ -521,4 +522,5 @@ class ccDriver:
                 )
                 if parsed_data is not None:
                     self._ccCollection.parsed_data[current_idx].setattributes(parsed_data)
+            line = next(self._fileHandler)
         return self._ccCollection
