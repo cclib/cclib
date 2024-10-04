@@ -199,7 +199,7 @@ class Gaussian(logfileparser.Logfile):
                 else:
                     mp_energies.append(energy)
 
-            self.mpenergies = mp_energies
+            self.set_attribute("mpenergies", mp_energies)
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
