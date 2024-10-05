@@ -4,10 +4,7 @@
 # the terms of the BSD 3-Clause License.
 from typing import Optional
 
-from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
-
-import numpy as np
 
 
 class nmo(base_parser):

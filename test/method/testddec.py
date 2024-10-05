@@ -42,7 +42,7 @@ class DDEC6Test:
             vol = volume.Volume((-4, -4, -4), (4, 4, 4), (0.2, 0.2, 0.2))
             delattr(self.data, missing_attribute)
             with pytest.raises(MissingAttributeError):
-                trial = DDEC6(self.data, vol, os.path.dirname(os.path.realpath(__file__)))
+                trial = DDEC6(self.data, vol, os.path.dirname(os.path.realpath(__file__)))  # noqa: F841
 
     def test_proatom_read(self) -> None:
         """Are proatom densities imported correctly?"""
@@ -59,7 +59,7 @@ class DDEC6Test:
             2.66407612e-01,
             2.66407322e-01,
         ]  # Hydrogen first five densities
-        refH_r = [
+        refH_r = [  # noqa: F841
             1.17745807e-07,
             4.05209491e-06,
             3.21078677e-05,
@@ -73,7 +73,7 @@ class DDEC6Test:
             2.98258487e02,
             2.98258290e02,
         ]  # Oxygen first five densities
-        refO_r = [
+        refO_r = [  # noqa: F841
             5.70916728e-09,
             1.97130512e-07,
             1.56506399e-06,

@@ -5,7 +5,7 @@
 
 """Contains parsers for all supported programs"""
 
-
+# ruff: noqa: F401
 # These import statements are added for the convenience of users...
 # Rather than having to type:
 #         from cclib.parser.gaussianparser import Gaussian

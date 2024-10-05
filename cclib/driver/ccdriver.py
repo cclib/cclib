@@ -4,14 +4,10 @@
 # the terms of the BSD 3-Clause License.
 """Tools for identifying, reading and writing files and streams."""
 
-import io
 import logging
-import os
-import pathlib
 import sys
 import typing
-import warnings
-from typing import TYPE_CHECKING, List, Optional, Union
+from typing import TYPE_CHECKING, List, Optional
 
 from cclib.collection import ccCollection
 from cclib.combinator import auto_combinator
@@ -488,7 +484,8 @@ class ccDriver:
         self.identified_program = None
         line = self._fileHandler.last_line
         current_idx = self._tree.get_next_idx()
-        while line := self._fileHandler.next():
+        line = next(self._fileHandler)
+        while line:
             for program, phrases, do_break in triggers_on:
                 if all([line.lower().find(p.lower()) >= 0 for p in phrases]):
                     if self.identified_program is None:
@@ -513,7 +510,7 @@ class ccDriver:
                     current_idx = self._tree.get_next_idx()
                     if do_break:
                         break
-            if self.identified_program == None:
+            if self.identified_program is None:
                 line = next(self._fileHandler)
                 continue
             # right now combinator is just a list of list of subparsers, tree idxs access what list of parsers we are using
@@ -525,4 +522,5 @@ class ccDriver:
                 )
                 if parsed_data is not None:
                     self._ccCollection.parsed_data[current_idx].setattributes(parsed_data)
+            line = next(self._fileHandler)
         return self._ccCollection

@@ -102,7 +102,8 @@ class DDEC6(Stockholder):
         # Notify user about the total charge in the density grid
         integrated_density = self.charge_density.integrate()
         self.logger.info(
-            f"Total charge density in the grid is {integrated_density}. If this does not match what is expected, using a finer grid may help."
+            "Total charge density in the grid is %f. If this does not match what is expected, using a finer grid may help.",
+            integrated_density,
         )
 
         # * STEP 1 *
@@ -186,7 +187,7 @@ class DDEC6(Stockholder):
         steps = 5
         self._update_kappa = False
         while steps < 7:
-            self.logger.info(f"Optimizing grid weights. (Step {steps}/7)")
+            self.logger.info("Optimizing grid weights. (Step %d/7)", steps)
             self.N_A.append(self._calculate_w_and_u())
 
             # Determine whether kappa needs to be updated or not based on Figure S4.2
@@ -283,9 +284,9 @@ class DDEC6(Stockholder):
         stockholder_bigW = numpy.sum(stockholder_w, axis=0)
         localized_bigW = numpy.sum(localized_w, axis=0)
 
-        reference_charges = numpy.zeros((self.data.natom))
-        localizedcharges = numpy.zeros((self.data.natom))
-        stockholdercharges = numpy.zeros((self.data.natom))
+        reference_charges = numpy.zeros(self.data.natom)
+        localizedcharges = numpy.zeros(self.data.natom)
+        stockholdercharges = numpy.zeros(self.data.natom)
 
         for atomi in range(self.data.natom):
             # Equation 52 and 51 in doi: 10.1039/c6ra04656h

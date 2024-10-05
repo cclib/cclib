@@ -32,7 +32,7 @@ class _Attribute(ABC):
             self.typecheck()
         else:
             if not self._impl:
-                raise AttributeError("{} doesn't contain any data".format(type(self)))
+                raise AttributeError(f"{type(self)} doesn't contain any data")
             else:
                 return self._impl
 
@@ -46,7 +46,7 @@ class _Attribute(ABC):
         convert; if that fails, only then raise a TypeError.
         """
 
-        if type(self._impl) == self.main_type:
+        if isinstance(self._impl, self.main_type):
             return
 
         try:

@@ -404,9 +404,9 @@ class FChk(logfileparser.Logfile):
             elif self.program == "QChem":
                 unknown_jobtype = self.jobtype not in ("sp", "freq", "force", "fopt")
             else:
-                self.logger.info(f"Unknown originating program for fchk file: {self.program}")
+                self.logger.info("Unknown originating program for fchk file: %s", self.program)
             if unknown_jobtype:
-                self.logger.info(f"Unknown job type for fchk file: {self.jobtype}")
+                self.logger.info("Unknown job type for fchk file: %s", self.jobtype)
         else:
             self.logger.info("Couldn't determine originating program for fchk file")
 

@@ -59,7 +59,7 @@ class atomnos(base_parser):
         if "Standard Nuclear Orientation" in line:
             file_handler.skip_lines(["cols", "dashes"], virtual=True)
             atomelements = []
-            line = next(inputfile)
+            line = next(inputfile)  # noqa: F821
             while list(set(line.strip())) != ["-"]:
                 entry = line.split()
                 atomelements.append(entry[1])
@@ -67,14 +67,14 @@ class atomnos(base_parser):
             # We calculate and handle atomnos no matter what, since in
             # the case of fragment calculations the atoms may change,
             # along with the charge and spin multiplicity.
-            constructed_atom_nos = []
+            constructed_atomnos = []
             for atomelement in atomelements:
-                self.atomelements.append(atomelement)
+                self.atomelements.append(atomelement)  # noqa: F821
                 if atomelement == "GH":
                     constructed_atomnos.append(0)
                 else:
                     constructed_atomnos.append(table.number[atomelement])
-        if constructued_atomnos:
+        if constructed_atomnos:  # noqa: F821
             constructed_data = {atomnos.__name__: constructed_atomnos}
         return constructed_data
 

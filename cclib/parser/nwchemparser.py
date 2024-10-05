@@ -31,7 +31,9 @@ class NWChem(logfileparser.Logfile):
         """NWChem does not require normalizing symmetry labels."""
         return label
 
-    name2element = lambda self, lbl: "".join(itertools.takewhile(str.isalpha, str(lbl)))
+    @staticmethod
+    def name2element(lbl: str) -> str:
+        return "".join(itertools.takewhile(str.isalpha, str(lbl)))
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -402,7 +404,7 @@ class NWChem(logfileparser.Logfile):
             if hasattr(self, "linesearch") and self.linesearch:
                 return
 
-            while not "Final" in line:
+            while "Final" not in line:
                 # Only the norm of the orbital gradient is used to test convergence.
                 if line[:22] == " Convergence threshold":
                     target = float(line.split()[-1])
@@ -429,7 +431,8 @@ class NWChem(logfileparser.Logfile):
                         # Is this the end of the file for some reason?
                         except StopIteration:
                             self.logger.warning(
-                                f"File terminated before end of last SCF! Last gradient norm: {gnorm}"
+                                "File terminated before end of last SCF! Last gradient norm: %f",
+                                gnorm,
                             )
                             break
                     if not hasattr(self, "scfvalues"):
@@ -490,7 +493,7 @@ class NWChem(logfileparser.Logfile):
                 # Is this the end of the file for some reason?
                 except StopIteration:
                     self.logger.warning(
-                        f"File terminated before end of last SCF! Last error: {diis}"
+                        "File terminated before end of last SCF! Last error: %f", diis
                     )
                     break
 
@@ -532,7 +535,7 @@ class NWChem(logfileparser.Logfile):
             self.skip_line(inputfile, "dashes")
             self.linesearch = False
         if line[0] == "@" and line.split()[1] == "Step":
-            at_and_dashes = next(inputfile)
+            self.skip_line(inputfile, "at and dashes")
             line = next(inputfile)
             tokens = line.split()
             assert int(tokens[1]) == self.geostep == 0
@@ -623,7 +626,7 @@ class NWChem(logfileparser.Logfile):
                     sym = sym[0].upper() + sym[1:]
                     if self.mosyms[0][index]:
                         if self.mosyms[0][index] != sym:
-                            self.logger.warning(f"Symmetry of MO {int(index + 1)} has changed")
+                            self.logger.warning("Symmetry of MO %d has changed", index + 1)
                     self.mosyms[0][index] = sym
                 line = next(inputfile)
 
@@ -831,7 +834,11 @@ class NWChem(logfileparser.Logfile):
         # by default, but they are printed by this modules later on. They are also print
         # for Hartree-Fock runs, though, so in that case make sure they are consistent.
         if line.strip() == "Mulliken population analysis":
-            self.skip_lines(inputfile, ["d", "b", "total_overlap_population", "b"])
+            skipped_lines = self.skip_lines(inputfile, ["d", "b", "total_overlap_population"])
+            if "overlap population" in skipped_lines[2]:
+                self.skip_line(inputfile, "b")
+            elif "shell population" in skipped_lines[2]:
+                self.skip_line(inputfile, "d")
 
             overlaps = []
             line = next(inputfile)
@@ -1271,7 +1278,7 @@ class NWChem(logfileparser.Logfile):
             line = next(inputfile)
             if "Spin forbidden" not in line:
                 # find Dipole Oscillator Strength
-                while not ("Dipole Oscillator Strength" in line):
+                while "Dipole Oscillator Strength" not in line:
                     line = next(inputfile)
                 etoscs = utils.float(line.split()[-1])
                 # in case of magnetic contribution replace, replace Dipole Oscillator Strength with Total Oscillator Strength
@@ -1322,7 +1329,7 @@ class NWChem(logfileparser.Logfile):
 
     def after_parsing(self):
         """NWChem-specific routines for after parsing a file."""
-        super(NWChem, self).after_parsing()
+        super().after_parsing()
 
         # Expand self.shells into a proper aonames attribute.
         #
@@ -1393,8 +1400,7 @@ class NWChem(logfileparser.Logfile):
                 shell_text = self.shells[element]
             except KeyError:
                 del self.aonames
-                msg = "Cannot determine aonames for at least one atom."
-                self.logger.warning(msg)
+                self.logger.warning("Cannot determine aonames for at least one atom.")
                 break
 
             prefix = f"{element}{int(i + 1)}_"  # (e.g. C1_)

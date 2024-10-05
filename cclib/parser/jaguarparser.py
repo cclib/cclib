@@ -43,7 +43,7 @@ class Jaguar(logfileparser.Logfile):
         self.geoopt = False
 
     def after_parsing(self):
-        super(Jaguar, self).after_parsing()
+        super().after_parsing()
 
         # This is to make sure we always have optdone after geometry optimizations,
         # even if it is to be empty for unconverged runs. We have yet to test this
@@ -105,7 +105,7 @@ class Jaguar(logfileparser.Logfile):
             fn_per_atom = []
             while line.strip():
                 if len(line.split()) > 3:
-                    aname = line.split()[0]
+                    aname = line.split()[0]  # noqa: F841
                     fn = int(line.split()[1])
                     prim = int(line.split()[2])
                     L = line.split()[3]
@@ -121,7 +121,7 @@ class Jaguar(logfileparser.Logfile):
                         self.gbasis.append([])
 
                     # Remember that fn is repeated when functions are contracted.
-                    if not fn - 1 in atombasis[-1]:
+                    if fn - 1 not in atombasis[-1]:
                         atombasis[-1].append(fn - 1)
 
                     # Here we use fn only to know when a new contraction is encountered,
@@ -129,7 +129,7 @@ class Jaguar(logfileparser.Logfile):
                     # What's more, since we only wish to save the parameters for each subshell
                     # once, we don't even need to consider lines for orbitals other than
                     # those for X*, making things a bit easier.
-                    if not fn in fn_per_atom:
+                    if fn not in fn_per_atom:
                         fn_per_atom.append(fn)
                         label = {"S": "S", "X": "P", "XX": "D", "XXX": "F"}[L]
                         self.gbasis[-1].append((label, []))
@@ -141,7 +141,7 @@ class Jaguar(logfileparser.Logfile):
                     L = line.split()[1]
 
                     # Some AO indices are only printed in these lines, for L > 0.
-                    if not fn - 1 in atombasis[-1]:
+                    if fn - 1 not in atombasis[-1]:
                         atombasis[-1].append(fn - 1)
 
                 line = next(inputfile)
@@ -207,8 +207,7 @@ class Jaguar(logfileparser.Logfile):
             p = re.compile(r"(\D+)\d+")  # One/more letters followed by a number
             atomcoords = []
             atomnos = []
-            angstrom = next(inputfile)
-            title = next(inputfile)
+            self.skip_lines(inputfile, ["angstroms", "header"])
             line = next(inputfile)
             while line.strip():
                 temp = line.split()
@@ -239,13 +238,13 @@ class Jaguar(logfileparser.Logfile):
             occs = int(line.split()[-1])
             line = next(inputfile)
             virts = int(line.split()[-1])
-            self.nmo = occs + virts
-            self.homos = numpy.array([occs - 1], "i")
 
-            self.unrestrictedflag = False
+            self.set_attribute("nmo", occs + virts)
+            self.set_attribute("homos", numpy.array([occs - 1], "i"))
+            self.set_attribute("unrestrictedflag", False)
 
         if line[1:28] == "number of occupied orbitals":
-            self.homos = numpy.array([float(line.strip().split()[-1]) - 1], "i")
+            self.set_attribute("homos", numpy.array([float(line.strip().split()[-1]) - 1], "i"))
 
         if line[2:27] == "number of basis functions":
             nbasis = int(line.strip().split()[-1])
@@ -260,16 +259,15 @@ class Jaguar(logfileparser.Logfile):
             line = next(inputfile)
             boccs = int(line.split()[-1])
             line = next(inputfile)
-            bvirt = int(line.split()[-1])
+            bvirt = int(line.split()[-1])  # noqa: F841
 
-            self.nmo = aoccs + avirts
-            self.homos = numpy.array([aoccs - 1, boccs - 1], "i")
-            self.unrestrictedflag = True
+            self.set_attribute("nmo", aoccs + avirts)
+            self.set_attribute("homos", numpy.array([aoccs - 1, boccs - 1], "i"))
+            self.set_attribute("unrestrictedflag", True)
 
         if line[0:4] == "etot":
             # Get SCF convergence information
             if not hasattr(self, "scfvalues"):
-                self.scfvalues = []
                 self.scftargets = [[5e-5, 5e-6]]
             values = []
             while line[0:4] == "etot":
@@ -295,10 +293,10 @@ class Jaguar(logfileparser.Logfile):
                     line = next(inputfile)
                 except StopIteration:
                     self.logger.warning(
-                        f"File terminated before end of last SCF! Last error: {maxdiiserr}"
+                        "File terminated before end of last SCF! Last error: %f", maxdiiserr
                     )
                     break
-            self.scfvalues.append(values)
+            self.append_attribute("scfvalues", values)
 
         # MO energies and symmetries.
         # Jaguar 7.0: provides energies and symmetries for both
@@ -540,7 +538,7 @@ class Jaguar(logfileparser.Logfile):
 
             gopt_step = int(line.split()[-1])
 
-            energy = next(inputfile)
+            energy = next(inputfile)  # noqa: F841
             blank = next(inputfile)
 
             # A quick hack for messages that show up right after the energy
@@ -619,7 +617,7 @@ class Jaguar(logfileparser.Logfile):
             # which could be caught. This is not true in newer version (including 8.3),
             # but in general it would be better to bound this loop more strictly.
             freqs = next(inputfile)
-            while freqs.strip() and not "imaginary frequencies" in freqs:
+            while freqs.strip() and "imaginary frequencies" not in freqs:
                 # Number of modes (columns printed in this block).
                 nmodes = len(freqs.split()) - 1
 

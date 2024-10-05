@@ -4,10 +4,7 @@
 # the terms of the BSD 3-Clause License.
 from typing import Optional
 
-from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
-
-import numpy as np
 
 
 class natom(base_parser):
@@ -26,7 +23,6 @@ class natom(base_parser):
         # Also, in older versions there is bo blank line (G98 regressions),
         # so we need to watch out for leaving the link.
         dependency_list = ["atomnos"]
-        line = file_handler.last_line
         if base_parser.check_dependencies(dependency_list, ccdata, "natom"):
             return {natom.__name__: len(ccdata.atomnos)}
 

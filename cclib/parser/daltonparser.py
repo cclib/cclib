@@ -213,9 +213,9 @@ class DALTON(logfileparser.Logfile):
                 line = next(inputfile)
 
             # Split lines into columsn and dd any missing symmetry labels, if needed.
-            lines = [l.split() for l in lines]
-            if any([len(l) == 3 for l in lines]):
-                for il, l in enumerate(lines):
+            lines = [l.split() for l in lines]  # noqa: E741
+            if any([len(l) == 3 for l in lines]):  # noqa: E741
+                for il, l in enumerate(lines):  # noqa: E741
                     if len(l) == 2:
                         lines[il] = [l[0], "_1", l[1]]
 
@@ -495,7 +495,7 @@ class DALTON(logfileparser.Logfile):
                     orbital = cols[2]
                     prims = [int(i) - 1 for i in cols[3:]]
 
-                shell = orbital[0]
+                shell = orbital[0]  # noqa: F841
                 subshell = orbital[1].upper()
 
                 iatom = basisatoms[ibasis]
@@ -760,7 +760,7 @@ class DALTON(logfileparser.Logfile):
             # the number of electrons for open-shell calculations.
             while "Number of electrons" not in line:
                 line = next(inputfile)
-            nelectrons = int(line.split()[-1])
+            nelectrons = int(line.split()[-1])  # noqa: F841
 
             line = next(inputfile)
             occupations = [int(o) for o in line.split()[3:]]
@@ -981,7 +981,7 @@ class DALTON(logfileparser.Logfile):
             # If we're missing something above, throw away the partial geovalues since
             # we don't want artificial NaNs getting into cclib. Instead, fix the dictionary
             # to make things work.
-            if not numpy.nan in values:
+            if numpy.nan not in values:
                 if not hasattr(self, "geovalues"):
                     self.geovalues = []
                 self.geovalues.append(values)
@@ -1001,7 +1001,7 @@ class DALTON(logfileparser.Logfile):
             line = next(inputfile)
             line = next(inputfile)
             line = next(inputfile)
-            if not "zero by symmetry" in line:
+            if "zero by symmetry" not in line:
                 line = next(inputfile)
 
                 line = next(inputfile)

@@ -7,9 +7,11 @@
 
 import logging
 import sys
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
-from cclib.progress import Progress
+if TYPE_CHECKING:
+    from cclib.parser.data import ccData
+    from cclib.progress import Progress
 
 
 class MissingAttributeError(Exception):
@@ -40,8 +42,8 @@ class Method:
 
     def __init__(
         self,
-        data: "cclib.parser.data.ccData",
-        progress: Optional[Progress] = None,
+        data: "ccData",
+        progress: Optional["Progress"] = None,
         loglevel: int = logging.INFO,
         logname: str = "Log",
     ) -> None:

@@ -2,6 +2,7 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
+# ruff: noqa: F401
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.aooverlaps import aooverlaps
 from cclib.attribute_parsers.atombasis import atombasis

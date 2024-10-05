@@ -5,7 +5,6 @@
 import re
 from typing import Optional
 
-from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
 
 import numpy as np
@@ -38,9 +37,9 @@ class atombasis(base_parser):
             base = 0
             curr_atombasis = []
             for base in range(0, ccdata.nmo, 5):
-                colNames = file_handler.virtual_next()
-                symmetries = file_handler.virtual_next()
-                eigenvalues = file_handler.virtual_next()
+                colNames = file_handler.virtual_next()  # noqa: F841
+                symmetries = file_handler.virtual_next()  # noqa: F841
+                eigenvalues = file_handler.virtual_next()  # noqa: F841
                 for i in range(ccdata.nbasis):
                     line = file_handler.virtual_next()
                     if i == 0:
@@ -72,11 +71,11 @@ class atombasis(base_parser):
         # ...
         #
         def natural_orbital_single_spin_parsing(fh):
-            coeffs = np.zeros((ccdata.nmo, ccdata.nbasis), "d")
+            coeffs = np.zeros((ccdata.nmo, ccdata.nbasis), "d")  # noqa: F841
             this_atombasis = []
             for base in range(0, ccdata.nmo, 5):
-                colmNames = fh.virtual_next()
-                eigenvalues = fh.virtual_next()
+                colmNames = fh.virtual_next()  # noqa: F841
+                eigenvalues = fh.virtual_next()  # noqa: F841
                 for i in range(ccdata.nbasis):
                     line = fh.virtual_next()
                     # Just do this the first time 'round.
@@ -85,9 +84,9 @@ class atombasis(base_parser):
                         # New atom.
                         if len(parts) > 1:
                             if i > 0:
-                                this_atombasis.append(basisonatom)
+                                this_atombasis.append(basisonatom)  # noqa: F821
                             basisonatom = []
-                        orbital = line[11:20].strip()
+                        orbital = line[11:20].strip()  # noqa: F841
                         basisonatom.append(i)
                     part = line[21:].replace("D", "E").rstrip()
                     temp = []
@@ -113,8 +112,8 @@ class atombasis(base_parser):
 
     @staticmethod
     def psi4(file_handler, ccdata) -> Optional[dict]:
-        dependency_list = ["nmo", "nbasis"]
-        if getattr(ccdata, "atombasis") == None:
+        dependency_list = ["nmo", "nbasis"]  # noqa: F841
+        if getattr(ccdata, "atombasis") is None:
             line = file_handler.last_line
             if line.strip() == "-Contraction Scheme:":
                 file_handler.skip_lines(["headers", "d"], virtual=True)
@@ -158,7 +157,7 @@ class atombasis(base_parser):
                 for aoindex, aoname in enumerate(ccdata.aonames):
                     atomindex = int(qchem_re_atomindex.search(aoname).groups()[0]) - 1
                     constructed_atombasis.atombasis[atomindex].append(aoindex)
-                assert len(self.atombasis) == len(self.atomnos)
+                assert len(self.atombasis) == len(self.atomnos)  # noqa: F821
                 if not hasattr(ccdata, "atombasis"):
                     constructed_data = {atombasis.__name__: constructed_atombasis}
                     return constructed_data

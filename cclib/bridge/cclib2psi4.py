@@ -21,7 +21,7 @@ def _check_psi4(found_psi4: bool) -> None:
 
 def makepsi4(
     atomcoords: np.ndarray, atomnos: np.ndarray, charge: int = 0, mult: int = 1
-) -> "psi4.core.Molecule":
+) -> "Molecule":
     """Create a Psi4 Molecule."""
     _check_psi4(_found_psi4)
     return Molecule.from_arrays(

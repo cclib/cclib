@@ -17,13 +17,13 @@ class dispersionenergies(base_parser):
 
     @staticmethod
     def psi4(file_handler, ccdata) -> Optional[dict]:
-        ccsd_trigger = "* CCSD total energy"
-        ccsd_t_trigger = "* CCSD(T) total energy"
+        ccsd_trigger = "* CCSD total energy"  # noqa: F841
+        ccsd_t_trigger = "* CCSD(T) total energy"  # noqa: F841
         line = file_handler.last_line
         if getattr(ccdata, "dispersionenergies") is None:
             this_dispersionenergies = []
         else:
-            this_dispersionenergies = ccdata.dispoersionenergies
+            this_dispersionenergies = ccdata.dispersionenergies
         if "Empirical Dispersion Energy" in line:
             dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
             this_dispersionenergies.append(dispersion)

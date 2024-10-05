@@ -9,7 +9,6 @@ See the pytest documentation for more details:
 https://docs.pytest.org/en/latest/contents.html
 """
 
-import json
 import os
 from collections import defaultdict
 from dataclasses import dataclass
@@ -411,7 +410,7 @@ def pytest_sessionfinish(session: "pytest.Session") -> None:
     this seems to be the only relevant global hook that runs at the end of a test session.
     """
     if _CACHE:
-        coverage_accumulate = defaultdict(set)
+        coverage_accumulate = defaultdict(set)  # noqa: F841
         # for data in _CACHE.values():
         #    coverage_accumulate[data.__dict__["parserclassname"]].update(data.__dict__.keys())
         # for parserclassname in coverage_accumulate:

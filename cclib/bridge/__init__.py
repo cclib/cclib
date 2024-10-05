@@ -5,6 +5,7 @@
 
 """Facilities for moving parsed data to other cheminformatic libraries."""
 
+# ruff: noqa: F401
 from cclib.parser.utils import find_package
 
 if find_package("Bio"):

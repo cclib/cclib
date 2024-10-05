@@ -48,7 +48,7 @@ class ADF(logfileparser.Logfile):
             temp = f'{ans[0]}"'
             ans = temp
 
-        l = len(ans)
+        l = len(ans)  # noqa: E741
         if (
             l > 1 and ans[0] == ans[1]
         ):  # Python only tests the second condition if the first is true
@@ -113,7 +113,7 @@ class ADF(logfileparser.Logfile):
             while True:
                 self.updateprogress(inputfile, "Unsupported Information", self.fupdate)
                 line = next(inputfile) if line.strip() == "(INPUT FILE)" else None
-                if line and not line[:6] in ("Create", "create"):
+                if line and line[:6] not in ("Create", "create"):
                     break
                 line = next(inputfile)
 
@@ -453,7 +453,7 @@ class ADF(logfileparser.Logfile):
 
             self.skip_lines(inputfile, ["e", "b"])
 
-            energies_old = next(inputfile)
+            energies_old = next(inputfile)  # noqa: F841
             energies_new = next(inputfile)
             self.append_attribute("scfenergies", float(energies_new.split()[-1]))
 
@@ -497,7 +497,7 @@ class ADF(logfileparser.Logfile):
         # cart. step max                      0.03331296     0.01000000    F
         # cart. step rms                      0.00844037     0.00666667    F
         if line[:31] == "Geometry Convergence after Step":
-            stepno = int(line.split()[4])
+            stepno = int(line.split()[4])  # noqa: F841
 
             # This is to make geometry optimization always have the optdone attribute,
             # even if it is to be empty for unconverged runs.
@@ -514,8 +514,8 @@ class ADF(logfileparser.Logfile):
             energy_change = next(inputfile)
             constrained_gradient_max = next(inputfile)
             constrained_gradient_rms = next(inputfile)
-            gradient_max = next(inputfile)
-            gradient_rms = next(inputfile)
+            gradient_max = next(inputfile)  # noqa: F841
+            gradient_rms = next(inputfile)  # noqa: F841
             cart_step_max = next(inputfile)
             cart_step_rms = next(inputfile)
 
@@ -558,15 +558,13 @@ class ADF(logfileparser.Logfile):
             line = next(inputfile)
             info = line.split()
 
-            if not info[0] == "1":
-                self.logger.warning(f"MO info up to #{info[0]} is missing")
+            if info[0] != "1":
+                self.logger.warning("MO info up to #%s is missing", info[0])
 
             # handle case where MO information up to a certain orbital are missing
             while int(info[0]) - 1 != len(self.moenergies[0]):
                 self.moenergies[0].append(numpy.nan)
                 self.mosyms[0].append("A")
-
-            homoA = None
 
             while len(line) > 10:
                 info = line.split()
@@ -728,7 +726,7 @@ class ADF(logfileparser.Logfile):
 
             freqs = next(inputfile)
             while freqs.strip() != "":
-                minus = next(inputfile)
+                self.skip_line(inputfile, "d")
                 p = [[], [], []]
                 for i in range(len(self.atomnos)):
                     broken = list(map(float, next(inputfile).split()[1:]))
@@ -814,18 +812,14 @@ class ADF(logfileparser.Logfile):
                 [] for frag in self.frags
             ]  # parse atombasis in the case of trivial SFOs
 
-            self.skip_line(inputfile, "blank")
-
-            note = next(inputfile)
-            symoffset = 0
-
-            self.skip_line(inputfile, "blank")
+            self.skip_lines(inputfile, ["blank", "note", "blank"])
             line = next(inputfile)
             if len(line) > 2:  # fix for ADF2006.01 as it has another note
                 self.skip_line(inputfile, "blank")
                 line = next(inputfile)
             self.skip_line(inputfile, "blank")
 
+            symoffset = 0
             self.nosymreps = []
             while len(self.fonames) < self.nbasis:
                 symline = next(inputfile)
@@ -844,7 +838,7 @@ class ADF(logfileparser.Logfile):
                     info = line.split()
 
                     # index0 index1 occ2 energy3/4 fragname5 coeff6 orbnum7 orbname8 fragname9
-                    if not sym in list(self.start_indeces.keys()):
+                    if sym not in list(self.start_indeces.keys()):
                         # have we already set the start index for this symmetry?
                         self.start_indeces[sym] = int(info[1])
 
@@ -1002,7 +996,7 @@ class ADF(logfileparser.Logfile):
                     # The table can end with a blank line or "1".
                     row = 0
                     line = next(inputfile)
-                    while not line.strip() in ["", "1"]:
+                    while line.strip() not in ["", "1"]:
                         info = line.split()
 
                         if int(info[0]) < self.start_indeces[sym]:
@@ -1074,13 +1068,11 @@ class ADF(logfileparser.Logfile):
 
             # Note that here, and later, the number of blank lines can vary between
             # version of ADF (extra lines are seen in 2013.01 unit tests, for example).
-            self.skip_line(inputfile, "blank")
-            excitation_occupied = next(inputfile)
+            self.skip_lines(inputfile, ["blank", "Excitation  Occupied to virtual  Contribution"])
             header = next(inputfile)
             while not header.strip():
                 header = next(inputfile)
-            header2 = next(inputfile)
-            x_y_z = next(inputfile)
+            self.skip_lines(inputfile, ["tdm section header", "x y z"])
             line = next(inputfile)
             while not line.strip():
                 line = next(inputfile)

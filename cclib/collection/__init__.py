@@ -5,4 +5,4 @@
 
 """A hieararchical storage for parsed chemical data."""
 
-from cclib.collection.collection import ccCollection
+from cclib.collection.collection import ccCollection  # noqa: F401

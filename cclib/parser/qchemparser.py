@@ -124,7 +124,7 @@ class QChem(logfileparser.Logfile):
         ]
 
     def after_parsing(self):
-        super(QChem, self).after_parsing()
+        super().after_parsing()
 
         # If parsing a fragment job, each of the geometries appended to
         # `atomcoords` may be of different lengths, which will prevent
@@ -364,7 +364,7 @@ cannot be determined. Rerun without `$molecule read`."""
 
         # The end of the block is either a blank line or only dashes.
         while (
-            not self.re_dashes_and_spaces.search(line) and not "Warning : Irrep of orbital" in line
+            not self.re_dashes_and_spaces.search(line) and "Warning : Irrep of orbital" not in line
         ):
             if "Occupied" in line or "Virtual" in line:
                 # A nice trick to find where the HOMO is.
@@ -597,7 +597,7 @@ cannot be determined. Rerun without `$molecule read`."""
                         if line.split()[0].lower() == "read":
                             pass
                         else:
-                            charge, mult = [int(x) for x in line.split()]
+                            charge, mult = (int(x) for x in line.split())
                             self.user_input["molecule"]["charge"] = charge
                             self.user_input["molecule"]["mult"] = mult
 
@@ -786,9 +786,13 @@ cannot be determined. Rerun without `$molecule read`."""
             # Extract the atomic numbers and coordinates of the atoms.
             if "Standard Nuclear Orientation" in line:
                 if "Angstroms" in line:
-                    convertor = lambda x: x
+
+                    def convertor(x: float) -> float:
+                        return x
                 elif "Bohr" in line:
-                    convertor = lambda x: utils.convertor(x, "bohr", "Angstrom")
+
+                    def convertor(x: float) -> float:
+                        return utils.convertor(x, "bohr", "Angstrom")
                 else:
                     raise ValueError(f"Unknown units in coordinate header: {line}")
                 self.skip_lines(inputfile, ["cols", "dashes"])
@@ -922,7 +926,7 @@ cannot be determined. Rerun without `$molecule read`."""
 
                 # We should have the header between dashes now,
                 # but sometimes there are lines before the first dashes.
-                while not "Cycle       Energy" in line:
+                while "Cycle       Energy" not in line:
                     line = next(inputfile)
                 self.skip_line(inputfile, "d")
 
@@ -945,7 +949,7 @@ cannot be determined. Rerun without `$molecule read`."""
                     # Is this the end of the file for some reason?
                     except StopIteration:
                         self.logger.warning(
-                            f"File terminated before end of last SCF! Last error: {error}"
+                            "File terminated before end of last SCF! Last error: %f", error
                         )
                         break
 
@@ -1732,9 +1736,9 @@ cannot be determined. Rerun without `$molecule read`."""
         if line[:16] == " Total job time:":
             self.metadata["success"] = True
             # create empty list for the times to be stored in
-            if not "wall_time" in self.metadata:
+            if "wall_time" not in self.metadata:
                 self.metadata["wall_time"] = []
-            if not "cpu_time" in self.metadata:
+            if "cpu_time" not in self.metadata:
                 self.metadata["cpu_time"] = []
             # the line format is " Total job time:  120.37s(wall), 2251.02s(cpu)" at the end of each job ran.
             # first split the line by white space
@@ -1748,5 +1752,5 @@ cannot be determined. Rerun without `$molecule read`."""
                 cpu_td = datetime.timedelta(seconds=float(a[-1].split("s")[0]))
                 self.metadata["wall_time"].append(wall_td)
                 self.metadata["cpu_time"].append(cpu_td)
-            except:
+            except:  # noqa: E722
                 pass

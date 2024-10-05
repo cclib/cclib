@@ -5,9 +5,6 @@
 
 """Calculation of overlap population analysis based on cclib data."""
 
-import random
-
-from cclib.method.calculationmethod import Method
 from cclib.method.population import Population
 
 import numpy
@@ -65,7 +62,6 @@ class OPA(Population):
         nstep = func(nfrag - 1)
         unrestricted = len(self.data.mocoeffs) == 2
         alpha = len(self.data.mocoeffs[0])
-        nbasis = self.data.nbasis
 
         self.logger.info("Creating attribute results: array[4]")
         results = [numpy.zeros([nfrag, nfrag, alpha], "d")]
@@ -83,10 +79,8 @@ class OPA(Population):
         if self.progress:
             self.progress.initialize(nstep)
 
-        size = len(self.data.mocoeffs[0])
         step = 0
 
-        preresults = []
         for spin in range(len(self.data.mocoeffs)):
             two = numpy.array([2.0] * len(self.data.mocoeffs[spin]), "d")
 

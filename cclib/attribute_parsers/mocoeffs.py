@@ -4,10 +4,7 @@
 # the terms of the BSD 3-Clause License.
 from typing import Optional
 
-from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
-
-import numpy as np
 
 
 class mocoeffs(base_parser):
@@ -43,7 +40,7 @@ class mocoeffs(base_parser):
                 while line.strip():
                     chomp = line.split()
                     m = len(chomp)
-                    iao = int(chomp[0])
+                    iao = int(chomp[0])  # noqa: F841
                     coeffs = [float(c) for c in chomp[m - n :]]
                     for i, c in enumerate(coeffs):
                         mocoeffs[indices[i] - 1].append(c)
@@ -55,7 +52,7 @@ class mocoeffs(base_parser):
                 file_handler.skip_lines(["b", "b"], virtual=True)
                 indices = file_handler.virtual_next()
 
-            if hasattr(ccdata, "mocoeffs") and getattr(ccdata, "mocoeffs") != None:
+            if hasattr(ccdata, "mocoeffs") and getattr(ccdata, "mocoeffs") is not None:
                 extended_mocoeffs = [ccdata.mocoeffs, mocoeffs]
                 return {mocoeffs.__name__: extended_mocoeffs}
             else:
