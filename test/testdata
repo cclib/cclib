@@ -223,9 +223,9 @@ CC        Psi4        Psi4CCSDPTTest        basicPsi4-1.7         water_ccsd(t).
 # MP        ORCA        GenericMP3Test        basicORCA4.1          water_mp3.out
 # MP        ORCA        GenericMP3Test        basicORCA4.2          water_mp3.out
 # MP        ORCA        GenericMP3Test        basicORCA5.0          water_mp3.out
-# MP        Psi4        GenericMP2Test        basicPsi4-1.2.1       water_mp2.out
-# MP        Psi4        GenericMP2Test        basicPsi4-1.3.1       water_mp2.out
-# MP        Psi4        GenericMP2Test        basicPsi4-1.7         water_mp2.out
+MP        Psi4        GenericMP2Test        basicPsi4-1.2.1       water_mp2.out
+MP        Psi4        GenericMP2Test        basicPsi4-1.3.1       water_mp2.out
+MP        Psi4        GenericMP2Test        basicPsi4-1.7         water_mp2.out
 # MP        QChem       GenericMP2Test        basicQChem5.1         water_mp2.out
 # MP        QChem       GenericMP3Test        basicQChem5.1         water_mp3.out
 # MP        QChem       QChemMP4SDQTest       basicQChem5.1         water_mp4sdq.out

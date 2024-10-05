@@ -30,6 +30,7 @@ DEFAULT_PARSERS = [
     cprops.aooverlaps,
     cprops.atommasses,
     cprops.mosyms,
+    cprops.mpenergies,
     cprops.nmo,
     cprops.atombasis,
     cprops.scftargets,
