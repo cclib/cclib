@@ -25,7 +25,8 @@ clean:
 # When releasing a new version, this can't be updated until after the tag is pushed.
 PRODUCTION_VERSION = v1.8.1
 CCLIB_PROD = $(BUILDDIR)/cclib_prod
-CCLIB_DEV = $(realpath $(SOURCEDIR)/../..)
+#CCLIB_DEV = $(realpath $(SOURCEDIR)/../..)
+CCLIB_DEV = $(SOURCEDIR)/../..
 SRC_PROD = $(CCLIB_PROD)/cclib
 SRC_DEV = $(CCLIB_DEV)/cclib
 
@@ -92,7 +93,7 @@ coverage.rst: generate_coverage.py $(wildcard $(SRC_PROD)/parser/*parser.py) $(w
 coverage_dev.rst: generate_coverage.py $(wildcard $(SRC_DEV)/parser/*parser.py) $(wildcard $(CCLIB_DEV)/test/*.py)
 	@echo "Generating dev coverage..."
 	@$(MAKE) --no-print-directory checkout_dev
-	python generate_coverage.py $(CCLIB_DEV) > $@
+	python generate_coverage.py "$(realpath $(CCLIB_DEV))" > $@
 	-rm cclib
 
 # Catch-all target: route all unknown targets to Sphinx using the new
