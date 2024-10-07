@@ -50,6 +50,8 @@ bridges = [
     "pandas",
     "pyscf",
     "pyscf-properties @ git+https://github.com/pyscf/properties",
+    "pyberny",
+    "geometric",
     "qc-iodata>=1.0.0a2",
 ]
 docs = [
