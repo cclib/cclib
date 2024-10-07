@@ -60,9 +60,13 @@ update_prod:
 .PHONY: checkout_prod checkout_dev
 checkout_prod:
 	python -m build --sdist $(CCLIB_PROD)
+	# Install test dependencies.
+	cd "$(CCLIB_PROD)"; python -m pip install -e .[test]
 	ln -fs $(SRC_PROD) cclib
 checkout_dev:
 	python -m build --sdist $(CCLIB_DEV)
+	# Install test dependencies.
+	cd "$(CCLIB_DEV)"; python -m pip install -e .[test]
 	ln -fs $(SRC_DEV) cclib
 
 # We need three layers of targets in order to always get the checkout
