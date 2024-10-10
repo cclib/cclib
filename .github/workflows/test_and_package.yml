@@ -47,7 +47,7 @@ jobs:
           echo "/opt/conda/envs/cclib/bin" >> "${GITHUB_PATH}"
       - name: Install cclib
         run: |
-          python -m pip install .
+          python -m pip install .[test]
       - name: Filter code
         uses: dorny/paths-filter@v3
         id: filter
