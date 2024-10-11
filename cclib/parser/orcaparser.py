@@ -1196,40 +1196,41 @@ Dispersion correction           -0.016199959
             if self.natom > 1:
                 self.set_attribute("freeenergy", float(line.split()[5]))
 
-        # Excited state metadata.
         if line.strip() in (
             "ORCA TD-DFT/TDA CALCULATION",
             "ORCA TD-DFT CALCULATION",
             "ORCA CIS CALCULATION",
+            "ORCA ROCIS CALCULATION",
         ):
-            if "TD-DFT" in line:
-                method = "TD-DFT"
-
-            else:
-                method = "RPA"
-
-            while "Tamm-Dancoff approximation" not in line:
-                line = next(inputfile)
-
-            if line.split()[-1] == "operative":
-                if method == "TD-DFT":
-                    method = "TDA"
-
-                else:
-                    method = "CIS"
-
-            self.metadata["excited_states_method"] = method
-
-        elif line.strip() == "ORCA ROCIS CALCULATION":
-            # Here we consider ROCIS the same as CIS (?)
-            self.metadata["excited_states_method"] = "CIS"
-
-        if line.strip() in ("ORCA TD-DFT/TDA CALCULATION", "ORCA CIS CALCULATION"):
             # Start of excited states, reset our attributes in case this is an optimised excited state calc
             # (or another type of calc where excited states are calculated multiple times).
             for attr in ("etenergies", "etsyms", "etoscs", "etsecs", "etrotats"):
                 if hasattr(self, attr):
                     delattr(self, attr)
+
+            # Excited state metadata.
+            if line.strip() == "ORCA ROCIS CALCULATION":
+                # Here we consider ROCIS the same as CIS (?)
+                self.metadata["excited_states_method"] = "CIS"
+
+            else:
+                if "TD-DFT" in line:
+                    method = "TD-DFT"
+
+                else:
+                    method = "RPA"
+
+                while "Tamm-Dancoff approximation" not in line:
+                    line = next(inputfile)
+
+                if line.split()[-1] == "operative":
+                    if method == "TD-DFT":
+                        method = "TDA"
+
+                    else:
+                        method = "CIS"
+
+                self.metadata["excited_states_method"] = method
 
         # Read TDDFT information
         if any(
