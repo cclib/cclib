@@ -901,6 +901,14 @@ def testGaussian_Gaussian03_AM1_SP_out(logfile):
     assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
+def testGaussian_Gaussian03_OPT_td_out(logfile):
+    """Working fine - adding to ensure that CD is parsed correctly."""
+    assert len(logfile.data.etrotats) == 10
+    assert logfile.data.etrotats[0] == -0.4568
+
+    assert logfile.data.metadata["package_version"] == "2003+B.05"
+
+
 def testGaussian_Gaussian03_anthracene_log(logfile):
     """This file exposed a bug in extracting the vibsyms."""
     assert len(logfile.data.vibsyms) == len(logfile.data.vibfreqs)
@@ -1141,14 +1149,6 @@ def testGaussian_Gaussian09_OPT_td_g09_out(logfile):
     assert logfile.data.etrotats[0] == -0.4568
 
     assert logfile.data.metadata["package_version"] == "2009+A.02"
-
-
-def testGaussian_Gaussian09_OPT_td_out(logfile):
-    """Working fine - adding to ensure that CD is parsed correctly."""
-    assert len(logfile.data.etrotats) == 10
-    assert logfile.data.etrotats[0] == -0.4568
-
-    assert logfile.data.metadata["package_version"] == "2003+B.05"
 
 
 def testGaussian_Gaussian09_OPT_oniom_log(logfile):
