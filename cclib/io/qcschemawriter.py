@@ -1,12 +1,10 @@
-# -*- coding: utf-8 -*-
 #
-# Copyright (c) 2021, the cclib development team
+# Copyright (c) 2021-2024, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
-"""A writer for MolSSI quantum chemical JSON (QCSchema) files.
-"""
+"""A writer for MolSSI quantum chemical JSON (QCSchema) files."""
 
 import json
 
@@ -106,7 +104,7 @@ class QCSchemaWriter(CJSONWriter):
             )
             return_energy = ccsd_total_energy
         else:
-            raise RuntimeError("Don't know what to do with method {}".format(method))
+            raise RuntimeError(f"Don't know what to do with method {method}")
 
         scf_dipole_moment = None
         if hasattr(self.ccdata, "moments"):
@@ -155,9 +153,9 @@ class QCSchemaWriter(CJSONWriter):
             # scf_xc_energy
         }
         if hasattr(self.ccdata, "dispersionenergies"):
-            qcschema_dict["properties"][
-                "scf_dispersion_correction_energy"
-            ] = self.ccdata.dispersionenergies[-1]
+            qcschema_dict["properties"]["scf_dispersion_correction_energy"] = (
+                self.ccdata.dispersionenergies[-1]
+            )
         if scf_dipole_moment is not None:
             qcschema_dict["scf_dipole_moment"] = scf_dipole_moment
         if mp2_correlation_energy is not None:
@@ -205,9 +203,9 @@ class QCSchemaWriter(CJSONWriter):
             if has_beta:
                 mocoeffs_b = self.ccdata.mocoeffs[1]
                 if not np.isnan(mocoeffs_b).any():
-                    qcschema_dict["wavefunction"][
-                        "scf_orbitals_b"
-                    ] = mocoeffs_b.transpose().tolist()
+                    qcschema_dict["wavefunction"]["scf_orbitals_b"] = (
+                        mocoeffs_b.transpose().tolist()
+                    )
 
         if driver == "energy":
             return_result = return_energy
@@ -216,7 +214,7 @@ class QCSchemaWriter(CJSONWriter):
         elif driver == "hessian":
             return_result = self.ccdata.hessian.flatten().tolist()
         else:
-            raise RuntimeError("Don't know driver {}".format(driver))
+            raise RuntimeError(f"Don't know driver {driver}")
         qcschema_dict["return_result"] = return_result
 
         if validate:
