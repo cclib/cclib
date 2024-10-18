@@ -400,27 +400,7 @@ class ORCA(logfileparser.Logfile):
             self.set_attribute("mult", mult)
 
         if line[1:18] == "Symmetry handling":
-            self.uses_symmetry = True
-
-            line = next(inputfile)
-            assert "Point group" in line
-            point_group_full = line.split()[3].lower()
-            line = next(inputfile)
-            assert "Used point group" in line
-            point_group_abelian = line.split()[4].lower()
-            line = next(inputfile)
-            assert "Number of irreps" in line
-            nirrep = int(line.split()[4])
-            for n in range(nirrep):
-                line = next(inputfile)
-                assert "symmetry adapted basis functions" in line
-                irrep = line[8:13]
-                if not hasattr(self, "symlabels"):
-                    self.symlabels = []
-                self.symlabels.append(self.normalisesym(irrep))
-
-            self.metadata["symmetry_detected"] = point_group_full
-            self.metadata["symmetry_used"] = point_group_abelian
+            self.parse_symmetry_section(inputfile)
 
         if "Density Functional" == line[1:19]:
             self.is_DFT = True
@@ -2563,6 +2543,34 @@ Dispersion correction           -0.016199959
                 * self.metadata["num_cpu"]
             )
 
+    def parse_symmetry_section(self, inputfile):
+        self.uses_symmetry = True
+
+        line = next(inputfile)
+        assert "Point group" in line
+        point_group_full = line.split()[3].lower()
+        line = next(inputfile)
+        # ORCA < 6
+        if "Used point group" in line:
+            point_group_abelian = line.split()[4].lower()
+            line = next(inputfile)
+        # ORCA >= 6
+        elif "Symmetry-adapted orbitals":
+            point_group_abelian = line.split()[3].lower()
+            next(inputfile)
+            line = next(inputfile)
+        assert "Number of irreps" in line
+        nirrep = int(line.split()[4])
+        for n in range(nirrep):
+            line = next(inputfile)
+            assert "symmetry adapted basis functions" in line
+            irrep = line[8:13]
+            if not hasattr(self, "symlabels"):
+                self.symlabels = []
+            self.symlabels.append(self.normalisesym(irrep))
+
+        self.metadata["symmetry_detected"] = point_group_full
+        self.metadata["symmetry_used"] = point_group_abelian
     def parse_charge_section(self, line, inputfile, chargestype):
         """Parse a charge section, modifies class in place
 
