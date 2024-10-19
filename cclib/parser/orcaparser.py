@@ -916,7 +916,9 @@ Dispersion correction           -0.016199959
                 self.mosyms.append([])
 
                 line = next(inputfile)
-                while len(line) > 20:  # actually terminated by ------
+                # actually terminated by ------
+                # OR has *Only the first 10 virtual orbitals were printed.
+                while len(line) > 20 and line[:5] != '*Only':
                     info = line.split()
                     mooccno = int(float(info[1]))
                     moenergy = float(info[2])
