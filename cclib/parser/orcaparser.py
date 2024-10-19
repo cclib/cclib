@@ -1289,7 +1289,8 @@ Dispersion correction           -0.016199959
             header = ["d", "header", "header", "d"]
             energy_intensity: Optional[Callable[[str], Tuple[float, float]]] = None
 
-            if line == "ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS":
+            version = parse_version(self.metadata["package_version"]).release
+            if line == "ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS" and version < (6, 0):
 
                 def energy_intensity(line: str) -> Tuple[float, float]:
                     """TDDFT and related methods standard method of output
@@ -1310,6 +1311,21 @@ Dispersion correction           -0.016199959
                         intensity = 0
                     energy = utils.convertor(energy, "wavenumber", "hartree")
                     return energy, intensity
+
+            elif line == "ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS" and version > (6, 0):
+                def energy_intensity(line: str) -> Tuple[float, float]:
+                    """TDDFT and related methods standard method of output
+                    ----------------------------------------------------------------------------------------------------
+                     ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS
+                    ----------------------------------------------------------------------------------------------------
+                         Transition      Energy     Energy  Wavelength fosc(D2)      D2        DX        DY        DZ
+                                          (eV)      (cm-1)    (nm)                 (au**2)    (au)      (au)      (au)
+                    ----------------------------------------------------------------------------------------------------
+                      0-1Ag ->  1-3Bu   3.129277   25239.3   396.2   0.000000000   0.00000   0.00000   0.00000   0.00000"""
+                    state1, arrow, state2, energy_ev, energy_wavenumber, wavelength, intensity, t2, tx, ty, tz = line.split()
+
+                    energy = utils.convertor(utils.float(energy_wavenumber), "wavenumber", "hartree")
+                    return energy, utils.float(intensity)
 
             # Check for variations
             elif (
