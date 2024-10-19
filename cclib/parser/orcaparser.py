@@ -892,7 +892,9 @@ Dispersion correction           -0.016199959
             self.mosyms = [[]]
 
             line = next(inputfile)
-            while len(line) > 20:  # restricted calcs are terminated by ------
+            # restricted calcs are terminated by ------
+            # OR has *Only the first 10 virtual orbitals were printed.
+            while len(line) > 20 and line[:5] != '*Only':
                 info = line.split()
                 mooccno = int(float(info[1]))
                 moenergy = float(info[2])
@@ -2168,7 +2170,11 @@ Dispersion correction           -0.016199959
             self.reference = numpy.array([reference_x, reference_y, reference_z])
 
         if line.startswith("DIPOLE MOMENT"):
-            self.skip_lines(inputfile, ["d", "XYZ", "electronic", "nuclear", "d"])
+            self.skip_lines(inputfile, 'd')
+            line = next(inputfile) # blank or XYZ
+            if line.strip() == '':
+                self.skip_lines(inputfile, ['Method', 'Type', 'Multiplicity', 'Irrep', 'Energy', 'Relativity', 'Basis', 'XYZ'])
+            self.skip_lines(inputfile, ["electronic", "nuclear", "d"])
             total = next(inputfile)
             assert "Total Dipole Moment" in total
 
@@ -2823,8 +2829,11 @@ Dispersion correction           -0.016199959
                 rmsDP_value = None
                 rmsDP_target = None
 
-        self.scfvalues[-1].append([deltaE_value, maxDP_value, rmsDP_value])
-        self.scftargets.append([deltaE_target, maxDP_target, rmsDP_target])
+        if len(self.scfvalues) > 0:
+            self.scfvalues[-1].append([deltaE_value, maxDP_value, rmsDP_value])
+            self.scftargets.append([deltaE_target, maxDP_target, rmsDP_target])
+        else:
+            self.logger.warning('No SCF values when parsing final changes')
 
 
 _METHODS_SEMIEMPIRICAL = {"AM1", "MNDO", "PM3", "ZINDO/1", "ZINDO/S"}
