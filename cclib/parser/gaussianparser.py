@@ -243,6 +243,49 @@ class Gaussian(logfileparser.Logfile):
             run_date = next(inputfile).strip()  # noqa: F841
             line = self.skip_line(inputfile, "s")[0]
             while set(line.strip()) != {"-"}:
+                # Parse performance info.
+                if "Will use up to" in line and "processors via shared memory." in line:
+                    self.metadata["num_cpu"] = int(line.split()[4])
+
+                elif line[1:6].lower() == "%mem=":
+                    # The maximum amount of memory requested.
+                    # We need to do some unit juggling.
+                    mem_str = line.strip().upper()
+                    # No space is allowed between units, units can probably only be uppercase but convert anyway.
+                    # Supported units are: 'KB, MB, GB, TB, KW, MW, GW or TW'.
+                    # TODO: Good opportunity for case here in future.
+                    units = mem_str[-2:]
+                    raw_mem = int(mem_str[5:-2])
+                    # We are converting to bytes.
+                    if units == "TB":
+                        memory = raw_mem * 1e12
+
+                    elif units == "GB":
+                        memory = raw_mem * 1e9
+
+                    elif units == "MB":
+                        memory = raw_mem * 1e6
+
+                    elif units == "KB":
+                        memory = raw_mem * 1e3
+
+                    elif units == "TW":
+                        memory = raw_mem * 8e12
+
+                    elif units == "GW":
+                        memory = raw_mem * 8e9
+
+                    elif units == "MW":
+                        memory = raw_mem * 8e6
+
+                    elif units == "KW":
+                        memory = raw_mem * 8e3
+
+                    else:
+                        # No explicit units, default are single words (8-bytes)
+                        memory = mem_str[5:] * 8
+
+                    self.metadata["memory_available"] = int(memory)
                 line = next(inputfile)
             line = next(inputfile)
             self.parse_keywords_route_and_comment(inputfile, line)
@@ -252,64 +295,6 @@ class Gaussian(logfileparser.Logfile):
             self.skip_line(inputfile, "d")
             line = next(inputfile)
             self.parse_keywords_route_and_comment(inputfile, line)
-
-        # Parse performance info.
-        if "Will use up to" in line and "processors via shared memory." in line:
-            self.metadata["num_cpu"] = int(line.split()[4])
-
-        elif "Leave Link    1" in line and "MaxMem=" in line and "num_cpu" in self.metadata:
-            # Leave Link    1 at Wed Apr  4 10:49:19 2018, MaxMem=   805306368 cpu:               0.3 elap:               0.0
-            # Gaussian helpfully prints the total 'available' memory for us. There are, however a few caveats here:
-            # 1) This memory (in bytes) is per CPU
-            # 2) The total memory here (x num_cpu) will not equal the amount requested in %mem because Gaussian (probably erroneously)
-            #    interprets GB as gibibytes (1024 x 1024 x 1024 bytes) rather than gigabytes. This has the unfortunate consequence of
-            #    Gaussian assigning more memory than you probably expected.
-            #
-            # MaxMem can appear with or without whitespace:
-            # MaxMem=  805306368
-            # MaxMem=174483046400
-            memory_per_cpu = int(re.search(r"MaxMem=\s*(\d+)", line).group(1))
-            self.metadata["memory_used"] = memory_per_cpu * self.metadata["num_cpu"]
-
-        elif line[1:6].lower() == "%mem=":
-            # The maximum amount of memory requested.
-            # We need to do some unit juggling.
-            mem_str = line.strip().upper()
-            # No space is allowed between units, units can probably only be uppercase but convert anyway.
-            # Supported units are: 'KB, MB, GB, TB, KW, MW, GW or TW'.
-            # TODO: Good opportunity for case here in future.
-            units = mem_str[-2:]
-            raw_mem = int(mem_str[5:-2])
-            # We are converting to bytes.
-            if units == "TB":
-                memory = raw_mem * 1e12
-
-            elif units == "GB":
-                memory = raw_mem * 1e9
-
-            elif units == "MB":
-                memory = raw_mem * 1e6
-
-            elif units == "KB":
-                memory = raw_mem * 1e3
-
-            elif units == "TW":
-                memory = raw_mem * 8e12
-
-            elif units == "GW":
-                memory = raw_mem * 8e9
-
-            elif units == "MW":
-                memory = raw_mem * 8e6
-
-            elif units == "KW":
-                memory = raw_mem * 8e3
-
-            else:
-                # No explicit units, default are single words (8-bytes)
-                memory = mem_str[5:] * 8
-
-            self.metadata["memory_available"] = int(memory)
 
         # This block contains some general information as well as coordinates,
         # which could be parsed in the future:
@@ -2597,6 +2582,21 @@ class Gaussian(logfileparser.Logfile):
         line = next(inputfile)
         # Don't do anything with the route info for now.
         while set(line.strip()) != {"-"}:
+            if "Leave Link    1" in line and "MaxMem=" in line and "num_cpu" in self.metadata:
+                # Leave Link    1 at Wed Apr  4 10:49:19 2018, MaxMem=   805306368 cpu:               0.3 elap:               0.0
+                # Gaussian helpfully prints the total 'available' memory for us. There are, however a few caveats here:
+                # 1) This memory (in bytes) is per CPU
+                # 2) The total memory here (x num_cpu) will not equal the amount requested in %mem because Gaussian (probably erroneously)
+                #    interprets GB as gibibytes (1024 x 1024 x 1024 bytes) rather than gigabytes. This has the unfortunate consequence of
+                #    Gaussian assigning more memory than you probably expected.
+                #
+                # MaxMem can appear with or without whitespace:
+                # MaxMem=  805306368
+                # MaxMem=174483046400
+                maxmem = re.search(r"MaxMem=\s*(\d+)", line)
+                assert maxmem is not None
+                memory_per_cpu = int(maxmem.group(1))
+                self.metadata["memory_used"] = memory_per_cpu * self.metadata["num_cpu"]
             line = next(inputfile)
         line = next(inputfile)
         comments = []
