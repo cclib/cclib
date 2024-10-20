@@ -832,6 +832,8 @@ def testGaussian_Gaussian98_C_bigmult_log(logfile):
     assert logfile.data.metadata["legacy_package_version"] == "98revisionA.11.3"
     assert logfile.data.metadata["package_version"] == "1998+A.11.3"
     assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
+    assert logfile.data.metadata["keywords"] == ["#p HF/3-21G"]
+    assert logfile.data.metadata["comments"] == ["Title card required"]
 
 
 def testGaussian_Gaussian98_NIST_CCCBDB_1himidaz_m21b0_out(logfile):
@@ -848,6 +850,24 @@ def testGaussian_Gaussian98_NIST_CCCBDB_1himidaz_m21b0_out(logfile):
     assert logfile.data.metadata["legacy_package_version"] == "98revisionA.7"
     assert logfile.data.metadata["package_version"] == "1998+A.7"
     assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
+    assert logfile.data.metadata["keywords"] == [
+        "#G3",
+        "#N Geom=AllCheck Guess=TCheck HF/6-31G(d) Freq",
+        "#N Geom=AllCheck Guess=TCheck MP2(Full)/6-31G(d) Opt=RCFC",
+        "#N Geom=AllCheck Guess=TCheck QCISD(T,E4T)/6-31G(d)",
+        "#N Geom=AllCheck Guess=TCheck MP4/6-31+G(d)",
+        "#N Geom=AllCheck Guess=TCheck MP4/6-31G(2df,p)",
+        "#N Geom=AllCheck Guess=TCheck MP2=Full/GTLarge",
+    ]
+    assert logfile.data.metadata["comments"] == [
+        "1H imidazole C3H4N2 casno=288324",
+        "1H imidazole C3H4N2 casno=288324",
+        "1H imidazole C3H4N2 casno=288324",
+        "1H imidazole C3H4N2 casno=288324",
+        "1H imidazole C3H4N2 casno=288324",
+        "1H imidazole C3H4N2 casno=288324",
+        "1H imidazole C3H4N2 casno=288324",
+    ]
 
 
 def testGaussian_Gaussian98_NIST_CCCBDB_1himidaz_m23b6_out(logfile):
@@ -857,6 +877,8 @@ def testGaussian_Gaussian98_NIST_CCCBDB_1himidaz_m23b6_out(logfile):
     assert hasattr(logfile.data, "mult")
 
     assert logfile.data.metadata["package_version"] == "1998+A.7"
+    assert logfile.data.metadata["keywords"] == ["#MP2/cc-pVTZ"]
+    assert logfile.data.metadata["comments"] == ["1H imidazole C3H4N2 casno=288324"]
 
 
 def testGaussian_Gaussian98_test_Cu2_log(logfile):
@@ -871,6 +893,8 @@ def testGaussian_Gaussian98_test_Cu2_log(logfile):
     assert logfile.data.metadata["legacy_package_version"] == "98revisionA.11.4"
     assert logfile.data.metadata["package_version"] == "1998+A.11.4"
     assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
+    assert logfile.data.metadata["keywords"] == ["#P STO-3G SCF(MaxCycle=500) Freq IOP(7/33=1)"]
+    assert logfile.data.metadata["comments"] == ["Test"]
 
 
 def testGaussian_Gaussian98_test_H2_log(logfile):
@@ -882,6 +906,10 @@ def testGaussian_Gaussian98_test_H2_log(logfile):
     assert logfile.data.atomcharges["natural"][1] == 0.0
 
     assert logfile.data.metadata["package_version"] == "1998+A.11.4"
+    assert logfile.data.metadata["keywords"] == [
+        "#P STO-3G SCF(MaxCycle=500,conver=8) Pop=(NPA) Freq IOP(7/33=1)"
+    ]
+    assert logfile.data.metadata["comments"] == ["Test"]
 
 
 def testGaussian_Gaussian98_water_zmatrix_nosym_log(logfile):
@@ -895,6 +923,8 @@ def testGaussian_Gaussian98_water_zmatrix_nosym_log(logfile):
     assert logfile.data.natom == 3
 
     assert logfile.data.metadata["package_version"] == "1998+A.11.3"
+    assert logfile.data.metadata["keywords"] == ["#P HF/STO-3G NOSYM"]
+    assert logfile.data.metadata["comments"] == ["Water"]
 
 
 def testGaussian_Gaussian03_AM1_SP_out(logfile):
@@ -904,6 +934,8 @@ def testGaussian_Gaussian03_AM1_SP_out(logfile):
     assert logfile.data.metadata["legacy_package_version"] == "03revisionE.01"
     assert logfile.data.metadata["package_version"] == "2003+E.01"
     assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
+    assert logfile.data.metadata["keywords"] == ["# AM1 SP"]
+    assert logfile.data.metadata["comments"] == ["c(o1)ccc1~c([nH]1)ccc1~c(o1)ccc1~c([nH]1)ccc1"]
 
 
 def testGaussian_Gaussian03_OPT_td_out(logfile):
@@ -921,6 +953,11 @@ def testGaussian_Gaussian03_anthracene_log(logfile):
     assert logfile.data.metadata["legacy_package_version"] == "03revisionC.02"
     assert logfile.data.metadata["package_version"] == "2003+C.02"
     assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
+    assert logfile.data.metadata["keywords"] == [
+        "# opt freq hf/6-31g geom=connectivity",
+        "#N Geom=AllCheck Guess=Read SCRF=Check GenChk RHF/6-31G Freq",
+    ]
+    assert logfile.data.metadata["comments"] == ["Title Card Required", "Title Card Required"]
 
 
 def testGaussian_Gaussian03_borane_opt_log(logfile):
@@ -929,6 +966,8 @@ def testGaussian_Gaussian03_borane_opt_log(logfile):
     assert logfile.data.nmo == 609
 
     assert logfile.data.metadata["package_version"] == "2003+E.01"
+    assert logfile.data.metadata["keywords"] == ["#p gfinput #B3LYP/6-31+G(d) 5D #Opt"]
+    assert logfile.data.metadata["comments"] == ["Initial optimization of borane"]
 
 
 def testGaussian_Gaussian03_chn1_log(logfile):
@@ -941,6 +980,8 @@ def testGaussian_Gaussian03_chn1_log(logfile):
     assert logfile.data.metadata["legacy_package_version"] == "03revisionB.04"
     assert logfile.data.metadata["package_version"] == "2003+B.04"
     assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
+    assert logfile.data.metadata["keywords"] == ["#B3PW91/6-311G opt Pop=regular"]
+    assert logfile.data.metadata["comments"] == ["chn1"]
 
 
 def testGaussian_Gaussian03_cyclopropenyl_rhf_g03_cut_log(logfile):
@@ -952,6 +993,12 @@ def testGaussian_Gaussian03_cyclopropenyl_rhf_g03_cut_log(logfile):
     assert len(logfile.data.atomcoords) == len(logfile.data.geovalues)
 
     assert logfile.data.metadata["package_version"] == "2003+C.02"
+    assert logfile.data.metadata["keywords"] == [
+        "# RHF/cc-pVDZ opt=(maxcycle=1000) nosymm gfinput iop(6/7=3)"
+    ]
+    assert logfile.data.metadata["comments"] == [
+        "cyclopropenyl - RHF optimization - uklad (short48h)"
+    ]
 
 
 def testGaussian_Gaussian03_DCV4T_C60_log(logfile):
@@ -966,6 +1013,12 @@ def testGaussian_Gaussian03_DCV4T_C60_log(logfile):
     assert logfile.data.metadata["legacy_package_version"] == "03revisionD.02"
     assert logfile.data.metadata["package_version"] == "2003+D.02"
     assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
+    assert logfile.data.metadata["keywords"] == [
+        "#p pop=full pbepbe/gen nosymm pseudo=read punch=mo iop(3/33=1,3/36=-1)"
+    ]
+    assert logfile.data.metadata["comments"] == [
+        "DCV4T+C60 optimization with effective core potentials"
+    ]
 
 
 def testGaussian_Gaussian03_dvb_gopt_symmfollow_log(logfile):
@@ -985,6 +1038,8 @@ def testGaussian_Gaussian03_dvb_gopt_symmfollow_log(logfile):
     assert logfile.data.metadata["legacy_package_version"] == "03revisionC.01"
     assert logfile.data.metadata["package_version"] == "2003+C.01"
     assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
+    assert logfile.data.metadata["keywords"] == ["#p b3lyp/sto-3g opt symm=(follow,loose)"]
+    assert logfile.data.metadata["comments"] == ["Title Card Required"]
 
 
 def testGaussian_Gaussian03_mendes_out(logfile):
@@ -997,6 +1052,10 @@ def testGaussian_Gaussian03_mendes_out(logfile):
             assert x == 0
 
     assert logfile.data.metadata["package_version"] == "2003+C.02"
+    assert logfile.data.metadata["keywords"] == [
+        "# gfinput pop=full iop(3/33=1,3/36=-1) b3lyp/gen pseudo=read"
+    ]
+    assert logfile.data.metadata["comments"] == ["NiNC2SNO2C2 orbGS"]
 
 
 def testGaussian_Gaussian03_Mo4OSibdt2_opt_log(logfile):
@@ -1008,6 +1067,14 @@ def testGaussian_Gaussian03_Mo4OSibdt2_opt_log(logfile):
     assert hasattr(logfile.data, "atomcoords")
 
     assert logfile.data.metadata["package_version"] == "2003+C.02"
+    assert logfile.data.metadata["keywords"] == [
+        "#p gfinput iop(6/7=3) #UB3LYP/Gen pseudo=read #Opt Freq",
+        "#P Geom=AllCheck Guess=Read SCRF=Check Test GenChk UB3LYP/ChkBas Freq",
+    ]
+    assert logfile.data.metadata["comments"] == [
+        "Mo4OSibdt2 with CEP and 6-31G(d)",
+        "Mo4OSibdt2 with CEP and 6-31G(d)",
+    ]
 
 
 def testGaussian_Gaussian03_orbgs_log(logfile):
@@ -1019,6 +1086,10 @@ def testGaussian_Gaussian03_orbgs_log(logfile):
     assert logfile.data.coreelectrons[23] == 10
 
     assert logfile.data.metadata["package_version"] == "2003+C.02"
+    assert logfile.data.metadata["keywords"] == [
+        "# gfinput pop=full iop(3/33=1,3/36=-1) b3lyp/gen pseudo=read"
+    ]
+    assert logfile.data.metadata["comments"] == ["RuTioNO2+ TD calculation"]
 
 
 def testGaussian_Gaussian09_100_g09(logfile):
@@ -1029,6 +1100,14 @@ def testGaussian_Gaussian09_100_g09(logfile):
     assert logfile.data.metadata["legacy_package_version"] == "09revisionB.01"
     assert logfile.data.metadata["package_version"] == "2009+B.01"
     assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
+    assert logfile.data.metadata["keywords"] == [
+        "#T wB97xD/Def2SVP OPT=(MaxCycles=500)",
+        "# Geom=AllCheck ZINDO(NStates=15,Singlets)",
+    ]
+    assert logfile.data.metadata["comments"] == [
+        "c1sc2c(c1)oc1c2sc(c1)c1sc2c(c1)oc1c2sc(c1)c1sc2c(c1)oc1c2sc(c1)c1sc2c(c1)oc1c2sc(c1)",
+        "c1sc2c(c1)oc1c2sc(c1)c1sc2c(c1)oc1c2sc(c1)c1sc2c(c1)oc1c2sc(c1)c1sc2c(c1)oc1c2sc(c1)",
+    ]
 
 
 def testGaussian_Gaussian09_25DMF_HRANH_log(logfile):
@@ -1041,6 +1120,11 @@ def testGaussian_Gaussian09_25DMF_HRANH_log(logfile):
     assert abs(anharms[N - 1][N - 1] + 36.481) < 0.01
 
     assert logfile.data.metadata["package_version"] == "2009+B.01"
+    assert logfile.data.metadata["keywords"] == [
+        "# B3LYP/6-31+G(d,p) Opt=Tight Int=Ultrafine Freq=(HinderedRotor,Anharmonic)",
+        "#N Geom=AllCheck Guess=TCheck SCRF=Check GenChk RB3LYP/6-31+G(d,p) Freq",
+    ]
+    assert logfile.data.metadata["comments"] == ["25DMF", "25DMF"]
 
 
 def testGaussian_Gaussian09_2D_PES_all_converged_log(logfile):
@@ -1050,6 +1134,10 @@ def testGaussian_Gaussian09_2D_PES_all_converged_log(logfile):
     assert logfile.data.metadata["legacy_package_version"] == "09revisionD.01"
     assert logfile.data.metadata["package_version"] == "2009+D.01"
     assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
+    assert logfile.data.metadata["keywords"] == [
+        "#p opt=modredundant m062x/6-311+g(d,p) scrf=(solvent=water)"
+    ]
+    assert logfile.data.metadata["comments"] == ["sco scan-ext"]
 
     # The energies printed in the scan summary are misformated.
     assert numpy.all(numpy.isnan(logfile.data.scanenergies))
@@ -1060,6 +1148,10 @@ def testGaussian_Gaussian09_2D_PES_one_unconverged_log(logfile):
     assert ccData.OPT_UNCONVERGED in logfile.data.optstatus
 
     assert logfile.data.metadata["package_version"] == "2009+D.01"
+    assert logfile.data.metadata["keywords"] == [
+        "#p opt=modredundant m062x/6-311+g(d,p) scrf=(solvent=water)"
+    ]
+    assert logfile.data.metadata["comments"] == ["sco scan-ext"]
 
 
 def testGaussian_Gaussian09_534_out(logfile):
@@ -1073,6 +1165,8 @@ def testGaussian_Gaussian09_534_out(logfile):
     assert logfile.data.metadata["legacy_package_version"] == "09revisionA.02"
     assert logfile.data.metadata["package_version"] == "2009+A.02"
     assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
+    assert logfile.data.metadata["keywords"] == ["#T PM6 OPT", "# ZINDO Geom=AllCheck"]
+    assert logfile.data.metadata["comments"] == ["C#CC#CC#CC#C", "C#CC#CC#CC#C"]
 
 
 def testGaussian_Gaussian09_BSL_opt_freq_DFT_out(logfile):
@@ -1086,6 +1180,14 @@ def testGaussian_Gaussian09_BSL_opt_freq_DFT_out(logfile):
     assert logfile.data.moments[4][-1] == -77.9600
 
     assert logfile.data.metadata["package_version"] == "2009+D.01"
+    assert logfile.data.metadata["keywords"] == [
+        "# opt freq rb3lyp/6-311++g(3df,3pd) geom=connectivity",
+        "#N Geom=AllCheck Guess=TCheck SCRF=Check GenChk RB3LYP/6-311++G(3df,3pd) Freq",
+    ]
+    assert logfile.data.metadata["comments"] == [
+        "BenzeneSelenol WB97XD-CC-PVDZ",
+        "BenzeneSelenol WB97XD-CC-PVDZ",
+    ]
 
 
 def testGaussian_Gaussian09_dvb_gopt_unconverged_log(logfile):
@@ -1099,6 +1201,8 @@ def testGaussian_Gaussian09_dvb_gopt_unconverged_log(logfile):
         == [datetime.timedelta(seconds=27, microseconds=700000)]
     )
     assert logfile.data.metadata["package_version"] == "2009+D.01"
+    assert logfile.data.metadata["keywords"] == ["#p b3lyp/sto-3g opt(maxcycles=5,maxstep=1)"]
+    assert logfile.data.metadata["comments"] == ["Title Card Required"]
 
 
 def testGaussian_Gaussian09_dvb_lowdin_log(logfile):
@@ -1107,6 +1211,8 @@ def testGaussian_Gaussian09_dvb_lowdin_log(logfile):
     assert "lowdin" in logfile.data.atomcharges
 
     assert logfile.data.metadata["package_version"] == "2009+A.02"
+    assert logfile.data.metadata["keywords"] == ["#p rb3lyp/sto-3g iop(6/80=1)"]
+    assert logfile.data.metadata["comments"] == ["Print Lowdin charges"]
 
 
 def testGaussian_Gaussian09_Dahlgren_TS_log(logfile):
@@ -1115,6 +1221,12 @@ def testGaussian_Gaussian09_Dahlgren_TS_log(logfile):
     assert abs(convertor(logfile.data.ccenergies[0], "eV", "hartree") - (-434.37573219)) < 1.0e-6
 
     assert logfile.data.metadata["package_version"] == "2009+A.02"
+    assert logfile.data.metadata["keywords"] == [
+        "# SCRF=(Solvent=Water) geom=check CCSD(T,T1Diag,Conver=6)/6-31+G(d)"
+    ]
+    assert logfile.data.metadata["comments"] == [
+        "Single point energy of TS with coordinates from dEaa12_TS.chk"
+    ]
 
 
 def testGaussian_Gaussian09_irc_point_log(logfile):
@@ -1123,6 +1235,10 @@ def testGaussian_Gaussian09_irc_point_log(logfile):
     assert len(logfile.data.vibfreqs) == 11
 
     assert logfile.data.metadata["package_version"] == "2009+D.01"
+    assert logfile.data.metadata["keywords"] == [
+        "#p gfprint pop=full HF/6-31G(d) freq=projected symmetry=none"
+    ]
+    assert logfile.data.metadata["comments"] == ["Gaussian input prepared by ASE"]
 
 
 def testGaussian_Gaussian09_issue_460_log(logfile):
@@ -1149,6 +1265,10 @@ def testGaussian_Gaussian09_issue_460_log(logfile):
     assert numpy.isnan(logfile.data.scfvalues[0][0, 2])
 
     assert logfile.data.metadata["package_version"] == "2009+D.01"
+    assert logfile.data.metadata["keywords"] == [
+        "#p opt=(calcfc,modredundant,ts,noeigentest) freq=noraman SCRF=(SMD,SOLVENT=generic,read) GEN 5D pseudo=read scfcyc=60 scf=xqc B3LYP EmpiricalDispersion=GD3"
+    ]
+    assert logfile.data.metadata["comments"] == ["Title Card Required"]
 
 
 def testGaussian_Gaussian09_OPT_td_g09_out(logfile):
@@ -1157,12 +1277,18 @@ def testGaussian_Gaussian09_OPT_td_g09_out(logfile):
     assert logfile.data.etrotats[0] == -0.4568
 
     assert logfile.data.metadata["package_version"] == "2009+A.02"
+    assert logfile.data.metadata["keywords"] == ["# td=(nstates=10) b3lyp geom=connectivity tzvp"]
+    assert logfile.data.metadata["comments"] == ["opt_td_g09"]
 
 
 def testGaussian_Gaussian09_OPT_oniom_log(logfile):
     """AO basis extraction broke with ONIOM"""
 
     assert logfile.data.metadata["package_version"] == "2009+D.01"
+    assert logfile.data.metadata["keywords"] == [
+        "#p gfprint oniom(UB3LYP/6-31G(d):upm6) opt geom=allcheck guess=read"
+    ]
+    assert logfile.data.metadata["comments"] == ["Gaussian input prepared by ASE"]
 
 
 def testGaussian_Gaussian09_oniom_IR_intensity_log(logfile):
@@ -1171,6 +1297,10 @@ def testGaussian_Gaussian09_oniom_IR_intensity_log(logfile):
     assert len(logfile.data.vibirs) == 216
 
     assert logfile.data.metadata["package_version"] == "2009+C.01"
+    assert logfile.data.metadata["keywords"] == [
+        "#p oniom(B3LYP/6-31G(d):pm6) geom=allcheck freq guess=read scf=xqc"
+    ]
+    assert logfile.data.metadata["comments"] == ["Gaussian input prepared by ASE"]
 
 
 def testGaussian_Gaussian09_Ru2bpyen2_H2_freq3_log(logfile):
@@ -1178,6 +1308,10 @@ def testGaussian_Gaussian09_Ru2bpyen2_H2_freq3_log(logfile):
     assert len(logfile.data.atomnos) == 69
 
     assert logfile.data.metadata["package_version"] == "2009+A.02"
+    assert logfile.data.metadata["keywords"] == [
+        "#p gfinput iop(6/7=3) #B3LYP/Gen pseudo=read #Freq SCF=Tight Integral=UltraFine"
+    ]
+    assert logfile.data.metadata["comments"] == ["[Ru(bpy)(en*)2]2+ freq"]
 
 
 def testGaussian_Gaussian09_benzene_HPfreq_log(logfile):
@@ -1185,6 +1319,10 @@ def testGaussian_Gaussian09_benzene_HPfreq_log(logfile):
     assert abs(logfile.data.vibdisps[0, 0, 2] - (-0.04497)) < 0.00001
 
     assert logfile.data.metadata["package_version"] == "2009+C.01"
+    assert logfile.data.metadata["keywords"] == ["# AM1 freq=HPmodes geom=check guess=read"]
+    assert logfile.data.metadata["comments"] == [
+        "Benzene frequency calculation printing out normal mode displacements in higher precision"
+    ]
 
 
 def testGaussian_Gaussian09_benzene_freq_log(logfile):
@@ -1256,6 +1394,11 @@ def testGaussian_Gaussian09_benzene_excited_states_optimization_issue889_log(log
     assert len(logfile.data.etsecs) == 20
     assert logfile.data.etveldips.shape == (20, 3)
 
+    assert logfile.data.metadata["keywords"] == [
+        "#p Opt TDA=(Nstates=20,Singlets) pbe1pbe/6-31G(d,p) EmpiricalDispersion=(GD3BJ) Symmetry=Tight Density Population=Regular"
+    ]
+    assert logfile.data.metadata["comments"] == ["Benzene_Optimisation"]
+
 
 def testGaussian_Gaussian09_issue1150_log(logfile):
     """Symmetry parsing for Gaussian09 was broken"""
@@ -1312,6 +1455,10 @@ def testGaussian_Gaussian16_naturalspinorbitals_parsing_log(logfile):
     assert logfile.data.metadata["legacy_package_version"] == "16revisionA.03"
     assert logfile.data.metadata["package_version"] == "2016+A.03"
     assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
+    assert logfile.data.metadata["keywords"] == [
+        "#p mp2/aug-cc-pvdz IOp(3/27=20,3/22=0) Guess=INDO scf=(NoVarAcc,MaxCycle=512) Pop=NaturalSpinOrbitals Density=Current Polar"
+    ]
+    assert logfile.data.metadata["comments"] == ["Natural Spin Orbitals"]
 
 
 def testGaussian_Gaussian16_issue851_log(logfile):
