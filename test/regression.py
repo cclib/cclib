@@ -2790,6 +2790,15 @@ def testTurbomole_Turbomole7_5_mp2_opt__(logfile):
     assert len(logfile.data.scfenergies) == len(logfile.data.mpenergies)
 
 
+def testXTB_basicXTB6_5_1_1448_out(logfile):
+    """Atomic coordinates for elements with two-letter symbols were not being
+    parsed.
+
+    See https://github.com/cclib/cclib/issues/1448
+    """
+    assert logfile.data.atomcoords.shape == (1, 5, 3)
+
+
 # These regression tests are for logfiles that are not to be parsed
 # for some reason, and the function should start with 'testnoparse'.
 
