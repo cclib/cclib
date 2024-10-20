@@ -241,9 +241,17 @@ class Gaussian(logfileparser.Logfile):
                 )
                 self.metadata["platform"] = groupdict["platform"]
             run_date = next(inputfile).strip()  # noqa: F841
+            line = self.skip_line(inputfile, "s")[0]
+            while set(line.strip()) != {"-"}:
+                line = next(inputfile)
+            line = next(inputfile)
+            self.parse_keywords_route_and_comment(inputfile, line)
 
         if line.strip().startswith("Link1:  Proceeding to internal job step number"):
             self.new_internal_job()
+            self.skip_line(inputfile, "d")
+            line = next(inputfile)
+            self.parse_keywords_route_and_comment(inputfile, line)
 
         # Parse performance info.
         if "Will use up to" in line and "processors via shared memory." in line:
@@ -2557,3 +2565,44 @@ class Gaussian(logfileparser.Logfile):
 
         if line[:31] == " Normal termination of Gaussian":
             self.metadata["success"] = True
+
+    def parse_keywords_route_and_comment(self, inputfile, line: str) -> None:
+        """Parse the keyword line and comment from the echoed input file into metadata."""
+        # example:
+        #
+        # --------------------------------
+        # #p hf/sto-3g polar symmetry=none
+        # --------------------------------
+        # 1/38=1,172=1/1;
+        # 2/12=2,15=3,17=6,18=5,40=1/2;
+        # 3/6=3,11=9,25=1,30=1/1,2,3;
+        # 4//1;
+        # 5/5=2,38=5,98=1/2;
+        # 8/6=4,10=90,11=11/1;
+        # 10/6=1,13=10,31=1/2;
+        # 6/7=2,8=2,9=2,10=2,28=1/1;
+        # 99/5=1,9=1/99;
+        # Leave Link    1 at Wed Apr  4 10:15:34 2018, MaxMem=           0 cpu:               0.0 elap:               0.1
+        # (Enter /software/Gaussian16/g16_sse4/g16/l101.exe)
+        # --------------------------------
+        # tryptophan static polarizability
+        # --------------------------------
+        keywords = []
+        while set(line.strip()) != {"-"}:
+            keywords.append(line.strip())
+            line = next(inputfile)
+        if "keywords" not in self.metadata:
+            self.metadata["keywords"] = []
+        self.metadata["keywords"].append("".join(keywords))
+        line = next(inputfile)
+        # Don't do anything with the route info for now.
+        while set(line.strip()) != {"-"}:
+            line = next(inputfile)
+        line = next(inputfile)
+        comments = []
+        while set(line.strip()) != {"-"}:
+            comments.append(line.strip())
+            line = next(inputfile)
+        if "comments" not in self.metadata:
+            self.metadata["comments"] = []
+        self.metadata["comments"].append("".join(comments))
