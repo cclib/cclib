@@ -16,6 +16,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterator, List, Mapping, Optional, Tuple, Union
 
+from cclib.bridge import cclib2pyscf
 from cclib.io import ccopen
 from cclib.parser.data import ccData
 from cclib.parser.logfileparser import Logfile
@@ -294,13 +295,38 @@ def data(request) -> ccData:
     files = request.param
     first = files[0]
     if first not in _CACHE:
-        logfile = ccopen([str(f) for f in files], future=True)
-        data = logfile.parse()
-        filenames = logfile.filename
+        # For 'normal' log files we use ccopen to parse.
+        # For pseudo parsers (like PySCF) we use a different mechanism.
+        if "PySCF" in str(first):
+            # TODO: a smarter check?
+            # PySCF.
+            logfile = cclib2pyscf.makecclib
+            filenames = [str(file) for file in files]
+
+            # Import the given file so we can run it
+            # Adapted from https://stackoverflow.com/questions/67631/how-can-i-import-a-module-dynamically-given-the-full-path
+            import importlib.util
+
+            spec = importlib.util.spec_from_file_location(first.name, first)
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+
+            # Run the exposed calculate() method and 'parse'.
+            res = module.calculate()
+            methods = res.pop("methods")
+            data = logfile(*methods, **res)
+            data.parsername = "PySCF"
+        else:
+            # Normal logfiles.
+            # logfile is really the parser.
+            logfile = ccopen([str(f) for f in files], future=True)
+            data = logfile.parse()
+            filenames = logfile.filename
+            data.parsername = logfile.logname
+
         if not isinstance(filenames, list):
             filenames = [filenames]
         data.filenames = filenames
-        data.parsername = logfile.logname
         data.parserclassname = str(logfile.__class__).split(".")[-1][:-2]
         _CACHE[first] = data
     return _CACHE[first]
