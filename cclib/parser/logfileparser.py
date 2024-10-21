@@ -13,7 +13,7 @@ from abc import ABC, abstractmethod
 from typing import Any, Iterable, List, Optional
 
 from cclib.parser import utils
-from cclib.parser.data import ccData
+from cclib.parser.data import ccData, ccData_optdone_bool
 from cclib.parser.logfilewrapper import FileWrapper
 
 import numpy
@@ -39,7 +39,7 @@ class Logfile(ABC):
         loglevel: int = logging.ERROR,
         logname: str = "Log",
         logstream=sys.stderr,
-        datatype=ccData,
+        datatype=ccData_optdone_bool,
         **kwds,
     ):
         """Initialise the Logfile object.
@@ -87,6 +87,12 @@ class Logfile(ABC):
         self.datatype = datatype
 
         self.future = kwds.get("future", False)
+        # Change the class used if we want optdone to be a list or if the 'future' option
+        # is used, which might have more consequences in the future.
+        optdone_as_list = kwds.get("optdone_as_list", False) or kwds.get("future", False)
+        optdone_as_list = optdone_as_list if isinstance(optdone_as_list, bool) else False
+        if optdone_as_list:
+            self.datatype = ccData
         # Parsing of Natural Orbitals and Natural Spin Orbtials into one attribute
         self.unified_no_nso = self.future
 

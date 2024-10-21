@@ -511,7 +511,27 @@ A dictionary where the keys zero-index the atomic center for which the chemical 
 optdone
 -------
 
-A list that indexes which elements of `atomcoords`_ represent converged geometries.
+Flags whether a geometry optimisation has completed. Currently this attribute is a single Boolean value, which is set to True when the final `atomcoords`_ represent a converged geometry optimisation. In the future, ``optdone`` will be a list that indexes which elements of `atomcoords`_ represent converged geometries. This functionality can be used starting from version 1.3, from the command line by passing the ``--future`` option to ``ccget``,
+
+.. code-block:: bash
+
+    $ ccget optdone data/Gaussian/basicGaussian09/dvb_gopt.out
+    Attempting to parse data/Gaussian/basicGaussian09/dvb_gopt.out
+    optdone:
+    True
+
+    $ ccget --future optdone data/Gaussian/basicGaussian09/dvb_gopt.out
+    Attempting to parse data/Gaussian/basicGaussian09/dvb_gopt.out
+    optdone:
+    [4]
+
+or by providing the corresponding argument to ``ccopen``,
+
+.. code-block:: python
+
+    from cclib.parser import ccopen
+    parser = ccopen("filename", optdone_as_list=True) # could also do future=True instead of optdone_as_list
+    data = parser.parse()
 
 optstatus
 ---------
