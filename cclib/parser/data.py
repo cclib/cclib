@@ -69,7 +69,7 @@ class ccData:
         nooccnos -- natural orbital occupation numbers (array[1])
         nsocoeffs -- natural spin orbital coefficients (list of array[2])
         nsooccnos -- natural spin orbital occupation numbers (list of array[1])
-        optdone -- flags whether an optimization has converged (list of int)
+        optdone -- flags whether an optimization has converged (bool or list of int)
         optstatus -- optimization status for each set of atomic coordinates (array[1])
         polarizabilities -- (dipole) polarizabilities, static or dynamic (list of arrays[2])
         pressure -- pressure used for Thermochemistry (float, atm)
@@ -444,3 +444,21 @@ class ccData:
     @property
     def closed_shell(self) -> bool:
         return orbitals.Orbitals(self).closed_shell()
+
+
+class ccData_optdone_bool(ccData):
+    """This is the version of ccData where optdone is a Boolean."""
+
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self._attributes["optdone"] = Attribute(bool, "done", "optimization")
+
+    def setattributes(self, *args, **kwargs) -> List[str]:
+        invalid = super().setattributes(*args, **kwargs)
+
+        # Reduce optdone to a Boolean, because it will be parsed as a list. If this list has any element,
+        # it means that there was an optimized structure and optdone should be True.
+        if hasattr(self, "optdone"):
+            self.optdone = len(self.optdone) > 0
+
+        return invalid
