@@ -765,6 +765,7 @@ class Turbomole(logfileparser.Logfile):
                 info = re.match(
                     r".*eigenvalue=(?P<moenergy>[0-9D\.+-]{20})\s+nsaos=(?P<count>\d+).*", line
                 )
+                assert info is not None
                 eigenvalue = utils.float(info.group("moenergy"))
 
                 moenergies.append(eigenvalue)

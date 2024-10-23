@@ -5,6 +5,8 @@
 
 """Test geometry optimization logfiles in cclib"""
 
+from cclib.parser import utils
+
 import numpy
 from common import get_minimum_carbon_separation
 from skip import skipForLogfile, skipForParser
@@ -23,8 +25,8 @@ class GenericGeoOptTest:
     extrascfs = 0
 
     # Approximate B3LYP energy of dvb after SCF in STO-3G.
-    b3lyp_energy = -380.90674109218116
-    b3lyp_tolerance = 1.4699729516340807
+    scfenergy = -380.90674109218116
+    scfenergy_tolerance = 1.4699729516340807
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("MOPAC", "The success status is not parsed yet")
@@ -100,11 +102,9 @@ class GenericGeoOptTest:
 
     def testscfenergy(self, data) -> None:
         """Is the SCF energy close to target?"""
-        scf = data.scfenergies[-1]
-        ref = self.b3lyp_energy
-        tol = self.b3lyp_tolerance
-        msg = f"Final SCF energy: {scf:f} not {int(ref)} +- {int(tol)}eV"
-        assert abs(scf - ref) < 40, msg
+        assert abs(
+            data.scfenergies[-1] - utils.convertor(self.scfenergy, "hartree", "eV")
+        ) < utils.convertor(self.scfenergy_tolerance, "hartree", "eV")
 
     @skipForParser("xTB", "Not implemented yet")
     def testscfenergydim(self, data) -> None:
@@ -231,8 +231,8 @@ class ADFGeoOptTest(GenericGeoOptTest):
     extracoords = 1
     extrascfs = 1
 
-    b3lyp_energy = -5.144905330719283
-    b3lyp_tolerance = 0.03674932379085202
+    scfenergy = -5.144905330719283
+    scfenergy_tolerance = 0.03674932379085202
 
 
 class DALTONGeoOptTest(GenericGeoOptTest):
@@ -307,8 +307,8 @@ class MOPACGeoOptTest(GenericGeoOptTest):
     """Customized geometry optimization unittest for MOPAC."""
 
     # The geometry optimization unit test logfile uses a PM7 Hamiltonian.
-    b3lyp_energy = 0.08166294233283113
-    b3lyp_tolerance = 1.6e-5
+    scfenergy = 0.08166294233283113
+    scfenergy_tolerance = 1.6e-5
 
 
 class NWChemGeoOptTest(GenericGeoOptTest):
@@ -335,7 +335,7 @@ class OrcaGeoOptTest(GenericGeoOptTest):
     #   2) gradient is overachieved and displacement is reasonable (3 x tolerance)
     #   3) displacement is overachieved and gradient is reasonable (3 x tolerance)
     #   4) energy, gradients and angles are converged (displacements not considered)
-    # All these exceptions are signaleld in the output with some comments, and here
+    # All these exceptions are signaled in the output with some comments, and here
     # we include the first three exceptions for the pruposes of the unit test.
     def testgeoconverged(self, data) -> None:
         """Has the geometry converged and set optdone to True?"""
@@ -387,9 +387,8 @@ class Psi4GeoOptTest(GenericGeoOptTest):
 class XTBGeoOptTest(GenericGeoOptTest):
     """Customized restricted single point unittest"""
 
-    def testscfenergy(self, data) -> None:
-        """Is the SCF energy within the target?"""
-        assert abs(data.scfenergies[-1] - -26.438242468348) < 1.0e-6
+    scfenergy = -26.438242468348
+    scfenergy_tolerance = 1.0e-6
 
 
 class TurbomoleKeepGeoOptTest(GenericGeoOptTest):

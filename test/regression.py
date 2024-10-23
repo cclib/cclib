@@ -39,6 +39,7 @@ from pathlib import Path
 
 from cclib.io import ccread, moldenwriter
 from cclib.parser import DALTON, Gaussian, ccData
+from cclib.parser.utils import convertor
 
 import numpy
 import pytest
@@ -652,7 +653,7 @@ def testGAMESS_GAMESS_US2008_N2_UMP2_out(logfile):
     """Check that the new format for GAMESS MP2 is parsed."""
     assert hasattr(logfile.data, "mpenergies")
     assert len(logfile.data.mpenergies) == 1
-    assert abs(logfile.data.mpenergies[0] - -109.3647999161) < 1.0e-10
+    assert abs(convertor(logfile.data.mpenergies[0], "eV", "hartree") - -109.3647999161) < 1.0e-10
 
     assert logfile.data.metadata["legacy_package_version"] == "2008R1"
     assert logfile.data.metadata["package_version"] == "2008.r1"
@@ -663,7 +664,7 @@ def testGAMESS_GAMESS_US2008_N2_ROMP2_out(logfile):
     """Check that the new format for GAMESS MP2 is parsed."""
     assert hasattr(logfile.data, "mpenergies")
     assert len(logfile.data.mpenergies) == 1
-    assert abs(logfile.data.mpenergies[0] - -109.3647999184) < 1.0e-10
+    assert abs(convertor(logfile.data.mpenergies[0], "eV", "hartree") - -109.3647999184) < 1.0e-10
 
     assert logfile.data.metadata["package_version"] == "2008.r1"
 
@@ -672,7 +673,7 @@ def testGAMESS_GAMESS_US2009_open_shell_ccsd_test_log(logfile):
     """Parse ccenergies from open shell CCSD calculations."""
     assert hasattr(logfile.data, "ccenergies")
     assert len(logfile.data.ccenergies) == 1
-    assert abs(logfile.data.ccenergies[0] - -128.6777922565) < 1.0e-10
+    assert abs(convertor(logfile.data.ccenergies[0], "eV", "hartree") - -128.6777922565) < 1.0e-10
 
     assert logfile.data.metadata["legacy_package_version"] == "2009R3"
     assert logfile.data.metadata["package_version"] == "2009.r3"
@@ -683,7 +684,7 @@ def testGAMESS_GAMESS_US2009_paulo_h2o_mp2_out(logfile):
     """Check that the new format for GAMESS MP2 is parsed."""
     assert hasattr(logfile.data, "mpenergies")
     assert len(logfile.data.mpenergies) == 1
-    assert abs(logfile.data.mpenergies[0] - -76.1492222841) < 1.0e-10
+    assert abs(convertor(logfile.data.mpenergies[0], "eV", "hartree") - -76.1492222841) < 1.0e-10
 
     assert logfile.data.metadata["package_version"] == "2009.r3"
 
@@ -758,7 +759,11 @@ def testGAMESS_WinGAMESS_dvb_td_trplet_2007_03_24_r1_out(logfile):
         0
     ]
     assert (
-        abs(logfile.data.etenergies[idx_lambdamax] - (-381.9320539243 - -382.0432999970)) < 1.0e-5
+        abs(
+            convertor(logfile.data.etenergies[idx_lambdamax], "wavenumber", "hartree")
+            - (-381.9320539243 - -382.0432999970)
+        )
+        < 1.0e-5
     )
     assert len(logfile.data.etoscs) == number
     assert abs(max(logfile.data.etoscs) - 0.0) < 0.01
@@ -1060,7 +1065,10 @@ def testGaussian_Gaussian09_2D_PES_one_unconverged_log(logfile):
 def testGaussian_Gaussian09_534_out(logfile):
     """Previously, caused etenergies parsing to fail."""
     assert logfile.data.etsyms[0] == "Singlet-?Sym"
-    assert abs(logfile.data.etenergies[0] - 0.09532039604871197) < 1.0e-5
+    assert (
+        abs(convertor(logfile.data.etenergies[0], "wavenumber", "hartree") - 0.09532039604871197)
+        < 1.0e-5
+    )
 
     assert logfile.data.metadata["legacy_package_version"] == "09revisionA.02"
     assert logfile.data.metadata["package_version"] == "2009+A.02"
@@ -1104,7 +1112,7 @@ def testGaussian_Gaussian09_dvb_lowdin_log(logfile):
 def testGaussian_Gaussian09_Dahlgren_TS_log(logfile):
     """Failed to parse ccenergies for a variety of reasons"""
     assert hasattr(logfile.data, "ccenergies")
-    assert abs(logfile.data.ccenergies[0] - (-434.37573219)) < 1.0e-6
+    assert abs(convertor(logfile.data.ccenergies[0], "eV", "hartree") - (-434.37573219)) < 1.0e-6
 
     assert logfile.data.metadata["package_version"] == "2009+A.02"
 
@@ -1681,7 +1689,7 @@ def testORCA_ORCA2_9_job_out(logfile):
 
 def testORCA_ORCA2_9_qmspeedtest_hf_out(logfile):
     """Check precision of SCF energies (cclib/cclib#210)."""
-    energy = logfile.data.scfenergies[-1]
+    energy = convertor(logfile.data.scfenergies[-1], "eV", "hartree")
     expected = -644.675706036271
     assert abs(energy - expected) < 1.0e-8
 
@@ -1913,7 +1921,7 @@ def testORCA_ORCA4_2_longer_input_out(logfile):
 
 def testORCA_ORCA4_2_casscf_out(logfile):
     """ORCA casscf input file (#1044)."""
-    assert numpy.isclose(logfile.data.etenergies[0], 0.128812)
+    assert numpy.isclose(convertor(logfile.data.etenergies[0], "wavenumber", "hartree"), 0.128812)
 
 
 def testORCA_ORCA5_0_ADBNA_Me_Mes_MesCz_log(logfile):
@@ -2032,7 +2040,7 @@ def testQChem_QChem4_2_CH3___Na__RS_out(logfile):
     # Fragments: A, B, RS_CP(A), RS_CP(B), Full
     assert len(logfile.data.scfenergies) == 1
     scfenergy = -201.9388745658
-    assert abs(logfile.data.scfenergies[0] - scfenergy) < 1.0e-10
+    assert abs(convertor(logfile.data.scfenergies[0], "eV", "hartree") - scfenergy) < 1.0e-10
 
     assert logfile.data.nbasis == logfile.data.nmo == 40
     assert len(logfile.data.moenergies[0]) == 40
@@ -2065,7 +2073,7 @@ def testQChem_QChem4_2_CH3___Na__RS_SCF_out(logfile):
     # Fragments: A, B, RS_CP(A), RS_CP(B), SCF_CP(A), SCF_CP(B), Full
     assert len(logfile.data.scfenergies) == 1
     scfenergy = -201.9396979324
-    assert abs(logfile.data.scfenergies[0] - scfenergy) < 1.0e-10
+    assert abs(convertor(logfile.data.scfenergies[0], "eV", "hartree") - scfenergy) < 1.0e-10
 
     assert logfile.data.nbasis == logfile.data.nmo == 40
     assert len(logfile.data.moenergies[0]) == 40
@@ -2096,7 +2104,7 @@ def testQChem_QChem4_2_CH4___Na__out(logfile):
     # Fragments: A, B, Full
     assert len(logfile.data.scfenergies) == 1
     scfenergy = -202.6119443654
-    assert abs(logfile.data.scfenergies[0] - scfenergy) < 1.0e-10
+    assert abs(convertor(logfile.data.scfenergies[0], "eV", "hartree") - scfenergy) < 1.0e-10
 
     assert logfile.data.nbasis == logfile.data.nmo == 42
     assert len(logfile.data.moenergies[0]) == 42
@@ -2126,7 +2134,7 @@ def testQChem_QChem4_2_CH3___Na__RS_SCF_noprint_out(logfile):
 
     assert len(logfile.data.scfenergies) == 1
     scfenergy = -201.9396979324
-    assert abs(logfile.data.scfenergies[0] - scfenergy) < 1.0e-10
+    assert abs(convertor(logfile.data.scfenergies[0], "eV", "hartree") - scfenergy) < 1.0e-10
 
     assert logfile.data.nbasis == logfile.data.nmo == 40
     assert len(logfile.data.moenergies[0]) == 40
@@ -2156,7 +2164,7 @@ def testQChem_QChem4_2_CH3___Na__RS_noprint_out(logfile):
 
     assert len(logfile.data.scfenergies) == 1
     scfenergy = -201.9388582085
-    assert abs(logfile.data.scfenergies[0] - scfenergy) < 1.0e-10
+    assert abs(convertor(logfile.data.scfenergies[0], "eV", "hartree") - scfenergy) < 1.0e-10
 
     assert logfile.data.nbasis == logfile.data.nmo == 40
     assert len(logfile.data.moenergies[0]) == 40
@@ -2184,7 +2192,7 @@ def testQChem_QChem4_2_CH4___Na__noprint_out(logfile):
 
     assert len(logfile.data.scfenergies) == 1
     scfenergy = -202.6119443654
-    assert abs(logfile.data.scfenergies[0] - scfenergy) < 1.0e-10
+    assert abs(convertor(logfile.data.scfenergies[0], "eV", "hartree") - scfenergy) < 1.0e-10
 
     assert logfile.data.nbasis == logfile.data.nmo == 42
     assert len(logfile.data.moenergies[0]) == 42
@@ -2728,8 +2736,14 @@ def testQChem_QChem5_0_argon_out(logfile):
     assert len(logfile.data.etenergies) == nroots
     state_0_energy = -526.6323968555
     state_1_energy = -526.14663738
-    assert logfile.data.scfenergies[0] == state_0_energy
-    assert abs(logfile.data.etenergies[0] - (state_1_energy - state_0_energy)) < 1.0e-1
+    assert convertor(logfile.data.scfenergies[0], "eV", "hartree") == state_0_energy
+    assert (
+        abs(
+            convertor(logfile.data.etenergies[0], "wavenumber", "hartree")
+            - (state_1_energy - state_0_energy)
+        )
+        < 1.0e-1
+    )
 
 
 def testQChem_QChem5_0_Si_out(logfile):

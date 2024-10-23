@@ -7,6 +7,8 @@
 
 import datetime
 
+from cclib.parser import utils
+
 import numpy
 import packaging
 from common import get_minimum_carbon_separation
@@ -271,7 +273,9 @@ class GenericSPTest:
     @skipForParser("NBO", "attribute not implemented in this version")
     def testscfenergy(self, data) -> None:
         """Is the SCF energy within the target?"""
-        assert abs(data.scfenergies[-1] - self.scfenergy) < self.scfenergy_delta
+        assert abs(
+            data.scfenergies[-1] - utils.convertor(self.scfenergy, "hartree", "eV")
+        ) < utils.convertor(self.scfenergy_delta, "hartree", "eV")
 
     @skipForParser("FChk", "Formatted Checkpoint files do not have a section for SCF convergence")
     @skipForParser("GAMESSDAT", "Scftargets probably do not exist in the file")
@@ -308,7 +312,9 @@ class GenericSPTest:
     @skipForParser("xTB", "not implemented yet")
     def testfirstmoenergy(self, data) -> None:
         """Is the lowest energy molecular orbital within the target?"""
-        assert abs(data.moenergies[0][0] - self.moenergy) < self.moenergy_delta
+        assert abs(
+            data.moenergies[0][0] - utils.convertor(self.moenergy, "hartree", "eV")
+        ) < utils.convertor(self.moenergy_delta, "hartree", "eV")
 
     @skipForParser("DALTON", "mocoeffs not implemented yet")
     @skipForLogfile(
@@ -738,9 +744,8 @@ class TurbomoleHFSPTest(TurbomoleSPTest, GenericHFSPTest):
 class XTBSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
 
-    def testscfenergy(self, data) -> None:
-        """Is the SCF energy within the target?"""
-        assert abs(data.scfenergies[-1] - -26.425939358406) < 1.0e-6
+    scfenergy = -26.425939358406
+    scfenergy_delta = 1.0e-6
 
 
 class GenericDispersionTest:
@@ -748,11 +753,14 @@ class GenericDispersionTest:
 
     # Q-Chem 5.4
     dispersionenergy = -0.0147199319
+    dispersionenergy_delta = 2.0e-7
 
     def testdispersionenergies(self, data) -> None:
         """Is the dispersion energy parsed correctly?"""
         assert len(data.dispersionenergies) == 1
-        assert abs(data.dispersionenergies[0] - self.dispersionenergy) < 2.0e-7
+        assert abs(
+            data.dispersionenergies[0] - utils.convertor(self.dispersionenergy, "hartree", "eV")
+        ) < utils.convertor(self.dispersionenergy_delta, "hartree", "eV")
 
 
 class FireflyDispersionTest(GenericDispersionTest):

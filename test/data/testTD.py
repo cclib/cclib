@@ -5,6 +5,8 @@
 
 """Test single point time-dependent logfiles in cclib"""
 
+from cclib.parser import utils
+
 import numpy
 from skip import skipForLogfile, skipForParser
 
@@ -16,6 +18,7 @@ class GenericTDTest:
     # ???
     expected_l_max = 0.18680974536292055
     expected_f_max = 0.67
+    expected_f_max_thresh = 0.1
     symmetries = ["Singlet-Bu", "Singlet-Bu", "Singlet-Ag", "Singlet-Bu", "Singlet-Ag"]
     sumofsec = 1.0
     method = "TD-DFT"
@@ -44,7 +47,10 @@ class GenericTDTest:
         # Note that if all oscillator strengths are zero (like for triplets)
         # then this will simply pick out the first energy.
         idx_lambdamax = numpy.argmax(data.etoscs)
-        assert abs(data.etenergies[idx_lambdamax] - self.expected_l_max) < 0.022781676263770798
+        assert abs(
+            data.etenergies[idx_lambdamax]
+            - utils.convertor(self.expected_l_max, "hartree", "wavenumber")
+        ) < utils.convertor(0.022781676263770798, "hartree", "wavenumber")
 
     @skipForLogfile(
         "Turbomole/basicTurbomole7.4/CO_cc2_TD_trip",
@@ -53,7 +59,7 @@ class GenericTDTest:
     def testoscs(self, data) -> None:
         """Is the maximum of etoscs in the right range?"""
         assert len(data.etoscs) == self.number
-        assert abs(max(data.etoscs) - self.expected_f_max) < 0.1
+        assert abs(max(data.etoscs) - self.expected_f_max) < self.expected_f_max_thresh
 
     @skipForParser("FChk", "The parser is still being developed so we skip this test")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
@@ -205,11 +211,6 @@ class JaguarTDDFTTest(GenericTDTest):
     expected_l_max = 0.21870409213219966
     expected_f_max = 1.2
 
-    def testoscs(self, data) -> None:
-        """Is the maximum of etoscs in the right range?"""
-        assert len(data.etoscs) == self.number
-        assert abs(max(data.etoscs) - 1.0) < 0.2
-
 
 class OrcaTDDFTTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
@@ -243,11 +244,6 @@ class QChemTDDFTTest(GenericTDTest):
     expected_l_max = 0.21870409213219966
     expected_f_max = 0.9
 
-    def testoscs(self, data) -> None:
-        """Is the maximum of etoscs in the right range?"""
-        assert len(data.etoscs) == self.number
-        assert abs(max(data.etoscs) - 0.9) < 0.1
-
 
 class GenericTDDFTtrpTest(GenericTDTest):
     """Generic time-dependent HF/DFT (triplet) unittest"""
@@ -272,11 +268,6 @@ class OrcaROCISTest(GenericTDTest):
 
     # Do we want to parse ROCIS as its own method?
     method = "CIS"
-
-    def testoscs(self, data) -> None:
-        """Is the maximum of etoscs in the right range?"""
-        assert len(data.etoscs) == self.number
-        assert abs(max(data.etoscs) - 0.015) < 0.1
 
     def testTransprop(self, data) -> None:
         """Check the number of spectra parsed"""
@@ -313,11 +304,6 @@ class TurbomoleTDTest(GenericTDTest):
     expected_f_max = 0.19
     symmetries = ["Singlet-A"] * 10
 
-    def testoscs(self, data) -> None:
-        """Is the maximum of etoscs in the right range?"""
-        assert len(data.etoscs) == self.number
-        assert abs(max(data.etoscs) - 0.19) < 0.1
-
     @skipForLogfile("Turbomole/basicTurbomole7.4/CO_cc2_TD", "There are no dipole moments in ricc2")
     def testetmagdipsshape(self, data) -> None:
         """Is the shape of etmagdips correct?"""
@@ -348,11 +334,6 @@ class TurbomoleTDTripTest(GenericTDTest):
     expected_f_max = 0.84
     symmetries = ["Triplet-A"] * 10
     method = "RPA"
-
-    def testoscs(self, data) -> None:
-        """Is the maximum of etoscs in the right range?"""
-        assert len(data.etoscs) == self.number
-        assert abs(max(data.etoscs) - 0.84) < 0.1
 
 
 class TurbomoleTDCC2TripTest(GenericTDTest):
