@@ -5,7 +5,7 @@
 
 """Bridge for using cclib data in PySCF (https://github.com/pyscf/pyscf)."""
 
-from cclib.parser.utils import PeriodicTable, find_package
+from cclib.parser.utils import PeriodicTable, convertor, find_package
 
 import numpy as np
 
@@ -85,7 +85,7 @@ def makepyscf_mos(ccdata, mol):
         molecular orbital energies in units of Hartree
     """
     inputattrs = ccdata.__dict__
-    mo_energies = ccdata.moenergies
+    mo_energies = convertor(np.asarray(ccdata.moenergies), "eV", "hartree")
     if "mocoeffs" in inputattrs:
         mol.build()
         s = mol.intor("int1e_ovlp")
