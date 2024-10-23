@@ -5,6 +5,8 @@
 
 """Test coupled cluster logfiles"""
 
+from cclib.parser import utils
+
 import numpy
 import pytest
 
@@ -33,7 +35,9 @@ class GenericCC2Test(GenericCCTest):
         e_scf = data.scfenergies[0]
         e_cc = data.ccenergies[0]
         e_corr = e_cc - e_scf
-        assert pytest.approx(e_corr, rel=self.rel_thresh) == self.corr_energy
+        assert pytest.approx(e_corr, rel=self.rel_thresh) == utils.convertor(
+            self.corr_energy, "hartree", "eV"
+        )
 
 
 class GenericCCDTest(GenericCCTest):
@@ -45,7 +49,9 @@ class GenericCCDTest(GenericCCTest):
         e_scf = data.scfenergies[0]
         e_cc = data.ccenergies[0]
         e_corr = e_cc - e_scf
-        assert pytest.approx(e_corr, rel=self.rel_thresh) == self.corr_energy
+        assert pytest.approx(e_corr, rel=self.rel_thresh) == utils.convertor(
+            self.corr_energy, "hartree", "eV"
+        )
 
 
 class GenericCCSDTest(GenericCCTest):
@@ -57,7 +63,9 @@ class GenericCCSDTest(GenericCCTest):
         e_scf = data.scfenergies[0]
         e_cc = data.ccenergies[0]
         e_corr = e_cc - e_scf
-        assert pytest.approx(e_corr, rel=self.rel_thresh) == self.corr_energy
+        assert pytest.approx(e_corr, rel=self.rel_thresh) == utils.convertor(
+            self.corr_energy, "hartree", "eV"
+        )
 
 
 class GenericCCSDPTTest(GenericCCTest):
@@ -69,7 +77,9 @@ class GenericCCSDPTTest(GenericCCTest):
         e_scf = data.scfenergies[0]
         e_cc = data.ccenergies[0]
         e_corr = e_cc - e_scf
-        assert pytest.approx(e_corr, rel=self.rel_thresh) == self.corr_energy
+        assert pytest.approx(e_corr, rel=self.rel_thresh) == utils.convertor(
+            self.corr_energy, "hartree", "eV"
+        )
 
 
 class DALTONCCSDPTTest(GenericCCSDPTTest):

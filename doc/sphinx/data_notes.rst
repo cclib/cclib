@@ -149,7 +149,7 @@ However, in *all* cases the dispersion energy for a given geometry will also be 
 etenergies
 ----------
 
-This is a rank 1 array that contains the energies of electronic transitions from a reference state to the excited states of the molecule, in hartree. There should be as many elements to this array as there are excited states calculated. Any type of excited state calculation should provide output that can be parsed into this attribute.
+This is a rank 1 array that contains the energies of electronic transitions from a reference state to the excited states of the molecule, in ``cm<sup>-1</sup>``. There should be as many elements to this array as there are excited states calculated. Any type of excited state calculation should provide output that can be parsed into this attribute.
 
 etoscs
 ------
@@ -389,7 +389,7 @@ Note: For restricted calculation, ``mocoeffs`` is still a list, but it only cont
 moenergies
 ----------
 
-A list of rank 1 arrays containing the molecular orbital energies in hartree. The list is of length 1 for restricted calculations, but length 2 for unrestricted calculations.
+A list of rank 1 arrays containing the molecular orbital energies in eV. The list is of length 1 for restricted calculations, but length 2 for unrestricted calculations.
 
 **GAMESS-UK**: similar to `mocoeffs`_, the directive `FORMAT HIGH`_ needs to be used if you want all of the eigenvalues printed.
 
@@ -568,7 +568,7 @@ A list of lists where each list contains the values scanned for each parameter i
 scfenergies
 -----------
 
-An array containing the converged SCF energies of the calculation, in hartree. For an optimisation log file, there will be as many elements in this array as there were optimisation steps.
+An array containing the converged SCF energies of the calculation, in eV. For an optimisation log file, there will be as many elements in this array as there were optimisation steps.
 
 If a dispersion correction of any form was used, it is part of the SCF energy and, in the event that it is separable, such as with D3 and similar empirical corrections, it is also available separately under `dispersionenergies`_.
 
