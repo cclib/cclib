@@ -591,7 +591,7 @@ class Jaguar(logfileparser.Logfile):
         #   C1       Z     0.04792 -0.06032 -0.01192  0.00000  0.00000  0.11613
         #   C2       X     0.00000  0.00000  0.00000 -0.06094 -0.04635  0.00000
         #   ... etc. ...
-        # This is a complete ouput, some files will not have intensities,
+        # This is a complete output, some files will not have intensities,
         #   and older Jaguar versions sometimes skip the symmetries.
         if line[2:23] == "start of program freq":
             self.skip_line(inputfile, "blank")
@@ -639,10 +639,10 @@ class Jaguar(logfileparser.Logfile):
 
                 # Start parsing the displacements.
                 # Variable 'q' holds up to 7 lists of triplets.
-                q = [[] for i in range(7)]
+                q = [[] for _ in range(7)]
                 for n in range(self.natom):
                     # Variable 'p' holds up to 7 triplets.
-                    p = [[] for i in range(7)]
+                    p = [[] for _ in range(7)]
                     for i in range(3):
                         line = next(inputfile)
                         disps = [float(disp) for disp in line.split()[2:]]
