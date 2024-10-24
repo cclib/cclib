@@ -617,7 +617,7 @@ class Jaguar(logfileparser.Logfile):
             # which could be caught. This is not true in newer version (including 8.3),
             # but in general it would be better to bound this loop more strictly.
             freqs = next(inputfile)
-            while freqs.strip() and "imaginary frequencies" not in freqs:
+            while freqs.strip() and freqs[2:13] == "frequencies":
                 # Number of modes (columns printed in this block).
                 nmodes = len(freqs.split()) - 1
 
