@@ -49,6 +49,9 @@ bridges = [
     "openbabel",
     "pandas",
     "pyscf",
+    "pyscf-properties @ git+https://github.com/pyscf/properties",
+    "pyberny",
+    "geometric",
     "qc-iodata>=1.0.0a2",
 ]
 docs = [
@@ -60,6 +63,10 @@ test = [
     "coverage",
     "pytest-cov",
     "pyyaml",
+    "pyscf",
+    "pyscf-properties @ git+https://github.com/pyscf/properties",
+    "pyberny",
+    "geometric"
 ]
 dev = ["cclib[bridges,docs,test]"]
 all = ["cclib[bridges]"]

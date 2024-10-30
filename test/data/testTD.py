@@ -92,7 +92,7 @@ class GenericTDTest:
         """Is the length of etsyms correct?"""
         assert len(data.etsyms) == self.number
 
-    @skipForParser("ADF", "etrotats are not yet implemented")
+    @skipForParser("ADF", "etsyms are not yet implemented")
     @skipForParser("DALTON", "etsyms are not yet implemented")
     @skipForParser("FChk", "etsyms are not yet implemented")
     @skipForParser("GAMESS", "etsyms are not yet implemented")
@@ -125,6 +125,7 @@ class GenericTDTest:
         "Turbomole/basicTurbomole7.4/CO_adc2_TD",
         "Rotatory strengths are not currently available for ricc2",
     )
+    @skipForParser("PySCF", "etrotats are not yet implemented")
     def testrotatsnumber(self, data) -> None:
         """Is the length of etrotats correct?"""
         assert len(data.etrotats) == self.number
@@ -139,6 +140,7 @@ class GenericTDTest:
     @skipForParser("ORCA", "optstate are not yet implemented")
     @skipForParser("QChem", "optstate are not yet implemented")
     @skipForParser("Turbomole", "optstate are not yet implemented")
+    @skipForParser("PySCF", "optstate are not yet implemented")
     def testoptstate(self, data) -> None:
         # All our examples have a default state-of-interest of 1 (index 0).
         assert data.metadata["opt_state"] == 0
@@ -229,11 +231,7 @@ class OrcaTDDFTTest(GenericTDTest):
         "Singlet-Ag",
     ]
     method = "TDA"
-
-    def testoscs(self, data) -> None:
-        """Is the maximum of etoscs in the right range?"""
-        assert len(data.etoscs) == self.number
-        assert abs(max(data.etoscs) - 1.17) < 0.01
+    expected_f_max = 1.17
 
 
 class QChemTDDFTTest(GenericTDTest):
@@ -412,3 +410,12 @@ class GaussianEOMCCSDTest(GenericTDTest):
         "Triplet-Ag",
     ]
     method = "EOM-CCSD"
+
+
+class PySCFTDTest(GenericTDTest):
+    # No symmetry labels for PySCF yet.
+    symmetries = ["Singlet", "Singlet", "Singlet", "Singlet", "Singlet"]
+    method = "TDA"
+
+    expected_f_max = 1.17
+    expected_l_max = 0.21870229042

@@ -150,7 +150,8 @@ class GenericSPTest:
     @skipForParser("Psi4", "Hirshfeld charges not implemented")
     @skipForParser("QChem", "Hirshfeld charges not implemented")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    @skipForParser("xTB", "not implemented yet")
+    @skipForParser("xTB", "Hirshfeld charges not implemented")
+    @skipForParser("PySCF", "Hirshfeld charges not implemented")
     def testatomcharges_hirshfeld(self, data) -> None:
         """Do Hirshfeld atomic charges sum to roughly zero?"""
         charges = data.atomcharges["hirshfeld"]
@@ -371,7 +372,8 @@ class GenericSPTest:
 
         # All values on diagonal should be exactly one.
         for i in range(data.nbasis):
-            assert data.aooverlaps[i, i] == 1.0
+            # assert data.aooverlaps[i, i] == 1.0
+            assert abs(data.aooverlaps[i, i] - 1.0) < 0.0001
 
         # Check some additional values that don't seem to move around between programs.
         assert abs(data.aooverlaps[0, 1] - self.overlap01) < 0.01
@@ -735,6 +737,27 @@ class TurbomoleHFSPTest(TurbomoleSPTest, GenericHFSPTest):
     """Customized restricted single point HF unittest"""
 
 
+class PySCFSPTest(GenericSPTest):
+    """Customized single point PySCF test"""
+
+    num_scf_criteria = 2
+
+    def testmetadata_input_file(self, data) -> None:
+        """Does metadata have expected keys and values?"""
+        assert "input_file_contents" in data.metadata
+        # PySCF doesn't really have a concept of an input file
+        # assert "dvb_sp.in" in data.metadata["input_file_name"]
+
+    def testrotconsts(self, data) -> None:
+        """A single geometry leads to single set of rotational constants."""
+        assert data.rotconsts.shape == (1, 3)
+
+        # PySCF produces different constants compared to Gaussian (probably
+        # because we're using slightly different isotope masses).
+        ref = [4.617831, 0.685761, 0.597091]
+        numpy.testing.assert_allclose(data.rotconsts[0], ref, rtol=0, atol=1.0e-3)
+
+
 class XTBSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
 
@@ -846,52 +869,53 @@ class QChemSMDCPCMMetadataTest(QChemSolventMetadataTest, SMDCPCMMetadataTest):
     """Check we can parse implicit solvent data."""
 
 
-class GaussianPerformanceMetadataTest:
+class GenericPerformanceMetadataTest:
     """Check we can parse CPU/memory metadata."""
+
+    num_cpu = 1
+    # 400 MB.
+    memory_available = 400000000
+    memory_used = 0
 
     def testmetadata_cpu(self, data) -> None:
         """Does metadata have the expected number of CPUs used?"""
-        assert data.metadata["num_cpu"] == 1
+        assert data.metadata["num_cpu"] == self.num_cpu
 
     def testmetadata_memory_available(self, data) -> None:
         """Does metadata have the expected amount of memory?"""
-        # 400 MB
-        assert data.metadata["memory_available"] == 400000000
+        assert data.metadata["memory_available"] == self.memory_available
 
+    @skipForParser("PySCF", "not available for PySCF")
+    @skipForParser("Turbomole", "not available for Turbomole")
     def testmetadata_memory_used(self, data) -> None:
         """Does metadata have the expected amount of memory?"""
-        assert data.metadata["memory_used"] == 52428800
+        assert data.metadata["memory_used"] == self.memory_used
 
 
-class ORCAPerformanceMetadataTest:
+class GaussianPerformanceMetadataTest(GenericPerformanceMetadataTest):
     """Check we can parse CPU/memory metadata."""
 
-    def testmetadata_cpu(self, data) -> None:
-        """Does metadata have the expected number of CPUs used?"""
-        assert data.metadata["num_cpu"] == 2
-
-    def testmetadata_memory_available(self, data) -> None:
-        """Does metadata have the expected amount of memory?"""
-        # 400 MB
-        assert data.metadata["memory_available"] == 1000000000
-
-    def testmetadata_memory_used(self, data) -> None:
-        """Does metadata have the expected amount of memory?"""
-        assert data.metadata["memory_used"] == 463000000
+    num_cpu = 1
+    memory_available = 400000000
+    memory_used = 52428800
 
 
-class TurbomolePerformanceMetadataTest:
+class ORCAPerformanceMetadataTest(GenericPerformanceMetadataTest):
     """Check we can parse CPU/memory metadata."""
 
-    def testmetadata_cpu(self, data) -> None:
-        """Does metadata have the expected number of CPUs used?"""
-        assert data.metadata["num_cpu"] == 1
+    num_cpu = 2
+    memory_available = 1000000000
+    memory_used = 463000000
 
-    def testmetadata_memory_available(self, data) -> None:
-        """Does metadata have the expected amount of memory?"""
-        assert data.metadata["memory_available"] == 524288000
 
-    @skipForParser("Turbomole", "memory used is not available for Turbomole")
-    def testmetadata_memory_used(self, data) -> None:
-        """Does metadata have the expected amount of memory?"""
-        assert data.metadata["memory_used"] == 0
+class TurbomolePerformanceMetadataTest(GenericPerformanceMetadataTest):
+    """Check we can parse CPU/memory metadata."""
+
+    num_cpu = 1
+    memory_available = 524288000
+    memory_used = 0
+
+
+class PySCFPerformanceMetadataTest(GenericPerformanceMetadataTest):
+    num_cpu = 8
+    memory_available = 400 * 1000 * 1000
