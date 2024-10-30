@@ -563,7 +563,8 @@ class ADF(logfileparser.Logfile):
 
             # handle case where MO information up to a certain orbital are missing
             while int(info[0]) - 1 != len(self.moenergies[0]):
-                self.moenergies[0].append(numpy.nan)
+                # This will be converted back from hartree to eV in logfileparser afterwards.
+                self.moenergies[0].append(utils.convertor(99999, "eV", "hartree"))
                 self.mosyms[0].append("A")
 
             while len(line) > 10:
