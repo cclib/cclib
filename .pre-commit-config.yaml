@@ -128,7 +128,7 @@ repos:
       - id: no-commit-to-branch
         args: [--branch, main, --branch, master]
   - repo: https://github.com/Mateusz-Grzelinski/actionlint-py
-    rev: "v1.7.3.17"
+    rev: "v1.7.4.18"
     hooks:
       - id: actionlint
   - repo: https://github.com/asottile/pyupgrade
@@ -141,7 +141,7 @@ repos:
     hooks:
       - id: isort
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.7.2
+    rev: v0.7.3
     hooks:
       - id: ruff-format
       - id: ruff
