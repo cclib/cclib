@@ -7,6 +7,7 @@
 
 import datetime
 import re
+from typing import List
 
 from cclib.parser import data, logfileparser, utils
 from cclib.parser.logfileparser import StopParsing
@@ -2155,8 +2156,8 @@ class Gaussian(logfileparser.Logfile):
         #     2  C    0.320624   0.000869
         #
         # APT and Lowdin charges are also displayed in this way.
-        def extract_charges_spins(line, prop):
-            """Extracts atomic charges and spin densities into
+        def extract_charges_spins(line: str, prop: str) -> None:
+            """Extracts atomic charges and spin de strnsities into
                self.atomcharges and self.atomspins dictionaries.
 
             Inputs:
@@ -2200,13 +2201,7 @@ class Gaussian(logfileparser.Logfile):
                         # spins, so these should be ignored.
                         while nline.split()[1] == "H":
                             nline = next(inputfile)
-                        split_line = nline.split()
-                        if has_charges:
-                            charges.append(float(split_line[2]))
-                            if has_spin:
-                                spins.append(float(split_line[3]))
-                        elif has_spin:
-                            spins.append(float(split_line[2]))
+                        _append_charges_and_spins(nline, has_charges, charges, has_spin, spins)
             else:
                 for i in self.atomnos:
                     # Ignore translation vectors.
@@ -2214,13 +2209,7 @@ class Gaussian(logfileparser.Logfile):
                         pass
                     else:
                         nline = next(inputfile)
-                        split_line = nline.split()
-                        if has_charges:
-                            charges.append(float(split_line[2]))
-                            if has_spin:
-                                spins.append(float(split_line[3]))
-                        elif has_spin:
-                            spins.append(float(split_line[2]))
+                        _append_charges_and_spins(nline, has_charges, charges, has_spin, spins)
             # When the charge type is not given explicitly we
             # must find it from the bottom line, which always
             # has the format: "Sum of Mulliken charges=   0.00000"
@@ -2240,6 +2229,8 @@ class Gaussian(logfileparser.Logfile):
                     self.atomspins[f"{prop}_sum"] = spins
                 else:
                     self.atomspins[f"{prop}"] = spins
+
+            return None
 
         # Define strings needed for line detection. Older Gaussian
         # versions don't always give the charge type explicitly,
@@ -2606,3 +2597,15 @@ class Gaussian(logfileparser.Logfile):
         if "comments" not in self.metadata:
             self.metadata["comments"] = []
         self.metadata["comments"].append("".join(comments))
+
+
+def _append_charges_and_spins(
+    nline: str, has_charges: bool, charges: List[float], has_spin: bool, spins: List[float]
+) -> None:
+    split_line = nline.split()
+    if has_charges:
+        charges.append(float(split_line[2]))
+        if has_spin:
+            spins.append(float(split_line[3]))
+    elif has_spin:
+        spins.append(float(split_line[2]))
