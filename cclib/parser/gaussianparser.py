@@ -118,6 +118,21 @@ class Gaussian(logfileparser.Logfile):
         # or a new round in an optimisation etc).
         self.last_et = 0
 
+        # Define strings needed for line detection. Older Gaussian versions
+        # don't always give the charge type explicitly, so we must include
+        # "atomic" as a general term to catch all other atomic charge or spin
+        # lines.
+        self.atomprops = ["mulliken", "lowdin", "apt", "atomic", "hirshfeld"]
+        self.atomcharges_atomspins_headers = [
+            " atomic charges:",
+            " charges:",
+            " charges with hydrogens summed into heavy atoms:",
+            " atomic charges with hydrogens summed into heavy atoms:",
+            " atomic spin densities:",
+            " charges and spin densities with hydrogens summed into heavy atoms:",
+            " charges and spin densities:",
+        ]
+
     def after_parsing(self):
         # atomcoords are parsed as a list of lists but it should be an array
         if hasattr(self, "atomcoords"):
@@ -2161,10 +2176,8 @@ class Gaussian(logfileparser.Logfile):
                self.atomcharges and self.atomspins dictionaries.
 
             Inputs:
-                line - line header marking the beginning of a
-                particular set of charges or spins.
-                prop - property type to be extracted as a
-                string (e.g. Mulliken, Lowdin, APT).
+                line - line header marking the beginning of a particular set of charges or spins.
+                prop - property type to be extracted as a string (e.g. Mulliken, Lowdin, APT).
             """
             has_spin = "spin" in line.lower()
             has_charges = "charges" in line.lower()
@@ -2232,26 +2245,11 @@ class Gaussian(logfileparser.Logfile):
 
             return None
 
-        # Define strings needed for line detection. Older Gaussian
-        # versions don't always give the charge type explicitly,
-        # so we must include "atomic" as a general term to catch
-        # all other atomic charge or spin lines.
-        props = ["mulliken", "lowdin", "apt", "atomic"]
-        headers = [
-            " atomic charges:",
-            " charges:",
-            " charges with hydrogens summed into heavy atoms:",
-            " atomic charges with hydrogens summed into heavy atoms:",
-            " atomic spin densities:",
-            " charges and spin densities with hydrogens summed into heavy atoms:",
-            " charges and spin densities:",
-        ]
-
         if hasattr(self, "atomnos"):
             # Combine props and headers to find lines heading lists
             # of atom charges or spins.
-            for prop in props:
-                for header in headers:
+            for prop in self.atomprops:
+                for header in self.atomcharges_atomspins_headers:
                     if f"{prop}{header}".lower() in line.lower():
                         # When we use "atomic" as the property, only
                         # extract if the charge type isn't given explicity.
