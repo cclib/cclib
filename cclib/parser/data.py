@@ -53,6 +53,7 @@ class ccData:
         grads -- current values of forces (gradients) in geometry optimization (array[3])
         hessian -- elements of the force constant matrix (array[1])
         homos -- molecular orbital indices of HOMO(s) (array[1])
+        ircvalues -- raw data for each step of an IRC calculation (dict of string to int/float/list of string)
         metadata -- various metadata about the package and computation (dict)
         mocoeffs -- molecular orbital coefficients (list of arrays[2])
         moenergies -- molecular orbital energies (list of arrays[1], eV)
@@ -141,6 +142,7 @@ class ccData:
         "grads": Attribute(numpy.ndarray, "TBD", "N/A"),
         "hessian": Attribute(numpy.ndarray, "hessian matrix", "vibrations"),
         "homos": Attribute(numpy.ndarray, "homos", "properties:orbitals"),
+        "ircvalues": Attribute(dict, "raw data", "optimization:irc"),
         "metadata": Attribute(dict, "TBD", "N/A"),
         "mocoeffs": Attribute(list, "coeffs", "properties:orbitals"),
         "moenergies": Attribute(list, "energies", "properties:orbitals"),
@@ -374,6 +376,12 @@ class ccData:
         """Write parsed attributes to an XML file."""
         return self.write(filename=filename, indices=indices, outputtype="xyz")
 
+    def opt_indices(self, optstatus):
+        """
+        Return the indices corresponding to the given optimization status.
+        """
+        return [x for x, y in enumerate(self.optstatus) if y & optstatus > 0]
+
     @property
     def converged_geometries(self) -> numpy.ndarray:
         """
@@ -385,7 +393,7 @@ class ccData:
             - The input geometry for single points
         """
         if hasattr(self, "optstatus"):
-            converged_indexes = [x for x, y in enumerate(self.optstatus) if y & self.OPT_DONE > 0]
+            converged_indexes = self.opt_indices(self.OPT_DONE)
             return self.atomcoords[converged_indexes]
         else:
             return self.atomcoords
@@ -400,7 +408,7 @@ class ccData:
             - The input geometry for simple optimisations or single points
         """
         if hasattr(self, "optstatus"):
-            new_indexes = [x for x, y in enumerate(self.optstatus) if y & self.OPT_NEW > 0]
+            new_indexes = self.opt_indices(self.OPT_NEW)
             return self.atomcoords[new_indexes]
         else:
             return self.atomcoords
@@ -415,7 +423,7 @@ class ccData:
             - The input geometry for simple optimisations or single points
         """
         if hasattr(self, "optstatus"):
-            unknown_indexes = [x for x, y in enumerate(self.optstatus) if y == self.OPT_UNKNOWN]
+            unknown_indexes = self.opt_indices(self.OPT_UNKNOWN)
             return self.atomcoords[unknown_indexes]
         else:
             return self.atomcoords
@@ -430,9 +438,7 @@ class ccData:
             - The input geometry for simple optimisations or single points
         """
         if hasattr(self, "optstatus"):
-            unconverged_indexes = [
-                x for x, y in enumerate(self.optstatus) if y & self.OPT_UNCONVERGED > 0
-            ]
+            unconverged_indexes = self.opt_indices(self.OPT_UNCONVERGED)
             return self.atomcoords[unconverged_indexes]
         else:
             return self.atomcoords
