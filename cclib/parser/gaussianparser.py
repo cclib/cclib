@@ -139,6 +139,14 @@ class Gaussian(logfileparser.Logfile):
             " charges and spin densities with hydrogens summed into heavy atoms:",
             " charges and spin densities:",
         ]
+        # The (Hirshfeld) partial atomic charges and spins parsed in these
+        # sections need to be swapped after parsing via the general extraction
+        # code.  This is only required for version 09; Hirshfeld charges were
+        # not present earlier, and 16 combines them with CM5 in a different
+        # section.
+        self.atomcharges_atomspins_headers_swap = [
+            " spin densities, charges and dipoles using IRadAn="
+        ]
 
     def after_parsing(self):
         # atomcoords are parsed as a list of lists but it should be an array.
