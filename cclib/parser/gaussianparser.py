@@ -128,8 +128,16 @@ class Gaussian(logfileparser.Logfile):
         # don't always give the charge type explicitly, so we must include
         # "atomic" as a general term to catch all other atomic charge or spin
         # lines.
-        self.atomprops_no_atomic = ["mulliken", "lowdin", "apt"]
+        self.atomprops_no_atomic = ["mulliken", "lowdin", "apt", "hirshfeld"]
         self.atomprops = self.atomprops_no_atomic + ["atomic"]
+        # The (Hirshfeld) partial atomic charges and spins parsed in these
+        # sections need to be swapped after parsing via the general extraction
+        # code.  This is only required for version 09; Hirshfeld charges were
+        # not present earlier, and 16 combines them with CM5 in a different
+        # section.
+        self.atomcharges_atomspins_headers_swap = [
+            " spin densities, charges and dipoles using iradan="
+        ]
         self.atomcharges_atomspins_headers = [
             " atomic charges:",
             " charges:",
@@ -138,15 +146,7 @@ class Gaussian(logfileparser.Logfile):
             " atomic spin densities:",
             " charges and spin densities with hydrogens summed into heavy atoms:",
             " charges and spin densities:",
-        ]
-        # The (Hirshfeld) partial atomic charges and spins parsed in these
-        # sections need to be swapped after parsing via the general extraction
-        # code.  This is only required for version 09; Hirshfeld charges were
-        # not present earlier, and 16 combines them with CM5 in a different
-        # section.
-        self.atomcharges_atomspins_headers_swap = [
-            " spin densities, charges and dipoles using IRadAn="
-        ]
+        ] + self.atomcharges_atomspins_headers_swap
 
     def after_parsing(self):
         # atomcoords are parsed as a list of lists but it should be an array.
@@ -237,6 +237,20 @@ class Gaussian(logfileparser.Logfile):
                     mp_energies.append(energy)
 
             self.set_attribute("mpenergies", mp_energies)
+
+        # The Hirshfeld section from version 09 prints atomspins no matter
+        # what; no spin density means all printed values are zero.  Rather
+        # than determine whether or not they should be present by looking at
+        # (un)restricted flags and HOMO indices, check that they are the only
+        # key present in atomspins, since otherwise Mulliken will be there,
+        # since it isn't possible to simultaneously turn off Mulliken and
+        # Hirshfeld printing.
+        if hasattr(self, "atomcharges") and hasattr(self, "atomspins"):
+            if (
+                set(self.atomspins.keys()) == {"hirshfeld"}
+                and sum(self.atomspins["hirshfeld"]) == 0.0
+            ):
+                delattr(self, "atomspins")
 
         super().after_parsing()
 
@@ -2251,6 +2265,12 @@ class Gaussian(logfileparser.Logfile):
             _ = next(inputfile)
             charges = []
             spins = []
+            # It's possible that this could match on a header other than how
+            # the matched happen in the code before calling this function, but
+            # the effect should be the same.
+            swap_indices = any(
+                header in line.lower() for header in self.atomcharges_atomspins_headers_swap
+            )
             is_sum = "summed" in line
             # Iterate over each line and append values to a list
             # based on whether they are charges or spins.
@@ -2277,7 +2297,9 @@ class Gaussian(logfileparser.Logfile):
                         # spins, so these should be ignored.
                         while nline.split()[1] == "H":
                             nline = next(inputfile)
-                        _append_charges_and_spins(nline, has_charges, charges, has_spin, spins)
+                        _append_charges_and_spins(
+                            nline, has_charges, charges, has_spin, spins, swap_indices
+                        )
             else:
                 for i in self.atomnos:
                     # Ignore translation vectors.
@@ -2285,7 +2307,9 @@ class Gaussian(logfileparser.Logfile):
                         pass
                     else:
                         nline = next(inputfile)
-                        _append_charges_and_spins(nline, has_charges, charges, has_spin, spins)
+                        _append_charges_and_spins(
+                            nline, has_charges, charges, has_spin, spins, swap_indices
+                        )
             # When the charge type is not given explicitly we
             # must find it from the bottom line, which always
             # has the format: "Sum of Mulliken charges=   0.00000"
@@ -2663,12 +2687,25 @@ class Gaussian(logfileparser.Logfile):
 
 
 def _append_charges_and_spins(
-    nline: str, has_charges: bool, charges: List[float], has_spin: bool, spins: List[float]
+    nline: str,
+    has_charges: bool,
+    charges: List[float],
+    has_spin: bool,
+    spins: List[float],
+    swap_indices: bool,
 ) -> None:
+    """Append partial atomic charges and spins to their respective lists, if
+    they were determined beforehand to exist.
+    """
     split_line = nline.split()
     if has_charges:
-        charges.append(float(split_line[2]))
+        charge_index = 2 if not swap_indices else 3
+        charges.append(float(split_line[charge_index]))
         if has_spin:
-            spins.append(float(split_line[3]))
+            spin_index = 3 if not swap_indices else 2
+            spins.append(float(split_line[spin_index]))
     elif has_spin:
+        # This will never need swapping, since the particular section where
+        # swapping is relevant 1. will always have both charges and spins and
+        # 2. has spins first.
         spins.append(float(split_line[2]))
