@@ -1012,8 +1012,11 @@ Dispersion correction           -0.016199959
             aonames = []
             atombasis = [[] for i in range(self.natom)]
             mocoeffs = [numpy.zeros((self.nbasis, self.nbasis), "d")]
+            
+            moenergies = []
 
             for spin in range(len(self.moenergies)):
+                moenergies.append([]);
                 if spin == 1:
                     self.skip_line(inputfile, "blank")
                     mocoeffs.append(numpy.zeros((self.nbasis, self.nbasis), "d"))
@@ -1021,7 +1024,11 @@ Dispersion correction           -0.016199959
                 for i in range(0, self.nbasis, 6):
                     self.updateprogress(inputfile, "Coefficients")
 
-                    self.skip_lines(inputfile, ["numbers", "energies", "occs", "d"])
+                    line = self.skip_lines(inputfile, ["numbers", "energies"])[-1]
+                    moenergies[-1].extend([float(energy) for energy in line.split()])
+                    self.skip_lines(inputfile, ["occs", "d"])
+#                    self.skip_lines(inputfile, ["numbers", "energies", "occs", "d"])
+                    
 
                     for j in range(self.nbasis):
                         line = next(inputfile)
@@ -1047,6 +1054,13 @@ Dispersion correction           -0.016199959
             self.set_attribute("aonames", aonames)
             self.set_attribute("atombasis", atombasis)
             self.set_attribute("mocoeffs", mocoeffs)
+            if hasattr(self, 'moenergies') and len(self.moenergies[0]) != self.nbasis:
+                self.logger.warning(
+                    "Only {} of {} orbital energies parsed from orbital table; switching to lower precision coefficients table".format(len(self.moenergies[0]), self.nbasis)
+                )
+                # The previously parsed orbital energies can be cut off in Orca 6
+                # (only the first 10 virtual orbitals are printed)
+                self.set_attribute("moenergies", moenergies, False)
 
         # Basis set information
         # ORCA prints this out in a somewhat indirect fashion.
