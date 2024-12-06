@@ -1265,6 +1265,13 @@ Dispersion correction           -0.016199959
             while line.find("STATE") >= 0:
                 broken = line.split()
                 etenergies.append(utils.float(broken[3]))
+                # In Orca 6, symmetry is printed at the end of the line.
+                if len(broken) >= 14 and broken[12] == "Sym:":
+                    symm = broken[13]
+                    
+                else:
+                    symm = ""
+                
                 line = next(inputfile)
                 sec = []
                 # Contains SEC or is blank
@@ -1286,8 +1293,7 @@ Dispersion correction           -0.016199959
                     if "Symmetry" in line:
                         symm = line.split()[-1]
                         line = next(inputfile)
-                    else:
-                        symm = ""
+                    
                 etsecs.append(sec)
                 if mult != "" and symm != "":
                     etsyms.append(mult + "-" + symm)
