@@ -1307,7 +1307,7 @@ Dispersion correction           -0.016199959
                 self.extend_attribute("etsyms", etsyms)
 
         # Parse the various absorption spectra for TDDFT and ROCIS.
-        if "ABSORPTION SPECTRUM" in line or "ELECTRIC DIPOLE" in line:
+        if "CD SPECTRUM" not in line and ( "ABSORPTION SPECTRUM" in line or "ELECTRIC DIPOLE" in line ):
             # CASSCF has an anomalous printing of ABSORPTION SPECTRUM.
             if line[:-1] == "ABSORPTION SPECTRUM":
                 return
@@ -1633,7 +1633,7 @@ Dispersion correction           -0.016199959
                 # Save everything to transprop.
                 self.transprop[name] = (numpy.asarray(etenergies), numpy.asarray(etoscs))
 
-        if line.strip() == "CD SPECTRUM":
+        if line.strip() in ["CD SPECTRUM", "CD SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS"]: 
             # -------------------------------------------------------------------
             #                              CD SPECTRUM
             # -------------------------------------------------------------------
