@@ -455,17 +455,23 @@ class ORCA(logfileparser.Logfile):
                     # Only get this for SMD.
                     self.metadata["solvent_name"] = line.split()[-1].lower()
 
-        # SCF convergence output begins with:
+        # In Orca <= 5.x, SCF convergence output begins with:
         #
         # --------------
         # SCF ITERATIONS
         # --------------
         #
         # However, there are two common formats which need to be handled, implemented as separate functions.
-        if line.strip() == "SCF ITERATIONS":
-            self.skip_line(inputfile, "dashes")
-
-            line = next(inputfile)
+        # In Orca 6.x, the SCF ITERATIONS header has been removed, and there is no warning before the
+        # convergence data is printed.
+        if line.strip() == "SCF ITERATIONS" or \
+            ("Iteration" in line and "Energy" in line and "Delta-E" in line):
+            
+            # Skip for old Orca.
+            if line.strip() == "SCF ITERATIONS":
+                self.skip_line(inputfile, "dashes")
+                line = next(inputfile)
+            
             columns = line.split()
             # "Starting incremental Fock matrix formation" doesn't
             # necessarily appear before the extended format.
@@ -2672,11 +2678,11 @@ Dispersion correction           -0.016199959
         self.atomcharges[chargestype] = charges
         if has_spins:
             self.atomspins[chargestype] = spins
-
-    def parse_scf_condensed_format(self, inputfile, line):
-        """Parse the SCF convergence information in condensed format"""
-
-        # This is what it looks like
+            
+    def parse_scf_condensed_format(self, inputfile, splitline):
+        """"""
+        # Possible formats:
+        # Orca 5:
         # ITER       Energy         Delta-E        Max-DP      RMS-DP      [F,P]     Damp
         #                ***  Starting incremental Fock matrix formation  ***
         #   0   -384.5203638934   0.000000000000 0.03375012  0.00223249  0.1351565 0.7000
@@ -2690,60 +2696,110 @@ Dispersion correction           -0.016199959
         #   7   -384.6575005762  -0.000001497987 0.00020257  0.00001146  0.0001652 0.0000
         #   8   -384.6575007321  -0.000000155848 0.00008572  0.00000435  0.0000745 0.0000
         #          **** Energy Check signals convergence ****
-
-        assert line[2] == "Delta-E"
-        assert line[3] == "Max-DP"
-
+        # Orca 6:
+        # ----------------------------------------D-I-I-S--------------------------------------------
+        # Iteration    Energy (Eh)           Delta-E    RMSDP     MaxDP     DIISErr   Damp  Time(sec)
+        # -------------------------------------------------------------------------------------------
+        #                ***  Starting incremental Fock matrix formation  ***
+        #     1    -382.0551222939103582     0.00e+00  1.60e-04  1.99e-03  3.38e-03  0.700   1.0
+        #                               *** Initializing SOSCF ***
+        # ---------------------------------------S-O-S-C-F--------------------------------------
+        # Iteration    Energy (Eh)           Delta-E    RMSDP     MaxDP     MaxGrad    Time(sec)
+        # --------------------------------------------------------------------------------------
+        #     2    -382.0551463039915916    -2.40e-05  3.97e-04  5.10e-03  1.52e-03     0.4
+        #                *** Restarting incremental Fock matrix formation ***
+        #     3    -382.0551558700066153    -9.57e-06  5.54e-04  9.87e-03  1.10e-03     1.0
+        #     4    -382.0551154272437770     4.04e-05  3.63e-04  6.82e-03  2.09e-03     0.8
+        #     5    -382.0551748409881156    -5.94e-05  5.18e-05  4.86e-04  8.23e-05     0.8
+        #     6    -382.0551748903446878    -4.94e-08  2.54e-05  3.18e-04  9.86e-05     0.7
+        #                  **** Energy Check signals convergence ****
+        #
+        
+        # Decide which version this is
+        headers = splitline[0][0:5] == "-----"
+        # Based on that, decide on our column positions:
+        if headers:
+            # New, Orca 6 format:
+            index = {
+                'energy':1,
+                'deltaE': 2,
+                'maxDP': 4,
+                'rmsDP': 3
+            }
+        else:
+            # Old, Orca 5 format.
+            index = {
+                'energy':1,
+                'deltaE': 2,
+                'maxDP': 3,
+                'rmsDP': 4
+            }
+        
         self.append_attribute("scfvalues", [])
-
-        # Try to keep track of the converger (NR, DIIS, SOSCF, etc.).
-        diis_active = True
-        while line:
+        #diis_active = True
+        
+        # Stop on newline.
+        while splitline:
+            
             maxDP = None
-            if "Newton-Raphson" in line:
-                diis_active = False
-            elif "SOSCF" in line:
-                diis_active = False
-            elif line[0].isdigit():
-                try:
-                    energy = float(line[1])
-                    deltaE = float(line[2])
-                    maxDP = float(line[3 + int(not diis_active)])
-                    rmsDP = float(line[4 + int(not diis_active)])
-                except ValueError as e:
-                    # Someone in Orca forgot to properly add spaces in the scf printing
-                    # code looks like:
-                    # %3i %17.10f%12.12f%11.8f %11.8f
-                    if line[1].count(".") == 2:
-                        integer1, decimal1_integer2, decimal2 = line[1].split(".")
-                        decimal1, integer2 = decimal1_integer2[:10], decimal1_integer2[10:]
-                        energy = float(integer1 + "." + decimal1)
-                        deltaE = float(integer2 + "." + decimal2)
-                        maxDP = float(line[2 + int(not diis_active)])
-                        rmsDP = float(line[3 + int(not diis_active)])
-                    elif line[1].count(".") == 3:
-                        integer1, decimal1_integer2, decimal2_integer3, decimal3 = line[1].split(
-                            "."
-                        )
-                        decimal1, integer2 = decimal1_integer2[:10], decimal1_integer2[10:]
-                        decimal2, integer3 = decimal2_integer3[:12], decimal2_integer3[12:]
-                        energy = float(integer1 + "." + decimal1)  # noqa: F841
-                        deltaE = float(integer2 + "." + decimal2)
-                        maxDP = float(integer3 + "." + decimal3)
-                        rmsDP = float(line[2 + int(not diis_active)])
-                    elif line[2].count(".") == 2:
-                        integer1, decimal1_integer2, decimal2 = line[2].split(".")
-                        decimal1, integer2 = decimal1_integer2[:12], decimal1_integer2[12:]
-                        deltaE = float(integer1 + "." + decimal1)
-                        maxDP = float(integer2 + "." + decimal2)
-                        rmsDP = float(line[3 + int(not diis_active)])
-                    else:
-                        raise e
+            # Taken from old code. I don't think these statements can ever get triggered
+            # (looks like they want to check the whole line contents rather than any of
+            # the split elements). Furthermore we don't have any tests to check their
+            # function or intent...
+#             if "Newton-Raphson" in splitline:
+#                 diis_active = False
+#                 
+#             elif "SOSCF" in splitline:
+#                 diis_active = False
+#                 
+#             el
+            if splitline[0].isdigit():
+                # In some (Orca 4 at least) versions of Orca there appears to be a printing error, and columns can overlap each other
+                # looks like:
+                # %3i %17.10f%12.12f%11.8f %11.8f
+                if splitline[1].count(".") == 2:
+                    integer1, decimal1_integer2, decimal2 = splitline[1].split(".")
+                    decimal1, integer2 = decimal1_integer2[:10], decimal1_integer2[10:]
+                    splitline = [
+                        splitline[0],
+                        integer1 + "." + decimal1,
+                        integer2 + "." + decimal2
+                    ] + splitline[2:]
+                    
+                elif splitline[1].count(".") == 3:
+                    integer1, decimal1_integer2, decimal2_integer3, decimal3 = splitline[1].split(
+                        "."
+                    )
+                    decimal1, integer2 = decimal1_integer2[:10], decimal1_integer2[10:]
+                    decimal2, integer3 = decimal2_integer3[:12], decimal2_integer3[12:]
+                    splitline = [
+                        splitline[0],
+                        integer1 + "." + decimal1,
+                        integer2 + "." + decimal2,
+                        integer3 + "." + decimal3
+                    ] + splitline[2:]
+                    
+                elif splitline[2].count(".") == 2:
+                    integer1, decimal1_integer2, decimal2 = splitline[2].split(".")
+                    decimal1, integer2 = decimal1_integer2[:12], decimal1_integer2[12:]
+                    
+                    splitline = [
+                        splitline[0],
+                        splitline[1],
+                        integer1 + "." + decimal1,
+                        integer2 + "." + decimal2
+                    ] + splitline[3:]
+                
+                
+                deltaE = float(splitline[index['deltaE']])
+                maxDP = float(splitline[index['maxDP']]) #+ int(not diis_active)])
+                rmsDP = float(splitline[index['rmsDP']]) #+ int(not diis_active)])
 
                 self.scfvalues[-1].append([deltaE, maxDP, rmsDP])
-
+            
             try:
-                line = next(inputfile).split()
+                splitline = next(inputfile).split()
+            
             except StopIteration:
                 self.logger.warning(f"File terminated before end of last SCF! Last Max-DP: {maxDP}")
                 break
