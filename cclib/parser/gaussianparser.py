@@ -7,6 +7,7 @@
 
 import datetime
 import re
+from typing import List
 
 from cclib.parser import data, logfileparser, utils
 from cclib.parser.logfileparser import StopParsing
@@ -116,6 +117,21 @@ class Gaussian(logfileparser.Logfile):
         # For detecting when excited states reset (because of a new level of theory,
         # or a new round in an optimisation etc).
         self.last_et = 0
+
+        # Define strings needed for line detection. Older Gaussian versions
+        # don't always give the charge type explicitly, so we must include
+        # "atomic" as a general term to catch all other atomic charge or spin
+        # lines.
+        self.atomprops = ["mulliken", "lowdin", "apt", "atomic", "hirshfeld"]
+        self.atomcharges_atomspins_headers = [
+            " atomic charges:",
+            " charges:",
+            " charges with hydrogens summed into heavy atoms:",
+            " atomic charges with hydrogens summed into heavy atoms:",
+            " atomic spin densities:",
+            " charges and spin densities with hydrogens summed into heavy atoms:",
+            " charges and spin densities:",
+        ]
 
     def after_parsing(self):
         # atomcoords are parsed as a list of lists but it should be an array
@@ -2155,15 +2171,13 @@ class Gaussian(logfileparser.Logfile):
         #     2  C    0.320624   0.000869
         #
         # APT and Lowdin charges are also displayed in this way.
-        def extract_charges_spins(line, prop):
-            """Extracts atomic charges and spin densities into
+        def extract_charges_spins(line: str, prop: str) -> None:
+            """Extracts atomic charges and spin de strnsities into
                self.atomcharges and self.atomspins dictionaries.
 
             Inputs:
-                line - line header marking the beginning of a
-                particular set of charges or spins.
-                prop - property type to be extracted as a
-                string (e.g. Mulliken, Lowdin, APT).
+                line - line header marking the beginning of a particular set of charges or spins.
+                prop - property type to be extracted as a string (e.g. Mulliken, Lowdin, APT).
             """
             has_spin = "spin" in line.lower()
             has_charges = "charges" in line.lower()
@@ -2200,13 +2214,7 @@ class Gaussian(logfileparser.Logfile):
                         # spins, so these should be ignored.
                         while nline.split()[1] == "H":
                             nline = next(inputfile)
-                        split_line = nline.split()
-                        if has_charges:
-                            charges.append(float(split_line[2]))
-                            if has_spin:
-                                spins.append(float(split_line[3]))
-                        elif has_spin:
-                            spins.append(float(split_line[2]))
+                        _append_charges_and_spins(nline, has_charges, charges, has_spin, spins)
             else:
                 for i in self.atomnos:
                     # Ignore translation vectors.
@@ -2214,13 +2222,7 @@ class Gaussian(logfileparser.Logfile):
                         pass
                     else:
                         nline = next(inputfile)
-                        split_line = nline.split()
-                        if has_charges:
-                            charges.append(float(split_line[2]))
-                            if has_spin:
-                                spins.append(float(split_line[3]))
-                        elif has_spin:
-                            spins.append(float(split_line[2]))
+                        _append_charges_and_spins(nline, has_charges, charges, has_spin, spins)
             # When the charge type is not given explicitly we
             # must find it from the bottom line, which always
             # has the format: "Sum of Mulliken charges=   0.00000"
@@ -2241,26 +2243,13 @@ class Gaussian(logfileparser.Logfile):
                 else:
                     self.atomspins[f"{prop}"] = spins
 
-        # Define strings needed for line detection. Older Gaussian
-        # versions don't always give the charge type explicitly,
-        # so we must include "atomic" as a general term to catch
-        # all other atomic charge or spin lines.
-        props = ["mulliken", "lowdin", "apt", "atomic"]
-        headers = [
-            " atomic charges:",
-            " charges:",
-            " charges with hydrogens summed into heavy atoms:",
-            " atomic charges with hydrogens summed into heavy atoms:",
-            " atomic spin densities:",
-            " charges and spin densities with hydrogens summed into heavy atoms:",
-            " charges and spin densities:",
-        ]
+            return None
 
         if hasattr(self, "atomnos"):
             # Combine props and headers to find lines heading lists
             # of atom charges or spins.
-            for prop in props:
-                for header in headers:
+            for prop in self.atomprops:
+                for header in self.atomcharges_atomspins_headers:
                     if f"{prop}{header}".lower() in line.lower():
                         # When we use "atomic" as the property, only
                         # extract if the charge type isn't given explicity.
@@ -2606,3 +2595,15 @@ class Gaussian(logfileparser.Logfile):
         if "comments" not in self.metadata:
             self.metadata["comments"] = []
         self.metadata["comments"].append("".join(comments))
+
+
+def _append_charges_and_spins(
+    nline: str, has_charges: bool, charges: List[float], has_spin: bool, spins: List[float]
+) -> None:
+    split_line = nline.split()
+    if has_charges:
+        charges.append(float(split_line[2]))
+        if has_spin:
+            spins.append(float(split_line[3]))
+    elif has_spin:
+        spins.append(float(split_line[2]))
