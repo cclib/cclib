@@ -55,6 +55,37 @@ class ORCA(logfileparser.Logfile):
 
         # needs to be here so regression tests pass
         self.reference = [0.0, 0.0, 0.0]
+        
+    def sort_et(self):
+        # ORCA prints singlet and triplet excited states separately, so the energies are out of order.
+        if hasattr(self, "etenergies"):
+            prop_names = ("etenergies", "etsyms", "etoscs", "etsecs", "etrotats")
+
+            # First, set energies properly, keeping track of each energy's old index.
+            energy_index = sorted(
+                [(energy, index) for index, energy in enumerate(self.etenergies)],
+                key=lambda energy_index: energy_index[0],
+            )
+
+            props = {}
+            for prop_name in prop_names:
+                if hasattr(self, prop_name):
+                    # Check this property and etenergies are the same length (otherwise we can accidentally and silently truncate a list that's too long).
+                    if len(getattr(self, prop_name)) != len(self.etenergies):
+                        raise Exception(
+                            f"Parsed different number of {prop_name} "
+                            f"({len(getattr(self, prop_name))}) than "
+                            f"etenergies ({len(self.etenergies)})"
+                        )
+
+                    # Reorder based on our mapping.
+                    props[prop_name] = [
+                        getattr(self, prop_name)[old_index] for energy, old_index in energy_index
+                    ]
+
+            # Assign back again
+            for prop_name in props:
+                setattr(self, prop_name, props[prop_name])
 
     def after_parsing(self):
         super().after_parsing()
@@ -86,35 +117,7 @@ class ORCA(logfileparser.Logfile):
                     break
                 self.scfenergies[i] += dispersionenergy
 
-        # ORCA prints singlet and triplet excited states separately, so the energies are out of order.
-        if hasattr(self, "etenergies"):
-            prop_names = ("etenergies", "etsyms", "etoscs", "etsecs", "etrotats")
-
-            # First, set energies properly, keeping track of each energy's old index.
-            energy_index = sorted(
-                [(energy, index) for index, energy in enumerate(self.etenergies)],
-                key=lambda energy_index: energy_index[0],
-            )
-
-            props = {}
-            for prop_name in prop_names:
-                if hasattr(self, prop_name):
-                    # Check this property and etenergies are the same length (otherwise we can accidentally and silently truncate a list that's too long).
-                    if len(getattr(self, prop_name)) != len(self.etenergies):
-                        raise Exception(
-                            f"Parsed different number of {prop_name} "
-                            f"({len(getattr(self, prop_name))}) than "
-                            f"etenergies ({len(self.etenergies)})"
-                        )
-
-                    # Reorder based on our mapping.
-                    props[prop_name] = [
-                        getattr(self, prop_name)[old_index] for energy, old_index in energy_index
-                    ]
-
-            # Assign back again
-            for prop_name in props:
-                setattr(self, prop_name, props[prop_name])
+        self.sort_et()
 
         # If we previously stored the mem per cpu, add the total mem now.
         if hasattr(self, "mem_per_cpu"):
@@ -1593,9 +1596,14 @@ Dispersion correction           -0.016199959
                     # If we have no previously parsed etenergies, there's nothing to worry about.
                     if not hasattr(self, "etenergies"):
                         self.set_attribute("etenergies", etenergies)
+                        
+                    elif version > (6, 0):
+                        # Uniquely (so far), Orca 6 reorders the spectrum states in terms of energy.
+                        # Fix our internal states to match.
+                        self.sort_et()
 
                     # Determine if these energies are same as those previously parsed.
-                    elif len(etenergies) == len(self.etenergies) and numpy.allclose(
+                    if len(etenergies) == len(self.etenergies) and numpy.allclose(
                         etenergies, self.etenergies
                     ):
                         pass
