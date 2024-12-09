@@ -137,6 +137,8 @@ class ORCA(logfileparser.Logfile):
             if "SVN: $Rev" in possible_revision_line:
                 version = re.search(r"\d+", possible_revision_line).group()
                 self.metadata["package_version"] += f"+{version}"
+            
+            self.version = parse_version(self.metadata["package_version"]).release
 
         # Extract basis-set info.
         # ----- Orbital basis set information -----
@@ -1163,7 +1165,8 @@ Dispersion correction           -0.016199959
             total_thermal_energy = float(next(inputfile).split()[3])  # noqa: F841
 
             # Enthalpy
-            while line[:17] != "Total free energy":
+            # In Orca 6.x, this line gets renamed to Total thermal energy
+            while line[:20].strip() not in ["Total free energy", "Total thermal energy"]:
                 line = next(inputfile)
             thermal_enthalpy_correction = float(next(inputfile).split()[4])  # noqa: F841
             next(inputfile)
@@ -1318,8 +1321,8 @@ Dispersion correction           -0.016199959
             header = ["d", "header", "header", "d"]
             energy_intensity: Optional[Callable[[str], Tuple[float, float]]] = None
 
-            version = parse_version(self.metadata["package_version"]).release
-            if line == "ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS" and version < (6, 0):
+            
+            if line == "ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS" and self.version < (6, 0):
 
                 def energy_intensity(line: str) -> Tuple[float, float]:
                     """TDDFT and related methods standard method of output
@@ -1341,7 +1344,7 @@ Dispersion correction           -0.016199959
                     energy = utils.convertor(energy, "wavenumber", "hartree")
                     return energy, intensity
 
-            elif line == "ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS" and version > (6, 0):
+            elif line == "ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS" and self.version > (6, 0):
                 def energy_intensity(line: str) -> Tuple[float, float]:
                     """TDDFT and related methods standard method of output
                     ----------------------------------------------------------------------------------------------------
@@ -1603,7 +1606,7 @@ Dispersion correction           -0.016199959
                     if not hasattr(self, "etenergies"):
                         self.set_attribute("etenergies", etenergies)
                         
-                    elif version > (6, 0):
+                    elif self.version >= (6, 0):
                         # Uniquely (so far), Orca 6 reorders the spectrum states in terms of energy.
                         # Fix our internal states to match.
                         self.sort_et()
@@ -2009,9 +2012,19 @@ Dispersion correction           -0.016199959
         if line[:23] == "VIBRATIONAL FREQUENCIES":
             self.skip_lines(inputfile, ["d", "b"])
 
+            # Starting with 6.0, the point group is printed.
+            if float(self.metadata["package_version"][:3]) >= 6.0:
+                self.skip_lines(inputfile, [
+                    "Scaling factor for frequencies",
+                    "Point group:",
+                    "Irrep"
+                ])
+                
             # Starting with 4.1, a scaling factor for frequencies is printed
-            if float(self.metadata["package_version"][:3]) > 4.0:
+            elif float(self.metadata["package_version"][:3]) > 4.0:
                 self.skip_lines(inputfile, ["Scaling factor for frequencies", "b"])
+            
+            
 
             if self.natom > 1:
                 vibfreqs = numpy.zeros(3 * self.natom)
@@ -2047,15 +2060,30 @@ Dispersion correction           -0.016199959
         if line[:12] == "NORMAL MODES":
             if self.natom > 1:
                 all_vibdisps = numpy.zeros((3 * self.natom, self.natom, 3), "d")
+                
+                if self.version >= (6, 0):
+                    # Orca 6 once again prints the point group.
+                    self.skip_lines(inputfile, ["d", "b", "text", "text", "text", "b", "Point group:", "b"])
+                    # And has a wider matrix.
+                    matrix_columns = 10
+                
+                else:
+                    self.skip_lines(inputfile, ["d", "b", "text", "text", "text", "b"])
+                    matrix_columns = 6
+                    
 
-                self.skip_lines(inputfile, ["d", "b", "text", "text", "text", "b"])
-
-                for mode in range(0, 3 * self.natom, 6):
+                for mode in range(0, 3 * self.natom, matrix_columns):
                     header = next(inputfile)
+                    if self.version >= (6, 0):
+                        irreps = next(inputfile)
+                    
                     for atom in range(self.natom):
-                        all_vibdisps[mode : mode + 6, atom, 0] = next(inputfile).split()[1:]
-                        all_vibdisps[mode : mode + 6, atom, 1] = next(inputfile).split()[1:]
-                        all_vibdisps[mode : mode + 6, atom, 2] = next(inputfile).split()[1:]
+                        all_vibdisps[mode : mode + matrix_columns, atom, 0] = next(inputfile).split()[1:]
+                        all_vibdisps[mode : mode + matrix_columns, atom, 1] = next(inputfile).split()[1:]
+                        all_vibdisps[mode : mode + matrix_columns, atom, 2] = next(inputfile).split()[1:]
+                        
+                    if self.version >= (6, 0):
+                        self.skip_lines(inputfile, ["b"])
 
                 self.set_attribute("vibdisps", all_vibdisps[self.first_mode :])
             else:
@@ -2093,12 +2121,14 @@ Dispersion correction           -0.016199959
                     "package_version has not been set, assuming %s", package_version
                 )
             major_version = int(package_version[0])
-            if major_version <= 4:
-                self.skip_lines(inputfile, ["d", "b", "header", "d"])
-                regex = r"\s+(?P<num>\d+):\s+(?P<frequency>\d+\.\d+)\s+(?P<intensity>\d+\.\d+)"
-            else:
+            if major_version >= 5:
                 self.skip_lines(inputfile, ["d", "b", "header", "units", "d"])
                 regex = r"\s+(?P<num>\d+):\s+(?P<frequency>\d+\.\d+)\s+(?P<eps>\d+\.\d+)\s+(?P<intensity>\d+\.\d+)"
+                
+            else:
+                self.skip_lines(inputfile, ["d", "b", "header", "d"])
+                regex = r"\s+(?P<num>\d+):\s+(?P<frequency>\d+\.\d+)\s+(?P<intensity>\d+\.\d+)"
+                
 
             if self.natom > 1:
                 all_vibirs = numpy.zeros((3 * self.natom,), "d")
