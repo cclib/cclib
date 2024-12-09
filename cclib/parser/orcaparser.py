@@ -1480,6 +1480,23 @@ Dispersion correction           -0.016199959
                     )
                     energy = utils.convertor(energy, "wavenumber", "hartree")
                     return energy, intensity
+                
+            elif line[:48] == "SOC CORRECTED ABSORPTION SPECTRUM VIA TRANSITION":
+                # Orca 6.x
+                def energy_intensity(line: str) -> Tuple[float, float]:
+                    """
+                    --------------------------------------------------------------------------------------------------------
+                          SOC CORRECTED ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS    
+                    --------------------------------------------------------------------------------------------------------
+                          Transition         Energy     Energy  Wavelength fosc(D2)      D2       |DX|      |DY|      |DZ|  
+                                              (eV)      (cm-1)    (nm)  (*population)  (au**2)    (au)      (au)      (au)  
+                    --------------------------------------------------------------------------------------------------------
+                      0-2.0A  ->  1-2.0A    0.000000       0.0     0.0   0.000000000   0.00433   0.00000   0.00000   0.06579
+                      1-2.0A  ->  2-2.0A   291.659506 2352392.8     4.3   0.028362855   0.00794   0.02275   0.08614   0.00000
+                      """
+                    state1, arrow, state2, energy, wavenumber, wavelength, intensity, d2, tx, ty, tz = line.split()
+                    energy = utils.convertor(float(wavenumber), "wavenumber", "hartree")
+                    return energy, float(intensity)
 
             elif (
                 line[:79]
@@ -1513,6 +1530,42 @@ Dispersion correction           -0.016199959
                     ) = (utils.float(x) for x in line.split())
                     energy = utils.convertor(energy, "wavenumber", "hartree")
                     return energy, intensity
+            
+            elif (
+                line[:107]
+                == "SOC CORRECTED ABSORPTION SPECTRUM COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM"
+                or line[:93]
+                == "ABSORPTION SPECTRUM COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM"
+            ):
+                # Orca 6.x
+                def energy_intensity(line: str) -> Tuple[float, float]:
+                    """
+                    ------------------------------------------------------------------------------------------------------------------------------------
+                          SOC CORRECTED ABSORPTION SPECTRUM COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM    
+                    ------------------------------------------------------------------------------------------------------------------------------------
+                          Transition         Energy     Energy  Wavelength fosc(D2)  fosc(M2)  fosc(Q2)   fosc(D2+M2+Q2)     D2/TOT    M2/TOT    Q2/TOT
+                                              (eV)      (cm-1)    (nm)       (au)    (au*1e6)  (au*1e6)    (*population)
+                    ------------------------------------------------------------------------------------------------------------------------------------
+                      0-2.0A  ->  1-2.0A    0.000000       0.0     0.0     0.00000   0.00000   0.00000   0.00000000000000   0.00000   0.00000   0.00000
+                      1-2.0A  ->  2-2.0A   291.659506 2352392.8     4.3     0.05673   0.00000   0.00000   0.02836285492196   1.00000   0.00000   0.00000
+                    """
+                    (
+                        state,
+                        arrow,
+                        state2,
+                        energy,
+                        wavenumber,
+                        wavelength,
+                        d2,
+                        m2,
+                        q2,
+                        intensity,
+                        d2_contrib,
+                        m2_contrib,
+                        q2_contrib,
+                    ) = line.split()
+                    energy = utils.convertor(float(wavenumber), "wavenumber", "hartree")
+                    return energy, float(intensity)
 
             # Clashes with Orca 2.6 (and presumably before) TDDFT absorption spectrum printing
             elif line == "ABSORPTION SPECTRUM" and parse_version(
