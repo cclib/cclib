@@ -1881,7 +1881,7 @@ Dispersion correction           -0.016199959
         #      0       C          116.686        143.809
         #      1       C          122.158        130.692
         # ...
-        if line[:15] == "CHEMICAL SHIFTS":
+        if line.strip() == "CHEMICAL SHIFTS":
             nmrtensors = dict()
             while line.strip() != "CHEMICAL SHIELDING SUMMARY (ppm)":
                 if line[:8] == " Nucleus":
@@ -1978,7 +1978,7 @@ Dispersion correction           -0.016199959
             # The order and number of tensors is not guaranteed (because different tensors can be
             # explicitly requested).
             tensors = dict()
-            while "Diagonalized sT*s matrix:" not in line:
+            while line.strip() not in ["Diagonalized sT*s matrix:", "Diagonalized JT*J matrix:"]:
                 if "contribution" in line or "Total spin-spin coupling tensor" in line:
                     # Tensor section.
                     t_type = line.split()[0].lower()
