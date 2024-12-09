@@ -1564,7 +1564,12 @@ Dispersion correction           -0.016199959
                 line = next(inputfile)
                 # The sections are occasionally ended with dashed lines
                 # other times they are blank (other than a new line)
-                while len(line.strip("-")) > 2:
+                # In orca 6, sometimes there is a message like this:
+                # *The positivity of oscillator strengths is not guaranteed in non-Hermitian theories.
+                #
+                # TODO: This works for now, but ideally each energy_intensity() function should decide for
+                # itself when there's no more information to read
+                while line.strip() != "*The positivity of oscillator strengths is not guaranteed in non-Hermitian theories." and len(line.strip("-")) >2:
                     energy, intensity = energy_intensity(line)
                     etenergies.append(energy)
                     etoscs.append(intensity)
@@ -2255,7 +2260,9 @@ Dispersion correction           -0.016199959
             self.skip_lines(inputfile, 'd')
             line = next(inputfile) # blank or XYZ
             if line.strip() == '':
-                self.skip_lines(inputfile, ['Method', 'Type', 'Multiplicity', 'Irrep', 'Energy', 'Relativity', 'Basis', 'XYZ'])
+                while line.split() != ["X", "Y", "Z"]:
+                    line = next(inputfile)
+                
             self.skip_lines(inputfile, ["electronic", "nuclear", "d"])
             total = next(inputfile)
             assert "Total Dipole Moment" in total
