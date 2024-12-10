@@ -56,6 +56,9 @@ class ORCA(logfileparser.Logfile):
         # needs to be here so regression tests pass
         self.reference = [0.0, 0.0, 0.0]
 
+        # Is this a numerical frequency calc?
+        self.numfreq = False
+
     def sort_et(self):
         # ORCA prints singlet and triplet excited states separately, so the energies are out of order.
         if hasattr(self, "etenergies"):
@@ -2104,18 +2107,22 @@ Dispersion correction           -0.016199959
 
             self.nmrcouplingtensors[atoms][isotopes] = tensors
 
+        if line.strip() == "ORCA NUMERICAL FREQUENCIES":
+            self.numfreq = True
+
         if line[:23] == "VIBRATIONAL FREQUENCIES":
             self.skip_lines(inputfile, ["d", "b"])
 
-            # Starting with 6.0, the point group is printed.
-            if float(self.metadata["package_version"][:3]) >= 6.0:
-                self.skip_lines(
-                    inputfile, ["Scaling factor for frequencies", "Point group:", "Irrep"]
-                )
+            line = next(inputfile)
 
+            # Starting with 6.0, the point group is printed (but only for analytical freqs...)
             # Starting with 4.1, a scaling factor for frequencies is printed
-            elif float(self.metadata["package_version"][:3]) > 4.0:
-                self.skip_lines(inputfile, ["Scaling factor for frequencies", "b"])
+            if "Scaling factor for frequencies" in line:
+                line = next(inputfile)
+
+            if "Point group" in line:
+                # Skip point group
+                line = next(inputfile)
 
             if self.natom > 1:
                 vibfreqs = numpy.zeros(3 * self.natom)
@@ -2152,8 +2159,8 @@ Dispersion correction           -0.016199959
             if self.natom > 1:
                 all_vibdisps = numpy.zeros((3 * self.natom, self.natom, 3), "d")
 
-                if self.version >= (6, 0):
-                    # Orca 6 once again prints the point group.
+                if self.version >= (6, 0) and not self.numfreq:
+                    # Orca 6 once again prints the point group (but only for analytical freqs).
                     self.skip_lines(
                         inputfile, ["d", "b", "text", "text", "text", "b", "Point group:", "b"]
                     )
@@ -2166,7 +2173,7 @@ Dispersion correction           -0.016199959
 
                 for mode in range(0, 3 * self.natom, matrix_columns):
                     header = next(inputfile)
-                    if self.version >= (6, 0):
+                    if self.version >= (6, 0) and not self.numfreq:
                         _irreps = next(inputfile)
 
                     for atom in range(self.natom):
@@ -2180,7 +2187,7 @@ Dispersion correction           -0.016199959
                             inputfile
                         ).split()[1:]
 
-                    if self.version >= (6, 0):
+                    if self.version >= (6, 0) and not self.numfreq:
                         self.skip_lines(inputfile, ["b"])
 
                 self.set_attribute("vibdisps", all_vibdisps[self.first_mode :])
