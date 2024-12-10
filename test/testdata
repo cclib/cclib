@@ -500,6 +500,6 @@ vib       Gaussian    GaussianRamanTest     basicGaussian16       dvb_raman.out
 vib       ORCA        OrcaRamanTest         basicORCA4.1          dvb_raman.out
 vib       ORCA        OrcaRamanTest         basicORCA4.2          dvb_raman.out
 vib       ORCA        OrcaRamanTest         basicORCA5.0          dvb_raman.out
-vib       ORCA        OrcaRamanTest         basicORCA6.0          dvb_raman.out
+vib       ORCA        Orca6RamanTest        basicORCA6.0          dvb_raman.out
 vib       QChem       QChemRamanTest        basicQChem5.1         dvb_raman.out
 vib       QChem       QChemRamanTest        basicQChem5.4         dvb_raman.out
