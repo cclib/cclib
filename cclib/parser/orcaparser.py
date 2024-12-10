@@ -2341,12 +2341,16 @@ Dispersion correction           -0.016199959
             self.append_attribute("time", time)
 
         # Static polarizability.
-        if line.strip() == "THE POLARIZABILITY TENSOR":
+        if line.strip() == "THE POLARIZABILITY TENSOR" or "STATIC POLARIZABILITY TENSOR" in line:
             if not hasattr(self, "polarizabilities"):
                 self.polarizabilities = []
             self.skip_lines(inputfile, ["d", "b"])
             line = next(inputfile)
-            assert line.strip() == "The raw cartesian tensor (atomic units):"
+            
+            # Orca 6.x has some more metadata
+            while line.strip() != "The raw cartesian tensor (atomic units):":
+                line = next(inputfile)
+            
             polarizability = []
             for _ in range(3):
                 line = next(inputfile)
