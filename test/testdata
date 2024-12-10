@@ -245,6 +245,7 @@ NMR       ORCA        GenericNMRTest        basicORCA4.1          dvb_nmr.out
 NMR       ORCA        GenericNMRTest        basicORCA4.2          dvb_nmr.out
 NMR       ORCA        GenericNMRTest        basicORCA5.0          dvb_nmr.out
 NMR       ORCA        GenericNMRCouplingTest        basicORCA5.0          dvb_coupling_nmr.out
+NMR       ORCA        GenericNMRCouplingTest        basicORCA6.1          dvb_coupling_nmr.out
 
 Polar     DALTON      ReferencePolarTest    basicDALTON-2015      Trp_polar_abalnr.out
 Polar     FChk        ReferencePolarTest    basicGaussian16       Trp_polar.fchk
@@ -270,6 +271,7 @@ Scan      ORCA         GenericRelaxedScanTest                basicORCA4.2       
 Scan      ORCA         GenericUnrelaxedScanTest              basicORCA4.2          dvb_scan_unrelaxed.out
 Scan      ORCA         GenericRelaxedScanTest                basicORCA5.0          dvb_scan.out
 Scan      ORCA         GenericUnrelaxedScanTest              basicORCA5.0          dvb_scan_unrelaxed.out
+Scan      ORCA         GenericRelaxedScanTest                basicORCA6.1          dvb_scan.out
 
 SP        ADF         ADFSPTest             basicADF2007.01             dvb_sp_b.adfout
 SP        ADF         ADFSPTest             basicADF2013.01             dvb_sp_b.adfout
@@ -424,8 +426,10 @@ TD        ORCA        OrcaTDDFTTest         basicORCA6.0          dvb_td.out
 TD        ORCA        OrcaROCISTest         basicORCA4.1          dvb_rocis.out
 TD        ORCA        OrcaROCISTest         basicORCA4.2          dvb_rocis.out
 TD        ORCA        OrcaROCISTest         basicORCA5.0          dvb_rocis.out
+TD        ORCA        Orca6ROCISTest        basicORCA6.1          dvb_rocis.out
 TD        ORCA        OrcaADC2Test          basicORCA5.0          dvb_adc2.log
 TD        ORCA        OrcaETPostHFTest      basicORCA5.0          dvb_eom_ccsd.log
+TD        ORCA        OrcaETPostHFTest      basicORCA6.1          dvb_eom_ccsd.out
 TD        ORCA        OrcaETPostHFTest      basicORCA5.0          dvb_pno_eom_ccsd.log
 TD        ORCA        OrcaSTEOMCCSDTest     basicORCA5.0          dvb_steom_ccsd.log
 TD        ORCA        OrcaSTEOMCCSDTest     basicORCA5.0          dvb_steom_dlpno_ccsd.log
@@ -466,6 +470,7 @@ vib       NWChem      NWChemIRTest          basicNWChem7.0        dvb_ir.out
 vib       ORCA        OrcaIRTest            basicORCA4.1          dvb_ir.out
 vib       ORCA        OrcaIRTest            basicORCA4.2          dvb_ir.out
 vib       ORCA        OrcaIRTest            basicORCA5.0          dvb_ir.out
+vib       ORCA        OrcaIRTest            basicORCA6.1          dvb_ir.out
 vib       Psi4        Psi4HFIRTest          basicPsi4-1.2.1       dvb_ir_rhf.out
 vib       Psi4        Psi4HFIRTest          basicPsi4-1.3.1       dvb_ir_rhf.out
 vib       Psi4        Psi4HFIRTest          basicPsi4-1.7         dvb_ir_rhf.out
