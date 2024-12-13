@@ -1,5 +1,14 @@
 !  hf sto-3g usesym
 
+%output
+ printlevel normal
+ print[ p_basis ] 2
+ print[ p_mos ] 1
+ print[ p_overlap ] 1
+ print[ p_hirshfeld ] 1
+ end 
+
+
 * xyz 1 2
  C       -1.4152533224   0.2302217854   0.0000000000
  C        1.4152533224  -0.2302217854   0.0000000000
