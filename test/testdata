@@ -315,7 +315,7 @@ SP        ORCA        OrcaSPTest            basicORCA4.1                dvb_sp.o
 SP        ORCA        OrcaSPTest            basicORCA4.2                dvb_sp.out
 SP        ORCA        OrcaSPTest            basicORCA5.0                dvb_sp.out
 SP        ORCA        OrcaSPTest            basicORCA6.0                dvb_sp.out
-SP        ORCA        OrcaSPTest            basicORCA6.0                dvb_sp_hf.out
+SP        ORCA        OrcaHFSPTest          basicORCA6.0                dvb_sp_hf.out
 SP        Psi3        Psi3SPTest            basicPsi3                   dvb_sp_hf.out
 SP        Psi4        PsiHFSPTest           basicPsi4-1.2.1             dvb_sp_rhf.out
 SP        Psi4        PsiSPTest             basicPsi4-1.2.1             dvb_sp_rks.out
