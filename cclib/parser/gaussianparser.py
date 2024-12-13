@@ -7,7 +7,7 @@
 
 import datetime
 import re
-from typing import List
+from typing import Dict, List, Tuple
 
 from cclib.parser import data, logfileparser, utils
 from cclib.parser.logfileparser import StopParsing
@@ -2658,7 +2658,7 @@ class Gaussian(logfileparser.Logfile):
             self.metadata["keywords"] = []
         self.metadata["keywords"].append("".join(keywords))
         line = next(inputfile)
-        # Don't do anything with the route info for now.
+        route_lines = []
         while set(line.strip()) != {"-"}:
             if "Leave Link    1" in line and "MaxMem=" in line and "num_cpu" in self.metadata:
                 # Leave Link    1 at Wed Apr  4 10:49:19 2018, MaxMem=   805306368 cpu:               0.3 elap:               0.0
@@ -2675,7 +2675,17 @@ class Gaussian(logfileparser.Logfile):
                 assert maxmem is not None
                 memory_per_cpu = int(maxmem.group(1))
                 self.metadata["memory_used"] = memory_per_cpu * self.metadata["num_cpu"]
+            route_lines.append(line)
             line = next(inputfile)
+        route_lines = [
+            rl
+            for rl in route_lines
+            if not any(rl.startswith(x) for x in (" Leave Link", " (Enter "))
+        ]
+        route = parse_route_lines(route_lines)
+        if "routes" not in self.metadata:
+            self.metadata["routes"] = []
+        self.metadata["routes"].append(route)
         line = next(inputfile)
         comments = []
         while set(line.strip()) != {"-"}:
@@ -2709,3 +2719,40 @@ def _append_charges_and_spins(
         # swapping is relevant 1. will always have both charges and spins and
         # 2. has spins first.
         spins.append(float(split_line[2]))
+
+
+Overlay = int
+Option = int
+Value = int
+Route = Dict[Overlay, Dict[Option, Value]]
+
+
+def parse_route_line(route_line: str) -> Tuple[Overlay, Dict[Option, Value]]:
+    """Parse a single line of the route section.
+
+    This line should be preserved as present in the input, with a single
+    leading space, a trailing semicolon, and a possible trailing newline.
+    """
+    cleaned = route_line.rstrip()
+    # remove single leading space and single trailing semicolon
+    assert cleaned[-1] == ";"
+    cleaned = cleaned[1:-1]
+    # it's not clear the stuff at the end means anything
+    route, options, _ = cleaned.split("/")
+    if not options:
+        return int(route), dict()
+    return int(route), dict([[int(x) for x in pair.split("=")] for pair in options.split(",")])
+
+
+def parse_route_lines(route_lines: List[str]) -> Route:
+    """Parse the route lines appearing after the input keyword line.
+
+    The route is the section of global internal options (IOps) derived from
+    the input keywords and dictates what calculation will be performed
+    (https://gaussian.com/iops/).
+    """
+    route = dict()
+    for route_line in route_lines:
+        overlay, mapping = parse_route_line(route_line)
+        route[overlay] = mapping
+    return route
