@@ -91,6 +91,11 @@ class Gaussian(logfileparser.Logfile):
         # floating-point format.
         self.re_float = re.compile(r"(\w*-?\w*)=\s*(-?\d+\.\d{10,})")
 
+        # Detect when a new link (Gaussian subprogram) is entered.
+        self.re_link = re.compile(r"\(Enter [\w/:\\\-\.]+l(?P<link_number>\d{3,4})\.exe\)")
+        # Printed in a different format, but always start here.
+        self.link = 1
+
         # Flag for identifying Coupled Cluster runs.
         self.coupledcluster = False
 
@@ -256,6 +261,10 @@ class Gaussian(logfileparser.Logfile):
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
+
+        link_match = self.re_link.search(line)
+        if link_match is not None:
+            self.link = int(link_match.groupdict()["link_number"])
 
         # Extract the version number: "Gaussian 09, Revision D.01"
         # becomes "09revisionD.01".
