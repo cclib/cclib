@@ -2425,6 +2425,80 @@ class Gaussian(logfileparser.Logfile):
             self.atomcharges["hirshfeld_sum"] = atomcharges_hirshfeld_summed
             self.atomcharges["cm5_sum"] = atomcharges_cm5_summed
 
+        # Determine information about ESP-derived charges.
+        if self.link == 602:
+            # Some are not prefixed or postfixed for consistency with the
+            # Q-Chem parser.
+            radii_to_esp_model = {
+                "Breneman": "chelpg",
+                "Chirlian-Francl": "chelp",
+                "Francl": "chelp",
+                # Ideally would be "esp_hly".
+                "Hu-Lu-Yang": "esp",
+                # Ideally would be "esp_mk".
+                "Merz-Kollman": "esp",
+                # Ideally would be "esp_mkuff".
+                "UFF": "esp",
+            }
+            esp_iop = self.metadata["routes"][-1][6][20]
+            if line.startswith(" Read replacement radii"):
+                # This section still generally depends on a parent set of
+                # radii being defined.  This parent set determines the
+                # atomcharges key.
+                re_radii_line = re.compile(
+                    r"Rad\((?P<atnum>\d+)\)\s+=\s+(?P<radius>\d\.\d{12}D\+\d{2})"
+                )
+                line = next(inputfile)
+                while line.startswith(" Rad("):
+                    mtch = re_radii_line.search(line)
+                    assert mtch is not None
+                    _atnum = int(mtch.group("atnum"))
+                    _radius = utils.float(mtch.group("radius"))
+                    line = next(inputfile)
+            elif "radii" in line:
+                self.esp_model = radii_to_esp_model[line.split()[0]]
+            elif line.startswith(" Generate Potential Derived Charges using the"):
+                self.esp_model = radii_to_esp_model[line.split()[6]]
+            elif line.strip() == "Electrostatic Properties Using The SCF Density":
+                key = self.esp_model
+                _ = self.skip_lines(inputfile, ["b", "s", "b"])
+                # atomic positions
+                for _ in range(self.natom):
+                    line = next(inputfile)
+                line = next(inputfile)
+                assert "points will be used for fitting atomic charges" in line
+                _npoints = int(line.split()[0])
+                line = next(inputfile)
+                assert "Fitting point charges" in line
+                fitting_point_dipoles = False
+                if "Fitting point charges and point dipoles" in line:
+                    fitting_point_dipoles = True
+                line = next(inputfile)
+                if line.strip() == "The dipole moment will be constrained to the correct value":
+                    # This doesn't make sense for ChElP(G), so avoid setting
+                    # it there.
+                    if key == "esp":
+                        key = "resp"
+                    if fitting_point_dipoles:
+                        _key = "esp_mk_dipole_atom"
+                    line = next(inputfile)
+                assert line.startswith(" Charges from ESP fit")
+                line = next(inputfile)
+                assert line.startswith(" Charge=") or line.strip() in (
+                    "ESP charges:",
+                    "ESP charges         Point Dipoles (au):",
+                )
+                line = next(inputfile)
+                line = next(inputfile)
+                charges = []
+                for _ in range(self.natom):
+                    charges.append(float(line.split()[2]))
+                    line = next(inputfile)
+                # Gaussian atomic densities instead of those from the HLY scheme
+                if esp_iop == 15:
+                    _key = "esp_hlygat"
+                self.atomcharges[key] = charges
+
         # Extract Thermochemistry
         # Temperature   298.150 Kelvin.  Pressure   1.00000 Atm.
         # Zero-point correction=                           0.342233 (Hartree/
@@ -2686,11 +2760,7 @@ class Gaussian(logfileparser.Logfile):
                 self.metadata["memory_used"] = memory_per_cpu * self.metadata["num_cpu"]
             route_lines.append(line)
             line = next(inputfile)
-        route_lines = [
-            rl
-            for rl in route_lines
-            if not any(rl.startswith(x) for x in (" Leave Link", " (Enter "))
-        ]
+        route_lines = [line for line in route_lines if re.match(r"\s\d", line) is not None]
         route = parse_route_lines(route_lines)
         if "routes" not in self.metadata:
             self.metadata["routes"] = []
