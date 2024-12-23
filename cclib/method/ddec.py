@@ -763,8 +763,8 @@ class DDEC6(Stockholder):
             lowerbigPhi = self._candidates_bigPhi[atomi][lower_ind]
             lowerphi = self._candidates_phi[atomi][lower_ind]
         else:  # assign some large negative number otherwise
-            lowerbigPhi = numpy.NINF
-            lowerphi = numpy.NINF
+            lowerbigPhi = -numpy.inf
+            lowerphi = -numpy.inf
         if numpy.count_nonzero(self._candidates_phi[atomi] > 0) > 0:
             # If there is at least one candidate phi that is positive
             upper_ind = numpy.where(
@@ -774,8 +774,8 @@ class DDEC6(Stockholder):
             upperbigPhi = self._candidates_bigPhi[atomi][upper_ind]
             upperphi = self._candidates_phi[atomi][upper_ind]
         else:  # assign some large positive number otherwise
-            upperbigPhi = numpy.PINF
-            upperphi = numpy.PINF
+            upperbigPhi = numpy.inf
+            upperphi = numpy.inf
 
         for iteration in range(self.max_iteration):
             # Flow diagram on Figure S1 in doi: 10.1039/c6ra04656h details the procedure.
