@@ -763,8 +763,8 @@ class DDEC6(Stockholder):
             lowerbigPhi = self._candidates_bigPhi[atomi][lower_ind]
             lowerphi = self._candidates_phi[atomi][lower_ind]
         else:  # assign some large negative number otherwise
-            lowerbigPhi = numpy.NINF
-            lowerphi = numpy.NINF
+            lowerbigPhi = -numpy.inf
+            lowerphi = -numpy.inf
         if numpy.count_nonzero(self._candidates_phi[atomi] > 0) > 0:
             # If there is at least one candidate phi that is positive
             upper_ind = numpy.where(
