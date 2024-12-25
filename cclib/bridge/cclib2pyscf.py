@@ -534,7 +534,7 @@ def cclibfrommethods(
             else:
                 et_mult = "Triplet"
 
-            attributes["etsyms"].extend([et_mult for i in range(len(etmethod.e))])
+            attributes["etsyms"].extend([et_mult for _ in range(len(etmethod.e))])
 
         # Orbital contributions.
         # In PySCF, occupied and virtual orbital indices are stored separately.
