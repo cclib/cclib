@@ -166,9 +166,7 @@ def makecclib(*methods, ccsd_t=None, scf_steps=[], opt_steps=[], opt_failed=Fals
             base_method = method._scf
             et.append(method)
 
-        if isinstance(base_method, pyscf.scf.hf.SCF) or isinstance(
-            base_method, pyscf.scf.hf.KohnShamDFT
-        ):
+        if isinstance(base_method, (pyscf.scf.hf.SCF, pyscf.scf.hf.KohnShamDFT)):
             scf = base_method
 
         elif isinstance(base_method, pyscf.mp.mp2.MP2):
