@@ -129,7 +129,7 @@ def makepyscf_mos(ccdata, mol):
     return mo_coeffs, mo_occ, mo_syms, mo_energies
 
 
-def makecclib(*methods, ccsd_t=None, scf_steps=[], opt_steps=[], opt_failed=False) -> ccData:
+def makecclib(*methods: Type[Any], ccsd_t: Optional[float] = None, scf_steps: List[List[Dict[str, float]]] = [], opt_steps: List[Dict[str, Any]] = [], opt_failed: bool = False) -> ccData:
     """Create cclib attributes and return a ccData from a PySCF calculation.
 
     PySCF calculation results are stored in method objects, with each object representing a different part of the
