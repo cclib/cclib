@@ -251,8 +251,6 @@ def cclibfrommethods(
 
     # Metadata.
     attributes["metadata"] = {
-        # TODO: What if using a non-standard basis set?
-        #'basis_set': mol.basis,
         "basis_set": mol.basis
         if isinstance(mol.basis, str)
         else ", ".join(set(mol.basis.values())),
