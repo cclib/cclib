@@ -559,8 +559,8 @@ def cclibfrommethods(
             x, y = list(itertools.chain(*(etmethod.xy for etmethod in et)))[index]
 
             def norm_xy(x, y):
-                norm = np.linalg.norm(x) ** 2 - np.linalg.norm(y) ** 2
-                return (x * 1.0 / np.sqrt(norm), y * 1.0 / np.sqrt(norm))
+                norm_factor = 1.0 / np.sqrt(np.linalg.norm(x) ** 2 - np.linalg.norm(y) ** 2)
+                return (x * norm_factor, y * norm_factor)
 
             if not scf.istype("UHF"):
                 # The coefficients of x (and presumably also y) are normalised to 0.5,
