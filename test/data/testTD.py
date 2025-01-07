@@ -393,10 +393,17 @@ class GaussianEOMCCSDTest(GenericTDTest):
     method = "EOM-CCSD"
 
 
-class PySCFTDTest(GenericTDTest):
+class PySCFTDATest(GenericTDTest):
     # No symmetry labels for PySCF yet.
     symmetries = ["Singlet", "Singlet", "Singlet", "Singlet", "Singlet"]
     method = "TDA"
 
     expected_f_max = 1.17
     expected_l_max = 0.21870229042
+
+
+class PySCFTDTest(GenericTDTest):
+    # Testing against water because DVB will not converge for some reason...
+    symmetries = ["Singlet", "Singlet", "Singlet", "Singlet", "Singlet"]
+    expected_l_max = 0.75825470773
+    expected_f_max = 0.98

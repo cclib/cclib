@@ -2,23 +2,18 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
-from pyscf import dft, gto
+from pyscf import dft, gto, tddft
 
 
 def calculate():
     mol = gto.M(
         atom="""
-        Mo         0.00001        0.00000        0.29568
-        O          0.00000        0.00000        1.98538
-        Cl         2.42022       -0.00000       -0.41621
-        Cl         0.00000       -2.42024       -0.41620
-        Cl        -2.42025       -0.00000       -0.41620
-        Cl         0.00000        2.42024       -0.41620
-        """,
-        basis={"Mo": "lanl2dz", "Cl": "lanl2dz", "O": "6-31G*"},
-        ecp={"Mo": "lanl2dz", "Cl": "lanl2dz"},
+    O         -0.00000       -0.11916        0.00000
+    H         -0.79065        0.47664       -0.00000
+    H          0.79065        0.47664       -0.00000
+    """,
+        basis="STO-3G",
         symmetry=True,
-        charge=-2,
     )
 
     scf_steps = []
@@ -37,8 +32,22 @@ def calculate():
     method.callback = store_intermediate
     method.xc = "b3lyp"
     method.kernel()
-    return {"methods": [method], "scf_steps": [scf_steps]}
+
+    # Now excited states.
+    # TD-DFT proved extremely unstable, maybe a bug in PySCF?
+    tdm = tddft.TD(method)
+    tdm.nstates = 5
+    tdm.singlet = True
+    tdm.kernel()
+
+    assert all(tdm.converged)
+
+    return {"methods": [tdm], "scf_steps": [scf_steps]}
 
 
 if __name__ == "__main__":
-    calculate()
+    methods = calculate()
+
+    from cclib.bridge.cclib2pyscf import makecclib
+
+    makecclib(*methods["methods"])
