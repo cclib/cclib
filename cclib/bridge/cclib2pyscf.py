@@ -558,14 +558,15 @@ def cclibfrommethods(
             # y is ignored for now.
             x, y = list(itertools.chain(*(etmethod.xy for etmethod in et)))[index]
 
+            def norm_xy(x, y):
+                norm = np.linalg.norm(x) ** 2 - np.linalg.norm(y) ** 2
+                return (x * 1.0 / np.sqrt(norm), y * 1.0 / np.sqrt(norm))
+
             if not scf.istype("UHF"):
                 # The coefficients of x (and presumably also y) are normalised to 0.5,
                 # but we expect 1.0
                 # Renormalize.
-                # Taken from pyscf.tdscf.rhf.get_nto()
-                #
-                # Would appreciate someone checking this makes sense?
-                x *= 1.0 / np.linalg.norm(x)
+                x = norm_xy(x, y)[0]
 
                 # Flatten the x matrix.
                 # The first index is the occupied orbital, the second is the virtual (both 0 indexed):
@@ -577,8 +578,8 @@ def cclibfrommethods(
 
             else:
                 x = [x[0], x[1]]
-                x[0] *= 1.0 / np.linalg.norm(x[0])
-                x[1] *= 1.0 / np.linalg.norm(x[1])
+                x[0] = norm_xy(x[0], y[0])[0]
+                x[1] = norm_xy(x[1], y[1])[0]
 
                 # Flatten the x matrix.
                 # The first index is the occupied orbital, the second is the virtual (both 0 indexed):
