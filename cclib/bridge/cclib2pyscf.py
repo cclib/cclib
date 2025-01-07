@@ -7,6 +7,7 @@
 
 import functools
 import itertools
+import logging
 from typing import Any, Dict, List, Optional
 
 from cclib.parser.data import ccData
@@ -131,6 +132,8 @@ def makepyscf_mos(ccdata, mol):
 
 
 def makecclib(
+    # pyscf.lib.StreamObject is the ultimate base class I believe, but not sure
+    # if we can give this as a type hint as we don't know if PySCF is even available...
     *methods: Any,
     ccsd_t: Optional[float] = None,
     scf_steps: List[List[Dict[str, float]]] = [],
@@ -156,6 +159,11 @@ def makecclib(
     _check_pyscf(_found_pyscf)
     # What is our level of theory?
     scf, mp, cc, hess, freq, et = None, None, None, None, None, []
+
+    mols = {method.mol for method in methods if hasattr(method, "mol")}
+    if len(mols) > 1:
+        logger = logging.getLogger("cclib")
+        logger.warning("not all PySCF methods are operating on the same molecule")
 
     for method in methods:
         # Assume the method is a base CC method (SCF, MP, CC etc.) unless we can prove otherwise.
@@ -240,8 +248,6 @@ def cclibfrommethods(
 
     mol = scf.mol
     ptable = PeriodicTable()
-
-    # TODO: A sanity check that all the supplied methods use the same mol object?
 
     # Metadata.
     attributes["metadata"] = {
