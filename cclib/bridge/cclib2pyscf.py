@@ -7,7 +7,7 @@
 
 import functools
 import itertools
-from typing import Any, Dict, List, Optional, Type
+from typing import Any, Dict, List, Optional
 
 from cclib.parser.data import ccData
 from cclib.parser.utils import PeriodicTable, convertor, find_package
@@ -131,7 +131,7 @@ def makepyscf_mos(ccdata, mol):
 
 
 def makecclib(
-    *methods: Type[Any],
+    *methods: Any,
     ccsd_t: Optional[float] = None,
     scf_steps: List[List[Dict[str, float]]] = [],
     opt_steps: List[Dict[str, Any]] = [],
