@@ -610,8 +610,13 @@ def cclibfrommethods(
     if freq:
         # Freq data, a dict with 'freq_error', 'freq_au', 'freq_wavenumber', 'norm_mode', 'reduced_mass',
         # 'vib_temperature', 'force_const_au', 'force_const_dyne'
-        # TODO: This can include imaginary numbers, convert to 'negative' frequencies?
         attributes["vibfreqs"] = freq.vib_dict["freq_wavenumber"]
+
+        # Convert imaginary frequencies to negative ones.
+        # Adapted from https://pyscf.org/_modules/pyscf/hessian/thermo.html
+        if np.iscomplexobj(attributes["vibfreqs"]):
+            attributes["vibfreqs"] = attributes["vibfreqs"].real - abs(attributes["vibfreqs"].imag)
+
         # TODO: Check these units.
         attributes["vibfconsts"] = freq.vib_dict["force_const_dyne"]
         attributes["vibrmasses"] = freq.vib_dict["reduced_mass"]
