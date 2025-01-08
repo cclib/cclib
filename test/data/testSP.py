@@ -695,10 +695,11 @@ class OrcaSPTest(GenericSPTest):
     moenergy_delta = 1.2e-1
 
     num_scf_criteria = 3
-    
+
+
 class OrcaHFSPTest(OrcaSPTest, GenericHFSPTest):
     """Customized restricted single point unittest"""
-    
+
     def testmetadata_input_file(self, data) -> None:
         """Does metadata have expected keys and values?"""
         assert "input_file_contents" in data.metadata
