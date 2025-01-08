@@ -600,10 +600,12 @@ def cclibfrommethods(
     # Hessian/frequencies
     if hess:
         pass
-        # TODO: Don't know enough to work out what this is
+        # TODO: check this conversion
         # cclib wants a rank 2 array, pyscf gives us a rank 4 array?
         # Dimensions appear to be natoms x natoms x 3 x 3
-        # attributes["hessian"] = hess.de
+        #
+        # Units may also be mismatched.
+        # attributes["hessian"] = hess.de.reshape(attributes["natom"], *3, attributes["natom"]*3)
 
     if freq:
         # Freq data, a dict with 'freq_error', 'freq_au', 'freq_wavenumber', 'norm_mode', 'reduced_mass',
