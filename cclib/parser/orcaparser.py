@@ -7,7 +7,7 @@
 
 import datetime
 import re
-from itertools import zip_longest
+from itertools import zip_longest, chain
 from typing import Callable, Optional, Tuple
 
 from cclib.parser import logfileparser, utils
@@ -2074,6 +2074,32 @@ Dispersion correction           -0.016199959
             self.numfreq = True
 
         if line[:23] == "VIBRATIONAL FREQUENCIES":
+            # This section is a mess between different versions, here are some of the known permutations:
+            # Orca ~2:
+            # -----------------------
+            # VIBRATIONAL FREQUENCIES
+            # -----------------------
+            # 
+            #    0:         0.00 cm**-1
+            #
+            # Orca ~4:
+            # -----------------------
+            # VIBRATIONAL FREQUENCIES
+            # -----------------------
+            # 
+            # Scaling factor for frequencies =  1.000000000  (already applied!)
+            # 
+            #    0:         0.00 cm**-1
+            #
+            # Orca ~6:
+            # -----------------------
+            # VIBRATIONAL FREQUENCIES
+            # -----------------------
+            # 
+            # Scaling factor for frequencies =  1.000000000  (already applied!)
+            # Point group:  C2h
+            #                              Irrep
+            #      0:       0.00 cm**-1    1-Au
             self.skip_lines(inputfile, ["d", "b"])
             
             line = next(inputfile)
@@ -2086,10 +2112,13 @@ Dispersion correction           -0.016199959
             if "Point group" in line:
                 # Skip point group
                 line = next(inputfile)
+                
+            if line.strip() == "" or "Irrep" in line:
+                line = next(inputfile)
 
             if self.natom > 1:
                 vibfreqs = numpy.zeros(3 * self.natom)
-                for i, line in zip(range(3 * self.natom), inputfile):
+                for i, line in zip(range(3 * self.natom), chain([line], inputfile)):
                     vibfreqs[i] = float(line.split()[1])
 
                 nonzero = numpy.nonzero(vibfreqs)[0]
