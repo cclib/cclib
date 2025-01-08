@@ -44,7 +44,7 @@ jobs:
           name: python-package-distributions
           path: dist/
       - name: Publish distribution to TestPyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@67339c736fd9354cd4f8cb0b744f2b82a74b5c70 # v1.12.3
         with:
           repository-url: https://test.pypi.org/legacy/
 
@@ -69,7 +69,7 @@ jobs:
           name: python-package-distributions
           path: dist/
       - name: Publish distribution to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@67339c736fd9354cd4f8cb0b744f2b82a74b5c70 # v1.12.3
 
   github-release:
     name: >-
