@@ -1347,7 +1347,7 @@ Dispersion correction           -0.016199959
                     energy = utils.convertor(energy, "wavenumber", "hartree")
                     return energy, intensity
 
-            elif line == "ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS" and self.version > (6, 0):
+            elif line == "ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS" and self.version >= (6, 0):
                 def energy_intensity(line: str) -> Tuple[float, float]:
                     """TDDFT and related methods standard method of output
                     ----------------------------------------------------------------------------------------------------
@@ -1484,7 +1484,7 @@ Dispersion correction           -0.016199959
                     energy = utils.convertor(energy, "wavenumber", "hartree")
                     return energy, intensity
                 
-            elif line[:48] == "SOC CORRECTED ABSORPTION SPECTRUM VIA TRANSITION":
+            elif line[:48] == "SOC CORRECTED ABSORPTION SPECTRUM VIA TRANSITION"  and self.version >= (6, 0):
                 # Orca 6.x
                 def energy_intensity(line: str) -> Tuple[float, float]:
                     """
