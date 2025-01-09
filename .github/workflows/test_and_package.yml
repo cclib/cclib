@@ -54,7 +54,7 @@ jobs:
         with:
           filters: |
             methods:
-              - 'cclib/cclib/method/**'
+              - 'cclib/method/**'
               - 'test/method/**'
       - name: Test core code with pytest
         run: |
