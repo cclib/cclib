@@ -14,12 +14,8 @@ concurrency:
 jobs:
   build-and-push-docs:
     runs-on: ubuntu-22.04
-    strategy:
-      matrix:
-        container:
-          - 'shivupa/cclib-ci:py311-edge'
     container:
-      image: ${{ matrix.container }}
+      image: shivupa/cclib-ci:py312-edge
     defaults:
       run:
         shell: bash -eo pipefail -l {0}
@@ -38,7 +34,7 @@ jobs:
           git config --global --add safe.directory /__w/cclib/cclib
       - name: Prepare conda environment
         run: |
-          echo "/opt/conda/envs/cclib/bin" >> $GITHUB_PATH
+          echo "/opt/conda/envs/cclib/bin" >> "${GITHUB_PATH}"
       - name: Build docs
         run: cd doc && make default
       - name: Make a no jekyll file
