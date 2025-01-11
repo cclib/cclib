@@ -78,7 +78,7 @@ jobs:
           verbose: false
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        if: matrix.container == 'shivupa/cclib-ci:py311-edge'
+        if: matrix.container == 'shivupa/cclib-ci:py312-edge'
       - name: Install pypa/build
         run: |
           python -m pip install build
