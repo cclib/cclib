@@ -58,14 +58,18 @@ jobs:
             methods:
               - 'cclib/method/**'
               - 'test/method/**'
+      - name: Enable test coverage for Python < 3.12
+        run: |
+          echo "PYTEST_ENABLE_COVERAGE=true" >> "${GITHUB_ENV}"
+        if: matrix.container != 'shivupa/cclib-ci:py312-edge'
       - name: Test core code with pytest
         run: |
           env | sort
-          bash .github/scripts/run_pytest.bash 2
+          bash .github/scripts/run_pytest.bash "$(nproc)"
       - name: Test methods with pytest
         if: steps.filter.outputs.methods == 'true'
         run: |
-          bash .github/scripts/run_pytest_methods.bash 2
+          bash .github/scripts/run_pytest_methods.bash "$(nproc)"
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
@@ -75,7 +79,7 @@ jobs:
           verbose: false
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        if: matrix.container == 'shivupa/cclib-ci:py312-edge'
+        if: matrix.container == 'shivupa/cclib-ci:py311-edge'
       - name: Install pypa/build
         run: |
           python -m pip install build
