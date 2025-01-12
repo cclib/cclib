@@ -13,9 +13,15 @@ else
     PYTEST_PARALLELISM=""
 fi
 
-PYTEST_ADDOPTS="-v -s ${PYTEST_PARALLELISM} --cov=cclib --cov-report=term --cov-report=xml:coverage-unit.xml -m 'not is_method'" python -m pytest
+if [[ "${PYTEST_ENABLE_COVERAGE}" == "true" ]]; then
+    PYTEST_COVERAGE="--cov=cclib --cov-report=term"
+else
+    PYTEST_COVERAGE=""
+fi
+
+PYTEST_ADDOPTS="-v -s ${PYTEST_PARALLELISM} ${PYTEST_COVERAGE} --cov-report=xml:coverage-unit.xml -m 'not is_method'" python -m pytest
 pushd data
 bash ./regression_download.sh
 popd
-PYTEST_ADDOPTS="-v -s ${PYTEST_PARALLELISM} --cov=cclib --cov-report=term --cov-report=xml:coverage-regression.xml --cov-append" python -m pytest test/regression.py
-PYTEST_ADDOPTS="-v -s ${PYTEST_PARALLELISM} --cov=cclib --cov-report=term --cov-report=xml:coverage-regression.xml --cov-append" python -m pytest test/regression_io.py
+PYTEST_ADDOPTS="-v -s ${PYTEST_PARALLELISM} ${PYTEST_COVERAGE} --cov-report=xml:coverage-regression.xml --cov-append" python -m pytest test/regression.py
+PYTEST_ADDOPTS="-v -s ${PYTEST_PARALLELISM} ${PYTEST_COVERAGE} --cov-report=xml:coverage-regression.xml --cov-append" python -m pytest test/regression_io.py
