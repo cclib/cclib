@@ -13,4 +13,10 @@ else
     PYTEST_PARALLELISM=""
 fi
 
-PYTEST_ADDOPTS="-v -s ${PYTEST_PARALLELISM} --cov=cclib --cov-report=term --cov-report=xml:coverage-method.xml -m 'is_method'" python -m pytest
+if [[ "${PYTEST_ENABLE_COVERAGE}" == "true" ]]; then
+    PYTEST_COVERAGE="--cov=cclib --cov-report=term"
+else
+    PYTEST_COVERAGE=""
+fi
+
+PYTEST_ADDOPTS="-v -s ${PYTEST_PARALLELISM} ${PYTEST_COVERAGE} --cov-report=xml:coverage-method.xml -m 'is_method'" python -m pytest
