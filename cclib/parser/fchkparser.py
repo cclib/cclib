@@ -369,14 +369,14 @@ class FChk(logfileparser.Logfile):
             aonames.extend([f"{atom_labels[atom]}_{x}" for x in orbitals])
             atombasis[-1].extend(list(range(basis_offset, basis_offset + len(orbitals))))
 
-        assert (
-            len(aonames) == self.nbasis
-        ), f"Length of aonames != nbasis: {len(aonames)} != {self.nbasis}"
+        assert len(aonames) == self.nbasis, (
+            f"Length of aonames != nbasis: {len(aonames)} != {self.nbasis}"
+        )
         self.set_attribute("aonames", aonames)
 
-        assert (
-            len(atombasis) == self.natom
-        ), f"Length of atombasis != natom: {len(atombasis)} != {self.natom}"
+        assert len(atombasis) == self.natom, (
+            f"Length of atombasis != natom: {len(atombasis)} != {self.natom}"
+        )
         self.set_attribute("atombasis", atombasis)
 
     def after_parsing(self) -> None:

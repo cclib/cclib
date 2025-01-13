@@ -204,9 +204,9 @@ class Volume:
 
     def integrate(self, weights=None):
         weights = numpy.ones_like(self.data) if weights is None else weights
-        assert (
-            weights.shape == self.data.shape
-        ), "Shape of weights do not match with shape of Volume data."
+        assert weights.shape == self.data.shape, (
+            "Shape of weights do not match with shape of Volume data."
+        )
 
         boxvol = (
             self.spacing[0]
