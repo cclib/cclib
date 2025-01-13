@@ -62,7 +62,7 @@ def main():
         "compchemlogfiles",
         metavar="compchemlogfile",
         nargs="+",
-        help=("one or more computational chemistry output " "files to parse and convert"),
+        help=("one or more computational chemistry output files to parse and convert"),
     )
     parser.add_argument(
         "--identifier",
