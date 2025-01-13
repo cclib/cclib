@@ -37,9 +37,9 @@ class GenericSPunTest:
         for atomcharge_type in data.atomcharges:
             charges = data.atomcharges[atomcharge_type]
             natom = data.natom
-            assert (
-                len(charges) == natom
-            ), f"len(atomcharges['{atomcharge_type}']) = {len(charges)}, natom = {natom}"
+            assert len(charges) == natom, (
+                f"len(atomcharges['{atomcharge_type}']) = {len(charges)}, natom = {natom}"
+            )
 
     @skipForParser("ADF", "???")
     @skipForParser(

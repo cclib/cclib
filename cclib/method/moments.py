@@ -122,8 +122,7 @@ class Moments(Method):
                     atommasses = self.data.atommasses
                 except AttributeError as e:
                     msg = (
-                        "atomic masses were not parsed, consider provide "
-                        "'masses' argument instead"
+                        "atomic masses were not parsed, consider provide 'masses' argument instead"
                     )
                     raise ValueError(msg, e)
             origin_pos = numpy.average(coords, weights=atommasses, axis=0)
