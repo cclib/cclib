@@ -50,9 +50,9 @@ class Stockholder(Method):
         self.proatom_path = proatom_path
 
         # Check whether proatom_path is a valid directory or not.
-        assert os.path.isdir(
-            proatom_path
-        ), "Directory that contains proatom densities should be added as an input."
+        assert os.path.isdir(proatom_path), (
+            "Directory that contains proatom densities should be added as an input."
+        )
 
         # Read in reference charges.
         self.proatom_density = []
@@ -149,11 +149,9 @@ class Stockholder(Method):
                         gridtype = gridtype.decode("UTF-8")
 
                     # First verify that it is one of recognized grids
-                    assert gridtype in [
-                        "LinearRTransform",
-                        "ExpRTransform",
-                        "PowerRTransform",
-                    ], "Grid type not recognized."
+                    assert gridtype in ["LinearRTransform", "ExpRTransform", "PowerRTransform"], (
+                        "Grid type not recognized."
+                    )
 
                     if gridtype == "LinearRTransform":
                         # Linear transformation. r(t) = rmin + t*(rmax - rmin)/(npoint - 1)
