@@ -71,9 +71,9 @@ class GenericCISTest:
                     if s[0][0] == exc[0] and s[1][0] == exc[1]:
                         found = True
                         assert abs(abs(s[2]) - abs(exc[2])) < self.etsecs_precision
-                assert (
-                    found
-                ), f"Excitation {int(exc[0])}->{exc[1]} not found (singlet state {int(i)})"
+                assert found, (
+                    f"Excitation {int(exc[0])}->{exc[1]} not found (singlet state {int(i)})"
+                )
         # Not all programs do triplets (i.e. Jaguar).
         if len(triplets) >= 4:
             for i in range(4):
@@ -83,9 +83,9 @@ class GenericCISTest:
                         if s[0][0] == exc[0] and s[1][0] == exc[1]:
                             found = True
                             assert abs(abs(s[2]) - abs(exc[2])) < self.etsecs_precision
-                    assert (
-                        found
-                    ), f"Excitation {int(exc[0])}->{exc[1]} not found (triplet state {int(i)})"
+                    assert found, (
+                        f"Excitation {int(exc[0])}->{exc[1]} not found (triplet state {int(i)})"
+                    )
 
 
 class GAMESSCISTest(GenericCISTest):

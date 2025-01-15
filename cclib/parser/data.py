@@ -28,13 +28,13 @@ class ccData:
         atommasses -- atom masses (array[1], daltons)
         atomnos -- atomic numbers (array[1])
         atomspins -- atomic spin densities (dict of arrays[1])
-        ccenergies -- molecular energies with Coupled-Cluster corrections (array[2], hartree)
+        ccenergies -- molecular energies with Coupled-Cluster corrections (array[2], eV)
         charge -- net charge of the system (integer)
         coreelectrons -- number of core electrons in atom pseudopotentials (array[1])
-        dispersionenergies -- dispersion energy corrections (array[1], hartree)
+        dispersionenergies -- dispersion energy corrections (array[1], eV)
         enthalpy -- sum of electronic and thermal enthalpies (float, hartree/particle)
         entropy -- entropy (float, hartree/(particle*kelvin))
-        etenergies -- energies of electronic transitions (array[1], hartree)
+        etenergies -- energies of electronic transitions (array[1], 1/cm)
         etoscs -- oscillator strengths of electronic transitions (array[1])
         etdips -- electric transition dipoles of electronic transitions (array[2], ebohr)
         etveldips -- velocity-gauge electric transition dipoles of electronic transitions (array[2], ebohr)
@@ -55,10 +55,10 @@ class ccData:
         homos -- molecular orbital indices of HOMO(s) (array[1])
         metadata -- various metadata about the package and computation (dict)
         mocoeffs -- molecular orbital coefficients (list of arrays[2])
-        moenergies -- molecular orbital energies (list of arrays[1], hartree)
+        moenergies -- molecular orbital energies (list of arrays[1], eV)
         moments -- molecular multipole moments (list of arrays[], a.u.)
         mosyms -- orbital symmetries (list of lists)
-        mpenergies -- molecular electronic energies with Møller-Plesset corrections (array[2], hartree)
+        mpenergies -- molecular electronic energies with Møller-Plesset corrections (array[2], eV)
         mult -- multiplicity of the system (integer)
         natom -- number of atoms (integer)
         nbasis -- number of basis functions (integer)
@@ -69,7 +69,7 @@ class ccData:
         nooccnos -- natural orbital occupation numbers (array[1])
         nsocoeffs -- natural spin orbital coefficients (list of array[2])
         nsooccnos -- natural spin orbital occupation numbers (list of array[1])
-        optdone -- flags whether an optimization has converged (list of int)
+        optdone -- flags whether an optimization has converged (bool or list of int)
         optstatus -- optimization status for each set of atomic coordinates (array[1])
         polarizabilities -- (dipole) polarizabilities, static or dynamic (list of arrays[2])
         pressure -- pressure used for Thermochemistry (float, atm)
@@ -78,7 +78,7 @@ class ccData:
         scanenergies -- energies of potential energy surface (list)
         scannames -- names of variables scanned (list of strings)
         scanparm -- values of parameters in potential energy surface (list of tuples)
-        scfenergies -- molecular electronic energies after SCF (Hartree-Fock, DFT) (array[1], hartree)
+        scfenergies -- molecular electronic energies after SCF (Hartree-Fock, DFT) (array[1], eV)
         scftargets -- targets for convergence of the SCF (array[2])
         scfvalues -- current values for convergence of the SCF (list of arrays[2])
         temperature -- temperature used for Thermochemistry (float, kelvin)
@@ -444,3 +444,21 @@ class ccData:
     @property
     def closed_shell(self) -> bool:
         return orbitals.Orbitals(self).closed_shell()
+
+
+class ccData_optdone_bool(ccData):
+    """This is the version of ccData where optdone is a Boolean."""
+
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self._attributes["optdone"] = Attribute(bool, "done", "optimization")
+
+    def setattributes(self, *args, **kwargs) -> List[str]:
+        invalid = super().setattributes(*args, **kwargs)
+
+        # Reduce optdone to a Boolean, because it will be parsed as a list. If this list has any element,
+        # it means that there was an optimized structure and optdone should be True.
+        if hasattr(self, "optdone"):
+            self.optdone = len(self.optdone) > 0
+
+        return invalid

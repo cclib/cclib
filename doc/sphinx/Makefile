@@ -84,15 +84,15 @@ attributes_dev.rst: attributes.py $(SRC_DEV)/parser/data.py
 # especially takes some time as it performs all the tests.
 .PHONY: coverage
 coverage: coverage.rst coverage_dev.rst
-coverage.rst: coverage.py $(wildcard $(SRC_PROD)/parser/*parser.py) $(wildcard $(CCLIB_PROD)/test/*.py)
+coverage.rst: generate_coverage.py $(wildcard $(SRC_PROD)/parser/*parser.py) $(wildcard $(CCLIB_PROD)/test/*.py)
 	@echo "Generating prod coverage..."
 	@$(MAKE) --no-print-directory checkout_prod
-	python coverage.py $(CCLIB_PROD) > $@
+	python generate_coverage.py $(CCLIB_PROD) > $@
 	-rm cclib
-coverage_dev.rst: coverage.py $(wildcard $(SRC_DEV)/parser/*parser.py) $(wildcard $(CCLIB_DEV)/test/*.py)
+coverage_dev.rst: generate_coverage.py $(wildcard $(SRC_DEV)/parser/*parser.py) $(wildcard $(CCLIB_DEV)/test/*.py)
 	@echo "Generating dev coverage..."
 	@$(MAKE) --no-print-directory checkout_dev
-	python coverage.py $(CCLIB_DEV) > $@
+	python generate_coverage.py $(CCLIB_DEV) > $@
 	-rm cclib
 
 # Catch-all target: route all unknown targets to Sphinx using the new

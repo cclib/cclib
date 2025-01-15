@@ -301,10 +301,10 @@ class WFXWriter(filewriter.Writer):
         alpha_elctrons = self._no_alpha_electrons()
         beta_electrons = self._no_beta_electrons()
         for mo_energy in self.ccdata.moenergies[0][:alpha_elctrons]:
-            mo_energies.append(WFX_FIELD_FMT % mo_energy)
+            mo_energies.append(WFX_FIELD_FMT % (utils.convertor(mo_energy, "eV", "hartree")))
         if self.ccdata.mult > 1:
             for mo_energy in self.ccdata.moenergies[1][:beta_electrons]:
-                mo_energies.append(WFX_FIELD_FMT % mo_energy)
+                mo_energies.append(WFX_FIELD_FMT % (utils.convertor(mo_energy, "eV", "hartree")))
         return mo_energies
 
     def _mo_spin_types(self):
@@ -451,7 +451,7 @@ class WFXWriter(filewriter.Writer):
             energy = self.ccdata.scfenergies[-1]
         else:
             raise filewriter.MissingAttributeError("scfenergies/mpenergies/ccenergies")
-        return WFX_FIELD_FMT % energy
+        return WFX_FIELD_FMT % (utils.convertor(energy, "eV", "hartree"))
 
     def _virial_ratio(self) -> str:
         """Ratio of kinetic energy to potential energy."""

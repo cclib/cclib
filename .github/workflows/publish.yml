@@ -44,9 +44,12 @@ jobs:
           name: python-package-distributions
           path: dist/
       - name: Publish distribution to TestPyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@67339c736fd9354cd4f8cb0b744f2b82a74b5c70 # v1.12.3
         with:
           repository-url: https://test.pypi.org/legacy/
+          # Temporary workaround for
+          # https://github.com/pypa/gh-action-pypi-publish/issues/283
+          attestations: false
 
   publish-to-pypi:
     name: Publish Python distribution to PyPI
@@ -69,7 +72,11 @@ jobs:
           name: python-package-distributions
           path: dist/
       - name: Publish distribution to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@67339c736fd9354cd4f8cb0b744f2b82a74b5c70 # v1.12.3
+        with:
+          # Temporary workaround for
+          # https://github.com/pypa/gh-action-pypi-publish/issues/283
+          attestations: false
 
   github-release:
     name: >-

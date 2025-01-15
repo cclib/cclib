@@ -591,7 +591,7 @@ class Jaguar(logfileparser.Logfile):
         #   C1       Z     0.04792 -0.06032 -0.01192  0.00000  0.00000  0.11613
         #   C2       X     0.00000  0.00000  0.00000 -0.06094 -0.04635  0.00000
         #   ... etc. ...
-        # This is a complete ouput, some files will not have intensities,
+        # This is a complete output, some files will not have intensities,
         #   and older Jaguar versions sometimes skip the symmetries.
         if line[2:23] == "start of program freq":
             self.skip_line(inputfile, "blank")
@@ -601,9 +601,9 @@ class Jaguar(logfileparser.Logfile):
             if not line.strip():
                 line = next(inputfile)
 
-            self.vibfreqs = []
-            self.vibdisps = []
-            self.vibrmasses = []
+            vibfreqs = []
+            vibdisps = []
+            vibrmasses = []
             forceconstants = False
             intensities = False
             while line.strip():
@@ -617,38 +617,32 @@ class Jaguar(logfileparser.Logfile):
             # which could be caught. This is not true in newer version (including 8.3),
             # but in general it would be better to bound this loop more strictly.
             freqs = next(inputfile)
-            while freqs.strip() and "imaginary frequencies" not in freqs:
+            while freqs.strip() and freqs[2:13] == "frequencies":
                 # Number of modes (columns printed in this block).
                 nmodes = len(freqs.split()) - 1
 
                 # Append the frequencies.
-                self.vibfreqs.extend(list(map(float, freqs.split()[1:])))
+                vibfreqs.extend(list(map(float, freqs.split()[1:])))
                 line = next(inputfile).split()
 
                 # May skip symmetries (older Jaguar versions).
                 if line[0] == "symmetries":
-                    if not hasattr(self, "vibsyms"):
-                        self.vibsyms = []
-                    self.vibsyms.extend(list(map(self.normalisesym, line[1:])))
+                    self.extend_attribute("vibsyms", list(map(self.normalisesym, line[1:])))
                     line = next(inputfile).split()
                 if intensities:
-                    if not hasattr(self, "vibirs"):
-                        self.vibirs = []
-                    self.vibirs.extend(list(map(float, line[1:])))
+                    self.extend_attribute("vibirs", list(map(float, line[1:])))
                     line = next(inputfile).split()
-                self.vibrmasses.extend(list(map(float, line[2:])))
+                vibrmasses.extend(list(map(float, line[2:])))
                 if forceconstants:
                     line = next(inputfile).split()
-                    if not hasattr(self, "vibfconsts"):
-                        self.vibfconsts = []
-                    self.vibfconsts.extend(list(map(float, line[2:])))
+                    self.extend_attribute("vibfconsts", list(map(float, line[2:])))
 
                 # Start parsing the displacements.
                 # Variable 'q' holds up to 7 lists of triplets.
-                q = [[] for i in range(7)]
+                q = [[] for _ in range(7)]
                 for n in range(self.natom):
                     # Variable 'p' holds up to 7 triplets.
-                    p = [[] for i in range(7)]
+                    p = [[] for _ in range(7)]
                     for i in range(3):
                         line = next(inputfile)
                         disps = [float(disp) for disp in line.split()[2:]]
@@ -657,19 +651,15 @@ class Jaguar(logfileparser.Logfile):
                     for i in range(nmodes):
                         q[i].append(p[i])
 
-                self.vibdisps.extend(q[:nmodes])
+                vibdisps.extend(q[:nmodes])
 
                 self.skip_line(inputfile, "blank")
                 freqs = next(inputfile)
 
             # Convert new data to arrays.
-            self.vibfreqs = numpy.array(self.vibfreqs, "d")
-            self.vibdisps = numpy.array(self.vibdisps, "d")
-            self.vibrmasses = numpy.array(self.vibrmasses, "d")
-            if hasattr(self, "vibirs"):
-                self.vibirs = numpy.array(self.vibirs, "d")
-            if hasattr(self, "vibfconsts"):
-                self.vibfconsts = numpy.array(self.vibfconsts, "d")
+            self.set_attribute("vibfreqs", vibfreqs)
+            self.set_attribute("vibdisps", vibdisps)
+            self.set_attribute("vibrmasses", vibrmasses)
 
             line = freqs
 
