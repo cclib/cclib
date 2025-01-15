@@ -1,4 +1,4 @@
-# Copyright (c) 2024, the cclib development team
+# Copyright (c) 2025, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -2205,7 +2205,7 @@ Dispersion correction           -0.016199959
                 for mode in range(0, 3 * self.natom, matrix_columns):
                     header = next(inputfile)
                     if self.version >= (6, 0) and not self.numfreq:
-                        irreps = next(inputfile)
+                        _irreps = next(inputfile)
 
                     for atom in range(self.natom):
                         all_vibdisps[mode : mode + matrix_columns, atom, 0] = next(
