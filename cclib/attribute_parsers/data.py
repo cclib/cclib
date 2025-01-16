@@ -118,6 +118,8 @@ class ccData:
     # Attributes that should be dictionaries of dictionaries.
     _dictsofdicts = ["populations"]
 
+
+
     # Possible statuses for optimization steps.
     # OPT_UNKNOWN is the default and means optimization is in progress.
     # OPT_NEW is set for every new optimization (e.g. PES, IRCs, etc.)
@@ -139,6 +141,7 @@ class ccData:
         """
 
         self._parsed_attributes = dict()
+        self.parser_metadata = dict()
 
         if attributes:
             self.setattributes(attributes)

@@ -36,6 +36,7 @@ DEFAULT_PARSERS = [
     cprops.atombasis,
     cprops.scftargets,
     cprops.scfvalues,
+    cprops.parser_metadata,
 ]
 
 
