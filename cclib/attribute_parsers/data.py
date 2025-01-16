@@ -138,6 +138,7 @@ class ccData:
         """
 
         self._parsed_attributes = dict()
+        self.parser_metadata = dict()
 
         if attributes:
             self.setattributes(attributes)
