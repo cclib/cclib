@@ -46,6 +46,7 @@ cda = "cclib.scripts.cda:main"
 bridges = [
     "ase>=3.21",
     "biopython",
+    "openbabel",
     "pandas",
     "pyscf",
     "pyberny",
