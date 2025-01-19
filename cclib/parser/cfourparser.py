@@ -48,6 +48,12 @@ class CFOUR(logfileparser.Logfile):
         self.atomcoords=np.array(self.atomcoords)
         #change scf energies to a numpy array
         self.scfenergies=np.array(self.scfenergies)
+        #get the number of atoms
+        if len(self.atomcoords)>=1:
+            self.set_attribute('natom',len(self.atomcoords[-1]))
+        #get the number of molecular orbitals
+        if len(self.moenergies)>=1:
+            self.set_attribute('nmo',len(self.moenergies[0]))
 
     def extract(self, inputfile, line):
         #set package metadata to CFOUR
@@ -58,8 +64,12 @@ class CFOUR(logfileparser.Logfile):
         #get the name of the basis set used
         if 'BASIS                IBASIS' in line:
             self.metadata['basis_set']=line.split()[2]
+        #get whether the reference is unrestricted or not
         if 'REFERENCE            IREFNC' in line:
             self.metadata['unrestricted']=(True if line.split()[2][0]=='U' else False)
+        #get the number of atomic orbitals in the basis
+        if ('There are' in line) and ('functions in the AO basis.' in line):
+            self.set_attribute('nbasis',int(line.split()[2]))
         #get the net charge of the system
         if 'CHARGE               ICHRGE' in line:
             self.set_attribute('charge',utils.float(line.split()[2]))
