@@ -38,6 +38,10 @@ class CFOUR(logfileparser.Logfile):
         self.set_attribute('atomcoords',[])
         #set the list of scf energies to []
         self.set_attribute('scfenergies',[])
+        #set mo energies list to []
+        self.set_attribute('moenergies',[])
+        #set mo symmetries list to []
+        self.set_attribute('mosyms',[])
 
     def after_parsing(self):
         #change atomic coordinates to a numpy array
@@ -58,7 +62,7 @@ class CFOUR(logfileparser.Logfile):
             self.metadata['unrestricted']=(True if line.split()[2][0]=='U' else False)
         #get the net charge of the system
         if 'CHARGE               ICHRGE' in line:
-            self.set_attribute('charge',float(line.split()[2]))
+            self.set_attribute('charge',utils.float(line.split()[2]))
         #get the spin multiplicity of the system
         if 'MULTIPLICTY          IMULTP' in line:
             self.set_attribute('mult',int(line.split()[2]))
@@ -86,7 +90,7 @@ class CFOUR(logfileparser.Logfile):
             while not '----------------------------------------------------------------' in line:
                 if self.first_coord_block:
                     atomnos.append(int(line.strip().split()[1]))
-                temp_atomcoords.append([float(line.strip().split()[2]),float(line.strip().split()[3]),float(line.strip().split()[4])])
+                temp_atomcoords.append([utils.convertor(utils.float(line.strip().split()[2]),'bohr','Angstrom'),utils.convertor(utils.float(line.strip().split()[3]),'bohr','Angstrom'),utils.convertor(utils.float(line.strip().split()[4]),'bohr','Angstrom')])
                 line=next(inputfile)
             if self.first_coord_block:
                 self.set_attribute('atomnos',atomnos)
@@ -94,7 +98,44 @@ class CFOUR(logfileparser.Logfile):
             self.first_coord_block=False
         #get the scf energy at each step in a geometry optimization
         if 'E(SCF)=' in line:
-            self.scfenergies.append(float(line.split()[1]))
+            self.scfenergies.append(utils.float(line.split()[1]))
+        #get alpha mo energies of the last ran scf method
+        if 'ORBITAL EIGENVALUES (ALPHA)  (1H = 27.2113834 eV)' in line:
+            line=next(inputfile)
+            line=next(inputfile)
+            line=next(inputfile)
+            line=next(inputfile)
+            self.moenergies=[]
+            self.mosyms=[]
+            alpha_moenergies=[]
+            alpha_mosyms=[]
+            while not (('VSCF finished.' in line)or('ORBITAL EIGENVALUES ( BETA)  (1H = 27.2113834 eV)' in line)):
+                if ('+++++' in line) or (line.strip()==''):
+                    line=next(inputfile)
+                    continue
+                alpha_moenergies.append(utils.float(line.split()[2]))
+                alpha_mosyms.append(line.split()[5])
+                line=next(inputfile)
+            self.moenergies.append(np.array(alpha_moenergies))
+            self.mosyms.append(alpha_mosyms)
+        #get beta mo energies of the last ran scf method if an unrestricted reference is used
+        if 'ORBITAL EIGENVALUES ( BETA)  (1H = 27.2113834 eV)' in line:
+            line=next(inputfile)
+            line=next(inputfile)
+            line=next(inputfile)
+            line=next(inputfile)
+            beta_moenergies=[]
+            beta_mosyms=[]
+            while not ('VSCF finished.' in line):
+                if ('+++++' in line) or (line.strip()==''):
+                    line=next(inputfile)
+                    continue
+                beta_moenergies.append(utils.float(line.split()[2]))
+                beta_mosyms.append(line.split()[5])
+                line=next(inputfile)
+            self.moenergies.append(np.array(beta_moenergies))
+            self.mosyms.append(beta_mosyms)
+
 
 
 
