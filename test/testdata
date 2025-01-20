@@ -34,8 +34,6 @@ Basis     NWChem      GenericBasisTest      basicNWChem6.5        dvb_sp_hf.out
 Basis     NWChem      GenericBasisTest      basicNWChem6.5        dvb_sp_ks.out
 Basis     NWChem      GenericBasisTest      basicNWChem7.0        dvb_sp_hf.out
 Basis     NWChem      GenericBasisTest      basicNWChem7.0        dvb_sp_ks.out
-Basis     ORCA        GenericBasisTest      basicORCA4.1          dvb_sp.out
-Basis     ORCA        GenericBasisTest      basicORCA4.2          dvb_sp.out
 Basis     ORCA        GenericBasisTest      basicORCA5.0          dvb_sp.out
 Basis     Psi4        GenericBasisTest      basicPsi4-1.2.1       dvb_sp_rhf.out
 Basis     Psi4        GenericBasisTest      basicPsi4-1.2.1       dvb_sp_rks.out
@@ -96,10 +94,6 @@ CC        Molcas      MolcasCCSDTest        basicOpenMolcas18.0   water_ccsd.out
 CC        NWChem      NWChemCCSDPTTest      basicNWChem6.0        water_ccsd(t).out
 CC        NWChem      NWChemCCSDPTTest      basicNWChem6.5        water_ccsd(t).out
 CC        NWChem      NWChemCCSDPTTest      basicNWChem7.0        water_ccsd(t).out
-CC        ORCA        OrcaCCSDTest          basicORCA4.1          water_ccsd.out
-CC        ORCA        OrcaCCSDPTTest        basicORCA4.1          water_ccsd_t.out
-CC        ORCA        OrcaCCSDTest          basicORCA4.2          water_ccsd.out
-CC        ORCA        OrcaCCSDPTTest        basicORCA4.2          water_ccsd_t.out
 CC        ORCA        OrcaCCSDTest          basicORCA5.0          water_ccsd.out
 CC        ORCA        OrcaCCSDPTTest        basicORCA5.0          water_ccsd_t.out
 CC        ORCA        OrcaCCSDTest          basicORCA6.0          water_ccsd.out
@@ -173,8 +167,6 @@ GeoOpt    NWChem      NWChemGeoOptTest      basicNWChem6.5        dvb_gopt_hf.ou
 GeoOpt    NWChem      NWChemGeoOptTest      basicNWChem6.5        dvb_gopt_ks.out
 GeoOpt    NWChem      NWChemGeoOptTest      basicNWChem7.0        dvb_gopt_hf.out
 GeoOpt    NWChem      NWChemGeoOptTest      basicNWChem7.0        dvb_gopt_ks.out
-GeoOpt    ORCA        OrcaGeoOptTest        basicORCA4.1          dvb_gopt.out
-GeoOpt    ORCA        OrcaGeoOptTest        basicORCA4.2          dvb_gopt.out
 GeoOpt    ORCA        OrcaGeoOptTest        basicORCA5.0          dvb_gopt.out
 GeoOpt    ORCA        OrcaGeoOptTest        basicORCA6.0          dvb_gopt.out
 GeoOpt    Psi4        Psi4GeoOptTest        basicPsi4-1.2.1       dvb_gopt_rhf.out
@@ -220,12 +212,8 @@ MP        Molcas      GenericMP2Test        basicOpenMolcas18.0   water_mbpt2.ou
 MP        NWChem      GenericMP2Test        basicNWChem6.0        water_mp2.out
 MP        NWChem      GenericMP2Test        basicNWChem6.5        water_mp2.out
 MP        NWChem      GenericMP2Test        basicNWChem7.0        water_mp2.out
-MP        ORCA        GenericMP2Test        basicORCA4.1          water_mp2.out
-MP        ORCA        GenericMP2Test        basicORCA4.2          water_mp2.out
 MP        ORCA        GenericMP2Test        basicORCA5.0          water_mp2.out
 MP        ORCA        GenericMP2Test        basicORCA6.0          water_mp2.out
-MP        ORCA        GenericMP3Test        basicORCA4.1          water_mp3.out
-MP        ORCA        GenericMP3Test        basicORCA4.2          water_mp3.out
 MP        ORCA        GenericMP3Test        basicORCA5.0          water_mp3.out
 MP        ORCA        GenericMP3Test        basicORCA6.0          water_mp3.out
 MP        Psi4        GenericMP2Test        basicPsi4-1.2.1       water_mp2.out
@@ -245,8 +233,6 @@ MP        Turbomole   GenericMP2Test        basicTurbomole7.4     water_mp2_rimp
 MP        Turbomole   GenericMP2Test        basicTurbomole7.4     water_mp2_ricc2/basis    water_mp2_ricc2/control    water_mp2_ricc2/coord    water_mp2_ricc2/mos    water_mp2_ricc2/dscf.out    water_mp2_ricc2/ricc2.out
 MP        Turbomole   GenericMP3Test        basicTurbomole7.4     water_mp3/basis    water_mp3/control    water_mp3/coord    water_mp3/mos    water_mp3/dscf.out    water_mp3/ccsdf12.out
 
-NMR       ORCA        GenericNMRTest        basicORCA4.1          dvb_nmr.out
-NMR       ORCA        GenericNMRTest        basicORCA4.2          dvb_nmr.out
 NMR       ORCA        GenericNMRTest        basicORCA5.0          dvb_nmr.out
 NMR       ORCA        GenericNMRCouplingTest        basicORCA5.0          dvb_coupling_nmr.out
 NMR       ORCA        GenericNMRCouplingTest        basicORCA6.0          dvb_coupling_nmr.out
@@ -261,8 +247,6 @@ Polar     Gaussian    ReferencePolarTest    basicGaussian16       Trp_polar_G16C
 Polar     Molpro      ReferencePolarTest    basicMolpro2012       Trp_polar.out
 Polar     NWChem      ReferencePolarTest    basicNWChem6.5        Trp_polar.out
 Polar     NWChem      ReferencePolarTest    basicNWChem7.0        Trp_polar.out
-Polar     ORCA        ReferencePolarTest    basicORCA4.1          Trp_polar.out
-Polar     ORCA        ReferencePolarTest    basicORCA4.2          Trp_polar.out
 Polar     ORCA        ReferencePolarTest    basicORCA5.0          Trp_polar.out
 Polar     ORCA        ReferencePolarTest    basicORCA6.0          Trp_polar.out
 Polar     QChem       ReferencePolarTest    basicQChem5.1         Trp_polar.out
@@ -272,8 +256,6 @@ Scan      Gaussian     GaussianRelaxedScanTest               basicGaussian09    
 Scan      Gaussian     GaussianRelaxedScanTest               basicGaussian16       dvb_scan_relaxed.log
 Scan      Gaussian     GaussianUnrelaxedScanTest             basicGaussian16       dvb_scan_unrelaxed.log
 Scan      Jaguar       JaguarRelaxedScanTest                 basicJaguar8.3        dvb_scan.out
-Scan      ORCA         GenericRelaxedScanTest                basicORCA4.2          dvb_scan.out
-Scan      ORCA         GenericUnrelaxedScanTest              basicORCA4.2          dvb_scan_unrelaxed.out
 Scan      ORCA         GenericRelaxedScanTest                basicORCA5.0          dvb_scan.out
 Scan      ORCA         GenericUnrelaxedScanTest              basicORCA5.0          dvb_scan_unrelaxed.out
 Scan      ORCA         GenericRelaxedScanTest                basicORCA6.0          dvb_scan.out
@@ -311,8 +293,6 @@ SP        NWChem      GenericHFSPTest       basicNWChem6.5              dvb_sp_h
 SP        NWChem      NWChemKSSPTest        basicNWChem6.5              dvb_sp_ks.out
 SP        NWChem      GenericHFSPTest       basicNWChem7.0              dvb_sp_hf.out
 SP        NWChem      NWChemKSSPTest        basicNWChem7.0              dvb_sp_ks.out
-SP        ORCA        OrcaSPTest            basicORCA4.1                dvb_sp.out
-SP        ORCA        OrcaSPTest            basicORCA4.2                dvb_sp.out
 SP        ORCA        OrcaSPTest            basicORCA5.0                dvb_sp.out
 SP        ORCA        OrcaSPTest            basicORCA6.0                dvb_sp.out
 SP        ORCA        OrcaHFSPTest          basicORCA6.0                dvb_sp_hf.out
@@ -335,8 +315,6 @@ SP        Gaussian    GenericDispersionTest basicGaussian09             dvb_disp
 SP        Gaussian    GenericDispersionTest basicGaussian16             dvb_dispersion_bp86_d3zero.out
 SP        NWChem      GenericDispersionTest basicNWChem6.8              dvb_dispersion_bp86_d3zero.out
 SP        NWChem      GenericDispersionTest basicNWChem7.0              dvb_dispersion_bp86_d3zero.out
-SP        ORCA        GenericDispersionTest basicORCA4.1                dvb_dispersion_bp86_d3zero.out
-SP        ORCA        GenericDispersionTest basicORCA4.2                dvb_dispersion_bp86_d3zero.out
 SP        ORCA        GenericDispersionTest basicORCA5.0                dvb_dispersion_bp86_d3zero.out
 SP        Psi4        GenericDispersionTest basicPsi4-1.2.1             dvb_dispersion_bp86_d3zero.out
 SP        Psi4        GenericDispersionTest basicPsi4-1.3.1             dvb_dispersion_bp86_d3zero.out
@@ -390,8 +368,6 @@ SPun      Molpro      GenericSPunTest       basicMolpro2012       dvb_sphf_un.ou
 SPun      NWChem      GenericSPunTest       basicNWChem6.0        dvb_un_sp_ks.out
 SPun      NWChem      GenericSPunTest       basicNWChem6.5        dvb_un_sp_ks.out
 SPun      NWChem      GenericSPunTest       basicNWChem7.0        dvb_un_sp_ks.out
-SPun      ORCA        GenericSPunTest       basicORCA4.1          dvb_sp_un.out
-SPun      ORCA        GenericSPunTest       basicORCA4.2          dvb_sp_un.out
 SPun      ORCA        GenericSPunTest       basicORCA5.0          dvb_sp_un.out
 SPun      ORCA        GenericSPunTest       basicORCA6.0          dvb_sp_un.out
 SPun      ORCA        GenericSPunTest       basicORCA6.0          dvb_sp_un_hf.out
@@ -426,12 +402,8 @@ TD        Gaussian    GaussianTDDFTTest     basicGaussian16       dvb_td.out
 TD        Gaussian    GaussianEOMCCSDTest   basicGaussian16       dvb_eomccsd.log
 TD        Jaguar      JaguarTDDFTTest       basicJaguar8.3        dvb_td.out
 TD        NWChem      GenericTDTest         basicNWChem7.0        dvb_td.out
-TD        ORCA        OrcaTDDFTTest         basicORCA4.1          dvb_td.out
-TD        ORCA        OrcaTDDFTTest         basicORCA4.2          dvb_td.out
 TD        ORCA        OrcaTDDFTTest         basicORCA5.0          dvb_td.out
 TD        ORCA        OrcaTDDFTTest         basicORCA6.0          dvb_td.out
-TD        ORCA        OrcaROCISTest         basicORCA4.1          dvb_rocis.out
-TD        ORCA        OrcaROCISTest         basicORCA4.2          dvb_rocis.out
 TD        ORCA        OrcaROCISTest         basicORCA5.0          dvb_rocis.out
 TD        ORCA        Orca6ROCISTest        basicORCA6.0          dvb_rocis.out
 TD        ORCA        OrcaADC2Test          basicORCA5.0          dvb_adc2.log
@@ -474,8 +446,6 @@ vib       Molcas      MolcasIRTest          basicOpenMolcas18.0   dvb_ir.out
 vib       Molpro      GenericIRTest         basicMolpro2006       dvb_ir.out            dvb_ir.log
 vib       Molpro      GenericIRTest         basicMolpro2012       dvb_ir.out            dvb_ir.log
 vib       NWChem      NWChemIRTest          basicNWChem7.0        dvb_ir.out
-vib       ORCA        OrcaIRTest            basicORCA4.1          dvb_ir.out
-vib       ORCA        OrcaIRTest            basicORCA4.2          dvb_ir.out
 vib       ORCA        OrcaIRTest            basicORCA5.0          dvb_ir.out
 vib       ORCA        OrcaIRTest            basicORCA6.0          dvb_ir.out
 vib       Psi4        Psi4HFIRTest          basicPsi4-1.2.1       dvb_ir_rhf.out
@@ -497,8 +467,6 @@ vib       GAMESSUK    GenericRamanTest      basicGAMESS-UK8.0     dvb_raman.out
 vib       GAMESS      GenericRamanTest      basicFirefly8.0       dvb_raman.out
 vib       Gaussian    GaussianRamanTest     basicGaussian09       dvb_raman.out
 vib       Gaussian    GaussianRamanTest     basicGaussian16       dvb_raman.out
-vib       ORCA        OrcaRamanTest         basicORCA4.1          dvb_raman.out
-vib       ORCA        OrcaRamanTest         basicORCA4.2          dvb_raman.out
 vib       ORCA        OrcaRamanTest         basicORCA5.0          dvb_raman.out
 vib       ORCA        Orca6RamanTest        basicORCA6.0          dvb_raman.out
 vib       QChem       QChemRamanTest        basicQChem5.1         dvb_raman.out
