@@ -32,6 +32,8 @@ class CFOUR(logfileparser.Logfile):
         pass
 
     def before_parsing(self):
+        #set package metadata to CFOUR
+        self.metadata['package']='CFOUR'
         #set to true so that atomic numbers are parsed on the first block of coordinates
         self.set_attribute('first_coord_block',True)
         #set the atomic coordinates to []
@@ -42,6 +44,16 @@ class CFOUR(logfileparser.Logfile):
         self.set_attribute('moenergies',[])
         #set mo symmetries list to []
         self.set_attribute('mosyms',[])
+        #set to True so that alpha MOs are parsed first
+        self.set_attribute('alpha_mos_to_parse',True)
+        #set temp alpha mo coeffs to []
+        self.set_attribute('temp_alpha_mocoeffs',[])
+        #set temp beta mo coeffs to []
+        self.set_attribute('temp_beta_mocoeffs',[])
+        #set mo coeffs to []
+        self.set_attribute('mocoeffs',[])
+        #should mo coeffs be reset the next time an mo is parsed
+        self.set_attribute('mocoeffs_should_be_reset',True)
 
     def after_parsing(self):
         #change atomic coordinates to a numpy array
@@ -50,14 +62,12 @@ class CFOUR(logfileparser.Logfile):
         self.scfenergies=np.array(self.scfenergies)
         #get the number of atoms
         if len(self.atomcoords)>=1:
-            self.set_attribute('natom',len(self.atomcoords[-1]))
+            self.set_attribute('natom',len(self.atomnos))
         #get the number of molecular orbitals
         if len(self.moenergies)>=1:
             self.set_attribute('nmo',len(self.moenergies[0]))
 
     def extract(self, inputfile, line):
-        #set package metadata to CFOUR
-        self.metadata['package']='CFOUR'
         #get the version of CFOUR
         if 'Version' in line:
             self.metadata['package_version']=line.split()[1]
@@ -67,6 +77,12 @@ class CFOUR(logfileparser.Logfile):
         #get whether the reference is unrestricted or not
         if 'REFERENCE            IREFNC' in line:
             self.metadata['unrestricted']=(True if line.split()[2][0]=='U' else False)
+        #get full point group
+        if 'The full molecular point group is' in line:
+            self.metadata['symmetry_detected']=line.split()[6]
+        #get used point group
+        if 'The computational point group is' in line:
+            self.metadata['symmetry_used']=line.split()[5]
         #get the number of atomic orbitals in the basis
         if ('There are' in line) and ('functions in the AO basis.' in line):
             self.set_attribute('nbasis',int(line.split()[2]))
@@ -99,7 +115,9 @@ class CFOUR(logfileparser.Logfile):
             temp_atomcoords=[]
             while not '----------------------------------------------------------------' in line:
                 if self.first_coord_block:
-                    atomnos.append(int(line.strip().split()[1]))
+                    atomic_number=int(line.strip().split()[1])
+                    if atomic_number>0:
+                        atomnos.append(atomic_number)
                 temp_atomcoords.append([utils.convertor(utils.float(line.strip().split()[2]),'bohr','Angstrom'),utils.convertor(utils.float(line.strip().split()[3]),'bohr','Angstrom'),utils.convertor(utils.float(line.strip().split()[4]),'bohr','Angstrom')])
                 line=next(inputfile)
             if self.first_coord_block:
@@ -119,12 +137,12 @@ class CFOUR(logfileparser.Logfile):
             self.mosyms=[]
             alpha_moenergies=[]
             alpha_mosyms=[]
-            while not (('VSCF finished.' in line)or('ORBITAL EIGENVALUES ( BETA)  (1H = 27.2113834 eV)' in line)):
+            while not (('VSCF finished.' in line)or('ORBITAL EIGENVALUES ( BETA)  (1H = 27.2113834 eV)' in line)or('SCF failed to converge in' in line)):
                 if ('+++++' in line) or (line.strip()==''):
                     line=next(inputfile)
                     continue
                 alpha_moenergies.append(utils.float(line.split()[2]))
-                alpha_mosyms.append(line.split()[5])
+                alpha_mosyms.append(line.split()[4])
                 line=next(inputfile)
             self.moenergies.append(np.array(alpha_moenergies))
             self.mosyms.append(alpha_mosyms)
@@ -136,15 +154,58 @@ class CFOUR(logfileparser.Logfile):
             line=next(inputfile)
             beta_moenergies=[]
             beta_mosyms=[]
-            while not ('VSCF finished.' in line):
+            while not (('VSCF finished.' in line)or('SCF failed to converge in' in line)):
                 if ('+++++' in line) or (line.strip()==''):
                     line=next(inputfile)
                     continue
                 beta_moenergies.append(utils.float(line.split()[2]))
-                beta_mosyms.append(line.split()[5])
+                beta_mosyms.append(line.split()[4])
                 line=next(inputfile)
             self.moenergies.append(np.array(beta_moenergies))
             self.mosyms.append(beta_mosyms)
+        #add on to the molecular orbital coefficeints
+        if len(line.split())>=2:
+            if 'Symmetry'==line.split()[0]:
+                line=next(inputfile)
+                if '--------------------------------------------------------------------------------' in line:
+                    if self.mocoeffs_should_be_reset:
+                        self.mocoeffs=[]
+                        self.mocoeffs_should_be_reset=False
+                    line=next(inputfile)
+                    len_split_line=len(line.split())
+                    if self.alpha_mos_to_parse:
+                        for i in range(len_split_line-2):
+                            self.temp_alpha_mocoeffs.append([])
+                        while not '----------' in line:
+                            split_line=line.split()
+                            for i in range(len_split_line-2):
+                                self.temp_alpha_mocoeffs[i-(len_split_line-2)].append(utils.float(split_line[i+2]))
+                            line=next(inputfile)
+                        line=next(inputfile)
+                        if ('-----------' in line)or(''==line.strip()):
+                            self.alpha_mos_to_parse=False
+                            self.mocoeffs.append(self.temp_alpha_mocoeffs)
+                            self.temp_alpha_mocoeffs=[]
+                            if (''==line.strip()):
+                                self.alpha_mos_to_parse=True
+                                self.mocoeffs_should_be_reset=True
+                    else:
+                        for i in range(len_split_line-2):
+                            self.temp_beta_mocoeffs.append([])
+                        while not '----------------' in line:
+                            split_line=line.split()
+                            for i in range(len_split_line-2):
+                                self.temp_beta_mocoeffs[i-(len_split_line-2)].append(utils.float(split_line[i+2]))
+                            line=next(inputfile)
+                        line=next(inputfile)
+                        if (''==line.strip()):
+                            self.alpha_mos_to_parse=True
+                            self.mocoeffs.append(self.temp_beta_mocoeffs)
+                            self.temp_beta_mocoeffs=[]
+                            self.mocoeffs_should_be_reset=True
+
+
+
 
 
 
