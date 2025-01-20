@@ -29,11 +29,13 @@ class CFOUR(logfileparser.Logfile):
         return f'CFOUR("{self.filename}")'
 
     def normalisesym(self, label):
+        #CFOUR uses 1g, 1u, 2g, 2u,... for E1g, E1u, E2g, E2u,...
         try:
             label_int=int(label[0])
             return 'E'+label
         except:
             if len(label)>=2:
+                #CFOUR uses SG for sigma, PI for pi, DE for delta, and PH for phi
                 if 'SG'==label[:2]:
                     if len(label)==2:
                         label='sigma'
@@ -79,6 +81,10 @@ class CFOUR(logfileparser.Logfile):
         self.set_attribute('mocoeffs',[])
         #should mo coeffs be reset the next time an mo is parsed
         self.set_attribute('mocoeffs_should_be_reset',True)
+        #set to True so that the first time parsing mo coeffs it also parses ao names
+        self.set_attribute('parse_aonames',True)
+        #set cc energies to []
+        self.set_attribute('ccenergies',[])
 
     def after_parsing(self):
         #change atomic coordinates to a numpy array
@@ -88,6 +94,9 @@ class CFOUR(logfileparser.Logfile):
         #get the number of atoms
         if len(self.atomcoords)>=1:
             self.set_attribute('natom',len(self.atomnos))
+        #get the number of atomic orbitals in the basis
+        if hasattr(self,'aonames'):
+            self.set_attribute('nbasis',len(self.aonames))
         #get the number of molecular orbitals
         if len(self.moenergies)>=1:
             self.set_attribute('nmo',len(self.moenergies[0]))
@@ -108,15 +117,17 @@ class CFOUR(logfileparser.Logfile):
         #get used point group
         if 'The computational point group is' in line:
             self.metadata['symmetry_used']=line.split()[5]
-        #get the number of atomic orbitals in the basis
-        if ('There are' in line) and ('functions in the AO basis.' in line):
-            self.set_attribute('nbasis',int(line.split()[2]))
         #get the net charge of the system
         if 'CHARGE               ICHRGE' in line:
             self.set_attribute('charge',utils.float(line.split()[2]))
         #get the spin multiplicity of the system
         if 'MULTIPLICTY          IMULTP' in line:
             self.set_attribute('mult',int(line.split()[2]))
+        if 'A miracle has come to pass. The CC iterations have converged.' in line:
+            line=next(inputfile)
+            line=next(inputfile)
+            line=next(inputfile)
+            self.ccenergies.append(utils.float(line.split()[4]))
         #get the coordinates at each step in a geometry optimization
         #if this is the first time parsing a block of coordinates also get the atomic numbers
         '''
@@ -137,16 +148,20 @@ class CFOUR(logfileparser.Logfile):
             line=next(inputfile)
             line=next(inputfile)
             atomnos=[]
+            atomic_symbols=[]
             temp_atomcoords=[]
             while not '----------------------------------------------------------------' in line:
                 if self.first_coord_block:
                     atomic_number=int(line.strip().split()[1])
+                    atomic_symbol=line.strip().split()[0]
                     if atomic_number>0:
                         atomnos.append(atomic_number)
+                        atomic_symbols.append(atomic_symbol)
                 temp_atomcoords.append([utils.convertor(utils.float(line.strip().split()[2]),'bohr','Angstrom'),utils.convertor(utils.float(line.strip().split()[3]),'bohr','Angstrom'),utils.convertor(utils.float(line.strip().split()[4]),'bohr','Angstrom')])
                 line=next(inputfile)
             if self.first_coord_block:
                 self.set_attribute('atomnos',atomnos)
+                self.set_attribute('atomic_symbols',atomic_symbols)
             self.atomcoords.append(temp_atomcoords)
             self.first_coord_block=False
         #get the scf energy at each step in a geometry optimization
@@ -199,13 +214,48 @@ class CFOUR(logfileparser.Logfile):
                     line=next(inputfile)
                     len_split_line=len(line.split())
                     if self.alpha_mos_to_parse:
+                        if self.parse_aonames:
+                            aonames=[]
+                            atombasis=[]
+                            start_atom=0
+                            sub_amount=0
+                            basis_index=0
                         for i in range(len_split_line-2):
                             self.temp_alpha_mocoeffs.append([])
                         while not '----------' in line:
                             split_line=line.split()
+                            if self.parse_aonames:
+                                if int(split_line[0])-start_atom>1:
+                                    sub_amount+=((int(split_line[0])-start_atom)-1)
+                                    start_atom=int(split_line[0])
+                                    atombasis.append([])
+                                    subshell_number=0
+                                elif int(split_line[0])-start_atom==1:
+                                    start_atom=int(split_line[0])
+                                    atombasis.append([])
+                                    subshell_number=0
+                                if split_line[1]=='S':
+                                    subshell_number+=1
+                                if len(split_line[1])==2:
+                                    if split_line[1][1]=='X':
+                                        subshell_number+=1
+                                if len(split_line[1])>=3:
+                                    if split_line[1][1]=='X':
+                                        try:
+                                            x_power=int(split_line[1][2:])
+                                            subshell_number+=1
+                                        except:
+                                            pass
+                                aonames.append('{}{}_{}{}'.format(self.atomic_symbols[(int(split_line[0])-sub_amount)-1],int(split_line[0])-sub_amount,subshell_number,split_line[1]))
+                                atombasis[-1].append(basis_index)
+                                basis_index+=1
                             for i in range(len_split_line-2):
                                 self.temp_alpha_mocoeffs[i-(len_split_line-2)].append(utils.float(split_line[i+2]))
                             line=next(inputfile)
+                        if self.parse_aonames:
+                            self.set_attribute('aonames',aonames)
+                            self.set_attribute('atombasis',atombasis)
+                            self.parse_aonames=False
                         line=next(inputfile)
                         if ('-----------' in line)or(''==line.strip()):
                             self.alpha_mos_to_parse=False
