@@ -29,7 +29,32 @@ class CFOUR(logfileparser.Logfile):
         return f'CFOUR("{self.filename}")'
 
     def normalisesym(self, label):
-        pass
+        try:
+            label_int=int(label[0])
+            return 'E'+label
+        except:
+            if len(label)>=2:
+                if 'SG'==label[:2]:
+                    if len(label)==2:
+                        label='sigma'
+                    else:
+                        label='sigma.'+label[2:]
+                if 'PI'==label[:2]:
+                    if len(label)==2:
+                        label='pi'
+                    else:
+                        label='pi.'+label[2:]
+                if 'DE'==label[:2]:
+                    if len(label)==2:
+                        label='delta'
+                    else:
+                        label='delta.'+label[2:]
+                if 'PH'==label[:2]:
+                    if len(label)==2:
+                        label='phi'
+                    else:
+                        label='phi.'+label[2:]
+            return label
 
     def before_parsing(self):
         #set package metadata to CFOUR
@@ -142,7 +167,7 @@ class CFOUR(logfileparser.Logfile):
                     line=next(inputfile)
                     continue
                 alpha_moenergies.append(utils.float(line.split()[2]))
-                alpha_mosyms.append(line.split()[4])
+                alpha_mosyms.append(self.normalisesym(line.split()[4]))
                 line=next(inputfile)
             self.moenergies.append(np.array(alpha_moenergies))
             self.mosyms.append(alpha_mosyms)
@@ -159,7 +184,7 @@ class CFOUR(logfileparser.Logfile):
                     line=next(inputfile)
                     continue
                 beta_moenergies.append(utils.float(line.split()[2]))
-                beta_mosyms.append(line.split()[4])
+                beta_mosyms.append(self.normalisesym(line.split()[4]))
                 line=next(inputfile)
             self.moenergies.append(np.array(beta_moenergies))
             self.mosyms.append(beta_mosyms)
