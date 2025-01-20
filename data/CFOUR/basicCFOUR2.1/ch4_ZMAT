@@ -1,0 +1,21 @@
+Geometry optimization calculation of benzene at RHF level
+C
+H 1 R*
+H 1 R* 2 A
+H 1 R* 2 A 3 D
+H 1 R* 2 A 4 D
+
+R=1.0
+A=109.471220634
+D=120.0
+
+*ACES2(CALC=RHF,BASIS=dzp
+GEO_CONV=8
+SCF_CONV=8
+PRINT=1)
+
+
+
+
+
+
