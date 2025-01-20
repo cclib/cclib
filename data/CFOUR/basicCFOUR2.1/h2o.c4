@@ -34,8 +34,8 @@ Copyright (C) 2009-2019 Intel Corporation. All rights reserved.
  
                        Version 2.1
  
-                     smp-n214.crc.pitt.edu                             
-                     Sat Jan 18 23:08:07 EST 2025                      
+                     smp-n223.crc.pitt.edu                             
+                     Mon Jan 20 14:25:46 EST 2025                      
                      integer*8 version is running
  
 ********************************************************************************
@@ -324,11 +324,11 @@ SCF_CONV=12)
   GENBAS file not present.   Using default GENBAS. 
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/set_genbas
---executable set_genbas finished with status     0 in        0.02 seconds (walltime).
+--executable set_genbas finished with status     0 in        0.03 seconds (walltime).
   ECPDATA file not present.   Using default ECPDATA. 
   There are   25 basis functions.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.07/       0.11 seconds.
---executable xjoda finished with status     0 in        0.13 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.09/       0.14 seconds.
+--executable xjoda finished with status     0 in        0.19 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvmol
  SERIAL VERSION OF MOLECULE STARTED
@@ -395,24 +395,24 @@ FINISH
    OFFSET WITHIN ANGULAR MOMENTUM :  1
    <CHI|CHI>                      :    1.7013118403
   NUCLEAR REPULSION ENERGY :    8.8122294218 A.U.
-  @MOLECU-I, ONE ELECTRON INTEGRALS (CPU/WALL):        0.00/       0.00 SECONDS.
+  @MOLECU-I, ONE ELECTRON INTEGRALS (CPU/WALL):        0.00/       0.01 SECONDS.
   @TWOEL-I,       3047 INTEGRALS OF SYMMETRY TYPE  I I I I
   @TWOEL-I,       5200 INTEGRALS OF SYMMETRY TYPE  I J I J
   @TWOEL-I,       3309 INTEGRALS OF SYMMETRY TYPE  I I J J
   @TWOEL-I,       1891 INTEGRALS OF SYMMETRY TYPE  I J K L
   @TWOEL-I, TOTAL NUMBER OF 2-E INTEGRALS      13447.
   @MOLECU-I, TWO ELECTRON INTEGRALS (CPU/WALL):        0.01/       0.01 SECONDS.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.02/       0.02 seconds.
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.02/       0.03 seconds.
 
 OMP_NUM_THREADS not specified; defaulting to 1
 Running with 1 threads/proc
 
---executable xvmol finished with status     0 in        0.03 seconds (walltime).
+--executable xvmol finished with status     0 in        0.09 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvmol2ja
  @GETMEM-I,  Allocated     762 MB of main memory.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xvmol2ja finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.02 seconds.
+--executable xvmol2ja finished with status     0 in        0.05 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvscf
   There are   25 functions in the AO basis.
@@ -604,8 +604,8 @@ Running with 1 threads/proc
 
   VSCF finished.
 
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.01 seconds.
---executable xvscf finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.02 seconds.
+--executable xvscf finished with status     0 in        0.04 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvtran
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -654,8 +654,8 @@ Running with 1 threads/proc
   0.752238547073737        1.27750113264878        2.04326366325643     
    2.45575296338254        4.21108969471893        1.60525704775218     
    3.32895488567719     
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.01 seconds.
---executable xvtran finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.02 seconds.
+--executable xvtran finished with status     0 in        0.04 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xintprc
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -692,8 +692,8 @@ Running with 1 threads/proc
 -----------------------------------------------------------------------------
    Norm of T2AB vector (     2762 symmetry allowed elements):  0.1990021932.
 -----------------------------------------------------------------------------
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xintprc finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.01 seconds.
+--executable xintprc finished with status     0 in        0.03 seconds (walltime).
   calling xvcc 
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvcc
@@ -902,8 +902,8 @@ Running with 1 threads/proc
   Largest element of DIIS residual   :  0.70319716E-12.
   Amplitude equations converged in    20 iterations.
       The lambda equations have converged.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.02/       0.02 seconds.
---executable xlambda finished with status     0 in        0.04 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.02/       0.03 seconds.
+--executable xlambda finished with status     0 in        0.06 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xdens
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -920,19 +920,19 @@ Running with 1 threads/proc
   Trace of density matrix :  10.0000000000.
   ----------------------------------------------------------------------
   Density calculation successfully completed.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.01 seconds.
---executable xdens finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.02 seconds.
+--executable xdens finished with status     0 in        0.05 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xanti
  @GETMEM-I,  Allocated     762 MB of main memory.
  CCSD(T) MO gammas will be sorted to Mulliken order.
  @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xanti finished with status     0 in        0.02 seconds (walltime).
+--executable xanti finished with status     0 in        0.03 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xbcktrn
  @GETMEM-I,  Allocated     762 MB of main memory.
  @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xbcktrn finished with status     0 in        0.02 seconds (walltime).
+--executable xbcktrn finished with status     0 in        0.04 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvdint
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -1035,8 +1035,8 @@ Running with 1 threads/proc
   Conversion factor used: 1 a.u. =   2.54174691 Debye 
 
 
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.04/       0.05 seconds.
---executable xvdint finished with status     0 in        0.06 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.05/       0.06 seconds.
+--executable xvdint finished with status     0 in        0.08 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xjoda
    JODA beginning optimization cycle #  1.
@@ -1114,8 +1114,8 @@ Running with 1 threads/proc
      271375.4284173303        716670.9476723976        436759.1342131786
   ECPDATA file not present.   Using default ECPDATA. 
   There are   25 basis functions.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.02 seconds.
---executable xjoda finished with status     0 in        0.03 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.03 seconds.
+--executable xjoda finished with status     0 in        0.04 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvmol
  SERIAL VERSION OF MOLECULE STARTED
@@ -1182,19 +1182,19 @@ FINISH
    OFFSET WITHIN ANGULAR MOMENTUM :  1
    <CHI|CHI>                      :    1.7013118403
   NUCLEAR REPULSION ENERGY :    8.9548490744 A.U.
-  @MOLECU-I, ONE ELECTRON INTEGRALS (CPU/WALL):        0.00/       0.00 SECONDS.
+  @MOLECU-I, ONE ELECTRON INTEGRALS (CPU/WALL):        0.00/       0.01 SECONDS.
   @TWOEL-I,       3047 INTEGRALS OF SYMMETRY TYPE  I I I I
   @TWOEL-I,       5200 INTEGRALS OF SYMMETRY TYPE  I J I J
   @TWOEL-I,       3309 INTEGRALS OF SYMMETRY TYPE  I I J J
   @TWOEL-I,       1891 INTEGRALS OF SYMMETRY TYPE  I J K L
   @TWOEL-I, TOTAL NUMBER OF 2-E INTEGRALS      13447.
   @MOLECU-I, TWO ELECTRON INTEGRALS (CPU/WALL):        0.01/       0.01 SECONDS.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.02/       0.02 seconds.
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.02/       0.03 seconds.
 
 OMP_NUM_THREADS not specified; defaulting to 1
 Running with 1 threads/proc
 
---executable xvmol finished with status     0 in        0.03 seconds (walltime).
+--executable xvmol finished with status     0 in        0.04 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvmol2ja
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -1231,7 +1231,7 @@ Running with 1 threads/proc
   Memory information:      63965 words required.
   Fock matrices are constructed from AO integral file.
  @GETMEM-I,  Allocated       0 MB of main memory.
-  Initialization and symmetry analysis required      0.000 seconds.
+  Initialization and symmetry analysis required      0.001 seconds.
 
  total no. of electrons in initial guess :  0.000000000000000E+000
   --------------------------------------------------------------------
@@ -1364,7 +1364,7 @@ Running with 1 threads/proc
   VSCF finished.
 
  @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.01 seconds.
---executable xvscf finished with status     0 in        0.02 seconds (walltime).
+--executable xvscf finished with status     0 in        0.03 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvtran
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -1414,7 +1414,7 @@ Running with 1 threads/proc
    2.49427999245265        4.22704932851518        1.60623766770583     
    3.34760154126073     
  @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.01 seconds.
---executable xvtran finished with status     0 in        0.02 seconds (walltime).
+--executable xvtran finished with status     0 in        0.03 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xintprc
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -1451,8 +1451,8 @@ Running with 1 threads/proc
 -----------------------------------------------------------------------------
    Norm of T2AB vector (     2762 symmetry allowed elements):  0.1969692915.
 -----------------------------------------------------------------------------
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xintprc finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.01 seconds.
+--executable xintprc finished with status     0 in        0.03 seconds (walltime).
   calling xvcc 
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvcc
@@ -1592,8 +1592,8 @@ Running with 1 threads/proc
         E(CCSD)           =     -76.240431074876
         E(CCSD + T(CCSD)) =     -76.243735033355
         E(CCSD(T))        =     -76.243646445897
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.03/       0.03 seconds.
---executable xvcc finished with status     0 in        0.05 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.03/       0.04 seconds.
+--executable xvcc finished with status     0 in        0.06 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xlambda
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -1658,7 +1658,7 @@ Running with 1 threads/proc
   Largest element of DIIS residual   :  0.94195470E-12.
   Amplitude equations converged in    19 iterations.
       The lambda equations have converged.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.02/       0.02 seconds.
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.02/       0.03 seconds.
 --executable xlambda finished with status     0 in        0.04 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xdens
@@ -1677,18 +1677,18 @@ Running with 1 threads/proc
   ----------------------------------------------------------------------
   Density calculation successfully completed.
  @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.01 seconds.
---executable xdens finished with status     0 in        0.02 seconds (walltime).
+--executable xdens finished with status     0 in        0.03 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xanti
  @GETMEM-I,  Allocated     762 MB of main memory.
  CCSD(T) MO gammas will be sorted to Mulliken order.
  @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xanti finished with status     0 in        0.02 seconds (walltime).
+--executable xanti finished with status     0 in        0.04 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xbcktrn
  @GETMEM-I,  Allocated     762 MB of main memory.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xbcktrn finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.02 seconds.
+--executable xbcktrn finished with status     0 in        0.05 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvdint
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -1791,8 +1791,8 @@ Running with 1 threads/proc
   Conversion factor used: 1 a.u. =   2.54174691 Debye 
 
 
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.04/       0.05 seconds.
---executable xvdint finished with status     0 in        0.06 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.05/       0.05 seconds.
+--executable xvdint finished with status     0 in        0.08 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xjoda
    JODA beginning optimization cycle #  2.
@@ -1873,8 +1873,8 @@ Running with 1 threads/proc
      283649.7484338952        776856.5436634904        446780.4687824623
   ECPDATA file not present.   Using default ECPDATA. 
   There are   25 basis functions.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.02 seconds.
---executable xjoda finished with status     0 in        0.03 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.03 seconds.
+--executable xjoda finished with status     0 in        0.04 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvmol
  SERIAL VERSION OF MOLECULE STARTED
@@ -1941,24 +1941,24 @@ FINISH
    OFFSET WITHIN ANGULAR MOMENTUM :  1
    <CHI|CHI>                      :    1.7013118403
   NUCLEAR REPULSION ENERGY :    9.1584679191 A.U.
-  @MOLECU-I, ONE ELECTRON INTEGRALS (CPU/WALL):        0.00/       0.00 SECONDS.
+  @MOLECU-I, ONE ELECTRON INTEGRALS (CPU/WALL):        0.00/       0.01 SECONDS.
   @TWOEL-I,       3047 INTEGRALS OF SYMMETRY TYPE  I I I I
   @TWOEL-I,       5200 INTEGRALS OF SYMMETRY TYPE  I J I J
   @TWOEL-I,       3309 INTEGRALS OF SYMMETRY TYPE  I I J J
   @TWOEL-I,       1891 INTEGRALS OF SYMMETRY TYPE  I J K L
   @TWOEL-I, TOTAL NUMBER OF 2-E INTEGRALS      13447.
   @MOLECU-I, TWO ELECTRON INTEGRALS (CPU/WALL):        0.01/       0.01 SECONDS.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.02/       0.02 seconds.
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.02/       0.03 seconds.
 
 OMP_NUM_THREADS not specified; defaulting to 1
 Running with 1 threads/proc
 
---executable xvmol finished with status     0 in        0.03 seconds (walltime).
+--executable xvmol finished with status     0 in        0.05 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvmol2ja
  @GETMEM-I,  Allocated     762 MB of main memory.
  @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xvmol2ja finished with status     0 in        0.02 seconds (walltime).
+--executable xvmol2ja finished with status     0 in        0.03 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvscf
   There are   25 functions in the AO basis.
@@ -2172,7 +2172,7 @@ Running with 1 threads/proc
   0.785829340558932        1.27177405184358        2.07167483185579     
    2.55117450857090        4.24458929586538        1.60578306802868     
    3.37679495807937     
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.01 seconds.
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.02 seconds.
 --executable xvtran finished with status     0 in        0.03 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xintprc
@@ -2210,8 +2210,8 @@ Running with 1 threads/proc
 -----------------------------------------------------------------------------
    Norm of T2AB vector (     2762 symmetry allowed elements):  0.1941791026.
 -----------------------------------------------------------------------------
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xintprc finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.02 seconds.
+--executable xintprc finished with status     0 in        0.04 seconds (walltime).
   calling xvcc 
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvcc
@@ -2352,7 +2352,7 @@ Running with 1 threads/proc
         E(CCSD + T(CCSD)) =     -76.244419711879
         E(CCSD(T))        =     -76.244338387788
  @CHECKOUT-I, Total execution time (CPU/WALL):        0.03/       0.04 seconds.
---executable xvcc finished with status     0 in        0.05 seconds (walltime).
+--executable xvcc finished with status     0 in        0.06 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xlambda
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -2417,8 +2417,8 @@ Running with 1 threads/proc
   Largest element of DIIS residual   :  0.71204539E-12.
   Amplitude equations converged in    19 iterations.
       The lambda equations have converged.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.02/       0.02 seconds.
---executable xlambda finished with status     0 in        0.03 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.02/       0.03 seconds.
+--executable xlambda finished with status     0 in        0.05 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xdens
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -2435,19 +2435,19 @@ Running with 1 threads/proc
   Trace of density matrix :  10.0000000000.
   ----------------------------------------------------------------------
   Density calculation successfully completed.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.01 seconds.
---executable xdens finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.02 seconds.
+--executable xdens finished with status     0 in        0.03 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xanti
  @GETMEM-I,  Allocated     762 MB of main memory.
  CCSD(T) MO gammas will be sorted to Mulliken order.
  @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xanti finished with status     0 in        0.02 seconds (walltime).
+--executable xanti finished with status     0 in        0.03 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xbcktrn
  @GETMEM-I,  Allocated     762 MB of main memory.
  @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xbcktrn finished with status     0 in        0.02 seconds (walltime).
+--executable xbcktrn finished with status     0 in        0.05 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvdint
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -2550,8 +2550,8 @@ Running with 1 threads/proc
   Conversion factor used: 1 a.u. =   2.54174691 Debye 
 
 
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.04/       0.05 seconds.
---executable xvdint finished with status     0 in        0.06 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.05/       0.06 seconds.
+--executable xvdint finished with status     0 in        0.09 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xjoda
    JODA beginning optimization cycle #  3.
@@ -2632,8 +2632,8 @@ Running with 1 threads/proc
      281939.2423064597        773264.2463682484        443725.7088921173
   ECPDATA file not present.   Using default ECPDATA. 
   There are   25 basis functions.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.02 seconds.
---executable xjoda finished with status     0 in        0.03 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.05 seconds.
+--executable xjoda finished with status     0 in        0.09 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvmol
  SERIAL VERSION OF MOLECULE STARTED
@@ -2712,7 +2712,7 @@ FINISH
 OMP_NUM_THREADS not specified; defaulting to 1
 Running with 1 threads/proc
 
---executable xvmol finished with status     0 in        0.03 seconds (walltime).
+--executable xvmol finished with status     0 in        0.05 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvmol2ja
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -2749,7 +2749,7 @@ Running with 1 threads/proc
   Memory information:      63965 words required.
   Fock matrices are constructed from AO integral file.
  @GETMEM-I,  Allocated       0 MB of main memory.
-  Initialization and symmetry analysis required      0.000 seconds.
+  Initialization and symmetry analysis required      0.001 seconds.
 
  total no. of electrons in initial guess :  0.000000000000000E+000
   --------------------------------------------------------------------
@@ -2877,8 +2877,8 @@ Running with 1 threads/proc
 
   VSCF finished.
 
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.01 seconds.
---executable xvscf finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.02 seconds.
+--executable xvscf finished with status     0 in        0.05 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvtran
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -2927,8 +2927,8 @@ Running with 1 threads/proc
   0.783964174855092        1.27193957919777        2.06786111310153     
    2.54417330380280        4.24089464326663        1.60487114220534     
    3.37404205136921     
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xvtran finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.03 seconds.
+--executable xvtran finished with status     0 in        0.06 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xintprc
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -2965,8 +2965,8 @@ Running with 1 threads/proc
 -----------------------------------------------------------------------------
    Norm of T2AB vector (     2762 symmetry allowed elements):  0.1945058718.
 -----------------------------------------------------------------------------
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xintprc finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.02 seconds.
+--executable xintprc finished with status     0 in        0.07 seconds (walltime).
   calling xvcc 
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvcc
@@ -3106,8 +3106,8 @@ Running with 1 threads/proc
         E(CCSD)           =     -76.241248958137
         E(CCSD + T(CCSD)) =     -76.244436439680
         E(CCSD(T))        =     -76.244354357421
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.03/       0.04 seconds.
---executable xvcc finished with status     0 in        0.05 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.03/       0.05 seconds.
+--executable xvcc finished with status     0 in        0.09 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xlambda
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -3172,8 +3172,8 @@ Running with 1 threads/proc
   Largest element of DIIS residual   :  0.73669819E-12.
   Amplitude equations converged in    19 iterations.
       The lambda equations have converged.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.02/       0.02 seconds.
---executable xlambda finished with status     0 in        0.04 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.02/       0.04 seconds.
+--executable xlambda finished with status     0 in        0.09 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xdens
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -3190,19 +3190,19 @@ Running with 1 threads/proc
   Trace of density matrix :  10.0000000000.
   ----------------------------------------------------------------------
   Density calculation successfully completed.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.01 seconds.
---executable xdens finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.03 seconds.
+--executable xdens finished with status     0 in        0.07 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xanti
  @GETMEM-I,  Allocated     762 MB of main memory.
  CCSD(T) MO gammas will be sorted to Mulliken order.
  @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xanti finished with status     0 in        0.02 seconds (walltime).
+--executable xanti finished with status     0 in        0.05 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xbcktrn
  @GETMEM-I,  Allocated     762 MB of main memory.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xbcktrn finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.03 seconds.
+--executable xbcktrn finished with status     0 in        0.06 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvdint
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -3305,8 +3305,8 @@ Running with 1 threads/proc
   Conversion factor used: 1 a.u. =   2.54174691 Debye 
 
 
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.04/       0.05 seconds.
---executable xvdint finished with status     0 in        0.06 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.05/       0.07 seconds.
+--executable xvdint finished with status     0 in        0.09 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xjoda
    JODA beginning optimization cycle #  4.
@@ -3387,8 +3387,8 @@ Running with 1 threads/proc
      281985.5338847766        774912.1943747498        443299.2701741531
   ECPDATA file not present.   Using default ECPDATA. 
   There are   25 basis functions.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.02 seconds.
---executable xjoda finished with status     0 in        0.03 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.03 seconds.
+--executable xjoda finished with status     0 in        0.05 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvmol
  SERIAL VERSION OF MOLECULE STARTED
@@ -3467,12 +3467,12 @@ FINISH
 OMP_NUM_THREADS not specified; defaulting to 1
 Running with 1 threads/proc
 
---executable xvmol finished with status     0 in        0.03 seconds (walltime).
+--executable xvmol finished with status     0 in        0.04 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvmol2ja
  @GETMEM-I,  Allocated     762 MB of main memory.
  @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xvmol2ja finished with status     0 in        0.02 seconds (walltime).
+--executable xvmol2ja finished with status     0 in        0.03 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvscf
   There are   25 functions in the AO basis.
@@ -3624,8 +3624,8 @@ Running with 1 threads/proc
 
   VSCF finished.
 
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.01 seconds.
---executable xvscf finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.02 seconds.
+--executable xvscf finished with status     0 in        0.04 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvtran
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -3674,8 +3674,8 @@ Running with 1 threads/proc
   0.784344555833266        1.27184975359410        2.06741282227287     
    2.54465346687558        4.24054401900792        1.60460141028972     
    3.37451421663973     
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.01 seconds.
---executable xvtran finished with status     0 in        0.03 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.02 seconds.
+--executable xvtran finished with status     0 in        0.05 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xintprc
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -3712,8 +3712,8 @@ Running with 1 threads/proc
 -----------------------------------------------------------------------------
    Norm of T2AB vector (     2762 symmetry allowed elements):  0.1944831953.
 -----------------------------------------------------------------------------
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xintprc finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.02 seconds.
+--executable xintprc finished with status     0 in        0.04 seconds (walltime).
   calling xvcc 
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvcc
@@ -3853,8 +3853,8 @@ Running with 1 threads/proc
         E(CCSD)           =     -76.241250715676
         E(CCSD + T(CCSD)) =     -76.244436704237
         E(CCSD(T))        =     -76.244354693018
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.03/       0.04 seconds.
---executable xvcc finished with status     0 in        0.05 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.03/       0.05 seconds.
+--executable xvcc finished with status     0 in        0.07 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xlambda
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -3919,8 +3919,8 @@ Running with 1 threads/proc
   Largest element of DIIS residual   :  0.73537866E-12.
   Amplitude equations converged in    19 iterations.
       The lambda equations have converged.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.02/       0.02 seconds.
---executable xlambda finished with status     0 in        0.04 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.02/       0.04 seconds.
+--executable xlambda finished with status     0 in        0.06 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xdens
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -3937,19 +3937,19 @@ Running with 1 threads/proc
   Trace of density matrix :  10.0000000000.
   ----------------------------------------------------------------------
   Density calculation successfully completed.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.01 seconds.
---executable xdens finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.02 seconds.
+--executable xdens finished with status     0 in        0.05 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xanti
  @GETMEM-I,  Allocated     762 MB of main memory.
  CCSD(T) MO gammas will be sorted to Mulliken order.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xanti finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.02 seconds.
+--executable xanti finished with status     0 in        0.06 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xbcktrn
  @GETMEM-I,  Allocated     762 MB of main memory.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xbcktrn finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.02 seconds.
+--executable xbcktrn finished with status     0 in        0.07 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvdint
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -4052,8 +4052,8 @@ Running with 1 threads/proc
   Conversion factor used: 1 a.u. =   2.54174691 Debye 
 
 
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.04/       0.05 seconds.
---executable xvdint finished with status     0 in        0.06 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.05/       0.07 seconds.
+--executable xvdint finished with status     0 in        0.11 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xjoda
    JODA beginning optimization cycle #  5.
@@ -4134,8 +4134,8 @@ Running with 1 threads/proc
      281992.9044462627        775471.7586019515        443134.5572007518
   ECPDATA file not present.   Using default ECPDATA. 
   There are   25 basis functions.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.02 seconds.
---executable xjoda finished with status     0 in        0.03 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.04 seconds.
+--executable xjoda finished with status     0 in        0.07 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvmol
  SERIAL VERSION OF MOLECULE STARTED
@@ -4202,24 +4202,24 @@ FINISH
    OFFSET WITHIN ANGULAR MOMENTUM :  1
    <CHI|CHI>                      :    1.7013118403
   NUCLEAR REPULSION ENERGY :    9.1320548987 A.U.
-  @MOLECU-I, ONE ELECTRON INTEGRALS (CPU/WALL):        0.00/       0.00 SECONDS.
+  @MOLECU-I, ONE ELECTRON INTEGRALS (CPU/WALL):        0.00/       0.01 SECONDS.
   @TWOEL-I,       3047 INTEGRALS OF SYMMETRY TYPE  I I I I
   @TWOEL-I,       5200 INTEGRALS OF SYMMETRY TYPE  I J I J
   @TWOEL-I,       3309 INTEGRALS OF SYMMETRY TYPE  I I J J
   @TWOEL-I,       1891 INTEGRALS OF SYMMETRY TYPE  I J K L
   @TWOEL-I, TOTAL NUMBER OF 2-E INTEGRALS      13447.
   @MOLECU-I, TWO ELECTRON INTEGRALS (CPU/WALL):        0.01/       0.01 SECONDS.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.02/       0.02 seconds.
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.02/       0.03 seconds.
 
 OMP_NUM_THREADS not specified; defaulting to 1
 Running with 1 threads/proc
 
---executable xvmol finished with status     0 in        0.03 seconds (walltime).
+--executable xvmol finished with status     0 in        0.09 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvmol2ja
  @GETMEM-I,  Allocated     762 MB of main memory.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xvmol2ja finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.03 seconds.
+--executable xvmol2ja finished with status     0 in        0.07 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvscf
   There are   25 functions in the AO basis.
@@ -4251,7 +4251,7 @@ Running with 1 threads/proc
   Memory information:      63965 words required.
   Fock matrices are constructed from AO integral file.
  @GETMEM-I,  Allocated       0 MB of main memory.
-  Initialization and symmetry analysis required      0.000 seconds.
+  Initialization and symmetry analysis required      0.001 seconds.
 
  total no. of electrons in initial guess :  0.000000000000000E+000
   --------------------------------------------------------------------
@@ -4417,8 +4417,8 @@ Running with 1 threads/proc
   0.784468256563362        1.27181920729535        2.06723622713968     
    2.54478590148537        4.24040169027371        1.60450246214005     
    3.37466528312507     
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.01 seconds.
---executable xvtran finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.02 seconds.
+--executable xvtran finished with status     0 in        0.04 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xintprc
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -4455,8 +4455,8 @@ Running with 1 threads/proc
 -----------------------------------------------------------------------------
    Norm of T2AB vector (     2762 symmetry allowed elements):  0.1944769637.
 -----------------------------------------------------------------------------
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xintprc finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.03 seconds.
+--executable xintprc finished with status     0 in        0.07 seconds (walltime).
   calling xvcc 
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvcc
@@ -4596,8 +4596,8 @@ Running with 1 threads/proc
         E(CCSD)           =     -76.241251171196
         E(CCSD + T(CCSD)) =     -76.244436707297
         E(CCSD(T))        =     -76.244354716926
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.03/       0.04 seconds.
---executable xvcc finished with status     0 in        0.05 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.03/       0.06 seconds.
+--executable xvcc finished with status     0 in        0.10 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xlambda
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -4662,8 +4662,8 @@ Running with 1 threads/proc
   Largest element of DIIS residual   :  0.73504842E-12.
   Amplitude equations converged in    19 iterations.
       The lambda equations have converged.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.02/       0.02 seconds.
---executable xlambda finished with status     0 in        0.04 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.02/       0.04 seconds.
+--executable xlambda finished with status     0 in        0.09 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xdens
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -4680,19 +4680,19 @@ Running with 1 threads/proc
   Trace of density matrix :  10.0000000000.
   ----------------------------------------------------------------------
   Density calculation successfully completed.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.01 seconds.
---executable xdens finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.03 seconds.
+--executable xdens finished with status     0 in        0.08 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xanti
  @GETMEM-I,  Allocated     762 MB of main memory.
  CCSD(T) MO gammas will be sorted to Mulliken order.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xanti finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.03 seconds.
+--executable xanti finished with status     0 in        0.08 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xbcktrn
  @GETMEM-I,  Allocated     762 MB of main memory.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xbcktrn finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.03 seconds.
+--executable xbcktrn finished with status     0 in        0.08 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvdint
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -4795,8 +4795,8 @@ Running with 1 threads/proc
   Conversion factor used: 1 a.u. =   2.54174691 Debye 
 
 
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.04/       0.05 seconds.
---executable xvdint finished with status     0 in        0.06 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.05/       0.07 seconds.
+--executable xvdint finished with status     0 in        0.11 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xjoda
    JODA beginning optimization cycle #  6.
@@ -4877,8 +4877,8 @@ Running with 1 threads/proc
      281992.7610471283        775472.0854911733        443134.0963453602
   ECPDATA file not present.   Using default ECPDATA. 
   There are   25 basis functions.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.02 seconds.
---executable xjoda finished with status     0 in        0.03 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.05 seconds.
+--executable xjoda finished with status     0 in        0.10 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvmol
  SERIAL VERSION OF MOLECULE STARTED
@@ -4945,24 +4945,24 @@ FINISH
    OFFSET WITHIN ANGULAR MOMENTUM :  1
    <CHI|CHI>                      :    1.7013118403
   NUCLEAR REPULSION ENERGY :    9.1320526623 A.U.
-  @MOLECU-I, ONE ELECTRON INTEGRALS (CPU/WALL):        0.00/       0.00 SECONDS.
+  @MOLECU-I, ONE ELECTRON INTEGRALS (CPU/WALL):        0.00/       0.01 SECONDS.
   @TWOEL-I,       3047 INTEGRALS OF SYMMETRY TYPE  I I I I
   @TWOEL-I,       5200 INTEGRALS OF SYMMETRY TYPE  I J I J
   @TWOEL-I,       3309 INTEGRALS OF SYMMETRY TYPE  I I J J
   @TWOEL-I,       1891 INTEGRALS OF SYMMETRY TYPE  I J K L
   @TWOEL-I, TOTAL NUMBER OF 2-E INTEGRALS      13447.
   @MOLECU-I, TWO ELECTRON INTEGRALS (CPU/WALL):        0.01/       0.01 SECONDS.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.02/       0.02 seconds.
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.02/       0.03 seconds.
 
 OMP_NUM_THREADS not specified; defaulting to 1
 Running with 1 threads/proc
 
---executable xvmol finished with status     0 in        0.03 seconds (walltime).
+--executable xvmol finished with status     0 in        0.09 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvmol2ja
  @GETMEM-I,  Allocated     762 MB of main memory.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xvmol2ja finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.02 seconds.
+--executable xvmol2ja finished with status     0 in        0.07 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvscf
   There are   25 functions in the AO basis.
@@ -4994,7 +4994,7 @@ Running with 1 threads/proc
   Memory information:      63965 words required.
   Fock matrices are constructed from AO integral file.
  @GETMEM-I,  Allocated       0 MB of main memory.
-  Initialization and symmetry analysis required      0.000 seconds.
+  Initialization and symmetry analysis required      0.001 seconds.
 
  total no. of electrons in initial guess :  0.000000000000000E+000
   --------------------------------------------------------------------
@@ -5098,8 +5098,8 @@ Running with 1 threads/proc
 
   VSCF finished.
 
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.01 seconds.
---executable xvscf finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.02 seconds.
+--executable xvscf finished with status     0 in        0.06 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvtran
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -5148,8 +5148,8 @@ Running with 1 threads/proc
   0.784468233639068        1.27181918702909        2.06723568461837     
    2.54478543123912        4.24040119688381        1.60450226738847     
    3.37466521221049     
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xvtran finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.04 seconds.
+--executable xvtran finished with status     0 in        0.07 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xintprc
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -5186,8 +5186,8 @@ Running with 1 threads/proc
 -----------------------------------------------------------------------------
    Norm of T2AB vector (     2762 symmetry allowed elements):  0.1944769856.
 -----------------------------------------------------------------------------
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xintprc finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.02 seconds.
+--executable xintprc finished with status     0 in        0.07 seconds (walltime).
   calling xvcc 
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvcc
@@ -5327,8 +5327,8 @@ Running with 1 threads/proc
         E(CCSD)           =     -76.241251170572
         E(CCSD + T(CCSD)) =     -76.244436707341
         E(CCSD(T))        =     -76.244354716927
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.03/       0.04 seconds.
---executable xvcc finished with status     0 in        0.05 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.03/       0.05 seconds.
+--executable xvcc finished with status     0 in        0.08 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xlambda
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -5393,8 +5393,8 @@ Running with 1 threads/proc
   Largest element of DIIS residual   :  0.73505394E-12.
   Amplitude equations converged in    19 iterations.
       The lambda equations have converged.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.02/       0.02 seconds.
---executable xlambda finished with status     0 in        0.04 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.02/       0.03 seconds.
+--executable xlambda finished with status     0 in        0.06 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xdens
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -5412,18 +5412,18 @@ Running with 1 threads/proc
   ----------------------------------------------------------------------
   Density calculation successfully completed.
  @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.01 seconds.
---executable xdens finished with status     0 in        0.02 seconds (walltime).
+--executable xdens finished with status     0 in        0.04 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xanti
  @GETMEM-I,  Allocated     762 MB of main memory.
  CCSD(T) MO gammas will be sorted to Mulliken order.
  @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xanti finished with status     0 in        0.02 seconds (walltime).
+--executable xanti finished with status     0 in        0.03 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xbcktrn
  @GETMEM-I,  Allocated     762 MB of main memory.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xbcktrn finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.02 seconds.
+--executable xbcktrn finished with status     0 in        0.04 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvdint
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -5526,8 +5526,8 @@ Running with 1 threads/proc
   Conversion factor used: 1 a.u. =   2.54174691 Debye 
 
 
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.04/       0.05 seconds.
---executable xvdint finished with status     0 in        0.06 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.05/       0.07 seconds.
+--executable xvdint finished with status     0 in        0.10 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xjoda
    JODA beginning optimization cycle #  7.
@@ -5608,8 +5608,8 @@ Running with 1 threads/proc
      281992.7588724590        775472.0813744339        443134.0923194804
   ECPDATA file not present.   Using default ECPDATA. 
   There are   25 basis functions.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.02 seconds.
---executable xjoda finished with status     0 in        0.03 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.04 seconds.
+--executable xjoda finished with status     0 in        0.07 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvmol
  SERIAL VERSION OF MOLECULE STARTED
@@ -5688,7 +5688,7 @@ FINISH
 OMP_NUM_THREADS not specified; defaulting to 1
 Running with 1 threads/proc
 
---executable xvmol finished with status     0 in        0.03 seconds (walltime).
+--executable xvmol finished with status     0 in        0.04 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvmol2ja
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -5821,8 +5821,8 @@ Running with 1 threads/proc
 
   VSCF finished.
 
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.01 seconds.
---executable xvscf finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.02 seconds.
+--executable xvscf finished with status     0 in        0.04 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvtran
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -5871,8 +5871,8 @@ Running with 1 threads/proc
   0.784468231362779        1.27181918721864        2.06723567960817     
    2.54478542240178        4.24040119204171        1.60450226614876     
    3.37466520881521     
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.01 seconds.
---executable xvtran finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.02 seconds.
+--executable xvtran finished with status     0 in        0.04 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xintprc
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -5909,8 +5909,8 @@ Running with 1 threads/proc
 -----------------------------------------------------------------------------
    Norm of T2AB vector (     2762 symmetry allowed elements):  0.1944769861.
 -----------------------------------------------------------------------------
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xintprc finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.02 seconds.
+--executable xintprc finished with status     0 in        0.03 seconds (walltime).
   calling xvcc 
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvcc
@@ -6050,8 +6050,8 @@ Running with 1 threads/proc
         E(CCSD)           =     -76.241251170556
         E(CCSD + T(CCSD)) =     -76.244436707342
         E(CCSD(T))        =     -76.244354716927
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.03/       0.04 seconds.
---executable xvcc finished with status     0 in        0.05 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.03/       0.05 seconds.
+--executable xvcc finished with status     0 in        0.08 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xlambda
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -6116,8 +6116,8 @@ Running with 1 threads/proc
   Largest element of DIIS residual   :  0.73505599E-12.
   Amplitude equations converged in    19 iterations.
       The lambda equations have converged.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.02/       0.02 seconds.
---executable xlambda finished with status     0 in        0.03 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.02/       0.03 seconds.
+--executable xlambda finished with status     0 in        0.04 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xdens
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -6134,19 +6134,19 @@ Running with 1 threads/proc
   Trace of density matrix :  10.0000000000.
   ----------------------------------------------------------------------
   Density calculation successfully completed.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.01 seconds.
---executable xdens finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.02 seconds.
+--executable xdens finished with status     0 in        0.06 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xanti
  @GETMEM-I,  Allocated     762 MB of main memory.
  CCSD(T) MO gammas will be sorted to Mulliken order.
  @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xanti finished with status     0 in        0.02 seconds (walltime).
+--executable xanti finished with status     0 in        0.04 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xbcktrn
  @GETMEM-I,  Allocated     762 MB of main memory.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xbcktrn finished with status     0 in        0.02 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.02 seconds.
+--executable xbcktrn finished with status     0 in        0.04 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvdint
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -6249,8 +6249,8 @@ Running with 1 threads/proc
   Conversion factor used: 1 a.u. =   2.54174691 Debye 
 
 
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.04/       0.05 seconds.
---executable xvdint finished with status     0 in        0.06 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.05/       0.05 seconds.
+--executable xvdint finished with status     0 in        0.08 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xjoda
    JODA beginning optimization cycle #  8.
@@ -6330,7 +6330,7 @@ LINEQ_CONV=12
 SCF_CONV=12)                                                                    
                                                                                 
 ********************************************************************************
---executable xjoda finished with status     0 in        0.02 seconds (walltime).
+--executable xjoda finished with status     0 in        0.03 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvprop
  @GETMEM-I,  Allocated     762 MB of main memory.
@@ -6354,8 +6354,8 @@ SCF_CONV=12)
     Potential                0.0000000    -1.4214529    -1.0126148
     Potential                0.0000000     1.4214529    -1.0126148
     --------------------------------------------------------------
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.02/       0.02 seconds.
---executable xvprop finished with status     0 in        0.10 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.02/       0.04 seconds.
+--executable xvprop finished with status     0 in        0.07 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xprops
   occupation vector                      3
@@ -6559,7 +6559,7 @@ SCF_CONV=12)
          2                               0.84595218
          3                               0.84595218
  -------------------------------------------------------
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.01 seconds.
---executable xprops finished with status     0 in        0.07 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.02 seconds.
+--executable xprops finished with status     0 in        0.05 seconds (walltime).
   The final electronic energy is       -76.244354716926509 a.u. 
-  This computation required                            3.11 seconds (walltime).
+  This computation required                            5.82 seconds (walltime).

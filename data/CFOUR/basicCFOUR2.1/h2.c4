@@ -34,8 +34,8 @@ Copyright (C) 2009-2019 Intel Corporation. All rights reserved.
  
                        Version 2.1
  
-                     smp-n217.crc.pitt.edu                             
-                     Mon Jan 20 10:32:45 EST 2025                      
+                     smp-n223.crc.pitt.edu                             
+                     Mon Jan 20 14:25:50 EST 2025                      
                      integer*8 version is running
  
 ********************************************************************************
@@ -335,12 +335,12 @@ SCF_CONV=10,PRINT=1)
   GENBAS file not present.   Using default GENBAS. 
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/set_genbas
---executable set_genbas finished with status     0 in        0.12 seconds (walltime).
+--executable set_genbas finished with status     0 in        0.04 seconds (walltime).
   ECPDATA file not present.   Using default ECPDATA. 
   There are    2 basis functions.
  @GEOPT-W, Archive file not created for single-point calculation.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.07/       0.28 seconds.
---executable xjoda finished with status     0 in        0.47 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.08/       0.18 seconds.
+--executable xjoda finished with status     0 in        0.23 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvmol
  SERIAL VERSION OF MOLECULE STARTED
@@ -434,26 +434,26 @@ FINISH
 
     2    1  H #1     1S     2   1   1.0   2  -1.0
   NUCLEAR REPULSION ENERGY :    0.3779836429 A.U.
-  @MOLECU-I, ONE ELECTRON INTEGRALS (CPU/WALL):        0.00/       0.00 SECONDS.
+  @MOLECU-I, ONE ELECTRON INTEGRALS (CPU/WALL):        0.00/       0.01 SECONDS.
   @TWOEL-I,          2 INTEGRALS OF SYMMETRY TYPE  I I I I
   @TWOEL-I,          1 INTEGRALS OF SYMMETRY TYPE  I J I J
   @TWOEL-I,          1 INTEGRALS OF SYMMETRY TYPE  I I J J
   @TWOEL-I, TOTAL NUMBER OF 2-E INTEGRALS          4.
   @MOLECU-I, TWO ELECTRON INTEGRALS (CPU/WALL):        0.00/       0.00 SECONDS.
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.00 seconds.
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.02 seconds.
 
 OMP_NUM_THREADS not specified; defaulting to 1
 Running with 1 threads/proc
 
---executable xvmol finished with status     0 in        0.10 seconds (walltime).
+--executable xvmol finished with status     0 in        0.08 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvmol2ja
  @GETMEM-I,  Allocated     762 MB of main memory.
  ZMAT order <=> comp order: mapping vector 
            1    1
            2    2
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xvmol2ja finished with status     0 in        0.08 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.02 seconds.
+--executable xvmol2ja finished with status     0 in        0.07 seconds (walltime).
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvscf
   There are    2 functions in the AO basis.
@@ -597,7 +597,7 @@ Eigenvalue     -0.377323      0.258902
 
   VSCF finished.
 
- @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.01 seconds.
---executable xvscf finished with status     0 in        0.08 seconds (walltime).
+ @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.04 seconds.
+--executable xvscf finished with status     0 in        0.09 seconds (walltime).
   The final electronic energy is        -0.941480540925290 a.u. 
-  This computation required                            0.77 seconds (walltime).
+  This computation required                            0.50 seconds (walltime).

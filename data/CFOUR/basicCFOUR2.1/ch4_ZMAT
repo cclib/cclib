@@ -1,4 +1,4 @@
-Geometry optimization calculation of benzene at RHF level
+Geometry optimization calculation of methane at CCSD level
 C
 H 1 R*
 H 1 R* 2 A
@@ -9,7 +9,9 @@ R=1.0
 A=109.471220634
 D=120.0
 
-*ACES2(CALC=RHF,BASIS=dzp
+*ACES2(CALC=CCSD
+BASIS=dzp
+REF=RHF
 GEO_CONV=8
 SCF_CONV=8
 PRINT=1)
