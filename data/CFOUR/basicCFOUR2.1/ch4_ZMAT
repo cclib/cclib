@@ -15,9 +15,3 @@ REF=RHF
 GEO_CONV=8
 SCF_CONV=8
 PRINT=1)
-
-
-
-
-
-
