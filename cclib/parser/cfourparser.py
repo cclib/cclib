@@ -124,10 +124,14 @@ class CFOUR(logfileparser.Logfile):
         if 'MULTIPLICTY          IMULTP' in line:
             self.set_attribute('mult',int(line.split()[2]))
         if 'A miracle has come to pass. The CC iterations have converged.' in line:
-            line=next(inputfile)
-            line=next(inputfile)
-            line=next(inputfile)
-            self.ccenergies.append(utils.float(line.split()[4]))
+            cc_lines=[]
+            while not '@CHECKOUT-I,' in line:
+                cc_lines.append(line)
+                line=next(inputfile)
+            if cc_lines[-1].split()[-1]=='a.u.':
+                self.ccenergies.append(utils.float(cc_lines[-1].split()[-2]))
+            else:
+                self.ccenergies.append(utils.float(cc_lines[-1].split()[-1]))
         #get the coordinates at each step in a geometry optimization
         #if this is the first time parsing a block of coordinates also get the atomic numbers
         '''
