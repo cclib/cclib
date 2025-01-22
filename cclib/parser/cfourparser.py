@@ -29,21 +29,6 @@ class CFOUR(logfileparser.Logfile):
         return f'CFOUR("{self.filename}")'
 
     def normalisesym(self, label):
-<<<<<<< HEAD
-        #CFOUR uses 1g, 1u, 2g, 2u,... for E1g, E1u, E2g, E2u,...
-        try:
-            label_int=int(label[0])
-            return 'E'+label
-        except:
-            if len(label)>=2:
-                #CFOUR uses '' for "
-                if "''" in label:
-                    label.replace("''",'"')
-                #CFOUR uses SG for sigma, PI for pi, DE for delta, and PH for phi
-                if 'SG'==label[:2]:
-                    if (len(label)==2)or((len(label)==3)and((label[2]=='+')or(label[2]=='-'))):
-                        label='sigma'
-=======
         # CFOUR uses A'' instead of A"
         label.replace("''",'"')
         # CFOUR uses 1g, 1u, 2g, 2u,... for E1g, E1u, E2g, E2u,...
@@ -56,7 +41,6 @@ class CFOUR(logfileparser.Logfile):
                 if "SG" == label[:2]:
                     if len(label) == 2:
                         label = "sigma"
->>>>>>> ec752d40 (Improved normalizing symmetry labels in CFOUR and its corresponding test)
                     else:
                         label='sigma.'+label[2]
                 if 'PI'==label[:2]:
@@ -120,33 +104,34 @@ class CFOUR(logfileparser.Logfile):
             self.set_attribute('nmo',len(self.moenergies[0]))
 
     def extract(self, inputfile, line):
-        #get the version of CFOUR
-        if 'Version' in line:
-            self.metadata['package_version']=line.split()[1]
-        #get the name of the basis set used
-        if 'BASIS                IBASIS' in line:
-            self.metadata['basis_set']=line.split()[2]
-        #get whether the reference is unrestricted or not
-        if 'REFERENCE            IREFNC' in line:
-            self.metadata['unrestricted']=(True if line.split()[2][0]=='U' else False)
-        #get full point group
-        if 'The full molecular point group is' in line:
-            self.metadata['symmetry_detected']=line.split()[6]
-        #get used point group
-        if 'The computational point group is' in line:
-            self.metadata['symmetry_used']=line.split()[5]
-        #get the net charge of the system
-        if 'CHARGE               ICHRGE' in line:
-            self.set_attribute('charge',utils.float(line.split()[2]))
-        #get the spin multiplicity of the system
-        if 'MULTIPLICTY          IMULTP' in line:
-            self.set_attribute('mult',int(line.split()[2]))
-        if 'A miracle has come to pass. The CC iterations have converged.' in line:
-            cc_lines=[]
-            while not '@CHECKOUT-I,' in line:
-                cc_lines.append(line)
-                line=next(inputfile)
-            if cc_lines[-1].split()[-1]=='a.u.':
+        # get the version of CFOUR
+        if "Version" in line:
+            self.metadata["package_version"] = line.split()[1]
+        # get the name of the basis set used
+        if "BASIS                IBASIS" in line:
+            self.metadata["basis_set"] = line.split()[2]
+        # get whether the reference is unrestricted or not
+        if "REFERENCE            IREFNC" in line:
+            self.metadata["unrestricted"] = True if line.split()[2][0] == "U" else False
+        # get full point group
+        if "The full molecular point group is" in line:
+            self.metadata["symmetry_detected"] = line.split()[6]
+        # get used point group
+        if "The computational point group is" in line:
+            self.metadata["symmetry_used"] = line.split()[5]
+        # get the net charge of the system
+        if "CHARGE               ICHRGE" in line:
+            self.set_attribute("charge", utils.float(line.split()[2]))
+        # get the spin multiplicity of the system
+        if "MULTIPLICTY          IMULTP" in line:
+            self.set_attribute("mult", int(line.split()[2]))
+        if "A miracle has come to pass. The CC iterations have converged." in line:
+            cc_lines = []
+            while "@CHECKOUT-I," not in line:
+                if not line.strip()=='':
+                    cc_lines.append(line)
+                line = next(inputfile)
+            if cc_lines[-1].split()[-1] == "a.u.":
                 self.ccenergies.append(utils.float(cc_lines[-1].split()[-2]))
             else:
                 self.ccenergies.append(utils.float(cc_lines[-1].split()[-1]))
