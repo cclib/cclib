@@ -49,6 +49,14 @@ class NormalisesymTest:
         ]
         assert list(map(sym, labels)) == ref
 
+    def test_normalisesym_cfour(self):
+        from cclib.parser.cfourparser import CFOUR
+
+        sym = CFOUR(io.StringIO("dummyfile")).normalisesym
+        labels = ['A','A1','Ag','A1g',"A'","A''",'SG','SG+','SGg+','E','1g']
+        ref = ['A','A1','Ag','A1g',"A'",'A"','sigma','sigma','sigma.g','E','E1g']
+        assert list(map(sym, labels)) == ref
+
     def test_normalisesym_gamess(self):
         from cclib.parser.gamessparser import GAMESS
 

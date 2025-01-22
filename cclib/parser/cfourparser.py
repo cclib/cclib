@@ -35,12 +35,15 @@ class CFOUR(logfileparser.Logfile):
             return 'E'+label
         except:
             if len(label)>=2:
+                #CFOUR uses '' for "
+                if '\'\'' in label:
+                    label=label[:-2]+'"'
                 #CFOUR uses SG for sigma, PI for pi, DE for delta, and PH for phi
                 if 'SG'==label[:2]:
-                    if len(label)==2:
+                    if (len(label)==2)or((len(label)==3)and((label[2]=='+')or(label[2]=='-'))):
                         label='sigma'
                     else:
-                        label='sigma.'+label[2:]
+                        label='sigma.'+label[2]
                 if 'PI'==label[:2]:
                     if len(label)==2:
                         label='pi'
