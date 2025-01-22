@@ -22,6 +22,7 @@ sys.path.insert(1, os.path.join(__filedir__, "data"))
 
 parser_names = [
     "ADF",
+    "CFOUR",
     "DALTON",
     "FChk",
     "GAMESS",
