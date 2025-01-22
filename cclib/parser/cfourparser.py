@@ -5,7 +5,6 @@
 
 """Parser for CFOUR output files"""
 
-
 from cclib.parser import logfileparser, utils
 
 import numpy as np
@@ -27,13 +26,13 @@ class CFOUR(logfileparser.Logfile):
 
     def normalisesym(self, label):
         # CFOUR uses A'' instead of A"
-        label.replace("''",'"')
+        label.replace("''", '"')
         # CFOUR uses 1g, 1u, 2g, 2u,... for E1g, E1u, E2g, E2u,...
         try:
             label_int = int(label[0])
-            return 'E'+ label
+            return "E" + label
         except:
-            if len(label)>=2:
+            if len(label) >= 2:
                 # CFOUR uses SG for sigma, PI for pi, DE for delta, and PH for phi
                 if "SG" == label[:2]:
                     if len(label) == 2:
