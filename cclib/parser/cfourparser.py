@@ -124,7 +124,7 @@ class CFOUR(logfileparser.Logfile):
         if "A miracle has come to pass. The CC iterations have converged." in line:
             cc_lines = []
             while "@CHECKOUT-I," not in line:
-                if not line.strip()=='':
+                if not line.strip() == "":
                     cc_lines.append(line)
                 line = next(inputfile)
             if cc_lines[-1].split()[-1] == "a.u.":
