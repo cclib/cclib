@@ -31,22 +31,9 @@ class CFOUR(logfileparser.Logfile):
             label_int = int(label[0])
             return "E" + label
         except:
-<<<<<<< HEAD
             if len(label)>=2:
-                #CFOUR uses '' for "
-                if '\'\'' in label:
-                    label=label[:-2]+'"'
-                #CFOUR uses SG for sigma, PI for pi, DE for delta, and PH for phi
-                if 'SG'==label[:2]:
-                    if (len(label)==2)or((len(label)==3)and((label[2]=='+')or(label[2]=='-'))):
-                        label='sigma'
-                    else:
-                        label='sigma.'+label[2]
-                if 'PI'==label[:2]:
-                    if len(label)==2:
-                        label='pi'
-=======
-            if len(label) >= 2:
+                if "''" in label:
+                    label.replace("''",'"')
                 # CFOUR uses SG for sigma, PI for pi, DE for delta, and PH for phi
                 if "SG" == label[:2]:
                     if len(label) == 2:
@@ -56,7 +43,6 @@ class CFOUR(logfileparser.Logfile):
                 if "PI" == label[:2]:
                     if len(label) == 2:
                         label = "pi"
->>>>>>> bfb3cca831336918c470d8f9aca9ce29460cd94d
                     else:
                         label = "pi." + label[2:]
                 if "DE" == label[:2]:
