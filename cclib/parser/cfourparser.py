@@ -29,6 +29,7 @@ class CFOUR(logfileparser.Logfile):
         return f'CFOUR("{self.filename}")'
 
     def normalisesym(self, label):
+<<<<<<< HEAD
         #CFOUR uses 1g, 1u, 2g, 2u,... for E1g, E1u, E2g, E2u,...
         try:
             label_int=int(label[0])
@@ -42,6 +43,20 @@ class CFOUR(logfileparser.Logfile):
                 if 'SG'==label[:2]:
                     if (len(label)==2)or((len(label)==3)and((label[2]=='+')or(label[2]=='-'))):
                         label='sigma'
+=======
+        # CFOUR uses A'' instead of A"
+        label.replace("''",'"')
+        # CFOUR uses 1g, 1u, 2g, 2u,... for E1g, E1u, E2g, E2u,...
+        try:
+            label_int = int(label[0])
+            return 'E'+ label
+        except:
+            if len(label)>=2:
+                # CFOUR uses SG for sigma, PI for pi, DE for delta, and PH for phi
+                if "SG" == label[:2]:
+                    if len(label) == 2:
+                        label = "sigma"
+>>>>>>> ec752d40 (Improved normalizing symmetry labels in CFOUR and its corresponding test)
                     else:
                         label='sigma.'+label[2]
                 if 'PI'==label[:2]:
