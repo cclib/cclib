@@ -26,7 +26,7 @@ class CFOUR(logfileparser.Logfile):
 
     def normalisesym(self, label):
         # CFOUR uses A'' instead of A"
-        label=label.replace("''", '"')
+        label = label.replace("''", '"')
         # CFOUR uses 1g, 1u, 2g, 2u,... for E1g, E1u, E2g, E2u,...
         try:
             label_int = int(label[0])
@@ -132,74 +132,84 @@ class CFOUR(logfileparser.Logfile):
                 self.ccenergies.append(utils.float(cc_lines[-1].split()[-2]))
             else:
                 self.ccenergies.append(utils.float(cc_lines[-1].split()[-1]))
-        #get coefficients and exponents of the gaussian basis set
-        if 'ATOM                 EXPONENT      COEFFICIENTS' in line:
-            atom_index={}
-            atom_index_length=0
-            line=next(inputfile)
-            should_parse=True
-            last_line=''
-            temp_basis_info=[]
-            gbasis=[]
-            hashtag_in_last_line=False
-            first_iter=True
+        # get coefficients and exponents of the gaussian basis set
+        if "ATOM                 EXPONENT      COEFFICIENTS" in line:
+            atom_index = {}
+            atom_index_length = 0
+            line = next(inputfile)
+            should_parse = True
+            last_line = ""
+            temp_basis_info = []
+            gbasis = []
+            hashtag_in_last_line = False
+            first_iter = True
             while True:
-                if line.strip()=='':
-                    line=next(inputfile)
+                if line.strip() == "":
+                    line = next(inputfile)
                     continue
-                line=line.replace('+','')
-                split_line=line.strip().split()
-                line_length=len(split_line)
-                if not ((hashtag_in_last_line) or ('#' in line) or (len(last_line.strip().split())==line_length)):
+                line = line.replace("+", "")
+                split_line = line.strip().split()
+                line_length = len(split_line)
+                if not (
+                    (hashtag_in_last_line)
+                    or ("#" in line)
+                    or (len(last_line.strip().split()) == line_length)
+                ):
                     break
-                if '#' in line:
+                if "#" in line:
                     if (not first_iter) and should_parse:
                         for i in temp_basis_info:
-                            gbasis[atom_index[curr_atom]].append((curr_ang_mom,i))
-                    first_iter=False
-                    hashtag_in_last_line=True
-                    curr_atom=split_line[0]+split_line[1]+split_line[2]
-                    if not (curr_atom in atom_index):
-                        atom_index[curr_atom]=atom_index_length
-                        atom_index_length+=1
+                            gbasis[atom_index[curr_atom]].append((curr_ang_mom, i))
+                    first_iter = False
+                    hashtag_in_last_line = True
+                    curr_atom = split_line[0] + split_line[1] + split_line[2]
+                    if curr_atom not in atom_index:
+                        atom_index[curr_atom] = atom_index_length
+                        atom_index_length += 1
                         gbasis.append([])
-                    if len(split_line[3])==1:
-                        if split_line[3]=='S':
-                            curr_ang_mom='S'
-                            should_parse=True
-                        elif split_line[3]=='X':
-                            curr_ang_mom='P'
-                            should_parse=True
+                    if len(split_line[3]) == 1:
+                        if split_line[3] == "S":
+                            curr_ang_mom = "S"
+                            should_parse = True
+                        elif split_line[3] == "X":
+                            curr_ang_mom = "P"
+                            should_parse = True
                         else:
-                            should_parse=False
-                    elif len(split_line[3])==2:
-                        if split_line[3]=='XX':
-                            curr_ang_mom='D'
-                            should_parse=True
+                            should_parse = False
+                    elif len(split_line[3]) == 2:
+                        if split_line[3] == "XX":
+                            curr_ang_mom = "D"
+                            should_parse = True
                         else:
-                            should_parse=False
+                            should_parse = False
                     else:
-                        if ((int(split_line[3][-3])>2) and (int(split_line[3][-2])==0) and (int(split_line[3][-1])==0)):
-                            curr_ang_mom=split_line[3][:-3]
-                            should_parse=True
+                        if (
+                            (int(split_line[3][-3]) > 2)
+                            and (int(split_line[3][-2]) == 0)
+                            and (int(split_line[3][-1]) == 0)
+                        ):
+                            curr_ang_mom = split_line[3][:-3]
+                            should_parse = True
                         else:
-                            should_parse=False
-                if should_parse and (not ('#' in line)):
+                            should_parse = False
+                if should_parse and ("#" not in line):
                     if hashtag_in_last_line:
-                        temp_basis_info=[]
-                        for i in range(line_length-2):
+                        temp_basis_info = []
+                        for i in range(line_length - 2):
                             temp_basis_info.append([])
-                    for i in range(line_length-2):
-                        if not float(split_line[2+i])==0.:
-                            temp_basis_info[i].append((float(split_line[1]),float(split_line[2+i])))
-                if hashtag_in_last_line and (not ('#' in line)):
-                    hashtag_in_last_line=False
-                last_line=line
-                line=next(inputfile)
+                    for i in range(line_length - 2):
+                        if not float(split_line[2 + i]) == 0.0:
+                            temp_basis_info[i].append(
+                                (float(split_line[1]), float(split_line[2 + i]))
+                            )
+                if hashtag_in_last_line and ("#" not in line):
+                    hashtag_in_last_line = False
+                last_line = line
+                line = next(inputfile)
             if should_parse:
                 for i in temp_basis_info:
-                    gbasis[atom_index[curr_atom]].append((curr_ang_mom,i))
-            self.set_attribute('gbasis',gbasis)
+                    gbasis[atom_index[curr_atom]].append((curr_ang_mom, i))
+            self.set_attribute("gbasis", gbasis)
         # get the coordinates at each step in a geometry optimization
         # if this is the first time parsing a block of coordinates also get the atomic numbers
         """
