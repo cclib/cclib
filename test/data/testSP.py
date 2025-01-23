@@ -55,7 +55,7 @@ class GenericSPTest:
 
         assert data.atomnos.shape == (20,)
         assert sum(data.atomnos == 6) + sum(data.atomnos == 1) == 20
-    
+
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser(
         "DALTON",
@@ -657,6 +657,7 @@ class ADFSPTest(GenericSPTest):
         assert abs(data.fooverlaps[0, 0] - self.foverlap00) < 0.0001
         assert abs(data.fooverlaps[1, 1] - self.foverlap11) < 0.0001
         assert abs(data.fooverlaps[2, 2] - self.foverlap22) < 0.0001
+
 
 class CFOURSPTest(GenericSPTest):
     """Customized restricted single point unittest"""

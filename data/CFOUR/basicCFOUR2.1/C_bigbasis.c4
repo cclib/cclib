@@ -17,7 +17,7 @@ Copyright (C) 2009-2019 Intel Corporation. All rights reserved.
      ****************************************************************
      * CFOUR Coupled-Cluster techniques for Computational Chemistry *
      ****************************************************************
- 
+
 
    Department of Chemistry                Institut fuer Physikalische Chemie
    University of Florida                  Universitaet Mainz
@@ -31,250 +31,250 @@ Copyright (C) 2009-2019 Intel Corporation. All rights reserved.
    Southern Methodist University          Eotvos Lorand University
    Dallas, TX 75275, USA                  H-1053 Budapest, Hungary
 
- 
+
                        Version 2.1
- 
-                     smp-n214.crc.pitt.edu                             
-                     Wed Jan 22 21:18:41 EST 2025                      
+
+                     smp-n214.crc.pitt.edu
+                     Wed Jan 22 21:18:41 EST 2025
                      integer*8 version is running
- 
+
 ********************************************************************************
 *                          Input from ZMAT file                                *
 ********************************************************************************
-RHF/aug-cc-pVQZ on C                                                            
-C                                                                               
-                                                                                
-*ACES2(CALC=SCF                                                                 
-BASIS=AUG-PVQZ                                                                  
-REF=RHF                                                                         
-SCF_CONV=12                                                                     
-PRINT=1                                                                         
-CHARGE=0                                                                        
-MULTIPLICITY=1)                                                                 
-                                                                                
+RHF/aug-cc-pVQZ on C
+C
+
+*ACES2(CALC=SCF
+BASIS=AUG-PVQZ
+REF=RHF
+SCF_CONV=12
+PRINT=1
+CHARGE=0
+MULTIPLICITY=1)
+
 ********************************************************************************
     -------------------------------------------------------------------
-                    CFOUR Control Parameters 
+                    CFOUR Control Parameters
     -------------------------------------------------------------------
         External           Internal           Value            Units
           Name               Name
     -------------------------------------------------------------------
-       ABCDTYPE             IABCDT         STANDARD    [  0]    ***   
-       ANHARMONIC           IANHAR         OFF         [  0]    ***   
-       ANH_ALGORIT          IANALG         STANDARD    [  0]    ***   
-       ANH_DERIVAT          IANDER         SECOND      [  1]    ***   
-       ANH_MODE             ANHMOD         VIBRATION   [  0]    ***   
-       ANH_STEPSIZ          ICUBST             50000          x 10-6  
-       ANH_SYMMETR          IANHSM         ABELIAN     [  0]    ***   
-       AO_LADDERS           IAOLAD         SINGLEPASS  [  1]    ***   
-       AV_SCF               IAVSCF         OFF         [  0]    ***   
-       BASIS                IBASIS         AUG-PVQZ    [ 35]    ***   
-       BOTHVECTORS          BOTHVC         OFF         [  0]    ***   
-       BOX_POTENT           IPIAB          OFF         [  0]    ***   
-       BREIT                IBREIT         OFF         [  0]    ***   
-       BRUCK_CONV           IBRTOL          10D-  4             ***   
-       BRUECKNER            IBRKNR         OFF         [  0]    ***   
-       BUFFERSIZE           IBUFFS              4096            ***   
-       CACHE_RECS           ICHREC             10               ***   
-       CALCLEVEL            ICLLVL         SCF         [  0]    ***   
-       CCORBOPT             ICCORB         OFF         [  0]  x 0.01  
-       CC_CONV              ICCCNV          10D-  7             ***   
-       CC_EXPORDER          ICCEOR              0               ***   
-       CC_EXTRAPOL          ICCEXT         DIIS        [  1]    ***   
-       CC_GUESS             ICCGES         MP2         [  0]    ***   
-       CC_MAXCYC            ICCCYC              0              cycles 
-       CC_PROGRAM           ICCPRO         VCC         [  0]    ***   
-       CHARGE               ICHRGE              0               ***   
-       CHOLESKY             ICHOLE         OFF         [  0]    ***   
-       CIS_CONV             ICISTL              5               ***   
-       COMM_SIZE            IPSIZE            ***               ***   
-       CONSTANT             ICONST         OLD         [  1]    ***   
-       CONTINUUM            ICONTU         NONE        [  0]    ***   
-       CONTRACTION          ICNTYP         GENERAL     [  1]    ***   
-       COORDINATES          ICOORD         INTERNAL    [  0]    ***   
-       CPHF_CONVER          ICPHFT          10D- 16             ***   
-       CPHF_MAXCYC          ICPHFC             64              cycles 
-       CUBIC                ICUBIC         OFF         [  0]    ***   
-       CURVILINEAR          ICURVY         OFF         [  0]    ***   
-       DBOC                 IDBOC          OFF         [  0]    ***   
-       DCT                  IDCT           OFF         [  0]    ***   
-       DERIV_LEV            IDRLVL         ZERO        [  0]    ***   
-       DEVMEM_SIZE          IDVMEM          50000000           MByte  
-       DIAG_MRCC            IEOMST          10D-  0             ***   
-       DIFF_TYPE            IDIFTY         RELAXED     [  0]    ***   
-       DIRECT               IDIRCT         OFF         [  0]    ***   
-       DROPMO               IDRPMO      NONE         
-       ECP                  IECP           OFF         [  0]    ***   
-       EIGENVECTOR          IVEC                1               ***   
-       EL_ANHARM            IELANH         OFF         [  0]    ***   
-       EOMFOLLOW            IEOMSR         ENERGY      [  0]    ***   
-       EOMIP                IEOMIP         OFF         [  0]    ***   
-       EOMLEVEL             HBARFM         SAME        [  0]    ***   
-       EOM_MRCC             IMRCCE         NEW         [  1]    ***   
-       EOM_NONIT            EOMNON         OFF         [  0]    ***   
-       EOM_NSING            IEOMSI          10D-  0             ***   
-       EOM_NSTATES          IMRCCD         DAVIDSON    [  0]    ***   
-       EOM_NTRIP            IEOMTR          10D-  0             ***   
-       EOM_ORDER            IEXORD         ENERGY      [  0]    ***   
-       EOM_PROPSTA          IEOMST              0               ***   
-       ESTATE_CONV          IEXTOL          10D-  5             ***   
-       ESTATE_DIAG          IEXDIG         ITERATIVE   [  0]    ***   
-       ESTATE_LOCK          IESLOC         ON          [  1]    ***   
-       ESTATE_MAXC          IEXMXC             40               ***   
-       ESTATE_PROP          IEXPRP         OFF         [  0]    ***   
+       ABCDTYPE             IABCDT         STANDARD    [  0]    ***
+       ANHARMONIC           IANHAR         OFF         [  0]    ***
+       ANH_ALGORIT          IANALG         STANDARD    [  0]    ***
+       ANH_DERIVAT          IANDER         SECOND      [  1]    ***
+       ANH_MODE             ANHMOD         VIBRATION   [  0]    ***
+       ANH_STEPSIZ          ICUBST             50000          x 10-6
+       ANH_SYMMETR          IANHSM         ABELIAN     [  0]    ***
+       AO_LADDERS           IAOLAD         SINGLEPASS  [  1]    ***
+       AV_SCF               IAVSCF         OFF         [  0]    ***
+       BASIS                IBASIS         AUG-PVQZ    [ 35]    ***
+       BOTHVECTORS          BOTHVC         OFF         [  0]    ***
+       BOX_POTENT           IPIAB          OFF         [  0]    ***
+       BREIT                IBREIT         OFF         [  0]    ***
+       BRUCK_CONV           IBRTOL          10D-  4             ***
+       BRUECKNER            IBRKNR         OFF         [  0]    ***
+       BUFFERSIZE           IBUFFS              4096            ***
+       CACHE_RECS           ICHREC             10               ***
+       CALCLEVEL            ICLLVL         SCF         [  0]    ***
+       CCORBOPT             ICCORB         OFF         [  0]  x 0.01
+       CC_CONV              ICCCNV          10D-  7             ***
+       CC_EXPORDER          ICCEOR              0               ***
+       CC_EXTRAPOL          ICCEXT         DIIS        [  1]    ***
+       CC_GUESS             ICCGES         MP2         [  0]    ***
+       CC_MAXCYC            ICCCYC              0              cycles
+       CC_PROGRAM           ICCPRO         VCC         [  0]    ***
+       CHARGE               ICHRGE              0               ***
+       CHOLESKY             ICHOLE         OFF         [  0]    ***
+       CIS_CONV             ICISTL              5               ***
+       COMM_SIZE            IPSIZE            ***               ***
+       CONSTANT             ICONST         OLD         [  1]    ***
+       CONTINUUM            ICONTU         NONE        [  0]    ***
+       CONTRACTION          ICNTYP         GENERAL     [  1]    ***
+       COORDINATES          ICOORD         INTERNAL    [  0]    ***
+       CPHF_CONVER          ICPHFT          10D- 16             ***
+       CPHF_MAXCYC          ICPHFC             64              cycles
+       CUBIC                ICUBIC         OFF         [  0]    ***
+       CURVILINEAR          ICURVY         OFF         [  0]    ***
+       DBOC                 IDBOC          OFF         [  0]    ***
+       DCT                  IDCT           OFF         [  0]    ***
+       DERIV_LEV            IDRLVL         ZERO        [  0]    ***
+       DEVMEM_SIZE          IDVMEM          50000000           MByte
+       DIAG_MRCC            IEOMST          10D-  0             ***
+       DIFF_TYPE            IDIFTY         RELAXED     [  0]    ***
+       DIRECT               IDIRCT         OFF         [  0]    ***
+       DROPMO               IDRPMO      NONE
+       ECP                  IECP           OFF         [  0]    ***
+       EIGENVECTOR          IVEC                1               ***
+       EL_ANHARM            IELANH         OFF         [  0]    ***
+       EOMFOLLOW            IEOMSR         ENERGY      [  0]    ***
+       EOMIP                IEOMIP         OFF         [  0]    ***
+       EOMLEVEL             HBARFM         SAME        [  0]    ***
+       EOM_MRCC             IMRCCE         NEW         [  1]    ***
+       EOM_NONIT            EOMNON         OFF         [  0]    ***
+       EOM_NSING            IEOMSI          10D-  0             ***
+       EOM_NSTATES          IMRCCD         DAVIDSON    [  0]    ***
+       EOM_NTRIP            IEOMTR          10D-  0             ***
+       EOM_ORDER            IEXORD         ENERGY      [  0]    ***
+       EOM_PROPSTA          IEOMST              0               ***
+       ESTATE_CONV          IEXTOL          10D-  5             ***
+       ESTATE_DIAG          IEXDIG         ITERATIVE   [  0]    ***
+       ESTATE_LOCK          IESLOC         ON          [  1]    ***
+       ESTATE_MAXC          IEXMXC             40               ***
+       ESTATE_PROP          IEXPRP         OFF         [  0]    ***
        EVAL_HESS            IRECAL              0            # of cyc.
-       EXCITATION           IEXCIT              0               ***   
-       EXCITE               IEXCIT         NONE        [  0]    ***   
-       EXTERN_POT           IEXPOT         OFF         [  0]    ***   
-       FCGRADNEW            IFCGNW         OFF         [  0]    ***   
-       FC_FIELD             IFINFC              0             x 10-6  
-       FD_CALTYPE           IFDCAL         GRADONLY    [  0]    ***   
-       FD_PROJECT           IFDPRJ         OFF         [  1]    ***   
+       EXCITATION           IEXCIT              0               ***
+       EXCITE               IEXCIT         NONE        [  0]    ***
+       EXTERN_POT           IEXPOT         OFF         [  0]    ***
+       FCGRADNEW            IFCGNW         OFF         [  0]    ***
+       FC_FIELD             IFINFC              0             x 10-6
+       FD_CALTYPE           IFDCAL         GRADONLY    [  0]    ***
+       FD_PROJECT           IFDPRJ         OFF         [  1]    ***
        FD_STEPSIZE          IDISFD              0            10-4 bohr
-       FD_USEGROUP          IFDGRP         FULL        [  0]    ***   
-       FILE_RECSIZ          IFLREC              4096           words  
-       FINITE_PERT          IFIPER              0             x 10-6  
-       FIXGEOM              IFIXGM         OFF         [  0]    ***   
-       FOCK                 IFOCK          AO          [  1]    ***   
-       FREQ_ALGORI          IVIALG         STANDARD    [  0]    ***   
-       FROZEN_CORE          IFROCO         OFF         [  0]    ***   
-       GAMMA_ABCD           IGABCD         STORE       [  0]    ***   
-       GAMMA_ABCI           IGABCI         STORE       [  0]    ***   
-       GENBAS_1             IGNBS1              0               ***   
-       GENBAS_2             IGNBS2              0               ***   
-       GENBAS_3             IGNBS3              0               ***   
-       GENBAS_4             IGNBS4              0               ***   
-       GEO_CONV             ICONTL              5              H/bohr 
-       GEO_MAXCYC           IOPTCY             50               ***   
+       FD_USEGROUP          IFDGRP         FULL        [  0]    ***
+       FILE_RECSIZ          IFLREC              4096           words
+       FINITE_PERT          IFIPER              0             x 10-6
+       FIXGEOM              IFIXGM         OFF         [  0]    ***
+       FOCK                 IFOCK          AO          [  1]    ***
+       FREQ_ALGORI          IVIALG         STANDARD    [  0]    ***
+       FROZEN_CORE          IFROCO         OFF         [  0]    ***
+       GAMMA_ABCD           IGABCD         STORE       [  0]    ***
+       GAMMA_ABCI           IGABCI         STORE       [  0]    ***
+       GENBAS_1             IGNBS1              0               ***
+       GENBAS_2             IGNBS2              0               ***
+       GENBAS_3             IGNBS3              0               ***
+       GENBAS_4             IGNBS4              0               ***
+       GEO_CONV             ICONTL              5              H/bohr
+       GEO_MAXCYC           IOPTCY             50               ***
        GEO_MAXSTEP          IMXSTP            300            millibohr
-       GEO_METHOD           INR            SINGLE_POINT[  5]    ***   
-       GIAO                 IGIAO          OFF         [  1]    ***   
-       GIMIC                IGIMIC         OFF         [  0]    ***   
-       GRID                 IGRID          OFF         [  0]    ***   
-       GRID_ALGO            IGALGO         SERIAL      [  0]    ***   
-       GUESS                IGUESS         MOREAD      [  0]    ***   
-       HBAR                 IHBAR          OFF         [  0]    ***   
-       HESS_TYPE            IHESTP         SCF         [  0]    ***   
-       HF2_FILE             IHF2Fl         USE         [  1]    ***   
-       HFSTABILITY          ISTABL         OFF         [  0]    ***   
-       INCORE               INCORE         OFF         [  0]    ***   
-       INPUT_MRCC           IMRCC          ON          [  1]    ***   
-       INTEGRALS            INTTYP         VMOL        [  1]    ***   
-       JODA_PRINT           IJPRNT              0               ***   
-       KEYWORD_OUT          IDMPKW         NO          [  0]    ***   
-       LINDEP_TOL           ILINDP              8               ***   
-       LINEQ_CONV           IZTACN          10D-  7           cycles  
-       LINEQ_EXPOR          ILMAXD              5               ***   
-       LINEQ_MAXCY          ILMAXC            100               ***   
-       LINEQ_TYPE           ILTYPE         DIIS        [  1]    ***   
-       LOCK_ORBOCC          ILOCOC         OFF         [  0]    ***   
-       MEMORY_SIZE          IMEMSZ         100000000           words  
-       MEM_UNIT             IMEMU          INTEGERWORDS[  0]    ***   
-       MRCC                 IMRCCC         OFF         [  0]    ***   
-       MULTIPLICTY          IMULTP              1               ***   
-       NACOUPLING           IVCOUP         OFF         [  0]    ***   
-       NEGEVAL              IDIE           ABORT       [  0]    ***   
-       NEWNORM              INEWNO         OFF         [  0]    ***   
-       NON-HF               INONHF         OFF         [  0]    ***   
-       NTOP_TAMP            ITOPT2             15               ***   
-       NUC_MODEL            INUCMO         POINT       [  0]    ***   
-       OCCUPATION           IOCCU   ESTIMATED BY SCF 
-       OPEN-SHELL           IOPEN          SPIN-ORBITAL[  0]    ***   
-       OPTVIB               IOPTVB         OFF         [  0]    ***   
-       ORBITALS             IORBTP         STANDARD    [  0]    ***   
-       PARALLEL             IPARAL         ON          [  1]    ***   
-       PARA_INT             IPINTS         ON          [  1]    ***   
-       PARA_PRINT           IPPRIN              0               ***   
-       PERT_ORB             IPTORB         STANDARD    [  0]    ***   
-       POINTS               IGRDFD              0               ***   
-       PRINT                IPRNT               1               ***   
-       PROPS                IPROPS         OFF         [  0]    ***   
-       PROP_INTEGR          IINTYP         INTERNAL    [  0]    ***   
-       PSI                  IPSI           OFF         [  0]    ***   
-       QC_ALG               IQCALG         FLM         [  0]    ***   
-       QC_LINALG            IQCLIN         TRIDIAG     [  2]    ***   
-       QC_MAXCYC            IQCMAX          10D-100           cycles  
-       QC_MAXSCFCY          IQCMSC          10D- 15           cycles  
-       QC_RTRUST            IQCRTR          10D-  0           x 10-3  
-       QC_SKIPSCF           IQCSKI         OFF         [  0]    ***   
-       QC_START             IQCSTA          10D-  1             ***   
-       QRHFGUESS            IQGUES         OFF         [  0]    ***   
-       QUARTIC              IQUART         OFF         [  0]    ***   
-       RAMAN_INT            IRAMIN         OFF         [  0]    ***   
-       RAMAN_ORB            IRAMRE         UNRELAXED   [  0]    ***   
-       RDO                  IRDOFM         OFF         [  0]    ***   
-       REDUCE_REPR          REDREP         Ir          [  0]    ***   
-       REFERENCE            IREFNC         RHF         [  0]    ***   
-       RELATIVIST           IRELAT         OFF         [  0]    ***   
-       RELAX_DENS           IRDENS         OFF         [  0]    ***   
-       RESET_FLAGS          IRESET         OFF         [  0]    ***   
-       RESTART_CC           ICCRES         OFF         [  0]    ***   
-       ROT_EVEC             ROTVEC              0               ***   
-       SAVE_INTS            ISVINT         OFF         [  0]    ***   
-       SCALE_ON             ISTCRT              0               ***   
-       SCF_CONV             ISCFCV          10D- 12             ***   
-       SCF_DAMPING          IDAMP               0             x 10-3  
-       SCF_EXPORDE          IRPPOR              6               ***   
-       SCF_EXPSTAR          IRPPLS              8               ***   
-       SCF_EXTRAPO          IRPP           ON          [  1]    ***   
-       SCF_MAXCYC           ISCFCY            150              cycles 
-       SCF_NOSTOP           ISCFST         OFF         [  0]    ***   
-       SCF_PRINT            ISCFPR              0               ***   
-       SCF_PROG             ISCFPR         SCF         [  0]    ***   
-       SD_FIELD             IFINSD              0             x 10-6  
-       SOPERT               IPERSO         OFF         [  0]    ***   
-       SPHERICAL            IDFGHI         ON          [  1]    ***   
-       SPINORBIT            ISOCAL         OFF         [  0]    ***   
-       SPINROTATIO          ISRCON         OFF         [  0]    ***   
-       SPIN_FLIP            ISPFLP         OFF         [  0]    ***   
-       SPIN_ORBIT           ISPORB         OFF         [  0]    ***   
-       SPIN_SCAL            ISCSMP         OFF         [  0]    ***   
-       STEEPSCALE           ISTPSC              1000          x 10-3  
-       SUBGROUP             ISUBGP         DEFAULT     [  0]    ***   
-       SUBGRPAXIS           ISBXYZ         X           [  0]    ***   
-       SYMMETRY             ISYM           ON          [  0]    ***   
-       SYM_CHECK            ISYMCK         OVERRIDE    [  1]    ***   
-       T3_EXTRAPOL          IT3EXT         OFF         [  0]    ***   
-       T4_EXTRAPOL          IT4EXP         OFF         [  0]    ***   
-       TAMP_SUM             IEVERY              0               ***   
-       TESTSUITE            ITESTS         OFF         [  0]    ***   
-       THERMOCH             ITHERM         OFF         [  0]    ***   
-       TOL_CHOLESK          ITOLCH          10D-  4             ***   
-       TRANGRAD             IRESRM         OFF         [  0]    ***   
-       TRANS_INV            ITRAIN         USE         [  0]    ***   
-       TREAT_PERT           ITREAT         SIMULTANEOUS[  0]    ***   
-       TRIP_ALGORI          ITRALG         NORMAL      [  0]    ***   
-       UIJ_THRESHO          IUIJTH              1               ***   
-       UNITS                IUNITS         ANGSTROM    [  0]    ***   
-       UNOS                 IUNOS          OFF         [  0]    ***   
-       UPDATE_HESS          IHUPDT         ON          [  1]    ***   
-       VIBPHASE             ISETPH         STANDARD    [  0]    ***   
-       VIBRATION            IVIB           NO          [  0]    ***   
-       VIB_ALGORIT          IGEALG         STANDARD    [  0]    ***   
-       VNATORB              IVNORB         OFF         [  0]    ***   
-       VTRAN                IVTRAN         FULL/PARTIAL[  0]    ***   
-       XFIELD               IXEFLD              0             x 10-6  
-       XFORM_TOL            IXFTOL          10D- 11             ***   
-       YFIELD               IYEFLD              0             x 10-6  
-       ZFIELD               IZEFLD              0             x 10-6  
-       ZSCALE_EXP           IZEXPS         OFF         [  0]    ***   
+       GEO_METHOD           INR            SINGLE_POINT[  5]    ***
+       GIAO                 IGIAO          OFF         [  1]    ***
+       GIMIC                IGIMIC         OFF         [  0]    ***
+       GRID                 IGRID          OFF         [  0]    ***
+       GRID_ALGO            IGALGO         SERIAL      [  0]    ***
+       GUESS                IGUESS         MOREAD      [  0]    ***
+       HBAR                 IHBAR          OFF         [  0]    ***
+       HESS_TYPE            IHESTP         SCF         [  0]    ***
+       HF2_FILE             IHF2Fl         USE         [  1]    ***
+       HFSTABILITY          ISTABL         OFF         [  0]    ***
+       INCORE               INCORE         OFF         [  0]    ***
+       INPUT_MRCC           IMRCC          ON          [  1]    ***
+       INTEGRALS            INTTYP         VMOL        [  1]    ***
+       JODA_PRINT           IJPRNT              0               ***
+       KEYWORD_OUT          IDMPKW         NO          [  0]    ***
+       LINDEP_TOL           ILINDP              8               ***
+       LINEQ_CONV           IZTACN          10D-  7           cycles
+       LINEQ_EXPOR          ILMAXD              5               ***
+       LINEQ_MAXCY          ILMAXC            100               ***
+       LINEQ_TYPE           ILTYPE         DIIS        [  1]    ***
+       LOCK_ORBOCC          ILOCOC         OFF         [  0]    ***
+       MEMORY_SIZE          IMEMSZ         100000000           words
+       MEM_UNIT             IMEMU          INTEGERWORDS[  0]    ***
+       MRCC                 IMRCCC         OFF         [  0]    ***
+       MULTIPLICTY          IMULTP              1               ***
+       NACOUPLING           IVCOUP         OFF         [  0]    ***
+       NEGEVAL              IDIE           ABORT       [  0]    ***
+       NEWNORM              INEWNO         OFF         [  0]    ***
+       NON-HF               INONHF         OFF         [  0]    ***
+       NTOP_TAMP            ITOPT2             15               ***
+       NUC_MODEL            INUCMO         POINT       [  0]    ***
+       OCCUPATION           IOCCU   ESTIMATED BY SCF
+       OPEN-SHELL           IOPEN          SPIN-ORBITAL[  0]    ***
+       OPTVIB               IOPTVB         OFF         [  0]    ***
+       ORBITALS             IORBTP         STANDARD    [  0]    ***
+       PARALLEL             IPARAL         ON          [  1]    ***
+       PARA_INT             IPINTS         ON          [  1]    ***
+       PARA_PRINT           IPPRIN              0               ***
+       PERT_ORB             IPTORB         STANDARD    [  0]    ***
+       POINTS               IGRDFD              0               ***
+       PRINT                IPRNT               1               ***
+       PROPS                IPROPS         OFF         [  0]    ***
+       PROP_INTEGR          IINTYP         INTERNAL    [  0]    ***
+       PSI                  IPSI           OFF         [  0]    ***
+       QC_ALG               IQCALG         FLM         [  0]    ***
+       QC_LINALG            IQCLIN         TRIDIAG     [  2]    ***
+       QC_MAXCYC            IQCMAX          10D-100           cycles
+       QC_MAXSCFCY          IQCMSC          10D- 15           cycles
+       QC_RTRUST            IQCRTR          10D-  0           x 10-3
+       QC_SKIPSCF           IQCSKI         OFF         [  0]    ***
+       QC_START             IQCSTA          10D-  1             ***
+       QRHFGUESS            IQGUES         OFF         [  0]    ***
+       QUARTIC              IQUART         OFF         [  0]    ***
+       RAMAN_INT            IRAMIN         OFF         [  0]    ***
+       RAMAN_ORB            IRAMRE         UNRELAXED   [  0]    ***
+       RDO                  IRDOFM         OFF         [  0]    ***
+       REDUCE_REPR          REDREP         Ir          [  0]    ***
+       REFERENCE            IREFNC         RHF         [  0]    ***
+       RELATIVIST           IRELAT         OFF         [  0]    ***
+       RELAX_DENS           IRDENS         OFF         [  0]    ***
+       RESET_FLAGS          IRESET         OFF         [  0]    ***
+       RESTART_CC           ICCRES         OFF         [  0]    ***
+       ROT_EVEC             ROTVEC              0               ***
+       SAVE_INTS            ISVINT         OFF         [  0]    ***
+       SCALE_ON             ISTCRT              0               ***
+       SCF_CONV             ISCFCV          10D- 12             ***
+       SCF_DAMPING          IDAMP               0             x 10-3
+       SCF_EXPORDE          IRPPOR              6               ***
+       SCF_EXPSTAR          IRPPLS              8               ***
+       SCF_EXTRAPO          IRPP           ON          [  1]    ***
+       SCF_MAXCYC           ISCFCY            150              cycles
+       SCF_NOSTOP           ISCFST         OFF         [  0]    ***
+       SCF_PRINT            ISCFPR              0               ***
+       SCF_PROG             ISCFPR         SCF         [  0]    ***
+       SD_FIELD             IFINSD              0             x 10-6
+       SOPERT               IPERSO         OFF         [  0]    ***
+       SPHERICAL            IDFGHI         ON          [  1]    ***
+       SPINORBIT            ISOCAL         OFF         [  0]    ***
+       SPINROTATIO          ISRCON         OFF         [  0]    ***
+       SPIN_FLIP            ISPFLP         OFF         [  0]    ***
+       SPIN_ORBIT           ISPORB         OFF         [  0]    ***
+       SPIN_SCAL            ISCSMP         OFF         [  0]    ***
+       STEEPSCALE           ISTPSC              1000          x 10-3
+       SUBGROUP             ISUBGP         DEFAULT     [  0]    ***
+       SUBGRPAXIS           ISBXYZ         X           [  0]    ***
+       SYMMETRY             ISYM           ON          [  0]    ***
+       SYM_CHECK            ISYMCK         OVERRIDE    [  1]    ***
+       T3_EXTRAPOL          IT3EXT         OFF         [  0]    ***
+       T4_EXTRAPOL          IT4EXP         OFF         [  0]    ***
+       TAMP_SUM             IEVERY              0               ***
+       TESTSUITE            ITESTS         OFF         [  0]    ***
+       THERMOCH             ITHERM         OFF         [  0]    ***
+       TOL_CHOLESK          ITOLCH          10D-  4             ***
+       TRANGRAD             IRESRM         OFF         [  0]    ***
+       TRANS_INV            ITRAIN         USE         [  0]    ***
+       TREAT_PERT           ITREAT         SIMULTANEOUS[  0]    ***
+       TRIP_ALGORI          ITRALG         NORMAL      [  0]    ***
+       UIJ_THRESHO          IUIJTH              1               ***
+       UNITS                IUNITS         ANGSTROM    [  0]    ***
+       UNOS                 IUNOS          OFF         [  0]    ***
+       UPDATE_HESS          IHUPDT         ON          [  1]    ***
+       VIBPHASE             ISETPH         STANDARD    [  0]    ***
+       VIBRATION            IVIB           NO          [  0]    ***
+       VIB_ALGORIT          IGEALG         STANDARD    [  0]    ***
+       VNATORB              IVNORB         OFF         [  0]    ***
+       VTRAN                IVTRAN         FULL/PARTIAL[  0]    ***
+       XFIELD               IXEFLD              0             x 10-6
+       XFORM_TOL            IXFTOL          10D- 11             ***
+       YFIELD               IYEFLD              0             x 10-6
+       ZFIELD               IZEFLD              0             x 10-6
+       ZSCALE_EXP           IZEXPS         OFF         [  0]    ***
     -------------------------------------------------------------------
-   1 entries found in Z-matrix 
-   Job Title : RHF/aug-cc-pVQZ on C                                                            
-   Rotational constants (in cm-1): 
+   1 entries found in Z-matrix
+   Job Title : RHF/aug-cc-pVQZ on C
+   Rotational constants (in cm-1):
 
-   Rotational constants (in MHz): 
+   Rotational constants (in MHz):
 
 ********************************************************************************
    The full molecular point group is I h .
    The largest Abelian subgroup of the full molecular point group is D2h .
    The computational point group is D2h .
 ********************************************************************************
-  GENBAS file not present.   Using default GENBAS. 
+  GENBAS file not present.   Using default GENBAS.
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/set_genbas
 --executable set_genbas finished with status     0 in        0.12 seconds (walltime).
-  ECPDATA file not present.   Using default ECPDATA. 
+  ECPDATA file not present.   Using default ECPDATA.
   There are   80 basis functions.
  @GEOPT-W, Archive file not created for single-point calculation.
  @CHECKOUT-I, Total execution time (CPU/WALL):        0.07/       0.20 seconds.
@@ -285,101 +285,101 @@ MULTIPLICITY=1)
 ********************************************************************************
                     INPUT FROM MOL FILE
 ********************************************************************************
-INTGRL        1    0    1    0    0    0    0    0    0                         
-         *** CFOUR Program System (Release V0.1) ***                            
-RHF/aug-cc-pVQZ on C                                                            
-    1    3 X  Y   Z   0.10E-08              0    0                              
-   9999.00      3.00                                                            
-          6.00000000    1    5    1    1    1    1    1                         
-C #1   0.000000000000000   0.000000000000000   0.000000000000000                
-   13    6                                                                      
-   33980.0000000000       9.100000000000000E-005 -1.900000000000000E-005        
-  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000        
-  0.000000000000000E+000                                                        
-   5089.00000000000       7.040000000000000E-004 -1.510000000000000E-004        
-  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000        
-  0.000000000000000E+000                                                        
-   1157.00000000000       3.693000000000000E-003 -7.850000000000000E-004        
-  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000        
-  0.000000000000000E+000                                                        
-   326.600000000000       1.536000000000000E-002 -3.324000000000000E-003        
-  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000        
-  0.000000000000000E+000                                                        
-   106.100000000000       5.292900000000000E-002 -1.151200000000000E-002        
-  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000        
-  0.000000000000000E+000                                                        
-   38.1100000000000       0.147043000000000      -3.416000000000000E-002        
-  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000        
-  0.000000000000000E+000                                                        
-   14.7500000000000       0.305631000000000      -7.717300000000001E-002        
-  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000        
-  0.000000000000000E+000                                                        
-   6.03500000000000       0.399345000000000      -0.141493000000000             
-  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000        
-  0.000000000000000E+000                                                        
-   2.53000000000000       0.217051000000000      -0.118019000000000             
-  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000        
-  0.000000000000000E+000                                                        
-  0.735500000000000       1.589400000000000E-002  0.273806000000000             
-   1.00000000000000       0.000000000000000E+000  0.000000000000000E+000        
-  0.000000000000000E+000                                                        
-  0.290500000000000      -3.084000000000000E-003  0.586510000000000             
-  0.000000000000000E+000   1.00000000000000       0.000000000000000E+000        
-  0.000000000000000E+000                                                        
-  0.111100000000000       9.779999999999999E-004  0.285430000000000             
-  0.000000000000000E+000  0.000000000000000E+000   1.00000000000000             
-  0.000000000000000E+000                                                        
-  4.145000000000000E-002  0.000000000000000E+000  0.000000000000000E+000        
-  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000        
-   1.00000000000000                                                             
-    7    5                                                                      
-   34.5100000000000       5.378000000000000E-003  0.000000000000000E+000        
-  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000        
-   7.91500000000000       3.613200000000000E-002  0.000000000000000E+000        
-  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000        
-   2.36800000000000       0.142493000000000       0.000000000000000E+000        
-  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000        
-  0.813200000000000       0.342150000000000        1.00000000000000             
-  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000        
-  0.289000000000000       0.463864000000000       0.000000000000000E+000        
-   1.00000000000000       0.000000000000000E+000  0.000000000000000E+000        
-  0.100700000000000       0.250028000000000       0.000000000000000E+000        
-  0.000000000000000E+000   1.00000000000000       0.000000000000000E+000        
-  3.218000000000000E-002  0.000000000000000E+000  0.000000000000000E+000        
-  0.000000000000000E+000  0.000000000000000E+000   1.00000000000000             
-    4    4                                                                      
-   1.84800000000000        1.00000000000000       0.000000000000000E+000        
-  0.000000000000000E+000  0.000000000000000E+000                                
-  0.649000000000000       0.000000000000000E+000   1.00000000000000             
-  0.000000000000000E+000  0.000000000000000E+000                                
-  0.228000000000000       0.000000000000000E+000  0.000000000000000E+000        
-   1.00000000000000       0.000000000000000E+000                                
-  7.660000000000000E-002  0.000000000000000E+000  0.000000000000000E+000        
-  0.000000000000000E+000   1.00000000000000                                     
-    3    3                                                                      
-   1.41900000000000        1.00000000000000       0.000000000000000E+000        
-  0.000000000000000E+000                                                        
-  0.485000000000000       0.000000000000000E+000   1.00000000000000             
-  0.000000000000000E+000                                                        
-  0.187000000000000       0.000000000000000E+000  0.000000000000000E+000        
-   1.00000000000000                                                             
-    2    2                                                                      
-   1.01100000000000        1.00000000000000       0.000000000000000E+000        
-  0.424000000000000       0.000000000000000E+000   1.00000000000000             
-FINISH                                                                          
- 
+INTGRL        1    0    1    0    0    0    0    0    0
+         *** CFOUR Program System (Release V0.1) ***
+RHF/aug-cc-pVQZ on C
+    1    3 X  Y   Z   0.10E-08              0    0
+   9999.00      3.00
+          6.00000000    1    5    1    1    1    1    1
+C #1   0.000000000000000   0.000000000000000   0.000000000000000
+   13    6
+   33980.0000000000       9.100000000000000E-005 -1.900000000000000E-005
+  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000
+  0.000000000000000E+000
+   5089.00000000000       7.040000000000000E-004 -1.510000000000000E-004
+  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000
+  0.000000000000000E+000
+   1157.00000000000       3.693000000000000E-003 -7.850000000000000E-004
+  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000
+  0.000000000000000E+000
+   326.600000000000       1.536000000000000E-002 -3.324000000000000E-003
+  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000
+  0.000000000000000E+000
+   106.100000000000       5.292900000000000E-002 -1.151200000000000E-002
+  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000
+  0.000000000000000E+000
+   38.1100000000000       0.147043000000000      -3.416000000000000E-002
+  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000
+  0.000000000000000E+000
+   14.7500000000000       0.305631000000000      -7.717300000000001E-002
+  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000
+  0.000000000000000E+000
+   6.03500000000000       0.399345000000000      -0.141493000000000
+  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000
+  0.000000000000000E+000
+   2.53000000000000       0.217051000000000      -0.118019000000000
+  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000
+  0.000000000000000E+000
+  0.735500000000000       1.589400000000000E-002  0.273806000000000
+   1.00000000000000       0.000000000000000E+000  0.000000000000000E+000
+  0.000000000000000E+000
+  0.290500000000000      -3.084000000000000E-003  0.586510000000000
+  0.000000000000000E+000   1.00000000000000       0.000000000000000E+000
+  0.000000000000000E+000
+  0.111100000000000       9.779999999999999E-004  0.285430000000000
+  0.000000000000000E+000  0.000000000000000E+000   1.00000000000000
+  0.000000000000000E+000
+  4.145000000000000E-002  0.000000000000000E+000  0.000000000000000E+000
+  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000
+   1.00000000000000
+    7    5
+   34.5100000000000       5.378000000000000E-003  0.000000000000000E+000
+  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000
+   7.91500000000000       3.613200000000000E-002  0.000000000000000E+000
+  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000
+   2.36800000000000       0.142493000000000       0.000000000000000E+000
+  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000
+  0.813200000000000       0.342150000000000        1.00000000000000
+  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000
+  0.289000000000000       0.463864000000000       0.000000000000000E+000
+   1.00000000000000       0.000000000000000E+000  0.000000000000000E+000
+  0.100700000000000       0.250028000000000       0.000000000000000E+000
+  0.000000000000000E+000   1.00000000000000       0.000000000000000E+000
+  3.218000000000000E-002  0.000000000000000E+000  0.000000000000000E+000
+  0.000000000000000E+000  0.000000000000000E+000   1.00000000000000
+    4    4
+   1.84800000000000        1.00000000000000       0.000000000000000E+000
+  0.000000000000000E+000  0.000000000000000E+000
+  0.649000000000000       0.000000000000000E+000   1.00000000000000
+  0.000000000000000E+000  0.000000000000000E+000
+  0.228000000000000       0.000000000000000E+000  0.000000000000000E+000
+   1.00000000000000       0.000000000000000E+000
+  7.660000000000000E-002  0.000000000000000E+000  0.000000000000000E+000
+  0.000000000000000E+000   1.00000000000000
+    3    3
+   1.41900000000000        1.00000000000000       0.000000000000000E+000
+  0.000000000000000E+000
+  0.485000000000000       0.000000000000000E+000   1.00000000000000
+  0.000000000000000E+000
+  0.187000000000000       0.000000000000000E+000  0.000000000000000E+000
+   1.00000000000000
+    2    2
+   1.01100000000000        1.00000000000000       0.000000000000000E+000
+  0.424000000000000       0.000000000000000E+000   1.00000000000000
+FINISH
+
 ********************************************************************************
  ONE- AND TWO-ELECTRON INTEGRALS OVER SYMMETRY-ADAPTED AOS ARE CALCULATED.
 
   SPHERICAL HARMONICS ARE USED.
-  
+
    1 TYPES OF ATOMS
    3 SYMMETRY OPERATIONS
 
    REFLECTION IN THE YZ-PLANE
    REFLECTION IN THE XZ-PLANE
    REFLECTION IN THE XY-PLANE
-  
+
   INTEGRALS LESS THAN  0.10E-13 ARE NEGLECTED.
 
   ATOMIC TYPE NUMBER  1 :
@@ -398,7 +398,7 @@ FINISH
     NUCLEAR COORDINATES (IN A.U.) ARE :
 
     C #1        0.000000000000000        0.000000000000000        0.000000000000000
-  
+
    INTERNUCLEAR DISTANCES (A) :
 
      FOR ATOM C #1 (COORDINATES :   0.00000   0.00000   0.00000)
@@ -419,7 +419,7 @@ FINISH
 
    ATOM                 EXPONENT      COEFFICIENTS
 
- C #1  1    S   
+ C #1  1    S
 +                 1   33980.000000   0.0000910  -0.0000190   0.0000000   0.0000000   0.0000000   0.0000000
                   2    5089.000000   0.0007040  -0.0001510   0.0000000   0.0000000   0.0000000   0.0000000
                   3    1157.000000   0.0036930  -0.0007850   0.0000000   0.0000000   0.0000000   0.0000000
@@ -434,7 +434,7 @@ FINISH
                  12       0.111100   0.0009780   0.2854300   0.0000000   0.0000000   1.0000000   0.0000000
                  13       0.041450   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   1.0000000
 
- C #1  1    X   
+ C #1  1    X
 +                14      34.510000   0.0053780   0.0000000   0.0000000   0.0000000   0.0000000
                  15       7.915000   0.0361320   0.0000000   0.0000000   0.0000000   0.0000000
                  16       2.368000   0.1424930   0.0000000   0.0000000   0.0000000   0.0000000
@@ -443,7 +443,7 @@ FINISH
                  19       0.100700   0.2500280   0.0000000   0.0000000   1.0000000   0.0000000
                  20       0.032180   0.0000000   0.0000000   0.0000000   0.0000000   1.0000000
 
- C #1  1    Y   
+ C #1  1    Y
 +                21      34.510000   0.0053780   0.0000000   0.0000000   0.0000000   0.0000000
                  22       7.915000   0.0361320   0.0000000   0.0000000   0.0000000   0.0000000
                  23       2.368000   0.1424930   0.0000000   0.0000000   0.0000000   0.0000000
@@ -452,7 +452,7 @@ FINISH
                  26       0.100700   0.2500280   0.0000000   0.0000000   1.0000000   0.0000000
                  27       0.032180   0.0000000   0.0000000   0.0000000   0.0000000   1.0000000
 
- C #1  1    Z   
+ C #1  1    Z
 +                28      34.510000   0.0053780   0.0000000   0.0000000   0.0000000   0.0000000
                  29       7.915000   0.0361320   0.0000000   0.0000000   0.0000000   0.0000000
                  30       2.368000   0.1424930   0.0000000   0.0000000   0.0000000   0.0000000
@@ -461,37 +461,37 @@ FINISH
                  33       0.100700   0.2500280   0.0000000   0.0000000   1.0000000   0.0000000
                  34       0.032180   0.0000000   0.0000000   0.0000000   0.0000000   1.0000000
 
- C #1  1    XX  
+ C #1  1    XX
 +                35       1.848000   1.0000000   0.0000000   0.0000000   0.0000000
                  36       0.649000   0.0000000   1.0000000   0.0000000   0.0000000
                  37       0.228000   0.0000000   0.0000000   1.0000000   0.0000000
                  38       0.076600   0.0000000   0.0000000   0.0000000   1.0000000
 
- C #1  1    XY  
+ C #1  1    XY
 +                39       1.848000   1.0000000   0.0000000   0.0000000   0.0000000
                  40       0.649000   0.0000000   1.0000000   0.0000000   0.0000000
                  41       0.228000   0.0000000   0.0000000   1.0000000   0.0000000
                  42       0.076600   0.0000000   0.0000000   0.0000000   1.0000000
 
- C #1  1    XZ  
+ C #1  1    XZ
 +                43       1.848000   1.0000000   0.0000000   0.0000000   0.0000000
                  44       0.649000   0.0000000   1.0000000   0.0000000   0.0000000
                  45       0.228000   0.0000000   0.0000000   1.0000000   0.0000000
                  46       0.076600   0.0000000   0.0000000   0.0000000   1.0000000
 
- C #1  1    YY  
+ C #1  1    YY
 +                47       1.848000   1.0000000   0.0000000   0.0000000   0.0000000
                  48       0.649000   0.0000000   1.0000000   0.0000000   0.0000000
                  49       0.228000   0.0000000   0.0000000   1.0000000   0.0000000
                  50       0.076600   0.0000000   0.0000000   0.0000000   1.0000000
 
- C #1  1    YZ  
+ C #1  1    YZ
 +                51       1.848000   1.0000000   0.0000000   0.0000000   0.0000000
                  52       0.649000   0.0000000   1.0000000   0.0000000   0.0000000
                  53       0.228000   0.0000000   0.0000000   1.0000000   0.0000000
                  54       0.076600   0.0000000   0.0000000   0.0000000   1.0000000
 
- C #1  1    ZZ  
+ C #1  1    ZZ
 +                55       1.848000   1.0000000   0.0000000   0.0000000   0.0000000
                  56       0.649000   0.0000000   1.0000000   0.0000000   0.0000000
                  57       0.228000   0.0000000   0.0000000   1.0000000   0.0000000
@@ -615,7 +615,7 @@ FINISH
 1
 
              SYMMETRY TRANSFORMATION INFO
-             80 SYMMETRY ADAPTED BASIS FUNCTIONS 
+             80 SYMMETRY ADAPTED BASIS FUNCTIONS
 
 
           IRREDUCIBLE REPRESENTATION NUMBER 1
@@ -745,7 +745,7 @@ Running with 1 threads/proc
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvmol2ja
  @GETMEM-I,  Allocated     762 MB of main memory.
- ZMAT order <=> comp order: mapping vector 
+ ZMAT order <=> comp order: mapping vector
            1    1
  @CHECKOUT-I, Total execution time (CPU/WALL):        0.01/       0.01 seconds.
 --executable xvmol2ja finished with status     0 in        0.05 seconds (walltime).
@@ -766,12 +766,12 @@ Running with 1 threads/proc
          8                  3
 
 
-  Parameters for SCF calculation: 
-        SCF reference function:  RHF  
+  Parameters for SCF calculation:
+        SCF reference function:  RHF
   Maximum number of iterations:  150
-     Full symmetry point group: I h 
-     Computational point group: D2h 
-        Initial density matrix: MOREAD                 
+     Full symmetry point group: I h
+     Computational point group: D2h
+        Initial density matrix: MOREAD
      SCF convergence tolerance: 10**(-12)
   DIIS convergence acceleration:  ON
           Latest start for DIIS:   8
@@ -782,7 +782,7 @@ Running with 1 threads/proc
  @GETMEM-I,  Allocated       2 MB of main memory.
   Initialization and symmetry analysis required      0.001 seconds.
 
- @INITGES-I, Routine entered. 
+ @INITGES-I, Routine entered.
   @INITGES-I, Occupancies from core Hamiltonian:
 
           Alpha population by irrep:   1    1    0    0    1    0    0    0
@@ -794,50 +794,50 @@ Running with 1 threads/proc
   Iteration         Total Energy            Largest Density Difference
   --------------------------------------------------------------------
        0             0.000000000000000              0.0000000000D+00
-   current occupation vector 
+   current occupation vector
      1  1  0  0  1  0  0  0
      1  1  0  0  1  0  0  0
-  processed                  19106  ao basis integrals from 
+  processed                  19106  ao basis integrals from
                      5  buffers.
-  processed                  82182  ao basis integrals from 
+  processed                  82182  ao basis integrals from
                     21  buffers.
-  processed                 131787  ao basis integrals from 
+  processed                 131787  ao basis integrals from
                     33  buffers.
        1           -32.624975766444187              0.2585158328D+02
-   current occupation vector 
+   current occupation vector
      1  1  0  0  1  0  0  0
      1  1  0  0  1  0  0  0
-  processed                  19106  ao basis integrals from 
+  processed                  19106  ao basis integrals from
                      5  buffers.
-  processed                  82182  ao basis integrals from 
+  processed                  82182  ao basis integrals from
                     21  buffers.
-  processed                 131787  ao basis integrals from 
+  processed                 131787  ao basis integrals from
                     33  buffers.
        2           -34.660928604401079              0.2585158328D+02
-   current occupation vector 
+   current occupation vector
      2  0  1  0  0  0  0  0
      2  0  1  0  0  0  0  0
-  processed                  19106  ao basis integrals from 
+  processed                  19106  ao basis integrals from
                      5  buffers.
-  processed                  82182  ao basis integrals from 
+  processed                  82182  ao basis integrals from
                     21  buffers.
-  processed                 131787  ao basis integrals from 
+  processed                 131787  ao basis integrals from
                     33  buffers.
        3           -37.184089781974862              0.5150450443D+01
-   current occupation vector 
+   current occupation vector
      2  0  0  0  1  0  0  0
      2  0  0  0  1  0  0  0
-  processed                  19106  ao basis integrals from 
+  processed                  19106  ao basis integrals from
                      5  buffers.
-  processed                  82182  ao basis integrals from 
+  processed                  82182  ao basis integrals from
                     21  buffers.
-  processed                 131787  ao basis integrals from 
+  processed                 131787  ao basis integrals from
                     33  buffers.
        4           -37.600008350350400              0.3322038469D+01
-   current occupation vector 
+   current occupation vector
      2  0  0  0  1  0  0  0
      2  0  0  0  1  0  0  0
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      1
  -7.752687380957468E-013 -8.872425094460987E-014
@@ -845,7 +845,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      1
  -7.660538869913580E-015 -5.757053759014598E-014
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      2
  -1.676436767183986E-014 -3.995696802810885E-014
@@ -853,7 +853,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      2
   3.996802888650564E-015  2.689996392909466E-015
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      3
  -2.009503674571533E-014 -3.635561138461939E-014
@@ -861,7 +861,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      3
   1.665334536937735E-015  4.832967874485350E-015
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      4
   2.553512956637860E-015 -5.188825949234211E-015
@@ -869,7 +869,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      4
  -9.992007221626409E-016  1.128313437092086E-016
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      5
   1.021405182655144E-014  1.515588102468896E-014
@@ -877,7 +877,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      5
  -4.773959005888173E-015  1.334714577334306E-017
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      6
   2.309263891220326E-014 -1.696056730624236E-014
@@ -885,7 +885,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      6
  -3.330669073875470E-016 -1.812497357612931E-015
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      7
   8.437694987151190E-015  1.732186473333438E-014
@@ -893,7 +893,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      7
  -7.771561172376096E-016 -1.174420882542311E-015
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      8
  -2.775557561562891E-015  5.060188379424346E-015
@@ -901,57 +901,57 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      8
  -1.110223024625157E-016  1.665334536937735E-016
-  processed                  19106  ao basis integrals from 
+  processed                  19106  ao basis integrals from
                      5  buffers.
-  processed                  82182  ao basis integrals from 
+  processed                  82182  ao basis integrals from
                     21  buffers.
-  processed                 131787  ao basis integrals from 
+  processed                 131787  ao basis integrals from
                     33  buffers.
        5           -37.604350976146350              0.1570007030D+00
-   current occupation vector 
+   current occupation vector
      2  0  0  0  1  0  0  0
      2  0  0  0  1  0  0  0
-  processed                  19106  ao basis integrals from 
+  processed                  19106  ao basis integrals from
                      5  buffers.
-  processed                  82182  ao basis integrals from 
+  processed                  82182  ao basis integrals from
                     21  buffers.
-  processed                 131787  ao basis integrals from 
+  processed                 131787  ao basis integrals from
                     33  buffers.
        6           -37.604531455730047              0.5110915313D-01
-   current occupation vector 
+   current occupation vector
      2  0  0  0  1  0  0  0
      2  0  0  0  1  0  0  0
-  processed                  19106  ao basis integrals from 
+  processed                  19106  ao basis integrals from
                      5  buffers.
-  processed                  82182  ao basis integrals from 
+  processed                  82182  ao basis integrals from
                     21  buffers.
-  processed                 131787  ao basis integrals from 
+  processed                 131787  ao basis integrals from
                     33  buffers.
        7           -37.604542600309742              0.9306357215D-02
-   current occupation vector 
+   current occupation vector
      2  0  0  0  1  0  0  0
      2  0  0  0  1  0  0  0
-  processed                  19106  ao basis integrals from 
+  processed                  19106  ao basis integrals from
                      5  buffers.
-  processed                  82182  ao basis integrals from 
+  processed                  82182  ao basis integrals from
                     21  buffers.
-  processed                 131787  ao basis integrals from 
+  processed                 131787  ao basis integrals from
                     33  buffers.
        8           -37.604542647182583              0.6257533927D-03
-   current occupation vector 
+   current occupation vector
      2  0  0  0  1  0  0  0
      2  0  0  0  1  0  0  0
-  processed                  19106  ao basis integrals from 
+  processed                  19106  ao basis integrals from
                      5  buffers.
-  processed                  82182  ao basis integrals from 
+  processed                  82182  ao basis integrals from
                     21  buffers.
-  processed                 131787  ao basis integrals from 
+  processed                 131787  ao basis integrals from
                     33  buffers.
        9           -37.604542648383784              0.9808352641D-04
-   current occupation vector 
+   current occupation vector
      2  0  0  0  1  0  0  0
      2  0  0  0  1  0  0  0
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      1
  -6.367129046225273E-013 -5.642194132366452E-014
@@ -959,7 +959,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      1
  -4.107825191113079E-015  6.468963383058027E-015
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      2
  -2.409183963436590E-014 -6.654373327076820E-014
@@ -967,7 +967,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      2
   3.330669073875470E-015  6.765089094664565E-015
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      3
  -8.548717289613705E-015 -6.303136445899991E-014
@@ -975,7 +975,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      3
   2.220446049250313E-015  3.079811698938612E-016
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      4
   1.554312234475219E-015 -2.635785221697473E-015
@@ -983,7 +983,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      4
  -4.440892098500626E-016  9.630306221676163E-017
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      5
  -7.882583474838611E-015  1.688039699962223E-014
@@ -991,7 +991,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      5
   4.996003610813204E-015 -1.991971406559139E-017
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      6
   1.809663530139005E-014  1.670482308720037E-014
@@ -999,7 +999,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      6
  -1.443289932012704E-015  1.122733129195359E-015
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      7
   1.709743457922741E-014  9.439853071607852E-015
@@ -1007,7 +1007,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      7
  -1.665334536937735E-015  1.237604511280341E-016
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      8
  -4.218847493575595E-015  5.381112222480056E-015
@@ -1015,57 +1015,57 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      8
  -3.330669073875470E-016  1.647987302177967E-016
-  processed                  19106  ao basis integrals from 
+  processed                  19106  ao basis integrals from
                      5  buffers.
-  processed                  82182  ao basis integrals from 
+  processed                  82182  ao basis integrals from
                     21  buffers.
-  processed                 131787  ao basis integrals from 
+  processed                 131787  ao basis integrals from
                     33  buffers.
       10           -37.604542648423234              0.1524973347D-04
-   current occupation vector 
+   current occupation vector
      2  0  0  0  1  0  0  0
      2  0  0  0  1  0  0  0
-  processed                  19106  ao basis integrals from 
+  processed                  19106  ao basis integrals from
                      5  buffers.
-  processed                  82182  ao basis integrals from 
+  processed                  82182  ao basis integrals from
                     21  buffers.
-  processed                 131787  ao basis integrals from 
+  processed                 131787  ao basis integrals from
                     33  buffers.
       11           -37.604542648423653              0.1610347807D-05
-   current occupation vector 
+   current occupation vector
      2  0  0  0  1  0  0  0
      2  0  0  0  1  0  0  0
-  processed                  19106  ao basis integrals from 
+  processed                  19106  ao basis integrals from
                      5  buffers.
-  processed                  82182  ao basis integrals from 
+  processed                  82182  ao basis integrals from
                     21  buffers.
-  processed                 131787  ao basis integrals from 
+  processed                 131787  ao basis integrals from
                     33  buffers.
       12           -37.604542648423568              0.1855302274D-06
-   current occupation vector 
+   current occupation vector
      2  0  0  0  1  0  0  0
      2  0  0  0  1  0  0  0
-  processed                  19106  ao basis integrals from 
+  processed                  19106  ao basis integrals from
                      5  buffers.
-  processed                  82182  ao basis integrals from 
+  processed                  82182  ao basis integrals from
                     21  buffers.
-  processed                 131787  ao basis integrals from 
+  processed                 131787  ao basis integrals from
                     33  buffers.
       13           -37.604542648423603              0.9410611922D-08
-   current occupation vector 
+   current occupation vector
      2  0  0  0  1  0  0  0
      2  0  0  0  1  0  0  0
-  processed                  19106  ao basis integrals from 
+  processed                  19106  ao basis integrals from
                      5  buffers.
-  processed                  82182  ao basis integrals from 
+  processed                  82182  ao basis integrals from
                     21  buffers.
-  processed                 131787  ao basis integrals from 
+  processed                 131787  ao basis integrals from
                     33  buffers.
       14           -37.604542648423617              0.6578285902D-09
-   current occupation vector 
+   current occupation vector
      2  0  0  0  1  0  0  0
      2  0  0  0  1  0  0  0
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      1
  -8.730793865652231E-013 -1.561519690550981E-013
@@ -1073,7 +1073,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      1
   2.121636200058674E-013  4.091298258512696E-014
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      2
  -8.215650382226158E-015 -6.522342651951348E-014
@@ -1081,7 +1081,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      2
   2.220446049250313E-015 -4.963269122594930E-015
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      3
  -1.709743457922741E-014 -6.560431699973481E-014
@@ -1089,7 +1089,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      3
  -4.662936703425657E-015 -2.751973199698182E-015
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      4
  -6.772360450213455E-015 -7.239096316023377E-016
@@ -1097,7 +1097,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      4
  -1.110223024625157E-016 -6.996684844300151E-016
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      5
   3.996802888650564E-015  1.245892491479702E-014
@@ -1105,7 +1105,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      5
   3.552713678800501E-015 -2.175439800526018E-015
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      6
   2.864375403532904E-014  1.373950629639301E-014
@@ -1113,7 +1113,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      6
  -9.992007221626409E-016  6.902352902595355E-016
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      7
   2.509104035652854E-014  1.500851345943059E-014
@@ -1121,7 +1121,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      7
   4.440892098500626E-016 -1.303858991529948E-016
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      8
  -5.329070518200751E-015  4.869368797066898E-015
@@ -1129,36 +1129,36 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      8
   0.000000000000000E+000  3.469446951953614E-018
-  processed                  19106  ao basis integrals from 
+  processed                  19106  ao basis integrals from
                      5  buffers.
-  processed                  82182  ao basis integrals from 
+  processed                  82182  ao basis integrals from
                     21  buffers.
-  processed                 131787  ao basis integrals from 
+  processed                 131787  ao basis integrals from
                     33  buffers.
       15           -37.604542648423639              0.5650554157D-10
-   current occupation vector 
+   current occupation vector
      2  0  0  0  1  0  0  0
      2  0  0  0  1  0  0  0
-  processed                  19106  ao basis integrals from 
+  processed                  19106  ao basis integrals from
                      5  buffers.
-  processed                  82182  ao basis integrals from 
+  processed                  82182  ao basis integrals from
                     21  buffers.
-  processed                 131787  ao basis integrals from 
+  processed                 131787  ao basis integrals from
                     33  buffers.
       16           -37.604542648423845              0.6098677119D-11
-   current occupation vector 
+   current occupation vector
      2  0  0  0  1  0  0  0
      2  0  0  0  1  0  0  0
 
   SCF has converged.
 
  Density matrix saved to file den.dat
- total electron number:   6.00000000000002     
-  processed                  19106  ao basis integrals from 
+ total electron number:   6.00000000000002
+  processed                  19106  ao basis integrals from
                      5  buffers.
-  processed                  82182  ao basis integrals from 
+  processed                  82182  ao basis integrals from
                     21  buffers.
-  processed                 131787  ao basis integrals from 
+  processed                 131787  ao basis integrals from
                     33  buffers.
      E(SCF)=       -37.604542648423688              0.8288578157D-12
 
@@ -1564,7 +1564,7 @@ Running with 1 threads/proc
    80; C #1                1.11674       0.64180       0.28778
 
 
- @PUTMOS-I, Writing converged MOs to NEWMOS. 
+ @PUTMOS-I, Writing converged MOs to NEWMOS.
  @PUTMOS-I, Symmetry   1 Full Blocks  5 Partial Blocksize   0
  @PUTMOS-I, Symmetry   2 Full Blocks  2 Partial Blocksize   3
  @PUTMOS-I, Symmetry   3 Full Blocks  2 Partial Blocksize   3
@@ -1573,7 +1573,7 @@ Running with 1 threads/proc
  @PUTMOS-I, Symmetry   6 Full Blocks  2 Partial Blocksize   0
  @PUTMOS-I, Symmetry   7 Full Blocks  2 Partial Blocksize   0
  @PUTMOS-I, Symmetry   8 Full Blocks  0 Partial Blocksize   3
- @PUTFOCK-I, Writing converged Fock matrix to NEWFOCK. 
+ @PUTFOCK-I, Writing converged Fock matrix to NEWFOCK.
  @PUTFOCK-I, Symmetry   1 Full Blocks  5 Partial Blocksize   0
  @PUTFOCK-I, Symmetry   2 Full Blocks  2 Partial Blocksize   3
  @PUTFOCK-I, Symmetry   3 Full Blocks  2 Partial Blocksize   3
@@ -1584,7 +1584,7 @@ Running with 1 threads/proc
  @PUTFOCK-I, Symmetry   8 Full Blocks  0 Partial Blocksize   3
 --------------------------------------------------------------------------------
 Eigenvalue    -11.364989     -0.725630     -0.358430      0.018858      0.018858
- Symmetry          Ag            Ag            Au             u             u    
+ Symmetry          Ag            Ag            Au             u             u
 --------------------------------------------------------------------------------
    1 S         1.0002749     0.0005582     0.0000000     0.0000000     0.0000000
    1 S         0.0004603     1.0104553     0.0000000     0.0000000     0.0000000
@@ -1693,7 +1693,7 @@ Eigenvalue    -11.364989     -0.725630     -0.358430      0.018858      0.018858
    1 GZ4      -0.0000003    -0.0000393     0.0000000     0.0000000     0.0000000
 --------------------------------------------------------------------------------
 Eigenvalue      0.083419      0.089900      0.108245      0.108245      0.232374
- Symmetry          Ag            Au             u             u             g    
+ Symmetry          Ag            Au             u             u             g
 --------------------------------------------------------------------------------
    1 S         0.0269178     0.0000000     0.0000000     0.0000000     0.0000000
    1 S         0.3442938     0.0000000     0.0000000     0.0000000     0.0000000
@@ -1802,7 +1802,7 @@ Eigenvalue      0.083419      0.089900      0.108245      0.108245      0.232374
    1 GZ4      -0.0000297     0.0000000     0.0000000     0.0000000     0.0000000
 --------------------------------------------------------------------------------
 Eigenvalue      0.232374      0.241640      0.241640      0.245418      0.445331
- Symmetry           g             g             g            Ag            Au    
+ Symmetry           g             g             g            Ag            Au
 --------------------------------------------------------------------------------
    1 S         0.0000000     0.0000000     0.0000000     0.0046009     0.0000000
    1 S         0.0000000     0.0000000     0.0000000     0.0277744     0.0000000
@@ -1911,7 +1911,7 @@ Eigenvalue      0.232374      0.241640      0.241640      0.245418      0.445331
    1 GZ4       0.0000000     0.0000000     0.0000000     0.0006188     0.0000000
 --------------------------------------------------------------------------------
 Eigenvalue      0.463968      0.463968      0.503207      0.744145      0.744145
- Symmetry           u             u            Ag             u             u    
+ Symmetry           u             u            Ag             u             u
 --------------------------------------------------------------------------------
    1 S         0.0000000     0.0000000     0.0828395     0.0000000     0.0000000
    1 S         0.0000000     0.0000000    -0.2744090     0.0000000     0.0000000
@@ -2020,7 +2020,7 @@ Eigenvalue      0.463968      0.463968      0.503207      0.744145      0.744145
    1 GZ4       0.0000000     0.0000000     0.0000966     0.0000000     0.0000000
 --------------------------------------------------------------------------------
 Eigenvalue      0.762265      0.762265      0.773568      0.773568      0.775670
- Symmetry           u             u             u             u             g    
+ Symmetry           u             u             u             u             g
 --------------------------------------------------------------------------------
    1 S         0.0000000     0.0000000     0.0000000     0.0000000    -0.0000000
    1 S         0.0000000     0.0000000     0.0000000     0.0000000    -0.0000000
@@ -2129,7 +2129,7 @@ Eigenvalue      0.762265      0.762265      0.773568      0.773568      0.775670
    1 GZ4       0.0000000     0.0000000     0.0000000     0.0000000     0.0000000
 --------------------------------------------------------------------------------
 Eigenvalue      0.775670      0.777426      0.791145      0.791145      0.798435
- Symmetry           g            Au             g             g            Ag    
+ Symmetry           g            Au             g             g            Ag
 --------------------------------------------------------------------------------
    1 S         0.0000000     0.0000000     0.0000000     0.0000000     0.0116577
    1 S         0.0000000     0.0000000     0.0000000     0.0000000     0.0266497
@@ -2238,7 +2238,7 @@ Eigenvalue      0.775670      0.777426      0.791145      0.791145      0.798435
    1 GZ4       0.0000000     0.0000000     0.0000000     0.0000000    -0.0025220
 --------------------------------------------------------------------------------
 Eigenvalue      1.591452      1.591452      1.608606      2.089990      2.089990
- Symmetry           u             u            Au             g             g    
+ Symmetry           u             u            Au             g             g
 --------------------------------------------------------------------------------
    1 S         0.0000000     0.0000000     0.0000000     0.0000000     0.0000000
    1 S         0.0000000     0.0000000     0.0000000     0.0000000     0.0000000
@@ -2347,7 +2347,7 @@ Eigenvalue      1.591452      1.591452      1.608606      2.089990      2.089990
    1 GZ4       0.0000000     0.0000000     0.0000000     0.0000000     0.0000000
 --------------------------------------------------------------------------------
 Eigenvalue      2.107562      2.118335      2.118335      2.138628      2.138628
- Symmetry          Ag             g             g             g             g    
+ Symmetry          Ag             g             g             g             g
 --------------------------------------------------------------------------------
    1 S         0.5588329     0.0000000     0.0000000     0.0000000     0.0000000
    1 S         3.6690248     0.0000000     0.0000000     0.0000000     0.0000000
@@ -2456,7 +2456,7 @@ Eigenvalue      2.107562      2.118335      2.118335      2.138628      2.138628
    1 GZ4       0.0005728     0.0000000     0.0000000     0.0000000    -0.0000000
 --------------------------------------------------------------------------------
 Eigenvalue      2.150822      2.150822      2.154890      2.197270      2.197270
- Symmetry           g             g            Ag             g             g    
+ Symmetry           g             g            Ag             g             g
 --------------------------------------------------------------------------------
    1 S         0.0000000     0.0000000     0.0023142    -0.0000000     0.0000000
    1 S         0.0000000     0.0000000     0.0152737    -0.0000000     0.0000000
@@ -2565,7 +2565,7 @@ Eigenvalue      2.150822      2.150822      2.154890      2.197270      2.197270
    1 GZ4       0.0000000     0.0000000    -0.1080810    -0.0000000     0.0000000
 --------------------------------------------------------------------------------
 Eigenvalue      2.231526      2.231526      2.244775      2.245170      2.245170
- Symmetry           g             g            Ag             u             u    
+ Symmetry           g             g            Ag             u             u
 --------------------------------------------------------------------------------
    1 S         0.0000000     0.0000000     0.0459838     0.0000000     0.0000000
    1 S         0.0000000     0.0000000     0.2590799     0.0000000     0.0000000
@@ -2674,7 +2674,7 @@ Eigenvalue      2.231526      2.231526      2.244775      2.245170      2.245170
    1 GZ4       0.0000000     0.0000000    -0.0013569     0.0000000     0.0000000
 --------------------------------------------------------------------------------
 Eigenvalue      2.283144      2.283144      2.306664      2.306664      2.314666
- Symmetry           u             u             u             u            Au    
+ Symmetry           u             u             u             u            Au
 --------------------------------------------------------------------------------
    1 S         0.0000000     0.0000000     0.0000000     0.0000000     0.0000000
    1 S         0.0000000     0.0000000     0.0000000     0.0000000     0.0000000
@@ -2783,7 +2783,7 @@ Eigenvalue      2.283144      2.283144      2.306664      2.306664      2.314666
    1 GZ4       0.0000000     0.0000000     0.0000000     0.0000000     0.0000000
 --------------------------------------------------------------------------------
 Eigenvalue      5.767116      5.767116      5.814210      5.873884      5.873884
- Symmetry           u             u            Au             g             g    
+ Symmetry           u             u            Au             g             g
 --------------------------------------------------------------------------------
    1 S         0.0000000     0.0000000     0.0000000     0.0000000     0.0000000
    1 S         0.0000000     0.0000000     0.0000000     0.0000000     0.0000000
@@ -2892,7 +2892,7 @@ Eigenvalue      5.767116      5.767116      5.814210      5.873884      5.873884
    1 GZ4       0.0000000     0.0000000     0.0000000     0.0000000     0.0000000
 --------------------------------------------------------------------------------
 Eigenvalue      5.921158      5.921158      5.954832      5.954832      5.975001
- Symmetry           g             g             g             g             g    
+ Symmetry           g             g             g             g             g
 --------------------------------------------------------------------------------
    1 S         0.0000000     0.0000000     0.0000000    -0.0000000     0.0000000
    1 S         0.0000000     0.0000000     0.0000000    -0.0000000     0.0000000
@@ -3001,7 +3001,7 @@ Eigenvalue      5.921158      5.921158      5.954832      5.954832      5.975001
    1 GZ4       0.0000000     0.0000000     0.0000000    -0.0000000     0.0000000
 --------------------------------------------------------------------------------
 Eigenvalue      5.975001      5.981719      6.328046      6.328046      6.382815
- Symmetry           g            Ag             g             g             g    
+ Symmetry           g            Ag             g             g             g
 --------------------------------------------------------------------------------
    1 S         0.0000000     0.0000909    -0.0000000     0.0000000     0.0000000
    1 S         0.0000000     0.0000187    -0.0000000     0.0000000     0.0000000
@@ -3110,7 +3110,7 @@ Eigenvalue      5.975001      5.981719      6.328046      6.328046      6.382815
    1 GZ4       0.0000000     0.0575655    -0.0000000     0.0000000     0.0000000
 --------------------------------------------------------------------------------
 Eigenvalue      6.382815      6.401370      6.418131      6.418131      6.473048
- Symmetry           g            Ag             u             u             u    
+ Symmetry           g            Ag             u             u             u
 --------------------------------------------------------------------------------
    1 S         0.0000000     0.0029499     0.0000000     0.0000000     0.0000000
    1 S         0.0000000     0.0279538     0.0000000     0.0000000     0.0000000
@@ -3219,7 +3219,7 @@ Eigenvalue      6.382815      6.401370      6.418131      6.418131      6.473048
    1 GZ4       0.0000000     0.0002385     0.0000000     0.0000000     0.0000000
 --------------------------------------------------------------------------------
 Eigenvalue      6.473048      6.506663      6.506663      6.518031     20.422581
- Symmetry           u             u             u            Au            Ag    
+ Symmetry           u             u             u            Au            Ag
 --------------------------------------------------------------------------------
    1 S         0.0000000     0.0000000     0.0000000     0.0000000    10.0211238
    1 S         0.0000000     0.0000000     0.0000000     0.0000000    31.4661074
@@ -3329,7 +3329,7 @@ Eigenvalue      6.473048      6.506663      6.506663      6.518031     20.422581
 --------------------------------------------------------------------------------
 
 
- 
+
   ORBITAL EIGENVALUES (ALPHA)  (1H = 27.2113834 eV)
 
        MO #        E(hartree)               E(eV)           FULLSYM    COMPSYM
@@ -3421,5 +3421,5 @@ Eigenvalue      6.473048      6.506663      6.506663      6.518031     20.422581
 
  @CHECKOUT-I, Total execution time (CPU/WALL):        0.24/       0.25 seconds.
 --executable xvscf finished with status     0 in        0.28 seconds (walltime).
-  The final electronic energy is       -37.604542648423688 a.u. 
+  The final electronic energy is       -37.604542648423688 a.u.
   This computation required                            1.18 seconds (walltime).

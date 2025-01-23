@@ -82,11 +82,11 @@ class GenericCCSDPTTest(GenericCCTest):
         )
 
 class CFOURCCDTest(GenericCCSDPTTest):
-    # CFOUR 2.1 
+    # CFOUR 2.1
 
 
 class CFOURCCSDTest(GenericCCSDPTTest):
-    # CFOUR 2.1 
+    # CFOUR 2.1
 
 
 class CFOURCCSDPTTest(GenericCCSDPTTest):

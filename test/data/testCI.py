@@ -36,7 +36,7 @@ class GenericCISTest:
     ]
 
     etsecs_precision = 0.0005
-    
+
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     def testetenergiesvalues(self, data) -> None:
         """Are etenergies within 50 wavenumbers of the correct values?"""

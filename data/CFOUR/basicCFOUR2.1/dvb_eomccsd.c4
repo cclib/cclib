@@ -17,7 +17,7 @@ Copyright (C) 2009-2019 Intel Corporation. All rights reserved.
      ****************************************************************
      * CFOUR Coupled-Cluster techniques for Computational Chemistry *
      ****************************************************************
- 
+
 
    Department of Chemistry                Institut fuer Physikalische Chemie
    University of Florida                  Universitaet Mainz
@@ -31,259 +31,259 @@ Copyright (C) 2009-2019 Intel Corporation. All rights reserved.
    Southern Methodist University          Eotvos Lorand University
    Dallas, TX 75275, USA                  H-1053 Budapest, Hungary
 
- 
+
                        Version 2.1
- 
-                     smp-n224.crc.pitt.edu                             
-                     Wed Jan 22 21:38:32 EST 2025                      
+
+                     smp-n224.crc.pitt.edu
+                     Wed Jan 22 21:38:32 EST 2025
                      integer*8 version is running
- 
+
 ********************************************************************************
 *                          Input from ZMAT file                                *
 ********************************************************************************
-CCSD/STO-3G EOMEE DVB                                                           
-C                    -1.41012   0.26944   0.                                    
-C                    -0.92066  -1.06479   0.                                    
-C                     0.45706  -1.32539   0.                                    
-C                     1.41012  -0.26944   0.                                    
-C                     0.92066   1.06479   0.                                    
-H                    -1.62752  -1.90447   0.                                    
-H                     0.81304  -2.36476   0.                                    
-H                     1.62752   1.90447   0.                                    
-C                     2.86996  -0.60369   0.                                    
-C                     3.89207   0.26944   0.                                    
-H                     3.74231   1.35518   0.                                    
-H                     3.09015  -1.68186   0.                                    
-H                     4.93303  -0.07425   0.                                    
-C                    -2.86996   0.60369   0.                                    
-H                    -3.09015   1.68186   0.                                    
-C                    -3.89207  -0.26944   0.                                    
-H                    -3.74231  -1.35518   0.                                    
-H                    -4.93303   0.07425   0.                                    
-C                    -0.45706   1.32539   0.                                    
-H                    -0.81304   2.36476   0.                                    
-                                                                                
-*ACES2(CALC=CCSD                                                                
-COORDINATES=CARTESIAN                                                           
-EXCITE=EOMEE                                                                    
-ESTATE_SYM=10/0/0/0                                                             
-BASIS=STO-3G                                                                    
-REF=RHF                                                                         
-PRINT=1                                                                         
-CHARGE=0                                                                        
-MULTIPLICITY=1)                                                                 
+CCSD/STO-3G EOMEE DVB
+C                    -1.41012   0.26944   0.
+C                    -0.92066  -1.06479   0.
+C                     0.45706  -1.32539   0.
+C                     1.41012  -0.26944   0.
+C                     0.92066   1.06479   0.
+H                    -1.62752  -1.90447   0.
+H                     0.81304  -2.36476   0.
+H                     1.62752   1.90447   0.
+C                     2.86996  -0.60369   0.
+C                     3.89207   0.26944   0.
+H                     3.74231   1.35518   0.
+H                     3.09015  -1.68186   0.
+H                     4.93303  -0.07425   0.
+C                    -2.86996   0.60369   0.
+H                    -3.09015   1.68186   0.
+C                    -3.89207  -0.26944   0.
+H                    -3.74231  -1.35518   0.
+H                    -4.93303   0.07425   0.
+C                    -0.45706   1.32539   0.
+H                    -0.81304   2.36476   0.
+
+*ACES2(CALC=CCSD
+COORDINATES=CARTESIAN
+EXCITE=EOMEE
+ESTATE_SYM=10/0/0/0
+BASIS=STO-3G
+REF=RHF
+PRINT=1
+CHARGE=0
+MULTIPLICITY=1)
 ********************************************************************************
     -------------------------------------------------------------------
-                    CFOUR Control Parameters 
+                    CFOUR Control Parameters
     -------------------------------------------------------------------
         External           Internal           Value            Units
           Name               Name
     -------------------------------------------------------------------
-       ABCDTYPE             IABCDT         STANDARD    [  0]    ***   
-       ANHARMONIC           IANHAR         OFF         [  0]    ***   
-       ANH_ALGORIT          IANALG         STANDARD    [  0]    ***   
-       ANH_DERIVAT          IANDER         SECOND      [  1]    ***   
-       ANH_MODE             ANHMOD         VIBRATION   [  0]    ***   
-       ANH_STEPSIZ          ICUBST             50000          x 10-6  
-       ANH_SYMMETR          IANHSM         ABELIAN     [  0]    ***   
-       AO_LADDERS           IAOLAD         SINGLEPASS  [  1]    ***   
-       AV_SCF               IAVSCF         OFF         [  0]    ***   
-       BASIS                IBASIS         STO-3G      [  2]    ***   
-       BOTHVECTORS          BOTHVC         OFF         [  0]    ***   
-       BOX_POTENT           IPIAB          OFF         [  0]    ***   
-       BREIT                IBREIT         OFF         [  0]    ***   
-       BRUCK_CONV           IBRTOL          10D-  4             ***   
-       BRUECKNER            IBRKNR         OFF         [  0]    ***   
-       BUFFERSIZE           IBUFFS              4096            ***   
-       CACHE_RECS           ICHREC             10               ***   
-       CALCLEVEL            ICLLVL         CCSD        [ 10]    ***   
-       CCORBOPT             ICCORB         OFF         [  0]  x 0.01  
-       CC_CONV              ICCCNV          10D-  7             ***   
-       CC_EXPORDER          ICCEOR              5               ***   
-       CC_EXTRAPOL          ICCEXT         DIIS        [  1]    ***   
-       CC_GUESS             ICCGES         MP2         [  0]    ***   
-       CC_MAXCYC            ICCCYC            100              cycles 
-       CC_PROGRAM           ICCPRO         VCC         [  0]    ***   
-       CHARGE               ICHRGE              0               ***   
-       CHOLESKY             ICHOLE         OFF         [  0]    ***   
-       CIS_CONV             ICISTL              5               ***   
-       COMM_SIZE            IPSIZE            ***               ***   
-       CONSTANT             ICONST         OLD         [  1]    ***   
-       CONTINUUM            ICONTU         NONE        [  0]    ***   
-       CONTRACTION          ICNTYP         GENERAL     [  1]    ***   
-       COORDINATES          ICOORD         CARTESIAN   [  1]    ***   
-       CPHF_CONVER          ICPHFT          10D- 16             ***   
-       CPHF_MAXCYC          ICPHFC             64              cycles 
-       CUBIC                ICUBIC         OFF         [  0]    ***   
-       CURVILINEAR          ICURVY         OFF         [  0]    ***   
-       DBOC                 IDBOC          OFF         [  0]    ***   
-       DCT                  IDCT           OFF         [  0]    ***   
-       DERIV_LEV            IDRLVL         ZERO        [  0]    ***   
-       DEVMEM_SIZE          IDVMEM          50000000           MByte  
-       DIAG_MRCC            IEOMST          10D-  0             ***   
-       DIFF_TYPE            IDIFTY         RELAXED     [  0]    ***   
-       DIRECT               IDIRCT         OFF         [  0]    ***   
-       DROPMO               IDRPMO      NONE         
-       ECP                  IECP           OFF         [  0]    ***   
-       EIGENVECTOR          IVEC                1               ***   
-       EL_ANHARM            IELANH         OFF         [  0]    ***   
-       EOMFOLLOW            IEOMSR         ENERGY      [  0]    ***   
-       EOMIP                IEOMIP         OFF         [  0]    ***   
-       EOMLEVEL             HBARFM         SAME        [  0]    ***   
-       EOM_MRCC             IMRCCE         NEW         [  1]    ***   
-       EOM_NONIT            EOMNON         OFF         [  0]    ***   
-       EOM_NSING            IEOMSI          10D-  0             ***   
-       EOM_NSTATES          IMRCCD         DAVIDSON    [  0]    ***   
-       EOM_NTRIP            IEOMTR          10D-  0             ***   
-       EOM_ORDER            IEXORD         ENERGY      [  0]    ***   
-       EOM_PROPSTA          IEOMST              0               ***   
-       ESTATE_CONV          IEXTOL          10D-  5             ***   
-       ESTATE_DIAG          IEXDIG         ITERATIVE   [  0]    ***   
-       ESTATE_LOCK          IESLOC         ON          [  1]    ***   
-       ESTATE_MAXC          IEXMXC             40               ***   
-       ESTATE_PROP          IEXPRP         OFF         [  0]    ***   
+       ABCDTYPE             IABCDT         STANDARD    [  0]    ***
+       ANHARMONIC           IANHAR         OFF         [  0]    ***
+       ANH_ALGORIT          IANALG         STANDARD    [  0]    ***
+       ANH_DERIVAT          IANDER         SECOND      [  1]    ***
+       ANH_MODE             ANHMOD         VIBRATION   [  0]    ***
+       ANH_STEPSIZ          ICUBST             50000          x 10-6
+       ANH_SYMMETR          IANHSM         ABELIAN     [  0]    ***
+       AO_LADDERS           IAOLAD         SINGLEPASS  [  1]    ***
+       AV_SCF               IAVSCF         OFF         [  0]    ***
+       BASIS                IBASIS         STO-3G      [  2]    ***
+       BOTHVECTORS          BOTHVC         OFF         [  0]    ***
+       BOX_POTENT           IPIAB          OFF         [  0]    ***
+       BREIT                IBREIT         OFF         [  0]    ***
+       BRUCK_CONV           IBRTOL          10D-  4             ***
+       BRUECKNER            IBRKNR         OFF         [  0]    ***
+       BUFFERSIZE           IBUFFS              4096            ***
+       CACHE_RECS           ICHREC             10               ***
+       CALCLEVEL            ICLLVL         CCSD        [ 10]    ***
+       CCORBOPT             ICCORB         OFF         [  0]  x 0.01
+       CC_CONV              ICCCNV          10D-  7             ***
+       CC_EXPORDER          ICCEOR              5               ***
+       CC_EXTRAPOL          ICCEXT         DIIS        [  1]    ***
+       CC_GUESS             ICCGES         MP2         [  0]    ***
+       CC_MAXCYC            ICCCYC            100              cycles
+       CC_PROGRAM           ICCPRO         VCC         [  0]    ***
+       CHARGE               ICHRGE              0               ***
+       CHOLESKY             ICHOLE         OFF         [  0]    ***
+       CIS_CONV             ICISTL              5               ***
+       COMM_SIZE            IPSIZE            ***               ***
+       CONSTANT             ICONST         OLD         [  1]    ***
+       CONTINUUM            ICONTU         NONE        [  0]    ***
+       CONTRACTION          ICNTYP         GENERAL     [  1]    ***
+       COORDINATES          ICOORD         CARTESIAN   [  1]    ***
+       CPHF_CONVER          ICPHFT          10D- 16             ***
+       CPHF_MAXCYC          ICPHFC             64              cycles
+       CUBIC                ICUBIC         OFF         [  0]    ***
+       CURVILINEAR          ICURVY         OFF         [  0]    ***
+       DBOC                 IDBOC          OFF         [  0]    ***
+       DCT                  IDCT           OFF         [  0]    ***
+       DERIV_LEV            IDRLVL         ZERO        [  0]    ***
+       DEVMEM_SIZE          IDVMEM          50000000           MByte
+       DIAG_MRCC            IEOMST          10D-  0             ***
+       DIFF_TYPE            IDIFTY         RELAXED     [  0]    ***
+       DIRECT               IDIRCT         OFF         [  0]    ***
+       DROPMO               IDRPMO      NONE
+       ECP                  IECP           OFF         [  0]    ***
+       EIGENVECTOR          IVEC                1               ***
+       EL_ANHARM            IELANH         OFF         [  0]    ***
+       EOMFOLLOW            IEOMSR         ENERGY      [  0]    ***
+       EOMIP                IEOMIP         OFF         [  0]    ***
+       EOMLEVEL             HBARFM         SAME        [  0]    ***
+       EOM_MRCC             IMRCCE         NEW         [  1]    ***
+       EOM_NONIT            EOMNON         OFF         [  0]    ***
+       EOM_NSING            IEOMSI          10D-  0             ***
+       EOM_NSTATES          IMRCCD         DAVIDSON    [  0]    ***
+       EOM_NTRIP            IEOMTR          10D-  0             ***
+       EOM_ORDER            IEXORD         ENERGY      [  0]    ***
+       EOM_PROPSTA          IEOMST              0               ***
+       ESTATE_CONV          IEXTOL          10D-  5             ***
+       ESTATE_DIAG          IEXDIG         ITERATIVE   [  0]    ***
+       ESTATE_LOCK          IESLOC         ON          [  1]    ***
+       ESTATE_MAXC          IEXMXC             40               ***
+       ESTATE_PROP          IEXPRP         OFF         [  0]    ***
        ESTATE_SYM           IEXSYM  10,  0,  0,  0,
        EVAL_HESS            IRECAL              0            # of cyc.
-       EXCITATION           IEXCIT              0               ***   
-       EXCITE               IEXCIT         EOMEE       [  3]    ***   
-       EXTERN_POT           IEXPOT         OFF         [  0]    ***   
-       FCGRADNEW            IFCGNW         OFF         [  0]    ***   
-       FC_FIELD             IFINFC              0             x 10-6  
-       FD_CALTYPE           IFDCAL         GRADONLY    [  0]    ***   
-       FD_PROJECT           IFDPRJ         OFF         [  1]    ***   
+       EXCITATION           IEXCIT              0               ***
+       EXCITE               IEXCIT         EOMEE       [  3]    ***
+       EXTERN_POT           IEXPOT         OFF         [  0]    ***
+       FCGRADNEW            IFCGNW         OFF         [  0]    ***
+       FC_FIELD             IFINFC              0             x 10-6
+       FD_CALTYPE           IFDCAL         GRADONLY    [  0]    ***
+       FD_PROJECT           IFDPRJ         OFF         [  1]    ***
        FD_STEPSIZE          IDISFD              0            10-4 bohr
-       FD_USEGROUP          IFDGRP         FULL        [  0]    ***   
-       FILE_RECSIZ          IFLREC              4096           words  
-       FINITE_PERT          IFIPER              0             x 10-6  
-       FIXGEOM              IFIXGM         OFF         [  0]    ***   
-       FOCK                 IFOCK          AO          [  1]    ***   
-       FREQ_ALGORI          IVIALG         STANDARD    [  0]    ***   
-       FROZEN_CORE          IFROCO         OFF         [  0]    ***   
-       GAMMA_ABCD           IGABCD         STORE       [  0]    ***   
-       GAMMA_ABCI           IGABCI         STORE       [  0]    ***   
-       GENBAS_1             IGNBS1              0               ***   
-       GENBAS_2             IGNBS2              0               ***   
-       GENBAS_3             IGNBS3              0               ***   
-       GENBAS_4             IGNBS4              0               ***   
-       GEO_CONV             ICONTL              5              H/bohr 
-       GEO_MAXCYC           IOPTCY             50               ***   
+       FD_USEGROUP          IFDGRP         FULL        [  0]    ***
+       FILE_RECSIZ          IFLREC              4096           words
+       FINITE_PERT          IFIPER              0             x 10-6
+       FIXGEOM              IFIXGM         OFF         [  0]    ***
+       FOCK                 IFOCK          AO          [  1]    ***
+       FREQ_ALGORI          IVIALG         STANDARD    [  0]    ***
+       FROZEN_CORE          IFROCO         OFF         [  0]    ***
+       GAMMA_ABCD           IGABCD         STORE       [  0]    ***
+       GAMMA_ABCI           IGABCI         STORE       [  0]    ***
+       GENBAS_1             IGNBS1              0               ***
+       GENBAS_2             IGNBS2              0               ***
+       GENBAS_3             IGNBS3              0               ***
+       GENBAS_4             IGNBS4              0               ***
+       GEO_CONV             ICONTL              5              H/bohr
+       GEO_MAXCYC           IOPTCY             50               ***
        GEO_MAXSTEP          IMXSTP            300            millibohr
-       GEO_METHOD           INR            SINGLE_POINT[  5]    ***   
-       GIAO                 IGIAO          OFF         [  1]    ***   
-       GIMIC                IGIMIC         OFF         [  0]    ***   
-       GRID                 IGRID          OFF         [  0]    ***   
-       GRID_ALGO            IGALGO         SERIAL      [  0]    ***   
-       GUESS                IGUESS         MOREAD      [  0]    ***   
-       HBAR                 IHBAR          ON          [  1]    ***   
-       HESS_TYPE            IHESTP         SCF         [  0]    ***   
-       HF2_FILE             IHF2Fl         USE         [  1]    ***   
-       HFSTABILITY          ISTABL         OFF         [  0]    ***   
-       INCORE               INCORE         OFF         [  0]    ***   
-       INPUT_MRCC           IMRCC          ON          [  1]    ***   
-       INTEGRALS            INTTYP         VMOL        [  1]    ***   
-       JODA_PRINT           IJPRNT              0               ***   
-       KEYWORD_OUT          IDMPKW         NO          [  0]    ***   
-       LINDEP_TOL           ILINDP              8               ***   
-       LINEQ_CONV           IZTACN          10D-  7           cycles  
-       LINEQ_EXPOR          ILMAXD              5               ***   
-       LINEQ_MAXCY          ILMAXC            100               ***   
-       LINEQ_TYPE           ILTYPE         DIIS        [  1]    ***   
-       LOCK_ORBOCC          ILOCOC         OFF         [  0]    ***   
-       MEMORY_SIZE          IMEMSZ         100000000           words  
-       MEM_UNIT             IMEMU          INTEGERWORDS[  0]    ***   
-       MRCC                 IMRCCC         OFF         [  0]    ***   
-       MULTIPLICTY          IMULTP              1               ***   
-       NACOUPLING           IVCOUP         OFF         [  0]    ***   
-       NEGEVAL              IDIE           ABORT       [  0]    ***   
-       NEWNORM              INEWNO         OFF         [  0]    ***   
-       NON-HF               INONHF         OFF         [  0]    ***   
-       NTOP_TAMP            ITOPT2             15               ***   
-       NUC_MODEL            INUCMO         POINT       [  0]    ***   
-       OCCUPATION           IOCCU   ESTIMATED BY SCF 
-       OPEN-SHELL           IOPEN          SPIN-ORBITAL[  0]    ***   
-       OPTVIB               IOPTVB         OFF         [  0]    ***   
-       ORBITALS             IORBTP         STANDARD    [  0]    ***   
-       PARALLEL             IPARAL         ON          [  1]    ***   
-       PARA_INT             IPINTS         ON          [  1]    ***   
-       PARA_PRINT           IPPRIN              0               ***   
-       PERT_ORB             IPTORB         STANDARD    [  0]    ***   
-       POINTS               IGRDFD              0               ***   
-       PRINT                IPRNT               1               ***   
-       PROPS                IPROPS         OFF         [  0]    ***   
-       PROP_INTEGR          IINTYP         INTERNAL    [  0]    ***   
-       PSI                  IPSI           OFF         [  0]    ***   
-       QC_ALG               IQCALG         FLM         [  0]    ***   
-       QC_LINALG            IQCLIN         TRIDIAG     [  2]    ***   
-       QC_MAXCYC            IQCMAX          10D-100           cycles  
-       QC_MAXSCFCY          IQCMSC          10D- 15           cycles  
-       QC_RTRUST            IQCRTR          10D-  0           x 10-3  
-       QC_SKIPSCF           IQCSKI         OFF         [  0]    ***   
-       QC_START             IQCSTA          10D-  1             ***   
-       QRHFGUESS            IQGUES         OFF         [  0]    ***   
-       QUARTIC              IQUART         OFF         [  0]    ***   
-       RAMAN_INT            IRAMIN         OFF         [  0]    ***   
-       RAMAN_ORB            IRAMRE         UNRELAXED   [  0]    ***   
-       RDO                  IRDOFM         OFF         [  0]    ***   
-       REDUCE_REPR          REDREP         Ir          [  0]    ***   
-       REFERENCE            IREFNC         RHF         [  0]    ***   
-       RELATIVIST           IRELAT         OFF         [  0]    ***   
-       RELAX_DENS           IRDENS         OFF         [  0]    ***   
-       RESET_FLAGS          IRESET         OFF         [  0]    ***   
-       RESTART_CC           ICCRES         OFF         [  0]    ***   
-       ROT_EVEC             ROTVEC              0               ***   
-       SAVE_INTS            ISVINT         OFF         [  0]    ***   
-       SCALE_ON             ISTCRT              0               ***   
-       SCF_CONV             ISCFCV          10D-  7             ***   
-       SCF_DAMPING          IDAMP               0             x 10-3  
-       SCF_EXPORDE          IRPPOR              6               ***   
-       SCF_EXPSTAR          IRPPLS              8               ***   
-       SCF_EXTRAPO          IRPP           ON          [  1]    ***   
-       SCF_MAXCYC           ISCFCY            150              cycles 
-       SCF_NOSTOP           ISCFST         OFF         [  0]    ***   
-       SCF_PRINT            ISCFPR              0               ***   
-       SCF_PROG             ISCFPR         SCF         [  0]    ***   
-       SD_FIELD             IFINSD              0             x 10-6  
-       SOPERT               IPERSO         OFF         [  0]    ***   
-       SPHERICAL            IDFGHI         ON          [  1]    ***   
-       SPINORBIT            ISOCAL         OFF         [  0]    ***   
-       SPINROTATIO          ISRCON         OFF         [  0]    ***   
-       SPIN_FLIP            ISPFLP         OFF         [  0]    ***   
-       SPIN_ORBIT           ISPORB         OFF         [  0]    ***   
-       SPIN_SCAL            ISCSMP         OFF         [  0]    ***   
-       STEEPSCALE           ISTPSC              1000          x 10-3  
-       SUBGROUP             ISUBGP         DEFAULT     [  0]    ***   
-       SUBGRPAXIS           ISBXYZ         X           [  0]    ***   
-       SYMMETRY             ISYM           ON          [  0]    ***   
-       SYM_CHECK            ISYMCK         OVERRIDE    [  1]    ***   
-       T3_EXTRAPOL          IT3EXT         OFF         [  0]    ***   
-       T4_EXTRAPOL          IT4EXP         OFF         [  0]    ***   
-       TAMP_SUM             IEVERY              5               ***   
-       TESTSUITE            ITESTS         OFF         [  0]    ***   
-       THERMOCH             ITHERM         OFF         [  0]    ***   
-       TOL_CHOLESK          ITOLCH          10D-  4             ***   
-       TRANGRAD             IRESRM         OFF         [  0]    ***   
-       TRANS_INV            ITRAIN         USE         [  0]    ***   
-       TREAT_PERT           ITREAT         SIMULTANEOUS[  0]    ***   
-       TRIP_ALGORI          ITRALG         NORMAL      [  0]    ***   
-       UIJ_THRESHO          IUIJTH              1               ***   
-       UNITS                IUNITS         ANGSTROM    [  0]    ***   
-       UNOS                 IUNOS          OFF         [  0]    ***   
-       UPDATE_HESS          IHUPDT         ON          [  1]    ***   
-       VIBPHASE             ISETPH         STANDARD    [  0]    ***   
-       VIBRATION            IVIB           NO          [  0]    ***   
-       VIB_ALGORIT          IGEALG         STANDARD    [  0]    ***   
-       VNATORB              IVNORB         OFF         [  0]    ***   
-       VTRAN                IVTRAN         FULL/PARTIAL[  0]    ***   
-       XFIELD               IXEFLD              0             x 10-6  
-       XFORM_TOL            IXFTOL          10D- 11             ***   
-       YFIELD               IYEFLD              0             x 10-6  
-       ZFIELD               IZEFLD              0             x 10-6  
-       ZSCALE_EXP           IZEXPS         OFF         [  0]    ***   
+       GEO_METHOD           INR            SINGLE_POINT[  5]    ***
+       GIAO                 IGIAO          OFF         [  1]    ***
+       GIMIC                IGIMIC         OFF         [  0]    ***
+       GRID                 IGRID          OFF         [  0]    ***
+       GRID_ALGO            IGALGO         SERIAL      [  0]    ***
+       GUESS                IGUESS         MOREAD      [  0]    ***
+       HBAR                 IHBAR          ON          [  1]    ***
+       HESS_TYPE            IHESTP         SCF         [  0]    ***
+       HF2_FILE             IHF2Fl         USE         [  1]    ***
+       HFSTABILITY          ISTABL         OFF         [  0]    ***
+       INCORE               INCORE         OFF         [  0]    ***
+       INPUT_MRCC           IMRCC          ON          [  1]    ***
+       INTEGRALS            INTTYP         VMOL        [  1]    ***
+       JODA_PRINT           IJPRNT              0               ***
+       KEYWORD_OUT          IDMPKW         NO          [  0]    ***
+       LINDEP_TOL           ILINDP              8               ***
+       LINEQ_CONV           IZTACN          10D-  7           cycles
+       LINEQ_EXPOR          ILMAXD              5               ***
+       LINEQ_MAXCY          ILMAXC            100               ***
+       LINEQ_TYPE           ILTYPE         DIIS        [  1]    ***
+       LOCK_ORBOCC          ILOCOC         OFF         [  0]    ***
+       MEMORY_SIZE          IMEMSZ         100000000           words
+       MEM_UNIT             IMEMU          INTEGERWORDS[  0]    ***
+       MRCC                 IMRCCC         OFF         [  0]    ***
+       MULTIPLICTY          IMULTP              1               ***
+       NACOUPLING           IVCOUP         OFF         [  0]    ***
+       NEGEVAL              IDIE           ABORT       [  0]    ***
+       NEWNORM              INEWNO         OFF         [  0]    ***
+       NON-HF               INONHF         OFF         [  0]    ***
+       NTOP_TAMP            ITOPT2             15               ***
+       NUC_MODEL            INUCMO         POINT       [  0]    ***
+       OCCUPATION           IOCCU   ESTIMATED BY SCF
+       OPEN-SHELL           IOPEN          SPIN-ORBITAL[  0]    ***
+       OPTVIB               IOPTVB         OFF         [  0]    ***
+       ORBITALS             IORBTP         STANDARD    [  0]    ***
+       PARALLEL             IPARAL         ON          [  1]    ***
+       PARA_INT             IPINTS         ON          [  1]    ***
+       PARA_PRINT           IPPRIN              0               ***
+       PERT_ORB             IPTORB         STANDARD    [  0]    ***
+       POINTS               IGRDFD              0               ***
+       PRINT                IPRNT               1               ***
+       PROPS                IPROPS         OFF         [  0]    ***
+       PROP_INTEGR          IINTYP         INTERNAL    [  0]    ***
+       PSI                  IPSI           OFF         [  0]    ***
+       QC_ALG               IQCALG         FLM         [  0]    ***
+       QC_LINALG            IQCLIN         TRIDIAG     [  2]    ***
+       QC_MAXCYC            IQCMAX          10D-100           cycles
+       QC_MAXSCFCY          IQCMSC          10D- 15           cycles
+       QC_RTRUST            IQCRTR          10D-  0           x 10-3
+       QC_SKIPSCF           IQCSKI         OFF         [  0]    ***
+       QC_START             IQCSTA          10D-  1             ***
+       QRHFGUESS            IQGUES         OFF         [  0]    ***
+       QUARTIC              IQUART         OFF         [  0]    ***
+       RAMAN_INT            IRAMIN         OFF         [  0]    ***
+       RAMAN_ORB            IRAMRE         UNRELAXED   [  0]    ***
+       RDO                  IRDOFM         OFF         [  0]    ***
+       REDUCE_REPR          REDREP         Ir          [  0]    ***
+       REFERENCE            IREFNC         RHF         [  0]    ***
+       RELATIVIST           IRELAT         OFF         [  0]    ***
+       RELAX_DENS           IRDENS         OFF         [  0]    ***
+       RESET_FLAGS          IRESET         OFF         [  0]    ***
+       RESTART_CC           ICCRES         OFF         [  0]    ***
+       ROT_EVEC             ROTVEC              0               ***
+       SAVE_INTS            ISVINT         OFF         [  0]    ***
+       SCALE_ON             ISTCRT              0               ***
+       SCF_CONV             ISCFCV          10D-  7             ***
+       SCF_DAMPING          IDAMP               0             x 10-3
+       SCF_EXPORDE          IRPPOR              6               ***
+       SCF_EXPSTAR          IRPPLS              8               ***
+       SCF_EXTRAPO          IRPP           ON          [  1]    ***
+       SCF_MAXCYC           ISCFCY            150              cycles
+       SCF_NOSTOP           ISCFST         OFF         [  0]    ***
+       SCF_PRINT            ISCFPR              0               ***
+       SCF_PROG             ISCFPR         SCF         [  0]    ***
+       SD_FIELD             IFINSD              0             x 10-6
+       SOPERT               IPERSO         OFF         [  0]    ***
+       SPHERICAL            IDFGHI         ON          [  1]    ***
+       SPINORBIT            ISOCAL         OFF         [  0]    ***
+       SPINROTATIO          ISRCON         OFF         [  0]    ***
+       SPIN_FLIP            ISPFLP         OFF         [  0]    ***
+       SPIN_ORBIT           ISPORB         OFF         [  0]    ***
+       SPIN_SCAL            ISCSMP         OFF         [  0]    ***
+       STEEPSCALE           ISTPSC              1000          x 10-3
+       SUBGROUP             ISUBGP         DEFAULT     [  0]    ***
+       SUBGRPAXIS           ISBXYZ         X           [  0]    ***
+       SYMMETRY             ISYM           ON          [  0]    ***
+       SYM_CHECK            ISYMCK         OVERRIDE    [  1]    ***
+       T3_EXTRAPOL          IT3EXT         OFF         [  0]    ***
+       T4_EXTRAPOL          IT4EXP         OFF         [  0]    ***
+       TAMP_SUM             IEVERY              5               ***
+       TESTSUITE            ITESTS         OFF         [  0]    ***
+       THERMOCH             ITHERM         OFF         [  0]    ***
+       TOL_CHOLESK          ITOLCH          10D-  4             ***
+       TRANGRAD             IRESRM         OFF         [  0]    ***
+       TRANS_INV            ITRAIN         USE         [  0]    ***
+       TREAT_PERT           ITREAT         SIMULTANEOUS[  0]    ***
+       TRIP_ALGORI          ITRALG         NORMAL      [  0]    ***
+       UIJ_THRESHO          IUIJTH              1               ***
+       UNITS                IUNITS         ANGSTROM    [  0]    ***
+       UNOS                 IUNOS          OFF         [  0]    ***
+       UPDATE_HESS          IHUPDT         ON          [  1]    ***
+       VIBPHASE             ISETPH         STANDARD    [  0]    ***
+       VIBRATION            IVIB           NO          [  0]    ***
+       VIB_ALGORIT          IGEALG         STANDARD    [  0]    ***
+       VNATORB              IVNORB         OFF         [  0]    ***
+       VTRAN                IVTRAN         FULL/PARTIAL[  0]    ***
+       XFIELD               IXEFLD              0             x 10-6
+       XFORM_TOL            IXFTOL          10D- 11             ***
+       YFIELD               IYEFLD              0             x 10-6
+       ZFIELD               IZEFLD              0             x 10-6
+       ZSCALE_EXP           IZEXPS         OFF         [  0]    ***
     -------------------------------------------------------------------
   @GETXYZ-I,    20 atoms read from ZMAT.
-   Rotational constants (in cm-1): 
+   Rotational constants (in cm-1):
           0.0199000945             0.0228460225             0.1543276032
-   Rotational constants (in MHz): 
+   Rotational constants (in MHz):
         596.5899090364           684.9066211999          4626.6257974335
 ********************************************************************************
    The full molecular point group is C2h .
@@ -293,7 +293,7 @@ MULTIPLICITY=1)
 
 
  ----------------------------------------------------------------
-         Coordinates used in calculation (QCOMP) 
+         Coordinates used in calculation (QCOMP)
  ----------------------------------------------------------------
  Z-matrix   Atomic            Coordinates (in bohr)
   Symbol    Number           X              Y              Z
@@ -319,8 +319,8 @@ MULTIPLICITY=1)
      C         6        -0.92389483     2.48305706     0.00000000
      H         1        -1.64379134     4.43038037     0.00000000
  ----------------------------------------------------------------
- 
-  Original Center of Mass Coordinates (QCOM) 
+
+  Original Center of Mass Coordinates (QCOM)
         -2.66474116132387         0.50916791372869         0.00000000000000
         -1.73979561851788        -2.01216190194171         0.00000000000000
          0.86371840353636        -2.50462463322770         0.00000000000000
@@ -341,13 +341,13 @@ MULTIPLICITY=1)
         -9.32207761824916         0.14031219415957         0.00000000000000
         -0.86371840353636         2.50462463322770         0.00000000000000
         -1.53642325036363         4.46874968701405         0.00000000000000
- 
-  Transformation matrix between QCOM and QCOMP (OMAT) 
+
+  Transformation matrix between QCOM and QCOMP (OMAT)
   (QCOM = OMAT * QCOMP, where Q is stored 3 x NATOMS)
          0.99970891344795        -0.02412650767758        -0.00000000000000
          0.02412650767758         0.99970891344795         0.00000000000000
          0.00000000000000         0.00000000000000         1.00000000000000
-  test:  OMAT * QCOMP = 
+  test:  OMAT * QCOMP =
         -2.66474116132387         0.50916791372869         0.00000000000000
         -1.73979561851788        -2.01216190194171         0.00000000000000
          0.86371840353636        -2.50462463322770        -0.00000000000000
@@ -368,10 +368,10 @@ MULTIPLICITY=1)
         -9.32207761824916         0.14031219415957         0.00000000000000
         -0.86371840353636         2.50462463322770         0.00000000000000
         -1.53642325036363         4.46874968701404         0.00000000000000
- 
-   Interatomic distance matrix (Angstroms) 
- 
-                 C             C             C             C             C    
+
+   Interatomic distance matrix (Angstroms)
+
+                 C             C             C             C             C
                 [ 1]        [ 2]        [ 3]        [ 4]        [ 5]
   C    [ 1]     0.00000
   C    [ 2]     1.42118     0.00000
@@ -393,8 +393,8 @@ MULTIPLICITY=1)
   H    [18]     3.52831     4.17092     5.56885     6.35246     5.93691
   C    [19]     1.42245     2.43473     2.80397     2.45557     1.40215
   H    [20]     2.17873     3.43124     3.90261     3.44695     2.16694
- 
-                 H             H             H             C             C    
+
+                 H             H             H             C             C
                 [ 6]        [ 7]        [ 8]        [ 9]        [10]
   H    [ 6]     0.00000
   H    [ 7]     2.48359     0.00000
@@ -411,8 +411,8 @@ MULTIPLICITY=1)
   H    [18]     3.85250     6.24228     6.81106     7.83239     8.82726
   C    [19]     3.43540     3.90261     2.16352     3.84583     4.47549
   H    [20]     4.34623     5.00125     2.48359     4.73035     5.15058
- 
-                 H             H             H             C             H    
+
+                 H             H             H             C             H
                 [11]        [12]        [13]        [14]        [15]
   H    [11]     0.00000
   H    [12]     3.10627     0.00000
@@ -424,8 +424,8 @@ MULTIPLICITY=1)
   H    [18]     8.76940     8.21312     9.86718     2.12992     2.44553
   C    [19]     4.19948     4.65040     5.56885     2.51852     2.65711
   H    [20]     4.66588     5.62228     6.24228     2.70782     2.37731
- 
-                 C             H             H             C             H    
+
+                 C             H             H             C             H
                 [16]        [17]        [18]        [19]        [20]
   C    [16]     0.00000
   H    [17]     1.09602     0.00000
@@ -433,15 +433,15 @@ MULTIPLICITY=1)
   C    [19]     3.78719     4.24009     4.64754     0.00000
   H    [20]     4.05209     4.73483     4.71389     1.09864     0.00000
  rotcon2
-   Rotational constants (in cm-1): 
+   Rotational constants (in cm-1):
           0.1543276032             0.0228460225             0.0199000945
-   Rotational constants (in MHz): 
+   Rotational constants (in MHz):
        4626.6257974335           684.9066211999           596.5899090364
-  GENBAS file not present.   Using default GENBAS. 
+  GENBAS file not present.   Using default GENBAS.
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/set_genbas
 --executable set_genbas finished with status     0 in        0.04 seconds (walltime).
-  ECPDATA file not present.   Using default ECPDATA. 
+  ECPDATA file not present.   Using default ECPDATA.
   There are   60 basis functions.
  @GEOPT-W, Archive file not created for single-point calculation.
  @CHECKOUT-I, Total execution time (CPU/WALL):        0.07/       0.20 seconds.
@@ -452,119 +452,119 @@ MULTIPLICITY=1)
 ********************************************************************************
                     INPUT FROM MOL FILE
 ********************************************************************************
-INTGRL        1    0    1    0    0    0    0    0    0                         
-         *** CFOUR Program System (Release V0.1) ***                            
-CCSD/STO-3G EOMEE DVB                                                           
-   10    2 Z  XY      0.10E-08              0    0                              
-   9999.00      3.00                                                            
-          6.00000000    1    2    1    1                                        
-C #1  -2.676249934586875   0.444728803708827   0.000000000000000                
-    6    2                                                                      
-   71.6168373000000       0.154329000000000       0.000000000000000E+000        
-   13.0450963000000       0.535328100000000       0.000000000000000E+000        
-   3.53051220000000       0.444634500000000       0.000000000000000E+000        
-   2.94124940000000       0.000000000000000E+000 -9.996720000000001E-002        
-  0.683483100000000       0.000000000000000E+000  0.399512800000000             
-  0.222289900000000       0.000000000000000E+000  0.700115500000000             
-    3    1                                                                      
-   2.94124940000000       0.155916300000000                                     
-  0.683483100000000       0.607683700000000                                     
-  0.222289900000000       0.391957400000000                                     
-          6.00000000    1    2    1    1                                        
-C #2  -1.690742747834288  -2.053551381019105   0.000000000000000                
-    6    2                                                                      
-   71.6168373000000       0.154329000000000       0.000000000000000E+000        
-   13.0450963000000       0.535328100000000       0.000000000000000E+000        
-   3.53051220000000       0.444634500000000       0.000000000000000E+000        
-   2.94124940000000       0.000000000000000E+000 -9.996720000000001E-002        
-  0.683483100000000       0.000000000000000E+000  0.399512800000000             
-  0.222289900000000       0.000000000000000E+000  0.700115500000000             
-    3    1                                                                      
-   2.94124940000000       0.155916300000000                                     
-  0.683483100000000       0.607683700000000                                     
-  0.222289900000000       0.391957400000000                                     
-          6.00000000    1    2    1    1                                        
-C #3   0.923894832167357  -2.483057061984854   0.000000000000000                
-    6    2                                                                      
-   71.6168373000000       0.154329000000000       0.000000000000000E+000        
-   13.0450963000000       0.535328100000000       0.000000000000000E+000        
-   3.53051220000000       0.444634500000000       0.000000000000000E+000        
-   2.94124940000000       0.000000000000000E+000 -9.996720000000001E-002        
-  0.683483100000000       0.000000000000000E+000  0.399512800000000             
-  0.222289900000000       0.000000000000000E+000  0.700115500000000             
-    3    1                                                                      
-   2.94124940000000       0.155916300000000                                     
-  0.683483100000000       0.607683700000000                                     
-  0.222289900000000       0.391957400000000                                     
-          1.00000000    1    1    1                                             
-H #4  -2.987842899358434  -3.672082575322393   0.000000000000000                
-    3    1                                                                      
-   3.42525090000000       0.154329000000000                                     
-  0.623913700000000       0.535328100000000                                     
-  0.168855400000000       0.444634500000000                                     
-          1.00000000    1    1    1                                             
-H #5   1.643791341850124  -4.430380366729771   0.000000000000000                
-    3    1                                                                      
-   3.42525090000000       0.154329000000000                                     
-  0.623913700000000       0.535328100000000                                     
-  0.168855400000000       0.444634500000000                                     
-          6.00000000    1    2    1    1                                        
-C #6   5.449384572119542  -1.009628273757585   0.000000000000000                
-    6    2                                                                      
-   71.6168373000000       0.154329000000000       0.000000000000000E+000        
-   13.0450963000000       0.535328100000000       0.000000000000000E+000        
-   3.53051220000000       0.444634500000000       0.000000000000000E+000        
-   2.94124940000000       0.000000000000000E+000 -9.996720000000001E-002        
-  0.683483100000000       0.000000000000000E+000  0.399512800000000             
-  0.222289900000000       0.000000000000000E+000  0.700115500000000             
-    3    1                                                                      
-   2.94124940000000       0.155916300000000                                     
-  0.683483100000000       0.607683700000000                                     
-  0.222289900000000       0.391957400000000                                     
-          6.00000000    1    2    1    1                                        
-C #7   7.340522529290705   0.686468908756816   0.000000000000000                
-    6    2                                                                      
-   71.6168373000000       0.154329000000000       0.000000000000000E+000        
-   13.0450963000000       0.535328100000000       0.000000000000000E+000        
-   3.53051220000000       0.444634500000000       0.000000000000000E+000        
-   2.94124940000000       0.000000000000000E+000 -9.996720000000001E-002        
-  0.683483100000000       0.000000000000000E+000  0.399512800000000             
-  0.222289900000000       0.000000000000000E+000  0.700115500000000             
-    3    1                                                                      
-   2.94124940000000       0.155916300000000                                     
-  0.683483100000000       0.607683700000000                                     
-  0.222289900000000       0.391957400000000                                     
-          1.00000000    1    1    1                                             
-H #8   7.008097862154085   2.730795410975419   0.000000000000000                
-    3    1                                                                      
-   3.42525090000000       0.154329000000000                                     
-  0.623913700000000       0.535328100000000                                     
-  0.168855400000000       0.444634500000000                                     
-          1.00000000    1    1    1                                             
-H #9   5.914518801160900  -3.036442630400477   0.000000000000000                
-    3    1                                                                      
-   3.42525090000000       0.154329000000000                                     
-  0.623913700000000       0.535328100000000                                     
-  0.168855400000000       0.444634500000000                                     
-          1.00000000    1    1    1                                             
-H #0   9.322749330046985   0.084637826060924   0.000000000000000                
-    3    1                                                                      
-   3.42525090000000       0.154329000000000                                     
-  0.623913700000000       0.535328100000000                                     
-  0.168855400000000       0.444634500000000                                     
-FINISH                                                                          
- 
+INTGRL        1    0    1    0    0    0    0    0    0
+         *** CFOUR Program System (Release V0.1) ***
+CCSD/STO-3G EOMEE DVB
+   10    2 Z  XY      0.10E-08              0    0
+   9999.00      3.00
+          6.00000000    1    2    1    1
+C #1  -2.676249934586875   0.444728803708827   0.000000000000000
+    6    2
+   71.6168373000000       0.154329000000000       0.000000000000000E+000
+   13.0450963000000       0.535328100000000       0.000000000000000E+000
+   3.53051220000000       0.444634500000000       0.000000000000000E+000
+   2.94124940000000       0.000000000000000E+000 -9.996720000000001E-002
+  0.683483100000000       0.000000000000000E+000  0.399512800000000
+  0.222289900000000       0.000000000000000E+000  0.700115500000000
+    3    1
+   2.94124940000000       0.155916300000000
+  0.683483100000000       0.607683700000000
+  0.222289900000000       0.391957400000000
+          6.00000000    1    2    1    1
+C #2  -1.690742747834288  -2.053551381019105   0.000000000000000
+    6    2
+   71.6168373000000       0.154329000000000       0.000000000000000E+000
+   13.0450963000000       0.535328100000000       0.000000000000000E+000
+   3.53051220000000       0.444634500000000       0.000000000000000E+000
+   2.94124940000000       0.000000000000000E+000 -9.996720000000001E-002
+  0.683483100000000       0.000000000000000E+000  0.399512800000000
+  0.222289900000000       0.000000000000000E+000  0.700115500000000
+    3    1
+   2.94124940000000       0.155916300000000
+  0.683483100000000       0.607683700000000
+  0.222289900000000       0.391957400000000
+          6.00000000    1    2    1    1
+C #3   0.923894832167357  -2.483057061984854   0.000000000000000
+    6    2
+   71.6168373000000       0.154329000000000       0.000000000000000E+000
+   13.0450963000000       0.535328100000000       0.000000000000000E+000
+   3.53051220000000       0.444634500000000       0.000000000000000E+000
+   2.94124940000000       0.000000000000000E+000 -9.996720000000001E-002
+  0.683483100000000       0.000000000000000E+000  0.399512800000000
+  0.222289900000000       0.000000000000000E+000  0.700115500000000
+    3    1
+   2.94124940000000       0.155916300000000
+  0.683483100000000       0.607683700000000
+  0.222289900000000       0.391957400000000
+          1.00000000    1    1    1
+H #4  -2.987842899358434  -3.672082575322393   0.000000000000000
+    3    1
+   3.42525090000000       0.154329000000000
+  0.623913700000000       0.535328100000000
+  0.168855400000000       0.444634500000000
+          1.00000000    1    1    1
+H #5   1.643791341850124  -4.430380366729771   0.000000000000000
+    3    1
+   3.42525090000000       0.154329000000000
+  0.623913700000000       0.535328100000000
+  0.168855400000000       0.444634500000000
+          6.00000000    1    2    1    1
+C #6   5.449384572119542  -1.009628273757585   0.000000000000000
+    6    2
+   71.6168373000000       0.154329000000000       0.000000000000000E+000
+   13.0450963000000       0.535328100000000       0.000000000000000E+000
+   3.53051220000000       0.444634500000000       0.000000000000000E+000
+   2.94124940000000       0.000000000000000E+000 -9.996720000000001E-002
+  0.683483100000000       0.000000000000000E+000  0.399512800000000
+  0.222289900000000       0.000000000000000E+000  0.700115500000000
+    3    1
+   2.94124940000000       0.155916300000000
+  0.683483100000000       0.607683700000000
+  0.222289900000000       0.391957400000000
+          6.00000000    1    2    1    1
+C #7   7.340522529290705   0.686468908756816   0.000000000000000
+    6    2
+   71.6168373000000       0.154329000000000       0.000000000000000E+000
+   13.0450963000000       0.535328100000000       0.000000000000000E+000
+   3.53051220000000       0.444634500000000       0.000000000000000E+000
+   2.94124940000000       0.000000000000000E+000 -9.996720000000001E-002
+  0.683483100000000       0.000000000000000E+000  0.399512800000000
+  0.222289900000000       0.000000000000000E+000  0.700115500000000
+    3    1
+   2.94124940000000       0.155916300000000
+  0.683483100000000       0.607683700000000
+  0.222289900000000       0.391957400000000
+          1.00000000    1    1    1
+H #8   7.008097862154085   2.730795410975419   0.000000000000000
+    3    1
+   3.42525090000000       0.154329000000000
+  0.623913700000000       0.535328100000000
+  0.168855400000000       0.444634500000000
+          1.00000000    1    1    1
+H #9   5.914518801160900  -3.036442630400477   0.000000000000000
+    3    1
+   3.42525090000000       0.154329000000000
+  0.623913700000000       0.535328100000000
+  0.168855400000000       0.444634500000000
+          1.00000000    1    1    1
+H #0   9.322749330046985   0.084637826060924   0.000000000000000
+    3    1
+   3.42525090000000       0.154329000000000
+  0.623913700000000       0.535328100000000
+  0.168855400000000       0.444634500000000
+FINISH
+
 ********************************************************************************
  ONE- AND TWO-ELECTRON INTEGRALS OVER SYMMETRY-ADAPTED AOS ARE CALCULATED.
 
   SPHERICAL HARMONICS ARE USED.
-  
+
   10 TYPES OF ATOMS
    2 SYMMETRY OPERATIONS
 
    REFLECTION IN THE XY-PLANE
    ROTATION ABOUT THE Z-AXIS
-  
+
   INTEGRALS LESS THAN  0.10E-13 ARE NEGLECTED.
 
   ATOMIC TYPE NUMBER  1 :
@@ -580,7 +580,7 @@ FINISH
     NUCLEAR COORDINATES (IN A.U.) ARE :
 
     C #1       -2.676249934586875        0.444728803708827        0.000000000000000
-  
+
   ATOMIC TYPE NUMBER  2 :
   -----------------------
 
@@ -594,7 +594,7 @@ FINISH
     NUCLEAR COORDINATES (IN A.U.) ARE :
 
     C #2       -1.690742747834288       -2.053551381019105        0.000000000000000
-  
+
   ATOMIC TYPE NUMBER  3 :
   -----------------------
 
@@ -608,7 +608,7 @@ FINISH
     NUCLEAR COORDINATES (IN A.U.) ARE :
 
     C #3        0.923894832167357       -2.483057061984854        0.000000000000000
-  
+
   ATOMIC TYPE NUMBER  4 :
   -----------------------
 
@@ -621,7 +621,7 @@ FINISH
     NUCLEAR COORDINATES (IN A.U.) ARE :
 
     H #4       -2.987842899358434       -3.672082575322393        0.000000000000000
-  
+
   ATOMIC TYPE NUMBER  5 :
   -----------------------
 
@@ -634,7 +634,7 @@ FINISH
     NUCLEAR COORDINATES (IN A.U.) ARE :
 
     H #5        1.643791341850124       -4.430380366729771        0.000000000000000
-  
+
   ATOMIC TYPE NUMBER  6 :
   -----------------------
 
@@ -648,7 +648,7 @@ FINISH
     NUCLEAR COORDINATES (IN A.U.) ARE :
 
     C #6        5.449384572119542       -1.009628273757585        0.000000000000000
-  
+
   ATOMIC TYPE NUMBER  7 :
   -----------------------
 
@@ -662,7 +662,7 @@ FINISH
     NUCLEAR COORDINATES (IN A.U.) ARE :
 
     C #7        7.340522529290705        0.686468908756816        0.000000000000000
-  
+
   ATOMIC TYPE NUMBER  8 :
   -----------------------
 
@@ -675,7 +675,7 @@ FINISH
     NUCLEAR COORDINATES (IN A.U.) ARE :
 
     H #8        7.008097862154085        2.730795410975419        0.000000000000000
-  
+
   ATOMIC TYPE NUMBER  9 :
   -----------------------
 
@@ -688,7 +688,7 @@ FINISH
     NUCLEAR COORDINATES (IN A.U.) ARE :
 
     H #9        5.914518801160900       -3.036442630400477        0.000000000000000
-  
+
   ATOMIC TYPE NUMBER 10 :
   -----------------------
 
@@ -701,7 +701,7 @@ FINISH
     NUCLEAR COORDINATES (IN A.U.) ARE :
 
     H #0        9.322749330046985        0.084637826060924        0.000000000000000
-  
+
    INTERNUCLEAR DISTANCES (A) :
 
      FOR ATOM C #1 (COORDINATES :  -2.67625   0.44473   0.00000)
@@ -845,7 +845,7 @@ FINISH
 
    ATOM                 EXPONENT      COEFFICIENTS
 
- C #1  1    S   
+ C #1  1    S
 +                 1      71.616837   0.1543290   0.0000000
                   2      13.045096   0.5353281   0.0000000
                   3       3.530512   0.4446345   0.0000000
@@ -853,7 +853,7 @@ FINISH
                   5       0.683483   0.0000000   0.3995128
                   6       0.222290   0.0000000   0.7001155
 
- C #1  3    S   
+ C #1  3    S
 +                 7      71.616837   0.1543290   0.0000000
                   8      13.045096   0.5353281   0.0000000
                   9       3.530512   0.4446345   0.0000000
@@ -861,37 +861,37 @@ FINISH
                  11       0.683483   0.0000000   0.3995128
                  12       0.222290   0.0000000   0.7001155
 
- C #1  1    X   
+ C #1  1    X
 +                13       2.941249   0.1559163
                  14       0.683483   0.6076837
                  15       0.222290   0.3919574
 
- C #1  3    X   
+ C #1  3    X
 +                16       2.941249   0.1559163
                  17       0.683483   0.6076837
                  18       0.222290   0.3919574
 
- C #1  1    Y   
+ C #1  1    Y
 +                19       2.941249   0.1559163
                  20       0.683483   0.6076837
                  21       0.222290   0.3919574
 
- C #1  3    Y   
+ C #1  3    Y
 +                22       2.941249   0.1559163
                  23       0.683483   0.6076837
                  24       0.222290   0.3919574
 
- C #1  1    Z   
+ C #1  1    Z
 +                25       2.941249   0.1559163
                  26       0.683483   0.6076837
                  27       0.222290   0.3919574
 
- C #1  3    Z   
+ C #1  3    Z
 +                28       2.941249   0.1559163
                  29       0.683483   0.6076837
                  30       0.222290   0.3919574
 
- C #2  1    S   
+ C #2  1    S
 +                31      71.616837   0.1543290   0.0000000
                  32      13.045096   0.5353281   0.0000000
                  33       3.530512   0.4446345   0.0000000
@@ -899,7 +899,7 @@ FINISH
                  35       0.683483   0.0000000   0.3995128
                  36       0.222290   0.0000000   0.7001155
 
- C #2  3    S   
+ C #2  3    S
 +                37      71.616837   0.1543290   0.0000000
                  38      13.045096   0.5353281   0.0000000
                  39       3.530512   0.4446345   0.0000000
@@ -907,37 +907,37 @@ FINISH
                  41       0.683483   0.0000000   0.3995128
                  42       0.222290   0.0000000   0.7001155
 
- C #2  1    X   
+ C #2  1    X
 +                43       2.941249   0.1559163
                  44       0.683483   0.6076837
                  45       0.222290   0.3919574
 
- C #2  3    X   
+ C #2  3    X
 +                46       2.941249   0.1559163
                  47       0.683483   0.6076837
                  48       0.222290   0.3919574
 
- C #2  1    Y   
+ C #2  1    Y
 +                49       2.941249   0.1559163
                  50       0.683483   0.6076837
                  51       0.222290   0.3919574
 
- C #2  3    Y   
+ C #2  3    Y
 +                52       2.941249   0.1559163
                  53       0.683483   0.6076837
                  54       0.222290   0.3919574
 
- C #2  1    Z   
+ C #2  1    Z
 +                55       2.941249   0.1559163
                  56       0.683483   0.6076837
                  57       0.222290   0.3919574
 
- C #2  3    Z   
+ C #2  3    Z
 +                58       2.941249   0.1559163
                  59       0.683483   0.6076837
                  60       0.222290   0.3919574
 
- C #3  1    S   
+ C #3  1    S
 +                61      71.616837   0.1543290   0.0000000
                  62      13.045096   0.5353281   0.0000000
                  63       3.530512   0.4446345   0.0000000
@@ -945,7 +945,7 @@ FINISH
                  65       0.683483   0.0000000   0.3995128
                  66       0.222290   0.0000000   0.7001155
 
- C #3  3    S   
+ C #3  3    S
 +                67      71.616837   0.1543290   0.0000000
                  68      13.045096   0.5353281   0.0000000
                  69       3.530512   0.4446345   0.0000000
@@ -953,57 +953,57 @@ FINISH
                  71       0.683483   0.0000000   0.3995128
                  72       0.222290   0.0000000   0.7001155
 
- C #3  1    X   
+ C #3  1    X
 +                73       2.941249   0.1559163
                  74       0.683483   0.6076837
                  75       0.222290   0.3919574
 
- C #3  3    X   
+ C #3  3    X
 +                76       2.941249   0.1559163
                  77       0.683483   0.6076837
                  78       0.222290   0.3919574
 
- C #3  1    Y   
+ C #3  1    Y
 +                79       2.941249   0.1559163
                  80       0.683483   0.6076837
                  81       0.222290   0.3919574
 
- C #3  3    Y   
+ C #3  3    Y
 +                82       2.941249   0.1559163
                  83       0.683483   0.6076837
                  84       0.222290   0.3919574
 
- C #3  1    Z   
+ C #3  1    Z
 +                85       2.941249   0.1559163
                  86       0.683483   0.6076837
                  87       0.222290   0.3919574
 
- C #3  3    Z   
+ C #3  3    Z
 +                88       2.941249   0.1559163
                  89       0.683483   0.6076837
                  90       0.222290   0.3919574
 
- H #4  1    S   
+ H #4  1    S
 +                91       3.425251   0.1543290
                  92       0.623914   0.5353281
                  93       0.168855   0.4446345
 
- H #4  3    S   
+ H #4  3    S
 +                94       3.425251   0.1543290
                  95       0.623914   0.5353281
                  96       0.168855   0.4446345
 
- H #5  1    S   
+ H #5  1    S
 +                97       3.425251   0.1543290
                  98       0.623914   0.5353281
                  99       0.168855   0.4446345
 
- H #5  3    S   
+ H #5  3    S
 +               100       3.425251   0.1543290
                 101       0.623914   0.5353281
                 102       0.168855   0.4446345
 
- C #6  1    S   
+ C #6  1    S
 +               103      71.616837   0.1543290   0.0000000
                 104      13.045096   0.5353281   0.0000000
                 105       3.530512   0.4446345   0.0000000
@@ -1011,7 +1011,7 @@ FINISH
                 107       0.683483   0.0000000   0.3995128
                 108       0.222290   0.0000000   0.7001155
 
- C #6  3    S   
+ C #6  3    S
 +               109      71.616837   0.1543290   0.0000000
                 110      13.045096   0.5353281   0.0000000
                 111       3.530512   0.4446345   0.0000000
@@ -1019,37 +1019,37 @@ FINISH
                 113       0.683483   0.0000000   0.3995128
                 114       0.222290   0.0000000   0.7001155
 
- C #6  1    X   
+ C #6  1    X
 +               115       2.941249   0.1559163
                 116       0.683483   0.6076837
                 117       0.222290   0.3919574
 
- C #6  3    X   
+ C #6  3    X
 +               118       2.941249   0.1559163
                 119       0.683483   0.6076837
                 120       0.222290   0.3919574
 
- C #6  1    Y   
+ C #6  1    Y
 +               121       2.941249   0.1559163
                 122       0.683483   0.6076837
                 123       0.222290   0.3919574
 
- C #6  3    Y   
+ C #6  3    Y
 +               124       2.941249   0.1559163
                 125       0.683483   0.6076837
                 126       0.222290   0.3919574
 
- C #6  1    Z   
+ C #6  1    Z
 +               127       2.941249   0.1559163
                 128       0.683483   0.6076837
                 129       0.222290   0.3919574
 
- C #6  3    Z   
+ C #6  3    Z
 +               130       2.941249   0.1559163
                 131       0.683483   0.6076837
                 132       0.222290   0.3919574
 
- C #7  1    S   
+ C #7  1    S
 +               133      71.616837   0.1543290   0.0000000
                 134      13.045096   0.5353281   0.0000000
                 135       3.530512   0.4446345   0.0000000
@@ -1057,7 +1057,7 @@ FINISH
                 137       0.683483   0.0000000   0.3995128
                 138       0.222290   0.0000000   0.7001155
 
- C #7  3    S   
+ C #7  3    S
 +               139      71.616837   0.1543290   0.0000000
                 140      13.045096   0.5353281   0.0000000
                 141       3.530512   0.4446345   0.0000000
@@ -1065,62 +1065,62 @@ FINISH
                 143       0.683483   0.0000000   0.3995128
                 144       0.222290   0.0000000   0.7001155
 
- C #7  1    X   
+ C #7  1    X
 +               145       2.941249   0.1559163
                 146       0.683483   0.6076837
                 147       0.222290   0.3919574
 
- C #7  3    X   
+ C #7  3    X
 +               148       2.941249   0.1559163
                 149       0.683483   0.6076837
                 150       0.222290   0.3919574
 
- C #7  1    Y   
+ C #7  1    Y
 +               151       2.941249   0.1559163
                 152       0.683483   0.6076837
                 153       0.222290   0.3919574
 
- C #7  3    Y   
+ C #7  3    Y
 +               154       2.941249   0.1559163
                 155       0.683483   0.6076837
                 156       0.222290   0.3919574
 
- C #7  1    Z   
+ C #7  1    Z
 +               157       2.941249   0.1559163
                 158       0.683483   0.6076837
                 159       0.222290   0.3919574
 
- C #7  3    Z   
+ C #7  3    Z
 +               160       2.941249   0.1559163
                 161       0.683483   0.6076837
                 162       0.222290   0.3919574
 
- H #8  1    S   
+ H #8  1    S
 +               163       3.425251   0.1543290
                 164       0.623914   0.5353281
                 165       0.168855   0.4446345
 
- H #8  3    S   
+ H #8  3    S
 +               166       3.425251   0.1543290
                 167       0.623914   0.5353281
                 168       0.168855   0.4446345
 
- H #9  1    S   
+ H #9  1    S
 +               169       3.425251   0.1543290
                 170       0.623914   0.5353281
                 171       0.168855   0.4446345
 
- H #9  3    S   
+ H #9  3    S
 +               172       3.425251   0.1543290
                 173       0.623914   0.5353281
                 174       0.168855   0.4446345
 
- H #0  1    S   
+ H #0  1    S
 +               175       3.425251   0.1543290
                 176       0.623914   0.5353281
                 177       0.168855   0.4446345
 
- H #0  3    S   
+ H #0  3    S
 +               178       3.425251   0.1543290
                 179       0.623914   0.5353281
                 180       0.168855   0.4446345
@@ -1131,7 +1131,7 @@ FINISH
 1
 
              SYMMETRY TRANSFORMATION INFO
-             60 SYMMETRY ADAPTED BASIS FUNCTIONS 
+             60 SYMMETRY ADAPTED BASIS FUNCTIONS
 
 
           IRREDUCIBLE REPRESENTATION NUMBER 1
@@ -1225,7 +1225,7 @@ Running with 1 threads/proc
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvmol2ja
  @GETMEM-I,  Allocated     762 MB of main memory.
- ZMAT order <=> comp order: mapping vector 
+ ZMAT order <=> comp order: mapping vector
            1    1
            4    2
            2    3
@@ -1261,12 +1261,12 @@ Running with 1 threads/proc
          4                  5
 
 
-  Parameters for SCF calculation: 
-        SCF reference function:  RHF  
+  Parameters for SCF calculation:
+        SCF reference function:  RHF
   Maximum number of iterations:  150
-     Full symmetry point group: C2h 
-     Computational point group: C2h 
-        Initial density matrix: MOREAD                 
+     Full symmetry point group: C2h
+     Computational point group: C2h
+        Initial density matrix: MOREAD
      SCF convergence tolerance: 10**(- 7)
   DIIS convergence acceleration:  ON
           Latest start for DIIS:   8
@@ -1277,7 +1277,7 @@ Running with 1 threads/proc
  @GETMEM-I,  Allocated       1 MB of main memory.
   Initialization and symmetry analysis required      0.001 seconds.
 
- @INITGES-I, Routine entered. 
+ @INITGES-I, Routine entered.
   @INITGES-I, Occupancies from core Hamiltonian:
 
           Alpha population by irrep:  15    3   14    3
@@ -1289,50 +1289,50 @@ Running with 1 threads/proc
   Iteration         Total Energy            Largest Density Difference
   --------------------------------------------------------------------
        0           445.894944024931533              0.0000000000D+00
-   current occupation vector 
+   current occupation vector
     15  3 14  3
     15  3 14  3
-  processed                 102960  ao basis integrals from 
+  processed                 102960  ao basis integrals from
                     26  buffers.
-  processed                 121825  ao basis integrals from 
+  processed                 121825  ao basis integrals from
                     30  buffers.
-  processed                 221235  ao basis integrals from 
+  processed                 221235  ao basis integrals from
                     55  buffers.
        1          -303.440928287767861              0.2772816532D+01
-   current occupation vector 
+   current occupation vector
     15  3 14  3
     15  3 14  3
-  processed                 102960  ao basis integrals from 
+  processed                 102960  ao basis integrals from
                     26  buffers.
-  processed                 121825  ao basis integrals from 
+  processed                 121825  ao basis integrals from
                     30  buffers.
-  processed                 221235  ao basis integrals from 
+  processed                 221235  ao basis integrals from
                     55  buffers.
        2          -296.288567591469928              0.2826395273D+01
-   current occupation vector 
+   current occupation vector
     16  2 15  2
     16  2 15  2
-  processed                 102960  ao basis integrals from 
+  processed                 102960  ao basis integrals from
                     26  buffers.
-  processed                 121825  ao basis integrals from 
+  processed                 121825  ao basis integrals from
                     30  buffers.
-  processed                 221235  ao basis integrals from 
+  processed                 221235  ao basis integrals from
                     55  buffers.
        3          -294.858771284917793              0.2840097955D+01
-   current occupation vector 
+   current occupation vector
     15  3 14  3
     15  3 14  3
-  processed                 102960  ao basis integrals from 
+  processed                 102960  ao basis integrals from
                     26  buffers.
-  processed                 121825  ao basis integrals from 
+  processed                 121825  ao basis integrals from
                     30  buffers.
-  processed                 221235  ao basis integrals from 
+  processed                 221235  ao basis integrals from
                     55  buffers.
        4          -296.273163289102513              0.2840280090D+01
-   current occupation vector 
+   current occupation vector
     16  2 15  2
     16  2 15  2
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      1
  -3.530509218307998E-014  2.625237302766030E-014
@@ -1340,7 +1340,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      1
  -3.330669073875470E-015  2.571369890810747E-016
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      2
   8.215650382226158E-015 -6.365420411364071E-015
@@ -1348,7 +1348,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      2
   2.220446049250313E-016  7.335834718814275E-017
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      3
   9.314771176605063E-014 -6.038801520543714E-015
@@ -1356,7 +1356,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      3
   5.551115123125783E-016 -3.678998919500645E-017
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      4
   1.665334536937735E-014  1.600225284804224E-015
@@ -1364,57 +1364,57 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      4
  -1.221245327087672E-015 -1.156885937340498E-016
-  processed                 102960  ao basis integrals from 
+  processed                 102960  ao basis integrals from
                     26  buffers.
-  processed                 121825  ao basis integrals from 
+  processed                 121825  ao basis integrals from
                     30  buffers.
-  processed                 221235  ao basis integrals from 
+  processed                 221235  ao basis integrals from
                     55  buffers.
        5          -294.565744457673077              0.2840289139D+01
-   current occupation vector 
+   current occupation vector
     15  3 14  3
     15  3 14  3
-  processed                 102960  ao basis integrals from 
+  processed                 102960  ao basis integrals from
                     26  buffers.
-  processed                 121825  ao basis integrals from 
+  processed                 121825  ao basis integrals from
                     30  buffers.
-  processed                 221235  ao basis integrals from 
+  processed                 221235  ao basis integrals from
                     55  buffers.
        6          -296.303089633873469              0.2840284582D+01
-   current occupation vector 
+   current occupation vector
     16  2 15  2
     16  2 15  2
-  processed                 102960  ao basis integrals from 
+  processed                 102960  ao basis integrals from
                     26  buffers.
-  processed                 121825  ao basis integrals from 
+  processed                 121825  ao basis integrals from
                     30  buffers.
-  processed                 221235  ao basis integrals from 
+  processed                 221235  ao basis integrals from
                     55  buffers.
        7          -294.575282436219368              0.2840284639D+01
-   current occupation vector 
+   current occupation vector
     15  3 14  3
     15  3 14  3
-  processed                 102960  ao basis integrals from 
+  processed                 102960  ao basis integrals from
                     26  buffers.
-  processed                 121825  ao basis integrals from 
+  processed                 121825  ao basis integrals from
                     30  buffers.
-  processed                 221235  ao basis integrals from 
+  processed                 221235  ao basis integrals from
                     55  buffers.
        8          -296.304983137875638              0.2840284298D+01
-   current occupation vector 
+   current occupation vector
     16  2 15  2
     16  2 15  2
-  processed                 102960  ao basis integrals from 
+  processed                 102960  ao basis integrals from
                     26  buffers.
-  processed                 121825  ao basis integrals from 
+  processed                 121825  ao basis integrals from
                     30  buffers.
-  processed                 221235  ao basis integrals from 
+  processed                 221235  ao basis integrals from
                     55  buffers.
        9          -379.594893948144886              0.2398457732D+01
-   current occupation vector 
+   current occupation vector
     15  2 15  3
     15  2 15  3
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      1
  -5.784261958297066E-014 -1.268012800940946E-014
@@ -1422,7 +1422,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      1
  -9.992007221626409E-016 -1.695156730669599E-016
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      2
   7.549516567451064E-015  9.259953914764196E-015
@@ -1430,7 +1430,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      2
   0.000000000000000E+000  2.393918396847994E-016
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      3
   6.417089082333405E-014 -4.872518811275785E-015
@@ -1438,7 +1438,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      3
  -5.551115123125783E-016 -5.816755892344163E-015
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      4
   1.132427485117660E-014  5.518155377082223E-015
@@ -1446,57 +1446,57 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      4
   4.440892098500626E-016  1.214306433183765E-017
-  processed                 102960  ao basis integrals from 
+  processed                 102960  ao basis integrals from
                     26  buffers.
-  processed                 121825  ao basis integrals from 
+  processed                 121825  ao basis integrals from
                     30  buffers.
-  processed                 221235  ao basis integrals from 
+  processed                 221235  ao basis integrals from
                     55  buffers.
       10          -379.595599399553635              0.9717866426D-01
-   current occupation vector 
+   current occupation vector
     15  2 15  3
     15  2 15  3
-  processed                 102960  ao basis integrals from 
+  processed                 102960  ao basis integrals from
                     26  buffers.
-  processed                 121825  ao basis integrals from 
+  processed                 121825  ao basis integrals from
                     30  buffers.
-  processed                 221235  ao basis integrals from 
+  processed                 221235  ao basis integrals from
                     55  buffers.
       11          -379.589986014010378              0.2028566972D-01
-   current occupation vector 
+   current occupation vector
     15  2 15  3
     15  2 15  3
-  processed                 102960  ao basis integrals from 
+  processed                 102960  ao basis integrals from
                     26  buffers.
-  processed                 121825  ao basis integrals from 
+  processed                 121825  ao basis integrals from
                     30  buffers.
-  processed                 221235  ao basis integrals from 
+  processed                 221235  ao basis integrals from
                     55  buffers.
       12          -379.599643620322240              0.3886963081D-02
-   current occupation vector 
+   current occupation vector
     15  2 15  3
     15  2 15  3
-  processed                 102960  ao basis integrals from 
+  processed                 102960  ao basis integrals from
                     26  buffers.
-  processed                 121825  ao basis integrals from 
+  processed                 121825  ao basis integrals from
                     30  buffers.
-  processed                 221235  ao basis integrals from 
+  processed                 221235  ao basis integrals from
                     55  buffers.
       13          -379.766311238890466              0.1650456936D+00
-   current occupation vector 
+   current occupation vector
     15  2 15  3
     15  2 15  3
-  processed                 102960  ao basis integrals from 
+  processed                 102960  ao basis integrals from
                     26  buffers.
-  processed                 121825  ao basis integrals from 
+  processed                 121825  ao basis integrals from
                     30  buffers.
-  processed                 221235  ao basis integrals from 
+  processed                 221235  ao basis integrals from
                     55  buffers.
       14          -379.768627018471875              0.1667969182D-01
-   current occupation vector 
+   current occupation vector
     15  2 15  3
     15  2 15  3
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      1
  -1.532107773982716E-014 -3.587378199458045E-014
@@ -1504,7 +1504,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      1
  -2.109423746787797E-015 -1.097378477329985E-015
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      2
   2.331468351712829E-015 -3.596976232492222E-016
@@ -1512,7 +1512,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      2
  -5.551115123125783E-016  8.100413243818105E-016
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      3
   1.088018564132653E-014 -2.267804618113021E-014
@@ -1520,7 +1520,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      3
  -8.881784197001252E-016 -1.564241707666098E-015
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      4
   1.243449787580175E-014  4.050037215319602E-015
@@ -1528,57 +1528,57 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      4
  -3.330669073875470E-016  5.902396627011086E-016
-  processed                 102960  ao basis integrals from 
+  processed                 102960  ao basis integrals from
                     26  buffers.
-  processed                 121825  ao basis integrals from 
+  processed                 121825  ao basis integrals from
                     30  buffers.
-  processed                 221235  ao basis integrals from 
+  processed                 221235  ao basis integrals from
                     55  buffers.
       15          -379.769085318706743              0.8056225185D-02
-   current occupation vector 
+   current occupation vector
     15  2 15  3
     15  2 15  3
-  processed                 102960  ao basis integrals from 
+  processed                 102960  ao basis integrals from
                     26  buffers.
-  processed                 121825  ao basis integrals from 
+  processed                 121825  ao basis integrals from
                     30  buffers.
-  processed                 221235  ao basis integrals from 
+  processed                 221235  ao basis integrals from
                     55  buffers.
       16          -379.769105652050484              0.1975174750D-02
-   current occupation vector 
+   current occupation vector
     15  2 15  3
     15  2 15  3
-  processed                 102960  ao basis integrals from 
+  processed                 102960  ao basis integrals from
                     26  buffers.
-  processed                 121825  ao basis integrals from 
+  processed                 121825  ao basis integrals from
                     30  buffers.
-  processed                 221235  ao basis integrals from 
+  processed                 221235  ao basis integrals from
                     55  buffers.
       17          -379.769106884362145              0.3812185179D-03
-   current occupation vector 
+   current occupation vector
     15  2 15  3
     15  2 15  3
-  processed                 102960  ao basis integrals from 
+  processed                 102960  ao basis integrals from
                     26  buffers.
-  processed                 121825  ao basis integrals from 
+  processed                 121825  ao basis integrals from
                     30  buffers.
-  processed                 221235  ao basis integrals from 
+  processed                 221235  ao basis integrals from
                     55  buffers.
       18          -379.769106954376753              0.1265760910D-03
-   current occupation vector 
+   current occupation vector
     15  2 15  3
     15  2 15  3
-  processed                 102960  ao basis integrals from 
+  processed                 102960  ao basis integrals from
                     26  buffers.
-  processed                 121825  ao basis integrals from 
+  processed                 121825  ao basis integrals from
                     30  buffers.
-  processed                 221235  ao basis integrals from 
+  processed                 221235  ao basis integrals from
                     55  buffers.
       19          -379.769106957749727              0.2009824841D-04
-   current occupation vector 
+   current occupation vector
     15  2 15  3
     15  2 15  3
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      1
  -4.862776847858186E-014 -5.307368609924557E-014
@@ -1586,7 +1586,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      1
  -8.881784197001252E-016 -3.332989139174963E-015
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      2
   5.995204332975845E-015  1.548620173069670E-015
@@ -1594,7 +1594,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      2
   5.551115123125783E-016  3.616356346325400E-016
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      3
   8.448797217397441E-014 -1.502401911370155E-014
@@ -1602,7 +1602,7 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      3
   1.110223024625157E-016  5.917571105938873E-016
- 
+
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      4
   7.993605777301127E-015  5.732637671854168E-015
@@ -1610,56 +1610,56 @@ Running with 1 threads/proc
  sum over diagonal and offdiagdiagonal of C(T)*S*C for irrep
                      4
  -5.551115123125783E-016 -8.397145825900232E-017
-  processed                 102960  ao basis integrals from 
+  processed                 102960  ao basis integrals from
                     26  buffers.
-  processed                 121825  ao basis integrals from 
+  processed                 121825  ao basis integrals from
                     30  buffers.
-  processed                 221235  ao basis integrals from 
+  processed                 221235  ao basis integrals from
                     55  buffers.
       20          -379.769106957903659              0.3984605299D-05
-   current occupation vector 
+   current occupation vector
     15  2 15  3
     15  2 15  3
-  processed                 102960  ao basis integrals from 
+  processed                 102960  ao basis integrals from
                     26  buffers.
-  processed                 121825  ao basis integrals from 
+  processed                 121825  ao basis integrals from
                     30  buffers.
-  processed                 221235  ao basis integrals from 
+  processed                 221235  ao basis integrals from
                     55  buffers.
       21          -379.769106957914801              0.9324348263D-06
-   current occupation vector 
+   current occupation vector
     15  2 15  3
     15  2 15  3
-  processed                 102960  ao basis integrals from 
+  processed                 102960  ao basis integrals from
                     26  buffers.
-  processed                 121825  ao basis integrals from 
+  processed                 121825  ao basis integrals from
                     30  buffers.
-  processed                 221235  ao basis integrals from 
+  processed                 221235  ao basis integrals from
                     55  buffers.
       22          -379.769106957916506              0.7424618844D-06
-   current occupation vector 
+   current occupation vector
     15  2 15  3
     15  2 15  3
-  processed                 102960  ao basis integrals from 
+  processed                 102960  ao basis integrals from
                     26  buffers.
-  processed                 121825  ao basis integrals from 
+  processed                 121825  ao basis integrals from
                     30  buffers.
-  processed                 221235  ao basis integrals from 
+  processed                 221235  ao basis integrals from
                     55  buffers.
       23          -379.769106957916847              0.1237963768D-06
-   current occupation vector 
+   current occupation vector
     15  2 15  3
     15  2 15  3
 
   SCF has converged.
 
  Density matrix saved to file den.dat
- total electron number:   70.0000000000000     
-  processed                 102960  ao basis integrals from 
+ total electron number:   70.0000000000000
+  processed                 102960  ao basis integrals from
                     26  buffers.
-  processed                 121825  ao basis integrals from 
+  processed                 121825  ao basis integrals from
                     30  buffers.
-  processed                 221235  ao basis integrals from 
+  processed                 221235  ao basis integrals from
                     55  buffers.
      E(SCF)=      -379.769106957917415              0.8943167784D-07
 
@@ -2159,19 +2159,19 @@ Running with 1 threads/proc
    60; C #7               -0.15827
 
 
- @PUTMOS-I, Writing converged MOs to NEWMOS. 
+ @PUTMOS-I, Writing converged MOs to NEWMOS.
  @PUTMOS-I, Symmetry   1 Full Blocks  6 Partial Blocksize   1
  @PUTMOS-I, Symmetry   2 Full Blocks  1 Partial Blocksize   1
  @PUTMOS-I, Symmetry   3 Full Blocks  6 Partial Blocksize   1
  @PUTMOS-I, Symmetry   4 Full Blocks  1 Partial Blocksize   1
- @PUTFOCK-I, Writing converged Fock matrix to NEWFOCK. 
+ @PUTFOCK-I, Writing converged Fock matrix to NEWFOCK.
  @PUTFOCK-I, Symmetry   1 Full Blocks  6 Partial Blocksize   1
  @PUTFOCK-I, Symmetry   2 Full Blocks  1 Partial Blocksize   1
  @PUTFOCK-I, Symmetry   3 Full Blocks  6 Partial Blocksize   1
  @PUTFOCK-I, Symmetry   4 Full Blocks  1 Partial Blocksize   1
 --------------------------------------------------------------------------------
 Eigenvalue    -11.040580    -11.040519    -11.031779    -11.031778    -11.028877
- Symmetry          Bu            Ag           E             E              Bu    
+ Symmetry          Bu            Ag           E             E              Bu
 --------------------------------------------------------------------------------
    1 S         0.7014808     0.7015375     0.0098569     0.0101977     0.0033360
    1 S         0.0252695     0.0251867    -0.0037915    -0.0037405     0.0032430
@@ -2235,7 +2235,7 @@ Eigenvalue    -11.040580    -11.040519    -11.031779    -11.031778    -11.028877
   20 S         0.0000608    -0.0000216     0.0000026     0.0000064    -0.0014002
 --------------------------------------------------------------------------------
 Eigenvalue    -11.028767    -11.028366    -11.028321    -11.017688    -11.017688
- Symmetry          Ag            Bu            Ag           E             E      
+ Symmetry          Ag            Bu            Ag           E             E
 --------------------------------------------------------------------------------
    1 S         0.0031439     0.0064578     0.0017745     0.0002772     0.0002450
    1 S         0.0056450     0.0065575     0.0036476     0.0002698     0.0002692
@@ -2299,7 +2299,7 @@ Eigenvalue    -11.028767    -11.028366    -11.028321    -11.017688    -11.017688
   20 S         0.0010002     0.0044880     0.0046830    -0.0000036    -0.0000053
 --------------------------------------------------------------------------------
 Eigenvalue     -1.090355     -1.020306     -0.975046     -0.950144     -0.909868
- Symmetry          Ag            Bu            Ag            Bu            Bu    
+ Symmetry          Ag            Bu            Ag            Bu            Bu
 --------------------------------------------------------------------------------
    1 S         0.1066710     0.1013275     0.0031017     0.0116164     0.1002928
    1 S        -0.2753025    -0.2709107    -0.0105342    -0.0318536    -0.2790637
@@ -2363,7 +2363,7 @@ Eigenvalue     -1.090355     -1.020306     -0.975046     -0.950144     -0.909868
   20 S        -0.0441743    -0.0257543     0.0237412    -0.0980685    -0.0345357
 --------------------------------------------------------------------------------
 Eigenvalue     -0.800110     -0.762554     -0.727922     -0.697079     -0.627857
- Symmetry          Ag            Ag            Bu            Ag            Ag    
+ Symmetry          Ag            Ag            Bu            Ag            Ag
 --------------------------------------------------------------------------------
    1 S         0.0725397     0.0501518     0.0114901     0.0563465     0.0287494
    1 S        -0.2134662    -0.1504734    -0.0331527    -0.1707229    -0.0960819
@@ -2427,7 +2427,7 @@ Eigenvalue     -0.800110     -0.762554     -0.727922     -0.697079     -0.627857
   20 S        -0.0131227     0.1740597    -0.0517626     0.0978204    -0.1468388
 --------------------------------------------------------------------------------
 Eigenvalue     -0.605892     -0.572469     -0.553902     -0.553347     -0.524842
- Symmetry          Bu            Bu            Bu            Ag            Bu    
+ Symmetry          Bu            Bu            Bu            Ag            Bu
 --------------------------------------------------------------------------------
    1 S         0.0259244     0.0657273     0.0196310     0.0198845     0.0031345
    1 S        -0.0894573    -0.2226878    -0.0663555    -0.0650709    -0.0108569
@@ -2491,7 +2491,7 @@ Eigenvalue     -0.605892     -0.572469     -0.553902     -0.553347     -0.524842
   20 S         0.1111701     0.2246868     0.0321285     0.0040294     0.2596175
 --------------------------------------------------------------------------------
 Eigenvalue     -0.496949     -0.492861     -0.463787     -0.446664     -0.421409
- Symmetry          Bu            Ag            Au            Bu            Ag    
+ Symmetry          Bu            Ag            Au            Bu            Ag
 --------------------------------------------------------------------------------
    1 S         0.0024521     0.0233745     0.0000000     0.0101274     0.0022107
    1 S        -0.0088830    -0.0837980     0.0000000    -0.0441872    -0.0167770
@@ -2555,7 +2555,7 @@ Eigenvalue     -0.496949     -0.492861     -0.463787     -0.446664     -0.421409
   20 S        -0.0035511    -0.1562905     0.0000000    -0.0496870    -0.0491021
 --------------------------------------------------------------------------------
 Eigenvalue     -0.415615     -0.377065     -0.315250     -0.278276     -0.222268
- Symmetry          Ag            Bg            Au            Bg            Bg    
+ Symmetry          Ag            Bg            Au            Bg            Bg
 --------------------------------------------------------------------------------
    1 S         0.0064119     0.0000000     0.0000000     0.0000000     0.0000000
    1 S        -0.0321774     0.0000000     0.0000000     0.0000000     0.0000000
@@ -2619,7 +2619,7 @@ Eigenvalue     -0.415615     -0.377065     -0.315250     -0.278276     -0.222268
   20 S         0.2530635     0.0000000     0.0000000     0.0000000     0.0000000
 --------------------------------------------------------------------------------
 Eigenvalue      0.198874      0.268833      0.308680      0.397069      0.522029
- Symmetry          Au            Au            Bg            Au            Bg    
+ Symmetry          Au            Au            Bg            Au            Bg
 --------------------------------------------------------------------------------
    1 S         0.0000000     0.0000000     0.0000000     0.0000000     0.0000000
    1 S         0.0000000     0.0000000     0.0000000     0.0000000     0.0000000
@@ -2683,7 +2683,7 @@ Eigenvalue      0.198874      0.268833      0.308680      0.397069      0.522029
   20 S         0.0000000     0.0000000     0.0000000     0.0000000     0.0000000
 --------------------------------------------------------------------------------
 Eigenvalue      0.564722      0.575667      0.621719      0.625596      0.658866
- Symmetry          Ag            Bu            Ag            Bu            Ag    
+ Symmetry          Ag            Bu            Ag            Bu            Ag
 --------------------------------------------------------------------------------
    1 S         0.0635157     0.0302831     0.0205536     0.0547564     0.0439785
    1 S        -0.3804888    -0.1809069    -0.1257280    -0.3225733    -0.2699062
@@ -2747,7 +2747,7 @@ Eigenvalue      0.564722      0.575667      0.621719      0.625596      0.658866
   20 S         0.4204031     0.3166566    -0.2887157    -0.1043173     0.2453305
 --------------------------------------------------------------------------------
 Eigenvalue      0.660203      0.678284      0.694482      0.705551      0.740054
- Symmetry          Bu            Bu            Ag            Bu            Ag    
+ Symmetry          Bu            Bu            Ag            Bu            Ag
 --------------------------------------------------------------------------------
    1 S         0.0826495     0.0158157     0.1296936     0.0613489     0.0407731
    1 S        -0.4925976    -0.1024708    -0.7981779    -0.3693519    -0.2576363
@@ -2811,7 +2811,7 @@ Eigenvalue      0.660203      0.678284      0.694482      0.705551      0.740054
   20 S        -0.3437223    -0.5950175    -0.2864545    -0.0837552    -0.2445971
 --------------------------------------------------------------------------------
 Eigenvalue      0.802996      0.824984      0.860168      0.888830      0.921194
- Symmetry          Ag            Bu            Ag            Bu            Bu    
+ Symmetry          Ag            Bu            Ag            Bu            Bu
 --------------------------------------------------------------------------------
    1 S         0.0684030     0.0033942     0.0019544     0.0494975     0.0951009
    1 S        -0.4633672    -0.0125878    -0.0199099    -0.3481771    -0.6532465
@@ -2875,7 +2875,7 @@ Eigenvalue      0.802996      0.824984      0.860168      0.888830      0.921194
   20 S         0.2497119    -0.2997520    -0.4410006     0.0594152     0.1485791
 --------------------------------------------------------------------------------
 Eigenvalue      0.939736      0.990287      1.027132      1.108280      1.125294
- Symmetry          Ag            Ag            Bu            Ag            Bu    
+ Symmetry          Ag            Ag            Bu            Ag            Bu
 --------------------------------------------------------------------------------
    1 S         0.0143009     0.0170605     0.0201593     0.0047641     0.0426628
    1 S        -0.0856187    -0.1086162    -0.1438686    -0.0317942    -0.3234100
@@ -2940,7 +2940,7 @@ Eigenvalue      0.939736      0.990287      1.027132      1.108280      1.125294
 --------------------------------------------------------------------------------
 
 
- 
+
   ORBITAL EIGENVALUES (ALPHA)  (1H = 27.2113834 eV)
 
        MO #        E(hartree)               E(eV)           FULLSYM    COMPSYM
@@ -3033,9 +3033,9 @@ Eigenvalue      0.939736      0.990287      1.027132      1.108280      1.125294
   1 pass through the AO integral file was required.
        46619 AO integrals were read.
        46875 MO integrals were written to HF2.
-  Summary of active molecular orbitals: 
+  Summary of active molecular orbitals:
 ------------------------------------------------------------------------
- 
+
   Index      Eigenvalue    Symmetry    Index      Eigenvalue    Symmetry
 ------------------------------------------------------------------------
      1       -11.0405189        1        31        -0.4969488        3
@@ -3069,26 +3069,26 @@ Eigenvalue      0.939736      0.990287      1.027132      1.108280      1.125294
     29        -0.5539016        3        59         0.3086803        4
     30        -0.5248418        3        60         0.5220286        4
 ------------------------------------------------------------------------
-  -11.0405188760744       -11.0317784197235       -11.0287669908886     
-  -11.0283209839991       -11.0176876779853       -1.09035539613784     
- -0.975045849693475      -0.800109893788456      -0.762553502952081     
- -0.697078780171184      -0.627856658744621      -0.553346765787722     
- -0.492860769783257      -0.421409037237243      -0.415615167375836     
- -0.463787158766031      -0.315249779384635       -11.0405804374697     
-  -11.0317787776484       -11.0288765284070       -11.0283662065440     
-  -11.0176878553539       -1.02030578518849      -0.950144157872997     
- -0.909868283564935      -0.727921911487520      -0.605891566793335     
- -0.572468941230982      -0.553901646887548      -0.524841754302115     
- -0.496948829108151      -0.446664424245773      -0.377065054050607     
- -0.278275689682598      -0.222267762528669       0.564722077271680     
-  0.621718770863503       0.658866388283749       0.694481893844140     
-  0.740053828902163       0.802995923031257       0.860168413338478     
-  0.939735937938426       0.990287361315926        1.10828003549621     
-  0.198874014685225       0.268832647288584       0.397069065462271     
-  0.575666821334873       0.625596123006389       0.660203126492713     
-  0.678284358146943       0.705551212533031       0.824983902835686     
-  0.888830322436576       0.921193773691537        1.02713224930382     
-   1.12529424745153       0.308680326554865       0.522028644598152     
+  -11.0405188760744       -11.0317784197235       -11.0287669908886
+  -11.0283209839991       -11.0176876779853       -1.09035539613784
+ -0.975045849693475      -0.800109893788456      -0.762553502952081
+ -0.697078780171184      -0.627856658744621      -0.553346765787722
+ -0.492860769783257      -0.421409037237243      -0.415615167375836
+ -0.463787158766031      -0.315249779384635       -11.0405804374697
+  -11.0317787776484       -11.0288765284070       -11.0283662065440
+  -11.0176878553539       -1.02030578518849      -0.950144157872997
+ -0.909868283564935      -0.727921911487520      -0.605891566793335
+ -0.572468941230982      -0.553901646887548      -0.524841754302115
+ -0.496948829108151      -0.446664424245773      -0.377065054050607
+ -0.278275689682598      -0.222267762528669       0.564722077271680
+  0.621718770863503       0.658866388283749       0.694481893844140
+  0.740053828902163       0.802995923031257       0.860168413338478
+  0.939735937938426       0.990287361315926        1.10828003549621
+  0.198874014685225       0.268832647288584       0.397069065462271
+  0.575666821334873       0.625596123006389       0.660203126492713
+  0.678284358146943       0.705551212533031       0.824983902835686
+  0.888830322436576       0.921193773691537        1.02713224930382
+   1.12529424745153       0.308680326554865       0.522028644598152
  @CHECKOUT-I, Total execution time (CPU/WALL):        0.06/       0.07 seconds.
 --executable xvtran finished with status     0 in        0.15 seconds (walltime).
  --invoking executable--
@@ -3115,7 +3115,7 @@ Eigenvalue      0.939736      0.990287      1.027132      1.108280      1.125294
   @STT4AAQRHF-I, Processing integral type PHPH, spin case AAAA.
   @DS25AB-I, PPPHAB integrals will be sorted in core.
      Words required:   164721  Words available: 99958920
-  ALPHA EIGENVALUES 
+  ALPHA EIGENVALUES
  -11.04052 -11.03178 -11.02877 -11.02832 -11.01769  -1.09036  -0.97505
   -0.80011  -0.76255  -0.69708  -0.62786  -0.55335  -0.49286  -0.42141
   -0.41562  -0.46379  -0.31525 -11.04058 -11.03178 -11.02888 -11.02837
@@ -3125,7 +3125,7 @@ Eigenvalue      0.939736      0.990287      1.027132      1.108280      1.125294
    0.93974   0.99029   1.10828   0.19887   0.26883   0.39707   0.57567
    0.62560   0.66020   0.67828   0.70555   0.82498   0.88883   0.92119
    1.02713   1.12529   0.30868   0.52203
-  BETA EIGENVALUES 
+  BETA EIGENVALUES
  -11.04052 -11.03178 -11.02877 -11.02832 -11.01769  -1.09036  -0.97505
   -0.80011  -0.76255  -0.69708  -0.62786  -0.55335  -0.49286  -0.42141
   -0.41562  -0.46379  -0.31525 -11.04058 -11.03178 -11.02888 -11.02837
@@ -3176,150 +3176,150 @@ Eigenvalue      0.939736      0.990287      1.027132      1.108280      1.125294
                                            C1                 C2h
 ------------------------------------------------------------------------
  a) contributions to the intermediates :
- 
+
  T2 --> W(MNIJ)  (ABAB)   2 - 7        937890625          95410725
- 
+
  T1 --> W(MNIJ)  (ABAB)     7           37515625           4469250
- 
+
  T2 --> W(MBEJ)  (AAAA)   3 - 7       1339843750         129883750
  T2 --> W(MBEJ)  (ABAB)   3 - 7       1339843750         129883750
  T2 --> W(MBEJ)  (BAAB)   3 - 7        669921875          64941875
- 
+
  T1 --> W(MBEJ)  (AAAA)     7           45937500           5175000
  T1 --> W(MBEJ)  (ABAB)     7           45937500           5175000
  T1 --> W(MBEJ)  (BAAB)     7           45937500           5175000
- 
+
  T1 --> W(ABEF)  (ABAB)     7          696718750          68239350
- 
+
  T2 --> F(MI)    (AA)     3 - 7         26796875           3146565
- 
+
  T2 --> F(AE)    (AA)     3 - 7         19140625           2069065
- 
+
 b) contractions
 ------------------------------------------------------------------------
- 
+
  W(ABEF) --> T2 (ABAB)    1 - 7        478515625          44769975
- 
+
  W(MNIJ) --> T2 (ABAB)    1 - 7        937890625          95410725
- 
+
  W(MBEJ) --> T2 (ABAB)    1 - 7       1339843750         129883750
  W(MBEJ) --> T2 (BAAB)    1 - 7        669921875          64941875
- 
+
  F(MI) --> T2   (ABAB)    2 - 7         26796875           3146565
- 
+
  F(AE) --> T2   (ABAB)    2 - 7         19140625           2069065
- 
+
 c) direct contributions
 ------------------------------------------------------------------------
- 
+
  T2 --> T1       (AA)     3,4,6,7       68140625           7652850
- 
+
  T1 --> T2      (ABAB)     6,7          45937500           5175000
- 
+
  T1**2 --> T2   (ABAB)      7           53593750           6127500
  T1**2 --> T2   (BAAB)      7           53593750           6127500
- 
+
 d) total number of operations for various methods
 ------------------------------------------------------------------------
- 
+
  MBPT(3)                        (1)   3426171875         335006325
  DQ-MBPT(4)                     (2)  10753203125        1055794035
  SDQ-MBPT(4)                    (3)  10821343750        1063446885
  CCD          per iteration     (5)   7805546875         765557685
  QCISD        per iteration     (6)   7919625000         778385535
  CCSD         per iteration     (7)   8852921875         873699135
- 
+
 ------------------------------------------------------------------------
  @CHECKOUT-I, Total execution time (CPU/WALL):        0.04/       0.04 seconds.
 --executable xintprc finished with status     0 in        0.10 seconds (walltime).
-  calling xvcc 
+  calling xvcc
  --invoking executable--
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/xvcc
  @GETMEM-I,  Allocated     762 MB of main memory.
    CCSD energy will be calculated.
    The total correlation energy is -0.604842100122 a.u.
    The total correlation energy is -0.678499436992 a.u.
-  Convergence information after     1 iterations: 
+  Convergence information after     1 iterations:
   Largest element of residual vector : -0.18640365E-01.
   Largest element of DIIS residual   : -0.18640365E-01.
    The total correlation energy is -0.708989473194 a.u.
-  Convergence information after     2 iterations: 
+  Convergence information after     2 iterations:
   Largest element of residual vector : -0.17233992E-01.
   Largest element of DIIS residual   : -0.17109801E-01.
    The total correlation energy is -0.726635283433 a.u.
-  Convergence information after     3 iterations: 
+  Convergence information after     3 iterations:
   Largest element of residual vector : -0.57900138E-02.
   Largest element of DIIS residual   : -0.34244663E-02.
    The total correlation energy is -0.733254949964 a.u.
-  Convergence information after     4 iterations: 
+  Convergence information after     4 iterations:
   Largest element of residual vector : -0.42383022E-02.
   Largest element of DIIS residual   : -0.21802693E-02.
    The total correlation energy is -0.735134338761 a.u.
-  Convergence information after     5 iterations: 
+  Convergence information after     5 iterations:
   Largest element of residual vector : -0.78326898E-03.
   Largest element of DIIS residual   : -0.57603130E-03.
    The total correlation energy is -0.735257699977 a.u.
-  Convergence information after     6 iterations: 
+  Convergence information after     6 iterations:
   Largest element of residual vector : -0.53755599E-03.
   Largest element of DIIS residual   : -0.34651909E-03.
    The total correlation energy is -0.735215830455 a.u.
-  Convergence information after     7 iterations: 
+  Convergence information after     7 iterations:
   Largest element of residual vector : -0.24752928E-03.
   Largest element of DIIS residual   : -0.18605781E-03.
    The total correlation energy is -0.735183036469 a.u.
-  Convergence information after     8 iterations: 
+  Convergence information after     8 iterations:
   Largest element of residual vector : -0.11399109E-03.
   Largest element of DIIS residual   : -0.77887745E-04.
    The total correlation energy is -0.735191823660 a.u.
-  Convergence information after     9 iterations: 
+  Convergence information after     9 iterations:
   Largest element of residual vector : -0.66557542E-04.
   Largest element of DIIS residual   : -0.58322539E-04.
    The total correlation energy is -0.735208348206 a.u.
-  Convergence information after    10 iterations: 
+  Convergence information after    10 iterations:
   Largest element of residual vector : -0.36423731E-04.
   Largest element of DIIS residual   : -0.32030766E-04.
    The total correlation energy is -0.735222277295 a.u.
-  Convergence information after    11 iterations: 
+  Convergence information after    11 iterations:
   Largest element of residual vector : -0.23003840E-04.
   Largest element of DIIS residual   : -0.17746761E-04.
    The total correlation energy is -0.735230458103 a.u.
-  Convergence information after    12 iterations: 
+  Convergence information after    12 iterations:
   Largest element of residual vector : -0.87945408E-05.
   Largest element of DIIS residual   : -0.53026536E-05.
    The total correlation energy is -0.735234101483 a.u.
-  Convergence information after    13 iterations: 
+  Convergence information after    13 iterations:
   Largest element of residual vector : -0.56730638E-05.
   Largest element of DIIS residual   : -0.42126078E-05.
    The total correlation energy is -0.735235063347 a.u.
-  Convergence information after    14 iterations: 
+  Convergence information after    14 iterations:
   Largest element of residual vector : -0.22770333E-05.
   Largest element of DIIS residual   : -0.15540779E-05.
    The total correlation energy is -0.735235650858 a.u.
-  Convergence information after    15 iterations: 
+  Convergence information after    15 iterations:
   Largest element of residual vector : -0.14478469E-05.
   Largest element of DIIS residual   :  0.72832453E-06.
    The total correlation energy is -0.735235953775 a.u.
-  Convergence information after    16 iterations: 
+  Convergence information after    16 iterations:
   Largest element of residual vector : -0.61416162E-06.
   Largest element of DIIS residual   : -0.52339767E-06.
    The total correlation energy is -0.735236042734 a.u.
-  Convergence information after    17 iterations: 
+  Convergence information after    17 iterations:
   Largest element of residual vector : -0.33002440E-06.
   Largest element of DIIS residual   : -0.31288878E-06.
    The total correlation energy is -0.735236054484 a.u.
-  Convergence information after    18 iterations: 
+  Convergence information after    18 iterations:
   Largest element of residual vector : -0.28342572E-06.
   Largest element of DIIS residual   : -0.28204026E-06.
    The total correlation energy is -0.735236066409 a.u.
-  Convergence information after    19 iterations: 
+  Convergence information after    19 iterations:
   Largest element of residual vector : -0.12680538E-06.
   Largest element of DIIS residual   : -0.10096757E-06.
    The total correlation energy is -0.735236078730 a.u.
-  Convergence information after    20 iterations: 
+  Convergence information after    20 iterations:
   Largest element of residual vector : -0.11072103E-06.
   Largest element of DIIS residual   : -0.73342205E-07.
    The total correlation energy is -0.735236091422 a.u.
-  Convergence information after    21 iterations: 
+  Convergence information after    21 iterations:
   Largest element of residual vector : -0.47184398E-07.
   Largest element of DIIS residual   : -0.39390659E-07.
   Amplitude equations converged in    21iterations.
@@ -3327,7 +3327,7 @@ d) total number of operations for various methods
    The CC iterations have converged.
 
    Largest T1 amplitudes for spin case AA:
-   i       a                 i       a                 i       a    
+   i       a                 i       a                 i       a
 -----------------------------------------------------------------------------
 [ 35      59    ]-0.00487 [ 35      60    ] 0.00404 [ 14      41    ] 0.00376
 [ 12      36    ] 0.00351 [ 15      41    ] 0.00342 [ 13      36    ] 0.00329
@@ -3349,33 +3349,33 @@ d) total number of operations for various methods
 -----------------------------------------------------------------------------
    Norm of T2AB vector (   226563 symmetry allowed elements):  0.6803507453.
 -----------------------------------------------------------------------------
-       Summary of iterative solution of CC equations 
+       Summary of iterative solution of CC equations
       -----------------------------------------------------------
                        Correlation           Total
        Iteration         Energy              Energy
       -----------------------------------------------------------
-            0        -0.604842100122    -380.373949058039  DIIS 
-            1        -0.678499436992    -380.447606394909  DIIS 
-            2        -0.708989473194    -380.478096431111  DIIS 
-            3        -0.726635283433    -380.495742241350  DIIS 
-            4        -0.733254949964    -380.502361907881  DIIS 
-            5        -0.735134338761    -380.504241296678  DIIS 
-            6        -0.735257699977    -380.504364657894  DIIS 
-            7        -0.735215830455    -380.504322788373  DIIS 
-            8        -0.735183036469    -380.504289994386  DIIS 
-            9        -0.735191823660    -380.504298781577  DIIS 
-           10        -0.735208348206    -380.504315306123  DIIS 
-           11        -0.735222277295    -380.504329235212  DIIS 
-           12        -0.735230458103    -380.504337416021  DIIS 
-           13        -0.735234101483    -380.504341059400  DIIS 
-           14        -0.735235063347    -380.504342021265  DIIS 
-           15        -0.735235650858    -380.504342608776  DIIS 
-           16        -0.735235953775    -380.504342911692  DIIS 
-           17        -0.735236042734    -380.504343000651  DIIS 
-           18        -0.735236054484    -380.504343012401  DIIS 
-           19        -0.735236066409    -380.504343024327  DIIS 
-           20        -0.735236078730    -380.504343036647  DIIS 
-           21        -0.735236093068    -380.504343050986  DIIS 
+            0        -0.604842100122    -380.373949058039  DIIS
+            1        -0.678499436992    -380.447606394909  DIIS
+            2        -0.708989473194    -380.478096431111  DIIS
+            3        -0.726635283433    -380.495742241350  DIIS
+            4        -0.733254949964    -380.502361907881  DIIS
+            5        -0.735134338761    -380.504241296678  DIIS
+            6        -0.735257699977    -380.504364657894  DIIS
+            7        -0.735215830455    -380.504322788373  DIIS
+            8        -0.735183036469    -380.504289994386  DIIS
+            9        -0.735191823660    -380.504298781577  DIIS
+           10        -0.735208348206    -380.504315306123  DIIS
+           11        -0.735222277295    -380.504329235212  DIIS
+           12        -0.735230458103    -380.504337416021  DIIS
+           13        -0.735234101483    -380.504341059400  DIIS
+           14        -0.735235063347    -380.504342021265  DIIS
+           15        -0.735235650858    -380.504342608776  DIIS
+           16        -0.735235953775    -380.504342911692  DIIS
+           17        -0.735236042734    -380.504343000651  DIIS
+           18        -0.735236054484    -380.504343012401  DIIS
+           19        -0.735236066409    -380.504343024327  DIIS
+           20        -0.735236078730    -380.504343036647  DIIS
+           21        -0.735236093068    -380.504343050986  DIIS
       -----------------------------------------------------------
       A miracle has come to pass. The CC iterations have converged.
       The reference energy is      -379.76910695791742 a.u.
@@ -3477,283 +3477,283 @@ __________________________________________________________________________
 __________________________________________________________________________
    1       1    0.33407      0.0000      0.0000      0.0000  .00000000D+00
 __________________________________________________________________________
- 
+
 __________________________________________________________________________
   TDA excitation ergy:             0.334068169897 a.u.    9.0905 eV
   Total TDA electronic energy:  -379.435038788020 a.u.
- 
-  Dominant contributions: 
-  SCF eigenvalue ordering used in list below. 
+
+  Dominant contributions:
+  SCF eigenvalue ordering used in list below.
 --------------------------------------------------------------------------------
     I    j    A    b
 --------------------------------------------------------------------------------
-   33    0   36    0  -0.8039436256 AA  
-   35    0   38    0  -0.5166370373 AA  
-   32    0   38    0   0.1294422170 AA  
-   28    0   36    0  -0.1221628940 AA  
-   35    0   40    0  -0.0819107645 AA  
-   28    0   39    0  -0.0593114703 AA  
-   33    0   39    0   0.0533153062 AA  
-   26    0   52    0  -0.0499243151 AA  
-   26    0   58    0   0.0462242758 AA  
-   24    0   56    0  -0.0411841373 AA  
-   34    0   38    0  -0.0404796101 AA  
-   33    0   37    0   0.0396686432 AA  
-   27    0   57    0  -0.0360586614 AA  
-   30    0   53    0   0.0354056860 AA  
-   25    0   42    0   0.0321157790 AA  
+   33    0   36    0  -0.8039436256 AA
+   35    0   38    0  -0.5166370373 AA
+   32    0   38    0   0.1294422170 AA
+   28    0   36    0  -0.1221628940 AA
+   35    0   40    0  -0.0819107645 AA
+   28    0   39    0  -0.0593114703 AA
+   33    0   39    0   0.0533153062 AA
+   26    0   52    0  -0.0499243151 AA
+   26    0   58    0   0.0462242758 AA
+   24    0   56    0  -0.0411841373 AA
+   34    0   38    0  -0.0404796101 AA
+   33    0   37    0   0.0396686432 AA
+   27    0   57    0  -0.0360586614 AA
+   30    0   53    0   0.0354056860 AA
+   25    0   42    0   0.0321157790 AA
 --------------------------------------------------------------------------------
    2       1    0.36958      0.0000      0.0000      0.0000  .00000000D+00
 __________________________________________________________________________
- 
+
 __________________________________________________________________________
   TDA excitation ergy:             0.369584781435 a.u.   10.0569 eV
   Total TDA electronic energy:  -379.399522176483 a.u.
- 
-  Dominant contributions: 
-  SCF eigenvalue ordering used in list below. 
+
+  Dominant contributions:
+  SCF eigenvalue ordering used in list below.
 --------------------------------------------------------------------------------
     I    j    A    b
 --------------------------------------------------------------------------------
-   35    0   38    0   0.8026643968 AA  
-   33    0   36    0  -0.5194344257 AA  
-   32    0   38    0   0.1872381378 AA  
-   33    0   39    0  -0.1813501682 AA  
-   28    0   36    0   0.0749291128 AA  
-   32    0   40    0   0.0747680875 AA  
-   28    0   39    0  -0.0625206666 AA  
-   33    0   37    0  -0.0213989554 AA  
-   34    0   38    0   0.0199423094 AA  
-   26    0   52    0   0.0113133093 AA  
-   25    0   42    0  -0.0098395136 AA  
-   35    0   40    0   0.0093120743 AA  
-   30    0   53    0  -0.0092084491 AA  
-   31    0   53    0   0.0082967219 AA  
-   19    0   41    0  -0.0079954377 AA  
+   35    0   38    0   0.8026643968 AA
+   33    0   36    0  -0.5194344257 AA
+   32    0   38    0   0.1872381378 AA
+   33    0   39    0  -0.1813501682 AA
+   28    0   36    0   0.0749291128 AA
+   32    0   40    0   0.0747680875 AA
+   28    0   39    0  -0.0625206666 AA
+   33    0   37    0  -0.0213989554 AA
+   34    0   38    0   0.0199423094 AA
+   26    0   52    0   0.0113133093 AA
+   25    0   42    0  -0.0098395136 AA
+   35    0   40    0   0.0093120743 AA
+   30    0   53    0  -0.0092084491 AA
+   31    0   53    0   0.0082967219 AA
+   19    0   41    0  -0.0079954377 AA
 --------------------------------------------------------------------------------
    3       1    0.41017      0.0000      0.0000      0.0000  .00000000D+00
 __________________________________________________________________________
- 
+
 __________________________________________________________________________
   TDA excitation ergy:             0.410172900768 a.u.   11.1614 eV
   Total TDA electronic energy:  -379.358934057149 a.u.
- 
-  Dominant contributions: 
-  SCF eigenvalue ordering used in list below. 
+
+  Dominant contributions:
+  SCF eigenvalue ordering used in list below.
 --------------------------------------------------------------------------------
     I    j    A    b
 --------------------------------------------------------------------------------
-   33    0   37    0   0.7433154040 AA  
-   34    0   38    0  -0.5588552881 AA  
-   28    0   37    0   0.2675420525 AA  
-   34    0   40    0  -0.1541418277 AA  
-   35    0   38    0   0.0553398635 AA  
-   26    0   54    0   0.0509139023 AA  
-   25    0   60    0  -0.0381593684 AA  
-   33    0   36    0   0.0373772077 AA  
-   21    0   54    0   0.0342170679 AA  
-   26    0   44    0  -0.0334786822 AA  
-   30    0   57    0  -0.0331188230 AA  
-   17    0   48    0   0.0315445123 AA  
-   30    0   59    0   0.0311334412 AA  
-   30    0   51    0   0.0308249423 AA  
-   31    0   48    0  -0.0291901828 AA  
+   33    0   37    0   0.7433154040 AA
+   34    0   38    0  -0.5588552881 AA
+   28    0   37    0   0.2675420525 AA
+   34    0   40    0  -0.1541418277 AA
+   35    0   38    0   0.0553398635 AA
+   26    0   54    0   0.0509139023 AA
+   25    0   60    0  -0.0381593684 AA
+   33    0   36    0   0.0373772077 AA
+   21    0   54    0   0.0342170679 AA
+   26    0   44    0  -0.0334786822 AA
+   30    0   57    0  -0.0331188230 AA
+   17    0   48    0   0.0315445123 AA
+   30    0   59    0   0.0311334412 AA
+   30    0   51    0   0.0308249423 AA
+   31    0   48    0  -0.0291901828 AA
 --------------------------------------------------------------------------------
    4       1    0.42817      0.0000      0.0000      0.0000  .00000000D+00
 __________________________________________________________________________
- 
+
 __________________________________________________________________________
   TDA excitation ergy:             0.428168456629 a.u.   11.6511 eV
   Total TDA electronic energy:  -379.340938501289 a.u.
- 
-  Dominant contributions: 
-  SCF eigenvalue ordering used in list below. 
+
+  Dominant contributions:
+  SCF eigenvalue ordering used in list below.
 --------------------------------------------------------------------------------
     I    j    A    b
 --------------------------------------------------------------------------------
-   34    0   38    0   0.7926147868 AA  
-   33    0   37    0   0.5928894593 AA  
-   34    0   40    0   0.0871354683 AA  
-   28    0   36    0   0.0725569644 AA  
-   28    0   37    0   0.0704403631 AA  
-   32    0   38    0   0.0325560423 AA  
-   35    0   38    0  -0.0179793542 AA  
-   33    0   39    0   0.0088716885 AA  
-   35    0   40    0  -0.0077011833 AA  
-   26    0   54    0  -0.0064402173 AA  
-   31    0   48    0   0.0060370336 AA  
-   31    0   59    0  -0.0058873995 AA  
-   31    0   51    0   0.0056028285 AA  
-   26    0   58    0   0.0055750411 AA  
-   23    0   55    0  -0.0055606826 AA  
+   34    0   38    0   0.7926147868 AA
+   33    0   37    0   0.5928894593 AA
+   34    0   40    0   0.0871354683 AA
+   28    0   36    0   0.0725569644 AA
+   28    0   37    0   0.0704403631 AA
+   32    0   38    0   0.0325560423 AA
+   35    0   38    0  -0.0179793542 AA
+   33    0   39    0   0.0088716885 AA
+   35    0   40    0  -0.0077011833 AA
+   26    0   54    0  -0.0064402173 AA
+   31    0   48    0   0.0060370336 AA
+   31    0   59    0  -0.0058873995 AA
+   31    0   51    0   0.0056028285 AA
+   26    0   58    0   0.0055750411 AA
+   23    0   55    0  -0.0055606826 AA
 --------------------------------------------------------------------------------
    5       1    0.44987      0.0000      0.0000      0.0000  .00000000D+00
 __________________________________________________________________________
- 
+
 __________________________________________________________________________
   TDA excitation ergy:             0.449874232642 a.u.   12.2417 eV
   Total TDA electronic energy:  -379.319232725275 a.u.
- 
-  Dominant contributions: 
-  SCF eigenvalue ordering used in list below. 
+
+  Dominant contributions:
+  SCF eigenvalue ordering used in list below.
 --------------------------------------------------------------------------------
     I    j    A    b
 --------------------------------------------------------------------------------
-   28    0   36    0   0.8291182127 AA  
-   32    0   38    0   0.3874038352 AA  
-   33    0   39    0   0.2548398873 AA  
-   35    0   40    0   0.1021305009 AA  
-   35    0   38    0  -0.1005061278 AA  
-   28    0   39    0   0.0886982426 AA  
-   26    0   58    0   0.0774755413 AA  
-   33    0   37    0  -0.0756460622 AA  
-   31    0   59    0  -0.0461108902 AA  
-   21    0   52    0   0.0459584220 AA  
-   34    0   38    0  -0.0442233550 AA  
-   23    0   52    0   0.0441207566 AA  
-   30    0   59    0   0.0413439653 AA  
-   23    0   55    0  -0.0410941427 AA  
-   24    0   56    0  -0.0409981706 AA  
+   28    0   36    0   0.8291182127 AA
+   32    0   38    0   0.3874038352 AA
+   33    0   39    0   0.2548398873 AA
+   35    0   40    0   0.1021305009 AA
+   35    0   38    0  -0.1005061278 AA
+   28    0   39    0   0.0886982426 AA
+   26    0   58    0   0.0774755413 AA
+   33    0   37    0  -0.0756460622 AA
+   31    0   59    0  -0.0461108902 AA
+   21    0   52    0   0.0459584220 AA
+   34    0   38    0  -0.0442233550 AA
+   23    0   52    0   0.0441207566 AA
+   30    0   59    0   0.0413439653 AA
+   23    0   55    0  -0.0410941427 AA
+   24    0   56    0  -0.0409981706 AA
 --------------------------------------------------------------------------------
    6       1    0.49047      0.0000      0.0000      0.0000  .00000000D+00
 __________________________________________________________________________
- 
+
 __________________________________________________________________________
   TDA excitation ergy:             0.490469421555 a.u.   13.3464 eV
   Total TDA electronic energy:  -379.278637536363 a.u.
- 
-  Dominant contributions: 
-  SCF eigenvalue ordering used in list below. 
+
+  Dominant contributions:
+  SCF eigenvalue ordering used in list below.
 --------------------------------------------------------------------------------
     I    j    A    b
 --------------------------------------------------------------------------------
-   32    0   38    0   0.5626972736 AA  
-   33    0   39    0   0.5351120494 AA  
-   28    0   36    0  -0.4454205700 AA  
-   28    0   39    0  -0.2250206088 AA  
-   35    0   40    0   0.2201349064 AA  
-   33    0   36    0   0.1403423520 AA  
-   32    0   40    0  -0.1347831118 AA  
-   35    0   38    0   0.1159807525 AA  
-   28    0   37    0   0.0805460289 AA  
-   30    0   41    0   0.0629213790 AA  
-   29    0   44    0   0.0493094441 AA  
-   26    0   58    0   0.0463548333 AA  
-   34    0   38    0   0.0384946191 AA  
-   31    0   41    0   0.0384861773 AA  
-   29    0   42    0   0.0365139530 AA  
+   32    0   38    0   0.5626972736 AA
+   33    0   39    0   0.5351120494 AA
+   28    0   36    0  -0.4454205700 AA
+   28    0   39    0  -0.2250206088 AA
+   35    0   40    0   0.2201349064 AA
+   33    0   36    0   0.1403423520 AA
+   32    0   40    0  -0.1347831118 AA
+   35    0   38    0   0.1159807525 AA
+   28    0   37    0   0.0805460289 AA
+   30    0   41    0   0.0629213790 AA
+   29    0   44    0   0.0493094441 AA
+   26    0   58    0   0.0463548333 AA
+   34    0   38    0   0.0384946191 AA
+   31    0   41    0   0.0384861773 AA
+   29    0   42    0   0.0365139530 AA
 --------------------------------------------------------------------------------
    7       1    0.50505      0.0000      0.0000      0.0000  .00000000D+00
 __________________________________________________________________________
- 
+
 __________________________________________________________________________
   TDA excitation ergy:             0.505051312610 a.u.   13.7431 eV
   Total TDA electronic energy:  -379.264055645307 a.u.
- 
-  Dominant contributions: 
-  SCF eigenvalue ordering used in list below. 
+
+  Dominant contributions:
+  SCF eigenvalue ordering used in list below.
 --------------------------------------------------------------------------------
     I    j    A    b
 --------------------------------------------------------------------------------
-   28    0   37    0  -0.9038395500 AA  
-   33    0   37    0   0.2828652501 AA  
-   34    0   40    0   0.1862517084 AA  
-   34    0   38    0  -0.1595538454 AA  
-   32    0   38    0   0.0844099580 AA  
-   33    0   39    0   0.0544269701 AA  
-   26    0   54    0  -0.0471118581 AA  
-   26    0   44    0   0.0399597887 AA  
-   30    0   57    0   0.0362934708 AA  
-   25    0   60    0   0.0337142061 AA  
-   31    0   48    0   0.0325789455 AA  
-   21    0   54    0  -0.0313090329 AA  
-   30    0   51    0  -0.0311295553 AA  
-   35    0   40    0  -0.0270662476 AA  
-   17    0   48    0  -0.0265038436 AA  
+   28    0   37    0  -0.9038395500 AA
+   33    0   37    0   0.2828652501 AA
+   34    0   40    0   0.1862517084 AA
+   34    0   38    0  -0.1595538454 AA
+   32    0   38    0   0.0844099580 AA
+   33    0   39    0   0.0544269701 AA
+   26    0   54    0  -0.0471118581 AA
+   26    0   44    0   0.0399597887 AA
+   30    0   57    0   0.0362934708 AA
+   25    0   60    0   0.0337142061 AA
+   31    0   48    0   0.0325789455 AA
+   21    0   54    0  -0.0313090329 AA
+   30    0   51    0  -0.0311295553 AA
+   35    0   40    0  -0.0270662476 AA
+   17    0   48    0  -0.0265038436 AA
 --------------------------------------------------------------------------------
    8       1    0.52921      0.0000      0.0000      0.0000  .00000000D+00
 __________________________________________________________________________
- 
+
 __________________________________________________________________________
   TDA excitation ergy:             0.529210752203 a.u.   14.4006 eV
   Total TDA electronic energy:  -379.239896205714 a.u.
- 
-  Dominant contributions: 
-  SCF eigenvalue ordering used in list below. 
+
+  Dominant contributions:
+  SCF eigenvalue ordering used in list below.
 --------------------------------------------------------------------------------
     I    j    A    b
 --------------------------------------------------------------------------------
-   35    0   40    0   0.8566916659 AA  
-   32    0   38    0  -0.3006020424 AA  
-   28    0   39    0   0.2185752476 AA  
-   32    0   40    0   0.2083369117 AA  
-   33    0   36    0  -0.1452281093 AA  
-   33    0   39    0   0.1194211193 AA  
-   28    0   36    0  -0.0687060508 AA  
-   28    0   37    0  -0.0461908927 AA  
-   30    0   51    0   0.0430856362 AA  
-   29    0   44    0  -0.0427435787 AA  
-   26    0   44    0  -0.0415265291 AA  
-   23    0   42    0   0.0414935177 AA  
-   31    0   59    0  -0.0397932740 AA  
-   23    0   52    0   0.0357386248 AA  
-   31    0   51    0   0.0327514478 AA  
+   35    0   40    0   0.8566916659 AA
+   32    0   38    0  -0.3006020424 AA
+   28    0   39    0   0.2185752476 AA
+   32    0   40    0   0.2083369117 AA
+   33    0   36    0  -0.1452281093 AA
+   33    0   39    0   0.1194211193 AA
+   28    0   36    0  -0.0687060508 AA
+   28    0   37    0  -0.0461908927 AA
+   30    0   51    0   0.0430856362 AA
+   29    0   44    0  -0.0427435787 AA
+   26    0   44    0  -0.0415265291 AA
+   23    0   42    0   0.0414935177 AA
+   31    0   59    0  -0.0397932740 AA
+   23    0   52    0   0.0357386248 AA
+   31    0   51    0   0.0327514478 AA
 --------------------------------------------------------------------------------
    9       1    0.57347      0.0000      0.0000      0.0000  .00000000D+00
 __________________________________________________________________________
- 
+
 __________________________________________________________________________
   TDA excitation ergy:             0.573465275100 a.u.   15.6048 eV
   Total TDA electronic energy:  -379.195641682817 a.u.
- 
-  Dominant contributions: 
-  SCF eigenvalue ordering used in list below. 
+
+  Dominant contributions:
+  SCF eigenvalue ordering used in list below.
 --------------------------------------------------------------------------------
     I    j    A    b
 --------------------------------------------------------------------------------
-   34    0   40    0  -0.9365286199 AA  
-   28    0   37    0  -0.2536842697 AA  
-   34    0   38    0   0.1471058540 AA  
-   33    0   39    0  -0.1032308527 AA  
-   32    0   38    0   0.0558785853 AA  
-   35    0   40    0   0.0505538014 AA  
-   26    0   54    0   0.0342339532 AA  
-   32    0   40    0   0.0341732843 AA  
-   35    0   38    0  -0.0282625994 AA  
-   26    0   44    0  -0.0281877723 AA  
-   31    0   48    0  -0.0261805427 AA  
-   30    0   57    0  -0.0242550911 AA  
-   30    0   51    0   0.0239757466 AA  
-   33    0   37    0  -0.0238241462 AA  
-   25    0   60    0  -0.0237575600 AA  
+   34    0   40    0  -0.9365286199 AA
+   28    0   37    0  -0.2536842697 AA
+   34    0   38    0   0.1471058540 AA
+   33    0   39    0  -0.1032308527 AA
+   32    0   38    0   0.0558785853 AA
+   35    0   40    0   0.0505538014 AA
+   26    0   54    0   0.0342339532 AA
+   32    0   40    0   0.0341732843 AA
+   35    0   38    0  -0.0282625994 AA
+   26    0   44    0  -0.0281877723 AA
+   31    0   48    0  -0.0261805427 AA
+   30    0   57    0  -0.0242550911 AA
+   30    0   51    0   0.0239757466 AA
+   33    0   37    0  -0.0238241462 AA
+   25    0   60    0  -0.0237575600 AA
 --------------------------------------------------------------------------------
   10       1    0.57645      0.0000      0.0000      0.0000  .00000000D+00
 __________________________________________________________________________
- 
+
 __________________________________________________________________________
   TDA excitation ergy:             0.576448627454 a.u.   15.6860 eV
   Total TDA electronic energy:  -379.192658330463 a.u.
- 
-  Dominant contributions: 
-  SCF eigenvalue ordering used in list below. 
+
+  Dominant contributions:
+  SCF eigenvalue ordering used in list below.
 --------------------------------------------------------------------------------
     I    j    A    b
 --------------------------------------------------------------------------------
-   33    0   39    0   0.6966853627 AA  
-   32    0   38    0  -0.5376486940 AA  
-   35    0   40    0  -0.2492706979 AA  
-   32    0   40    0  -0.2413624608 AA  
-   35    0   38    0   0.2064647668 AA  
-   33    0   36    0  -0.1544156003 AA  
-   34    0   40    0  -0.1294870939 AA  
-   28    0   36    0   0.0969391842 AA  
-   28    0   39    0   0.0798730817 AA  
-   28    0   37    0  -0.0320415262 AA  
-   34    0   38    0   0.0256305810 AA  
-   30    0   41    0   0.0209679137 AA  
-   29    0   44    0   0.0200598561 AA  
-   31    0   41    0   0.0169562842 AA  
-   29    0   42    0   0.0169199029 AA  
+   33    0   39    0   0.6966853627 AA
+   32    0   38    0  -0.5376486940 AA
+   35    0   40    0  -0.2492706979 AA
+   32    0   40    0  -0.2413624608 AA
+   35    0   38    0   0.2064647668 AA
+   33    0   36    0  -0.1544156003 AA
+   34    0   40    0  -0.1294870939 AA
+   28    0   36    0   0.0969391842 AA
+   28    0   39    0   0.0798730817 AA
+   28    0   37    0  -0.0320415262 AA
+   34    0   38    0   0.0256305810 AA
+   30    0   41    0   0.0209679137 AA
+   29    0   44    0   0.0200598561 AA
+   31    0   41    0   0.0169562842 AA
+   29    0   42    0   0.0169199029 AA
 --------------------------------------------------------------------------------
 __________________________________________________________________________
   STATESYM record is                      5
@@ -3763,7 +3763,7 @@ __________________________________________________________________________
   @DOEOMEE-I, Matrix dimension for diagonalization:   226875
   Creating initial guess for root
 ________________________________________________________________________
-            Subspace          Eigenvalue           
+            Subspace          Eigenvalue
  Iteration  Dimension   (a.u.)         (eV)       Overlap      Residual
 ________________________________________________________________________
   @NEWGES-I, Using TDA initial guess.
@@ -3899,7 +3899,7 @@ ________________________________________________________________________
          12             1.67208179561621       0.00000000000000
          13             1.75287844226913       0.00000000000000
          14             1.98739945697479       0.00000000000000
-  L-O-C-K-I-N-G O-N R-O-O-T 
+  L-O-C-K-I-N-G O-N R-O-O-T
  14  14  0.2796860977D+00  0.7610645636D+01  0.9999809780D+00  0.2098910244D-02
    Eigenvalue        Real Part            Imaginary Part
           1             0.27968159912408       0.00000000000000
@@ -4118,18 +4118,18 @@ ________________________________________________________________________
  24  24  0.2796807504D+00  0.7610500129D+01  0.9999999998D+00  0.6606438828D-05
   Converged eigenvalue:   0.279680750396370       a.u.
    Total EOMEE-CCSD electronic energy     -380.224662300589273 a.u.
-  Converged eigenvector 
-  SCF eigenvalue ordering used in list below. 
+  Converged eigenvector
+  SCF eigenvalue ordering used in list below.
 --------------------------------------------------------------------------------
     I    j    A    b
 --------------------------------------------------------------------------------
    35   35   36   36  -0.4063121854 ABAB
-   33    0   36    0  -0.3488043364 AA  
-   35    0   38    0   0.2946953441 AA  
+   33    0   36    0  -0.3488043364 AA
+   35    0   38    0   0.2946953441 AA
    35   33   38   36  -0.1647214144 ABAB
    33   35   36   38  -0.1647214144 ABAB
-   32    0   38    0   0.1075134173 AA  
-   33    0   39    0  -0.1023022783 AA  
+   32    0   38    0   0.1075134173 AA
+   33    0   39    0  -0.1023022783 AA
    34   33   38   37   0.1022474648 ABAB
    33   34   37   38   0.1022474648 ABAB
    35   32   39   36  -0.0925684240 ABAB
@@ -4139,18 +4139,18 @@ ________________________________________________________________________
    35   32   36   36   0.0790209110 ABAB
    32   35   36   36   0.0790209110 ABAB
 --------------------------------------------------------------------------------
-  Converged eigenvector, normalized to one 
-  SCF eigenvalue ordering used in list below. 
+  Converged eigenvector, normalized to one
+  SCF eigenvalue ordering used in list below.
 --------------------------------------------------------------------------------
     I    j    A    b
 --------------------------------------------------------------------------------
    35   35   36   36  -0.4063121854 ABAB
-   33    0   36    0  -0.3488043364 AA  
-   35    0   38    0   0.2946953441 AA  
+   33    0   36    0  -0.3488043364 AA
+   35    0   38    0   0.2946953441 AA
    35   33   38   36  -0.1647214144 ABAB
    33   35   36   38  -0.1647214144 ABAB
-   32    0   38    0   0.1075134173 AA  
-   33    0   39    0  -0.1023022783 AA  
+   32    0   38    0   0.1075134173 AA
+   33    0   39    0  -0.1023022783 AA
    34   33   38   37   0.1022474648 ABAB
    33   34   37   38   0.1022474648 ABAB
    35   32   39   36  -0.0925684240 ABAB
@@ -4161,10 +4161,10 @@ ________________________________________________________________________
    32   35   36   36   0.0790209110 ABAB
 --------------------------------------------------------------------------------
 
-  Eigenvector is saved on CCRE_1_1  
+  Eigenvector is saved on CCRE_1_1
 
   Adding new vector to expansion space.
-  Guess for next eigenvalue   0.369584781434813     
+  Guess for next eigenvalue   0.369584781434813
    Eigenvalue        Real Part            Imaginary Part
           1             0.27968074921306       0.00000000000000
           2             0.35176711967511       0.00000000000000
@@ -4278,7 +4278,7 @@ ________________________________________________________________________
          26             1.91253041067071       0.00000000000000
          27             1.97598856029897       0.00000000000000
          28             2.16266845736370       0.00000000000000
-  L-O-C-K-I-N-G O-N R-O-O-T 
+  L-O-C-K-I-N-G O-N R-O-O-T
  28  28  0.3502801305D+00  0.9531606929D+01  0.9998876266D+00  0.5303232483D-02
    Eigenvalue        Real Part            Imaginary Part
           1             0.27968071933023       0.00000000000000
@@ -4894,18 +4894,18 @@ ________________________________________________________________________
  49  21  0.3498093778D+00  0.9518797097D+01  0.9999999997D+00  0.7236052687D-05
   Converged eigenvalue:   0.349809377844280       a.u.
    Total EOMEE-CCSD electronic energy     -380.154533673141373 a.u.
-  Converged eigenvector 
-  SCF eigenvalue ordering used in list below. 
+  Converged eigenvector
+  SCF eigenvalue ordering used in list below.
 --------------------------------------------------------------------------------
     I    j    A    b
 --------------------------------------------------------------------------------
-   28    0   36    0  -0.3216227757 AA  
-   33    0   36    0  -0.2670463858 AA  
-   33    0   37    0   0.1930275897 AA  
+   28    0   36    0  -0.3216227757 AA
+   33    0   36    0  -0.2670463858 AA
+   33    0   37    0   0.1930275897 AA
    35   34   37   36  -0.1862379335 ABAB
    34   35   36   37  -0.1862379335 ABAB
-   35    0   40    0   0.1702570013 AA  
-   34    0   38    0   0.1643119129 AA  
+   35    0   40    0   0.1702570013 AA
+   34    0   38    0   0.1643119129 AA
    35   34   36   37  -0.1294435041 ABAB
    34   35   37   36  -0.1294435041 ABAB
    34   34   37   37   0.1184552852 ABAB
@@ -4913,20 +4913,20 @@ ________________________________________________________________________
    34   33   38   37  -0.1085263522 ABAB
    33   34   37   38  -0.1085263522 ABAB
    35   35   36   36   0.1079512478 ABAB
-   28    0   37    0   0.0933144966 AA  
+   28    0   37    0   0.0933144966 AA
 --------------------------------------------------------------------------------
-  Converged eigenvector, normalized to one 
-  SCF eigenvalue ordering used in list below. 
+  Converged eigenvector, normalized to one
+  SCF eigenvalue ordering used in list below.
 --------------------------------------------------------------------------------
     I    j    A    b
 --------------------------------------------------------------------------------
-   28    0   36    0  -0.3216227757 AA  
-   33    0   36    0  -0.2670463858 AA  
-   33    0   37    0   0.1930275897 AA  
+   28    0   36    0  -0.3216227757 AA
+   33    0   36    0  -0.2670463858 AA
+   33    0   37    0   0.1930275897 AA
    35   34   37   36  -0.1862379335 ABAB
    34   35   36   37  -0.1862379335 ABAB
-   35    0   40    0   0.1702570013 AA  
-   34    0   38    0   0.1643119129 AA  
+   35    0   40    0   0.1702570013 AA
+   34    0   38    0   0.1643119129 AA
    35   34   36   37  -0.1294435041 ABAB
    34   35   37   36  -0.1294435041 ABAB
    34   34   37   37   0.1184552852 ABAB
@@ -4934,13 +4934,13 @@ ________________________________________________________________________
    34   33   38   37  -0.1085263522 ABAB
    33   34   37   38  -0.1085263522 ABAB
    35   35   36   36   0.1079512478 ABAB
-   28    0   37    0   0.0933144966 AA  
+   28    0   37    0   0.0933144966 AA
 --------------------------------------------------------------------------------
 
-  Eigenvector is saved on CCRE_1_2  
+  Eigenvector is saved on CCRE_1_2
 
   Adding new vector to expansion space.
-  Guess for next eigenvalue   0.410172900768439     
+  Guess for next eigenvalue   0.410172900768439
    Eigenvalue        Real Part            Imaginary Part
           1             0.27968071417352       0.00000000000000
           2             0.34980937792440       0.00000000000000
@@ -5015,7 +5015,7 @@ ________________________________________________________________________
          22             1.78234479550831       0.00000000000000
          23             1.89878383327502       0.00000000000000
          24             2.20778872957234       0.00000000000000
-  L-O-C-K-I-N-G O-N R-O-O-T 
+  L-O-C-K-I-N-G O-N R-O-O-T
  52  24  0.3527099291D+00  0.9597725109D+01  0.9999991291D+00  0.6230261145D-03
    Eigenvalue        Real Part            Imaginary Part
           1             0.27968071865458       0.00000000000000
@@ -5196,53 +5196,53 @@ ________________________________________________________________________
  58  30  0.3527093358D+00  0.9597708965D+01  0.9999999997D+00  0.7794139661D-05
   Converged eigenvalue:   0.352709335796396       a.u.
    Total EOMEE-CCSD electronic energy     -380.151633715189234 a.u.
-  Converged eigenvector 
-  SCF eigenvalue ordering used in list below. 
+  Converged eigenvector
+  SCF eigenvalue ordering used in list below.
 --------------------------------------------------------------------------------
     I    j    A    b
 --------------------------------------------------------------------------------
-   33    0   37    0   0.3396879191 AA  
-   34    0   38    0   0.3312804906 AA  
-   28    0   36    0   0.1916521754 AA  
-   28    0   37    0   0.1798388296 AA  
-   33    0   36    0   0.1301374675 AA  
-   34    0   40    0   0.1274321477 AA  
+   33    0   37    0   0.3396879191 AA
+   34    0   38    0   0.3312804906 AA
+   28    0   36    0   0.1916521754 AA
+   28    0   37    0   0.1798388296 AA
+   33    0   36    0   0.1301374675 AA
+   34    0   40    0   0.1274321477 AA
    35   34   37   37   0.1250449733 ABAB
    34   35   37   37   0.1250449733 ABAB
    34   34   37   36  -0.1211893618 ABAB
    34   34   36   37  -0.1211893618 ABAB
-   35    0   40    0  -0.1099477312 AA  
+   35    0   40    0  -0.1099477312 AA
    35   34   37   36   0.1041035889 ABAB
    34   35   36   37   0.1041035889 ABAB
    34   34   37   37  -0.0794796623 ABAB
    35   34   36   37   0.0744353542 ABAB
 --------------------------------------------------------------------------------
-  Converged eigenvector, normalized to one 
-  SCF eigenvalue ordering used in list below. 
+  Converged eigenvector, normalized to one
+  SCF eigenvalue ordering used in list below.
 --------------------------------------------------------------------------------
     I    j    A    b
 --------------------------------------------------------------------------------
-   33    0   37    0   0.3396879191 AA  
-   34    0   38    0   0.3312804906 AA  
-   28    0   36    0   0.1916521754 AA  
-   28    0   37    0   0.1798388296 AA  
-   33    0   36    0   0.1301374675 AA  
-   34    0   40    0   0.1274321477 AA  
+   33    0   37    0   0.3396879191 AA
+   34    0   38    0   0.3312804906 AA
+   28    0   36    0   0.1916521754 AA
+   28    0   37    0   0.1798388296 AA
+   33    0   36    0   0.1301374675 AA
+   34    0   40    0   0.1274321477 AA
    35   34   37   37   0.1250449733 ABAB
    34   35   37   37   0.1250449733 ABAB
    34   34   37   36  -0.1211893618 ABAB
    34   34   36   37  -0.1211893618 ABAB
-   35    0   40    0  -0.1099477312 AA  
+   35    0   40    0  -0.1099477312 AA
    35   34   37   36   0.1041035889 ABAB
    34   35   36   37   0.1041035889 ABAB
    34   34   37   37  -0.0794796623 ABAB
    35   34   36   37   0.0744353542 ABAB
 --------------------------------------------------------------------------------
 
-  Eigenvector is saved on CCRE_1_3  
+  Eigenvector is saved on CCRE_1_3
 
   Adding new vector to expansion space.
-  Guess for next eigenvalue   0.428168456628531     
+  Guess for next eigenvalue   0.428168456628531
    Eigenvalue        Real Part            Imaginary Part
           1             0.27968072091112       0.00000000000000
           2             0.34980936418688       0.00000000000000
@@ -5380,7 +5380,7 @@ ________________________________________________________________________
          32             1.81308773930410       0.00000000000000
          33             1.94587576337240       0.00000000000000
          34             2.33202323143483       0.00000000000000
-  L-O-C-K-I-N-G O-N R-O-O-T 
+  L-O-C-K-I-N-G O-N R-O-O-T
  62  34  0.3654086971D+00  0.9943276154D+01  0.9999820964D+00  0.2154398907D-02
    Eigenvalue        Real Part            Imaginary Part
           1             0.27968072286892       0.00000000000000
@@ -5639,42 +5639,42 @@ ________________________________________________________________________
  69  13  0.3654034358D+00  0.9943132987D+01  0.9999999999D+00  0.8142641467D-05
   Converged eigenvalue:   0.365403435802714       a.u.
    Total EOMEE-CCSD electronic energy     -380.138939615182949 a.u.
-  Converged eigenvector 
-  SCF eigenvalue ordering used in list below. 
+  Converged eigenvector
+  SCF eigenvalue ordering used in list below.
 --------------------------------------------------------------------------------
     I    j    A    b
 --------------------------------------------------------------------------------
-   35    0   38    0   0.5169027540 AA  
-   33    0   36    0   0.3857397976 AA  
-   35    0   40    0   0.1294302230 AA  
+   35    0   38    0   0.5169027540 AA
+   33    0   36    0   0.3857397976 AA
+   35    0   40    0   0.1294302230 AA
    35   34   37   36  -0.0598915745 ABAB
    34   35   36   37  -0.0598915745 ABAB
    35   35   37   37   0.0577740531 ABAB
-   34    0   38    0   0.0527038792 AA  
+   34    0   38    0   0.0527038792 AA
    35   32   36   36  -0.0524971836 ABAB
    32   35   36   36  -0.0524971836 ABAB
-   32    0   38    0   0.0503309399 AA  
+   32    0   38    0   0.0503309399 AA
    34   34   37   37   0.0445808151 ABAB
    35   34   36   37  -0.0432105747 ABAB
    34   35   37   36  -0.0432105747 ABAB
    33   33   38   38   0.0378201163 ABAB
    34   28   37   38   0.0351363792 ABAB
 --------------------------------------------------------------------------------
-  Converged eigenvector, normalized to one 
-  SCF eigenvalue ordering used in list below. 
+  Converged eigenvector, normalized to one
+  SCF eigenvalue ordering used in list below.
 --------------------------------------------------------------------------------
     I    j    A    b
 --------------------------------------------------------------------------------
-   35    0   38    0   0.5169027540 AA  
-   33    0   36    0   0.3857397976 AA  
-   35    0   40    0   0.1294302230 AA  
+   35    0   38    0   0.5169027540 AA
+   33    0   36    0   0.3857397976 AA
+   35    0   40    0   0.1294302230 AA
    35   34   37   36  -0.0598915745 ABAB
    34   35   36   37  -0.0598915745 ABAB
    35   35   37   37   0.0577740531 ABAB
-   34    0   38    0   0.0527038792 AA  
+   34    0   38    0   0.0527038792 AA
    35   32   36   36  -0.0524971836 ABAB
    32   35   36   36  -0.0524971836 ABAB
-   32    0   38    0   0.0503309399 AA  
+   32    0   38    0   0.0503309399 AA
    34   34   37   37   0.0445808151 ABAB
    35   34   36   37  -0.0432105747 ABAB
    34   35   37   36  -0.0432105747 ABAB
@@ -5682,10 +5682,10 @@ ________________________________________________________________________
    34   28   37   38   0.0351363792 ABAB
 --------------------------------------------------------------------------------
 
-  Eigenvector is saved on CCRE_1_4  
+  Eigenvector is saved on CCRE_1_4
 
   Adding new vector to expansion space.
-  Guess for next eigenvalue   0.449874232642264     
+  Guess for next eigenvalue   0.449874232642264
    Eigenvalue        Real Part            Imaginary Part
           1             0.27968072075402       0.00000000000000
           2             0.34980933684714       0.00000000000000
@@ -5796,7 +5796,7 @@ ________________________________________________________________________
          17             1.44104192906405       0.00000000000000
          18             1.54669303867607       0.00000000000000
          19             1.68279236781849       0.00000000000000
-  L-O-C-K-I-N-G O-N R-O-O-T 
+  L-O-C-K-I-N-G O-N R-O-O-T
  75  19  0.3944522135D+00  0.1073359041D+02  0.9999667780D+00  0.5118598714D-02
    Eigenvalue        Real Part            Imaginary Part
           1             0.27968076284309       0.00000000000000
@@ -6065,53 +6065,53 @@ ________________________________________________________________________
  85  29  0.3944375013D+00  0.1073319008D+02  0.9999999999D+00  0.7097895099D-05
   Converged eigenvalue:   0.394437501349613       a.u.
    Total EOMEE-CCSD electronic energy     -380.109905549636039 a.u.
-  Converged eigenvector 
-  SCF eigenvalue ordering used in list below. 
+  Converged eigenvector
+  SCF eigenvalue ordering used in list below.
 --------------------------------------------------------------------------------
     I    j    A    b
 --------------------------------------------------------------------------------
    33   33   38   38  -0.2900780854 ABAB
    33   33   36   36   0.2659558553 ABAB
    35   35   38   38   0.2323996986 ABAB
-   32    0   38    0  -0.1860433626 AA  
+   32    0   38    0  -0.1860433626 AA
    35   32   38   38  -0.1635639413 ABAB
    32   35   38   38  -0.1635639413 ABAB
    33   33   39   36  -0.1618947818 ABAB
    33   33   36   39  -0.1618947818 ABAB
-   28    0   36    0  -0.1594072575 AA  
+   28    0   36    0  -0.1594072575 AA
    32   32   36   36  -0.1561557349 ABAB
-   33    0   39    0   0.1494796771 AA  
+   33    0   39    0   0.1494796771 AA
    35   35   36   36  -0.1467467823 ABAB
    35   32   36   39  -0.1268860321 ABAB
    32   35   39   36  -0.1268860321 ABAB
    35   35   39   39  -0.1157738313 ABAB
 --------------------------------------------------------------------------------
-  Converged eigenvector, normalized to one 
-  SCF eigenvalue ordering used in list below. 
+  Converged eigenvector, normalized to one
+  SCF eigenvalue ordering used in list below.
 --------------------------------------------------------------------------------
     I    j    A    b
 --------------------------------------------------------------------------------
    33   33   38   38  -0.2900780854 ABAB
    33   33   36   36   0.2659558553 ABAB
    35   35   38   38   0.2323996986 ABAB
-   32    0   38    0  -0.1860433626 AA  
+   32    0   38    0  -0.1860433626 AA
    35   32   38   38  -0.1635639413 ABAB
    32   35   38   38  -0.1635639413 ABAB
    33   33   39   36  -0.1618947818 ABAB
    33   33   36   39  -0.1618947818 ABAB
-   28    0   36    0  -0.1594072575 AA  
+   28    0   36    0  -0.1594072575 AA
    32   32   36   36  -0.1561557349 ABAB
-   33    0   39    0   0.1494796771 AA  
+   33    0   39    0   0.1494796771 AA
    35   35   36   36  -0.1467467823 ABAB
    35   32   36   39  -0.1268860321 ABAB
    32   35   39   36  -0.1268860321 ABAB
    35   35   39   39  -0.1157738313 ABAB
 --------------------------------------------------------------------------------
 
-  Eigenvector is saved on CCRE_1_5  
+  Eigenvector is saved on CCRE_1_5
 
   Adding new vector to expansion space.
-  Guess for next eigenvalue   0.490469421554752     
+  Guess for next eigenvalue   0.490469421554752
    Eigenvalue        Real Part            Imaginary Part
           1             0.27968076488307       0.00000000000000
           2             0.34980934599056       0.00000000000000
@@ -6245,7 +6245,7 @@ ________________________________________________________________________
          31             1.79200087280047       0.00000000000000
          32             1.87103896717331       0.00000000000000
          33             2.01840011287027       0.00000000000000
-  L-O-C-K-I-N-G O-N R-O-O-T 
+  L-O-C-K-I-N-G O-N R-O-O-T
  89  33  0.4023549336D+00  0.1094863436D+02  0.9997105894D+00  0.3893556949D-02
    Eigenvalue        Real Part            Imaginary Part
           1             0.27968076513319       0.00000000000000
@@ -6573,15 +6573,15 @@ ________________________________________________________________________
  99  15  0.4023536859D+00  0.1094860041D+02  0.9999999999D+00  0.6331726687D-05
   Converged eigenvalue:   0.402353685863635       a.u.
    Total EOMEE-CCSD electronic energy     -380.101989365121995 a.u.
-  Converged eigenvector 
-  SCF eigenvalue ordering used in list below. 
+  Converged eigenvector
+  SCF eigenvalue ordering used in list below.
 --------------------------------------------------------------------------------
     I    j    A    b
 --------------------------------------------------------------------------------
-   33    0   37    0  -0.4520642170 AA  
-   34    0   38    0   0.4418818253 AA  
-   28    0   36    0  -0.0788571379 AA  
-   35    0   38    0  -0.0699388046 AA  
+   33    0   37    0  -0.4520642170 AA
+   34    0   38    0   0.4418818253 AA
+   28    0   36    0  -0.0788571379 AA
+   35    0   38    0  -0.0699388046 AA
    35   35   37   36  -0.0666672357 ABAB
    35   35   36   37  -0.0666672357 ABAB
    35   33   38   37  -0.0651820097 ABAB
@@ -6594,15 +6594,15 @@ ________________________________________________________________________
    33   33   37   36  -0.0419000225 ABAB
    33   33   36   37  -0.0419000225 ABAB
 --------------------------------------------------------------------------------
-  Converged eigenvector, normalized to one 
-  SCF eigenvalue ordering used in list below. 
+  Converged eigenvector, normalized to one
+  SCF eigenvalue ordering used in list below.
 --------------------------------------------------------------------------------
     I    j    A    b
 --------------------------------------------------------------------------------
-   33    0   37    0  -0.4520642170 AA  
-   34    0   38    0   0.4418818253 AA  
-   28    0   36    0  -0.0788571379 AA  
-   35    0   38    0  -0.0699388046 AA  
+   33    0   37    0  -0.4520642170 AA
+   34    0   38    0   0.4418818253 AA
+   28    0   36    0  -0.0788571379 AA
+   35    0   38    0  -0.0699388046 AA
    35   35   37   36  -0.0666672357 ABAB
    35   35   36   37  -0.0666672357 ABAB
    35   33   38   37  -0.0651820097 ABAB
@@ -6616,10 +6616,10 @@ ________________________________________________________________________
    33   33   36   37  -0.0419000225 ABAB
 --------------------------------------------------------------------------------
 
-  Eigenvector is saved on CCRE_1_6  
+  Eigenvector is saved on CCRE_1_6
 
   Adding new vector to expansion space.
-  Guess for next eigenvalue   0.505051312609956     
+  Guess for next eigenvalue   0.505051312609956
    Eigenvalue        Real Part            Imaginary Part
           1             0.27968076505420       0.00000000000000
           2             0.34980934632898       0.00000000000000
@@ -6742,7 +6742,7 @@ ________________________________________________________________________
          19             1.47161172759299       0.00000000000000
          20             1.55426231630681       0.00000000000000
          21             1.78925844465427       0.00000000000000
-  L-O-C-K-I-N-G O-N R-O-O-T 
+  L-O-C-K-I-N-G O-N R-O-O-T
 105  21  0.4080905346D+00  0.1110470800D+02  0.9999797422D+00  0.2816423086D-02
    Eigenvalue        Real Part            Imaginary Part
           1             0.27968076693804       0.00000000000000
@@ -6998,53 +6998,53 @@ ________________________________________________________________________
 114  30  0.4080771453D+00  0.1110434366D+02  0.9999999998D+00  0.6672329668D-05
   Converged eigenvalue:   0.408077145347422       a.u.
    Total EOMEE-CCSD electronic energy     -380.096265905638234 a.u.
-  Converged eigenvector 
-  SCF eigenvalue ordering used in list below. 
+  Converged eigenvector
+  SCF eigenvalue ordering used in list below.
 --------------------------------------------------------------------------------
     I    j    A    b
 --------------------------------------------------------------------------------
    35   35   36   36  -0.3273347285 ABAB
-   28    0   36    0  -0.3061112842 AA  
+   28    0   36    0  -0.3061112842 AA
    35   32   36   36  -0.1784159825 ABAB
    32   35   36   36  -0.1784159825 ABAB
-   33    0   36    0   0.1721182221 AA  
+   33    0   36    0   0.1721182221 AA
    35   34   37   36   0.1669591777 ABAB
    34   35   36   37   0.1669591777 ABAB
    35   35   39   36  -0.1546548881 ABAB
    35   35   36   39  -0.1546548881 ABAB
    34   34   37   37  -0.1486704973 ABAB
-   35    0   40    0   0.1412553877 AA  
-   35    0   38    0  -0.1354419075 AA  
+   35    0   40    0   0.1412553877 AA
+   35    0   38    0  -0.1354419075 AA
    34   33   38   37   0.1079019928 ABAB
    33   34   37   38   0.1079019928 ABAB
-   33    0   37    0   0.0950291095 AA  
+   33    0   37    0   0.0950291095 AA
 --------------------------------------------------------------------------------
-  Converged eigenvector, normalized to one 
-  SCF eigenvalue ordering used in list below. 
+  Converged eigenvector, normalized to one
+  SCF eigenvalue ordering used in list below.
 --------------------------------------------------------------------------------
     I    j    A    b
 --------------------------------------------------------------------------------
    35   35   36   36  -0.3273347285 ABAB
-   28    0   36    0  -0.3061112842 AA  
+   28    0   36    0  -0.3061112842 AA
    35   32   36   36  -0.1784159825 ABAB
    32   35   36   36  -0.1784159825 ABAB
-   33    0   36    0   0.1721182221 AA  
+   33    0   36    0   0.1721182221 AA
    35   34   37   36   0.1669591777 ABAB
    34   35   36   37   0.1669591777 ABAB
    35   35   39   36  -0.1546548881 ABAB
    35   35   36   39  -0.1546548881 ABAB
    34   34   37   37  -0.1486704973 ABAB
-   35    0   40    0   0.1412553877 AA  
-   35    0   38    0  -0.1354419075 AA  
+   35    0   40    0   0.1412553877 AA
+   35    0   38    0  -0.1354419075 AA
    34   33   38   37   0.1079019928 ABAB
    33   34   37   38   0.1079019928 ABAB
-   33    0   37    0   0.0950291095 AA  
+   33    0   37    0   0.0950291095 AA
 --------------------------------------------------------------------------------
 
-  Eigenvector is saved on CCRE_1_7  
+  Eigenvector is saved on CCRE_1_7
 
   Adding new vector to expansion space.
-  Guess for next eigenvalue   0.529210752202954     
+  Guess for next eigenvalue   0.529210752202954
    Eigenvalue        Real Part            Imaginary Part
           1             0.27968076496883       0.00000000000000
           2             0.34980934339612       0.00000000000000
@@ -7219,7 +7219,7 @@ ________________________________________________________________________
          33             1.76979181835516       0.00000000000000
          34             1.79431594009813       0.00000000000000
          35             1.99442333667620       0.00000000000000
-  L-O-C-K-I-N-G O-N R-O-O-T 
+  L-O-C-K-I-N-G O-N R-O-O-T
 119  35  0.4257187559D+00  0.1158439629D+02  0.9999593524D+00  0.5463048158D-02
    Eigenvalue        Real Part            Imaginary Part
           1             0.27968076412154       0.00000000000000
@@ -7552,17 +7552,17 @@ ________________________________________________________________________
 131  19  0.4257304447D+00  0.1158471435D+02  0.1000000000D+01  0.6611180167D-05
   Converged eigenvalue:   0.425730444662433       a.u.
    Total EOMEE-CCSD electronic energy     -380.078612606323247 a.u.
-  Converged eigenvector 
-  SCF eigenvalue ordering used in list below. 
+  Converged eigenvector
+  SCF eigenvalue ordering used in list below.
 --------------------------------------------------------------------------------
     I    j    A    b
 --------------------------------------------------------------------------------
-   28    0   37    0  -0.4491196384 AA  
-   34    0   40    0  -0.2468692053 AA  
-   34    0   38    0   0.2027462857 AA  
+   28    0   37    0  -0.4491196384 AA
+   34    0   40    0  -0.2468692053 AA
+   34    0   38    0   0.2027462857 AA
    35   34   37   37  -0.1410117370 ABAB
    34   35   37   37  -0.1410117370 ABAB
-   33    0   37    0   0.1348758479 AA  
+   33    0   37    0   0.1348758479 AA
    34   34   37   36   0.1247451459 ABAB
    34   34   36   37   0.1247451459 ABAB
    35   34   36   36  -0.1182927528 ABAB
@@ -7573,17 +7573,17 @@ ________________________________________________________________________
    33   35   37   38   0.1010731630 ABAB
    35   35   37   36   0.1003143394 ABAB
 --------------------------------------------------------------------------------
-  Converged eigenvector, normalized to one 
-  SCF eigenvalue ordering used in list below. 
+  Converged eigenvector, normalized to one
+  SCF eigenvalue ordering used in list below.
 --------------------------------------------------------------------------------
     I    j    A    b
 --------------------------------------------------------------------------------
-   28    0   37    0  -0.4491196384 AA  
-   34    0   40    0  -0.2468692053 AA  
-   34    0   38    0   0.2027462857 AA  
+   28    0   37    0  -0.4491196384 AA
+   34    0   40    0  -0.2468692053 AA
+   34    0   38    0   0.2027462857 AA
    35   34   37   37  -0.1410117370 ABAB
    34   35   37   37  -0.1410117370 ABAB
-   33    0   37    0   0.1348758479 AA  
+   33    0   37    0   0.1348758479 AA
    34   34   37   36   0.1247451459 ABAB
    34   34   36   37   0.1247451459 ABAB
    35   34   36   36  -0.1182927528 ABAB
@@ -7595,10 +7595,10 @@ ________________________________________________________________________
    35   35   37   36   0.1003143394 ABAB
 --------------------------------------------------------------------------------
 
-  Eigenvector is saved on CCRE_1_8  
+  Eigenvector is saved on CCRE_1_8
 
   Adding new vector to expansion space.
-  Guess for next eigenvalue   0.573465275100158     
+  Guess for next eigenvalue   0.573465275100158
    Eigenvalue        Real Part            Imaginary Part
           1             0.27968076187062       0.00000000000000
           2             0.34980934360328       0.00000000000000
@@ -7718,7 +7718,7 @@ ________________________________________________________________________
          22             1.49129893005917       0.00000000000000
          23             1.63628268835443       0.00000000000000
          24             1.88632778412922       0.00000000000000
-  L-O-C-K-I-N-G O-N R-O-O-T 
+  L-O-C-K-I-N-G O-N R-O-O-T
 136  24  0.4797684856D+00  0.1305516420D+02  0.9998268483D+00  0.1964358256D-01
    Eigenvalue        Real Part            Imaginary Part
           1             0.27968076269673       0.00000000000000
@@ -7775,9 +7775,9 @@ ________________________________________________________________________
          25             1.65955133060260       0.00000000000000
          26             1.90388692210370       0.00000000000000
 138  26  0.4796225592D+00  0.1305119335D+02  0.9999605275D+00  0.5537725703D-02
- The phase angle is:   0.410815697190905     
- Cr.Cr.  0.162237910784914     
- Ci.Ci.  0.837762089215086     
+ The phase angle is:   0.410815697190905
+ Cr.Cr.  0.162237910784914
+ Ci.Ci.  0.837762089215086
    Eigenvalue        Real Part            Imaginary Part
           1             0.27968076164408       0.00000000000000
           2             0.34980934157595       0.00000000000000
@@ -8194,7 +8194,7 @@ ________________________________________________________________________
 150  38  0.4796047573D+00  0.1305070893D+02  0.9999999961D+00  0.4339566542D-04
  The phase angle is:   2.887530778644996E-002
  Cr.Cr.  3.310915124934798E-002
- Ci.Ci.  0.966890848750652     
+ Ci.Ci.  0.966890848750652
    Eigenvalue        Real Part            Imaginary Part
           1             0.27968076102589       0.00000000000000
           2             0.34980934362757       0.00000000000000
@@ -8409,8 +8409,8 @@ ________________________________________________________________________
 159  19  0.4796046752D+00  0.1305070670D+02  0.9999999999D+00  0.9928014030D-05
   Converged eigenvalue:   0.479604675190491       a.u.
    Total EOMEE-CCSD electronic energy     -380.024738375795152 a.u.
-  Converged eigenvector 
-  SCF eigenvalue ordering used in list below. 
+  Converged eigenvector
+  SCF eigenvalue ordering used in list below.
 --------------------------------------------------------------------------------
     I    j    A    b
 --------------------------------------------------------------------------------
@@ -8418,20 +8418,20 @@ ________________________________________________________________________
    35   35   36   36   0.2528205422 ABAB
    34   32   36   37  -0.2081826593 ABAB
    32   34   37   36  -0.2081826593 ABAB
-   28    0   36    0  -0.1964713696 AA  
+   28    0   36    0  -0.1964713696 AA
    35   34   37   39  -0.1745143434 ABAB
    34   35   39   37  -0.1745143434 ABAB
    34   33   38   37   0.1421474026 ABAB
    33   34   37   38   0.1421474026 ABAB
-   33    0   36    0   0.1419770989 AA  
+   33    0   36    0   0.1419770989 AA
    34   32   37   36  -0.1338505748 ABAB
    32   34   36   37  -0.1338505748 ABAB
-   32    0   38    0   0.1251745432 AA  
+   32    0   38    0   0.1251745432 AA
    35   35   39   36   0.1226835017 ABAB
    35   35   36   39   0.1226835017 ABAB
 --------------------------------------------------------------------------------
-  Converged eigenvector, normalized to one 
-  SCF eigenvalue ordering used in list below. 
+  Converged eigenvector, normalized to one
+  SCF eigenvalue ordering used in list below.
 --------------------------------------------------------------------------------
     I    j    A    b
 --------------------------------------------------------------------------------
@@ -8439,23 +8439,23 @@ ________________________________________________________________________
    35   35   36   36   0.2528205422 ABAB
    34   32   36   37  -0.2081826593 ABAB
    32   34   37   36  -0.2081826593 ABAB
-   28    0   36    0  -0.1964713696 AA  
+   28    0   36    0  -0.1964713696 AA
    35   34   37   39  -0.1745143434 ABAB
    34   35   39   37  -0.1745143434 ABAB
    34   33   38   37   0.1421474026 ABAB
    33   34   37   38   0.1421474026 ABAB
-   33    0   36    0   0.1419770989 AA  
+   33    0   36    0   0.1419770989 AA
    34   32   37   36  -0.1338505748 ABAB
    32   34   36   37  -0.1338505748 ABAB
-   32    0   38    0   0.1251745432 AA  
+   32    0   38    0   0.1251745432 AA
    35   35   39   36   0.1226835017 ABAB
    35   35   36   39   0.1226835017 ABAB
 --------------------------------------------------------------------------------
 
-  Eigenvector is saved on CCRE_1_9  
+  Eigenvector is saved on CCRE_1_9
 
   Adding new vector to expansion space.
-  Guess for next eigenvalue   0.576448627454087     
+  Guess for next eigenvalue   0.576448627454087
    Eigenvalue        Real Part            Imaginary Part
           1             0.27968076265942       0.00000000000000
           2             0.34980934342235       0.00000000000000
@@ -8630,7 +8630,7 @@ ________________________________________________________________________
          24             1.53330364106791       0.00000000000000
          25             1.65753655271019       0.00000000000000
          26             1.95363840549186       0.00000000000000
-  L-O-C-K-I-N-G O-N R-O-O-T 
+  L-O-C-K-I-N-G O-N R-O-O-T
 166  26  0.4971109154D+00  0.1352707571D+02  0.9999111747D+00  0.1321503112D-01
    Eigenvalue        Real Part            Imaginary Part
           1             0.27968076196607       0.00000000000000
@@ -8787,9 +8787,9 @@ ________________________________________________________________________
          30             1.67729956730032       0.00000000000000
          31             1.98737910762135       0.00000000000000
 171  31  0.4970235365D+00  0.1352469801D+02  0.9999853038D+00  0.2454895391D-02
- The phase angle is:   0.370912117268737     
- Cr.Cr.  0.631645193658574     
- Ci.Ci.  0.368354806341426     
+ The phase angle is:   0.370912117268737
+ Cr.Cr.  0.631645193658574
+ Ci.Ci.  0.368354806341426
    Eigenvalue        Real Part            Imaginary Part
           1             0.27968076127051       0.00000000000000
           2             0.34980934582588       0.00000000000000
@@ -9497,53 +9497,53 @@ ________________________________________________________________________
 196  28  0.4970277403D+00  0.1352481240D+02  0.9999999999D+00  0.8148475549D-05
   Converged eigenvalue:   0.497027740250479       a.u.
    Total EOMEE-CCSD electronic energy     -380.007315310735180 a.u.
-  Converged eigenvector 
-  SCF eigenvalue ordering used in list below. 
+  Converged eigenvector
+  SCF eigenvalue ordering used in list below.
 --------------------------------------------------------------------------------
     I    j    A    b
 --------------------------------------------------------------------------------
-   32    0   38    0   0.4489071595 AA  
-   35    0   40    0   0.2811837289 AA  
-   33    0   39    0   0.2779170211 AA  
-   28    0   36    0   0.1855226899 AA  
-   35    0   38    0  -0.1386283608 AA  
+   32    0   38    0   0.4489071595 AA
+   35    0   40    0   0.2811837289 AA
+   33    0   39    0   0.2779170211 AA
+   28    0   36    0   0.1855226899 AA
+   35    0   38    0  -0.1386283608 AA
    35   35   39   39  -0.0682819129 ABAB
    34   34   37   37   0.0664957259 ABAB
    32   32   38   38   0.0616214043 ABAB
-   26    0   58    0   0.0608850227 AA  
-   28    0   39    0  -0.0570112218 AA  
-   32    0   40    0   0.0566563714 AA  
+   26    0   58    0   0.0608850227 AA
+   28    0   39    0  -0.0570112218 AA
+   32    0   40    0   0.0566563714 AA
    33   33   38   38  -0.0534120605 ABAB
    35   35   37   37   0.0528925939 ABAB
    35   35   36   36  -0.0506585276 ABAB
-   30    0   41    0   0.0412843149 AA  
+   30    0   41    0   0.0412843149 AA
 --------------------------------------------------------------------------------
-  Converged eigenvector, normalized to one 
-  SCF eigenvalue ordering used in list below. 
+  Converged eigenvector, normalized to one
+  SCF eigenvalue ordering used in list below.
 --------------------------------------------------------------------------------
     I    j    A    b
 --------------------------------------------------------------------------------
-   32    0   38    0   0.4489071595 AA  
-   35    0   40    0   0.2811837289 AA  
-   33    0   39    0   0.2779170211 AA  
-   28    0   36    0   0.1855226899 AA  
-   35    0   38    0  -0.1386283608 AA  
+   32    0   38    0   0.4489071595 AA
+   35    0   40    0   0.2811837289 AA
+   33    0   39    0   0.2779170211 AA
+   28    0   36    0   0.1855226899 AA
+   35    0   38    0  -0.1386283608 AA
    35   35   39   39  -0.0682819129 ABAB
    34   34   37   37   0.0664957259 ABAB
    32   32   38   38   0.0616214043 ABAB
-   26    0   58    0   0.0608850227 AA  
-   28    0   39    0  -0.0570112218 AA  
-   32    0   40    0   0.0566563714 AA  
+   26    0   58    0   0.0608850227 AA
+   28    0   39    0  -0.0570112218 AA
+   32    0   40    0   0.0566563714 AA
    33   33   38   38  -0.0534120605 ABAB
    35   35   37   37   0.0528925939 ABAB
    35   35   36   36  -0.0506585276 ABAB
-   30    0   41    0   0.0412843149 AA  
+   30    0   41    0   0.0412843149 AA
 --------------------------------------------------------------------------------
 
-  Eigenvector is saved on CCRE_110  
+  Eigenvector is saved on CCRE_110
 
   Solution of  10 roots required  196 iterations.
  @CHECKOUT-I, Total execution time (CPU/WALL):       41.80/      41.81 seconds.
 --executable xvee finished with status     0 in       41.92 seconds (walltime).
-  The final electronic energy is      -380.007315310735180 a.u. 
+  The final electronic energy is      -380.007315310735180 a.u.
   This computation required                           46.52 seconds (walltime).
