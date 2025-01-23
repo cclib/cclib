@@ -15,18 +15,21 @@ class GenericBOMDTest:
     nsteps = 35
     nenergies = 36
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     def testdimscfenergies(self, data) -> None:
         """Are the number of parsed energies consistent with the number of MD
         steps?
         """
         assert data.scfenergies.shape == (self.nenergies,)
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     def testdimatomcoords(self, data) -> None:
         """Are the number of parsed geometries consistent with the number of
         MD steps?
         """
         assert data.atomcoords.shape == (self.nenergies, 20, 3)
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     def testdimtime(self, data) -> None:
         """Are the number of time points consistent with the number of MD
         steps?

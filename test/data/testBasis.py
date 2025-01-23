@@ -109,7 +109,6 @@ class GenericBigBasisTest(GenericBasisTest):
         """"""
         assert True
 
-
 class DALTONBigBasisTest(GenericBigBasisTest):
     """Customized big basis set unittest"""
 

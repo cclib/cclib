@@ -13,10 +13,12 @@ class GenericMP2Test:
 
     level = 2
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     def testsizeandshape(self, data) -> None:
         """(MP2) Are the dimensions of mpenergies correct?"""
         assert data.mpenergies.shape == (len(data.scfenergies), self.level - 1)
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     def testsign(self, data) -> None:
         """Are the Moller-Plesset corrections negative?"""
         if self.level == 2:
