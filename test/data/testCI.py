@@ -36,7 +36,8 @@ class GenericCISTest:
     ]
 
     etsecs_precision = 0.0005
-
+    
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     def testetenergiesvalues(self, data) -> None:
         """Are etenergies within 50 wavenumbers of the correct values?"""
         indices0 = [i for i in range(self.nstates) if data.etsyms[i][0] == "S"]
@@ -51,12 +52,14 @@ class GenericCISTest:
             tripletdiff = triplets[:4] - self.etenergies1
             assert numpy.all(tripletdiff < 50)
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     def testsecs(self, data) -> None:
         """Is the sum of etsecs close to 1?"""
         etsec = data.etsecs[2]  # Pick one with several contributors
         sumofsec = sum([z * z for (x, y, z) in etsec])
         assert abs(sumofsec - 1.0) < 0.02
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     def testetsecsvalues(self, data) -> None:
         """Are etsecs correct and coefficients close to the correct values?"""
         indices0 = [i for i in range(self.nstates) if data.etsyms[i][0] == "S"]

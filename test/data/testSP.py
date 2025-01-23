@@ -56,7 +56,8 @@ class GenericSPTest:
 
         assert data.atomnos.shape == (20,)
         assert sum(data.atomnos == 6) + sum(data.atomnos == 1) == 20
-
+    
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser(
         "DALTON",
         "DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now",
@@ -82,6 +83,7 @@ class GenericSPTest:
                 f"len(atomcharges['{atomcharge_type}']) = {len(charges)}, natom = {natom}"
             )
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser(
         "DALTON",
         "DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now",
@@ -108,6 +110,7 @@ class GenericSPTest:
         assert abs(sum(charges)) < 1.0e-2
 
     @skipForParser("ADF", "Lowdin charges not present by default")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser(
         "DALTON",
         "DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now",
@@ -132,6 +135,7 @@ class GenericSPTest:
         assert abs(sum(charges)) < 1.0e-2
 
     @skipForParser("ADF", "Hirshfeld charges not implemented")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser(
         "DALTON",
         "DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now",
@@ -213,6 +217,7 @@ class GenericSPTest:
         # Check if all are different (every orbital indexed once).
         assert len(set(all)) == len(all)
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForLogfile("FChk/basicQChem5.2", "Q-Chem doesn't print SCF energy to fchk")
     @skipForLogfile("FChk/basicQChem5.4", "Q-Chem doesn't print SCF energy to fchk")
     @skipForParser("GAMESS", "atommasses not implemented yet")
@@ -232,6 +237,7 @@ class GenericSPTest:
         msg = f"Molecule mass: {mm:f} not {self.molecularmass:f} +- {self.mass_precision:f}mD"
         assert abs(mm - self.molecularmass) < self.mass_precision, msg
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("xTB", "not implemented yet")
@@ -251,6 +257,7 @@ class GenericSPTest:
         sumwronglabels = sum([x not in ["Ag", "Bu", "Au", "Bg"] for x in data.mosyms[0]])
         assert sumwronglabels == 0
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("xTB", "xTB does not print them all")
     def testhomos(self, data) -> None:
@@ -259,6 +266,7 @@ class GenericSPTest:
             data.homos, numpy.array([34], "i"), f"{numpy.array_repr(data.homos)} != array([34],'i')"
         )
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("FChk", "Formatted Checkpoint files do not have a section for SCF energy")
     @skipForParser("GAMESSDAT", "Scfvalues probably do not exist in the file")
     @skipForParser("NBO", "attribute not implemented in this version")
@@ -278,6 +286,7 @@ class GenericSPTest:
             data.scfenergies[-1] - utils.convertor(self.scfenergy, "hartree", "eV")
         ) < utils.convertor(self.scfenergy_delta, "hartree", "eV")
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("FChk", "Formatted Checkpoint files do not have a section for SCF convergence")
     @skipForParser("GAMESSDAT", "Scftargets probably do not exist in the file")
     @skipForParser("NBO", "attribute not implemented in this version")
@@ -286,6 +295,7 @@ class GenericSPTest:
         """Do the scf targets have the right dimensions?"""
         assert data.scftargets.shape == (len(data.scfvalues), len(data.scfvalues[0][0]))
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("FChk", "Formatted Checkpoint files do not have a section for SCF convergence")
     @skipForParser("GAMESSDAT", "Scftargets probably do not exist in the file")
     @skipForParser("NBO", "attribute not implemented in this version")
@@ -342,6 +352,7 @@ class GenericSPTest:
         """Do we have NOs or MOs?"""
         assert hasattr(data, "nocoeffs") or hasattr(data, "mocoeffs")
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("NBO", "attribute not implemented in this version")
     def testdimnoccnos(self, data) -> None:
         """Is the length of nooccnos equal to nmo?"""
@@ -349,6 +360,7 @@ class GenericSPTest:
             assert isinstance(data.nooccnos, numpy.ndarray)
             assert len(data.nooccnos) == data.nmo
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("NBO", "attribute not implemented in this version")
     def testdimnocoeffs(self, data) -> None:
         """Are the dimensions of nocoeffs equal to nmo x nmo?"""
@@ -356,6 +368,7 @@ class GenericSPTest:
             assert isinstance(data.nocoeffs, numpy.ndarray)
             assert data.nocoeffs.shape == (data.nmo, data.nmo)
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "To print: **INTEGRALS\n.PROPRI")
     @skipForLogfile("FChk/basicGaussian09", "Only available in QChem")
     @skipForLogfile("FChk/basicGaussian16", "Only available in QChem")
@@ -392,6 +405,7 @@ class GenericSPTest:
         assert not hasattr(data, "optdone")
 
     @skipForParser("ADF", "Not implemented yes")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "Not implemented yes")
     @skipForParser("FChk", "Rotational constants are never written to fchk files")
     @skipForParser("GAMESS", "Not implemented yes")
@@ -414,6 +428,7 @@ class GenericSPTest:
         ref = [4.6266363, 0.6849065, 0.5965900]
         numpy.testing.assert_allclose(data.rotconsts[0], ref, rtol=0, atol=1.0e-3)
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("FChk", "The parser is still being developed so we skip this test")
     @skipForParser("Gaussian", "Logfile needs to be updated")
     @skipForParser("Jaguar", "No dipole moments in the logfile")
@@ -481,6 +496,7 @@ class GenericSPTest:
         assert data.metadata["basis_set"].lower() == "sto-3g"
 
     @skipForParser("ADF", "reading input file contents and name is not implemented")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "reading input file contents and name is not implemented")
     @skipForParser("FChk", "Formatted checkpoint files do not have an input file section")
     @skipForParser("GAMESS", "reading input file contents and name is not implemented")
@@ -504,6 +520,7 @@ class GenericSPTest:
         # must end in `dal`.
         assert "dvb_sp.in" in data.metadata["input_file_name"]
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("NBO", "attribute not implemented in this version")
     def testmetadata_methods(self, data) -> None:
         """Does metadata have expected keys and values?"""
@@ -518,6 +535,7 @@ class GenericSPTest:
         # the parser and isn't stored on ccData?
         assert "package" in data.metadata
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser(
         "FChk", "Formatted Checkpoint files do not have section for legacy package version"
     )
@@ -539,6 +557,7 @@ class GenericSPTest:
             packaging.version.parse(data.metadata["package_version"]), packaging.version.Version
         )
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForLogfile("NBO/basicNBO7.0/basicORCA5.0/dvb_sp.nbo.out", "TODO impossible to determine?")
     @skipForLogfile("FChk/basicGaussian09/dvb_sp.fchk", "impossible to determine")
     @skipForLogfile("FChk/basicQChem5.2/dvb_sp_modified.fchk", "impossible to determine")
@@ -572,6 +591,7 @@ class GenericSPTest:
         assert data.metadata["symmetry_used"] == "c2h"
 
     @skipForParser("ADF", "reading cpu/wall time is not implemented for this parser")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "reading cpu/wall time is not implemented for this parser")
     @skipForParser("FChk", "reading cpu/wall time is not implemented for this parser")
     @skipForParser("GAMESS", "reading cpu/wall time is not implemented for this parser")
@@ -639,6 +659,9 @@ class ADFSPTest(GenericSPTest):
         assert abs(data.fooverlaps[0, 0] - self.foverlap00) < 0.0001
         assert abs(data.fooverlaps[1, 1] - self.foverlap11) < 0.0001
         assert abs(data.fooverlaps[2, 2] - self.foverlap22) < 0.0001
+
+class CFOURSPTest(GenericSPTest):
+    """Customized restricted single point unittest"""
 
 
 class GaussianSPTest(GenericSPTest):

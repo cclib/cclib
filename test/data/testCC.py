@@ -81,6 +81,17 @@ class GenericCCSDPTTest(GenericCCTest):
             self.corr_energy, "hartree", "eV"
         )
 
+class CFOURCCDTest(GenericCCSDPTTest):
+    # CFOUR 2.1 
+
+
+class CFOURCCSDTest(GenericCCSDPTTest):
+    # CFOUR 2.1 
+
+
+class CFOURCCSDPTTest(GenericCCSDPTTest):
+    # CFOUR 2.1
+
 
 class DALTONCCSDPTTest(GenericCCSDPTTest):
     # DALTON 2015

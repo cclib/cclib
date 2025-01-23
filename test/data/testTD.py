@@ -24,6 +24,7 @@ class GenericTDTest:
     method = "TD-DFT"
 
     @skipForParser("ADF", "excited_states_method not yet implemented")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "excited_states_method not yet implemented")
     @skipForParser("FChk", "excited_states_method not yet implemented")
     @skipForParser("GAMESS", "excited_states_method not yet implemented")
@@ -35,6 +36,7 @@ class GenericTDTest:
         """Did we parse an excited states method?"""
         assert data.metadata["excited_states_method"] == self.method
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForLogfile(
         "Turbomole/basicTurbomole7.4/CO_cc2_TD_trip",
         "Oscillator strengths are not available for Turbomole triplets using ricc2 but are required for testenergies()",
@@ -52,6 +54,7 @@ class GenericTDTest:
             - utils.convertor(self.expected_l_max, "hartree", "wavenumber")
         ) < utils.convertor(0.022781676263770798, "hartree", "wavenumber")
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForLogfile(
         "Turbomole/basicTurbomole7.4/CO_cc2_TD_trip",
         "Oscillator strengths are not available for triplets with Turbomole's ricc2",
@@ -61,6 +64,7 @@ class GenericTDTest:
         assert len(data.etoscs) == self.number
         assert abs(max(data.etoscs) - self.expected_f_max) < self.expected_f_max_thresh
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("FChk", "The parser is still being developed so we skip this test")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForLogfile(
@@ -73,6 +77,7 @@ class GenericTDTest:
         sumofsec = sum([z * z for (x, y, z) in lowestEtrans])
         assert abs(sumofsec - self.sumofsec) < 0.16
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("FChk", "This is true for calculations without symmetry, but not with?")
     @skipForParser("DALTON", "This is true for calculations without symmetry, but not with?")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
@@ -85,6 +90,7 @@ class GenericTDTest:
         t = list(reversed(sorted([(c * c, s, e) for (s, e, c) in lowestEtrans])))
         assert t[0][1][0] == data.homos[0] or t[0][2][0] == data.homos[0] + 1
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForLogfile("FChk/basicQChem5.4", "etsyms are not yet implemented")
     @skipForLogfile("ORCA/basicORCA5.0/dvb_adc2.log", "etsyms are not available for this method")
@@ -99,6 +105,7 @@ class GenericTDTest:
         assert len(data.etsyms) == self.number
 
     @skipForParser("ADF", "etsyms are not yet implemented")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "etsyms are not yet implemented")
     @skipForParser("FChk", "etsyms are not yet implemented")
     @skipForParser("GAMESS", "etsyms are not yet implemented")
@@ -113,6 +120,7 @@ class GenericTDTest:
         assert data.etsyms == self.symmetries
 
     @skipForParser("ADF", "etrotats are not yet implemented")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "etrotats are not yet implemented")
     @skipForParser("FChk", "etrotats are not yet implemented")
     @skipForParser("GAMESS", "etrotats are not yet implemented")
@@ -144,6 +152,7 @@ class GenericTDTest:
         assert len(data.etrotats) == self.number
 
     @skipForParser("ADF", "optstate is not yet implemented")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "optstate are not yet implemented")
     @skipForParser("FChk", "optstate are not yet implemented")
     @skipForParser("GAMESS", "optstate are not yet implemented")

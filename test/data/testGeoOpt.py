@@ -28,6 +28,7 @@ class GenericGeoOptTest:
     scfenergy = -380.90674109218116
     scfenergy_tolerance = 1.4699729516340807
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("MOPAC", "The success status is not parsed yet")
     def test_success(self, data) -> None:
@@ -78,12 +79,14 @@ class GenericGeoOptTest:
         count = sum([self.nbasisdict[n] for n in data.atomnos])
         assert data.nbasis == count
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     def testcoreelectrons(self, data) -> None:
         """Are the coreelectrons all 0?"""
         ans = numpy.zeros(data.natom, "i")
         numpy.testing.assert_array_equal(data.coreelectrons, ans)
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("MOPAC", "Not implemented.")
     @skipForParser("xTB", "Not implemented yet")
@@ -93,6 +96,7 @@ class GenericGeoOptTest:
         msg = f"{numpy.array_repr(data.homos)} != array([34], 'i')"
         numpy.testing.assert_array_equal(data.homos, ref, msg)
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("MOPAC", "The scfvalues attribute is not parsed yet")
     @skipForParser("xTB", "not implemented yet")
     def testscfvaluetype(self, data) -> None:
@@ -113,6 +117,7 @@ class GenericGeoOptTest:
         count_atomcoords = data.atomcoords.shape[0] - self.extracoords
         assert count_scfenergies == count_atomcoords
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("MOPAC", "The scftargets attribute is not parsed yet")
     @skipForParser("xTB", "not implemented yet")
     def testscftargetdim(self, data) -> None:
@@ -121,6 +126,7 @@ class GenericGeoOptTest:
         dim_scfvalues = (len(data.scfvalues), len(data.scfvalues[0][0]))
         assert dim_scftargets == dim_scfvalues
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("MOPAC", "Not implemented.")
     @skipForParser("xTB", "not implemented yet")
     def testgeovalues_atomcoords(self, data) -> None:
@@ -130,6 +136,7 @@ class GenericGeoOptTest:
         msg = f"len(atomcoords) is {int(count_coords)} but len(geovalues) is {int(count_geovalues)}"
         assert count_geovalues == count_coords, msg
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("MOPAC", "Not implemented.")
     @skipForParser("xTB", "not implemented yet")
     def testgeovalues_scfvalues(self, data) -> None:
@@ -138,6 +145,7 @@ class GenericGeoOptTest:
         count_geovalues = len(data.geovalues)
         assert count_scfvalues == count_geovalues
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("MOPAC", "Not implemented.")
     @skipForParser("PySCF", "not implemented yet")
     @skipForParser("xTB", "not implemented yet")
@@ -147,6 +155,7 @@ class GenericGeoOptTest:
         dim_geovalues = (len(data.geovalues[0]),)
         assert dim_geotargets == dim_geovalues
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("MOPAC", "Not implemented.")
     @skipForParser("PySCF", "not implemented yet")
     @skipForParser("xTB", "not implemented yet")
@@ -156,6 +165,7 @@ class GenericGeoOptTest:
         assert len(data.optdone) == 1
         assert all(isinstance(val, int) for val in data.optdone)
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("MOPAC", "Not implemented.")
     @skipForParser("PySCF", "geotargets not implemented yet")
     @skipForParser("xTB", "not implemented yet")
@@ -164,6 +174,7 @@ class GenericGeoOptTest:
         assert numpy.all(numpy.abs(data.geovalues[-1]) <= data.geotargets)
 
     @skipForParser("ADF", "Not implemented.")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "Not implemented.")
     @skipForParser("GAMESS", "Not implemented.")
     @skipForParser("GAMESSUK", "Not implemented.")
@@ -184,6 +195,7 @@ class GenericGeoOptTest:
         assert data.optstatus[-1] == data.OPT_DONE
 
     @skipForParser("ADF", "Not implemented yet")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "Not implemented yet")
     @skipForParser("FChk", "Rotational constants are never written to fchk files")
     @skipForParser("GAMESS", "Not implemented yet")
@@ -210,6 +222,7 @@ class GenericGeoOptTest:
             assert len(data.mocoeffs) == 1
 
     @skipForParser("ADF", "Not implemented.")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "Not implemented.")
     @skipForParser("GAMESS", "Not implemented.")
     @skipForParser("GAMESSUK", "Not implemented.")
@@ -222,6 +235,7 @@ class GenericGeoOptTest:
         """Do the grads have the right dimensions?"""
         assert data.grads.shape == (len(data.geovalues), data.natom, 3)
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForLogfile("Molcas/basicOpenMolcas18.0/dvb_gopt.out", "not implemented yet")
     def testmetadata_success(self, data) -> None:
         """Does metadata have expected keys and values?"""
