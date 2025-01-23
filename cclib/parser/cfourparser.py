@@ -30,7 +30,8 @@ class CFOUR(logfileparser.Logfile):
 
     def normalisesym(self, label):
         # CFOUR uses A'' instead of A"
-        label=label.replace("''", '"')
+        label = label.replace("''", '"')
+        label = label.replace("+","")
         # CFOUR uses 1g, 1u, 2g, 2u,... for E1g, E1u, E2g, E2u,...
         try:
             label_int = int(label[0])
