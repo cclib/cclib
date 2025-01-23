@@ -12,20 +12,17 @@ import pytest
 class GenericNMRTest:
     """Generic NMR unittest"""
 
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     def testkeys(self, data) -> None:
         """Check dictionary keys are ints."""
         key_types = {type(key) for key in data.nmrtensors.keys()}
         assert len(key_types) == 1 and int in key_types
 
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     def testsize(self, data) -> None:
         """Check to make sure there are the correct number of tensors parsed"""
         assert len(data.nmrtensors) == data.natom
         assert len(data.nmrtensors[0]) == 4
         assert data.nmrtensors[0]["total"].shape == (3, 3)
 
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     def testisotropic(self, data) -> None:
         """Check the total isotropic value matches the computed value."""
         tensor = data.nmrtensors[0]
@@ -40,7 +37,6 @@ class GenericNMRTest:
 class GenericNMRCouplingTest:
     """Generic NMR spin-spin coupling unittest"""
 
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     def testkeys(self, data) -> None:
         """Check dictionary keys are ints."""
         assert all(
@@ -58,7 +54,6 @@ class GenericNMRCouplingTest:
             ]
         )
 
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     def testsize(self, data) -> None:
         """Check to make sure there are the correct number of tensors parsed"""
         assert len(data.nmrcouplingtensors) == 139
@@ -66,7 +61,6 @@ class GenericNMRCouplingTest:
         assert len(tensor) == 7
         assert tensor["total"].shape == (3, 3)
 
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     def testisotropic(self, data) -> None:
         """Check the total isotropic value matches the computed value."""
         tensor = list(list(data.nmrcouplingtensors.values())[0].values())[0]
