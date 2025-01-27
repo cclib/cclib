@@ -60,6 +60,8 @@ class CFOUR(logfileparser.Logfile):
     def before_parsing(self):
         # set package metadata to CFOUR
         self.metadata["package"] = "CFOUR"
+        # geting atomic number and symbol is different for 1 atom
+        self.set_attribute("only_one_atom", False)
         # set to true so that atomic numbers are parsed on the first block of coordinates
         self.set_attribute("first_coord_block", True)
         # set the atomic coordinates to []
@@ -213,6 +215,16 @@ class CFOUR(logfileparser.Logfile):
                 for i in temp_basis_info:
                     gbasis[atom_index[curr_atom]].append((curr_ang_mom, i))
             self.set_attribute("gbasis", gbasis)
+        # exception for only one atom
+        if "1 entries found in Z-matrix" in line:
+            self.only_one_atom=True
+        if ("NUCLEAR CHARGE:" in line) and self.only_one_atom:
+            self.set_attribute("atomnos", [int(line.strip().split()[2])])
+        if ("NUCLEAR COORDINATES (IN A.U.) ARE :" in line) and self.only_one_atom:
+            line = next(inputfile)
+            line = next(inputfile)
+            self.set_attribute("atomic_symbols", [line.strip().split()[0]])
+            self.atomcoords.append([[float(line.strip().split()[2]),float(line.strip().split()[3]),float(line.strip().split()[4])]])
         # get the coordinates at each step in a geometry optimization
         # if this is the first time parsing a block of coordinates also get the atomic numbers
         """
