@@ -11,6 +11,7 @@
 # a special keyword, and we can test both HF and DFT outputs. Gaussian is an
 # exception, as it has at least two different formats for printing basis set
 # information, and so we made dedicated unit test logfiles in that case.
+Basis     CFOUR       GenericBasisTest      basicCFOUR2.1         dvb_sp.c4
 Basis     DALTON      GenericBasisTest      basicDALTON-2013      dvb_sp_hf.out
 Basis     DALTON      GenericBasisTest      basicDALTON-2015      dvb_sp_hf.out
 Basis     DALTON      GenericBasisTest      basicDALTON-2013      dvb_sp_ks.out
@@ -46,6 +47,7 @@ Basis     PySCF       GenericBasisTest      basicPySCF2.6         dvb_sp.py
 Basis     QChem       GenericBasisTest      basicQChem5.1         dvb_sp.out
 Basis     QChem       GenericBasisTest      basicQChem5.4         dvb_sp.out
 
+Basis     CFOUR       GenericBigBasisTest   basicCFOUR2.1         C_bigbasis.c4
 Basis     DALTON      DALTONBigBasisTest    basicDALTON-2013      C_bigbasis.out
 Basis     DALTON      DALTONBigBasisTest    basicDALTON-2015      C_bigbasis.out
 Basis     GAMESS      GenericBigBasisTest   basicFirefly8.0       C_bigbasis.out
@@ -72,6 +74,10 @@ BOMD      NWChem      GenericBOMDTest       basicNWChem7.0        dvb_bomd_ks.ou
 BOMD      QChem       GenericBOMDTest       basicQChem5.1         dvb_bomd.out
 BOMD      QChem       GenericBOMDTest       basicQChem5.4         dvb_bomd.out
 
+CC        CFOUR       CFOURCC2Test          basicCFOUR2.1         water_cc2.c4
+CC        CFOUR       CFOURCCDTest          basicCFOUR2.1         water_ccd.c4
+CC        CFOUR       CFOURCCSDTest         basicCFOUR2.1         water_ccsd.c4
+CC        CFOUR       CFOURCCSDPTTest       basicCFOUR2.1         water_ccsdpt.c4
 CC        DALTON      DALTONCCSDPTTest      basicDALTON-2013      water_ccsdt.out
 CC        DALTON      DALTONCCSDPTTest      basicDALTON-2015      water_ccsdt.out
 CC        GAMESS      GamessCCDTest         basicGAMESS-US2017    water_ccd.out
