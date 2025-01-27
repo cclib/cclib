@@ -62,32 +62,34 @@ class CFOUR(logfileparser.Logfile):
             return label
 
     def before_parsing(self):
-        #set package metadata to CFOUR
-        self.metadata['package']='CFOUR'
-        #set to true so that atomic numbers are parsed on the first block of coordinates
-        self.set_attribute('first_coord_block',True)
-        #set the atomic coordinates to []
-        self.set_attribute('atomcoords',[])
-        #set the list of scf energies to []
-        self.set_attribute('scfenergies',[])
-        #set mo energies list to []
-        self.set_attribute('moenergies',[])
-        #set mo symmetries list to []
-        self.set_attribute('mosyms',[])
-        #set to True so that alpha MOs are parsed first
-        self.set_attribute('alpha_mos_to_parse',True)
-        #set temp alpha mo coeffs to []
-        self.set_attribute('temp_alpha_mocoeffs',[])
-        #set temp beta mo coeffs to []
-        self.set_attribute('temp_beta_mocoeffs',[])
-        #set mo coeffs to []
-        self.set_attribute('mocoeffs',[])
-        #should mo coeffs be reset the next time an mo is parsed
-        self.set_attribute('mocoeffs_should_be_reset',True)
-        #set to True so that the first time parsing mo coeffs it also parses ao names
-        self.set_attribute('parse_aonames',True)
-        #set cc energies to []
-        self.set_attribute('ccenergies',[])
+        # set package metadata to CFOUR
+        self.metadata["package"] = "CFOUR"
+        # geting atomic number and symbol is different for 1 atom
+        self.set_attribute("only_one_atom", False)
+        # set to true so that atomic numbers are parsed on the first block of coordinates
+        self.set_attribute("first_coord_block", True)
+        # set the atomic coordinates to []
+        self.set_attribute("atomcoords", [])
+        # set the list of scf energies to []
+        self.set_attribute("scfenergies", [])
+        # set mo energies list to []
+        self.set_attribute("moenergies", [])
+        # set mo symmetries list to []
+        self.set_attribute("mosyms", [])
+        # set to True so that alpha MOs are parsed first
+        self.set_attribute("alpha_mos_to_parse", True)
+        # set temp alpha mo coeffs to []
+        self.set_attribute("temp_alpha_mocoeffs", [])
+        # set temp beta mo coeffs to []
+        self.set_attribute("temp_beta_mocoeffs", [])
+        # set mo coeffs to []
+        self.set_attribute("mocoeffs", [])
+        # should mo coeffs be reset the next time an mo is parsed
+        self.set_attribute("mocoeffs_should_be_reset", True)
+        # set to True so that the first time parsing mo coeffs it also parses ao names
+        self.set_attribute("parse_aonames", True)
+        # set cc energies to []
+        self.set_attribute("ccenergies", [])
 
     def after_parsing(self):
         #change atomic coordinates to a numpy array
@@ -205,8 +207,18 @@ class CFOUR(logfileparser.Logfile):
                 line=next(inputfile)
             if should_parse:
                 for i in temp_basis_info:
-                    gbasis[atom_index[curr_atom]].append((curr_ang_mom,i))
-            self.set_attribute('gbasis',gbasis)
+                    gbasis[atom_index[curr_atom]].append((curr_ang_mom, i))
+            self.set_attribute("gbasis", gbasis)
+        # exception for only one atom
+        if "1 entries found in Z-matrix" in line:
+            self.only_one_atom=True
+        if ("NUCLEAR CHARGE:" in line) and self.only_one_atom:
+            self.set_attribute("atomnos", [int(line.strip().split()[2])])
+        if ("NUCLEAR COORDINATES (IN A.U.) ARE :" in line) and self.only_one_atom:
+            line = next(inputfile)
+            line = next(inputfile)
+            self.set_attribute("atomic_symbols", [line.strip().split()[0]])
+            self.atomcoords.append([[float(line.strip().split()[2]),float(line.strip().split()[3]),float(line.strip().split()[4])]])
         # get the coordinates at each step in a geometry optimization
         # if this is the first time parsing a block of coordinates also get the atomic numbers
         '''
