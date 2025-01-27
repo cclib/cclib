@@ -137,17 +137,18 @@ class CFOUR(logfileparser.Logfile):
                 self.ccenergies.append(utils.float(cc_lines[-1].split()[-2]))
             else:
                 self.ccenergies.append(utils.float(cc_lines[-1].split()[-1]))
-        #get coefficients and exponents of the gaussian basis set
-        if 'ATOM                 EXPONENT      COEFFICIENTS' in line:
-            atom_index={}
-            atom_index_length=0
-            line=next(inputfile)
-            should_parse=True
-            last_line=''
-            temp_basis_info=[]
-            gbasis=[]
-            hashtag_in_last_line=False
-            first_iter=True
+        # get coefficients and exponents of the gaussian basis set
+        if "ATOM                 EXPONENT      COEFFICIENTS" in line:
+            atom_index = {}
+            line = next(inputfile)
+            should_parse = True
+            last_line = ""
+            temp_basis_info = []
+            gbasis = []
+            for i in range(len(self.atomic_symbols)):
+                gbasis.append([])
+            hashtag_in_last_line = False
+            first_iter = True
             while True:
                 if line.strip()=='':
                     line=next(inputfile)
@@ -160,21 +161,22 @@ class CFOUR(logfileparser.Logfile):
                 if '#' in line:
                     if (not first_iter) and should_parse:
                         for i in temp_basis_info:
-                            gbasis[atom_index[curr_atom]].append((curr_ang_mom,i))
-                    first_iter=False
-                    hashtag_in_last_line=True
-                    curr_atom=split_line[0]+split_line[1]+split_line[2]
-                    if not (curr_atom in atom_index):
-                        atom_index[curr_atom]=atom_index_length
-                        atom_index_length+=1
-                        gbasis.append([])
-                    if len(split_line[3])==1:
-                        if split_line[3]=='S':
-                            curr_ang_mom='S'
-                            should_parse=True
-                        elif split_line[3]=='X':
-                            curr_ang_mom='P'
-                            should_parse=True
+                            gbasis[atom_index[curr_atom]].append((curr_ang_mom, i))
+                    first_iter = False
+                    hashtag_in_last_line = True
+                    curr_atom = split_line[0] + split_line[1] + split_line[2]
+                    if curr_atom not in atom_index.keys():
+                        for i in range(len(self.atomic_symbols)):
+                            if self.atomic_symbols[i]==split_line[0] and (i not in atom_index.values()):
+                                atom_index[curr_atom] = i
+                                break
+                    if len(split_line[3]) == 1:
+                        if split_line[3] == "S":
+                            curr_ang_mom = "S"
+                            should_parse = True
+                        elif split_line[3] == "X":
+                            curr_ang_mom = "P"
+                            should_parse = True
                         else:
                             should_parse=False
                     elif len(split_line[3])==2:
