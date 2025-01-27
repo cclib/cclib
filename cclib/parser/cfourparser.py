@@ -169,7 +169,9 @@ class CFOUR(logfileparser.Logfile):
                     curr_atom = split_line[0] + split_line[1] + split_line[2]
                     if curr_atom not in atom_index.keys():
                         for i in range(len(self.atomic_symbols)):
-                            if self.atomic_symbols[i]==split_line[0] and (i not in atom_index.values()):
+                            if self.atomic_symbols[i] == split_line[0] and (
+                                i not in atom_index.values()
+                            ):
                                 atom_index[curr_atom] = i
                                 break
                     if len(split_line[3]) == 1:
