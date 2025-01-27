@@ -136,12 +136,13 @@ class CFOUR(logfileparser.Logfile):
         # get coefficients and exponents of the gaussian basis set
         if "ATOM                 EXPONENT      COEFFICIENTS" in line:
             atom_index = {}
-            atom_index_length = 0
             line = next(inputfile)
             should_parse = True
             last_line = ""
             temp_basis_info = []
             gbasis = []
+            for i in range(len(self.atomic_symbols)):
+                gbasis.append([])
             hashtag_in_last_line = False
             first_iter = True
             while True:
@@ -164,10 +165,11 @@ class CFOUR(logfileparser.Logfile):
                     first_iter = False
                     hashtag_in_last_line = True
                     curr_atom = split_line[0] + split_line[1] + split_line[2]
-                    if curr_atom not in atom_index:
-                        atom_index[curr_atom] = atom_index_length
-                        atom_index_length += 1
-                        gbasis.append([])
+                    if curr_atom not in atom_index.keys():
+                        for i in range(len(self.atomic_symbols)):
+                            if self.atomic_symbols[i]==split_line[0] and (i not in atom_index.values()):
+                                atom_index[curr_atom] = i
+                                break
                     if len(split_line[3]) == 1:
                         if split_line[3] == "S":
                             curr_ang_mom = "S"
