@@ -166,31 +166,46 @@ class CFOUR(logfileparser.Logfile):
                             gbasis[atom_index[curr_atom]].append((curr_ang_mom, i))
                     first_iter = False
                     hashtag_in_last_line = True
-                    curr_atom = split_line[0] + split_line[1] + split_line[2]
+                    if len(split_line[0])==1:
+                        curr_atom = split_line[0] + split_line[1] + split_line[2]
+                    else:
+                        curr_atom = split_line[0] + split_line[1]
+                    symbol_len=0
+                    for i in curr_atom:
+                        if not i=="#":
+                            symbol_len+=1
+                        else:
+                            break
                     if curr_atom not in atom_index.keys():
                         for i in range(len(self.atomic_symbols)):
-                            if self.atomic_symbols[i]==split_line[0] and (i not in atom_index.values()):
+                            if self.atomic_symbols[i] == curr_atom[:symbol_len] and (
+                                i not in atom_index.values()
+                            ):
                                 atom_index[curr_atom] = i
                                 break
-                    if len(split_line[3]) == 1:
-                        if split_line[3] == "S":
+                    if len(split_line[-1]) == 1:
+                        if split_line[-1] == "S":
                             curr_ang_mom = "S"
                             should_parse = True
-                        elif split_line[3] == "X":
+                        elif split_line[-1] == "X":
                             curr_ang_mom = "P"
                             should_parse = True
                         else:
-                            should_parse=False
-                    elif len(split_line[3])==2:
-                        if split_line[3]=='XX':
-                            curr_ang_mom='D'
-                            should_parse=True
+                            should_parse = False
+                    elif len(split_line[-1]) == 2:
+                        if split_line[-1] == "XX":
+                            curr_ang_mom = "D"
+                            should_parse = True
                         else:
                             should_parse=False
                     else:
-                        if ((int(split_line[3][-3])>2) and (int(split_line[3][-2])==0) and (int(split_line[3][-1])==0)):
-                            curr_ang_mom=split_line[3][:-3]
-                            should_parse=True
+                        if (
+                            (int(split_line[-1][-3]) > 2)
+                            and (int(split_line[-1][-2]) == 0)
+                            and (int(split_line[-1][-1]) == 0)
+                        ):
+                            curr_ang_mom = split_line[-1][:-3]
+                            should_parse = True
                         else:
                             should_parse=False
                 if should_parse and (not ('#' in line)):
@@ -252,16 +267,9 @@ class CFOUR(logfileparser.Logfile):
                 line=next(inputfile)
             if self.first_coord_block:
                 self.set_attribute("atomnos", atomnos)
-                self.set_attribute("coreelectrons", np.zeros(len(atomnos)))
                 self.set_attribute("atomic_symbols", atomic_symbols)
             self.atomcoords.append(temp_atomcoords)
             self.first_coord_block = False
-        # get core electrons in each atoms ECP
-        if "ECP PARAMETERS FOR ATOM" in line:
-            ce_index=int(line.strip().split()[-1])-1
-            while not "NCORE =" in line:
-                line=next(inputfile)
-            self.coreelectrons[ce_index]=int(line.strip().split()[2])
         # get the scf energy at each step in a geometry optimization
         if "E(SCF)=" in line:
             self.scfenergies.append(utils.float(line.split()[1]))
