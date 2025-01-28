@@ -90,21 +90,30 @@ class CFOUR(logfileparser.Logfile):
         self.set_attribute("parse_aonames", True)
         # set cc energies to []
         self.set_attribute("ccenergies", [])
+        # dict of ECP labels
+        self.set_attribute("ecp_labels", {})
+        # core electron dict
+        self.set_attribute("core_electron_dict", {})
 
     def after_parsing(self):
-        #change atomic coordinates to a numpy array
-        self.atomcoords=np.array(self.atomcoords)
-        #change scf energies to a numpy array
-        self.scfenergies=np.array(self.scfenergies)
-        #get the number of atoms
-        if len(self.atomcoords)>=1:
-            self.set_attribute('natom',len(self.atomnos))
-        #get the number of atomic orbitals in the basis
-        if hasattr(self,'aonames'):
-            self.set_attribute('nbasis',len(self.aonames))
-        #get the number of molecular orbitals
-        if len(self.moenergies)>=1:
-            self.set_attribute('nmo',len(self.moenergies[0]))
+        # change atomic coordinates to a numpy array
+        self.atomcoords = np.array(self.atomcoords)
+        # change scf energies to a numpy array
+        self.scfenergies = np.array(self.scfenergies)
+        # get the number of atoms
+        if len(self.atomcoords) >= 1:
+            self.set_attribute("natom", len(self.atomnos))
+        # get the number of atomic orbitals in the basis
+        if hasattr(self, "aonames"):
+            self.set_attribute("nbasis", len(self.aonames))
+        # get the number of molecular orbitals
+        if len(self.moenergies) >= 1:
+            self.set_attribute("nmo", len(self.moenergies[0]))
+        # get core electrons
+        for i in self.ecp_labels.keys():
+            if i in self.core_electron_dict.keys():
+                for j in self.ecp_labels[i]:
+                    self.coreelectrons[j] = self.core_electron_dict[i]
 
     def extract(self, inputfile, line):
         # get the version of CFOUR
@@ -147,6 +156,7 @@ class CFOUR(logfileparser.Logfile):
             last_line = ""
             temp_basis_info = []
             gbasis = []
+            self.ecp_labels={}
             for i in range(len(self.atomic_symbols)):
                 gbasis.append([])
             hashtag_in_last_line = False
@@ -168,9 +178,11 @@ class CFOUR(logfileparser.Logfile):
                     hashtag_in_last_line = True
                     if len(split_line[0])==1:
                         curr_atom = split_line[0] + split_line[1] + split_line[2]
+                        ecp_label = split_line[0] + split_line[1]
                     else:
                         curr_atom = split_line[0] + split_line[1]
-                    symbol_len=0
+                        ecp_label = split_line[0]
+                    symbol_len = 0
                     for i in curr_atom:
                         if not i=="#":
                             symbol_len+=1
@@ -181,6 +193,10 @@ class CFOUR(logfileparser.Logfile):
                             if self.atomic_symbols[i] == curr_atom[:symbol_len] and (
                                 i not in atom_index.values()
                             ):
+                                if ecp_label in self.ecp_labels.keys():
+                                    self.ecp_labels[ecp_label] += [i]
+                                else:
+                                    self.ecp_labels[ecp_label] = [i]
                                 atom_index[curr_atom] = i
                                 break
                     if len(split_line[-1]) == 1:
@@ -267,15 +283,19 @@ class CFOUR(logfileparser.Logfile):
                 line=next(inputfile)
             if self.first_coord_block:
                 self.set_attribute("atomnos", atomnos)
+                self.set_attribute("coreelectrons", np.zeros(len(atomnos)))
                 self.set_attribute("atomic_symbols", atomic_symbols)
             self.atomcoords.append(temp_atomcoords)
             self.first_coord_block = False
         # get core electrons in each atoms ECP
         if "ECP PARAMETERS FOR ATOM" in line:
-            ce_index = int(line.strip().split()[-1]) - 1
+            num_ce_index = line.strip().split()[-1]
+            line = next(inputfile)
+            let_ce_index = line.strip().split(":")[0]
+            ce_index = let_ce_index + "#" + num_ce_index
             while "NCORE =" not in line:
                 line = next(inputfile)
-            self.coreelectrons[ce_index] = int(line.strip().split()[2])
+            self.core_electron_dict[ce_index] = int(line.strip().split()[2])
         # get the scf energy at each step in a geometry optimization
         if "E(SCF)=" in line:
             self.scfenergies.append(utils.float(line.split()[1]))

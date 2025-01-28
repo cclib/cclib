@@ -17,7 +17,6 @@ class GenericCoreTest:
     coredict = {"Mo": 28, "O": 0, "Cl": 10}
     charge = -2
 
-    @skipForParser("CFOUR", "This parser is still being developed")
     @skipForParser("FChk", "Core electrons do not seem to be available")
     def testcorrect(self, data) -> None:
         """Is coreelectrons equal to what it should be?"""
