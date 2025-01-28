@@ -152,7 +152,7 @@ class CFOUR(logfileparser.Logfile):
             last_line = ""
             temp_basis_info = []
             gbasis = []
-            self.ecp_labels={}
+            self.ecp_labels = {}
             for i in range(len(self.atomic_symbols)):
                 gbasis.append([])
             hashtag_in_last_line = False
