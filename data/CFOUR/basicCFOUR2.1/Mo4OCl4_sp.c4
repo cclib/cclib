@@ -34,9 +34,9 @@ Copyright (C) 2009-2019 Intel Corporation. All rights reserved.
 
                        Version 2.1
 <<<<<<< HEAD
- 
-                     smp-n217.crc.pitt.edu                             
-                     Mon Jan 27 23:08:13 EST 2025                      
+
+                     smp-n217.crc.pitt.edu
+                     Mon Jan 27 23:08:13 EST 2025
 =======
 
                      smp-n217.crc.pitt.edu
@@ -48,37 +48,37 @@ Copyright (C) 2009-2019 Intel Corporation. All rights reserved.
 *                          Input from ZMAT file                                *
 ********************************************************************************
 <<<<<<< HEAD
-Mo4OCl4 restricted single point                                                 
-MO     0.000325    -0.000325     0.051810                                       
-O      0.000206    -0.000206     1.741504                                       
-CL     1.711727    -1.711727    -0.659846                                       
-CL    -1.710992    -1.711738    -0.660079                                       
-CL    -1.711004     1.711004    -0.660311                                       
-CL     1.711738     1.710992    -0.660079                                       
-                                                                                
-*ACES2(CALC=SCF                                                                 
-ECP=ON                                                                          
-COORDINATES=CARTESIAN                                                           
-BASIS=SPECIAL                                                                   
-REF=RHF                                                                         
-PRINT=2                                                                         
-CHARGE=-2                                                                       
-MULTIPLICITY=1)                                                                 
-                                                                                
-MO:STO-3G                                                                       
-O:STO-3G                                                                        
-CL:STO-3G                                                                       
-CL:STO-3G                                                                       
-CL:STO-3G                                                                       
-CL:STO-3G                                                                       
-                                                                                
-MO:ECP-28-HAY                                                                   
-O:NONE                                                                          
-CL:ECP-10-HAY                                                                   
-CL:ECP-10-HAY                                                                   
-CL:ECP-10-HAY                                                                   
-CL:ECP-10-HAY                                                                   
-                                                                                
+Mo4OCl4 restricted single point
+MO     0.000325    -0.000325     0.051810
+O      0.000206    -0.000206     1.741504
+CL     1.711727    -1.711727    -0.659846
+CL    -1.710992    -1.711738    -0.660079
+CL    -1.711004     1.711004    -0.660311
+CL     1.711738     1.710992    -0.660079
+
+*ACES2(CALC=SCF
+ECP=ON
+COORDINATES=CARTESIAN
+BASIS=SPECIAL
+REF=RHF
+PRINT=2
+CHARGE=-2
+MULTIPLICITY=1)
+
+MO:STO-3G
+O:STO-3G
+CL:STO-3G
+CL:STO-3G
+CL:STO-3G
+CL:STO-3G
+
+MO:ECP-28-HAY
+O:NONE
+CL:ECP-10-HAY
+CL:ECP-10-HAY
+CL:ECP-10-HAY
+CL:ECP-10-HAY
+
 =======
 Mo4OCl4 restricted single point
 MO     0.000325    -0.000325     0.051810
@@ -208,117 +208,117 @@ CL:ECP-10-HAY
        GEO_MAXCYC           IOPTCY             50               ***
        GEO_MAXSTEP          IMXSTP            300            millibohr
 <<<<<<< HEAD
-       GEO_METHOD           INR            SINGLE_POINT[  5]    ***   
-       GIAO                 IGIAO          OFF         [  1]    ***   
-       GIMIC                IGIMIC         OFF         [  0]    ***   
-       GRID                 IGRID          OFF         [  0]    ***   
-       GRID_ALGO            IGALGO         SERIAL      [  0]    ***   
-       GUESS                IGUESS         MOREAD      [  0]    ***   
-       HBAR                 IHBAR          OFF         [  0]    ***   
-       HESS_TYPE            IHESTP         SCF         [  0]    ***   
-       HF2_FILE             IHF2Fl         USE         [  1]    ***   
-       HFSTABILITY          ISTABL         OFF         [  0]    ***   
-       INCORE               INCORE         OFF         [  0]    ***   
-       INPUT_MRCC           IMRCC          ON          [  1]    ***   
-       INTEGRALS            INTTYP         VMOL        [  1]    ***   
-       JODA_PRINT           IJPRNT              0               ***   
-       KEYWORD_OUT          IDMPKW         NO          [  0]    ***   
-       LINDEP_TOL           ILINDP              8               ***   
-       LINEQ_CONV           IZTACN          10D-  7           cycles  
-       LINEQ_EXPOR          ILMAXD              5               ***   
-       LINEQ_MAXCY          ILMAXC            100               ***   
-       LINEQ_TYPE           ILTYPE         DIIS        [  1]    ***   
-       LOCK_ORBOCC          ILOCOC         OFF         [  0]    ***   
-       MEMORY_SIZE          IMEMSZ         100000000           words  
-       MEM_UNIT             IMEMU          INTEGERWORDS[  0]    ***   
-       MRCC                 IMRCCC         OFF         [  0]    ***   
-       MULTIPLICTY          IMULTP              1               ***   
-       NACOUPLING           IVCOUP         OFF         [  0]    ***   
-       NEGEVAL              IDIE           ABORT       [  0]    ***   
-       NEWNORM              INEWNO         OFF         [  0]    ***   
-       NON-HF               INONHF         OFF         [  0]    ***   
-       NTOP_TAMP            ITOPT2             15               ***   
-       NUC_MODEL            INUCMO         POINT       [  0]    ***   
-       OCCUPATION           IOCCU   ESTIMATED BY SCF 
-       OPEN-SHELL           IOPEN          SPIN-ORBITAL[  0]    ***   
-       OPTVIB               IOPTVB         OFF         [  0]    ***   
-       ORBITALS             IORBTP         STANDARD    [  0]    ***   
-       PARALLEL             IPARAL         ON          [  1]    ***   
-       PARA_INT             IPINTS         ON          [  1]    ***   
-       PARA_PRINT           IPPRIN              0               ***   
-       PERT_ORB             IPTORB         STANDARD    [  0]    ***   
-       POINTS               IGRDFD              0               ***   
-       PRINT                IPRNT               2               ***   
-       PROPS                IPROPS         OFF         [  0]    ***   
-       PROP_INTEGR          IINTYP         INTERNAL    [  0]    ***   
-       PSI                  IPSI           OFF         [  0]    ***   
-       QC_ALG               IQCALG         FLM         [  0]    ***   
-       QC_LINALG            IQCLIN         TRIDIAG     [  2]    ***   
-       QC_MAXCYC            IQCMAX          10D-100           cycles  
-       QC_MAXSCFCY          IQCMSC          10D- 15           cycles  
-       QC_RTRUST            IQCRTR          10D-  0           x 10-3  
-       QC_SKIPSCF           IQCSKI         OFF         [  0]    ***   
-       QC_START             IQCSTA          10D-  1             ***   
-       QRHFGUESS            IQGUES         OFF         [  0]    ***   
-       QUARTIC              IQUART         OFF         [  0]    ***   
-       RAMAN_INT            IRAMIN         OFF         [  0]    ***   
-       RAMAN_ORB            IRAMRE         UNRELAXED   [  0]    ***   
-       RDO                  IRDOFM         OFF         [  0]    ***   
-       REDUCE_REPR          REDREP         Ir          [  0]    ***   
-       REFERENCE            IREFNC         RHF         [  0]    ***   
-       RELATIVIST           IRELAT         OFF         [  0]    ***   
-       RELAX_DENS           IRDENS         OFF         [  0]    ***   
-       RESET_FLAGS          IRESET         OFF         [  0]    ***   
-       RESTART_CC           ICCRES         OFF         [  0]    ***   
-       ROT_EVEC             ROTVEC              0               ***   
-       SAVE_INTS            ISVINT         OFF         [  0]    ***   
-       SCALE_ON             ISTCRT              0               ***   
-       SCF_CONV             ISCFCV          10D-  7             ***   
-       SCF_DAMPING          IDAMP               0             x 10-3  
-       SCF_EXPORDE          IRPPOR              6               ***   
-       SCF_EXPSTAR          IRPPLS              8               ***   
-       SCF_EXTRAPO          IRPP           ON          [  1]    ***   
-       SCF_MAXCYC           ISCFCY            150              cycles 
-       SCF_NOSTOP           ISCFST         OFF         [  0]    ***   
-       SCF_PRINT            ISCFPR              0               ***   
-       SCF_PROG             ISCFPR         SCF         [  0]    ***   
-       SD_FIELD             IFINSD              0             x 10-6  
-       SOPERT               IPERSO         OFF         [  0]    ***   
-       SPHERICAL            IDFGHI         ON          [  1]    ***   
-       SPINORBIT            ISOCAL         OFF         [  0]    ***   
-       SPINROTATIO          ISRCON         OFF         [  0]    ***   
-       SPIN_FLIP            ISPFLP         OFF         [  0]    ***   
-       SPIN_ORBIT           ISPORB         OFF         [  0]    ***   
-       SPIN_SCAL            ISCSMP         OFF         [  0]    ***   
-       STEEPSCALE           ISTPSC              1000          x 10-3  
-       SUBGROUP             ISUBGP         DEFAULT     [  0]    ***   
-       SUBGRPAXIS           ISBXYZ         X           [  0]    ***   
-       SYMMETRY             ISYM           ON          [  0]    ***   
-       SYM_CHECK            ISYMCK         OVERRIDE    [  1]    ***   
-       T3_EXTRAPOL          IT3EXT         OFF         [  0]    ***   
-       T4_EXTRAPOL          IT4EXP         OFF         [  0]    ***   
-       TAMP_SUM             IEVERY              0               ***   
-       TESTSUITE            ITESTS         OFF         [  0]    ***   
-       THERMOCH             ITHERM         OFF         [  0]    ***   
-       TOL_CHOLESK          ITOLCH          10D-  4             ***   
-       TRANGRAD             IRESRM         OFF         [  0]    ***   
-       TRANS_INV            ITRAIN         USE         [  0]    ***   
-       TREAT_PERT           ITREAT         SIMULTANEOUS[  0]    ***   
-       TRIP_ALGORI          ITRALG         NORMAL      [  0]    ***   
-       UIJ_THRESHO          IUIJTH              1               ***   
-       UNITS                IUNITS         ANGSTROM    [  0]    ***   
-       UNOS                 IUNOS          OFF         [  0]    ***   
-       UPDATE_HESS          IHUPDT         ON          [  1]    ***   
-       VIBPHASE             ISETPH         STANDARD    [  0]    ***   
-       VIBRATION            IVIB           NO          [  0]    ***   
-       VIB_ALGORIT          IGEALG         STANDARD    [  0]    ***   
-       VNATORB              IVNORB         OFF         [  0]    ***   
-       VTRAN                IVTRAN         FULL/PARTIAL[  0]    ***   
-       XFIELD               IXEFLD              0             x 10-6  
-       XFORM_TOL            IXFTOL          10D- 11             ***   
-       YFIELD               IYEFLD              0             x 10-6  
-       ZFIELD               IZEFLD              0             x 10-6  
-       ZSCALE_EXP           IZEXPS         OFF         [  0]    ***   
+       GEO_METHOD           INR            SINGLE_POINT[  5]    ***
+       GIAO                 IGIAO          OFF         [  1]    ***
+       GIMIC                IGIMIC         OFF         [  0]    ***
+       GRID                 IGRID          OFF         [  0]    ***
+       GRID_ALGO            IGALGO         SERIAL      [  0]    ***
+       GUESS                IGUESS         MOREAD      [  0]    ***
+       HBAR                 IHBAR          OFF         [  0]    ***
+       HESS_TYPE            IHESTP         SCF         [  0]    ***
+       HF2_FILE             IHF2Fl         USE         [  1]    ***
+       HFSTABILITY          ISTABL         OFF         [  0]    ***
+       INCORE               INCORE         OFF         [  0]    ***
+       INPUT_MRCC           IMRCC          ON          [  1]    ***
+       INTEGRALS            INTTYP         VMOL        [  1]    ***
+       JODA_PRINT           IJPRNT              0               ***
+       KEYWORD_OUT          IDMPKW         NO          [  0]    ***
+       LINDEP_TOL           ILINDP              8               ***
+       LINEQ_CONV           IZTACN          10D-  7           cycles
+       LINEQ_EXPOR          ILMAXD              5               ***
+       LINEQ_MAXCY          ILMAXC            100               ***
+       LINEQ_TYPE           ILTYPE         DIIS        [  1]    ***
+       LOCK_ORBOCC          ILOCOC         OFF         [  0]    ***
+       MEMORY_SIZE          IMEMSZ         100000000           words
+       MEM_UNIT             IMEMU          INTEGERWORDS[  0]    ***
+       MRCC                 IMRCCC         OFF         [  0]    ***
+       MULTIPLICTY          IMULTP              1               ***
+       NACOUPLING           IVCOUP         OFF         [  0]    ***
+       NEGEVAL              IDIE           ABORT       [  0]    ***
+       NEWNORM              INEWNO         OFF         [  0]    ***
+       NON-HF               INONHF         OFF         [  0]    ***
+       NTOP_TAMP            ITOPT2             15               ***
+       NUC_MODEL            INUCMO         POINT       [  0]    ***
+       OCCUPATION           IOCCU   ESTIMATED BY SCF
+       OPEN-SHELL           IOPEN          SPIN-ORBITAL[  0]    ***
+       OPTVIB               IOPTVB         OFF         [  0]    ***
+       ORBITALS             IORBTP         STANDARD    [  0]    ***
+       PARALLEL             IPARAL         ON          [  1]    ***
+       PARA_INT             IPINTS         ON          [  1]    ***
+       PARA_PRINT           IPPRIN              0               ***
+       PERT_ORB             IPTORB         STANDARD    [  0]    ***
+       POINTS               IGRDFD              0               ***
+       PRINT                IPRNT               2               ***
+       PROPS                IPROPS         OFF         [  0]    ***
+       PROP_INTEGR          IINTYP         INTERNAL    [  0]    ***
+       PSI                  IPSI           OFF         [  0]    ***
+       QC_ALG               IQCALG         FLM         [  0]    ***
+       QC_LINALG            IQCLIN         TRIDIAG     [  2]    ***
+       QC_MAXCYC            IQCMAX          10D-100           cycles
+       QC_MAXSCFCY          IQCMSC          10D- 15           cycles
+       QC_RTRUST            IQCRTR          10D-  0           x 10-3
+       QC_SKIPSCF           IQCSKI         OFF         [  0]    ***
+       QC_START             IQCSTA          10D-  1             ***
+       QRHFGUESS            IQGUES         OFF         [  0]    ***
+       QUARTIC              IQUART         OFF         [  0]    ***
+       RAMAN_INT            IRAMIN         OFF         [  0]    ***
+       RAMAN_ORB            IRAMRE         UNRELAXED   [  0]    ***
+       RDO                  IRDOFM         OFF         [  0]    ***
+       REDUCE_REPR          REDREP         Ir          [  0]    ***
+       REFERENCE            IREFNC         RHF         [  0]    ***
+       RELATIVIST           IRELAT         OFF         [  0]    ***
+       RELAX_DENS           IRDENS         OFF         [  0]    ***
+       RESET_FLAGS          IRESET         OFF         [  0]    ***
+       RESTART_CC           ICCRES         OFF         [  0]    ***
+       ROT_EVEC             ROTVEC              0               ***
+       SAVE_INTS            ISVINT         OFF         [  0]    ***
+       SCALE_ON             ISTCRT              0               ***
+       SCF_CONV             ISCFCV          10D-  7             ***
+       SCF_DAMPING          IDAMP               0             x 10-3
+       SCF_EXPORDE          IRPPOR              6               ***
+       SCF_EXPSTAR          IRPPLS              8               ***
+       SCF_EXTRAPO          IRPP           ON          [  1]    ***
+       SCF_MAXCYC           ISCFCY            150              cycles
+       SCF_NOSTOP           ISCFST         OFF         [  0]    ***
+       SCF_PRINT            ISCFPR              0               ***
+       SCF_PROG             ISCFPR         SCF         [  0]    ***
+       SD_FIELD             IFINSD              0             x 10-6
+       SOPERT               IPERSO         OFF         [  0]    ***
+       SPHERICAL            IDFGHI         ON          [  1]    ***
+       SPINORBIT            ISOCAL         OFF         [  0]    ***
+       SPINROTATIO          ISRCON         OFF         [  0]    ***
+       SPIN_FLIP            ISPFLP         OFF         [  0]    ***
+       SPIN_ORBIT           ISPORB         OFF         [  0]    ***
+       SPIN_SCAL            ISCSMP         OFF         [  0]    ***
+       STEEPSCALE           ISTPSC              1000          x 10-3
+       SUBGROUP             ISUBGP         DEFAULT     [  0]    ***
+       SUBGRPAXIS           ISBXYZ         X           [  0]    ***
+       SYMMETRY             ISYM           ON          [  0]    ***
+       SYM_CHECK            ISYMCK         OVERRIDE    [  1]    ***
+       T3_EXTRAPOL          IT3EXT         OFF         [  0]    ***
+       T4_EXTRAPOL          IT4EXP         OFF         [  0]    ***
+       TAMP_SUM             IEVERY              0               ***
+       TESTSUITE            ITESTS         OFF         [  0]    ***
+       THERMOCH             ITHERM         OFF         [  0]    ***
+       TOL_CHOLESK          ITOLCH          10D-  4             ***
+       TRANGRAD             IRESRM         OFF         [  0]    ***
+       TRANS_INV            ITRAIN         USE         [  0]    ***
+       TREAT_PERT           ITREAT         SIMULTANEOUS[  0]    ***
+       TRIP_ALGORI          ITRALG         NORMAL      [  0]    ***
+       UIJ_THRESHO          IUIJTH              1               ***
+       UNITS                IUNITS         ANGSTROM    [  0]    ***
+       UNOS                 IUNOS          OFF         [  0]    ***
+       UPDATE_HESS          IHUPDT         ON          [  1]    ***
+       VIBPHASE             ISETPH         STANDARD    [  0]    ***
+       VIBRATION            IVIB           NO          [  0]    ***
+       VIB_ALGORIT          IGEALG         STANDARD    [  0]    ***
+       VNATORB              IVNORB         OFF         [  0]    ***
+       VTRAN                IVTRAN         FULL/PARTIAL[  0]    ***
+       XFIELD               IXEFLD              0             x 10-6
+       XFORM_TOL            IXFTOL          10D- 11             ***
+       YFIELD               IYEFLD              0             x 10-6
+       ZFIELD               IZEFLD              0             x 10-6
+       ZSCALE_EXP           IZEXPS         OFF         [  0]    ***
 =======
        GEO_METHOD           INR            SINGLE_POINT[  5]    ***
        GIAO                 IGIAO          OFF         [  1]    ***
@@ -3722,7 +3722,7 @@ Eigenvalue   1656.956848   1656.971394  11003.416627
 <<<<<<< HEAD
  @CHECKOUT-I, Total execution time (CPU/WALL):        0.18/       0.20 seconds.
 --executable xvscf finished with status     0 in        0.21 seconds (walltime).
-  The final electronic energy is      -198.516559733368155 a.u. 
+  The final electronic energy is      -198.516559733368155 a.u.
   This computation required                            1.21 seconds (walltime).
 =======
  @CHECKOUT-I, Total execution time (CPU/WALL):        0.19/       0.20 seconds.
