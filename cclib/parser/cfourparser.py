@@ -166,14 +166,14 @@ class CFOUR(logfileparser.Logfile):
                             gbasis[atom_index[curr_atom]].append((curr_ang_mom, i))
                     first_iter = False
                     hashtag_in_last_line = True
-                    if len(split_line[0])==1:
+                    if len(split_line[0]) == 1:
                         curr_atom = split_line[0] + split_line[1] + split_line[2]
                     else:
                         curr_atom = split_line[0] + split_line[1]
-                    symbol_len=0
+                    symbol_len = 0
                     for i in curr_atom:
-                        if not i=="#":
-                            symbol_len+=1
+                        if not i == "#":
+                            symbol_len += 1
                         else:
                             break
                     if curr_atom not in atom_index.keys():
