@@ -251,12 +251,19 @@ class CFOUR(logfileparser.Logfile):
                 temp_atomcoords.append([utils.convertor(utils.float(line.strip().split()[2]),'bohr','Angstrom'),utils.convertor(utils.float(line.strip().split()[3]),'bohr','Angstrom'),utils.convertor(utils.float(line.strip().split()[4]),'bohr','Angstrom')])
                 line=next(inputfile)
             if self.first_coord_block:
-                self.set_attribute('atomnos',atomnos)
-                self.set_attribute('atomic_symbols',atomic_symbols)
+                self.set_attribute("atomnos", atomnos)
+                self.set_attribute("coreelectrons", np.zeros(len(atomnos)))
+                self.set_attribute("atomic_symbols", atomic_symbols)
             self.atomcoords.append(temp_atomcoords)
-            self.first_coord_block=False
-        #get the scf energy at each step in a geometry optimization
-        if 'E(SCF)=' in line:
+            self.first_coord_block = False
+        # get core electrons in each atoms ECP
+        if "ECP PARAMETERS FOR ATOM" in line:
+            ce_index=int(line.strip().split()[-1])-1
+            while not "NCORE =" in line:
+                line=next(inputfile)
+            self.coreelectrons[ce_index]=int(line.strip().split()[2])
+        # get the scf energy at each step in a geometry optimization
+        if "E(SCF)=" in line:
             self.scfenergies.append(utils.float(line.split()[1]))
         #get alpha mo energies of the last ran scf method
         if 'ORBITAL EIGENVALUES (ALPHA)  (1H = 27.2113834 eV)' in line:

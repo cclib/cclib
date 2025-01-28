@@ -135,6 +135,7 @@ CI        QChem       QChemCISTest          basicQChem5.4         water_cis.out
 
 Core      ADF         ADFCoreTest           basicADF2007.01       MoOCl4-sp.adfout
 Core      ADF         ADFCoreTest           basicADF2013.01       MoOCl4-sp.adfout
+Core      CFOUR       GenericCoreTest       basicCFOUR2.1         Mo4OCl4_sp.c4
 Core      FChk        GenericCoreTest       basicGaussian09       Mo4OCl4-sp.fchk
 Core      FChk        GenericCoreTest       basicGaussian16       Mo4OCl4-sp.fchk
 Core      FChk        GenericCoreTest       basicQChem5.2         MoOCl4_sp_modified.fchk
