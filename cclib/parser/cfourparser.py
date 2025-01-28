@@ -219,14 +219,22 @@ class CFOUR(logfileparser.Logfile):
             self.set_attribute("gbasis", gbasis)
         # exception for only one atom
         if "1 entries found in Z-matrix" in line:
-            self.only_one_atom=True
+            self.only_one_atom = True
         if ("NUCLEAR CHARGE:" in line) and self.only_one_atom:
             self.set_attribute("atomnos", [int(line.strip().split()[2])])
         if ("NUCLEAR COORDINATES (IN A.U.) ARE :" in line) and self.only_one_atom:
             line = next(inputfile)
             line = next(inputfile)
             self.set_attribute("atomic_symbols", [line.strip().split()[0]])
-            self.atomcoords.append([[float(line.strip().split()[2]),float(line.strip().split()[3]),float(line.strip().split()[4])]])
+            self.atomcoords.append(
+                [
+                    [
+                        float(line.strip().split()[2]),
+                        float(line.strip().split()[3]),
+                        float(line.strip().split()[4]),
+                    ]
+                ]
+            )
         # get the coordinates at each step in a geometry optimization
         # if this is the first time parsing a block of coordinates also get the atomic numbers
         """
