@@ -94,6 +94,10 @@ class CFOUR(logfileparser.Logfile):
         self.set_attribute("ecp_labels", {})
         # core electron dict
         self.set_attribute("core_electron_dict", {})
+        # set excitation energies to []
+        self.set_attribute("etenergies", [])
+        # set etoscs to []
+        self.set_attribute("etoscs", [])
 
     def after_parsing(self):
         # change atomic coordinates to a numpy array
@@ -408,12 +412,15 @@ class CFOUR(logfileparser.Logfile):
                         if (''==line.strip()):
                             self.alpha_mos_to_parse=True
                             self.mocoeffs.append(self.temp_beta_mocoeffs)
-                            self.temp_beta_mocoeffs=[]
-                            self.mocoeffs_should_be_reset=True
-
-
-
-
-
-
-
+                            self.temp_beta_mocoeffs = []
+                            self.mocoeffs_should_be_reset = True
+        # get excitation energies
+        if 'Converged eigenvalue:' in line:
+            temp_etenergy=float(line.strip().split()[2])
+            while (not 'Eigenvalue        Real Part            Imaginary Part' in line) and (not 'Right Transition Moment' in line):
+                line = next(inputfile)
+            if 'Right Transition Moment' in line:
+                self.etenergies.append(temp_etenergy)
+        # get etoscs
+        if 'Norm of oscillator strength :' in line:
+            self.etoscs.append(float(line.strip().split()[-1]))
