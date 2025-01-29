@@ -444,12 +444,14 @@ class CFOUR(logfileparser.Logfile):
                             self.temp_beta_mocoeffs = []
                             self.mocoeffs_should_be_reset = True
         # get excitation energies
-        if 'Converged eigenvalue:' in line:
-            temp_etenergy=float(line.strip().split()[2])
-            while (not 'Eigenvalue        Real Part            Imaginary Part' in line) and (not 'Right Transition Moment' in line):
+        if "Converged eigenvalue:" in line:
+            temp_etenergy = float(line.strip().split()[2])
+            while ("Eigenvalue        Real Part            Imaginary Part" not in line) and (
+                "Right Transition Moment" not in line
+            ):
                 line = next(inputfile)
-            if 'Right Transition Moment' in line:
+            if "Right Transition Moment" in line:
                 self.etenergies.append(temp_etenergy)
         # get etoscs
-        if 'Norm of oscillator strength :' in line:
+        if "Norm of oscillator strength :" in line:
             self.etoscs.append(float(line.strip().split()[-1]))
