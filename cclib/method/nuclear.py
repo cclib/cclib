@@ -12,10 +12,7 @@ from cclib.method.calculationmethod import Method
 from cclib.parser.utils import PeriodicTable, convertor, find_package
 
 import numpy as np
-
-_found_periodictable = find_package("periodictable")
-if _found_periodictable:
-    import periodictable as pt
+import periodictable as pt
 
 _found_scipy = find_package("scipy")
 if _found_scipy:
@@ -49,14 +46,7 @@ def get_isotopic_masses(charges):
     """Return the masses for the given nuclei, respresented by their
     nuclear charges.
     """
-    _check_periodictable(_found_periodictable)
-    masses = []
-    for charge in charges:
-        el = pt.elements[charge]
-        isotope = get_most_abundant_isotope(el)
-        mass = isotope.mass
-        masses.append(mass)
-    return np.array(masses)
+    return np.array([get_most_abundant_isotope(pt.elements[charge]).mass for charge in charges])
 
 
 class Nuclear(Method):
