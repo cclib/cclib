@@ -34,9 +34,9 @@ Copyright (C) 2009-2019 Intel Corporation. All rights reserved.
 
                        Version 2.1
 <<<<<<< HEAD:data/CFOUR/basicCFOUR2.1/water_eomccsd_p1_ep_off.c4
- 
-                     smp-n214.crc.pitt.edu                             
-                     Thu Jan 30 21:17:23 EST 2025                      
+
+                     smp-n214.crc.pitt.edu
+                     Thu Jan 30 21:17:23 EST 2025
 =======
 
                      smp-n217.crc.pitt.edu
@@ -48,26 +48,26 @@ Copyright (C) 2009-2019 Intel Corporation. All rights reserved.
 *                          Input from ZMAT file                                *
 ********************************************************************************
 <<<<<<< HEAD:data/CFOUR/basicCFOUR2.1/water_eomccsd_p1_ep_off.c4
-H2O EOMEE-CCSD/CC-PVDZ                                                          
-O                                                                               
-H 1 R1                                                                          
-H 1 R1 2 A1                                                                     
-                                                                                
-R1=0.99                                                                         
-A1=106.0                                                                        
-                                                                                
-*ACES2(CALC=CCSD                                                                
-COORDINATES=INTERNAL                                                            
-EXCITE=EOMEE                                                                    
-BASIS=PVDZ                                                                      
-ESTATE_SYM=5/5/5/5                                                              
-REF=RHF                                                                         
-PRINT=1                                                                         
-ESTATE_PROP=OFF                                                                 
-ESTATE_TRANS=EXPECTATION                                                        
-CHARGE=0                                                                        
-MULTIPLICITY=1)                                                                 
-                                                                                
+H2O EOMEE-CCSD/CC-PVDZ
+O
+H 1 R1
+H 1 R1 2 A1
+
+R1=0.99
+A1=106.0
+
+*ACES2(CALC=CCSD
+COORDINATES=INTERNAL
+EXCITE=EOMEE
+BASIS=PVDZ
+ESTATE_SYM=5/5/5/5
+REF=RHF
+PRINT=1
+ESTATE_PROP=OFF
+ESTATE_TRANS=EXPECTATION
+CHARGE=0
+MULTIPLICITY=1)
+
 =======
 H2O EOMEE-CCSD/CC-PVDZ
 O
@@ -383,7 +383,7 @@ MULTIPLICITY=1)
 /ihome/kjordan/shu8/software/source/cfour/cfour-public/bin/set_genbas
 --executable set_genbas finished with status     0 in        0.02 seconds (walltime).
 <<<<<<< HEAD:data/CFOUR/basicCFOUR2.1/water_eomccsd_p1_ep_off.c4
-  ECPDATA file not present.   Using default ECPDATA. 
+  ECPDATA file not present.   Using default ECPDATA.
   @GTFLGS-W, Keyword ESTATE_TRANS not known and is ignored.
 =======
   ECPDATA file not present.   Using default ECPDATA.
@@ -7947,7 +7947,7 @@ ________________________________________________________________________
 <<<<<<< HEAD:data/CFOUR/basicCFOUR2.1/water_eomccsd_p1_ep_off.c4
  @CHECKOUT-I, Total execution time (CPU/WALL):        0.34/       0.34 seconds.
 --executable xvee finished with status     0 in        0.35 seconds (walltime).
-  The final electronic energy is       -75.087552556698171 a.u. 
+  The final electronic energy is       -75.087552556698171 a.u.
   This computation required                            0.70 seconds (walltime).
 =======
  @CHECKOUT-I, Total execution time (CPU/WALL):        0.34/       0.35 seconds.
