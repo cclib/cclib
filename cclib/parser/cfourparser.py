@@ -464,10 +464,9 @@ class CFOUR(logfileparser.Logfile):
                     line = next(inputfile)
                     if 'Converged eigenvalue:' in line:
                         temp_etenergy=float(line.strip().split()[2])
-                if 'Right Transition Moment' in line:
-                    self.etenergies.append(temp_etenergy)
+                self.etenergies.append(temp_etenergy)
             else:
                 self.etenergies.append(temp_etenergy)
         # get etoscs
-        if 'Norm of oscillator strength :' in line:
+        if "Norm of oscillator strength :" in line:
             self.etoscs.append(float(line.strip().split()[-1]))
