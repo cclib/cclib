@@ -124,11 +124,13 @@ class CFOUR(logfileparser.Logfile):
             self.metadata["basis_set"] = line.split()[2]
         # get calc_level
         if "CALCLEVEL            ICLLVL" in line:
-            self.set_attribute("calc_level",line.strip().split()[2])
+            self.set_attribute("calc_level", line.strip().split()[2])
         # get excited_states_method
         if "EXCITE               IEXCIT" in line:
-            if not line.strip().split()[2]=="NONE":
-                self.metadata["excited_states_method"]=line.strip().split()[2]+"-"+self.calc_level
+            if not line.strip().split()[2] == "NONE":
+                self.metadata["excited_states_method"] = (
+                    line.strip().split()[2] + "-" + self.calc_level
+                )
         # get whether the reference is unrestricted or not
         if "REFERENCE            IREFNC" in line:
             self.metadata["unrestricted"] = True if line.split()[2][0] == "U" else False
@@ -143,10 +145,10 @@ class CFOUR(logfileparser.Logfile):
             self.set_attribute("charge", utils.float(line.split()[2]))
         # get estate_prop state
         if "ESTATE_PROP          IEXPRP" in line:
-            if line.strip().split()[2]=="OFF":
-                self.set_attribute("estate_prop_on",False)
+            if line.strip().split()[2] == "OFF":
+                self.set_attribute("estate_prop_on", False)
             else:
-                self.set_attribute("estate_prop_on",True)
+                self.set_attribute("estate_prop_on", True)
         # get the spin multiplicity of the system
         if "MULTIPLICTY          IMULTP" in line:
             self.set_attribute("mult", int(line.split()[2]))
@@ -457,13 +459,13 @@ class CFOUR(logfileparser.Logfile):
                             self.temp_beta_mocoeffs = []
                             self.mocoeffs_should_be_reset = True
         # get excitation energies
-        if 'Converged eigenvalue:' in line:
-            temp_etenergy=float(line.strip().split()[2])
+        if "Converged eigenvalue:" in line:
+            temp_etenergy = float(line.strip().split()[2])
             if self.estate_prop_on:
-                while not 'Right Transition Moment' in line:
+                while "Right Transition Moment" not in line:
                     line = next(inputfile)
-                    if 'Converged eigenvalue:' in line:
-                        temp_etenergy=float(line.strip().split()[2])
+                    if "Converged eigenvalue:" in line:
+                        temp_etenergy = float(line.strip().split()[2])
                 self.etenergies.append(temp_etenergy)
             else:
                 self.etenergies.append(temp_etenergy)
