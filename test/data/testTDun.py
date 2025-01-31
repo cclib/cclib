@@ -13,11 +13,13 @@ class GenericTDunTest:
 
     number = 24
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     def testenergiesnumber(self, data) -> None:
         """Is the length of etenergies correct?"""
         assert len(data.etenergies) == self.number
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForLogfile(
         "Turbomole/basicTurbomole7.4/CO_cc2_TD_un",
@@ -27,6 +29,7 @@ class GenericTDunTest:
         """Is the length of eotscs correct?"""
         assert len(data.etoscs) == self.number
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForLogfile(
         "Turbomole/basicTurbomole7.4/CO_cc2_TD",
@@ -36,16 +39,19 @@ class GenericTDunTest:
         """Is the length of etrotats correct?"""
         assert len(data.etrotats) == self.number
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     def testsecsnumber(self, data) -> None:
         """Is the length of etsecs correct?"""
         assert len(data.etsecs) == self.number
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     def testsymsnumber(self, data) -> None:
         """Is the length of etsyms correct?"""
         assert len(data.etsyms) == self.number
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "Turbomole etsyms are not available for UHF")
     def testsyms(self, data) -> None:

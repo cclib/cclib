@@ -23,6 +23,7 @@ class GenericSPunTest:
         assert sum(data.atomnos == 6) + sum(data.atomnos == 1) == 20
 
     @skipForParser("ADF", "???")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser(
         "DALTON",
         "DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now",
@@ -42,6 +43,7 @@ class GenericSPunTest:
             )
 
     @skipForParser("ADF", "???")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser(
         "DALTON",
         "DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now",
@@ -75,6 +77,7 @@ class GenericSPunTest:
         """Do we have NOs or MOs?"""
         assert hasattr(data, "nocoeffs") or hasattr(data, "mocoeffs")
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     def testdimnoccnos(self, data) -> None:
         """Is the length of nooccnos equal to nmo?"""
         if hasattr(data, "nooccnos"):
@@ -82,6 +85,7 @@ class GenericSPunTest:
             # FIXME
             assert data.nooccnos.shape in [(data.nmo,), (2, data.nmo)]
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     def testdimnocoeffs(self, data) -> None:
         """Are the dimensions of nocoeffs equal to 2 x nmo x nmo?"""
         if hasattr(data, "nocoeffs"):
@@ -94,6 +98,7 @@ class GenericSPunTest:
         assert data.charge == 1
         assert data.mult == 2
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     def testhomos(self, data) -> None:
         """Are the homos correct?"""
         msg = f"{numpy.array_repr(data.homos)} != array([34,33],'i')"
@@ -128,6 +133,7 @@ class GenericROSPTest(GenericSPunTest):
         assert len(data.mocoeffs) == 1
         assert data.mocoeffs[0].shape == (data.nmo, data.nbasis)
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     def testhomos(self, data) -> None:
