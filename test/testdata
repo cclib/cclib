@@ -412,6 +412,10 @@ SPun      Turbomole   GenericSPunTest       basicTurbomole5.9     dvb_un_sp/alph
 
 TD        ADF         ADFTDDFTTest          basicADF2007.01       dvb_td.adfout
 TD        ADF         ADFTDDFTTest          basicADF2013.01       dvb_td.adfout
+TD        CFOUR       CFOUREOMCCSDTest      basicCFOUR2.1         water_eomccsd_p1_ep_on.c4
+TD        CFOUR       CFOUREOMCCSDTest      basicCFOUR2.1         water_eomccsd_p1_ep_off.c4
+TD        CFOUR       CFOUREOMCCSDTest      basicCFOUR2.1         water_eomccsd_p0_ep_on.c4
+TD        CFOUR       CFOUREOMCCSDTest      basicCFOUR2.1         water_eomccsd_p0_ep_off.c4
 TD        DALTON      DALTONTDTest          basicDALTON-2013      dvb_td.out
 TD        DALTON      DALTONTDTest          basicDALTON-2015      dvb_td.out
 TD        FChk        GaussianTDDFTTest     basicGaussian09       dvb_td.fchk

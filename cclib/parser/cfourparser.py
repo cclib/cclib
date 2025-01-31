@@ -126,6 +126,13 @@ class CFOUR(logfileparser.Logfile):
         # get the name of the basis set used
         if "BASIS                IBASIS" in line:
             self.metadata["basis_set"] = line.split()[2]
+        # get calc_level
+        if "CALCLEVEL            ICLLVL" in line:
+            self.set_attribute("calc_level",line.strip().split()[2])
+        # get excited_states_method
+        if "EXCITE               IEXCIT" in line:
+            if not line.strip().split()[2]=="NONE":
+                self.metadata["excited_states_method"]=line.strip().split()[2]+"-"+self.calc_level
         # get whether the reference is unrestricted or not
         if "REFERENCE            IREFNC" in line:
             self.metadata["unrestricted"] = True if line.split()[2][0] == "U" else False
@@ -138,6 +145,12 @@ class CFOUR(logfileparser.Logfile):
         # get the net charge of the system
         if "CHARGE               ICHRGE" in line:
             self.set_attribute("charge", utils.float(line.split()[2]))
+        # get estate_prop state
+        if "ESTATE_PROP          IEXPRP" in line:
+            if line.strip().split()[2]=="OFF":
+                self.set_attribute("estate_prop_on",False)
+            else:
+                self.set_attribute("estate_prop_on",True)
         # get the spin multiplicity of the system
         if "MULTIPLICTY          IMULTP" in line:
             self.set_attribute("mult", int(line.split()[2]))
@@ -417,9 +430,14 @@ class CFOUR(logfileparser.Logfile):
         # get excitation energies
         if 'Converged eigenvalue:' in line:
             temp_etenergy=float(line.strip().split()[2])
-            while (not 'Eigenvalue        Real Part            Imaginary Part' in line) and (not 'Right Transition Moment' in line):
-                line = next(inputfile)
-            if 'Right Transition Moment' in line:
+            if self.estate_prop_on:
+                while not 'Right Transition Moment' in line:
+                    line = next(inputfile)
+                    if 'Converged eigenvalue:' in line:
+                        temp_etenergy=float(line.strip().split()[2])
+                if 'Right Transition Moment' in line:
+                    self.etenergies.append(temp_etenergy)
+            else:
                 self.etenergies.append(temp_etenergy)
         # get etoscs
         if 'Norm of oscillator strength :' in line:

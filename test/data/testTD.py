@@ -24,7 +24,6 @@ class GenericTDTest:
     method = "TD-DFT"
 
     @skipForParser("ADF", "excited_states_method not yet implemented")
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "excited_states_method not yet implemented")
     @skipForParser("FChk", "excited_states_method not yet implemented")
     @skipForParser("GAMESS", "excited_states_method not yet implemented")
@@ -36,7 +35,6 @@ class GenericTDTest:
         """Did we parse an excited states method?"""
         assert data.metadata["excited_states_method"] == self.method
 
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForLogfile(
         "Turbomole/basicTurbomole7.4/CO_cc2_TD_trip",
         "Oscillator strengths are not available for Turbomole triplets using ricc2 but are required for testenergies()",
@@ -54,7 +52,6 @@ class GenericTDTest:
             - utils.convertor(self.expected_l_max, "hartree", "wavenumber")
         ) < utils.convertor(0.022781676263770798, "hartree", "wavenumber")
 
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForLogfile(
         "Turbomole/basicTurbomole7.4/CO_cc2_TD_trip",
         "Oscillator strengths are not available for triplets with Turbomole's ricc2",
@@ -434,3 +431,13 @@ class PySCFTDTest(GenericTDTest):
     symmetries = ["Singlet", "Singlet", "Singlet", "Singlet", "Singlet"]
     expected_l_max = 0.75825470773
     expected_f_max = 0.98
+
+
+class CFOUREOMCCSDTest(GenericTDTest):
+    """Test for EOM-CCSD with Gaussian."""
+
+    number = 20
+    expected_l_max = 1.100761725
+    expected_f_max = 0.35442355
+    symmetries = []
+    method = "EOMEE-CCSD"
