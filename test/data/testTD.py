@@ -402,7 +402,7 @@ class GaussianEOMCCSDTest(GenericTDTest):
 
 
 class CFOUREOMCCSDTest(GenericTDTest):
-    """Test for EOM-CCSD with Gaussian."""
+    """Test for EOMEE-CCSD with CFOUR."""
 
     number = 20
     expected_l_max = 1.100761725
