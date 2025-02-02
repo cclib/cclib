@@ -35,6 +35,10 @@ class CFOUR(logfileparser.Logfile):
         except:
             if len(label) >= 2:
                 # CFOUR uses SG for sigma, PI for pi, DE for delta, and PH for phi
+                if "u" == label:
+                    label = "Eu"
+                if "g" == label:
+                    label = "Eg"
                 if "SG" == label[:2]:
                     if len(label) == 2:
                         label = "sigma"
@@ -94,6 +98,14 @@ class CFOUR(logfileparser.Logfile):
         self.set_attribute("etenergies", [])
         # set etoscs to []
         self.set_attribute("etoscs", [])
+        # set etsecs to []
+        self.set_attribute("etsecs", [])
+        # set etsyms to []
+        self.set_attribute("etsyms", [])
+        # set sym numbering to {}
+        self.set_attribute("sym_numbering", {})
+        # set current symmetry to "0"
+        self.set_attribute("curr_sym", "0")
 
     def after_parsing(self):
         # change atomic coordinates to a numpy array
@@ -114,6 +126,22 @@ class CFOUR(logfileparser.Logfile):
             if i in self.core_electron_dict.keys():
                 for j in self.ecp_labels[i]:
                     self.coreelectrons[j] = self.core_electron_dict[i]
+        # sort etenergies, etoscs, etsecs, and etsyms
+        sort_inds=np.argsort(self.etenergies)
+        temp_etenergies=[]
+        temp_etoscs=[]
+        temp_etsecs=[]
+        temp_etsyms=[]
+        for i in sort_inds:
+            temp_etenergies.append(self.etenergies[i])
+            if self.estate_prop_on:
+                temp_etoscs.append(self.etoscs[i])
+            temp_etsecs.append(self.etsecs[i])
+            temp_etsyms.append(self.etsyms[i])
+        self.etenergies=temp_etenergies
+        self.etoscs=temp_etoscs
+        self.etsecs=temp_etsecs
+        self.etsyms=temp_etsyms
 
     def extract(self, inputfile, line):
         # get the version of CFOUR
@@ -133,7 +161,12 @@ class CFOUR(logfileparser.Logfile):
                 )
         # get whether the reference is unrestricted or not
         if "REFERENCE            IREFNC" in line:
-            self.metadata["unrestricted"] = True if line.split()[2][0] == "U" else False
+            if line.split()[2][0] == "U":
+                self.metadata["unrestricted"] = True
+                self.set_attribute('homos',np.array([0,0]))
+            else:
+                self.metadata["unrestricted"] = False
+                self.set_attribute('homos',np.array([0]))
         # get full point group
         if "The full molecular point group is" in line:
             self.metadata["symmetry_detected"] = line.split()[6]
@@ -350,10 +383,15 @@ class CFOUR(logfileparser.Logfile):
                 or ("SCF failed to converge in" in line)
             ):
                 if ("+++++" in line) or (line.strip() == ""):
+                    if "+++++" in line:
+                        self.homos[0]=int(last_line.strip().split()[0])
                     line = next(inputfile)
                     continue
                 alpha_moenergies.append(utils.float(line.split()[2]))
                 alpha_mosyms.append(self.normalisesym(line.split()[4]))
+                if self.normalisesym(line.split()[5]) not in self.sym_numbering.values():
+                    self.sym_numbering[line.split()[6][1:-1]]=self.normalisesym(line.split()[5])
+                last_line=line
                 line = next(inputfile)
             self.moenergies.append(np.array(alpha_moenergies))
             self.mosyms.append(alpha_mosyms)
@@ -367,10 +405,13 @@ class CFOUR(logfileparser.Logfile):
             beta_mosyms = []
             while not (("VSCF finished." in line) or ("SCF failed to converge in" in line)):
                 if ("+++++" in line) or (line.strip() == ""):
+                    if "+++++" in line:
+                        self.homos[1]=int(last_line.strip().split()[0])
                     line = next(inputfile)
                     continue
                 beta_moenergies.append(utils.float(line.split()[2]))
                 beta_mosyms.append(self.normalisesym(line.split()[4]))
+                last_line=line
                 line = next(inputfile)
             self.moenergies.append(np.array(beta_moenergies))
             self.mosyms.append(beta_mosyms)
@@ -458,17 +499,55 @@ class CFOUR(logfileparser.Logfile):
                             self.mocoeffs.append(self.temp_beta_mocoeffs)
                             self.temp_beta_mocoeffs = []
                             self.mocoeffs_should_be_reset = True
+        # change curr_sym
+        if "Beginning symmetry block" in line:
+            self.curr_sym=line.strip().split()[3][:-1]
         # get excitation energies
         if "Converged eigenvalue:" in line:
             temp_etenergy = float(line.strip().split()[2])
             if self.estate_prop_on:
+                num_dash_lines=0
+                parse_etsecs=False
+                keep_parse=True
+                temp_etsecs=[]
+                mult="Singlet"
+                line = next(inputfile)
                 while "Right Transition Moment" not in line:
-                    line = next(inputfile)
                     if "Converged eigenvalue:" in line:
                         temp_etenergy = float(line.strip().split()[2])
+                        parse_etsecs=True
+                    if parse_etsecs and ('--------------------------------------------------------------------------------' in line):
+                        keep_parse=False
+                    if parse_etsecs and keep_parse and num_dash_lines==2:
+                        temp_etsecs.append(((int(line.strip().split()[0]),int(line.strip().split()[1])),(int(line.strip().split()[2]),int(line.strip().split()[3])),np.float64(line.strip().split()[4])))
+                    if parse_etsecs and keep_parse and num_dash_lines==3 and ("The state is a" in line):
+                        mult=line.strip().split()[4]
+                        if mult=='triplet':
+                            mult='Triplet'
+                        else:
+                            mult='Singlet'
+                    if parse_etsecs and ('--------------------------------------------------------------------------------' in line):
+                        num_dash_lines+=1
+                        keep_parse=True
+                    line = next(inputfile)
                 self.etenergies.append(temp_etenergy)
+                self.etsecs.append(temp_etsecs)
+                self.etsyms.append('{}-{}'.format(mult,self.sym_numbering[self.curr_sym]))
             else:
                 self.etenergies.append(temp_etenergy)
+                line = next(inputfile)
+                line = next(inputfile)
+                line = next(inputfile)
+                line = next(inputfile)
+                line = next(inputfile)
+                line = next(inputfile)
+                line = next(inputfile)
+                temp_etsecs=[]
+                while "--------------------------------------------------------------------------------" not in line:
+                    temp_etsecs.append(((int(line.strip().split()[0]),int(line.strip().split()[1])),(int(line.strip().split()[2]),int(line.strip().split()[3])),np.float64(line.strip().split()[4])))
+                    line = next(inputfile)
+                self.etsecs.append(temp_etsecs)
+                self.etsyms.append('Singlet-{}'.format(self.sym_numbering[self.curr_sym]))
         # get etoscs
         if "Norm of oscillator strength :" in line:
             self.etoscs.append(float(line.strip().split()[-1]))
