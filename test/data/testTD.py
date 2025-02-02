@@ -61,7 +61,6 @@ class GenericTDTest:
         assert len(data.etoscs) == self.number
         assert abs(max(data.etoscs) - self.expected_f_max) < self.expected_f_max_thresh
 
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("FChk", "The parser is still being developed so we skip this test")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForLogfile(
@@ -74,7 +73,6 @@ class GenericTDTest:
         sumofsec = sum([z * z for (x, y, z) in lowestEtrans])
         assert abs(sumofsec - self.sumofsec) < 0.16
 
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("FChk", "This is true for calculations without symmetry, but not with?")
     @skipForParser("DALTON", "This is true for calculations without symmetry, but not with?")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
@@ -87,7 +85,6 @@ class GenericTDTest:
         t = list(reversed(sorted([(c * c, s, e) for (s, e, c) in lowestEtrans])))
         assert t[0][1][0] == data.homos[0] or t[0][2][0] == data.homos[0] + 1
 
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForLogfile("FChk/basicQChem5.4", "etsyms are not yet implemented")
     @skipForLogfile("ORCA/basicORCA5.0/dvb_adc2.log", "etsyms are not available for this method")
@@ -102,7 +99,6 @@ class GenericTDTest:
         assert len(data.etsyms) == self.number
 
     @skipForParser("ADF", "etsyms are not yet implemented")
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "etsyms are not yet implemented")
     @skipForParser("FChk", "etsyms are not yet implemented")
     @skipForParser("GAMESS", "etsyms are not yet implemented")
@@ -117,7 +113,7 @@ class GenericTDTest:
         assert data.etsyms == self.symmetries
 
     @skipForParser("ADF", "etrotats are not yet implemented")
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
+    @skipForParser("CFOUR", "etrotats are not yet implemented")
     @skipForParser("DALTON", "etrotats are not yet implemented")
     @skipForParser("FChk", "etrotats are not yet implemented")
     @skipForParser("GAMESS", "etrotats are not yet implemented")
@@ -149,7 +145,7 @@ class GenericTDTest:
         assert len(data.etrotats) == self.number
 
     @skipForParser("ADF", "optstate is not yet implemented")
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
+    @skipForParser("CFOUR", "optstate are not yet implemented")
     @skipForParser("DALTON", "optstate are not yet implemented")
     @skipForParser("FChk", "optstate are not yet implemented")
     @skipForParser("GAMESS", "optstate are not yet implemented")
@@ -439,5 +435,5 @@ class CFOUREOMCCSDTest(GenericTDTest):
     number = 20
     expected_l_max = 1.100761725
     expected_f_max = 0.35442355
-    symmetries = []
+    symmetries = ['Singlet-B1', 'Singlet-A2', 'Singlet-A1', 'Singlet-B2', 'Singlet-B2', 'Singlet-A1', 'Singlet-A2', 'Singlet-B1', 'Singlet-B2', 'Singlet-A1', 'Singlet-A1', 'Singlet-B1', 'Singlet-A2', 'Singlet-A1', 'Singlet-B2', 'Singlet-A2', 'Singlet-B2', 'Singlet-B1', 'Singlet-B1', 'Singlet-A2']
     method = "EOMEE-CCSD"
