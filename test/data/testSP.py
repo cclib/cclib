@@ -237,7 +237,6 @@ class GenericSPTest:
         msg = f"Molecule mass: {mm:f} not {self.molecularmass:f} +- {self.mass_precision:f}mD"
         assert abs(mm - self.molecularmass) < self.mass_precision, msg
 
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("xTB", "not implemented yet")
@@ -257,7 +256,6 @@ class GenericSPTest:
         sumwronglabels = sum([x not in ["Ag", "Bu", "Au", "Bg"] for x in data.mosyms[0]])
         assert sumwronglabels == 0
 
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("xTB", "xTB does not print them all")
     def testhomos(self, data) -> None:
@@ -352,7 +350,6 @@ class GenericSPTest:
         """Do we have NOs or MOs?"""
         assert hasattr(data, "nocoeffs") or hasattr(data, "mocoeffs")
 
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("NBO", "attribute not implemented in this version")
     def testdimnoccnos(self, data) -> None:
         """Is the length of nooccnos equal to nmo?"""
@@ -360,7 +357,6 @@ class GenericSPTest:
             assert isinstance(data.nooccnos, numpy.ndarray)
             assert len(data.nooccnos) == data.nmo
 
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("NBO", "attribute not implemented in this version")
     def testdimnocoeffs(self, data) -> None:
         """Are the dimensions of nocoeffs equal to nmo x nmo?"""
