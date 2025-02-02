@@ -165,8 +165,11 @@ class CFOUR(logfileparser.Logfile):
                 self.metadata["unrestricted"] = True
                 self.set_attribute("homos", np.array([0, 0]))
             else:
+                if line.split()[2] == "ROHF":
+                    self.set_attribute("homos", np.array([0, 0]))
+                else:
+                    self.set_attribute("homos", np.array([0]))
                 self.metadata["unrestricted"] = False
-                self.set_attribute("homos", np.array([0]))
         # get full point group
         if "The full molecular point group is" in line:
             self.metadata["symmetry_detected"] = line.split()[6]
@@ -384,7 +387,7 @@ class CFOUR(logfileparser.Logfile):
             ):
                 if ("+++++" in line) or (line.strip() == ""):
                     if "+++++" in line:
-                        self.homos[0] = int(last_line.strip().split()[0])
+                        self.homos[0] = int(last_line.strip().split()[0])-1
                     line = next(inputfile)
                     continue
                 alpha_moenergies.append(utils.float(line.split()[2]))
@@ -406,7 +409,7 @@ class CFOUR(logfileparser.Logfile):
             while not (("VSCF finished." in line) or ("SCF failed to converge in" in line)):
                 if ("+++++" in line) or (line.strip() == ""):
                     if "+++++" in line:
-                        self.homos[1] = int(last_line.strip().split()[0])
+                        self.homos[1] = int(last_line.strip().split()[0])-1
                     line = next(inputfile)
                     continue
                 beta_moenergies.append(utils.float(line.split()[2]))
@@ -522,13 +525,11 @@ class CFOUR(logfileparser.Logfile):
                     ):
                         keep_parse = False
                     if parse_etsecs and keep_parse and num_dash_lines == 2:
-                        temp_etsecs.append(
-                            (
-                                (int(line.strip().split()[0]), int(line.strip().split()[1])),
-                                (int(line.strip().split()[2]), int(line.strip().split()[3])),
-                                np.float64(line.strip().split()[4]),
-                            )
-                        )
+                        i=int(line.strip().split()[0]) if int(line.strip().split()[0])==0 else int(line.strip().split()[0])-1
+                        j=int(line.strip().split()[1]) if int(line.strip().split()[1])==0 else int(line.strip().split()[1])-1
+                        a=int(line.strip().split()[2]) if int(line.strip().split()[2])==0 else int(line.strip().split()[2])-1
+                        b=int(line.strip().split()[3]) if int(line.strip().split()[3])==0 else int(line.strip().split()[3])-1
+                        temp_etsecs.append(((i, j), (a, b), np.float64(line.strip().split()[4])))
                     if (
                         parse_etsecs
                         and keep_parse
@@ -564,13 +565,11 @@ class CFOUR(logfileparser.Logfile):
                     "--------------------------------------------------------------------------------"
                     not in line
                 ):
-                    temp_etsecs.append(
-                        (
-                            (int(line.strip().split()[0]), int(line.strip().split()[1])),
-                            (int(line.strip().split()[2]), int(line.strip().split()[3])),
-                            np.float64(line.strip().split()[4]),
-                        )
-                    )
+                    i=int(line.strip().split()[0]) if int(line.strip().split()[0])==0 else int(line.strip().split()[0])-1
+                    j=int(line.strip().split()[1]) if int(line.strip().split()[1])==0 else int(line.strip().split()[1])-1
+                    a=int(line.strip().split()[2]) if int(line.strip().split()[2])==0 else int(line.strip().split()[2])-1
+                    b=int(line.strip().split()[3]) if int(line.strip().split()[3])==0 else int(line.strip().split()[3])-1
+                    temp_etsecs.append(((i, j), (a, b), np.float64(line.strip().split()[4])))
                     line = next(inputfile)
                 self.etsecs.append(temp_etsecs)
                 self.etsyms.append(f"Singlet-{self.sym_numbering[self.curr_sym]}")
