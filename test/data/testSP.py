@@ -553,7 +553,6 @@ class GenericSPTest:
             packaging.version.parse(data.metadata["package_version"]), packaging.version.Version
         )
 
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForLogfile("NBO/basicNBO7.0/basicORCA5.0/dvb_sp.nbo.out", "TODO impossible to determine?")
     @skipForLogfile("FChk/basicGaussian09/dvb_sp.fchk", "impossible to determine")
     @skipForLogfile("FChk/basicQChem5.2/dvb_sp_modified.fchk", "impossible to determine")
@@ -587,7 +586,6 @@ class GenericSPTest:
         assert data.metadata["symmetry_used"] == "c2h"
 
     @skipForParser("ADF", "reading cpu/wall time is not implemented for this parser")
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "reading cpu/wall time is not implemented for this parser")
     @skipForParser("FChk", "reading cpu/wall time is not implemented for this parser")
     @skipForParser("GAMESS", "reading cpu/wall time is not implemented for this parser")

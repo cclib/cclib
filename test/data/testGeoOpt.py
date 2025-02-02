@@ -235,7 +235,6 @@ class GenericGeoOptTest:
         """Do the grads have the right dimensions?"""
         assert data.grads.shape == (len(data.geovalues), data.natom, 3)
 
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForLogfile("Molcas/basicOpenMolcas18.0/dvb_gopt.out", "not implemented yet")
     def testmetadata_success(self, data) -> None:
         """Does metadata have expected keys and values?"""

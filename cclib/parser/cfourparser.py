@@ -5,12 +5,8 @@
 
 """Parser for CFOUR output files"""
 
-import datetime
-import re
-
-from cclib.parser import data, logfileparser, utils
-from cclib.parser.logfileparser import StopParsing
-
+from cclib.parser import logfileparser, utils
+from datetime import timedeltas
 import numpy as np
 
 
@@ -110,6 +106,8 @@ class CFOUR(logfileparser.Logfile):
         self.set_attribute("sym_numbering", {})
         # set current symmetry to "0"
         self.set_attribute("curr_sym", "0")
+        # set success to False
+        self.metadata["success"]=False
 
     def after_parsing(self):
         # change atomic coordinates to a numpy array
@@ -178,6 +176,11 @@ class CFOUR(logfileparser.Logfile):
         # get used point group
         if "The computational point group is" in line:
             self.metadata["symmetry_used"] = line.split()[5].lower()
+        # get success, cpu time, and wall time
+        if "@CHECKOUT-I, Total execution time (CPU/WALL):" in line:
+            self.metadata["success"] = True
+            self.metadata["cpu_time"] = timedeltas(seconds=float(line.strip().split()[5][:-1]))
+            self.metadata["wall_time"] = timedeltas(seconds=float(line.strip().split()[6]))
         # get the net charge of the system
         if "CHARGE               ICHRGE" in line:
             self.set_attribute("charge", utils.float(line.split()[2]))
