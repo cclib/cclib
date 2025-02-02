@@ -369,7 +369,7 @@ SP        QChem       QChemSMDIEFPCMMetadataTest      basicQChem6.0             
 SPun      ADF         GenericSPunTest       basicADF2007.01       dvb_un_sp.adfout
 SPun      ADF         GenericSPunTest       basicADF2013.01       dvb_un_sp.adfout
 SPun      CFOUR       GenericSPunTest       basicCFOUR2.1         dvb_un_sp.c4
-SPun      CFOUR       GenericROSPTest       basicCFOUR2.1         dvb_rohf_sp.c4
+SPun      CFOUR       GenericSPunTest       basicCFOUR2.1         dvb_rohf_sp.c4
 SPun      DALTON      GenericROSPTest       basicDALTON-2013      dvb_sp_un_hf.out
 SPun      DALTON      GenericROSPTest       basicDALTON-2013      dvb_sp_un_ks.out
 SPun      DALTON      GenericROSPTest       basicDALTON-2015      dvb_sp_un_hf.out
