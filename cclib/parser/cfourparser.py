@@ -174,10 +174,10 @@ class CFOUR(logfileparser.Logfile):
                 self.metadata["unrestricted"] = False
         # get full point group
         if "The full molecular point group is" in line:
-            self.metadata["symmetry_detected"] = line.split()[6]
+            self.metadata["symmetry_detected"] = line.split()[6].lower()
         # get used point group
         if "The computational point group is" in line:
-            self.metadata["symmetry_used"] = line.split()[5]
+            self.metadata["symmetry_used"] = line.split()[5].lower()
         # get the net charge of the system
         if "CHARGE               ICHRGE" in line:
             self.set_attribute("charge", utils.float(line.split()[2]))
@@ -373,7 +373,7 @@ class CFOUR(logfileparser.Logfile):
                     line = next(inputfile)
                     continue
                 alpha_moenergies.append(utils.float(line.split()[2]))
-                alpha_mosyms.append(self.normalisesym(line.split()[4]))
+                alpha_mosyms.append(self.normalisesym(line.split()[5]))
                 if self.normalisesym(line.split()[5]) not in self.sym_numbering.values():
                     self.sym_numbering[line.split()[6][1:-1]]=self.normalisesym(line.split()[5])
                 last_line=line
@@ -395,8 +395,8 @@ class CFOUR(logfileparser.Logfile):
                     line = next(inputfile)
                     continue
                 beta_moenergies.append(utils.float(line.split()[2]))
-                beta_mosyms.append(self.normalisesym(line.split()[4]))
-                last_line=line
+                beta_mosyms.append(self.normalisesym(line.split()[5]))
+                last_line = line
                 line = next(inputfile)
             self.moenergies.append(np.array(beta_moenergies))
             self.mosyms.append(beta_mosyms)
