@@ -435,5 +435,27 @@ class CFOUREOMCCSDTest(GenericTDTest):
     number = 20
     expected_l_max = 1.100761725
     expected_f_max = 0.35442355
-    symmetries = ['Singlet-B1', 'Singlet-A2', 'Singlet-A1', 'Singlet-B2', 'Singlet-B2', 'Singlet-A1', 'Singlet-A2', 'Singlet-B1', 'Singlet-B2', 'Singlet-A1', 'Singlet-A1', 'Singlet-B1', 'Singlet-A2', 'Singlet-A1', 'Singlet-B2', 'Singlet-A2', 'Singlet-B2', 'Singlet-B1', 'Singlet-B1', 'Singlet-A2']
+    sumofsec = 0.4996557738404641
+    symmetries = [
+        "Singlet-B1",
+        "Singlet-A2",
+        "Singlet-A1",
+        "Singlet-B2",
+        "Singlet-B2",
+        "Singlet-A1",
+        "Singlet-A2",
+        "Singlet-B1",
+        "Singlet-B2",
+        "Singlet-A1",
+        "Singlet-A1",
+        "Singlet-B1",
+        "Singlet-A2",
+        "Singlet-A1",
+        "Singlet-B2",
+        "Singlet-A2",
+        "Singlet-B2",
+        "Singlet-B1",
+        "Singlet-B1",
+        "Singlet-A2",
+    ]
     method = "EOMEE-CCSD"
