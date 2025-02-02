@@ -5,8 +5,10 @@
 
 """Parser for CFOUR output files"""
 
-from cclib.parser import logfileparser, utils
 from datetime import timedeltas
+
+from cclib.parser import logfileparser, utils
+
 import numpy as np
 
 
@@ -107,7 +109,7 @@ class CFOUR(logfileparser.Logfile):
         # set current symmetry to "0"
         self.set_attribute("curr_sym", "0")
         # set success to False
-        self.metadata["success"]=False
+        self.metadata["success"] = False
 
     def after_parsing(self):
         # change atomic coordinates to a numpy array
