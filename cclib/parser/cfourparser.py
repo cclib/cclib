@@ -387,7 +387,7 @@ class CFOUR(logfileparser.Logfile):
             ):
                 if ("+++++" in line) or (line.strip() == ""):
                     if "+++++" in line:
-                        self.homos[0] = int(last_line.strip().split()[0])-1
+                        self.homos[0] = int(last_line.strip().split()[0]) - 1
                     line = next(inputfile)
                     continue
                 alpha_moenergies.append(utils.float(line.split()[2]))
@@ -409,7 +409,7 @@ class CFOUR(logfileparser.Logfile):
             while not (("VSCF finished." in line) or ("SCF failed to converge in" in line)):
                 if ("+++++" in line) or (line.strip() == ""):
                     if "+++++" in line:
-                        self.homos[1] = int(last_line.strip().split()[0])-1
+                        self.homos[1] = int(last_line.strip().split()[0]) - 1
                     line = next(inputfile)
                     continue
                 beta_moenergies.append(utils.float(line.split()[2]))
@@ -525,10 +525,26 @@ class CFOUR(logfileparser.Logfile):
                     ):
                         keep_parse = False
                     if parse_etsecs and keep_parse and num_dash_lines == 2:
-                        i=int(line.strip().split()[0]) if int(line.strip().split()[0])==0 else int(line.strip().split()[0])-1
-                        j=int(line.strip().split()[1]) if int(line.strip().split()[1])==0 else int(line.strip().split()[1])-1
-                        a=int(line.strip().split()[2]) if int(line.strip().split()[2])==0 else int(line.strip().split()[2])-1
-                        b=int(line.strip().split()[3]) if int(line.strip().split()[3])==0 else int(line.strip().split()[3])-1
+                        i = (
+                            int(line.strip().split()[0])
+                            if int(line.strip().split()[0]) == 0
+                            else int(line.strip().split()[0]) - 1
+                        )
+                        j = (
+                            int(line.strip().split()[1])
+                            if int(line.strip().split()[1]) == 0
+                            else int(line.strip().split()[1]) - 1
+                        )
+                        a = (
+                            int(line.strip().split()[2])
+                            if int(line.strip().split()[2]) == 0
+                            else int(line.strip().split()[2]) - 1
+                        )
+                        b = (
+                            int(line.strip().split()[3])
+                            if int(line.strip().split()[3]) == 0
+                            else int(line.strip().split()[3]) - 1
+                        )
                         temp_etsecs.append(((i, j), (a, b), np.float64(line.strip().split()[4])))
                     if (
                         parse_etsecs
@@ -565,10 +581,26 @@ class CFOUR(logfileparser.Logfile):
                     "--------------------------------------------------------------------------------"
                     not in line
                 ):
-                    i=int(line.strip().split()[0]) if int(line.strip().split()[0])==0 else int(line.strip().split()[0])-1
-                    j=int(line.strip().split()[1]) if int(line.strip().split()[1])==0 else int(line.strip().split()[1])-1
-                    a=int(line.strip().split()[2]) if int(line.strip().split()[2])==0 else int(line.strip().split()[2])-1
-                    b=int(line.strip().split()[3]) if int(line.strip().split()[3])==0 else int(line.strip().split()[3])-1
+                    i = (
+                        int(line.strip().split()[0])
+                        if int(line.strip().split()[0]) == 0
+                        else int(line.strip().split()[0]) - 1
+                    )
+                    j = (
+                        int(line.strip().split()[1])
+                        if int(line.strip().split()[1]) == 0
+                        else int(line.strip().split()[1]) - 1
+                    )
+                    a = (
+                        int(line.strip().split()[2])
+                        if int(line.strip().split()[2]) == 0
+                        else int(line.strip().split()[2]) - 1
+                    )
+                    b = (
+                        int(line.strip().split()[3])
+                        if int(line.strip().split()[3]) == 0
+                        else int(line.strip().split()[3]) - 1
+                    )
                     temp_etsecs.append(((i, j), (a, b), np.float64(line.strip().split()[4])))
                     line = next(inputfile)
                 self.etsecs.append(temp_etsecs)
