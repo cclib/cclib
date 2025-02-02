@@ -453,7 +453,7 @@ TD        Turbomole   TurbomoleTDCC2Test    basicTurbomole7.4     CO_cc2_TD/basi
 TD        Turbomole   TurbomoleTDADC2Test   basicTurbomole7.4     CO_adc2_TD/basis    CO_adc2_TD/control    CO_adc2_TD/mos    CO_adc2_TD/CO.log    CO_adc2_TD/coord
 TD        Turbomole   TurbomoleTDCC2TripTest   basicTurbomole7.4  CO_cc2_TD_trip/basis    CO_cc2_TD_trip/control    CO_cc2_TD_trip/mos    CO_cc2_TD_trip/dscf.out    CO_cc2_TD_trip/ricc2.out    CO_cc2_TD_trip/coord
 
-TDun      CFOUR       CFOUREOMCCSDTest      basicCFOUR2.1         water_eomccsd_un.c4
+TDun      CFOUR       CFOUREOMCCSDunTest    basicCFOUR2.1         water_eomccsd_un.c4
 TDun      Gaussian    GenericTDunTest       basicGaussian09       CO_TD_delta.log
 TDun      Gaussian    GenericTDunTest       basicGaussian16       CO_TD_delta.log
 TDun      PySCF       PySCFTDunTest         basicPySCF2.6         dvb_un_td.py

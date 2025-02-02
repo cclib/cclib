@@ -60,7 +60,7 @@ class GenericTDunTest:
         assert len(triplets) == self.number / 2
 
 
-class CFOUREOMCCSDTest(GenericTDunTest):
+class CFOUREOMCCSDunTest(GenericTDunTest):
     """Customized UHF/EOMEE-CCSD unittest"""
 
     number = 10
