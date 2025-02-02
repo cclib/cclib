@@ -5,6 +5,8 @@
 
 """Parser for CFOUR output files"""
 
+from datetime import timedelta
+
 from cclib.parser import logfileparser, utils
 from datetime import timedeltas
 import numpy as np
@@ -179,8 +181,8 @@ class CFOUR(logfileparser.Logfile):
         # get success, cpu time, and wall time
         if "@CHECKOUT-I, Total execution time (CPU/WALL):" in line:
             self.metadata["success"] = True
-            self.metadata["cpu_time"] = timedeltas(seconds=float(line.strip().split()[5][:-1]))
-            self.metadata["wall_time"] = timedeltas(seconds=float(line.strip().split()[6]))
+            self.metadata["cpu_time"] = timedelta(seconds=float(line.strip().split()[5][:-1]))
+            self.metadata["wall_time"] = timedelta(seconds=float(line.strip().split()[6]))
         # get the net charge of the system
         if "CHARGE               ICHRGE" in line:
             self.set_attribute("charge", utils.float(line.split()[2]))
