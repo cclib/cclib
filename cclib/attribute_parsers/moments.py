@@ -1,4 +1,4 @@
-# Copyright (c) 2024, the cclib development team
+# Copyright (c) 2024-2025, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -24,18 +24,18 @@ class moments(base_parser):
             line = file_handler.virtual_next()
             tokens = line.split()
             dipole = utils.convertor(
-             np.array([float(tokens[1]), float(tokens[3]), float(tokens[5])]), "ebohr", "Debye"
+                np.array([float(tokens[1]), float(tokens[3]), float(tokens[5])]), "ebohr", "Debye"
             )
 
             if getattr(ccdata, "moments") is None:
-             # Old versions of Psi4 don't print the origin; assume
-             # it's at zero.
-             if 'origin' in ccdata.parser_metadata.keys():
-                origin = ccdata.parser_metadata['origin'] 
-             else:
-                origin = numpy.array([0.0, 0.0, 0.0])
+                # Old versions of Psi4 don't print the origin; assume
+                # it's at zero.
+                if "origin" in ccdata.parser_metadata.keys():
+                    origin = ccdata.parser_metadata["origin"]
+                else:
+                    origin = numpy.array([0.0, 0.0, 0.0])
 
-             return {moments.__name__: [origin, dipole]}
+                return {moments.__name__: [origin, dipole]}
             else:
                 try:
                     assert np.all(ccdata.moments[1] == dipole)
@@ -43,8 +43,8 @@ class moments(base_parser):
                     return {moments.__name__: [origin, dipole]}
 
         if line.strip() == "Multipole Moments:":
-            if 'origin' in ccdata.parser_metadata.keys():
-                origin = ccdata.parser_metadata['origin'] 
+            if "origin" in ccdata.parser_metadata.keys():
+                origin = ccdata.parser_metadata["origin"]
             else:
                 origin = np.array([0.0, 0.0, 0.0])
             file_handler.skip_lines(["b", "d", "header", "d", "b"])
@@ -82,7 +82,7 @@ class moments(base_parser):
                         this_moments.append(m)
                     else:
                         assert np.allclose(this_moments[im], m, atol=1.0e4)
-                return {moments.__name__:this_moments}
+                return {moments.__name__: this_moments}
         return None
 
     @staticmethod
