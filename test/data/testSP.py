@@ -1,4 +1,4 @@
-# Copyright (c) 2024, the cclib development team
+# Copyright (c) 2024-2025, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -462,7 +462,6 @@ class GenericSPTest:
     @skipForParser("Jaguar", "No dipole moments in the logfile")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("NBO", "attribute not implemented in this version")
-    @skipForParser("Psi4", "The parser is still being converted to version 2")
     @skipForParser("xTB", "not implemented yet")
     def testmoments(self, data) -> None:
         """Does the dipole and possible higher molecular moments look reasonable?"""
