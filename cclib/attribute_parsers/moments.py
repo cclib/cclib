@@ -71,18 +71,20 @@ class moments(base_parser):
                     multipole.append(value)
 
                     line = file_handler.virtual_next()
-                multipole = np.array(multipole)
-                this_moments.append(multipole)
+                this_moments.append(np.array(multipole))
                 line = file_handler.virtual_next()
             if getattr(ccdata, "moments") is None:
+                print("the moments are none")
                 return {moments.__name__: this_moments}
             else:
-                for im, m in enumerate(this_moments):
-                    if len(ccdata.moments) <= im:
-                        this_moments.append(m)
+                print("the moments are NOT none")
+                existing_moments_list = getattr(ccdata, "moments")
+                for m_idx, m in enumerate(this_moments):
+                    if len(ccdata.moments) <= m_idx:
+                        existing_moments_list.append(m)
                     else:
-                        assert np.allclose(this_moments[im], m, atol=1.0e4)
-                return {moments.__name__: this_moments}
+                        assert np.allclose(existing_moments_list[m_idx], m, atol=1.0e4)
+                return {moments.__name__: existing_moments_list}
         return None
 
     @staticmethod
