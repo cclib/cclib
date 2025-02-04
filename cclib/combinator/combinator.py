@@ -31,6 +31,7 @@ DEFAULT_PARSERS = [
     cprops.atommasses,
     cprops.mosyms,
     cprops.mpenergies,
+    cprops.moments,
     cprops.nmo,
     cprops.atombasis,
     cprops.scftargets,
