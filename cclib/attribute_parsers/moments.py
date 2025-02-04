@@ -78,7 +78,7 @@ class moments(base_parser):
                 return {moments.__name__: this_moments}
             else:
                 print("the moments are NOT none")
-                existing_moments_list = getattr(ccdata,"moments")
+                existing_moments_list = getattr(ccdata, "moments")
                 for m_idx, m in enumerate(this_moments):
                     if len(ccdata.moments) <= m_idx:
                         existing_moments_list.append(m)
