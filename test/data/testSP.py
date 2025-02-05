@@ -654,9 +654,6 @@ class ADFSPTest(GenericSPTest):
         assert abs(data.fooverlaps[1, 1] - self.foverlap11) < 0.0001
         assert abs(data.fooverlaps[2, 2] - self.foverlap22) < 0.0001
 
-class CFOURSPTest(GenericSPTest):
-    """Customized restricted single point unittest"""
-
 
 class GaussianSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
