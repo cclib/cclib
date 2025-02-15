@@ -791,30 +791,6 @@ class NWChem(logfileparser.Logfile):
 
                 array_info = next(inputfile)
 
-        # NWChem 7.2.3 charges example:
-        #
-        #        Total Density - Mulliken Population Analysis
-        #     ---------------------------------------------
-        #
-        #    Atom       Charge   Shell Charges
-        # -----------   ------   -------------------------------------------------------
-        #    1 O    8     8.89   0.79  1.19  0.57  0.98  0.28  2.01  2.08  0.96  0.02 -0.03  0.04
-        #    2 H    1     0.55   0.20  0.26  0.05  0.04
-        #    3 H    1     0.55   0.20  0.26  0.05  0.04
-        if line.strip() == "Total Density - Mulliken Population Analysis":
-            if not hasattr(self, "atomcharges"):
-                self.atomcharges = {}
-
-            self.skip_lines(inputfile, ["d", "b", "header", "d"])
-            charges = []
-            line = next(inputfile)
-            while line.strip() and "to" not in line:
-                index, atomname, nuclear, atom = line.split()[:4]
-                shells = line.split()[4:]
-                charges.append(float(nuclear) - float(atom))
-                line = next(inputfile)
-            self.atomcharges["mulliken"] = charges
-
         # For Hartree-Fock, the atomic Mulliken charges are typically printed like this:
         #
         #  Mulliken analysis of the total density
@@ -825,7 +801,7 @@ class NWChem(logfileparser.Logfile):
         #    1 C    6     6.00   1.99  1.14  2.87
         #    2 C    6     6.00   1.99  1.14  2.87
         # ...
-        if line.strip() == "Mulliken analysis of the total density":
+        if line.strip() in self.mulliken_atomcharges_headers:
             if not hasattr(self, "atomcharges"):
                 self.atomcharges = {}
 
@@ -1363,6 +1339,11 @@ class NWChem(logfileparser.Logfile):
         # trajectory. This will enable parsing coordinates from the
         # 'DFT ENERGY GRADIENTS' section.
         self.is_BOMD = False
+
+        self.mulliken_atomcharges_headers = (
+            "Total Density - Mulliken Population Analysis",
+            "Mulliken analysis of the total density",
+        )
 
     def after_parsing(self):
         """NWChem-specific routines for after parsing a file."""
