@@ -222,7 +222,7 @@ Using both the unit and regression tests, the line-by-line `test coverage`_ show
 Adding a new regression test
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-A regression test consists of one or more output files and optionally a test function or class.
+A regression test consists of one or more output files and optionally a test function and/or multiple test classes.
 
 New regression tests are added by creating entries in `regressionfiles.yaml`_. There are three kinds of tests:
 
