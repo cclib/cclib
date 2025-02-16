@@ -197,6 +197,7 @@ Adding a new program version
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 There are a few conventions when adding a new supported program version to the unit tests:
+
 * Two different recent versions are typically used in the unit tests. If there already are two, move the older version(s) the regression suite (see below).
 * When adding files for the new version, first copy the corresponding files for the last version already in cclib. Afterwards, check in files from the new program version as changes to the copied files. This procedure makes it easy to look at the differences introduced with the new version in git clients.
 
