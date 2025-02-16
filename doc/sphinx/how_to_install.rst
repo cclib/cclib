@@ -80,9 +80,9 @@ There are in fact multiple packages, `python3-cclib`_ containing the Python modu
 .. _`Debian GNU/Linux`: https://www.debian.org
 .. _`Ubuntu`: https://ubuntu.com/
 .. _`cclib packages`: https://packages.debian.org/search?searchon=sourcenames&keywords=cclib
-.. _`python3-cclib`: https://packages.debian.org/bullseye/python3-cclib
-.. _`cclib`: https://packages.debian.org/bullseye/cclib
-.. _`cclib-data`: https://packages.debian.org/bullseye/cclib-data
+.. _`python3-cclib`: https://packages.debian.org/bookworm/python3-cclib
+.. _`cclib`: https://packages.debian.org/bookworm/cclib
+.. _`cclib-data`: https://packages.debian.org/bookworm/cclib-data
 
 Manual download and install
 ---------------------------
