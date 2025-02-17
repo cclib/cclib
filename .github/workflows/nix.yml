@@ -15,15 +15,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Install Nix on the runner
-      - uses: cachix/install-nix-action@v30
+      - uses: cachix/install-nix-action@08dcb3a5e62fa31e2da3d490afc4176ef55ecd72 # v30
         with:
           nix_path: nixpkgs=channel:nixos-unstable
       # Pull from the cachix cache
-      - uses: cachix/cachix-action@v15
+      - uses: cachix/cachix-action@ad2ddac53f961de1989924296a1f236fcfbaa4fc # v15
         with:
           name: nix-qchem
       # Checkout of the current head in the working dir
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Check nix flake
         run: nix flake check -L
       # Disabled until https://github.com/Nix-QChem/NixOS-QChem/issues/513 is fixed
