@@ -222,8 +222,8 @@ class CFOUR(logfileparser.Logfile):
             hashtag_in_last_line = False
             first_iter = True
             while True:
-                if line.strip()=='':
-                    line=next(inputfile)
+                if not line.strip():
+                    line = next(inputfile)
                     continue
                 line=line.replace('+','')
                 split_line=line.strip().split()
