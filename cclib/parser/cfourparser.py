@@ -202,10 +202,12 @@ class CFOUR(logfileparser.Logfile):
                 if not line.strip()=='':
                     cc_lines.append(line)
                 line = next(inputfile)
-            if cc_lines[-1].split()[-1] == "a.u.":
-                self.ccenergies.append(utils.float(cc_lines[-1].split()[-2]))
+            tokens = cc_lines[-1].split()
+            if tokens[-1] == "a.u.":
+                ccenergy_index = -2
             else:
-                self.ccenergies.append(utils.float(cc_lines[-1].split()[-1]))
+                ccenergy_index = -1
+            self.append_attribute("ccenergies", tokens[ccenergy_index])
         # get coefficients and exponents of the gaussian basis set
         if "ATOM                 EXPONENT      COEFFICIENTS" in line:
             atom_index = {}
