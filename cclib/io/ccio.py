@@ -23,6 +23,7 @@ from cclib.io import (
 )
 from cclib.parser import data, logfileparser
 from cclib.parser.adfparser import ADF
+from cclib.parser.cfourparser import CFOUR
 from cclib.parser.daltonparser import DALTON
 from cclib.parser.fchkparser import FChk
 from cclib.parser.gamessdatparser import GAMESSDAT
@@ -65,6 +66,7 @@ if _has_pandas:
 #   (parser, phrases, flag whether we should break)
 triggers = [
     (ADF, ["Amsterdam Density Functional"], True),
+    (CFOUR, ["* CFOUR Coupled-Cluster techniques for Computational Chemistry *"], True),
     (DALTON, ["Dalton - An Electronic Structure Program"], True),
     (FChk, ["Number of atoms", "I"], True),
     (GAMESS, ["GAMESS"], False),

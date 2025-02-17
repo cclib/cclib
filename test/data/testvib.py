@@ -48,6 +48,7 @@ class GenericIRTest:
         """Are basic attributes correct?"""
         assert data.natom == 20
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForLogfile("FChk/basicGaussian09", "not printed in older versions than 16")
     @skipForLogfile("FChk/basicQChem5.4", "not printed")
     @skipForParser("xTB", "Custom treatment")
@@ -56,6 +57,7 @@ class GenericIRTest:
         assert len(data.vibfreqs) == numvib
         assert data.vibdisps.shape == (numvib, len(data.atomnos), 3)
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForLogfile("FChk/basicGaussian09", "not printed in older versions than 16")
     @skipForLogfile("FChk/basicQChem5.4", "not printed")
     def testlengths(self, data, numvib) -> None:
@@ -70,12 +72,14 @@ class GenericIRTest:
         if hasattr(data, "vibrmasses"):
             assert len(data.vibrmasses) == numvib
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForLogfile("FChk/basicGaussian09", "not printed in older versions than 16")
     @skipForLogfile("FChk/basicQChem5.4", "not printed")
     def testfreqval(self, data) -> None:
         """Does the highest frequency value match?"""
         assert abs(max(data.vibfreqs) - self.highest_freq) < self.highest_freq_thresh
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForLogfile("FChk/basicGaussian09", "not printed in older versions than 16")
     @skipForLogfile("FChk/basicQChem5.4", "not printed")
     @skipForLogfile(
@@ -89,6 +93,7 @@ class GenericIRTest:
         assert abs(max(data.vibirs) - self.max_IR_intensity) < 10
 
     @skipForParser("ADF", "ADF cannot print force constants")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "DALTON cannot print force constants")
     @skipForParser("GAMESS", "GAMESS-US cannot print force constants")
     @skipForParser("GAMESSUK", "GAMESS-UK cannot print force constants")
@@ -105,6 +110,7 @@ class GenericIRTest:
         assert abs(max(data.vibfconsts) - self.max_force_constant) < self.force_constant_thresh
 
     @skipForParser("ADF", "ADF cannot print reduced masses")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "DALTON cannot print reduced masses")
     @skipForParser("GAMESSUK", "GAMESSUK cannot print reduced masses")
     @skipForParser("Molpro", "Molpro cannot print reduced masses")
@@ -117,6 +123,7 @@ class GenericIRTest:
         """Is the maximum reduced mass 6.9 +/- 0.1 daltons?"""
         assert abs(max(data.vibrmasses) - self.max_reduced_mass) < 0.1
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("FChk", "not printed")
     @skipForParser("Psi3", "not implemented yet")
     def testzeropointcorrection(self, data) -> None:
@@ -124,6 +131,7 @@ class GenericIRTest:
         assert abs(data.zpve - self.zpve) < self.zpve_thresh
 
     @skipForParser("ADF", "not implemented yet")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("GAMESSUK", "not implemented yet")
     @skipForParser("Gaussian", "not implemented yet")
     @skipForParser("Jaguar", "not implemented yet")
@@ -143,6 +151,7 @@ class GenericIRTest:
     def testhessian_frequencies(self, data) -> None:
         """Do the frequencies from the Hessian match the printed frequencies?"""
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "not implemented yet")
     @skipForParser("FChk", "not printed")
     @skipForParser("Molpro", "not implemented yet")
@@ -151,6 +160,7 @@ class GenericIRTest:
         """Is the temperature 298.15 K?"""
         assert round(abs(298.15 - data.temperature), 7) == 0
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "not implemented yet")
     @skipForParser("FChk", "not printed")
     @skipForParser("Molpro", "not implemented yet")
@@ -161,6 +171,7 @@ class GenericIRTest:
         """Is the pressure 1 atm?"""
         assert round(abs(1 - data.pressure), 7) == 0
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "not implemented yet")
     @skipForParser("FChk", "not printed")
     @skipForParser("Jaguar", "not implemented yet")
@@ -172,6 +183,7 @@ class GenericIRTest:
         assert round(abs(self.entropy - data.entropy), self.entropy_places) == 0
 
     @skipForParser("ADF", "not implemented yet")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "not implemented yet")
     @skipForParser("FChk", "not printed")
     @skipForParser("GAMESSUK", "not implemented yet")
@@ -182,6 +194,7 @@ class GenericIRTest:
         assert round(abs(self.enthalpy - data.enthalpy), self.enthalpy_places) == 0
 
     @skipForParser("ADF", "not implemented yet")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "not implemented yet")
     @skipForParser("FChk", "not printed")
     @skipForParser("GAMESSUK", "not implemented yet")
@@ -192,6 +205,7 @@ class GenericIRTest:
         assert round(abs(self.freeenergy - data.freeenergy), self.freeenergy_places) == 0
 
     @skipForParser("ADF", "not implemented yet")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "not implemented yet")
     @skipForParser("FChk", "not printed")
     @skipForParser("GAMESSUK", "not implemented yet")
@@ -207,6 +221,7 @@ class GenericIRTest:
             == 0
         )
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("FChk", "not printed")
     @skipForParser("GAMESSUK", "not implemented yet")
     @skipForParser("Jaguar", "not implemented yet")

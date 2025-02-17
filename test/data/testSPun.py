@@ -23,6 +23,7 @@ class GenericSPunTest:
         assert sum(data.atomnos == 6) + sum(data.atomnos == 1) == 20
 
     @skipForParser("ADF", "???")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser(
         "DALTON",
         "DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now",
@@ -42,6 +43,7 @@ class GenericSPunTest:
             )
 
     @skipForParser("ADF", "???")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser(
         "DALTON",
         "DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now",
