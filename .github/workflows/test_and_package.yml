@@ -19,7 +19,7 @@ env:
 jobs:
 
   run-tests:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         container:
@@ -103,7 +103,7 @@ jobs:
   check-installation:
     needs:
       - run-tests
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         install-method: [wheel, source]
