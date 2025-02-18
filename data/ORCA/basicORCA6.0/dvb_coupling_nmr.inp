@@ -1,12 +1,6 @@
-! B3LYP NOCOSX NORI STO-3G TightSCF SP
-%Pal NProcs 1 end
-%MaxCore 2000
-%SCF
-    AutoTRAH    True
-    CNVDamp     False
-    CNVZerner   False
-    end
-*xyz 0 1
+!  b3lyp sto-3g usesym sp
+
+* xyz 0 1
 C            -1.41525000     0.23022000     0.00000000
 C             1.41525000    -0.23022000     0.00000000
 C            -0.49513000     1.31446000     0.00000000
@@ -28,7 +22,10 @@ H            -3.69468000    -1.46244000     0.00000000
 H             4.93164000     0.07111000     0.00000000
 H            -4.93164000    -0.07111000     0.00000000
 *
-
+%pal
+ nprocs 4
+end
+%MaxCore 700
 %eprnmr
   nuclei = all C { shift, ssall};
   nuclei = all H { shift, ssall};

@@ -1,13 +1,12 @@
-! TightSCF STO-3G RIJCOSX AutoAux
+!  TightSCF STO-3G RIJCOSX AutoAux
 
 % rocis
     NRoots  5
-    MaxCore 2500
     MaxDim  50
     DoRI    true
     SOC     true
     DoHigherMult true
-    DoQuad      true
+    DoHigherMoments      true
     OrbWin = 0, 0, 0, 2000
 end
 
@@ -36,3 +35,4 @@ end
 %pal
  nprocs 4
 end
+%MaxCore 1500

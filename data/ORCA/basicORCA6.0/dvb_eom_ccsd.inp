@@ -1,11 +1,4 @@
-! EOM-CCSD NOCOSX NORI STO-3G TightSCF
-%Pal NProcs 4 end
-%MaxCore 2500
-%SCF
-    AutoTRAH    True
-    CNVDamp     False
-    CNVZerner   False
-    end
+!  EOM-CCSD STO-3G TightSCF
 %mdci
     MaxIter     200
     NRoots      2
@@ -14,7 +7,7 @@
     DoDbfilter  false
     end
 
-*xyz 0 1
+* xyz 0 1
 C            -1.41525000     0.23022000     0.00000000
 C             1.41525000    -0.23022000     0.00000000
 C            -0.49513000     1.31446000     0.00000000
@@ -36,3 +29,7 @@ H            -3.69468000    -1.46244000     0.00000000
 H             4.93165000     0.07110000     0.00000000
 H            -4.93165000    -0.07110000     0.00000000
 *
+%pal
+ nprocs 4
+end
+%MaxCore 700

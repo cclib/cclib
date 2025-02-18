@@ -7,7 +7,7 @@
     CNVZerner   False
     end
 %mdci
-    MaxIter     200
+    MaxIter     500
     NRoots      2
     DoTriplet   false
     STEOMSOC    false

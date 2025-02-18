@@ -1,4 +1,4 @@
-! rks b3lyp sto-3g usesym freq
+!  b3lyp sto-3g usesym freq
 
 * xyz 0 1
  C       -1.4152533224   0.2302217854   0.0000000000
@@ -23,5 +23,6 @@
  H       -4.9316453546  -0.0711049543   0.0000000000
 *
 %pal
- nprocs 2
+ nprocs 4
 end
+%MaxCore 700
