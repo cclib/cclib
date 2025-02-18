@@ -1,7 +1,11 @@
-! ccsd sto-3g noautostart
+! ccsd sto-3g
 
 *xyz 0 1
   O      1.784914    1.262422    0.511985
   H      2.648237    1.072929    0.131631
   H      1.183168    1.256816   -0.238835
 *
+%pal
+ nprocs 4
+end
+%MaxCore 700
