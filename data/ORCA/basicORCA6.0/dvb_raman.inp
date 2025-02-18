@@ -1,4 +1,4 @@
-! rks b3lyp sto-3g usesym numfreq
+!  b3lyp sto-3g usesym numfreq
 
 %elprop
  polar 1
@@ -27,5 +27,6 @@
  H       -4.9316453546  -0.0711049543   0.0000000000
 *
 %pal
- nprocs 4
+ nprocs 14
 end
+%MaxCore 700
