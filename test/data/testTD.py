@@ -300,7 +300,7 @@ class OrcaROCISTest(GenericTDTest):
 
 
 class Orca6ROCISTest(OrcaROCISTest):
-    # The energies are different in 5 Vs 6 for some reason I can't fathom,
+    # TODO The energies are different in 5 Vs 6 for some reason I can't fathom,
     # perhaps a setting has changed from some old default value?
     expected_l_max = 10.718302
     n_spectra = 4
