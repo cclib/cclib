@@ -12,6 +12,7 @@ from skip import skipForParser
 class GenericPolarTest:
     """Generic static polarizability unittest"""
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     def testshape(self, data) -> None:
@@ -29,6 +30,7 @@ class ReferencePolarTest(GenericPolarTest):
     isotropic_delta = 0.01
     principal_components_delta = 0.01
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     def testisotropic(self, data) -> None:
@@ -38,6 +40,7 @@ class ReferencePolarTest(GenericPolarTest):
         isotropic = numpy.average(numpy.diag(data.polarizabilities[0]))
         assert abs(isotropic - self.isotropic) < self.isotropic_delta
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     def testprincomponents(self, data) -> None:
