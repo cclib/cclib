@@ -10,7 +10,7 @@ from cclib.attribute_parsers.base_parser import base_parser
 import numpy as np
 
 
-class parser_metadata(base_parser):
+class parser_state(base_parser):
     """
     A temporary variable
     """
@@ -20,8 +20,8 @@ class parser_metadata(base_parser):
     def psi4(file_handler, ccdata):
         line = file_handler.last_line
         if "Properties will be evaluated at" in line.strip():
-            if getattr(ccdata, "parser_metadata"):
-                this_metadata = ccdata.parser_metadata
+            if getattr(ccdata, "parser_state"):
+                this_metadata = ccdata.parser_state
             else:
                 this_metadata = {}
             tokens = line.split()
@@ -29,14 +29,14 @@ class parser_metadata(base_parser):
             this_metadata["origin"] = utils.convertor(
                 np.array([float(x.strip(",")) for x in line.split()[-4:-1]]), "bohr", "Angstrom"
             )
-            return {parser_metadata.__name__: this_metadata}
+            return {parser_state.__name__: this_metadata}
 
     @staticmethod
     def parse(file_handler, program: str, ccdata) -> Optional[dict]:
         constructed_data = None
-        if program in parser_metadata.known_codes:
+        if program in parser_state.known_codes:
             file_handler.virtual_set()
-            program_parser = getattr(parser_metadata, program)
+            program_parser = getattr(parser_state, program)
             constructed_data = program_parser(file_handler, ccdata)
             file_handler.virtual_reset()
         return constructed_data

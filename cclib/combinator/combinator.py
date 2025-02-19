@@ -14,7 +14,7 @@ class combinator:
 
 
 DEFAULT_PARSERS = [
-    cprops.parser_metadata,
+    cprops.parser_state,
     cprops.scfenergies,
     cprops.atomcoords,
     cprops.atomcharges,
@@ -37,7 +37,6 @@ DEFAULT_PARSERS = [
     cprops.atombasis,
     cprops.scftargets,
     cprops.scfvalues,
-    cprops.parser_metadata,
 ]
 
 

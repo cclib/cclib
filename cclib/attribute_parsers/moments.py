@@ -30,8 +30,8 @@ class moments(base_parser):
             if getattr(ccdata, "moments") is None:
                 # Old versions of Psi4 don't print the origin; assume
                 # it's at zero.
-                if "origin" in ccdata.parser_metadata.keys():
-                    origin = ccdata.parser_metadata["origin"]
+                if "origin" in ccdata.parser_state.keys():
+                    origin = ccdata.parser_state["origin"]
                 else:
                     origin = np.array([0.0, 0.0, 0.0])
 
@@ -43,8 +43,8 @@ class moments(base_parser):
                     return {moments.__name__: [origin, dipole]}
 
         if line.strip() == "Multipole Moments:":
-            if "origin" in ccdata.parser_metadata.keys():
-                origin = ccdata.parser_metadata["origin"]
+            if "origin" in ccdata.parser_state.keys():
+                origin = ccdata.parser_state["origin"]
             else:
                 origin = np.array([0.0, 0.0, 0.0])
             file_handler.skip_lines(["b", "d", "header", "d", "b"])
