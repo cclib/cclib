@@ -35,6 +35,7 @@ Basis     NWChem      GenericBasisTest      basicNWChem6.5        dvb_sp_ks.out
 Basis     NWChem      GenericBasisTest      basicNWChem7.0        dvb_sp_hf.out
 Basis     NWChem      GenericBasisTest      basicNWChem7.0        dvb_sp_ks.out
 Basis     ORCA        GenericBasisTest      basicORCA5.0          dvb_sp.out
+Basis     ORCA        GenericBasisTest      basicORCA6.0          dvb_sp.out
 Basis     Psi4        GenericBasisTest      basicPsi4-1.2.1       dvb_sp_rhf.out
 Basis     Psi4        GenericBasisTest      basicPsi4-1.2.1       dvb_sp_rks.out
 Basis     Psi4        GenericBasisTest      basicPsi4-1.3.1       dvb_sp_rhf.out
@@ -234,6 +235,7 @@ MP        Turbomole   GenericMP2Test        basicTurbomole7.4     water_mp2_ricc
 MP        Turbomole   GenericMP3Test        basicTurbomole7.4     water_mp3/basis    water_mp3/control    water_mp3/coord    water_mp3/mos    water_mp3/dscf.out    water_mp3/ccsdf12.out
 
 NMR       ORCA        GenericNMRTest        basicORCA5.0          dvb_nmr.out
+NMR       ORCA        GenericNMRTest        basicORCA6.0          dvb_nmr.out
 NMR       ORCA        GenericNMRCouplingTest        basicORCA5.0          dvb_coupling_nmr.out
 NMR       ORCA        GenericNMRCouplingTest        basicORCA6.0          dvb_coupling_nmr.out
 
@@ -259,6 +261,7 @@ Scan      Jaguar       JaguarRelaxedScanTest                 basicJaguar8.3     
 Scan      ORCA         GenericRelaxedScanTest                basicORCA5.0          dvb_scan.out
 Scan      ORCA         GenericUnrelaxedScanTest              basicORCA5.0          dvb_scan_unrelaxed.out
 Scan      ORCA         GenericRelaxedScanTest                basicORCA6.0          dvb_scan.out
+Scan      ORCA         GenericUnrelaxedScanTest              basicORCA6.0          dvb_scan_unrelaxed.out
 
 SP        ADF         ADFSPTest             basicADF2007.01             dvb_sp_b.adfout
 SP        ADF         ADFSPTest             basicADF2013.01             dvb_sp_b.adfout
@@ -316,6 +319,7 @@ SP        Gaussian    GenericDispersionTest basicGaussian16             dvb_disp
 SP        NWChem      GenericDispersionTest basicNWChem6.8              dvb_dispersion_bp86_d3zero.out
 SP        NWChem      GenericDispersionTest basicNWChem7.0              dvb_dispersion_bp86_d3zero.out
 SP        ORCA        GenericDispersionTest basicORCA5.0                dvb_dispersion_bp86_d3zero.out
+SP        ORCA        GenericDispersionTest basicORCA6.0                dvb_dispersion_bp86_d3zero.out
 SP        Psi4        GenericDispersionTest basicPsi4-1.2.1             dvb_dispersion_bp86_d3zero.out
 SP        Psi4        GenericDispersionTest basicPsi4-1.3.1             dvb_dispersion_bp86_d3zero.out
 SP        Psi4        GenericDispersionTest basicPsi4-1.7               dvb_dispersion_bp86_d3zero.out
@@ -323,6 +327,7 @@ SP        QChem       GenericDispersionTest basicQChem5.1               dvb_disp
 SP        QChem       GenericDispersionTest basicQChem5.4               dvb_dispersion_bp86_d3zero.out
 SP        Gaussian    GaussianPerformanceMetadataTest basicGaussian16               dvb_sp.out
 SP        ORCA        ORCAPerformanceMetadataTest basicORCA5.0          dvb_perf.log
+SP        ORCA        ORCAPerformanceMetadataTest basicORCA6.0          dvb_perf.log
 SP        Turbomole   TurbomolePerformanceMetadataTest basicTurbomole7.5           dvb_sp/basis      dvb_sp/control      dvb_sp/mos      dvb_sp/dscf.out      dvb_sp/coord
 SP        Gaussian    IEFPCMMetadataTest    basicGaussian16             water_hf_solvent_pcm.log
 SP        Gaussian    CPCMMetadataTest      basicGaussian16             water_hf_solvent_cpcm.log
@@ -333,6 +338,9 @@ SP        Turbomole   COSMOMetadataTest     basicTurbomole7.5           water_hf
 SP        ORCA        CPCMMetadataTest      basicORCA5.0                water_hf_solvent_cpcm.log
 SP        ORCA        CPCMCOSMOMetadataTest basicORCA5.0                water_hf_solvent_cpcm_cosmo.log
 SP        ORCA        SMDCPCMMetadataTest   basicORCA5.0                water_hf_solvent_smd.log
+SP        ORCA        CPCMMetadataTest      basicORCA6.0                water_hf_solvent_cpcm.log
+SP        ORCA        CPCMCOSMOMetadataTest basicORCA6.0                water_hf_solvent_cpcm_cosmo.log
+SP        ORCA        SMDCPCMMetadataTest   basicORCA6.0                water_hf_solvent_smd.log
 SP        QChem       COSMOMetadataTest          basicQChem6.0               water_hf_solvent_cosmo.out
 SP        QChem       CPCMCOSMOMetadataTest      basicQChem6.0               water_hf_solvent_pcm_cosmo.out
 SP        QChem       CPCMMetadataTest           basicQChem6.0               water_hf_solvent_pcm_cpcm.out
@@ -407,11 +415,15 @@ TD        ORCA        OrcaTDDFTTest         basicORCA6.0          dvb_td.out
 TD        ORCA        OrcaROCISTest         basicORCA5.0          dvb_rocis.out
 TD        ORCA        Orca6ROCISTest        basicORCA6.0          dvb_rocis.out
 TD        ORCA        OrcaADC2Test          basicORCA5.0          dvb_adc2.log
+TD        ORCA        OrcaADC2Test          basicORCA6.0          dvb_adc2.log
 TD        ORCA        OrcaETPostHFTest      basicORCA5.0          dvb_eom_ccsd.log
 TD        ORCA        OrcaETPostHFTest      basicORCA6.0          dvb_eom_ccsd.log
 TD        ORCA        OrcaETPostHFTest      basicORCA5.0          dvb_pno_eom_ccsd.log
 TD        ORCA        OrcaSTEOMCCSDTest     basicORCA5.0          dvb_steom_ccsd.log
 TD        ORCA        OrcaSTEOMCCSDTest     basicORCA5.0          dvb_steom_dlpno_ccsd.log
+TD        ORCA        OrcaETPostHFTest      basicORCA6.0          dvb_pno_eom_ccsd.log
+TD        ORCA        OrcaSTEOMCCSDTest     basicORCA6.0          dvb_steom_ccsd.log
+TD        ORCA        OrcaSTEOMCCSDTest     basicORCA6.0          dvb_steom_dlpno_ccsd.log
 TD        QChem       QChemTDDFTTest        basicQChem5.1         dvb_td.out
 TD        QChem       QChemTDDFTTest        basicQChem5.4         dvb_td.out
 TD        Turbomole   TurbomoleTDTest       basicTurbomole7.4     CO_TD/basis    CO_TD/control    CO_TD/mos    CO_TD/dscf.out    CO_TD/escf.out    CO_TD/coord
