@@ -327,7 +327,7 @@ SP        QChem       GenericDispersionTest basicQChem5.1               dvb_disp
 SP        QChem       GenericDispersionTest basicQChem5.4               dvb_dispersion_bp86_d3zero.out
 SP        Gaussian    GaussianPerformanceMetadataTest basicGaussian16               dvb_sp.out
 SP        ORCA        ORCAPerformanceMetadataTest basicORCA5.0          dvb_perf.log
-SP        ORCA        ORCAPerformanceMetadataTest basicORCA6.0          dvb_perf.log
+SP        ORCA        ORCA6PerformanceMetadataTest basicORCA6.0         dvb_perf.log
 SP        Turbomole   TurbomolePerformanceMetadataTest basicTurbomole7.5           dvb_sp/basis      dvb_sp/control      dvb_sp/mos      dvb_sp/dscf.out      dvb_sp/coord
 SP        Gaussian    IEFPCMMetadataTest    basicGaussian16             water_hf_solvent_pcm.log
 SP        Gaussian    CPCMMetadataTest      basicGaussian16             water_hf_solvent_cpcm.log
