@@ -132,8 +132,10 @@ class GenericTDTest:
         "Rotatory strengths are not currently available for ricc2",
     )
     @skipForLogfile(
-        "ORCA/basicORCA6.0/dvb_eom_ccsd.log", "etrotats don't seem to be available for EOM-CCSD"
+        "ORCA/basicORCA6.0/dvb_eom_ccsd.log", "etrotats are not printed by default in Orca 6"
     )
+    @skipForLogfile("ORCA/basicORCA6.0/dvb_adc2.log", "etrotats are not printed by default in Orca 6")
+    @skipForLogfile("ORCA/basicORCA6.0/dvb_pno_eom_ccsd.log", "etrotats are not printed by default in Orca 6")
     def testrotatsnumber(self, data) -> None:
         """Is the length of etrotats correct?"""
         assert len(data.etrotats) == self.number
