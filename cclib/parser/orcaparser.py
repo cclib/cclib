@@ -2816,7 +2816,7 @@ Dispersion correction           -0.016199959
             point_group_abelian = line.split()[4].lower()
             line = next(inputfile)
         # ORCA >= 6
-        elif "Symmetry-adapted orbitals":
+        elif "Symmetry-adapted orbitals" in line:
             point_group_abelian = line.split()[3].lower()
             next(inputfile)
             line = next(inputfile)
