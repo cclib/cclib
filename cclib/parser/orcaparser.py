@@ -1937,6 +1937,7 @@ Dispersion correction           -0.016199959
             else:
                 self.del_attribute("etsyms")
 
+        # NMR Section for Orca 5
         # ---------------
         # CHEMICAL SHIFTS
         # ---------------
@@ -1981,7 +1982,38 @@ Dispersion correction           -0.016199959
         #      0       C          116.686        143.809
         #      1       C          122.158        130.692
         # ...
-        if line.strip() == "CHEMICAL SHIFTS":
+        #
+        # For Orca 6
+        # -------------------
+        # CHEMICAL SHIELDINGS (ppm)
+        # -------------------
+        # 
+        # Method             : SCF
+        # Type of density    : Electron Density
+        # Type of derivative : Magnetic Field (with GIAOs) (Direction=X)
+        # Multiplicity       :   1
+        # Irrep              :   0
+        # Relativity type    : 
+        # Basis              : AO
+        #  --------------
+        #  Nucleus   0C :
+        #  --------------
+        # 
+        # Diamagnetic contribution to the shielding tensor (ppm) : 
+        #            267.110         -0.567         0.000
+        #             -0.688        260.069         0.000
+        #             -0.000          0.000       244.869
+        # 
+        # Paramagnetic contribution to the shielding tensor (ppm): 
+        #           -217.104          5.098         0.000
+        #              7.251       -179.615        -0.000
+        #              0.000         -0.000       -32.135
+        # 
+        # Total shielding tensor (ppm): 
+        #             50.006          4.530         0.000
+        #              6.563         80.454        -0.000
+        #              0.000         -0.000       212.734
+        if line.strip() in ["CHEMICAL SHIFTS", "CHEMICAL SHIELDINGS (ppm)"]:
             nmrtensors = dict()
             while line.strip() != "CHEMICAL SHIELDING SUMMARY (ppm)":
                 if line[:8] == " Nucleus":
