@@ -415,7 +415,7 @@ TD        ORCA        OrcaTDDFTTest         basicORCA6.0          dvb_td.out
 TD        ORCA        OrcaROCISTest         basicORCA5.0          dvb_rocis.out
 TD        ORCA        Orca6ROCISTest        basicORCA6.0          dvb_rocis.out
 TD        ORCA        OrcaADC2Test          basicORCA5.0          dvb_adc2.log
-TD        ORCA        OrcaADC2Test          basicORCA6.0          dvb_adc2.log
+TD        ORCA        Orca6ADC2Test         basicORCA6.0          dvb_adc2.log
 TD        ORCA        OrcaETPostHFTest      basicORCA5.0          dvb_eom_ccsd.log
 TD        ORCA        OrcaETPostHFTest      basicORCA6.0          dvb_eom_ccsd.log
 TD        ORCA        OrcaETPostHFTest      basicORCA5.0          dvb_pno_eom_ccsd.log

@@ -377,6 +377,11 @@ class OrcaADC2Test(OrcaETPostHFTest):
     method = "ADC(2)"
 
 
+class Orca6ADC2Test(OrcaADC2Test):
+    
+    expected_f_max = 1.16
+
+
 class OrcaSTEOMCCSDTest(OrcaETPostHFTest):
     """Test for STEOM-CCSD with Orca."""
 
