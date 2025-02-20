@@ -35,7 +35,7 @@ Basis     NWChem      GenericBasisTest      basicNWChem6.5        dvb_sp_ks.out
 Basis     NWChem      GenericBasisTest      basicNWChem7.0        dvb_sp_hf.out
 Basis     NWChem      GenericBasisTest      basicNWChem7.0        dvb_sp_ks.out
 Basis     ORCA        GenericBasisTest      basicORCA5.0          dvb_sp.out
-Basis     ORCA        GenericBasisTest      basicORCA6.0          dvb_sp.out
+Basis     ORCA        GenericBasisTest      basicORCA6.0          dvb_sp_dft.out
 Basis     Psi4        GenericBasisTest      basicPsi4-1.2.1       dvb_sp_rhf.out
 Basis     Psi4        GenericBasisTest      basicPsi4-1.2.1       dvb_sp_rks.out
 Basis     Psi4        GenericBasisTest      basicPsi4-1.3.1       dvb_sp_rhf.out
@@ -297,7 +297,7 @@ SP        NWChem      NWChemKSSPTest        basicNWChem6.5              dvb_sp_k
 SP        NWChem      GenericHFSPTest       basicNWChem7.0              dvb_sp_hf.out
 SP        NWChem      NWChemKSSPTest        basicNWChem7.0              dvb_sp_ks.out
 SP        ORCA        OrcaSPTest            basicORCA5.0                dvb_sp.out
-SP        ORCA        OrcaSPTest            basicORCA6.0                dvb_sp.out
+SP        ORCA        OrcaSPTest            basicORCA6.0                dvb_sp_dft.out
 SP        ORCA        OrcaHFSPTest          basicORCA6.0                dvb_sp_hf.out
 SP        Psi3        Psi3SPTest            basicPsi3                   dvb_sp_hf.out
 SP        Psi4        PsiHFSPTest           basicPsi4-1.2.1             dvb_sp_rhf.out
@@ -377,7 +377,7 @@ SPun      NWChem      GenericSPunTest       basicNWChem6.0        dvb_un_sp_ks.o
 SPun      NWChem      GenericSPunTest       basicNWChem6.5        dvb_un_sp_ks.out
 SPun      NWChem      GenericSPunTest       basicNWChem7.0        dvb_un_sp_ks.out
 SPun      ORCA        GenericSPunTest       basicORCA5.0          dvb_sp_un.out
-SPun      ORCA        GenericSPunTest       basicORCA6.0          dvb_sp_un.out
+SPun      ORCA        GenericSPunTest       basicORCA6.0          dvb_sp_un_dft.out
 SPun      ORCA        GenericSPunTest       basicORCA6.0          dvb_sp_un_hf.out
 SPun      Psi4        GenericROSPTest       basicPsi4-1.2.1       dvb_sp_rohf.out
 SPun      Psi4        GenericSPunTest       basicPsi4-1.2.1       dvb_sp_uhf.out
