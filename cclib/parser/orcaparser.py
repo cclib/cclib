@@ -2184,7 +2184,7 @@ Dispersion correction           -0.016199959
                 # Skip point group
                 line = next(inputfile)
 
-            if line.strip() == "" or "Irrep" in line:
+            if not line.strip() or "Irrep" in line:
                 line = next(inputfile)
 
             if self.natom > 1:
