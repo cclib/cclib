@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   build-and-push-docs:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     container:
       image: shivupa/cclib-ci:py312-edge@sha256:fc84b709c09286d288ce8d43e28c9cc6a76f85481a6d459d445c1ca8a5eaf439
     defaults:
