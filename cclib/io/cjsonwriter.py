@@ -30,8 +30,7 @@ class CJSON(filewriter.Writer):
 
     def pathname(self, path):
         """Return filename without extension to be used as name."""
-        name = os.path.basename(os.path.splitext(path)[0])
-        return name
+        return os.path.basename(os.path.splitext(path)[0])
 
     def as_dict(self):
         """Build a Python dict with the CJSON data"""
