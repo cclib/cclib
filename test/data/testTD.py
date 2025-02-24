@@ -121,6 +121,7 @@ class GenericTDTest:
     @skipForParser("GAMESSUK", "etrotats are not yet implemented")
     @skipForParser("Jaguar", "etrotats are not yet implemented")
     @skipForParser("NWChem", "etrotats are not yet implemented")
+    @skipForParser("PySCF", "etrotats are not yet implemented")
     @skipForParser("QChem", "Q-Chem cannot calculate rotatory strengths")
     @skipForLogfile("FChk/basicQChem5.4", "Q-Chem cannot calculate rotatory strengths")
     @skipForLogfile(
@@ -131,7 +132,6 @@ class GenericTDTest:
         "Turbomole/basicTurbomole7.4/CO_adc2_TD",
         "Rotatory strengths are not currently available for ricc2",
     )
-    @skipForParser("PySCF", "etrotats are not yet implemented")
     def testrotatsnumber(self, data) -> None:
         """Is the length of etrotats correct?"""
         assert len(data.etrotats) == self.number
@@ -144,9 +144,9 @@ class GenericTDTest:
     @skipForParser("Jaguar", "optstate are not yet implemented")
     @skipForParser("NWChem", "optstate are not yet implemented")
     @skipForParser("ORCA", "optstate are not yet implemented")
+    @skipForParser("PySCF", "optstate are not yet implemented")
     @skipForParser("QChem", "optstate are not yet implemented")
     @skipForParser("Turbomole", "optstate are not yet implemented")
-    @skipForParser("PySCF", "optstate are not yet implemented")
     def testoptstate(self, data) -> None:
         # All our examples have a default state-of-interest of 1 (index 0).
         assert data.metadata["opt_state"] == 0
