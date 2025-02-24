@@ -882,7 +882,7 @@ class GenericPerformanceMetadataTest:
 
     num_cpu = 1
     # 400 MB.
-    memory_available = 400000000
+    memory_available = 400_000_000
     memory_used = 0
 
     def testmetadata_cpu(self, data) -> None:
