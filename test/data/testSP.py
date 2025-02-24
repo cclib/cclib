@@ -904,8 +904,8 @@ class GaussianPerformanceMetadataTest(GenericPerformanceMetadataTest):
     """Check we can parse CPU/memory metadata."""
 
     num_cpu = 1
-    memory_available = 400000000
-    memory_used = 52428800
+    memory_available = 400_000_000
+    memory_used = 52_428_800
 
 
 class ORCAPerformanceMetadataTest(GenericPerformanceMetadataTest):
