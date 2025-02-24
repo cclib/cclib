@@ -150,10 +150,10 @@ class GenericSPTest:
     @skipForParser("Molpro", "Hirshfeld charges not implemented")
     @skipForLogfile("ORCA/basicORCA4.1", "This needs to be moved to regressions")
     @skipForParser("Psi4", "Hirshfeld charges not implemented")
+    @skipForParser("PySCF", "Hirshfeld charges not implemented")
     @skipForParser("QChem", "Hirshfeld charges not implemented")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     @skipForParser("xTB", "Hirshfeld charges not implemented")
-    @skipForParser("PySCF", "Hirshfeld charges not implemented")
     def testatomcharges_hirshfeld(self, data) -> None:
         """Do Hirshfeld atomic charges sum to roughly zero?"""
         charges = data.atomcharges["hirshfeld"]
