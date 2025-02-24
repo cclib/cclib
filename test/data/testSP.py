@@ -11,6 +11,7 @@ from cclib.parser import utils
 
 import numpy
 import packaging
+import pytest
 from common import get_minimum_carbon_separation
 from skip import skipForLogfile, skipForParser
 
@@ -378,14 +379,14 @@ class GenericSPTest:
 
         # All values on diagonal should be exactly one.
         for i in range(data.nbasis):
-            # assert data.aooverlaps[i, i] == 1.0
-            assert abs(data.aooverlaps[i, i] - 1.0) < 0.0001
+            assert data.aooverlaps[i, i] == pytest.approx(1.0)
 
         # Check some additional values that don't seem to move around between programs.
-        assert abs(data.aooverlaps[0, 1] - self.overlap01) < 0.01
-        assert abs(data.aooverlaps[1, 0] - self.overlap01) < 0.01
-        assert round(abs(data.aooverlaps[3, 0]), 7) == 0
-        assert round(abs(data.aooverlaps[0, 3]), 7) == 0
+        assert data.aooverlaps[0, 1] == pytest.approx(self.overlap01)
+        assert data.aooverlaps[1, 0] == pytest.approx(self.overlap01)
+
+        assert data.aooverlaps[3, 0] == pytest.approx(0)
+        assert data.aooverlaps[0, 3] == pytest.approx(0)
 
     def testoptdone(self, data) -> None:
         """There should be no optdone attribute set."""
