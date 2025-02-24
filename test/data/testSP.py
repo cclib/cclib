@@ -912,18 +912,18 @@ class ORCAPerformanceMetadataTest(GenericPerformanceMetadataTest):
     """Check we can parse CPU/memory metadata."""
 
     num_cpu = 2
-    memory_available = 1000000000
-    memory_used = 463000000
+    memory_available = 1_000_000_000
+    memory_used = 463_000_000
 
 
 class TurbomolePerformanceMetadataTest(GenericPerformanceMetadataTest):
     """Check we can parse CPU/memory metadata."""
 
     num_cpu = 1
-    memory_available = 524288000
+    memory_available = 524_288_000
     memory_used = 0
 
 
 class PySCFPerformanceMetadataTest(GenericPerformanceMetadataTest):
     num_cpu = 8
-    memory_available = 400 * 1000 * 1000
+    memory_available = 400_000_000
