@@ -30,11 +30,11 @@ class GenericTDunTest:
         assert len(data.etoscs) == self.number
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
+    @skipForParser("PySCF", "etrotats are not yet implemented")
     @skipForLogfile(
         "Turbomole/basicTurbomole7.4/CO_cc2_TD",
         "Rotatory strengths are not currently available for ricc2",
     )
-    @skipForParser("PySCF", "etrotats are not yet implemented")
     def testrotatsnumber(self, data) -> None:
         """Is the length of etrotats correct?"""
         assert len(data.etrotats) == self.number
