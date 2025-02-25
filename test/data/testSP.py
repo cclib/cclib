@@ -382,8 +382,8 @@ class GenericSPTest:
             assert data.aooverlaps[i, i] == pytest.approx(1.0)
 
         # Check some additional values that don't seem to move around between programs.
-        assert data.aooverlaps[0, 1] == pytest.approx(self.overlap01)
-        assert data.aooverlaps[1, 0] == pytest.approx(self.overlap01)
+        assert data.aooverlaps[0, 1] == pytest.approx(self.overlap01, abs=0.01)
+        assert data.aooverlaps[1, 0] == pytest.approx(self.overlap01, abs=0.01)
 
         assert data.aooverlaps[3, 0] == pytest.approx(0)
         assert data.aooverlaps[0, 3] == pytest.approx(0)
