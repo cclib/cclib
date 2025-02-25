@@ -496,12 +496,21 @@ def cclibfrommethods(
     ]
 
     # Quadrupole moments are new (introduced ~ August 2024) and not yet widely available.
-    if hasattr(scf, "quad_moment"):
-        attributes["moments"].append(
-            scf.quad_moment(
-                scf.mol, scf_density_matrix, origin=origin, unit="DebyeAngstrom", verbose=2
-            )
-        )
+    # So far, PySCF only supports the traceless quadrupole (the raw version is calculated
+    # internally but is not exposed), I propose we hold off on this until both become available.
+    # if hasattr(scf, "quad_moment"):
+    #     quad_moment_matrix = scf.quad_moment(
+    #             scf.mol, scf_density_matrix, origin=origin, unit="DebyeAngstrom", verbose=2
+    #         )
+    #     attributes["moments"].append(
+    #         [quad_moment_matrix[0,1], # XX
+    #          quad_moment_matrix[0,1], # XY
+    #          quad_moment_matrix[0,2], # XZ
+    #          quad_moment_matrix[1,1], # YY
+    #          quad_moment_matrix[1,2], # YZ
+    #          quad_moment_matrix[2,2], # ZZ
+    #         ]
+    #     )
 
     # Mulliken.
     mulliken_pop, mulliken_charges = scf.mulliken_pop(
