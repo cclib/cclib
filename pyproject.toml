@@ -58,17 +58,14 @@ docs = [
     "sphinx",
     "sphinx_rtd_theme",
 ]
-test = [
+test-infrastructure = [
     "pytest",
     "coverage",
     "pytest-cov",
     "pyyaml",
-    "pyscf",
-    "pyscf-properties @ git+https://github.com/pyscf/properties",
-    "pyberny",
-    "geometric"
 ]
-dev = ["cclib[bridges,docs,test]"]
+test = ["cclib[bridges,docs,test-infrastructure]"]
+dev = ["cclib[bridges,docs,test-infrastructure]"]
 all = ["cclib[bridges]"]
 
 [build-system]
