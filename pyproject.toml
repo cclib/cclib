@@ -46,7 +46,7 @@ cda = "cclib.scripts.cda:main"
 bridges = [
     "ase>=3.21",
     "biopython",
-    "openbabel",
+#    "openbabel",
     "pandas",
     "pyscf",
     "pyscf-properties @ git+https://github.com/pyscf/properties",
