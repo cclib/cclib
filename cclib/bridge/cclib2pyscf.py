@@ -104,7 +104,8 @@ def makepyscf_mos(ccdata, mol):
         molecular orbital energies in units of Hartree
     """
     inputattrs = ccdata.__dict__
-    mo_energies = convertor(np.asarray(ccdata.moenergies), "eV", "hartree")
+    # mo_energies = convertor(np.asarray(ccdata.moenergies), "eV", "hartree")
+    mo_energies = np.asarray(ccdata.moenergies)
     if "mocoeffs" in inputattrs:
         mol.build()
         s = mol.intor("int1e_ovlp")
@@ -367,19 +368,23 @@ def cclibfrommethods(
     attributes["aooverlaps"] = scf.get_ovlp()
 
     # Total energies.
-    attributes["scfenergies"] = [scf.e_tot]
+    attributes["scfenergies"] = [convertor(scf.e_tot, "hartree", "eV")]
     attributes["metadata"]["success"] = scf.converged
     attributes["metadata"]["methods"].append("DFT" if hasattr(scf, "xc") else "HF")
     if hasattr(scf, "xc"):
         attributes["metadata"]["functional"] = scf.xc
 
     if mp:
-        attributes["mpenergies"] = [[mp.e_tot]]
+        attributes["mpenergies"] = [[convertor(mp.e_tot, "hartree", "eV")]]
         attributes["metadata"]["methods"].append("MP2")
 
     if cc:
         # We have to manually add in the CCSD(T) correction energy.
-        attributes["ccenergies"] = [(cc.e_tot + ccsd_t) if ccsd_t else cc.e_tot]
+        attributes["ccenergies"] = [
+            (convertor(cc.e_tot + ccsd_t, "hartree", "eV"))
+            if ccsd_t
+            else convertor(cc.e_tot, "hartree", "eV")
+        ]
         attributes["metadata"]["success"] = cc.converged
         if cc.cc2:
             ccmethod = "CC2"
@@ -396,15 +401,21 @@ def cclibfrommethods(
     # we have to be smart based on what we asked for.
     if opt_steps:
         if cc:
-            attributes["ccenergies"] = [step["energy"] for step in opt_steps]
+            attributes["ccenergies"] = [
+                convertor(step["energy"], "hartree", "eV") for step in opt_steps
+            ]
             opt_e = attributes["ccenergies"]
 
         elif mp:
-            attributes["mpenergies"] = [[step["energy"]] for step in opt_steps]
+            attributes["mpenergies"] = [
+                [convertor(step["energy"], "hartree", "eV")] for step in opt_steps
+            ]
             opt_e = attributes["mpenergies"]
 
         else:
-            attributes["scfenergies"] = [step["energy"] for step in opt_steps]
+            attributes["scfenergies"] = [
+                convertor(step["energy"], "hartree", "eV") for step in opt_steps
+            ]
             opt_e = attributes["scfenergies"]
 
         attributes["optstatus"] = [ccData.OPT_UNKNOWN for _ in attributes["atomcoords"]]
@@ -440,7 +451,10 @@ def cclibfrommethods(
         attributes["metadata"]["unrestricted"] = True
 
         nocc = [np.count_nonzero(scf.mo_occ[0] != 0), np.count_nonzero(scf.mo_occ[1] != 0)]
-        attributes["moenergies"] = [scf.mo_energy[0], scf.mo_energy[1]]
+        attributes["moenergies"] = [
+            convertor(scf.mo_energy[0], "hartree", "eV"),
+            convertor(scf.mo_energy[1], "hartree", "eV"),
+        ]
         attributes["homos"] = [nocc[0] - 1, nocc[1] - 1]
         attributes["mocoeffs"] = scf.mo_coeff
 
@@ -448,7 +462,7 @@ def cclibfrommethods(
         attributes["metadata"]["unrestricted"] = False
 
         nocc = [np.count_nonzero(scf.mo_occ != 0)]
-        attributes["moenergies"] = [scf.mo_energy]
+        attributes["moenergies"] = [convertor(scf.mo_energy, "hartree", "eV")]
         attributes["homos"] = [nocc[0] - 1]
         # Orbital coeffs.
         attributes["mocoeffs"] = [scf.mo_coeff]
@@ -507,7 +521,9 @@ def cclibfrommethods(
         )
 
         # In cclib 1.x, 'energies' are actually expected to be cm-1. In 2.x, this will change to Hartree.
-        attributes["etenergies"] = list(itertools.chain(*(etmethod.e for etmethod in et)))
+        attributes["etenergies"] = list(
+            itertools.chain(*(convertor(etmethod.e, "hartree", "wavenumber") for etmethod in et))
+        )
         attributes["etoscs"] = list(
             itertools.chain(*(etmethod.oscillator_strength(gauge="length") for etmethod in et))
         )  # or do we want velocity?

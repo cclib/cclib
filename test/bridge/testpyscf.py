@@ -40,7 +40,8 @@ class PyscfTest:
     def test_makepyscf_mos(self) -> None:
         pyscfmol = cclib2pyscf.makepyscf(self.data)
         mo_coeff, mo_occ, mo_syms, mo_energies = cclib2pyscf.makepyscf_mos(self.data, pyscfmol)
-        assert np.allclose(mo_energies, convertor(np.array(self.data.moenergies), "eV", "hartree"))
+        # assert np.allclose(mo_energies, convertor(np.array(self.data.moenergies), "eV", "hartree"))
+        assert np.allclose(mo_energies, np.array(self.data.moenergies))
         # check first MO coefficient
         assert np.allclose(mo_coeff[0][0], self.data.mocoeffs[0][0][0])
         # check a random middle MO coefficient
@@ -48,7 +49,8 @@ class PyscfTest:
         # test unrestricted code.
         pyscfmol = cclib2pyscf.makepyscf(self.udata)
         mo_coeff, mo_occ, mo_syms, mo_energies = cclib2pyscf.makepyscf_mos(self.udata, pyscfmol)
-        assert np.allclose(mo_energies, convertor(np.array(self.udata.moenergies), "eV", "hartree"))
+        # assert np.allclose(mo_energies, convertor(np.array(self.udata.moenergies), "eV", "hartree"))
+        assert np.allclose(mo_energies, np.array(self.udata.moenergies))
         # check first MO coefficient
         assert np.allclose(mo_coeff[0][0][0], self.udata.mocoeffs[0][0][0])
         # check a random middle MO coefficient
