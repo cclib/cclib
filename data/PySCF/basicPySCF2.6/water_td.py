@@ -1,4 +1,4 @@
-# Copyright (c) 2024, the cclib development team
+# Copyright (c) 2024-2025, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -47,6 +47,7 @@ def calculate():
 
 if __name__ == "__main__":
     methods = calculate()
-    
+
     from cclib.bridge.cclib2pyscf import makecclib
-    makecclib(*methods['methods'])
+
+    makecclib(*methods["methods"])

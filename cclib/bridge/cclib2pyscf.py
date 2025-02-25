@@ -7,8 +7,8 @@
 
 import functools
 import itertools
-from typing import Optional, List, Dict, Any
 import logging
+from typing import Any, Dict, List, Optional
 
 from cclib.parser.data import ccData
 from cclib.parser.utils import PeriodicTable, convertor, find_package
@@ -104,7 +104,7 @@ def makepyscf_mos(ccdata, mol):
         molecular orbital energies in units of Hartree
     """
     inputattrs = ccdata.__dict__
-    #mo_energies = convertor(np.asarray(ccdata.moenergies), "eV", "hartree")
+    # mo_energies = convertor(np.asarray(ccdata.moenergies), "eV", "hartree")
     mo_energies = np.asarray(ccdata.moenergies)
     if "mocoeffs" in inputattrs:
         mol.build()
@@ -133,13 +133,14 @@ def makepyscf_mos(ccdata, mol):
 
 
 def makecclib(
-        # pyscf.lib.StreamObject is the ultimate base class I believe, but not sure
-        # if we can give this as a type hint as we don't know if PySCF is even available...
-        *methods: Any,
-        ccsd_t: Optional[float] = None,
-        scf_steps: List[List[Dict[str, float]]] = [],
-        opt_steps: List[Dict[str, Any]] = [],
-        opt_failed: bool = False) -> ccData:
+    # pyscf.lib.StreamObject is the ultimate base class I believe, but not sure
+    # if we can give this as a type hint as we don't know if PySCF is even available...
+    *methods: Any,
+    ccsd_t: Optional[float] = None,
+    scf_steps: List[List[Dict[str, float]]] = [],
+    opt_steps: List[Dict[str, Any]] = [],
+    opt_failed: bool = False,
+) -> ccData:
     """Create cclib attributes and return a ccData from a PySCF calculation.
 
     PySCF calculation results are stored in method objects, with each object representing a different part of the
@@ -159,9 +160,9 @@ def makecclib(
     _check_pyscf(_found_pyscf)
     # What is our level of theory?
     scf, mp, cc, hess, freq, et = None, None, None, None, None, []
-    
-    mols = set([method.mol for method in methods if hasattr(method, "mol")])
-    if (len(mols) > 1) :
+
+    mols = {method.mol for method in methods if hasattr(method, "mol")}
+    if len(mols) > 1:
         logger = logging.getLogger("cclib")
         logger.warning("not all PySCF methods are operating on the same molecule")
 
@@ -348,7 +349,7 @@ def cclibfrommethods(
 
     # mol.ao_labels() and aonames have almost the same format, just need to tweak a bit.
     attributes["aonames"] = [
-        f"{atom_label}{atom_index+1}_{shell.upper()}{xyz.upper()}"
+        f"{atom_label}{atom_index + 1}_{shell.upper()}{xyz.upper()}"
         for atom_index, atom_label, shell, xyz in mol.ao_labels(False)
     ]
 
@@ -379,7 +380,11 @@ def cclibfrommethods(
 
     if cc:
         # We have to manually add in the CCSD(T) correction energy.
-        attributes["ccenergies"] = [(convertor(cc.e_tot + ccsd_t, "hartree", "eV")) if ccsd_t else convertor(cc.e_tot, "hartree", "eV")]
+        attributes["ccenergies"] = [
+            (convertor(cc.e_tot + ccsd_t, "hartree", "eV"))
+            if ccsd_t
+            else convertor(cc.e_tot, "hartree", "eV")
+        ]
         attributes["metadata"]["success"] = cc.converged
         if cc.cc2:
             ccmethod = "CC2"
@@ -396,15 +401,21 @@ def cclibfrommethods(
     # we have to be smart based on what we asked for.
     if opt_steps:
         if cc:
-            attributes["ccenergies"] = [convertor(step["energy"], "hartree", "eV") for step in opt_steps]
+            attributes["ccenergies"] = [
+                convertor(step["energy"], "hartree", "eV") for step in opt_steps
+            ]
             opt_e = attributes["ccenergies"]
 
         elif mp:
-            attributes["mpenergies"] = [[convertor(step["energy"], "hartree", "eV")] for step in opt_steps]
+            attributes["mpenergies"] = [
+                [convertor(step["energy"], "hartree", "eV")] for step in opt_steps
+            ]
             opt_e = attributes["mpenergies"]
 
         else:
-            attributes["scfenergies"] = [convertor(step["energy"], "hartree", "eV") for step in opt_steps]
+            attributes["scfenergies"] = [
+                convertor(step["energy"], "hartree", "eV") for step in opt_steps
+            ]
             opt_e = attributes["scfenergies"]
 
         attributes["optstatus"] = [ccData.OPT_UNKNOWN for _ in attributes["atomcoords"]]
@@ -440,7 +451,10 @@ def cclibfrommethods(
         attributes["metadata"]["unrestricted"] = True
 
         nocc = [np.count_nonzero(scf.mo_occ[0] != 0), np.count_nonzero(scf.mo_occ[1] != 0)]
-        attributes["moenergies"] = [convertor(scf.mo_energy[0], "hartree", "eV"), convertor(scf.mo_energy[1], "hartree", "eV")]
+        attributes["moenergies"] = [
+            convertor(scf.mo_energy[0], "hartree", "eV"),
+            convertor(scf.mo_energy[1], "hartree", "eV"),
+        ]
         attributes["homos"] = [nocc[0] - 1, nocc[1] - 1]
         attributes["mocoeffs"] = scf.mo_coeff
 
@@ -448,7 +462,7 @@ def cclibfrommethods(
         attributes["metadata"]["unrestricted"] = False
 
         nocc = [np.count_nonzero(scf.mo_occ != 0)]
-        attributes["moenergies"] = [convertor(scf.mo_energy, "hartree", "eV")] 
+        attributes["moenergies"] = [convertor(scf.mo_energy, "hartree", "eV")]
         attributes["homos"] = [nocc[0] - 1]
         # Orbital coeffs.
         attributes["mocoeffs"] = [scf.mo_coeff]
@@ -507,7 +521,9 @@ def cclibfrommethods(
         )
 
         # In cclib 1.x, 'energies' are actually expected to be cm-1. In 2.x, this will change to Hartree.
-        attributes["etenergies"] = list(itertools.chain(*(convertor(etmethod.e, "hartree", "wavenumber") for etmethod in et)))
+        attributes["etenergies"] = list(
+            itertools.chain(*(convertor(etmethod.e, "hartree", "wavenumber") for etmethod in et))
+        )
         attributes["etoscs"] = list(
             itertools.chain(*(etmethod.oscillator_strength(gauge="length") for etmethod in et))
         )  # or do we want velocity?
@@ -557,11 +573,9 @@ def cclibfrommethods(
             # Assuming x are excitations, y are de-excitations.
             # y is ignored for now.
             x, y = list(itertools.chain(*(etmethod.xy for etmethod in et)))[index]
-            
+
             def norm_xy(x, y):
-                norm_factor = 1.0 / np.sqrt(
-                    np.linalg.norm(x) ** 2 - np.linalg.norm(y) ** 2
-                )
+                norm_factor = 1.0 / np.sqrt(np.linalg.norm(x) ** 2 - np.linalg.norm(y) ** 2)
                 return (x * norm_factor, y * norm_factor)
 
             if not scf.istype("UHF"):
@@ -607,18 +621,18 @@ def cclibfrommethods(
         # Dimensions appear to be natoms x natoms x 3 x 3
         #
         # Units may also be mismatched.
-        #attributes["hessian"] = hess.de.transpose(0,2,1,3).reshape(attributes["natom"], *3, attributes["natom"]*3)
+        # attributes["hessian"] = hess.de.transpose(0,2,1,3).reshape(attributes["natom"], *3, attributes["natom"]*3)
 
     if freq:
         # Freq data, a dict with 'freq_error', 'freq_au', 'freq_wavenumber', 'norm_mode', 'reduced_mass',
         # 'vib_temperature', 'force_const_au', 'force_const_dyne'
         attributes["vibfreqs"] = freq.vib_dict["freq_wavenumber"]
-        
+
         # Convert imaginary frequencies to negative ones.
         # Adapted from https://pyscf.org/_modules/pyscf/hessian/thermo.html
         if np.iscomplexobj(attributes["vibfreqs"]):
             attributes["vibfreqs"] = attributes["vibfreqs"].real - abs(attributes["vibfreqs"].imag)
-        
+
         # TODO: Check these units.
         attributes["vibfconsts"] = freq.vib_dict["force_const_dyne"]
         attributes["vibrmasses"] = freq.vib_dict["reduced_mass"]
