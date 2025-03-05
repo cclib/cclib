@@ -703,6 +703,18 @@ class OrcaSPTest(GenericSPTest):
     num_scf_criteria = 3
 
 
+class OrcaHFSPTest(OrcaSPTest, GenericHFSPTest):
+    """Customized restricted single point unittest"""
+
+    def testmetadata_input_file(self, data) -> None:
+        """Does metadata have expected keys and values?"""
+        assert "input_file_contents" in data.metadata
+        # TODO make input file names consistent where possible, though some
+        # programs do not allow arbitrary file extensions; for example, DALTON
+        # must end in `dal`.
+        assert "dvb_sp_hf.in" in data.metadata["input_file_name"]
+
+
 class NBOSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
 
@@ -886,6 +898,14 @@ class ORCAPerformanceMetadataTest:
     def testmetadata_memory_used(self, data) -> None:
         """Does metadata have the expected amount of memory?"""
         assert data.metadata["memory_used"] == 463000000
+
+
+class ORCA6PerformanceMetadataTest(ORCAPerformanceMetadataTest):
+    """Check we can parse CPU/memory metadata."""
+
+    def testmetadata_memory_used(self, data) -> None:
+        """Does metadata have the expected amount of memory?"""
+        assert data.metadata["memory_used"] == 22_800_000
 
 
 class TurbomolePerformanceMetadataTest:
