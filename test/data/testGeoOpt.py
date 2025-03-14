@@ -139,6 +139,7 @@ class GenericGeoOptTest:
         assert count_scfvalues == count_geovalues
 
     @skipForParser("MOPAC", "Not implemented.")
+    @skipForParser("PySCF", "not implemented yet")
     @skipForParser("xTB", "not implemented yet")
     def testgeotargets(self, data) -> None:
         """Do the geo targets have the right dimensions?"""
@@ -147,6 +148,7 @@ class GenericGeoOptTest:
         assert dim_geotargets == dim_geovalues
 
     @skipForParser("MOPAC", "Not implemented.")
+    @skipForParser("PySCF", "not implemented yet")
     @skipForParser("xTB", "not implemented yet")
     def testoptdone(self, data) -> None:
         """Has the geometry converged and set optdone to True?"""
@@ -155,6 +157,7 @@ class GenericGeoOptTest:
         assert all(isinstance(val, int) for val in data.optdone)
 
     @skipForParser("MOPAC", "Not implemented.")
+    @skipForParser("PySCF", "geotargets not implemented yet")
     @skipForParser("xTB", "not implemented yet")
     def testgeoconverged(self, data) -> None:
         """Has the geometry converged and set optdone to True?"""
@@ -213,6 +216,7 @@ class GenericGeoOptTest:
     @skipForParser("Jaguar", "Not implemented.")
     @skipForParser("MOPAC", "Not implemented.")
     @skipForParser("NWChem", "Not implemented.")
+    @skipForParser("PySCF", "Not implemented.")
     @skipForParser("xTB", "not implemented yet")
     def testgradsdim(self, data) -> None:
         """Do the grads have the right dimensions?"""

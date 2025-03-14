@@ -8,6 +8,8 @@
 from skip import skipForLogfile, skipForParser
 
 
+# The Gaussian log files for this test are a normal restricted calculation,
+# is this class misnamed?
 class GenericTDunTest:
     """Generic time-dependent unrestricted HF/DFT unittest"""
 
@@ -28,6 +30,7 @@ class GenericTDunTest:
         assert len(data.etoscs) == self.number
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
+    @skipForParser("PySCF", "etrotats are not yet implemented")
     @skipForLogfile(
         "Turbomole/basicTurbomole7.4/CO_cc2_TD",
         "Rotatory strengths are not currently available for ricc2",
@@ -57,6 +60,12 @@ class GenericTDunTest:
 
 
 class TurbomoleTDunTest(GenericTDunTest):
+    """Customized time-dependent unrestricted HF/DFT unittest"""
+
+    number = 10
+
+
+class PySCFTDunTest(GenericTDunTest):
     """Customized time-dependent unrestricted HF/DFT unittest"""
 
     number = 10
