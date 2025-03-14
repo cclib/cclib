@@ -1793,6 +1793,8 @@ def testNWChem_NWChem6_8_526_out(logfile):
     assert not hasattr(logfile.data, "scftargets")
     assert not hasattr(logfile.data, "scfvalues")
 
+    assert logfile.data.atomcharges["mulliken"][0] == pytest.approx(-0.13, abs=1.0e-4)
+
     assert logfile.data.metadata["legacy_package_version"] == "6.8.1"
     assert logfile.data.metadata["package_version"] == "6.8.1+g08bf49b"
     assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)

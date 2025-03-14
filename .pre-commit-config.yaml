@@ -137,11 +137,11 @@ repos:
       - id: pyupgrade
         args: [--py37-plus]
   - repo: https://github.com/PyCQA/isort
-    rev: "6.0.0"
+    rev: "6.0.1"
     hooks:
       - id: isort
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.9.4
+    rev: v0.11.0
     hooks:
       - id: ruff-format
       - id: ruff
