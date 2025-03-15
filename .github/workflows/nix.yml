@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Install Nix on the runner
-      - uses: cachix/install-nix-action@91a071959513ca103b54280ac0bef5b825791d4d # v31
+      - uses: cachix/install-nix-action@02a151ada4993995686f9ed4f1be7cfbb229e56f # v31
         with:
           nix_path: nixpkgs=channel:nixos-unstable
       # Pull from the cachix cache
