@@ -31,10 +31,12 @@ class GenericUnrelaxedScanTest:
         """extra indices"""
         return 0
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Jaguar", "Not implemented")
     def testscannames(self, data) -> None:
         assert isinstance(data.scannames, list)
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("ORCA", "Not implemented")
     @skipForParser("Jaguar", "Not implemented")
     def testscanenergies(self, data) -> None:
@@ -45,6 +47,7 @@ class GenericUnrelaxedScanTest:
             numpy.array(data.scanenergies), cclib.parser.utils.convertor(-378, "hartree", "eV")
         )
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("ORCA", "Not implemented")
     @skipForParser("Jaguar", "Not implemented")
     def testscanparm(self, data) -> None:
@@ -59,12 +62,14 @@ class GenericUnrelaxedScanTest:
 class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
     """Generic relaxed potential energy surface scan unittest."""
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     def testnumindices(self, data, extra) -> None:
         """Do the number of indices match number of scan points."""
         assert len(data.optdone) == 12 + extra
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Jaguar", "Does not work as expected")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("ORCA", "Does not work as expected")
@@ -77,6 +82,7 @@ class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
         geovalues = data.geovalues[temp]
         numpy.testing.assert_array_equal(geovalues, geovalues_from_index)
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Jaguar", "Not implemented")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("ORCA", "Not implemented")
@@ -92,10 +98,12 @@ class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
             if idone != len(data.optstatus) - 1:
                 assert is_optnew(data.optstatus[idone + 1])
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Jaguar", "Not implemented")
     def testscannames(self, data) -> None:
         assert isinstance(data.scannames, list)
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Jaguar", "Not implemented")
     @skipForParser("ORCA", "Not implemented")
     def testscanparm(self, data) -> None:
