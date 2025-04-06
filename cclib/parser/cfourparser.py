@@ -315,6 +315,7 @@ class CFOUR(logfileparser.Logfile):
         if ("NUCLEAR COORDINATES (IN A.U.) ARE :" in line) and self.only_one_atom:
             line = next(inputfile)
             line = next(inputfile)
+            tokens = line.strip().split()
             self.set_attribute("atomic_symbols", [tokens[0]])
             self.set_attribute("atomcoords",[[float(tokens[2]),float(tokens[3]),float(tokens[4])]])
         # get the coordinates at each step in a geometry optimization
