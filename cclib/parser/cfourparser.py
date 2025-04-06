@@ -72,78 +72,72 @@ class CFOUR(logfileparser.Logfile):
         self.set_attribute("first_coord_block", True)
         # set the list of scf energies to []
         self.set_attribute("first_scfenergies", True)
-        # set mo energies list to []
-        self.set_attribute("moenergies", [])
-        # set mo symmetries list to []
-        self.set_attribute("mosyms", [])
         # set to True so that alpha MOs are parsed first
         self.set_attribute("alpha_mos_to_parse", True)
         # set temp alpha mo coeffs to []
         self.set_attribute("temp_alpha_mocoeffs", [])
         # set temp beta mo coeffs to []
         self.set_attribute("temp_beta_mocoeffs", [])
-        # set mo coeffs to []
-        self.set_attribute("mocoeffs", [])
         # should mo coeffs be reset the next time an mo is parsed
         self.set_attribute("mocoeffs_should_be_reset", True)
         # set to True so that the first time parsing mo coeffs it also parses ao names
         self.set_attribute("parse_aonames", True)
-        # set cc energies to []
-        self.set_attribute("ccenergies", [])
+        # set to True so it ccenegies are initialized correctly
+        self.set_attribute("first_ccenergies", True)
         # dict of ECP labels
         self.set_attribute("ecp_labels", {})
         # core electron dict
         self.set_attribute("core_electron_dict", {})
-        # set excitation energies to []
-        self.set_attribute("etenergies", [])
-        # set etoscs to []
-        self.set_attribute("etoscs", [])
-        # set etsecs to []
-        self.set_attribute("etsecs", [])
-        # set etsyms to []
-        self.set_attribute("etsyms", [])
+        # set to True so etenergies, etsecs, and etsyms are initialized correctly
+        self.set_attribute("first_etenergies", True)
+        # set True so etoscs is initialized correctly
+        self.set_attribute("first_etoscs", True)
         # set sym numbering to {}
         self.set_attribute("sym_numbering", {})
         # set current symmetry to "0"
         self.set_attribute("curr_sym", "0")
-        # set success to False
-        self.metadata["success"]=False
+        # set to True so to indicate no time was recorded
+        self.set_attribute("no_time", True)
 
     def after_parsing(self):
-        # change atomic coordinates to a numpy array
-        self.atomcoords = np.array(self.atomcoords)
-        # change scf energies to a numpy array
-        self.scfenergies = np.array(self.scfenergies)
+        # set metadata "success" to False if no time was recorded
+        if self.no_time:
+            self.metadata["success"] = False
         # get the number of atoms
-        if len(self.atomcoords) >= 1:
-            self.set_attribute("natom", len(self.atomnos))
+        if hasattr(self,"atomcoords"):
+            if len(self.atomcoords) >= 1:
+                self.set_attribute("natom", len(self.atomnos))
         # get the number of atomic orbitals in the basis
         if hasattr(self, "aonames"):
             self.set_attribute("nbasis", len(self.aonames))
         # get the number of molecular orbitals
-        if len(self.moenergies) >= 1:
-            self.set_attribute("nmo", len(self.moenergies[0]))
+        if hasattr(self,"moenergies"):
+            if len(self.moenergies) >= 1:
+                self.set_attribute("nmo", len(self.moenergies[0]))
         # get core electrons
         for i in self.ecp_labels.keys():
             if i in self.core_electron_dict.keys():
                 for j in self.ecp_labels[i]:
                     self.coreelectrons[j] = self.core_electron_dict[i]
         # sort etenergies, etoscs, etsecs, and etsyms
-        sort_inds=np.argsort(self.etenergies)
-        temp_etenergies=[]
-        temp_etoscs=[]
-        temp_etsecs=[]
-        temp_etsyms=[]
-        for i in sort_inds:
-            temp_etenergies.append(self.etenergies[i])
-            if self.estate_prop_on:
-                temp_etoscs.append(self.etoscs[i])
-            temp_etsecs.append(self.etsecs[i])
-            temp_etsyms.append(self.etsyms[i])
-        self.etenergies=temp_etenergies
-        self.etoscs=temp_etoscs
-        self.etsecs=temp_etsecs
-        self.etsyms=temp_etsyms
+        if hasattr(self,"etenergies"):
+            sort_inds = np.argsort(self.etenergies)
+            temp_etenergies = []
+            temp_etoscs = []
+            temp_etsecs = []
+            temp_etsyms = []
+            for i in sort_inds:
+                temp_etenergies.append(self.etenergies[i])
+                if hasattr(self,"etoscs"):
+                    if self.estate_prop_on:
+                        temp_etoscs.append(self.etoscs[i])
+                temp_etsecs.append(self.etsecs[i])
+                temp_etsyms.append(self.etsyms[i])
+            self.etenergies = temp_etenergies
+            if hasattr(self,"etoscs"):
+                self.etoscs = temp_etoscs
+            self.etsecs = temp_etsecs
+            self.etsyms = temp_etsyms
 
     def extract(self, inputfile, line):
         tokens=line.strip().split()
@@ -181,6 +175,7 @@ class CFOUR(logfileparser.Logfile):
             self.metadata["symmetry_used"] = tokens[5].lower()
         # get success, cpu time, and wall time
         if "@CHECKOUT-I, Total execution time (CPU/WALL):" in line:
+            self.no_time=False
             self.metadata["success"] = True
             self.metadata["cpu_time"] = [timedelta(seconds=float(tokens[5][:-1]))]
             self.metadata["wall_time"] = [timedelta(seconds=float(tokens[6]))]
@@ -198,6 +193,9 @@ class CFOUR(logfileparser.Logfile):
             self.set_attribute("mult", int(tokens[2]))
         # get coupled cluster energy
         if "A miracle has come to pass. The CC iterations have converged." in line:
+            if self.first_ccenergies:
+                self.set_attribute("ccenergies",[])
+                self.first_ccenergies = False
             cc_lines = []
             while "@CHECKOUT-I," not in line:
                 if not line.strip()  == "":
@@ -390,9 +388,9 @@ class CFOUR(logfileparser.Logfile):
             line = next(inputfile)
             line = next(inputfile)
             line = next(inputfile)
-            tokens=line.strip().split()
-            self.moenergies = []
-            self.mosyms = []
+            tokens = line.strip().split()
+            self.set_attribute("moenergies", [])
+            self.set_attribute("mosyms", [])
             alpha_moenergies = []
             alpha_mosyms = []
             while not (
@@ -448,7 +446,7 @@ class CFOUR(logfileparser.Logfile):
                     in line
                 ):
                     if self.mocoeffs_should_be_reset:
-                        self.mocoeffs = []
+                        self.set_attribute("mocoeffs", [])
                         self.mocoeffs_should_be_reset = False
                     line = next(inputfile)
                     tokens=line.strip().split()
@@ -531,6 +529,11 @@ class CFOUR(logfileparser.Logfile):
             self.curr_sym = tokens[3][:-1]
         # get excitation energies
         if "Converged eigenvalue:" in line:
+            if self.first_etenergies:
+                self.set_attribute("etenergies", [])
+                self.set_attribute("etsecs", [])
+                self.set_attribute("etsyms", [])
+                self.first_etenergies = False
             temp_etenergy = float(tokens[2])
             if self.estate_prop_on:
                 num_dash_lines=0
@@ -632,4 +635,7 @@ class CFOUR(logfileparser.Logfile):
                 self.etsyms.append('Singlet-{}'.format(self.sym_numbering[self.curr_sym]))
         # get etoscs
         if "Norm of oscillator strength :" in line:
+            if self.first_etoscs:
+                self.set_attribute("etoscs", [])
+                self.first_etoscs = False
             self.etoscs.append(float(tokens[-1]))
