@@ -314,7 +314,7 @@ class CFOUR(logfileparser.Logfile):
             tokens = line.strip().split()
             self.set_attribute("atomic_symbols", [tokens[0]])
             self.set_attribute(
-                "atomcoords", [[float(tokens[2]), float(tokens[3]), float(tokens[4])]]
+                "atomcoords", [[[float(tokens[2]), float(tokens[3]), float(tokens[4])]]]
             )
         # get the coordinates at each step in a geometry optimization
         # if this is the first time parsing a block of coordinates also get the atomic numbers
