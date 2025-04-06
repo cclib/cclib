@@ -104,14 +104,14 @@ class CFOUR(logfileparser.Logfile):
         if self.no_time:
             self.metadata["success"] = False
         # get the number of atoms
-        if hasattr(self,"atomcoords"):
+        if hasattr(self, "atomcoords"):
             if len(self.atomcoords) >= 1:
                 self.set_attribute("natom", len(self.atomnos))
         # get the number of atomic orbitals in the basis
         if hasattr(self, "aonames"):
             self.set_attribute("nbasis", len(self.aonames))
         # get the number of molecular orbitals
-        if hasattr(self,"moenergies"):
+        if hasattr(self, "moenergies"):
             if len(self.moenergies) >= 1:
                 self.set_attribute("nmo", len(self.moenergies[0]))
         # get core electrons
@@ -120,7 +120,7 @@ class CFOUR(logfileparser.Logfile):
                 for j in self.ecp_labels[i]:
                     self.coreelectrons[j] = self.core_electron_dict[i]
         # sort etenergies, etoscs, etsecs, and etsyms
-        if hasattr(self,"etenergies"):
+        if hasattr(self, "etenergies"):
             sort_inds = np.argsort(self.etenergies)
             temp_etenergies = []
             temp_etoscs = []
@@ -128,13 +128,13 @@ class CFOUR(logfileparser.Logfile):
             temp_etsyms = []
             for i in sort_inds:
                 temp_etenergies.append(self.etenergies[i])
-                if hasattr(self,"etoscs"):
+                if hasattr(self, "etoscs"):
                     if self.estate_prop_on:
                         temp_etoscs.append(self.etoscs[i])
                 temp_etsecs.append(self.etsecs[i])
                 temp_etsyms.append(self.etsyms[i])
             self.etenergies = temp_etenergies
-            if hasattr(self,"etoscs"):
+            if hasattr(self, "etoscs"):
                 self.etoscs = temp_etoscs
             self.etsecs = temp_etsecs
             self.etsyms = temp_etsyms
@@ -173,7 +173,7 @@ class CFOUR(logfileparser.Logfile):
             self.metadata["symmetry_used"] = tokens[5].lower()
         # get success, cpu time, and wall time
         if "@CHECKOUT-I, Total execution time (CPU/WALL):" in line:
-            self.no_time=False
+            self.no_time = False
             self.metadata["success"] = True
             self.metadata["cpu_time"] = [timedelta(seconds=float(tokens[5][:-1]))]
             self.metadata["wall_time"] = [timedelta(seconds=float(tokens[6]))]
@@ -192,7 +192,7 @@ class CFOUR(logfileparser.Logfile):
         # get coupled cluster energy
         if "A miracle has come to pass. The CC iterations have converged." in line:
             if self.first_ccenergies:
-                self.set_attribute("ccenergies",[])
+                self.set_attribute("ccenergies", [])
                 self.first_ccenergies = False
             cc_lines = []
             while "@CHECKOUT-I," not in line:
