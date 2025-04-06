@@ -424,7 +424,7 @@ class CFOUR(logfileparser.Logfile):
             while not (("VSCF finished." in line) or ("SCF failed to converge in" in line)):
                 if ("+++++" in line) or (line.strip() == ""):
                     if "+++++" in line:
-                        self.homos[1] = int(last_line.strip().split[0]) - 1
+                        self.homos[1] = int(last_line.strip().split()[0]) - 1
                     line = next(inputfile)
                     tokens=line.strip().split()
                     continue
