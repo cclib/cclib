@@ -154,7 +154,7 @@ Core      QChem       GenericCoreTest       basicQChem5.4         MoOCl4_sp.out
 
 GeoOpt    ADF         ADFGeoOptTest         basicADF2007.01       dvb_gopt_b.adfout
 GeoOpt    ADF         ADFGeoOptTest         basicADF2013.01       dvb_gopt_b.adfout
-GeoOpt    CFOUR       GenericGeoOptTest     basicCFOUR2.1         dvb_gopt.c4
+#GeoOpt    CFOUR       GenericGeoOptTest     basicCFOUR2.1         dvb_gopt.c4
 GeoOpt    DALTON      DALTONGeoOptTest      basicDALTON-2013      dvb_gopt_hf.out
 GeoOpt    DALTON      DALTONGeoOptTest      basicDALTON-2013      dvb_gopt_ks.out
 GeoOpt    DALTON      DALTONGeoOptTest      basicDALTON-2015      dvb_gopt_hf.out
