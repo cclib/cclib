@@ -180,9 +180,9 @@ class CFOUR(logfileparser.Logfile):
             self.set_attribute("geotargets",[np.power(10.,-int(tokens[2]))])
         if ("Minimum force:" in line) and ("RMS force:" in line):
             if self.first_geovalues:
-                self.set_attribute("geovalues",[])
-                self.first_geovalues=False
-            self.geovalues.append(float(tokens[6]))
+                self.set_attribute("geovalues", [])
+                self.first_geovalues = False
+            self.geovalues.append([float(tokens[6])])
         # get full point group
         if "The full molecular point group is" in line:
             self.metadata["symmetry_detected"] = tokens[6].lower()
