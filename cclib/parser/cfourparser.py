@@ -170,10 +170,12 @@ class CFOUR(logfileparser.Logfile):
                     self.set_attribute("homos", np.array([0]))
                 self.metadata["unrestricted"] = False
         if "SCF_CONV             ISCFCV" in line:
-            if tokens[3]=="***":
-                self.set_attribute("scf_target_value",np.power(10.,int(tokens[2].split("D")[1])))
+            if tokens[3] == "***":
+                self.set_attribute("scf_target_value", float(np.power(10.0, int(tokens[2].split("D")[1]))))
             else:
-                self.set_attribute("scf_target_value",np.power(10.,int(tokens[2][-1]+tokens[3])))
+                self.set_attribute(
+                    "scf_target_value", float(np.power(10.0, int(tokens[2][-1] + tokens[3])))
+                )
         if "GEO_CONV             ICONTL" in line:
             self.set_attribute("geotargets",[np.power(10.,-int(tokens[2]))])
         if ("Minimum force:" in line) and ("RMS force:" in line):
@@ -403,15 +405,23 @@ class CFOUR(logfileparser.Logfile):
                 line = next(inputfile)
                 tokens = line.strip().split()
                 if "current occupation vector" in line:
-                    last_tokens=last_line.strip().split()
-                    if last_tokens[0]=="0":
-                        self.scftargets.append([])
+                    last_tokens = last_line.strip().split()
+                    if last_tokens[0] == "0":
                         self.scfvalues.append([])
-                    self.scftargets[-1].append(self.scf_target_value)
-                    self.scfvalues[-1].append([float(last_tokens[2].split("D")[0])*np.power(10.,int(last_tokens[2].split("D")[1]))])
+                    self.scfvalues[-1].append(
+                        [
+                            float(last_tokens[2].split("D")[0])
+                            * float(np.power(10.0, int(last_tokens[2].split("D")[1])))
+                        ]
+                    )
                 if "E(SCF)=" in line:
-                    self.scftargets[-1].append(self.scf_target_value)
-                    self.scfvalues[-1].append([float(tokens[2].split("D")[0])*np.power(10.,int(tokens[2].split("D")[1]))])
+                    self.scftargets.append([self.scf_target_value])
+                    self.scfvalues[-1].append(
+                        [
+                            float(tokens[2].split("D")[0])
+                            * float(np.power(10.0, int(tokens[2].split("D")[1])))
+                        ]
+                    )
                     self.scfenergies.append(float(tokens[1]))
                     no_scf_energy_yet=False
         # get alpha mo energies of the last ran scf method
