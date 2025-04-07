@@ -182,7 +182,7 @@ class CFOUR(logfileparser.Logfile):
             if self.first_geovalues:
                 self.set_attribute("geovalues", [])
                 self.first_geovalues = False
-            self.geovalues.append(float(tokens[6]))
+            self.geovalues.append([float(tokens[6])])
         # get full point group
         if "The full molecular point group is" in line:
             self.metadata["symmetry_detected"] = tokens[6].lower()
