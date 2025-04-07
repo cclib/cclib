@@ -169,7 +169,9 @@ class CFOUR(logfileparser.Logfile):
                 self.metadata["unrestricted"] = False
         if "SCF_CONV             ISCFCV" in line:
             if tokens[3] == "***":
-                self.set_attribute("scf_target_value", float(np.power(10.0, int(tokens[2].split("D")[1]))))
+                self.set_attribute(
+                    "scf_target_value", float(np.power(10.0, int(tokens[2].split("D")[1])))
+                )
             else:
                 self.set_attribute(
                     "scf_target_value", float(np.power(10.0, int(tokens[2][-1] + tokens[3])))
