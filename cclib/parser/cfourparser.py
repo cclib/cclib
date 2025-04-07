@@ -99,7 +99,7 @@ class CFOUR(logfileparser.Logfile):
         # set to True so to indicate no time was recorded
         self.set_attribute("no_time", True)
         # set to True so geovalues is initialized correctly
-        self.set_attribute("first_geovalues",True)
+        self.set_attribute("first_geovalues", True)
 
     def after_parsing(self):
         # set metadata "success" to False if no time was recorded
@@ -168,16 +168,18 @@ class CFOUR(logfileparser.Logfile):
                     self.set_attribute("homos", np.array([0]))
                 self.metadata["unrestricted"] = False
         if "SCF_CONV             ISCFCV" in line:
-            if tokens[3]=="***":
-                self.set_attribute("scf_target_value",np.power(10.,int(tokens[2].split("D")[1])))
+            if tokens[3] == "***":
+                self.set_attribute("scf_target_value", np.power(10.0, int(tokens[2].split("D")[1])))
             else:
-                self.set_attribute("scf_target_value",np.power(10.,int(tokens[2][-1]+tokens[3])))
+                self.set_attribute(
+                    "scf_target_value", np.power(10.0, int(tokens[2][-1] + tokens[3]))
+                )
         if "GEO_CONV             ICONTL" in line:
-            self.set_attribute("geotargets",[np.power(10.,-int(tokens[2]))])
+            self.set_attribute("geotargets", [np.power(10.0, -int(tokens[2]))])
         if ("Minimum force:" in line) and ("RMS force:" in line):
             if self.first_geovalues:
-                self.set_attribute("geovalues",[])
-                self.first_geovalues=False
+                self.set_attribute("geovalues", [])
+                self.first_geovalues = False
             self.geovalues.append(float(tokens[6]))
         # get full point group
         if "The full molecular point group is" in line:
@@ -386,12 +388,12 @@ class CFOUR(logfileparser.Logfile):
                 line = next(inputfile)
                 tokens = line.strip().split()
             self.core_electron_dict[ce_index] = int(tokens[2])
-        # get scfenergies, scftargets, and scfvalues at each step in a geometry optimization 
+        # get scfenergies, scftargets, and scfvalues at each step in a geometry optimization
         if "Iteration         Total Energy            Largest Density Difference" in line:
             if self.first_scfenergies:
                 self.set_attribute("scfenergies", [])
-                self.set_attribute("scftargets",[])
-                self.set_attribute("scfvalues",[])
+                self.set_attribute("scftargets", [])
+                self.set_attribute("scfvalues", [])
                 self.first_scfenergies = False
             no_scf_energy_yet = True
             while no_scf_energy_yet:
@@ -399,17 +401,27 @@ class CFOUR(logfileparser.Logfile):
                 line = next(inputfile)
                 tokens = line.strip().split()
                 if "current occupation vector" in line:
-                    last_tokens=last_line.strip().split()
-                    if last_tokens[0]=="0":
+                    last_tokens = last_line.strip().split()
+                    if last_tokens[0] == "0":
                         self.scftargets.append([])
                         self.scfvalues.append([])
                     self.scftargets[-1].append(self.scf_target_value)
-                    self.scfvalues[-1].append([float(last_tokens[2].split("D")[0])*np.power(10.,int(last_tokens[2].split("D")[1]))])
+                    self.scfvalues[-1].append(
+                        [
+                            float(last_tokens[2].split("D")[0])
+                            * np.power(10.0, int(last_tokens[2].split("D")[1]))
+                        ]
+                    )
                 if "E(SCF)=" in line:
                     self.scftargets[-1].append(self.scf_target_value)
-                    self.scfvalues[-1].append([float(tokens[2].split("D")[0])*np.power(10.,int(tokens[2].split("D")[1]))])
+                    self.scfvalues[-1].append(
+                        [
+                            float(tokens[2].split("D")[0])
+                            * np.power(10.0, int(tokens[2].split("D")[1]))
+                        ]
+                    )
                     self.scfenergies.append(float(tokens[1]))
-                    no_scf_energy_yet=False
+                    no_scf_energy_yet = False
         # get alpha mo energies of the last ran scf method
         if "ORBITAL EIGENVALUES (ALPHA)  (1H = 27.2113834 eV)" in line:
             line = next(inputfile)
