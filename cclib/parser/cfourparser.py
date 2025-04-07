@@ -106,10 +106,10 @@ class CFOUR(logfileparser.Logfile):
         if self.no_time:
             self.metadata["success"] = False
         # get optdone
-        if hasattr(self,"geovalues") and hasattr(self,"geotargets"):
-            self.set_attribute("optdone",[])
+        if hasattr(self, "geovalues") and hasattr(self, "geotargets"):
+            self.set_attribute("optdone", [])
             for i in range(len(self.geovalues)):
-                if self.geovalues[i][0]<self.geotargets[0]:
+                if self.geovalues[i][0] < self.geotargets[0]:
                     self.optdone.append(i)
         # get the number of atoms
         if hasattr(self, "atomcoords"):
