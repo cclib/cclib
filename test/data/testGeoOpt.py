@@ -148,7 +148,6 @@ class GenericGeoOptTest:
         dim_geovalues = (len(data.geovalues[0]),)
         assert dim_geotargets == dim_geovalues
 
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("MOPAC", "Not implemented.")
     @skipForParser("PySCF", "not implemented yet")
     @skipForParser("xTB", "not implemented yet")

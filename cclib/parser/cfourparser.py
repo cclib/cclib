@@ -105,6 +105,12 @@ class CFOUR(logfileparser.Logfile):
         # set metadata "success" to False if no time was recorded
         if self.no_time:
             self.metadata["success"] = False
+        # get optdone
+        if hasattr(self,"geovalues") and hasattr(self,"geotargets"):
+            self.set_attribute("optdone",[])
+            for i in range(len(self.geovalues)):
+                if self.geovalues[i][0]<self.geotargets[0]:
+                    self.optdone.append(i)
         # get the number of atoms
         if hasattr(self,"atomcoords"):
             if len(self.atomcoords) >= 1:
