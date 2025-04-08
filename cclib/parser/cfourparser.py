@@ -105,7 +105,6 @@ class CFOUR(logfileparser.Logfile):
         # set to True so vibdisps is initialized correctly
         self.set_attribute("first_vibdisps", True)
 
-
     def after_parsing(self):
         # set metadata "success" to False if no time was recorded
         if self.no_time:
@@ -663,7 +662,7 @@ class CFOUR(logfileparser.Logfile):
             self.etoscs.append(float(tokens[-1]))
         # zero point vibrational energy correction
         if "Zero-point energy:" in line:
-            self.set_attribute("zpve",float(tokens[5])/2625.5)
+            self.set_attribute("zpve", float(tokens[5]) / 2625.5)
         # get vibrational data
         if "Normal Coordinate Analysis" in line:
             line = next(inputfile)
@@ -675,11 +674,11 @@ class CFOUR(logfileparser.Logfile):
             line = next(inputfile)
             tokens = line.strip().split()
             if self.first_vibfreqs:
-                self.set_attribute("vibfreqs",[])
-                self.set_attribute("vibirs",[])
-                self.set_attribute("vibsyms",[])
-                self.first_vibfreqs=False
-            while not ("----------------------------------------------------------------" in line):
+                self.set_attribute("vibfreqs", [])
+                self.set_attribute("vibirs", [])
+                self.set_attribute("vibsyms", [])
+                self.first_vibfreqs = False
+            while "----------------------------------------------------------------" not in line:
                 if "VIBRATION" in line:
                     self.vibfreqs.append(float(tokens[1]))
                     self.vibirs.append(float(tokens[2]))
@@ -688,8 +687,8 @@ class CFOUR(logfileparser.Logfile):
                 tokens = line.strip().split()
         if "Normal Coordinates" in line:
             if self.first_vibdisps:
-                self.set_attribute("vibdisps",[])
-                self.first_vibdisps=False
+                self.set_attribute("vibdisps", [])
+                self.first_vibdisps = False
             while True:
                 if "VIBRATION" in line:
                     num_vibs_this_line = len(tokens)
@@ -697,30 +696,30 @@ class CFOUR(logfileparser.Logfile):
                         self.vibdisps.append([])
                     line = next(inputfile)
                     tokens = line.strip().split()
-                    while (not ("Gradient vector in normal coordinate representation" in line)) and (not (line.strip()=="")):
-                        test_tokens=tokens[1].replace("-"," ").strip().split()
-                        if len(test_tokens)==2:
-                            token1=test_tokens[0]
-                            token2="-"+test_tokens[1]
-                            if tokens[1][0]=="-":
-                                token1="-"+token1
+                    while (
+                        "Gradient vector in normal coordinate representation" not in line
+                    ) and (not (line.strip() == "")):
+                        test_tokens = tokens[1].replace("-", " ").strip().split()
+                        if len(test_tokens) == 2:
+                            token1 = test_tokens[0]
+                            token2 = "-" + test_tokens[1]
+                            if tokens[1][0] == "-":
+                                token1 = "-" + token1
                             tokens.remove(tokens[1])
-                            tokens.insert(1,token2)
-                            tokens.insert(1,token1)
+                            tokens.insert(1, token2)
+                            tokens.insert(1, token1)
                         print(tokens)
                         for i in range(num_vibs_this_line):
-                            self.vibdisps[-(i+1)].append([float(tokens[-((3*i)+3)]),float(tokens[-((3*i)+2)]),float(tokens[-((3*i)+1)])])
+                            self.vibdisps[-(i + 1)].append(
+                                [
+                                    float(tokens[-((3 * i) + 3)]),
+                                    float(tokens[-((3 * i) + 2)]),
+                                    float(tokens[-((3 * i) + 1)]),
+                                ]
+                            )
                         line = next(inputfile)
                         tokens = line.strip().split()
-                    if ("Gradient vector in normal coordinate representation" in line):
+                    if "Gradient vector in normal coordinate representation" in line:
                         break
                 line = next(inputfile)
                 tokens = line.strip().split()
-
-
-
-
-
-
-
-
