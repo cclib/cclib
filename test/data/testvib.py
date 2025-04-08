@@ -48,7 +48,6 @@ class GenericIRTest:
         """Are basic attributes correct?"""
         assert data.natom == 20
 
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForLogfile("FChk/basicGaussian09", "not printed in older versions than 16")
     @skipForLogfile("FChk/basicQChem5.4", "not printed")
     @skipForParser("PySCF", "not implemented yet")
@@ -58,7 +57,6 @@ class GenericIRTest:
         assert len(data.vibfreqs) == numvib
         assert data.vibdisps.shape == (numvib, len(data.atomnos), 3)
 
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForLogfile("FChk/basicGaussian09", "not printed in older versions than 16")
     @skipForLogfile("FChk/basicQChem5.4", "not printed")
     def testlengths(self, data, numvib) -> None:
@@ -73,14 +71,12 @@ class GenericIRTest:
         if hasattr(data, "vibrmasses"):
             assert len(data.vibrmasses) == numvib
 
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForLogfile("FChk/basicGaussian09", "not printed in older versions than 16")
     @skipForLogfile("FChk/basicQChem5.4", "not printed")
     def testfreqval(self, data) -> None:
         """Does the highest frequency value match?"""
         assert abs(max(data.vibfreqs) - self.highest_freq) < self.highest_freq_thresh
 
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForLogfile("FChk/basicGaussian09", "not printed in older versions than 16")
     @skipForLogfile("FChk/basicQChem5.4", "not printed")
     @skipForLogfile(
@@ -124,7 +120,6 @@ class GenericIRTest:
         """Is the maximum reduced mass 6.9 +/- 0.1 daltons?"""
         assert abs(max(data.vibrmasses) - self.max_reduced_mass) < 0.1
 
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("FChk", "not printed")
     @skipForParser("Psi3", "not implemented yet")
     @skipForParser("PySCF", "not implemented yet")
@@ -256,6 +251,12 @@ class ADFIRTest(GenericIRTest):
     zpve_thresh = 1.1e-3
     entropy_places = 4
 
+class CFOURIRTest(GenericIRTest):
+    """Customized vibrational frequency unittest"""
+
+    highest_freq = 3816.21
+    max_IR_intensity = 136.3592
+    zpve = 0.1935035993144163
 
 class FireflyIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""

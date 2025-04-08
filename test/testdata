@@ -466,6 +466,7 @@ TDun	  Turbomole   TurbomoleTDunTest     basicTurbomole7.4     CO_cc2_TD_un/basi
 
 vib       ADF         ADFIRTest             basicADF2007.01       dvb_ir.adfout
 vib       ADF         ADFIRTest             basicADF2013.01       dvb_ir.adfout
+vib       CFOUR       CFOURIRTest           basicCFOUR2.1         dvb_ir.c4
 vib       DALTON      GenericIRTest         basicDALTON-2013      dvb_ir.out
 vib       DALTON      GenericIRTest         basicDALTON-2015      dvb_ir.out
 vib       FChk        GaussianIRTest        basicGaussian09       dvb_ir.fchk
