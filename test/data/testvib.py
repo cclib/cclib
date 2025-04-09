@@ -440,6 +440,13 @@ class OrcaRamanTest(GenericRamanTest):
     max_raman_intensity = 1045
 
 
+class Orca6RamanTest(GenericRamanTest):
+    """Customized Raman unittest"""
+
+    # This value has changed again in Orca 6 for some reason...
+    max_raman_intensity = 1037
+
+
 class QChemRamanTest(GenericRamanTest):
     """Customized Raman unittest"""
 
