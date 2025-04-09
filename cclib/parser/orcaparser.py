@@ -2241,17 +2241,13 @@ Dispersion correction           -0.016199959
             if self.natom > 1:
                 all_vibdisps = numpy.zeros((3 * self.natom, self.natom, 3), "d")
 
-                self.skip_lines(
-                    inputfile, ["d", "b", "text", "text", "text", "b"]
-                )
+                self.skip_lines(inputfile, ["d", "b", "text", "text", "text", "b"])
 
                 line = next(inputfile)
 
                 if line[:12] == "Point group:":
                     # Orca 6 once again prints the point group (but only for analytical freqs).
-                    self.skip_lines(
-                        inputfile, ["b"]
-                    )
+                    self.skip_lines(inputfile, ["b"])
                     # And has a wider matrix.
                     matrix_columns = 10
                     pseudofile = chain([], inputfile)
