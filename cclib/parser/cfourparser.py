@@ -104,6 +104,9 @@ class CFOUR(logfileparser.Logfile):
         self.set_attribute("first_vibfreqs", True)
         # set to True so vibdisps is initialized correctly
         self.set_attribute("first_vibdisps", True)
+        # set to True so grads is initialized correctly
+        self.set_attribute("first_grads", True)
+
 
     def after_parsing(self):
         # set metadata "success" to False if no time was recorded
@@ -716,6 +719,7 @@ class CFOUR(logfileparser.Logfile):
                     self.vibsyms.append(self.normalisesym(tokens[0]))
                 line = next(inputfile)
                 tokens = line.strip().split()
+        # get vibrational displacements
         if "Normal Coordinates" in line:
             if self.first_vibdisps:
                 self.set_attribute("vibdisps",[])
@@ -746,11 +750,14 @@ class CFOUR(logfileparser.Logfile):
                         break
                 line = next(inputfile)
                 tokens = line.strip().split()
-
-
-
-
-
-
-
-
+        if "gradient from JOBARC" in line:
+            if self.first_grads:
+                self.set_attribute("grads",[])
+                self.first_grads=False
+            line = next(inputfile)
+            tokens = line.strip().split()
+            self.grads.append([])
+            while not ("Norm is" in line):
+                self.grads[-1].append([float(tokens[0]),float(tokens[1]),float(tokens[2])])
+                line = next(inputfile)
+                tokens = line.strip().split()

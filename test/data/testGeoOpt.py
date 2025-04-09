@@ -213,7 +213,6 @@ class GenericGeoOptTest:
             assert len(data.mocoeffs) == 1
 
     @skipForParser("ADF", "Not implemented.")
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "Not implemented.")
     @skipForParser("GAMESS", "Not implemented.")
     @skipForParser("GAMESSUK", "Not implemented.")
