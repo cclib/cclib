@@ -107,7 +107,6 @@ class CFOUR(logfileparser.Logfile):
         # set to True so grads is initialized correctly
         self.set_attribute("first_grads", True)
 
-
     def after_parsing(self):
         # set metadata "success" to False if no time was recorded
         if self.no_time:
@@ -700,9 +699,9 @@ class CFOUR(logfileparser.Logfile):
                         self.vibdisps.append([])
                     line = next(inputfile)
                     tokens = line.strip().split()
-                    while (
-                        "Gradient vector in normal coordinate representation" not in line
-                    ) and (not (line.strip() == "")):
+                    while ("Gradient vector in normal coordinate representation" not in line) and (
+                        not (line.strip() == "")
+                    ):
                         test_tokens = tokens[1].replace("-", " ").strip().split()
                         if len(test_tokens) == 2:
                             token1 = test_tokens[0]
@@ -729,13 +728,12 @@ class CFOUR(logfileparser.Logfile):
                 tokens = line.strip().split()
         if "gradient from JOBARC" in line:
             if self.first_grads:
-                self.set_attribute("grads",[])
-                self.first_grads=False
+                self.set_attribute("grads", [])
+                self.first_grads = False
             line = next(inputfile)
             tokens = line.strip().split()
             self.grads.append([])
-            while not ("Norm is" in line):
-                self.grads[-1].append([float(tokens[0]),float(tokens[1]),float(tokens[2])])
+            while "Norm is" not in line:
+                self.grads[-1].append([float(tokens[0]), float(tokens[1]), float(tokens[2])])
                 line = next(inputfile)
                 tokens = line.strip().split()
-
