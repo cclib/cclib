@@ -89,6 +89,7 @@ class GenericIRTest:
         assert abs(max(data.vibirs) - self.max_IR_intensity) < 10
 
     @skipForParser("ADF", "ADF cannot print force constants")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "DALTON cannot print force constants")
     @skipForParser("GAMESS", "GAMESS-US cannot print force constants")
     @skipForParser("GAMESSUK", "GAMESS-UK cannot print force constants")
@@ -105,6 +106,7 @@ class GenericIRTest:
         assert abs(max(data.vibfconsts) - self.max_force_constant) < self.force_constant_thresh
 
     @skipForParser("ADF", "ADF cannot print reduced masses")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "DALTON cannot print reduced masses")
     @skipForParser("GAMESSUK", "GAMESSUK cannot print reduced masses")
     @skipForParser("Molpro", "Molpro cannot print reduced masses")
@@ -124,6 +126,7 @@ class GenericIRTest:
         assert abs(data.zpve - self.zpve) < self.zpve_thresh
 
     @skipForParser("ADF", "not implemented yet")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("GAMESSUK", "not implemented yet")
     @skipForParser("Gaussian", "not implemented yet")
     @skipForParser("Jaguar", "not implemented yet")
@@ -143,6 +146,7 @@ class GenericIRTest:
     def testhessian_frequencies(self, data) -> None:
         """Do the frequencies from the Hessian match the printed frequencies?"""
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "not implemented yet")
     @skipForParser("FChk", "not printed")
     @skipForParser("Molpro", "not implemented yet")
@@ -151,6 +155,7 @@ class GenericIRTest:
         """Is the temperature 298.15 K?"""
         assert round(abs(298.15 - data.temperature), 7) == 0
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "not implemented yet")
     @skipForParser("FChk", "not printed")
     @skipForParser("Molpro", "not implemented yet")
@@ -161,6 +166,7 @@ class GenericIRTest:
         """Is the pressure 1 atm?"""
         assert round(abs(1 - data.pressure), 7) == 0
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "not implemented yet")
     @skipForParser("FChk", "not printed")
     @skipForParser("Jaguar", "not implemented yet")
@@ -172,6 +178,7 @@ class GenericIRTest:
         assert round(abs(self.entropy - data.entropy), self.entropy_places) == 0
 
     @skipForParser("ADF", "not implemented yet")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "not implemented yet")
     @skipForParser("FChk", "not printed")
     @skipForParser("GAMESSUK", "not implemented yet")
@@ -182,6 +189,7 @@ class GenericIRTest:
         assert round(abs(self.enthalpy - data.enthalpy), self.enthalpy_places) == 0
 
     @skipForParser("ADF", "not implemented yet")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "not implemented yet")
     @skipForParser("FChk", "not printed")
     @skipForParser("GAMESSUK", "not implemented yet")
@@ -192,6 +200,7 @@ class GenericIRTest:
         assert round(abs(self.freeenergy - data.freeenergy), self.freeenergy_places) == 0
 
     @skipForParser("ADF", "not implemented yet")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "not implemented yet")
     @skipForParser("FChk", "not printed")
     @skipForParser("GAMESSUK", "not implemented yet")
@@ -207,6 +216,7 @@ class GenericIRTest:
             == 0
         )
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("FChk", "not printed")
     @skipForParser("GAMESSUK", "not implemented yet")
     @skipForParser("Jaguar", "not implemented yet")
@@ -231,6 +241,14 @@ class ADFIRTest(GenericIRTest):
 
     zpve_thresh = 1.1e-3
     entropy_places = 4
+
+
+class CFOURIRTest(GenericIRTest):
+    """Customized vibrational frequency unittest"""
+
+    highest_freq = 3816.21
+    max_IR_intensity = 136.3592
+    zpve = 0.1935035993144163
 
 
 class FireflyIRTest(GenericIRTest):
