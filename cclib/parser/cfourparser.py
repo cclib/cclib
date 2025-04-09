@@ -742,12 +742,11 @@ class CFOUR(logfileparser.Logfile):
                 tokens = line.strip().split()
         if "Total MP2 energy" in line:
             if self.first_mpenergies:
-                self.set_attribute("mpenergies",[])
-                self.first_mpenergies=False
+                self.set_attribute("mpenergies", [])
+                self.first_mpenergies = False
             self.mpenergies.append([])
             self.mpenergies[-1].append(float(tokens[4]))
         if "D-MBPT(3)" in line:
             self.mpenergies[-1].append(float(tokens[2]))
         if "Total MBPT(4)       energy:" in line:
             self.mpenergies[-1].append(float(tokens[3]))
-
