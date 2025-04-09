@@ -196,6 +196,9 @@ GeoOpt    Turbomole   TurbomoleGeoOptTest   basicTurbomole5.9     dvb_gopt/basis
 GeoOpt    Turbomole   TurbomoleKeepGeoOptTest   basicTurbomole7.5     dvb_gopt/basis      dvb_gopt/control      dvb_gopt/mos      dvb_gopt/job.0      dvb_gopt/job.1      dvb_gopt/job.2      dvb_gopt/job.3      dvb_gopt/job.4      dvb_gopt/job.5     dvb_gopt/job.last
 GeoOpt    XTB         XTBGeoOptTest     basicXTB6.6.1/dvb_opt       dvb_opt.out gradient
 
+MP        CFOUR       GenericMP2Test        basicCFOUR2.1         water_mp2.c4
+MP        CFOUR       GenericMP3Test        basicCFOUR2.1         water_mp3.c4
+MP        CFOUR       GenericMP4Test        basicCFOUR2.1         water_mp4.c4
 MP        DALTON      GenericMP2Test        basicDALTON-2013      water_mp2.out
 MP        DALTON      GenericMP2Test        basicDALTON-2015      water_mp2.out
 MP        GAMESSUK    GenericMP2Test        basicGAMESS-UK7.0     water_mp2.out

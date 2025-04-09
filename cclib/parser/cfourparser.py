@@ -106,6 +106,8 @@ class CFOUR(logfileparser.Logfile):
         self.set_attribute("first_vibdisps", True)
         # set to True so grads is initialized correctly
         self.set_attribute("first_grads", True)
+        # set to True so mpenergies is initialized correctly
+        self.set_attribute("first_mpenergies", True)
 
 
     def after_parsing(self):
@@ -750,6 +752,7 @@ class CFOUR(logfileparser.Logfile):
                         break
                 line = next(inputfile)
                 tokens = line.strip().split()
+        # get gradients
         if "gradient from JOBARC" in line:
             if self.first_grads:
                 self.set_attribute("grads",[])
@@ -761,3 +764,14 @@ class CFOUR(logfileparser.Logfile):
                 self.grads[-1].append([float(tokens[0]),float(tokens[1]),float(tokens[2])])
                 line = next(inputfile)
                 tokens = line.strip().split()
+        if "Total MP2 energy" in line:
+            if self.first_mpenergies:
+                self.set_attribute("mpenergies",[])
+                self.first_mpenergies=False
+            self.mpenergies.append([])
+            self.mpenergies[-1].append(float(tokens[4]))
+        if "D-MBPT(3)" in line:
+            self.mpenergies[-1].append(float(tokens[2]))
+        if "Total MBPT(4)       energy:" in line:
+            self.mpenergies[-1].append(float(tokens[3]))
+
