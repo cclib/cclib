@@ -2218,40 +2218,62 @@ Dispersion correction           -0.016199959
         #       1       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
         #       2       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
         # ...
+        #
+        # Or sometimes in Orca 6 (perhaps when symmetry is used?):
+        #
+        # ------------
+        # NORMAL MODES
+        # ------------
+        #
+        # These modes are the Cartesian displacements weighted by the diagonal matrix
+        # M(i,i)=1/sqrt(m[i]) where m[i] is the mass of the displaced atom
+        # Thus, these vectors are normalized but *not* orthogonal
+        #
+        # Point group:  C2h
+        #
+        #                0          1          2          3          4          5          6          7          8          9
+        #             1-Au       1-Bu       2-Bu       1-Ag       1-Bg       2-Bg       2-Au       3-Bg       3-Au       3-Bu
+        #     0   0.000000   0.223607   0.000000  -0.016715   0.000000   0.000000   0.000000   0.000000   0.000000  -0.020024
+        #     1   0.000000   0.000000   0.223607  -0.102752   0.000000   0.000000   0.000000   0.000000   0.000000   0.104450
+        #     2   0.223607   0.000000   0.000000   0.000000   0.039090   0.114220   0.078313  -0.085691  -0.031312   0.000000
+        # ...
         if line[:12] == "NORMAL MODES":
             if self.natom > 1:
                 all_vibdisps = numpy.zeros((3 * self.natom, self.natom, 3), "d")
 
-                if self.version >= (6, 0) and not self.numfreq:
+                self.skip_lines(inputfile, ["d", "b", "text", "text", "text", "b"])
+
+                line = next(inputfile)
+
+                if line[:12] == "Point group:":
                     # Orca 6 once again prints the point group (but only for analytical freqs).
-                    self.skip_lines(
-                        inputfile, ["d", "b", "text", "text", "text", "b", "Point group:", "b"]
-                    )
+                    self.skip_lines(inputfile, ["b"])
                     # And has a wider matrix.
                     matrix_columns = 10
+                    pseudofile = chain([], inputfile)
 
                 else:
-                    self.skip_lines(inputfile, ["d", "b", "text", "text", "text", "b"])
                     matrix_columns = 6
+                    pseudofile = chain([line], inputfile)
 
                 for mode in range(0, 3 * self.natom, matrix_columns):
-                    header = next(inputfile)
-                    if self.version >= (6, 0) and not self.numfreq:
-                        _irreps = next(inputfile)
+                    header = next(pseudofile)
+                    if matrix_columns == 10:
+                        _irreps = next(pseudofile)
 
                     for atom in range(self.natom):
                         all_vibdisps[mode : mode + matrix_columns, atom, 0] = next(
-                            inputfile
+                            pseudofile
                         ).split()[1:]
                         all_vibdisps[mode : mode + matrix_columns, atom, 1] = next(
-                            inputfile
+                            pseudofile
                         ).split()[1:]
                         all_vibdisps[mode : mode + matrix_columns, atom, 2] = next(
-                            inputfile
+                            pseudofile
                         ).split()[1:]
 
-                    if self.version >= (6, 0) and not self.numfreq:
-                        self.skip_lines(inputfile, ["b"])
+                    if matrix_columns == 10:
+                        self.skip_lines(pseudofile, ["b"])
 
                 self.set_attribute("vibdisps", all_vibdisps[self.first_mode :])
             else:
