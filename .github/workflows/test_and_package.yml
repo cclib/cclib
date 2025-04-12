@@ -23,7 +23,6 @@ jobs:
     strategy:
       matrix:
         container:
-          - 'shivupa/cclib-ci:py37-edge'
           - 'shivupa/cclib-ci:py38-edge'
           - 'shivupa/cclib-ci:py39-edge'
           - 'shivupa/cclib-ci:py310-edge'
@@ -108,7 +107,6 @@ jobs:
       matrix:
         install-method: [wheel, source]
         python-version:
-          - 3.7
           - 3.8
           - 3.9
           - "3.10"
