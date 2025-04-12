@@ -98,7 +98,7 @@ class GenericTDTest:
         """Is the length of etsyms correct?"""
         assert len(data.etsyms) == self.number
 
-    @skipForParser("ADF", "etrotats are not yet implemented")
+    @skipForParser("ADF", "etsyms are not yet implemented")
     @skipForParser("DALTON", "etsyms are not yet implemented")
     @skipForParser("FChk", "etsyms are not yet implemented")
     @skipForParser("GAMESS", "etsyms are not yet implemented")
@@ -121,6 +121,7 @@ class GenericTDTest:
     @skipForParser("GAMESSUK", "etrotats are not yet implemented")
     @skipForParser("Jaguar", "etrotats are not yet implemented")
     @skipForParser("NWChem", "etrotats are not yet implemented")
+    @skipForParser("PySCF", "etrotats are not yet implemented")
     @skipForParser("QChem", "Q-Chem cannot calculate rotatory strengths")
     @skipForLogfile("FChk/basicQChem5.4", "Q-Chem cannot calculate rotatory strengths")
     @skipForLogfile(
@@ -143,6 +144,7 @@ class GenericTDTest:
     @skipForParser("Jaguar", "optstate are not yet implemented")
     @skipForParser("NWChem", "optstate are not yet implemented")
     @skipForParser("ORCA", "optstate are not yet implemented")
+    @skipForParser("PySCF", "optstate are not yet implemented")
     @skipForParser("QChem", "optstate are not yet implemented")
     @skipForParser("Turbomole", "optstate are not yet implemented")
     def testoptstate(self, data) -> None:
@@ -230,11 +232,7 @@ class OrcaTDDFTTest(GenericTDTest):
         "Singlet-Ag",
     ]
     method = "TDA"
-
-    def testoscs(self, data) -> None:
-        """Is the maximum of etoscs in the right range?"""
-        assert len(data.etoscs) == self.number
-        assert abs(max(data.etoscs) - 1.17) < 0.01
+    expected_f_max = 1.17
 
 
 class QChemTDDFTTest(GenericTDTest):
@@ -393,3 +391,19 @@ class GaussianEOMCCSDTest(GenericTDTest):
         "Triplet-Ag",
     ]
     method = "EOM-CCSD"
+
+
+class PySCFTDATest(GenericTDTest):
+    # No symmetry labels for PySCF yet.
+    symmetries = ["Singlet", "Singlet", "Singlet", "Singlet", "Singlet"]
+    method = "TDA"
+
+    expected_f_max = 1.17
+    expected_l_max = 0.21870229042
+
+
+class PySCFTDTest(GenericTDTest):
+    # Testing against water because DVB will not converge for some reason...
+    symmetries = ["Singlet", "Singlet", "Singlet", "Singlet", "Singlet"]
+    expected_l_max = 0.75825470773
+    expected_f_max = 0.98
