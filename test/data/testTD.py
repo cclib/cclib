@@ -132,6 +132,15 @@ class GenericTDTest:
         "Turbomole/basicTurbomole7.4/CO_adc2_TD",
         "Rotatory strengths are not currently available for ricc2",
     )
+    @skipForLogfile(
+        "ORCA/basicORCA6.0/dvb_eom_ccsd.log", "etrotats are not printed by default in Orca 6"
+    )
+    @skipForLogfile(
+        "ORCA/basicORCA6.0/dvb_adc2.log", "etrotats are not printed by default in Orca 6"
+    )
+    @skipForLogfile(
+        "ORCA/basicORCA6.0/dvb_pno_eom_ccsd.log", "etrotats are not printed by default in Orca 6"
+    )
     def testrotatsnumber(self, data) -> None:
         """Is the length of etrotats correct?"""
         assert len(data.etrotats) == self.number
@@ -294,6 +303,13 @@ class OrcaROCISTest(GenericTDTest):
         pass
 
 
+class Orca6ROCISTest(OrcaROCISTest):
+    # TODO The energies are different in 5 Vs 6 for some reason I can't fathom,
+    # perhaps a setting has changed from some old default value?
+    expected_l_max = 10.718302
+    n_spectra = 4
+
+
 class TurbomoleTDTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
 
@@ -363,6 +379,10 @@ class OrcaETPostHFTest(GenericTDTest):
 
 class OrcaADC2Test(OrcaETPostHFTest):
     method = "ADC(2)"
+
+
+class Orca6ADC2Test(OrcaADC2Test):
+    expected_f_max = 1.16
 
 
 class OrcaSTEOMCCSDTest(OrcaETPostHFTest):

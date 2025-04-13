@@ -101,7 +101,7 @@ class WFXTest:
         """Check other programs against reference data."""
         ref_file = "data/GAMESS/basicGAMESS-US2017/dvb_sp.out"
         programs = {
-            "ORCA": "data/ORCA/basicORCA4.2/dvb_sp.out",
+            "ORCA": "data/ORCA/basicORCA5.0/dvb_sp.out",
             "NWChem": "data/NWChem/basicNWChem6.5/dvb_sp_hf.out",
             "Psi4": "data/Psi4/basicPsi4-1.3.1/dvb_sp_rhf.out",
             "GAMESS-UK": "data/GAMESS-UK/basicGAMESS-UK8.0/dvb_sp_hf.out",
