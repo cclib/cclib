@@ -19,11 +19,10 @@ env:
 jobs:
 
   run-tests:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         container:
-          - 'shivupa/cclib-ci:py37-edge'
           - 'shivupa/cclib-ci:py38-edge'
           - 'shivupa/cclib-ci:py39-edge'
           - 'shivupa/cclib-ci:py310-edge'
@@ -103,12 +102,11 @@ jobs:
   check-installation:
     needs:
       - run-tests
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         install-method: [wheel, source]
         python-version:
-          - 3.7
           - 3.8
           - 3.9
           - "3.10"
