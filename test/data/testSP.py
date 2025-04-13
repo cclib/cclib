@@ -932,9 +932,7 @@ class ORCAPerformanceMetadataTest(GenericPerformanceMetadataTest):
 class ORCA6PerformanceMetadataTest(ORCAPerformanceMetadataTest):
     """Check we can parse CPU/memory metadata."""
 
-    def testmetadata_memory_used(self, data) -> None:
-        """Does metadata have the expected amount of memory?"""
-        assert data.metadata["memory_used"] == 22_800_000
+    memory_used = 22_800_000
 
 
 class TurbomolePerformanceMetadataTest(GenericPerformanceMetadataTest):
