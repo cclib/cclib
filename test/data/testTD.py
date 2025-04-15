@@ -106,8 +106,6 @@ class GenericTDTest:
     @skipForParser("Jaguar", "etsyms are not yet implemented")
     @skipForParser("NWChem", "etsyms are not yet implemented")
     @skipForParser("QChem", "etsyms are not yet implemented")
-    @skipForLogfile("ORCA/basicORCA4.2", "etsyms are only available in ORCA >= 5.0")
-    @skipForLogfile("ORCA/basicORCA4.1", "etsyms are only available in ORCA >= 5.0")
     @skipForLogfile("Gaussian/basicGaussian09", "symmetry is missing for this log file")
     @skipForLogfile("FChk/basicQChem5.4", "etsyms are not yet implemented")
     def testsyms(self, data) -> None:
