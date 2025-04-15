@@ -70,7 +70,7 @@ jobs:
         run: |
           bash .github/scripts/run_pytest_methods.bash "$(nproc)"
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@0565863a31f2c772f9f0395002a31e3f06189574 # v5
+        uses: codecov/codecov-action@ad3126e916f78f00edff4ed0317cf185271ccc2d # v5
         with:
           files: ./coverage-unit.xml,./coverage-regression.xml,./coverage-method.xml
           name: codecov-cclib
