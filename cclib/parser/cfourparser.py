@@ -238,7 +238,7 @@ class CFOUR(logfileparser.Logfile):
                 ccenergy_index = -1
             self.append_attribute("ccenergies", cc_tokens[ccenergy_index])
         # get coefficients and exponents of the gaussian basis set from blocks such as the following
-        '''   ATOM                 EXPONENT      COEFFICIENTS
+        """   ATOM                 EXPONENT      COEFFICIENTS
 
  C #1  1    S
 +                 1   33980.000000   0.0000910  -0.0000190   0.0000000   0.0000000   0.0000000   0.0000000
@@ -322,7 +322,7 @@ class CFOUR(logfileparser.Logfile):
 +                59       1.419000   1.0000000   0.0000000   0.0000000
                  60       0.485000   0.0000000   1.0000000   0.0000000
                  61       0.187000   0.0000000   0.0000000   1.0000000
-'''
+"""
         if "ATOM                 EXPONENT      COEFFICIENTS" in line:
             atom_index = {}
             line = next(inputfile)
@@ -422,7 +422,7 @@ class CFOUR(logfileparser.Logfile):
         if "1 entries found in Z-matrix" in line:
             self.only_one_atom = True
         # The next 2 sections parse blocks like the following if there is only one atom in the calculation
-        ''' NUCLEAR CHARGE:                        6
+        """ NUCLEAR CHARGE:                        6
     NUMBER OF SYMMETRY INDEPENDENT ATOMS:  1
     HIGHEST ORBITAL TYPE:                  G
 
@@ -439,7 +439,7 @@ class CFOUR(logfileparser.Logfile):
    INTERNUCLEAR DISTANCES (A) :
 
      FOR ATOM C #1 (COORDINATES :   0.00000   0.00000   0.00000)
-'''
+"""
         if ("NUCLEAR CHARGE:" in line) and self.only_one_atom:
             self.set_attribute("atomnos", [int(tokens[2])])
         if ("NUCLEAR COORDINATES (IN A.U.) ARE :" in line) and self.only_one_atom:
@@ -854,4 +854,3 @@ class CFOUR(logfileparser.Logfile):
             self.mpenergies[-1].append(float(tokens[2]))
         if "Total MBPT(4)       energy:" in line:
             self.mpenergies[-1].append(float(tokens[3]))
-
