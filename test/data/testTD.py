@@ -412,6 +412,7 @@ class GaussianEOMCCSDTest(GenericTDTest):
     ]
     method = "EOM-CCSD"
 
+
 class CFOUREOMCCSDTest(GenericTDTest):
     """Test for EOMEE-CCSD with CFOUR."""
 
@@ -443,6 +444,7 @@ class CFOUREOMCCSDTest(GenericTDTest):
     ]
     method = "EOMEE-CCSD"
 
+
 class PySCFTDATest(GenericTDTest):
     # No symmetry labels for PySCF yet.
     symmetries = ["Singlet", "Singlet", "Singlet", "Singlet", "Singlet"]
@@ -457,4 +459,3 @@ class PySCFTDTest(GenericTDTest):
     symmetries = ["Singlet", "Singlet", "Singlet", "Singlet", "Singlet"]
     expected_l_max = 0.75825470773
     expected_f_max = 0.98
-
