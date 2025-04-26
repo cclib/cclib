@@ -1,6 +1,1 @@
-coverage
-pytest
-pytest-cov
-pyyaml
-sphinx
-sphinx_rtd_theme
+pyquante2 @ git+https://github.com/cclib/pyquante2.git@cythonize-becke

@@ -1,9 +1,0 @@
-ase>=3.21
-biopython
-geometric
-pandas
-pyberny
-pyquante2 @ git+https://github.com/cclib/pyquante2.git@cythonize-becke
-pyscf
-pyscf-properties @ git+https://github.com/pyscf/properties
-qc-iodata>=1.0.0a2
