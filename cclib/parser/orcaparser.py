@@ -1606,9 +1606,7 @@ Dispersion correction           -0.016199959
                     return energy, float(intensity)
 
             # Clashes with Orca 2.6 (and presumably before) TDDFT absorption spectrum printing
-            elif line == "ABSORPTION SPECTRUM" and parse_version(
-                self.metadata["package_version"]
-            ).release > (2, 6):
+            elif line == "ABSORPTION SPECTRUM" and self.version > (2, 6):
 
                 def energy_intensity(line: str) -> Tuple[float, float]:
                     """CASSCF absorption spectrum
