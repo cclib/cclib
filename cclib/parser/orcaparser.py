@@ -664,7 +664,7 @@ Dispersion correction           -0.016199959
         # Max. Displacement        TolMAXD  ....  4.0000e-03 bohr
         # RMS Displacement         TolRMSD  ....  2.0000e-03 bohr
         if "RELAXED SURFACE SCAN STEP" in line:
-            self.skip_lines(inputfile, ["b"])
+            _ = self.skip_line(inputfile, "s")
             current_params = []
             for i in range(len(self.scannames)):
                 line = next(inputfile)
