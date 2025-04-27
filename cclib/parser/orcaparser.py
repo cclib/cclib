@@ -2734,19 +2734,28 @@ Dispersion correction           -0.016199959
             #                                   -14.444151727
             #
             # Core energy                  :    -13.604678408 Eh     -370.2021 eV
-            one_el_energy = float(next(inputfile).split()[4])  # noqa: F841
-            two_el_energy = float(next(inputfile).split()[4])  # noqa: F841
-            nuclear_repulsion_energy = float(next(inputfile).split()[4])  # noqa: F841
+            line = next(inputfile)
+            one_el_energy = float(line.split()[4])  # noqa: F841
+            line = next(inputfile)
+            two_el_energy = float(line.split()[4])  # noqa: F841
+            line = next(inputfile)
+            nuclear_repulsion_energy = float(line.split()[4])  # noqa: F841
             self.skip_line(inputfile, "dashes")
-            energy = float(next(inputfile).strip())
+            line = next(inputfile)
+            energy = float(line.strip())
             self.skip_line(inputfile, "blank")
-            kinetic_energy = float(next(inputfile).split()[3])  # noqa: F841
-            potential_energy = float(next(inputfile).split()[3])  # noqa: F841
-            virial_ratio = float(next(inputfile).split()[3])  # noqa: F841
+            line = next(inputfile)
+            kinetic_energy = float(line.split()[3])  # noqa: F841
+            line = next(inputfile)
+            potential_energy = float(line.split()[3])  # noqa: F841
+            line = next(inputfile)
+            virial_ratio = float(line.split()[3])  # noqa: F841
             self.skip_line(inputfile, "dashes")
-            energy = float(next(inputfile).strip())
+            line = next(inputfile)
+            energy = float(line.strip())
             self.skip_line(inputfile, "blank")
-            core_energy = float(next(inputfile).split()[3])  # noqa: F841
+            line = next(inputfile)
+            core_energy = float(line.split()[3])  # noqa: F841
 
         if "Program running with" in line and "parallel MPI-processes" in line:
             # ************************************************************
