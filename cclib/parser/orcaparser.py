@@ -2527,6 +2527,15 @@ Dispersion correction           -0.016199959
             # This will align the cases of symmetry on and off.
             line = next(inputfile)
             while line[:25] != "SYSTEM-SPECIFIC SETTINGS:":
+                # There may be an "ORCA-CASSCF" block that contains nothing
+                # but a "CASSCF UV, CD spectra and dipole moments" header with
+                # no values followed by a timings section that is also mostly
+                # empty, appearing before "FINAL SINGLE POINT ENERGY".  This
+                # traps the equals line which wraps the empty spectrum section
+                # header.
+                if self.version[0] >= 6:
+                    if set(line.strip()) == {"="}:
+                        return
                 line = next(inputfile)
 
             # SYSTEM-SPECIFIC SETTINGS:
