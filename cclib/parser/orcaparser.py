@@ -164,7 +164,10 @@ class ORCA(logfileparser.Logfile):
         #
         # ================================================================================
         if "WARNINGS" == line.strip():
-            self.skip_lines(inputfile, ["text", "=", "blank"])
+            self.skip_lines(inputfile, ["text", "="])
+            if self.version[0] <= 3:
+                _ = self.skip_line(inputfile, "Now building the actual basis set")
+            _ = self.skip_line(inputfile, "blank")
             if "warnings" not in self.metadata:
                 self.metadata["warnings"] = []
             if "info" not in self.metadata:
