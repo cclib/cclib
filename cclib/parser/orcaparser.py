@@ -2573,12 +2573,15 @@ Dispersion correction           -0.016199959
             #     ROOT=0 WEIGHT=    1.000000
             self.skip_line(inputfile, "CI strategy")
             num_blocks = int(next(inputfile).split()[-1])
-            for b in range(1, num_blocks + 1):
+            for b in range(num_blocks):
                 line = utils.skip_until_no_match(inputfile, r"^\s*$")
                 vals = line.split()
                 block = int(vals[1])
                 weight = float(vals[3])
-                assert b == block
+                if self.version >= (6, 0):
+                    assert b == block
+                else:
+                    assert b + 1 == block
                 mult = int(next(inputfile).split()[-1])
                 vals = next(inputfile).split()
                 # The irrep will only be printed if using symmetry.
