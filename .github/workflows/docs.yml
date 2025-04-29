@@ -15,7 +15,7 @@ jobs:
   build-and-push-docs:
     runs-on: ubuntu-24.04
     container:
-      image: shivupa/cclib-ci:py312-edge@sha256:ed389bbcd136d319f8852c9331144d1d483b7d2bf94536ae492f67df08045088
+      image: shivupa/cclib-ci:py312-edge@sha256:61f56b7a4f85b33f7b3f73e17abb7cd92b001fb4e1df4d5ea2f64f715fab0dd6
     defaults:
       run:
         shell: bash -eo pipefail -l {0}
