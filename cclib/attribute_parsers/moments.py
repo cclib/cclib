@@ -74,10 +74,8 @@ class moments(base_parser):
                 this_moments.append(np.array(multipole))
                 line = file_handler.virtual_next()
             if getattr(ccdata, "moments") is None:
-                print("the moments are none")
                 return {moments.__name__: this_moments}
             else:
-                print("the moments are NOT none")
                 existing_moments_list = getattr(ccdata, "moments")
                 for m_idx, m in enumerate(this_moments):
                     if len(ccdata.moments) <= m_idx:
