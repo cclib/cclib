@@ -2646,18 +2646,22 @@ Dispersion correction           -0.016199959
                 # Versions < 4.0 are missing the ORBITAL ENERGIES header.
                 in_orbital_energies = True
             if in_orbital_energies:
-                orbitals = []
+                nooccnos = []
+                moenergies = []
                 vals = next(inputfile).split()
                 while vals:
-                    occ, eh, ev = map(float, vals[1:4])
+                    occ, eh = map(float, vals[1:3])
+                    nooccnos.append(occ)
+                    moenergies.append(eh)
                     # The irrep will only be printed if using symmetry.
                     if len(vals) == 5:
-                        idx, irrep = vals[4].split("-")
-                        orbitals.append((occ, ev, int(idx), irrep))
-                    else:
-                        orbitals.append((occ, ev))
+                        irrep_idx, irrep_label = vals[4].split("-")  # noqa: F841
                     vals = next(inputfile).split()
                 self.skip_lines(inputfile, ["b", "d"])
+                if nooccnos:
+                    self.set_attribute("nooccnos", [nooccnos])
+                if moenergies:
+                    self.set_attribute("moenergies", [moenergies])
 
             # Orbital Compositions
             # ---------------------------------------------
@@ -2675,7 +2679,7 @@ Dispersion correction           -0.016199959
                 mult = int(groups[1])
                 # The irrep will only be printed if using symmetry.
                 if groups[2] is not None:
-                    irrep = groups[2].split("=")[1].strip()
+                    irrep = groups[2].split("=")[1].strip()  # noqa: F841
                 nroots = int(groups[3].split("=")[1])  # noqa: F841
 
                 self.skip_lines(inputfile, ["d", "b"])
