@@ -2504,6 +2504,8 @@ Dispersion correction           -0.016199959
             #    MO =    0  IRREP= 0 (A)
             #    MO =    1  IRREP= 1 (B)
             self.skip_lines(inputfile, ["d", "b"])
+            if self.version[0] < 4:
+                _ = self.skip_line(inputfile, "b")
             vals = next(inputfile).split()
             # Symmetry section is only printed if symmetry is used.
             if vals[0] == "Symmetry":
@@ -2583,7 +2585,8 @@ Dispersion correction           -0.016199959
             #   #(CSFs)                           ...   12
             #   #(Roots)                          ...    1
             #     ROOT=0 WEIGHT=    1.000000
-            self.skip_line(inputfile, "CI strategy")
+            if self.version[0] > 3:
+                _ = self.skip_line(inputfile, "CI strategy")
             num_blocks = int(next(inputfile).split()[-1])
             for b in range(num_blocks):
                 line = utils.skip_until_no_match(inputfile, r"^\s*$")
@@ -2632,9 +2635,17 @@ Dispersion correction           -0.016199959
             #
             #   NO   OCC          E(Eh)            E(eV)    Irrep
             #    0   0.0868       0.257841         7.0162    1-A
-            self.skip_lines(inputfile, ["b", "d"])
-            if next(inputfile).strip() == "ORBITAL ENERGIES":
-                self.skip_lines(inputfile, ["d", "b", "NO"])
+            _ = self.skip_line(inputfile, "b")
+            line = next(inputfile)
+            in_orbital_energies = False
+            if set(line.strip()) == {"-"}:
+                in_orbital_energies = True
+                lines = self.skip_lines(inputfile, ["ORBITAL ENERGIES", "d", "b", "NO"])
+                assert lines[0].strip() == "ORBITAL ENERGIES"
+            elif "Orbital   Occ.   Energy(Eh)   Energy(eV)" in line:
+                # Versions < 4.0 are missing the ORBITAL ENERGIES header.
+                in_orbital_energies = True
+            if in_orbital_energies:
                 orbitals = []
                 vals = next(inputfile).split()
                 while vals:
