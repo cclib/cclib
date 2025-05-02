@@ -1847,6 +1847,18 @@ def testORCA_ORCA2_9_qmspeedtest_hf_out(logfile):
     assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
+def testORCA_ORCA3_0_casscf_beryllium_atom_nosym_out(logfile) -> None:
+    """A stereotypical CASSCF calculation, but with symmetry disabled."""
+    assert hasattr(logfile.data, "moenergies")
+    assert hasattr(logfile.data, "nooccnos")
+
+
+def testORCA_ORCA3_0_casscf_beryllium_atom_sym_out(logfile) -> None:
+    """A stereotypical CASSCF calculation."""
+    assert hasattr(logfile.data, "moenergies")
+    assert hasattr(logfile.data, "nooccnos")
+
+
 def testORCA_ORCA3_0_chelpg_out(logfile):
     """ORCA file with chelpg charges"""
     assert "chelpg" in logfile.data.atomcharges
@@ -1907,6 +1919,18 @@ def testORCA_ORCA4_0_1_ttt_td_out(logfile):
     assert logfile.data.metadata["legacy_package_version"] == "4.0.0"
     assert logfile.data.metadata["package_version"] == "4.0.0"
     assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
+
+
+def testORCA_ORCA4_0_casscf_beryllium_atom_nosym_out(logfile) -> None:
+    """A stereotypical CASSCF calculation, but with symmetry disabled."""
+    assert hasattr(logfile.data, "moenergies")
+    assert hasattr(logfile.data, "nooccnos")
+
+
+def testORCA_ORCA4_0_casscf_beryllium_atom_sym_out(logfile) -> None:
+    """A stereotypical CASSCF calculation."""
+    assert hasattr(logfile.data, "moenergies")
+    assert hasattr(logfile.data, "nooccnos")
 
 
 def testORCA_ORCA4_0_hydrogen_fluoride_numfreq_out(logfile):
@@ -1976,6 +2000,18 @@ def testORCA_ORCA4_1_725_out(logfile):
     assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
+def testORCA_ORCA4_1_casscf_beryllium_atom_nosym_out(logfile) -> None:
+    """A stereotypical CASSCF calculation, but with symmetry disabled."""
+    assert hasattr(logfile.data, "moenergies")
+    assert hasattr(logfile.data, "nooccnos")
+
+
+def testORCA_ORCA4_1_casscf_beryllium_atom_sym_out(logfile) -> None:
+    """A stereotypical CASSCF calculation."""
+    assert hasattr(logfile.data, "moenergies")
+    assert hasattr(logfile.data, "nooccnos")
+
+
 def testORCA_ORCA4_1_orca_from_issue_736_out(logfile):
     """ORCA file with no whitespace between SCF iteration columns."""
     assert len(logfile.data.scfvalues) == 23
@@ -2023,6 +2059,18 @@ def testORCA_ORCA4_2_MP2_gradient_out(logfile):
     # atom 2, y-coordinate.
     idx = (0, 1, 1)
     assert logfile.data.grads[idx] == -0.00040549
+
+
+def testORCA_ORCA4_2_casscf_beryllium_atom_nosym_out(logfile) -> None:
+    """A stereotypical CASSCF calculation, but with symmetry disabled."""
+    assert hasattr(logfile.data, "moenergies")
+    assert hasattr(logfile.data, "nooccnos")
+
+
+def testORCA_ORCA4_2_casscf_beryllium_atom_sym_out(logfile) -> None:
+    """A stereotypical CASSCF calculation."""
+    assert hasattr(logfile.data, "moenergies")
+    assert hasattr(logfile.data, "nooccnos")
 
 
 def testORCA_ORCA4_2_ligando_30_SRM1_S_ZINDO_out(logfile):
@@ -2081,6 +2129,30 @@ def testORCA_ORCA5_0_ADBNA_Me_Mes_MesCz_log(logfile):
 def testORCA_ORCA5_0_Benzene_opt_etsyms_log(logfile):
     """Check we can parse etsyms in opt + excited states calc."""
     assert hasattr(logfile.data, "etsyms")
+
+
+def testORCA_ORCA5_0_casscf_beryllium_atom_nosym_out(logfile) -> None:
+    """A stereotypical CASSCF calculation, but with symmetry disabled."""
+    assert hasattr(logfile.data, "moenergies")
+    assert hasattr(logfile.data, "nooccnos")
+
+
+def testORCA_ORCA5_0_casscf_beryllium_atom_sym_out(logfile) -> None:
+    """A stereotypical CASSCF calculation."""
+    assert hasattr(logfile.data, "moenergies")
+    assert hasattr(logfile.data, "nooccnos")
+
+
+def testORCA_ORCA6_0_casscf_beryllium_atom_nosym_out(logfile) -> None:
+    """A stereotypical CASSCF calculation, but with symmetry disabled."""
+    assert hasattr(logfile.data, "moenergies")
+    assert hasattr(logfile.data, "nooccnos")
+
+
+def testORCA_ORCA6_0_casscf_beryllium_atom_sym_out(logfile) -> None:
+    """A stereotypical CASSCF calculation."""
+    assert hasattr(logfile.data, "moenergies")
+    assert hasattr(logfile.data, "nooccnos")
 
 
 # PSI 3 #
