@@ -1762,7 +1762,12 @@ Dispersion correction           -0.016199959
             etrotats = []
             self.skip_lines(inputfile, ["d", "State   Energy Wavelength", "(cm-1)   (nm)", "d"])
             line = next(inputfile)
-            while line.strip() and not utils.str_contains_only(line.strip(), ["-"]):
+            # The stray "Transition_Moments" line appears in ORCA 6.
+            while (
+                line.strip()
+                and not utils.str_contains_only(line.strip(), ["-"])
+                and not line.startswith("Calculating Transition_Moments")
+            ):
                 tokens = line.split()
                 if "spin forbidden" in line:
                     etrotat, mx, my, mz = 0.0, 0.0, 0.0, 0.0
