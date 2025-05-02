@@ -2155,6 +2155,21 @@ def testORCA_ORCA6_0_casscf_beryllium_atom_sym_out(logfile) -> None:
     assert hasattr(logfile.data, "nooccnos")
 
 
+def testORCA_ORCA6_0_ho_h_cas_aDZ_scanSA_out(logfile) -> None:
+    """A relaxed scan with a CASSCF wavefunction, printing MO coefficients at
+    each step.
+    """
+    assert len(logfile.data.moenergies) == 1
+    # Integral section says 47 but that's uncontracted functions
+    nbasis = 41
+    nmo = nbasis
+    assert logfile.data.moenergies[0].shape == (nmo,)
+    assert len(logfile.data.nooccnos) == 1
+    assert logfile.data.nooccnos[0].shape == (nmo,)
+    assert len(logfile.data.mocoeffs) == 1
+    assert logfile.data.mocoeffs[0].shape == (nmo, nbasis)
+
+
 # PSI 3 #
 
 
