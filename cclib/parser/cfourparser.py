@@ -32,10 +32,9 @@ class CFOUR(logfileparser.Logfile):
         label = label.replace("+","")
         # CFOUR uses 1g, 1u, 2g, 2u,... for E1g, E1u, E2g, E2u,...
         try:
-            label_int = int(label[0])
-            return 'E'+ label
-        except:
-            if len(label)>=2:
+            return f"E{int(label[0])}"
+        except ValueError:
+            if len(label) >= 2:
                 # CFOUR uses SG for sigma, PI for pi, DE for delta, and PH for phi
                 if "u" == label:
                     label = "Eu"
@@ -352,7 +351,7 @@ class CFOUR(logfileparser.Logfile):
                 if '#' in line:
                     if (not first_iter) and should_parse:
                         for i in temp_basis_info:
-                            gbasis[atom_index[curr_atom]].append((curr_ang_mom, i))
+                            gbasis[atom_index[curr_atom]].append((curr_ang_mom, i))  # noqa: F821
                     first_iter = False
                     hashtag_in_last_line = True
                     if len(tokens[0]) == 1:
@@ -640,9 +639,9 @@ class CFOUR(logfileparser.Logfile):
                                 if len(tokens[1]) >= 3:
                                     if tokens[1][1] == "X":
                                         try:
-                                            x_power = int(tokens[1][2:])
+                                            x_power = int(tokens[1][2:])  # noqa: F841
                                             subshell_number += 1
-                                        except:
+                                        except ValueError:
                                             pass
                                 aonames.append(
                                     f"{self.atomic_symbols[(int(tokens[0]) - sub_amount) - 1]}{int(tokens[0]) - sub_amount}_{subshell_number}{tokens[1]}"
