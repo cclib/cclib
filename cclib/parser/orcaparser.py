@@ -164,7 +164,10 @@ class ORCA(logfileparser.Logfile):
         #
         # ================================================================================
         if "WARNINGS" == line.strip():
-            self.skip_lines(inputfile, ["text", "=", "blank"])
+            self.skip_lines(inputfile, ["text", "="])
+            if self.version[0] <= 3:
+                _ = self.skip_line(inputfile, "Now building the actual basis set")
+            _ = self.skip_line(inputfile, "blank")
             if "warnings" not in self.metadata:
                 self.metadata["warnings"] = []
             if "info" not in self.metadata:
@@ -664,7 +667,7 @@ Dispersion correction           -0.016199959
         # Max. Displacement        TolMAXD  ....  4.0000e-03 bohr
         # RMS Displacement         TolRMSD  ....  2.0000e-03 bohr
         if "RELAXED SURFACE SCAN STEP" in line:
-            self.skip_lines(inputfile, ["b"])
+            _ = self.skip_line(inputfile, "s")
             current_params = []
             for i in range(len(self.scannames)):
                 line = next(inputfile)
@@ -1606,9 +1609,7 @@ Dispersion correction           -0.016199959
                     return energy, float(intensity)
 
             # Clashes with Orca 2.6 (and presumably before) TDDFT absorption spectrum printing
-            elif line == "ABSORPTION SPECTRUM" and parse_version(
-                self.metadata["package_version"]
-            ).release > (2, 6):
+            elif line == "ABSORPTION SPECTRUM" and self.version > (2, 6):
 
                 def energy_intensity(line: str) -> Tuple[float, float]:
                     """CASSCF absorption spectrum
@@ -1761,7 +1762,12 @@ Dispersion correction           -0.016199959
             etrotats = []
             self.skip_lines(inputfile, ["d", "State   Energy Wavelength", "(cm-1)   (nm)", "d"])
             line = next(inputfile)
-            while line.strip() and not utils.str_contains_only(line.strip(), ["-"]):
+            # The stray "Transition_Moments" line appears in ORCA 6.
+            while (
+                line.strip()
+                and not utils.str_contains_only(line.strip(), ["-"])
+                and not line.startswith("Calculating Transition_Moments")
+            ):
                 tokens = line.split()
                 if "spin forbidden" in line:
                     etrotat, mx, my, mz = 0.0, 0.0, 0.0, 0.0
@@ -2503,6 +2509,8 @@ Dispersion correction           -0.016199959
             #    MO =    0  IRREP= 0 (A)
             #    MO =    1  IRREP= 1 (B)
             self.skip_lines(inputfile, ["d", "b"])
+            if self.version[0] < 4:
+                _ = self.skip_line(inputfile, "b")
             vals = next(inputfile).split()
             # Symmetry section is only printed if symmetry is used.
             if vals[0] == "Symmetry":
@@ -2529,6 +2537,15 @@ Dispersion correction           -0.016199959
             # This will align the cases of symmetry on and off.
             line = next(inputfile)
             while line[:25] != "SYSTEM-SPECIFIC SETTINGS:":
+                # There may be an "ORCA-CASSCF" block that contains nothing
+                # but a "CASSCF UV, CD spectra and dipole moments" header with
+                # no values followed by a timings section that is also mostly
+                # empty, appearing before "FINAL SINGLE POINT ENERGY".  This
+                # traps the equals line which wraps the empty spectrum section
+                # header.
+                if self.version[0] >= 6:
+                    if set(line.strip()) == {"="}:
+                        return
                 line = next(inputfile)
 
             # SYSTEM-SPECIFIC SETTINGS:
@@ -2573,14 +2590,18 @@ Dispersion correction           -0.016199959
             #   #(CSFs)                           ...   12
             #   #(Roots)                          ...    1
             #     ROOT=0 WEIGHT=    1.000000
-            self.skip_line(inputfile, "CI strategy")
+            if self.version[0] > 3:
+                _ = self.skip_line(inputfile, "CI strategy")
             num_blocks = int(next(inputfile).split()[-1])
-            for b in range(1, num_blocks + 1):
+            for b in range(num_blocks):
                 line = utils.skip_until_no_match(inputfile, r"^\s*$")
                 vals = line.split()
                 block = int(vals[1])
                 weight = float(vals[3])
-                assert b == block
+                if self.version >= (6, 0):
+                    assert b == block
+                else:
+                    assert b + 1 == block
                 mult = int(next(inputfile).split()[-1])
                 vals = next(inputfile).split()
                 # The irrep will only be printed if using symmetry.
@@ -2619,21 +2640,33 @@ Dispersion correction           -0.016199959
             #
             #   NO   OCC          E(Eh)            E(eV)    Irrep
             #    0   0.0868       0.257841         7.0162    1-A
-            self.skip_lines(inputfile, ["b", "d"])
-            if next(inputfile).strip() == "ORBITAL ENERGIES":
-                self.skip_lines(inputfile, ["d", "b", "NO"])
-                orbitals = []
+            _ = self.skip_line(inputfile, "b")
+            line = next(inputfile)
+            in_orbital_energies = False
+            if set(line.strip()) == {"-"}:
+                in_orbital_energies = True
+                lines = self.skip_lines(inputfile, ["ORBITAL ENERGIES", "d", "b", "NO"])
+                assert lines[0].strip() == "ORBITAL ENERGIES"
+            elif "Orbital   Occ.   Energy(Eh)   Energy(eV)" in line:
+                # Versions < 4.0 are missing the ORBITAL ENERGIES header.
+                in_orbital_energies = True
+            if in_orbital_energies:
+                nooccnos = []
+                moenergies = []
                 vals = next(inputfile).split()
                 while vals:
-                    occ, eh, ev = map(float, vals[1:4])
+                    occ, eh = map(float, vals[1:3])
+                    nooccnos.append(occ)
+                    moenergies.append(eh)
                     # The irrep will only be printed if using symmetry.
                     if len(vals) == 5:
-                        idx, irrep = vals[4].split("-")
-                        orbitals.append((occ, ev, int(idx), irrep))
-                    else:
-                        orbitals.append((occ, ev))
+                        irrep_idx, irrep_label = vals[4].split("-")  # noqa: F841
                     vals = next(inputfile).split()
                 self.skip_lines(inputfile, ["b", "d"])
+                if nooccnos:
+                    self.set_attribute("nooccnos", [nooccnos])
+                if moenergies:
+                    self.set_attribute("moenergies", [moenergies])
 
             # Orbital Compositions
             # ---------------------------------------------
@@ -2651,7 +2684,7 @@ Dispersion correction           -0.016199959
                 mult = int(groups[1])
                 # The irrep will only be printed if using symmetry.
                 if groups[2] is not None:
-                    irrep = groups[2].split("=")[1].strip()
+                    irrep = groups[2].split("=")[1].strip()  # noqa: F841
                 nroots = int(groups[3].split("=")[1])  # noqa: F841
 
                 self.skip_lines(inputfile, ["d", "b"])
@@ -2733,19 +2766,28 @@ Dispersion correction           -0.016199959
             #                                   -14.444151727
             #
             # Core energy                  :    -13.604678408 Eh     -370.2021 eV
-            one_el_energy = float(next(inputfile).split()[4])  # noqa: F841
-            two_el_energy = float(next(inputfile).split()[4])  # noqa: F841
-            nuclear_repulsion_energy = float(next(inputfile).split()[4])  # noqa: F841
+            line = next(inputfile)
+            one_el_energy = float(line.split()[4])  # noqa: F841
+            line = next(inputfile)
+            two_el_energy = float(line.split()[4])  # noqa: F841
+            line = next(inputfile)
+            nuclear_repulsion_energy = float(line.split()[4])  # noqa: F841
             self.skip_line(inputfile, "dashes")
-            energy = float(next(inputfile).strip())
+            line = next(inputfile)
+            energy = float(line.strip())
             self.skip_line(inputfile, "blank")
-            kinetic_energy = float(next(inputfile).split()[3])  # noqa: F841
-            potential_energy = float(next(inputfile).split()[3])  # noqa: F841
-            virial_ratio = float(next(inputfile).split()[3])  # noqa: F841
+            line = next(inputfile)
+            kinetic_energy = float(line.split()[3])  # noqa: F841
+            line = next(inputfile)
+            potential_energy = float(line.split()[3])  # noqa: F841
+            line = next(inputfile)
+            virial_ratio = float(line.split()[3])  # noqa: F841
             self.skip_line(inputfile, "dashes")
-            energy = float(next(inputfile).strip())
+            line = next(inputfile)
+            energy = float(line.strip())
             self.skip_line(inputfile, "blank")
-            core_energy = float(next(inputfile).split()[3])  # noqa: F841
+            line = next(inputfile)
+            core_energy = float(line.split()[3])  # noqa: F841
 
         if "Program running with" in line and "parallel MPI-processes" in line:
             # ************************************************************
