@@ -3026,6 +3026,21 @@ def testQChem_QChem5_3_ts_30_irc_out(logfile):
     assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
 
 
+def testQChem_QChem6_1_td_bnparaben_h_out(logfile):
+    """A TDDFT calculation containing the line
+
+     Total energy for state100:                  -766.82851376 au
+
+    where the lack of space after 'state' broke parsing.
+
+    See https://github.com/cclib/cclib/issues/1573.
+    """
+    etenergy = convertor(logfile.data.etenergies[99], "wavenumber", "hartree")
+    state_0_energy = -767.1091612568
+    state_100_energy = -766.82851376
+    assert state_100_energy - state_0_energy == pytest.approx(etenergy, abs=1.0e-15)
+
+
 # Turbomole
 
 

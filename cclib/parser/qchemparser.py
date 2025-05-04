@@ -68,6 +68,9 @@ class QChem(logfileparser.Logfile):
         # aoname.
         self.re_atomindex = re.compile(r"(\d+)_")
 
+        self.re_tddft_total_energy = re.compile(
+            r"\s+Total energy for state\s*(?P<state>\d+):\s+(?P<energy>-?\d+\.\d+)(?: au)?"
+        )
         # QChem changed the number of spaces from version 5.1 to 5.2
         # D(   35) --> V(    3) amplitude =  0.0644
         # S(  1) --> V(  1) amplitude = -0.1628 alpha
@@ -1131,8 +1134,9 @@ cannot be determined. Rerun without `$molecule read`."""
                     # Take the total energy for the state and subtract from the
                     # ground state energy, rather than just the EE;
                     # this will be more accurate.
-                    if "Total energy for state" in line:
-                        etenergies.append(float(line.split()[5]) - self.scfenergies[-1])
+                    mtch = self.re_tddft_total_energy.search(line)
+                    if mtch is not None:
+                        etenergies.append(float(mtch.group("energy")) - self.scfenergies[-1])
                     # if 'excitation energy' in line:
                     #     etenergies.append(float(line.split()[-1]))
                     if "Multiplicity" in line:
