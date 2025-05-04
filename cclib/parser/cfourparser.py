@@ -32,7 +32,7 @@ class CFOUR(logfileparser.Logfile):
         label = label.replace("+","")
         # CFOUR uses 1g, 1u, 2g, 2u,... for E1g, E1u, E2g, E2u,...
         try:
-            return f"E{int(label[0])}"
+            return f"E{int(label[0])}{label[1]}"
         except ValueError:
             if len(label) >= 2:
                 # CFOUR uses SG for sigma, PI for pi, DE for delta, and PH for phi
