@@ -462,7 +462,6 @@ class GenericSPTest:
     @skipForParser("Jaguar", "No dipole moments in the logfile")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("NBO", "attribute not implemented in this version")
-    @skipForParser("Psi4", "The parser is still being converted to version 2")
     @skipForParser("xTB", "not implemented yet")
     def testmoments(self, data) -> None:
         """Does the dipole and possible higher molecular moments look reasonable?"""
