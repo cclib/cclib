@@ -463,7 +463,7 @@ class CFOUR(logfileparser.Logfile):
          ----------------------------------------------------------------
         """
         if "Coordinates used in calculation (QCOMP)" in line:
-            self.skip_lines(inputfile,["d","header","header","d"])
+            self.skip_lines(inputfile, ["d", "header", "header", "d"])
             line = next(inputfile)
             tokens = line.split()
             atomnos = []
@@ -534,7 +534,7 @@ class CFOUR(logfileparser.Logfile):
 
         # get alpha mo energies of the last ran scf method
         if "ORBITAL EIGENVALUES (ALPHA)  (1H = 27.2113834 eV)" in line:
-            self.skip_lines(inputfile,["b","header","d"])
+            self.skip_lines(inputfile, ["b", "header", "d"])
             line = next(inputfile)
             tokens = line.split()
             self.set_attribute("moenergies", [])
@@ -564,7 +564,7 @@ class CFOUR(logfileparser.Logfile):
 
         # get beta mo energies of the last ran scf method if an unrestricted reference is used
         if "ORBITAL EIGENVALUES ( BETA)  (1H = 27.2113834 eV)" in line:
-            self.skip_lines(inputfile,["b","header","d"])
+            self.skip_lines(inputfile, ["b", "header", "d"])
             line = next(inputfile)
             tokens = line.split()
             beta_moenergies = []
@@ -727,7 +727,7 @@ class CFOUR(logfileparser.Logfile):
                 self.append_attribute("etsyms", f"{mult}-{self.sym_numbering[self.curr_sym]}")
             else:
                 self.append_attribute("etenergies", temp_etenergy)
-                self.skip_lines(inputfile,["header","header","header","d","header","d"])
+                self.skip_lines(inputfile, ["header", "header", "header", "d", "header", "d"])
                 line = next(inputfile)
                 tokens = line.split()
                 temp_etsecs = []
@@ -755,7 +755,7 @@ class CFOUR(logfileparser.Logfile):
 
         # get vibrational data
         if "Normal Coordinate Analysis" in line:
-            self.skip_lines(inputfile,["d","header","header","d","header","d"])
+            self.skip_lines(inputfile, ["d", "header", "header", "d", "header", "d"])
             line = next(inputfile)
             tokens = line.split()
             while "----------------------------------------------------------------" not in line:
