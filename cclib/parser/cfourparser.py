@@ -141,6 +141,7 @@ class CFOUR(logfileparser.Logfile):
                  60       0.485000   0.0000000   1.0000000   0.0000000
                  61       0.187000   0.0000000   0.0000000   1.0000000
 """
+
     def parse_basis(self, inputfile, line):
         atom_index = {}
         line = next(inputfile)
@@ -236,8 +237,6 @@ class CFOUR(logfileparser.Logfile):
             for i in temp_basis_info:
                 gbasis[atom_index[curr_atom]].append((curr_ang_mom, i))
         return gbasis
-
-
 
     def before_parsing(self):
         # geting atomic number and symbol is different for 1 atom
