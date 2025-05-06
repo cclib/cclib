@@ -287,7 +287,7 @@ class CFOUR(logfileparser.Logfile):
         if hasattr(self, "geovalues") and hasattr(self, "geotargets"):
             for i in range(len(self.geovalues)):
                 if self.geovalues[i][0] < self.geotargets[0]:
-                    self.set_attribute("optdone", i)
+                    self.append_attribute("optdone", i)
         # get the number of atoms
         if hasattr(self, "atomcoords"):
             if len(self.atomcoords) >= 1:
