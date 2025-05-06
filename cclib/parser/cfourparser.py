@@ -402,7 +402,7 @@ class CFOUR(logfileparser.Logfile):
             self.append_attribute("ccenergies", cc_tokens[ccenergy_index])
         # get coefficients and exponents of the gaussian basis set from blocks such as the following
         if "ATOM                 EXPONENT      COEFFICIENTS" in line:
-            self.set_attribute("gbasis", parse_basis(self, inputfile, line))
+            self.set_attribute("gbasis", self.parse_basis(inputfile, line))
         # exception for only one atom
         if "1 entries found in Z-matrix" in line:
             self.only_one_atom = True
