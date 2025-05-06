@@ -463,10 +463,7 @@ class CFOUR(logfileparser.Logfile):
          ----------------------------------------------------------------
         """
         if "Coordinates used in calculation (QCOMP)" in line:
-            line = next(inputfile)
-            line = next(inputfile)
-            line = next(inputfile)
-            line = next(inputfile)
+            self.skip_lines(inputfile,["d","header","header","d"])
             line = next(inputfile)
             tokens = line.split()
             atomnos = []
@@ -537,9 +534,7 @@ class CFOUR(logfileparser.Logfile):
 
         # get alpha mo energies of the last ran scf method
         if "ORBITAL EIGENVALUES (ALPHA)  (1H = 27.2113834 eV)" in line:
-            line = next(inputfile)
-            line = next(inputfile)
-            line = next(inputfile)
+            self.skip_lines(inputfile,["b","header","d"])
             line = next(inputfile)
             tokens = line.split()
             self.set_attribute("moenergies", [])
@@ -569,9 +564,7 @@ class CFOUR(logfileparser.Logfile):
 
         # get beta mo energies of the last ran scf method if an unrestricted reference is used
         if "ORBITAL EIGENVALUES ( BETA)  (1H = 27.2113834 eV)" in line:
-            line = next(inputfile)
-            line = next(inputfile)
-            line = next(inputfile)
+            self.skip_lines(inputfile,["b","header","d"])
             line = next(inputfile)
             tokens = line.split()
             beta_moenergies = []
@@ -687,12 +680,12 @@ class CFOUR(logfileparser.Logfile):
         # get excitation energies
         if "Converged eigenvalue:" in line:
             temp_etenergy = float(tokens[2])
+            mult = "Singlet"
             if self.estate_prop_on:
                 num_dash_lines = 0
                 parse_etsecs = False
                 keep_parse = True
                 temp_etsecs = []
-                mult = "Singlet"
                 line = next(inputfile)
                 tokens = line.split()
                 while "Right Transition Moment" not in line:
@@ -733,13 +726,8 @@ class CFOUR(logfileparser.Logfile):
                 self.append_attribute("etsecs", temp_etsecs)
                 self.append_attribute("etsyms", f"{mult}-{self.sym_numbering[self.curr_sym]}")
             else:
-                self.etenergies.append(temp_etenergy)
-                line = next(inputfile)
-                line = next(inputfile)
-                line = next(inputfile)
-                line = next(inputfile)
-                line = next(inputfile)
-                line = next(inputfile)
+                self.append_attribute("etenergies", temp_etenergy)
+                self.skip_lines(inputfile,["header","header","header","d","header","d"])
                 line = next(inputfile)
                 tokens = line.split()
                 temp_etsecs = []
@@ -754,8 +742,8 @@ class CFOUR(logfileparser.Logfile):
                     temp_etsecs.append(((i, j), (a, b), float(tokens[4])))
                     line = next(inputfile)
                     tokens = line.split()
-                self.etsecs.append(temp_etsecs)
-                self.etsyms.append(f"Singlet-{self.sym_numbering[self.curr_sym]}")
+                self.append_attribute("etsecs", temp_etsecs)
+                self.append_attribute("etsyms", f"{mult}-{self.sym_numbering[self.curr_sym]}")
 
         # get etoscs
         if "Norm of oscillator strength :" in line:
@@ -767,12 +755,7 @@ class CFOUR(logfileparser.Logfile):
 
         # get vibrational data
         if "Normal Coordinate Analysis" in line:
-            line = next(inputfile)
-            line = next(inputfile)
-            line = next(inputfile)
-            line = next(inputfile)
-            line = next(inputfile)
-            line = next(inputfile)
+            self.skip_lines(inputfile,["d","header","header","d","header","d"])
             line = next(inputfile)
             tokens = line.split()
             while "----------------------------------------------------------------" not in line:
@@ -798,9 +781,9 @@ class CFOUR(logfileparser.Logfile):
                         test_tokens = tokens[1].replace("-", " ").split()
                         if len(test_tokens) == 2:
                             token1 = test_tokens[0]
-                            token2 = "-" + test_tokens[1]
+                            token2 = f"-{test_tokens[1]}"
                             if tokens[1][0] == "-":
-                                token1 = "-" + token1
+                                token1 = f"-{token1}"
                             tokens.remove(tokens[1])
                             tokens.insert(1, token2)
                             tokens.insert(1, token1)
