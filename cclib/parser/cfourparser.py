@@ -704,10 +704,18 @@ class CFOUR(logfileparser.Logfile):
                     ):
                         keep_parse = False
                     if parse_etsecs and keep_parse and num_dash_lines == 2:
-                        i = int(tokens[0]) if int(tokens[0]) == 0 else int(tokens[0]) - 1
-                        j = int(tokens[1]) if int(tokens[1]) == 0 else int(tokens[1]) - 1
-                        a = int(tokens[2]) if int(tokens[2]) == 0 else int(tokens[2]) - 1
-                        b = int(tokens[3]) if int(tokens[3]) == 0 else int(tokens[3]) - 1
+                        i = int(tokens[0])
+                        if i:
+                            i -= 1
+                        j = int(tokens[1])
+                        if j:
+                            j -= 1
+                        a = int(tokens[2])
+                        if a:
+                            a -= 1
+                        b = int(tokens[3])
+                        if b:
+                            b -= 1
                         temp_etsecs.append(((i, j), (a, b), float(tokens[4])))
                     if (
                         parse_etsecs
@@ -738,10 +746,18 @@ class CFOUR(logfileparser.Logfile):
                     "--------------------------------------------------------------------------------"
                     not in line
                 ):
-                    i = int(tokens[0]) if int(tokens[0]) == 0 else int(tokens[0]) - 1
-                    j = int(tokens[1]) if int(tokens[1]) == 0 else int(tokens[1]) - 1
-                    a = int(tokens[2]) if int(tokens[2]) == 0 else int(tokens[2]) - 1
-                    b = int(tokens[3]) if int(tokens[3]) == 0 else int(tokens[3]) - 1
+                    i = int(tokens[0])
+                    if i:
+                        i -= 1
+                    j = int(tokens[1])
+                    if j:
+                        j -= 1
+                    a = int(tokens[2])
+                    if a:
+                        a -= 1
+                    b = int(tokens[3])
+                    if b:
+                        b -= 1
                     temp_etsecs.append(((i, j), (a, b), float(tokens[4])))
                     line = next(inputfile)
                     tokens = line.split()
