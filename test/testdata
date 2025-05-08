@@ -80,12 +80,12 @@ BOMD      QChem       GenericBOMDTest       basicQChem5.4         dvb_bomd.out
 # CC        GAMESS      GamessCCSDTest        basicGAMESS-US2018    water_ccsd.out
 # CC        GAMESS      GamessCCSDPTTest      basicGAMESS-US2017    water_ccsd(t).out
 # CC        GAMESS      GamessCCSDPTTest      basicGAMESS-US2018    water_ccsd(t).out
-# CC        Gaussian    GenericCCDTest        basicGaussian09       water_ccd.log
-# CC        Gaussian    GenericCCDTest        basicGaussian16       water_ccd.log
-# CC        Gaussian    GenericCCSDTest       basicGaussian09       water_ccsd.log
-# CC        Gaussian    GenericCCSDTest       basicGaussian16       water_ccsd.log
-# CC        Gaussian    GenericCCSDPTTest     basicGaussian09       water_ccsdt.log
-# CC        Gaussian    GenericCCSDPTTest     basicGaussian16       water_ccsdt.log
+CC        Gaussian    GenericCCDTest        basicGaussian09       water_ccd.log
+CC        Gaussian    GenericCCDTest        basicGaussian16       water_ccd.log
+CC        Gaussian    GenericCCSDTest       basicGaussian09       water_ccsd.log
+CC        Gaussian    GenericCCSDTest       basicGaussian16       water_ccsd.log
+CC        Gaussian    GenericCCSDPTTest     basicGaussian09       water_ccsdt.log
+CC        Gaussian    GenericCCSDPTTest     basicGaussian16       water_ccsdt.log
 # CC        Molpro      MolproCCDTest         basicMolpro2006       h2o_ccd.out
 # CC        Molpro      MolproCCDTest         basicMolpro2012       h2o_ccd.out
 # CC        Molpro      MolproCCSDTest        basicMolpro2006       h2o_ccsd.out

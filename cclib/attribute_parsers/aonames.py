@@ -1,4 +1,4 @@
-# Copyright (c) 2024, the cclib development team
+# Copyright (c) 2024-2025, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -105,7 +105,6 @@ class aonames(base_parser):
             return {atombasis.__name__: parsed_atombasis}
 
         return None
-
 
     @staticmethod
     def gaussian(file_handler, ccdata) -> Optional[dict]:

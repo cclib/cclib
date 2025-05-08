@@ -4,6 +4,7 @@
 # the terms of the BSD 3-Clause License.
 from typing import Optional
 
+from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
 
 import numpy as np
@@ -34,9 +35,33 @@ class ccenergies(base_parser):
             return {ccenergies.__name__: np.array(this_ccenergies)}
         return None
 
-        # The geometry convergence targets and values are printed in a table, with the legends
+    @staticmethod
+    def gaussian(file_handler, ccdata) -> Optional[dict]:
+        line = file_handler.last_line
+        if getattr(ccdata, "ccenergies") is None:
+            this_ccenergies = []
+        else:
+            this_ccenergies = []  # note we only save the last ccenergy
+        # Total energies after Coupled Cluster corrections.
+        # Second order MBPT energies (MP2) are also calculated for these runs,
+        # but the output is the same as when parsing for mpenergies.
+        # Read the consecutive correlated energies
+        # but append only the last one to ccenergies.
+        # Only the highest level energy is appended - ex. CCSD(T), not CCSD.
+        parsed_ccenergy = None
+        if line[1:10] == "DE(Corr)=" and line[27:35] == "E(CORR)=":
+            parsed_ccenergy = utils.float(line.split()[3])
+        if line[1:10] == "T5(CCSD)=":
+            line = file_handler.virtual_next()
+            if line[1:9] == "CCSD(T)=":
+                parsed_ccenergy = utils.float(line.split()[1])
 
-    known_codes = ["psi4"]
+        if parsed_ccenergy:
+            this_ccenergies.append(parsed_ccenergy)
+            return {ccenergies.__name__: np.array(this_ccenergies)}
+        return None
+
+    known_codes = ["psi4", "gaussian"]
 
     @staticmethod
     def parse(file_handler, program, ccdata) -> Optional[dict]:

@@ -49,7 +49,6 @@ class dispersionenergies(base_parser):
         return None
         # The geometry convergence targets and values are printed in a table, with the legends
 
-
     known_codes = ["psi4", "gaussian"]
 
     @staticmethod
