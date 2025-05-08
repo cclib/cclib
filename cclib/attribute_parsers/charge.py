@@ -19,10 +19,25 @@ class charge(base_parser):
     def gaussian(file_handler, ccdata) -> Optional[dict]:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
-        if line[1:7] == "Charge":
-            constructed_charge = int(line.split()[2])
-            constructed_data = {charge.__name__: constructed_charge}
-            return constructed_data
+        constructed_data = None
+        if line.strip() == "Symbolic Z-matrix:":
+            line = file_handler.virtual_next()
+            while line.split()[0] == "Charge":
+                    # For the supermolecule, we can parse the charge and multicplicity.
+                    regex = r".*=(.*)Mul.*=\s*-?(\d+).*"
+                    match = re.match(regex, line)
+                    constructed_charge = int(match.groups()[0])
+                    constructed_data = {charge.__name__: constructed_charge}
+                    return constructed_data
+        if line[1:7] == "Charge" and line.find("Multiplicity") >= 0:
+            if line.split()[-1] == "supermolecule" or (
+                "fragment" not in line and "model system" not in line
+            ):
+                regex = r".*=(.*)Mul.*=\s*-?(\d+).*"
+                match = re.match(regex, line)
+                constructed_charge = int(match.groups()[0])
+                constructed_data = {charge.__name__: constructed_charge}
+                return constructed_data
         return None
 
     @staticmethod
