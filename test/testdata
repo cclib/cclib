@@ -194,16 +194,16 @@ CC        Psi4        Psi4CCSDPTTest        basicPsi4-1.7         water_ccsd(t).
 # MP        GAMESSUK    GenericMP3Test        basicGAMESS-UK8.0     water_mp3.out
 # MP        GAMESS      GenericMP2Test        basicGAMESS-US2017    water_mp2.out
 # MP        GAMESS      GenericMP2Test        basicGAMESS-US2018    water_mp2.out
-# MP        Gaussian    GaussianMP2Test       basicGaussian09       water_mp2.log
-# MP        Gaussian    GaussianMP2Test       basicGaussian16       water_mp2.log
-# MP        Gaussian    GaussianMP3Test       basicGaussian09       water_mp3.log
-# MP        Gaussian    GaussianMP3Test       basicGaussian16       water_mp3.log
-# MP        Gaussian    GaussianMP4SDQTest    basicGaussian09       water_mp4sdq.log
-# MP        Gaussian    GaussianMP4SDQTest    basicGaussian16       water_mp4sdq.log
-# MP        Gaussian    GaussianMP4SDTQTest   basicGaussian09       water_mp4.log
-# MP        Gaussian    GaussianMP4SDTQTest   basicGaussian16       water_mp4.log
-# MP        Gaussian    GenericMP5Test        basicGaussian09       water_mp5.log
-# MP        Gaussian    GenericMP5Test        basicGaussian16       water_mp5.log
+MP        Gaussian    GaussianMP2Test       basicGaussian09       water_mp2.log
+MP        Gaussian    GaussianMP2Test       basicGaussian16       water_mp2.log
+MP        Gaussian    GaussianMP3Test       basicGaussian09       water_mp3.log
+MP        Gaussian    GaussianMP3Test       basicGaussian16       water_mp3.log
+MP        Gaussian    GaussianMP4SDQTest    basicGaussian09       water_mp4sdq.log
+MP        Gaussian    GaussianMP4SDQTest    basicGaussian16       water_mp4sdq.log
+MP        Gaussian    GaussianMP4SDTQTest   basicGaussian09       water_mp4.log
+MP        Gaussian    GaussianMP4SDTQTest   basicGaussian16       water_mp4.log
+MP        Gaussian    GenericMP5Test        basicGaussian09       water_mp5.log
+MP        Gaussian    GenericMP5Test        basicGaussian16       water_mp5.log
 # MP        Jaguar      GenericMP2Test        basicJaguar7.0        water_lmp2.out
 # MP        Jaguar      GenericMP2Test        basicJaguar8.3        water_lmp2.out
 # MP        GAMESS      GenericMP2Test        basicFirefly8.0       water_mp2.out
