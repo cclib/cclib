@@ -117,6 +117,12 @@ class Gaussian(logfileparser.Logfile):
         # or a new round in an optimisation etc).
         self.last_et = 0
 
+        # When running an NBO analysis on a calculation with different alpha
+        # and beta orbitals, the charges are printed for combined, alpha, and
+        # beta spins.  This is false when in the combined section (the general
+        # case) and true when in an alpha or beta section.
+        self.nbo_spin_section = False
+
     def after_parsing(self):
         # atomcoords are parsed as a list of lists but it should be an array
         if hasattr(self, "atomcoords"):
@@ -2335,10 +2341,17 @@ class Gaussian(logfileparser.Logfile):
                         else:
                             extract_charges_spins(line, prop)
 
+        if "N A T U R A L   A T O M I C   O R B I T A L" in line:
+            self.nbo_spin_section = False
+        elif "Alpha spin orbitals" in line:
+            self.nbo_spin_section = True
+        elif "Beta spin orbitals" in line:
+            self.nbo_spin_section = True
+
         if line.strip() == "Natural Population":
             if not hasattr(self, "atomcharges"):
                 self.atomcharges = {}
-            if "natural" not in self.atomcharges:
+            if not self.nbo_spin_section:
                 line1 = next(inputfile)
                 line2 = next(inputfile)
                 if line1.split()[0] == "Natural" and line2.split()[2] == "Charge":
