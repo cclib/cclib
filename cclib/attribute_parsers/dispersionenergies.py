@@ -32,7 +32,25 @@ class dispersionenergies(base_parser):
 
         # The geometry convergence targets and values are printed in a table, with the legends
 
-    known_codes = ["psi4"]
+    @staticmethod
+    def gaussian(file_handler, ccdata) -> Optional[dict]:
+        ccsd_trigger = "* CCSD total energy"  # noqa: F841
+        ccsd_t_trigger = "* CCSD(T) total energy"  # noqa: F841
+        line = file_handler.last_line
+        if getattr(ccdata, "dispersionenergies") is None:
+            this_dispersionenergies = []
+        else:
+            this_dispersionenergies = ccdata.dispersionenergies
+
+        if "Dispersion energy=" in line:
+            dispersion = float(line.split()[-2])
+            this_dispersionenergies.append(dispersion)
+            return {dispersionenergies.__name__: np.array(this_dispersionenergies)}
+        return None
+        # The geometry convergence targets and values are printed in a table, with the legends
+
+
+    known_codes = ["psi4", "gaussian"]
 
     @staticmethod
     def parse(file_handler, program, ccdata) -> Optional[dict]:
