@@ -36,6 +36,7 @@ import datetime
 import logging
 import sys
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from cclib.io import ccread, moldenwriter
 from cclib.parser import DALTON, Gaussian, ccData
@@ -130,6 +131,9 @@ from .data.testvib import (
     Psi4HFIRTest,
     QChemRamanTest,
 )
+
+if TYPE_CHECKING:
+    from cclib.parser.logfileparser import Logfile
 
 # The following regression test functions were manually written, because they
 # contain custom checks that were determined on a per-file basis. Care needs to be taken
@@ -1415,9 +1419,25 @@ def testGaussian_Gaussian16_co_pbe1pbe_631ppGss_log(logfile):
     assert logfile.metadata["platform"] == "Apple M1"
 
 
+def testGaussian_Gaussian16_dol_1_pen_5_pen_trip_out(logfile: "Logfile") -> None:
+    """A geometry optimization followed by frequency calculation that performs
+    NBO at each step.  There is NBO printing for combined, alpha, and beta
+    spins.
+
+    See https://github.com/cclib/cclib/issues/1576
+    """
+    # Line 2460, geom opt step 1
+    # Line 25209, geom opt step 2
+    # Line 39581, frequency job
+    assert logfile.data.atomcharges["natural"][0] == pytest.approx(0.22988)
+
+
 def testGaussian_Gaussian16_H3_natcharge_log(logfile):
-    """A calculation with natural charges calculated. Test issue 1055 where
-    only the beta set of charges was parsed rather than the spin independent"""
+    """A calculation with NBO charges. Only the beta set of charges was parsed
+    rather than the spin independent ones.
+
+    See https://github.com/cclib/cclib/issues/1055
+    """
 
     assert isinstance(logfile.data.atomcharges, dict)
     assert "mulliken" in logfile.data.atomcharges
@@ -1489,6 +1509,25 @@ def testGaussian_Gaussian16_Ethane_mp5_log(logfile):
     assert hasattr(logfile.data, "mpenergies")
     assert len(logfile.data.mpenergies) == 1
     assert len(logfile.data.mpenergies[0]) == 4
+
+
+def testGaussian_Gaussian16_water_cation_nbo_opt_out(logfile: "Logfile") -> None:
+    """A geometry optimization that performs NBO at each step.
+    There is NBO printing for combined, alpha, and beta spins.
+    This ensures the final combined printing is used.
+
+    See https://github.com/cclib/cclib/issues/1576
+    """
+    assert logfile.data.atomcharges["natural"][0] == pytest.approx(0.12011)
+
+
+def testGaussian_Gaussian16_water_neutral_nbo_opt_out(logfile: "Logfile") -> None:
+    """A geometry optimization that performs NBO at each step.
+    This ensures the final printing is used.
+
+    See https://github.com/cclib/cclib/issues/1576
+    """
+    assert logfile.data.atomcharges["natural"][0] == pytest.approx(-0.36599)
 
 
 # Jaguar #
