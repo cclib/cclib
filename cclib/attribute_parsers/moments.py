@@ -98,7 +98,7 @@ class moments(base_parser):
         if line[1:39] == "Dipole moment (field-independent basis":
             reference = [0.0, 0.0, 0.0]
             parsed_moments = []
-            
+
             line = file_handler.virtual_next()
             tokens = line.split()
             # split - dipole would need to be *huge* to fail a split
@@ -133,10 +133,10 @@ class moments(base_parser):
             quadrupole = [quadrupole[key] for key in lex]
             parsed_moments = []
             if getattr(ccdata, "moments") is None or len(ccdata.moments) < 2:
-                    #logger.warning("Found quadrupole moments but no previous dipole")
-                    reference = [0.0, 0.0, 0.0]
-                    parsed_moments = [reference, None, quadrupole]
-                    return {moments.__name__: parsed_moments}
+                # logger.warning("Found quadrupole moments but no previous dipole")
+                reference = [0.0, 0.0, 0.0]
+                parsed_moments = [reference, None, quadrupole]
+                return {moments.__name__: parsed_moments}
             else:
                 parsed_moments = ccdata.moments
                 if len(parsed_moments) == 2:
@@ -175,10 +175,10 @@ class moments(base_parser):
 
             parsed_moments = []
             if getattr(ccdata, "moments") is None or len(ccdata.moments) < 3:
-                    #logger.warning("Found quadrupole moments but no previous dipole")
-                    reference = [0.0, 0.0, 0.0]
-                    parsed_moments = [reference, None, None, octapole]
-                    return {moments.__name__: parsed_moments}
+                # logger.warning("Found quadrupole moments but no previous dipole")
+                reference = [0.0, 0.0, 0.0]
+                parsed_moments = [reference, None, None, octapole]
+                return {moments.__name__: parsed_moments}
             else:
                 parsed_moments = ccdata.moments
                 if len(parsed_moments) == 3:
@@ -186,8 +186,6 @@ class moments(base_parser):
                     return {moments.__name__: parsed_moments}
                 else:
                     assert parsed_moments[3] == octapole
-
-
 
         if line[1:20] == "Hexadecapole moment":
             # e.g.
@@ -221,10 +219,10 @@ class moments(base_parser):
 
             parsed_moments = []
             if getattr(ccdata, "moments") is None or len(ccdata.moments) < 4:
-                    #logger.warning("Found quadrupole moments but no previous dipole")
-                    reference = [0.0, 0.0, 0.0]
-                    parsed_moments = [reference, None, None, None, hexadecapole]
-                    return {moments.__name__: parsed_moments}
+                # logger.warning("Found quadrupole moments but no previous dipole")
+                reference = [0.0, 0.0, 0.0]
+                parsed_moments = [reference, None, None, None, hexadecapole]
+                return {moments.__name__: parsed_moments}
             else:
                 parsed_moments = ccdata.moments
                 if len(parsed_moments) == 4:

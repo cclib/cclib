@@ -97,11 +97,11 @@ class geotargets(base_parser):
                 try:
                     value = utils.float(parts[2])
                 except ValueError:
-                    pass # todo logging
-                    #self.logger.error(
+                    pass  # todo logging
+                    # self.logger.error(
                     #    "Problem parsing the value for geometry optimisation: %s is not a number.",
                     #    parts[2],
-                    #)
+                    # )
                 else:
                     newlist[i] = value
                 parsed_geotargets[i] = utils.float(parts[3])
