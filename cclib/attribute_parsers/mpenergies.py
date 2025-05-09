@@ -96,6 +96,4 @@ class mpenergies(base_parser):
             program_parser = getattr(mpenergies, program)
             constructed_data = program_parser(file_handler, ccdata)
             file_handler.virtual_reset()
-            if constructed_data:
-                print(constructed_data)
         return constructed_data
