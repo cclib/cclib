@@ -272,13 +272,13 @@ Polar     ORCA        ReferencePolarTest    basicORCA6.0          Trp_polar.out
 Polar     QChem       ReferencePolarTest    basicQChem5.1         Trp_polar.out
 Polar     QChem       ReferencePolarTest    basicQChem5.4         Trp_polar.out
 
-Scan      Gaussian     GaussianRelaxedScanTest               basicGaussian09       dvb_scan.log
+Scan      Gaussian     GaussianRelaxedScanTest               basicGaussian09       dvb_scan_relaxed.log
 Scan      Gaussian     GaussianRelaxedScanTest               basicGaussian16       dvb_scan_relaxed.log
 Scan      Gaussian     GaussianUnrelaxedScanTest             basicGaussian16       dvb_scan_unrelaxed.log
-Scan      Jaguar       JaguarRelaxedScanTest                 basicJaguar8.3        dvb_scan.out
-Scan      ORCA         GenericRelaxedScanTest                basicORCA5.0          dvb_scan.out
+Scan      Jaguar       JaguarRelaxedScanTest                 basicJaguar8.3        dvb_scan_relaxed.out
+Scan      ORCA         GenericRelaxedScanTest                basicORCA5.0          dvb_scan_relaxed.out
 Scan      ORCA         GenericUnrelaxedScanTest              basicORCA5.0          dvb_scan_unrelaxed.out
-Scan      ORCA         GenericRelaxedScanTest                basicORCA6.0          dvb_scan.out
+Scan      ORCA         GenericRelaxedScanTest                basicORCA6.0          dvb_scan_relaxed.out
 Scan      ORCA         GenericUnrelaxedScanTest              basicORCA6.0          dvb_scan_unrelaxed.out
 
 SP        ADF         ADFSPTest             basicADF2007.01             dvb_sp_b.adfout
