@@ -1,4 +1,4 @@
-! HF STO-3G 
+! rks b3lyp STO-3G noautostart
 
 %output
  printlevel normal

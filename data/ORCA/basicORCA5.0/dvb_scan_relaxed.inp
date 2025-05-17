@@ -1,4 +1,4 @@
-! HF STO-3G Opt
+! rks b3lyp STO-3G Opt noautostart
 
 %output
  printlevel normal
@@ -11,7 +11,7 @@ D 9 8 3 2 = 0, 360, 12
 end
 end
 
-*xyz 0 1
+* xyz 0 1
 C          0.26948       -1.41009        0.00000
 C         -1.06475       -0.92070        0.00000
 C         -1.32543        0.45703        0.00000
