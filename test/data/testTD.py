@@ -113,6 +113,7 @@ class GenericTDTest:
         assert data.etsyms == self.symmetries
 
     @skipForParser("ADF", "etrotats are not yet implemented")
+    @skipForParser("CFOUR", "etrotats are not yet implemented")
     @skipForParser("DALTON", "etrotats are not yet implemented")
     @skipForParser("FChk", "etrotats are not yet implemented")
     @skipForParser("GAMESS", "etrotats are not yet implemented")
@@ -144,6 +145,7 @@ class GenericTDTest:
         assert len(data.etrotats) == self.number
 
     @skipForParser("ADF", "optstate is not yet implemented")
+    @skipForParser("CFOUR", "optstate are not yet implemented")
     @skipForParser("DALTON", "optstate are not yet implemented")
     @skipForParser("FChk", "optstate are not yet implemented")
     @skipForParser("GAMESS", "optstate are not yet implemented")
@@ -425,3 +427,35 @@ class PySCFTDTest(GenericTDTest):
     symmetries = ["Singlet", "Singlet", "Singlet", "Singlet", "Singlet"]
     expected_l_max = 0.75825470773
     expected_f_max = 0.98
+
+
+class CFOUREOMCCSDTest(GenericTDTest):
+    """Test for EOMEE-CCSD with CFOUR."""
+
+    number = 20
+    expected_l_max = 1.100761725
+    expected_f_max = 0.35442355
+    sumofsec = 0.4996557738404641
+    symmetries = [
+        "Singlet-B1",
+        "Singlet-A2",
+        "Singlet-A1",
+        "Singlet-B2",
+        "Singlet-B2",
+        "Singlet-A1",
+        "Singlet-A2",
+        "Singlet-B1",
+        "Singlet-B2",
+        "Singlet-A1",
+        "Singlet-A1",
+        "Singlet-B1",
+        "Singlet-A2",
+        "Singlet-A1",
+        "Singlet-B2",
+        "Singlet-A2",
+        "Singlet-B2",
+        "Singlet-B1",
+        "Singlet-B1",
+        "Singlet-A2",
+    ]
+    method = "EOMEE-CCSD"

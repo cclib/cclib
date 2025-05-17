@@ -29,6 +29,7 @@ class GenericTDunTest:
         """Is the length of eotscs correct?"""
         assert len(data.etoscs) == self.number
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("PySCF", "etrotats are not yet implemented")
     @skipForLogfile(
@@ -57,6 +58,12 @@ class GenericTDunTest:
         triplets = [sym for sym in data.etsyms if "Triplet" in sym]
         assert len(singlets) == self.number / 2
         assert len(triplets) == self.number / 2
+
+
+class CFOUREOMCCSDunTest(GenericTDunTest):
+    """Customized UHF/EOMEE-CCSD unittest"""
+
+    number = 10
 
 
 class TurbomoleTDunTest(GenericTDunTest):

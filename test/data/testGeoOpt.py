@@ -28,6 +28,7 @@ class GenericGeoOptTest:
     scfenergy = -380.90674109218116
     scfenergy_tolerance = 1.4699729516340807
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("MOPAC", "The success status is not parsed yet")
     def test_success(self, data) -> None:
@@ -164,6 +165,7 @@ class GenericGeoOptTest:
         assert numpy.all(numpy.abs(data.geovalues[-1]) <= data.geotargets)
 
     @skipForParser("ADF", "Not implemented.")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "Not implemented.")
     @skipForParser("GAMESS", "Not implemented.")
     @skipForParser("GAMESSUK", "Not implemented.")
@@ -184,6 +186,7 @@ class GenericGeoOptTest:
         assert data.optstatus[-1] == data.OPT_DONE
 
     @skipForParser("ADF", "Not implemented yet")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "Not implemented yet")
     @skipForParser("FChk", "Rotational constants are never written to fchk files")
     @skipForParser("GAMESS", "Not implemented yet")

@@ -19,6 +19,7 @@ repos:
               \.molden$|
               \.out$|
               ^data/ADF|
+              ^data/CFOUR|
               ^data/DALTON|
               ^data/FChk|
               ^data/GAMESS|
@@ -47,6 +48,7 @@ repos:
               \.molden$|
               \.out$|
               ^data/ADF|
+              ^data/CFOUR|
               ^data/DALTON|
               ^data/FChk|
               ^data/GAMESS|
@@ -75,6 +77,7 @@ repos:
               \.molden$|
               \.out$|
               ^data/ADF|
+              ^data/CFOUR|
               ^data/DALTON|
               ^data/FChk|
               ^data/GAMESS|
@@ -103,6 +106,7 @@ repos:
               \.molden$|
               \.out$|
               ^data/ADF|
+              ^data/CFOUR|
               ^data/DALTON|
               ^data/FChk|
               ^data/GAMESS|

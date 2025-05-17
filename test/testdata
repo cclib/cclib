@@ -11,6 +11,7 @@
 # a special keyword, and we can test both HF and DFT outputs. Gaussian is an
 # exception, as it has at least two different formats for printing basis set
 # information, and so we made dedicated unit test logfiles in that case.
+Basis     CFOUR       GenericBasisTest      basicCFOUR2.1         dvb_sp.c4
 Basis     DALTON      GenericBasisTest      basicDALTON-2013      dvb_sp_hf.out
 Basis     DALTON      GenericBasisTest      basicDALTON-2015      dvb_sp_hf.out
 Basis     DALTON      GenericBasisTest      basicDALTON-2013      dvb_sp_ks.out
@@ -46,6 +47,7 @@ Basis     PySCF       GenericBasisTest      basicPySCF2.6         dvb_sp.py
 Basis     QChem       GenericBasisTest      basicQChem5.1         dvb_sp.out
 Basis     QChem       GenericBasisTest      basicQChem5.4         dvb_sp.out
 
+Basis     CFOUR       GenericBigBasisTest   basicCFOUR2.1         C_bigbasis.c4
 Basis     DALTON      DALTONBigBasisTest    basicDALTON-2013      C_bigbasis.out
 Basis     DALTON      DALTONBigBasisTest    basicDALTON-2015      C_bigbasis.out
 Basis     GAMESS      GenericBigBasisTest   basicFirefly8.0       C_bigbasis.out
@@ -72,6 +74,10 @@ BOMD      NWChem      GenericBOMDTest       basicNWChem7.0        dvb_bomd_ks.ou
 BOMD      QChem       GenericBOMDTest       basicQChem5.1         dvb_bomd.out
 BOMD      QChem       GenericBOMDTest       basicQChem5.4         dvb_bomd.out
 
+CC        CFOUR       CFOURCC2Test          basicCFOUR2.1         water_cc2.c4
+CC        CFOUR       CFOURCCDTest          basicCFOUR2.1         water_ccd.c4
+CC        CFOUR       CFOURCCSDTest         basicCFOUR2.1         water_ccsd.c4
+CC        CFOUR       CFOURCCSDPTTest       basicCFOUR2.1         water_ccsdpt.c4
 CC        DALTON      DALTONCCSDPTTest      basicDALTON-2013      water_ccsdt.out
 CC        DALTON      DALTONCCSDPTTest      basicDALTON-2015      water_ccsdt.out
 CC        GAMESS      GamessCCDTest         basicGAMESS-US2017    water_ccd.out
@@ -129,6 +135,7 @@ CI        QChem       QChemCISTest          basicQChem5.4         water_cis.out
 
 Core      ADF         ADFCoreTest           basicADF2007.01       MoOCl4-sp.adfout
 Core      ADF         ADFCoreTest           basicADF2013.01       MoOCl4-sp.adfout
+Core      CFOUR       GenericCoreTest       basicCFOUR2.1         MoOCl4_sp.c4
 Core      FChk        GenericCoreTest       basicGaussian09       Mo4OCl4-sp.fchk
 Core      FChk        GenericCoreTest       basicGaussian16       Mo4OCl4-sp.fchk
 Core      FChk        GenericCoreTest       basicQChem5.2         MoOCl4_sp_modified.fchk
@@ -147,6 +154,7 @@ Core      QChem       GenericCoreTest       basicQChem5.4         MoOCl4_sp.out
 
 GeoOpt    ADF         ADFGeoOptTest         basicADF2007.01       dvb_gopt_b.adfout
 GeoOpt    ADF         ADFGeoOptTest         basicADF2013.01       dvb_gopt_b.adfout
+GeoOpt    CFOUR       GenericGeoOptTest     basicCFOUR2.1         dvb_gopt.c4
 GeoOpt    DALTON      DALTONGeoOptTest      basicDALTON-2013      dvb_gopt_hf.out
 GeoOpt    DALTON      DALTONGeoOptTest      basicDALTON-2013      dvb_gopt_ks.out
 GeoOpt    DALTON      DALTONGeoOptTest      basicDALTON-2015      dvb_gopt_hf.out
@@ -188,6 +196,9 @@ GeoOpt    Turbomole   TurbomoleGeoOptTest   basicTurbomole5.9     dvb_gopt/basis
 GeoOpt    Turbomole   TurbomoleKeepGeoOptTest   basicTurbomole7.5     dvb_gopt/basis      dvb_gopt/control      dvb_gopt/mos      dvb_gopt/job.0      dvb_gopt/job.1      dvb_gopt/job.2      dvb_gopt/job.3      dvb_gopt/job.4      dvb_gopt/job.5     dvb_gopt/job.last
 GeoOpt    XTB         XTBGeoOptTest     basicXTB6.6.1/dvb_opt       dvb_opt.out gradient
 
+MP        CFOUR       GenericMP2Test        basicCFOUR2.1         water_mp2.c4
+MP        CFOUR       GenericMP3Test        basicCFOUR2.1         water_mp3.c4
+MP        CFOUR       GenericMP4Test        basicCFOUR2.1         water_mp4.c4
 MP        DALTON      GenericMP2Test        basicDALTON-2013      water_mp2.out
 MP        DALTON      GenericMP2Test        basicDALTON-2015      water_mp2.out
 MP        GAMESSUK    GenericMP2Test        basicGAMESS-UK7.0     water_mp2.out
@@ -272,6 +283,7 @@ Scan      ORCA         GenericUnrelaxedScanTest              basicORCA6.0       
 
 SP        ADF         ADFSPTest             basicADF2007.01             dvb_sp_b.adfout
 SP        ADF         ADFSPTest             basicADF2013.01             dvb_sp_b.adfout
+SP        CFOUR       GenericHFSPTest       basicCFOUR2.1               dvb_sp.c4
 SP        DALTON      GenericHFSPTest       basicDALTON-2013            dvb_sp_hf.out
 SP        DALTON      GenericSPTest         basicDALTON-2013            dvb_sp_ks.out
 SP        DALTON      GenericHFSPTest       basicDALTON-2015            dvb_sp_hf.out
@@ -360,6 +372,8 @@ SP        QChem       QChemSMDIEFPCMMetadataTest      basicQChem6.0             
 
 SPun      ADF         GenericSPunTest       basicADF2007.01       dvb_un_sp.adfout
 SPun      ADF         GenericSPunTest       basicADF2013.01       dvb_un_sp.adfout
+SPun      CFOUR       GenericSPunTest       basicCFOUR2.1         dvb_un_sp.c4
+SPun      CFOUR       GenericSPunTest       basicCFOUR2.1         dvb_rohf_sp.c4
 SPun      DALTON      GenericROSPTest       basicDALTON-2013      dvb_sp_un_hf.out
 SPun      DALTON      GenericROSPTest       basicDALTON-2013      dvb_sp_un_ks.out
 SPun      DALTON      GenericROSPTest       basicDALTON-2015      dvb_sp_un_hf.out
@@ -405,6 +419,7 @@ SPun      Turbomole   GenericSPunTest       basicTurbomole5.9     dvb_un_sp/alph
 
 TD        ADF         ADFTDDFTTest          basicADF2007.01       dvb_td.adfout
 TD        ADF         ADFTDDFTTest          basicADF2013.01       dvb_td.adfout
+TD        CFOUR       CFOUREOMCCSDTest      basicCFOUR2.1         water_eomccsd.c4
 TD        DALTON      DALTONTDTest          basicDALTON-2013      dvb_td.out
 TD        DALTON      DALTONTDTest          basicDALTON-2015      dvb_td.out
 TD        FChk        GaussianTDDFTTest     basicGaussian09       dvb_td.fchk
@@ -445,6 +460,7 @@ TD        Turbomole   TurbomoleTDCC2Test    basicTurbomole7.4     CO_cc2_TD/basi
 TD        Turbomole   TurbomoleTDADC2Test   basicTurbomole7.4     CO_adc2_TD/basis    CO_adc2_TD/control    CO_adc2_TD/mos    CO_adc2_TD/CO.log    CO_adc2_TD/coord
 TD        Turbomole   TurbomoleTDCC2TripTest   basicTurbomole7.4  CO_cc2_TD_trip/basis    CO_cc2_TD_trip/control    CO_cc2_TD_trip/mos    CO_cc2_TD_trip/dscf.out    CO_cc2_TD_trip/ricc2.out    CO_cc2_TD_trip/coord
 
+TDun      CFOUR       CFOUREOMCCSDunTest    basicCFOUR2.1         water_eomccsd_un.c4
 TDun      Gaussian    GenericTDunTest       basicGaussian09       CO_TD_delta.log
 TDun      Gaussian    GenericTDunTest       basicGaussian16       CO_TD_delta.log
 TDun      PySCF       PySCFTDunTest         basicPySCF2.6         dvb_un_td.py
@@ -453,6 +469,7 @@ TDun	  Turbomole   TurbomoleTDunTest     basicTurbomole7.4     CO_cc2_TD_un/basi
 
 vib       ADF         ADFIRTest             basicADF2007.01       dvb_ir.adfout
 vib       ADF         ADFIRTest             basicADF2013.01       dvb_ir.adfout
+vib       CFOUR       CFOURIRTest           basicCFOUR2.1         dvb_ir.c4
 vib       DALTON      GenericIRTest         basicDALTON-2013      dvb_ir.out
 vib       DALTON      GenericIRTest         basicDALTON-2015      dvb_ir.out
 vib       FChk        GaussianIRTest        basicGaussian09       dvb_ir.fchk

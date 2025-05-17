@@ -82,6 +82,26 @@ class GenericCCSDPTTest(GenericCCTest):
         )
 
 
+class CFOURCC2Test(GenericCC2Test):
+    # CFOUR 2.1
+    corr_energy = -0.03819768728081
+
+
+class CFOURCCDTest(GenericCCDTest):
+    # CFOUR 2.1
+    corr_energy = -0.05312310114987
+
+
+class CFOURCCSDTest(GenericCCSDTest):
+    # CFOUR 2.1
+    corr_energy = -0.05342943538964
+
+
+class CFOURCCSDPTTest(GenericCCSDPTTest):
+    # CFOUR 2.1
+    corr_energy = -75.017834877377 - -74.964328738906460
+
+
 class DALTONCCSDPTTest(GenericCCSDPTTest):
     # DALTON 2015
     corr_energy = -73.4491137256 - -73.4345879538

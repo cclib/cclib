@@ -1,0 +1,19 @@
+Geometry optimization of H2O at CCSD(T) level
+O
+H 1 R*
+H 1 R* 2 A*
+
+R=1.0
+A=100.0
+
+*ACES2(CALC=CCSD(T),BASIS=dzp
+GEO_CONV=10
+CC_CONV=12
+LINEQ_CONV=12
+SCF_CONV=12)
+
+
+
+
+
+

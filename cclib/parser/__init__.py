@@ -16,6 +16,7 @@
 #         from cclib.parser import ccopen
 from cclib.io.ccio import ccopen
 from cclib.parser.adfparser import ADF
+from cclib.parser.cfourparser import CFOUR
 from cclib.parser.daltonparser import DALTON
 from cclib.parser.data import ccData
 from cclib.parser.fchkparser import FChk
