@@ -56,7 +56,7 @@ class GenericSPTest:
 
         assert data.atomnos.shape == (20,)
         assert sum(data.atomnos == 6) + sum(data.atomnos == 1) == 20
-    
+
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser(
         "DALTON",

@@ -251,12 +251,14 @@ class ADFIRTest(GenericIRTest):
     zpve_thresh = 1.1e-3
     entropy_places = 4
 
+
 class CFOURIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
     highest_freq = 3816.21
     max_IR_intensity = 136.3592
     zpve = 0.1935035993144163
+
 
 class FireflyIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
