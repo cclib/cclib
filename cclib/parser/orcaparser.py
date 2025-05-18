@@ -521,8 +521,6 @@ class ORCA(logfileparser.Logfile):
         if "SCF CONVERGED AFTER" in line:
             if not hasattr(self, "scfvalues"):
                 self.scfvalues = []
-            if not hasattr(self, "scftargets"):
-                self.scftargets = []
 
             while "Total Energy       :" not in line:
                 line = next(inputfile)
@@ -554,8 +552,6 @@ class ORCA(logfileparser.Logfile):
         if "SCF NOT CONVERGED AFTER" in line:
             if not hasattr(self, "scfvalues"):
                 self.scfvalues = []
-            if not hasattr(self, "scftargets"):
-                self.scftargets = []
 
             self.append_attribute("scfenergies", self.scfvalues[-1][-1][0])
             self.metadata["methods"].append("HF" if not self.is_DFT else "DFT")
@@ -785,9 +781,7 @@ Dispersion correction           -0.016199959
                 grads.append((x, y, z))
                 line = next(inputfile).strip()
 
-            if not hasattr(self, "grads"):
-                self.grads = []
-            self.grads.append(grads)
+            self.append_attribute("grads", grads)
 
         if line.strip() == "ORCA GEOMETRY RELAXATION STEP":
             status = data.ccData.OPT_UNKNOWN
@@ -905,9 +899,7 @@ Dispersion correction           -0.016199959
                 line = next(inputfile)
 
         if line[21:68] == "FINAL ENERGY EVALUATION AT THE STATIONARY POINT":
-            if not hasattr(self, "optdone"):
-                self.optdone = []
-            self.optdone.append(len(self.atomcoords))
+            self.append_attribute("optdone", len(self.atomcoords))
 
         if "The optimization did not converge" in line:
             if not hasattr(self, "optdone"):
@@ -2491,8 +2483,6 @@ Dispersion correction           -0.016199959
 
         # Static polarizability.
         if line.strip() == "THE POLARIZABILITY TENSOR" or "STATIC POLARIZABILITY TENSOR" in line:
-            if not hasattr(self, "polarizabilities"):
-                self.polarizabilities = []
             self.skip_lines(inputfile, ["d", "b"])
             line = next(inputfile)
 
@@ -2504,7 +2494,7 @@ Dispersion correction           -0.016199959
             for _ in range(3):
                 line = next(inputfile)
                 polarizability.append(line.split())
-            self.polarizabilities.append(numpy.array(polarizability))
+            self.append_attribute("polarizabilities", numpy.array(polarizability))
 
         if line.strip() == "Rotational spectrum":
             self.skip_lines(inputfile, ["d", "b", "Rotational constants in cm-1"])
@@ -2907,9 +2897,7 @@ Dispersion correction           -0.016199959
             line = next(inputfile)
             assert "symmetry adapted basis functions" in line
             irrep = line[8:13]
-            if not hasattr(self, "symlabels"):
-                self.symlabels = []
-            self.symlabels.append(self.normalisesym(irrep))
+            self.append_attribute("symlabels", self.normalisesym(irrep))
 
         self.metadata["symmetry_detected"] = point_group_full
         self.metadata["symmetry_used"] = point_group_abelian
@@ -3147,10 +3135,8 @@ Dispersion correction           -0.016199959
         #                         ----------------------------
         # ....
         #
-        if not hasattr(self, "scfvalues"):
-            self.scfvalues = []
 
-        self.scfvalues.append([])
+        self.append_attribute("scfvalues", [])
 
         line = "Foo"  # dummy argument to enter loop
         while line.find("******") < 0:
@@ -3206,7 +3192,7 @@ Dispersion correction           -0.016199959
 
         if len(self.scfvalues) > 0:
             self.scfvalues[-1].append([deltaE_value, maxDP_value, rmsDP_value])
-            self.scftargets.append([deltaE_target, maxDP_target, rmsDP_target])
+            self.append_attribute("scftargets", [deltaE_target, maxDP_target, rmsDP_target])
         else:
             self.logger.warning("No SCF values when parsing final changes")
 
