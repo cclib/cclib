@@ -41,6 +41,9 @@ class GenericSPTest:
     # Generally, one criteria for SCF energy convergence.
     num_scf_criteria = 1
 
+    # taken from Gaussian16/dvb_sp.out
+    rotconsts = [4.6266363, 0.6849065, 0.5965900]
+
     def testnatom(self, data) -> None:
         """Is the number of atoms equal to 20?"""
         assert data.natom == 20
@@ -412,7 +415,6 @@ class GenericSPTest:
     @skipForParser("Molpro", "Not implemented yes")
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("NWChem", "Not implemented yes")
-    @skipForParser("ORCA", "Not implemented yes")
     @skipForParser("Psi4", "Not implemented yes")
     @skipForParser("QChem", "Not implemented yes")
     @skipForParser("Turbomole", "Not implemented yes")
@@ -420,9 +422,7 @@ class GenericSPTest:
     def testrotconsts(self, data) -> None:
         """A single geometry leads to single set of rotational constants."""
         assert data.rotconsts.shape == (1, 3)
-        # taken from Gaussian16/dvb_sp.out
-        ref = [4.6266363, 0.6849065, 0.5965900]
-        numpy.testing.assert_allclose(data.rotconsts[0], ref, rtol=0, atol=1.0e-3)
+        numpy.testing.assert_allclose(data.rotconsts[0], self.rotconsts, rtol=0, atol=1.0e-3)
 
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("FChk", "The parser is still being developed so we skip this test")
@@ -718,6 +718,8 @@ class OrcaSPTest(GenericSPTest):
 
     num_scf_criteria = 3
 
+    rotconsts = [4.614497946, 0.685205544, 0.596614430]
+
 
 class OrcaHFSPTest(OrcaSPTest, GenericHFSPTest):
     """Customized restricted single point unittest"""
@@ -774,20 +776,15 @@ class PySCFSPTest(GenericSPTest):
 
     num_scf_criteria = 2
 
+    # PySCF produces different constants compared to Gaussian (probably
+    # because we're using slightly different isotope masses).
+    rotconsts = [4.617831, 0.685761, 0.597091]
+
     def testmetadata_input_file(self, data) -> None:
         """Does metadata have expected keys and values?"""
         assert "input_file_contents" in data.metadata
         # PySCF doesn't really have a concept of an input file
         # assert "dvb_sp.in" in data.metadata["input_file_name"]
-
-    def testrotconsts(self, data) -> None:
-        """A single geometry leads to single set of rotational constants."""
-        assert data.rotconsts.shape == (1, 3)
-
-        # PySCF produces different constants compared to Gaussian (probably
-        # because we're using slightly different isotope masses).
-        ref = [4.617831, 0.685761, 0.597091]
-        numpy.testing.assert_allclose(data.rotconsts[0], ref, rtol=0, atol=1.0e-3)
 
 
 class XTBSPTest(GenericSPTest):

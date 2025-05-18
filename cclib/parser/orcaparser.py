@@ -2506,6 +2506,11 @@ Dispersion correction           -0.016199959
                 polarizability.append(line.split())
             self.polarizabilities.append(numpy.array(polarizability))
 
+        if line.strip() == "Rotational spectrum":
+            self.skip_lines(inputfile, ["d", "b", "Rotational constants in cm-1"])
+            line = next(inputfile)
+            self.append_attribute("rotconsts", [float(v) / 1.0e3 for v in line.split()[-3:]])
+
         if line.strip() == "ORCA-CASSCF":
             # -------------------------------------------------------------------------------
             #                               ORCA-CASSCF
