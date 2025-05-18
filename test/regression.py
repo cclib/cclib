@@ -1910,6 +1910,7 @@ def testORCA_ORCA3_0_chelpg_out(logfile):
 def testORCA_ORCA3_0_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, "optdone") and not logfile.data.optdone
+    assert logfile.data.optstatus[-1] == logfile.data.OPT_UNCONVERGED
 
     assert logfile.data.metadata["legacy_package_version"] == "3.0.1"
     assert logfile.data.metadata["package_version"] == "3.0.1"

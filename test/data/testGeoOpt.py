@@ -174,7 +174,6 @@ class GenericGeoOptTest:
     @skipForParser("Molpro", "Not implemented.")
     @skipForParser("MOPAC", "Not implemented.")
     @skipForParser("NWChem", "Not implemented.")
-    @skipForParser("ORCA", "Not implemented.")
     @skipForParser("QChem", "Not implemented.")
     @skipForParser("xTB", "not implemented yet")
     def testoptstatus(self, data) -> None:
