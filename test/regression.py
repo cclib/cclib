@@ -1910,6 +1910,7 @@ def testORCA_ORCA3_0_chelpg_out(logfile):
 def testORCA_ORCA3_0_dvb_gopt_unconverged_out(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, "optdone") and not logfile.data.optdone
+    assert logfile.data.optstatus[-1] == logfile.data.OPT_UNCONVERGED
 
     assert logfile.data.metadata["legacy_package_version"] == "3.0.1"
     assert logfile.data.metadata["package_version"] == "3.0.1"
@@ -3483,6 +3484,18 @@ class MolproBigBasisTest_cart(MolproBigBasisTest):
 # ORCA #
 
 
+class OrcaGeoOptTest_norotconsts(OrcaGeoOptTest):
+    """Versions pre-4.1 did not print rotational constants."""
+
+    def testrotconsts(self, data: "ccData") -> None:
+        """Rotational constants were not printed in versions prior to 4.1."""
+        v = parse_version(data.metadata["package_version"]).release
+        if v >= (4, 1):
+            super().testrotconsts(data)
+        else:
+            pytest.skip("Rotational constants were not printed in versions prior to 4.1.")
+
+
 class OrcaRelaxedScanTest(GenericRelaxedScanTest):
     """Customized relaxed potential energy surface scan unittest"""
 
@@ -3502,7 +3515,19 @@ class OrcaROCIS40Test(OrcaROCISTest):
     n_spectra = 8
 
 
-class OrcaSPTest_nohirshfeld(OrcaSPTest):
+class OrcaSPTest_norotconsts(OrcaSPTest):
+    """Versions pre-4.1 did not print rotational constants."""
+
+    def testrotconsts(self, data: "ccData") -> None:
+        """Rotational constants were not printed in versions prior to 4.1."""
+        v = parse_version(data.metadata["package_version"]).release
+        if v >= (4, 1):
+            super().testrotconsts(data)
+        else:
+            pytest.skip("Rotational constants were not printed in versions prior to 4.1.")
+
+
+class OrcaSPTest_nohirshfeld(OrcaSPTest_norotconsts):
     """Versions pre-5.0 did not specify calculating Hirshfeld atomic charges."""
 
     @pytest.mark.skip("atomcharges['hirshfeld'] were not calculated")

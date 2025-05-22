@@ -10,7 +10,7 @@ import re
 from itertools import chain, zip_longest
 from typing import Callable, Optional, Tuple
 
-from cclib.parser import logfileparser, utils
+from cclib.parser import data, logfileparser, utils
 
 import numpy
 from packaging.version import parse as parse_version
@@ -789,6 +789,12 @@ Dispersion correction           -0.016199959
                 self.grads = []
             self.grads.append(grads)
 
+        if line.strip() == "ORCA GEOMETRY RELAXATION STEP":
+            status = data.ccData.OPT_UNKNOWN
+            if not hasattr(self, "optstatus"):
+                status += data.ccData.OPT_NEW
+            self.append_attribute("optstatus", status)
+
         # After each geometry optimization step, ORCA prints the current convergence
         # parameters and the targets (again), so it is a good idea to check that they
         # have not changed. Note that the order of these criteria here are different
@@ -841,6 +847,12 @@ Dispersion correction           -0.016199959
                     assert targets[names.index(n)] == self.geotargets[i]
 
             self.append_attribute("geovalues", newvalues)
+
+        if "THE OPTIMIZATION HAS CONVERGED" in line:
+            self.optstatus[-1] += data.ccData.OPT_DONE
+
+        if line.startswith("The optimization did not converge"):
+            self.optstatus[-1] += data.ccData.OPT_UNCONVERGED
 
         """ Grab cartesian coordinates
         ---------------------------------
@@ -2493,6 +2505,11 @@ Dispersion correction           -0.016199959
                 line = next(inputfile)
                 polarizability.append(line.split())
             self.polarizabilities.append(numpy.array(polarizability))
+
+        if line.strip() == "Rotational spectrum":
+            self.skip_lines(inputfile, ["d", "b", "Rotational constants in cm-1"])
+            line = next(inputfile)
+            self.append_attribute("rotconsts", [float(v) / 1.0e3 for v in line.split()[-3:]])
 
         if line.strip() == "ORCA-CASSCF":
             # -------------------------------------------------------------------------------

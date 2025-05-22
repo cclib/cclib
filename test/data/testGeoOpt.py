@@ -174,7 +174,6 @@ class GenericGeoOptTest:
     @skipForParser("Molpro", "Not implemented.")
     @skipForParser("MOPAC", "Not implemented.")
     @skipForParser("NWChem", "Not implemented.")
-    @skipForParser("ORCA", "Not implemented.")
     @skipForParser("QChem", "Not implemented.")
     @skipForParser("xTB", "not implemented yet")
     def testoptstatus(self, data) -> None:
@@ -196,7 +195,6 @@ class GenericGeoOptTest:
     @skipForParser("Molpro", "Not implemented yet")
     @skipForLogfile("MOPAC/basicMOPAC2016", "Not present in this file")
     @skipForParser("NWChem", "Not implemented yet")
-    @skipForParser("ORCA", "Not implemented yet")
     @skipForParser("Psi4", "Not implemented yet")
     @skipForParser("QChem", "Not implemented yet")
     @skipForParser("Turbomole", "Not implemented yet")
@@ -367,6 +365,10 @@ class OrcaGeoOptTest(GenericGeoOptTest):
         )
         converged = conv_all or conv_e or conv_g or conv_x
         assert converged
+
+    def testrotconsts(self, data) -> None:
+        """ORCA only prints rotational constants for the final geometry."""
+        assert data.rotconsts.shape == (1, 3)
 
 
 class Psi4GeoOptTest(GenericGeoOptTest):
