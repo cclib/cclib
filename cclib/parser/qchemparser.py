@@ -634,8 +634,6 @@ cannot be determined. Rerun without `$molecule read`."""
             if "Basis set in general basis input format:" in line:
                 self.skip_lines(inputfile, ["d", "$basis"])
                 line = next(inputfile)
-                if not hasattr(self, "gbasis"):
-                    self.gbasis = []
                 # The end of the general basis block.
                 while "$end" not in line:
                     atom = []
@@ -694,7 +692,7 @@ cannot be determined. Rerun without `$molecule read`."""
                         # Move to the next contracted basis function
                         # as long as we don't hit the '****' atom
                         # delimiter.
-                    self.gbasis.append(atom)
+                    self.append_attribute("gbasis", atom)
                     line = next(inputfile)
 
             if line.strip() == "The following effective core potentials will be applied":
@@ -922,10 +920,8 @@ cannot be determined. Rerun without `$molecule read`."""
             scf_success_messages = ("Convergence criterion met", "corrected energy")
             scf_failure_messages = ("SCF failed to converge", "Convergence failure")
             if "SCF converges when " in line:
-                if not hasattr(self, "scftargets"):
-                    self.scftargets = []
                 target = float(line.split()[-1])
-                self.scftargets.append([target])
+                self.append_attribute("scftargets", [target])
 
                 # We should have the header between dashes now,
                 # but sometimes there are lines before the first dashes.
@@ -968,9 +964,7 @@ cannot be determined. Rerun without `$molecule read`."""
                     if any(message in line for message in scf_failure_messages):
                         break
 
-                if not hasattr(self, "scfvalues"):
-                    self.scfvalues = []
-                self.scfvalues.append(numpy.array(values))
+                self.append_attribute("scfvalues", numpy.array(values))
 
             # Molecular orbital coefficients.
 
@@ -979,18 +973,16 @@ cannot be determined. Rerun without `$molecule read`."""
             # aonames/mocoeffs/moenergies block (which comes from
             # `print_orbitals = true`).
             if "Final Alpha MO Coefficients" in line:
-                if not hasattr(self, "mocoeffs"):
-                    self.mocoeffs = []
                 mocoeffs = QChem.parse_matrix(
                     inputfile, self.nbasis, self.norbdisp_alpha, self.ncolsblock
                 )
-                self.mocoeffs.append(mocoeffs.transpose())
+                self.append_attribute("mocoeffs", mocoeffs.transpose())
 
             if "Final Beta MO Coefficients" in line:
                 mocoeffs = QChem.parse_matrix(
                     inputfile, self.nbasis, self.norbdisp_beta, self.ncolsblock
                 )
-                self.mocoeffs.append(mocoeffs.transpose())
+                self.append_attribute("mocoeffs", mocoeffs.transpose())
 
             if "Total energy in the final basis set" in line:
                 self.append_attribute("scfenergies", float(line.split()[-1]))
@@ -1002,24 +994,18 @@ cannot be determined. Rerun without `$molecule read`."""
                 line_d = next(inputfile).split()[1:3]
                 line_e = next(inputfile).split()[2:4]
 
-                if not hasattr(self, "geotargets"):
-                    self.geotargets = [line_g[1], line_d[1], utils.float(line_e[1])]
-                if not hasattr(self, "geovalues"):
-                    self.geovalues = []
+                self.set_attribute("geotargets", [line_g[1], line_d[1], utils.float(line_e[1])])
                 maxg = utils.float(line_g[0])
                 maxd = utils.float(line_d[0])
                 ediff = utils.float(line_e[0])
                 geovalues = [maxg, maxd, ediff]
-                self.geovalues.append(geovalues)
+                self.append_attribute("geovalues", geovalues)
 
             if "**  OPTIMIZATION CONVERGED  **" in line:
-                if not hasattr(self, "optdone"):
-                    self.optdone = []
-                self.optdone.append(len(self.atomcoords))
+                self.append_attribute("optdone", len(self.atomcoords))
 
             if "**  MAXIMUM OPTIMIZATION CYCLES REACHED  **" in line:
-                if not hasattr(self, "optdone"):
-                    self.optdone = []
+                self.set_attribute("optdone", [])
 
             # Moller-Plesset corrections.
 
@@ -1234,13 +1220,11 @@ cannot be determined. Rerun without `$molecule read`."""
 
             # Static and dynamic polarizability from mopropman.
             if "Polarizability (a.u.)" in line:
-                if not hasattr(self, "polarizabilities"):
-                    self.polarizabilities = []
                 while "Full Tensor" not in line:
                     line = next(inputfile)
                 self.skip_line(inputfile, "blank")
                 polarizability = [next(inputfile).split() for _ in range(3)]
-                self.polarizabilities.append(numpy.array(polarizability))
+                self.append_attribute("polarizabilities", numpy.array(polarizability))
 
             # Static polarizability from finite difference or
             # responseman.
@@ -1248,10 +1232,8 @@ cannot be determined. Rerun without `$molecule read`."""
                 "Static polarizability tensor [a.u.]",
                 "Polarizability tensor      [a.u.]",
             ):
-                if not hasattr(self, "polarizabilities"):
-                    self.polarizabilities = []
                 polarizability = [next(inputfile).split() for _ in range(3)]
-                self.polarizabilities.append(numpy.array(polarizability))
+                self.append_attribute("polarizabilities", numpy.array(polarizability))
 
             # Molecular orbital energies and symmetries.
             if line.strip() == "Orbital Energies (a.u.) and Symmetries":
@@ -1556,19 +1538,15 @@ cannot be determined. Rerun without `$molecule read`."""
             # For `method = force` or geometry optimizations,
             # the gradient is printed.
             if any(header in line for header in self.gradient_headers):
-                if not hasattr(self, "grads"):
-                    self.grads = []
                 if "SCF" in line:
                     ncolsblock = self.ncolsblock
                 else:
                     ncolsblock = 5
                 grad = QChem.parse_matrix(inputfile, 3, self.natom, ncolsblock)
-                self.grads.append(grad.T)
+                self.append_attribute("grads", grad.T)
 
             # (Static) polarizability from frequency calculations.
             if "Polarizability Matrix (a.u.)" in line:
-                if not hasattr(self, "polarizabilities"):
-                    self.polarizabilities = []
                 polarizability = []
                 self.skip_line(inputfile, "index header")
                 for _ in range(3):
@@ -1576,7 +1554,7 @@ cannot be determined. Rerun without `$molecule read`."""
                     ss = line.strip()[1:]
                     polarizability.append([ss[0:12], ss[13:24], ss[25:36]])
                 # For some reason the sign is inverted.
-                self.polarizabilities.append(-numpy.array(polarizability, dtype=float))
+                self.append_attribute("polarizabilities", -numpy.array(polarizability, dtype=float))
 
             # For IR-related jobs, the Hessian is printed (dim: 3*natom, 3*natom).
             # Note that this is *not* the mass-weighted Hessian.

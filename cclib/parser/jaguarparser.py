@@ -376,9 +376,6 @@ class Jaguar(logfileparser.Logfile):
         ):
             self.skip_lines(inputfile, ["b", "s", "b", "b"])
 
-            if not hasattr(self, "mocoeffs"):
-                self.mocoeffs = []
-
             aonames = []
             lastatom = "X"
 
@@ -458,7 +455,7 @@ class Jaguar(logfileparser.Logfile):
                         self.aonames = aonames
 
                     offset += 5
-                self.mocoeffs.append(mocoeffs)
+                self.append_attribute("mocoeffs", mocoeffs)
 
         #  Atomic charges from Mulliken population analysis:
         #
@@ -532,9 +529,7 @@ class Jaguar(logfileparser.Logfile):
         #  displacement rms:        4.6567E-03 .  (  1.2000E-03 )
         #
         if line[2:28] == "geometry optimization step":
-            if not hasattr(self, "geovalues"):
-                self.geovalues = []
-                self.geotargets = numpy.zeros(5, "d")
+            self.set_attribute("geotargets", numpy.zeros(5, "d"))
 
             gopt_step = int(line.split()[-1])
 
@@ -578,7 +573,7 @@ class Jaguar(logfileparser.Logfile):
                     self.geotargets[target_index] = float(line[43:54])
                     target_index += 1
                 line = next(inputfile)
-            self.geovalues.append(values)
+            self.append_attribute("geovalues", values)
 
         # IR output looks like this:
         #   frequencies        72.45   113.25   176.88   183.76   267.60   312.06
@@ -734,11 +729,6 @@ class Jaguar(logfileparser.Logfile):
         # Parse excited state output (for CIS calculations).
         # Jaguar calculates only singlet states.
         if line[2:15] == "Excited State":
-            if not hasattr(self, "etoscs"):
-                self.etoscs = []
-            if not hasattr(self, "etsecs"):
-                self.etsecs = []
-                self.etsyms = []
             self.append_attribute(
                 "etenergies", utils.convertor(float(line.split()[3]), "eV", "hartree")
             )
@@ -746,20 +736,21 @@ class Jaguar(logfileparser.Logfile):
             self.skip_lines(inputfile, ["line", "line", "line", "line"])
 
             line = next(inputfile)
-            self.etsecs.append([])
+            etsecs = []
             # Jaguar calculates only singlet states.
-            self.etsyms.append("Singlet-A")
+            self.append_attribute("etsyms", "Singlet-A")
             while line.strip() != "":
                 fromMO = int(line.split()[0]) - 1
                 toMO = int(line.split()[2]) - 1
                 coeff = float(line.split()[-1])
-                self.etsecs[-1].append([(fromMO, 0), (toMO, 0), coeff])
+                etsecs.append([(fromMO, 0), (toMO, 0), coeff])
                 line = next(inputfile)
+            self.append_attribute("etsecs", etsecs)
             # Skip 3 lines
             for i in range(4):
                 line = next(inputfile)
             strength = float(line.split()[-1])
-            self.etoscs.append(strength)
+            self.append_attribute("etoscs", strength)
 
         if line[:20] == " Total elapsed time:" or line[:18] == " Total cpu seconds":
             self.metadata["success"] = True

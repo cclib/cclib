@@ -661,9 +661,7 @@ class Gaussian(logfileparser.Logfile):
 
         # Catch message about completed optimization.
         if line[1:23] == "Optimization completed":
-            if not hasattr(self, "optdone"):
-                self.optdone = []
-            self.optdone.append(len(self.geovalues) - 1)
+            self.append_attribute("optdone", len(self.geovalues) - 1)
 
             assert hasattr(self, "optstatus") and len(self.optstatus) > 0
             self.optstatus[-1] += data.ccData.OPT_DONE
@@ -1144,9 +1142,7 @@ class Gaussian(logfileparser.Logfile):
         # Matches "Step number  123", "Pt XX Step number 123" and "PtXXX Step number 123"
         if " Step number" in line:
             step = int(line.split()[line.split().index("Step") + 2])
-            if not hasattr(self, "optstatus"):
-                self.optstatus = []
-            self.optstatus.append(data.ccData.OPT_UNKNOWN)
+            self.append_attribute("optstatus", data.ccData.OPT_UNKNOWN)
             if step == 1:
                 self.optstatus[-1] += data.ccData.OPT_NEW
 
@@ -2557,17 +2553,13 @@ class Gaussian(logfileparser.Logfile):
         #   Delta-x Convergence NOT Met
         # IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC
         if line[1:20] == "INPUT DATA FOR L123":  # First IRC step
-            if not hasattr(self, "optstatus"):
-                self.optstatus = []
-            self.optstatus.append(data.ccData.OPT_NEW)
+            self.append_attribute("optstatus", data.ccData.OPT_NEW)
         if line[3:22] == "Delta-x Convergence":
             if line[23:30] == "NOT Met":
                 self.optstatus[-1] += data.ccData.OPT_UNCONVERGED
             elif line[23:26] == "Met":
                 self.optstatus[-1] += data.ccData.OPT_DONE
-                if not hasattr(self, "optdone"):
-                    self.optdone = []
-                self.optdone.append(len(self.optstatus) - 1)
+                self.append_attribute("optdone", len(self.optstatus) - 1)
 
         # Save num CPUs incase we have an old version of Gaussian which doesn't print wall times.
         if "Will use up to" in line:
