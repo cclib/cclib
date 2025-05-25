@@ -362,11 +362,12 @@ class ORCA(logfileparser.Logfile):
                 line = next(inputfile).strip()
                 self.append_attribute("scannames", line.split(":")[0])
         if "TRAJECTORY STEP" in line:
-            current_params = []
+            if not hasattr(self, "scanparm"):
+                self.scanparm = [[] for _ in range(len(self.scannames))]
             for i in range(len(self.scannames)):
                 line = next(inputfile)
-                current_params.append(float(line.split(":")[-1].strip()))
-            self.append_attribute("scanparm", tuple(current_params))
+                parm = float(line.split(":")[-1].strip())
+                self.scanparm[i].append(parm)
 
         # If the calculations is a relaxed parameter scan then immediately following the
         # input file block is the following section:
@@ -664,12 +665,13 @@ Dispersion correction           -0.016199959
         # RMS Displacement         TolRMSD  ....  2.0000e-03 bohr
         if "RELAXED SURFACE SCAN STEP" in line:
             _ = self.skip_line(inputfile, "s")
-            current_params = []
+            if not hasattr(self, "scanparm"):
+                self.scanparm = [[] for _ in range(len(self.scannames))]
             for i in range(len(self.scannames)):
                 line = next(inputfile)
                 line = line.replace("*", "")
-                current_params.append(float(line.split(":")[-1].strip()))
-            self.append_attribute("scanparm", tuple(current_params))
+                parm = float(line.split(":")[-1].strip())
+                self.scanparm[i].append(parm)
 
             self.is_relaxed_scan = True
             while "Convergence Tolerances:" not in line:
