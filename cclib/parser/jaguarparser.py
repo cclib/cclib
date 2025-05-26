@@ -7,7 +7,7 @@
 
 import re
 
-from cclib.parser import logfileparser, utils
+from cclib.parser import data, logfileparser, utils
 
 import numpy
 
@@ -231,6 +231,7 @@ class Jaguar(logfileparser.Logfile):
             self.append_attribute("mpenergies", [float(line.split()[-1])])
 
         if line[15:45] == "Geometry optimization complete":
+            self.optstatus[-1] += data.ccData.OPT_DONE
             self.append_attribute("optdone", len(self.geovalues) - 1)
 
         if line.find("number of occupied orbitals") > 0:
@@ -533,6 +534,10 @@ class Jaguar(logfileparser.Logfile):
 
             gopt_step = int(line.split()[-1])
 
+            optstatus = data.ccData.OPT_UNKNOWN
+            if gopt_step == 1:
+                optstatus += data.ccData.OPT_NEW
+
             energy = next(inputfile)  # noqa: F841
             blank = next(inputfile)
 
@@ -574,6 +579,7 @@ class Jaguar(logfileparser.Logfile):
                     target_index += 1
                 line = next(inputfile)
             self.append_attribute("geovalues", values)
+            self.append_attribute("optstatus", optstatus)
 
         # IR output looks like this:
         #   frequencies        72.45   113.25   176.88   183.76   267.60   312.06
