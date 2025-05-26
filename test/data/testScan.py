@@ -73,12 +73,14 @@ class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
     @skipForParser("ORCA", "Does not work as expected")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     def testindices(self, data) -> None:
-        """Do the indices match the results from geovalues."""
-        indexes = data.optdone
-        geovalues_from_index = data.geovalues[indexes]
-        temp = numpy.all(data.geovalues <= data.geotargets, axis=1)
-        geovalues = data.geovalues[temp]
-        numpy.testing.assert_array_equal(geovalues, geovalues_from_index)
+        """Do the optdone indices match the results from geovalues?"""
+        mask_converged_geovalues = numpy.all(data.geovalues <= data.geotargets, axis=1)
+        indices_converged_geovalues = [i for i, v in enumerate(mask_converged_geovalues) if v]
+        # Depending on the program, it's possible that convergence may be
+        # triggered even if all convergence criteria are not met, but if they
+        # are met, the program should consider it converged and we should have
+        # set optdone.
+        assert set(indices_converged_geovalues) - set(data.optdone) == set()
 
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Jaguar", "Not implemented")
