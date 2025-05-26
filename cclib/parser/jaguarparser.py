@@ -187,6 +187,27 @@ class Jaguar(logfileparser.Logfile):
                     self.coreelectrons.append(int(line.split()[1]))
                 line = next(inputfile)
 
+        # Geometry scan step   1 : (angstroms and degrees)
+        #  scan:   d = 0.0   energy =     -382.308265
+        #  ================================================
+        # //       end of geometry scan step   1         //
+        # ================================================
+        if line.startswith(" Geometry scan step"):
+            stepnum = int(line.split()[3])
+            line = next(inputfile)
+            while line.strip() and set(line.strip()) != {"="}:
+                _, scanname, _, scanparm, _, _, scanenergy = line.split()
+                # TODO The structure of this section isn't known when multiple
+                # variables are being scanned.  If there are multiple lines,
+                # this will be wrong.
+                if stepnum == 1:
+                    self.append_attribute("scannames", scanname)
+                    self.set_attribute("scanparm", [[float(scanparm)]])
+                else:
+                    self.extend_attribute("scanparm", [float(scanparm)], index=-1)
+                self.append_attribute("scanenergies", float(scanenergy))
+                line = next(inputfile)
+
         if "Molecular Point Group:" in line:
             point_group_full = line.split()[3].lower()
             while "Point Group used:" not in line:
