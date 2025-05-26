@@ -686,6 +686,18 @@ Dispersion correction           -0.016199959
                 self.geotargets_names.append(name)
                 self.geotargets.append(target)
 
+        if line.strip() in ("TRAJECTORY RESULTS", "RELAXED SURFACE SCAN RESULTS"):
+            _ = self.skip_lines(inputfile, ["d", "b"])
+            while line.strip():
+                line = next(inputfile)
+            line = next(inputfile)
+            assert line.strip() == "The Calculated Surface using the 'Actual Energy'"
+            line = next(inputfile)
+            while line.strip():
+                *_scanparms, scanenergy = (float(x) for x in line.split())
+                self.append_attribute("scanenergies", scanenergy)
+                line = next(inputfile)
+
         # Moller-Plesset energies.
         #
         # ---------------------------------------

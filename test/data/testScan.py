@@ -37,7 +37,6 @@ class GenericUnrelaxedScanTest:
         assert isinstance(data.scannames, list)
 
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
-    @skipForParser("ORCA", "Not implemented")
     @skipForParser("Jaguar", "Not implemented")
     def testscanenergies(self, data) -> None:
         assert isinstance(data.scanenergies, list)
