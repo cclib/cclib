@@ -208,6 +208,18 @@ class Jaguar(logfileparser.Logfile):
                 self.append_attribute("scanenergies", float(scanenergy))
                 line = next(inputfile)
 
+        if "rotational constants:" in line:
+            _ = self.skip_line(inputfile, "cm^(-1):")
+            line = next(inputfile)
+            rotconsts_tokens = line.split()[1:]
+            rotconsts = []
+            for rotconst_token in rotconsts_tokens:
+                if rotconst_token == "infinite":
+                    rotconsts.append(numpy.inf)
+                else:
+                    rotconsts.append(float(rotconst_token))
+            self.append_attribute("rotconsts", rotconsts)
+
         if "Molecular Point Group:" in line:
             point_group_full = line.split()[3].lower()
             while "Point Group used:" not in line:
