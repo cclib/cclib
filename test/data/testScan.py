@@ -56,6 +56,19 @@ class GenericUnrelaxedScanTest:
         for parm in data.scanparm:
             assert len(parm) == len(data.scanenergies)
 
+    @skipForParser("Jaguar", "Not implemented")
+    def testscancoords(self, data) -> None:
+        """Are the final coordinates for each scan point consistent?"""
+
+        assert isinstance(data.scancoords, numpy.ndarray)
+        if hasattr(data, "scanenergies"):
+            assert len(data.scancoords) == len(data.scanenergies)
+        # In an unrelaxed scan, the only coordinates present in the file
+        # should be the ones associated with the coordinates at each scan
+        # point.
+        assert data.scancoords.shape == data.atomcoords.shape
+        numpy.testing.assert_array_equal(data.scancoords, data.atomcoords)
+
 
 class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
     """Generic relaxed potential energy surface scan unittest."""
@@ -99,6 +112,21 @@ class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
             assert is_optdone(data.optstatus[idone])
             if idone != len(data.optstatus) - 1:
                 assert is_optnew(data.optstatus[idone + 1])
+
+    @skipForParser("Jaguar", "Not implemented")
+    def testscancoords(self, data) -> None:
+        """Are the final coordinates for each scan point consistent?"""
+
+        assert isinstance(data.scancoords, numpy.ndarray)
+        if hasattr(data, "scanenergies"):
+            assert len(data.scancoords) == len(data.scanenergies)
+        # A relaxed scan is where a geometry optimization is performed for
+        # each set of parameters along the scan rather than taking the
+        # geometry as-is.  That means each point on the scan is considered
+        # done when its geometry optimization has converged.
+        assert data.scancoords.shape == (len(data.optdone), data.natom, 3)
+        for iscan, idone in enumerate(data.optdone):
+            numpy.testing.assert_array_equal(data.scancoords[iscan], data.atomcoords[idone])
 
 
 class GaussianUnrelaxedScanTest(GenericUnrelaxedScanTest):
