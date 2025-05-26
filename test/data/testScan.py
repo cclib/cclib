@@ -90,7 +90,11 @@ class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
     def testoptstatus(self, data) -> None:
         """Does optstatus contain expected values?"""
         # The input coordinates were at a stationary point.
-        assert is_optdone(data.optstatus[0])
+        #
+        # This depends on the input, and not all currently obey this
+        # requirement.
+        #
+        # assert is_optdone(data.optstatus[0])
 
         assert len(data.converged_geometries) == len(data.optdone)
         for idone in data.optdone:
