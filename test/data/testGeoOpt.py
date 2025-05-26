@@ -143,7 +143,7 @@ class GenericGeoOptTest:
     @skipForParser("PySCF", "not implemented yet")
     @skipForParser("xTB", "not implemented yet")
     def testgeotargets(self, data) -> None:
-        """Do the geo targets have the right dimensions?"""
+        """Do the geometry optimization targets have the right dimensions?"""
         dim_geotargets = data.geotargets.shape
         dim_geovalues = (len(data.geovalues[0]),)
         assert dim_geotargets == dim_geovalues

@@ -37,7 +37,6 @@ class GenericUnrelaxedScanTest:
         assert isinstance(data.scannames, list)
 
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
-    @skipForParser("ORCA", "Not implemented")
     @skipForParser("Jaguar", "Not implemented")
     def testscanenergies(self, data) -> None:
         assert isinstance(data.scanenergies, list)
@@ -48,7 +47,6 @@ class GenericUnrelaxedScanTest:
         )
 
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
-    @skipForParser("ORCA", "Not implemented")
     @skipForParser("Jaguar", "Not implemented")
     def testscanparm(self, data) -> None:
         assert isinstance(data.scanparm, list)
@@ -57,6 +55,19 @@ class GenericUnrelaxedScanTest:
         # energies, or optimized point on the PES.
         for parm in data.scanparm:
             assert len(parm) == len(data.scanenergies)
+
+    @skipForParser("Jaguar", "Not implemented")
+    def testscancoords(self, data) -> None:
+        """Are the final coordinates for each scan point consistent?"""
+
+        assert isinstance(data.scancoords, numpy.ndarray)
+        if hasattr(data, "scanenergies"):
+            assert len(data.scancoords) == len(data.scanenergies)
+        # In an unrelaxed scan, the only coordinates present in the file
+        # should be the ones associated with the coordinates at each scan
+        # point.
+        assert data.scancoords.shape == data.atomcoords.shape
+        numpy.testing.assert_array_equal(data.scancoords, data.atomcoords)
 
 
 class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
@@ -66,31 +77,35 @@ class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     def testnumindices(self, data, extra) -> None:
-        """Do the number of indices match number of scan points."""
+        """Do the number of indices match number of scan points?"""
         assert len(data.optdone) == 12 + extra
 
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Jaguar", "Does not work as expected")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
-    @skipForParser("ORCA", "Does not work as expected")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     def testindices(self, data) -> None:
-        """Do the indices match the results from geovalues."""
-        indexes = data.optdone
-        geovalues_from_index = data.geovalues[indexes]
-        temp = numpy.all(data.geovalues <= data.geotargets, axis=1)
-        geovalues = data.geovalues[temp]
-        numpy.testing.assert_array_equal(geovalues, geovalues_from_index)
+        """Do the optdone indices match the results from geovalues?"""
+        mask_converged_geovalues = numpy.all(data.geovalues <= data.geotargets, axis=1)
+        indices_converged_geovalues = [i for i, v in enumerate(mask_converged_geovalues) if v]
+        # Depending on the program, it's possible that convergence may be
+        # triggered even if all convergence criteria are not met, but if they
+        # are met, the program should consider it converged and we should have
+        # set optdone.
+        assert set(indices_converged_geovalues) - set(data.optdone) == set()
 
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Jaguar", "Not implemented")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
-    @skipForParser("ORCA", "Not implemented")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     def testoptstatus(self, data) -> None:
         """Does optstatus contain expected values?"""
         # The input coordinates were at a stationary point.
-        assert is_optdone(data.optstatus[0])
+        #
+        # This depends on the input, and not all currently obey this
+        # requirement.
+        #
+        # assert is_optdone(data.optstatus[0])
 
         assert len(data.converged_geometries) == len(data.optdone)
         for idone in data.optdone:
@@ -98,21 +113,20 @@ class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
             if idone != len(data.optstatus) - 1:
                 assert is_optnew(data.optstatus[idone + 1])
 
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Jaguar", "Not implemented")
-    def testscannames(self, data) -> None:
-        assert isinstance(data.scannames, list)
+    def testscancoords(self, data) -> None:
+        """Are the final coordinates for each scan point consistent?"""
 
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
-    @skipForParser("Jaguar", "Not implemented")
-    @skipForParser("ORCA", "Not implemented")
-    def testscanparm(self, data) -> None:
-        assert isinstance(data.scanparm, list)
-
-        # Each parameters should have as many values as there are scan
-        # energies, or optimized point on the PES.
-        for parm in data.scanparm:
-            assert len(parm) == len(data.scanenergies)
+        assert isinstance(data.scancoords, numpy.ndarray)
+        if hasattr(data, "scanenergies"):
+            assert len(data.scancoords) == len(data.scanenergies)
+        # A relaxed scan is where a geometry optimization is performed for
+        # each set of parameters along the scan rather than taking the
+        # geometry as-is.  That means each point on the scan is considered
+        # done when its geometry optimization has converged.
+        assert data.scancoords.shape == (len(data.optdone), data.natom, 3)
+        for iscan, idone in enumerate(data.optdone):
+            numpy.testing.assert_array_equal(data.scancoords[iscan], data.atomcoords[idone])
 
 
 class GaussianUnrelaxedScanTest(GenericUnrelaxedScanTest):

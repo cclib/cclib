@@ -362,11 +362,12 @@ class ORCA(logfileparser.Logfile):
                 line = next(inputfile).strip()
                 self.append_attribute("scannames", line.split(":")[0])
         if "TRAJECTORY STEP" in line:
-            current_params = []
+            if not hasattr(self, "scanparm"):
+                self.scanparm = [[] for _ in range(len(self.scannames))]
             for i in range(len(self.scannames)):
                 line = next(inputfile)
-                current_params.append(float(line.split(":")[-1].strip()))
-            self.append_attribute("scanparm", tuple(current_params))
+                parm = float(line.split(":")[-1].strip())
+                self.scanparm[i].append(parm)
 
         # If the calculations is a relaxed parameter scan then immediately following the
         # input file block is the following section:
@@ -664,12 +665,13 @@ Dispersion correction           -0.016199959
         # RMS Displacement         TolRMSD  ....  2.0000e-03 bohr
         if "RELAXED SURFACE SCAN STEP" in line:
             _ = self.skip_line(inputfile, "s")
-            current_params = []
+            if not hasattr(self, "scanparm"):
+                self.scanparm = [[] for _ in range(len(self.scannames))]
             for i in range(len(self.scannames)):
                 line = next(inputfile)
                 line = line.replace("*", "")
-                current_params.append(float(line.split(":")[-1].strip()))
-            self.append_attribute("scanparm", tuple(current_params))
+                parm = float(line.split(":")[-1].strip())
+                self.scanparm[i].append(parm)
 
             self.is_relaxed_scan = True
             while "Convergence Tolerances:" not in line:
@@ -685,6 +687,18 @@ Dispersion correction           -0.016199959
                 target = float(line.split()[-2])
                 self.geotargets_names.append(name)
                 self.geotargets.append(target)
+
+        if line.strip() in ("TRAJECTORY RESULTS", "RELAXED SURFACE SCAN RESULTS"):
+            _ = self.skip_lines(inputfile, ["d", "b"])
+            while line.strip():
+                line = next(inputfile)
+            line = next(inputfile)
+            assert line.strip() == "The Calculated Surface using the 'Actual Energy'"
+            line = next(inputfile)
+            while line.strip():
+                *_scanparms, scanenergy = (float(x) for x in line.split())
+                self.append_attribute("scanenergies", scanenergy)
+                line = next(inputfile)
 
         # Moller-Plesset energies.
         #
@@ -783,12 +797,6 @@ Dispersion correction           -0.016199959
 
             self.append_attribute("grads", grads)
 
-        if line.strip() == "ORCA GEOMETRY RELAXATION STEP":
-            status = data.ccData.OPT_UNKNOWN
-            if not hasattr(self, "optstatus"):
-                status += data.ccData.OPT_NEW
-            self.append_attribute("optstatus", status)
-
         # After each geometry optimization step, ORCA prints the current convergence
         # parameters and the targets (again), so it is a good idea to check that they
         # have not changed. Note that the order of these criteria here are different
@@ -844,9 +852,18 @@ Dispersion correction           -0.016199959
 
         if "THE OPTIMIZATION HAS CONVERGED" in line:
             self.optstatus[-1] += data.ccData.OPT_DONE
+            self.append_attribute("optdone", len(self.optstatus) - 1)
 
         if line.startswith("The optimization did not converge"):
             self.optstatus[-1] += data.ccData.OPT_UNCONVERGED
+
+        # The start of a new optimization iteration: energy plus
+        # gradient/force calculation followed by geometry relaxation.
+        if "GEOMETRY OPTIMIZATION CYCLE" in line:
+            status = data.ccData.OPT_UNKNOWN
+            if line.split()[-2] == "1":
+                status += data.ccData.OPT_NEW
+            self.append_attribute("optstatus", status)
 
         """ Grab cartesian coordinates
         ---------------------------------
@@ -897,9 +914,6 @@ Dispersion correction           -0.016199959
                 if lb[-1] != ">":
                     self.atommasses.append(float(mass))
                 line = next(inputfile)
-
-        if line[21:68] == "FINAL ENERGY EVALUATION AT THE STATIONARY POINT":
-            self.append_attribute("optdone", len(self.atomcoords))
 
         if "The optimization did not converge" in line:
             if not hasattr(self, "optdone"):

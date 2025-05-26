@@ -248,6 +248,23 @@ class Logfile(ABC):
 
     def after_parsing(self) -> None:
         """Correct data or do parser-specific validation after parsing is finished."""
+
+        # atomcoords are parsed as a list of lists but it should be an array.
+        # Done automatically later in arrayify, but we need it now for the
+        # rest of this method.
+        if hasattr(self, "atomcoords"):
+            self.atomcoords = numpy.array(self.atomcoords)
+
+        if hasattr(self, "scanenergies"):
+            self.set_attribute("scancoords", [])
+            if hasattr(self, "optstatus") and hasattr(self, "atomcoords"):
+                converged_indexes = [
+                    x for x, y in enumerate(self.optstatus) if y & ccData.OPT_DONE > 0
+                ]
+                self.set_attribute("scancoords", self.atomcoords[converged_indexes, :, :])
+            elif hasattr(self, "atomcoords"):
+                self.set_attribute("scancoords", self.atomcoords)
+
         if (
             hasattr(self, "enthalpy")
             and hasattr(self, "entropy")

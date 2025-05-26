@@ -2209,6 +2209,42 @@ def testORCA_ORCA6_0_ho_h_cas_aDZ_scanSA_out(logfile) -> None:
     assert len(logfile.data.mocoeffs) == 1
     assert logfile.data.mocoeffs[0].shape == (nmo, nbasis)
 
+    npoints = 16
+    assert len(logfile.data.optdone) == npoints
+    assert len(logfile.data.scanenergies) == npoints
+    assert len(logfile.data.scanparm) == 1
+    assert len(logfile.data.scanparm[0]) == npoints
+    assert logfile.data.scannames == ["Bond (  2,   0)"]
+    actual_scanenergies = convertor(
+        numpy.asarray(
+            [
+                -75.92129535,
+                -75.92128991,
+                -75.92127521,
+                -75.92123869,
+                -75.92115423,
+                -75.92097062,
+                -75.92058801,
+                -75.92081693,
+                -75.92038463,
+                -75.91960223,
+                -75.91816618,
+                -75.91535317,
+                -75.90974140,
+                -75.89950765,
+                -75.88780375,
+                -75.90555481,
+            ]
+        ),
+        "hartree",
+        "eV",
+    )
+    numpy.testing.assert_array_equal(logfile.data.scanenergies, actual_scanenergies)
+    for iscan, idone in enumerate(logfile.data.optdone):
+        numpy.testing.assert_array_equal(
+            logfile.data.scancoords[iscan], logfile.data.atomcoords[idone]
+        )
+
 
 # PSI 3 #
 
@@ -3484,7 +3520,7 @@ class MolproBigBasisTest_cart(MolproBigBasisTest):
 # ORCA #
 
 
-class OrcaGeoOptTest_norotconsts(OrcaGeoOptTest):
+class OrcaSkipRotconstsMixin:
     """Versions pre-4.1 did not print rotational constants."""
 
     def testrotconsts(self, data: "ccData") -> None:
@@ -3515,19 +3551,11 @@ class OrcaROCIS40Test(OrcaROCISTest):
     n_spectra = 8
 
 
-class OrcaSPTest_norotconsts(OrcaSPTest):
+class OrcaSPTest_norotconsts(OrcaSkipRotconstsMixin, OrcaSPTest):
     """Versions pre-4.1 did not print rotational constants."""
 
-    def testrotconsts(self, data: "ccData") -> None:
-        """Rotational constants were not printed in versions prior to 4.1."""
-        v = parse_version(data.metadata["package_version"]).release
-        if v >= (4, 1):
-            super().testrotconsts(data)
-        else:
-            pytest.skip("Rotational constants were not printed in versions prior to 4.1.")
 
-
-class OrcaSPTest_nohirshfeld(OrcaSPTest_norotconsts):
+class OrcaSPTest_nohirshfeld(OrcaSkipRotconstsMixin, OrcaSPTest):
     """Versions pre-5.0 did not specify calculating Hirshfeld atomic charges."""
 
     @pytest.mark.skip("atomcharges['hirshfeld'] were not calculated")
