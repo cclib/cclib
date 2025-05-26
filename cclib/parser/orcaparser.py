@@ -852,6 +852,7 @@ Dispersion correction           -0.016199959
 
         if "THE OPTIMIZATION HAS CONVERGED" in line:
             self.optstatus[-1] += data.ccData.OPT_DONE
+            self.append_attribute("optdone", len(self.optstatus) - 1)
 
         if line.startswith("The optimization did not converge"):
             self.optstatus[-1] += data.ccData.OPT_UNCONVERGED
@@ -913,9 +914,6 @@ Dispersion correction           -0.016199959
                 if lb[-1] != ">":
                     self.atommasses.append(float(mass))
                 line = next(inputfile)
-
-        if line[21:68] == "FINAL ENERGY EVALUATION AT THE STATIONARY POINT":
-            self.append_attribute("optdone", len(self.atomcoords))
 
         if "The optimization did not converge" in line:
             if not hasattr(self, "optdone"):
