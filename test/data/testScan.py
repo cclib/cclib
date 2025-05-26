@@ -70,7 +70,6 @@ class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Jaguar", "Does not work as expected")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
-    @skipForParser("ORCA", "Does not work as expected")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     def testindices(self, data) -> None:
         """Do the optdone indices match the results from geovalues?"""
@@ -85,7 +84,6 @@ class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Jaguar", "Not implemented")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
-    @skipForParser("ORCA", "Not implemented")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     def testoptstatus(self, data) -> None:
         """Does optstatus contain expected values?"""
