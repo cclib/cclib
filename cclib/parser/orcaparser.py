@@ -797,12 +797,6 @@ Dispersion correction           -0.016199959
 
             self.append_attribute("grads", grads)
 
-        if line.strip() == "ORCA GEOMETRY RELAXATION STEP":
-            status = data.ccData.OPT_UNKNOWN
-            if not hasattr(self, "optstatus"):
-                status += data.ccData.OPT_NEW
-            self.append_attribute("optstatus", status)
-
         # After each geometry optimization step, ORCA prints the current convergence
         # parameters and the targets (again), so it is a good idea to check that they
         # have not changed. Note that the order of these criteria here are different
@@ -861,6 +855,14 @@ Dispersion correction           -0.016199959
 
         if line.startswith("The optimization did not converge"):
             self.optstatus[-1] += data.ccData.OPT_UNCONVERGED
+
+        # The start of a new optimization iteration: energy plus
+        # gradient/force calculation followed by geometry relaxation.
+        if "GEOMETRY OPTIMIZATION CYCLE" in line:
+            status = data.ccData.OPT_UNKNOWN
+            if line.split()[-2] == "1":
+                status += data.ccData.OPT_NEW
+            self.append_attribute("optstatus", status)
 
         """ Grab cartesian coordinates
         ---------------------------------
