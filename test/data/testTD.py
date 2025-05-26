@@ -145,17 +145,17 @@ class GenericTDTest:
         assert len(data.etrotats) == self.number
 
     @skipForParser("ADF", "optstate is not yet implemented")
-    @skipForParser("CFOUR", "optstate are not yet implemented")
-    @skipForParser("DALTON", "optstate are not yet implemented")
-    @skipForParser("FChk", "optstate are not yet implemented")
-    @skipForParser("GAMESS", "optstate are not yet implemented")
-    @skipForParser("GAMESSUK", "optstate are not yet implemented")
-    @skipForParser("Jaguar", "optstate are not yet implemented")
-    @skipForParser("NWChem", "optstate are not yet implemented")
-    @skipForParser("ORCA", "optstate are not yet implemented")
-    @skipForParser("PySCF", "optstate are not yet implemented")
-    @skipForParser("QChem", "optstate are not yet implemented")
-    @skipForParser("Turbomole", "optstate are not yet implemented")
+    @skipForParser("CFOUR", "optstate is not yet implemented")
+    @skipForParser("DALTON", "optstate is not yet implemented")
+    @skipForParser("FChk", "optstate is not yet implemented")
+    @skipForParser("GAMESS", "optstate is not yet implemented")
+    @skipForParser("GAMESSUK", "optstate is not yet implemented")
+    @skipForParser("Jaguar", "optstate is not yet implemented")
+    @skipForParser("NWChem", "optstate is not yet implemented")
+    @skipForParser("ORCA", "optstate is not yet implemented")
+    @skipForParser("PySCF", "optstate is not yet implemented")
+    @skipForParser("QChem", "optstate is not yet implemented")
+    @skipForParser("Turbomole", "optstate is not yet implemented")
     def testoptstate(self, data) -> None:
         # All our examples have a default state-of-interest of 1 (index 0).
         assert data.metadata["opt_state"] == 0
