@@ -210,7 +210,7 @@ class ccData:
     OPT_DONE = 0b100
 
     def __init__(self, attributes: Mapping[str, Any] = {}) -> None:
-        """Initialize the cclibData object.
+        """Initialize the cclib data representation.
 
         Normally called in the parse() method of a Logfile subclass.
 

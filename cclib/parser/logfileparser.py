@@ -256,14 +256,14 @@ class Logfile(ABC):
             self.atomcoords = numpy.array(self.atomcoords)
 
         if hasattr(self, "scanenergies"):
-            self.scancoords = []
+            self.set_attribute("scancoords", [])
             if hasattr(self, "optstatus") and hasattr(self, "atomcoords"):
                 converged_indexes = [
                     x for x, y in enumerate(self.optstatus) if y & ccData.OPT_DONE > 0
                 ]
-                self.scancoords = self.atomcoords[converged_indexes, :, :]
+                self.set_attribute("scancoords", self.atomcoords[converged_indexes, :, :])
             elif hasattr(self, "atomcoords"):
-                self.scancoords = self.atomcoords
+                self.set_attribute("scancoords", self.atomcoords)
 
         if (
             hasattr(self, "enthalpy")
