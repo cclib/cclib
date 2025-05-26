@@ -124,7 +124,9 @@ class Gaussian(logfileparser.Logfile):
         self.nbo_spin_section = False
 
     def after_parsing(self):
-        # atomcoords are parsed as a list of lists but it should be an array
+        # atomcoords are parsed as a list of lists but it should be an array.
+        # Done automatically later in arrayify, but we need it now for the
+        # rest of this method.
         if hasattr(self, "atomcoords"):
             self.atomcoords = numpy.array(self.atomcoords)
 
@@ -136,16 +138,6 @@ class Gaussian(logfileparser.Logfile):
                 [(x[0], x[1], x[2] * numpy.sqrt(2)) for x in etsec] for etsec in self.etsecs
             ]
             self.etsecs = new_etsecs
-
-        if hasattr(self, "scanenergies"):
-            self.scancoords = []
-            if hasattr(self, "optstatus") and hasattr(self, "atomcoords"):
-                converged_indexes = [
-                    x for x, y in enumerate(self.optstatus) if y & data.ccData.OPT_DONE > 0
-                ]
-                self.scancoords = self.atomcoords[converged_indexes, :, :]
-            elif hasattr(self, "atomcoords"):
-                self.scancoords = self.atomcoords
 
         if (
             hasattr(self, "enthalpy")
@@ -220,6 +212,8 @@ class Gaussian(logfileparser.Logfile):
                     mp_energies.append(energy)
 
             self.set_attribute("mpenergies", mp_energies)
+
+        super().after_parsing()
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
