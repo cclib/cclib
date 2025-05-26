@@ -98,22 +98,6 @@ class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
             if idone != len(data.optstatus) - 1:
                 assert is_optnew(data.optstatus[idone + 1])
 
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
-    @skipForParser("Jaguar", "Not implemented")
-    def testscannames(self, data) -> None:
-        assert isinstance(data.scannames, list)
-
-    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
-    @skipForParser("Jaguar", "Not implemented")
-    @skipForParser("ORCA", "Not implemented")
-    def testscanparm(self, data) -> None:
-        assert isinstance(data.scanparm, list)
-
-        # Each parameters should have as many values as there are scan
-        # energies, or optimized point on the PES.
-        for parm in data.scanparm:
-            assert len(parm) == len(data.scanenergies)
-
 
 class GaussianUnrelaxedScanTest(GenericUnrelaxedScanTest):
     """Customized unrelaxed potential energy surface scan unittest"""
