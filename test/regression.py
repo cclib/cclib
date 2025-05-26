@@ -3495,6 +3495,17 @@ class JaguarGeoOptTest_nmo45(SkipRotconstsMixin, JaguarGeoOptTest):
         """Without special options, Jaguar only print Homo+10 orbital energies."""
         assert len(data.moenergies[0]) == 45
 
+    def testoptstatus(self, data: "ccData") -> None:
+        """The calculations that use this test, for whatever reason, are
+        already at the stationary point, so the single geometry is
+        simultaneously new, unknown, and done.
+        """
+        assert len(data.optstatus) == len(data.geovalues)
+        assert data.optstatus[0] & data.OPT_NEW == data.OPT_NEW
+        for i in range(1, len(data.optstatus) - 1):
+            assert data.optstatus[i] & data.OPT_UNKNOWN == data.OPT_UNKNOWN
+        assert data.optstatus[-1] & data.OPT_DONE == data.OPT_DONE
+
 
 class JaguarSPTest_nmo45(SkipRotconstsMixin, JaguarSPTest_noatomcharges):
     def testlengthmoenergies(self, data: "ccData") -> None:

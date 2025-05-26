@@ -169,7 +169,6 @@ class GenericGeoOptTest:
     @skipForParser("DALTON", "Not implemented.")
     @skipForParser("GAMESS", "Not implemented.")
     @skipForParser("GAMESSUK", "Not implemented.")
-    @skipForParser("Jaguar", "Not implemented.")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Molpro", "Not implemented.")
     @skipForParser("MOPAC", "Not implemented.")
