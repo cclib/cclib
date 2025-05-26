@@ -190,7 +190,6 @@ class GenericGeoOptTest:
     @skipForParser("FChk", "Rotational constants are never written to fchk files")
     @skipForParser("GAMESS", "Not implemented yet")
     @skipForParser("GAMESSUK", "Not implemented yet")
-    @skipForParser("Jaguar", "Not implemented yet")
     @skipForParser("Molcas", "Not implemented yet")
     @skipForParser("Molpro", "Not implemented yet")
     @skipForLogfile("MOPAC/basicMOPAC2016", "Not present in this file")
@@ -265,6 +264,14 @@ class GaussianGeoOptTest(GenericGeoOptTest):
         """Are the orientations for grads and atomcoords are same?"""
         # since z-coordinates of atomcoords are all 0 for dvb, z-values of grads should be all 0
         assert numpy.all(numpy.abs(data.grads[:, :, 2]) < 1e-14)
+
+
+class JaguarGeoOptTest(GenericGeoOptTest):
+    """Customized geometry optimization unittest"""
+
+    def testrotconsts(self, data) -> None:
+        """Jaguar only prints rotational constants for the first and last geometries."""
+        assert data.rotconsts.shape == (2, 3)
 
 
 class MolcasGeoOptTest(GenericGeoOptTest):
