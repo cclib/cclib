@@ -64,7 +64,7 @@ class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     def testnumindices(self, data, extra) -> None:
-        """Do the number of indices match number of scan points."""
+        """Do the number of indices match number of scan points?"""
         assert len(data.optdone) == 12 + extra
 
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
