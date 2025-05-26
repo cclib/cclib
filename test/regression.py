@@ -3484,7 +3484,7 @@ class MolproBigBasisTest_cart(MolproBigBasisTest):
 # ORCA #
 
 
-class OrcaGeoOptTest_norotconsts(OrcaGeoOptTest):
+class OrcaSkipRotconstsMixin:
     """Versions pre-4.1 did not print rotational constants."""
 
     def testrotconsts(self, data: "ccData") -> None:
@@ -3515,19 +3515,11 @@ class OrcaROCIS40Test(OrcaROCISTest):
     n_spectra = 8
 
 
-class OrcaSPTest_norotconsts(OrcaSPTest):
+class OrcaSPTest_norotconsts(OrcaSkipRotconstsMixin, OrcaSPTest):
     """Versions pre-4.1 did not print rotational constants."""
 
-    def testrotconsts(self, data: "ccData") -> None:
-        """Rotational constants were not printed in versions prior to 4.1."""
-        v = parse_version(data.metadata["package_version"]).release
-        if v >= (4, 1):
-            super().testrotconsts(data)
-        else:
-            pytest.skip("Rotational constants were not printed in versions prior to 4.1.")
 
-
-class OrcaSPTest_nohirshfeld(OrcaSPTest_norotconsts):
+class OrcaSPTest_nohirshfeld(OrcaSkipRotconstsMixin, OrcaSPTest):
     """Versions pre-5.0 did not specify calculating Hirshfeld atomic charges."""
 
     @pytest.mark.skip("atomcharges['hirshfeld'] were not calculated")
