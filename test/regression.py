@@ -1120,6 +1120,19 @@ def testGaussian_Gaussian09_100_g09(logfile):
     ]
 
 
+def testGaussian_Gaussian09_1504_log(logfile: "Logfile") -> None:
+    """Previously failed to parse Hirshfeld charges."""
+    assert not hasattr(logfile.data, "atomspins")
+    assert len(logfile.data.atomcharges["hirshfeld"]) == 11
+    numpy.testing.assert_array_equal(
+        logfile.data.atomcharges["hirshfeld"][:3], [0.097390, 0.080642, 0.144695]
+    )
+    assert len(logfile.data.atomcharges["esp"]) == 11
+    numpy.testing.assert_array_equal(
+        logfile.data.atomcharges["esp"][:3], [0.378117, 0.030522, 0.629117]
+    )
+
+
 def testGaussian_Gaussian09_25DMF_HRANH_log(logfile):
     """Check that the anharmonicities are being parsed correctly."""
     assert hasattr(logfile.data, "vibanharms"), "Missing vibanharms"
@@ -1200,6 +1213,16 @@ def testGaussian_Gaussian09_BSL_opt_freq_DFT_out(logfile):
     ]
 
 
+def testGaussian_Gaussian09_dvb_chelp_out(logfile: "Logfile") -> None:
+    """Ensure that ESP-based charge variants are saved."""
+    assert "chelp" in logfile.data.atomcharges
+
+
+def testGaussian_Gaussian09_dvb_chelpg_out(logfile: "Logfile") -> None:
+    """Ensure that ESP-based charge variants are saved."""
+    assert "chelpg" in logfile.data.atomcharges
+
+
 def testGaussian_Gaussian09_dvb_gopt_unconverged_log(logfile):
     """An unconverged geometry optimization to test for empty optdone (see #103 for details)."""
     assert hasattr(logfile.data, "optdone") and not logfile.data.optdone
@@ -1215,6 +1238,29 @@ def testGaussian_Gaussian09_dvb_gopt_unconverged_log(logfile):
     assert logfile.data.metadata["comments"] == ["Title Card Required"]
 
 
+def testGaussian_Gaussian09_dvb_hirshfeld_out(logfile: "Logfile") -> None:
+    """Ensure that Hirshfeld charges are parsed."""
+    assert not hasattr(logfile.data, "atomspins")
+    numpy.testing.assert_array_equal(
+        logfile.data.atomcharges["hirshfeld"][:3], [-0.004307, -0.034340, -0.032672]
+    )
+    numpy.testing.assert_array_equal(
+        logfile.data.atomcharges["hirshfeld_sum"][:3], [-0.004307, 0.000130, 0.003108]
+    )
+    # The printed total is actually 0.000031.
+    assert sum(logfile.data.atomcharges["hirshfeld"]) == pytest.approx(0.000032)
+
+
+def testGaussian_Gaussian09_dvb_hly_out(logfile: "Logfile") -> None:
+    """Ensure that ESP-based charge variants are saved."""
+    assert "esp" in logfile.data.atomcharges
+
+
+def testGaussian_Gaussian09_dvb_hlygat_out(logfile: "Logfile") -> None:
+    """Ensure that ESP-based charge variants are saved."""
+    assert "esp" in logfile.data.atomcharges
+
+
 def testGaussian_Gaussian09_dvb_lowdin_log(logfile):
     """Check if both Mulliken and Lowdin charges are parsed."""
     assert "mulliken" in logfile.data.atomcharges
@@ -1223,6 +1269,21 @@ def testGaussian_Gaussian09_dvb_lowdin_log(logfile):
     assert logfile.data.metadata["package_version"] == "2009+A.02"
     assert logfile.data.metadata["keywords"] == ["#p rb3lyp/sto-3g iop(6/80=1)"]
     assert logfile.data.metadata["comments"] == ["Print Lowdin charges"]
+
+
+def testGaussian_Gaussian09_dvb_mk_out(logfile: "Logfile") -> None:
+    """Ensure that ESP-based charge variants are saved."""
+    assert "esp" in logfile.data.atomcharges
+
+
+def testGaussian_Gaussian09_dvb_mk_dipole_out(logfile: "Logfile") -> None:
+    """Ensure that ESP-based charge variants are saved."""
+    assert "resp" in logfile.data.atomcharges
+
+
+def testGaussian_Gaussian09_dvb_mk_dipole_atomdipole_out(logfile: "Logfile") -> None:
+    """Ensure that ESP-based charge variants are saved."""
+    assert "resp" in logfile.data.atomcharges
 
 
 def testGaussian_Gaussian09_Dahlgren_TS_log(logfile):
@@ -1415,6 +1476,23 @@ def testGaussian_Gaussian09_issue1150_log(logfile):
     assert logfile.metadata["symmetry_detected"] == "c1"
 
 
+def testGaussian_Gaussian09_test0200_log(logfile: "Logfile") -> None:
+    """Ensure that ESP-based charge variants are saved."""
+    assert set(logfile.data.atomcharges.keys()) == {
+        "mulliken",
+        "mulliken_sum",
+        "chelpg",
+        "chelp",
+        "esp",
+        "resp",
+    }
+
+
+def testGaussian_Gaussian09_test0237_log(logfile: "Logfile") -> None:
+    """Ensure that ESP-based charge variants are saved."""
+    assert set(logfile.data.atomcharges.keys()) == {"mulliken", "mulliken_sum", "chelpg"}
+
+
 def testGaussian_Gaussian16_co_pbe1pbe_631ppGss_log(logfile):
     """A calculation where the platform couldn't be parsed."""
     # *********************************************
@@ -1438,7 +1516,72 @@ def testGaussian_Gaussian16_dol_1_pen_5_pen_trip_out(logfile: "Logfile") -> None
     assert logfile.data.atomcharges["natural"][0] == pytest.approx(0.22988)
 
 
-def testGaussian_Gaussian16_H3_natcharge_log(logfile):
+def testGaussian_Gaussian16_dvb_chelp_out(logfile: "Logfile") -> None:
+    """Ensure that ESP-based charge variants are saved."""
+    assert "chelp" in logfile.data.atomcharges
+
+
+def testGaussian_Gaussian16_dvb_chelpg_out(logfile: "Logfile") -> None:
+    """Ensure that ESP-based charge variants are saved."""
+    assert "chelpg" in logfile.data.atomcharges
+
+
+def _testGaussian_Gaussian16_dvb_cm5_and_hirshfeld(parsed_data) -> None:
+    """In v2016, the pop=cm5 and pop=hirshfeld keywords are synonymous."""
+    assert not hasattr(parsed_data, "atomspins")
+    assert "cm5" in parsed_data.atomcharges
+    assert "hirshfeld" in parsed_data.atomcharges
+    assert "cm5_sum" in parsed_data.atomcharges
+    assert "hirshfeld_sum" in parsed_data.atomcharges
+    numpy.testing.assert_array_equal(
+        parsed_data.atomcharges["hirshfeld"][:3], [0.001436, -0.035760, -0.034274]
+    )
+    numpy.testing.assert_array_equal(
+        parsed_data.atomcharges["cm5"][:3], [-0.009905, -0.089419, -0.087796]
+    )
+
+
+def testGaussian_Gaussian16_dvb_cm5_out(logfile: "Logfile") -> None:
+    """In v2016, the pop=cm5 and pop=hirshfeld keywords are synonymous."""
+    _testGaussian_Gaussian16_dvb_cm5_and_hirshfeld(logfile.data)
+
+
+def testGaussian_Gaussian16_dvb_hirshfeld_out(logfile: "Logfile") -> None:
+    """In v2016, the pop=cm5 and pop=hirshfeld keywords are synonymous."""
+    _testGaussian_Gaussian16_dvb_cm5_and_hirshfeld(logfile.data)
+
+
+def testGaussian_Gaussian16_dvb_hly_out(logfile: "Logfile") -> None:
+    """Ensure that ESP-based charge variants are saved."""
+    assert "esp" in logfile.data.atomcharges
+
+
+def testGaussian_Gaussian16_dvb_hlygat_out(logfile: "Logfile") -> None:
+    """Ensure that ESP-based charge variants are saved."""
+    assert "esp" in logfile.data.atomcharges
+
+
+def testGaussian_Gaussian16_dvb_mk_out(logfile: "Logfile") -> None:
+    """Ensure that ESP-based charge variants are saved."""
+    assert "esp" in logfile.data.atomcharges
+
+
+def testGaussian_Gaussian16_dvb_mk_dipole_out(logfile: "Logfile") -> None:
+    """Ensure that ESP-based charge variants are saved."""
+    assert "resp" in logfile.data.atomcharges
+
+
+def testGaussian_Gaussian16_dvb_mk_dipole_atomdipole_out(logfile: "Logfile") -> None:
+    """Ensure that ESP-based charge variants are saved."""
+    assert "resp" in logfile.data.atomcharges
+
+
+def testGaussian_Gaussian16_dvb_mkuff_out(logfile: "Logfile") -> None:
+    """Ensure that ESP-based charge variants are saved."""
+    assert "esp" in logfile.data.atomcharges
+
+
+def testGaussian_Gaussian16_H3_natcharge_log(logfile: "Logfile") -> None:
     """A calculation with NBO charges. Only the beta set of charges was parsed
     rather than the spin independent ones.
 
