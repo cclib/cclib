@@ -7,7 +7,7 @@
 
 import re
 
-from cclib.parser import logfileparser, utils
+from cclib.parser import data, logfileparser, utils
 
 import numpy
 
@@ -187,6 +187,39 @@ class Jaguar(logfileparser.Logfile):
                     self.coreelectrons.append(int(line.split()[1]))
                 line = next(inputfile)
 
+        # Geometry scan step   1 : (angstroms and degrees)
+        #  scan:   d = 0.0   energy =     -382.308265
+        #  ================================================
+        # //       end of geometry scan step   1         //
+        # ================================================
+        if line.startswith(" Geometry scan step"):
+            stepnum = int(line.split()[3])
+            line = next(inputfile)
+            while line.strip() and set(line.strip()) != {"="}:
+                _, scanname, _, scanparm, _, _, scanenergy = line.split()
+                # TODO The structure of this section isn't known when multiple
+                # variables are being scanned.  If there are multiple lines,
+                # this will be wrong.
+                if stepnum == 1:
+                    self.append_attribute("scannames", scanname)
+                    self.set_attribute("scanparm", [[float(scanparm)]])
+                else:
+                    self.extend_attribute("scanparm", [float(scanparm)], index=-1)
+                self.append_attribute("scanenergies", float(scanenergy))
+                line = next(inputfile)
+
+        if "rotational constants:" in line:
+            _ = self.skip_line(inputfile, "cm^(-1):")
+            line = next(inputfile)
+            rotconsts_tokens = line.split()[1:]
+            rotconsts = []
+            for rotconst_token in rotconsts_tokens:
+                if rotconst_token == "infinite":
+                    rotconsts.append(numpy.inf)
+                else:
+                    rotconsts.append(float(rotconst_token))
+            self.append_attribute("rotconsts", rotconsts)
+
         if "Molecular Point Group:" in line:
             point_group_full = line.split()[3].lower()
             while "Point Group used:" not in line:
@@ -231,6 +264,7 @@ class Jaguar(logfileparser.Logfile):
             self.append_attribute("mpenergies", [float(line.split()[-1])])
 
         if line[15:45] == "Geometry optimization complete":
+            self.optstatus[-1] += data.ccData.OPT_DONE
             self.append_attribute("optdone", len(self.geovalues) - 1)
 
         if line.find("number of occupied orbitals") > 0:
@@ -533,6 +567,10 @@ class Jaguar(logfileparser.Logfile):
 
             gopt_step = int(line.split()[-1])
 
+            optstatus = data.ccData.OPT_UNKNOWN
+            if gopt_step == 1:
+                optstatus += data.ccData.OPT_NEW
+
             energy = next(inputfile)  # noqa: F841
             blank = next(inputfile)
 
@@ -574,6 +612,7 @@ class Jaguar(logfileparser.Logfile):
                     target_index += 1
                 line = next(inputfile)
             self.append_attribute("geovalues", values)
+            self.append_attribute("optstatus", optstatus)
 
         # IR output looks like this:
         #   frequencies        72.45   113.25   176.88   183.76   267.60   312.06

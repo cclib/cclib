@@ -32,12 +32,10 @@ class GenericUnrelaxedScanTest:
         return 0
 
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
-    @skipForParser("Jaguar", "Not implemented")
     def testscannames(self, data) -> None:
         assert isinstance(data.scannames, list)
 
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
-    @skipForParser("Jaguar", "Not implemented")
     def testscanenergies(self, data) -> None:
         assert isinstance(data.scanenergies, list)
 
@@ -47,9 +45,10 @@ class GenericUnrelaxedScanTest:
         )
 
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
-    @skipForParser("Jaguar", "Not implemented")
     def testscanparm(self, data) -> None:
         assert isinstance(data.scanparm, list)
+
+        assert len(data.scanparm) == len(data.scannames)
 
         # Each parameters should have as many values as there are scan
         # energies, or optimized point on the PES.
@@ -81,7 +80,6 @@ class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
         assert len(data.optdone) == 12 + extra
 
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
-    @skipForParser("Jaguar", "Does not work as expected")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     def testindices(self, data) -> None:
@@ -95,7 +93,6 @@ class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
         assert set(indices_converged_geovalues) - set(data.optdone) == set()
 
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
-    @skipForParser("Jaguar", "Not implemented")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     def testoptstatus(self, data) -> None:

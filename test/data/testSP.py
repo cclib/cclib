@@ -410,7 +410,6 @@ class GenericSPTest:
     @skipForParser("GAMESS", "Not implemented yes")
     @skipForParser("GAMESSUK", "Not implemented yet")
     @skipForParser("GAMESSDAT", "Not implemented yet")
-    @skipForParser("Jaguar", "Not implemented yet")
     @skipForParser("Molcas", "Not implemented yes")
     @skipForParser("Molpro", "Not implemented yes")
     @skipForParser("NBO", "attribute not implemented in this version")

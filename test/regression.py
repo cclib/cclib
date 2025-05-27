@@ -77,7 +77,13 @@ from .data.testBOMD import GenericBOMDTest
 from .data.testCC import GenericCCTest
 from .data.testCI import GAMESSCISTest, GaussianCISTest, GenericCISTest, QChemCISTest
 from .data.testCore import ADFCoreTest, GenericCoreTest
-from .data.testGeoOpt import ADFGeoOptTest, GenericGeoOptTest, OrcaGeoOptTest, Psi4GeoOptTest
+from .data.testGeoOpt import (
+    ADFGeoOptTest,
+    GenericGeoOptTest,
+    JaguarGeoOptTest,
+    OrcaGeoOptTest,
+    Psi4GeoOptTest,
+)
 from .data.testMP import (
     GaussianMP2Test,
     GaussianMP3Test,
@@ -1536,6 +1542,14 @@ def testGaussian_Gaussian16_water_neutral_nbo_opt_out(logfile: "Logfile") -> Non
 # we can test that optdone is set properly.
 # def testJaguarX.X_dvb_gopt_unconverged:
 #    assert hasattr(logfile.data, 'optdone') and not logfile.data.optdone
+
+
+def testJaguar_Jaguar7_8_911_out(logfile) -> None:
+    rotconsts = logfile.data.rotconsts
+    assert rotconsts.shape == (1, 3)
+    assert numpy.isinf(rotconsts[0][0])
+    assert numpy.isfinite(rotconsts[0][1])
+    assert numpy.isfinite(rotconsts[0][2])
 
 
 def testJaguar_Jaguar8_3_stopiter_jaguar_dft_out(logfile):
@@ -3179,6 +3193,18 @@ def testnoparseGaussian_Gaussian09_coeffs_log(filename):
 # and provide the modified version of the test class.
 
 
+class SkipRotconstsMixin:
+    """No rotational constants available"""
+
+    @pytest.mark.skip("No rotational constants available")
+    def testrotconsts(self, data) -> None:
+        """No rotational constants available"""
+
+
+class GenericGeoOptTest_norotconsts(SkipRotconstsMixin, GenericGeoOptTest):
+    """A geometry optimization test with no rotational constants printed"""
+
+
 class ADFGeoOptTest_noscfvalues(ADFGeoOptTest):
     @pytest.mark.skip("Cannot parse scfvalues from this file.")
     def testgeovalues_scfvalues(self, data: "ccData") -> None:
@@ -3392,6 +3418,10 @@ class GaussianPolarTest(ReferencePolarTest):
 # Jaguar #
 
 
+class JaguarGeoOptTest_norotconsts(SkipRotconstsMixin, JaguarGeoOptTest):
+    """Older Jaguar versions don't print rotational constants"""
+
+
 class JaguarIRTest_v42(JaguarIRTest):
     @pytest.mark.skip("Data file does not contain force constants")
     def testvibfconsts(self, data: "ccData") -> None:
@@ -3421,6 +3451,7 @@ class JaguarSPTest_6_31gss(JaguarSPTest_noatomcharges):
     scfenergy = -387.06414443
     moenergy = -10.20198
     overlap01 = 0.22
+    rotconsts = [4.76004948, 0.69575622, 0.60702933]
 
     def testmetadata_basis_set(self, data: "ccData") -> None:
         """This calculation did not use STO-3G for the basis set."""
@@ -3459,13 +3490,24 @@ class JaguarSPunTest_nmo_all_nomosyms(JaguarSPunTest_nmo_all):
         """mosyms were not printed here."""
 
 
-class JaguarGeoOptTest_nmo45(GenericGeoOptTest):
+class JaguarGeoOptTest_nmo45(SkipRotconstsMixin, JaguarGeoOptTest):
     def testlengthmoenergies(self, data: "ccData") -> None:
         """Without special options, Jaguar only print Homo+10 orbital energies."""
         assert len(data.moenergies[0]) == 45
 
+    def testoptstatus(self, data: "ccData") -> None:
+        """The calculations that use this test, for whatever reason, are
+        already at the stationary point, so the single geometry is
+        simultaneously new, unknown, and done.
+        """
+        assert len(data.optstatus) == len(data.geovalues)
+        assert data.optstatus[0] & data.OPT_NEW == data.OPT_NEW
+        for i in range(1, len(data.optstatus) - 1):
+            assert data.optstatus[i] & data.OPT_UNKNOWN == data.OPT_UNKNOWN
+        assert data.optstatus[-1] & data.OPT_DONE == data.OPT_DONE
 
-class JaguarSPTest_nmo45(JaguarSPTest_noatomcharges):
+
+class JaguarSPTest_nmo45(SkipRotconstsMixin, JaguarSPTest_noatomcharges):
     def testlengthmoenergies(self, data: "ccData") -> None:
         """Without special options, Jaguar only print Homo+10 orbital energies."""
         assert len(data.moenergies[0]) == 45
@@ -3487,7 +3529,7 @@ class JaguarSPTest_nmo45(JaguarSPTest_noatomcharges):
         """atombasis was not parsed correctly here."""
 
 
-class JaguarGeoOptTest_6_31gss(GenericGeoOptTest):
+class JaguarGeoOptTest_6_31gss(JaguarGeoOptTest):
     nbasisdict = {1: 5, 6: 15}
     scfenergy = -387.064207
 
