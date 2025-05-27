@@ -2275,7 +2275,7 @@ class Gaussian(logfileparser.Logfile):
             charges = []
             spins = []
             # It's possible that this could match on a header other than how
-            # the matched happen in the code before calling this function, but
+            # the match happen in the code before calling this function, but
             # the effect should be the same.
             swap_indices = any(
                 header in line.lower() for header in self.atomcharges_atomspins_headers_swap
