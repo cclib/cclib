@@ -7,6 +7,7 @@
 
 import datetime
 import re
+from typing import Dict, List, Tuple
 
 from cclib.parser import data, logfileparser, utils
 from cclib.parser.logfileparser import StopParsing
@@ -15,7 +16,7 @@ import numpy
 
 
 class Gaussian(logfileparser.Logfile):
-    """A Gaussian 98/03 log file."""
+    """A Gaussian log file."""
 
     def __init__(self, *args, **kwargs):
         super().__init__(logname="Gaussian", *args, **kwargs)
@@ -90,6 +91,11 @@ class Gaussian(logfileparser.Logfile):
         # floating-point format.
         self.re_float = re.compile(r"(\w*-?\w*)=\s*(-?\d+\.\d{10,})")
 
+        # Detect when a new link (Gaussian subprogram) is entered.
+        self.re_link = re.compile(r"\(Enter [\w/:\\\-\.]+l(?P<link_number>\d{3,4})\.exe\)")
+        # Printed in a different format, but always start here.
+        self.link = 1
+
         # Flag for identifying Coupled Cluster runs.
         self.coupledcluster = False
 
@@ -122,6 +128,30 @@ class Gaussian(logfileparser.Logfile):
         # beta spins.  This is false when in the combined section (the general
         # case) and true when in an alpha or beta section.
         self.nbo_spin_section = False
+
+        # Define strings needed for line detection. Older Gaussian versions
+        # don't always give the charge type explicitly, so we must include
+        # "atomic" as a general term to catch all other atomic charge or spin
+        # lines.
+        self.atomprops_no_atomic = ["mulliken", "lowdin", "apt", "hirshfeld"]
+        self.atomprops = self.atomprops_no_atomic + ["atomic"]
+        # The (Hirshfeld) partial atomic charges and spins parsed in these
+        # sections need to be swapped after parsing via the general extraction
+        # code.  This is only required for version 09; Hirshfeld charges were
+        # not present earlier, and 16 combines them with CM5 in a different
+        # section.
+        self.atomcharges_atomspins_headers_swap = [
+            " spin densities, charges and dipoles using iradan="
+        ]
+        self.atomcharges_atomspins_headers = [
+            " atomic charges:",
+            " charges:",
+            " charges with hydrogens summed into heavy atoms:",
+            " atomic charges with hydrogens summed into heavy atoms:",
+            " atomic spin densities:",
+            " charges and spin densities with hydrogens summed into heavy atoms:",
+            " charges and spin densities:",
+        ] + self.atomcharges_atomspins_headers_swap
 
     def after_parsing(self):
         # atomcoords are parsed as a list of lists but it should be an array.
@@ -213,10 +243,28 @@ class Gaussian(logfileparser.Logfile):
 
             self.set_attribute("mpenergies", mp_energies)
 
+        # The Hirshfeld section from version 09 prints atomspins no matter
+        # what; no spin density means all printed values are zero.  Rather
+        # than determine whether or not they should be present by looking at
+        # (un)restricted flags and HOMO indices, check that they are the only
+        # key present in atomspins, since otherwise Mulliken will be there,
+        # since it isn't possible to simultaneously turn off Mulliken and
+        # Hirshfeld printing.
+        if hasattr(self, "atomcharges") and hasattr(self, "atomspins"):
+            if (
+                set(self.atomspins.keys()) == {"hirshfeld"}
+                and sum(self.atomspins["hirshfeld"]) == 0.0
+            ):
+                delattr(self, "atomspins")
+
         super().after_parsing()
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
+
+        link_match = self.re_link.search(line)
+        if link_match is not None:
+            self.link = int(link_match.groupdict()["link_number"])
 
         # Extract the version number: "Gaussian 09, Revision D.01"
         # becomes "09revisionD.01".
@@ -2209,15 +2257,13 @@ class Gaussian(logfileparser.Logfile):
         #     2  C    0.320624   0.000869
         #
         # APT and Lowdin charges are also displayed in this way.
-        def extract_charges_spins(line, prop):
-            """Extracts atomic charges and spin densities into
+        def extract_charges_spins(line: str, prop: str) -> None:
+            """Extracts atomic charges and spin de strnsities into
                self.atomcharges and self.atomspins dictionaries.
 
             Inputs:
-                line - line header marking the beginning of a
-                particular set of charges or spins.
-                prop - property type to be extracted as a
-                string (e.g. Mulliken, Lowdin, APT).
+                line - line header marking the beginning of a particular set of charges or spins.
+                prop - property type to be extracted as a string (e.g. Mulliken, Lowdin, APT).
             """
             has_spin = "spin" in line.lower()
             has_charges = "charges" in line.lower()
@@ -2228,6 +2274,12 @@ class Gaussian(logfileparser.Logfile):
             _ = next(inputfile)
             charges = []
             spins = []
+            # It's possible that this could match on a header other than how
+            # the match happen in the code before calling this function, but
+            # the effect should be the same.
+            swap_indices = any(
+                header in line.lower() for header in self.atomcharges_atomspins_headers_swap
+            )
             is_sum = "summed" in line
             # Iterate over each line and append values to a list
             # based on whether they are charges or spins.
@@ -2254,13 +2306,9 @@ class Gaussian(logfileparser.Logfile):
                         # spins, so these should be ignored.
                         while nline.split()[1] == "H":
                             nline = next(inputfile)
-                        split_line = nline.split()
-                        if has_charges:
-                            charges.append(float(split_line[2]))
-                            if has_spin:
-                                spins.append(float(split_line[3]))
-                        elif has_spin:
-                            spins.append(float(split_line[2]))
+                        _append_charges_and_spins(
+                            nline, has_charges, charges, has_spin, spins, swap_indices
+                        )
             else:
                 for i in self.atomnos:
                     # Ignore translation vectors.
@@ -2268,19 +2316,15 @@ class Gaussian(logfileparser.Logfile):
                         pass
                     else:
                         nline = next(inputfile)
-                        split_line = nline.split()
-                        if has_charges:
-                            charges.append(float(split_line[2]))
-                            if has_spin:
-                                spins.append(float(split_line[3]))
-                        elif has_spin:
-                            spins.append(float(split_line[2]))
+                        _append_charges_and_spins(
+                            nline, has_charges, charges, has_spin, spins, swap_indices
+                        )
             # When the charge type is not given explicitly we
             # must find it from the bottom line, which always
             # has the format: "Sum of Mulliken charges=   0.00000"
             # so we can extract the type by splitting each
             # line until we get a valid charge type.
-            while prop.lower() not in ["mulliken", "lowdin", "apt"]:
+            while prop.lower() not in self.atomprops_no_atomic:
                 nline = next(inputfile)
                 prop = nline.split()[2].lower()
             # Input extracted values into self.atomcharges.
@@ -2295,26 +2339,13 @@ class Gaussian(logfileparser.Logfile):
                 else:
                     self.atomspins[f"{prop}"] = spins
 
-        # Define strings needed for line detection. Older Gaussian
-        # versions don't always give the charge type explicitly,
-        # so we must include "atomic" as a general term to catch
-        # all other atomic charge or spin lines.
-        props = ["mulliken", "lowdin", "apt", "atomic"]
-        headers = [
-            " atomic charges:",
-            " charges:",
-            " charges with hydrogens summed into heavy atoms:",
-            " atomic charges with hydrogens summed into heavy atoms:",
-            " atomic spin densities:",
-            " charges and spin densities with hydrogens summed into heavy atoms:",
-            " charges and spin densities:",
-        ]
+            return None
 
         if hasattr(self, "atomnos"):
             # Combine props and headers to find lines heading lists
             # of atom charges or spins.
-            for prop in props:
-                for header in headers:
+            for prop in self.atomprops:
+                for header in self.atomcharges_atomspins_headers:
                     if f"{prop}{header}".lower() in line.lower():
                         # When we use "atomic" as the property, only
                         # extract if the charge type isn't given explicity.
@@ -2322,10 +2353,9 @@ class Gaussian(logfileparser.Logfile):
                         # e.g. "Mulliken atomic charges:" is caught by
                         # "mulliken atomic charges:" and " atomic charges:"
                         if prop == "atomic":
-                            if (
-                                "mulliken" not in line.lower()
-                                and "lowdin" not in line.lower()
-                                and "apt" not in line.lower()
+                            if all(
+                                atomprop not in line.lower()
+                                for atomprop in self.atomprops_no_atomic
                             ):
                                 extract_charges_spins(line, prop)
                         else:
@@ -2394,6 +2424,80 @@ class Gaussian(logfileparser.Logfile):
                     line = next(inputfile)
             self.atomcharges["hirshfeld_sum"] = atomcharges_hirshfeld_summed
             self.atomcharges["cm5_sum"] = atomcharges_cm5_summed
+
+        # Determine information about ESP-derived charges.
+        if self.link == 602:
+            # Some are not prefixed or postfixed for consistency with the
+            # Q-Chem parser.
+            radii_to_esp_model = {
+                "Breneman": "chelpg",
+                "Chirlian-Francl": "chelp",
+                "Francl": "chelp",
+                # Ideally would be "esp_hly".
+                "Hu-Lu-Yang": "esp",
+                # Ideally would be "esp_mk".
+                "Merz-Kollman": "esp",
+                # Ideally would be "esp_mkuff".
+                "UFF": "esp",
+            }
+            esp_iop = self.metadata["routes"][-1][6][20]
+            if line.startswith(" Read replacement radii"):
+                # This section still generally depends on a parent set of
+                # radii being defined.  This parent set determines the
+                # atomcharges key.
+                re_radii_line = re.compile(
+                    r"Rad\((?P<atnum>\d+)\)\s+=\s+(?P<radius>\d\.\d{12}D\+\d{2})"
+                )
+                line = next(inputfile)
+                while line.startswith(" Rad("):
+                    mtch = re_radii_line.search(line)
+                    assert mtch is not None
+                    _atnum = int(mtch.group("atnum"))
+                    _radius = utils.float(mtch.group("radius"))
+                    line = next(inputfile)
+            elif "radii" in line:
+                self.esp_model = radii_to_esp_model[line.split()[0]]
+            elif line.startswith(" Generate Potential Derived Charges using the"):
+                self.esp_model = radii_to_esp_model[line.split()[6]]
+            elif line.strip() == "Electrostatic Properties Using The SCF Density":
+                key = self.esp_model
+                _ = self.skip_lines(inputfile, ["b", "s", "b"])
+                # atomic positions
+                for _ in range(self.natom):
+                    line = next(inputfile)
+                line = next(inputfile)
+                assert "points will be used for fitting atomic charges" in line
+                _npoints = int(line.split()[0])
+                line = next(inputfile)
+                assert "Fitting point charges" in line
+                fitting_point_dipoles = False
+                if "Fitting point charges and point dipoles" in line:
+                    fitting_point_dipoles = True
+                line = next(inputfile)
+                if line.strip() == "The dipole moment will be constrained to the correct value":
+                    # This doesn't make sense for ChElP(G), so avoid setting
+                    # it there.
+                    if key == "esp":
+                        key = "resp"
+                    if fitting_point_dipoles:
+                        _key = "esp_mk_dipole_atom"
+                    line = next(inputfile)
+                assert line.startswith(" Charges from ESP fit")
+                line = next(inputfile)
+                assert line.startswith(" Charge=") or line.strip() in (
+                    "ESP charges:",
+                    "ESP charges         Point Dipoles (au):",
+                )
+                line = next(inputfile)
+                line = next(inputfile)
+                charges = []
+                for _ in range(self.natom):
+                    charges.append(float(line.split()[2]))
+                    line = next(inputfile)
+                # Gaussian atomic densities instead of those from the HLY scheme
+                if esp_iop == 15:
+                    _key = "esp_hlygat"
+                self.atomcharges[key] = charges
 
         # Extract Thermochemistry
         # Temperature   298.150 Kelvin.  Pressure   1.00000 Atm.
@@ -2637,7 +2741,7 @@ class Gaussian(logfileparser.Logfile):
             self.metadata["keywords"] = []
         self.metadata["keywords"].append("".join(keywords))
         line = next(inputfile)
-        # Don't do anything with the route info for now.
+        route_lines = []
         while set(line.strip()) != {"-"}:
             if "Leave Link    1" in line and "MaxMem=" in line and "num_cpu" in self.metadata:
                 # Leave Link    1 at Wed Apr  4 10:49:19 2018, MaxMem=   805306368 cpu:               0.3 elap:               0.0
@@ -2654,7 +2758,13 @@ class Gaussian(logfileparser.Logfile):
                 assert maxmem is not None
                 memory_per_cpu = int(maxmem.group(1))
                 self.metadata["memory_used"] = memory_per_cpu * self.metadata["num_cpu"]
+            route_lines.append(line)
             line = next(inputfile)
+        route_lines = [line for line in route_lines if re.match(r"\s\d", line) is not None]
+        route = parse_route_lines(route_lines)
+        if "routes" not in self.metadata:
+            self.metadata["routes"] = []
+        self.metadata["routes"].append(route)
         line = next(inputfile)
         comments = []
         while set(line.strip()) != {"-"}:
@@ -2663,3 +2773,65 @@ class Gaussian(logfileparser.Logfile):
         if "comments" not in self.metadata:
             self.metadata["comments"] = []
         self.metadata["comments"].append("".join(comments))
+
+
+def _append_charges_and_spins(
+    nline: str,
+    has_charges: bool,
+    charges: List[float],
+    has_spin: bool,
+    spins: List[float],
+    swap_indices: bool,
+) -> None:
+    """Append partial atomic charges and spins to their respective lists, if
+    they were determined beforehand to exist.
+    """
+    split_line = nline.split()
+    if has_charges:
+        charge_index = 2 if not swap_indices else 3
+        charges.append(float(split_line[charge_index]))
+        if has_spin:
+            spin_index = 3 if not swap_indices else 2
+            spins.append(float(split_line[spin_index]))
+    elif has_spin:
+        # This will never need swapping, since the particular section where
+        # swapping is relevant 1. will always have both charges and spins and
+        # 2. has spins first.
+        spins.append(float(split_line[2]))
+
+
+Overlay = int
+Option = int
+Value = int
+Route = Dict[Overlay, Dict[Option, Value]]
+
+
+def parse_route_line(route_line: str) -> Tuple[Overlay, Dict[Option, Value]]:
+    """Parse a single line of the route section.
+
+    This line should be preserved as present in the input, with a single
+    leading space, a trailing semicolon, and a possible trailing newline.
+    """
+    cleaned = route_line.rstrip()
+    # remove single leading space and single trailing semicolon
+    assert cleaned[-1] == ";"
+    cleaned = cleaned[1:-1]
+    # it's not clear the stuff at the end means anything
+    route, options, _ = cleaned.split("/")
+    if not options:
+        return int(route), dict()
+    return int(route), dict([[int(x) for x in pair.split("=")] for pair in options.split(",")])
+
+
+def parse_route_lines(route_lines: List[str]) -> Route:
+    """Parse the route lines appearing after the input keyword line.
+
+    The route is the section of global internal options (IOps) derived from
+    the input keywords and dictates what calculation will be performed
+    (https://gaussian.com/iops/).
+    """
+    route = dict()
+    for route_line in route_lines:
+        overlay, mapping = parse_route_line(route_line)
+        route[overlay] = mapping
+    return route
