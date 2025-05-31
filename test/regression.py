@@ -1688,6 +1688,7 @@ def testGaussian_Gaussian16_water_neutral_nbo_opt_out(logfile: "Logfile") -> Non
 
 
 def testJaguar_Jaguar7_8_911_out(logfile) -> None:
+    """Problem with parsing rotational constants of linear molecules."""
     rotconsts = logfile.data.rotconsts
     assert rotconsts.shape == (1, 3)
     assert numpy.isinf(rotconsts[0][0])
