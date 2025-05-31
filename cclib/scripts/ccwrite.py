@@ -19,7 +19,8 @@ def main() -> None:
 
     parser.add_argument(
         "outputtype",
-        choices=("json", "cjson", "cml", "xyz", "molden", "wfx"),
+        choices=("json", "cjson", "cml", "molden", "qcschema", "wfx", "xyz"),
+        type=str,
         help="the output format to write (json/cjson are identical)",
     )
     parser.add_argument(
