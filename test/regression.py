@@ -3534,11 +3534,11 @@ class GaussianSPunTest_nomosyms(GaussianSPunTest):
 
 
 class GaussianSPunTest_nonaturalorbitals(GaussianCISTest):
-    @pytest.mark.skip("Cannot parse natrual orbitals from this file.")
+    @pytest.mark.skip("Cannot parse natural orbitals from this file.")
     def testnocoeffs(self, data: "ccData") -> None:
         """natural orbitals were not printed here."""
 
-    @pytest.mark.skip("Cannot parse natrual orbital occupation numbers from this file.")
+    @pytest.mark.skip("Cannot parse natural orbital occupation numbers from this file.")
     def testnooccnos(self, data: "ccData") -> None:
         """natural orbital occupation numbers were not printed here."""
 
