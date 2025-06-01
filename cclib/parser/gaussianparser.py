@@ -816,13 +816,10 @@ class Gaussian(logfileparser.Logfile):
         # This is generally parsed before coordinates, so atomnos is not defined.
         # Note that in Gaussian03 the comments are not there yet and the labels are different.
         if line.strip() == "Isotopes and Nuclear Properties:":
-            if not hasattr(self, "atommasses"):
-                self.atommasses = []
-
             line = next(inputfile)
             while line[1:16] != "Leave Link  101":
                 if line[1:8] == "AtmWgt=":
-                    self.atommasses.extend(list(map(float, line.split()[1:])))
+                    self.extend_attribute("atommasses", list(map(float, line.split()[1:])))
                 line = next(inputfile)
 
         # Symmetry: point group
