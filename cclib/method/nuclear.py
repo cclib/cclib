@@ -156,13 +156,15 @@ class Nuclear(Method):
             conv = amu2g * (scipy.constants.angstrom / scipy.constants.centi) ** 2
         return conv * principal_moments, principal_axes
 
-    def rotational_constants(self, units: str = "ghz") -> np.ndarray:
+    def rotational_constants(self, units: str = "ghz", atomcoords_index: int = -1) -> np.ndarray:
         """Compute the rotational constants in 1/cm or GHz."""
         choices = ("invcm", "ghz")
         units = units.lower()
         if units not in choices:
             raise ValueError(f"Invalid units, pick one of {choices}")
-        principal_moments = self.principal_moments_of_inertia("amu_angstrom_2")[0]
+        principal_moments = self.principal_moments_of_inertia(
+            "amu_angstrom_2", atomcoords_index=atomcoords_index
+        )[0]
         bohr2ang = scipy.constants.value("atomic unit of length") / scipy.constants.angstrom
         xfamu = 1 / scipy.constants.value("electron mass in u")
         xthz = scipy.constants.value("hartree-hertz relationship")
