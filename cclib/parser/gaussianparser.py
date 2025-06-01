@@ -844,10 +844,8 @@ class Gaussian(logfileparser.Logfile):
 
         # Symmetry: ordering of irreducible representations
         if "symmetry adapted cartesian basis functions" in line:
-            if not hasattr(self, "symlabels"):
-                self.symlabels = []
             irrep = self.normalisesym(line.split()[-2])
-            self.symlabels.append(irrep)
+            self.append_attribute("symlabels", irrep)
 
         # Extract the atomic numbers and coordinates of the atoms.
         if line.strip() == "Standard orientation:":
