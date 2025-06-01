@@ -132,7 +132,7 @@ class Nuclear(Method):
         return moi_tensor
 
     def principal_moments_of_inertia(
-        self, units: str = "amu_bohr_2"
+        self, units: str = "amu_bohr_2", atomcoords_index: int = -1
     ) -> Tuple[np.ndarray, np.ndarray]:
         """Return the principal moments of inertia in 3 kinds of units:
         1. [amu][bohr]^2
@@ -144,7 +144,7 @@ class Nuclear(Method):
         units = units.lower()
         if units not in choices:
             raise ValueError(f"Invalid units, pick one of {choices}")
-        moi_tensor = self.moment_of_inertia_tensor()
+        moi_tensor = self.moment_of_inertia_tensor(atomcoords_index=atomcoords_index)
         principal_moments, principal_axes = np.linalg.eigh(moi_tensor)
         if units == "amu_bohr_2":
             bohr2ang = scipy.constants.value("atomic unit of length") / scipy.constants.angstrom
