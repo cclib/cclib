@@ -926,10 +926,13 @@ Dispersion correction           -0.016199959
             self.moenergies = [[]]
             self.mosyms = [[]]
 
+            def continue_orbital_section(line: str) -> bool:
+                # terminated by ------
+                # OR has *Only the first 10 virtual orbitals were printed.
+                return len(line) > 20 and line[:5] not in ("*Only", "Total")
+
             line = next(inputfile)
-            # restricted calcs are terminated by ------
-            # OR has *Only the first 10 virtual orbitals were printed.
-            while len(line) > 20 and line[:5] != "*Only":
+            while continue_orbital_section(line):
                 info = line.split()
                 mooccno = int(float(info[1]))
                 moenergy = float(info[2])
@@ -951,9 +954,7 @@ Dispersion correction           -0.016199959
                 self.mosyms.append([])
 
                 line = next(inputfile)
-                # actually terminated by ------
-                # OR has *Only the first 10 virtual orbitals were printed.
-                while len(line) > 20 and line[:5] != "*Only":
+                while continue_orbital_section(line):
                     info = line.split()
                     mooccno = int(float(info[1]))
                     moenergy = float(info[2])
