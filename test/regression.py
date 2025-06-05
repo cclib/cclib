@@ -39,6 +39,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from cclib.io import ccread, moldenwriter
+from cclib.method import Nuclear
 from cclib.parser import DALTON, Gaussian, ccData
 from cclib.parser.utils import convertor
 
@@ -422,10 +423,14 @@ def testDALTON_DALTON_2016_huge_neg_polar_stat_out(logfile):
 def testDALTON_DALTON_2016_Trp_polar_response_diplnx_out(logfile):
     """Check that only the xx component of polarizability is defined and
     all others are NaN even after parsing a previous file with full tensor.
+
+    Since the molecule (tryptophan) also lacks intrinsic symmetry, it serves
+    as a test for a non-zero center of mass, as well as the principal moments
+    of inertia and rotational constants.
     """
     # TODO replace with looking at file location from fixture?
-    full_tens_path = __regression_dir__ / "DALTON" / "DALTON-2015" / "Trp_polar_response.out"
-    DALTON(full_tens_path, loglevel=logging.ERROR).parse()
+    # full_tens_path = __regression_dir__ / "DALTON" / "DALTON-2015" / "Trp_polar_response.out"
+    # DALTON(full_tens_path, loglevel=logging.ERROR).parse()
     assert hasattr(logfile.data, "polarizabilities")
     assert abs(logfile.data.polarizabilities[0][0, 0] - 95.11540019) < 1.0e-8
     assert numpy.count_nonzero(numpy.isnan(logfile.data.polarizabilities)) == 8
@@ -433,6 +438,52 @@ def testDALTON_DALTON_2016_Trp_polar_response_diplnx_out(logfile):
     assert (
         logfile.data.metadata["package_version"]
         == "2016.2+7db4647eac203e51aae7da3cbc289f55146b30e9"
+    )
+
+    nuclear = Nuclear(logfile.data)
+    # reference from line 457
+    numpy.testing.assert_allclose(
+        nuclear.center_of_mass(),
+        convertor(numpy.array([6.317790, 0.497269, -2.037318]), "bohr", "Angstrom"),
+        rtol=1.3e-7,
+    )
+
+    # reference from rerunning the calculation with .PRINT 5
+    numpy.testing.assert_allclose(
+        abs(nuclear.moment_of_inertia_tensor(units="amu_angstrom_2")),
+        abs(
+            numpy.array(
+                [
+                    [1017.281559, 22.227887, 489.646337],
+                    [22.227887, 1558.900188, -120.034138],
+                    [489.646337, -120.034138, 819.496574],
+                ]
+            )
+        ),
+    )
+
+    pmoi, moi_axes = nuclear.principal_moments_of_inertia(units="amu_angstrom_2")
+    # reference starting from line 592
+    numpy.testing.assert_allclose(pmoi, numpy.array([408.875429, 1397.895049, 1588.907843]))
+    # reference starting from line 592
+    numpy.testing.assert_allclose(
+        moi_axes,
+        numpy.array(
+            [
+                [-0.626320, 0.092893, 0.774012],
+                [0.754463, 0.322162, 0.571837],
+                [-0.196238, 0.942116, -0.271861],
+            ]
+        ).transpose(),
+    )
+
+    # reference from line 605
+    numpy.testing.assert_allclose(
+        nuclear.rotational_constants("ghz") * 1.0e3, numpy.array([1236.0220, 361.5286, 318.0669])
+    )
+    # reference from line 606
+    numpy.testing.assert_allclose(
+        nuclear.rotational_constants("invcm"), numpy.array([0.041229, 0.012059, 0.010610])
     )
 
 
@@ -446,6 +497,45 @@ def testDALTON_DALTON_2018_dft_properties_nosym_H2O_cc_pVDZ_out(logfile):
     assert logfile.data.metadata["legacy_package_version"] == "2019.alpha"
     assert logfile.data.metadata["package_version"] == "2019.alpha"
     assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
+
+
+def testDALTON_DALTON_2018_irc_point_out(logfile):
+    nuclear = Nuclear(logfile.data)
+    numpy.testing.assert_allclose(
+        nuclear.moment_of_inertia_tensor(units="amu_angstrom_2"),
+        numpy.array(
+            [
+                [301.223026, -85.209255, 147.657765],
+                [-85.209255, 324.407198, 128.930152],
+                [147.657765, 128.930152, 175.388249],
+            ]
+        ),
+    )
+    pmoi, moi_axes = nuclear.principal_moments_of_inertia(units="amu_angstrom_2")
+    numpy.testing.assert_allclose(pmoi, numpy.array([3.399951, 398.809260, 398.809262]))
+    numpy.testing.assert_allclose(
+        numpy.abs(moi_axes),
+        numpy.abs(
+            numpy.array(
+                [
+                    [-0.496788, -0.433780, 0.751690],
+                    [-0.510896, 0.846323, 0.150742],
+                    [0.701561, 0.309148, 0.642059],
+                ]
+            ).transpose()
+        ),
+        rtol=4.7e-5,
+    )
+    numpy.testing.assert_allclose(
+        nuclear.rotational_constants("ghz") * 1.0e3,
+        numpy.array([148643.0197, 1267.2198, 1267.2198]),
+        rtol=2.3e-6,
+    )
+    numpy.testing.assert_allclose(
+        nuclear.rotational_constants("invcm"),
+        numpy.array([4.958197, 0.042270, 0.042270]),
+        rtol=2.3e-6,
+    )
 
 
 def testDALTON_DALTON_2018_tdhf_2000_out(logfile):
@@ -1306,6 +1396,23 @@ def testGaussian_Gaussian09_irc_point_log(logfile):
     assert hasattr(logfile.data, "vibfreqs")
     assert len(logfile.data.vibfreqs) == 11
 
+    nuclear = Nuclear(logfile.data)
+    # reference is on line 248
+    assert convertor(nuclear.repulsion_energy(), "eV", "hartree") == pytest.approx(107.9672499066)
+    pmoi, _ = nuclear.principal_moments_of_inertia("amu_bohr_2")
+    # reference is starting on line 2413
+    numpy.testing.assert_allclose(
+        pmoi, numpy.array([12.14144, 1424.17386, 1424.17386]), rtol=5.0e-7
+    )
+    # Can't compare the principal axes (eigenvectors) as only the first seems
+    # to be equivalent within phase
+    # reference is on line 163; also appears in lower precision on line 2420
+    numpy.testing.assert_allclose(
+        nuclear.rotational_constants("ghz"),
+        numpy.array([148.6430872, 1.2672197, 1.2672197]),
+        rtol=4.5e-7,
+    )
+
     assert logfile.data.metadata["package_version"] == "2009+D.01"
     assert logfile.data.metadata["keywords"] == [
         "#p gfprint pop=full HF/6-31G(d) freq=projected symmetry=none"
@@ -1637,6 +1744,14 @@ def testGaussian_Gaussian16_issue851_log(logfile):
     assert isinstance(logfile.data.scannames, list)
     assert isinstance(logfile.data.scanparm, list)
     assert isinstance(logfile.data.scanenergies, list)
+
+    nuclear = Nuclear(logfile.data)
+    numpy.testing.assert_allclose(
+        numpy.array([361.9878736, 361.9878736, 180.9939368]),
+        nuclear.rotational_constants("ghz"),
+        rtol=0.0,
+        atol=1.0e-3,
+    )
 
 
 def testGaussian_Gaussian16_issue962_log(logfile):
@@ -3315,6 +3430,31 @@ def testXTB_basicXTB6_5_1_1448_out(logfile):
     """
     assert logfile.data.atomcoords.shape == (1, 5, 3)
 
+    # Not using the program's atomic masses is a large source of error (~3
+    # orders of magnitude in relative tolerance).
+    logfile.data.atommasses = numpy.array(
+        [_xtb_atomno_to_atommass[atomno - 1] for atomno in logfile.data.atomnos]
+    )
+    nuclear = Nuclear(logfile.data)
+    # reference from line 457
+    numpy.testing.assert_allclose(
+        nuclear.center_of_mass(), numpy.array([1.4342479, 0.0012299, 0.0245854]), rtol=4.1e-6
+    )
+
+    # reference from line 494
+    numpy.testing.assert_allclose(
+        nuclear.principal_moments_of_inertia(units="amu_angstrom_2")[0],
+        numpy.array([0.3216841e01, 0.5275963e02, 0.5275963e02]),
+        rtol=2.8e-5,
+    )
+
+    # reference from line 495
+    numpy.testing.assert_allclose(
+        nuclear.rotational_constants("invcm"),
+        numpy.array([0.5240431e01, 0.3195177e00, 0.3195177e00]),
+        rtol=2.8e-5,
+    )
+
 
 # These regression tests are for logfiles that are not to be parsed
 # for some reason, and the function should start with 'testnoparse'.
@@ -3957,3 +4097,127 @@ class Psi4HFIRTest_v1(Psi4HFIRTest):
     @pytest.mark.skip("not implemented in versions older than 1.2")
     def testvibrmasses(self, data: "ccData") -> None:
         pass
+
+
+# https://github.com/grimme-lab/xtb/blob/579679afd673b20e6dc6e238ecc19db70941731f/src/param/atomicmass.f90#L37
+# at tag v6.5.1
+_xtb_atomno_to_atommass = [
+    1.00794075,
+    4.00260193,
+    6.94003660,
+    9.01218307,
+    10.81102805,
+    12.01073590,
+    14.00670321,
+    15.99940492,
+    18.99840316,
+    20.18004638,
+    22.98976928,
+    24.30505162,
+    26.98153853,
+    28.08549871,
+    30.97376200,
+    32.06478741,
+    35.45293758,
+    39.94779856,
+    39.09830091,
+    40.07802251,
+    44.95590828,
+    47.86674496,
+    50.94146504,
+    51.99613176,
+    54.93804391,
+    55.84514443,
+    58.93319429,
+    58.69334711,
+    63.54603995,
+    65.37778253,
+    69.72306607,
+    72.62755016,
+    74.92159457,
+    78.95938856,
+    79.90352778,
+    83.79800000,
+    85.46766360,
+    87.61664447,
+    88.90584030,
+    91.22364160,
+    92.90637300,
+    95.95978854,
+    97.90721240,
+    101.06494014,
+    102.90549800,
+    106.41532751,
+    107.86814963,
+    112.41155782,
+    114.81808663,
+    118.71011259,
+    121.75978367,
+    127.60312648,
+    126.90447190,
+    131.29276145,
+    132.90545196,
+    137.32689163,
+    138.90546887,
+    140.11573074,
+    140.90765760,
+    144.24159603,
+    144.91275590,
+    150.36635571,
+    151.96437813,
+    157.25213065,
+    158.92535470,
+    162.49947282,
+    164.93032880,
+    167.25908265,
+    168.93421790,
+    173.05415017,
+    174.96681496,
+    178.48497872,
+    180.94787564,
+    183.84177755,
+    186.20670455,
+    190.22485963,
+    192.21605165,
+    195.08445686,
+    196.96656879,
+    200.59916703,
+    204.38341284,
+    207.21690806,
+    208.98039910,
+    208.98243080,
+    209.98714790,
+    222.01757820,
+    223.01973600,
+    226.02541030,
+    227.02775230,
+    232.03805580,
+    231.03588420,
+    238.02891046,
+    237.04817360,
+    244.06420530,
+    243.06138130,
+    247.07035410,
+    247.07030730,
+    251.07958860,
+    252.08298000,
+    257.09510610,
+    258.09843150,
+    259.10103000,
+    262.10961000,
+    267.12179000,
+    269.12791000,
+    271.13393000,
+    270.13336000,
+    276.14846000,
+    276.15159000,
+    280.16131000,
+    282.16912000,
+    284.17416000,
+    284.17873000,
+    289.19042000,
+    288.19274000,
+    293.20449000,
+    292.20746000,
+    294.21392000,
+]

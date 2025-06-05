@@ -11,7 +11,7 @@ from math import sqrt
 from typing import List, Sequence
 
 import numpy
-import periodictable
+import qcelemental as qcel
 import scipy.spatial
 
 
@@ -193,10 +193,10 @@ class PeriodicTable:
         self.element = [None]
         self.number = {}
 
-        for e in periodictable.elements:
-            if e.symbol != "n":
-                self.element.append(e.symbol)
-                self.number[e.symbol] = e.number
+        for name in qcel.periodictable.name[1:]:
+            symbol = qcel.periodictable.to_E(name)
+            self.element.append(symbol)
+            self.number[symbol] = qcel.periodictable.to_Z(name)
 
         # Add common placeholder atoms.  These are not ghost atoms, which
         # still have basis functions associated with a parent element.
