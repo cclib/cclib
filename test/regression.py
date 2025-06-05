@@ -2319,6 +2319,23 @@ def testORCA_ORCA4_2_casscf_out(logfile):
     assert numpy.isclose(convertor(logfile.data.etenergies[0], "wavenumber", "hartree"), 0.128812)
 
 
+def testORCA_ORCA5_0_1177_out(logfile: "Logfile") -> None:
+    """Geometry optimization with miniprint print level
+
+    See https://github.com/cclib/cclib/issues/1177
+    """
+    numpy.testing.assert_array_equal(
+        logfile.data.scftargets, [[1.0e-8, numpy.nan, numpy.nan], [1.0e-8, 1.0e-7, numpy.nan]]
+    )
+    numpy.testing.assert_array_equal(
+        logfile.data.geotargets, [3.0e-5, 2.0e-3, 5.0e-4, 1.0e-2, 7.0e-3]
+    )
+    numpy.testing.assert_array_equal(
+        logfile.data.geovalues[1],
+        [-0.0361512558, 0.0467409950, 0.0267056941, 0.1694571553, 0.0948683298],
+    )
+
+
 def testORCA_ORCA5_0_ADBNA_Me_Mes_MesCz_log(logfile):
     """Check we can parse etsyms in difficult cases."""
     assert hasattr(logfile.data, "etsyms")
