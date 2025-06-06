@@ -222,6 +222,10 @@ class PeriodicTable:
                 self.element.append(e.symbol)
                 self.number[e.symbol] = e.number
 
+        # Add common placeholder atoms.  These are not ghost atoms, which
+        # still have basis functions associated with a parent element.
+        self.number["-"] = 0
+
 
 class WidthSplitter:
     """Split a line based not on a character, but a given number of field
