@@ -62,10 +62,10 @@ jobs:
             pyscf:
               - 'cclib/bridge/cclib2pyscf.py'
               - 'data/PySCF/**'
-      - name: Enable test coverage for Python < 3.12
+      - name: Enable test coverage for Python 3.11
         run: |
           echo "PYTEST_ENABLE_COVERAGE=true" >> "${GITHUB_ENV}"
-        if: matrix.container != 'shivupa/cclib-ci:py312-edge'
+        if: matrix.container == 'shivupa/cclib-ci:py311-edge'
       - name: Test core code with pytest
         run: |
           env | sort
