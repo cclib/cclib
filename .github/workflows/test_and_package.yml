@@ -60,6 +60,7 @@ jobs:
               - 'test/method/**'
             # Basic bridge functionality (test/bridge/testpyscf.py) is kept.
             pyscf:
+              - 'cclib/bridge/cclib2pyscf.py'
               - 'data/PySCF/**'
       - name: Enable test coverage for Python < 3.12
         run: |
