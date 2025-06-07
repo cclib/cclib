@@ -9,27 +9,11 @@ import logging
 from typing import Tuple
 
 from cclib.method.calculationmethod import Method
-from cclib.parser.utils import PeriodicTable, convertor, find_package
+from cclib.parser.utils import PeriodicTable, convertor
 
 import numpy as np
-
-_found_periodictable = find_package("periodictable")
-if _found_periodictable:
-    import periodictable as pt
-
-_found_scipy = find_package("scipy")
-if _found_scipy:
-    import scipy.constants
-
-
-def _check_periodictable(found_periodictable: bool) -> None:
-    if not _found_periodictable:
-        raise ImportError("You must install `periodictable` to use this function")
-
-
-def _check_scipy(found_scipy: bool) -> None:
-    if not _found_scipy:
-        raise ImportError("You must install `scipy` to use this function")
+import periodictable as pt
+import scipy.constants
 
 
 def get_most_abundant_isotope(element: "pt.Element") -> "pt.Isotope":
@@ -49,7 +33,6 @@ def get_isotopic_masses(charges):
     """Return the masses for the given nuclei, respresented by their
     nuclear charges.
     """
-    _check_periodictable(_found_periodictable)
     masses = []
     for charge in charges:
         el = pt.elements[charge]
@@ -149,7 +132,7 @@ class Nuclear(Method):
         return moi_tensor
 
     def principal_moments_of_inertia(
-        self, units: str = "amu_bohr_2"
+        self, units: str = "amu_bohr_2", atomcoords_index: int = -1
     ) -> Tuple[np.ndarray, np.ndarray]:
         """Return the principal moments of inertia in 3 kinds of units:
         1. [amu][bohr]^2
@@ -161,38 +144,34 @@ class Nuclear(Method):
         units = units.lower()
         if units not in choices:
             raise ValueError(f"Invalid units, pick one of {choices}")
-        moi_tensor = self.moment_of_inertia_tensor()
+        moi_tensor = self.moment_of_inertia_tensor(atomcoords_index=atomcoords_index)
         principal_moments, principal_axes = np.linalg.eigh(moi_tensor)
         if units == "amu_bohr_2":
-            _check_scipy(_found_scipy)
             bohr2ang = scipy.constants.value("atomic unit of length") / scipy.constants.angstrom
             conv = 1 / bohr2ang**2
         elif units == "amu_angstrom_2":
             conv = 1
         elif units == "g_cm_2":
-            _check_scipy(_found_scipy)
             amu2g = scipy.constants.value("unified atomic mass unit") * scipy.constants.kilo
             conv = amu2g * (scipy.constants.angstrom / scipy.constants.centi) ** 2
         return conv * principal_moments, principal_axes
 
-    def rotational_constants(self, units: str = "ghz") -> np.ndarray:
+    def rotational_constants(self, units: str = "ghz", atomcoords_index: int = -1) -> np.ndarray:
         """Compute the rotational constants in 1/cm or GHz."""
         choices = ("invcm", "ghz")
         units = units.lower()
         if units not in choices:
             raise ValueError(f"Invalid units, pick one of {choices}")
-        principal_moments = self.principal_moments_of_inertia("amu_angstrom_2")[0]
-        _check_scipy(_found_scipy)
+        principal_moments = self.principal_moments_of_inertia(
+            "amu_angstrom_2", atomcoords_index=atomcoords_index
+        )[0]
         bohr2ang = scipy.constants.value("atomic unit of length") / scipy.constants.angstrom
         xfamu = 1 / scipy.constants.value("electron mass in u")
         xthz = scipy.constants.value("hartree-hertz relationship")
         rotghz = xthz * (bohr2ang**2) / (2 * xfamu * scipy.constants.giga)
         if units == "ghz":
             conv = rotghz
-        if units == "invcm":
+        elif units == "invcm":
             ghz2invcm = scipy.constants.giga * scipy.constants.centi / scipy.constants.c
             conv = rotghz * ghz2invcm
         return conv / principal_moments
-
-
-del find_package
