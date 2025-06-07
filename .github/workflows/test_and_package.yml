@@ -58,10 +58,14 @@ jobs:
             methods:
               - 'cclib/method/**'
               - 'test/method/**'
-      - name: Enable test coverage for Python < 3.12
+            # Basic bridge functionality (test/bridge/testpyscf.py) is kept.
+            pyscf:
+              - 'cclib/bridge/cclib2pyscf.py'
+              - 'data/PySCF/**'
+      - name: Enable test coverage for Python 3.11
         run: |
           echo "PYTEST_ENABLE_COVERAGE=true" >> "${GITHUB_ENV}"
-        if: matrix.container != 'shivupa/cclib-ci:py312-edge'
+        if: matrix.container == 'shivupa/cclib-ci:py311-edge'
       - name: Test core code with pytest
         run: |
           env | sort
@@ -70,10 +74,15 @@ jobs:
         if: steps.filter.outputs.methods == 'true'
         run: |
           bash .github/scripts/run_pytest_methods.bash "$(nproc)"
+      - name: Test PySCF with pytest
+        if: steps.filter.outputs.pyscf == 'true'
+        run: |
+          env | sort
+          bash .github/scripts/run_pytest_pyscf.bash "$(nproc)"
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5
         with:
-          files: ./coverage-unit.xml,./coverage-regression.xml,./coverage-method.xml
+          files: ./coverage-unit.xml,./coverage-regression.xml,./coverage-method.xml,./coverage-pyscf.xml
           name: codecov-cclib
           fail_ci_if_error: false
           verbose: false
