@@ -93,14 +93,7 @@ class aonames(base_parser):
                     this_atombasis.append(basisonatom)
             return this_atombasis
 
-        if line[5:33] == "Natural Orbital Coefficients":
-            parsed_atombasis = natural_orbital_single_spin_parsing(file_handler)
-            return {atombasis.__name__: parsed_atombasis}
-
-        if line[5:39] == "Alpha Natural Orbital Coefficients":
-            parsed_atombasis = natural_orbital_single_spin_parsing(file_handler)
-            return {atombasis.__name__: parsed_atombasis}
-        if line[5:38] == "Beta Natural Orbital Coefficients":
+        if "Natural Orbital Coefficients" in line:
             parsed_atombasis = natural_orbital_single_spin_parsing(file_handler)
             return {atombasis.__name__: parsed_atombasis}
 

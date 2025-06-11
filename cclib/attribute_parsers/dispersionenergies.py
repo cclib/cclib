@@ -29,7 +29,6 @@ class dispersionenergies(base_parser):
             this_dispersionenergies.append(dispersion)
             return {dispersionenergies.__name__: np.array(this_dispersionenergies)}
         return None
-
         # The geometry convergence targets and values are printed in a table, with the legends
 
     @staticmethod
@@ -47,7 +46,6 @@ class dispersionenergies(base_parser):
             this_dispersionenergies.append(dispersion)
             return {dispersionenergies.__name__: np.array(this_dispersionenergies)}
         return None
-        # The geometry convergence targets and values are printed in a table, with the legends
 
     known_codes = ["psi4", "gaussian"]
 
