@@ -34,7 +34,6 @@ class aonames(base_parser):
             if line[5:40] == "Beta Molecular Orbital Coefficients":
                 beta = True
             base = 0
-            curr_atombasis = []
             for base in range(0, ccdata.nmo, 5):
                 colNames = file_handler.virtual_next()  # noqa: F841
                 symmetries = file_handler.virtual_next()  # noqa: F841
@@ -95,38 +94,9 @@ class aonames(base_parser):
 
         if "Natural Orbital Coefficients" in line:
             parsed_atombasis = natural_orbital_single_spin_parsing(file_handler)
-            return {atombasis.__name__: parsed_atombasis}
+            return {aonames.__name__: parsed_atombasis}
 
         return None
-
-    @staticmethod
-    def gaussian(file_handler, ccdata) -> Optional[dict]:
-        # Molecular orbital overlap matrix.
-        # Has to deal with lines such as:
-        #   *** Overlap ***
-        #   ****** Overlap ******
-        # Note that Gaussian sometimes drops basis functions,
-        #  causing the overlap matrix as parsed below to not be
-        line = file_handler.last_line
-        if line[1:4] == "***" and (line[5:12] == "Overlap" or line[8:15] == "Overlap"):
-            # Ensure that this is the main calc and not a fragment
-            # if ccdata.counterpoise != 0:
-            #   return
-            constructed_aonames = np.zeros((ccdata.nbasis, ccdata.nbasis), "d")
-            # Overlap integrals for basis fn#1 are in aonames[0]
-            base = 0
-            colmNames = file_handler.virtual_next()  # noqa: F841
-            while base < ccdata.nbasis:
-                for i in range(ccdata.nbasis - base):  # Fewer lines this time
-                    line = file_handler.virtual_next()
-                    parts = line.split()
-                    for j in range(len(parts) - 1):  # Some lines are longer than others
-                        k = float(parts[j + 1].replace("D", "E"))
-                        constructed_aonames[base + j, i + base] = k
-                        constructed_aonames[i + base, base + j] = k
-                base += 5
-                colmNames = file_handler.virtual_next()  # noqa: F841
-            return {aonames.__name__: constructed_aonames}
 
     @staticmethod
     def parse(file_handler, program: str, ccdata) -> Optional[dict]:

@@ -4,9 +4,10 @@
 # the terms of the BSD 3-Clause License.
 from typing import Optional
 
+from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
 
-import numpy as np
+import numpy
 
 
 class geotargets(base_parser):
@@ -39,7 +40,7 @@ class geotargets(base_parser):
                 if criteria[istart : istart + 9].strip():
                     this_geotargets.append(float(criteria[istart : istart + 9]))
                 else:
-                    this_geotargets.append(np.inf)
+                    this_geotargets.append(numpy.inf)
 
             file_handler.skip_lines(["dashes"])
 
