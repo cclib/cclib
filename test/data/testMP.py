@@ -6,6 +6,7 @@
 """Test Moller-Plesset logfiles in cclib"""
 
 import numpy
+from skip import skipForParser
 
 
 class GenericMP2Test:
@@ -62,10 +63,12 @@ class GenericMP5Test(GenericMP2Test):
 class GaussianMP2Test(GenericMP2Test):
     """Customized MP2 unittest"""
 
+    @skipForParser("Gaussian", "The parser is still being developed for version 2")
     def testnocoeffs(self, data) -> None:
         """Are natural orbital coefficients the right size?"""
         assert data.nocoeffs.shape == (data.nmo, data.nbasis)
 
+    @skipForParser("Gaussian", "The parser is still being developed for version 2")
     def testnooccnos(self, data) -> None:
         """Are natural orbital occupation numbers the right size?"""
         assert data.nooccnos.shape == (data.nmo,)

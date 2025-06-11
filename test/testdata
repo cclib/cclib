@@ -80,12 +80,12 @@ BOMD      QChem       GenericBOMDTest       basicQChem5.4         dvb_bomd.out
 # CC        GAMESS      GamessCCSDTest        basicGAMESS-US2018    water_ccsd.out
 # CC        GAMESS      GamessCCSDPTTest      basicGAMESS-US2017    water_ccsd(t).out
 # CC        GAMESS      GamessCCSDPTTest      basicGAMESS-US2018    water_ccsd(t).out
-# CC        Gaussian    GenericCCDTest        basicGaussian09       water_ccd.log
-# CC        Gaussian    GenericCCDTest        basicGaussian16       water_ccd.log
-# CC        Gaussian    GenericCCSDTest       basicGaussian09       water_ccsd.log
-# CC        Gaussian    GenericCCSDTest       basicGaussian16       water_ccsd.log
-# CC        Gaussian    GenericCCSDPTTest     basicGaussian09       water_ccsdt.log
-# CC        Gaussian    GenericCCSDPTTest     basicGaussian16       water_ccsdt.log
+CC        Gaussian    GenericCCDTest        basicGaussian09       water_ccd.log
+CC        Gaussian    GenericCCDTest        basicGaussian16       water_ccd.log
+CC        Gaussian    GenericCCSDTest       basicGaussian09       water_ccsd.log
+CC        Gaussian    GenericCCSDTest       basicGaussian16       water_ccsd.log
+CC        Gaussian    GenericCCSDPTTest     basicGaussian09       water_ccsdt.log
+CC        Gaussian    GenericCCSDPTTest     basicGaussian16       water_ccsdt.log
 # CC        Molpro      MolproCCDTest         basicMolpro2006       h2o_ccd.out
 # CC        Molpro      MolproCCDTest         basicMolpro2012       h2o_ccd.out
 # CC        Molpro      MolproCCSDTest        basicMolpro2006       h2o_ccsd.out
@@ -194,16 +194,16 @@ CC        Psi4        Psi4CCSDPTTest        basicPsi4-1.7         water_ccsd(t).
 # MP        GAMESSUK    GenericMP3Test        basicGAMESS-UK8.0     water_mp3.out
 # MP        GAMESS      GenericMP2Test        basicGAMESS-US2017    water_mp2.out
 # MP        GAMESS      GenericMP2Test        basicGAMESS-US2018    water_mp2.out
-# MP        Gaussian    GaussianMP2Test       basicGaussian09       water_mp2.log
-# MP        Gaussian    GaussianMP2Test       basicGaussian16       water_mp2.log
-# MP        Gaussian    GaussianMP3Test       basicGaussian09       water_mp3.log
-# MP        Gaussian    GaussianMP3Test       basicGaussian16       water_mp3.log
-# MP        Gaussian    GaussianMP4SDQTest    basicGaussian09       water_mp4sdq.log
-# MP        Gaussian    GaussianMP4SDQTest    basicGaussian16       water_mp4sdq.log
-# MP        Gaussian    GaussianMP4SDTQTest   basicGaussian09       water_mp4.log
-# MP        Gaussian    GaussianMP4SDTQTest   basicGaussian16       water_mp4.log
-# MP        Gaussian    GenericMP5Test        basicGaussian09       water_mp5.log
-# MP        Gaussian    GenericMP5Test        basicGaussian16       water_mp5.log
+MP        Gaussian    GaussianMP2Test       basicGaussian09       water_mp2.log
+MP        Gaussian    GaussianMP2Test       basicGaussian16       water_mp2.log
+MP        Gaussian    GaussianMP3Test       basicGaussian09       water_mp3.log
+MP        Gaussian    GaussianMP3Test       basicGaussian16       water_mp3.log
+MP        Gaussian    GaussianMP4SDQTest    basicGaussian09       water_mp4sdq.log
+MP        Gaussian    GaussianMP4SDQTest    basicGaussian16       water_mp4sdq.log
+MP        Gaussian    GaussianMP4SDTQTest   basicGaussian09       water_mp4.log
+MP        Gaussian    GaussianMP4SDTQTest   basicGaussian16       water_mp4.log
+MP        Gaussian    GenericMP5Test        basicGaussian09       water_mp5.log
+MP        Gaussian    GenericMP5Test        basicGaussian16       water_mp5.log
 # MP        Jaguar      GenericMP2Test        basicJaguar7.0        water_lmp2.out
 # MP        Jaguar      GenericMP2Test        basicJaguar8.3        water_lmp2.out
 # MP        GAMESS      GenericMP2Test        basicFirefly8.0       water_mp2.out
@@ -321,8 +321,8 @@ SP        Psi4        PsiSPTest             basicPsi4-1.7               dvb_sp_r
 # SP        DALTON      GenericDispersionTest basicDALTON-2018            dvb_dispersion_bp86_d3zero.out
 # SP        GAMESS      FireflyDispersionTest basicFirefly8.1             dvb_dispersion_bp86_d3zero.out
 # SP        GAMESS      GenericDispersionTest basicGAMESS-US2018          dvb_dispersion_bp86_d3zero.out
-# SP        Gaussian    GenericDispersionTest basicGaussian09             dvb_dispersion_bp86_d3zero.out
-# SP        Gaussian    GenericDispersionTest basicGaussian16             dvb_dispersion_bp86_d3zero.out
+SP        Gaussian    GenericDispersionTest basicGaussian09             dvb_dispersion_bp86_d3zero.out
+SP        Gaussian    GenericDispersionTest basicGaussian16             dvb_dispersion_bp86_d3zero.out
 # SP        NWChem      GenericDispersionTest basicNWChem6.8              dvb_dispersion_bp86_d3zero.out
 # SP        NWChem      GenericDispersionTest basicNWChem7.0              dvb_dispersion_bp86_d3zero.out
 # SP        ORCA        GenericDispersionTest basicORCA4.1                dvb_dispersion_bp86_d3zero.out

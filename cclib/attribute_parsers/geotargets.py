@@ -4,9 +4,10 @@
 # the terms of the BSD 3-Clause License.
 from typing import Optional
 
+from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
 
-import numpy as np
+import numpy
 
 
 class geotargets(base_parser):
@@ -14,7 +15,7 @@ class geotargets(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["psi4"]
+    known_codes = ["psi4", "gaussian"]
 
     @staticmethod
     def psi4(file_handler, ccdata) -> Optional[dict]:
@@ -39,7 +40,7 @@ class geotargets(base_parser):
                 if criteria[istart : istart + 9].strip():
                     this_geotargets.append(float(criteria[istart : istart + 9]))
                 else:
-                    this_geotargets.append(np.inf)
+                    this_geotargets.append(numpy.inf)
 
             file_handler.skip_lines(["dashes"])
 
@@ -79,7 +80,34 @@ class geotargets(base_parser):
             return {geotargets.__name__: this_scftargets}
         return None
 
-        # This section prints contraction information before the atomic basis set functions and
+    @staticmethod
+    def gaussian(file_handler, ccdata) -> Optional[dict]:
+        line = file_handler.last_line
+        # Geometry convergence information.
+        if line[49:59] == "Converged?":
+            parsed_geotargets = []
+            if not hasattr(ccdata, "geotargets"):
+                parsed_geotargets = numpy.array([0.0, 0.0, 0.0, 0.0], "d")
+            allconverged = True
+            newlist = [0] * 4
+            for i in range(4):
+                line = file_handler.virtual_next()
+                parts = line.split()
+                if "NO" in parts[-1]:
+                    allconverged = False  # noqa: F841
+                try:
+                    value = utils.float(parts[2])
+                except ValueError:
+                    pass  # todo logging
+                    # self.logger.error(
+                    #    "Problem parsing the value for geometry optimisation: %s is not a number.",
+                    #    parts[2],
+                    # )
+                else:
+                    newlist[i] = value
+                parsed_geotargets[i] = utils.float(parts[3])
+            return {geotargets.__name__: parsed_geotargets}
+        return None
 
     @staticmethod
     def parse(file_handler, program, ccdata) -> Optional[dict]:
