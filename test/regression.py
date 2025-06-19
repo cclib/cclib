@@ -101,6 +101,7 @@ from .data.testPolar import GenericPolarTest, ReferencePolarTest
 from .data.testScan import GaussianRelaxedScanTest, GenericRelaxedScanTest
 from .data.testSP import (
     ADFSPTest,
+    DALTONSPTest,
     GaussianSPTest,
     GenericHFSPTest,
     GenericSPTest,
@@ -3467,7 +3468,7 @@ class DALTONBigBasisTest_aug_cc_pCVQZ(GenericBigBasisTest):
     spherical = True
 
 
-class DALTONSPTest_nosymmetry(GenericSPTest):
+class DALTONSPTest_nosymmetry(DALTONSPTest):
     def testsymlabels(self, data: "ccData") -> None:
         """Are all the symmetry labels either Ag/u or Bg/u?"""
         # A calculation without symmetry, meaning it belongs to the C1 point

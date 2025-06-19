@@ -651,6 +651,17 @@ class ADFSPTest(GenericSPTest):
         assert abs(data.fooverlaps[2, 2] - self.foverlap22) < 0.0001
 
 
+class DALTONSPTest(GenericSPTest):
+    """Customized restricted single point unittest"""
+
+    # taken from basicDALTON-2013/dvb_sp_hf.out
+    rotconsts = [4.6178434, 0.6857618, 0.5970921]
+
+
+class DALTONHFSPTest(DALTONSPTest, GenericHFSPTest):
+    """Customized restricted single point unittest"""
+
+
 class GaussianSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
 

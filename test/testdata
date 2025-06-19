@@ -284,10 +284,10 @@ Scan      ORCA         GenericUnrelaxedScanTest              basicORCA6.0       
 SP        ADF         ADFSPTest             basicADF2007.01             dvb_sp_b.adfout
 SP        ADF         ADFSPTest             basicADF2013.01             dvb_sp_b.adfout
 SP        CFOUR       GenericHFSPTest       basicCFOUR2.1               dvb_sp.c4
-SP        DALTON      GenericHFSPTest       basicDALTON-2013            dvb_sp_hf.out
-SP        DALTON      GenericSPTest         basicDALTON-2013            dvb_sp_ks.out
-SP        DALTON      GenericHFSPTest       basicDALTON-2015            dvb_sp_hf.out
-SP        DALTON      GenericSPTest         basicDALTON-2015            dvb_sp_ks.out
+SP        DALTON      DALTONHFSPTest        basicDALTON-2013            dvb_sp_hf.out
+SP        DALTON      DALTONSPTest          basicDALTON-2013            dvb_sp_ks.out
+SP        DALTON      DALTONHFSPTest        basicDALTON-2015            dvb_sp_hf.out
+SP        DALTON      DALTONSPTest          basicDALTON-2015            dvb_sp_ks.out
 SP        FChk        GenericSPTest         basicGaussian09             dvb_sp.fchk
 SP        FChk        GenericSPTest         basicGaussian16             dvb_sp.fchk
 SP        FChk        GenericSPTest         basicQChem5.2               dvb_sp_modified.fchk
