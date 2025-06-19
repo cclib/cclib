@@ -402,23 +402,22 @@ class GenericSPTest:
         """There should be no optdone attribute set."""
         assert not hasattr(data, "optdone")
 
-    @skipForParser("ADF", "Not implemented yes")
+    @skipForParser("ADF", "Not implemented yet")
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
-    @skipForParser("DALTON", "Not implemented yes")
     @skipForParser("FChk", "Rotational constants are never written to fchk files")
-    @skipForParser("GAMESS", "Not implemented yes")
+    @skipForParser("GAMESS", "Not implemented yet")
     @skipForParser("GAMESSUK", "Not implemented yet")
     @skipForParser("GAMESSDAT", "Not implemented yet")
-    @skipForParser("Molcas", "Not implemented yes")
-    @skipForParser("Molpro", "Not implemented yes")
+    @skipForParser("Molcas", "Not implemented yet")
+    @skipForParser("Molpro", "Not implemented yet")
     @skipForParser("NBO", "attribute not implemented in this version")
-    @skipForParser("NWChem", "Not implemented yes")
-    @skipForParser("Psi4", "Not implemented yes")
-    @skipForParser("QChem", "Not implemented yes")
-    @skipForParser("Turbomole", "Not implemented yes")
     @skipForParser("xTB", "not implemented yet")
+    @skipForParser("NWChem", "Not implemented yet")
+    @skipForParser("Psi4", "Not implemented yet")
+    @skipForParser("QChem", "Not implemented yet")
+    @skipForParser("Turbomole", "Not implemented yet")
     def testrotconsts(self, data) -> None:
-        """A single geometry leads to single set of rotational constants."""
+        """A single geometry leads to single set of rotational constants (in GHz)."""
         assert data.rotconsts.shape == (1, 3)
         numpy.testing.assert_allclose(data.rotconsts[0], self.rotconsts, rtol=0, atol=1.0e-3)
 
