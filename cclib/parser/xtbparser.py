@@ -507,7 +507,7 @@ def _extract_gfn2_mulliken_charge(line: str) -> Optional[Tuple[float, int]]:
     3   1 H        0.805     0.282     0.777     1.384
     """
     line_split = line.split()
-    return (float(line_split[4]), line_split[1]) if len(line_split) == 7 else None
+    return (float(line_split[4]), int(line_split[1])) if len(line_split) == 7 else None
 
 
 def _extract_gfn1_mulliken_cm5_charges(line: str) -> Optional[Tuple[float, float]]:
