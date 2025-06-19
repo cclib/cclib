@@ -34,6 +34,14 @@ if _found_pyscf:
 
     # This is an optional install.
     try:
+        import warnings
+
+        warnings.filterwarnings(
+            action="ignore", category=UserWarning, message=r"Module [\w-]+ is under testing"
+        )
+        warnings.filterwarnings(
+            action="ignore", category=UserWarning, message=r"Module [\w-]+ is not fully tested"
+        )
         import pyscf.prop as pyscf_prop
 
     except ModuleNotFoundError:
