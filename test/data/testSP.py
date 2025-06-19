@@ -675,7 +675,7 @@ class JaguarSPTest(GenericSPTest):
 
 
 class JaguarHFSPTest(JaguarSPTest, GenericHFSPTest):
-    """Customized restricted single point KS unittest"""
+    """Customized restricted single point unittest"""
 
 
 class Jaguar7SPTest(JaguarSPTest):
