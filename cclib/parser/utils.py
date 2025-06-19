@@ -58,24 +58,6 @@ def symmetrize(m: numpy.ndarray, use_triangle: str = "lower") -> numpy.ndarray:
     return ms
 
 
-_BUILTIN_FLOAT = float
-
-
-def float(number: str) -> float:
-    """Convert a string to a float.
-
-    This method should perform certain checks that are specific to cclib,
-    including avoiding the problem with Ds instead of Es in scientific notation.
-    Another point is converting string signifying numerical problems (*****)
-    to something we can manage (Numpy's NaN).
-    """
-
-    if list(set(number)) == ["*"]:
-        return numpy.nan
-
-    return _BUILTIN_FLOAT(number.replace("D", "E"))
-
-
 def convertor(value: float, fromunits: str, tounits: str) -> float:
     """Convert from one set of units to another.
 
@@ -273,3 +255,23 @@ def block_to_matrix(block: numpy.ndarray) -> numpy.ndarray:
     mat = numpy.empty(shape=(dim, dim), dtype=block.dtype)
     mat[numpy.tril_indices_from(mat)] = block
     return symmetrize(mat)
+
+
+_BUILTIN_FLOAT = float
+
+
+# This is at the bottom of the file so it doesn't interfere with type hints in
+# any of the file's other functions.
+def float(number: str) -> float:
+    """Convert a string to a float.
+
+    This method should perform certain checks that are specific to cclib,
+    including avoiding the problem with Ds instead of Es in scientific notation.
+    Another point is converting string signifying numerical problems (*****)
+    to something we can manage (Numpy's NaN).
+    """
+
+    if list(set(number)) == ["*"]:
+        return numpy.nan
+
+    return _BUILTIN_FLOAT(number.replace("D", "E"))
