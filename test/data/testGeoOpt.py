@@ -196,7 +196,6 @@ class GenericGeoOptTest:
     @skipForParser("Psi4", "Not implemented yet")
     @skipForParser("QChem", "Not implemented yet")
     @skipForParser("Turbomole", "Not implemented yet")
-    @skipForParser("xTB", "not implemented yet")
     def testrotconsts(self, data) -> None:
         """Each geometry leads to a row in the rotational constants entry."""
         assert data.rotconsts.shape == (len(data.atomcoords), 3)
