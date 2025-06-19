@@ -49,7 +49,6 @@ class GenericSPTest:
         assert data.natom == 20
 
     @skipForParser("NBO", "attribute not implemented in this version")
-    @skipForParser("xTB", "not implemented yet")
     def testatomnos(self, data) -> None:
         """Are the atomnos correct?"""
 
