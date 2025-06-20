@@ -1564,9 +1564,10 @@ class GAMESS(logfileparser.Logfile):
                     "moments of inertia",
                     "THE ROTATIONAL SYMMETRY NUMBER IS",
                     "THE ROTATIONAL CONSTANTS ARE (IN GHZ)",
-                    "rotational constants",
                 ],
             )
+            line = next(inputfile)
+            self.append_attribute("rotconsts", [float(x) for x in line.split()])
             # Sometimes the volume is printed between the pressure and "ALL
             # FREQUENCIES ARE SCALED".
             if lines[0][:3] == " V=":

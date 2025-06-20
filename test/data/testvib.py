@@ -5,6 +5,7 @@
 
 """Test logfiles with vibration output in cclib"""
 
+import numpy as np
 import pytest
 from skip import skipForLogfile, skipForParser
 
@@ -38,6 +39,10 @@ class GenericIRTest:
     # Molecular mass of DVB in mD.
     molecularmass = 130078.25
     molecularmass_thresh = 0.25
+
+    # taken from Gaussian16/dvb_sp.out, in GHz
+    nrotconsts = 1
+    rotconsts = [4.6266363, 0.6849065, 0.5965900]
 
     @pytest.fixture
     def numvib(self, data) -> int:
@@ -241,6 +246,21 @@ class GenericIRTest:
             f"Molecule mass: {mm:f} not {self.molecularmass:f} +- {self.molecularmass_thresh:f} mD"
         )
 
+    @skipForParser("ADF", "not implemented yet")
+    @skipForParser("CFOUR", "not implemented yet")
+    @skipForParser("FChk", "Rotational constants are never written to fchk files")
+    @skipForParser("GAMESSUK", "not implemented yet")
+    @skipForParser("Molpro", "not implemented yet")
+    @skipForParser("NWChem", "not implemented yet")
+    @skipForParser("Psi4", "not implemented yet")
+    @skipForParser("QChem", "Rotational constants are not printed")
+    @skipForParser("Turbomole", "Not implemented yet")
+    @skipForParser("xTB", "Rotational constants not printed for frequency calculations")
+    def testrotconsts(self, data) -> None:
+        """A single geometry leads to single set of rotational constants (in GHz)."""
+        assert data.rotconsts.shape == (self.nrotconsts, 3)
+        np.testing.assert_allclose(data.rotconsts[0], self.rotconsts, rtol=5.0e-5)
+
 
 class ADFIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
@@ -260,6 +280,17 @@ class CFOURIRTest(GenericIRTest):
     zpve = 0.1935035993144163
 
 
+class DALTONIRTest(GenericIRTest):
+    """Customized vibrational frequency unittest"""
+
+    # 2015/dvb_ir.out
+    #
+    # Once in the molecule/basis section at the beginning that all outputs
+    # have, then once again in ABACUS as part of the vibrational analysis.
+    nrotconsts = 2
+    rotconsts = [4.6178434, 0.6857618, 0.5970921]
+
+
 class FireflyIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
@@ -270,6 +301,9 @@ class FireflyIRTest(GenericIRTest):
     freeenergy = -379.61838132136285
 
     entropy_places = 5
+
+    # 8.0/dvb_ir.out
+    rotconsts = [4.79366, 0.69975, 0.61062]
 
 
 class GaussianIRTest(GenericIRTest):
@@ -305,6 +339,9 @@ class MolcasIRTest(GenericIRTest):
     enthalpy = -382.11385
     freeenergy = -382.153812
 
+    # OpenMolcas 18.0/dvb_ir.out
+    rotconsts = [4.6160, 0.7067, 0.6129]
+
 
 class NWChemIRTest(GenericIRTest):
     """Generic imaginary vibrational frequency unittest"""
@@ -322,6 +359,9 @@ class GamessIRTest(GenericIRTest):
     enthalpy = -381.86372805188300
     freeenergy = -381.90808120060200
 
+    # GAMESS-US 2018/dvb_ir.out
+    rotconsts = [4.61361, 0.68513, 0.59655]
+
 
 class OrcaIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
@@ -336,6 +376,9 @@ class OrcaIRTest(GenericIRTest):
     freeenergy_places = 2
 
     molecularmass = 130190
+
+    # ORCA 6.0/dvb_ir.out
+    rotconsts = [4.614498, 0.685206, 0.596614]
 
 
 class Psi4HFIRTest(GenericIRTest):
@@ -355,6 +398,12 @@ class Psi4KSIRTest(GenericIRTest):
 
     enthalpy_places = 2
     freeenergy_places = 2
+
+
+class PySCFIRTest(GenericIRTest):
+    """Customized vibrational frequency unittest"""
+
+    rotconsts = [4.617848, 0.685763, 0.597093]
 
 
 class TurbomoleIRTest(GenericIRTest):

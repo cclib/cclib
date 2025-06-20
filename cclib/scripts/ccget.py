@@ -38,7 +38,7 @@ def ccget() -> None:
     parser.add_argument(
         "attribute_or_compchemlogfile",
         nargs="+",
-        help="one or more attributes to be parsed from one ore more logfiles",
+        help="one or more attributes to be parsed from one or more logfiles",
     )
 
     group = parser.add_mutually_exclusive_group()

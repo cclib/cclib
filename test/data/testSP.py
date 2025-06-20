@@ -41,7 +41,7 @@ class GenericSPTest:
     # Generally, one criteria for SCF energy convergence.
     num_scf_criteria = 1
 
-    # taken from Gaussian16/dvb_sp.out
+    # taken from Gaussian16/dvb_sp.out, in GHz
     rotconsts = [4.6266363, 0.6849065, 0.5965900]
 
     def testnatom(self, data) -> None:
@@ -49,7 +49,6 @@ class GenericSPTest:
         assert data.natom == 20
 
     @skipForParser("NBO", "attribute not implemented in this version")
-    @skipForParser("xTB", "not implemented yet")
     def testatomnos(self, data) -> None:
         """Are the atomnos correct?"""
 
@@ -76,7 +75,6 @@ class GenericSPTest:
         "These tests were run a long time ago and since we don't have access to Molpro 2006 anymore, we can skip this test (it is tested in 2012)",
     )
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    @skipForParser("xTB", "not implemented yet")
     def testatomcharges(self, data) -> None:
         """Are atomic charges consistent with natom?"""
         for atomcharge_type in data.atomcharges:
@@ -403,25 +401,24 @@ class GenericSPTest:
         """There should be no optdone attribute set."""
         assert not hasattr(data, "optdone")
 
-    @skipForParser("ADF", "Not implemented yes")
+    @skipForParser("ADF", "Not implemented yet")
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
-    @skipForParser("DALTON", "Not implemented yes")
     @skipForParser("FChk", "Rotational constants are never written to fchk files")
-    @skipForParser("GAMESS", "Not implemented yes")
+    @skipForParser("GAMESS", "Not implemented yet")
     @skipForParser("GAMESSUK", "Not implemented yet")
     @skipForParser("GAMESSDAT", "Not implemented yet")
-    @skipForParser("Molcas", "Not implemented yes")
-    @skipForParser("Molpro", "Not implemented yes")
+    @skipForParser("Molcas", "Not implemented yet")
+    @skipForParser("Molpro", "Not implemented yet")
     @skipForParser("NBO", "attribute not implemented in this version")
-    @skipForParser("NWChem", "Not implemented yes")
-    @skipForParser("Psi4", "Not implemented yes")
-    @skipForParser("QChem", "Not implemented yes")
-    @skipForParser("Turbomole", "Not implemented yes")
     @skipForParser("xTB", "not implemented yet")
+    @skipForParser("NWChem", "Not implemented yet")
+    @skipForParser("Psi4", "Not implemented yet")
+    @skipForParser("QChem", "Not implemented yet")
+    @skipForParser("Turbomole", "Not implemented yet")
     def testrotconsts(self, data) -> None:
-        """A single geometry leads to single set of rotational constants."""
+        """A single geometry leads to single set of rotational constants (in GHz)."""
         assert data.rotconsts.shape == (1, 3)
-        numpy.testing.assert_allclose(data.rotconsts[0], self.rotconsts, rtol=0, atol=1.0e-3)
+        numpy.testing.assert_allclose(data.rotconsts[0], self.rotconsts, rtol=5.0e-5)
 
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("FChk", "The parser is still being developed so we skip this test")
@@ -654,6 +651,17 @@ class ADFSPTest(GenericSPTest):
         assert abs(data.fooverlaps[2, 2] - self.foverlap22) < 0.0001
 
 
+class DALTONSPTest(GenericSPTest):
+    """Customized restricted single point unittest"""
+
+    # taken from basicDALTON-2013/dvb_sp_hf.out
+    rotconsts = [4.6178434, 0.6857618, 0.5970921]
+
+
+class DALTONHFSPTest(DALTONSPTest, GenericHFSPTest):
+    """Customized restricted single point unittest"""
+
+
 class GaussianSPTest(GenericSPTest):
     """Customized restricted single point unittest"""
 
@@ -667,7 +675,7 @@ class JaguarSPTest(GenericSPTest):
 
 
 class JaguarHFSPTest(JaguarSPTest, GenericHFSPTest):
-    """Customized restricted single point KS unittest"""
+    """Customized restricted single point unittest"""
 
 
 class Jaguar7SPTest(JaguarSPTest):

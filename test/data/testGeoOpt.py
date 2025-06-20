@@ -185,7 +185,6 @@ class GenericGeoOptTest:
 
     @skipForParser("ADF", "Not implemented yet")
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
-    @skipForParser("DALTON", "Not implemented yet")
     @skipForParser("FChk", "Rotational constants are never written to fchk files")
     @skipForParser("GAMESS", "Not implemented yet")
     @skipForParser("GAMESSUK", "Not implemented yet")
@@ -196,7 +195,6 @@ class GenericGeoOptTest:
     @skipForParser("Psi4", "Not implemented yet")
     @skipForParser("QChem", "Not implemented yet")
     @skipForParser("Turbomole", "Not implemented yet")
-    @skipForParser("xTB", "not implemented yet")
     def testrotconsts(self, data) -> None:
         """Each geometry leads to a row in the rotational constants entry."""
         assert data.rotconsts.shape == (len(data.atomcoords), 3)
@@ -254,6 +252,10 @@ class DALTONGeoOptTest(GenericGeoOptTest):
         """Has the geometry converged and set optdone to True?"""
         convergence = numpy.abs(data.geovalues[-1]) <= data.geotargets
         assert sum(convergence) >= 2
+
+    def testrotconsts(self, data) -> None:
+        """DALTON only prints rotational constants for the first geometry."""
+        assert data.rotconsts.shape == (1, 3)
 
 
 class GaussianGeoOptTest(GenericGeoOptTest):
