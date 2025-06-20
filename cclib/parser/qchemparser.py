@@ -1686,14 +1686,16 @@ cannot be determined. Rerun without `$molecule read`."""
                     line = next(inputfile)
                     # Not supported yet.
                     assert "Zero point vibrational energy" in line
-                    if not hasattr(self, "zpe"):
+                    if not hasattr(self, "zpve"):
                         # Convert from kcal/mol to Hartree/particle.
-                        self.zpve = utils.convertor(float(line.split()[4]), "kcal/mol", "hartree")
+                        self.set_attribute(
+                            "zpve", utils.convertor(float(line.split()[4]), "kcal/mol", "hartree")
+                        )
+                    _ = self.skip_line(inputfile, "b")
+                    line = next(inputfile)
                     atommasses = []
-                    while "Translational Enthalpy" not in line:
-                        if "Has Mass" in line:
-                            atommass = float(line.split()[6])
-                            atommasses.append(atommass)
+                    while "Molecular Mass" not in line:
+                        atommasses.append(float(line.split()[6]))
                         line = next(inputfile)
                     if not hasattr(self, "atommasses"):
                         self.atommasses = numpy.array(atommasses)
