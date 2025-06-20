@@ -37,6 +37,9 @@ if _found_pyscf:
         import warnings
 
         warnings.filterwarnings(
+            action="ignore", category=UserWarning, message="Since PySCF-2.3, B3LYP"
+        )
+        warnings.filterwarnings(
             action="ignore", category=UserWarning, message=r"Module [\w-]+ is under testing"
         )
         warnings.filterwarnings(
