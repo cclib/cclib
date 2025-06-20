@@ -9,54 +9,23 @@ import logging
 from typing import Tuple
 
 from cclib.method.calculationmethod import Method
-from cclib.parser.utils import PeriodicTable, convertor, find_package
+from cclib.parser.utils import PeriodicTable, convertor
 
 import numpy as np
+import qcelemental as qcel
+from qcelemental import constants
 
-_found_periodictable = find_package("periodictable")
-if _found_periodictable:
-    import periodictable as pt
-
-_found_scipy = find_package("scipy")
-if _found_scipy:
-    import scipy.constants
-
-
-def _check_periodictable(found_periodictable: bool) -> None:
-    if not _found_periodictable:
-        raise ImportError("You must install `periodictable` to use this function")
-
-
-def _check_scipy(found_scipy: bool) -> None:
-    if not _found_scipy:
-        raise ImportError("You must install `scipy` to use this function")
-
-
-def get_most_abundant_isotope(element: "pt.Element") -> "pt.Isotope":
-    """Given a `periodictable` element, return the most abundant
-    isotope.
-    """
-    most_abundant_isotope = element.isotopes[0]
-    abundance = 0
-    for iso in element:
-        if iso.abundance > abundance:
-            most_abundant_isotope = iso
-            abundance = iso.abundance
-    return most_abundant_isotope
+_CENTI = 0.01
+_GIGA = 1000000000.0
+_KILO = 1000.0
+_ANGSTROM = 1e-10
 
 
 def get_isotopic_masses(charges):
     """Return the masses for the given nuclei, respresented by their
     nuclear charges.
     """
-    _check_periodictable(_found_periodictable)
-    masses = []
-    for charge in charges:
-        el = pt.elements[charge]
-        isotope = get_most_abundant_isotope(el)
-        mass = isotope.mass
-        masses.append(mass)
-    return np.array(masses)
+    return np.array([qcel.periodictable.to_mass(charge) for charge in charges])
 
 
 class Nuclear(Method):
@@ -114,11 +83,14 @@ class Nuclear(Method):
                 nre += zi * zj / d
         return convertor(nre, "hartree", "eV")
 
-    def center_of_mass(self, atomcoords_index: int = -1) -> float:
+    def center_of_mass(self, atomcoords_index: int = -1) -> np.ndarray:
         """Return the center of mass."""
-        charges = self.data.atomnos
+
         coords = self.data.atomcoords[atomcoords_index]
-        masses = get_isotopic_masses(charges)
+        if hasattr(self.data, "atommasses"):
+            masses = self.data.atommasses
+        else:
+            masses = get_isotopic_masses(self.data.atomnos)
 
         mwc = coords * masses[:, np.newaxis]
         numerator = np.sum(mwc, axis=0)
@@ -126,11 +98,28 @@ class Nuclear(Method):
 
         return numerator / denominator
 
-    def moment_of_inertia_tensor(self, atomcoords_index: int = -1) -> np.ndarray:
+    def moment_of_inertia_tensor(
+        self, units: str = "amu_angstrom_2", atomcoords_index: int = -1
+    ) -> np.ndarray:
         """Return the moment of inertia tensor."""
-        charges = self.data.atomnos
-        coords = self.data.atomcoords[atomcoords_index]
-        masses = get_isotopic_masses(charges)
+
+        coords = self.data.atomcoords[atomcoords_index] - self.center_of_mass(
+            atomcoords_index=atomcoords_index
+        )
+        if hasattr(self.data, "atommasses"):
+            masses = self.data.atommasses
+        else:
+            masses = get_isotopic_masses(self.data.atomnos)
+
+        # Put input components in the right units before assembling the tensor.
+        if units == "amu_bohr_2":
+            bohr2ang = constants.atomic_unit_of_length / _ANGSTROM
+            coords /= bohr2ang
+        elif units == "amu_angstrom_2":
+            # No need to do anything, already in the correct units
+            pass
+        else:
+            raise ValueError("Invalid units")
 
         moi_tensor = np.empty((3, 3))
 
@@ -138,9 +127,9 @@ class Nuclear(Method):
         moi_tensor[1][1] = np.sum(masses * (coords[:, 0] ** 2 + coords[:, 2] ** 2))
         moi_tensor[2][2] = np.sum(masses * (coords[:, 0] ** 2 + coords[:, 1] ** 2))
 
-        moi_tensor[0][1] = np.sum(masses * coords[:, 0] * coords[:, 1])
-        moi_tensor[0][2] = np.sum(masses * coords[:, 0] * coords[:, 2])
-        moi_tensor[1][2] = np.sum(masses * coords[:, 1] * coords[:, 2])
+        moi_tensor[0][1] = -np.sum(masses * coords[:, 0] * coords[:, 1])
+        moi_tensor[0][2] = -np.sum(masses * coords[:, 0] * coords[:, 2])
+        moi_tensor[1][2] = -np.sum(masses * coords[:, 1] * coords[:, 2])
 
         moi_tensor[1][0] = moi_tensor[0][1]
         moi_tensor[2][0] = moi_tensor[0][2]
@@ -149,7 +138,7 @@ class Nuclear(Method):
         return moi_tensor
 
     def principal_moments_of_inertia(
-        self, units: str = "amu_bohr_2"
+        self, units: str = "amu_bohr_2", atomcoords_index: int = -1
     ) -> Tuple[np.ndarray, np.ndarray]:
         """Return the principal moments of inertia in 3 kinds of units:
         1. [amu][bohr]^2
@@ -161,38 +150,35 @@ class Nuclear(Method):
         units = units.lower()
         if units not in choices:
             raise ValueError(f"Invalid units, pick one of {choices}")
-        moi_tensor = self.moment_of_inertia_tensor()
+        moi_tensor_units = units
+        if units == "g_cm_2":
+            moi_tensor_units = "amu_angstrom_2"
+        moi_tensor = self.moment_of_inertia_tensor(
+            units=moi_tensor_units, atomcoords_index=atomcoords_index
+        )
         principal_moments, principal_axes = np.linalg.eigh(moi_tensor)
-        if units == "amu_bohr_2":
-            _check_scipy(_found_scipy)
-            bohr2ang = scipy.constants.value("atomic unit of length") / scipy.constants.angstrom
-            conv = 1 / bohr2ang**2
-        elif units == "amu_angstrom_2":
-            conv = 1
-        elif units == "g_cm_2":
-            _check_scipy(_found_scipy)
-            amu2g = scipy.constants.value("unified atomic mass unit") * scipy.constants.kilo
-            conv = amu2g * (scipy.constants.angstrom / scipy.constants.centi) ** 2
+        if units == "g_cm_2":
+            amu2g = constants.unified_atomic_mass_unit * _KILO
+            conv = amu2g * (constants.atomic_unit_of_length * _CENTI) ** 2
+        else:
+            conv = 1.0
         return conv * principal_moments, principal_axes
 
-    def rotational_constants(self, units: str = "ghz") -> np.ndarray:
+    def rotational_constants(self, units: str = "ghz", atomcoords_index: int = -1) -> np.ndarray:
         """Compute the rotational constants in 1/cm or GHz."""
         choices = ("invcm", "ghz")
         units = units.lower()
         if units not in choices:
             raise ValueError(f"Invalid units, pick one of {choices}")
-        principal_moments = self.principal_moments_of_inertia("amu_angstrom_2")[0]
-        _check_scipy(_found_scipy)
-        bohr2ang = scipy.constants.value("atomic unit of length") / scipy.constants.angstrom
-        xfamu = 1 / scipy.constants.value("electron mass in u")
-        xthz = scipy.constants.value("hartree-hertz relationship")
-        rotghz = xthz * (bohr2ang**2) / (2 * xfamu * scipy.constants.giga)
+        principal_moments = self.principal_moments_of_inertia(
+            units="amu_angstrom_2", atomcoords_index=atomcoords_index
+        )[0]
+        bohr2ang = constants.atomic_unit_of_length / _ANGSTROM
+        xfamu = 1 / constants.electron_mass_in_u
+        rotghz = constants.hartree_hertz_relationship * (bohr2ang**2) / (2 * xfamu * _GIGA)
         if units == "ghz":
             conv = rotghz
-        if units == "invcm":
-            ghz2invcm = scipy.constants.giga * scipy.constants.centi / scipy.constants.c
+        elif units == "invcm":
+            ghz2invcm = _GIGA * _CENTI / constants.c
             conv = rotghz * ghz2invcm
         return conv / principal_moments
-
-
-del find_package

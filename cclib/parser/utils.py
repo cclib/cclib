@@ -11,7 +11,8 @@ from math import sqrt
 from typing import List, Sequence
 
 import numpy
-import periodictable
+import qcelemental as qcel
+import scipy.spatial
 
 
 def find_package(package: str) -> bool:
@@ -23,11 +24,6 @@ def find_package(package: str) -> bool:
 
     module_spec = find_spec(package)
     return module_spec is not None and module_spec.loader is not None
-
-
-_found_scipy = find_package("scipy")
-if _found_scipy:
-    import scipy.spatial
 
 
 def symmetrize(m: numpy.ndarray, use_triangle: str = "lower") -> numpy.ndarray:
@@ -144,8 +140,6 @@ def get_rotation(a, b):
     Returns:
         A scipy.spatial.transform.Rotation object
     """
-    if not _found_scipy:
-        raise ImportError("You must install `scipy` to use this function")
 
     assert a.shape == b.shape
     if a.shape[0] == 1:
@@ -199,10 +193,10 @@ class PeriodicTable:
         self.element = [None]
         self.number = {}
 
-        for e in periodictable.elements:
-            if e.symbol != "n":
-                self.element.append(e.symbol)
-                self.number[e.symbol] = e.number
+        for name in qcel.periodictable.name[1:]:
+            symbol = qcel.periodictable.to_E(name)
+            self.element.append(symbol)
+            self.number[symbol] = qcel.periodictable.to_Z(name)
 
         # Add common placeholder atoms.  These are not ghost atoms, which
         # still have basis functions associated with a parent element.
