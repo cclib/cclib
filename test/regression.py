@@ -3521,6 +3521,14 @@ class GamessIRTest_old(GamessIRTest):
     entropy_places = 5
     freeenergy_places = 2
 
+    def testrotconsts(self, data) -> None:
+        """A single geometry leads to single set of rotational constants (in GHz).
+
+        Don't check against reference values since the multiple outputs that
+        use this test vary substantially.
+        """
+        assert data.rotconsts.shape == (1, 3)
+
 
 class GAMESSUSIRTest_ts(GenericIRimgTest):
     @pytest.mark.skip("This is a transition state with different intensities")
@@ -3584,7 +3592,7 @@ class JaguarGeoOptTest_norotconsts(SkipRotconstsMixin, JaguarGeoOptTest):
     """Older Jaguar versions don't print rotational constants"""
 
 
-class JaguarIRTest_v42(JaguarIRTest):
+class JaguarIRTest_v42(SkipRotconstsMixin, JaguarIRTest):
     @pytest.mark.skip("Data file does not contain force constants")
     def testvibfconsts(self, data: "ccData") -> None:
         pass
@@ -3817,7 +3825,11 @@ class OrcaTDDFTTest_pre1085(OrcaTDDFTTest_pre5):
         assert abs(max(data.etoscs) - 0.94) < 0.2
 
 
-class OrcaIRTest_pre4(OrcaIRTest):
+class OrcaIRTest_norotconsts(OrcaSkipRotconstsMixin, OrcaIRTest):
+    """Versions pre-4.1 did not print rotational constants."""
+
+
+class OrcaIRTest_pre4(OrcaIRTest_norotconsts):
     """Customized vibrational frequency unittest"""
 
     # ORCA has a bug in the intensities for version < 4.0

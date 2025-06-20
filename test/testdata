@@ -470,8 +470,8 @@ TDun	  Turbomole   TurbomoleTDunTest     basicTurbomole7.4     CO_cc2_TD_un/basi
 vib       ADF         ADFIRTest             basicADF2007.01       dvb_ir.adfout
 vib       ADF         ADFIRTest             basicADF2013.01       dvb_ir.adfout
 vib       CFOUR       CFOURIRTest           basicCFOUR2.1         dvb_ir.c4
-vib       DALTON      GenericIRTest         basicDALTON-2013      dvb_ir.out
-vib       DALTON      GenericIRTest         basicDALTON-2015      dvb_ir.out
+vib       DALTON      DALTONIRTest          basicDALTON-2013      dvb_ir.out
+vib       DALTON      DALTONIRTest          basicDALTON-2015      dvb_ir.out
 vib       FChk        GaussianIRTest        basicGaussian09       dvb_ir.fchk
 vib       FChk        GaussianIRTest        basicGaussian16       dvb_ir.fchk
 vib       FChk        GenericIRTest         basicQChem5.4         dvb_ir.fchk
@@ -495,7 +495,7 @@ vib       Psi4        Psi4HFIRTest          basicPsi4-1.2.1       dvb_ir_rhf.out
 vib       Psi4        Psi4HFIRTest          basicPsi4-1.3.1       dvb_ir_rhf.out
 vib       Psi4        Psi4HFIRTest          basicPsi4-1.7         dvb_ir_rhf.out
 vib       Psi4        Psi4KSIRTest          basicPsi4-1.7         dvb_ir_rks.out
-vib       PySCF       GenericIRTest         basicPySCF2.6         dvb_ir.py
+vib       PySCF       PySCFIRTest           basicPySCF2.6         dvb_ir.py
 vib       QChem       GenericIRTest         basicQChem5.1         dvb_ir.out
 vib       QChem       GenericIRTest         basicQChem5.4         dvb_ir.out
 vib       Turbomole   TurbomoleIRTest       basicTurbomole5.9     dvb_ir/basis            dvb_ir/control            dvb_ir/mos            dvb_ir/aoforce.out

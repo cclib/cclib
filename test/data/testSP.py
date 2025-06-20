@@ -41,7 +41,7 @@ class GenericSPTest:
     # Generally, one criteria for SCF energy convergence.
     num_scf_criteria = 1
 
-    # taken from Gaussian16/dvb_sp.out
+    # taken from Gaussian16/dvb_sp.out, in GHz
     rotconsts = [4.6266363, 0.6849065, 0.5965900]
 
     def testnatom(self, data) -> None:
@@ -418,7 +418,7 @@ class GenericSPTest:
     def testrotconsts(self, data) -> None:
         """A single geometry leads to single set of rotational constants (in GHz)."""
         assert data.rotconsts.shape == (1, 3)
-        numpy.testing.assert_allclose(data.rotconsts[0], self.rotconsts, rtol=0, atol=1.0e-3)
+        numpy.testing.assert_allclose(data.rotconsts[0], self.rotconsts, rtol=5.0e-5)
 
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("FChk", "The parser is still being developed so we skip this test")
