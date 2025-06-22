@@ -2116,6 +2116,13 @@ def testMOPAC_MOPAC2016_9S3_uuu_Cs_cation_freq_PM7_out(logfile):
 
     nuclear = Nuclear(logfile.data)
 
+    # reference is on line 167
+    numpy.testing.assert_allclose(
+        nuclear.principal_moments_of_inertia(units="g_cm_2")[0] * 10.0**40,
+        [1343.7084, 2037.2305, 2164.8281],
+        rtol=1.8e-3,
+    )
+
     numpy.testing.assert_allclose(
         nuclear.rotational_constants(units="invcm"), rotconsts_invcm, atol=3.6e-5, rtol=0.0
     )

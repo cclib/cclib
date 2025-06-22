@@ -168,9 +168,9 @@ class Nuclear(Method):
         atommasses: Optional[np.ndarray] = None,
     ) -> Tuple[np.ndarray, np.ndarray]:
         """Return the principal moments of inertia in 3 kinds of units:
-        1. [amu][bohr]^2
-        2. [amu][angstrom]^2
-        3. [g][cm]^2
+        1. [amu][bohr]^2 (amu_bohr_2)
+        2. [amu][angstrom]^2 (amu_angstrom_2)
+        3. [g][cm]^2 (g_cm_2)
         and the principal axes.
 
         Following convention, the ordering of the moments is from smallest to
@@ -183,7 +183,7 @@ class Nuclear(Method):
 
         moi_tensor_units = units
         if units == "g_cm_2":
-            moi_tensor_units = "amu_angstrom_2"
+            moi_tensor_units = "amu_bohr_2"
         moi_tensor = self.moment_of_inertia_tensor(
             units=moi_tensor_units, atomcoords_index=atomcoords_index, atommasses=atommasses
         )
@@ -195,7 +195,7 @@ class Nuclear(Method):
             amu2g = scipy.constants.value("unified atomic mass unit") * scipy.constants.kilo
             conv = (
                 amu2g
-                * (scipy.constants.value("atomic unit of length") * scipy.constants.centi) ** 2
+                * (scipy.constants.value("atomic unit of length") * scipy.constants.hecto) ** 2
             )
         else:
             conv = 1.0
