@@ -6,7 +6,7 @@
 """Calculate properties of nuclei based on data parsed by cclib."""
 
 import logging
-from typing import TYPE_CHECKING, Optional, Tuple
+from typing import TYPE_CHECKING, Iterable, Optional, Tuple
 
 from cclib.method.calculationmethod import Method
 from cclib.parser.utils import PeriodicTable, convertor
@@ -17,6 +17,7 @@ import scipy.constants
 
 if TYPE_CHECKING:
     from cclib.parser.data import ccData
+    from cclib.progress import Progress
 
 
 def get_most_abundant_isotope(element: "pt.Element") -> "pt.Isotope":
@@ -32,7 +33,7 @@ def get_most_abundant_isotope(element: "pt.Element") -> "pt.Isotope":
     return most_abundant_isotope
 
 
-def get_isotopic_masses(charges):
+def get_isotopic_masses(charges: Iterable[int]) -> np.array:
     """Return the masses for the given nuclei, respresented by their
     nuclear charges.
     """
@@ -48,7 +49,13 @@ def get_isotopic_masses(charges):
 class Nuclear(Method):
     """A container for methods pertaining to atomic nuclei."""
 
-    def __init__(self, data, progress=None, loglevel=logging.INFO, logname="Log") -> None:
+    def __init__(
+        self,
+        data: "ccData",
+        progress: Optional["Progress"] = None,
+        loglevel: int = logging.INFO,
+        logname: str = "Log",
+    ) -> None:
         super().__init__(data, progress, loglevel, logname)
         self.required_attrs = ("natom", "atomcoords", "atomnos", "charge")
 
