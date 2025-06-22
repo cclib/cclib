@@ -439,7 +439,8 @@ class DALTON(logfileparser.Logfile):
             _ = self.skip_lines(inputfile, ["d", "b"])
             line = next(inputfile)
             if "The molecule" in line:
-                _ = self.skip_lines(inputfile, ["b", "header", "b"])
+                _ = self.skip_lines(inputfile, ["b", "header"])
+            _ = self.skip_line(inputfile, "b")
             line = next(inputfile)
             self.append_attribute("rotconsts", [float(x) * 1.0e-3 for x in line.split()[:3]])
 

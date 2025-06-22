@@ -443,6 +443,11 @@ def testDALTON_DALTON_2016_Trp_polar_response_diplnx_out(logfile):
         == "2016.2+7db4647eac203e51aae7da3cbc289f55146b30e9"
     )
 
+    # reference from line 605, divided by 1000 to convert from MHz to GHz
+    numpy.testing.assert_allclose(
+        logfile.data.rotconsts[0], numpy.array([1.2360220, 0.3615286, 0.3180669])
+    )
+
     nuclear = Nuclear(logfile.data)
 
     # reference from line 457
