@@ -418,7 +418,12 @@ class GenericSPTest:
     def testrotconsts(self, data) -> None:
         """A single geometry leads to single set of rotational constants (in GHz)."""
         assert data.rotconsts.shape == (1, 3)
-        numpy.testing.assert_allclose(data.rotconsts[0], self.rotconsts, rtol=5.0e-5)
+        rotconsts = data.rotconsts[0]
+        numpy.testing.assert_allclose(rotconsts, self.rotconsts, rtol=5.0e-5)
+
+        # Are the rotational constants ordered from largest to smallest?
+        idx = rotconsts.argsort()[::-1]
+        numpy.testing.assert_equal(rotconsts, rotconsts[idx])
 
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("FChk", "The parser is still being developed so we skip this test")
