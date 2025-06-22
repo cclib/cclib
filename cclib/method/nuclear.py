@@ -13,7 +13,7 @@ from cclib.parser.utils import PeriodicTable, convertor
 
 import numpy as np
 import periodictable as pt
-import scipy.constants
+import scipy.constants as spc
 
 if TYPE_CHECKING:
     from cclib.parser.data import ccData
@@ -139,7 +139,7 @@ class Nuclear(Method):
 
         # Put input components in the right units before assembling the tensor.
         if units == "amu_bohr_2":
-            ang2bohr = scipy.constants.angstrom / scipy.constants.value("atomic unit of length")
+            ang2bohr = spc.angstrom / spc.value("atomic unit of length")
             coords *= ang2bohr
         elif units == "amu_angstrom_2":
             # No need to do anything, already in the correct units
@@ -192,11 +192,8 @@ class Nuclear(Method):
         principal_moments = principal_moments[idx]
         principal_axes = principal_axes[:, idx]
         if units == "g_cm_2":
-            amu2g = scipy.constants.value("unified atomic mass unit") * scipy.constants.kilo
-            conv = (
-                amu2g
-                * (scipy.constants.value("atomic unit of length") * scipy.constants.hecto) ** 2
-            )
+            amu2g = spc.value("unified atomic mass unit") * spc.kilo
+            conv = amu2g * (spc.value("atomic unit of length") * spc.hecto) ** 2
         else:
             conv = 1.0
         return conv * principal_moments, principal_axes
@@ -220,14 +217,14 @@ class Nuclear(Method):
         principal_moments = self.principal_moments_of_inertia(
             units="amu_angstrom_2", atomcoords_index=atomcoords_index, atommasses=atommasses
         )[0]
-        bohr2ang = scipy.constants.value("atomic unit of length") / scipy.constants.angstrom
-        xfamu = 1 / scipy.constants.value("electron mass in u")
-        xthz = scipy.constants.value("hartree-hertz relationship")
-        rotghz = xthz * (bohr2ang**2) / (2 * xfamu * scipy.constants.giga)
+        bohr2ang = spc.value("atomic unit of length") / spc.angstrom
+        xfamu = 1 / spc.value("electron mass in u")
+        xthz = spc.value("hartree-hertz relationship")
+        rotghz = xthz * (bohr2ang**2) / (2 * xfamu * spc.giga)
         if units == "ghz":
             conv = rotghz
         elif units == "invcm":
-            ghz2invcm = scipy.constants.giga * scipy.constants.centi / scipy.constants.c
+            ghz2invcm = spc.giga * spc.centi / spc.c
             conv = rotghz * ghz2invcm
         return conv / principal_moments
 
