@@ -45,6 +45,7 @@ from cclib.parser.utils import convertor
 
 import numpy
 import pytest
+import scipy.constants as spc
 from packaging.version import Version
 from packaging.version import parse as parse_version
 
@@ -2106,6 +2107,18 @@ def testMOPAC_MOPAC2016_9S3_uuu_Cs_cation_freq_PM7_out(logfile):
     assert logfile.data.metadata["legacy_package_version"] == "2016"
     assert logfile.data.metadata["package_version"] == "16.175"
     assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
+
+    # reference is on line 161
+    rotconsts_invcm = numpy.array([0.02083248, 0.01374060, 0.01293071])
+
+    invcm2ghz = spc.c / (spc.giga * spc.centi)
+    numpy.testing.assert_allclose(logfile.data.rotconsts[0], rotconsts_invcm * invcm2ghz)
+
+    nuclear = Nuclear(logfile.data)
+
+    numpy.testing.assert_allclose(
+        nuclear.rotational_constants(units="invcm"), rotconsts_invcm, atol=3.6e-5, rtol=0.0
+    )
 
 
 # NWChem #
