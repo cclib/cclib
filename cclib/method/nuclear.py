@@ -121,9 +121,9 @@ class Nuclear(Method):
         moi_tensor[1][1] = np.sum(masses * (coords[:, 0] ** 2 + coords[:, 2] ** 2))
         moi_tensor[2][2] = np.sum(masses * (coords[:, 0] ** 2 + coords[:, 1] ** 2))
 
-        moi_tensor[0][1] = np.sum(masses * coords[:, 0] * coords[:, 1])
-        moi_tensor[0][2] = np.sum(masses * coords[:, 0] * coords[:, 2])
-        moi_tensor[1][2] = np.sum(masses * coords[:, 1] * coords[:, 2])
+        moi_tensor[0][1] = -np.sum(masses * coords[:, 0] * coords[:, 1])
+        moi_tensor[0][2] = -np.sum(masses * coords[:, 0] * coords[:, 2])
+        moi_tensor[1][2] = -np.sum(masses * coords[:, 1] * coords[:, 2])
 
         moi_tensor[1][0] = moi_tensor[0][1]
         moi_tensor[2][0] = moi_tensor[0][2]
