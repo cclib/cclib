@@ -199,6 +199,12 @@ class GenericGeoOptTest:
         """Each geometry leads to a row in the rotational constants entry."""
         assert data.rotconsts.shape == (len(data.atomcoords), 3)
 
+        # Are the rotational constants ordered from largest to smallest?
+        for i in range(len(data.atomcoords)):
+            rotconsts = data.rotconsts[i]
+            idx = rotconsts.argsort()[::-1]
+            numpy.testing.assert_equal(rotconsts, rotconsts[idx])
+
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     def testmoenergies(self, data) -> None:
         """Are only the final MOs parsed?"""

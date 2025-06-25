@@ -17,6 +17,7 @@ import re
 from cclib.parser import logfileparser, utils
 
 import numpy
+import scipy.constants as spc
 
 
 def symbol2int(symbol):
@@ -170,11 +171,10 @@ class MOPAC(logfileparser.Logfile):
         if line[0:40] == "          ROTATIONAL CONSTANTS IN CM(-1)":
             self.skip_line(inputfile, "b")
             broken = next(inputfile).split()
-            # leave the rotational constants in Hz
-            a = float(broken[2])
-            b = float(broken[5])
-            c = float(broken[8])
-            self.append_attribute("rotconsts", [a, b, c])
+            rotconsts = numpy.asarray([broken[2], broken[5], broken[8]], dtype=float)
+            ghz2invcm = spc.giga * spc.centi / spc.c
+            rotconsts /= ghz2invcm
+            self.append_attribute("rotconsts", rotconsts)
 
         # Start of the IR/Raman frequency section.
         # Example:

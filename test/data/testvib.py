@@ -261,6 +261,12 @@ class GenericIRTest:
         assert data.rotconsts.shape == (self.nrotconsts, 3)
         np.testing.assert_allclose(data.rotconsts[0], self.rotconsts, rtol=5.0e-5)
 
+        # Are the rotational constants ordered from largest to smallest?
+        for i in range(self.nrotconsts):
+            rotconsts = data.rotconsts[i]
+            idx = rotconsts.argsort()[::-1]
+            np.testing.assert_equal(rotconsts, rotconsts[idx])
+
 
 class ADFIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""

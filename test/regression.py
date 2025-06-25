@@ -39,11 +39,13 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from cclib.io import ccread, moldenwriter
+from cclib.method import Nuclear
 from cclib.parser import DALTON, Gaussian, ccData
 from cclib.parser.utils import convertor
 
 import numpy
 import pytest
+import scipy.constants as spc
 from packaging.version import Version
 from packaging.version import parse as parse_version
 
@@ -57,6 +59,9 @@ base_dir = (Path(__file__) / ".." / "..").resolve()
 __regression_dir__ = base_dir / "data" / "regression"
 __filedir__ = base_dir / "test"
 sys.path.insert(1, str(__filedir__))
+
+from .constants import XTB_ATOMNO_TO_ATOMMASS
+
 # TODO There are many seemingly unused test imports here so that pytest can
 # parameterize them with the desired files from
 # cclib-data/regressionfiles.yaml.  If one is removed, the regression tests
@@ -422,6 +427,10 @@ def testDALTON_DALTON_2016_huge_neg_polar_stat_out(logfile):
 def testDALTON_DALTON_2016_Trp_polar_response_diplnx_out(logfile):
     """Check that only the xx component of polarizability is defined and
     all others are NaN even after parsing a previous file with full tensor.
+
+    Since the molecule (tryptophan) also lacks intrinsic symmetry, it serves
+    as a test for a non-zero center of mass, as well as the principal moments
+    of inertia and rotational constants.
     """
     # TODO replace with looking at file location from fixture?
     full_tens_path = __regression_dir__ / "DALTON" / "DALTON-2015" / "Trp_polar_response.out"
@@ -435,6 +444,63 @@ def testDALTON_DALTON_2016_Trp_polar_response_diplnx_out(logfile):
         == "2016.2+7db4647eac203e51aae7da3cbc289f55146b30e9"
     )
 
+    # reference from line 605, divided by 1000 to convert from MHz to GHz
+    numpy.testing.assert_allclose(
+        logfile.data.rotconsts[0], numpy.array([1.2360220, 0.3615286, 0.3180669])
+    )
+
+    nuclear = Nuclear(logfile.data)
+
+    # reference from line 457
+    numpy.testing.assert_allclose(
+        nuclear.center_of_mass(),
+        convertor(numpy.array([6.317790, 0.497269, -2.037318]), "bohr", "Angstrom"),
+        rtol=1.3e-7,
+    )
+
+    # reference from rerunning the calculation with .PRINT 5
+    numpy.testing.assert_allclose(
+        numpy.abs(nuclear.moment_of_inertia_tensor(units="amu_angstrom_2")),
+        numpy.abs(
+            numpy.array(
+                [
+                    [1017.281559, 22.227887, 489.646337],
+                    [22.227887, 1558.900188, -120.034138],
+                    [489.646337, -120.034138, 819.496574],
+                ]
+            )
+        ),
+    )
+
+    pmoi, moi_axes = nuclear.principal_moments_of_inertia(units="amu_angstrom_2")
+    # reference starting from line 592
+    numpy.testing.assert_allclose(pmoi, numpy.array([408.875429, 1397.895049, 1588.907843]))
+    # reference starting from line 592
+    numpy.testing.assert_allclose(
+        numpy.abs(moi_axes),
+        numpy.abs(
+            numpy.array(
+                [
+                    [-0.626320, 0.092893, 0.774012],
+                    [0.754463, 0.322162, 0.571837],
+                    [-0.196238, 0.942116, -0.271861],
+                ]
+            ).transpose()
+        ),
+        rtol=3.4e-6,
+    )
+
+    # reference from line 605
+    numpy.testing.assert_allclose(
+        nuclear.rotational_constants("ghz") * 1.0e3, numpy.array([1236.0220, 361.5286, 318.0669])
+    )
+    # reference from line 606
+    numpy.testing.assert_allclose(
+        nuclear.rotational_constants("invcm"),
+        numpy.array([0.041229, 0.012059, 0.010610]),
+        rtol=4.1e-5,
+    )
+
 
 def testDALTON_DALTON_2018_dft_properties_nosym_H2O_cc_pVDZ_out(logfile):
     """The "simple" version string in newer development versions of DALTON wasn't
@@ -446,6 +512,115 @@ def testDALTON_DALTON_2018_dft_properties_nosym_H2O_cc_pVDZ_out(logfile):
     assert logfile.data.metadata["legacy_package_version"] == "2019.alpha"
     assert logfile.data.metadata["package_version"] == "2019.alpha"
     assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
+
+
+def testDALTON_DALTON_2018_irc_point_nosym_out(logfile):
+    """A DALTON re-calculation of Gaussian09/irc_point.log, which is a
+    structure very close to C3v and was not testing properly for moment of
+    inertia calculations.
+
+    Symmetry is disabled.
+    """
+
+    nuclear = Nuclear(logfile.data)
+
+    # reference is starting on line 1033
+    numpy.testing.assert_allclose(
+        nuclear.moment_of_inertia_tensor(units="amu_angstrom_2"),
+        numpy.array(
+            [
+                [301.223026, -85.209255, 147.657765],
+                [-85.209255, 324.407198, 128.930152],
+                [147.657765, 128.930152, 175.388249],
+            ]
+        ),
+    )
+
+    pmoi, moi_axes = nuclear.principal_moments_of_inertia(units="amu_angstrom_2")
+    # references are starting on line 1041
+    numpy.testing.assert_allclose(pmoi, numpy.array([3.399951, 398.809260, 398.809262]))
+    numpy.testing.assert_allclose(
+        numpy.abs(moi_axes),
+        numpy.abs(
+            numpy.array(
+                [
+                    [-0.496788, -0.433780, 0.751690],
+                    [-0.510896, 0.846323, 0.150742],
+                    [0.701561, 0.309148, 0.642059],
+                ]
+            ).transpose()
+        ),
+        rtol=4.7e-5,
+    )
+
+    # reference is on line 1051
+    numpy.testing.assert_allclose(
+        nuclear.rotational_constants("ghz") * 1.0e3,
+        numpy.array([148643.0197, 1267.2198, 1267.2198]),
+        rtol=2.3e-6,
+    )
+    # reference is on line 1052
+    numpy.testing.assert_allclose(
+        nuclear.rotational_constants("invcm"),
+        numpy.array([4.958197, 0.042270, 0.042270]),
+        rtol=2.3e-6,
+    )
+
+
+def testDALTON_DALTON_2018_irc_point_sym_out(logfile):
+    """A DALTON re-calculation of Gaussian09/irc_point.log, which is a
+    structure very close to C3v and was not testing properly for moment of
+    inertia calculations.
+
+    Symmetry is enabled.
+    """
+
+    nuclear = Nuclear(logfile.data)
+
+    # reference is starting on line 1104
+    #
+    # This is different from the symmetry disabled case.
+    numpy.testing.assert_allclose(
+        nuclear.moment_of_inertia_tensor(units="amu_angstrom_2"),
+        numpy.array(
+            [
+                [398.809262, -0.000000, 0.000000],
+                [-0.000000, 398.809260, 0.000000],
+                [0.000000, 0.000000, 3.399951],
+            ]
+        ),
+        atol=2.2e-7,
+        rtol=0.0,
+    )
+
+    pmoi, moi_axes = nuclear.principal_moments_of_inertia(units="amu_angstrom_2")
+    # references are starting on line 1113
+    #
+    # The eigenvalues are going to be the same as the symmetry disabled case,
+    # but because the MOI tensor is different, the eigenvectors will be
+    # different; since the tensor is almost diagonal, the eigenvectors are
+    # almost unit vectors, so compared against those rather than the true reference.
+    numpy.testing.assert_allclose(pmoi, numpy.array([3.399951, 398.809260, 398.809262]))
+    numpy.testing.assert_allclose(
+        numpy.abs(moi_axes), numpy.rot90(numpy.eye(3)), atol=1.5e-5, rtol=0.0
+    )
+
+    # reference is on line 1123
+    #
+    # This is identical to the symmetry disabled case.
+    numpy.testing.assert_allclose(
+        nuclear.rotational_constants("ghz") * 1.0e3,
+        numpy.array([148643.0197, 1267.2198, 1267.2198]),
+        rtol=2.3e-6,
+    )
+    # reference is on line 1124
+    #
+    # This is identical to the symmetry disabled case.
+    numpy.testing.assert_allclose(
+        nuclear.rotational_constants("invcm"),
+        numpy.array([4.958197, 0.042270, 0.042270]),
+        rtol=2.3e-6,
+    )
 
 
 def testDALTON_DALTON_2018_tdhf_2000_out(logfile):
@@ -1306,6 +1481,38 @@ def testGaussian_Gaussian09_irc_point_log(logfile):
     assert hasattr(logfile.data, "vibfreqs")
     assert len(logfile.data.vibfreqs) == 11
 
+    nuclear = Nuclear(logfile.data)
+
+    # reference is on line 248
+    assert convertor(nuclear.repulsion_energy(), "eV", "hartree") == pytest.approx(107.9672499066)
+
+    pmoi, moi_axes = nuclear.principal_moments_of_inertia("amu_bohr_2")
+    # reference is starting on line 2413
+    numpy.testing.assert_allclose(
+        pmoi, numpy.array([12.14144, 1424.17386, 1424.17386]), rtol=5.0e-7
+    )
+    # Can't compare all the principal axes (eigenvectors) as only the first
+    # seems to be equivalent within phase
+    numpy.testing.assert_allclose(
+        numpy.abs(moi_axes)[:, 0],
+        numpy.abs(
+            numpy.array(
+                [
+                    [-0.49679, 0.80706, 0.31915],
+                    [-0.43378, -0.54942, 0.71413],
+                    [0.75169, 0.21633, 0.62303],
+                ]
+            )[:, 0]
+        ),
+        rtol=4.7e-6,
+    )
+    # reference is on line 163; also appears in lower precision on line 2420
+    numpy.testing.assert_allclose(
+        nuclear.rotational_constants("ghz"),
+        numpy.array([148.6430872, 1.2672197, 1.2672197]),
+        rtol=4.5e-7,
+    )
+
     assert logfile.data.metadata["package_version"] == "2009+D.01"
     assert logfile.data.metadata["keywords"] == [
         "#p gfprint pop=full HF/6-31G(d) freq=projected symmetry=none"
@@ -1638,6 +1845,23 @@ def testGaussian_Gaussian16_issue851_log(logfile):
     assert isinstance(logfile.data.scanparm, list)
     assert isinstance(logfile.data.scanenergies, list)
 
+    assert len(logfile.data.atomcoords) == 46
+
+    nuclear = Nuclear(logfile.data)
+
+    # reference is on line 164
+    numpy.testing.assert_allclose(
+        nuclear.rotational_constants("ghz", atomcoords_index=0),
+        numpy.array([361.9878736, 269.9340065, 269.9340065]),
+        rtol=1.1e-6,
+    )
+    # reference is on line 4138
+    numpy.testing.assert_allclose(
+        nuclear.rotational_constants("ghz", atomcoords_index=-1),
+        numpy.array([361.9878736, 361.9878736, 180.9939368]),
+        rtol=1.0e-6,
+    )
+
 
 def testGaussian_Gaussian16_issue962_log(logfile):
     """For issue 962, this shouldn't have scftargets but should parse fully"""
@@ -1883,6 +2107,25 @@ def testMOPAC_MOPAC2016_9S3_uuu_Cs_cation_freq_PM7_out(logfile):
     assert logfile.data.metadata["legacy_package_version"] == "2016"
     assert logfile.data.metadata["package_version"] == "16.175"
     assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
+
+    # reference is on line 161
+    rotconsts_invcm = numpy.array([0.02083248, 0.01374060, 0.01293071])
+
+    invcm2ghz = spc.c / (spc.giga * spc.centi)
+    numpy.testing.assert_allclose(logfile.data.rotconsts[0], rotconsts_invcm * invcm2ghz)
+
+    nuclear = Nuclear(logfile.data)
+
+    # reference is on line 167
+    numpy.testing.assert_allclose(
+        nuclear.principal_moments_of_inertia(units="g_cm_2")[0] * 10.0**40,
+        [1343.7084, 2037.2305, 2164.8281],
+        rtol=1.8e-3,
+    )
+
+    numpy.testing.assert_allclose(
+        nuclear.rotational_constants(units="invcm"), rotconsts_invcm, atol=3.6e-5, rtol=0.0
+    )
 
 
 # NWChem #
@@ -3314,6 +3557,38 @@ def testXTB_basicXTB6_5_1_1448_out(logfile):
     See https://github.com/cclib/cclib/issues/1448
     """
     assert logfile.data.atomcoords.shape == (1, 5, 3)
+
+    # Not using the program's atomic masses is a large source of error (~3
+    # orders of magnitude in relative tolerance).
+    logfile.data.atommasses = numpy.array(
+        [XTB_ATOMNO_TO_ATOMMASS[atomno - 1] for atomno in logfile.data.atomnos]
+    )
+    # in amu, needs to be in au
+    # amutokg = 1.660539040e-27
+    # metokg = 9.10938356e-31
+    # kgtome = 1.0 / metokg
+    # amutoau = amutokg * kgtome
+    # logfile.data.atommasses *= amutoau
+    nuclear = Nuclear(logfile.data)
+
+    # reference from line 457
+    numpy.testing.assert_allclose(
+        nuclear.center_of_mass(), numpy.array([1.4342479, 0.0012299, 0.0245854]), rtol=4.1e-6
+    )
+
+    # reference from line 494
+    numpy.testing.assert_allclose(
+        nuclear.principal_moments_of_inertia(units="amu_angstrom_2")[0],
+        numpy.array([0.3216841e01, 0.5275963e02, 0.5275963e02]),
+        rtol=2.8e-5,
+    )
+
+    # reference from line 495
+    numpy.testing.assert_allclose(
+        nuclear.rotational_constants("invcm"),
+        numpy.array([0.5240431e01, 0.3195177e00, 0.3195177e00]),
+        rtol=2.8e-5,
+    )
 
 
 # These regression tests are for logfiles that are not to be parsed
