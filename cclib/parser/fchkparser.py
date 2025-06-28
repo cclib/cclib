@@ -71,6 +71,16 @@ class FChk(logfileparser.Logfile):
             self.jobtype = jobtype.lower()
             self.start = False
 
+        if line[0:7] == "Info1-9":
+            self.program = "Gaussian"
+
+        if line[0:5] == "Route":
+            assert self.program == "Gaussian"
+            if "keywords" not in self.metadata:
+                self.metadata["keywords"] = []
+            line = next(inputfile)
+            self.metadata["keywords"].append(line.strip())
+
         if line[0:6] == "Charge":
             self.set_attribute("charge", int(line.split()[-1]))
 
@@ -120,9 +130,6 @@ class FChk(logfileparser.Logfile):
             or line[0:31] == "Number of independant functions"
         ):
             self.set_attribute("nmo", int(line.split()[-1]))
-
-        if "Number of point charges in /Mol/" in line:
-            self.program = "Gaussian"
 
         if line[0:10] == "Job Status":
             job_status = int(line.split()[-1])
