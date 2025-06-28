@@ -115,6 +115,20 @@ class FChk(logfileparser.Logfile):
         if line[0:10] == "SCF Energy":
             self.append_attribute("scfenergies", float(line.split()[-1]))
 
+        if line[0:9] == "RMS Force":
+            assert self.program == "Gaussian"
+            # The maximum force, maximum displacement, and RMS displacement
+            # are not printed, but add them for consistency.
+            self.append_attribute(
+                "geovalues", [numpy.nan, float(line.split()[-1]), numpy.nan, numpy.nan]
+            )
+
+        if line[0:11] == "RMS Density":
+            assert self.program == "Gaussian"
+            # The maximum change in the density matrix is not printed, but add
+            # it for consistency.  Don't add the optional change in energy.
+            self.append_attribute("scfvalues", [float(line.split()[-1]), numpy.nan])
+
         if line[0:25] == "Number of basis functions":
             self.set_attribute("nbasis", int(line.split()[-1]))
 
