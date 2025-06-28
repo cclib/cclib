@@ -188,12 +188,12 @@ class FChk(logfileparser.Logfile):
             )
 
         if line[0:18] == "Cartesian Gradient":
-            count = int(line.split()[-1])
-            assert count == self.natom * 3
+            assert self.program == "Gaussian"
+            self._parse_gradient(line, inputfile)
 
-            gradient = numpy.array(self._parse_block(inputfile, count, float, "Gradient"))
-
-            self.set_attribute("grads", gradient)
+        if line[0:16] == "Cartesian Forces":
+            assert self.program == "QChem"
+            self._parse_gradient(line, inputfile)
 
         if line[0:14] == "Polarizability":
             polarizability = numpy.asarray(self._parse_block(inputfile, 6, float, "Polarizability"))
@@ -480,6 +480,13 @@ class FChk(logfileparser.Logfile):
             line = next(inputfile)
             atomnos.extend([type(x) for x in line.split()])
         return atomnos
+
+    def _parse_gradient(self, line: str, inputfile) -> None:
+        count = int(line.split()[-1])
+        assert count == self.natom * 3
+        gradient = numpy.array(self._parse_block(inputfile, count, float, "Gradient"))
+        gradient.shape = (self.natom, 3)
+        self.append_attribute("grads", gradient)
 
 
 # These are the orderings of the named multipole moments as presented by
