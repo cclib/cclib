@@ -218,7 +218,6 @@ class GenericGeoOptTest:
     @skipForParser("GAMESSUK", "Not implemented.")
     @skipForParser("Jaguar", "Not implemented.")
     @skipForParser("MOPAC", "Not implemented.")
-    @skipForParser("NWChem", "Not implemented.")
     @skipForParser("PySCF", "Not implemented.")
     @skipForParser("xTB", "not implemented yet")
     def testgradsdim(self, data) -> None:
