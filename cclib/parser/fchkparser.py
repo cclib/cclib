@@ -323,6 +323,56 @@ class FChk(logfileparser.Logfile):
             etoscs = self._parse_block(inputfile, count, float, "Oscillator Strengths")
             self.set_attribute("etoscs", etoscs)
 
+        if line[0:11] == "Dipole_Data":
+            assert self.program == "QChem"
+            if hasattr(self, "moments"):
+                self.set_attribute("moments", [])
+            count = int(line.split()[-1])
+            self.logger.info("The origin for multipole moments isn't printed, so assume zero")
+            self.append_attribute("moments", [0.0, 0.0, 0.0])
+            self.append_attribute(
+                "moments", self._parse_block(inputfile, count, float, "Dipole moment")
+            )
+
+        if line[0:15] == "Quadrupole_Data":
+            assert self.program == "QChem"
+            assert hasattr(self, "moments")
+            assert len(self.moments) == 2
+            count = int(line.split()[-1])
+            quadrupole_unsorted = self._parse_block(inputfile, count, float, "Quadrupole moment")
+            quadrupole_sorted = list(
+                zip(*sorted(zip(QCHEM_LABELS_QUADRUPOLE, quadrupole_unsorted), key=lambda x: x[0]))
+            )[1]
+            self.append_attribute("moments", quadrupole_sorted)
+
+        if line[0:13] == "Octapole_Data":
+            assert self.program == "QChem"
+            assert hasattr(self, "moments")
+            assert len(self.moments) == 3
+            count = int(line.split()[-1])
+            octupole_unsorted = self._parse_block(inputfile, count, float, "Octupole moment")
+            octupole_sorted = list(
+                zip(*sorted(zip(QCHEM_LABELS_OCTUPOLE, octupole_unsorted), key=lambda x: x[0]))
+            )[1]
+            self.append_attribute("moments", octupole_sorted)
+
+        if line[0:17] == "Hexadecapole_Data":
+            assert self.program == "QChem"
+            assert hasattr(self, "moments")
+            assert len(self.moments) == 4
+            count = int(line.split()[-1])
+            hexadecapole_unsorted = self._parse_block(
+                inputfile, count, float, "Hexadecapole moment"
+            )
+            hexadecapole_sorted = list(
+                zip(
+                    *sorted(
+                        zip(QCHEM_LABELS_HEXADECAPOLE, hexadecapole_unsorted), key=lambda x: x[0]
+                    )
+                )
+            )[1]
+            self.append_attribute("moments", hexadecapole_sorted)
+
     def parse_aonames(self, line, inputfile):
         # e.g.: Shell types                                I   N=          28
         count = int(line.split()[-1])
@@ -425,3 +475,28 @@ class FChk(logfileparser.Logfile):
             line = next(inputfile)
             atomnos.extend([type(x) for x in line.split()])
         return atomnos
+
+
+# These are the orderings of the named multipole moments as presented by
+# Q-Chem in the main output file; they are printed in the same order in the
+# formatted checkpoint file and are used to then sort the moments into
+# lexicographic (cclib) order.
+QCHEM_LABELS_QUADRUPOLE = ["XX", "XY", "YY", "XZ", "YZ", "ZZ"]
+QCHEM_LABELS_OCTUPOLE = ["XXX", "XXY", "XYY", "YYY", "XXZ", "XYZ", "YYZ", "XZZ", "YZZ", "ZZZ"]
+QCHEM_LABELS_HEXADECAPOLE = [
+    "XXXX",
+    "XXXY",
+    "XXYY",
+    "XYYY",
+    "YYYY",
+    "XXXZ",
+    "XXYZ",
+    "XYYZ",
+    "YYYZ",
+    "XXZZ",
+    "XYZZ",
+    "YYZZ",
+    "XZZZ",
+    "YZZZ",
+    "ZZZZ",
+]
