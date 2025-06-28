@@ -100,7 +100,7 @@ class FChk(logfileparser.Logfile):
             self.set_attribute("atomcoords", utils.convertor(coords, "bohr", "Angstrom"))
 
         if line[0:10] == "SCF Energy":
-            self.set_attribute("scfenergies", float(line.split()[-1]))
+            self.append_attribute("scfenergies", float(line.split()[-1]))
 
         if line[0:25] == "Number of basis functions":
             self.set_attribute("nbasis", int(line.split()[-1]))
@@ -168,11 +168,6 @@ class FChk(logfileparser.Logfile):
             atommasses = numpy.array(self._parse_block(inputfile, count, float, "Atomic Masses"))
 
             self.set_attribute("atommasses", atommasses)
-
-        if line[0:10] == "SCF Energy":
-            self.scfenergy = float(line.split()[-1])
-
-            self.set_attribute("scfenergies", [self.scfenergy])
 
         if line[0:16] == "Mulliken Charges":
             count = int(line.split()[-1])
@@ -284,7 +279,7 @@ class FChk(logfileparser.Logfile):
             etvalues = self._parse_block(inputfile, count, float, "ET Values")
 
             # ETr energies (1/cm)
-            etenergies = [e_es - self.scfenergy for e_es in etvalues[0 : net * 16 : 16]]
+            etenergies = [e_es - self.scfenergies[-1] for e_es in etvalues[0 : net * 16 : 16]]
             self.set_attribute("etenergies", etenergies)
 
             # ETr dipoles (length-gauge)
