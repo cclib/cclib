@@ -325,7 +325,8 @@ class FChk(logfileparser.Logfile):
 
         if line[0:11] == "Dipole_Data":
             assert self.program == "QChem"
-            assert not hasattr(self, "moments")
+            if hasattr(self, "moments"):
+                self.set_attribute("moments", [])
             count = int(line.split()[-1])
             self.logger.info("The origin for multipole moments isn't printed, so assume zero")
             self.append_attribute("moments", [0.0, 0.0, 0.0])
