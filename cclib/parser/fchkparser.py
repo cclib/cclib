@@ -69,6 +69,9 @@ class FChk(logfileparser.Logfile):
             jobtype, *methods, basis = details
             self.metadata.update({"methods": methods, "basis_set": basis})
             self.jobtype = jobtype.lower()
+            line = next(inputfile)
+            assert line.startswith("Number of atoms")
+            self.set_attribute("natom", int(line.split()[-1]))
             self.start = False
 
         if line[0:7] == "Info1-9":
@@ -88,7 +91,7 @@ class FChk(logfileparser.Logfile):
             self.set_attribute("mult", int(line.split()[-1]))
 
         if line[0:14] == "Atomic numbers":
-            self.natom = int(line.split()[-1])
+            self.set_attribute("natom", int(line.split()[-1]))
             atomnos = self._parse_block(inputfile, self.natom, int, "Basic Information")
             self.set_attribute("atomnos", atomnos)
 
