@@ -79,10 +79,14 @@ class FChk(logfileparser.Logfile):
 
         if line[0:5] == "Route":
             assert self.program == "Gaussian"
+            keyword_lines = []
+            line = next(inputfile)
+            while not line.startswith("Charge"):
+                keyword_lines.append(line)
+                line = next(inputfile)
             if "keywords" not in self.metadata:
                 self.metadata["keywords"] = []
-            line = next(inputfile)
-            self.metadata["keywords"].append(line.strip())
+            self.metadata["keywords"].append("".join(line.strip() for line in keyword_lines))
 
         if line[0:6] == "Charge":
             self.set_attribute("charge", int(line.split()[-1]))
