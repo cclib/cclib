@@ -113,8 +113,8 @@ class FChk(logfileparser.Logfile):
             assert count % 3 == 0
 
             coords = numpy.array(self._parse_block(inputfile, count, float, "Coordinates"))
-            coords.shape = (1, int(count / 3), 3)
-            self.set_attribute("atomcoords", utils.convertor(coords, "bohr", "Angstrom"))
+            coords.shape = (int(count / 3), 3)
+            self.append_attribute("atomcoords", utils.convertor(coords, "bohr", "Angstrom"))
 
         if line[0:10] == "SCF Energy":
             self.append_attribute("scfenergies", float(line.split()[-1]))
