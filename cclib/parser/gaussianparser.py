@@ -14,6 +14,8 @@ from cclib.parser.logfileparser import StopParsing
 
 import numpy
 
+__all__ = ("Gaussian", "parse_version")
+
 
 class Gaussian(logfileparser.Logfile):
     """A Gaussian log file."""
@@ -48,40 +50,7 @@ class Gaussian(logfileparser.Logfile):
         ans = label.replace("U", "u").replace("G", "g")
         return ans
 
-    # Use to map from the usual year suffixed to full years so package
-    # versions can be sorted properly after parsing with
-    # `packaging.parse.version`.
-    YEAR_SUFFIXES_TO_YEARS = {
-        "70": "1970",
-        "76": "1976",
-        "80": "1980",
-        "82": "1982",
-        "86": "1986",
-        "88": "1988",
-        "90": "1990",
-        "92": "1992",
-        "94": "1994",
-        "98": "1998",
-        "03": "2003",
-        "09": "2009",
-        "16": "2016",
-    }
-
     def before_parsing(self):
-        # Examples:
-        #  Gaussian 16:  Apple M1-G16RevC.02  7-Dec-2021
-        #  Gaussian 16:  ES64L-G16RevC.01  3-Jul-2019
-        #  Gaussian 98:  IBM-RS6000-G98RevA.7 11-Apr-1999
-        #  Gaussian 98:  SGI64-G98RevA.7 11-Apr-1999
-        self.re_platform_and_version = re.compile(
-            r"""
-            \ Gaussian\ (?P<year>\d{2}):\ {2}
-            (?P<platform>\w*\ ?\w*(?:-\w*)?)-G(?P<year_suffix>\d{2})Rev(?P<revision>[A-Z]\.\d{1,2}(?:\.\d)?)\ *
-            (?P<compile_date>\d{1,2}-[A-Z][a-z]{2}-\d{4})
-            """,
-            re.VERBOSE,
-        )
-
         # Calculations use point group symmetry by default.
         self.uses_symmetry = True
 
@@ -274,20 +243,10 @@ class Gaussian(logfileparser.Logfile):
                 [tokens[1][:-1], "revision", tokens[-1][:-1]]
             )
 
-        # Extract the version number: "Gaussian 98: x86-Linux-G98RevA.11.3
-        # 5-Feb-2002" becomes "1998+A.11.3", and "Gaussian 16:
-        # ES64L-G16RevA.03 25-Dec-2016" becomes "2016+A.03".
         if "Gaussian, Inc.," in line:
             self.skip_lines(inputfile, ["b", "s"])
-            mtch = self.re_platform_and_version.match(next(inputfile))
-            if mtch is not None:
-                groupdict = mtch.groupdict()
-                year_suffix = groupdict["year_suffix"]
-                revision = groupdict["revision"]
-                self.metadata["package_version"] = (
-                    f"{self.YEAR_SUFFIXES_TO_YEARS[year_suffix]}+{revision}"
-                )
-                self.metadata["platform"] = groupdict["platform"]
+            parsed_version = parse_version(next(inputfile))
+            self.metadata.update(parsed_version)
             run_date = next(inputfile).strip()  # noqa: F841
             line = self.skip_line(inputfile, "s")[0]
             while set(line.strip()) != {"-"}:
@@ -2764,6 +2723,65 @@ class Gaussian(logfileparser.Logfile):
         if "comments" not in self.metadata:
             self.metadata["comments"] = []
         self.metadata["comments"].append("".join(comments))
+
+
+# Examples:
+#  Gaussian 16:  Apple M1-G16RevC.02  7-Dec-2021
+#  Gaussian 16:  ES64L-G16RevC.01  3-Jul-2019
+#  Gaussian 98:  IBM-RS6000-G98RevA.7 11-Apr-1999
+#  Gaussian 98:  SGI64-G98RevA.7 11-Apr-1999
+RE_PLATFORM_AND_VERSION = re.compile(
+    r"""
+    (?:\ Gaussian\ (?P<year>\d{2}):\ {2})?  # not present in fchk files
+    (?P<platform>\w*\ ?\w*(?:-\w*)?)-G(?P<year_suffix>\d{2})Rev(?P<revision>[A-Z]\.\d{1,2}(?:\.\d)?)
+    (?:\ +(?P<compile_date>\d{1,2}-[A-Z][a-z]{2}-\d{4}))?  # not present in fchk files
+    """,
+    re.VERBOSE,
+)
+
+# Use to map from the usual year suffixed to full years so package
+# versions can be sorted properly after parsing with
+# `packaging.parse.version`.
+YEAR_SUFFIXES_TO_YEARS = {
+    "70": "1970",
+    "76": "1976",
+    "80": "1980",
+    "82": "1982",
+    "86": "1986",
+    "88": "1988",
+    "90": "1990",
+    "92": "1992",
+    "94": "1994",
+    "98": "1998",
+    "03": "2003",
+    "09": "2009",
+    "16": "2016",
+}
+
+
+def parse_version(line: str) -> Dict[str, str]:
+    """Extract the version number from Gaussian log and formatted checkpoint
+    files.
+
+    From log files, "Gaussian 98: x86-Linux-G98RevA.11.3 5-Feb-2002" becomes
+    "1998+A.11.3", and "Gaussian 16: ES64L-G16RevA.03 25-Dec-2016" becomes
+    "2016+A.03".
+
+    In formatted checkpoint files, only the middle part of the string is
+    present.
+
+    The compile date, which is the last part of the string in log files, is
+    not used.
+    """
+    mtch = RE_PLATFORM_AND_VERSION.match(line)
+    assert mtch is not None
+    groupdict = mtch.groupdict()
+    year_suffix = groupdict["year_suffix"]
+    revision = groupdict["revision"]
+    return {
+        "package_version": f"{YEAR_SUFFIXES_TO_YEARS[year_suffix]}+{revision}",
+        "platform": groupdict["platform"],
+    }
 
 
 def _append_charges_and_spins(

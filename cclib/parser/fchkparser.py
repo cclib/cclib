@@ -6,6 +6,7 @@
 """Parser for Formatted Checkpoint files"""
 
 from cclib.parser import logfileparser, utils
+from cclib.parser.gaussianparser import parse_version as gaussian_parse_version
 
 import numpy
 
@@ -395,6 +396,11 @@ class FChk(logfileparser.Logfile):
                 )
             )[1]
             self.append_attribute("moments", hexadecapole_sorted)
+
+        if line[0:16] == "Gaussian Version":
+            assert self.program == "Gaussian"
+            line = next(inputfile)
+            self.metadata.update(gaussian_parse_version(line.strip()))
 
     def parse_aonames(self, line, inputfile):
         # e.g.: Shell types                                I   N=          28
