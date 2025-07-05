@@ -61,6 +61,7 @@ __filedir__ = base_dir / "test"
 sys.path.insert(1, str(__filedir__))
 
 from .constants import XTB_ATOMNO_TO_ATOMMASS
+from .data.common import is_optdone, is_optnew, is_optunconverged, is_optunknown
 
 # TODO There are many seemingly unused test imports here so that pytest can
 # parameterize them with the desired files from
@@ -748,30 +749,137 @@ def testDALTON_DALTON_2018_tdpbe_normal_sym_out(logfile):
 # Formatted checkpoint #
 
 
-def testFChk_Gaussian03_dvb_gopt_qchem_unconverged_fchk(logfile: "Logfile") -> None:
+def testFChk_Gaussian03_dvb_gopt_qchem_fchk(logfile: "Logfile") -> None:
+    """A formatted checkpoint file from a geometry optimization that
+    converged.
+
+    This uses the input structure from the Q-Chem 5.4 geometry optimization.
+    """
     metadata = logfile.data.metadata
     assert metadata["package"] == "FChk[Gaussian]"
     # Impossible to determined based upon current parsed data
+    # Because Gaussian only ever prints a single geometry to fchk, we can't
+    # say anything definitive about this, so it isn't set.
+    assert not is_optnew(logfile.data.optstatus[0])
+    assert "success" in metadata
+    assert metadata["success"]
+    assert logfile.data.optdone
+    assert is_optdone(logfile.data.optstatus[-1])
+
+
+def testFChk_Gaussian03_dvb_gopt_qchem_unconverged_fchk(logfile: "Logfile") -> None:
+    """A formatted checkpoint file from a geometry optimization that ran out
+    of cycles before convergence could be reached.
+
+    This uses the input structure from the Q-Chem 5.4 geometry optimization.
+    """
+    metadata = logfile.data.metadata
+    assert metadata["package"] == "FChk[Gaussian]"
+    # Because Gaussian only ever prints a single geometry to fchk, we can't
+    # say anything definitive about this, so it isn't set.
+    assert not is_optnew(logfile.data.optstatus[0])
+    assert "success" in metadata
+    assert not metadata["success"]
+    assert not logfile.data.optdone
+    assert is_optunconverged(logfile.data.optstatus[-1])
+
+
+def testFChk_Gaussian09_dvb_gopt_qchem_fchk(logfile: "Logfile") -> None:
+    """A formatted checkpoint file from a geometry optimization that
+    converged.
+
+    This uses the input structure from the Q-Chem 5.4 geometry optimization.
+    """
+    metadata = logfile.data.metadata
+    assert metadata["package"] == "FChk[Gaussian]"
+    # Because Gaussian only ever prints a single geometry to fchk, we can't
+    # say anything definitive about this, so it isn't set.
+    assert not is_optnew(logfile.data.optstatus[0])
+    # Impossible to determined based upon current parsed data, so we can't
+    # even set it.
     assert "success" not in metadata
+    assert not hasattr(logfile.data, "optdone")
+    assert is_optunknown(logfile.data.optstatus[-1])
+
+
+def testFChk_Gaussian09_dvb_gopt_qchem_unconverged_fchk(logfile: "Logfile") -> None:
+    """A formatted checkpoint file from a geometry optimization that ran out
+    of cycles before convergence could be reached.
+
+    This uses the input structure from the Q-Chem 5.4 geometry optimization.
+    """
+    metadata = logfile.data.metadata
+    assert metadata["package"] == "FChk[Gaussian]"
+    # Because Gaussian only ever prints a single geometry to fchk, we can't
+    # say anything definitive about this, so it isn't set.
+    assert not is_optnew(logfile.data.optstatus[0])
+    # Impossible to determined based upon current parsed data, so we can't
+    # even set it.
+    assert "success" not in metadata
+    assert not hasattr(logfile.data, "optdone")
+    assert is_optunknown(logfile.data.optstatus[-1])
+
+
+def testFChk_Gaussian16_dvb_gopt_qchem_fchk(logfile: "Logfile") -> None:
+    """A formatted checkpoint file from a geometry optimization that
+    converged.
+
+    This uses the input structure from the Q-Chem 5.4 geometry optimization.
+    """
+    metadata = logfile.data.metadata
+    assert metadata["package"] == "FChk[Gaussian]"
+    # Because Gaussian only ever prints a single geometry to fchk, we can't
+    # say anything definitive about this, so it isn't set.
+    assert not is_optnew(logfile.data.optstatus[0])
+    # >= g16 has "Job Status"
+    assert "success" in metadata
+    assert metadata["success"]
+    assert logfile.data.optdone
+    assert is_optdone(logfile.data.optstatus[-1])
 
 
 def testFChk_Gaussian16_dvb_gopt_qchem_unconverged_fchk(logfile: "Logfile") -> None:
+    """A formatted checkpoint file from a geometry optimization that ran out
+    of cycles before convergence could be reached.
+
+    This uses the input structure from the Q-Chem 5.4 geometry optimization.
+    """
     metadata = logfile.data.metadata
     assert metadata["package"] == "FChk[Gaussian]"
+    # Because Gaussian only ever prints a single geometry to fchk, we can't
+    # say anything definitive about this, so it isn't set.
+    assert not is_optnew(logfile.data.optstatus[0])
     # >= g16 has "Job Status"
     assert "success" in metadata
     assert not metadata["success"]
+    assert not logfile.data.optdone
+    assert is_optunconverged(logfile.data.optstatus[-1])
 
 
-def testFChk_QChem5_3_dvb_gopt_unconverged_in_fchk(logfile):
+def testFChk_QChem5_3_dvb_gopt_unconverged_in_fchk(logfile: "Logfile") -> None:
+    """A formatted checkpoint file from a geometry optimization that ran out
+    of cycles before convergence could be reached.
+
+    This uses the input structure from the Q-Chem 5.4 geometry optimization.
+    """
     metadata = logfile.data.metadata
     assert metadata["package"] == "FChk[QChem]"
+    # Q-Chem does print all geometries to fchk, so the first one is definitely
+    # the start of an optimization.
+    assert is_optnew(logfile.data.optstatus[0])
     # Determined because mocoeffs are missing
     assert "success" in metadata
     assert not metadata["success"]
+    assert not logfile.data.optdone
+    assert is_optunconverged(logfile.data.optstatus[-1])
 
 
-def testFChk_QChem5_3_dvb_sp_unconverged_in_fchk(logfile):
+def testFChk_QChem5_3_dvb_sp_unconverged_in_fchk(logfile: "Logfile") -> None:
+    """A formatted checkpoint file from a single point energy calculation that
+    ran out of cycles.
+
+    This uses the input structure from the Q-Chem 5.4 geometry optimization.
+    """
     metadata = logfile.data.metadata
     assert metadata["package"] == "FChk[QChem]"
     # Determined because mocoeffs are missing

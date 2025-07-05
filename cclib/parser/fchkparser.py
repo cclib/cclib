@@ -5,11 +5,15 @@
 
 """Parser for Formatted Checkpoint files"""
 
-from cclib.parser import logfileparser, utils
+from typing import TYPE_CHECKING, List, Optional, Type, TypeVar
+
+from cclib.parser import data, logfileparser, utils
 from cclib.parser.gaussianparser import parse_version as gaussian_parse_version
 
 import numpy
 
+if TYPE_CHECKING:
+    from cclib.parser.logfilewrapper import FileWrapper
 SHELL_ORBITALS = {
     0: ["S"],
     1: ["PX", "PY", "PZ"],
@@ -23,6 +27,8 @@ SHELL_ORBITALS = {
 }
 
 SHELL_START = {0: 1, 1: 2, -1: 2, 2: 3, -2: 3, 3: 4, -3: 4}
+
+T = TypeVar("T")
 
 
 def _shell_to_orbitals(type, offset):
@@ -58,7 +64,15 @@ class FChk(logfileparser.Logfile):
         """Just return label"""
         return symlabel
 
-    def extract(self, inputfile, line):
+    def before_parsing(self) -> None:
+        self.success = None
+
+        # Used to differentiate between success and failure for Gaussian 03.
+        self.gaussian_has_qeq_coupling_tensors = False
+
+        self.gaussian_03_or_earlier = False
+
+    def extract(self, inputfile: "FileWrapper", line: str) -> None:
         # just opened file
         if self.start:
             jobname = line.strip()
@@ -152,6 +166,8 @@ class FChk(logfileparser.Logfile):
             or line[0:31] == "Number of independant functions"
         ):
             self.set_attribute("nmo", int(line.split()[-1]))
+            if "independant" in line:
+                self.gaussian_03_or_earlier = True
 
         if line[0:10] == "Job Status":
             job_status = int(line.split()[-1])
@@ -213,6 +229,13 @@ class FChk(logfileparser.Logfile):
         if line[0:16] == "Cartesian Forces":
             assert self.program == "QChem"
             self._parse_gradient(line, inputfile)
+
+        if line[0:13] == "Dipole Moment":
+            assert self.program == "Gaussian"
+
+        if line[0:20] == "QEq coupling tensors":
+            assert self.program == "Gaussian"
+            self.gaussian_has_qeq_coupling_tensors = True
 
         if line[0:14] == "Polarizability":
             polarizability = numpy.asarray(self._parse_block(inputfile, 6, float, "Polarizability"))
@@ -460,12 +483,7 @@ class FChk(logfileparser.Logfile):
 
     def after_parsing(self) -> None:
         """Correct data or do parser-specific validation after parsing is finished."""
-
-        # Q-Chem will write the fchk file no matter what happens to the
-        # calculation, however the absence of certain attributes can be used
-        # to determine if the calculation ran properly.
-        if not hasattr(self, "moenergies"):
-            self.success = False
+        super().after_parsing()
 
         if hasattr(self, "program"):
             unknown_jobtype = False
@@ -473,15 +491,34 @@ class FChk(logfileparser.Logfile):
             if self.program == "Gaussian":
                 unknown_jobtype = self.jobtype not in ("sp", "freq", "fopt", "scan")
                 if self.jobtype == "sp":
+                    # The calculation will not produce an fchk file at all if
+                    # the SCF doesn't converge.
                     self.success = True
+                elif self.jobtype == "fopt":
+                    # For Gaussian 03; in 09 and newer it is always present,
+                    # and in 16 and newer it isn't necessary.  For 09 there is
+                    # no way to differentiate between success and failure.
+                    if self.gaussian_03_or_earlier:
+                        assert self.success is None
+                        self.success = self.gaussian_has_qeq_coupling_tensors
+                    opt_converged = self.success
+                    self._set_optstatus_and_optdone_from_atomcoords(opt_converged, False)
             elif self.program == "Psi4":
                 unknown_jobtype = self.jobtype not in ("sp", "force")
                 # The calculation will halt before making it to the fchk(wfn,
-                # ...) call in the input file, so the file's existence always
-                # signifies success.
+                # ...) call in the input file if something didn't converge, so
+                # the file's existence always signifies success.
                 self.success = True
             elif self.program == "QChem":
                 unknown_jobtype = self.jobtype not in ("sp", "freq", "force", "fopt")
+                # Q-Chem will write the fchk file no matter what happens to the
+                # calculation, however the absence of certain attributes can be used
+                # to determine if the calculation ran properly.
+                if not hasattr(self, "moenergies"):
+                    self.success = False
+                if self.jobtype == "fopt":
+                    opt_converged = len(self.atomcoords) == len(self.grads)
+                    self._set_optstatus_and_optdone_from_atomcoords(opt_converged, True)
             else:
                 self.logger.info("Unknown originating program for fchk file: %s", self.program)
             if unknown_jobtype:
@@ -490,27 +527,52 @@ class FChk(logfileparser.Logfile):
             self.logger.info("Couldn't determine originating program for fchk file")
 
         # If restricted calculation, need to remove beta homo
-        if hasattr(self, "moenergies"):
+        if hasattr(self, "moenergies") and hasattr(self, "homos"):
             if len(self.moenergies) == len(self.homos) - 1:
                 self.homos.pop()
 
-        if hasattr(self, "success"):
+        if self.success is not None:
             self.metadata["success"] = self.success
 
-    def _parse_block(self, inputfile, count, type, msg):
-        atomnos = []
-        while len(atomnos) < count:
+    def _parse_block(
+        self, inputfile: "FileWrapper", count: int, type: Type[T], msg: str
+    ) -> List[T]:
+        elements = []
+        while len(elements) < count:
             self.updateprogress(inputfile, msg, self.fupdate)
             line = next(inputfile)
-            atomnos.extend([type(x) for x in line.split()])
-        return atomnos
+            elements.extend([type(x) for x in line.split()])
+        return elements
 
-    def _parse_gradient(self, line: str, inputfile) -> None:
+    def _parse_gradient(self, line: str, inputfile: "FileWrapper") -> None:
         count = int(line.split()[-1])
         assert count == self.natom * 3
         gradient = numpy.array(self._parse_block(inputfile, count, float, "Gradient"))
         gradient.shape = (self.natom, 3)
         self.append_attribute("grads", gradient)
+
+    def _set_optstatus_and_optdone_from_atomcoords(
+        self, opt_converged: Optional[bool], can_set_opt_new: bool
+    ) -> None:
+        """For geometry optimizations, use the length of atomcoords and an
+        external trigger of whether or not the optimization converged to
+        determine optstatus and optdone.
+        """
+        optstatus = [data.ccData.OPT_UNKNOWN for _ in range(len(self.atomcoords))]
+        if optstatus:
+            # For Gaussian, which only prints the final geometry, it is not
+            # possible to say anything about whether or not the printed
+            # geometry is the only one, in which case it would be new.
+            if can_set_opt_new:
+                optstatus[0] += data.ccData.OPT_NEW
+            if opt_converged is not None:
+                if opt_converged:
+                    optstatus[-1] += data.ccData.OPT_DONE
+                    self.append_attribute("optdone", len(self.atomcoords))
+                else:
+                    optstatus[-1] += data.ccData.OPT_UNCONVERGED
+                    self.set_attribute("optdone", [])
+            self.set_attribute("optstatus", optstatus)
 
 
 # These are the orderings of the named multipole moments as presented by
