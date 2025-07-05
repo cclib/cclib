@@ -748,14 +748,14 @@ def testDALTON_DALTON_2018_tdpbe_normal_sym_out(logfile):
 # Formatted checkpoint #
 
 
-def testFChk_Gaussian03_dvb_gopt_unconverged_fchk(logfile):
+def testFChk_Gaussian03_dvb_gopt_qchem_unconverged_fchk(logfile: "Logfile") -> None:
     metadata = logfile.data.metadata
     assert metadata["package"] == "FChk[Gaussian]"
     # Impossible to determined based upon current parsed data
     assert "success" not in metadata
 
 
-def testFChk_Gaussian16_dvb_gopt_unconverged_fchk(logfile):
+def testFChk_Gaussian16_dvb_gopt_qchem_unconverged_fchk(logfile: "Logfile") -> None:
     metadata = logfile.data.metadata
     assert metadata["package"] == "FChk[Gaussian]"
     # >= g16 has "Job Status"
