@@ -59,6 +59,23 @@ class ORCA(logfileparser.Logfile):
         # Is this a numerical frequency calc?
         self.numfreq = False
 
+        # Match a line for a single contribution to a CIS/TDDFT/TDA/RPA
+        # calculation.
+        # Example lines:
+        #    32a ->  38a  :     0.045759 (c= -0.21391281)
+        #    17a ->  20a  :     0.061720
+        #   1779a -> 1787a  :     1.000000 (c=  1.00000000)
+        # where the coefficient is not present for RPA.
+        self.re_singly_excited_configuration = re.compile(
+            r"""
+            \s*(?P<start>\d+)(?P<start_spin>[ab])\s*->
+            \s*(?P<end>\d+)(?P<end_spin>[ab])\s+:
+            \s*(?P<weight>\d\.\d{6})
+            (?:\s\(c=\s+(?P<coefficient>-?\d\.\d{8})\))?
+            """,
+            flags=re.VERBOSE,
+        )
+
     def sort_et(self):
         # ORCA prints singlet and triplet excited states separately, so the energies are out of order.
         if hasattr(self, "etenergies"):
@@ -1303,18 +1320,20 @@ Dispersion correction           -0.016199959
                 sec = []
                 # Contains SEC or is blank
                 while line.strip():
-                    start = line[0:8].strip()
-                    start = (int(start[:-1]), lookup[start[-1]])
-                    end = line[10:17].strip()
-                    end = (int(end[:-1]), lookup[end[-1]])
-                    # Coeffients are not printed for RPA, only
-                    # TDA/CIS.
-                    contrib = line[35:47].strip()
-                    try:
-                        contrib = float(contrib)
-                    except ValueError:
-                        contrib = numpy.nan
-                    sec.append([start, end, contrib])
+                    mtch = self.re_singly_excited_configuration.match(line)
+                    assert mtch is not None
+                    d = mtch.groupdict()
+                    start = int(d["start"])
+                    start_spin = lookup[d["start_spin"]]
+                    end = int(d["end"])
+                    end_spin = lookup[d["end_spin"]]
+                    # Coefficients are not printed for RPA, only TDA/CIS.
+                    coefficient = d.get("coefficient")
+                    if coefficient is not None:
+                        coefficient = float(coefficient)
+                    else:
+                        coefficient = numpy.nan
+                    sec.append([(start, start_spin), (end, end_spin), coefficient])
                     line = next(inputfile)
                     # ORCA 5.0 seems to print symmetry at end of block listing transitions
                     if "Symmetry" in line:
