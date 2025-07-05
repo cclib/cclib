@@ -10,7 +10,7 @@ import itertools
 import math
 import re
 
-from cclib.parser import logfileparser, utils
+from cclib.parser import data, logfileparser, utils
 
 import numpy
 from packaging.version import Version
@@ -67,6 +67,9 @@ class QChem(logfileparser.Logfile):
         # Compile the regex for extracting the atomic index from an
         # aoname.
         self.re_atomindex = re.compile(r"(\d+)_")
+
+        # Geometry optimization iteration header with counter starting from 1.
+        self.re_optimization_cycle = re.compile(r"Optimization Cycle:\s+(?P<cycle_number>\d+)")
 
         self.re_tddft_total_energy = re.compile(
             r"\s+Total energy for state\s*(?P<state>\d+):\s+(?P<energy>-?\d+\.\d+)(?: au)?"
@@ -989,6 +992,12 @@ cannot be determined. Rerun without `$molecule read`."""
 
             # Geometry optimization.
 
+            mtch = self.re_optimization_cycle.search(line)
+            if mtch is not None:
+                self.append_attribute("optstatus", data.ccData.OPT_UNKNOWN)
+                if mtch.group("cycle_number") == "1":
+                    self.optstatus[-1] += data.ccData.OPT_NEW
+
             if "Maximum     Tolerance    Cnvgd?" in line:
                 line_g = next(inputfile).split()[1:3]
                 line_d = next(inputfile).split()[1:3]
@@ -1003,9 +1012,11 @@ cannot be determined. Rerun without `$molecule read`."""
 
             if "**  OPTIMIZATION CONVERGED  **" in line:
                 self.append_attribute("optdone", len(self.atomcoords))
+                self.optstatus[-1] += data.ccData.OPT_DONE
 
             if "**  MAXIMUM OPTIMIZATION CYCLES REACHED  **" in line:
                 self.set_attribute("optdone", [])
+                self.optstatus[-1] += data.ccData.OPT_UNCONVERGED
 
             # Moller-Plesset corrections.
 
