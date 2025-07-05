@@ -89,8 +89,8 @@ class GenericSPTest:
         "DALTON",
         "DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now",
     )
-    @skipForLogfile("FChk/basicQChem5.2", "not printed for Q-Chem")
-    @skipForLogfile("FChk/basicQChem5.4", "not printed for Q-Chem")
+    @skipForLogfile("FChk/basicQChem5.2", "Q-Chem doesn't print atomic charges for fchk")
+    @skipForLogfile("FChk/basicQChem5.4", "Q-Chem doesn't print atomic charges for fchk")
     @skipForParser(
         "GAMESSDAT",
         "We are not sure about the specific type of atom charges, it is best to skip the test for now.",
@@ -556,9 +556,15 @@ class GenericSPTest:
         )
 
     @skipForLogfile("NBO/basicNBO7.0/basicORCA5.0/dvb_sp.nbo.out", "TODO impossible to determine?")
-    @skipForLogfile("FChk/basicGaussian09/dvb_sp.fchk", "impossible to determine")
-    @skipForLogfile("FChk/basicQChem5.2/dvb_sp_modified.fchk", "impossible to determine")
-    @skipForLogfile("FChk/basicQChem5.4/dvb_sp.fchk", "impossible to determine")
+    @skipForLogfile(
+        "FChk/basicGaussian09/dvb_sp.fchk", "impossible to determine success of calculation"
+    )
+    @skipForLogfile(
+        "FChk/basicQChem5.2/dvb_sp_modified.fchk", "impossible to determine success of calculation"
+    )
+    @skipForLogfile(
+        "FChk/basicQChem5.4/dvb_sp.fchk", "impossible to determine success of calculation"
+    )
     @skipForLogfile("GAMESSDAT/basicGAMESS-US2018/dvb_sp.dat", "TODO impossible to determine?")
     def testmetadata_success(self, data) -> None:
         """Does metadata have expected keys and values?"""
