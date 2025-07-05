@@ -2662,6 +2662,9 @@ class Gaussian(logfileparser.Logfile):
         if line[:31] == " Normal termination of Gaussian":
             self.metadata["success"] = True
 
+        if line.startswith(" Error termination via"):
+            self.metadata["success"] = False
+
     def parse_keywords_route_and_comment(self, inputfile, line: str) -> None:
         """Parse the keyword line and comment from the echoed input file into metadata."""
         # example:

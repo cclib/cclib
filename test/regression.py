@@ -1261,6 +1261,7 @@ def testGaussian_Gaussian03_Mo4OSibdt2_opt_log(logfile):
         "Mo4OSibdt2 with CEP and 6-31G(d)",
         "Mo4OSibdt2 with CEP and 6-31G(d)",
     ]
+    assert not logfile.data.metadata["success"]
 
 
 def testGaussian_Gaussian03_orbgs_log(logfile):
@@ -1412,6 +1413,7 @@ def testGaussian_Gaussian09_dvb_gopt_unconverged_log(logfile):
     assert logfile.data.metadata["package_version"] == "2009+D.01"
     assert logfile.data.metadata["keywords"] == ["#p b3lyp/sto-3g opt(maxcycles=5,maxstep=1)"]
     assert logfile.data.metadata["comments"] == ["Title Card Required"]
+    assert not logfile.data.metadata["success"]
 
 
 def testGaussian_Gaussian09_dvb_hirshfeld_out(logfile: "Logfile") -> None:
