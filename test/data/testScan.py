@@ -9,18 +9,8 @@ import cclib
 
 import numpy
 import pytest
+from common import is_optdone, is_optnew
 from skip import skipForParser
-
-OPT_DONE = cclib.parser.data.ccData.OPT_DONE
-OPT_NEW = cclib.parser.data.ccData.OPT_NEW
-
-
-def is_optnew(optstatus_value) -> bool:
-    return optstatus_value & OPT_NEW == OPT_NEW
-
-
-def is_optdone(optstatus_value) -> bool:
-    return optstatus_value & OPT_DONE == OPT_DONE
 
 
 class GenericUnrelaxedScanTest:

@@ -216,7 +216,7 @@ class Psi4(logfileparser.Logfile):
             # The 0 is to handle the presence of ghost atoms.
             self.set_attribute("atomnos", [self.table.number.get(el, 0) for el in elements])
 
-            # This condition discards any repeated coordinates that Psi print. For example,
+            # This condition discards any repeated coordinates that Psi4 prints. For example,
             # geometry optimizations will print the coordinates at the beginning of and SCF
             # section and also at the start of the gradient calculation.
             if not hasattr(self, "atomcoords") or (

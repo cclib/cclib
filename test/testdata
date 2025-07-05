@@ -159,6 +159,9 @@ GeoOpt    DALTON      DALTONGeoOptTest      basicDALTON-2013      dvb_gopt_hf.ou
 GeoOpt    DALTON      DALTONGeoOptTest      basicDALTON-2013      dvb_gopt_ks.out
 GeoOpt    DALTON      DALTONGeoOptTest      basicDALTON-2015      dvb_gopt_hf.out
 GeoOpt    DALTON      DALTONGeoOptTest      basicDALTON-2015      dvb_gopt_ks.out
+GeoOpt    FChk        GaussianFChkGeoOptTest basicGaussian09      dvb_gopt.fchk
+GeoOpt    FChk        GaussianFChkGeoOptTest basicGaussian16      dvb_gopt.fchk
+GeoOpt    FChk        FChkGeoOptTest        basicQChem5.4         dvb_gopt.fchk
 GeoOpt    GAMESSUK    GenericGeoOptTest     basicGAMESS-UK7.0     dvb_gopt_d.out
 GeoOpt    GAMESSUK    GenericGeoOptTest     basicGAMESS-UK8.0     dvb_gopt_hf.out
 GeoOpt    GAMESSUK    GenericGeoOptTest     basicGAMESS-UK8.0     dvb_gopt_ks.out
