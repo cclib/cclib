@@ -1738,3 +1738,6 @@ cannot be determined. Rerun without `$molecule read`."""
                 self.metadata["cpu_time"].append(cpu_td)
             except:  # noqa: E722
                 pass
+
+        if line.startswith(" Q-Chem fatal error occurred"):
+            self.metadata["success"] = False

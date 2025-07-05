@@ -3060,6 +3060,8 @@ def testQChem_QChem4_2_dvb_gopt_unconverged_out(logfile):
     assert logfile.data.metadata["package_version"] == "4.2.0"
     assert hasattr(logfile.data, "optdone") and not logfile.data.optdone
 
+    assert not logfile.data.metadata["success"]
+
 
 def testQChem_QChem4_2_dvb_sp_multipole_10_out(logfile):
     """Multipole moments up to the 10-th order.
