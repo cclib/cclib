@@ -6,7 +6,7 @@
 """Population analyses based on cclib data."""
 
 import logging
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, List, Optional
 
 from cclib.method.calculationmethod import Method, MissingAttributeError
 from cclib.progress import Progress
@@ -55,11 +55,11 @@ class Population(Method):
                 "Need overlap matrix (aooverlaps or fooverlaps attribute) for Population methods"
             )
 
-    def partition(self, indices=None) -> bool:
+    def partition(self, indices: Optional[List[List[int]]] = None) -> bool:
         if not hasattr(self, "aoresults"):
             self.calculate()
 
-        if not indices:
+        if indices is None:
             # Build list of groups of orbitals in each atom for atomresults.
             if hasattr(self.data, "aonames"):
                 names = self.data.aonames

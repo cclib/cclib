@@ -7,11 +7,15 @@
 
 import itertools
 import re
+from typing import TYPE_CHECKING
 
 from cclib.parser import logfileparser, utils
 from cclib.parser.logfileparser import StopParsing
 
 import numpy
+
+if TYPE_CHECKING:
+    from cclib.parser.logfilewrapper import FileWrapper
 
 
 class ADF(logfileparser.Logfile):
@@ -20,15 +24,15 @@ class ADF(logfileparser.Logfile):
     def __init__(self, *args, **kwargs):
         super().__init__(logname="ADF", *args, **kwargs)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"ADF log file {self.filename}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'ADF("{self.filename}")'
 
-    def normalisesym(self, label):
+    def normalisesym(self, label: str) -> str:
         """Use standard symmetry labels instead of ADF labels.
 
         To normalise:
@@ -80,7 +84,7 @@ class ADF(logfileparser.Logfile):
         else:
             return f"{label}:{int(num + 1)}"
 
-    def before_parsing(self):
+    def before_parsing(self) -> None:
         # Used to avoid extracting the final geometry twice in a GeoOpt
         self.NOTFOUND, self.GETLAST, self.NOMORE = list(range(3))
         self.finalgeometry = self.NOTFOUND
@@ -95,7 +99,7 @@ class ADF(logfileparser.Logfile):
         SCFCNV, SCFCNV2 = list(range(2))  # used to index self.scftargets[]
         maxelem, norm = list(range(2))  # used to index scf.values
 
-    def extract(self, inputfile, line):
+    def extract(self, inputfile: "FileWrapper", line: str) -> None:
         """Extract information from the file object inputfile."""
 
         # If a file contains multiple calculations, currently we want to print a warning

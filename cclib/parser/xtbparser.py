@@ -31,7 +31,7 @@ class XTB(logfileparser.Logfile):
         """Return a representation of the object."""
         return f'xTB("{self.filename}")'
 
-    def normalisesym(self, label):
+    def normalisesym(self, label: str) -> str:
         """xTB does not require normalizing symmetry labels."""
         return label
 

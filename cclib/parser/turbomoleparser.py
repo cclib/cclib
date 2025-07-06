@@ -131,7 +131,7 @@ class Turbomole(logfileparser.Logfile):
         # with non-C1 symmetry.
         return label.capitalize()
 
-    def before_parsing(self):
+    def before_parsing(self) -> None:
         self.periodic_table = utils.PeriodicTable()
 
     @staticmethod
@@ -1483,7 +1483,7 @@ class Turbomole(logfileparser.Logfile):
                 i -= 1
             i += 1
 
-    def after_parsing(self):
+    def after_parsing(self) -> None:
         if hasattr(self, "vibfreqs"):
             self.deleting_modes(self.vibfreqs, self.vibdisps, self.vibirs, self.vibrmasses)
 
@@ -1512,11 +1512,11 @@ class OldTurbomole(logfileparser.Logfile):
     def __init__(self, *args):
         super().__init__(logname="Turbomole", *args)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"Turbomole output file {self.filename}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'Turbomole("{self.filename}")'
 
@@ -1541,7 +1541,7 @@ class OldTurbomole(logfileparser.Logfile):
         """Normalise the symmetries used by Turbomole."""
         return symlabel
 
-    def before_parsing(self):
+    def before_parsing(self) -> None:
         self.geoopt = False  # Is this a GeoOpt? Needed for SCF targets/values.
 
     def split_molines(self, inline):
@@ -1561,7 +1561,7 @@ class OldTurbomole(logfileparser.Logfile):
             return [float(f1)]
         return
 
-    def extract(self, inputfile, line):
+    def extract(self, inputfile: "FileWrapper", line: str) -> None:
         """Extract information from the file object inputfile."""
 
         if line[3:11] == "nbf(AO)=":
@@ -1953,7 +1953,7 @@ class OldTurbomole(logfileparser.Logfile):
 
     #        line=next(inputfile)
 
-    def after_parsing(self):
+    def after_parsing(self) -> None:
         # delete all frequencies that correspond to translations or rotations
 
         if hasattr(self, "vibfreqs"):
