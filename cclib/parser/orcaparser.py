@@ -2914,7 +2914,7 @@ Dispersion correction           -0.016199959
                 * self.metadata["num_cpu"]
             )
 
-    def parse_symmetry_section(self, inputfile):
+    def parse_symmetry_section(self, inputfile: "FileWrapper") -> None:
         self.uses_symmetry = True
 
         line = next(inputfile)

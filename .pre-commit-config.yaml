@@ -122,15 +122,17 @@ repos:
       - id: ruff-check
         args: [--fix]
   # - repo: https://github.com/pre-commit/mirrors-mypy
-  #   rev: "v1.3.0"
+  #   rev: "v1.16.1"
   #   hooks:
   #     - id: mypy
   #       additional_dependencies:
   #         - numpy
   #         - packaging
   #         - pandas-stubs
+  #         - pytest
   #         # - scipy
   #         - types-setuptools
+  #         - versioningit
   #       args: []
   - repo: https://github.com/Lucas-C/pre-commit-hooks
     rev: v1.5.5

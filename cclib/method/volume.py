@@ -6,7 +6,7 @@
 """Calculation methods related to volume based on cclib data."""
 
 import copy
-from typing import TYPE_CHECKING, List, Optional, Sequence, Tuple, Union
+from typing import TYPE_CHECKING, Iterable, List, Optional, Sequence, Tuple, Union
 
 from cclib.parser.logfilewrapper import FileWrapper
 from cclib.parser.utils import convertor, find_package
@@ -169,7 +169,9 @@ class Volume:
        numpts -- the numbers of points in the (x,y,z) directions
     """
 
-    def __init__(self, origin, topcorner, spacing):
+    def __init__(
+        self, origin: Iterable[float], topcorner: Iterable[float], spacing: Iterable[float]
+    ) -> None:
         self.origin = numpy.asarray(origin, dtype=float)
         self.topcorner = numpy.asarray(topcorner, dtype=float)
         self.spacing = numpy.asarray(spacing, dtype=float)
@@ -208,7 +210,7 @@ class Volume:
         )
         v.tofile(filename)
 
-    def integrate(self, weights: Optional[numpy.ndarray] = None):
+    def integrate(self, weights: Optional[numpy.ndarray] = None) -> float:
         weights = numpy.ones_like(self.data) if weights is None else weights
         assert weights.shape == self.data.shape, (
             "Shape of weights do not match with shape of Volume data."
@@ -223,7 +225,7 @@ class Volume:
 
         return numpy.sum(self.data * weights) * boxvol
 
-    def integrate_square(self, weights: Optional[numpy.ndarray] = None):
+    def integrate_square(self, weights: Optional[numpy.ndarray] = None) -> float:
         weights = numpy.ones_like(self.data) if weights is None else weights
 
         boxvol = (
