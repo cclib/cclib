@@ -7,10 +7,14 @@
 
 import re
 import string
+from typing import TYPE_CHECKING
 
 from cclib.parser import logfileparser, utils
 
 import numpy
+
+if TYPE_CHECKING:
+    from cclib.parser.logfilewrapper import FileWrapper
 
 
 class Molcas(logfileparser.Logfile):
@@ -19,22 +23,22 @@ class Molcas(logfileparser.Logfile):
     def __init__(self, *args, **kwargs):
         super().__init__(logname="Molcas", *args, **kwargs)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string repeesentation of the object."""
         return f"Molcas log file {self.filename}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'Molcas("{self.filename}")'
 
-    def normalisesym(self, label):
+    def normalisesym(self, label: str) -> str:
         """Normalise the symmetries used by Molcas.
 
         The labels are standardized except for the first character being lowercase.
         """
         return label[0].upper() + label[1:]
 
-    def after_parsing(self):
+    def after_parsing(self) -> None:
         for element, ncore in self.core_array:
             self._assign_coreelectrons_to_element(element, ncore)
 
@@ -58,7 +62,7 @@ class Molcas(logfileparser.Logfile):
                     f"{self.metadata['package_version']}+{self.metadata['revision']}"
                 )
 
-    def before_parsing(self):
+    def before_parsing(self) -> None:
         # Compile the regex for extracting the element symbol from the
         # atom label in the "Molecular structure info" block.
         self.re_atomelement = re.compile(r"([a-zA-Z]+)\d?")
@@ -74,7 +78,7 @@ class Molcas(logfileparser.Logfile):
 
         self.success_headers = ("Happy landing!", "RC_ALL_IS_WELL")
 
-    def extract(self, inputfile, line):
+    def extract(self, inputfile: "FileWrapper", line: str) -> None:
         """Extract information from the file object inputfile."""
 
         if "Start Module: gateway" in line:

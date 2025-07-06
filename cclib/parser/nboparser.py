@@ -5,7 +5,12 @@
 
 """Parser for NBO output files"""
 
+from typing import TYPE_CHECKING
+
 from cclib.parser import logfileparser
+
+if TYPE_CHECKING:
+    from cclib.parser.logfilewrapper import FileWrapper
 
 
 class NBO(logfileparser.Logfile):
@@ -26,7 +31,7 @@ class NBO(logfileparser.Logfile):
         """Normalise the symmetries used by NBO."""
         return label
 
-    def extract(self, inputfile, line):
+    def extract(self, inputfile: "FileWrapper", line: str) -> None:
         """Extract information from the file object inputfile."""
 
         """ NATURAL POPULATIONS:  Natural atomic orbital occupancies

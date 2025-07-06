@@ -68,11 +68,11 @@ class DDEC6(Stockholder):
             # TODO: Pseudopotentials should be added back
             pass
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"DDEC6 charges of {self.data}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f"DDEC6({self.data})"
 
