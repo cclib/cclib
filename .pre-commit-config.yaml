@@ -1,5 +1,7 @@
 ---
 fail_fast: false
+ci:
+  autofix_prs: false
 repos:
   - repo: meta
     hooks:
