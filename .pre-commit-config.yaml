@@ -97,35 +97,6 @@ repos:
               ^data/Turbomole|
               ^data/XTB
           )
-      - id: mixed-line-ending
-        exclude: |
-          (?x)(
-              \.bpa$|
-              \.bpaspn$|
-              \.cube$|
-              \.in$|
-              \.inp$|
-              \.molden$|
-              \.out$|
-              ^data/ADF|
-              ^data/CFOUR|
-              ^data/DALTON|
-              ^data/FChk|
-              ^data/GAMESS|
-              ^data/Gaussian|
-              ^data/Jaguar|
-              ^data/Molcas|
-              ^data/Molpro|
-              ^data/MOPAC|
-              ^data/NBO|
-              ^data/NWChem|
-              ^data/ORCA|
-              ^data/Psi4|
-              ^data/QChem|
-              ^data/regression|
-              ^data/Turbomole|
-              ^data/XTB
-          )
       - id: check-merge-conflict
       - id: check-json
       - id: check-yaml
@@ -173,6 +144,35 @@ repos:
           - .github/license_header.txt
           - --use-current-year
           - --no-extra-eol
+      - id: remove-crlf
+        exclude: |
+          (?x)(
+              \.bpa$|
+              \.bpaspn$|
+              \.cube$|
+              \.in$|
+              \.inp$|
+              \.molden$|
+              \.out$|
+              ^data/ADF|
+              ^data/CFOUR|
+              ^data/DALTON|
+              ^data/FChk|
+              ^data/GAMESS|
+              ^data/Gaussian|
+              ^data/Jaguar|
+              ^data/Molcas|
+              ^data/Molpro|
+              ^data/MOPAC|
+              ^data/NBO|
+              ^data/NWChem|
+              ^data/ORCA|
+              ^data/Psi4|
+              ^data/QChem|
+              ^data/regression|
+              ^data/Turbomole|
+              ^data/XTB
+          )
   - repo: https://github.com/pre-commit/pygrep-hooks
     rev: "v1.10.0"
     hooks:
