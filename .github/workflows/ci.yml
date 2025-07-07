@@ -11,9 +11,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  prechecks:
+    uses: ./.github/workflows/pre-commit.yml
   nix:
     uses: ./.github/workflows/nix.yml
   unit-tests:
+    needs: [prechecks]
     uses: ./.github/workflows/test_and_package.yml
   docs:
     uses: ./.github/workflows/docs.yml
