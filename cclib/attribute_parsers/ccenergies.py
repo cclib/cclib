@@ -40,10 +40,7 @@ class ccenergies(base_parser):
     @staticmethod
     def gaussian(file_handler, ccdata) -> Optional[dict]:
         line = file_handler.last_line
-        if getattr(ccdata, "ccenergies") is None:
-            this_ccenergies = []
-        else:
-            this_ccenergies = []  # note we only save the last ccenergy
+        this_ccenergies = []
         # Total energies after Coupled Cluster corrections.
         # Second order MBPT energies (MP2) are also calculated for these runs,
         # but the output is the same as when parsing for mpenergies.
