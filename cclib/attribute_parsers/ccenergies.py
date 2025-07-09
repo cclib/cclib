@@ -15,6 +15,8 @@ class ccenergies(base_parser):
     Docstring? Units?
     """
 
+    known_codes = ["psi4", "gaussian"]
+
     @staticmethod
     def psi4(file_handler, ccdata) -> Optional[dict]:
         ccsd_trigger = "* CCSD total energy"
@@ -60,8 +62,6 @@ class ccenergies(base_parser):
             this_ccenergies.append(parsed_ccenergy)
             return {ccenergies.__name__: np.array(this_ccenergies)}
         return None
-
-    known_codes = ["psi4", "gaussian"]
 
     @staticmethod
     def parse(file_handler, program, ccdata) -> Optional[dict]:
