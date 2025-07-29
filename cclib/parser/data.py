@@ -49,7 +49,7 @@ class ccData:
         frags -- indices of atoms in a fragment (list of lists)
         gbasis -- coefficients and exponents of Gaussian basis functions (PyQuante format)
         geotargets -- targets for convergence of geometry optimization (array[1])
-        geovalues -- current values for convergence of geometry optmization (array[1])
+        geovalues -- current values for convergence of geometry optimization (array[1])
         grads -- current values of forces (gradients) in geometry optimization (array[3])
         hessian -- elements of the force constant matrix (array[1])
         homos -- molecular orbital indices of HOMO(s) (array[1])
