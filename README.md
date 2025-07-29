@@ -42,17 +42,17 @@ If you use cclib, please cite [the following article](https://doi.org/10.1063/5.
 
 For the original paper on cclib (before version 2.0), please refer to [the following article](https://doi.org/10.1002/jcc.20823):
 
-```
+```bib
 @article{https://doi.org/10.1002/jcc.20823,
-author = {O'boyle, Noel M. and Tenderholt, Adam L. and Langner, Karol M.},
-title = {cclib: A library for package-independent computational chemistry algorithms},
-journal = {Journal of Computational Chemistry},
-volume = {29},
-number = {5},
-pages = {839-845},
-keywords = {computational chemistry, algorithms, Python},
-doi = {https://doi.org/10.1002/jcc.20823},
-url = {https://onlinelibrary.wiley.com/doi/abs/10.1002/jcc.20823},
-year = {2008}
+    author = {O'boyle, Noel M. and Tenderholt, Adam L. and Langner, Karol M.},
+    title = {cclib: A library for package-independent computational chemistry algorithms},
+    journal = {Journal of Computational Chemistry},
+    volume = {29},
+    number = {5},
+    pages = {839-845},
+    keywords = {computational chemistry, algorithms, Python},
+    doi = {https://doi.org/10.1002/jcc.20823},
+    url = {https://onlinelibrary.wiley.com/doi/abs/10.1002/jcc.20823},
+    year = {2008}
 }
 ```
