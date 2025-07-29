@@ -42,7 +42,7 @@ If you use cclib, please cite [the following article](https://doi.org/10.1063/5.
 
 For the original paper on cclib (before version 2.0), please refer to [the following article](https://doi.org/10.1002/jcc.20823):
 
-```
+```bib
 @article{https://doi.org/10.1002/jcc.20823,
 author = {O'boyle, Noel M. and Tenderholt, Adam L. and Langner, Karol M.},
 title = {cclib: A library for package-independent computational chemistry algorithms},
