@@ -897,6 +897,140 @@ cannot be determined. Rerun without `$molecule read`."""
                         self.metadata["solvent_params"] = dict()
                     self.metadata["solvent_params"]["epsilon"] = eps
 
+            if line.strip() == "******** Starting FSM Calculation *********":
+                self.fsmvalues = dict()
+                self.skip_lines(
+                    inputfile,
+                    ["s", "s", "-FSM parameters:", "Maximum displacement of each coordinate"],
+                )
+                line = next(inputfile)
+                max_ngrad_steps_per_node = int(line.split()[-1])
+                self.skip_lines(
+                    inputfile,
+                    [
+                        "scaling factor for optimization",
+                        "number of LST interpolations used",
+                        "Aligning product structure to maximum coincidence with the reactant structure",
+                        "Total R --> P Distance",
+                        "New node interpolation distance",
+                    ],
+                )
+                line = next(inputfile)
+
+            # Freezing string method: the first step is calculating the
+            # gradient for the reactant and product states (the two sides of
+            # the string).
+            if line.startswith("-Performing force calculation on"):
+                m = re.search(
+                    r"Performing force calculation on (\w+) structure in state:?(\d+)", line
+                )
+                assert m is not None
+                groups = m.groups()
+                assert len(groups) == 2
+                fsm_structure = groups[0]
+                assert fsm_structure in ("reactant", "product")
+                if fsm_structure == "reactant":
+                    # This is the reactant side printed *before* "Starting FSM
+                    # Calculation" appears.
+                    assert len(self.atomcoords) == 1
+                    assert not hasattr(self, "grads")
+                else:
+                    # These correspond to the results from the reactant side
+                    # force calculation.
+                    assert len(self.atomcoords) == 2
+                    assert len(self.grads) == 1
+                # Which electronic state are we using (if doing TDDFT/EOM/etc.)?
+                state = int(groups[1])
+                if hasattr(self, "grads"):
+                    idx_grads = len(self.grads) - 1
+                else:
+                    idx_grads = None
+                if hasattr(self, "scfenergies"):
+                    idx_scfenergy = len(self.scfenergies) - 1
+                else:
+                    idx_scfenergy = None
+                print(
+                    f"[next] idx_atomcoords {len(self.atomcoords) - 1} idx_scfenergy {idx_scfenergy} idx_grads {idx_grads}: force on {fsm_structure} {state}"
+                )
+
+            if line.startswith("STARTING FREEZING STRING ITERATION"):
+                tokens = line.split()
+                fs_iter = int(tokens[-1])
+                print(
+                    f"[next] idx_atomcoords {len(self.atomcoords) - 1} idx_scfenergy {len(self.scfenergies) - 1} idx_grads {len(self.grads) - 1}: starting FS iter {fs_iter}"
+                )
+                line = self.skip_line(inputfile, "distance between the innermost nodes")[-1]
+                distance_innermost = float(line.split()[-1])
+                line = next(inputfile)
+                assert line.strip() in ("-Adding two new nodes", "Adding one new node")
+                if line.strip() == "-Adding two new nodes":
+                    lines = self.skip_lines(
+                        inputfile,
+                        [
+                            "distance between the previous and current R_nodes",
+                            "distance between the previous and current P_nodes",
+                        ],
+                    )
+                    assert len(lines) == 2
+                    distance_reactant = float(lines[0].split()[-1])
+                    distance_product = float(lines[1].split()[-1])
+                else:
+                    line = next(inputfile)
+                    assert line.strip() == "-Optimizing new node"
+
+            if line.startswith("-Optimizing new"):
+                m = re.search(r"-Optimizing new (\w+) side node", line)
+                if m is not None:
+                    side = m.groups()[0]
+                    assert side in ("reactant", "product")
+                else:
+                    # In the case of having only added one node that will join
+                    # both sides of the string
+                    assert line.strip() == "-Optimizing new node"
+                    side = None
+                line = next(inputfile)
+                if "BFGS" in line:
+                    fs_algo = "bfgs"
+                    # Using BFGS, step: 2 E_tol 0.0180
+                    # max_steps 3, node_spacing 0.6544, sigma 0.7000
+                    tokens = line.split()
+                    step = int(tokens[3])
+                    e_tol = float(tokens[-1])
+                    line = next(inputfile)
+                    tokens = line.split()
+                    max_steps = int(tokens[1][:-1])
+                    node_spacing = float(tokens[3][:-1])
+                    sigma = float(tokens[-1])
+                else:
+                    fs_algo = "cg"
+                    assert line.strip() == "-Starting node optimization"
+                print(
+                    f"[next] idx_atomcoords {len(self.atomcoords) - 1} idx_scfenergy {len(self.scfenergies) - 1} idx_grads {len(self.grads) - 1}: optimizing new side {side}"
+                )
+
+            if line.startswith("-taking"):
+                line = next(inputfile)
+                assert line.startswith("Magnitude of Displacement (Angstroms):")
+                displacement = float(line.split()[-1])
+                line = next(inputfile)
+                if line.startswith("-performing optimization step:"):
+                    opt_step = int(line.split()[-1])
+                else:
+                    opt_step = None
+                print(
+                    f"[next] idx_atomcoords {len(self.atomcoords) - 1} idx_scfenergy {len(self.scfenergies) - 1} idx_grads {len(self.grads) - 1}: making displacement {displacement} opt_step {opt_step}"
+                )
+
+            if line.strip() == "-Constructing approximate final Hessian":
+                print(
+                    f"idx_atomcoords {len(self.atomcoords) - 1} idx_scfenergy {len(self.scfenergies) - 1} idx_grads {len(self.grads) - 1}: about to construct hessian"
+                )
+
+            if line.strip() == "Eigenvalues after right structure":
+                print(
+                    f"idx_atomcoords {len(self.atomcoords) - 1} idx_scfenergy {len(self.scfenergies) - 1} idx_grads {len(self.grads) - 1}: done"
+                )
+
             # Check for whether or not we're peforming an
             # (un)restricted calculation.
             if "calculation will be" in line:
