@@ -5,20 +5,22 @@
 
 import re
 from datetime import timedelta
-from typing import List, Optional, Tuple
+from typing import TYPE_CHECKING, List, Optional, Tuple
 
 from cclib.parser import logfileparser
-from cclib.parser.logfilewrapper import FileWrapper
 from cclib.parser.utils import convertor
 
 import numpy as np
 import scipy.constants as spc
 
+if TYPE_CHECKING:
+    from cclib.parser.logfilewrapper import FileWrapper
+
 
 class XTB(logfileparser.Logfile):
     """An output parser for the xTB code"""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(logname="xTB", *args, **kwargs)
 
     def __str__(self) -> str:
@@ -29,7 +31,7 @@ class XTB(logfileparser.Logfile):
         """Return a representation of the object."""
         return f'xTB("{self.filename}")'
 
-    def normalisesym(self, label):
+    def normalisesym(self, label: str) -> str:
         """xTB does not require normalizing symmetry labels."""
         return label
 
@@ -41,7 +43,7 @@ class XTB(logfileparser.Logfile):
         """Actions after parsing"""
         pass
 
-    def extract(self, inputfile: FileWrapper, line: str) -> None:
+    def extract(self, inputfile: "FileWrapper", line: str) -> None:
         if self.metadata.get("success") is None:
             # Initialize as False. Will be overwritten to True if/when appropriate.
             self.metadata["success"] = False

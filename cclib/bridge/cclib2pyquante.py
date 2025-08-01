@@ -5,9 +5,14 @@
 
 """Bridge for using cclib data in PyQuante (http://pyquante.sourceforge.net)."""
 
+from typing import TYPE_CHECKING
+
 from cclib.parser.utils import find_package
 
 import numpy
+
+if TYPE_CHECKING:
+    from cclib.parser.data import ccData
 
 
 class MissingAttributeError(Exception):
@@ -19,12 +24,12 @@ if _found_pyquante2:
     from pyquante2 import molecule
 
 
-def _check_pyquante():
+def _check_pyquante() -> None:
     if not _found_pyquante2:
         raise ImportError("You must install `pyquante2` to use this function")
 
 
-def makepyquante(data):
+def makepyquante(data: "ccData") -> "molecule":
     """Create a PyQuante Molecule from ccData object."""
     _check_pyquante()
 
