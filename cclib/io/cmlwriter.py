@@ -6,9 +6,13 @@
 """A writer for chemical markup language (CML) files."""
 
 import xml.etree.ElementTree as ET
+from typing import TYPE_CHECKING, Mapping
 
 from cclib.io import filewriter
 from cclib.parser.utils import find_package
+
+if TYPE_CHECKING:
+    from cclib.parser.data import ccData
 
 _has_openbabel = find_package("openbabel")
 
@@ -16,7 +20,7 @@ _has_openbabel = find_package("openbabel")
 class CML(filewriter.Writer):
     """A writer for chemical markup language (CML) files."""
 
-    def __init__(self, ccdata, *args, **kwargs):
+    def __init__(self, ccdata: "ccData", *args, **kwargs) -> None:
         """Initialize the CML writer object.
 
         Inputs:
@@ -24,7 +28,7 @@ class CML(filewriter.Writer):
         """
         super().__init__(ccdata, *args, **kwargs)
 
-    def generate_repr(self):
+    def generate_repr(self) -> str:
         """Generate the CML representation of the logfile data."""
 
         # Create the base molecule.
@@ -66,7 +70,7 @@ class CML(filewriter.Writer):
         return _tostring(molecule)
 
 
-def _set_attrs(element, d):
+def _set_attrs(element: ET.Element, d: Mapping[str, str]) -> None:
     """Set all the key-value pairs from a dictionary as element
     attributes.
     """
@@ -75,7 +79,7 @@ def _set_attrs(element, d):
     return
 
 
-def _indent(elem, level=0):
+def _indent(elem: ET.Element, level: int = 0) -> None:
     """An in-place pretty-print indenter for XML."""
     i = f"\n{level * '  '}"
     if len(elem):
@@ -92,7 +96,9 @@ def _indent(elem, level=0):
             elem.tail = i
 
 
-def _tostring(element, xml_declaration=True, encoding="utf-8", method="xml"):
+def _tostring(
+    element: ET.Element, xml_declaration: bool = True, encoding: str = "utf-8", method: str = "xml"
+) -> str:
     """A reimplementation of tostring() found in ElementTree."""
 
     class dummy:

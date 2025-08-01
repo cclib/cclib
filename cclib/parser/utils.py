@@ -8,11 +8,14 @@
 import re
 from itertools import accumulate
 from math import sqrt
-from typing import List, Sequence
+from typing import TYPE_CHECKING, Iterable, List, Sequence
 
 import numpy
 import periodictable
 import scipy.spatial
+
+if TYPE_CHECKING:
+    from cclib.parser.logfilewrapper import FileWrapper
 
 
 def find_package(package: str) -> bool:
@@ -168,7 +171,7 @@ def get_rotation(a, b):
     return r
 
 
-def skip_until_no_match(inputfile, regex):
+def skip_until_no_match(inputfile: "FileWrapper", regex: str) -> str:
     """Skip lines that match a regex. First non-matching line is returned.
 
     This method allows to skip a variable number of lines, allowing for example,
@@ -181,7 +184,7 @@ def skip_until_no_match(inputfile, regex):
     return line
 
 
-def str_contains_only(string, chars):
+def str_contains_only(string: str, chars: Iterable[str]) -> bool:
     """Checks if string contains only the specified characters."""
     return all([c in chars for c in string])
 

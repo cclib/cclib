@@ -24,7 +24,7 @@ if TYPE_CHECKING:
     from cclib.parser.logfilewrapper import FileWrapper
 
 
-def symbol2int(symbol):
+def symbol2int(symbol: str) -> int:
     t = utils.PeriodicTable()
     return t.number[symbol]
 
