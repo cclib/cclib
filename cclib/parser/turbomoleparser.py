@@ -8,7 +8,7 @@
 import re
 from datetime import timedelta
 from pathlib import Path
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING, Iterable, List, Optional
 
 from cclib.parser import data, logfileparser, utils
 
@@ -72,7 +72,7 @@ class Turbomole(logfileparser.Logfile):
         self.metadata["num_cpu"] = 1
 
     @classmethod
-    def sort_input(self, file_names: List[str]) -> List[str]:
+    def sort_input(self, file_names: Iterable[str]) -> List[str]:
         """
         If this parser expects multiple files to appear in a certain order, return that ordering.
         """
@@ -135,7 +135,7 @@ class Turbomole(logfileparser.Logfile):
         self.periodic_table = utils.PeriodicTable()
 
     @staticmethod
-    def split_molines(inline: str) -> List[float]:
+    def split_molines(inline: str) -> Optional[List[float]]:
         """Splits the lines containing mocoeffs (each of length 20)
         and converts them to float correctly.
         """

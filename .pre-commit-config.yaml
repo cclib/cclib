@@ -131,9 +131,14 @@ repos:
   #         - pandas-stubs
   #         - pytest
   #         # - scipy
+  #         - types-requests
   #         - types-setuptools
   #         - versioningit
   #       args: []
+  #       exclude: |
+  #         (?x)(
+  #             ^test/
+  #         )
   - repo: https://github.com/Lucas-C/pre-commit-hooks
     rev: v1.5.5
     hooks:
