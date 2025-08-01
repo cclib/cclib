@@ -8,15 +8,17 @@ import inspect
 import logging
 import random
 import sys
-import typing
 from abc import ABC, abstractmethod
-from typing import Any, Iterable, List, Optional
+from typing import IO, TYPE_CHECKING, Any, Iterable, List, Optional, Type, Union
 
 from cclib.parser import utils
 from cclib.parser.data import ccData, ccData_optdone_bool
 from cclib.parser.logfilewrapper import FileWrapper
 
 import numpy
+
+if TYPE_CHECKING:
+    from cclib.progress import Progress
 
 # This seems to avoid a problem with Avogadro.
 logging.logMultiprocessing = 0
@@ -28,18 +30,19 @@ class StopParsing(Exception):
     """
 
 
+Source = Union[str, IO, FileWrapper, List[Union[str, IO]]]
+
+
 class Logfile(ABC):
     """Abstract class for logfile objects."""
 
     def __init__(
         self,
-        source: typing.Union[
-            str, typing.IO, FileWrapper, typing.List[typing.Union[str, typing.IO]]
-        ],
+        source: Source,
         loglevel: int = logging.ERROR,
         logname: str = "Log",
         logstream=sys.stderr,
-        datatype=ccData_optdone_bool,
+        datatype: Type[ccData] = ccData_optdone_bool,
         **kwds,
     ) -> None:
         """Initialise the Logfile object.
@@ -101,18 +104,18 @@ class Logfile(ABC):
         return self.inputfile.file_name
 
     @classmethod
-    def sort_input(self, file_names: typing.List[str]) -> typing.List:
+    def sort_input(self, file_names: List[str]) -> List[str]:
         """
         If this parser expects multiple files to appear in a certain order, return that ordering.
         """
         return file_names
 
-    def __setattr__(self, name: str, value) -> None:
+    def __setattr__(self, name: str, value: Any) -> None:
         # Send info to logger if the attribute is in the list of attributes.
         if name in ccData._attrlist and hasattr(self, "logger"):
             # Call logger.info() only if the attribute is new.
             if not hasattr(self, name):
-                if type(value) in [numpy.ndarray, list]:
+                if isinstance(value, (numpy.ndarray, list)):
                     self.logger.info("Creating attribute %s[]", name)
                 else:
                     self.logger.info("Creating attribute %s: %s", name, value)
@@ -120,7 +123,9 @@ class Logfile(ABC):
         # Set the attribute.
         object.__setattr__(self, name, value)
 
-    def parse(self, progress=None, fupdate=0.05, cupdate=0.002):
+    def parse(
+        self, progress: Optional["Progress"] = None, fupdate: float = 0.05, cupdate: float = 0.002
+    ):
         """Parse the logfile, using the assumed extract method of the child."""
 
         # Check that the sub-class has an extract attribute,
@@ -139,7 +144,7 @@ class Logfile(ABC):
         _nodelete = list(set(self.__dict__.keys()))
 
         # Intialize self.progress
-        if progress:
+        if progress is not None:
             self.progress = progress
             self.progress.initialize(self.inputfile.size)
             self.progress.step = 0
