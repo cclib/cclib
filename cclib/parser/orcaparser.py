@@ -150,8 +150,10 @@ class ORCA(logfileparser.Logfile):
         if "Program Version" == line.strip()[:15]:
             # Handle development versions.
             self.metadata["legacy_package_version"] = line.split()[2]
-            self.metadata["package_version"] = self.metadata["legacy_package_version"].replace(
-                ".x", "dev"
+            self.metadata["package_version"] = (
+                self.metadata["legacy_package_version"]
+                .replace(".x", "dev")
+                .replace("-f.", ".post")  # e.g. 6.0.1-f.3 -> 6.0.1.post3
             )
             possible_revision_line = next(inputfile)
             if "SVN: $Rev" in possible_revision_line:
