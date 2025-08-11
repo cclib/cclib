@@ -23,7 +23,7 @@ jobs:
         with:
           name: nix-qchem
       # Checkout of the current head in the working dir
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
       - name: Check nix flake
         run: nix flake check -L
       # Disabled until https://github.com/Nix-QChem/NixOS-QChem/issues/513 is fixed
