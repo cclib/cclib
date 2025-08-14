@@ -59,8 +59,6 @@ class XYZWriterTest:
         reader = cclib.io.xyzreader.XYZ(orig_fpath)
         data = reader.parse()
 
-        # If not `allgeom`, only the last structure present in a
-        # `ccData` will be written out.
         writer = cclib.io.xyzwriter.XYZ(data, allgeom=True)
         new_repr = writer.generate_repr()
 
@@ -101,6 +99,27 @@ class XYZWriterTest:
         new_repr = writer.generate_repr()
 
         ref_fpath = os.path.join(__filedir__, "data/uracil_two_ref_lastgeom.xyz")
+        with open(ref_fpath) as ref:
+            assert ref.read() == new_repr
+
+    def test_roundtrip_10_defaults(self):
+        """Does a written XYZ file with ten structures match a reference
+        output where only the last structure is requested?
+
+        Perform a roundtrip test, reading an XYZ file into a ccData
+        instance then writing it out again.
+
+        This test checks the behavior with default arguments of the writing
+        class, which is to use the last geometry if no kwargs are requested.
+        """
+        orig_fpath = os.path.join(__filedir__, "data/example_MEP_trj.xyz")
+        reader = cclib.io.xyzreader.XYZ(orig_fpath)
+        data = reader.parse()
+
+        writer = cclib.io.xyzwriter.XYZ(data)
+        new_repr = writer.generate_repr()
+
+        ref_fpath = os.path.join(__filedir__, "data/example_MEP_trj_ref_lastgeom.xyz")
         with open(ref_fpath) as ref:
             assert ref.read() == new_repr
 
