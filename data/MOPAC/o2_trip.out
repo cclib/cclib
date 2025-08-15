@@ -1,23 +1,20 @@
  *******************************************************************************
- ** Site#: 6541         For non-commercial use only     Version 16.093M 64BITS**
- *******************************************************************************
- ** Cite this program as: MOPAC2016, Version: 16.093M, James J. P. Stewart,   **
- ** Stewart Computational Chemistry, web: HTTP://OpenMOPAC.net. Days left: 360**
- *******************************************************************************
  **                                                                           **
- **                                MOPAC2016                                  **
+ **                              MOPAC v23.1.2                                **
  **                                                                           **
+ *******************************************************************************
+ **          Digital Object Identifier (DOI): 10.5281/zenodo.6511958          **
+ **    Visit the DOI location for information on how to cite this program.    **
  *******************************************************************************
 
                               PM7 CALCULATION RESULTS
 
-
  *******************************************************************************
- *  CALCULATION DONE:                                Fri Apr  8 18:36:56 2016  *
+ *  CALCULATION DONE: (MAX THREADS = 16)             Mon Jul 14 17:07:28 2025  *
  *  TRIPLET    - SPIN STATE DEFINED AS A TRIPLET
  *  UHF        - UNRESTRICTED HARTREE-FOCK CALCULATION
  *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
- *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY 7200.0 SECONDS REQUESTED
  *  LARGE      - EXPANDED OUTPUT TO BE PRINTED
  *******************************************************************************
  LARGE UHF TRIPLET
@@ -25,23 +22,23 @@
 
    ATOM   CHEMICAL          X               Y               Z
   NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
- 
-     1       O         -5.40592000  *  -0.47619000  *   0.00000000  *
-     2       O         -4.36197000  *  -0.31061000  *   0.00000000  *
- 
+
+     1       O         -5.40592000  *  -0.47619000  *  -0.00000000  *
+     2       O         -4.36197000  *  -0.31061000  *  -0.00000000  *
+
 
 
           CARTESIAN COORDINATES 
 
-    NO.       ATOM         X         Y         Z
+    NO.       ATOM           X           Y           Z
 
-     1         O       -5.4059   -0.4762    0.0000
-     2         O       -4.3620   -0.3106    0.0000
+     1         O         -5.4059     -0.4762     -0.0000
+     2         O         -4.3620     -0.3106     -0.0000
 
  General Reference for PM7:
  "Optimization of Parameters for Semiempirical Methods VI: More Modifications to the 
  NDDO Approximations and Re-optimization of Parameters", J. J. P. Stewart, J. Mol. Mod., 1:32, 19 (2013)
- http://www.springerlink.com/openurl.asp?genre=article&id=doi:10.1007/s00894-012-1667-x
+ https://link.springer.com/article/10.1007/s00894-012-1667-x
 
            Empirical Formula: O2  =     2 atoms
 
@@ -60,13 +57,13 @@
 
           DIAGONAL MATRIX USED AS START HESSIAN
 
- CYCLE:     1 TIME:   0.008 TIME LEFT:  2.00D  GRAD.:   222.730 HEAT: -3.750272
- CYCLE:     2 TIME:   0.008 TIME LEFT:  2.00D  GRAD.:   140.905 HEAT: -5.618448
- CYCLE:     3 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:    30.260 HEAT: -9.033786
- CYCLE:     4 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:     5.685 HEAT: -9.166914
- CYCLE:     5 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:     0.215 HEAT: -9.171444
+ CYCLE:     1 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:   221.974 HEAT: -3.750748
+ CYCLE:     2 TIME:   0.004 TIME LEFT:  2.00D  GRAD.:   140.997 HEAT: -5.618809
+ CYCLE:     3 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:    29.995 HEAT: -9.036911
+ CYCLE:     4 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:     5.666 HEAT: -9.167019
+ CYCLE:     5 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:     0.184 HEAT: -9.171547
 
-     GRADIENT =  0.21509  IS LESS THAN CUTOFF =  1.00000
+     GRADIENT =  0.18376 IS LESS THAN CUTOFF =  1.00000
 
 
 
@@ -81,56 +78,52 @@
 
 
                               PM7 CALCULATION
-                                                       MOPAC2016 (Version: 16.093M)
-                                                       Fri Apr  8 18:36:56 2016
-                                                       No. of days remaining = 360
+                                                       MOPAC v23.1.2 Windows
+                                                       Mon Jul 14 17:07:28 2025
 
 
 
 
-          FINAL HEAT OF FORMATION =         -9.17144 KCAL/MOL =     -38.37332 KJ/MOL
+          FINAL HEAT OF FORMATION =         -9.17155 KCAL/MOL =     -38.37375 KJ/MOL
 
 
-          TOTAL ENERGY            =       -587.42567 EV
-          ELECTRONIC ENERGY       =       -951.56226 EV  POINT GROUP:     D*h 
-          CORE-CORE REPULSION     =        364.13659 EV
           COSMO AREA              =         49.05 SQUARE ANGSTROMS
-          COSMO VOLUME            =         31.42 CUBIC ANGSTROMS
+          COSMO VOLUME            =         31.41 CUBIC ANGSTROMS
 
-          GRADIENT NORM           =          0.21509
-          IONIZATION POTENTIAL    =         10.667813 EV
+          GRADIENT NORM           =          0.18376          =       0.12994 PER ATOM
+          IONIZATION POTENTIAL    =         10.667749 EV
           ALPHA SOMO LUMO (EV)    =        -10.668  2.451
           BETA  SOMO LUMO (EV)    =        -15.302  0.614
           NO. OF ALPHA ELECTRONS  =          7
           NO. OF BETA  ELECTRONS  =          5
-          MOLECULAR WEIGHT        =         31.9988
+          MOLECULAR WEIGHT        =         31.9988         POINT GROUP:  D*h 
 
           MOLECULAR DIMENSIONS (Angstroms)
 
             Atom       Atom       Distance
-            O     2    O     1     1.13095
+            O     2    O     1     1.13094
             O     2    O     1     0.00000
             O     1    O     2     0.00000
 
 
           SCF CALCULATIONS        =          7
- 
-          WALL-CLOCK TIME         =          0.023 SECONDS
-          COMPUTATION TIME        =          0.010 SECONDS
+
+          WALL-CLOCK TIME         =      0.020 SECONDS
+          COMPUTATION TIME        =      0.031 SECONDS
 
 
 
 
    ATOM   CHEMICAL          X               Y               Z
   NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
- 
-     1       O         -5.44209638  *  -0.48410726  *  -0.00000000  *
-     2       O         -4.32579361  *  -0.30269274  *  -0.00000000  *
+
+     1       O         -5.44213436  *  -0.48383633  *  -0.00000000  *
+     2       O         -4.32575564  *  -0.30296367  *  -0.00000000  *
 
                              CARTESIAN COORDINATES
 
-   1    O       -5.442096385    -0.484107260    -0.000000000
-   2    O       -4.325793614    -0.302692740    -0.000000000
+   1    O       -5.442134363    -0.483836330    -0.000000000
+   2    O       -4.325755636    -0.302963670    -0.000000000
 
 
            Empirical Formula: O2  =     2 atoms
@@ -141,11 +134,11 @@
 
 
           ALPHA EIGENVALUES  
- -34.83549 -30.83402 -17.99930 -17.47964 -17.47964 -10.66781 -10.66781   2.45143
+ -34.83579 -30.83409 -17.99923 -17.47979 -17.47979 -10.66775 -10.66775   2.45149
 
 
            BETA EIGENVALUES 
- -31.02858 -26.05942 -16.17693 -15.30164 -15.30164   0.61375   0.61375   4.07383
+ -31.02893 -26.05950 -16.17682 -15.30181 -15.30181   0.61384   0.61384   4.07392
 
 
               NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
@@ -162,8 +155,8 @@
           ATOMIC ORBITAL ELECTRON POPULATIONS
 
      Atom    s        px        py        pz   
-    1  O   1.94850   1.06304   1.48846   1.50000
-    2  O   1.94850   1.06304   1.48846   1.50000
+    1  O   1.94850   1.06297   1.48853   1.50000
+    2  O   1.94850   1.06297   1.48853   1.50000
 
 
                     (SZ)    =    1.000000
