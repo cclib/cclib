@@ -19,11 +19,11 @@ class Density(Method):
     def __init__(self, data, progress=None, loglevel=logging.INFO, logname="Density"):
         super().__init__(data, progress, loglevel, logname)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"Density matrix of {self.data}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'Density matrix("{self.data}")'
 

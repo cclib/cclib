@@ -25,11 +25,11 @@ class Moments(Method):
         self.required_attrs = ("atomcoords", "atomcharges")
         self.results = {}
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Returns a string representation of the object."""
         return f"Multipole moments of {self.data}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Returns a representation of the object."""
         return f'Moments("{self.data}")'
 

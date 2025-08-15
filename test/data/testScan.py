@@ -5,12 +5,17 @@
 
 """Test scan logfiles in cclib"""
 
+from typing import TYPE_CHECKING
+
 import cclib
 
 import numpy
 import pytest
 from common import is_optdone, is_optnew
 from skip import skipForParser
+
+if TYPE_CHECKING:
+    from cclib.parser.data import ccData
 
 
 class GenericUnrelaxedScanTest:
@@ -22,11 +27,11 @@ class GenericUnrelaxedScanTest:
         return 0
 
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
-    def testscannames(self, data) -> None:
+    def testscannames(self, data: "ccData") -> None:
         assert isinstance(data.scannames, list)
 
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
-    def testscanenergies(self, data) -> None:
+    def testscanenergies(self, data: "ccData") -> None:
         assert isinstance(data.scanenergies, list)
 
         # This checks the order of magnitude, and unit conversion if nothing else.
@@ -35,7 +40,7 @@ class GenericUnrelaxedScanTest:
         )
 
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
-    def testscanparm(self, data) -> None:
+    def testscanparm(self, data: "ccData") -> None:
         assert isinstance(data.scanparm, list)
 
         assert len(data.scanparm) == len(data.scannames)
@@ -65,14 +70,14 @@ class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    def testnumindices(self, data, extra) -> None:
+    def testnumindices(self, data: "ccData", extra: int) -> None:
         """Do the number of indices match number of scan points?"""
         assert len(data.optdone) == 12 + extra
 
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    def testindices(self, data) -> None:
+    def testindices(self, data: "ccData") -> None:
         """Do the optdone indices match the results from geovalues?"""
         mask_converged_geovalues = numpy.all(data.geovalues <= data.geotargets, axis=1)
         indices_converged_geovalues = [i for i, v in enumerate(mask_converged_geovalues) if v]
@@ -85,7 +90,7 @@ class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    def testoptstatus(self, data) -> None:
+    def testoptstatus(self, data: "ccData") -> None:
         """Does optstatus contain expected values?"""
         # The input coordinates were at a stationary point.
         #
@@ -101,7 +106,7 @@ class GenericRelaxedScanTest(GenericUnrelaxedScanTest):
                 assert is_optnew(data.optstatus[idone + 1])
 
     @skipForParser("Jaguar", "Not implemented")
-    def testscancoords(self, data) -> None:
+    def testscancoords(self, data: "ccData") -> None:
         """Are the final coordinates for each scan point consistent?"""
 
         assert isinstance(data.scancoords, numpy.ndarray)

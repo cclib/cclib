@@ -5,10 +5,15 @@
 
 """Test logfiles with core electron data in cclib"""
 
+from typing import TYPE_CHECKING
+
 from cclib.parser.utils import PeriodicTable
 
 import numpy
 from skip import skipForParser
+
+if TYPE_CHECKING:
+    from cclib.parser.data import ccData
 
 
 class GenericCoreTest:
@@ -18,7 +23,7 @@ class GenericCoreTest:
     charge = -2
 
     @skipForParser("FChk", "Core electrons do not seem to be available")
-    def testcorrect(self, data) -> None:
+    def testcorrect(self, data: "ccData") -> None:
         """Is coreelectrons equal to what it should be?"""
         pt = PeriodicTable()
         ans = []
@@ -27,7 +32,7 @@ class GenericCoreTest:
         ans = numpy.array(ans, "i")
         numpy.testing.assert_array_equal(data.coreelectrons, ans)
 
-    def testcharge(self, data) -> None:
+    def testcharge(self, data: "ccData") -> None:
         """Is the total charge correct?"""
         assert data.charge == self.charge
 

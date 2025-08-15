@@ -19,12 +19,12 @@ if _found_iodata:
     from iodata.orbitals import MolecularOrbitals
 
 
-def check_horton():
+def check_horton() -> None:
     if not _found_iodata:
         raise ImportError("You must install `horton` to use this function.")
 
 
-def makehorton(data):
+def makehorton(data: ccData) -> "IOData":
     """Create horton IOData object from ccData object"""
 
     check_horton()
@@ -82,7 +82,7 @@ def makehorton(data):
     return IOData(**attributes)  # Pass collected attributes into IOData constructor
 
 
-def makecclib(iodat):
+def makecclib(iodat: "IOData") -> ccData:
     """Create cclib ccData object from horton IOData object"""
 
     check_horton()

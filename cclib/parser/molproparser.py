@@ -6,10 +6,14 @@
 """Parser for Molpro output files"""
 
 import itertools
+from typing import TYPE_CHECKING
 
 from cclib.parser import logfileparser, utils
 
 import numpy
+
+if TYPE_CHECKING:
+    pass
 
 
 def create_atomic_orbital_names(orbitals):
