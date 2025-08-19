@@ -6,12 +6,10 @@
 """Functions used across multiple data tests."""
 
 import itertools
-from typing import TYPE_CHECKING
+
+from cclib.parser.data import ccData
 
 import numpy
-
-if TYPE_CHECKING:
-    from cclib.parser.data import ccData
 
 
 def get_minimum_carbon_separation(data: "ccData") -> float:
