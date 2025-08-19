@@ -20,7 +20,7 @@ from ..test_data import getdatafile
 
 
 class MBOTest:
-    def test_mbo_sp(self):
+    def test_mbo_sp(self) -> None:
         """Testing Mayer bond orders for restricted single point."""
 
         data, logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_sp.out"])
@@ -32,7 +32,7 @@ class MBOTest:
         assert numpy.all(mbo.fragresults[0] >= e_mbo - 0.25)
         assert numpy.all(mbo.fragresults[0] <= e_mbo + 0.25)
 
-    def test_mbo_un_sp(self):
+    def test_mbo_un_sp(self) -> None:
         """Testing Mayer bond orders for unrestricted single point."""
 
         data, logfile = getdatafile(Gaussian, "basicGaussian09", ["dvb_un_sp.log"])

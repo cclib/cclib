@@ -9,6 +9,7 @@ import io
 import os
 import sys
 import tempfile
+from typing import TYPE_CHECKING
 from unittest import mock
 from urllib.request import urlopen
 
@@ -17,13 +18,15 @@ import cclib
 import pytest
 from pytest import MonkeyPatch
 
+if TYPE_CHECKING:
+    from cclib.parser.logfileparser import FileWrapper
 __filedir__ = os.path.dirname(__file__)
 __filepath__ = os.path.realpath(__filedir__)
 __datadir__ = os.path.join(__filepath__, "..", "..")
 
 
 class FileWrapperTest:
-    def check_seek(self, wrapper):
+    def check_seek(self, wrapper: "FileWrapper") -> None:
         """Check that a FileWrapper can seek properly"""
         wrapper.seek(0, 2)
         assert wrapper.pos == wrapper.size
@@ -34,14 +37,14 @@ class FileWrapperTest:
         with pytest.raises(NotImplementedError):
             wrapper.seek(0, 1)
 
-    def test_file_seek(self):
+    def test_file_seek(self) -> None:
         """Can we seek anywhere in a file object?"""
         fpath = os.path.join(__datadir__, "data/ADF/basicADF2007.01/dvb_gopt.adfout")
         with open(fpath) as fobject:
             wrapper = cclib.parser.logfileparser.FileWrapper(fobject)
             self.check_seek(wrapper)
 
-    def test_url_seek(self):
+    def test_url_seek(self) -> None:
         """Can we seek only to the end of an url stream?"""
 
         url = "https://raw.githubusercontent.com/cclib/cclib/master/data/ADF/basicADF2007.01/dvb_gopt.adfout"
@@ -50,7 +53,7 @@ class FileWrapperTest:
 
         self.check_seek(wrapper)
 
-    def test_stdin_seek(self):
+    def test_stdin_seek(self) -> None:
         """We shouldn't be able to seek anywhere in standard input."""
         # stdin is disabled by pytest.
         # the recommended way of emulating stdin is by doing this
@@ -60,7 +63,7 @@ class FileWrapperTest:
         wrapper = cclib.parser.logfileparser.FileWrapper(sys.stdin)
         self.check_seek(wrapper)
 
-    def test_data_stdin(self):
+    def test_data_stdin(self) -> None:
         """Check that the same attributes are parsed when a file is piped through standard input."""
         logfiles = [
             "data/ADF/basicADF2007.01/dvb_gopt.adfout",
@@ -90,7 +93,7 @@ class FileWrapperTest:
 class LogfileTest:
     """Unit tests for the Logfile class."""
 
-    def test_parse_check_values(self):
+    def test_parse_check_values(self) -> None:
         """Are custom checks performed after parsing finishes?
 
         The purpose of this test is not to comprehensively cover all the checks,
