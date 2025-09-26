@@ -42,6 +42,7 @@ from cclib.parser.psi3parser import Psi3
 from cclib.parser.psi4parser import Psi4
 from cclib.parser.qchemparser import QChem
 from cclib.parser.turbomoleparser import Turbomole
+from cclib.parser.serenityparser import Serenity
 from cclib.parser.utils import find_package
 from cclib.parser.xtbparser import XTB
 
@@ -88,6 +89,7 @@ triggers = [
     (QChem, ["A Quantum Leap Into The Future Of Chemistry"], True),
     (Turbomole, ["TURBOMOLE"], True),
     (XTB, ["x T B"], True),
+	(Serenity, ["Serenity                                   #"], True),
 ]
 
 readerclasses = {"cjson": cjsonreader.CJSON, "json": cjsonreader.CJSON, "xyz": xyzreader.XYZ}
