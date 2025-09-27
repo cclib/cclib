@@ -5,12 +5,7 @@
 
 """Parser for Serenity output files"""
 
-import re
-
-from cclib.parser import data, logfileparser, utils
-
-import numpy
-
+from cclib.parser import logfileparser
 
 
 class Serenity(logfileparser.Logfile):
