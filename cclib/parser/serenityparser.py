@@ -38,3 +38,7 @@ class Serenity(logfileparser.Logfile):
         # Extract charge and multiplicity
         if line[5:11] == "Charge":
             self.set_attribute("charge", int(line.split()[1]))
+
+        # Extract multiplicity
+        if line[5:9] == "Spin":
+            self.set_attribute("mult", int(line.split()[1]) + 1)
