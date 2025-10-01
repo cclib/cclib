@@ -42,3 +42,6 @@ class Serenity(logfileparser.Logfile):
         # Extract multiplicity
         if line[5:9] == "Spin":
             self.set_attribute("mult", int(line.split()[1]) + 1)
+
+        if line[5:21] == "Basis Functions:":
+            self.set_attribute("nbasis", int(line.split()[2]))
