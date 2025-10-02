@@ -7,6 +7,8 @@
 
 from cclib.parser import logfileparser
 
+import numpy
+
 
 class Serenity(logfileparser.Logfile):
     """A Serenity output file"""
@@ -46,8 +48,7 @@ class Serenity(logfileparser.Logfile):
         if line[5:21] == "Basis Functions:":
             self.set_attribute("nbasis", int(line.split()[2]))
 
-        if line.strip().startswith("Cycle      E/a.u.         abs(dE)/a.u.p"):
-            print(line)
+        if "Cycle" in line and "Mode" in line:
             line = next(inputfile)
             values = []
             while not line.strip().startswith("Converged after"):
@@ -55,5 +56,5 @@ class Serenity(logfileparser.Logfile):
                 c1, c2, c3 = map(float, linedata[2:5])
                 values.append([c1, c2, c3])
                 line = next(inputfile)
-
-            self.set_attribute("scfvalues", values)
+            scfvalues = [numpy.vstack(numpy.array(values))]
+            self.set_attribute("scfvalues", scfvalues)
