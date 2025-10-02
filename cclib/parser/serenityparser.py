@@ -45,3 +45,15 @@ class Serenity(logfileparser.Logfile):
 
         if line[5:21] == "Basis Functions:":
             self.set_attribute("nbasis", int(line.split()[2]))
+
+        if line.strip().startswith("Cycle      E/a.u.         abs(dE)/a.u.p"):
+            print(line)
+            line = next(inputfile)
+            values = []
+            while not line.strip().startswith("Converged after"):
+                linedata = line.split()
+                c1, c2, c3 = map(float, linedata[2:5])
+                values.append([c1, c2, c3])
+                line = next(inputfile)
+
+            self.set_attribute("scfvalues", values)
