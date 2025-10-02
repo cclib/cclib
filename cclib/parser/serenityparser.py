@@ -61,6 +61,6 @@ class Serenity(logfileparser.Logfile):
             self.set_attribute("atomnos", atomnos)
             self.set_attribute("natom", len(atomnos))
             self.append_attribute("atomcoords", coords)
-            
+
         if line[5:21] == "Basis Functions:":
             self.set_attribute("nbasis", int(line.split()[2]))
