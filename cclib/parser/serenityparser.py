@@ -46,6 +46,5 @@ class Serenity(logfileparser.Logfile):
         if line[5:21] == "Basis Functions:":
             self.set_attribute("nbasis", int(line.split()[2]))
 
-        # Extract total energy
         if "Total Energy" in line:
             self.set_attribute("scfenergies", [float(line.split()[3])])
