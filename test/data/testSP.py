@@ -11,7 +11,7 @@ import numpy
 import packaging
 from common import get_minimum_carbon_separation
 from skip import skipForLogfile, skipForParser
-
+from cclib import ureg
 
 class GenericSPTest:
     """Generic restricted single point unittest"""
@@ -24,8 +24,9 @@ class GenericSPTest:
     nbasisdict = {1: 1, 6: 5}
 
     # Approximate B3LYP energy of dvb after SCF in STO-3G (Gaussian 16).
-    scfenergy = -382.308266602
-    scfenergy_delta = 3.0e-1
+    scfenergy = -382.308266602 * ureg.hartree
+    scfenergy_delta = 3.0e-1 * ureg.hartree
+
 
     # Approximate energy of the innermost molecular orbital of DVB with
     # B3LYP/STO-3G (from Q-Chem 5.4 fchk).
@@ -263,7 +264,7 @@ class GenericSPTest:
     def testsymlabels(self, data) -> None:
         """Are all the symmetry labels either Ag/u or Bg/u?"""
         sumwronglabels = sum(
-            [
+            [=
                 x not in ["Ag", "Bu", "Au", "Bg"]
                 for x in data._ccCollection._parsed_data[0].mosyms[0]
             ]
@@ -302,6 +303,7 @@ class GenericSPTest:
             abs(data._ccCollection._parsed_data[0].scfenergies[-1] - self.scfenergy)
             < self.scfenergy_delta
         )
+        assert data._ccCollection._parsed_data[0].scfenergies[-1]
 
     @skipForParser("FChk", "Formatted Checkpoint files do not have a section for SCF convergence")
     @skipForParser("GAMESSDAT", "Scftargets probably do not exist in the file")
