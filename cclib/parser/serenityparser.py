@@ -48,4 +48,4 @@ class Serenity(logfileparser.Logfile):
 
         # Extract dispersion correction
         if "Dispersion Correction (" in line:
-            self.set_attribute("dispersionenergies", [float(line.split()[3])])
+            self.append_attribute("dispersionenergies", float(line.split()[3]))
