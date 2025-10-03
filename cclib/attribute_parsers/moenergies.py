@@ -6,13 +6,14 @@ from typing import Optional
 
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
-
+from cclib import ureg
 import numpy as np
 
 
 class moenergies(base_parser):
     """
-    Docstring? Units?
+     Molecular orbital energies
+     Units: Hartree
     """
 
     known_codes = ["gaussian"]
@@ -48,7 +49,7 @@ class moenergies(base_parser):
                         i += 1
                     line = file_handler.virtual_next()
 
-                constructed_moenergies = [np.array(x, "d") for x in constructed_moenergies]
+                constructed_moenergies = [np.array(x, "d")*ureg.hartree for x in constructed_moenergies]
                 return {moenergies.__name__: constructed_moenergies}
         return None
 
