@@ -11,7 +11,8 @@ from cclib import ureg
 
 class scfenergies(base_parser):
     """
-    Docstring? Units?
+    molecular electronic energies after SCF (Hartree-Fock, DFT)
+    Units: Hartree
     """
 
     known_codes = ["gaussian", "psi4", "qchem"]
@@ -31,6 +32,7 @@ class scfenergies(base_parser):
         line = file_handler.last_line
         if "Final Energy" in line:
             constructed_data = float(line.split()[3])
+            constructed_data *= ureg.hartree
             return {scfenergies.__name__: [constructed_data]}
         return None
 
@@ -41,7 +43,7 @@ class scfenergies(base_parser):
         constructed_data = None
         if "Total energy in the final basis set" in line:
             constructed_scfenergies = float(line.split()[-1])
-            # self.scfenergies.append(utils.convertor(scfenergy, "hartree", "eV"))
+            constructed_data *= ureg.hartree
         if constructed_scfenergies is not None:
             constructed_data = {scfenergies.__name__: constructed_data}
         return constructed_data

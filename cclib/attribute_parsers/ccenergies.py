@@ -6,7 +6,7 @@ from typing import Optional
 
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
-
+from cclib import ureg
 import numpy as np
 
 
