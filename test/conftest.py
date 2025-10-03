@@ -18,6 +18,7 @@ from typing import Dict, Iterator, List, Mapping, Optional, Tuple, Union
 from cclib.attribute_parsers.data import ccData
 from cclib.file_handler import FileHandler
 from cclib.io import ccopen
+from cclib import ureg
 
 import pytest
 import yaml

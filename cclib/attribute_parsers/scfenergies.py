@@ -6,6 +6,7 @@ from typing import Optional
 
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
+from cclib import ureg
 
 
 class scfenergies(base_parser):
@@ -21,6 +22,7 @@ class scfenergies(base_parser):
         line = file_handler.last_line
         if line[1:9] == "SCF Done":
             constructed_data = utils.float(line.split()[4])
+            constructed_data *= ureg.hartree
             return {scfenergies.__name__: [constructed_data]}
         return None
 
