@@ -56,5 +56,4 @@ class Serenity(logfileparser.Logfile):
                 c1, c2, c3 = map(float, linedata[2:5])
                 values.append([c1, c2, c3])
                 line = next(inputfile)
-            scfvalues = [numpy.vstack(numpy.array(values))]
-            self.set_attribute("scfvalues", scfvalues)
+            self.append_attribute("scfvalues", numpy.vstack(numpy.array(values)))
