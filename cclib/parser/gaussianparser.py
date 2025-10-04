@@ -7,12 +7,15 @@
 
 import datetime
 import re
-from typing import Dict, List, Tuple
+from typing import TYPE_CHECKING, Dict, List, Tuple
 
 from cclib.parser import data, logfileparser, utils
 from cclib.parser.logfileparser import StopParsing
 
 import numpy
+
+if TYPE_CHECKING:
+    from cclib.parser.logfilewrapper import FileWrapper
 
 __all__ = ("Gaussian", "parse_version")
 
@@ -23,15 +26,15 @@ class Gaussian(logfileparser.Logfile):
     def __init__(self, *args, **kwargs):
         super().__init__(logname="Gaussian", *args, **kwargs)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"Gaussian log file {self.filename}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'Gaussian("{self.filename}")'
 
-    def normalisesym(self, label):
+    def normalisesym(self, label: str) -> str:
         """Use standard symmetry labels instead of Gaussian labels.
 
         To normalise:
@@ -50,7 +53,7 @@ class Gaussian(logfileparser.Logfile):
         ans = label.replace("U", "u").replace("G", "g")
         return ans
 
-    def before_parsing(self):
+    def before_parsing(self) -> None:
         # Calculations use point group symmetry by default.
         self.uses_symmetry = True
 
@@ -122,7 +125,7 @@ class Gaussian(logfileparser.Logfile):
             " charges and spin densities:",
         ] + self.atomcharges_atomspins_headers_swap
 
-    def after_parsing(self):
+    def after_parsing(self) -> None:
         # atomcoords are parsed as a list of lists but it should be an array.
         # Done automatically later in arrayify, but we need it now for the
         # rest of this method.
@@ -228,7 +231,7 @@ class Gaussian(logfileparser.Logfile):
 
         super().after_parsing()
 
-    def extract(self, inputfile, line):
+    def extract(self, inputfile: "FileWrapper", line: str) -> None:
         """Extract information from the file object inputfile."""
 
         link_match = self.re_link.search(line)
@@ -2024,7 +2027,9 @@ class Gaussian(logfileparser.Logfile):
         #   2        2S          0.00000   0.75440   0.57746   0.07245   0.00000
         # ...
         #
-        def natural_orbital_single_spin_parsing(inputfile, updateprogress_title):
+        def natural_orbital_single_spin_parsing(
+            inputfile: "FileWrapper", updateprogress_title: str
+        ):
             coeffs = numpy.zeros((self.nmo, self.nbasis), "d")
             occnos = []
             aonames = []
@@ -2212,7 +2217,7 @@ class Gaussian(logfileparser.Logfile):
         #
         # APT and Lowdin charges are also displayed in this way.
         def extract_charges_spins(line: str, prop: str) -> None:
-            """Extracts atomic charges and spin de strnsities into
+            """Extracts atomic charges and spin densities into
                self.atomcharges and self.atomspins dictionaries.
 
             Inputs:

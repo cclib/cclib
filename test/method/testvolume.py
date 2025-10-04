@@ -21,13 +21,13 @@ from ..test_data import getdatafile
 
 
 class VolumeTest:
-    def test_scinotation(self):
+    def test_scinotation(self) -> None:
         """Does the scientific notation writer work as expected?"""
 
         assert volume.scinotation(1.0 / 654) == " 1.52905E-03"
         assert volume.scinotation(-1.0 / 654) == "-1.52905E-03"
 
-    def test_wavefunction(self):
+    def test_wavefunction(self) -> None:
         """Does the volume occupied by the HOMO integrate to the correct
         values?
         """
@@ -45,7 +45,7 @@ class VolumeTest:
         assert abs(integral_square - 1.00) < 1e-2  # true for all wavefns
         print(integral, integral_square)
 
-    def test_density(self):
+    def test_density(self) -> None:
         """Does the volume occupied by the combined electron density integrate
         to the correct value?
         """
@@ -62,7 +62,7 @@ class VolumeTest:
         assert abs(integral - 8.00) < 1e-2
         print("Combined Density of 4 Frontier orbitals=", integral)
 
-    def test_cube(self):
+    def test_cube(self) -> None:
         """Does the cube file written out for electron density on a Cartesian grid match
         expected values?
         """
@@ -90,7 +90,7 @@ class VolumeTest:
 
         assert_allclose(density.data, refcube, atol=0.5, rtol=0.1)
 
-    def test_roundtrip_cube(self):
+    def test_roundtrip_cube(self) -> None:
         """Write a cube file and then read it back. Check if the volume object contains
         identical information on each grid point"""
 
@@ -103,7 +103,7 @@ class VolumeTest:
 
         assert_allclose(density.data, density_recovered.data, rtol=0.05)
 
-    def test_zip_cube(self):
+    def test_zip_cube(self) -> None:
         """Check we can read from a zipped file."""
         data = volume.read_from_cube(Path(__file__).resolve().parent / "co.cube.zip")
         assert len(data.data) > 0

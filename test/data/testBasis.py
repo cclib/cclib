@@ -5,7 +5,12 @@
 
 """Test logfiles related to basis sets"""
 
+from typing import TYPE_CHECKING
+
 import pytest
+
+if TYPE_CHECKING:
+    from cclib.parser.data import ccData
 
 
 class GenericBasisTest:
@@ -28,17 +33,17 @@ class GenericBasisTest:
     gbasis_C_2s_func0 = [2.9412, -0.1000]
     gbasis_C_2p_func0 = [2.9412, 0.1559]
 
-    def testgbasis(self, data) -> None:
+    def testgbasis(self, data: "ccData") -> None:
         """Is gbasis the right length?"""
         assert data.natom == len(data.gbasis)
 
-    def testnames(self, data) -> None:
+    def testnames(self, data: "ccData") -> None:
         """Are the name of basis set functions acceptable?"""
         for atom in data.gbasis:
             for fns in atom:
                 assert fns[0] in self.names, f"{fns[0]} not one of S or P"
 
-    def testsizeofbasis(self, data) -> None:
+    def testsizeofbasis(self, data: "ccData") -> None:
         """Is the basis set the correct size?"""
 
         total = 0
@@ -49,20 +54,20 @@ class GenericBasisTest:
 
         assert data.nbasis == total
 
-    def testcontractions(self, data) -> None:
+    def testcontractions(self, data: "ccData") -> None:
         """Are the number of contractions on all atoms correct?"""
         for iatom, atom in enumerate(data.gbasis):
             atomno = data.atomnos[iatom]
             assert len(atom) == self.contractions[atomno]
 
-    def testprimitives(self, data) -> None:
+    def testprimitives(self, data: "ccData") -> None:
         """Are all primitives 2-tuples?"""
         for atom in data.gbasis:
             for ftype, contraction in atom:
                 for primitive in contraction:
                     assert len(primitive) == 2
 
-    def testcoeffs(self, data) -> None:
+    def testcoeffs(self, data: "ccData") -> None:
         """Are the atomic basis set exponents and coefficients correct?"""
 
         for iatom, atom in enumerate(data.gbasis):
@@ -78,7 +83,7 @@ class GenericBasisTest:
                 assert round(abs(s_coeffs[0][1] - self.gbasis_C_2s_func0[1]), 4) == 0
                 assert round(abs(p_coeffs[0][1] - self.gbasis_C_2p_func0[1]), 4) == 0
 
-    def testatomcoords(self, data) -> None:
+    def testatomcoords(self, data: "ccData") -> None:
         """Are the dimensions of atomcoords 1 x natom x 3?"""
         expected_shape = (1, data.natom, 3)
         assert data.atomcoords.shape == expected_shape
@@ -100,12 +105,12 @@ class GenericBigBasisTest(GenericBasisTest):
     contractions = {6: 20}
 
     @pytest.mark.skip("Write up a new test, and/or revise the one inherited.")
-    def testcoeffs(self, data):
+    def testcoeffs(self, data: "ccData"):
         """Are the basis set coefficients correct?"""
         assert True
 
     @pytest.mark.skip("# of contractions is 20 for VQZ, but 29 for CVQZ; unify files first.")
-    def testcontractions(self, data):
+    def testcontractions(self, data: "ccData") -> None:
         """"""
         assert True
 

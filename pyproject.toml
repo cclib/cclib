@@ -79,6 +79,9 @@ zip-safe = false
 [tool.setuptools.package-dir]
 cclib = "cclib"
 
+[tool.coverage.run]
+branch = true
+
 [tool.isort]
 profile = "black"
 line_length = 100
