@@ -64,3 +64,6 @@ class Serenity(logfileparser.Logfile):
 
         if line[5:21] == "Basis Functions:":
             self.set_attribute("nbasis", int(line.split()[2]))
+
+        if "Dispersion Correction (" in line:
+            self.append_attribute("dispersionenergies", float(line.split()[3]))
