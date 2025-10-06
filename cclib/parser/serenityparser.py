@@ -7,6 +7,8 @@
 
 from cclib.parser import logfileparser
 
+import numpy
+
 
 class Serenity(logfileparser.Logfile):
     """A Serenity output file"""
@@ -65,6 +67,15 @@ class Serenity(logfileparser.Logfile):
         if line[5:21] == "Basis Functions:":
             self.set_attribute("nbasis", int(line.split()[2]))
 
+        if "Cycle" in line and "Mode" in line:
+            line = next(inputfile)
+            values = []
+            while not line.strip().startswith("Converged after"):
+                linedata = line.split()
+                c1, c2, c3 = map(float, linedata[2:5])
+                values.append([c1, c2, c3])
+                line = next(inputfile)
+            self.append_attribute("scfvalues", numpy.vstack(numpy.array(values)))
         if "Dispersion Correction (" in line:
             self.append_attribute("dispersionenergies", float(line.split()[3]))
 
