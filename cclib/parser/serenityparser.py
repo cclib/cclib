@@ -43,6 +43,25 @@ class Serenity(logfileparser.Logfile):
         if line[5:9] == "Spin":
             self.set_attribute("mult", int(line.split()[1]) + 1)
 
+        # Extract from atoms: number of atoms, elements, and coordinates
+        if line.strip().startswith("Current Geometry (Angstrom):"):
+            line = next(inputfile)
+            line = next(inputfile)
+            atomnos = []
+            coords = []
+            while line.strip():
+                print(line)
+                atominfo = line.split()
+                element = atominfo[1]
+                x, y, z = map(float, atominfo[2:5])
+                atomnos.append(self.table.number[element])
+                coords.append([x, y, z])
+                line = next(inputfile)
+
+            self.set_attribute("atomnos", atomnos)
+            self.set_attribute("natom", len(atomnos))
+            self.append_attribute("atomcoords", coords)
+
         if line[5:21] == "Basis Functions:":
             self.set_attribute("nbasis", int(line.split()[2]))
 
@@ -79,3 +98,5 @@ class Serenity(logfileparser.Logfile):
             quadrupoleRaw = [xx, xy, xz, yy, yz, zz]
             quadrupole = [utils.convertor(value, "ebohr2", "Buckingham") for value in quadrupoleRaw]
             self.append_attribute("moments", quadrupole)
+        if "Dispersion Correction (" in line:
+            self.append_attribute("dispersionenergies", float(line.split()[3]))
