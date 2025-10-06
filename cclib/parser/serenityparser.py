@@ -52,7 +52,6 @@ class Serenity(logfileparser.Logfile):
             atomnos = []
             coords = []
             while line.strip():
-                print(line)
                 atominfo = line.split()
                 element = atominfo[1]
                 x, y, z = map(float, atominfo[2:5])
@@ -80,10 +79,10 @@ class Serenity(logfileparser.Logfile):
             self.append_attribute("dispersionenergies", float(line.split()[3]))
 
         if "Total Local-CCSD Energy" in line:
-            self.set_attribute("cceneriges", float(line.split()[1]))
+            self.set_attribute("ccenergies", float(line.split()[3]))
         if "Total Local-CCSD(T0) Energy" in line:
-            self.set_attribute("cceneriges", float(line.split()[1]))
+            self.set_attribute("ccenergies", float(line.split()[3]))
         if "Total CCSD Energy" in line:
-            self.set_attribute("cceneriges", float(line.split()[1]))
+            self.set_attribute("ccenergies", float(line.split()[3]))
         if "Total CCSD(T) Energy" in line:
-            self.set_attribute("cceneriges", float(line.split()[1]))
+            self.set_attribute("ccenergies", float(line.split()[3]))
