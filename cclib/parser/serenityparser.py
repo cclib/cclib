@@ -67,3 +67,12 @@ class Serenity(logfileparser.Logfile):
 
         if "Dispersion Correction (" in line:
             self.append_attribute("dispersionenergies", float(line.split()[3]))
+
+        if "Total Local-CCSD Energy" in line:
+            self.set_attribute("cceneriges", float(line.split()[1]))
+        if "Total Local-CCSD(T0) Energy" in line:
+            self.set_attribute("cceneriges", float(line.split()[1]))
+        if "Total CCSD Energy" in line:
+            self.set_attribute("cceneriges", float(line.split()[1]))
+        if "Total CCSD(T) Energy" in line:
+            self.set_attribute("cceneriges", float(line.split()[1]))
