@@ -79,3 +79,5 @@ class Serenity(logfileparser.Logfile):
                     diis = float(line.split()[2])
                     scftargets.append(numpy.array([ethresh, rmsd, diis]))
                     self.set_attribute("scftargets", scftargets)
+        if "Dispersion Correction (" in line:
+            self.append_attribute("dispersionenergies", float(line.split()[3]))
