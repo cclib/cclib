@@ -6,6 +6,7 @@
 """Parser for Serenity output files"""
 
 import os
+from pathlib import Path
 
 from cclib.parser import logfileparser
 from cclib.parser.utils import find_package
@@ -36,7 +37,7 @@ class Serenity(logfileparser.Logfile):
 
     def after_parsing(self):
         # Get molecular orbital information
-        orbpath = f"{self.systemname}/{self.systemname}.orbs.res.h5"
+        orbpath = self.path.parent / self.systemname / f"{self.systemname}.orbs.res.h5"
         if os.path.isfile(orbpath):
             assert find_package("h5py"), (
                 "h5py is needed to read in molecular orbital info from Serenity."
@@ -54,6 +55,8 @@ class Serenity(logfileparser.Logfile):
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
+
+        self.path = Path(inputfile.filenames[0]).resolve()
 
         # Extract system name
         if line.strip().startswith("------------------------------------------------------------"):
