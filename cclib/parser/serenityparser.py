@@ -79,5 +79,14 @@ class Serenity(logfileparser.Logfile):
                     diis = float(line.split()[2])
                     scftargets.append(numpy.array([ethresh, rmsd, diis]))
                     self.set_attribute("scftargets", scftargets)
+        if "Cycle" in line and "Mode" in line:
+            line = next(inputfile)
+            values = []
+            while not line.strip().startswith("Converged after"):
+                linedata = line.split()
+                c1, c2, c3 = map(float, linedata[2:5])
+                values.append([c1, c2, c3])
+                line = next(inputfile)
+            self.append_attribute("scfvalues", numpy.vstack(numpy.array(values)))
         if "Dispersion Correction (" in line:
             self.append_attribute("dispersionenergies", float(line.split()[3]))
