@@ -46,13 +46,14 @@ class Serenity(logfileparser.Logfile):
             self.set_attribute("mult", int(line.split()[1]) + 1)
 
         # Extract from atoms: number of atoms, elements, and coordinates
-        if line.strip().startswith("Current Geometry (Angstrom):"):
+        if line.strip().startswith("Current Geometry (Angstrom):") and not getattr(
+            self, "atomcoords", []
+        ):
             line = next(inputfile)
             line = next(inputfile)
             atomnos = []
             coords = []
             while line.strip():
-                print(line)
                 atominfo = line.split()
                 element = atominfo[1]
                 x, y, z = map(float, atominfo[2:5])
@@ -76,5 +77,29 @@ class Serenity(logfileparser.Logfile):
                 values.append([c1, c2, c3])
                 line = next(inputfile)
             self.append_attribute("scfvalues", numpy.vstack(numpy.array(values)))
+
         if "Dispersion Correction (" in line:
             self.append_attribute("dispersionenergies", float(line.split()[3]))
+
+        # create dict
+
+        populationtypes = ["CM5", "Mulliken", "Hirshfeld"]
+        thisdict = {}
+        if line.strip().startswith(tuple(populationtypes)) and line.split()[1] == "Population":
+            key = line.split()[0]
+            line = next(inputfile)
+            self.skip_line(inputfile, "dashes")
+            self.skip_line(inputfile, "blank")
+            line = next(inputfile)
+            line = next(inputfile)
+            chargeList = []
+
+            while line.strip():
+                charge = float(line.split()[3])
+                chargeList.append(charge)
+                line = next(inputfile)
+
+            value = numpy.array(chargeList)
+            thisdict[key] = value
+            print(thisdict)
+        self.set_attribute("atomcharges", thisdict)
