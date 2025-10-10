@@ -88,4 +88,4 @@ class Serenity(logfileparser.Logfile):
             while line.split()[1] == "2.00":
                 homos = int(line.split()[0])
                 line = next(inputfile)
-            self.set_attribute("homos", numpy.array([homos]))
+            self.set_attribute("homos", [homos])
