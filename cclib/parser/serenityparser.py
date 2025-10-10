@@ -29,9 +29,11 @@ class Serenity(logfileparser.Logfile):
         return label
 
     def before_parsing(self):
+        self.populationdict = {}
         self.unrestricted = False
 
     def after_parsing(self):
+        self.set_attribute("atomcharges", self.populationdict)
         super().after_parsing()
 
     def extract(self, inputfile, line):
@@ -81,10 +83,8 @@ class Serenity(logfileparser.Logfile):
         if "Dispersion Correction (" in line:
             self.append_attribute("dispersionenergies", float(line.split()[3]))
 
-        # create dict
-
-        populationtypes = ["CM5", "Mulliken", "Hirshfeld"]
-        thisdict = {}
+        # Extract charges from population analyzsis
+        populationtypes = ["CM5", "Mulliken", "Hirshfeld", "Becke", "IAO", "CHELPG"]
         if line.strip().startswith(tuple(populationtypes)) and line.split()[1] == "Population":
             key = line.split()[0]
             line = next(inputfile)
@@ -94,12 +94,10 @@ class Serenity(logfileparser.Logfile):
             line = next(inputfile)
             chargeList = []
 
-            while line.strip():
+            while line.strip() and not line.strip().startswith("---"):
                 charge = float(line.split()[3])
                 chargeList.append(charge)
                 line = next(inputfile)
 
             value = numpy.array(chargeList)
-            thisdict[key] = value
-            print(thisdict)
-        self.set_attribute("atomcharges", thisdict)
+            self.populationdict[key] = value
