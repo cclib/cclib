@@ -82,8 +82,7 @@ class Serenity(logfileparser.Logfile):
         # Extract index of HOMO
         if line.strip().startswith("Orbital Energies:"):
             line = next(inputfile)
-            self.skip_line(inputfile, "dashes")
-            self.skip_line(inputfile, "dashes")
+            self.skip_lines(inputfile, ["dashes", "dashes"])
             homos = None
             line = next(inputfile)
             while line.split()[1] == "2.00":
