@@ -5,7 +5,7 @@
 
 """Parser for Serenity output files"""
 
-from cclib.parser import logfileparser
+from cclib.parser import logfileparser, utils
 
 import numpy
 
@@ -70,6 +70,39 @@ class Serenity(logfileparser.Logfile):
         if line[5:21] == "Basis Functions:":
             self.set_attribute("nbasis", int(line.split()[2]))
 
+        if line.strip().startswith("Origin chosen as:"):
+            line = self.skip_line(inputfile, "Origin chosen as:")[0]
+            origin_data = line.replace("(", "").replace(")", "").replace(",", "").split()
+            x, y, z = map(float, origin_data)
+            origin = [x, y, z]
+            self.append_attribute("moments", origin)
+
+        if line.strip().startswith("Dipole Moment:"):
+            line = self.skip_line(inputfile, "Dipole Moment")
+            line = self.skip_line(inputfile, "dashes")
+            line = self.skip_line(inputfile, "x")
+            line = self.skip_line(inputfile, "blank")[0]
+            dipole_data = line.split()
+            x, y, z = map(float, dipole_data[:3])
+            dipoleRaw = [x, y, z]
+            dipole = [utils.convertor(value, "ebohr", "Debye") for value in dipoleRaw]
+            self.append_attribute("moments", dipole)
+
+        if line.strip().startswith("Quadrupole Moment:"):
+            line = self.skip_line(inputfile, "Quadrupole Moment")
+            line = self.skip_line(inputfile, "dashes")
+            line = self.skip_line(inputfile, "x")[0]
+            q_data = line.split()
+            xx, xy, xz = map(float, q_data[1:4])
+            line = self.skip_line(inputfile, "x")[0]
+            q_data = line.split()
+            yy, yz = map(float, q_data[2:4])
+            line = self.skip_line(inputfile, "y")[0]
+            q_data = line.split()
+            zz = float(q_data[3])
+            quadrupoleRaw = [xx, xy, xz, yy, yz, zz]
+            quadrupole = [utils.convertor(value, "ebohr2", "Buckingham") for value in quadrupoleRaw]
+            self.append_attribute("moments", quadrupole)
         if "Cycle" in line and "Mode" in line:
             line = next(inputfile)
             values = []
@@ -101,3 +134,13 @@ class Serenity(logfileparser.Logfile):
 
             value = numpy.array(chargeList)
             self.populationdict[key] = value
+        # Extract index of HOMO
+        if line.strip().startswith("Orbital Energies:"):
+            line = next(inputfile)
+            self.skip_lines(inputfile, ["dashes", "dashes"])
+            homos = None
+            line = next(inputfile)
+            while line.split()[1] == "2.00":
+                homos = int(line.split()[0])
+                line = next(inputfile)
+            self.set_attribute("homos", [homos])
