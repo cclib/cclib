@@ -66,6 +66,8 @@ class Serenity(logfileparser.Logfile):
         if line[5:21] == "Basis Functions:":
             self.set_attribute("nbasis", int(line.split()[2]))
 
+        if "Total Energy" in line:
+            self.append_attribute("scfenergies", float(line.split()[3]))
         if line.strip().startswith("Origin chosen as:"):
             line = self.skip_line(inputfile, "Origin chosen as:")[0]
             origin_data = line.replace("(", "").replace(")", "").replace(",", "").split()
