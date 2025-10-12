@@ -52,7 +52,6 @@ class Serenity(logfileparser.Logfile):
             atomnos = []
             coords = []
             while line.strip():
-                print(line)
                 atominfo = line.split()
                 element = atominfo[1]
                 x, y, z = map(float, atominfo[2:5])
@@ -79,6 +78,8 @@ class Serenity(logfileparser.Logfile):
                     diis = float(line.split()[2])
                     scftargets.append(numpy.array([ethresh, rmsd, diis]))
                     self.set_attribute("scftargets", scftargets)
+        if "Total Energy" in line:
+            self.append_attribute("scfenergies", float(line.split()[3]))
         if line.strip().startswith("Origin chosen as:"):
             line = self.skip_line(inputfile, "Origin chosen as:")[0]
             origin_data = line.replace("(", "").replace(")", "").replace(",", "").split()
@@ -121,5 +122,17 @@ class Serenity(logfileparser.Logfile):
                 values.append([c1, c2, c3])
                 line = next(inputfile)
             self.append_attribute("scfvalues", numpy.vstack(numpy.array(values)))
+
         if "Dispersion Correction (" in line:
             self.append_attribute("dispersionenergies", float(line.split()[3]))
+
+        # Extract index of HOMO
+        if line.strip().startswith("Orbital Energies:"):
+            line = next(inputfile)
+            self.skip_lines(inputfile, ["dashes", "dashes"])
+            homos = None
+            line = next(inputfile)
+            while line.split()[1] == "2.00":
+                homos = int(line.split()[0])
+                line = next(inputfile)
+            self.set_attribute("homos", [homos])
