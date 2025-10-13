@@ -71,6 +71,11 @@ class Serenity(logfileparser.Logfile):
                     seconds=float(line.split()[5].split(":")[1]),
                 )
             self.metadata["wall_time"].append(walltime)
+        if line.strip().startswith("Warning") or line.strip().startswith("WARNING"):
+            if "warnings" not in self.metadata:
+                self.metadata["warnings"] = []
+            # just adding the entire warning line for now
+            self.metadata["warning"].append(line)
 
         # Extract from atoms: number of atoms, elements, and coordinates
         if line.strip().startswith("Current Geometry (Angstrom):"):

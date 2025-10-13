@@ -596,7 +596,7 @@ class GenericSPTest:
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("Turbomole", "reading point group symmetry and name is not implemented")
     @skipForParser("xTB", "not implemented yet")
-    @skipForParser("Serenity", "not implemented yet")
+    @skipForParser("Serenity", "not applicable")
     def testmetadata_symmetry_detected(self, data) -> None:
         """Does metadata have expected keys and values?"""
         assert data.metadata["symmetry_detected"] == "c2h"
@@ -608,7 +608,7 @@ class GenericSPTest:
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("Turbomole", "reading point group symmetry and name is not implemented")
     @skipForParser("xTB", "not implemented yet")
-    @skipForParser("Serenity", "not implemented yet")
+    @skipForParser("Serenity", "not applicable")
     def testmetadata_symmetry_used(self, data) -> None:
         """Does metadata have expected keys and values?"""
         assert data.metadata["symmetry_used"] == "c2h"
@@ -626,7 +626,6 @@ class GenericSPTest:
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("NWChem", "reading cpu/wall time is not implemented for this parser")
     @skipForParser("Psi4", "reading cpu/wall time is not implemented for this parser")
-    @skipForParser("Serenity", "not implemented yet")
     def testmetadata_times(self, data) -> None:
         """Does metadata have expected keys and values of correct types?"""
         if "wall_time" in data.metadata:
