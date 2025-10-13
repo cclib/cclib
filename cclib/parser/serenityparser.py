@@ -114,12 +114,17 @@ class Serenity(logfileparser.Logfile):
 
         if "Total Local-CCSD Energy" in line:
             self.set_attribute("ccenergies", float(line.split()[3]))
+            self.metadata["methods"].append("Local CCSD")
         if "Total Local-CCSD(T0) Energy" in line:
             self.set_attribute("ccenergies", float(line.split()[3]))
+            self.metadata["methods"].append("Local CCSD(T0)")
         if "Total CCSD Energy" in line:
             self.set_attribute("ccenergies", float(line.split()[3]))
+            self.metadata["methods"].append("CCSD")
         if "Total CCSD(T) Energy" in line:
             self.set_attribute("ccenergies", float(line.split()[3]))
+            self.metadata["methods"].append("CCSD(T)")
+
         # Extract index of HOMO
         if line.strip().startswith("Orbital Energies:"):
             line = next(inputfile)
