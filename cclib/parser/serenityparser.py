@@ -5,6 +5,8 @@
 
 """Parser for Serenity output files"""
 
+import datetime
+
 from cclib.parser import logfileparser, utils
 
 import numpy
@@ -37,13 +39,38 @@ class Serenity(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
-        # Extract charge and multiplicity
         if line[5:11] == "Charge":
             self.set_attribute("charge", int(line.split()[1]))
 
         # Extract multiplicity
         if line[5:9] == "Spin":
             self.set_attribute("mult", int(line.split()[1]) + 1)
+
+        # metadata
+        self.metadata["coord_type"] = "xyz"
+        self.metadata["package"] = "Serenity"
+        if line[4:23] == "Version           :":
+            self.metadata["package_version"] = line.split()[2]
+        if line[5:15] == "Basis Set:":
+            self.metadata["basis_set"] = line.split()[2]
+        if line[5:16] == "Functional:":
+            self.metadata["functional"] = line.split()[1]
+        if line[5:14] == "SCF Mode:":
+            self.metadata["unrestricted"] = False
+        if line[4:34] == "Time taken for the entire run:":
+            self.metadata["success"] = True
+        # note: cpu time is not put out straightforwardly in Serenity.
+        if line[4:23] == "Time taken for task":
+            if "wall_time" not in self.metadata:
+                self.metadata["wall_time"] = []
+            if line.split()[6] == "s.":
+                walltime = datetime.timedelta(seconds=float(line.split()[5]))
+            elif line.split()[6] == "min.":
+                walltime = datetime.timedelta(
+                    minutes=float(line.split()[5].split(":")[0]),
+                    seconds=float(line.split()[5].split(":")[1]),
+                )
+            self.metadata["wall_time"].append(walltime)
 
         # Extract from atoms: number of atoms, elements, and coordinates
         if line.strip().startswith("Current Geometry (Angstrom):"):

@@ -504,7 +504,6 @@ class GenericSPTest:
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("Psi4", "reading basis set names is not implemented")
     @skipForParser("xTB", "not implemented yet")
-    @skipForParser("Serenity", "not implemented yet")
     def testmetadata_basis_set(self, data) -> None:
         """Does metadata have expected keys and values?"""
         assert data.metadata["basis_set"].lower() == "sto-3g"
@@ -545,7 +544,6 @@ class GenericSPTest:
         assert "methods" in data.metadata
 
     @skipForParser("NBO", "attribute not implemented in this version")
-    @skipForParser("Serenity", "not implemented yet")
     def testmetadata_package(self, data) -> None:
         """Does metadata have expected keys and values?"""
         # TODO How can the value be tested when the package name comes from
@@ -568,7 +566,6 @@ class GenericSPTest:
     @skipForParser("FChk", "Formatted Checkpoint files do not have section for package version")
     @skipForParser("GAMESSDAT", "Files do not contain information about the package version")
     @skipForParser("NBO", "attribute not implemented in this version")
-    @skipForParser("Serenity", "not implemented yet")
     def testmetadata_package_version(self, data) -> None:
         """Does metadata have expected keys and values?"""
         # TODO Test specific values for each unit test.
@@ -587,7 +584,6 @@ class GenericSPTest:
         "FChk/basicQChem5.4/dvb_sp.fchk", "impossible to determine success of calculation"
     )
     @skipForLogfile("GAMESSDAT/basicGAMESS-US2018/dvb_sp.dat", "TODO impossible to determine?")
-    @skipForParser("Serenity", "not implemented yet")
     def testmetadata_success(self, data) -> None:
         """Does metadata have expected keys and values?"""
         assert "success" in data.metadata
