@@ -410,7 +410,7 @@ class GenericSPTest:
         assert data.aooverlaps[3, 0] == pytest.approx(0)
         assert data.aooverlaps[0, 3] == pytest.approx(0)
 
-    @skipForParser("Serenity", "Testing right now")
+    @skipForParser("Serenity", "not implemented yet")
     def testoptdone(self, data) -> None:
         """There should be no optdone attribute set."""
         assert not hasattr(data, "optdone")
@@ -525,7 +525,7 @@ class GenericSPTest:
     @skipForParser("QChem", "reading input file contents and name is not implemented")
     @skipForParser("Turbomole", "reading input file contents and name is not implemented")
     @skipForParser("xTB", "not implemented yet")
-    @skipForParser("Serenity", "not implemented yet")
+    @skipForParser("Serenity", "reading input file contents and name is not implemented")
     def testmetadata_input_file(self, data) -> None:
         """Does metadata have expected keys and values?"""
         assert "input_file_contents" in data.metadata
@@ -557,7 +557,7 @@ class GenericSPTest:
     @skipForParser("GAMESSDAT", "Files do not contain information about the legacy package version")
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("xTB", "not implemented yet")
-    @skipForParser("Serenity", "not implemented yet")
+    @skipForParser("Serenity", "might not be applicable")
     def testmetadata_legacy_package_version(self, data) -> None:
         """Does metadata have expected keys and values?"""
         # TODO Test specific values for each unit test.
