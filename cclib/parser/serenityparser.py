@@ -150,6 +150,8 @@ class Serenity(logfileparser.Logfile):
             if self.alphaDone:
                 while line.split()[0] != "Beta:":
                     line = next(inputfile)
+                self.skip_line(inputfile, ["Beta:"])
+                self.skip_line(inputfile, ["#   Occ."])
                 line = next(inputfile)
                 while line.split()[1] == occNumber:
                     homos = int(line.split()[0])
