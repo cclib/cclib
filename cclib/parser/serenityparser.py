@@ -29,7 +29,7 @@ class Serenity(logfileparser.Logfile):
         return label
 
     def before_parsing(self):
-        self.unrestricted = False
+        self.metadata["unrestricted"] = False
 
     def after_parsing(self):
         super().after_parsing()
@@ -63,8 +63,17 @@ class Serenity(logfileparser.Logfile):
             self.set_attribute("natom", len(atomnos))
             self.append_attribute("atomcoords", coords)
 
+        if line[5:13] == "SCF Mode":
+            if line.split()[2] == "RESTRICTED":
+                self.metadata["unrestricted"] = False
+            elif line.split()[2] == "UNRESTRICTED":
+                self.metadata["unrestricted"] = True
+
         if line[5:21] == "Basis Functions:":
-            self.set_attribute("nbasis", int(line.split()[2]))
+            if self.metadata["unrestricted"]:
+                self.set_attribute("nbasis", int(line.split()[2]) * 2)
+            else:
+                self.set_attribute("nbasis", int(line.split()[2]))
 
         if "Total Energy" in line:
             self.append_attribute("scfenergies", float(line.split()[3]))
@@ -115,15 +124,34 @@ class Serenity(logfileparser.Logfile):
         if "Dispersion Correction (" in line:
             self.append_attribute("dispersionenergies", float(line.split()[3]))
 
-        # Extract index of HOMO
+        # Extract index of HOMO(s)
+        self.alphaDone = False
         if line.strip().startswith("Orbital Energies:"):
             self.skip_line(inputfile, ["Orbital"])
             self.skip_line(inputfile, ["dashes"])
+            if self.metadata["unrestricted"] and not self.alphaDone:
+                self.skip_line(inputfile, ["Alpha:"])
+                self.alphaDone = True
             self.skip_line(inputfile, ["#   Occ."])
             # self.skip_lines(inputfile, ["Orbital","dashes","#   Occ."]) # test results in warnings
-            homos = None
             line = next(inputfile)
-            while line.split()[1] == "2.00":
+            homos = None
+            occNumber = None
+            if self.metadata["unrestricted"]:
+                occNumber = "1.00"
+            else:
+                occNumber = "2.00"
+            while line.split()[1] == occNumber:
                 homos = int(line.split()[0])
                 line = next(inputfile)
-            self.set_attribute("homos", [homos - 1])  # Serenity starts at 1, python at 0
+            self.append_attribute("homos", homos - 1)  # Serenity starts at 1, python at 0
+
+            # repeating this for beta now:
+            if self.alphaDone:
+                while line.split()[0] != "Beta:":
+                    line = next(inputfile)
+                line = next(inputfile)
+                while line.split()[1] == occNumber:
+                    homos = int(line.split()[0])
+                    line = next(inputfile)
+                self.append_attribute("homos", homos - 1)  # Serenity starts at 1, python at 0
