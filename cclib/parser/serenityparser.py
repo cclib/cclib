@@ -29,9 +29,11 @@ class Serenity(logfileparser.Logfile):
         return label
 
     def before_parsing(self):
+        self.populationdict = {}
         self.unrestricted = False
 
     def after_parsing(self):
+        self.set_attribute("atomcharges", self.populationdict)
         super().after_parsing()
 
     def extract(self, inputfile, line):
@@ -46,7 +48,9 @@ class Serenity(logfileparser.Logfile):
             self.set_attribute("mult", int(line.split()[1]) + 1)
 
         # Extract from atoms: number of atoms, elements, and coordinates
-        if line.strip().startswith("Current Geometry (Angstrom):"):
+        if line.strip().startswith("Current Geometry (Angstrom):") and not getattr(
+            self, "atomcoords", []
+        ):
             line = next(inputfile)
             line = next(inputfile)
             atomnos = []
@@ -114,6 +118,24 @@ class Serenity(logfileparser.Logfile):
         if "Dispersion Correction (" in line:
             self.append_attribute("dispersionenergies", float(line.split()[3]))
 
+        # Extract charges from population analyzsis
+        populationtypes = ["CM5", "Mulliken", "Hirshfeld", "Becke", "IAO", "CHELPG"]
+        if line.strip().startswith(tuple(populationtypes)) and line.split()[1] == "Population":
+            key = line.split()[0]
+            line = next(inputfile)
+            self.skip_line(inputfile, "dashes")
+            self.skip_line(inputfile, "blank")
+            line = next(inputfile)
+            line = next(inputfile)
+            chargeList = []
+
+            while line.strip() and not line.strip().startswith("---"):
+                charge = float(line.split()[3])
+                chargeList.append(charge)
+                line = next(inputfile)
+
+            value = numpy.array(chargeList)
+            self.populationdict[key] = value
         # Extract index of HOMO
         if line.strip().startswith("Orbital Energies:"):
             line = next(inputfile)
