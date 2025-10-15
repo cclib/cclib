@@ -5,7 +5,11 @@
 
 """Parser for Serenity output files"""
 
-from cclib.parser import logfileparser, utils
+import os
+from pathlib import Path
+
+from cclib.parser import logfileparser
+from cclib.parser.utils import find_package
 
 import numpy
 
@@ -32,10 +36,33 @@ class Serenity(logfileparser.Logfile):
         self.unrestricted = False
 
     def after_parsing(self):
+        # Get molecular orbital information
+        orbpath = self.path.parent / self.systemname / f"{self.systemname}.orbs.res.h5"
+        if os.path.isfile(orbpath):
+            assert find_package("h5py"), (
+                "h5py is needed to read in molecular orbital info from Serenity."
+            )
+            import h5py
+
+            with h5py.File(orbpath, "r") as orbfile:
+                coeffs = [orbfile["coefficients"][:]]
+                eigenvalues = [orbfile["eigenvalues"][:].flatten()]
+                self.set_attribute("moenergies", eigenvalues)
+                self.set_attribute("mocoeffs", coeffs)
+                self.set_attribute("nmo", len(eigenvalues[0]))
+
         super().after_parsing()
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
+
+        self.path = Path(inputfile.filenames[0]).resolve()
+
+        # Extract system name
+        if line.strip().startswith("------------------------------------------------------------"):
+            line = next(inputfile)
+            if line.strip().startswith("System"):
+                self.systemname = line.split()[1]
 
         # Extract charge and multiplicity
         if line[5:11] == "Charge":
