@@ -8,9 +8,9 @@
 #  in a HF calculations.
 #=======================================================
 +system
-NAME dvb
-IDENTIFIER 1760301362424942351
-PATH ./dvb/
+NAME dvb_sp
+IDENTIFIER 1760560470009111059
+PATH ./dvb_sp/
 CHARGE 0
 IGNORECHARGE false
 SPIN 0

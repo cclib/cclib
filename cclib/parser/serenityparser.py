@@ -119,7 +119,7 @@ class Serenity(logfileparser.Logfile):
             self.skip_line(inputfile, ["Orbital"])
             self.skip_line(inputfile, ["dashes"])
             self.skip_line(inputfile, ["#   Occ."])
-            # self.skip_lines(inputfile, ["Orbital","dashes","#   Occ."]) # test results in warnings
+            # self.skip_lines(inputfile, ["Orbital","dashes","#   Occ."]) # TODO test results in warnings
             homos = None
             line = next(inputfile)
             while line.split()[1] == "2.00":

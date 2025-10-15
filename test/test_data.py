@@ -38,9 +38,9 @@ parser_names = [
     "ORCA",
     "Psi4",
     "QChem",
+    "Serenity",
     "Turbomole",
     "XTB",
-    "Serenity",
 ]
 all_parsers = {name: getattr(cclib.parser, name) for name in parser_names}
 
