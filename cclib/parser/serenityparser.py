@@ -77,7 +77,9 @@ class Serenity(logfileparser.Logfile):
             self.append_attribute("moments", origin)
 
         if line.strip().startswith("Dipole Moment:"):
-            self.skip_lines(inputfile, ["Dipole Moment", "dashes"])
+            self.skip_line(inputfile, ["Dipole Moment"])
+            self.skip_line(inputfile, ["dashes"])
+            # self.skip_lines(inputfile, ["Dipole Moment","dashes"]) # TODO test results in warnings
             line = self.skip_line(inputfile, "x")[0]
             dipole_data = line.split()
             x, y, z = map(float, dipole_data[:3])
