@@ -6,6 +6,7 @@
 """Parser for Serenity output files"""
 
 from cclib.parser import logfileparser, utils
+from cclib.parser.logfileparser import StopParsing
 
 import numpy
 
@@ -30,6 +31,7 @@ class Serenity(logfileparser.Logfile):
 
     def before_parsing(self):
         self.unrestricted = False
+        self.optRequested = False
 
     def after_parsing(self):
         super().after_parsing()
@@ -68,6 +70,16 @@ class Serenity(logfileparser.Logfile):
 
         if "Total Energy" in line:
             self.append_attribute("scfenergies", float(line.split()[3]))
+            if not self.optRequested and hasattr(self, "scfenergies"):
+                self.logger.warning(
+                    "Multiple instances of scfenergies despite no geometry optimization being done. This Serenity calculation possibly has several systems."
+                )
+
+        if "Total Supersystem Energy" in line:
+            self.logger.warning(
+                "Supersystem energy encountered. Serenity calculations involving subsystems (and by extension, supersystems) are currently not supported."
+            )
+            raise StopParsing()
 
         if line.strip().startswith("Origin chosen as:"):
             line = self.skip_line(inputfile, "Origin chosen as:")[0]
@@ -127,3 +139,6 @@ class Serenity(logfileparser.Logfile):
                 homos = int(line.split()[0])
                 line = next(inputfile)
             self.set_attribute("homos", [homos - 1])  # Serenity starts at 1, python at 0
+
+        if line.strip().startswith("Geometry Relaxation:"):
+            self.optRequested = True
