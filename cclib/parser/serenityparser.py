@@ -66,7 +66,7 @@ class Serenity(logfileparser.Logfile):
         if line[5:21] == "Basis Functions:":
             self.set_attribute("nbasis", int(line.split()[2]))
 
-        if "Total Energy" in line:
+        if line.startswith("Total Energy ("):
             self.append_attribute("scfenergies", float(line.split()[3]))
 
         if line.strip().startswith("Origin chosen as:"):
@@ -128,12 +128,14 @@ class Serenity(logfileparser.Logfile):
                 line = next(inputfile)
             self.set_attribute("homos", [homos - 1])  # Serenity starts at 1, python at 0
 
-        # if line.split()[1:3] == ["MP2", "Results"] or line.split()[1:3] = ["(Local-)MP2", "Results"]:
-        # line = next(inputfile)
-        # skip forward to Total Energy, but only for max 20 lines
-        # i = 0
-        # while not line.strip().startswith("Total Energy") and i < 20:
-        #    line = next(inputfile)
-        #    i = i + 1
-        #    print(line)
-        # self.append_attribute("mpenergies", line.split()[2])
+        if line.split()[1:3] == ["MP2", "Results"] or line.split()[1:3] == [
+            "(Local-)MP2",
+            "Results",
+        ]:
+            line = next(inputfile)
+            # skip forward to Total Energy, but only for max 20 lines
+            i = 0
+            while not line.strip().startswith("Total Energy") and i < 20:
+                line = next(inputfile)
+                i = i + 1
+            self.append_attribute("mpenergies", line.split()[2])
