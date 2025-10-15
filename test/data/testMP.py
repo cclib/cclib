@@ -5,7 +5,12 @@
 
 """Test Moller-Plesset logfiles in cclib"""
 
+from typing import TYPE_CHECKING
+
 import numpy
+
+if TYPE_CHECKING:
+    from cclib.parser.data import ccData
 
 
 class GenericMP2Test:
@@ -13,11 +18,11 @@ class GenericMP2Test:
 
     level = 2
 
-    def testsizeandshape(self, data) -> None:
+    def testsizeandshape(self, data: "ccData") -> None:
         """(MP2) Are the dimensions of mpenergies correct?"""
         assert data.mpenergies.shape == (len(data.scfenergies), self.level - 1)
 
-    def testsign(self, data) -> None:
+    def testsign(self, data: "ccData") -> None:
         """Are the Moller-Plesset corrections negative?"""
         if self.level == 2:
             corrections = data.mpenergies[:, 0] - data.scfenergies
@@ -53,11 +58,11 @@ class GenericMP5Test(GenericMP2Test):
 class GaussianMP2Test(GenericMP2Test):
     """Customized MP2 unittest"""
 
-    def testnocoeffs(self, data) -> None:
+    def testnocoeffs(self, data: "ccData") -> None:
         """Are natural orbital coefficients the right size?"""
         assert data.nocoeffs.shape == (data.nmo, data.nbasis)
 
-    def testnooccnos(self, data) -> None:
+    def testnooccnos(self, data: "ccData") -> None:
         """Are natural orbital occupation numbers the right size?"""
         assert data.nooccnos.shape == (data.nmo,)
 

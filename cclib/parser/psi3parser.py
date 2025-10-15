@@ -5,9 +5,14 @@
 
 """Parser for Psi3 output files."""
 
+from typing import TYPE_CHECKING
+
 from cclib.parser import logfileparser, utils
 
 import numpy
+
+if TYPE_CHECKING:
+    from cclib.parser.logfilewrapper import FileWrapper
 
 
 class Psi3(logfileparser.Logfile):
@@ -16,19 +21,19 @@ class Psi3(logfileparser.Logfile):
     def __init__(self, *args, **kwargs):
         super().__init__(logname="Psi3", *args, **kwargs)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"Psi3 log file {self.filename}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'Psi3("{self.filename}")'
 
-    def normalisesym(self, label):
+    def normalisesym(self, label: str) -> str:
         """Psi3 does not require normalizing symmetry labels."""
         return label
 
-    def extract(self, inputfile, line):
+    def extract(self, inputfile: "FileWrapper", line: str) -> None:
         """Extract information from the file object inputfile."""
 
         if "Version" in line:
