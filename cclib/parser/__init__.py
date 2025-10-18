@@ -34,5 +34,6 @@ from cclib.parser.orcaparser import ORCA
 from cclib.parser.psi3parser import Psi3
 from cclib.parser.psi4parser import Psi4
 from cclib.parser.qchemparser import QChem
+from cclib.parser.serenityparser import Serenity
 from cclib.parser.turbomoleparser import Turbomole
 from cclib.parser.xtbparser import XTB

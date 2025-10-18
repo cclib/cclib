@@ -68,6 +68,7 @@ class Serenity(logfileparser.Logfile):
 
         if "Total Energy" in line:
             self.append_attribute("scfenergies", float(line.split()[3]))
+
         if line.strip().startswith("Origin chosen as:"):
             line = self.skip_line(inputfile, "Origin chosen as:")[0]
             origin_data = line.replace("(", "").replace(")", "").replace(",", "").split()
@@ -76,10 +77,10 @@ class Serenity(logfileparser.Logfile):
             self.append_attribute("moments", origin)
 
         if line.strip().startswith("Dipole Moment:"):
-            line = self.skip_line(inputfile, "Dipole Moment")
-            line = self.skip_line(inputfile, "dashes")
-            line = self.skip_line(inputfile, "x")
-            line = self.skip_line(inputfile, "blank")[0]
+            self.skip_line(inputfile, ["Dipole Moment"])
+            self.skip_line(inputfile, ["dashes"])
+            # self.skip_lines(inputfile, ["Dipole Moment","dashes"]) # TODO test results in warnings
+            line = self.skip_line(inputfile, "x")[0]
             dipole_data = line.split()
             x, y, z = map(float, dipole_data[:3])
             dipoleRaw = [x, y, z]
@@ -87,8 +88,8 @@ class Serenity(logfileparser.Logfile):
             self.append_attribute("moments", dipole)
 
         if line.strip().startswith("Quadrupole Moment:"):
-            line = self.skip_line(inputfile, "Quadrupole Moment")
-            line = self.skip_line(inputfile, "dashes")
+            self.skip_line(inputfile, "Quadrupole Moment")
+            self.skip_line(inputfile, ["dashes"])
             line = self.skip_line(inputfile, "x")[0]
             q_data = line.split()
             xx, xy, xz = map(float, q_data[1:4])
@@ -101,6 +102,7 @@ class Serenity(logfileparser.Logfile):
             quadrupoleRaw = [xx, xy, xz, yy, yz, zz]
             quadrupole = [utils.convertor(value, "ebohr2", "Buckingham") for value in quadrupoleRaw]
             self.append_attribute("moments", quadrupole)
+
         if "Cycle" in line and "Mode" in line:
             line = next(inputfile)
             values = []
@@ -116,11 +118,13 @@ class Serenity(logfileparser.Logfile):
 
         # Extract index of HOMO
         if line.strip().startswith("Orbital Energies:"):
-            line = next(inputfile)
-            self.skip_lines(inputfile, ["dashes", "dashes"])
+            self.skip_line(inputfile, ["Orbital"])
+            self.skip_line(inputfile, ["dashes"])
+            self.skip_line(inputfile, ["#   Occ."])
+            # self.skip_lines(inputfile, ["Orbital","dashes","#   Occ."]) # TODO test results in warnings
             homos = None
             line = next(inputfile)
             while line.split()[1] == "2.00":
                 homos = int(line.split()[0])
                 line = next(inputfile)
-            self.set_attribute("homos", [homos])
+            self.set_attribute("homos", [homos - 1])  # Serenity starts at 1, python at 0
