@@ -138,4 +138,4 @@ class Serenity(logfileparser.Logfile):
             while not line.strip().startswith("Total Energy") and i < 20:
                 line = next(inputfile)
                 i = i + 1
-            self.append_attribute("mpenergies", line.split()[2])
+            self.append_attribute("mpenergies", [line.split()[2]])
