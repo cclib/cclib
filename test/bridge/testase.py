@@ -5,6 +5,9 @@
 
 """Tests for the cclib2ase bridge in cclib."""
 
+# mypy: disable-error-code="attr-defined"
+from typing import TYPE_CHECKING
+
 from cclib import ccopen
 from cclib.bridge import cclib2ase
 from cclib.parser.utils import find_package
@@ -18,11 +21,14 @@ import pytest
 from ase import Atoms
 from ase.calculators.emt import EMT
 
+if TYPE_CHECKING:
+    from pathlib import Path
+
 
 class ASETest:
     """Tests for the cclib2ase bridge in cclib."""
 
-    def test_makease_allows_optimization(self):
+    def test_makease_allows_optimization(self) -> None:
         """Ensure makease works from direct input."""
         h2 = cclib2ase.makease([[0, 0, 0], [0, 0, 0.7]], [1, 1])
 
@@ -36,7 +42,7 @@ class ASETest:
         assert np.isclose(data.mult, 1)
         assert np.isclose(data.temperature, 0)
 
-    def test_makecclib_retrieves_optimization(self):
+    def test_makecclib_retrieves_optimization(self) -> None:
         """Ensure makecclib works with native ASE Atoms objects."""
         h2 = Atoms("H2", positions=[[0, 0, 0], [0, 0, 0.7]])
 
@@ -50,7 +56,7 @@ class ASETest:
         assert np.isclose(data.mult, 1)
         assert np.isclose(data.temperature, 0)
 
-    def test_makease_works_with_openshells(self):
+    def test_makease_works_with_openshells(self) -> None:
         """Ensure makease works from parsed data for open-shell molecules."""
         # Make sure we can construct an open shell molecule,
         data = ccopen("data/ORCA/basicORCA5.0/dvb_sp_un.out").parse()
@@ -98,7 +104,7 @@ class ASETest:
         assert np.allclose(ase_data.scfenergies, [7.016800805424298])
         assert np.shape(ase_data.grads) == (1, ase_data.natom, 3)
 
-    def test_makease_works_with_closedshells(self):
+    def test_makease_works_with_closedshells(self) -> None:
         """Ensure makease works from parsed data for closed-shell molecules."""
         # Make sure we can construct a closed shell molecule.
         data = ccopen("data/ORCA/basicORCA5.0/dvb_ir.out").parse()
@@ -122,7 +128,7 @@ class ASETest:
         assert np.isclose(ase_data.natom, len(data.atomnos))
         assert np.isclose(ase_data.temperature, 0)
 
-    def test_write_and_read_trivial_trajectories(self, tmp_path):
+    def test_write_and_read_trivial_trajectories(self, tmp_path: "Path") -> None:
         """Ensure write and read trajectory files with single structures."""
         # An open-shell single point calculation.
         data = ccopen("data/ORCA/basicORCA5.0/dvb_sp_un.out").parse()
@@ -168,7 +174,7 @@ class ASETest:
         assert np.allclose(trajdata.atomcharges["mulliken"], data.atomcharges["mulliken"])
         # No atomspins here.
 
-    def test_write_and_read_opt_trajectories(self, tmp_path):
+    def test_write_and_read_opt_trajectories(self, tmp_path: "Path") -> None:
         """Ensure write and read trajectory files with optimizations."""
         # Geometry optimization.
         data = ccopen("data/ORCA/basicORCA5.0/dvb_gopt.out").parse()
@@ -192,7 +198,7 @@ class ASETest:
         assert np.allclose(trajdata.atomcharges["mulliken"], data.atomcharges["mulliken"])
         # No atomspins here.
 
-    def test_read_ase_native_trajectory(self):
+    def test_read_ase_native_trajectory(self) -> None:
         """Ensure we can read ASE native trajectory files."""
         trajdata = cclib2ase.read_trajectory("test/bridge/h2o.traj")
 

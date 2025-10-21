@@ -6,10 +6,14 @@
 """Parser for GAMESS-UK output files"""
 
 import re
+from typing import TYPE_CHECKING
 
 from cclib.parser import logfileparser, utils
 
 import numpy
+
+if TYPE_CHECKING:
+    from cclib.parser.logfilewrapper import FileWrapper
 
 
 class GAMESSUK(logfileparser.Logfile):
@@ -17,28 +21,28 @@ class GAMESSUK(logfileparser.Logfile):
 
     SCFRMS, SCFMAX, SCFENERGY = list(range(3))  # Used to index self.scftargets[]
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(logname="GAMESSUK", *args, **kwargs)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"GAMESS UK log file {self.filename}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'GAMESSUK("{self.filename}")'
 
-    def normalisesym(self, label):
+    def normalisesym(self, label: str) -> str:
         """Use standard symmetry labels instead of GAMESS UK labels."""
         label = label.replace("''", '"').replace("+", "").replace("-", "")
         ans = label[0].upper() + label[1:]
         return ans
 
-    def before_parsing(self):
+    def before_parsing(self) -> None:
         # used for determining whether to add a second mosyms, etc.
         self.betamosyms = self.betamoenergies = self.betamocoeffs = False
 
-    def extract(self, inputfile, line):
+    def extract(self, inputfile: "FileWrapper", line: str) -> None:
         """Extract information from the file object inputfile."""
 
         # Extract the version number and optionally the revision number.

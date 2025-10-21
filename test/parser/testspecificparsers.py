@@ -11,7 +11,7 @@ import io
 class NormalisesymTest:
     # Not needed: DALTON, MOPAC, NWChem, ORCA, QChem
 
-    def test_normalisesym_adf(self):
+    def test_normalisesym_adf(self) -> None:
         from cclib.parser.adfparser import ADF
 
         sym = ADF(io.StringIO("dummyfile")).normalisesym
@@ -49,7 +49,7 @@ class NormalisesymTest:
         ]
         assert list(map(sym, labels)) == ref
 
-    def test_normalisesym_cfour(self):
+    def test_normalisesym_cfour(self) -> None:
         from cclib.parser.cfourparser import CFOUR
 
         sym = CFOUR(io.StringIO("dummyfile")).normalisesym
@@ -95,7 +95,7 @@ class NormalisesymTest:
         ]
         assert list(map(sym, labels)) == ref
 
-    def test_normalisesym_gamess(self):
+    def test_normalisesym_gamess(self) -> None:
         from cclib.parser.gamessparser import GAMESS
 
         sym = GAMESS(io.StringIO("dummyfile")).normalisesym
@@ -103,7 +103,7 @@ class NormalisesymTest:
         ref = ["A", "A1", "A1g", "A'", 'A"', "Ag"]
         assert list(map(sym, labels)) == ref
 
-    def test_normalisesym_gamessuk(self):
+    def test_normalisesym_gamessuk(self) -> None:
         from cclib.parser.gamessukparser import GAMESSUK
 
         sym = GAMESSUK(io.StringIO("dummyfile")).normalisesym
@@ -111,7 +111,7 @@ class NormalisesymTest:
         ref = ["A", "A1", "Ag", "A'", 'A"', 'A"', 'A1"', 'A1"', "E1", "E1"]
         assert list(map(sym, labels)) == ref
 
-    def test_normalisesym_gaussian(self):
+    def test_normalisesym_gaussian(self) -> None:
         from cclib.parser.gaussianparser import Gaussian
 
         sym = Gaussian(io.StringIO("dummyfile")).normalisesym
@@ -119,7 +119,7 @@ class NormalisesymTest:
         ref = ["A1", "Ag", "A1g", "sigma", "pi", "phi", "delta", "delta.u", "sigma.g"]
         assert list(map(sym, labels)) == ref
 
-    def test_normalisesym_jaguar(self):
+    def test_normalisesym_jaguar(self) -> None:
         from cclib.parser.jaguarparser import Jaguar
 
         sym = Jaguar(io.StringIO("dummyfile")).normalisesym
@@ -127,7 +127,7 @@ class NormalisesymTest:
         ref = ["A", "A1", "Ag", "A'", 'A"', "A1'", 'A1"', 'E1"']
         assert list(map(sym, labels)) == ref
 
-    def test_normalisesym_molcas(self):
+    def test_normalisesym_molcas(self) -> None:
         from cclib.parser.molcasparser import Molcas
 
         sym = Molcas(io.StringIO("dummyfile")).normalisesym
@@ -135,7 +135,7 @@ class NormalisesymTest:
         ref = ["A", "A1", "Ag"]
         assert list(map(sym, labels)) == ref
 
-    def test_normalisesym_molpro(self):
+    def test_normalisesym_molpro(self) -> None:
         from cclib.parser.molproparser import Molpro
 
         sym = Molpro(io.StringIO("dummyfile")).normalisesym
@@ -143,7 +143,7 @@ class NormalisesymTest:
         ref = ["A'", "A''"]
         assert list(map(sym, labels)) == ref
 
-    def test_normalisesym_psi4(self):
+    def test_normalisesym_psi4(self) -> None:
         from cclib.parser.psi4parser import Psi4
 
         sym = Psi4(io.StringIO("dummyfile")).normalisesym
@@ -151,7 +151,7 @@ class NormalisesymTest:
         ref = ["A'", 'A"']
         assert list(map(sym, labels)) == ref
 
-    def test_normalisesym_turbomole(self):
+    def test_normalisesym_turbomole(self) -> None:
         from cclib.parser.turbomoleparser import Turbomole
 
         sym = Turbomole(io.StringIO("dummyfile")).normalisesym

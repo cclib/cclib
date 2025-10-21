@@ -14,6 +14,7 @@ import numpy
 
 if TYPE_CHECKING:
     from cclib.parser.logfilewrapper import FileWrapper
+
 SHELL_ORBITALS = {
     0: ["S"],
     1: ["PX", "PY", "PZ"],
@@ -31,7 +32,7 @@ SHELL_START = {0: 1, 1: 2, -1: 2, 2: 3, -2: 3, 3: 4, -3: 4}
 T = TypeVar("T")
 
 
-def _shell_to_orbitals(type, offset):
+def _shell_to_orbitals(type: int, offset: int) -> List[str]:
     """Convert a Fchk shell type and offset to a list of string representations.
 
     For example, shell type = -2 corresponds to d orbitals (spherical basis) with
@@ -52,15 +53,15 @@ class FChk(logfileparser.Logfile):
         super().__init__(logname="FChk", *args, **kwargs)
         self.start = True
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"Formatted checkpoint file {self.filename}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'FCHK("{self.filename}")'
 
-    def normalisesym(self, symlabel):
+    def normalisesym(self, symlabel: str) -> str:
         """Just return label"""
         return symlabel
 

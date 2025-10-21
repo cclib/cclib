@@ -47,7 +47,7 @@ def process_logfiles(filenames: Iterable[str], output: Optional[str], identifier
         print(df)
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-O",

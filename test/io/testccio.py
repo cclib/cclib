@@ -73,13 +73,13 @@ class ccopenTest:
     def setup_method(self) -> None:
         self.ccopen = cclib.io.ccio.ccopen
 
-    def test_ccopen_fail(self):
+    def test_ccopen_fail(self) -> None:
         """Does the function fail as expected?"""
         assert self.ccopen("", quiet=True) is None
         assert self.ccopen([], quiet=True) is None
         assert self.ccopen(None, quiet=True) is None
 
-    def test_list_of_filenames(self):
+    def test_list_of_filenames(self) -> None:
         """Can we ccopen a list of filenames (https://github.com/cclib/cclib/issues/350)?"""
         absdir = os.path.dirname(os.path.abspath(__file__))
         rootdir = os.path.join(os.sep, *absdir.split(os.sep)[:-2])
@@ -89,12 +89,12 @@ class ccopenTest:
         assert self.ccopen(filepaths) is not None
         assert self.ccopen(filepaths).parse() is not None
 
-    def test_cjson_empty_tempfile(self):
+    def test_cjson_empty_tempfile(self) -> None:
         """Do we get a CJSON object when the keyword argument used?"""
         with tempfile.NamedTemporaryFile() as tf:
             assert isinstance(self.ccopen(tf.name, cjson=True), cclib.io.cjsonreader.CJSON)
 
-    def test_url_io(self):
+    def test_url_io(self) -> None:
         """Does the function works with URLs such good as with filenames?"""
         fpath = os.path.join(__datadir__, "data")
         for fname in URL_FILES:
@@ -102,7 +102,7 @@ class ccopenTest:
                 tolists=True
             ) == self.ccopen(BASE_URL + fname).parse().getattributes(tolists=True)
 
-    def test_multi_url_io(self):
+    def test_multi_url_io(self) -> None:
         """Does the function works with multiple URLs such good as with multiple filenames?"""
         fpath = os.path.join(__datadir__, "data")
         filenames = ["Molpro/basicMolpro2012/dvb_gopt.out", "Molpro/basicMolpro2012/dvb_gopt.log"]
@@ -113,25 +113,25 @@ class ccopenTest:
         ).parse().getattributes(tolists=True)
 
     @pytest.mark.skip("This should also work if cjsonreader supported streams.")
-    def test_cjson(self):
+    def test_cjson(self) -> None:
         """Do we get a CJSON object then keyword argument used?"""
         assert isinstance(self.ccopen(StringIO(""), cjson=True), cclib.io.cjsonreader.CJSON)
 
-    def test_bz2_io(self):
+    def test_bz2_io(self) -> None:
         """Can we read from a bz2 archive?"""
         file_path = os.path.join(__filedir__, "data/dvb_gopt.out.bz2")
         # Test both single-file and multi-file parsing.
         assert self.ccopen(file_path) is not None
         assert self.ccopen([file_path, file_path]) is not None
 
-    def test_gz_io(self):
+    def test_gz_io(self) -> None:
         """Can we read from a gz archive?"""
         file_path = os.path.join(__filedir__, "data/dvb_gopt.out.gz")
         # Test both single-file and multi-file parsing.
         assert self.ccopen(file_path) is not None
         assert self.ccopen([file_path, file_path]) is not None
 
-    def test_zip_io(self):
+    def test_zip_io(self) -> None:
         """Can we read from a zip archive?"""
         file_path = os.path.join(__filedir__, "data/dvb_gopt.out.zip")
         # Test both single-file and multi-file parsing.

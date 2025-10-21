@@ -38,11 +38,11 @@ class Hirshfeld(Stockholder):
         """
         super().__init__(data, volume, proatom_path, progress, loglevel, logname)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"Hirshfeld charges of {self.data}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f"Hirshfeld({self.data})"
 

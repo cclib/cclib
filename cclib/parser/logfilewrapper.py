@@ -14,10 +14,10 @@ import logging
 import pathlib
 import re
 import sys
-import typing
 import zipfile
 from collections.abc import Iterator
 from tempfile import NamedTemporaryFile
+from typing import IO, List, Tuple
 from urllib.error import URLError
 from urllib.request import urlopen
 
@@ -33,7 +33,7 @@ URL_PATTERN = re.compile(
 )
 
 
-def logerror(error):
+def logerror(error) -> Tuple[str, int]:
     """
     Log a unicode decode/encode error to the logger and return a replacement character.
     """
@@ -133,7 +133,7 @@ class FileWrapper(FileWrapperBase):
     @classmethod
     def open_log_file(
         self, source, mode: str = "r", encoding: str = "utf-8", errors: str = "logerror"
-    ) -> typing.Tuple[str, typing.IO]:
+    ) -> Tuple[str, IO]:
         """
         Open a possibly compressed file, returning both the filename of the file and an open file object.
         """
@@ -215,13 +215,13 @@ class FileWrapper(FileWrapperBase):
 
         return filename, fileobject
 
-    def __enter__(self):
+    def __enter__(self) -> "FileWrapper":
         """
         Enter context.
         """
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback):
+    def __exit__(self, exc_type, exc_value, traceback) -> None:
         """
         Exit context
         """
@@ -255,7 +255,7 @@ class FileWrapper(FileWrapperBase):
         """
         return self.last_lines[-1]
 
-    def __iter__(self):
+    def __iter__(self) -> "FileWrapper":
         return self
 
     # TODO: support size parameter.
@@ -265,7 +265,7 @@ class FileWrapper(FileWrapperBase):
         """
         return next(self)
 
-    def readlines(self) -> typing.List[str]:
+    def readlines(self) -> List[str]:
         """
         Read all the lines from this file.
         """
@@ -316,7 +316,7 @@ class FileWrapper(FileWrapperBase):
     #                 # Seek forwards please.
     #                 file_size = self.sizes[self.file_pointer]
 
-    def reset(self):
+    def reset(self) -> None:
         # Equivalent to seeking to 0 for all our files.
         for file in self.files:
             file.seek(0, 0)
@@ -324,7 +324,7 @@ class FileWrapper(FileWrapperBase):
         self.file_pointer = 0
         self.pos = 0
 
-    def finish(self):
+    def finish(self) -> None:
         # Equivalent to seeking to 2 for all our files.
         for file in self.files:
             file.seek(0, 2)

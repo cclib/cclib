@@ -5,25 +5,30 @@
 
 """Test NMR logfiles in cclib."""
 
+from typing import TYPE_CHECKING
+
 import numpy
 import pytest
+
+if TYPE_CHECKING:
+    from cclib.parser.data import ccData
 
 
 class GenericNMRTest:
     """Generic NMR unittest"""
 
-    def testkeys(self, data) -> None:
+    def testkeys(self, data: "ccData") -> None:
         """Check dictionary keys are ints."""
         key_types = {type(key) for key in data.nmrtensors.keys()}
         assert len(key_types) == 1 and int in key_types
 
-    def testsize(self, data) -> None:
+    def testsize(self, data: "ccData") -> None:
         """Check to make sure there are the correct number of tensors parsed"""
         assert len(data.nmrtensors) == data.natom
         assert len(data.nmrtensors[0]) == 4
         assert data.nmrtensors[0]["total"].shape == (3, 3)
 
-    def testisotropic(self, data) -> None:
+    def testisotropic(self, data: "ccData") -> None:
         """Check the total isotropic value matches the computed value."""
         tensor = data.nmrtensors[0]
         total = 0.0
@@ -37,7 +42,7 @@ class GenericNMRTest:
 class GenericNMRCouplingTest:
     """Generic NMR spin-spin coupling unittest"""
 
-    def testkeys(self, data) -> None:
+    def testkeys(self, data: "ccData") -> None:
         """Check dictionary keys are ints."""
         assert all(
             {
@@ -54,14 +59,14 @@ class GenericNMRCouplingTest:
             ]
         )
 
-    def testsize(self, data) -> None:
+    def testsize(self, data: "ccData") -> None:
         """Check to make sure there are the correct number of tensors parsed"""
         assert len(data.nmrcouplingtensors) == 139
         tensor = list(list(data.nmrcouplingtensors.values())[0].values())[0]
         assert len(tensor) == 7
         assert tensor["total"].shape == (3, 3)
 
-    def testisotropic(self, data) -> None:
+    def testisotropic(self, data: "ccData") -> None:
         """Check the total isotropic value matches the computed value."""
         tensor = list(list(data.nmrcouplingtensors.values())[0].values())[0]
         # Check the total isotropic value matches the computed value.

@@ -6,34 +6,45 @@
 """Calculate properties for electrons."""
 
 import logging
+from typing import TYPE_CHECKING, Optional
 
 from cclib.method.calculationmethod import Method
+
+if TYPE_CHECKING:
+    from cclib.parser.data import ccData
+    from cclib.progress import Progress
 
 
 class Electrons(Method):
     """A container for methods pertaining to electrons."""
 
-    def __init__(self, data, progress=None, loglevel=logging.INFO, logname="Log"):
+    def __init__(
+        self,
+        data: "ccData",
+        progress: Optional["Progress"] = None,
+        loglevel: int = logging.INFO,
+        logname: str = "Log",
+    ):
         super().__init__(data, progress, loglevel, logname)
         self.required_attrs = ("atomnos", "charge", "coreelectrons", "homos")
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Returns a string representation of the object."""
         return "Electrons"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Returns a representation of the object."""
         return "Electrons"
 
-    def alpha(self):
+    def alpha(self) -> int:
         """Number of alpha electrons"""
         return self.data.homos[0] + 1
 
-    def beta(self):
+    def beta(self) -> int:
         """Number of beta electrons"""
         return self.data.homos[-1] + 1
 
-    def count(self, core=False):
+    def count(self, core: bool = False) -> int:
         """Returns the electron count in system.
 
         Normally returns electrons used in calculation, but will include

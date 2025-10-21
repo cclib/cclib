@@ -8,9 +8,8 @@ import io
 import logging
 import os
 import pathlib
-import typing
 import warnings
-from typing import Optional, Union
+from typing import IO, TYPE_CHECKING, Iterable, List, Optional, Type, Union
 
 from cclib.io import (
     cjsonreader,
@@ -21,10 +20,11 @@ from cclib.io import (
     xyzreader,
     xyzwriter,
 )
-from cclib.parser import data, logfileparser
+from cclib.parser import logfileparser
 from cclib.parser.adfparser import ADF
 from cclib.parser.cfourparser import CFOUR
 from cclib.parser.daltonparser import DALTON
+from cclib.parser.data import ccData
 from cclib.parser.fchkparser import FChk
 from cclib.parser.gamessdatparser import GAMESSDAT
 from cclib.parser.gamessparser import GAMESS
@@ -53,6 +53,9 @@ if _has_cclib2openbabel:
 _has_pandas = find_package("pandas")
 if _has_pandas:
     import pandas as pd
+
+if TYPE_CHECKING:
+    from cclib.io.filewriter import Writer
 
 # Parser choice is triggered by certain phrases occurring the logfile. Where these
 # strings are unique, we can set the parser and break. In other cases, the situation
@@ -120,7 +123,7 @@ def is_xyz(inputfile: FileWrapper) -> bool:
     )
 
 
-def guess_filetype(inputfile) -> Optional[logfileparser.Logfile]:
+def guess_filetype(inputfile: FileWrapper) -> Optional[Type[logfileparser.Logfile]]:
     """Try to guess the filetype by searching for trigger strings."""
     filetype = None
     logger = logging.getLogger("cclib")
@@ -141,7 +144,7 @@ def guess_filetype(inputfile) -> Optional[logfileparser.Logfile]:
     return filetype
 
 
-def sort_turbomole_outputs(fileinputs):
+def sort_turbomole_outputs(fileinputs: Iterable[str]) -> List[str]:
     """
     Sorts a list of inputs (or list of log files) according to the order
     required by the Turbomole parser for correct parsing. Unrecognised
@@ -164,8 +167,8 @@ def sort_turbomole_outputs(fileinputs):
 
 
 def ccread(
-    source: Union[str, typing.IO, FileWrapper, typing.List[Union[str, typing.IO]]], *args, **kwargs
-):
+    source: Union[str, IO, FileWrapper, List[Union[str, IO]]], *args, **kwargs
+) -> Optional[ccData]:
     """Attempt to open and read computational chemistry data from a file.
 
     If the file is not appropriate for cclib parsers, a fallback mechanism
@@ -197,7 +200,7 @@ def ccread(
 
 
 def ccopen(
-    source: Union[str, typing.IO, FileWrapper, typing.List[Union[str, typing.IO]]],
+    source: Union[str, IO, FileWrapper, List[Union[str, IO]]],
     *args,
     quiet: bool = False,
     cjson: bool = False,
@@ -273,7 +276,7 @@ def ccopen(
         logger.error("Failed to open logfile", exc_info=True)
 
 
-def fallback(source):
+def fallback(source) -> Optional[ccData]:
     """Attempt to read standard molecular formats using other libraries.
 
     Currently this will read XYZ files with OpenBabel, but this can easily
@@ -301,15 +304,15 @@ def fallback(source):
 
 
 def ccwrite(
-    ccobj,
-    outputtype=None,
-    outputdest=None,
+    ccobj: ccData,
+    outputtype: Optional[str] = None,
+    outputdest: Optional[str] = None,
     indices=None,
-    terse=False,
-    returnstr=False,
+    terse: bool = False,
+    returnstr: bool = False,
     *args,
     **kwargs,
-):
+) -> Optional[str]:
     """Write the parsed data from an outputfile to a standard chemical
     representation.
 
@@ -336,7 +339,7 @@ def ccwrite(
     if isinstance(ccobj, logfileparser.Logfile):
         jobfilename = ccobj.filename
         ccdata = ccobj.parse()
-    elif isinstance(ccobj, data.ccData):
+    elif isinstance(ccobj, ccData):
         jobfilename = None
         ccdata = ccobj
     else:
@@ -371,7 +374,9 @@ def ccwrite(
         return output
 
 
-def _determine_output_format(outputtype, outputdest):
+def _determine_output_format(
+    outputtype: Optional[str], outputdest: Optional[str]
+) -> Type["Writer"]:
     """
     Determine the correct output format.
 
@@ -412,7 +417,7 @@ def _determine_output_format(outputtype, outputdest):
     return outputclass
 
 
-def _check_pandas(found_pandas):
+def _check_pandas(found_pandas: bool) -> None:
     if not found_pandas:
         raise ImportError("You must install `pandas` to use this function")
 
@@ -435,7 +440,7 @@ def ccframe(ccobjs, *args, **kwargs):
         if isinstance(ccobj, logfileparser.Logfile):
             jobfilename = ccobj.filename
             ccdata = ccobj.parse()
-        elif isinstance(ccobj, data.ccData):
+        elif isinstance(ccobj, ccData):
             jobfilename = None
             ccdata = ccobj
         else:

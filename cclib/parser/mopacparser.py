@@ -13,14 +13,18 @@
 
 import math
 import re
+from typing import TYPE_CHECKING
 
 from cclib.parser import logfileparser, utils
 
 import numpy
 import scipy.constants as spc
 
+if TYPE_CHECKING:
+    from cclib.parser.logfilewrapper import FileWrapper
 
-def symbol2int(symbol):
+
+def symbol2int(symbol: str) -> int:
     t = utils.PeriodicTable()
     return t.number[symbol]
 
@@ -31,19 +35,19 @@ class MOPAC(logfileparser.Logfile):
     def __init__(self, *args, **kwargs):
         super().__init__(logname="MOPAC", *args, **kwargs)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"MOPAC log file {self.filename}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'MOPAC("{self.filename}")'
 
-    def normalisesym(self, label):
+    def normalisesym(self, label: str) -> str:
         """MOPAC does not require normalizing symmetry labels."""
         return label
 
-    def before_parsing(self):
+    def before_parsing(self) -> None:
         # TODO
 
         # Defaults
@@ -81,7 +85,7 @@ class MOPAC(logfileparser.Logfile):
             "NONET": 9,
         }
 
-    def extract(self, inputfile, line):
+    def extract(self, inputfile: "FileWrapper", line: str) -> None:
         """Extract information from the file object inputfile."""
 
         # Extract the package version.

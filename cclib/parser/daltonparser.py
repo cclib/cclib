@@ -6,10 +6,14 @@
 """Parser for DALTON output files"""
 
 import re
+from typing import TYPE_CHECKING
 
 from cclib.parser import logfileparser, utils
 
 import numpy
+
+if TYPE_CHECKING:
+    from cclib.parser.logfilewrapper import FileWrapper
 
 
 class DALTON(logfileparser.Logfile):
@@ -67,7 +71,7 @@ class DALTON(logfileparser.Logfile):
 
         return coords
 
-    def extract(self, inputfile, line):
+    def extract(self, inputfile: "FileWrapper", line: str) -> None:
         """Extract information from the file object inputfile."""
 
         # Extract the version number and optionally the Git revision

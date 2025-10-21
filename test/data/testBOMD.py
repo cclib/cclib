@@ -5,6 +5,11 @@
 
 """Test Born-Oppenheimer molecular dynamics (BOMD) logfiles in cclib."""
 
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from cclib.parser.data import ccData
+
 
 class GenericBOMDTest:
     """Generic Born-Oppenheimer molecular dynamics unittest"""
@@ -15,19 +20,19 @@ class GenericBOMDTest:
     nsteps = 35
     nenergies = 36
 
-    def testdimscfenergies(self, data) -> None:
+    def testdimscfenergies(self, data: "ccData") -> None:
         """Are the number of parsed energies consistent with the number of MD
         steps?
         """
         assert data.scfenergies.shape == (self.nenergies,)
 
-    def testdimatomcoords(self, data) -> None:
+    def testdimatomcoords(self, data: "ccData") -> None:
         """Are the number of parsed geometries consistent with the number of
         MD steps?
         """
         assert data.atomcoords.shape == (self.nenergies, 20, 3)
 
-    def testdimtime(self, data) -> None:
+    def testdimtime(self, data: "ccData") -> None:
         """Are the number of time points consistent with the number of MD
         steps?
         """

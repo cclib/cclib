@@ -5,7 +5,7 @@
 
 """Bridge for using cclib data in ASE (https://wiki.fysik.dtu.dk/ase/)."""
 
-from typing import Optional, Sequence
+from typing import TYPE_CHECKING, Optional, Sequence, Union
 
 from cclib.parser.data import ccData
 from cclib.parser.utils import find_package
@@ -17,6 +17,9 @@ if _found_ase:
     from ase import Atoms, units
     from ase.calculators.calculator import PropertyNotImplementedError
     from ase.io.trajectory import Trajectory
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 def _check_ase(found_ase: bool) -> None:
@@ -50,7 +53,10 @@ def makease(atomcoords, atomnos, atomcharges=None, atomspins=None, atommasses=No
 
 
 def write_trajectory(
-    filename: str, ccdata: ccData, popname: str = "mulliken", index: Optional[Sequence[int]] = None
+    filename: Union[str, "Path"],
+    ccdata: ccData,
+    popname: str = "mulliken",
+    index: Optional[Sequence[int]] = None,
 ) -> None:
     """Write an ASE Trajectory object from a ccData object.
 
