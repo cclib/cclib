@@ -474,8 +474,7 @@ def read_from_cube(filepath):
             datas.append(data)
 
         datas = numpy.array(datas)
-        tmp = datas[0]
-        tmp = tmp.flatten()
+        tmp = datas[0].flatten()
 
         """
         tmp = []
