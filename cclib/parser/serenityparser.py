@@ -159,8 +159,12 @@ class Serenity(logfileparser.Logfile):
             "(Local-)MP2",
             "Results",
         ]:
+            # Serenity has no higher order than MP2 and cannot do geometry optimization with it,
+            # but still may contain several MP2 energies in one file.
+            if hasattr(self, "mpenergies"):
+                self.logger.warning("Warning: Multiple MP2 energies in Serenity!")
             line = next(inputfile)
-            # skip forward to Total Energy, but only for max 20 lines
+            # skip forward to string "Total Energy", but only for max 20 lines
             i = 0
             while not line.strip().startswith("Total Energy") and i < 20:
                 line = next(inputfile)
