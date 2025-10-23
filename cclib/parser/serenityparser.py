@@ -8,8 +8,7 @@
 import os
 from pathlib import Path
 
-from cclib.parser import logfileparser
-from cclib.parser.utils import find_package
+from cclib.parser import logfileparser, utils
 
 import numpy
 
@@ -39,7 +38,7 @@ class Serenity(logfileparser.Logfile):
         # Get molecular orbital information
         orbpath = self.path.parent / self.systemname / f"{self.systemname}.orbs.res.h5"
         if os.path.isfile(orbpath):
-            assert find_package("h5py"), (
+            assert utils.find_package("h5py"), (
                 "h5py is needed to read in molecular orbital info from Serenity."
             )
             import h5py
