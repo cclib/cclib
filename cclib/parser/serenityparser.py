@@ -31,6 +31,7 @@ class Serenity(logfileparser.Logfile):
     def before_parsing(self):
         self.populationdict = {}
         self.unrestricted = False
+        self.populationtypes = ["CM5", "Mulliken", "Hirshfeld", "Becke", "IAO", "CHELPG"]
 
     def after_parsing(self):
         self.set_attribute("atomcharges", self.populationdict)
@@ -84,8 +85,8 @@ class Serenity(logfileparser.Logfile):
             line = self.skip_line(inputfile, "blank")[0]
             dipole_data = line.split()
             x, y, z = map(float, dipole_data[:3])
-            dipoleRaw = [x, y, z]
-            dipole = [utils.convertor(value, "ebohr", "Debye") for value in dipoleRaw]
+            dipole_raw = [x, y, z]
+            dipole = [utils.convertor(value, "ebohr", "Debye") for value in dipole_raw]
             self.append_attribute("moments", dipole)
 
         if line.strip().startswith("Quadrupole Moment:"):
@@ -100,8 +101,10 @@ class Serenity(logfileparser.Logfile):
             line = self.skip_line(inputfile, "y")[0]
             q_data = line.split()
             zz = float(q_data[3])
-            quadrupoleRaw = [xx, xy, xz, yy, yz, zz]
-            quadrupole = [utils.convertor(value, "ebohr2", "Buckingham") for value in quadrupoleRaw]
+            quadrupole_raw = [xx, xy, xz, yy, yz, zz]
+            quadrupole = [
+                utils.convertor(value, "ebohr2", "Buckingham") for value in quadrupole_raw
+            ]
             self.append_attribute("moments", quadrupole)
         if "Cycle" in line and "Mode" in line:
             line = next(inputfile)
@@ -116,24 +119,24 @@ class Serenity(logfileparser.Logfile):
         if "Dispersion Correction (" in line:
             self.append_attribute("dispersionenergies", float(line.split()[3]))
 
-        # Extract charges from population analyzsis
-        populationtypes = ["CM5", "Mulliken", "Hirshfeld", "Becke", "IAO", "CHELPG"]
-        if line.strip().startswith(tuple(populationtypes)) and line.split()[1] == "Population":
+        # Extract charges from population analysis
+        if line.strip().startswith(tuple(self.populationtypes)) and line.split()[1] == "Population":
             key = line.split()[0]
             line = next(inputfile)
             self.skip_line(inputfile, "dashes")
             self.skip_line(inputfile, "blank")
             line = next(inputfile)
             line = next(inputfile)
-            chargeList = []
+            chargelist = []
 
             while line.strip() and not line.strip().startswith("---"):
                 charge = float(line.split()[3])
-                chargeList.append(charge)
+                chargelist.append(charge)
                 line = next(inputfile)
 
-            value = numpy.array(chargeList)
+            value = numpy.array(chargelist)
             self.populationdict[key] = value
+
         # Extract index of HOMO
         if line.strip().startswith("Orbital Energies:"):
             line = next(inputfile)
