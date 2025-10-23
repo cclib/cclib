@@ -423,7 +423,7 @@ def read_from_cube(filepath):
 
         # Lines 3-6 specify the grid in Cartesian coordinates
         # Line 3 -- [Number of atoms] [Origin x] [Origin y] [Origin z]
-        natom = int(lines[2].split()[0])  # noqa: F841
+        natom = int(lines[2].split()[0])
         has_labels = natom < 0
         originx, originy, originz = numpy.asanyarray(lines[2].split()[1:], dtype=float)
         num_val = int(lines[2].split()[4]) if len(lines[2]) == 5 else 1
