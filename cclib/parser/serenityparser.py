@@ -32,6 +32,8 @@ class Serenity(logfileparser.Logfile):
 
     def before_parsing(self):
         self.unrestricted = False
+        self.metadata["coord_type"] = "xyz"
+        self.metadata["package"] = "Serenity"
 
     def after_parsing(self):
         super().after_parsing()
@@ -47,8 +49,6 @@ class Serenity(logfileparser.Logfile):
             self.set_attribute("mult", int(line.split()[1]) + 1)
 
         # metadata
-        self.metadata["coord_type"] = "xyz"
-        self.metadata["package"] = "Serenity"
         if line[4:23] == "Version           :":
             self.metadata["package_version"] = line.split()[2]
         if line[5:15] == "Basis Set:":
@@ -74,7 +74,7 @@ class Serenity(logfileparser.Logfile):
         if line.strip().startswith("Warning") or line.strip().startswith("WARNING"):
             if "warnings" not in self.metadata:
                 self.metadata["warnings"] = []
-            # just adding the entire warning line for now
+            # TODO just adding the entire warning line for now. Warnings may be longer than this line.
             self.metadata["warning"].append(line)
 
         # Extract from atoms: number of atoms, elements, and coordinates
