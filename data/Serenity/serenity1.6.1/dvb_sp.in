@@ -1,5 +1,5 @@
 +system 
- name dvb
+ name dvb_sp
  geometry dvb_sp.xyz
  method dft
  +dft
@@ -11,10 +11,10 @@
 -system
 
 +task scf
- act dvb
+ act dvb_sp
 -task
 
 +task multi
- act dvb
+ act dvb_sp
  highestorder 2
 -task

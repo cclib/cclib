@@ -66,6 +66,19 @@ class Serenity(logfileparser.Logfile):
         if line[5:21] == "Basis Functions:":
             self.set_attribute("nbasis", int(line.split()[2]))
 
+        # Extract SCF thresholds
+        if line.strip().startswith("Energy Threshold:"):
+            scftargets = []
+            ethresh = float(line.split()[2])
+            line = next(inputfile)
+            if "RMSD[D]" in line:
+                rmsd = float(line.split()[2])
+                line = next(inputfile)
+                if "DIIS" in line:
+                    diis = float(line.split()[2])
+                    scftargets.append(numpy.array([ethresh, rmsd, diis]))
+                    self.set_attribute("scftargets", scftargets)
+
         if line.startswith("Total Energy ("):
             self.append_attribute("scfenergies", float(line.split()[3]))
 
@@ -77,8 +90,9 @@ class Serenity(logfileparser.Logfile):
             self.append_attribute("moments", origin)
 
         if line.strip().startswith("Dipole Moment:"):
-            self.skip_line(inputfile, "Dipole Moment")
+            self.skip_line(inputfile, ["Dipole Moment"])
             self.skip_line(inputfile, ["dashes"])
+            # self.skip_lines(inputfile, ["Dipole Moment","dashes"]) # TODO test results in warnings
             line = self.skip_line(inputfile, "x")[0]
             dipole_data = line.split()
             x, y, z = map(float, dipole_data[:3])
@@ -115,12 +129,25 @@ class Serenity(logfileparser.Logfile):
         if "Dispersion Correction (" in line:
             self.append_attribute("dispersionenergies", float(line.split()[3]))
 
+        if "Total Local-CCSD Energy" in line:
+            self.set_attribute("ccenergies", float(line.split()[3]))
+            self.metadata["methods"].append("Local CCSD")
+        if "Total Local-CCSD(T0) Energy" in line:
+            self.set_attribute("ccenergies", float(line.split()[3]))
+            self.metadata["methods"].append("Local CCSD(T0)")
+        if "Total CCSD Energy" in line:
+            self.set_attribute("ccenergies", float(line.split()[3]))
+            self.metadata["methods"].append("CCSD")
+        if "Total CCSD(T) Energy" in line:
+            self.set_attribute("ccenergies", float(line.split()[3]))
+            self.metadata["methods"].append("CCSD(T)")
+
         # Extract index of HOMO
         if line.strip().startswith("Orbital Energies:"):
             self.skip_line(inputfile, ["Orbital"])
             self.skip_line(inputfile, ["dashes"])
             self.skip_line(inputfile, ["#   Occ."])
-            # self.skip_lines(inputfile, ["Orbital","dashes","#   Occ."]) # test results in warnings
+            # self.skip_lines(inputfile, ["Orbital","dashes","#   Occ."]) # TODO test results in warnings
             homos = None
             line = next(inputfile)
             while line.split()[1] == "2.00":
