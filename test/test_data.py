@@ -38,6 +38,7 @@ parser_names = [
     "ORCA",
     "Psi4",
     "QChem",
+    "Serenity",
     "Turbomole",
     "XTB",
     "Serenity",

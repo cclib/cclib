@@ -30,6 +30,7 @@ class Serenity(logfileparser.Logfile):
 
     def before_parsing(self):
         self.metadata["unrestricted"] = False
+        self.beta_parsing = False
 
     def after_parsing(self):
         super().after_parsing()
@@ -75,6 +76,18 @@ class Serenity(logfileparser.Logfile):
             else:
                 self.set_attribute("nbasis", int(line.split()[2]))
 
+        # Extract SCF thresholds
+        if line.strip().startswith("Energy Threshold:"):
+            scftargets = []
+            ethresh = float(line.split()[2])
+            line = next(inputfile)
+            if "RMSD[D]" in line:
+                rmsd = float(line.split()[2])
+                line = next(inputfile)
+                if "DIIS" in line:
+                    diis = float(line.split()[2])
+                    scftargets.append(numpy.array([ethresh, rmsd, diis]))
+                    self.set_attribute("scftargets", scftargets)
         if "Total Energy" in line:
             self.append_attribute("scfenergies", float(line.split()[3]))
 
@@ -86,8 +99,9 @@ class Serenity(logfileparser.Logfile):
             self.append_attribute("moments", origin)
 
         if line.strip().startswith("Dipole Moment:"):
-            self.skip_line(inputfile, "Dipole Moment")
+            self.skip_line(inputfile, ["Dipole Moment"])
             self.skip_line(inputfile, ["dashes"])
+            # self.skip_lines(inputfile, ["Dipole Moment","dashes"]) # TODO test results in warnings
             line = self.skip_line(inputfile, "x")[0]
             dipole_data = line.split()
             x, y, z = map(float, dipole_data[:3])
@@ -124,36 +138,48 @@ class Serenity(logfileparser.Logfile):
         if "Dispersion Correction (" in line:
             self.append_attribute("dispersionenergies", float(line.split()[3]))
 
+        if "Total Local-CCSD Energy" in line:
+            self.set_attribute("ccenergies", float(line.split()[3]))
+            self.metadata["methods"].append("Local CCSD")
+        if "Total Local-CCSD(T0) Energy" in line:
+            self.set_attribute("ccenergies", float(line.split()[3]))
+            self.metadata["methods"].append("Local CCSD(T0)")
+        if "Total CCSD Energy" in line:
+            self.set_attribute("ccenergies", float(line.split()[3]))
+            self.metadata["methods"].append("CCSD")
+        if "Total CCSD(T) Energy" in line:
+            self.set_attribute("ccenergies", float(line.split()[3]))
+            self.metadata["methods"].append("CCSD(T)")
+
         # Extract index of HOMO(s)
-        self.alphaDone = False
         if line.strip().startswith("Orbital Energies:"):
             self.skip_line(inputfile, ["Orbital"])
             self.skip_line(inputfile, ["dashes"])
-            if self.metadata["unrestricted"] and not self.alphaDone:
+            if self.metadata["unrestricted"] and not self.beta_parsing:
                 self.skip_line(inputfile, ["Alpha:"])
-                self.alphaDone = True
+                self.beta_parsing = True
             self.skip_line(inputfile, ["#   Occ."])
-            # self.skip_lines(inputfile, ["Orbital","dashes","#   Occ."]) # test results in warnings
+            # self.skip_lines(inputfile, ["Orbital","dashes","#   Occ."]) # TODO test results in warnings
             line = next(inputfile)
             homos = None
-            occNumber = None
+            occ_number = None
             if self.metadata["unrestricted"]:
-                occNumber = "1.00"
+                occ_number = "1.00"
             else:
-                occNumber = "2.00"
-            while line.split()[1] == occNumber:
+                occ_number = "2.00"
+            while line.split()[1] == occ_number:
                 homos = int(line.split()[0])
                 line = next(inputfile)
-            self.append_attribute("homos", homos - 1)  # Serenity starts at 1, python at 0
+            self.set_attribute("homos", [homos - 1])  # Serenity starts at 1, python at 0
 
             # repeating this for beta now:
-            if self.alphaDone:
+            if self.beta_parsing:
                 while line.split()[0] != "Beta:":
                     line = next(inputfile)
                 self.skip_line(inputfile, ["Beta:"])
                 self.skip_line(inputfile, ["#   Occ."])
                 line = next(inputfile)
-                while line.split()[1] == occNumber:
+                while line.split()[1] == occ_number:
                     homos = int(line.split()[0])
                     line = next(inputfile)
-                self.append_attribute("homos", homos - 1)  # Serenity starts at 1, python at 0
+                self.set_attribute("homos", [homos - 1])  # Serenity starts at 1, python at 0
