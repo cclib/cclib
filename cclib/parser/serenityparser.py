@@ -172,7 +172,6 @@ class Serenity(logfileparser.Logfile):
                 line = next(inputfile)
             self.append_attribute("homos", homos - 1)  # Serenity starts at 1, python at 0
 
-            # repeating this for beta now:
             if self.beta_parsing:
                 while line.split()[0] != "Beta:":
                     line = next(inputfile)
@@ -182,4 +181,4 @@ class Serenity(logfileparser.Logfile):
                 while line.split()[1] == occ_number:
                     homos = int(line.split()[0])
                     line = next(inputfile)
-                self.append_attribute("homos", homos - 1)  # Serenity starts at 1, python at 0
+                self.append_attribute("homos", homos - 1)
