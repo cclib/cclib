@@ -37,19 +37,34 @@ class Serenity(logfileparser.Logfile):
 
     def after_parsing(self):
         # Get molecular orbital information
-        orbpath = self.path.parent / self.systemname / f"{self.systemname}.orbs.res.h5"
-        if orbpath.is_file():
-            assert utils.find_package("h5py"), (
-                "h5py is needed to read in molecular orbital info from Serenity."
-            )
-            import h5py
+        if self.metadata["unrestricted"]:
+            orbpath = self.path.parent / self.systemname / f"{self.systemname}.orbs.res.h5"
+            if orbpath.is_file():
+                assert utils.find_package("h5py"), (
+                    "h5py is needed to read in molecular orbital info from Serenity."
+                )
+                import h5py
 
-            with h5py.File(orbpath, "r") as orbfile:
-                coeffs = [orbfile["coefficients"][:]]
-                eigenvalues = [orbfile["eigenvalues"][:].flatten()]
-                self.set_attribute("moenergies", eigenvalues)
-                self.set_attribute("mocoeffs", coeffs)
-                self.set_attribute("nmo", len(eigenvalues[0]))
+                with h5py.File(orbpath, "r") as orbfile:
+                    coeffs = [orbfile["coefficients"][:]]
+                    eigenvalues = [orbfile["eigenvalues"][:].flatten()]
+                    self.set_attribute("moenergies", eigenvalues)
+                    self.set_attribute("mocoeffs", coeffs)
+                    self.set_attribute("nmo", len(eigenvalues[0]))
+        else:
+            orbpath = self.path.parent / self.systemname / f"{self.systemname}.orbs.res.h5"
+            if orbpath.is_file():
+                assert utils.find_package("h5py"), (
+                    "h5py is needed to read in molecular orbital info from Serenity."
+                )
+                import h5py
+
+                with h5py.File(orbpath, "r") as orbfile:
+                    coeffs = [orbfile["coefficients"][:]]
+                    eigenvalues = [orbfile["eigenvalues"][:].flatten()]
+                    self.set_attribute("moenergies", eigenvalues)
+                    self.set_attribute("mocoeffs", coeffs)
+                    self.set_attribute("nmo", len(eigenvalues[0]))
 
         super().after_parsing()
 
