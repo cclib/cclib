@@ -65,7 +65,6 @@ class GenericSPunTest:
         assert data.atomcoords.shape == (1, data.natom, 3)
 
     @skipForParser("Jaguar", "Data file does not contain enough information")
-    @skipForParser("Serenity", "not merged yet")
     def testdimmocoeffs(self, data) -> None:
         """Are the dimensions of mocoeffs equal to 2 x nmo x nbasis?"""
         if hasattr(data, "mocoeffs"):
@@ -76,12 +75,12 @@ class GenericSPunTest:
 
     @skipForParser("Jaguar", "Data file does not contain enough information")
     @skipForParser("DALTON", "mocoeffs not implemented yet")
-    @skipForParser("Serenity", "not merged yet")
+    @skipForParser("Serenity", "not applicable")
     def testfornoormo(self, data) -> None:
         """Do we have NOs or MOs?"""
         assert hasattr(data, "nocoeffs") or hasattr(data, "mocoeffs")
 
-    @skipForParser("Serenity", "not merged yet")
+    @skipForParser("Serenity", "not applicable")
     def testdimnoccnos(self, data) -> None:
         """Is the length of nooccnos equal to nmo?"""
         if hasattr(data, "nooccnos"):
@@ -89,7 +88,7 @@ class GenericSPunTest:
             # FIXME
             assert data.nooccnos.shape in [(data.nmo,), (2, data.nmo)]
 
-    @skipForParser("Serenity", "not merged yet")
+    @skipForParser("Serenity", "not applicable")
     def testdimnocoeffs(self, data) -> None:
         """Are the dimensions of nocoeffs equal to 2 x nmo x nmo?"""
         if hasattr(data, "nocoeffs"):
@@ -107,7 +106,6 @@ class GenericSPunTest:
         msg = f"{numpy.array_repr(data.homos)} != array([34,33],'i')"
         numpy.testing.assert_array_equal(data.homos, numpy.array([34, 33], "i"), msg)
 
-    @skipForParser("Serenity", "not merged yet")
     def testmoenergies(self, data) -> None:
         """Are the dims of the moenergies equals to 2 x nmo?"""
         if hasattr(data, "moenergies"):
@@ -132,7 +130,7 @@ class GenericROSPTest(GenericSPunTest):
     @skipForParser("DALTON", "mocoeffs not implemented yet")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    @skipForParser("Serenity", "not merged yet")
+    @skipForParser("Serenity", "not applicable")
     def testdimmocoeffs(self, data) -> None:
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis?"""
         assert isinstance(data.mocoeffs, list)
@@ -141,7 +139,7 @@ class GenericROSPTest(GenericSPunTest):
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    @skipForParser("Serenity", "not merged yet")
+    @skipForParser("Serenity", "not applicable")
     def testhomos(self, data) -> None:
         """Are the HOMO indices equal to 34 and 33 (one more alpha electron
         than beta electron)?
@@ -152,7 +150,7 @@ class GenericROSPTest(GenericSPunTest):
     @skipForParser("QChem", "prints 2 sets of different MO energies?")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    @skipForParser("Serenity", "not merged yet")
+    @skipForParser("Serenity", "not applicable")
     def testmoenergies(self, data) -> None:
         """Are the dims of the moenergies equals to 1 x nmo?"""
         assert len(data.moenergies) == 1
@@ -160,7 +158,7 @@ class GenericROSPTest(GenericSPunTest):
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    @skipForParser("Serenity", "not merged yet")
+    @skipForParser("Serenity", "not applicable")
     def testmosyms(self, data) -> None:
         """Are the dims of the mosyms equals to 1 x nmo?"""
         shape = (len(data.mosyms), len(data.mosyms[0]))
