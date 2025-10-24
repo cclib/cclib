@@ -38,7 +38,7 @@ class Serenity(logfileparser.Logfile):
     def after_parsing(self):
         # Get molecular orbital information
         if self.metadata["unrestricted"]:
-            orbpath = self.path.parent / self.systemname / f"{self.systemname}.orbs.res.h5"
+            orbpath = self.path.parent / self.systemname / f"{self.systemname}.orbs.unres.h5"
             if orbpath.is_file():
                 assert utils.find_package("h5py"), (
                     "h5py is needed to read in molecular orbital info from Serenity."
