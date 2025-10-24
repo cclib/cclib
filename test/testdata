@@ -249,7 +249,7 @@ MP        QChem       GenericMP2Test        basicQChem5.4         water_mp2.out
 MP        QChem       GenericMP3Test        basicQChem5.4         water_mp3.out
 MP        QChem       QChemMP4SDQTest       basicQChem5.4         water_mp4sdq.out
 MP        QChem       QChemMP4SDTQTest      basicQChem5.4         water_mp4.out
-SP        Serenity    GenericMP2Test        serenity1.6.1         water_mp2.out
+SP        Serenity    GenericMP2Test        serenity1.6.1         water_mp2/water_mp2.out
 MP        Turbomole   GenericMP2Test        basicTurbomole7.2     water_mp2/basis    water_mp2/control    water_mp2/coord    water_mp2/mos    water_mp2/dscf.out    water_mp2/ccsdf12.out
 MP        Turbomole   GenericMP2Test        basicTurbomole7.4     water_mp2/basis    water_mp2/control    water_mp2/coord    water_mp2/mos    water_mp2/dscf.out    water_mp2/ccsdf12.out
 MP        Turbomole   GenericMP2Test        basicTurbomole7.4     water_mp2_rimp2/basis    water_mp2_rimp2/control    water_mp2_rimp2/coord    water_mp2_rimp2/mos    water_mp2_rimp2/dscf.out    water_mp2_rimp2/rimp2.out
