@@ -37,32 +37,27 @@ class Serenity(logfileparser.Logfile):
 
     def after_parsing(self):
         # Get molecular orbital information
+        assert utils.find_package("h5py"), (
+            "h5py is needed to read in molecular orbital info from Serenity."
+        )
+        import h5py
+
         if self.metadata["unrestricted"]:
             orbpath = self.path.parent / self.systemname / f"{self.systemname}.orbs.unres.h5"
             if orbpath.is_file():
-                assert utils.find_package("h5py"), (
-                    "h5py is needed to read in molecular orbital info from Serenity."
-                )
-                import h5py
-
                 with h5py.File(orbpath, "r") as orbfile:
-                    coeffs_alpha = [orbfile["coefficients_alpha"][:]]
-                    coeffs_beta = [orbfile["coefficients_alpha"][:]]
-                    eigenvalues_alpha = [orbfile["eigenvalues_alpha"][:].flatten()]
-                    eigenvalues_beta = [orbfile["eigenvalues_beta"][:].flatten()]
-                    eigenvalues = [eigenvalues_alpha, eigenvalues_beta]
-                    coeffs = [coeffs_alpha, coeffs_beta]
+                    eigenvalues = []
+                    coeffs = []
+                    eigenvalues.append(orbfile["eigenvalues_alpha"][:].flatten())
+                    eigenvalues.append(orbfile["eigenvalues_beta"][:].flatten())
+                    coeffs.append(orbfile["coefficients_alpha"][:])
+                    coeffs.append(orbfile["coefficients_alpha"][:])
                     self.set_attribute("moenergies", eigenvalues)
                     self.set_attribute("mocoeffs", coeffs)
-                    self.set_attribute("nmo", len(eigenvalues[0]))  # TODO
+                    self.set_attribute("nmo", len(eigenvalues[0]))
         else:
             orbpath = self.path.parent / self.systemname / f"{self.systemname}.orbs.res.h5"
             if orbpath.is_file():
-                assert utils.find_package("h5py"), (
-                    "h5py is needed to read in molecular orbital info from Serenity."
-                )
-                import h5py
-
                 with h5py.File(orbpath, "r") as orbfile:
                     coeffs = [orbfile["coefficients"][:]]
                     eigenvalues = [orbfile["eigenvalues"][:].flatten()]
@@ -114,10 +109,10 @@ class Serenity(logfileparser.Logfile):
                 self.metadata["unrestricted"] = True
 
         if line[5:21] == "Basis Functions:":
-            if self.metadata["unrestricted"]:
-                self.set_attribute("nbasis", int(line.split()[2]) * 2)
-            else:
-                self.set_attribute("nbasis", int(line.split()[2]))
+            # if self.metadata["unrestricted"]:
+            #    self.set_attribute("nbasis", int(line.split()[2]) * 2)
+            # else:
+            self.set_attribute("nbasis", int(line.split()[2]))
 
         # Extract SCF thresholds
         if line.strip().startswith("Energy Threshold:"):
