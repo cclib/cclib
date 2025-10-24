@@ -46,11 +46,15 @@ class Serenity(logfileparser.Logfile):
                 import h5py
 
                 with h5py.File(orbpath, "r") as orbfile:
-                    coeffs = [orbfile["coefficients"][:]]
-                    eigenvalues = [orbfile["eigenvalues"][:].flatten()]
+                    coeffs_alpha = [orbfile["coefficients_alpha"][:]]
+                    coeffs_beta = [orbfile["coefficients_alpha"][:]]
+                    eigenvalues_alpha = [orbfile["eigenvalues_alpha"][:].flatten()]
+                    eigenvalues_beta = [orbfile["eigenvalues_beta"][:].flatten()]
+                    eigenvalues = [eigenvalues_alpha, eigenvalues_beta]
+                    coeffs = [coeffs_alpha, coeffs_beta]
                     self.set_attribute("moenergies", eigenvalues)
                     self.set_attribute("mocoeffs", coeffs)
-                    self.set_attribute("nmo", len(eigenvalues[0]))
+                    self.set_attribute("nmo", len(eigenvalues[0]))  # TODO
         else:
             orbpath = self.path.parent / self.systemname / f"{self.systemname}.orbs.res.h5"
             if orbpath.is_file():
