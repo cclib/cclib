@@ -74,6 +74,7 @@ class GenericGeoOptTest:
         assert data.nbasis == count
 
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
+    @skipForParser("Serenity", "not implemented yet")
     def testcoreelectrons(self, data) -> None:
         """Are the coreelectrons all 0?"""
         ans = numpy.zeros(data.natom, "i")
@@ -135,6 +136,7 @@ class GenericGeoOptTest:
     @skipForLogfile("FChk/basicQChem5.4", "Q-Chem doesn't print geovalues to fchk")
     @skipForParser("MOPAC", "Not implemented.")
     @skipForParser("xTB", "not implemented yet")
+    @skipForParser("Serenity", "not implemented yet")
     def testgeovalues_scfvalues(self, data) -> None:
         """Are scfvalues consistent with geovalues?"""
         count_scfvalues = len(data.scfvalues) - self.extrascfs
@@ -147,6 +149,7 @@ class GenericGeoOptTest:
     @skipForParser("MOPAC", "Not implemented.")
     @skipForParser("PySCF", "not implemented yet")
     @skipForParser("xTB", "not implemented yet")
+    @skipForParser("Serenity", "not implemented yet")
     def testgeotargets(self, data) -> None:
         """Do the geometry optimization targets have the right dimensions?"""
         dim_geotargets = data.geotargets.shape
@@ -160,6 +163,7 @@ class GenericGeoOptTest:
     @skipForParser("MOPAC", "Not implemented.")
     @skipForParser("PySCF", "not implemented yet")
     @skipForParser("xTB", "not implemented yet")
+    @skipForParser("Serenity", "not implemented yet")
     def testoptdone(self, data) -> None:
         """Has the geometry converged and set optdone to True?"""
         assert isinstance(data.optdone, list)
@@ -172,6 +176,7 @@ class GenericGeoOptTest:
     @skipForParser("MOPAC", "Not implemented.")
     @skipForParser("PySCF", "geotargets not implemented yet")
     @skipForParser("xTB", "not implemented yet")
+    @skipForParser("Serenity", "not implemented yet")
     def testgeoconverged(self, data) -> None:
         """Has the geometry converged and set optdone to True?"""
         assert numpy.all(numpy.abs(data.geovalues[-1]) <= data.geotargets)
@@ -186,6 +191,7 @@ class GenericGeoOptTest:
     @skipForParser("MOPAC", "Not implemented.")
     @skipForParser("NWChem", "Not implemented.")
     @skipForParser("xTB", "not implemented yet")
+    @skipForParser("Serenity", "not implemented yet")
     def testoptstatus(self, data) -> None:
         """Is optstatus consistent with geovalues and reasonable?"""
         assert len(data.optstatus) == len(data.geovalues)
@@ -208,6 +214,7 @@ class GenericGeoOptTest:
         "QChem", "Q-Chem doesn't print rotational constants during geometry optimizations"
     )
     @skipForParser("Turbomole", "Not implemented yet")
+    @skipForParser("Serenity", "not implemented yet")
     def testrotconsts(self, data) -> None:
         """Each geometry leads to a row in the rotational constants entry."""
         assert data.rotconsts.shape == (len(data.atomcoords), 3)
@@ -219,6 +226,7 @@ class GenericGeoOptTest:
             numpy.testing.assert_equal(rotconsts, rotconsts[idx])
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
+    @skipForParser("Serenity", "not implemented yet")
     def testmoenergies(self, data) -> None:
         """Are only the final MOs parsed?"""
         assert len(data.moenergies) == 1
@@ -233,6 +241,7 @@ class GenericGeoOptTest:
     @skipForParser("MOPAC", "Not implemented.")
     @skipForParser("PySCF", "Not implemented.")
     @skipForParser("xTB", "not implemented yet")
+    @skipForParser("Serenity", "not implemented yet")
     def testgrads(self, data) -> None:
         """Do nuclear gradients exist?"""
         assert hasattr(data, "grads")
@@ -249,6 +258,7 @@ class GenericGeoOptTest:
         "Q-Chem has grads but no way to verify the number of times they appear",
     )
     @skipForParser("xTB", "not implemented yet")
+    @skipForParser("Serenity", "not implemented yet")
     def testgradsdim(self, data) -> None:
         """Do the grads have the right dimensions?"""
         # This originally compared against the length of geovalues, but some
@@ -262,6 +272,7 @@ class GenericGeoOptTest:
     @skipForLogfile("FChk/basicGaussian09", "impossible to determine success of calculation")
     @skipForLogfile("FChk/basicQChem5.4", "impossible to determine success of calculation")
     @skipForLogfile("Molcas/basicOpenMolcas18.0/dvb_gopt.out", "not implemented yet")
+    @skipForParser("Serenity", "not implemented yet")
     def testmetadata_success(self, data) -> None:
         """Does metadata have expected keys and values?"""
         assert "success" in data.metadata

@@ -1,0 +1,15 @@
++system 
+ name dvb_gopt
+ geometry dvb_gopt.xyz
+ method dft
+ +dft
+  functional b3lyp
+ -dft
+ +basis
+  label sto-3g
+ -basis
+-system
+
++task opt
+ act dvb_gopt
+-task

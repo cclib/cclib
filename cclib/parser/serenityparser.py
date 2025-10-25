@@ -91,7 +91,11 @@ class Serenity(logfileparser.Logfile):
 
             self.set_attribute("atomnos", atomnos)
             self.set_attribute("natom", len(atomnos))
-            self.append_attribute("atomcoords", coords)
+            if hasattr(self, "optstatus"):
+                if not self.optstatus[-1] & data.ccData.OPT_DONE and not len(self.optstatus) == 1:
+                    self.append_attribute("atomcoords", coords)
+            else:
+                self.append_attribute("atomcoords", coords)
 
         if line[5:21] == "Basis Functions:":
             self.set_attribute("nbasis", int(line.split()[2]))
@@ -107,7 +111,8 @@ class Serenity(logfileparser.Logfile):
                 if "DIIS" in line:
                     diis = float(line.split()[2])
                     scftargets.append(numpy.array([ethresh, rmsd, diis]))
-                    self.set_attribute("scftargets", scftargets)
+                    self.append_attribute("scftargets", scftargets)
+
         if "Total Energy (" in line:
             self.append_attribute("scfenergies", float(line.split()[3]))
 
@@ -194,10 +199,11 @@ class Serenity(logfileparser.Logfile):
 
         ### geometry optimization
         if line.strip().startswith("Cycle:"):
+            print(line)
             self.append_attribute("optstatus", data.ccData.OPT_UNKNOWN)
 
         if hasattr(self, "optstatus"):
-            if line.strip().startswith("Cycle: 1"):
+            if line.strip().startswith("Cycle: 1 "):
                 self.optstatus[-1] += data.ccData.OPT_NEW
 
             if line.strip().startswith("WARNING: Geometry Optimization not yet converged!"):
