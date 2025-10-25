@@ -82,8 +82,9 @@ class Serenity(logfileparser.Logfile):
         if line[5:14] == "SCF Mode:":
             self.metadata["unrestricted"] = False
         if line[4:34] == "Time taken for the entire run:":
+            # TODO this condition is probably too straigthforward and will take some more testing.
             self.metadata["success"] = True
-        # note: cpu time is not put out straightforwardly in Serenity.
+        # note: cpu time is not printed straightforwardly in Serenity.
         if line[4:23] == "Time taken for task":
             if "wall_time" not in self.metadata:
                 self.metadata["wall_time"] = []
@@ -186,10 +187,10 @@ class Serenity(logfileparser.Logfile):
 
         if "Total Local-CCSD Energy" in line:
             self.set_attribute("ccenergies", float(line.split()[3]))
-            self.metadata["methods"].append("Local CCSD")
+            self.metadata["methods"].append("Local CCSD")  # TODO might not work
         if "Total Local-CCSD(T0) Energy" in line:
             self.set_attribute("ccenergies", float(line.split()[3]))
-            self.metadata["methods"].append("Local CCSD(T0)")
+            self.metadata["methods"].append("Local CCSD(T0)")  # TODO might not work
         if "Total CCSD Energy" in line:
             self.set_attribute("ccenergies", float(line.split()[3]))
             self.metadata["methods"].append("CCSD")
