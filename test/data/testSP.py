@@ -75,7 +75,6 @@ class GenericSPTest:
         "These tests were run a long time ago and since we don't have access to Molpro 2006 anymore, we can skip this test (it is tested in 2012)",
     )
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    @skipForParser("Serenity", "not merged yet")
     def testatomcharges(self, data) -> None:
         """Are atomic charges consistent with natom?"""
         for atomcharge_type in data.atomcharges:
@@ -106,7 +105,6 @@ class GenericSPTest:
     )
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    @skipForParser("Serenity", "not merged yet")
     def testatomcharges_mulliken(self, data) -> None:
         """Do Mulliken atomic charges sum to zero?"""
         charges = data.atomcharges["mulliken"]
@@ -162,7 +160,7 @@ class GenericSPTest:
     @skipForParser("QChem", "Hirshfeld charges not implemented")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     @skipForParser("xTB", "Hirshfeld charges not implemented")
-    @skipForParser("Serenity", "not merged yet")
+    @skipForParser("Serenity", "not possible yet")
     def testatomcharges_hirshfeld(self, data) -> None:
         """Do Hirshfeld atomic charges sum to roughly zero?"""
         charges = data.atomcharges["hirshfeld"]
