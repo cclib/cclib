@@ -36,7 +36,7 @@ class Serenity(logfileparser.Logfile):
         # TODO Note that CM5 and Hirshfeld will not function properly currently, as they perform atom SCFs.
         # This will be fixed in my upcoming PR of geometry optimizations.
         # TODO Serenity also has Becke, IAO, and CHELPG population analyses that are currently not supported.
-        self.populationtypes = ["Mulliken", "CM5", "Hirshfeld"]
+        self.populationtypes = ["Mulliken"]  # , "CM5", "Hirshfeld"]
         self.path = Path(self.inputfile.filenames[0]).resolve()
 
     def after_parsing(self):
