@@ -102,7 +102,6 @@ class Serenity(logfileparser.Logfile):
 
         # Extract SCF thresholds
         if line.strip().startswith("Energy Threshold:"):
-            scftargets = []
             ethresh = float(line.split()[2])
             line = next(inputfile)
             if "RMSD[D]" in line:
@@ -110,7 +109,7 @@ class Serenity(logfileparser.Logfile):
                 line = next(inputfile)
                 if "DIIS" in line:
                     diis = float(line.split()[2])
-                    scftargets.append(numpy.array([ethresh, rmsd, diis]))
+                    scftargets = [ethresh, rmsd, diis]
                     self.append_attribute("scftargets", scftargets)
 
         if "Total Energy (" in line:
@@ -203,7 +202,8 @@ class Serenity(logfileparser.Logfile):
             self.append_attribute("optstatus", data.ccData.OPT_UNKNOWN)
 
         if hasattr(self, "optstatus"):
-            if line.strip().startswith("Cycle: 1 "):
+            if line.split() == ["Cycle:", "1"]:
+                print("NEW")
                 self.optstatus[-1] += data.ccData.OPT_NEW
 
             if line.strip().startswith("WARNING: Geometry Optimization not yet converged!"):
@@ -211,8 +211,9 @@ class Serenity(logfileparser.Logfile):
                 self.optstatus[-1] += data.ccData.OPT_UNCONVERGED
 
             if line.strip().startswith("Convergence reached after"):
-                self.append_attribute("optdone", len(self.atomcoords) - 1)
-                self.optstatus[-1] += data.ccData.OPT_DONE
+                if not self.optstatus[-1] & data.ccData.OPT_DONE:
+                    self.append_attribute("optdone", len(self.atomcoords) - 1)
+                    self.optstatus[-1] += data.ccData.OPT_DONE
 
             if line.strip().startswith("Current Geometry Gradients (a.u.):"):
                 if not self.optstatus[-1] & data.ccData.OPT_DONE:

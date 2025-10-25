@@ -12,4 +12,5 @@
 
 +task opt
  act dvb_gopt
+ printlevel 2
 -task
