@@ -33,6 +33,8 @@ class Serenity(logfileparser.Logfile):
     def before_parsing(self):
         self.populationdict = {}
         self.unrestricted = False
+        # TODO Note that CM5 and Hirshfeld will not function properly currently, as they perform atom SCFs.
+        # This will be fixed in my upcoming PR of geometry optimizations.
         self.populationtypes = ["CM5", "Mulliken", "Hirshfeld", "Becke", "IAO", "CHELPG"]
         self.path = Path(self.inputfile.filenames[0]).resolve()
 
@@ -177,10 +179,6 @@ class Serenity(logfileparser.Logfile):
             self.append_attribute("moments", quadrupole)
 
         # Extract charges from population analysis
-
-        # TODO if we are already in task area (starting with | Task) then ignore any new systems?
-        # not viable, since the scf itself may be a task... for now just ignore
-
         if line.strip().startswith(tuple(self.populationtypes)) and line.split()[1] == "Population":
             key = line.split()[0]
             line = next(inputfile)
