@@ -7,7 +7,7 @@
 
 from pathlib import Path
 
-from cclib.parser import logfileparser, utils
+from cclib.parser import data, logfileparser, utils
 
 import numpy
 
@@ -178,46 +178,56 @@ class Serenity(logfileparser.Logfile):
                 line = next(inputfile)
             self.set_attribute("homos", [homos - 1])  # Serenity starts at 1, python at 0
 
-        # geometry optimization
-        if line.strip().startswith("Convergence reached after"):
-            print("optdone")
-            # TODO fix this
-        #    self.set_attribute("optdone", True)
-
-        if line.strip().startswith("Cycle:"):
-            print("bla")
-
         # TODO abort in this case
+        # TODO also add a case like this for presence of several systems
         if line.strip().startswith("Freeze-and-Thaw Cycle"):
             print("bla")
 
-        # TODO if geom opt recognized as in progress
-        if line.strip().startswith("Current Geometry Gradients (a.u.):"):
-            self.skip_line(inputfile, ["Current"])
-            line = next(inputfile)
-            grad = []
-            for i in range(self.natom):
-                grad_data_raw = line.split()
-                x, y, z = map(float, grad_data_raw[2:5])
-                grad.append([x, y, z])
-                line = next(inputfile)
-            self.append_attribute("grads", grad)
+        ### geometry optimization
+        if line.strip().startswith("Cycle:"):
+            self.append_attribute("optstatus", data.ccData.OPT_UNKNOWN)
 
-        # The 5 convergence criteria in Serenity, of which 3 must be met, are (in order):
-        # Energy Change, RMS Gradient, Max Gradient, RMS Step, Max Step
-        if line.strip().startswith("Geometry Relaxation:"):
-            criteria = []
-            self.skip_line(inputfile, ["Geometry Relaxation:"])
-            self.skip_line(inputfile, ["dashes"])
-            line = next(inputfile)
-            criteria.append(line.split()[2])
-            line = next(inputfile)
-            line = next(inputfile)
-            criteria.append(line.split()[2])
-            line = next(inputfile)
-            criteria.append(line.split()[2])
-            line = next(inputfile)
-            criteria.append(line.split()[2])
-            line = next(inputfile)
-            criteria.append(line.split()[2])
-            self.append_attribute("geovalues", criteria)
+        if hasattr(self, "optstatus"):
+            if line.strip().startswith("Cycle: 1"):
+                self.optstatus[-1] += data.ccData.OPT_NEW
+
+            if line.strip().startswith("WARNING: Geometry Optimization not yet converged!"):
+                self.set_attribute("optdone", [])
+                self.optstatus[-1] += data.ccData.OPT_UNCONVERGED
+
+            # TODO: after convergence, geom is printed one more time. optdone list is correct, but check if problems
+            if line.strip().startswith("Convergence reached after"):
+                # TODO check if this is right:
+                self.append_attribute("optdone", len(self.atomcoords))
+                self.optstatus[-1] += data.ccData.OPT_DONE
+
+            if line.strip().startswith("Current Geometry Gradients (a.u.):"):
+                if not self.optstatus[-1] & data.ccData.OPT_DONE:
+                    self.skip_line(inputfile, ["Current"])
+                    line = next(inputfile)
+                    grad = []
+                    for i in range(self.natom):
+                        grad_data_raw = line.split()
+                        x, y, z = map(float, grad_data_raw[2:5])
+                        grad.append([x, y, z])
+                        line = next(inputfile)
+                    self.append_attribute("grads", grad)
+
+            # The 5 convergence criteria in Serenity, of which 3 must be met, are (in order):
+            # Energy Change, RMS Gradient, Max Gradient, RMS Step, Max Step
+            if line.strip().startswith("Geometry Relaxation:"):
+                criteria = []
+                self.skip_line(inputfile, ["Geometry Relaxation:"])
+                self.skip_line(inputfile, ["dashes"])
+                line = next(inputfile)
+                criteria.append(line.split()[2])
+                line = next(inputfile)
+                line = next(inputfile)
+                criteria.append(line.split()[2])
+                line = next(inputfile)
+                criteria.append(line.split()[2])
+                line = next(inputfile)
+                criteria.append(line.split()[2])
+                line = next(inputfile)
+                criteria.append(line.split()[2])
+                self.append_attribute("geovalues", criteria)
