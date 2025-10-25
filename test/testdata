@@ -193,6 +193,7 @@ GeoOpt    Psi4        Psi4GeoOptTest        basicPsi4-1.7         dvb_gopt_rhf.o
 GeoOpt    Psi4        Psi4GeoOptTest        basicPsi4-1.7         dvb_gopt_rks.out
 GeoOpt    PySCF       GenericGeoOptTest     basicPySCF2.6         dvb_gopt_bern.py
 GeoOpt    PySCF       GenericGeoOptTest     basicPySCF2.6         dvb_gopt_tric.py
+GeoOpt    Serenity    GenericGeoOptTest     serenity1.6.1/gopt    dvb_gopt.out
 GeoOpt    QChem       GenericGeoOptTest     basicQChem5.1         dvb_gopt.out
 GeoOpt    QChem       GenericGeoOptTest     basicQChem5.4         dvb_gopt.out
 GeoOpt    Turbomole   TurbomoleGeoOptTest   basicTurbomole5.9     dvb_gopt/basis      dvb_gopt/control      dvb_gopt/mos      dvb_gopt/job.last
