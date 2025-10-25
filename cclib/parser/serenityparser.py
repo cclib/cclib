@@ -102,7 +102,7 @@ class Serenity(logfileparser.Logfile):
                     diis = float(line.split()[2])
                     scftargets.append(numpy.array([ethresh, rmsd, diis]))
                     self.set_attribute("scftargets", scftargets)
-        if "Total Energy" in line:
+        if "Total Energy (" in line:
             self.append_attribute("scfenergies", float(line.split()[3]))
 
         if line.strip().startswith("Origin chosen as:"):
@@ -177,3 +177,31 @@ class Serenity(logfileparser.Logfile):
                 homos = int(line.split()[0])
                 line = next(inputfile)
             self.set_attribute("homos", [homos - 1])  # Serenity starts at 1, python at 0
+
+        # geometry optimization
+        if line.strip().startswith("Convergence reached after"):
+            print("optdone")
+            # TODO fix this
+        #    self.set_attribute("optdone", True)
+
+        if line.strip().startswith("Cycle:"):
+            print("bla")
+
+        # TODO abort in this case
+        if line.strip().startswith("Freeze-and-Thaw Cycle"):
+            print("bla")
+
+        # TODO if geom opt recognized as in progress
+        if line.strip().startswith("Current Geometry Gradients (a.u.):"):
+            self.skip_line(inputfile, ["Current"])
+            # line = self.skip_line(inputfile, ["dashes"])
+            line = next(inputfile)
+            grad = []
+            for i in range(self.natom):
+                grad_data_raw = line.split()
+                x, y, z = map(float, grad_data_raw[2:5])
+                grad.append([x, y, z])
+                line = next(inputfile)
+
+            print(grad)
+            self.append_attribute("grads", grad)
