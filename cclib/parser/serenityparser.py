@@ -8,6 +8,7 @@
 from pathlib import Path
 
 from cclib.parser import data, logfileparser, utils
+from cclib.parser.logfileparser import StopParsing
 
 import numpy
 
@@ -59,7 +60,12 @@ class Serenity(logfileparser.Logfile):
         if line.strip().startswith("------------------------------------------------------------"):
             line = next(inputfile)
             if line.strip().startswith("System"):
-                self.systemname = line.split()[1]
+                name = line.split()[1]
+                if not hasattr(self, "systemname"):
+                    self.systemname = name
+                elif name != self.systemname:
+                    self.logger.error("Multiple systems detected which is not currently supported.")
+                    raise StopParsing()
 
         # Extract charge and multiplicity
         if line[5:11] == "Charge":
@@ -149,7 +155,7 @@ class Serenity(logfileparser.Logfile):
                 line = next(inputfile)
             self.append_attribute("scfvalues", numpy.vstack(numpy.array(values)))
 
-        if "Dispersion Correction (" in line:
+        if line.strip().startswith("Dispersion Correction ("):
             self.append_attribute("dispersionenergies", float(line.split()[3]))
 
         if "Total Local-CCSD Energy" in line:
@@ -178,10 +184,13 @@ class Serenity(logfileparser.Logfile):
                 line = next(inputfile)
             self.set_attribute("homos", [homos - 1])  # Serenity starts at 1, python at 0
 
-        # TODO abort in this case
-        # TODO also add a case like this for presence of several systems
+        # for additional robustness.
+        # this should already be stopped by the presence of several systems in the output
         if line.strip().startswith("Freeze-and-Thaw Cycle"):
-            print("bla")
+            self.logger.error(
+                "Freeze-and-Thaw subsystem calculation detected which is not currently supported."
+            )
+            raise StopParsing()
 
         ### geometry optimization
         if line.strip().startswith("Cycle:"):
@@ -195,10 +204,8 @@ class Serenity(logfileparser.Logfile):
                 self.set_attribute("optdone", [])
                 self.optstatus[-1] += data.ccData.OPT_UNCONVERGED
 
-            # TODO: after convergence, geom is printed one more time. optdone list is correct, but check if problems
             if line.strip().startswith("Convergence reached after"):
-                # TODO check if this is right:
-                self.append_attribute("optdone", len(self.atomcoords))
+                self.append_attribute("optdone", len(self.atomcoords) - 1)
                 self.optstatus[-1] += data.ccData.OPT_DONE
 
             if line.strip().startswith("Current Geometry Gradients (a.u.):"):
