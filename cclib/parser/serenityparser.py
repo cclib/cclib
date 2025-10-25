@@ -35,10 +35,12 @@ class Serenity(logfileparser.Logfile):
         self.unrestricted = False
         # TODO Note that CM5 and Hirshfeld will not function properly currently, as they perform atom SCFs.
         # This will be fixed in my upcoming PR of geometry optimizations.
-        self.populationtypes = ["CM5", "Mulliken", "Hirshfeld", "Becke", "IAO", "CHELPG"]
+        # TODO Serenity also has Becke, IAO, and CHELPG population analyses that are currently not supported.
+        self.populationtypes = ["Mulliken", "CM5", "Hirshfeld"]
         self.path = Path(self.inputfile.filenames[0]).resolve()
 
     def after_parsing(self):
+        self.populationdict = {k.lower(): v for k, v in self.populationdict.items()}
         self.set_attribute("atomcharges", self.populationdict)
         # Get molecular orbital information
         orbpath = self.path.parent / self.systemname / f"{self.systemname}.orbs.res.h5"
