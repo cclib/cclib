@@ -194,7 +194,6 @@ class Serenity(logfileparser.Logfile):
         # TODO if geom opt recognized as in progress
         if line.strip().startswith("Current Geometry Gradients (a.u.):"):
             self.skip_line(inputfile, ["Current"])
-            # line = self.skip_line(inputfile, ["dashes"])
             line = next(inputfile)
             grad = []
             for i in range(self.natom):
@@ -202,6 +201,23 @@ class Serenity(logfileparser.Logfile):
                 x, y, z = map(float, grad_data_raw[2:5])
                 grad.append([x, y, z])
                 line = next(inputfile)
-
-            print(grad)
             self.append_attribute("grads", grad)
+
+        # The 5 convergence criteria in Serenity, of which 3 must be met, are (in order):
+        # Energy Change, RMS Gradient, Max Gradient, RMS Step, Max Step
+        if line.strip().startswith("Geometry Relaxation:"):
+            criteria = []
+            self.skip_line(inputfile, ["Geometry Relaxation:"])
+            self.skip_line(inputfile, ["dashes"])
+            line = next(inputfile)
+            criteria.append(line.split()[2])
+            line = next(inputfile)
+            line = next(inputfile)
+            criteria.append(line.split()[2])
+            line = next(inputfile)
+            criteria.append(line.split()[2])
+            line = next(inputfile)
+            criteria.append(line.split()[2])
+            line = next(inputfile)
+            criteria.append(line.split()[2])
+            self.append_attribute("geovalues", criteria)
