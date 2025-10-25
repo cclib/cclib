@@ -58,6 +58,7 @@ class Serenity(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
+        ### SYSTEM specific data
         # Extract system name
         if line.strip().startswith("------------------------------------------------------------"):
             line = next(inputfile)
@@ -92,6 +93,7 @@ class Serenity(logfileparser.Logfile):
             self.set_attribute("natom", len(atomnos))
             self.append_attribute("atomcoords", coords)
 
+        ### SCF data
         if line[5:21] == "Basis Functions:":
             self.set_attribute("nbasis", int(line.split()[2]))
 
@@ -107,9 +109,37 @@ class Serenity(logfileparser.Logfile):
                     diis = float(line.split()[2])
                     scftargets.append(numpy.array([ethresh, rmsd, diis]))
                     self.set_attribute("scftargets", scftargets)
+
+        if "Cycle" in line and "Mode" in line:
+            line = next(inputfile)
+            values = []
+            while not line.strip().startswith("Converged after"):
+                linedata = line.split()
+                c1, c2, c3 = map(float, linedata[2:5])
+                values.append([c1, c2, c3])
+                line = next(inputfile)
+            self.append_attribute("scfvalues", numpy.vstack(numpy.array(values)))
+
         if "Total Energy" in line:
             self.append_attribute("scfenergies", float(line.split()[3]))
 
+        if "Dispersion Correction (" in line:
+            self.append_attribute("dispersionenergies", float(line.split()[3]))
+
+        # Extract index of HOMO
+        if line.strip().startswith("Orbital Energies:"):
+            self.skip_line(inputfile, ["Orbital"])
+            self.skip_line(inputfile, ["dashes"])
+            self.skip_line(inputfile, ["#   Occ."])
+            # self.skip_lines(inputfile, ["Orbital","dashes","#   Occ."]) # TODO test results in warnings
+            homos = None
+            line = next(inputfile)
+            while line.split()[1] == "2.00":
+                homos = int(line.split()[0])
+                line = next(inputfile)
+            self.set_attribute("homos", [homos - 1])  # Serenity starts at 1, python at 0
+
+        ### Multipole moments
         if line.strip().startswith("Origin chosen as:"):
             line = self.skip_line(inputfile, "Origin chosen as:")[0]
             origin_data = line.replace("(", "").replace(")", "").replace(",", "").split()
@@ -146,20 +176,11 @@ class Serenity(logfileparser.Logfile):
             ]
             self.append_attribute("moments", quadrupole)
 
-        if "Cycle" in line and "Mode" in line:
-            line = next(inputfile)
-            values = []
-            while not line.strip().startswith("Converged after"):
-                linedata = line.split()
-                c1, c2, c3 = map(float, linedata[2:5])
-                values.append([c1, c2, c3])
-                line = next(inputfile)
-            self.append_attribute("scfvalues", numpy.vstack(numpy.array(values)))
-
-        if "Dispersion Correction (" in line:
-            self.append_attribute("dispersionenergies", float(line.split()[3]))
-
         # Extract charges from population analysis
+
+        # TODO if we are already in task area (starting with | Task) then ignore any new systems?
+        # not viable, since the scf itself may be a task... for now just ignore
+
         if line.strip().startswith(tuple(self.populationtypes)) and line.split()[1] == "Population":
             key = line.split()[0]
             line = next(inputfile)
@@ -189,16 +210,3 @@ class Serenity(logfileparser.Logfile):
         if "Total CCSD(T) Energy" in line:
             self.set_attribute("ccenergies", float(line.split()[3]))
             self.metadata["methods"].append("CCSD(T)")
-
-        # Extract index of HOMO
-        if line.strip().startswith("Orbital Energies:"):
-            self.skip_line(inputfile, ["Orbital"])
-            self.skip_line(inputfile, ["dashes"])
-            self.skip_line(inputfile, ["#   Occ."])
-            # self.skip_lines(inputfile, ["Orbital","dashes","#   Occ."]) # TODO test results in warnings
-            homos = None
-            line = next(inputfile)
-            while line.split()[1] == "2.00":
-                homos = int(line.split()[0])
-                line = next(inputfile)
-            self.set_attribute("homos", [homos - 1])  # Serenity starts at 1, python at 0
