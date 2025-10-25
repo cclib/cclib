@@ -198,12 +198,10 @@ class Serenity(logfileparser.Logfile):
 
         ### geometry optimization
         if line.strip().startswith("Cycle:"):
-            print(line)
             self.append_attribute("optstatus", data.ccData.OPT_UNKNOWN)
 
         if hasattr(self, "optstatus"):
             if line.split() == ["Cycle:", "1"]:
-                print("NEW")
                 self.optstatus[-1] += data.ccData.OPT_NEW
 
             if line.strip().startswith("WARNING: Geometry Optimization not yet converged!"):
