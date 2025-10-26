@@ -124,7 +124,7 @@ class Serenity(logfileparser.Logfile):
                 line = next(inputfile)
             self.append_attribute("scfvalues", numpy.vstack(numpy.array(values)))
 
-        if "Total Energy" in line:
+        if line.startswith("Total Energy ("):
             self.append_attribute("scfenergies", float(line.split()[3]))
 
         if "Dispersion Correction (" in line:
@@ -210,3 +210,19 @@ class Serenity(logfileparser.Logfile):
         if "Total CCSD(T) Energy" in line:
             self.set_attribute("ccenergies", float(line.split()[3]))
             self.metadata["methods"].append("CCSD(T)")
+
+        if line.split()[1:3] == ["MP2", "Results"] or line.split()[1:3] == [
+            "(Local-)MP2",
+            "Results",
+        ]:
+            # Serenity has no higher order than MP2 and cannot do geometry optimization with it,
+            # but still may contain several MP2 energies in one file.
+            if hasattr(self, "mpenergies"):
+                self.logger.warning("Warning: Multiple MP2 energies in Serenity!")
+            line = next(inputfile)
+            # skip forward to string "Total Energy", but only for max 20 lines
+            i = 0
+            while not line.strip().startswith("Total Energy") and i < 20:
+                line = next(inputfile)
+                i += 1
+            self.append_attribute("mpenergies", [line.split()[2]])
