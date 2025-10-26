@@ -243,3 +243,18 @@ class Serenity(logfileparser.Logfile):
                 line = next(inputfile)
                 criteria.append(line.split()[2])
                 self.append_attribute("geovalues", criteria)
+        if line.split()[1:3] == ["MP2", "Results"] or line.split()[1:3] == [
+            "(Local-)MP2",
+            "Results",
+        ]:
+            # Serenity has no higher order than MP2 and cannot do geometry optimization with it,
+            # but still may contain several MP2 energies in one file.
+            if hasattr(self, "mpenergies"):
+                self.logger.warning("Warning: Multiple MP2 energies in Serenity!")
+            line = next(inputfile)
+            # skip forward to string "Total Energy", but only for max 20 lines
+            i = 0
+            while not line.strip().startswith("Total Energy") and i < 20:
+                line = next(inputfile)
+                i += 1
+            self.append_attribute("mpenergies", [line.split()[2]])
