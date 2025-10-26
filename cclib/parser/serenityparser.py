@@ -31,10 +31,17 @@ class Serenity(logfileparser.Logfile):
         return label
 
     def before_parsing(self):
+        self.populationdict = {}
         self.unrestricted = False
+        # TODO Note that CM5 and Hirshfeld will not function properly currently, as they perform atom SCFs.
+        # This will be fixed in my upcoming PR of geometry optimizations.
+        # TODO Serenity also has Becke, IAO, and CHELPG population analyses that are currently not supported.
+        self.populationtypes = ["Mulliken"]  # , "CM5", "Hirshfeld"]
         self.path = Path(self.inputfile.filenames[0]).resolve()
 
     def after_parsing(self):
+        self.populationdict = {k.lower(): v for k, v in self.populationdict.items()}
+        self.set_attribute("atomcharges", self.populationdict)
         # Get molecular orbital information
         orbpath = self.path.parent / self.systemname / f"{self.systemname}.orbs.res.h5"
         if orbpath.is_file():
@@ -55,6 +62,7 @@ class Serenity(logfileparser.Logfile):
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
+        ### SYSTEM specific data
         # Extract system name
         if line.strip().startswith("------------------------------------------------------------"):
             line = next(inputfile)
@@ -70,7 +78,9 @@ class Serenity(logfileparser.Logfile):
             self.set_attribute("mult", int(line.split()[1]) + 1)
 
         # Extract from atoms: number of atoms, elements, and coordinates
-        if line.strip().startswith("Current Geometry (Angstrom):"):
+        if line.strip().startswith("Current Geometry (Angstrom):") and not getattr(
+            self, "atomcoords", []
+        ):
             line = next(inputfile)
             line = next(inputfile)
             atomnos = []
@@ -87,6 +97,7 @@ class Serenity(logfileparser.Logfile):
             self.set_attribute("natom", len(atomnos))
             self.append_attribute("atomcoords", coords)
 
+        ### SCF data
         if line[5:21] == "Basis Functions:":
             self.set_attribute("nbasis", int(line.split()[2]))
 
@@ -103,9 +114,36 @@ class Serenity(logfileparser.Logfile):
                     scftargets.append(numpy.array([ethresh, rmsd, diis]))
                     self.set_attribute("scftargets", scftargets)
 
+        if "Cycle" in line and "Mode" in line:
+            line = next(inputfile)
+            values = []
+            while not line.strip().startswith("Converged after"):
+                linedata = line.split()
+                c1, c2, c3 = map(float, linedata[2:5])
+                values.append([c1, c2, c3])
+                line = next(inputfile)
+            self.append_attribute("scfvalues", numpy.vstack(numpy.array(values)))
+
         if line.startswith("Total Energy ("):
             self.append_attribute("scfenergies", float(line.split()[3]))
 
+        if "Dispersion Correction (" in line:
+            self.append_attribute("dispersionenergies", float(line.split()[3]))
+
+        # Extract index of HOMO
+        if line.strip().startswith("Orbital Energies:"):
+            self.skip_line(inputfile, ["Orbital"])
+            self.skip_line(inputfile, ["dashes"])
+            self.skip_line(inputfile, ["#   Occ."])
+            # self.skip_lines(inputfile, ["Orbital","dashes","#   Occ."]) # TODO test results in warnings
+            homos = None
+            line = next(inputfile)
+            while line.split()[1] == "2.00":
+                homos = int(line.split()[0])
+                line = next(inputfile)
+            self.set_attribute("homos", [homos - 1])  # Serenity starts at 1, python at 0
+
+        ### Multipole moments
         if line.strip().startswith("Origin chosen as:"):
             line = self.skip_line(inputfile, "Origin chosen as:")[0]
             origin_data = line.replace("(", "").replace(")", "").replace(",", "").split()
@@ -120,8 +158,8 @@ class Serenity(logfileparser.Logfile):
             line = self.skip_line(inputfile, "x")[0]
             dipole_data = line.split()
             x, y, z = map(float, dipole_data[:3])
-            dipoleRaw = [x, y, z]
-            dipole = [utils.convertor(value, "ebohr", "Debye") for value in dipoleRaw]
+            dipole_raw = [x, y, z]
+            dipole = [utils.convertor(value, "ebohr", "Debye") for value in dipole_raw]
             self.append_attribute("moments", dipole)
 
         if line.strip().startswith("Quadrupole Moment:"):
@@ -136,22 +174,29 @@ class Serenity(logfileparser.Logfile):
             line = self.skip_line(inputfile, "y")[0]
             q_data = line.split()
             zz = float(q_data[3])
-            quadrupoleRaw = [xx, xy, xz, yy, yz, zz]
-            quadrupole = [utils.convertor(value, "ebohr2", "Buckingham") for value in quadrupoleRaw]
+            quadrupole_raw = [xx, xy, xz, yy, yz, zz]
+            quadrupole = [
+                utils.convertor(value, "ebohr2", "Buckingham") for value in quadrupole_raw
+            ]
             self.append_attribute("moments", quadrupole)
 
-        if "Cycle" in line and "Mode" in line:
+        # Extract charges from population analysis
+        if line.strip().startswith(tuple(self.populationtypes)) and line.split()[1] == "Population":
+            key = line.split()[0]
             line = next(inputfile)
-            values = []
-            while not line.strip().startswith("Converged after"):
-                linedata = line.split()
-                c1, c2, c3 = map(float, linedata[2:5])
-                values.append([c1, c2, c3])
-                line = next(inputfile)
-            self.append_attribute("scfvalues", numpy.vstack(numpy.array(values)))
+            self.skip_line(inputfile, "dashes")
+            self.skip_line(inputfile, "blank")
+            line = next(inputfile)
+            line = next(inputfile)
+            chargelist = []
 
-        if "Dispersion Correction (" in line:
-            self.append_attribute("dispersionenergies", float(line.split()[3]))
+            while line.strip() and not line.strip().startswith("---"):
+                charge = float(line.split()[3])
+                chargelist.append(charge)
+                line = next(inputfile)
+
+            value = numpy.array(chargelist)
+            self.populationdict[key] = value
 
         if "Total Local-CCSD Energy" in line:
             self.set_attribute("ccenergies", float(line.split()[3]))
@@ -165,19 +210,6 @@ class Serenity(logfileparser.Logfile):
         if "Total CCSD(T) Energy" in line:
             self.set_attribute("ccenergies", float(line.split()[3]))
             self.metadata["methods"].append("CCSD(T)")
-
-        # Extract index of HOMO
-        if line.strip().startswith("Orbital Energies:"):
-            self.skip_line(inputfile, ["Orbital"])
-            self.skip_line(inputfile, ["dashes"])
-            self.skip_line(inputfile, ["#   Occ."])
-            # self.skip_lines(inputfile, ["Orbital","dashes","#   Occ."]) # TODO test results in warnings
-            homos = None
-            line = next(inputfile)
-            while line.split()[1] == "2.00":
-                homos = int(line.split()[0])
-                line = next(inputfile)
-            self.set_attribute("homos", [homos - 1])  # Serenity starts at 1, python at 0
 
         if line.split()[1:3] == ["MP2", "Results"] or line.split()[1:3] == [
             "(Local-)MP2",
