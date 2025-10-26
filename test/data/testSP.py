@@ -596,7 +596,7 @@ class GenericSPTest:
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("Turbomole", "reading point group symmetry and name is not implemented")
     @skipForParser("xTB", "not implemented yet")
-    @skipForParser("Serenity", "not applicable")
+    @skipForParser("Serenity", "Serenity doesn't use symmetry")
     def testmetadata_symmetry_detected(self, data) -> None:
         """Does metadata have expected keys and values?"""
         assert data.metadata["symmetry_detected"] == "c2h"

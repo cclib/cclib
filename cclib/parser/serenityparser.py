@@ -33,8 +33,6 @@ class Serenity(logfileparser.Logfile):
 
     def before_parsing(self):
         self.unrestricted = False
-        self.metadata["coord_type"] = "xyz"
-        self.metadata["package"] = "Serenity"
         self.path = Path(self.inputfile.filenames[0]).resolve()
 
     def after_parsing(self):
