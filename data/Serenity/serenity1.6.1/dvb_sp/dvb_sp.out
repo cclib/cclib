@@ -58,15 +58,15 @@
 
   Program started:
  ------------------
-    Time              :   2025-10-15 22:34:30
+    Time              :   2025-10-12 22:36:02
     By                :   lukas
     On                :   HOSTNAME UNKNOWN
 
     Threads           :   12
-    Memory Limit      :   5266 MB
+    Memory Limit      :   7520 MB
 
           ------------------------------------------------------------          
-                                 System dvb_sp                                  
+                                   System dvb                                   
           ------------------------------------------------------------          
 
      Charge:                              0
@@ -149,15 +149,15 @@ o------------------------------------------------------------------------------o
     
     Cycle      E/a.u.         abs(dE)/a.u.     rmsd(P)/a.u.       [F,P]/a.u.      time/min   Mode
        1  -382.0447786996              inf              inf         2.26e-02      0:00 
-       2  -382.0431056427         1.67e-03         1.43e-03         2.81e-02      0:00:116    DDL
-       3  -382.0452032511         2.10e-03         7.29e-04         2.20e-02      0:00:253    -DL
-       4  -382.0481474968         2.94e-03         1.94e-03         6.19e-03      0:00:119    -DL
-       5  -382.0482588750         1.11e-04         4.30e-04         5.29e-04      0:00:220    -DL
-       6  -382.0482606200         1.74e-06         8.41e-05         1.60e-04      0:00:296    -DL
-       7  -382.0482607590         1.39e-07         1.87e-05         5.50e-05      0:00:119    -DL
-       8  -382.0482607757         1.67e-08         5.38e-06         1.10e-05      0:00:108    -D-
-       9  -382.0482607742         1.54e-09         1.15e-06         5.15e-06      0:00:096    -D-
-      10  -382.0482607755         1.28e-09         4.26e-07         4.92e-07      0:00:090    -D-
+       2  -382.0431056427         1.67e-03         1.43e-03         2.81e-02      0:00:119    DDL
+       3  -382.0452032511         2.10e-03         7.29e-04         2.20e-02      0:00:226    -DL
+       4  -382.0481474968         2.94e-03         1.94e-03         6.19e-03      0:00:120    -DL
+       5  -382.0482588750         1.11e-04         4.30e-04         5.29e-04      0:00:173    -DL
+       6  -382.0482606200         1.74e-06         8.41e-05         1.60e-04      0:00:305    -DL
+       7  -382.0482607590         1.39e-07         1.87e-05         5.50e-05      0:00:221    -DL
+       8  -382.0482607757         1.67e-08         5.38e-06         1.10e-05      0:00:130    -D-
+       9  -382.0482607742         1.54e-09         1.15e-06         5.15e-06      0:00:116    -D-
+      10  -382.0482607755         1.28e-09         4.26e-07         4.92e-07      0:00:088    -D-
     Converged after  10 cycles. Loop exited.
 
 
@@ -214,7 +214,7 @@ Total Energy (DFT):                                                             
     S*(S+1) = 0.000 
           C = 0.000 
 
-    Time taken for task 1: 7.99210514 s.
+    Time taken for task 1: 7.586993982 s.
     
  o-------------o
  | Task No. 2: |
@@ -257,7 +257,7 @@ Total Energy (DFT):                                                             
   z  -0.0000000000 +0.0000000000 -43.5485670570 a.u.
 
      1/3 Trace: -39.5748729335 a.u.
-    Time taken for task 2: 0.017791622 s.
+    Time taken for task 2: 0.00358547 s.
     
 
 o------------------------------------------------------------------------------o
@@ -269,24 +269,24 @@ o------------------------------------------------------------------------------o
   Final Timings:
  ----------------
               Active System -     1e-Int Pot.      0:00.015 min
-              Active System -    Coulomb Pot.      0:02.029 min
-              Active System -   Coul./XC Pot.      0:06.114 min
-              Active System -   Exchange Pot.      0:04.085 min
-              Active System - Functional Pot.      0:01.128 min
-               Tech. -           DIIS/Damping      0:00.022 min
-               Tech. -           Grid Sorting      0:00.133 min
-               Tech. -     Grid Constructions      0:00.045 min
-               Tech. -    Basis On Grid Eval.      0:00.371 min
-               Tech. -    Fock Matrix Solving      0:00.044 min
-               Tech. -    Grid to Matrix Int.      0:00.417 min
-               Tech. -  Density On Grid Eval.      0:00.350 min
-               Tech. - Libint Initializations      0:03.334 min
-               Tech. - XCFun Functional Eval.      0:00.356 min
+              Active System -    Coulomb Pot.      0:01.698 min
+              Active System -   Coul./XC Pot.      0:05.441 min
+              Active System -   Exchange Pot.      0:03.743 min
+              Active System - Functional Pot.      0:01.501 min
+               Tech. -           DIIS/Damping      0:00.032 min
+               Tech. -           Grid Sorting      0:00.077 min
+               Tech. -     Grid Constructions      0:00.037 min
+               Tech. -    Basis On Grid Eval.      0:00.386 min
+               Tech. -    Fock Matrix Solving      0:00.019 min
+               Tech. -    Grid to Matrix Int.      0:00.409 min
+               Tech. -  Density On Grid Eval.      0:00.407 min
+               Tech. - Libint Initializations      0:02.964 min
+               Tech. - XCFun Functional Eval.      0:00.680 min
 
   Program ended:
  ----------------
-    Time:  2025-10-15 22:34:38
+    Time:  2025-10-12 22:36:10
     On:    HOSTNAME UNKNOWN
-    Time taken for the entire run: 8.025725900000001 s.
+    Time taken for the entire run: 7.596654877000001 s.
     
 
