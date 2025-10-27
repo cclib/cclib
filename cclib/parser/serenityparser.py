@@ -209,15 +209,13 @@ class Serenity(logfileparser.Logfile):
         if line.strip().startswith("|                                    LRSCF"):
             print("bla")
 
+        # excitation energies and transition data
         if line.strip().startswith("Dominant Contributions"):
             self.skip_line(inputfile, ["Dominant"])
             self.skip_line(inputfile, ["dashes"])
             self.skip_line(inputfile, ["state"])
             self.skip_line(inputfile, ["(a.u.)"])
-            # self.skip_line(inputfile, ["dashes"])
             line = next(inputfile)
-
-            # exc_energies = [] # exc e in a.u.
 
             exc_iterator = 1
             transition_data = []
@@ -228,7 +226,6 @@ class Serenity(logfileparser.Logfile):
                         self.append_attribute("etsecs", transition_data)
                         transition_data = []
 
-                    # exc_energies.append(line.split()[1])
                     self.append_attribute("etenergies", line.split()[1])
                     i = line.split()[6]
                     a = line.split()[8]
@@ -246,3 +243,14 @@ class Serenity(logfileparser.Logfile):
                     transition_data.append([(i, i_spin), (a, a_spin), coef])
                 line = next(inputfile)
             self.append_attribute("etsecs", transition_data)
+
+        # oscillator strengths
+        if line.strip().startswith("Absorption Spectrum (dipole-length)"):
+            self.skip_line(inputfile, ["Absorption"])
+            self.skip_line(inputfile, ["dashes"])
+            self.skip_line(inputfile, ["state"])
+            self.skip_line(inputfile, ["(eV)"])
+            line = next(inputfile)
+            while not line.strip().startswith("--"):
+                self.append_attribute("etoscs", line.split()[3])
+                line = next(inputfile)
