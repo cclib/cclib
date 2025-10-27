@@ -210,11 +210,18 @@ class Serenity(logfileparser.Logfile):
         if line.strip().startswith("TDDFT Summary"):
             self.metadata["excited_states_method"] = "TD-DFT"
 
+        if line.strip().startswith("TDA Summary"):
+            # TODO need to differentiate between TDA and CIS depending on DFT or HF for ground state
+            self.metadata["excited_states_method"] = "TDA"
+
         if line.strip().startswith("CC2 Summary"):
             self.metadata["excited_states_method"] = "CC2"
 
         if line.strip().startswith("ADC(2) Summary"):
             self.metadata["excited_states_method"] = "ADC2"
+
+        if line.strip().startswith("CIS(D) Summary"):
+            self.metadata["excited_states_method"] = "CIS(D)"
 
         # excitation energies and singly-excited configuration data
         if line.strip().startswith("Dominant Contributions"):
