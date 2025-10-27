@@ -258,7 +258,20 @@ class Serenity(logfileparser.Logfile):
                 self.append_attribute("etoscs", line_data[3])
                 line = next(inputfile)
 
-        # rotatory strengths (length gauge)
+        # transition dipoles (velocity gauge)
+        if line.strip().startswith("Absorption Spectrum (dipole-velocity)"):
+            self.skip_line(inputfile, ["Absorption"])
+            self.skip_line(inputfile, ["dashes"])
+            self.skip_line(inputfile, ["state"])
+            self.skip_line(inputfile, ["(eV)"])
+            line = next(inputfile)
+            while not line.strip().startswith("--"):
+                line_data = line.split()
+                x, y, z = map(float, line_data[4:])
+                self.append_attribute("etveldips", [x, y, z])
+                line = next(inputfile)
+
+        # rotatory strengths and magnetic transition dipoles (length gauge)
         if line.strip().startswith("CD Spectrum (dipole-length)"):
             self.skip_line(inputfile, ["CD"])
             self.skip_line(inputfile, ["dashes"])
@@ -267,5 +280,7 @@ class Serenity(logfileparser.Logfile):
             line = next(inputfile)
             while not line.strip().startswith("--"):
                 line_data = line.split()
+                x, y, z = map(float, line_data[4:])
+                self.append_attribute("etmagdips", [x, y, z])
                 self.append_attribute("etrotats", line_data[3])
                 line = next(inputfile)
