@@ -204,10 +204,9 @@ class Serenity(logfileparser.Logfile):
                 i += 1
             self.append_attribute("mpenergies", [line.split()[2]])
 
-        # TODO we're doing lrscf, metadata
-        # TODO might not be necessary... check cc2 and bse later
-        if line.strip().startswith("|                                    LRSCF"):
-            print("bla")
+        # TODO add CC2 etc
+        if line.strip().startswith("TDDFT Summary"):
+            self.metadata["excited_states_method"] = "TD-DFT"
 
         # excitation energies and singly-excited configuration data
         if line.strip().startswith("Dominant Contributions"):
@@ -220,26 +219,25 @@ class Serenity(logfileparser.Logfile):
             exc_iterator = 1
             transition_data = []
             while not line.strip().startswith("--"):
-                if line.strip().startswith(str(exc_iterator)):  # if we catch new exc
+                if line.strip().startswith(str(exc_iterator)):  # new exc
                     if exc_iterator > 1:
-                        # save data
                         self.append_attribute("etsecs", transition_data)
                         transition_data = []
-
                     self.append_attribute("etenergies", line.split()[1])
-                    i = line.split()[6]
-                    a = line.split()[8]
+                    i = int(line.split()[6])
+                    a = int(line.split()[8])
                     i_spin = self.convert_to_spin(line.split()[7])
                     a_spin = self.convert_to_spin(line.split()[9])
-                    coef = line.split()[10]
+                    # Serenity prints coef as coef^2 * 100
+                    coef = numpy.sqrt(float(line.split()[10]) / 100.00)
                     transition_data.append([(i, i_spin), (a, a_spin), coef])
                     exc_iterator += 1
                 else:
-                    i = line.split()[1]
-                    a = line.split()[3]
+                    i = int(line.split()[1])
+                    a = int(line.split()[3])
                     i_spin = self.convert_to_spin(line.split()[2])
                     a_spin = self.convert_to_spin(line.split()[4])
-                    coef = line.split()[5]
+                    coef = numpy.sqrt(float(line.split()[5]) / 100.00)
                     transition_data.append([(i, i_spin), (a, a_spin), coef])
                 line = next(inputfile)
             self.append_attribute("etsecs", transition_data)
