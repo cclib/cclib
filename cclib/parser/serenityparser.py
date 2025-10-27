@@ -252,5 +252,8 @@ class Serenity(logfileparser.Logfile):
             self.skip_line(inputfile, ["(eV)"])
             line = next(inputfile)
             while not line.strip().startswith("--"):
-                self.append_attribute("etoscs", line.split()[3])
+                line_data = line.split()
+                x, y, z = map(float, line_data[4:])
+                self.append_attribute("etdips", [x, y, z])
+                self.append_attribute("etoscs", line_data[3])
                 line = next(inputfile)
