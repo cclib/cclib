@@ -39,6 +39,7 @@ class GenericTDTest:
         "Turbomole/basicTurbomole7.4/CO_cc2_TD_trip",
         "Oscillator strengths are not available for Turbomole triplets using ricc2 but are required for testenergies()",
     )
+    @skipForParser("Serenity", "Serenity will need its own test energy.")  # TODO
     def testenergies(self, data) -> None:
         """Is the l_max reasonable?"""
 
@@ -94,6 +95,7 @@ class GenericTDTest:
     @skipForLogfile(
         "ORCA/basicORCA5.0/dvb_pno_eom_ccsd.log", "etsyms are not available for this method"
     )
+    @skipForParser("Serenity", "Serenity does not use symmetry")
     def testsymsnumber(self, data) -> None:
         """Is the length of etsyms correct?"""
         assert len(data.etsyms) == self.number
@@ -108,6 +110,7 @@ class GenericTDTest:
     @skipForParser("QChem", "etsyms are not yet implemented")
     @skipForLogfile("Gaussian/basicGaussian09", "symmetry is missing for this log file")
     @skipForLogfile("FChk/basicQChem5.4", "etsyms are not yet implemented")
+    @skipForParser("Serenity", "Serenity does not use symmetry")
     def testsyms(self, data) -> None:
         """Are the values of etsyms correct?"""
         assert data.etsyms == self.symmetries
@@ -156,6 +159,10 @@ class GenericTDTest:
     @skipForParser("PySCF", "optstate is not yet implemented")
     @skipForParser("QChem", "optstate is not yet implemented")
     @skipForParser("Turbomole", "optstate is not yet implemented")
+    @skipForParser(
+        "Serenity",
+        "Serenity does not offer linear response calculations where optstate would be applicable",
+    )
     def testoptstate(self, data) -> None:
         # All our examples have a default state-of-interest of 1 (index 0).
         assert data.metadata["opt_state"] == 0
