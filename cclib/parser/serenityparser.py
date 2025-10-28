@@ -78,7 +78,6 @@ class Serenity(logfileparser.Logfile):
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
-        print(line)
 
         ### SYSTEM specific data
         # Extract system name
@@ -106,36 +105,6 @@ class Serenity(logfileparser.Logfile):
             # Extract multiplicity
             if line[5:9] == "Spin":
                 self.set_attribute("mult", int(line.split()[1]) + 1)
-
-        # metadata
-        if line[4:23] == "Version           :":
-            self.metadata["package_version"] = line.split()[2]
-        if line[5:15] == "Basis Set:":
-            self.metadata["basis_set"] = line.split()[2]
-        if line[5:16] == "Functional:":
-            self.metadata["functional"] = line.split()[1]
-        if line[5:14] == "SCF Mode:":
-            self.metadata["unrestricted"] = False
-        if line[4:34] == "Time taken for the entire run:":
-            # TODO this condition is probably too straigthforward and will take some more testing.
-            self.metadata["success"] = True
-        # note: cpu time is not printed straightforwardly in Serenity.
-        if line[4:23] == "Time taken for task":
-            if "wall_time" not in self.metadata:
-                self.metadata["wall_time"] = []
-            if line.split()[6] == "s.":
-                walltime = datetime.timedelta(seconds=float(line.split()[5]))
-            elif line.split()[6] == "min.":
-                walltime = datetime.timedelta(
-                    minutes=float(line.split()[5].split(":")[0]),
-                    seconds=float(line.split()[5].split(":")[1]),
-                )
-            self.metadata["wall_time"].append(walltime)
-        if line.strip().startswith("Warning") or line.strip().startswith("WARNING"):
-            if "warnings" not in self.metadata:
-                self.metadata["warnings"] = []
-            # TODO just adding the entire warning line for now. Warnings may be longer than this line.
-            self.metadata["warning"].append(line)
 
             # Extract from atoms: number of atoms, elements, and coordinates
             if line.strip().startswith("Current Geometry (Angstrom):"):
@@ -166,6 +135,13 @@ class Serenity(logfileparser.Logfile):
             ### SCF data
             if line[5:21] == "Basis Functions:":
                 self.set_attribute("nbasis", int(line.split()[2]))
+
+            if line[5:15] == "Basis Set:":
+                self.metadata["basis_set"] = line.split()[2]
+            if line[5:16] == "Functional:":
+                self.metadata["functional"] = line.split()[1]
+            if line[5:14] == "SCF Mode:":
+                self.metadata["unrestricted"] = False
 
             # Extract SCF thresholds
             if line.strip().startswith("Energy Threshold:"):
@@ -388,3 +364,30 @@ class Serenity(logfileparser.Logfile):
                 line = next(inputfile)
                 i += 1
             self.append_attribute("mpenergies", [line.split()[2]])
+
+        ### metadata
+        if line[4:34] == "Time taken for the entire run:":
+            # TODO this condition is probably too straigthforward and will take some more testing.
+            self.metadata["success"] = True
+
+        # note: cpu time is not printed straightforwardly in Serenity.
+        if line[4:23] == "Time taken for task":
+            if "wall_time" not in self.metadata:
+                self.metadata["wall_time"] = []
+            if line.split()[6] == "s.":
+                walltime = datetime.timedelta(seconds=float(line.split()[5]))
+            elif line.split()[6] == "min.":
+                walltime = datetime.timedelta(
+                    minutes=float(line.split()[5].split(":")[0]),
+                    seconds=float(line.split()[5].split(":")[1]),
+                )
+            self.metadata["wall_time"].append(walltime)
+
+        if line.strip().startswith("Warning") or line.strip().startswith("WARNING"):
+            if "warnings" not in self.metadata:
+                self.metadata["warnings"] = []
+            # TODO just adding the entire warning line for now. Warnings may be longer than this line.
+            self.metadata["warning"].append(line)
+
+        if line[4:23] == "Version           :":
+            self.metadata["package_version"] = line.split()[2]
