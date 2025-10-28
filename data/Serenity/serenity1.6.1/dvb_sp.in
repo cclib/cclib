@@ -22,3 +22,8 @@
 +task pop
  act dvb_sp
 -task
+
++task pop
+ act dvb_sp
+ algorithm hirshfeld
+-task

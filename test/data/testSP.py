@@ -160,7 +160,6 @@ class GenericSPTest:
     @skipForParser("QChem", "Hirshfeld charges not implemented")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     @skipForParser("xTB", "Hirshfeld charges not implemented")
-    @skipForParser("Serenity", "not possible yet")
     def testatomcharges_hirshfeld(self, data) -> None:
         """Do Hirshfeld atomic charges sum to roughly zero?"""
         charges = data.atomcharges["hirshfeld"]

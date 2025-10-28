@@ -39,7 +39,7 @@ class Serenity(logfileparser.Logfile):
         # TODO Note that CM5 and Hirshfeld will not function properly currently, as they perform atom SCFs.
         # This will be fixed in my upcoming PR of geometry optimizations.
         # TODO Serenity also has Becke, IAO, and CHELPG population analyses that are currently not supported.
-        self.populationtypes = ["Mulliken"]  # , "CM5", "Hirshfeld"]
+        self.populationtypes = ["Mulliken", "CM5", "Hirshfeld"]
         self.path = Path(self.inputfile.filenames[0]).resolve()
 
     def after_parsing(self):
@@ -74,8 +74,9 @@ class Serenity(logfileparser.Logfile):
                 if not hasattr(self, "systemname"):
                     self.systemname = name
                 elif name[-5:] == "_FREE":
-                    # TODO skip reading this system, it's just an atom scf for population analyses
-                    print("Atom SCF detected")  # TODO remove line
+                    self.logger.warning(
+                        "Skipping the parsing of the atom SCFs done by some population analysis methods in Serenity."
+                    )
                     self.skipSystem = True
                     self.skipSCF = True
                 elif name != self.systemname:
@@ -92,9 +93,7 @@ class Serenity(logfileparser.Logfile):
                 self.set_attribute("mult", int(line.split()[1]) + 1)
 
             # Extract from atoms: number of atoms, elements, and coordinates
-            if line.strip().startswith("Current Geometry (Angstrom):") and not getattr(
-                self, "atomcoords", []
-            ):
+            if line.strip().startswith("Current Geometry (Angstrom):"):
                 line = next(inputfile)
                 line = next(inputfile)
                 atomnos = []
