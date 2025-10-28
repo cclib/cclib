@@ -33,7 +33,6 @@ class Serenity(logfileparser.Logfile):
 
     def before_parsing(self):
         self.unrestricted = False
-        self.optRequested = False
         self.path = Path(self.inputfile.filenames[0]).resolve()
 
     def after_parsing(self):
@@ -115,7 +114,7 @@ class Serenity(logfileparser.Logfile):
 
         if "Total Energy (" in line:
             self.append_attribute("scfenergies", float(line.split()[3]))
-            if not self.optRequested and hasattr(self, "scfenergies"):
+            if not hasattr(self, "optstatus") and hasattr(self, "scfenergies"):
                 self.logger.warning(
                     "Multiple instances of scfenergies despite no geometry optimization being done. This Serenity calculation possibly has several systems."
                 )
@@ -199,9 +198,6 @@ class Serenity(logfileparser.Logfile):
                 line = next(inputfile)
             self.set_attribute("homos", [homos - 1])  # Serenity starts at 1, python at 0
 
-        if line.strip().startswith("Geometry Relaxation:"):
-            self.optRequested = True
-
         # for additional robustness.
         # this should already be stopped by the presence of several systems in the output
         if line.strip().startswith("Freeze-and-Thaw Cycle"):
@@ -257,6 +253,7 @@ class Serenity(logfileparser.Logfile):
                 line = next(inputfile)
                 criteria.append(line.split()[2])
                 self.append_attribute("geovalues", criteria)
+
         if line.split()[1:3] == ["MP2", "Results"] or line.split()[1:3] == [
             "(Local-)MP2",
             "Results",
