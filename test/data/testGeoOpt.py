@@ -266,7 +266,6 @@ class GenericGeoOptTest:
     @skipForLogfile("FChk/basicGaussian09", "impossible to determine success of calculation")
     @skipForLogfile("FChk/basicQChem5.4", "impossible to determine success of calculation")
     @skipForLogfile("Molcas/basicOpenMolcas18.0/dvb_gopt.out", "not implemented yet")
-    @skipForParser("Serenity", "not implemented yet")
     def testmetadata_success(self, data) -> None:
         """Does metadata have expected keys and values?"""
         assert "success" in data.metadata
