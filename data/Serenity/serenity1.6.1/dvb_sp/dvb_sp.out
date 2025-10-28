@@ -58,15 +58,15 @@
 
   Program started:
  ------------------
-    Time              :   2025-10-28 12:54:25
+    Time              :   2025-10-28 13:44:50
     By                :   lukas
     On                :   HOSTNAME UNKNOWN
 
     Threads           :   12
-    Memory Limit      :   3271 MB
+    Memory Limit      :   3622 MB
 
           ------------------------------------------------------------          
-                                 System dvb_sp                                  
+                                   System dvb                                   
           ------------------------------------------------------------          
 
      Charge:                              0
@@ -149,15 +149,15 @@ o------------------------------------------------------------------------------o
     
     Cycle      E/a.u.         abs(dE)/a.u.     rmsd(P)/a.u.       [F,P]/a.u.      time/min   Mode
        1  -382.0447786996              inf              inf         2.26e-02      0:00 
-       2  -382.0431056427         1.67e-03         1.43e-03         2.81e-02      0:00:139    DDL
-       3  -382.0452032511         2.10e-03         7.29e-04         2.20e-02      0:00:115    -DL
-       4  -382.0481474968         2.94e-03         1.94e-03         6.19e-03      0:00:123    -DL
-       5  -382.0482588750         1.11e-04         4.30e-04         5.29e-04      0:00:122    -DL
-       6  -382.0482606200         1.74e-06         8.41e-05         1.60e-04      0:00:366    -DL
-       7  -382.0482607590         1.39e-07         1.87e-05         5.50e-05      0:00:350    -DL
-       8  -382.0482607757         1.67e-08         5.38e-06         1.10e-05      0:00:274    -D-
-       9  -382.0482607742         1.54e-09         1.15e-06         5.15e-06      0:00:278    -D-
-      10  -382.0482607755         1.28e-09         4.26e-07         4.92e-07      0:00:309    -D-
+       2  -382.0431056427         1.67e-03         1.43e-03         2.81e-02      0:00:120    DDL
+       3  -382.0452032511         2.10e-03         7.29e-04         2.20e-02      0:00:134    -DL
+       4  -382.0481474968         2.94e-03         1.94e-03         6.19e-03      0:00:201    -DL
+       5  -382.0482588750         1.11e-04         4.30e-04         5.29e-04      0:00:140    -DL
+       6  -382.0482606200         1.74e-06         8.41e-05         1.60e-04      0:00:240    -DL
+       7  -382.0482607590         1.39e-07         1.87e-05         5.50e-05      0:00:123    -DL
+       8  -382.0482607757         1.67e-08         5.38e-06         1.10e-05      0:00:109    -D-
+       9  -382.0482607742         1.54e-09         1.15e-06         5.15e-06      0:00:101    -D-
+      10  -382.0482607755         1.28e-09         4.26e-07         4.92e-07      0:00:091    -D-
     Converged after  10 cycles. Loop exited.
 
 
@@ -214,53 +214,10 @@ Total Energy (DFT):                                                             
     S*(S+1) = 0.000 
           C = 0.000 
 
-    Time taken for task 1: 12.440782352 s.
+    Time taken for task 1: 14.815206298 s.
     
  o-------------o
  | Task No. 2: |
- o-------------o
-
-
-     Origin chosen as:
-     (+0.00000, +0.00000, +0.00000)
-
-     (Will be used for the origin correction of multipoles for charged systems!)
-
-
-  Dipole Moment:
- ----------------
-            x             y             z
-     -0.0000000000 -0.0000000000 +0.0000000000 a.u.
-     -0.0000000000 -0.0000000000 +0.0000000000 Debye
-
-     |Dipole Moment|: +0.0000000000 a.u.   +0.0000000000 Debye
-
-
-  Quadrupole Moment:
- --------------------
-            x             y             z
-  x  -37.2936529008 +0.0851159997 -0.0000000000 a.u.
-  y  +0.0851159997 -37.8823988427 +0.0000000000 a.u.
-  z  -0.0000000000 +0.0000000000 -43.5485670570 a.u.
-
-     1/3 Trace: -39.5748729335 a.u.
-
-
-  Calculate origin-corrected Quadrupole Moment q_corr=q-mu*R_0-R_0*mu+charge*R_0^2:
- -----------------------------------------------------------------------------------
-
-  Origin-Corrected Quadrupole Moment:
- -------------------------------------
-            x             y             z
-  x  -37.2936529008 +0.0851159997 -0.0000000000 a.u.
-  y  +0.0851159997 -37.8823988427 +0.0000000000 a.u.
-  z  -0.0000000000 +0.0000000000 -43.5485670570 a.u.
-
-     1/3 Trace: -39.5748729335 a.u.
-    Time taken for task 2: 0.005848416 s.
-    
- o-------------o
- | Task No. 3: |
  o-------------o
 
 
@@ -359,10 +316,10 @@ Total Energy (DFT):                                                             
         19  H    59  s      0.921980 
         20  H    60  s      0.923790 
 
-    Time taken for task 3: 0.0007241260000000001 s.
+    Time taken for task 2: 0.002040246 s.
     
  o-------------o
- | Task No. 4: |
+ | Task No. 3: |
  o-------------o
 
 
@@ -417,8 +374,8 @@ Total Energy (DFT):                                                             
     
     Cycle      E/a.u.         abs(dE)/a.u.     rmsd(P)/a.u.       [F,P]/a.u.      time/min   Mode
        1   -37.1994185959              inf              inf         1.15e-15      0:00 
-       2   -37.1994185959         7.11e-15         6.01e-17         1.15e-15      0:00:114    DD-
-       3   -37.1994185959         7.11e-15         7.10e-17         1.15e-15      0:00:123    -D-
+       2   -37.1994185959         7.11e-15         2.52e-16         6.88e-16      0:00:001    DD-
+       3   -37.1994185959         7.11e-15         1.10e-16         9.17e-16      0:00:001    -D-
     Converged after   3 cycles. Loop exited.
 
   Constructing an integration grid:
@@ -518,7 +475,7 @@ Total Energy (DFT):                                                             
     Cycle      E/a.u.         abs(dE)/a.u.     rmsd(P)/a.u.       [F,P]/a.u.      time/min   Mode
        1    -0.4640623360              inf              inf         0.00e+00      0:00 
        2    -0.4640623360         0.00e+00         0.00e+00         0.00e+00      0:00:001    DD-
-       3    -0.4640623360         0.00e+00         0.00e+00         0.00e+00      0:00:002    -D-
+       3    -0.4640623360         0.00e+00         0.00e+00         0.00e+00      0:00:001    -D-
     Converged after   3 cycles. Loop exited.
 
   Constructing an integration grid:
@@ -594,7 +551,50 @@ Beta:
         19         H    0.974474    0.025526
         20         H    0.974244    0.025756
 
-    Time taken for task 4: 5.205409578 s.
+    Time taken for task 3: 5.689680587000001 s.
+    
+ o-------------o
+ | Task No. 4: |
+ o-------------o
+
+
+     Origin chosen as:
+     (+0.00000, +0.00000, +0.00000)
+
+     (Will be used for the origin correction of multipoles for charged systems!)
+
+
+  Dipole Moment:
+ ----------------
+            x             y             z
+     -0.0000000000 -0.0000000000 +0.0000000000 a.u.
+     -0.0000000000 -0.0000000000 +0.0000000000 Debye
+
+     |Dipole Moment|: +0.0000000000 a.u.   +0.0000000000 Debye
+
+
+  Quadrupole Moment:
+ --------------------
+            x             y             z
+  x  -37.2936529008 +0.0851159997 -0.0000000000 a.u.
+  y  +0.0851159997 -37.8823988427 +0.0000000000 a.u.
+  z  -0.0000000000 +0.0000000000 -43.5485670570 a.u.
+
+     1/3 Trace: -39.5748729335 a.u.
+
+
+  Calculate origin-corrected Quadrupole Moment q_corr=q-mu*R_0-R_0*mu+charge*R_0^2:
+ -----------------------------------------------------------------------------------
+
+  Origin-Corrected Quadrupole Moment:
+ -------------------------------------
+            x             y             z
+  x  -37.2936529008 +0.0851159997 -0.0000000000 a.u.
+  y  +0.0851159997 -37.8823988427 +0.0000000000 a.u.
+  z  -0.0000000000 +0.0000000000 -43.5485670570 a.u.
+
+     1/3 Trace: -39.5748729335 a.u.
+    Time taken for task 4: 0.006824853000000001 s.
     
 
 o------------------------------------------------------------------------------o
@@ -605,25 +605,25 @@ o------------------------------------------------------------------------------o
 
   Final Timings:
  ----------------
-              Active System -     1e-Int Pot.      0:00.105 min
-              Active System -    Coulomb Pot.      0:06.946 min
-              Active System -   Coul./XC Pot.      0:13.265 min
-              Active System -   Exchange Pot.      0:06.317 min
-              Active System - Functional Pot.      0:02.242 min
-               Tech. -           DIIS/Damping      0:00.039 min
-               Tech. -           Grid Sorting      0:00.220 min
-               Tech. -     Grid Constructions      0:00.076 min
-               Tech. -    Basis On Grid Eval.      0:00.459 min
-               Tech. -    Fock Matrix Solving      0:00.039 min
-               Tech. -    Grid to Matrix Int.      0:00.547 min
-               Tech. -  Density On Grid Eval.      0:00.640 min
-               Tech. - Libint Initializations      0:09.306 min
-               Tech. - XCFun Functional Eval.      0:01.265 min
+              Active System -     1e-Int Pot.      0:00.096 min
+              Active System -    Coulomb Pot.      0:06.156 min
+              Active System -   Coul./XC Pot.      0:16.406 min
+              Active System -   Exchange Pot.      0:10.246 min
+              Active System - Functional Pot.      0:01.570 min
+               Tech. -           DIIS/Damping      0:00.044 min
+               Tech. -           Grid Sorting      0:00.219 min
+               Tech. -     Grid Constructions      0:00.108 min
+               Tech. -    Basis On Grid Eval.      0:00.469 min
+               Tech. -    Fock Matrix Solving      0:00.021 min
+               Tech. -    Grid to Matrix Int.      0:00.478 min
+               Tech. -  Density On Grid Eval.      0:00.626 min
+               Tech. - Libint Initializations      0:12.751 min
+               Tech. - XCFun Functional Eval.      0:00.724 min
 
   Program ended:
  ----------------
-    Time:  2025-10-28 12:54:42
+    Time:  2025-10-28 13:45:11
     On:    HOSTNAME UNKNOWN
-    Time taken for the entire run: 17.665019551 s.
+    Time taken for the entire run: 20.524319646 s.
     
 
