@@ -305,6 +305,11 @@ class Serenity(logfileparser.Logfile):
                 if not self.optstatus[-1] & data.ccData.OPT_DONE:
                     self.append_attribute("optdone", len(self.atomcoords) - 1)
                     self.optstatus[-1] += data.ccData.OPT_DONE
+                    # removing unnecessary entries of HOMOs in case of geom. opt. etc.
+                    if self.metadata["unrestricted"]:
+                        self.homos = self.homos[0:2]
+                    else:
+                        self.homos = self.homos[0]
 
             if line.strip().startswith("Current Geometry Gradients (a.u.):"):
                 if not self.optstatus[-1] & data.ccData.OPT_DONE:
