@@ -275,7 +275,7 @@ Polar     ORCA        ReferencePolarTest    basicORCA5.0          Trp_polar.out
 Polar     ORCA        ReferencePolarTest    basicORCA6.0          Trp_polar.out
 Polar     QChem       ReferencePolarTest    basicQChem5.1         Trp_polar.out
 Polar     QChem       ReferencePolarTest    basicQChem5.4         Trp_polar.out
-Polar     Serenity    ReferencePolarTest    serenity1.6.1         .out
+Polar     Serenity    GenericPolarTest      serenity1.6.1         dvb_ff/dvb_ff.out
 
 Scan      Gaussian     GaussianRelaxedScanTest               basicGaussian09       dvb_scan_relaxed.log
 Scan      Gaussian     GaussianRelaxedScanTest               basicGaussian16       dvb_scan_relaxed.log

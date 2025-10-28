@@ -1,0 +1,22 @@
++system 
+ name dvb_ff
+ geometry dvb_ff.xyz
+ method dft
+ +dft
+  functional pbe
+ -dft
+ +basis
+  label def2-svp 
+ -basis
+-system
+
++task scf
+ act dvb_ff
+-task
+
++task ff
+act dvb_ff
+finiteFieldStrength 0.1
+frequency 1.0
+-task
+

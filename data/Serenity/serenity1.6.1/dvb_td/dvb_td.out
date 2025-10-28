@@ -58,12 +58,12 @@
 
   Program started:
  ------------------
-    Time              :   2025-10-26 09:34:21
+    Time              :   2025-10-28 09:52:47
     By                :   lukas
     On                :   HOSTNAME UNKNOWN
 
     Threads           :   12
-    Memory Limit      :   3415 MB
+    Memory Limit      :   2813 MB
 
           ------------------------------------------------------------          
                                  System dvb_td                                  
@@ -149,15 +149,15 @@ o------------------------------------------------------------------------------o
     
     Cycle      E/a.u.         abs(dE)/a.u.     rmsd(P)/a.u.       [F,P]/a.u.      time/min   Mode
        1  -382.0447786996              inf              inf         2.26e-02      0:00 
-       2  -382.0431056427         1.67e-03         1.43e-03         2.81e-02      0:00:159    DDL
-       3  -382.0452032511         2.10e-03         7.29e-04         2.20e-02      0:00:115    -DL
-       4  -382.0481474968         2.94e-03         1.94e-03         6.19e-03      0:00:253    -DL
-       5  -382.0482588750         1.11e-04         4.30e-04         5.29e-04      0:00:120    -DL
-       6  -382.0482606200         1.74e-06         8.41e-05         1.60e-04      0:00:426    -DL
-       7  -382.0482607590         1.39e-07         1.87e-05         5.50e-05      0:00:214    -DL
-       8  -382.0482607757         1.67e-08         5.38e-06         1.10e-05      0:00:108    -D-
-       9  -382.0482607742         1.54e-09         1.15e-06         5.15e-06      0:00:097    -D-
-      10  -382.0482607755         1.28e-09         4.26e-07         4.92e-07      0:00:091    -D-
+       2  -382.0431056427         1.67e-03         1.43e-03         2.81e-02      0:00:476    DDL
+       3  -382.0452032511         2.10e-03         7.29e-04         2.20e-02      0:00:455    -DL
+       4  -382.0481474968         2.94e-03         1.94e-03         6.19e-03      0:00:467    -DL
+       5  -382.0482588750         1.11e-04         4.30e-04         5.29e-04      0:00:380    -DL
+       6  -382.0482606200         1.74e-06         8.41e-05         1.60e-04      0:00:557    -DL
+       7  -382.0482607590         1.39e-07         1.87e-05         5.50e-05      0:00:444    -DL
+       8  -382.0482607757         1.67e-08         5.38e-06         1.10e-05      0:00:389    -D-
+       9  -382.0482607742         1.54e-09         1.15e-06         5.15e-06      0:00:383    -D-
+      10  -382.0482607755         1.28e-09         4.26e-07         4.92e-07      0:00:301    -D-
     Converged after  10 cycles. Loop exited.
 
 
@@ -214,7 +214,7 @@ Total Energy (DFT):                                                             
     S*(S+1) = 0.000 
           C = 0.000 
 
-    Time taken for task 1: 10.804250781 s.
+    Time taken for task 1: 18.141681042 s.
     
  o-------------o
  | Task No. 2: |
@@ -278,17 +278,17 @@ o------------------------------------------------------------------------------o
   
    it.    dimension    time (min)    converged     max. norm
  ----------------------------------------------------------------
-    1         10          0.021           0      1.36e-01  ( 2)
-    2         15          0.011           0      3.10e-02  ( 2)
-    3         20          0.009           0      2.77e-02  ( 5)
-    4         25          0.013           0      6.17e-03  ( 5)
-    5         30          0.010           0      1.28e-03  ( 5)
-    6         35          0.008           1      2.27e-04  ( 5)
-    7         39          0.007           4      2.40e-02  ( 4)
-    8         40          0.011           4      1.72e-03  ( 4)
-    9         41          0.009           4      2.07e-04  ( 4)
-   10         42          0.008           4      2.77e-05  ( 4)
-   11         43          0.008           5      5.99e-06  ( 5)
+    1         10          0.029           0      1.36e-01  ( 2)
+    2         15          0.013           0      3.10e-02  ( 2)
+    3         20          0.013           0      2.77e-02  ( 5)
+    4         25          0.017           0      6.17e-03  ( 5)
+    5         30          0.017           0      1.28e-03  ( 5)
+    6         35          0.016           1      2.27e-04  ( 5)
+    7         39          0.010           4      2.40e-02  ( 4)
+    8         40          0.008           4      1.72e-03  ( 4)
+    9         41          0.008           4      2.07e-04  ( 4)
+   10         42          0.007           4      2.77e-05  ( 4)
+   11         43          0.007           5      5.99e-06  ( 5)
 
   Iterative solver converged in  11 iterations.
 
@@ -375,54 +375,322 @@ o------------------------------------------------------------------------------o
  state       energy      wavelength         R            Sxx        Syy        Szz     
               (eV)          (nm)        (1e-40cgs)               (1e-40cgs)            
 ---------------------------------------------------------------------------------------
-   1         5.63119        220.2          0.0000      0.00000    0.00000   -0.00000
+   1         5.63119        220.2          0.0000      0.00000    0.00000    0.00000
    2         5.74422        215.8          0.0000      0.00001   -0.00000   -0.00000
-   3         6.61496        187.4         -0.0000     -0.00000    0.00000   -0.00000
-   4         7.03084        176.3          0.0005      0.00051   -0.00000    0.00000
-   5         7.53889        164.5          0.0000      0.00000   -0.00000   -0.00000
+   3         6.61496        187.4         -0.0000     -0.00000   -0.00000   -0.00000
+   4         7.03084        176.3          0.0005      0.00051   -0.00000   -0.00000
+   5         7.53889        164.5          0.0000      0.00000    0.00000    0.00000
 ---------------------------------------------------------------------------------------
-    Time taken for task 2: 7.682699695 s.
+    Time taken for task 2: 10.677702083 s.
     
+ o-------------o
+ | Task No. 3: |
+ o-------------o
+
+
+          ------------------------------------------------------------          
+                               Finite Field Task                                
+          ------------------------------------------------------------          
+
+ o-------------------------o
+ | Calculation for dvb_td: |
+ o-------------------------o
+
+
+          ------------------------------------------------------------          
+                                Main SCF Options                                
+          ------------------------------------------------------------          
+
+     SCF Mode:                   RESTRICTED
+     Method:                            DFT
+     Functional:                      B3LYP
+     Grid Accuracy:                     2/4
+     Dispersion Correction:            NONE
+     Basis Set:                      STO-3G
+     Basis Functions:                    60
+     Caching Threshold:                  -1
+     Integral Threshold:            5.6e-11
+
+     Energy Threshold:              5.0e-08
+     RMSD[D] Threshold:             1.0e-08
+     DIIS Threshold:                5.0e-07
+
+     Density Fitting:
+       Coulomb                           RI
+       Exchange                        NONE
+       Long-Range Exchange             NONE
+       Correlation                       RI
+
+          ------------------------------------------------------------          
+                                      SCF                                       
+          ------------------------------------------------------------          
+
+  Homogeneous Electric Field:
+ -----------------------------
+  Field Strength (au): 0.00e+00
+
+  Electric Field Vector:   1.000   0.000   0.000
+
+    Cycle      E/a.u.         abs(dE)/a.u.     rmsd(P)/a.u.       [F,P]/a.u.      time/min   Mode
+       1  -382.0482566643              inf              inf         9.60e-04      0:00 
+       2  -382.0482601662         3.50e-06         4.46e-05         4.14e-04      0:00:272    DDL
+       3  -382.0482604285         2.62e-07         1.02e-05         2.64e-04      0:00:305    -DL
+       4  -382.0482607561         3.28e-07         1.94e-05         1.10e-05      0:00:280    -D-
+       5  -382.0482607880         3.19e-08         8.57e-07         9.19e-07      0:00:264    -D-
+       6  -382.0482607775         1.06e-08         1.35e-07         4.89e-07      0:00:239    -D-
+    Converged after   6 cycles. Loop exited.
+
+
+          ------------------------------------------------------------          
+                               Final SCF Results                                
+          ------------------------------------------------------------          
+
+Energy components as stored:
+Electron Electron Repulsion (with self-interact.):                                   634.2405855045 
+Nuclear Repulsion:                                                                   450.0061379780 
+One-Particle Energy (including ECPs):                                              -1408.6618211389 
+Exchange-Correlation Energy (without HF/MP2 contributions):                          -46.5623050950 
+Exact exchange (HF exchange in DFT):                                                 -11.0696854276 
+Dispersion Correction (DFT):                                                           0.0000000000 
+MP2 correlation (in DFT):                                                              0.0000000000 
+PCM Solvation Energy:                                                                  0.0000000000 
+----------------------------------------------------------------------------------------------------
+Derived energy components:
+Two-Particle Energy (DFT):                                                           576.6085949819 
+Exchange-Correlation Energy:                                                         -57.6319905226 
+Total Energy (DFT):                                                                 -382.0470881791 
+----------------------------------------------------------------------------------------------------
+    
+  Orbital Energies:
+ -------------------
+        #    Occ.      Hartree                eV   
+       ---  ------    ---------            --------
+        26   2.00   -0.3541238821       -9.6362017358
+        27   2.00   -0.3452888891       -9.3957893265
+        28   2.00   -0.3266220406       -8.8878385031
+        29   2.00   -0.3016371513       -8.2079650293
+        30   2.00   -0.2918555686       -7.9417946039
+        31   2.00   -0.2772960175       -7.5456090355
+        32   2.00   -0.2595481638       -7.0626653358
+        33   2.00   -0.2123911676       -5.7794580961
+        34   2.00   -0.1939687290       -5.2781580053
+        35   2.00   -0.1564290589       -4.2566515429
+        36   0.00   +0.0532450420       +1.4488714022
+        37   0.00   +0.0943248845       +2.5667108647
+        38   0.00   +0.1201522522       +3.2695093433
+        39   0.00   +0.1851407243       +5.0379357580
+        40   0.00   +0.2839694581       +7.7272026056
+        41   0.00   +0.3228807485       +8.7860327601
+        42   0.00   +0.3332441651       +9.0680356910
+        43   0.00   +0.3690129963      +10.0413551732
+        44   0.00   +0.3738962173      +10.1742343842
+        45   0.00   +0.4165089000      +11.3337845525
+    
+  Additional Analysis:
+ ----------------------
+
+   -<V>/<T> = 2.016 
+      <S*S> = 0.000 
+    S*(S+1) = 0.000 
+          C = 0.000 
+
+
+          ------------------------------------------------------------          
+                                Main SCF Options                                
+          ------------------------------------------------------------          
+
+     SCF Mode:                   RESTRICTED
+     Method:                            DFT
+     Functional:                      B3LYP
+     Grid Accuracy:                     2/4
+     Dispersion Correction:            NONE
+     Basis Set:                      STO-3G
+     Basis Functions:                    60
+     Caching Threshold:                  -1
+     Integral Threshold:            5.6e-11
+
+     Energy Threshold:              5.0e-08
+     RMSD[D] Threshold:             1.0e-08
+     DIIS Threshold:                5.0e-07
+
+     Density Fitting:
+       Coulomb                           RI
+       Exchange                        NONE
+       Long-Range Exchange             NONE
+       Correlation                       RI
+
+          ------------------------------------------------------------          
+                                      SCF                                       
+          ------------------------------------------------------------          
+
+  Homogeneous Electric Field:
+ -----------------------------
+  Field Strength (au): 0.00e+00
+
+  Electric Field Vector:   1.000   0.000   0.000
+
+    Cycle      E/a.u.         abs(dE)/a.u.     rmsd(P)/a.u.       [F,P]/a.u.      time/min   Mode
+       1  -382.0482566658              inf              inf         9.60e-04      0:00 
+       2  -382.0482601665         3.50e-06         4.46e-05         4.14e-04      0:00:090    DDL
+       3  -382.0482604287         2.62e-07         1.02e-05         2.64e-04      0:00:079    -DL
+       4  -382.0482607562         3.28e-07         1.94e-05         1.10e-05      0:00:084    -D-
+       5  -382.0482607879         3.17e-08         8.57e-07         9.19e-07      0:00:063    -D-
+       6  -382.0482607775         1.04e-08         1.35e-07         4.89e-07      0:00:166    -D-
+    Converged after   6 cycles. Loop exited.
+
+
+          ------------------------------------------------------------          
+                               Final SCF Results                                
+          ------------------------------------------------------------          
+
+Energy components as stored:
+Electron Electron Repulsion (with self-interact.):                                   634.2405855045 
+Nuclear Repulsion:                                                                   450.0061379780 
+One-Particle Energy (including ECPs):                                              -1408.6618211391 
+Exchange-Correlation Energy (without HF/MP2 contributions):                          -46.5623050949 
+Exact exchange (HF exchange in DFT):                                                 -11.0696854275 
+Dispersion Correction (DFT):                                                           0.0000000000 
+MP2 correlation (in DFT):                                                              0.0000000000 
+PCM Solvation Energy:                                                                  0.0000000000 
+----------------------------------------------------------------------------------------------------
+Derived energy components:
+Two-Particle Energy (DFT):                                                           576.6085949821 
+Exchange-Correlation Energy:                                                         -57.6319905224 
+Total Energy (DFT):                                                                 -382.0470881790 
+----------------------------------------------------------------------------------------------------
+    
+  Orbital Energies:
+ -------------------
+        #    Occ.      Hartree                eV   
+       ---  ------    ---------            --------
+        26   2.00   -0.3541238821       -9.6362017358
+        27   2.00   -0.3452888891       -9.3957893269
+        28   2.00   -0.3266220405       -8.8878385018
+        29   2.00   -0.3016371513       -8.2079650290
+        30   2.00   -0.2918555685       -7.9417946030
+        31   2.00   -0.2772960174       -7.5456090348
+        32   2.00   -0.2595481638       -7.0626653355
+        33   2.00   -0.2123911676       -5.7794580974
+        34   2.00   -0.1939687290       -5.2781580048
+        35   2.00   -0.1564290589       -4.2566515426
+        36   0.00   +0.0532450420       +1.4488714025
+        37   0.00   +0.0943248845       +2.5667108652
+        38   0.00   +0.1201522522       +3.2695093419
+        39   0.00   +0.1851407243       +5.0379357583
+        40   0.00   +0.2839694581       +7.7272026069
+        41   0.00   +0.3228807487       +8.7860327635
+        42   0.00   +0.3332441651       +9.0680356916
+        43   0.00   +0.3690129964      +10.0413551759
+        44   0.00   +0.3738962172      +10.1742343833
+        45   0.00   +0.4165089000      +11.3337845529
+    
+  Additional Analysis:
+ ----------------------
+
+   -<V>/<T> = 2.016 
+      <S*S> = 0.000 
+    S*(S+1) = 0.000 
+          C = 0.000 
+
 
 o------------------------------------------------------------------------------o
-|                                   Cleanup                                    |
+|                                    LRSCF                                     |
 o------------------------------------------------------------------------------o
 
-    All clean and shiny
+ o-------------o
+ | LRSCF Info: |
+ o-------------o
+
+ System(s):
+                       Sys  Stat    nOcc_a   nVirt_a     nDim
+ ----------------------------------------------------------------
+    1               dvb_td   act       35       25      875 
+
+ Type        :               Isolated 
+ NaddKinFunc :                   NONE 
+ NaddXCFunc  :                   NONE 
+
+
+  Set gauge-origin to center of mass.
+  Gauge-origin (Angstrom):  -0.0000  -0.0000   0.0000
+
+  Molecular weight:   130.0783
+
+  Nuclear dipole moment:     0.0000    -0.0000     0.0000
+
+ o---------o
+ | Kernel: |
+ o---------o
+
+  Grid:    4/4
+
+ .. done.
+
+ o------------------o
+ | Density Fitting: |
+ o------------------o
+
+  Coulomb      :  RI        
+  Exchange     :  NONE      
+
+  Using adaptive prescreening thresholds.
+
+ o------------------o
+ | Response Solver: |
+ o------------------o
+
+    Number of sets                        : 2
+    Dimension of the eigenvalue problem   : 875
+    Number of roots to be determined      : 3
+    Convergence threshold                 : 1e-05
+    Maximum number of iterations          : 100
+    Maximum subspace dimension            : 1000000
+
+    Gram-Schmidt: Removed   0 linear dependencies.
+
+o------------------------------------------------------------------------------o
+|                               Serenity Crashed                               |
+o------------------------------------------------------------------------------o
+
+
+  Error:
+ --------
+    No default auxiliary (correlation optimized) basis set for chosen basis. Set AuxCLabel: STO-3G-RI-C.
+You may have to manually specify an auxiliary basis or make sure that the file /home/lukas/serenity/data/basis/STO-3G-RI-C exists.
 
   Final Timings:
  ----------------
-              Active System -     1e-Int Pot.      0:00.026 min
-              Active System -    Coulomb Pot.      0:04.361 min
-              Active System -   Coul./XC Pot.      0:08.892 min
-              Active System -   Exchange Pot.      0:04.529 min
-              Active System - Functional Pot.      0:01.278 min
-                LRSCF -              Disk I/O      0:00.037 min
-                LRSCF -      Dipole Integrals      0:00.015 min
-                LRSCF -   Kernel: Contraction      0:01.159 min
-                LRSCF -   Kernel: Num. Integ.      0:01.022 min
-                LRSCF -   Sigmavector:      J      0:02.885 min
-                LRSCF -   Sigmavector:      K      0:01.546 min
-                LRSCF -   Sigmavector:   Fock      0:00.004 min
-                LRSCF -   Sigmavector: Kernel      0:02.271 min
+              Active System -     1e-Int Pot.      0:00.175 min
+              Active System -    Coulomb Pot.      0:06.611 min
+              Active System -   Coul./XC Pot.      0:17.460 min
+              Active System -   Exchange Pot.      0:10.837 min
+              Active System - Functional Pot.      0:05.259 min
+                LRSCF -              Disk I/O      0:00.066 min
+                LRSCF -      Dipole Integrals      0:00.044 min
+                LRSCF -   Kernel: Contraction      0:01.080 min
+                LRSCF -   Kernel: Num. Integ.      0:01.182 min
+                LRSCF -   Sigmavector:      J      0:02.322 min
+                LRSCF -   Sigmavector:      K      0:01.624 min
+                LRSCF -   Sigmavector:   Fock      0:00.006 min
+                LRSCF -   Sigmavector: Kernel      0:04.430 min
                 LRSCF -  AO-MO Transformation      0:00.053 min
-                LRSCF -  Kernel on Grid Eval.      0:00.376 min
-                LRSCF - Add/Sym Fock Matrices      0:00.006 min
-                LRSCF - Shell-Wise Abs. Calc.      0:00.003 min
-               Tech. -           DIIS/Damping      0:00.014 min
-               Tech. -           Grid Sorting      0:00.145 min
-               Tech. -     Grid Constructions      0:00.067 min
-               Tech. -    Basis On Grid Eval.      0:01.621 min
-               Tech. -    Fock Matrix Solving      0:00.023 min
-               Tech. -    Grid to Matrix Int.      0:00.403 min
-               Tech. -  Density On Grid Eval.      0:00.404 min
-               Tech. - Libint Initializations      0:06.537 min
-               Tech. - XCFun Functional Eval.      0:00.736 min
+                LRSCF -  Kernel on Grid Eval.      0:01.885 min
+                LRSCF - Add/Sym Fock Matrices      0:00.010 min
+                LRSCF - Shell-Wise Abs. Calc.      0:00.004 min
+               Tech. -           DIIS/Damping      0:00.175 min
+               Tech. -           Grid Sorting      0:00.528 min
+               Tech. -     Grid Constructions      0:00.170 min
+               Tech. -    Basis On Grid Eval.      0:02.107 min
+               Tech. -    Fock Matrix Solving      0:00.077 min
+               Tech. -    Grid to Matrix Int.      0:01.380 min
+               Tech. -  Density On Grid Eval.      0:01.187 min
+               Tech. - Libint Initializations      0:12.105 min
+               Tech. - XCFun Functional Eval.      0:03.499 min
 
-  Program ended:
- ----------------
-    Time:  2025-10-26 09:34:39
+  Program Crashed:
+ ------------------
+    Time:  2025-10-28 09:53:23
     On:    HOSTNAME UNKNOWN
-    Time taken for the entire run: 18.502944919 s.
+    Time taken for the entire run: 35.93428922 s.
     
 
