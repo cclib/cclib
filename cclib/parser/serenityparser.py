@@ -92,7 +92,6 @@ class Serenity(logfileparser.Logfile):
 
         # Extract SCF thresholds
         if line.strip().startswith("Energy Threshold:"):
-            scftargets = []
             ethresh = float(line.split()[2])
             line = next(inputfile)
             if "RMSD[D]" in line:
@@ -100,8 +99,7 @@ class Serenity(logfileparser.Logfile):
                 line = next(inputfile)
                 if "DIIS" in line:
                     diis = float(line.split()[2])
-                    scftargets.append(numpy.array([ethresh, rmsd, diis]))
-                    self.set_attribute("scftargets", scftargets)
+                    self.append_attribute("scftargets", [ethresh, rmsd, diis])
 
         if line.startswith("Total Energy ("):
             self.append_attribute("scfenergies", float(line.split()[3]))
