@@ -76,6 +76,17 @@ class Serenity(logfileparser.Logfile):
 
         super().after_parsing()
 
+    def convert_to_spin(self, symbol):
+        if symbol == "a":
+            return 0
+        elif symbol == "b":
+            return 1
+        else:
+            self.logger.warning(
+                "Unexpected symbol encountered while parsing for spins of transitions."
+            )
+            raise StopParsing()
+
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
 
@@ -391,3 +402,83 @@ class Serenity(logfileparser.Logfile):
 
         if line[4:23] == "Version           :":
             self.metadata["package_version"] = line.split()[2]
+
+        ### EXCITED STATE
+        # TODO add CC2 etc
+        if line.strip().startswith("TDDFT Summary"):
+            self.metadata["excited_states_method"] = "TD-DFT"
+
+        # excitation energies and singly-excited configuration data
+        if line.strip().startswith("Dominant Contributions"):
+            self.skip_line(inputfile, ["Dominant"])
+            self.skip_line(inputfile, ["dashes"])
+            self.skip_line(inputfile, ["state"])
+            self.skip_line(inputfile, ["(a.u.)"])
+            line = next(inputfile)
+
+            exc_iterator = 1
+            transition_data = []
+            while not line.strip().startswith("--"):
+                if line.strip().startswith(str(exc_iterator)):  # new exc
+                    if exc_iterator > 1:
+                        self.append_attribute("etsecs", transition_data)
+                        transition_data = []
+                    self.append_attribute("etenergies", line.split()[1])
+                    i = int(line.split()[6])
+                    a = int(line.split()[8])
+                    i_spin = self.convert_to_spin(line.split()[7])
+                    a_spin = self.convert_to_spin(line.split()[9])
+                    # Serenity prints coef as coef^2 * 100
+                    coef = numpy.sqrt(float(line.split()[10]) / 100.00)
+                    transition_data.append([(i, i_spin), (a, a_spin), coef])
+                    exc_iterator += 1
+                else:
+                    i = int(line.split()[1])
+                    a = int(line.split()[3])
+                    i_spin = self.convert_to_spin(line.split()[2])
+                    a_spin = self.convert_to_spin(line.split()[4])
+                    coef = numpy.sqrt(float(line.split()[5]) / 100.00)
+                    transition_data.append([(i, i_spin), (a, a_spin), coef])
+                line = next(inputfile)
+            self.append_attribute("etsecs", transition_data)
+
+        # oscillator strengths and transition dipoles (length gauge)
+        if line.strip().startswith("Absorption Spectrum (dipole-length)"):
+            self.skip_line(inputfile, ["Absorption"])
+            self.skip_line(inputfile, ["dashes"])
+            self.skip_line(inputfile, ["state"])
+            self.skip_line(inputfile, ["(eV)"])
+            line = next(inputfile)
+            while not line.strip().startswith("--"):
+                line_data = line.split()
+                x, y, z = map(float, line_data[4:])
+                self.append_attribute("etdips", [x, y, z])
+                self.append_attribute("etoscs", line_data[3])
+                line = next(inputfile)
+
+        # transition dipoles (velocity gauge)
+        if line.strip().startswith("Absorption Spectrum (dipole-velocity)"):
+            self.skip_line(inputfile, ["Absorption"])
+            self.skip_line(inputfile, ["dashes"])
+            self.skip_line(inputfile, ["state"])
+            self.skip_line(inputfile, ["(eV)"])
+            line = next(inputfile)
+            while not line.strip().startswith("--"):
+                line_data = line.split()
+                x, y, z = map(float, line_data[4:])
+                self.append_attribute("etveldips", [x, y, z])
+                line = next(inputfile)
+
+        # rotatory strengths and magnetic transition dipoles (length gauge)
+        if line.strip().startswith("CD Spectrum (dipole-length)"):
+            self.skip_line(inputfile, ["CD"])
+            self.skip_line(inputfile, ["dashes"])
+            self.skip_line(inputfile, ["state"])
+            self.skip_line(inputfile, ["(eV)"])
+            line = next(inputfile)
+            while not line.strip().startswith("--"):
+                line_data = line.split()
+                x, y, z = map(float, line_data[4:])
+                self.append_attribute("etmagdips", [x, y, z])
+                self.append_attribute("etrotats", line_data[3])
+                line = next(inputfile)

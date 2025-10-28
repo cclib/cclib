@@ -1,0 +1,428 @@
+
+#==============================================================================#
+#                                                                              #
+#   SSSSS                                                    #########         #
+#   SS    EEEE RRR  EEEE N   N II TTTTTT YY  YY          ####################  #
+#   SS    E    R  R E    NN  N II   TT    YYYY        ######################## #
+#   SSSSS EEEE RRR  EEEE N N N II   TT     YY      #########             ##### #
+#      SS E    R R  E    N  NN II   TT     YY   #######       OOOOOOOO         #
+#      SS EEEE R  R EEEE N   N II   TT     YY ########      OOOOOOOOOOOO       #
+#   SSSSS                                  ########        OOOOOOOOOOOOOO      #
+#                                     ###########   OOO    OOOOOOOOOOOOOO      #
+# #########                   ###############      OOOOO   OOOOOOOOOOOOOO      #
+# ######################################      OO   OOOOO    OOOOOOOOOOOO       #
+#       #########################         O   OO    OOO       OOOOOOOO         #
+#                                                                              #
+#                                                                              #
+#                                   Serenity                                   #
+#                                                                              #
+#                           A quantum chemistry code                           #
+#                developed in the group of Johannes Neugebauer                 #
+#                        at the University of Münster.                         #
+#                                                                              #
+#==============================================================================#
+
+  Program Info:
+ ---------------
+    Version           :   1.6.1
+    Git Branch        :   niklas_master_thesis
+    Serenity Home     :   /home/lukas/serenity
+
+  Citations:
+ ------------
+    First publication :
+  J. P. Unsleber, T. Dresselhaus, K. Klahr, D. Schnieders, M. Böckers, D. Barton
+  and J. Neugebauer, Serenity: A Subsystem Quantum Chemistry Program,
+  J. Comput. Chem., 39, 788-798, (2018).
+
+    Update paper      :
+  N. Niemeyer, P. Eschenbach, M. Bensberg, J. Toelle, L. Hellmann, L. Lampe,
+  A. Massolle, A. Rikus, D. Schnieders, J. P. Unsleber, and J. Neugebauer,
+  The subsystem quantum chemistry program Serenity,
+  Wiley Interdiscip. Rev. Comput. Mol. Sci., 13, e1647, (2023).
+
+    Libint (2.7.0-b6) :
+  Libint: A library for the evaluation of molecular integrals of many-body operators
+  over Gaussian functions, v2.7.0-beta6  Edward F. Valeev, http://libint.valeyev.net/ .
+
+    Libxc (6.1.0)     :
+  S. Lehtola, C. Steigemann, M. J.T. Oliveira, and M. A.L. Marques.,  SoftwareX 7, 1–5 (2018)
+  10.1016/j.softx.2017.11.002
+
+    XCFun (v2.0.2)    :
+  Ekström, U. (2020). XCFun: A library of exchange-correlation functionals with
+  arbitrary-order derivatives. Zenodo. https://doi.org/10.5281/zenodo.3946698
+
+    Libecpint (1.0.7) :
+  R. A. Shaw, J. G. Hill, J. Chem. Phys. 147, 074108 (2017); doi: 10.1063/1.4986887
+
+  Program started:
+ ------------------
+    Time              :   2025-10-26 09:34:21
+    By                :   lukas
+    On                :   HOSTNAME UNKNOWN
+
+    Threads           :   12
+    Memory Limit      :   3415 MB
+
+          ------------------------------------------------------------          
+                                 System dvb_td                                  
+          ------------------------------------------------------------          
+
+     Charge:                              0
+     Spin:                                0
+     Method:                            DFT
+     Functional:                      B3LYP
+     Basis Set:                      STO-3G
+  Current Geometry (Angstrom):
+ ------------------------------
+        1  C   +0.2786794800   -1.3668316200   +0.0000000000
+        2  C   +1.3230304100   -0.4417357500   +0.0000000000
+        3  C   +1.0443450600   +0.9248497800   +0.0000000000
+        4  C   -0.2786794800   +1.3668316200   +0.0000000000
+        5  C   -1.3230304100   +0.4417357500   +0.0000000000
+        6  C   -1.0443450600   -0.9248497800   +0.0000000000
+        7  H   +2.3659544300   -0.7903772600   +0.0000000000
+        8  H   +1.8674609400   +1.6540799700   +0.0000000000
+        9  H   -2.3659544300   +0.7903772600   +0.0000000000
+       10  H   -1.8674609400   -1.6540799700   +0.0000000000
+       11  C   -0.5865916900   +2.8758993100   +0.0000000000
+       12  C   +0.3635018800   +3.8007642000   +0.0000000000
+       13  H   -1.6564776800   +3.1239431200   +0.0000000000
+       14  H   +0.1442956000   +4.8769323500   +0.0000000000
+       15  H   +1.4333878800   +3.5527203900   +0.0000000000
+       16  C   +0.5865916900   -2.8758993100   +0.0000000000
+       17  C   -0.3635018800   -3.8007642000   +0.0000000000
+       18  H   +1.6564776800   -3.1239431200   +0.0000000000
+       19  H   -0.1442956000   -4.8769323500   +0.0000000000
+       20  H   -1.4333878800   -3.5527203900   +0.0000000000
+
+
+
+o------------------------------------------------------------------------------o
+|                                Running Tasks                                 |
+o------------------------------------------------------------------------------o
+
+ o-------------o
+ | Task No. 1: |
+ o-------------o
+
+
+          ------------------------------------------------------------          
+                                Main SCF Options                                
+          ------------------------------------------------------------          
+
+     SCF Mode:                   RESTRICTED
+     Method:                            DFT
+     Functional:                      B3LYP
+     Grid Accuracy:                     2/4
+     Dispersion Correction:            NONE
+     Basis Set:                      STO-3G
+     Basis Functions:                    60
+     Caching Threshold:                  -1
+     Integral Threshold:            5.6e-11
+
+     Energy Threshold:              5.0e-08
+     RMSD[D] Threshold:             1.0e-08
+     DIIS Threshold:                5.0e-07
+     Initial Guess:                 ATOMSCF
+
+     Density Fitting:
+       Coulomb                           RI
+       Exchange                        NONE
+       Long-Range Exchange             NONE
+       Correlation                       RI
+
+          ------------------------------------------------------------          
+                                      SCF                                       
+          ------------------------------------------------------------          
+
+  Constructing an integration grid:
+ -----------------------------------
+    Total number of grid points (before weight cutoff):    105900
+    Total number of grid points (after weight cutoff):     88862
+    
+  Constructing an integration grid:
+ -----------------------------------
+    Total number of grid points (before weight cutoff):    37900
+    Total number of grid points (after weight cutoff):     33404
+    
+    Cycle      E/a.u.         abs(dE)/a.u.     rmsd(P)/a.u.       [F,P]/a.u.      time/min   Mode
+       1  -382.0447786996              inf              inf         2.26e-02      0:00 
+       2  -382.0431056427         1.67e-03         1.43e-03         2.81e-02      0:00:159    DDL
+       3  -382.0452032511         2.10e-03         7.29e-04         2.20e-02      0:00:115    -DL
+       4  -382.0481474968         2.94e-03         1.94e-03         6.19e-03      0:00:253    -DL
+       5  -382.0482588750         1.11e-04         4.30e-04         5.29e-04      0:00:120    -DL
+       6  -382.0482606200         1.74e-06         8.41e-05         1.60e-04      0:00:426    -DL
+       7  -382.0482607590         1.39e-07         1.87e-05         5.50e-05      0:00:214    -DL
+       8  -382.0482607757         1.67e-08         5.38e-06         1.10e-05      0:00:108    -D-
+       9  -382.0482607742         1.54e-09         1.15e-06         5.15e-06      0:00:097    -D-
+      10  -382.0482607755         1.28e-09         4.26e-07         4.92e-07      0:00:091    -D-
+    Converged after  10 cycles. Loop exited.
+
+
+          ------------------------------------------------------------          
+                               Final SCF Results                                
+          ------------------------------------------------------------          
+
+Energy components as stored:
+Electron Electron Repulsion (with self-interact.):                                   634.2405845206 
+Nuclear Repulsion:                                                                   450.0061379780 
+One-Particle Energy (including ECPs):                                              -1408.6618201430 
+Exchange-Correlation Energy (without HF/MP2 contributions):                          -46.5623051068 
+Exact exchange (HF exchange in DFT):                                                 -11.0696854300 
+Dispersion Correction (DFT):                                                           0.0000000000 
+MP2 correlation (in DFT):                                                              0.0000000000 
+PCM Solvation Energy:                                                                  0.0000000000 
+----------------------------------------------------------------------------------------------------
+Derived energy components:
+Two-Particle Energy (DFT):                                                           576.6085939837 
+Exchange-Correlation Energy:                                                         -57.6319905368 
+Total Energy (DFT):                                                                 -382.0470881813 
+----------------------------------------------------------------------------------------------------
+    
+  Orbital Energies:
+ -------------------
+        #    Occ.      Hartree                eV   
+       ---  ------    ---------            --------
+        26   2.00   -0.3541238868       -9.6362018634
+        27   2.00   -0.3452888692       -9.3957887851
+        28   2.00   -0.3266220872       -8.8878397717
+        29   2.00   -0.3016371485       -8.2079649546
+        30   2.00   -0.2918556094       -7.9417957147
+        31   2.00   -0.2772960447       -7.5456097768
+        32   2.00   -0.2595481712       -7.0626655356
+        33   2.00   -0.2123911410       -5.7794573741
+        34   2.00   -0.1939687836       -5.2781594898
+        35   2.00   -0.1564290617       -4.2566516189
+        36   0.00   +0.0532450371       +1.4488712690
+        37   0.00   +0.0943248305       +2.5667093962
+        38   0.00   +0.1201522796       +3.2695100891
+        39   0.00   +0.1851407172       +5.0379355653
+        40   0.00   +0.2839694099       +7.7272012961
+        41   0.00   +0.3228807267       +8.7860321647
+        42   0.00   +0.3332441614       +9.0680355895
+        43   0.00   +0.3690129654      +10.0413543311
+        44   0.00   +0.3738962282      +10.1742346827
+        45   0.00   +0.4165089006      +11.3337845681
+    
+  Additional Analysis:
+ ----------------------
+
+   -<V>/<T> = 2.016 
+      <S*S> = 0.000 
+    S*(S+1) = 0.000 
+          C = 0.000 
+
+    Time taken for task 1: 10.804250781 s.
+    
+ o-------------o
+ | Task No. 2: |
+ o-------------o
+
+
+o------------------------------------------------------------------------------o
+|                                    LRSCF                                     |
+o------------------------------------------------------------------------------o
+
+ o-------------o
+ | LRSCF Info: |
+ o-------------o
+
+ System(s):
+                       Sys  Stat    nOcc_a   nVirt_a     nDim
+ ----------------------------------------------------------------
+    1               dvb_td   act       35       25      875 
+
+ Type        :               Isolated 
+ NaddKinFunc :                   NONE 
+ NaddXCFunc  :                   NONE 
+
+
+  Set gauge-origin to center of mass.
+  Gauge-origin (Angstrom):  -0.0000  -0.0000   0.0000
+
+  Molecular weight:   130.0783
+
+  Nuclear dipole moment:     0.0000    -0.0000     0.0000
+
+ o---------o
+ | Kernel: |
+ o---------o
+
+  Grid:    4/4
+
+ .. done.
+
+ o------------------o
+ | Density Fitting: |
+ o------------------o
+
+  Coulomb      :  NONE      
+  Exchange     :  NONE      
+
+  Using adaptive prescreening thresholds.
+
+ o--------------------o
+ | Eigenvalue Solver: |
+ o--------------------o
+
+    Number of sets                        : 2
+    Dimension of the eigenvalue problem   : 875
+    Number of roots to be determined      : 5
+    Convergence threshold                 : 1e-05
+    Maximum number of iterations          : 100
+    Maximum subspace dimension            : 1000000
+
+    TDDFT algorithm.
+  
+   it.    dimension    time (min)    converged     max. norm
+ ----------------------------------------------------------------
+    1         10          0.021           0      1.36e-01  ( 2)
+    2         15          0.011           0      3.10e-02  ( 2)
+    3         20          0.009           0      2.77e-02  ( 5)
+    4         25          0.013           0      6.17e-03  ( 5)
+    5         30          0.010           0      1.28e-03  ( 5)
+    6         35          0.008           1      2.27e-04  ( 5)
+    7         39          0.007           4      2.40e-02  ( 4)
+    8         40          0.011           4      1.72e-03  ( 4)
+    9         41          0.009           4      2.07e-04  ( 4)
+   10         42          0.008           4      2.77e-05  ( 4)
+   11         43          0.008           5      5.99e-06  ( 5)
+
+  Iterative solver converged in  11 iterations.
+
+        TDDFT excitation energies      
+ ------------------------------------------
+    root        eigenvalue       res norm  
+            (a.u.)      (eV)               
+ ------------------------------------------
+     1    0.2069424   5.63119   1.999e-06
+     2    0.2110961   5.74422   2.523e-06
+     3    0.2430955   6.61496   1.319e-06
+     4    0.2583787   7.03084   3.814e-06
+     5    0.2770490   7.53889   5.992e-06
+
+---------------------------------------------------------------------------------------
+                                   TDDFT Summary                                     
+
+---------------------------------------------------------------------------------------
+                                Singlet Excitations.                                 
+
+    Convergence Threshold            :          1.0e-05
+---------------------------------------------------------------------------------------
+                               Dominant Contributions                                  
+---------------------------------------------------------------------------------------
+ state                      energy                      sys     i         a   |c|^2*100
+          (a.u.)       (eV)       (nm)     %singles
+---------------------------------------------------------------------------------------
+    1    0.206942    5.63119     220.17     100.00       1    34  a    36  a    51.47 
+                                                         1    35  a    37  a    45.43 
+    2    0.211096    5.74422     215.84     100.00       1    35  a    36  a    95.09 
+    3    0.243095    6.61496     187.43     100.00       1    33  a    36  a    62.02 
+                                                         1    35  a    38  a    37.24 
+    4    0.258379    7.03084     176.34     100.00       1    35  a    37  a    49.11 
+                                                         1    34  a    36  a    40.46 
+    5    0.277049    7.53889     164.46     100.00       1    33  a    37  a    78.69 
+                                                         1    34  a    38  a    10.21 
+---------------------------------------------------------------------------------------
+                          Absorption Spectrum (dipole-length)                          
+---------------------------------------------------------------------------------------
+ state       energy      wavelength        fosc          Sxx        Syy        Szz     
+              (eV)          (nm)           (au)                    (au)                
+---------------------------------------------------------------------------------------
+   1         5.63119        220.2        0.016755      0.00231    0.11914    0.00000
+   2         5.74422        215.8        0.700458      0.00125    4.97604    0.00000
+   3         6.61496        187.4        0.000000      0.00000    0.00000    0.00000
+   4         7.03084        176.3        0.185660      0.80483    0.27300    0.00000
+   5         7.53889        164.5        0.000000      0.00000    0.00000    0.00000
+---------------------------------------------------------------------------------------
+                         Absorption Spectrum (dipole-velocity)                         
+---------------------------------------------------------------------------------------
+ state       energy      wavelength        fosc          Sxx        Syy        Szz     
+              (eV)          (nm)           (au)                    (au)                
+---------------------------------------------------------------------------------------
+   1         5.63119        220.2        0.007813      0.00156    0.05507    0.00000
+   2         5.74422        215.8        0.305354      0.00109    2.16868    0.00000
+   3         6.61496        187.4        0.000000      0.00000    0.00000    0.00000
+   4         7.03084        176.3        0.073366      0.33551    0.09042    0.00000
+   5         7.53889        164.5        0.000000      0.00000    0.00000    0.00000
+---------------------------------------------------------------------------------------
+                              CD Spectrum (dipole-length)                              
+---------------------------------------------------------------------------------------
+ state       energy      wavelength         R            Sxx        Syy        Szz     
+              (eV)          (nm)        (1e-40cgs)               (1e-40cgs)            
+---------------------------------------------------------------------------------------
+   1         5.63119        220.2          0.0000      0.00000    0.00000    0.00000
+   2         5.74422        215.8          0.0000      0.00000    0.00001   -0.00000
+   3         6.61496        187.4         -0.0000     -0.00000    0.00000   -0.00000
+   4         7.03084        176.3          0.0005      0.00033    0.00019   -0.00000
+   5         7.53889        164.5          0.0000      0.00000    0.00000    0.00000
+---------------------------------------------------------------------------------------
+                             CD Spectrum (dipole-velocity)                             
+---------------------------------------------------------------------------------------
+ state       energy      wavelength         R            Sxx        Syy        Szz     
+              (eV)          (nm)        (1e-40cgs)               (1e-40cgs)            
+---------------------------------------------------------------------------------------
+   1         5.63119        220.2          0.0000      0.00000    0.00000    0.00000
+   2         5.74422        215.8          0.0000      0.00000    0.00000   -0.00000
+   3         6.61496        187.4         -0.0000      0.00000    0.00000   -0.00000
+   4         7.03084        176.3          0.0003      0.00021    0.00011   -0.00000
+   5         7.53889        164.5          0.0000      0.00000    0.00000    0.00000
+---------------------------------------------------------------------------------------
+                            CD Spectrum (mod. dipole-length)                           
+---------------------------------------------------------------------------------------
+ state       energy      wavelength         R            Sxx        Syy        Szz     
+              (eV)          (nm)        (1e-40cgs)               (1e-40cgs)            
+---------------------------------------------------------------------------------------
+   1         5.63119        220.2          0.0000      0.00000    0.00000   -0.00000
+   2         5.74422        215.8          0.0000      0.00001   -0.00000   -0.00000
+   3         6.61496        187.4         -0.0000     -0.00000    0.00000   -0.00000
+   4         7.03084        176.3          0.0005      0.00051   -0.00000    0.00000
+   5         7.53889        164.5          0.0000      0.00000   -0.00000   -0.00000
+---------------------------------------------------------------------------------------
+    Time taken for task 2: 7.682699695 s.
+    
+
+o------------------------------------------------------------------------------o
+|                                   Cleanup                                    |
+o------------------------------------------------------------------------------o
+
+    All clean and shiny
+
+  Final Timings:
+ ----------------
+              Active System -     1e-Int Pot.      0:00.026 min
+              Active System -    Coulomb Pot.      0:04.361 min
+              Active System -   Coul./XC Pot.      0:08.892 min
+              Active System -   Exchange Pot.      0:04.529 min
+              Active System - Functional Pot.      0:01.278 min
+                LRSCF -              Disk I/O      0:00.037 min
+                LRSCF -      Dipole Integrals      0:00.015 min
+                LRSCF -   Kernel: Contraction      0:01.159 min
+                LRSCF -   Kernel: Num. Integ.      0:01.022 min
+                LRSCF -   Sigmavector:      J      0:02.885 min
+                LRSCF -   Sigmavector:      K      0:01.546 min
+                LRSCF -   Sigmavector:   Fock      0:00.004 min
+                LRSCF -   Sigmavector: Kernel      0:02.271 min
+                LRSCF -  AO-MO Transformation      0:00.053 min
+                LRSCF -  Kernel on Grid Eval.      0:00.376 min
+                LRSCF - Add/Sym Fock Matrices      0:00.006 min
+                LRSCF - Shell-Wise Abs. Calc.      0:00.003 min
+               Tech. -           DIIS/Damping      0:00.014 min
+               Tech. -           Grid Sorting      0:00.145 min
+               Tech. -     Grid Constructions      0:00.067 min
+               Tech. -    Basis On Grid Eval.      0:01.621 min
+               Tech. -    Fock Matrix Solving      0:00.023 min
+               Tech. -    Grid to Matrix Int.      0:00.403 min
+               Tech. -  Density On Grid Eval.      0:00.404 min
+               Tech. - Libint Initializations      0:06.537 min
+               Tech. - XCFun Functional Eval.      0:00.736 min
+
+  Program ended:
+ ----------------
+    Time:  2025-10-26 09:34:39
+    On:    HOSTNAME UNKNOWN
+    Time taken for the entire run: 18.502944919 s.
+    
+
