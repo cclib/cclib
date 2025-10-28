@@ -173,7 +173,7 @@ class Serenity(logfileparser.Logfile):
                     self.metadata["unrestricted"] = True
                 line = next(inputfile)
                 if line.startswith("Method"):
-                    self.metadata["method"].append(line.split()[1])
+                    self.metadata["methods"].append(line.split()[1])
 
             if "Cycle" in line and "Mode" in line:
                 line = next(inputfile)
@@ -375,6 +375,7 @@ class Serenity(logfileparser.Logfile):
                 line = next(inputfile)
                 i += 1
             self.append_attribute("mpenergies", [line.split()[2]])
+            self.metadata["methods"].append("MP2")
 
         ### metadata
         if line[4:34] == "Time taken for the entire run:":
