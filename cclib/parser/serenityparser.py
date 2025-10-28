@@ -195,28 +195,14 @@ class Serenity(logfileparser.Logfile):
                 i += 1
             self.append_attribute("mpenergies", [line.split()[2]])
 
-        if line.strip().startswith("Polarizability  Moment Vector / a.u.:"):
-            self.skip_line(inputfile, ["Dipole Moment"])
-            self.skip_line(inputfile, ["dashes"])
-            line = self.skip_line(inputfile, "x")[0]
-            dipole_data = line.split()
-            x, y, z = map(float, dipole_data[:3])
-            dipoleRaw = [x, y, z]
-            dipole = [utils.convertor(value, "ebohr", "Debye") for value in dipoleRaw]
-            self.append_attribute("moments", dipole)
-
         if line.strip().startswith("Polarizability Tensor / a.u.:"):
-            self.skip_line(inputfile, "Quadrupole Moment")
+            self.skip_line(inputfile, "Polarizability")
             self.skip_line(inputfile, ["dashes"])
-            line = self.skip_line(inputfile, "x")[0]
-            q_data = line.split()
-            xx, xy, xz = map(float, q_data[1:4])
-            line = self.skip_line(inputfile, "x")[0]
-            q_data = line.split()
-            yy, yz = map(float, q_data[2:4])
-            line = self.skip_line(inputfile, "y")[0]
-            q_data = line.split()
-            zz = float(q_data[3])
-            quadrupoleRaw = [xx, xy, xz, yy, yz, zz]
-            quadrupole = [utils.convertor(value, "ebohr2", "Buckingham") for value in quadrupoleRaw]
-            self.append_attribute("moments", quadrupole)
+            line = next(inputfile)
+            polarizability = []
+            polarizability.append([float(i) for i in line.split()[-3:]])
+            line = next(inputfile)
+            polarizability.append([float(i) for i in line.split()[-3:]])
+            line = next(inputfile)
+            polarizability.append([float(i) for i in line.split()[-3:]])
+            self.append_attribute("polarizabilities", numpy.array(polarizability))
