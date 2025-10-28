@@ -130,7 +130,7 @@ class GenericSPTest:
     @skipForParser("QChem", "Lowdin charges not present by default")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     @skipForParser("xTB", "not implemented yet")
-    @skipForParser("Serenity", "not implemented yet")
+    @skipForParser("Serenity", "Lowdin charges not implemented in Serenity.")
     def testatomcharges_lowdin(self, data) -> None:
         """Do Lowdin atomic charges sum to zero?"""
         charges = data.atomcharges["lowdin"]
@@ -256,7 +256,7 @@ class GenericSPTest:
     @skipForParser("Molpro", "?")
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("xTB", "not implemented yet")
-    @skipForParser("Serenity", "not implemented yet")
+    @skipForParser("Serenity", "Serenity does not use symmetry.")
     def testsymlabels(self, data) -> None:
         """Are all the symmetry labels either Ag/u or Bg/u?"""
         sumwronglabels = sum([x not in ["Ag", "Bu", "Au", "Bg"] for x in data.mosyms[0]])
@@ -355,7 +355,7 @@ class GenericSPTest:
     )
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("xTB", "not implemented yet")
-    @skipForParser("Serenity", "not merged yet")
+    @skipForParser("Serenity", "NOs not in Serenity")
     def testfornoormo(self, data) -> None:
         """Do we have NOs or MOs?"""
         assert hasattr(data, "nocoeffs") or hasattr(data, "mocoeffs")
@@ -426,7 +426,7 @@ class GenericSPTest:
     @skipForParser("Psi4", "Not implemented yet")
     @skipForParser("QChem", "Not implemented yet")
     @skipForParser("Turbomole", "Not implemented yet")
-    @skipForParser("Serenity", "Not implemented yet")
+    @skipForParser("Serenity", "Not rot. constants in Serenity")
     def testrotconsts(self, data) -> None:
         """A single geometry leads to single set of rotational constants (in GHz)."""
         assert data.rotconsts.shape == (1, 3)
@@ -533,7 +533,6 @@ class GenericSPTest:
 
     @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("NBO", "attribute not implemented in this version")
-    @skipForParser("Serenity", "not implemented yet")
     def testmetadata_methods(self, data) -> None:
         """Does metadata have expected keys and values?"""
         # TODO implement and unify across parsers; current values are [],
@@ -554,7 +553,7 @@ class GenericSPTest:
     @skipForParser("GAMESSDAT", "Files do not contain information about the legacy package version")
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("xTB", "not implemented yet")
-    @skipForParser("Serenity", "might not be applicable")
+    @skipForParser("Serenity", "Serenity reports version differently.")
     def testmetadata_legacy_package_version(self, data) -> None:
         """Does metadata have expected keys and values?"""
         # TODO Test specific values for each unit test.
