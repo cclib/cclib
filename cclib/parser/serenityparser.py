@@ -64,7 +64,6 @@ class Serenity(logfileparser.Logfile):
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
-        print(line)
 
         ### SYSTEM specific data
         # Extract system name
@@ -76,6 +75,7 @@ class Serenity(logfileparser.Logfile):
                     self.systemname = name
                 elif name[-5:] == "_FREE":
                     # TODO skip reading this system, it's just an atom scf for population analyses
+                    print("Atom SCF detected")  # TODO remove line
                     self.skipSystem = True
                     self.skipSCF = True
                 elif name != self.systemname:
