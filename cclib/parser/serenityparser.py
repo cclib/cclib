@@ -77,6 +77,7 @@ class Serenity(logfileparser.Logfile):
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
+        print(line)
 
         ### SYSTEM specific data
         # Extract system name
@@ -182,18 +183,37 @@ class Serenity(logfileparser.Logfile):
             if "Dispersion Correction (" in line:
                 self.append_attribute("dispersionenergies", float(line.split()[3]))
 
-            # Extract index of HOMO
+            # Extract index of HOMO(s)
             if line.strip().startswith("Orbital Energies:"):
                 self.skip_line(inputfile, ["Orbital"])
                 self.skip_line(inputfile, ["dashes"])
+                if self.metadata["unrestricted"] and not self.beta_parsing:
+                    self.skip_line(inputfile, ["Alpha:"])
+                    self.beta_parsing = True
                 self.skip_line(inputfile, ["#   Occ."])
                 # self.skip_lines(inputfile, ["Orbital","dashes","#   Occ."]) # TODO test results in warnings
-                homos = None
                 line = next(inputfile)
-                while line.split()[1] == "2.00":
+                homos = None
+                occ_number = None
+                if self.metadata["unrestricted"]:
+                    occ_number = "1.00"
+                else:
+                    occ_number = "2.00"
+                while line.split()[1] == occ_number:
                     homos = int(line.split()[0])
                     line = next(inputfile)
-                self.set_attribute("homos", [homos - 1])  # Serenity starts at 1, python at 0
+                self.append_attribute("homos", homos - 1)  # Serenity starts at 1, python at 0
+
+                if self.beta_parsing:
+                    while line.split()[0] != "Beta:":
+                        line = next(inputfile)
+                    self.skip_line(inputfile, ["Beta:"])
+                    self.skip_line(inputfile, ["#   Occ."])
+                    line = next(inputfile)
+                    while line.split()[1] == occ_number:
+                        homos = int(line.split()[0])
+                        line = next(inputfile)
+                    self.append_attribute("homos", homos - 1)
 
         ### Multipole moments
         if line.strip().startswith("Origin chosen as:"):
@@ -316,39 +336,6 @@ class Serenity(logfileparser.Logfile):
                 line = next(inputfile)
                 criteria.append(line.split()[2])
                 self.append_attribute("geovalues", criteria)
-
-        # TODO move this to scf part
-        # Extract index of HOMO(s)
-        if line.strip().startswith("Orbital Energies:"):
-            self.skip_line(inputfile, ["Orbital"])
-            self.skip_line(inputfile, ["dashes"])
-            if self.metadata["unrestricted"] and not self.beta_parsing:
-                self.skip_line(inputfile, ["Alpha:"])
-                self.beta_parsing = True
-            self.skip_line(inputfile, ["#   Occ."])
-            # self.skip_lines(inputfile, ["Orbital","dashes","#   Occ."]) # TODO test results in warnings
-            line = next(inputfile)
-            homos = None
-            occ_number = None
-            if self.metadata["unrestricted"]:
-                occ_number = "1.00"
-            else:
-                occ_number = "2.00"
-            while line.split()[1] == occ_number:
-                homos = int(line.split()[0])
-                line = next(inputfile)
-            self.append_attribute("homos", homos - 1)  # Serenity starts at 1, python at 0
-
-            if self.beta_parsing:
-                while line.split()[0] != "Beta:":
-                    line = next(inputfile)
-                self.skip_line(inputfile, ["Beta:"])
-                self.skip_line(inputfile, ["#   Occ."])
-                line = next(inputfile)
-                while line.split()[1] == occ_number:
-                    homos = int(line.split()[0])
-                    line = next(inputfile)
-                self.append_attribute("homos", homos - 1)
 
         if line.split()[1:3] == ["MP2", "Results"] or line.split()[1:3] == [
             "(Local-)MP2",
