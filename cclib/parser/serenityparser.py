@@ -35,28 +35,43 @@ class Serenity(logfileparser.Logfile):
         self.skipSystem = False
         self.skipSCF = False
         self.populationdict = {}
-        self.unrestricted = False
         # TODO Serenity also has Becke, IAO, and CHELPG population analyses that are currently not supported.
         self.populationtypes = ["Mulliken", "CM5", "Hirshfeld"]
+        self.metadata["unrestricted"] = False
+        self.beta_parsing = False
         self.path = Path(self.inputfile.filenames[0]).resolve()
 
     def after_parsing(self):
         self.populationdict = {k.lower(): v for k, v in self.populationdict.items()}
         self.set_attribute("atomcharges", self.populationdict)
         # Get molecular orbital information
-        orbpath = self.path.parent / self.systemname / f"{self.systemname}.orbs.res.h5"
-        if orbpath.is_file():
-            assert utils.find_package("h5py"), (
-                "h5py is needed to read in molecular orbital info from Serenity."
-            )
-            import h5py
+        assert utils.find_package("h5py"), (
+            "h5py is needed to read in molecular orbital info from Serenity."
+        )
+        import h5py
 
-            with h5py.File(orbpath, "r") as orbfile:
-                coeffs = [orbfile["coefficients"][:]]
-                eigenvalues = [orbfile["eigenvalues"][:].flatten()]
-                self.set_attribute("moenergies", eigenvalues)
-                self.set_attribute("mocoeffs", coeffs)
-                self.set_attribute("nmo", len(eigenvalues[0]))
+        if self.metadata["unrestricted"]:
+            orbpath = self.path.parent / self.systemname / f"{self.systemname}.orbs.unres.h5"
+            if orbpath.is_file():
+                with h5py.File(orbpath, "r") as orbfile:
+                    eigenvalues = []
+                    coeffs = []
+                    eigenvalues.append(orbfile["eigenvalues_alpha"][:].flatten())
+                    eigenvalues.append(orbfile["eigenvalues_beta"][:].flatten())
+                    coeffs.append(orbfile["coefficients_alpha"][:])
+                    coeffs.append(orbfile["coefficients_alpha"][:])
+                    self.set_attribute("moenergies", eigenvalues)
+                    self.set_attribute("mocoeffs", coeffs)
+                    self.set_attribute("nmo", len(eigenvalues[0]))
+        else:
+            orbpath = self.path.parent / self.systemname / f"{self.systemname}.orbs.res.h5"
+            if orbpath.is_file():
+                with h5py.File(orbpath, "r") as orbfile:
+                    coeffs = [orbfile["coefficients"][:]]
+                    eigenvalues = [orbfile["eigenvalues"][:].flatten()]
+                    self.set_attribute("moenergies", eigenvalues)
+                    self.set_attribute("mocoeffs", coeffs)
+                    self.set_attribute("nmo", len(eigenvalues[0]))
 
         super().after_parsing()
 
@@ -131,6 +146,15 @@ class Serenity(logfileparser.Logfile):
                         diis = float(line.split()[2])
                         scftargets = [ethresh, rmsd, diis]
                         self.append_attribute("scftargets", scftargets)
+
+            if line[5:13] == "SCF Mode":
+                if line.split()[2] == "RESTRICTED":
+                    self.metadata["unrestricted"] = False
+                elif line.split()[2] == "UNRESTRICTED":
+                    self.metadata["unrestricted"] = True
+                line = next(inputfile)
+                if line.startswith("Method"):
+                    self.metadata["method"].append(line.split()[1])
 
             if "Cycle" in line and "Mode" in line:
                 line = next(inputfile)
@@ -292,6 +316,39 @@ class Serenity(logfileparser.Logfile):
                 line = next(inputfile)
                 criteria.append(line.split()[2])
                 self.append_attribute("geovalues", criteria)
+
+        # TODO move this to scf part
+        # Extract index of HOMO(s)
+        if line.strip().startswith("Orbital Energies:"):
+            self.skip_line(inputfile, ["Orbital"])
+            self.skip_line(inputfile, ["dashes"])
+            if self.metadata["unrestricted"] and not self.beta_parsing:
+                self.skip_line(inputfile, ["Alpha:"])
+                self.beta_parsing = True
+            self.skip_line(inputfile, ["#   Occ."])
+            # self.skip_lines(inputfile, ["Orbital","dashes","#   Occ."]) # TODO test results in warnings
+            line = next(inputfile)
+            homos = None
+            occ_number = None
+            if self.metadata["unrestricted"]:
+                occ_number = "1.00"
+            else:
+                occ_number = "2.00"
+            while line.split()[1] == occ_number:
+                homos = int(line.split()[0])
+                line = next(inputfile)
+            self.append_attribute("homos", homos - 1)  # Serenity starts at 1, python at 0
+
+            if self.beta_parsing:
+                while line.split()[0] != "Beta:":
+                    line = next(inputfile)
+                self.skip_line(inputfile, ["Beta:"])
+                self.skip_line(inputfile, ["#   Occ."])
+                line = next(inputfile)
+                while line.split()[1] == occ_number:
+                    homos = int(line.split()[0])
+                    line = next(inputfile)
+                self.append_attribute("homos", homos - 1)
 
         if line.split()[1:3] == ["MP2", "Results"] or line.split()[1:3] == [
             "(Local-)MP2",
