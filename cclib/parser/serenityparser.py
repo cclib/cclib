@@ -64,6 +64,7 @@ class Serenity(logfileparser.Logfile):
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
+        print(line)
 
         ### SYSTEM specific data
         # Extract system name
@@ -238,19 +239,6 @@ class Serenity(logfileparser.Logfile):
         if "Total CCSD(T) Energy" in line:
             self.set_attribute("ccenergies", float(line.split()[3]))
             self.metadata["methods"].append("CCSD(T)")
-
-        # Extract index of HOMO
-        if line.strip().startswith("Orbital Energies:"):
-            self.skip_line(inputfile, ["Orbital"])
-            self.skip_line(inputfile, ["dashes"])
-            self.skip_line(inputfile, ["#   Occ."])
-            # self.skip_lines(inputfile, ["Orbital","dashes","#   Occ."]) # TODO test results in warnings
-            homos = None
-            line = next(inputfile)
-            while line.split()[1] == "2.00":
-                homos = int(line.split()[0])
-                line = next(inputfile)
-            self.set_attribute("homos", [homos - 1])  # Serenity starts at 1, python at 0
 
         # for additional robustness.
         # this should already be stopped by the presence of several systems in the output
