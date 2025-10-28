@@ -148,7 +148,7 @@ class GenericGeoOptTest:
     @skipForParser("MOPAC", "Not implemented.")
     @skipForParser("PySCF", "not implemented yet")
     @skipForParser("xTB", "not implemented yet")
-    @skipForParser("Serenity", "not printed in Serenity yet")
+    @skipForParser("Serenity", "geo targets are not printed in Serenity.")
     def testgeotargets(self, data) -> None:
         """Do the geometry optimization targets have the right dimensions?"""
         dim_geotargets = data.geotargets.shape
