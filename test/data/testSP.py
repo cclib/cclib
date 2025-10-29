@@ -298,7 +298,6 @@ class GenericSPTest:
     @skipForParser("GAMESSDAT", "Scftargets probably do not exist in the file")
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("xTB", "not implemented yet")
-    @skipForParser("Serenity", "not merged yet")
     def testscftargetdim(self, data) -> None:
         """Do the scf targets have the right dimensions?"""
         assert data.scftargets.shape == (len(data.scfvalues), len(data.scfvalues[0][0]))
@@ -308,7 +307,6 @@ class GenericSPTest:
     @skipForParser("GAMESSDAT", "Scftargets probably do not exist in the file")
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("xTB", "not implemented yet")
-    @skipForParser("Serenity", "not merged yet")
     def testscftargets(self, data) -> None:
         """Are correct number of SCF convergence criteria being parsed?"""
         assert len(data.scftargets[0]) == self.num_scf_criteria
@@ -330,7 +328,7 @@ class GenericSPTest:
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForLogfile("Turbomole/basicTurbomole5.9/dvb_sp_symm", "delta of 7.4, everything else ok")
     @skipForParser("xTB", "not implemented yet")
-    @skipForParser("Serenity", "not merged yet")
+    @skipForParser("Serenity", "Serenity needs it's own reference here")  # TODO
     def testfirstmoenergy(self, data) -> None:
         """Is the lowest energy molecular orbital within the target?"""
         assert abs(
