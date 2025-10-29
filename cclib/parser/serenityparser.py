@@ -33,6 +33,7 @@ class Serenity(logfileparser.Logfile):
     def before_parsing(self):
         self.unrestricted = False
         self.path = Path(self.inputfile.filenames[0]).resolve()
+        self.ccmethods = []
 
     def after_parsing(self):
         # Get molecular orbital information
@@ -49,6 +50,16 @@ class Serenity(logfileparser.Logfile):
                 self.set_attribute("moenergies", eigenvalues)
                 self.set_attribute("mocoeffs", coeffs)
                 self.set_attribute("nmo", len(eigenvalues[0]))
+
+        # keep only the most accurate CC result
+        self.cc_hierarchy = ["CCSD(T)", "Local CCSD(T0)", "CCSD", "Local CCSD"]
+        if hasattr(self, "ccenergies"):
+            for tier in self.cc_hierarchy:
+                if tier in self.ccmethods:
+                    idx = self.ccmethods.index(tier)
+                    print(self.ccmethods.index(tier))
+                    self.set_attribute("ccenergies", [self.ccenergies[idx]])
+                    break
 
         super().after_parsing()
 
@@ -152,17 +163,21 @@ class Serenity(logfileparser.Logfile):
             self.append_attribute("dispersionenergies", float(line.split()[3]))
 
         if "Total Local-CCSD Energy" in line:
-            self.set_attribute("ccenergies", float(line.split()[3]))
+            self.append_attribute("ccenergies", float(line.split()[3]))
             self.metadata["methods"].append("Local CCSD")
+            self.ccmethods.append("Local CCSD")
         if "Total Local-CCSD(T0) Energy" in line:
-            self.set_attribute("ccenergies", float(line.split()[3]))
+            self.append_attribute("ccenergies", float(line.split()[3]))
             self.metadata["methods"].append("Local CCSD(T0)")
+            self.ccmethods.append("Local CCSD(T0)")
         if "Total CCSD Energy" in line:
-            self.set_attribute("ccenergies", float(line.split()[3]))
+            self.append_attribute("ccenergies", float(line.split()[3]))
             self.metadata["methods"].append("CCSD")
+            self.ccmethods.append("CCSD")
         if "Total CCSD(T) Energy" in line:
-            self.set_attribute("ccenergies", float(line.split()[3]))
+            self.append_attribute("ccenergies", float(line.split()[3]))
             self.metadata["methods"].append("CCSD(T)")
+            self.ccmethods.append("CCSD(T)")
 
         # Extract index of HOMO
         if line.strip().startswith("Orbital Energies:"):
