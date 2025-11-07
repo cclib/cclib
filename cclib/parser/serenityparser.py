@@ -156,8 +156,8 @@ class Serenity(logfileparser.Logfile):
             line = next(inputfile)
             values = []
             while not line.strip().startswith("Converged after"):
-                linedata = line.split()
-                c1, c2, c3 = map(float, linedata[2:5])
+                line_data = line.split()
+                c1, c2, c3 = map(float, line_data[2:5])
                 values.append([c1, c2, c3])
                 line = next(inputfile)
             self.append_attribute("scfvalues", numpy.vstack(numpy.array(values)))
@@ -227,20 +227,22 @@ class Serenity(logfileparser.Logfile):
                         self.append_attribute("etsecs", transition_data)
                         transition_data = []
                     self.append_attribute("etenergies", line.split()[1])
-                    i = int(line.split()[6])
-                    a = int(line.split()[8])
-                    i_spin = self.convert_to_spin(line.split()[7])
-                    a_spin = self.convert_to_spin(line.split()[9])
+                    line_data = line.split()
+                    i = int(line_data[6])
+                    a = int(line_data[8])
+                    i_spin = self.convert_to_spin(line_data[7])
+                    a_spin = self.convert_to_spin(line_data[9])
                     # Serenity prints coef as coef^2 * 100
-                    coef = numpy.sqrt(float(line.split()[10]) / 100.00)
+                    coef = numpy.sqrt(float(line_data[10]) / 100.00)
                     transition_data.append([(i, i_spin), (a, a_spin), coef])
                     exc_iterator += 1
                 else:
-                    i = int(line.split()[1])
-                    a = int(line.split()[3])
-                    i_spin = self.convert_to_spin(line.split()[2])
-                    a_spin = self.convert_to_spin(line.split()[4])
-                    coef = numpy.sqrt(float(line.split()[5]) / 100.00)
+                    line_data = line.split()
+                    i = int(line_data[1])
+                    a = int(line_data[3])
+                    i_spin = self.convert_to_spin(line_data[2])
+                    a_spin = self.convert_to_spin(line_data[4])
+                    coef = numpy.sqrt(float(line_data[5]) / 100.00)
                     transition_data.append([(i, i_spin), (a, a_spin), coef])
                 line = next(inputfile)
             self.append_attribute("etsecs", transition_data)
