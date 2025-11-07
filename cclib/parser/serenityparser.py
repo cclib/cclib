@@ -8,7 +8,6 @@
 from pathlib import Path
 
 from cclib.parser import logfileparser, utils
-from cclib.parser.logfileparser import StopParsing
 
 import numpy
 
@@ -59,10 +58,9 @@ class Serenity(logfileparser.Logfile):
         elif symbol == "b":
             return 1
         else:
-            self.logger.warning(
+            self.logger.error(
                 "Unexpected symbol encountered while parsing for spins of transitions."
             )
-            raise StopParsing()
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
