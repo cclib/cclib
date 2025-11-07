@@ -74,6 +74,7 @@ class GenericGeoOptTest:
         assert data.nbasis == count
 
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
+    @skipForParser("Serenity", "not implemented yet")
     def testcoreelectrons(self, data) -> None:
         """Are the coreelectrons all 0?"""
         ans = numpy.zeros(data.natom, "i")
@@ -147,6 +148,7 @@ class GenericGeoOptTest:
     @skipForParser("MOPAC", "Not implemented.")
     @skipForParser("PySCF", "not implemented yet")
     @skipForParser("xTB", "not implemented yet")
+    @skipForParser("Serenity", "not printed in Serenity yet")
     def testgeotargets(self, data) -> None:
         """Do the geometry optimization targets have the right dimensions?"""
         dim_geotargets = data.geotargets.shape
@@ -172,6 +174,7 @@ class GenericGeoOptTest:
     @skipForParser("MOPAC", "Not implemented.")
     @skipForParser("PySCF", "geotargets not implemented yet")
     @skipForParser("xTB", "not implemented yet")
+    @skipForParser("Serenity", "geotargets not printed currently")
     def testgeoconverged(self, data) -> None:
         """Has the geometry converged and set optdone to True?"""
         assert numpy.all(numpy.abs(data.geovalues[-1]) <= data.geotargets)
@@ -208,6 +211,7 @@ class GenericGeoOptTest:
         "QChem", "Q-Chem doesn't print rotational constants during geometry optimizations"
     )
     @skipForParser("Turbomole", "Not implemented yet")
+    @skipForParser("Serenity", "not implemented in Serenity")
     def testrotconsts(self, data) -> None:
         """Each geometry leads to a row in the rotational constants entry."""
         assert data.rotconsts.shape == (len(data.atomcoords), 3)
@@ -262,6 +266,7 @@ class GenericGeoOptTest:
     @skipForLogfile("FChk/basicGaussian09", "impossible to determine success of calculation")
     @skipForLogfile("FChk/basicQChem5.4", "impossible to determine success of calculation")
     @skipForLogfile("Molcas/basicOpenMolcas18.0/dvb_gopt.out", "not implemented yet")
+    @skipForParser("Serenity", "not implemented yet")
     def testmetadata_success(self, data) -> None:
         """Does metadata have expected keys and values?"""
         assert "success" in data.metadata
