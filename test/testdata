@@ -250,7 +250,7 @@ MP        QChem       GenericMP2Test        basicQChem5.4         water_mp2.out
 MP        QChem       GenericMP3Test        basicQChem5.4         water_mp3.out
 MP        QChem       QChemMP4SDQTest       basicQChem5.4         water_mp4sdq.out
 MP        QChem       QChemMP4SDTQTest      basicQChem5.4         water_mp4.out
-SP        Serenity    GenericMP2Test        serenity1.6.1         water_mp2/water_mp2.out
+MP        Serenity    GenericMP2Test        serenity1.6.1         water_mp2/water_mp2.out
 MP        Turbomole   GenericMP2Test        basicTurbomole7.2     water_mp2/basis    water_mp2/control    water_mp2/coord    water_mp2/mos    water_mp2/dscf.out    water_mp2/ccsdf12.out
 MP        Turbomole   GenericMP2Test        basicTurbomole7.4     water_mp2/basis    water_mp2/control    water_mp2/coord    water_mp2/mos    water_mp2/dscf.out    water_mp2/ccsdf12.out
 MP        Turbomole   GenericMP2Test        basicTurbomole7.4     water_mp2_rimp2/basis    water_mp2_rimp2/control    water_mp2_rimp2/coord    water_mp2_rimp2/mos    water_mp2_rimp2/dscf.out    water_mp2_rimp2/rimp2.out
@@ -333,7 +333,7 @@ SP        Psi4        PsiSPTest             basicPsi4-1.7               dvb_sp_r
 SP        PySCF       PySCFSPTest           basicPySCF2.6               dvb_sp.py
 SP        QChem       GenericSPTest         basicQChem5.1               dvb_sp.out
 SP        QChem       GenericSPTest         basicQChem5.4               dvb_sp.out
-SP        Serenity    GenericSPTest         serenity1.6.1               dvb_sp.out
+SP        Serenity    GenericSPTest         serenity1.6.1/dvb_sp        dvb_sp.out
 SP        Turbomole   TurbomoleSPTest       basicTurbomole5.9           dvb_sp_symm/mos       dvb_sp_symm/basis      dvb_sp_symm/control      dvb_sp_symm/dscf.out      dvb_sp_symm/coord
 SP        Turbomole   TurbomoleHFSPTest     basicTurbomole7.5           dvb_sp/basis      dvb_sp/control      dvb_sp/mos      dvb_sp/dscf.out      dvb_sp/coord
 SP        XTB         XTBSPTest             basicXTB6.6.1/dvb_sp        dvb_sp.out
@@ -458,6 +458,7 @@ TD        ORCA        OrcaSTEOMCCSDTest     basicORCA6.0          dvb_steom_ccsd
 TD        ORCA        OrcaSTEOMCCSDTest     basicORCA6.0          dvb_steom_dlpno_ccsd.log
 TD        PySCF       PySCFTDTest           basicPySCF2.6         water_td.py
 TD        PySCF       PySCFTDATest          basicPySCF2.6         dvb_td.py
+TD        Serenity    GenericTDTest         serenity1.6.1/dvb_td  dvb_td.out
 TD        QChem       QChemTDDFTTest        basicQChem5.1         dvb_td.out
 TD        QChem       QChemTDDFTTest        basicQChem5.4         dvb_td.out
 TD        Turbomole   TurbomoleTDTest       basicTurbomole7.4     CO_TD/basis    CO_TD/control    CO_TD/mos    CO_TD/dscf.out    CO_TD/escf.out    CO_TD/coord

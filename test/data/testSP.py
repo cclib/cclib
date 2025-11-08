@@ -408,7 +408,7 @@ class GenericSPTest:
         assert data.aooverlaps[3, 0] == pytest.approx(0)
         assert data.aooverlaps[0, 3] == pytest.approx(0)
 
-    @skipForParser("Serenity", "Testing right now")
+    @skipForParser("Serenity", "not implemented yet")
     def testoptdone(self, data) -> None:
         """There should be no optdone attribute set."""
         assert not hasattr(data, "optdone")
@@ -502,7 +502,6 @@ class GenericSPTest:
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("Psi4", "reading basis set names is not implemented")
     @skipForParser("xTB", "not implemented yet")
-    @skipForParser("Serenity", "not implemented yet")
     def testmetadata_basis_set(self, data) -> None:
         """Does metadata have expected keys and values?"""
         assert data.metadata["basis_set"].lower() == "sto-3g"
@@ -524,7 +523,7 @@ class GenericSPTest:
     @skipForParser("QChem", "reading input file contents and name is not implemented")
     @skipForParser("Turbomole", "reading input file contents and name is not implemented")
     @skipForParser("xTB", "not implemented yet")
-    @skipForParser("Serenity", "not implemented yet")
+    @skipForParser("Serenity", "reading input file contents and name is not implemented")
     def testmetadata_input_file(self, data) -> None:
         """Does metadata have expected keys and values?"""
         assert "input_file_contents" in data.metadata
@@ -543,7 +542,6 @@ class GenericSPTest:
         assert "methods" in data.metadata
 
     @skipForParser("NBO", "attribute not implemented in this version")
-    @skipForParser("Serenity", "not implemented yet")
     def testmetadata_package(self, data) -> None:
         """Does metadata have expected keys and values?"""
         # TODO How can the value be tested when the package name comes from
@@ -557,7 +555,7 @@ class GenericSPTest:
     @skipForParser("GAMESSDAT", "Files do not contain information about the legacy package version")
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("xTB", "not implemented yet")
-    @skipForParser("Serenity", "not implemented yet")
+    @skipForParser("Serenity", "might not be applicable")
     def testmetadata_legacy_package_version(self, data) -> None:
         """Does metadata have expected keys and values?"""
         # TODO Test specific values for each unit test.
@@ -566,7 +564,6 @@ class GenericSPTest:
     @skipForParser("FChk", "Formatted Checkpoint files do not have section for package version")
     @skipForParser("GAMESSDAT", "Files do not contain information about the package version")
     @skipForParser("NBO", "attribute not implemented in this version")
-    @skipForParser("Serenity", "not implemented yet")
     def testmetadata_package_version(self, data) -> None:
         """Does metadata have expected keys and values?"""
         # TODO Test specific values for each unit test.
@@ -585,7 +582,6 @@ class GenericSPTest:
         "FChk/basicQChem5.4/dvb_sp.fchk", "impossible to determine success of calculation"
     )
     @skipForLogfile("GAMESSDAT/basicGAMESS-US2018/dvb_sp.dat", "TODO impossible to determine?")
-    @skipForParser("Serenity", "not implemented yet")
     def testmetadata_success(self, data) -> None:
         """Does metadata have expected keys and values?"""
         assert "success" in data.metadata
@@ -598,7 +594,7 @@ class GenericSPTest:
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("Turbomole", "reading point group symmetry and name is not implemented")
     @skipForParser("xTB", "not implemented yet")
-    @skipForParser("Serenity", "not implemented yet")
+    @skipForParser("Serenity", "Serenity doesn't use symmetry")
     def testmetadata_symmetry_detected(self, data) -> None:
         """Does metadata have expected keys and values?"""
         assert data.metadata["symmetry_detected"] == "c2h"
@@ -610,7 +606,7 @@ class GenericSPTest:
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("Turbomole", "reading point group symmetry and name is not implemented")
     @skipForParser("xTB", "not implemented yet")
-    @skipForParser("Serenity", "not implemented yet")
+    @skipForParser("Serenity", "Serenity doesn't use symmetry")
     def testmetadata_symmetry_used(self, data) -> None:
         """Does metadata have expected keys and values?"""
         assert data.metadata["symmetry_used"] == "c2h"
@@ -628,7 +624,6 @@ class GenericSPTest:
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("NWChem", "reading cpu/wall time is not implemented for this parser")
     @skipForParser("Psi4", "reading cpu/wall time is not implemented for this parser")
-    @skipForParser("Serenity", "not implemented yet")
     def testmetadata_times(self, data) -> None:
         """Does metadata have expected keys and values of correct types?"""
         if "wall_time" in data.metadata:
