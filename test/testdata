@@ -422,6 +422,7 @@ SPun      Psi4        GenericSPunTest       basicPsi4-1.7         dvb_sp_uks.out
 SPun      PySCF       GenericSPunTest       basicPySCF2.6         dvb_un_sp.py
 SPun      QChem       GenericSPunTest       basicQChem5.1         dvb_sp_un.out
 SPun      QChem       GenericSPunTest       basicQChem5.4         dvb_sp_un.out
+SPun      Serenity    GenericSPunTest       serenity1.6.1         dvb_sp_un/dvb_sp_un.out
 SPun      Turbomole   GenericSPunTest       basicTurbomole5.9     dvb_un_sp/alpha    dvb_un_sp/beta    dvb_un_sp/basis    dvb_un_sp/control    dvb_un_sp/dscf.out    dvb_un_sp/coord    dvb_un_sp/gradient
 
 TD        ADF         ADFTDDFTTest          basicADF2007.01       dvb_td.adfout

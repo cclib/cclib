@@ -33,24 +33,39 @@ class Serenity(logfileparser.Logfile):
         return label
 
     def before_parsing(self):
-        self.unrestricted = False
+        self.metadata["unrestricted"] = False
+        self.beta_parsing = False
         self.path = Path(self.inputfile.filenames[0]).resolve()
 
     def after_parsing(self):
         # Get molecular orbital information
-        orbpath = self.path.parent / self.systemname / f"{self.systemname}.orbs.res.h5"
-        if orbpath.is_file():
-            assert utils.find_package("h5py"), (
-                "h5py is needed to read in molecular orbital info from Serenity."
-            )
-            import h5py
+        assert utils.find_package("h5py"), (
+            "h5py is needed to read in molecular orbital info from Serenity."
+        )
+        import h5py
 
-            with h5py.File(orbpath, "r") as orbfile:
-                coeffs = [orbfile["coefficients"][:]]
-                eigenvalues = [orbfile["eigenvalues"][:].flatten()]
-                self.set_attribute("moenergies", eigenvalues)
-                self.set_attribute("mocoeffs", coeffs)
-                self.set_attribute("nmo", len(eigenvalues[0]))
+        if self.metadata["unrestricted"]:
+            orbpath = self.path.parent / self.systemname / f"{self.systemname}.orbs.unres.h5"
+            if orbpath.is_file():
+                with h5py.File(orbpath, "r") as orbfile:
+                    eigenvalues = []
+                    coeffs = []
+                    eigenvalues.append(orbfile["eigenvalues_alpha"][:].flatten())
+                    eigenvalues.append(orbfile["eigenvalues_beta"][:].flatten())
+                    coeffs.append(orbfile["coefficients_alpha"][:])
+                    coeffs.append(orbfile["coefficients_alpha"][:])
+                    self.set_attribute("moenergies", eigenvalues)
+                    self.set_attribute("mocoeffs", coeffs)
+                    self.set_attribute("nmo", len(eigenvalues[0]))
+        else:
+            orbpath = self.path.parent / self.systemname / f"{self.systemname}.orbs.res.h5"
+            if orbpath.is_file():
+                with h5py.File(orbpath, "r") as orbfile:
+                    coeffs = [orbfile["coefficients"][:]]
+                    eigenvalues = [orbfile["eigenvalues"][:].flatten()]
+                    self.set_attribute("moenergies", eigenvalues)
+                    self.set_attribute("mocoeffs", coeffs)
+                    self.set_attribute("nmo", len(eigenvalues[0]))
 
         super().after_parsing()
 
@@ -138,7 +153,16 @@ class Serenity(logfileparser.Logfile):
             else:
                 self.append_attribute("atomcoords", coords)
 
+        if line[5:13] == "SCF Mode":
+            if line.split()[2] == "RESTRICTED":
+                self.metadata["unrestricted"] = False
+            elif line.split()[2] == "UNRESTRICTED":
+                self.metadata["unrestricted"] = True
+
         if line[5:21] == "Basis Functions:":
+            # if self.metadata["unrestricted"]:
+            #    self.set_attribute("nbasis", int(line.split()[2]) * 2)
+            # else:
             self.set_attribute("nbasis", int(line.split()[2]))
 
         # Extract SCF thresholds
@@ -216,18 +240,37 @@ class Serenity(logfileparser.Logfile):
             self.set_attribute("ccenergies", float(line.split()[3]))
             self.metadata["methods"].append("CCSD(T)")
 
-        # Extract index of HOMO
+        # Extract index of HOMO(s)
         if line.strip().startswith("Orbital Energies:"):
             self.skip_line(inputfile, ["Orbital"])
             self.skip_line(inputfile, ["dashes"])
+            if self.metadata["unrestricted"] and not self.beta_parsing:
+                self.skip_line(inputfile, ["Alpha:"])
+                self.beta_parsing = True
             self.skip_line(inputfile, ["#   Occ."])
             # self.skip_lines(inputfile, ["Orbital","dashes","#   Occ."]) # TODO test results in warnings
-            homos = None
             line = next(inputfile)
-            while line.split()[1] == "2.00":
+            homos = None
+            occ_number = None
+            if self.metadata["unrestricted"]:
+                occ_number = "1.00"
+            else:
+                occ_number = "2.00"
+            while line.split()[1] == occ_number:
                 homos = int(line.split()[0])
                 line = next(inputfile)
-            self.set_attribute("homos", [homos - 1])  # Serenity starts at 1, python at 0
+            self.append_attribute("homos", homos - 1)  # Serenity starts at 1, python at 0
+
+            if self.beta_parsing:
+                while line.split()[0] != "Beta:":
+                    line = next(inputfile)
+                self.skip_line(inputfile, ["Beta:"])
+                self.skip_line(inputfile, ["#   Occ."])
+                line = next(inputfile)
+                while line.split()[1] == occ_number:
+                    homos = int(line.split()[0])
+                    line = next(inputfile)
+                self.append_attribute("homos", homos - 1)
 
         # for additional robustness.
         # this should already be stopped by the presence of several systems in the output
@@ -316,6 +359,19 @@ class Serenity(logfileparser.Logfile):
         if line.strip().startswith("TDDFT Summary"):
             self.metadata["excited_states_method"] = "TD-DFT"
 
+        if line.strip().startswith("TDA Summary"):
+            # TODO need to differentiate between TDA and CIS depending on DFT or HF for ground state
+            self.metadata["excited_states_method"] = "TDA"
+
+        if line.strip().startswith("CC2 Summary"):
+            self.metadata["excited_states_method"] = "CC2"
+
+        if line.strip().startswith("ADC(2) Summary"):
+            self.metadata["excited_states_method"] = "ADC2"
+
+        if line.strip().startswith("CIS(D) Summary"):
+            self.metadata["excited_states_method"] = "CIS(D)"
+
         # excitation energies and singly-excited configuration data
         if line.strip().startswith("Dominant Contributions"):
             self.skip_line(inputfile, ["Dominant"])
@@ -323,6 +379,10 @@ class Serenity(logfileparser.Logfile):
             self.skip_line(inputfile, ["state"])
             self.skip_line(inputfile, ["(a.u.)"])
             line = next(inputfile)
+
+            # TODO maybe modify the method of warning. having multiple excited state calculations  obscures the metadata
+            if hasattr(self, "etenergies"):
+                self.logger.warning("Warning: Multiple Excited state calculations in Serenity!")
 
             exc_iterator = 1
             transition_data = []
