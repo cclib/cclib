@@ -426,7 +426,7 @@ class GenericSPTest:
     @skipForParser("Psi4", "Not implemented yet")
     @skipForParser("QChem", "Not implemented yet")
     @skipForParser("Turbomole", "Not implemented yet")
-    @skipForParser("Serenity", "Not rot. constants in Serenity")
+    @skipForParser("Serenity", "No rot. constants in Serenity")
     def testrotconsts(self, data) -> None:
         """A single geometry leads to single set of rotational constants (in GHz)."""
         assert data.rotconsts.shape == (1, 3)
