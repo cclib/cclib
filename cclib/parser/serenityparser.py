@@ -343,9 +343,21 @@ class Serenity(logfileparser.Logfile):
                 i += 1
             self.append_attribute("mpenergies", [line.split()[2]])
 
-        # TODO add CC2 etc
         if line.strip().startswith("TDDFT Summary"):
             self.metadata["excited_states_method"] = "TD-DFT"
+
+        if line.strip().startswith("TDA Summary"):
+            # TODO need to differentiate between TDA and CIS depending on DFT or HF for ground state
+            self.metadata["excited_states_method"] = "TDA"
+
+        if line.strip().startswith("CC2 Summary"):
+            self.metadata["excited_states_method"] = "CC2"
+
+        if line.strip().startswith("ADC(2) Summary"):
+            self.metadata["excited_states_method"] = "ADC2"
+
+        if line.strip().startswith("CIS(D) Summary"):
+            self.metadata["excited_states_method"] = "CIS(D)"
 
         # excitation energies and singly-excited configuration data
         if line.strip().startswith("Dominant Contributions"):
@@ -354,6 +366,10 @@ class Serenity(logfileparser.Logfile):
             self.skip_line(inputfile, ["state"])
             self.skip_line(inputfile, ["(a.u.)"])
             line = next(inputfile)
+
+            # TODO maybe modify the method of warning. having multiple excited state calculations  obscures the metadata
+            if hasattr(self, "etenergies"):
+                self.logger.warning("Warning: Multiple Excited state calculations in Serenity!")
 
             exc_iterator = 1
             transition_data = []
