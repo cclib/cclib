@@ -1,6 +1,9 @@
 +system 
- name dvb_sp
+ name dvb
  geometry dvb_sp.xyz
+ scfmode unrestricted
+ charge +1
+ spin 1
  method dft
  +dft
   functional b3lyp
@@ -11,10 +14,10 @@
 -system
 
 +task scf
- act dvb_sp
+ act dvb
 -task
 
 +task multi
- act dvb_sp
+ act dvb
  highestorder 2
 -task
