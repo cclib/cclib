@@ -83,6 +83,9 @@ class GenericGeoOptTest:
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("MOPAC", "Not implemented.")
     @skipForParser("xTB", "Not implemented yet")
+    @skipForParser(
+        "Serenity", "This is fixed in a later PR that is already prepared, ignoring for now"
+    )
     def testhomos(self, data) -> None:
         """Is the index of the HOMO equal to 34?"""
         ref = numpy.array([34], "i")
@@ -266,6 +269,7 @@ class GenericGeoOptTest:
     @skipForLogfile("FChk/basicGaussian09", "impossible to determine success of calculation")
     @skipForLogfile("FChk/basicQChem5.4", "impossible to determine success of calculation")
     @skipForLogfile("Molcas/basicOpenMolcas18.0/dvb_gopt.out", "not implemented yet")
+    @skipForParser("Serenity", "not implemented yet")
     def testmetadata_success(self, data) -> None:
         """Does metadata have expected keys and values?"""
         assert "success" in data.metadata

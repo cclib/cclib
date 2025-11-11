@@ -82,10 +82,9 @@ class Serenity(logfileparser.Logfile):
         elif symbol == "b":
             return 1
         else:
-            self.logger.warning(
+            self.logger.error(
                 "Unexpected symbol encountered while parsing for spins of transitions."
             )
-            raise StopParsing()
 
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
@@ -151,8 +150,6 @@ class Serenity(logfileparser.Logfile):
                 self.metadata["basis_set"] = line.split()[2]
             if line[5:16] == "Functional:":
                 self.metadata["functional"] = line.split()[1]
-            if line[5:14] == "SCF Mode:":
-                self.metadata["unrestricted"] = False
 
             # Extract SCF thresholds
             if line.strip().startswith("Energy Threshold:"):
@@ -405,9 +402,21 @@ class Serenity(logfileparser.Logfile):
             self.metadata["package_version"] = line.split()[2]
 
         ### EXCITED STATE
-        # TODO add CC2 etc
         if line.strip().startswith("TDDFT Summary"):
             self.metadata["excited_states_method"] = "TD-DFT"
+
+        if line.strip().startswith("TDA Summary"):
+            # TODO need to differentiate between TDA and CIS depending on DFT or HF for ground state
+            self.metadata["excited_states_method"] = "TDA"
+
+        if line.strip().startswith("CC2 Summary"):
+            self.metadata["excited_states_method"] = "CC2"
+
+        if line.strip().startswith("ADC(2) Summary"):
+            self.metadata["excited_states_method"] = "ADC2"
+
+        if line.strip().startswith("CIS(D) Summary"):
+            self.metadata["excited_states_method"] = "CIS(D)"
 
         # excitation energies and singly-excited configuration data
         if line.strip().startswith("Dominant Contributions"):
@@ -417,6 +426,10 @@ class Serenity(logfileparser.Logfile):
             self.skip_line(inputfile, ["(a.u.)"])
             line = next(inputfile)
 
+            # TODO maybe modify the method of warning. having multiple excited state calculations  obscures the metadata
+            if hasattr(self, "etenergies"):
+                self.logger.warning("Warning: Multiple Excited state calculations in Serenity!")
+
             exc_iterator = 1
             transition_data = []
             while not line.strip().startswith("--"):
@@ -425,20 +438,22 @@ class Serenity(logfileparser.Logfile):
                         self.append_attribute("etsecs", transition_data)
                         transition_data = []
                     self.append_attribute("etenergies", line.split()[1])
-                    i = int(line.split()[6])
-                    a = int(line.split()[8])
-                    i_spin = self.convert_to_spin(line.split()[7])
-                    a_spin = self.convert_to_spin(line.split()[9])
+                    line_data = line.split()
+                    i = int(line_data[6])
+                    a = int(line_data[8])
+                    i_spin = self.convert_to_spin(line_data[7])
+                    a_spin = self.convert_to_spin(line_data[9])
                     # Serenity prints coef as coef^2 * 100
-                    coef = numpy.sqrt(float(line.split()[10]) / 100.00)
+                    coef = numpy.sqrt(float(line_data[10]) / 100.00)
                     transition_data.append([(i, i_spin), (a, a_spin), coef])
                     exc_iterator += 1
                 else:
-                    i = int(line.split()[1])
-                    a = int(line.split()[3])
-                    i_spin = self.convert_to_spin(line.split()[2])
-                    a_spin = self.convert_to_spin(line.split()[4])
-                    coef = numpy.sqrt(float(line.split()[5]) / 100.00)
+                    line_data = line.split()
+                    i = int(line_data[1])
+                    a = int(line_data[3])
+                    i_spin = self.convert_to_spin(line_data[2])
+                    a_spin = self.convert_to_spin(line_data[4])
+                    coef = numpy.sqrt(float(line_data[5]) / 100.00)
                     transition_data.append([(i, i_spin), (a, a_spin), coef])
                 line = next(inputfile)
             self.append_attribute("etsecs", transition_data)

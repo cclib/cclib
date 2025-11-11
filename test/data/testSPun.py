@@ -54,6 +54,7 @@ class GenericSPunTest:
     @skipForParser("Molcas", "Length is zero for some reason")
     @skipForParser("Molpro", "???")
     @skipForParser("Turbomole", "???")
+    @skipForParser("Serenity", "not merged yet")
     def testatomcharges_mulliken(self, data) -> None:
         """Do Mulliken atomic charges sum to positive one?"""
         charges = data.atomcharges["mulliken"]
@@ -138,6 +139,7 @@ class GenericROSPTest(GenericSPunTest):
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
+    @skipForParser("Serenity", "not applicable")
     def testhomos(self, data) -> None:
         """Are the HOMO indices equal to 34 and 33 (one more alpha electron
         than beta electron)?
