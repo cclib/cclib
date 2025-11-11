@@ -58,12 +58,12 @@
 
   Program started:
  ------------------
-    Time              :   2025-10-25 18:56:27
+    Time              :   2025-10-28 13:44:50
     By                :   lukas
     On                :   HOSTNAME UNKNOWN
 
     Threads           :   12
-    Memory Limit      :   2508 MB
+    Memory Limit      :   3622 MB
 
           ------------------------------------------------------------          
                                    System dvb                                   
@@ -149,15 +149,15 @@ o------------------------------------------------------------------------------o
     
     Cycle      E/a.u.         abs(dE)/a.u.     rmsd(P)/a.u.       [F,P]/a.u.      time/min   Mode
        1  -382.0447786996              inf              inf         2.26e-02      0:00 
-       2  -382.0431056427         1.67e-03         1.43e-03         2.81e-02      0:00:420    DDL
-       3  -382.0452032511         2.10e-03         7.29e-04         2.20e-02      0:00:382    -DL
-       4  -382.0481474968         2.94e-03         1.94e-03         6.19e-03      0:00:433    -DL
-       5  -382.0482588750         1.11e-04         4.30e-04         5.29e-04      0:00:300    -DL
-       6  -382.0482606200         1.74e-06         8.41e-05         1.60e-04      0:00:374    -DL
-       7  -382.0482607590         1.39e-07         1.87e-05         5.50e-05      0:00:126    -DL
-       8  -382.0482607757         1.67e-08         5.38e-06         1.10e-05      0:00:111    -D-
-       9  -382.0482607742         1.54e-09         1.15e-06         5.15e-06      0:00:100    -D-
-      10  -382.0482607755         1.28e-09         4.26e-07         4.92e-07      0:00:101    -D-
+       2  -382.0431056427         1.67e-03         1.43e-03         2.81e-02      0:00:120    DDL
+       3  -382.0452032511         2.10e-03         7.29e-04         2.20e-02      0:00:134    -DL
+       4  -382.0481474968         2.94e-03         1.94e-03         6.19e-03      0:00:201    -DL
+       5  -382.0482588750         1.11e-04         4.30e-04         5.29e-04      0:00:140    -DL
+       6  -382.0482606200         1.74e-06         8.41e-05         1.60e-04      0:00:240    -DL
+       7  -382.0482607590         1.39e-07         1.87e-05         5.50e-05      0:00:123    -DL
+       8  -382.0482607757         1.67e-08         5.38e-06         1.10e-05      0:00:109    -D-
+       9  -382.0482607742         1.54e-09         1.15e-06         5.15e-06      0:00:101    -D-
+      10  -382.0482607755         1.28e-09         4.26e-07         4.92e-07      0:00:091    -D-
     Converged after  10 cycles. Loop exited.
 
 
@@ -214,53 +214,10 @@ Total Energy (DFT):                                                             
     S*(S+1) = 0.000 
           C = 0.000 
 
-    Time taken for task 1: 15.307757433 s.
+    Time taken for task 1: 14.815206298 s.
     
  o-------------o
  | Task No. 2: |
- o-------------o
-
-
-     Origin chosen as:
-     (+0.00000, +0.00000, +0.00000)
-
-     (Will be used for the origin correction of multipoles for charged systems!)
-
-
-  Dipole Moment:
- ----------------
-            x             y             z
-     -0.0000000000 -0.0000000000 +0.0000000000 a.u.
-     -0.0000000000 -0.0000000000 +0.0000000000 Debye
-
-     |Dipole Moment|: +0.0000000000 a.u.   +0.0000000000 Debye
-
-
-  Quadrupole Moment:
- --------------------
-            x             y             z
-  x  -37.2936529008 +0.0851159997 -0.0000000000 a.u.
-  y  +0.0851159997 -37.8823988427 +0.0000000000 a.u.
-  z  -0.0000000000 +0.0000000000 -43.5485670570 a.u.
-
-     1/3 Trace: -39.5748729335 a.u.
-
-
-  Calculate origin-corrected Quadrupole Moment q_corr=q-mu*R_0-R_0*mu+charge*R_0^2:
- -----------------------------------------------------------------------------------
-
-  Origin-Corrected Quadrupole Moment:
- -------------------------------------
-            x             y             z
-  x  -37.2936529008 +0.0851159997 -0.0000000000 a.u.
-  y  +0.0851159997 -37.8823988427 +0.0000000000 a.u.
-  z  -0.0000000000 +0.0000000000 -43.5485670570 a.u.
-
-     1/3 Trace: -39.5748729335 a.u.
-    Time taken for task 2: 0.008424759 s.
-    
- o-------------o
- | Task No. 3: |
  o-------------o
 
 
@@ -359,7 +316,285 @@ Total Energy (DFT):                                                             
         19  H    59  s      0.921980 
         20  H    60  s      0.923790 
 
-    Time taken for task 3: 0.001552303 s.
+    Time taken for task 2: 0.002040246 s.
+    
+ o-------------o
+ | Task No. 3: |
+ o-------------o
+
+
+          ------------------------------------------------------------          
+                                 System C_FREE                                  
+          ------------------------------------------------------------          
+
+     Charge:                              0
+     Spin:                                0
+     Method:                            DFT
+     Functional:                      B3LYP
+     Basis Set:                      STO-3G
+  Current Geometry (Angstrom):
+ ------------------------------
+        1  C   +0.2786794800   -1.3668316200   +0.0000000000
+
+
+
+          ------------------------------------------------------------          
+                                Main SCF Options                                
+          ------------------------------------------------------------          
+
+     SCF Mode:                   RESTRICTED
+     Method:                            DFT
+     Functional:                      B3LYP
+     Grid Accuracy:                     2/4
+     Dispersion Correction:            NONE
+     Basis Set:                      STO-3G
+     Basis Functions:                     5
+     Caching Threshold:                  -1
+     Integral Threshold:            6.7e-10
+
+     Energy Threshold:              1.0e-06
+     RMSD[D] Threshold:             1.0e-06
+     DIIS Threshold:                1.0e-06
+     Initial Guess:                   HCORE
+
+     Density Fitting:
+       Coulomb                           RI
+       Exchange                        NONE
+       Long-Range Exchange             NONE
+       Correlation                       RI
+
+          ------------------------------------------------------------          
+                                      SCF                                       
+          ------------------------------------------------------------          
+
+  Constructing an integration grid:
+ -----------------------------------
+    Total number of grid points (before weight cutoff):    2290
+    Total number of grid points (after weight cutoff):     2290
+    
+    Cycle      E/a.u.         abs(dE)/a.u.     rmsd(P)/a.u.       [F,P]/a.u.      time/min   Mode
+       1   -37.1994185959              inf              inf         1.15e-15      0:00 
+       2   -37.1994185959         7.11e-15         2.52e-16         6.88e-16      0:00:001    DD-
+       3   -37.1994185959         7.11e-15         1.10e-16         9.17e-16      0:00:001    -D-
+    Converged after   3 cycles. Loop exited.
+
+  Constructing an integration grid:
+ -----------------------------------
+    Total number of grid points (before weight cutoff):    6800
+    Total number of grid points (after weight cutoff):     6800
+    
+
+          ------------------------------------------------------------          
+                               Final SCF Results                                
+          ------------------------------------------------------------          
+
+Energy components as stored:
+Electron Electron Repulsion (with self-interact.):                                    18.7556033315 
+Nuclear Repulsion:                                                                     0.0000000000 
+One-Particle Energy (including ECPs):                                                -50.7252730748 
+Exchange-Correlation Energy (without HF/MP2 contributions):                           -4.2712146902 
+Exact exchange (HF exchange in DFT):                                                  -0.9585325853 
+Dispersion Correction (DFT):                                                           0.0000000000 
+MP2 correlation (in DFT):                                                              0.0000000000 
+PCM Solvation Energy:                                                                  0.0000000000 
+----------------------------------------------------------------------------------------------------
+Derived energy components:
+Two-Particle Energy (DFT):                                                            13.5258560560 
+Exchange-Correlation Energy:                                                          -5.2297472755 
+Total Energy (DFT):                                                                  -37.1994170188 
+----------------------------------------------------------------------------------------------------
+    
+  Orbital Energies:
+ -------------------
+        #    Occ.      Hartree                eV   
+       ---  ------    ---------            --------
+         1   2.00   -9.8787324939     -268.8140055119
+         2   2.00   -0.4165613410      -11.3352115442
+         3   0.67   -0.0035416304       -0.0963726722
+         4   0.67   -0.0035416304       -0.0963726722
+         5   0.67   -0.0035416304       -0.0963726722
+    
+  Additional Analysis:
+ ----------------------
+
+   -<V>/<T> = 1.981 
+      <S*S> = 0.000 
+    S*(S+1) = 0.000 
+          C = 0.000 
+
+
+          ------------------------------------------------------------          
+                                 System H_FREE                                  
+          ------------------------------------------------------------          
+
+     Charge:                              0
+     Spin:                                1
+     Method:                            DFT
+     Functional:                      B3LYP
+     Basis Set:                      STO-3G
+  Current Geometry (Angstrom):
+ ------------------------------
+        1  H   +2.3659544300   -0.7903772600   +0.0000000000
+
+
+
+          ------------------------------------------------------------          
+                                Main SCF Options                                
+          ------------------------------------------------------------          
+
+     SCF Mode:                 UNRESTRICTED
+     Method:                            DFT
+     Functional:                      B3LYP
+     Grid Accuracy:                     2/4
+     Dispersion Correction:            NONE
+     Basis Set:                      STO-3G
+     Basis Functions:                     1
+     Caching Threshold:                  -1
+     Integral Threshold:            3.3e-09
+
+     Energy Threshold:              1.0e-06
+     RMSD[D] Threshold:             1.0e-06
+     DIIS Threshold:                1.0e-06
+     Initial Guess:                   HCORE
+
+     Density Fitting:
+       Coulomb                           RI
+       Exchange                        NONE
+       Long-Range Exchange             NONE
+       Correlation                       RI
+
+          ------------------------------------------------------------          
+                                      SCF                                       
+          ------------------------------------------------------------          
+
+  Constructing an integration grid:
+ -----------------------------------
+    Total number of grid points (before weight cutoff):    1500
+    Total number of grid points (after weight cutoff):     1500
+    
+    Cycle      E/a.u.         abs(dE)/a.u.     rmsd(P)/a.u.       [F,P]/a.u.      time/min   Mode
+       1    -0.4640623360              inf              inf         0.00e+00      0:00 
+       2    -0.4640623360         0.00e+00         0.00e+00         0.00e+00      0:00:001    DD-
+       3    -0.4640623360         0.00e+00         0.00e+00         0.00e+00      0:00:001    -D-
+    Converged after   3 cycles. Loop exited.
+
+  Constructing an integration grid:
+ -----------------------------------
+    Total number of grid points (before weight cutoff):    3790
+    Total number of grid points (after weight cutoff):     3790
+    
+
+          ------------------------------------------------------------          
+                               Final SCF Results                                
+          ------------------------------------------------------------          
+
+Energy components as stored:
+Electron Electron Repulsion (with self-interact.):                                     0.3872563448 
+Nuclear Repulsion:                                                                     0.0000000000 
+One-Particle Energy (including ECPs):                                                 -0.4665818504 
+Exchange-Correlation Energy (without HF/MP2 contributions):                           -0.3072762361 
+Exact exchange (HF exchange in DFT):                                                  -0.0774605944 
+Dispersion Correction (DFT):                                                           0.0000000000 
+MP2 correlation (in DFT):                                                              0.0000000000 
+PCM Solvation Energy:                                                                  0.0000000000 
+----------------------------------------------------------------------------------------------------
+Derived energy components:
+Two-Particle Energy (DFT):                                                             0.0025195143 
+Exchange-Correlation Energy:                                                          -0.3847368305 
+Total Energy (DFT):                                                                   -0.4640623361 
+----------------------------------------------------------------------------------------------------
+    
+  Orbital Energies:
+ -------------------
+Alpha:
+        #    Occ.      Hartree                eV   
+       ---  ------    ---------            --------
+         1   1.00   -0.2377884892       -6.4705544233
+Beta:
+        #    Occ.      Hartree                eV   
+       ---  ------    ---------            --------
+         1   0.00   +0.1905000505       +5.1837704550
+    
+  Additional Analysis:
+ ----------------------
+
+   -<V>/<T> = 1.611 
+      <S*S> = 0.750 
+    S*(S+1) = 0.750 
+          C = 0.000 
+
+
+          ------------------------------------------------------------          
+                         Hirshfeld Population Analysis                          
+          ------------------------------------------------------------          
+
+       No.  Atomtype   Electrons      Charge
+       ---  --------   ---------      ------
+         1         C    5.996914    0.003086
+         2         C    6.026265   -0.026265
+         3         C    6.027230   -0.027230
+         4         C    5.996914    0.003086
+         5         C    6.026265   -0.026265
+         6         C    6.027230   -0.027230
+         7         H    0.975229    0.024771
+         8         H    0.973911    0.026089
+         9         H    0.975229    0.024771
+        10         H    0.973911    0.026089
+        11         C    6.022535   -0.022535
+        12         C    6.054533   -0.054533
+        13         H    0.974785    0.025215
+        14         H    0.974474    0.025526
+        15         H    0.974244    0.025756
+        16         C    6.022535   -0.022535
+        17         C    6.054533   -0.054533
+        18         H    0.974785    0.025215
+        19         H    0.974474    0.025526
+        20         H    0.974244    0.025756
+
+    Time taken for task 3: 5.689680587000001 s.
+    
+ o-------------o
+ | Task No. 4: |
+ o-------------o
+
+
+     Origin chosen as:
+     (+0.00000, +0.00000, +0.00000)
+
+     (Will be used for the origin correction of multipoles for charged systems!)
+
+
+  Dipole Moment:
+ ----------------
+            x             y             z
+     -0.0000000000 -0.0000000000 +0.0000000000 a.u.
+     -0.0000000000 -0.0000000000 +0.0000000000 Debye
+
+     |Dipole Moment|: +0.0000000000 a.u.   +0.0000000000 Debye
+
+
+  Quadrupole Moment:
+ --------------------
+            x             y             z
+  x  -37.2936529008 +0.0851159997 -0.0000000000 a.u.
+  y  +0.0851159997 -37.8823988427 +0.0000000000 a.u.
+  z  -0.0000000000 +0.0000000000 -43.5485670570 a.u.
+
+     1/3 Trace: -39.5748729335 a.u.
+
+
+  Calculate origin-corrected Quadrupole Moment q_corr=q-mu*R_0-R_0*mu+charge*R_0^2:
+ -----------------------------------------------------------------------------------
+
+  Origin-Corrected Quadrupole Moment:
+ -------------------------------------
+            x             y             z
+  x  -37.2936529008 +0.0851159997 -0.0000000000 a.u.
+  y  +0.0851159997 -37.8823988427 +0.0000000000 a.u.
+  z  -0.0000000000 +0.0000000000 -43.5485670570 a.u.
+
+     1/3 Trace: -39.5748729335 a.u.
+    Time taken for task 4: 0.006824853000000001 s.
     
 
 o------------------------------------------------------------------------------o
@@ -370,25 +605,25 @@ o------------------------------------------------------------------------------o
 
   Final Timings:
  ----------------
-              Active System -     1e-Int Pot.      0:00.021 min
-              Active System -    Coulomb Pot.      0:07.629 min
-              Active System -   Coul./XC Pot.      0:12.261 min
-              Active System -   Exchange Pot.      0:04.616 min
-              Active System - Functional Pot.      0:02.146 min
-               Tech. -           DIIS/Damping      0:00.101 min
-               Tech. -           Grid Sorting      0:00.076 min
-               Tech. -     Grid Constructions      0:00.018 min
-               Tech. -    Basis On Grid Eval.      0:00.476 min
-               Tech. -    Fock Matrix Solving      0:00.066 min
-               Tech. -    Grid to Matrix Int.      0:00.545 min
-               Tech. -  Density On Grid Eval.      0:00.498 min
-               Tech. - Libint Initializations      0:09.280 min
-               Tech. - XCFun Functional Eval.      0:01.019 min
+              Active System -     1e-Int Pot.      0:00.096 min
+              Active System -    Coulomb Pot.      0:06.156 min
+              Active System -   Coul./XC Pot.      0:16.406 min
+              Active System -   Exchange Pot.      0:10.246 min
+              Active System - Functional Pot.      0:01.570 min
+               Tech. -           DIIS/Damping      0:00.044 min
+               Tech. -           Grid Sorting      0:00.219 min
+               Tech. -     Grid Constructions      0:00.108 min
+               Tech. -    Basis On Grid Eval.      0:00.469 min
+               Tech. -    Fock Matrix Solving      0:00.021 min
+               Tech. -    Grid to Matrix Int.      0:00.478 min
+               Tech. -  Density On Grid Eval.      0:00.626 min
+               Tech. - Libint Initializations      0:12.751 min
+               Tech. - XCFun Functional Eval.      0:00.724 min
 
   Program ended:
  ----------------
-    Time:  2025-10-25 18:56:42
+    Time:  2025-10-28 13:45:11
     On:    HOSTNAME UNKNOWN
-    Time taken for the entire run: 15.328708633 s.
+    Time taken for the entire run: 20.524319646 s.
     
 

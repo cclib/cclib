@@ -14,11 +14,16 @@
  act dvb
 -task
 
-+task multi
++task pop
  act dvb
- highestorder 2
 -task
 
 +task pop
- act dvb_sp
+ act dvb
+ algorithm hirshfeld
+-task
+
++task multi
+ act dvb
+ highestorder 2
 -task

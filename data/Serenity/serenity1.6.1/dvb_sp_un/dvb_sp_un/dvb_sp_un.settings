@@ -8,13 +8,13 @@
 #  in a HF calculations.
 #=======================================================
 +system
-NAME dvb
-IDENTIFIER 1760432518800774240
-PATH ./dvb/
+NAME dvb_sp_un
+IDENTIFIER 1761677869590185485
+PATH ./dvb_sp_un/
 CHARGE 1
 IGNORECHARGE false
 SPIN 1
-GEOMETRY dvb_sp.xyz
+GEOMETRY dvb_sp_un.xyz
 SCFMODE UNRESTRICTED
 METHOD DFT
 +dft

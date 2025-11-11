@@ -33,11 +33,11 @@ class Serenity(logfileparser.Logfile):
         return label
 
     def before_parsing(self):
+        self.skipSystem = False
+        self.skipSCF = False
         self.populationdict = {}
-        # TODO Note that CM5 and Hirshfeld will not function properly currently, as they perform atom SCFs.
-        # This will be fixed in my upcoming PR of geometry optimizations.
         # TODO Serenity also has Becke, IAO, and CHELPG population analyses that are currently not supported.
-        self.populationtypes = ["Mulliken"]  # , "CM5", "Hirshfeld"]
+        self.populationtypes = ["Mulliken", "CM5", "Hirshfeld"]
         self.metadata["unrestricted"] = False
         self.beta_parsing = False
         self.path = Path(self.inputfile.filenames[0]).resolve()
@@ -97,125 +97,138 @@ class Serenity(logfileparser.Logfile):
                 name = line.split()[1]
                 if not hasattr(self, "systemname"):
                     self.systemname = name
+                elif name[-5:] == "_FREE":
+                    self.logger.warning(
+                        "Skipping the parsing of the atom SCFs done by some population analysis methods in Serenity."
+                    )
+                    self.skipSystem = True
+                    self.skipSCF = True
                 elif name != self.systemname:
                     self.logger.error("Multiple systems detected which is not currently supported.")
                     raise StopParsing()
 
-        # Extract charge and multiplicity
-        if line[5:11] == "Charge":
-            self.set_attribute("charge", int(line.split()[1]))
+        if not self.skipSystem:
+            # Extract charge and multiplicity
+            if line[5:11] == "Charge":
+                self.set_attribute("charge", int(line.split()[1]))
 
-        # Extract multiplicity
-        if line[5:9] == "Spin":
-            self.set_attribute("mult", int(line.split()[1]) + 1)
+            # Extract multiplicity
+            if line[5:9] == "Spin":
+                self.set_attribute("mult", int(line.split()[1]) + 1)
 
-        # metadata
-        if line[4:23] == "Version           :":
-            self.metadata["package_version"] = line.split()[2]
-        if line[5:15] == "Basis Set:":
-            self.metadata["basis_set"] = line.split()[2]
-        if line[5:16] == "Functional:":
-            self.metadata["functional"] = line.split()[1]
-        if line[5:14] == "SCF Mode:":
-            self.metadata["unrestricted"] = False
-        if line[4:34] == "Time taken for the entire run:":
-            # TODO this condition is probably too straigthforward and will take some more testing.
-            self.metadata["success"] = True
-        # note: cpu time is not printed straightforwardly in Serenity.
-        if line[4:23] == "Time taken for task":
-            if "wall_time" not in self.metadata:
-                self.metadata["wall_time"] = []
-            if line.split()[6] == "s.":
-                walltime = datetime.timedelta(seconds=float(line.split()[5]))
-            elif line.split()[6] == "min.":
-                walltime = datetime.timedelta(
-                    minutes=float(line.split()[5].split(":")[0]),
-                    seconds=float(line.split()[5].split(":")[1]),
-                )
-            self.metadata["wall_time"].append(walltime)
-        if line.strip().startswith("Warning") or line.strip().startswith("WARNING"):
-            if "warnings" not in self.metadata:
-                self.metadata["warnings"] = []
-            # TODO just adding the entire warning line for now. Warnings may be longer than this line.
-            self.metadata["warning"].append(line)
-
-        # Extract from atoms: number of atoms, elements, and coordinates
-        if line.strip().startswith("Current Geometry (Angstrom):") and not getattr(
-            self, "atomcoords", []
-        ):
-            line = next(inputfile)
-            line = next(inputfile)
-            atomnos = []
-            coords = []
-            while line.strip():
-                atominfo = line.split()
-                element = atominfo[1]
-                x, y, z = map(float, atominfo[2:5])
-                atomnos.append(self.table.number[element])
-                coords.append([x, y, z])
+            # Extract from atoms: number of atoms, elements, and coordinates
+            if line.strip().startswith("Current Geometry (Angstrom):"):
                 line = next(inputfile)
+                line = next(inputfile)
+                atomnos = []
+                coords = []
+                while line.strip():
+                    atominfo = line.split()
+                    element = atominfo[1]
+                    x, y, z = map(float, atominfo[2:5])
+                    atomnos.append(self.table.number[element])
+                    coords.append([x, y, z])
+                    line = next(inputfile)
 
-            self.set_attribute("atomnos", atomnos)
-            self.set_attribute("natom", len(atomnos))
-            if hasattr(self, "optstatus"):
-                if not self.optstatus[-1] & data.ccData.OPT_DONE and not len(self.optstatus) == 1:
+                self.set_attribute("atomnos", atomnos)
+                self.set_attribute("natom", len(atomnos))
+                if hasattr(self, "optstatus"):
+                    if (
+                        not self.optstatus[-1] & data.ccData.OPT_DONE
+                        and not len(self.optstatus) == 1
+                    ):
+                        self.append_attribute("atomcoords", coords)
+                else:
                     self.append_attribute("atomcoords", coords)
-            else:
-                self.append_attribute("atomcoords", coords)
 
-        ### SCF data
-        if line[5:13] == "SCF Mode":
-            if line.split()[2] == "RESTRICTED":
-                self.metadata["unrestricted"] = False
-            elif line.split()[2] == "UNRESTRICTED":
-                self.metadata["unrestricted"] = True
+        if not self.skipSCF:
+            ### SCF data
+            if line[5:21] == "Basis Functions:":
+                self.set_attribute("nbasis", int(line.split()[2]))
 
-        if line[5:21] == "Basis Functions:":
-            # if self.metadata["unrestricted"]:
-            #    self.set_attribute("nbasis", int(line.split()[2]) * 2)
-            # else:
-            self.set_attribute("nbasis", int(line.split()[2]))
+            if line[5:15] == "Basis Set:":
+                self.metadata["basis_set"] = line.split()[2]
+            if line[5:16] == "Functional:":
+                self.metadata["functional"] = line.split()[1]
 
-        # Extract SCF thresholds
-        if line.strip().startswith("Energy Threshold:"):
-            ethresh = float(line.split()[2])
-            line = next(inputfile)
-            if "RMSD[D]" in line:
-                rmsd = float(line.split()[2])
+            # Extract SCF thresholds
+            if line.strip().startswith("Energy Threshold:"):
+                ethresh = float(line.split()[2])
                 line = next(inputfile)
-                if "DIIS" in line:
-                    diis = float(line.split()[2])
-                    scftargets = [ethresh, rmsd, diis]
-                    self.append_attribute("scftargets", scftargets)
+                if "RMSD[D]" in line:
+                    rmsd = float(line.split()[2])
+                    line = next(inputfile)
+                    if "DIIS" in line:
+                        diis = float(line.split()[2])
+                        scftargets = [ethresh, rmsd, diis]
+                        self.append_attribute("scftargets", scftargets)
 
-        if "Cycle" in line and "Mode" in line:
-            line = next(inputfile)
-            values = []
-            while not line.strip().startswith("Converged after"):
-                linedata = line.split()
-                c1, c2, c3 = map(float, linedata[2:5])
-                values.append([c1, c2, c3])
+            if line[5:13] == "SCF Mode":
+                if line.split()[2] == "RESTRICTED":
+                    self.metadata["unrestricted"] = False
+                elif line.split()[2] == "UNRESTRICTED":
+                    self.metadata["unrestricted"] = True
                 line = next(inputfile)
-            self.append_attribute("scfvalues", numpy.vstack(numpy.array(values)))
+                if line.startswith("Method"):
+                    self.metadata["methods"].append(line.split()[1])
 
-        if "Total Energy (" in line:
-            self.append_attribute("scfenergies", float(line.split()[3]))
-
-        if "Dispersion Correction (" in line:
-            self.append_attribute("dispersionenergies", float(line.split()[3]))
-
-        # Extract index of HOMO
-        if line.strip().startswith("Orbital Energies:"):
-            self.skip_line(inputfile, ["Orbital"])
-            self.skip_line(inputfile, ["dashes"])
-            self.skip_line(inputfile, ["#   Occ."])
-            # self.skip_lines(inputfile, ["Orbital","dashes","#   Occ."]) # TODO test results in warnings
-            homos = None
-            line = next(inputfile)
-            while line.split()[1] == "2.00":
-                homos = int(line.split()[0])
+            if "Cycle" in line and "Mode" in line:
                 line = next(inputfile)
-            self.set_attribute("homos", [homos - 1])  # Serenity starts at 1, python at 0
+                values = []
+                while not line.strip().startswith("Converged after"):
+                    linedata = line.split()
+                    c1, c2, c3 = map(float, linedata[2:5])
+                    values.append([c1, c2, c3])
+                    line = next(inputfile)
+                self.append_attribute("scfvalues", numpy.vstack(numpy.array(values)))
+
+            if line.startswith("Total Energy ("):
+                self.append_attribute("scfenergies", float(line.split()[3]))
+                if not hasattr(self, "optstatus") and hasattr(self, "scfenergies"):
+                    self.logger.warning(
+                        "Multiple instances of scfenergies despite no geometry optimization being done. This Serenity calculation possibly has several systems."
+                    )
+
+            if "Total Supersystem Energy" in line:
+                self.logger.warning(
+                    "Supersystem energy encountered. Serenity calculations involving subsystems (and by extension, supersystems) are currently not supported."
+                )
+                raise StopParsing()
+
+            if "Dispersion Correction (" in line:
+                self.append_attribute("dispersionenergies", float(line.split()[3]))
+
+            # Extract index of HOMO(s)
+            if line.strip().startswith("Orbital Energies:"):
+                self.skip_line(inputfile, ["Orbital"])
+                self.skip_line(inputfile, ["dashes"])
+                if self.metadata["unrestricted"] and not self.beta_parsing:
+                    self.skip_line(inputfile, ["Alpha:"])
+                    self.beta_parsing = True
+                self.skip_line(inputfile, ["#   Occ."])
+                # self.skip_lines(inputfile, ["Orbital","dashes","#   Occ."]) # TODO test results in warnings
+                line = next(inputfile)
+                homos = None
+                occ_number = None
+                if self.metadata["unrestricted"]:
+                    occ_number = "1.00"
+                else:
+                    occ_number = "2.00"
+                while line.split()[1] == occ_number:
+                    homos = int(line.split()[0])
+                    line = next(inputfile)
+                self.append_attribute("homos", homos - 1)  # Serenity starts at 1, python at 0
+
+                if self.beta_parsing:
+                    while line.split()[0] != "Beta:":
+                        line = next(inputfile)
+                    self.skip_line(inputfile, ["Beta:"])
+                    self.skip_line(inputfile, ["#   Occ."])
+                    line = next(inputfile)
+                    while line.split()[1] == occ_number:
+                        homos = int(line.split()[0])
+                        line = next(inputfile)
+                    self.append_attribute("homos", homos - 1)
 
         ### Multipole moments
         if line.strip().startswith("Origin chosen as:"):
@@ -263,17 +276,12 @@ class Serenity(logfileparser.Logfile):
             line = next(inputfile)
             line = next(inputfile)
             chargelist = []
-
             while line.strip() and not line.strip().startswith("---"):
                 charge = float(line.split()[3])
                 chargelist.append(charge)
                 line = next(inputfile)
-
             value = numpy.array(chargelist)
             self.populationdict[key] = value
-
-        if line.strip().startswith("Dispersion Correction ("):
-            self.append_attribute("dispersionenergies", float(line.split()[3]))
 
         if "Total Local-CCSD Energy" in line:
             self.set_attribute("ccenergies", float(line.split()[3]))
@@ -287,38 +295,6 @@ class Serenity(logfileparser.Logfile):
         if "Total CCSD(T) Energy" in line:
             self.set_attribute("ccenergies", float(line.split()[3]))
             self.metadata["methods"].append("CCSD(T)")
-
-        # Extract index of HOMO(s)
-        if line.strip().startswith("Orbital Energies:"):
-            self.skip_line(inputfile, ["Orbital"])
-            self.skip_line(inputfile, ["dashes"])
-            if self.metadata["unrestricted"] and not self.beta_parsing:
-                self.skip_line(inputfile, ["Alpha:"])
-                self.beta_parsing = True
-            self.skip_line(inputfile, ["#   Occ."])
-            # self.skip_lines(inputfile, ["Orbital","dashes","#   Occ."]) # TODO test results in warnings
-            line = next(inputfile)
-            homos = None
-            occ_number = None
-            if self.metadata["unrestricted"]:
-                occ_number = "1.00"
-            else:
-                occ_number = "2.00"
-            while line.split()[1] == occ_number:
-                homos = int(line.split()[0])
-                line = next(inputfile)
-            self.append_attribute("homos", homos - 1)  # Serenity starts at 1, python at 0
-
-            if self.beta_parsing:
-                while line.split()[0] != "Beta:":
-                    line = next(inputfile)
-                self.skip_line(inputfile, ["Beta:"])
-                self.skip_line(inputfile, ["#   Occ."])
-                line = next(inputfile)
-                while line.split()[1] == occ_number:
-                    homos = int(line.split()[0])
-                    line = next(inputfile)
-                self.append_attribute("homos", homos - 1)
 
         # for additional robustness.
         # this should already be stopped by the presence of several systems in the output
@@ -344,6 +320,11 @@ class Serenity(logfileparser.Logfile):
                 if not self.optstatus[-1] & data.ccData.OPT_DONE:
                     self.append_attribute("optdone", len(self.atomcoords) - 1)
                     self.optstatus[-1] += data.ccData.OPT_DONE
+                    # removing unnecessary entries of HOMOs in case of geom. opt. etc.
+                    if self.metadata["unrestricted"]:
+                        self.homos = self.homos[0:2]
+                    else:
+                        self.homos = self.homos[0]
 
             if line.strip().startswith("Current Geometry Gradients (a.u.):"):
                 if not self.optstatus[-1] & data.ccData.OPT_DONE:
@@ -391,7 +372,36 @@ class Serenity(logfileparser.Logfile):
                 line = next(inputfile)
                 i += 1
             self.append_attribute("mpenergies", [line.split()[2]])
+            self.metadata["methods"].append("MP2")
 
+        ### metadata
+        if line[4:34] == "Time taken for the entire run:":
+            # TODO this condition is probably too straigthforward and will take some more testing.
+            self.metadata["success"] = True
+
+        # note: cpu time is not printed straightforwardly in Serenity.
+        if line[4:23] == "Time taken for task":
+            if "wall_time" not in self.metadata:
+                self.metadata["wall_time"] = []
+            if line.split()[6] == "s.":
+                walltime = datetime.timedelta(seconds=float(line.split()[5]))
+            elif line.split()[6] == "min.":
+                walltime = datetime.timedelta(
+                    minutes=float(line.split()[5].split(":")[0]),
+                    seconds=float(line.split()[5].split(":")[1]),
+                )
+            self.metadata["wall_time"].append(walltime)
+
+        if line.strip().startswith("Warning") or line.strip().startswith("WARNING"):
+            if "warnings" not in self.metadata:
+                self.metadata["warnings"] = []
+            # TODO just adding the entire warning line for now. Warnings may be longer than this line.
+            self.metadata["warning"].append(line)
+
+        if line[4:23] == "Version           :":
+            self.metadata["package_version"] = line.split()[2]
+
+        ### EXCITED STATE
         if line.strip().startswith("TDDFT Summary"):
             self.metadata["excited_states_method"] = "TD-DFT"
 
