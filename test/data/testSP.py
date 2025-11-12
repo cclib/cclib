@@ -75,6 +75,7 @@ class GenericSPTest:
         "These tests were run a long time ago and since we don't have access to Molpro 2006 anymore, we can skip this test (it is tested in 2012)",
     )
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
+    @skipForParser("Serenity", "not implemented yet")
     def testatomcharges(self, data) -> None:
         """Are atomic charges consistent with natom?"""
         for atomcharge_type in data.atomcharges:
@@ -295,7 +296,6 @@ class GenericSPTest:
     @skipForParser("GAMESSDAT", "Scftargets probably do not exist in the file")
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("xTB", "not implemented yet")
-    @skipForParser("Serenity", "not merged yet")
     def testscftargetdim(self, data) -> None:
         """Do the scf targets have the right dimensions?"""
         assert data.scftargets.shape == (len(data.scfvalues), len(data.scfvalues[0][0]))
@@ -355,7 +355,6 @@ class GenericSPTest:
     )
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("xTB", "not implemented yet")
-    @skipForParser("Serenity", "NOs not in Serenity")
     def testfornoormo(self, data) -> None:
         """Do we have NOs or MOs?"""
         assert hasattr(data, "nocoeffs") or hasattr(data, "mocoeffs")
@@ -407,7 +406,6 @@ class GenericSPTest:
         assert data.aooverlaps[3, 0] == pytest.approx(0)
         assert data.aooverlaps[0, 3] == pytest.approx(0)
 
-    @skipForParser("Serenity", "not implemented yet")
     def testoptdone(self, data) -> None:
         """There should be no optdone attribute set."""
         assert not hasattr(data, "optdone")

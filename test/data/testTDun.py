@@ -46,12 +46,14 @@ class GenericTDunTest:
         assert len(data.etsecs) == self.number
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
+    @skipForParser("Serenity", "Serenity does not use symmetry.")
     def testsymsnumber(self, data) -> None:
         """Is the length of etsyms correct?"""
         assert len(data.etsyms) == self.number
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "Turbomole etsyms are not available for UHF")
+    @skipForParser("Serenity", "Serenity does not use symmetry.")
     def testsyms(self, data) -> None:
         """Is etsyms populated by singlets and triplets 50/50?"""
         singlets = [sym for sym in data.etsyms if "Singlet" in sym]
@@ -76,3 +78,9 @@ class PySCFTDunTest(GenericTDunTest):
     """Customized time-dependent unrestricted HF/DFT unittest"""
 
     number = 10
+
+
+class SerenityTDunTest(GenericTDunTest):
+    """Customized time-dependent unrestricted HF/DFT unittest"""
+
+    number = 5

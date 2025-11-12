@@ -1,0 +1,23 @@
++system 
+ name dvb_td_un
+ geometry dvb_td_un.xyz
+ method dft
+ scfmode unrestricted
+ +dft
+  functional b3lyp
+ -dft
+ +basis
+  label sto-3g
+ -basis
+-system
+
++task scf
+ act dvb_td_un
+-task
+
++task lrscf
+ act dvb_td_un
+ neigen 5
+ densFitJ None
+ densFitK None
+-task
