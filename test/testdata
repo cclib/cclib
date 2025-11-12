@@ -472,6 +472,7 @@ TDun      CFOUR       CFOUREOMCCSDunTest    basicCFOUR2.1         water_eomccsd_
 TDun      Gaussian    GenericTDunTest       basicGaussian09       CO_TD_delta.log
 TDun      Gaussian    GenericTDunTest       basicGaussian16       CO_TD_delta.log
 TDun      PySCF       PySCFTDunTest         basicPySCF2.6         dvb_un_td.py
+TDun      Serenity    SerenityTDunTest      serenity1.6.1         dvb_td_un/dvb_td_un.out
 TDun	  Turbomole   TurbomoleTDunTest     basicTurbomole7.4     CO_TD_un/basis    CO_TD_un/control    CO_TD_un/alpha    CO_TD_un/beta    CO_TD_un/dscf.out    CO_TD_un/escf.out    CO_TD_un/coord
 TDun	  Turbomole   TurbomoleTDunTest     basicTurbomole7.4     CO_cc2_TD_un/basis    CO_cc2_TD_un/control    CO_cc2_TD_un/alpha    CO_cc2_TD_un/beta    CO_cc2_TD_un/dscf.out    CO_cc2_TD_un/ricc2.out    CO_cc2_TD_un/coord
 

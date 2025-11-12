@@ -33,7 +33,7 @@ class GenericSPunTest:
     @skipForParser("Molcas", "Length is zero for some reason")
     @skipForParser("Molpro", "???")
     @skipForParser("Turbomole", "???")
-    @skipForParser("Serenity", "not merged yet")
+    @skipForParser("Serenity", "not implemented yet")
     def testatomcharges(self, data) -> None:
         """Are atomic charges consistent with natom?"""
         for atomcharge_type in data.atomcharges:
@@ -54,7 +54,7 @@ class GenericSPunTest:
     @skipForParser("Molcas", "Length is zero for some reason")
     @skipForParser("Molpro", "???")
     @skipForParser("Turbomole", "???")
-    @skipForParser("Serenity", "not merged yet")
+    @skipForParser("Serenity", "not included in testfile yet")
     def testatomcharges_mulliken(self, data) -> None:
         """Do Mulliken atomic charges sum to positive one?"""
         charges = data.atomcharges["mulliken"]
@@ -75,12 +75,11 @@ class GenericSPunTest:
 
     @skipForParser("Jaguar", "Data file does not contain enough information")
     @skipForParser("DALTON", "mocoeffs not implemented yet")
-    @skipForParser("Serenity", "not applicable")
     def testfornoormo(self, data) -> None:
         """Do we have NOs or MOs?"""
         assert hasattr(data, "nocoeffs") or hasattr(data, "mocoeffs")
 
-    @skipForParser("Serenity", "not applicable")
+    @skipForParser("Serenity", "no NOs in Serenity")
     def testdimnoccnos(self, data) -> None:
         """Is the length of nooccnos equal to nmo?"""
         if hasattr(data, "nooccnos"):
@@ -88,7 +87,7 @@ class GenericSPunTest:
             # FIXME
             assert data.nooccnos.shape in [(data.nmo,), (2, data.nmo)]
 
-    @skipForParser("Serenity", "not applicable")
+    @skipForParser("Serenity", "no NOs in Serenity")
     def testdimnocoeffs(self, data) -> None:
         """Are the dimensions of nocoeffs equal to 2 x nmo x nmo?"""
         if hasattr(data, "nocoeffs"):
@@ -117,7 +116,7 @@ class GenericSPunTest:
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Molpro", "?")
     @skipForParser("ORCA", "ORCA has no support for symmetry yet")
-    @skipForParser("Serenity", "not applicable")
+    @skipForParser("Serenity", "Serenity does not use symmetry.")
     def testmosyms(self, data) -> None:
         """Are the dims of the mosyms equals to 2 x nmo?"""
         shape = (len(data.mosyms), len(data.mosyms[0]))
@@ -130,7 +129,6 @@ class GenericROSPTest(GenericSPunTest):
     @skipForParser("DALTON", "mocoeffs not implemented yet")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    @skipForParser("Serenity", "not applicable")
     def testdimmocoeffs(self, data) -> None:
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis?"""
         assert isinstance(data.mocoeffs, list)
@@ -139,7 +137,6 @@ class GenericROSPTest(GenericSPunTest):
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    @skipForParser("Serenity", "not applicable")
     def testhomos(self, data) -> None:
         """Are the HOMO indices equal to 34 and 33 (one more alpha electron
         than beta electron)?
@@ -150,7 +147,6 @@ class GenericROSPTest(GenericSPunTest):
     @skipForParser("QChem", "prints 2 sets of different MO energies?")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    @skipForParser("Serenity", "not applicable")
     def testmoenergies(self, data) -> None:
         """Are the dims of the moenergies equals to 1 x nmo?"""
         assert len(data.moenergies) == 1
@@ -158,7 +154,7 @@ class GenericROSPTest(GenericSPunTest):
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    @skipForParser("Serenity", "not applicable")
+    @skipForParser("Serenity", "Serenity does not use symmetry.")
     def testmosyms(self, data) -> None:
         """Are the dims of the mosyms equals to 1 x nmo?"""
         shape = (len(data.mosyms), len(data.mosyms[0]))
