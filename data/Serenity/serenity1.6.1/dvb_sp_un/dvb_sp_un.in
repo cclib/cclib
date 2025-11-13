@@ -1,6 +1,6 @@
 +system 
- name dvb
- geometry dvb_sp.xyz
+ name dvb_sp_un
+ geometry dvb_sp_un.xyz
  scfmode unrestricted
  charge +1
  spin 1
@@ -14,10 +14,14 @@
 -system
 
 +task scf
- act dvb
+ act dvb_sp_un
 -task
 
 +task multi
- act dvb
+ act dvb_sp_un
  highestorder 2
+-task
+
++task pop
+ act dvb_sp_un
 -task
