@@ -83,9 +83,6 @@ class GenericGeoOptTest:
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("MOPAC", "Not implemented.")
     @skipForParser("xTB", "Not implemented yet")
-    @skipForParser(
-        "Serenity", "This is fixed in a later PR that is already prepared, ignoring for now"
-    )
     def testhomos(self, data) -> None:
         """Is the index of the HOMO equal to 34?"""
         ref = numpy.array([34], "i")
@@ -151,7 +148,7 @@ class GenericGeoOptTest:
     @skipForParser("MOPAC", "Not implemented.")
     @skipForParser("PySCF", "not implemented yet")
     @skipForParser("xTB", "not implemented yet")
-    @skipForParser("Serenity", "not printed in Serenity yet")
+    @skipForParser("Serenity", "geo targets are not printed in Serenity.")
     def testgeotargets(self, data) -> None:
         """Do the geometry optimization targets have the right dimensions?"""
         dim_geotargets = data.geotargets.shape

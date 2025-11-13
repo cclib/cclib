@@ -8,14 +8,14 @@
 #  in a HF calculations.
 #=======================================================
 +system
-NAME dvb_sp
-IDENTIFIER 1760560470009111059
-PATH ./dvb_sp/
-CHARGE 0
+NAME dvb_sp_un
+IDENTIFIER 1761677869590185485
+PATH ./dvb_sp_un/
+CHARGE 1
 IGNORECHARGE false
-SPIN 0
-GEOMETRY dvb_sp.xyz
-SCFMODE RESTRICTED
+SPIN 1
+GEOMETRY dvb_sp_un.xyz
+SCFMODE UNRESTRICTED
 METHOD DFT
 +dft
 FUNCTIONAL B3LYP
