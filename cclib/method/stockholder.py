@@ -8,14 +8,18 @@
 import logging
 import math
 import os
-from typing import Optional, Sequence, Tuple
+from typing import TYPE_CHECKING, Optional, Sequence, Tuple
 
 from cclib.method.calculationmethod import Method
 from cclib.method.volume import electrondensity_spin
 from cclib.parser.utils import convertor, find_package
-from cclib.progress import Progress
 
 import numpy
+
+if TYPE_CHECKING:
+    from cclib.method.volume import Volume
+    from cclib.parser.data import ccData
+    from cclib.progress import Progress
 
 
 class MissingInputError(Exception):
@@ -30,10 +34,10 @@ class Stockholder(Method):
 
     def __init__(
         self,
-        data,
-        volume,
+        data: "ccData",
+        volume: "Volume",
         proatom_path: str,
-        progress: Optional[Progress] = None,
+        progress: Optional["Progress"] = None,
         loglevel: int = logging.INFO,
         logname: str = "Log",
     ) -> None:
@@ -189,7 +193,7 @@ class Stockholder(Method):
 
     def calculate(
         self, indices: Optional[Sequence[Sequence[int]]] = None, fupdate: float = 0.05
-    ) -> None:
+    ) -> bool:
         """Charge density on a Cartesian grid is a common routine required for Stockholder-type
         and related methods. This abstract class prepares the grid if input Volume object
         is empty.
@@ -216,3 +220,5 @@ class Stockholder(Method):
         else:
             self.logger.info("Using charge densities from the provided Volume object.")
             self.charge_density = self.volume
+
+        return True

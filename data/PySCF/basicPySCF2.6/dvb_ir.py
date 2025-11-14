@@ -2,11 +2,13 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
+from typing import Any, Dict, List
+
 from pyscf import dft, gto
 from pyscf.prop import infrared
 
 
-def calculate():
+def calculate() -> Dict[str, List[Any]]:
     # This is DVB.
     mol = gto.M(
         atom="""
@@ -37,7 +39,7 @@ def calculate():
 
     scf_steps = []
 
-    def store_intermediate(_locals):
+    def store_intermediate(_locals: Dict[str, Any]) -> None:
         scf_steps.append(
             {
                 "e_tot": _locals["e_tot"],

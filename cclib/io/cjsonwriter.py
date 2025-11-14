@@ -7,6 +7,7 @@
 
 import json
 import os.path
+from typing import TYPE_CHECKING, Any, Dict, Union
 
 from cclib.io import filewriter
 from cclib.parser.data import ccData
@@ -14,13 +15,16 @@ from cclib.parser.utils import find_package
 
 import numpy as np
 
+if TYPE_CHECKING:
+    from pathlib import Path
+
 _has_openbabel = find_package("openbabel")
 
 
 class CJSON(filewriter.Writer):
     """A writer for chemical JSON (CJSON) files."""
 
-    def __init__(self, ccdata, terse=False, *args, **kwargs):
+    def __init__(self, ccdata: "ccData", terse: bool = False, *args, **kwargs) -> None:
         """Initialize the chemical JSON writer object.
 
         Inputs:
@@ -28,12 +32,12 @@ class CJSON(filewriter.Writer):
         """
         super().__init__(ccdata, terse=terse, *args, **kwargs)
 
-    def pathname(self, path):
+    def pathname(self, path: Union[str, Path]) -> str:
         """Return filename without extension to be used as name."""
         name = os.path.basename(os.path.splitext(path)[0])
         return name
 
-    def as_dict(self):
+    def as_dict(self) -> Dict[str, Any]:
         """Build a Python dict with the CJSON data"""
         cjson_dict = dict()
         # Need to decide on a number format.
@@ -143,7 +147,7 @@ class CJSON(filewriter.Writer):
             cjson_dict["diagram"] = self.pbmol.write(format="svg")
         return cjson_dict
 
-    def generate_repr(self):
+    def generate_repr(self) -> str:
         """Generate the CJSON representation of the logfile data."""
         cjson_dict = self.as_dict()
         if self.terse:
@@ -151,7 +155,7 @@ class CJSON(filewriter.Writer):
         else:
             return json.dumps(cjson_dict, cls=JSONIndentEncoder, sort_keys=True, indent=4)
 
-    def set_JSON_attribute(self, object, key):
+    def set_JSON_attribute(self, object: Any, key: str) -> None:
         """
         Args:
             object: Python dictionary which is being appended with the key value.
@@ -188,7 +192,7 @@ class JSONIndentEncoder(json.JSONEncoder):
         self.current_indent = 0
         self.current_indent_str = ""
 
-    def encode(self, o):
+    def encode(self, o: Any) -> str:
         # Special Processing for lists
         if isinstance(o, (list, tuple)):
             primitives_only = True

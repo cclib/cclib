@@ -375,7 +375,7 @@ def ccwrite(
 
 
 def _determine_output_format(
-    outputtype: Optional[str], outputdest: Optional[str]
+    outputtype: Optional[str], outputdest: Optional[Union[str, io.IOBase]]
 ) -> Type["Writer"]:
     """
     Determine the correct output format.
@@ -422,7 +422,9 @@ def _check_pandas(found_pandas: bool) -> None:
         raise ImportError("You must install `pandas` to use this function")
 
 
-def ccframe(ccobjs, *args, **kwargs):
+def ccframe(
+    ccobjs: Iterable[Union[logfileparser.Logfile, ccData]], *args, **kwargs
+) -> pd.DataFrame:
     """Returns a pandas.DataFrame of data attributes parsed by cclib from one
     or more logfiles.
 
