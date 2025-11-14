@@ -120,6 +120,7 @@ CC        QChem       GenericCCSDPTTest     basicQChem5.1         water_ccsd(t).
 CC        QChem       GenericCCDTest        basicQChem5.4         water_ccd.out
 CC        QChem       GenericCCSDTest       basicQChem5.4         water_ccsd.out
 CC        QChem       GenericCCSDPTTest     basicQChem5.4         water_ccsd(t).out
+CC        Serenity    SerenityCCSDTest       serenity1.6.1         water_ccsd/water_ccsd.out
 CC        Turbomole   TurbomoleCCSDTest     basicTurbomole7.2     water_ccsd/basis      water_ccsd/control      water_ccsd/mos      water_ccsd/dscf.out      water_ccsd/ccsdf12.out
 CC        Turbomole   TurbomoleCCSDTest     basicTurbomole7.4     water_ccsd/basis      water_ccsd/control      water_ccsd/mos      water_ccsd/dscf.out      water_ccsd/ccsdf12.out
 CC        Turbomole   GenericCC2Test        basicTurbomole7.4     water_cc2/basis      water_cc2/control      water_cc2/mos      water_cc2/dscf.out      water_cc2/ricc2.out
@@ -334,7 +335,7 @@ SP        Psi4        PsiSPTest             basicPsi4-1.7               dvb_sp_r
 SP        PySCF       PySCFSPTest           basicPySCF2.6               dvb_sp.py
 SP        QChem       GenericSPTest         basicQChem5.1               dvb_sp.out
 SP        QChem       GenericSPTest         basicQChem5.4               dvb_sp.out
-SP        Serenity    GenericSPTest         serenity1.6.1               dvb_sp/dvb_sp.out
+SP        Serenity    SerenitySPTest        serenity1.6.1/dvb_sp        dvb_sp.out
 SP        Turbomole   TurbomoleSPTest       basicTurbomole5.9           dvb_sp_symm/mos       dvb_sp_symm/basis      dvb_sp_symm/control      dvb_sp_symm/dscf.out      dvb_sp_symm/coord
 SP        Turbomole   TurbomoleHFSPTest     basicTurbomole7.5           dvb_sp/basis      dvb_sp/control      dvb_sp/mos      dvb_sp/dscf.out      dvb_sp/coord
 SP        XTB         XTBSPTest             basicXTB6.6.1/dvb_sp        dvb_sp.out

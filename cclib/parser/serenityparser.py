@@ -41,6 +41,7 @@ class Serenity(logfileparser.Logfile):
         self.metadata["unrestricted"] = False
         self.beta_parsing = False
         self.path = Path(self.inputfile.filenames[0]).resolve()
+        self.ccmethods = []
 
     def after_parsing(self):
         self.populationdict = {k.lower(): v for k, v in self.populationdict.items()}
@@ -73,6 +74,16 @@ class Serenity(logfileparser.Logfile):
                     self.set_attribute("moenergies", eigenvalues)
                     self.set_attribute("mocoeffs", coeffs)
                     self.set_attribute("nmo", len(eigenvalues[0]))
+
+        # keep only the most accurate CC result
+        self.cc_hierarchy = ["CCSD(T)", "Local CCSD(T0)", "CCSD", "Local CCSD"]
+        if hasattr(self, "ccenergies"):
+            for tier in self.cc_hierarchy:
+                if tier in self.ccmethods:
+                    idx = self.ccmethods.index(tier)
+                    print(self.ccmethods.index(tier))
+                    self.set_attribute("ccenergies", [self.ccenergies[idx]])
+                    break
 
         super().after_parsing()
 
@@ -160,8 +171,7 @@ class Serenity(logfileparser.Logfile):
                     line = next(inputfile)
                     if "DIIS" in line:
                         diis = float(line.split()[2])
-                        scftargets = [ethresh, rmsd, diis]
-                        self.append_attribute("scftargets", scftargets)
+                        self.append_attribute("scftargets", [ethresh, rmsd, diis])
 
             if line[5:13] == "SCF Mode":
                 if line.split()[2] == "RESTRICTED":
@@ -284,17 +294,21 @@ class Serenity(logfileparser.Logfile):
             self.populationdict[key] = value
 
         if "Total Local-CCSD Energy" in line:
-            self.set_attribute("ccenergies", float(line.split()[3]))
-            self.metadata["methods"].append("Local CCSD")  # TODO might not work
+            self.append_attribute("ccenergies", float(line.split()[3]))
+            self.metadata["methods"].append("Local CCSD")
+            self.ccmethods.append("Local CCSD")
         if "Total Local-CCSD(T0) Energy" in line:
-            self.set_attribute("ccenergies", float(line.split()[3]))
-            self.metadata["methods"].append("Local CCSD(T0)")  # TODO might not work
+            self.append_attribute("ccenergies", float(line.split()[3]))
+            self.metadata["methods"].append("Local CCSD(T0)")
+            self.ccmethods.append("Local CCSD(T0)")
         if "Total CCSD Energy" in line:
-            self.set_attribute("ccenergies", float(line.split()[3]))
+            self.append_attribute("ccenergies", float(line.split()[3]))
             self.metadata["methods"].append("CCSD")
+            self.ccmethods.append("CCSD")
         if "Total CCSD(T) Energy" in line:
-            self.set_attribute("ccenergies", float(line.split()[3]))
+            self.append_attribute("ccenergies", float(line.split()[3]))
             self.metadata["methods"].append("CCSD(T)")
+            self.ccmethods.append("CCSD(T)")
 
         # for additional robustness.
         # this should already be stopped by the presence of several systems in the output

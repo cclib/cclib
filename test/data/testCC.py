@@ -183,3 +183,8 @@ class PySCFCCSDTest(GenericCCSDTest):
 class PySCFCCSDPTTest(GenericCCSDPTTest):
     # PySCF 2.6
     corr_energy = -0.05350650307
+
+
+class SerenityCCSDTest(GenericCCSDTest):
+    # Serenity 1.6.1
+    corr_energy = -0.130059162427  # TODO
