@@ -20,10 +20,3 @@
  densFitJ None
  densFitK None
 -task
-
-+task ff
-act dvb_td
-finiteFieldStrength 0.1
-frequency 1.0
--task
-
