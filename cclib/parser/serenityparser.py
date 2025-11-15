@@ -388,6 +388,18 @@ class Serenity(logfileparser.Logfile):
             self.append_attribute("mpenergies", [line.split()[2]])
             self.metadata["methods"].append("MP2")
 
+        if line.strip().startswith("Polarizability Tensor / a.u.:"):
+            self.skip_line(inputfile, "Polarizability")
+            self.skip_line(inputfile, ["dashes"])
+            line = next(inputfile)
+            polarizability = []
+            polarizability.append([float(i) for i in line.split()[-3:]])
+            line = next(inputfile)
+            polarizability.append([float(i) for i in line.split()[-3:]])
+            line = next(inputfile)
+            polarizability.append([float(i) for i in line.split()[-3:]])
+            self.append_attribute("polarizabilities", numpy.array(polarizability))
+
         ### metadata
         if line[4:34] == "Time taken for the entire run:":
             # TODO this condition is probably too straigthforward and will take some more testing.
