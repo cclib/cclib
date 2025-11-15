@@ -8,17 +8,17 @@
 #  in a HF calculations.
 #=======================================================
 +system
-NAME dvb_ff
-IDENTIFIER 1763194667791209716
-PATH ./dvb_ff/
+NAME trp_polar
+IDENTIFIER 1763196002844540555
+PATH ./trp_polar/
 CHARGE 0
 IGNORECHARGE false
 SPIN 0
-GEOMETRY dvb_ff.xyz
+GEOMETRY trp_polar.xyz
 SCFMODE RESTRICTED
-METHOD DFT
+METHOD HF
 +dft
-FUNCTIONAL PBE
+FUNCTIONAL BP86
 DISPERSION NONE
 -dft
 +scf
