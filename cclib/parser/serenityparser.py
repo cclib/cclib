@@ -428,7 +428,6 @@ class Serenity(logfileparser.Logfile):
             self.metadata["package_version"] = line.split()[2]
 
         ### EXCITED STATE
-        # TODO add CC2 etc
         if line.strip().startswith("TDDFT Summary"):
             self.metadata["excited_states_method"] = "TD-DFT"
 
