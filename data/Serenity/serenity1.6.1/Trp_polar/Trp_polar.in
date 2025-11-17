@@ -1,0 +1,19 @@
++system 
+ name trp_polar
+ geometry trp_polar.xyz
+ method hf
+ +basis
+  label def2-svp
+ -basis
+-system
+
++task scf
+ act trp_polar
+-task
+
++task ff
+act trp_polar
+finiteFieldStrength 0.05
+frequency 1e-9
+-task
+
