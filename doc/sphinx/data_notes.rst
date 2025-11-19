@@ -507,7 +507,7 @@ Commands to get information on all orbitals:
 nmrtensors
 ----------
 
-A dictionary where the keys zero-index the atomic center for which the chemical shielding tensor is calculated, and the values are themselves dictionaries containing the keys ``total``, ``paramagnetic``, and ``diamagnetic``. These correspond to the total chemical shielding tensor and its separation into paramagnetic and diamagnetic components, where :math:`\sigma_{K}^{\textrm{tot}} = \sigma_{K}^{\textrm{para}} + \sigma_{K}^{\textrm{dia}}` for a nucleus :math:`K`.  Each tensor is represented as a 3-by-3 NumPy array. If no breakdown for paramagnetic and diamagnetic contributions to the chemical shielding is available, then only the ``total`` key will be present.
+A dictionary where the keys zero-index the atomic center for which the chemical shielding tensor is calculated, and the values are themselves dictionaries containing the keys ``total`` and ``isotropic``, and optionally ``paramagnetic``, and ``diamagnetic``. ``total``, ``paramagnetic`` and ``diamagnetic`` correspond to the total chemical shielding tensor and its separation into paramagnetic and diamagnetic components, where :math:`\sigma_{K}^{\textrm{tot}} = \sigma_{K}^{\textrm{para}} + \sigma_{K}^{\textrm{dia}}` for a nucleus :math:`K`.  Each tensor is represented as a 3-by-3 NumPy array. If no breakdown for paramagnetic and diamagnetic contributions to the chemical shielding is available, then ``paramagnetic`` and ``diamagnetic`` will be absent. ``isotropic`` contains the total isotropic shielding value for the atom, which corresponds to the mean of the eigenvalues of the ``total`` tensor. All values are in ppm.
 
 optdone
 -------
