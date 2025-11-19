@@ -37,6 +37,12 @@ class GenericNMRTest:
         eigvals = numpy.linalg.eigvals(tensor["total"])
         total = numpy.mean(eigvals)
         assert total == pytest.approx(tensor["isotropic"], abs=3)
+    
+    def testtotalshift(self, data):
+        """Test the total chemical shift matches our expected value."""
+        # TODO: A bit crude, but at least it will alert to unexpected changes in structure.
+        assert sum([data.nmrtensors[atom]['isotropic'] for atom in data.nmrtensors]) == pytest.approx(1456.5138, abs = 3)
+
 
 class GaussianNMRTest(GenericNMRTest):
 
