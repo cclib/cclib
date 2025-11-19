@@ -263,6 +263,7 @@ NMR       ORCA        GenericNMRTest        basicORCA6.0          dvb_nmr.out
 NMR       Gaussian    GaussianNMRTest       basicGaussian16       dvb_nmr.log
 NMR       ORCA        GenericNMRCouplingTest        basicORCA5.0          dvb_coupling_nmr.out
 NMR       ORCA        GenericNMRCouplingTest        basicORCA6.0          dvb_coupling_nmr.out
+NMR       Gaussian    GaussianNMRCouplingTest       basicGaussian16       dvb_nmr.log
 
 Polar     DALTON      ReferencePolarTest    basicDALTON-2015      Trp_polar_abalnr.out
 Polar     FChk        ReferencePolarTest    basicGaussian16       Trp_polar.fchk

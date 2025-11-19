@@ -7,6 +7,7 @@
 
 import numpy
 import pytest
+from skip import skipForParser
 
 
 class GenericNMRTest:
@@ -46,9 +47,9 @@ class GenericNMRTest:
 
 class GaussianNMRTest(GenericNMRTest):
 
-    def testsize(self, data, num = 4) -> None:
+    def testsize(self, data, num = 2) -> None:
         """Check to make sure there are the correct number of tensors parsed"""
-        return super().testsize(data, 2)
+        return super().testsize(data, num)
 
 
 class GenericNMRCouplingTest:
@@ -71,13 +72,14 @@ class GenericNMRCouplingTest:
             ]
         )
 
-    def testsize(self, data) -> None:
+    def testsize(self, data, num = 7) -> None:
         """Check to make sure there are the correct number of tensors parsed"""
-        assert len(data.nmrcouplingtensors) == 139
+        assert len(data.nmrcouplingtensors) == 190
         tensor = list(list(data.nmrcouplingtensors.values())[0].values())[0]
-        assert len(tensor) == 7
+        assert len(tensor) == num
         assert tensor["total"].shape == (3, 3)
 
+    @skipForParser("Gaussian", "no coupling tensors are available")
     def testisotropic(self, data) -> None:
         """Check the total isotropic value matches the computed value."""
         tensor = list(list(data.nmrcouplingtensors.values())[0].values())[0]
@@ -94,3 +96,13 @@ class GenericNMRCouplingTest:
             total += numpy.mean(eigvals)
 
         assert total == pytest.approx(tensor["isotropic"], abs=3)
+
+
+class GaussianNMRCouplingTest(GenericNMRCouplingTest):
+    """Gaussian NMR spin-spin coupling unittest"""
+
+    def testsize(self, data, num = 1) -> None:
+        """Check to make sure there are the correct number of tensors parsed"""
+        assert len(data.nmrcouplingtensors) == 190
+        tensor = list(list(data.nmrcouplingtensors.values())[0].values())[0]
+        assert len(tensor) == num
