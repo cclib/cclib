@@ -409,6 +409,7 @@ def read_from_cube(filepath):
     Output:
         vol -- Volume object filled with data from cube file
     """
+
     with FileWrapper(filepath) as f:
         lines = f.readlines()
 
@@ -423,7 +424,7 @@ def read_from_cube(filepath):
 
         # Lines 3-6 specify the grid in Cartesian coordinates
         # Line 3 -- [Number of atoms] [Origin x] [Origin y] [Origin z]
-        natom = int(lines[2].split()[0])
+        natom = int(lines[2].split()[0])  
         has_labels = natom < 0
         originx, originy, originz = numpy.asanyarray(lines[2].split()[1:], dtype=float)
         num_val = int(lines[2].split()[4]) if len(lines[2]) == 5 else 1
@@ -440,7 +441,7 @@ def read_from_cube(filepath):
             skiplines += 1
 
         # Line 10+ (or 7+ if atomic coordinates data are not present)
-        # Process {DSET_IDS (#x int)} according to https://h5cube-spec.readthedocs.io/en/latest/cubeformat.html.
+        # Process {DSET_IDS (#x int)} according to https://h5cube-spec.readthedocs.io/en/latest/cubeformat.html. Code is adapted from ASE v3.26.0 (https://gitlab.com/ase/ase/-/blob/3.26.0/ase/io/cube.py#L78).
         labels = []
         if has_labels:
             fields = lines[skiplines].split()
@@ -477,12 +478,6 @@ def read_from_cube(filepath):
         datas = numpy.array(datas)
         tmp = datas[0].flatten()
         
-        '''
-        tmp = []
-        for line in lines[skiplines:]:
-            tmp.extend(line.split())
-        tmp = numpy.asanyarray(tmp, dtype=float)
-        '''
 
     # Initialize volume object
     vol = Volume(
@@ -508,4 +503,5 @@ def read_from_cube(filepath):
 
     # Assign grid data
     vol.data = numpy.resize(tmp, vol.data.shape)
+    
     return vol
