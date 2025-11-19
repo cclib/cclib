@@ -2,8 +2,8 @@
  Input=dvb_nmr.com
  Output=dvb_nmr.log
  Initial command:
- /software/Gaussian/Gaussian16/AVX2/g16/l1.exe "/home/osl/test/Benzene/NMR/Output/Gau-3375129.inp" -scrdir="/home/osl/test/Benzene/NMR/Output/"
- Entering Link 1 = /software/Gaussian/Gaussian16/AVX2/g16/l1.exe PID=   3375130.
+ /software/Gaussian/Gaussian16/AVX2/g16/l1.exe "/home/osl/test/Benzene/NMR/G16/Gau-3753263.inp" -scrdir="/home/osl/test/Benzene/NMR/G16/"
+ Entering Link 1 = /software/Gaussian/Gaussian16/AVX2/g16/l1.exe PID=   3753264.
   
  Copyright (c) 1988-2019, Gaussian, Inc.  All Rights Reserved.
   
@@ -76,7 +76,7 @@
  
  ******************************************
  Gaussian 16:  ES64L-G16RevC.01  3-Jul-2019
-                18-Nov-2025 
+                19-Nov-2025 
  ******************************************
  %NProcShared=1
  Will use up to    1 processors via shared memory.
@@ -93,29 +93,29 @@
  10/13=100,45=16,47=1/2;
  6/7=2,8=2,9=2,10=2,28=1/1;
  99/9=1/99;
- Leave Link    1 at Tue Nov 18 14:38:18 2025, MaxMem=   134217728 cpu:               0.0 elap:               0.1
+ Leave Link    1 at Wed Nov 19 14:06:55 2025, MaxMem=   134217728 cpu:               0.0 elap:               0.0
  (Enter /software/Gaussian/Gaussian16/AVX2/g16/l101.exe)
  -------
  dvb_nmr
  -------
  Symbolic Z-matrix:
  Charge =  0 Multiplicity = 1
- C                    -1.41525   0.23022   0. 
- C                     1.41525  -0.23022   0. 
- C                    -0.49513   1.31446   0. 
- C                     0.49513  -1.31446   0. 
- C                     0.88941   1.09095   0. 
- C                    -0.88941  -1.09095   0. 
+ C(Iso=13)            -1.41525   0.23022   0. 
+ C(Iso=13)             1.41525  -0.23022   0. 
+ C(Iso=13)            -0.49513   1.31446   0. 
+ C(Iso=13)             0.49513  -1.31446   0. 
+ C(Iso=13)             0.88941   1.09095   0. 
+ C(Iso=13)            -0.88941  -1.09095   0. 
  H                    -0.87955   2.34373   0. 
  H                     0.87955  -2.34373   0. 
  H                     1.5779    1.94501   0. 
  H                    -1.5779   -1.94501   0. 
- C                     2.88458  -0.52109   0. 
- C                    -2.88458   0.52109   0. 
+ C(Iso=13)             2.88458  -0.52109   0. 
+ C(Iso=13)            -2.88458   0.52109   0. 
  H                     3.14034  -1.59196   0. 
  H                    -3.14034   1.59196   0. 
- C                     3.88004   0.38225   0. 
- C                    -3.88004  -0.38225   0. 
+ C(Iso=13)             3.88004   0.38225   0. 
+ C(Iso=13)            -3.88004  -0.38225   0. 
  H                     3.69468   1.46244   0. 
  H                    -3.69468  -1.46244   0. 
  H                     4.93165   0.0711    0. 
@@ -130,23 +130,23 @@
   in nuclear magnetons)
 
   Atom         1           2           3           4           5           6           7           8           9          10
- IAtWgt=          12          12          12          12          12          12           1           1           1           1
- AtmWgt=  12.0000000  12.0000000  12.0000000  12.0000000  12.0000000  12.0000000   1.0078250   1.0078250   1.0078250   1.0078250
- NucSpn=           0           0           0           0           0           0           1           1           1           1
+ IAtWgt=          13          13          13          13          13          13           1           1           1           1
+ AtmWgt=  13.0033548  13.0033548  13.0033548  13.0033548  13.0033548  13.0033548   1.0078250   1.0078250   1.0078250   1.0078250
+ NucSpn=           1           1           1           1           1           1           1           1           1           1
  AtZEff=  -0.0000000  -0.0000000  -0.0000000  -0.0000000  -0.0000000  -0.0000000  -0.0000000  -0.0000000  -0.0000000  -0.0000000
  NQMom=    0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000
- NMagM=    0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   2.7928460   2.7928460   2.7928460   2.7928460
+ NMagM=    0.7024110   0.7024110   0.7024110   0.7024110   0.7024110   0.7024110   2.7928460   2.7928460   2.7928460   2.7928460
  AtZNuc=   6.0000000   6.0000000   6.0000000   6.0000000   6.0000000   6.0000000   1.0000000   1.0000000   1.0000000   1.0000000
 
   Atom        11          12          13          14          15          16          17          18          19          20
- IAtWgt=          12          12           1           1          12          12           1           1           1           1
- AtmWgt=  12.0000000  12.0000000   1.0078250   1.0078250  12.0000000  12.0000000   1.0078250   1.0078250   1.0078250   1.0078250
- NucSpn=           0           0           1           1           0           0           1           1           1           1
+ IAtWgt=          13          13           1           1          13          13           1           1           1           1
+ AtmWgt=  13.0033548  13.0033548   1.0078250   1.0078250  13.0033548  13.0033548   1.0078250   1.0078250   1.0078250   1.0078250
+ NucSpn=           1           1           1           1           1           1           1           1           1           1
  AtZEff=  -0.0000000  -0.0000000  -0.0000000  -0.0000000  -0.0000000  -0.0000000  -0.0000000  -0.0000000  -0.0000000  -0.0000000
  NQMom=    0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000
- NMagM=    0.0000000   0.0000000   2.7928460   2.7928460   0.0000000   0.0000000   2.7928460   2.7928460   2.7928460   2.7928460
+ NMagM=    0.7024110   0.7024110   2.7928460   2.7928460   0.7024110   0.7024110   2.7928460   2.7928460   2.7928460   2.7928460
  AtZNuc=   6.0000000   6.0000000   1.0000000   1.0000000   6.0000000   6.0000000   1.0000000   1.0000000   1.0000000   1.0000000
- Leave Link  101 at Tue Nov 18 14:38:19 2025, MaxMem=   134217728 cpu:               0.1 elap:               0.2
+ Leave Link  101 at Wed Nov 19 14:06:55 2025, MaxMem=   134217728 cpu:               0.0 elap:               0.1
  (Enter /software/Gaussian/Gaussian16/AVX2/g16/l202.exe)
                           Input orientation:                          
  ---------------------------------------------------------------------
@@ -261,8 +261,8 @@
      19          1           0       -4.608344   -1.757654   -0.000000
      20          1           0        4.608344    1.757654   -0.000000
  ---------------------------------------------------------------------
- Rotational constants (GHZ):           4.6178433           0.6857618           0.5970921
- Leave Link  202 at Tue Nov 18 14:38:19 2025, MaxMem=   134217728 cpu:               0.0 elap:               0.0
+ Rotational constants (GHZ):           4.3476504           0.6397484           0.5576860
+ Leave Link  202 at Wed Nov 19 14:06:55 2025, MaxMem=   134217728 cpu:               0.0 elap:               0.0
  (Enter /software/Gaussian/Gaussian16/AVX2/g16/l301.exe)
  Standard basis: STO-3G (5D, 7F)
  Ernie: Thresh=  0.10000D-02 Tol=  0.10000D-05 Strict=F.
@@ -284,7 +284,7 @@
  Integral buffers will be    131072 words long.
  Raffenetti 2 integral format.
  Two-electron integral symmetry is turned on.
- Leave Link  301 at Tue Nov 18 14:38:19 2025, MaxMem=   134217728 cpu:               0.0 elap:               0.1
+ Leave Link  301 at Wed Nov 19 14:06:55 2025, MaxMem=   134217728 cpu:               0.0 elap:               0.0
  (Enter /software/Gaussian/Gaussian16/AVX2/g16/l302.exe)
  NPDir=0 NMtPBC=     1 NCelOv=     1 NCel=       1 NClECP=     1 NCelD=      1
          NCelK=      1 NCelE2=     1 NClLst=     1 CellRange=     0.0.
@@ -296,12 +296,12 @@
  IXCGrd= 4 IRadAn=           5 IRanWt=          -1 IRanGd=           0 AccXCQ= 0.00D+00.
  Generated NRdTot=       0 NPtTot=           0 NUsed=           0 NTot=          32
  NSgBfM=    59    59    59    59    59 MxSgAt=    20 MxSgA2=    20.
- Leave Link  302 at Tue Nov 18 14:38:20 2025, MaxMem=   134217728 cpu:               0.2 elap:               0.2
+ Leave Link  302 at Wed Nov 19 14:06:55 2025, MaxMem=   134217728 cpu:               0.2 elap:               0.2
  (Enter /software/Gaussian/Gaussian16/AVX2/g16/l303.exe)
  DipDrv:  MaxL=1.
- Leave Link  303 at Tue Nov 18 14:38:20 2025, MaxMem=   134217728 cpu:               0.0 elap:               0.0
+ Leave Link  303 at Wed Nov 19 14:06:55 2025, MaxMem=   134217728 cpu:               0.0 elap:               0.0
  (Enter /software/Gaussian/Gaussian16/AVX2/g16/l308.exe)
- Leave Link  308 at Tue Nov 18 14:38:21 2025, MaxMem=   134217728 cpu:               0.0 elap:               0.0
+ Leave Link  308 at Wed Nov 19 14:06:56 2025, MaxMem=   134217728 cpu:               0.0 elap:               0.0
  (Enter /software/Gaussian/Gaussian16/AVX2/g16/l401.exe)
  ExpMin= 1.69D-01 ExpMax= 7.16D+01 ExpMxC= 7.16D+01 IAcc=3 IRadAn=         5 AccDes= 0.00D+00
  Harris functional with IExCor=  402 and IRadAn=       5 diagonalized for initial guess.
@@ -323,7 +323,7 @@
                  (BU) (BU) (AG) (BU) (AG) (AG) (BU) (AG) (BU) (BU)
                  (AG) (AG) (BU) (AG) (BU)
  The electronic state of the initial guess is 1-AG.
- Leave Link  401 at Tue Nov 18 14:38:22 2025, MaxMem=   134217728 cpu:               0.4 elap:               0.7
+ Leave Link  401 at Wed Nov 19 14:06:56 2025, MaxMem=   134217728 cpu:               0.4 elap:               0.3
  (Enter /software/Gaussian/Gaussian16/AVX2/g16/l502.exe)
  Keep R1 ints in memory in symmetry-blocked form, NReq=2568018.
  FoFCou: FMM=F IPFlag=           0 FMFlag=           0 FMFlg1=           0
@@ -484,13 +484,13 @@
  SCF Done:  E(RB3LYP) =  -382.308241783     A.U. after   12 cycles
             NFock= 12  Conv=0.47D-08     -V/T= 2.0172
  KE= 3.758451719006D+02 PE=-1.776489943365D+03 EE= 5.723995496035D+02
- Leave Link  502 at Tue Nov 18 14:38:25 2025, MaxMem=   134217728 cpu:               2.0 elap:               2.2
+ Leave Link  502 at Wed Nov 19 14:06:58 2025, MaxMem=   134217728 cpu:               2.0 elap:               2.0
  (Enter /software/Gaussian/Gaussian16/AVX2/g16/l801.exe)
  DoSCS=F DFT=T ScalE2(SS,OS)=  1.000000  1.000000
  Range of M.O.s used for correlation:     1    60
  NBasis=    60 NAE=    35 NBE=    35 NFC=     0 NFV=     0
  NROrb=     60 NOA=    35 NOB=    35 NVA=    25 NVB=    25
- Leave Link  801 at Tue Nov 18 14:38:25 2025, MaxMem=   134217728 cpu:               0.0 elap:               0.0
+ Leave Link  801 at Wed Nov 19 14:06:58 2025, MaxMem=   134217728 cpu:               0.0 elap:               0.0
  (Enter /software/Gaussian/Gaussian16/AVX2/g16/l1002.exe)
  Minotr:  Closed shell wavefunction.
           IDoAtm=11111111111111111111
@@ -1216,7 +1216,7 @@
  End of Minotr F.D. properties file   721 does not exist.
  End of Minotr F.D. properties file   722 does not exist.
  End of Minotr F.D. properties file   788 does not exist.
- Leave Link 1002 at Tue Nov 18 14:40:15 2025, MaxMem=   134217728 cpu:             108.9 elap:             109.6
+ Leave Link 1002 at Wed Nov 19 14:08:50 2025, MaxMem=   134217728 cpu:             111.7 elap:             112.3
  (Enter /software/Gaussian/Gaussian16/AVX2/g16/l601.exe)
  Copying SCF densities to generalized density rwf, IOpCl= 0 IROHF=0.
 
@@ -1392,10 +1392,10 @@
  Symmetry AU   KE= 4.697232202700D+00
  Symmetry BU   KE= 1.819202650968D+02
  Calculating spin-rotation constants.
- Leave Link  601 at Tue Nov 18 14:40:16 2025, MaxMem=   134217728 cpu:               0.7 elap:               0.8
+ Leave Link  601 at Wed Nov 19 14:08:51 2025, MaxMem=   134217728 cpu:               0.6 elap:               0.6
  (Enter /software/Gaussian/Gaussian16/AVX2/g16/l9999.exe)
  Unable to Open any file for archive entry.
- 1\1\GINC-COMPUTE060\SP\RB3LYP\STO-3G\C10H10\OSL\18-Nov-2025\0\\#p NMR=
+ 1\1\GINC-COMPUTE060\SP\RB3LYP\STO-3G\C10H10\OSL\19-Nov-2025\0\\#p NMR=
  (SpinSpin) B3LYP/sto-3g Symmetry=(Tight) Integral=(Ultrafine)\\dvb_nmr
  \\0,1\C,0,-1.4152533224,0.2302217854,0.\C,0,1.4152533224,-0.2302217854
  ,0.\C,0,-0.4951331558,1.3144608674,0.\C,0,0.4951331558,-1.3144608674,0
@@ -1413,19 +1413,10 @@
  The archive entry for this job was punched.
 
 
- OLD HORSE! OLD HORSE! WHAT BROUGHT YOU HERE?
- FROM SACARAP' TO PORTLAND PIER
- I'VE CARTED STONE THIS MANY A YEAR;
- TILL, KILLED BY BLOWS AND SORE ABUSE,
- THEY SALTED ME DOWN FOR SAILORS' USE.
- THE SAILORS THEY DO ME DESPISE;
- THEY TURN ME OVER AND DAMN MY EYES;
- CUT OFF MY MEAT, AND SCRAPE MY BONES,
- AND PITCH ME OVER TO DAVY JONES.
-
-    SAILORS' COMPLAINT ABOUT THE BEEF
-    SERVED ON SHIPBOARD, CIRCA 1835.
- Job cpu time:       0 days  0 hours  1 minutes 52.8 seconds.
- Elapsed time:       0 days  0 hours  1 minutes 54.1 seconds.
+ KNOWLEDGE IS CHIMERA - FOR BEYOND IT LIES OTHER KNOWLEDGE,
+ AND THE INCOMPLETENESS OF WHAT IS KNOWN RENDERS THE KNOWING FALSE.
+     -- THE THOMAS COVENANT CHRONICLES
+ Job cpu time:       0 days  0 hours  1 minutes 55.2 seconds.
+ Elapsed time:       0 days  0 hours  1 minutes 55.8 seconds.
  File lengths (MBytes):  RWF=    332 Int=      0 D2E=      0 Chk=      8 Scr=      8
- Normal termination of Gaussian 16 at Tue Nov 18 14:40:17 2025.
+ Normal termination of Gaussian 16 at Wed Nov 19 14:08:52 2025.
