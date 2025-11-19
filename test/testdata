@@ -260,9 +260,11 @@ MP        Turbomole   GenericMP3Test        basicTurbomole7.4     water_mp3/basi
 
 NMR       ORCA        GenericNMRTest        basicORCA5.0          dvb_nmr.out
 NMR       ORCA        GenericNMRTest        basicORCA6.0          dvb_nmr.out
+NMR       Gaussian    GaussianNMRTest       basicGaussian09       dvb_nmr.log
 NMR       Gaussian    GaussianNMRTest       basicGaussian16       dvb_nmr.log
 NMR       ORCA        GenericNMRCouplingTest        basicORCA5.0          dvb_coupling_nmr.out
 NMR       ORCA        GenericNMRCouplingTest        basicORCA6.0          dvb_coupling_nmr.out
+NMR       Gaussian    GaussianNMRCouplingTest       basicGaussian09       dvb_nmr.log
 NMR       Gaussian    GaussianNMRCouplingTest       basicGaussian16       dvb_nmr.log
 
 Polar     DALTON      ReferencePolarTest    basicDALTON-2015      Trp_polar_abalnr.out
