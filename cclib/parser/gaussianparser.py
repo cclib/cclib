@@ -461,6 +461,61 @@ class Gaussian(logfileparser.Logfile):
         if line[1:15] == "Standard basis":
             self.metadata["basis_set"] = line.split()[2]
 
+        # NMR.
+        # A few different ways this section can appear.
+        # From the manual:
+        # Magnetic properties (GIAO method)
+        #
+        # Magnetic shielding (ppm):
+        #   1  C    Isotropic =    57.7345   Anisotropy =   194.4092
+        #    XX=    48.4143   YX=      .0000   ZX=      .0000
+        #    XY=      .0000   YY=   -62.5514   ZY=      .0000
+        #    XZ=      .0000   YZ=      .0000   ZZ=   187.3406
+        #   2  H    Isotropic =    23.9397   Anisotropy =     5.2745
+        #    XX=    27.3287   YX=      .0000   ZX=      .0000
+        #    XY=      .0000   YY=    24.0670   ZY=      .0000
+        #    XZ=      .0000   YZ=      .0000   ZZ=    20.4233
+        #
+        # From the g16 log file:
+        #  Calculating GIAO nuclear magnetic shielding tensors.
+        #  SCF GIAO Magnetic shielding tensor (ppm):
+        #       1  C    Isotropic =   114.0880   Anisotropy =   147.6438
+        #    XX=    57.6159   YX=   -13.4888   ZX=     0.0000
+        #    XY=   -15.5032   YY=    72.1309   ZY=    -0.0000
+        #    XZ=     0.0000   YZ=    -0.0000   ZZ=   212.5172
+        #    Eigenvalues:    48.6622    81.0847   212.5172
+        #       2  C    Isotropic =   114.0880   Anisotropy =   147.6438
+        #    XX=    57.6159   YX=   -13.4888   ZX=    -0.0000
+        #    XY=   -15.5032   YY=    72.1309   ZY=     0.0000
+        #    XZ=    -0.0000   YZ=    -0.0000   ZZ=   212.5172
+        #    Eigenvalues:    48.6622    81.0847   212.5172
+        if "Magnetic shielding" in line and "(ppm)" in line:
+            nmrtensors = dict()
+            line = next(inputfile)
+
+            while "Isotropic =" in line:
+                line_split = line.split()
+                atom = int(line_split[0]) - 1
+
+                iso = float(line_split[4])
+                # Currently unused.
+                #aniso = float(line_split[7])
+
+                tensor = numpy.zeros((3, 3))
+                for j, row in zip(range(3), inputfile):
+                    split_row = row.split()
+                    tensor[j] = [float(val) for val in (split_row[1], split_row[3], split_row[5])]
+                
+                nmrtensors[atom] = {
+                    "total": tensor,
+                    "isotropic": iso
+                }
+                line = next(inputfile)
+                line = next(inputfile)
+            
+            self.set_attribute("nmrtensors", nmrtensors)
+
+
         # Solvent information.
         # PCM (the default gaussian solvent method).
         if line[1:34] == "Polarizable Continuum Model (PCM)":
