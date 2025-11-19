@@ -17,21 +17,32 @@ class GenericNMRTest:
         key_types = {type(key) for key in data.nmrtensors.keys()}
         assert len(key_types) == 1 and int in key_types
 
-    def testsize(self, data) -> None:
+    def testsize(self, data, num = 4) -> None:
         """Check to make sure there are the correct number of tensors parsed"""
         assert len(data.nmrtensors) == data.natom
-        assert len(data.nmrtensors[0]) == 4
+        assert len(data.nmrtensors[0]) == num
         assert data.nmrtensors[0]["total"].shape == (3, 3)
 
     def testisotropic(self, data) -> None:
         """Check the total isotropic value matches the computed value."""
         tensor = data.nmrtensors[0]
         total = 0.0
-        for t_type in ("diamagnetic", "paramagnetic"):
-            eigvals = numpy.linalg.eigvals(tensor[t_type])
-            total += numpy.mean(eigvals)
+        if "diamagnetic" in tensor and "paramagnetic" in tensor:
+            for t_type in ("diamagnetic", "paramagnetic"):
+                eigvals = numpy.linalg.eigvals(tensor[t_type])
+                total += numpy.mean(eigvals)
 
+            assert total == pytest.approx(tensor["isotropic"], abs=3)
+
+        eigvals = numpy.linalg.eigvals(tensor["total"])
+        total = numpy.mean(eigvals)
         assert total == pytest.approx(tensor["isotropic"], abs=3)
+
+class GaussianNMRTest(GenericNMRTest):
+
+    def testsize(self, data, num = 4) -> None:
+        """Check to make sure there are the correct number of tensors parsed"""
+        return super().testsize(data, 2)
 
 
 class GenericNMRCouplingTest:
