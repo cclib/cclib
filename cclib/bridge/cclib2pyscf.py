@@ -8,7 +8,8 @@
 import functools
 import itertools
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
+import numpy
 
 from cclib.parser.data import ccData
 from cclib.parser.utils import PeriodicTable, convertor, find_package
@@ -151,6 +152,7 @@ def makecclib(
     scf_steps: List[List[Dict[str, float]]] = [],
     opt_steps: List[Dict[str, Any]] = [],
     opt_failed: bool = False,
+    nmr_coupling: List[Tuple[Tuple[float, float, float],Tuple[float, float, float],Tuple[float, float, float]]]
 ) -> ccData:
     """Create cclib attributes and return a ccData from a PySCF calculation.
 
@@ -170,7 +172,7 @@ def makecclib(
     """
     _check_pyscf(_found_pyscf)
     # What is our level of theory?
-    scf, mp, cc, hess, freq, et = None, None, None, None, None, []
+    scf, mp, cc, hess, freq, et, nmr = None, None, None, None, None, [], None
 
     mols = {method.mol for method in methods if hasattr(method, "mol")}
     if len(mols) > 1:
@@ -203,6 +205,9 @@ def makecclib(
         elif isinstance(base_method, pyscf.cc.ccsd.CCSDBase):
             cc = base_method
             scf = base_method._scf
+        
+        elif pyscf_prop is not None and isinstance(method, pyscf_prop.nmr.rhf.NMR):
+            nmr = base_method
 
         else:
             # Panic.
@@ -221,6 +226,8 @@ def makecclib(
         opt_steps=opt_steps,
         et=et,
         opt_failed=opt_failed,
+        nmr=nmr,
+        nmr_coupling=nmr_coupling
     )
 
 
@@ -236,6 +243,8 @@ def cclibfrommethods(
     scf_steps=[],
     opt_steps=[],
     opt_failed=False,
+    nmr=None,
+    nmr_coupling=[]
 ) -> ccData:
     """Create cclib attributes and return a ccData from a PySCF method object.
 
@@ -665,6 +674,16 @@ def cclibfrommethods(
         if hasattr(freq, "ir_inten"):
             # TODO: Units?
             attributes["vibirs"] = freq.ir_inten
+        
+    # NMR
+    if len(nmr_coupling):
+        # nmr_coupling is a list, nmrtensors is a dict
+        attributes['nmrtensors'] = {
+            index: {
+                "isotropic": numpy.mean(numpy.linalg.eigvals(value)),
+                "total": value
+            } for index, value in enumerate(nmr_coupling)
+        }
 
     return ccData(attributes)
 
