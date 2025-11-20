@@ -55,6 +55,6 @@ def calculate():
     nmrm = nmr.RKS(method)
 
     # Annoyingly, NMR coupling results are not saved in the NMR method object...
-    nmrc = nmrm.kernel()
+    nmrs = nmrm.kernel()
 
-    return {"methods": [method, nmrm], "scf_steps": [scf_steps], "nmr_coupling": nmrc}
+    return {"methods": [method, nmrm], "scf_steps": [scf_steps], "nmr_shielding": nmrs}

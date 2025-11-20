@@ -152,7 +152,7 @@ def makecclib(
     scf_steps: List[List[Dict[str, float]]] = [],
     opt_steps: List[Dict[str, Any]] = [],
     opt_failed: bool = False,
-    nmr_coupling: List[Tuple[Tuple[float, float, float],Tuple[float, float, float],Tuple[float, float, float]]]
+    nmr_shielding: List[Tuple[Tuple[float, float, float],Tuple[float, float, float],Tuple[float, float, float]]]
 ) -> ccData:
     """Create cclib attributes and return a ccData from a PySCF calculation.
 
@@ -227,7 +227,7 @@ def makecclib(
         et=et,
         opt_failed=opt_failed,
         nmr=nmr,
-        nmr_coupling=nmr_coupling
+        nmr_shielding=nmr_shielding
     )
 
 
@@ -244,7 +244,7 @@ def cclibfrommethods(
     opt_steps=[],
     opt_failed=False,
     nmr=None,
-    nmr_coupling=[]
+    nmr_shielding=[]
 ) -> ccData:
     """Create cclib attributes and return a ccData from a PySCF method object.
 
@@ -676,13 +676,13 @@ def cclibfrommethods(
             attributes["vibirs"] = freq.ir_inten
         
     # NMR
-    if len(nmr_coupling):
-        # nmr_coupling is a list, nmrtensors is a dict
+    if len(nmr_shielding):
+        # nmr_shielding is a list, nmrtensors is a dict
         attributes['nmrtensors'] = {
             index: {
                 "isotropic": numpy.mean(numpy.linalg.eigvals(value)),
                 "total": value
-            } for index, value in enumerate(nmr_coupling)
+            } for index, value in enumerate(nmr_shielding)
         }
 
     return ccData(attributes)
