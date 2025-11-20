@@ -786,7 +786,7 @@ class Turbomole(logfileparser.Logfile):
             
             while line.strip()[0:4] == "ATOM":
                 split_line = line.split()
-                atom = int(split_line[2])
+                atom = int(split_line[2]) -1
                 iso = float(split_line[4])
 
                 line = next(inputfile)
