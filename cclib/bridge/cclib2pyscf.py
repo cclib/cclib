@@ -32,6 +32,7 @@ if _found_pyscf:
     import pyscf.mp.mp2
     import pyscf.scf.hf
     import pyscf.tdscf.rhf
+    import pyscf.data.nist
 
     # This is an optional install.
     try:
@@ -47,6 +48,7 @@ if _found_pyscf:
             action="ignore", category=UserWarning, message=r"Module [\w-]+ is not fully tested"
         )
         import pyscf.prop as pyscf_prop
+        import pyscf.prop.ssc.rhf
 
     except ModuleNotFoundError:
         pyscf_prop = None
@@ -695,17 +697,34 @@ def cclibfrommethods(
 
     # NMR Coupling.
     if spin_spin and len(spin_spin_coupling):
-        attributes['nmrcouplingtensors'] = {
-            spin_spin.nuc_pair[index]: {
-                (
-                    round(attributes["atommasses"][spin_spin.nuc_pair[index][0]]),
-                    round(attributes["atommasses"][spin_spin.nuc_pair[index][1]])
-                ): {
-                    "isotropic": numpy.mean(numpy.linalg.eigvals(value)),
-                    "total": value
+        # spin_spin_coupling is in eH, we want Hz
+        # From properties.pyscf.prop.ssc.uhf.py
+        # Setup some constants for conversion.
+        nuc_mag = .5 * (pyscf.data.nist.E_MASS/pyscf.data.nist.PROTON_MASS)  # e*hbar/2m
+        au2Hz = pyscf.data.nist.HARTREE2J / pyscf.data.nist.PLANCK
+        gyro = pyscf.prop.ssc.rhf._atom_gyro_list(mol)
+
+        nmrcouplingtensors = {}
+        for index, tensor in enumerate(spin_spin_coupling):
+            atoms = spin_spin.nuc_pair[index]
+            isotopes = (
+                round(attributes["atommasses"][spin_spin.nuc_pair[index][0]]),
+                round(attributes["atommasses"][spin_spin.nuc_pair[index][1]])
+            )
+            gyros = (
+                gyro[atoms[0]],
+                gyro[atoms[1]]
+            )
+
+            nmrcouplingtensors[atoms] = {
+                isotopes: {
+                    # Convert to Hz, and add in g-factors for the relevant atoms.
+                    "isotropic": numpy.mean(numpy.linalg.eigvals(au2Hz * nuc_mag ** 2 * tensor *  gyros[0] * gyros[1])),
+                    "total": au2Hz * nuc_mag ** 2 * tensor * gyros[0] * gyros[1]
                 }
-            } for index, value in enumerate(spin_spin_coupling)
-        }
+            }
+
+        attributes['nmrcouplingtensors'] = nmrcouplingtensors
 
     return ccData(attributes)
 
