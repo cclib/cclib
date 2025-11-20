@@ -96,6 +96,7 @@ class GenericNMRCouplingTest:
 
     @skipForParser("Gaussian", "no coupling tensors are available")
     @skipForParser("PySCF", "only the total tensor is available")
+    @skipForParser("Turbomole", "only the total tensor is available")
     def testtensors(self, data) -> None:
         """Check the total isotropic value matches the computed value."""
         tensor = list(list(data.nmrcouplingtensors.values())[0].values())[0]
@@ -135,6 +136,16 @@ class GaussianNMRCouplingTest(GenericNMRCouplingTest):
 
 
 class PySCFNMRCouplingTest(GenericNMRCouplingTest):
+    """Gaussian NMR spin-spin coupling unittest"""
+
+    def testsize(self, data, num = 2) -> None:
+        """Check to make sure there are the correct number of tensors parsed"""
+        assert len(data.nmrcouplingtensors) == 190
+        tensor = list(list(data.nmrcouplingtensors.values())[0].values())[0]
+        assert len(tensor) == num
+
+
+class TurbomoleNMRCouplingTest(GenericNMRCouplingTest):
     """Gaussian NMR spin-spin coupling unittest"""
 
     def testsize(self, data, num = 2) -> None:

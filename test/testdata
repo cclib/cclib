@@ -269,6 +269,7 @@ NMR       Gaussian    GaussianNMRCouplingTest       basicGaussian16       dvb_nm
 NMR       ORCA        GenericNMRCouplingTest        basicORCA5.0          dvb_coupling_nmr.out
 NMR       ORCA        GenericNMRCouplingTest        basicORCA6.0          dvb_coupling_nmr.out
 NMR       PySCF       PySCFNMRCouplingTest          basicPySCF2.6         dvb_coupling_nmr.py
+NMR       Turbomole   TurbomoleNMRCouplingTest      basicTurbomole7.5     dvb_coupling_nmr/basis      dvb_coupling_nmr/control      dvb_coupling_nmr/mos      dvb_coupling_nmr/dscf.out      dvb_coupling_nmr/coord      dvb_coupling_nmr/escf.out
 
 Polar     DALTON      ReferencePolarTest    basicDALTON-2015      Trp_polar_abalnr.out
 Polar     FChk        ReferencePolarTest    basicGaussian16       Trp_polar.fchk
