@@ -216,7 +216,7 @@ def makecclib(
         else:
             # Panic.
             raise ValueError(
-                f"Could not determine level of theory of base method '{type(base_method.__name__)}'"
+                f"Could not determine level of theory of base method '{type(base_method).__name__}'"
             )
 
     return cclibfrommethods(
