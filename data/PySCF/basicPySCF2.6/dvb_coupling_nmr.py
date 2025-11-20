@@ -60,6 +60,3 @@ def calculate():
     jj = sscm.kernel()
 
     return {"methods": [method, sscm], "scf_steps": [scf_steps], "spin_spin_coupling": jj}
-
-if __name__ == "__main__":
-    calculate()
