@@ -133,7 +133,8 @@ class Turbomole(logfileparser.Logfile):
 
         self.nmrtypes = {
             "diamagnetic part of magnetic shielding:": "diamagnetic",
-            "paramagnetic disturbed density part of magnetic shielding:": "paramagnetic",
+            "paramagnetic undisturbed density part of magnetic shielding:": "paramagnetic-undisturbed",
+            "paramagnetic disturbed density part of magnetic shielding:": "paramagnetic-disturbed",
             "total magnetic shielding:": "total"
         }
 
