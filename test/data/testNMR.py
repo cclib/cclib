@@ -52,6 +52,13 @@ class GaussianNMRTest(GenericNMRTest):
         return super().testsize(data, num)
 
 
+class PySCFNMRTest(GenericNMRTest):
+
+    def testsize(self, data, num = 2) -> None:
+        """Check to make sure there are the correct number of tensors parsed"""
+        return super().testsize(data, num)
+
+
 class GenericNMRCouplingTest:
     """Generic NMR spin-spin coupling unittest"""
 
