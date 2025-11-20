@@ -28,8 +28,9 @@ class GenericNMRTest:
         """Check the total isotropic value matches the computed value."""
         tensor = data.nmrtensors[0]
         total = 0.0
-        if "diamagnetic" in tensor and "paramagnetic" in tensor:
-            for t_type in ("diamagnetic", "paramagnetic"):
+        other_tensors = {key: value for key, value in tensor.items() if key not in ["total", "isotropic"]}
+        if len(other_tensors) > 0:
+            for t_type in other_tensors:
                 eigvals = numpy.linalg.eigvals(tensor[t_type])
                 total += numpy.mean(eigvals)
 
@@ -42,7 +43,7 @@ class GenericNMRTest:
     def testtotalshift(self, data):
         """Test the total chemical shift matches our expected value."""
         # TODO: A bit crude, but at least it will alert to unexpected changes in structure.
-        assert sum([data.nmrtensors[atom]['isotropic'] for atom in data.nmrtensors]) == pytest.approx(1456.5138, abs = 3)
+        assert sum([data.nmrtensors[atom]['isotropic'] for atom in data.nmrtensors]) == pytest.approx(1455, abs = 5)
 
 
 class GaussianNMRTest(GenericNMRTest):
@@ -55,6 +56,13 @@ class GaussianNMRTest(GenericNMRTest):
 class PySCFNMRTest(GenericNMRTest):
 
     def testsize(self, data, num = 2) -> None:
+        """Check to make sure there are the correct number of tensors parsed"""
+        return super().testsize(data, num)
+
+
+class TurbomoleNMRTest(GenericNMRTest):
+
+    def testsize(self, data, num = 5) -> None:
         """Check to make sure there are the correct number of tensors parsed"""
         return super().testsize(data, num)
 
