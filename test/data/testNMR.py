@@ -18,7 +18,7 @@ class GenericNMRTest:
         key_types = {type(key) for key in data.nmrtensors.keys()}
         assert len(key_types) == 1 and int in key_types
 
-    def testsize(self, data, num = 4) -> None:
+    def testsize(self, data, num=4) -> None:
         """Check to make sure there are the correct number of tensors parsed"""
         assert len(data.nmrtensors) == data.natom
         assert len(data.nmrtensors[0]) == num
@@ -28,7 +28,9 @@ class GenericNMRTest:
         """Check the total isotropic value matches the computed value."""
         tensor = data.nmrtensors[0]
         total = 0.0
-        other_tensors = {key: value for key, value in tensor.items() if key not in ["total", "isotropic"]}
+        other_tensors = {
+            key: value for key, value in tensor.items() if key not in ["total", "isotropic"]
+        }
         if len(other_tensors) > 0:
             for t_type in other_tensors:
                 eigvals = numpy.linalg.eigvals(tensor[t_type])
@@ -39,30 +41,29 @@ class GenericNMRTest:
         eigvals = numpy.linalg.eigvals(tensor["total"])
         total = numpy.mean(eigvals)
         assert total == pytest.approx(tensor["isotropic"], abs=3)
-    
+
     def testtotalshift(self, data):
         """Test the total chemical shift matches our expected value."""
         # TODO: A bit crude, but at least it will alert to unexpected changes in structure.
-        assert sum([data.nmrtensors[atom]['isotropic'] for atom in data.nmrtensors]) == pytest.approx(1455, abs = 5)
+        assert sum(
+            [data.nmrtensors[atom]["isotropic"] for atom in data.nmrtensors]
+        ) == pytest.approx(1455, abs=5)
 
 
 class GaussianNMRTest(GenericNMRTest):
-
-    def testsize(self, data, num = 2) -> None:
+    def testsize(self, data, num=2) -> None:
         """Check to make sure there are the correct number of tensors parsed"""
         return super().testsize(data, num)
 
 
 class PySCFNMRTest(GenericNMRTest):
-
-    def testsize(self, data, num = 2) -> None:
+    def testsize(self, data, num=2) -> None:
         """Check to make sure there are the correct number of tensors parsed"""
         return super().testsize(data, num)
 
 
 class TurbomoleNMRTest(GenericNMRTest):
-
-    def testsize(self, data, num = 5) -> None:
+    def testsize(self, data, num=5) -> None:
         """Check to make sure there are the correct number of tensors parsed"""
         return super().testsize(data, num)
 
@@ -87,7 +88,7 @@ class GenericNMRCouplingTest:
             ]
         )
 
-    def testsize(self, data, num = 7) -> None:
+    def testsize(self, data, num=7) -> None:
         """Check to make sure there are the correct number of tensors parsed"""
         assert len(data.nmrcouplingtensors) == 190
         tensor = list(list(data.nmrcouplingtensors.values())[0].values())[0]
@@ -123,20 +124,21 @@ class GenericNMRCouplingTest:
         total = numpy.mean(eigvals)
 
         assert total == pytest.approx(tensor["isotropic"], abs=3)
-    
+
     def testtotalcoupling(self, data):
         """Test the total chemical shift matches our expected value."""
-        assert sum([
-            list(data.nmrcouplingtensors[atom].values())[0]['isotropic']
-            for atom
-            in data.nmrcouplingtensors
-        ]) == pytest.approx(1825, abs = 5)
+        assert sum(
+            [
+                list(data.nmrcouplingtensors[atom].values())[0]["isotropic"]
+                for atom in data.nmrcouplingtensors
+            ]
+        ) == pytest.approx(1825, abs=5)
 
 
 class GaussianNMRCouplingTest(GenericNMRCouplingTest):
     """Gaussian NMR spin-spin coupling unittest"""
 
-    def testsize(self, data, num = 1) -> None:
+    def testsize(self, data, num=1) -> None:
         """Check to make sure there are the correct number of tensors parsed"""
         assert len(data.nmrcouplingtensors) == 190
         tensor = list(list(data.nmrcouplingtensors.values())[0].values())[0]
@@ -146,7 +148,7 @@ class GaussianNMRCouplingTest(GenericNMRCouplingTest):
 class PySCFNMRCouplingTest(GenericNMRCouplingTest):
     """Gaussian NMR spin-spin coupling unittest"""
 
-    def testsize(self, data, num = 2) -> None:
+    def testsize(self, data, num=2) -> None:
         """Check to make sure there are the correct number of tensors parsed"""
         assert len(data.nmrcouplingtensors) == 190
         tensor = list(list(data.nmrcouplingtensors.values())[0].values())[0]
@@ -156,7 +158,7 @@ class PySCFNMRCouplingTest(GenericNMRCouplingTest):
 class TurbomoleNMRCouplingTest(GenericNMRCouplingTest):
     """Gaussian NMR spin-spin coupling unittest"""
 
-    def testsize(self, data, num = 2) -> None:
+    def testsize(self, data, num=2) -> None:
         """Check to make sure there are the correct number of tensors parsed"""
         assert len(data.nmrcouplingtensors) == 190
         tensor = list(list(data.nmrcouplingtensors.values())[0].values())[0]

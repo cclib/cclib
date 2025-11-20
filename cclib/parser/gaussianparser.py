@@ -126,10 +126,10 @@ class Gaussian(logfileparser.Logfile):
         self.nmrcouplingtypes = {
             # Unfortunately, we only have the total values for these 'tensors', which we
             # dont support yet.
-            #"Fermi Contact (FC) contribution to J (Hz):": "fermi",
-            #"Spin-dipolar (SD) contribution to J (Hz):": "spin-dipolar",
-            #"Paramagnetic spin-orbit (PSO) contribution to J (Hz):": "paramagnetic",
-            #"Diamagnetic spin-orbit (DSO) contribution to J (Hz):": "diamagnetic",
+            # "Fermi Contact (FC) contribution to J (Hz):": "fermi",
+            # "Spin-dipolar (SD) contribution to J (Hz):": "spin-dipolar",
+            # "Paramagnetic spin-orbit (PSO) contribution to J (Hz):": "paramagnetic",
+            # "Diamagnetic spin-orbit (DSO) contribution to J (Hz):": "diamagnetic",
             "Total nuclear spin-spin coupling J (Hz):": "isotropic"
         }
         self.nmrcouplings = {}
@@ -515,28 +515,25 @@ class Gaussian(logfileparser.Logfile):
 
                 iso = float(line_split[4])
                 # Currently unused.
-                #aniso = float(line_split[7])
+                # aniso = float(line_split[7])
 
                 tensor = numpy.zeros((3, 3))
                 for j, row in zip(range(3), inputfile):
                     split_row = row.split()
                     tensor[j] = [float(val) for val in (split_row[1], split_row[3], split_row[5])]
-                
-                nmrtensors[atom] = {
-                    "total": tensor,
-                    "isotropic": iso
-                }
+
+                nmrtensors[atom] = {"total": tensor, "isotropic": iso}
                 line = next(inputfile)
                 line = next(inputfile)
-            
+
             self.set_attribute("nmrtensors", nmrtensors)
-        
+
         # NMR Coupling.
         # Note that only a subset of atoms may be calculated for, so we cannot assume the length of
         # this matrix
         #
-        #  Total nuclear spin-spin coupling J (Hz): 
-        #                 1             2             3             4             5 
+        #  Total nuclear spin-spin coupling J (Hz):
+        #                 1             2             3             4             5
         #       1  0.000000D+00
         #       2  0.926067D+01  0.000000D+00
         #       3  0.451042D+02 -0.666100D+01  0.000000D+00
@@ -548,7 +545,6 @@ class Gaussian(logfileparser.Logfile):
         #       9  0.555607D+01 -0.385089D+01 -0.393707D+01  0.512551D+01  0.133053D+03
         # ...
         if line.strip() in self.nmrcouplingtypes:
-
             coupling_type = self.nmrcouplingtypes[line.strip()]
             line = next(inputfile)
 
@@ -557,28 +553,30 @@ class Gaussian(logfileparser.Logfile):
 
                 if line[0:10] == "          ":
                     # New header
-                    columns = [int(column) -1 for column in line.split()]
-                
+                    columns = [int(column) - 1 for column in line.split()]
+
                 elif split_line[0]:
-                    atom = int(split_line[0]) -1
+                    atom = int(split_line[0]) - 1
 
                     for index, coupling in enumerate(split_line[1:]):
                         # Ignore self coupling.
-                        if (atom == columns[index]):
+                        if atom == columns[index]:
                             continue
 
                         isotopes = (
                             round(self.atommasses[atom]),
-                            round(self.atommasses[columns[index]])
+                            round(self.atommasses[columns[index]]),
                         )
-                        
+
                         # Create dictionaries if we haven't already.
                         if (atom, columns[index]) not in self.nmrcouplings:
                             # We only support one set of istopes, so just add them now.
                             self.nmrcouplings[(atom, columns[index])] = {isotopes: {}}
-                        
-                        self.nmrcouplings[(atom, columns[index])][isotopes][coupling_type] = utils.float(coupling)
-                
+
+                        self.nmrcouplings[(atom, columns[index])][isotopes][coupling_type] = (
+                            utils.float(coupling)
+                        )
+
                 line = next(inputfile)
 
         # Solvent information.

@@ -135,7 +135,7 @@ class Turbomole(logfileparser.Logfile):
             "diamagnetic part of magnetic shielding:": "diamagnetic",
             "paramagnetic undisturbed density part of magnetic shielding:": "paramagnetic-undisturbed",
             "paramagnetic disturbed density part of magnetic shielding:": "paramagnetic-disturbed",
-            "total magnetic shielding:": "total"
+            "total magnetic shielding:": "total",
         }
 
         self.isotopes = []
@@ -785,24 +785,22 @@ class Turbomole(logfileparser.Logfile):
 
             while line.strip()[0:4] != "ATOM":
                 line = next(inputfile)
-            
+
             while line.strip()[0:4] == "ATOM":
                 split_line = line.split()
-                atom = int(split_line[2]) -1
+                atom = int(split_line[2]) - 1
                 iso = float(split_line[4])
 
                 line = next(inputfile)
                 line = next(inputfile)
-                atomtensors = {
-                    "isotropic": iso
-                }
+                atomtensors = {"isotropic": iso}
 
                 while "magnetic shielding" in line:
                     # Even if we don't save this tensor, we'll still parse it to move to the next correctly.
                     tensor_type = self.nmrtypes.get(line.strip(), None)
                     line = next(inputfile)
                     # Currently unused.
-                    #trace = float(line.split()[-1])
+                    # trace = float(line.split()[-1])
                     line = next(inputfile)
                     tensor = numpy.zeros((3, 3))
                     for j, row in zip(range(3), inputfile):
@@ -810,14 +808,14 @@ class Turbomole(logfileparser.Logfile):
 
                     if tensor_type is not None:
                         atomtensors[tensor_type] = tensor
-                    
+
                     line = next(inputfile)
                     line = next(inputfile)
-                
+
                 nmrtensors[atom] = atomtensors
-            
+
             self.set_attribute("nmrtensors", nmrtensors)
-        
+
         # Isotope info.
         #   ------------------------------------------------
         #      Gyromagnetic ratios in 10^7 rad s^-1 T^-1
@@ -833,11 +831,11 @@ class Turbomole(logfileparser.Logfile):
             isotopes = [None] * self.natom
             while line.strip() != "":
                 split_line = line.split()
-                atom = int(split_line[0]) -1
+                atom = int(split_line[0]) - 1
                 isotope = int(split_line[2])
                 isotopes[atom] = isotope
                 line = next(inputfile)
-            
+
             self.isotopes = isotopes
 
         # NMR spin-spin coupling.
@@ -862,35 +860,25 @@ class Turbomole(logfileparser.Logfile):
 
             while line.strip() != "":
                 split_line = line.split()
-                atoms = (
-                    int(split_line[1]) -1,
-                    int(split_line[4][:-1]) -1,
-                )
-                isotopes = (
-                    self.isotopes[atoms[0]],
-                    self.isotopes[atoms[1]]
-                )
+                atoms = (int(split_line[1]) - 1, int(split_line[4][:-1]) - 1)
+                isotopes = (self.isotopes[atoms[0]], self.isotopes[atoms[1]])
 
                 iso = float(split_line[5])
-                #aniso = float(split_line[6])
+                # aniso = float(split_line[6])
 
                 tensor = numpy.zeros((3, 3))
                 for j, row in zip(range(3), inputfile):
                     tensor[j] = list(map(float, row.split()))
-                
+
                 if atoms not in nmrcouplingtensors:
                     nmrcouplingtensors[atoms] = {}
-                
-                nmrcouplingtensors[atoms][isotopes] = {
-                    "total": tensor,
-                    "isotropic": iso
-                }
-                
-                line = next(inputfile)
-                line = next(inputfile)
-            
-            self.set_attribute("nmrcouplingtensors", nmrcouplingtensors)
 
+                nmrcouplingtensors[atoms][isotopes] = {"total": tensor, "isotropic": iso}
+
+                line = next(inputfile)
+                line = next(inputfile)
+
+            self.set_attribute("nmrcouplingtensors", nmrcouplingtensors)
 
         # In this section we are parsing mocoeffs and moenergies from
         # the files like: mos, alpha and beta.

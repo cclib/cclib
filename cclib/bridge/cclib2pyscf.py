@@ -9,11 +9,11 @@ import functools
 import itertools
 import logging
 from typing import Any, Dict, List, Optional, Tuple
-import numpy
 
 from cclib.parser.data import ccData
 from cclib.parser.utils import PeriodicTable, convertor, find_package
 
+import numpy
 import numpy as np
 
 l_sym2num = {"S": 0, "P": 1, "D": 2, "F": 3, "G": 4}
@@ -27,12 +27,12 @@ _found_pyscf = find_package("pyscf")
 if _found_pyscf:
     import pyscf.cc.ccsd
     import pyscf.data.elements
+    import pyscf.data.nist
     import pyscf.gto
     import pyscf.hessian.thermo
     import pyscf.mp.mp2
     import pyscf.scf.hf
     import pyscf.tdscf.rhf
-    import pyscf.data.nist
 
     # This is an optional install.
     try:
@@ -154,8 +154,12 @@ def makecclib(
     scf_steps: List[List[Dict[str, float]]] = [],
     opt_steps: List[Dict[str, Any]] = [],
     opt_failed: bool = False,
-    nmr_shielding: List[Tuple[Tuple[float, float, float],Tuple[float, float, float],Tuple[float, float, float]]] = [],
-    spin_spin_coupling: List[Tuple[Tuple[float, float, float],Tuple[float, float, float],Tuple[float, float, float]]] = [],
+    nmr_shielding: List[
+        Tuple[Tuple[float, float, float], Tuple[float, float, float], Tuple[float, float, float]]
+    ] = [],
+    spin_spin_coupling: List[
+        Tuple[Tuple[float, float, float], Tuple[float, float, float], Tuple[float, float, float]]
+    ] = [],
 ) -> ccData:
     """Create cclib attributes and return a ccData from a PySCF calculation.
 
@@ -208,10 +212,10 @@ def makecclib(
         elif isinstance(base_method, pyscf.cc.ccsd.CCSDBase):
             cc = base_method
             scf = base_method._scf
-        
+
         elif pyscf_prop is not None and isinstance(method, pyscf_prop.nmr.rhf.NMR):
             nmr = base_method
-        
+
         elif pyscf_prop is not None and isinstance(method, pyscf_prop.ssc.rhf.SpinSpinCoupling):
             spin_spin = base_method
 
@@ -233,9 +237,9 @@ def makecclib(
         et=et,
         opt_failed=opt_failed,
         nmr=nmr,
-        spin_spin = spin_spin,
+        spin_spin=spin_spin,
         nmr_shielding=nmr_shielding,
-        spin_spin_coupling=spin_spin_coupling
+        spin_spin_coupling=spin_spin_coupling,
     )
 
 
@@ -254,7 +258,7 @@ def cclibfrommethods(
     nmr=None,
     spin_spin=None,
     nmr_shielding=[],
-    spin_spin_coupling=[]
+    spin_spin_coupling=[],
 ) -> ccData:
     """Create cclib attributes and return a ccData from a PySCF method object.
 
@@ -684,15 +688,13 @@ def cclibfrommethods(
         if hasattr(freq, "ir_inten"):
             # TODO: Units?
             attributes["vibirs"] = freq.ir_inten
-        
+
     # NMR
     if len(nmr_shielding):
         # nmr_shielding is a list, nmrtensors is a dict
-        attributes['nmrtensors'] = {
-            index: {
-                "isotropic": numpy.mean(numpy.linalg.eigvals(value)),
-                "total": value
-            } for index, value in enumerate(nmr_shielding)
+        attributes["nmrtensors"] = {
+            index: {"isotropic": numpy.mean(numpy.linalg.eigvals(value)), "total": value}
+            for index, value in enumerate(nmr_shielding)
         }
 
     # NMR Coupling.
@@ -700,7 +702,7 @@ def cclibfrommethods(
         # spin_spin_coupling is in eH, we want Hz
         # From properties.pyscf.prop.ssc.uhf.py
         # Setup some constants for conversion.
-        nuc_mag = .5 * (pyscf.data.nist.E_MASS/pyscf.data.nist.PROTON_MASS)  # e*hbar/2m
+        nuc_mag = 0.5 * (pyscf.data.nist.E_MASS / pyscf.data.nist.PROTON_MASS)  # e*hbar/2m
         au2Hz = pyscf.data.nist.HARTREE2J / pyscf.data.nist.PLANCK
         gyro = pyscf.prop.ssc.rhf._atom_gyro_list(mol)
 
@@ -709,22 +711,21 @@ def cclibfrommethods(
             atoms = spin_spin.nuc_pair[index]
             isotopes = (
                 round(attributes["atommasses"][spin_spin.nuc_pair[index][0]]),
-                round(attributes["atommasses"][spin_spin.nuc_pair[index][1]])
+                round(attributes["atommasses"][spin_spin.nuc_pair[index][1]]),
             )
-            gyros = (
-                gyro[atoms[0]],
-                gyro[atoms[1]]
-            )
+            gyros = (gyro[atoms[0]], gyro[atoms[1]])
 
             nmrcouplingtensors[atoms] = {
                 isotopes: {
                     # Convert to Hz, and add in g-factors for the relevant atoms.
-                    "isotropic": numpy.mean(numpy.linalg.eigvals(au2Hz * nuc_mag ** 2 * tensor *  gyros[0] * gyros[1])),
-                    "total": au2Hz * nuc_mag ** 2 * tensor * gyros[0] * gyros[1]
+                    "isotropic": numpy.mean(
+                        numpy.linalg.eigvals(au2Hz * nuc_mag**2 * tensor * gyros[0] * gyros[1])
+                    ),
+                    "total": au2Hz * nuc_mag**2 * tensor * gyros[0] * gyros[1],
                 }
             }
 
-        attributes['nmrcouplingtensors'] = nmrcouplingtensors
+        attributes["nmrcouplingtensors"] = nmrcouplingtensors
 
     return ccData(attributes)
 
