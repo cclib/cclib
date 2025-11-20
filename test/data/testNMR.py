@@ -123,6 +123,14 @@ class GenericNMRCouplingTest:
         total = numpy.mean(eigvals)
 
         assert total == pytest.approx(tensor["isotropic"], abs=3)
+    
+    def testtotalcoupling(self, data):
+        """Test the total chemical shift matches our expected value."""
+        assert sum([
+            list(data.nmrcouplingtensors[atom].values())[0]['isotropic']
+            for atom
+            in data.nmrcouplingtensors
+        ]) == pytest.approx(1825, abs = 5)
 
 
 class GaussianNMRCouplingTest(GenericNMRCouplingTest):
