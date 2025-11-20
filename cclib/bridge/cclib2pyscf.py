@@ -152,7 +152,8 @@ def makecclib(
     scf_steps: List[List[Dict[str, float]]] = [],
     opt_steps: List[Dict[str, Any]] = [],
     opt_failed: bool = False,
-    nmr_shielding: List[Tuple[Tuple[float, float, float],Tuple[float, float, float],Tuple[float, float, float]]] = []
+    nmr_shielding: List[Tuple[Tuple[float, float, float],Tuple[float, float, float],Tuple[float, float, float]]] = [],
+    spin_spin_coupling: List[Tuple[Tuple[float, float, float],Tuple[float, float, float],Tuple[float, float, float]]] = [],
 ) -> ccData:
     """Create cclib attributes and return a ccData from a PySCF calculation.
 
@@ -172,7 +173,7 @@ def makecclib(
     """
     _check_pyscf(_found_pyscf)
     # What is our level of theory?
-    scf, mp, cc, hess, freq, et, nmr = None, None, None, None, None, [], None
+    scf, mp, cc, hess, freq, et, nmr, spin_spin = None, None, None, None, None, [], None, None
 
     mols = {method.mol for method in methods if hasattr(method, "mol")}
     if len(mols) > 1:
@@ -208,6 +209,9 @@ def makecclib(
         
         elif pyscf_prop is not None and isinstance(method, pyscf_prop.nmr.rhf.NMR):
             nmr = base_method
+        
+        elif pyscf_prop is not None and isinstance(method, pyscf_prop.ssc.rhf.SpinSpinCoupling):
+            spin_spin = base_method
 
         else:
             # Panic.
@@ -227,7 +231,9 @@ def makecclib(
         et=et,
         opt_failed=opt_failed,
         nmr=nmr,
-        nmr_shielding=nmr_shielding
+        spin_spin = spin_spin,
+        nmr_shielding=nmr_shielding,
+        spin_spin_coupling=spin_spin_coupling
     )
 
 
@@ -244,7 +250,9 @@ def cclibfrommethods(
     opt_steps=[],
     opt_failed=False,
     nmr=None,
-    nmr_shielding=[]
+    spin_spin=None,
+    nmr_shielding=[],
+    spin_spin_coupling=[]
 ) -> ccData:
     """Create cclib attributes and return a ccData from a PySCF method object.
 
@@ -683,6 +691,20 @@ def cclibfrommethods(
                 "isotropic": numpy.mean(numpy.linalg.eigvals(value)),
                 "total": value
             } for index, value in enumerate(nmr_shielding)
+        }
+
+    # NMR Coupling.
+    if spin_spin and len(spin_spin_coupling):
+        attributes['nmrcouplingtensors'] = {
+            spin_spin.nuc_pair[index]: {
+                (
+                    round(attributes["atommasses"][spin_spin.nuc_pair[index][0]]),
+                    round(attributes["atommasses"][spin_spin.nuc_pair[index][1]])
+                ): {
+                    "isotropic": numpy.mean(numpy.linalg.eigvals(value)),
+                    "total": value
+                }
+            } for index, value in enumerate(spin_spin_coupling)
         }
 
     return ccData(attributes)
