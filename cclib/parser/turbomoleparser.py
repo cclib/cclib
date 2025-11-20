@@ -138,6 +138,8 @@ class Turbomole(logfileparser.Logfile):
             "total magnetic shielding:": "total"
         }
 
+        self.isotopes = []
+
     @staticmethod
     def split_molines(inline):
         """Splits the lines containing mocoeffs (each of length 20)
@@ -815,7 +817,79 @@ class Turbomole(logfileparser.Logfile):
                 nmrtensors[atom] = atomtensors
             
             self.set_attribute("nmrtensors", nmrtensors)
+        
+        # Isotope info.
+        #   ------------------------------------------------
+        #      Gyromagnetic ratios in 10^7 rad s^-1 T^-1
+        #   ------------------------------------------------
+        #
+        #             atom  isotope  gyromagn. ratio
+        #             1 c       13       6.728286000
+        #             2 c       13       6.728286000
+        #             3 c       13       6.728286000
+        # ...
+        if line.strip() == "atom  isotope  gyromagn. ratio":
+            line = next(inputfile)
+            isotopes = [None] * self.natom
+            while line.strip() != "":
+                split_line = line.split()
+                atom = int(split_line[0]) -1
+                isotope = int(split_line[2])
+                isotopes[atom] = isotope
+                line = next(inputfile)
+            
+            self.isotopes = isotopes
 
+        # NMR spin-spin coupling.
+        #   ------------------------------------------------
+        #     Nuclear coupling constants >=      0.1000 Hz
+        #   ------------------------------------------------
+        #
+        #     Coupling nuclei        Isotropy    Anisotropy
+        #
+        #    c     2 - c     1:        9.4539       14.3280
+        #            5.4113        1.1840        0.0000
+        #            1.1840        4.0745        0.0000
+        #            0.0000        0.0000       18.8760
+        #
+        #    c     3 - c     1:       45.4438       31.6640
+        # ...
+        if line.strip() == "Coupling nuclei        Isotropy    Anisotropy":
+            nmrcouplingtensors = {}
+
+            line = next(inputfile)
+            line = next(inputfile)
+
+            while line.strip() != "":
+                split_line = line.split()
+                atoms = (
+                    int(split_line[1]) -1,
+                    int(split_line[4][:-1]) -1,
+                )
+                isotopes = (
+                    self.isotopes[atoms[0]],
+                    self.isotopes[atoms[1]]
+                )
+
+                iso = float(split_line[5])
+                #aniso = float(split_line[6])
+
+                tensor = numpy.zeros((3, 3))
+                for j, row in zip(range(3), inputfile):
+                    tensor[j] = list(map(float, row.split()))
+                
+                if atoms not in nmrcouplingtensors:
+                    nmrcouplingtensors[atoms] = {}
+                
+                nmrcouplingtensors[atoms][isotopes] = {
+                    "total": tensor,
+                    "isotropic": iso
+                }
+                
+                line = next(inputfile)
+                line = next(inputfile)
+            
+            self.set_attribute("nmrcouplingtensors", nmrcouplingtensors)
 
 
         # In this section we are parsing mocoeffs and moenergies from
