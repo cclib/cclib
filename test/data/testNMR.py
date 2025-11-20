@@ -87,7 +87,8 @@ class GenericNMRCouplingTest:
         assert tensor["total"].shape == (3, 3)
 
     @skipForParser("Gaussian", "no coupling tensors are available")
-    def testisotropic(self, data) -> None:
+    @skipForParser("PySCF", "only the total tensor is available")
+    def testtensors(self, data) -> None:
         """Check the total isotropic value matches the computed value."""
         tensor = list(list(data.nmrcouplingtensors.values())[0].values())[0]
         # Check the total isotropic value matches the computed value.
@@ -104,11 +105,31 @@ class GenericNMRCouplingTest:
 
         assert total == pytest.approx(tensor["isotropic"], abs=3)
 
+    @skipForParser("Gaussian", "no coupling tensors are available")
+    def testtotaltensor(self, data) -> None:
+        """Check the total isotropic value matches the computed value."""
+        tensor = list(list(data.nmrcouplingtensors.values())[0].values())[0]
+        # Check the total isotropic value matches the computed value.
+        eigvals = numpy.linalg.eigvals(tensor["total"])
+        total = numpy.mean(eigvals)
+
+        assert total == pytest.approx(tensor["isotropic"], abs=3)
+
 
 class GaussianNMRCouplingTest(GenericNMRCouplingTest):
     """Gaussian NMR spin-spin coupling unittest"""
 
     def testsize(self, data, num = 1) -> None:
+        """Check to make sure there are the correct number of tensors parsed"""
+        assert len(data.nmrcouplingtensors) == 190
+        tensor = list(list(data.nmrcouplingtensors.values())[0].values())[0]
+        assert len(tensor) == num
+
+
+class PySCFNMRCouplingTest(GenericNMRCouplingTest):
+    """Gaussian NMR spin-spin coupling unittest"""
+
+    def testsize(self, data, num = 2) -> None:
         """Check to make sure there are the correct number of tensors parsed"""
         assert len(data.nmrcouplingtensors) == 190
         tensor = list(list(data.nmrcouplingtensors.values())[0].values())[0]
