@@ -152,7 +152,7 @@ def makecclib(
     scf_steps: List[List[Dict[str, float]]] = [],
     opt_steps: List[Dict[str, Any]] = [],
     opt_failed: bool = False,
-    nmr_shielding: List[Tuple[Tuple[float, float, float],Tuple[float, float, float],Tuple[float, float, float]]]
+    nmr_shielding: List[Tuple[Tuple[float, float, float],Tuple[float, float, float],Tuple[float, float, float]]] = []
 ) -> ccData:
     """Create cclib attributes and return a ccData from a PySCF calculation.
 
