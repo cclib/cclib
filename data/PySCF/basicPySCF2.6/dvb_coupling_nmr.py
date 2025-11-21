@@ -36,11 +36,7 @@ def calculate():
     )
 
     # Use 13C
-    mol.nucprop ={
-        "C": {
-            "mass": 13
-        }
-    }
+    mol.nucprop = {"C": {"mass": 13}}
 
     scf_steps = []
 
