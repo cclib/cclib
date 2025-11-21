@@ -8,6 +8,7 @@
 import functools
 import itertools
 import logging
+import periodictable
 from typing import Any, Dict, List, Optional, Tuple
 
 from cclib.parser.data import ccData
@@ -323,6 +324,19 @@ def cclibfrommethods(
     attributes["atommasses"] = [
         pyscf.data.elements.COMMON_ISOTOPE_MASSES[atom_no] for atom_no in attributes["atomnos"]
     ]
+
+    attributes["atommasses"] = []
+    for atom_index in range(attributes["natom"]):
+        # If an isotope mass has been given for this atom, we can use that.
+        if mol.elements[atom_index] in mol.nucprop and 'mass' in mol.nucprop[mol.elements[atom_index]]:
+            # Despite its name, 'mass' is actually referring to the isotope (or the mass rounded to the nearest integer)
+            isotope = mol.nucprop[mol.elements[atom_index]]['mass']
+            # We can get the actual mass from periodictable
+            attributes["atommasses"].append(getattr(periodictable, mol.elements[atom_index])[isotope].mass)
+        
+        else:
+            # Use a default mass.
+            attributes["atommasses"].append(pyscf.data.elements.COMMON_ISOTOPE_MASSES[attributes["atomnos"][atom_index]])
 
     coord_convertor = functools.partial(convertor, fromunits="Angstrom", tounits="bohr")
     bohr_coords = [
