@@ -693,7 +693,10 @@ def cclibfrommethods(
     if len(nmr_shielding):
         # nmr_shielding is a list, nmrtensors is a dict
         attributes["nmrtensors"] = {
-            nmr.shielding_nuc[index]: {"isotropic": numpy.mean(numpy.linalg.eigvals(value)), "total": value}
+            nmr.shielding_nuc[index]: {
+                "isotropic": numpy.mean(numpy.linalg.eigvals(value)),
+                "total": value,
+            }
             for index, value in enumerate(nmr_shielding)
         }
 
