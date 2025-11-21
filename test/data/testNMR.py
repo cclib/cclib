@@ -71,10 +71,11 @@ class TurbomoleNMRTest(GenericNMRTest):
 class GenericNMRCouplingTest:
     """Generic NMR spin-spin coupling unittest"""
 
+    @skipForParser("Turbomole", "atommasses is not available")
     def testmass(self, data) -> None:
         """Check we are using 13C"""
         assert sum(data.atommasses) == pytest.approx(140.111, 1e-2)
-    
+
     def testisotopes(self, data) -> None:
         """Check we are using 13C"""
         for atom1, atom2 in data.nmrcouplingtensors:
@@ -156,6 +157,7 @@ class OrcaNMRCouplingTest(GenericNMRCouplingTest):
         """Check we are using 12C"""
         # In Orca, the NMR isotopes do not impact the main calculation isotopes.
         assert sum(data.atommasses) == pytest.approx(130.190, 1e-2)
+
 
 class GaussianNMRCouplingTest(GenericNMRCouplingTest):
     """Gaussian NMR spin-spin coupling unittest"""
