@@ -266,8 +266,8 @@ NMR       PySCF       PySCFNMRTest          basicPySCF2.6         dvb_nmr.py
 NMR       Turbomole   TurbomoleNMRTest      basicTurbomole7.5     dvb_nmr/basis      dvb_nmr/control      dvb_nmr/mos      dvb_nmr/dscf.out      dvb_nmr/coord      dvb_nmr/mpshift.out
 NMR       Gaussian    GaussianNMRCouplingTest       basicGaussian09       dvb_nmr.log
 NMR       Gaussian    GaussianNMRCouplingTest       basicGaussian16       dvb_nmr.log
-NMR       ORCA        GenericNMRCouplingTest        basicORCA5.0          dvb_coupling_nmr.out
-NMR       ORCA        GenericNMRCouplingTest        basicORCA6.0          dvb_coupling_nmr.out
+NMR       ORCA        OrcaNMRCouplingTest           basicORCA5.0          dvb_coupling_nmr.out
+NMR       ORCA        OrcaNMRCouplingTest           basicORCA6.0          dvb_coupling_nmr.out
 NMR       PySCF       PySCFNMRCouplingTest          basicPySCF2.6         dvb_coupling_nmr.py
 NMR       Turbomole   TurbomoleNMRCouplingTest      basicTurbomole7.5     dvb_coupling_nmr/basis      dvb_coupling_nmr/control      dvb_coupling_nmr/mos      dvb_coupling_nmr/dscf.out      dvb_coupling_nmr/coord      dvb_coupling_nmr/escf.out
 

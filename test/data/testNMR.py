@@ -71,6 +71,20 @@ class TurbomoleNMRTest(GenericNMRTest):
 class GenericNMRCouplingTest:
     """Generic NMR spin-spin coupling unittest"""
 
+    def testmass(self, data) -> None:
+        """Check we are using 13C"""
+        assert sum(data.atommasses) == pytest.approx(140.111, 1e-2)
+    
+    def testisotopes(self, data) -> None:
+        """Check we are using 13C"""
+        for atom1, atom2 in data.nmrcouplingtensors:
+            for isotope1, isotope2 in data.nmrcouplingtensors[(atom1, atom2)]:
+                if data.atomnos[atom1] == 6:
+                    assert isotope1 == 13
+
+                if data.atomnos[atom2] == 6:
+                    assert isotope2 == 13
+
     def testkeys(self, data) -> None:
         """Check dictionary keys are ints."""
         assert all(
@@ -135,6 +149,14 @@ class GenericNMRCouplingTest:
         ) == pytest.approx(1825, abs=5)
 
 
+class OrcaNMRCouplingTest(GenericNMRCouplingTest):
+    """Orca NMR spin-spin coupling unittest"""
+
+    def testmass(self, data) -> None:
+        """Check we are using 12C"""
+        # In Orca, the NMR isotopes do not impact the main calculation isotopes.
+        assert sum(data.atommasses) == pytest.approx(130.190, 1e-2)
+
 class GaussianNMRCouplingTest(GenericNMRCouplingTest):
     """Gaussian NMR spin-spin coupling unittest"""
 
@@ -146,7 +168,7 @@ class GaussianNMRCouplingTest(GenericNMRCouplingTest):
 
 
 class PySCFNMRCouplingTest(GenericNMRCouplingTest):
-    """Gaussian NMR spin-spin coupling unittest"""
+    """PySCF NMR spin-spin coupling unittest"""
 
     def testsize(self, data, num=2) -> None:
         """Check to make sure there are the correct number of tensors parsed"""
@@ -156,7 +178,7 @@ class PySCFNMRCouplingTest(GenericNMRCouplingTest):
 
 
 class TurbomoleNMRCouplingTest(GenericNMRCouplingTest):
-    """Gaussian NMR spin-spin coupling unittest"""
+    """Turbomole NMR spin-spin coupling unittest"""
 
     def testsize(self, data, num=2) -> None:
         """Check to make sure there are the correct number of tensors parsed"""

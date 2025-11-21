@@ -35,6 +35,13 @@ def calculate():
         symmetry=True,
     )
 
+    # Use 13C
+    mol.nucprop ={
+        "C": {
+            "mass": 13
+        }
+    }
+
     scf_steps = []
 
     def store_intermediate(_locals):
