@@ -1,0 +1,302 @@
+
+ dscf (compute060.hpc.st-andrews.ac.uk) : TURBOMOLE rev. V7.5.0 compiled 13 Jun 2020 at 23:29:25
+ Copyright (C) 2020 TURBOMOLE GmbH, Karlsruhe
+
+
+    2025-11-20 12:35:59.392 
+
+
+
+                             d s c f - program
+
+                   idea & directorship : reinhart ahlrichs
+                   program development : marco haeser
+                                         michael baer
+                           dft version : oliver treutler
+
+
+                          quantum chemistry group
+                          universitaet  karlsruhe
+                                  germany
+
+
+
+   *-----------------------------------------------------------------------*
+   |                     program will use  1 thread(s)                     |
+   *-----------------------------------------------------------------------*
+
+
+              +--------------------------------------------------+
+              | Atomic coordinate, charge and isotop information |
+              +--------------------------------------------------+
+
+                    atomic coordinates            atom    charge  isotop
+          2.32397196    1.39322137    0.00000000    c      6.000     0
+         -2.32397196   -1.39322137    0.00000000    c      6.000     0
+         -0.04923303    2.65389547    0.00000000    c      6.000     0
+          0.04923303   -2.65389547    0.00000000    c      6.000     0
+         -2.32397196    1.29391626    0.00000000    c      6.000     0
+          2.32397196   -1.29391626    0.00000000    c      6.000     0
+         -0.09356034    4.72969725    0.00000000    h      1.000     0
+          0.09356034   -4.72969725    0.00000000    h      1.000     0
+         -4.12963929    2.31230668    0.00000000    h      1.000     0
+          4.12963929   -2.31230668    0.00000000    h      1.000     0
+         -4.70051043   -2.93071389    0.00000000    c      6.000     0
+          4.70051043    2.93071389    0.00000000    c      6.000     0
+         -4.40120427   -4.98963853    0.00000000    h      1.000     0
+          4.40120427    4.98963853    0.00000000    h      1.000     0
+         -7.07957547   -2.04030139    0.00000000    c      6.000     0
+          7.07957547    2.04030139    0.00000000    c      6.000     0
+         -7.50897038   -0.01420885    0.00000000    h      1.000     0
+          7.50897038    0.01420885    0.00000000    h      1.000     0
+         -8.70850805   -3.32148468    0.00000000    h      1.000     0
+          8.70850805    3.32148468    0.00000000    h      1.000     0
+ 
+       center of nuclear mass  :    0.00000000    0.00000000    0.00000000
+       center of nuclear charge:    0.00000000    0.00000000    0.00000000
+
+   *************************************************************************
+   dvb_nmr_Single_Point_DFT_B3LYP__GD3BJ__Gas_Phase_Pople_Basis_Sets_STO_3G 
+   *************************************************************************
+
+
+
+              +--------------------------------------------------+
+              |               basis set information              |
+              +--------------------------------------------------+
+
+              we will work with the 1s 3p 5d 7f 9g ... basis set
+              ...i.e. with spherical basis functions...
+
+   type   atoms  prim   cont   basis
+   ---------------------------------------------------------------------------
+    c       10     15      5   STO-3G   [2s1p|6s3p]
+    h       10      3      1   STO-3G   [1s|3s]
+   ---------------------------------------------------------------------------
+   total:   20    180     60
+   ---------------------------------------------------------------------------
+
+   total number of primitive shells          :   12
+   total number of contracted shells         :   40
+   total number of cartesian basis functions :   60
+   total number of SCF-basis functions       :   60
+
+
+ integral neglect threshold       :  0.56E-10
+ integral storage threshold THIZE :  0.10E-04
+ integral storage threshold THIME :         5
+
+
+ DENSITY CONVERGENCE CHECK SWITCHED ON !
+ SCF CONVERGENCE IF RMS(delta[D]) <     0.1000000000E-06
+
+
+ symmetry group of the molecule :   c1 
+
+ the group has the following generators :
+   c1(z)
+
+    1 symmetry operations found
+
+ there are 1 real representations :   a   
+
+ maximum number of shells which are related by symmetry :  1
+
+  
+           ------------------
+           density functional
+           ------------------
+ Becke-3-Parameter hybrid functional: B3-LYP
+ exchange:    0.8*LDA + 0.72*B88 + 0.2*HF
+ correlation: 0.19*LDA(VWN) + 0.81*LYP
+
+ spherical integration : Lebedev's spherical grid
+ spherical gridsize    :                     3
+    i.e. gridpoints    :                   302
+ value for diffuse not defined
+ radial integration    : Chebyshev 2nd kind (scaling 3)
+ radial gridsize       :                     3
+ integration cells     :                    20
+ partition function    : becke
+ partition sharpness   :                     3
+  
+
+          ------------------------
+          nuclear repulsion energy  :   445.936972389    
+          ------------------------
+
+
+         -----------------
+         -S,T+V- integrals
+         -----------------
+
+ 1e-integrals will be neglected if expon. factor < 0.556994E-11
+ 
+   Difference densities algorithm switched on.
+   The maximal number of linear combinations of
+   difference densities is                    20 .
+
+ DIIS switched on: error vector is FDS-SDF
+ Max. Iterations for DIIS is     :   4
+ DIIS matrix (see manual) 
+    Scaling factor of diagonals  :  1.200
+    threshold for scaling factor :  0.000
+
+ scf convergence criterion : increment of total energy < .1000000D-06
+                  and increment of one-electron energy < .1000000D-03
+
+ MOs are in ASCII format !
+
+
+    mo occupation :
+   irrep   mo's   occupied
+    a       60       35
+ 
+ number of basis functions   :    60
+ number of occupied orbitals :    35
+ 
+
+ reading orbital data $scfmo  from file mos
+ orbital characterization : scfconv=7
+ mo-orthogonalization by Cholesky decomposition
+
+ automatic virtual orbital shift switched on 
+      shift if e(lumo)-e(homo) < 0.10000000    
+
+
+ DSCF restart information will be dumped onto file mos
+
+          Overall gridpoints after grid construction =         96244
+ 
+                                              current damping :  0.300
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
+   1  -382.05072026196    -1400.6403923     572.65269965    0.000D+00 0.556D-10
+                            Exc =   -46.526323655844     N = 69.999967587    
+          max. resid. norm for Fia-block=  5.213D-05 for orbital     25a         
+          max. resid. fock norm         =  6.721D-05 for orbital     20a         
+          Delta Eig. =     0.0011476655 eV 
+ 
+                                              current damping :  0.300
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
+   2  -382.05072032309    -1400.6399013     572.65220860    0.111D-04 0.352D-10
+                            Exc =   -46.526336717925     N = 69.999967586    
+          Norm of current diis error: 0.11706E-03
+          max. resid. norm for Fia-block=  2.298D-05 for orbital     33a         
+          max. resid. fock norm         =  3.308D-05 for orbital     44a         
+          Delta Eig. =     0.0015535341 eV 
+ 
+                                              current damping :  0.350
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
+   3  -382.05072032821    -1400.6404367     572.65274401    0.571D-05 0.308D-10
+                            Exc =   -46.526342384821     N = 69.999967586    
+          Norm of current diis error: 0.97187E-04
+          max. resid. norm for Fia-block=  1.138D-05 for orbital     33a         
+          max. resid. fock norm         =  1.314D-05 for orbital     58a         
+          Delta Eig. =     0.0005629195 eV 
+ 
+                                              current damping :  0.400
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
+   4  -382.05072033103    -1400.6401551     572.65246238    0.247D-05 0.283D-10
+                            Exc =   -46.526344110898     N = 69.999967586    
+          Norm of current diis error: 0.18269E-04
+          max. resid. norm for Fia-block=  3.382D-06 for orbital     28a         
+          max. resid. fock norm         =  3.902D-06 for orbital     31a         
+          Delta Eig. =     0.0002100319 eV 
+
+ ENERGY & DENSITY CONVERGED !
+
+ 
+                                              current damping :  0.450
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
+   5  -382.05072033083    -1400.6401737     572.65248095    0.622D-06 0.273D-10
+                            Exc =   -46.526344033148     N = 69.999967586    
+          max. resid. norm for Fia-block=  1.339D-06 for orbital     28a         
+          max. resid. fock norm         =  1.822D-06 for orbital     16a         
+
+ convergence criteria satisfied after     5 iterations
+
+
+   *************************************************************************
+   dvb_nmr_Single_Point_DFT_B3LYP__GD3BJ__Gas_Phase_Pople_Basis_Sets_STO_3G 
+   *************************************************************************
+
+
+                  ------------------------------------------ 
+                 |  total energy      =   -382.05072033083  |
+                  ------------------------------------------ 
+                 :  kinetic energy    =    375.84328293997  :
+                 :  potential energy  =   -757.89400327080  :
+                 :  virial theorem    =      1.98375232120  :
+                 :  wavefunction norm =      1.00000000000  :
+                  .......................................... 
+
+
+ orbitals $scfmo  will be written to file mos
+
+    irrep                 31a         32a         33a         34a         35a   
+ eigenvalues H         -0.28384    -0.25985    -0.20873    -0.19156    -0.14938
+            eV          -7.7238     -7.0711     -5.6798     -5.2125     -4.0648
+ occupation              2.0000      2.0000      2.0000      2.0000      2.0000
+
+    irrep                 36a         37a         38a         39a         40a   
+ eigenvalues H          0.04114     0.09376     0.11436     0.18585     0.27596
+            eV           1.1195      2.5512      3.1120      5.0573      7.5094
+ 
+ 
+ 
+ 
+ ==============================================================================
+                           electrostatic moments
+ ==============================================================================
+
+ reference point for electrostatic moments:    0.00000   0.00000   0.00000
+
+ 
+              nuc           elec       ->  total
+ ------------------------------------------------------------------------------
+                          charge      
+ ------------------------------------------------------------------------------
+          70.000000     -70.000000      -0.000000
+ 
+ ------------------------------------------------------------------------------
+                       dipole moment  
+ ------------------------------------------------------------------------------
+   x       0.000000       0.000000       0.000000
+   y       0.000000       0.000000       0.000000
+   z       0.000000       0.000000       0.000000
+ 
+   | dipole moment | =     0.0000 a.u. =     0.0000 debye 
+ 
+ ------------------------------------------------------------------------------
+                     quadrupole moment
+ ------------------------------------------------------------------------------
+  xx    1333.543672   -1371.264026     -37.720354
+  yy     408.215825    -445.576409     -37.360584
+  zz       0.000000     -43.587402     -43.587402
+  xy     421.846870    -421.923958      -0.077089
+  xz       0.000000       0.000000       0.000000
+  yz       0.000000       0.000000       0.000000
+ 
+     1/3  trace=     -39.556113
+     anisotropy=       6.056427
+ 
+ ==============================================================================
+ 
+HOMO-LUMO Separation
+ HOMO         :   -0.14937731 H =     -4.06477 eV
+ LUMO         :    0.04114140 H =     +1.11952 eV
+ HOMO-LUMO gap:    0.19051871 H =     +5.18428 eV
+ 
+ ==============================================================================
+
+
+    ------------------------------------------------------------------------
+         total  cpu-time :   2.15 seconds
+         total wall-time :   2.18 seconds
+    ------------------------------------------------------------------------
+
+   ****  dscf : all done  ****
+
+
+    2025-11-20 12:36:01.561 
+

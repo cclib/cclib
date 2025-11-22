@@ -1,0 +1,81 @@
+
+ STATISTICS OUTPUT FOR PROJECT :
+   --->  dvb_nmr_Single_Point_DFT_B3LYP__GD3BJ__Gas_Phase_Pople_Basis  <---
+
+ integral neglect threshold       :  0.33E-10
+ integral storage threshold THIZE :  0.10E-04
+ integral storage threshold THIME :         5
+
+ cpu-time for construction of rho     :        0.108 s
+
+
+
+ --------------------    1.ITERATION  --------------------
+ number of shell pairs ii,jj included  :          756
+ number of integral batches included   :       239138
+ number of batches from twoint         :            0
+ unnecessary integral batches on file  :            0
+
+ cpu-time for xc part                 :        1.048 s
+
+
+
+ --------------------    2.ITERATION  --------------------
+ number of shell pairs ii,jj included  :          756
+ number of integral batches included   :       152866
+ number of batches from twoint         :            0
+ unnecessary integral batches on file  :            0
+
+ cpu-time for xc part                 :        0.439 s
+
+
+
+ --------------------    3.ITERATION  --------------------
+ number of shell pairs ii,jj included  :          756
+ number of integral batches included   :       142962
+ number of batches from twoint         :            0
+ unnecessary integral batches on file  :            0
+
+ cpu-time for xc part                 :        0.421 s
+
+
+
+ --------------------    4.ITERATION  --------------------
+ number of shell pairs ii,jj included  :          756
+ number of integral batches included   :       123841
+ number of batches from twoint         :            0
+ unnecessary integral batches on file  :            0
+
+ cpu-time for xc part                 :        0.392 s
+
+
+
+ --------------------    1.ITERATION  --------------------
+ number of shell pairs ii,jj included  :          756
+ number of integral batches included   :       241088
+ number of batches from twoint         :            0
+ unnecessary integral batches on file  :            0
+
+ cpu-time for xc part                 :        5.270 s
+
+
+
+ --------------------    2.ITERATION  --------------------
+ number of shell pairs ii,jj included  :          756
+ number of integral batches included   :       129250
+ number of batches from twoint         :            0
+ unnecessary integral batches on file  :            0
+
+ cpu-time for xc part                 :        0.401 s
+
+
+
+ --------------------    1.ITERATION  --------------------
+ number of shell pairs ii,jj included  :          756
+ number of integral batches included   :       239601
+ number of batches from twoint         :            0
+ unnecessary integral batches on file  :            0
+
+
+  escf  : cpu elapsed        19.154 s
+          wall               19.325 s
