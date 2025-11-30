@@ -1,0 +1,20 @@
+Carbon monoxide, CCSD/aug-pVDZ triplet excitation energies
+C
+O 1 R
+
+R=1.139804697867341
+
+*ACES2(CALC=CCSD,BASIS=AUG-PVDZ,EXCITE=EOMEE,REF=UHF
+ESTATE_CONV=10,SCF_CONV=10,CC_CONV=10,PRINT=1)
+
+%excite*
+1
+2
+1 7 0 8 0 1.0
+2 7 0 8 0 -1.0
+
+
+
+
+
+

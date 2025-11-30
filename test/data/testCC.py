@@ -5,6 +5,8 @@
 
 """Test coupled cluster logfiles"""
 
+from cclib.parser import utils
+
 import numpy
 import pytest
 
@@ -38,7 +40,9 @@ class GenericCC2Test(GenericCCTest):
         e_scf = data._ccCollection._parsed_data[0].scfenergies[0]
         e_cc = data._ccCollection._parsed_data[0].ccenergies[0]
         e_corr = e_cc - e_scf
-        assert pytest.approx(e_corr, rel=self.rel_thresh) == self.corr_energy
+        assert pytest.approx(e_corr, rel=self.rel_thresh) == utils.convertor(
+            self.corr_energy, "hartree", "eV"
+        )
 
 
 class GenericCCDTest(GenericCCTest):
@@ -50,7 +54,9 @@ class GenericCCDTest(GenericCCTest):
         e_scf = data._ccCollection._parsed_data[0].scfenergies[0]
         e_cc = data._ccCollection._parsed_data[0].ccenergies[0]
         e_corr = e_cc - e_scf
-        assert pytest.approx(e_corr, rel=self.rel_thresh) == self.corr_energy
+        assert pytest.approx(e_corr, rel=self.rel_thresh) == utils.convertor(
+            self.corr_energy, "hartree", "eV"
+        )
 
 
 class GenericCCSDTest(GenericCCTest):
@@ -62,7 +68,9 @@ class GenericCCSDTest(GenericCCTest):
         e_scf = data._ccCollection._parsed_data[0].scfenergies[0]
         e_cc = data._ccCollection._parsed_data[0].ccenergies[0]
         e_corr = e_cc - e_scf
-        assert pytest.approx(e_corr, rel=self.rel_thresh) == self.corr_energy
+        assert pytest.approx(e_corr, rel=self.rel_thresh) == utils.convertor(
+            self.corr_energy, "hartree", "eV"
+        )
 
 
 class GenericCCSDPTTest(GenericCCTest):
@@ -74,7 +82,29 @@ class GenericCCSDPTTest(GenericCCTest):
         e_scf = data._ccCollection._parsed_data[0].scfenergies[0]
         e_cc = data._ccCollection._parsed_data[0].ccenergies[0]
         e_corr = e_cc - e_scf
-        assert pytest.approx(e_corr, rel=self.rel_thresh) == self.corr_energy
+        assert pytest.approx(e_corr, rel=self.rel_thresh) == utils.convertor(
+            self.corr_energy, "hartree", "eV"
+        )
+
+
+class CFOURCC2Test(GenericCC2Test):
+    # CFOUR 2.1
+    corr_energy = -0.03819768728081
+
+
+class CFOURCCDTest(GenericCCDTest):
+    # CFOUR 2.1
+    corr_energy = -0.05312310114987
+
+
+class CFOURCCSDTest(GenericCCSDTest):
+    # CFOUR 2.1
+    corr_energy = -0.05342943538964
+
+
+class CFOURCCSDPTTest(GenericCCSDPTTest):
+    # CFOUR 2.1
+    corr_energy = -75.017834877377 - -74.964328738906460
 
 
 class DALTONCCSDPTTest(GenericCCSDPTTest):
@@ -148,3 +178,18 @@ class TurbomoleCCSDTest(GenericCCSDTest):
 
     # Turbomole 7.4
     corr_energy = -0.0510005307
+
+
+class PySCFCCSDTest(GenericCCSDTest):
+    # PySCF 2.6
+    corr_energy = -0.053429798261439
+
+
+class PySCFCCSDPTTest(GenericCCSDPTTest):
+    # PySCF 2.6
+    corr_energy = -0.05350650307
+
+
+class SerenityCCSDTest(GenericCCSDTest):
+    # Serenity 1.6.1
+    corr_energy = -0.130059162427  # TODO

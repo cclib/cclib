@@ -32,6 +32,7 @@ class GenericSPunTest:
         )
 
     @skipForParser("ADF", "???")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser(
         "DALTON",
         "DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now",
@@ -43,16 +44,18 @@ class GenericSPunTest:
     @skipForParser("Molpro", "???")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
     @skipForParser("Turbomole", "???")
+    @skipForParser("Serenity", "not implemented yet")
     def testatomcharges(self, data) -> None:
         """Are atomic charges consistent with natom?"""
         for atomcharge_type in data._ccCollection._parsed_data[0].atomcharges:
             charges = data._ccCollection._parsed_data[0].atomcharges[atomcharge_type]
             natom = data._ccCollection._parsed_data[0].natom
-            assert (
-                len(charges) == natom
-            ), f"len(atomcharges['{atomcharge_type}']) = {len(charges)}, natom = {natom}"
+            assert len(charges) == natom, (
+                f"len(atomcharges['{atomcharge_type}']) = {len(charges)}, natom = {natom}"
+            )
 
     @skipForParser("ADF", "???")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser(
         "DALTON",
         "DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now",
@@ -64,6 +67,7 @@ class GenericSPunTest:
     @skipForParser("Molpro", "???")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
     @skipForParser("Turbomole", "???")
+    @skipForParser("Serenity", "not included in testfile yet")
     def testatomcharges_mulliken(self, data) -> None:
         """Do Mulliken atomic charges sum to positive one?"""
         charges = data.atomcharges["mulliken"]
@@ -102,6 +106,7 @@ class GenericSPunTest:
 
     @skipForParser("Gaussian", "The parser is still being developed for version 2")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
+    @skipForParser("Serenity", "no NOs in Serenity")
     def testdimnoccnos(self, data) -> None:
         """Is the length of nooccnos equal to nmo?"""
         if hasattr(data._ccCollection._parsed_data[0], "nooccnos"):
@@ -114,6 +119,7 @@ class GenericSPunTest:
 
     @skipForParser("Gaussian", "The parser is still being developed for version 2")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
+    @skipForParser("Serenity", "no NOs in Serenity")
     def testdimnocoeffs(self, data) -> None:
         """Are the dimensions of nocoeffs equal to 2 x nmo x nmo?"""
         if hasattr(data._ccCollection._parsed_data[0], "nocoeffs"):
@@ -157,6 +163,7 @@ class GenericSPunTest:
     @skipForParser("Molpro", "?")
     @skipForParser("ORCA", "ORCA has no support for symmetry yet")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
+    @skipForParser("Serenity", "Serenity does not use symmetry.")
     def testmosyms(self, data) -> None:
         """Are the dims of the mosyms equals to 2 x nmo?"""
         shape = (
@@ -207,6 +214,7 @@ class GenericROSPTest(GenericSPunTest):
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
+    @skipForParser("Serenity", "Serenity does not use symmetry.")
     def testmosyms(self, data) -> None:
         """Are the dims of the mosyms equals to 1 x nmo?"""
         shape = (

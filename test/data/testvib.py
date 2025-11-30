@@ -5,6 +5,7 @@
 
 """Test logfiles with vibration output in cclib"""
 
+import numpy as np
 import pytest
 from skip import skipForLogfile, skipForParser
 
@@ -39,6 +40,10 @@ class GenericIRTest:
     molecularmass = 130078.25
     molecularmass_thresh = 0.25
 
+    # taken from Gaussian16/dvb_sp.out, in GHz
+    nrotconsts = 1
+    rotconsts = [4.6266363, 0.6849065, 0.5965900]
+
     @pytest.fixture
     def numvib(self, data) -> int:
         """Initialize the number of vibrational frequencies on a per molecule basis"""
@@ -50,6 +55,7 @@ class GenericIRTest:
 
     @skipForLogfile("FChk/basicGaussian09", "not printed in older versions than 16")
     @skipForLogfile("FChk/basicQChem5.4", "not printed")
+    @skipForParser("PySCF", "not implemented yet")
     @skipForParser("xTB", "Custom treatment")
     def testvibdisps(self, data, numvib) -> None:
         """Are the dimensions of vibdisps consistent with numvib x N x 3"""
@@ -89,6 +95,7 @@ class GenericIRTest:
         assert abs(max(data.vibirs) - self.max_IR_intensity) < 10
 
     @skipForParser("ADF", "ADF cannot print force constants")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "DALTON cannot print force constants")
     @skipForParser("GAMESS", "GAMESS-US cannot print force constants")
     @skipForParser("GAMESSUK", "GAMESS-UK cannot print force constants")
@@ -105,6 +112,7 @@ class GenericIRTest:
         assert abs(max(data.vibfconsts) - self.max_force_constant) < self.force_constant_thresh
 
     @skipForParser("ADF", "ADF cannot print reduced masses")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "DALTON cannot print reduced masses")
     @skipForParser("GAMESSUK", "GAMESSUK cannot print reduced masses")
     @skipForParser("Molpro", "Molpro cannot print reduced masses")
@@ -119,11 +127,13 @@ class GenericIRTest:
 
     @skipForParser("FChk", "not printed")
     @skipForParser("Psi3", "not implemented yet")
+    @skipForParser("PySCF", "not implemented yet")
     def testzeropointcorrection(self, data) -> None:
         """Is the zero-point correction correct?"""
         assert abs(data.zpve - self.zpve) < self.zpve_thresh
 
     @skipForParser("ADF", "not implemented yet")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("GAMESSUK", "not implemented yet")
     @skipForParser("Gaussian", "not implemented yet")
     @skipForParser("Jaguar", "not implemented yet")
@@ -135,6 +145,7 @@ class GenericIRTest:
         "QChem/basicQChem5.4/dvb_ir.out", "needs to be rerun with print level turned up"
     )
     @skipForParser("Turbomole", "not implemented yet")
+    @skipForParser("PySCF", "not implemented yet")
     @skipForParser("xTB", "not implemented yet")
     def testhessian(self, data) -> None:
         """Are the dimensions of the molecular Hessian correct?"""
@@ -143,59 +154,71 @@ class GenericIRTest:
     def testhessian_frequencies(self, data) -> None:
         """Do the frequencies from the Hessian match the printed frequencies?"""
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "not implemented yet")
     @skipForParser("FChk", "not printed")
     @skipForParser("Molpro", "not implemented yet")
+    @skipForParser("PySCF", "not implemented yet")
     @skipForParser("Turbomole", "not implemented yet")
     def testtemperature(self, data) -> None:
         """Is the temperature 298.15 K?"""
         assert round(abs(298.15 - data.temperature), 7) == 0
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "not implemented yet")
     @skipForParser("FChk", "not printed")
     @skipForParser("Molpro", "not implemented yet")
     @skipForParser("Psi4", "not implemented yet")
-    @skipForParser("xTB", "not printed")
+    @skipForParser("PySCF", "not implemented yet")
     @skipForParser("Turbomole", "not implemented yet")
+    @skipForParser("xTB", "not printed")
     def testpressure(self, data) -> None:
         """Is the pressure 1 atm?"""
         assert round(abs(1 - data.pressure), 7) == 0
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "not implemented yet")
     @skipForParser("FChk", "not printed")
     @skipForParser("Jaguar", "not implemented yet")
     @skipForParser("GAMESSUK", "not implemented yet")
     @skipForParser("Molpro", "not implemented yet")
+    @skipForParser("PySCF", "not implemented yet")
     @skipForParser("Turbomole", "not implemented yet")
     def testentropy(self, data) -> None:
         """Is the entropy reasonable"""
         assert round(abs(self.entropy - data.entropy), self.entropy_places) == 0
 
     @skipForParser("ADF", "not implemented yet")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "not implemented yet")
     @skipForParser("FChk", "not printed")
     @skipForParser("GAMESSUK", "not implemented yet")
     @skipForParser("Molpro", "not implemented yet")
+    @skipForParser("PySCF", "not implemented yet")
     @skipForParser("Turbomole", "not implemented yet")
     def testenthalpy(self, data) -> None:
         """Is the enthalpy reasonable"""
         assert round(abs(self.enthalpy - data.enthalpy), self.enthalpy_places) == 0
 
     @skipForParser("ADF", "not implemented yet")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "not implemented yet")
     @skipForParser("FChk", "not printed")
     @skipForParser("GAMESSUK", "not implemented yet")
     @skipForParser("Molpro", "not implemented yet")
+    @skipForParser("PySCF", "not implemented yet")
     @skipForParser("Turbomole", "not implemented yet")
     def testfreeenergy(self, data) -> None:
         """Is the freeenergy reasonable"""
         assert round(abs(self.freeenergy - data.freeenergy), self.freeenergy_places) == 0
 
     @skipForParser("ADF", "not implemented yet")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "not implemented yet")
     @skipForParser("FChk", "not printed")
     @skipForParser("GAMESSUK", "not implemented yet")
     @skipForParser("Molpro", "not implemented yet")
+    @skipForParser("PySCF", "not implemented yet")
     @skipForParser("Turbomole", "not implemented yet")
     def testfreeenergyconsistency(self, data) -> None:
         """Does G = H - TS hold"""
@@ -207,6 +230,7 @@ class GenericIRTest:
             == 0
         )
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("FChk", "not printed")
     @skipForParser("GAMESSUK", "not implemented yet")
     @skipForParser("Jaguar", "not implemented yet")
@@ -218,9 +242,30 @@ class GenericIRTest:
     def testatommasses(self, data) -> None:
         """Do the atom masses sum up to the molecular mass?"""
         mm = 1000 * sum(data.atommasses)
-        assert (
-            abs(mm - self.molecularmass) < self.molecularmass_thresh
-        ), f"Molecule mass: {mm:f} not {self.molecularmass:f} +- {self.molecularmass_thresh:f} mD"
+        assert abs(mm - self.molecularmass) < self.molecularmass_thresh, (
+            f"Molecule mass: {mm:f} not {self.molecularmass:f} +- {self.molecularmass_thresh:f} mD"
+        )
+
+    @skipForParser("ADF", "not implemented yet")
+    @skipForParser("CFOUR", "not implemented yet")
+    @skipForParser("FChk", "Rotational constants are never written to fchk files")
+    @skipForParser("GAMESSUK", "not implemented yet")
+    @skipForParser("Molpro", "not implemented yet")
+    @skipForParser("NWChem", "not implemented yet")
+    @skipForParser("Psi4", "not implemented yet")
+    @skipForParser("QChem", "Rotational constants are not printed")
+    @skipForParser("Turbomole", "Not implemented yet")
+    @skipForParser("xTB", "Rotational constants not printed for frequency calculations")
+    def testrotconsts(self, data) -> None:
+        """A single geometry leads to single set of rotational constants (in GHz)."""
+        assert data.rotconsts.shape == (self.nrotconsts, 3)
+        np.testing.assert_allclose(data.rotconsts[0], self.rotconsts, rtol=5.0e-5)
+
+        # Are the rotational constants ordered from largest to smallest?
+        for i in range(self.nrotconsts):
+            rotconsts = data.rotconsts[i]
+            idx = rotconsts.argsort()[::-1]
+            np.testing.assert_equal(rotconsts, rotconsts[idx])
 
 
 class ADFIRTest(GenericIRTest):
@@ -233,6 +278,25 @@ class ADFIRTest(GenericIRTest):
     entropy_places = 4
 
 
+class CFOURIRTest(GenericIRTest):
+    """Customized vibrational frequency unittest"""
+
+    highest_freq = 3816.21
+    max_IR_intensity = 136.3592
+    zpve = 0.1935035993144163
+
+
+class DALTONIRTest(GenericIRTest):
+    """Customized vibrational frequency unittest"""
+
+    # 2015/dvb_ir.out
+    #
+    # Once in the molecule/basis section at the beginning that all outputs
+    # have, then once again in ABACUS as part of the vibrational analysis.
+    nrotconsts = 2
+    rotconsts = [4.6178434, 0.6857618, 0.5970921]
+
+
 class FireflyIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
 
@@ -243,6 +307,9 @@ class FireflyIRTest(GenericIRTest):
     freeenergy = -379.61838132136285
 
     entropy_places = 5
+
+    # 8.0/dvb_ir.out
+    rotconsts = [4.79366, 0.69975, 0.61062]
 
 
 class GaussianIRTest(GenericIRTest):
@@ -278,6 +345,9 @@ class MolcasIRTest(GenericIRTest):
     enthalpy = -382.11385
     freeenergy = -382.153812
 
+    # OpenMolcas 18.0/dvb_ir.out
+    rotconsts = [4.6160, 0.7067, 0.6129]
+
 
 class NWChemIRTest(GenericIRTest):
     """Generic imaginary vibrational frequency unittest"""
@@ -295,6 +365,9 @@ class GamessIRTest(GenericIRTest):
     enthalpy = -381.86372805188300
     freeenergy = -381.90808120060200
 
+    # GAMESS-US 2018/dvb_ir.out
+    rotconsts = [4.61361, 0.68513, 0.59655]
+
 
 class OrcaIRTest(GenericIRTest):
     """Customized vibrational frequency unittest"""
@@ -309,6 +382,9 @@ class OrcaIRTest(GenericIRTest):
     freeenergy_places = 2
 
     molecularmass = 130190
+
+    # ORCA 6.0/dvb_ir.out
+    rotconsts = [4.614498, 0.685206, 0.596614]
 
 
 class Psi4HFIRTest(GenericIRTest):
@@ -328,6 +404,12 @@ class Psi4KSIRTest(GenericIRTest):
 
     enthalpy_places = 2
     freeenergy_places = 2
+
+
+class PySCFIRTest(GenericIRTest):
+    """Customized vibrational frequency unittest"""
+
+    rotconsts = [4.617848, 0.685763, 0.597093]
 
 
 class TurbomoleIRTest(GenericIRTest):
@@ -438,6 +520,13 @@ class OrcaRamanTest(GenericRamanTest):
     """Customized Raman unittest"""
 
     max_raman_intensity = 1045
+
+
+class Orca6RamanTest(GenericRamanTest):
+    """Customized Raman unittest"""
+
+    # This value has changed again in Orca 6 for some reason...
+    max_raman_intensity = 1037
 
 
 class QChemRamanTest(GenericRamanTest):

@@ -1,0 +1,210 @@
+
+#==============================================================================#
+#                                                                              #
+#   SSSSS                                                    #########         #
+#   SS    EEEE RRR  EEEE N   N II TTTTTT YY  YY          ####################  #
+#   SS    E    R  R E    NN  N II   TT    YYYY        ######################## #
+#   SSSSS EEEE RRR  EEEE N N N II   TT     YY      #########             ##### #
+#      SS E    R R  E    N  NN II   TT     YY   #######       OOOOOOOO         #
+#      SS EEEE R  R EEEE N   N II   TT     YY ########      OOOOOOOOOOOO       #
+#   SSSSS                                  ########        OOOOOOOOOOOOOO      #
+#                                     ###########   OOO    OOOOOOOOOOOOOO      #
+# #########                   ###############      OOOOO   OOOOOOOOOOOOOO      #
+# ######################################      OO   OOOOO    OOOOOOOOOOOO       #
+#       #########################         O   OO    OOO       OOOOOOOO         #
+#                                                                              #
+#                                                                              #
+#                                   Serenity                                   #
+#                                                                              #
+#                           A quantum chemistry code                           #
+#                developed in the group of Johannes Neugebauer                 #
+#                        at the University of Münster.                         #
+#                                                                              #
+#==============================================================================#
+
+  Program Info:
+ ---------------
+    Version           :   1.6.1
+    Git Branch        :   niklas_master_thesis
+    Serenity Home     :   /home/lukas/serenity
+
+  Citations:
+ ------------
+    First publication :
+  J. P. Unsleber, T. Dresselhaus, K. Klahr, D. Schnieders, M. Böckers, D. Barton
+  and J. Neugebauer, Serenity: A Subsystem Quantum Chemistry Program,
+  J. Comput. Chem., 39, 788-798, (2018).
+
+    Update paper      :
+  N. Niemeyer, P. Eschenbach, M. Bensberg, J. Toelle, L. Hellmann, L. Lampe,
+  A. Massolle, A. Rikus, D. Schnieders, J. P. Unsleber, and J. Neugebauer,
+  The subsystem quantum chemistry program Serenity,
+  Wiley Interdiscip. Rev. Comput. Mol. Sci., 13, e1647, (2023).
+
+    Libint (2.7.0-b6) :
+  Libint: A library for the evaluation of molecular integrals of many-body operators
+  over Gaussian functions, v2.7.0-beta6  Edward F. Valeev, http://libint.valeyev.net/ .
+
+    Libxc (6.1.0)     :
+  S. Lehtola, C. Steigemann, M. J.T. Oliveira, and M. A.L. Marques.,  SoftwareX 7, 1–5 (2018)
+  10.1016/j.softx.2017.11.002
+
+    XCFun (v2.0.2)    :
+  Ekström, U. (2020). XCFun: A library of exchange-correlation functionals with
+  arbitrary-order derivatives. Zenodo. https://doi.org/10.5281/zenodo.3946698
+
+    Libecpint (1.0.7) :
+  R. A. Shaw, J. G. Hill, J. Chem. Phys. 147, 074108 (2017); doi: 10.1063/1.4986887
+
+  Program started:
+ ------------------
+    Time              :   2025-10-21 21:53:03
+    By                :   lukas
+    On                :   HOSTNAME UNKNOWN
+
+    Threads           :   12
+    Memory Limit      :   4643 MB
+
+          ------------------------------------------------------------          
+                                   System h2o                                   
+          ------------------------------------------------------------          
+
+     Charge:                              0
+     Spin:                                0
+     Method:                             HF
+     Basis Set:                       3-21G
+  Current Geometry (Angstrom):
+ ------------------------------
+        1  O   +1.7849140000   +1.2624220000   +0.5119850000
+        2  H   +2.6482370000   +1.0729290000   +0.1316310000
+        3  H   +1.1831680000   +1.2568160000   -0.2388350000
+
+
+
+o------------------------------------------------------------------------------o
+|                                Running Tasks                                 |
+o------------------------------------------------------------------------------o
+
+ o-------------o
+ | Task No. 1: |
+ o-------------o
+
+
+          ------------------------------------------------------------          
+                                Main SCF Options                                
+          ------------------------------------------------------------          
+
+     SCF Mode:                   RESTRICTED
+     Method:                             HF
+     Basis Set:                       3-21G
+     Basis Functions:                    13
+     Caching Threshold:                  -1
+     Integral Threshold:            2.6e-10
+
+     Energy Threshold:              5.0e-08
+     RMSD[D] Threshold:             1.0e-08
+     DIIS Threshold:                5.0e-07
+     Initial Guess:                 ATOMSCF
+
+     Density Fitting:
+       Coulomb                         NONE
+       Exchange                        NONE
+
+          ------------------------------------------------------------          
+                                      SCF                                       
+          ------------------------------------------------------------          
+
+    Cycle      E/a.u.         abs(dE)/a.u.     rmsd(P)/a.u.       [F,P]/a.u.      time/min   Mode
+       1   -75.5819083456              inf              inf         7.12e-02      0:00 
+       2   -75.5828887096         9.80e-04         5.50e-03         8.17e-02      0:00:005    D-L
+       3   -75.5843777039         1.49e-03         1.96e-03         5.60e-02      0:00:010    D-L
+       4   -75.5851784958         8.01e-04         1.56e-03         3.22e-02      0:00:010    -DL
+       5   -75.5855767528         3.98e-04         2.18e-03         3.95e-03      0:00:015    -DL
+       6   -75.5855842098         7.46e-06         4.32e-04         1.62e-04      0:00:005    -DL
+       7   -75.5855842415         3.17e-08         3.57e-05         1.23e-05      0:00:009    -D-
+       8   -75.5855842417         2.73e-10         2.76e-06         3.10e-06      0:00:013    -D-
+       9   -75.5855842418         2.48e-11         1.06e-06         7.54e-07      0:00:000    -D-
+      10   -75.5855842419         1.35e-10         2.54e-07         1.77e-08      0:00:000    -D-
+    Converged after  10 cycles. Loop exited.
+
+
+          ------------------------------------------------------------          
+                               Final SCF Results                                
+          ------------------------------------------------------------          
+
+Energy components as stored:
+Nuclear Repulsion:                                                                     9.1468130260 
+One-Particle Energy (including ECPs):                                               -122.5542759448 
+Two-Particle Energy (HF):                                                             37.8218786769 
+PCM Solvation Energy:                                                                  0.0000000000 
+----------------------------------------------------------------------------------------------------
+Derived energy components:
+Total Energy (HF):                                                                   -75.5855842419 
+----------------------------------------------------------------------------------------------------
+    
+  Orbital Energies:
+ -------------------
+        #    Occ.      Hartree                eV   
+       ---  ------    ---------            --------
+         1   2.00  -20.4291487206     -555.9054565116
+         2   2.00   -1.3268953158      -36.1066609459
+         3   2.00   -0.6830492415      -18.5867167342
+         4   2.00   -0.5368098474      -14.6073400993
+         5   2.00   -0.4793561916      -13.0439464778
+         6   0.00   +0.2622117581       +7.1351454285
+         7   0.00   +0.3604291650       +9.8077772223
+         8   0.00   +1.1913316917      +32.4177868093
+         9   0.00   +1.3016306083      +35.4191732323
+        10   0.00   +1.7822836240      +48.4984080925
+        11   0.00   +1.8680919425      +50.8333713894
+        12   0.00   +2.0163262353      +54.8670319869
+        13   0.00   +3.1106963394      +84.6463595864
+    
+  Additional Analysis:
+ ----------------------
+
+   -<V>/<T> = 2.002 
+      <S*S> = 0.000 
+    S*(S+1) = 0.000 
+          C = 0.000 
+
+    Time taken for task 1: 4.163204769 s.
+    
+ o-------------o
+ | Task No. 2: |
+ o-------------o
+
+
+o------------------------------------------------------------------------------o
+|                                 MP2 Results                                  |
+o------------------------------------------------------------------------------o
+
+  Old Energy                        -75.585584241907                   Hartree
+  Canonical MP2 energy correction   -0.122751687914                    Hartree
+--------------------------------------------------------------------------------
+  Total Energy                      -75.708335929821                   Hartree
+    Time taken for task 2: 1.035769626 s.
+    
+
+o------------------------------------------------------------------------------o
+|                                   Cleanup                                    |
+o------------------------------------------------------------------------------o
+
+    All clean and shiny
+
+  Final Timings:
+ ----------------
+              Active System -         HF Pot.      0:03.720 min
+              Active System -     1e-Int Pot.      0:00.009 min
+              Active System -   Coul./XC Pot.      0:03.720 min
+               Tech. -           DIIS/Damping      0:00.022 min
+               Tech. -    Fock Matrix Solving      0:00.002 min
+               Tech. - Libint Initializations      0:03.455 min
+
+  Program ended:
+ ----------------
+    Time:  2025-10-21 21:53:09
+    On:    HOSTNAME UNKNOWN
+    Time taken for the entire run: 5.202775674000001 s.
+    
+

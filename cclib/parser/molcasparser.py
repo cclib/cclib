@@ -462,6 +462,9 @@ class Molcas(logfileparser.Logfile):
         #
         #  ++    Isotopic shifts:
         if line[4:19] == "THERMOCHEMISTRY":
+            while "Rotational Constants (GHz)" not in line:
+                line = next(inputfile)
+            self.append_attribute("rotconsts", [float(x) for x in reversed(line.split()[-3:])])
             while "ZPVE" not in line:
                 line = next(inputfile)
             self.set_attribute("zpve", float(line.split()[3]))

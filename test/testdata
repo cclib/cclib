@@ -11,6 +11,7 @@
 # a special keyword, and we can test both HF and DFT outputs. Gaussian is an
 # exception, as it has at least two different formats for printing basis set
 # information, and so we made dedicated unit test logfiles in that case.
+# Basis     CFOUR       GenericBasisTest      basicCFOUR2.1         dvb_sp.c4
 # Basis     DALTON      GenericBasisTest      basicDALTON-2013      dvb_sp_hf.out
 # Basis     DALTON      GenericBasisTest      basicDALTON-2015      dvb_sp_hf.out
 # Basis     DALTON      GenericBasisTest      basicDALTON-2013      dvb_sp_ks.out
@@ -34,18 +35,19 @@ Basis     Gaussian    GenericBasisTest      basicGaussian16       dvb_sp.out
 # Basis     NWChem      GenericBasisTest      basicNWChem6.5        dvb_sp_ks.out
 # Basis     NWChem      GenericBasisTest      basicNWChem7.0        dvb_sp_hf.out
 # Basis     NWChem      GenericBasisTest      basicNWChem7.0        dvb_sp_ks.out
-# Basis     ORCA        GenericBasisTest      basicORCA4.1          dvb_sp.out
-# Basis     ORCA        GenericBasisTest      basicORCA4.2          dvb_sp.out
 # Basis     ORCA        GenericBasisTest      basicORCA5.0          dvb_sp.out
+# Basis     ORCA        GenericBasisTest      basicORCA6.0          dvb_sp_dft.out
 Basis     Psi4        GenericBasisTest      basicPsi4-1.2.1       dvb_sp_rhf.out
 Basis     Psi4        GenericBasisTest      basicPsi4-1.2.1       dvb_sp_rks.out
 Basis     Psi4        GenericBasisTest      basicPsi4-1.3.1       dvb_sp_rhf.out
 Basis     Psi4        GenericBasisTest      basicPsi4-1.3.1       dvb_sp_rks.out
 Basis     Psi4        GenericBasisTest      basicPsi4-1.7         dvb_sp_rhf.out
 Basis     Psi4        GenericBasisTest      basicPsi4-1.7         dvb_sp_rks.out
+# Basis     PySCF       GenericBasisTest      basicPySCF2.6         dvb_sp.py
 # Basis     QChem       GenericBasisTest      basicQChem5.1         dvb_sp.out
 # Basis     QChem       GenericBasisTest      basicQChem5.4         dvb_sp.out
 
+# Basis     CFOUR       GenericBigBasisTest   basicCFOUR2.1         C_bigbasis.c4
 # Basis     DALTON      DALTONBigBasisTest    basicDALTON-2013      C_bigbasis.out
 # Basis     DALTON      DALTONBigBasisTest    basicDALTON-2015      C_bigbasis.out
 # Basis     GAMESS      GenericBigBasisTest   basicFirefly8.0       C_bigbasis.out
@@ -72,6 +74,10 @@ BOMD      NWChem      GenericBOMDTest       basicNWChem7.0        dvb_bomd_ks.ou
 BOMD      QChem       GenericBOMDTest       basicQChem5.1         dvb_bomd.out
 BOMD      QChem       GenericBOMDTest       basicQChem5.4         dvb_bomd.out
 
+# CC        CFOUR       CFOURCC2Test          basicCFOUR2.1         water_cc2.c4
+# CC        CFOUR       CFOURCCDTest          basicCFOUR2.1         water_ccd.c4
+# CC        CFOUR       CFOURCCSDTest         basicCFOUR2.1         water_ccsd.c4
+# CC        CFOUR       CFOURCCSDPTTest       basicCFOUR2.1         water_ccsdpt.c4
 # CC        DALTON      DALTONCCSDPTTest      basicDALTON-2013      water_ccsdt.out
 # CC        DALTON      DALTONCCSDPTTest      basicDALTON-2015      water_ccsdt.out
 # CC        GAMESS      GamessCCDTest         basicGAMESS-US2017    water_ccd.out
@@ -96,24 +102,25 @@ CC        Gaussian    GenericCCSDPTTest     basicGaussian16       water_ccsdt.lo
 # CC        NWChem      NWChemCCSDPTTest      basicNWChem6.0        water_ccsd(t).out
 # CC        NWChem      NWChemCCSDPTTest      basicNWChem6.5        water_ccsd(t).out
 # CC        NWChem      NWChemCCSDPTTest      basicNWChem7.0        water_ccsd(t).out
-# CC        ORCA        OrcaCCSDTest          basicORCA4.1          water_ccsd.out
-# CC        ORCA        OrcaCCSDPTTest        basicORCA4.1          water_ccsd_t.out
-# CC        ORCA        OrcaCCSDTest          basicORCA4.2          water_ccsd.out
-# CC        ORCA        OrcaCCSDPTTest        basicORCA4.2          water_ccsd_t.out
 # CC        ORCA        OrcaCCSDTest          basicORCA5.0          water_ccsd.out
 # CC        ORCA        OrcaCCSDPTTest        basicORCA5.0          water_ccsd_t.out
+# CC        ORCA        OrcaCCSDTest          basicORCA6.0          water_ccsd.out
+# CC        ORCA        OrcaCCSDPTTest        basicORCA6.0          water_ccsd_t.out
 CC        Psi4        Psi4CCSDTest          basicPsi4-1.2.1       water_ccsd.out
 CC        Psi4        Psi4CCSDPTTest        basicPsi4-1.2.1       water_ccsd(t).out
 CC        Psi4        Psi4CCSDTest          basicPsi4-1.3.1       water_ccsd.out
 CC        Psi4        Psi4CCSDPTTest        basicPsi4-1.3.1       water_ccsd(t).out
 CC        Psi4        Psi4CCSDTest          basicPsi4-1.7         water_ccsd.out
 CC        Psi4        Psi4CCSDPTTest        basicPsi4-1.7         water_ccsd(t).out
+# CC        PySCF       PySCFCCSDTest         basicPySCF2.6         water_ccsd.py
+# CC        PySCF       PySCFCCSDPTTest       basicPySCF2.6         water_ccsd(t).py
 # CC        QChem       GenericCCDTest        basicQChem5.1         water_ccd.out
 # CC        QChem       GenericCCSDTest       basicQChem5.1         water_ccsd.out
 # CC        QChem       GenericCCSDPTTest     basicQChem5.1         water_ccsd(t).out
 # CC        QChem       GenericCCDTest        basicQChem5.4         water_ccd.out
 # CC        QChem       GenericCCSDTest       basicQChem5.4         water_ccsd.out
 # CC        QChem       GenericCCSDPTTest     basicQChem5.4         water_ccsd(t).out
+# CC        Serenity    SerenityCCSDTest       serenity1.6.1         water_ccsd/water_ccsd.out
 # CC        Turbomole   TurbomoleCCSDTest     basicTurbomole7.2     water_ccsd/basis      water_ccsd/control      water_ccsd/mos      water_ccsd/dscf.out      water_ccsd/ccsdf12.out
 # CC        Turbomole   TurbomoleCCSDTest     basicTurbomole7.4     water_ccsd/basis      water_ccsd/control      water_ccsd/mos      water_ccsd/dscf.out      water_ccsd/ccsdf12.out
 # CC        Turbomole   GenericCC2Test        basicTurbomole7.4     water_cc2/basis      water_cc2/control      water_cc2/mos      water_cc2/dscf.out      water_cc2/ricc2.out
@@ -129,6 +136,7 @@ CC        Psi4        Psi4CCSDPTTest        basicPsi4-1.7         water_ccsd(t).
 
 # Core      ADF         ADFCoreTest           basicADF2007.01       MoOCl4-sp.adfout
 # Core      ADF         ADFCoreTest           basicADF2013.01       MoOCl4-sp.adfout
+# Core      CFOUR       GenericCoreTest       basicCFOUR2.1         MoOCl4_sp.c4
 # Core      FChk        GenericCoreTest       basicGaussian09       Mo4OCl4-sp.fchk
 # Core      FChk        GenericCoreTest       basicGaussian16       Mo4OCl4-sp.fchk
 # Core      FChk        GenericCoreTest       basicQChem5.2         MoOCl4_sp_modified.fchk
@@ -141,15 +149,20 @@ CC        Psi4        Psi4CCSDPTTest        basicPsi4-1.7         water_ccsd(t).
 # Core      Gaussian    GenericCoreTest       basicGaussian16       Mo4OCl4-sp.log
 # Core      Jaguar      JaguarCoreTest        basicJaguar8.3        MoOCl4-sp.out
 # Core      Molcas      GenericCoreTest       basicOpenMolcas18.0   MoOCl4_sp.out
+# Core      PySCF       GenericCoreTest       basicPySCF2.6         MoOCl4_sp.py
 # Core      QChem       GenericCoreTest       basicQChem5.1         MoOCl4_sp.out
 # Core      QChem       GenericCoreTest       basicQChem5.4         MoOCl4_sp.out
 
 # GeoOpt    ADF         ADFGeoOptTest         basicADF2007.01       dvb_gopt_b.adfout
 # GeoOpt    ADF         ADFGeoOptTest         basicADF2013.01       dvb_gopt_b.adfout
+# GeoOpt    CFOUR       GenericGeoOptTest     basicCFOUR2.1         dvb_gopt.c4
 # GeoOpt    DALTON      DALTONGeoOptTest      basicDALTON-2013      dvb_gopt_hf.out
 # GeoOpt    DALTON      DALTONGeoOptTest      basicDALTON-2013      dvb_gopt_ks.out
 # GeoOpt    DALTON      DALTONGeoOptTest      basicDALTON-2015      dvb_gopt_hf.out
 # GeoOpt    DALTON      DALTONGeoOptTest      basicDALTON-2015      dvb_gopt_ks.out
+# GeoOpt    FChk        GaussianFChkGeoOptTest basicGaussian09      dvb_gopt.fchk
+# GeoOpt    FChk        GaussianFChkGeoOptTest basicGaussian16      dvb_gopt.fchk
+# GeoOpt    FChk        FChkGeoOptTest        basicQChem5.4         dvb_gopt.fchk
 # GeoOpt    GAMESSUK    GenericGeoOptTest     basicGAMESS-UK7.0     dvb_gopt_d.out
 # GeoOpt    GAMESSUK    GenericGeoOptTest     basicGAMESS-UK8.0     dvb_gopt_hf.out
 # GeoOpt    GAMESSUK    GenericGeoOptTest     basicGAMESS-UK8.0     dvb_gopt_ks.out
@@ -158,9 +171,9 @@ CC        Psi4        Psi4CCSDPTTest        basicPsi4-1.7         water_ccsd(t).
 # GeoOpt    GAMESS      GenericGeoOptTest     basicGAMESS-US2018    dvb_gopt_a.out
 # GeoOpt    Gaussian    GaussianGeoOptTest    basicGaussian09       dvb_gopt.out
 # GeoOpt    Gaussian    GaussianGeoOptTest    basicGaussian16       dvb_gopt.out
-# GeoOpt    Jaguar      GenericGeoOptTest     basicJaguar7.0        dvb_gopt_b.out
-# GeoOpt    Jaguar      GenericGeoOptTest     basicJaguar8.3        dvb_gopt_hf.out
-# GeoOpt    Jaguar      GenericGeoOptTest     basicJaguar8.3        dvb_gopt_ks.out
+# GeoOpt    Jaguar      JaguarGeoOptTest      basicJaguar7.0        dvb_gopt_b.out
+# GeoOpt    Jaguar      JaguarGeoOptTest      basicJaguar8.3        dvb_gopt_hf.out
+# GeoOpt    Jaguar      JaguarGeoOptTest      basicJaguar8.3        dvb_gopt_ks.out
 # GeoOpt    Molcas      MolcasGeoOptTest      basicOpenMolcas18.0   dvb_gopt.out
 # GeoOpt    Molpro      MolproGeoOptTest      basicMolpro2006       dvb_gopt.out          dvb_gopt.log
 # GeoOpt    Molpro      MolproGeoOptTest      basicMolpro2012       dvb_gopt.out          dvb_gopt.log
@@ -171,21 +184,26 @@ CC        Psi4        Psi4CCSDPTTest        basicPsi4-1.7         water_ccsd(t).
 # GeoOpt    NWChem      NWChemGeoOptTest      basicNWChem6.5        dvb_gopt_ks.out
 # GeoOpt    NWChem      NWChemGeoOptTest      basicNWChem7.0        dvb_gopt_hf.out
 # GeoOpt    NWChem      NWChemGeoOptTest      basicNWChem7.0        dvb_gopt_ks.out
-# GeoOpt    ORCA        OrcaGeoOptTest        basicORCA4.1          dvb_gopt.out
-# GeoOpt    ORCA        OrcaGeoOptTest        basicORCA4.2          dvb_gopt.out
 # GeoOpt    ORCA        OrcaGeoOptTest        basicORCA5.0          dvb_gopt.out
+# GeoOpt    ORCA        OrcaGeoOptTest        basicORCA6.0          dvb_gopt.out
 # GeoOpt    Psi4        Psi4GeoOptTest        basicPsi4-1.2.1       dvb_gopt_rhf.out
 # GeoOpt    Psi4        Psi4GeoOptTest        basicPsi4-1.2.1       dvb_gopt_rks.out
 # GeoOpt    Psi4        Psi4GeoOptTest        basicPsi4-1.3.1       dvb_gopt_rhf.out
 # GeoOpt    Psi4        Psi4GeoOptTest        basicPsi4-1.3.1       dvb_gopt_rks.out
 # GeoOpt    Psi4        Psi4GeoOptTest        basicPsi4-1.7         dvb_gopt_rhf.out
 # GeoOpt    Psi4        Psi4GeoOptTest        basicPsi4-1.7         dvb_gopt_rks.out
+# GeoOpt    PySCF       GenericGeoOptTest     basicPySCF2.6         dvb_gopt_bern.py
+# GeoOpt    PySCF       GenericGeoOptTest     basicPySCF2.6         dvb_gopt_tric.py
+# GeoOpt    Serenity    GenericGeoOptTest     serenity1.6.1/gopt    dvb_gopt.out
 # GeoOpt    QChem       GenericGeoOptTest     basicQChem5.1         dvb_gopt.out
 # GeoOpt    QChem       GenericGeoOptTest     basicQChem5.4         dvb_gopt.out
 # GeoOpt    Turbomole   TurbomoleGeoOptTest   basicTurbomole5.9     dvb_gopt/basis      dvb_gopt/control      dvb_gopt/mos      dvb_gopt/job.last
 # GeoOpt    Turbomole   TurbomoleKeepGeoOptTest   basicTurbomole7.5     dvb_gopt/basis      dvb_gopt/control      dvb_gopt/mos      dvb_gopt/job.0      dvb_gopt/job.1      dvb_gopt/job.2      dvb_gopt/job.3      dvb_gopt/job.4      dvb_gopt/job.5     dvb_gopt/job.last
 # GeoOpt    XTB         XTBGeoOptTest     basicXTB6.6.1/dvb_opt       dvb_opt.out gradient
 
+# MP        CFOUR       GenericMP2Test        basicCFOUR2.1         water_mp2.c4
+# MP        CFOUR       GenericMP3Test        basicCFOUR2.1         water_mp3.c4
+# MP        CFOUR       GenericMP4Test        basicCFOUR2.1         water_mp4.c4
 # MP        DALTON      GenericMP2Test        basicDALTON-2013      water_mp2.out
 # MP        DALTON      GenericMP2Test        basicDALTON-2015      water_mp2.out
 # MP        GAMESSUK    GenericMP2Test        basicGAMESS-UK7.0     water_mp2.out
@@ -217,15 +235,14 @@ MP        Gaussian    GenericMP5Test        basicGaussian16       water_mp5.log
 # MP        NWChem      GenericMP2Test        basicNWChem6.0        water_mp2.out
 # MP        NWChem      GenericMP2Test        basicNWChem6.5        water_mp2.out
 # MP        NWChem      GenericMP2Test        basicNWChem7.0        water_mp2.out
-# MP        ORCA        GenericMP2Test        basicORCA4.1          water_mp2.out
-# MP        ORCA        GenericMP2Test        basicORCA4.2          water_mp2.out
 # MP        ORCA        GenericMP2Test        basicORCA5.0          water_mp2.out
-# MP        ORCA        GenericMP3Test        basicORCA4.1          water_mp3.out
-# MP        ORCA        GenericMP3Test        basicORCA4.2          water_mp3.out
+# MP        ORCA        GenericMP2Test        basicORCA6.0          water_mp2.out
 # MP        ORCA        GenericMP3Test        basicORCA5.0          water_mp3.out
+# MP        ORCA        GenericMP3Test        basicORCA6.0          water_mp3.out
 MP        Psi4        GenericMP2Test        basicPsi4-1.2.1       water_mp2.out
 MP        Psi4        GenericMP2Test        basicPsi4-1.3.1       water_mp2.out
 MP        Psi4        GenericMP2Test        basicPsi4-1.7         water_mp2.out
+# MP        PySCF       GenericMP2Test        basicPySCF2.6         water_mp2.py
 # MP        QChem       GenericMP2Test        basicQChem5.1         water_mp2.out
 # MP        QChem       GenericMP3Test        basicQChem5.1         water_mp3.out
 # MP        QChem       QChemMP4SDQTest       basicQChem5.1         water_mp4sdq.out
@@ -234,16 +251,17 @@ MP        Psi4        GenericMP2Test        basicPsi4-1.7         water_mp2.out
 # MP        QChem       GenericMP3Test        basicQChem5.4         water_mp3.out
 # MP        QChem       QChemMP4SDQTest       basicQChem5.4         water_mp4sdq.out
 # MP        QChem       QChemMP4SDTQTest      basicQChem5.4         water_mp4.out
+# MP        Serenity    GenericMP2Test        serenity1.6.1         water_mp2/water_mp2.out
 # MP        Turbomole   GenericMP2Test        basicTurbomole7.2     water_mp2/basis    water_mp2/control    water_mp2/coord    water_mp2/mos    water_mp2/dscf.out    water_mp2/ccsdf12.out
 # MP        Turbomole   GenericMP2Test        basicTurbomole7.4     water_mp2/basis    water_mp2/control    water_mp2/coord    water_mp2/mos    water_mp2/dscf.out    water_mp2/ccsdf12.out
 # MP        Turbomole   GenericMP2Test        basicTurbomole7.4     water_mp2_rimp2/basis    water_mp2_rimp2/control    water_mp2_rimp2/coord    water_mp2_rimp2/mos    water_mp2_rimp2/dscf.out    water_mp2_rimp2/rimp2.out
 # MP        Turbomole   GenericMP2Test        basicTurbomole7.4     water_mp2_ricc2/basis    water_mp2_ricc2/control    water_mp2_ricc2/coord    water_mp2_ricc2/mos    water_mp2_ricc2/dscf.out    water_mp2_ricc2/ricc2.out
 # MP        Turbomole   GenericMP3Test        basicTurbomole7.4     water_mp3/basis    water_mp3/control    water_mp3/coord    water_mp3/mos    water_mp3/dscf.out    water_mp3/ccsdf12.out
 
-# NMR       ORCA        GenericNMRTest        basicORCA4.1          dvb_nmr.out
-# NMR       ORCA        GenericNMRTest        basicORCA4.2          dvb_nmr.out
 # NMR       ORCA        GenericNMRTest        basicORCA5.0          dvb_nmr.out
+# NMR       ORCA        GenericNMRTest        basicORCA6.0          dvb_nmr.out
 # NMR       ORCA        GenericNMRCouplingTest        basicORCA5.0          dvb_coupling_nmr.out
+# NMR       ORCA        GenericNMRCouplingTest        basicORCA6.0          dvb_coupling_nmr.out
 
 # Polar     DALTON      ReferencePolarTest    basicDALTON-2015      Trp_polar_abalnr.out
 # Polar     FChk        ReferencePolarTest    basicGaussian16       Trp_polar.fchk
@@ -255,27 +273,27 @@ MP        Psi4        GenericMP2Test        basicPsi4-1.7         water_mp2.out
 # Polar     Molpro      ReferencePolarTest    basicMolpro2012       Trp_polar.out
 # Polar     NWChem      ReferencePolarTest    basicNWChem6.5        Trp_polar.out
 # Polar     NWChem      ReferencePolarTest    basicNWChem7.0        Trp_polar.out
-# Polar     ORCA        ReferencePolarTest    basicORCA4.1          Trp_polar.out
-# Polar     ORCA        ReferencePolarTest    basicORCA4.2          Trp_polar.out
 # Polar     ORCA        ReferencePolarTest    basicORCA5.0          Trp_polar.out
+# Polar     ORCA        ReferencePolarTest    basicORCA6.0          Trp_polar.out
 # Polar     QChem       ReferencePolarTest    basicQChem5.1         Trp_polar.out
 # Polar     QChem       ReferencePolarTest    basicQChem5.4         Trp_polar.out
 
-# Scan      Gaussian     GaussianRelaxedScanTest               basicGaussian09       dvb_scan.log
+# Scan      Gaussian     GaussianRelaxedScanTest               basicGaussian09       dvb_scan_relaxed.log
 # Scan      Gaussian     GaussianRelaxedScanTest               basicGaussian16       dvb_scan_relaxed.log
 # Scan      Gaussian     GaussianUnrelaxedScanTest             basicGaussian16       dvb_scan_unrelaxed.log
-# Scan      Jaguar       JaguarRelaxedScanTest                 basicJaguar8.3        dvb_scan.out
-# Scan      ORCA         GenericRelaxedScanTest                basicORCA4.2          dvb_scan.out
-# Scan      ORCA         GenericUnrelaxedScanTest              basicORCA4.2          dvb_scan_unrelaxed.out
-# Scan      ORCA         GenericRelaxedScanTest                basicORCA5.0          dvb_scan.out
+# Scan      Jaguar       JaguarRelaxedScanTest                 basicJaguar8.3        dvb_scan_relaxed.out
+# Scan      ORCA         GenericRelaxedScanTest                basicORCA5.0          dvb_scan_relaxed.out
 # Scan      ORCA         GenericUnrelaxedScanTest              basicORCA5.0          dvb_scan_unrelaxed.out
+# Scan      ORCA         GenericRelaxedScanTest                basicORCA6.0          dvb_scan_relaxed.out
+# Scan      ORCA         GenericUnrelaxedScanTest              basicORCA6.0          dvb_scan_unrelaxed.out
 
 # SP        ADF         ADFSPTest             basicADF2007.01             dvb_sp_b.adfout
 # SP        ADF         ADFSPTest             basicADF2013.01             dvb_sp_b.adfout
-# SP        DALTON      GenericHFSPTest       basicDALTON-2013            dvb_sp_hf.out
-# SP        DALTON      GenericSPTest         basicDALTON-2013            dvb_sp_ks.out
-# SP        DALTON      GenericHFSPTest       basicDALTON-2015            dvb_sp_hf.out
-# SP        DALTON      GenericSPTest         basicDALTON-2015            dvb_sp_ks.out
+# SP        CFOUR       GenericHFSPTest       basicCFOUR2.1               dvb_sp.c4
+# SP        DALTON      DALTONHFSPTest        basicDALTON-2013            dvb_sp_hf.out
+# SP        DALTON      DALTONSPTest          basicDALTON-2013            dvb_sp_ks.out
+# SP        DALTON      DALTONHFSPTest        basicDALTON-2015            dvb_sp_hf.out
+# SP        DALTON      DALTONSPTest          basicDALTON-2015            dvb_sp_ks.out
 # SP        FChk        GenericSPTest         basicGaussian09             dvb_sp.fchk
 # SP        FChk        GenericSPTest         basicGaussian16             dvb_sp.fchk
 # SP        FChk        GenericSPTest         basicQChem5.2               dvb_sp_modified.fchk
@@ -303,9 +321,9 @@ SP        Gaussian    GaussianSPTest        basicGaussian16             dvb_sp_n
 # SP        NWChem      NWChemKSSPTest        basicNWChem6.5              dvb_sp_ks.out
 # SP        NWChem      GenericHFSPTest       basicNWChem7.0              dvb_sp_hf.out
 # SP        NWChem      NWChemKSSPTest        basicNWChem7.0              dvb_sp_ks.out
-# SP        ORCA        OrcaSPTest            basicORCA4.1                dvb_sp.out
-# SP        ORCA        OrcaSPTest            basicORCA4.2                dvb_sp.out
 # SP        ORCA        OrcaSPTest            basicORCA5.0                dvb_sp.out
+# SP        ORCA        OrcaSPTest            basicORCA6.0                dvb_sp_dft.out
+# SP        ORCA        OrcaHFSPTest          basicORCA6.0                dvb_sp_hf.out
 # SP        Psi3        Psi3SPTest            basicPsi3                   dvb_sp_hf.out
 SP        Psi4        PsiHFSPTest           basicPsi4-1.2.1             dvb_sp_rhf.out
 SP        Psi4        PsiSPTest             basicPsi4-1.2.1             dvb_sp_rks.out
@@ -313,8 +331,10 @@ SP        Psi4        PsiHFSPTest           basicPsi4-1.3.1             dvb_sp_r
 SP        Psi4        PsiSPTest             basicPsi4-1.3.1             dvb_sp_rks.out
 SP        Psi4        PsiHFSPTest           basicPsi4-1.7               dvb_sp_rhf.out
 SP        Psi4        PsiSPTest             basicPsi4-1.7               dvb_sp_rks.out
+# SP        PySCF       PySCFSPTest           basicPySCF2.6               dvb_sp.py
 # SP        QChem       GenericSPTest         basicQChem5.1               dvb_sp.out
 # SP        QChem       GenericSPTest         basicQChem5.4               dvb_sp.out
+# SP        Serenity    SerenitySPTest        serenity1.6.1/dvb_sp        dvb_sp.out
 # SP        Turbomole   TurbomoleSPTest       basicTurbomole5.9           dvb_sp_symm/mos       dvb_sp_symm/basis      dvb_sp_symm/control      dvb_sp_symm/dscf.out      dvb_sp_symm/coord
 # SP        Turbomole   TurbomoleHFSPTest     basicTurbomole7.5           dvb_sp/basis      dvb_sp/control      dvb_sp/mos      dvb_sp/dscf.out      dvb_sp/coord
 # SP        XTB         XTBSPTest             basicXTB6.6.1/dvb_sp        dvb_sp.out
@@ -325,9 +345,8 @@ SP        Gaussian    GenericDispersionTest basicGaussian09             dvb_disp
 SP        Gaussian    GenericDispersionTest basicGaussian16             dvb_dispersion_bp86_d3zero.out
 # SP        NWChem      GenericDispersionTest basicNWChem6.8              dvb_dispersion_bp86_d3zero.out
 # SP        NWChem      GenericDispersionTest basicNWChem7.0              dvb_dispersion_bp86_d3zero.out
-# SP        ORCA        GenericDispersionTest basicORCA4.1                dvb_dispersion_bp86_d3zero.out
-# SP        ORCA        GenericDispersionTest basicORCA4.2                dvb_dispersion_bp86_d3zero.out
 # SP        ORCA        GenericDispersionTest basicORCA5.0                dvb_dispersion_bp86_d3zero.out
+# SP        ORCA        GenericDispersionTest basicORCA6.0                dvb_dispersion_bp86_d3zero.out
 # SP        Psi4        GenericDispersionTest basicPsi4-1.2.1             dvb_dispersion_bp86_d3zero.out
 # SP        Psi4        GenericDispersionTest basicPsi4-1.3.1             dvb_dispersion_bp86_d3zero.out
 # SP        Psi4        GenericDispersionTest basicPsi4-1.7               dvb_dispersion_bp86_d3zero.out
@@ -335,6 +354,8 @@ SP        Gaussian    GenericDispersionTest basicGaussian16             dvb_disp
 # SP        QChem       GenericDispersionTest basicQChem5.4               dvb_dispersion_bp86_d3zero.out
 # SP        Gaussian    GaussianPerformanceMetadataTest basicGaussian16               dvb_sp.out
 # SP        ORCA        ORCAPerformanceMetadataTest basicORCA5.0          dvb_perf.log
+# SP        ORCA        ORCA6PerformanceMetadataTest basicORCA6.0         dvb_perf.log
+# SP        PySCF       PySCFPerformanceMetadataTest basicPySCF2.6        dvb_sp.py
 # SP        Turbomole   TurbomolePerformanceMetadataTest basicTurbomole7.5           dvb_sp/basis      dvb_sp/control      dvb_sp/mos      dvb_sp/dscf.out      dvb_sp/coord
 # SP        Gaussian    IEFPCMMetadataTest    basicGaussian16             water_hf_solvent_pcm.log
 # SP        Gaussian    CPCMMetadataTest      basicGaussian16             water_hf_solvent_cpcm.log
@@ -345,6 +366,10 @@ SP        Gaussian    GenericDispersionTest basicGaussian16             dvb_disp
 # SP        ORCA        CPCMMetadataTest      basicORCA5.0                water_hf_solvent_cpcm.log
 # SP        ORCA        CPCMCOSMOMetadataTest basicORCA5.0                water_hf_solvent_cpcm_cosmo.log
 # SP        ORCA        SMDCPCMMetadataTest   basicORCA5.0                water_hf_solvent_smd.log
+# SP        ORCA        CPCMMetadataTest      basicORCA6.0                water_hf_solvent_cpcm.log
+# SP        ORCA        CPCMCOSMOMetadataTest basicORCA6.0                water_hf_solvent_cpcm_cosmo.log
+# SP        ORCA        SMDCPCMMetadataTest   basicORCA6.0                water_hf_solvent_smd.log
+# SP        PySCF       IEFPCMMetadataTest    basicPySCF2.6               water_hf_solvent_pcm.py
 # SP        QChem       COSMOMetadataTest          basicQChem6.0               water_hf_solvent_cosmo.out
 # SP        QChem       CPCMCOSMOMetadataTest      basicQChem6.0               water_hf_solvent_pcm_cosmo.out
 # SP        QChem       CPCMMetadataTest           basicQChem6.0               water_hf_solvent_pcm_cpcm.out
@@ -354,6 +379,8 @@ SP        Gaussian    GenericDispersionTest basicGaussian16             dvb_disp
 
 # SPun      ADF         GenericSPunTest       basicADF2007.01       dvb_un_sp.adfout
 # SPun      ADF         GenericSPunTest       basicADF2013.01       dvb_un_sp.adfout
+# SPun      CFOUR       GenericSPunTest       basicCFOUR2.1         dvb_un_sp.c4
+# SPun      CFOUR       GenericSPunTest       basicCFOUR2.1         dvb_rohf_sp.c4
 # SPun      DALTON      GenericROSPTest       basicDALTON-2013      dvb_sp_un_hf.out
 # SPun      DALTON      GenericROSPTest       basicDALTON-2013      dvb_sp_un_ks.out
 # SPun      DALTON      GenericROSPTest       basicDALTON-2015      dvb_sp_un_hf.out
@@ -380,9 +407,9 @@ SPun      Gaussian    GaussianSPunTest      basicGaussian16       dvb_un_sp_nso.
 # SPun      NWChem      GenericSPunTest       basicNWChem6.0        dvb_un_sp_ks.out
 # SPun      NWChem      GenericSPunTest       basicNWChem6.5        dvb_un_sp_ks.out
 # SPun      NWChem      GenericSPunTest       basicNWChem7.0        dvb_un_sp_ks.out
-# SPun      ORCA        GenericSPunTest       basicORCA4.1          dvb_sp_un.out
-# SPun      ORCA        GenericSPunTest       basicORCA4.2          dvb_sp_un.out
 # SPun      ORCA        GenericSPunTest       basicORCA5.0          dvb_sp_un.out
+# SPun      ORCA        GenericSPunTest       basicORCA6.0          dvb_sp_un_dft.out
+# SPun      ORCA        GenericSPunTest       basicORCA6.0          dvb_sp_un_hf.out
 # SPun      Psi4        GenericROSPTest       basicPsi4-1.2.1       dvb_sp_rohf.out
 SPun      Psi4        GenericSPunTest       basicPsi4-1.2.1       dvb_sp_uhf.out
 SPun      Psi4        GenericSPunTest       basicPsi4-1.2.1       dvb_sp_uks.out
@@ -392,12 +419,15 @@ SPun      Psi4        GenericSPunTest       basicPsi4-1.3.1       dvb_sp_uks.out
 # SPun      Psi4        GenericROSPTest       basicPsi4-1.7         dvb_sp_rohf.out
 SPun      Psi4        GenericSPunTest       basicPsi4-1.7         dvb_sp_uhf.out
 SPun      Psi4        GenericSPunTest       basicPsi4-1.7         dvb_sp_uks.out
+# SPun      PySCF       GenericSPunTest       basicPySCF2.6         dvb_un_sp.py
 # SPun      QChem       GenericSPunTest       basicQChem5.1         dvb_sp_un.out
 # SPun      QChem       GenericSPunTest       basicQChem5.4         dvb_sp_un.out
+# SPun      Serenity    GenericSPunTest       serenity1.6.1         dvb_sp_un/dvb_sp_un.out
 # SPun      Turbomole   GenericSPunTest       basicTurbomole5.9     dvb_un_sp/alpha    dvb_un_sp/beta    dvb_un_sp/basis    dvb_un_sp/control    dvb_un_sp/dscf.out    dvb_un_sp/coord    dvb_un_sp/gradient
 
 # TD        ADF         ADFTDDFTTest          basicADF2007.01       dvb_td.adfout
 # TD        ADF         ADFTDDFTTest          basicADF2013.01       dvb_td.adfout
+# TD        CFOUR       CFOUREOMCCSDTest      basicCFOUR2.1         water_eomccsd.c4
 # TD        DALTON      DALTONTDTest          basicDALTON-2013      dvb_td.out
 # TD        DALTON      DALTONTDTest          basicDALTON-2015      dvb_td.out
 # TD        FChk        GaussianTDDFTTest     basicGaussian09       dvb_td.fchk
@@ -414,17 +444,23 @@ SPun      Psi4        GenericSPunTest       basicPsi4-1.7         dvb_sp_uks.out
 # TD        Gaussian    GaussianEOMCCSDTest   basicGaussian16       dvb_eomccsd.log
 # TD        Jaguar      JaguarTDDFTTest       basicJaguar8.3        dvb_td.out
 # TD        NWChem      GenericTDTest         basicNWChem7.0        dvb_td.out
-# TD        ORCA        OrcaTDDFTTest         basicORCA4.1          dvb_td.out
-# TD        ORCA        OrcaTDDFTTest         basicORCA4.2          dvb_td.out
 # TD        ORCA        OrcaTDDFTTest         basicORCA5.0          dvb_td.out
-# TD        ORCA        OrcaROCISTest         basicORCA4.1          dvb_rocis.out
-# TD        ORCA        OrcaROCISTest         basicORCA4.2          dvb_rocis.out
+# TD        ORCA        OrcaTDDFTTest         basicORCA6.0          dvb_td.out
 # TD        ORCA        OrcaROCISTest         basicORCA5.0          dvb_rocis.out
+# TD        ORCA        Orca6ROCISTest        basicORCA6.0          dvb_rocis.out
 # TD        ORCA        OrcaADC2Test          basicORCA5.0          dvb_adc2.log
+# TD        ORCA        Orca6ADC2Test         basicORCA6.0          dvb_adc2.log
 # TD        ORCA        OrcaETPostHFTest      basicORCA5.0          dvb_eom_ccsd.log
+# TD        ORCA        OrcaETPostHFTest      basicORCA6.0          dvb_eom_ccsd.log
 # TD        ORCA        OrcaETPostHFTest      basicORCA5.0          dvb_pno_eom_ccsd.log
 # TD        ORCA        OrcaSTEOMCCSDTest     basicORCA5.0          dvb_steom_ccsd.log
 # TD        ORCA        OrcaSTEOMCCSDTest     basicORCA5.0          dvb_steom_dlpno_ccsd.log
+# TD        ORCA        OrcaETPostHFTest      basicORCA6.0          dvb_pno_eom_ccsd.log
+# TD        ORCA        OrcaSTEOMCCSDTest     basicORCA6.0          dvb_steom_ccsd.log
+# TD        ORCA        OrcaSTEOMCCSDTest     basicORCA6.0          dvb_steom_dlpno_ccsd.log
+# TD        PySCF       PySCFTDTest           basicPySCF2.6         water_td.py
+# TD        PySCF       PySCFTDATest          basicPySCF2.6         dvb_td.py
+# TD        Serenity    GenericTDTest         serenity1.6.1/dvb_td  dvb_td.out
 # TD        QChem       QChemTDDFTTest        basicQChem5.1         dvb_td.out
 # TD        QChem       QChemTDDFTTest        basicQChem5.4         dvb_td.out
 # TD        Turbomole   TurbomoleTDTest       basicTurbomole7.4     CO_TD/basis    CO_TD/control    CO_TD/mos    CO_TD/dscf.out    CO_TD/escf.out    CO_TD/coord
@@ -433,15 +469,19 @@ SPun      Psi4        GenericSPunTest       basicPsi4-1.7         dvb_sp_uks.out
 # TD        Turbomole   TurbomoleTDADC2Test   basicTurbomole7.4     CO_adc2_TD/basis    CO_adc2_TD/control    CO_adc2_TD/mos    CO_adc2_TD/CO.log    CO_adc2_TD/coord
 # TD        Turbomole   TurbomoleTDCC2TripTest   basicTurbomole7.4  CO_cc2_TD_trip/basis    CO_cc2_TD_trip/control    CO_cc2_TD_trip/mos    CO_cc2_TD_trip/dscf.out    CO_cc2_TD_trip/ricc2.out    CO_cc2_TD_trip/coord
 
+# TDun      CFOUR       CFOUREOMCCSDunTest    basicCFOUR2.1         water_eomccsd_un.c4
 # TDun      Gaussian    GenericTDunTest       basicGaussian09       CO_TD_delta.log
 # TDun      Gaussian    GenericTDunTest       basicGaussian16       CO_TD_delta.log
+# TDun      PySCF       PySCFTDunTest         basicPySCF2.6         dvb_un_td.py
+# TDun      Serenity    SerenityTDunTest      serenity1.6.1         dvb_td_un/dvb_td_un.out
 # TDun	  Turbomole   TurbomoleTDunTest     basicTurbomole7.4     CO_TD_un/basis    CO_TD_un/control    CO_TD_un/alpha    CO_TD_un/beta    CO_TD_un/dscf.out    CO_TD_un/escf.out    CO_TD_un/coord
 # TDun	  Turbomole   TurbomoleTDunTest     basicTurbomole7.4     CO_cc2_TD_un/basis    CO_cc2_TD_un/control    CO_cc2_TD_un/alpha    CO_cc2_TD_un/beta    CO_cc2_TD_un/dscf.out    CO_cc2_TD_un/ricc2.out    CO_cc2_TD_un/coord
 
 # vib       ADF         ADFIRTest             basicADF2007.01       dvb_ir.adfout
 # vib       ADF         ADFIRTest             basicADF2013.01       dvb_ir.adfout
-# vib       DALTON      GenericIRTest         basicDALTON-2013      dvb_ir.out
-# vib       DALTON      GenericIRTest         basicDALTON-2015      dvb_ir.out
+# vib       CFOUR       CFOURIRTest           basicCFOUR2.1         dvb_ir.c4
+# vib       DALTON      DALTONIRTest          basicDALTON-2013      dvb_ir.out
+# vib       DALTON      DALTONIRTest          basicDALTON-2015      dvb_ir.out
 # vib       FChk        GaussianIRTest        basicGaussian09       dvb_ir.fchk
 # vib       FChk        GaussianIRTest        basicGaussian16       dvb_ir.fchk
 # vib       FChk        GenericIRTest         basicQChem5.4         dvb_ir.fchk
@@ -459,13 +499,13 @@ SPun      Psi4        GenericSPunTest       basicPsi4-1.7         dvb_sp_uks.out
 # vib       Molpro      GenericIRTest         basicMolpro2006       dvb_ir.out            dvb_ir.log
 # vib       Molpro      GenericIRTest         basicMolpro2012       dvb_ir.out            dvb_ir.log
 # vib       NWChem      NWChemIRTest          basicNWChem7.0        dvb_ir.out
-# vib       ORCA        OrcaIRTest            basicORCA4.1          dvb_ir.out
-# vib       ORCA        OrcaIRTest            basicORCA4.2          dvb_ir.out
 # vib       ORCA        OrcaIRTest            basicORCA5.0          dvb_ir.out
+# vib       ORCA        OrcaIRTest            basicORCA6.0          dvb_ir.out
 # vib       Psi4        Psi4HFIRTest          basicPsi4-1.2.1       dvb_ir_rhf.out
 # vib       Psi4        Psi4HFIRTest          basicPsi4-1.3.1       dvb_ir_rhf.out
 # vib       Psi4        Psi4HFIRTest          basicPsi4-1.7         dvb_ir_rhf.out
 # vib       Psi4        Psi4KSIRTest          basicPsi4-1.7         dvb_ir_rks.out
+# vib       PySCF       PySCFIRTest           basicPySCF2.6         dvb_ir.py
 # vib       QChem       GenericIRTest         basicQChem5.1         dvb_ir.out
 # vib       QChem       GenericIRTest         basicQChem5.4         dvb_ir.out
 # vib       Turbomole   TurbomoleIRTest       basicTurbomole5.9     dvb_ir/basis            dvb_ir/control            dvb_ir/mos            dvb_ir/aoforce.out
@@ -481,8 +521,7 @@ SPun      Psi4        GenericSPunTest       basicPsi4-1.7         dvb_sp_uks.out
 # vib       GAMESS      GenericRamanTest      basicFirefly8.0       dvb_raman.out
 # vib       Gaussian    GaussianRamanTest     basicGaussian09       dvb_raman.out
 # vib       Gaussian    GaussianRamanTest     basicGaussian16       dvb_raman.out
-# vib       ORCA        OrcaRamanTest         basicORCA4.1          dvb_raman.out
-# vib       ORCA        OrcaRamanTest         basicORCA4.2          dvb_raman.out
 # vib       ORCA        OrcaRamanTest         basicORCA5.0          dvb_raman.out
+# vib       ORCA        Orca6RamanTest        basicORCA6.0          dvb_raman.out
 # vib       QChem       QChemRamanTest        basicQChem5.1         dvb_raman.out
 # vib       QChem       QChemRamanTest        basicQChem5.4         dvb_raman.out

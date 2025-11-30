@@ -5,8 +5,10 @@
 
 """Test geometry optimization logfiles in cclib"""
 
+from cclib.parser import utils
+
 import numpy
-from common import get_minimum_carbon_separation
+from common import get_minimum_carbon_separation, is_optdone, is_optnew, is_optunknown
 from skip import skipForLogfile, skipForParser
 
 
@@ -23,13 +25,8 @@ class GenericGeoOptTest:
     extrascfs = 0
 
     # Approximate B3LYP energy of dvb after SCF in STO-3G.
-    b3lyp_energy = -380.90674109218116
-    b3lyp_tolerance = 1.4699729516340807
-
-    @skipForParser("Molcas", "The parser is still being developed so we skip this test")
-    @skipForParser("MOPAC", "The success status is not parsed yet")
-    def test_success(self, data) -> None:
-        assert data.metadata["success"]
+    scfenergy = -380.90674109218116
+    scfenergy_tolerance = 1.4699729516340807
 
     def testnatom(self, data) -> None:
         """Is the number of atoms equal to 20?"""
@@ -77,6 +74,7 @@ class GenericGeoOptTest:
         assert data.nbasis == count
 
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
+    @skipForParser("Serenity", "not implemented yet")
     def testcoreelectrons(self, data) -> None:
         """Are the coreelectrons all 0?"""
         ans = numpy.zeros(data.natom, "i")
@@ -92,20 +90,21 @@ class GenericGeoOptTest:
         numpy.testing.assert_array_equal(data.homos, ref, msg)
 
     @skipForParser("MOPAC", "The scfvalues attribute is not parsed yet")
+    @skipForLogfile("FChk/basicQChem5.4", "Q-Chem doesn't print scfvalues to fchk")
     @skipForParser("xTB", "not implemented yet")
     def testscfvaluetype(self, data) -> None:
         """Are scfvalues and its elements the right type?"""
         assert isinstance(data.scfvalues, list)
         assert isinstance(data.scfvalues[0], numpy.ndarray)
 
+    @skipForLogfile("FChk/basicQChem5.4", "Q-Chem doesn't print SCF energy to fchk")
     def testscfenergy(self, data) -> None:
         """Is the SCF energy close to target?"""
-        scf = data.scfenergies[-1]
-        ref = self.b3lyp_energy
-        tol = self.b3lyp_tolerance
-        msg = f"Final SCF energy: {scf:f} not {int(ref)} +- {int(tol)}eV"
-        assert abs(scf - ref) < 40, msg
+        assert abs(
+            data.scfenergies[-1] - utils.convertor(self.scfenergy, "hartree", "eV")
+        ) < utils.convertor(self.scfenergy_tolerance, "hartree", "eV")
 
+    @skipForLogfile("FChk/basicQChem5.4", "Q-Chem doesn't print SCF energy to fchk")
     @skipForParser("xTB", "Not implemented yet")
     def testscfenergydim(self, data) -> None:
         """Is the number of SCF energies consistent with atomcoords?"""
@@ -113,14 +112,18 @@ class GenericGeoOptTest:
         count_atomcoords = data.atomcoords.shape[0] - self.extracoords
         assert count_scfenergies == count_atomcoords
 
+    @skipForLogfile("FChk/basicGaussian09", "Gaussian doesn't print scftargets to fchk")
+    @skipForLogfile("FChk/basicGaussian16", "Gaussian doesn't print scftargets to fchk")
+    @skipForLogfile("FChk/basicQChem5.4", "Q-Chem doesn't print scftargets to fchk")
     @skipForParser("MOPAC", "The scftargets attribute is not parsed yet")
     @skipForParser("xTB", "not implemented yet")
     def testscftargetdim(self, data) -> None:
-        """Do the scf targets have the right dimensions?"""
+        """Do the SCF convergence targets have the right dimensions?"""
         dim_scftargets = data.scftargets.shape
         dim_scfvalues = (len(data.scfvalues), len(data.scfvalues[0][0]))
         assert dim_scftargets == dim_scfvalues
 
+    @skipForLogfile("FChk/basicQChem5.4", "Q-Chem doesn't print geovalues to fchk")
     @skipForParser("MOPAC", "Not implemented.")
     @skipForParser("xTB", "not implemented yet")
     def testgeovalues_atomcoords(self, data) -> None:
@@ -130,6 +133,7 @@ class GenericGeoOptTest:
         msg = f"len(atomcoords) is {int(count_coords)} but len(geovalues) is {int(count_geovalues)}"
         assert count_geovalues == count_coords, msg
 
+    @skipForLogfile("FChk/basicQChem5.4", "Q-Chem doesn't print geovalues to fchk")
     @skipForParser("MOPAC", "Not implemented.")
     @skipForParser("xTB", "not implemented yet")
     def testgeovalues_scfvalues(self, data) -> None:
@@ -138,15 +142,25 @@ class GenericGeoOptTest:
         count_geovalues = len(data.geovalues)
         assert count_scfvalues == count_geovalues
 
+    @skipForLogfile("FChk/basicGaussian09", "Gaussian doesn't print geotargets to fchk")
+    @skipForLogfile("FChk/basicGaussian16", "Gaussian doesn't print geotargets to fchk")
+    @skipForLogfile("FChk/basicQChem5.4", "Q-Chem doesn't print geotargets to fchk")
     @skipForParser("MOPAC", "Not implemented.")
+    @skipForParser("PySCF", "not implemented yet")
     @skipForParser("xTB", "not implemented yet")
+    @skipForParser("Serenity", "geo targets are not printed in Serenity.")
     def testgeotargets(self, data) -> None:
-        """Do the geo targets have the right dimensions?"""
+        """Do the geometry optimization targets have the right dimensions?"""
         dim_geotargets = data.geotargets.shape
         dim_geovalues = (len(data.geovalues[0]),)
         assert dim_geotargets == dim_geovalues
 
+    @skipForLogfile(
+        "FChk/basicGaussian09",
+        "Gaussian 09 gives no way of determining geometry convergence from the fchk file",
+    )
     @skipForParser("MOPAC", "Not implemented.")
+    @skipForParser("PySCF", "not implemented yet")
     @skipForParser("xTB", "not implemented yet")
     def testoptdone(self, data) -> None:
         """Has the geometry converged and set optdone to True?"""
@@ -154,23 +168,26 @@ class GenericGeoOptTest:
         assert len(data.optdone) == 1
         assert all(isinstance(val, int) for val in data.optdone)
 
+    @skipForLogfile("FChk/basicGaussian09", "Gaussian doesn't print geotargets to fchk")
+    @skipForLogfile("FChk/basicGaussian16", "Gaussian doesn't print geotargets to fchk")
+    @skipForLogfile("FChk/basicQChem5.4", "Q-Chem doesn't print geotargets to fchk")
     @skipForParser("MOPAC", "Not implemented.")
+    @skipForParser("PySCF", "geotargets not implemented yet")
     @skipForParser("xTB", "not implemented yet")
+    @skipForParser("Serenity", "geotargets not printed currently")
     def testgeoconverged(self, data) -> None:
         """Has the geometry converged and set optdone to True?"""
         assert numpy.all(numpy.abs(data.geovalues[-1]) <= data.geotargets)
 
     @skipForParser("ADF", "Not implemented.")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("DALTON", "Not implemented.")
     @skipForParser("GAMESS", "Not implemented.")
     @skipForParser("GAMESSUK", "Not implemented.")
-    @skipForParser("Jaguar", "Not implemented.")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Molpro", "Not implemented.")
     @skipForParser("MOPAC", "Not implemented.")
     @skipForParser("NWChem", "Not implemented.")
-    @skipForParser("ORCA", "Not implemented.")
-    @skipForParser("QChem", "Not implemented.")
     @skipForParser("xTB", "not implemented yet")
     def testoptstatus(self, data) -> None:
         """Is optstatus consistent with geovalues and reasonable?"""
@@ -181,23 +198,29 @@ class GenericGeoOptTest:
         assert data.optstatus[-1] == data.OPT_DONE
 
     @skipForParser("ADF", "Not implemented yet")
-    @skipForParser("DALTON", "Not implemented yet")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("FChk", "Rotational constants are never written to fchk files")
     @skipForParser("GAMESS", "Not implemented yet")
     @skipForParser("GAMESSUK", "Not implemented yet")
-    @skipForParser("Jaguar", "Not implemented yet")
     @skipForParser("Molcas", "Not implemented yet")
     @skipForParser("Molpro", "Not implemented yet")
     @skipForLogfile("MOPAC/basicMOPAC2016", "Not present in this file")
     @skipForParser("NWChem", "Not implemented yet")
-    @skipForParser("ORCA", "Not implemented yet")
     @skipForParser("Psi4", "Not implemented yet")
-    @skipForParser("QChem", "Not implemented yet")
+    @skipForParser(
+        "QChem", "Q-Chem doesn't print rotational constants during geometry optimizations"
+    )
     @skipForParser("Turbomole", "Not implemented yet")
-    @skipForParser("xTB", "not implemented yet")
+    @skipForParser("Serenity", "not implemented in Serenity")
     def testrotconsts(self, data) -> None:
         """Each geometry leads to a row in the rotational constants entry."""
         assert data.rotconsts.shape == (len(data.atomcoords), 3)
+
+        # Are the rotational constants ordered from largest to smallest?
+        for i in range(len(data.atomcoords)):
+            rotconsts = data.rotconsts[i]
+            idx = rotconsts.argsort()[::-1]
+            numpy.testing.assert_equal(rotconsts, rotconsts[idx])
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     def testmoenergies(self, data) -> None:
@@ -212,13 +235,38 @@ class GenericGeoOptTest:
     @skipForParser("GAMESSUK", "Not implemented.")
     @skipForParser("Jaguar", "Not implemented.")
     @skipForParser("MOPAC", "Not implemented.")
-    @skipForParser("NWChem", "Not implemented.")
+    @skipForParser("PySCF", "Not implemented.")
+    @skipForParser("xTB", "not implemented yet")
+    def testgrads(self, data) -> None:
+        """Do nuclear gradients exist?"""
+        assert hasattr(data, "grads")
+
+    @skipForParser("ADF", "Not implemented.")
+    @skipForParser("DALTON", "Not implemented.")
+    @skipForParser("GAMESS", "Not implemented.")
+    @skipForParser("GAMESSUK", "Not implemented.")
+    @skipForParser("Jaguar", "Not implemented.")
+    @skipForParser("MOPAC", "Not implemented.")
+    @skipForParser("PySCF", "Not implemented.")
+    @skipForLogfile(
+        "FChk/basicQChem5.4",
+        "Q-Chem has grads but no way to verify the number of times they appear",
+    )
     @skipForParser("xTB", "not implemented yet")
     def testgradsdim(self, data) -> None:
         """Do the grads have the right dimensions?"""
-        assert data.grads.shape == (len(data.geovalues), data.natom, 3)
+        # This originally compared against the length of geovalues, but some
+        # parsers don't have it, and consistency between the number of
+        # geovalues and SCF energies is checked elsewhere (the combination of
+        # testscfenergydim and testgeovalues_atomcoords).
+        assert data.grads.shape == (len(data.scfenergies) - self.extrascfs, data.natom, 3)
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
+    @skipForParser("MOPAC", "The success status is not parsed yet")
+    @skipForLogfile("FChk/basicGaussian09", "impossible to determine success of calculation")
+    @skipForLogfile("FChk/basicQChem5.4", "impossible to determine success of calculation")
     @skipForLogfile("Molcas/basicOpenMolcas18.0/dvb_gopt.out", "not implemented yet")
+    @skipForParser("Serenity", "not implemented yet")
     def testmetadata_success(self, data) -> None:
         """Does metadata have expected keys and values?"""
         assert "success" in data.metadata
@@ -231,8 +279,8 @@ class ADFGeoOptTest(GenericGeoOptTest):
     extracoords = 1
     extrascfs = 1
 
-    b3lyp_energy = -5.144905330719283
-    b3lyp_tolerance = 0.03674932379085202
+    scfenergy = -5.144905330719283
+    scfenergy_tolerance = 0.03674932379085202
 
 
 class DALTONGeoOptTest(GenericGeoOptTest):
@@ -252,6 +300,29 @@ class DALTONGeoOptTest(GenericGeoOptTest):
         convergence = numpy.abs(data.geovalues[-1]) <= data.geotargets
         assert sum(convergence) >= 2
 
+    def testrotconsts(self, data) -> None:
+        """DALTON only prints rotational constants for the first geometry."""
+        assert data.rotconsts.shape == (1, 3)
+
+
+class FChkGeoOptTest(GenericGeoOptTest):
+    """Customized geometry optimization unittest"""
+
+    def testoptstatus(self, data) -> None:
+        """Is optstatus consistent with geovalues and reasonable?"""
+        # Geometry convergence values (geovalues) are not consistently
+        # available in formatted checkpoint files, so compare length against
+        # the number of nuclear gradients instead.
+        assert len(data.optstatus) == len(data.grads)
+        # These checks are similar to the parent class, but lifts the
+        # constraint that each point have a single status.  This handles the
+        # case where the input geometry is already converged, and this
+        # geometry is both new and done.
+        assert is_optnew(data.optstatus[0])
+        for i in range(1, len(data.optstatus) - 1):
+            assert is_optunknown(data.optstatus[i])
+        assert is_optdone(data.optstatus[-1])
+
 
 class GaussianGeoOptTest(GenericGeoOptTest):
     """Customized geometry optimization unittest"""
@@ -260,6 +331,44 @@ class GaussianGeoOptTest(GenericGeoOptTest):
         """Are the orientations for grads and atomcoords are same?"""
         # since z-coordinates of atomcoords are all 0 for dvb, z-values of grads should be all 0
         assert numpy.all(numpy.abs(data.grads[:, :, 2]) < 1e-14)
+
+
+class GaussianFChkGeoOptTest(GaussianGeoOptTest):
+    """Customized geometry optimization unittest"""
+
+    @skipForLogfile(
+        "FChk/basicGaussian09",
+        "Gaussian 09 gives no way of determining geometry convergence from the fchk file",
+    )
+    def testoptstatus(self, data) -> None:
+        """Is optstatus consistent with geovalues and reasonable?"""
+        # Geometry convergence values (geovalues) are not consistently
+        # available in formatted checkpoint files, so compare length against
+        # the number of nuclear gradients instead.
+        assert len(data.optstatus) == len(data.grads)
+        # These checks are similar to the parent class, but lifts the
+        # constraint that each point have a single status.  This handles the
+        # case where the input geometry is already converged, and this
+        # geometry is both new and done.
+        #
+        # For Gaussian, which only prints the final coordinates, it is not
+        # possible to say if those coordinates are the only ones in the
+        # optimization, so we can't say if they're new.  There are still ways
+        # to say if they are converged, depending on the Gaussian version.
+        # Only 09 has no way of determining this at all.
+        #
+        # assert is_optnew(data.optstatus[0])
+        for i in range(1, len(data.optstatus) - 1):
+            assert is_optunknown(data.optstatus[i])
+        assert is_optdone(data.optstatus[-1])
+
+
+class JaguarGeoOptTest(GenericGeoOptTest):
+    """Customized geometry optimization unittest"""
+
+    def testrotconsts(self, data) -> None:
+        """Jaguar only prints rotational constants for the first and last geometries."""
+        assert data.rotconsts.shape == (2, 3)
 
 
 class MolcasGeoOptTest(GenericGeoOptTest):
@@ -307,8 +416,8 @@ class MOPACGeoOptTest(GenericGeoOptTest):
     """Customized geometry optimization unittest for MOPAC."""
 
     # The geometry optimization unit test logfile uses a PM7 Hamiltonian.
-    b3lyp_energy = 0.08166294233283113
-    b3lyp_tolerance = 1.6e-5
+    scfenergy = 0.08166294233283113
+    scfenergy_tolerance = 1.6e-5
 
 
 class NWChemGeoOptTest(GenericGeoOptTest):
@@ -335,7 +444,7 @@ class OrcaGeoOptTest(GenericGeoOptTest):
     #   2) gradient is overachieved and displacement is reasonable (3 x tolerance)
     #   3) displacement is overachieved and gradient is reasonable (3 x tolerance)
     #   4) energy, gradients and angles are converged (displacements not considered)
-    # All these exceptions are signaleld in the output with some comments, and here
+    # All these exceptions are signaled in the output with some comments, and here
     # we include the first three exceptions for the pruposes of the unit test.
     def testgeoconverged(self, data) -> None:
         """Has the geometry converged and set optdone to True?"""
@@ -360,6 +469,10 @@ class OrcaGeoOptTest(GenericGeoOptTest):
         )
         converged = conv_all or conv_e or conv_g or conv_x
         assert converged
+
+    def testrotconsts(self, data) -> None:
+        """ORCA only prints rotational constants for the final geometry."""
+        assert data.rotconsts.shape == (1, 3)
 
 
 class Psi4GeoOptTest(GenericGeoOptTest):
@@ -387,9 +500,8 @@ class Psi4GeoOptTest(GenericGeoOptTest):
 class XTBGeoOptTest(GenericGeoOptTest):
     """Customized restricted single point unittest"""
 
-    def testscfenergy(self, data) -> None:
-        """Is the SCF energy within the target?"""
-        assert abs(data.scfenergies[-1] - -26.438242468348) < 1.0e-6
+    scfenergy = -26.438242468348
+    scfenergy_tolerance = 1.0e-6
 
 
 class TurbomoleKeepGeoOptTest(GenericGeoOptTest):

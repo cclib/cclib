@@ -13,13 +13,9 @@ concurrency:
 
 jobs:
   build-and-push-docs:
-    runs-on: ubuntu-22.04
-    strategy:
-      matrix:
-        container:
-          - 'shivupa/cclib-ci:py311-edge'
+    runs-on: ubuntu-24.04
     container:
-      image: ${{ matrix.container }}
+      image: shivupa/cclib-ci:py312-edge@sha256:1d5638793e21480301db184a5fd7b10603a19851b526af67cbb7124088dfc7c7
     defaults:
       run:
         shell: bash -eo pipefail -l {0}
@@ -28,7 +24,7 @@ jobs:
         run: |
           apt-get update && apt-get install -y openssh-client
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
           # so versioningit can figure out the version
           fetch-depth: 0

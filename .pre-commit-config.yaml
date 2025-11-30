@@ -1,12 +1,14 @@
 ---
 fail_fast: false
+ci:
+  autofix_prs: false
 repos:
   - repo: meta
     hooks:
       - id: check-hooks-apply
       - id: check-useless-excludes
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: "v4.6.0"
+    rev: "v6.0.0"
     hooks:
       - id: trailing-whitespace
         exclude: |
@@ -19,6 +21,7 @@ repos:
               \.molden$|
               \.out$|
               ^data/ADF|
+              ^data/CFOUR|
               ^data/DALTON|
               ^data/FChk|
               ^data/GAMESS|
@@ -47,6 +50,7 @@ repos:
               \.molden$|
               \.out$|
               ^data/ADF|
+              ^data/CFOUR|
               ^data/DALTON|
               ^data/FChk|
               ^data/GAMESS|
@@ -75,34 +79,7 @@ repos:
               \.molden$|
               \.out$|
               ^data/ADF|
-              ^data/DALTON|
-              ^data/FChk|
-              ^data/GAMESS|
-              ^data/Gaussian|
-              ^data/Jaguar|
-              ^data/Molcas|
-              ^data/Molpro|
-              ^data/MOPAC|
-              ^data/NBO|
-              ^data/NWChem|
-              ^data/ORCA|
-              ^data/Psi4|
-              ^data/QChem|
-              ^data/regression|
-              ^data/Turbomole|
-              ^data/XTB
-          )
-      - id: mixed-line-ending
-        exclude: |
-          (?x)(
-              \.bpa$|
-              \.bpaspn$|
-              \.cube$|
-              \.in$|
-              \.inp$|
-              \.molden$|
-              \.out$|
-              ^data/ADF|
+              ^data/CFOUR|
               ^data/DALTON|
               ^data/FChk|
               ^data/GAMESS|
@@ -125,26 +102,24 @@ repos:
       - id: check-yaml
       - id: check-toml
       - id: check-added-large-files
-      - id: no-commit-to-branch
-        args: [--branch, main, --branch, master]
   - repo: https://github.com/Mateusz-Grzelinski/actionlint-py
-    rev: "v1.7.1.15"
+    rev: "v1.7.7.23"
     hooks:
       - id: actionlint
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.17.0
+    rev: v3.21.1
     hooks:
       - id: pyupgrade
         args: [--py37-plus]
   - repo: https://github.com/PyCQA/isort
-    rev: "5.13.2"
+    rev: "7.0.0"
     hooks:
       - id: isort
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.6.5
+    rev: v0.14.4
     hooks:
       - id: ruff-format
-      - id: ruff
+      - id: ruff-check
         args: [--fix]
   # - repo: https://github.com/pre-commit/mirrors-mypy
   #   rev: "v1.3.0"
@@ -167,6 +142,35 @@ repos:
           - .github/license_header.txt
           - --use-current-year
           - --no-extra-eol
+      - id: remove-crlf
+        exclude: |
+          (?x)(
+              \.bpa$|
+              \.bpaspn$|
+              \.cube$|
+              \.in$|
+              \.inp$|
+              \.molden$|
+              \.out$|
+              ^data/ADF|
+              ^data/CFOUR|
+              ^data/DALTON|
+              ^data/FChk|
+              ^data/GAMESS|
+              ^data/Gaussian|
+              ^data/Jaguar|
+              ^data/Molcas|
+              ^data/Molpro|
+              ^data/MOPAC|
+              ^data/NBO|
+              ^data/NWChem|
+              ^data/ORCA|
+              ^data/Psi4|
+              ^data/QChem|
+              ^data/regression|
+              ^data/Turbomole|
+              ^data/XTB
+          )
   - repo: https://github.com/pre-commit/pygrep-hooks
     rev: "v1.10.0"
     hooks:

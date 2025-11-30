@@ -11,9 +11,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  prechecks:
+    uses: ./.github/workflows/pre-commit.yml
   nix:
     uses: ./.github/workflows/nix.yml
   unit-tests:
+    needs: [prechecks]
     uses: ./.github/workflows/test_and_package.yml
     secrets: inherit
   docs:
@@ -24,7 +27,7 @@ jobs:
     uses: ./.github/workflows/publish.yml
   all:
     needs: [unit-tests, publish]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Success
         run: "true"

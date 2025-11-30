@@ -149,7 +149,7 @@ However, in *all* cases the dispersion energy for a given geometry will also be 
 etenergies
 ----------
 
-This is a rank 1 array that contains the energies of electronic transitions from a reference state to the excited states of the molecule, in hartree. There should be as many elements to this array as there are excited states calculated. Any type of excited state calculation should provide output that can be parsed into this attribute.
+This is a rank 1 array that contains the energies of electronic transitions from a reference state to the excited states of the molecule, in ``cm<sup>-1</sup>``. There should be as many elements to this array as there are excited states calculated. Any type of excited state calculation should provide output that can be parsed into this attribute.
 
 etoscs
 ------
@@ -345,6 +345,7 @@ metadata
 A dictionary containing metadata_ (data about data) for the calculation. Currently, it can contain the following possible attributes, not all of which are implemented for each parser.
 
 * ``basis_set``: A string with the name of the basis set, if it is printed anywhere as a standard name.
+* ``comments``: A list of strings of the user-provided input file comment sections. There is one string per discovered job in the output.
 * ``coord_type``: For the ``coords`` field, a string for the representation of stored coordinates. Currently, it is one of ``xyz``, ``int``/``internal``, or ``gzmat``.
 * ``coords``: A list of lists with shape ``[natoms, 4]`` which contains the input coordinates (those found in the input file). The first column is the atomic symbol as a string, and the next three columns are floats. This is useful as many programs reorient coordinates for symmetry reasons.
 * ``cpu_time``: A list of datetime.timedeltas containing the CPU time of each calculation in the output.
@@ -352,7 +353,7 @@ A dictionary containing metadata_ (data about data) for the calculation. Current
 * ``info``: A list of strings, each of which is an information or log message produced during a calculation.
 * ``input_file_contents``: A string containing the entire input file, if it is echoed back during the calculation.
 * ``input_file_name``: A string containing the name of the input file, with file extension. It may not contain the entire path to the file.
-* ``keywords``: A list of strings corresponding to the keywords used in the input file, in the loose format used by ORCA.
+* ``keywords``: A list of strings corresponding to the keywords used in the input file, in the loose format used by ORCA.  For Gaussian there is one string per discovered job in the output.
 * ``methods``: A list of strings containing each method used in order. Currently, the list may contain ``HF``, ``DFT``, ``LMP2``/``DF-MP2``/``MP2``, ``MP3``, ``MP4``, ``CCSD``, and/or ``CCSD(T)``/``CCSD-T``.
 * ``package``: A string with the name of the quantum chemistry program used.
 * ``package_version``: A string representation of the package version. It is formatted to allow comparison using relational operators.
@@ -389,7 +390,7 @@ Note: For restricted calculation, ``mocoeffs`` is still a list, but it only cont
 moenergies
 ----------
 
-A list of rank 1 arrays containing the molecular orbital energies in hartree. The list is of length 1 for restricted calculations, but length 2 for unrestricted calculations.
+A list of rank 1 arrays containing the molecular orbital energies in eV. The list is of length 1 for restricted calculations, but length 2 for unrestricted calculations.
 
 **GAMESS-UK**: similar to `mocoeffs`_, the directive `FORMAT HIGH`_ needs to be used if you want all of the eigenvalues printed.
 
@@ -511,7 +512,27 @@ A dictionary where the keys zero-index the atomic center for which the chemical 
 optdone
 -------
 
-A list that indexes which elements of `atomcoords`_ represent converged geometries.
+Flags whether a geometry optimisation has completed. Currently this attribute is a single Boolean value, which is set to True when the final `atomcoords`_ represent a converged geometry optimisation. In the future, ``optdone`` will be a list that indexes which elements of `atomcoords`_ represent converged geometries. This functionality can be used starting from version 1.3, from the command line by passing the ``--future`` option to ``ccget``,
+
+.. code-block:: bash
+
+    $ ccget optdone data/Gaussian/basicGaussian09/dvb_gopt.out
+    Attempting to parse data/Gaussian/basicGaussian09/dvb_gopt.out
+    optdone:
+    True
+
+    $ ccget --future optdone data/Gaussian/basicGaussian09/dvb_gopt.out
+    Attempting to parse data/Gaussian/basicGaussian09/dvb_gopt.out
+    optdone:
+    [4]
+
+or by providing the corresponding argument to ``ccopen``,
+
+.. code-block:: python
+
+    from cclib.parser import ccopen
+    parser = ccopen("filename", optdone_as_list=True) # could also do future=True instead of optdone_as_list
+    data = parser.parse()
 
 optstatus
 ---------
@@ -548,7 +569,7 @@ A list of lists where each list contains the values scanned for each parameter i
 scfenergies
 -----------
 
-An array containing the converged SCF energies of the calculation, in hartree. For an optimisation log file, there will be as many elements in this array as there were optimisation steps.
+An array containing the converged SCF energies of the calculation, in eV. For an optimisation log file, there will be as many elements in this array as there were optimisation steps.
 
 If a dispersion correction of any form was used, it is part of the SCF energy and, in the event that it is separable, such as with D3 and similar empirical corrections, it is also available separately under `dispersionenergies`_.
 

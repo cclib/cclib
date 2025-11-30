@@ -12,6 +12,7 @@ from typing import List, Sequence
 
 import numpy
 import periodictable
+import scipy.spatial
 
 
 def find_package(package: str) -> bool:
@@ -23,11 +24,6 @@ def find_package(package: str) -> bool:
 
     module_spec = find_spec(package)
     return module_spec is not None and module_spec.loader is not None
-
-
-_found_scipy = find_package("scipy")
-if _found_scipy:
-    import scipy.spatial
 
 
 def symmetrize(m: numpy.ndarray, use_triangle: str = "lower") -> numpy.ndarray:
@@ -56,24 +52,6 @@ def symmetrize(m: numpy.ndarray, use_triangle: str = "lower") -> numpy.ndarray:
         ms[lower_indices] = ms[upper_indices]
 
     return ms
-
-
-_BUILTIN_FLOAT = float
-
-
-def float(number: str) -> float:
-    """Convert a string to a float.
-
-    This method should perform certain checks that are specific to cclib,
-    including avoiding the problem with Ds instead of Es in scientific notation.
-    Another point is converting string signifying numerical problems (*****)
-    to something we can manage (Numpy's NaN).
-    """
-
-    if list(set(number)) == ["*"]:
-        return numpy.nan
-
-    return _BUILTIN_FLOAT(number.replace("D", "E"))
 
 
 def convertor(value: float, fromunits: str, tounits: str) -> float:
@@ -162,8 +140,6 @@ def get_rotation(a, b):
     Returns:
         A scipy.spatial.transform.Rotation object
     """
-    if not _found_scipy:
-        raise ImportError("You must install `scipy` to use this function")
 
     assert a.shape == b.shape
     if a.shape[0] == 1:
@@ -222,6 +198,10 @@ class PeriodicTable:
                 self.element.append(e.symbol)
                 self.number[e.symbol] = e.number
 
+        # Add common placeholder atoms.  These are not ghost atoms, which
+        # still have basis functions associated with a parent element.
+        self.number["-"] = 0
+
 
 class WidthSplitter:
     """Split a line based not on a character, but a given number of field
@@ -269,3 +249,23 @@ def block_to_matrix(block: numpy.ndarray) -> numpy.ndarray:
     mat = numpy.empty(shape=(dim, dim), dtype=block.dtype)
     mat[numpy.tril_indices_from(mat)] = block
     return symmetrize(mat)
+
+
+_BUILTIN_FLOAT = float
+
+
+# This is at the bottom of the file so it doesn't interfere with type hints in
+# any of the file's other functions.
+def float(number: str) -> float:
+    """Convert a string to a float.
+
+    This method should perform certain checks that are specific to cclib,
+    including avoiding the problem with Ds instead of Es in scientific notation.
+    Another point is converting string signifying numerical problems (*****)
+    to something we can manage (Numpy's NaN).
+    """
+
+    if list(set(number)) == ["*"]:
+        return numpy.nan
+
+    return _BUILTIN_FLOAT(number.replace("D", "E"))

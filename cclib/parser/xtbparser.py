@@ -12,6 +12,7 @@ from cclib.parser.logfilewrapper import FileWrapper
 from cclib.parser.utils import convertor
 
 import numpy as np
+import scipy.constants as spc
 
 
 class XTB(logfileparser.Logfile):
@@ -183,6 +184,10 @@ class XTB(logfileparser.Logfile):
 
         if atomcharges:
             self.set_attribute("atomcharges", atomcharges)
+
+        rotconsts = _extract_rotational_constants(line)
+        if rotconsts is not None:
+            self.append_attribute("rotconsts", rotconsts)
 
         final_energy = _extract_final_energy(line)
         if final_energy is not None:
@@ -507,7 +512,7 @@ def _extract_gfn2_mulliken_charge(line: str) -> Optional[Tuple[float, int]]:
     3   1 H        0.805     0.282     0.777     1.384
     """
     line_split = line.split()
-    return (float(line_split[4]), line_split[1]) if len(line_split) == 7 else None
+    return (float(line_split[4]), int(line_split[1])) if len(line_split) == 7 else None
 
 
 def _extract_gfn1_mulliken_cm5_charges(line: str) -> Optional[Tuple[float, float]]:
@@ -521,6 +526,26 @@ def _extract_gfn1_mulliken_cm5_charges(line: str) -> Optional[Tuple[float, float
     """
     line_split = line.split()
     return [float(line_split[1]), float(line_split[2])] if len(line_split) == 6 else None
+
+
+def _extract_rotational_constants(line: str) -> Optional[np.ndarray]:
+    """Extract the rotational constants in GHz.
+
+               -------------------------------------------------
+              |                Geometry Summary                 |
+               -------------------------------------------------
+
+          molecular mass/u    :       94.9380859
+       center of mass at/Å    :        1.4342479       0.0012299       0.0245854
+      moments of inertia/u·Å² :        0.3216841E+01   0.5275963E+02   0.5275963E+02
+    rotational constants/cm⁻¹ :        0.5240431E+01   0.3195177E+00   0.3195177E+00
+    """
+    if line.startswith("rotational constants/cm⁻¹"):
+        line_split = line.split()
+        _CENTI = 0.01
+        _GIGA = 1000000000.0
+        ghz2invcm = _GIGA * _CENTI / spc.c
+        return np.array([float(x) for x in line_split[-3:]]) / ghz2invcm
 
 
 def _extract_wall_time(line: str) -> Optional[List[timedelta]]:
