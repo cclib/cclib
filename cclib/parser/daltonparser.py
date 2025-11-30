@@ -435,6 +435,15 @@ class DALTON(logfileparser.Logfile):
             # At the end we have the final primitive to save.
             self.primitives.append(prims)
 
+        if line.strip() == "Rotational constants":
+            _ = self.skip_lines(inputfile, ["d", "b"])
+            line = next(inputfile)
+            if "The molecule" in line:
+                _ = self.skip_lines(inputfile, ["b", "header"])
+            _ = self.skip_line(inputfile, "b")
+            line = next(inputfile)
+            self.append_attribute("rotconsts", [float(x) * 1.0e-3 for x in line.split()[:3]])
+
         # This is the corresponding section to the primitive definitions parsed above, so we
         # assume those numbers are available in the variable 'primitives'. Here we read in the
         # indicies of primitives, which we use to construct gbasis.
@@ -1329,21 +1338,3 @@ class DALTON(logfileparser.Logfile):
 
         if line[:37] == " >>>> Total wall time used in DALTON:":
             self.metadata["success"] = True
-
-        # TODO:
-        # aonames
-        # aooverlaps
-        # atomcharges
-        # atomspins
-        # coreelectrons
-        # etrotats
-        # grads
-        # hessian
-        # mocoeffs
-        # nocoeffs
-        # nooccnos
-        # scancoords
-        # scanenergies
-        # scannames
-        # scanparm
-        # vibanharms

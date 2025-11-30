@@ -1,1 +1,0 @@
-pyquante2 @ git+https://github.com/cclib/pyquante2.git@cythonize-becke

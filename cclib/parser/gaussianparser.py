@@ -7,15 +7,18 @@
 
 import datetime
 import re
+from typing import Dict, List, Tuple
 
 from cclib.parser import data, logfileparser, utils
 from cclib.parser.logfileparser import StopParsing
 
 import numpy
 
+__all__ = ("Gaussian", "parse_version")
+
 
 class Gaussian(logfileparser.Logfile):
-    """A Gaussian 98/03 log file."""
+    """A Gaussian log file."""
 
     def __init__(self, *args, **kwargs):
         super().__init__(logname="Gaussian", *args, **kwargs)
@@ -47,40 +50,7 @@ class Gaussian(logfileparser.Logfile):
         ans = label.replace("U", "u").replace("G", "g")
         return ans
 
-    # Use to map from the usual year suffixed to full years so package
-    # versions can be sorted properly after parsing with
-    # `packaging.parse.version`.
-    YEAR_SUFFIXES_TO_YEARS = {
-        "70": "1970",
-        "76": "1976",
-        "80": "1980",
-        "82": "1982",
-        "86": "1986",
-        "88": "1988",
-        "90": "1990",
-        "92": "1992",
-        "94": "1994",
-        "98": "1998",
-        "03": "2003",
-        "09": "2009",
-        "16": "2016",
-    }
-
     def before_parsing(self):
-        # Examples:
-        #  Gaussian 16:  Apple M1-G16RevC.02  7-Dec-2021
-        #  Gaussian 16:  ES64L-G16RevC.01  3-Jul-2019
-        #  Gaussian 98:  IBM-RS6000-G98RevA.7 11-Apr-1999
-        #  Gaussian 98:  SGI64-G98RevA.7 11-Apr-1999
-        self.re_platform_and_version = re.compile(
-            r"""
-            \ Gaussian\ (?P<year>\d{2}):\ {2}
-            (?P<platform>\w*\ ?\w*(?:-\w*)?)-G(?P<year_suffix>\d{2})Rev(?P<revision>[A-Z]\.\d{1,2}(?:\.\d)?)\ *
-            (?P<compile_date>\d{1,2}-[A-Z][a-z]{2}-\d{4})
-            """,
-            re.VERBOSE,
-        )
-
         # Calculations use point group symmetry by default.
         self.uses_symmetry = True
 
@@ -89,6 +59,11 @@ class Gaussian(logfileparser.Logfile):
         # Extract only well-formed numbers in traditional
         # floating-point format.
         self.re_float = re.compile(r"(\w*-?\w*)=\s*(-?\d+\.\d{10,})")
+
+        # Detect when a new link (Gaussian subprogram) is entered.
+        self.re_link = re.compile(r"\(Enter [\w/:\\\-\.]+l(?P<link_number>\d{3,4})\.exe\)")
+        # Printed in a different format, but always start here.
+        self.link = 1
 
         # Flag for identifying Coupled Cluster runs.
         self.coupledcluster = False
@@ -117,8 +92,40 @@ class Gaussian(logfileparser.Logfile):
         # or a new round in an optimisation etc).
         self.last_et = 0
 
+        # When running an NBO analysis on a calculation with different alpha
+        # and beta orbitals, the charges are printed for combined, alpha, and
+        # beta spins.  This is false when in the combined section (the general
+        # case) and true when in an alpha or beta section.
+        self.nbo_spin_section = False
+
+        # Define strings needed for line detection. Older Gaussian versions
+        # don't always give the charge type explicitly, so we must include
+        # "atomic" as a general term to catch all other atomic charge or spin
+        # lines.
+        self.atomprops_no_atomic = ["mulliken", "lowdin", "apt", "hirshfeld"]
+        self.atomprops = self.atomprops_no_atomic + ["atomic"]
+        # The (Hirshfeld) partial atomic charges and spins parsed in these
+        # sections need to be swapped after parsing via the general extraction
+        # code.  This is only required for version 09; Hirshfeld charges were
+        # not present earlier, and 16 combines them with CM5 in a different
+        # section.
+        self.atomcharges_atomspins_headers_swap = [
+            " spin densities, charges and dipoles using iradan="
+        ]
+        self.atomcharges_atomspins_headers = [
+            " atomic charges:",
+            " charges:",
+            " charges with hydrogens summed into heavy atoms:",
+            " atomic charges with hydrogens summed into heavy atoms:",
+            " atomic spin densities:",
+            " charges and spin densities with hydrogens summed into heavy atoms:",
+            " charges and spin densities:",
+        ] + self.atomcharges_atomspins_headers_swap
+
     def after_parsing(self):
-        # atomcoords are parsed as a list of lists but it should be an array
+        # atomcoords are parsed as a list of lists but it should be an array.
+        # Done automatically later in arrayify, but we need it now for the
+        # rest of this method.
         if hasattr(self, "atomcoords"):
             self.atomcoords = numpy.array(self.atomcoords)
 
@@ -130,16 +137,6 @@ class Gaussian(logfileparser.Logfile):
                 [(x[0], x[1], x[2] * numpy.sqrt(2)) for x in etsec] for etsec in self.etsecs
             ]
             self.etsecs = new_etsecs
-
-        if hasattr(self, "scanenergies"):
-            self.scancoords = []
-            if hasattr(self, "optstatus") and hasattr(self, "atomcoords"):
-                converged_indexes = [
-                    x for x, y in enumerate(self.optstatus) if y & data.ccData.OPT_DONE > 0
-                ]
-                self.scancoords = self.atomcoords[converged_indexes, :, :]
-            elif hasattr(self, "atomcoords"):
-                self.scancoords = self.atomcoords
 
         if (
             hasattr(self, "enthalpy")
@@ -198,8 +195,45 @@ class Gaussian(logfileparser.Logfile):
             for cpu_time in self.metadata["cpu_time"]:
                 self.metadata["wall_time"].append(cpu_time / self.num_cpu)
 
+        # Some calculation types don't use consistent MP levels throughout.
+        # For example, EOM-CCSD + opt prints MP3 and MP4 energies for the first iteration only.
+        # However, mpenergies needs to be homogeneous, so we need to do something about it.
+        if hasattr(self, "mpenergies"):
+            max_mp = max(len(mp_e) for mp_e in self.mpenergies)
+            mp_energies = []
+            for index, energy in enumerate(self.mpenergies):
+                if len(energy) != max_mp:
+                    self.logger.warning(
+                        "MP energies of order %d are incomplete and will be ignored", index + 2
+                    )
+
+                else:
+                    mp_energies.append(energy)
+
+            self.set_attribute("mpenergies", mp_energies)
+
+        # The Hirshfeld section from version 09 prints atomspins no matter
+        # what; no spin density means all printed values are zero.  Rather
+        # than determine whether or not they should be present by looking at
+        # (un)restricted flags and HOMO indices, check that they are the only
+        # key present in atomspins, since otherwise Mulliken will be there,
+        # since it isn't possible to simultaneously turn off Mulliken and
+        # Hirshfeld printing.
+        if hasattr(self, "atomcharges") and hasattr(self, "atomspins"):
+            if (
+                set(self.atomspins.keys()) == {"hirshfeld"}
+                and sum(self.atomspins["hirshfeld"]) == 0.0
+            ):
+                delattr(self, "atomspins")
+
+        super().after_parsing()
+
     def extract(self, inputfile, line):
         """Extract information from the file object inputfile."""
+
+        link_match = self.re_link.search(line)
+        if link_match is not None:
+            self.link = int(link_match.groupdict()["link_number"])
 
         # Extract the version number: "Gaussian 09, Revision D.01"
         # becomes "09revisionD.01".
@@ -209,24 +243,65 @@ class Gaussian(logfileparser.Logfile):
                 [tokens[1][:-1], "revision", tokens[-1][:-1]]
             )
 
-        # Extract the version number: "Gaussian 98: x86-Linux-G98RevA.11.3
-        # 5-Feb-2002" becomes "1998+A.11.3", and "Gaussian 16:
-        # ES64L-G16RevA.03 25-Dec-2016" becomes "2016+A.03".
         if "Gaussian, Inc.," in line:
             self.skip_lines(inputfile, ["b", "s"])
-            mtch = self.re_platform_and_version.match(next(inputfile))
-            if mtch is not None:
-                groupdict = mtch.groupdict()
-                year_suffix = groupdict["year_suffix"]
-                revision = groupdict["revision"]
-                self.metadata["package_version"] = (
-                    f"{self.YEAR_SUFFIXES_TO_YEARS[year_suffix]}+{revision}"
-                )
-                self.metadata["platform"] = groupdict["platform"]
+            parsed_version = parse_version(next(inputfile))
+            self.metadata.update(parsed_version)
             run_date = next(inputfile).strip()  # noqa: F841
+            line = self.skip_line(inputfile, "s")[0]
+            while set(line.strip()) != {"-"}:
+                # Parse performance info.
+                if "Will use up to" in line and "processors via shared memory." in line:
+                    self.metadata["num_cpu"] = int(line.split()[4])
+
+                elif line[1:6].lower() == "%mem=":
+                    # The maximum amount of memory requested.
+                    # We need to do some unit juggling.
+                    mem_str = line.strip().upper()
+                    # No space is allowed between units, units can probably only be uppercase but convert anyway.
+                    # Supported units are: 'KB, MB, GB, TB, KW, MW, GW or TW'.
+                    # TODO: Good opportunity for case here in future.
+                    units = mem_str[-2:]
+                    raw_mem = int(mem_str[5:-2])
+                    # We are converting to bytes.
+                    if units == "TB":
+                        memory = raw_mem * 1e12
+
+                    elif units == "GB":
+                        memory = raw_mem * 1e9
+
+                    elif units == "MB":
+                        memory = raw_mem * 1e6
+
+                    elif units == "KB":
+                        memory = raw_mem * 1e3
+
+                    elif units == "TW":
+                        memory = raw_mem * 8e12
+
+                    elif units == "GW":
+                        memory = raw_mem * 8e9
+
+                    elif units == "MW":
+                        memory = raw_mem * 8e6
+
+                    elif units == "KW":
+                        memory = raw_mem * 8e3
+
+                    else:
+                        # No explicit units, default are single words (8-bytes)
+                        memory = mem_str[5:] * 8
+
+                    self.metadata["memory_available"] = int(memory)
+                line = next(inputfile)
+            line = next(inputfile)
+            self.parse_keywords_route_and_comment(inputfile, line)
 
         if line.strip().startswith("Link1:  Proceeding to internal job step number"):
             self.new_internal_job()
+            self.skip_line(inputfile, "d")
+            line = next(inputfile)
+            self.parse_keywords_route_and_comment(inputfile, line)
 
         # Parse performance info.
         if "Will use up to" in line and "processors via shared memory." in line:
@@ -587,9 +662,7 @@ class Gaussian(logfileparser.Logfile):
 
         # Catch message about completed optimization.
         if line[1:23] == "Optimization completed":
-            if not hasattr(self, "optdone"):
-                self.optdone = []
-            self.optdone.append(len(self.geovalues) - 1)
+            self.append_attribute("optdone", len(self.geovalues) - 1)
 
             assert hasattr(self, "optstatus") and len(self.optstatus) > 0
             self.optstatus[-1] += data.ccData.OPT_DONE
@@ -702,13 +775,10 @@ class Gaussian(logfileparser.Logfile):
         # This is generally parsed before coordinates, so atomnos is not defined.
         # Note that in Gaussian03 the comments are not there yet and the labels are different.
         if line.strip() == "Isotopes and Nuclear Properties:":
-            if not hasattr(self, "atommasses"):
-                self.atommasses = []
-
             line = next(inputfile)
             while line[1:16] != "Leave Link  101":
                 if line[1:8] == "AtmWgt=":
-                    self.atommasses.extend(list(map(float, line.split()[1:])))
+                    self.extend_attribute("atommasses", list(map(float, line.split()[1:])))
                 line = next(inputfile)
 
         # Symmetry: point group
@@ -733,10 +803,8 @@ class Gaussian(logfileparser.Logfile):
 
         # Symmetry: ordering of irreducible representations
         if "symmetry adapted cartesian basis functions" in line:
-            if not hasattr(self, "symlabels"):
-                self.symlabels = []
             irrep = self.normalisesym(line.split()[-2])
-            self.symlabels.append(irrep)
+            self.append_attribute("symlabels", irrep)
 
         # Extract the atomic numbers and coordinates of the atoms.
         if line.strip() == "Standard orientation:":
@@ -1070,9 +1138,7 @@ class Gaussian(logfileparser.Logfile):
         # Matches "Step number  123", "Pt XX Step number 123" and "PtXXX Step number 123"
         if " Step number" in line:
             step = int(line.split()[line.split().index("Step") + 2])
-            if not hasattr(self, "optstatus"):
-                self.optstatus = []
-            self.optstatus.append(data.ccData.OPT_UNKNOWN)
+            self.append_attribute("optstatus", data.ccData.OPT_UNKNOWN)
             if step == 1:
                 self.optstatus[-1] += data.ccData.OPT_NEW
 
@@ -2145,15 +2211,13 @@ class Gaussian(logfileparser.Logfile):
         #     2  C    0.320624   0.000869
         #
         # APT and Lowdin charges are also displayed in this way.
-        def extract_charges_spins(line, prop):
-            """Extracts atomic charges and spin densities into
+        def extract_charges_spins(line: str, prop: str) -> None:
+            """Extracts atomic charges and spin de strnsities into
                self.atomcharges and self.atomspins dictionaries.
 
             Inputs:
-                line - line header marking the beginning of a
-                particular set of charges or spins.
-                prop - property type to be extracted as a
-                string (e.g. Mulliken, Lowdin, APT).
+                line - line header marking the beginning of a particular set of charges or spins.
+                prop - property type to be extracted as a string (e.g. Mulliken, Lowdin, APT).
             """
             has_spin = "spin" in line.lower()
             has_charges = "charges" in line.lower()
@@ -2164,6 +2228,12 @@ class Gaussian(logfileparser.Logfile):
             _ = next(inputfile)
             charges = []
             spins = []
+            # It's possible that this could match on a header other than how
+            # the match happen in the code before calling this function, but
+            # the effect should be the same.
+            swap_indices = any(
+                header in line.lower() for header in self.atomcharges_atomspins_headers_swap
+            )
             is_sum = "summed" in line
             # Iterate over each line and append values to a list
             # based on whether they are charges or spins.
@@ -2190,13 +2260,9 @@ class Gaussian(logfileparser.Logfile):
                         # spins, so these should be ignored.
                         while nline.split()[1] == "H":
                             nline = next(inputfile)
-                        split_line = nline.split()
-                        if has_charges:
-                            charges.append(float(split_line[2]))
-                            if has_spin:
-                                spins.append(float(split_line[3]))
-                        elif has_spin:
-                            spins.append(float(split_line[2]))
+                        _append_charges_and_spins(
+                            nline, has_charges, charges, has_spin, spins, swap_indices
+                        )
             else:
                 for i in self.atomnos:
                     # Ignore translation vectors.
@@ -2204,19 +2270,15 @@ class Gaussian(logfileparser.Logfile):
                         pass
                     else:
                         nline = next(inputfile)
-                        split_line = nline.split()
-                        if has_charges:
-                            charges.append(float(split_line[2]))
-                            if has_spin:
-                                spins.append(float(split_line[3]))
-                        elif has_spin:
-                            spins.append(float(split_line[2]))
+                        _append_charges_and_spins(
+                            nline, has_charges, charges, has_spin, spins, swap_indices
+                        )
             # When the charge type is not given explicitly we
             # must find it from the bottom line, which always
             # has the format: "Sum of Mulliken charges=   0.00000"
             # so we can extract the type by splitting each
             # line until we get a valid charge type.
-            while prop.lower() not in ["mulliken", "lowdin", "apt"]:
+            while prop.lower() not in self.atomprops_no_atomic:
                 nline = next(inputfile)
                 prop = nline.split()[2].lower()
             # Input extracted values into self.atomcharges.
@@ -2231,26 +2293,13 @@ class Gaussian(logfileparser.Logfile):
                 else:
                     self.atomspins[f"{prop}"] = spins
 
-        # Define strings needed for line detection. Older Gaussian
-        # versions don't always give the charge type explicitly,
-        # so we must include "atomic" as a general term to catch
-        # all other atomic charge or spin lines.
-        props = ["mulliken", "lowdin", "apt", "atomic"]
-        headers = [
-            " atomic charges:",
-            " charges:",
-            " charges with hydrogens summed into heavy atoms:",
-            " atomic charges with hydrogens summed into heavy atoms:",
-            " atomic spin densities:",
-            " charges and spin densities with hydrogens summed into heavy atoms:",
-            " charges and spin densities:",
-        ]
+            return None
 
         if hasattr(self, "atomnos"):
             # Combine props and headers to find lines heading lists
             # of atom charges or spins.
-            for prop in props:
-                for header in headers:
+            for prop in self.atomprops:
+                for header in self.atomcharges_atomspins_headers:
                     if f"{prop}{header}".lower() in line.lower():
                         # When we use "atomic" as the property, only
                         # extract if the charge type isn't given explicity.
@@ -2258,19 +2307,25 @@ class Gaussian(logfileparser.Logfile):
                         # e.g. "Mulliken atomic charges:" is caught by
                         # "mulliken atomic charges:" and " atomic charges:"
                         if prop == "atomic":
-                            if (
-                                "mulliken" not in line.lower()
-                                and "lowdin" not in line.lower()
-                                and "apt" not in line.lower()
+                            if all(
+                                atomprop not in line.lower()
+                                for atomprop in self.atomprops_no_atomic
                             ):
                                 extract_charges_spins(line, prop)
                         else:
                             extract_charges_spins(line, prop)
 
+        if "N A T U R A L   A T O M I C   O R B I T A L" in line:
+            self.nbo_spin_section = False
+        elif "Alpha spin orbitals" in line:
+            self.nbo_spin_section = True
+        elif "Beta spin orbitals" in line:
+            self.nbo_spin_section = True
+
         if line.strip() == "Natural Population":
             if not hasattr(self, "atomcharges"):
                 self.atomcharges = {}
-            if "natural" not in self.atomcharges:
+            if not self.nbo_spin_section:
                 line1 = next(inputfile)
                 line2 = next(inputfile)
                 if line1.split()[0] == "Natural" and line2.split()[2] == "Charge":
@@ -2324,6 +2379,80 @@ class Gaussian(logfileparser.Logfile):
             self.atomcharges["hirshfeld_sum"] = atomcharges_hirshfeld_summed
             self.atomcharges["cm5_sum"] = atomcharges_cm5_summed
 
+        # Determine information about ESP-derived charges.
+        if self.link == 602:
+            # Some are not prefixed or postfixed for consistency with the
+            # Q-Chem parser.
+            radii_to_esp_model = {
+                "Breneman": "chelpg",
+                "Chirlian-Francl": "chelp",
+                "Francl": "chelp",
+                # Ideally would be "esp_hly".
+                "Hu-Lu-Yang": "esp",
+                # Ideally would be "esp_mk".
+                "Merz-Kollman": "esp",
+                # Ideally would be "esp_mkuff".
+                "UFF": "esp",
+            }
+            esp_iop = self.metadata["routes"][-1][6][20]
+            if line.startswith(" Read replacement radii"):
+                # This section still generally depends on a parent set of
+                # radii being defined.  This parent set determines the
+                # atomcharges key.
+                re_radii_line = re.compile(
+                    r"Rad\((?P<atnum>\d+)\)\s+=\s+(?P<radius>\d\.\d{12}D\+\d{2})"
+                )
+                line = next(inputfile)
+                while line.startswith(" Rad("):
+                    mtch = re_radii_line.search(line)
+                    assert mtch is not None
+                    _atnum = int(mtch.group("atnum"))
+                    _radius = utils.float(mtch.group("radius"))
+                    line = next(inputfile)
+            elif "radii" in line:
+                self.esp_model = radii_to_esp_model[line.split()[0]]
+            elif line.startswith(" Generate Potential Derived Charges using the"):
+                self.esp_model = radii_to_esp_model[line.split()[6]]
+            elif line.strip() == "Electrostatic Properties Using The SCF Density":
+                key = self.esp_model
+                _ = self.skip_lines(inputfile, ["b", "s", "b"])
+                # atomic positions
+                for _ in range(self.natom):
+                    line = next(inputfile)
+                line = next(inputfile)
+                assert "points will be used for fitting atomic charges" in line
+                _npoints = int(line.split()[0])
+                line = next(inputfile)
+                assert "Fitting point charges" in line
+                fitting_point_dipoles = False
+                if "Fitting point charges and point dipoles" in line:
+                    fitting_point_dipoles = True
+                line = next(inputfile)
+                if line.strip() == "The dipole moment will be constrained to the correct value":
+                    # This doesn't make sense for ChElP(G), so avoid setting
+                    # it there.
+                    if key == "esp":
+                        key = "resp"
+                    if fitting_point_dipoles:
+                        _key = "esp_mk_dipole_atom"
+                    line = next(inputfile)
+                assert line.startswith(" Charges from ESP fit")
+                line = next(inputfile)
+                assert line.startswith(" Charge=") or line.strip() in (
+                    "ESP charges:",
+                    "ESP charges         Point Dipoles (au):",
+                )
+                line = next(inputfile)
+                line = next(inputfile)
+                charges = []
+                for _ in range(self.natom):
+                    charges.append(float(line.split()[2]))
+                    line = next(inputfile)
+                # Gaussian atomic densities instead of those from the HLY scheme
+                if esp_iop == 15:
+                    _key = "esp_hlygat"
+                self.atomcharges[key] = charges
+
         # Extract Thermochemistry
         # Temperature   298.150 Kelvin.  Pressure   1.00000 Atm.
         # Zero-point correction=                           0.342233 (Hartree/
@@ -2348,22 +2477,18 @@ class Gaussian(logfileparser.Logfile):
         # matrix.
         if line[1:26] == "SCF Polarizability for W=":
             self.hp_polarizabilities = True
-            if not hasattr(self, "polarizabilities"):
-                self.polarizabilities = []
             polarizability = numpy.zeros(shape=(3, 3))
             self.skip_line(inputfile, "directions")
             for i in range(3):
                 line = next(inputfile)
                 polarizability[i, : i + 1] = [utils.float(x) for x in line.split()[1:]]
-
-            polarizability = utils.symmetrize(polarizability, use_triangle="lower")
-            self.polarizabilities.append(polarizability)
+            self.append_attribute(
+                "polarizabilities", utils.symmetrize(polarizability, use_triangle="lower")
+            )
 
         # Static polarizability (from `freq`), lower triangular matrix.
         if line[1:16] == "Polarizability=":
             self.hp_polarizabilities = True
-            if not hasattr(self, "polarizabilities"):
-                self.polarizabilities = []
             polarizability = numpy.zeros(shape=(3, 3))
             polarizability_list = []
             polarizability_list.extend([line[16:31], line[31:46], line[46:61]])
@@ -2371,16 +2496,15 @@ class Gaussian(logfileparser.Logfile):
             polarizability_list.extend([line[16:31], line[31:46], line[46:61]])
             indices = numpy.tril_indices(3)
             polarizability[indices] = [utils.float(x) for x in polarizability_list]
-            polarizability = utils.symmetrize(polarizability, use_triangle="lower")
-            self.polarizabilities.append(polarizability)
+            self.append_attribute(
+                "polarizabilities", utils.symmetrize(polarizability, use_triangle="lower")
+            )
 
         # Static polarizability, compressed into a single line from
         # terse printing.
         # Order is XX, YX, YY, ZX, ZY, ZZ (lower triangle).
         if line[2:23] == "Exact polarizability:":
             if not self.hp_polarizabilities:
-                if not hasattr(self, "polarizabilities"):
-                    self.polarizabilities = []
                 polarizability = numpy.zeros(shape=(3, 3))
                 indices = numpy.tril_indices(3)
                 try:
@@ -2413,8 +2537,9 @@ class Gaussian(logfileparser.Logfile):
                             line[63:71],
                         ]
                     ]
-                polarizability = utils.symmetrize(polarizability, use_triangle="lower")
-                self.polarizabilities.append(polarizability)
+                self.append_attribute(
+                    "polarizabilities", utils.symmetrize(polarizability, use_triangle="lower")
+                )
 
         # IRC Computation convergence checks.
         #
@@ -2476,17 +2601,13 @@ class Gaussian(logfileparser.Logfile):
         #   Delta-x Convergence NOT Met
         # IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC-IRC
         if line[1:20] == "INPUT DATA FOR L123":  # First IRC step
-            if not hasattr(self, "optstatus"):
-                self.optstatus = []
-            self.optstatus.append(data.ccData.OPT_NEW)
+            self.append_attribute("optstatus", data.ccData.OPT_NEW)
         if line[3:22] == "Delta-x Convergence":
             if line[23:30] == "NOT Met":
                 self.optstatus[-1] += data.ccData.OPT_UNCONVERGED
             elif line[23:26] == "Met":
                 self.optstatus[-1] += data.ccData.OPT_DONE
-                if not hasattr(self, "optdone"):
-                    self.optdone = []
-                self.optdone.append(len(self.optstatus) - 1)
+                self.append_attribute("optdone", len(self.optstatus) - 1)
 
         # Save num CPUs incase we have an old version of Gaussian which doesn't print wall times.
         if "Will use up to" in line:
@@ -2540,3 +2661,189 @@ class Gaussian(logfileparser.Logfile):
 
         if line[:31] == " Normal termination of Gaussian":
             self.metadata["success"] = True
+
+        if line.startswith(" Error termination via"):
+            self.metadata["success"] = False
+
+    def parse_keywords_route_and_comment(self, inputfile, line: str) -> None:
+        """Parse the keyword line and comment from the echoed input file into metadata."""
+        # example:
+        #
+        # --------------------------------
+        # #p hf/sto-3g polar symmetry=none
+        # --------------------------------
+        # 1/38=1,172=1/1;
+        # 2/12=2,15=3,17=6,18=5,40=1/2;
+        # 3/6=3,11=9,25=1,30=1/1,2,3;
+        # 4//1;
+        # 5/5=2,38=5,98=1/2;
+        # 8/6=4,10=90,11=11/1;
+        # 10/6=1,13=10,31=1/2;
+        # 6/7=2,8=2,9=2,10=2,28=1/1;
+        # 99/5=1,9=1/99;
+        # Leave Link    1 at Wed Apr  4 10:15:34 2018, MaxMem=           0 cpu:               0.0 elap:               0.1
+        # (Enter /software/Gaussian16/g16_sse4/g16/l101.exe)
+        # --------------------------------
+        # tryptophan static polarizability
+        # --------------------------------
+        keywords = []
+        while set(line.strip()) != {"-"}:
+            keywords.append(line.strip())
+            line = next(inputfile)
+        if "keywords" not in self.metadata:
+            self.metadata["keywords"] = []
+        self.metadata["keywords"].append("".join(keywords))
+        line = next(inputfile)
+        route_lines = []
+        while set(line.strip()) != {"-"}:
+            if "Leave Link    1" in line and "MaxMem=" in line and "num_cpu" in self.metadata:
+                # Leave Link    1 at Wed Apr  4 10:49:19 2018, MaxMem=   805306368 cpu:               0.3 elap:               0.0
+                # Gaussian helpfully prints the total 'available' memory for us. There are, however a few caveats here:
+                # 1) This memory (in bytes) is per CPU
+                # 2) The total memory here (x num_cpu) will not equal the amount requested in %mem because Gaussian (probably erroneously)
+                #    interprets GB as gibibytes (1024 x 1024 x 1024 bytes) rather than gigabytes. This has the unfortunate consequence of
+                #    Gaussian assigning more memory than you probably expected.
+                #
+                # MaxMem can appear with or without whitespace:
+                # MaxMem=  805306368
+                # MaxMem=174483046400
+                maxmem = re.search(r"MaxMem=\s*(\d+)", line)
+                assert maxmem is not None
+                memory_per_cpu = int(maxmem.group(1))
+                self.metadata["memory_used"] = memory_per_cpu * self.metadata["num_cpu"]
+            route_lines.append(line)
+            line = next(inputfile)
+        route_lines = [line for line in route_lines if re.match(r"\s\d", line) is not None]
+        route = parse_route_lines(route_lines)
+        if "routes" not in self.metadata:
+            self.metadata["routes"] = []
+        self.metadata["routes"].append(route)
+        line = next(inputfile)
+        comments = []
+        while set(line.strip()) != {"-"}:
+            comments.append(line.strip())
+            line = next(inputfile)
+        if "comments" not in self.metadata:
+            self.metadata["comments"] = []
+        self.metadata["comments"].append("".join(comments))
+
+
+# Examples:
+#  Gaussian 16:  Apple M1-G16RevC.02  7-Dec-2021
+#  Gaussian 16:  ES64L-G16RevC.01  3-Jul-2019
+#  Gaussian 98:  IBM-RS6000-G98RevA.7 11-Apr-1999
+#  Gaussian 98:  SGI64-G98RevA.7 11-Apr-1999
+RE_PLATFORM_AND_VERSION = re.compile(
+    r"""
+    (?:\ Gaussian\ (?P<year>\d{2}):\ {2})?  # not present in fchk files
+    (?P<platform>\w*\ ?\w*(?:-\w*)?)-G(?P<year_suffix>\d{2})Rev(?P<revision>[A-Z]\.\d{1,2}(?:\.\d)?)
+    (?:\ +(?P<compile_date>\d{1,2}-[A-Z][a-z]{2}-\d{4}))?  # not present in fchk files
+    """,
+    re.VERBOSE,
+)
+
+# Use to map from the usual year suffixed to full years so package
+# versions can be sorted properly after parsing with
+# `packaging.parse.version`.
+YEAR_SUFFIXES_TO_YEARS = {
+    "70": "1970",
+    "76": "1976",
+    "80": "1980",
+    "82": "1982",
+    "86": "1986",
+    "88": "1988",
+    "90": "1990",
+    "92": "1992",
+    "94": "1994",
+    "98": "1998",
+    "03": "2003",
+    "09": "2009",
+    "16": "2016",
+}
+
+
+def parse_version(line: str) -> Dict[str, str]:
+    """Extract the version number from Gaussian log and formatted checkpoint
+    files.
+
+    From log files, "Gaussian 98: x86-Linux-G98RevA.11.3 5-Feb-2002" becomes
+    "1998+A.11.3", and "Gaussian 16: ES64L-G16RevA.03 25-Dec-2016" becomes
+    "2016+A.03".
+
+    In formatted checkpoint files, only the middle part of the string is
+    present.
+
+    The compile date, which is the last part of the string in log files, is
+    not used.
+    """
+    mtch = RE_PLATFORM_AND_VERSION.match(line)
+    assert mtch is not None
+    groupdict = mtch.groupdict()
+    year_suffix = groupdict["year_suffix"]
+    revision = groupdict["revision"]
+    return {
+        "package_version": f"{YEAR_SUFFIXES_TO_YEARS[year_suffix]}+{revision}",
+        "platform": groupdict["platform"],
+    }
+
+
+def _append_charges_and_spins(
+    nline: str,
+    has_charges: bool,
+    charges: List[float],
+    has_spin: bool,
+    spins: List[float],
+    swap_indices: bool,
+) -> None:
+    """Append partial atomic charges and spins to their respective lists, if
+    they were determined beforehand to exist.
+    """
+    split_line = nline.split()
+    if has_charges:
+        charge_index = 2 if not swap_indices else 3
+        charges.append(float(split_line[charge_index]))
+        if has_spin:
+            spin_index = 3 if not swap_indices else 2
+            spins.append(float(split_line[spin_index]))
+    elif has_spin:
+        # This will never need swapping, since the particular section where
+        # swapping is relevant 1. will always have both charges and spins and
+        # 2. has spins first.
+        spins.append(float(split_line[2]))
+
+
+Overlay = int
+Option = int
+Value = int
+Route = Dict[Overlay, Dict[Option, Value]]
+
+
+def parse_route_line(route_line: str) -> Tuple[Overlay, Dict[Option, Value]]:
+    """Parse a single line of the route section.
+
+    This line should be preserved as present in the input, with a single
+    leading space, a trailing semicolon, and a possible trailing newline.
+    """
+    cleaned = route_line.rstrip()
+    # remove single leading space and single trailing semicolon
+    assert cleaned[-1] == ";"
+    cleaned = cleaned[1:-1]
+    # it's not clear the stuff at the end means anything
+    route, options, _ = cleaned.split("/")
+    if not options:
+        return int(route), dict()
+    return int(route), dict([[int(x) for x in pair.split("=")] for pair in options.split(",")])
+
+
+def parse_route_lines(route_lines: List[str]) -> Route:
+    """Parse the route lines appearing after the input keyword line.
+
+    The route is the section of global internal options (IOps) derived from
+    the input keywords and dictates what calculation will be performed
+    (https://gaussian.com/iops/).
+    """
+    route = dict()
+    for route_line in route_lines:
+        overlay, mapping = parse_route_line(route_line)
+        route[overlay] = mapping
+    return route

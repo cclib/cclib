@@ -13,7 +13,7 @@ from abc import ABC, abstractmethod
 from typing import Any, Iterable, List, Optional
 
 from cclib.parser import utils
-from cclib.parser.data import ccData
+from cclib.parser.data import ccData, ccData_optdone_bool
 from cclib.parser.logfilewrapper import FileWrapper
 
 import numpy
@@ -39,7 +39,7 @@ class Logfile(ABC):
         loglevel: int = logging.ERROR,
         logname: str = "Log",
         logstream=sys.stderr,
-        datatype=ccData,
+        datatype=ccData_optdone_bool,
         **kwds,
     ):
         """Initialise the Logfile object.
@@ -87,6 +87,12 @@ class Logfile(ABC):
         self.datatype = datatype
 
         self.future = kwds.get("future", False)
+        # Change the class used if we want optdone to be a list or if the 'future' option
+        # is used, which might have more consequences in the future.
+        optdone_as_list = kwds.get("optdone_as_list", False) or kwds.get("future", False)
+        optdone_as_list = optdone_as_list if isinstance(optdone_as_list, bool) else False
+        if optdone_as_list:
+            self.datatype = ccData
         # Parsing of Natural Orbitals and Natural Spin Orbtials into one attribute
         self.unified_no_nso = self.future
 
@@ -205,6 +211,28 @@ class Logfile(ABC):
             if attr not in _nodelete:
                 self.__delattr__(attr)
 
+        # Convert from atomic units to convenience units.
+        for attr in ("ccenergies", "dispersionenergies", "mpenergies", "scfenergies"):
+            if hasattr(data, attr):
+                setattr(data, attr, utils.convertor(getattr(data, attr), "hartree", "eV"))
+        for attr in ("etenergies",):
+            if hasattr(data, attr):
+                setattr(data, attr, utils.convertor(getattr(data, attr), "hartree", "wavenumber"))
+        for attr in ("scanenergies",):
+            if hasattr(data, attr):
+                setattr(
+                    data,
+                    attr,
+                    utils.convertor(numpy.asarray(getattr(data, attr)), "hartree", "eV").tolist(),
+                )
+        for attr in ("moenergies",):
+            if hasattr(data, attr):
+                setattr(
+                    data,
+                    attr,
+                    [utils.convertor(elem, "hartree", "eV") for elem in getattr(data, attr)],
+                )
+
         # Perform final checks on values of attributes.
         data.check_values(logger=self.logger)
 
@@ -220,6 +248,23 @@ class Logfile(ABC):
 
     def after_parsing(self) -> None:
         """Correct data or do parser-specific validation after parsing is finished."""
+
+        # atomcoords are parsed as a list of lists but it should be an array.
+        # Done automatically later in arrayify, but we need it now for the
+        # rest of this method.
+        if hasattr(self, "atomcoords"):
+            self.atomcoords = numpy.array(self.atomcoords)
+
+        if hasattr(self, "scanenergies"):
+            self.set_attribute("scancoords", [])
+            if hasattr(self, "optstatus") and hasattr(self, "atomcoords"):
+                converged_indexes = [
+                    x for x, y in enumerate(self.optstatus) if y & ccData.OPT_DONE > 0
+                ]
+                self.set_attribute("scancoords", self.atomcoords[converged_indexes, :, :])
+            elif hasattr(self, "atomcoords"):
+                self.set_attribute("scancoords", self.atomcoords)
+
         if (
             hasattr(self, "enthalpy")
             and hasattr(self, "entropy")

@@ -7,10 +7,10 @@
 
 import datetime
 import re
-from itertools import zip_longest
+from itertools import chain, zip_longest
 from typing import Callable, Optional, Tuple
 
-from cclib.parser import logfileparser, utils
+from cclib.parser import data, logfileparser, utils
 
 import numpy
 from packaging.version import parse as parse_version
@@ -56,36 +56,27 @@ class ORCA(logfileparser.Logfile):
         # needs to be here so regression tests pass
         self.reference = [0.0, 0.0, 0.0]
 
-    def after_parsing(self):
-        super().after_parsing()
-        # ORCA doesn't add the dispersion energy to the "Total energy" (which
-        # we parse), only to the "FINAL SINGLE POINT ENERGY" (which we don't
-        # parse).
-        if hasattr(self, "scfenergies") and hasattr(self, "dispersionenergies"):
-            for i, (scfenergy, dispersionenergy) in enumerate(
-                zip_longest(self.scfenergies, self.dispersionenergies)
-            ):
-                # It isn't as problematic if there are more dispersion than
-                # SCF energies, since all dispersion energies can still be
-                # added to the SCF energies, hence the difference in log level.
-                if dispersionenergy is None:
-                    self.logger.error(
-                        "The number of SCF and dispersion energies are not equal: %d vs. %d, "
-                        "can't add dispersion energy to all SCF energies",
-                        len(self.scfenergies),
-                        len(self.dispersionenergies),
-                    )
-                    break
-                if scfenergy is None:
-                    self.logger.warning(
-                        "The number of SCF and dispersion energies are not equal: %d vs. %d, "
-                        "can't add dispersion energy to all SCF energies",
-                        len(self.scfenergies),
-                        len(self.dispersionenergies),
-                    )
-                    break
-                self.scfenergies[i] += dispersionenergy
+        # Is this a numerical frequency calc?
+        self.numfreq = False
 
+        # Match a line for a single contribution to a CIS/TDDFT/TDA/RPA
+        # calculation.
+        # Example lines:
+        #    32a ->  38a  :     0.045759 (c= -0.21391281)
+        #    17a ->  20a  :     0.061720
+        #   1779a -> 1787a  :     1.000000 (c=  1.00000000)
+        # where the coefficient is not present for RPA.
+        self.re_singly_excited_configuration = re.compile(
+            r"""
+            \s*(?P<start>\d+)(?P<start_spin>[ab])\s*->
+            \s*(?P<end>\d+)(?P<end_spin>[ab])\s+:
+            \s*(?P<weight>\d\.\d{6})
+            (?:\s\(c=\s+(?P<coefficient>-?\d\.\d{8})\))?
+            """,
+            flags=re.VERBOSE,
+        )
+
+    def sort_et(self):
         # ORCA prints singlet and triplet excited states separately, so the energies are out of order.
         if hasattr(self, "etenergies"):
             prop_names = ("etenergies", "etsyms", "etoscs", "etsecs", "etrotats")
@@ -116,6 +107,38 @@ class ORCA(logfileparser.Logfile):
             for prop_name in props:
                 setattr(self, prop_name, props[prop_name])
 
+    def after_parsing(self):
+        super().after_parsing()
+        # ORCA doesn't add the dispersion energy to the "Total energy" (which
+        # we parse), only to the "FINAL SINGLE POINT ENERGY" (which we don't
+        # parse).
+        if hasattr(self, "scfenergies") and hasattr(self, "dispersionenergies"):
+            for i, (scfenergy, dispersionenergy) in enumerate(
+                zip_longest(self.scfenergies, self.dispersionenergies)
+            ):
+                # It isn't as problematic if there are more dispersion than
+                # SCF energies, since all dispersion energies can still be
+                # added to the SCF energies, hence the difference in log level.
+                if dispersionenergy is None:
+                    self.logger.error(
+                        "The number of SCF and dispersion energies are not equal: %d vs. %d, "
+                        "can't add dispersion energy to all SCF energies",
+                        len(self.scfenergies),
+                        len(self.dispersionenergies),
+                    )
+                    break
+                if scfenergy is None:
+                    self.logger.warning(
+                        "The number of SCF and dispersion energies are not equal: %d vs. %d, "
+                        "can't add dispersion energy to all SCF energies",
+                        len(self.scfenergies),
+                        len(self.dispersionenergies),
+                    )
+                    break
+                self.scfenergies[i] += dispersionenergy
+
+        self.sort_et()
+
         # If we previously stored the mem per cpu, add the total mem now.
         if hasattr(self, "mem_per_cpu"):
             self.metadata["memory_available"] = int(self.mem_per_cpu * self.metadata["num_cpu"])
@@ -127,13 +150,17 @@ class ORCA(logfileparser.Logfile):
         if "Program Version" == line.strip()[:15]:
             # Handle development versions.
             self.metadata["legacy_package_version"] = line.split()[2]
-            self.metadata["package_version"] = self.metadata["legacy_package_version"].replace(
-                ".x", "dev"
+            self.metadata["package_version"] = (
+                self.metadata["legacy_package_version"]
+                .replace(".x", "dev")
+                .replace("-f.", ".post")  # e.g. 6.0.1-f.3 -> 6.0.1.post3
             )
             possible_revision_line = next(inputfile)
             if "SVN: $Rev" in possible_revision_line:
                 version = re.search(r"\d+", possible_revision_line).group()
                 self.metadata["package_version"] += f"+{version}"
+
+            self.version = parse_version(self.metadata["package_version"]).release
 
         # Extract basis-set info.
         # ----- Orbital basis set information -----
@@ -156,7 +183,10 @@ class ORCA(logfileparser.Logfile):
         #
         # ================================================================================
         if "WARNINGS" == line.strip():
-            self.skip_lines(inputfile, ["text", "=", "blank"])
+            self.skip_lines(inputfile, ["text", "="])
+            if self.version[0] <= 3:
+                _ = self.skip_line(inputfile, "Now building the actual basis set")
+            _ = self.skip_line(inputfile, "blank")
             if "warnings" not in self.metadata:
                 self.metadata["warnings"] = []
             if "info" not in self.metadata:
@@ -351,11 +381,12 @@ class ORCA(logfileparser.Logfile):
                 line = next(inputfile).strip()
                 self.append_attribute("scannames", line.split(":")[0])
         if "TRAJECTORY STEP" in line:
-            current_params = []
+            if not hasattr(self, "scanparm"):
+                self.scanparm = [[] for _ in range(len(self.scannames))]
             for i in range(len(self.scannames)):
                 line = next(inputfile)
-                current_params.append(float(line.split(":")[-1].strip()))
-            self.append_attribute("scanparm", tuple(current_params))
+                parm = float(line.split(":")[-1].strip())
+                self.scanparm[i].append(parm)
 
         # If the calculations is a relaxed parameter scan then immediately following the
         # input file block is the following section:
@@ -400,27 +431,7 @@ class ORCA(logfileparser.Logfile):
             self.set_attribute("mult", mult)
 
         if line[1:18] == "Symmetry handling":
-            self.uses_symmetry = True
-
-            line = next(inputfile)
-            assert "Point group" in line
-            point_group_full = line.split()[3].lower()
-            line = next(inputfile)
-            assert "Used point group" in line
-            point_group_abelian = line.split()[4].lower()
-            line = next(inputfile)
-            assert "Number of irreps" in line
-            nirrep = int(line.split()[4])
-            for n in range(nirrep):
-                line = next(inputfile)
-                assert "symmetry adapted basis functions" in line
-                irrep = line[8:13]
-                if not hasattr(self, "symlabels"):
-                    self.symlabels = []
-                self.symlabels.append(self.normalisesym(irrep))
-
-            self.metadata["symmetry_detected"] = point_group_full
-            self.metadata["symmetry_used"] = point_group_abelian
+            self.parse_symmetry_section(inputfile)
 
         if "Density Functional" == line[1:19]:
             self.is_DFT = True
@@ -475,17 +486,23 @@ class ORCA(logfileparser.Logfile):
                     # Only get this for SMD.
                     self.metadata["solvent_name"] = line.split()[-1].lower()
 
-        # SCF convergence output begins with:
+        # In Orca <= 5.x, SCF convergence output begins with:
         #
         # --------------
         # SCF ITERATIONS
         # --------------
         #
         # However, there are two common formats which need to be handled, implemented as separate functions.
-        if line.strip() == "SCF ITERATIONS":
-            self.skip_line(inputfile, "dashes")
+        # In Orca 6.x, the SCF ITERATIONS header has been removed, and there is no warning before the
+        # convergence data is printed.
+        if line.strip() == "SCF ITERATIONS" or (
+            "Iteration" in line and "Energy" in line and "Delta-E" in line
+        ):
+            # Skip for old Orca.
+            if line.strip() == "SCF ITERATIONS":
+                self.skip_line(inputfile, "dashes")
+                line = next(inputfile)
 
-            line = next(inputfile)
             columns = line.split()
             # "Starting incremental Fock matrix formation" doesn't
             # necessarily appear before the extended format.
@@ -524,8 +541,6 @@ class ORCA(logfileparser.Logfile):
         if "SCF CONVERGED AFTER" in line:
             if not hasattr(self, "scfvalues"):
                 self.scfvalues = []
-            if not hasattr(self, "scftargets"):
-                self.scftargets = []
 
             while "Total Energy       :" not in line:
                 line = next(inputfile)
@@ -557,8 +572,6 @@ class ORCA(logfileparser.Logfile):
         if "SCF NOT CONVERGED AFTER" in line:
             if not hasattr(self, "scfvalues"):
                 self.scfvalues = []
-            if not hasattr(self, "scftargets"):
-                self.scftargets = []
 
             self.append_attribute("scfenergies", self.scfvalues[-1][-1][0])
             self.metadata["methods"].append("HF" if not self.is_DFT else "DFT")
@@ -670,13 +683,14 @@ Dispersion correction           -0.016199959
         # Max. Displacement        TolMAXD  ....  4.0000e-03 bohr
         # RMS Displacement         TolRMSD  ....  2.0000e-03 bohr
         if "RELAXED SURFACE SCAN STEP" in line:
-            self.skip_lines(inputfile, ["b"])
-            current_params = []
+            _ = self.skip_line(inputfile, "s")
+            if not hasattr(self, "scanparm"):
+                self.scanparm = [[] for _ in range(len(self.scannames))]
             for i in range(len(self.scannames)):
                 line = next(inputfile)
                 line = line.replace("*", "")
-                current_params.append(float(line.split(":")[-1].strip()))
-            self.append_attribute("scanparm", tuple(current_params))
+                parm = float(line.split(":")[-1].strip())
+                self.scanparm[i].append(parm)
 
             self.is_relaxed_scan = True
             while "Convergence Tolerances:" not in line:
@@ -692,6 +706,18 @@ Dispersion correction           -0.016199959
                 target = float(line.split()[-2])
                 self.geotargets_names.append(name)
                 self.geotargets.append(target)
+
+        if line.strip() in ("TRAJECTORY RESULTS", "RELAXED SURFACE SCAN RESULTS"):
+            _ = self.skip_lines(inputfile, ["d", "b"])
+            while line.strip():
+                line = next(inputfile)
+            line = next(inputfile)
+            assert line.strip() == "The Calculated Surface using the 'Actual Energy'"
+            line = next(inputfile)
+            while line.strip():
+                *_scanparms, scanenergy = (float(x) for x in line.split())
+                self.append_attribute("scanenergies", scanenergy)
+                line = next(inputfile)
 
         # Moller-Plesset energies.
         #
@@ -788,9 +814,7 @@ Dispersion correction           -0.016199959
                 grads.append((x, y, z))
                 line = next(inputfile).strip()
 
-            if not hasattr(self, "grads"):
-                self.grads = []
-            self.grads.append(grads)
+            self.append_attribute("grads", grads)
 
         # After each geometry optimization step, ORCA prints the current convergence
         # parameters and the targets (again), so it is a good idea to check that they
@@ -845,6 +869,21 @@ Dispersion correction           -0.016199959
 
             self.append_attribute("geovalues", newvalues)
 
+        if "THE OPTIMIZATION HAS CONVERGED" in line:
+            self.optstatus[-1] += data.ccData.OPT_DONE
+            self.append_attribute("optdone", len(self.optstatus) - 1)
+
+        if line.startswith("The optimization did not converge"):
+            self.optstatus[-1] += data.ccData.OPT_UNCONVERGED
+
+        # The start of a new optimization iteration: energy plus
+        # gradient/force calculation followed by geometry relaxation.
+        if "GEOMETRY OPTIMIZATION CYCLE" in line:
+            status = data.ccData.OPT_UNKNOWN
+            if line.split()[-2] == "1":
+                status += data.ccData.OPT_NEW
+            self.append_attribute("optstatus", status)
+
         """ Grab cartesian coordinates
         ---------------------------------
         CARTESIAN COORDINATES (ANGSTROEM)
@@ -895,11 +934,6 @@ Dispersion correction           -0.016199959
                     self.atommasses.append(float(mass))
                 line = next(inputfile)
 
-        if line[21:68] == "FINAL ENERGY EVALUATION AT THE STATIONARY POINT":
-            if not hasattr(self, "optdone"):
-                self.optdone = []
-            self.optdone.append(len(self.atomcoords))
-
         if "The optimization did not converge" in line:
             if not hasattr(self, "optdone"):
                 self.optdone = []
@@ -911,8 +945,13 @@ Dispersion correction           -0.016199959
             self.moenergies = [[]]
             self.mosyms = [[]]
 
+            def continue_orbital_section(line: str) -> bool:
+                # terminated by ------
+                # OR has *Only the first 10 virtual orbitals were printed.
+                return len(line) > 20 and line[:5] not in ("*Only", "Total")
+
             line = next(inputfile)
-            while len(line) > 20:  # restricted calcs are terminated by ------
+            while continue_orbital_section(line):
                 info = line.split()
                 mooccno = int(float(info[1]))
                 moenergy = float(info[2])
@@ -934,7 +973,7 @@ Dispersion correction           -0.016199959
                 self.mosyms.append([])
 
                 line = next(inputfile)
-                while len(line) > 20:  # actually terminated by ------
+                while continue_orbital_section(line):
                     info = line.split()
                     mooccno = int(float(info[1]))
                     moenergy = float(info[2])
@@ -1023,7 +1062,10 @@ Dispersion correction           -0.016199959
             atombasis = [[] for i in range(self.natom)]
             mocoeffs = [numpy.zeros((self.nbasis, self.nbasis), "d")]
 
+            moenergies = []
+
             for spin in range(len(self.moenergies)):
+                moenergies.append([])
                 if spin == 1:
                     self.skip_line(inputfile, "blank")
                     mocoeffs.append(numpy.zeros((self.nbasis, self.nbasis), "d"))
@@ -1031,7 +1073,10 @@ Dispersion correction           -0.016199959
                 for i in range(0, self.nbasis, 6):
                     self.updateprogress(inputfile, "Coefficients")
 
-                    self.skip_lines(inputfile, ["numbers", "energies", "occs", "d"])
+                    line = self.skip_lines(inputfile, ["numbers", "energies"])[-1]
+                    moenergies[-1].extend([float(energy) for energy in line.split()])
+                    self.skip_lines(inputfile, ["occs", "d"])
+                    # self.skip_lines(inputfile, ["numbers", "energies", "occs", "d"])
 
                     for j in range(self.nbasis):
                         line = next(inputfile)
@@ -1057,6 +1102,13 @@ Dispersion correction           -0.016199959
             self.set_attribute("aonames", aonames)
             self.set_attribute("atombasis", atombasis)
             self.set_attribute("mocoeffs", mocoeffs)
+            if hasattr(self, "moenergies") and len(self.moenergies[0]) != self.nbasis:
+                self.logger.warning(
+                    f"Only {len(self.moenergies[0])} of {self.nbasis} orbital energies parsed from orbital table; switching to lower precision coefficients table"
+                )
+                # The previously parsed orbital energies can be cut off in Orca 6
+                # (only the first 10 virtual orbitals are printed)
+                self.set_attribute("moenergies", moenergies, False)
 
         # Basis set information
         # ORCA prints this out in a somewhat indirect fashion.
@@ -1156,7 +1208,8 @@ Dispersion correction           -0.016199959
             total_thermal_energy = float(next(inputfile).split()[3])  # noqa: F841
 
             # Enthalpy
-            while line[:17] != "Total free energy":
+            # In Orca 6.x, this line gets renamed to Total thermal energy
+            while line[:20].strip() not in ["Total free energy", "Total thermal energy"]:
                 line = next(inputfile)
             thermal_enthalpy_correction = float(next(inputfile).split()[4])  # noqa: F841
             next(inputfile)
@@ -1196,40 +1249,41 @@ Dispersion correction           -0.016199959
             if self.natom > 1:
                 self.set_attribute("freeenergy", float(line.split()[5]))
 
-        # Excited state metadata.
         if line.strip() in (
             "ORCA TD-DFT/TDA CALCULATION",
             "ORCA TD-DFT CALCULATION",
             "ORCA CIS CALCULATION",
+            "ORCA ROCIS CALCULATION",
         ):
-            if "TD-DFT" in line:
-                method = "TD-DFT"
-
-            else:
-                method = "RPA"
-
-            while "Tamm-Dancoff approximation" not in line:
-                line = next(inputfile)
-
-            if line.split()[-1] == "operative":
-                if method == "TD-DFT":
-                    method = "TDA"
-
-                else:
-                    method = "CIS"
-
-            self.metadata["excited_states_method"] = method
-
-        elif line.strip() == "ORCA ROCIS CALCULATION":
-            # Here we consider ROCIS the same as CIS (?)
-            self.metadata["excited_states_method"] = "CIS"
-
-        if line.strip() in ("ORCA TD-DFT/TDA CALCULATION", "ORCA CIS CALCULATION"):
             # Start of excited states, reset our attributes in case this is an optimised excited state calc
             # (or another type of calc where excited states are calculated multiple times).
             for attr in ("etenergies", "etsyms", "etoscs", "etsecs", "etrotats"):
                 if hasattr(self, attr):
                     delattr(self, attr)
+
+            # Excited state metadata.
+            if line.strip() == "ORCA ROCIS CALCULATION":
+                # Here we consider ROCIS the same as CIS (?)
+                self.metadata["excited_states_method"] = "CIS"
+
+            else:
+                if "TD-DFT" in line:
+                    method = "TD-DFT"
+
+                else:
+                    method = "RPA"
+
+                while "Tamm-Dancoff approximation" not in line:
+                    line = next(inputfile)
+
+                if line.split()[-1] == "operative":
+                    if method == "TD-DFT":
+                        method = "TDA"
+
+                    else:
+                        method = "CIS"
+
+                self.metadata["excited_states_method"] = method
 
         # Read TDDFT information
         if any(
@@ -1257,29 +1311,37 @@ Dispersion correction           -0.016199959
             while line.find("STATE") >= 0:
                 broken = line.split()
                 etenergies.append(utils.float(broken[3]))
+                # In Orca 6, symmetry is printed at the end of the line.
+                if len(broken) >= 14 and broken[12] == "Sym:":
+                    symm = broken[13]
+
+                else:
+                    symm = ""
+
                 line = next(inputfile)
                 sec = []
                 # Contains SEC or is blank
                 while line.strip():
-                    start = line[0:8].strip()
-                    start = (int(start[:-1]), lookup[start[-1]])
-                    end = line[10:17].strip()
-                    end = (int(end[:-1]), lookup[end[-1]])
-                    # Coeffients are not printed for RPA, only
-                    # TDA/CIS.
-                    contrib = line[35:47].strip()
-                    try:
-                        contrib = float(contrib)
-                    except ValueError:
-                        contrib = numpy.nan
-                    sec.append([start, end, contrib])
+                    mtch = self.re_singly_excited_configuration.match(line)
+                    assert mtch is not None
+                    d = mtch.groupdict()
+                    start = int(d["start"])
+                    start_spin = lookup[d["start_spin"]]
+                    end = int(d["end"])
+                    end_spin = lookup[d["end_spin"]]
+                    # Coefficients are not printed for RPA, only TDA/CIS.
+                    coefficient = d.get("coefficient")
+                    if coefficient is not None:
+                        coefficient = float(coefficient)
+                    else:
+                        coefficient = numpy.nan
+                    sec.append([(start, start_spin), (end, end_spin), coefficient])
                     line = next(inputfile)
                     # ORCA 5.0 seems to print symmetry at end of block listing transitions
                     if "Symmetry" in line:
                         symm = line.split()[-1]
                         line = next(inputfile)
-                    else:
-                        symm = ""
+
                 etsecs.append(sec)
                 if mult != "" and symm != "":
                     etsyms.append(mult + "-" + symm)
@@ -1293,7 +1355,9 @@ Dispersion correction           -0.016199959
                 self.extend_attribute("etsyms", etsyms)
 
         # Parse the various absorption spectra for TDDFT and ROCIS.
-        if "ABSORPTION SPECTRUM" in line or "ELECTRIC DIPOLE" in line:
+        if "CD SPECTRUM" not in line and (
+            "ABSORPTION SPECTRUM" in line or "ELECTRIC DIPOLE" in line
+        ):
             # CASSCF has an anomalous printing of ABSORPTION SPECTRUM.
             if line[:-1] == "ABSORPTION SPECTRUM":
                 return
@@ -1304,7 +1368,10 @@ Dispersion correction           -0.016199959
             header = ["d", "header", "header", "d"]
             energy_intensity: Optional[Callable[[str], Tuple[float, float]]] = None
 
-            if line == "ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS":
+            if (
+                line == "ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS"
+                and self.version < (6, 0)
+            ):
 
                 def energy_intensity(line: str) -> Tuple[float, float]:
                     """TDDFT and related methods standard method of output
@@ -1325,6 +1392,39 @@ Dispersion correction           -0.016199959
                         intensity = 0
                     energy = utils.convertor(energy, "wavenumber", "hartree")
                     return energy, intensity
+
+            elif (
+                line == "ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS"
+                and self.version >= (6, 0)
+            ):
+
+                def energy_intensity(line: str) -> Tuple[float, float]:
+                    """TDDFT and related methods standard method of output
+                    ----------------------------------------------------------------------------------------------------
+                     ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS
+                    ----------------------------------------------------------------------------------------------------
+                         Transition      Energy     Energy  Wavelength fosc(D2)      D2        DX        DY        DZ
+                                          (eV)      (cm-1)    (nm)                 (au**2)    (au)      (au)      (au)
+                    ----------------------------------------------------------------------------------------------------
+                      0-1Ag ->  1-3Bu   3.129277   25239.3   396.2   0.000000000   0.00000   0.00000   0.00000   0.00000"""
+                    (
+                        state1,
+                        arrow,
+                        state2,
+                        energy_ev,
+                        energy_wavenumber,
+                        wavelength,
+                        intensity,
+                        t2,
+                        tx,
+                        ty,
+                        tz,
+                    ) = line.split()
+
+                    energy = utils.convertor(
+                        utils.float(energy_wavenumber), "wavenumber", "hartree"
+                    )
+                    return energy, utils.float(intensity)
 
             # Check for variations
             elif (
@@ -1448,6 +1548,37 @@ Dispersion correction           -0.016199959
                     energy = utils.convertor(energy, "wavenumber", "hartree")
                     return energy, intensity
 
+            elif line[
+                :48
+            ] == "SOC CORRECTED ABSORPTION SPECTRUM VIA TRANSITION" and self.version >= (6, 0):
+                # Orca 6.x
+                def energy_intensity(line: str) -> Tuple[float, float]:
+                    """
+                    --------------------------------------------------------------------------------------------------------
+                          SOC CORRECTED ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS
+                    --------------------------------------------------------------------------------------------------------
+                          Transition         Energy     Energy  Wavelength fosc(D2)      D2       |DX|      |DY|      |DZ|
+                                              (eV)      (cm-1)    (nm)  (*population)  (au**2)    (au)      (au)      (au)
+                    --------------------------------------------------------------------------------------------------------
+                      0-2.0A  ->  1-2.0A    0.000000       0.0     0.0   0.000000000   0.00433   0.00000   0.00000   0.06579
+                      1-2.0A  ->  2-2.0A   291.659506 2352392.8     4.3   0.028362855   0.00794   0.02275   0.08614   0.00000
+                    """
+                    (
+                        state1,
+                        arrow,
+                        state2,
+                        energy,
+                        wavenumber,
+                        wavelength,
+                        intensity,
+                        d2,
+                        tx,
+                        ty,
+                        tz,
+                    ) = line.split()
+                    energy = utils.convertor(float(wavenumber), "wavenumber", "hartree")
+                    return energy, float(intensity)
+
             elif (
                 line[:79]
                 == "ROCIS COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM"
@@ -1481,10 +1612,44 @@ Dispersion correction           -0.016199959
                     energy = utils.convertor(energy, "wavenumber", "hartree")
                     return energy, intensity
 
+            elif (
+                line[:107]
+                == "SOC CORRECTED ABSORPTION SPECTRUM COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM"
+                or line[:93]
+                == "ABSORPTION SPECTRUM COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM"
+            ):
+                # Orca 6.x
+                def energy_intensity(line: str) -> Tuple[float, float]:
+                    """
+                    ------------------------------------------------------------------------------------------------------------------------------------
+                          SOC CORRECTED ABSORPTION SPECTRUM COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM
+                    ------------------------------------------------------------------------------------------------------------------------------------
+                          Transition         Energy     Energy  Wavelength fosc(D2)  fosc(M2)  fosc(Q2)   fosc(D2+M2+Q2)     D2/TOT    M2/TOT    Q2/TOT
+                                              (eV)      (cm-1)    (nm)       (au)    (au*1e6)  (au*1e6)    (*population)
+                    ------------------------------------------------------------------------------------------------------------------------------------
+                      0-2.0A  ->  1-2.0A    0.000000       0.0     0.0     0.00000   0.00000   0.00000   0.00000000000000   0.00000   0.00000   0.00000
+                      1-2.0A  ->  2-2.0A   291.659506 2352392.8     4.3     0.05673   0.00000   0.00000   0.02836285492196   1.00000   0.00000   0.00000
+                    """
+                    (
+                        state,
+                        arrow,
+                        state2,
+                        energy,
+                        wavenumber,
+                        wavelength,
+                        d2,
+                        m2,
+                        q2,
+                        intensity,
+                        d2_contrib,
+                        m2_contrib,
+                        q2_contrib,
+                    ) = line.split()
+                    energy = utils.convertor(float(wavenumber), "wavenumber", "hartree")
+                    return energy, float(intensity)
+
             # Clashes with Orca 2.6 (and presumably before) TDDFT absorption spectrum printing
-            elif line == "ABSORPTION SPECTRUM" and parse_version(
-                self.metadata["package_version"]
-            ).release > (2, 6):
+            elif line == "ABSORPTION SPECTRUM" and self.version > (2, 6):
 
                 def energy_intensity(line: str) -> Tuple[float, float]:
                     """CASSCF absorption spectrum
@@ -1531,7 +1696,16 @@ Dispersion correction           -0.016199959
                 line = next(inputfile)
                 # The sections are occasionally ended with dashed lines
                 # other times they are blank (other than a new line)
-                while len(line.strip("-")) > 2:
+                # In orca 6, sometimes there is a message like this:
+                # *The positivity of oscillator strengths is not guaranteed in non-Hermitian theories.
+                #
+                # TODO: This works for now, but ideally each energy_intensity() function should decide for
+                # itself when there's no more information to read
+                while (
+                    line.strip()
+                    != "*The positivity of oscillator strengths is not guaranteed in non-Hermitian theories."
+                    and len(line.strip("-")) > 2
+                ):
                     energy, intensity = energy_intensity(line)
                     etenergies.append(energy)
                     etoscs.append(intensity)
@@ -1573,8 +1747,13 @@ Dispersion correction           -0.016199959
                     if not hasattr(self, "etenergies"):
                         self.set_attribute("etenergies", etenergies)
 
+                    elif self.version >= (6, 0):
+                        # Uniquely (so far), Orca 6 reorders the spectrum states in terms of energy.
+                        # Fix our internal states to match.
+                        self.sort_et()
+
                     # Determine if these energies are same as those previously parsed.
-                    elif len(etenergies) == len(self.etenergies) and numpy.allclose(
+                    if len(etenergies) == len(self.etenergies) and numpy.allclose(
                         etenergies, self.etenergies
                     ):
                         pass
@@ -1598,7 +1777,7 @@ Dispersion correction           -0.016199959
                 # Save everything to transprop.
                 self.transprop[name] = (numpy.asarray(etenergies), numpy.asarray(etoscs))
 
-        if line.strip() == "CD SPECTRUM":
+        if line.strip() in ["CD SPECTRUM", "CD SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS"]:
             # -------------------------------------------------------------------
             #                              CD SPECTRUM
             # -------------------------------------------------------------------
@@ -1623,7 +1802,12 @@ Dispersion correction           -0.016199959
             etrotats = []
             self.skip_lines(inputfile, ["d", "State   Energy Wavelength", "(cm-1)   (nm)", "d"])
             line = next(inputfile)
-            while line.strip() and not utils.str_contains_only(line.strip(), ["-"]):
+            # The stray "Transition_Moments" line appears in ORCA 6.
+            while (
+                line.strip()
+                and not utils.str_contains_only(line.strip(), ["-"])
+                and not line.startswith("Calculating Transition_Moments")
+            ):
                 tokens = line.split()
                 if "spin forbidden" in line:
                     etrotat, mx, my, mz = 0.0, 0.0, 0.0, 0.0
@@ -1799,6 +1983,7 @@ Dispersion correction           -0.016199959
             else:
                 self.del_attribute("etsyms")
 
+        # NMR Section for Orca 5
         # ---------------
         # CHEMICAL SHIFTS
         # ---------------
@@ -1843,7 +2028,38 @@ Dispersion correction           -0.016199959
         #      0       C          116.686        143.809
         #      1       C          122.158        130.692
         # ...
-        if line[:15] == "CHEMICAL SHIFTS":
+        #
+        # For Orca 6
+        # -------------------
+        # CHEMICAL SHIELDINGS (ppm)
+        # -------------------
+        #
+        # Method             : SCF
+        # Type of density    : Electron Density
+        # Type of derivative : Magnetic Field (with GIAOs) (Direction=X)
+        # Multiplicity       :   1
+        # Irrep              :   0
+        # Relativity type    :
+        # Basis              : AO
+        #  --------------
+        #  Nucleus   0C :
+        #  --------------
+        #
+        # Diamagnetic contribution to the shielding tensor (ppm) :
+        #            267.110         -0.567         0.000
+        #             -0.688        260.069         0.000
+        #             -0.000          0.000       244.869
+        #
+        # Paramagnetic contribution to the shielding tensor (ppm):
+        #           -217.104          5.098         0.000
+        #              7.251       -179.615        -0.000
+        #              0.000         -0.000       -32.135
+        #
+        # Total shielding tensor (ppm):
+        #             50.006          4.530         0.000
+        #              6.563         80.454        -0.000
+        #              0.000         -0.000       212.734
+        if line.strip() in ["CHEMICAL SHIFTS", "CHEMICAL SHIELDINGS (ppm)"]:
             nmrtensors = dict()
             while line.strip() != "CHEMICAL SHIELDING SUMMARY (ppm)":
                 if line[:8] == " Nucleus":
@@ -1940,7 +2156,7 @@ Dispersion correction           -0.016199959
             # The order and number of tensors is not guaranteed (because different tensors can be
             # explicitly requested).
             tensors = dict()
-            while "Diagonalized sT*s matrix:" not in line:
+            while line.strip() not in ["Diagonalized sT*s matrix:", "Diagonalized JT*J matrix:"]:
                 if "contribution" in line or "Total spin-spin coupling tensor" in line:
                     # Tensor section.
                     t_type = line.split()[0].lower()
@@ -1971,16 +2187,55 @@ Dispersion correction           -0.016199959
 
             self.nmrcouplingtensors[atoms][isotopes] = tensors
 
+        if line.strip() == "ORCA NUMERICAL FREQUENCIES":
+            self.numfreq = True
+
         if line[:23] == "VIBRATIONAL FREQUENCIES":
+            # This section is a mess between different versions, here are some of the known permutations:
+            # Orca ~2:
+            # -----------------------
+            # VIBRATIONAL FREQUENCIES
+            # -----------------------
+            #
+            #    0:         0.00 cm**-1
+            #
+            # Orca ~4:
+            # -----------------------
+            # VIBRATIONAL FREQUENCIES
+            # -----------------------
+            #
+            # Scaling factor for frequencies =  1.000000000  (already applied!)
+            #
+            #    0:         0.00 cm**-1
+            #
+            # Orca ~6:
+            # -----------------------
+            # VIBRATIONAL FREQUENCIES
+            # -----------------------
+            #
+            # Scaling factor for frequencies =  1.000000000  (already applied!)
+            # Point group:  C2h
+            #                              Irrep
+            #      0:       0.00 cm**-1    1-Au
             self.skip_lines(inputfile, ["d", "b"])
 
+            line = next(inputfile)
+
+            # Starting with 6.0, the point group is printed (but only for analytical freqs...)
             # Starting with 4.1, a scaling factor for frequencies is printed
-            if float(self.metadata["package_version"][:3]) > 4.0:
-                self.skip_lines(inputfile, ["Scaling factor for frequencies", "b"])
+            if "Scaling factor for frequencies" in line:
+                line = next(inputfile)
+
+            if "Point group" in line:
+                # Skip point group
+                line = next(inputfile)
+
+            if not line.strip() or "Irrep" in line:
+                line = next(inputfile)
 
             if self.natom > 1:
                 vibfreqs = numpy.zeros(3 * self.natom)
-                for i, line in zip(range(3 * self.natom), inputfile):
+                for i, line in zip(range(3 * self.natom), chain([line], inputfile)):
                     vibfreqs[i] = float(line.split()[1])
 
                 nonzero = numpy.nonzero(vibfreqs)[0]
@@ -2009,18 +2264,62 @@ Dispersion correction           -0.016199959
         #       1       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
         #       2       0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
         # ...
+        #
+        # Or sometimes in Orca 6 (perhaps when symmetry is used?):
+        #
+        # ------------
+        # NORMAL MODES
+        # ------------
+        #
+        # These modes are the Cartesian displacements weighted by the diagonal matrix
+        # M(i,i)=1/sqrt(m[i]) where m[i] is the mass of the displaced atom
+        # Thus, these vectors are normalized but *not* orthogonal
+        #
+        # Point group:  C2h
+        #
+        #                0          1          2          3          4          5          6          7          8          9
+        #             1-Au       1-Bu       2-Bu       1-Ag       1-Bg       2-Bg       2-Au       3-Bg       3-Au       3-Bu
+        #     0   0.000000   0.223607   0.000000  -0.016715   0.000000   0.000000   0.000000   0.000000   0.000000  -0.020024
+        #     1   0.000000   0.000000   0.223607  -0.102752   0.000000   0.000000   0.000000   0.000000   0.000000   0.104450
+        #     2   0.223607   0.000000   0.000000   0.000000   0.039090   0.114220   0.078313  -0.085691  -0.031312   0.000000
+        # ...
         if line[:12] == "NORMAL MODES":
             if self.natom > 1:
                 all_vibdisps = numpy.zeros((3 * self.natom, self.natom, 3), "d")
 
                 self.skip_lines(inputfile, ["d", "b", "text", "text", "text", "b"])
 
-                for mode in range(0, 3 * self.natom, 6):
-                    header = next(inputfile)
+                line = next(inputfile)
+
+                if line[:12] == "Point group:":
+                    # Orca 6 once again prints the point group (but only for analytical freqs).
+                    self.skip_lines(inputfile, ["b"])
+                    # And has a wider matrix.
+                    matrix_columns = 10
+                    pseudofile = chain([], inputfile)
+
+                else:
+                    matrix_columns = 6
+                    pseudofile = chain([line], inputfile)
+
+                for mode in range(0, 3 * self.natom, matrix_columns):
+                    header = next(pseudofile)
+                    if matrix_columns == 10:
+                        _irreps = next(pseudofile)
+
                     for atom in range(self.natom):
-                        all_vibdisps[mode : mode + 6, atom, 0] = next(inputfile).split()[1:]
-                        all_vibdisps[mode : mode + 6, atom, 1] = next(inputfile).split()[1:]
-                        all_vibdisps[mode : mode + 6, atom, 2] = next(inputfile).split()[1:]
+                        all_vibdisps[mode : mode + matrix_columns, atom, 0] = next(
+                            pseudofile
+                        ).split()[1:]
+                        all_vibdisps[mode : mode + matrix_columns, atom, 1] = next(
+                            pseudofile
+                        ).split()[1:]
+                        all_vibdisps[mode : mode + matrix_columns, atom, 2] = next(
+                            pseudofile
+                        ).split()[1:]
+
+                    if matrix_columns == 10:
+                        self.skip_lines(pseudofile, ["b"])
 
                 self.set_attribute("vibdisps", all_vibdisps[self.first_mode :])
             else:
@@ -2058,12 +2357,13 @@ Dispersion correction           -0.016199959
                     "package_version has not been set, assuming %s", package_version
                 )
             major_version = int(package_version[0])
-            if major_version <= 4:
-                self.skip_lines(inputfile, ["d", "b", "header", "d"])
-                regex = r"\s+(?P<num>\d+):\s+(?P<frequency>\d+\.\d+)\s+(?P<intensity>\d+\.\d+)"
-            else:
+            if major_version >= 5:
                 self.skip_lines(inputfile, ["d", "b", "header", "units", "d"])
                 regex = r"\s+(?P<num>\d+):\s+(?P<frequency>\d+\.\d+)\s+(?P<eps>\d+\.\d+)\s+(?P<intensity>\d+\.\d+)"
+
+            else:
+                self.skip_lines(inputfile, ["d", "b", "header", "d"])
+                regex = r"\s+(?P<num>\d+):\s+(?P<frequency>\d+\.\d+)\s+(?P<intensity>\d+\.\d+)"
 
             if self.natom > 1:
                 all_vibirs = numpy.zeros((3 * self.natom,), "d")
@@ -2187,7 +2487,13 @@ Dispersion correction           -0.016199959
             self.reference = numpy.array([reference_x, reference_y, reference_z])
 
         if line.startswith("DIPOLE MOMENT"):
-            self.skip_lines(inputfile, ["d", "XYZ", "electronic", "nuclear", "d"])
+            self.skip_lines(inputfile, "d")
+            line = next(inputfile)  # blank or XYZ
+            if line.strip() == "":
+                while line.split() != ["X", "Y", "Z"]:
+                    line = next(inputfile)
+
+            self.skip_lines(inputfile, ["electronic", "nuclear", "d"])
             total = next(inputfile)
             assert "Total Dipole Moment" in total
 
@@ -2212,17 +2518,24 @@ Dispersion correction           -0.016199959
             self.append_attribute("time", time)
 
         # Static polarizability.
-        if line.strip() == "THE POLARIZABILITY TENSOR":
-            if not hasattr(self, "polarizabilities"):
-                self.polarizabilities = []
+        if line.strip() == "THE POLARIZABILITY TENSOR" or "STATIC POLARIZABILITY TENSOR" in line:
             self.skip_lines(inputfile, ["d", "b"])
             line = next(inputfile)
-            assert line.strip() == "The raw cartesian tensor (atomic units):"
+
+            # Orca 6.x has some more metadata
+            while line.strip() != "The raw cartesian tensor (atomic units):":
+                line = next(inputfile)
+
             polarizability = []
             for _ in range(3):
                 line = next(inputfile)
                 polarizability.append(line.split())
-            self.polarizabilities.append(numpy.array(polarizability))
+            self.append_attribute("polarizabilities", numpy.array(polarizability))
+
+        if line.strip() == "Rotational spectrum":
+            self.skip_lines(inputfile, ["d", "b", "Rotational constants in cm-1"])
+            line = next(inputfile)
+            self.append_attribute("rotconsts", [float(v) / 1.0e3 for v in line.split()[-3:]])
 
         if line.strip() == "ORCA-CASSCF":
             # -------------------------------------------------------------------------------
@@ -2239,6 +2552,8 @@ Dispersion correction           -0.016199959
             #    MO =    0  IRREP= 0 (A)
             #    MO =    1  IRREP= 1 (B)
             self.skip_lines(inputfile, ["d", "b"])
+            if self.version[0] < 4:
+                _ = self.skip_line(inputfile, "b")
             vals = next(inputfile).split()
             # Symmetry section is only printed if symmetry is used.
             if vals[0] == "Symmetry":
@@ -2265,6 +2580,15 @@ Dispersion correction           -0.016199959
             # This will align the cases of symmetry on and off.
             line = next(inputfile)
             while line[:25] != "SYSTEM-SPECIFIC SETTINGS:":
+                # There may be an "ORCA-CASSCF" block that contains nothing
+                # but a "CASSCF UV, CD spectra and dipole moments" header with
+                # no values followed by a timings section that is also mostly
+                # empty, appearing before "FINAL SINGLE POINT ENERGY".  This
+                # traps the equals line which wraps the empty spectrum section
+                # header.
+                if self.version[0] >= 6:
+                    if set(line.strip()) == {"="}:
+                        return
                 line = next(inputfile)
 
             # SYSTEM-SPECIFIC SETTINGS:
@@ -2309,14 +2633,18 @@ Dispersion correction           -0.016199959
             #   #(CSFs)                           ...   12
             #   #(Roots)                          ...    1
             #     ROOT=0 WEIGHT=    1.000000
-            self.skip_line(inputfile, "CI strategy")
+            if self.version[0] > 3:
+                _ = self.skip_line(inputfile, "CI strategy")
             num_blocks = int(next(inputfile).split()[-1])
-            for b in range(1, num_blocks + 1):
+            for b in range(num_blocks):
                 line = utils.skip_until_no_match(inputfile, r"^\s*$")
                 vals = line.split()
                 block = int(vals[1])
                 weight = float(vals[3])
-                assert b == block
+                if self.version >= (6, 0):
+                    assert b == block
+                else:
+                    assert b + 1 == block
                 mult = int(next(inputfile).split()[-1])
                 vals = next(inputfile).split()
                 # The irrep will only be printed if using symmetry.
@@ -2355,21 +2683,33 @@ Dispersion correction           -0.016199959
             #
             #   NO   OCC          E(Eh)            E(eV)    Irrep
             #    0   0.0868       0.257841         7.0162    1-A
-            self.skip_lines(inputfile, ["b", "d"])
-            if next(inputfile).strip() == "ORBITAL ENERGIES":
-                self.skip_lines(inputfile, ["d", "b", "NO"])
-                orbitals = []
+            _ = self.skip_line(inputfile, "b")
+            line = next(inputfile)
+            in_orbital_energies = False
+            if set(line.strip()) == {"-"}:
+                in_orbital_energies = True
+                lines = self.skip_lines(inputfile, ["ORBITAL ENERGIES", "d", "b", "NO"])
+                assert lines[0].strip() == "ORBITAL ENERGIES"
+            elif "Orbital   Occ.   Energy(Eh)   Energy(eV)" in line:
+                # Versions < 4.0 are missing the ORBITAL ENERGIES header.
+                in_orbital_energies = True
+            if in_orbital_energies:
+                nooccnos = []
+                moenergies = []
                 vals = next(inputfile).split()
                 while vals:
-                    occ, eh, ev = map(float, vals[1:4])
+                    occ, eh = map(float, vals[1:3])
+                    nooccnos.append(occ)
+                    moenergies.append(eh)
                     # The irrep will only be printed if using symmetry.
                     if len(vals) == 5:
-                        idx, irrep = vals[4].split("-")
-                        orbitals.append((occ, ev, int(idx), irrep))
-                    else:
-                        orbitals.append((occ, ev))
+                        irrep_idx, irrep_label = vals[4].split("-")  # noqa: F841
                     vals = next(inputfile).split()
                 self.skip_lines(inputfile, ["b", "d"])
+                if nooccnos:
+                    self.set_attribute("nooccnos", [nooccnos])
+                if moenergies:
+                    self.set_attribute("moenergies", [moenergies])
 
             # Orbital Compositions
             # ---------------------------------------------
@@ -2387,7 +2727,7 @@ Dispersion correction           -0.016199959
                 mult = int(groups[1])
                 # The irrep will only be printed if using symmetry.
                 if groups[2] is not None:
-                    irrep = groups[2].split("=")[1].strip()
+                    irrep = groups[2].split("=")[1].strip()  # noqa: F841
                 nroots = int(groups[3].split("=")[1])  # noqa: F841
 
                 self.skip_lines(inputfile, ["d", "b"])
@@ -2469,19 +2809,28 @@ Dispersion correction           -0.016199959
             #                                   -14.444151727
             #
             # Core energy                  :    -13.604678408 Eh     -370.2021 eV
-            one_el_energy = float(next(inputfile).split()[4])  # noqa: F841
-            two_el_energy = float(next(inputfile).split()[4])  # noqa: F841
-            nuclear_repulsion_energy = float(next(inputfile).split()[4])  # noqa: F841
+            line = next(inputfile)
+            one_el_energy = float(line.split()[4])  # noqa: F841
+            line = next(inputfile)
+            two_el_energy = float(line.split()[4])  # noqa: F841
+            line = next(inputfile)
+            nuclear_repulsion_energy = float(line.split()[4])  # noqa: F841
             self.skip_line(inputfile, "dashes")
-            energy = float(next(inputfile).strip())
+            line = next(inputfile)
+            energy = float(line.strip())
             self.skip_line(inputfile, "blank")
-            kinetic_energy = float(next(inputfile).split()[3])  # noqa: F841
-            potential_energy = float(next(inputfile).split()[3])  # noqa: F841
-            virial_ratio = float(next(inputfile).split()[3])  # noqa: F841
+            line = next(inputfile)
+            kinetic_energy = float(line.split()[3])  # noqa: F841
+            line = next(inputfile)
+            potential_energy = float(line.split()[3])  # noqa: F841
+            line = next(inputfile)
+            virial_ratio = float(line.split()[3])  # noqa: F841
             self.skip_line(inputfile, "dashes")
-            energy = float(next(inputfile).strip())
+            line = next(inputfile)
+            energy = float(line.strip())
             self.skip_line(inputfile, "blank")
-            core_energy = float(next(inputfile).split()[3])  # noqa: F841
+            line = next(inputfile)
+            core_energy = float(line.split()[3])  # noqa: F841
 
         if "Program running with" in line and "parallel MPI-processes" in line:
             # ************************************************************
@@ -2562,6 +2911,33 @@ Dispersion correction           -0.016199959
                 * self.metadata["num_cpu"]
             )
 
+    def parse_symmetry_section(self, inputfile):
+        self.uses_symmetry = True
+
+        line = next(inputfile)
+        assert "Point group" in line
+        point_group_full = line.split()[3].lower()
+        line = next(inputfile)
+        # ORCA < 6
+        if "Used point group" in line:
+            point_group_abelian = line.split()[4].lower()
+            line = next(inputfile)
+        # ORCA >= 6
+        elif "Symmetry-adapted orbitals" in line:
+            point_group_abelian = line.split()[3].lower()
+            next(inputfile)
+            line = next(inputfile)
+        assert "Number of irreps" in line
+        nirrep = int(line.split()[4])
+        for n in range(nirrep):
+            line = next(inputfile)
+            assert "symmetry adapted basis functions" in line
+            irrep = line[8:13]
+            self.append_attribute("symlabels", self.normalisesym(irrep))
+
+        self.metadata["symmetry_detected"] = point_group_full
+        self.metadata["symmetry_used"] = point_group_abelian
+
     def parse_charge_section(self, line, inputfile, chargestype):
         """Parse a charge section, modifies class in place
 
@@ -2640,10 +3016,10 @@ Dispersion correction           -0.016199959
         if has_spins:
             self.atomspins[chargestype] = spins
 
-    def parse_scf_condensed_format(self, inputfile, line):
-        """Parse the SCF convergence information in condensed format"""
-
-        # This is what it looks like
+    def parse_scf_condensed_format(self, inputfile, splitline):
+        """"""
+        # Possible formats:
+        # Orca 5:
         # ITER       Energy         Delta-E        Max-DP      RMS-DP      [F,P]     Damp
         #                ***  Starting incremental Fock matrix formation  ***
         #   0   -384.5203638934   0.000000000000 0.03375012  0.00223249  0.1351565 0.7000
@@ -2657,60 +3033,98 @@ Dispersion correction           -0.016199959
         #   7   -384.6575005762  -0.000001497987 0.00020257  0.00001146  0.0001652 0.0000
         #   8   -384.6575007321  -0.000000155848 0.00008572  0.00000435  0.0000745 0.0000
         #          **** Energy Check signals convergence ****
+        # Orca 6:
+        # ----------------------------------------D-I-I-S--------------------------------------------
+        # Iteration    Energy (Eh)           Delta-E    RMSDP     MaxDP     DIISErr   Damp  Time(sec)
+        # -------------------------------------------------------------------------------------------
+        #                ***  Starting incremental Fock matrix formation  ***
+        #     1    -382.0551222939103582     0.00e+00  1.60e-04  1.99e-03  3.38e-03  0.700   1.0
+        #                               *** Initializing SOSCF ***
+        # ---------------------------------------S-O-S-C-F--------------------------------------
+        # Iteration    Energy (Eh)           Delta-E    RMSDP     MaxDP     MaxGrad    Time(sec)
+        # --------------------------------------------------------------------------------------
+        #     2    -382.0551463039915916    -2.40e-05  3.97e-04  5.10e-03  1.52e-03     0.4
+        #                *** Restarting incremental Fock matrix formation ***
+        #     3    -382.0551558700066153    -9.57e-06  5.54e-04  9.87e-03  1.10e-03     1.0
+        #     4    -382.0551154272437770     4.04e-05  3.63e-04  6.82e-03  2.09e-03     0.8
+        #     5    -382.0551748409881156    -5.94e-05  5.18e-05  4.86e-04  8.23e-05     0.8
+        #     6    -382.0551748903446878    -4.94e-08  2.54e-05  3.18e-04  9.86e-05     0.7
+        #                  **** Energy Check signals convergence ****
+        #
 
-        assert line[2] == "Delta-E"
-        assert line[3] == "Max-DP"
+        # Decide which version this is
+        headers = splitline[0][0:5] == "-----"
+        # Based on that, decide on our column positions:
+        if headers:
+            # New, Orca 6 format:
+            index = {"energy": 1, "deltaE": 2, "maxDP": 4, "rmsDP": 3}
+        else:
+            # Old, Orca 5 format.
+            index = {"energy": 1, "deltaE": 2, "maxDP": 3, "rmsDP": 4}
 
         self.append_attribute("scfvalues", [])
+        # diis_active = True
 
-        # Try to keep track of the converger (NR, DIIS, SOSCF, etc.).
-        diis_active = True
-        while line:
+        # Stop on newline.
+        while splitline:
             maxDP = None
-            if "Newton-Raphson" in line:
-                diis_active = False
-            elif "SOSCF" in line:
-                diis_active = False
-            elif line[0].isdigit():
-                try:
-                    energy = float(line[1])
-                    deltaE = float(line[2])
-                    maxDP = float(line[3 + int(not diis_active)])
-                    rmsDP = float(line[4 + int(not diis_active)])
-                except ValueError as e:
-                    # Someone in Orca forgot to properly add spaces in the scf printing
-                    # code looks like:
-                    # %3i %17.10f%12.12f%11.8f %11.8f
-                    if line[1].count(".") == 2:
-                        integer1, decimal1_integer2, decimal2 = line[1].split(".")
-                        decimal1, integer2 = decimal1_integer2[:10], decimal1_integer2[10:]
-                        energy = float(integer1 + "." + decimal1)
-                        deltaE = float(integer2 + "." + decimal2)
-                        maxDP = float(line[2 + int(not diis_active)])
-                        rmsDP = float(line[3 + int(not diis_active)])
-                    elif line[1].count(".") == 3:
-                        integer1, decimal1_integer2, decimal2_integer3, decimal3 = line[1].split(
-                            "."
-                        )
-                        decimal1, integer2 = decimal1_integer2[:10], decimal1_integer2[10:]
-                        decimal2, integer3 = decimal2_integer3[:12], decimal2_integer3[12:]
-                        energy = float(integer1 + "." + decimal1)  # noqa: F841
-                        deltaE = float(integer2 + "." + decimal2)
-                        maxDP = float(integer3 + "." + decimal3)
-                        rmsDP = float(line[2 + int(not diis_active)])
-                    elif line[2].count(".") == 2:
-                        integer1, decimal1_integer2, decimal2 = line[2].split(".")
-                        decimal1, integer2 = decimal1_integer2[:12], decimal1_integer2[12:]
-                        deltaE = float(integer1 + "." + decimal1)
-                        maxDP = float(integer2 + "." + decimal2)
-                        rmsDP = float(line[3 + int(not diis_active)])
-                    else:
-                        raise e
+            # Taken from old code. I don't think these statements can ever get triggered
+            # (looks like they want to check the whole line contents rather than any of
+            # the split elements). Furthermore we don't have any tests to check their
+            # function or intent...
+            # if "Newton-Raphson" in splitline:
+            #     diis_active = False
+            #
+            # elif "SOSCF" in splitline:
+            #     diis_active = False
+            #
+            # el
+            if splitline[0].isdigit():
+                # In some (Orca 4 at least) versions of Orca there appears to be a printing error, and columns can overlap each other
+                # looks like:
+                # %3i %17.10f%12.12f%11.8f %11.8f
+                if splitline[1].count(".") == 2:
+                    integer1, decimal1_integer2, decimal2 = splitline[1].split(".")
+                    decimal1, integer2 = decimal1_integer2[:10], decimal1_integer2[10:]
+                    splitline = [
+                        splitline[0],
+                        integer1 + "." + decimal1,
+                        integer2 + "." + decimal2,
+                    ] + splitline[2:]
+
+                elif splitline[1].count(".") == 3:
+                    integer1, decimal1_integer2, decimal2_integer3, decimal3 = splitline[1].split(
+                        "."
+                    )
+                    decimal1, integer2 = decimal1_integer2[:10], decimal1_integer2[10:]
+                    decimal2, integer3 = decimal2_integer3[:12], decimal2_integer3[12:]
+                    splitline = [
+                        splitline[0],
+                        integer1 + "." + decimal1,
+                        integer2 + "." + decimal2,
+                        integer3 + "." + decimal3,
+                    ] + splitline[2:]
+
+                elif splitline[2].count(".") == 2:
+                    integer1, decimal1_integer2, decimal2 = splitline[2].split(".")
+                    decimal1, integer2 = decimal1_integer2[:12], decimal1_integer2[12:]
+
+                    splitline = [
+                        splitline[0],
+                        splitline[1],
+                        integer1 + "." + decimal1,
+                        integer2 + "." + decimal2,
+                    ] + splitline[3:]
+
+                deltaE = float(splitline[index["deltaE"]])
+                maxDP = float(splitline[index["maxDP"]])  # + int(not diis_active)])
+                rmsDP = float(splitline[index["rmsDP"]])  # + int(not diis_active)])
 
                 self.scfvalues[-1].append([deltaE, maxDP, rmsDP])
 
             try:
-                line = next(inputfile).split()
+                splitline = next(inputfile).split()
+
             except StopIteration:
                 self.logger.warning(f"File terminated before end of last SCF! Last Max-DP: {maxDP}")
                 break
@@ -2757,10 +3171,8 @@ Dispersion correction           -0.016199959
         #                         ----------------------------
         # ....
         #
-        if not hasattr(self, "scfvalues"):
-            self.scfvalues = []
 
-        self.scfvalues.append([])
+        self.append_attribute("scfvalues", [])
 
         line = "Foo"  # dummy argument to enter loop
         while line.find("******") < 0:
@@ -2814,8 +3226,11 @@ Dispersion correction           -0.016199959
                 rmsDP_value = None
                 rmsDP_target = None
 
-        self.scfvalues[-1].append([deltaE_value, maxDP_value, rmsDP_value])
-        self.scftargets.append([deltaE_target, maxDP_target, rmsDP_target])
+        if len(self.scfvalues) > 0:
+            self.scfvalues[-1].append([deltaE_value, maxDP_value, rmsDP_value])
+            self.append_attribute("scftargets", [deltaE_target, maxDP_target, rmsDP_target])
+        else:
+            self.logger.warning("No SCF values when parsing final changes")
 
 
 _METHODS_SEMIEMPIRICAL = {"AM1", "MNDO", "PM3", "ZINDO/1", "ZINDO/S"}

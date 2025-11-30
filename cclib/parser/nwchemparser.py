@@ -11,6 +11,7 @@ import re
 from cclib.parser import logfileparser, utils
 
 import numpy
+from packaging.version import parse as parse_version
 
 
 class NWChem(logfileparser.Logfile):
@@ -56,6 +57,7 @@ class NWChem(logfileparser.Logfile):
                     self.metadata["package_version"] = (
                         f"{self.metadata['package_version']}+{revision}"
                     )
+            self.set_attribute("package_version", parse_version(self.metadata["package_version"]))
 
         # This is printed in the input module, so should always be the first coordinates,
         # and contains some basic information we want to parse as well. However, this is not
@@ -799,19 +801,51 @@ class NWChem(logfileparser.Logfile):
         #    1 C    6     6.00   1.99  1.14  2.87
         #    2 C    6     6.00   1.99  1.14  2.87
         # ...
-        if line.strip() == "Mulliken analysis of the total density":
+        #
+        # If `print "mulliken ao"` is requested, after the section header the
+        # breakdown is different:
+        #
+        # Bfn.    Population  Atom+Function
+        # ---------------------------------
+        #   1      1.997265     1 C  s
+        #   2      0.743630     1 C  s
+        #   3      0.691045     1 C  px
+        #   4      0.687280     1 C  py
+        #
+        # followed by the "Shell Charges" section, which means the
+        # Atom+Function block can be skipped.  TODO Use this section when
+        # available, since it has higher precision.
+        if line.strip() in self.mulliken_atomcharges_headers:
             if not hasattr(self, "atomcharges"):
                 self.atomcharges = {}
 
-            self.skip_lines(inputfile, ["d", "b", "header", "d"])
+            _, _, header, _ = self.skip_lines(inputfile, ["d", "b", "header", "d"])
 
             charges = []
             line = next(inputfile)
-            while line.strip():
-                index, atomname, nuclear, atom = line.split()[:4]
-                shells = line.split()[4:]
-                charges.append(float(nuclear) - float(atom))
+
+            target_block_header = "Atom       Charge   Shell Charges"
+            if header.strip() != target_block_header:
+                while line.strip():
+                    line = next(inputfile)
+                _lines = self.skip_lines(inputfile, [target_block_header, "d"])
                 line = next(inputfile)
+
+            while line.strip():
+                _index, _atomname, atomnum, atom = line.split()[:4]
+                # 47 H    1     0.85   0.52  0.32
+                #   followed immediately by
+                # Time prior to 1st pass:     ...
+                #   or
+                # Max. records in memory = ...
+                try:
+                    nuclear = float(atomnum)
+                except ValueError:
+                    break
+                shells = line.split()[4:]
+                charges.append(nuclear - float(atom))
+                line = next(inputfile)
+
             self.atomcharges["mulliken"] = charges
 
         # Note the 'overlap population' as printed in the Mulliken population analysis
@@ -1147,15 +1181,26 @@ class NWChem(logfileparser.Logfile):
             rc = 1
             cc = 1
             self.skip_lines(inputfile, ["d"])
+            # Newer versions always have a space between columns, but older
+            # versions allow values in columns to touch if the value is
+            # negative.
+            if self.package_version.major >= 7:
+                line_col_width = 13
+            else:
+                line_col_width = 12
             while cc < nelem:
                 lines = self.skip_lines(inputfile, ["b", "b", "column numbers", "d"])
                 cc_prev = cc
                 cc = int(lines[2].split()[-1])
                 while rc < nelem:
-                    line = next(inputfile)
-                    tokens = line.split()
-                    rc = int(tokens[0])
-                    vals = [utils.float(x) for x in tokens[1:]]
+                    line = next(inputfile).rstrip()
+                    line_col_start = 7
+                    rc = int(line[:line_col_start])
+                    vals = []
+                    while line_col_start < len(line):
+                        line_col_end = line_col_start + line_col_width
+                        vals.append(utils.float(line[line_col_start:line_col_end]))
+                        line_col_start = line_col_end
                     cstart = cc_prev - 1
                     cend = cstart + len(vals)
                     hessian[rc - 1, cstart:cend] = vals
@@ -1326,6 +1371,11 @@ class NWChem(logfileparser.Logfile):
         # trajectory. This will enable parsing coordinates from the
         # 'DFT ENERGY GRADIENTS' section.
         self.is_BOMD = False
+
+        self.mulliken_atomcharges_headers = (
+            "Total Density - Mulliken Population Analysis",
+            "Mulliken analysis of the total density",
+        )
 
     def after_parsing(self):
         """NWChem-specific routines for after parsing a file."""

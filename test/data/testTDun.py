@@ -8,6 +8,8 @@
 from skip import skipForLogfile, skipForParser
 
 
+# The Gaussian log files for this test are a normal restricted calculation,
+# is this class misnamed?
 class GenericTDunTest:
     """Generic time-dependent unrestricted HF/DFT unittest"""
 
@@ -27,7 +29,9 @@ class GenericTDunTest:
         """Is the length of eotscs correct?"""
         assert len(data.etoscs) == self.number
 
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
+    @skipForParser("PySCF", "etrotats are not yet implemented")
     @skipForLogfile(
         "Turbomole/basicTurbomole7.4/CO_cc2_TD",
         "Rotatory strengths are not currently available for ricc2",
@@ -42,12 +46,14 @@ class GenericTDunTest:
         assert len(data.etsecs) == self.number
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
+    @skipForParser("Serenity", "Serenity does not use symmetry.")
     def testsymsnumber(self, data) -> None:
         """Is the length of etsyms correct?"""
         assert len(data.etsyms) == self.number
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "Turbomole etsyms are not available for UHF")
+    @skipForParser("Serenity", "Serenity does not use symmetry.")
     def testsyms(self, data) -> None:
         """Is etsyms populated by singlets and triplets 50/50?"""
         singlets = [sym for sym in data.etsyms if "Singlet" in sym]
@@ -56,7 +62,25 @@ class GenericTDunTest:
         assert len(triplets) == self.number / 2
 
 
+class CFOUREOMCCSDunTest(GenericTDunTest):
+    """Customized UHF/EOMEE-CCSD unittest"""
+
+    number = 10
+
+
 class TurbomoleTDunTest(GenericTDunTest):
     """Customized time-dependent unrestricted HF/DFT unittest"""
 
     number = 10
+
+
+class PySCFTDunTest(GenericTDunTest):
+    """Customized time-dependent unrestricted HF/DFT unittest"""
+
+    number = 10
+
+
+class SerenityTDunTest(GenericTDunTest):
+    """Customized time-dependent unrestricted HF/DFT unittest"""
+
+    number = 5

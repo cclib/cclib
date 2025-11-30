@@ -195,12 +195,12 @@ class Bader(Method):
             zgrid = int(gridpt[2])
             self.matches[pos] = self.fragresults[xgrid, ygrid, zgrid]
 
-        assert (
-            0 not in self.matches
-        ), f"Failed to assign Bader regions to atoms. Try with a finer grid. Content of Bader area matches: {self.matches}"
-        assert len(
-            numpy.unique(self.matches) != len(self.data.atomnos)
-        ), "Failed to assign unique Bader regions to each atom. Try with a finer grid."
+        assert 0 not in self.matches, (
+            f"Failed to assign Bader regions to atoms. Try with a finer grid. Content of Bader area matches: {self.matches}"
+        )
+        assert len(numpy.unique(self.matches) != len(self.data.atomnos)), (
+            "Failed to assign unique Bader regions to each atom. Try with a finer grid."
+        )
 
         # Finally integrate the assigned Bader areas
         self.logger.info("Creating fragcharges: array[1]")

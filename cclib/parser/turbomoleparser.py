@@ -765,6 +765,7 @@ class Turbomole(logfileparser.Logfile):
                 info = re.match(
                     r".*eigenvalue=(?P<moenergy>[0-9D\.+-]{20})\s+nsaos=(?P<count>\d+).*", line
                 )
+                assert info is not None
                 eigenvalue = utils.float(info.group("moenergy"))
 
                 moenergies.append(eigenvalue)
@@ -854,9 +855,9 @@ class Turbomole(logfileparser.Logfile):
                     self.iter_one_elec_energy.append(utils.float(info[2]))
                 line = next(inputfile)
 
-            assert len(self.iter_energy) == len(
-                self.iter_one_elec_energy
-            ), "Different number of values found for total energy and one electron energy."
+            assert len(self.iter_energy) == len(self.iter_one_elec_energy), (
+                "Different number of values found for total energy and one electron energy."
+            )
             scfvalues = [
                 [x - y, a - b]
                 for x, y, a, b in zip(
