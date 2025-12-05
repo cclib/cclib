@@ -23,10 +23,11 @@ H             4.93164000     0.07111000     0.00000000
 H            -4.93164000    -0.07111000     0.00000000
 *
 %pal
- nprocs 4
+ nprocs 1
 end
 %MaxCore 700
 %eprnmr
   nuclei = all C { shift, ssall};
   nuclei = all H { shift, ssall};
+  SpinSpinRThresh 50.0
 end
