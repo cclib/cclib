@@ -1,0 +1,553 @@
+
+#==============================================================================#
+#                                                                              #
+#   SSSSS                                                    #########         #
+#   SS    EEEE RRR  EEEE N   N II TTTTTT YY  YY          ####################  #
+#   SS    E    R  R E    NN  N II   TT    YYYY        ######################## #
+#   SSSSS EEEE RRR  EEEE N N N II   TT     YY      #########             ##### #
+#      SS E    R R  E    N  NN II   TT     YY   #######       OOOOOOOO         #
+#      SS EEEE R  R EEEE N   N II   TT     YY ########      OOOOOOOOOOOO       #
+#   SSSSS                                  ########        OOOOOOOOOOOOOO      #
+#                                     ###########   OOO    OOOOOOOOOOOOOO      #
+# #########                   ###############      OOOOO   OOOOOOOOOOOOOO      #
+# ######################################      OO   OOOOO    OOOOOOOOOOOO       #
+#       #########################         O   OO    OOO       OOOOOOOO         #
+#                                                                              #
+#                                                                              #
+#                                   Serenity                                   #
+#                                                                              #
+#                           A quantum chemistry code                           #
+#                developed in the group of Johannes Neugebauer                 #
+#                        at the University of Münster.                         #
+#                                                                              #
+#==============================================================================#
+
+  Program Info:
+ ---------------
+    Version           :   1.6.1
+    Git Branch        :   niklas_master_thesis
+    Serenity Home     :   /home/lukas/serenity
+
+  Citations:
+ ------------
+    First publication :
+  J. P. Unsleber, T. Dresselhaus, K. Klahr, D. Schnieders, M. Böckers, D. Barton
+  and J. Neugebauer, Serenity: A Subsystem Quantum Chemistry Program,
+  J. Comput. Chem., 39, 788-798, (2018).
+
+    Update paper      :
+  N. Niemeyer, P. Eschenbach, M. Bensberg, J. Toelle, L. Hellmann, L. Lampe,
+  A. Massolle, A. Rikus, D. Schnieders, J. P. Unsleber, and J. Neugebauer,
+  The subsystem quantum chemistry program Serenity,
+  Wiley Interdiscip. Rev. Comput. Mol. Sci., 13, e1647, (2023).
+
+    Libint (2.7.0-b6) :
+  Libint: A library for the evaluation of molecular integrals of many-body operators
+  over Gaussian functions, v2.7.0-beta6  Edward F. Valeev, http://libint.valeyev.net/ .
+
+    Libxc (6.1.0)     :
+  S. Lehtola, C. Steigemann, M. J.T. Oliveira, and M. A.L. Marques.,  SoftwareX 7, 1–5 (2018)
+  10.1016/j.softx.2017.11.002
+
+    XCFun (v2.0.2)    :
+  Ekström, U. (2020). XCFun: A library of exchange-correlation functionals with
+  arbitrary-order derivatives. Zenodo. https://doi.org/10.5281/zenodo.3946698
+
+    Libecpint (1.0.7) :
+  R. A. Shaw, J. G. Hill, J. Chem. Phys. 147, 074108 (2017); doi: 10.1063/1.4986887
+
+  Program started:
+ ------------------
+    Time              :   2025-11-15 09:40:02
+    By                :   lukas
+    On                :   HOSTNAME UNKNOWN
+
+    Threads           :   12
+    Memory Limit      :   8349 MB
+
+          ------------------------------------------------------------          
+                                System trp_polar                                
+          ------------------------------------------------------------          
+
+     Charge:                              0
+     Spin:                                0
+     Method:                             HF
+     Basis Set:                    DEF2-SVP
+  Current Geometry (Angstrom):
+ ------------------------------
+        1  N   -0.0699826875   +0.3321987191   +0.2821283177
+        2  C   +1.3728035449   +0.0970713322   -0.0129587739
+        3  C   +2.0969275417   -0.0523593054   +1.3682652221
+        4  O   +3.1382490088   -0.6563684788   +1.5380162924
+        5  C   +1.9529664597   +1.3136139853   -0.7956021969
+        6  H   +1.8442727348   +2.2050605044   -0.1801631789
+        7  H   +1.3455899915   +1.4594935008   -1.6885689523
+        8  C   +3.4053646872   +1.1270611844   -1.1918075237
+        9  C   +4.4845249667   +1.6235038050   -0.5598918002
+       10  N   +5.6509089647   +1.2379326369   -1.2284610654
+       11  H   +6.6009314349   +1.4112351003   -0.9028629397
+       12  C   +5.2921619642   +0.4356274269   -2.3131617003
+       13  C   +3.8942019475   +0.3557998019   -2.3263315791
+       14  C   +3.2659168792   -0.3832607567   -3.3431309548
+       15  H   +2.1864306677   -0.4577058843   -3.3815918670
+       16  C   +4.0381762333   -1.0087512639   -4.2870993776
+       17  H   +3.5696890585   -1.5824763141   -5.0755609734
+       18  C   +5.4445159165   -0.9194874753   -4.2519002882
+       19  H   +6.0229926396   -1.4277973542   -5.0130007062
+       20  C   +6.0869576238   -0.2024044961   -3.2767702726
+       21  H   +7.1656650647   -0.1287762497   -3.2458650647
+       22  H   +4.5457621618   +2.2425310766   +0.3253979653
+       23  H   -0.5159777859   +0.7478905868   -0.5487661007
+       24  H   +1.5420526570   -0.8143939718   -0.5935463196
+       25  H   -0.5302278747   -0.5823989653   +0.4084507634
+       26  O   +1.4575846656   +0.5996887308   +2.4093500287
+       27  H   +0.5990015339   +0.8842421241   +2.0047830456
+
+
+
+o------------------------------------------------------------------------------o
+|                                Running Tasks                                 |
+o------------------------------------------------------------------------------o
+
+ o-------------o
+ | Task No. 1: |
+ o-------------o
+
+
+          ------------------------------------------------------------          
+                                Main SCF Options                                
+          ------------------------------------------------------------          
+
+     SCF Mode:                   RESTRICTED
+     Method:                             HF
+     Basis Set:                    DEF2-SVP
+     Basis Functions:                   270
+     Caching Threshold:                  -1
+     Integral Threshold:            1.2e-11
+
+     Energy Threshold:              5.0e-08
+     RMSD[D] Threshold:             1.0e-08
+     DIIS Threshold:                5.0e-07
+     Initial Guess:                 ATOMSCF
+
+     Density Fitting:
+       Coulomb                         NONE
+       Exchange                        NONE
+
+          ------------------------------------------------------------          
+                                      SCF                                       
+          ------------------------------------------------------------          
+
+    Cycle      E/a.u.         abs(dE)/a.u.     rmsd(P)/a.u.       [F,P]/a.u.      time/min   Mode
+       1  -681.6191731854              inf              inf         6.02e-02      0:00 
+       2  -681.6330330036         1.39e-02         1.46e-03         5.67e-02      0:01:833    D-L
+       3  -681.6488482034         1.58e-02         6.77e-04         3.17e-02      0:01:760    -DL
+       4  -681.6601943879         1.13e-02         1.30e-03         5.67e-03      0:01:857    -DL
+       5  -681.6607031286         5.09e-04         3.53e-04         1.95e-03      0:01:624    -DL
+       6  -681.6607836339         8.05e-05         1.13e-04         6.01e-04      0:03:110    -DL
+       7  -681.6608035494         1.99e-05         5.96e-05         2.44e-04      0:02:052    -DL
+       8  -681.6608062114         2.66e-06         2.19e-05         6.03e-05      0:01:862    -DL
+       9  -681.6608064480         2.37e-07         6.28e-06         2.55e-05      0:01:610    -D-
+      10  -681.6608064868         3.88e-08         2.07e-06         1.32e-05      0:01:518    -D-
+      11  -681.6608064960         9.18e-09         9.94e-07         8.14e-06      0:03:036    -D-
+      12  -681.6608064995         3.54e-09         6.57e-07         2.84e-06      0:01:590    -D-
+      13  -681.6608065019         2.40e-09         2.67e-07         1.26e-06      0:01:435    -D-
+      14  -681.6608065022         2.86e-10         1.33e-07         2.95e-07      0:01:347    -D-
+    Converged after  14 cycles. Loop exited.
+
+
+          ------------------------------------------------------------          
+                               Final SCF Results                                
+          ------------------------------------------------------------          
+
+Energy components as stored:
+Nuclear Repulsion:                                                                   957.1063341336 
+One-Particle Energy (including ECPs):                                              -2828.9325137867 
+Two-Particle Energy (HF):                                                           1190.1653731509 
+PCM Solvation Energy:                                                                  0.0000000000 
+----------------------------------------------------------------------------------------------------
+Derived energy components:
+Total Energy (HF):                                                                  -681.6608065022 
+----------------------------------------------------------------------------------------------------
+    
+  Orbital Energies:
+ -------------------
+        #    Occ.      Hartree                eV   
+       ---  ------    ---------            --------
+        45   2.00   -0.5296271637      -14.4118893175
+        46   2.00   -0.5093779328      -13.8608796747
+        47   2.00   -0.4851705898      -13.2021643138
+        48   2.00   -0.4713949570      -12.8273102491
+        49   2.00   -0.4594562436      -12.5024413081
+        50   2.00   -0.4556907703      -12.3999775599
+        51   2.00   -0.4253697083      -11.5748994289
+        52   2.00   -0.3816553217      -10.3853703725
+        53   2.00   -0.3060132235       -8.3270440221
+        54   2.00   -0.2917268735       -7.9382926337
+        55   0.00   +0.1193341351       +3.2472472423
+        56   0.00   +0.1477480091       +4.0204281432
+        57   0.00   +0.1590026731       +4.3266831517
+        58   0.00   +0.1653224903       +4.4986541400
+        59   0.00   +0.1791046976       +4.8736871058
+        60   0.00   +0.1974781125       +5.3736531956
+        61   0.00   +0.1990075975       +5.4152726018
+        62   0.00   +0.2125857293       +5.7847523914
+        63   0.00   +0.2224951882       +6.0544025048
+        64   0.00   +0.2260035886       +6.1498709437
+    
+  Additional Analysis:
+ ----------------------
+
+   -<V>/<T> = 2.005 
+      <S*S> = 0.000 
+    S*(S+1) = 0.000 
+          C = 0.000 
+
+    Time taken for task 1: 34.876068183 s.
+    
+ o-------------o
+ | Task No. 2: |
+ o-------------o
+
+
+          ------------------------------------------------------------          
+                               Finite Field Task                                
+          ------------------------------------------------------------          
+
+ o----------------------------o
+ | Calculation for trp_polar: |
+ o----------------------------o
+
+
+          ------------------------------------------------------------          
+                                Main SCF Options                                
+          ------------------------------------------------------------          
+
+     SCF Mode:                   RESTRICTED
+     Method:                             HF
+     Basis Set:                    DEF2-SVP
+     Basis Functions:                   270
+     Caching Threshold:                  -1
+     Integral Threshold:            1.2e-11
+
+     Energy Threshold:              5.0e-08
+     RMSD[D] Threshold:             1.0e-08
+     DIIS Threshold:                5.0e-07
+
+     Density Fitting:
+       Coulomb                         NONE
+       Exchange                        NONE
+
+          ------------------------------------------------------------          
+                                      SCF                                       
+          ------------------------------------------------------------          
+
+  Homogeneous Electric Field:
+ -----------------------------
+  Field Strength (au): 0.00e+00
+
+  Electric Field Vector:   1.000   0.000   0.000
+
+    Cycle      E/a.u.         abs(dE)/a.u.     rmsd(P)/a.u.       [F,P]/a.u.      time/min   Mode
+       1  -681.6608064995              inf              inf         8.80e-08      0:00 
+       2  -681.6608064486         5.08e-08         1.31e-09         5.83e-07      0:00:153    DD-
+       3  -681.6608058381         6.11e-07         7.52e-10         7.04e-07      0:00:150    -D-
+       4  -681.6608059160         7.79e-08         2.91e-09         9.42e-07      0:00:156    -D-
+       5  -681.6608059156         3.24e-10         2.73e-10         9.42e-07      0:00:151    -D-
+    Converged after   5 cycles. Loop exited.
+
+
+          ------------------------------------------------------------          
+                               Final SCF Results                                
+          ------------------------------------------------------------          
+
+Energy components as stored:
+Nuclear Repulsion:                                                                   957.1063341336 
+One-Particle Energy (including ECPs):                                              -2828.9325157877 
+Two-Particle Energy (HF):                                                           1190.1653757384 
+PCM Solvation Energy:                                                                  0.0000000000 
+----------------------------------------------------------------------------------------------------
+Derived energy components:
+Total Energy (HF):                                                                  -681.6608059156 
+----------------------------------------------------------------------------------------------------
+    
+  Orbital Energies:
+ -------------------
+        #    Occ.      Hartree                eV   
+       ---  ------    ---------            --------
+        45   2.00   -0.5296273942      -14.4118955892
+        46   2.00   -0.5093781055      -13.8608843740
+        47   2.00   -0.4851708559      -13.2021715542
+        48   2.00   -0.4713950491      -12.8273127555
+        49   2.00   -0.4594563960      -12.5024454558
+        50   2.00   -0.4556909592      -12.3999826991
+        51   2.00   -0.4253699286      -11.5749054248
+        52   2.00   -0.3816555373      -10.3853762395
+        53   2.00   -0.3060134568       -8.3270503698
+        54   2.00   -0.2917272608       -7.9383031726
+        55   0.00   +0.1193335534       +3.2472314138
+        56   0.00   +0.1477461957       +4.0203787977
+        57   0.00   +0.1590025340       +4.3266793666
+        58   0.00   +0.1653210326       +4.4986144716
+        59   0.00   +0.1791033132       +4.8736494327
+        60   0.00   +0.1974748284       +5.3735638303
+        61   0.00   +0.1990057555       +5.4152224780
+        62   0.00   +0.2125831937       +5.7846833945
+        63   0.00   +0.2224927377       +6.0543358220
+        64   0.00   +0.2260016195       +6.1498173608
+    
+  Additional Analysis:
+ ----------------------
+
+   -<V>/<T> = 2.005 
+      <S*S> = 0.000 
+    S*(S+1) = 0.000 
+          C = 0.000 
+
+
+          ------------------------------------------------------------          
+                                Main SCF Options                                
+          ------------------------------------------------------------          
+
+     SCF Mode:                   RESTRICTED
+     Method:                             HF
+     Basis Set:                    DEF2-SVP
+     Basis Functions:                   270
+     Caching Threshold:                  -1
+     Integral Threshold:            1.2e-11
+
+     Energy Threshold:              5.0e-08
+     RMSD[D] Threshold:             1.0e-08
+     DIIS Threshold:                5.0e-07
+
+     Density Fitting:
+       Coulomb                         NONE
+       Exchange                        NONE
+
+          ------------------------------------------------------------          
+                                      SCF                                       
+          ------------------------------------------------------------          
+
+  Homogeneous Electric Field:
+ -----------------------------
+  Field Strength (au): 0.00e+00
+
+  Electric Field Vector:   1.000   0.000   0.000
+
+    Cycle      E/a.u.         abs(dE)/a.u.     rmsd(P)/a.u.       [F,P]/a.u.      time/min   Mode
+       1  -681.6608064995              inf              inf         1.14e-06      0:00 
+       2  -681.6608057428         7.57e-07         1.06e-07         7.37e-06      0:00:307    DD-
+       3  -681.6608047544         9.88e-07         8.53e-08         8.18e-06      0:00:290    -D-
+       4  -681.6608027774         1.98e-06         2.00e-07         1.18e-05      0:00:343    -D-
+       5  -681.6608057991         3.02e-06         2.95e-08         9.36e-06      0:00:202    -D-
+       6  -681.6608064995         7.00e-07         1.52e-08         1.96e-07      0:02:919    -D-
+       7  -681.6608065396         4.01e-08         2.48e-08         1.28e-07      0:00:718    -D-
+    Converged after   7 cycles. Loop exited.
+
+
+          ------------------------------------------------------------          
+                               Final SCF Results                                
+          ------------------------------------------------------------          
+
+Energy components as stored:
+Nuclear Repulsion:                                                                   957.1063341336 
+One-Particle Energy (including ECPs):                                              -2828.9325147978 
+Two-Particle Energy (HF):                                                           1190.1653741246 
+PCM Solvation Energy:                                                                  0.0000000000 
+----------------------------------------------------------------------------------------------------
+Derived energy components:
+Total Energy (HF):                                                                  -681.6608065396 
+----------------------------------------------------------------------------------------------------
+    
+  Orbital Energies:
+ -------------------
+        #    Occ.      Hartree                eV   
+       ---  ------    ---------            --------
+        45   2.00   -0.5296272016      -14.4118903504
+        46   2.00   -0.5093779736      -13.8608807839
+        47   2.00   -0.4851706342      -13.2021655235
+        48   2.00   -0.4713950247      -12.8273120911
+        49   2.00   -0.4594562372      -12.5024411338
+        50   2.00   -0.4556907706      -12.3999775675
+        51   2.00   -0.4253696005      -11.5748964962
+        52   2.00   -0.3816553328      -10.3853706724
+        53   2.00   -0.3060132955       -8.3270459794
+        54   2.00   -0.2917269572       -7.9382949116
+        55   0.00   +0.1193341334       +3.2472471976
+        56   0.00   +0.1477479729       +4.0204271577
+        57   0.00   +0.1590026441       +4.3266823637
+        58   0.00   +0.1653225066       +4.4986545828
+        59   0.00   +0.1791047436       +4.8736883553
+        60   0.00   +0.1974780804       +5.3736523199
+        61   0.00   +0.1990075844       +5.4152722451
+        62   0.00   +0.2125856975       +5.7847515263
+        63   0.00   +0.2224951416       +6.0544012371
+        64   0.00   +0.2260035668       +6.1498703505
+    
+  Additional Analysis:
+ ----------------------
+
+   -<V>/<T> = 2.005 
+      <S*S> = 0.000 
+    S*(S+1) = 0.000 
+          C = 0.000 
+
+
+o------------------------------------------------------------------------------o
+|                                    LRSCF                                     |
+o------------------------------------------------------------------------------o
+
+ o-------------o
+ | LRSCF Info: |
+ o-------------o
+
+ System(s):
+                       Sys  Stat    nOcc_a   nVirt_a     nDim
+ ----------------------------------------------------------------
+    1            trp_polar   act       54      216    11664 
+
+ Type        :               Isolated 
+ NaddKinFunc :                   NONE 
+ NaddXCFunc  :                   NONE 
+
+
+  Set gauge-origin to center of mass.
+  Gauge-origin (Angstrom):   3.3432   0.2631  -1.0781
+
+  Molecular weight:   204.0899
+
+  Nuclear dipole moment:    -5.3903     0.7434    -4.6185
+
+ o------------------o
+ | Density Fitting: |
+ o------------------o
+
+  Coulomb      :  RI        
+  Exchange     :  NONE      
+
+  Using adaptive prescreening thresholds.
+
+ o------------------o
+ | Response Solver: |
+ o------------------o
+
+    Number of sets                        : 2
+    Dimension of the eigenvalue problem   : 11664
+    Number of roots to be determined      : 3
+    Convergence threshold                 : 1e-05
+    Maximum number of iterations          : 100
+    Maximum subspace dimension            : 1000000
+
+    Gram-Schmidt: Removed   0 linear dependencies.
+  
+   it.    dimension    time (min)    converged     max. norm
+ ----------------------------------------------------------------
+    1          3          0.068           0      3.49e+00  ( 1)
+    2          6          0.083           0      1.06e+00  ( 1)
+    3          9          0.081           0      3.66e-01  ( 1)
+    4         12          0.080           0      1.53e-01  ( 1)
+    5         15          0.077           0      7.48e-02  ( 1)
+    6         18          0.072           0      2.75e-02  ( 1)
+    7         21          0.071           0      1.16e-02  ( 1)
+    8         24          0.068           0      3.99e-03  ( 1)
+    9         27          0.065           0      1.25e-03  ( 1)
+   10         30          0.060           0      4.10e-04  ( 1)
+   11         33          0.058           0      1.35e-04  ( 1)
+   12         36          0.053           0      3.91e-05  ( 1)
+   13         39          0.047           2      1.18e-05  ( 1)
+   14         40          0.035           3      8.49e-06  ( 2)
+
+  Iterative solver converged in  14 iterations.
+
+
+  Note: These response properties were calculated in LENGTH gauge.
+
+        The origin-independent optical rotation is computed from a
+        singular-value decomposition of the mixed-gauge polarizability.
+        See J. Chem. Phys. 153 (2020) 151101 for reference.
+
+        Tensors: alpha = -<<mu;mu>> on the left.
+                     G = -<<mu;m>> on the right.
+
+        The Specific Rotation is given in deg/[dm(g/mL)].
+
+
+ --------------------------------------------------------------------------------- 
+    Frequency:         0.000000 au         0.000 eV 1239841984332.00 nm
+
+			       ### Real Response ###
+
+          x           y           z      |          x           y          z    
+
+  x  142.608906   -2.123126  -10.633613  |  x    0.000000    0.000000   -0.000000
+  y   -2.123126   95.911766   32.404849  |  y   -0.000000   -0.000000    0.000000
+  z  -10.633615   32.404851  131.220912  |  z   -0.000000    0.000000    0.000000
+
+  Isotropic Polarizability:                                        123.2471947373
+  Isotropic Optical Rotation:                                       -0.1829047105
+  Specific Rotation:                                                   -0.0000000
+  Isotropic Optical Rotation (origin-independent):                  -0.1489796414
+  Specific Rotation (origin-independent):                           -0.0000000000
+ ---------------------------------------------------------------------------------
+
+ o----------------------------o
+ | Finite-Field Task Results: |
+ o----------------------------o
+
+  Note that the polarizability tensor was obtained analytically via the LRSCFTask.
+
+  Frequency / a.u.                  3.675e-11 
+  Frequency / eV                    1.000e-09 
+  Wavelength / nm                1239841984332.003 
+
+
+  Dipole Moment Vector / a.u.:
+ ------------------------------
+                x            y            z 
+      -0.80918230   0.59713674  -1.16744958 
+
+
+
+  Polarizability Tensor / a.u.:
+ -------------------------------
+                x            y            z 
+    x 142.60890613  -2.12312623 -10.63361337 
+    y  -2.12312624  95.91176620  32.40484881 
+    z -10.63361550  32.40485057 131.22091189 
+
+  Isotropic Polarizability / a.u.: 123.24719474
+
+
+    Time taken for task 2: 1:14.87832265 min.
+    
+
+o------------------------------------------------------------------------------o
+|                                   Cleanup                                    |
+o------------------------------------------------------------------------------o
+
+    All clean and shiny
+
+  Final Timings:
+ ----------------
+              Active System -         HF Pot.      0:48.510 min
+              Active System -     1e-Int Pot.      0:00.298 min
+              Active System -   Coul./XC Pot.      0:48.515 min
+                LRSCF -      Dipole Integrals      0:00.076 min
+                LRSCF -   Sigmavector:      K      0:41.495 min
+                LRSCF -   Sigmavector:   Fock      0:00.401 min
+                LRSCF -   Sigmavector:   RI-J      0:09.357 min
+                LRSCF -  AO-MO Transformation      0:03.056 min
+                LRSCF -  RSolver: LES Solving      0:00.196 min
+                LRSCF - Add/Sym Fock Matrices      0:00.083 min
+                LRSCF - Shell-Wise Abs. Calc.      0:00.050 min
+               Tech. -           DIIS/Damping      0:01.606 min
+               Tech. -    Fock Matrix Solving      0:02.240 min
+               Tech. - Libint Initializations      0:03.845 min
+
+  Program ended:
+ ----------------
+    Time:  2025-11-15 09:41:52
+    On:    HOSTNAME UNKNOWN
+    Time taken for the entire run: 1:49.76837768600001 min.
+    
+
