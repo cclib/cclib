@@ -12,7 +12,7 @@ class natom(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["gaussian", "psi4", "qchem"]
+    known_codes = ["gaussian", "psi4", "qchem", "ORCA"]
 
     @staticmethod
     def gaussian(file_handler, ccdata) -> Optional[dict]:
@@ -25,6 +25,14 @@ class natom(base_parser):
         dependency_list = ["atomnos"]
         if base_parser.check_dependencies(dependency_list, ccdata, "natom"):
             return {natom.__name__: len(ccdata.atomnos)}
+
+    @staticmethod
+    def ORCA(file_handler, ccdata) -> Optional[dict]:
+        # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
+        dependency_list = ["atomnos"]
+        if base_parser.check_dependencies(dependency_list, ccdata, "natom"):
+            return {natom.__name__: len(ccdata.atomnos)}
+        return None
 
     @staticmethod
     def psi4(file_handler, ccdata) -> Optional[dict]:
