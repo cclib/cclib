@@ -258,6 +258,7 @@ class GenericSPTest:
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Molpro", "?")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
     @skipForParser("xTB", "not implemented yet")
     def testsymlabels(self, data) -> None:
@@ -272,6 +273,7 @@ class GenericSPTest:
 
     @skipForParser("Gaussian", "The parser is still being converted to version 2")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
     @skipForParser("xTB", "xTB does not print them all")
     def testhomos(self, data) -> None:
@@ -286,6 +288,7 @@ class GenericSPTest:
     @skipForParser("GAMESSDAT", "Scfvalues probably do not exist in the file")
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
+    @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("xTB", "not implemented yet")
     def testscfvaluetype(self, data) -> None:
         """Are scfvalues and its elements the right type??"""
@@ -296,6 +299,7 @@ class GenericSPTest:
     @skipForLogfile("FChk/basicQChem5.4", "Q-Chem doesn't print SCF energy to fchk")
     @skipForParser("GAMESSDAT", "Scfenergies probably do not exist in the file")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("ORCA", "The parser is still being developed for version 2")
     def testscfenergy(self, data) -> None:
         """Is the SCF energy within the target?"""
         assert (
@@ -306,6 +310,7 @@ class GenericSPTest:
     @skipForParser("FChk", "Formatted Checkpoint files do not have a section for SCF convergence")
     @skipForParser("GAMESSDAT", "Scftargets probably do not exist in the file")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
     @skipForParser("xTB", "not implemented yet")
     def testscftargetdim(self, data) -> None:
@@ -318,6 +323,7 @@ class GenericSPTest:
     @skipForParser("FChk", "Formatted Checkpoint files do not have a section for SCF convergence")
     @skipForParser("GAMESSDAT", "Scftargets probably do not exist in the file")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
     @skipForParser("xTB", "not implemented yet")
     def testscftargets(self, data) -> None:
@@ -339,6 +345,7 @@ class GenericSPTest:
     @skipForParser("GAMESSDAT", "Moenergies probably do not exist in the file")
     @skipForLogfile("Gaussian/basicGaussian16/dvb_sp_no.out", "no energies for natural orbitals")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
     @skipForLogfile("Turbomole/basicTurbomole5.9/dvb_sp_symm", "delta of 7.4, everything else ok")
     @skipForParser("xTB", "not implemented yet")
@@ -452,15 +459,16 @@ class GenericSPTest:
     @skipForParser("xTB", "not implemented yet")
     def testrotconsts(self, data) -> None:
         """A single geometry leads to single set of rotational constants."""
-        assert data.rotconsts.shape == (1, 3)
+        assert data._ccCollection._parsed_data[0].rotconsts.shape == (1, 3)
         # taken from Gaussian16/dvb_sp.out
         ref = [4.6266363, 0.6849065, 0.5965900]
-        numpy.testing.assert_allclose(data.rotconsts[0], ref, rtol=0, atol=1.0e-3)
+        numpy.testing.assert_allclose(data._ccCollection._parsed_data[0].rotconsts[0], ref, rtol=0, atol=1.0e-3)
 
     @skipForParser("FChk", "The parser is still being developed so we skip this test")
     @skipForParser("Gaussian", "Logfile needs to be updated")
     @skipForParser("Jaguar", "No dipole moments in the logfile")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
+    @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("xTB", "not implemented yet")
     def testmoments(self, data) -> None:
@@ -609,8 +617,8 @@ class GenericSPTest:
     @skipForLogfile("GAMESSDAT/basicGAMESS-US2018/dvb_sp.dat", "TODO impossible to determine?")
     def testmetadata_success(self, data) -> None:
         """Does metadata have expected keys and values?"""
-        assert "success" in data.metadata
-        assert data.metadata["success"]
+        assert "success" in data._ccCollection._parsed_data[0].metadata
+        assert data._ccCollection._parsed_data[0].metadata["success"]
 
     @skipForParser("FChk", "point group symmetry cannot be printed")
     @skipForParser("GAMESSDAT", "Files probably do not contain information about symmetry_detected")
