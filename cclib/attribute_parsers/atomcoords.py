@@ -53,7 +53,7 @@ class atomcoords(base_parser):
                 if atom[-1] != ">":
                     constructed_atomcoords.append([float(x), float(y), float(z)])
                 line = file_handler.virtual_next()
-            return {atomccords.__name__ : constructed_atomcoords}
+            return {atomcoords.__name__ : constructed_atomcoords}
         return None
 
 
