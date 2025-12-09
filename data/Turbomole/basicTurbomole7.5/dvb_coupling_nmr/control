@@ -1,0 +1,75 @@
+$title
+dvb_nmr_Single_Point_DFT_B3LYP__GD3BJ__Gas_Phase_Pople_Basis_Sets_STO_3G
+$symmetry c1
+$redundant    file=coord
+$user-defined bonds    file=coord
+$coord    file=coord
+$optimize
+ internal   on
+ redundant  on
+ cartesian  off
+ global     off
+ basis      off
+$atoms
+c  1-6,11-12,15-16                                                             \
+   basis =c STO-3G
+h  7-10,13-14,17-20                                                            \
+   basis =h STO-3G
+$basis    file=basis
+$scfmo   file=mos
+$scfiterlimit      100
+$thize     0.10000000E-04
+$thime        5
+$scfdamp   start=  0.300  step=  0.050  min=  0.100
+$scfdump
+$scfintunit
+ unit=30       size=0        file=twoint
+$scfdiis
+$maxcor    954 MiB  per_core
+$scforbitalshift  automatic=.1
+$drvopt
+   cartesian  on
+   basis      off
+   global     off
+   hessian    on
+   dipole     on
+   nuclear polarizability
+$interconversion  off
+   qconv=1.d-7
+   maxiter=25
+$coordinateupdate
+   dqmax=0.3
+   interpolate  on
+   statistics    5
+$forceupdate
+   ahlrichs numgeo=0  mingeo=3 maxgeo=4 modus=<g|dq> dynamic fail=0.3
+   threig=0.005  reseig=0.005  thrbig=3.0  scale=1.00  damping=0.0
+$forceinit on
+   diag=default
+$energy    file=energy
+$grad    file=gradient
+$forceapprox    file=forceapprox
+$dft
+   functional b3-lyp
+   gridsize   3
+$denconv     0.10000000E-06
+$rundimensions
+   natoms=20
+   nbf(CAO)=60
+   nbf(AO)=60
+$last SCF energy change = -.64832761E-07
+$charge from dscf
+         -0.000 (not to be modified here)
+$dipole from dscf
+  x     0.00000000000175    y     0.00000000000133    z     0.00000000000019    a.u.
+   | dipole | =    0.0000000000  debye
+$scfconv   7
+$orbital_max_rnorm 0.18224760000665E-05
+$closed shells
+ a       1-35                                   ( 2 )
+$ncoupling
+  fc sd pso dso
+  thr=  0.100000
+$last step     escf
+$coupling_reduced  file=coupling.reduced
+$end

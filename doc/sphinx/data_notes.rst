@@ -507,7 +507,72 @@ Commands to get information on all orbitals:
 nmrtensors
 ----------
 
-A dictionary where the keys zero-index the atomic center for which the chemical shielding tensor is calculated, and the values are themselves dictionaries containing the keys ``total``, ``paramagnetic``, and ``diamagnetic``. These correspond to the total chemical shielding tensor and its separation into paramagnetic and diamagnetic components, where :math:`\sigma_{K}^{\textrm{tot}} = \sigma_{K}^{\textrm{para}} + \sigma_{K}^{\textrm{dia}}` for a nucleus :math:`K`.  Each tensor is represented as a 3-by-3 NumPy array. If no breakdown for paramagnetic and diamagnetic contributions to the chemical shielding is available, then only the ``total`` key will be present.
+A dictionary where the keys zero-index the atomic center for which the chemical shielding tensor is calculated, and the values are themselves dictionaries containing the keys ``total`` and ``isotropic``, and optionally ``paramagnetic``, and ``diamagnetic``. ``total``, ``paramagnetic`` and ``diamagnetic`` correspond to the total chemical shielding tensor and its separation into paramagnetic and diamagnetic components, where :math:`\sigma_{K}^{\textrm{tot}} = \sigma_{K}^{\textrm{para}} + \sigma_{K}^{\textrm{dia}}` for a nucleus :math:`K`.  Each tensor is represented as a 3-by-3 NumPy array. If no breakdown for paramagnetic and diamagnetic contributions to the chemical shielding is available, then ``paramagnetic`` and ``diamagnetic`` will be absent. ``isotropic`` contains the total isotropic shielding value for the atom, which corresponds to the mean of the eigenvalues of the ``total`` tensor. All values are in ppm.
+
+.. code-block:: python
+
+    {
+        # Atomic index.
+        0: {
+            'diamagnetic': array([[267.113,  -0.561,   0.   ],
+                                  [ -0.693, 260.076,   0.   ],
+                                  [  0.   ,   0.   , 244.893]]
+            ),
+            'isotropic': 114.114,
+            'paramagnetic': array([[-217.434,    5.104,    0.   ],
+                                   [   7.253, -179.952,    0.   ],
+                                   [   0.   ,   -0.   ,  -32.354]]
+            ),
+            'total': array([[ 49.679,   4.542,   0.   ],
+                            [  6.56 ,  80.124,   0.   ],
+                            [  0.   ,  -0.   , 212.538]]
+            )
+        }
+        # ...
+    }
+
+nmrcouplingtensors
+------------------
+
+A dictionary of spin-spin coupling tensors. The keys of ``nmrcouplingtensors`` are each a pair of atomic indices, indicating the atoms between which the coupling is taking place, and the values are themselves dictionaries containing pairs of atomic isotopes as keys, where the ordering of the isotopes matches that of the atomic indices. The values of the isotope dictionaries are a third layer of dictionaries, where the keys represent different contributions to the coupling tensor, and the values are the tensors themselves as a 3-by-3 NumPy array. The available tensor types depends on what is available in the calculation, but may include ``fermi``, ``spin-dipolar-fermi``, ``diamagnetic``, ``paramagnetic``, and ``spin-dipolar``. The ``total`` spin tensor is always available. Additionally, the ``isotropic`` key contains the total isotropic coupling value for the atom pair. All values are in Hz, and include the atomic g-factors (the J matrix).
+
+.. code-block:: python
+
+    {
+        # Atomic pair.
+        (1,0): {
+            # Istopes, here two C13 atoms.
+            (13,13): {
+                'diamagnetic': array([[ 0.4902, -0.1273, -0.    ],
+                                    [-0.1273, -0.2556,  0.    ],
+                                    [ 0.    , -0.    , -0.1391]]
+                ),
+                'fermi': array([[7.44, 0.  , 0.  ],
+                                [0.  , 7.44, 0.  ],
+                                [0.  , 0.  , 7.44]]
+                ),
+                'isotropic': 9.485,
+                'paramagnetic': array([[ 1.188 , -0.2805,  0.    ],
+                                    [-0.2804, -0.5528,  0.    ],
+                                    [-0.    ,  0.    , -0.0408]]
+                ),
+                'spin-dipolar': array([[ 0.7239,  0.0401,  0.    ],
+                                    [ 0.0398,  1.1012, -0.    ],
+                                    [-0.    ,  0.    ,  3.6195]]
+                ),
+                'spin-dipolar-fermi': array([[ 1.9809,  0.0177,  0.    ],
+                                            [ 0.0177,  2.2309, -0.    ],
+                                            [ 0.    , -0.    , -4.2119]]
+                ),
+                'total': array([[11.8229, -0.3499,  0.    ],
+                                [-0.3501,  9.9637, -0.    ],
+                                [-0.    ,  0.    ,  6.6676]]
+                )
+            }
+        }
+        # ...
+    }
+
 
 optdone
 -------

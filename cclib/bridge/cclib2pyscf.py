@@ -8,12 +8,13 @@
 import functools
 import itertools
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from cclib.parser.data import ccData
 from cclib.parser.utils import PeriodicTable, convertor, find_package
 
 import numpy as np
+import periodictable
 
 l_sym2num = {"S": 0, "P": 1, "D": 2, "F": 3, "G": 4}
 
@@ -26,6 +27,7 @@ _found_pyscf = find_package("pyscf")
 if _found_pyscf:
     import pyscf.cc.ccsd
     import pyscf.data.elements
+    import pyscf.data.nist
     import pyscf.gto
     import pyscf.hessian.thermo
     import pyscf.mp.mp2
@@ -46,6 +48,7 @@ if _found_pyscf:
             action="ignore", category=UserWarning, message=r"Module [\w-]+ is not fully tested"
         )
         import pyscf.prop as pyscf_prop
+        import pyscf.prop.ssc.rhf
 
     except ModuleNotFoundError:
         pyscf_prop = None
@@ -151,6 +154,12 @@ def makecclib(
     scf_steps: List[List[Dict[str, float]]] = [],
     opt_steps: List[Dict[str, Any]] = [],
     opt_failed: bool = False,
+    nmr_shielding: List[
+        Tuple[Tuple[float, float, float], Tuple[float, float, float], Tuple[float, float, float]]
+    ] = [],
+    spin_spin_coupling: List[
+        Tuple[Tuple[float, float, float], Tuple[float, float, float], Tuple[float, float, float]]
+    ] = [],
 ) -> ccData:
     """Create cclib attributes and return a ccData from a PySCF calculation.
 
@@ -170,7 +179,7 @@ def makecclib(
     """
     _check_pyscf(_found_pyscf)
     # What is our level of theory?
-    scf, mp, cc, hess, freq, et = None, None, None, None, None, []
+    scf, mp, cc, hess, freq, et, nmr, spin_spin = None, None, None, None, None, [], None, None
 
     mols = {method.mol for method in methods if hasattr(method, "mol")}
     if len(mols) > 1:
@@ -204,10 +213,16 @@ def makecclib(
             cc = base_method
             scf = base_method._scf
 
+        elif pyscf_prop is not None and isinstance(method, pyscf_prop.nmr.rhf.NMR):
+            nmr = base_method
+
+        elif pyscf_prop is not None and isinstance(method, pyscf_prop.ssc.rhf.SpinSpinCoupling):
+            spin_spin = base_method
+
         else:
             # Panic.
             raise ValueError(
-                f"Could not determine level of theory of base method '{type(base_method.__name__)}'"
+                f"Could not determine level of theory of base method '{type(base_method).__name__}'"
             )
 
     return cclibfrommethods(
@@ -221,6 +236,10 @@ def makecclib(
         opt_steps=opt_steps,
         et=et,
         opt_failed=opt_failed,
+        nmr=nmr,
+        spin_spin=spin_spin,
+        nmr_shielding=nmr_shielding,
+        spin_spin_coupling=spin_spin_coupling,
     )
 
 
@@ -236,6 +255,10 @@ def cclibfrommethods(
     scf_steps=[],
     opt_steps=[],
     opt_failed=False,
+    nmr=None,
+    spin_spin=None,
+    nmr_shielding=[],
+    spin_spin_coupling=[],
 ) -> ccData:
     """Create cclib attributes and return a ccData from a PySCF method object.
 
@@ -300,6 +323,22 @@ def cclibfrommethods(
     attributes["atommasses"] = [
         pyscf.data.elements.COMMON_ISOTOPE_MASSES[atom_no] for atom_no in attributes["atomnos"]
     ]
+
+    attributes["atommasses"] = []
+    for atom_index in range(attributes["natom"]):
+        element = mol.elements[atom_index]
+        # If an isotope mass has been given for this atom, we can use that.
+        if element in mol.nucprop and "mass" in mol.nucprop[element]:
+            # Despite its name, 'mass' is actually referring to the isotope (or the mass rounded to the nearest integer)
+            isotope = mol.nucprop[element]["mass"]
+            # We can get the actual mass from periodictable
+            attributes["atommasses"].append(periodictable.elements.symbol(element)[isotope].mass)
+
+        else:
+            # Use a default mass.
+            attributes["atommasses"].append(
+                pyscf.data.elements.COMMON_ISOTOPE_MASSES[attributes["atomnos"][atom_index]]
+            )
 
     coord_convertor = functools.partial(convertor, fromunits="Angstrom", tounits="bohr")
     bohr_coords = [
@@ -665,6 +704,46 @@ def cclibfrommethods(
         if hasattr(freq, "ir_inten"):
             # TODO: Units?
             attributes["vibirs"] = freq.ir_inten
+
+    # NMR
+    if len(nmr_shielding):
+        # nmr_shielding is a list, nmrtensors is a dict
+        attributes["nmrtensors"] = {
+            nmr.shielding_nuc[index]: {
+                "isotropic": np.mean(np.linalg.eigvals(value)),
+                "total": value,
+            }
+            for index, value in enumerate(nmr_shielding)
+        }
+
+    # NMR Coupling.
+    if spin_spin and len(spin_spin_coupling):
+        # spin_spin_coupling is in eH, we want Hz
+        # From properties.pyscf.prop.ssc.uhf.py
+        # Setup some constants for conversion.
+        nuc_mag = 0.5 * (pyscf.data.nist.E_MASS / pyscf.data.nist.PROTON_MASS)  # e*hbar/2m
+        au2Hz = pyscf.data.nist.HARTREE2J / pyscf.data.nist.PLANCK
+        gyro = pyscf.prop.ssc.rhf._atom_gyro_list(mol)
+
+        nmrcouplingtensors = {}
+        for index, tensor in enumerate(spin_spin_coupling):
+            atoms = spin_spin.nuc_pair[index]
+            isotopes = (
+                round(attributes["atommasses"][spin_spin.nuc_pair[index][0]]),
+                round(attributes["atommasses"][spin_spin.nuc_pair[index][1]]),
+            )
+            gyros = (gyro[atoms[0]], gyro[atoms[1]])
+            total_gyros = au2Hz * nuc_mag**2 * tensor * gyros[0] * gyros[1]
+
+            nmrcouplingtensors[atoms] = {
+                isotopes: {
+                    # Convert to Hz, and add in g-factors for the relevant atoms.
+                    "isotropic": np.mean(np.linalg.eigvals(total_gyros)),
+                    "total": total_gyros,
+                }
+            }
+
+        attributes["nmrcouplingtensors"] = nmrcouplingtensors
 
     return ccData(attributes)
 

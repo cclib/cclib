@@ -122,6 +122,18 @@ class Gaussian(logfileparser.Logfile):
             " charges and spin densities:",
         ] + self.atomcharges_atomspins_headers_swap
 
+        # NMR spin couplings.
+        self.nmrcouplingtypes = {
+            # Unfortunately, we only have the total values for these 'tensors', which we
+            # dont support yet.
+            # "Fermi Contact (FC) contribution to J (Hz):": "fermi",
+            # "Spin-dipolar (SD) contribution to J (Hz):": "spin-dipolar",
+            # "Paramagnetic spin-orbit (PSO) contribution to J (Hz):": "paramagnetic",
+            # "Diamagnetic spin-orbit (DSO) contribution to J (Hz):": "diamagnetic",
+            "Total nuclear spin-spin coupling J (Hz):": "isotropic"
+        }
+        self.nmrcouplings = {}
+
     def after_parsing(self):
         # atomcoords are parsed as a list of lists but it should be an array.
         # Done automatically later in arrayify, but we need it now for the
@@ -225,6 +237,10 @@ class Gaussian(logfileparser.Logfile):
                 and sum(self.atomspins["hirshfeld"]) == 0.0
             ):
                 delattr(self, "atomspins")
+
+        # If we read any couplings, set those now.
+        if len(self.nmrcouplings):
+            self.set_attribute("nmrcouplingtensors", self.nmrcouplings)
 
         super().after_parsing()
 
@@ -460,6 +476,108 @@ class Gaussian(logfileparser.Logfile):
         # Basis set name
         if line[1:15] == "Standard basis":
             self.metadata["basis_set"] = line.split()[2]
+
+        # NMR.
+        # A few different ways this section can appear.
+        # From the manual:
+        # Magnetic properties (GIAO method)
+        #
+        # Magnetic shielding (ppm):
+        #   1  C    Isotropic =    57.7345   Anisotropy =   194.4092
+        #    XX=    48.4143   YX=      .0000   ZX=      .0000
+        #    XY=      .0000   YY=   -62.5514   ZY=      .0000
+        #    XZ=      .0000   YZ=      .0000   ZZ=   187.3406
+        #   2  H    Isotropic =    23.9397   Anisotropy =     5.2745
+        #    XX=    27.3287   YX=      .0000   ZX=      .0000
+        #    XY=      .0000   YY=    24.0670   ZY=      .0000
+        #    XZ=      .0000   YZ=      .0000   ZZ=    20.4233
+        #
+        # From the g16 log file:
+        #  Calculating GIAO nuclear magnetic shielding tensors.
+        #  SCF GIAO Magnetic shielding tensor (ppm):
+        #       1  C    Isotropic =   114.0880   Anisotropy =   147.6438
+        #    XX=    57.6159   YX=   -13.4888   ZX=     0.0000
+        #    XY=   -15.5032   YY=    72.1309   ZY=    -0.0000
+        #    XZ=     0.0000   YZ=    -0.0000   ZZ=   212.5172
+        #    Eigenvalues:    48.6622    81.0847   212.5172
+        #       2  C    Isotropic =   114.0880   Anisotropy =   147.6438
+        #    XX=    57.6159   YX=   -13.4888   ZX=    -0.0000
+        #    XY=   -15.5032   YY=    72.1309   ZY=     0.0000
+        #    XZ=    -0.0000   YZ=    -0.0000   ZZ=   212.5172
+        #    Eigenvalues:    48.6622    81.0847   212.5172
+        if "Magnetic shielding" in line and "(ppm)" in line:
+            nmrtensors = dict()
+            line = next(inputfile)
+
+            while "Isotropic =" in line:
+                line_split = line.split()
+                atom = int(line_split[0]) - 1
+
+                iso = float(line_split[4])
+                # Currently unused.
+                # aniso = float(line_split[7])
+
+                tensor = numpy.zeros((3, 3))
+                for j, row in zip(range(3), inputfile):
+                    split_row = row.split()
+                    tensor[j] = [float(val) for val in (split_row[1], split_row[3], split_row[5])]
+
+                nmrtensors[atom] = {"total": tensor, "isotropic": iso}
+                line = next(inputfile)
+                line = next(inputfile)
+
+            self.set_attribute("nmrtensors", nmrtensors)
+
+        # NMR Coupling.
+        # Note that only a subset of atoms may be calculated for, so we cannot assume the length of
+        # this matrix
+        #
+        #  Total nuclear spin-spin coupling J (Hz):
+        #                 1             2             3             4             5
+        #       1  0.000000D+00
+        #       2  0.926067D+01  0.000000D+00
+        #       3  0.451042D+02 -0.666100D+01  0.000000D+00
+        #       4 -0.666100D+01  0.451042D+02  0.841685D+01  0.000000D+00
+        #       5 -0.678025D+01  0.456666D+02  0.464173D+02 -0.605372D+01  0.000000D+00
+        #       6  0.456666D+02 -0.678025D+01 -0.605372D+01  0.464173D+02  0.853065D+01
+        #       7 -0.367044D+01  0.558159D+01  0.133415D+03 -0.267713D+01 -0.379366D+01
+        #       8  0.558159D+01 -0.367044D+01 -0.267713D+01  0.133415D+03  0.498884D+01
+        #       9  0.555607D+01 -0.385089D+01 -0.393707D+01  0.512551D+01  0.133053D+03
+        # ...
+        if line.strip() in self.nmrcouplingtypes:
+            coupling_type = self.nmrcouplingtypes[line.strip()]
+            line = next(inputfile)
+
+            while line[0:5] == "     ":
+                split_line = line.split()
+
+                if line[0:10] == "          ":
+                    # New header
+                    columns = [int(column) - 1 for column in line.split()]
+
+                elif split_line[0]:
+                    atom = int(split_line[0]) - 1
+
+                    for index, coupling in enumerate(split_line[1:]):
+                        # Ignore self coupling.
+                        if atom == columns[index]:
+                            continue
+
+                        isotopes = (
+                            round(self.atommasses[atom]),
+                            round(self.atommasses[columns[index]]),
+                        )
+
+                        # Create dictionaries if we haven't already.
+                        if (atom, columns[index]) not in self.nmrcouplings:
+                            # We only support one set of isotopes, so just add them now.
+                            self.nmrcouplings[(atom, columns[index])] = {isotopes: {}}
+
+                        self.nmrcouplings[(atom, columns[index])][isotopes][coupling_type] = (
+                            utils.float(coupling)
+                        )
+
+                line = next(inputfile)
 
         # Solvent information.
         # PCM (the default gaussian solvent method).

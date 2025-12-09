@@ -131,6 +131,15 @@ class Turbomole(logfileparser.Logfile):
     def before_parsing(self):
         self.periodic_table = utils.PeriodicTable()
 
+        self.nmrtypes = {
+            "diamagnetic part of magnetic shielding:": "diamagnetic",
+            "paramagnetic undisturbed density part of magnetic shielding:": "paramagnetic-undisturbed",
+            "paramagnetic disturbed density part of magnetic shielding:": "paramagnetic-disturbed",
+            "total magnetic shielding:": "total",
+        }
+
+        self.isotopes = []
+
     @staticmethod
     def split_molines(inline):
         """Splits the lines containing mocoeffs (each of length 20)
@@ -731,6 +740,145 @@ class Turbomole(logfileparser.Logfile):
             self.set_attribute("vibirs", vibirs)
             self.set_attribute("vibdisps", vibdisps)
             self.set_attribute("vibrmasses", vibrmasses)
+
+        # NMR chemical shifts from mpshift
+        #         >>>>> DFT MAGNETIC SHIELDINGS <<<<<
+        #
+        # Diamagnetic shielding:  full
+        # Paramagnetic shielding, undisturbed density:  full
+        # Paramagnetic shielding, disturbed density:  full
+        #
+        # ATOM  c    1      ISOTROPIC:      122.6073998       ANISOTROPIC:      156.3422302
+        #
+        #   diamagnetic part of magnetic shielding:
+        #     Trace =     253.97215102
+        #     Tensor :
+        #               259.37937013          0.99883879          0.12241962
+        #                 0.99896494        265.61002239          0.25177999
+        #                 0.12146162          0.24857564        236.92706055
+        #
+        #   paramagnetic undisturbed density part of magnetic shielding:
+        #     Trace =      -0.27724072
+        #     Tensor :
+        #                 0.85271422         -0.25082922          0.00807053
+        #                -0.25049124         -0.71179568         -0.01217268
+        #                 0.00553948          0.01640964         -0.97264069
+        #
+        #   paramagnetic disturbed density part of magnetic shielding:
+        #     Trace =    -131.08751051
+        #     Tensor :
+        #              -215.80713691          8.65109510         -0.93979373
+        #                 8.66943099       -162.13338069         -1.16686633
+        #                -0.91373927         -1.24756790        -15.32201394
+        #
+        #   total magnetic shielding:
+        #     Trace =     122.60739979
+        #     Tensor :
+        #                44.42494744          9.39910468         -0.80930358
+        #                 9.41790469        102.76484602         -0.92725901
+        #                -0.78673818         -0.98258262        220.63240592
+        #
+        # ATOM  c    2      ISOTROPIC:      122.6422736       ANISOTROPIC:      156.3464506
+        # ...
+        if ">>>>> DFT MAGNETIC SHIELDINGS <<<<<" in line:
+            nmrtensors = dict()
+
+            while line.strip()[0:4] != "ATOM":
+                line = next(inputfile)
+
+            while line.strip()[0:4] == "ATOM":
+                split_line = line.split()
+                atom = int(split_line[2]) - 1
+                iso = float(split_line[4])
+
+                line = next(inputfile)
+                line = next(inputfile)
+                atomtensors = {"isotropic": iso}
+
+                while "magnetic shielding" in line:
+                    # Even if we don't save this tensor, we'll still parse it to move to the next correctly.
+                    tensor_type = self.nmrtypes.get(line.strip(), None)
+                    line = next(inputfile)
+                    # Currently unused.
+                    # trace = float(line.split()[-1])
+                    line = next(inputfile)
+                    tensor = numpy.zeros((3, 3))
+                    for j, row in zip(range(3), inputfile):
+                        tensor[j] = list(map(float, row.split()))
+
+                    if tensor_type is not None:
+                        atomtensors[tensor_type] = tensor
+
+                    line = next(inputfile)
+                    line = next(inputfile)
+
+                nmrtensors[atom] = atomtensors
+
+            self.set_attribute("nmrtensors", nmrtensors)
+
+        # Isotope info.
+        #   ------------------------------------------------
+        #      Gyromagnetic ratios in 10^7 rad s^-1 T^-1
+        #   ------------------------------------------------
+        #
+        #             atom  isotope  gyromagn. ratio
+        #             1 c       13       6.728286000
+        #             2 c       13       6.728286000
+        #             3 c       13       6.728286000
+        # ...
+        if line.strip() == "atom  isotope  gyromagn. ratio":
+            line = next(inputfile)
+            isotopes = [None] * self.natom
+            while line.strip() != "":
+                split_line = line.split()
+                atom = int(split_line[0]) - 1
+                isotope = int(split_line[2])
+                isotopes[atom] = isotope
+                line = next(inputfile)
+
+            self.isotopes = isotopes
+
+        # NMR spin-spin coupling.
+        #   ------------------------------------------------
+        #     Nuclear coupling constants >=      0.1000 Hz
+        #   ------------------------------------------------
+        #
+        #     Coupling nuclei        Isotropy    Anisotropy
+        #
+        #    c     2 - c     1:        9.4539       14.3280
+        #            5.4113        1.1840        0.0000
+        #            1.1840        4.0745        0.0000
+        #            0.0000        0.0000       18.8760
+        #
+        #    c     3 - c     1:       45.4438       31.6640
+        # ...
+        if line.strip() == "Coupling nuclei        Isotropy    Anisotropy":
+            nmrcouplingtensors = {}
+
+            line = next(inputfile)
+            line = next(inputfile)
+
+            while line.strip() != "":
+                split_line = line.split()
+                atoms = (int(split_line[1]) - 1, int(split_line[4][:-1]) - 1)
+                isotopes = (self.isotopes[atoms[0]], self.isotopes[atoms[1]])
+
+                iso = float(split_line[5])
+                # aniso = float(split_line[6])
+
+                tensor = numpy.zeros((3, 3))
+                for j, row in zip(range(3), inputfile):
+                    tensor[j] = list(map(float, row.split()))
+
+                if atoms not in nmrcouplingtensors:
+                    nmrcouplingtensors[atoms] = {}
+
+                nmrcouplingtensors[atoms][isotopes] = {"total": tensor, "isotropic": iso}
+
+                line = next(inputfile)
+                line = next(inputfile)
+
+            self.set_attribute("nmrcouplingtensors", nmrcouplingtensors)
 
         # In this section we are parsing mocoeffs and moenergies from
         # the files like: mos, alpha and beta.
