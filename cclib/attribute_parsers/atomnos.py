@@ -50,7 +50,7 @@ class atomnos(base_parser):
             while len(line) > 1:
                 atom, x, y, z = line.split()
                 if atom[-1] != ">":
-                    constructed_atomnos.append(ccdata.table.number[atom])
+                    constructed_atomnos.append(table.number[atom])
                 line = file_handler.virtual_next()
             return {atomnos.__name__ : constructed_atomnos}
         return None
