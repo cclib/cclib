@@ -79,7 +79,7 @@ class aonames(base_parser):
                         # New atom.
                         if len(parts) > 1:
                             if i > 0:
-                                this_aonames.append(basisonatom)  # noqa: F821
+                                this_aonames.append(basisonatom)
                             basisonatom = []
                         orbital = line[11:20].strip()  # noqa: F841
                         basisonatom.append(i)
