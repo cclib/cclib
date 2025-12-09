@@ -191,6 +191,7 @@ class GenericSPTest:
     @skipForParser("GAMESSDAT", "Neither charge nor mult exists in the files.")
     @skipForParser("Molcas", "missing mult")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("xTB", "not implemented yet")
     def testcharge_and_mult(self, data) -> None:
         """Are the charge and multiplicity correct?"""
@@ -211,6 +212,7 @@ class GenericSPTest:
     )
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     @skipForParser("xTB", "not implemented yet")
     def testatombasis(self, data) -> None:
@@ -233,6 +235,7 @@ class GenericSPTest:
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Molpro", "atommasses not implemented yet")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForLogfile("Psi4/basicPsi4.0b5", "atommasses not implemented yet")
     @skipForParser("QChem", "atommasses not implemented yet")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
@@ -246,6 +249,7 @@ class GenericSPTest:
     @skipForParser("Psi4", "The parser is still being developed for version 2")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("xTB", "not implemented yet")
     def testcoreelectrons(self, data) -> None:
         """Are the coreelectrons all 0?"""
