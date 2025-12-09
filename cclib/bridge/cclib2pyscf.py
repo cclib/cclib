@@ -13,7 +13,6 @@ from typing import Any, Dict, List, Optional, Tuple
 from cclib.parser.data import ccData
 from cclib.parser.utils import PeriodicTable, convertor, find_package
 
-import numpy
 import numpy as np
 import periodictable
 
@@ -327,16 +326,17 @@ def cclibfrommethods(
 
     attributes["atommasses"] = []
     for atom_index in range(attributes["natom"]):
+        element = mol.elements[atom_index]
         # If an isotope mass has been given for this atom, we can use that.
         if (
-            mol.elements[atom_index] in mol.nucprop
-            and "mass" in mol.nucprop[mol.elements[atom_index]]
+            element in mol.nucprop
+            and "mass" in mol.nucprop[element]
         ):
             # Despite its name, 'mass' is actually referring to the isotope (or the mass rounded to the nearest integer)
-            isotope = mol.nucprop[mol.elements[atom_index]]["mass"]
+            isotope = mol.nucprop[element]["mass"]
             # We can get the actual mass from periodictable
             attributes["atommasses"].append(
-                getattr(periodictable, mol.elements[atom_index])[isotope].mass
+                periodictable.elements.symbol(element)[isotope].mass
             )
 
         else:
@@ -715,7 +715,7 @@ def cclibfrommethods(
         # nmr_shielding is a list, nmrtensors is a dict
         attributes["nmrtensors"] = {
             nmr.shielding_nuc[index]: {
-                "isotropic": numpy.mean(numpy.linalg.eigvals(value)),
+                "isotropic": np.mean(np.linalg.eigvals(value)),
                 "total": value,
             }
             for index, value in enumerate(nmr_shielding)
@@ -738,14 +738,15 @@ def cclibfrommethods(
                 round(attributes["atommasses"][spin_spin.nuc_pair[index][1]]),
             )
             gyros = (gyro[atoms[0]], gyro[atoms[1]])
+            total_gyros = au2Hz * nuc_mag**2 * tensor * gyros[0] * gyros[1]
 
             nmrcouplingtensors[atoms] = {
                 isotopes: {
                     # Convert to Hz, and add in g-factors for the relevant atoms.
-                    "isotropic": numpy.mean(
-                        numpy.linalg.eigvals(au2Hz * nuc_mag**2 * tensor * gyros[0] * gyros[1])
+                    "isotropic": np.mean(
+                        np.linalg.eigvals(total_gyros)
                     ),
-                    "total": au2Hz * nuc_mag**2 * tensor * gyros[0] * gyros[1],
+                    "total": total_gyros,
                 }
             }
 
