@@ -53,7 +53,7 @@ class atomnos(base_parser):
                 if atom[-1] != ">":
                     constructed_atomnos.append(table.number[atom])
                 line = file_handler.virtual_next()
-            return {atomnos.__name__ : constructed_atomnos}
+            return {atomnos.__name__ : np.array(constructed_atomnos)}
         return None
 
     @staticmethod
