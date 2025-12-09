@@ -570,7 +570,7 @@ class Gaussian(logfileparser.Logfile):
 
                         # Create dictionaries if we haven't already.
                         if (atom, columns[index]) not in self.nmrcouplings:
-                            # We only support one set of istopes, so just add them now.
+                            # We only support one set of isotopes, so just add them now.
                             self.nmrcouplings[(atom, columns[index])] = {isotopes: {}}
 
                         self.nmrcouplings[(atom, columns[index])][isotopes][coupling_type] = (
