@@ -328,16 +328,11 @@ def cclibfrommethods(
     for atom_index in range(attributes["natom"]):
         element = mol.elements[atom_index]
         # If an isotope mass has been given for this atom, we can use that.
-        if (
-            element in mol.nucprop
-            and "mass" in mol.nucprop[element]
-        ):
+        if element in mol.nucprop and "mass" in mol.nucprop[element]:
             # Despite its name, 'mass' is actually referring to the isotope (or the mass rounded to the nearest integer)
             isotope = mol.nucprop[element]["mass"]
             # We can get the actual mass from periodictable
-            attributes["atommasses"].append(
-                periodictable.elements.symbol(element)[isotope].mass
-            )
+            attributes["atommasses"].append(periodictable.elements.symbol(element)[isotope].mass)
 
         else:
             # Use a default mass.
@@ -743,9 +738,7 @@ def cclibfrommethods(
             nmrcouplingtensors[atoms] = {
                 isotopes: {
                     # Convert to Hz, and add in g-factors for the relevant atoms.
-                    "isotropic": np.mean(
-                        np.linalg.eigvals(total_gyros)
-                    ),
+                    "isotropic": np.mean(np.linalg.eigvals(total_gyros)),
                     "total": total_gyros,
                 }
             }

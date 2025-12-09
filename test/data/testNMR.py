@@ -12,6 +12,7 @@ from skip import skipForParser
 
 class GenericNMRTest:
     """Generic NMR unittest"""
+
     # How many different tensor types do we expect?
     num_tensors = 4
 
@@ -66,9 +67,10 @@ class TurbomoleNMRTest(GenericNMRTest):
 
 class GenericNMRCouplingTest:
     """Generic NMR spin-spin coupling unittest"""
+
     # The total molecular mass, varies depending on how the program handles isotope masses.
     tot_mass = 140.111
-    
+
     # How many different tensor types do we expect?
     num_tensors = 7
 
@@ -112,7 +114,7 @@ class GenericNMRCouplingTest:
         assert len(data.nmrcouplingtensors) == self.num_couplings
         tensor = list(list(data.nmrcouplingtensors.values())[0].values())[0]
         assert len(tensor) == self.num_tensors
-    
+
     @skipForParser("Gaussian", "no coupling tensors are available")
     def testtotal(self, data) -> None:
         """Does the total tensor have the correct shape?"""
@@ -161,6 +163,7 @@ class GenericNMRCouplingTest:
 
 class OrcaNMRCouplingTest(GenericNMRCouplingTest):
     """Orca NMR spin-spin coupling unittest"""
+
     # In Orca, the NMR isotopes do not impact the main calculation isotopes.
     tot_mass = 130.190
     num_tensors = 7
@@ -168,14 +171,17 @@ class OrcaNMRCouplingTest(GenericNMRCouplingTest):
 
 class GaussianNMRCouplingTest(GenericNMRCouplingTest):
     """Gaussian NMR spin-spin coupling unittest"""
+
     num_tensors = 1
 
 
 class PySCFNMRCouplingTest(GenericNMRCouplingTest):
     """PySCF NMR spin-spin coupling unittest"""
+
     num_tensors = 2
 
 
 class TurbomoleNMRCouplingTest(GenericNMRCouplingTest):
     """Turbomole NMR spin-spin coupling unittest"""
+
     num_tensors = 2
