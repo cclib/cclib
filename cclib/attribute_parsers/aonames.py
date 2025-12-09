@@ -14,7 +14,7 @@ class aonames(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["gaussian"]
+    known_codes = ["gaussian", "ORCA"]
 
     @staticmethod
     def gaussian(file_handler, ccdata) -> Optional[dict]:
@@ -67,7 +67,7 @@ class aonames(base_parser):
         #
         def natural_orbital_single_spin_parsing(fh):
             coeffs = np.zeros((ccdata.nmo, ccdata.nbasis), "d")  # noqa: F841
-            this_atombasis = []
+            this_aonames = []
             for base in range(0, ccdata.nmo, 5):
                 colmNames = fh.virtual_next()  # noqa: F841
                 eigenvalues = fh.virtual_next()  # noqa: F841
@@ -79,7 +79,7 @@ class aonames(base_parser):
                         # New atom.
                         if len(parts) > 1:
                             if i > 0:
-                                this_atombasis.append(basisonatom)  # noqa: F821
+                                this_aonames.append(basisonatom)
                             basisonatom = []
                         orbital = line[11:20].strip()  # noqa: F841
                         basisonatom.append(i)
@@ -87,16 +87,72 @@ class aonames(base_parser):
                     temp = []
                     for j in range(0, len(part), 10):
                         temp.append(float(part[j : j + 10]))
-                # Do the last update of atombasis.
+                # Do the last update of aonames.
                 if base == 0:
-                    this_atombasis.append(basisonatom)
-            return this_atombasis
+                    this_aonames.append(basisonatom)
+            return this_aonames
 
         if "Natural Orbital Coefficients" in line:
-            parsed_atombasis = natural_orbital_single_spin_parsing(file_handler)
-            return {aonames.__name__: parsed_atombasis}
+            parsed_aonames = natural_orbital_single_spin_parsing(file_handler)
+            return {aonames.__name__: parsed_aonames}
 
         return None
+
+    @staticmethod
+    def ORCA(file_handler, ccdata) -> Optional[dict]:
+        # Molecular orbital coefficients are parsed here, but also related things
+        # like atombasis and aonames if possible.
+        #
+        # Normally the output is easy to parse like this:
+        # ------------------
+        # MOLECULAR ORBITALS
+        # ------------------
+        #                       0         1         2         3         4         5
+        #                  -19.28527 -19.26828 -19.26356 -19.25801 -19.25765 -19.21471
+        #                    2.00000   2.00000   2.00000   2.00000   2.00000   2.00000
+        #                   --------  --------  --------  --------  --------  --------
+        #   0C   1s         0.000002 -0.000001  0.000000  0.000000 -0.000000  0.000001
+        #   0C   2s        -0.000007  0.000006 -0.000002 -0.000000  0.000001 -0.000003
+        #   0C   3s        -0.000086 -0.000061  0.000058 -0.000033 -0.000027 -0.000058
+        # ...
+        #
+        # But when the numbers get big, things get yucky since ORCA does not use
+        # fixed width formatting for the floats, and does not insert extra spaces
+        # when the numbers get wider. So things get stuck together overflowing columns,
+        # like this:
+        #   12C   6s       -11.608845-53.775398161.302640-76.633779 29.914985 22.083999
+        #
+        # One assumption that seems to hold is that there are always six significant
+        # digits in the coefficients, so we can try to use that to delineate numbers
+        # when the parsing gets rough. This is what we do below with a regex, and a case
+        # like this is tested in regression ORCA/ORCA4.0/invalid-literal-for-float.out
+        # which was reported in https://github.com/cclib/cclib/issues/629
+        line = file_handler.last_line
+        if line[0:18] == "MOLECULAR ORBITALS":
+            line = file_handler.virtual_next() # dashes
+
+            parsed_aonames = []
+            for spin in range(len(self.moenergies)):
+                if spin == 1:
+                    line = file_handler.virtual_next() # blank
+                for i in range(0, self.nbasis, 6):
+                    for _skipreason in ["numbers", "energies", "occs", "d"]:
+                        line = file_handler.virtual_next()
+                    for j in range(self.nbasis):
+                        line = file_handler.virtual_next()
+                        # Only need this in the first iteration.
+                        if spin == 0 and i == 0:
+                            atomname = line[3:5].split()[0]
+                            num = int(line[0:3])
+                            orbital = line.split()[1].upper()
+                            parsed_aonames.append(f"{atomname}{int(num + 1)}_{orbital}")
+                        # This regex will tease out all number with exactly
+                        # six digits after the decimal point.
+                        coeffs = re.findall(r"-?\d+\.\d{6}", line)
+                        # Something is very wrong if this does not hold.
+                        assert len(coeffs) <= 6
+            return {aonames.__name__: parsed_aonames}
+
 
     @staticmethod
     def parse(file_handler, program: str, ccdata) -> Optional[dict]:
