@@ -47,13 +47,15 @@ class atomcoords(base_parser):
         if line[0:33] == "CARTESIAN COORDINATES (ANGSTROEM)":
             line = file_handler.virtual_next()
             constructed_atomcoords = []
+            curr_atomcoords = []
             line = file_handler.virtual_next()
             while len(line) > 1:
                 atom, x, y, z = line.split()
                 if atom[-1] != ">":
-                    constructed_atomcoords.append([float(x), float(y), float(z)])
+                    curr_atomcoords.append([float(x), float(y), float(z)])
                 line = file_handler.virtual_next()
-            return {atomcoords.__name__ : constructed_atomcoords}
+            constructed_atomcoords.append(curr_atomcoords)
+            return {atomcoords.__name__ : np.array(constructed_atomcoords)}
         return None
 
 
