@@ -56,7 +56,7 @@ class aooverlaps(base_parser):
             if line[0:14] == "OVERLAP MATRIX":
                 dashes = file_handler.virtual_next()  # noqa: F841
                 constructed_aooverlaps = np.zeros((ccdata.nbasis, ccdata.nbasis), "d")
-                for i in range(0, self.nbasis, 6):
+                for i in range(0, ccdata.nbasis, 6):
                     #self.updateprogress(inputfile, "Overlap")
                     header = file_handler.virtual_next()
                     size = len(header.split())

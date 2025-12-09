@@ -34,6 +34,7 @@ class atomnos(base_parser):
 
     @staticmethod
     def ORCA(file_handler, ccdata) -> Optional[dict]:
+        table = utils.PeriodicTable()
         """ Grab cartesian coordinates
         ---------------------------------
         CARTESIAN COORDINATES (ANGSTROEM)
