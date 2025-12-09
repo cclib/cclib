@@ -15,7 +15,7 @@ class atomcoords(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["gaussian", "psi4", "qchem"]
+    known_codes = ["gaussian", "ORCA", "psi4", "qchem"]
 
     @staticmethod
     def gaussian(file_handler, ccdata) -> Optional[dict]:
@@ -32,6 +32,30 @@ class atomcoords(base_parser):
             constructed_atomcoords.append(curr_atomcoords)
             return {atomcoords.__name__: np.array(constructed_atomcoords)}
         return None
+
+    @staticmethod
+    def ORCA(file_handler, ccdata) -> Optional[dict]:
+        """ Grab cartesian coordinates
+        ---------------------------------
+        CARTESIAN COORDINATES (ANGSTROEM)
+        ---------------------------------
+        H      0.000000    0.000000    0.000000
+        O      0.000000    0.000000    1.000000
+        H      0.000000    1.000000    1.000000
+        """
+        line = file_handler.last_line
+        if line[0:33] == "CARTESIAN COORDINATES (ANGSTROEM)":
+            line = file_handler.virtual_next()
+            constructed_atomcoords = []
+            line = file_handler.virtual_next()
+            while len(line) > 1:
+                atom, x, y, z = line.split()
+                if atom[-1] != ">":
+                    constructed_atomcoords.append([float(x), float(y), float(z)])
+                line = file_handler.virtual_next()
+            return {atomccords.__name__ : constructed_atomcoords}
+        return None
+
 
     @staticmethod
     def psi4(file_handler, ccdata) -> Optional[dict]:
