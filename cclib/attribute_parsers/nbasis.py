@@ -12,7 +12,7 @@ class nbasis(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["gaussian", "psi4", "qchem"]
+    known_codes = ["gaussian", "psi4", "qchem", "ORCA"]
 
     @staticmethod
     def gaussian(file_handler, ccdata) -> Optional[dict]:
@@ -37,6 +37,17 @@ class nbasis(base_parser):
                     Warning(
                         f"Number of basis functions (nbasis) is different from that stores in ccdata. Changing from {ccdata.nbasis} to {constructed_data}"
                     )
+            return {nbasis.__name__: constructed_data}
+        return None
+
+    @staticmethod
+    def ORCA(file_handler, ccdata) -> Optional[dict]:
+        line = file_handler.last_line
+        if line[1:32] == "# of contracted basis functions":
+            constructed_data = int(line.split()[-1])
+            return {nbasis.__name__: constructed_data}
+        if line[1:27] == "Basis Dimension        Dim":
+            constructed_data = int(line.split()[-1])
             return {nbasis.__name__: constructed_data}
         return None
 
