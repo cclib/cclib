@@ -15,7 +15,7 @@ class atombasis(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["gaussian", "psi4", "qchem"]
+    known_codes = ["gaussian", "ORCA", "psi4", "qchem"]
 
     @staticmethod
     def gaussian(file_handler, ccdata) -> Optional[dict]:
@@ -108,6 +108,63 @@ class atombasis(base_parser):
             parsed_atombasis = natural_orbital_single_spin_parsing(file_handler)
             return {atombasis.__name__: parsed_atombasis}
 
+        return None
+
+    @staticmethod
+    def ORCA(file_handler, ccdata) -> Optional[dict]:
+        # Molecular orbital coefficients are parsed here, but also related things
+        # like atombasis and aonames if possible.
+        #
+        # Normally the output is easy to parse like this:
+        # ------------------
+        # MOLECULAR ORBITALS
+        # ------------------
+        #                       0         1         2         3         4         5
+        #                  -19.28527 -19.26828 -19.26356 -19.25801 -19.25765 -19.21471
+        #                    2.00000   2.00000   2.00000   2.00000   2.00000   2.00000
+        #                   --------  --------  --------  --------  --------  --------
+        #   0C   1s         0.000002 -0.000001  0.000000  0.000000 -0.000000  0.000001
+        #   0C   2s        -0.000007  0.000006 -0.000002 -0.000000  0.000001 -0.000003
+        #   0C   3s        -0.000086 -0.000061  0.000058 -0.000033 -0.000027 -0.000058
+        # ...
+        #
+        # But when the numbers get big, things get yucky since ORCA does not use
+        # fixed width formatting for the floats, and does not insert extra spaces
+        # when the numbers get wider. So things get stuck together overflowing columns,
+        # like this:
+        #   12C   6s       -11.608845-53.775398161.302640-76.633779 29.914985 22.083999
+        #
+        # One assumption that seems to hold is that there are always six significant
+        # digits in the coefficients, so we can try to use that to delineate numbers
+        # when the parsing gets rough. This is what we do below with a regex, and a case
+        # like this is tested in regression ORCA/ORCA4.0/invalid-literal-for-float.out
+        # which was reported in https://github.com/cclib/cclib/issues/629
+        line = file_handler.last_line
+        dependency_list = ["natom", "nbasis", "moenergies"]
+        if not base_parser.check_dependencies(dependency_list, ccdata, "atombasis"):
+            return None
+        if line[0:18] == "MOLECULAR ORBITALS":
+            file_handler.skip_lines(["dashes"], virtual=True)
+            #constructed_aonames = []
+            constructed_atombasis = [[] for i in range(ccdata.natom)]
+            #constructed_mocoeffs = [numpy.zeros((ccdata.nbasis, ccdata.nbasis), "d")]
+            for spin in range(len(ccdata.moenergies)):
+                if spin == 1:
+                    file_handler.skip_lines(["blank"], virtual=True)
+                    constructed_mocoeffs.append(numpy.zeros((ccdata.nbasis, ccdata.nbasis), "d"))
+                for i in range(0, ccdata.nbasis, 6):
+                    #self.updateprogress(inputfile, "Coefficients")
+                    file_handler.skip_lines(["numbers", "energies", "occs", "d"], virtual=True)
+                    for j in range(ccdata.nbasis):
+                        line = file_handler.virtual_next()
+                        # Only need this in the first iteration.
+                        if spin == 0 and i == 0:
+                            atomname = line[3:5].split()[0]
+                            num = int(line[0:3])
+                            orbital = line.split()[1].upper()
+                            constructed_atombasis[num].append(j)
+            constructed_data = {atombasis.__name__: constructed_atombasis}
+            return constructed_data
         return None
 
     @staticmethod

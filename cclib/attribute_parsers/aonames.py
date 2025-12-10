@@ -136,8 +136,7 @@ class aonames(base_parser):
                 if spin == 1:
                     line = file_handler.virtual_next() # blank
                 for i in range(0, self.nbasis, 6):
-                    for _skipreason in ["numbers", "energies", "occs", "d"]:
-                        line = file_handler.virtual_next()
+                    file_handler.skip_lines(["numbers", "energies, "occs", "d"], virtual=True)
                     for j in range(self.nbasis):
                         line = file_handler.virtual_next()
                         # Only need this in the first iteration.
@@ -146,12 +145,8 @@ class aonames(base_parser):
                             num = int(line[0:3])
                             orbital = line.split()[1].upper()
                             parsed_aonames.append(f"{atomname}{int(num + 1)}_{orbital}")
-                        # This regex will tease out all number with exactly
-                        # six digits after the decimal point.
-                        coeffs = re.findall(r"-?\d+\.\d{6}", line)
-                        # Something is very wrong if this does not hold.
-                        assert len(coeffs) <= 6
             return {aonames.__name__: parsed_aonames}
+        return None
 
 
     @staticmethod
