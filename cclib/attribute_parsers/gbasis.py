@@ -16,11 +16,13 @@ class gbasis(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["gaussian", "psi4", "qchem"]
+    known_codes = ["gaussian", "ORCA", "psi4", "qchem"]
 
     @staticmethod
     def gaussian(file_handler, ccdata) -> Optional[dict]:
-        dependency_list = ["natom", "gbasis"]  # noqa: F841
+        dependency_list = ["natom"]  # noqa: F841
+        if not base_parser.check_dependencies(dependency_list, ccdata, "gbasis"):
+            return None
         line = file_handler.last_line
         # With the gfinput keyword, the atomic basis set functions are:
         #
@@ -115,6 +117,53 @@ class gbasis(base_parser):
                     else:
                         shell_line = line
             return {gbasis.__name__: parsed_gbasis}
+        return None
+
+    @staticmethod
+    def ORCA(file_handler, ccdata) -> Optional[dict]:
+        line = file_handler.last_line
+        if not "gbasis_tmp_atnames" in ccdata.parser_state:
+            return None
+        # Basis set information
+        # ORCA prints this out in a somewhat indirect fashion.
+        # Therefore, parsing occurs in several steps:
+        # 1. read which atom belongs to which basis set group
+        tmp_atnames = ccdata.parser_state["gbasis_tmp_atnames"]
+        # 2. Read information for the basis set groups
+        if line[0:25] == "BASIS SET IN INPUT FORMAT":
+            line = file_handler.virtual_next()
+            line = file_handler.virtual_next()
+
+            # loop over basis set groups
+            gbasis_tmp = {}
+            while not line[0:5] == "-----":
+                if line[1:7] == "NewGTO":
+                    bas_atname = line.split()[1]
+                    gbasis_tmp[bas_atname] = []
+
+                    line = file_handler.virtual_next()
+                    # loop over contracted GTOs
+                    while not line[0:6] == "  end;":
+                        words = line.split()
+                        ang = words[0]
+                        nprim = int(words[1])
+
+                        # loop over primitives
+                        coeff = []
+                        for iprim in range(nprim):
+                            line = file_handler.virtual_next()
+                            words = line.split()
+                            coeff.append((float(words[1]), float(words[2])))
+                        gbasis_tmp[bas_atname].append((ang, coeff))
+                        line = file_handler.virtual_next()
+                line = file_handler.virtual_next()
+
+            # 3. Assign the basis sets to gbasis
+            parsed_gbasis = []
+            for bas_atname in tmp_atnames:
+                parsed_gbasis.append(gbasis_tmp[bas_atname])
+            constructed_data = {gbasis.__name__: parsed_gbasis}
+            return constructed_data
         return None
 
     @staticmethod
