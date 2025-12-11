@@ -5,9 +5,9 @@
 from typing import Optional
 
 from cclib.attribute_parsers.base_parser import base_parser
+from cclib import ureg
 
 import numpy as np
-
 
 class coreelectrons(base_parser):
     """
@@ -15,6 +15,7 @@ class coreelectrons(base_parser):
     """
 
     known_codes = ["gaussian"]
+
 
     @staticmethod
     def gaussian(file_handler, ccdata) -> Optional[dict]:
@@ -60,6 +61,7 @@ class coreelectrons(base_parser):
                         front = line[:10].strip()
                     info = line.split()
                     constructed_coreelectrons[center - 1] = int(info[1]) - int(info[2])
+                    constructed_coreelectrons *= ureg.count
                     line = file_handler.virtual_next()
             return {coreelectrons.__name__: constructed_coreelectrons}
 
