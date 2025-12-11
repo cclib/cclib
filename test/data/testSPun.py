@@ -41,6 +41,7 @@ class GenericSPunTest:
     @skipForParser("Jaguar", "???")
     @skipForParser("Molcas", "Length is zero for some reason")
     @skipForParser("Molpro", "???")
+    @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
     @skipForParser("Turbomole", "???")
     def testatomcharges(self, data) -> None:
@@ -62,6 +63,7 @@ class GenericSPunTest:
     @skipForParser("Jaguar", "???")
     @skipForParser("Molcas", "Length is zero for some reason")
     @skipForParser("Molpro", "???")
+    @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
     @skipForParser("Turbomole", "???")
     def testatomcharges_mulliken(self, data) -> None:
@@ -101,6 +103,7 @@ class GenericSPunTest:
         )
 
     @skipForParser("Gaussian", "The parser is still being developed for version 2")
+    @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
     def testdimnoccnos(self, data) -> None:
         """Is the length of nooccnos equal to nmo?"""
@@ -112,6 +115,7 @@ class GenericSPunTest:
                 (2, data._ccCollection._parsed_data[0].nmo),
             ]
 
+    @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("Gaussian", "The parser is still being developed for version 2")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
     def testdimnocoeffs(self, data) -> None:
@@ -124,12 +128,14 @@ class GenericSPunTest:
                 data._ccCollection._parsed_data[0].nmo,
             )
 
+    @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     def testcharge_and_mult(self, data) -> None:
         """Are the charge and multiplicity correct?"""
         assert data._ccCollection._parsed_data[0].charge == 1
         assert data._ccCollection._parsed_data[0].mult == 2
 
+    @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("Gaussian", "The parser is still being developed for version 2")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
     def testhomos(self, data) -> None:
