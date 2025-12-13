@@ -151,7 +151,6 @@ class atombasis(base_parser):
             for spin in range(len(ccdata.moenergies)):
                 if spin == 1:
                     file_handler.skip_lines(["blank"], virtual=True)
-                    constructed_mocoeffs.append(numpy.zeros((ccdata.nbasis, ccdata.nbasis), "d"))
                 for i in range(0, ccdata.nbasis, 6):
                     #self.updateprogress(inputfile, "Coefficients")
                     file_handler.skip_lines(["numbers", "energies", "occs", "d"], virtual=True)
