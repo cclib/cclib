@@ -160,7 +160,6 @@ class GenericSPunTest:
     @skipForParser("FChk", "Fchk files do not have a section for symmetry")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Molpro", "?")
-    @skipForParser("ORCA", "ORCA has no support for symmetry yet")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
     def testmosyms(self, data) -> None:
         """Are the dims of the mosyms equals to 2 x nmo?"""
