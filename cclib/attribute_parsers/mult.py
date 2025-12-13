@@ -13,7 +13,7 @@ class mult(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["gaussian", "psi4", "qchem"]
+    known_codes = ["gaussian", "ORCA", "psi4", "qchem"]
 
     @staticmethod
     def gaussian(file_handler, ccdata) -> Optional[dict]:
@@ -22,6 +22,34 @@ class mult(base_parser):
         if line.find("Multiplicity") > 0:
             constructed_data = int(line.split()[5])
             return {mult.__name__: constructed_data}
+        return None
+
+    @staticmethod
+    def ORCA(file_handler, ccdata) -> Optional[dict]:
+        line = file_handler.last_line
+        if line[1:13] == "Total Charge":
+            # first line is charge then mult
+            line = file_handler.virtual_next()
+            mult = int(line.split()[-1])
+            constructed_data = {mult.__name__: constructed_mult}
+            return constructed_data
+
+        dependency_list = ["metadata"]
+        if not base_parser.check_dependencies(dependency_list, ccdata, "mult"):
+            return None
+        if "input_file_contents" in ccdata.metadata:
+            #parsed from inputfile content
+            lines = ccdata.metdata["input_file_contents"].split('\n')
+            lines_iter = iter(lines[:-1])
+            for line in lines_iter:
+                line = line.strip()
+                if not line:
+                    continue
+                # Geometry block
+                if line[0] == "*":
+                    coord_type, charge, constructed_mult = line[1:].split()[:3]
+                    constructed_data = {mult.__name__: constructed_mult}
+                    return constructed_data
         return None
 
     @staticmethod
