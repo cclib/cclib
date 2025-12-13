@@ -12,7 +12,7 @@ class nmo(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["gaussian", "qchem"]
+    known_codes = ["gaussian", "qchem", "ORCA"]
 
     @staticmethod
     def gaussian(file_handler, ccdata) -> Optional[dict]:
@@ -34,9 +34,26 @@ class nmo(base_parser):
 
     @staticmethod
     def qchem(file_handler, ccdata) -> Optional[dict]:
+        # Don't reset this all the time
+        dependency_list = ["nmo"]
+        if base_parser.check_dependencies(dependency_list, ccdata, "nmo"):
+            return None
+
         dependency_list = ["moenergies"]
         if base_parser.check_dependencies(dependency_list, ccdata, "nmo"):
             return {nmo.__name__: len(ccdata.monergies[0])}
+        return None
+
+    @staticmethod
+    def ORCA(file_handler, ccdata) -> Optional[dict]:
+        # Don't reset this all the time
+        dependency_list = ["nmo"]
+        if base_parser.check_dependencies(dependency_list, ccdata, "nmo"):
+            return None
+        dependency_list = ["nbasis"]
+
+        if base_parser.check_dependencies(dependency_list, ccdata, "nmo"):
+            return {nmo.__name__: ccdata.nbasis}
         return None
 
     @staticmethod
