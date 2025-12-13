@@ -191,7 +191,6 @@ class GenericSPTest:
     @skipForParser("GAMESSDAT", "Neither charge nor mult exists in the files.")
     @skipForParser("Molcas", "missing mult")
     @skipForParser("NBO", "attribute not implemented in this version")
-    @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("xTB", "not implemented yet")
     def testcharge_and_mult(self, data) -> None:
         """Are the charge and multiplicity correct?"""

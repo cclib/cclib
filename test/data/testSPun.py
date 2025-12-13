@@ -128,7 +128,6 @@ class GenericSPunTest:
                 data._ccCollection._parsed_data[0].nmo,
             )
 
-    @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     def testcharge_and_mult(self, data) -> None:
         """Are the charge and multiplicity correct?"""
