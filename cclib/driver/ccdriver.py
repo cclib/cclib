@@ -522,8 +522,11 @@ class ccDriver:
                 )
                 if parsed_data is not None:
                     self._ccCollection.parsed_data[current_idx].setattributes(parsed_data)
+                    if 'parser_state' in parsed_data:
+                        self._ccCollection.parsed_data[current_idx].parser_state = parsed_data["parser_state"]
             line = next(self._fileHandler)
         # prune ccCollection
         for i in self._ccCollection._parsed_data:
+            #if hasattr(i, 'parser_state'):
             del i.parser_state
         return self._ccCollection

@@ -191,7 +191,6 @@ class GenericSPTest:
     @skipForParser("GAMESSDAT", "Neither charge nor mult exists in the files.")
     @skipForParser("Molcas", "missing mult")
     @skipForParser("NBO", "attribute not implemented in this version")
-    @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("xTB", "not implemented yet")
     def testcharge_and_mult(self, data) -> None:
         """Are the charge and multiplicity correct?"""
@@ -212,7 +211,6 @@ class GenericSPTest:
     )
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("NBO", "attribute not implemented in this version")
-    @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     @skipForParser("xTB", "not implemented yet")
     def testatombasis(self, data) -> None:
@@ -262,7 +260,6 @@ class GenericSPTest:
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Molpro", "?")
     @skipForParser("NBO", "attribute not implemented in this version")
-    @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
     @skipForParser("xTB", "not implemented yet")
     def testsymlabels(self, data) -> None:
@@ -349,7 +346,6 @@ class GenericSPTest:
     @skipForParser("GAMESSDAT", "Moenergies probably do not exist in the file")
     @skipForLogfile("Gaussian/basicGaussian16/dvb_sp_no.out", "no energies for natural orbitals")
     @skipForParser("NBO", "attribute not implemented in this version")
-    @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
     @skipForLogfile("Turbomole/basicTurbomole5.9/dvb_sp_symm", "delta of 7.4, everything else ok")
     @skipForParser("xTB", "not implemented yet")
