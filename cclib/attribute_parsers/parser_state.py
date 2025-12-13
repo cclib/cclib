@@ -41,13 +41,14 @@ class parser_state(base_parser):
         # ORCA prints this out in a somewhat indirect fashion.
         # Therefore, parsing occurs in several steps:
         # 1. read which atom belongs to which basis set group
+        this_metadata = {}
+        if getattr(ccdata, "parser_state"):
+            this_metadata = ccdata.parser_state
+
         if line[0:21] == "BASIS SET INFORMATION":
             gbasis_tmp_atnames = []  # temporary attribute, needed later
-            if getattr(ccdata, "parser_state"):
-                this_metadata = ccdata.parser_state
+            if "gbasis_tmp_atnames" in ccdata.parser_state:
                 gbasis_tmp_atnames = ccdata.parser_state["gbasis_tmp_atnames"]
-            else:
-                this_metadata = {}
             line = file_handler.virtual_next()
             line = file_handler.virtual_next()
             while not line[0:5] == "-----":
@@ -55,6 +56,10 @@ class parser_state(base_parser):
                     gbasis_tmp_atnames.append(line[8:12].strip())
                 line = file_handler.virtual_next()
             this_metadata["gbasis_tmp_atnames"] = gbasis_tmp_atnames
+            return {parser_state.__name__: this_metadata}
+        # do we use symmetry
+        if line[1:18] == "Symmetry handling":
+            this_metadata["uses_symmetry"] = True
             return {parser_state.__name__: this_metadata}
         return None
 
