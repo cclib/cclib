@@ -30,7 +30,7 @@ class mult(base_parser):
         if line[1:13] == "Total Charge":
             # first line is charge then mult
             line = file_handler.virtual_next()
-            mult = int(line.split()[-1])
+            constructed_mult = int(line.split()[-1])
             constructed_data = {mult.__name__: constructed_mult}
             return constructed_data
 
