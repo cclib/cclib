@@ -15,7 +15,7 @@ class moenergies(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["gaussian"]
+    known_codes = ["gaussian", "ORCA"]
 
     @staticmethod
     def gaussian(file_handler, ccdata) -> Optional[dict]:
@@ -50,6 +50,49 @@ class moenergies(base_parser):
 
                 constructed_moenergies = [np.array(x, "d") for x in constructed_moenergies]
                 return {moenergies.__name__: constructed_moenergies}
+        return None
+
+    @staticmethod
+    def ORCA(file_handler, ccdata) -> Optional[dict]:
+        line = file_handler.last_line
+        if line[0:16] == "ORBITAL ENERGIES":
+            file_handler.skip_lines(["d", "text", "text"], virtual=True)
+            #constructed_mooccnos = [[]]
+            constructed_moenergies = [[]]
+            #constructed_mosyms = [[]]
+            line = file_handler.virtual_next()
+            while len(line) > 20:  # restricted calcs are terminated by ------
+                info = line.split()
+                #mooccno = int(float(info[1]))
+                moenergy = float(info[2])
+                #mosym = "A"
+                #if self.uses_symmetry:
+                #    mosym = self.normalisesym(info[4].split("-")[1])
+                #self.mooccnos[0].append(mooccno)
+                constructed_moenergies[0].append(moenergy)
+                #self.mosyms[0].append(mosym)
+                line = file_handler.virtual_next()
+            line = file_handler.virtual_next()
+            # handle beta orbitals for UHF
+            if line[17:35] == "SPIN DOWN ORBITALS":
+                file_handler.skip_lines(["text"], virtual=True)
+                #constructed_mooccnos.append([])
+                constructed_moenergies.append([])
+                #constructed_mosyms.append([])
+                line = file_handler.virtual_next()
+                while len(line) > 20:  # actually terminated by ------
+                    info = line.split()
+                    #mooccno = int(float(info[1]))
+                    moenergy = float(info[2])
+                    #mosym = "A"
+                    #if self.uses_symmetry:
+                    #    mosym = self.normalisesym(info[4].split("-")[1])
+                    #constructed_mooccnos[1].append(mooccno)
+                    constructed_moenergies[1].append(moenergy)
+                    #constructed_mosyms[1].append(mosym)
+                    line = file_handler.virtual_next()
+            constructed_moenergies = [np.array(x, "d") for x in constructed_moenergies]
+            return {moenergies.__name__: constructed_moenergies}
         return None
 
     @staticmethod
