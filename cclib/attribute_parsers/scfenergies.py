@@ -23,8 +23,8 @@ class scfenergies(base_parser):
         line = file_handler.last_line
         if line[1:9] == "SCF Done":
             constructed_data = utils.float(line.split()[4])
-            constructed_data *= ureg.hartree
-            return {scfenergies.__name__: [constructed_data]}
+            constructed_data *= [constructed_data]*ureg.hartree
+            return {scfenergies.__name__: constructed_data}
         return None
 
     @staticmethod
@@ -32,8 +32,7 @@ class scfenergies(base_parser):
         line = file_handler.last_line
         if "Final Energy" in line:
             constructed_data = float(line.split()[3])
-            constructed_data *= ureg.hartree
-            return {scfenergies.__name__: [constructed_data]}
+            return {scfenergies.__name__: [constructed_data]* ureg.hartree}
         return None
 
     @staticmethod

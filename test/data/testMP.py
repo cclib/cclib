@@ -17,7 +17,7 @@ class GenericMP2Test:
     def testsizeandshape(self, data) -> None:
         """(MP2) Are the dimensions of mpenergies correct?"""
         assert data._ccCollection._parsed_data[0].mpenergies.shape == (
-            len(data._ccCollection._parsed_data[0].scfenergies),
+            len(data._ccCollection._parsed_data[0].scfenergies.magnitude),
             self.level - 1,
         )
 
@@ -26,7 +26,7 @@ class GenericMP2Test:
         if self.level == 2:
             corrections = (
                 data._ccCollection._parsed_data[0].mpenergies[:, 0]
-                - data._ccCollection._parsed_data[0].scfenergies
+                - data._ccCollection._parsed_data[0].scfenergies.magnitude
             )
         else:
             corrections = (
