@@ -60,11 +60,7 @@ class GenericCCSDTest(GenericCCTest):
     def testenergyccsd(self, data) -> None:
         """Is the CCSD correlation energy within the target?"""
         e_scf = data._ccCollection._parsed_data[0].scfenergies.magnitude[0]
-        print(data._ccCollection._parsed_data[0].scfenergies[0])
-        print(data._ccCollection._parsed_data[0].scfenergies)
-        print(e_scf)
         e_cc = data._ccCollection._parsed_data[0].ccenergies[0]
-        print(e_cc)
         e_corr = e_cc - e_scf
         assert pytest.approx(e_corr, rel=self.rel_thresh) == self.corr_energy
 

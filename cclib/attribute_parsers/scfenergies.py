@@ -23,10 +23,7 @@ class scfenergies(base_parser):
         line = file_handler.last_line
         if line[1:9] == "SCF Done":
             constructed_data = utils.float(line.split()[4])
-            print(constructed_data)
-            print(ureg.hartree)
             constructed_data = [constructed_data] * ureg.hartree
-            print(constructed_data)
             return {scfenergies.__name__: constructed_data}
         return None
 
