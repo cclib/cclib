@@ -19,6 +19,9 @@ as well as example methods that take parsed data as input.
 
 # ruff: noqa: F401
 from cclib._version import __version__
+from pint import UnitRegistry
+ureg = UnitRegistry()
+Q_ = ureg.Quantity
 
 # isort: off
 # from cclib import parser, progress, method, bridge
