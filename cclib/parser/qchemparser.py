@@ -1229,6 +1229,28 @@ cannot be determined. Rerun without `$molecule read`."""
                 self.set_attribute("etoscs", etoscs)
                 self.set_attribute("etsecs", etsecs)
 
+            if line.strip() == "CT corrected Almo-CIS result":
+                self.skip_line(inputfile, "d")
+                line = next(inputfile)
+                assert line.strip() == "Excited state   1"
+                etenergies = []
+                etoscs = []
+                while list(set(line.strip())) != ["-"]:
+                    if "excitation energy (eV)" in line:
+                        etenergy = utils.convertor(float(line.split()[3]), "eV", "cm-1")
+                        etenergies.append(etenergy)
+                    if "oscillator strength" in line:
+                        etosc = float(line.split()[2])
+                        etoscs.append(etosc)
+                    line = next(inputfile)
+                assert len(etenergies) == len(etoscs)
+                # ALMO-CIS is singlets only
+                etsyms = ["Singlet" for _ in range(len(etenergies))]
+                self.set_attribute("etenergies", etenergies)
+                self.set_attribute("etsyms", etsyms)
+                self.set_attribute("etoscs", etoscs)
+                # no configuration information printed, so no etsecs
+
             # Static and dynamic polarizability from mopropman.
             if "Polarizability (a.u.)" in line:
                 while "Full Tensor" not in line:
