@@ -13,6 +13,7 @@ from common import get_minimum_carbon_separation
 from skip import skipForLogfile, skipForParser
 from cclib import ureg
 
+
 class GenericSPTest:
     """Generic restricted single point unittest"""
 
@@ -26,7 +27,6 @@ class GenericSPTest:
     # Approximate B3LYP energy of dvb after SCF in STO-3G (Gaussian 16).
     scfenergy = -382.308266602 * ureg.hartree
     scfenergy_delta = 3.0e-1 * ureg.hartree
-
 
     # Approximate energy of the innermost molecular orbital of DVB with
     # B3LYP/STO-3G (from Q-Chem 5.4 fchk).
@@ -87,9 +87,9 @@ class GenericSPTest:
         for atomcharge_type in data._ccCollection._parsed_data[0].atomcharges:
             charges = data._ccCollection._parsed_data[0].atomcharges[atomcharge_type]
             natom = data._ccCollection._parsed_data[0].natom
-            assert (
-                len(charges) == natom
-            ), f"len(atomcharges['{atomcharge_type}']) = {len(charges)}, natom = {natom}"
+            assert len(charges) == natom, (
+                f"len(atomcharges['{atomcharge_type}']) = {len(charges)}, natom = {natom}"
+            )
 
     @skipForParser(
         "DALTON",
@@ -849,14 +849,16 @@ class GenericDispersionTest:
     """Generic single-geometry dispersion correction unittest"""
 
     # Q-Chem 5.4
-    dispersionenergy = -0.0147199319
+    dispersionenergy = -0.0147199319 * ureg.hartree
 
     @skipForParser("QChem", "this property has yet to be ported for version 2")
     def testdispersionenergies(self, data) -> None:
         """Is the dispersion energy parsed correctly?"""
         assert len(data._ccCollection._parsed_data[0].dispersionenergies) == 1
         assert (
-            abs(data._ccCollection._parsed_data[0].dispersionenergies[0] - self.dispersionenergy)
+            abs(
+                data._ccCollection._parsed_data[0].dispersionenergies[0] - self.dispersionenergy
+            ).magnitude
             < 2.0e-7
         )
 
