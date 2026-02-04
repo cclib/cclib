@@ -6,13 +6,17 @@ from typing import Optional
 
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
+from cclib import ureg
 
 import numpy as np
 
 
 class dispersionenergies(base_parser):
     """
-    Docstring? Units?
+    This is a rank 1 array that contains the isolated dispersion energy for each geometry.
+    This will be populated for empirical models, such as those from Grimme that only depend on relative atomic positions.
+
+    Units:
     """
 
     known_codes = ["psi4", "gaussian"]
@@ -25,11 +29,11 @@ class dispersionenergies(base_parser):
         if getattr(ccdata, "dispersionenergies") is None:
             this_dispersionenergies = []
         else:
-            this_dispersionenergies = ccdata.dispersionenergies
+            this_dispersionenergies = ccdata.dispersionenergies.magnitude
         if "Empirical Dispersion Energy" in line:
-            dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
+            dispersion = float(line.split()[-1])
             this_dispersionenergies.append(dispersion)
-            return {dispersionenergies.__name__: np.array(this_dispersionenergies)}
+            return {dispersionenergies.__name__: np.array(this_dispersionenergies) * ureg.hartree}
         return None
         # The geometry convergence targets and values are printed in a table, with the legends
 
@@ -41,12 +45,12 @@ class dispersionenergies(base_parser):
         if getattr(ccdata, "dispersionenergies") is None:
             this_dispersionenergies = []
         else:
-            this_dispersionenergies = ccdata.dispersionenergies
+            this_dispersionenergies = ccdata.dispersionenergies.magnitude
 
         if "Dispersion energy=" in line:
             dispersion = float(line.split()[-2])
             this_dispersionenergies.append(dispersion)
-            return {dispersionenergies.__name__: np.array(this_dispersionenergies)}
+            return {dispersionenergies.__name__: np.array(this_dispersionenergies) * ureg.hartree}
         return None
 
     @staticmethod

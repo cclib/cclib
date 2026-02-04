@@ -25,13 +25,13 @@ class GenericMP2Test:
         """Are the Moller-Plesset corrections negative?"""
         if self.level == 2:
             corrections = (
-                data._ccCollection._parsed_data[0].mpenergies[:, 0]
+                data._ccCollection._parsed_data[0].mpenergies[:, 0].magnitude
                 - data._ccCollection._parsed_data[0].scfenergies.magnitude
             )
         else:
             corrections = (
-                data._ccCollection._parsed_data[0].mpenergies[:, self.level - 2]
-                - data._ccCollection._parsed_data[0].mpenergies[:, self.level - 3]
+                data._ccCollection._parsed_data[0].mpenergies[:, self.level - 2].magnitude
+                - data._ccCollection._parsed_data[0].mpenergies[:, self.level - 3].magnitude
             )
         assert numpy.all(corrections < 0.0)
 
