@@ -26,6 +26,5 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - name: Check nix flake
         run: nix flake check -L
-      # Disabled until https://github.com/Nix-QChem/NixOS-QChem/issues/513 is fixed
-      # - name: Build nix package
-      #   run: nix build -L
+      - name: Build nix package
+        run: nix build -L
