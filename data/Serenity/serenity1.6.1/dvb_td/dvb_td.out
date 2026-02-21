@@ -58,12 +58,12 @@
 
   Program started:
  ------------------
-    Time              :   2025-10-26 09:34:21
+    Time              :   2025-11-15 12:28:51
     By                :   lukas
     On                :   HOSTNAME UNKNOWN
 
     Threads           :   12
-    Memory Limit      :   3415 MB
+    Memory Limit      :   8342 MB
 
           ------------------------------------------------------------          
                                  System dvb_td                                  
@@ -149,15 +149,15 @@ o------------------------------------------------------------------------------o
     
     Cycle      E/a.u.         abs(dE)/a.u.     rmsd(P)/a.u.       [F,P]/a.u.      time/min   Mode
        1  -382.0447786996              inf              inf         2.26e-02      0:00 
-       2  -382.0431056427         1.67e-03         1.43e-03         2.81e-02      0:00:159    DDL
+       2  -382.0431056427         1.67e-03         1.43e-03         2.81e-02      0:00:120    DDL
        3  -382.0452032511         2.10e-03         7.29e-04         2.20e-02      0:00:115    -DL
-       4  -382.0481474968         2.94e-03         1.94e-03         6.19e-03      0:00:253    -DL
-       5  -382.0482588750         1.11e-04         4.30e-04         5.29e-04      0:00:120    -DL
-       6  -382.0482606200         1.74e-06         8.41e-05         1.60e-04      0:00:426    -DL
-       7  -382.0482607590         1.39e-07         1.87e-05         5.50e-05      0:00:214    -DL
-       8  -382.0482607757         1.67e-08         5.38e-06         1.10e-05      0:00:108    -D-
-       9  -382.0482607742         1.54e-09         1.15e-06         5.15e-06      0:00:097    -D-
-      10  -382.0482607755         1.28e-09         4.26e-07         4.92e-07      0:00:091    -D-
+       4  -382.0481474968         2.94e-03         1.94e-03         6.19e-03      0:00:121    -DL
+       5  -382.0482588750         1.11e-04         4.30e-04         5.29e-04      0:00:109    -DL
+       6  -382.0482606200         1.74e-06         8.41e-05         1.60e-04      0:00:163    -DL
+       7  -382.0482607590         1.39e-07         1.87e-05         5.50e-05      0:00:139    -DL
+       8  -382.0482607757         1.67e-08         5.38e-06         1.10e-05      0:00:111    -D-
+       9  -382.0482607742         1.54e-09         1.15e-06         5.15e-06      0:00:102    -D-
+      10  -382.0482607755         1.28e-09         4.26e-07         4.92e-07      0:00:088    -D-
     Converged after  10 cycles. Loop exited.
 
 
@@ -214,7 +214,7 @@ Total Energy (DFT):                                                             
     S*(S+1) = 0.000 
           C = 0.000 
 
-    Time taken for task 1: 10.804250781 s.
+    Time taken for task 1: 6.818458393 s.
     
  o-------------o
  | Task No. 2: |
@@ -278,17 +278,17 @@ o------------------------------------------------------------------------------o
   
    it.    dimension    time (min)    converged     max. norm
  ----------------------------------------------------------------
-    1         10          0.021           0      1.36e-01  ( 2)
-    2         15          0.011           0      3.10e-02  ( 2)
-    3         20          0.009           0      2.77e-02  ( 5)
-    4         25          0.013           0      6.17e-03  ( 5)
-    5         30          0.010           0      1.28e-03  ( 5)
-    6         35          0.008           1      2.27e-04  ( 5)
-    7         39          0.007           4      2.40e-02  ( 4)
-    8         40          0.011           4      1.72e-03  ( 4)
-    9         41          0.009           4      2.07e-04  ( 4)
-   10         42          0.008           4      2.77e-05  ( 4)
-   11         43          0.008           5      5.99e-06  ( 5)
+    1         10          0.019           0      1.36e-01  ( 2)
+    2         15          0.007           0      3.10e-02  ( 2)
+    3         20          0.008           0      2.77e-02  ( 5)
+    4         25          0.007           0      6.17e-03  ( 5)
+    5         30          0.007           0      1.28e-03  ( 5)
+    6         35          0.006           1      2.27e-04  ( 5)
+    7         39          0.005           4      2.40e-02  ( 4)
+    8         40          0.005           4      1.72e-03  ( 4)
+    9         41          0.005           4      2.07e-04  ( 4)
+   10         42          0.005           4      2.77e-05  ( 4)
+   11         43          0.004           5      5.99e-06  ( 5)
 
   Iterative solver converged in  11 iterations.
 
@@ -375,13 +375,13 @@ o------------------------------------------------------------------------------o
  state       energy      wavelength         R            Sxx        Syy        Szz     
               (eV)          (nm)        (1e-40cgs)               (1e-40cgs)            
 ---------------------------------------------------------------------------------------
-   1         5.63119        220.2          0.0000      0.00000    0.00000   -0.00000
+   1         5.63119        220.2          0.0000      0.00000   -0.00000    0.00000
    2         5.74422        215.8          0.0000      0.00001   -0.00000   -0.00000
-   3         6.61496        187.4         -0.0000     -0.00000    0.00000   -0.00000
-   4         7.03084        176.3          0.0005      0.00051   -0.00000    0.00000
+   3         6.61496        187.4         -0.0000     -0.00000   -0.00000   -0.00000
+   4         7.03084        176.3          0.0005      0.00051    0.00000   -0.00000
    5         7.53889        164.5          0.0000      0.00000   -0.00000   -0.00000
 ---------------------------------------------------------------------------------------
-    Time taken for task 2: 7.682699695 s.
+    Time taken for task 2: 5.367526808 s.
     
 
 o------------------------------------------------------------------------------o
@@ -392,37 +392,37 @@ o------------------------------------------------------------------------------o
 
   Final Timings:
  ----------------
-              Active System -     1e-Int Pot.      0:00.026 min
-              Active System -    Coulomb Pot.      0:04.361 min
-              Active System -   Coul./XC Pot.      0:08.892 min
-              Active System -   Exchange Pot.      0:04.529 min
-              Active System - Functional Pot.      0:01.278 min
-                LRSCF -              Disk I/O      0:00.037 min
-                LRSCF -      Dipole Integrals      0:00.015 min
-                LRSCF -   Kernel: Contraction      0:01.159 min
-                LRSCF -   Kernel: Num. Integ.      0:01.022 min
-                LRSCF -   Sigmavector:      J      0:02.885 min
-                LRSCF -   Sigmavector:      K      0:01.546 min
+              Active System -     1e-Int Pot.      0:00.015 min
+              Active System -    Coulomb Pot.      0:01.577 min
+              Active System -   Coul./XC Pot.      0:05.377 min
+              Active System -   Exchange Pot.      0:03.799 min
+              Active System - Functional Pot.      0:00.865 min
+                LRSCF -              Disk I/O      0:00.036 min
+                LRSCF -      Dipole Integrals      0:00.012 min
+                LRSCF -   Kernel: Contraction      0:00.663 min
+                LRSCF -   Kernel: Num. Integ.      0:00.724 min
+                LRSCF -   Sigmavector:      J      0:01.836 min
+                LRSCF -   Sigmavector:      K      0:01.129 min
                 LRSCF -   Sigmavector:   Fock      0:00.004 min
-                LRSCF -   Sigmavector: Kernel      0:02.271 min
-                LRSCF -  AO-MO Transformation      0:00.053 min
-                LRSCF -  Kernel on Grid Eval.      0:00.376 min
+                LRSCF -   Sigmavector: Kernel      0:01.452 min
+                LRSCF -  AO-MO Transformation      0:00.042 min
+                LRSCF -  Kernel on Grid Eval.      0:00.365 min
                 LRSCF - Add/Sym Fock Matrices      0:00.006 min
-                LRSCF - Shell-Wise Abs. Calc.      0:00.003 min
-               Tech. -           DIIS/Damping      0:00.014 min
-               Tech. -           Grid Sorting      0:00.145 min
-               Tech. -     Grid Constructions      0:00.067 min
-               Tech. -    Basis On Grid Eval.      0:01.621 min
-               Tech. -    Fock Matrix Solving      0:00.023 min
-               Tech. -    Grid to Matrix Int.      0:00.403 min
-               Tech. -  Density On Grid Eval.      0:00.404 min
-               Tech. - Libint Initializations      0:06.537 min
-               Tech. - XCFun Functional Eval.      0:00.736 min
+                LRSCF - Shell-Wise Abs. Calc.      0:00.004 min
+               Tech. -           DIIS/Damping      0:00.011 min
+               Tech. -           Grid Sorting      0:00.154 min
+               Tech. -     Grid Constructions      0:00.051 min
+               Tech. -    Basis On Grid Eval.      0:01.045 min
+               Tech. -    Fock Matrix Solving      0:00.019 min
+               Tech. -    Grid to Matrix Int.      0:00.315 min
+               Tech. -  Density On Grid Eval.      0:00.296 min
+               Tech. - Libint Initializations      0:03.675 min
+               Tech. - XCFun Functional Eval.      0:00.499 min
 
   Program ended:
  ----------------
-    Time:  2025-10-26 09:34:39
+    Time:  2025-11-15 12:29:04
     On:    HOSTNAME UNKNOWN
-    Time taken for the entire run: 18.502944919 s.
+    Time taken for the entire run: 12.201565877 s.
     
 
