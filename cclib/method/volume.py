@@ -414,10 +414,20 @@ def read_from_cube(filepath):
         lines = f.readlines()
 
         # First two lines are comments
+        # The second comment line *CAN* contain information on the axes
+        # But this is by far not the case for all programs
+        axes = []
+        if "OUTER LOOP" in lines[1]:
+            axes = ["XYZ".index(s[0]) for s in lines[1].split()[2::3]]
+        if not axes:
+            axes = [0, 1, 2]
+
         # Lines 3-6 specify the grid in Cartesian coordinates
         # Line 3 -- [Number of atoms] [Origin x] [Origin y] [Origin z]
-        natom = int(lines[2].split()[0])  # noqa: F841
+        natom = int(lines[2].split()[0])
+        has_labels = natom < 0
         originx, originy, originz = numpy.asanyarray(lines[2].split()[1:], dtype=float)
+        num_val = int(lines[2].split()[4]) if len(lines[2]) == 5 else 1
 
         # Line 4, 5, 6 -- [Number of Grid Points] [Spacing x] [Spacing y], [Spacing z]
         ngridx, spacingx = numpy.asanyarray(lines[3].split(), dtype=float)[[0, 1]]
@@ -431,10 +441,41 @@ def read_from_cube(filepath):
             skiplines += 1
 
         # Line 10+ (or 7+ if atomic coordinates data are not present)
-        tmp = []
+        # Process {DSET_IDS (#x int)} according to https://h5cube-spec.readthedocs.io/en/latest/cubeformat.html. Code is adapted from ASE v3.26.0 (https://gitlab.com/ase/ase/-/blob/3.26.0/ase/io/cube.py#L78).
+        labels = []
+        if has_labels:
+            fields = lines[skiplines].split()
+            nfields = int(fields[0])
+            labels.extend(fields[1:])
+            skiplines += 1
+
+            # If the labels don’t fit on a single line.
+            while len(labels) < nfields:
+                fields = lines[skiplines].split()
+                labels.extend(fields)
+                skiplines += 1
+
+        labels = [int(x) for x in labels]
+
+        # Cube files can contain more than one density,
+        # so we need to be a little bit careful about where one ends
+        # and the next begins.
+        raw_volume = []
         for line in lines[skiplines:]:
-            tmp.extend(line.split())
-        tmp = numpy.asanyarray(tmp, dtype=float)
+            raw_volume.extend([float(s) for s in line.split()])
+        # Split each value at each point into a separate list.
+        raw_volumes = [numpy.array(raw_volume[offset::num_val]) for offset in range(num_val)]
+        datas = []
+        # Adjust each volume in turn.
+        shape = [int(ngridx), int(ngridy), int(ngridz)]
+        for data in raw_volumes:
+            data = data.reshape(shape)
+            if axes != [0, 1, 2]:
+                data = data.transpose(axes).copy()
+            datas.append(data)
+
+        datas = numpy.array(datas)
+        tmp = datas[0].flatten()
 
     # Initialize volume object
     vol = Volume(

@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
-# run_pytest.bash: Run pytest on cclib with coverage checking. Requires
-# `pytest` and `pytest-cov`.
+# Run pytest on cclib with coverage checking.  Requires `pytest` and
+# `pytest-cov`.
+#
+# This script runs all unit and regression tests for calculation methods.
 
 set -exo pipefail
 
@@ -20,3 +22,4 @@ else
 fi
 
 PYTEST_ADDOPTS="-v -s ${PYTEST_PARALLELISM} ${PYTEST_COVERAGE} --cov-report=xml:coverage-method.xml -m 'is_method'" python -m pytest
+PYTEST_ADDOPTS="-v -s ${PYTEST_PARALLELISM} ${PYTEST_COVERAGE} --cov-report=xml:coverage-method.xml --cov-append" python -m pytest test/regression_method.py
