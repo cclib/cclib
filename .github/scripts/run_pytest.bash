@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
-# run_pytest.bash: Run pytest on cclib with coverage checking. Requires
-# `pytest` and `pytest-cov`.
+# Run pytest on cclib with coverage checking.  Requires `pytest` and
+# `pytest-cov`.
+#
+# This script runs all unit and regression tests except for those based upon
+# PySCF or calculation methods.
 
 set -exo pipefail
 
