@@ -22,4 +22,4 @@ else
 fi
 
 PYTEST_ADDOPTS="-v -s ${PYTEST_PARALLELISM} ${PYTEST_COVERAGE} --cov-report=xml:coverage-method.xml -m 'is_method'" python -m pytest
-PYTEST_ADDOPTS="-v -s ${PYTEST_PARALLELISM} ${PYTEST_COVERAGE} --cov-report=xml:coverage-method.xml --cov-append -m 'is_method'" python -m pytest test/regression_method.py
+PYTEST_ADDOPTS="-v -s ${PYTEST_PARALLELISM} ${PYTEST_COVERAGE} --cov-report=xml:coverage-method.xml --cov-append" python -m pytest test/regression_method.py
