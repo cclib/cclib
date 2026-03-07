@@ -9,7 +9,7 @@ import os
 
 from cclib.io import ccread
 from cclib.method import Hirshfeld, volume
-from cclib.method.calculationmethod import MissingAttributeError
+from cclib.exception import MissingAttributeError
 from cclib.parser import Psi4
 
 import numpy

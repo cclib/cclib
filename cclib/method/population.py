@@ -8,7 +8,8 @@
 import logging
 from typing import TYPE_CHECKING, Optional
 
-from cclib.method.calculationmethod import Method, MissingAttributeError
+from cclib.exception import MissingAttributeError
+from cclib.method.calculationmethod import Method
 from cclib.progress import Progress
 
 import numpy

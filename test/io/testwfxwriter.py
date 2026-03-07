@@ -8,7 +8,7 @@
 import os
 
 import cclib
-from cclib.io.filewriter import MissingAttributeError
+from cclib.exception import MissingAttributeError
 from cclib.io.wfxwriter import _list_format, _section
 
 import numpy as np

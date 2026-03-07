@@ -19,6 +19,7 @@ as well as example methods that take parsed data as input.
 
 # ruff: noqa: F401
 from cclib._version import __version__
+from cclib.exception import MissingAttributeError
 
 # isort: off
 from cclib import parser, progress, method, bridge, io

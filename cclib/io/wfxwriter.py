@@ -8,6 +8,7 @@
 import os.path
 from typing import List
 
+from cclib.exception import MissingAttributeError
 from cclib.io import filewriter
 from cclib.parser import utils
 
@@ -450,7 +451,7 @@ class WFXWriter(filewriter.Writer):
         elif hasattr(self.ccdata, "scfenergies"):
             energy = self.ccdata.scfenergies[-1]
         else:
-            raise filewriter.MissingAttributeError("scfenergies/mpenergies/ccenergies")
+            raise MissingAttributeError("scfenergies/mpenergies/ccenergies")
         return WFX_FIELD_FMT % (utils.convertor(energy, "eV", "hartree"))
 
     def _virial_ratio(self) -> str:
@@ -506,7 +507,7 @@ class WFXWriter(filewriter.Writer):
                 wfx_lines.extend(_section(section_name, section_data))
             except:  # noqa: E722
                 if section_required:
-                    raise filewriter.MissingAttributeError(
+                    raise MissingAttributeError(
                         f"Unable to write required wfx section: {section_name}"
                     )
 

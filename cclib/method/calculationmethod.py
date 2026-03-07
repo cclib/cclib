@@ -9,13 +9,11 @@ import logging
 import sys
 from typing import TYPE_CHECKING, Optional
 
+from cclib.exception import MissingAttributeError
+
 if TYPE_CHECKING:
     from cclib.parser.data import ccData
     from cclib.progress import Progress
-
-
-class MissingAttributeError(Exception):
-    pass
 
 
 class Method:

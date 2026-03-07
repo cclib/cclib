@@ -5,13 +5,10 @@
 
 """Bridge for using cclib data in PyQuante (http://pyquante.sourceforge.net)."""
 
+from cclib.exception import MissingAttributeError
 from cclib.parser.utils import find_package
 
 import numpy
-
-
-class MissingAttributeError(Exception):
-    pass
 
 
 _found_pyquante2 = find_package("pyquante2")

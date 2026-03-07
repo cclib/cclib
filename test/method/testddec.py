@@ -11,7 +11,7 @@ from typing import Optional
 
 from cclib.io import ccread
 from cclib.method import DDEC6, volume
-from cclib.method.calculationmethod import MissingAttributeError
+from cclib.exception import MissingAttributeError
 from cclib.parser import Psi4
 
 import numpy

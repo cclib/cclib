@@ -10,6 +10,7 @@ import itertools
 import logging
 from typing import Any, Dict, List, Optional, Tuple
 
+from cclib.exception import MissingAttributeError
 from cclib.parser.data import ccData
 from cclib.parser.utils import PeriodicTable, convertor, find_package
 
@@ -17,10 +18,6 @@ import numpy as np
 import periodictable
 
 l_sym2num = {"S": 0, "P": 1, "D": 2, "F": 3, "G": 4}
-
-
-class MissingAttributeError(Exception):
-    pass
 
 
 _found_pyscf = find_package("pyscf")
