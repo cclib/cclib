@@ -35,8 +35,7 @@ if _has_openbabel:
             _has_openbabel = False
 
 
-class MissingAttributeError(Exception):
-    pass
+from cclib import MissingAttributeError
 
 
 class Writer(ABC):

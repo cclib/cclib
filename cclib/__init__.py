@@ -20,6 +20,11 @@ as well as example methods that take parsed data as input.
 # ruff: noqa: F401
 from cclib._version import __version__
 
+
+class MissingAttributeError(Exception):
+    """Exception raised when a required attribute is missing from parsed data."""
+    pass
+
 # isort: off
 from cclib import parser, progress, method, bridge, io
 # isort: on

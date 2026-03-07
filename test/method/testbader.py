@@ -9,7 +9,7 @@ import os
 
 from cclib.io import ccread
 from cclib.method import Bader
-from cclib.method.calculationmethod import MissingAttributeError
+from cclib import MissingAttributeError
 from cclib.method.volume import Volume, read_from_cube
 from cclib.parser import Psi4
 

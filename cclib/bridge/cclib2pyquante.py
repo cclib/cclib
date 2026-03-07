@@ -10,8 +10,7 @@ from cclib.parser.utils import find_package
 import numpy
 
 
-class MissingAttributeError(Exception):
-    pass
+from cclib import MissingAttributeError
 
 
 _found_pyquante2 = find_package("pyquante2")
