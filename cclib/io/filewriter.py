@@ -10,6 +10,7 @@ from abc import ABC, abstractmethod
 from collections.abc import Iterable
 from typing import List, Optional, Tuple
 
+from cclib.exceptions import MissingAttributeError
 from cclib.parser.data import ccData
 from cclib.parser.utils import PeriodicTable, find_package
 
@@ -33,10 +34,6 @@ if _has_openbabel:
 
         except ModuleNotFoundError:
             _has_openbabel = False
-
-
-class MissingAttributeError(Exception):
-    pass
 
 
 class Writer(ABC):
