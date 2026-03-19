@@ -33,9 +33,9 @@ class ChemfilesTest:
     def test_makechemfiles_masses(self):
         """Verify atomic masses are copied when present."""
         frame = cclib2chemfiles.makechemfiles(self.data)
-        if hasattr(self.data, "atommasses"):
-            frame_masses = [atom.mass for atom in frame.atoms]
-            assert_array_almost_equal(frame_masses, self.data.atommasses)
+        assert hasattr(self.data, "atommasses")
+        frame_masses = [atom.mass for atom in frame.atoms]
+        assert_array_almost_equal(frame_masses, self.data.atommasses)
 
     def test_makechemfiles_charges(self):
         """Verify selected charge scheme is transferred correctly."""
