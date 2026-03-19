@@ -6,7 +6,6 @@
 from cclib.bridge import cclib2chemfiles
 from cclib.parser.utils import find_package
 
-import pytest
 from chemfiles.frame import Frame
 from numpy.testing import assert_array_almost_equal
 
@@ -42,11 +41,8 @@ class ChemfilesTest:
         """Verify selected charge scheme is transferred correctly."""
         charges = getattr(self.data, "atomcharges", None)
 
-        if not isinstance(charges, dict):
-            pytest.skip("No charges in test data")
-
-        if "mulliken" not in charges:
-            pytest.skip("No Mulliken charges in test data")
+        assert isinstance(charges, dict)
+        assert "mulliken" in charges
 
         frame = cclib2chemfiles.makechemfiles(self.data, "mulliken")
         frame_charges = [atom.charge for atom in frame.atoms]

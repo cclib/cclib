@@ -5,6 +5,7 @@
 """Bridge for using cclib data in Chemfiles (https://github.com/chemfiles/chemfiles.py)."""
 
 from collections import defaultdict
+from typing import Optional
 
 from cclib.parser.data import ccData
 from cclib.parser.utils import PeriodicTable, find_package
@@ -24,7 +25,7 @@ def _check_chemfiles(found_chemfiles: bool) -> None:
         raise ImportError("You must install `chemfiles` to use this function")
 
 
-def makechemfiles(data: ccData, charge: str | None = None) -> "Frame":
+def makechemfiles(data: ccData, charge: Optional[str] = None) -> "Frame":
     """Create a Chemfiles frame from a ccData object.
 
     Inputs:
