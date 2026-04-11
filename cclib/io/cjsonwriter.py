@@ -32,7 +32,7 @@ class CJSON(filewriter.Writer):
         """
         super().__init__(ccdata, terse=terse, *args, **kwargs)
 
-    def pathname(self, path: Union[str, Path]) -> str:
+    def pathname(self, path: Union[str, "Path"]) -> str:
         """Return filename without extension to be used as name."""
         name = os.path.basename(os.path.splitext(path)[0])
         return name
