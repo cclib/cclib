@@ -5,7 +5,7 @@
 
 """Calculation of electric multipole moments based on data parsed by cclib."""
 
-from collections.abc import Iterable
+import sys
 from typing import TYPE_CHECKING, List, Optional, Union
 
 from cclib.method.calculationmethod import Method
@@ -15,6 +15,11 @@ import numpy
 
 if TYPE_CHECKING:
     from cclib.parser.data import ccData
+
+if sys.version_info.minor >= 9:
+    from collections.abc import Iterable
+else:
+    from typing import Iterable
 
 
 class Moments(Method):

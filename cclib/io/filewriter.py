@@ -6,6 +6,7 @@
 """Generic file writer and related tools"""
 
 import logging
+import sys
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
 from typing import TYPE_CHECKING, List, Optional, Tuple, Union
@@ -35,6 +36,11 @@ if _has_openbabel:
 
 if TYPE_CHECKING:
     from cclib.parser.data import ccData
+
+if sys.version_info.minor >= 9:
+    from collections.abc import Iterable
+else:
+    from typing import Iterable
 
 
 class MissingAttributeError(Exception):
