@@ -424,7 +424,7 @@ def _check_pandas(found_pandas: bool) -> None:
 
 def ccframe(
     ccobjs: Iterable[Union[logfileparser.Logfile, ccData]], *args, **kwargs
-) -> pd.DataFrame:
+) -> "pd.DataFrame":
     """Returns a pandas.DataFrame of data attributes parsed by cclib from one
     or more logfiles.
 
