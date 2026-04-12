@@ -80,6 +80,9 @@ zip-safe = false
 [tool.setuptools.package-dir]
 cclib = "cclib"
 
+[tool.coverage.run]
+branch = true
+
 [tool.isort]
 profile = "black"
 line_length = 100
@@ -110,37 +113,15 @@ section-order = ["future", "standard-library", "first-party", "third-party", "lo
 ]
 
 [tool.mypy]
-warn_redundant_casts = true
-warn_return_any = true
-warn_unreachable = true
-
-scripts_are_modules = true
-warn_unused_configs = true
-
-# Disallow dynamic typing
-# disallow_any_unimported = true
-# disallow_any_expr = true
-# disallow_any_decorated = true
-# disallow_any_explicit = true
-# disallow_any_generics = true
-# disallow_subclassing_any = true
-
-# Untyped definitions and calls
-disallow_untyped_calls = true
-disallow_untyped_defs = true
+disable_error_code = [
+    "attr-defined",
+]
 disallow_incomplete_defs = true
-# check_untyped_defs = true
-disallow_untyped_decorators = true
-
-# None and optional handling
-
-# Configuring warnings
-warn_unused_ignores = true
-#warn_return_any = true
-#warn_unreachable = true
-
-# Miscellaneous
-#warn_unused_configs = true
+disallow_untyped_defs = true
+enable_error_code = [
+    "ignore-without-code",
+]
+strict = true
 
 [[tool.mypy.overrides]]
 module = [
@@ -167,6 +148,9 @@ module = [
     "pybel",
     "pyquante2",
     "pyscf",
+    "pyscf.geomopt.berny_solver",
+    "pyscf.geomopt.geometric_solver",
+    "pyscf.prop",
     "pyvtk",
     "pyvtk.DataSetAttr",
     "scipy",

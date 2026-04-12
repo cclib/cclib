@@ -5,9 +5,14 @@
 
 """Test NMR logfiles in cclib."""
 
+from typing import TYPE_CHECKING
+
 import numpy
 import pytest
 from skip import skipForParser
+
+if TYPE_CHECKING:
+    from cclib.parser.data import ccData
 
 
 class GenericNMRTest:
@@ -16,18 +21,18 @@ class GenericNMRTest:
     # How many different tensor types do we expect?
     num_tensors = 4
 
-    def testkeys(self, data) -> None:
+    def testkeys(self, data: "ccData") -> None:
         """Check dictionary keys are ints."""
         key_types = {type(key) for key in data.nmrtensors.keys()}
         assert len(key_types) == 1 and int in key_types
 
-    def testsize(self, data) -> None:
+    def testsize(self, data: "ccData") -> None:
         """Check to make sure there are the correct number of tensors parsed"""
         assert len(data.nmrtensors) == data.natom
         assert len(data.nmrtensors[0]) == self.num_tensors
         assert data.nmrtensors[0]["total"].shape == (3, 3)
 
-    def testisotropic(self, data) -> None:
+    def testisotropic(self, data: "ccData") -> None:
         """Check the total isotropic value matches the computed value."""
         tensor = data.nmrtensors[0]
         total = 0.0
@@ -45,7 +50,7 @@ class GenericNMRTest:
         total = numpy.mean(eigvals)
         assert total == pytest.approx(tensor["isotropic"], abs=3)
 
-    def testtotalshift(self, data):
+    def testtotalshift(self, data: "ccData") -> None:
         """Test the total chemical shift matches our expected value."""
         # TODO: A bit crude, but at least it will alert to unexpected changes in structure.
         assert sum(
@@ -78,11 +83,11 @@ class GenericNMRCouplingTest:
     num_couplings = 190
 
     @skipForParser("Turbomole", "atommasses is not available")
-    def testmass(self, data) -> None:
+    def testmass(self, data: "ccData") -> None:
         """Check we are using 13C"""
         assert sum(data.atommasses) == pytest.approx(self.tot_mass, 1e-2)
 
-    def testisotopes(self, data) -> None:
+    def testisotopes(self, data: "ccData") -> None:
         """Check we are using 13C"""
         for atom1, atom2 in data.nmrcouplingtensors:
             for isotope1, isotope2 in data.nmrcouplingtensors[(atom1, atom2)]:
@@ -92,7 +97,7 @@ class GenericNMRCouplingTest:
                 if data.atomnos[atom2] == 6:
                     assert isotope2 == 13
 
-    def testkeys(self, data) -> None:
+    def testkeys(self, data: "ccData") -> None:
         """Check dictionary keys are ints."""
         assert all(
             {
@@ -109,14 +114,14 @@ class GenericNMRCouplingTest:
             ]
         )
 
-    def testsize(self, data) -> None:
+    def testsize(self, data: "ccData") -> None:
         """Check to make sure there are the correct number of tensors parsed"""
         assert len(data.nmrcouplingtensors) == self.num_couplings
         tensor = list(list(data.nmrcouplingtensors.values())[0].values())[0]
         assert len(tensor) == self.num_tensors
 
     @skipForParser("Gaussian", "no coupling tensors are available")
-    def testtotal(self, data) -> None:
+    def testtotal(self, data: "ccData") -> None:
         """Does the total tensor have the correct shape?"""
         tensor = list(list(data.nmrcouplingtensors.values())[0].values())[0]
         assert tensor["total"].shape == (3, 3)
@@ -124,7 +129,7 @@ class GenericNMRCouplingTest:
     @skipForParser("Gaussian", "no coupling tensors are available")
     @skipForParser("PySCF", "only the total tensor is available")
     @skipForParser("Turbomole", "only the total tensor is available")
-    def testtensors(self, data) -> None:
+    def testtensors(self, data: "ccData") -> None:
         """Check the total isotropic value matches the computed value."""
         tensor = list(list(data.nmrcouplingtensors.values())[0].values())[0]
         # Check the total isotropic value matches the computed value.
@@ -142,7 +147,7 @@ class GenericNMRCouplingTest:
         assert total == pytest.approx(tensor["isotropic"], abs=3)
 
     @skipForParser("Gaussian", "no coupling tensors are available")
-    def testtotaltensor(self, data) -> None:
+    def testtotaltensor(self, data: "ccData") -> None:
         """Check the total isotropic value matches the computed value."""
         tensor = list(list(data.nmrcouplingtensors.values())[0].values())[0]
         # Check the total isotropic value matches the computed value.
@@ -151,7 +156,7 @@ class GenericNMRCouplingTest:
 
         assert total == pytest.approx(tensor["isotropic"], abs=3)
 
-    def testtotalcoupling(self, data):
+    def testtotalcoupling(self, data: "ccData") -> None:
         """Test the total chemical shift matches our expected value."""
         assert sum(
             [

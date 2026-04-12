@@ -7,28 +7,32 @@
 
 import itertools
 import re
+from typing import TYPE_CHECKING
 
 from cclib.parser import logfileparser, utils
 
 import numpy
 from packaging.version import parse as parse_version
 
+if TYPE_CHECKING:
+    from cclib.parser.logfilewrapper import FileWrapper
+
 
 class NWChem(logfileparser.Logfile):
     """An NWChem log file."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(logname="NWChem", *args, **kwargs)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"NWChem log file {self.filename}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'NWChem("{self.filename}")'
 
-    def normalisesym(self, label):
+    def normalisesym(self, label: str) -> str:
         """NWChem does not require normalizing symmetry labels."""
         return label
 
@@ -36,7 +40,7 @@ class NWChem(logfileparser.Logfile):
     def name2element(lbl: str) -> str:
         return "".join(itertools.takewhile(str.isalpha, str(lbl)))
 
-    def extract(self, inputfile, line):
+    def extract(self, inputfile: "FileWrapper", line: str) -> None:
         """Extract information from the file object inputfile."""
         # search for No. of atoms     :
         if line[:22] == "          No. of atoms":
@@ -1363,7 +1367,7 @@ class NWChem(logfileparser.Logfile):
             else:
                 self.append_attribute("etoscs", 0.0)
 
-    def before_parsing(self):
+    def before_parsing(self) -> None:
         """NWChem-specific routines performed before parsing a file."""
 
         # The only reason we need this identifier is if `print low` is
@@ -1377,7 +1381,7 @@ class NWChem(logfileparser.Logfile):
             "Mulliken analysis of the total density",
         )
 
-    def after_parsing(self):
+    def after_parsing(self) -> None:
         """NWChem-specific routines for after parsing a file."""
         super().after_parsing()
 

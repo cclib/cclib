@@ -2,10 +2,12 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
+from typing import Any, Dict, List
+
 from pyscf import dft, gto
 
 
-def calculate():
+def calculate() -> Dict[str, List[Any]]:
     mol = gto.M(
         atom="""
         Mo         0.00001        0.00000        0.29568

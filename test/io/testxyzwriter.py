@@ -18,7 +18,7 @@ __datadir__ = os.path.join(__filepath__, "..", "..")
 
 
 class XYZWriterTest:
-    def test_init(self):
+    def test_init(self) -> None:
         """Does the class initialize correctly?"""
         fpath = os.path.join(__datadir__, "data/ADF/basicADF2007.01/dvb_gopt.adfout")
         data = cclib.io.ccread(fpath)
@@ -27,7 +27,7 @@ class XYZWriterTest:
         # The object should keep the ccData instance passed to its constructor.
         assert xyz.ccdata == data
 
-    def test_roundtrip_one(self):
+    def test_roundtrip_one(self) -> None:
         """Does a written XYZ file with a single structure match a reference
         output?
 
@@ -48,7 +48,7 @@ class XYZWriterTest:
             # (right).
             assert ref.read() == new_repr
 
-    def test_roundtrip_two(self):
+    def test_roundtrip_two(self) -> None:
         """Does a written XYZ file with two structures match a reference
         output?
 
@@ -71,7 +71,7 @@ class XYZWriterTest:
             # (right).
             assert ref.read() == new_repr
 
-    def test_quantum_output_repr(self):
+    def test_quantum_output_repr(self) -> None:
         """Can the XYZ representation be generated from a parsed quantum chemical
         output?
         """

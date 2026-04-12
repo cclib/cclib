@@ -6,11 +6,11 @@
 """Generic file writer and related tools"""
 
 import logging
+import sys
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
-from typing import List, Optional, Tuple
+from typing import TYPE_CHECKING, List, Optional, Tuple, Union
 
-from cclib.parser.data import ccData
 from cclib.parser.utils import PeriodicTable, find_package
 
 import numpy
@@ -34,6 +34,14 @@ if _has_openbabel:
         except ModuleNotFoundError:
             _has_openbabel = False
 
+if TYPE_CHECKING:
+    from cclib.parser.data import ccData
+
+if sys.version_info.minor >= 9:
+    from collections.abc import Iterable
+else:
+    from typing import Iterable
+
 
 class MissingAttributeError(Exception):
     pass
@@ -46,9 +54,9 @@ class Writer(ABC):
 
     def __init__(
         self,
-        ccdata: ccData,
+        ccdata: "ccData",
         jobfilename: Optional[str] = None,
-        indices=None,
+        indices: Optional[Union[int, Iterable[int]]] = None,
         terse: bool = False,
         *args,
         **kwargs,
@@ -154,7 +162,7 @@ class Writer(ABC):
         prevent duplicate structures and incorrect ordering when
         indices are later sorted.
         """
-        if not self.indices:
+        if self.indices is None:
             self.indices = set()
         elif not isinstance(self.indices, Iterable):
             self.indices = {self.indices}
@@ -168,7 +176,6 @@ class Writer(ABC):
                     i += lencoords
                 indices.add(i)
             self.indices = indices
-        return
 
 
 del find_package

@@ -6,10 +6,16 @@
 """Calculation of Hirshfeld charges based on data parsed by cclib."""
 
 import logging
+from typing import TYPE_CHECKING, Optional, Tuple
 
 from cclib.method.stockholder import Stockholder
 
 import numpy
+
+if TYPE_CHECKING:
+    from cclib.method.volume import Volume
+    from cclib.parser.data import ccData
+    from cclib.progress import Progress
 
 
 class MissingInputError(Exception):
@@ -27,8 +33,14 @@ class Hirshfeld(Stockholder):
     required_attrs = ("homos", "mocoeffs", "nbasis", "gbasis")
 
     def __init__(
-        self, data, volume, proatom_path=None, progress=None, loglevel=logging.INFO, logname="Log"
-    ):
+        self,
+        data: "ccData",
+        volume: "Volume",
+        proatom_path: str,
+        progress: Optional["Progress"] = None,
+        loglevel: int = logging.INFO,
+        logname: str = "Log",
+    ) -> None:
         """Initialize Hirshfeld object.
         Inputs are:
             data -- ccData object that describe target molecule.
@@ -38,15 +50,15 @@ class Hirshfeld(Stockholder):
         """
         super().__init__(data, volume, proatom_path, progress, loglevel, logname)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"Hirshfeld charges of {self.data}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f"Hirshfeld({self.data})"
 
-    def _check_required_attributes(self):
+    def _check_required_attributes(self) -> None:
         super()._check_required_attributes()
 
     def _cartesian_dist(self, pt1, pt2):
@@ -57,14 +69,11 @@ class Hirshfeld(Stockholder):
         return numpy.sqrt(numpy.dot(pt1 - pt2, pt1 - pt2))
 
     def _read_proatom(
-        self,
-        directory,
-        atom_num,
-        charge,  # type = str  # type = int  # type = float
-    ):
+        self, directory: str, atom_num: int, charge: float
+    ) -> Tuple[numpy.ndarray, numpy.ndarray]:
         return super()._read_proatom(directory, atom_num, charge)
 
-    def calculate(self):
+    def calculate(self) -> bool:
         """Calculate Hirshfeld charges."""
         super().calculate()
 

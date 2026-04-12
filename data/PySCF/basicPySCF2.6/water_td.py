@@ -2,10 +2,12 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
+from typing import Any, Dict, List
+
 from pyscf import dft, gto, tddft
 
 
-def calculate():
+def calculate() -> Dict[str, List[Any]]:
     mol = gto.M(
         atom="""
     O         -0.00000       -0.11916        0.00000
@@ -18,7 +20,7 @@ def calculate():
 
     scf_steps = []
 
-    def store_intermediate(_locals):
+    def store_intermediate(_locals: Dict[str, Any]) -> None:
         scf_steps.append(
             {
                 "e_tot": _locals["e_tot"],

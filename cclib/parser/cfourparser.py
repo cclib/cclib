@@ -7,10 +7,14 @@
 
 from collections import defaultdict
 from datetime import timedelta
+from typing import TYPE_CHECKING
 
 from cclib.parser import logfileparser, utils
 
 import numpy as np
+
+if TYPE_CHECKING:
+    from cclib.parser.logfilewrapper import FileWrapper
 
 
 class CFOUR(logfileparser.Logfile):
@@ -19,7 +23,7 @@ class CFOUR(logfileparser.Logfile):
     def __init__(self, *args, **kwargs):
         super().__init__(logname="CFOUR", *args, **kwargs)
 
-    def normalisesym(self, label):
+    def normalisesym(self, label: str) -> str:
         # CFOUR uses A'' instead of A"
         label = label.replace("''", '"')
         # CFOUR uses SG+ and SGg+ sometimes
@@ -234,7 +238,7 @@ class CFOUR(logfileparser.Logfile):
                 gbasis[atom_index[curr_atom]].append((curr_ang_mom, i))
         return gbasis
 
-    def before_parsing(self):
+    def before_parsing(self) -> None:
         # geting atomic number and symbol is different for 1 atom
         self.set_attribute("only_one_atom", False)
 
@@ -271,7 +275,7 @@ class CFOUR(logfileparser.Logfile):
         # set to True so to indicate no time was recorded
         self.set_attribute("no_time", True)
 
-    def after_parsing(self):
+    def after_parsing(self) -> None:
         # set metadata "success" to False if no time was recorded
         if self.no_time:
             self.metadata["success"] = False
@@ -322,7 +326,7 @@ class CFOUR(logfileparser.Logfile):
             self.etsecs = temp_etsecs
             self.etsyms = temp_etsyms
 
-    def extract(self, inputfile, line):
+    def extract(self, inputfile: "FileWrapper", line: str) -> None:
         tokens = line.split()
 
         # get the version of CFOUR

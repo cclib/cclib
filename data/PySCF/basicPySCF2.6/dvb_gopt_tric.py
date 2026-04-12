@@ -2,11 +2,13 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
+from typing import Any, Dict, List
+
 from pyscf import dft, gto
 from pyscf.geomopt.geometric_solver import optimize
 
 
-def calculate():
+def calculate() -> Dict[str, List[Any]]:
     # This is DVB.
     mol = gto.M(
         atom="""

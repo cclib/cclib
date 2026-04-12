@@ -5,7 +5,12 @@
 
 """Test configuration interaction (CI) logfiles in cclib"""
 
+from typing import TYPE_CHECKING
+
 import numpy
+
+if TYPE_CHECKING:
+    from cclib.parser.data import ccData
 
 
 class GenericCISTest:
@@ -37,7 +42,7 @@ class GenericCISTest:
 
     etsecs_precision = 0.0005
 
-    def testetenergiesvalues(self, data) -> None:
+    def testetenergiesvalues(self, data: "ccData") -> None:
         """Are etenergies within 50 wavenumbers of the correct values?"""
         indices0 = [i for i in range(self.nstates) if data.etsyms[i][0] == "S"]
         indices1 = [i for i in range(self.nstates) if data.etsyms[i][0] == "T"]
@@ -51,13 +56,13 @@ class GenericCISTest:
             tripletdiff = triplets[:4] - self.etenergies1
             assert numpy.all(tripletdiff < 50)
 
-    def testsecs(self, data) -> None:
+    def testsecs(self, data: "ccData") -> None:
         """Is the sum of etsecs close to 1?"""
         etsec = data.etsecs[2]  # Pick one with several contributors
         sumofsec = sum([z * z for (x, y, z) in etsec])
         assert abs(sumofsec - 1.0) < 0.02
 
-    def testetsecsvalues(self, data) -> None:
+    def testetsecsvalues(self, data: "ccData") -> None:
         """Are etsecs correct and coefficients close to the correct values?"""
         indices0 = [i for i in range(self.nstates) if data.etsyms[i][0] == "S"]
         indices1 = [i for i in range(self.nstates) if data.etsyms[i][0] == "T"]
@@ -91,11 +96,11 @@ class GenericCISTest:
 class GAMESSCISTest(GenericCISTest):
     """Customized CIS(RHF)/STO-3G water unittest"""
 
-    def testnocoeffs(self, data) -> None:
+    def testnocoeffs(self, data: "ccData") -> None:
         """Are natural orbital coefficients the right size?"""
         assert data.nocoeffs.shape == (data.nmo, data.nbasis)
 
-    def testnooccnos(self, data) -> None:
+    def testnooccnos(self, data: "ccData") -> None:
         """Are natural orbital occupation numbers the right size?"""
         assert data.nooccnos.shape == (data.nmo,)
 
@@ -105,11 +110,11 @@ class GaussianCISTest(GenericCISTest):
 
     nstates = 10
 
-    def testnocoeffs(self, data) -> None:
+    def testnocoeffs(self, data: "ccData") -> None:
         """Are natural orbital coefficients the right size?"""
         assert data.nocoeffs.shape == (data.nmo, data.nbasis)
 
-    def testnooccnos(self, data) -> None:
+    def testnooccnos(self, data: "ccData") -> None:
         """Are natural orbital occupation numbers the right size?"""
         assert data.nooccnos.shape == (data.nmo,)
 

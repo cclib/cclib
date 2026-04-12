@@ -9,6 +9,7 @@ import datetime
 import itertools
 import math
 import re
+from typing import TYPE_CHECKING, Dict
 
 from cclib.parser import data, logfileparser, utils
 
@@ -16,26 +17,29 @@ import numpy
 from packaging.version import Version
 from packaging.version import parse as parse_version
 
+if TYPE_CHECKING:
+    from cclib.parser.logfilewrapper import FileWrapper
+
 
 class QChem(logfileparser.Logfile):
     """A Q-Chem log file."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(logname="QChem", *args, **kwargs)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"QChem log file {self.filename}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'QChem("{self.filename}")'
 
-    def normalisesym(self, label):
+    def normalisesym(self, label: str) -> str:
         """Q-Chem does not require normalizing symmetry labels."""
         return label
 
-    def before_parsing(self):
+    def before_parsing(self) -> None:
         # Keep track of whether or not we're performing an
         # (un)restricted calculation.
         self.unrestricted = False
@@ -129,7 +133,7 @@ class QChem(logfileparser.Logfile):
             "QCISD(T)",
         ]
 
-    def after_parsing(self):
+    def after_parsing(self) -> None:
         super().after_parsing()
 
         # If parsing a fragment job, each of the geometries appended to
@@ -253,7 +257,7 @@ cannot be determined. Rerun without `$molecule read`."""
                 if user_charge is not None:
                     self.set_attribute("charge", user_charge)
 
-    def parse_charge_section(self, inputfile, chargetype):
+    def parse_charge_section(self, inputfile: "FileWrapper", chargetype: str) -> None:
         """Parse the population analysis charge block."""
         self.skip_line(inputfile, "blank")
         line = next(inputfile)
@@ -283,7 +287,9 @@ cannot be determined. Rerun without `$molecule read`."""
             self.atomspins[chargetype] = numpy.array(spins)
 
     @staticmethod
-    def parse_matrix(inputfile, nrows, ncols, ncolsblock):
+    def parse_matrix(
+        inputfile: "FileWrapper", nrows: int, ncols: int, ncolsblock: int
+    ) -> numpy.ndarray:
         """Q-Chem prints most matrices in a standard format; parse the matrix
         into a NumPy array of the appropriate shape.
         """
@@ -305,7 +311,9 @@ cannot be determined. Rerun without `$molecule read`."""
             colcounter += ncolsblock
         return nparray
 
-    def parse_matrix_aonames(self, inputfile, nrows, ncols):
+    def parse_matrix_aonames(
+        self, inputfile: "FileWrapper", nrows: int, ncols: int
+    ) -> numpy.ndarray:
         """Q-Chem prints most matrices in a standard format; parse the matrix
         into a preallocated NumPy array of the appropriate shape.
 
@@ -354,7 +362,7 @@ cannot be determined. Rerun without `$molecule read`."""
             colcounter += self.ncolsblock
         return nparray
 
-    def parse_orbital_energies_and_symmetries(self, inputfile):
+    def parse_orbital_energies_and_symmetries(self, inputfile: "FileWrapper"):
         """Parse the 'Orbital Energies (a.u.)' block appearing after SCF converges,
         which optionally includes MO symmetries. Based upon the
         Occupied/Virtual labeling, the HOMO is also parsed.
@@ -397,7 +405,7 @@ cannot be determined. Rerun without `$molecule read`."""
 
         return energies, symbols, homo
 
-    def generate_atom_map(self):
+    def generate_atom_map(self) -> Dict[str, str]:
         """Generate the map to go from Q-Chem atom numbering:
         'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'H1', 'H2', 'H3', 'H4', 'C7', ...
         to cclib atom numbering:
@@ -419,7 +427,7 @@ cannot be determined. Rerun without `$molecule read`."""
         atommap = {k: v for k, v in zip(order_qchem, order_proper)}
         return atommap
 
-    def generate_formula_histogram(self):
+    def generate_formula_histogram(self) -> Dict[str, int]:
         """From the atomnos, generate a histogram that represents the
         molecular formula.
         """
@@ -432,7 +440,7 @@ cannot be determined. Rerun without `$molecule read`."""
                 histogram[element] = 1
         return histogram
 
-    def extract(self, inputfile, line):
+    def extract(self, inputfile: "FileWrapper", line: str) -> None:
         """Extract information from the file object inputfile."""
 
         # Extract the version number and optionally the version
@@ -832,6 +840,7 @@ cannot be determined. Rerun without `$molecule read`."""
                 line = next(inputfile)
                 nelec_re_string = r"There are(\s+[0-9]+) alpha and(\s+[0-9]+) beta electrons"
                 match = re.findall(nelec_re_string, line.strip())
+                assert match is not None
                 self.set_attribute("nalpha", int(match[0][0].strip()))
                 self.set_attribute("nbeta", int(match[0][1].strip()))
                 self.norbdisp_alpha += self.nalpha
