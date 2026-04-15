@@ -440,6 +440,10 @@ def _extract_symbol_coords(line: str, mode: str) -> Optional[Tuple[str, List[flo
     M  END
     """
     line_split = line.split()
+    # Guard against empty lines or headers that are too short to hold coordinates
+    if len(line_split) < 4:
+        return None
+
     if mode == "xyz":
         if line_split[0].istitle():
             return line_split[0], [float(coord) for coord in line_split[1:]]
@@ -833,7 +837,7 @@ def _is_end_of_structure_block(line: str, mode: str) -> bool:
     Refer to _extract_symbol_coords for examples of structure blocks.
     """
     if mode == "xyz":
-        return line == "\n"
+        return line.strip() == ""
     elif mode in {"mol", "sdf"}:
         return "M" in line and "END" in line
     else:
