@@ -440,27 +440,12 @@ def _extract_symbol_coords(line: str, mode: str) -> Optional[Tuple[str, List[flo
     M  END
     """
     line_split = line.split()
-
-    # Guard against empty lines or headers that are too short to hold coordinates
-    if len(line_split) < 4:
-        return None
-    
     if mode == "xyz":
-        # Check if index 0 is a valid chemical symbol (e.g., 'C', 'Fe')
-        if line_split[0].isalpha() and line_split[0][0].isupper():
-            try:
-                # Safely slice to grab exactly 3 coordinates
-                return line_split[0], [float(coord) for coord in line_split[1:4]]
-            except ValueError:
-                return None
-                
+        if line_split[0].istitle():
+            return line_split[0], [float(coord) for coord in line_split[1:]]
     elif mode in {"mol", "sdf"}:
-        # Check if index 3 is a valid chemical symbol
-        if line_split[3].isalpha() and line_split[3][0].isupper():
-            try:
-                return line_split[3], [float(coord) for coord in line_split[:3]]
-            except ValueError:
-                return None
+        if line_split[3].istitle():
+            return line_split[3], [float(coord) for coord in line_split[:3]]
     else:
         raise ValueError(f"Unsupported coordinate file type: {mode}")
 
