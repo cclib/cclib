@@ -84,6 +84,8 @@ class ORCA(logfileparser.Logfile):
         if hasattr(self, "etenergies"):
             prop_names = ("etenergies", "etsyms", "etoscs", "etsecs", "etrotats")
 
+            # convert to wavenumber to be consistent w/ 1.7.2
+            self.etenergies = [utils.convertor(x, "hartree", "wavenumber") for x in self.etenergies]
             # First, set energies properly, keeping track of each energy's old index.
             energy_index = sorted(
                 [(energy, index) for index, energy in enumerate(self.etenergies)],
