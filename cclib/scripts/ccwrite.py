@@ -14,7 +14,7 @@ from cclib.io import ccopen, ccwrite
 from cclib.parser import ccData
 
 
-def main() -> None:
+def main() -> str:
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
@@ -114,15 +114,21 @@ def main() -> None:
             ccwrite_kwargs["ghost"] = ghost
         if naturalorbitals:
             ccwrite_kwargs["naturalorbitals"] = True
-        # For XYZ files, write the last geometry unless otherwise
-        # specified.
-        if not index:
-            index = -1
-        ccwrite_kwargs["jobfilename"] = filename
 
         # The argument terse presently is only applicable to
         # CJSON/JSON formats
-        ccwrite(data, outputtype, outputdest, indices=index, terse=terse, **ccwrite_kwargs)
+        #
+        # Forcibly set returnstr so that the CLI results can be tested without
+        # mocking;
+        return ccwrite(
+            data,
+            outputtype,
+            outputdest,
+            indices=index,
+            terse=terse,
+            returnstr=True,
+            **ccwrite_kwargs,
+        )
 
 
 if __name__ == "__main__":

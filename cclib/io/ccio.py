@@ -304,7 +304,7 @@ def fallback(source) -> Optional[ccData]:
 
 
 def ccwrite(
-    ccobj: ccData,
+    ccobj: Union[logfileparser.Logfile, ccData],
     outputtype: Optional[str] = None,
     outputdest: Optional[str] = None,
     indices=None,
@@ -342,8 +342,6 @@ def ccwrite(
     elif isinstance(ccobj, ccData):
         jobfilename = None
         ccdata = ccobj
-    else:
-        raise ValueError
 
     # If the logfile name has been passed in through kwargs (such as
     # in the ccwrite script), make sure it has precedence.
@@ -357,7 +355,8 @@ def ccwrite(
     )
     output = outputobj.generate_repr()
 
-    # If outputdest isn't None, write the output to disk.
+    # If outputdest isn't None, write the output to disk, otherwise return a
+    # string representation of the output.
     if outputdest is not None:
         if isinstance(outputdest, str):
             with open(outputdest, "w") as outputobj:
@@ -366,7 +365,6 @@ def ccwrite(
             outputdest.write(output)
         else:
             raise ValueError
-    # If outputdest is None, return a string representation of the output.
     else:
         return output
 
