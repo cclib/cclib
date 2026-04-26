@@ -182,7 +182,6 @@ class ccwriteTest:
             ccwrite_cli_result, Path(__filedir__) / "data" / "dvb_gopt_23.xyz"
         )
 
-    @pytest.mark.xfail
     @mock.patch(
         target="cclib.scripts.ccwrite.sys.argv",
         new=["ccwrite", "-i", "0", "xyz", CCWRITE_INPUT_FILE],

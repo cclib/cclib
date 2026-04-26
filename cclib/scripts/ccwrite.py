@@ -114,11 +114,6 @@ def main() -> str:
             ccwrite_kwargs["ghost"] = ghost
         if naturalorbitals:
             ccwrite_kwargs["naturalorbitals"] = True
-        # For XYZ files, write the last geometry unless otherwise
-        # specified.
-        if not index:
-            index = -1
-        ccwrite_kwargs["jobfilename"] = filename
 
         # The argument terse presently is only applicable to
         # CJSON/JSON formats
