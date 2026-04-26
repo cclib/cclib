@@ -14,7 +14,7 @@ from cclib.io import ccopen, ccwrite
 from cclib.parser import ccData
 
 
-def main() -> None:
+def main() -> str:
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
@@ -122,7 +122,18 @@ def main() -> None:
 
         # The argument terse presently is only applicable to
         # CJSON/JSON formats
-        ccwrite(data, outputtype, outputdest, indices=index, terse=terse, **ccwrite_kwargs)
+        #
+        # Forcibly set returnstr so that the CLI results can be tested without
+        # mocking;
+        return ccwrite(
+            data,
+            outputtype,
+            outputdest,
+            indices=index,
+            terse=terse,
+            returnstr=True,
+            **ccwrite_kwargs,
+        )
 
 
 if __name__ == "__main__":
