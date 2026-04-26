@@ -138,8 +138,6 @@ class XYZWriterTest:
         new_repr = writer.generate_repr()
 
         ref_fpath = os.path.join(__filedir__, "data/example_MEP_trj_ref_firstgeom.xyz")
-        # with open(ref_fpath, "w") as ref:
-        #     ref.write(new_repr)
         with open(ref_fpath) as ref:
             assert ref.read() == new_repr
 
@@ -158,8 +156,6 @@ class XYZWriterTest:
         new_repr = writer.generate_repr()
 
         ref_fpath = os.path.join(__filedir__, "data/example_MEP_trj_ref_lastgeom.xyz")
-        # with open(ref_fpath, "w") as ref:
-        #     ref.write(new_repr)
         with open(ref_fpath) as ref:
             assert ref.read() == new_repr
 
