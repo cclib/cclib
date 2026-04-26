@@ -31,7 +31,9 @@ class FileWriterTest:
         fix_indices = cclib.io.filewriter._fix_indices
 
         assert fix_indices(None, None) == set()
+        assert fix_indices(None, 10) == set()
         assert fix_indices(4, None) == {4}
+        assert fix_indices(4, 10) == {4}
         assert fix_indices([4], None) == {4}
         assert fix_indices([4, 5], None) == {4, 5}
         assert fix_indices([4, 4], None) == {4}
