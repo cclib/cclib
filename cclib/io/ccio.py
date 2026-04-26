@@ -355,7 +355,8 @@ def ccwrite(
     )
     output = outputobj.generate_repr()
 
-    # If outputdest isn't None, write the output to disk.
+    # If outputdest isn't None, write the output to disk, otherwise return a
+    # string representation of the output.
     if outputdest is not None:
         if isinstance(outputdest, str):
             with open(outputdest, "w") as outputobj:
@@ -364,7 +365,6 @@ def ccwrite(
             outputdest.write(output)
         else:
             raise ValueError
-    # If outputdest is None, return a string representation of the output.
     else:
         return output
 
