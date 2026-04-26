@@ -108,9 +108,7 @@ class XYZ(filewriter.Writer):
             comment = f"[{comment}]"
 
         atom_template = "{:3s} {:15.10f} {:15.10f} {:15.10f}"
-        block = []
-        block.append(self.natom)
-        block.append(comment)
+        block = [self.natom, comment]
         for element, (x, y, z) in zip(self.element_list, atomcoords):
             block.append(atom_template.format(element, x, y, z))
         return "\n".join(block)
