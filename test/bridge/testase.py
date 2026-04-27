@@ -13,13 +13,7 @@ from cclib.bridge import cclib2ase
 from cclib.parser.utils import find_package
 
 import numpy as np
-
-if not find_package("ase"):
-    raise ImportError("Must install ase to run this test")
-
 import pytest
-from ase import Atoms
-from ase.calculators.emt import EMT
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -27,6 +21,10 @@ if TYPE_CHECKING:
 
 class ASETest:
     """Tests for the cclib2ase bridge in cclib."""
+
+    def setup_method(self) -> None:
+        if not find_package("ase"):
+            raise ImportError("Must install ase to run this test")
 
     def test_makease_allows_optimization(self) -> None:
         """Ensure makease works from direct input."""
@@ -44,6 +42,8 @@ class ASETest:
 
     def test_makecclib_retrieves_optimization(self) -> None:
         """Ensure makecclib works with native ASE Atoms objects."""
+        from ase import Atoms
+
         h2 = Atoms("H2", positions=[[0, 0, 0], [0, 0, 0.7]])
 
         # Check whether converting back gives the expected data,
@@ -86,6 +86,8 @@ class ASETest:
         assert np.isclose(ase_data.temperature, 0)
 
         # Make sure our object is compatible with ASE API.
+        from ase.calculators.emt import EMT
+
         dvb_sp_un.calc = EMT(label="dvb_sp_un")  # not a serious calculator!
 
         # Converting back should give updated results.
