@@ -102,6 +102,12 @@ repos:
       - id: check-yaml
       - id: check-toml
       - id: check-added-large-files
+  - repo: https://github.com/tombi-toml/tombi-pre-commit
+    rev: v0.10.1
+    hooks:
+      - id: tombi-format
+        # Requires https://github.com/cclib/cclib/pull/1775
+        # - id: tombi-lint
   - repo: https://github.com/Mateusz-Grzelinski/actionlint-py
     rev: "v1.7.7.23"
     hooks:
