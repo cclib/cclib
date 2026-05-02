@@ -4,17 +4,17 @@ dynamic = ["version"]
 description = "parsers and algorithms for computational chemistry"
 readme = "README.md"
 authors = [
-    {name = "cclib development team", email = "cclib@googlegroups.com"}
+    { name = "cclib development team", email = "cclib@googlegroups.com" }
 ]
 maintainers = [
-    {name = "cclib development team", email = "cclib@googlegroups.com"}
+    { name = "cclib development team", email = "cclib@googlegroups.com" }
 ]
-license = {file = "LICENSE"}
+license = { file = "LICENSE" }
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
-    "Intended Audience :: Science/Research",
     "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
     "License :: OSI Approved :: BSD License",
     "Natural Language :: English",
     "Operating System :: OS Independent",
@@ -43,6 +43,7 @@ ccwrite = "cclib.scripts.ccwrite:main"
 cda = "cclib.scripts.cda:main"
 
 [project.optional-dependencies]
+all = ["cclib[bridges]"]
 bridges = [
     "ase>=3.21",
     "biopython",
@@ -53,19 +54,18 @@ bridges = [
     "geometric",
     "qc-iodata>=1.0.0a2",
 ]
+dev = ["cclib[bridges,docs,test-infrastructure]"]
 docs = [
     "sphinx",
     "sphinx_rtd_theme",
 ]
+test = ["cclib[bridges,docs,test-infrastructure]"]
 test-infrastructure = [
     "pytest",
     "coverage",
     "pytest-cov",
     "pyyaml",
 ]
-test = ["cclib[bridges,docs,test-infrastructure]"]
-dev = ["cclib[bridges,docs,test-infrastructure]"]
-all = ["cclib[bridges]"]
 
 [build-system]
 requires = [
@@ -73,12 +73,6 @@ requires = [
     "versioningit>=2.0",
 ]
 build-backend = "setuptools.build_meta"
-
-[tool.setuptools]
-zip-safe = false
-
-[tool.setuptools.package-dir]
-cclib = "cclib"
 
 [tool.coverage.run]
 branch = true
@@ -89,28 +83,6 @@ line_length = 100
 # default is FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER
 # Placing third-party imports at the end makes their inclusion more obvious
 sections = ["FUTURE", "STDLIB", "FIRSTPARTY", "THIRDPARTY", "LOCALFOLDER"]
-
-[tool.ruff]
-line-length = 100
-src = ["cclib"]
-target-version = "py37"
-
-[tool.ruff.format]
-skip-magic-trailing-comma = true
-
-[tool.ruff.lint]
-
-
-[tool.ruff.lint.isort]
-lines-after-imports = 2
-section-order = ["future", "standard-library", "first-party", "third-party", "local-folder"]
-
-[tool.ruff.lint.per-file-ignores]
-"test/test*.py" = [
-    "PLR2004", # magic value comparison
-    "S101",    # use of assert detected
-    "TCH002",  # third party import (for pytest)
-]
 
 [tool.mypy]
 disable_error_code = [
@@ -163,8 +135,40 @@ module = [
 ]
 ignore_missing_imports = true
 
+[tool.ruff]
+line-length = 100
+src = ["cclib"]
+target-version = "py37"
+
+[tool.ruff.format]
+skip-magic-trailing-comma = true
+
+[tool.ruff.lint]
+[tool.ruff.lint.isort]
+lines-after-imports = 2
+section-order = [
+    "future",
+    "standard-library",
+    "first-party",
+    "third-party",
+    "local-folder"
+]
+
+[tool.ruff.lint.per-file-ignores]
+"test/test*.py" = [
+    "PLR2004",  # magic value comparison
+    "S101",  # use of assert detected
+    "TCH002",  # third party import (for pytest)
+]
+
+[tool.setuptools]
+zip-safe = false
+
+[tool.setuptools.package-dir]
+cclib = "cclib"
+
 [tool.versioningit.format]
-method = {module = "versioningit_override", value = "cclib_format", module-dir = "tools"}
+method = { module = "versioningit_override", value = "cclib_format", module-dir = "tools" }
 
 [tool.versioningit.template-fields.version-tuple]
 pep440 = true
