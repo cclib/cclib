@@ -1,34 +1,34 @@
 [project]
 name = "cclib"
-dynamic = ["version"]
 description = "parsers and algorithms for computational chemistry"
 readme = "README.md"
+requires-python = ">=3.8"
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
 authors = [
     { name = "cclib development team", email = "cclib@googlegroups.com" }
 ]
 maintainers = [
     { name = "cclib development team", email = "cclib@googlegroups.com" }
 ]
-license = { file = "LICENSE" }
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: BSD License",
     "Natural Language :: English",
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Topic :: Scientific/Engineering :: Chemistry",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
-requires-python = ">=3.8"
 dependencies = [
     "numpy",
     "packaging>=19.0",
     "periodictable",
     "scipy>=1.2.0",
 ]
+dynamic = ["version"]
 
 [project.urls]
 "Bug Tracker" = "https://github.com/cclib/cclib/issues"
@@ -70,7 +70,7 @@ test-infrastructure = [
 
 [build-system]
 requires = [
-    "setuptools>=61.0",
+    "setuptools>=77.0.3",
     "versioningit>=2.0",
 ]
 build-backend = "setuptools.build_meta"
