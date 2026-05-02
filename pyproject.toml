@@ -128,6 +128,24 @@ module = [
 ]
 ignore_missing_imports = true
 
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = ["linux-64"]
+
+[tool.pixi.pypi-dependencies]
+cclib = { path = ".", editable = true }
+
+[tool.pixi.environments]
+default = { solve-group = "default" }
+all = { features = ["all"], solve-group = "default" }
+bridges = { features = ["bridges"], solve-group = "default" }
+dev = { features = ["dev"], solve-group = "default" }
+docs = { features = ["docs"], solve-group = "default" }
+test = { features = ["test"], solve-group = "default" }
+test-infrastructure = { features = ["test-infrastructure"], solve-group = "default" }
+
+[tool.pixi.tasks]
+
 [tool.ruff]
 line-length = 100
 

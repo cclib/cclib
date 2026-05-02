@@ -16,3 +16,6 @@ cclib/_version.py
 .direnv
 # Auto-generated from running tests, introduced by https://github.com/cclib/cclib/pull/1653
 dvb_gopt.xyz
+# pixi environments
+.pixi/*
+!.pixi/config.toml
