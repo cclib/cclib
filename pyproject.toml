@@ -9,7 +9,8 @@ authors = [
 maintainers = [
     {name = "cclib development team", email = "cclib@googlegroups.com"}
 ]
-license = {file = "LICENSE"}
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
@@ -69,7 +70,7 @@ all = ["cclib[bridges]"]
 
 [build-system]
 requires = [
-    "setuptools>=61.0",
+    "setuptools>=77.0.3",
     "versioningit>=2.0",
 ]
 build-backend = "setuptools.build_meta"
