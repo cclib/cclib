@@ -108,10 +108,12 @@ repos:
       - id: tombi-format
         # Requires https://github.com/cclib/cclib/pull/1775
         # - id: tombi-lint
-  - repo: https://github.com/Mateusz-Grzelinski/actionlint-py
-    rev: "v1.7.7.23"
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.12
     hooks:
       - id: actionlint
+        additional_dependencies:
+          - "github.com/wasilibs/go-shellcheck/cmd/shellcheck@v0.11.1"
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.21.2
     hooks:
