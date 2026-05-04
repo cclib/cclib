@@ -35,7 +35,7 @@ jobs:
         shell: bash -eo pipefail -l {0}
     steps:
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6
         with:
           # so versioningit can figure out the version
           fetch-depth: 0
@@ -51,7 +51,7 @@ jobs:
           python -m pip install -r requirements-bridges.txt
           python -m pip install '.[test]'
       - name: Filter code
-        uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d # v4
+        uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d  # v4
         id: filter
         with:
           filters: |
@@ -80,7 +80,7 @@ jobs:
           env | sort
           bash .github/scripts/run_pytest_pyscf.bash "$(nproc)"
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5
+        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24  # v5
         with:
           files: ./coverage-unit.xml,./coverage-regression.xml,./coverage-method.xml,./coverage-pyscf.xml
           name: codecov-cclib
@@ -100,7 +100,7 @@ jobs:
           python -m pip install twine
           python -m twine check dist/*
       - name: Store the distribution packages
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7
         with:
           name: python-package-distributions
           path: dist/
@@ -123,11 +123,11 @@ jobs:
           - 3.11
           - 3.12
     steps:
-      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405  # v6
         with:
           python-version: ${{ matrix.python-version }}
       - name: Download the distribution packages
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c  # v8
         with:
           name: python-package-distributions
           path: dist/
@@ -143,7 +143,7 @@ jobs:
           python -m pip install dist/*.tar.gz
         if: matrix.install-method == 'source'
       - name: Check cclib install
-        run: |
+        run: |-
           cd ~
           python -c 'import cclib; print(cclib.__version__)'
           python -c 'from cclib.io import ccread; data = ccread("https://raw.githubusercontent.com/cclib/cclib-data/master/Gaussian/Gaussian16/water.log"); print(data.zpve)'
