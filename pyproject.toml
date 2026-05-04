@@ -65,6 +65,13 @@ test-infrastructure = [
     "pytest-cov",
     "pytest-xdist",
     "pyyaml",
+    "pytest-xdist",
+]
+
+[dependency-groups]
+pixi-bridges = [
+    "pyquante2 @ git+https://github.com/cclib/pyquante2.git@cythonize-becke",
+    "pyscf-properties @ git+https://github.com/pyscf/properties.git",
 ]
 
 [build-system]
@@ -130,21 +137,68 @@ ignore_missing_imports = true
 
 [tool.pixi.workspace]
 channels = ["conda-forge"]
-platforms = ["linux-64"]
+platforms = [
+    "linux-64",
+    "osx-64",
+    "osx-arm64",
+    "win-64",
+]
 
 [tool.pixi.pypi-dependencies]
 cclib = { path = ".", editable = true }
 
 [tool.pixi.environments]
-default = { solve-group = "default" }
-all = { features = ["all"], solve-group = "default" }
-bridges = { features = ["bridges"], solve-group = "default" }
-dev = { features = ["dev"], solve-group = "default" }
-docs = { features = ["docs"], solve-group = "default" }
-test = { features = ["test"], solve-group = "default" }
-test-infrastructure = { features = ["test-infrastructure"], solve-group = "default" }
+# default = { solve-group = "default" }
+# all = { features = ["all"], solve-group = "default" }
+# bridges = { features = ["bridges"], solve-group = "default" }
+# dev = { features = ["dev"], solve-group = "default" }
+# docs = { features = ["docs"], solve-group = "default" }
+# test = { features = ["test"], solve-group = "default" }
+# test-infrastructure = { features = ["test-infrastructure"], solve-group = "default" }
+# py37 = { features = ["py37", "dev"], solve-group = "py37" }
+py38 = { features = ["py38", "dev", "pixi-bridges"], solve-group = "py38" }
+py39 = { features = ["py39", "dev", "pixi-bridges"], solve-group = "py39" }
+py310 = { features = ["py310", "dev", "pixi-bridges"], solve-group = "py310" }
+py311 = { features = ["py311", "dev", "pixi-bridges"], solve-group = "py311" }
+py312 = { features = ["py312", "dev", "pixi-bridges"], solve-group = "py312" }
+py313 = { features = ["py313", "dev", "pixi-bridges"], solve-group = "py313" }
+py314 = { features = ["py314", "dev", "pixi-bridges"], solve-group = "py314" }
+# dev = { features = ["dev"], no-default-feature = true }
 
-[tool.pixi.tasks]
+# [tool.pixi.feature.dev.dependencies]
+# # TODO this is a missing transitive dependency of pyberny
+# pkg_resources = "*"
+
+# [tool.pixi.feature.py37.dependencies]
+# python = "3.7.*"
+# openbabel = "*"
+
+[tool.pixi.feature.py38.dependencies]
+python = "3.8.*"
+psi4 = "*"
+
+[tool.pixi.feature.py39.dependencies]
+python = "3.9.*"
+psi4 = "*"
+
+[tool.pixi.feature.py310.dependencies]
+python = "3.10.*"
+psi4 = "*"
+
+[tool.pixi.feature.py311.dependencies]
+python = "3.11.*"
+psi4 = "*"
+
+[tool.pixi.feature.py312.dependencies]
+python = "3.12.*"
+psi4 = "*"
+
+[tool.pixi.feature.py313.dependencies]
+python = "3.13.*"
+psi4 = "*"
+
+[tool.pixi.feature.py314.dependencies]
+python = "3.14.*"
 
 [tool.ruff]
 line-length = 100
