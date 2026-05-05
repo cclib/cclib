@@ -1,5 +1,5 @@
 .. index::
-    module: methods
+    pair: module; methods
 
 Calculation methods
 ===================

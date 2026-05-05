@@ -1,5 +1,5 @@
 .. index::
-    module: data_notes
+    pair: module; data_notes
 
 Parsed data notes
 =================
