@@ -15,7 +15,7 @@ from docs_common import check_cclib
 check_cclib(cclib)
 
 
-def generate_attributes():
+def generate_attributes() -> str:
     """Generate a string containing a reStructuredText table
     representation of the ccData docstring, which contains a list of
     all supported attributes with
