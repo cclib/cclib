@@ -1759,6 +1759,9 @@ Dispersion correction           -0.016199959
                         # Fix our internal states to match.
                         self.sort_et()
 
+                    # convert to wavenumber to be consistent w/ 1.7.2
+                    etenergies = [utils.convertor(x, "hartree", "wavenumber") for x in etenergies]
+
                     # Determine if these energies are same as those previously parsed.
                     if len(etenergies) == len(self.etenergies) and numpy.allclose(
                         etenergies, self.etenergies
