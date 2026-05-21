@@ -951,7 +951,7 @@ Dispersion correction           -0.016199959
             def continue_orbital_section(line: str) -> bool:
                 # terminated by ------
                 # OR has *Only the first 10 virtual orbitals were printed.
-                return len(line) > 20 and line[:5] not in ("*Only", "Total")
+                return len(line) > 25 and line[:5] not in ("*Only", "Total")
 
             line = next(inputfile)
             while continue_orbital_section(line):
