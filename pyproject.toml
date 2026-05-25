@@ -55,6 +55,7 @@ bridges = [
 ]
 dev = ["cclib[bridges,docs,test-infrastructure]"]
 docs = [
+    "build",
     "sphinx",
     "sphinx_rtd_theme",
 ]
