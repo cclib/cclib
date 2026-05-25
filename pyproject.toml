@@ -50,7 +50,6 @@ bridges = [
     "chemfiles",
     "pandas",
     "pyscf",
-    "pyberny",
     "geometric",
     "qc-iodata>=1.0.0a2",
 ]
