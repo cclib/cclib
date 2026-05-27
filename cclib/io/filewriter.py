@@ -42,9 +42,7 @@ if sys.version_info.minor >= 9:
 else:
     from typing import Iterable
 
-
-class MissingAttributeError(Exception):
-    pass
+from cclib import MissingAttributeError
 
 
 class Writer(ABC):

@@ -13,9 +13,7 @@ if TYPE_CHECKING:
     from cclib.parser.data import ccData
     from cclib.progress import Progress
 
-
-class MissingAttributeError(Exception):
-    pass
+from cclib import MissingAttributeError
 
 
 class Method:

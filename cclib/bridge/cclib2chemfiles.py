@@ -7,12 +7,9 @@
 from collections import defaultdict
 from typing import Optional
 
+from cclib import MissingAttributeError
 from cclib.parser.data import ccData
 from cclib.parser.utils import PeriodicTable, find_package
-
-
-class MissingAttributeError(Exception):
-    pass
 
 
 _found_chemfiles = find_package("chemfiles")

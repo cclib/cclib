@@ -8,7 +8,7 @@
 import os
 
 import cclib
-from cclib.io.filewriter import MissingAttributeError
+from cclib import MissingAttributeError
 from cclib.io.moldenwriter import MoldenReformatter, round_molden
 
 import pytest

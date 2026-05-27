@@ -10,8 +10,9 @@ import os
 import sys
 from typing import Type
 
+from cclib import MissingAttributeError
 from cclib.method import CSPA, LPA, MPA, OPA, Bickelhaupt
-from cclib.method.calculationmethod import Method, MissingAttributeError
+from cclib.method.calculationmethod import Method
 from cclib.parser import Gaussian
 
 import numpy

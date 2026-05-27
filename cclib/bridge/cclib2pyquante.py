@@ -14,10 +14,7 @@ import numpy
 if TYPE_CHECKING:
     from cclib.parser.data import ccData
 
-
-class MissingAttributeError(Exception):
-    pass
-
+from cclib import MissingAttributeError
 
 _found_pyquante2 = find_package("pyquante2")
 if _found_pyquante2:
