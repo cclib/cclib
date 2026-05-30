@@ -122,7 +122,7 @@ class gbasis(base_parser):
     @staticmethod
     def ORCA(file_handler, ccdata) -> Optional[dict]:
         line = file_handler.last_line
-        if not "gbasis_tmp_atnames" in ccdata.parser_state:
+        if "gbasis_tmp_atnames" not in ccdata.parser_state:
             return None
         # Basis set information
         # ORCA prints this out in a somewhat indirect fashion.

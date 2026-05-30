@@ -145,22 +145,17 @@ class atombasis(base_parser):
             return None
         if line[0:18] == "MOLECULAR ORBITALS":
             file_handler.skip_lines(["dashes"], virtual=True)
-            #constructed_aonames = []
             constructed_atombasis = [[] for i in range(ccdata.natom)]
-            #constructed_mocoeffs = [numpy.zeros((ccdata.nbasis, ccdata.nbasis), "d")]
             for spin in range(len(ccdata.moenergies)):
                 if spin == 1:
                     file_handler.skip_lines(["blank"], virtual=True)
                 for i in range(0, ccdata.nbasis, 6):
-                    #self.updateprogress(inputfile, "Coefficients")
                     file_handler.skip_lines(["numbers", "energies", "occs", "d"], virtual=True)
                     for j in range(ccdata.nbasis):
                         line = file_handler.virtual_next()
                         # Only need this in the first iteration.
                         if spin == 0 and i == 0:
-                            atomname = line[3:5].split()[0]
                             num = int(line[0:3])
-                            orbital = line.split()[1].upper()
                             constructed_atombasis[num].append(j)
             constructed_data = {atombasis.__name__: constructed_atombasis}
             return constructed_data

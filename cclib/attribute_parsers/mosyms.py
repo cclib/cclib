@@ -30,11 +30,11 @@ def gaussian_normalizesym(label):
     ans = label.replace("U", "u").replace("G", "g")
     return ans
 
-def orca_normalizesym(label):
-        """ORCA does not require normalizing symmetry labels."""
-        return label
 
- 
+def orca_normalizesym(label):
+    """ORCA does not require normalizing symmetry labels."""
+    return label
+
 
 def qchem_parse_orbital_energies_and_symmetries(file_handler):
     """Parse the 'Orbital Energies (a.u.)' block appearing after SCF converges,
@@ -209,14 +209,10 @@ class mosyms(base_parser):
             uses_symmetry = ccdata.parser_state["uses_symmetry"]
         if line[0:16] == "ORBITAL ENERGIES":
             file_handler.skip_lines(["d", "text", "text"], virtual=True)
-            #constructed_mooccnos = [[]]
-            #constructed_moenergies = [[]]
             constructed_mosyms = [[]]
             line = file_handler.virtual_next()
             while len(line) > 20:  # restricted calcs are terminated by ------
                 info = line.split()
-                #mooccno = int(float(info[1]))
-                #moenergy = float(info[2])
                 mosym = "A"
                 if uses_symmetry:
                     mosym = orca_normalizesym(info[4].split("-")[1])
@@ -226,24 +222,17 @@ class mosyms(base_parser):
             # handle beta orbitals for UHF
             if line[17:35] == "SPIN DOWN ORBITALS":
                 file_handler.skip_lines(["text"], virtual=True)
-                #constructed_mooccnos.append([])
-                #constructed_moenergies.append([])
                 constructed_mosyms.append([])
                 line = file_handler.virtual_next()
                 while len(line) > 20:  # actually terminated by ------
                     info = line.split()
-                    #mooccno = int(float(info[1]))
-                    #moenergy = float(info[2])
                     mosym = "A"
                     if uses_symmetry:
                         mosym = orca_normalizesym(info[4].split("-")[1])
-                    #constructed_mooccnos[1].append(mooccno)
-                    #constructed_moenergies[1].append(moenergy)
                     constructed_mosyms[1].append(mosym)
                     line = file_handler.virtual_next()
             return {mosyms.__name__: constructed_mosyms}
         return None
-
 
     @staticmethod
     def parse(file_handler, program: str, ccdata) -> Optional[dict]:

@@ -52,8 +52,8 @@ class charge(base_parser):
         if not base_parser.check_dependencies(dependency_list, ccdata, "charge"):
             return None
         if "input_file_contents" in ccdata.metadata:
-            #parsed from inputfile content
-            lines = ccdata.metdata["input_file_contents"].split('\n')
+            # parsed from inputfile content
+            lines = ccdata.metdata["input_file_contents"].split("\n")
             lines_iter = iter(lines[:-1])
             for line in lines_iter:
                 line = line.strip()

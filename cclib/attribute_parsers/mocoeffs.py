@@ -2,9 +2,12 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
+import re
 from typing import Optional
 
 from cclib.attribute_parsers.base_parser import base_parser
+
+import numpy
 
 
 class mocoeffs(base_parser):
@@ -100,7 +103,7 @@ class mocoeffs(base_parser):
                     file_handler.skip_lines(["blank"], virtual=True)
                     constructed_mocoeffs.append(numpy.zeros((ccdata.nbasis, ccdata.nbasis), "d"))
                 for i in range(0, ccdata.nbasis, 6):
-                    #self.updateprogress(inputfile, "Coefficients")
+                    # self.updateprogress(inputfile, "Coefficients")
                     file_handler.skip_lines(["numbers", "energies", "occs", "d"], virtual=True)
                     for j in range(ccdata.nbasis):
                         line = file_handler.virtual_next()
@@ -109,11 +112,12 @@ class mocoeffs(base_parser):
                         coeffs = re.findall(r"-?\d+\.\d{6}", line)
                         # Something is very wrong if this does not hold.
                         assert len(coeffs) <= 6
-                        constructed_mocoeffs[spin][i : i + len(coeffs), j] = [float(c) for c in coeffs]
+                        constructed_mocoeffs[spin][i : i + len(coeffs), j] = [
+                            float(c) for c in coeffs
+                        ]
             constructed_data = {mocoeffs.__name__: constructed_mocoeffs}
             return constructed_data
         return None
-
 
     @staticmethod
     def parse(file_handler, program: str, ccdata) -> Optional[dict]:
