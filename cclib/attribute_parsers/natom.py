@@ -22,6 +22,10 @@ class natom(base_parser):
         # stop at those to get the right atom count.
         # Also, in older versions there is bo blank line (G98 regressions),
         # so we need to watch out for leaving the link.
+        # Don't reset this all the time
+        dependency_list = ["natom"]
+        if base_parser.check_dependencies(dependency_list, ccdata, "natom"):
+            return None
         dependency_list = ["atomnos"]
         if base_parser.check_dependencies(dependency_list, ccdata, "natom"):
             return {natom.__name__: len(ccdata.atomnos)}
@@ -29,6 +33,10 @@ class natom(base_parser):
     @staticmethod
     def ORCA(file_handler, ccdata) -> Optional[dict]:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
+        # Don't reset this all the time
+        dependency_list = ["natom"]
+        if base_parser.check_dependencies(dependency_list, ccdata, "natom"):
+            return None
         dependency_list = ["atomnos"]
         if base_parser.check_dependencies(dependency_list, ccdata, "natom"):
             return {natom.__name__: len(ccdata.atomnos)}
@@ -37,6 +45,10 @@ class natom(base_parser):
     @staticmethod
     def psi4(file_handler, ccdata) -> Optional[dict]:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
+        # Don't reset this all the time
+        dependency_list = ["natom"]
+        if base_parser.check_dependencies(dependency_list, ccdata, "natom"):
+            return None
         dependency_list = ["atomnos"]
         if base_parser.check_dependencies(dependency_list, ccdata, "natom"):
             return {natom.__name__: len(ccdata.atomnos)}
@@ -45,6 +57,10 @@ class natom(base_parser):
     @staticmethod
     def qchem(file_handler, ccdata) -> Optional[dict]:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
+        # Don't reset this all the time
+        dependency_list = ["natom"]
+        if base_parser.check_dependencies(dependency_list, ccdata, "natom"):
+            return None
         dependency_list = ["atomnos"]
         if base_parser.check_dependencies(dependency_list, ccdata, "natom"):
             return {natom.__name__: len(ccdata.atomnos)}

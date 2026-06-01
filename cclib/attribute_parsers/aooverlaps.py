@@ -57,13 +57,15 @@ class aooverlaps(base_parser):
                 dashes = file_handler.virtual_next()  # noqa: F841
                 constructed_aooverlaps = np.zeros((ccdata.nbasis, ccdata.nbasis), "d")
                 for i in range(0, ccdata.nbasis, 6):
-                    #self.updateprogress(inputfile, "Overlap")
+                    # self.updateprogress(inputfile, "Overlap")
                     header = file_handler.virtual_next()
                     size = len(header.split())
                     for j in range(ccdata.nbasis):
                         line = file_handler.virtual_next()
                         broken = line.split()
-                        constructed_aooverlaps[j, i : i + size] = list(map(float, broken[1 : size + 1]))
+                        constructed_aooverlaps[j, i : i + size] = list(
+                            map(float, broken[1 : size + 1])
+                        )
                 return {aooverlaps.__name__: constructed_aooverlaps}
         return None
 

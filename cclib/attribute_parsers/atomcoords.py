@@ -35,7 +35,7 @@ class atomcoords(base_parser):
 
     @staticmethod
     def ORCA(file_handler, ccdata) -> Optional[dict]:
-        """ Grab cartesian coordinates
+        """Grab cartesian coordinates
         ---------------------------------
         CARTESIAN COORDINATES (ANGSTROEM)
         ---------------------------------
@@ -55,9 +55,8 @@ class atomcoords(base_parser):
                     curr_atomcoords.append([float(x), float(y), float(z)])
                 line = file_handler.virtual_next()
             constructed_atomcoords.append(curr_atomcoords)
-            return {atomcoords.__name__ : np.array(constructed_atomcoords)}
+            return {atomcoords.__name__: np.array(constructed_atomcoords)}
         return None
-
 
     @staticmethod
     def psi4(file_handler, ccdata) -> Optional[dict]:

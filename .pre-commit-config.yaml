@@ -6,7 +6,7 @@ repos:
       - id: check-hooks-apply
       - id: check-useless-excludes
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: "v4.6.0"
+    rev: "v6.0.0"
     hooks:
       - id: trailing-whitespace
         exclude: |
@@ -128,20 +128,20 @@ repos:
       - id: no-commit-to-branch
         args: [--branch, main, --branch, master]
   - repo: https://github.com/Mateusz-Grzelinski/actionlint-py
-    rev: "v1.7.1.15"
+    rev: "v1.7.12.24"
     hooks:
       - id: actionlint
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.17.0
+    rev: v3.21.2
     hooks:
       - id: pyupgrade
         args: [--py37-plus]
   - repo: https://github.com/PyCQA/isort
-    rev: "5.13.2"
+    rev: "9.0.0a3"
     hooks:
       - id: isort
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.6.5
+    rev: v0.15.15
     hooks:
       - id: ruff-format
       - id: ruff
@@ -158,7 +158,7 @@ repos:
   #         - types-setuptools
   #       args: []
   - repo: https://github.com/Lucas-C/pre-commit-hooks
-    rev: v1.5.5
+    rev: v1.5.6
     hooks:
       - id: insert-license
         files: \.py$

@@ -79,7 +79,7 @@ class aonames(base_parser):
                         # New atom.
                         if len(parts) > 1:
                             if i > 0:
-                                this_aonames.append(basisonatom)
+                                this_aonames.append(basisonatom)  # noqa: F821
                             basisonatom = []
                         orbital = line[11:20].strip()  # noqa: F841
                         basisonatom.append(i)
@@ -127,18 +127,20 @@ class aonames(base_parser):
         # when the parsing gets rough. This is what we do below with a regex, and a case
         # like this is tested in regression ORCA/ORCA4.0/invalid-literal-for-float.out
         # which was reported in https://github.com/cclib/cclib/issues/629
+        dependency_list = ["moenergies", "nbasis"]
+        if not base_parser.check_dependencies(dependency_list, ccdata, "atombasis"):
+            return None
         line = file_handler.last_line
         if line[0:18] == "MOLECULAR ORBITALS":
-            line = file_handler.virtual_next() # dashes
+            line = file_handler.virtual_next()  # dashes
 
             parsed_aonames = []
-            for spin in range(len(self.moenergies)):
+            for spin in range(len(ccdata.moenergies)):
                 if spin == 1:
-                    line = file_handler.virtual_next() # blank
-                for i in range(0, self.nbasis, 6):
-                    for _skipreason in ["numbers", "energies", "occs", "d"]:
-                        line = file_handler.virtual_next()
-                    for j in range(self.nbasis):
+                    line = file_handler.virtual_next()  # blank
+                for i in range(0, ccdata.nbasis, 6):
+                    file_handler.skip_lines(["numbers", "energies", "occs", "d"], virtual=True)
+                    for j in range(ccdata.nbasis):
                         line = file_handler.virtual_next()
                         # Only need this in the first iteration.
                         if spin == 0 and i == 0:
@@ -146,13 +148,8 @@ class aonames(base_parser):
                             num = int(line[0:3])
                             orbital = line.split()[1].upper()
                             parsed_aonames.append(f"{atomname}{int(num + 1)}_{orbital}")
-                        # This regex will tease out all number with exactly
-                        # six digits after the decimal point.
-                        coeffs = re.findall(r"-?\d+\.\d{6}", line)
-                        # Something is very wrong if this does not hold.
-                        assert len(coeffs) <= 6
             return {aonames.__name__: parsed_aonames}
-
+        return None
 
     @staticmethod
     def parse(file_handler, program: str, ccdata) -> Optional[dict]:

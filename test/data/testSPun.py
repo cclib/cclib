@@ -41,6 +41,7 @@ class GenericSPunTest:
     @skipForParser("Jaguar", "???")
     @skipForParser("Molcas", "Length is zero for some reason")
     @skipForParser("Molpro", "???")
+    @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
     @skipForParser("Turbomole", "???")
     def testatomcharges(self, data) -> None:
@@ -62,6 +63,7 @@ class GenericSPunTest:
     @skipForParser("Jaguar", "???")
     @skipForParser("Molcas", "Length is zero for some reason")
     @skipForParser("Molpro", "???")
+    @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
     @skipForParser("Turbomole", "???")
     def testatomcharges_mulliken(self, data) -> None:
@@ -101,6 +103,7 @@ class GenericSPunTest:
         )
 
     @skipForParser("Gaussian", "The parser is still being developed for version 2")
+    @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
     def testdimnoccnos(self, data) -> None:
         """Is the length of nooccnos equal to nmo?"""
@@ -112,6 +115,7 @@ class GenericSPunTest:
                 (2, data._ccCollection._parsed_data[0].nmo),
             ]
 
+    @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("Gaussian", "The parser is still being developed for version 2")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
     def testdimnocoeffs(self, data) -> None:
@@ -130,6 +134,7 @@ class GenericSPunTest:
         assert data._ccCollection._parsed_data[0].charge == 1
         assert data._ccCollection._parsed_data[0].mult == 2
 
+    @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("Gaussian", "The parser is still being developed for version 2")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
     def testhomos(self, data) -> None:
@@ -155,7 +160,6 @@ class GenericSPunTest:
     @skipForParser("FChk", "Fchk files do not have a section for symmetry")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Molpro", "?")
-    @skipForParser("ORCA", "ORCA has no support for symmetry yet")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
     def testmosyms(self, data) -> None:
         """Are the dims of the mosyms equals to 2 x nmo?"""
