@@ -1,3 +1,3 @@
-pyberny @ git+https://github.com/jhrmnn/pyberny.git@23576f4027978de0668733e24516121ceb846ee3
+pyberny @ git+https://github.com/cclib/pyberny.git@8142ce1bc468664aef18e88099b03734bff982e5
 pyquante2 @ git+https://github.com/cclib/pyquante2.git@cythonize-becke
 pyscf-properties @ git+https://github.com/pyscf/properties
