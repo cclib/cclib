@@ -38,7 +38,10 @@ class NWChem(logfileparser.Logfile):
 
     @staticmethod
     def name2element(lbl: str) -> str:
-        return "".join(itertools.takewhile(str.isalpha, str(lbl)))
+        # NWChem echoes atom names with the capitalization used in the input
+        # (e.g. "n" or "FE"), while these are looked up against the standard
+        # symbols in PeriodicTable, so normalize the case.
+        return "".join(itertools.takewhile(str.isalpha, str(lbl))).capitalize()
 
     def extract(self, inputfile: "FileWrapper", line: str) -> None:
         """Extract information from the file object inputfile."""
@@ -106,7 +109,9 @@ class NWChem(logfileparser.Logfile):
                 tokens = next(inputfile).split()
                 mtch = re.search(r"[a-zA-Z]+", tokens[0])
                 assert mtch is not None
-                name2mass[mtch.group()] = float(tokens[1])
+                # The atom name is echoed as typed in the input (e.g. "n"),
+                # but is looked up below via the standard PeriodicTable symbol.
+                name2mass[mtch.group().capitalize()] = float(tokens[1])
             masses = [name2mass[self.table.element[number]] for number in self.atomnos]
             self.set_attribute("atommasses", masses)
 
@@ -271,7 +276,9 @@ class NWChem(logfileparser.Logfile):
                     atomelement = self.name2element(atomname)
                     self.metadata["basis_set"] = desc
 
-                    self.shells[atomname] = types
+                    # Keyed by element since after_parsing looks the types up
+                    # via PeriodicTable symbols when building aonames.
+                    self.shells[atomelement] = types
                     atombasis_dict[atomelement] = int(funcs)
                     line = next(inputfile)
 
@@ -289,9 +296,13 @@ class NWChem(logfileparser.Logfile):
             self.skip_lines(inputfile, ["d", "b"])
             if not hasattr(self, "symlabels"):
                 self.symlabels = []
-            for _ in range(self.pg_order):
-                line = next(inputfile)
+            # One line per irreducible representation; only for abelian groups
+            # does their number equal the group order (e.g. D4h: order 16 but
+            # 10 irreps), so read until the blank line ending the block.
+            line = next(inputfile)
+            while line.strip():
                 self.symlabels.append(self.normalisesym(line.split()[0]))
+                line = next(inputfile)
 
         # This section contains general parameters for Hartree-Fock calculations,
         # which do not contain the 'General Information' section like most jobs.

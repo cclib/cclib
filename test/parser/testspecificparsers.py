@@ -158,3 +158,81 @@ class NormalisesymTest:
         labels = ["a", "a1", "ag"]
         ref = ["A", "A1", "Ag"]
         assert list(map(sym, labels)) == ref
+
+
+def _nwchem_n2_output(symbol: str) -> str:
+    """A minimal NWChem logfile for N2, with atoms named as typed in the input.
+
+    Modeled on the output attached to https://github.com/cclib/cclib/issues/1801;
+    NWChem echoes atom names with the capitalization the user typed (e.g. "n"),
+    and D4h is a non-abelian group whose order (16) exceeds its irrep count (10).
+    """
+    return f"""\
+                             Geometry "geometry" -> ""
+                             -------------------------
+
+ Output coordinates in angstroms (scale by  1.889725989 to convert to a.u.)
+
+  No.       Tag          Charge          X              Y              Z
+ ---- ---------------- ---------- -------------- -------------- --------------
+    1 {symbol}                    7.0000     0.00000000     0.00000000    -0.54000000
+    2 {symbol}                    7.0000     0.00000000     0.00000000     0.54000000
+
+      Atomic Mass
+      -----------
+
+      {symbol}                 14.003070
+
+
+      Symmetry information
+      --------------------
+
+ Group name             D4h
+ Group number             28
+ Group order              16
+ No. of unique centers     1
+
+ Summary of "ao basis" -> "ao basis" (cartesian)
+ ------------------------------------------------------------------------------
+       Tag                 Description            Shells   Functions and Types
+ ---------------- ------------------------------  ------  ---------------------
+ {symbol}                          cc-pvdz                  6       15   3s2p1d
+
+
+      Symmetry analysis of basis
+      --------------------------
+
+        a1g         7
+        a1u         0
+        a2g         0
+        a2u         7
+        b1g         1
+        b1u         1
+        b2g         1
+        b2u         1
+        eg          6
+        eu          6
+
+ Forming initial guess at       0.0s
+"""
+
+
+class NWChemTest:
+    def test_atom_names_as_typed_in_input(self) -> None:
+        """NWChem echoes atom names as typed (e.g. lowercase "n"), while masses,
+        atombasis and aonames are resolved via standard PeriodicTable symbols (#1801)."""
+        from cclib.parser.nwchemparser import NWChem
+
+        data = NWChem(io.StringIO(_nwchem_n2_output("n"))).parse()
+        assert data.atommasses.tolist() == [14.003070, 14.003070]
+        assert data.atombasis == [list(range(15)), list(range(15, 30))]
+        assert data.aonames[:4] == ["N1_1S", "N1_2S", "N1_3S", "N1_2PX"]
+        assert len(data.aonames) == 30
+
+    def test_symlabels_nonabelian_group(self) -> None:
+        """The symmetry analysis block has one line per irrep, which is fewer
+        than the group order for non-abelian groups (D4h: 10 irreps, order 16)."""
+        from cclib.parser.nwchemparser import NWChem
+
+        data = NWChem(io.StringIO(_nwchem_n2_output("N"))).parse()
+        assert data.atommasses.tolist() == [14.003070, 14.003070]
