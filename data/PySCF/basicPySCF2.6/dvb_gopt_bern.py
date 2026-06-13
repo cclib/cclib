@@ -59,13 +59,24 @@ def calculate():
     opt_steps = []
 
     def store_opt(_locals):
+        params = _locals["optimizer"]._state.params
+        if isinstance(params, dict):
+            gradient_max = params["gradientmax"]
+            gradient_rms = params["gradientrms"]
+            step_max = params["stepmax"]
+            step_rms = params["steprms"]
+        else:
+            gradient_max = params.gradientmax
+            gradient_rms = params.gradientrms
+            step_max = params.stepmax
+            step_rms = params.steprms
         opt_steps.append(
             {
                 # Convergence criteria (not used yet).
-                "gradient_max": _locals["optimizer"]._state.params["gradientmax"],
-                "gradient_rms": _locals["optimizer"]._state.params["gradientrms"],
-                "step_max": _locals["optimizer"]._state.params["stepmax"],
-                "step_rms": _locals["optimizer"]._state.params["steprms"],
+                "gradient_max": gradient_max,
+                "gradient_rms": gradient_rms,
+                "step_max": step_max,
+                "step_rms": step_rms,
                 # Values at this opt step.
                 "energy": _locals["energy"],
                 "gradients": _locals["gradients"],

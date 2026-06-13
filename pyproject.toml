@@ -22,7 +22,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Chemistry",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 dependencies = [
     "numpy",
     "packaging>=19.0",
@@ -48,14 +48,15 @@ bridges = [
     "ase>=3.21",
     "biopython",
     "chemfiles",
+    "openbabel-wheel",
     "pandas",
     "pyscf",
-    "pyberny",
     "geometric",
     "qc-iodata>=1.0.0a2",
 ]
 dev = ["cclib[bridges,docs,test-infrastructure]"]
 docs = [
+    "build",
     "sphinx",
     "sphinx_rtd_theme",
 ]

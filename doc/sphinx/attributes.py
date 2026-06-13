@@ -6,6 +6,8 @@
 """Generate the attributes.rst and attributes_dev.rst files from the
 ccData docstring that describes attributes."""
 
+from textwrap import dedent
+
 import cclib
 
 from docs_common import check_cclib
@@ -13,7 +15,7 @@ from docs_common import check_cclib
 check_cclib(cclib)
 
 
-def generate_attributes():
+def generate_attributes() -> str:
     """Generate a string containing a reStructuredText table
     representation of the ccData docstring, which contains a list of
     all supported attributes with
@@ -26,8 +28,8 @@ def generate_attributes():
 
     # Need to parse the ccData docstring, since only that currently
     # contains all the information needed for this table.
-    data_doc = cclib.parser.data.ccData.__doc__
-    attributes = [line for line in data_doc.split("\n") if line[:8].strip() == ""]
+    data_doc = dedent(cclib.parser.data.ccData.__doc__)
+    attributes = [line for line in data_doc.split("\n") if line[:4].strip() == ""]
     attributes = [line for line in attributes if "--" in line]
 
     names = []
