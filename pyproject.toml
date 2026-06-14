@@ -139,12 +139,15 @@ ignore_missing_imports = true
 [tool.ruff]
 line-length = 100
 src = ["cclib"]
-target-version = "py37"
 
 [tool.ruff.format]
 skip-magic-trailing-comma = true
 
 [tool.ruff.lint]
+extend-select = [
+    "UP",  # pyupgrade
+]
+
 [tool.ruff.lint.isort]
 lines-after-imports = 2
 section-order = [

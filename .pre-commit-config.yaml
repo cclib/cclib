@@ -114,11 +114,6 @@ repos:
       - id: actionlint
         additional_dependencies:
           - "github.com/wasilibs/go-shellcheck/cmd/shellcheck@v0.11.1"
-  - repo: https://github.com/asottile/pyupgrade
-    rev: v3.21.2
-    hooks:
-      - id: pyupgrade
-        args: [--py37-plus]
   - repo: https://github.com/PyCQA/isort
     rev: "8.0.1"
     hooks:
