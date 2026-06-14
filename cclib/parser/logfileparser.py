@@ -17,6 +17,7 @@ from cclib.parser.logfilewrapper import FileWrapper
 
 import numpy
 
+
 if TYPE_CHECKING:
     from cclib.progress import Progress
 

@@ -13,6 +13,7 @@ from cclib.method import Electrons, orbitals
 
 import numpy
 
+
 Attribute = namedtuple("Attribute", ["type", "json_key", "attribute_path"])
 
 

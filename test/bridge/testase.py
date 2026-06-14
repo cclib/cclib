@@ -15,6 +15,7 @@ from cclib.parser.utils import find_package
 import numpy as np
 import pytest
 
+
 if TYPE_CHECKING:
     from pathlib import Path
 

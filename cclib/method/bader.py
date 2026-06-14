@@ -12,6 +12,7 @@ from cclib.method.volume import electrondensity_spin
 
 import numpy
 
+
 # Distance between two adjacent grids (sqrt[2] or sqrt[3] for uniform Cartesian grid).
 _griddist = numpy.array(
     [

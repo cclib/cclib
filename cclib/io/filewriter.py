@@ -15,6 +15,7 @@ from cclib.parser.utils import PeriodicTable, find_package
 
 import numpy
 
+
 _has_openbabel = find_package("openbabel")
 if _has_openbabel:
     from cclib.bridge import makeopenbabel

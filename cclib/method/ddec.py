@@ -15,6 +15,7 @@ from cclib.parser.utils import convertor
 
 import numpy
 
+
 if TYPE_CHECKING:
     from cclib.method.volume import Volume
     from cclib.parser.data import ccData

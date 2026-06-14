@@ -13,6 +13,7 @@ from cclib.parser.utils import convertor, find_package
 
 import numpy
 
+
 if TYPE_CHECKING:
     from pathlib import Path
 

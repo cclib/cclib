@@ -12,6 +12,7 @@ from cclib.parser import utils
 import numpy
 import pytest
 
+
 if TYPE_CHECKING:
     from cclib.parser.data import ccData
 

@@ -14,6 +14,7 @@ import pytest
 from common import is_optdone, is_optnew
 from skip import skipForParser
 
+
 if TYPE_CHECKING:
     from cclib.parser.data import ccData
 

@@ -13,6 +13,7 @@ import numpy
 from common import get_minimum_carbon_separation, is_optdone, is_optnew, is_optunknown
 from skip import skipForLogfile, skipForParser
 
+
 if TYPE_CHECKING:
     from cclib.parser.data import ccData
 

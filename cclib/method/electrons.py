@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING, Optional
 
 from cclib.method.calculationmethod import Method
 
+
 if TYPE_CHECKING:
     from cclib.parser.data import ccData
     from cclib.progress import Progress

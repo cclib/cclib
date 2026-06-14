@@ -13,6 +13,7 @@ from cclib.parser.utils import convertor
 import numpy as np
 import scipy.constants as spc
 
+
 if TYPE_CHECKING:
     from cclib.parser.logfilewrapper import FileWrapper
 

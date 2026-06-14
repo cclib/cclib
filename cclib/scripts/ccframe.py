@@ -14,6 +14,7 @@ from typing import Iterable, Optional
 from cclib.io import ccframe, ccopen
 from cclib.parser.utils import find_package
 
+
 _has_pandas = find_package("pandas")
 if _has_pandas:
     import pandas as pd

@@ -14,6 +14,7 @@ import numpy
 import periodictable
 import scipy.spatial
 
+
 if TYPE_CHECKING:
     from cclib.parser.logfilewrapper import FileWrapper
 

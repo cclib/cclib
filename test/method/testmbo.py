@@ -14,6 +14,7 @@ from cclib.parser import Gaussian
 
 import numpy
 
+
 sys.path.insert(1, "..")
 
 from ..test_data import getdatafile
