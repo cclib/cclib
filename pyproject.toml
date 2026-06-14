@@ -78,13 +78,6 @@ build-backend = "setuptools.build_meta"
 [tool.coverage.run]
 branch = true
 
-[tool.isort]
-profile = "black"
-line_length = 100
-# default is FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER
-# Placing third-party imports at the end makes their inclusion more obvious
-sections = ["FUTURE", "STDLIB", "FIRSTPARTY", "THIRDPARTY", "LOCALFOLDER"]
-
 [tool.mypy]
 disable_error_code = [
     "attr-defined",
@@ -138,18 +131,20 @@ ignore_missing_imports = true
 
 [tool.ruff]
 line-length = 100
-src = ["cclib"]
 
 [tool.ruff.format]
 skip-magic-trailing-comma = true
 
 [tool.ruff.lint]
 extend-select = [
+    "I",  # isort
     "UP",  # pyupgrade
 ]
 
 [tool.ruff.lint.isort]
 lines-after-imports = 2
+# default is FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER
+# Placing third-party imports at the end makes their inclusion more obvious
 section-order = [
     "future",
     "standard-library",
