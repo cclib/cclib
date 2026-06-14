@@ -48,7 +48,7 @@ bridges = [
     "ase>=3.21",
     "biopython",
     "chemfiles",
-    "openbabel-wheel",
+    "openbabel",
     "pandas",
     "pyscf",
     "geometric",
