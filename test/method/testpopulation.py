@@ -16,6 +16,7 @@ from cclib.parser import Gaussian
 
 import numpy
 
+
 sys.path.insert(1, "..")
 
 import pytest

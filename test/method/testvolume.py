@@ -13,6 +13,7 @@ from cclib.parser import Gaussian, Psi4
 
 import numpy
 
+
 sys.path.insert(1, "..")
 
 from numpy.testing import assert_allclose

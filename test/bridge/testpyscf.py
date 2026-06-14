@@ -3,10 +3,9 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
-from test.test_data import getdatafile
-
 from cclib.bridge import cclib2pyscf
 from cclib.parser.utils import convertor, find_package
+from test.test_data import getdatafile
 
 import numpy as np
 

@@ -11,6 +11,7 @@ import numpy
 import pytest
 from skip import skipForParser
 
+
 if TYPE_CHECKING:
     from cclib.parser.data import ccData
 

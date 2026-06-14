@@ -11,6 +11,7 @@ from cclib.parser.utils import find_package
 
 import numpy
 
+
 if TYPE_CHECKING:
     from cclib.parser.data import ccData
 

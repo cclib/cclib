@@ -16,6 +16,7 @@ from cclib.parser import DALTON, GAMESS, Gaussian, Molcas, QChem, ccData, utils
 import numpy as np
 import pytest
 
+
 sys.path.insert(1, "..")
 
 from ..test_data import getdatafile

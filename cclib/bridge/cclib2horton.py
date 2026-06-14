@@ -10,6 +10,7 @@ from cclib.parser.utils import convertor, find_package
 
 import numpy
 
+
 _found_iodata = find_package("iodata")
 
 # Detect whether iodata (part of horton 3) is present or not

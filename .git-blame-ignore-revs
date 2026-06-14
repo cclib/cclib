@@ -26,3 +26,5 @@ e986fd9bb37ca0113707f88f6fea7f2318671cdd
 47ee1d84e2325b15c9e5508d6d48ae1f49e507b3
 # Apply tombi
 c79af1b4bcdb62bb9efe71a240b908f41e005b84
+# Apply isort via ruff
+a1a30a14674ee54579c8e4bdade3ecc9b3bb58b9

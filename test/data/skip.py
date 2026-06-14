@@ -11,6 +11,7 @@ from typing import TYPE_CHECKING, Callable
 
 import pytest
 
+
 if TYPE_CHECKING:
     from cclib.parser.data import ccData
 

@@ -12,6 +12,7 @@ from cclib.parser.gaussianparser import parse_version as gaussian_parse_version
 
 import numpy
 
+
 if TYPE_CHECKING:
     from cclib.parser.logfilewrapper import FileWrapper
 

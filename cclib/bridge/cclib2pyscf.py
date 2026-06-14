@@ -16,6 +16,7 @@ from cclib.parser.utils import PeriodicTable, convertor, find_package
 import numpy as np
 import periodictable
 
+
 l_sym2num = {"S": 0, "P": 1, "D": 2, "F": 3, "G": 4}
 
 

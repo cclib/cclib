@@ -46,6 +46,7 @@ from cclib.parser.turbomoleparser import Turbomole
 from cclib.parser.utils import find_package
 from cclib.parser.xtbparser import XTB
 
+
 _has_cclib2openbabel = find_package("openbabel")
 if _has_cclib2openbabel:
     from cclib.bridge import cclib2openbabel

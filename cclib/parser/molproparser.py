@@ -12,6 +12,7 @@ from cclib.parser import logfileparser, utils
 
 import numpy
 
+
 if TYPE_CHECKING:
     pass
 

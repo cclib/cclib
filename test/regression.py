@@ -50,6 +50,7 @@ import scipy.constants as spc
 from packaging.version import Version
 from packaging.version import parse as parse_version
 
+
 # This assume that the cclib-data repository is located at a specific location
 # within the cclib repository. It would be better to figure out a more natural
 # way to import the relevant tests from cclib here.
@@ -145,6 +146,7 @@ from .data.testvib import (
     Psi4HFIRTest,
     QChemRamanTest,
 )
+
 
 if TYPE_CHECKING:
     from cclib.parser.logfileparser import Logfile

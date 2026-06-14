@@ -21,6 +21,7 @@ from typing import IO, List, Tuple
 from urllib.error import URLError
 from urllib.request import urlopen
 
+
 # Regular expression for validating URLs
 URL_PATTERN = re.compile(
     r"^(?:http|ftp)s?://"  # http:// or https://

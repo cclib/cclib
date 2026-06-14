@@ -14,6 +14,7 @@ from cclib.io.wfxwriter import _list_format, _section
 import numpy as np
 import pytest
 
+
 __filedir__ = os.path.dirname(__file__)
 __filepath__ = os.path.realpath(__filedir__)
 __datadir__ = os.path.join(__filepath__, "..", "..")

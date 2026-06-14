@@ -11,6 +11,7 @@ from typing import TYPE_CHECKING, Mapping
 from cclib.io import filewriter
 from cclib.parser.utils import find_package
 
+
 if TYPE_CHECKING:
     from cclib.parser.data import ccData
 

@@ -8,4 +8,5 @@ import sys
 
 from cclib.progress.textprogress import TextProgress
 
+
 Progress = TextProgress

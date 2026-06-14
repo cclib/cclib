@@ -15,6 +15,7 @@ import numpy as np
 import periodictable as pt
 import scipy.constants as spc
 
+
 if TYPE_CHECKING:
     from cclib.parser.data import ccData
     from cclib.progress import Progress

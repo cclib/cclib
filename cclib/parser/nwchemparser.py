@@ -14,6 +14,7 @@ from cclib.parser import logfileparser, utils
 import numpy
 from packaging.version import parse as parse_version
 
+
 if TYPE_CHECKING:
     from cclib.parser.logfilewrapper import FileWrapper
 

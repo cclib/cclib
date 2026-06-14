@@ -114,10 +114,6 @@ repos:
       - id: actionlint
         additional_dependencies:
           - "github.com/wasilibs/go-shellcheck/cmd/shellcheck@v0.11.1"
-  - repo: https://github.com/PyCQA/isort
-    rev: "8.0.1"
-    hooks:
-      - id: isort
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.15.17
     hooks:

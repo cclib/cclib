@@ -10,6 +10,7 @@ from cclib.parser.utils import PeriodicTable, find_package
 
 import numpy as np
 
+
 _found_biopython = find_package("Bio")
 if _found_biopython:
     from Bio.PDB.Atom import Atom
