@@ -80,7 +80,11 @@ def generate_coverage(cclib_base_dir: Path) -> str:
             # Ignore one or more checked-out cclib source trees under doc/sphinx/,
             # since there will be conftest.py multiple detection issues.
             # TODO specify in pytest config?
-            retcode = pytest.main(["--ignore=doc", "-m", "is_data"], plugins=[capture_coverage_dir])
+            nworkers = os.environ.get("PYTEST_NWORKERS")
+            pytest_args = ["--ignore=doc", "-m", "is_data"]
+            if nworkers:
+                pytest_args.extend(["-n", nworkers, "--dist", "worksteal"])
+            retcode = pytest.main(pytest_args, plugins=[capture_coverage_dir])
             sys.stdout = stdout_backup
         if retcode != 0:
             print("Unit tests did not run correctly. Check log file for errors:")
