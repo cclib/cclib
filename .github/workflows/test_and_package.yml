@@ -46,6 +46,13 @@ jobs:
       - name: Prepare conda environment
         run: |
           echo "/opt/conda/envs/cclib/bin" >> "${GITHUB_PATH}"
+      - name: Patch Open Babel dependency requirement
+        run: |
+          # The official Open Babel package doesn't provide wheels for Python
+          # versions older than 3.10, but the deprecated
+          # https://pypi.org/project/openbabel-wheel/ package does.
+          sed -i 's/openbabel/openbabel-wheel/' pyproject.toml
+        if: (matrix.container == 'shivupa/cclib-ci:py38-edge') || (matrix.container == 'shivupa/cclib-ci:py39-edge')
       - name: Install cclib
         run: |
           python -m pip install -r requirements-bridges.txt
