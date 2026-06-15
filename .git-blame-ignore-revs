@@ -28,3 +28,7 @@ e986fd9bb37ca0113707f88f6fea7f2318671cdd
 c79af1b4bcdb62bb9efe71a240b908f41e005b84
 # Apply isort via ruff
 a1a30a14674ee54579c8e4bdade3ecc9b3bb58b9
+# pre-commit: apply yamlfmt fixes
+e440b69835cc39e741f50f10a39eda1f6f8a2002
+# pre-commit: move TOML and YAML checks after Python
+b7b31cf838fc2baae968dfd81d44508688cf90d7

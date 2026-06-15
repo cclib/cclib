@@ -24,7 +24,7 @@ jobs:
         run: |
           apt-get update && apt-get install -y openssh-client
       - name: Checkout
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6
         with:
           # so versioningit can figure out the version
           fetch-depth: 0
@@ -41,7 +41,7 @@ jobs:
         run: touch doc/sphinx/_build/html/.nojekyll
       - name: Pushes to another repository
         id: push_directory
-        uses: cpina/github-action-push-to-another-repository@55306faa4ed53b815ae49e564af8cfb359d32ae2 # main
+        uses: cpina/github-action-push-to-another-repository@55306faa4ed53b815ae49e564af8cfb359d32ae2  # main
         env:
           SSH_DEPLOY_KEY: ${{ secrets.CCLIB_DOCS_KEY }}
         with:
