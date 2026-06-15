@@ -10,8 +10,11 @@ concurrency:
   group: nix-${{github.ref}}-${{github.event.pull_request.number || github.run_number}}
   cancel-in-progress: true
 
+permissions: {}
+
 jobs:
   nix-build:
+    name: Check, build, and test Nix flake
     runs-on: ubuntu-latest
     steps:
       # Install Nix on the runner
@@ -24,6 +27,8 @@ jobs:
           name: nix-qchem
       # Checkout of the current head in the working dir
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6
+        with:
+          persist-credentials: false
       - name: Check nix flake
         run: nix flake check -L
         # Disabled until https://github.com/Nix-QChem/NixOS-QChem/issues/513 is fixed

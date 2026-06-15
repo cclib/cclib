@@ -1,0 +1,7 @@
+---
+rules:
+  # This is safe because we control these images (shivupa/cclib-ci:py-*) and
+  # there is a pinned one in docs.yml that can help warn of other issues.
+  unpinned-images:
+    ignore:
+      - test_and_package.yml:30:7

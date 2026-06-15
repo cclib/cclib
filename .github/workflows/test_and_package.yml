@@ -11,9 +11,12 @@ concurrency:
   group: test-${{github.ref}}-${{github.event.pull_request.number || github.run_number}}
   cancel-in-progress: true
 
+permissions: {}
+
 jobs:
 
   run-tests:
+    name: Run tests and create distribution packages
     runs-on: ubuntu-24.04
     strategy:
       matrix:
@@ -35,6 +38,7 @@ jobs:
           # so versioningit can figure out the version
           fetch-depth: 0
           fetch-tags: true
+          persist-credentials: false
       - name: Allow repo access (see https://github.com/actions/checkout/issues/760)
         run: |
           git config --global --add safe.directory /__w/cclib/cclib
@@ -85,7 +89,7 @@ jobs:
           env | sort
           bash .github/scripts/run_pytest_pyscf.bash "$(nproc)"
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24  # v5
+        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24  # v5.4.3
         with:
           files: ./coverage-unit.xml,./coverage-regression.xml,./coverage-method.xml,./coverage-pyscf.xml
           name: codecov-cclib
@@ -115,6 +119,7 @@ jobs:
   # created from a single version, since the packages are platform and version
   # independent.
   check-installation:
+    name: Test that installation from distribution packages works
     needs:
       - run-tests
     runs-on: ubuntu-24.04

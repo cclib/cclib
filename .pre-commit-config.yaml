@@ -185,3 +185,8 @@ repos:
       - id: actionlint
         additional_dependencies:
           - "github.com/wasilibs/go-shellcheck/cmd/shellcheck@v0.11.1"
+  - repo: https://github.com/zizmorcore/zizmor-pre-commit
+    rev: "v1.25.2"
+    hooks:
+      - id: zizmor
+        args: [--no-progress, --persona=pedantic, --fix=all]
