@@ -62,8 +62,6 @@ docs = [
 ]
 test = ["cclib[bridges,docs,test-infrastructure]"]
 test-infrastructure = [
-    "pytest",
-    "coverage",
     "pytest-cov",
     "pytest-xdist",
     "pyyaml",
