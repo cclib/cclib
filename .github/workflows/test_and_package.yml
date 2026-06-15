@@ -55,6 +55,7 @@ jobs:
         if: (matrix.container == 'shivupa/cclib-ci:py38-edge') || (matrix.container == 'shivupa/cclib-ci:py39-edge')
       - name: Install cclib
         run: |
+          python tools/versioningit_conditional_disable.py
           python -m pip install -r requirements-bridges.txt
           python -m pip install '.[test]'
       - name: Filter code
