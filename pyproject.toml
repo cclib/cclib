@@ -65,6 +65,7 @@ test-infrastructure = [
     "pytest",
     "coverage",
     "pytest-cov",
+    "pytest-xdist",
     "pyyaml",
 ]
 
