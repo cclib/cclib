@@ -11,11 +11,6 @@ concurrency:
   group: test-${{github.ref}}-${{github.event.pull_request.number || github.run_number}}
   cancel-in-progress: true
 
-# For now always take the "reduced" form of the version, even for those
-# actions runs that do not push to a package index.
-env:
-  VERSIONINGIT_FOR_PACKAGE_INDEX: true
-
 jobs:
 
   run-tests:
@@ -46,6 +41,9 @@ jobs:
       - name: Prepare conda environment
         run: |
           echo "/opt/conda/envs/cclib/bin" >> "${GITHUB_PATH}"
+      - name: Prepare CI for Versioningit
+        run: |
+          python .github/scripts/prepare_ci_for_versioningit.py
       - name: Patch Open Babel dependency requirement
         run: |
           # The official Open Babel package doesn't provide wheels for Python
@@ -55,7 +53,6 @@ jobs:
         if: (matrix.container == 'shivupa/cclib-ci:py38-edge') || (matrix.container == 'shivupa/cclib-ci:py39-edge')
       - name: Install cclib
         run: |
-          python tools/versioningit_conditional_disable.py
           python -m pip install -r requirements-bridges.txt
           python -m pip install '.[test]'
       - name: Filter code
