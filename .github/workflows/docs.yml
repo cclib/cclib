@@ -6,13 +6,19 @@ name: docs push
 on:
   workflow_dispatch:
   workflow_call:
+    secrets:
+      CCLIB_DOCS_KEY:
+        required: true
 
 concurrency:
   group: docs-${{github.ref}}-${{github.event.pull_request.number || github.run_number}}
   cancel-in-progress: true
 
+permissions: {}
+
 jobs:
   build-and-push-docs:
+    name: Build documentation and push to cclib.github.io on merge
     runs-on: ubuntu-24.04
     container:
       image: shivupa/cclib-ci:py312-edge@sha256:eb3b07d699b987a3d5097fbba5f9e25c73545bfef24c16ba572f789ad37b8892
@@ -29,6 +35,7 @@ jobs:
           # so versioningit can figure out the version
           fetch-depth: 0
           fetch-tags: true
+          persist-credentials: false
       - name: Allow repo access (see https://github.com/actions/checkout/issues/760)
         run: |
           git config --global --add safe.directory /__w/cclib/cclib
@@ -41,7 +48,7 @@ jobs:
         run: touch doc/sphinx/_build/html/.nojekyll
       - name: Pushes to another repository
         id: push_directory
-        uses: cpina/github-action-push-to-another-repository@55306faa4ed53b815ae49e564af8cfb359d32ae2  # main
+        uses: cpina/github-action-push-to-another-repository@55306faa4ed53b815ae49e564af8cfb359d32ae2  # v1.7.3
         env:
           SSH_DEPLOY_KEY: ${{ secrets.CCLIB_DOCS_KEY }}
         with:

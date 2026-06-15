@@ -10,6 +10,8 @@ concurrency:
   group: ci-${{github.ref}}-${{github.event.pull_request.number || github.run_number}}
   cancel-in-progress: true
 
+permissions: {}
+
 jobs:
   prechecks:
     uses: ./.github/workflows/pre-commit.yml
@@ -20,11 +22,16 @@ jobs:
     uses: ./.github/workflows/test_and_package.yml
   docs:
     uses: ./.github/workflows/docs.yml
-    secrets: inherit
+    secrets:
+      CCLIB_DOCS_KEY: ${{ secrets.CCLIB_DOCS_KEY }}
   publish:
     needs: [nix, unit-tests, docs]
     uses: ./.github/workflows/publish.yml
+    permissions:
+      contents: write  # for making GitHub Releases
+      id-token: write  # for trusted publishing and sigstore
   all:
+    name: CI success
     needs: [unit-tests, publish]
     runs-on: ubuntu-24.04
     steps:

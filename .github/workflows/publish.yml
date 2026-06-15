@@ -11,6 +11,8 @@ concurrency:
   group: publish-${{github.ref}}-${{github.event.pull_request.number || github.run_number}}
   cancel-in-progress: true
 
+permissions: {}
+
 env:
   # For now always take the "reduced" form of the version, even for those
   # actions runs that do not push to a package index.
@@ -105,7 +107,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: >-
-          gh release create '${{ github.ref_name }}' --repo '${{ github.repository }}' --draft --notes ""
+          gh release create "${GITHUB_REF_NAME}" --repo "${GITHUB_REPOSITORY}" --draft --notes ""
       - name: Upload artifact signatures to GitHub Release
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -113,4 +115,4 @@ jobs:
         # `dist/` contains the built packages, and the
         # sigstore-produced signatures and certificates.
         run: >-
-          gh release upload '${{ github.ref_name }}' dist/** --repo '${{ github.repository }}'
+          gh release upload "${GITHUB_REF_NAME}" dist/** --repo "${GITHUB_REPOSITORY}"
