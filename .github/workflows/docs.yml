@@ -21,7 +21,7 @@ jobs:
     name: Build documentation and push to cclib.github.io on merge
     runs-on: ubuntu-24.04
     container:
-      image: shivupa/cclib-ci:py312-edge@sha256:eb3b07d699b987a3d5097fbba5f9e25c73545bfef24c16ba572f789ad37b8892
+      image: shivupa/cclib-ci:py312-edge@sha256:0f591dde4c57d5304ccbc1ed487e9bcd81ed9a7c3b430a40e69f37f02ab84a79
     defaults:
       run:
         shell: bash -eo pipefail -l {0}
