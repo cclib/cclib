@@ -89,7 +89,7 @@ jobs:
           env | sort
           bash .github/scripts/run_pytest_pyscf.bash "$(nproc)"
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@0fb7174895f61a3b6b78fc075e0cd60383518dac  # v5.5.5
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f  # v7.0.0
         with:
           files: ./coverage-unit.xml,./coverage-regression.xml,./coverage-method.xml,./coverage-pyscf.xml
           name: codecov-cclib
