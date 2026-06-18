@@ -101,7 +101,7 @@ repos:
       - id: check-json
       - id: check-added-large-files
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.17
+    rev: v0.15.18
     hooks:
       - id: ruff-format
       - id: ruff-check
