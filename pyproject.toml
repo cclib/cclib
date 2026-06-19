@@ -205,7 +205,10 @@ python = "3.14.*"
 
 [tool.pixi.package]
 name = "cclib"
-version = "1.8.1"
+# This means `pixi build` will fail, but leaving it in causes problems with
+# `nix build`, which must be using regex to find the version in this file.
+#
+# version = "1.8.1"
 
 [tool.pixi.package.build]
 backend = { name = "pixi-build-python", version = "0.*" }
