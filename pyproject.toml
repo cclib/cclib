@@ -43,33 +43,44 @@ ccwrite = "cclib.scripts.ccwrite:main"
 cda = "cclib.scripts.cda:main"
 
 [project.optional-dependencies]
+# The Open Babel PyPI package for version < 3.2.0 is missing native wheels and
+# requires using SWIG to compile the Python extension against a preinstalled
+# native library.  The wheels for version >= 3.2.0 only support Python >=
+# 3.10.
+#
+# With Pixi v0.67.2, specifying a (conda) dependency via Pixi doesn't seem
+# override the corresponding PyPI dependency, so we create groups that leave
+# out Open Babel and manually specify it as a Pixi dependency for Python <
+# 3.10 versions while keeping everything as-is for Python >= 3.10.
 all = ["cclib[bridges]"]
-bridges = [
+bridges = ["cclib[bridges-no-openbabel,openbabel]"]
+bridges-no-openbabel = [
     "ase>=3.21",
     "biopython",
     "chemfiles",
-    "openbabel",
     "pandas",
     "pyscf",
     "geometric",
     "qc-iodata>=1.0.0a2",
 ]
 dev = ["cclib[bridges,docs,test-infrastructure]"]
+dev-no-openbabel = ["cclib[bridges-no-openbabel,docs,test-infrastructure]"]
 docs = [
     "build",
     "sphinx",
     "sphinx_rtd_theme",
 ]
+openbabel = ["openbabel"]
 test = ["cclib[bridges,docs,test-infrastructure]"]
 test-infrastructure = [
     "pytest-cov",
     "pytest-xdist",
     "pyyaml",
-    "pytest-xdist",
 ]
 
 [dependency-groups]
-pixi-bridges = [
+bridges-git = [
+    "pyberny @ git+https://github.com/cclib/pyberny.git@8142ce1bc468664aef18e88099b03734bff982e5",
     "pyquante2 @ git+https://github.com/cclib/pyquante2.git@cythonize-becke",
     "pyscf-properties @ git+https://github.com/pyscf/properties.git",
 ]
@@ -139,66 +150,75 @@ ignore_missing_imports = true
 channels = ["conda-forge"]
 platforms = [
     "linux-64",
-    "osx-64",
     "osx-arm64",
     "win-64",
 ]
+preview = ["pixi-build"]
+
+# This can't be present until Psi4 is packaged for Python 3.14.
+#
+# [tool.pixi.dependencies]
+# psi4 = "*"
 
 [tool.pixi.pypi-dependencies]
 cclib = { path = ".", editable = true }
 
 [tool.pixi.environments]
-# default = { solve-group = "default" }
-# all = { features = ["all"], solve-group = "default" }
-# bridges = { features = ["bridges"], solve-group = "default" }
-# dev = { features = ["dev"], solve-group = "default" }
-# docs = { features = ["docs"], solve-group = "default" }
-# test = { features = ["test"], solve-group = "default" }
-# test-infrastructure = { features = ["test-infrastructure"], solve-group = "default" }
-# py37 = { features = ["py37", "dev"], solve-group = "py37" }
-py38 = { features = ["py38", "dev", "pixi-bridges"], solve-group = "py38" }
-py39 = { features = ["py39", "dev", "pixi-bridges"], solve-group = "py39" }
-py310 = { features = ["py310", "dev", "pixi-bridges"], solve-group = "py310" }
-py311 = { features = ["py311", "dev", "pixi-bridges"], solve-group = "py311" }
-py312 = { features = ["py312", "dev", "pixi-bridges"], solve-group = "py312" }
-py313 = { features = ["py313", "dev", "pixi-bridges"], solve-group = "py313" }
-py314 = { features = ["py314", "dev", "pixi-bridges"], solve-group = "py314" }
-# dev = { features = ["dev"], no-default-feature = true }
-
-# [tool.pixi.feature.dev.dependencies]
-# # TODO this is a missing transitive dependency of pyberny
-# pkg_resources = "*"
-
-# [tool.pixi.feature.py37.dependencies]
-# python = "3.7.*"
-# openbabel = "*"
+py38 = { features = ["py38", "dev-no-openbabel", "bridges-git"], solve-group = "py38" }
+py39 = { features = ["py39", "dev-no-openbabel", "bridges-git"], solve-group = "py39" }
+py310 = { features = ["py310", "dev", "bridges-git"], solve-group = "py310" }
+py311 = { features = ["py311", "dev", "bridges-git"], solve-group = "py311" }
+py312 = { features = ["py312", "dev", "bridges-git"], solve-group = "py312" }
+py313 = { features = ["py313", "dev", "bridges-git"], solve-group = "py313" }
+py314 = { features = ["py314", "dev", "bridges-git"], solve-group = "py314" }
 
 [tool.pixi.feature.py38.dependencies]
-python = "3.8.*"
+libint = { version = "==2.9.0", build = "*_4" }
+openbabel = "*"
 psi4 = "*"
+python = "3.8.*"
 
 [tool.pixi.feature.py39.dependencies]
-python = "3.9.*"
+libint = { version = "==2.9.0", build = "*_4" }
+openbabel = "*"
 psi4 = "*"
+python = "3.9.*"
 
 [tool.pixi.feature.py310.dependencies]
-python = "3.10.*"
 psi4 = "*"
+python = "3.10.*"
 
 [tool.pixi.feature.py311.dependencies]
-python = "3.11.*"
 psi4 = "*"
+python = "3.11.*"
 
 [tool.pixi.feature.py312.dependencies]
-python = "3.12.*"
 psi4 = "*"
+python = "3.12.*"
 
 [tool.pixi.feature.py313.dependencies]
-python = "3.13.*"
 psi4 = "*"
+python = "3.13.*"
 
 [tool.pixi.feature.py314.dependencies]
 python = "3.14.*"
+
+[tool.pixi.package]
+name = "cclib"
+version = "1.8.1"
+
+[tool.pixi.package.build]
+backend = { name = "pixi-build-python", version = "0.*" }
+
+[tool.pixi.package.host-dependencies]
+setuptools = ">=61.0"
+versioningit = ">=2.0"
+
+[tool.pixi.package.run-dependencies]
+numpy = "*"
+packaging = ">=19.0"
+periodictable = "*"
+scipy = ">=1.2.0"
 
 [tool.ruff]
 line-length = 100
