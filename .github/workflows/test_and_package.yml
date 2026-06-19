@@ -26,6 +26,7 @@ jobs:
           - 'shivupa/cclib-ci:py310-edge'
           - 'shivupa/cclib-ci:py311-edge'
           - 'shivupa/cclib-ci:py312-edge'
+          - 'shivupa/cclib-ci:py313-edge'
     container:
       image: ${{ matrix.container }}
     defaults:
@@ -129,6 +130,8 @@ jobs:
           - "3.10"
           - 3.11
           - 3.12
+          - 3.13
+          - 3.14
     steps:
       - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405  # v6
         with:

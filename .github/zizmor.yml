@@ -4,4 +4,4 @@ rules:
   # there is a pinned one in docs.yml that can help warn of other issues.
   unpinned-images:
     ignore:
-      - test_and_package.yml:30:7
+      - test_and_package.yml:31:7
