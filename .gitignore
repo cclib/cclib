@@ -19,3 +19,4 @@ dvb_gopt.xyz
 # pixi environments
 .pixi/*
 !.pixi/config.toml
+pixi.lock
