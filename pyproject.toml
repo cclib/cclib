@@ -173,13 +173,13 @@ py313 = { features = ["py313", "dev", "bridges-git"], solve-group = "py313" }
 py314 = { features = ["py314", "dev", "bridges-git"], solve-group = "py314" }
 
 [tool.pixi.feature.py38.dependencies]
-libint = { version = "==2.9.0", build = "*_4" }
+libint = { version = "==2.13.1", build = "*_4" }
 openbabel = "*"
 psi4 = "*"
 python = "3.8.*"
 
 [tool.pixi.feature.py39.dependencies]
-libint = { version = "==2.9.0", build = "*_4" }
+libint = { version = "==2.13.1", build = "*_4" }
 openbabel = "*"
 psi4 = "*"
 python = "3.9.*"
