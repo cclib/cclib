@@ -1,0 +1,29 @@
++system 
+ name dvb
+ geometry dvb_sp.xyz
+ method dft
+ +dft
+  functional b3lyp
+ -dft
+ +basis
+  label sto-3g
+ -basis
+-system
+
++task scf
+ act dvb
+-task
+
++task pop
+ act dvb
+-task
+
++task pop
+ act dvb
+ algorithm hirshfeld
+-task
+
++task multi
+ act dvb
+ highestorder 2
+-task

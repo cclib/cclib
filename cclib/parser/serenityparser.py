@@ -193,11 +193,11 @@ class Serenity(logfileparser.Logfile):
                 self.append_attribute("scfvalues", numpy.vstack(numpy.array(values)))
 
             if line.startswith("Total Energy ("):
-                self.append_attribute("scfenergies", float(line.split()[3]))
                 if not hasattr(self, "optstatus") and hasattr(self, "scfenergies"):
                     self.logger.warning(
                         "Multiple instances of scfenergies despite no geometry optimization being done. This Serenity calculation possibly has several systems."
                     )
+                self.append_attribute("scfenergies", float(line.split()[3]))
 
             if "Total Supersystem Energy" in line:
                 self.logger.warning(
@@ -387,6 +387,18 @@ class Serenity(logfileparser.Logfile):
                 i += 1
             self.append_attribute("mpenergies", [line.split()[2]])
             self.metadata["methods"].append("MP2")
+
+        if line.strip().startswith("Polarizability Tensor / a.u.:"):
+            self.skip_line(inputfile, "Polarizability")
+            self.skip_line(inputfile, ["dashes"])
+            line = next(inputfile)
+            polarizability = []
+            polarizability.append([float(i) for i in line.split()[-3:]])
+            line = next(inputfile)
+            polarizability.append([float(i) for i in line.split()[-3:]])
+            line = next(inputfile)
+            polarizability.append([float(i) for i in line.split()[-3:]])
+            self.append_attribute("polarizabilities", numpy.array(polarizability))
 
         ### metadata
         if line[4:34] == "Time taken for the entire run:":
