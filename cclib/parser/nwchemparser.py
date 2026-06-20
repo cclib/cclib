@@ -39,7 +39,7 @@ class NWChem(logfileparser.Logfile):
 
     @staticmethod
     def name2element(lbl: str) -> str:
-        return "".join(itertools.takewhile(str.isalpha, str(lbl)))
+        return "".join(itertools.takewhile(str.isalpha, str(lbl))).title()
 
     def extract(self, inputfile: "FileWrapper", line: str) -> None:
         """Extract information from the file object inputfile."""
@@ -107,7 +107,7 @@ class NWChem(logfileparser.Logfile):
                 tokens = next(inputfile).split()
                 mtch = re.search(r"[a-zA-Z]+", tokens[0])
                 assert mtch is not None
-                name2mass[mtch.group()] = float(tokens[1])
+                name2mass[self.name2element(mtch.group())] = float(tokens[1])
             masses = [name2mass[self.table.element[number]] for number in self.atomnos]
             self.set_attribute("atommasses", masses)
 
@@ -272,7 +272,7 @@ class NWChem(logfileparser.Logfile):
                     atomelement = self.name2element(atomname)
                     self.metadata["basis_set"] = desc
 
-                    self.shells[atomname] = types
+                    self.shells[atomelement] = types
                     atombasis_dict[atomelement] = int(funcs)
                     line = next(inputfile)
 
