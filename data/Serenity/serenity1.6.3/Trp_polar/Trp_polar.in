@@ -3,7 +3,9 @@
  geometry trp_polar.xyz
  method hf
  +basis
-  label def2-svp
+  label sto-3g
+  # Otherwise RI will be attempted in the linear response part
+  densFitJ NONE
  -basis
 -system
 
@@ -12,8 +14,6 @@
 -task
 
 +task ff
-act trp_polar
-finiteFieldStrength 0.05
-frequency 1e-9
+ act trp_polar
+ frequency 1.0e-9
 -task
-
