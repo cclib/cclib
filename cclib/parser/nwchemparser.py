@@ -39,7 +39,7 @@ class NWChem(logfileparser.Logfile):
 
     @staticmethod
     def name2element(lbl: str) -> str:
-        return "".join(itertools.takewhile(str.isalpha, str(lbl)))
+        return "".join(itertools.takewhile(str.isalpha, str(lbl))).title()
 
     def extract(self, inputfile: "FileWrapper", line: str) -> None:
         """Extract information from the file object inputfile."""
@@ -107,7 +107,7 @@ class NWChem(logfileparser.Logfile):
                 tokens = next(inputfile).split()
                 mtch = re.search(r"[a-zA-Z]+", tokens[0])
                 assert mtch is not None
-                name2mass[mtch.group()] = float(tokens[1])
+                name2mass[self.name2element(mtch.group())] = float(tokens[1])
             masses = [name2mass[self.table.element[number]] for number in self.atomnos]
             self.set_attribute("atommasses", masses)
 
@@ -272,7 +272,7 @@ class NWChem(logfileparser.Logfile):
                     atomelement = self.name2element(atomname)
                     self.metadata["basis_set"] = desc
 
-                    self.shells[atomname] = types
+                    self.shells[atomelement] = types
                     atombasis_dict[atomelement] = int(funcs)
                     line = next(inputfile)
 
@@ -288,11 +288,13 @@ class NWChem(logfileparser.Logfile):
 
         if line.strip() == "Symmetry analysis of basis":
             self.skip_lines(inputfile, ["d", "b"])
-            if not hasattr(self, "symlabels"):
-                self.symlabels = []
-            for _ in range(self.pg_order):
+            # The number of lines here is not the order of the point group but
+            # is the number of irreducible representations, which isn't
+            # printed anywhere in the file.
+            line = next(inputfile)
+            while line.strip():
+                self.append_attribute("symlabels", self.normalisesym(line.split()[0]))
                 line = next(inputfile)
-                self.symlabels.append(self.normalisesym(line.split()[0]))
 
         # This section contains general parameters for Hartree-Fock calculations,
         # which do not contain the 'General Information' section like most jobs.
@@ -619,7 +621,13 @@ class NWChem(logfileparser.Logfile):
         #     6 ag          7 bu          8 ag          9 bu         10 ag
         # ...
         if line.strip() == "Symmetry analysis of molecular orbitals - final":
-            self.skip_lines(inputfile, ["d", "b", "numbering", "b", "reps", "b", "syms", "b"])
+            self.skip_lines(inputfile, ["d", "b", "Numbering of irreducible representations", "b"])
+            line = next(inputfile)
+            # This also handles the blank line between the irrep ordering and
+            # the next header.
+            while line.strip():
+                line = next(inputfile)
+            self.skip_lines(inputfile, ["Orbital symmetries", "b"])
 
             if not hasattr(self, "mosyms"):
                 self.mosyms = [[None] * self.nbasis]
