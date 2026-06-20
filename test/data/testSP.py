@@ -79,8 +79,8 @@ class GenericSPTest:
         "Molpro/basicMolpro2006",
         "These tests were run a long time ago and since we don't have access to Molpro 2006 anymore, we can skip this test (it is tested in 2012)",
     )
-    @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     @skipForParser("Serenity", "not implemented yet")
+    @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     def testatomcharges(self, data: "ccData") -> None:
         """Are atomic charges consistent with natom?"""
         for atomcharge_type in data.atomcharges:
@@ -134,9 +134,9 @@ class GenericSPTest:
     @skipForParser("Molcas", "Lowdin charges not present by default")
     @skipForParser("Molpro", "Lowdin charges not present by default")
     @skipForParser("QChem", "Lowdin charges not present by default")
+    @skipForParser("Serenity", "Lowdin charges not implemented in Serenity.")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     @skipForParser("xTB", "not implemented yet")
-    @skipForParser("Serenity", "Lowdin charges not implemented in Serenity.")
     def testatomcharges_lowdin(self, data: "ccData") -> None:
         """Do Lowdin atomic charges sum to zero?"""
         charges = data.atomcharges["lowdin"]
@@ -212,9 +212,9 @@ class GenericSPTest:
     )
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("Serenity", "not implemented yet")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     @skipForParser("xTB", "not implemented yet")
-    @skipForParser("Serenity", "not implemented yet")
     def testatombasis(self, data: "ccData") -> None:
         """Are the indices in atombasis the right amount and unique?"""
         all = []
@@ -238,19 +238,19 @@ class GenericSPTest:
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForLogfile("Psi4/basicPsi4.0b5", "atommasses not implemented yet")
     @skipForParser("QChem", "atommasses not implemented yet")
+    @skipForParser("Serenity", "not implemented yet")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     @skipForParser("xTB", "not implemented yet")
-    @skipForParser("Serenity", "not implemented yet")
     def testatommasses(self, data: "ccData") -> None:
         """Do the atom masses sum up to the molecular mass?"""
         mm = 1000 * sum(data.atommasses)
         msg = f"Molecule mass: {mm:f} not {self.molecularmass:f} +- {self.mass_precision:f}mD"
         assert abs(mm - self.molecularmass) < self.mass_precision, msg
 
-    @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     @skipForParser("NBO", "attribute not implemented in this version")
-    @skipForParser("xTB", "not implemented yet")
     @skipForParser("Serenity", "not implemented yet")
+    @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
+    @skipForParser("xTB", "not implemented yet")
     def testcoreelectrons(self, data: "ccData") -> None:
         """Are the coreelectrons all 0?"""
         ans = numpy.zeros(data.natom, "i")
@@ -261,8 +261,8 @@ class GenericSPTest:
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Molpro", "?")
     @skipForParser("NBO", "attribute not implemented in this version")
-    @skipForParser("xTB", "not implemented yet")
     @skipForParser("Serenity", "Serenity does not use symmetry.")
+    @skipForParser("xTB", "not implemented yet")
     def testsymlabels(self, data: "ccData") -> None:
         """Are all the symmetry labels either Ag/u or Bg/u?"""
         sumwronglabels = sum([x not in ["Ag", "Bu", "Au", "Bg"] for x in data.mosyms[0]])
@@ -386,9 +386,9 @@ class GenericSPTest:
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("Psi4", "Psi4 does not currently have the option to print the overlap matrix")
     @skipForParser("QChem", "QChem cannot print the overlap matrix")
+    @skipForParser("Serenity", "not implemented yet")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     @skipForParser("xTB", "not implemented yet")
-    @skipForParser("Serenity", "not implemented yet")
     def testaooverlaps(self, data: "ccData") -> None:
         """Are the dims and values of the overlap matrix correct?"""
 
@@ -423,12 +423,12 @@ class GenericSPTest:
     @skipForParser("Molcas", "Not implemented yet")
     @skipForParser("Molpro", "Not implemented yet")
     @skipForParser("NBO", "attribute not implemented in this version")
-    @skipForParser("xTB", "not implemented yet")
     @skipForParser("NWChem", "Not implemented yet")
     @skipForParser("Psi4", "Not implemented yet")
     @skipForParser("QChem", "Not implemented yet")
-    @skipForParser("Turbomole", "Not implemented yet")
     @skipForParser("Serenity", "No rot. constants in Serenity")
+    @skipForParser("Turbomole", "Not implemented yet")
+    @skipForParser("xTB", "not implemented yet")
     def testrotconsts(self, data: "ccData") -> None:
         """A single geometry leads to single set of rotational constants (in GHz)."""
         assert data.rotconsts.shape == (1, 3)
@@ -522,9 +522,9 @@ class GenericSPTest:
     @skipForParser("NWChem", "reading input file contents and name is not implemented")
     @skipForParser("Psi4", "reading input file contents and name is not implemented")
     @skipForParser("QChem", "reading input file contents and name is not implemented")
+    @skipForParser("Serenity", "reading input file contents and name is not implemented")
     @skipForParser("Turbomole", "reading input file contents and name is not implemented")
     @skipForParser("xTB", "not implemented yet")
-    @skipForParser("Serenity", "reading input file contents and name is not implemented")
     def testmetadata_input_file(self, data: "ccData") -> None:
         """Does metadata have expected keys and values?"""
         assert "input_file_contents" in data.metadata
@@ -554,8 +554,8 @@ class GenericSPTest:
     )
     @skipForParser("GAMESSDAT", "Files do not contain information about the legacy package version")
     @skipForParser("NBO", "attribute not implemented in this version")
-    @skipForParser("xTB", "not implemented yet")
     @skipForParser("Serenity", "Serenity reports version differently.")
+    @skipForParser("xTB", "not implemented yet")
     def testmetadata_legacy_package_version(self, data: "ccData") -> None:
         """Does metadata have expected keys and values?"""
         # TODO Test specific values for each unit test.
@@ -592,9 +592,9 @@ class GenericSPTest:
     @skipForParser("Molcas", "reading point group symmetry and name is not implemented")
     @skipForParser("Molpro", "reading point group symmetry and name is not implemented")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("Serenity", "Serenity doesn't use symmetry")
     @skipForParser("Turbomole", "reading point group symmetry and name is not implemented")
     @skipForParser("xTB", "not implemented yet")
-    @skipForParser("Serenity", "Serenity doesn't use symmetry")
     def testmetadata_symmetry_detected(self, data: "ccData") -> None:
         """Does metadata have expected keys and values?"""
         assert data.metadata["symmetry_detected"] == "c2h"
@@ -604,9 +604,9 @@ class GenericSPTest:
     @skipForParser("Molcas", "reading point group symmetry and name is not implemented")
     @skipForParser("Molpro", "reading point group symmetry and name is not implemented")
     @skipForParser("NBO", "attribute not implemented in this version")
+    @skipForParser("Serenity", "Serenity doesn't use symmetry")
     @skipForParser("Turbomole", "reading point group symmetry and name is not implemented")
     @skipForParser("xTB", "not implemented yet")
-    @skipForParser("Serenity", "Serenity doesn't use symmetry")
     def testmetadata_symmetry_used(self, data: "ccData") -> None:
         """Does metadata have expected keys and values?"""
         assert data.metadata["symmetry_used"] == "c2h"

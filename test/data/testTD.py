@@ -41,11 +41,11 @@ class GenericTDTest:
         """Did we parse an excited states method?"""
         assert data.metadata["excited_states_method"] == self.method
 
+    @skipForParser("Serenity", "Serenity will need its own test energy.")  # TODO
     @skipForLogfile(
         "Turbomole/basicTurbomole7.4/CO_cc2_TD_trip",
         "Oscillator strengths are not available for Turbomole triplets using ricc2 but are required for testenergies()",
     )
-    @skipForParser("Serenity", "Serenity will need its own test energy.")  # TODO
     def testenergies(self, data: "ccData") -> None:
         """Is the l_max reasonable?"""
 
@@ -164,11 +164,11 @@ class GenericTDTest:
     @skipForParser("ORCA", "optstate is not yet implemented")
     @skipForParser("PySCF", "optstate is not yet implemented")
     @skipForParser("QChem", "optstate is not yet implemented")
-    @skipForParser("Turbomole", "optstate is not yet implemented")
     @skipForParser(
         "Serenity",
         "Serenity does not offer linear response calculations where optstate would be applicable",
     )
+    @skipForParser("Turbomole", "optstate is not yet implemented")
     def testoptstate(self, data: "ccData") -> None:
         # All our examples have a default state-of-interest of 1 (index 0).
         assert data.metadata["opt_state"] == 0
