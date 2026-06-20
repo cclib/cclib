@@ -34,3 +34,5 @@ e440b69835cc39e741f50f10a39eda1f6f8a2002
 b7b31cf838fc2baae968dfd81d44508688cf90d7
 # testdata file cleanup
 55e2824b794a3390862f0b8466de8b574b2cc879
+# test: alphabetical order for programs in skip decorators
+09be8ebcf6287428be3ccb2d805e3d3ec94c516a
