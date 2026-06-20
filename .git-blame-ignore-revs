@@ -36,3 +36,5 @@ b7b31cf838fc2baae968dfd81d44508688cf90d7
 55e2824b794a3390862f0b8466de8b574b2cc879
 # test: alphabetical order for programs in skip decorators
 09be8ebcf6287428be3ccb2d805e3d3ec94c516a
+# Serenity: rename gopt directory to dvb_gopt
+d0457be74b69c4f05445466c7bf4fca399a32dc8
