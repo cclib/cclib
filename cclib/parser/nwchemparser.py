@@ -288,11 +288,13 @@ class NWChem(logfileparser.Logfile):
 
         if line.strip() == "Symmetry analysis of basis":
             self.skip_lines(inputfile, ["d", "b"])
-            if not hasattr(self, "symlabels"):
-                self.symlabels = []
-            for _ in range(self.pg_order):
+            # The number of lines here is not the order of the point group but
+            # is the number of irreducible representations, which isn't
+            # printed anywhere in the file.
+            line = next(inputfile)
+            while line.strip():
+                self.append_attribute("symlabels", self.normalisesym(line.split()[0]))
                 line = next(inputfile)
-                self.symlabels.append(self.normalisesym(line.split()[0]))
 
         # This section contains general parameters for Hartree-Fock calculations,
         # which do not contain the 'General Information' section like most jobs.
@@ -619,7 +621,13 @@ class NWChem(logfileparser.Logfile):
         #     6 ag          7 bu          8 ag          9 bu         10 ag
         # ...
         if line.strip() == "Symmetry analysis of molecular orbitals - final":
-            self.skip_lines(inputfile, ["d", "b", "numbering", "b", "reps", "b", "syms", "b"])
+            self.skip_lines(inputfile, ["d", "b", "Numbering of irreducible representations", "b"])
+            line = next(inputfile)
+            # This also handles the blank line between the irrep ordering and
+            # the next header.
+            while line.strip():
+                line = next(inputfile)
+            self.skip_lines(inputfile, ["Orbital symmetries", "b"])
 
             if not hasattr(self, "mosyms"):
                 self.mosyms = [[None] * self.nbasis]
