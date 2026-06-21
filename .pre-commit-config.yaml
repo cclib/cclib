@@ -189,7 +189,7 @@ repos:
         additional_dependencies:
           - "github.com/wasilibs/go-shellcheck/cmd/shellcheck@v0.11.1"
   - repo: https://github.com/zizmorcore/zizmor-pre-commit
-    rev: "v1.25.2"
+    rev: "v1.26.1"
     hooks:
       - id: zizmor
         args: [--no-progress, --persona=pedantic, --fix=all]
