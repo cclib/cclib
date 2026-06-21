@@ -36,6 +36,7 @@ repos:
               ^data/Psi4|
               ^data/QChem|
               ^data/regression|
+              ^data/Serenity|
               ^data/Turbomole|
               ^data/XTB
           )
@@ -65,6 +66,7 @@ repos:
               ^data/Psi4|
               ^data/QChem|
               ^data/regression|
+              ^data/Serenity|
               ^data/Turbomole|
               ^data/XTB
           )
@@ -94,6 +96,7 @@ repos:
               ^data/Psi4|
               ^data/QChem|
               ^data/regression|
+              ^data/Serenity|
               ^data/Turbomole|
               ^data/XTB
           )
