@@ -210,16 +210,13 @@ class Serenity(logfileparser.Logfile):
 
             # Extract index of HOMO(s)
             if line.strip().startswith("Orbital Energies:"):
-                self.skip_line(inputfile, ["Orbital"])
-                self.skip_line(inputfile, ["dashes"])
+                self.skip_line(inputfile, "dashes")
                 if self.metadata["unrestricted"] and not self.beta_parsing:
-                    self.skip_line(inputfile, ["Alpha:"])
+                    self.skip_line(inputfile, "Alpha:")
                     self.beta_parsing = True
-                self.skip_line(inputfile, ["#   Occ."])
-                # self.skip_lines(inputfile, ["Orbital","dashes","#   Occ."]) # TODO test results in warnings
+                self.skip_lines(inputfile, ["#   Occ.", "dashes"])
                 line = next(inputfile)
                 homos = None
-                occ_number = None
                 if self.metadata["unrestricted"]:
                     occ_number = "1.00"
                 else:
@@ -232,8 +229,7 @@ class Serenity(logfileparser.Logfile):
                 if self.beta_parsing:
                     while line.split()[0] != "Beta:":
                         line = next(inputfile)
-                    self.skip_line(inputfile, ["Beta:"])
-                    self.skip_line(inputfile, ["#   Occ."])
+                    self.skip_lines(inputfile, ["Beta:", "#   Occ."])
                     line = next(inputfile)
                     while line.split()[1] == occ_number:
                         homos = int(line.split()[0])
@@ -249,9 +245,7 @@ class Serenity(logfileparser.Logfile):
             self.append_attribute("moments", origin)
 
         if line.strip().startswith("Dipole Moment:"):
-            self.skip_line(inputfile, ["Dipole Moment"])
-            self.skip_line(inputfile, ["dashes"])
-            # self.skip_lines(inputfile, ["Dipole Moment","dashes"]) # TODO test results in warnings
+            self.skip_lines(inputfile, ["dashes", "header"])
             line = self.skip_line(inputfile, "x")[0]
             dipole_data = line.split()
             x, y, z = map(float, dipole_data[:3])
@@ -260,8 +254,7 @@ class Serenity(logfileparser.Logfile):
             self.append_attribute("moments", dipole)
 
         if line.strip().startswith("Quadrupole Moment:"):
-            self.skip_line(inputfile, "Quadrupole Moment")
-            self.skip_line(inputfile, ["dashes"])
+            self.skip_lines(inputfile, ["dashes", "header"])
             line = self.skip_line(inputfile, "x")[0]
             q_data = line.split()
             xx, xy, xz = map(float, q_data[1:4])
@@ -280,10 +273,7 @@ class Serenity(logfileparser.Logfile):
         # Extract charges from population analysis
         if line.strip().startswith(tuple(self.populationtypes)) and line.split()[1] == "Population":
             key = line.split()[0]
-            line = next(inputfile)
-            self.skip_line(inputfile, "dashes")
-            self.skip_line(inputfile, "blank")
-            line = next(inputfile)
+            self.skip_lines(inputfile, ["dashes", "blank", "header"])
             line = next(inputfile)
             chargelist = []
             while line.strip() and not line.strip().startswith("---"):
@@ -342,7 +332,7 @@ class Serenity(logfileparser.Logfile):
 
             if line.strip().startswith("Current Geometry Gradients (a.u.):"):
                 if not self.optstatus[-1] & data.ccData.OPT_DONE:
-                    self.skip_line(inputfile, ["Current"])
+                    self.skip_line(inputfile, "Current")
                     line = next(inputfile)
                     grad = []
                     for i in range(self.natom):
@@ -356,8 +346,7 @@ class Serenity(logfileparser.Logfile):
             # Energy Change, RMS Gradient, Max Gradient, RMS Step, Max Step
             if line.strip().startswith("Geometry Relaxation:"):
                 criteria = []
-                self.skip_line(inputfile, ["Geometry Relaxation:"])
-                self.skip_line(inputfile, ["dashes"])
+                self.skip_line(inputfile, "dashes")
                 line = next(inputfile)
                 criteria.append(line.split()[2])
                 line = next(inputfile)
@@ -389,8 +378,7 @@ class Serenity(logfileparser.Logfile):
             self.metadata["methods"].append("MP2")
 
         if line.strip().startswith("Polarizability Tensor / a.u.:"):
-            self.skip_line(inputfile, "Polarizability")
-            self.skip_line(inputfile, ["dashes"])
+            self.skip_lines(inputfile, ["dashes", "header"])
             line = next(inputfile)
             polarizability = []
             polarizability.append([float(i) for i in line.split()[-3:]])
@@ -446,10 +434,7 @@ class Serenity(logfileparser.Logfile):
 
         # excitation energies and singly-excited configuration data
         if line.strip().startswith("Dominant Contributions"):
-            self.skip_line(inputfile, ["Dominant"])
-            self.skip_line(inputfile, ["dashes"])
-            self.skip_line(inputfile, ["state"])
-            self.skip_line(inputfile, ["(a.u.)"])
+            self.skip_lines(inputfile, ["dashes", "state", "(a.u.)", "dashes"])
             line = next(inputfile)
 
             # TODO maybe modify the method of warning. having multiple excited state calculations  obscures the metadata
@@ -486,10 +471,7 @@ class Serenity(logfileparser.Logfile):
 
         # oscillator strengths and transition dipoles (length gauge)
         if line.strip().startswith("Absorption Spectrum (dipole-length)"):
-            self.skip_line(inputfile, ["Absorption"])
-            self.skip_line(inputfile, ["dashes"])
-            self.skip_line(inputfile, ["state"])
-            self.skip_line(inputfile, ["(eV)"])
+            self.skip_lines(inputfile, ["dashes", "state", "(eV)", "dashes"])
             line = next(inputfile)
             while not line.strip().startswith("--"):
                 line_data = line.split()
@@ -500,10 +482,7 @@ class Serenity(logfileparser.Logfile):
 
         # transition dipoles (velocity gauge)
         if line.strip().startswith("Absorption Spectrum (dipole-velocity)"):
-            self.skip_line(inputfile, ["Absorption"])
-            self.skip_line(inputfile, ["dashes"])
-            self.skip_line(inputfile, ["state"])
-            self.skip_line(inputfile, ["(eV)"])
+            self.skip_lines(inputfile, ["dashes", "state", "(eV)", "dashes"])
             line = next(inputfile)
             while not line.strip().startswith("--"):
                 line_data = line.split()
@@ -513,10 +492,7 @@ class Serenity(logfileparser.Logfile):
 
         # rotatory strengths and magnetic transition dipoles (length gauge)
         if line.strip().startswith("CD Spectrum (dipole-length)"):
-            self.skip_line(inputfile, ["CD"])
-            self.skip_line(inputfile, ["dashes"])
-            self.skip_line(inputfile, ["state"])
-            self.skip_line(inputfile, ["(eV)"])
+            self.skip_lines(inputfile, ["dashes", "state", "(eV)", "dashes"])
             line = next(inputfile)
             while not line.strip().startswith("--"):
                 line_data = line.split()
