@@ -81,7 +81,7 @@ test-infrastructure = [
 [dependency-groups]
 bridges-git = [
     "pyberny @ git+https://github.com/cclib/pyberny.git@8142ce1bc468664aef18e88099b03734bff982e5",
-    "pyquante2 @ git+https://github.com/cclib/pyquante2.git@cythonize-becke",
+    "pyquante2 @ git+https://github.com/rpmuller/pyquante2.git@master",
     "pyscf-properties @ git+https://github.com/pyscf/properties.git",
 ]
 
