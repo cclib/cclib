@@ -95,12 +95,18 @@ class XTB(logfileparser.Logfile):
         # But will need to be careful about what might happen if other formats are supplied,
         # such as sdf or POSCAR.
         if _is_geom_cycle_line(line):
+            self.set_attribute('optdone', [])
+
             while not _is_geom_end_line(line):
                 scf_energy = _extract_geom_energy(line)
                 if scf_energy is not None:
                     self.append_attribute("scfenergies", scf_energy)
 
                 line = next(inputfile)
+
+        if _is_geom_opt_converged(line):
+            # We only have one set of coords.
+            self.set_attribute('optdone', [0])
 
         # TODO: Use the `xtbopt.xyz` file if available since it has higher precision and
         # has the coordinates for every geometry step. If it's not an optimization,
