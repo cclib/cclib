@@ -121,6 +121,7 @@ class XTB(logfileparser.Logfile):
             line = next(inputfile)
 
             homo = None
+            last_index = None
             mooccnos = []
             moenergies = []
 
@@ -128,7 +129,7 @@ class XTB(logfileparser.Logfile):
             while "------" not in line:
                 orbital_info = _extract_orbitals(line)
                 if orbital_info is not None:
-                    orbital_idx = orbital_info[0] - 1
+                    last_index = orbital_idx = orbital_info[0] - 1
                     orbital_occ = orbital_info[1]
                     orbital_energy = orbital_info[2]
                     is_homo = orbital_info[3]
@@ -153,6 +154,9 @@ class XTB(logfileparser.Logfile):
                 self.set_attribute("mooccnos", np.array(mooccnos))
             if homo:
                 self.set_attribute("homos", np.array([homo]))
+            if last_index:
+                self.set_attribute("nmo", last_index + 1)
+
 
         # TODO: Use `charges` file for Mulliken if available since it has higher precision.
         mulliken = []
