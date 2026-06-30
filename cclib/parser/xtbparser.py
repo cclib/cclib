@@ -290,6 +290,41 @@ class XTB(logfileparser.Logfile):
                     grads[-1].append([float(v) for v in line.split()])
                 line = next(inputfile)
             self.set_attribute("grads", np.array(grads))
+        
+        if _is_moment_line(line):
+            # We don't seem to be given the origin unfortunately.
+            moments = [
+                [0.0,0.0,0.0]
+            ]
+
+            # First up is dipole moment, available in 'q only' and 'full' variants.
+            line = next(inputfile)
+            line = next(inputfile)
+            line = next(inputfile)
+
+            # Total is in D, but x, y, and z are in Au...
+            title, x, y, z, tot = line.split()
+            moments.append(convertor(np.array([float(x), float(y), float(z)]), "ebohr", "Debye"))
+
+            # Next is quadrupole, available in 'q only', 'q+dip', and 'full' flavours.
+            # Unknown units.
+            line = next(inputfile)
+            line = next(inputfile)
+            line = next(inputfile)
+            line = next(inputfile)
+            # Note the different ordering.
+            title, xx, xy, yy, xz, yz, zz = line.split()
+            moments.append(convertor(np.array([
+                float(xx),
+                float(xy),
+                float(xz),
+                float(yy),
+                float(yz),
+                float(zz)
+            ]), "ebohr2", "Buckingham"))
+
+            self.set_attribute('moments', moments)
+
 
         # TODO:
         # 1) Ensure `hessian` is always read last in
@@ -936,3 +971,20 @@ def _is_hessian_line(line: str) -> bool:
     0.0162496487   0.0000016361   0.1907680190   0.1825630415
     """
     return "$hessian" in line
+
+
+def _is_moment_line(line:str) -> bool:
+    """
+    Determine if we are in the dipole moment printout.
+
+    molecular dipole:
+                    x           y           z       tot (Debye)
+    q only:        0.000       0.000       0.000
+    full:        0.000       0.000       0.000       0.000
+    molecular quadrupole (traceless):
+                    xx          xy          yy          xz          yz          zz
+    q only:        1.417       0.327       0.770       0.000       0.000      -2.187
+    q+dip:        5.938       0.815       3.726       0.000      -0.000      -9.664
+    full:        3.132       0.354       1.754       0.000       0.000      -4.886
+    """
+    return "molecular dipole:" in line
