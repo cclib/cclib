@@ -120,7 +120,7 @@ class XTB(logfileparser.Logfile):
             next(inputfile)
             line = next(inputfile)
 
-            homos = []
+            homo = None
             mooccnos = []
             moenergies = []
 
@@ -142,7 +142,7 @@ class XTB(logfileparser.Logfile):
                     moenergies.append(orbital_energy)
                     mooccnos.append(orbital_occ)
                     if is_homo:
-                        homos.append(orbital_idx)
+                        homo = orbital_idx
 
                 i += 1
                 line = next(inputfile)
@@ -151,8 +151,8 @@ class XTB(logfileparser.Logfile):
                 self.set_attribute("moenergies", [np.array(moenergies)])
             if mooccnos:
                 self.set_attribute("mooccnos", np.array(mooccnos))
-            if homos:
-                self.set_attribute("homos", np.array(homos))
+            if homo:
+                self.set_attribute("homos", np.array([homo]))
 
         # TODO: Use `charges` file for Mulliken if available since it has higher precision.
         mulliken = []

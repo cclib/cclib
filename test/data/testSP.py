@@ -269,7 +269,6 @@ class GenericSPTest:
         assert sumwronglabels == 0
 
     @skipForParser("NBO", "attribute not implemented in this version")
-    @skipForParser("xTB", "xTB does not print them all")
     def testhomos(self, data: "ccData") -> None:
         """Is the index of the HOMO equal to 34?"""
         numpy.testing.assert_array_equal(
@@ -835,6 +834,13 @@ class XTBSPTest(GenericSPTest):
 
     scfenergy = -26.425939358406
     scfenergy_delta = 1.0e-6
+
+    def testhomos(self, data: "ccData") -> None:
+        """Is the index of the HOMO equal to 24?"""
+        # xTB seems to only treat valence electrons.
+        numpy.testing.assert_array_equal(
+            data.homos, numpy.array([24], "i"), f"{numpy.array_repr(data.homos)} != array([24],'i')"
+        )
 
 
 class GenericDispersionTest:
