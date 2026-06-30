@@ -74,6 +74,22 @@ class XTB(logfileparser.Logfile):
         mult = _extract_multiplicity(line)
         if mult is not None:
             self.set_attribute("mult", mult)
+        
+        if _is_scc_line(line):
+            # Parse SCF (SCC here) convergence.
+            # We have 5 fields we can parse (E, dE, RMSdq, gap, omega)
+            # For now, we'll just take E.
+            # Note that the SCC energy != final energy, there seems to be some additional minor contribution(s)...
+            scc_values = []
+            line = next(inputfile)
+            while line.strip() != "":
+                split_line = line.split()
+                scc_values.append(float(split_line[1]))
+                line = next(inputfile)
+            
+            # Convert?
+            #scc_values = convertor(np.array(scc_values), "hartree", "eV")
+            self.append_attribute("scfvalues", scc_values)
 
         # TODO: Use the `xtbopt.xyz` file for SCF energies if available since it has higher precision.
         # But will need to be careful about what might happen if other formats are supplied,
@@ -818,6 +834,25 @@ def _extract_entropy(line: str) -> Optional[float]:
     """
     if line.strip().startswith("TOT"):
         return convertor(float(line.split()[3]) / 1000, "kcal/mol", "hartree")
+
+
+def _is_scc_line(line: str) -> bool:
+    """
+    Determine if the line indicates the start of the SCC iterations block.
+
+ iter      E             dE          RMSdq      gap      omega  full diag
+   1    -26.8817007 -0.268817E+02  0.514E+00    3.36       0.0  T
+   2    -26.9029233 -0.212226E-01  0.307E+00    3.34       1.0  T
+   3    -26.9032490 -0.325733E-03  0.513E-01    3.33       1.0  T
+   4    -26.9033575 -0.108444E-03  0.261E-01    3.33       1.0  T
+   5    -26.9044923 -0.113485E-02  0.685E-02    3.33       1.0  T
+   6    -26.9045263 -0.340103E-04  0.318E-02    3.33       1.0  T
+   7    -26.9045273 -0.938828E-06  0.102E-02    3.33       2.2  T
+   8    -26.9045283 -0.985018E-06  0.770E-04    3.33      29.1  T
+   9    -26.9045283 -0.905125E-09  0.356E-04    3.33      62.8  T
+    """
+    split = line.split()
+    return len(split) == 8 and split[0] == "iter" and split[1] == "E"
 
 
 def _is_grad_line(line: str) -> bool:
