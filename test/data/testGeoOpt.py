@@ -66,7 +66,6 @@ class GenericGeoOptTest:
         assert dev < 0.15, f"Minimum carbon dist is {min_carbon_dist:.2f} (not 1.34)"
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
-    @skipForParser("xTB", "Not implemented yet")
     def testcharge_and_mult(self, data: "ccData") -> None:
         """Are the charge and multiplicity correct?"""
         assert data.charge == 0
@@ -88,7 +87,6 @@ class GenericGeoOptTest:
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("MOPAC", "Not implemented.")
-    @skipForParser("xTB", "Not implemented yet")
     def testhomos(self, data: "ccData") -> None:
         """Is the index of the HOMO equal to 34?"""
         ref = numpy.array([34], "i")
@@ -97,7 +95,6 @@ class GenericGeoOptTest:
 
     @skipForParser("MOPAC", "The scfvalues attribute is not parsed yet")
     @skipForLogfile("FChk/basicQChem5.4", "Q-Chem doesn't print scfvalues to fchk")
-    @skipForParser("xTB", "not implemented yet")
     def testscfvaluetype(self, data: "ccData") -> None:
         """Are scfvalues and its elements the right type?"""
         assert isinstance(data.scfvalues, list)
@@ -167,7 +164,6 @@ class GenericGeoOptTest:
     )
     @skipForParser("MOPAC", "Not implemented.")
     @skipForParser("PySCF", "not implemented yet")
-    @skipForParser("xTB", "not implemented yet")
     def testoptdone(self, data: "ccData") -> None:
         """Has the geometry converged and set optdone to True?"""
         assert isinstance(data.optdone, list)
@@ -508,6 +504,14 @@ class XTBGeoOptTest(GenericGeoOptTest):
 
     scfenergy = -26.438242468348
     scfenergy_tolerance = 1.0e-6
+    moenergy = -0.6407832846
+
+    def testhomos(self, data: "ccData") -> None:
+        """Is the index of the HOMO equal to 24?"""
+        # xTB seems to only treat valence electrons.
+        numpy.testing.assert_array_equal(
+            data.homos, numpy.array([24], "i"), f"{numpy.array_repr(data.homos)} != array([24],'i')"
+        )
 
 
 class TurbomoleKeepGeoOptTest(GenericGeoOptTest):
