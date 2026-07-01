@@ -75,6 +75,18 @@ class XTB(logfileparser.Logfile):
         if mult is not None:
             self.set_attribute("mult", mult)
         
+        solvent_model = _extract_solvent_model(line)
+        if solvent_model is not None:
+            self.metadata["solvent_model"] = solvent_model
+
+        solvent_name = _extract_solvent_name(line)
+        if solvent_name is not None:
+            self.metadata['solvent_name'] = solvent_name
+
+        solvent_constant = _extract_solvent_constant(line)
+        if solvent_constant is not None:
+            self.metadata["solvent_params"] = {'epsilon': solvent_constant}
+        
         if _is_scc_line(line):
             # Parse SCF (SCC here) convergence.
             # We have 5 fields we can parse (E, dE, RMSdq, gap, omega)
@@ -423,6 +435,37 @@ def _extract_charge(line: str) -> Optional[int]:
         :::::::::::::::::::::::::::::::::::::::::::::::::::::
     """
     return round(float(line.split()[-3])) if "total charge" in line else None
+
+
+def _extract_solvent_model(line: str) -> Optional[str]:
+    """
+    * Solvation model:               GBSA
+      Solvent                        toluene
+      Parameter file                 internal GFN2-xTB/GBSA
+      Dielectric constant                7.0000E+00
+    """
+    return line.split()[-1] if "Solvation model" in line else None
+
+
+def _extract_solvent_name(line: str) -> Optional[str]:
+    """
+    * Solvation model:               GBSA
+      Solvent                        toluene
+      Parameter file                 internal GFN2-xTB/GBSA
+      Dielectric constant                7.0000E+00
+    """
+    split_line = line.split()
+    return split_line[-1] if "Solvent" in line and len(split_line) == 2 else None
+
+
+def _extract_solvent_constant(line: str) -> Optional[str]:
+    """
+    * Solvation model:               GBSA
+      Solvent                        toluene
+      Parameter file                 internal GFN2-xTB/GBSA
+      Dielectric constant                7.0000E+00
+    """
+    return float(line.split()[-1]) if "Dielectric constant" in line else None
 
 
 def _extract_final_energy(line: str) -> Optional[float]:

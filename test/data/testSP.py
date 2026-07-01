@@ -945,6 +945,21 @@ class QChemSMDCPCMMetadataTest(QChemSolventMetadataTest, SMDCPCMMetadataTest):
     """Check we can parse implicit solvent data."""
 
 
+class ALPBMetadatataTest(SolventMetadataTest):
+    """Check we can parse implicit solvent data."""
+
+    # Toluene
+    static_dielectric_constant = 7.0
+    model = "ALPB"
+
+class GBSAMetadatataTest(SolventMetadataTest):
+    """Check we can parse implicit solvent data."""
+
+    # Toluene
+    static_dielectric_constant = 7.0
+    model = "GBSA"
+
+
 class GenericPerformanceMetadataTest:
     """Check we can parse CPU/memory metadata."""
 
