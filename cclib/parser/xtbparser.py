@@ -38,11 +38,11 @@ class XTB(logfileparser.Logfile):
 
     def before_parsing(self) -> None:
         """Actions before parsing"""
-        pass
+        super().before_parsing()
 
     def after_parsing(self) -> None:
         """Actions after parsing"""
-        pass
+        super().after_parsing()
 
     def extract(self, inputfile: "FileWrapper", line: str) -> None:
         if self.metadata.get("success") is None:
