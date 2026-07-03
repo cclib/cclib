@@ -94,7 +94,7 @@ class XTB(logfileparser.Logfile):
             # Note that the SCC energy != final energy, there seems to be some additional minor contribution(s)...
             scc_values = []
             line = next(inputfile)
-            while line.strip() != "":
+            while line.strip():
                 split_line = line.split()
                 scc_values.append(float(split_line[1]))
                 line = next(inputfile)
