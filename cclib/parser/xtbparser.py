@@ -37,14 +37,12 @@ class XTB(logfileparser.Logfile):
         return label
 
     def before_parsing(self) -> None:
-        """Acttions before parsing"""
+        """Actions before parsing"""
         pass
 
     def after_parsing(self) -> None:
         """Actions after parsing"""
-        # We can work out our multiplicity based on the number of unpaired electrons we have.
-        if hasattr(self, 'mooccnos') and not hasattr(self, 'mult'):
-            self.set_attribute("mult", len([occ for occ in self.mooccnos if occ == 1]) +1)
+        pass
 
     def extract(self, inputfile: "FileWrapper", line: str) -> None:
         if self.metadata.get("success") is None:

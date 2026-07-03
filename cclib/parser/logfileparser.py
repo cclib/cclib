@@ -278,6 +278,10 @@ class Logfile(ABC):
             and not hasattr(self, "freeenergy")
         ):
             self.set_attribute("freeenergy", self.enthalpy - self.entropy * self.temperature)
+        
+        # We can work out our multiplicity based on the number of unpaired electrons we have.
+        if hasattr(self, 'mooccnos') and not hasattr(self, 'mult'):
+            self.set_attribute("mult", len([occ for occ in self.mooccnos if occ == 1]) +1)
 
     def updateprogress(self, inputfile, msg: str, xupdate: float = 0.05) -> None:
         """Update progress."""
