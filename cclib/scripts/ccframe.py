@@ -11,6 +11,7 @@ import os.path
 import sys  # noqa: F401
 from typing import Iterable, Optional
 
+import cclib.io.ccio
 from cclib.io import ccread
 from cclib.parser.utils import find_package
 
@@ -28,6 +29,8 @@ def _first_parsed_data(parsed_data):
 
 
 def process_logfiles(filenames: Iterable[str], output: Optional[str], identifier: str) -> None:
+    if not _has_pandas:
+        raise ImportError("You must install `pandas` to use this function")
     series = []
     for path in filenames:
         data = _first_parsed_data(ccread(path))
