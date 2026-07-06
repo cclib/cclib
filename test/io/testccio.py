@@ -27,6 +27,7 @@ class guess_filetypeTest:
     def setup_method(self) -> None:
         self.guess = cclib.io.ccio.guess_filetype
 
+    @pytest.mark.skip("This is no longer valid. We don't have guess_filetype.")
     def test_fail(self) -> None:
         """Does the function fail as expected?"""
         assert self.guess([]) is None
@@ -34,6 +35,7 @@ class guess_filetypeTest:
         assert self.guess(os.devnull) is None
         assert self.guess(["test", "random", "quantum chemistry"]) is None
 
+    @pytest.mark.skip("This is no longer valid. We don't have any of these classes.")
     def test_programs(self) -> None:
         """Does the function catch programs as expected?"""
         assert self.guess(["Amsterdam Density Functional"]) == cclib.parser.ADF
@@ -157,9 +159,11 @@ class _determine_output_formatTest:
 
 
 class fallbackTest:
+    @pytest.mark.skip("This fallback isn't used in v2.")
     def setup_method(self) -> None:
         self.fallback = cclib.io.ccio.fallback
 
+    @pytest.mark.skip("This fallback isn't used in v2.")
     def test_fallback_fail(self) -> None:
         """Does the function fail as expected?"""
         assert self.fallback(None) is None
