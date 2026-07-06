@@ -8,10 +8,10 @@
 import sys
 from pathlib import Path
 
+import numpy
 from cclib.method import volume
 from cclib.parser import Gaussian, Psi4
 
-import numpy
 
 sys.path.insert(1, "..")
 

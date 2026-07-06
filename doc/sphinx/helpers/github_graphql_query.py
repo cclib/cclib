@@ -8,6 +8,7 @@ from typing import Any, MutableMapping
 
 import requests
 
+
 # adapted from https://stackoverflow.com/a/46271487
 API_TOKEN_ENVVAR = "GITHUB_API_TOKEN"
 API_TOKEN = os.getenv(API_TOKEN_ENVVAR, None)

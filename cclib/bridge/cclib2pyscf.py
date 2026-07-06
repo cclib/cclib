@@ -9,6 +9,7 @@ from cclib.parser.utils import PeriodicTable, find_package
 
 import numpy as np
 
+
 l_sym2num = {"S": 0, "P": 1, "D": 2, "F": 3, "G": 4}
 
 

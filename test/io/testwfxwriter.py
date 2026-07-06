@@ -8,11 +8,11 @@
 import os
 
 import cclib
+import numpy as np
+import pytest
 from cclib.io.filewriter import MissingAttributeError
 from cclib.io.wfxwriter import _list_format, _section
 
-import numpy as np
-import pytest
 
 __filedir__ = os.path.dirname(__file__)
 __filepath__ = os.path.realpath(__filedir__)

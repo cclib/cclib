@@ -20,6 +20,7 @@ from typing import Union
 from cclib.driver import ccDriver
 from cclib.file_handler import FileHandler
 
+
 # _has_cclib2openbabel = find_package("openbabel")
 # if _has_cclib2openbabel:
 #    from cclib.bridge import cclib2openbabel

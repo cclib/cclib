@@ -8,8 +8,8 @@
 import os
 
 import cclib
-
 import numpy as np
+
 
 __filedir__ = os.path.dirname(__file__)
 __filepath__ = os.path.realpath(__filedir__)

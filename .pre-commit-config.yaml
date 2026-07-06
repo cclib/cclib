@@ -136,10 +136,6 @@ repos:
     hooks:
       - id: pyupgrade
         args: [--py37-plus]
-  - repo: https://github.com/PyCQA/isort
-    rev: "9.0.0a3"
-    hooks:
-      - id: isort
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.15.15
     hooks:

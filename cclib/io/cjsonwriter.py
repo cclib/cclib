@@ -14,6 +14,7 @@ from cclib.parser.utils import find_package
 
 import numpy as np
 
+
 _has_openbabel = find_package("openbabel")
 
 

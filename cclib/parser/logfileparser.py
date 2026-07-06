@@ -18,6 +18,7 @@ from cclib.parser.logfilewrapper import FileWrapper
 
 import numpy
 
+
 # This seems to avoid a problem with Avogadro.
 logging.logMultiprocessing = 0
 

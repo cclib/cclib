@@ -10,10 +10,10 @@ import re
 import sys
 from typing import Sequence
 
+import numpy as np
 from cclib.method import Nuclear
 from cclib.parser import DALTON, Gaussian, Molcas, QChem, ccData, utils
 
-import numpy as np
 
 sys.path.insert(1, "..")
 

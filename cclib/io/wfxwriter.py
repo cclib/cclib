@@ -13,6 +13,7 @@ from cclib.parser import utils
 
 import numpy
 
+
 # Number of orbitals of type key.
 # There are 3 p type, 6 d type orbitals etc.
 ORBITAL_COUNT = {"S": 1, "P": 3, "D": 6, "F": 10, "G": 15, "H": 21}

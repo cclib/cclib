@@ -8,10 +8,10 @@
 import os
 
 import cclib
+import pytest
 from cclib.io.filewriter import MissingAttributeError
 from cclib.io.moldenwriter import MoldenReformatter, round_molden
 
-import pytest
 
 __filedir__ = os.path.dirname(__file__)
 __filepath__ = os.path.realpath(__filedir__)

@@ -5,9 +5,8 @@
 
 import os
 
-from cclib.bridge import cclib2openbabel
-
 import numpy
+from cclib.bridge import cclib2openbabel
 
 
 class OpenbabelTest:

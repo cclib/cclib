@@ -10,6 +10,7 @@ import sys
 from cclib.method import Electrons
 from cclib.parser import Gaussian, QChem
 
+
 sys.path.insert(1, "..")
 
 from ..test_data import getdatafile

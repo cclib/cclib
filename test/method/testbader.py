@@ -7,14 +7,13 @@
 
 import os
 
+import numpy
+import pytest
 from cclib.io import ccread
 from cclib.method import Bader
 from cclib.method.calculationmethod import MissingAttributeError
 from cclib.method.volume import Volume, read_from_cube
 from cclib.parser import Psi4
-
-import numpy
-import pytest
 from numpy.testing import assert_allclose
 
 from ..test_data import getdatafile

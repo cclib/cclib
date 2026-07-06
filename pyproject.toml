@@ -77,13 +77,6 @@ zip-safe = false
 [tool.setuptools.package-dir]
 cclib = "cclib"
 
-[tool.isort]
-profile = "black"
-line_length = 100
-# default is FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER
-# Placing third-party imports at the end makes their inclusion more obvious
-sections = ["FUTURE", "STDLIB", "FIRSTPARTY", "THIRDPARTY", "LOCALFOLDER"]
-
 [tool.ruff]
 line-length = 100
 src = ["cclib"]
@@ -93,7 +86,7 @@ target-version = "py37"
 skip-magic-trailing-comma = true
 
 [tool.ruff.lint]
-
+select = ["E4", "E7", "E9", "F", "I"]
 
 [tool.ruff.lint.isort]
 lines-after-imports = 2

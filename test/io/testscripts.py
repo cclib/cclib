@@ -6,14 +6,15 @@
 
 import os
 from pathlib import Path
-from test.conftest import get_program_dir, gettestdata
-from test.io.testccio import BASE_URL, URL_FILES
 from unittest import mock
 
+from test.conftest import get_program_dir, gettestdata
+from test.io.testccio import BASE_URL, URL_FILES
+
 import cclib
+import pytest
 from cclib.io import ccread, ccwrite
 
-import pytest
 
 __filedir__ = os.path.dirname(__file__)
 __filepath__ = os.path.realpath(__filedir__)

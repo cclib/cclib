@@ -7,8 +7,8 @@
 ccData docstring that describes attributes."""
 
 import cclib
-
 from docs_common import check_cclib
+
 
 check_cclib(cclib)
 

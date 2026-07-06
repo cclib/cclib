@@ -25,6 +25,7 @@ from urllib.request import urlopen
 
 from cclib.file_handler import utils
 
+
 # Regular expression for validating URLs
 URL_PATTERN = re.compile(
     r"^(?:http|ftp)s?://"  # http:// or https://

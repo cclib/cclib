@@ -37,13 +37,13 @@ import logging
 import sys
 from pathlib import Path
 
-from cclib.io import ccread, moldenwriter
-from cclib.parser import DALTON, Gaussian, ccData
-
 import numpy
 import pytest
+from cclib.io import ccread, moldenwriter
+from cclib.parser import DALTON, Gaussian, ccData
 from packaging.version import Version
 from packaging.version import parse as parse_version
+
 
 # This assume that the cclib-data repository is located at a specific location
 # within the cclib repository. It would be better to figure out a more natural
@@ -129,6 +129,7 @@ from .data.testvib import (
     Psi4HFIRTest,
     QChemRamanTest,
 )
+
 
 # The following regression test functions were manually written, because they
 # contain custom checks that were determined on a per-file basis. Care needs to be taken

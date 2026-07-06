@@ -2,4 +2,7 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
-from cclib.combinator.combinator import auto_combinator, combinator  # noqa: F401
+from cclib.combinator.combinator import (
+    auto_combinator,  # noqa: F401
+    combinator,  # noqa: F401
+)
