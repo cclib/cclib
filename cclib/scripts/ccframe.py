@@ -11,16 +11,31 @@ import os.path
 import sys  # noqa: F401
 from typing import Iterable, Optional
 
-from cclib.io import ccframe, ccopen
+from cclib.io import ccread
 from cclib.parser.utils import find_package
+
 
 _has_pandas = find_package("pandas")
 if _has_pandas:
     import pandas as pd
 
 
+def _first_parsed_data(parsed_data):
+    """Return the first ccData object from a v2 ccCollection parse result."""
+    if isinstance(parsed_data, list):
+        return parsed_data[0] if parsed_data else None
+    return parsed_data
+
+
 def process_logfiles(filenames: Iterable[str], output: Optional[str], identifier: str) -> None:
-    df = ccframe([ccopen(path) for path in filenames])
+    series = []
+    for path in filenames:
+        data = _first_parsed_data(ccread(path))
+        if data is not None:
+            logdata = pd.Series(data.getattributes())
+            logdata["jobfilename"] = path
+            series.append(logdata)
+    df = pd.DataFrame(series)
     if output is not None:
         outputtype = os.path.splitext(os.path.basename(output))[1][1:]
         if not outputtype:
@@ -62,7 +77,7 @@ def main():
         "compchemlogfiles",
         metavar="compchemlogfile",
         nargs="+",
-        help=("one or more computational chemistry output " "files to parse and convert"),
+        help=("one or more computational chemistry output files to parse and convert"),
     )
     parser.add_argument(
         "--identifier",

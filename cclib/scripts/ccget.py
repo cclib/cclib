@@ -17,15 +17,23 @@ import sys
 from functools import partial
 from pprint import pprint
 
+from cclib.attribute_parsers import ccData
+from cclib.file_handler.file_handler import URL_PATTERN
 from cclib.io import ccread
-from cclib.parser import ccData
-from cclib.parser.logfilewrapper import URL_PATTERN
 
 import numpy
+
 
 # Set up options for pretty-printing output.
 pprint = partial(pprint, width=120, compact=True)
 numpy.set_printoptions(linewidth=120)
+
+
+def _first_parsed_data(parsed_data):
+    """Return the first ccData object from a v2 ccCollection parse result."""
+    if isinstance(parsed_data, list):
+        return parsed_data[0] if parsed_data else None
+    return parsed_data
 
 
 def ccget() -> None:
@@ -179,7 +187,7 @@ def ccget() -> None:
             kwargs["cjson"] = True
 
         print(f"Attempting to read {name}")
-        data = ccread(filename, **kwargs)
+        data = _first_parsed_data(ccread(filename, **kwargs))
 
         if data is None:
             print(f"Cannot figure out the format of '{name}'")
