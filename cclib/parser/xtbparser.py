@@ -308,11 +308,11 @@ class XTB(logfileparser.Logfile):
         if warnings:
             self.metadata["warnings"] = warnings
 
-        wall_time = _extract_wall_time(line)
+        wall_time = _extract_wall_time(line, self.inputfile.last_lines)
         if wall_time is not None:
             self.metadata["wall_time"] = wall_time
 
-        cpu_time = _extract_cpu_time(line)
+        cpu_time = _extract_cpu_time(line, self.inputfile.last_lines)
         if cpu_time is not None:
             self.metadata["cpu_time"] = cpu_time
 
@@ -659,15 +659,23 @@ def _extract_rotational_constants(line: str) -> Optional[np.ndarray]:
         return np.array([float(x) for x in line_split[-3:]]) / ghz2invcm
 
 
-def _extract_wall_time(line: str) -> Optional[List[timedelta]]:
+def _extract_wall_time(line: str, last_lines: List[str]) -> Optional[List[timedelta]]:
     """
     Extract the wall time.
 
-        * wall-time:     0 d,  0 h,  0 min,  0.091 sec
+    total:
+    * wall-time:     0 d,  0 h,  7 min, 38.132 sec
+    *  cpu-time:     0 d,  0 h,  7 min, 44.658 sec
+    * ratio c/w:     1.014 speedup
+    SCF:
+    * wall-time:     0 d,  0 h,  0 min,  1.641 sec
+    *  cpu-time:     0 d,  0 h,  0 min,  9.011 sec
+    * ratio c/w:     5.489 speedup
     """
-    line_split = line.split()
-    return (
-        [
+    # We only want the total wall time.
+    if "*" in line and "wall-time" in line and 'total:' in last_lines[-2]:
+        line_split = line.split()
+        return [
             timedelta(
                 days=float(line_split[2]),
                 hours=float(line_split[4]),
@@ -675,17 +683,26 @@ def _extract_wall_time(line: str) -> Optional[List[timedelta]]:
                 seconds=float(line_split[8]),
             )
         ]
-        if "*" in line and "wall-time" in line
-        else None
-    )
 
 
-def _extract_cpu_time(line: str) -> Optional[List[timedelta]]:
+def _extract_cpu_time(line: str, last_lines: List[str]) -> Optional[List[timedelta]]:
     """
     Extract the CPU time.
 
         *  cpu-time:     0 d,  0 h,  0 min,  1.788 sec
     """
+    # We only want the total wall time.
+    if "*" in line and "cpu-time" in line and 'total:' in last_lines[-3]:
+        line_split = line.split()
+        return [
+            timedelta(
+                days=float(line_split[2]),
+                hours=float(line_split[4]),
+                minutes=float(line_split[6]),
+                seconds=float(line_split[8]),
+            )
+        ]
+    return
     line_split = line.split()
     return (
         [
