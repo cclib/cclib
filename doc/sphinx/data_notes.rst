@@ -696,7 +696,7 @@ The attribute ``vibdisps`` stores the Cartesian displacement vectors from the ou
 vibfconsts
 ----------
 
-The attribute ``vibfconsts`` stores the force constants in :math:`\mathrm{mDyne/Å}` from vibrational frequency calculation. It is a rank 1 array having dimension ``M``, where ``M`` is the number of normal modes.
+The attribute ``vibfconsts`` stores the force constants in :math:`\mathrm{mDyne/Å}` from vibrational frequency calculations. It is a rank 1 array having dimension ``M``, where ``M`` is the number of normal modes.
 
 vibrmasses
 ----------
