@@ -299,7 +299,9 @@ class XTB(logfileparser.Logfile):
             while line != "\n":
                 hessian.extend([float(v) for v in line.split()])
                 line = next(inputfile)
-            self.set_attribute("hessian", np.reshape(hessian, 3 * self.natom, 3 * self.natom))
+            self.set_attribute(
+                "hessian", np.reshape(hessian, (3 * self.natom, 3 * self.natom))
+            )
 
 
 def _extract_version(line: str) -> Optional[str]:
