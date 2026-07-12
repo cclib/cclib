@@ -505,7 +505,7 @@ def _extract_orbitals(line: str) -> Optional[Tuple[int, float, float, bool]]:
             int(line_split[0]),
             float(line_split[1]),
             float(line_split[3]),
-            bool("(HOMO) in line"),
+            "(HOMO)" in line,
         )
     if "(LUMO)" in line or (len(line_split) == 3 and "MO" not in line):
         return int(line_split[0]), 0.0, float(line_split[2]), False
