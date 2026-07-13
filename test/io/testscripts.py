@@ -157,14 +157,13 @@ class ccframeTest:
             cclib.scripts.ccframe.main()
 
     @mock.patch("cclib.scripts.ccframe.sys.argv", ["ccframe", INPUT_FILE])
-    @mock.patch("cclib.io.ccio._has_pandas", False)
+    @mock.patch("cclib.scripts.ccframe._has_pandas", False)
     def test_main_without_pandas(self) -> None:
         """Does ccframe fail if Pandas can't be imported?"""
         with pytest.raises(ImportError, match="You must install `pandas` to use this function"):
             cclib.scripts.ccframe.main()
 
     @mock.patch("cclib.scripts.ccframe.sys.argv", ["ccframe", INPUT_FILE])
-    @mock.patch("cclib.io.ccio._has_pandas", True)
     def test_main(self) -> None:
         """Is ccframe called with the given parameters?"""
         with mock.patch("sys.stdout") as mock_stdout:
