@@ -8,7 +8,7 @@
 import json
 from typing import Mapping
 
-from cclib.attribute_parsers.data import ccData
+from cclib.attributes.attribute import _attributes
 from cclib.io import filereader
 
 
@@ -30,7 +30,7 @@ class CJSON(filereader.Reader):
         return self.representation
 
     def generate_repr(self, json_data) -> None:
-        for k, v in ccData._attributes.items():
+        for k, v in _attributes.items():
             json_key = v.json_key
             attribute_path = v.attribute_path.split(":")
 
