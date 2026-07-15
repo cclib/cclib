@@ -23,18 +23,18 @@ class mocoeffs(base_parser):
         if "Molecular Orbitals" in line:
             file_handler.skip_lines(["b"], virtual=True)
             indices = file_handler.virtual_next()
-            mocoeffs = []
+            parsed_mocoeffs = []
             while indices.strip():
                 if indices[:3] == "***":
                     break
 
                 indices = [int(i) for i in indices.split()]
 
-                if len(mocoeffs) < indices[-1]:
+                if len(parsed_mocoeffs) < indices[-1]:
                     for i in range(len(indices)):
-                        mocoeffs.append([])
+                        parsed_mocoeffs.append([])
                 else:
-                    assert len(mocoeffs) == indices[-1]
+                    assert len(parsed_mocoeffs) == indices[-1]
 
                 file_handler.skip_lines(["b"], virtual=True)
 
@@ -46,7 +46,7 @@ class mocoeffs(base_parser):
                     iao = int(chomp[0])  # noqa: F841
                     coeffs = [float(c) for c in chomp[m - n :]]
                     for i, c in enumerate(coeffs):
-                        mocoeffs[indices[i] - 1].append(c)
+                        parsed_mocoeffs[indices[i] - 1].append(c)
                     line = file_handler.virtual_next()
 
                 line = file_handler.virtual_next()
@@ -56,10 +56,10 @@ class mocoeffs(base_parser):
                 indices = file_handler.virtual_next()
 
             if getattr(ccdata, "mocoeffs", None) is not None:
-                extended_mocoeffs = [ccdata.mocoeffs, mocoeffs]
+                extended_mocoeffs = [ccdata.mocoeffs, parsed_mocoeffs]
                 return {mocoeffs.__name__: extended_mocoeffs}
             else:
-                return {mocoeffs.__name__: mocoeffs}
+                return {mocoeffs.__name__: parsed_mocoeffs}
         return None
 
     @staticmethod

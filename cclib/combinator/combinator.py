@@ -31,6 +31,7 @@ DEFAULT_PARSERS = [
     cprops.aooverlaps,
     cprops.atommasses,
     cprops.mosyms,
+    cprops.mocoeffs,
     cprops.mpenergies,
     cprops.moments,
     cprops.nmo,

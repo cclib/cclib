@@ -97,8 +97,6 @@ class GenericSPunTest:
     @skipForParser("Jaguar", "Data file does not contain enough information")
     @skipForParser("DALTON", "mocoeffs not implemented yet")
     @skipForParser("Gaussian", "V2 no/mo not implemented yet")
-    @skipForParser("ORCA", "V2 no/mo not implemented yet")
-    @skipForParser("Psi4", "V2 no/mo not implemented yet")
     def testfornoormo(self, data) -> None:
         """Do we have NOs or MOs?"""
         assert hasattr(data._ccCollection._parsed_data[0], "nocoeffs") or hasattr(
