@@ -374,6 +374,9 @@ class GenericSPTest:
             )
 
     @skipForParser("DALTON", "mocoeffs not implemented yet")
+    @skipForParser("Gaussian", "V2 no/mo not implemented yet")
+    @skipForParser("ORCA", "V2 no/mo not implemented yet")
+    @skipForParser("Psi4", "V2 no/mo not implemented yet")
     @skipForLogfile(
         "Jaguar/basicJaguar7",
         "Data file does not contain enough information. Can we make a new one?",
