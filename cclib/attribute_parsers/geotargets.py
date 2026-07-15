@@ -21,7 +21,7 @@ class geotargets(base_parser):
     def psi4(file_handler, ccdata) -> Optional[dict]:
         line = file_handler.last_line
         if (line.strip() == "==> Convergence Check <==") and (
-            getattr(ccdata, "finite_difference") is None
+            getattr(ccdata, "finite_difference", None) is None
         ):
             this_geotargets = []
             file_handler.skip_lines(["b", "units"])
@@ -71,7 +71,7 @@ class geotargets(base_parser):
                     dtarget = float(line.split()[-1])
                 line = file_handler.virtual_next()
 
-            if getattr(ccdata, "scftargets") is None:
+            if getattr(ccdata, "scftargets", None) is None:
                 this_scftargets = []
             else:
                 this_scftargets = ccdata.scftargets

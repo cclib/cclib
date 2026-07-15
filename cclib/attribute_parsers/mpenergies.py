@@ -24,7 +24,7 @@ class mpenergies(base_parser):
         mp_trigger = "MP2 Total Energy (a.u.)"
         if line.strip()[: len(mp_trigger)] == mp_trigger:
             mpenergy = utils.convertor(float(line.split()[-1]), "hartree", "eV")
-            if getattr(ccdata, "mpenergies") is None:
+            if getattr(ccdata, "mpenergies", None) is None:
                 this_mpenergies = []
             this_mpenergies.append([mpenergy])
             return {mpenergies.__name__: this_mpenergies}
@@ -33,7 +33,7 @@ class mpenergies(base_parser):
             while "Total Energy" not in line:
                 line = file_handler.virtual_next()
             mpenergy = utils.convertor(float(line.split()[3]), "hartree", "eV")
-            if getattr(ccdata, "mpenergies") is None:
+            if getattr(ccdata, "mpenergies", None) is None:
                 this_mpenergies = []
             this_mpenergies.append([mpenergy])
             return {mpenergies.__name__: np.array(this_mpenergies)}
@@ -42,7 +42,7 @@ class mpenergies(base_parser):
     @staticmethod
     def gaussian(file_handler, ccdata) -> Optional[dict]:
         line = file_handler.last_line
-        if getattr(ccdata, "mpenergies") is None:
+        if getattr(ccdata, "mpenergies", None) is None:
             this_mpenergies = []
         else:
             this_mpenergies = ccdata.mpenergies.tolist()

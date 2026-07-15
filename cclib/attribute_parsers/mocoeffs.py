@@ -55,7 +55,7 @@ class mocoeffs(base_parser):
                 file_handler.skip_lines(["b", "b"], virtual=True)
                 indices = file_handler.virtual_next()
 
-            if hasattr(ccdata, "mocoeffs") and getattr(ccdata, "mocoeffs") is not None:
+            if getattr(ccdata, "mocoeffs", None) is not None:
                 extended_mocoeffs = [ccdata.mocoeffs, mocoeffs]
                 return {mocoeffs.__name__: extended_mocoeffs}
             else:

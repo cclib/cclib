@@ -55,11 +55,11 @@ class gbasis(base_parser):
         # ...
 
         # ONIOM calculations result basis sets reported for atoms that are not in order of atom number which breaks this code (line 390 relies on atoms coming in order)
-        if line[1:13] == "AO basis set" and not ccdata.oniom:
+        if line[1:13] == "AO basis set" and not getattr(ccdata, "oniom", None):
             parsed_gbasis = []
 
             # For counterpoise fragment calcualtions, skip these lines.
-            if ccdata.counterpoise is not None:
+            if getattr(ccdata, "counterpoise", None) is not None:
                 return
             gfprint = True
             atom_line = file_handler.virtual_next()
