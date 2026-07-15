@@ -12,8 +12,8 @@ import sys  # noqa: F401
 from typing import Iterable, Optional
 
 import cclib.io.ccio
+from cclib.attribute_parsers.utils import find_package
 from cclib.io import ccread
-from cclib.parser.utils import find_package
 
 
 _has_pandas = find_package("pandas")

@@ -10,8 +10,8 @@ from abc import ABC, abstractmethod
 from collections.abc import Iterable
 from typing import List, Optional, Tuple
 
-from cclib.parser.data import ccData
-from cclib.parser.utils import PeriodicTable, find_package
+from cclib.attribute_parsers.data import ccData
+from cclib.attribute_parsers.utils import PeriodicTable, find_package
 
 import numpy
 

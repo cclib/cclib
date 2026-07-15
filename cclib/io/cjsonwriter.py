@@ -8,9 +8,9 @@
 import json
 import os.path
 
+from cclib.attribute_parsers.data import ccData
+from cclib.attribute_parsers.utils import find_package
 from cclib.io import filewriter
-from cclib.parser.data import ccData
-from cclib.parser.utils import find_package
 
 import numpy as np
 

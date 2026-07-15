@@ -8,8 +8,8 @@
 import json
 from typing import Mapping
 
+from cclib.attribute_parsers.data import ccData
 from cclib.io import filereader
-from cclib.parser.data import ccData
 
 
 class CJSON(filereader.Reader):
