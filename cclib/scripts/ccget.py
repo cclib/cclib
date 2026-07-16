@@ -29,13 +29,6 @@ pprint = partial(pprint, width=120, compact=True)
 numpy.set_printoptions(linewidth=120)
 
 
-def _first_parsed_data(parsed_data):
-    """Return the first ccData object from a v2 ccCollection parse result."""
-    if isinstance(parsed_data, list):
-        return parsed_data[0] if parsed_data else None
-    return parsed_data
-
-
 def ccget() -> None:
     """Parse files with cclib based on command line arguments."""
 
@@ -187,41 +180,34 @@ def ccget() -> None:
             kwargs["cjson"] = True
 
         print(f"Attempting to read {name}")
-        data = _first_parsed_data(ccread(filename, **kwargs))
+        collection = ccread(filename, **kwargs)
 
-        if data is None:
+        if collection is None or not collection.parsed_data:
             print(f"Cannot figure out the format of '{name}'")
             print("Report this to the cclib development team if you think it is an error.")
             print(f"\n{parser.format_usage()}")
             parser.exit(1)
 
+        data = collection.parsed_data[0]
+        attributes = data.getattributes()
+
         if showattr:
             print(f"cclib can parse the following attributes from {name}:")
-            if cjsonfile:
-                for key in data:
-                    print(key)
-                break
-            for attr in data._attrlist:
-                if hasattr(data, attr):
-                    print(f"  {attr}")
+            for attr in attributes:
+                print(f"  {attr}")
         else:
             invalid = False
             for attr in attrnames:
-                if cjsonfile:
-                    if attr in data:
-                        print(f"{attr}:\n{data[attr]}")
-                        continue
-                else:
-                    if hasattr(data, attr):
-                        print(attr)
-                        attr_val = getattr(data, attr)
-                        # List of attributes to be printed with new lines
-                        if attr in data._listsofarrays and full:
-                            for val in attr_val:
-                                pprint(val)
-                        else:
-                            pprint(attr_val)
-                        continue
+                if attr in attributes:
+                    print(attr)
+                    attr_val = attributes[attr]
+                    # List of attributes to be printed with new lines
+                    if attr in data._listsofarrays and full:
+                        for val in attr_val:
+                            pprint(val)
+                    else:
+                        pprint(attr_val)
+                    continue
 
                 print(f"Could not parse {attr} from this file.")
                 invalid = True
