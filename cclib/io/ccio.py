@@ -118,13 +118,27 @@ def ccopen(
         *args, **kwargs - arguments and keyword arguments passed to filetype
 
     Returns:
-        ccCollection: by default a single point combinator, eventually dynamically determined.
+        A CJSON/XYZ reader or a ccDriver for computational output.
     """
-    if not isinstance(source, list):
-        source = [source]
+    if source is None or source == "" or source == []:
+        return None
 
-    ccdriver_inst = ccDriver(source)
-    return ccdriver_inst
+    try:
+        inputfile = source if isinstance(source, FileHandler) else FileHandler(source)
+    except Exception:
+        if not quiet:
+            raise
+        return None
+
+    if cjson:
+        return readerclasses["cjson"](inputfile, *args, **kwargs)
+
+    if len(inputfile.filenames) == 1:
+        extension = os.path.splitext(inputfile.filenames[0])[1][1:].lower()
+        if extension in readerclasses:
+            return readerclasses[extension](inputfile, *args, **kwargs)
+
+    return ccDriver(inputfile, *args, **kwargs)
 
 
 def ccwrite(
