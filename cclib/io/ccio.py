@@ -141,6 +141,22 @@ def ccopen(
     return ccDriver(inputfile, *args, **kwargs)
 
 
+def _first_ccdata(ccobj: Union[ccData, ccCollection, ccDriver]) -> ccData:
+    """Return the first data object represented by a supported v2 object."""
+    if isinstance(ccobj, ccData):
+        return ccobj
+
+    if isinstance(ccobj, ccDriver):
+        ccobj = ccobj.process_combinator()
+
+    if isinstance(ccobj, ccCollection):
+        if not ccobj.parsed_data:
+            raise ValueError("Cannot select data from an empty ccCollection")
+        return ccobj.parsed_data[0]
+
+    raise ValueError(f"Unsupported object type: {type(ccobj).__name__}")
+
+
 def ccwrite(
     ccobj,
     outputtype=None,
@@ -155,7 +171,7 @@ def ccwrite(
     representation.
 
     Inputs:
-        ccobj - Either a job (from ccopen) or a data (from job.parse()) object
+        ccobj - A ccDriver, ccCollection, or v2 ccData object
         outputtype - The output format (should be a string)
         outputdest - A filename or file object for writing
         indices - One or more indices for extracting specific geometries/etc. (zero-based)
@@ -173,18 +189,8 @@ def ccwrite(
     # Determine the correct output format.
     outputclass = _determine_output_format(outputtype, outputdest)
 
-    # Is ccobj an unparsed driver or a data object (parsed)?
-    if isinstance(ccobj, ccData):
-        jobfilename = None
-        ccdata = ccobj
-    elif hasattr(ccobj, "process_combinator"):
-        jobfilename = None
-        parsed_data = ccobj.process_combinator().parsed_data
-        ccdata = parsed_data[0] if parsed_data else None
-    else:
-        raise ValueError
-    if ccdata is None:
-        raise ValueError
+    jobfilename = None
+    ccdata = _first_ccdata(ccobj)
 
     # If the logfile name has been passed in through kwargs (such as
     # in the ccwrite script), make sure it has precedence.
@@ -266,8 +272,7 @@ def ccframe(ccobjs, *args, **kwargs):
     or more logfiles.
 
     Inputs:
-        ccobjs - an iterable of either cclib jobs (from ccopen) or data (from
-        job.parse()) objects
+        ccobjs - an iterable of ccDriver, ccCollection, or v2 ccData objects
 
     Returns:
         a pandas.DataFrame
@@ -275,18 +280,8 @@ def ccframe(ccobjs, *args, **kwargs):
     _check_pandas(_has_pandas)
     logfiles = []
     for ccobj in ccobjs:
-        if isinstance(ccobj, ccData):
-            jobfilename = None
-            ccdata = ccobj
-        elif hasattr(ccobj, "process_combinator"):
-            jobfilename = None
-            parsed_data = ccobj.process_combinator().parsed_data
-            ccdata = parsed_data[0] if parsed_data else None
-        else:
-            raise ValueError
-
-        if ccdata is None:
-            raise ValueError
+        jobfilename = None
+        ccdata = _first_ccdata(ccobj)
 
         attributes = ccdata.getattributes()
         attributes.update({"jobfilename": jobfilename})
