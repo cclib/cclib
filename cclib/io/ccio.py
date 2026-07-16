@@ -5,15 +5,15 @@
 """Tools for identifying, reading and writing files and streams."""
 
 import io
-import logging
 import os
 import typing
 import warnings
 from typing import Optional, Union
 
 from cclib.attribute_parsers.data import ccData
-from cclib.driver.ccdriver import triggers_on as triggers
+from cclib.collection import ccCollection
 from cclib.driver import ccDriver
+from cclib.driver.ccdriver import triggers_on as triggers
 from cclib.file_handler import FileHandler
 from cclib.file_handler.utils import find_package
 from cclib.io import (
@@ -25,6 +25,8 @@ from cclib.io import (
     xyzreader,
     xyzwriter,
 )
+from cclib.io.filereader import Reader
+from cclib.tree import Tree
 
 FileWrapper = FileHandler
 
@@ -65,26 +67,40 @@ class UnknownOutputFormatError(Exception):
 
 def ccread(
     source: Union[str, typing.IO, FileHandler, typing.List[Union[str, typing.IO]]], *args, **kwargs
-):
+) -> Optional[ccCollection]:
     """Attempt to open and read computational chemistry data from a file.
-
-    If the file is not appropriate for cclib parsers, a fallback mechanism
-    will try to recognize some common chemistry formats and read those using
-    the appropriate bridge such as Open Babel.
 
     Inputs:
         source - a single logfile, a list of logfiles (for a single job),
                  an input stream, or an URL pointing to a log file.
         *args, **kwargs - arguments and keyword arguments passed to ccopen
     Returns:
-        a ccData object containing cclib data attributes
+        a ccCollection containing parsed cclib data attributes
     """
-    if not isinstance(source, list):
-        source = [source]
+    inputobj = ccopen(source, *args, **kwargs)
+    if inputobj is None:
+        return None
 
-    a = ccDriver(source, **kwargs)
-    a.process_combinator()
-    return a._ccCollection._parsed_data
+    try:
+        if isinstance(inputobj, Reader):
+            tree = Tree()
+            tree.add_root()
+            collection = ccCollection(tree=tree)
+            collection.parsed_data[0] = inputobj.parse()
+            return collection
+
+        if isinstance(inputobj, ccDriver):
+            collection = inputobj.process_combinator()
+            if not any(data.getattributes() for data in collection.parsed_data):
+                return None
+            return collection
+
+        raise TypeError(f"Unsupported input object: {type(inputobj).__name__}")
+    finally:
+        if isinstance(inputobj, Reader):
+            inputobj.inputfile.close()
+        elif isinstance(inputobj, ccDriver):
+            inputobj.fileHandler.close()
 
 
 def ccopen(
