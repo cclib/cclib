@@ -79,3 +79,4 @@ class XYZ(filereader.Reader):
         }
 
         self.data = ccData(attributes)
+        self.data.arrayify()
