@@ -15,12 +15,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterator, List, Mapping, Optional, Tuple, Union
 
+import pytest
+import yaml
 from cclib.attribute_parsers.data import ccData
 from cclib.file_handler import FileHandler
 from cclib.io import ccopen
-
-import pytest
-import yaml
 
 
 def normalisefilename(filename: str) -> str:

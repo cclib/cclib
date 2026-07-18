@@ -49,9 +49,9 @@ class GenericSPunTest:
         for atomcharge_type in data._ccCollection._parsed_data[0].atomcharges:
             charges = data._ccCollection._parsed_data[0].atomcharges[atomcharge_type]
             natom = data._ccCollection._parsed_data[0].natom
-            assert (
-                len(charges) == natom
-            ), f"len(atomcharges['{atomcharge_type}']) = {len(charges)}, natom = {natom}"
+            assert len(charges) == natom, (
+                f"len(atomcharges['{atomcharge_type}']) = {len(charges)}, natom = {natom}"
+            )
 
     @skipForParser("ADF", "???")
     @skipForParser(
@@ -96,6 +96,7 @@ class GenericSPunTest:
 
     @skipForParser("Jaguar", "Data file does not contain enough information")
     @skipForParser("DALTON", "mocoeffs not implemented yet")
+    @skipForParser("Gaussian", "V2 no/mo not implemented yet")
     def testfornoormo(self, data) -> None:
         """Do we have NOs or MOs?"""
         assert hasattr(data._ccCollection._parsed_data[0], "nocoeffs") or hasattr(

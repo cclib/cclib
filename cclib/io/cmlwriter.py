@@ -7,8 +7,9 @@
 
 import xml.etree.ElementTree as ET
 
+from cclib.attribute_parsers.utils import find_package
 from cclib.io import filewriter
-from cclib.parser.utils import find_package
+
 
 _has_openbabel = find_package("openbabel")
 

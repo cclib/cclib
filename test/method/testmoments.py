@@ -7,10 +7,9 @@
 
 from unittest import mock
 
-from cclib.method import Moments
-
 import numpy as np
 import pytest
+from cclib.method import Moments
 from numpy.testing import assert_almost_equal, assert_equal
 
 

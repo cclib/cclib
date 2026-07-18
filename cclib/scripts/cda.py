@@ -21,9 +21,20 @@ def main() -> None:
 
     loglevel = logging.ERROR
 
-    data1 = ccread(args.file1, loglevel=loglevel)
-    data2 = ccread(args.file2, loglevel=loglevel)
-    data3 = ccread(args.file3, loglevel=loglevel)
+    collection1 = ccread(args.file1, loglevel=loglevel)
+    collection2 = ccread(args.file2, loglevel=loglevel)
+    collection3 = ccread(args.file3, loglevel=loglevel)
+
+    if collection1 is None or not collection1.parsed_data:
+        parser.error(f"Could not parse data from '{args.file1}'")
+    if collection2 is None or not collection2.parsed_data:
+        parser.error(f"Could not parse data from '{args.file2}'")
+    if collection3 is None or not collection3.parsed_data:
+        parser.error(f"Could not parse data from '{args.file3}'")
+
+    data1 = collection1.parsed_data[0]
+    data2 = collection2.parsed_data[0]
+    data3 = collection3.parsed_data[0]
 
     fa = CDA(data1, None, loglevel)
     retval = fa.calculate([data2, data3])

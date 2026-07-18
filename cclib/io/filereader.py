@@ -8,7 +8,7 @@
 import typing
 from abc import ABC, abstractmethod
 
-from cclib.parser.logfilewrapper import FileWrapper
+from cclib.file_handler import FileHandler
 
 
 class Reader(ABC):
@@ -17,7 +17,7 @@ class Reader(ABC):
     def __init__(
         self,
         source: typing.Union[
-            str, typing.IO, FileWrapper, typing.List[typing.Union[str, typing.IO]]
+            str, typing.IO, FileHandler, typing.List[typing.Union[str, typing.IO]]
         ],
         *args,
         **kwargs,
@@ -29,8 +29,8 @@ class Reader(ABC):
         Inputs:
           source - A single filename, stream [TODO], or list of filenames/streams [TODO].
         """
-        if not isinstance(source, FileWrapper):
-            source = FileWrapper(source)
+        if not isinstance(source, FileHandler):
+            source = FileHandler(source)
 
         self.inputfile = source
 

@@ -4,29 +4,40 @@
 # the terms of the BSD 3-Clause License.
 """Tools for identifying, reading and writing files and streams."""
 
+import io
+import os
 import typing
-from typing import Union
+import warnings
+from typing import Optional, Union
 
-# from cclib.io import (
-#    cjsonreader,
-#    cjsonwriter,
-#    cmlwriter,
-#    moldenwriter,
-#    wfxwriter,
-#    xyzreader,
-#    xyzwriter,
-# )
-# from cclib.parser import data, logfileparser
+from cclib.attribute_parsers.data import ccData
+from cclib.collection import ccCollection
 from cclib.driver import ccDriver
+from cclib.driver.ccdriver import triggers_on as triggers
 from cclib.file_handler import FileHandler
+from cclib.file_handler.utils import find_package
+from cclib.io import (
+    cjsonreader,
+    cjsonwriter,
+    cmlwriter,
+    moldenwriter,
+    wfxwriter,
+    xyzreader,
+    xyzwriter,
+)
+from cclib.io.filereader import Reader
+from cclib.tree import Tree
 
+FileWrapper = FileHandler
+
+# Todo bridges not ported yet
 # _has_cclib2openbabel = find_package("openbabel")
 # if _has_cclib2openbabel:
-#    from cclib.bridge import cclib2openbabel
+#     from cclib.bridge import cclib2openbabel
 
-# _has_pandas = find_package("pandas")
-# if _has_pandas:
-#    import pandas as pd
+_has_pandas = find_package("pandas")
+if _has_pandas:
+    import pandas as pd
 
 # Parser choice is triggered by certain phrases occurring the logfile. Where these
 # strings are unique, we can set the parser and break. In other cases, the situation
@@ -40,99 +51,57 @@ from cclib.file_handler import FileHandler
 # The triggers are defined by the tuples in the list below like so:
 #   (parser, phrases, flag whether we should break)
 
-# readerclasses = {"cjson": cjsonreader.CJSON, "json": cjsonreader.CJSON, "xyz": xyzreader.XYZ}
+readerclasses = {"cjson": cjsonreader.CJSON, "json": cjsonreader.CJSON, "xyz": xyzreader.XYZ}
 
-# writerclasses = {
-#     "cjson": cjsonwriter.CJSON,
-#     "json": cjsonwriter.CJSON,
-#     "cml": cmlwriter.CML,
-#     "molden": moldenwriter.MOLDEN,
-#     "wfx": wfxwriter.WFXWriter,
-#     "xyz": xyzwriter.XYZ,
-# }
+writerclasses = {
+    "cjson": cjsonwriter.CJSON,
+    "json": cjsonwriter.CJSON,
+    "cml": cmlwriter.CML,
+    "molden": moldenwriter.MOLDEN,
+    "wfx": wfxwriter.WFXWriter,
+    "xyz": xyzwriter.XYZ,
+}
 
 
 class UnknownOutputFormatError(Exception):
     """Raised when an unknown output format is encountered."""
 
-
-# def is_xyz(inputfile: FileWrapper) -> bool:
-#     """Is the given inputfile actually an XYZ file?
-
-#     The only way to determine this without reading the entire file is to
-#     inspect the file extension.
-#     """
-#     return (
-#         len(inputfile.filenames) == 1
-#         and os.path.splitext(inputfile.filenames[0])[1].lower() == ".xyz"
-#     )
-
-
-# def guess_filetype(inputfile) -> Optional[logfileparser.Logfile]:
-#     """Try to guess the filetype by searching for trigger strings."""
-#     filetype = None
-#     logger = logging.getLogger("cclib")
-#     try:
-#         if isinstance(inputfile, FileWrapper) and is_xyz(inputfile):
-#             logger.info("Found XYZ file based on file extension")
-#             return filetype
-#         for line in inputfile:
-#             for parser, phrases, do_break in triggers:
-#                 if all([line.lower().find(p.lower()) >= 0 for p in phrases]):
-#                     filetype = parser
-#                     if do_break:
-#                         return filetype
-#     except Exception:
-#         # guess_filetype() is expected to be quiet by default...
-#         logger.error("Failed to determine log file type", exc_info=True)
-
-#     return filetype
-
-
-# def sort_turbomole_outputs(fileinputs):
-#     """
-#     Sorts a list of inputs (or list of log files) according to the order
-#     required by the Turbomole parser for correct parsing. Unrecognised
-#     files are appended to the end of the list in the same order they are
-#     given.
-
-#     This function has been deprecated as of version 1.8; use:
-#     cclib.parser.turbomoleparser.Turbomole.sort_input() instead
-
-#     Inputs:
-#       filelist - a list of Turbomole log files needed to be parsed.
-#     Returns:
-#       sorted_list - a sorted list of Turbomole files needed for proper parsing.
-#     """
-#     warnings.warn(
-#         "sort_turbomole_outputs() has been deprecated as of v1.8; use: "
-#         + "cclib.parser.turbomoleparser.Turbomole.sort_input() instead"
-#     )
-#     return Turbomole.sort_input(fileinputs)
-
-
 def ccread(
     source: Union[str, typing.IO, FileHandler, typing.List[Union[str, typing.IO]]], *args, **kwargs
-):
+) -> Optional[ccCollection]:
     """Attempt to open and read computational chemistry data from a file.
-
-    If the file is not appropriate for cclib parsers, a fallback mechanism
-    will try to recognize some common chemistry formats and read those using
-    the appropriate bridge such as Open Babel.
 
     Inputs:
         source - a single logfile, a list of logfiles (for a single job),
                  an input stream, or an URL pointing to a log file.
         *args, **kwargs - arguments and keyword arguments passed to ccopen
     Returns:
-        a ccData object containing cclib data attributes
+        a ccCollection containing parsed cclib data attributes
     """
-    if not isinstance(source, list):
-        source = [source]
+    inputobj = ccopen(source, *args, **kwargs)
+    if inputobj is None:
+        return None
 
-    a = ccDriver(source, **kwargs)
-    a.process_combinator()
-    return a._ccCollection._parsed_data
+    try:
+        if isinstance(inputobj, Reader):
+            tree = Tree()
+            tree.add_root()
+            collection = ccCollection(tree=tree)
+            collection.parsed_data[0] = inputobj.parse()
+            return collection
+
+        if isinstance(inputobj, ccDriver):
+            collection = inputobj.process_combinator()
+            if not any(data.getattributes() for data in collection.parsed_data):
+                return None
+            return collection
+
+        raise TypeError(f"Unsupported input object: {type(inputobj).__name__}")
+    finally:
+        if isinstance(inputobj, Reader):
+            inputobj.inputfile.close()
+        elif isinstance(inputobj, ccDriver):
+            inputobj.fileHandler.close()
 
 
 def ccopen(
@@ -150,188 +119,176 @@ def ccopen(
         *args, **kwargs - arguments and keyword arguments passed to filetype
 
     Returns:
-        ccCollection: by default a single point combinator, eventually dynamically determined.
+        A CJSON/XYZ reader or a ccDriver for computational output.
     """
-    if not isinstance(source, list):
-        source = [source]
+    if source is None or source == "" or source == []:
+        return None
 
-    ccdriver_inst = ccDriver(source)
-    return ccdriver_inst
+    try:
+        inputfile = source if isinstance(source, FileHandler) else FileHandler(source)
+    except Exception:
+        if not quiet:
+            raise
+        return None
 
+    if cjson:
+        return readerclasses["cjson"](inputfile, *args, **kwargs)
 
-# def fallback(source):
-#     """Attempt to read standard molecular formats using other libraries.
+    if len(inputfile.filenames) == 1:
+        extension = os.path.splitext(inputfile.filenames[0])[1][1:].lower()
+        if extension in readerclasses:
+            return readerclasses[extension](inputfile, *args, **kwargs)
 
-#     Currently this will read XYZ files with OpenBabel, but this can easily
-#     be extended to other formats and libraries, too.
-#     """
-
-#     if isinstance(source, str):
-#         ext = os.path.splitext(source)[1][1:].lower()
-#         if _has_cclib2openbabel:
-#             # From OB 3.0 onward, Pybel is contained inside the OB module.
-#             try:
-#                 import openbabel.pybel as pb
-#             except:  # noqa: E722
-#                 try:
-#                     import pybel as pb
-#                 except:  # noqa: E722
-#                     return
-#             if ext in pb.informats:
-#                 return cclib2openbabel.readfile(source, ext)
-#         else:
-#             # This should be a warning, but warnings are currently disabled by default.
-#             logging.getLogger("cclib").error(
-#                 "Could not import `openbabel`, fallback mechanism might not work."
-#             )
+    return ccDriver(inputfile, *args, **kwargs)
 
 
-# def ccwrite(
-#     ccobj,
-#     outputtype=None,
-#     outputdest=None,
-#     indices=None,
-#     terse=False,
-#     returnstr=False,
-#     *args,
-#     **kwargs,
-# ):
-#     """Write the parsed data from an outputfile to a standard chemical
-#     representation.
+def _first_ccdata(ccobj: Union[ccData, ccCollection, ccDriver]) -> ccData:
+    """Return the first data object represented by a supported v2 object."""
+    if isinstance(ccobj, ccData):
+        return ccobj
 
-#     Inputs:
-#         ccobj - Either a job (from ccopen) or a data (from job.parse()) object
-#         outputtype - The output format (should be a string)
-#         outputdest - A filename or file object for writing
-#         indices - One or more indices for extracting specific geometries/etc. (zero-based)
-#         terse -  This option is currently limited to the cjson/json format. Whether to indent the cjson/json or not
-#         returnstr - Whether or not to return a string representation.
+    if isinstance(ccobj, ccDriver):
+        ccobj = ccobj.process_combinator()
 
-#     The different writers may take additional arguments, which are
-#     documented in their respective docstrings.
+    if isinstance(ccobj, ccCollection):
+        if not ccobj.parsed_data:
+            raise ValueError("Cannot select data from an empty ccCollection")
+        return ccobj.parsed_data[0]
 
-#     Returns:
-#         the string representation of the chemical datatype
-#           requested, or None.
-#     """
-
-#     # Determine the correct output format.
-#     outputclass = _determine_output_format(outputtype, outputdest)
-
-#     # Is ccobj an job object (unparsed), or is it a ccdata object (parsed)?
-#     if isinstance(ccobj, logfileparser.Logfile):
-#         jobfilename = ccobj.filename
-#         ccdata = ccobj.parse()
-#     elif isinstance(ccobj, data.ccData):
-#         jobfilename = None
-#         ccdata = ccobj
-#     else:
-#         raise ValueError
-
-#     # If the logfile name has been passed in through kwargs (such as
-#     # in the ccwrite script), make sure it has precedence.
-#     if "jobfilename" in kwargs:
-#         jobfilename = kwargs["jobfilename"]
-#         # Avoid passing multiple times into the main call.
-#         del kwargs["jobfilename"]
-
-#     outputobj = outputclass(
-#         ccdata, jobfilename=jobfilename, indices=indices, terse=terse, *args, **kwargs
-#     )
-#     output = outputobj.generate_repr()
-
-#     # If outputdest isn't None, write the output to disk.
-#     if outputdest is not None:
-#         if isinstance(outputdest, str):
-#             with open(outputdest, "w") as outputobj:
-#                 outputobj.write(output)
-#         elif isinstance(outputdest, io.IOBase):
-#             outputdest.write(output)
-#         else:
-#             raise ValueError
-#     # If outputdest is None, return a string representation of the output.
-#     else:
-#         return output
-
-#     if returnstr:
-#         return output
+    raise ValueError(f"Unsupported object type: {type(ccobj).__name__}")
 
 
-# def _determine_output_format(outputtype, outputdest):
-#     """
-#     Determine the correct output format.
+def ccwrite(
+    ccobj,
+    outputtype=None,
+    outputdest=None,
+    indices=None,
+    terse=False,
+    returnstr=False,
+    *args,
+    **kwargs,
+):
+    """Write the parsed data from an outputfile to a standard chemical
+    representation.
 
-#     Inputs:
-#       outputtype - a string corresponding to the file type
-#       outputdest - a filename string or file handle
-#     Returns:
-#       outputclass - the class corresponding to the correct output format
-#     Raises:
-#       UnknownOutputFormatError for unsupported file writer extensions
-#     """
+    Inputs:
+        ccobj - A ccDriver, ccCollection, or v2 ccData object
+        outputtype - The output format (should be a string)
+        outputdest - A filename or file object for writing
+        indices - One or more indices for extracting specific geometries/etc. (zero-based)
+        terse -  This option is currently limited to the cjson/json format. Whether to indent the cjson/json or not
+        returnstr - Whether or not to return a string representation.
 
-#     # Priority for determining the correct output format:
-#     #  1. outputtype
-#     #  2. outputdest
+    The different writers may take additional arguments, which are
+    documented in their respective docstrings.
 
-#     outputclass = None
-#     # First check outputtype.
-#     if isinstance(outputtype, str):
-#         extension = outputtype.lower()
-#         if extension in writerclasses:
-#             outputclass = writerclasses[extension]
-#         else:
-#             raise UnknownOutputFormatError(extension)
-#     else:
-#         # Then checkout outputdest.
-#         if isinstance(outputdest, str):
-#             extension = os.path.splitext(outputdest)[1].lower()
-#         elif isinstance(outputdest, io.IOBase):
-#             extension = os.path.splitext(outputdest.name)[1].lower()
-#         else:
-#             raise UnknownOutputFormatError
-#         if extension in writerclasses:
-#             outputclass = writerclasses[extension]
-#         else:
-#             raise UnknownOutputFormatError(extension)
+    Returns:
+        the string representation of the chemical datatype
+          requested, or None.
+    """
 
-#     return outputclass
+    # Determine the correct output format.
+    outputclass = _determine_output_format(outputtype, outputdest)
 
+    jobfilename = None
+    ccdata = _first_ccdata(ccobj)
 
-# def _check_pandas(found_pandas):
-#     if not found_pandas:
-#         raise ImportError("You must install `pandas` to use this function")
+    # If the logfile name has been passed in through kwargs (such as
+    # in the ccwrite script), make sure it has precedence.
+    if "jobfilename" in kwargs:
+        jobfilename = kwargs["jobfilename"]
+        # Avoid passing multiple times into the main call.
+        del kwargs["jobfilename"]
 
+    outputobj = outputclass(
+        ccdata, jobfilename=jobfilename, indices=indices, terse=terse, *args, **kwargs
+    )
+    output = outputobj.generate_repr()
 
-# def ccframe(ccobjs, *args, **kwargs):
-#     """Returns a pandas.DataFrame of data attributes parsed by cclib from one
-#     or more logfiles.
+    # If outputdest isn't None, write the output to disk.
+    if outputdest is not None:
+        if isinstance(outputdest, str):
+            with open(outputdest, "w") as outputobj:
+                outputobj.write(output)
+        elif isinstance(outputdest, io.IOBase):
+            outputdest.write(output)
+        else:
+            raise ValueError
+    # If outputdest is None, return a string representation of the output.
+    else:
+        return output
 
-#     Inputs:
-#         ccobjs - an iterable of either cclib jobs (from ccopen) or data (from
-#         job.parse()) objects
-
-#     Returns:
-#         a pandas.DataFrame
-#     """
-#     _check_pandas(_has_pandas)
-#     logfiles = []
-#     for ccobj in ccobjs:
-#         # Is ccobj an job object (unparsed), or is it a ccdata object (parsed)?
-#         if isinstance(ccobj, logfileparser.Logfile):
-#             jobfilename = ccobj.filename
-#             ccdata = ccobj.parse()
-#         elif isinstance(ccobj, data.ccData):
-#             jobfilename = None
-#             ccdata = ccobj
-#         else:
-#             raise ValueError
-
-#         attributes = ccdata.getattributes()
-#         attributes.update({"jobfilename": jobfilename})
-
-#         logfiles.append(pd.Series(attributes))
-#     return pd.DataFrame(logfiles)
+    if returnstr:
+        return output
 
 
-# del find_package
+def _determine_output_format(outputtype, outputdest):
+    """
+    Determine the correct output format.
+
+    Inputs:
+      outputtype - a string corresponding to the file type
+      outputdest - a filename string or file handle
+    Returns:
+      outputclass - the class corresponding to the correct output format
+    Raises:
+      UnknownOutputFormatError for unsupported file writer extensions
+    """
+
+    # Priority for determining the correct output format:
+    #  1. outputtype
+    #  2. outputdest
+
+    outputclass = None
+    # First check outputtype.
+    if isinstance(outputtype, str):
+        extension = outputtype.lower()
+        if extension in writerclasses:
+            outputclass = writerclasses[extension]
+        else:
+            raise UnknownOutputFormatError(extension)
+    else:
+        # Then checkout outputdest.
+        if isinstance(outputdest, str):
+            extension = os.path.splitext(outputdest)[1].lower()
+        elif isinstance(outputdest, io.IOBase):
+            extension = os.path.splitext(outputdest.name)[1].lower()
+        else:
+            raise UnknownOutputFormatError
+        if extension in writerclasses:
+            outputclass = writerclasses[extension]
+        else:
+            raise UnknownOutputFormatError(extension)
+
+    return outputclass
+
+
+def _check_pandas(found_pandas):
+    if not found_pandas:
+        raise ImportError("You must install `pandas` to use this function")
+
+
+def ccframe(ccobjs, *args, **kwargs):
+    """Returns a pandas.DataFrame of data attributes parsed by cclib from one
+    or more logfiles.
+
+    Inputs:
+        ccobjs - an iterable of ccDriver, ccCollection, or v2 ccData objects
+
+    Returns:
+        a pandas.DataFrame
+    """
+    _check_pandas(_has_pandas)
+    logfiles = []
+    for ccobj in ccobjs:
+        jobfilename = None
+        ccdata = _first_ccdata(ccobj)
+
+        attributes = ccdata.getattributes()
+        attributes.update({"jobfilename": jobfilename})
+
+        logfiles.append(pd.Series(attributes))
+    return pd.DataFrame(logfiles)
+
+
+del find_package

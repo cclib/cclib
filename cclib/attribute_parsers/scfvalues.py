@@ -26,7 +26,7 @@ class scfvalues(base_parser):
         line = file_handler.last_line
         # Extract SCF convergence information (QM calcs).
         if line[1:10] == "Cycle   1":
-            if getattr(ccdata, "scfvalues") is not None:
+            if getattr(ccdata, "scfvalues", None) is not None:
                 constructed_scfvalues = ccdata.scfvalues
             else:
                 constructed_scfvalues = []
@@ -46,7 +46,9 @@ class scfvalues(base_parser):
                     matches = re_scinot.findall(line)
                     matches = {match[0]: utils.float(match[1]) for match in matches}
                     scfvalues_step = [matches.get("RMSDP", np.nan), matches.get("MaxDP", np.nan)]
-                    if (ccdata.scftargets is not None) and len(ccdata.scftargets[0]) == 3:
+                    if (getattr(ccdata, "scftargets", None) is not None) and len(
+                        ccdata.scftargets[0]
+                    ) == 3:
                         scfvalues_step.append(matches.get("DE", np.nan))
                     this_scfvalue.append(scfvalues_step)
                 try:

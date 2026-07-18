@@ -27,7 +27,7 @@ class moments(base_parser):
                 np.array([float(tokens[1]), float(tokens[3]), float(tokens[5])]), "ebohr", "Debye"
             )
 
-            if getattr(ccdata, "moments") is None:
+            if getattr(ccdata, "moments", None) is None:
                 # Old versions of Psi4 don't print the origin; assume
                 # it's at zero.
                 if "origin" in ccdata.parser_state.keys():
@@ -73,10 +73,10 @@ class moments(base_parser):
                     line = file_handler.virtual_next()
                 this_moments.append(np.array(multipole))
                 line = file_handler.virtual_next()
-            if getattr(ccdata, "moments") is None:
+            if getattr(ccdata, "moments", None) is None:
                 return {moments.__name__: this_moments}
             else:
-                existing_moments_list = getattr(ccdata, "moments")
+                existing_moments_list = getattr(ccdata, "moments", None)
                 for m_idx, m in enumerate(this_moments):
                     if len(ccdata.moments) <= m_idx:
                         existing_moments_list.append(m)
@@ -105,7 +105,7 @@ class moments(base_parser):
             # and G03 and G09 use different spacing
             if len(tokens) >= 6:
                 dipole = (float(tokens[1]), float(tokens[3]), float(tokens[5]))
-                if getattr(ccdata, "moments") is None:
+                if getattr(ccdata, "moments", None) is None:
                     parsed_moments = [reference, dipole]
                 else:
                     parsed_moments = ccdata.moments
@@ -132,7 +132,7 @@ class moments(base_parser):
             lex = sorted(quadrupole.keys())
             quadrupole = [quadrupole[key] for key in lex]
             parsed_moments = []
-            if getattr(ccdata, "moments") is None or len(ccdata.moments) < 2:
+            if getattr(ccdata, "moments", None) is None or len(ccdata.moments) < 2:
                 # logger.warning("Found quadrupole moments but no previous dipole")
                 reference = [0.0, 0.0, 0.0]
                 parsed_moments = [reference, None, quadrupole]
@@ -174,7 +174,7 @@ class moments(base_parser):
             octapole = [octapole[key] for key in lex]
 
             parsed_moments = []
-            if getattr(ccdata, "moments") is None or len(ccdata.moments) < 3:
+            if getattr(ccdata, "moments", None) is None or len(ccdata.moments) < 3:
                 # logger.warning("Found quadrupole moments but no previous dipole")
                 reference = [0.0, 0.0, 0.0]
                 parsed_moments = [reference, None, None, octapole]
@@ -218,7 +218,7 @@ class moments(base_parser):
             hexadecapole = [hexadecapole[key] for key in lex]
 
             parsed_moments = []
-            if getattr(ccdata, "moments") is None or len(ccdata.moments) < 4:
+            if getattr(ccdata, "moments", None) is None or len(ccdata.moments) < 4:
                 # logger.warning("Found quadrupole moments but no previous dipole")
                 reference = [0.0, 0.0, 0.0]
                 parsed_moments = [reference, None, None, None, hexadecapole]

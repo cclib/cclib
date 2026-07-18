@@ -7,6 +7,7 @@ from pathlib import Path
 
 import cclib
 
+
 __filedir__ = Path(__file__).parent
 __filepath__ = Path(__filedir__).resolve()
 __regdir__ = (__filepath__ / ".." / "data" / "regression").resolve()

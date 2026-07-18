@@ -36,6 +36,7 @@ def generate_coverage(cclib_base_dir: Path) -> str:
     try:
         # unittest-based testing
         import inspect
+
         from test.test_data import DataSuite, all_modules
 
         ds_args = inspect.getfullargspec(DataSuite.__init__).args

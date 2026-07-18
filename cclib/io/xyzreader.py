@@ -5,9 +5,9 @@
 
 """A reader for XYZ (Cartesian coordinate) files."""
 
+from cclib.attribute_parsers.data import ccData
+from cclib.attribute_parsers.utils import PeriodicTable
 from cclib.io import filereader
-from cclib.parser.data import ccData
-from cclib.parser.utils import PeriodicTable
 
 
 class XYZ(filereader.Reader):
@@ -79,3 +79,4 @@ class XYZ(filereader.Reader):
         }
 
         self.data = ccData(attributes)
+        self.data.arrayify()

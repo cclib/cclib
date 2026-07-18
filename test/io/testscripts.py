@@ -4,16 +4,21 @@
 # the terms of the BSD 3-Clause License.
 """Unit tests for main scripts (ccget, ccwrite)."""
 
+import logging
 import os
 from pathlib import Path
-from test.conftest import get_program_dir, gettestdata
-from test.io.testccio import BASE_URL, URL_FILES
 from unittest import mock
 
-import cclib
-from cclib.io import ccread, ccwrite
+from test.conftest import get_program_dir, gettestdata
+from test.io.testccio import BASE_URL, URL_FILES
 
+import cclib
 import pytest
+from cclib.attribute_parsers import ccData
+from cclib.collection import ccCollection
+from cclib.io.ccio import ccread, ccwrite
+from cclib.tree import Tree
+
 
 __filedir__ = os.path.dirname(__file__)
 __filepath__ = os.path.realpath(__filedir__)
@@ -139,6 +144,7 @@ class ccwriteTest:
 
         assert mock_ccwrite.call_count == 1
         ccwrite_call_args, ccwrite_call_kwargs = mock_ccwrite.call_args
+        assert isinstance(ccwrite_call_args[0], ccCollection)
         assert ccwrite_call_args[1] == "cjson"
         assert ccwrite_call_args[2] == CJSON_OUTPUT_FILENAME
 
@@ -146,8 +152,8 @@ class ccwriteTest:
 class ccframeTest:
     def setup_method(self) -> None:
         # It would be best to test with Pandas and not a mock!
-        if not hasattr(cclib.io.ccio, "pd"):
-            cclib.io.ccio.pd = mock.MagicMock()
+        if not hasattr(cclib.scripts.ccframe, "pd"):
+            cclib.scripts.ccframe.pd = mock.MagicMock()
 
     @mock.patch("cclib.scripts.ccframe.sys.argv", ["ccframe"])
     def test_main_empty_argv(self) -> None:
@@ -156,14 +162,13 @@ class ccframeTest:
             cclib.scripts.ccframe.main()
 
     @mock.patch("cclib.scripts.ccframe.sys.argv", ["ccframe", INPUT_FILE])
-    @mock.patch("cclib.io.ccio._has_pandas", False)
+    @mock.patch("cclib.scripts.ccframe._has_pandas", False)
     def test_main_without_pandas(self) -> None:
         """Does ccframe fail if Pandas can't be imported?"""
         with pytest.raises(ImportError, match="You must install `pandas` to use this function"):
             cclib.scripts.ccframe.main()
 
     @mock.patch("cclib.scripts.ccframe.sys.argv", ["ccframe", INPUT_FILE])
-    @mock.patch("cclib.io.ccio._has_pandas", True)
     def test_main(self) -> None:
         """Is ccframe called with the given parameters?"""
         with mock.patch("sys.stdout") as mock_stdout:

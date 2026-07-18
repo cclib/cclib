@@ -382,19 +382,5 @@ class ccData:
         # container.
         try:
             return self._parsed_attributes[name]
-        except KeyError:
-            pass
-            # raise AttributeError
-
-    @property
-    def aonames(self):
-        try:
-            return self._parsed_attributes["aonames"]
-        except:  # noqa: E722
-            pass
-        # except KeyError:
-        #    raise AttributeError
-
-    # @aonames.setter
-    # def aonames(self, val):
-    #     setattr(self, "aonames", val)
+        except KeyError as e:
+            raise AttributeError(e.args[0])

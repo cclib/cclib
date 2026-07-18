@@ -6,7 +6,6 @@
 
 from cclib.bridge import cclib2pyquante
 from cclib.parser.utils import find_package
-
 from numpy.testing import assert_array_almost_equal
 
 from ..test_data import getdatafile

@@ -9,6 +9,7 @@ from cclib.parser.utils import find_package
 
 import numpy as np
 
+
 _found_psi4 = find_package("psi4")
 if _found_psi4:
     from psi4.core import Molecule

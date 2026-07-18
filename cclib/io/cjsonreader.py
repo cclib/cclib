@@ -6,10 +6,12 @@
 """A reader for chemical JSON (CJSON) files."""
 
 import json
-from typing import Mapping
 
+from cclib.attribute_parsers.data import ccData
+from cclib.attributes.attribute import _attributes
 from cclib.io import filereader
-from cclib.parser.data import ccData
+
+import numpy
 
 
 class CJSON(filereader.Reader):
@@ -20,17 +22,27 @@ class CJSON(filereader.Reader):
 
         self.representation = dict()
 
-    def parse(self) -> Mapping:
+    def parse(self) -> ccData:
         super().parse()
 
         json_data = json.loads(self.filecontents)
 
         self.generate_repr(json_data)
 
-        return self.representation
+        if "atomcoords" in self.representation:
+            self.representation["atomcoords"] = numpy.array(
+                self.representation["atomcoords"]
+            ).reshape(1, self.representation["natom"], 3)
+
+        data = ccData(self.representation)
+        data.arrayify()
+        return data
 
     def generate_repr(self, json_data) -> None:
-        for k, v in ccData._attributes.items():
+        # NOTE: In the writer we write the total dipole moment as moments
+        # Reading that in would be weird because we lose x y z dip directions
+        # Not sure if we have a test that covers full round trip
+        for k, v in _attributes.items():
             json_key = v.json_key
             attribute_path = v.attribute_path.split(":")
 

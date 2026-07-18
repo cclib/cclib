@@ -6,10 +6,10 @@
 """Test scan logfiles in cclib"""
 
 import cclib
-
 import numpy
 import pytest
 from skip import skipForParser
+
 
 OPT_DONE = cclib.parser.data.ccData.OPT_DONE
 OPT_NEW = cclib.parser.data.ccData.OPT_NEW

@@ -21,7 +21,7 @@ class parser_state(base_parser):
     def psi4(file_handler, ccdata):
         line = file_handler.last_line
         if "Properties will be evaluated at" in line.strip():
-            if getattr(ccdata, "parser_state"):
+            if getattr(ccdata, "parser_state", None):
                 this_metadata = ccdata.parser_state
             else:
                 this_metadata = {}
@@ -42,7 +42,7 @@ class parser_state(base_parser):
         # Therefore, parsing occurs in several steps:
         # 1. read which atom belongs to which basis set group
         this_metadata = {}
-        if getattr(ccdata, "parser_state"):
+        if getattr(ccdata, "parser_state", None):
             this_metadata = ccdata.parser_state
 
         if line[0:21] == "BASIS SET INFORMATION":

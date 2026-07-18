@@ -164,7 +164,7 @@ class atombasis(base_parser):
     @staticmethod
     def psi4(file_handler, ccdata) -> Optional[dict]:
         dependency_list = ["nmo", "nbasis"]  # noqa: F841
-        if getattr(ccdata, "atombasis") is None:
+        if getattr(ccdata, "atombasis", None) is None:
             line = file_handler.last_line
             if line.strip() == "-Contraction Scheme:":
                 file_handler.skip_lines(["headers", "d"], virtual=True)

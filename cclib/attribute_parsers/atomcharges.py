@@ -181,12 +181,12 @@ class atomcharges(base_parser):
         # TODO handle atomspins
         constructed_data = dict()
         if constructed_charge_data:
-            if ccdata.atomcharges:
+            if getattr(ccdata, "atomcharges", None):
                 constructed_data["atomcharges"] = {**ccdata.atomcharges, **constructed_charge_data}
             else:
                 constructed_data["atomcharges"] = {**constructed_charge_data}
         if constructed_spin_data:
-            if ccdata.atomspins:
+            if getattr(ccdata, "atomspins", None):
                 constructed_data["atomspins"] = {**ccdata.atomspins, **constructed_spin_data}
             else:
                 constructed_data["atomspins"] = {**constructed_spin_data}
@@ -218,7 +218,7 @@ class atomcharges(base_parser):
             atomcharges["nbo"] = parsed_charges
         constructed_data = dict()
         if atomcharges != dict():
-            if ccdata.atomcharges:
+            if getattr(ccdata, "atomcharges", None):
                 constructed_data["atomcharges"] = {**ccdata.atomcharges, **atomcharges}
             else:
                 constructed_data["atomcharges"] = {**atomcharges}
@@ -264,12 +264,12 @@ class atomcharges(base_parser):
             )
         constructed_data = dict()
         if constructed_charge_data:
-            if ccdata.atomcharges:
+            if getattr(ccdata, "atomcharges", None):
                 constructed_data["atomcharges"] = {**ccdata.atomcharges, **constructed_charge_data}
             else:
                 constructed_data["atomcharges"] = {**constructed_charge_data}
         if constructed_spin_data:
-            if ccdata.atomspins:
+            if getattr(ccdata, "atomspins", None):
                 constructed_data["atomspins"] = {**ccdata.atomspins, **constructed_spin_data}
             else:
                 constructed_data["atomspins"] = {**constructed_spin_data}
@@ -292,7 +292,7 @@ class atomcharges(base_parser):
             r"^\s*(Mulliken|Lowdin|MBIS) Charges(:?: \(a\.u\.\)| \[a\.u\.\]:)"
         ).search(line)
         if atomic_charges_header is not None:
-            if getattr(ccdata, "atomcharges") is None:
+            if getattr(ccdata, "atomcharges", None) is None:
                 this_atomcharges = {}
             else:
                 this_atomcharges = ccdata.atomcharges
