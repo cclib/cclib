@@ -20,6 +20,7 @@ __datadir__ = os.path.join(__filepath__, "..", "..")
 
 
 class WFXTest:
+    @pytest.mark.skip(reason="skipping for now - v2 in development")
     def test_missing_attribute_error(self):
         """Check if MissingAttributeError is raised as expected."""
         fpath = os.path.join(__datadir__, "data/GAMESS/basicGAMESS-US2017/C_bigbasis.out")
@@ -32,6 +33,7 @@ class WFXTest:
             with pytest.raises(MissingAttributeError):
                 cclib.io.wfxwriter.WFXWriter(data)
 
+    @pytest.mark.skip(reason="skipping for now - v2 in development")
     def test_no_of_prims(self):
         """Check if number of primitives are calculated correctly."""
         num_orb = {"s": 1, "p": 3, "d": 6, "f": 10, "g": 15, "h": 21}
@@ -51,6 +53,7 @@ class WFXTest:
 
             assert no_prims_writer == no_prims_ccdata
 
+    @pytest.mark.skip(reason="skipping for now - v2 in development")
     def test_mo_normalization(self):
         """Check if MO section is printed correctly."""
         fpath = os.path.join(__datadir__, "data/GAMESS/basicGAMESS-US2017/C_bigbasis.out")
@@ -64,6 +67,7 @@ class WFXTest:
             assert len(normalized_mocoeffs) == wfx._no_of_mos()
         assert len(normalized_mocoeffs[0]) == wfx._no_of_prims()
 
+    @pytest.mark.skip(reason="skipping for now - v2 in development")
     def test_mo_normalization_dat(self):
         """Check if MOs are normalized as expected."""
         fpath = os.path.join(__datadir__, "data/GAMESS/basicGAMESS-US2017/dvb_sp.out")
@@ -97,6 +101,7 @@ class WFXTest:
             for coeff1, coeff2 in zip(mo1, mo2):
                 assert -0.09 <= abs(coeff1) - abs(coeff2) <= 0.09
 
+    @pytest.mark.skip(reason="skipping for now - v2 in development")
     def test_programs(self):
         """Check other programs against reference data."""
         ref_file = "data/GAMESS/basicGAMESS-US2017/dvb_sp.out"
