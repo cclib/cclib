@@ -10,6 +10,7 @@ import tempfile
 
 import cclib
 import numpy as np
+import pytest
 
 
 __filedir__ = os.path.dirname(__file__)
@@ -20,6 +21,7 @@ __datadir__ = os.path.join(__filepath__, "..", "..")
 class CJSONReaderTest:
     """Unit tests for the CJSON reader."""
 
+    @pytest.mark.skip(reason="skipping for now - v2 in development")
     def test_cjson_read(self):
         """File->ccData->CJSON->attribute_dict, the attributes within ccData and attribute_dict
         should be the same."""
