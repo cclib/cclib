@@ -20,4 +20,4 @@
 #   from cclib.io import ccread
 #   from cclib.io import ccwrite
 #   from cclib.io import URL_PATTERN todo from cclib.io.ccio import ccframe
-from cclib.io.ccio import ccopen, ccread #, ccwrite
+from cclib.io.ccio import ccopen, ccread, ccwrite
