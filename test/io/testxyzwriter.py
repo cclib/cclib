@@ -9,7 +9,6 @@ import os
 
 import cclib
 import pytest
-from cclib.parser import QChem
 
 from ..test_data import getdatafile
 
