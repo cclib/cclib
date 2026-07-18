@@ -30,9 +30,10 @@ from cclib.tree import Tree
 
 FileWrapper = FileHandler
 
-_has_cclib2openbabel = find_package("openbabel")
-if _has_cclib2openbabel:
-    from cclib.bridge import cclib2openbabel
+# Todo bridges not ported yet
+# _has_cclib2openbabel = find_package("openbabel")
+# if _has_cclib2openbabel:
+#     from cclib.bridge import cclib2openbabel
 
 _has_pandas = find_package("pandas")
 if _has_pandas:
