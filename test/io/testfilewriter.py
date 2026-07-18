@@ -22,6 +22,9 @@ class FileWriterTest:
 
         # You cannot instantiate a class with abstract methods.
         fpath = os.path.join(__datadir__, "data/ADF/basicADF2007.01/dvb_gopt.adfout")
-        data = cclib.io.ccread(fpath)
+        collection = cclib.io.ccread(fpath)
+        assert collection is not None
+        assert collection.parsed_data
+        data = collection.parsed_data[0]
         with pytest.raises(TypeError):
             cclib.io.filewriter.Writer(data)
