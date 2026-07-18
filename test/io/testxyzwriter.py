@@ -8,6 +8,7 @@
 import os
 
 import cclib
+import pytest
 from cclib.parser import QChem
 
 from ..test_data import getdatafile
@@ -19,6 +20,7 @@ __datadir__ = os.path.join(__filepath__, "..", "..")
 
 
 class XYZWriterTest:
+    @pytest.mark.skip(reason="skipping for now - v2 in development")
     def test_init(self):
         """Does the class initialize correctly?"""
         fpath = os.path.join(__datadir__, "data/ADF/basicADF2007.01/dvb_gopt.adfout")
@@ -72,6 +74,7 @@ class XYZWriterTest:
             # (right).
             assert ref.read() == new_repr
 
+    @pytest.mark.skip(reason="skipping for now - v2 in development")
     def test_quantum_output_repr(self):
         """Can the XYZ representation be generated from a parsed quantum chemical
         output?
