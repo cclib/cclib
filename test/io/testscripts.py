@@ -4,6 +4,7 @@
 # the terms of the BSD 3-Clause License.
 """Unit tests for main scripts (ccget, ccwrite)."""
 
+import logging
 import os
 from pathlib import Path
 from unittest import mock
@@ -13,7 +14,10 @@ from test.io.testccio import BASE_URL, URL_FILES
 
 import cclib
 import pytest
-from cclib.io import ccread, ccwrite
+from cclib.attribute_parsers import ccData
+from cclib.collection import ccCollection
+from cclib.io.ccio import ccread, ccwrite
+from cclib.tree import Tree
 
 
 __filedir__ = os.path.dirname(__file__)
@@ -140,6 +144,7 @@ class ccwriteTest:
 
         assert mock_ccwrite.call_count == 1
         ccwrite_call_args, ccwrite_call_kwargs = mock_ccwrite.call_args
+        assert isinstance(ccwrite_call_args[0], ccCollection)
         assert ccwrite_call_args[1] == "cjson"
         assert ccwrite_call_args[2] == CJSON_OUTPUT_FILENAME
 
@@ -147,8 +152,8 @@ class ccwriteTest:
 class ccframeTest:
     def setup_method(self) -> None:
         # It would be best to test with Pandas and not a mock!
-        if not hasattr(cclib.io.ccio, "pd"):
-            cclib.io.ccio.pd = mock.MagicMock()
+        if not hasattr(cclib.scripts.ccframe, "pd"):
+            cclib.scripts.ccframe.pd = mock.MagicMock()
 
     @mock.patch("cclib.scripts.ccframe.sys.argv", ["ccframe"])
     def test_main_empty_argv(self) -> None:
