@@ -173,7 +173,7 @@ repos:
       - id: rst-directive-colons
       - id: rst-inline-touching-normal
   - repo: https://github.com/tombi-toml/tombi-pre-commit
-    rev: v1.2.3
+    rev: v1.2.4
     hooks:
       - id: tombi-format
         # Requires https://github.com/cclib/cclib/pull/1775
