@@ -37,12 +37,12 @@ class XTB(logfileparser.Logfile):
         return label
 
     def before_parsing(self) -> None:
-        """Acttions before parsing"""
-        pass
+        """Actions before parsing"""
+        super().before_parsing()
 
     def after_parsing(self) -> None:
         """Actions after parsing"""
-        pass
+        super().after_parsing()
 
     def extract(self, inputfile: "FileWrapper", line: str) -> None:
         if self.metadata.get("success") is None:
@@ -72,17 +72,51 @@ class XTB(logfileparser.Logfile):
         mult = _extract_multiplicity(line)
         if mult is not None:
             self.set_attribute("mult", mult)
+        
+        solvent_model = _extract_solvent_model(line)
+        if solvent_model is not None:
+            self.metadata["solvent_model"] = solvent_model
+
+        solvent_name = _extract_solvent_name(line)
+        if solvent_name is not None:
+            self.metadata['solvent_name'] = solvent_name
+
+        solvent_constant = _extract_solvent_constant(line)
+        if solvent_constant is not None:
+            self.metadata["solvent_params"] = {'epsilon': solvent_constant}
+        
+        if _is_scc_line(line):
+            # Parse SCF (SCC here) convergence.
+            # We have 5 fields we can parse (E, dE, RMSdq, gap, omega)
+            # For now, we'll just take E.
+            # Note that the SCC energy != final energy, there seems to be some additional minor contribution(s)...
+            scc_values = []
+            line = next(inputfile)
+            while line.strip():
+                split_line = line.split()
+                scc_values.append(float(split_line[1]))
+                line = next(inputfile)
+            
+            # Convert?
+            #scc_values = convertor(np.array(scc_values), "hartree", "eV")
+            self.append_attribute("scfvalues", scc_values)
 
         # TODO: Use the `xtbopt.xyz` file for SCF energies if available since it has higher precision.
         # But will need to be careful about what might happen if other formats are supplied,
         # such as sdf or POSCAR.
         if _is_geom_cycle_line(line):
+            self.set_attribute('optdone', [])
+
             while not _is_geom_end_line(line):
                 scf_energy = _extract_geom_energy(line)
                 if scf_energy is not None:
                     self.append_attribute("scfenergies", scf_energy)
 
                 line = next(inputfile)
+
+        if _is_geom_opt_converged(line):
+            # We only have one set of coords.
+            self.set_attribute('optdone', [0])
 
         # TODO: Use the `xtbopt.xyz` file if available since it has higher precision and
         # has the coordinates for every geometry step. If it's not an optimization,
@@ -118,7 +152,8 @@ class XTB(logfileparser.Logfile):
             next(inputfile)
             line = next(inputfile)
 
-            homos = []
+            homo = None
+            last_index = None
             mooccnos = []
             moenergies = []
 
@@ -126,7 +161,7 @@ class XTB(logfileparser.Logfile):
             while "------" not in line:
                 orbital_info = _extract_orbitals(line)
                 if orbital_info is not None:
-                    orbital_idx = orbital_info[0] - 1
+                    last_index = orbital_idx = orbital_info[0] - 1
                     orbital_occ = orbital_info[1]
                     orbital_energy = orbital_info[2]
                     is_homo = orbital_info[3]
@@ -140,7 +175,7 @@ class XTB(logfileparser.Logfile):
                     moenergies.append(orbital_energy)
                     mooccnos.append(orbital_occ)
                     if is_homo:
-                        homos.append(orbital_idx)
+                        homo = orbital_idx
 
                 i += 1
                 line = next(inputfile)
@@ -149,8 +184,11 @@ class XTB(logfileparser.Logfile):
                 self.set_attribute("moenergies", [np.array(moenergies)])
             if mooccnos:
                 self.set_attribute("mooccnos", np.array(mooccnos))
-            if homos:
-                self.set_attribute("homos", np.array(homos))
+            if homo:
+                self.set_attribute("homos", np.array([homo]))
+            if last_index:
+                self.set_attribute("nmo", last_index + 1)
+
 
         # TODO: Use `charges` file for Mulliken if available since it has higher precision.
         mulliken = []
@@ -270,11 +308,11 @@ class XTB(logfileparser.Logfile):
         if warnings:
             self.metadata["warnings"] = warnings
 
-        wall_time = _extract_wall_time(line)
+        wall_time = _extract_wall_time(line, self.inputfile.last_lines)
         if wall_time is not None:
             self.metadata["wall_time"] = wall_time
 
-        cpu_time = _extract_cpu_time(line)
+        cpu_time = _extract_cpu_time(line, self.inputfile.last_lines)
         if cpu_time is not None:
             self.metadata["cpu_time"] = cpu_time
 
@@ -288,6 +326,41 @@ class XTB(logfileparser.Logfile):
                     grads[-1].append([float(v) for v in line.split()])
                 line = next(inputfile)
             self.set_attribute("grads", np.array(grads))
+        
+        if _is_moment_line(line):
+            # We don't seem to be given the origin unfortunately.
+            moments = [
+                [0.0,0.0,0.0]
+            ]
+
+            # First up is dipole moment, available in 'q only' and 'full' variants.
+            line = next(inputfile)
+            line = next(inputfile)
+            line = next(inputfile)
+
+            # Total is in D, but x, y, and z are in Au...
+            title, x, y, z, tot = line.split()
+            moments.append(convertor(np.array([float(x), float(y), float(z)]), "ebohr", "Debye"))
+
+            # Next is quadrupole, available in 'q only', 'q+dip', and 'full' flavours.
+            # Unknown units.
+            line = next(inputfile)
+            line = next(inputfile)
+            line = next(inputfile)
+            line = next(inputfile)
+            # Note the different ordering.
+            title, xx, xy, yy, xz, yz, zz = line.split()
+            moments.append(convertor(np.array([
+                float(xx),
+                float(xy),
+                float(xz),
+                float(yy),
+                float(yz),
+                float(zz)
+            ]), "ebohr2", "Buckingham"))
+
+            self.set_attribute('moments', moments)
+
 
         # TODO:
         # 1) Ensure `hessian` is always read last in
@@ -360,6 +433,37 @@ def _extract_charge(line: str) -> Optional[int]:
         :::::::::::::::::::::::::::::::::::::::::::::::::::::
     """
     return round(float(line.split()[-3])) if "total charge" in line else None
+
+
+def _extract_solvent_model(line: str) -> Optional[str]:
+    """
+    * Solvation model:               GBSA
+      Solvent                        toluene
+      Parameter file                 internal GFN2-xTB/GBSA
+      Dielectric constant                7.0000E+00
+    """
+    return line.split()[-1] if "Solvation model" in line else None
+
+
+def _extract_solvent_name(line: str) -> Optional[str]:
+    """
+    * Solvation model:               GBSA
+      Solvent                        toluene
+      Parameter file                 internal GFN2-xTB/GBSA
+      Dielectric constant                7.0000E+00
+    """
+    split_line = line.split()
+    return split_line[-1] if "Solvent" in line and len(split_line) == 2 else None
+
+
+def _extract_solvent_constant(line: str) -> Optional[str]:
+    """
+    * Solvation model:               GBSA
+      Solvent                        toluene
+      Parameter file                 internal GFN2-xTB/GBSA
+      Dielectric constant                7.0000E+00
+    """
+    return float(line.split()[-1]) if "Dielectric constant" in line else None
 
 
 def _extract_final_energy(line: str) -> Optional[float]:
@@ -502,11 +606,11 @@ def _extract_orbitals(line: str) -> Optional[Tuple[int, float, float, bool]]:
         return (
             int(line_split[0]),
             float(line_split[1]),
-            float(line_split[3]),
+            float(line_split[2]),
             bool("(HOMO) in line"),
         )
     if "(LUMO)" in line or (len(line_split) == 3 and "MO" not in line):
-        return int(line_split[0]), 0.0, float(line_split[2]), False
+        return int(line_split[0]), 0.0, float(line_split[1]), False
 
 
 def _extract_gfn2_mulliken_charge(line: str) -> Optional[Tuple[float, int]]:
@@ -555,15 +659,23 @@ def _extract_rotational_constants(line: str) -> Optional[np.ndarray]:
         return np.array([float(x) for x in line_split[-3:]]) / ghz2invcm
 
 
-def _extract_wall_time(line: str) -> Optional[List[timedelta]]:
+def _extract_wall_time(line: str, last_lines: List[str]) -> Optional[List[timedelta]]:
     """
     Extract the wall time.
 
-        * wall-time:     0 d,  0 h,  0 min,  0.091 sec
+    total:
+    * wall-time:     0 d,  0 h,  7 min, 38.132 sec
+    *  cpu-time:     0 d,  0 h,  7 min, 44.658 sec
+    * ratio c/w:     1.014 speedup
+    SCF:
+    * wall-time:     0 d,  0 h,  0 min,  1.641 sec
+    *  cpu-time:     0 d,  0 h,  0 min,  9.011 sec
+    * ratio c/w:     5.489 speedup
     """
-    line_split = line.split()
-    return (
-        [
+    # We only want the total wall time.
+    if "*" in line and "wall-time" in line and 'total:' in last_lines[-2]:
+        line_split = line.split()
+        return [
             timedelta(
                 days=float(line_split[2]),
                 hours=float(line_split[4]),
@@ -571,17 +683,26 @@ def _extract_wall_time(line: str) -> Optional[List[timedelta]]:
                 seconds=float(line_split[8]),
             )
         ]
-        if "*" in line and "wall-time" in line
-        else None
-    )
 
 
-def _extract_cpu_time(line: str) -> Optional[List[timedelta]]:
+def _extract_cpu_time(line: str, last_lines: List[str]) -> Optional[List[timedelta]]:
     """
     Extract the CPU time.
 
         *  cpu-time:     0 d,  0 h,  0 min,  1.788 sec
     """
+    # We only want the total wall time.
+    if "*" in line and "cpu-time" in line and 'total:' in last_lines[-3]:
+        line_split = line.split()
+        return [
+            timedelta(
+                days=float(line_split[2]),
+                hours=float(line_split[4]),
+                minutes=float(line_split[6]),
+                seconds=float(line_split[8]),
+            )
+        ]
+    return
     line_split = line.split()
     return (
         [
@@ -779,6 +900,25 @@ def _extract_entropy(line: str) -> Optional[float]:
         return convertor(float(line.split()[3]) / 1000, "kcal/mol", "hartree")
 
 
+def _is_scc_line(line: str) -> bool:
+    """
+    Determine if the line indicates the start of the SCC iterations block.
+
+ iter      E             dE          RMSdq      gap      omega  full diag
+   1    -26.8817007 -0.268817E+02  0.514E+00    3.36       0.0  T
+   2    -26.9029233 -0.212226E-01  0.307E+00    3.34       1.0  T
+   3    -26.9032490 -0.325733E-03  0.513E-01    3.33       1.0  T
+   4    -26.9033575 -0.108444E-03  0.261E-01    3.33       1.0  T
+   5    -26.9044923 -0.113485E-02  0.685E-02    3.33       1.0  T
+   6    -26.9045263 -0.340103E-04  0.318E-02    3.33       1.0  T
+   7    -26.9045273 -0.938828E-06  0.102E-02    3.33       2.2  T
+   8    -26.9045283 -0.985018E-06  0.770E-04    3.33      29.1  T
+   9    -26.9045283 -0.905125E-09  0.356E-04    3.33      62.8  T
+    """
+    split = line.split()
+    return len(split) == 8 and split[0] == "iter" and split[1] == "E"
+
+
 def _is_grad_line(line: str) -> bool:
     """
     Determine if the line indicates the start of a gradient block.
@@ -934,3 +1074,20 @@ def _is_hessian_line(line: str) -> bool:
     0.0162496487   0.0000016361   0.1907680190   0.1825630415
     """
     return "$hessian" in line
+
+
+def _is_moment_line(line:str) -> bool:
+    """
+    Determine if we are in the dipole moment printout.
+
+    molecular dipole:
+                    x           y           z       tot (Debye)
+    q only:        0.000       0.000       0.000
+    full:        0.000       0.000       0.000       0.000
+    molecular quadrupole (traceless):
+                    xx          xy          yy          xz          yz          zz
+    q only:        1.417       0.327       0.770       0.000       0.000      -2.187
+    q+dip:        5.938       0.815       3.726       0.000      -0.000      -9.664
+    full:        3.132       0.354       1.754       0.000       0.000      -4.886
+    """
+    return "molecular dipole:" in line
