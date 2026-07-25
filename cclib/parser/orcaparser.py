@@ -778,7 +778,7 @@ Dispersion correction           -0.016199959
             self.append_attribute("ccenergies", float(line.split()[-1]))
             self.metadata["methods"].append("CCSD")
             line = next(inputfile)
-            assert line[:23] == "Singles Norm <S|S>**1/2"
+            assert line[:23].lower() == "singles norm <s|s>**1/2"
             line = next(inputfile)
             self.metadata["t1_diagnostic"] = float(line.split()[-1])
 
