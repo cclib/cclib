@@ -81,7 +81,7 @@ triggers = [
     (GAMESSDAT, ["$DATA"], True),
     (Gaussian, ["Gaussian, Inc."], True),
     (Jaguar, ["Jaguar"], True),
-    (Molcas, ["MOLCAS"], True),
+    (Molcas, ["OPENMOLCAS"], True),
     (Molpro, ["PROGRAM SYSTEM MOLPRO"], True),
     (Molpro, ["1PROGRAM"], False),
     (MOPAC, ["MOPAC20"], True),
