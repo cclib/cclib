@@ -307,6 +307,11 @@ class Logfile(ABC):
         for name in ("mpenergies",):
             if hasattr(self, name):
                 delattr(self, name)
+        # Reset the success flag so that only the *last* internal step's
+        # termination status is reported. Without this, a truncated
+        # second step (e.g. Freq after Opt) would falsely report
+        # success=True from the first step's "Normal termination".
+        self.metadata["success"] = False
 
     def hasattrs(self, names: Iterable[str]) -> bool:
         """Does this logfile have all the given attributes?"""
