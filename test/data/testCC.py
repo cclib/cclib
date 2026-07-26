@@ -17,7 +17,7 @@ class GenericCCTest:
     def testsizeandshape(self, data) -> None:
         """Are the dimensions of ccenergies correct?"""
         assert data._ccCollection._parsed_data[0].ccenergies.shape == (
-            len(data._ccCollection._parsed_data[0].scfenergies.magnitude),
+            len(data._ccCollection._parsed_data[0].scfenergies),
         )
 
     def testsign(self, data) -> None:

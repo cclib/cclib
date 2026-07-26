@@ -6,7 +6,7 @@ from typing import Optional
 
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
-from cclib import ureg
+from cclib import unit_registry
 
 import numpy as np
 
@@ -51,7 +51,7 @@ class moenergies(base_parser):
 
                 constructed_moenergies = [
                     np.array(x, "d") for x in constructed_moenergies
-                ] * ureg.hartree
+                ] * unit_registry.hartree
                 return {moenergies.__name__: constructed_moenergies}
         return None
 

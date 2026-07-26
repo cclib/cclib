@@ -6,7 +6,7 @@ from typing import Optional
 
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
-from cclib import ureg
+from cclib import unit_registry
 
 import numpy as np
 
@@ -26,14 +26,15 @@ class dispersionenergies(base_parser):
         ccsd_trigger = "* CCSD total energy"  # noqa: F841
         ccsd_t_trigger = "* CCSD(T) total energy"  # noqa: F841
         line = file_handler.last_line
-        if getattr(ccdata, "dispersionenergies") is None:
-            this_dispersionenergies = []
+        existing = getattr(ccdata, "dispersionenergies", None)
+        if existing is None:
+            this_dispersionenergies = unit_registry.Quantity(np.array([]), "hartree")
         else:
-            this_dispersionenergies = ccdata.dispersionenergies.magnitude
+            this_dispersionenergies = existing
         if "Empirical Dispersion Energy" in line:
-            dispersion = float(line.split()[-1])
-            this_dispersionenergies.append(dispersion)
-            return {dispersionenergies.__name__: np.array(this_dispersionenergies) * ureg.hartree}
+            dispersion = float(line.split()[-1])*unit_registry.hartree
+            this_dispersionenergies = np.append(this_dispersionenergies, dispersion)
+            return {dispersionenergies.__name__: this_dispersionenergies}
         return None
         # The geometry convergence targets and values are printed in a table, with the legends
 
@@ -42,15 +43,16 @@ class dispersionenergies(base_parser):
         ccsd_trigger = "* CCSD total energy"  # noqa: F841
         ccsd_t_trigger = "* CCSD(T) total energy"  # noqa: F841
         line = file_handler.last_line
-        if getattr(ccdata, "dispersionenergies") is None:
-            this_dispersionenergies = []
+        existing = getattr(ccdata, "dispersionenergies", None)
+        if existing is None:
+            this_dispersionenergies = unit_registry.Quantity(np.array([]), "hartree")
         else:
-            this_dispersionenergies = ccdata.dispersionenergies.magnitude
+            this_dispersionenergies = existing
 
         if "Dispersion energy=" in line:
-            dispersion = float(line.split()[-2])
-            this_dispersionenergies.append(dispersion)
-            return {dispersionenergies.__name__: np.array(this_dispersionenergies) * ureg.hartree}
+            dispersion = float(line.split()[-2])* unit_registry.hartree
+            this_dispersionenergies = np.append(this_dispersionenergies, dispersion)
+            return {dispersionenergies.__name__: this_dispersionenergies}
         return None
 
     @staticmethod
