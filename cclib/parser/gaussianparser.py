@@ -900,7 +900,11 @@ class Gaussian(logfileparser.Logfile):
             line = next(inputfile)
             while line[1:16] != "Leave Link  101":
                 if line[1:8] == "AtmWgt=":
-                    self.extend_attribute("atommasses", list(map(float, line.split()[1:])))
+                    # Guard against duplicate "Isotopes and Nuclear Properties"
+                    # blocks in opt+freq jobs (issue #1080): stop accumulating
+                    # once we have one mass per atom.
+                    if not hasattr(self, "atommasses") or len(self.atommasses) < self.natom:
+                        self.extend_attribute("atommasses", list(map(float, line.split()[1:])))
                 line = next(inputfile)
 
         # Symmetry: point group
