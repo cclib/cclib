@@ -1684,6 +1684,12 @@ class Gaussian(logfileparser.Logfile):
                         self.set_attribute("nqmf", self.natom)
                     for n in range(self.nqmf):
                         line = next(inputfile)
+                        # Frozen coordinates: Gaussian omits frozen atoms from the
+                        # displacement block. Stop if we reach a non-atom line
+                        # (blank, separator, or thermochemistry), fixing #905.
+                        stripped = line.strip()
+                        if not stripped or not stripped.split()[0].isdigit():
+                            break
                         numbers = [float(s) for s in line[10:].split()]
                         N = len(numbers) // 3
                         if not disps:
