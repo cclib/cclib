@@ -812,9 +812,22 @@ Dispersion correction           -0.016199959
                 self.skip_line(inputfile, "constrained Cartesian coordinate warning")
                 line = next(inputfile).strip()
 
+            _numeric_re = re.compile(r"^-?\d+\.?\d*(?:[eE][+-]?\d+)?")
             while line:
                 tokens = line.split()
-                x, y, z = float(tokens[-3]), float(tokens[-2]), float(tokens[-1])
+                # Robustly extract the last 3 numeric values from each gradient
+                # line. ORCA sometimes concatenates module startup text onto the
+                # last value (e.g. '0.000111Starting D4'), causing float() to fail
+                # on a naive tokens[-1] approach (fixes #1317).
+                numeric_vals = []
+                for _tok in tokens:
+                    _m = _numeric_re.match(_tok)
+                    if _m:
+                        try:
+                            numeric_vals.append(float(_m.group()))
+                        except ValueError:
+                            pass
+                x, y, z = numeric_vals[-3], numeric_vals[-2], numeric_vals[-1]
                 grads.append((x, y, z))
                 line = next(inputfile).strip()
 
