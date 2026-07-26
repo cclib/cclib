@@ -1684,6 +1684,11 @@ class Gaussian(logfileparser.Logfile):
                         self.set_attribute("nqmf", self.natom)
                     for n in range(self.nqmf):
                         line = next(inputfile)
+                        if not line.strip():
+                            # Blank line terminates the normal coordinate block
+                            # early, e.g. when fewer atoms are printed because
+                            # some coordinates are frozen (NQMF > NQM atoms).
+                            break
                         numbers = [float(s) for s in line[10:].split()]
                         N = len(numbers) // 3
                         if not disps:
@@ -1692,6 +1697,12 @@ class Gaussian(logfileparser.Logfile):
                         for n in range(N):
                             disps[n].append(numbers[3 * n : 3 * n + 3])
                     self.vibdisps.extend(disps)
+                    if not line.strip():
+                        # The blank line that ended the atom block also marks
+                        # the end of the harmonic frequency while-loop. Skip
+                        # the line = next(inputfile) advance below so the
+                        # while condition sees the blank line and exits.
+                        continue
 
                 # Block with high-precision (freq=hpmodes) displacements should start with this.
                 #                           1         2         3         4         5
