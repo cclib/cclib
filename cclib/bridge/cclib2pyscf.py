@@ -20,8 +20,7 @@ import periodictable
 l_sym2num = {"S": 0, "P": 1, "D": 2, "F": 3, "G": 4}
 
 
-class MissingAttributeError(Exception):
-    pass
+from cclib.exceptions import MissingAttributeError
 
 
 _found_pyscf = find_package("pyscf")
