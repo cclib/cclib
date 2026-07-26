@@ -15,8 +15,7 @@ if TYPE_CHECKING:
     from cclib.progress import Progress
 
 
-class MissingAttributeError(Exception):
-    pass
+from cclib.exceptions import MissingAttributeError
 
 
 class Method:

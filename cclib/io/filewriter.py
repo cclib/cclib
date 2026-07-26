@@ -44,8 +44,7 @@ else:
     from typing import Iterable
 
 
-class MissingAttributeError(Exception):
-    pass
+from cclib.exceptions import MissingAttributeError
 
 
 class Writer(ABC):

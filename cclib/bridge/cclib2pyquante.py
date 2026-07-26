@@ -16,8 +16,7 @@ if TYPE_CHECKING:
     from cclib.parser.data import ccData
 
 
-class MissingAttributeError(Exception):
-    pass
+from cclib.exceptions import MissingAttributeError
 
 
 _found_pyquante2 = find_package("pyquante2")

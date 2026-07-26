@@ -11,8 +11,7 @@ from cclib.parser.data import ccData
 from cclib.parser.utils import PeriodicTable, find_package
 
 
-class MissingAttributeError(Exception):
-    pass
+from cclib.exceptions import MissingAttributeError
 
 
 _found_chemfiles = find_package("chemfiles")
