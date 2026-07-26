@@ -11,7 +11,7 @@ import numpy
 import packaging
 from common import get_minimum_carbon_separation
 from skip import skipForLogfile, skipForParser
-from cclib import ureg
+from cclib import unit_registry
 
 
 class GenericSPTest:
@@ -25,13 +25,13 @@ class GenericSPTest:
     nbasisdict = {1: 1, 6: 5}
 
     # Approximate B3LYP energy of dvb after SCF in STO-3G (Gaussian 16).
-    scfenergy = -382.308266602 * ureg.hartree
-    scfenergy_delta = 3.0e-1 * ureg.hartree
+    scfenergy = -382.308266602 *unit_registry.hartree
+    scfenergy_delta = 3.0e-1 * unit_registry.hartree
 
     # Approximate energy of the innermost molecular orbital of DVB with
     # B3LYP/STO-3G (from Q-Chem 5.4 fchk).
-    moenergy = -10.0179353 * ureg.hartree
-    moenergy_delta = 3.0e-3 * ureg.hartree
+    moenergy = -10.0179353 * unit_registry.hartree
+    moenergy_delta = 3.0e-3 * unit_registry.hartree
 
     # Overlap first two atomic orbitals.
     overlap01 = 0.24
@@ -683,13 +683,13 @@ class GenericSPTest:
 
 class GenericHFSPTest(GenericSPTest):
     # Approximate HF energy of dvb after SCF in STO-3G (from DALTON 2015).
-    scfenergy = -379.7689629312 * ureg.hartree
-    scfenergy_delta = 6.5e-1 * ureg.hartree
+    scfenergy = -379.7689629312 * unit_registry.hartree
+    scfenergy_delta = 6.5e-1 * unit_registry.hartree
 
     # Approximate energy of the innermost molecular orbital of DVB with
     # HF/STO-3G (from Psi4 1.3.1).
-    moenergy = -11.0407466 * ureg.hartree
-    moenergy_delta = 1.6e-1 * ureg.hartree
+    moenergy = -11.0407466 * unit_registry.hartree
+    moenergy_delta = 1.6e-1 * unit_registry.hartree
 
 
 class ADFSPTest(GenericSPTest):
@@ -849,7 +849,7 @@ class GenericDispersionTest:
     """Generic single-geometry dispersion correction unittest"""
 
     # Q-Chem 5.4
-    dispersionenergy = -0.0147199319 * ureg.hartree
+    dispersionenergy = -0.0147199319 * unit_registry.hartree
 
     @skipForParser("QChem", "this property has yet to be ported for version 2")
     def testdispersionenergies(self, data) -> None:
