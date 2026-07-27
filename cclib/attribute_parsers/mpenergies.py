@@ -30,8 +30,8 @@ class mpenergies(base_parser):
             existing = getattr(ccdata, "mpenergies")
             if existing is None:
                 this_mpenergies = unit_registry.Quantity(np.array([]), "hartree")
-            np.append(this_mpenergies.append([mpenergy])
-            return {mpenergies.__name__: np.array(this_mpenergies) * unit_registry.hartree}
+            this_mpenergies = np.append(this_mpenergies,mpenergy)
+            return {mpenergies.__name__: this_mpenergies * unit_registry.hartree}
         # This is for the newer DF-MP2 code in 4.0.
         if "DF-MP2 Energies" in line:
             while "Total Energy" not in line:

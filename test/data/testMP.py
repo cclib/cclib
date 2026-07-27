@@ -17,16 +17,20 @@ class GenericMP2Test:
     def testsizeandshape(self, data) -> None:
         """(MP2) Are the dimensions of mpenergies correct?"""
         assert data._ccCollection._parsed_data[0].mpenergies.shape == (
-            len(data._ccCollection._parsed_data[0].scfenergies.magnitude),
+            len(data._ccCollection._parsed_data[0].scfenergies),
             self.level - 1,
         )
 
     def testsign(self, data) -> None:
         """Are the Moller-Plesset corrections negative?"""
         if self.level == 2:
+            print('mp')
+            print(data._ccCollection._parsed_data[0].mpenergies[:, 0].magnitude)
+            print('scf')
+            print(data._ccCollection._parsed_data[0].scfenergies)
             corrections = (
                 data._ccCollection._parsed_data[0].mpenergies[:, 0].magnitude
-                - data._ccCollection._parsed_data[0].scfenergies.magnitude
+                - data._ccCollection._parsed_data[0].scfenergies[0].magnitude
             )
         else:
             corrections = (
