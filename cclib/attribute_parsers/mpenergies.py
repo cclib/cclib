@@ -89,7 +89,6 @@ class mpenergies(base_parser):
         #  DEMP5 =  -0.11048812312D-02 MP5 =  -0.75017172926D+02
         if line[29:34] == "MP5 =":
             this_mpenergies[-1].append(utils.float(line.split("=")[2]))
-            print(this_mpenergies)
             return {mpenergies.__name__: np.array(this_mpenergies) * unit_registry.hartree}
         return None
 
