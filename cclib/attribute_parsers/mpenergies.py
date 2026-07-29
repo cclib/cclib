@@ -6,7 +6,7 @@ from typing import Optional
 
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
-from cclib import unit_registry
+from cclib import ureg
 import numpy as np
 
 
@@ -29,9 +29,9 @@ class mpenergies(base_parser):
             mpenergy = utils.convertor(float(line.split()[-1]), "hartree", "eV")
             existing = getattr(ccdata, "mpenergies")
             if existing is None:
-                this_mpenergies = unit_registry.Quantity(np.array([]), "hartree")
+                this_mpenergies = ureg.Quantity(np.array([]), "hartree")
             this_mpenergies = np.append(this_mpenergies,mpenergy)
-            return {mpenergies.__name__: this_mpenergies * unit_registry.hartree}
+            return {mpenergies.__name__: this_mpenergies * ureg.hartree}
         # This is for the newer DF-MP2 code in 4.0.
         if "DF-MP2 Energies" in line:
             while "Total Energy" not in line:
@@ -40,7 +40,7 @@ class mpenergies(base_parser):
             if getattr(ccdata, "mpenergies") is None:
                 this_mpenergies = []
             this_mpenergies.append([mpenergy])
-            return {mpenergies.__name__: np.array(this_mpenergies) * unit_registry.hartree}
+            return {mpenergies.__name__: np.array(this_mpenergies) * ureg.hartree}
         return None
 
     @staticmethod
@@ -61,13 +61,13 @@ class mpenergies(base_parser):
         # Newer versions of gausian introduced a space between 'EUMP2' and '='...
         if "EUMP2 =" in line[27:36] or "EUMP2=" in line[27:35]:
             this_mpenergies.append([utils.float(line.split("=")[2])])
-            return {mpenergies.__name__: np.array(this_mpenergies) * unit_registry.hartree}
+            return {mpenergies.__name__: np.array(this_mpenergies) * ureg.hartree}
 
         # Example MP3 output line:
         #  E3=       -0.10518801D-01     EUMP3=      -0.75012800924D+02
         if line[34:40] == "EUMP3=":
             this_mpenergies[-1].append(utils.float(line.split("=")[2]))
-            return {mpenergies.__name__: np.array(this_mpenergies) * unit_registry.hartree}
+            return {mpenergies.__name__: np.array(this_mpenergies) * ureg.hartree}
 
         # Example MP4 output lines:
         #  E4(DQ)=   -0.31002157D-02        UMP4(DQ)=   -0.75015901139D+02
@@ -83,13 +83,13 @@ class mpenergies(base_parser):
                 if line[34:45] == "UMP4(SDTQ)=":
                     mp4energy = utils.float(line.split("=")[2])
             this_mpenergies[-1].append(mp4energy)
-            return {mpenergies.__name__: np.array(this_mpenergies) * unit_registry.hartree}
+            return {mpenergies.__name__: np.array(this_mpenergies) * ureg.hartree}
 
         # Example MP5 output line:
         #  DEMP5 =  -0.11048812312D-02 MP5 =  -0.75017172926D+02
         if line[29:34] == "MP5 =":
             this_mpenergies[-1].append(utils.float(line.split("=")[2]))
-            return {mpenergies.__name__: np.array(this_mpenergies) * unit_registry.hartree}
+            return {mpenergies.__name__: np.array(this_mpenergies) * ureg.hartree}
         return None
 
     @staticmethod

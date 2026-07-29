@@ -6,7 +6,7 @@ from typing import Optional
 
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
-from cclib import unit_registry
+from cclib import ureg
 
 import numpy as np
 
@@ -23,36 +23,40 @@ class moenergies(base_parser):
         line = file_handler.last_line
         if line[1:6] == "Alpha" and line.find("eigenvalues") >= 0:
             # For counterpoise fragments, skip these lines.
-            if getattr(ccdata, "moenergies") is None:
-                constructed_moenergies = [[]]
-                while line.find("Alpha") == 1:
-                    part = line[28:]
-                    i = 0
-                    while i * 10 + 4 < len(part):
-                        s = part[i * 10 : (i + 1) * 10]
-                        try:
-                            x = utils.float(s)
-                        except ValueError:
-                            x = np.nan
-                        constructed_moenergies[0].append(x)
-                        i += 1
-                    line = file_handler.virtual_next()
-                if line.find("Beta") == 2:
-                    constructed_moenergies.append([])
+            existing = getattr(ccdata, "moenergies") 
+            print(existing)
+            if existing:
+                constructed_moenergies = existing
+            else:
+                constructed_moenergies = [np.array([])*ureg.hartree]
+                print(constructed_moenergies)
 
-                while line.find("Beta") == 2:
-                    part = line[28:]
-                    i = 0
-                    while i * 10 + 4 < len(part):
-                        x = part[i * 10 : (i + 1) * 10]
-                        constructed_moenergies[1].append(utils.float(x))
-                        i += 1
-                    line = file_handler.virtual_next()
+            while line.find("Alpha") == 1:
+                part = line[28:]
+                print(part)
+                i = 0
+                while i * 10 + 4 < len(part):
+                    s = part[i * 10 : (i + 1) * 10]
+                    try:
+                        x = utils.float(s)*ureg.hartree
+                    except ValueError:
+                        x = np.nan
+                    constructed_moenergies[0] = np.append(constructed_moenergies[0],x)
+                    i += 1
+                line = file_handler.virtual_next()
+            if line.find("Beta") == 2:
+                constructed_moenergies.append([])
 
-                constructed_moenergies = [
-                    np.array(x, "d") for x in constructed_moenergies
-                ] * unit_registry.hartree
-                return {moenergies.__name__: constructed_moenergies}
+            while line.find("Beta") == 2:
+                part = line[28:]
+                i = 0
+                while i * 10 + 4 < len(part):
+                    x = part[i * 10 : (i + 1) * 10]
+                    constructed_moenergies[1] = np.append(constructed_moenergies[1],utils.float(x))
+                    i += 1
+                line = file_handler.virtual_next()
+                print(line)
+            return {moenergies.__name__: constructed_moenergies}
         return None
 
     @staticmethod

@@ -6,7 +6,7 @@ from typing import Optional
 
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
-from cclib import unit_registry
+from cclib import ureg
 
 import numpy as np
 
@@ -28,11 +28,11 @@ class dispersionenergies(base_parser):
         line = file_handler.last_line
         existing = getattr(ccdata, "dispersionenergies", None)
         if existing is None:
-            this_dispersionenergies = unit_registry.Quantity(np.array([]), "hartree")
+            this_dispersionenergies = ureg.Quantity(np.array([]), "hartree")
         else:
             this_dispersionenergies = existing
         if "Empirical Dispersion Energy" in line:
-            dispersion = float(line.split()[-1])*unit_registry.hartree
+            dispersion = float(line.split()[-1])*ureg.hartree
             this_dispersionenergies = np.append(this_dispersionenergies, dispersion)
             return {dispersionenergies.__name__: this_dispersionenergies}
         return None
@@ -45,12 +45,12 @@ class dispersionenergies(base_parser):
         line = file_handler.last_line
         existing = getattr(ccdata, "dispersionenergies", None)
         if existing is None:
-            this_dispersionenergies = unit_registry.Quantity(np.array([]), "hartree")
+            this_dispersionenergies = ureg.Quantity(np.array([]), "hartree")
         else:
             this_dispersionenergies = existing
 
         if "Dispersion energy=" in line:
-            dispersion = float(line.split()[-2])* unit_registry.hartree
+            dispersion = float(line.split()[-2])* ureg.hartree
             this_dispersionenergies = np.append(this_dispersionenergies, dispersion)
             return {dispersionenergies.__name__: this_dispersionenergies}
         return None

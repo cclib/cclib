@@ -6,7 +6,7 @@ from typing import Optional
 
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
-from cclib import unit_registry 
+from cclib import ureg 
 import numpy as np
 
 
@@ -24,11 +24,11 @@ class scfenergies(base_parser):
         line = file_handler.last_line
         existing = getattr(ccdata, "scfenergies")
         if existing is None:
-            this_scfenergies = unit_registry.Quantity(np.array([]), "hartree")
+            this_scfenergies = ureg.Quantity(np.array([]), "hartree")
         else:
             this_scfenergies=existing
         if line[1:9] == "SCF Done":
-            constructed_data = utils.float(line.split()[4]) * unit_registry.hartree
+            constructed_data = utils.float(line.split()[4]) * ureg.hartree
             this_scfenergies = np.append(this_scfenergies,constructed_data)
             return {scfenergies.__name__: this_scfenergies}
         return None
@@ -38,11 +38,11 @@ class scfenergies(base_parser):
         line = file_handler.last_line
         existing = getattr(ccdata, "scfenergies")
         if existing is None:
-            this_scfenergies = unit_registry.Quantity(np.array([]), "hartree")
+            this_scfenergies = ureg.Quantity(np.array([]), "hartree")
         else:
             this_scfenergies=existing
         if "Final Energy" in line:
-            constructed_data = float(line.split()[3]) * unit_registry.hartree
+            constructed_data = float(line.split()[3]) * ureg.hartree
             this_scfenergies = np.append(this_scfenergies,constructed_data)
             return {scfenergies.__name__: this_scfenergies}
         return None
@@ -52,12 +52,12 @@ class scfenergies(base_parser):
         line = file_handler.last_line
         existing = getattr(ccdata, "scfenergies")
         if existing is None:
-            this_scfenergies = unit_registry.Quantity(np.array([]), "hartree")
+            this_scfenergies = ureg.Quantity(np.array([]), "hartree")
         else:
             this_scfenergies=existing
         constructed_scfenergies = None
         if "Total energy in the final basis set" in line:
-            constructed_scfenergies = float(line.split()[-1]) * unit_registry.hartree
+            constructed_scfenergies = float(line.split()[-1]) * ureg.hartree
             if constructed_scfenergies is not None:
                 this_scfenergies = np.append(this_scfenergies,constructed_scfenergies)
             return {scfenergies.__name__: this_scfenergies}
