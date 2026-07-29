@@ -42,6 +42,10 @@ jobs:
       - name: Prepare CI for Versioningit
         run: |
           python .github/scripts/prepare_ci_for_versioningit.py
+      - name: Set Python version variable
+        run: echo "PIXI_ENV_NAME=$(python -c "import sys; print('py' + sys.argv[1].replace('.', ''))" "${PYTHON_VERSION}")" >> "${GITHUB_ENV}"
+        env:
+          PYTHON_VERSION: ${{ matrix.python-version }}
       - name: Install cclib
         run: |
           python -m pip install -r requirements-bridges.txt
@@ -64,14 +68,17 @@ jobs:
         if: matrix.python-version == '3.11'
       - name: Test core code with pytest
         run: |
+          pixi shell -e "${PIXI_ENV_NAME}"
           bash .github/scripts/run_pytest.bash "$(nproc)"
       - name: Test methods with pytest
         if: steps.filter.outputs.methods == 'true'
         run: |
+          pixi shell -e "${PIXI_ENV_NAME}"
           bash .github/scripts/run_pytest_methods.bash "$(nproc)"
       - name: Test PySCF with pytest
         if: steps.filter.outputs.pyscf == 'true'
         run: |
+          pixi shell -e "${PIXI_ENV_NAME}"
           bash .github/scripts/run_pytest_pyscf.bash "$(nproc)"
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f  # v7.0.0
