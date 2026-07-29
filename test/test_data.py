@@ -12,6 +12,7 @@ from typing import Optional, Type, Union
 
 import cclib
 
+
 __filedir__ = os.path.realpath(os.path.dirname(__file__))
 
 
@@ -19,26 +20,28 @@ __filedir__ = os.path.realpath(os.path.dirname(__file__))
 # within the unit test files.
 sys.path.insert(1, os.path.join(__filedir__, "data"))
 
-[  # "ADF",
-    # "DALTON",
-    # "FChk",
-    # "GAMESS",
-    # "GAMESSDAT",
-    # "GAMESSUK",
-    "Gaussian",
-    # "Jaguar",
-    # "Molpro",
-    # "Molcas",
-    # "MOPAC",
-    # "Molcas",
-    # "NWChem",
-    "NBO",
-    # "NWChem",
-    # "QChem",
-    # "Turbomole",
-    # "XTB",
-    # "Turbomole",
-]
+# parser_names = [
+#     "ADF",
+#     "CFOUR",
+#     "DALTON",
+#     "FChk",
+#     "GAMESS",
+#     "GAMESSDAT",
+#     "GAMESSUK",
+#     "Gaussian",
+#     "Jaguar",
+#     "Molpro",
+#     "Molcas",
+#     "MOPAC",
+#     "NBO",
+#     "NWChem",
+#     "ORCA",
+#     "Psi4",
+#     "QChem",
+#     "Serenity",
+#     "Turbomole",
+#     "XTB",
+# ]
 # all_parsers = {name: getattr(cclib.parser, name) for name in parser_names}
 
 

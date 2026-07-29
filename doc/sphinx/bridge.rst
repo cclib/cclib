@@ -1,5 +1,5 @@
 .. index::
-    module: bridge
+    pair: module; bridge
 
 Bridges to other packages
 =========================

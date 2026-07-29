@@ -29,7 +29,7 @@ class HirshfeldTest:
         self.data, self.logfile = getdatafile(Psi4, "basicPsi4-1.2.1", ["water_mp2.out"])
         self.volume = volume.Volume((-4, -4, -4), (4, 4, 4), (0.2, 0.2, 0.2))
 
-    def testmissingrequiredattributes(self):
+    def testmissingrequiredattributes(self) -> None:
         """Is an error raised when required attributes are missing?"""
         for missing_attribute in Hirshfeld.required_attrs:
             self.parse()
@@ -39,7 +39,7 @@ class HirshfeldTest:
                     self.data, self.volume, os.path.dirname(os.path.realpath(__file__))
                 )
 
-    def test_proatom_read(self):
+    def test_proatom_read(self) -> None:
         """Are proatom densities imported correctly?"""
 
         self.parse()
@@ -80,7 +80,7 @@ class HirshfeldTest:
         assert_allclose(self.analysis.proatom_density[1][0:5], refH_den, rtol=1e-3)
         assert_allclose(self.analysis.proatom_density[2][0:5], refH_den, rtol=1e-3)
 
-    def test_water_charges(self):
+    def test_water_charges(self) -> None:
         """Are Hirshfeld charges calculated correctly for water?
 
         Note. Table 1 in doi:10.1007/BF01113058 reports Hirshfeld charge for Hydrogen atom as
@@ -101,7 +101,7 @@ class HirshfeldTest:
         # Check assigned charges
         assert_allclose(analysis.fragcharges, [-0.29084274, 0.14357639, 0.14357639], atol=0.1)
 
-    def test_chgsum_h2(self):
+    def test_chgsum_h2(self) -> None:
         """Are Hirshfeld charges for hydrogen atoms in nonpolar H2 small as expected?"""
 
         h2path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "h2.out")
@@ -113,7 +113,7 @@ class HirshfeldTest:
         assert abs(numpy.sum(analysis.fragcharges) - 0) < 1e-2
         assert abs(analysis.fragcharges[0] - analysis.fragcharges[1]) < 1e-6
 
-    def test_chgsum_co(self):
+    def test_chgsum_co(self) -> None:
         """Are Hirshfeld charges for carbon monoxide reported as expected?
 
         Note. Table 1 in doi:10.1007/BF01113058 reports Hirshfeld charge for Carbon atom as

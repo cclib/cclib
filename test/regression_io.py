@@ -7,13 +7,14 @@ from pathlib import Path
 
 import cclib
 
+
 __filedir__ = Path(__file__).parent
 __filepath__ = Path(__filedir__).resolve()
 __regdir__ = (__filepath__ / ".." / "data" / "regression").resolve()
 
 
 class XYZRegressionTests:
-    def test_xyz_not_turbomole(self):
+    def test_xyz_not_turbomole(self) -> None:
         """Ensure XYZ file isn't misrecognized as a Turbomole file.
 
         From https://github.com/cclib/cclib/issues/1207.

@@ -72,7 +72,7 @@ class XYZ(filewriter.Writer):
         # Generate the XYZ string for each index.
         indices = sorted(self.indices)
         if not indices:
-            indices = [-1]
+            indices = [lencoords - 1]
         for i in indices:
             xyzblock.append(self._xyz_from_ccdata(i))
 
@@ -84,6 +84,10 @@ class XYZ(filewriter.Writer):
     def _xyz_from_ccdata(self, index: int) -> str:
         """Create an XYZ file of the geometry at the given index."""
 
+        # TODO https://stackoverflow.com/a/72563242/ when Python 3.9+
+        if index < 0:
+            raise ValueError("_xyz_from_ccdata: can't use wrap around index")
+
         atomcoords = self.ccdata.atomcoords[index]
         existing_comment = (
             ""
@@ -91,11 +95,8 @@ class XYZ(filewriter.Writer):
             else self.ccdata.metadata["comments"][index]
         )
 
+        geometry_num = index + 1
         # Create a comment derived from the filename and the index.
-        if index == -1:
-            geometry_num = len(self.ccdata.atomcoords)
-        else:
-            geometry_num = index + 1
         if self.jobfilename is not None:
             comment = f"{self.jobfilename}: Geometry {geometry_num}"
         else:
@@ -108,9 +109,7 @@ class XYZ(filewriter.Writer):
             comment = f"[{comment}]"
 
         atom_template = "{:3s} {:15.10f} {:15.10f} {:15.10f}"
-        block = []
-        block.append(self.natom)
-        block.append(comment)
+        block = [self.natom, comment]
         for element, (x, y, z) in zip(self.element_list, atomcoords):
             block.append(atom_template.format(element, x, y, z))
         return "\n".join(block)

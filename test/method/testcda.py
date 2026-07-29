@@ -8,6 +8,7 @@
 import logging
 import sys
 
+
 sys.path.insert(1, "..")
 
 from cclib.method import CDA

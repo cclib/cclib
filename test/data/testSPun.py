@@ -5,18 +5,24 @@
 
 """Test unrestrictied single point logfiles in cclib"""
 
+from typing import TYPE_CHECKING
+
 import numpy
 from skip import skipForParser
+
+
+if TYPE_CHECKING:
+    from cclib.parser.data import ccData
 
 
 class GenericSPunTest:
     """Generic unrestricted single point unittest"""
 
-    def testnatom(self, data) -> None:
+    def testnatom(self, data: "ccData") -> None:
         """Is the number of atoms equal to 20?"""
         assert data._ccCollection._parsed_data[0].natom == 20
 
-    def testatomnos(self, data) -> None:
+    def testatomnos(self, data: "ccData") -> None:
         """Are the atomnos correct?"""
         assert numpy.all(
             [
@@ -32,6 +38,7 @@ class GenericSPunTest:
         )
 
     @skipForParser("ADF", "???")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser(
         "DALTON",
         "DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now",
@@ -43,17 +50,19 @@ class GenericSPunTest:
     @skipForParser("Molpro", "???")
     @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
+    @skipForParser("Serenity", "not implemented yet")
     @skipForParser("Turbomole", "???")
-    def testatomcharges(self, data) -> None:
+    def testatomcharges(self, data: "ccData") -> None:
         """Are atomic charges consistent with natom?"""
         for atomcharge_type in data._ccCollection._parsed_data[0].atomcharges:
             charges = data._ccCollection._parsed_data[0].atomcharges[atomcharge_type]
             natom = data._ccCollection._parsed_data[0].natom
-            assert (
-                len(charges) == natom
-            ), f"len(atomcharges['{atomcharge_type}']) = {len(charges)}, natom = {natom}"
+            assert len(charges) == natom, (
+                f"len(atomcharges['{atomcharge_type}']) = {len(charges)}, natom = {natom}"
+            )
 
     @skipForParser("ADF", "???")
+    @skipForParser("CFOUR", "The parser is still being developed so we skip this test")
     @skipForParser(
         "DALTON",
         "DALTON has a very low accuracy for the printed values of all populations (2 decimals rounded in a weird way), so let it slide for now",
@@ -65,13 +74,14 @@ class GenericSPunTest:
     @skipForParser("Molpro", "???")
     @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
+    @skipForParser("Serenity", "not included in testfile yet")
     @skipForParser("Turbomole", "???")
-    def testatomcharges_mulliken(self, data) -> None:
+    def testatomcharges_mulliken(self, data: "ccData") -> None:
         """Do Mulliken atomic charges sum to positive one?"""
         charges = data.atomcharges["mulliken"]
         assert abs(sum(charges) - 1.0) < 1.0e-2
 
-    def testatomcoords(self, data) -> None:
+    def testatomcoords(self, data: "ccData") -> None:
         """Are the dimensions of atomcoords 1 x natom x 3?"""
         assert data._ccCollection._parsed_data[0].atomcoords.shape == (
             1,
@@ -80,7 +90,7 @@ class GenericSPunTest:
         )
 
     @skipForParser("Jaguar", "Data file does not contain enough information")
-    def testdimmocoeffs(self, data) -> None:
+    def testdimmocoeffs(self, data: "ccData") -> None:
         """Are the dimensions of mocoeffs equal to 2 x nmo x nbasis?"""
         if hasattr(data, "mocoeffs"):
             assert isinstance(data.mocoeffs, list)
@@ -96,7 +106,7 @@ class GenericSPunTest:
 
     @skipForParser("Jaguar", "Data file does not contain enough information")
     @skipForParser("DALTON", "mocoeffs not implemented yet")
-    def testfornoormo(self, data) -> None:
+    def testfornoormo(self, data: "ccData") -> None:
         """Do we have NOs or MOs?"""
         assert hasattr(data._ccCollection._parsed_data[0], "nocoeffs") or hasattr(
             data._ccCollection._parsed_data[0], "mocoeffs"
@@ -105,7 +115,8 @@ class GenericSPunTest:
     @skipForParser("Gaussian", "The parser is still being developed for version 2")
     @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
-    def testdimnoccnos(self, data) -> None:
+    @skipForParser("Serenity", "no NOs in Serenity")
+    def testdimnoccnos(self, data: "ccData") -> None:
         """Is the length of nooccnos equal to nmo?"""
         if hasattr(data._ccCollection._parsed_data[0], "nooccnos"):
             assert isinstance(data._ccCollection._parsed_data[0].nooccnos, numpy.ndarray)
@@ -118,7 +129,8 @@ class GenericSPunTest:
     @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("Gaussian", "The parser is still being developed for version 2")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
-    def testdimnocoeffs(self, data) -> None:
+    @skipForParser("Serenity", "no NOs in Serenity")
+    def testdimnocoeffs(self, data: "ccData") -> None:
         """Are the dimensions of nocoeffs equal to 2 x nmo x nmo?"""
         if hasattr(data._ccCollection._parsed_data[0], "nocoeffs"):
             assert isinstance(data._ccCollection._parsed_data[0].nocoeffs, numpy.ndarray)
@@ -129,7 +141,7 @@ class GenericSPunTest:
             )
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
-    def testcharge_and_mult(self, data) -> None:
+    def testcharge_and_mult(self, data: "ccData") -> None:
         """Are the charge and multiplicity correct?"""
         assert data._ccCollection._parsed_data[0].charge == 1
         assert data._ccCollection._parsed_data[0].mult == 2
@@ -137,14 +149,14 @@ class GenericSPunTest:
     @skipForParser("ORCA", "The parser is still being developed for version 2")
     @skipForParser("Gaussian", "The parser is still being developed for version 2")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
-    def testhomos(self, data) -> None:
+    def testhomos(self, data: "ccData") -> None:
         """Are the homos correct?"""
         msg = f"{numpy.array_repr(data._ccCollection._parsed_data[0].homos)} != array([34,33],'i')"
         numpy.testing.assert_array_equal(
             data._ccCollection._parsed_data[0].homos, numpy.array([34, 33], "i"), msg
         )
 
-    def testmoenergies(self, data) -> None:
+    def testmoenergies(self, data: "ccData") -> None:
         """Are the dims of the moenergies equals to 2 x nmo?"""
         if hasattr(data, "moenergies"):
             assert len(data._ccCollection._parsed_data[0].moenergies) == 2
@@ -161,7 +173,8 @@ class GenericSPunTest:
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Molpro", "?")
     @skipForParser("Psi4", "The parser is still being developed for version 2")
-    def testmosyms(self, data) -> None:
+    @skipForParser("Serenity", "Serenity does not use symmetry.")
+    def testmosyms(self, data: "ccData") -> None:
         """Are the dims of the mosyms equals to 2 x nmo?"""
         shape = (
             len(data._ccCollection._parsed_data[0].mosyms),
@@ -176,7 +189,7 @@ class GenericROSPTest(GenericSPunTest):
     @skipForParser("DALTON", "mocoeffs not implemented yet")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    def testdimmocoeffs(self, data) -> None:
+    def testdimmocoeffs(self, data: "ccData") -> None:
         """Are the dimensions of mocoeffs equal to 1 x nmo x nbasis?"""
         assert isinstance(data._ccCollection._parsed_data[0].mocoeffs, list)
         assert len(data._ccCollection._parsed_data[0].mocoeffs) == 1
@@ -187,7 +200,7 @@ class GenericROSPTest(GenericSPunTest):
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    def testhomos(self, data) -> None:
+    def testhomos(self, data: "ccData") -> None:
         """Are the HOMO indices equal to 34 and 33 (one more alpha electron
         than beta electron)?
         """
@@ -201,7 +214,7 @@ class GenericROSPTest(GenericSPunTest):
     @skipForParser("QChem", "prints 2 sets of different MO energies?")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    def testmoenergies(self, data) -> None:
+    def testmoenergies(self, data: "ccData") -> None:
         """Are the dims of the moenergies equals to 1 x nmo?"""
         assert len(data._ccCollection._parsed_data[0].moenergies) == 1
         assert (
@@ -210,8 +223,9 @@ class GenericROSPTest(GenericSPunTest):
         )
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
+    @skipForParser("Serenity", "Serenity does not use symmetry.")
     @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
-    def testmosyms(self, data) -> None:
+    def testmosyms(self, data: "ccData") -> None:
         """Are the dims of the mosyms equals to 1 x nmo?"""
         shape = (
             len(data._ccCollection._parsed_data[0].mosyms),
@@ -223,7 +237,7 @@ class GenericROSPTest(GenericSPunTest):
 class GamessUK70SPunTest(GenericSPunTest):
     """Customized unrestricted single point unittest"""
 
-    def testdimmocoeffs(self, data) -> None:
+    def testdimmocoeffs(self, data: "ccData") -> None:
         """Are the dimensions of mocoeffs equal to 2 x (homos+6) x nbasis?"""
 
         assert isinstance(data._ccCollection._parsed_data[0].mocoeffs, list)
@@ -242,7 +256,7 @@ class GamessUK70SPunTest(GenericSPunTest):
         assert data._ccCollection._parsed_data[0].mocoeffs[0].shape == shape_alpha
         assert data._ccCollection._parsed_data[0].mocoeffs[1].shape == shape_beta
 
-    def testnooccnos(self, data) -> None:
+    def testnooccnos(self, data: "ccData") -> None:
         """Are natural orbital occupation numbers the right size?"""
         assert data._ccCollection._parsed_data[0].nooccnos.shape == (
             data._ccCollection._parsed_data[0].nmo,
@@ -252,7 +266,7 @@ class GamessUK70SPunTest(GenericSPunTest):
 class GamessUK80SPunTest(GenericSPunTest):
     """Customized unrestricted single point unittest"""
 
-    def testnooccnos(self, data) -> None:
+    def testnooccnos(self, data: "ccData") -> None:
         """Are natural orbital occupation numbers the right size?"""
         assert data.nooccnos.shape == (data.nmo,)
 
@@ -261,7 +275,7 @@ class GaussianSPunTest(GenericSPunTest):
     """Customized unrestricted single point unittest"""
 
     @skipForParser("Gaussian", "The parser is still being developed for version 2")
-    def testatomspins(self, data) -> None:
+    def testatomspins(self, data: "ccData") -> None:
         """Are atomic spins from Mulliken population analysis consistent with
         natom and sum to one (doublet)?
         """
@@ -273,13 +287,13 @@ class GaussianSPunTest(GenericSPunTest):
 class JaguarSPunTest(GenericSPunTest):
     """Customized unrestricted single point unittest"""
 
-    def testmoenergies(self, data) -> None:
+    def testmoenergies(self, data: "ccData") -> None:
         """Are the dims of the moenergies equal to 2 x homos+11?"""
         assert len(data.moenergies) == 2
         assert len(data.moenergies[0]) == data.homos[0] + 11
         assert len(data.moenergies[1]) == data.homos[1] + 11
 
-    def testmosyms(self, data) -> None:
+    def testmosyms(self, data: "ccData") -> None:
         """Are the dims of the mosyms equals to 2 x nmo?"""
         shape0 = (len(data.mosyms), len(data.mosyms[0]))
         shape1 = (len(data.mosyms), len(data.mosyms[1]))

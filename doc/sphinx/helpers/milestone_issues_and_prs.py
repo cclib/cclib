@@ -8,6 +8,7 @@ from pathlib import Path
 
 from github_graphql_query import FILTER_AUTHORS, execute_query, transform_author
 
+
 if __name__ == "__main__":
     raw = execute_query(Path("milestone_issues_and_prs.graphql"))
     result = json.loads(raw)

@@ -23,6 +23,7 @@ from cclib.parser.logfilewrapper import URL_PATTERN
 
 import numpy
 
+
 # Set up options for pretty-printing output.
 pprint = partial(pprint, width=120, compact=True)
 numpy.set_printoptions(linewidth=120)
@@ -38,7 +39,7 @@ def ccget() -> None:
     parser.add_argument(
         "attribute_or_compchemlogfile",
         nargs="+",
-        help="one or more attributes to be parsed from one ore more logfiles",
+        help="one or more attributes to be parsed from one or more logfiles",
     )
 
     group = parser.add_mutually_exclusive_group()

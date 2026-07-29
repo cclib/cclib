@@ -1,0 +1,17 @@
+! HF NOCOSX NORI STO-3G TightSCF SP CPCM
+%Pal NProcs 1 end
+%MaxCore 500
+%SCF
+    AutoTRAH    True
+    CNVDamp     False
+    CNVZerner   False
+    end
+%cpcm
+    smd         True
+    smdsolvent  "Toluene"
+    end
+*xyz 0 1
+O            -0.00000000    -0.11915900     0.00000000
+H            -0.79064900     0.47663700     0.00000000
+H             0.79064900     0.47663700    -0.00000000
+*
