@@ -22,7 +22,7 @@ class ccenergies(base_parser):
         ccsd_trigger = "* CCSD total energy"
         ccsd_t_trigger = "* CCSD(T) total energy"
         line = file_handler.last_line
-        if getattr(ccdata, "ccenergies") is None:
+        if getattr(ccdata, "ccenergies", None) is None:
             this_ccenergies = []
         else:
             this_ccenergies = ccdata.ccenergies

@@ -12,6 +12,7 @@ from cclib.parser.utils import find_package
 
 import numpy as np
 
+
 _found_ase = find_package("ase")
 if _found_ase:
     from ase import Atoms, units

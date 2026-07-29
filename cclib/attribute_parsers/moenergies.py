@@ -22,7 +22,7 @@ class moenergies(base_parser):
         line = file_handler.last_line
         if line[1:6] == "Alpha" and line.find("eigenvalues") >= 0:
             # For counterpoise fragments, skip these lines.
-            if getattr(ccdata, "moenergies") is None:
+            if getattr(ccdata, "moenergies", None) is None:
                 constructed_moenergies = [[]]
                 while line.find("Alpha") == 1:
                     part = line[28:]

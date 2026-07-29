@@ -8,6 +8,7 @@
 # ruff: noqa: F401
 from cclib.parser.utils import find_package
 
+
 if find_package("Bio"):
     from cclib.bridge.cclib2biopython import makebiopython
 

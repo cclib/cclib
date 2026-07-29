@@ -20,11 +20,14 @@ class scftargets(base_parser):
     @staticmethod
     def gaussian(file_handler, ccdata) -> Optional[dict]:
         line = file_handler.last_line
-        if ccdata.BOMD is None and line[1:44] == "Requested convergence on RMS density matrix":
-            constructed_scftargets = ccdata.scftargets
+        if (
+            getattr(ccdata, "BOMD", None) is None
+            and line[1:44] == "Requested convergence on RMS density matrix"
+        ):
+            constructed_scftargets = getattr(ccdata, "scftargets", None)
             if constructed_scftargets is None:
                 constructed_scftargets = []
-            elif isinstance(ccdata.scftargets, np.ndarray):
+            elif isinstance(constructed_scftargets, np.ndarray):
                 # This case can happen with ONIOM which are mixed SCF
                 # and semi-empirical
                 constructed_scftargets = []
@@ -47,7 +50,7 @@ class scftargets(base_parser):
 
         # Extract SCF convergence information (QM calcs).
         if line[1:10] == "Cycle   1":
-            constructed_scftargets = ccdata.scftargets
+            constructed_scftargets = getattr(ccdata, "scftargets", None)
             if constructed_scftargets is None:
                 constructed_scftargets = []
 
@@ -63,7 +66,9 @@ class scftargets(base_parser):
     @staticmethod
     def psi4(file_handler, ccdata) -> Optional[dict]:
         line = file_handler.last_line
-        if (line.strip() == "==> Algorithm <==") and (getattr(ccdata, "finite_difference") is None):
+        if (line.strip() == "==> Algorithm <==") and (
+            getattr(ccdata, "finite_difference", None) is None
+        ):
             file_handler.skip_lines(["blank"], virtual=True)
             line = file_handler.virtual_next()
             while line.strip():
@@ -73,7 +78,7 @@ class scftargets(base_parser):
                     dtarget = float(line.split()[-1])
                 line = file_handler.virtual_next()
 
-            if getattr(ccdata, "scftargets") is None:
+            if getattr(ccdata, "scftargets", None) is None:
                 this_scftargets = []
             else:
                 this_scftargets = ccdata.scftargets

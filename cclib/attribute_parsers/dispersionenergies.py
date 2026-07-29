@@ -22,7 +22,7 @@ class dispersionenergies(base_parser):
         ccsd_trigger = "* CCSD total energy"  # noqa: F841
         ccsd_t_trigger = "* CCSD(T) total energy"  # noqa: F841
         line = file_handler.last_line
-        if getattr(ccdata, "dispersionenergies") is None:
+        if getattr(ccdata, "dispersionenergies", None) is None:
             this_dispersionenergies = []
         else:
             this_dispersionenergies = ccdata.dispersionenergies
@@ -38,7 +38,7 @@ class dispersionenergies(base_parser):
         ccsd_trigger = "* CCSD total energy"  # noqa: F841
         ccsd_t_trigger = "* CCSD(T) total energy"  # noqa: F841
         line = file_handler.last_line
-        if getattr(ccdata, "dispersionenergies") is None:
+        if getattr(ccdata, "dispersionenergies", None) is None:
             this_dispersionenergies = []
         else:
             this_dispersionenergies = ccdata.dispersionenergies

@@ -9,13 +9,12 @@ import os
 import sys
 from typing import Optional
 
+import numpy
+import pytest
 from cclib.io import ccread
 from cclib.method import DDEC6, volume
 from cclib.method.calculationmethod import MissingAttributeError
 from cclib.parser import Psi4
-
-import numpy
-import pytest
 from numpy.testing import assert_allclose
 
 from ..test_data import getdatafile

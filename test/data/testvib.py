@@ -218,9 +218,9 @@ class GenericIRTest:
     def testatommasses(self, data) -> None:
         """Do the atom masses sum up to the molecular mass?"""
         mm = 1000 * sum(data.atommasses)
-        assert (
-            abs(mm - self.molecularmass) < self.molecularmass_thresh
-        ), f"Molecule mass: {mm:f} not {self.molecularmass:f} +- {self.molecularmass_thresh:f} mD"
+        assert abs(mm - self.molecularmass) < self.molecularmass_thresh, (
+            f"Molecule mass: {mm:f} not {self.molecularmass:f} +- {self.molecularmass_thresh:f} mD"
+        )
 
 
 class ADFIRTest(GenericIRTest):

@@ -8,7 +8,6 @@
 from unittest import mock
 
 import cclib
-
 import numpy
 
 

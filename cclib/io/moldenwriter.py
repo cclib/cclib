@@ -10,8 +10,8 @@ import math
 import os.path
 from itertools import zip_longest
 
+from cclib.attribute_parsers import utils
 from cclib.io import filewriter
-from cclib.parser import utils
 
 import numpy
 

@@ -8,11 +8,12 @@
 import json
 import os.path
 
+from cclib.attribute_parsers.utils import find_package
+from cclib.attributes.attribute import _attributes
 from cclib.io import filewriter
-from cclib.parser.data import ccData
-from cclib.parser.utils import find_package
 
 import numpy as np
+
 
 _has_openbabel = find_package("openbabel")
 
@@ -51,7 +52,7 @@ class CJSON(filewriter.Writer):
 
         # Iterate through the attribute list present in ccData. Depending on
         # the availability of the attribute add it at the right 'level'.
-        for attribute_name, v in ccData._attributes.items():
+        for attribute_name, v in _attributes.items():
             if not hasattr(self.ccdata, attribute_name):
                 continue
 
@@ -74,7 +75,7 @@ class CJSON(filewriter.Writer):
                 if attribute_name == "moments":
                     dipole_moment = self._calculate_total_dipole_moment()
                     if dipole_moment is not None:
-                        cjson_dict["properties"][ccData._attributes["moments"].json_key] = (
+                        cjson_dict["properties"][_attributes["moments"].json_key] = (
                             dipole_moment
                         )
                 else:
@@ -162,7 +163,7 @@ class CJSON(filewriter.Writer):
                  cclib keyname as key
         """
         if hasattr(self.ccdata, key):
-            object[ccData._attributes[key].json_key] = getattr(self.ccdata, key)
+            object[_attributes[key].json_key] = getattr(self.ccdata, key)
 
 
 class NumpyAwareJSONEncoder(json.JSONEncoder):

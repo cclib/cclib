@@ -11,8 +11,10 @@ import os.path
 import sys  # noqa: F401
 from typing import Iterable, Optional
 
-from cclib.io import ccframe, ccopen
-from cclib.parser.utils import find_package
+import cclib.io.ccio
+from cclib.attribute_parsers.utils import find_package
+from cclib.io import ccread
+
 
 _has_pandas = find_package("pandas")
 if _has_pandas:
@@ -20,7 +22,17 @@ if _has_pandas:
 
 
 def process_logfiles(filenames: Iterable[str], output: Optional[str], identifier: str) -> None:
-    df = ccframe([ccopen(path) for path in filenames])
+    if not _has_pandas:
+        raise ImportError("You must install `pandas` to use this function")
+    series = []
+    for path in filenames:
+        collection = ccread(path)
+        if collection is None or not collection.parsed_data:
+            continue
+        logdata = pd.Series(collection.parsed_data[0].getattributes())
+        logdata["jobfilename"] = path
+        series.append(logdata)
+    df = pd.DataFrame(series)
     if output is not None:
         outputtype = os.path.splitext(os.path.basename(output))[1][1:]
         if not outputtype:
@@ -62,7 +74,7 @@ def main():
         "compchemlogfiles",
         metavar="compchemlogfile",
         nargs="+",
-        help=("one or more computational chemistry output " "files to parse and convert"),
+        help=("one or more computational chemistry output files to parse and convert"),
     )
     parser.add_argument(
         "--identifier",

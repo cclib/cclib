@@ -10,8 +10,7 @@ import logging
 import os.path
 import sys
 
-from cclib.io import ccopen, ccwrite
-from cclib.parser import ccData
+from cclib.io import ccread, ccwrite
 
 
 def main() -> None:
@@ -81,28 +80,24 @@ def main() -> None:
 
     for filename in filenames:
         # We might want to use this option in the near future.
-        ccopen_kwargs = dict()
+        ccread_kwargs = {"loglevel": logging.INFO if verbose else logging.ERROR}
         if future:
-            ccopen_kwargs["future"] = True
+            ccread_kwargs["future"] = True
 
         print(f"Attempting to parse {filename}")
-        log = ccopen(filename, **ccopen_kwargs)
+        collection = ccread(filename, **ccread_kwargs)
 
-        if not log:
+        if collection is None or not collection.parsed_data:
             print(
                 f"Cannot figure out what type of computational chemistry output file '{filename}' is."
             )
             print("Report this to the cclib development team if you think this is an error.")
             sys.exit()
 
-        if verbose:
-            log.logger.setLevel(logging.INFO)
-        else:
-            log.logger.setLevel(logging.ERROR)
-        data = log.parse()
+        data = collection.parsed_data[0]
 
         print(f"cclib can parse the following attributes from {filename}:")
-        hasattrs = [f"  {attr}" for attr in ccData._attrlist if hasattr(data, attr)]
+        hasattrs = [f"  {attr}" for attr in data._attrlist if hasattr(data, attr)]
         print("\n".join(hasattrs))
 
         # Write out to disk.
@@ -122,7 +117,7 @@ def main() -> None:
 
         # The argument terse presently is only applicable to
         # CJSON/JSON formats
-        ccwrite(data, outputtype, outputdest, indices=index, terse=terse, **ccwrite_kwargs)
+        ccwrite(collection, outputtype, outputdest, indices=index, terse=terse, **ccwrite_kwargs)
 
 
 if __name__ == "__main__":

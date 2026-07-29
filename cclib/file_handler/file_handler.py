@@ -25,6 +25,7 @@ from urllib.request import urlopen
 
 from cclib.file_handler import utils
 
+
 # Regular expression for validating URLs
 URL_PATTERN = re.compile(
     r"^(?:http|ftp)s?://"  # http:// or https://
@@ -290,7 +291,6 @@ class FileHandler(FileWrapperBase):
 
         except IndexError:
             return False
-            # raise StopIteration()
 
     @property
     def last_line(self) -> str:
@@ -313,7 +313,12 @@ class FileHandler(FileWrapperBase):
         """
         Read all the lines from this file.
         """
-        return list(self)
+        lines = []
+        while True:
+            line = next(self)
+            if line is False:
+                return lines
+            lines.append(line)
 
     # TODO: support size parameter.
     def read(self) -> str:
@@ -322,7 +327,7 @@ class FileHandler(FileWrapperBase):
 
         Be aware that this function will load the entire file into a single string.
         """
-        return "".join(list(self))
+        return "".join(self.readlines())
 
     def close(self) -> None:
         """

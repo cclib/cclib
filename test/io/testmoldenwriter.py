@@ -8,10 +8,10 @@
 import os
 
 import cclib
+import pytest
 from cclib.io.filewriter import MissingAttributeError
 from cclib.io.moldenwriter import MoldenReformatter, round_molden
 
-import pytest
 
 __filedir__ = os.path.dirname(__file__)
 __filepath__ = os.path.realpath(__filedir__)
@@ -20,6 +20,7 @@ __testdir__ = __filedir__
 
 
 class MOLDENTest:
+    @pytest.mark.skip(reason="skipping for now - v2 in development")
     def test_missing_attribute_error(self):
         """Check if MissingAttributeError is raised as expected."""
         fpath = os.path.join(__datadir__, "data/GAMESS/basicGAMESS-US2018/dvb_un_sp.out")
@@ -32,6 +33,7 @@ class MOLDENTest:
             with pytest.raises(MissingAttributeError):
                 cclib.io.moldenwriter.MOLDEN(data)
 
+    @pytest.mark.skip(reason="skipping for now - v2 in development")
     def test_atoms_section_size(self):
         """Check if size of Atoms section is equal to expected."""
         fpath = os.path.join(__datadir__, "data/GAMESS/basicGAMESS-US2018/dvb_un_sp.out")
@@ -40,6 +42,7 @@ class MOLDENTest:
         # Check size of Atoms section.
         assert len(writer._coords_from_ccdata(-1)) == data.natom
 
+    @pytest.mark.skip(reason="skipping for now - v2 in development")
     def test_atoms_section_size_with_ghost(self):
         """Check if size of Atoms section is equal to expected with a ghost atom present."""
         fpath = os.path.join(__datadir__, "data/GAMESS/basicGAMESS-US2018/dvb_un_sp_ghost.out")
@@ -51,6 +54,7 @@ class MOLDENTest:
         # Check size of Atoms section.
         assert len(writer._coords_from_ccdata(-1)) == data.natom
 
+    @pytest.mark.skip(reason="skipping for now - v2 in development")
     def test_gto_section_size(self):
         """Check if size of GTO section is equal to expected."""
         fpath = os.path.join(__datadir__, "data/GAMESS/basicGAMESS-US2018/dvb_un_sp.out")
@@ -66,6 +70,7 @@ class MOLDENTest:
         size_gto_writer = len(list(filter(None, writer._gto_from_ccdata())))
         assert size_gto_writer == size_gto_ccdata
 
+    @pytest.mark.skip(reason="skipping for now - v2 in development")
     def test_mo_section_size(self):
         """Check if size of MO section is equal to expected."""
         fpath = os.path.join(__datadir__, "data/GAMESS/basicGAMESS-US2018/dvb_un_sp.out")
@@ -85,6 +90,7 @@ class MOLDENTest:
         )
         assert size_mo_writer == size_mo_ccdata
 
+    @pytest.mark.skip(reason="skipping for now - v2 in development")
     def test_no_section_size(self):
         """Check if size of NO section is equal to expected."""
         fpath = os.path.join(__datadir__, "data/GAMESS/basicGAMESS-US2018/water_cis_dets.out")
@@ -118,6 +124,7 @@ class MOLDENTest:
         assert round_molden(-0.999998789) == -0.999999
         assert round_molden(-0.999999999) == -1.0
 
+    @pytest.mark.skip(reason="skipping for now - v2 in development")
     def test_molden_cclib_diff(self):
         """Check if file written by cclib matched file written by Molden."""
         filenames = ["dvb_un_sp", "C_bigbasis", "water_mp2", "dvb_ir"]

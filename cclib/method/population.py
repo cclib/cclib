@@ -13,6 +13,7 @@ from cclib.progress import Progress
 
 import numpy
 
+
 if TYPE_CHECKING:
     from cclib.parser.data import ccData
 

@@ -5,10 +5,9 @@
 
 """Unit tests for utilities."""
 
-from cclib.parser import utils
-
 import numpy
 import scipy.spatial.transform
+from cclib.parser import utils
 
 
 class FloatTest:

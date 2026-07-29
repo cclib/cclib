@@ -9,10 +9,10 @@ import logging
 import os
 import sys
 
+import numpy
 from cclib.method import MBO
 from cclib.parser import Gaussian
 
-import numpy
 
 sys.path.insert(1, "..")
 

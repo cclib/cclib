@@ -10,11 +10,11 @@ import os
 import sys
 from typing import Type
 
+import numpy
 from cclib.method import CSPA, LPA, MPA, OPA, Bickelhaupt
 from cclib.method.calculationmethod import Method, MissingAttributeError
 from cclib.parser import Gaussian
 
-import numpy
 
 sys.path.insert(1, "..")
 

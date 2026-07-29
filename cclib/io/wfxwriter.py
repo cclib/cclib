@@ -8,10 +8,11 @@
 import os.path
 from typing import List
 
+from cclib.attribute_parsers import utils
 from cclib.io import filewriter
-from cclib.parser import utils
 
 import numpy
+
 
 # Number of orbitals of type key.
 # There are 3 p type, 6 d type orbitals etc.

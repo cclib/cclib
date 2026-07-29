@@ -5,8 +5,8 @@
 
 """A writer for XYZ (Cartesian coordinate) files."""
 
+from cclib.attribute_parsers.data import ccData
 from cclib.io import filewriter
-from cclib.parser.data import ccData
 
 
 class XYZ(filewriter.Writer):

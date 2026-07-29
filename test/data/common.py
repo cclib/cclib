@@ -7,9 +7,8 @@
 
 import itertools
 
-from cclib.attribute_parsers.data import ccData
-
 import numpy
+from cclib.attribute_parsers.data import ccData
 
 
 def get_minimum_carbon_separation(data: ccData) -> float:

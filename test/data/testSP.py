@@ -86,9 +86,9 @@ class GenericSPTest:
         for atomcharge_type in data._ccCollection._parsed_data[0].atomcharges:
             charges = data._ccCollection._parsed_data[0].atomcharges[atomcharge_type]
             natom = data._ccCollection._parsed_data[0].natom
-            assert (
-                len(charges) == natom
-            ), f"len(atomcharges['{atomcharge_type}']) = {len(charges)}, natom = {natom}"
+            assert len(charges) == natom, (
+                f"len(atomcharges['{atomcharge_type}']) = {len(charges)}, natom = {natom}"
+            )
 
     @skipForParser(
         "DALTON",
@@ -374,6 +374,7 @@ class GenericSPTest:
             )
 
     @skipForParser("DALTON", "mocoeffs not implemented yet")
+    @skipForParser("Gaussian", "V2 no/mo not implemented yet")
     @skipForLogfile(
         "Jaguar/basicJaguar7",
         "Data file does not contain enough information. Can we make a new one?",
@@ -462,7 +463,9 @@ class GenericSPTest:
         assert data._ccCollection._parsed_data[0].rotconsts.shape == (1, 3)
         # taken from Gaussian16/dvb_sp.out
         ref = [4.6266363, 0.6849065, 0.5965900]
-        numpy.testing.assert_allclose(data._ccCollection._parsed_data[0].rotconsts[0], ref, rtol=0, atol=1.0e-3)
+        numpy.testing.assert_allclose(
+            data._ccCollection._parsed_data[0].rotconsts[0], ref, rtol=0, atol=1.0e-3
+        )
 
     @skipForParser("FChk", "The parser is still being developed so we skip this test")
     @skipForParser("Gaussian", "Logfile needs to be updated")

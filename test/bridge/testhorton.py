@@ -5,10 +5,9 @@
 
 import os
 
+import numpy
 from cclib.bridge import cclib2horton
 from cclib.parser.utils import find_package
-
-import numpy
 from numpy.testing import assert_array_almost_equal
 
 from ..test_data import getdatafile

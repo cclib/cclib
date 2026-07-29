@@ -13,6 +13,7 @@ from cclib.parser.utils import PeriodicTable, convertor, find_package
 
 import numpy as np
 
+
 _found_periodictable = find_package("periodictable")
 if _found_periodictable:
     import periodictable as pt

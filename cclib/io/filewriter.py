@@ -10,29 +10,31 @@ from abc import ABC, abstractmethod
 from collections.abc import Iterable
 from typing import List, Optional, Tuple
 
-from cclib.parser.data import ccData
-from cclib.parser.utils import PeriodicTable, find_package
+from cclib.attribute_parsers.data import ccData
+from cclib.attribute_parsers.utils import PeriodicTable, find_package
 
 import numpy
 
+
 _has_openbabel = find_package("openbabel")
-if _has_openbabel:
-    from cclib.bridge import makeopenbabel
-
-    # Open Babel 3.0 and above
-    try:
-        import openbabel.pybel as pb
-        from openbabel import openbabel as ob
-    # Open Babel 2.4.x and below
-    except:  # noqa: E722
-        import openbabel as ob
-
-        # There's no guarantee pybel is also available...
-        try:
-            import pybel as pb
-
-        except ModuleNotFoundError:
-            _has_openbabel = False
+# Todo bridges haven't been ported
+# if _has_openbabel:
+#     from cclib.bridge import makeopenbabel
+# 
+#     # Open Babel 3.0 and above
+#     try:
+#         import openbabel.pybel as pb
+#         from openbabel import openbabel as ob
+#     # Open Babel 2.4.x and below
+#     except:  # noqa: E722
+#         import openbabel as ob
+# 
+#         # There's no guarantee pybel is also available...
+#         try:
+#             import pybel as pb
+# 
+#         except ModuleNotFoundError:
+#             _has_openbabel = False
 
 
 class MissingAttributeError(Exception):

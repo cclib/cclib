@@ -5,10 +5,9 @@
 
 from test.test_data import getdatafile
 
+import numpy as np
 from cclib.bridge import cclib2pyscf
 from cclib.parser.utils import find_package
-
-import numpy as np
 
 
 class PyscfTest:

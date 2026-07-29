@@ -5,9 +5,8 @@
 
 """Test logfiles with core electron data in cclib"""
 
-from cclib.parser.utils import PeriodicTable
-
 import numpy
+from cclib.parser.utils import PeriodicTable
 from skip import skipForParser
 
 

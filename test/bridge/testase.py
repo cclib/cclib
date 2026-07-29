@@ -5,11 +5,11 @@
 
 """Tests for the cclib2ase bridge in cclib."""
 
+import numpy as np
 from cclib import ccopen
 from cclib.bridge import cclib2ase
 from cclib.parser.utils import find_package
 
-import numpy as np
 
 if not find_package("ase"):
     raise ImportError("Must install ase to run this test")

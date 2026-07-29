@@ -12,6 +12,7 @@ from cclib.parser.utils import convertor, find_package
 
 import numpy
 
+
 r""" In the dictionary sym2powerlist below, each element is a list that contain the combinations of
     powers that are applied to x, y, and z in the equation for the gaussian primitives --
     \psi (x, y, z) = x^a * y^b * z^c * exp(-\lambda * r^2)
@@ -204,9 +205,9 @@ class Volume:
 
     def integrate(self, weights=None):
         weights = numpy.ones_like(self.data) if weights is None else weights
-        assert (
-            weights.shape == self.data.shape
-        ), "Shape of weights do not match with shape of Volume data."
+        assert weights.shape == self.data.shape, (
+            "Shape of weights do not match with shape of Volume data."
+        )
 
         boxvol = (
             self.spacing[0]
