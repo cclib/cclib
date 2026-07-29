@@ -20,16 +20,12 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       matrix:
-        container:
-          - 'shivupa/cclib-ci:py310-edge'
-          - 'shivupa/cclib-ci:py311-edge'
-          - 'shivupa/cclib-ci:py312-edge'
-          - 'shivupa/cclib-ci:py313-edge'
-    container:
-      image: ${{ matrix.container }}
-    defaults:
-      run:
-        shell: bash -eo pipefail -l {0}
+        python-version:
+          - "3.10"
+          - 3.11
+          - 3.12
+          - 3.13
+          - 3.14
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
@@ -41,19 +37,9 @@ jobs:
       - name: Allow repo access (see https://github.com/actions/checkout/issues/760)
         run: |
           git config --global --add safe.directory /__w/cclib/cclib
-      - name: Prepare conda environment
-        run: |
-          echo "/opt/conda/envs/cclib/bin" >> "${GITHUB_PATH}"
       - name: Prepare CI for Versioningit
         run: |
           python .github/scripts/prepare_ci_for_versioningit.py
-      - name: Patch Open Babel dependency requirement
-        run: |
-          # The official Open Babel package doesn't provide wheels for Python
-          # versions older than 3.10, but the deprecated
-          # https://pypi.org/project/openbabel-wheel/ package does.
-          sed -i 's/openbabel/openbabel-wheel/' pyproject.toml
-        if: (matrix.container == 'shivupa/cclib-ci:py38-edge') || (matrix.container == 'shivupa/cclib-ci:py39-edge')
       - name: Install cclib
         run: |
           python -m pip install -r requirements-bridges.txt
@@ -73,10 +59,9 @@ jobs:
       - name: Enable test coverage for Python 3.11
         run: |
           echo "PYTEST_ENABLE_COVERAGE=true" >> "${GITHUB_ENV}"
-        if: matrix.container == 'shivupa/cclib-ci:py311-edge'
+        if: matrix.python-version == '3.11'
       - name: Test core code with pytest
         run: |
-          env | sort
           bash .github/scripts/run_pytest.bash "$(nproc)"
       - name: Test methods with pytest
         if: steps.filter.outputs.methods == 'true'
@@ -85,7 +70,6 @@ jobs:
       - name: Test PySCF with pytest
         if: steps.filter.outputs.pyscf == 'true'
         run: |
-          env | sort
           bash .github/scripts/run_pytest_pyscf.bash "$(nproc)"
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f  # v7.0.0
@@ -96,7 +80,7 @@ jobs:
           verbose: false
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        if: matrix.container == 'shivupa/cclib-ci:py311-edge'
+        if: matrix.python-version == '3.11'
       - name: Build distribution packages (binary wheel and source tarball)
         run: |
           python -m build
@@ -109,7 +93,7 @@ jobs:
         with:
           name: python-package-distributions
           path: dist/
-        if: matrix.container == 'shivupa/cclib-ci:py312-edge'
+        if: matrix.python-version == '3.12'
 
   # We check the installation using all Python versions using the packages
   # created from a single version, since the packages are platform and version
