@@ -1,0 +1,24 @@
+---
+name: pre-commit
+
+# yamllint disable-line rule:truthy
+on:
+  workflow_call:
+
+concurrency:
+  group: style-${{github.ref}}-${{github.event.pull_request.number || github.run_number}}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  pre-commit:
+    name: Run prek for pre-commit checks
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # v7.0.0
+        with:
+          persist-credentials: false
+      - name: Run prek
+        uses: j178/prek-action@e98a699c41eb69ab013a45817a0406469a748f8d  # v2.0.5

@@ -5,8 +5,14 @@
 
 """Test Moller-Plesset logfiles in cclib"""
 
+from typing import TYPE_CHECKING
+
 import numpy
 from skip import skipForParser
+
+
+if TYPE_CHECKING:
+    from cclib.parser.data import ccData
 
 
 class GenericMP2Test:
@@ -14,14 +20,14 @@ class GenericMP2Test:
 
     level = 2
 
-    def testsizeandshape(self, data) -> None:
+    def testsizeandshape(self, data: "ccData") -> None:
         """(MP2) Are the dimensions of mpenergies correct?"""
         assert data._ccCollection._parsed_data[0].mpenergies.shape == (
             len(data._ccCollection._parsed_data[0].scfenergies),
             self.level - 1,
         )
 
-    def testsign(self, data) -> None:
+    def testsign(self, data: "ccData") -> None:
         """Are the Moller-Plesset corrections negative?"""
         if self.level == 2:
             corrections = (

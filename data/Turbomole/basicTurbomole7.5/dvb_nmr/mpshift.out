@@ -1,0 +1,901 @@
+
+ mpshift (compute060.hpc.st-andrews.ac.uk) : TURBOMOLE rev. V7.5.0 compiled 13 Jun 2020 at 23:29:25
+ Copyright (C) 2020 TURBOMOLE GmbH, Karlsruhe
+
+
+    2025-11-20 12:07:48.108 
+
+
+
+
+                                mpshift
+
+                             TURBOMOLE GmbH
+
+
+          integral direct evaluation of NMR shielding tensors
+
+
+                                                          
+                                 References:                     
+                                                                 
+          DIRECT RHF NMR CHEMICAL SHIFTS                         
+              M.Haser, R.Ahlrichs, H.P.Baron, P.Weis, H.Horn     
+              Direct computation of second-order SCF properties  
+              of large molecules on workstation computers with an
+              application to large carbon clusters               
+              Theor. Chim. Acta 83, 455 (1992)                   
+          DIRECT MP2 NMR CHEMICAL SHIFTS                         
+              M.Kollwitz, J.Gauss                                
+              A direct implementation of the GIAO-MBPT(2) method 
+              for calculating NMR chemical shifts. Application to
+              the naphthalenium and anthracenium ions            
+              Chem. Phys. Lett. 260, 639 (1996)                  
+          SYMMETRY FOR DIRECT MP2 NMR CHEMICAL SHIFTS            
+              M.Kollwitz, M.Haser, J.Gauss                       
+              Non-Abelian point group symmetry in direct second- 
+              order many-body perturbation theory calculations of
+              NMR chemical shifts                                
+              J. Chem. Phys. 108, 8295 (1998)                    
+          DIRECT DFT NMR CHEMICAL SHIFTS                         
+              U. Huniar                                          
+              Berechnung der chemischen Verschiebung der NMR mit 
+              Methoden der Dichtefunktionaltheorie (DFT)         
+              Diploma Thesis, University of Karlsruhe (1999)     
+          VIBRATIONAL CIRCULAR DICHROISM AND EXTENSION TO ECPS   
+              K. Reiter, M. Kuehn, F. Weigend                     
+              Vibrational circular dichroism spectra for large   
+              molecules and molecules with heavy elements        
+              J. Chem. Phys. 146, 054102 (2017)                  
+          (MA)RI-J APPROXIMATION, META-GGAS AND OPENMP VERSION   
+              K. Reiter, F. Mack, F. Weigend                     
+              Calculation of magnetic shielding constants with   
+              meta-GGA functionals employing the multipole-      
+              accelerated resolution of the identity:            
+              Implementation and assessment of accuracy and      
+              efficiency                                         
+              J. Chem. Theory Comput. 14, 191 (2018)             
+          SCALAR-RELATIVISTIC (LOCAL) EXACT TWO-COMPONENT (X2C)  
+              Y. J. Franzke, F. Weigend                          
+              NMR shielding tensors and chemical shifts in scalar
+              -relativistic local exact two-component theory     
+              J. Chem. Theory Comput. 15, 1028 (2019)            
+                                                                 
+
+
+              +--------------------------------------------------+
+              | Atomic coordinate, charge and isotop information |
+              +--------------------------------------------------+
+
+                    atomic coordinates            atom    charge  isotop
+          2.32397196    1.39322137    0.00000000    c      6.000     0
+         -2.32397196   -1.39322137    0.00000000    c      6.000     0
+         -0.04923303    2.65389547    0.00000000    c      6.000     0
+          0.04923303   -2.65389547    0.00000000    c      6.000     0
+         -2.32397196    1.29391626    0.00000000    c      6.000     0
+          2.32397196   -1.29391626    0.00000000    c      6.000     0
+         -0.09356034    4.72969725    0.00000000    h      1.000     0
+          0.09356034   -4.72969725    0.00000000    h      1.000     0
+         -4.12963929    2.31230668    0.00000000    h      1.000     0
+          4.12963929   -2.31230668    0.00000000    h      1.000     0
+         -4.70051043   -2.93071389    0.00000000    c      6.000     0
+          4.70051043    2.93071389    0.00000000    c      6.000     0
+         -4.40120427   -4.98963853    0.00000000    h      1.000     0
+          4.40120427    4.98963853    0.00000000    h      1.000     0
+         -7.07957547   -2.04030139    0.00000000    c      6.000     0
+          7.07957547    2.04030139    0.00000000    c      6.000     0
+         -7.50897038   -0.01420885    0.00000000    h      1.000     0
+          7.50897038    0.01420885    0.00000000    h      1.000     0
+         -8.70850805   -3.32148468    0.00000000    h      1.000     0
+          8.70850805    3.32148468    0.00000000    h      1.000     0
+ 
+       center of nuclear mass  :    0.00000000    0.00000000    0.00000000
+       center of nuclear charge:    0.00000000    0.00000000    0.00000000
+
+   *************************************************************************
+   dvb_nmr_Single_Point_DFT_B3LYP__GD3BJ__Gas_Phase_Pople_Basis_Sets_STO_3G 
+   *************************************************************************
+
+
+
+              +--------------------------------------------------+
+              |               basis set information              |
+              +--------------------------------------------------+
+
+              we will work with the 1s 3p 5d 7f 9g ... basis set
+              ...i.e. with spherical basis functions...
+
+   type   atoms  prim   cont   basis
+   ---------------------------------------------------------------------------
+    c       10     15      5   STO-3G   [2s1p|6s3p]
+    h       10      3      1   STO-3G   [1s|3s]
+   ---------------------------------------------------------------------------
+   total:   20    180     60
+   ---------------------------------------------------------------------------
+
+   total number of primitive shells          :   12
+   total number of contracted shells         :   40
+   total number of cartesian basis functions :   60
+   total number of SCF-basis functions       :   60
+
+
+ symmetry group of the molecule :   c1 
+
+ the group has the following generators :
+   c1(z)
+
+    1 symmetry operations found
+
+ there are 1 real representations :   a   
+
+ integral neglect threshold       :  0.56E-10
+ integral storage threshold THIZE :  0.10E-04
+ integral storage threshold THIME :         5
+
+
+ WARNING : cannot change filename for statistics 
+
+ maximum number of shells which are related by symmetry :  1
+
+
+    mo occupation :
+   irrep   mo's   occupied
+    a       60       35
+ 
+ number of basis functions   :    60
+ number of occupied orbitals :    35
+ 
+  MOs are in ASCII format !
+
+
+ reading orbital data $scfmo from file mos
+ orbital characterization : scfconv=7
+ ************************************************
+           DFT is switched ON !!
+ ************************************************
+ 
+ 
+  
+           ------------------
+           density functional
+           ------------------
+ Becke-3-Parameter hybrid functional: B3-LYP
+ exchange:    0.8*LDA + 0.72*B88 + 0.2*HF
+ correlation: 0.19*LDA(VWN) + 0.81*LYP
+
+ iterations will be done with small grid
+  
+ spherical integration : Lebedev's spherical grid
+ spherical gridsize    :                     3
+    i.e. gridpoints    :                   302
+ value for diffuse not defined
+ radial integration    : Chebyshev 2nd kind (scaling 3)
+ radial gridsize       :                     3
+ integration cells     :                    20
+ partition function    : becke
+ partition sharpness   :                     3
+  
+ 
+ Residuum convergence criterium for CPHF : 0.100E-06
+ 
+ time for          input      0.01
+ time for        csoneip      0.02
+ time for            csp      0.00
+ time for    1e matrices      0.02
+ time for undisturbed cs      0.16
+ shell blocked total number of electrons =     70.00000000
+
+ Entering DFT part...  
+ 
+          Overall gridpoints after grid construction =         96244
+ time for   dgs 2e stuff      1.52
+ 
+ Residuum convergence criterium for CPHF : 0.100E-06
+
+ The magnetic field transforms like a direct sum of 3 real irreps
+
+ 
+ OCCUPIED-VIRTUAL TENSOR SPACES :
+
+          IRREP   tensor space dimension   magnetic field direction
+
+           a               875               Bx By Bz 
+ 
+ 
+
+ logfile cphf_Bx_a    will be constructed
+
+ logfile cphf_By_a    will be constructed
+
+ logfile cphf_Bz_a    will be constructed
+
+ biggest AO integral is expected to be     3.541948133
+
+ Iteration   B-field   IRREP   Converged   Euclidean residual norm
+
+    1        Bx        a       no          3.322530298453794D-04
+             By        a       no          4.447765317083182D-04
+             Bz        a       no          1.129641089445771D-03
+ 
+             time for iteration  1:         0.361566
+
+
+    2        Bx        a       no          3.079224277066816D-05
+             By        a       no          4.071260224322508D-05
+             Bz        a       no          1.483057602797686D-04
+ 
+             time for iteration  2:         0.244287
+
+
+    3        Bx        a       no          1.156145857293747D-06
+             By        a       no          1.926150453911358D-06
+             Bz        a       no          5.693629250782841D-06
+ 
+             time for iteration  3:         0.365404
+
+
+    4        Bx        a       yes         4.255998096336755D-08
+             By        a       yes         6.475940364884803D-08
+             Bz        a       no          1.923631764106067D-07
+ 
+             time for iteration  4:         0.350392
+
+
+    5        Bx        a       yes         4.255998096336755D-08
+             By        a       yes         6.475940364884803D-08
+             Bz        a       yes         9.425187236008368D-09
+ 
+             time for iteration  5:         0.251092
+
+
+time after convergence:         0.000125
+
+Atom No.     Isotropic               Paramagnetic disturbed contribution
+             shielding                   xx               yy               zz
+c     1     114.08010430      -208.09585053    -189.35557774     -32.39863717
+c     2     114.08010430      -208.09585053    -189.35557774     -32.39863717
+c     3     117.77362656      -164.02751381    -215.27581466     -37.61645047
+c     4     117.77362656      -164.02751381    -215.27581466     -37.61645048
+c     5     121.23768105      -201.74676363    -177.54350403     -29.04841602
+c     6     121.23768105      -201.74676363    -177.54350403     -29.04841602
+h     7      25.56819914         0.29619316     -16.57374878      -7.43310455
+h     8      25.56819914         0.29619316     -16.57374878      -7.43310455
+h     9      25.14833329       -12.42428303      -4.83496790     -11.95461722
+h    10      25.14833329       -12.42428303      -4.83496790     -11.95461722
+c    11     116.07042922      -152.90122239    -218.36855116     -33.91375722
+c    12     116.07042922      -152.90122239    -218.36855116     -33.91375723
+h    13      26.06482666         0.30231032     -16.11339290       3.07284293
+h    14      26.06482666         0.30231032     -16.11339290       3.07284293
+c    15     128.43328594      -149.31613622    -200.83261715     -17.43775241
+c    16     128.43328594      -149.31613622    -200.83261715     -17.43775241
+h    17      26.78767485        -1.14025748     -12.73016903      -1.70814098
+h    18      26.78767485        -1.14025748     -12.73016903      -1.70814098
+h    19      27.10216126        -8.06702457      -4.85728755      12.21751833
+h    20      27.10216126        -8.06702457      -4.85728755      12.21751833
+
+CPHF procedure converged in   5 iterations.
+
+ time for last cphf step      0.28
+ time for           cphf        1.89
+
+        >>>>> DFT MAGNETIC SHIELDINGS <<<<<
+
+Diamagnetic shielding:  full
+Paramagnetic shielding, undisturbed density:  full
+Paramagnetic shielding, disturbed density:  full
+ 
+ATOM  c    1      ISOTROPIC:      114.0801043       ANISOTROPIC:      150.2683398
+
+  diamagnetic part of magnetic shielding:
+    Trace =     252.59187623
+    Tensor :
+              264.98214294          2.38525703         -0.00000000
+                2.40359075        261.07684965         -0.00000000
+               -0.00000000         -0.00000000        231.71663609
+
+  paramagnetic undisturbed density part of magnetic shielding:
+    Trace =       4.77158322
+    Tensor :
+                0.73969013          0.42161591          0.00000000
+                0.53746441          0.39643180          0.00000000
+                0.00000000          0.00000000         13.17862772
+
+  paramagnetic disturbed density part of magnetic shielding:
+    Trace =    -143.28335515
+    Tensor :
+             -208.09585053        -16.29879730          0.00000000
+              -18.43164861       -189.35557774          0.00000000
+                0.00000000          0.00000000        -32.39863717
+
+  total magnetic shielding:
+    Trace =     114.08010430
+    Tensor :
+               57.62598254        -13.49192435         -0.00000000
+              -15.49059345         72.11770371         -0.00000000
+                0.00000000          0.00000000        212.49662664
+
+ATOM  c    2      ISOTROPIC:      114.0801043       ANISOTROPIC:      150.2683398
+
+  diamagnetic part of magnetic shielding:
+    Trace =     252.59187623
+    Tensor :
+              264.98214294          2.38525703         -0.00000000
+                2.40359075        261.07684965         -0.00000000
+               -0.00000000         -0.00000000        231.71663609
+
+  paramagnetic undisturbed density part of magnetic shielding:
+    Trace =       4.77158322
+    Tensor :
+                0.73969013          0.42161591         -0.00000000
+                0.53746441          0.39643180         -0.00000000
+                0.00000000         -0.00000000         13.17862772
+
+  paramagnetic disturbed density part of magnetic shielding:
+    Trace =    -143.28335515
+    Tensor :
+             -208.09585053        -16.29879730          0.00000000
+              -18.43164861       -189.35557774          0.00000000
+                0.00000000          0.00000000        -32.39863717
+
+  total magnetic shielding:
+    Trace =     114.08010430
+    Tensor :
+               57.62598254        -13.49192435         -0.00000000
+              -15.49059345         72.11770371         -0.00000000
+                0.00000000         -0.00000000        212.49662664
+
+ATOM  c    3      ISOTROPIC:      117.7736266       ANISOTROPIC:      142.4385534
+
+  diamagnetic part of magnetic shielding:
+    Trace =     253.77199540
+    Tensor :
+              268.01311731          1.16529640         -0.00000000
+                1.17787559        257.86812392          0.00000000
+               -0.00000000          0.00000000        235.43474496
+
+  paramagnetic undisturbed density part of magnetic shielding:
+    Trace =       2.97489081
+    Tensor :
+               -0.58359653         -0.16905857         -0.00000000
+               -0.17122173          1.19676584          0.00000000
+                0.00000000         -0.00000000          8.31150313
+
+  paramagnetic disturbed density part of magnetic shielding:
+    Trace =    -138.97325965
+    Tensor :
+             -164.02751381          3.02152820          0.00000000
+                3.77982875       -215.27581466          0.00000000
+                0.00000000          0.00000000        -37.61645047
+
+  total magnetic shielding:
+    Trace =     117.77362656
+    Tensor :
+              103.40200696          4.01776602         -0.00000000
+                4.78648260         43.78907510          0.00000000
+                0.00000000          0.00000000        206.12979762
+
+ATOM  c    4      ISOTROPIC:      117.7736266       ANISOTROPIC:      142.4385534
+
+  diamagnetic part of magnetic shielding:
+    Trace =     253.77199540
+    Tensor :
+              268.01311731          1.16529640          0.00000000
+                1.17787559        257.86812392          0.00000000
+                0.00000000          0.00000000        235.43474496
+
+  paramagnetic undisturbed density part of magnetic shielding:
+    Trace =       2.97489081
+    Tensor :
+               -0.58359653         -0.16905857          0.00000000
+               -0.17122173          1.19676584          0.00000000
+                0.00000000         -0.00000000          8.31150313
+
+  paramagnetic disturbed density part of magnetic shielding:
+    Trace =    -138.97325965
+    Tensor :
+             -164.02751381          3.02152820          0.00000000
+                3.77982875       -215.27581466          0.00000000
+                0.00000000          0.00000000        -37.61645048
+
+  total magnetic shielding:
+    Trace =     117.77362656
+    Tensor :
+              103.40200696          4.01776602          0.00000000
+                4.78648260         43.78907510          0.00000000
+                0.00000000         -0.00000000        206.12979762
+
+ATOM  c    5      ISOTROPIC:      121.2376810       ANISOTROPIC:      152.3067224
+
+  diamagnetic part of magnetic shielding:
+    Trace =     253.77850054
+    Tensor :
+              261.83850077          4.93439536          0.00000000
+                4.92980531        264.19115350          0.00000000
+                0.00000000          0.00000000        235.30584736
+
+  paramagnetic undisturbed density part of magnetic shielding:
+    Trace =       3.57207506
+    Tensor :
+                0.62861727         -0.79981886         -0.00000000
+               -0.73097029          0.12244547          0.00000000
+                0.00000000         -0.00000000          9.96516244
+
+  paramagnetic disturbed density part of magnetic shielding:
+    Trace =    -136.11289456
+    Tensor :
+             -201.74676363         25.28723622          0.00000000
+               22.81332825       -177.54350403          0.00000000
+                0.00000000          0.00000000        -29.04841602
+
+  total magnetic shielding:
+    Trace =     121.23768105
+    Tensor :
+               60.72035441         29.42181272          0.00000000
+               27.01216327         86.77009494          0.00000000
+                0.00000000         -0.00000000        216.22259378
+
+ATOM  c    6      ISOTROPIC:      121.2376810       ANISOTROPIC:      152.3067224
+
+  diamagnetic part of magnetic shielding:
+    Trace =     253.77850054
+    Tensor :
+              261.83850077          4.93439536         -0.00000000
+                4.92980531        264.19115350         -0.00000000
+               -0.00000000          0.00000000        235.30584736
+
+  paramagnetic undisturbed density part of magnetic shielding:
+    Trace =       3.57207506
+    Tensor :
+                0.62861727         -0.79981886         -0.00000000
+               -0.73097029          0.12244547          0.00000000
+                0.00000000         -0.00000000          9.96516244
+
+  paramagnetic disturbed density part of magnetic shielding:
+    Trace =    -136.11289456
+    Tensor :
+             -201.74676363         25.28723622          0.00000000
+               22.81332825       -177.54350403          0.00000000
+                0.00000000          0.00000000        -29.04841602
+
+  total magnetic shielding:
+    Trace =     121.23768105
+    Tensor :
+               60.72035442         29.42181272         -0.00000000
+               27.01216327         86.77009494          0.00000000
+                0.00000000         -0.00000000        216.22259378
+
+ATOM  h    7      ISOTROPIC:       25.5681991       ANISOTROPIC:        6.6495097
+
+  diamagnetic part of magnetic shielding:
+    Trace =      25.94648895
+    Tensor :
+               21.27252146         -0.89275098         -0.00000000
+               -0.80586302         42.32356534         -0.00000000
+                0.00000000          0.00000000         14.24338005
+
+  paramagnetic undisturbed density part of magnetic shielding:
+    Trace =       7.52526358
+    Tensor :
+                7.31402742          0.13731747         -0.00000000
+                0.18085487          0.70691943          0.00000000
+               -0.00000000         -0.00000000         14.55484388
+
+  paramagnetic disturbed density part of magnetic shielding:
+    Trace =      -7.90355339
+    Tensor :
+                0.29619316          0.90874186          0.00000000
+                0.73908453        -16.57374878          0.00000000
+                0.00000000          0.00000000         -7.43310455
+
+  total magnetic shielding:
+    Trace =      25.56819914
+    Tensor :
+               28.88274204          0.15330836         -0.00000000
+                0.11407638         26.45673598         -0.00000000
+               -0.00000000         -0.00000000         21.36511938
+
+ATOM  h    8      ISOTROPIC:       25.5681991       ANISOTROPIC:        6.6495097
+
+  diamagnetic part of magnetic shielding:
+    Trace =      25.94648895
+    Tensor :
+               21.27252146         -0.89275098         -0.00000000
+               -0.80586302         42.32356534          0.00000000
+                0.00000000          0.00000000         14.24338005
+
+  paramagnetic undisturbed density part of magnetic shielding:
+    Trace =       7.52526358
+    Tensor :
+                7.31402742          0.13731747          0.00000000
+                0.18085487          0.70691943         -0.00000000
+               -0.00000000         -0.00000000         14.55484388
+
+  paramagnetic disturbed density part of magnetic shielding:
+    Trace =      -7.90355339
+    Tensor :
+                0.29619316          0.90874186          0.00000000
+                0.73908453        -16.57374878          0.00000000
+                0.00000000          0.00000000         -7.43310455
+
+  total magnetic shielding:
+    Trace =      25.56819914
+    Tensor :
+               28.88274204          0.15330836          0.00000000
+                0.11407638         26.45673598          0.00000000
+               -0.00000000         -0.00000000         21.36511938
+
+ATOM  h    9      ISOTROPIC:       25.1483333       ANISOTROPIC:        7.6069128
+
+  diamagnetic part of magnetic shielding:
+    Trace =      26.00407612
+    Tensor :
+               37.46061411         -8.39678515          0.00000000
+               -8.45513933         26.70220701         -0.00000000
+                0.00000000          0.00000000         13.84940725
+
+  paramagnetic undisturbed density part of magnetic shielding:
+    Trace =       8.88221322
+    Tensor :
+                2.33120544          2.96248148         -0.00000000
+                2.92506339          5.84379021          0.00000000
+                0.00000000         -0.00000000         18.47164402
+
+  paramagnetic disturbed density part of magnetic shielding:
+    Trace =      -9.73795605
+    Tensor :
+              -12.42428303          6.86635727          0.00000000
+                7.00247200         -4.83496790          0.00000000
+                0.00000000          0.00000000        -11.95461722
+
+  total magnetic shielding:
+    Trace =      25.14833329
+    Tensor :
+               27.36753652          1.43205360         -0.00000000
+                1.47239606         27.71102932          0.00000000
+                0.00000000         -0.00000000         20.36643404
+
+ATOM  h   10      ISOTROPIC:       25.1483333       ANISOTROPIC:        7.6069128
+
+  diamagnetic part of magnetic shielding:
+    Trace =      26.00407612
+    Tensor :
+               37.46061411         -8.39678515         -0.00000000
+               -8.45513933         26.70220701         -0.00000000
+               -0.00000000          0.00000000         13.84940725
+
+  paramagnetic undisturbed density part of magnetic shielding:
+    Trace =       8.88221322
+    Tensor :
+                2.33120544          2.96248148         -0.00000000
+                2.92506339          5.84379021          0.00000000
+                0.00000000          0.00000000         18.47164402
+
+  paramagnetic disturbed density part of magnetic shielding:
+    Trace =      -9.73795605
+    Tensor :
+              -12.42428303          6.86635727          0.00000000
+                7.00247200         -4.83496790          0.00000000
+                0.00000000          0.00000000        -11.95461722
+
+  total magnetic shielding:
+    Trace =      25.14833329
+    Tensor :
+               27.36753652          1.43205360         -0.00000000
+                1.47239606         27.71102932         -0.00000000
+                0.00000000          0.00000000         20.36643404
+
+ATOM  c   11      ISOTROPIC:      116.0704292       ANISOTROPIC:      140.3413869
+
+  diamagnetic part of magnetic shielding:
+    Trace =     253.67045209
+    Tensor :
+              269.83608014          2.08222665          0.00000000
+                2.11631660        254.36044285          0.00000000
+                0.00000000         -0.00000000        236.81483329
+
+  paramagnetic undisturbed density part of magnetic shielding:
+    Trace =      -2.53884595
+    Tensor :
+               -1.16555250          1.16872372         -0.00000000
+                1.19107617          1.99951335          0.00000000
+               -0.00000000         -0.00000000         -8.45049869
+
+  paramagnetic disturbed density part of magnetic shielding:
+    Trace =    -135.06117693
+    Tensor :
+             -152.90122239        -24.24900255          0.00000000
+              -24.51354918       -218.36855116          0.00000000
+                0.00000000          0.00000000        -33.91375722
+
+  total magnetic shielding:
+    Trace =     116.07042922
+    Tensor :
+              115.76930525        -20.99805217          0.00000000
+              -21.20615640         37.99140504          0.00000000
+               -0.00000000         -0.00000000        194.45057738
+
+ATOM  c   12      ISOTROPIC:      116.0704292       ANISOTROPIC:      140.3413869
+
+  diamagnetic part of magnetic shielding:
+    Trace =     253.67045209
+    Tensor :
+              269.83608014          2.08222665          0.00000000
+                2.11631660        254.36044285          0.00000000
+               -0.00000000          0.00000000        236.81483329
+
+  paramagnetic undisturbed density part of magnetic shielding:
+    Trace =      -2.53884595
+    Tensor :
+               -1.16555250          1.16872372         -0.00000000
+                1.19107617          1.99951335         -0.00000000
+                0.00000000          0.00000000         -8.45049869
+
+  paramagnetic disturbed density part of magnetic shielding:
+    Trace =    -135.06117693
+    Tensor :
+             -152.90122239        -24.24900255          0.00000000
+              -24.51354918       -218.36855116          0.00000000
+                0.00000000          0.00000000        -33.91375723
+
+  total magnetic shielding:
+    Trace =     116.07042922
+    Tensor :
+              115.76930525        -20.99805217          0.00000000
+              -21.20615640         37.99140504         -0.00000000
+                0.00000000          0.00000000        194.45057737
+
+ATOM  h   13      ISOTROPIC:       26.0648267       ANISOTROPIC:        6.2392850
+
+  diamagnetic part of magnetic shielding:
+    Trace =      26.05862512
+    Tensor :
+               22.35510963         -1.17545485          0.00000000
+               -1.31806281         41.09868823          0.00000000
+                0.00000000          0.00000000         14.72207750
+
+  paramagnetic undisturbed density part of magnetic shielding:
+    Trace =       4.25228142
+    Tensor :
+                7.06669272          1.34783516         -0.00000000
+                1.20390605          0.93249136          0.00000000
+               -0.00000000         -0.00000000          4.75766019
+
+  paramagnetic disturbed density part of magnetic shielding:
+    Trace =      -4.24607988
+    Tensor :
+                0.30231032         -1.40211011          0.00000000
+                0.70422351        -16.11339290          0.00000000
+                0.00000000          0.00000000          3.07284293
+
+  total magnetic shielding:
+    Trace =      26.06482666
+    Tensor :
+               29.72411267         -1.22972979          0.00000000
+                0.59006674         25.91778669          0.00000000
+               -0.00000000         -0.00000000         22.55258062
+
+ATOM  h   14      ISOTROPIC:       26.0648267       ANISOTROPIC:        6.2392850
+
+  diamagnetic part of magnetic shielding:
+    Trace =      26.05862512
+    Tensor :
+               22.35510963         -1.17545485          0.00000000
+               -1.31806281         41.09868823          0.00000000
+               -0.00000000          0.00000000         14.72207750
+
+  paramagnetic undisturbed density part of magnetic shielding:
+    Trace =       4.25228142
+    Tensor :
+                7.06669272          1.34783516          0.00000000
+                1.20390605          0.93249136         -0.00000000
+                0.00000000          0.00000000          4.75766019
+
+  paramagnetic disturbed density part of magnetic shielding:
+    Trace =      -4.24607988
+    Tensor :
+                0.30231032         -1.40211011          0.00000000
+                0.70422351        -16.11339290          0.00000000
+                0.00000000          0.00000000          3.07284293
+
+  total magnetic shielding:
+    Trace =      26.06482666
+    Tensor :
+               29.72411267         -1.22972979          0.00000000
+                0.59006674         25.91778669         -0.00000000
+                0.00000000          0.00000000         22.55258062
+
+ATOM  c   15      ISOTROPIC:      128.4332859       ANISOTROPIC:      146.2230675
+
+  diamagnetic part of magnetic shielding:
+    Trace =     254.74607382
+    Tensor :
+              268.19743139         -2.59476148          0.00000000
+               -2.56107295        254.64670885          0.00000000
+                0.00000000          0.00000000        241.39408120
+
+  paramagnetic undisturbed density part of magnetic shielding:
+    Trace =      -3.78395262
+    Tensor :
+               -1.34943142          1.34744838         -0.00000000
+                1.30744217          1.39113038          0.00000000
+               -0.00000000          0.00000000        -11.39355681
+
+  paramagnetic disturbed density part of magnetic shielding:
+    Trace =    -122.52883526
+    Tensor :
+             -149.31613622        -29.86546439          0.00000000
+              -25.86009579       -200.83261715          0.00000000
+                0.00000000          0.00000000        -17.43775241
+
+  total magnetic shielding:
+    Trace =     128.43328594
+    Tensor :
+              117.53186375        -31.11277749          0.00000000
+              -27.11372657         55.20522208          0.00000000
+               -0.00000000          0.00000000        212.56277197
+
+ATOM  c   16      ISOTROPIC:      128.4332859       ANISOTROPIC:      146.2230675
+
+  diamagnetic part of magnetic shielding:
+    Trace =     254.74607382
+    Tensor :
+              268.19743139         -2.59476148          0.00000000
+               -2.56107295        254.64670885          0.00000000
+               -0.00000000          0.00000000        241.39408120
+
+  paramagnetic undisturbed density part of magnetic shielding:
+    Trace =      -3.78395262
+    Tensor :
+               -1.34943142          1.34744838         -0.00000000
+                1.30744217          1.39113038         -0.00000000
+               -0.00000000         -0.00000000        -11.39355681
+
+  paramagnetic disturbed density part of magnetic shielding:
+    Trace =    -122.52883526
+    Tensor :
+             -149.31613622        -29.86546439          0.00000000
+              -25.86009579       -200.83261715          0.00000000
+                0.00000000          0.00000000        -17.43775241
+
+  total magnetic shielding:
+    Trace =     128.43328594
+    Tensor :
+              117.53186375        -31.11277749          0.00000000
+              -27.11372657         55.20522208          0.00000000
+               -0.00000000         -0.00000000        212.56277197
+
+ATOM  h   17      ISOTROPIC:       26.7876749       ANISOTROPIC:        6.6458970
+
+  diamagnetic part of magnetic shielding:
+    Trace =      25.95122244
+    Tensor :
+               24.97314719         -5.18303416          0.00000000
+               -5.35210923         37.43198026          0.00000000
+                0.00000000          0.00000000         15.44853987
+
+  paramagnetic undisturbed density part of magnetic shielding:
+    Trace =       6.02930824
+    Tensor :
+                6.93466841          1.83445689          0.00000000
+                1.58015886          0.96596747         -0.00000000
+               -0.00000000          0.00000000         10.18728885
+
+  paramagnetic disturbed density part of magnetic shielding:
+    Trace =      -5.19285583
+    Tensor :
+               -1.14025748          0.66580618          0.00000000
+                3.56607715        -12.73016903          0.00000000
+                0.00000000          0.00000000         -1.70814098
+
+  total magnetic shielding:
+    Trace =      26.78767485
+    Tensor :
+               30.76755813         -2.68277109          0.00000000
+               -0.20587322         25.66777870          0.00000000
+               -0.00000000          0.00000000         23.92768774
+
+ATOM  h   18      ISOTROPIC:       26.7876749       ANISOTROPIC:        6.6458970
+
+  diamagnetic part of magnetic shielding:
+    Trace =      25.95122244
+    Tensor :
+               24.97314719         -5.18303416          0.00000000
+               -5.35210923         37.43198026         -0.00000000
+               -0.00000000          0.00000000         15.44853987
+
+  paramagnetic undisturbed density part of magnetic shielding:
+    Trace =       6.02930824
+    Tensor :
+                6.93466841          1.83445689         -0.00000000
+                1.58015886          0.96596747         -0.00000000
+               -0.00000000         -0.00000000         10.18728885
+
+  paramagnetic disturbed density part of magnetic shielding:
+    Trace =      -5.19285583
+    Tensor :
+               -1.14025748          0.66580618          0.00000000
+                3.56607715        -12.73016903          0.00000000
+                0.00000000          0.00000000         -1.70814098
+
+  total magnetic shielding:
+    Trace =      26.78767485
+    Tensor :
+               30.76755813         -2.68277109          0.00000000
+               -0.20587322         25.66777870         -0.00000000
+               -0.00000000         -0.00000000         23.92768774
+
+ATOM  h   19      ISOTROPIC:       27.1021613       ANISOTROPIC:        5.2192843
+
+  diamagnetic part of magnetic shielding:
+    Trace =      25.87303380
+    Tensor :
+               35.71021639         10.47082762         -0.00000000
+               10.65707099         25.42996101         -0.00000000
+                0.00000000          0.00000000         16.47892401
+
+  paramagnetic undisturbed density part of magnetic shielding:
+    Trace =       1.46472539
+    Tensor :
+                2.85193516         -3.26693279         -0.00000000
+               -2.99912604          4.88562284         -0.00000000
+                0.00000000          0.00000000         -3.34338183
+
+  paramagnetic disturbed density part of magnetic shielding:
+    Trace =      -0.23559793
+    Tensor :
+               -8.06702457         -6.92671862          0.00000000
+               -9.26685473         -4.85728755          0.00000000
+                0.00000000          0.00000000         12.21751833
+
+  total magnetic shielding:
+    Trace =      27.10216126
+    Tensor :
+               30.49512698          0.27717621         -0.00000000
+               -1.60890979         25.45829630         -0.00000000
+                0.00000000          0.00000000         25.35306051
+
+ATOM  h   20      ISOTROPIC:       27.1021613       ANISOTROPIC:        5.2192843
+
+  diamagnetic part of magnetic shielding:
+    Trace =      25.87303380
+    Tensor :
+               35.71021639         10.47082762         -0.00000000
+               10.65707099         25.42996101         -0.00000000
+                0.00000000          0.00000000         16.47892401
+
+  paramagnetic undisturbed density part of magnetic shielding:
+    Trace =       1.46472539
+    Tensor :
+                2.85193516         -3.26693279          0.00000000
+               -2.99912604          4.88562284         -0.00000000
+               -0.00000000         -0.00000000         -3.34338183
+
+  paramagnetic disturbed density part of magnetic shielding:
+    Trace =      -0.23559793
+    Tensor :
+               -8.06702457         -6.92671862          0.00000000
+               -9.26685473         -4.85728755          0.00000000
+                0.00000000          0.00000000         12.21751833
+
+  total magnetic shielding:
+    Trace =      27.10216126
+    Tensor :
+               30.49512698          0.27717621         -0.00000000
+               -1.60890979         25.45829630         -0.00000000
+               -0.00000000         -0.00000000         25.35306051
+
+
+   ***  nmr shielding constants written onto general input/output file!  ***
+
+
+
+    ------------------------------------------------------------------------
+         total  cpu-time :   3.45 seconds
+         total wall-time :   3.72 seconds
+    ------------------------------------------------------------------------
+
+   ****  mpshift : all done  ****
+
+
+    2025-11-20 12:07:51.734 
+

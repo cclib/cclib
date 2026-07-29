@@ -14,6 +14,7 @@ from cclib.combinator import auto_combinator
 from cclib.file_handler import FileHandler
 from cclib.tree import Tree
 
+
 if TYPE_CHECKING:
     from cclib.combinator import combinator
 

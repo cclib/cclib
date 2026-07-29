@@ -1,0 +1,19 @@
++system 
+ name trp_polar
+ geometry trp_polar.xyz
+ method hf
+ +basis
+  label sto-3g
+  # Otherwise RI will be attempted in the linear response part
+  densFitJ NONE
+ -basis
+-system
+
++task scf
+ act trp_polar
+-task
+
++task ff
+ act trp_polar
+ frequency 1.0e-9
+-task

@@ -5,8 +5,14 @@
 
 """Test coupled cluster logfiles"""
 
+from typing import TYPE_CHECKING
+
 import numpy
 import pytest
+
+
+if TYPE_CHECKING:
+    from cclib.parser.data import ccData
 
 
 class GenericCCTest:
@@ -14,13 +20,13 @@ class GenericCCTest:
 
     rel_thresh = 1.0e-4
 
-    def testsizeandshape(self, data) -> None:
+    def testsizeandshape(self, data: "ccData") -> None:
         """Are the dimensions of ccenergies correct?"""
         assert data._ccCollection._parsed_data[0].ccenergies.shape == (
             len(data._ccCollection._parsed_data[0].scfenergies),
         )
 
-    def testsign(self, data) -> None:
+    def testsign(self, data: "ccData") -> None:
         """Are the coupled cluster corrections negative?"""
         corrections = (
             data._ccCollection._parsed_data[0].ccenergies
@@ -33,7 +39,7 @@ class GenericCC2Test(GenericCCTest):
     # Turbomole 7.4
     corr_energy = -0.0422913114
 
-    def testenergycc2(self, data) -> None:
+    def testenergycc2(self, data: "ccData") -> None:
         """Is the CC2 correlation energy within the target?"""
         e_scf = data._ccCollection._parsed_data[0].scfenergies[0]
         e_cc = data._ccCollection._parsed_data[0].ccenergies[0]
@@ -45,7 +51,7 @@ class GenericCCDTest(GenericCCTest):
     # Q-Chem 5.4
     corr_energy = -0.05304913
 
-    def testenergyccd(self, data) -> None:
+    def testenergyccd(self, data: "ccData") -> None:
         """Is the CCD correlation energy within the target?"""
         e_scf = data._ccCollection._parsed_data[0].scfenergies[0]
         e_cc = data._ccCollection._parsed_data[0].ccenergies[0]
@@ -57,7 +63,7 @@ class GenericCCSDTest(GenericCCTest):
     # Q-Chem 5.4
     corr_energy = -0.05335475
 
-    def testenergyccsd(self, data) -> None:
+    def testenergyccsd(self, data: "ccData") -> None:
         """Is the CCSD correlation energy within the target?"""
         e_scf = data._ccCollection._parsed_data[0].scfenergies[0]
         e_cc = data._ccCollection._parsed_data[0].ccenergies[0]
@@ -69,12 +75,32 @@ class GenericCCSDPTTest(GenericCCTest):
     # Q-Chem 5.4
     corr_energy = -0.05335475 + -0.00007679
 
-    def testenergyccsdpt(self, data) -> None:
+    def testenergyccsdpt(self, data: "ccData") -> None:
         """Is the CCSD(T) correlation energy within the target?"""
         e_scf = data._ccCollection._parsed_data[0].scfenergies[0]
         e_cc = data._ccCollection._parsed_data[0].ccenergies[0]
         e_corr = e_cc - e_scf
         assert pytest.approx(e_corr, rel=self.rel_thresh) == self.corr_energy
+
+
+class CFOURCC2Test(GenericCC2Test):
+    # CFOUR 2.1
+    corr_energy = -0.03819768728081
+
+
+class CFOURCCDTest(GenericCCDTest):
+    # CFOUR 2.1
+    corr_energy = -0.05312310114987
+
+
+class CFOURCCSDTest(GenericCCSDTest):
+    # CFOUR 2.1
+    corr_energy = -0.05342943538964
+
+
+class CFOURCCSDPTTest(GenericCCSDPTTest):
+    # CFOUR 2.1
+    corr_energy = -75.017834877377 - -74.964328738906460
 
 
 class DALTONCCSDPTTest(GenericCCSDPTTest):
@@ -148,3 +174,18 @@ class TurbomoleCCSDTest(GenericCCSDTest):
 
     # Turbomole 7.4
     corr_energy = -0.0510005307
+
+
+class PySCFCCSDTest(GenericCCSDTest):
+    # PySCF 2.6
+    corr_energy = -0.053429798261439
+
+
+class PySCFCCSDPTTest(GenericCCSDPTTest):
+    # PySCF 2.6
+    corr_energy = -0.05350650307
+
+
+class SerenityCCSDTest(GenericCCSDTest):
+    # Serenity 1.6.1
+    corr_energy = -0.130059162427  # TODO

@@ -8,6 +8,7 @@
 # ruff: noqa: F401
 from cclib.parser.utils import find_package
 
+
 if find_package("Bio"):
     from cclib.bridge.cclib2biopython import makebiopython
 
@@ -28,4 +29,8 @@ if find_package("iodata"):
 
 if find_package("pyscf"):
     from cclib.bridge.cclib2pyscf import makepyscf, makepyscf_mos
+
+if find_package("chemfiles"):
+    from cclib.bridge.cclib2chemfiles import makechemfiles
+
 del find_package
