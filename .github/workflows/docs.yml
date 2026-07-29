@@ -33,9 +33,13 @@ jobs:
           git config --global --add safe.directory /__w/cclib/cclib
       - name: Install Pixi
         uses: prefix-dev/setup-pixi@a09b6247153796b190642a2b53fac4241043cf6f  # v0.10.0
+        with:
+          activate-environment: true
+          cache-write: ${{ github.event_name == 'push' && github.ref_name == 'master' }}
+          environments: >-
+            py312
       - name: Build docs
         run: |
-          pixi shell -e py312
           cd doc && make default
       - name: Make a no jekyll file
         run: touch doc/sphinx/_build/html/.nojekyll

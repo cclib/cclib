@@ -21,11 +21,11 @@ jobs:
     strategy:
       matrix:
         python-version:
-          - "3.10"
-          - 3.11
-          - 3.12
-          - 3.13
-          - 3.14
+          - "py310"
+          - py311
+          - py312
+          - py313
+          - py314
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
@@ -39,13 +39,13 @@ jobs:
           git config --global --add safe.directory /__w/cclib/cclib
       - name: Install Pixi
         uses: prefix-dev/setup-pixi@a09b6247153796b190642a2b53fac4241043cf6f  # v0.10.0
+        with:
+          activate-environment: true
+          cache-write: ${{ github.event_name == 'push' && github.ref_name == 'master' }}
+          environments: ${{ matrix.python-version }}
       - name: Prepare CI for Versioningit
         run: |
           python .github/scripts/prepare_ci_for_versioningit.py
-      - name: Set Python version variable
-        run: echo "PIXI_ENV_NAME=$(python -c "import sys; print('py' + sys.argv[1].replace('.', ''))" "${PYTHON_VERSION}")" >> "${GITHUB_ENV}"
-        env:
-          PYTHON_VERSION: ${{ matrix.python-version }}
       - name: Install cclib
         run: |
           python -m pip install -r requirements-bridges.txt
@@ -65,20 +65,17 @@ jobs:
       - name: Enable test coverage for Python 3.11
         run: |
           echo "PYTEST_ENABLE_COVERAGE=true" >> "${GITHUB_ENV}"
-        if: matrix.python-version == '3.11'
+        if: matrix.python-version == 'py311'
       - name: Test core code with pytest
         run: |
-          pixi shell -e "${PIXI_ENV_NAME}"
           bash .github/scripts/run_pytest.bash "$(nproc)"
       - name: Test methods with pytest
         if: steps.filter.outputs.methods == 'true'
         run: |
-          pixi shell -e "${PIXI_ENV_NAME}"
           bash .github/scripts/run_pytest_methods.bash "$(nproc)"
       - name: Test PySCF with pytest
         if: steps.filter.outputs.pyscf == 'true'
         run: |
-          pixi shell -e "${PIXI_ENV_NAME}"
           bash .github/scripts/run_pytest_pyscf.bash "$(nproc)"
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f  # v7.0.0
@@ -89,7 +86,7 @@ jobs:
           verbose: false
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        if: matrix.python-version == '3.11'
+        if: matrix.python-version == 'py311'
       - name: Build distribution packages (binary wheel and source tarball)
         run: |
           python -m build
@@ -102,7 +99,7 @@ jobs:
         with:
           name: python-package-distributions
           path: dist/
-        if: matrix.python-version == '3.12'
+        if: matrix.python-version == 'py312'
 
   # We check the installation using all Python versions using the packages
   # created from a single version, since the packages are platform and version
