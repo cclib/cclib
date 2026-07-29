@@ -67,6 +67,7 @@ dev = ["cclib[bridges,docs,test-infrastructure]", "twine"]
 dev-no-openbabel = ["cclib[bridges-no-openbabel,docs,test-infrastructure]"]
 docs = [
     "build",
+    "pip",
     "sphinx",
     "sphinx_rtd_theme",
 ]
