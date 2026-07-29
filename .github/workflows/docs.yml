@@ -38,6 +38,8 @@ jobs:
           cache-write: ${{ github.event_name == 'push' && github.ref_name == 'master' }}
           environments: >-
             py312
+          global-environments: >-
+            pip
       - name: Build docs
         run: |
           cd doc && make default
