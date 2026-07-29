@@ -567,7 +567,9 @@ class Jaguar(logfileparser.Logfile):
         #  displacement maximum:    1.3954E-02 .  (  1.8000E-03 )
         #  displacement rms:        4.6567E-03 .  (  1.2000E-03 )
         #
-        if line[2:28] == "geometry optimization step":
+        #  Note: geometry -> Geometry capitalization changed
+        #
+        if line[3:28] == "eometry optimization step":
             self.set_attribute("geotargets", numpy.zeros(5, "d"))
 
             gopt_step = int(line.split()[-1])
