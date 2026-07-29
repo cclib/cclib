@@ -37,6 +37,8 @@ jobs:
       - name: Allow repo access (see https://github.com/actions/checkout/issues/760)
         run: |
           git config --global --add safe.directory /__w/cclib/cclib
+      - name: Install Pixi
+        uses: prefix-dev/setup-pixi@a09b6247153796b190642a2b53fac4241043cf6f  # v0.10.0
       - name: Prepare CI for Versioningit
         run: |
           python .github/scripts/prepare_ci_for_versioningit.py
