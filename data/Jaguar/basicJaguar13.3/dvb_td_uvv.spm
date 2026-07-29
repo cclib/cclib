@@ -1,0 +1,49 @@
+{ 
+ s_m_m2io_version
+ :::
+ 2.0.0 
+} 
+
+f_m_table { 
+ s_j_spectrum_type
+ s_j_x_label
+ s_j_y_label
+ :::
+ "Electronic Absorption" 
+  r_j_Excitation_Energy_(eV) 
+  r_j_Oscillator_Strength 
+ m_column[3] { 
+  s_m_data_name
+  s_m_column_name
+  i_m_width
+  b_m_visible
+  :::
+  1 r_j_Excitation_Energy_(eV)  "Excitation Energy (eV)"  10 1
+  2 r_j_Oscillator_Strength  "Oscillator Strength"  10 1
+  3 s_j_Symmetry  "Symmetry"  10 0
+  :::
+ } 
+ m_row[5] { 
+  r_j_Excitation_Energy_(eV)
+  r_j_Oscillator_Strength
+  s_j_Symmetry
+  :::
+  1 5.39251610355246 0.00420065010811059 "" 
+  2 5.96040071377086 1.19518119491918 "" 
+  3 6.24358094864598 8.49652287038376e-14 "" 
+  4 7.23610973338649 0.185790071286148 "" 
+  5 7.41959328567043 9.01694944636306e-13 "" 
+  :::
+ } 
+ m_exists[5] { 
+  s_m_exists
+  :::
+  1 111 
+  2 111 
+  3 111 
+  4 111 
+  5 111 
+  :::
+ } 
+} 
+
