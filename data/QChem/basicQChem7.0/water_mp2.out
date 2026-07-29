@@ -1,7 +1,7 @@
 
-Running Job 1 of 1 water_hf_solvent_sm12_cm5.in
-qchem water_hf_solvent_sm12_cm5.in_24404.0 /scratch/shannon.houck/qchem24404/ 1
-/sw/qchem/release/7.0.0/exe/qcprog.exe_s water_hf_solvent_sm12_cm5.in_24404.0 /scratch/shannon.houck/qchem24404/
+Running Job 1 of 1 water_mp2.in
+qchem water_mp2.in_24678.0 /scratch/shannon.houck/qchem24678/ 1
+/sw/qchem/release/7.0.0/exe/qcprog.exe_s water_mp2.in_24678.0 /scratch/shannon.houck/qchem24678/
                   Welcome to Q-Chem
      A Quantum Leap Into The Future Of Chemistry
 
@@ -112,24 +112,34 @@ qchem water_hf_solvent_sm12_cm5.in_24404.0 /scratch/shannon.houck/qchem24404/ 1
  Parts of Q-Chem use Armadillo 12.8.2 (Cortisol Injector).
  http://arma.sourceforge.net/
 
- Q-Chem begins on Wed Jul 29 13:20:59 2026  
+ Q-Chem begins on Wed Jul 29 13:21:09 2026  
 
  Host: coreman6
 0
 
- Scratch files written to /scratch/shannon.houck/qchem24404//
+ Scratch files written to /scratch/shannon.houck/qchem24678//
  Executable: /sw/qchem/release/7.0.0/exe/qcprog.exe_s
  Number of threads = 1
  Jul426 |scratch|qcdevops|jenkins|workspace|build_RNUM -1
  Processing $rem in /sw/qchem/release/7.0.0/config/preferences:
  Processing $rem in /hfnas/home/shannon.houck/.qchemrc:
- Symmetry turned off for PCM/SM12/SMD calculation
+ Core orbitals will be frozen
 
  Checking the input file for inconsistencies... 	...done.
 
 --------------------------------------------------------------
 User input:
 --------------------------------------------------------------
+$comment
+ Water, single point, RMP2/STO-3G
+$end
+
+$rem
+ method = mp2
+ basis = sto-3g
+ gui = 2
+$end
+
 $molecule
  0 1
  O
@@ -139,27 +149,17 @@ $molecule
  R1=0.99
  A1=106.0
 $end
-
-$rem
- method = hf
- basis = sto-3g
- gui = 2
- solvent_method = sm12
-$end
-
-$smx
-solvent toluene
-charges cm5
-$end
 --------------------------------------------------------------
  ----------------------------------------------------------------
              Standard Nuclear Orientation (Angstroms)
     I     Atom           X                Y                Z
  ----------------------------------------------------------------
-    1      O       0.0000000000     0.0000000000     0.0000000000
-    2      H       0.0000000000     0.0000000000     0.9900000000
-    3      H       0.9516490790     0.0000000000    -0.2728809823
+    1      O       0.0000000000     0.0000000000     0.1191593746
+    2      H      -0.7906491549    -0.0000000000    -0.4766374983
+    3      H       0.7906491549    -0.0000000000    -0.4766374983
  ----------------------------------------------------------------
+ Molecular Point Group                 C2v   NOp =  4
+ Largest Abelian Subgroup              C2v   NOp =  4
  Nuclear Repulsion Energy =           8.88700626 hartrees
  There are        5 alpha and        5 beta electrons
  Requested basis set is STO-3G
@@ -183,28 +183,10 @@ $end
  Scale SEOQF with 1.000000e+00/1.000000e+00/1.000000e+00
 
  Standard Electronic Orientation quadrupole field applied
- Nucleus-field energy     =    -0.0000000008 hartrees
- ================ Generating on-the-fly SAD Guess ================
- Attempting to make child job directory: /scratch/shannon.houck/qchem24404//Frg1/
- Attempting to make child job directory: /scratch/shannon.houck/qchem24404//Frg2/
- Creating input file /scratch/shannon.houck/qchem24404/Frg1.input
- using default PutDataFrgm: nothing
- calling putenv with: QCSCRATCH=/scratch/shannon.houck/qchem24404/ 
- Spawning Job For Fragment 0
- Done Job For Fragment 0
- calling putenv with: QCSCRATCH=/scratch/shannon.houck 
- calling putenv with: QCTHREADS=1 
- Creating input file /scratch/shannon.houck/qchem24404/Frg2.input
- using default PutDataFrgm: nothing
- calling putenv with: QCSCRATCH=/scratch/shannon.houck/qchem24404/ 
- Spawning Job For Fragment 1
- Done Job For Fragment 1
- calling putenv with: QCSCRATCH=/scratch/shannon.houck 
- calling putenv with: QCTHREADS=1 
- Time for running child jobs:  CPU 0.00 s  wall 0.44 s
- ============= Method Specific SAD Guess Constructed =============
- Guess from on-the-fly superposition of atomic densities
- Warning: Energy on first SCF cycle will be non-variational
+ Nucleus-field energy     =    -0.0000000002 hartrees
+ Guess from superposition of atomic densities
+ Warning:  Energy on first SCF cycle will be non-variational
+ SAD guess density has 10.000000 electrons
 
  -----------------------------------------------------------------------
   General SCF calculation program by
@@ -214,32 +196,6 @@ $end
   Bang C. Huynh
  -----------------------------------------------------------------------
  Hartree-Fock
- 
- SM12 calculation using CM5 charges
- Using the SM12 solvation model
- Solvent: toluene                                                         
- 
- Hirshfeld: reading atomic densities from disk.
- warning:  vdwdata pointer should have been initialzed before dftman
-
- Charges (in A.U.) from CM5PAC (Nov. 11, 2011)
- -----------------------------------------------
- Center     Atomic      CM5         Hirshfeld
- Number     Number      Charge      Charge
- -----------------------------------------------
-    1          8       -0.310280    0.000014
-    2          1        0.155146   -0.000001
-    3          1        0.155149    0.000002
- -----------------------------------------------
-
- Dipole moment (in Debye)
- -----------------------------------------------
-                 X        Y        Z     Total
- -----------------------------------------------
- CM5          0.7092   0.0000   0.5344   0.8880
- Hirshfeld    0.0000   0.0000  -0.0000   0.0000
- -----------------------------------------------
-
  A restricted SCF calculation will be
  performed using DIIS
  SCF converges when DIIS error is below 1.0e-05
@@ -251,141 +207,54 @@ $end
  ---------------------------------------
   Cycle       Energy         DIIS error
  ---------------------------------------
- Hirshfeld: reading atomic densities from disk.
-
- Charges (in A.U.) from CM5PAC (Nov. 11, 2011)
- -----------------------------------------------
- Center     Atomic      CM5         Hirshfeld
- Number     Number      Charge      Charge
- -----------------------------------------------
-    1          8       -0.778798   -0.468504
-    2          1        0.389405    0.234258
-    3          1        0.389407    0.234260
- -----------------------------------------------
-
- Dipole moment (in Debye)
- -----------------------------------------------
-                 X        Y        Z     Total
- -----------------------------------------------
- CM5          1.7800   0.0000   1.3413   2.2288
- Hirshfeld    1.0708   0.0000   0.8069   1.3408
- -----------------------------------------------
-
-    1     -74.6004034467      3.98e-01  
- Hirshfeld: reading atomic densities from disk.
-
- Charges (in A.U.) from CM5PAC (Nov. 11, 2011)
- -----------------------------------------------
- Center     Atomic      CM5         Hirshfeld
- Number     Number      Charge      Charge
- -----------------------------------------------
-    1          8       -0.532575   -0.222281
-    2          1        0.266294    0.111147
-    3          1        0.266295    0.111148
- -----------------------------------------------
-
- Dipole moment (in Debye)
- -----------------------------------------------
-                 X        Y        Z     Total
- -----------------------------------------------
- CM5          1.2172   0.0000   0.9172   1.5241
- Hirshfeld    0.5081   0.0000   0.3828   0.6362
- -----------------------------------------------
-
-    2     -74.9221365792      6.59e-02  
- Hirshfeld: reading atomic densities from disk.
-
- Charges (in A.U.) from CM5PAC (Nov. 11, 2011)
- -----------------------------------------------
- Center     Atomic      CM5         Hirshfeld
- Number     Number      Charge      Charge
- -----------------------------------------------
-    1          8       -0.545786   -0.235492
-    2          1        0.272899    0.117753
-    3          1        0.272900    0.117754
- -----------------------------------------------
-
- Dipole moment (in Debye)
- -----------------------------------------------
-                 X        Y        Z     Total
- -----------------------------------------------
- CM5          1.2474   0.0000   0.9400   1.5619
- Hirshfeld    0.5383   0.0000   0.4056   0.6740
- -----------------------------------------------
-
-    3     -74.9639668614      7.73e-03  
- Hirshfeld: reading atomic densities from disk.
-
- Charges (in A.U.) from CM5PAC (Nov. 11, 2011)
- -----------------------------------------------
- Center     Atomic      CM5         Hirshfeld
- Number     Number      Charge      Charge
- -----------------------------------------------
-    1          8       -0.545152   -0.234858
-    2          1        0.272583    0.117436
-    3          1        0.272583    0.117437
- -----------------------------------------------
-
- Dipole moment (in Debye)
- -----------------------------------------------
-                 X        Y        Z     Total
- -----------------------------------------------
- CM5          1.2460   0.0000   0.9389   1.5601
- Hirshfeld    0.5368   0.0000   0.4045   0.6721
- -----------------------------------------------
-
-    4     -74.9642927454      1.56e-03  
- Hirshfeld: reading atomic densities from disk.
-
- Charges (in A.U.) from CM5PAC (Nov. 11, 2011)
- -----------------------------------------------
- Center     Atomic      CM5         Hirshfeld
- Number     Number      Charge      Charge
- -----------------------------------------------
-    1          8       -0.545154   -0.234860
-    2          1        0.272583    0.117436
-    3          1        0.272584    0.117437
- -----------------------------------------------
-
- Dipole moment (in Debye)
- -----------------------------------------------
-                 X        Y        Z     Total
- -----------------------------------------------
- CM5          1.2460   0.0000   0.9389   1.5601
- Hirshfeld    0.5368   0.0000   0.4045   0.6722
- -----------------------------------------------
-
-    5     -74.9643137317      2.87e-05  
-    6     -74.9643136417      6.19e-06  Convergence criterion met
+    1     -74.6004034649      3.98e-01  
+    2     -74.9231294895      6.68e-02  
+    3     -74.9638278704      8.22e-03  
+    4     -74.9643050864      1.60e-03  
+    5     -74.9643287508      2.83e-05  
+    6     -74.9643287652      8.23e-06  Convergence criterion met
  ---------------------------------------
- SCF time:   CPU 0.22s  wall 0.00s 
- Summary of SMx free energies:
- 	G_P    =    -0.8173 kcal/mol (polarization energy)
- 	G_CDS  =    -2.1899 kcal/mol (non-electrostatic energy)
- 	G_ENP  =   -74.96561604 a.u. = E_SCF + G_P
- 	G(tot) =   -74.96910579 a.u. = G_ENP + G_CDS
- SCF   energy =   -74.96431364
- Total energy =   -74.96910579
+ SCF time:   CPU 0.06s  wall 0.00s 
+ SCF   energy =   -74.96432877
+ Total energy =   -74.96432877
+ 
+ Components of the MP2 correlation energy:
+        aaaa  correlation energy =        -0.0010885445 au
+        abab  correlation energy =        -0.0357762854 au
+        bbbb  correlation energy =        -0.0010885445 au
+        non-Brillouin singles    =        -0.0000000000 au
+
+ Total  MP2   correlation energy =                    -0.03795337 au
+        MP2         total energy =                   -75.00228214 au
  
  --------------------------------------------------------------
- 
-                    Orbital Energies (a.u.)
+             Orbital Energies (a.u.) and Symmetries
  --------------------------------------------------------------
  
- Alpha MOs
- -- Occupied --
--20.2395  -1.2482  -0.6004  -0.4434  -0.3863
- -- Virtual --
-  0.5739   0.7118
+ Alpha MOs, Restricted
+ -- Occupied --                  
+-20.244  -1.251  -0.603  -0.445  -0.388
+  1 A1    2 A1    1 B1    3 A1    1 B2                                         
+ -- Virtual --                   
+  0.571   0.709
+  4 A1    2 B1                                                                 
+ 
+ Beta MOs, Restricted
+ -- Occupied --                  
+-20.244  -1.251  -0.603  -0.445  -0.388
+  1 A1    2 A1    1 B1    3 A1    1 B2                                         
+ -- Virtual --                   
+  0.571   0.709
+  4 A1    2 B1                                                                 
  --------------------------------------------------------------
  
           Ground-State Mulliken Net Atomic Charges
 
      Atom                 Charge (a.u.)
   ----------------------------------------
-      1 O                    -0.346819
-      2 H                     0.173410
-      3 H                     0.173410
+      1 O                    -0.339215
+      2 H                     0.169607
+      3 H                     0.169607
   ----------------------------------------
   Sum of atomic charges =     0.000000
 
@@ -393,27 +262,27 @@ $end
                     Cartesian Multipole Moments
  -----------------------------------------------------------------
     Charge (ESU x 10^10)
-                -0.0000
+                 0.0000
     Dipole Moment (Debye)
-         X       1.3510      Y      -0.0000      Z       1.0180
-       Tot       1.6916
+         X      -0.0000      Y      -0.0000      Z      -1.6735
+       Tot       1.6735
     Quadrupole Moments (Debye-Ang)
-        XX      -4.7385     XY       0.0000     YY      -6.1182
-        XZ      -0.3524     YZ       0.0000     ZZ      -4.5364
+        XX      -4.2950     XY      -0.0000     YY      -6.1213
+        XZ       0.0000     YZ      -0.0000     ZZ      -5.4175
     Octopole Moments (Debye-Ang^2)
-       XXX      -0.7873    XXY      -0.0000    XYY      -0.5906
-       YYY      -0.0000    XXZ      -0.7029    XYZ      -0.0000
-       YYZ      -0.4450    XZZ      -0.4983    YZZ       0.0000
-       ZZZ      -0.2659
+       XXX      -0.0000    XXY      -0.0000    XYY      -0.0000
+       YYY      -0.0000    XXZ      -0.5848    XYZ      -0.0000
+       YYZ       0.0136    XZZ      -0.0000    YZZ      -0.0000
+       ZZZ      -0.1457
     Hexadecapole Moments (Debye-Ang^3)
-      XXXX      -5.3635   XXXY       0.0000   XXYY      -1.6272
-      XYYY       0.0000   YYYY      -3.2576   XXXZ       0.1972
-      XXYZ       0.0000   XYYZ       0.1702   YYYZ       0.0000
-      XXZZ      -2.1649   XYZZ       0.0000   YYZZ      -1.7249
-      XZZZ       0.4892   YZZZ       0.0000   ZZZZ      -5.7572
+      XXXX      -6.8264   XXXY      -0.0000   XXYY      -1.8585
+      XYYY      -0.0000   YYYY      -3.2614   XXXZ       0.0000
+      XXYZ      -0.0000   XYYZ       0.0000   YYYZ      -0.0000
+      XXZZ      -1.7504   XYZZ      -0.0000   YYZZ      -1.4123
+      XZZZ       0.0000   YZZZ      -0.0000   ZZZZ      -4.9965
  -----------------------------------------------------------------
- Total job time:  0.82s(wall), 0.27s(cpu) 
- Wed Jul 29 13:21:00 2026
+ Total job time:  0.21s(wall), 0.12s(cpu) 
+ Wed Jul 29 13:21:09 2026
 
         *************************************************************
         *                                                           *

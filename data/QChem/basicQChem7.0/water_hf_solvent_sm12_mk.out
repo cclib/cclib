@@ -1,7 +1,7 @@
 
 Running Job 1 of 1 water_hf_solvent_sm12_mk.in
-qchem water_hf_solvent_sm12_mk.in_21442.0 /scratch/shannon.houck/qchem21442/ 1
-/sw/qchem/release/7.0.0/exe/qcprog.exe_s water_hf_solvent_sm12_mk.in_21442.0 /scratch/shannon.houck/qchem21442/
+qchem water_hf_solvent_sm12_mk.in_24446.0 /scratch/shannon.houck/qchem24446/ 1
+/sw/qchem/release/7.0.0/exe/qcprog.exe_s water_hf_solvent_sm12_mk.in_24446.0 /scratch/shannon.houck/qchem24446/
                   Welcome to Q-Chem
      A Quantum Leap Into The Future Of Chemistry
 
@@ -112,12 +112,12 @@ qchem water_hf_solvent_sm12_mk.in_21442.0 /scratch/shannon.houck/qchem21442/ 1
  Parts of Q-Chem use Armadillo 12.8.2 (Cortisol Injector).
  http://arma.sourceforge.net/
 
- Q-Chem begins on Wed Jul 29 10:44:39 2026  
+ Q-Chem begins on Wed Jul 29 13:21:00 2026  
 
  Host: coreman6
 0
 
- Scratch files written to /scratch/shannon.houck/qchem21442//
+ Scratch files written to /scratch/shannon.houck/qchem24446//
  Executable: /sw/qchem/release/7.0.0/exe/qcprog.exe_s
  Number of threads = 1
  Jul426 |scratch|qcdevops|jenkins|workspace|build_RNUM -1
@@ -185,23 +185,23 @@ $end
  Standard Electronic Orientation quadrupole field applied
  Nucleus-field energy     =    -0.0000000008 hartrees
  ================ Generating on-the-fly SAD Guess ================
- Attempting to make child job directory: /scratch/shannon.houck/qchem21442//Frg1/
- Attempting to make child job directory: /scratch/shannon.houck/qchem21442//Frg2/
- Creating input file /scratch/shannon.houck/qchem21442/Frg1.input
+ Attempting to make child job directory: /scratch/shannon.houck/qchem24446//Frg1/
+ Attempting to make child job directory: /scratch/shannon.houck/qchem24446//Frg2/
+ Creating input file /scratch/shannon.houck/qchem24446/Frg1.input
  using default PutDataFrgm: nothing
- calling putenv with: QCSCRATCH=/scratch/shannon.houck/qchem21442/ 
+ calling putenv with: QCSCRATCH=/scratch/shannon.houck/qchem24446/ 
  Spawning Job For Fragment 0
  Done Job For Fragment 0
  calling putenv with: QCSCRATCH=/scratch/shannon.houck 
  calling putenv with: QCTHREADS=1 
- Creating input file /scratch/shannon.houck/qchem21442/Frg2.input
+ Creating input file /scratch/shannon.houck/qchem24446/Frg2.input
  using default PutDataFrgm: nothing
- calling putenv with: QCSCRATCH=/scratch/shannon.houck/qchem21442/ 
+ calling putenv with: QCSCRATCH=/scratch/shannon.houck/qchem24446/ 
  Spawning Job For Fragment 1
  Done Job For Fragment 1
  calling putenv with: QCSCRATCH=/scratch/shannon.houck 
  calling putenv with: QCTHREADS=1 
- Time for running child jobs:  CPU 0.00 s  wall 0.40 s
+ Time for running child jobs:  CPU 0.00 s  wall 0.47 s
  ============= Method Specific SAD Guess Constructed =============
  Guess from on-the-fly superposition of atomic densities
  Warning: Energy on first SCF cycle will be non-variational
@@ -370,7 +370,7 @@ $end
     5     -74.9643108508      2.89e-05  
     6     -74.9643107497      5.83e-06  Convergence criterion met
  ---------------------------------------
- SCF time:   CPU 0.12s  wall 0.00s 
+ SCF time:   CPU 0.13s  wall 0.00s 
  Summary of SMx free energies:
  	G_P    =    -0.9735 kcal/mol (polarization energy)
  	G_CDS  =    -1.5361 kcal/mol (non-electrostatic energy)
@@ -436,8 +436,8 @@ $end
       XXZZ      -2.1641   XYZZ      -0.0000   YYZZ      -1.7244
       XZZZ       0.4889   YZZZ       0.0000   ZZZZ      -5.7533
  -----------------------------------------------------------------
- Total job time:  0.70s(wall), 0.18s(cpu) 
- Wed Jul 29 10:44:39 2026
+ Total job time:  0.77s(wall), 0.18s(cpu) 
+ Wed Jul 29 13:21:01 2026
 
         *************************************************************
         *                                                           *

@@ -1,7 +1,7 @@
 
 Running Job 1 of 1 water_hf_solvent_cosmo.in
-qchem water_hf_solvent_cosmo.in_21186.0 /scratch/shannon.houck/qchem21186/ 1
-/sw/qchem/release/7.0.0/exe/qcprog.exe_s water_hf_solvent_cosmo.in_21186.0 /scratch/shannon.houck/qchem21186/
+qchem water_hf_solvent_cosmo.in_24181.0 /scratch/shannon.houck/qchem24181/ 1
+/sw/qchem/release/7.0.0/exe/qcprog.exe_s water_hf_solvent_cosmo.in_24181.0 /scratch/shannon.houck/qchem24181/
                   Welcome to Q-Chem
      A Quantum Leap Into The Future Of Chemistry
 
@@ -112,12 +112,12 @@ qchem water_hf_solvent_cosmo.in_21186.0 /scratch/shannon.houck/qchem21186/ 1
  Parts of Q-Chem use Armadillo 12.8.2 (Cortisol Injector).
  http://arma.sourceforge.net/
 
- Q-Chem begins on Wed Jul 29 10:44:33 2026  
+ Q-Chem begins on Wed Jul 29 13:20:55 2026  
 
  Host: coreman6
 0
 
- Scratch files written to /scratch/shannon.houck/qchem21186//
+ Scratch files written to /scratch/shannon.houck/qchem24181//
  Executable: /sw/qchem/release/7.0.0/exe/qcprog.exe_s
  Number of threads = 1
  Jul426 |scratch|qcdevops|jenkins|workspace|build_RNUM -1
@@ -214,7 +214,7 @@ $end
     5     -74.9643287508      2.83e-05  
     6     -74.9643287652      8.23e-06  Convergence criterion met
  ---------------------------------------
- SCF time:   CPU 0.08s  wall 0.00s 
+ SCF time:   CPU 0.05s  wall 0.00s 
  SCF   energy =   -74.96432877
  Total energy =   -74.96432877
  Hartree-Fock
@@ -262,7 +262,7 @@ $end
     3     -74.9675397572      3.23e-05  
     4     -74.9675397759      6.90e-06  Convergence criterion met
  ---------------------------------------
- SCF time:   CPU 0.09s  wall 0.00s 
+ SCF time:   CPU 0.10s  wall 0.00s 
  E(tot) before outlying charge correction:          -74.9675397759
  SCF energy after outlying charge correction:       -74.9674449126
  SCF   energy =   -74.96744491
@@ -322,8 +322,8 @@ $end
       XXZZ      -1.7208   XYZZ      -0.0000   YYZZ      -1.4061
       XZZZ       0.0001   YZZZ       0.0000   ZZZZ      -4.9641
  -----------------------------------------------------------------
- Total job time:  0.73s(wall), 0.24s(cpu) 
- Wed Jul 29 10:44:34 2026
+ Total job time:  0.34s(wall), 0.21s(cpu) 
+ Wed Jul 29 13:20:56 2026
 
         *************************************************************
         *                                                           *

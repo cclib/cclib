@@ -1,7 +1,7 @@
 
 Running Job 1 of 1 water_hf_solvent_pcm_cosmo.in
-qchem water_hf_solvent_pcm_cosmo.in_21244.0 /scratch/shannon.houck/qchem21244/ 1
-/sw/qchem/release/7.0.0/exe/qcprog.exe_s water_hf_solvent_pcm_cosmo.in_21244.0 /scratch/shannon.houck/qchem21244/
+qchem water_hf_solvent_pcm_cosmo.in_24242.0 /scratch/shannon.houck/qchem24242/ 1
+/sw/qchem/release/7.0.0/exe/qcprog.exe_s water_hf_solvent_pcm_cosmo.in_24242.0 /scratch/shannon.houck/qchem24242/
                   Welcome to Q-Chem
      A Quantum Leap Into The Future Of Chemistry
 
@@ -112,12 +112,12 @@ qchem water_hf_solvent_pcm_cosmo.in_21244.0 /scratch/shannon.houck/qchem21244/ 1
  Parts of Q-Chem use Armadillo 12.8.2 (Cortisol Injector).
  http://arma.sourceforge.net/
 
- Q-Chem begins on Wed Jul 29 10:44:35 2026  
+ Q-Chem begins on Wed Jul 29 13:20:56 2026  
 
  Host: coreman6
 0
 
- Scratch files written to /scratch/shannon.houck/qchem21244//
+ Scratch files written to /scratch/shannon.houck/qchem24242//
  Executable: /sw/qchem/release/7.0.0/exe/qcprog.exe_s
  Number of threads = 1
  Jul426 |scratch|qcdevops|jenkins|workspace|build_RNUM -1
@@ -229,7 +229,7 @@ $end
     5     -74.9670867426      2.53e-05  
     6     -74.9670867543      5.08e-06  Convergence criterion met
  ---------------------------------------
- SCF time:   CPU 0.08s  wall 0.00s 
+ SCF time:   CPU 0.09s  wall 1.00s 
 
 ************** Final PCM Free Energy Summary **************
  G_electrostatic  =      -0.00282537 hartree =      -1.77294520 kcal/mol
@@ -294,8 +294,8 @@ $end
       XXZZ      -2.1555   XYZZ      -0.0000   YYZZ      -1.7200
       XZZZ       0.4862   YZZZ       0.0000   ZZZZ      -5.7097
  -----------------------------------------------------------------
- Total job time:  0.29s(wall), 0.14s(cpu) 
- Wed Jul 29 10:44:35 2026
+ Total job time:  0.25s(wall), 0.13s(cpu) 
+ Wed Jul 29 13:20:57 2026
 
         *************************************************************
         *                                                           *

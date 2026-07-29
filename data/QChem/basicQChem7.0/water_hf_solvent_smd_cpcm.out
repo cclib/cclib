@@ -1,7 +1,7 @@
 
 Running Job 1 of 1 water_hf_solvent_smd_cpcm.in
-qchem water_hf_solvent_smd_cpcm.in_21525.0 /scratch/shannon.houck/qchem21525/ 1
-/sw/qchem/release/7.0.0/exe/qcprog.exe_s water_hf_solvent_smd_cpcm.in_21525.0 /scratch/shannon.houck/qchem21525/
+qchem water_hf_solvent_smd_cpcm.in_24530.0 /scratch/shannon.houck/qchem24530/ 1
+/sw/qchem/release/7.0.0/exe/qcprog.exe_s water_hf_solvent_smd_cpcm.in_24530.0 /scratch/shannon.houck/qchem24530/
                   Welcome to Q-Chem
      A Quantum Leap Into The Future Of Chemistry
 
@@ -112,12 +112,12 @@ qchem water_hf_solvent_smd_cpcm.in_21525.0 /scratch/shannon.houck/qchem21525/ 1
  Parts of Q-Chem use Armadillo 12.8.2 (Cortisol Injector).
  http://arma.sourceforge.net/
 
- Q-Chem begins on Wed Jul 29 10:44:41 2026  
+ Q-Chem begins on Wed Jul 29 13:21:02 2026  
 
  Host: coreman6
 0
 
- Scratch files written to /scratch/shannon.houck/qchem21525//
+ Scratch files written to /scratch/shannon.houck/qchem24530//
  Executable: /sw/qchem/release/7.0.0/exe/qcprog.exe_s
  Number of threads = 1
  Jul426 |scratch|qcdevops|jenkins|workspace|build_RNUM -1
@@ -238,7 +238,7 @@ $end
     5     -74.9663495788      2.66e-05  
     6     -74.9663495918      5.85e-06  Convergence criterion met
  ---------------------------------------
- SCF time:   CPU 0.08s  wall 0.00s 
+ SCF time:   CPU 0.09s  wall 0.00s 
  Summary of SMD free energies:
  	G_PCM  =    -1.2925 kcal/mol (polarization energy)
  	G_CDS  =    -0.8201 kcal/mol (non-electrostatic energy)
@@ -292,8 +292,8 @@ $end
       XXZZ      -2.1598   XYZZ      -0.0000   YYZZ      -1.7223
       XZZZ       0.4876   YZZZ       0.0000   ZZZZ      -5.7313
  -----------------------------------------------------------------
- Total job time:  0.24s(wall), 0.13s(cpu) 
- Wed Jul 29 10:44:41 2026
+ Total job time:  0.24s(wall), 0.14s(cpu) 
+ Wed Jul 29 13:21:02 2026
 
         *************************************************************
         *                                                           *

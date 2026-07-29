@@ -1,7 +1,7 @@
 
-Running Job 1 of 1 water_hf_solvent_sm12_cm5.in
-qchem water_hf_solvent_sm12_cm5.in_24404.0 /scratch/shannon.houck/qchem24404/ 1
-/sw/qchem/release/7.0.0/exe/qcprog.exe_s water_hf_solvent_sm12_cm5.in_24404.0 /scratch/shannon.houck/qchem24404/
+Running Job 1 of 1 water_ir.in
+qchem water_ir.in_24649.0 /scratch/shannon.houck/qchem24649/ 1
+/sw/qchem/release/7.0.0/exe/qcprog.exe_s water_ir.in_24649.0 /scratch/shannon.houck/qchem24649/
                   Welcome to Q-Chem
      A Quantum Leap Into The Future Of Chemistry
 
@@ -112,24 +112,34 @@ qchem water_hf_solvent_sm12_cm5.in_24404.0 /scratch/shannon.houck/qchem24404/ 1
  Parts of Q-Chem use Armadillo 12.8.2 (Cortisol Injector).
  http://arma.sourceforge.net/
 
- Q-Chem begins on Wed Jul 29 13:20:59 2026  
+ Q-Chem begins on Wed Jul 29 13:21:08 2026  
 
  Host: coreman6
 0
 
- Scratch files written to /scratch/shannon.houck/qchem24404//
+ Scratch files written to /scratch/shannon.houck/qchem24649//
  Executable: /sw/qchem/release/7.0.0/exe/qcprog.exe_s
  Number of threads = 1
  Jul426 |scratch|qcdevops|jenkins|workspace|build_RNUM -1
  Processing $rem in /sw/qchem/release/7.0.0/config/preferences:
  Processing $rem in /hfnas/home/shannon.houck/.qchemrc:
- Symmetry turned off for PCM/SM12/SMD calculation
 
  Checking the input file for inconsistencies... 	...done.
 
 --------------------------------------------------------------
 User input:
 --------------------------------------------------------------
+$comment
+ Water, frequencies (analytic), RB3LYP/STO-3G
+$end
+
+$rem
+ jobtype = freq
+ method = b3lyp
+ basis = sto-3g
+ gui = 2
+$end
+
 $molecule
  0 1
  O
@@ -139,27 +149,17 @@ $molecule
  R1=0.99
  A1=106.0
 $end
-
-$rem
- method = hf
- basis = sto-3g
- gui = 2
- solvent_method = sm12
-$end
-
-$smx
-solvent toluene
-charges cm5
-$end
 --------------------------------------------------------------
  ----------------------------------------------------------------
              Standard Nuclear Orientation (Angstroms)
     I     Atom           X                Y                Z
  ----------------------------------------------------------------
-    1      O       0.0000000000     0.0000000000     0.0000000000
-    2      H       0.0000000000     0.0000000000     0.9900000000
-    3      H       0.9516490790     0.0000000000    -0.2728809823
+    1      O       0.0000000000     0.0000000000     0.1191593746
+    2      H      -0.7906491549    -0.0000000000    -0.4766374983
+    3      H       0.7906491549    -0.0000000000    -0.4766374983
  ----------------------------------------------------------------
+ Molecular Point Group                 C2v   NOp =  4
+ Largest Abelian Subgroup              C2v   NOp =  4
  Nuclear Repulsion Energy =           8.88700626 hartrees
  There are        5 alpha and        5 beta electrons
  Requested basis set is STO-3G
@@ -175,36 +175,13 @@ $end
    H (  2)  0.990000
    H (  3)  0.990000  1.581298
  
- A cutoff of  1.0D-09 yielded     10 shell pairs
+ A cutoff of  1.0D-12 yielded     10 shell pairs
  There are        34 function pairs
  Start forming overlap matrix
  Smallest overlap matrix eigenvalue = 3.64E-01
-
- Scale SEOQF with 1.000000e+00/1.000000e+00/1.000000e+00
-
- Standard Electronic Orientation quadrupole field applied
- Nucleus-field energy     =    -0.0000000008 hartrees
- ================ Generating on-the-fly SAD Guess ================
- Attempting to make child job directory: /scratch/shannon.houck/qchem24404//Frg1/
- Attempting to make child job directory: /scratch/shannon.houck/qchem24404//Frg2/
- Creating input file /scratch/shannon.houck/qchem24404/Frg1.input
- using default PutDataFrgm: nothing
- calling putenv with: QCSCRATCH=/scratch/shannon.houck/qchem24404/ 
- Spawning Job For Fragment 0
- Done Job For Fragment 0
- calling putenv with: QCSCRATCH=/scratch/shannon.houck 
- calling putenv with: QCTHREADS=1 
- Creating input file /scratch/shannon.houck/qchem24404/Frg2.input
- using default PutDataFrgm: nothing
- calling putenv with: QCSCRATCH=/scratch/shannon.houck/qchem24404/ 
- Spawning Job For Fragment 1
- Done Job For Fragment 1
- calling putenv with: QCSCRATCH=/scratch/shannon.houck 
- calling putenv with: QCTHREADS=1 
- Time for running child jobs:  CPU 0.00 s  wall 0.44 s
- ============= Method Specific SAD Guess Constructed =============
- Guess from on-the-fly superposition of atomic densities
- Warning: Energy on first SCF cycle will be non-variational
+ Guess from superposition of atomic densities
+ Warning:  Energy on first SCF cycle will be non-variational
+ SAD guess density has 10.000000 electrons
 
  -----------------------------------------------------------------------
   General SCF calculation program by
@@ -213,179 +190,65 @@ $end
   Daniel Levine, Susi Lehtola, Hugh Burton, Evgeny Epifanovsky,
   Bang C. Huynh
  -----------------------------------------------------------------------
- Hartree-Fock
- 
- SM12 calculation using CM5 charges
- Using the SM12 solvation model
- Solvent: toluene                                                         
- 
- Hirshfeld: reading atomic densities from disk.
- warning:  vdwdata pointer should have been initialzed before dftman
-
- Charges (in A.U.) from CM5PAC (Nov. 11, 2011)
- -----------------------------------------------
- Center     Atomic      CM5         Hirshfeld
- Number     Number      Charge      Charge
- -----------------------------------------------
-    1          8       -0.310280    0.000014
-    2          1        0.155146   -0.000001
-    3          1        0.155149    0.000002
- -----------------------------------------------
-
- Dipole moment (in Debye)
- -----------------------------------------------
-                 X        Y        Z     Total
- -----------------------------------------------
- CM5          0.7092   0.0000   0.5344   0.8880
- Hirshfeld    0.0000   0.0000  -0.0000   0.0000
- -----------------------------------------------
-
+ Exchange:     0.2000 Hartree-Fock + 0.0800 Slater + 0.7200 B88
+ Correlation:  0.1900 VWN1RPA + 0.8100 LYP
+ Using SG-1 standard quadrature grid
  A restricted SCF calculation will be
  performed using DIIS
- SCF converges when DIIS error is below 1.0e-05
- User-specified cutoff of 10e-9
+ SCF converges when DIIS error is below 1.0e-08
+ User-specified cutoff of 10e-12
  used for neglect of 2-electron integrals.
- A cutoff of 10e-9
+ A cutoff of 10e-12
  used for neglect of overlap integrals.
  Incremental Fock algorithm is on at the start.
  ---------------------------------------
   Cycle       Energy         DIIS error
  ---------------------------------------
- Hirshfeld: reading atomic densities from disk.
-
- Charges (in A.U.) from CM5PAC (Nov. 11, 2011)
- -----------------------------------------------
- Center     Atomic      CM5         Hirshfeld
- Number     Number      Charge      Charge
- -----------------------------------------------
-    1          8       -0.778798   -0.468504
-    2          1        0.389405    0.234258
-    3          1        0.389407    0.234260
- -----------------------------------------------
-
- Dipole moment (in Debye)
- -----------------------------------------------
-                 X        Y        Z     Total
- -----------------------------------------------
- CM5          1.7800   0.0000   1.3413   2.2288
- Hirshfeld    1.0708   0.0000   0.8069   1.3408
- -----------------------------------------------
-
-    1     -74.6004034467      3.98e-01  
- Hirshfeld: reading atomic densities from disk.
-
- Charges (in A.U.) from CM5PAC (Nov. 11, 2011)
- -----------------------------------------------
- Center     Atomic      CM5         Hirshfeld
- Number     Number      Charge      Charge
- -----------------------------------------------
-    1          8       -0.532575   -0.222281
-    2          1        0.266294    0.111147
-    3          1        0.266295    0.111148
- -----------------------------------------------
-
- Dipole moment (in Debye)
- -----------------------------------------------
-                 X        Y        Z     Total
- -----------------------------------------------
- CM5          1.2172   0.0000   0.9172   1.5241
- Hirshfeld    0.5081   0.0000   0.3828   0.6362
- -----------------------------------------------
-
-    2     -74.9221365792      6.59e-02  
- Hirshfeld: reading atomic densities from disk.
-
- Charges (in A.U.) from CM5PAC (Nov. 11, 2011)
- -----------------------------------------------
- Center     Atomic      CM5         Hirshfeld
- Number     Number      Charge      Charge
- -----------------------------------------------
-    1          8       -0.545786   -0.235492
-    2          1        0.272899    0.117753
-    3          1        0.272900    0.117754
- -----------------------------------------------
-
- Dipole moment (in Debye)
- -----------------------------------------------
-                 X        Y        Z     Total
- -----------------------------------------------
- CM5          1.2474   0.0000   0.9400   1.5619
- Hirshfeld    0.5383   0.0000   0.4056   0.6740
- -----------------------------------------------
-
-    3     -74.9639668614      7.73e-03  
- Hirshfeld: reading atomic densities from disk.
-
- Charges (in A.U.) from CM5PAC (Nov. 11, 2011)
- -----------------------------------------------
- Center     Atomic      CM5         Hirshfeld
- Number     Number      Charge      Charge
- -----------------------------------------------
-    1          8       -0.545152   -0.234858
-    2          1        0.272583    0.117436
-    3          1        0.272583    0.117437
- -----------------------------------------------
-
- Dipole moment (in Debye)
- -----------------------------------------------
-                 X        Y        Z     Total
- -----------------------------------------------
- CM5          1.2460   0.0000   0.9389   1.5601
- Hirshfeld    0.5368   0.0000   0.4045   0.6721
- -----------------------------------------------
-
-    4     -74.9642927454      1.56e-03  
- Hirshfeld: reading atomic densities from disk.
-
- Charges (in A.U.) from CM5PAC (Nov. 11, 2011)
- -----------------------------------------------
- Center     Atomic      CM5         Hirshfeld
- Number     Number      Charge      Charge
- -----------------------------------------------
-    1          8       -0.545154   -0.234860
-    2          1        0.272583    0.117436
-    3          1        0.272584    0.117437
- -----------------------------------------------
-
- Dipole moment (in Debye)
- -----------------------------------------------
-                 X        Y        Z     Total
- -----------------------------------------------
- CM5          1.2460   0.0000   0.9389   1.5601
- Hirshfeld    0.5368   0.0000   0.4045   0.6722
- -----------------------------------------------
-
-    5     -74.9643137317      2.87e-05  
-    6     -74.9643136417      6.19e-06  Convergence criterion met
+    1     -75.1755248011      3.78e-01  
+    2     -75.2913289529      5.40e-02  
+    3     -75.3034824628      4.19e-02  
+    4     -75.3178464109      2.41e-04  
+    5     -75.3178467081      2.84e-05  
+    6     -75.3178467152      1.24e-06  
+    7     -75.3178467152      1.97e-08  
+    8     -75.3178467152      2.47e-12  Convergence criterion met
  ---------------------------------------
- SCF time:   CPU 0.22s  wall 0.00s 
- Summary of SMx free energies:
- 	G_P    =    -0.8173 kcal/mol (polarization energy)
- 	G_CDS  =    -2.1899 kcal/mol (non-electrostatic energy)
- 	G_ENP  =   -74.96561604 a.u. = E_SCF + G_P
- 	G(tot) =   -74.96910579 a.u. = G_ENP + G_CDS
- SCF   energy =   -74.96431364
- Total energy =   -74.96910579
+ SCF time:   CPU 0.20s  wall 0.00s 
+ SCF   energy =   -75.31784672
+ Total energy =   -75.31784672
+ Integrated density by DFT XC:
+   Number of electrons = 10
+   Numerical integral  =    10.000004528800
+   Relative error      =     0.0000452880 %
  
  --------------------------------------------------------------
- 
-                    Orbital Energies (a.u.)
+             Orbital Energies (a.u.) and Symmetries
  --------------------------------------------------------------
  
- Alpha MOs
- -- Occupied --
--20.2395  -1.2482  -0.6004  -0.4434  -0.3863
- -- Virtual --
-  0.5739   0.7118
+ Alpha MOs, Restricted
+ -- Occupied --                  
+-18.837  -0.919  -0.433  -0.229  -0.142
+  1 A1    2 A1    1 B1    3 A1    1 B2                                         
+ -- Virtual --                   
+  0.324   0.441
+  4 A1    2 B1                                                                 
+ 
+ Beta MOs, Restricted
+ -- Occupied --                  
+-18.837  -0.919  -0.433  -0.229  -0.142
+  1 A1    2 A1    1 B1    3 A1    1 B2                                         
+ -- Virtual --                   
+  0.324   0.441
+  4 A1    2 B1                                                                 
  --------------------------------------------------------------
  
           Ground-State Mulliken Net Atomic Charges
 
      Atom                 Charge (a.u.)
   ----------------------------------------
-      1 O                    -0.346819
-      2 H                     0.173410
-      3 H                     0.173410
+      1 O                    -0.340765
+      2 H                     0.170382
+      3 H                     0.170382
   ----------------------------------------
   Sum of atomic charges =     0.000000
 
@@ -393,27 +256,98 @@ $end
                     Cartesian Multipole Moments
  -----------------------------------------------------------------
     Charge (ESU x 10^10)
-                -0.0000
+                 0.0000
     Dipole Moment (Debye)
-         X       1.3510      Y      -0.0000      Z       1.0180
-       Tot       1.6916
+         X       0.0000      Y      -0.0000      Z      -1.6167
+       Tot       1.6167
     Quadrupole Moments (Debye-Ang)
-        XX      -4.7385     XY       0.0000     YY      -6.1182
-        XZ      -0.3524     YZ       0.0000     ZZ      -4.5364
+        XX      -4.3198     XY       0.0000     YY      -6.1259
+        XZ      -0.0000     YZ      -0.0000     ZZ      -5.4148
     Octopole Moments (Debye-Ang^2)
-       XXX      -0.7873    XXY      -0.0000    XYY      -0.5906
-       YYY      -0.0000    XXZ      -0.7029    XYZ      -0.0000
-       YYZ      -0.4450    XZZ      -0.4983    YZZ       0.0000
-       ZZZ      -0.2659
+       XXX       0.0000    XXY      -0.0000    XYY       0.0000
+       YYY      -0.0000    XXZ      -0.5574    XYZ      -0.0000
+       YYZ       0.0235    XZZ       0.0000    YZZ      -0.0000
+       ZZZ      -0.0969
     Hexadecapole Moments (Debye-Ang^3)
-      XXXX      -5.3635   XXXY       0.0000   XXYY      -1.6272
-      XYYY       0.0000   YYYY      -3.2576   XXXZ       0.1972
-      XXYZ       0.0000   XYYZ       0.1702   YYYZ       0.0000
-      XXZZ      -2.1649   XYZZ       0.0000   YYZZ      -1.7249
-      XZZZ       0.4892   YZZZ       0.0000   ZZZZ      -5.7572
+      XXXX      -6.8771   XXXY      -0.0000   XXYY      -1.8643
+      XYYY      -0.0000   YYYY      -3.2662   XXXZ      -0.0000
+      XXYZ      -0.0000   XYYZ      -0.0000   YYYZ      -0.0000
+      XXZZ      -1.7671   XYZZ      -0.0000   YYZZ      -1.4153
+      XZZZ      -0.0000   YZZZ      -0.0000   ZZZZ      -5.0125
  -----------------------------------------------------------------
- Total job time:  0.82s(wall), 0.27s(cpu) 
- Wed Jul 29 13:21:00 2026
+ Calculating MO derivatives via CPSCF
+    1     4     8    0.0966630  
+    2    12     0    0.0000000  Converged
+ Polarizability Matrix (a.u.)
+            1           2           3
+    1  -5.5854984  -0.0000000  -0.0000000
+    2  -0.0000000  -0.0409346  -0.0000000
+    3  -0.0000000  -0.0000000  -2.3246756
+ Calculating analytic Hessian of the SCF energy
+ 
+ Direct stationary perturbation theory relativistic correction:
+ 
+ 
+ **********************************************************************
+ **                                                                  **
+ **                       VIBRATIONAL ANALYSIS                       **
+ **                       --------------------                       **
+ **                                                                  **
+ **        VIBRATIONAL FREQUENCIES (CM**-1) AND NORMAL MODES         **
+ **     FORCE CONSTANTS (mDYN/ANGSTROM) AND REDUCED MASSES (AMU)     **
+ **                  INFRARED INTENSITIES (KM/MOL)                   **
+ **                                                                  **
+ **********************************************************************
+ 
+
+ Mode:                 1                      2                      3
+ Frequency:      1860.10                3939.13                4272.66
+ Force Cnst:      2.2064                 9.5583                11.6524
+ Red. Mass:       1.0823                 1.0455                 1.0833
+ IR Active:          YES                    YES                    YES
+ IR Intens:        5.911                 61.120                 36.761
+ Raman Active:       YES                    YES                    YES
+               X      Y      Z        X      Y      Z        X      Y      Z
+ O         -0.000 -0.000 -0.070   -0.000 -0.000 -0.050   -0.071 -0.000  0.000
+ H         -0.430  0.000  0.559    0.583  0.000  0.398    0.563  0.000  0.424
+ H          0.430  0.000  0.559   -0.583 -0.000  0.398    0.563 -0.000 -0.424
+ TransDip  -0.000  0.000  0.078   -0.000 -0.000 -0.250   -0.194 -0.000  0.000
+
+ STANDARD THERMODYNAMIC QUANTITIES AT   298.15 K  AND     1.00 ATM
+
+   This Molecule has  0 Imaginary Frequencies
+   Zero point vibrational energy:       14.398 kcal/mol
+
+   Atom    1 Element O  Has Mass   15.99491
+   Atom    2 Element H  Has Mass    1.00783
+   Atom    3 Element H  Has Mass    1.00783
+   Molecular Mass:    18.010570 amu
+   Principal axes and moments of inertia in amu*Bohr^2:
+                             1           2           3
+    Eigenvalues --        2.26916     4.49969     6.76885
+          X               1.00000     0.00000     0.00000
+          Y               0.00000     0.00000     1.00000
+          Z               0.00000     1.00000    -0.00000
+   Rotational Symmetry Number is   2
+   The Molecule is an Asymmetric Top
+   Translational Enthalpy:        0.889 kcal/mol
+   Rotational Enthalpy:           0.889 kcal/mol
+   Vibrational Enthalpy:         14.399 kcal/mol
+   gas constant (RT):             0.592 kcal/mol
+   Translational Entropy:        34.608  cal/mol.K
+   Rotational Entropy:           10.634  cal/mol.K
+   Vibrational Entropy:           0.003  cal/mol.K
+
+   Total Enthalpy:               16.769 kcal/mol
+   Total Entropy:                45.245  cal/mol.K
+
+   Quasi-RRHO corrections using alpha = 4, and omega = 100 cm^-1
+   QRRHO-Vib. Enthalpy:          14.399 kcal/mol
+   QRRHO-Vib. Entropy:            0.003  cal/mol.K
+   QRRHO-Total Enthalpy:         16.769 kcal/mol
+   QRRHO-Total Entropy:          45.245  cal/mol.K
+ Total job time:  0.85s(wall), 0.66s(cpu) 
+ Wed Jul 29 13:21:09 2026
 
         *************************************************************
         *                                                           *

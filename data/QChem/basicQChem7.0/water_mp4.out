@@ -1,7 +1,7 @@
 
-Running Job 1 of 1 water_hf_solvent_sm8.in
-qchem water_hf_solvent_sm8.in_24488.0 /scratch/shannon.houck/qchem24488/ 1
-/sw/qchem/release/7.0.0/exe/qcprog.exe_s water_hf_solvent_sm8.in_24488.0 /scratch/shannon.houck/qchem24488/
+Running Job 1 of 1 water_mp4.in
+qchem water_mp4.in_24737.0 /scratch/shannon.houck/qchem24737/ 1
+/sw/qchem/release/7.0.0/exe/qcprog.exe_s water_mp4.in_24737.0 /scratch/shannon.houck/qchem24737/
                   Welcome to Q-Chem
      A Quantum Leap Into The Future Of Chemistry
 
@@ -112,29 +112,33 @@ qchem water_hf_solvent_sm8.in_24488.0 /scratch/shannon.houck/qchem24488/ 1
  Parts of Q-Chem use Armadillo 12.8.2 (Cortisol Injector).
  http://arma.sourceforge.net/
 
- Q-Chem begins on Wed Jul 29 13:21:01 2026  
+ Q-Chem begins on Wed Jul 29 13:21:12 2026  
 
  Host: coreman6
 0
 
- Scratch files written to /scratch/shannon.houck/qchem24488//
+ Scratch files written to /scratch/shannon.houck/qchem24737//
  Executable: /sw/qchem/release/7.0.0/exe/qcprog.exe_s
  Number of threads = 1
  Jul426 |scratch|qcdevops|jenkins|workspace|build_RNUM -1
  Processing $rem in /sw/qchem/release/7.0.0/config/preferences:
  Processing $rem in /hfnas/home/shannon.houck/.qchemrc:
- Setting PURECART = 222 for SM8 calculation
 
  Checking the input file for inconsistencies... 	...done.
-
- Q-Chem warning in module forms1/BasisType.C, line 3173:
-
- You are not using the predefined 5D/6D in this basis set.
-
 
 --------------------------------------------------------------
 User input:
 --------------------------------------------------------------
+$comment
+ Water, single point, RMP4/STO-3G
+$end
+
+$rem
+ method = mp4
+ basis = sto-3g
+ gui = 2
+$end
+
 $molecule
  0 1
  O
@@ -143,17 +147,6 @@ $molecule
 
  R1=0.99
  A1=106.0
-$end
-
-$rem
- method = hf
- basis = sto-3g
- gui = 2
- solvent_method = sm8
-$end
-
-$smx
-solvent toluene
 $end
 --------------------------------------------------------------
  ----------------------------------------------------------------
@@ -170,6 +163,10 @@ $end
  There are        5 alpha and        5 beta electrons
  Requested basis set is STO-3G
  There are 4 shells and 7 basis functions
+ Total memory of 8000 MB is distributed as follows: 
+   MEM_STATIC is set to 192 MB
+   QALLOC/CCMAN JOB total memory use is  7808 MB
+ Warning: actual memory use might exceed 8000 MB
 
  Total QAlloc Memory Limit   8000 MB
  Mega-Array Size       188 MB
@@ -181,7 +178,7 @@ $end
    H (  2)  0.990000
    H (  3)  0.990000  1.581298
  
- A cutoff of  1.0D-09 yielded     10 shell pairs
+ A cutoff of  1.0D-14 yielded     10 shell pairs
  There are        34 function pairs
  Start forming overlap matrix
  Smallest overlap matrix eigenvalue = 3.64E-01
@@ -190,27 +187,9 @@ $end
 
  Standard Electronic Orientation quadrupole field applied
  Nucleus-field energy     =    -0.0000000002 hartrees
- ================ Generating on-the-fly SAD Guess ================
- Attempting to make child job directory: /scratch/shannon.houck/qchem24488//Frg1/
- Attempting to make child job directory: /scratch/shannon.houck/qchem24488//Frg2/
- Creating input file /scratch/shannon.houck/qchem24488/Frg1.input
- using default PutDataFrgm: nothing
- calling putenv with: QCSCRATCH=/scratch/shannon.houck/qchem24488/ 
- Spawning Job For Fragment 0
- Done Job For Fragment 0
- calling putenv with: QCSCRATCH=/scratch/shannon.houck 
- calling putenv with: QCTHREADS=1 
- Creating input file /scratch/shannon.houck/qchem24488/Frg2.input
- using default PutDataFrgm: nothing
- calling putenv with: QCSCRATCH=/scratch/shannon.houck/qchem24488/ 
- Spawning Job For Fragment 1
- Done Job For Fragment 1
- calling putenv with: QCSCRATCH=/scratch/shannon.houck 
- calling putenv with: QCTHREADS=1 
- Time for running child jobs:  CPU 0.00 s  wall 0.36 s
- ============= Method Specific SAD Guess Constructed =============
- Guess from on-the-fly superposition of atomic densities
- Warning: Energy on first SCF cycle will be non-variational
+ Guess from superposition of atomic densities
+ Warning:  Energy on first SCF cycle will be non-variational
+ SAD guess density has 10.000000 electrons
 
  -----------------------------------------------------------------------
   General SCF calculation program by
@@ -220,56 +199,209 @@ $end
   Bang C. Huynh
  -----------------------------------------------------------------------
  Hartree-Fock
- 
- Using the SM8 solvation model
- Solvent: toluene                                                         
- Basis set: other           
- 
-  *********************************************
-  CM4 charges are not available for your basis.
-  The supported basis sets are 6-31G*, 6-31+G*,
-  and 6-31+G**. However, the solvation calculation
-  will be performed with the charge parameters known
-  for the 6-31G* basis. The final solvation energy
-  may be inaccurate. Next time try to use only 
-  6-31G*, 6-31+G*,or 6-31+G** for your basis.
-  *********************************************
- 
- 
  A restricted SCF calculation will be
  performed using DIIS
- SCF converges when DIIS error is below 1.0e-05
- User-specified cutoff of 10e-9
+ SCF converges when DIIS error is below 1.0e-08
+ User-specified cutoff of 10e-14
  used for neglect of 2-electron integrals.
- A cutoff of 10e-9
+ A cutoff of 10e-14
  used for neglect of overlap integrals.
  Incremental Fock algorithm is on at the start.
  ---------------------------------------
   Cycle       Energy         DIIS error
  ---------------------------------------
-    1     -74.6004034467      3.97e-01  
-    2     -74.9238212155      6.53e-02  
-    3     -74.9639191529      7.56e-03  
-    4     -74.9643061008      1.55e-03  
-    5     -74.9643279431      2.98e-05  
-    6     -74.9643279287      5.55e-06  Convergence criterion met
+    1     -74.6004034653      3.98e-01  
+    2     -74.9231294899      6.68e-02  
+    3     -74.9638278708      8.22e-03  
+    4     -74.9643050867      1.60e-03  
+    5     -74.9643287512      2.83e-05  
+    6     -74.9643287656      8.23e-06  
+    7     -74.9643287669      1.04e-07  
+    8     -74.9643287669      5.45e-11  Convergence criterion met
  ---------------------------------------
- SCF time:   CPU 0.09s  wall 0.00s 
- Summary of SMx free energies:
- 	G_P    =    -0.0425 kcal/mol (polarization energy)
- 	G_CDS  =    -2.4761 kcal/mol (non-electrostatic energy)
- 	G_ENP  =   -74.96439572 a.u. = E_SCF + G_P
- 	G(tot) =   -74.96834159 a.u. = G_ENP + G_CDS
- SCF   energy =   -74.96432793
- Total energy =   -74.96834159
- 
- --------------------------------------------------------------
-             Orbital Energies (a.u.) and Symmetries
- --------------------------------------------------------------
+ SCF time:   CPU 0.08s  wall 0.00s 
+ SCF   energy =   -74.96432877
+ Total energy =   -74.96432877
+
+******************************************************
+*                    C C M A N                       *
+*                                                    *
+*                   Anna I. Krylov                   *
+*                  C. David Sherrill                 *
+*                  Steven R. Gwaltney                *
+*                  Edward F. C. Byrd                 *
+*                     June 2000                      *
+*                                                    *
+*                     AND                            *
+*                                                    *
+*                  Sergey V. Levchenko               *
+*                  Lyudmila V. Slipchenko            *
+*                  Tao Wang                          *
+*                  Ana-Maria C. Cristian             *
+*                                                    *
+*                     November 2003                  *
+*                                                    *
+*                    AND                             *
+*                                                    *
+*          Piotr A. Pieniazek                        *
+*          C. Melania Oana                           *
+*          E. Epifanovsky                            *
+*                                                    *
+*                    October 2007                    *
+*                                                    *
+*                                                    *
+******************************************************
+
+
+
+blck_tnsr_buffsz = 7608
+ccjobtype = sp
+ccman2 = 0
+ccsd.dOV_threshold = 0
+ccsd.diis_freq = 1
+ccsd.diis_max_overlap = 1
+ccsd.diis_min_overlap = 1e-11
+ccsd.diis_size = 7
+ccsd.diis_start = 3
+ccsd.energy_convergence = 1e-08
+ccsd.maxiter = 100
+ccsd.restart = 0
+ccsd.saveampl = 0
+ccsd.scale_amp = 1
+ccsd.solver = diis
+ccsd.t_convergence = 1e-08
+ccsd.z_convergence = 1e-08
+do_efp = 0
+do_ri = 0
+eom.convergence = 1e-06
+eom.do_fake_ipea = 0
+eom.dthreshold = 1e-06
+eom.filter_ipea = 0
+eom.maxiter = 30
+eom.maxvectors = 60
+eom.nguess_doubles = 0
+eom.nguess_singles = 0
+eom.preconv_doubles = 0
+eom.preconv_sd = 0
+eom.preconv_singles = 0
+eom.use_exdiag = 0
+eomcorr = none
+mgc.amodel = 0
+mgc.canonize = 0
+mgc.canonize_final = 0
+mgc.canonize_freq = 50
+mgc.dOV_threshold = 0
+mgc.diis = 0
+mgc.diis12_switch = 1e-05
+mgc.diis_freq = 2
+mgc.diis_max_overlap = 1
+mgc.diis_min_overlap = 1e-11
+mgc.diis_size = 7
+mgc.diis_start = 2
+mgc.do_ed_ccd = 0
+mgc.do_qccd = 0
+mgc.energy_convergence = 1e-08
+mgc.hess_threshold = 0.01
+mgc.iterate_ov = 0
+mgc.maxiter = 100
+mgc.maxtrank = 0
+mgc.mgc_ampread = 0
+mgc.mgc_amps = 2
+mgc.mgc_ampscale = 0
+mgc.mgc_cc_gvb_guess = 0
+mgc.mgc_create_dm = 0
+mgc.mgc_eom = 0
+mgc.mgc_frzn_core = 0
+mgc.mgc_gvb_n_pairs = 0
+mgc.mgc_ip = 0
+mgc.mgc_localinter = 0
+mgc.mgc_localints = 1
+mgc.mgc_oo_type = 0
+mgc.mgc_ph = 0
+mgc.mgc_renorm = 0
+mgc.mgc_skip_ae = 0
+mgc.mgc_write_ints = 0
+mgc.nlpairs = 2
+mgc.preconv_frozen = 0
+mgc.preconv_t2z = 0
+mgc.preconv_t2z_each = 0
+mgc.reset_theta = 15
+mgc.restart = 0
+mgc.saveampl = 0
+mgc.scale_amp = 1
+mgc.solver = diis
+mgc.t_convergence = 1e-08
+mgc.theta_convergence = 0.0001
+mgc.theta_grad_convergence = 0.0001
+mgc.theta_grad_threshold = 0.01
+mgc.theta_stepsize = 1
+mgc.turn_on_qccd = 0.01
+mgc.z_convergence = 1e-08
+ooccd.canonize_final = 0
+ooccd.canonize_freq = 50
+ooccd.dOV_threshold = 0
+ooccd.diis = 0
+ooccd.diis12_switch = 1e-05
+ooccd.diis_freq = 2
+ooccd.diis_max_overlap = 1
+ooccd.diis_min_overlap = 1e-11
+ooccd.diis_size = 7
+ooccd.diis_start = 2
+ooccd.do_ed_ccd = 0
+ooccd.do_qccd = 0
+ooccd.energy_convergence = 1e-08
+ooccd.hess_threshold = 0.01
+ooccd.iterate_ov = 0
+ooccd.maxiter = 100
+ooccd.preconv_frozen = 0
+ooccd.preconv_t2z = 0
+ooccd.preconv_t2z_each = 0
+ooccd.reset_theta = 15
+ooccd.restart = 0
+ooccd.saveampl = 0
+ooccd.scale_amp = 1
+ooccd.solver = diis
+ooccd.t_convergence = 1e-08
+ooccd.theta_convergence = 0.0001
+ooccd.theta_grad_convergence = 0.0001
+ooccd.theta_grad_threshold = 0.01
+ooccd.theta_stepsize = 1
+ooccd.turn_on_qccd = 0.01
+ooccd.z_convergence = 1e-08
+orbitals.canonize = 1
+orbitals.do_fno = 0
+orbitals.mp2_grad = 0
+orbitals.mp2no_guess = 0
+orbitals.reorthogonalize_mo = 0
+orbitals.restart_no_scf = 0
+orbitals.restricted_amplitudes = 1
+orbitals.restricted_triples = 0
+print_lvl = 1
+pt_corr.incl_core_corr = 1
+pt_corr.incl_virt_corr = 1
+pt_corr.sd_corr_only = 0
+refcorr = mp4
+solvent_model.cc_solvent = 0
+svd.analyze_t2 = 0
+svd.d1_d2_diag = 0
+svd.energy_decomp = 0
+svd.svd_algorithm = 1
+svd.svd_decompose_geminals = 0
+svd.svd_first_geminal = 0
+svd.svd_incl_singles = 1
+svd.svd_n_values = 1
+svd.svd_plot_geminals = 0
+svd.t2_lowrank = 0
+test_mode = 0
+threads = 1
+tmp_maxbuffsz = 200
+unrestricted = 0
+
+Testing symmetry... Orbitals in the original order:
  
  Alpha MOs, Restricted
  -- Occupied --                  
--20.243  -1.250  -0.602  -0.445  -0.388
+-20.244  -1.251  -0.603  -0.445  -0.388
   1 A1    2 A1    1 B1    3 A1    1 B2                                         
  -- Virtual --                   
   0.571   0.709
@@ -277,8 +409,106 @@ $end
  
  Beta MOs, Restricted
  -- Occupied --                  
--20.243  -1.250  -0.602  -0.445  -0.388
+-20.244  -1.251  -0.603  -0.445  -0.388
   1 A1    2 A1    1 B1    3 A1    1 B2                                         
+ -- Virtual --                   
+  0.571   0.709
+  4 A1    2 B1                                                                 
+Setting symmetry... Orbitals will be reordered.
+No MO reordering is requested
+
+The orbitals are ordered and numbered as follows:
+Alpha orbitals:
+Number  Energy    Type    Symmetry  ANLMAN number  Total number:
+  0    -20.244     AOCC      A1      1A1     1
+  1     -1.251     AOCC      A1      2A1     2
+  2     -0.445     AOCC      A1      3A1     3
+  3     -0.603     AOCC      B1      1B1     4
+  4     -0.388     AOCC      B2      1B2     5
+
+  0      0.571     AVIRT     A1      4A1     6
+  1      0.709     AVIRT     B1      2B1     7
+
+
+MOLECULAR PARAMETERS: 
+ORB SYMM INFO:
+     POINT GROUP=C2v               NIRREPS   =  4
+     MOL ORB=  7
+
+     IRREPS =   A1   A2   B1   B2  
+     ORBSPI =    4    0    2    1 
+     DOCC   =    3    0    1    1 
+     SOCC   =    0    0    0    0 
+
+     FDOCC  =    0    0    0    0 
+     RDOCC  =    0    0    0    0 
+     AAOCC  =    3    0    1    1 
+     BAOCC  =    3    0    1    1 
+     AAVIRT =    1    0    1    0 
+     BAVIRT =    1    0    1    0 
+     RUOCC  =    0    0    0    0 
+     FUOCC  =    0    0    0    0 
+
+     IRREP MULT TABLE:
+       0   1   2   3 
+       1   0   3   2 
+       2   3   0   1 
+       3   2   1   0 
+
+     ORBSYM ALPHA= A1   A1   A1   B1   B2   A1   B1   
+     ORBSYM BETA = A1   A1   A1   B1   B2   A1   B1   
+
+
+   BASIS ORBS   =       7      MOL ORBS     =       7
+   NAUXBASIS    =       0
+   FROZEN OCC   =       0      FROZEN VIR   =       0
+   CORR ORBS    =       7      CORR SP ORBS =      14
+   NUM ALP ELEC =       5      NUM BET ELEC =       5
+   NUM ALP EXPL =       5      NUM BET EXPL =       5
+   NUM SO OCC   =      10      NUM SO VIR   =       4
+   NUM RESTR DOCC=      0      NUM RESTR DVIRT=     0
+   ORBS PER BLCK =     16      RESTRICTED_REF =    1
+
+BLOCKING PARAMETERS: 
+   NUM ROCC BLOCKS =     0      NUM AOCC  BLOCKS=     3
+   NUM AVIRT BLOCKS=     2      NUM RVIRT BLOCKS=     0
+
+   ORBITALS/BLOCK =   3   1   1   3   1   1   1   1   1   1 
+
+BIRREP = A1   B1   B2   A1   B1   B2   A1   B1   A1   B1   
+ 
+EHF                    =   -74.964328767
+EMP2                   =   -75.002378705
+EMP3                   =   -75.012879231
+EMP4SDQ                =   -75.016089019
+
+
+ CCSD or (V)OO-CCD job:  CPU 0.02 s  wall 0.03 s
+Doing only closed-shell triples contributions
+EMP4                   =   -75.016143404
+
+
+ (2) or (T) job:  CPU 0.02 s  wall 0.02 s
+
+
+ CCMAN JOB: ALL  CPU 0.05 s  wall 0.06 s
+ 
+ --------------------------------------------------------------
+             Orbital Energies (a.u.) and Symmetries
+ --------------------------------------------------------------
+ 
+ Alpha MOs, Restricted
+ -- Occupied --                  
+-20.244  -1.251  -0.445  -0.603  -0.388
+  1 A1    2 A1    3 A1    1 B1    1 B2                                         
+ -- Virtual --                   
+  0.571   0.709
+  4 A1    2 B1                                                                 
+ 
+ Beta MOs, Restricted
+ -- Occupied --                  
+-20.244  -1.251  -0.445  -0.603  -0.388
+  1 A1    2 A1    3 A1    1 B1    1 B2                                         
  -- Virtual --                   
   0.571   0.709
   4 A1    2 B1                                                                 
@@ -288,9 +518,9 @@ $end
 
      Atom                 Charge (a.u.)
   ----------------------------------------
-      1 O                    -0.340996
-      2 H                     0.170498
-      3 H                     0.170498
+      1 O                    -0.339214
+      2 H                     0.169607
+      3 H                     0.169607
   ----------------------------------------
   Sum of atomic charges =     0.000000
 
@@ -300,25 +530,25 @@ $end
     Charge (ESU x 10^10)
                  0.0000
     Dipole Moment (Debye)
-         X      -0.0000      Y      -0.0000      Z      -1.6777
-       Tot       1.6777
+         X      -0.0000      Y      -0.0000      Z      -1.6735
+       Tot       1.6735
     Quadrupole Moments (Debye-Ang)
-        XX      -4.2894     XY       0.0000     YY      -6.1206
-        XZ       0.0000     YZ      -0.0000     ZZ      -5.4151
+        XX      -4.2950     XY       0.0000     YY      -6.1213
+        XZ       0.0000     YZ      -0.0000     ZZ      -5.4175
     Octopole Moments (Debye-Ang^2)
        XXX      -0.0000    XXY      -0.0000    XYY      -0.0000
-       YYY      -0.0000    XXZ      -0.5883    XYZ      -0.0000
-       YYZ       0.0129    XZZ      -0.0000    YZZ      -0.0000
-       ZZZ      -0.1491
+       YYY      -0.0000    XXZ      -0.5848    XYZ      -0.0000
+       YYZ       0.0136    XZZ      -0.0000    YZZ      -0.0000
+       ZZZ      -0.1457
     Hexadecapole Moments (Debye-Ang^3)
-      XXXX      -6.8164   XXXY       0.0000   XXYY      -1.8572
-      XYYY      -0.0000   YYYY      -3.2605   XXXZ       0.0000
+      XXXX      -6.8264   XXXY       0.0000   XXYY      -1.8585
+      XYYY      -0.0000   YYYY      -3.2614   XXXZ       0.0000
       XXYZ      -0.0000   XYYZ       0.0000   YYYZ      -0.0000
-      XXZZ      -1.7475   XYZZ       0.0000   YYZZ      -1.4116
-      XZZZ       0.0000   YZZZ      -0.0000   ZZZZ      -4.9932
+      XXZZ      -1.7504   XYZZ       0.0000   YYZZ      -1.4123
+      XZZZ       0.0000   YZZZ      -0.0000   ZZZZ      -4.9965
  -----------------------------------------------------------------
- Total job time:  0.60s(wall), 0.13s(cpu) 
- Wed Jul 29 13:21:02 2026
+ Total job time:  0.36s(wall), 0.26s(cpu) 
+ Wed Jul 29 13:21:12 2026
 
         *************************************************************
         *                                                           *

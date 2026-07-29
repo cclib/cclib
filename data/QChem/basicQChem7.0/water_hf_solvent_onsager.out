@@ -1,7 +1,7 @@
 
 Running Job 1 of 1 water_hf_solvent_onsager.in
-qchem water_hf_solvent_onsager.in_21215.0 /scratch/shannon.houck/qchem21215/ 1
-/sw/qchem/release/7.0.0/exe/qcprog.exe_s water_hf_solvent_onsager.in_21215.0 /scratch/shannon.houck/qchem21215/
+qchem water_hf_solvent_onsager.in_24212.0 /scratch/shannon.houck/qchem24212/ 1
+/sw/qchem/release/7.0.0/exe/qcprog.exe_s water_hf_solvent_onsager.in_24212.0 /scratch/shannon.houck/qchem24212/
                   Welcome to Q-Chem
      A Quantum Leap Into The Future Of Chemistry
 
@@ -112,12 +112,12 @@ qchem water_hf_solvent_onsager.in_21215.0 /scratch/shannon.houck/qchem21215/ 1
  Parts of Q-Chem use Armadillo 12.8.2 (Cortisol Injector).
  http://arma.sourceforge.net/
 
- Q-Chem begins on Wed Jul 29 10:44:34 2026  
+ Q-Chem begins on Wed Jul 29 13:20:56 2026  
 
  Host: coreman6
 0
 
- Scratch files written to /scratch/shannon.houck/qchem21215//
+ Scratch files written to /scratch/shannon.houck/qchem24212//
  Executable: /sw/qchem/release/7.0.0/exe/qcprog.exe_s
  Number of threads = 1
  Jul426 |scratch|qcdevops|jenkins|workspace|build_RNUM -1
@@ -279,8 +279,8 @@ $end
       XXZZ      -1.6980   XYZZ       0.0000   YYZZ      -1.4300
       XZZZ      -0.0000   YZZZ      -0.0000   ZZZZ      -5.0510
  -----------------------------------------------------------------
- Total job time:  0.21s(wall), 0.13s(cpu) 
- Wed Jul 29 10:44:34 2026
+ Total job time:  0.22s(wall), 0.13s(cpu) 
+ Wed Jul 29 13:20:56 2026
 
         *************************************************************
         *                                                           *
