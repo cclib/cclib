@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       matrix:
-        python-version:
+        pixi-env:
           - "py310"
           - py311
           - py312
@@ -42,7 +42,7 @@ jobs:
         with:
           activate-environment: true
           cache-write: ${{ github.event_name == 'push' && github.ref_name == 'master' }}
-          environments: ${{ matrix.python-version }}
+          environments: ${{ matrix.pixi-env }}
       - name: Prepare CI for Versioningit
         run: |
           python .github/scripts/prepare_ci_for_versioningit.py
@@ -65,7 +65,7 @@ jobs:
       - name: Enable test coverage for Python 3.11
         run: |
           echo "PYTEST_ENABLE_COVERAGE=true" >> "${GITHUB_ENV}"
-        if: matrix.python-version == 'py311'
+        if: matrix.pixi-env == 'py311'
       - name: Test core code with pytest
         run: |
           bash .github/scripts/run_pytest.bash "$(nproc)"
@@ -86,20 +86,19 @@ jobs:
           verbose: false
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        if: matrix.python-version == 'py311'
+        if: matrix.pixi-env == 'py311'
       - name: Build distribution packages (binary wheel and source tarball)
         run: |
           python -m build
       - name: Check packages with twine
         run: |
-          python -m pip install twine
           python -m twine check dist/*
       - name: Store the distribution packages
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7
         with:
           name: python-package-distributions
           path: dist/
-        if: matrix.python-version == 'py312'
+        if: matrix.pixi-env == 'py312'
 
   # We check the installation using all Python versions using the packages
   # created from a single version, since the packages are platform and version
