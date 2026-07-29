@@ -483,6 +483,7 @@ class GenericSPTest:
     @skipForParser("Molpro", "Not implemented yes")
     @skipForParser("NBO", "attribute not implemented in this version")
     @skipForParser("NWChem", "Not implemented yet")
+    @skipForParser("ORCA", "The parser is still being converted to version 2")
     @skipForParser("Psi4", "Not implemented yet")
     @skipForParser("QChem", "Not implemented yet")
     @skipForParser("Serenity", "No rot. constants in Serenity")
@@ -859,6 +860,7 @@ class OrcaSPTest(GenericSPTest):
 class OrcaHFSPTest(OrcaSPTest, GenericHFSPTest):
     """Customized restricted single point unittest"""
 
+    @skipForParser("ORCA", "The parser is still being developed for version 2")
     def testmetadata_input_file(self, data) -> None:
         """Does metadata have expected keys and values?"""
         assert "input_file_contents" in data.metadata
