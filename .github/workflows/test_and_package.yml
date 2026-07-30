@@ -11,6 +11,11 @@ concurrency:
   group: test-${{github.ref}}-${{github.event.pull_request.number || github.run_number}}
   cancel-in-progress: true
 
+# For now always take the "reduced" form of the version, even for those
+# actions runs that do not push to a package index.
+env:
+  VERSIONINGIT_FOR_PACKAGE_INDEX: true
+
 permissions: {}
 
 jobs:
@@ -34,18 +39,11 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
           persist-credentials: false
-      - name: Allow repo access (see https://github.com/actions/checkout/issues/760)
-        run: |
-          git config --global --add safe.directory /__w/cclib/cclib
       - name: Install Pixi
         uses: prefix-dev/setup-pixi@a09b6247153796b190642a2b53fac4241043cf6f  # v0.10.0
         with:
           activate-environment: true
-          cache-write: ${{ github.event_name == 'push' && github.ref_name == 'master' }}
           environments: ${{ matrix.pixi-env }}
-      - name: Prepare CI for Versioningit
-        run: |
-          python .github/scripts/prepare_ci_for_versioningit.py
       - name: Filter code
         uses: dorny/paths-filter@7b450fff21473bca461d4b92ce414b9d0420d706  # v4
         id: filter

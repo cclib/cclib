@@ -28,14 +28,10 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
           persist-credentials: false
-      - name: Allow repo access (see https://github.com/actions/checkout/issues/760)
-        run: |
-          git config --global --add safe.directory /__w/cclib/cclib
       - name: Install Pixi
         uses: prefix-dev/setup-pixi@a09b6247153796b190642a2b53fac4241043cf6f  # v0.10.0
         with:
           activate-environment: true
-          cache-write: ${{ github.event_name == 'push' && github.ref_name == 'master' }}
           environments: >-
             py312
       - name: Build docs
