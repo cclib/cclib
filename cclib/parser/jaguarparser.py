@@ -658,6 +658,9 @@ class Jaguar(logfileparser.Logfile):
             # which could be caught. This is not true in newer version (including 8.3),
             # but in general it would be better to bound this loop more strictly.
             freqs = next(inputfile)
+            # in newer Jaguar we have some extra printing before this block
+            while freqs.strip() and "frequencies" not in freqs:
+                freqs = next(inputfile)
             while freqs.strip() and freqs[2:13] == "frequencies":
                 # Number of modes (columns printed in this block).
                 nmodes = len(freqs.split()) - 1
@@ -696,6 +699,8 @@ class Jaguar(logfileparser.Logfile):
 
                 self.skip_line(inputfile, "blank")
                 freqs = next(inputfile)
+                while freqs.strip() and "frequencies" not in freqs:
+                    freqs = next(inputfile)
 
             # Convert new data to arrays.
             self.set_attribute("vibfreqs", vibfreqs)
