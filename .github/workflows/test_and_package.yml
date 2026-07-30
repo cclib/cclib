@@ -43,7 +43,6 @@ jobs:
         uses: prefix-dev/setup-pixi@a09b6247153796b190642a2b53fac4241043cf6f  # v0.10.0
         with:
           activate-environment: true
-          cache-write: ${{ github.event_name == 'push' && github.ref_name == 'master' }}
           environments: ${{ matrix.pixi-env }}
       - name: Filter code
         uses: dorny/paths-filter@7b450fff21473bca461d4b92ce414b9d0420d706  # v4
