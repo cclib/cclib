@@ -777,12 +777,11 @@ cannot be determined. Rerun without `$molecule read`."""
                             if "solvent_params" not in self.metadata:
                                 self.metadata["solvent_params"] = dict()
                             self.metadata["solvent_params"]["epsilon_infinite"] = float(tokens[1])
-
-            if line.strip() == "==== cosmo data ====":
+            if "= cosmo data =" in line.strip().lower():
                 self.metadata["solvent_model"] = "COSMO"
-                while line.strip() != "=== end cosmo data ===":
+                while "= end cosmo data =" not in line.strip().lower():
                     line = next(inputfile)
-                    if line.startswith("eps"):
+                    if line.strip().startswith("eps"):
                         if "solvent_params" not in self.metadata:
                             self.metadata["solvent_params"] = dict()
                         self.metadata["solvent_params"]["epsilon"] = float(line.split()[2])
