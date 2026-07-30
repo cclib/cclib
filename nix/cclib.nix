@@ -15,6 +15,7 @@
 , pandas
 , biopython
 , pyquante
+, trexio
 }:
 
 buildPythonPackage rec {
@@ -51,6 +52,7 @@ buildPythonPackage rec {
     pandas
     biopython
     pyquante
+    trexio
   ];
 
   checkInputs = [ pytestCheckHook ];
