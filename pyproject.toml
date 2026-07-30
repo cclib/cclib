@@ -63,10 +63,11 @@ bridges-no-openbabel = [
     "geometric",
     "qc-iodata>=1.0.0a2",
 ]
-dev = ["cclib[bridges,docs,test-infrastructure]"]
+dev = ["cclib[bridges,docs,test-infrastructure]", "twine"]
 dev-no-openbabel = ["cclib[bridges-no-openbabel,docs,test-infrastructure]"]
 docs = [
     "build",
+    "pip",
     "sphinx",
     "sphinx_rtd_theme",
 ]
@@ -187,6 +188,7 @@ psi4 = "*"
 python = "3.13.*"
 
 [tool.pixi.feature.py314.dependencies]
+psi4 = "*"
 python = "3.14.*"
 
 [tool.pixi.package]
