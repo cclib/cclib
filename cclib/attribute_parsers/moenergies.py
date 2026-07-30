@@ -4,9 +4,9 @@
 # the terms of the BSD 3-Clause License.
 from typing import Optional
 
+from cclib import ureg
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
-from cclib import ureg
 
 import numpy as np
 
@@ -31,7 +31,7 @@ class moenergies(base_parser):
             if existing:
                 constructed_moenergies = existing
             else:
-                constructed_moenergies = [np.array([])*moenergies.cclib_unit]
+                constructed_moenergies = [np.array([]) * moenergies.cclib_unit]
 
             while line.find("Alpha") == 1:
                 part = line[28:]
@@ -39,14 +39,14 @@ class moenergies(base_parser):
                 while i * 10 + 4 < len(part):
                     s = part[i * 10 : (i + 1) * 10]
                     try:
-                        x = utils.float(s)* gaussian_unit
+                        x = utils.float(s) * gaussian_unit
                     except ValueError:
                         x = np.nan
-                    constructed_moenergies[0] = np.append(constructed_moenergies[0],x)
+                    constructed_moenergies[0] = np.append(constructed_moenergies[0], x)
                     i += 1
                 line = file_handler.virtual_next()
             if line.find("Beta") == 2:
-                constructed_moenergies.append([np.array([])*moenergies.cclib_unit])
+                constructed_moenergies.append([np.array([]) * moenergies.cclib_unit])
 
             while line.find("Beta") == 2:
                 part = line[28:]
@@ -54,11 +54,11 @@ class moenergies(base_parser):
                 while i * 10 + 4 < len(part):
                     s = part[i * 10 : (i + 1) * 10]
                     try:
-                        x = utils.float(s)* gaussian_unit
+                        x = utils.float(s) * gaussian_unit
                     except ValueError:
                         x = np.nan
 
-                    constructed_moenergies[1] = np.append(constructed_moenergies[1],x)
+                    constructed_moenergies[1] = np.append(constructed_moenergies[1], x)
                     i += 1
                 line = file_handler.virtual_next()
             return {moenergies.__name__: constructed_moenergies}

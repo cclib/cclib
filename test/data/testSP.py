@@ -8,12 +8,13 @@
 import datetime
 from typing import TYPE_CHECKING
 
+from cclib import ureg
+
 import numpy
 import packaging
 import pytest
 from common import get_minimum_carbon_separation
 from skip import skipForLogfile, skipForParser
-from cclib import ureg
 
 
 if TYPE_CHECKING:
@@ -31,7 +32,7 @@ class GenericSPTest:
     nbasisdict = {1: 1, 6: 5}
 
     # Approximate B3LYP energy of dvb after SCF in STO-3G (Gaussian 16).
-    scfenergy = -382.308266602 *ureg.hartree
+    scfenergy = -382.308266602 * ureg.hartree
     scfenergy_delta = 3.0e-1 * ureg.hartree
 
     # Approximate energy of the innermost molecular orbital of DVB with
@@ -948,7 +949,7 @@ class GenericDispersionTest:
     """Generic single-geometry dispersion correction unittest"""
 
     # Q-Chem 5.4
-    dispersionenergy = ureg.Quantity(-0.0147199319,ureg.hartree)
+    dispersionenergy = ureg.Quantity(-0.0147199319, ureg.hartree)
     dispersionenergy_delta = ureg.Quantity(3.0e-7, ureg.hartree)
 
     @skipForParser("QChem", "this property has yet to be ported for version 2")
@@ -956,9 +957,7 @@ class GenericDispersionTest:
         """Is the dispersion energy parsed correctly?"""
         assert len(data._ccCollection._parsed_data[0].dispersionenergies) == 1
         assert (
-            abs(
-                data._ccCollection._parsed_data[0].dispersionenergies[0] - self.dispersionenergy
-            )
+            abs(data._ccCollection._parsed_data[0].dispersionenergies[0] - self.dispersionenergy)
             < self.dispersionenergy_delta
         )
 

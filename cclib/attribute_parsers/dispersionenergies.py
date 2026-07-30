@@ -4,9 +4,8 @@
 # the terms of the BSD 3-Clause License.
 from typing import Optional
 
-from cclib.attribute_parsers import utils
-from cclib.attribute_parsers.base_parser import base_parser
 from cclib import ureg
+from cclib.attribute_parsers.base_parser import base_parser
 
 import numpy as np
 
@@ -32,7 +31,7 @@ class dispersionenergies(base_parser):
         else:
             this_dispersionenergies = existing
         if "Empirical Dispersion Energy" in line:
-            dispersion = float(line.split()[-1])*psi4_unit
+            dispersion = float(line.split()[-1]) * psi4_unit
             this_dispersionenergies = np.append(this_dispersionenergies, dispersion)
             return {dispersionenergies.__name__: this_dispersionenergies}
         return None
@@ -49,7 +48,7 @@ class dispersionenergies(base_parser):
             this_dispersionenergies = existing
 
         if "Dispersion energy=" in line:
-            dispersion = float(line.split()[-2])* gaussian_unit
+            dispersion = float(line.split()[-2]) * gaussian_unit
             this_dispersionenergies = np.append(this_dispersionenergies, dispersion)
             return {dispersionenergies.__name__: this_dispersionenergies}
         return None

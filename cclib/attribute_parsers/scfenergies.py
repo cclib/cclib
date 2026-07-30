@@ -4,9 +4,10 @@
 # the terms of the BSD 3-Clause License.
 from typing import Optional
 
+from cclib import ureg
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
-from cclib import ureg 
+
 import numpy as np
 
 
@@ -28,10 +29,10 @@ class scfenergies(base_parser):
         if existing is None:
             this_scfenergies = ureg.Quantity(np.array([]), scfenergies.cclib_unit)
         else:
-            this_scfenergies=existing
+            this_scfenergies = existing
         if line[1:9] == "SCF Done":
             constructed_data = utils.float(line.split()[4]) * gaussian_unit
-            this_scfenergies = np.append(this_scfenergies,constructed_data)
+            this_scfenergies = np.append(this_scfenergies, constructed_data)
             return {scfenergies.__name__: this_scfenergies}
         return None
 
@@ -43,10 +44,10 @@ class scfenergies(base_parser):
         if existing is None:
             this_scfenergies = ureg.Quantity(np.array([]), scfenergies.cclib_unit)
         else:
-            this_scfenergies=existing
+            this_scfenergies = existing
         if "Final Energy" in line:
             constructed_data = float(line.split()[3]) * psi4_unit
-            this_scfenergies = np.append(this_scfenergies,constructed_data)
+            this_scfenergies = np.append(this_scfenergies, constructed_data)
             return {scfenergies.__name__: this_scfenergies}
         return None
 
@@ -58,14 +59,13 @@ class scfenergies(base_parser):
         if existing is None:
             this_scfenergies = ureg.Quantity(np.array([]), scfenergies.cclib_unit)
         else:
-            this_scfenergies=existing
+            this_scfenergies = existing
         constructed_scfenergies = None
         if "Total energy in the final basis set" in line:
             constructed_scfenergies = float(line.split()[-1]) * qchem_unit
             if constructed_scfenergies is not None:
-                this_scfenergies = np.append(this_scfenergies,constructed_scfenergies)
+                this_scfenergies = np.append(this_scfenergies, constructed_scfenergies)
             return {scfenergies.__name__: this_scfenergies}
-
 
     @staticmethod
     def parse(file_handler, program, ccdata) -> Optional[dict]:
