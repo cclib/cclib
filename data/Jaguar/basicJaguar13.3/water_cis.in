@@ -1,0 +1,15 @@
+&gen
+nroot=5
+isymm=0
+basis=6-31G
+icis=1
+&
+&zmat
+O1   
+H1    O1 r1
+H2    O1 r1  H1 a1
+&
+&zvar
+r1 = 0.99
+a1 = 106
+&

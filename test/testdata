@@ -26,6 +26,8 @@ Basis     Gaussian    GenericBasisTest      basicGaussian09       dvb_sp.out
 Basis     Gaussian    GenericBasisTest      basicGaussian16       dvb_sp.out
 Basis     Jaguar      JaguarBasisTest       basicJaguar8.3        dvb_sp_hf.out
 Basis     Jaguar      JaguarBasisTest       basicJaguar8.3        dvb_sp_ks.out
+Basis     Jaguar      GenericBasisTest      basicJaguar13.3       dvb_sp_hf.out
+Basis     Jaguar      GenericBasisTest      basicJaguar13.3       dvb_sp_ks.out
 Basis     Molcas      GenericBasisTest      basicOpenMolcas18.0   dvb_sp.out
 Basis     Molpro      GenericBasisTest      basicMolpro2006       dvb_sphf.out
 Basis     Molpro      GenericBasisTest      basicMolpro2012       dvb_sphf.out
@@ -56,6 +58,7 @@ Basis     GAMESS      GenericBigBasisTest   basicGAMESS-US2018    C_bigbasis.out
 Basis     Gaussian    GaussianBigBasisTest  basicGaussian09       C_bigbasis.out
 Basis     Gaussian    GaussianBigBasisTest  basicGaussian16       C_bigbasis.out
 Basis     Jaguar      JaguarBigBasisTest    basicJaguar8.3        C_bigbasis.out
+Basis     Jaguar      JaguarBigBasisTest    basicJaguar13.3        C_bigbasis.out
 Basis     Molcas      MolcasBigBasisTest    basicOpenMolcas18.0   C_bigbasis.out
 Basis     Molpro      MolproBigBasisTest    basicMolpro2006       C_bigbasis.out
 Basis     Molpro      MolproBigBasisTest    basicMolpro2012       C_bigbasis.out
@@ -131,6 +134,7 @@ CI        Gaussian    GaussianCISTest       basicGaussian09       water_cis.log
 CI        Gaussian    GaussianCISTest       basicGaussian16       water_cis.log
 CI        Jaguar      GenericCISTest        basicJaguar7.0        water_cis.out
 CI        Jaguar      Jaguar83CISTest       basicJaguar8.3        water_cis.out
+CI        Jaguar      Jaguar83CISTest       basicJaguar13.3        water_cis.out
 CI        QChem       QChemCISTest          basicQChem5.1         water_cis.out
 CI        QChem       QChemCISTest          basicQChem5.4         water_cis.out
 
@@ -148,6 +152,7 @@ Core      GAMESS      GenericCoreTest       basicGAMESS-US2018    MoOCl4-sp.out
 Core      Gaussian    GenericCoreTest       basicGaussian09       Mo4OCl4-sp.log
 Core      Gaussian    GenericCoreTest       basicGaussian16       Mo4OCl4-sp.log
 Core      Jaguar      JaguarCoreTest        basicJaguar8.3        MoOCl4-sp.out
+Core      Jaguar      JaguarCoreTest        basicJaguar13.3        MoOCl4-sp.out
 Core      Molcas      GenericCoreTest       basicOpenMolcas18.0   MoOCl4_sp.out
 Core      PySCF       GenericCoreTest       basicPySCF2.6         MoOCl4_sp.py
 Core      QChem       GenericCoreTest       basicQChem5.1         MoOCl4_sp.out
@@ -174,6 +179,8 @@ GeoOpt    Gaussian    GaussianGeoOptTest    basicGaussian16       dvb_gopt.out
 GeoOpt    Jaguar      JaguarGeoOptTest      basicJaguar7.0        dvb_gopt_b.out
 GeoOpt    Jaguar      JaguarGeoOptTest      basicJaguar8.3        dvb_gopt_hf.out
 GeoOpt    Jaguar      JaguarGeoOptTest      basicJaguar8.3        dvb_gopt_ks.out
+GeoOpt    Jaguar      JaguarGeoOptTest      basicJaguar13.3        dvb_gopt_hf.out
+GeoOpt    Jaguar      JaguarGeoOptTest      basicJaguar13.3        dvb_gopt_ks.out
 GeoOpt    Molcas      MolcasGeoOptTest      basicOpenMolcas18.0   dvb_gopt.out
 GeoOpt    Molpro      MolproGeoOptTest      basicMolpro2006       dvb_gopt.out          dvb_gopt.log
 GeoOpt    Molpro      MolproGeoOptTest      basicMolpro2012       dvb_gopt.out          dvb_gopt.log
@@ -224,6 +231,7 @@ MP        Gaussian    GenericMP5Test        basicGaussian09       water_mp5.log
 MP        Gaussian    GenericMP5Test        basicGaussian16       water_mp5.log
 MP        Jaguar      GenericMP2Test        basicJaguar7.0        water_lmp2.out
 MP        Jaguar      GenericMP2Test        basicJaguar8.3        water_lmp2.out
+MP        Jaguar      GenericMP2Test        basicJaguar13.3        water_lmp2.out
 MP        GAMESS      GenericMP2Test        basicFirefly8.0       water_mp2.out
 MP        Molpro      GenericMP2Test        basicMolpro2006       h2o_mp2.out
 MP        Molpro      GenericMP2Test        basicMolpro2012       h2o_mp2.out
@@ -291,6 +299,7 @@ Scan      Gaussian     GaussianRelaxedScanTest               basicGaussian09    
 Scan      Gaussian     GaussianRelaxedScanTest               basicGaussian16       dvb_scan_relaxed.log
 Scan      Gaussian     GaussianUnrelaxedScanTest             basicGaussian16       dvb_scan_unrelaxed.log
 Scan      Jaguar       JaguarRelaxedScanTest                 basicJaguar8.3        dvb_scan_relaxed.out
+Scan      Jaguar       JaguarRelaxedScanTest                 basicJaguar13.3        dvb_scan_relaxed.out
 Scan      ORCA         GenericRelaxedScanTest                basicORCA5.0          dvb_scan_relaxed.out
 Scan      ORCA         GenericUnrelaxedScanTest              basicORCA5.0          dvb_scan_unrelaxed.out
 Scan      ORCA         GenericRelaxedScanTest                basicORCA6.0          dvb_scan_relaxed.out
@@ -320,6 +329,8 @@ SP        Gaussian    GaussianSPTest        basicGaussian16             dvb_sp_n
 SP        Jaguar      Jaguar7SPTest         basicJaguar7.0              dvb_sp.out
 SP        Jaguar      JaguarHFSPTest        basicJaguar8.3              dvb_sp_hf.out
 SP        Jaguar      JaguarSPTest          basicJaguar8.3              dvb_sp_ks.out
+SP        Jaguar      JaguarHFSPTest        basicJaguar13.3              dvb_sp_hf.out
+SP        Jaguar      JaguarSPTest          basicJaguar13.3              dvb_sp_ks.out
 SP        Molcas      MolcasSPTest          basicOpenMolcas18.0         dvb_sp.out
 SP        Molpro      MolproSPTest          basicMolpro2006             dvb_sphf.out
 SP        Molpro      MolproSPTest          basicMolpro2012             dvb_sphf.out
@@ -411,6 +422,8 @@ SPun      Gaussian    GaussianSPunTest      basicGaussian16       dvb_un_sp_nso.
 SPun      Jaguar      JaguarSPunTest        basicJaguar7.0        dvb_un_sp.out
 SPun      Jaguar      JaguarSPunTest        basicJaguar8.3        dvb_un_sp_hf.out
 SPun      Jaguar      JaguarSPunTest        basicJaguar8.3        dvb_un_sp_ks.out
+SPun      Jaguar      JaguarSPunTest        basicJaguar13.3        dvb_un_sp_hf.out
+SPun      Jaguar      JaguarSPunTest        basicJaguar13.3        dvb_un_sp_ks.out
 SPun      Molcas      GenericSPunTest       basicOpenMolcas18.0   dvb_sp_un.out
 SPun      Molpro      GenericSPunTest       basicMolpro2006       dvb_sphf_un.out
 SPun      Molpro      GenericSPunTest       basicMolpro2012       dvb_sphf_un.out
@@ -453,6 +466,7 @@ TD        Gaussian    GaussianTDDFTTest     basicGaussian09       dvb_td.out
 TD        Gaussian    GaussianTDDFTTest     basicGaussian16       dvb_td.out
 TD        Gaussian    GaussianEOMCCSDTest   basicGaussian16       dvb_eomccsd.log
 TD        Jaguar      JaguarTDDFTTest       basicJaguar8.3        dvb_td.out
+TD        Jaguar      JaguarTDDFTTest       basicJaguar13.3        dvb_td.out
 TD        NWChem      GenericTDTest         basicNWChem7.0        dvb_td.out
 TD        ORCA        OrcaTDDFTTest         basicORCA5.0          dvb_td.out
 TD        ORCA        OrcaTDDFTTest         basicORCA6.0          dvb_td.out
@@ -505,6 +519,7 @@ vib       Gaussian    GaussianIRTest        basicGaussian16       dvb_ir.out
 vib       Gaussian    GaussianIRTest        basicGaussian16       dvb_ir_G16C01.out
 vib       Jaguar      JaguarIRTest          basicJaguar7.0        dvb_ir.out
 vib       Jaguar      JaguarIRTest          basicJaguar8.3        dvb_ir.out
+vib       Jaguar      JaguarIRTest          basicJaguar13.3        dvb_ir.out
 vib       Molcas      MolcasIRTest          basicOpenMolcas18.0   dvb_ir.out
 vib       Molpro      GenericIRTest         basicMolpro2006       dvb_ir.out            dvb_ir.log
 vib       Molpro      GenericIRTest         basicMolpro2012       dvb_ir.out            dvb_ir.log

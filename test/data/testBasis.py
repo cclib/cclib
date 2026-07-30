@@ -93,7 +93,7 @@ class GenericBasisTest:
 class JaguarBasisTest(GenericBasisTest):
     """Customized basis set unittest"""
 
-    # For some reason, Jaguar seems to use slightly different coefficients for
+    # For some reason, older versions of Jaguar seems to use slightly different coefficients for
     # contractions in the STO-3G basis set. Or perhaps we don't understand something.
     gbasis_H_1s_func0 = [3.42525, 0.24050]
     gbasis_C_2s_func0 = [2.941249, -0.29565]
