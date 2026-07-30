@@ -43,21 +43,12 @@ ccwrite = "cclib.scripts.ccwrite:main"
 cda = "cclib.scripts.cda:main"
 
 [project.optional-dependencies]
-# The Open Babel PyPI package for version < 3.2.0 is missing native wheels and
-# requires using SWIG to compile the Python extension against a preinstalled
-# native library.  The wheels for version >= 3.2.0 only support Python >=
-# 3.10.
-#
-# With Pixi v0.67.2, specifying a (conda) dependency via Pixi doesn't seem
-# override the corresponding PyPI dependency, so we create groups that leave
-# out Open Babel and manually specify it as a Pixi dependency for Python <
-# 3.10 versions while keeping everything as-is for Python >= 3.10.
 all = ["cclib[bridges]"]
-bridges = ["cclib[bridges-no-openbabel,openbabel]"]
-bridges-no-openbabel = [
+bridges = [
     "ase>=3.21",
     "biopython",
     "chemfiles",
+    "openbabel",
     "pandas",
     "pyscf",
     "geometric",
@@ -65,14 +56,12 @@ bridges-no-openbabel = [
     "trexio",
 ]
 dev = ["cclib[bridges,docs,test-infrastructure]", "twine"]
-dev-no-openbabel = ["cclib[bridges-no-openbabel,docs,test-infrastructure]"]
 docs = [
     "build",
     "pip",
     "sphinx",
     "sphinx_rtd_theme",
 ]
-openbabel = ["openbabel"]
 test = ["cclib[bridges,docs,test-infrastructure]"]
 test-infrastructure = [
     "pytest-cov",
