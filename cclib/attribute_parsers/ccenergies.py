@@ -2,7 +2,6 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
-from typing import Optional
 
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
@@ -18,7 +17,7 @@ class ccenergies(base_parser):
     known_codes = ["psi4", "gaussian"]
 
     @staticmethod
-    def psi4(file_handler, ccdata) -> Optional[dict]:
+    def psi4(file_handler, ccdata) -> dict | None:
         ccsd_trigger = "* CCSD total energy"
         ccsd_t_trigger = "* CCSD(T) total energy"
         line = file_handler.last_line
@@ -38,7 +37,7 @@ class ccenergies(base_parser):
         return None
 
     @staticmethod
-    def gaussian(file_handler, ccdata) -> Optional[dict]:
+    def gaussian(file_handler, ccdata) -> dict | None:
         line = file_handler.last_line
         this_ccenergies = []
         # Total energies after Coupled Cluster corrections.
@@ -61,7 +60,7 @@ class ccenergies(base_parser):
         return None
 
     @staticmethod
-    def parse(file_handler, program, ccdata) -> Optional[dict]:
+    def parse(file_handler, program, ccdata) -> dict | None:
         constructed_data = None
         if program in ccenergies.known_codes:
             file_handler.virtual_set()

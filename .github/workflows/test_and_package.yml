@@ -11,6 +11,11 @@ concurrency:
   group: test-${{github.ref}}-${{github.event.pull_request.number || github.run_number}}
   cancel-in-progress: true
 
+# For now always take the "reduced" form of the version, even for those
+# actions runs that do not push to a package index.
+env:
+  VERSIONINGIT_FOR_PACKAGE_INDEX: true
+
 permissions: {}
 
 jobs:
@@ -20,18 +25,12 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       matrix:
-        container:
-          - 'shivupa/cclib-ci:py38-edge'
-          - 'shivupa/cclib-ci:py39-edge'
-          - 'shivupa/cclib-ci:py310-edge'
-          - 'shivupa/cclib-ci:py311-edge'
-          - 'shivupa/cclib-ci:py312-edge'
-          - 'shivupa/cclib-ci:py313-edge'
-    container:
-      image: ${{ matrix.container }}
-    defaults:
-      run:
-        shell: bash -eo pipefail -l {0}
+        pixi-env:
+          - "py310"
+          - py311
+          - py312
+          - py313
+          - py314
     steps:
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # v7.0.0
@@ -40,26 +39,11 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
           persist-credentials: false
-      - name: Allow repo access (see https://github.com/actions/checkout/issues/760)
-        run: |
-          git config --global --add safe.directory /__w/cclib/cclib
-      - name: Prepare conda environment
-        run: |
-          echo "/opt/conda/envs/cclib/bin" >> "${GITHUB_PATH}"
-      - name: Prepare CI for Versioningit
-        run: |
-          python .github/scripts/prepare_ci_for_versioningit.py
-      - name: Patch Open Babel dependency requirement
-        run: |
-          # The official Open Babel package doesn't provide wheels for Python
-          # versions older than 3.10, but the deprecated
-          # https://pypi.org/project/openbabel-wheel/ package does.
-          sed -i 's/openbabel/openbabel-wheel/' pyproject.toml
-        if: (matrix.container == 'shivupa/cclib-ci:py38-edge') || (matrix.container == 'shivupa/cclib-ci:py39-edge')
-      - name: Install cclib
-        run: |
-          python -m pip install -r requirements-bridges.txt
-          python -m pip install '.[test]'
+      - name: Install Pixi
+        uses: prefix-dev/setup-pixi@a09b6247153796b190642a2b53fac4241043cf6f  # v0.10.0
+        with:
+          activate-environment: true
+          environments: ${{ matrix.pixi-env }}
       - name: Filter code
         uses: dorny/paths-filter@7b450fff21473bca461d4b92ce414b9d0420d706  # v4
         id: filter
@@ -75,10 +59,9 @@ jobs:
       - name: Enable test coverage for Python 3.11
         run: |
           echo "PYTEST_ENABLE_COVERAGE=true" >> "${GITHUB_ENV}"
-        if: matrix.container == 'shivupa/cclib-ci:py311-edge'
+        if: matrix.pixi-env == 'py311'
       - name: Test core code with pytest
         run: |
-          env | sort
           bash .github/scripts/run_pytest.bash "$(nproc)"
       - name: Test methods with pytest
         if: steps.filter.outputs.methods == 'true'
@@ -87,7 +70,6 @@ jobs:
       - name: Test PySCF with pytest
         if: steps.filter.outputs.pyscf == 'true'
         run: |
-          env | sort
           bash .github/scripts/run_pytest_pyscf.bash "$(nproc)"
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f  # v7.0.0
@@ -98,20 +80,19 @@ jobs:
           verbose: false
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        if: matrix.container == 'shivupa/cclib-ci:py311-edge'
+        if: matrix.pixi-env == 'py311'
       - name: Build distribution packages (binary wheel and source tarball)
         run: |
           python -m build
       - name: Check packages with twine
         run: |
-          python -m pip install twine
           python -m twine check dist/*
       - name: Store the distribution packages
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7
         with:
           name: python-package-distributions
           path: dist/
-        if: matrix.container == 'shivupa/cclib-ci:py312-edge'
+        if: matrix.pixi-env == 'py312'
 
   # We check the installation using all Python versions using the packages
   # created from a single version, since the packages are platform and version
@@ -125,15 +106,13 @@ jobs:
       matrix:
         install-method: [wheel, source]
         python-version:
-          - 3.8
-          - 3.9
           - "3.10"
           - 3.11
           - 3.12
           - 3.13
           - 3.14
     steps:
-      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1  # v6
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7
         with:
           python-version: ${{ matrix.python-version }}
       - name: Download the distribution packages

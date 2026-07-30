@@ -3,7 +3,6 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 import re
-from typing import Optional
 
 from cclib.attribute_parsers.base_parser import base_parser
 
@@ -18,7 +17,7 @@ class atombasis(base_parser):
     known_codes = ["gaussian", "ORCA", "psi4", "qchem"]
 
     @staticmethod
-    def gaussian(file_handler, ccdata) -> Optional[dict]:
+    def gaussian(file_handler, ccdata) -> dict | None:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         dependency_list = ["nmo", "nbasis"]
         line = file_handler.last_line
@@ -111,7 +110,7 @@ class atombasis(base_parser):
         return None
 
     @staticmethod
-    def ORCA(file_handler, ccdata) -> Optional[dict]:
+    def ORCA(file_handler, ccdata) -> dict | None:
         # Molecular orbital coefficients are parsed here, but also related things
         # like atombasis and aonames if possible.
         #
@@ -162,7 +161,7 @@ class atombasis(base_parser):
         return None
 
     @staticmethod
-    def psi4(file_handler, ccdata) -> Optional[dict]:
+    def psi4(file_handler, ccdata) -> dict | None:
         dependency_list = ["nmo", "nbasis"]  # noqa: F841
         if getattr(ccdata, "atombasis") is None:
             line = file_handler.last_line
@@ -189,7 +188,7 @@ class atombasis(base_parser):
         return None
 
     @staticmethod
-    def qchem(file_handler, ccdata) -> Optional[dict]:
+    def qchem(file_handler, ccdata) -> dict | None:
         # This block comes from `print_orbitals = true/{int}`. Less
         # precision than `scf_final_print >= 2` for `mocoeffs`, but
         # important for `aonames` and `atombasis`.
@@ -215,7 +214,7 @@ class atombasis(base_parser):
         return None
 
     @staticmethod
-    def parse(file_handler, program: str, ccdata) -> Optional[dict]:
+    def parse(file_handler, program: str, ccdata) -> dict | None:
         constructed_data = None
         if program in atombasis.known_codes:
             file_handler.virtual_set()

@@ -20,11 +20,6 @@ jobs:
   build-and-push-docs:
     name: Build documentation and push to cclib.github.io on merge
     runs-on: ubuntu-24.04
-    container:
-      image: shivupa/cclib-ci:py312-edge@sha256:d196836517722e12ba071371de4e208605df8910df7d2fa8335e5bb35dab5325
-    defaults:
-      run:
-        shell: bash -eo pipefail -l {0}
     steps:
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # v7.0.0
@@ -33,25 +28,25 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
           persist-credentials: false
-      - name: Allow repo access (see https://github.com/actions/checkout/issues/760)
-        run: |
-          git config --global --add safe.directory /__w/cclib/cclib
-      - name: Prepare conda environment
-        run: |
-          echo "/opt/conda/envs/cclib/bin" >> "${GITHUB_PATH}"
-        # - name: Build docs
-        #   run: cd doc && make default
-        # - name: Make a no jekyll file
-        #   run: touch doc/sphinx/_build/html/.nojekyll
-        # - name: Pushes to another repository
-        #   id: push_directory
-        #   uses: cpina/github-action-push-to-another-repository@55306faa4ed53b815ae49e564af8cfb359d32ae2  # v1.7.3
-        #   env:
-        #     SSH_DEPLOY_KEY: ${{ secrets.CCLIB_DOCS_KEY }}
-        #   with:
-        #     source-directory: doc/sphinx/_build/html
-        #     destination-github-username: 'cclib'
-        #     destination-repository-name: 'cclib.github.io'
-        #     commit-message: See ORIGIN_COMMIT from $GITHUB_REF
-        #     target-branch: master
-        #   if: github.ref == 'refs/heads/master'
+      - name: Install Pixi
+        uses: prefix-dev/setup-pixi@a09b6247153796b190642a2b53fac4241043cf6f  # v0.10.0
+        with:
+          activate-environment: true
+          environments: >-
+            py312
+          # - name: Build docs
+          #   run: cd doc && make default
+          # - name: Make a no jekyll file
+          #   run: touch doc/sphinx/_build/html/.nojekyll
+          # - name: Pushes to another repository
+          #   id: push_directory
+          #   uses: cpina/github-action-push-to-another-repository@55306faa4ed53b815ae49e564af8cfb359d32ae2  # v1.7.3
+          #   env:
+          #     SSH_DEPLOY_KEY: ${{ secrets.CCLIB_DOCS_KEY }}
+          #   with:
+          #     source-directory: doc/sphinx/_build/html
+          #     destination-github-username: 'cclib'
+          #     destination-repository-name: 'cclib.github.io'
+          #     commit-message: See ORIGIN_COMMIT from $GITHUB_REF
+          #     target-branch: master
+          #   if: github.ref == 'refs/heads/master'

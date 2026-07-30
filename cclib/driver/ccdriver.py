@@ -7,7 +7,7 @@
 import logging
 import sys
 import typing
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING
 
 from cclib.collection import ccCollection
 from cclib.combinator import auto_combinator
@@ -413,10 +413,8 @@ class ccDriver:
 
     def __init__(
         self,
-        source: typing.Union[
-            str, typing.IO, FileHandler, typing.List[typing.Union[str, typing.IO]]
-        ],
-        tree: Optional[Tree] = None,
+        source: str | typing.IO | FileHandler | list[str | typing.IO],
+        tree: Tree | None = None,
         combinator: "combinator" = None,
         loglevel: int = logging.ERROR,
         logname: str = "Log",
@@ -447,7 +445,7 @@ class ccDriver:
             self._combinator = auto_combinator(self._tree)
         self._ccCollection = ccCollection(self._combinator, self._tree)
         self._fileHandler = source
-        self._identified_program: List[str] = []
+        self._identified_program: list[str] = []
 
     @property
     def cccollection(self):
@@ -466,14 +464,14 @@ class ccDriver:
         return self._tree
 
     @property
-    def identified_program(self) -> Optional[str]:
+    def identified_program(self) -> str | None:
         if not self._identified_program:
             return None
         else:
             return self._identified_program[-1]
 
     @identified_program.setter
-    def identified_program(self, in_prog: Optional[str]) -> None:
+    def identified_program(self, in_prog: str | None) -> None:
         if in_prog is None:
             if self._identified_program:
                 self._identified_program.pop()

@@ -3,7 +3,6 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 import re
-from typing import Optional
 
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
@@ -19,7 +18,7 @@ class gbasis(base_parser):
     known_codes = ["gaussian", "ORCA", "psi4", "qchem"]
 
     @staticmethod
-    def gaussian(file_handler, ccdata) -> Optional[dict]:
+    def gaussian(file_handler, ccdata) -> dict | None:
         dependency_list = ["natom"]  # noqa: F841
         if not base_parser.check_dependencies(dependency_list, ccdata, "gbasis"):
             return None
@@ -120,7 +119,7 @@ class gbasis(base_parser):
         return None
 
     @staticmethod
-    def ORCA(file_handler, ccdata) -> Optional[dict]:
+    def ORCA(file_handler, ccdata) -> dict | None:
         line = file_handler.last_line
         if "gbasis_tmp_atnames" not in ccdata.parser_state:
             return None
@@ -167,7 +166,7 @@ class gbasis(base_parser):
         return None
 
     @staticmethod
-    def psi4(file_handler, ccdata) -> Optional[dict]:
+    def psi4(file_handler, ccdata) -> dict | None:
         dependency_list = ["natom", "atomnos"]
         line = file_handler.last_line
         if line.strip() == "==> AO Basis Functions <==":
@@ -263,7 +262,7 @@ class gbasis(base_parser):
         return None
 
     @staticmethod
-    def qchem(file_handler, ccdata) -> Optional[dict]:
+    def qchem(file_handler, ccdata) -> dict | None:
         constructed_data = None
         line = file_handler.last_line
         parsed_gbasis = []
@@ -336,7 +335,7 @@ class gbasis(base_parser):
         return constructed_data
 
     @staticmethod
-    def parse(file_handler, program: str, ccdata) -> Optional[dict]:
+    def parse(file_handler, program: str, ccdata) -> dict | None:
         constructed_data = None
         if program in gbasis.known_codes:
             file_handler.virtual_set()

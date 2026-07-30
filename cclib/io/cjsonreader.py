@@ -6,7 +6,7 @@
 """A reader for chemical JSON (CJSON) files."""
 
 import json
-from typing import Mapping
+from collections.abc import Mapping
 
 from cclib.io import filereader
 from cclib.parser.data import ccData

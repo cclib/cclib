@@ -4,24 +4,23 @@
 # the terms of the BSD 3-Clause License.
 
 import sys
-from typing import Optional, Union
 
 
 class TextProgress:
     def __init__(self) -> None:
         self.nstep: float = 0
-        self.text: Optional[str] = None
+        self.text: str | None = None
         self.oldprogress = 0
         self.progress = 0
         self.calls = 0
 
-    def initialize(self, nstep: Union[float, int], text: Optional[str] = None) -> None:
+    def initialize(self, nstep: float | int, text: str | None = None) -> None:
         self.nstep = float(nstep)
         self.text = text
 
         # sys.stdout.write("\n")
 
-    def update(self, step: Union[float, int], text: Optional[str] = None) -> None:
+    def update(self, step: float | int, text: str | None = None) -> None:
         self.progress = int(step * 100 / self.nstep)
 
         if self.progress / 2 >= self.oldprogress / 2 + 1 or self.text != text:

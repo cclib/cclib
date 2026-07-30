@@ -1,0 +1,331 @@
+Job dvb_td started on anonymized-host at Wed Jul 29 10:54:33 2026
+jobid: 67710161-8b5d-11f1-93ba-00be43be7bed
+
+  +------------------------------------------------------------------------+
+  |  Jaguar version 13.3, release 113                                      |
+  |                                                                        |
+  |  Copyright Schrodinger, Inc.                                           |
+  |  All Rights Reserved.                                                  |
+  |                                                                        |
+  |  The following have contributed to Jaguar (listed alphabetically):     |
+  |  Ty Balduf, Mike Beachy, Chandler Bennett, Art Bochevarov,             |
+  |  Dale Braden, Yixiang Cao, Alan Chien, Chris Cortis,                   |
+  |  Rich Friesner, Jim Furness, Bill Goddard, Hod Greeley,                |
+  |  Tom Hughes, Leif Jacobson, Jean-Marc Langlois, Daniel Levine,         |
+  |  Daniel Mainz, Rob Murphy, Dean Philipp, Tom Pollard,                  |
+  |  Murco Ringnalda, Pablo Videla, Mark Watson, Haoyu Yu.                 |
+  |                                                                        |
+  |  Use of this program should be acknowledged in publications as:        |
+  |                                                                        |
+  |  Jaguar, version 13.3, Schrodinger, Inc., New York, NY, 2026.          |
+  |                                                                        |
+  |  Y. Cao, T. Balduf, M. D. Beachy, M. C. Bennett, A. D. Bochevarov,     |
+  |  A. Chien, P. A. Dub, K. G. Dyall, J. W. Furness, M. D. Halls,         |
+  |  T. F. Hughes, L. D. Jacobson, H. S. Kwak, D. S. Levine, D. T. Mainz,  |
+  |  K. B. Moore, M. Svensson, P. E. Videla, M. A. Watson, R. A. Friesner, |
+  |  "Quantum chemical package Jaguar: A survey of recent developments     |
+  |  and unique features", J. Chem. Phys. 161, 052502 (2024).              |
+  |  DOI: 10.1063/5.0213317                                                |
+  +------------------------------------------------------------------------+
+  
+  start of program pre
+  
+  Job name: dvb_td
+  Executables used: /scr/shared/builds/2026-3/build/jaguar-v13.3/bin/Linux-x86_64
+  Temporary files : /scr/shared/jobs/67710161-8b5d-11f1-93ba-00be43be7bed
+  Basis file : using default basis file from /scr/shared/builds/2026-3/build
+  Maestro file (input):  dvb_td.mae
+  Maestro file (output): dvb_td.01.mae
+  
+ Contents of input file: &gen and (if present) &atomic sections only
+ ----------------Contents start----------------
+&gen
+nroot=5
+basis=sto-3g
+dftname=b3lyp
+icis=1
+&
+ -----------------Contents end-----------------
+ 
+  basis set:               sto-3g                          
+  net molecular charge:    0
+  multiplicity:            1
+  
+  number of basis functions....           60
+  no dealiasing set available for atom            1
+  switch to all-analytic calculation
+  
+ Input geometry:
+                                   angstroms
+  atom               x                 y                 z
+  C1           -0.0758150000      0.0000000000      0.0269380000 
+  C2           -0.0045600000      0.0000000000      1.4463040000 
+  C3            1.2336810000      0.0000000000      2.1042190000 
+  C4            2.4572420000      0.0000000000      1.3787840000 
+  C5            2.3859860000      0.0000000000     -0.0405820000 
+  H6           -0.9288540000      0.0000000000      2.0382910000 
+  H7            1.2652340000      0.0000000000      3.2024280000 
+  H8            3.3102810000      0.0000000000     -0.6325690000 
+  C9            3.7520430000      0.0000000000      2.1313240000 
+  C10           4.9872240000      0.0000000000      1.6008690000 
+  H11           5.1663340000      0.0000000000      0.5196130000 
+  H12           3.6421500000      0.0000000000      3.2262300000 
+  H13           5.8793430000      0.0000000000      2.2379240000 
+  C14          -1.3706160000      0.0000000000     -0.7256020000 
+  H15          -1.2607230000      0.0000000000     -1.8205080000 
+  C16          -2.6057970000      0.0000000000     -0.1951460000 
+  H17          -2.7849070000      0.0000000000      0.8861090000 
+  H18          -3.4979160000      0.0000000000     -0.8322020000 
+  C19           1.1477460000      0.0000000000     -0.6984970000 
+  H20           1.1161930000      0.0000000000     -1.7967060000 
+   
+  principal moments of inertia:
+        amu*angstrom^2:               109.23592               737.84463               847.08055
+                g*cm^2:          1.81390497E-38          1.22521968E-37          1.40661017E-37
+   
+  rotational constants:
+               cm^(-1):      0.15432312      0.02284713      0.01990086
+                   GHz:      4.62649088      0.68493960      0.59661269
+   
+  Molecular weight:     130.08 amu
+   
+  Stoichiometry: C10H10
+  Molecular Point Group: C2h     
+  Point Group used: C1 (symmetry turned off)
+  
+  nuclear repulsion energy.......           445.899321568 hartrees
+ 
+ Non-default options chosen:
+   SCF calculation type: DFT(b3lyp)                  
+   DFT=Becke_3_Parameter/HF+Slater+Becke88+VWN+LYP (B3LYP)
+   Electronic excitation energies will be calculated by TDDFT
+   Q will be stored on disk for fine grid
+  
+ Temporary integer options set:
+     73=  2
+  
+  end of program pre
+   
+ Time(pre)  user:       0.534  user+sys:       0.534  wallclock:       0.466
+  
+  start of program onee
+  
+  smallest eigenvalue of S:    1.814E-01
+  number of canonical orbitals.....           60
+  end of program onee
+   
+ Time(onee)  user:       0.185  user+sys:       0.185  wallclock:       0.114
+  
+  start of program hfig
+  
+  initial wavefunction generated automatically from atomic wavefunctions
+ 
+  Irreducible     Total no   No of occupied orbitals 
+  representation  orbitals   Shell_1  Shell_2    ...
+  No Symm           60         35
+  ------------------------
+  Orbital occupation/shell    1.000
+ 
+  end of program hfig
+   
+ Time(hfig)  user:       0.549  user+sys:       0.549  wallclock:       0.566
+  
+  start of program probe
+  
+  end of program probe
+   
+ Time(probe)  user:       0.156  user+sys:       0.156  wallclock:       0.113
+  
+  start of program grid
+  
+   grid     grid set  grid #  grid sym
+  ------    --------  ------  --------
+  coarse        0        0        1
+  medium        0        0        1
+  fine          0        0        1
+  ultrafine     0        0        1
+  charge        0        0        1
+  gradient      0        0        1
+  density       0        0        1
+  DFT-fine    -11        1        1
+  DFT-med.    -10        2        1
+  DFT-grad    -12        3        1
+  DFT-der2      0        0        1
+  DFT-cphf      0        0        1
+  LMP2-enrg     0        0        1
+  LMP2-grad     0        0        1
+  DFT-cphf2     0        0        1
+  PBF-dens      0        0        1
+  plotting      0        0        1
+  Rel-grad    -17        0        1
+  Extreme       0        0        1
+  Extreme-G     0        0        1
+  
+  number of gridpoints: 
+                 total
+  grid # 1       86080
+  grid # 2       23840
+  grid # 3      104520
+   
+  end of program grid
+   
+ Time(grid)  user:       0.716  user+sys:       0.716  wallclock:       0.861
+  
+  start of program scf
+  
+ number of electrons..........         70
+ number of alpha electrons....         35
+ number of beta electrons.....         35
+ number of orbitals, total....         60
+ number of doubly-occ'd orbs..         35
+ number of open shell orbs....          0
+ number of occupied orbitals..         35
+ number of virtual orbitals...         25
+ number of hamiltonians.......          1
+ number of shells.............          1
+ SCF type: DFT=Becke_3_Parameter/HF+Slater+Becke88+VWN+LYP (B3LYP)
+ Energy computed using fully analytic integrals.
+ Convergence Criteria:
+    Energy (econv):       5.00E-05
+    RMS density (dconv):  1.00E-04
+  
+       i  u  d  i  g                   
+       t  p  i  c  r                                 RMS    maximum
+       e  d  i  u  i                       energy  density   DIIS  
+       r  t  s  t  d       total energy    change  change    error 
+  
+etot    1  N  N  0  N    -382.08750464638           7.5E-03  1.4E-01
+etot    2  Y  Y  0  N    -382.28109457771  1.9E-01  4.4E-03  5.8E-02
+etot    3  N  Y  0  N    -382.29956632361  1.8E-02  2.5E-03  2.1E-02
+etot    4  Y  Y  0  N    -382.30552898125  6.0E-03  9.5E-04  1.4E-02
+etot    5  N  Y  0  N    -382.30825591932  2.7E-03  4.7E-05  2.7E-04
+etot    6  N  Y  0  N    -382.30825709313  1.2E-06  2.4E-05  2.5E-04
+etot    7  N  N  0  N    -382.30825875169  1.7E-06  0.0E+00  0.0E+00
+  
+  
+ Energy components, in hartrees:
+   (A)  Nuclear repulsion............     445.89932156786
+   (E)  Total one-electron terms.....   -1400.56699169661
+   (I)  Total two-electron terms.....     572.35941137707
+   (J)    Coulomb....................     630.20305322257
+   (K)    Exchange+Correlation.......     -57.84364184550
+   (L)  Electronic energy............    -828.20758031954  (E+I)
+   (N)  Total energy.................    -382.30825875169  (A+L)
+   (O)  Gas phase energy.............    -382.30825875169
+  
+ SCFE: SCF energy: DFT(b3lyp)      -382.30825875169 hartrees   iterations:   7
+  
+ 
+ HOMO energy:    -0.15308
+ LUMO energy:     0.03742
+ 
+  Orbital energies (hartrees): 
+   -10.02022   -10.02017   -10.00809   -10.00809   -10.00680   -10.00680
+   -10.00612   -10.00598    -9.99229    -9.99229    -0.80953    -0.75398
+    -0.71795    -0.69981    -0.66750    -0.58870    -0.55894    -0.53166
+    -0.51018    -0.45745    -0.43936    -0.41061    -0.39796    -0.39606
+    -0.37399    -0.35115    -0.34729    -0.32453    -0.31125    -0.29280
+    -0.28747    -0.26354    -0.21244    -0.19508    -0.15308     0.03742
+     0.09034     0.11062     0.18221     0.27251     0.33223     0.34073
+     0.37936     0.38145     0.41097
+ 
+  end of program scf
+   
+ Time(scf)  user:       1.409  user+sys:       1.409  wallclock:       1.630
+  
+  start of program cis
+  
+ Energy convergence criterion:       0.1000E-04
+ Wavefunction convergence criterion: 0.1000E-01
+ Entering Diagonalization
+                   CI size =         875
+ Number of initial guesses =           5
+     Maximum subspace size =         876
+   Number of roots to find =           5
+ Diagonalization vectors stored in core
+ ----------------------------------------------------------------------------
+  
+  Excited State   1:     5.3925 eV       229.92 nm
+  
+  orbitals in
+   excitation    CI coeff.
+  ------------   ---------
+    34 =>  36    -0.75154
+    35 =>  37     0.65333
+  
+  Transition dipole moment (debye):
+  X=  4.35101137E-01  Y= -2.42700193E-11  Z= -1.26892102E-01  Tot=  4.53226881E-01
+  
+  Oscillator strength, f=     0.0042
+ ----------------------------------------------------------------------------
+  
+  Excited State   2:     5.9604 eV       208.01 nm
+  
+  orbitals in
+   excitation    CI coeff.
+  ------------   ---------
+    35 =>  36     0.95603
+    33 =>  38    -0.18734
+    32 =>  39     0.10282
+  
+  Transition dipole moment (debye):
+  X=  6.91729996E+00  Y=  1.20061404E-10  Z=  2.24225044E+00  Tot=  7.27163845E+00
+  
+  Oscillator strength, f=     1.1952
+ ----------------------------------------------------------------------------
+  
+  Excited State   3:     6.2436 eV       198.58 nm
+  
+  orbitals in
+   excitation    CI coeff.
+  ------------   ---------
+    33 =>  36     0.76211
+    35 =>  38    -0.64276
+  
+  Transition dipole moment (debye):
+  X=  1.88854464E-06  Y= -3.21025115E-10  Z= -1.48005394E-07  Tot=  1.89433539E-06
+  
+  Oscillator strength, f=     0.0000
+ ----------------------------------------------------------------------------
+  
+  Excited State   4:     7.2361 eV       171.34 nm
+  
+  orbitals in
+   excitation    CI coeff.
+  ------------   ---------
+    34 =>  36    -0.55809
+    32 =>  37     0.37705
+    35 =>  37    -0.67379
+    34 =>  39    -0.26956
+  
+  Transition dipole moment (debye):
+  X=  1.75477664E+00  Y=  4.41608143E-11  Z= -1.92127660E+00  Tot=  2.60202706E+00
+  
+  Oscillator strength, f=     0.1858
+ ----------------------------------------------------------------------------
+  
+  Excited State   5:     7.4196 eV       167.10 nm
+  
+  orbitals in
+   excitation    CI coeff.
+  ------------   ---------
+    33 =>  37     0.77828
+    34 =>  38    -0.62715
+  
+  Transition dipole moment (debye):
+  X=  3.66369087E-06  Y=  3.54143629E-10  Z= -4.31558249E-06  Tot=  5.66099666E-06
+  
+  Oscillator strength, f=     0.0000
+ ----------------------------------------------------------------------------
+  
+  Writing electronic absorption spectrum data to dvb_td_uvv.spm
+
+  end of program cis
+   
+ Time(cis)  user:       5.425  user+sys:       5.425  wallclock:       6.089
+
+ Total cpu seconds     user:       7.932   user+sys:       7.932
+  
+ Total elapsed time:    13 seconds
+
+Job dvb_td completed on anonymized-host at Wed Jul 29 10:54:46 2026
