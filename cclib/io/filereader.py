@@ -15,12 +15,7 @@ class Reader(ABC):
     """Abstract class for reader objects."""
 
     def __init__(
-        self,
-        source: typing.Union[
-            str, typing.IO, FileWrapper, typing.List[typing.Union[str, typing.IO]]
-        ],
-        *args,
-        **kwargs,
+        self, source: str | typing.IO | FileWrapper | list[str | typing.IO], *args, **kwargs
     ) -> None:
         """Initialize the Reader object.
 

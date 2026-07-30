@@ -7,7 +7,7 @@
 
 import json
 import os.path
-from typing import TYPE_CHECKING, Any, Dict, Union
+from typing import TYPE_CHECKING, Any, Union
 
 from cclib.io import filewriter
 from cclib.parser.data import ccData
@@ -38,7 +38,7 @@ class CJSON(filewriter.Writer):
         name = os.path.basename(os.path.splitext(path)[0])
         return name
 
-    def as_dict(self) -> Dict[str, Any]:
+    def as_dict(self) -> dict[str, Any]:
         """Build a Python dict with the CJSON data"""
         cjson_dict = dict()
         # Need to decide on a number format.

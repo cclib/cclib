@@ -5,7 +5,7 @@
 
 """Parser for Formatted Checkpoint files"""
 
-from typing import TYPE_CHECKING, List, Optional, Type, TypeVar
+from typing import TYPE_CHECKING, TypeVar
 
 from cclib.parser import data, logfileparser, utils
 from cclib.parser.gaussianparser import parse_version as gaussian_parse_version
@@ -33,7 +33,7 @@ SHELL_START = {0: 1, 1: 2, -1: 2, 2: 3, -2: 3, 3: 4, -3: 4}
 T = TypeVar("T")
 
 
-def _shell_to_orbitals(type: int, offset: int) -> List[str]:
+def _shell_to_orbitals(type: int, offset: int) -> list[str]:
     """Convert a Fchk shell type and offset to a list of string representations.
 
     For example, shell type = -2 corresponds to d orbitals (spherical basis) with
@@ -537,8 +537,8 @@ class FChk(logfileparser.Logfile):
             self.metadata["success"] = self.success
 
     def _parse_block(
-        self, inputfile: "FileWrapper", count: int, type: Type[T], msg: str
-    ) -> List[T]:
+        self, inputfile: "FileWrapper", count: int, type: type[T], msg: str
+    ) -> list[T]:
         elements = []
         while len(elements) < count:
             self.updateprogress(inputfile, msg, self.fupdate)
@@ -554,7 +554,7 @@ class FChk(logfileparser.Logfile):
         self.append_attribute("grads", gradient)
 
     def _set_optstatus_and_optdone_from_atomcoords(
-        self, opt_converged: Optional[bool], can_set_opt_new: bool
+        self, opt_converged: bool | None, can_set_opt_new: bool
     ) -> None:
         """For geometry optimizations, use the length of atomcoords and an
         external trigger of whether or not the optimization converged to

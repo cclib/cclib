@@ -6,7 +6,6 @@
 """A writer for wfx format files."""
 
 import os.path
-from typing import List, Tuple, Union
 
 from cclib.io import filewriter
 from cclib.parser import utils
@@ -58,7 +57,7 @@ _M = dict(
 )
 
 
-def _section(section_name: str, section_data: Union[List[str], int, float, str]) -> List[str]:
+def _section(section_name: str, section_data: list[str] | int | float | str) -> list[str]:
     """Add opening/closing section_name tags to data."""
     opening_tag = [f"<{section_name}>"]
     closing_tag = [f"</{section_name}>"]
@@ -73,7 +72,7 @@ def _section(section_name: str, section_data: Union[List[str], int, float, str])
     return section
 
 
-def _list_format(data, per_line, style: str = WFX_FIELD_FMT) -> List[str]:
+def _list_format(data, per_line, style: str = WFX_FIELD_FMT) -> list[str]:
     """Format lists for pretty print."""
     template = style * per_line
     leftover = len(data) % per_line
@@ -146,7 +145,7 @@ class WFXWriter(filewriter.Writer):
             return 6
         return 0
 
-    def _nuclear_names(self) -> List[str]:
+    def _nuclear_names(self) -> list[str]:
         """Section: Nuclear Names.
         Names of nuclei present in the molecule.
 
@@ -156,11 +155,11 @@ class WFXWriter(filewriter.Writer):
         """
         return [self.pt.element[Z] + str(i) for i, Z in enumerate(self.ccdata.atomnos, start=1)]
 
-    def _atomic_nos(self) -> List[str]:
+    def _atomic_nos(self) -> list[str]:
         """Section: Atomic Numbers."""
         return [str(Z) for Z in self.ccdata.atomnos]
 
-    def _nuclear_charges(self) -> List[str]:
+    def _nuclear_charges(self) -> list[str]:
         """Section: Nuclear Charges."""
         nuclear_charge = [WFX_FIELD_FMT % Z for Z in self.ccdata.atomnos]
         if hasattr(self.ccdata, "coreelectrons"):
@@ -169,7 +168,7 @@ class WFXWriter(filewriter.Writer):
             ]
         return nuclear_charge
 
-    def _nuclear_coords(self) -> List[str]:
+    def _nuclear_coords(self) -> list[str]:
         """Section: Nuclear Cartesian Coordinates.
         Nuclear coordinates in Bohr."""
         coord_template = WFX_FIELD_FMT * 3
@@ -207,7 +206,7 @@ class WFXWriter(filewriter.Writer):
         """Section: Electronic Spin Multiplicity"""
         return self.ccdata.mult
 
-    def _prim_centers(self) -> List[str]:
+    def _prim_centers(self) -> list[str]:
         """Section: Primitive Centers.
         List of nuclear numbers upon which the primitive basis functions
         are centered."""
@@ -218,7 +217,7 @@ class WFXWriter(filewriter.Writer):
 
         return _list_format(prim_centers, 10, "%d ")
 
-    def _rearrange_modata(self, data: Union[List[int], numpy.ndarray]) -> List[int]:
+    def _rearrange_modata(self, data: list[int] | numpy.ndarray) -> list[int]:
         """Rearranges MO related data according the expected order of
         Cartesian gaussian primitive types in wfx format.
         cclib parses mocoeffs in the order they occur in output files.
@@ -239,7 +238,7 @@ class WFXWriter(filewriter.Writer):
 
         return data
 
-    def _get_prim_types(self) -> List[int]:
+    def _get_prim_types(self) -> list[int]:
         """List of primitive types.
         Definition of the Cartesian Gaussian primitive types is as follows:
         1 S, 2 PX, 3 PY, 4 PZ, 5 DXX, 6 DYY, 7 DZZ, 8 DXY, 9 DXZ, 10 DYZ,
@@ -296,7 +295,7 @@ class WFXWriter(filewriter.Writer):
             occup += [WFX_FIELD_FMT % (1)] * +alpha + [WFX_FIELD_FMT % (1)] * beta
         return occup
 
-    def _mo_energies(self) -> List[str]:
+    def _mo_energies(self) -> list[str]:
         """Section: Molecular Orbital Energies."""
         mo_energies = []
         alpha_elctrons = self._no_alpha_electrons()
@@ -308,7 +307,7 @@ class WFXWriter(filewriter.Writer):
                 mo_energies.append(WFX_FIELD_FMT % (utils.convertor(mo_energy, "eV", "hartree")))
         return mo_energies
 
-    def _mo_spin_types(self) -> List[str]:
+    def _mo_spin_types(self) -> list[str]:
         """Section: Molecular Orbital Spin Types."""
         spin_types = []
         electrons = self._no_electrons()
@@ -359,7 +358,7 @@ class WFXWriter(filewriter.Writer):
 
         return mocoeffs
 
-    def _norm_mat(self) -> Tuple[List[float], List[int], List[int]]:
+    def _norm_mat(self) -> tuple[list[float], list[int], list[int]]:
         """Calculate normalization matrix for normalizing MOcoeffs."""
         alpha = []
         prim_coeff = []

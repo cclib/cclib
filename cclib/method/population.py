@@ -6,7 +6,7 @@
 """Population analyses based on cclib data."""
 
 import logging
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING
 
 from cclib.method.calculationmethod import Method, MissingAttributeError
 from cclib.progress import Progress
@@ -30,7 +30,7 @@ class Population(Method):
     def __init__(
         self,
         data: "ccData",
-        progress: Optional[Progress] = None,
+        progress: Progress | None = None,
         loglevel: int = logging.INFO,
         logname: str = "Log",
     ) -> None:
@@ -56,7 +56,7 @@ class Population(Method):
                 "Need overlap matrix (aooverlaps or fooverlaps attribute) for Population methods"
             )
 
-    def partition(self, indices: Optional[List[List[int]]] = None) -> bool:
+    def partition(self, indices: list[list[int]] | None = None) -> bool:
         if not hasattr(self, "aoresults"):
             self.calculate()
 

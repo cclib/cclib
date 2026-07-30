@@ -5,7 +5,8 @@
 
 """Bridge for using cclib data in ASE (https://wiki.fysik.dtu.dk/ase/)."""
 
-from typing import TYPE_CHECKING, Optional, Sequence, Union
+from collections.abc import Sequence
+from typing import TYPE_CHECKING, Union
 
 from cclib.parser.data import ccData
 from cclib.parser.utils import find_package
@@ -57,7 +58,7 @@ def write_trajectory(
     filename: Union[str, "Path"],
     ccdata: ccData,
     popname: str = "mulliken",
-    index: Optional[Sequence[int]] = None,
+    index: Sequence[int] | None = None,
 ) -> None:
     """Write an ASE Trajectory object from a ccData object.
 

@@ -7,7 +7,8 @@
 
 import logging
 from collections import namedtuple
-from typing import Any, Dict, List, Mapping, Optional
+from collections.abc import Mapping
+from typing import Any, Optional
 
 from cclib.method import Electrons, orbitals
 
@@ -278,7 +279,7 @@ class ccData:
                 ]
                 setattr(self, k, dict(pairs))
 
-    def getattributes(self, tolists: bool = False) -> Dict[str, Any]:
+    def getattributes(self, tolists: bool = False) -> dict[str, Any]:
         """Returns a dictionary of existing data attributes.
 
         Inputs:
@@ -295,7 +296,7 @@ class ccData:
             self.arrayify()
         return attributes
 
-    def setattributes(self, attributes: Mapping[str, Any]) -> List[str]:
+    def setattributes(self, attributes: Mapping[str, Any]) -> list[str]:
         """Sets data attributes given in a dictionary.
 
         Inputs:
@@ -347,9 +348,7 @@ class ccData:
             msg = f"At least one excitation energy is negative. \nNegative values: {negative_values}\nFull etenergies: {self.etenergies}"
             logger.error(msg)
 
-    def write(
-        self, filename: Optional[str] = None, indices: Optional = None, *args, **kwargs
-    ) -> str:
+    def write(self, filename: str | None = None, indices: Optional = None, *args, **kwargs) -> str:
         """Write parsed attributes to a file.
 
         Possible extensions:
@@ -363,15 +362,15 @@ class ccData:
         outputstr = ccwrite(self, outputdest=filename, indices=indices, *args, **kwargs)
         return outputstr
 
-    def writejson(self, filename: Optional[str] = None, indices=None):
+    def writejson(self, filename: str | None = None, indices=None):
         """Write parsed attributes to a JSON file."""
         return self.write(filename=filename, indices=indices, outputtype="cjson")
 
-    def writecml(self, filename: Optional[str] = None, indices=None):
+    def writecml(self, filename: str | None = None, indices=None):
         """Write parsed attributes to a CML file."""
         return self.write(filename=filename, indices=indices, outputtype="cml")
 
-    def writexyz(self, filename: Optional[str] = None, indices=None):
+    def writexyz(self, filename: str | None = None, indices=None):
         """Write parsed attributes to an XML file."""
         return self.write(filename=filename, indices=indices, outputtype="xyz")
 
@@ -454,7 +453,7 @@ class ccData_optdone_bool(ccData):
         super().__init__(*args, **kwargs)
         self._attributes["optdone"] = Attribute(bool, "done", "optimization")
 
-    def setattributes(self, *args, **kwargs) -> List[str]:
+    def setattributes(self, *args, **kwargs) -> list[str]:
         invalid = super().setattributes(*args, **kwargs)
 
         # Reduce optdone to a Boolean, because it will be parsed as a list. If this list has any element,
