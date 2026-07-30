@@ -3,7 +3,6 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 import re
-from typing import Optional
 
 from cclib.attribute_parsers.base_parser import base_parser
 
@@ -18,7 +17,7 @@ class mocoeffs(base_parser):
     known_codes = ["ORCA", "psi4"]
 
     @staticmethod
-    def psi4(file_handler, ccdata) -> Optional[dict]:
+    def psi4(file_handler, ccdata) -> dict | None:
         line = file_handler.last_line
         if "Molecular Orbitals" in line:
             file_handler.skip_lines(["b"], virtual=True)
@@ -63,7 +62,7 @@ class mocoeffs(base_parser):
         return None
 
     @staticmethod
-    def ORCA(file_handler, ccdata) -> Optional[dict]:
+    def ORCA(file_handler, ccdata) -> dict | None:
         # Molecular orbital coefficients are parsed here, but also related things
         # like atombasis and aonames if possible.
         #
@@ -120,7 +119,7 @@ class mocoeffs(base_parser):
         return None
 
     @staticmethod
-    def parse(file_handler, program: str, ccdata) -> Optional[dict]:
+    def parse(file_handler, program: str, ccdata) -> dict | None:
         constructed_data = None
         if program in mocoeffs.known_codes:
             file_handler.virtual_set()

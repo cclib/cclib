@@ -2,7 +2,6 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
-from typing import Optional
 
 from cclib.attribute_parsers.base_parser import base_parser
 
@@ -17,7 +16,7 @@ class aooverlaps(base_parser):
     known_codes = ["gaussian", "ORCA"]
 
     @staticmethod
-    def gaussian(file_handler, ccdata) -> Optional[dict]:
+    def gaussian(file_handler, ccdata) -> dict | None:
         # Molecular orbital overlap matrix.
         # Has to deal with lines such as:
         #   *** Overlap ***
@@ -49,7 +48,7 @@ class aooverlaps(base_parser):
         return None
 
     @staticmethod
-    def ORCA(file_handler, ccdata) -> Optional[dict]:
+    def ORCA(file_handler, ccdata) -> dict | None:
         dependency_list = ["nbasis"]
         if base_parser.check_dependencies(dependency_list, ccdata, "aooverlaps"):
             line = file_handler.last_line
@@ -70,7 +69,7 @@ class aooverlaps(base_parser):
         return None
 
     @staticmethod
-    def parse(file_handler, program: str, ccdata) -> Optional[dict]:
+    def parse(file_handler, program: str, ccdata) -> dict | None:
         constructed_data = None
         if program in aooverlaps.known_codes:
             file_handler.virtual_set()

@@ -2,7 +2,6 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
-from typing import Optional
 
 from cclib.attribute_parsers.base_parser import base_parser
 
@@ -15,7 +14,7 @@ class natom(base_parser):
     known_codes = ["gaussian", "psi4", "qchem", "ORCA"]
 
     @staticmethod
-    def gaussian(file_handler, ccdata) -> Optional[dict]:
+    def gaussian(file_handler, ccdata) -> dict | None:
         # The remaining part will allow us to get the atom count.
         # When coordinates are given, there is a blank line at the end, but if
         # there is a Z-matrix here, there will also be variables and we need to
@@ -31,7 +30,7 @@ class natom(base_parser):
             return {natom.__name__: len(ccdata.atomnos)}
 
     @staticmethod
-    def ORCA(file_handler, ccdata) -> Optional[dict]:
+    def ORCA(file_handler, ccdata) -> dict | None:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         # Don't reset this all the time
         dependency_list = ["natom"]
@@ -43,7 +42,7 @@ class natom(base_parser):
         return None
 
     @staticmethod
-    def psi4(file_handler, ccdata) -> Optional[dict]:
+    def psi4(file_handler, ccdata) -> dict | None:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         # Don't reset this all the time
         dependency_list = ["natom"]
@@ -55,7 +54,7 @@ class natom(base_parser):
         return None
 
     @staticmethod
-    def qchem(file_handler, ccdata) -> Optional[dict]:
+    def qchem(file_handler, ccdata) -> dict | None:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         # Don't reset this all the time
         dependency_list = ["natom"]
@@ -67,7 +66,7 @@ class natom(base_parser):
         return None
 
     @staticmethod
-    def parse(file_handler, program: str, ccdata) -> Optional[dict]:
+    def parse(file_handler, program: str, ccdata) -> dict | None:
         constructed_data = None
         if program in natom.known_codes:
             file_handler.virtual_set()

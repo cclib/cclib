@@ -567,7 +567,9 @@ class Jaguar(logfileparser.Logfile):
         #  displacement maximum:    1.3954E-02 .  (  1.8000E-03 )
         #  displacement rms:        4.6567E-03 .  (  1.2000E-03 )
         #
-        if line[2:28] == "geometry optimization step":
+        #  Note: geometry -> Geometry capitalization changed
+        #
+        if line[3:28] == "eometry optimization step":
             self.set_attribute("geotargets", numpy.zeros(5, "d"))
 
             gopt_step = int(line.split()[-1])
@@ -656,6 +658,9 @@ class Jaguar(logfileparser.Logfile):
             # which could be caught. This is not true in newer version (including 8.3),
             # but in general it would be better to bound this loop more strictly.
             freqs = next(inputfile)
+            # in newer Jaguar we have some extra printing before this block
+            while freqs.strip() and "frequencies" not in freqs:
+                freqs = next(inputfile)
             while freqs.strip() and freqs[2:13] == "frequencies":
                 # Number of modes (columns printed in this block).
                 nmodes = len(freqs.split()) - 1
@@ -694,6 +699,8 @@ class Jaguar(logfileparser.Logfile):
 
                 self.skip_line(inputfile, "blank")
                 freqs = next(inputfile)
+                while freqs.strip() and "frequencies" not in freqs:
+                    freqs = next(inputfile)
 
             # Convert new data to arrays.
             self.set_attribute("vibfreqs", vibfreqs)
@@ -714,22 +721,59 @@ class Jaguar(logfileparser.Logfile):
             #   Thermochemical properties at    1.0000 atm
             #   ...
             #   The zero point energy (ZPE):    111.155 kcal/mol
-            while "thermochemical properties" not in line.lower():
+            #
+            # Jaguar 13.3:
+            #   Thermodynamic properties for P = 1.00E+00 atm, calculated at   1 temperatures
+            while (
+                "thermochemical properties" not in line.lower()
+                and "thermodynamic properties for p" not in line.lower()
+            ):
                 line = next(inputfile)
+                if "zero point energy" in line:
+                    self.set_attribute(
+                        "zpve", utils.convertor(float(line.split()[-2]), "kcal/mol", "hartree")
+                    )
             tokens = line.split()
-            if len(tokens) == 5:
-                self.set_attribute("pressure", float(line.split()[3]))
+            tokens = [t.replace(",", "") for t in tokens]
+            if "atm" in tokens:
+                idx_press = tokens.index("atm") - 1
+                self.set_attribute("pressure", float(tokens[idx_press]))
             line = next(inputfile)
-            if "pressure" in line:
-                self.set_attribute("pressure", float(line.split()[1]))
-            while "zero point energy" not in line:
+            while "zero point energy" not in line and not hasattr(self, "zpve"):
                 line = next(inputfile)
-            self.set_attribute(
-                "zpve", utils.convertor(float(line.split()[-2]), "kcal/mol", "hartree")
-            )
+            if not hasattr(self, "zpve"):
+                self.set_attribute(
+                    "zpve", utils.convertor(float(line.split()[-2]), "kcal/mol", "hartree")
+                )
             line = next(inputfile)
-            # version >= 6.5
-            if "is not included in" in line:
+            if not line.strip():
+                line = next(inputfile)
+                self.set_attribute("temperature", float(line.split()[2]))
+                self.skip_lines(
+                    inputfile,
+                    [
+                        "b",
+                        "Ideal Gas header",
+                        "header",
+                        "dashes and spaces",
+                        "trans.",
+                        "rot.",
+                        "vib.",
+                        "elec.",
+                        "dashes and spaces",
+                    ],
+                )
+                line = next(inputfile)
+                self.set_attribute(
+                    "entropy", utils.convertor(float(line.split()[3]) / 1000, "kcal/mol", "hartree")
+                )
+                self.skip_lines(inputfile, ["b", "Total internal energy"])
+                line = next(inputfile)
+                self.set_attribute("enthalpy", float(line.split()[-2]))
+                line = next(inputfile)
+                self.set_attribute("freeenergy", float(line.split()[-2]))
+            elif "is not included in" in line:
+                # version >= 6.5
                 self.skip_lines(inputfile, ["b", "b"])
                 line = next(inputfile)
                 self.set_attribute("temperature", float(line.split()[2]))
@@ -747,6 +791,7 @@ class Jaguar(logfileparser.Logfile):
                 line = next(inputfile)
                 self.set_attribute("freeenergy", float(line.split()[-2]))
             else:
+                # Jaguar < 6.5
                 self.skip_lines(inputfile, ["header", "0K thermo"])
                 tokens = next(inputfile).split()
                 self.set_attribute("temperature", float(tokens[0]))

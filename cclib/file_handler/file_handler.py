@@ -16,9 +16,9 @@ import pathlib
 import re
 import sys
 import zipfile
-from collections.abc import Iterator
+from collections.abc import Iterable, Iterator
 from tempfile import NamedTemporaryFile
-from typing import IO, Iterable, List, Optional, Tuple
+from typing import IO
 from urllib.error import URLError
 from urllib.request import urlopen
 
@@ -37,7 +37,7 @@ URL_PATTERN = re.compile(
 )
 
 
-def logerror(error) -> Tuple[str, int]:
+def logerror(error) -> tuple[str, int]:
     """
     Log a unicode decode/encode error to the logger and return a replacement character.
     """
@@ -137,7 +137,7 @@ class FileHandler(FileWrapperBase):
     @classmethod
     def open_log_file(
         self, source, mode: str = "r", encoding: str = "utf-8", errors: str = "logerror"
-    ) -> Tuple[str, IO]:
+    ) -> tuple[str, IO]:
         """
         Open a possibly compressed file, returning both the filename of the file and an open file object.
         """
@@ -253,7 +253,7 @@ class FileHandler(FileWrapperBase):
         self.pos = self.virtual_reset_position
         self.virtual_reset_position = None
 
-    def virtual_next(self) -> Optional[str]:
+    def virtual_next(self) -> str | None:
         """
         For use with property parsers to handle parsing
         through a block of text without changing the state of fileHandler
@@ -309,7 +309,7 @@ class FileHandler(FileWrapperBase):
         """
         return next(self)
 
-    def readlines(self) -> List[str]:
+    def readlines(self) -> list[str]:
         """
         Read all the lines from this file.
         """
@@ -376,7 +376,7 @@ class FileHandler(FileWrapperBase):
         self.file_pointer = len(self.files) - 1
         self.pos = self.size
 
-    def skip_lines(self, sequence: Iterable[str], virtual=False) -> List[str]:
+    def skip_lines(self, sequence: Iterable[str], virtual=False) -> list[str]:
         """Read trivial line types and check they are what they are supposed to be.
 
         This function will read len(sequence) lines and do certain checks on them,

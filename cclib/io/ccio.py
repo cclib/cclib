@@ -4,7 +4,7 @@
 # the terms of the BSD 3-Clause License.
 """Tools for identifying, reading and writing files and streams."""
 
-from typing import IO, List, Union
+from typing import IO
 
 # from cclib.io import (
 #    cjsonreader,
@@ -68,7 +68,7 @@ class UnknownOutputFormatError(Exception):
 #     )
 
 
-# def guess_filetype(inputfile: FileWrapper) -> Optional[Type[logfileparser.Logfile]]:
+# def guess_filetype(inputfile: FileWrapper) -> type[logfileparser.Logfile] | None:
 #     """Try to guess the filetype by searching for trigger strings."""
 #     filetype = None
 #     logger = logging.getLogger("cclib")
@@ -89,7 +89,7 @@ class UnknownOutputFormatError(Exception):
 #     return filetype
 
 
-# def sort_turbomole_outputs(fileinputs: Iterable[str]) -> List[str]:
+# def sort_turbomole_outputs(fileinputs: Iterable[str]) -> list[str]:
 #     """
 #     Sorts a list of inputs (or list of log files) according to the order
 #     required by the Turbomole parser for correct parsing. Unrecognised
@@ -111,7 +111,7 @@ class UnknownOutputFormatError(Exception):
 #     return Turbomole.sort_input(fileinputs)
 
 
-def ccread(source: Union[str, IO, FileHandler, List[Union[str, IO]]], *args, **kwargs):
+def ccread(source: str | IO | FileHandler | list[str | IO], *args, **kwargs):
     """Attempt to open and read computational chemistry data from a file.
 
     If the file is not appropriate for cclib parsers, a fallback mechanism
@@ -134,7 +134,7 @@ def ccread(source: Union[str, IO, FileHandler, List[Union[str, IO]]], *args, **k
 
 
 def ccopen(
-    source: Union[str, IO, FileHandler, List[Union[str, IO]]],
+    source: str | IO | FileHandler | list[str | IO],
     *args,
     quiet: bool = False,
     cjson: bool = False,
@@ -157,7 +157,7 @@ def ccopen(
     return ccdriver_inst
 
 
-# def fallback(source) -> Optional[ccData]:
+# def fallback(source) -> ccData | None:
 #     """Attempt to read standard molecular formats using other libraries.
 
 #     Currently this will read XYZ files with OpenBabel, but this can easily
@@ -185,15 +185,15 @@ def ccopen(
 
 
 # def ccwrite(
-#     ccobj: Union[logfileparser.Logfile, ccData],
-#     outputtype: Optional[str] = None,
-#     outputdest: Optional[str] = None,
+#     ccobj: logfileparser.Logfile | ccData,
+#     outputtype: str | None = None,
+#     outputdest: str | None = None,
 #     indices=None,
 #     terse: bool = False,
 #     returnstr: bool = False,
 #     *args,
 #     **kwargs,
-# ) -> Optional[str]:
+# ) -> str | None:
 #     """Write the parsed data from an outputfile to a standard chemical
 #     representation.
 
@@ -254,8 +254,8 @@ def ccopen(
 
 
 # def _determine_output_format(
-#     outputtype: Optional[str], outputdest: Optional[Union[str, io.IOBase]]
-# ) -> Type["Writer"]:
+#     outputtype: str | None, outputdest: str | io.IOBase | None
+# ) -> type["Writer"]:
 #     """
 #     Determine the correct output format.
 
@@ -301,9 +301,7 @@ def ccopen(
 #         raise ImportError("You must install `pandas` to use this function")
 
 
-# def ccframe(
-#     ccobjs: Iterable[Union[logfileparser.Logfile, ccData]], *args, **kwargs
-# ) -> "pd.DataFrame":
+# def ccframe(ccobjs: Iterable[logfileparser.Logfile | ccData], *args, **kwargs) -> "pd.DataFrame":
 #     """Returns a pandas.DataFrame of data attributes parsed by cclib from one
 #     or more logfiles.
 

@@ -7,7 +7,7 @@
 
 import datetime
 import re
-from typing import TYPE_CHECKING, Dict, List, Tuple
+from typing import TYPE_CHECKING
 
 from cclib.parser import data, logfileparser, utils
 from cclib.parser.logfileparser import StopParsing
@@ -2886,7 +2886,7 @@ YEAR_SUFFIXES_TO_YEARS = {
 }
 
 
-def parse_version(line: str) -> Dict[str, str]:
+def parse_version(line: str) -> dict[str, str]:
     """Extract the version number from Gaussian log and formatted checkpoint
     files.
 
@@ -2914,9 +2914,9 @@ def parse_version(line: str) -> Dict[str, str]:
 def _append_charges_and_spins(
     nline: str,
     has_charges: bool,
-    charges: List[float],
+    charges: list[float],
     has_spin: bool,
-    spins: List[float],
+    spins: list[float],
     swap_indices: bool,
 ) -> None:
     """Append partial atomic charges and spins to their respective lists, if
@@ -2939,10 +2939,10 @@ def _append_charges_and_spins(
 Overlay = int
 Option = int
 Value = int
-Route = Dict[Overlay, Dict[Option, Value]]
+Route = dict[Overlay, dict[Option, Value]]
 
 
-def parse_route_line(route_line: str) -> Tuple[Overlay, Dict[Option, Value]]:
+def parse_route_line(route_line: str) -> tuple[Overlay, dict[Option, Value]]:
     """Parse a single line of the route section.
 
     This line should be preserved as present in the input, with a single
@@ -2959,7 +2959,7 @@ def parse_route_line(route_line: str) -> Tuple[Overlay, Dict[Option, Value]]:
     return int(route), dict([[int(x) for x in pair.split("=")] for pair in options.split(",")])
 
 
-def parse_route_lines(route_lines: List[str]) -> Route:
+def parse_route_lines(route_lines: list[str]) -> Route:
     """Parse the route lines appearing after the input keyword line.
 
     The route is the section of global internal options (IOps) derived from

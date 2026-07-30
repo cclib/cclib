@@ -3761,10 +3761,6 @@ class SkipRotconstsMixin:
         """No rotational constants available"""
 
 
-class GenericGeoOptTest_norotconsts(SkipRotconstsMixin, GenericGeoOptTest):
-    """A geometry optimization test with no rotational constants printed"""
-
-
 class ADFGeoOptTest_noscfvalues(ADFGeoOptTest):
     @pytest.mark.skip("Cannot parse scfvalues from this file.")
     def testgeovalues_scfvalues(self, data: "ccData") -> None:
@@ -3988,12 +3984,6 @@ class GaussianPolarTest(ReferencePolarTest):
 
 class JaguarGeoOptTest_norotconsts(SkipRotconstsMixin, JaguarGeoOptTest):
     """Older Jaguar versions don't print rotational constants"""
-
-
-class JaguarIRTest_v42(SkipRotconstsMixin, JaguarIRTest):
-    @pytest.mark.skip("Data file does not contain force constants")
-    def testvibfconsts(self, data: "ccData") -> None:
-        pass
 
 
 class JaguarSPTest_noatomcharges(JaguarSPTest):

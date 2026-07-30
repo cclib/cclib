@@ -9,7 +9,7 @@ import logging
 import sys
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
-from typing import TYPE_CHECKING, List, Optional, Set, Tuple, Union
+from typing import TYPE_CHECKING
 
 from cclib.parser.utils import PeriodicTable, find_package
 
@@ -41,7 +41,7 @@ if TYPE_CHECKING:
 if sys.version_info.minor >= 9:
     from collections.abc import Iterable
 else:
-    from typing import Iterable
+    from collections.abc import Iterable
 
 
 class MissingAttributeError(Exception):
@@ -51,13 +51,13 @@ class MissingAttributeError(Exception):
 class Writer(ABC):
     """Abstract class for writer objects."""
 
-    required_attrs: Tuple[str] = ()
+    required_attrs: tuple[str] = ()
 
     def __init__(
         self,
         ccdata: "ccData",
-        jobfilename: Optional[str] = None,
-        indices: Optional[Union[int, Iterable[int]]] = None,
+        jobfilename: str | None = None,
+        indices: int | Iterable[int] | None = None,
         terse: bool = False,
         *args,
         **kwargs,
@@ -100,7 +100,7 @@ class Writer(ABC):
     def generate_repr(self) -> str:
         """Generate the written representation of the logfile data."""
 
-    def _calculate_total_dipole_moment(self) -> Optional[numpy.ndarray]:
+    def _calculate_total_dipole_moment(self) -> numpy.ndarray | None:
         """Calculate the total dipole moment."""
 
         # ccdata.moments may exist, but only contain center-of-mass coordinates
@@ -144,7 +144,7 @@ class Writer(ABC):
             obmol.SetTitle(self.jobfilename)
         return (obmol, pb.Molecule(obmol))
 
-    def _make_bond_connectivity_from_openbabel(self, obmol) -> List[Tuple[int, int, int]]:
+    def _make_bond_connectivity_from_openbabel(self, obmol) -> list[tuple[int, int, int]]:
         """Based upon the Open Babel/Pybel molecule, create a list of tuples
         to represent bonding information, where the three integers are
         the index of the starting atom, the index of the ending atom,
@@ -162,9 +162,7 @@ class Writer(ABC):
         return bond_connectivities
 
 
-def _fix_indices(
-    indices: Optional[Union[int, Iterable[int]]], lencoords: Optional[int]
-) -> Set[int]:
+def _fix_indices(indices: int | Iterable[int] | None, lencoords: int | None) -> set[int]:
     """Clean up the index container type and remove zero-based indices to
     prevent duplicate structures and incorrect ordering when
     indices are later sorted.

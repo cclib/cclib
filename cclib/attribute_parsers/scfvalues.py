@@ -4,7 +4,6 @@
 # the terms of the BSD 3-Clause License.
 
 import re
-from typing import Optional
 
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
@@ -21,7 +20,7 @@ class scfvalues(base_parser):
     known_codes = ["gaussian"]
 
     @staticmethod
-    def gaussian(file_handler, ccdata) -> Optional[dict]:
+    def gaussian(file_handler, ccdata) -> dict | None:
         re_scinot = re.compile(r"(\w*)=\s*(-?\d\.\d{2}D[+-]\d{2})")
         line = file_handler.last_line
         # Extract SCF convergence information (QM calcs).
@@ -60,7 +59,7 @@ class scfvalues(base_parser):
         return None
 
     @staticmethod
-    def parse(file_handler, program, ccdata) -> Optional[dict]:
+    def parse(file_handler, program, ccdata) -> dict | None:
         constructed_data = None
         if program in scfvalues.known_codes:
             file_handler.virtual_set()
