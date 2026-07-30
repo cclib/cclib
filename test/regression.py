@@ -3760,6 +3760,7 @@ class SkipRotconstsMixin:
     def testrotconsts(self, data) -> None:
         """No rotational constants available"""
 
+
 class ADFGeoOptTest_noscfvalues(ADFGeoOptTest):
     @pytest.mark.skip("Cannot parse scfvalues from this file.")
     def testgeovalues_scfvalues(self, data: "ccData") -> None:
