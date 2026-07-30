@@ -17,7 +17,7 @@ import sys
 import zipfile
 from collections.abc import Iterator
 from tempfile import NamedTemporaryFile
-from typing import IO, List, Tuple
+from typing import IO
 from urllib.error import URLError
 from urllib.request import urlopen
 
@@ -34,7 +34,7 @@ URL_PATTERN = re.compile(
 )
 
 
-def logerror(error) -> Tuple[str, int]:
+def logerror(error) -> tuple[str, int]:
     """
     Log a unicode decode/encode error to the logger and return a replacement character.
     """
@@ -134,7 +134,7 @@ class FileWrapper(FileWrapperBase):
     @classmethod
     def open_log_file(
         self, source, mode: str = "r", encoding: str = "utf-8", errors: str = "logerror"
-    ) -> Tuple[str, IO]:
+    ) -> tuple[str, IO]:
         """
         Open a possibly compressed file, returning both the filename of the file and an open file object.
         """
@@ -266,7 +266,7 @@ class FileWrapper(FileWrapperBase):
         """
         return next(self)
 
-    def readlines(self) -> List[str]:
+    def readlines(self) -> list[str]:
         """
         Read all the lines from this file.
         """

@@ -7,7 +7,7 @@
 
 import re
 from collections import namedtuple
-from typing import TYPE_CHECKING, List, Tuple
+from typing import TYPE_CHECKING
 
 from cclib.parser import data, logfileparser, utils
 
@@ -1242,8 +1242,8 @@ class Psi4(logfileparser.Logfile):
             line = next(inputfile)
 
     def parse_gradient(
-        self, inputfile: "FileWrapper", skip_lines: List[str]
-    ) -> List[Tuple[float, float, float]]:
+        self, inputfile: "FileWrapper", skip_lines: list[str]
+    ) -> list[tuple[float, float, float]]:
         """Parse the nuclear gradient section into a list of lists with shape
         [natom, 3].
         """
@@ -1281,8 +1281,8 @@ class Psi4(logfileparser.Logfile):
     @staticmethod
     def parse_vibration(
         n: int, inputfile: "FileWrapper"
-    ) -> Tuple[
-        List[float], List[str], List[List[List[float]]], List[float], List[float], List[float]
+    ) -> tuple[
+        list[float], list[str], list[list[list[float]]], list[float], list[float], list[float]
     ]:
         #  Vibration                       1                   8                   9
         #  Freq [cm^-1]                698.2090i           1675.6707           1675.6899
@@ -1353,7 +1353,7 @@ class Psi4(logfileparser.Logfile):
         assert "---" in line
 
         line = next(inputfile)
-        vibdisps: List[List[List[float]]] = [[] for i in range(n)]
+        vibdisps: list[list[list[float]]] = [[] for i in range(n)]
         while len(line.strip()) > 0:
             chomp = line.split()
             for i in range(n):

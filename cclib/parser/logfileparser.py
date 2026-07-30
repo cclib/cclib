@@ -9,7 +9,8 @@ import logging
 import random
 import sys
 from abc import ABC, abstractmethod
-from typing import IO, TYPE_CHECKING, Any, Iterable, List, Optional, Type, Union
+from collections.abc import Iterable
+from typing import IO, TYPE_CHECKING, Any, Optional
 
 from cclib.parser import utils
 from cclib.parser.data import ccData, ccData_optdone_bool
@@ -31,7 +32,7 @@ class StopParsing(Exception):
     """
 
 
-Source = Union[str, IO, FileWrapper, List[Union[str, IO]]]
+Source = str | IO | FileWrapper | list[str | IO]
 
 
 class Logfile(ABC):
@@ -43,7 +44,7 @@ class Logfile(ABC):
         loglevel: int = logging.ERROR,
         logname: str = "Log",
         logstream=sys.stderr,
-        datatype: Type[ccData] = ccData_optdone_bool,
+        datatype: type[ccData] = ccData_optdone_bool,
         **kwds,
     ) -> None:
         """Initialise the Logfile object.
@@ -105,7 +106,7 @@ class Logfile(ABC):
         return self.inputfile.file_name
 
     @classmethod
-    def sort_input(self, file_names: List[str]) -> List[str]:
+    def sort_input(self, file_names: list[str]) -> list[str]:
         """
         If this parser expects multiple files to appear in a certain order, return that ordering.
         """
@@ -353,9 +354,7 @@ class Logfile(ABC):
             self.set_attribute(name, [])
         getattr(self, name).append(value)
 
-    def extend_attribute(
-        self, name: str, values: Iterable[Any], index: Optional[int] = None
-    ) -> None:
+    def extend_attribute(self, name: str, values: Iterable[Any], index: int | None = None) -> None:
         """Appends an iterable of values to an attribute."""
 
         if not hasattr(self, name):
@@ -393,7 +392,7 @@ class Logfile(ABC):
             self.coreelectrons = numpy.zeros(self.natom, "i")
         self.coreelectrons[indices] = ncore
 
-    def skip_lines(self, inputfile: "FileWrapper", sequence: Iterable[str]) -> List[str]:
+    def skip_lines(self, inputfile: "FileWrapper", sequence: Iterable[str]) -> list[str]:
         """Read trivial line types and check they are what they are supposed to be.
 
         This function will read len(sequence) lines and do certain checks on them,
@@ -458,5 +457,5 @@ class Logfile(ABC):
             if line.strip() != "":
                 return line
 
-    def skip_line(self, inputfile: "FileWrapper", expected: str) -> List[str]:
+    def skip_line(self, inputfile: "FileWrapper", expected: str) -> list[str]:
         return self.skip_lines(inputfile, [expected])

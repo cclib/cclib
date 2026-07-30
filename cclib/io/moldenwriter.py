@@ -9,7 +9,6 @@ import decimal
 import math
 import os.path
 from itertools import zip_longest
-from typing import List, Union
 
 from cclib.io import filewriter
 from cclib.parser import utils
@@ -17,7 +16,7 @@ from cclib.parser import utils
 import numpy
 
 
-def round_molden(num: Union[int, float], p: int = 6) -> float:
+def round_molden(num: int | float, p: int = 6) -> float:
     """Molden style number rounding in [Atoms] section."""
     # Digit at pth position after dot.
     p_digit = math.floor(abs(num) * 10**p) % 10
@@ -46,7 +45,7 @@ class MOLDEN(filewriter.Writer):
         title = os.path.basename(os.path.splitext(path)[0])
         return title
 
-    def _coords_from_ccdata(self, index: int) -> List[str]:
+    def _coords_from_ccdata(self, index: int) -> list[str]:
         """Create [Atoms] section using geometry at the given index."""
         elements = [self.pt.element[Z] for Z in self.ccdata.atomnos]
         if self.ghost is not None:
@@ -66,7 +65,7 @@ class MOLDEN(filewriter.Writer):
 
         return lines
 
-    def _gto_from_ccdata(self) -> List[str]:
+    def _gto_from_ccdata(self) -> list[str]:
         """Create [GTO] section using gbasis.
 
         atom_sequence_number1 0
@@ -90,7 +89,7 @@ class MOLDEN(filewriter.Writer):
         lines.append("")
         return lines
 
-    def _scfconv_from_ccdata(self) -> List[str]:
+    def _scfconv_from_ccdata(self) -> list[str]:
         """Create [SCFCONV] section using gbasis.
 
         scf-first    1 THROUGH   12
@@ -165,7 +164,7 @@ class MOLDEN(filewriter.Writer):
 
         return syms, energies, occs, coeffs
 
-    def _mo_from_ccdata(self, mosyms, moenergies, mooccs, mocoeffs) -> List[str]:
+    def _mo_from_ccdata(self, mosyms, moenergies, mooccs, mocoeffs) -> list[str]:
         """Create [MO] section.
 
         Sym= symmetry_label_1
@@ -198,7 +197,7 @@ class MOLDEN(filewriter.Writer):
             spin = "Beta"
         return lines
 
-    def _freq_from_ccdata(self) -> List[str]:
+    def _freq_from_ccdata(self) -> list[str]:
         lines = []
 
         if hasattr(self.ccdata, "vibfreqs"):

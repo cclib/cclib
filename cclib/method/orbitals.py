@@ -6,7 +6,6 @@
 """Analyses related to orbitals."""
 
 import logging
-from typing import Optional
 
 from cclib.method.calculationmethod import Method
 from cclib.progress import Progress
@@ -20,7 +19,7 @@ class Orbitals(Method):
     def __init__(
         self,
         data,
-        progress: Optional[Progress] = None,
+        progress: Progress | None = None,
         loglevel: int = logging.INFO,
         logname: str = "Log",
     ) -> None:

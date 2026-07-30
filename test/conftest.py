@@ -12,9 +12,9 @@ https://docs.pytest.org/en/latest/contents.html
 import json
 import os
 from collections import defaultdict
+from collections.abc import Iterator, Mapping
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Iterator, List, Mapping, Optional, Tuple, Union
 
 from cclib.bridge import cclib2pyscf
 from cclib.io import ccopen
@@ -76,7 +76,7 @@ class Regression:
     loc_entry: Path
     # The fully-resolved location of all files to parse.
     # For example, Turbomole output is spread over multiple files.
-    all_files: Tuple[Path, ...]
+    all_files: tuple[Path, ...]
     # The name of the output file transformed by `normalisefilename` for use as
     # part of a function (not class) in regression.py for testing,
     # if such a function exists.
@@ -86,7 +86,7 @@ class Regression:
     # that should be parameterized with a parsed `ccData` object,
     # just like in the main unit tests.
     # Each test class must exist: no automatic generation is done.
-    tests: Optional[Tuple[str, ...]]
+    tests: tuple[str, ...] | None
     # Should this regression entry be parsed?
     # - If true (default), the regression will be parsed even if
     #   no test classes were requested and no test function was defined.
@@ -126,7 +126,7 @@ class RegressionFile(pytest.File):
                 )
 
 
-def read_regressionfiles_yaml(regression_dir: Path) -> List[Regression]:
+def read_regressionfiles_yaml(regression_dir: Path) -> list[Regression]:
     """Create a Regression for every entry in regressionfiles.yaml."""
     regressions = list()
     regfile = regression_dir / "regressionfiles.yaml"
@@ -156,7 +156,7 @@ def read_regressionfiles_yaml(regression_dir: Path) -> List[Regression]:
     return regressions
 
 
-def make_regression_entries() -> List[Regression]:
+def make_regression_entries() -> list[Regression]:
     """Create a Regression for every entry in regressionfiles.yaml."""
     __filedir__ = Path(__file__).resolve().parent
     __regression_dir__ = (__filedir__ / ".." / "data" / "regression").resolve()
@@ -164,7 +164,7 @@ def make_regression_entries() -> List[Regression]:
 
 
 @pytest.fixture(scope="session")
-def _regression_entries() -> Dict[str, Regression]:
+def _regression_entries() -> dict[str, Regression]:
     """Not meant to be used in test code outside of conftest.py."""
     return {entry.normalisedfilename: entry for entry in make_regression_entries()}
 
@@ -241,7 +241,7 @@ def logfile(request, _regression_entries: Mapping[str, Regression]) -> Logfile:
     raise RuntimeError(f"file not found for {normalized_name}")
 
 
-def gettestdata() -> List[Dict[str, Union[str, List[str]]]]:
+def gettestdata() -> list[dict[str, str | list[str]]]:
     """Return a dict of the unit test file data."""
 
     lines = (Path(__file__).resolve().parent / "testdata").read_text(encoding="utf-8").splitlines()
@@ -282,9 +282,9 @@ def get_program_dir(parser_name: str) -> str:
 #
 # TODO see if this can be replaced with
 # https://docs.pytest.org/en/latest/how-to/writing_hook_functions.html#storing-data-on-items-across-hook-functions
-_CACHE: Dict[str, ccData] = {}
+_CACHE: dict[str, ccData] = {}
 # Each logfile, if Regression.parse == True, will have a `.data` member.
-_REGCACHE: Dict[Regression, Logfile] = {}
+_REGCACHE: dict[Regression, Logfile] = {}
 
 
 @pytest.fixture(scope="session")
@@ -332,7 +332,7 @@ def data(request) -> ccData:
     return _CACHE[first]
 
 
-def pytest_collect_file(file_path: Path, parent) -> Optional[pytest.Collector]:
+def pytest_collect_file(file_path: Path, parent) -> pytest.Collector | None:
     """Ensure that each regression specified in regressionfiles.yaml is parsed,
     even if a function- or class-based test doesn't exist for it,
     as long as the regression isn't explicitly marked to not parse.
