@@ -18,11 +18,11 @@ class MPA(Population):
     def __init__(self, *args):
         super().__init__(logname="MPA", *args)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"MPA of {self.data}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'MPA("{self.data}")'
 

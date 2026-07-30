@@ -14,6 +14,7 @@ from typing import Iterable, Optional
 from cclib.io import ccframe, ccopen
 from cclib.parser.utils import find_package
 
+
 _has_pandas = find_package("pandas")
 if _has_pandas:
     import pandas as pd
@@ -47,7 +48,7 @@ def process_logfiles(filenames: Iterable[str], output: Optional[str], identifier
         print(df)
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-O",
@@ -62,7 +63,7 @@ def main():
         "compchemlogfiles",
         metavar="compchemlogfile",
         nargs="+",
-        help=("one or more computational chemistry output " "files to parse and convert"),
+        help=("one or more computational chemistry output files to parse and convert"),
     )
     parser.add_argument(
         "--identifier",

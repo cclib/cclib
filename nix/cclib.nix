@@ -62,6 +62,14 @@ buildPythonPackage rec {
     "test_multi_url_io"
     "test_url_io"
     "test_url_seek"
+
+    # chemfiles isn't packaged with Nix yet
+    "test_makechemfiles"
+    "test_makechemfiles_charges"
+    "test_makechemfiles_masses"
+
+    # problems with current pinned PySCF version
+    "basicPySCF2.6"
   ];
 
   meta = with lib; {

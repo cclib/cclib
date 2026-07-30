@@ -1,0 +1,18 @@
++system 
+ name h2o
+ geometry h2o.xyz
+ scfmode restricted
+ method hf
+ +basis
+  label 3-21g
+ -basis
+-system
+
++task scf
+ act h2o
+-task
+
++task mp2
+ act h2o
+ mp2type ao
+-task

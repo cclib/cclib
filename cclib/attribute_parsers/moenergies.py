@@ -71,7 +71,7 @@ class moenergies(base_parser):
             file_handler.skip_lines(["d", "text", "text"], virtual=True)
             constructed_moenergies = [[]]
             line = file_handler.virtual_next()
-            while len(line) > 20:  # restricted calcs are terminated by ------
+            while orca_continue_orbital_section(line):
                 info = line.split()
                 moenergy = float(info[2])
                 constructed_moenergies[0].append(moenergy)
@@ -82,7 +82,7 @@ class moenergies(base_parser):
                 file_handler.skip_lines(["text"], virtual=True)
                 constructed_moenergies.append([])
                 line = file_handler.virtual_next()
-                while len(line) > 20:  # actually terminated by ------
+                while orca_continue_orbital_section(line):
                     info = line.split()
                     moenergy = float(info[2])
                     constructed_moenergies[1].append(moenergy)
@@ -100,3 +100,9 @@ class moenergies(base_parser):
             constructed_data = program_parser(file_handler, ccdata)
             file_handler.virtual_reset()
         return constructed_data
+
+
+def orca_continue_orbital_section(line: str) -> bool:
+    # terminated by ------
+    # OR has *Only the first 10 virtual orbitals were printed.
+    return len(line) > 25 and line[:5] not in ("*Only", "Total")

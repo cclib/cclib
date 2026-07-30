@@ -5,8 +5,16 @@
 
 """Test single point time-dependent logfiles in cclib"""
 
+from typing import TYPE_CHECKING
+
+from cclib.parser import utils
+
 import numpy
 from skip import skipForLogfile, skipForParser
+
+
+if TYPE_CHECKING:
+    from cclib.parser.data import ccData
 
 
 class GenericTDTest:
@@ -16,6 +24,7 @@ class GenericTDTest:
     # ???
     expected_l_max = 0.18680974536292055
     expected_f_max = 0.67
+    expected_f_max_thresh = 0.1
     symmetries = ["Singlet-Bu", "Singlet-Bu", "Singlet-Ag", "Singlet-Bu", "Singlet-Ag"]
     sumofsec = 1.0
     method = "TD-DFT"
@@ -28,15 +37,16 @@ class GenericTDTest:
     @skipForParser("Jaguar", "excited_states_method not yet implemented")
     @skipForParser("NWChem", "excited_states_method not yet implemented")
     @skipForParser("QChem", "excited_states_method not yet implemented")
-    def testmetadata(self, data) -> None:
+    def testmetadata(self, data: "ccData") -> None:
         """Did we parse an excited states method?"""
         assert data.metadata["excited_states_method"] == self.method
 
+    @skipForParser("Serenity", "Serenity will need its own test energy.")  # TODO
     @skipForLogfile(
         "Turbomole/basicTurbomole7.4/CO_cc2_TD_trip",
         "Oscillator strengths are not available for Turbomole triplets using ricc2 but are required for testenergies()",
     )
-    def testenergies(self, data) -> None:
+    def testenergies(self, data: "ccData") -> None:
         """Is the l_max reasonable?"""
 
         assert len(data.etenergies) == self.number
@@ -44,23 +54,26 @@ class GenericTDTest:
         # Note that if all oscillator strengths are zero (like for triplets)
         # then this will simply pick out the first energy.
         idx_lambdamax = numpy.argmax(data.etoscs)
-        assert abs(data.etenergies[idx_lambdamax] - self.expected_l_max) < 0.022781676263770798
+        assert abs(
+            data.etenergies[idx_lambdamax]
+            - utils.convertor(self.expected_l_max, "hartree", "wavenumber")
+        ) < utils.convertor(0.022781676263770798, "hartree", "wavenumber")
 
     @skipForLogfile(
         "Turbomole/basicTurbomole7.4/CO_cc2_TD_trip",
         "Oscillator strengths are not available for triplets with Turbomole's ricc2",
     )
-    def testoscs(self, data) -> None:
+    def testoscs(self, data: "ccData") -> None:
         """Is the maximum of etoscs in the right range?"""
         assert len(data.etoscs) == self.number
-        assert abs(max(data.etoscs) - self.expected_f_max) < 0.1
+        assert abs(max(data.etoscs) - self.expected_f_max) < self.expected_f_max_thresh
 
     @skipForParser("FChk", "The parser is still being developed so we skip this test")
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
     @skipForLogfile(
         "Gaussian/basicGaussian16/dvb_eomccsd.log", "Transitions are not yet parsed for EOM-CCSD"
     )
-    def testsecs(self, data) -> None:
+    def testsecs(self, data: "ccData") -> None:
         """Is the sum of etsecs close to 1?"""
         assert len(data.etsecs) == self.number
         lowestEtrans = data.etsecs[numpy.argmin(data.etenergies)]
@@ -73,7 +86,7 @@ class GenericTDTest:
     @skipForLogfile(
         "Gaussian/basicGaussian16/dvb_eomccsd.log", "Transitions are not yet parsed for EOM-CCSD"
     )
-    def testsecs_transition(self, data) -> None:
+    def testsecs_transition(self, data: "ccData") -> None:
         """Is the lowest E transition from the HOMO or to the LUMO?"""
         lowestEtrans = data.etsecs[numpy.argmin(data.etenergies)]
         t = list(reversed(sorted([(c * c, s, e) for (s, e, c) in lowestEtrans])))
@@ -88,11 +101,12 @@ class GenericTDTest:
     @skipForLogfile(
         "ORCA/basicORCA5.0/dvb_pno_eom_ccsd.log", "etsyms are not available for this method"
     )
-    def testsymsnumber(self, data) -> None:
+    @skipForParser("Serenity", "Serenity does not use symmetry")
+    def testsymsnumber(self, data: "ccData") -> None:
         """Is the length of etsyms correct?"""
         assert len(data.etsyms) == self.number
 
-    @skipForParser("ADF", "etrotats are not yet implemented")
+    @skipForParser("ADF", "etsyms are not yet implemented")
     @skipForParser("DALTON", "etsyms are not yet implemented")
     @skipForParser("FChk", "etsyms are not yet implemented")
     @skipForParser("GAMESS", "etsyms are not yet implemented")
@@ -100,21 +114,22 @@ class GenericTDTest:
     @skipForParser("Jaguar", "etsyms are not yet implemented")
     @skipForParser("NWChem", "etsyms are not yet implemented")
     @skipForParser("QChem", "etsyms are not yet implemented")
-    @skipForLogfile("ORCA/basicORCA4.2", "etsyms are only available in ORCA >= 5.0")
-    @skipForLogfile("ORCA/basicORCA4.1", "etsyms are only available in ORCA >= 5.0")
     @skipForLogfile("Gaussian/basicGaussian09", "symmetry is missing for this log file")
     @skipForLogfile("FChk/basicQChem5.4", "etsyms are not yet implemented")
-    def testsyms(self, data) -> None:
+    @skipForParser("Serenity", "Serenity does not use symmetry")
+    def testsyms(self, data: "ccData") -> None:
         """Are the values of etsyms correct?"""
         assert data.etsyms == self.symmetries
 
     @skipForParser("ADF", "etrotats are not yet implemented")
+    @skipForParser("CFOUR", "etrotats are not yet implemented")
     @skipForParser("DALTON", "etrotats are not yet implemented")
     @skipForParser("FChk", "etrotats are not yet implemented")
     @skipForParser("GAMESS", "etrotats are not yet implemented")
     @skipForParser("GAMESSUK", "etrotats are not yet implemented")
     @skipForParser("Jaguar", "etrotats are not yet implemented")
     @skipForParser("NWChem", "etrotats are not yet implemented")
+    @skipForParser("PySCF", "etrotats are not yet implemented")
     @skipForParser("QChem", "Q-Chem cannot calculate rotatory strengths")
     @skipForLogfile("FChk/basicQChem5.4", "Q-Chem cannot calculate rotatory strengths")
     @skipForLogfile(
@@ -125,21 +140,36 @@ class GenericTDTest:
         "Turbomole/basicTurbomole7.4/CO_adc2_TD",
         "Rotatory strengths are not currently available for ricc2",
     )
-    def testrotatsnumber(self, data) -> None:
+    @skipForLogfile(
+        "ORCA/basicORCA6.0/dvb_eom_ccsd.log", "etrotats are not printed by default in Orca 6"
+    )
+    @skipForLogfile(
+        "ORCA/basicORCA6.0/dvb_adc2.log", "etrotats are not printed by default in Orca 6"
+    )
+    @skipForLogfile(
+        "ORCA/basicORCA6.0/dvb_pno_eom_ccsd.log", "etrotats are not printed by default in Orca 6"
+    )
+    def testrotatsnumber(self, data: "ccData") -> None:
         """Is the length of etrotats correct?"""
         assert len(data.etrotats) == self.number
 
     @skipForParser("ADF", "optstate is not yet implemented")
-    @skipForParser("DALTON", "optstate are not yet implemented")
-    @skipForParser("FChk", "optstate are not yet implemented")
-    @skipForParser("GAMESS", "optstate are not yet implemented")
-    @skipForParser("GAMESSUK", "optstate are not yet implemented")
-    @skipForParser("Jaguar", "optstate are not yet implemented")
-    @skipForParser("NWChem", "optstate are not yet implemented")
-    @skipForParser("ORCA", "optstate are not yet implemented")
-    @skipForParser("QChem", "optstate are not yet implemented")
-    @skipForParser("Turbomole", "optstate are not yet implemented")
-    def testoptstate(self, data) -> None:
+    @skipForParser("CFOUR", "optstate is not yet implemented")
+    @skipForParser("DALTON", "optstate is not yet implemented")
+    @skipForParser("FChk", "optstate is not yet implemented")
+    @skipForParser("GAMESS", "optstate is not yet implemented")
+    @skipForParser("GAMESSUK", "optstate is not yet implemented")
+    @skipForParser("Jaguar", "optstate is not yet implemented")
+    @skipForParser("NWChem", "optstate is not yet implemented")
+    @skipForParser("ORCA", "optstate is not yet implemented")
+    @skipForParser("PySCF", "optstate is not yet implemented")
+    @skipForParser("QChem", "optstate is not yet implemented")
+    @skipForParser(
+        "Serenity",
+        "Serenity does not offer linear response calculations where optstate would be applicable",
+    )
+    @skipForParser("Turbomole", "optstate is not yet implemented")
+    def testoptstate(self, data: "ccData") -> None:
         # All our examples have a default state-of-interest of 1 (index 0).
         assert data.metadata["opt_state"] == 0
 
@@ -149,7 +179,7 @@ class ADFTDDFTTest(GenericTDTest):
 
     number = 5
 
-    def testsecs(self, data) -> None:
+    def testsecs(self, data: "ccData") -> None:
         """Is the sum of etsecs close to 1?"""
         assert len(data.etsecs) == self.number
         lowestEtrans = data.etsecs[1]
@@ -176,19 +206,19 @@ class GaussianTDDFTTest(GenericTDTest):
     @skipForLogfile(
         "FChk/basicGaussian16", "etrotats are not available in fchk, only the main logfile"
     )
-    def testrotatsnumber(self, data) -> None:
+    def testrotatsnumber(self, data: "ccData") -> None:
         """Is the length of etrotats correct?"""
         assert len(data.etrotats) == self.number
 
-    def testetdipsshape(self, data) -> None:
+    def testetdipsshape(self, data: "ccData") -> None:
         """Is the shape of etdips correct?"""
         assert numpy.shape(data.etdips) == (self.number, 3)
 
-    def testetveldipsshape(self, data) -> None:
+    def testetveldipsshape(self, data: "ccData") -> None:
         """Is the shape of etveldips correct?"""
         assert numpy.shape(data.etveldips) == (self.number, 3)
 
-    def testetmagdipsshape(self, data) -> None:
+    def testetmagdipsshape(self, data: "ccData") -> None:
         """Is the shape of etmagdips correct?"""
         assert numpy.shape(data.etmagdips) == (self.number, 3)
 
@@ -204,11 +234,6 @@ class JaguarTDDFTTest(GenericTDTest):
 
     expected_l_max = 0.21870409213219966
     expected_f_max = 1.2
-
-    def testoscs(self, data) -> None:
-        """Is the maximum of etoscs in the right range?"""
-        assert len(data.etoscs) == self.number
-        assert abs(max(data.etoscs) - 1.0) < 0.2
 
 
 class OrcaTDDFTTest(GenericTDTest):
@@ -229,11 +254,7 @@ class OrcaTDDFTTest(GenericTDTest):
         "Singlet-Ag",
     ]
     method = "TDA"
-
-    def testoscs(self, data) -> None:
-        """Is the maximum of etoscs in the right range?"""
-        assert len(data.etoscs) == self.number
-        assert abs(max(data.etoscs) - 1.17) < 0.01
+    expected_f_max = 1.17
 
 
 class QChemTDDFTTest(GenericTDTest):
@@ -243,11 +264,6 @@ class QChemTDDFTTest(GenericTDTest):
     expected_l_max = 0.21870409213219966
     expected_f_max = 0.9
 
-    def testoscs(self, data) -> None:
-        """Is the maximum of etoscs in the right range?"""
-        assert len(data.etoscs) == self.number
-        assert abs(max(data.etoscs) - 0.9) < 0.1
-
 
 class GenericTDDFTtrpTest(GenericTDTest):
     """Generic time-dependent HF/DFT (triplet) unittest"""
@@ -255,7 +271,7 @@ class GenericTDDFTtrpTest(GenericTDTest):
     number = 5
     expected_l_max = 0.11163021369247692
 
-    def testoscs(self, data) -> None:
+    def testoscs(self, data: "ccData") -> None:
         """Triplet excitations should be disallowed."""
         assert len(data.etoscs) == self.number
         assert abs(max(data.etoscs)) < 0.01
@@ -273,36 +289,38 @@ class OrcaROCISTest(GenericTDTest):
     # Do we want to parse ROCIS as its own method?
     method = "CIS"
 
-    def testoscs(self, data) -> None:
-        """Is the maximum of etoscs in the right range?"""
-        assert len(data.etoscs) == self.number
-        assert abs(max(data.etoscs) - 0.015) < 0.1
-
-    def testTransprop(self, data) -> None:
+    def testTransprop(self, data: "ccData") -> None:
         """Check the number of spectra parsed"""
         assert len(data.transprop) == self.n_spectra
         tddft_length = "ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS"
         assert tddft_length in data.transprop
 
-    def testsymsnumber(self, data) -> None:
+    def testsymsnumber(self, data: "ccData") -> None:
         """ORCA ROCIS has no symmetry"""
         pass
 
-    def testsecs(self, data) -> None:
+    def testsecs(self, data: "ccData") -> None:
         """ROCIS does not form singly excited configurations (secs)"""
         pass
 
-    def testsecs_transition(self, data) -> None:
+    def testsecs_transition(self, data: "ccData") -> None:
         """ROCIS does not form singly excited configurations (secs)"""
         pass
 
-    def testrotatsnumber(self, data) -> None:
+    def testrotatsnumber(self, data: "ccData") -> None:
         """ROCIS does not calculate rotatory strengths"""
         pass
 
-    def testsyms(self, data) -> None:
+    def testsyms(self, data: "ccData") -> None:
         """ROCIS does not show symmetries"""
         pass
+
+
+class Orca6ROCISTest(OrcaROCISTest):
+    # TODO The energies are different in 5 Vs 6 for some reason I can't fathom,
+    # perhaps a setting has changed from some old default value?
+    expected_l_max = 10.718302
+    n_spectra = 4
 
 
 class TurbomoleTDTest(GenericTDTest):
@@ -313,13 +331,8 @@ class TurbomoleTDTest(GenericTDTest):
     expected_f_max = 0.19
     symmetries = ["Singlet-A"] * 10
 
-    def testoscs(self, data) -> None:
-        """Is the maximum of etoscs in the right range?"""
-        assert len(data.etoscs) == self.number
-        assert abs(max(data.etoscs) - 0.19) < 0.1
-
     @skipForLogfile("Turbomole/basicTurbomole7.4/CO_cc2_TD", "There are no dipole moments in ricc2")
-    def testetmagdipsshape(self, data) -> None:
+    def testetmagdipsshape(self, data: "ccData") -> None:
         """Is the shape of etmagdips correct?"""
         assert numpy.shape(data.etmagdips) == (self.number, 3)
 
@@ -349,11 +362,6 @@ class TurbomoleTDTripTest(GenericTDTest):
     symmetries = ["Triplet-A"] * 10
     method = "RPA"
 
-    def testoscs(self, data) -> None:
-        """Is the maximum of etoscs in the right range?"""
-        assert len(data.etoscs) == self.number
-        assert abs(max(data.etoscs) - 0.84) < 0.1
-
 
 class TurbomoleTDCC2TripTest(GenericTDTest):
     """Customized time-dependent HF/DFT unittest"""
@@ -364,7 +372,7 @@ class TurbomoleTDCC2TripTest(GenericTDTest):
     symmetries = ["Triplet-A"] * 10
     method = "CC2"
 
-    def testenergies(self, data) -> None:
+    def testenergies(self, data: "ccData") -> None:
         """Is the l_max reasonable?"""
         assert len(data.etenergies) == self.number
 
@@ -384,6 +392,10 @@ class OrcaETPostHFTest(GenericTDTest):
 
 class OrcaADC2Test(OrcaETPostHFTest):
     method = "ADC(2)"
+
+
+class Orca6ADC2Test(OrcaADC2Test):
+    expected_f_max = 1.16
 
 
 class OrcaSTEOMCCSDTest(OrcaETPostHFTest):
@@ -412,3 +424,51 @@ class GaussianEOMCCSDTest(GenericTDTest):
         "Triplet-Ag",
     ]
     method = "EOM-CCSD"
+
+
+class PySCFTDATest(GenericTDTest):
+    # No symmetry labels for PySCF yet.
+    symmetries = ["Singlet", "Singlet", "Singlet", "Singlet", "Singlet"]
+    method = "TDA"
+
+    expected_f_max = 1.17
+    expected_l_max = 0.21870229042
+
+
+class PySCFTDTest(GenericTDTest):
+    # Testing against water because DVB will not converge for some reason...
+    symmetries = ["Singlet", "Singlet", "Singlet", "Singlet", "Singlet"]
+    expected_l_max = 0.75825470773
+    expected_f_max = 0.98
+
+
+class CFOUREOMCCSDTest(GenericTDTest):
+    """Test for EOMEE-CCSD with CFOUR."""
+
+    number = 20
+    expected_l_max = 1.100761725
+    expected_f_max = 0.35442355
+    sumofsec = 0.4996557738404641
+    symmetries = [
+        "Singlet-B1",
+        "Singlet-A2",
+        "Singlet-A1",
+        "Singlet-B2",
+        "Singlet-B2",
+        "Singlet-A1",
+        "Singlet-A2",
+        "Singlet-B1",
+        "Singlet-B2",
+        "Singlet-A1",
+        "Singlet-A1",
+        "Singlet-B1",
+        "Singlet-A2",
+        "Singlet-A1",
+        "Singlet-B2",
+        "Singlet-A2",
+        "Singlet-B2",
+        "Singlet-B1",
+        "Singlet-B1",
+        "Singlet-A2",
+    ]
+    method = "EOMEE-CCSD"

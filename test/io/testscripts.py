@@ -6,14 +6,15 @@
 
 import os
 from pathlib import Path
-from test.conftest import get_program_dir, gettestdata
-from test.io.testccio import BASE_URL, URL_FILES
 from unittest import mock
 
 import cclib
 from cclib.io import ccread, ccwrite
+from test.conftest import get_program_dir, gettestdata
+from test.io.testccio import BASE_URL, URL_FILES
 
 import pytest
+
 
 __filedir__ = os.path.dirname(__file__)
 __filepath__ = os.path.realpath(__filedir__)
@@ -91,6 +92,9 @@ class ccgetTest:
     def test_all(self, mock_ccread, file_path):
         if file_path["parser"] == "Psi3":
             pytest.skip("Psi3 is not yet supported")
+        if file_path["parser"] == "PySCF":
+            pytest.skip("PySCF cannot be parsed in this way")
+
         # Build a list of files.
         input_files = [
             str(
@@ -115,7 +119,7 @@ class ccgetTest:
 
 
 @mock.patch("cclib.scripts.ccwrite.ccwrite", wraps=ccwrite)
-class ccwriteTest:
+class ccwriteMockTest:
     def setup_method(self) -> None:
         try:
             from cclib.scripts import ccwrite
@@ -141,6 +145,52 @@ class ccwriteTest:
         ccwrite_call_args, ccwrite_call_kwargs = mock_ccwrite.call_args
         assert ccwrite_call_args[1] == "cjson"
         assert ccwrite_call_args[2] == CJSON_OUTPUT_FILENAME
+
+
+CCWRITE_INPUT_FILE = str(Path(__datadir__) / "Molcas" / "basicOpenMolcas18.0" / "dvb_gopt.out")
+
+
+def index_from_comment(comment: str) -> int:
+    return int(comment.split()[-1][:-1])
+
+
+def ccwrite_xyz_test_template(ccwrite_cli_result: str, ref_filename: Path) -> None:
+    """Template for testing a ccwrite CLI returned string against a file reference."""
+    natom, comment, *coords = ccwrite_cli_result.splitlines()
+    index = index_from_comment(comment)
+    with open(ref_filename) as ref_handle:
+        ref_natom, ref_comment, *ref_coords = (line.strip() for line in ref_handle.readlines())
+        ref_index = index_from_comment(ref_comment)
+    assert natom == ref_natom
+    assert index == ref_index
+    assert coords == ref_coords
+
+
+class ccwriteTest:
+    def setup_method(self) -> None:
+        try:
+            from cclib.scripts import ccwrite
+        except ImportError:
+            self.fail("ccwrite cannot be imported")
+
+        self.main = ccwrite.main
+
+    @mock.patch(target="cclib.scripts.ccwrite.sys.argv", new=["ccwrite", "xyz", CCWRITE_INPUT_FILE])
+    def test_ccwrite_xyz_last(self) -> None:
+        """Without additional arguments, ccwrite produces the last geometry parsed."""
+        ccwrite_cli_result = self.main()
+        ccwrite_xyz_test_template(
+            ccwrite_cli_result, Path(__filedir__) / "data" / "dvb_gopt_23.xyz"
+        )
+
+    @mock.patch(
+        target="cclib.scripts.ccwrite.sys.argv",
+        new=["ccwrite", "-i", "0", "xyz", CCWRITE_INPUT_FILE],
+    )
+    def test_ccwrite_xyz_0(self) -> None:
+        """With the --index 0 argument, ccwrite produces the first geometry parsed."""
+        ccwrite_cli_result = self.main()
+        ccwrite_xyz_test_template(ccwrite_cli_result, Path(__filedir__) / "data" / "dvb_gopt_0.xyz")
 
 
 class ccframeTest:

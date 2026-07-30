@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING, List, Optional
 
 from cclib.attribute_parsers import ccData
 
+
 if TYPE_CHECKING:
     from cclib.combinator import combinator
     from cclib.tree import Tree

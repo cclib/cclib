@@ -1,0 +1,93 @@
+$title
+dvb_nmr_Single_Point_DFT_B3LYP__GD3BJ__Gas_Phase_Pople_Basis_Sets_STO_3G
+$symmetry c1
+$redundant    file=coord
+$user-defined bonds    file=coord
+$coord    file=coord
+$optimize
+ internal   on
+ redundant  on
+ cartesian  off
+ global     off
+ basis      off
+$atoms
+c  1-6,11-12,15-16                                                             \
+   basis =c STO-3G
+h  7-10,13-14,17-20                                                            \
+   basis =h STO-3G
+$basis    file=basis
+$scfmo   file=mos
+$scfiterlimit      100
+$thize     0.10000000E-04
+$thime        5
+$scfdamp   start=  0.300  step=  0.050  min=  0.100
+$scfdump
+$scfintunit
+ unit=30       size=0        file=twoint
+$scfdiis
+$maxcor    954 MiB  per_core
+$scforbitalshift  automatic=.1
+$drvopt
+   cartesian  on
+   basis      off
+   global     off
+   hessian    on
+   dipole     on
+   nuclear polarizability
+$interconversion  off
+   qconv=1.d-7
+   maxiter=25
+$coordinateupdate
+   dqmax=0.3
+   interpolate  on
+   statistics    5
+$forceupdate
+   ahlrichs numgeo=0  mingeo=3 maxgeo=4 modus=<g|dq> dynamic fail=0.3
+   threig=0.005  reseig=0.005  thrbig=3.0  scale=1.00  damping=0.0
+$forceinit on
+   diag=default
+$forceapprox    file=forceapprox
+$dft
+   functional b3-lyp
+   gridsize   m3
+$scfconv   7
+$denconv     0.10000000E-06
+$rundimensions
+   natoms=20
+   nbf(CAO)=60
+   nbf(AO)=60
+$last SCF energy change = -382.05072
+$charge from dscf
+         -0.000 (not to be modified here)
+$closed shells
+ a       1-35                                   ( 2 )
+$energy    file=energy
+$grad    file=gradient
+$last step     mpshift
+$orbital_max_rnorm 0.89293386827990E-06
+$dipole from dscf
+  x     0.00000000000077    y     0.00000000000017    z    -0.00000000000000    a.u.
+   | dipole | =    0.0000000000  debye
+$nmr dft shielding constants
+#   NO. TYPE   MULT.     ISOTROPIC        ANISOTROPIC  dD/dB-CONTRIBUTION
+     1   c       1       114.08010430       150.26833980      -143.28335515
+     2   c       1       114.08010430       150.26833981      -143.28335515
+     3   c       1       117.77362656       142.43855342      -138.97325965
+     4   c       1       117.77362656       142.43855341      -138.97325965
+     5   c       1       121.23768105       152.30672236      -136.11289456
+     6   c       1       121.23768105       152.30672236      -136.11289456
+     7   h       1        25.56819914         6.64950966        -7.90355339
+     8   h       1        25.56819914         6.64950966        -7.90355339
+     9   h       1        25.14833329         7.60691280        -9.73795605
+    10   h       1        25.14833329         7.60691280        -9.73795605
+    11   c       1       116.07042922       140.34138695      -135.06117693
+    12   c       1       116.07042922       140.34138695      -135.06117693
+    13   h       1        26.06482666         6.23928500        -4.24607988
+    14   h       1        26.06482666         6.23928500        -4.24607988
+    15   c       1       128.43328594       146.22306752      -122.52883526
+    16   c       1       128.43328594       146.22306752      -122.52883526
+    17   h       1        26.78767485         6.64589695        -5.19285583
+    18   h       1        26.78767485         6.64589695        -5.19285583
+    19   h       1        27.10216126         5.21928428        -0.23559793
+    20   h       1        27.10216126         5.21928428        -0.23559793
+$end
