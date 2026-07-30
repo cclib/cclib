@@ -10,6 +10,7 @@ from collections import namedtuple
 
 import numpy as np
 from cclib import ureg
+import pint
 
 class _Attribute(ABC):
     def __init__(

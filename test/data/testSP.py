@@ -952,14 +952,14 @@ class GenericDispersionTest:
     dispersionenergy_delta = ureg.Quantity(3.0e-7, ureg.hartree)
 
     @skipForParser("QChem", "this property has yet to be ported for version 2")
-    def testdispersionenergies(self, data: "ccData") -> None:
+    def testdispersionenergieg(self, data: "ccData") -> None:
         """Is the dispersion energy parsed correctly?"""
         assert len(data._ccCollection._parsed_data[0].dispersionenergies) == 1
         assert (
             abs(
                 data._ccCollection._parsed_data[0].dispersionenergies[0] - self.dispersionenergy
             )
-            < dispersionenergy_delta
+            < self.dispersionenergy_delta
         )
 
 
