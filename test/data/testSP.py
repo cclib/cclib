@@ -942,11 +942,14 @@ class SMDCPCMMetadataTest(SolventMetadataTest):
 class QChemIEFPCMMetadataTest(QChemSolventMetadataTest, IEFPCMMetadataTest):
     """Check we can parse implicit solvent data."""
 
+
 class QChemSMDIEFPCMMetadataTest(QChemSolventMetadataTest, SMDIEFPCMMetadataTest):
     """Check we can parse implicit solvent data."""
 
+
 class QChemCPCMMetadataTest(QChemSolventMetadataTest, CPCMMetadataTest):
     """Check we can parse implicit solvent data."""
+
 
 class QChemSMDCPCMMetadataTest(QChemSolventMetadataTest, SMDCPCMMetadataTest):
     """Check we can parse implicit solvent data."""
