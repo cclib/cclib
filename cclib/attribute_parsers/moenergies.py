@@ -13,49 +13,54 @@ import numpy as np
 
 class moenergies(base_parser):
     """
-    Docstring? Units?
+    short: molecular orbital energies
+    long:
+    units: eV
     """
 
     known_codes = ["gaussian", "ORCA"]
+    cclib_unit = ureg.eV
 
     @staticmethod
     def gaussian(file_handler, ccdata) -> Optional[dict]:
+        gaussian_unit = ureg.hartree
         line = file_handler.last_line
         if line[1:6] == "Alpha" and line.find("eigenvalues") >= 0:
             # For counterpoise fragments, skip these lines.
-            existing = getattr(ccdata, "moenergies") 
-            print(existing)
+            existing = getattr(ccdata, "moenergies")
             if existing:
                 constructed_moenergies = existing
             else:
-                constructed_moenergies = [np.array([])*ureg.hartree]
-                print(constructed_moenergies)
+                constructed_moenergies = [np.array([])*moenergies.cclib_unit]
 
             while line.find("Alpha") == 1:
                 part = line[28:]
-                print(part)
                 i = 0
                 while i * 10 + 4 < len(part):
                     s = part[i * 10 : (i + 1) * 10]
                     try:
-                        x = utils.float(s)*ureg.hartree
+                        x = utils.float(s)* gaussian_unit
                     except ValueError:
                         x = np.nan
                     constructed_moenergies[0] = np.append(constructed_moenergies[0],x)
                     i += 1
                 line = file_handler.virtual_next()
             if line.find("Beta") == 2:
-                constructed_moenergies.append([])
+                constructed_moenergies.append([np.array([])*moenergies.cclib_unit])
 
             while line.find("Beta") == 2:
                 part = line[28:]
                 i = 0
                 while i * 10 + 4 < len(part):
-                    x = part[i * 10 : (i + 1) * 10]
-                    constructed_moenergies[1] = np.append(constructed_moenergies[1],utils.float(x))
+                    s = part[i * 10 : (i + 1) * 10]
+                    try:
+                        x = utils.float(s)* gaussian_unit
+                    except ValueError:
+                        x = np.nan
+
+                    constructed_moenergies[1] = np.append(constructed_moenergies[1],x)
                     i += 1
                 line = file_handler.virtual_next()
-                print(line)
             return {moenergies.__name__: constructed_moenergies}
         return None
 

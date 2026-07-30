@@ -9,16 +9,17 @@ from abc import ABC
 from collections import namedtuple
 
 import numpy as np
-
+from cclib import ureg
 
 class _Attribute(ABC):
     def __init__(
-        self, name: str, main_type, json_key: str, json_path: str, *args, **kwargs
+            self, name: str, main_type, json_key: str, json_path: str, unit: pint.Unit, *args, **kwargs
     ) -> None:
         self.name = __name__
         self.main_type = main_type
         self.json_key = json_key
         self.json_path = json_path
+        self.unit      = unit
 
         # backwards compatibility
         self.type = main_type
@@ -105,7 +106,7 @@ class Atomcoords(_Attribute):
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__(
-            "atomcoords", np.ndarray, "coords", "atoms:coords:3d", *args, **kwargs
+            "atomcoords", np.ndarray, "coords", "atoms:coords:3d", unit=ureg.bohr, *args, **kwargs
         )
 
 
@@ -113,7 +114,7 @@ class Atommasses(_Attribute):
     """atom masses (array[1], daltons)"""
 
     def __init__(self, *args, **kwargs):
-        super(type(self), self).__init__("atommasses", np.ndarray, "mass", "atoms", *args, **kwargs)
+        super(type(self), self).__init__("atommasses", np.ndarray, "mass", "atoms", unit=ureg.dalton, *args, **kwargs)
 
 
 class Atomnos(_Attribute):
@@ -124,7 +125,7 @@ class Atomnos(_Attribute):
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__(
-            "atomnos", np.ndarray, "number", "atoms:elements", *args, **kwargs
+            "atomnos", np.ndarray, "number", "atoms:elements" , *args, **kwargs
         )
 
 
@@ -143,8 +144,7 @@ class Ccenergies(_Attribute):
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__(
-            "ccenergies", np.ndarray, "coupled cluster", "properties:energy", *args, **kwargs
-        )
+            "ccenergies", np.ndarray, "coupled cluster", "properties:energy", unit=ureg.hartree, *args, **kwargs)
 
 
 class Charge(_Attribute):
@@ -175,6 +175,7 @@ class Dispersionenergies(_Attribute):
             np.ndarray,
             "dispersion correction",
             "properties:energy",
+            unit = ureg.hartree,
             *args,
             **kwargs,
         )
@@ -193,7 +194,7 @@ class Entropy(_Attribute):
     """entropy (float, hartree/particle)"""
 
     def __init__(self, *args, **kwargs):
-        super(type(self), self).__init__("entropy", float, "entropy", "properties", *args, **kwargs)
+        super(type(self), self).__init__("entropy", float, "entropy", "properties", unit=ureg('hartree/particle'),*args, **kwargs)
 
 
 class Etenergies(_Attribute):
@@ -201,7 +202,7 @@ class Etenergies(_Attribute):
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__(
-            "etenergies", np.ndarray, "electronic transitions", "transitions", *args, **kwargs
+            "etenergies", np.ndarray, "electronic transitions", "transitions", unit=ureg.hartree,*args, **kwargs
         )
 
 
@@ -276,7 +277,7 @@ class Freeenergy(_Attribute):
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__(
-            "freeenergy", float, "free energy", "properties:energy", *args, **kwargs
+            "freeenergy", float, "free energy", "properties:energy", unit=ureg('hartree/particle'),*args, **kwargs
         )
 
 
@@ -347,7 +348,7 @@ class Grads(_Attribute):
     """current values of forces (gradients) in geometry optimization (array[3])"""
 
     def __init__(self, *args, **kwargs):
-        super(type(self), self).__init__("grads", np.ndarray, "TBD", "N/A", *args, **kwargs)
+        super(type(self), self).__init__("grads", np.ndarray, "TBD", "N/A", unit=ureg.hartree/ureg.bohr, *args, **kwargs)
 
 
 class Hessian(_Attribute):
@@ -355,7 +356,7 @@ class Hessian(_Attribute):
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__(
-            "hessian", np.ndarray, "hessian matrix", "vibrations", *args, **kwargs
+            "hessian", np.ndarray, "hessian matrix", "vibrations", unit=ureg.hartree/(ureg.bohr**2) *args, **kwargs
         )
 
 
@@ -398,7 +399,7 @@ class Moenergies(_Attribute):
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__(
-            "moenergies", list, "energies", "properties:orbitals", *args, **kwargs
+            "moenergies", list, "energies", "properties:orbitals", unit=ureg.hartree, *args, **kwargs
         )
 
 
@@ -428,7 +429,7 @@ class Mpenergies(_Attribute):
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__(
-            "mpenergies", np.ndarray, "moller plesset", "properties:energy", *args, **kwargs
+            "mpenergies", np.ndarray, "moller plesset", "properties:energy", unit=ureg.hartree, *args, **kwargs
         )
 
 
@@ -444,7 +445,7 @@ class Natom(_Attribute):
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__(
-            "natom", int, "number of atoms", "properties", *args, **kwargs
+            "natom", int, "number of atoms", "properties", unit=ureg.particle, *args, **kwargs
         )
 
 
@@ -548,7 +549,7 @@ class Pressure(_Attribute):
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__(
-            "pressure", float, "pressure", "properties", *args, **kwargs
+            "pressure", float, "pressure", "properties", unit=ureg.atmosphere, *args, **kwargs
         )
 
 
@@ -561,6 +562,7 @@ class Rotconsts(_Attribute):
             np.ndarray,
             "rotational constants",
             "atoms:coords:rotconsts",
+            unit = ureg.gigahertz,
             *args,
             **kwargs,
         )
@@ -571,7 +573,7 @@ class Scancoords(_Attribute):
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__(
-            "scancoords", np.ndarray, "step geometry", "optimization:scan", *args, **kwargs
+            "scancoords", np.ndarray, "step geometry", "optimization:scan", unit=ureg.angstroms, *args, **kwargs
         )
 
 
@@ -607,7 +609,7 @@ class Scfenergies(_Attribute):
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__(
-            "scfenergies", np.ndarray, "scf energies", "optimization:scf", *args, **kwargs
+            "scfenergies", np.ndarray, "scf energies", "optimization:scf", unit=ureg.eV, *args, **kwargs
         )
 
 
@@ -637,7 +639,7 @@ class Temperature(_Attribute):
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__(
-            "temperature", float, "temperature", "properties", *args, **kwargs
+            "temperature", float, "temperature", "properties", unit=ureg.kelvin, *args, **kwargs
         )
 
 
@@ -645,7 +647,7 @@ class Time(_Attribute):
     """time in molecular dynamics and other trajectories (array[1], fs)"""
 
     def __init__(self, *args, **kwargs):
-        super(type(self), self).__init__("time", np.ndarray, "time", "N/A", *args, **kwargs)
+        super(type(self), self).__init__("time", np.ndarray, "time", "N/A", unit=ureg.femtosecond, *args, **kwargs)
 
 
 class Transprop(_Attribute):
@@ -665,7 +667,7 @@ class Vibanharms(_Attribute):
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__(
-            "vibanharms", np.ndarray, "anharmonicity constants", "vibrations", *args, **kwargs
+            "vibanharms", np.ndarray, "anharmonicity constants", "vibrations", unit = 1/ureg.centimeter, *args, **kwargs
         )
 
 
@@ -674,7 +676,7 @@ class Vibdisps(_Attribute):
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__(
-            "vibdisps", np.ndarray, "displacement", "vibrations", *args, **kwargs
+            "vibdisps", np.ndarray, "displacement", "vibrations", unit=urg.angstorm, *args, **kwargs
         )
 
 
@@ -683,7 +685,7 @@ class Vibfreqs(_Attribute):
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__(
-            "vibfreqs", np.ndarray, "frequencies", "vibrations", *args, **kwargs
+            "vibfreqs", np.ndarray, "frequencies", "vibrations", unit = 1/ureg.centimeter, *args, **kwargs
         )
 
 
@@ -692,7 +694,7 @@ class Vibfconsts(_Attribute):
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__(
-            "vibfreqs", np.ndarray, "force constants", "vibrations", *args, **kwargs
+            "vibfreqs", np.ndarray, "force constants", "vibrations", unit=1e3*ureg.dyne/ureg.angstrom, *args, **kwargs
         )
 
 
@@ -701,7 +703,7 @@ class Vibirs(_Attribute):
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__(
-            "vibirs", np.ndarray, "IR", "vibrations:intensities", *args, **kwargs
+            "vibirs", np.ndarray, "IR", "vibrations:intensities", unit=ureg.kilometers/ureg.mole, *args, **kwargs
         )
 
 
@@ -710,7 +712,7 @@ class Vibramans(_Attribute):
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__(
-            "vibramans", np.ndarray, "raman", "vibrations:intensities", *args, **kwargs
+            "vibramans", np.ndarray, "raman", "vibrations:intensities", unit=ureg.angstroms**4/ureg.dalton, *args, **kwargs
         )
 
 
@@ -719,7 +721,7 @@ class Vibrmasses(_Attribute):
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__(
-            "vibrmasses", np.ndarray, "reduced masses", "vibrations", *args, **kwargs
+            "vibrmasses", np.ndarray, "reduced masses", "vibrations", unit=ureg.dalton, *args, **kwargs
         )
 
 
@@ -737,7 +739,7 @@ class Zpve(_Attribute):
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__(
-            "zpve", float, "zero-point correction", "properties:energies", *args, **kwargs
+            "zpve", float, "zero-point correction", "properties:energies", unit = ureg.hartree/ureg.particle, *args, **kwargs
         )
 
 

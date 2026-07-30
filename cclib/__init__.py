@@ -22,6 +22,8 @@ from cclib._version import __version__
 from pint import UnitRegistry
 
 ureg = UnitRegistry()
+ureg.define('particle = [entity]')
+#ureg.define('dyne = gram * centimeter / second ** 2 = dyn')
 
 # isort: off
 # from cclib import parser, progress, method, bridge

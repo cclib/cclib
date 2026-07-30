@@ -17,47 +17,51 @@ class scfenergies(base_parser):
     """
 
     known_codes = ["gaussian", "psi4", "qchem"]
+    cclib_unit = ureg.eV
 
     @staticmethod
     def gaussian(file_handler, ccdata) -> Optional[dict]:
+        gaussian_unit = ureg.hartree
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
         existing = getattr(ccdata, "scfenergies")
         if existing is None:
-            this_scfenergies = ureg.Quantity(np.array([]), "hartree")
+            this_scfenergies = ureg.Quantity(np.array([]), scfenergies.cclib_unit)
         else:
             this_scfenergies=existing
         if line[1:9] == "SCF Done":
-            constructed_data = utils.float(line.split()[4]) * ureg.hartree
+            constructed_data = utils.float(line.split()[4]) * gaussian_unit
             this_scfenergies = np.append(this_scfenergies,constructed_data)
             return {scfenergies.__name__: this_scfenergies}
         return None
 
     @staticmethod
     def psi4(file_handler, ccdata) -> Optional[dict]:
+        psi4_unit = ureg.hartree
         line = file_handler.last_line
         existing = getattr(ccdata, "scfenergies")
         if existing is None:
-            this_scfenergies = ureg.Quantity(np.array([]), "hartree")
+            this_scfenergies = ureg.Quantity(np.array([]), scfenergies.cclib_unit)
         else:
             this_scfenergies=existing
         if "Final Energy" in line:
-            constructed_data = float(line.split()[3]) * ureg.hartree
+            constructed_data = float(line.split()[3]) * psi4_unit
             this_scfenergies = np.append(this_scfenergies,constructed_data)
             return {scfenergies.__name__: this_scfenergies}
         return None
 
     @staticmethod
     def qchem(file_handler, ccdata) -> Optional[dict]:
+        qchem_unit = ureg.hartree
         line = file_handler.last_line
         existing = getattr(ccdata, "scfenergies")
         if existing is None:
-            this_scfenergies = ureg.Quantity(np.array([]), "hartree")
+            this_scfenergies = ureg.Quantity(np.array([]), scfenergies.cclib_unit)
         else:
             this_scfenergies=existing
         constructed_scfenergies = None
         if "Total energy in the final basis set" in line:
-            constructed_scfenergies = float(line.split()[-1]) * ureg.hartree
+            constructed_scfenergies = float(line.split()[-1]) * qchem_unit
             if constructed_scfenergies is not None:
                 this_scfenergies = np.append(this_scfenergies,constructed_scfenergies)
             return {scfenergies.__name__: this_scfenergies}
