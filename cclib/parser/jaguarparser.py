@@ -719,14 +719,17 @@ class Jaguar(logfileparser.Logfile):
             #
             # Jaguar 13.3:
             #   Thermodynamic properties for P = 1.00E+00 atm, calculated at   1 temperatures
-            while ("thermochemical properties" not in line.lower() and "thermodynamic properties for p" not in line.lower()):
+            while (
+                "thermochemical properties" not in line.lower()
+                and "thermodynamic properties for p" not in line.lower()
+            ):
                 line = next(inputfile)
                 if "zero point energy" in line:
                     self.set_attribute(
                         "zpve", utils.convertor(float(line.split()[-2]), "kcal/mol", "hartree")
                     )
             tokens = line.split()
-            tokens = [t.replace(',','') for t in tokens]
+            tokens = [t.replace(",", "") for t in tokens]
             if "atm" in tokens:
                 idx_press = tokens.index("atm") - 1
                 self.set_attribute("pressure", float(tokens[idx_press]))
@@ -743,7 +746,17 @@ class Jaguar(logfileparser.Logfile):
                 self.set_attribute("temperature", float(line.split()[2]))
                 self.skip_lines(
                     inputfile,
-                    ["b", "Ideal Gas header", "header", "dashes and spaces", "trans.", "rot.", "vib.", "elec.", "dashes and spaces"],
+                    [
+                        "b",
+                        "Ideal Gas header",
+                        "header",
+                        "dashes and spaces",
+                        "trans.",
+                        "rot.",
+                        "vib.",
+                        "elec.",
+                        "dashes and spaces",
+                    ],
                 )
                 line = next(inputfile)
                 self.set_attribute(
