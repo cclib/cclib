@@ -1419,7 +1419,9 @@ cannot be determined. Rerun without `$molecule read`."""
                 mocoeffs_have_symm = False
                 pv = self.package_version
                 if pv >= Version("7.0.0"):
-                    mocoeffs_have_symm = True # for versions newer than 7 mocoeffs are printed with symmetries
+                    mocoeffs_have_symm = (
+                        True  # for versions newer than 7 mocoeffs are printed with symmetries
+                    )
                 mocoeffs = self.parse_matrix_aonames(
                     inputfile, self.nbasis, self.norbdisp_alpha_aonames, mocoeffs_have_symm
                 )
@@ -1439,7 +1441,9 @@ cannot be determined. Rerun without `$molecule read`."""
                 mocoeffs_have_symm = False
                 pv = self.package_version
                 if pv >= Version("7.0.0"):
-                    mocoeffs_have_symm = True # for versions newer than 7 mocoeffs are printed with symmetries
+                    mocoeffs_have_symm = (
+                        True  # for versions newer than 7 mocoeffs are printed with symmetries
+                    )
                 mocoeffs = self.parse_matrix_aonames(
                     inputfile, self.nbasis, self.norbdisp_beta_aonames, mocoeffs_have_symm
                 )
