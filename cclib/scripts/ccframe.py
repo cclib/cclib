@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -13,6 +13,7 @@ from typing import Iterable, Optional
 
 from cclib.io import ccframe, ccopen
 from cclib.parser.utils import find_package
+
 
 _has_pandas = find_package("pandas")
 if _has_pandas:
@@ -47,7 +48,7 @@ def process_logfiles(filenames: Iterable[str], output: Optional[str], identifier
         print(df)
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-O",
@@ -62,7 +63,7 @@ def main():
         "compchemlogfiles",
         metavar="compchemlogfile",
         nargs="+",
-        help=("one or more computational chemistry output " "files to parse and convert"),
+        help=("one or more computational chemistry output files to parse and convert"),
     )
     parser.add_argument(
         "--identifier",

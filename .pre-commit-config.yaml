@@ -1,12 +1,14 @@
 ---
 fail_fast: false
+ci:
+  autofix_prs: false
 repos:
   - repo: meta
     hooks:
       - id: check-hooks-apply
       - id: check-useless-excludes
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: "v4.6.0"
+    rev: "v6.0.0"
     hooks:
       - id: trailing-whitespace
         exclude: |
@@ -19,6 +21,7 @@ repos:
               \.molden$|
               \.out$|
               ^data/ADF|
+              ^data/CFOUR|
               ^data/DALTON|
               ^data/FChk|
               ^data/GAMESS|
@@ -33,6 +36,7 @@ repos:
               ^data/Psi4|
               ^data/QChem|
               ^data/regression|
+              ^data/Serenity|
               ^data/Turbomole|
               ^data/XTB
           )
@@ -47,6 +51,7 @@ repos:
               \.molden$|
               \.out$|
               ^data/ADF|
+              ^data/CFOUR|
               ^data/DALTON|
               ^data/FChk|
               ^data/GAMESS|
@@ -61,6 +66,7 @@ repos:
               ^data/Psi4|
               ^data/QChem|
               ^data/regression|
+              ^data/Serenity|
               ^data/Turbomole|
               ^data/XTB
           )
@@ -75,6 +81,7 @@ repos:
               \.molden$|
               \.out$|
               ^data/ADF|
+              ^data/CFOUR|
               ^data/DALTON|
               ^data/FChk|
               ^data/GAMESS|
@@ -89,10 +96,48 @@ repos:
               ^data/Psi4|
               ^data/QChem|
               ^data/regression|
+              ^data/Serenity|
               ^data/Turbomole|
               ^data/XTB
           )
-      - id: mixed-line-ending
+      - id: check-merge-conflict
+      - id: check-json
+      - id: check-added-large-files
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.21
+    hooks:
+      - id: ruff-format
+      - id: ruff-check
+        args: [--fix]
+  # - repo: https://github.com/pre-commit/mirrors-mypy
+  #   rev: "v1.16.1"
+  #   hooks:
+  #     - id: mypy
+  #       additional_dependencies:
+  #         - numpy
+  #         - packaging
+  #         - pandas-stubs
+  #         - pytest
+  #         # - scipy
+  #         - types-requests
+  #         - types-setuptools
+  #         - versioningit
+  #       args: []
+  #       exclude: |
+  #         (?x)(
+  #             ^test/
+  #         )
+  - repo: https://github.com/Lucas-C/pre-commit-hooks
+    rev: v1.5.6
+    hooks:
+      - id: insert-license
+        files: \.py$
+        args:
+          - --license-filepath
+          - .github/license_header.txt
+          - --use-current-year
+          - --no-extra-eol
+      - id: remove-crlf
         exclude: |
           (?x)(
               \.bpa$|
@@ -103,6 +148,7 @@ repos:
               \.molden$|
               \.out$|
               ^data/ADF|
+              ^data/CFOUR|
               ^data/DALTON|
               ^data/FChk|
               ^data/GAMESS|
@@ -120,56 +166,30 @@ repos:
               ^data/Turbomole|
               ^data/XTB
           )
-      - id: check-merge-conflict
-      - id: check-json
-      - id: check-yaml
-      - id: check-toml
-      - id: check-added-large-files
-      - id: no-commit-to-branch
-        args: [--branch, main, --branch, master]
-  - repo: https://github.com/Mateusz-Grzelinski/actionlint-py
-    rev: "v1.7.1.15"
-    hooks:
-      - id: actionlint
-  - repo: https://github.com/asottile/pyupgrade
-    rev: v3.17.0
-    hooks:
-      - id: pyupgrade
-        args: [--py37-plus]
-  - repo: https://github.com/PyCQA/isort
-    rev: "5.13.2"
-    hooks:
-      - id: isort
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.6.5
-    hooks:
-      - id: ruff-format
-      - id: ruff
-        args: [--fix]
-  # - repo: https://github.com/pre-commit/mirrors-mypy
-  #   rev: "v1.3.0"
-  #   hooks:
-  #     - id: mypy
-  #       additional_dependencies:
-  #         - numpy
-  #         - packaging
-  #         - pandas-stubs
-  #         # - scipy
-  #         - types-setuptools
-  #       args: []
-  - repo: https://github.com/Lucas-C/pre-commit-hooks
-    rev: v1.5.5
-    hooks:
-      - id: insert-license
-        files: \.py$
-        args:
-          - --license-filepath
-          - .github/license_header.txt
-          - --use-current-year
-          - --no-extra-eol
   - repo: https://github.com/pre-commit/pygrep-hooks
     rev: "v1.10.0"
     hooks:
       - id: rst-backticks
       - id: rst-directive-colons
       - id: rst-inline-touching-normal
+  - repo: https://github.com/tombi-toml/tombi-pre-commit
+    rev: v1.2.0
+    hooks:
+      - id: tombi-format
+        # Requires https://github.com/cclib/cclib/pull/1775
+        # - id: tombi-lint
+  - repo: https://github.com/google/yamlfmt
+    rev: "v0.21.0"
+    hooks:
+      - id: yamlfmt
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.12
+    hooks:
+      - id: actionlint
+        additional_dependencies:
+          - "github.com/wasilibs/go-shellcheck/cmd/shellcheck@v0.11.1"
+  - repo: https://github.com/zizmorcore/zizmor-pre-commit
+    rev: "v1.27.0"
+    hooks:
+      - id: zizmor
+        args: [--no-progress, --persona=pedantic, --fix=all]

@@ -1,4 +1,4 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -7,11 +7,16 @@
 
 import itertools
 import re
+from typing import TYPE_CHECKING
 
 from cclib.parser import logfileparser, utils
 from cclib.parser.logfileparser import StopParsing
 
 import numpy
+
+
+if TYPE_CHECKING:
+    from cclib.parser.logfilewrapper import FileWrapper
 
 
 class ADF(logfileparser.Logfile):
@@ -20,15 +25,15 @@ class ADF(logfileparser.Logfile):
     def __init__(self, *args, **kwargs):
         super().__init__(logname="ADF", *args, **kwargs)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"ADF log file {self.filename}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'ADF("{self.filename}")'
 
-    def normalisesym(self, label):
+    def normalisesym(self, label: str) -> str:
         """Use standard symmetry labels instead of ADF labels.
 
         To normalise:
@@ -80,7 +85,7 @@ class ADF(logfileparser.Logfile):
         else:
             return f"{label}:{int(num + 1)}"
 
-    def before_parsing(self):
+    def before_parsing(self) -> None:
         # Used to avoid extracting the final geometry twice in a GeoOpt
         self.NOTFOUND, self.GETLAST, self.NOMORE = list(range(3))
         self.finalgeometry = self.NOTFOUND
@@ -95,7 +100,7 @@ class ADF(logfileparser.Logfile):
         SCFCNV, SCFCNV2 = list(range(2))  # used to index self.scftargets[]
         maxelem, norm = list(range(2))  # used to index scf.values
 
-    def extract(self, inputfile, line):
+    def extract(self, inputfile: "FileWrapper", line: str) -> None:
         """Extract information from the file object inputfile."""
 
         # If a file contains multiple calculations, currently we want to print a warning
@@ -563,7 +568,8 @@ class ADF(logfileparser.Logfile):
 
             # handle case where MO information up to a certain orbital are missing
             while int(info[0]) - 1 != len(self.moenergies[0]):
-                self.moenergies[0].append(numpy.nan)
+                # This will be converted back from hartree to eV in logfileparser afterwards.
+                self.moenergies[0].append(utils.convertor(99999, "eV", "hartree"))
                 self.mosyms[0].append("A")
 
             while len(line) > 10:

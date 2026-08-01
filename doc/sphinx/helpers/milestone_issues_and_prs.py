@@ -1,4 +1,4 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 
 from github_graphql_query import FILTER_AUTHORS, execute_query, transform_author
+
 
 if __name__ == "__main__":
     raw = execute_query(Path("milestone_issues_and_prs.graphql"))

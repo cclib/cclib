@@ -1,0 +1,15 @@
+H2, RHF/sto-3g
+H
+H 1 R
+
+R=1.4
+
+*ACES2(CALC=SCF,BASIS=STO-3G,REF=RHF
+SCF_CONV=10,PRINT=1)
+
+
+
+
+
+
+

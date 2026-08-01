@@ -1,4 +1,4 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -293,9 +293,36 @@ def data(request) -> ccData:
     files = request.param
     first = files[0]
     if first not in _CACHE:
-        ccdriver_instance = ccopen([str(f) for f in files], future=True)
-        ccdriver_instance.process_combinator()
-        filenames = ccdriver_instance._fileHandler.filenames
+        # For 'normal' log files we use ccopen to parse.
+        # For pseudo parsers (like PySCF) we use a different mechanism.
+        if "PySCF" in str(first):
+            from cclib.bridge import cclib2pyscf
+
+            # TODO: a smarter check?
+            # PySCF.
+            logfile = cclib2pyscf.makecclib
+            filenames = [str(file) for file in files]
+
+            # Import the given file so we can run it
+            # Adapted from https://stackoverflow.com/questions/67631/how-can-i-import-a-module-dynamically-given-the-full-path
+            import importlib.util
+
+            spec = importlib.util.spec_from_file_location(first.name, first)
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+
+            # Run the exposed calculate() method and 'parse'.
+            res = module.calculate()
+            methods = res.pop("methods")
+            data = logfile(*methods, **res)
+            data.parsername = "PySCF"
+        else:
+            # Normal logfiles.
+            # logfile is really the parser.
+            ccdriver_instance = ccopen([str(f) for f in files], future=True)
+            ccdriver_instance.process_combinator()
+            filenames = ccdriver_instance._fileHandler.filenames
+
         if not isinstance(filenames, list):
             filenames = [filenames]
         ccdriver_instance._fileHandler.filenames = filenames

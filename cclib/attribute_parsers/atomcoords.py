@@ -1,4 +1,4 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -15,7 +15,7 @@ class atomcoords(base_parser):
     Docstring? Units?
     """
 
-    known_codes = ["gaussian", "psi4", "qchem"]
+    known_codes = ["gaussian", "ORCA", "psi4", "qchem"]
 
     @staticmethod
     def gaussian(file_handler, ccdata) -> Optional[dict]:
@@ -28,6 +28,31 @@ class atomcoords(base_parser):
             while list(set(line.strip())) != ["-"]:
                 broken = line.split()
                 curr_atomcoords.append(list(map(float, broken[-3:])))
+                line = file_handler.virtual_next()
+            constructed_atomcoords.append(curr_atomcoords)
+            return {atomcoords.__name__: np.array(constructed_atomcoords)}
+        return None
+
+    @staticmethod
+    def ORCA(file_handler, ccdata) -> Optional[dict]:
+        """Grab cartesian coordinates
+        ---------------------------------
+        CARTESIAN COORDINATES (ANGSTROEM)
+        ---------------------------------
+        H      0.000000    0.000000    0.000000
+        O      0.000000    0.000000    1.000000
+        H      0.000000    1.000000    1.000000
+        """
+        line = file_handler.last_line
+        if line[0:33] == "CARTESIAN COORDINATES (ANGSTROEM)":
+            line = file_handler.virtual_next()
+            constructed_atomcoords = []
+            curr_atomcoords = []
+            line = file_handler.virtual_next()
+            while len(line) > 1:
+                atom, x, y, z = line.split()
+                if atom[-1] != ">":
+                    curr_atomcoords.append([float(x), float(y), float(z)])
                 line = file_handler.virtual_next()
             constructed_atomcoords.append(curr_atomcoords)
             return {atomcoords.__name__: np.array(constructed_atomcoords)}

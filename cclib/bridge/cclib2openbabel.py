@@ -1,16 +1,17 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
 """Bridge between cclib data and openbabel (http://openbabel.org)."""
 
-from typing import Optional, Set, Union
+from typing import Optional
 
 from cclib.parser.data import ccData
 from cclib.parser.utils import find_package
 
 import numpy as np
+
 
 _found_openbabel = find_package("openbabel")
 if _found_openbabel:
@@ -82,7 +83,7 @@ def makeopenbabel(
     return obmol
 
 
-def readfile(fname: str, fmt: str) -> Union[ccData, Set]:
+def readfile(fname: str, fmt: str) -> ccData:
     """Read a file with OpenBabel and extract cclib attributes."""
     _check_openbabel(_found_openbabel)
     obc = ob.OBConversion()
@@ -92,7 +93,7 @@ def readfile(fname: str, fmt: str) -> Union[ccData, Set]:
         return makecclib(mol)
     else:
         print(f"Unable to load the {fmt} reader from OpenBabel.")
-        return {}
+        return {}  # type: ignore
 
 
 del find_package

@@ -1,0 +1,22 @@
++system 
+ name dvb_td
+ geometry dvb_td.xyz
+ method dft
+ +dft
+  functional b3lyp
+ -dft
+ +basis
+  label sto-3g
+ -basis
+-system
+
++task scf
+ act dvb_td
+-task
+
++task lrscf
+ act dvb_td
+ neigen 5
+ densFitJ None
+ densFitK None
+-task

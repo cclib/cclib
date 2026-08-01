@@ -1,4 +1,4 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -31,6 +31,7 @@ DEFAULT_PARSERS = [
     cprops.aooverlaps,
     cprops.atommasses,
     cprops.mosyms,
+    cprops.moenergies,
     cprops.mpenergies,
     cprops.moments,
     cprops.nmo,

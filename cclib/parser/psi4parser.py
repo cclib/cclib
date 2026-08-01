@@ -1,4 +1,4 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -7,6 +7,7 @@
 
 import re
 from collections import namedtuple
+from typing import TYPE_CHECKING, List, Tuple
 
 from cclib.parser import data, logfileparser, utils
 
@@ -14,21 +15,25 @@ import numpy
 from packaging.version import parse as parse_version
 
 
+if TYPE_CHECKING:
+    from cclib.parser.logfilewrapper import FileWrapper
+
+
 class Psi4(logfileparser.Logfile):
     """A Psi4 log file."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(logname="Psi4", *args, **kwargs)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"Psi4 log file {self.filename}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'Psi4("{self.filename}")'
 
-    def before_parsing(self):
+    def before_parsing(self) -> None:
         # Early beta versions of Psi4 normalize basis function
         # coefficients when printing.
         self.version_4_beta = False
@@ -51,7 +56,7 @@ class Psi4(logfileparser.Logfile):
         self.ccsd_trigger = "* CCSD total energy"
         self.ccsd_t_trigger = "* CCSD(T) total energy"
 
-    def after_parsing(self):
+    def after_parsing(self) -> None:
         super().after_parsing()
 
         # Newer versions of Psi4 don't explicitly print the number of atoms.
@@ -59,7 +64,7 @@ class Psi4(logfileparser.Logfile):
             if hasattr(self, "atomnos"):
                 self.set_attribute("natom", len(self.atomnos))
 
-    def normalisesym(self, label):
+    def normalisesym(self, label: str) -> str:
         """Use standard symmetry labels instead of Psi4 labels.
 
         To normalise:
@@ -82,7 +87,7 @@ class Psi4(logfileparser.Logfile):
     }
     GRADIENT_HEADERS = {gradient_type.header for gradient_type in GRADIENT_TYPES.values()}
 
-    def extract(self, inputfile, line):
+    def extract(self, inputfile: "FileWrapper", line: str) -> None:
         """Extract information from the file object inputfile."""
 
         # Extract the version number and the version control
@@ -216,7 +221,7 @@ class Psi4(logfileparser.Logfile):
             # The 0 is to handle the presence of ghost atoms.
             self.set_attribute("atomnos", [self.table.number.get(el, 0) for el in elements])
 
-            # This condition discards any repeated coordinates that Psi print. For example,
+            # This condition discards any repeated coordinates that Psi4 prints. For example,
             # geometry optimizations will print the coordinates at the beginning of and SCF
             # section and also at the start of the gradient calculation.
             if not hasattr(self, "atomcoords") or (
@@ -1224,7 +1229,7 @@ class Psi4(logfileparser.Logfile):
         if line[7:54] == "4 exiting successfully. Buy a developer a beer!":
             self.metadata["success"] = True
 
-    def _parse_mosyms_moenergies(self, inputfile, spinidx):
+    def _parse_mosyms_moenergies(self, inputfile: "FileWrapper", spinidx: int) -> None:
         """Parse molecular orbital symmetries and energies from the
         'Post-Iterations' section.
         """
@@ -1235,9 +1240,10 @@ class Psi4(logfileparser.Logfile):
                 moenergy = float(line.split()[i * 2 + 1])
                 self.moenergies[spinidx].append(moenergy)
             line = next(inputfile)
-        return
 
-    def parse_gradient(self, inputfile, skip_lines):
+    def parse_gradient(
+        self, inputfile: "FileWrapper", skip_lines: List[str]
+    ) -> List[Tuple[float, float, float]]:
         """Parse the nuclear gradient section into a list of lists with shape
         [natom, 3].
         """
@@ -1251,7 +1257,7 @@ class Psi4(logfileparser.Logfile):
             line = next(inputfile)
         return gradient
 
-    def parse_hessian(self, inputfile):
+    def parse_hessian(self, inputfile: "FileWrapper") -> numpy.ndarray:
         """Parse the geometric/molecular Hessian."""
         line = next(inputfile)
         tokens = line.split()
@@ -1273,7 +1279,11 @@ class Psi4(logfileparser.Logfile):
         return hessian
 
     @staticmethod
-    def parse_vibration(n, inputfile):
+    def parse_vibration(
+        n: int, inputfile: "FileWrapper"
+    ) -> Tuple[
+        List[float], List[str], List[List[List[float]]], List[float], List[float], List[float]
+    ]:
         #  Vibration                       1                   8                   9
         #  Freq [cm^-1]                698.2090i           1675.6707           1675.6899
         #  Irrep                           B2                  B1                  A1
@@ -1343,7 +1353,7 @@ class Psi4(logfileparser.Logfile):
         assert "---" in line
 
         line = next(inputfile)
-        vibdisps = [[] for i in range(n)]
+        vibdisps: List[List[List[float]]] = [[] for i in range(n)]
         while len(line.strip()) > 0:
             chomp = line.split()
             for i in range(n):
@@ -1357,7 +1367,7 @@ class Psi4(logfileparser.Logfile):
         return vibfreqs, vibsyms, vibdisps, vibrmasses, vibfconsts, vibirs
 
     @staticmethod
-    def parse_vibfreq(vibfreq):
+    def parse_vibfreq(vibfreq: str) -> float:
         """Imaginary frequencies are printed as '12.34i', rather than
         '-12.34'.
         """

@@ -1,39 +1,38 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
 """Parser for NBO output files"""
 
+from typing import TYPE_CHECKING
+
 from cclib.parser import logfileparser
+
+
+if TYPE_CHECKING:
+    from cclib.parser.logfilewrapper import FileWrapper
 
 
 class NBO(logfileparser.Logfile):
     """A NBO log file"""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(logname="NBO", *args, **kwargs)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"NBO log file {self.filename}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
-        return f'NBO ("{self.filename}")'
+        return f'NBO("{self.filename}")'
 
-    def normalisesym(self, label):
+    def normalisesym(self, label: str) -> str:
         """Normalise the symmetries used by NBO."""
+        return label
 
-        pass
-
-    def before_parsing(self):
-        pass
-
-    def after_parsing(self):
-        pass
-
-    def extract(self, inputfile, line):
+    def extract(self, inputfile: "FileWrapper", line: str) -> None:
         """Extract information from the file object inputfile."""
 
         """ NATURAL POPULATIONS:  Natural atomic orbital occupancies

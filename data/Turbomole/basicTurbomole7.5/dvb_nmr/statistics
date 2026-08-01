@@ -1,0 +1,39 @@
+Thu Nov 20 12:07:48 GMT 2025
+
+ STATISTICS OUTPUT FOR PROJECT :
+   --->  dvb_nmr_Single_Point_DFT_B3LYP__GD3BJ__Gas_Phase_Pople_Basis  <---
+
+ integral neglect threshold       :  0.56E-10
+ integral storage threshold THIZE :  0.10E-04
+ integral storage threshold THIME :         5
+
+ number of shell pairs ii,jj included  :          676
+ number of integral batches included   :       150276
+ number of batches from twoint         :            0
+ unnecessary integral batches on file  :            0
+
+ number of shell pairs ii,jj included  :          717
+ number of integral batches included   :       194773
+ number of batches from twoint         :            0
+ unnecessary integral batches on file  :            0
+
+ number of shell pairs ii,jj included  :          717
+ number of integral batches included   :       196428
+ number of batches from twoint         :            0
+ unnecessary integral batches on file  :            0
+
+ number of shell pairs ii,jj included  :          717
+ number of integral batches included   :       198775
+ number of batches from twoint         :            0
+ unnecessary integral batches on file  :            0
+
+ number of shell pairs ii,jj included  :          717
+ number of integral batches included   :       197987
+ number of batches from twoint         :            0
+ unnecessary integral batches on file  :            0
+
+ number of shell pairs ii,jj included  :          717
+ number of integral batches included   :       193972
+ number of batches from twoint         :            0
+ unnecessary integral batches on file  :            0
+

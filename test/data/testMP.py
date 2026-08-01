@@ -1,12 +1,18 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
 """Test Moller-Plesset logfiles in cclib"""
 
+from typing import TYPE_CHECKING
+
 import numpy
 from skip import skipForParser
+
+
+if TYPE_CHECKING:
+    from cclib.parser.data import ccData
 
 
 class GenericMP2Test:
@@ -14,21 +20,25 @@ class GenericMP2Test:
 
     level = 2
 
-    def testsizeandshape(self, data) -> None:
+    def testsizeandshape(self, data: "ccData") -> None:
         """(MP2) Are the dimensions of mpenergies correct?"""
         assert data._ccCollection._parsed_data[0].mpenergies.shape == (
             len(data._ccCollection._parsed_data[0].scfenergies.magnitude),
             self.level - 1,
         )
 
-    def testsign(self, data) -> None:
+    def testsign(self, data: "ccData") -> None:
         """Are the Moller-Plesset corrections negative?"""
         if self.level == 2:
+            print(data._ccCollection._parsed_data[0].mpenergies[:, 0].magnitude)
+            print(data._ccCollection._parsed_data[0].scfenergies[0].magnitude)
             corrections = (
                 data._ccCollection._parsed_data[0].mpenergies[:, 0].magnitude
-                - data._ccCollection._parsed_data[0].scfenergies.magnitude
+                - data._ccCollection._parsed_data[0].scfenergies[0].magnitude
             )
         else:
+            print(data._ccCollection._parsed_data[0].mpenergies[:, self.level - 2].magnitude)
+            print(data._ccCollection._parsed_data[0].mpenergies[:, self.level - 3].magnitude)
             corrections = (
                 data._ccCollection._parsed_data[0].mpenergies[:, self.level - 2].magnitude
                 - data._ccCollection._parsed_data[0].mpenergies[:, self.level - 3].magnitude

@@ -1,4 +1,4 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -6,11 +6,18 @@
 """Calculation methods related to volume based on cclib data."""
 
 import copy
+from typing import TYPE_CHECKING, Iterable, List, Optional, Sequence, Tuple, Union
 
 from cclib.file_handler import FileHandler
 from cclib.parser.utils import convertor, find_package
 
 import numpy
+
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from cclib.parser.data import ccData
 
 r""" In the dictionary sym2powerlist below, each element is a list that contain the combinations of
     powers that are applied to x, y, and z in the equation for the gaussian primitives --
@@ -39,7 +46,7 @@ _found_pyquante = find_package("PyQuante")
 if _found_pyquante:
     from PyQuante.CGBF import CGBF
 
-    def getbfs(ccdata):
+    def getbfs(ccdata: "ccData") -> List[CGBF]:
         from cclib.bridge import cclib2pyquante
 
         pymol = cclib2pyquante.makepyquante(ccdata)
@@ -59,7 +66,7 @@ if _found_pyquante:
 
         return bfs
 
-    def pyamp(bfs, bs, points):
+    def pyamp(bfs: Sequence[CGBF], bs: int, points: numpy.ndarray) -> numpy.ndarray:
         """Wrapper for evaluating basis functions at one or more grid points.
 
         Parameters
@@ -86,7 +93,7 @@ _found_pyquante2 = find_package("pyquante2")
 if _found_pyquante2:
     from pyquante2 import cgbf
 
-    def getbfs(ccdata):
+    def getbfs(ccdata: "ccData") -> List[cgbf]:
         bfs = []
         # `atom` is instance of pyquante2.geo.atom.atom class.
         for i, atom in enumerate(ccdata.atomcoords[-1]):
@@ -113,7 +120,7 @@ if _found_pyquante2:
 
         return bfs
 
-    def pyamp(bfs, bs, points):
+    def pyamp(bfs: Sequence[cgbf], bs: int, points: numpy.ndarray) -> numpy.ndarray:
         """Wrapper for evaluating basis functions at one or more grid points.
 
         Parameters
@@ -139,12 +146,12 @@ if _found_pyvtk:
     from pyvtk.DataSetAttr import *  # noqa: F403
 
 
-def _check_pyquante():
+def _check_pyquante() -> None:
     if (not _found_pyquante) and (not _found_pyquante2):
         raise ImportError("You must install `pyquante2` or `PyQuante` to use this function.")
 
 
-def _check_pyvtk(found_pyvtk):
+def _check_pyvtk(found_pyvtk: bool) -> None:
     if not found_pyvtk:
         raise ImportError("You must install `pyvtk` to use this function.")
 
@@ -163,7 +170,9 @@ class Volume:
        numpts -- the numbers of points in the (x,y,z) directions
     """
 
-    def __init__(self, origin, topcorner, spacing):
+    def __init__(
+        self, origin: Iterable[float], topcorner: Iterable[float], spacing: Iterable[float]
+    ) -> None:
         self.origin = numpy.asarray(origin, dtype=float)
         self.topcorner = numpy.asarray(topcorner, dtype=float)
         self.spacing = numpy.asarray(spacing, dtype=float)
@@ -172,11 +181,11 @@ class Volume:
             self.numpts.append(int((self.topcorner[i] - self.origin[i]) / self.spacing[i] + 1))
         self.data = numpy.zeros(tuple(self.numpts), "d")
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation."""
         return f"Volume {self.origin} to {self.topcorner} (density: {self.spacing})"
 
-    def write(self, filename, fformat="Cube"):
+    def write(self, filename: Union[str, "Path"], fformat: str = "Cube") -> None:
         """Write the volume to a file."""
 
         fformat = fformat.lower()
@@ -188,7 +197,7 @@ class Volume:
 
         writers[fformat](filename)
 
-    def writeasvtk(self, filename):
+    def writeasvtk(self, filename: Union[str, "Path"]) -> None:
         _check_pyvtk(_found_pyvtk)
         ranges = (
             numpy.arange(self.data.shape[2]),
@@ -202,11 +211,11 @@ class Volume:
         )
         v.tofile(filename)
 
-    def integrate(self, weights=None):
+    def integrate(self, weights: Optional[numpy.ndarray] = None) -> float:
         weights = numpy.ones_like(self.data) if weights is None else weights
-        assert (
-            weights.shape == self.data.shape
-        ), "Shape of weights do not match with shape of Volume data."
+        assert weights.shape == self.data.shape, (
+            "Shape of weights do not match with shape of Volume data."
+        )
 
         boxvol = (
             self.spacing[0]
@@ -217,7 +226,7 @@ class Volume:
 
         return numpy.sum(self.data * weights) * boxvol
 
-    def integrate_square(self, weights=None):
+    def integrate_square(self, weights: Optional[numpy.ndarray] = None) -> float:
         weights = numpy.ones_like(self.data) if weights is None else weights
 
         boxvol = (
@@ -228,9 +237,9 @@ class Volume:
         )
         return numpy.sum((self.data * weights) ** 2) * boxvol
 
-    def writeascube(self, filename):
+    def writeascube(self, filename: Union[str, "Path"]) -> None:
         # Remember that the units are bohr, not Angstroms
-        def convert(x):
+        def convert(x: Union[int, float]) -> float:
             return convertor(x, "Angstrom", "bohr")
 
         ans = []
@@ -256,12 +265,12 @@ class Volume:
         with open(filename, "w") as outputfile:
             outputfile.write("\n".join(ans))
 
-    def coordinates(self, indices):
+    def coordinates(self, indices) -> numpy.ndarray:
         """Return [x, y, z] coordinates that correspond to input indices"""
         return self.origin + self.spacing * indices
 
 
-def scinotation(num):
+def scinotation(num: float) -> str:
     """Write in scientific notation."""
     ans = f"{num:10.5E}"
     broken = ans.split("E")
@@ -275,7 +284,7 @@ def scinotation(num):
     return (f"{broken[0]}E{sign}{broken[1][-2:]}").rjust(12)
 
 
-def getGrid(vol):
+def getGrid(vol: Volume) -> Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]:
     """Helper function that returns (x, y, z), each of which are numpy array of the values that
        correspond to grid points.
 
@@ -291,7 +300,7 @@ def getGrid(vol):
     return (x, y, z)
 
 
-def wavefunction(ccdata, volume, mocoeffs):
+def wavefunction(ccdata: "ccData", volume: Volume, mocoeffs: numpy.ndarray) -> Volume:
     """Calculate the magnitude of the wavefunction at every point in a volume.
 
     Inputs:
@@ -321,7 +330,9 @@ def wavefunction(ccdata, volume, mocoeffs):
     return wavefn
 
 
-def electrondensity_spin(ccdata, volume, mocoeffslist):
+def electrondensity_spin(
+    ccdata: "ccData", volume: Volume, mocoeffslist: List[numpy.ndarray]
+) -> Volume:
     """Calculate the magnitude of the electron density at every point in a volume for either up or down spin
 
     Inputs:
@@ -366,7 +377,7 @@ def electrondensity_spin(ccdata, volume, mocoeffslist):
     return density
 
 
-def electrondensity(ccdata, volume, mocoeffslist):
+def electrondensity(ccdata: "ccData", volume: Volume, mocoeffslist: List[numpy.ndarray]) -> Volume:
     """Calculate the magnitude of the total electron density at every point in a volume.
 
     Inputs:
@@ -398,7 +409,7 @@ def electrondensity(ccdata, volume, mocoeffslist):
         return edens
 
 
-def read_from_cube(filepath):
+def read_from_cube(filepath: Union[str, "Path"]) -> Volume:
     """Read data from cube files and construct volume object
 
        Specification of cube file format is described in http://paulbourke.net/dataformats/cube/
@@ -414,10 +425,20 @@ def read_from_cube(filepath):
         lines = f.readlines()
 
         # First two lines are comments
+        # The second comment line *CAN* contain information on the axes
+        # But this is by far not the case for all programs
+        axes = []
+        if "OUTER LOOP" in lines[1]:
+            axes = ["XYZ".index(s[0]) for s in lines[1].split()[2::3]]
+        if not axes:
+            axes = [0, 1, 2]
+
         # Lines 3-6 specify the grid in Cartesian coordinates
         # Line 3 -- [Number of atoms] [Origin x] [Origin y] [Origin z]
-        natom = int(lines[2].split()[0])  # noqa: F841
+        natom = int(lines[2].split()[0])
+        has_labels = natom < 0
         originx, originy, originz = numpy.asanyarray(lines[2].split()[1:], dtype=float)
+        num_val = int(lines[2].split()[4]) if len(lines[2]) == 5 else 1
 
         # Line 4, 5, 6 -- [Number of Grid Points] [Spacing x] [Spacing y], [Spacing z]
         ngridx, spacingx = numpy.asanyarray(lines[3].split(), dtype=float)[[0, 1]]
@@ -431,10 +452,41 @@ def read_from_cube(filepath):
             skiplines += 1
 
         # Line 10+ (or 7+ if atomic coordinates data are not present)
-        tmp = []
+        # Process {DSET_IDS (#x int)} according to https://h5cube-spec.readthedocs.io/en/latest/cubeformat.html. Code is adapted from ASE v3.26.0 (https://gitlab.com/ase/ase/-/blob/3.26.0/ase/io/cube.py#L78).
+        labels = []
+        if has_labels:
+            fields = lines[skiplines].split()
+            nfields = int(fields[0])
+            labels.extend(fields[1:])
+            skiplines += 1
+
+            # If the labels don’t fit on a single line.
+            while len(labels) < nfields:
+                fields = lines[skiplines].split()
+                labels.extend(fields)
+                skiplines += 1
+
+        labels = [int(x) for x in labels]
+
+        # Cube files can contain more than one density,
+        # so we need to be a little bit careful about where one ends
+        # and the next begins.
+        raw_volume = []
         for line in lines[skiplines:]:
-            tmp.extend(line.split())
-        tmp = numpy.asanyarray(tmp, dtype=float)
+            raw_volume.extend([float(s) for s in line.split()])
+        # Split each value at each point into a separate list.
+        raw_volumes = [numpy.array(raw_volume[offset::num_val]) for offset in range(num_val)]
+        datas = []
+        # Adjust each volume in turn.
+        shape = [int(ngridx), int(ngridy), int(ngridz)]
+        for data in raw_volumes:
+            data = data.reshape(shape)
+            if axes != [0, 1, 2]:
+                data = data.transpose(axes).copy()
+            datas.append(data)
+
+        datas = numpy.array(datas)
+        tmp = datas[0].flatten()
 
     # Initialize volume object
     vol = Volume(

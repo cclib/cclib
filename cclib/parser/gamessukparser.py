@@ -1,4 +1,4 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -6,10 +6,15 @@
 """Parser for GAMESS-UK output files"""
 
 import re
+from typing import TYPE_CHECKING
 
 from cclib.parser import logfileparser, utils
 
 import numpy
+
+
+if TYPE_CHECKING:
+    from cclib.parser.logfilewrapper import FileWrapper
 
 
 class GAMESSUK(logfileparser.Logfile):
@@ -17,28 +22,28 @@ class GAMESSUK(logfileparser.Logfile):
 
     SCFRMS, SCFMAX, SCFENERGY = list(range(3))  # Used to index self.scftargets[]
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(logname="GAMESSUK", *args, **kwargs)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"GAMESS UK log file {self.filename}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'GAMESSUK("{self.filename}")'
 
-    def normalisesym(self, label):
+    def normalisesym(self, label: str) -> str:
         """Use standard symmetry labels instead of GAMESS UK labels."""
         label = label.replace("''", '"').replace("+", "").replace("-", "")
         ans = label[0].upper() + label[1:]
         return ans
 
-    def before_parsing(self):
+    def before_parsing(self) -> None:
         # used for determining whether to add a second mosyms, etc.
         self.betamosyms = self.betamoenergies = self.betamocoeffs = False
 
-    def extract(self, inputfile, line):
+    def extract(self, inputfile: "FileWrapper", line: str) -> None:
         """Extract information from the file object inputfile."""
 
         # Extract the version number and optionally the revision number.
@@ -354,11 +359,9 @@ class GAMESSUK(logfileparser.Logfile):
 
         if line[3:11] == "SCF TYPE":
             self.scftype = line.split()[-2]
-            assert self.scftype in [
-                "rhf",
-                "uhf",
-                "gvb",
-            ], f"{self.scftype} not one of 'rhf', 'uhf' or 'gvb'"
+            assert self.scftype in ["rhf", "uhf", "gvb"], (
+                f"{self.scftype} not one of 'rhf', 'uhf' or 'gvb'"
+            )
 
         if line[15:31] == "convergence data":
             if not hasattr(self, "scfvalues"):
@@ -438,13 +441,9 @@ class GAMESSUK(logfileparser.Logfile):
                         # See GAMESS-UK 7.0 distribution/examples/chap12/pyridine2_21m10r.out
                         # for an example of the latter
                         sym = basisregexp.match(temp[1]).groups()[0]
-                        assert sym in [
-                            "s",
-                            "p",
-                            "d",
-                            "f",
-                            "sp",
-                        ], f"'{sym}' not a recognized symmetry"
+                        assert sym in ["s", "p", "d", "f", "sp"], (
+                            f"'{sym}' not a recognized symmetry"
+                        )
                         if sym == "sp":
                             coeff.setdefault("S", []).append((float(temp[3]), float(temp[6])))
                             coeff.setdefault("P", []).append((float(temp[3]), float(temp[10])))

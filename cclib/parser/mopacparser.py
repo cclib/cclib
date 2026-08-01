@@ -1,4 +1,4 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -13,13 +13,19 @@
 
 import math
 import re
+from typing import TYPE_CHECKING
 
 from cclib.parser import logfileparser, utils
 
 import numpy
+import scipy.constants as spc
 
 
-def symbol2int(symbol):
+if TYPE_CHECKING:
+    from cclib.parser.logfilewrapper import FileWrapper
+
+
+def symbol2int(symbol: str) -> int:
     t = utils.PeriodicTable()
     return t.number[symbol]
 
@@ -30,19 +36,19 @@ class MOPAC(logfileparser.Logfile):
     def __init__(self, *args, **kwargs):
         super().__init__(logname="MOPAC", *args, **kwargs)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"MOPAC log file {self.filename}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'MOPAC("{self.filename}")'
 
-    def normalisesym(self, label):
+    def normalisesym(self, label: str) -> str:
         """MOPAC does not require normalizing symmetry labels."""
         return label
 
-    def before_parsing(self):
+    def before_parsing(self) -> None:
         # TODO
 
         # Defaults
@@ -80,7 +86,7 @@ class MOPAC(logfileparser.Logfile):
             "NONET": 9,
         }
 
-    def extract(self, inputfile, line):
+    def extract(self, inputfile: "FileWrapper", line: str) -> None:
         """Extract information from the file object inputfile."""
 
         # Extract the package version.
@@ -170,11 +176,10 @@ class MOPAC(logfileparser.Logfile):
         if line[0:40] == "          ROTATIONAL CONSTANTS IN CM(-1)":
             self.skip_line(inputfile, "b")
             broken = next(inputfile).split()
-            # leave the rotational constants in Hz
-            a = float(broken[2])
-            b = float(broken[5])
-            c = float(broken[8])
-            self.append_attribute("rotconsts", [a, b, c])
+            rotconsts = numpy.asarray([broken[2], broken[5], broken[8]], dtype=float)
+            ghz2invcm = spc.giga * spc.centi / spc.c
+            rotconsts /= ghz2invcm
+            self.append_attribute("rotconsts", rotconsts)
 
         # Start of the IR/Raman frequency section.
         # Example:

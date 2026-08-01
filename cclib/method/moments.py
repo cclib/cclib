@@ -1,16 +1,26 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
 """Calculation of electric multipole moments based on data parsed by cclib."""
 
-from collections.abc import Iterable
+import sys
+from typing import TYPE_CHECKING, List, Optional, Union
 
 from cclib.method.calculationmethod import Method
 from cclib.parser.utils import convertor
 
 import numpy
+
+
+if TYPE_CHECKING:
+    from cclib.parser.data import ccData
+
+if sys.version_info.minor >= 9:
+    from collections.abc import Iterable
+else:
+    from typing import Iterable
 
 
 class Moments(Method):
@@ -20,16 +30,16 @@ class Moments(Method):
     dictionary whose keys denote the used charge population scheme.
     """
 
-    def __init__(self, data):
+    def __init__(self, data: "ccData") -> None:
         super().__init__(data)
         self.required_attrs = ("atomcoords", "atomcharges")
         self.results = {}
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Returns a string representation of the object."""
         return f"Multipole moments of {self.data}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Returns a representation of the object."""
         return f'Moments("{self.data}")'
 
@@ -63,7 +73,12 @@ class Moments(Method):
 
         return convertor(quadrupole, "ebohr2", "Buckingham")
 
-    def calculate(self, origin="nuccharge", population="mulliken", masses=None):
+    def calculate(
+        self,
+        origin: Union[str, Iterable[float]] = "nuccharge",
+        population: str = "mulliken",
+        masses: Optional[Union[numpy.ndarray, Iterable[float]]] = None,
+    ) -> List[numpy.ndarray]:
         """Calculate electric dipole and quadrupole moments using parsed
         partial atomic charges.
 
@@ -122,8 +137,7 @@ class Moments(Method):
                     atommasses = self.data.atommasses
                 except AttributeError as e:
                     msg = (
-                        "atomic masses were not parsed, consider provide "
-                        "'masses' argument instead"
+                        "atomic masses were not parsed, consider provide 'masses' argument instead"
                     )
                     raise ValueError(msg, e)
             origin_pos = numpy.average(coords, weights=atommasses, axis=0)

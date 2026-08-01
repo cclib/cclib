@@ -1,4 +1,4 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -11,6 +11,7 @@ from cclib.method.calculationmethod import Method
 from cclib.method.volume import electrondensity_spin
 
 import numpy
+
 
 # Distance between two adjacent grids (sqrt[2] or sqrt[3] for uniform Cartesian grid).
 _griddist = numpy.array(
@@ -39,7 +40,7 @@ class Bader(Method):
     # All of these are required for QTAIM charges.
     required_attrs = ("homos", "mocoeffs", "nbasis", "gbasis")
 
-    def __init__(self, data, volume, progress=None, loglevel=logging.INFO, logname="Log"):
+    def __init__(self, data, volume, progress=None, loglevel=logging.INFO, logname="Log") -> None:
         super().__init__(data, progress, loglevel, logname)
 
         self.volume = volume
@@ -52,18 +53,18 @@ class Bader(Method):
                 "It looks like pseudopotentials were used to generate this output. Please note that the Bader charges may not be accurate and may report unexpected results. Consult the original paper (doi:10.1016/j.commatsci.2005.04.010) for more information."
             )
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"Bader's QTAIM charges of {self.data}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f"Bader({self.data})"
 
-    def _check_required_attributes(self):
+    def _check_required_attributes(self) -> None:
         super()._check_required_attributes()
 
-    def calculate(self, indices=None, fupdate=0.05):
+    def calculate(self, indices=None, fupdate: float = 0.05) -> bool:
         """Calculate Bader's QTAIM charges using on-grid algorithm proposed by Henkelman group
         in doi:10.1016/j.commatsci.2005.04.010
 
@@ -195,12 +196,12 @@ class Bader(Method):
             zgrid = int(gridpt[2])
             self.matches[pos] = self.fragresults[xgrid, ygrid, zgrid]
 
-        assert (
-            0 not in self.matches
-        ), f"Failed to assign Bader regions to atoms. Try with a finer grid. Content of Bader area matches: {self.matches}"
-        assert len(
-            numpy.unique(self.matches) != len(self.data.atomnos)
-        ), "Failed to assign unique Bader regions to each atom. Try with a finer grid."
+        assert 0 not in self.matches, (
+            f"Failed to assign Bader regions to atoms. Try with a finer grid. Content of Bader area matches: {self.matches}"
+        )
+        assert len(numpy.unique(self.matches) != len(self.data.atomnos)), (
+            "Failed to assign unique Bader regions to each atom. Try with a finer grid."
+        )
 
         # Finally integrate the assigned Bader areas
         self.logger.info("Creating fragcharges: array[1]")

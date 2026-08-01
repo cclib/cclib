@@ -1,4 +1,4 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -13,6 +13,7 @@ from cclib.collection import ccCollection
 from cclib.combinator import auto_combinator
 from cclib.file_handler import FileHandler
 from cclib.tree import Tree
+
 
 if TYPE_CHECKING:
     from cclib.combinator import combinator
@@ -522,6 +523,10 @@ class ccDriver:
                 )
                 if parsed_data is not None:
                     self._ccCollection.parsed_data[current_idx].setattributes(parsed_data)
+                    if "parser_state" in parsed_data:
+                        self._ccCollection.parsed_data[current_idx].parser_state = parsed_data[
+                            "parser_state"
+                        ]
             line = next(self._fileHandler)
         # prune ccCollection
         for i in self._ccCollection._parsed_data:

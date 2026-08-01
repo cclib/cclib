@@ -1,4 +1,4 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -10,7 +10,7 @@ from cclib.method.population import Population
 import numpy
 
 
-def func(x):
+def func(x: int) -> int:
     if x == 1:
         return 1
     else:
@@ -23,15 +23,15 @@ class OPA(Population):
     def __init__(self, *args):
         super().__init__(logname="OPA", *args)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"OPA of {self.data}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'OPA("{self.data}")'
 
-    def calculate(self, indices=None, fupdate=0.05):
+    def calculate(self, indices=None, fupdate: float = 0.05) -> bool:
         """Perform an overlap population analysis given the results of a parser"""
         if not indices:
             # Build list of groups of orbitals in each atom for atomresults.

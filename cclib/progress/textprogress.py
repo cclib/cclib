@@ -1,4 +1,4 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -9,8 +9,8 @@ from typing import Optional, Union
 
 class TextProgress:
     def __init__(self) -> None:
-        self.nstep = 0
-        self.text = None
+        self.nstep: float = 0
+        self.text: Optional[str] = None
         self.oldprogress = 0
         self.progress = 0
         self.calls = 0

@@ -1,4 +1,4 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -8,11 +8,18 @@
 import copy
 import logging
 import math
+from typing import TYPE_CHECKING, Optional, Tuple
 
 from cclib.method.stockholder import Stockholder
 from cclib.parser.utils import convertor
 
 import numpy
+
+
+if TYPE_CHECKING:
+    from cclib.method.volume import Volume
+    from cclib.parser.data import ccData
+    from cclib.progress import Progress
 
 
 class MissingInputError(Exception):
@@ -31,14 +38,14 @@ class DDEC6(Stockholder):
 
     def __init__(
         self,
-        data,
-        volume,
-        proatom_path=None,
-        progress=None,
-        convergence_level=1e-10,
-        max_iteration=50,
-        loglevel=logging.INFO,
-        logname="Log",
+        data: "ccData",
+        volume: "Volume",
+        proatom_path: str,
+        progress: Optional["Progress"] = None,
+        convergence_level: float = 1e-10,
+        max_iteration: int = 50,
+        loglevel: int = logging.INFO,
+        logname: str = "Log",
     ):
         """Initialize DDEC6 object.
         Inputs are:
@@ -68,31 +75,28 @@ class DDEC6(Stockholder):
             # TODO: Pseudopotentials should be added back
             pass
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"DDEC6 charges of {self.data}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f"DDEC6({self.data})"
 
     def _check_required_attributes(self):
         super()._check_required_attributes()
 
-    def _cartesian_dist(self, pt1, pt2):
+    def _cartesian_dist(self, pt1: numpy.ndarray, pt2: numpy.ndarray):
         """Small utility function that calculates Euclidian distance between two points
         pt1 and pt2 are numpy arrays representing a point in Cartesian coordinates."""
         return numpy.sqrt(numpy.dot(pt1 - pt2, pt1 - pt2))
 
     def _read_proatom(
-        self,
-        directory,
-        atom_num,
-        charge,  # type = str  # type = int  # type = float
-    ):
+        self, directory: str, atom_num: int, charge: float
+    ) -> Tuple[numpy.ndarray, numpy.ndarray]:
         return super()._read_proatom(directory, atom_num, charge)
 
-    def calculate(self, indices=None, fupdate=0.05):
+    def calculate(self, indices=None, fupdate: float = 0.05) -> None:
         """
         Calculate DDEC6 charges based on doi: 10.1039/c6ra04656h paper.
         Cartesian, uniformly spaced grids are assumed for this function.
@@ -305,7 +309,7 @@ class DDEC6(Stockholder):
 
         return reference_charges, localizedcharges, stockholdercharges
 
-    def condition_densities(self):
+    def condition_densities(self) -> None:
         """Calculate conditioned densities
         [STEP 3]
         """
@@ -412,7 +416,7 @@ class DDEC6(Stockholder):
             # Make tau monotonic decreasing
             self.tau[atomi] = numpy.maximum.accumulate(self.tau[atomi][::-1])[::-1]
 
-    def _ya(self, proatom_density, atomi):
+    def _ya(self, proatom_density, atomi: int):
         # Function that calculates Y_a^avg
         # See Eq. 40-41 in doi: 10.1039/c6ra04656h
         rho_ref = self._rho_ref
@@ -513,7 +517,7 @@ class DDEC6(Stockholder):
 
         return N_A
 
-    def reshape_G(self):
+    def reshape_G(self) -> None:
         """Calculate G_A(r_A) and reshape densities
 
         This is a quantity introduced in DDEC6 as a constraint preventing the tails from being
@@ -725,7 +729,7 @@ class DDEC6(Stockholder):
 
         return candidates_phi, candidates_bigphi
 
-    def _parabolic_fit(self, pseudodensity, superscript, atomi):
+    def _parabolic_fit(self, pseudodensity, superscript: int, atomi: int) -> None:
         """Optimize phi using parabolic fitting.
         This is used in step 3 (for phi_A^I) and in steps 4-6 (for phi_A^II).
 
@@ -763,8 +767,8 @@ class DDEC6(Stockholder):
             lowerbigPhi = self._candidates_bigPhi[atomi][lower_ind]
             lowerphi = self._candidates_phi[atomi][lower_ind]
         else:  # assign some large negative number otherwise
-            lowerbigPhi = numpy.NINF
-            lowerphi = numpy.NINF
+            lowerbigPhi = -numpy.inf
+            lowerphi = -numpy.inf
         if numpy.count_nonzero(self._candidates_phi[atomi] > 0) > 0:
             # If there is at least one candidate phi that is positive
             upper_ind = numpy.where(
@@ -774,8 +778,8 @@ class DDEC6(Stockholder):
             upperbigPhi = self._candidates_bigPhi[atomi][upper_ind]
             upperphi = self._candidates_phi[atomi][upper_ind]
         else:  # assign some large positive number otherwise
-            upperbigPhi = numpy.PINF
-            upperphi = numpy.PINF
+            upperbigPhi = numpy.inf
+            upperphi = numpy.inf
 
         for iteration in range(self.max_iteration):
             # Flow diagram on Figure S1 in doi: 10.1039/c6ra04656h details the procedure.

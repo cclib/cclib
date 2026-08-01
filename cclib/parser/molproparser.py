@@ -1,4 +1,4 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -6,10 +6,15 @@
 """Parser for Molpro output files"""
 
 import itertools
+from typing import TYPE_CHECKING
 
 from cclib.parser import logfileparser, utils
 
 import numpy
+
+
+if TYPE_CHECKING:
+    pass
 
 
 def create_atomic_orbital_names(orbitals):

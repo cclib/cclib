@@ -1,4 +1,4 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -23,6 +23,9 @@ from pint import UnitRegistry
 
 unit_registry = UnitRegistry()
 
+from pint import UnitRegistry
+
+
 # isort: off
 # from cclib import parser, progress, method, bridge
 from cclib import (
@@ -35,6 +38,10 @@ from cclib import (
     attribute_parsers,
     tree,
 )
+
+
+ureg = UnitRegistry()
+ureg.define("particle = [entity]")
 # isort: on
 
 # The test module can be imported if it was installed with cclib.

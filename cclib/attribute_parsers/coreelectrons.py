@@ -1,9 +1,10 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 from typing import Optional
 
+from cclib import ureg
 from cclib.attribute_parsers.base_parser import base_parser
 from cclib import unit_registry
 
@@ -61,7 +62,7 @@ class coreelectrons(base_parser):
                         front = line[:10].strip()
                     info = line.split()
                     constructed_coreelectrons[center - 1] = int(info[1]) - int(info[2])
-                    constructed_coreelectrons *= unit_registry.count
+                    constructed_coreelectrons *= ureg.count
                     line = file_handler.virtual_next()
             return {coreelectrons.__name__: constructed_coreelectrons}
 

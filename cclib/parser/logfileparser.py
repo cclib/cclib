@@ -1,4 +1,4 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -8,15 +8,18 @@ import inspect
 import logging
 import random
 import sys
-import typing
 from abc import ABC, abstractmethod
-from typing import Any, Iterable, List, Optional
+from typing import IO, TYPE_CHECKING, Any, Iterable, List, Optional, Type, Union
 
 from cclib.parser import utils
-from cclib.parser.data import ccData
+from cclib.parser.data import ccData, ccData_optdone_bool
 from cclib.parser.logfilewrapper import FileWrapper
 
 import numpy
+
+
+if TYPE_CHECKING:
+    from cclib.progress import Progress
 
 # This seems to avoid a problem with Avogadro.
 logging.logMultiprocessing = 0
@@ -28,20 +31,21 @@ class StopParsing(Exception):
     """
 
 
+Source = Union[str, IO, FileWrapper, List[Union[str, IO]]]
+
+
 class Logfile(ABC):
     """Abstract class for logfile objects."""
 
     def __init__(
         self,
-        source: typing.Union[
-            str, typing.IO, FileWrapper, typing.List[typing.Union[str, typing.IO]]
-        ],
+        source: Source,
         loglevel: int = logging.ERROR,
         logname: str = "Log",
         logstream=sys.stderr,
-        datatype=ccData,
+        datatype: Type[ccData] = ccData_optdone_bool,
         **kwds,
-    ):
+    ) -> None:
         """Initialise the Logfile object.
 
         This should be called by a subclass in its own __init__ method.
@@ -87,26 +91,32 @@ class Logfile(ABC):
         self.datatype = datatype
 
         self.future = kwds.get("future", False)
+        # Change the class used if we want optdone to be a list or if the 'future' option
+        # is used, which might have more consequences in the future.
+        optdone_as_list = kwds.get("optdone_as_list", False) or kwds.get("future", False)
+        optdone_as_list = optdone_as_list if isinstance(optdone_as_list, bool) else False
+        if optdone_as_list:
+            self.datatype = ccData
         # Parsing of Natural Orbitals and Natural Spin Orbtials into one attribute
         self.unified_no_nso = self.future
 
     @property
-    def filename(self):
+    def filename(self) -> str:
         return self.inputfile.file_name
 
     @classmethod
-    def sort_input(self, file_names: typing.List[str]) -> typing.List:
+    def sort_input(self, file_names: List[str]) -> List[str]:
         """
         If this parser expects multiple files to appear in a certain order, return that ordering.
         """
         return file_names
 
-    def __setattr__(self, name, value):
+    def __setattr__(self, name: str, value: Any) -> None:
         # Send info to logger if the attribute is in the list of attributes.
         if name in ccData._attrlist and hasattr(self, "logger"):
             # Call logger.info() only if the attribute is new.
             if not hasattr(self, name):
-                if type(value) in [numpy.ndarray, list]:
+                if isinstance(value, (numpy.ndarray, list)):
                     self.logger.info("Creating attribute %s[]", name)
                 else:
                     self.logger.info("Creating attribute %s: %s", name, value)
@@ -114,7 +124,9 @@ class Logfile(ABC):
         # Set the attribute.
         object.__setattr__(self, name, value)
 
-    def parse(self, progress=None, fupdate=0.05, cupdate=0.002):
+    def parse(
+        self, progress: Optional["Progress"] = None, fupdate: float = 0.05, cupdate: float = 0.002
+    ):
         """Parse the logfile, using the assumed extract method of the child."""
 
         # Check that the sub-class has an extract attribute,
@@ -133,7 +145,7 @@ class Logfile(ABC):
         _nodelete = list(set(self.__dict__.keys()))
 
         # Intialize self.progress
-        if progress:
+        if progress is not None:
             self.progress = progress
             self.progress.initialize(self.inputfile.size)
             self.progress.step = 0
@@ -205,6 +217,28 @@ class Logfile(ABC):
             if attr not in _nodelete:
                 self.__delattr__(attr)
 
+        # Convert from atomic units to convenience units.
+        for attr in ("ccenergies", "dispersionenergies", "mpenergies", "scfenergies"):
+            if hasattr(data, attr):
+                setattr(data, attr, utils.convertor(getattr(data, attr), "hartree", "eV"))
+        for attr in ("etenergies",):
+            if hasattr(data, attr):
+                setattr(data, attr, utils.convertor(getattr(data, attr), "hartree", "wavenumber"))
+        for attr in ("scanenergies",):
+            if hasattr(data, attr):
+                setattr(
+                    data,
+                    attr,
+                    utils.convertor(numpy.asarray(getattr(data, attr)), "hartree", "eV").tolist(),
+                )
+        for attr in ("moenergies",):
+            if hasattr(data, attr):
+                setattr(
+                    data,
+                    attr,
+                    [utils.convertor(elem, "hartree", "eV") for elem in getattr(data, attr)],
+                )
+
         # Perform final checks on values of attributes.
         data.check_values(logger=self.logger)
 
@@ -220,6 +254,23 @@ class Logfile(ABC):
 
     def after_parsing(self) -> None:
         """Correct data or do parser-specific validation after parsing is finished."""
+
+        # atomcoords are parsed as a list of lists but it should be an array.
+        # Done automatically later in arrayify, but we need it now for the
+        # rest of this method.
+        if hasattr(self, "atomcoords"):
+            self.atomcoords = numpy.array(self.atomcoords)
+
+        if hasattr(self, "scanenergies"):
+            self.set_attribute("scancoords", [])
+            if hasattr(self, "optstatus") and hasattr(self, "atomcoords"):
+                converged_indexes = [
+                    x for x, y in enumerate(self.optstatus) if y & ccData.OPT_DONE > 0
+                ]
+                self.set_attribute("scancoords", self.atomcoords[converged_indexes, :, :])
+            elif hasattr(self, "atomcoords"):
+                self.set_attribute("scancoords", self.atomcoords)
+
         if (
             hasattr(self, "enthalpy")
             and hasattr(self, "entropy")
@@ -238,7 +289,7 @@ class Logfile(ABC):
                 self.progress.step = newstep
 
     @abstractmethod
-    def normalisesym(self, symlabel: str) -> None:
+    def normalisesym(self, symlabel: str) -> str:
         """Standardise the symmetry labels between parsers."""
 
     def new_internal_job(self) -> None:
@@ -342,7 +393,7 @@ class Logfile(ABC):
             self.coreelectrons = numpy.zeros(self.natom, "i")
         self.coreelectrons[indices] = ncore
 
-    def skip_lines(self, inputfile, sequence: Iterable[str]) -> List[str]:
+    def skip_lines(self, inputfile: "FileWrapper", sequence: Iterable[str]) -> List[str]:
         """Read trivial line types and check they are what they are supposed to be.
 
         This function will read len(sequence) lines and do certain checks on them,
@@ -399,7 +450,7 @@ class Logfile(ABC):
         return lines
 
     @staticmethod
-    def next_filled_line(inputfile):
+    def next_filled_line(inputfile: "FileWrapper") -> str:
         """Return the next line that contains something other than whitespace."""
         while True:
             line = next(inputfile)

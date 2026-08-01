@@ -1,4 +1,4 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -6,14 +6,15 @@
 """Generic file writer and related tools"""
 
 import logging
+import sys
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
-from typing import List, Optional, Tuple
+from typing import TYPE_CHECKING, List, Optional, Set, Tuple, Union
 
-from cclib.parser.data import ccData
 from cclib.parser.utils import PeriodicTable, find_package
 
 import numpy
+
 
 _has_openbabel = find_package("openbabel")
 if _has_openbabel:
@@ -34,6 +35,14 @@ if _has_openbabel:
         except ModuleNotFoundError:
             _has_openbabel = False
 
+if TYPE_CHECKING:
+    from cclib.parser.data import ccData
+
+if sys.version_info.minor >= 9:
+    from collections.abc import Iterable
+else:
+    from typing import Iterable
+
 
 class MissingAttributeError(Exception):
     pass
@@ -46,9 +55,9 @@ class Writer(ABC):
 
     def __init__(
         self,
-        ccdata: ccData,
+        ccdata: "ccData",
         jobfilename: Optional[str] = None,
-        indices=None,
+        indices: Optional[Union[int, Iterable[int]]] = None,
         terse: bool = False,
         *args,
         **kwargs,
@@ -66,7 +75,6 @@ class Writer(ABC):
 
         self.ccdata = ccdata
         self.jobfilename = jobfilename
-        self.indices = indices
         self.terse = terse
         self.ghost = kwargs.get("ghost")
         self.naturalorbitals = kwargs.get("naturalorbitals")
@@ -82,7 +90,11 @@ class Writer(ABC):
             self.obmol, self.pbmol = self._make_openbabel_from_ccdata()
             self.bond_connectivities = self._make_bond_connectivity_from_openbabel(self.obmol)
 
-        self._fix_indices()
+        if hasattr(self.ccdata, "atomcoords"):
+            lencoords = len(self.ccdata.atomcoords)
+        else:
+            lencoords = None
+        self.indices = _fix_indices(indices, lencoords)
 
     @abstractmethod
     def generate_repr(self) -> str:
@@ -149,26 +161,35 @@ class Writer(ABC):
             )
         return bond_connectivities
 
-    def _fix_indices(self) -> None:
-        """Clean up the index container type and remove zero-based indices to
-        prevent duplicate structures and incorrect ordering when
-        indices are later sorted.
-        """
-        if not self.indices:
-            self.indices = set()
-        elif not isinstance(self.indices, Iterable):
-            self.indices = {self.indices}
-        # This is the most likely place to get the number of
-        # geometries from.
-        if hasattr(self.ccdata, "atomcoords"):
-            lencoords = len(self.ccdata.atomcoords)
-            indices = set()
-            for i in self.indices:
-                if i < 0:
-                    i += lencoords
-                indices.add(i)
-            self.indices = indices
-        return
+
+def _fix_indices(
+    indices: Optional[Union[int, Iterable[int]]], lencoords: Optional[int]
+) -> Set[int]:
+    """Clean up the index container type and remove zero-based indices to
+    prevent duplicate structures and incorrect ordering when
+    indices are later sorted.
+    """
+    if indices is None:
+        indices = set()
+    elif not isinstance(indices, Iterable):
+        indices = {indices}
+    if not isinstance(indices, set):
+        indices = set(indices)
+    # This is the most likely place to get the number of
+    # geometries from.
+    if lencoords is not None:
+        positive_indices = set()
+        for i in indices:
+            if i < 0:
+                i += lencoords
+            positive_indices.add(i)
+        indices = positive_indices
+    else:
+        if any(i < 0 for i in indices):
+            raise RuntimeError(
+                "Need to know number of geometries in order to handle negative indices"
+            )
+    return indices
 
 
 del find_package

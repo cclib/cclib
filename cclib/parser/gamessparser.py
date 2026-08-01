@@ -1,4 +1,4 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -6,10 +6,15 @@
 """Parser for GAMESS(US) output files"""
 
 import re
+from typing import TYPE_CHECKING
 
 from cclib.parser import logfileparser, utils
 
 import numpy
+
+
+if TYPE_CHECKING:
+    from cclib.parser.logfilewrapper import FileWrapper
 
 
 class GAMESS(logfileparser.Logfile):
@@ -42,18 +47,18 @@ class GAMESS(logfileparser.Logfile):
         "ACC6C": "aug-cc-pCV6Z",
     }
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(logname="GAMESS", *args, **kwargs)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"GAMESS log file {self.filename}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'GAMESS("{self.filename}")'
 
-    def normalisesym(self, label):
+    def normalisesym(self, label: str) -> str:
         """Normalise the symmetries used by GAMESS.
 
         To normalise, two rules need to be applied:
@@ -68,12 +73,12 @@ class GAMESS(logfileparser.Logfile):
             end = label[1:].replace("U", "u").replace("G", "g")
         return label[0] + end
 
-    def before_parsing(self):
+    def before_parsing(self) -> None:
         self.firststdorient = True  # Used to decide whether to wipe the atomcoords clean
         self.cihamtyp = "none"  # Type of CI Hamiltonian: saps or dets.
         self.scftype = "none"  # Type of SCF calculation: BLYP, RHF, ROHF, etc.
 
-    def extract(self, inputfile, line):
+    def extract(self, inputfile: "FileWrapper", line: str) -> None:
         """Extract information from the file object inputfile."""
 
         # Extract the version number. If the calculation is from
@@ -1564,9 +1569,10 @@ class GAMESS(logfileparser.Logfile):
                     "moments of inertia",
                     "THE ROTATIONAL SYMMETRY NUMBER IS",
                     "THE ROTATIONAL CONSTANTS ARE (IN GHZ)",
-                    "rotational constants",
                 ],
             )
+            line = next(inputfile)
+            self.append_attribute("rotconsts", [float(x) for x in line.split()])
             # Sometimes the volume is printed between the pressure and "ALL
             # FREQUENCIES ARE SCALED".
             if lines[0][:3] == " V=":

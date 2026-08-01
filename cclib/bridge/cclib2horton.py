@@ -1,4 +1,4 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -10,6 +10,7 @@ from cclib.parser.utils import convertor, find_package
 
 import numpy
 
+
 _found_iodata = find_package("iodata")
 
 # Detect whether iodata (part of horton 3) is present or not
@@ -19,12 +20,12 @@ if _found_iodata:
     from iodata.orbitals import MolecularOrbitals
 
 
-def check_horton():
+def check_horton() -> None:
     if not _found_iodata:
         raise ImportError("You must install `horton` to use this function.")
 
 
-def makehorton(data):
+def makehorton(data: ccData) -> "IOData":
     """Create horton IOData object from ccData object"""
 
     check_horton()
@@ -82,7 +83,7 @@ def makehorton(data):
     return IOData(**attributes)  # Pass collected attributes into IOData constructor
 
 
-def makecclib(iodat):
+def makecclib(iodat: "IOData") -> ccData:
     """Create cclib ccData object from horton IOData object"""
 
     check_horton()

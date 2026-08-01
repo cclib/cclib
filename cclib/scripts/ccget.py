@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -23,6 +23,7 @@ from cclib.parser.logfilewrapper import URL_PATTERN
 
 import numpy
 
+
 # Set up options for pretty-printing output.
 pprint = partial(pprint, width=120, compact=True)
 numpy.set_printoptions(linewidth=120)
@@ -38,7 +39,7 @@ def ccget() -> None:
     parser.add_argument(
         "attribute_or_compchemlogfile",
         nargs="+",
-        help="one or more attributes to be parsed from one ore more logfiles",
+        help="one or more attributes to be parsed from one or more logfiles",
     )
 
     group = parser.add_mutually_exclusive_group()

@@ -1,4 +1,4 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -19,11 +19,11 @@ class Density(Method):
     def __init__(self, data, progress=None, loglevel=logging.INFO, logname="Density"):
         super().__init__(data, progress, loglevel, logname)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"Density matrix of {self.data}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'Density matrix("{self.data}")'
 

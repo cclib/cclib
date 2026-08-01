@@ -1,4 +1,4 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -6,9 +6,9 @@
 """Parser for Turbomole output files."""
 
 import re
-import typing
 from datetime import timedelta
 from pathlib import Path
+from typing import TYPE_CHECKING, Iterable, List, Optional
 
 from cclib.parser import data, logfileparser, utils
 
@@ -16,8 +16,12 @@ import numpy
 import scipy.constants
 
 
+if TYPE_CHECKING:
+    from cclib.parser.logfilewrapper import FileWrapper
+
+
 class AtomBasis:
-    def __init__(self, atname, basis_name, inputfile):
+    def __init__(self, atname: str, basis_name: str, inputfile: "FileWrapper") -> None:
         self.symmetries = []
         self.coefficients = []
         self.atname = atname
@@ -25,7 +29,7 @@ class AtomBasis:
 
         self.parse_basis(inputfile)
 
-    def parse_basis(self, inputfile):
+    def parse_basis(self, inputfile: "FileWrapper") -> None:
         line = next(inputfile)
 
         while line[0] != "*":
@@ -48,7 +52,7 @@ class AtomBasis:
 class Turbomole(logfileparser.Logfile):
     """A Turbomole log file."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(logname="Turbomole", *args, **kwargs)
 
         # Flag for whether this calc is DFT.
@@ -69,7 +73,7 @@ class Turbomole(logfileparser.Logfile):
         self.metadata["num_cpu"] = 1
 
     @classmethod
-    def sort_input(self, file_names: typing.List[str]) -> typing.List:
+    def sort_input(self, file_names: Iterable[str]) -> List[str]:
         """
         If this parser expects multiple files to appear in a certain order, return that ordering.
         """
@@ -111,15 +115,15 @@ class Turbomole(logfileparser.Logfile):
 
         return sorted_list
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"Turbomole output file {self.filename}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'Turbomole("{self.filename}")'
 
-    def normalisesym(self, label):
+    def normalisesym(self, label: str) -> str:
         """Normalise the symmetries used by Turbomole.
 
         The labels are standardized except for the first character being lowercase.
@@ -128,11 +132,20 @@ class Turbomole(logfileparser.Logfile):
         # with non-C1 symmetry.
         return label.capitalize()
 
-    def before_parsing(self):
+    def before_parsing(self) -> None:
         self.periodic_table = utils.PeriodicTable()
 
+        self.nmrtypes = {
+            "diamagnetic part of magnetic shielding:": "diamagnetic",
+            "paramagnetic undisturbed density part of magnetic shielding:": "paramagnetic-undisturbed",
+            "paramagnetic disturbed density part of magnetic shielding:": "paramagnetic-disturbed",
+            "total magnetic shielding:": "total",
+        }
+
+        self.isotopes = []
+
     @staticmethod
-    def split_molines(inline):
+    def split_molines(inline: str) -> Optional[List[float]]:
         """Splits the lines containing mocoeffs (each of length 20)
         and converts them to float correctly.
         """
@@ -151,7 +164,7 @@ class Turbomole(logfileparser.Logfile):
         if len(f1) > 1:
             return [float(f1)]
 
-    def extract(self, inputfile, line):
+    def extract(self, inputfile: "FileWrapper", line: str) -> None:
         """Extract information from the file object inputfile."""
 
         ## This information is in the control file.
@@ -732,6 +745,145 @@ class Turbomole(logfileparser.Logfile):
             self.set_attribute("vibdisps", vibdisps)
             self.set_attribute("vibrmasses", vibrmasses)
 
+        # NMR chemical shifts from mpshift
+        #         >>>>> DFT MAGNETIC SHIELDINGS <<<<<
+        #
+        # Diamagnetic shielding:  full
+        # Paramagnetic shielding, undisturbed density:  full
+        # Paramagnetic shielding, disturbed density:  full
+        #
+        # ATOM  c    1      ISOTROPIC:      122.6073998       ANISOTROPIC:      156.3422302
+        #
+        #   diamagnetic part of magnetic shielding:
+        #     Trace =     253.97215102
+        #     Tensor :
+        #               259.37937013          0.99883879          0.12241962
+        #                 0.99896494        265.61002239          0.25177999
+        #                 0.12146162          0.24857564        236.92706055
+        #
+        #   paramagnetic undisturbed density part of magnetic shielding:
+        #     Trace =      -0.27724072
+        #     Tensor :
+        #                 0.85271422         -0.25082922          0.00807053
+        #                -0.25049124         -0.71179568         -0.01217268
+        #                 0.00553948          0.01640964         -0.97264069
+        #
+        #   paramagnetic disturbed density part of magnetic shielding:
+        #     Trace =    -131.08751051
+        #     Tensor :
+        #              -215.80713691          8.65109510         -0.93979373
+        #                 8.66943099       -162.13338069         -1.16686633
+        #                -0.91373927         -1.24756790        -15.32201394
+        #
+        #   total magnetic shielding:
+        #     Trace =     122.60739979
+        #     Tensor :
+        #                44.42494744          9.39910468         -0.80930358
+        #                 9.41790469        102.76484602         -0.92725901
+        #                -0.78673818         -0.98258262        220.63240592
+        #
+        # ATOM  c    2      ISOTROPIC:      122.6422736       ANISOTROPIC:      156.3464506
+        # ...
+        if ">>>>> DFT MAGNETIC SHIELDINGS <<<<<" in line:
+            nmrtensors = dict()
+
+            while line.strip()[0:4] != "ATOM":
+                line = next(inputfile)
+
+            while line.strip()[0:4] == "ATOM":
+                split_line = line.split()
+                atom = int(split_line[2]) - 1
+                iso = float(split_line[4])
+
+                line = next(inputfile)
+                line = next(inputfile)
+                atomtensors = {"isotropic": iso}
+
+                while "magnetic shielding" in line:
+                    # Even if we don't save this tensor, we'll still parse it to move to the next correctly.
+                    tensor_type = self.nmrtypes.get(line.strip(), None)
+                    line = next(inputfile)
+                    # Currently unused.
+                    # trace = float(line.split()[-1])
+                    line = next(inputfile)
+                    tensor = numpy.zeros((3, 3))
+                    for j, row in zip(range(3), inputfile):
+                        tensor[j] = list(map(float, row.split()))
+
+                    if tensor_type is not None:
+                        atomtensors[tensor_type] = tensor
+
+                    line = next(inputfile)
+                    line = next(inputfile)
+
+                nmrtensors[atom] = atomtensors
+
+            self.set_attribute("nmrtensors", nmrtensors)
+
+        # Isotope info.
+        #   ------------------------------------------------
+        #      Gyromagnetic ratios in 10^7 rad s^-1 T^-1
+        #   ------------------------------------------------
+        #
+        #             atom  isotope  gyromagn. ratio
+        #             1 c       13       6.728286000
+        #             2 c       13       6.728286000
+        #             3 c       13       6.728286000
+        # ...
+        if line.strip() == "atom  isotope  gyromagn. ratio":
+            line = next(inputfile)
+            isotopes = [None] * self.natom
+            while line.strip() != "":
+                split_line = line.split()
+                atom = int(split_line[0]) - 1
+                isotope = int(split_line[2])
+                isotopes[atom] = isotope
+                line = next(inputfile)
+
+            self.isotopes = isotopes
+
+        # NMR spin-spin coupling.
+        #   ------------------------------------------------
+        #     Nuclear coupling constants >=      0.1000 Hz
+        #   ------------------------------------------------
+        #
+        #     Coupling nuclei        Isotropy    Anisotropy
+        #
+        #    c     2 - c     1:        9.4539       14.3280
+        #            5.4113        1.1840        0.0000
+        #            1.1840        4.0745        0.0000
+        #            0.0000        0.0000       18.8760
+        #
+        #    c     3 - c     1:       45.4438       31.6640
+        # ...
+        if line.strip() == "Coupling nuclei        Isotropy    Anisotropy":
+            nmrcouplingtensors = {}
+
+            line = next(inputfile)
+            line = next(inputfile)
+
+            while line.strip() != "":
+                split_line = line.split()
+                atoms = (int(split_line[1]) - 1, int(split_line[4][:-1]) - 1)
+                isotopes = (self.isotopes[atoms[0]], self.isotopes[atoms[1]])
+
+                iso = float(split_line[5])
+                # aniso = float(split_line[6])
+
+                tensor = numpy.zeros((3, 3))
+                for j, row in zip(range(3), inputfile):
+                    tensor[j] = list(map(float, row.split()))
+
+                if atoms not in nmrcouplingtensors:
+                    nmrcouplingtensors[atoms] = {}
+
+                nmrcouplingtensors[atoms][isotopes] = {"total": tensor, "isotropic": iso}
+
+                line = next(inputfile)
+                line = next(inputfile)
+
+            self.set_attribute("nmrcouplingtensors", nmrcouplingtensors)
+
         # In this section we are parsing mocoeffs and moenergies from
         # the files like: mos, alpha and beta.
         # $scfmo    scfconv=6   format(4d20.14)
@@ -765,6 +917,7 @@ class Turbomole(logfileparser.Logfile):
                 info = re.match(
                     r".*eigenvalue=(?P<moenergy>[0-9D\.+-]{20})\s+nsaos=(?P<count>\d+).*", line
                 )
+                assert info is not None
                 eigenvalue = utils.float(info.group("moenergy"))
 
                 moenergies.append(eigenvalue)
@@ -854,9 +1007,9 @@ class Turbomole(logfileparser.Logfile):
                     self.iter_one_elec_energy.append(utils.float(info[2]))
                 line = next(inputfile)
 
-            assert len(self.iter_energy) == len(
-                self.iter_one_elec_energy
-            ), "Different number of values found for total energy and one electron energy."
+            assert len(self.iter_energy) == len(self.iter_one_elec_energy), (
+                "Different number of values found for total energy and one electron energy."
+            )
             scfvalues = [
                 [x - y, a - b]
                 for x, y, a, b in zip(
@@ -1479,7 +1632,7 @@ class Turbomole(logfileparser.Logfile):
                 i -= 1
             i += 1
 
-    def after_parsing(self):
+    def after_parsing(self) -> None:
         if hasattr(self, "vibfreqs"):
             self.deleting_modes(self.vibfreqs, self.vibdisps, self.vibirs, self.vibrmasses)
 
@@ -1508,11 +1661,11 @@ class OldTurbomole(logfileparser.Logfile):
     def __init__(self, *args):
         super().__init__(logname="Turbomole", *args)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"Turbomole output file {self.filename}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'Turbomole("{self.filename}")'
 
@@ -1537,7 +1690,7 @@ class OldTurbomole(logfileparser.Logfile):
         """Normalise the symmetries used by Turbomole."""
         return symlabel
 
-    def before_parsing(self):
+    def before_parsing(self) -> None:
         self.geoopt = False  # Is this a GeoOpt? Needed for SCF targets/values.
 
     def split_molines(self, inline):
@@ -1557,7 +1710,7 @@ class OldTurbomole(logfileparser.Logfile):
             return [float(f1)]
         return
 
-    def extract(self, inputfile, line):
+    def extract(self, inputfile: "FileWrapper", line: str) -> None:
         """Extract information from the file object inputfile."""
 
         if line[3:11] == "nbf(AO)=":
@@ -1949,7 +2102,7 @@ class OldTurbomole(logfileparser.Logfile):
 
     #        line=next(inputfile)
 
-    def after_parsing(self):
+    def after_parsing(self) -> None:
         # delete all frequencies that correspond to translations or rotations
 
         if hasattr(self, "vibfreqs"):

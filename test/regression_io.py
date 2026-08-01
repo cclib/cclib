@@ -1,4 +1,4 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -7,13 +7,14 @@ from pathlib import Path
 
 import cclib
 
+
 __filedir__ = Path(__file__).parent
 __filepath__ = Path(__filedir__).resolve()
 __regdir__ = (__filepath__ / ".." / "data" / "regression").resolve()
 
 
 class XYZRegressionTests:
-    def test_xyz_not_turbomole(self):
+    def test_xyz_not_turbomole(self) -> None:
         """Ensure XYZ file isn't misrecognized as a Turbomole file.
 
         From https://github.com/cclib/cclib/issues/1207.

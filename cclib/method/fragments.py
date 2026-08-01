@@ -1,4 +1,4 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -11,25 +11,28 @@ from cclib.method.calculationmethod import Method
 
 import numpy
 
+
 numpy.inv = numpy.linalg.inv
 
 
 class FragmentAnalysis(Method):
     """Convert a molecule's basis functions from atomic-based to fragment MO-based"""
 
-    def __init__(self, data, progress=None, loglevel=logging.INFO, logname="FragmentAnalysis of"):
+    def __init__(
+        self, data, progress=None, loglevel=logging.INFO, logname: str = "FragmentAnalysis of"
+    ) -> None:
         super().__init__(data, progress, loglevel, logname)
         self.parsed = False
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the object."""
         return f"Fragment molecule basis of {self.data}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a representation of the object."""
         return f'Fragment molecular basis("{self.data}")'
 
-    def calculate(self, fragments, cupdate=0.05):
+    def calculate(self, fragments, cupdate: float = 0.05) -> bool:
         nFragBasis = 0
         nFragAlpha = 0
         nFragBeta = 0

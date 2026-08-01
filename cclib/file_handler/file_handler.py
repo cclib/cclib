@@ -1,4 +1,4 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -15,15 +15,15 @@ import logging
 import pathlib
 import re
 import sys
-import typing
 import zipfile
 from collections.abc import Iterator
 from tempfile import NamedTemporaryFile
-from typing import Iterable, List, Optional
+from typing import IO, Iterable, List, Optional, Tuple
 from urllib.error import URLError
 from urllib.request import urlopen
 
 from cclib.file_handler import utils
+
 
 # Regular expression for validating URLs
 URL_PATTERN = re.compile(
@@ -37,7 +37,7 @@ URL_PATTERN = re.compile(
 )
 
 
-def logerror(error):
+def logerror(error) -> Tuple[str, int]:
     """
     Log a unicode decode/encode error to the logger and return a replacement character.
     """
@@ -137,7 +137,7 @@ class FileHandler(FileWrapperBase):
     @classmethod
     def open_log_file(
         self, source, mode: str = "r", encoding: str = "utf-8", errors: str = "logerror"
-    ) -> typing.Tuple[str, typing.IO]:
+    ) -> Tuple[str, IO]:
         """
         Open a possibly compressed file, returning both the filename of the file and an open file object.
         """
@@ -225,7 +225,7 @@ class FileHandler(FileWrapperBase):
         """
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback):
+    def __exit__(self, exc_type, exc_value, traceback) -> None:
         """
         Exit context
         """
@@ -309,7 +309,7 @@ class FileHandler(FileWrapperBase):
         """
         return next(self)
 
-    def readlines(self) -> typing.List[str]:
+    def readlines(self) -> List[str]:
         """
         Read all the lines from this file.
         """
@@ -360,7 +360,7 @@ class FileHandler(FileWrapperBase):
     #                 # Seek forwards please.
     #                 file_size = self.sizes[self.file_pointer]
 
-    def reset(self):
+    def reset(self) -> None:
         # Equivalent to seeking to 0 for all our files.
         for file in self.files:
             file.seek(0, 0)
@@ -368,7 +368,7 @@ class FileHandler(FileWrapperBase):
         self.file_pointer = 0
         self.pos = 0
 
-    def finish(self):
+    def finish(self) -> None:
         # Equivalent to seeking to 2 for all our files.
         for file in self.files:
             file.seek(0, 2)

@@ -1,9 +1,10 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 from typing import Optional
 
+from cclib import ureg
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
 from cclib import unit_registry
@@ -13,46 +14,82 @@ import numpy as np
 
 class moenergies(base_parser):
     """
-    Docstring? Units?
+    short: molecular orbital energies
+    long:
+    units: eV
     """
 
-    known_codes = ["gaussian"]
+    known_codes = ["gaussian", "ORCA"]
+    cclib_unit = ureg.eV
 
     @staticmethod
     def gaussian(file_handler, ccdata) -> Optional[dict]:
+        gaussian_unit = ureg.hartree
         line = file_handler.last_line
         if line[1:6] == "Alpha" and line.find("eigenvalues") >= 0:
             # For counterpoise fragments, skip these lines.
-            if getattr(ccdata, "moenergies") is None:
-                constructed_moenergies = [[]]
-                while line.find("Alpha") == 1:
-                    part = line[28:]
-                    i = 0
-                    while i * 10 + 4 < len(part):
-                        s = part[i * 10 : (i + 1) * 10]
-                        try:
-                            x = utils.float(s)
-                        except ValueError:
-                            x = np.nan
-                        constructed_moenergies[0].append(x)
-                        i += 1
-                    line = file_handler.virtual_next()
-                if line.find("Beta") == 2:
-                    constructed_moenergies.append([])
+            existing = getattr(ccdata, "moenergies")
+            if existing:
+                constructed_moenergies = existing
+            else:
+                constructed_moenergies = [np.array([]) * moenergies.cclib_unit]
 
-                while line.find("Beta") == 2:
-                    part = line[28:]
-                    i = 0
-                    while i * 10 + 4 < len(part):
-                        x = part[i * 10 : (i + 1) * 10]
-                        constructed_moenergies[1].append(utils.float(x))
-                        i += 1
-                    line = file_handler.virtual_next()
+            while line.find("Alpha") == 1:
+                part = line[28:]
+                i = 0
+                while i * 10 + 4 < len(part):
+                    s = part[i * 10 : (i + 1) * 10]
+                    try:
+                        x = utils.float(s) * gaussian_unit
+                    except ValueError:
+                        x = np.nan
+                    constructed_moenergies[0] = np.append(constructed_moenergies[0], x)
+                    i += 1
+                line = file_handler.virtual_next()
+            if line.find("Beta") == 2:
+                constructed_moenergies.append([np.array([]) * moenergies.cclib_unit])
 
-                constructed_moenergies = [
-                    np.array(x, "d") for x in constructed_moenergies
-                ] * unit_registry.hartree
-                return {moenergies.__name__: constructed_moenergies}
+            while line.find("Beta") == 2:
+                part = line[28:]
+                i = 0
+                while i * 10 + 4 < len(part):
+                    s = part[i * 10 : (i + 1) * 10]
+                    try:
+                        x = utils.float(s) * gaussian_unit
+                    except ValueError:
+                        x = np.nan
+
+                    constructed_moenergies[1] = np.append(constructed_moenergies[1], x)
+                    i += 1
+                line = file_handler.virtual_next()
+            return {moenergies.__name__: constructed_moenergies}
+        return None
+
+    @staticmethod
+    def ORCA(file_handler, ccdata) -> Optional[dict]:
+        line = file_handler.last_line
+        if line[0:16] == "ORBITAL ENERGIES":
+            file_handler.skip_lines(["d", "text", "text"], virtual=True)
+            constructed_moenergies = [[]]
+            line = file_handler.virtual_next()
+            while orca_continue_orbital_section(line):
+                info = line.split()
+                moenergy = float(info[2])
+                constructed_moenergies[0].append(moenergy)
+                line = file_handler.virtual_next()
+            line = file_handler.virtual_next()
+            # handle beta orbitals for UHF
+            if line[17:35] == "SPIN DOWN ORBITALS":
+                file_handler.skip_lines(["text"], virtual=True)
+                constructed_moenergies.append([])
+                line = file_handler.virtual_next()
+                while orca_continue_orbital_section(line):
+                    info = line.split()
+                    moenergy = float(info[2])
+                    constructed_moenergies[1].append(moenergy)
+                    line = file_handler.virtual_next()
+            constructed_moenergies = [np.array(x, "d") for x in constructed_moenergies]
+            return {moenergies.__name__: constructed_moenergies}
         return None
 
     @staticmethod
@@ -64,3 +101,9 @@ class moenergies(base_parser):
             constructed_data = program_parser(file_handler, ccdata)
             file_handler.virtual_reset()
         return constructed_data
+
+
+def orca_continue_orbital_section(line: str) -> bool:
+    # terminated by ------
+    # OR has *Only the first 10 virtual orbitals were printed.
+    return len(line) > 25 and line[:5] not in ("*Only", "Total")

@@ -1,4 +1,4 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -13,6 +13,7 @@ from cclib.io.moldenwriter import MoldenReformatter, round_molden
 
 import pytest
 
+
 __filedir__ = os.path.dirname(__file__)
 __filepath__ = os.path.realpath(__filedir__)
 __datadir__ = os.path.join(__filepath__, "..", "..")
@@ -20,7 +21,7 @@ __testdir__ = __filedir__
 
 
 class MOLDENTest:
-    def test_missing_attribute_error(self):
+    def test_missing_attribute_error(self) -> None:
         """Check if MissingAttributeError is raised as expected."""
         fpath = os.path.join(__datadir__, "data/GAMESS/basicGAMESS-US2018/dvb_un_sp.out")
         required_attrs = ["atomcoords", "atomnos", "natom"]
@@ -32,7 +33,7 @@ class MOLDENTest:
             with pytest.raises(MissingAttributeError):
                 cclib.io.moldenwriter.MOLDEN(data)
 
-    def test_atoms_section_size(self):
+    def test_atoms_section_size(self) -> None:
         """Check if size of Atoms section is equal to expected."""
         fpath = os.path.join(__datadir__, "data/GAMESS/basicGAMESS-US2018/dvb_un_sp.out")
         data = cclib.io.ccread(fpath)
@@ -40,7 +41,7 @@ class MOLDENTest:
         # Check size of Atoms section.
         assert len(writer._coords_from_ccdata(-1)) == data.natom
 
-    def test_atoms_section_size_with_ghost(self):
+    def test_atoms_section_size_with_ghost(self) -> None:
         """Check if size of Atoms section is equal to expected with a ghost atom present."""
         fpath = os.path.join(__datadir__, "data/GAMESS/basicGAMESS-US2018/dvb_un_sp_ghost.out")
         data = cclib.io.ccread(fpath)
@@ -51,7 +52,7 @@ class MOLDENTest:
         # Check size of Atoms section.
         assert len(writer._coords_from_ccdata(-1)) == data.natom
 
-    def test_gto_section_size(self):
+    def test_gto_section_size(self) -> None:
         """Check if size of GTO section is equal to expected."""
         fpath = os.path.join(__datadir__, "data/GAMESS/basicGAMESS-US2018/dvb_un_sp.out")
         data = cclib.io.ccread(fpath)
@@ -66,7 +67,7 @@ class MOLDENTest:
         size_gto_writer = len(list(filter(None, writer._gto_from_ccdata())))
         assert size_gto_writer == size_gto_ccdata
 
-    def test_mo_section_size(self):
+    def test_mo_section_size(self) -> None:
         """Check if size of MO section is equal to expected."""
         fpath = os.path.join(__datadir__, "data/GAMESS/basicGAMESS-US2018/dvb_un_sp.out")
         data = cclib.io.ccread(fpath)
@@ -85,7 +86,7 @@ class MOLDENTest:
         )
         assert size_mo_writer == size_mo_ccdata
 
-    def test_no_section_size(self):
+    def test_no_section_size(self) -> None:
         """Check if size of NO section is equal to expected."""
         fpath = os.path.join(__datadir__, "data/GAMESS/basicGAMESS-US2018/water_cis_dets.out")
         data = cclib.io.ccread(fpath)
@@ -103,7 +104,7 @@ class MOLDENTest:
         )
         assert size_no_writer == size_no_ccdata
 
-    def test_round_molden(self):
+    def test_round_molden(self) -> None:
         """Check if Molden Style number rounding works as expected."""
         # If the 6th digit after dot is greater than 5, but is not 7,
         # round the number upto 6th place.
@@ -118,7 +119,7 @@ class MOLDENTest:
         assert round_molden(-0.999998789) == -0.999999
         assert round_molden(-0.999999999) == -1.0
 
-    def test_molden_cclib_diff(self):
+    def test_molden_cclib_diff(self) -> None:
         """Check if file written by cclib matched file written by Molden."""
         filenames = ["dvb_un_sp", "C_bigbasis", "water_mp2", "dvb_ir"]
         for fn in filenames:

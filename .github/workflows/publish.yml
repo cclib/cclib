@@ -11,6 +11,8 @@ concurrency:
   group: publish-${{github.ref}}-${{github.event.pull_request.number || github.run_number}}
   cancel-in-progress: true
 
+permissions: {}
+
 env:
   # For now always take the "reduced" form of the version, even for those
   # actions runs that do not push to a package index.
@@ -25,7 +27,7 @@ jobs:
 
   publish-to-testpypi:
     name: Publish Python distribution to TestPyPI
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     # publish on merge to default branch or any tag
     if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')
@@ -39,18 +41,21 @@ jobs:
 
     steps:
       - name: Download all the dists
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c  # v8
         with:
           name: python-package-distributions
           path: dist/
       - name: Publish distribution to TestPyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b  # v1.14.0
         with:
           repository-url: https://test.pypi.org/legacy/
+          # Temporary workaround for
+          # https://github.com/pypa/gh-action-pypi-publish/issues/283
+          attestations: false
 
   publish-to-pypi:
     name: Publish Python distribution to PyPI
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     # only publish on release/versioned tag pushes
     if: startsWith(github.ref, 'refs/tags/v')
@@ -64,18 +69,21 @@ jobs:
 
     steps:
       - name: Download all the dists
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c  # v8
         with:
           name: python-package-distributions
           path: dist/
       - name: Publish distribution to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b  # v1.14.0
+        with:
+          # Temporary workaround for
+          # https://github.com/pypa/gh-action-pypi-publish/issues/283
+          attestations: false
 
   github-release:
     name: >-
-      Sign the Python distribution with Sigstore
-      and upload them to GitHub Release
-    runs-on: ubuntu-22.04
+      Sign the Python distribution with Sigstore and upload them to GitHub Release
+    runs-on: ubuntu-24.04
 
     # make (draft) release on any tag
     if: startsWith(github.ref, 'refs/tags/')
@@ -86,25 +94,20 @@ jobs:
 
     steps:
       - name: Download all the dists
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c  # v8
         with:
           name: python-package-distributions
           path: dist/
       - name: Sign the dists with Sigstore
-        uses: sigstore/gh-action-sigstore-python@v3.0.0
+        uses: sigstore/gh-action-sigstore-python@5b79a39c381910c090341a2c9b0bf022c8b387e1  # v3.4.0
         with:
           inputs: >-
-            ./dist/*.tar.gz
-            ./dist/*.whl
+            ./dist/*.tar.gz ./dist/*.whl
       - name: Create GitHub Release (draft)
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: >-
-          gh release create
-          '${{ github.ref_name }}'
-          --repo '${{ github.repository }}'
-          --draft
-          --notes ""
+          gh release create "${GITHUB_REF_NAME}" --repo "${GITHUB_REPOSITORY}" --draft --notes ""
       - name: Upload artifact signatures to GitHub Release
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -112,6 +115,4 @@ jobs:
         # `dist/` contains the built packages, and the
         # sigstore-produced signatures and certificates.
         run: >-
-          gh release upload
-          '${{ github.ref_name }}' dist/**
-          --repo '${{ github.repository }}'
+          gh release upload "${GITHUB_REF_NAME}" dist/** --repo "${GITHUB_REPOSITORY}"

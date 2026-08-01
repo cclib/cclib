@@ -1,4 +1,4 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -12,7 +12,7 @@ import numpy as np
 class Psi4Test:
     """Tests for the cclib2psi4 bridge in cclib."""
 
-    def test_makepsi4(self):
+    def test_makepsi4(self) -> None:
         if not find_package("psi4"):
             raise ImportError("Must install psi4 to run this test")
 

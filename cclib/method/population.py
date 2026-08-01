@@ -1,4 +1,4 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
@@ -6,12 +6,13 @@
 """Population analyses based on cclib data."""
 
 import logging
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, List, Optional
 
 from cclib.method.calculationmethod import Method, MissingAttributeError
 from cclib.progress import Progress
 
 import numpy
+
 
 if TYPE_CHECKING:
     from cclib.parser.data import ccData
@@ -55,11 +56,11 @@ class Population(Method):
                 "Need overlap matrix (aooverlaps or fooverlaps attribute) for Population methods"
             )
 
-    def partition(self, indices=None) -> bool:
+    def partition(self, indices: Optional[List[List[int]]] = None) -> bool:
         if not hasattr(self, "aoresults"):
             self.calculate()
 
-        if not indices:
+        if indices is None:
             # Build list of groups of orbitals in each atom for atomresults.
             if hasattr(self.data, "aonames"):
                 names = self.data.aonames

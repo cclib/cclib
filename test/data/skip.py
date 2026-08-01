@@ -1,10 +1,11 @@
-# Copyright (c) 2025, the cclib development team
+# Copyright (c) 2025-2026, the cclib development team
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
 """Tools for skipping data tests in cclib."""
 
+# mypy: disable-error-code="attr-defined"
 from inspect import signature
 from typing import Callable
 
@@ -18,9 +19,9 @@ def skipForParser(parser: str, msg: str):
         func_args = list(signature(testfunc).parameters.keys())
         if "numvib" in func_args:
 
-            def tstwrapper(self, data, numvib) -> None:
+            def tstwrapper(self, data, numvib: int) -> None:
                 if any(
-                    data._ccCollection._parsed_data[0].metadata["identified_program"]
+                    data._ccCollection._parsed_data[0].metadata["identified_program"].lower()
                     == parser.lower()
                 ):
                     pytest.skip(reason=f"{parser}: {msg}")
@@ -30,7 +31,7 @@ def skipForParser(parser: str, msg: str):
 
             def tstwrapper(self, data, extra) -> None:
                 if (
-                    data._ccCollection._parsed_data[0].metadata["identified_program"]
+                    data._ccCollection._parsed_data[0].metadata["identified_program"].lower()
                     == parser.lower()
                 ):
                     pytest.skip(reason=f"{parser}: {msg}")
@@ -40,7 +41,7 @@ def skipForParser(parser: str, msg: str):
 
             def tstwrapper(self, data) -> None:
                 if (
-                    data._ccCollection._parsed_data[0].metadata["identified_program"]
+                    data._ccCollection._parsed_data[0].metadata["identified_program"].lower()
                     == parser.lower()
                 ):
                     pytest.skip(reason=f"{parser}: {msg}")
@@ -59,7 +60,7 @@ def skipForLogfile(fragment: str, msg: str):
         func_args = list(signature(testfunc).parameters.keys())
         if "numvib" in func_args:
 
-            def tstwrapper(self, data, numvib) -> None:
+            def tstwrapper(self, data, numvib: int) -> None:
                 if any(fragment in filename for filename in data._fileHandler.filenames):
                     pytest.skip(reason=f"{fragment}: {msg}")
                 else:
