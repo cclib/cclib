@@ -104,11 +104,11 @@ repos:
       - id: check-json
       - id: check-added-large-files
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.21
+    rev: v0.15.22
     hooks:
-      - id: ruff-format
       - id: ruff-check
         args: [--fix]
+      - id: ruff-format
   # - repo: https://github.com/pre-commit/mirrors-mypy
   #   rev: "v1.16.1"
   #   hooks:
@@ -173,7 +173,7 @@ repos:
       - id: rst-directive-colons
       - id: rst-inline-touching-normal
   - repo: https://github.com/tombi-toml/tombi-pre-commit
-    rev: v1.2.0
+    rev: v1.2.4
     hooks:
       - id: tombi-format
         # Requires https://github.com/cclib/cclib/pull/1775
@@ -189,7 +189,7 @@ repos:
         additional_dependencies:
           - "github.com/wasilibs/go-shellcheck/cmd/shellcheck@v0.11.1"
   - repo: https://github.com/zizmorcore/zizmor-pre-commit
-    rev: "v1.27.0"
+    rev: "v1.28.0"
     hooks:
       - id: zizmor
         args: [--no-progress, --persona=pedantic, --fix=all]

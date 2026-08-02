@@ -1,0 +1,1398 @@
+{ 
+ s_m_m2io_version
+ s_m_workflow_menu
+ :::
+ 2.0.0 
+ "Jaguar Coordinate Scan Plot" 
+} 
+
+f_m_ct { 
+ s_m_title
+ b_j_Scan_Point_OK
+ i_j_Geometry_convergence_category
+ i_j_Number_of_canonical_orbitals
+ i_j_ScanPt_Num
+ i_m_Spin_multiplicity
+ r_j_Final_Energy
+ r_j_Gas_Phase_Energy
+ r_j_HOMO
+ r_j_LUMO
+ r_j_d
+ s_j_Jaguar_input_file
+ s_j_Jaguar_log_file
+ s_j_Jaguar_mae_file
+ s_j_Jaguar_output_file
+ s_j_Jaguar_restart_input_file
+ s_j_Jaguar_restart_mae_file
+ s_j_QM_Basis
+ s_j_QM_Method
+ s_j_Task
+ i_m_ct_format
+ :::
+ "" 
+ 1
+ 0
+ 60
+ 1
+ 1
+ -382.308265392835
+ -382.308265392835
+ -0.15306929878869
+ 0.0374701781586846
+ 0
+ dvb_scan_relaxed.in 
+ dvb_scan_relaxed.log 
+ dvb_scan_relaxed.mae 
+ dvb_scan_relaxed.out 
+ dvb_scan_relaxed.01.in 
+ dvb_scan_relaxed.01.mae 
+ sto-3g 
+ DFT(b3lyp) 
+ "Relaxed Scan" 
+  2
+ m_atom[20] { 
+  # First column is atom index #
+  i_m_mmod_type
+  r_m_x_coord
+  r_m_y_coord
+  r_m_z_coord
+  i_m_color
+  i_m_atomic_number
+  s_m_color_rgb
+  s_m_atom_name
+  :::
+  1 2 0.145632 -1.443117 0.000000 2 6 A0A0A0  C1 
+  2 2 1.152202 -0.437001 0.000000 2 6 A0A0A0  C2 
+  3 2 0.815974 0.923139 0.000000 2 6 A0A0A0  C3 
+  4 2 -0.543260 1.344576 0.000000 2 6 A0A0A0  C4 
+  5 2 -1.548315 0.340212 0.000000 2 6 A0A0A0  C5 
+  6 41 2.210521 -0.728162 0.000000 21 1 FFFFFF  H6 
+  7 41 1.616715 1.673983 0.000000 21 1 FFFFFF  H7 
+  8 41 -2.605219 0.639880 0.000000 21 1 FFFFFF  H8 
+  9 2 -0.950013 2.785625 0.000000 2 6 A0A0A0  C9 
+  10 2 -0.130435 3.851404 0.000000 2 6 A0A0A0  C10 
+  11 41 0.961731 3.759367 0.000000 21 1 FFFFFF  H11 
+  12 41 -2.037880 2.951641 0.000000 21 1 FFFFFF  H12 
+  13 41 -0.528350 4.872909 0.000000 21 1 FFFFFF  H13 
+  14 2 0.456947 -2.908031 0.000000 2 6 A0A0A0  C14 
+  15 41 -0.428437 -3.561499 0.000000 21 1 FFFFFF  H15 
+  16 2 1.679254 -3.467741 0.000000 2 6 A0A0A0  C16 
+  17 41 2.601172 -2.875051 0.000000 21 1 FFFFFF  H17 
+  18 41 1.805594 -4.556666 0.000000 21 1 FFFFFF  H18 
+  19 2 -1.211430 -1.022356 0.000000 2 6 A0A0A0  C19 
+  20 41 -2.006952 -1.780019 0.000000 21 1 FFFFFF  H20 
+  :::
+ } 
+ m_bond[20] { 
+  # First column is bond index #
+  i_m_from
+  i_m_to
+  i_m_order
+  :::
+  1 1 2 2
+  2 1 19 1
+  3 1 14 1
+  4 2 6 1
+  5 2 3 1
+  6 3 7 1
+  7 3 4 2
+  8 4 5 1
+  9 4 9 1
+  10 5 8 1
+  11 5 19 2
+  12 9 12 1
+  13 9 10 2
+  14 10 11 1
+  15 10 13 1
+  16 14 15 1
+  17 14 16 2
+  18 16 17 1
+  19 16 18 1
+  20 19 20 1
+  :::
+ } 
+} 
+
+f_m_ct { 
+ s_m_title
+ b_j_Scan_Point_OK
+ i_j_Geometry_convergence_category
+ i_j_Number_of_canonical_orbitals
+ i_j_ScanPt_Num
+ i_m_Spin_multiplicity
+ r_j_Final_Energy
+ r_j_Gas_Phase_Energy
+ r_j_HOMO
+ r_j_LUMO
+ r_j_d
+ s_j_Jaguar_input_file
+ s_j_Jaguar_log_file
+ s_j_Jaguar_mae_file
+ s_j_Jaguar_output_file
+ s_j_Jaguar_restart_input_file
+ s_j_Jaguar_restart_mae_file
+ s_j_QM_Basis
+ s_j_QM_Method
+ s_j_Task
+ i_m_ct_format
+ :::
+ "" 
+ 1
+ 1
+ 60
+ 2
+ 1
+ -382.306933318617
+ -382.306933318617
+ -0.154651273610705
+ 0.0407858161650069
+ 30
+ dvb_scan_relaxed.in 
+ dvb_scan_relaxed.log 
+ dvb_scan_relaxed.mae 
+ dvb_scan_relaxed.out 
+ dvb_scan_relaxed.01.in 
+ dvb_scan_relaxed.01.mae 
+ sto-3g 
+ DFT(b3lyp) 
+ "Relaxed Scan" 
+  2
+ m_atom[20] { 
+  # First column is atom index #
+  i_m_mmod_type
+  r_m_x_coord
+  r_m_y_coord
+  r_m_z_coord
+  i_m_color
+  i_m_atomic_number
+  s_m_color_rgb
+  s_m_atom_name
+  :::
+  1 2 0.157451 -1.435518 -0.046722 2 6 A0A0A0  C1 
+  2 2 1.001761 -0.470560 0.567395 2 6 A0A0A0  C2 
+  3 2 0.652686 0.887468 0.586673 2 6 A0A0A0  C3 
+  4 2 -0.552318 1.343348 -0.013373 2 6 A0A0A0  C4 
+  5 2 -1.408620 0.378035 -0.606730 2 6 A0A0A0  C5 
+  6 41 1.939354 -0.791166 1.039088 21 1 FFFFFF  H6 
+  7 41 1.317579 1.610697 1.076149 21 1 FFFFFF  H7 
+  8 41 -2.354771 0.704613 -1.060311 21 1 FFFFFF  H8 
+  9 2 -0.957451 2.788428 0.006129 2 6 A0A0A0  C9 
+  10 2 -0.112928 3.832867 0.024980 2 6 A0A0A0  C10 
+  11 41 0.975346 3.704327 0.063300 21 1 FFFFFF  H11 
+  12 41 -2.039863 2.971113 -0.074689 21 1 FFFFFF  H12 
+  13 41 -0.479388 4.866074 0.008527 21 1 FFFFFF  H13 
+  14 2 0.488483 -2.895606 -0.095073 2 6 A0A0A0  C14 
+  15 41 -0.260957 -3.515112 -0.609946 21 1 FFFFFF  H15 
+  16 2 1.581244 -3.487519 0.416585 2 6 A0A0A0  C16 
+  17 41 2.364943 -2.929599 0.942779 21 1 FFFFFF  H17 
+  18 41 1.735300 -4.569344 0.327979 21 1 FFFFFF  H18 
+  19 2 -1.055498 -0.979977 -0.631322 2 6 A0A0A0  C19 
+  20 41 -1.726353 -1.708211 -1.106407 21 1 FFFFFF  H20 
+  :::
+ } 
+ m_bond[20] { 
+  # First column is bond index #
+  i_m_from
+  i_m_to
+  i_m_order
+  :::
+  1 1 2 2
+  2 1 19 1
+  3 1 14 1
+  4 2 6 1
+  5 2 3 1
+  6 3 7 1
+  7 3 4 2
+  8 4 5 1
+  9 4 9 1
+  10 5 8 1
+  11 5 19 2
+  12 9 12 1
+  13 9 10 2
+  14 10 11 1
+  15 10 13 1
+  16 14 15 1
+  17 14 16 2
+  18 16 17 1
+  19 16 18 1
+  20 19 20 1
+  :::
+ } 
+} 
+
+f_m_ct { 
+ s_m_title
+ b_j_Scan_Point_OK
+ i_j_Geometry_convergence_category
+ i_j_Number_of_canonical_orbitals
+ i_j_ScanPt_Num
+ i_m_Spin_multiplicity
+ r_j_Final_Energy
+ r_j_Gas_Phase_Energy
+ r_j_HOMO
+ r_j_LUMO
+ r_j_d
+ s_j_Jaguar_input_file
+ s_j_Jaguar_log_file
+ s_j_Jaguar_mae_file
+ s_j_Jaguar_output_file
+ s_j_Jaguar_restart_input_file
+ s_j_Jaguar_restart_mae_file
+ s_j_QM_Basis
+ s_j_QM_Method
+ s_j_Task
+ i_m_ct_format
+ :::
+ "" 
+ 1
+ 3
+ 60
+ 3
+ 1
+ -382.302577203056
+ -382.302577203056
+ -0.159227343176755
+ 0.048391720004588
+ 60
+ dvb_scan_relaxed.in 
+ dvb_scan_relaxed.log 
+ dvb_scan_relaxed.mae 
+ dvb_scan_relaxed.out 
+ dvb_scan_relaxed.01.in 
+ dvb_scan_relaxed.01.mae 
+ sto-3g 
+ DFT(b3lyp) 
+ "Relaxed Scan" 
+  2
+ m_atom[20] { 
+  # First column is atom index #
+  i_m_mmod_type
+  r_m_x_coord
+  r_m_y_coord
+  r_m_z_coord
+  i_m_color
+  i_m_atomic_number
+  s_m_color_rgb
+  s_m_atom_name
+  :::
+  1 2 0.162237 -1.432663 -0.079189 2 6 A0A0A0  C1 
+  2 2 0.581562 -0.589298 0.984059 2 6 A0A0A0  C2 
+  3 2 0.227884 0.769556 1.009291 2 6 A0A0A0  C3 
+  4 2 -0.549298 1.341519 -0.030271 2 6 A0A0A0  C4 
+  5 2 -0.996226 0.496455 -1.078165 2 6 A0A0A0  C5 
+  6 41 1.186181 -1.003388 1.801581 21 1 FFFFFF  H6 
+  7 41 0.558278 1.403210 1.842540 21 1 FFFFFF  H7 
+  8 41 -1.622510 0.912803 -1.879517 21 1 FFFFFF  H8 
+  9 2 -0.968183 2.793720 0.010743 2 6 A0A0A0  C9 
+  10 2 -0.113455 3.825048 0.049986 2 6 A0A0A0  C10 
+  11 41 0.971735 3.676845 0.108136 21 1 FFFFFF  H11 
+  12 41 -2.048831 2.983178 -0.089517 21 1 FFFFFF  H12 
+  13 41 -0.463278 4.864427 0.041991 21 1 FFFFFF  H13 
+  14 2 0.516912 -2.886807 -0.155439 2 6 A0A0A0  C14 
+  15 41 0.124678 -3.403781 -1.043529 21 1 FFFFFF  H15 
+  16 2 1.246461 -3.582883 0.734236 2 6 A0A0A0  C16 
+  17 41 1.665733 -3.129771 1.639810 21 1 FFFFFF  H17 
+  18 41 1.454041 -4.649233 0.588734 21 1 FFFFFF  H18 
+  19 2 -0.636283 -0.860252 -1.107508 2 6 A0A0A0  C19 
+  20 41 -0.979291 -1.496503 -1.935652 21 1 FFFFFF  H20 
+  :::
+ } 
+ m_bond[20] { 
+  # First column is bond index #
+  i_m_from
+  i_m_to
+  i_m_order
+  :::
+  1 1 2 2
+  2 1 19 1
+  3 1 14 1
+  4 2 6 1
+  5 2 3 1
+  6 3 7 1
+  7 3 4 2
+  8 4 5 1
+  9 4 9 1
+  10 5 8 1
+  11 5 19 2
+  12 9 12 1
+  13 9 10 2
+  14 10 11 1
+  15 10 13 1
+  16 14 15 1
+  17 14 16 2
+  18 16 17 1
+  19 16 18 1
+  20 19 20 1
+  :::
+ } 
+} 
+
+f_m_ct { 
+ s_m_title
+ b_j_Scan_Point_OK
+ i_j_Geometry_convergence_category
+ i_j_Number_of_canonical_orbitals
+ i_j_ScanPt_Num
+ i_m_Spin_multiplicity
+ r_j_Final_Energy
+ r_j_Gas_Phase_Energy
+ r_j_HOMO
+ r_j_LUMO
+ r_j_d
+ s_j_Jaguar_input_file
+ s_j_Jaguar_log_file
+ s_j_Jaguar_mae_file
+ s_j_Jaguar_output_file
+ s_j_Jaguar_restart_input_file
+ s_j_Jaguar_restart_mae_file
+ s_j_QM_Basis
+ s_j_QM_Method
+ s_j_Task
+ i_m_ct_format
+ :::
+ "" 
+ 1
+ 3
+ 60
+ 4
+ 1
+ -382.299535818904
+ -382.299535818904
+ -0.163301927827526
+ 0.0540163006275521
+ 90
+ dvb_scan_relaxed.in 
+ dvb_scan_relaxed.log 
+ dvb_scan_relaxed.mae 
+ dvb_scan_relaxed.out 
+ dvb_scan_relaxed.01.in 
+ dvb_scan_relaxed.01.mae 
+ sto-3g 
+ DFT(b3lyp) 
+ "Relaxed Scan" 
+  2
+ m_atom[20] { 
+  # First column is atom index #
+  i_m_mmod_type
+  r_m_x_coord
+  r_m_y_coord
+  r_m_z_coord
+  i_m_color
+  i_m_atomic_number
+  s_m_color_rgb
+  s_m_atom_name
+  :::
+  1 2 0.161853 -1.432237 -0.127419 2 6 A0A0A0  C1 
+  2 2 -0.010610 -0.760391 1.112770 2 6 A0A0A0  C2 
+  3 2 -0.371420 0.596345 1.154670 2 6 A0A0A0  C3 
+  4 2 -0.571413 1.334360 -0.039563 2 6 A0A0A0  C4 
+  5 2 -0.402730 0.669532 -1.279044 2 6 A0A0A0  C5 
+  6 41 0.136804 -1.306171 2.053663 21 1 FFFFFF  H6 
+  7 41 -0.501165 1.094453 2.124540 21 1 FFFFFF  H7 
+  8 41 -0.557269 1.222522 -2.215533 21 1 FFFFFF  H8 
+  9 2 -0.974883 2.800338 0.010639 2 6 A0A0A0  C9 
+  10 2 -0.108245 3.818859 0.038204 2 6 A0A0A0  C10 
+  11 41 0.977042 3.659920 0.025199 21 1 FFFFFF  H11 
+  12 41 -2.058906 3.002431 0.024512 21 1 FFFFFF  H12 
+  13 41 -0.446304 4.861784 0.073577 21 1 FFFFFF  H13 
+  14 2 0.545040 -2.878292 -0.225298 2 6 A0A0A0  C14 
+  15 41 0.644085 -3.253874 -1.254499 21 1 FFFFFF  H15 
+  16 2 0.767406 -3.719718 0.798246 2 6 A0A0A0  C16 
+  17 41 0.684100 -3.411111 1.845838 21 1 FFFFFF  H17 
+  18 41 1.043993 -4.766044 0.624348 21 1 FFFFFF  H18 
+  19 2 -0.040805 -0.688052 -1.320985 2 6 A0A0A0  C19 
+  20 41 0.087379 -1.187651 -2.291939 21 1 FFFFFF  H20 
+  :::
+ } 
+ m_bond[20] { 
+  # First column is bond index #
+  i_m_from
+  i_m_to
+  i_m_order
+  :::
+  1 1 2 2
+  2 1 19 1
+  3 1 14 1
+  4 2 6 1
+  5 2 3 1
+  6 3 7 1
+  7 3 4 2
+  8 4 5 1
+  9 4 9 1
+  10 5 8 1
+  11 5 19 2
+  12 9 12 1
+  13 9 10 2
+  14 10 11 1
+  15 10 13 1
+  16 14 15 1
+  17 14 16 2
+  18 16 17 1
+  19 16 18 1
+  20 19 20 1
+  :::
+ } 
+} 
+
+f_m_ct { 
+ s_m_title
+ b_j_Scan_Point_OK
+ i_j_Geometry_convergence_category
+ i_j_Number_of_canonical_orbitals
+ i_j_ScanPt_Num
+ i_m_Spin_multiplicity
+ r_j_Final_Energy
+ r_j_Gas_Phase_Energy
+ r_j_HOMO
+ r_j_LUMO
+ r_j_d
+ s_j_Jaguar_input_file
+ s_j_Jaguar_log_file
+ s_j_Jaguar_mae_file
+ s_j_Jaguar_output_file
+ s_j_Jaguar_restart_input_file
+ s_j_Jaguar_restart_mae_file
+ s_j_QM_Basis
+ s_j_QM_Method
+ s_j_Task
+ i_m_ct_format
+ :::
+ "" 
+ 1
+ 1
+ 60
+ 5
+ 1
+ -382.302625285675
+ -382.302625285675
+ -0.159194725963282
+ 0.0484362024429201
+ 120
+ dvb_scan_relaxed.in 
+ dvb_scan_relaxed.log 
+ dvb_scan_relaxed.mae 
+ dvb_scan_relaxed.out 
+ dvb_scan_relaxed.01.in 
+ dvb_scan_relaxed.01.mae 
+ sto-3g 
+ DFT(b3lyp) 
+ "Relaxed Scan" 
+  2
+ m_atom[20] { 
+  # First column is atom index #
+  i_m_mmod_type
+  r_m_x_coord
+  r_m_y_coord
+  r_m_z_coord
+  i_m_color
+  i_m_atomic_number
+  s_m_color_rgb
+  s_m_atom_name
+  :::
+  1 2 0.166497 -1.424844 -0.144730 2 6 A0A0A0  C1 
+  2 2 -0.616833 -0.913452 0.925988 2 6 A0A0A0  C2 
+  3 2 -0.999127 0.436047 0.960721 2 6 A0A0A0  C3 
+  4 2 -0.617258 1.329831 -0.074465 2 6 A0A0A0  C4 
+  5 2 0.183220 0.830065 -1.131972 2 6 A0A0A0  C5 
+  6 41 -0.927472 -1.580530 1.740230 21 1 FFFFFF  H6 
+  7 41 -1.605882 0.807838 1.797814 21 1 FFFFFF  H7 
+  8 41 0.505595 1.509805 -1.932241 21 1 FFFFFF  H8 
+  9 2 -0.980492 2.794721 0.012371 2 6 A0A0A0  C9 
+  10 2 -0.082989 3.789944 0.026733 2 6 A0A0A0  C10 
+  11 41 0.991910 3.602992 -0.084913 21 1 FFFFFF  H11 
+  12 41 -2.047402 3.019581 0.167825 21 1 FFFFFF  H12 
+  13 41 -0.386938 4.838186 0.134754 21 1 FFFFFF  H13 
+  14 2 0.587918 -2.860476 -0.232127 2 6 A0A0A0  C14 
+  15 41 1.186293 -3.106559 -1.122445 21 1 FFFFFF  H15 
+  16 2 0.302593 -3.833720 0.649908 2 6 A0A0A0  C16 
+  17 41 -0.286311 -3.656028 1.556422 21 1 FFFFFF  H17 
+  18 41 0.654634 -4.860508 0.497626 21 1 FFFFFF  H18 
+  19 2 0.558897 -0.523523 -1.170300 2 6 A0A0A0  C19 
+  20 41 1.168034 -0.895855 -2.005062 21 1 FFFFFF  H20 
+  :::
+ } 
+ m_bond[20] { 
+  # First column is bond index #
+  i_m_from
+  i_m_to
+  i_m_order
+  :::
+  1 1 2 2
+  2 1 19 1
+  3 1 14 1
+  4 2 6 1
+  5 2 3 1
+  6 3 7 1
+  7 3 4 2
+  8 4 5 1
+  9 4 9 1
+  10 5 8 1
+  11 5 19 2
+  12 9 12 1
+  13 9 10 2
+  14 10 11 1
+  15 10 13 1
+  16 14 15 1
+  17 14 16 2
+  18 16 17 1
+  19 16 18 1
+  20 19 20 1
+  :::
+ } 
+} 
+
+f_m_ct { 
+ s_m_title
+ b_j_Scan_Point_OK
+ i_j_Geometry_convergence_category
+ i_j_Number_of_canonical_orbitals
+ i_j_ScanPt_Num
+ i_m_Spin_multiplicity
+ r_j_Final_Energy
+ r_j_Gas_Phase_Energy
+ r_j_HOMO
+ r_j_LUMO
+ r_j_d
+ s_j_Jaguar_input_file
+ s_j_Jaguar_log_file
+ s_j_Jaguar_mae_file
+ s_j_Jaguar_output_file
+ s_j_Jaguar_restart_input_file
+ s_j_Jaguar_restart_mae_file
+ s_j_QM_Basis
+ s_j_QM_Method
+ s_j_Task
+ i_m_ct_format
+ :::
+ "" 
+ 1
+ 1
+ 60
+ 6
+ 1
+ -382.3069366151
+ -382.3069366151
+ -0.154608714202485
+ 0.0407056119740248
+ 150
+ dvb_scan_relaxed.in 
+ dvb_scan_relaxed.log 
+ dvb_scan_relaxed.mae 
+ dvb_scan_relaxed.out 
+ dvb_scan_relaxed.01.in 
+ dvb_scan_relaxed.01.mae 
+ sto-3g 
+ DFT(b3lyp) 
+ "Relaxed Scan" 
+  2
+ m_atom[20] { 
+  # First column is atom index #
+  i_m_mmod_type
+  r_m_x_coord
+  r_m_y_coord
+  r_m_z_coord
+  i_m_color
+  i_m_atomic_number
+  s_m_color_rgb
+  s_m_atom_name
+  :::
+  1 2 0.108887 -1.446434 -0.107341 2 6 A0A0A0  C1 
+  2 2 -1.092183 -1.004245 0.511305 2 6 A0A0A0  C2 
+  3 2 -1.433584 0.356003 0.530720 2 6 A0A0A0  C3 
+  4 2 -0.591025 1.334259 -0.064205 2 6 A0A0A0  C4 
+  5 2 0.613051 0.895450 -0.675792 2 6 A0A0A0  C5 
+  6 41 -1.762860 -1.734457 0.982183 21 1 FFFFFF  H6 
+  7 41 -2.366206 0.676906 1.015202 21 1 FFFFFF  H7 
+  8 41 1.279570 1.629793 -1.146867 21 1 FFFFFF  H8 
+  9 2 -0.966217 2.785422 0.013753 2 6 A0A0A0  C9 
+  10 2 -0.100776 3.812438 0.038806 2 6 A0A0A0  C10 
+  11 41 0.983373 3.666146 -0.034777 21 1 FFFFFF  H11 
+  12 41 -2.042673 2.984656 0.130286 21 1 FFFFFF  H12 
+  13 41 -0.445818 4.849312 0.128777 21 1 FFFFFF  H13 
+  14 2 0.514880 -2.887226 -0.164358 2 6 A0A0A0  C14 
+  15 41 1.469971 -3.071310 -0.680095 21 1 FFFFFF  H15 
+  16 2 -0.164611 -3.932803 0.337922 2 6 A0A0A0  C16 
+  17 41 -1.121195 -3.821434 0.860564 21 1 FFFFFF  H17 
+  18 41 0.216275 -4.956241 0.242835 21 1 FFFFFF  H18 
+  19 2 0.952165 -0.465916 -0.698786 2 6 A0A0A0  C19 
+  20 41 1.885118 -0.786236 -1.183730 21 1 FFFFFF  H20 
+  :::
+ } 
+ m_bond[20] { 
+  # First column is bond index #
+  i_m_from
+  i_m_to
+  i_m_order
+  :::
+  1 1 2 2
+  2 1 19 1
+  3 1 14 1
+  4 2 6 1
+  5 2 3 1
+  6 3 7 1
+  7 3 4 2
+  8 4 5 1
+  9 4 9 1
+  10 5 8 1
+  11 5 19 2
+  12 9 12 1
+  13 9 10 2
+  14 10 11 1
+  15 10 13 1
+  16 14 15 1
+  17 14 16 2
+  18 16 17 1
+  19 16 18 1
+  20 19 20 1
+  :::
+ } 
+} 
+
+f_m_ct { 
+ s_m_title
+ b_j_Scan_Point_OK
+ i_j_Geometry_convergence_category
+ i_j_Number_of_canonical_orbitals
+ i_j_ScanPt_Num
+ i_m_Spin_multiplicity
+ r_j_Final_Energy
+ r_j_Gas_Phase_Energy
+ r_j_HOMO
+ r_j_LUMO
+ r_j_d
+ s_j_Jaguar_input_file
+ s_j_Jaguar_log_file
+ s_j_Jaguar_mae_file
+ s_j_Jaguar_output_file
+ s_j_Jaguar_restart_input_file
+ s_j_Jaguar_restart_mae_file
+ s_j_QM_Basis
+ s_j_QM_Method
+ s_j_Task
+ i_m_ct_format
+ :::
+ "" 
+ 1
+ 0
+ 60
+ 7
+ 1
+ -382.308254933326
+ -382.308254933326
+ -0.153088542181447
+ 0.0373914036719485
+ 180
+ dvb_scan_relaxed.in 
+ dvb_scan_relaxed.log 
+ dvb_scan_relaxed.mae 
+ dvb_scan_relaxed.out 
+ dvb_scan_relaxed.01.in 
+ dvb_scan_relaxed.01.mae 
+ sto-3g 
+ DFT(b3lyp) 
+ "Relaxed Scan" 
+  2
+ m_atom[20] { 
+  # First column is atom index #
+  i_m_mmod_type
+  r_m_x_coord
+  r_m_y_coord
+  r_m_z_coord
+  i_m_color
+  i_m_atomic_number
+  s_m_color_rgb
+  s_m_atom_name
+  :::
+  1 2 0.058029 -1.462417 -0.136368 2 6 A0A0A0  C1 
+  2 2 -1.292052 -1.019826 -0.102790 2 6 A0A0A0  C2 
+  3 2 -1.599527 0.347584 -0.055388 2 6 A0A0A0  C3 
+  4 2 -0.576829 1.335978 -0.037805 2 6 A0A0A0  C4 
+  5 2 0.773561 0.893215 -0.072173 2 6 A0A0A0  C5 
+  6 41 -2.107279 -1.754869 -0.116123 21 1 FFFFFF  H6 
+  7 41 -2.650260 0.667084 -0.030329 21 1 FFFFFF  H7 
+  8 41 1.587935 1.629619 -0.064152 21 1 FFFFFF  H8 
+  9 2 -0.959236 2.783142 0.012455 2 6 A0A0A0  C9 
+  10 2 -0.120319 3.833448 0.034371 2 6 A0A0A0  C10 
+  11 41 0.969661 3.720093 0.016835 21 1 FFFFFF  H11 
+  12 41 -2.043837 2.967041 0.032424 21 1 FFFFFF  H12 
+  13 41 -0.497709 4.861867 0.072531 21 1 FFFFFF  H13 
+  14 2 0.442925 -2.908687 -0.187399 2 6 A0A0A0  C14 
+  15 41 1.528046 -3.089540 -0.195391 21 1 FFFFFF  H15 
+  16 2 -0.391829 -3.961569 -0.223472 2 6 A0A0A0  C16 
+  17 41 -1.482629 -3.852839 -0.220073 21 1 FFFFFF  H17 
+  18 41 -0.009726 -4.988358 -0.259045 21 1 FFFFFF  H18 
+  19 2 1.080968 -0.474031 -0.119263 2 6 A0A0A0  C19 
+  20 41 2.131741 -0.794435 -0.145590 21 1 FFFFFF  H20 
+  :::
+ } 
+ m_bond[20] { 
+  # First column is bond index #
+  i_m_from
+  i_m_to
+  i_m_order
+  :::
+  1 1 2 2
+  2 1 19 1
+  3 1 14 1
+  4 2 6 1
+  5 2 3 1
+  6 3 7 1
+  7 3 4 2
+  8 4 5 1
+  9 4 9 1
+  10 5 8 1
+  11 5 19 2
+  12 9 12 1
+  13 9 10 2
+  14 10 11 1
+  15 10 13 1
+  16 14 15 1
+  17 14 16 2
+  18 16 17 1
+  19 16 18 1
+  20 19 20 1
+  :::
+ } 
+} 
+
+f_m_ct { 
+ s_m_title
+ b_j_Scan_Point_OK
+ i_j_Geometry_convergence_category
+ i_j_Number_of_canonical_orbitals
+ i_j_ScanPt_Num
+ i_m_Spin_multiplicity
+ r_j_Final_Energy
+ r_j_Gas_Phase_Energy
+ r_j_HOMO
+ r_j_LUMO
+ r_j_d
+ s_j_Jaguar_input_file
+ s_j_Jaguar_log_file
+ s_j_Jaguar_mae_file
+ s_j_Jaguar_output_file
+ s_j_Jaguar_restart_input_file
+ s_j_Jaguar_restart_mae_file
+ s_j_QM_Basis
+ s_j_QM_Method
+ s_j_Task
+ i_m_ct_format
+ :::
+ "" 
+ 1
+ 1
+ 60
+ 8
+ 1
+ -382.306934906636
+ -382.306934906636
+ -0.154653036962136
+ 0.0407389296758148
+ 210
+ dvb_scan_relaxed.in 
+ dvb_scan_relaxed.log 
+ dvb_scan_relaxed.mae 
+ dvb_scan_relaxed.out 
+ dvb_scan_relaxed.01.in 
+ dvb_scan_relaxed.01.mae 
+ sto-3g 
+ DFT(b3lyp) 
+ "Relaxed Scan" 
+  2
+ m_atom[20] { 
+  # First column is atom index #
+  i_m_mmod_type
+  r_m_x_coord
+  r_m_y_coord
+  r_m_z_coord
+  i_m_color
+  i_m_atomic_number
+  s_m_color_rgb
+  s_m_atom_name
+  :::
+  1 2 0.073376 -1.450994 -0.191587 2 6 A0A0A0  C1 
+  2 2 -1.142426 -0.958264 -0.738756 2 6 A0A0A0  C2 
+  3 2 -1.472108 0.402414 -0.652087 2 6 A0A0A0  C3 
+  4 2 -0.602092 1.331397 -0.018797 2 6 A0A0A0  C4 
+  5 2 0.615555 0.841990 0.523445 2 6 A0A0A0  C5 
+  6 41 -1.835588 -1.648177 -1.237063 21 1 FFFFFF  H6 
+  7 41 -2.417814 0.760530 -1.082140 21 1 FFFFFF  H7 
+  8 41 1.303159 1.536797 1.023499 21 1 FFFFFF  H8 
+  9 2 -0.965733 2.787483 0.014169 2 6 A0A0A0  C9 
+  10 2 -0.091236 3.806810 0.031761 2 6 A0A0A0  C10 
+  11 41 0.993170 3.646671 0.059551 21 1 FFFFFF  H11 
+  12 41 -2.043434 3.002142 -0.054065 21 1 FFFFFF  H12 
+  13 41 -0.427968 4.850259 0.023654 21 1 FFFFFF  H13 
+  14 2 0.471030 -2.893984 -0.250007 2 6 A0A0A0  C14 
+  15 41 1.430145 -3.120577 0.240179 21 1 FFFFFF  H15 
+  16 2 -0.216796 -3.894579 -0.826813 2 6 A0A0A0  C16 
+  17 41 -1.176251 -3.738229 -1.333932 21 1 FFFFFF  H17 
+  18 41 0.161126 -4.923494 -0.815158 21 1 FFFFFF  H18 
+  19 2 0.941688 -0.520350 0.442583 2 6 A0A0A0  C19 
+  20 41 1.884012 -0.880363 0.878413 21 1 FFFFFF  H20 
+  :::
+ } 
+ m_bond[20] { 
+  # First column is bond index #
+  i_m_from
+  i_m_to
+  i_m_order
+  :::
+  1 1 2 2
+  2 1 19 1
+  3 1 14 1
+  4 2 6 1
+  5 2 3 1
+  6 3 7 1
+  7 3 4 2
+  8 4 5 1
+  9 4 9 1
+  10 5 8 1
+  11 5 19 2
+  12 9 12 1
+  13 9 10 2
+  14 10 11 1
+  15 10 13 1
+  16 14 15 1
+  17 14 16 2
+  18 16 17 1
+  19 16 18 1
+  20 19 20 1
+  :::
+ } 
+} 
+
+f_m_ct { 
+ s_m_title
+ b_j_Scan_Point_OK
+ i_j_Geometry_convergence_category
+ i_j_Number_of_canonical_orbitals
+ i_j_ScanPt_Num
+ i_m_Spin_multiplicity
+ r_j_Final_Energy
+ r_j_Gas_Phase_Energy
+ r_j_HOMO
+ r_j_LUMO
+ r_j_d
+ s_j_Jaguar_input_file
+ s_j_Jaguar_log_file
+ s_j_Jaguar_mae_file
+ s_j_Jaguar_output_file
+ s_j_Jaguar_restart_input_file
+ s_j_Jaguar_restart_mae_file
+ s_j_QM_Basis
+ s_j_QM_Method
+ s_j_Task
+ i_m_ct_format
+ :::
+ "" 
+ 1
+ 0
+ 60
+ 9
+ 1
+ -382.302623355158
+ -382.302623355158
+ -0.159155693368235
+ 0.0483768418614808
+ 240
+ dvb_scan_relaxed.in 
+ dvb_scan_relaxed.log 
+ dvb_scan_relaxed.mae 
+ dvb_scan_relaxed.out 
+ dvb_scan_relaxed.01.in 
+ dvb_scan_relaxed.01.mae 
+ sto-3g 
+ DFT(b3lyp) 
+ "Relaxed Scan" 
+  2
+ m_atom[20] { 
+  # First column is atom index #
+  i_m_mmod_type
+  r_m_x_coord
+  r_m_y_coord
+  r_m_z_coord
+  i_m_color
+  i_m_atomic_number
+  s_m_color_rgb
+  s_m_atom_name
+  :::
+  1 2 0.131900 -1.432195 -0.186492 2 6 A0A0A0  C1 
+  2 2 -0.684483 -0.836587 -1.186560 2 6 A0A0A0  C2 
+  3 2 -1.054328 0.514621 -1.105218 2 6 A0A0A0  C3 
+  4 2 -0.629643 1.324416 -0.018895 2 6 A0A0A0  C4 
+  5 2 0.200534 0.739825 0.970200 2 6 A0A0A0  C5 
+  6 41 -1.031733 -1.438436 -2.036100 21 1 FFFFFF  H6 
+  7 41 -1.688089 0.952335 -1.888917 21 1 FFFFFF  H7 
+  8 41 0.551944 1.353679 1.810362 21 1 FFFFFF  H8 
+  9 2 -0.977630 2.795281 0.016409 2 6 A0A0A0  C9 
+  10 2 -0.068623 3.779671 0.048020 2 6 A0A0A0  C10 
+  11 41 1.006900 3.573882 0.111245 21 1 FFFFFF  H11 
+  12 41 -2.045668 3.042499 -0.090996 21 1 FFFFFF  H12 
+  13 41 -0.362517 4.836096 0.026190 21 1 FFFFFF  H13 
+  14 2 0.549441 -2.870937 -0.224266 2 6 A0A0A0  C14 
+  15 41 1.161958 -3.188611 0.632977 21 1 FFFFFF  H15 
+  16 2 0.252530 -3.768722 -1.179419 2 6 A0A0A0  C16 
+  17 41 -0.349747 -3.519414 -2.060333 21 1 FFFFFF  H17 
+  18 41 0.607897 -4.803651 -1.115772 21 1 FFFFFF  H18 
+  19 2 0.564949 -0.614894 0.892108 2 6 A0A0A0  C19 
+  20 41 1.196735 -1.055009 1.675914 21 1 FFFFFF  H20 
+  :::
+ } 
+ m_bond[20] { 
+  # First column is bond index #
+  i_m_from
+  i_m_to
+  i_m_order
+  :::
+  1 1 2 2
+  2 1 19 1
+  3 1 14 1
+  4 2 6 1
+  5 2 3 1
+  6 3 7 1
+  7 3 4 2
+  8 4 5 1
+  9 4 9 1
+  10 5 8 1
+  11 5 19 2
+  12 9 12 1
+  13 9 10 2
+  14 10 11 1
+  15 10 13 1
+  16 14 15 1
+  17 14 16 2
+  18 16 17 1
+  19 16 18 1
+  20 19 20 1
+  :::
+ } 
+} 
+
+f_m_ct { 
+ s_m_title
+ b_j_Scan_Point_OK
+ i_j_Geometry_convergence_category
+ i_j_Number_of_canonical_orbitals
+ i_j_ScanPt_Num
+ i_m_Spin_multiplicity
+ r_j_Final_Energy
+ r_j_Gas_Phase_Energy
+ r_j_HOMO
+ r_j_LUMO
+ r_j_d
+ s_j_Jaguar_input_file
+ s_j_Jaguar_log_file
+ s_j_Jaguar_mae_file
+ s_j_Jaguar_output_file
+ s_j_Jaguar_restart_input_file
+ s_j_Jaguar_restart_mae_file
+ s_j_QM_Basis
+ s_j_QM_Method
+ s_j_Task
+ i_m_ct_format
+ :::
+ "" 
+ 1
+ 1
+ 60
+ 10
+ 1
+ -382.299534449717
+ -382.299534449717
+ -0.163327024483311
+ 0.0540632133883319
+ 270
+ dvb_scan_relaxed.in 
+ dvb_scan_relaxed.log 
+ dvb_scan_relaxed.mae 
+ dvb_scan_relaxed.out 
+ dvb_scan_relaxed.01.in 
+ dvb_scan_relaxed.01.mae 
+ sto-3g 
+ DFT(b3lyp) 
+ "Relaxed Scan" 
+  2
+ m_atom[20] { 
+  # First column is atom index #
+  i_m_mmod_type
+  r_m_x_coord
+  r_m_y_coord
+  r_m_z_coord
+  i_m_color
+  i_m_atomic_number
+  s_m_color_rgb
+  s_m_atom_name
+  :::
+  1 2 0.159794 -1.433666 -0.118300 2 6 A0A0A0  C1 
+  2 2 -0.049054 -0.692308 -1.312124 2 6 A0A0A0  C2 
+  3 2 -0.410187 0.664303 -1.264928 2 6 A0A0A0  C3 
+  4 2 -0.576199 1.331752 -0.025008 2 6 A0A0A0  C4 
+  5 2 -0.372810 0.596772 1.168744 2 6 A0A0A0  C5 
+  6 41 0.074013 -1.181945 -2.286959 21 1 FFFFFF  H6 
+  7 41 -0.564292 1.219319 -2.200031 21 1 FFFFFF  H7 
+  8 41 -0.497103 1.095151 2.139756 21 1 FFFFFF  H8 
+  9 2 -0.975891 2.798958 0.021773 2 6 A0A0A0  C9 
+  10 2 -0.106200 3.815284 0.031045 2 6 A0A0A0  C10 
+  11 41 0.978364 3.653283 0.003937 21 1 FFFFFF  H11 
+  12 41 -2.059101 3.003945 0.050602 21 1 FFFFFF  H12 
+  13 41 -0.441002 4.859266 0.065855 21 1 FFFFFF  H13 
+  14 2 0.549879 -2.881160 -0.113442 2 6 A0A0A0  C14 
+  15 41 0.656393 -3.319007 0.890863 21 1 FFFFFF  H15 
+  16 2 0.774877 -3.654764 -1.188692 2 6 A0A0A0  C16 
+  17 41 0.689526 -3.280442 -2.215361 21 1 FFFFFF  H17 
+  18 41 1.057919 -4.708375 -1.081222 21 1 FFFFFF  H18 
+  19 2 -0.009601 -0.760024 1.121191 2 6 A0A0A0  C19 
+  20 41 0.150790 -1.314325 2.056146 21 1 FFFFFF  H20 
+  :::
+ } 
+ m_bond[20] { 
+  # First column is bond index #
+  i_m_from
+  i_m_to
+  i_m_order
+  :::
+  1 1 2 2
+  2 1 19 1
+  3 1 14 1
+  4 2 6 1
+  5 2 3 1
+  6 3 7 1
+  7 3 4 2
+  8 4 5 1
+  9 4 9 1
+  10 5 8 1
+  11 5 19 2
+  12 9 12 1
+  13 9 10 2
+  14 10 11 1
+  15 10 13 1
+  16 14 15 1
+  17 14 16 2
+  18 16 17 1
+  19 16 18 1
+  20 19 20 1
+  :::
+ } 
+} 
+
+f_m_ct { 
+ s_m_title
+ b_j_Scan_Point_OK
+ i_j_Geometry_convergence_category
+ i_j_Number_of_canonical_orbitals
+ i_j_ScanPt_Num
+ i_m_Spin_multiplicity
+ r_j_Final_Energy
+ r_j_Gas_Phase_Energy
+ r_j_HOMO
+ r_j_LUMO
+ r_j_d
+ s_j_Jaguar_input_file
+ s_j_Jaguar_log_file
+ s_j_Jaguar_mae_file
+ s_j_Jaguar_output_file
+ s_j_Jaguar_restart_input_file
+ s_j_Jaguar_restart_mae_file
+ s_j_QM_Basis
+ s_j_QM_Method
+ s_j_Task
+ i_m_ct_format
+ :::
+ "" 
+ 1
+ 1
+ 60
+ 11
+ 1
+ -382.302576318082
+ -382.302576318082
+ -0.159258277575638
+ 0.0484191308430723
+ 300
+ dvb_scan_relaxed.in 
+ dvb_scan_relaxed.log 
+ dvb_scan_relaxed.mae 
+ dvb_scan_relaxed.out 
+ dvb_scan_relaxed.01.in 
+ dvb_scan_relaxed.01.mae 
+ sto-3g 
+ DFT(b3lyp) 
+ "Relaxed Scan" 
+  2
+ m_atom[20] { 
+  # First column is atom index #
+  i_m_mmod_type
+  r_m_x_coord
+  r_m_y_coord
+  r_m_z_coord
+  i_m_color
+  i_m_atomic_number
+  s_m_color_rgb
+  s_m_atom_name
+  :::
+  1 2 0.163249 -1.432025 -0.132186 2 6 A0A0A0  C1 
+  2 2 0.558402 -0.534516 -1.160438 2 6 A0A0A0  C2 
+  3 2 0.202790 0.823062 -1.109365 2 6 A0A0A0  C3 
+  4 2 -0.548789 1.340410 -0.023115 2 6 A0A0A0  C4 
+  5 2 -0.966182 0.443290 0.993420 2 6 A0A0A0  C5 
+  6 41 1.141561 -0.906184 -2.012854 21 1 FFFFFF  H6 
+  7 41 0.515948 1.500171 -1.915577 21 1 FFFFFF  H7 
+  8 41 -1.568220 0.818093 1.832363 21 1 FFFFFF  H8 
+  9 2 -0.972128 2.791467 0.017126 2 6 A0A0A0  C9 
+  10 2 -0.120923 3.826518 0.006025 2 6 A0A0A0  C10 
+  11 41 0.962779 3.685044 -0.088120 21 1 FFFFFF  H11 
+  12 41 -2.050121 2.971968 0.155789 21 1 FFFFFF  H12 
+  13 41 -0.472705 4.863121 0.074268 21 1 FFFFFF  H13 
+  14 2 0.519393 -2.887627 -0.137742 2 6 A0A0A0  C14 
+  15 41 0.125512 -3.455494 0.718568 21 1 FFFFFF  H15 
+  16 2 1.255505 -3.531287 -1.059886 2 6 A0A0A0  C16 
+  17 41 1.680731 -3.027557 -1.935575 21 1 FFFFFF  H17 
+  18 41 1.463397 -4.604014 -0.972352 21 1 FFFFFF  H18 
+  19 2 -0.606272 -0.912978 0.944576 2 6 A0A0A0  C19 
+  20 41 -0.924568 -1.589057 1.749958 21 1 FFFFFF  H20 
+  :::
+ } 
+ m_bond[20] { 
+  # First column is bond index #
+  i_m_from
+  i_m_to
+  i_m_order
+  :::
+  1 1 2 2
+  2 1 19 1
+  3 1 14 1
+  4 2 6 1
+  5 2 3 1
+  6 3 7 1
+  7 3 4 2
+  8 4 5 1
+  9 4 9 1
+  10 5 8 1
+  11 5 19 2
+  12 9 12 1
+  13 9 10 2
+  14 10 11 1
+  15 10 13 1
+  16 14 15 1
+  17 14 16 2
+  18 16 17 1
+  19 16 18 1
+  20 19 20 1
+  :::
+ } 
+} 
+
+f_m_ct { 
+ s_m_title
+ b_j_Scan_Point_OK
+ i_j_Geometry_convergence_category
+ i_j_Number_of_canonical_orbitals
+ i_j_ScanPt_Num
+ i_m_Spin_multiplicity
+ r_j_Final_Energy
+ r_j_Gas_Phase_Energy
+ r_j_HOMO
+ r_j_LUMO
+ r_j_d
+ s_j_Jaguar_input_file
+ s_j_Jaguar_log_file
+ s_j_Jaguar_mae_file
+ s_j_Jaguar_output_file
+ s_j_Jaguar_restart_input_file
+ s_j_Jaguar_restart_mae_file
+ s_j_QM_Basis
+ s_j_QM_Method
+ s_j_Task
+ i_m_ct_format
+ :::
+ "" 
+ 1
+ 1
+ 60
+ 12
+ 1
+ -382.306933569029
+ -382.306933569029
+ -0.154603940992476
+ 0.0407195871475149
+ 330
+ dvb_scan_relaxed.in 
+ dvb_scan_relaxed.log 
+ dvb_scan_relaxed.mae 
+ dvb_scan_relaxed.out 
+ dvb_scan_relaxed.01.in 
+ dvb_scan_relaxed.01.mae 
+ sto-3g 
+ DFT(b3lyp) 
+ "Relaxed Scan" 
+  2
+ m_atom[20] { 
+  # First column is atom index #
+  i_m_mmod_type
+  r_m_x_coord
+  r_m_y_coord
+  r_m_z_coord
+  i_m_color
+  i_m_atomic_number
+  s_m_color_rgb
+  s_m_atom_name
+  :::
+  1 2 0.191652 -1.424552 -0.171749 2 6 A0A0A0  C1 
+  2 2 1.011306 -0.420047 -0.756366 2 6 A0A0A0  C2 
+  3 2 0.648663 0.933304 -0.698162 2 6 A0A0A0  C3 
+  4 2 -0.544459 1.344778 -0.044353 2 6 A0A0A0  C4 
+  5 2 -1.375913 0.341003 0.520327 2 6 A0A0A0  C5 
+  6 41 1.938630 -0.706193 -1.269044 21 1 FFFFFF  H6 
+  7 41 1.294900 1.687442 -1.166361 21 1 FFFFFF  H7 
+  8 41 -2.312181 0.633797 1.014687 21 1 FFFFFF  H8 
+  9 2 -0.964356 2.784277 0.018701 2 6 A0A0A0  C9 
+  10 2 -0.130962 3.837844 0.029465 2 6 A0A0A0  C10 
+  11 41 0.957266 3.723373 -0.041981 21 1 FFFFFF  H11 
+  12 41 -2.046156 2.950908 0.135461 21 1 FFFFFF  H12 
+  13 41 -0.507130 4.864912 0.104874 21 1 FFFFFF  H13 
+  14 2 0.536588 -2.881785 -0.207649 2 6 A0A0A0  C14 
+  15 41 -0.206785 -3.536971 0.271016 21 1 FFFFFF  H15 
+  16 2 1.635616 -3.433596 -0.750488 2 6 A0A0A0  C16 
+  17 41 2.415582 -2.839460 -1.240471 21 1 FFFFFF  H17 
+  18 41 1.799031 -4.517274 -0.724835 21 1 FFFFFF  H18 
+  19 2 -1.010358 -1.012943 0.465620 2 6 A0A0A0  C19 
+  20 41 -1.663361 -1.771206 0.919266 21 1 FFFFFF  H20 
+  :::
+ } 
+ m_bond[20] { 
+  # First column is bond index #
+  i_m_from
+  i_m_to
+  i_m_order
+  :::
+  1 1 2 2
+  2 1 19 1
+  3 1 14 1
+  4 2 6 1
+  5 2 3 1
+  6 3 7 1
+  7 3 4 2
+  8 4 5 1
+  9 4 9 1
+  10 5 8 1
+  11 5 19 2
+  12 9 12 1
+  13 9 10 2
+  14 10 11 1
+  15 10 13 1
+  16 14 15 1
+  17 14 16 2
+  18 16 17 1
+  19 16 18 1
+  20 19 20 1
+  :::
+ } 
+} 
+
+f_m_ct { 
+ s_m_title
+ b_j_Scan_Point_OK
+ i_j_Geometry_convergence_category
+ i_j_Number_of_canonical_orbitals
+ i_j_ScanPt_Num
+ i_m_Spin_multiplicity
+ r_j_Final_Energy
+ r_j_Gas_Phase_Energy
+ r_j_HOMO
+ r_j_LUMO
+ r_j_d
+ s_j_Jaguar_input_file
+ s_j_Jaguar_log_file
+ s_j_Jaguar_mae_file
+ s_j_Jaguar_output_file
+ s_j_Jaguar_restart_input_file
+ s_j_Jaguar_restart_mae_file
+ s_j_QM_Basis
+ s_j_QM_Method
+ s_j_Task
+ i_m_ct_format
+ :::
+ "" 
+ 1
+ 1
+ 60
+ 13
+ 1
+ -382.308260697743
+ -382.308260697743
+ -0.153077486349601
+ 0.0374908104073533
+ 360
+ dvb_scan_relaxed.in 
+ dvb_scan_relaxed.log 
+ dvb_scan_relaxed.mae 
+ dvb_scan_relaxed.out 
+ dvb_scan_relaxed.01.in 
+ dvb_scan_relaxed.01.mae 
+ sto-3g 
+ DFT(b3lyp) 
+ "Relaxed Scan" 
+  2
+ m_atom[20] { 
+  # First column is atom index #
+  i_m_mmod_type
+  r_m_x_coord
+  r_m_y_coord
+  r_m_z_coord
+  i_m_color
+  i_m_atomic_number
+  s_m_color_rgb
+  s_m_atom_name
+  :::
+  1 2 0.202044 -1.423880 -0.205266 2 6 A0A0A0  C1 
+  2 2 1.192155 -0.402519 -0.182617 2 6 A0A0A0  C2 
+  3 2 0.834915 0.950798 -0.112870 2 6 A0A0A0  C3 
+  4 2 -0.529730 1.349694 -0.062275 2 6 A0A0A0  C4 
+  5 2 -1.519060 0.329481 -0.086992 2 6 A0A0A0  C5 
+  6 41 2.254910 -0.674606 -0.223188 21 1 FFFFFF  H6 
+  7 41 1.624495 1.712898 -0.102029 21 1 FFFFFF  H7 
+  8 41 -2.580650 0.611492 -0.053341 21 1 FFFFFF  H8 
+  9 2 -0.957839 2.782635 0.017024 2 6 A0A0A0  C9 
+  10 2 -0.153037 3.858994 0.050797 2 6 A0A0A0  C10 
+  11 41 0.939879 3.781493 0.022150 21 1 FFFFFF  H11 
+  12 41 -2.047698 2.931002 0.049820 21 1 FFFFFF  H12 
+  13 41 -0.563457 4.873773 0.110265 21 1 FFFFFF  H13 
+  14 2 0.535400 -2.882139 -0.279215 2 6 A0A0A0  C14 
+  15 41 -0.340301 -3.548335 -0.303184 21 1 FFFFFF  H15 
+  16 2 1.766319 -3.421660 -0.314013 2 6 A0A0A0  C16 
+  17 41 2.678573 -2.814835 -0.290264 21 1 FFFFFF  H17 
+  18 41 1.909847 -4.507166 -0.367509 21 1 FFFFFF  H18 
+  19 2 -1.161318 -1.025495 -0.157808 2 6 A0A0A0  C19 
+  20 41 -1.943927 -1.795883 -0.177119 21 1 FFFFFF  H20 
+  :::
+ } 
+ m_bond[20] { 
+  # First column is bond index #
+  i_m_from
+  i_m_to
+  i_m_order
+  :::
+  1 1 2 2
+  2 1 19 1
+  3 1 14 1
+  4 2 6 1
+  5 2 3 1
+  6 3 7 1
+  7 3 4 2
+  8 4 5 1
+  9 4 9 1
+  10 5 8 1
+  11 5 19 2
+  12 9 12 1
+  13 9 10 2
+  14 10 11 1
+  15 10 13 1
+  16 14 15 1
+  17 14 16 2
+  18 16 17 1
+  19 16 18 1
+  20 19 20 1
+  :::
+ } 
+} 

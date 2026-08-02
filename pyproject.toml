@@ -1,28 +1,27 @@
 [project]
 name = "cclib"
-dynamic = ["version"]
 description = "parsers and algorithms for computational chemistry"
 readme = "README.md"
+requires-python = ">=3.10"
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
 authors = [
     { name = "cclib development team", email = "cclib@googlegroups.com" }
 ]
 maintainers = [
     { name = "cclib development team", email = "cclib@googlegroups.com" }
 ]
-license = { file = "LICENSE" }
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: BSD License",
     "Natural Language :: English",
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Topic :: Scientific/Engineering :: Chemistry",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
-requires-python = ">=3.8"
 dependencies = [
     "numpy",
     "packaging>=19.0",
@@ -30,6 +29,7 @@ dependencies = [
     "pint",
     "scipy>=1.2.0",
 ]
+dynamic = ["version"]
 
 [project.urls]
 "Bug Tracker" = "https://github.com/cclib/cclib/issues"
@@ -44,34 +44,25 @@ ccwrite = "cclib.scripts.ccwrite:main"
 cda = "cclib.scripts.cda:main"
 
 [project.optional-dependencies]
-# The Open Babel PyPI package for version < 3.2.0 is missing native wheels and
-# requires using SWIG to compile the Python extension against a preinstalled
-# native library.  The wheels for version >= 3.2.0 only support Python >=
-# 3.10.
-#
-# With Pixi v0.67.2, specifying a (conda) dependency via Pixi doesn't seem
-# override the corresponding PyPI dependency, so we create groups that leave
-# out Open Babel and manually specify it as a Pixi dependency for Python <
-# 3.10 versions while keeping everything as-is for Python >= 3.10.
 all = ["cclib[bridges]"]
-bridges = ["cclib[bridges-no-openbabel,openbabel]"]
-bridges-no-openbabel = [
+bridges = [
     "ase>=3.21",
     "biopython",
     "chemfiles",
+    "openbabel",
     "pandas",
     "pyscf",
     "geometric",
     "qc-iodata>=1.0.0a2",
+    "trexio",
 ]
-dev = ["cclib[bridges,docs,test-infrastructure]"]
-dev-no-openbabel = ["cclib[bridges-no-openbabel,docs,test-infrastructure]"]
+dev = ["cclib[bridges,docs,test-infrastructure]", "twine"]
 docs = [
     "build",
+    "pip",
     "sphinx",
     "sphinx_rtd_theme",
 ]
-openbabel = ["openbabel"]
 test = ["cclib[bridges,docs,test-infrastructure]"]
 test-infrastructure = [
     "pytest-cov",
@@ -88,7 +79,7 @@ bridges-git = [
 
 [build-system]
 requires = [
-    "setuptools>=61.0",
+    "setuptools>=77.0.3",
     "versioningit>=2.0",
 ]
 build-backend = "setuptools.build_meta"
@@ -165,25 +156,11 @@ preview = ["pixi-build"]
 cclib = { path = ".", editable = true }
 
 [tool.pixi.environments]
-py38 = { features = ["py38", "dev-no-openbabel", "bridges-git"], solve-group = "py38" }
-py39 = { features = ["py39", "dev-no-openbabel", "bridges-git"], solve-group = "py39" }
 py310 = { features = ["py310", "dev", "bridges-git"], solve-group = "py310" }
 py311 = { features = ["py311", "dev", "bridges-git"], solve-group = "py311" }
 py312 = { features = ["py312", "dev", "bridges-git"], solve-group = "py312" }
 py313 = { features = ["py313", "dev", "bridges-git"], solve-group = "py313" }
 py314 = { features = ["py314", "dev", "bridges-git"], solve-group = "py314" }
-
-[tool.pixi.feature.py38.dependencies]
-libint = { version = "==2.9.0", build = "*_4" }
-openbabel = "*"
-psi4 = "*"
-python = "3.8.*"
-
-[tool.pixi.feature.py39.dependencies]
-libint = { version = "==2.9.0", build = "*_4" }
-openbabel = "*"
-psi4 = "*"
-python = "3.9.*"
 
 [tool.pixi.feature.py310.dependencies]
 psi4 = "*"
@@ -202,6 +179,7 @@ psi4 = "*"
 python = "3.13.*"
 
 [tool.pixi.feature.py314.dependencies]
+psi4 = "*"
 python = "3.14.*"
 
 [tool.pixi.package]

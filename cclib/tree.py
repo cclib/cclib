@@ -3,16 +3,15 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 from dataclasses import dataclass, field
-from typing import List, Optional
 
 
 @dataclass
 class Tree:
-    _root_node: Optional[int] = None
-    _children: List[List[int]] = field(default_factory=list)
-    _parent: List[Optional[int]] = field(default_factory=list)
-    _visited_children_idx: List[int] = field(default_factory=list)
-    _curr_node_idx: Optional[int] = None
+    _root_node: int | None = None
+    _children: list[list[int]] = field(default_factory=list)
+    _parent: list[int | None] = field(default_factory=list)
+    _visited_children_idx: list[int] = field(default_factory=list)
+    _curr_node_idx: int | None = None
     _num_nodes: int = 0
 
     def __len__(self) -> int:
@@ -32,16 +31,16 @@ class Tree:
         self._children.append([])
         self._num_nodes += 1
 
-    def get_root_idx(self) -> Optional[int]:
+    def get_root_idx(self) -> int | None:
         return self._root_node
 
-    def get_children_idx(self, idx: int) -> List[int]:
+    def get_children_idx(self, idx: int) -> list[int]:
         """Returns the index of all the children"""
         return self._children[idx]
 
-    def get_parent_idxs(self, idx: int) -> List[int]:
+    def get_parent_idxs(self, idx: int) -> list[int]:
         """Returns all parents of a node"""
-        parents: List[int] = []
+        parents: list[int] = []
         curr_par = self._parent[idx]
         if curr_par is None:
             return parents
@@ -53,7 +52,7 @@ class Tree:
                 parents.append(curr_par)
         return parents
 
-    def get_next_idx(self, idx: Optional[int] = None) -> Optional[int]:
+    def get_next_idx(self, idx: int | None = None) -> int | None:
         """Returns the index of the next node to visit in a depth first search"""
         if self._curr_node_idx is None:
             # just starting the walk, start at root

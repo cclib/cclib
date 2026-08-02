@@ -6,7 +6,7 @@
 """Calculation of electric multipole moments based on data parsed by cclib."""
 
 import sys
-from typing import TYPE_CHECKING, List, Optional, Union
+from typing import TYPE_CHECKING
 
 from cclib.method.calculationmethod import Method
 from cclib.parser.utils import convertor
@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 if sys.version_info.minor >= 9:
     from collections.abc import Iterable
 else:
-    from typing import Iterable
+    from collections.abc import Iterable
 
 
 class Moments(Method):
@@ -75,10 +75,10 @@ class Moments(Method):
 
     def calculate(
         self,
-        origin: Union[str, Iterable[float]] = "nuccharge",
+        origin: str | Iterable[float] = "nuccharge",
         population: str = "mulliken",
-        masses: Optional[Union[numpy.ndarray, Iterable[float]]] = None,
-    ) -> List[numpy.ndarray]:
+        masses: numpy.ndarray | Iterable[float] | None = None,
+    ) -> list[numpy.ndarray]:
         """Calculate electric dipole and quadrupole moments using parsed
         partial atomic charges.
 

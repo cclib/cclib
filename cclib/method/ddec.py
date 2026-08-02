@@ -8,7 +8,7 @@
 import copy
 import logging
 import math
-from typing import TYPE_CHECKING, Optional, Tuple
+from typing import TYPE_CHECKING, Optional
 
 from cclib.method.stockholder import Stockholder
 from cclib.parser.utils import convertor
@@ -93,7 +93,7 @@ class DDEC6(Stockholder):
 
     def _read_proatom(
         self, directory: str, atom_num: int, charge: float
-    ) -> Tuple[numpy.ndarray, numpy.ndarray]:
+    ) -> tuple[numpy.ndarray, numpy.ndarray]:
         return super()._read_proatom(directory, atom_num, charge)
 
     def calculate(self, indices=None, fupdate: float = 0.05) -> None:

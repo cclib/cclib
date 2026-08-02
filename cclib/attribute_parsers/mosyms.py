@@ -3,7 +3,6 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 import re
-from typing import Optional
 
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
@@ -88,7 +87,7 @@ class mosyms(base_parser):
     known_codes = ["gaussian", "qchem", "ORCA"]
 
     @staticmethod
-    def gaussian(file_handler, ccdata) -> Optional[dict]:
+    def gaussian(file_handler, ccdata) -> dict | None:
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
         constructed_data = None
@@ -125,7 +124,7 @@ class mosyms(base_parser):
         return None
 
     @staticmethod
-    def qchem(file_handler, ccdata) -> Optional[dict]:
+    def qchem(file_handler, ccdata) -> dict | None:
         line = file_handler.last_line
         parsed_data = None
         # Molecular orbital energies and symmetries.
@@ -203,7 +202,7 @@ class mosyms(base_parser):
         return parsed_data
 
     @staticmethod
-    def ORCA(file_handler, ccdata) -> Optional[dict]:
+    def ORCA(file_handler, ccdata) -> dict | None:
         line = file_handler.last_line
         uses_symmetry = False
         if "uses_symmetry" in ccdata.parser_state:
@@ -236,7 +235,7 @@ class mosyms(base_parser):
         return None
 
     @staticmethod
-    def parse(file_handler, program: str, ccdata) -> Optional[dict]:
+    def parse(file_handler, program: str, ccdata) -> dict | None:
         constructed_data = None
         if program in mosyms.known_codes:
             file_handler.virtual_set()

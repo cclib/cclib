@@ -2,7 +2,6 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
-from typing import Optional
 
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
@@ -68,7 +67,7 @@ class scfenergies(base_parser):
             return {scfenergies.__name__: this_scfenergies}
 
     @staticmethod
-    def parse(file_handler, program, ccdata) -> Optional[dict]:
+    def parse(file_handler, program, ccdata) -> dict | None:
         constructed_data = None
         if program in scfenergies.known_codes:
             file_handler.virtual_set()

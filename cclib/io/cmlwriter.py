@@ -6,7 +6,8 @@
 """A writer for chemical markup language (CML) files."""
 
 import xml.etree.ElementTree as ET
-from typing import TYPE_CHECKING, Mapping
+from collections.abc import Mapping
+from typing import TYPE_CHECKING
 
 from cclib.io import filewriter
 from cclib.parser.utils import find_package

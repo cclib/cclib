@@ -1,0 +1,69 @@
+{ 
+ s_m_m2io_version
+ :::
+ 2.0.0 
+} 
+
+f_m_ct { 
+ s_m_title
+ i_m_Spin_multiplicity
+ i_j_Number_of_canonical_orbitals
+ r_j_Gas_Phase_Energy
+ r_j_Final_Energy
+ r_j_HOMO
+ r_j_LUMO
+ s_j_Task
+ s_j_Jaguar_input_file
+ s_j_Jaguar_restart_input_file
+ s_j_Jaguar_restart_mae_file
+ s_j_Jaguar_output_file
+ s_j_Jaguar_log_file
+ s_j_Jaguar_mae_file
+ s_j_QM_Method
+ s_j_QM_Basis
+ i_m_ct_format
+ :::
+ "" 
+  1
+  13
+  -75.9819665987984
+  -75.9819665987984
+  -0.498945106571459
+  0.196203781347378
+  "Single Point" 
+  water_cis.in 
+  water_cis.01.in 
+  water_cis.01.mae 
+  water_cis.out 
+  water_cis.log 
+  water_cis.mae 
+  HF 
+  6-31g 
+  2
+ m_atom[3] { 
+  # First column is atom index #
+  i_m_mmod_type
+  r_m_x_coord
+  r_m_y_coord
+  r_m_z_coord
+  i_m_color
+  i_m_atomic_number
+  s_m_color_rgb
+  s_m_atom_name
+  :::
+  1 16 0.000000 0.000000 0.000000 70 8 FF2F2F  O1 
+  2 42 0.000000 0.000000 0.990000 21 1 FFFFFF  H1 
+  3 42 0.951649 0.000000 -0.272881 21 1 FFFFFF  H2 
+  :::
+ } 
+ m_bond[2] { 
+  # First column is bond index #
+  i_m_from
+  i_m_to
+  i_m_order
+  :::
+  1 1 2 1
+  2 1 3 1
+  :::
+ } 
+} 

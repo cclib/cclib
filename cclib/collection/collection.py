@@ -5,7 +5,7 @@
 
 """Classes for hierarchical storage of parsed data."""
 
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING, Optional
 
 from cclib.attribute_parsers import ccData
 
@@ -40,5 +40,5 @@ class ccCollection:
         #    assert len(self._combinator.job_list) == 1
 
     @property
-    def parsed_data(self) -> List[ccData]:
+    def parsed_data(self) -> list[ccData]:
         return self._parsed_data

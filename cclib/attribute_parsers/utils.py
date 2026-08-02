@@ -6,9 +6,9 @@
 """Utilities often used by cclib parsers and scripts"""
 
 import re
+from collections.abc import Sequence
 from itertools import accumulate
 from math import sqrt
-from typing import List, Sequence
 
 import numpy
 import periodictable
@@ -231,7 +231,7 @@ class WidthSplitter:
         self.start_indices = [0] + list(accumulate(widths))[:-1]
         self.end_indices = list(accumulate(widths))
 
-    def split(self, line: str, truncate: bool = True) -> List[str]:
+    def split(self, line: str, truncate: bool = True) -> list[str]:
         """Split the given line using the field widths passed in on class
         initialization.
         """

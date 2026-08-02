@@ -8,7 +8,6 @@
 import logging
 import os
 import sys
-from typing import Optional, Type, Union
 
 import cclib
 
@@ -57,11 +56,11 @@ def get_program_dir(parser_name: str) -> str:
 
 
 def getdatafile(
-    parser: Union[str, Type[cclib.file_handler.FileHandler]],
+    parser: str | type[cclib.file_handler.FileHandler],
     subdir,
     files,
     loglevel: int = logging.ERROR,
-    datatype: Optional[Type[cclib.attribute_parsers.data.ccData]] = None,
+    datatype: type[cclib.attribute_parsers.data.ccData] | None = None,
 ):
     """Returns a parsed logfile.
 

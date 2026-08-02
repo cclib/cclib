@@ -1,0 +1,76 @@
+{ 
+ s_m_m2io_version
+ :::
+ 2.0.0 
+} 
+
+f_m_ct { 
+ s_m_title
+ i_m_Spin_multiplicity
+ i_j_Number_of_canonical_orbitals
+ r_j_Gas_Phase_Energy
+ r_j_Final_Energy
+ r_j_HOMO
+ r_j_LUMO
+ s_j_Task
+ s_j_Jaguar_input_file
+ s_j_Jaguar_restart_input_file
+ s_j_Jaguar_restart_mae_file
+ s_j_Jaguar_output_file
+ s_j_Jaguar_log_file
+ s_j_Jaguar_mae_file
+ s_j_QM_Method
+ s_j_QM_Basis
+ i_m_ct_format
+ :::
+ "" 
+  1
+  59
+  -141.758959679059
+  -141.758959679059
+  -0.0750585878286714
+  0.318636987547105
+  "Single Point" 
+  MoOCl4-sp.in 
+  MoOCl4-sp.01.in 
+  MoOCl4-sp.01.mae 
+  MoOCl4-sp.out 
+  MoOCl4-sp.log 
+  MoOCl4-sp.mae 
+  HF 
+  lav2d 
+  2
+ m_atom[6] { 
+  # First column is atom index #
+  i_m_mmod_type
+  r_m_x_coord
+  r_m_y_coord
+  r_m_z_coord
+  i_m_color
+  i_m_atomic_number
+  i_m_formal_charge
+  s_m_color_rgb
+  s_m_atom_name
+  :::
+  1 89 0.000000 0.000000 -0.285879 4 42 4 1E1EE1  Mo 
+  2 115 0.000000 0.000000 -1.975573 70 8 -2 FF2F2F  O 
+  3 102 1.711365 1.711365 0.426009 13 17 -1 E1E11E  Cl 
+  4 102 -1.711365 1.711365 0.426009 13 17 -1 E1E11E  Cl 
+  5 102 -1.711365 -1.711365 0.426009 13 17 -1 E1E11E  Cl 
+  6 102 1.711365 -1.711365 0.426009 13 17 -1 E1E11E  Cl 
+  :::
+ } 
+ m_bond[5] { 
+  # First column is bond index #
+  i_m_from
+  i_m_to
+  i_m_order
+  :::
+  1 1 2 2
+  2 1 3 1
+  3 1 4 1
+  4 1 5 1
+  5 1 6 1
+  :::
+ } 
+} 
