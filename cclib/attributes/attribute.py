@@ -8,7 +8,7 @@
 from abc import ABC
 from collections import namedtuple
 
-from cclib import ureg
+from cclib.units import ureg
 
 import numpy as np
 import pint

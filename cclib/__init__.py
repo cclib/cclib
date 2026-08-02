@@ -19,11 +19,6 @@ as well as example methods that take parsed data as input.
 
 # ruff: noqa: F401
 from cclib._version import __version__
-from pint import UnitRegistry
-
-unit_registry = UnitRegistry()
-
-from pint import UnitRegistry
 
 
 # isort: off
@@ -40,8 +35,6 @@ from cclib import (
 )
 
 
-ureg = UnitRegistry()
-ureg.define("particle = [entity]")
 # isort: on
 
 # The test module can be imported if it was installed with cclib.

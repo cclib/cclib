@@ -8,14 +8,13 @@
 import datetime
 from typing import TYPE_CHECKING
 
-from cclib import ureg
+from cclib.units import ureg
 
 import numpy
 import packaging
 import pytest
 from common import get_minimum_carbon_separation
 from skip import skipForLogfile, skipForParser
-from cclib import unit_registry
 
 
 if TYPE_CHECKING:
@@ -33,15 +32,6 @@ class GenericSPTest:
     nbasisdict = {1: 1, 6: 5}
 
     # Approximate B3LYP energy of dvb after SCF in STO-3G (Gaussian 16).
-<<<<<<< HEAD
-    scfenergy = -382.308266602 *unit_registry.hartree
-    scfenergy_delta = 3.0e-1 * unit_registry.hartree
-
-    # Approximate energy of the innermost molecular orbital of DVB with
-    # B3LYP/STO-3G (from Q-Chem 5.4 fchk).
-    moenergy = -10.0179353 * unit_registry.hartree
-    moenergy_delta = 3.0e-3 * unit_registry.hartree
-=======
     scfenergy = -382.308266602 * ureg.hartree
     scfenergy_delta = 3.0e-1 * ureg.hartree
 
@@ -49,7 +39,6 @@ class GenericSPTest:
     # B3LYP/STO-3G (from Q-Chem 5.4 fchk).
     moenergy = -10.0179353 * ureg.hartree
     moenergy_delta = 3.0e-3 * ureg.hartree
->>>>>>> b6d8ea73e6c2b874c21d9e061d3a368186b2b1a3
 
     # Overlap first two atomic orbitals.
     overlap01 = 0.24
