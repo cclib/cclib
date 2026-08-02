@@ -5,50 +5,62 @@
 
 from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
+from cclib.units import ureg
 
 import numpy as np
 
 
 class moenergies(base_parser):
     """
-    Docstring? Units?
+    short: molecular orbital energies
+    long:
+    units: eV
     """
 
     known_codes = ["gaussian", "ORCA"]
+    cclib_unit = ureg.eV
 
     @staticmethod
     def gaussian(file_handler, ccdata) -> dict | None:
+        gaussian_unit = ureg.hartree
         line = file_handler.last_line
         if line[1:6] == "Alpha" and line.find("eigenvalues") >= 0:
             # For counterpoise fragments, skip these lines.
-            if getattr(ccdata, "moenergies") is None:
-                constructed_moenergies = [[]]
-                while line.find("Alpha") == 1:
-                    part = line[28:]
-                    i = 0
-                    while i * 10 + 4 < len(part):
-                        s = part[i * 10 : (i + 1) * 10]
-                        try:
-                            x = utils.float(s)
-                        except ValueError:
-                            x = np.nan
-                        constructed_moenergies[0].append(x)
-                        i += 1
-                    line = file_handler.virtual_next()
-                if line.find("Beta") == 2:
-                    constructed_moenergies.append([])
+            existing = getattr(ccdata, "moenergies")
+            if existing:
+                constructed_moenergies = existing
+            else:
+                constructed_moenergies = [np.array([]) * moenergies.cclib_unit]
 
-                while line.find("Beta") == 2:
-                    part = line[28:]
-                    i = 0
-                    while i * 10 + 4 < len(part):
-                        x = part[i * 10 : (i + 1) * 10]
-                        constructed_moenergies[1].append(utils.float(x))
-                        i += 1
-                    line = file_handler.virtual_next()
+            while line.find("Alpha") == 1:
+                part = line[28:]
+                i = 0
+                while i * 10 + 4 < len(part):
+                    s = part[i * 10 : (i + 1) * 10]
+                    try:
+                        x = utils.float(s) * gaussian_unit
+                    except ValueError:
+                        x = np.nan
+                    constructed_moenergies[0] = np.append(constructed_moenergies[0], x)
+                    i += 1
+                line = file_handler.virtual_next()
+            if line.find("Beta") == 2:
+                constructed_moenergies.append([np.array([]) * moenergies.cclib_unit])
 
-                constructed_moenergies = [np.array(x, "d") for x in constructed_moenergies]
-                return {moenergies.__name__: constructed_moenergies}
+            while line.find("Beta") == 2:
+                part = line[28:]
+                i = 0
+                while i * 10 + 4 < len(part):
+                    s = part[i * 10 : (i + 1) * 10]
+                    try:
+                        x = utils.float(s) * gaussian_unit
+                    except ValueError:
+                        x = np.nan
+
+                    constructed_moenergies[1] = np.append(constructed_moenergies[1], x)
+                    i += 1
+                line = file_handler.virtual_next()
+            return {moenergies.__name__: constructed_moenergies}
         return None
 
     @staticmethod

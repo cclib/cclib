@@ -26,6 +26,7 @@ dependencies = [
     "numpy",
     "packaging>=19.0",
     "periodictable",
+    "pint",
     "scipy>=1.2.0",
 ]
 dynamic = ["version"]

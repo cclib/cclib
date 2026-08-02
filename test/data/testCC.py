@@ -7,6 +7,8 @@
 
 from typing import TYPE_CHECKING
 
+from cclib.units import ureg
+
 import numpy
 import pytest
 
@@ -41,7 +43,7 @@ class GenericCC2Test(GenericCCTest):
 
     def testenergycc2(self, data: "ccData") -> None:
         """Is the CC2 correlation energy within the target?"""
-        e_scf = data._ccCollection._parsed_data[0].scfenergies[0]
+        e_scf = data._ccCollection._parsed_data[0].scfenergies.magnitude[0]
         e_cc = data._ccCollection._parsed_data[0].ccenergies[0]
         e_corr = e_cc - e_scf
         assert pytest.approx(e_corr, rel=self.rel_thresh) == self.corr_energy
@@ -55,31 +57,32 @@ class GenericCCDTest(GenericCCTest):
         """Is the CCD correlation energy within the target?"""
         e_scf = data._ccCollection._parsed_data[0].scfenergies[0]
         e_cc = data._ccCollection._parsed_data[0].ccenergies[0]
-        e_corr = e_cc - e_scf
+        e_corr = (e_cc - e_scf).to(ureg.hartree)
         assert pytest.approx(e_corr, rel=self.rel_thresh) == self.corr_energy
 
 
 class GenericCCSDTest(GenericCCTest):
     # Q-Chem 5.4
-    corr_energy = -0.05335475
+    corr_energy = -0.05335475 * ureg.hartree
 
     def testenergyccsd(self, data: "ccData") -> None:
         """Is the CCSD correlation energy within the target?"""
         e_scf = data._ccCollection._parsed_data[0].scfenergies[0]
         e_cc = data._ccCollection._parsed_data[0].ccenergies[0]
-        e_corr = e_cc - e_scf
+        e_corr = (e_cc - e_scf).to(ureg.hartree)
         assert pytest.approx(e_corr, rel=self.rel_thresh) == self.corr_energy
 
 
 class GenericCCSDPTTest(GenericCCTest):
     # Q-Chem 5.4
-    corr_energy = -0.05335475 + -0.00007679
+    corr_energy = (-0.05335475 + -0.00007679) * ureg.hartree
 
     def testenergyccsdpt(self, data: "ccData") -> None:
         """Is the CCSD(T) correlation energy within the target?"""
         e_scf = data._ccCollection._parsed_data[0].scfenergies[0]
         e_cc = data._ccCollection._parsed_data[0].ccenergies[0]
-        e_corr = e_cc - e_scf
+        e_corr = (e_cc - e_scf).to(ureg.hartree)
+
         assert pytest.approx(e_corr, rel=self.rel_thresh) == self.corr_energy
 
 

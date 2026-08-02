@@ -33,6 +33,8 @@ from cclib import (
     attribute_parsers,
     tree,
 )
+
+
 # isort: on
 
 # The test module can be imported if it was installed with cclib.

@@ -3,49 +3,53 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 
-from cclib.attribute_parsers import utils
 from cclib.attribute_parsers.base_parser import base_parser
+from cclib.units import ureg
 
 import numpy as np
 
 
 class dispersionenergies(base_parser):
     """
-    Docstring? Units?
+    This is a rank 1 array that contains the isolated dispersion energy for each geometry.
+    This will be populated for empirical models, such as those from Grimme that only depend on relative atomic positions.
+
+    Units: eV
     """
 
     known_codes = ["psi4", "gaussian"]
+    cclib_unit = ureg.eV
 
     @staticmethod
     def psi4(file_handler, ccdata) -> dict | None:
-        ccsd_trigger = "* CCSD total energy"  # noqa: F841
-        ccsd_t_trigger = "* CCSD(T) total energy"  # noqa: F841
+        psi4_unit = ureg.hartree
         line = file_handler.last_line
-        if getattr(ccdata, "dispersionenergies") is None:
-            this_dispersionenergies = []
+        existing = getattr(ccdata, "dispersionenergies", None)
+        if existing is None:
+            this_dispersionenergies = ureg.Quantity(np.array([]), dispersionenergies.cclib_unit)
         else:
-            this_dispersionenergies = ccdata.dispersionenergies
+            this_dispersionenergies = existing
         if "Empirical Dispersion Energy" in line:
-            dispersion = utils.convertor(float(line.split()[-1]), "hartree", "eV")
-            this_dispersionenergies.append(dispersion)
-            return {dispersionenergies.__name__: np.array(this_dispersionenergies)}
+            dispersion = float(line.split()[-1]) * psi4_unit
+            this_dispersionenergies = np.append(this_dispersionenergies, dispersion)
+            return {dispersionenergies.__name__: this_dispersionenergies}
         return None
         # The geometry convergence targets and values are printed in a table, with the legends
 
     @staticmethod
     def gaussian(file_handler, ccdata) -> dict | None:
-        ccsd_trigger = "* CCSD total energy"  # noqa: F841
-        ccsd_t_trigger = "* CCSD(T) total energy"  # noqa: F841
+        gaussian_unit = ureg.hartree
         line = file_handler.last_line
-        if getattr(ccdata, "dispersionenergies") is None:
-            this_dispersionenergies = []
+        existing = getattr(ccdata, "dispersionenergies", None)
+        if existing is None:
+            this_dispersionenergies = ureg.Quantity(np.array([]), dispersionenergies.cclib_unit)
         else:
-            this_dispersionenergies = ccdata.dispersionenergies
+            this_dispersionenergies = existing
 
         if "Dispersion energy=" in line:
-            dispersion = float(line.split()[-2])
-            this_dispersionenergies.append(dispersion)
-            return {dispersionenergies.__name__: np.array(this_dispersionenergies)}
+            dispersion = float(line.split()[-2]) * gaussian_unit
+            this_dispersionenergies = np.append(this_dispersionenergies, dispersion)
+            return {dispersionenergies.__name__: this_dispersionenergies}
         return None
 
     @staticmethod
