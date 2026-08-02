@@ -21,7 +21,7 @@ class moenergies(base_parser):
     cclib_unit = ureg.eV
 
     @staticmethod
-    def gaussian(file_handler, ccdata) -> dict:None:
+    def gaussian(file_handler, ccdata) -> dict | None:
         gaussian_unit = ureg.hartree
         line = file_handler.last_line
         if line[1:6] == "Alpha" and line.find("eigenvalues") >= 0:
