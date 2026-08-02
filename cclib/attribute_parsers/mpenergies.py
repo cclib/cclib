@@ -16,7 +16,7 @@ class mpenergies(base_parser):
     V2 note: not set up correctly for optimizations yet
 
     long: The attribute mpenergies holds the total molecule energies including Møller-Plesset correlation energy corrections in a two-dimensional array.
-    The arrayi\’s shape is (n,L), where n is 1 for single point calculations and larger for optimisations, and L is the order at which the correction is truncated.
+    The arrays shape is (n,L), where n is 1 for single point calculations and larger for optimisations, and L is the order at which the correction is truncated.
 
     short:
 
@@ -35,7 +35,7 @@ class mpenergies(base_parser):
         return ureg.Quantity(val, mpenergies.cclib_units)
 
     @staticmethod
-    def psi4(file_handler, ccdata) -> Optional[dict]:
+    def psi4(file_handler, ccdata) -> dict | None:
         psi4_units = ureg.hartree
         line = file_handler.last_line
         # This is for the older conventional MP2 code in 4.0b5.
@@ -54,7 +54,7 @@ class mpenergies(base_parser):
         return None
 
     @staticmethod
-    def gaussian(file_handler, ccdata) -> Optional[dict]:
+    def gaussian(file_handler, ccdata) -> dict | None:
         def get_row():
             existing = getattr(ccdata, "mpenergies", None)
             if existing is None:

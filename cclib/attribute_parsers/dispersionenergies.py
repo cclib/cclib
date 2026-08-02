@@ -21,7 +21,7 @@ class dispersionenergies(base_parser):
     cclib_unit = ureg.eV
 
     @staticmethod
-    def psi4(file_handler, ccdata) -> Optional[dict]:
+    def psi4(file_handler, ccdata) -> dict | None:
         psi4_unit = ureg.hartree
         line = file_handler.last_line
         existing = getattr(ccdata, "dispersionenergies", None)
@@ -37,7 +37,7 @@ class dispersionenergies(base_parser):
         # The geometry convergence targets and values are printed in a table, with the legends
 
     @staticmethod
-    def gaussian(file_handler, ccdata) -> Optional[dict]:
+    def gaussian(file_handler, ccdata) -> dict | None:
         gaussian_unit = ureg.hartree
         line = file_handler.last_line
         existing = getattr(ccdata, "dispersionenergies", None)

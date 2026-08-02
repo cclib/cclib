@@ -20,7 +20,7 @@ class scfenergies(base_parser):
     cclib_unit = ureg.eV
 
     @staticmethod
-    def gaussian(file_handler, ccdata) -> Optional[dict]:
+    def gaussian(file_handler, ccdata) -> dict | None:
         gaussian_unit = ureg.hartree
         # ccdata is "const" here and we don't need to modify it yet. The driver will set the attr
         line = file_handler.last_line
@@ -36,7 +36,7 @@ class scfenergies(base_parser):
         return None
 
     @staticmethod
-    def psi4(file_handler, ccdata) -> Optional[dict]:
+    def psi4(file_handler, ccdata) -> dict | None:
         psi4_unit = ureg.hartree
         line = file_handler.last_line
         existing = getattr(ccdata, "scfenergies")
@@ -51,7 +51,7 @@ class scfenergies(base_parser):
         return None
 
     @staticmethod
-    def qchem(file_handler, ccdata) -> Optional[dict]:
+    def qchem(file_handler, ccdata) -> dict | None:
         qchem_unit = ureg.hartree
         line = file_handler.last_line
         existing = getattr(ccdata, "scfenergies")
