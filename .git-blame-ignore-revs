@@ -38,3 +38,5 @@ b7b31cf838fc2baae968dfd81d44508688cf90d7
 09be8ebcf6287428be3ccb2d805e3d3ec94c516a
 # Serenity: rename gopt directory to dvb_gopt
 d0457be74b69c4f05445466c7bf4fca399a32dc8
+# style: apply tombi-format fixes
+0216682dec7e2979e6995d6953fbb0ce4b794dda
