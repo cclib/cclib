@@ -1,6 +1,6 @@
 query {
   repository(owner: "cclib", name: "cclib") {
-    milestones(query: "v1.8.1", first: 1) {
+    milestones(query: "v1.9", first: 1) {
       nodes {
         title
         url

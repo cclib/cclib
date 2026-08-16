@@ -1,6 +1,6 @@
 # cclib
 
-**IMPORTANT for upcoming 2.0 release** We are preparing for the 2.0 release now that 1.8.1 is done.
+**IMPORTANT for upcoming 2.0 release** We are preparing for the 2.0 release now that 1.9 is done.
 Although most of the new features are on the unstable `main` branch, we will now be making some breaking changes to the default `master` branch.
 See https://github.com/cclib/cclib/issues/1395 for more information.
 
