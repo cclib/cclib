@@ -49,6 +49,7 @@ bridges = [
     "pyscf",
     "geometric",
     "qc-iodata>=1.0.0a2",
+    "qcschema @ git+https://github.com/cclib/QCSchema.git@make-pip-installable",
     "trexio",
 ]
 dev = ["cclib[bridges,docs,test-infrastructure]", "twine"]
