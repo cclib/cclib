@@ -9,12 +9,13 @@ from pathlib import Path
 from github_graphql_query import FILTER_AUTHORS, execute_query, transform_author
 
 
-if __name__ == "__main__":
-    raw = execute_query(Path("milestone_issues_and_prs.graphql"))
-    result = json.loads(raw)
-
-    # useful for debugging
-    Path("result.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
+def run(online: bool) -> None:
+    if online:
+        raw = execute_query(Path("milestone_issues_and_prs.graphql"))
+        result = json.loads(raw)
+        Path("result.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
+    else:
+        result = json.loads(Path("result.json").read_text(encoding="utf-8"))
 
     milestones = result["data"]["repository"]["milestones"]["nodes"]
     assert len(milestones) == 1
@@ -36,7 +37,11 @@ if __name__ == "__main__":
         for commit in commits:
             authors = commit["authors"]["nodes"]
             for author in authors:
-                all_authors.add(author["user"]["login"])
+                if author["user"] is not None:
+                    login = author["user"]["login"]
+                else:
+                    login = author["name"]
+                all_authors.add(login)
         all_authors.add(pull_request["author"])
         pull_request["authors"] = all_authors - FILTER_AUTHORS
         # flatten nodes
@@ -54,7 +59,7 @@ if __name__ == "__main__":
             # all_closing_issues.add(tuple(sorted(closing_issue.items())))
 
     all_issues = set(tuple(tuple(sorted(x.items())) for x in issues))
-    issues_without_pr = all_issues - all_closing_issues
+    _issues_without_pr = all_issues - all_closing_issues
 
     lines = list()
     lines.append("Issues")
@@ -72,3 +77,17 @@ if __name__ == "__main__":
                 lines.append(f"        * {issue['title']} (#{issue['number']})")
 
     print("\n".join(line.replace("`", "``") for line in lines))
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--online",
+        action="store_true",
+        help="Perform the query instead of reading query results from a file",
+    )
+    args = parser.parse_args()
+
+    run(args.online)
