@@ -9,19 +9,34 @@ from pathlib import Path
 from github_graphql_query import FILTER_AUTHORS, execute_query, transform_author
 
 
-if __name__ == "__main__":
-    raw = execute_query(Path("milestone_issues_and_prs.graphql"))
-    result = json.loads(raw)
+def generate_pull_request_section(pull_requests) -> list[str]:
+    lines = []
+    for pull_request in pull_requests:
+        if pull_request["author"] not in FILTER_AUTHORS:
+            authors = pull_request["authors"]
+            lines.append(
+                f"    * {pull_request['title']} ({', '.join(sorted(authors))}, #{pull_request['number']})"
+            )
+            closing_issues = pull_request["closingIssuesReferences"]
+            for issue in closing_issues:
+                lines.append(f"        * {issue['title']} (#{issue['number']})")
+    return lines
 
-    # useful for debugging
-    Path("result.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
+
+def run(online: bool) -> None:
+    if online:
+        raw = execute_query(Path("milestone_issues_and_prs.graphql"))
+        result = json.loads(raw)
+        Path("result.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
+    else:
+        result = json.loads(Path("result.json").read_text(encoding="utf-8"))
 
     milestones = result["data"]["repository"]["milestones"]["nodes"]
     assert len(milestones) == 1
     milestone = milestones[0]
 
     issues = milestone["issues"]["nodes"]
-    pull_requests = milestone["pullRequests"]["nodes"]
+    pull_requests = sorted(milestone["pullRequests"]["nodes"], key=lambda node: node["closedAt"])
 
     # flatten the author field
     for issue in issues:
@@ -36,7 +51,11 @@ if __name__ == "__main__":
         for commit in commits:
             authors = commit["authors"]["nodes"]
             for author in authors:
-                all_authors.add(author["user"]["login"])
+                if author["user"] is not None:
+                    login = author["user"]["login"]
+                else:
+                    login = author["name"]
+                all_authors.add(login)
         all_authors.add(pull_request["author"])
         pull_request["authors"] = all_authors - FILTER_AUTHORS
         # flatten nodes
@@ -54,21 +73,33 @@ if __name__ == "__main__":
             # all_closing_issues.add(tuple(sorted(closing_issue.items())))
 
     all_issues = set(tuple(tuple(sorted(x.items())) for x in issues))
-    issues_without_pr = all_issues - all_closing_issues
+    _issues_without_pr = all_issues - all_closing_issues
 
     lines = list()
     lines.append("Issues")
     for issue in issues:
         lines.append(f"    * {issue['title']} (#{issue['number']})")
-    lines.append("Pull requests")
-    for pull_request in pull_requests:
-        if pull_request["author"] not in FILTER_AUTHORS:
-            authors = pull_request["authors"]
-            lines.append(
-                f"    * {pull_request['title']} ({', '.join(sorted(authors))}, #{pull_request['number']})"
-            )
-            closing_issues = pull_request["closingIssuesReferences"]
-            for issue in closing_issues:
-                lines.append(f"        * {issue['title']} (#{issue['number']})")
+    lines.append("Pull requests (merged)")
+    lines.extend(
+        generate_pull_request_section([pr for pr in pull_requests if pr["state"] == "MERGED"])
+    )
+    lines.append("Pull requests (closed)")
+    lines.extend(
+        generate_pull_request_section([pr for pr in pull_requests if pr["state"] == "CLOSED"])
+    )
 
     print("\n".join(line.replace("`", "``") for line in lines))
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--online",
+        action="store_true",
+        help="Perform the query instead of reading query results from a file",
+    )
+    args = parser.parse_args()
+
+    run(args.online)

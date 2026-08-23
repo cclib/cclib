@@ -4,6 +4,22 @@
 Changelog
 =========
 
+Changes in cclib-1.9
+--------------------
+
+**Features**
+
+    * New parser: CFOUR ()
+    * New parser: Serenity ()
+    * ORCA 6.0 support ()
+    * Complete PySCF bridge ()
+
+
+
+**Bugfixes**
+
+**Developer facing changes**
+
 Changes in cclib-1.8.1
 ----------------------
 
