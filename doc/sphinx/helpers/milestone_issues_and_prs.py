@@ -9,6 +9,20 @@ from pathlib import Path
 from github_graphql_query import FILTER_AUTHORS, execute_query, transform_author
 
 
+def generate_pull_request_section(pull_requests) -> list[str]:
+    lines = []
+    for pull_request in pull_requests:
+        if pull_request["author"] not in FILTER_AUTHORS:
+            authors = pull_request["authors"]
+            lines.append(
+                f"    * {pull_request['title']} ({', '.join(sorted(authors))}, #{pull_request['number']})"
+            )
+            closing_issues = pull_request["closingIssuesReferences"]
+            for issue in closing_issues:
+                lines.append(f"        * {issue['title']} (#{issue['number']})")
+    return lines
+
+
 def run(online: bool) -> None:
     if online:
         raw = execute_query(Path("milestone_issues_and_prs.graphql"))
@@ -65,16 +79,14 @@ def run(online: bool) -> None:
     lines.append("Issues")
     for issue in issues:
         lines.append(f"    * {issue['title']} (#{issue['number']})")
-    lines.append("Pull requests")
-    for pull_request in pull_requests:
-        if pull_request["author"] not in FILTER_AUTHORS:
-            authors = pull_request["authors"]
-            lines.append(
-                f"    * {pull_request['title']} ({', '.join(sorted(authors))}, #{pull_request['number']})"
-            )
-            closing_issues = pull_request["closingIssuesReferences"]
-            for issue in closing_issues:
-                lines.append(f"        * {issue['title']} (#{issue['number']})")
+    lines.append("Pull requests (merged)")
+    lines.extend(
+        generate_pull_request_section([pr for pr in pull_requests if pr["state"] == "MERGED"])
+    )
+    lines.append("Pull requests (closed)")
+    lines.extend(
+        generate_pull_request_section([pr for pr in pull_requests if pr["state"] == "CLOSED"])
+    )
 
     print("\n".join(line.replace("`", "``") for line in lines))
 
