@@ -22,7 +22,7 @@ def run(online: bool) -> None:
     milestone = milestones[0]
 
     issues = milestone["issues"]["nodes"]
-    pull_requests = milestone["pullRequests"]["nodes"]
+    pull_requests = sorted(milestone["pullRequests"]["nodes"], key=lambda node: node["closedAt"])
 
     # flatten the author field
     for issue in issues:
