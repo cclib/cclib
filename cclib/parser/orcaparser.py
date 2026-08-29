@@ -86,8 +86,6 @@ class ORCA(logfileparser.Logfile):
         if hasattr(self, "etenergies"):
             prop_names = ("etenergies", "etsyms", "etoscs", "etsecs", "etrotats")
 
-            # convert to wavenumber to be consistent w/ 1.7.2
-            self.etenergies = [utils.convertor(x, "hartree", "wavenumber") for x in self.etenergies]
             # First, set energies properly, keeping track of each energy's old index.
             energy_index = sorted(
                 [(energy, index) for index, energy in enumerate(self.etenergies)],
@@ -1760,9 +1758,6 @@ Dispersion correction           -0.016199959
                         # Uniquely (so far), Orca 6 reorders the spectrum states in terms of energy.
                         # Fix our internal states to match.
                         self.sort_et()
-
-                    # convert to wavenumber to be consistent w/ 1.7.2
-                    etenergies = [utils.convertor(x, "hartree", "wavenumber") for x in etenergies]
 
                     # Determine if these energies are same as those previously parsed.
                     if len(etenergies) == len(self.etenergies) and numpy.allclose(
