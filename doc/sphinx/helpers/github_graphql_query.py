@@ -3,10 +3,12 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 import os
+from collections.abc import MutableMapping
 from pathlib import Path
-from typing import Any, MutableMapping
+from typing import Any
 
 import requests
+
 
 # adapted from https://stackoverflow.com/a/46271487
 API_TOKEN_ENVVAR = "GITHUB_API_TOKEN"

@@ -13,6 +13,7 @@ from cclib.io.moldenwriter import MoldenReformatter, round_molden
 
 import pytest
 
+
 __filedir__ = os.path.dirname(__file__)
 __filepath__ = os.path.realpath(__filedir__)
 __datadir__ = os.path.join(__filepath__, "..", "..")

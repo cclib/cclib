@@ -9,6 +9,7 @@ import logging
 import sys
 from typing import TYPE_CHECKING, Optional
 
+
 if TYPE_CHECKING:
     from cclib.parser.data import ccData
     from cclib.progress import Progress

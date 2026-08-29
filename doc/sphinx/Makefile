@@ -61,12 +61,12 @@ update_prod:
 checkout_prod:
 	python -m build --sdist $(CCLIB_PROD)
 	# Install test dependencies.
-	cd "$(CCLIB_PROD)"; python -m pip install -e .[test]
+	cd "$(CCLIB_PROD)"; if [ -f requirements-bridges.txt ]; then python -m pip install -r requirements-bridges.txt; fi; python -m pip install -e .[test]
 	ln -fs $(SRC_PROD) cclib
 checkout_dev:
 	python -m build --sdist $(CCLIB_DEV)
 	# Install test dependencies.
-	cd "$(CCLIB_DEV)"; python -m pip install -e .[test]
+	cd "$(CCLIB_DEV)"; if [ -f requirements-bridges.txt ]; then python -m pip install -r requirements-bridges.txt; fi; python -m pip install -e .[test]
 	ln -fs $(SRC_DEV) cclib
 
 # We need three layers of targets in order to always get the checkout

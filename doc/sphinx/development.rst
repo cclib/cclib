@@ -76,22 +76,22 @@ When creating a new release on GitHub, start by creating a new issue based on th
 
 .. code-block:: md
 
-    This is to track the work to be done for release v1.8.1:
+    This is to track the work to be done for release v1.9:
 
     - [ ] Migrate non-urgent issues/PRs to the 2.0 label ([2.0 list](https://github.com/cclib/cclib/issues?q=is%3Aopen+is%3Aissue+milestone%3Av2.0))
-    - [ ] Close out remaining PRs and issues ([PRs](https://github.com/cclib/cclib/pulls?q=is%3Aopen+is%3Apr+milestone%3Av1.8.1), [issues](https://github.com/cclib/cclib/issues?q=is%3Aopen+is%3Aissue+milestone%3Av1.8.1))
-    - [ ] Create `release-1.8.1` branch ([branch](https://github.com/cclib/cclib/tree/release-1.8.1))
+    - [ ] Close out remaining PRs and issues ([PRs](https://github.com/cclib/cclib/pulls?q=is%3Aopen+is%3Apr+milestone%3Av1.9), [issues](https://github.com/cclib/cclib/issues?q=is%3Aopen+is%3Aissue+milestone%3Av1.9))
+    - [ ] Create `release-1.9` branch ([branch](https://github.com/cclib/cclib/tree/release-1.9))
     - [ ] Bump version, update changelog, docs and other files (TODO)
-    - [ ] Create a v1.8.1 tag for the release
+    - [ ] Create a v1.9 tag for the release
     - [ ] Update release tag to HEAD on release branch
-    - [ ] Create a draft release from the v1.8.1 tag
+    - [ ] Create a draft release from the v1.9 tag
     - [ ] Attach source tar and zip archives to release on GitHub
-    - [ ] When ready, publish the draft release (https://github.com/cclib/cclib/releases/tag/v1.8.1)
-    - [ ] Upload new version to PyPI (https://pypi.org/project/cclib/1.8.1/)
+    - [ ] When ready, publish the draft release (https://github.com/cclib/cclib/releases/tag/v1.9)
+    - [ ] Upload new version to PyPI (https://pypi.org/project/cclib/1.9/)
     - [ ] Make sure conda picks up the change (https://github.com/conda-forge/cclib-feedstock/pull/TODO)
     - [ ] Update Zenodo if a major or minor version (https://zenodo.org/record/TODO)
     - [ ] Make sure Zenodo parts of documentation get updated (https://github.com/cclib/cclib/pull/TODO)
-    - [ ] Merge the `release-1.8.1` branch back into master (https://github.com/cclib/cclib/pull/TODO)
+    - [ ] Merge the `release-1.9` branch back into master (https://github.com/cclib/cclib/pull/TODO)
     - [ ] Send email to MLs
 
 An example of a past finished release is `1.8`_.

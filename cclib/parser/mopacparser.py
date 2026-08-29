@@ -20,6 +20,7 @@ from cclib.parser import logfileparser, utils
 import numpy
 import scipy.constants as spc
 
+
 if TYPE_CHECKING:
     from cclib.parser.logfilewrapper import FileWrapper
 

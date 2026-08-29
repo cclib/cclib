@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING
 import numpy
 from skip import skipForParser
 
+
 if TYPE_CHECKING:
     from cclib.parser.data import ccData
 
@@ -37,8 +38,8 @@ class GenericSPunTest:
     @skipForParser("Jaguar", "???")
     @skipForParser("Molcas", "Length is zero for some reason")
     @skipForParser("Molpro", "???")
-    @skipForParser("Turbomole", "???")
     @skipForParser("Serenity", "not implemented yet")
+    @skipForParser("Turbomole", "???")
     def testatomcharges(self, data: "ccData") -> None:
         """Are atomic charges consistent with natom?"""
         for atomcharge_type in data.atomcharges:
@@ -58,8 +59,8 @@ class GenericSPunTest:
     @skipForParser("Jaguar", "???")
     @skipForParser("Molcas", "Length is zero for some reason")
     @skipForParser("Molpro", "???")
-    @skipForParser("Turbomole", "???")
     @skipForParser("Serenity", "not included in testfile yet")
+    @skipForParser("Turbomole", "???")
     def testatomcharges_mulliken(self, data: "ccData") -> None:
         """Do Mulliken atomic charges sum to positive one?"""
         charges = data.atomcharges["mulliken"]
@@ -158,8 +159,8 @@ class GenericROSPTest(GenericSPunTest):
         assert len(data.moenergies[0]) == data.nmo
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
-    @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     @skipForParser("Serenity", "Serenity does not use symmetry.")
+    @skipForParser("Turbomole", "The parser is still being developed so we skip this test")
     def testmosyms(self, data: "ccData") -> None:
         """Are the dims of the mosyms equals to 1 x nmo?"""
         shape = (len(data.mosyms), len(data.mosyms[0]))

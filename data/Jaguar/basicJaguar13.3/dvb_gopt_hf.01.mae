@@ -1,0 +1,108 @@
+{ 
+ s_m_m2io_version
+ s_m_workflow_menu
+ :::
+ 2.0.0 
+ "Jaguar Geometry Optimization Plot" 
+} 
+
+f_m_ct { 
+ s_m_title
+ i_j_Geometry_convergence_category
+ i_j_Number_of_canonical_orbitals
+ i_m_Spin_multiplicity
+ r_j_Final_Energy
+ r_j_Gas_Phase_Energy
+ r_j_HOMO
+ r_j_LUMO
+ s_j_Jaguar_input_file
+ s_j_Jaguar_log_file
+ s_j_Jaguar_mae_file
+ s_j_Jaguar_output_file
+ s_j_Jaguar_restart_input_file
+ s_j_Jaguar_restart_mae_file
+ s_j_QM_Basis
+ s_j_QM_Method
+ s_j_Task
+ i_m_ct_format
+ :::
+ "" 
+ 0
+ 60
+ 1
+ -379.777954360495
+ -379.777954360495
+ -0.233209352438212
+ 0.206945807236551
+ dvb_gopt_hf.in 
+ dvb_gopt_hf.log 
+ dvb_gopt_hf.mae 
+ dvb_gopt_hf.out 
+ dvb_gopt_hf.01.in 
+ dvb_gopt_hf.01.mae 
+ sto-3g 
+ HF 
+ Optimization 
+  2
+ m_atom[20] { 
+  # First column is atom index #
+  i_m_mmod_type
+  r_m_x_coord
+  r_m_y_coord
+  r_m_z_coord
+  i_m_color
+  i_m_atomic_number
+  s_m_color_rgb
+  s_m_atom_name
+  :::
+  1 2 1.246947 0.661285 0.000000 2 6 A0A0A0  C1 
+  2 2 1.173953 -0.732222 0.000000 2 6 A0A0A0  C2 
+  3 2 -0.048498 -1.376986 0.000000 2 6 A0A0A0  C3 
+  4 2 -1.246947 -0.661285 0.000000 2 6 A0A0A0  C4 
+  5 2 -1.173953 0.732222 0.000000 2 6 A0A0A0  C5 
+  6 41 2.080237 -1.322386 0.000000 21 1 FFFFFF  H6 
+  7 41 -0.078995 -2.459161 0.000000 21 1 FFFFFF  H7 
+  8 41 -2.080237 1.322386 0.000000 21 1 FFFFFF  H8 
+  9 2 -2.542001 -1.409785 0.000000 2 6 A0A0A0  C9 
+  10 2 -3.750109 -0.894255 0.000000 2 6 A0A0A0  C10 
+  11 41 -3.937343 0.170007 0.000000 21 1 FFFFFF  H11 
+  12 41 -2.430828 -2.488518 0.000000 21 1 FFFFFF  H12 
+  13 41 -4.628627 -1.524323 0.000000 21 1 FFFFFF  H13 
+  14 2 2.542001 1.409785 0.000000 2 6 A0A0A0  C14 
+  15 41 2.430828 2.488518 0.000000 21 1 FFFFFF  H15 
+  16 2 3.750109 0.894255 0.000000 2 6 A0A0A0  C16 
+  17 41 3.937343 -0.170007 0.000000 21 1 FFFFFF  H17 
+  18 41 4.628627 1.524323 0.000000 21 1 FFFFFF  H18 
+  19 2 0.048498 1.376986 0.000000 2 6 A0A0A0  C19 
+  20 41 0.078995 2.459161 0.000000 21 1 FFFFFF  H20 
+  :::
+ } 
+ m_bond[20] { 
+  # First column is bond index #
+  i_m_from
+  i_m_to
+  i_m_order
+  :::
+  1 1 19 2
+  2 1 2 1
+  3 1 14 1
+  4 2 6 1
+  5 2 3 2
+  6 3 7 1
+  7 3 4 1
+  8 4 5 2
+  9 4 9 1
+  10 5 8 1
+  11 5 19 1
+  12 9 12 1
+  13 9 10 2
+  14 10 13 1
+  15 10 11 1
+  16 14 15 1
+  17 14 16 2
+  18 16 18 1
+  19 16 17 1
+  20 19 20 1
+  :::
+ } 
+} 

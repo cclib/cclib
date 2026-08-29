@@ -15,11 +15,12 @@
 , pandas
 , biopython
 , pyquante
+, trexio
 }:
 
 buildPythonPackage rec {
   pname = "cclib";
-  version = "1.8.1";
+  version = "1.9";
 
   src = lib.cleanSource ../.;
 
@@ -51,6 +52,7 @@ buildPythonPackage rec {
     pandas
     biopython
     pyquante
+    trexio
   ];
 
   checkInputs = [ pytestCheckHook ];
@@ -62,6 +64,14 @@ buildPythonPackage rec {
     "test_multi_url_io"
     "test_url_io"
     "test_url_seek"
+
+    # chemfiles isn't packaged with Nix yet
+    "test_makechemfiles"
+    "test_makechemfiles_charges"
+    "test_makechemfiles_masses"
+
+    # problems with current pinned PySCF version
+    "basicPySCF2.6"
   ];
 
   meta = with lib; {

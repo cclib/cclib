@@ -8,13 +8,14 @@
 import functools
 import itertools
 import logging
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
+from typing import TYPE_CHECKING, Any
 
 from cclib.parser.data import ccData
 from cclib.parser.utils import PeriodicTable, convertor, find_package
 
 import numpy as np
 import periodictable
+
 
 l_sym2num = {"S": 0, "P": 1, "D": 2, "F": 3, "G": 4}
 
@@ -154,15 +155,15 @@ def makecclib(
     # pyscf.lib.StreamObject is the ultimate base class I believe, but not sure
     # if we can give this as a type hint as we don't know if PySCF is even available...
     *methods: Any,
-    ccsd_t: Optional[float] = None,
-    scf_steps: List[List[Dict[str, float]]] = [],
-    opt_steps: List[Dict[str, Any]] = [],
+    ccsd_t: float | None = None,
+    scf_steps: list[list[dict[str, float]]] = [],
+    opt_steps: list[dict[str, Any]] = [],
     opt_failed: bool = False,
-    nmr_shielding: List[
-        Tuple[Tuple[float, float, float], Tuple[float, float, float], Tuple[float, float, float]]
+    nmr_shielding: list[
+        tuple[tuple[float, float, float], tuple[float, float, float], tuple[float, float, float]]
     ] = [],
-    spin_spin_coupling: List[
-        Tuple[Tuple[float, float, float], Tuple[float, float, float], Tuple[float, float, float]]
+    spin_spin_coupling: list[
+        tuple[tuple[float, float, float], tuple[float, float, float], tuple[float, float, float]]
     ] = [],
 ) -> ccData:
     """Create cclib attributes and return a ccData from a PySCF calculation.

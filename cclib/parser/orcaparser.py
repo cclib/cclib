@@ -7,13 +7,15 @@
 
 import datetime
 import re
+from collections.abc import Callable
 from itertools import chain, zip_longest
-from typing import TYPE_CHECKING, Callable, List, Optional, Tuple
+from typing import TYPE_CHECKING
 
 from cclib.parser import data, logfileparser, utils
 
 import numpy
 from packaging.version import parse as parse_version
+
 
 if TYPE_CHECKING:
     from cclib.parser.logfilewrapper import FileWrapper
@@ -1373,14 +1375,14 @@ Dispersion correction           -0.016199959
 
             # Standard header, occasionally changes
             header = ["d", "header", "header", "d"]
-            energy_intensity: Optional[Callable[[str], Tuple[float, float]]] = None
+            energy_intensity: Callable[[str], tuple[float, float]] | None = None
 
             if (
                 line == "ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS"
                 and self.version < (6, 0)
             ):
 
-                def energy_intensity(line: str) -> Tuple[float, float]:
+                def energy_intensity(line: str) -> tuple[float, float]:
                     """TDDFT and related methods standard method of output
                     -----------------------------------------------------------------------------
                              ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS
@@ -1405,7 +1407,7 @@ Dispersion correction           -0.016199959
                 and self.version >= (6, 0)
             ):
 
-                def energy_intensity(line: str) -> Tuple[float, float]:
+                def energy_intensity(line: str) -> tuple[float, float]:
                     """TDDFT and related methods standard method of output
                     ----------------------------------------------------------------------------------------------------
                      ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS
@@ -1440,7 +1442,7 @@ Dispersion correction           -0.016199959
                 == "COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM (origin adjusted)"
             ):
 
-                def energy_intensity(line: str) -> Tuple[float, float]:
+                def energy_intensity(line: str) -> tuple[float, float]:
                     """TDDFT with DoQuad == True
                     ------------------------------------------------------------------------------------------------------
                                     COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM
@@ -1469,7 +1471,7 @@ Dispersion correction           -0.016199959
                 == "COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM (Origin Independent, Length Representation)"
             ):
 
-                def energy_intensity(line: str) -> Tuple[float, float]:
+                def energy_intensity(line: str) -> tuple[float, float]:
                     """TDDFT with doQuad == True (Origin Independent Length Representation)
                     -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
                                                         COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM (Origin Independent, Length Representation)
@@ -1489,7 +1491,7 @@ Dispersion correction           -0.016199959
                 line[6:23] == "EMISSION SPECTRUM" or line[6:25] == "ABSORPTION SPECTRUM"
             ):
 
-                def energy_intensity(line: str) -> Tuple[float, float]:
+                def energy_intensity(line: str) -> tuple[float, float]:
                     """X-Ray from XES (emission or absorption, electric or velocity dipole moments)
                     -------------------------------------------------------------------------------------
                               X-RAY ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS
@@ -1508,7 +1510,7 @@ Dispersion correction           -0.016199959
             ):
                 header = ["header", "d", "header", "d", "header", "header", "d"]
 
-                def energy_intensity(line: str) -> Tuple[float, float]:
+                def energy_intensity(line: str) -> tuple[float, float]:
                     """XAS with quadrupole (origin adjusted)
                     -------------------------------------------------------------------------------------------------------------------------------
                               COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE X-RAY ABSORPTION SPECTRUM
@@ -1539,7 +1541,7 @@ Dispersion correction           -0.016199959
 
             elif line[:55] == "SPIN ORBIT CORRECTED ABSORPTION SPECTRUM VIA TRANSITION":
 
-                def energy_intensity(line: str) -> Tuple[float, float]:
+                def energy_intensity(line: str) -> tuple[float, float]:
                     """ROCIS dipole approximation with SOC == True (electric or velocity dipole moments)
                     -------------------------------------------------------------------------------
                     SPIN ORBIT CORRECTED ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS
@@ -1559,7 +1561,7 @@ Dispersion correction           -0.016199959
                 :48
             ] == "SOC CORRECTED ABSORPTION SPECTRUM VIA TRANSITION" and self.version >= (6, 0):
                 # Orca 6.x
-                def energy_intensity(line: str) -> Tuple[float, float]:
+                def energy_intensity(line: str) -> tuple[float, float]:
                     """
                     --------------------------------------------------------------------------------------------------------
                           SOC CORRECTED ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS
@@ -1593,7 +1595,7 @@ Dispersion correction           -0.016199959
                 == "SOC CORRECTED COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM"
             ):
 
-                def energy_intensity(line: str) -> Tuple[float, float]:
+                def energy_intensity(line: str) -> tuple[float, float]:
                     """ROCIS with DoQuad = True and SOC = True (also does origin adjusted)
                     ------------------------------------------------------------------------------------------------------
                               ROCIS COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM
@@ -1626,7 +1628,7 @@ Dispersion correction           -0.016199959
                 == "ABSORPTION SPECTRUM COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM"
             ):
                 # Orca 6.x
-                def energy_intensity(line: str) -> Tuple[float, float]:
+                def energy_intensity(line: str) -> tuple[float, float]:
                     """
                     ------------------------------------------------------------------------------------------------------------------------------------
                           SOC CORRECTED ABSORPTION SPECTRUM COMBINED ELECTRIC DIPOLE + MAGNETIC DIPOLE + ELECTRIC QUADRUPOLE SPECTRUM
@@ -1658,7 +1660,7 @@ Dispersion correction           -0.016199959
             # Clashes with Orca 2.6 (and presumably before) TDDFT absorption spectrum printing
             elif line == "ABSORPTION SPECTRUM" and self.version > (2, 6):
 
-                def energy_intensity(line: str) -> Tuple[float, float]:
+                def energy_intensity(line: str) -> tuple[float, float]:
                     """CASSCF absorption spectrum
                     ------------------------------------------------------------------------------------------
                                                     ABSORPTION SPECTRUM
@@ -3026,7 +3028,7 @@ Dispersion correction           -0.016199959
         if has_spins:
             self.atomspins[chargestype] = spins
 
-    def parse_scf_condensed_format(self, inputfile: "FileWrapper", splitline: List[str]) -> None:
+    def parse_scf_condensed_format(self, inputfile: "FileWrapper", splitline: list[str]) -> None:
         """Parse the SCF convergence information in condensed format"""
         # Possible formats:
         # Orca 5:

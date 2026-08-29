@@ -89,8 +89,8 @@ Manual download and install
 
 The source code of the newest release of cclib (version |release|) is distributed as:
 
-* A .zip file: https://github.com/cclib/cclib/releases/download/v1.8.1/cclib-1.8.1.zip
-* A .tar.gz file: https://github.com/cclib/cclib/releases/download/v1.8.1/cclib-1.8.1.tar.gz
+* A .zip file: https://github.com/cclib/cclib/releases/download/v1.9/cclib-1.9.zip
+* A .tar.gz file: https://github.com/cclib/cclib/releases/download/v1.9/cclib-1.9.tar.gz
 * Windows binary installers (see the `newest release page`_)
 
 On Windows, if you choose to download the .exe files instead, you can install simply by double-clicking on the file. To uninstall, use the "Add and Remove Programs" menu in the Control Panel.
@@ -119,7 +119,7 @@ To test, trying importing '''cclib''' at the Python prompt. You should see somet
     '1.6.2'
     >>>
 
-.. _`newest release page`: https://github.com/cclib/cclib/releases/tag/v1.8.1
+.. _`newest release page`: https://github.com/cclib/cclib/releases/tag/v1.9
 
 What next?
 ----------

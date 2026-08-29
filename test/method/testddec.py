@@ -7,7 +7,6 @@
 
 import os
 import sys
-from typing import Optional
 
 from cclib.io import ccread
 from cclib.method import DDEC6, volume
@@ -27,7 +26,7 @@ class DDEC6Test:
     def setup_method(self) -> None:
         self.parse()
 
-    def parse(self, molecule_name: Optional[str] = None) -> None:
+    def parse(self, molecule_name: str | None = None) -> None:
         if molecule_name is None:
             self.data, self.logfile = getdatafile(Psi4, "basicPsi4-1.2.1", ["water_mp2.out"])
         else:

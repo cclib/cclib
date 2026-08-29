@@ -24,3 +24,19 @@ e986fd9bb37ca0113707f88f6fea7f2318671cdd
 8243cb2c418f4f373c3a3e48ffa0c213dd77988e
 # pre-commit autofix
 47ee1d84e2325b15c9e5508d6d48ae1f49e507b3
+# Apply tombi
+c79af1b4bcdb62bb9efe71a240b908f41e005b84
+# Apply isort via ruff
+a1a30a14674ee54579c8e4bdade3ecc9b3bb58b9
+# pre-commit: apply yamlfmt fixes
+e440b69835cc39e741f50f10a39eda1f6f8a2002
+# pre-commit: move TOML and YAML checks after Python
+b7b31cf838fc2baae968dfd81d44508688cf90d7
+# testdata file cleanup
+55e2824b794a3390862f0b8466de8b574b2cc879
+# test: alphabetical order for programs in skip decorators
+09be8ebcf6287428be3ccb2d805e3d3ec94c516a
+# Serenity: rename gopt directory to dvb_gopt
+d0457be74b69c4f05445466c7bf4fca399a32dc8
+# style: apply tombi-format fixes
+0216682dec7e2979e6995d6953fbb0ce4b794dda

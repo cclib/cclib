@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 
 from cclib.parser import logfileparser
 
+
 if TYPE_CHECKING:
     from cclib.parser.logfilewrapper import FileWrapper
 

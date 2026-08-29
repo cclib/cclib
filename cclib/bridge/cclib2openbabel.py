@@ -5,12 +5,11 @@
 
 """Bridge between cclib data and openbabel (http://openbabel.org)."""
 
-from typing import Optional
-
 from cclib.parser.data import ccData
 from cclib.parser.utils import find_package
 
 import numpy as np
+
 
 _found_openbabel = find_package("openbabel")
 if _found_openbabel:
@@ -46,8 +45,8 @@ def makecclib(mol: "ob.OBMol") -> ccData:
 
 def makeopenbabel(
     *,
-    atomcoords: Optional[np.ndarray] = None,
-    atomnos: Optional[np.ndarray] = None,
+    atomcoords: np.ndarray | None = None,
+    atomnos: np.ndarray | None = None,
     charge: int = 0,
     mult: int = 1,
 ) -> "ob.OBMol":

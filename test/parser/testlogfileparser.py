@@ -18,6 +18,7 @@ import cclib
 import pytest
 from pytest import MonkeyPatch
 
+
 if TYPE_CHECKING:
     from cclib.parser.logfileparser import FileWrapper
 __filedir__ = os.path.dirname(__file__)

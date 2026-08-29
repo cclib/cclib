@@ -17,6 +17,7 @@ from cclib.io.cjsonreader import CJSON as CJSONReader
 from cclib.io.cjsonwriter import CJSON as CJSONWriter
 from cclib.io.cmlwriter import CML
 from cclib.io.moldenwriter import MOLDEN
+from cclib.io.trexiowriter import Trexio as TrexioWriter
 from cclib.io.wfxwriter import WFXWriter
 from cclib.io.xyzreader import XYZ as XYZReader
 from cclib.io.xyzwriter import XYZ as XYZWriter

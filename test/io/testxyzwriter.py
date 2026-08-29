@@ -12,6 +12,7 @@ from cclib.parser import QChem
 
 from ..test_data import getdatafile
 
+
 __filedir__ = os.path.dirname(__file__)
 __filepath__ = os.path.realpath(__filedir__)
 __datadir__ = os.path.join(__filepath__, "..", "..")

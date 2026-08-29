@@ -12,6 +12,7 @@ from cclib.parser.utils import PeriodicTable
 import numpy
 from skip import skipForParser
 
+
 if TYPE_CHECKING:
     from cclib.parser.data import ccData
 

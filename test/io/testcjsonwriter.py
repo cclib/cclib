@@ -11,6 +11,7 @@ from math import sqrt
 
 import cclib
 
+
 __filedir__ = os.path.dirname(__file__)
 __filepath__ = os.path.realpath(__filedir__)
 __datadir__ = os.path.join(__filepath__, "..", "..")

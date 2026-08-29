@@ -50,6 +50,7 @@ import scipy.constants as spc
 from packaging.version import Version
 from packaging.version import parse as parse_version
 
+
 # This assume that the cclib-data repository is located at a specific location
 # within the cclib repository. It would be better to figure out a more natural
 # way to import the relevant tests from cclib here.
@@ -145,6 +146,7 @@ from .data.testvib import (
     Psi4HFIRTest,
     QChemRamanTest,
 )
+
 
 if TYPE_CHECKING:
     from cclib.parser.logfileparser import Logfile
@@ -3759,10 +3761,6 @@ class SkipRotconstsMixin:
         """No rotational constants available"""
 
 
-class GenericGeoOptTest_norotconsts(SkipRotconstsMixin, GenericGeoOptTest):
-    """A geometry optimization test with no rotational constants printed"""
-
-
 class ADFGeoOptTest_noscfvalues(ADFGeoOptTest):
     @pytest.mark.skip("Cannot parse scfvalues from this file.")
     def testgeovalues_scfvalues(self, data: "ccData") -> None:
@@ -3986,12 +3984,6 @@ class GaussianPolarTest(ReferencePolarTest):
 
 class JaguarGeoOptTest_norotconsts(SkipRotconstsMixin, JaguarGeoOptTest):
     """Older Jaguar versions don't print rotational constants"""
-
-
-class JaguarIRTest_v42(SkipRotconstsMixin, JaguarIRTest):
-    @pytest.mark.skip("Data file does not contain force constants")
-    def testvibfconsts(self, data: "ccData") -> None:
-        pass
 
 
 class JaguarSPTest_noatomcharges(JaguarSPTest):

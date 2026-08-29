@@ -8,13 +8,14 @@
 import logging
 import re
 import sys
-from typing import Sequence
+from collections.abc import Sequence
 
 from cclib.method import Nuclear
 from cclib.parser import DALTON, GAMESS, Gaussian, Molcas, QChem, ccData, utils
 
 import numpy as np
 import pytest
+
 
 sys.path.insert(1, "..")
 

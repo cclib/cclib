@@ -6,12 +6,14 @@
 """Calculation methods related to volume based on cclib data."""
 
 import copy
-from typing import TYPE_CHECKING, Iterable, List, Optional, Sequence, Tuple, Union
+from collections.abc import Iterable, Sequence
+from typing import TYPE_CHECKING, Union
 
 from cclib.parser.logfilewrapper import FileWrapper
 from cclib.parser.utils import convertor, find_package
 
 import numpy
+
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -45,7 +47,7 @@ _found_pyquante = find_package("PyQuante")
 if _found_pyquante:
     from PyQuante.CGBF import CGBF
 
-    def getbfs(ccdata: "ccData") -> List[CGBF]:
+    def getbfs(ccdata: "ccData") -> list[CGBF]:
         from cclib.bridge import cclib2pyquante
 
         pymol = cclib2pyquante.makepyquante(ccdata)
@@ -92,7 +94,7 @@ _found_pyquante2 = find_package("pyquante2")
 if _found_pyquante2:
     from pyquante2 import cgbf
 
-    def getbfs(ccdata: "ccData") -> List[cgbf]:
+    def getbfs(ccdata: "ccData") -> list[cgbf]:
         bfs = []
         # `atom` is instance of pyquante2.geo.atom.atom class.
         for i, atom in enumerate(ccdata.atomcoords[-1]):
@@ -210,7 +212,7 @@ class Volume:
         )
         v.tofile(filename)
 
-    def integrate(self, weights: Optional[numpy.ndarray] = None) -> float:
+    def integrate(self, weights: numpy.ndarray | None = None) -> float:
         weights = numpy.ones_like(self.data) if weights is None else weights
         assert weights.shape == self.data.shape, (
             "Shape of weights do not match with shape of Volume data."
@@ -225,7 +227,7 @@ class Volume:
 
         return numpy.sum(self.data * weights) * boxvol
 
-    def integrate_square(self, weights: Optional[numpy.ndarray] = None) -> float:
+    def integrate_square(self, weights: numpy.ndarray | None = None) -> float:
         weights = numpy.ones_like(self.data) if weights is None else weights
 
         boxvol = (
@@ -238,7 +240,7 @@ class Volume:
 
     def writeascube(self, filename: Union[str, "Path"]) -> None:
         # Remember that the units are bohr, not Angstroms
-        def convert(x: Union[int, float]) -> float:
+        def convert(x: int | float) -> float:
             return convertor(x, "Angstrom", "bohr")
 
         ans = []
@@ -283,7 +285,7 @@ def scinotation(num: float) -> str:
     return (f"{broken[0]}E{sign}{broken[1][-2:]}").rjust(12)
 
 
-def getGrid(vol: Volume) -> Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]:
+def getGrid(vol: Volume) -> tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]:
     """Helper function that returns (x, y, z), each of which are numpy array of the values that
        correspond to grid points.
 
@@ -330,7 +332,7 @@ def wavefunction(ccdata: "ccData", volume: Volume, mocoeffs: numpy.ndarray) -> V
 
 
 def electrondensity_spin(
-    ccdata: "ccData", volume: Volume, mocoeffslist: List[numpy.ndarray]
+    ccdata: "ccData", volume: Volume, mocoeffslist: list[numpy.ndarray]
 ) -> Volume:
     """Calculate the magnitude of the electron density at every point in a volume for either up or down spin
 
@@ -376,7 +378,7 @@ def electrondensity_spin(
     return density
 
 
-def electrondensity(ccdata: "ccData", volume: Volume, mocoeffslist: List[numpy.ndarray]) -> Volume:
+def electrondensity(ccdata: "ccData", volume: Volume, mocoeffslist: list[numpy.ndarray]) -> Volume:
     """Calculate the magnitude of the total electron density at every point in a volume.
 
     Inputs:

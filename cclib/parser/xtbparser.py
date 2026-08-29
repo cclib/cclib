@@ -5,13 +5,14 @@
 
 import re
 from datetime import timedelta
-from typing import TYPE_CHECKING, List, Optional, Tuple
+from typing import TYPE_CHECKING
 
 from cclib.parser import logfileparser
 from cclib.parser.utils import convertor
 
 import numpy as np
 import scipy.constants as spc
+
 
 if TYPE_CHECKING:
     from cclib.parser.logfilewrapper import FileWrapper
@@ -301,7 +302,7 @@ class XTB(logfileparser.Logfile):
             self.set_attribute("hessian", np.reshape(hessian, 3 * self.natom, 3 * self.natom))
 
 
-def _extract_version(line: str) -> Optional[str]:
+def _extract_version(line: str) -> str | None:
     """
     Extract xtb version from the following:
 
@@ -320,7 +321,7 @@ def _extract_version(line: str) -> Optional[str]:
     return line.split()[3] if "xtb version" in line else None
 
 
-def _extract_coord_file(line: str) -> Optional[str]:
+def _extract_coord_file(line: str) -> str | None:
     """
     Extract the coordinate filename, from which we can strip out the type
 
@@ -335,7 +336,7 @@ def _extract_coord_file(line: str) -> Optional[str]:
     return line.split()[-1] if "coordinate file" in line else None
 
 
-def _extract_charge(line: str) -> Optional[int]:
+def _extract_charge(line: str) -> int | None:
     """
     Extract the total charge. It can always be found in the
     summary formatted as a float.
@@ -361,7 +362,7 @@ def _extract_charge(line: str) -> Optional[int]:
     return round(float(line.split()[-3])) if "total charge" in line else None
 
 
-def _extract_final_energy(line: str) -> Optional[float]:
+def _extract_final_energy(line: str) -> float | None:
     """
     Extract the final total energy from the result table.
 
@@ -374,7 +375,7 @@ def _extract_final_energy(line: str) -> Optional[float]:
     return float(line.split()[3]) if "TOTAL ENERGY" in line else None
 
 
-def _extract_geom_energy(line: str) -> Optional[float]:
+def _extract_geom_energy(line: str) -> float | None:
     """
     Extract the energies for a geometry step.
 
@@ -400,7 +401,7 @@ def _extract_geom_energy(line: str) -> Optional[float]:
 
 
 # TODO: Add support for POSCAR format.
-def _extract_symbol_coords(line: str, mode: str) -> Optional[Tuple[str, List[float]]]:
+def _extract_symbol_coords(line: str, mode: str) -> tuple[str, list[float]] | None:
     """
     Extract the symbol and X, Y, Z coordinates.
 
@@ -454,7 +455,7 @@ def _extract_symbol_coords(line: str, mode: str) -> Optional[Tuple[str, List[flo
         raise ValueError(f"Unsupported coordinate file type: {mode}")
 
 
-def _extract_orbitals(line: str) -> Optional[Tuple[int, float, float, bool]]:
+def _extract_orbitals(line: str) -> tuple[int, float, float, bool] | None:
     """
     Extract the orbital index, occupation, energy, and if it's the HOMO.
 
@@ -508,7 +509,7 @@ def _extract_orbitals(line: str) -> Optional[Tuple[int, float, float, bool]]:
         return int(line_split[0]), 0.0, float(line_split[2]), False
 
 
-def _extract_gfn2_mulliken_charge(line: str) -> Optional[Tuple[float, int]]:
+def _extract_gfn2_mulliken_charge(line: str) -> tuple[float, int] | None:
     """
     Extract Mulliken charge from GFN2-xTB format.
 
@@ -521,7 +522,7 @@ def _extract_gfn2_mulliken_charge(line: str) -> Optional[Tuple[float, int]]:
     return (float(line_split[4]), int(line_split[1])) if len(line_split) == 7 else None
 
 
-def _extract_gfn1_mulliken_cm5_charges(line: str) -> Optional[Tuple[float, float]]:
+def _extract_gfn1_mulliken_cm5_charges(line: str) -> tuple[float, float] | None:
     """
     Extract Mulliken and CM5 charge for GFN1-xTB format.
 
@@ -534,7 +535,7 @@ def _extract_gfn1_mulliken_cm5_charges(line: str) -> Optional[Tuple[float, float
     return [float(line_split[1]), float(line_split[2])] if len(line_split) == 6 else None
 
 
-def _extract_rotational_constants(line: str) -> Optional[np.ndarray]:
+def _extract_rotational_constants(line: str) -> np.ndarray | None:
     """Extract the rotational constants in GHz.
 
                -------------------------------------------------
@@ -554,7 +555,7 @@ def _extract_rotational_constants(line: str) -> Optional[np.ndarray]:
         return np.array([float(x) for x in line_split[-3:]]) / ghz2invcm
 
 
-def _extract_wall_time(line: str) -> Optional[List[timedelta]]:
+def _extract_wall_time(line: str) -> list[timedelta] | None:
     """
     Extract the wall time.
 
@@ -575,7 +576,7 @@ def _extract_wall_time(line: str) -> Optional[List[timedelta]]:
     )
 
 
-def _extract_cpu_time(line: str) -> Optional[List[timedelta]]:
+def _extract_cpu_time(line: str) -> list[timedelta] | None:
     """
     Extract the CPU time.
 
@@ -596,7 +597,7 @@ def _extract_cpu_time(line: str) -> Optional[List[timedelta]]:
     )
 
 
-def _extract_method(line: str) -> Optional[str]:
+def _extract_method(line: str) -> str | None:
     """
     Extract the method.
 
@@ -628,7 +629,7 @@ def _extract_method(line: str) -> Optional[str]:
     )
 
 
-def _extract_multiplicity(line: str) -> Optional[int]:
+def _extract_multiplicity(line: str) -> int | None:
     """
     Extract the spin multiplicity (uhf+1). This is not present
     anywhere in the log file unless the user specifies it via
@@ -638,7 +639,7 @@ def _extract_multiplicity(line: str) -> Optional[int]:
     return None if match is None else int(match.group(2)) + 1
 
 
-def _extract_symmetry(line: str) -> Optional[str]:
+def _extract_symmetry(line: str) -> str | None:
     """
     Extract symmetry.
 
@@ -654,7 +655,7 @@ def _extract_symmetry(line: str) -> Optional[str]:
     return line.split()[2] if ":" in line and "symmetry" in line else None
 
 
-def _extract_enthalpy(line: str) -> Optional[float]:
+def _extract_enthalpy(line: str) -> float | None:
     """
     Extract total enthalpy.
 
@@ -669,14 +670,14 @@ def _extract_enthalpy(line: str) -> Optional[float]:
     return float(line.split()[3]) if "TOTAL ENTHALPY" in line else None
 
 
-def _extract_free_energy(line: str) -> Optional[float]:
+def _extract_free_energy(line: str) -> float | None:
     """
     Extract total free energy. See summary above.
     """
     return float(line.split()[4]) if "TOTAL FREE ENERGY" in line else None
 
 
-def _extract_zpve(line: str) -> Optional[float]:
+def _extract_zpve(line: str) -> float | None:
     """
     Extract ZPVE.
 
@@ -694,7 +695,7 @@ def _extract_zpve(line: str) -> Optional[float]:
     return float(line.split()[4]) if "zero point energy" in line else None
 
 
-def _extract_frequencies(line: str) -> Optional[List[float]]:
+def _extract_frequencies(line: str) -> list[float] | None:
     """
     Extract the vibrational reduced masses.
 
@@ -721,7 +722,7 @@ def _extract_frequencies(line: str) -> Optional[List[float]]:
     return [float(val) for val in match] if match else None
 
 
-def _extract_reduced_masses(line: str) -> Optional[List[float]]:
+def _extract_reduced_masses(line: str) -> list[float] | None:
     """
     Extract the vibrational reduced masses. See summary above.
     """
@@ -729,7 +730,7 @@ def _extract_reduced_masses(line: str) -> Optional[List[float]]:
     return [float(val) for val in match] if match else None
 
 
-def _extract_ir_intensities(line: str) -> Optional[List[float]]:
+def _extract_ir_intensities(line: str) -> list[float] | None:
     """
     Extract the IR intensities. See summary above.
     """
@@ -737,7 +738,7 @@ def _extract_ir_intensities(line: str) -> Optional[List[float]]:
     return [float(val) for val in match] if match else None
 
 
-def _extract_program_call(line: str) -> Optional[List[str]]:
+def _extract_program_call(line: str) -> list[str] | None:
     """
     Extract the program call parameters. Note that this won't capture
     the command if the user has supplied it via the xcontrol.
@@ -747,7 +748,7 @@ def _extract_program_call(line: str) -> Optional[List[str]]:
     return line.split(":")[1].strip().split() if "program call" in line else None
 
 
-def _extract_temperature(line: str) -> Optional[float]:
+def _extract_temperature(line: str) -> float | None:
     """
     Extract the temperature.
 
@@ -758,7 +759,7 @@ def _extract_temperature(line: str) -> Optional[float]:
     return float(line.split()[0]) if "VIB" in line else None
 
 
-def _extract_entropy(line: str) -> Optional[float]:
+def _extract_entropy(line: str) -> float | None:
     """
     Extract the entropy.
 

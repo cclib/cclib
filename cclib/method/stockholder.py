@@ -8,13 +8,15 @@
 import logging
 import math
 import os
-from typing import TYPE_CHECKING, Optional, Sequence, Tuple
+from collections.abc import Sequence
+from typing import TYPE_CHECKING, Optional
 
 from cclib.method.calculationmethod import Method
 from cclib.method.volume import electrondensity_spin
 from cclib.parser.utils import convertor, find_package
 
 import numpy
+
 
 if TYPE_CHECKING:
     from cclib.method.volume import Volume
@@ -79,7 +81,7 @@ class Stockholder(Method):
 
     def _read_proatom(
         self, directory: str, atom_num: int, charge: float
-    ) -> Tuple[numpy.ndarray, numpy.ndarray]:
+    ) -> tuple[numpy.ndarray, numpy.ndarray]:
         """Return a list containing proatom reference densities."""
         # TODO: Treat calculations with psuedopotentials
         # TODO: Modify so that proatom densities are read only once for horton
@@ -192,7 +194,7 @@ class Stockholder(Method):
         return density, radiusgrid
 
     def calculate(
-        self, indices: Optional[Sequence[Sequence[int]]] = None, fupdate: float = 0.05
+        self, indices: Sequence[Sequence[int]] | None = None, fupdate: float = 0.05
     ) -> bool:
         """Charge density on a Cartesian grid is a common routine required for Stockholder-type
         and related methods. This abstract class prepares the grid if input Volume object

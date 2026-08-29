@@ -11,6 +11,7 @@ from cclib.method.calculationmethod import Method
 
 import numpy
 
+
 numpy.inv = numpy.linalg.inv
 
 

@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 
 from skip import skipForLogfile, skipForParser
 
+
 if TYPE_CHECKING:
     from cclib.parser.data import ccData
 
@@ -57,8 +58,8 @@ class GenericTDunTest:
         assert len(data.etsyms) == self.number
 
     @skipForParser("Molcas", "The parser is still being developed so we skip this test")
-    @skipForParser("Turbomole", "Turbomole etsyms are not available for UHF")
     @skipForParser("Serenity", "Serenity does not use symmetry.")
+    @skipForParser("Turbomole", "Turbomole etsyms are not available for UHF")
     def testsyms(self, data: "ccData") -> None:
         """Is etsyms populated by singlets and triplets 50/50?"""
         singlets = [sym for sym in data.etsyms if "Singlet" in sym]

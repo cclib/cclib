@@ -6,7 +6,8 @@
 """Calculate properties of nuclei based on data parsed by cclib."""
 
 import logging
-from typing import TYPE_CHECKING, Iterable, Optional, Tuple
+from collections.abc import Iterable
+from typing import TYPE_CHECKING, Optional
 
 from cclib.method.calculationmethod import Method
 from cclib.parser.utils import PeriodicTable, convertor
@@ -14,6 +15,7 @@ from cclib.parser.utils import PeriodicTable, convertor
 import numpy as np
 import periodictable as pt
 import scipy.constants as spc
+
 
 if TYPE_CHECKING:
     from cclib.parser.data import ccData
@@ -108,7 +110,7 @@ class Nuclear(Method):
         return convertor(nre, "hartree", "eV")
 
     def center_of_mass(
-        self, atomcoords_index: int = -1, atommasses: Optional[np.ndarray] = None
+        self, atomcoords_index: int = -1, atommasses: np.ndarray | None = None
     ) -> np.ndarray:
         """Return the center of mass in units of angstroms."""
         masses = _get_masses(self.data, atommasses)
@@ -124,7 +126,7 @@ class Nuclear(Method):
         self,
         units: str = "amu_angstrom_2",
         atomcoords_index: int = -1,
-        atommasses: Optional[np.ndarray] = None,
+        atommasses: np.ndarray | None = None,
     ) -> np.ndarray:
         """Return the moment of inertia tensor."""
         choices = ("amu_bohr_2", "amu_angstrom_2")
@@ -165,8 +167,8 @@ class Nuclear(Method):
         self,
         units: str = "amu_bohr_2",
         atomcoords_index: int = -1,
-        atommasses: Optional[np.ndarray] = None,
-    ) -> Tuple[np.ndarray, np.ndarray]:
+        atommasses: np.ndarray | None = None,
+    ) -> tuple[np.ndarray, np.ndarray]:
         """Return the principal moments of inertia in 3 kinds of units:
         1. [amu][bohr]^2 (amu_bohr_2)
         2. [amu][angstrom]^2 (amu_angstrom_2)
@@ -199,10 +201,7 @@ class Nuclear(Method):
         return conv * principal_moments, principal_axes
 
     def rotational_constants(
-        self,
-        units: str = "ghz",
-        atomcoords_index: int = -1,
-        atommasses: Optional[np.ndarray] = None,
+        self, units: str = "ghz", atomcoords_index: int = -1, atommasses: np.ndarray | None = None
     ) -> np.ndarray:
         """Compute the rotational constants in 1/cm or GHz.
 
@@ -229,7 +228,7 @@ class Nuclear(Method):
         return conv / principal_moments
 
 
-def _get_masses(data: "ccData", optional_atommasses: Optional[np.ndarray]) -> np.ndarray:
+def _get_masses(data: "ccData", optional_atommasses: np.ndarray | None) -> np.ndarray:
     """Determine the correct atomic masses to use for a nuclear properties
     calculation.
 

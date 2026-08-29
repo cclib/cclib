@@ -1,0 +1,13 @@
+&gen
+basis=6-31g
+mp2=3
+&
+&zmat
+O1   
+H1    O1 r1
+H2    O1 r1  H1 a1
+&
+&zvar
+r1 = 0.99
+a1 = 106
+&

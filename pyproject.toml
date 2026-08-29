@@ -1,34 +1,30 @@
 [project]
 name = "cclib"
-dynamic = ["version"]
 description = "parsers and algorithms for computational chemistry"
 readme = "README.md"
-authors = [
-    {name = "cclib development team", email = "cclib@googlegroups.com"}
-]
-maintainers = [
-    {name = "cclib development team", email = "cclib@googlegroups.com"}
-]
-license = {file = "LICENSE"}
+requires-python = ">=3.10"
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
+authors = [{ name = "cclib development team", email = "cclib@googlegroups.com" }]
+maintainers = [{ name = "cclib development team", email = "cclib@googlegroups.com" }]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
-    "Intended Audience :: Science/Research",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: BSD License",
+    "Intended Audience :: Science/Research",
     "Natural Language :: English",
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Topic :: Scientific/Engineering :: Chemistry",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
-requires-python = ">=3.7"
 dependencies = [
     "numpy",
     "packaging>=19.0",
     "periodictable",
     "scipy>=1.2.0",
 ]
+dynamic = ["version"]
 
 [project.urls]
 "Bug Tracker" = "https://github.com/cclib/cclib/issues"
@@ -43,74 +39,48 @@ ccwrite = "cclib.scripts.ccwrite:main"
 cda = "cclib.scripts.cda:main"
 
 [project.optional-dependencies]
+all = ["cclib[bridges]"]
 bridges = [
     "ase>=3.21",
     "biopython",
     "chemfiles",
+    "openbabel",
     "pandas",
     "pyscf",
-    "pyberny",
     "geometric",
     "qc-iodata>=1.0.0a2",
+    "trexio",
 ]
+dev = ["cclib[bridges,docs,test-infrastructure]", "twine"]
 docs = [
+    "build",
+    "pip",
     "sphinx",
     "sphinx_rtd_theme",
 ]
+test = ["cclib[bridges,docs,test-infrastructure]"]
 test-infrastructure = [
-    "pytest",
-    "coverage",
     "pytest-cov",
+    "pytest-xdist",
     "pyyaml",
 ]
-test = ["cclib[bridges,docs,test-infrastructure]"]
-dev = ["cclib[bridges,docs,test-infrastructure]"]
-all = ["cclib[bridges]"]
+
+[dependency-groups]
+bridges-git = [
+    "pyberny @ git+https://github.com/cclib/pyberny.git@8142ce1bc468664aef18e88099b03734bff982e5",
+    "pyquante2 @ git+https://github.com/cclib/pyquante2.git@old-python",
+    "pyscf-properties @ git+https://github.com/pyscf/properties.git",
+]
 
 [build-system]
 requires = [
-    "setuptools>=61.0",
+    "setuptools>=77.0.3",
     "versioningit>=2.0",
 ]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools]
-zip-safe = false
-
-[tool.setuptools.package-dir]
-cclib = "cclib"
-
 [tool.coverage.run]
 branch = true
-
-[tool.isort]
-profile = "black"
-line_length = 100
-# default is FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER
-# Placing third-party imports at the end makes their inclusion more obvious
-sections = ["FUTURE", "STDLIB", "FIRSTPARTY", "THIRDPARTY", "LOCALFOLDER"]
-
-[tool.ruff]
-line-length = 100
-src = ["cclib"]
-target-version = "py37"
-
-[tool.ruff.format]
-skip-magic-trailing-comma = true
-
-[tool.ruff.lint]
-
-
-[tool.ruff.lint.isort]
-lines-after-imports = 2
-section-order = ["future", "standard-library", "first-party", "third-party", "local-folder"]
-
-[tool.ruff.lint.per-file-ignores]
-"test/test*.py" = [
-    "PLR2004", # magic value comparison
-    "S101",    # use of assert detected
-    "TCH002",  # third party import (for pytest)
-]
 
 [tool.mypy]
 disable_error_code = [
@@ -163,8 +133,103 @@ module = [
 ]
 ignore_missing_imports = true
 
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = [
+    "linux-64",
+    "osx-arm64",
+    "win-64",
+]
+preview = ["pixi-build"]
+
+# This can't be present until Psi4 is packaged for Python 3.14.
+#
+# [tool.pixi.dependencies]
+# psi4 = "*"
+
+[tool.pixi.pypi-dependencies]
+cclib = { path = ".", editable = true }
+
+[tool.pixi.environments]
+py310 = { features = ["py310", "dev", "bridges-git"], solve-group = "py310" }
+py311 = { features = ["py311", "dev", "bridges-git"], solve-group = "py311" }
+py312 = { features = ["py312", "dev", "bridges-git"], solve-group = "py312" }
+py313 = { features = ["py313", "dev", "bridges-git"], solve-group = "py313" }
+py314 = { features = ["py314", "dev", "bridges-git"], solve-group = "py314" }
+
+[tool.pixi.feature.py310.dependencies]
+psi4 = "*"
+python = "3.10.*"
+
+[tool.pixi.feature.py311.dependencies]
+psi4 = "*"
+python = "3.11.*"
+
+[tool.pixi.feature.py312.dependencies]
+psi4 = "*"
+python = "3.12.*"
+
+[tool.pixi.feature.py313.dependencies]
+psi4 = "*"
+python = "3.13.*"
+
+[tool.pixi.feature.py314.dependencies]
+psi4 = "*"
+python = "3.14.*"
+
+[tool.pixi.package]
+name = "cclib"
+# This means `pixi build` will fail, but leaving it in causes problems with
+# `nix build`, which must be using regex to find the version in this file.
+#
+# version = "1.9"
+
+[tool.pixi.package.build]
+backend = { name = "pixi-build-python", version = "0.*" }
+
+[tool.pixi.package.host-dependencies]
+setuptools = ">=61.0"
+versioningit = ">=2.0"
+
+[tool.pixi.package.run-dependencies]
+numpy = "*"
+packaging = ">=19.0"
+periodictable = "*"
+scipy = ">=1.2.0"
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.format]
+skip-magic-trailing-comma = true
+
+[tool.ruff.lint]
+extend-select = [
+    "I",  # isort
+    "UP",  # pyupgrade
+]
+
+[tool.ruff.lint.isort]
+lines-after-imports = 2
+# default is FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER
+# Placing third-party imports at the end makes their inclusion more obvious
+section-order = ["future", "standard-library", "first-party", "third-party", "local-folder"]
+
+[tool.ruff.lint.per-file-ignores]
+"test/test*.py" = [
+    "PLR2004",  # magic value comparison
+    "S101",  # use of assert detected
+    "TCH002",  # third party import (for pytest)
+]
+
+[tool.setuptools]
+zip-safe = false
+
+[tool.setuptools.package-dir]
+cclib = "cclib"
+
 [tool.versioningit.format]
-method = {module = "versioningit_override", value = "cclib_format", module-dir = "tools"}
+method = { module = "versioningit_override", value = "cclib_format", module-dir = "tools" }
 
 [tool.versioningit.template-fields.version-tuple]
 pep440 = true

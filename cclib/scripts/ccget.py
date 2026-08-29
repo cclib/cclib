@@ -23,6 +23,7 @@ from cclib.parser.logfilewrapper import URL_PATTERN
 
 import numpy
 
+
 # Set up options for pretty-printing output.
 pprint = partial(pprint, width=120, compact=True)
 numpy.set_printoptions(linewidth=120)

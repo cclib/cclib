@@ -3,16 +3,17 @@
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
 from os import getenv
-from typing import Any, Dict
+from typing import Any
 
 from versioningit import VCSDescription
 from versioningit.basics import DEFAULT_FORMATS
+
 
 _ENVVARNAME = "VERSIONINGIT_FOR_PACKAGE_INDEX"
 
 
 def cclib_format(
-    *, description: VCSDescription, base_version: str, next_version: str, params: Dict[str, Any]
+    *, description: VCSDescription, base_version: str, next_version: str, params: dict[str, Any]
 ) -> str:
     """Override the formation of the version string created by versioningit.
 

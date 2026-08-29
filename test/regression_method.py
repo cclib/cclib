@@ -10,6 +10,7 @@ from cclib.method import volume
 import numpy as np
 import pytest
 
+
 __filedir__ = Path(__file__).parent
 __filepath__ = Path(__filedir__).resolve()
 __regdir__ = (__filepath__ / ".." / "data" / "regression").resolve()

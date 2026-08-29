@@ -6,11 +6,12 @@
 """Calculation of Hirshfeld charges based on data parsed by cclib."""
 
 import logging
-from typing import TYPE_CHECKING, Optional, Tuple
+from typing import TYPE_CHECKING, Optional
 
 from cclib.method.stockholder import Stockholder
 
 import numpy
+
 
 if TYPE_CHECKING:
     from cclib.method.volume import Volume
@@ -70,7 +71,7 @@ class Hirshfeld(Stockholder):
 
     def _read_proatom(
         self, directory: str, atom_num: int, charge: float
-    ) -> Tuple[numpy.ndarray, numpy.ndarray]:
+    ) -> tuple[numpy.ndarray, numpy.ndarray]:
         return super()._read_proatom(directory, atom_num, charge)
 
     def calculate(self) -> bool:

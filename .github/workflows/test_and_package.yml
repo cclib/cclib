@@ -16,42 +16,36 @@ concurrency:
 env:
   VERSIONINGIT_FOR_PACKAGE_INDEX: true
 
+permissions: {}
+
 jobs:
 
   run-tests:
+    name: Run tests and create distribution packages
     runs-on: ubuntu-24.04
     strategy:
       matrix:
-        container:
-          - 'shivupa/cclib-ci:py38-edge'
-          - 'shivupa/cclib-ci:py39-edge'
-          - 'shivupa/cclib-ci:py310-edge'
-          - 'shivupa/cclib-ci:py311-edge'
-          - 'shivupa/cclib-ci:py312-edge'
-    container:
-      image: ${{ matrix.container }}
-    defaults:
-      run:
-        shell: bash -eo pipefail -l {0}
+        pixi-env:
+          - "py310"
+          - py311
+          - py312
+          - py313
+          - py314
     steps:
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
         with:
           # so versioningit can figure out the version
           fetch-depth: 0
           fetch-tags: true
-      - name: Allow repo access (see https://github.com/actions/checkout/issues/760)
-        run: |
-          git config --global --add safe.directory /__w/cclib/cclib
-      - name: Prepare conda environment
-        run: |
-          echo "/opt/conda/envs/cclib/bin" >> "${GITHUB_PATH}"
-      - name: Install cclib
-        run: |
-          python -m pip install -r requirements-bridges.txt
-          python -m pip install '.[test]'
+          persist-credentials: false
+      - name: Install Pixi
+        uses: prefix-dev/setup-pixi@f00437f565399d418b0acc85936d12c1fb668347  # v0.10.1
+        with:
+          activate-environment: true
+          environments: ${{ matrix.pixi-env }}
       - name: Filter code
-        uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d # v4
+        uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d  # v4
         id: filter
         with:
           filters: |
@@ -65,10 +59,9 @@ jobs:
       - name: Enable test coverage for Python 3.11
         run: |
           echo "PYTEST_ENABLE_COVERAGE=true" >> "${GITHUB_ENV}"
-        if: matrix.container == 'shivupa/cclib-ci:py311-edge'
+        if: matrix.pixi-env == 'py311'
       - name: Test core code with pytest
         run: |
-          env | sort
           bash .github/scripts/run_pytest.bash "$(nproc)"
       - name: Test methods with pytest
         if: steps.filter.outputs.methods == 'true'
@@ -77,10 +70,9 @@ jobs:
       - name: Test PySCF with pytest
         if: steps.filter.outputs.pyscf == 'true'
         run: |
-          env | sort
           bash .github/scripts/run_pytest_pyscf.bash "$(nproc)"
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f  # v7.0.0
         with:
           files: ./coverage-unit.xml,./coverage-regression.xml,./coverage-method.xml,./coverage-pyscf.xml
           name: codecov-cclib
@@ -88,28 +80,25 @@ jobs:
           verbose: false
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        if: matrix.container == 'shivupa/cclib-ci:py311-edge'
-      - name: Install pypa/build
-        run: |
-          python -m pip install build
+        if: matrix.pixi-env == 'py311'
       - name: Build distribution packages (binary wheel and source tarball)
         run: |
           python -m build
       - name: Check packages with twine
         run: |
-          python -m pip install twine
           python -m twine check dist/*
       - name: Store the distribution packages
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7
         with:
           name: python-package-distributions
           path: dist/
-        if: matrix.container == 'shivupa/cclib-ci:py312-edge'
+        if: matrix.pixi-env == 'py312'
 
   # We check the installation using all Python versions using the packages
   # created from a single version, since the packages are platform and version
   # independent.
   check-installation:
+    name: Test that installation from distribution packages works
     needs:
       - run-tests
     runs-on: ubuntu-24.04
@@ -117,17 +106,17 @@ jobs:
       matrix:
         install-method: [wheel, source]
         python-version:
-          - 3.8
-          - 3.9
           - "3.10"
           - 3.11
           - 3.12
+          - 3.13
+          - 3.14
     steps:
-      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7
         with:
           python-version: ${{ matrix.python-version }}
       - name: Download the distribution packages
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c  # v8
         with:
           name: python-package-distributions
           path: dist/
@@ -143,7 +132,7 @@ jobs:
           python -m pip install dist/*.tar.gz
         if: matrix.install-method == 'source'
       - name: Check cclib install
-        run: |
+        run: |-
           cd ~
           python -c 'import cclib; print(cclib.__version__)'
           python -c 'from cclib.io import ccread; data = ccread("https://raw.githubusercontent.com/cclib/cclib-data/master/Gaussian/Gaussian16/water.log"); print(data.zpve)'

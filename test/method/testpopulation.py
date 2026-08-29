@@ -8,13 +8,13 @@
 import logging
 import os
 import sys
-from typing import Type
 
 from cclib.method import CSPA, LPA, MPA, OPA, Bickelhaupt
 from cclib.method.calculationmethod import Method, MissingAttributeError
 from cclib.parser import Gaussian
 
 import numpy
+
 
 sys.path.insert(1, "..")
 
@@ -28,7 +28,7 @@ class PopulationTest:
 
     methods = (CSPA, LPA, MPA, OPA, Bickelhaupt)
 
-    def calculate(self, method_class: Type[Method]) -> None:
+    def calculate(self, method_class: type[Method]) -> None:
         if not hasattr(self, "data"):
             self.data = parse()
         self.analysis = method_class(self.data)

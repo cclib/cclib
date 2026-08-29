@@ -7,6 +7,7 @@
 
 from typing import TYPE_CHECKING
 
+
 if TYPE_CHECKING:
     from cclib.parser.data import ccData
 

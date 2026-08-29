@@ -1,0 +1,318 @@
+Job water_cis started on anonymized-host at Wed Jul 29 10:54:46 2026
+jobid: 6f97c492-8b5d-11f1-9602-00be43be7bed
+
+  +------------------------------------------------------------------------+
+  |  Jaguar version 13.3, release 113                                      |
+  |                                                                        |
+  |  Copyright Schrodinger, Inc.                                           |
+  |  All Rights Reserved.                                                  |
+  |                                                                        |
+  |  The following have contributed to Jaguar (listed alphabetically):     |
+  |  Ty Balduf, Mike Beachy, Chandler Bennett, Art Bochevarov,             |
+  |  Dale Braden, Yixiang Cao, Alan Chien, Chris Cortis,                   |
+  |  Rich Friesner, Jim Furness, Bill Goddard, Hod Greeley,                |
+  |  Tom Hughes, Leif Jacobson, Jean-Marc Langlois, Daniel Levine,         |
+  |  Daniel Mainz, Rob Murphy, Dean Philipp, Tom Pollard,                  |
+  |  Murco Ringnalda, Pablo Videla, Mark Watson, Haoyu Yu.                 |
+  |                                                                        |
+  |  Use of this program should be acknowledged in publications as:        |
+  |                                                                        |
+  |  Jaguar, version 13.3, Schrodinger, Inc., New York, NY, 2026.          |
+  |                                                                        |
+  |  Y. Cao, T. Balduf, M. D. Beachy, M. C. Bennett, A. D. Bochevarov,     |
+  |  A. Chien, P. A. Dub, K. G. Dyall, J. W. Furness, M. D. Halls,         |
+  |  T. F. Hughes, L. D. Jacobson, H. S. Kwak, D. S. Levine, D. T. Mainz,  |
+  |  K. B. Moore, M. Svensson, P. E. Videla, M. A. Watson, R. A. Friesner, |
+  |  "Quantum chemical package Jaguar: A survey of recent developments     |
+  |  and unique features", J. Chem. Phys. 161, 052502 (2024).              |
+  |  DOI: 10.1063/5.0213317                                                |
+  +------------------------------------------------------------------------+
+  
+  start of program pre
+  
+  Job name: water_cis
+  Executables used: /scr/shared/builds/2026-3/build/jaguar-v13.3/bin/Linux-x86_64
+  Temporary files : /scr/shared/jobs/6f97c492-8b5d-11f1-9602-00be43be7bed
+  Basis file : using default basis file from /scr/shared/builds/2026-3/build
+  Maestro file (input):  water_cis.mae
+  Maestro file (output): water_cis.01.mae
+  
+ Contents of input file: &gen and (if present) &atomic sections only
+ ----------------Contents start----------------
+&gen
+nroot=5
+isymm=0
+basis=6-31G
+icis=1
+&
+ -----------------Contents end-----------------
+ 
+  PS calculation requested. Using PS version of 6-31g
+  basis set:               6-31g                           
+  net molecular charge:    0
+  multiplicity:            1
+  
+  number of basis functions....           13
+  
+ Input geometry:
+                                   angstroms
+  atom               x                 y                 z
+  O1            0.0000000000      0.0000000000      0.0000000000 
+  H1            0.0000000000      0.0000000000      0.9900000000 
+  H2            0.9516490790      0.0000000000     -0.2728809823 
+   
+  principal moments of inertia:
+        amu*angstrom^2:                 0.63543                 1.26004                 1.89546
+                g*cm^2:          1.05515246E-40          2.09233781E-40          3.14749027E-40
+   
+  rotational constants:
+               cm^(-1):     26.52957683     13.37869448      8.89367270
+                   GHz:    795.33670471    401.08317026    266.62559994
+   
+  Z-matrix: (angstroms and degrees) 
+ O1
+ H1    O1  r1
+ H2    O1  r1    H1  a1
+  
+  Z-variables: (angstroms and degrees) 
+  r1 =     0.99
+  a1 =   106.0
+  
+  Molecular weight:      18.01 amu
+   
+  Stoichiometry: H2O
+  Molecular Point Group: C2v     
+  Point Group used: C1 (symmetry turned off)
+  
+  nuclear repulsion energy.......             8.887006263 hartrees
+ 
+ Non-default options chosen:
+   Electronic excitation energies will be calculated by CIS
+   Molecular symmetry not used
+   Q will be stored on disk for fine grid
+  
+ Temporary integer options set:
+     73=  2
+  
+  end of program pre
+   
+ Time(pre)  user:       0.455  user+sys:       0.455  wallclock:       0.389
+  
+  start of program onee
+  
+  smallest eigenvalue of S:    7.284E-02
+  number of canonical orbitals.....           13
+  end of program onee
+   
+ Time(onee)  user:       0.153  user+sys:       0.153  wallclock:       0.098
+  
+  start of program hfig
+  
+  initial wavefunction generated automatically from atomic wavefunctions
+ 
+  Irreducible     Total no   No of occupied orbitals 
+  representation  orbitals   Shell_1  Shell_2    ...
+  No Symm           13          5
+  ------------------------
+  Orbital occupation/shell    1.000
+ 
+  end of program hfig
+   
+ Time(hfig)  user:       0.263  user+sys:       0.263  wallclock:       0.251
+  
+  start of program probe
+  
+  end of program probe
+   
+ Time(probe)  user:       0.146  user+sys:       0.146  wallclock:       0.108
+  
+  start of program grid
+  
+   grid     grid set  grid #  grid sym
+  ------    --------  ------  --------
+  coarse        0        0        1
+  medium        2        1        1
+  fine          0        0        1
+  ultrafine     4        2        1
+  charge        0        0        1
+  gradient      4        2        1
+  density       0        0        1
+  DFT-fine      0        0        1
+  DFT-med.      0        0        1
+  DFT-grad      0        0        1
+  DFT-der2      0        0        1
+  DFT-cphf      0        0        1
+  LMP2-enrg     4        2        1
+  LMP2-grad     2        1        1
+  DFT-cphf2     0        0        1
+  PBF-dens      0        0        1
+  plotting      0        0        1
+  Rel-grad    -17        0        1
+  Extreme       0        0        1
+  Extreme-G     0        0        1
+  
+  number of gridpoints: 
+                 total
+  grid # 1         347
+  grid # 2        1324
+   
+  end of program grid
+   
+ Time(grid)  user:       0.152  user+sys:       0.152  wallclock:       0.082
+  
+  start of program rwr
+  
+  end of program rwr
+   
+ Time(rwr)  user:       0.159  user+sys:       0.159  wallclock:       0.142
+  
+  start of program scf
+  
+ number of electrons..........         10
+ number of alpha electrons....          5
+ number of beta electrons.....          5
+ number of orbitals, total....         13
+ number of doubly-occ'd orbs..          5
+ number of open shell orbs....          0
+ number of occupied orbitals..          5
+ number of virtual orbitals...          8
+ number of hamiltonians.......          1
+ number of shells.............          1
+ SCF type: HF
+ Energy computed using pseudospectral method.
+ Convergence Criteria:
+    Energy (econv):       5.00E-05
+    RMS density (dconv):  1.00E-04
+  
+       i  u  d  i  g                   
+       t  p  i  c  r                                 RMS    maximum
+       e  d  i  u  i                       energy  density   DIIS  
+       r  t  s  t  d       total energy    change  change    error 
+  
+etot    1  N  N  5  M     -75.77989865570           2.6E-02  2.1E-01
+etot    2  Y  Y  6  M     -75.97029549106  1.9E-01  7.6E-03  4.0E-02
+etot    3  N  Y  2  U     -75.98105549443  1.1E-02  1.7E-03  1.8E-02
+etot    4  Y  Y  6  M     -75.98184983574  7.9E-04  5.6E-04  4.7E-03
+etot    5  N  Y  2  U     -75.98196720268  1.2E-04  2.6E-04  9.1E-04
+etot    6  Y  Y  6  M     -75.98196772655  5.2E-07  5.6E-05  2.0E-04
+etot    7  Y  N  6  M     -75.98196659880 -1.1E-06  0.0E+00  0.0E+00
+  
+  
+ Energy components, in hartrees:
+   (A)  Nuclear repulsion............       8.88700626299
+   (E)  Total one-electron terms.....    -122.43767969152
+   (I)  Total two-electron terms.....      37.56870682973
+   (L)  Electronic energy............     -84.86897286179  (E+I)
+   (N)  Total energy.................     -75.98196659880  (A+L)
+   (O)  Gas phase energy.............     -75.98196659880
+  
+ SCFE: SCF energy: HF       -75.98196659880 hartrees   iterations:   7
+  
+ 
+ HOMO energy:    -0.49895
+ LUMO energy:     0.19620
+ 
+  Orbital energies (hartrees): 
+   -20.56574    -1.33795    -0.69460    -0.55290    -0.49895     0.19620
+     0.29065     1.05327     1.13688     1.16504     1.21725     1.37251
+     1.68922
+ 
+  end of program scf
+   
+ Time(scf)  user:       0.286  user+sys:       0.286  wallclock:       0.403
+  
+  start of program cis
+  
+ Energy convergence criterion:       0.1000E-04
+ Wavefunction convergence criterion: 0.1000E-01
+ Entering Diagonalization
+                   CI size =          40
+ Number of initial guesses =           5
+     Maximum subspace size =          41
+   Number of roots to find =           5
+ Diagonalization vectors stored in core
+ ----------------------------------------------------------------------------
+  
+  Excited State   1:     9.1842 eV       135.00 nm
+  
+  orbitals in
+   excitation    CI coeff.
+  ------------   ---------
+     5 =>   6     0.99186
+     5 =>   9    -0.10580
+  
+  Transition dipole moment (debye):
+  X= -9.82408320E-12  Y=  5.93898741E-01  Z=  4.66405764E-13  Tot=  5.93898741E-01
+  
+  Oscillator strength, f=     0.0123
+ ----------------------------------------------------------------------------
+  
+  Excited State   2:    11.0733 eV       111.97 nm
+  
+  orbitals in
+   excitation    CI coeff.
+  ------------   ---------
+     5 =>   7    -0.98594
+     5 =>   8    -0.10510
+     5 =>  12    -0.12972
+  
+  Transition dipole moment (debye):
+  X= -3.65782093E-11  Y= -1.29156176E-10  Z= -1.99846091E-11  Tot=  1.35715393E-10
+  
+  Oscillator strength, f=     0.0000
+ ----------------------------------------------------------------------------
+  
+  Excited State   3:    11.4290 eV       108.48 nm
+  
+  orbitals in
+   excitation    CI coeff.
+  ------------   ---------
+     4 =>   6     0.98321
+     3 =>   7    -0.13410
+  
+  Transition dipole moment (debye):
+  X= -1.31361273E+00  Y= -6.08027792E-13  Z= -9.89878193E-01  Tot=  1.64482134E+00
+  
+  Oscillator strength, f=     0.1173
+ ----------------------------------------------------------------------------
+  
+  Excited State   4:    13.4240 eV        92.36 nm
+  
+  orbitals in
+   excitation    CI coeff.
+  ------------   ---------
+     3 =>   6     0.19240
+     4 =>   7    -0.97090
+     4 =>  12    -0.11666
+  
+  Transition dipole moment (debye):
+  X= -8.42763356E-01  Y=  2.47280469E-12  Z=  1.11838475E+00  Tot=  1.40036942E+00
+  
+  Oscillator strength, f=     0.0998
+ ----------------------------------------------------------------------------
+  
+  Excited State   5:    15.0064 eV        82.62 nm
+  
+  orbitals in
+   excitation    CI coeff.
+  ------------   ---------
+     3 =>   6    -0.97544
+     4 =>   7    -0.19481
+  
+  Transition dipole moment (debye):
+  X= -1.83851928E+00  Y=  4.11097424E-12  Z=  2.43979749E+00  Tot=  3.05495743E+00
+  
+  Oscillator strength, f=     0.5311
+ ----------------------------------------------------------------------------
+  
+  Writing electronic absorption spectrum data to water_cis_uvv.spm
+
+  end of program cis
+   
+ Time(cis)  user:       0.233  user+sys:       0.233  wallclock:       0.222
+
+ Total cpu seconds     user:       0.726   user+sys:       0.726
+  
+ Total elapsed time:    5 seconds
+
+Job water_cis completed on anonymized-host at Wed Jul 29 10:54:51 2026
