@@ -16,6 +16,20 @@ class convertorTest:
         assert round(abs(convertor(0.529, "Angstrom", "bohr") - 1.0), 3) == 0
         assert round(abs(convertor(627.5, "kcal/mol", "hartree") - 1.0), 3) == 0
 
+    def test_wavenumber_to_frequency(self) -> None:
+        """Is a wavenumber converted to a frequency in Hz, not GHz?"""
+
+        convertor = cclib.parser.utils.convertor
+
+        # nu [Hz] = c * nu_tilde, with c = 299792458 m/s exactly (SI) and
+        # 1 cm^-1 = 100 m^-1.
+        assert convertor(1.0, "wavenumber", "Hz") == 299792458.0 * 100
+
+        # Chaining the table's own hartree entry has to land on the CODATA 2010
+        # hartree-hertz relationship, 6.579683920729e15 Hz.
+        hartree_in_hz = convertor(convertor(1.0, "hartree", "wavenumber"), "wavenumber", "Hz")
+        assert abs(hartree_in_hz / 6.579683920729e15 - 1.0) < 1e-10
+
     def test_pairs(self) -> None:
         """Do flipped conversions correspond to each other?"""
 
