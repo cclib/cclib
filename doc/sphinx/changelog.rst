@@ -11,8 +11,8 @@ Changes in cclib-1.9
 
     * New parser: CFOUR (Stephen Slimak, #180, #1524)
     * New parser: Serenity (Lukas Paetow, #1661, #1680, #1698, #1837)
-    * ORCA 6.0 and 6.1 support (Emmanuel Nicolas, #1038, #1177, #1611, #1612, #1769, #1789)
-    * Complete PySCF bridge (#1434, #1570, #1587, #1602, #1614)
+    * ORCA 6.0 and 6.1 support (Emmanuel Nicolas, #1038, #1177, #1462, #1517, #1611, #1612, #1769, #1789)
+    * Complete PySCF bridge (#1434, #1481, #1570, #1587, #1602, #1614)
     * New bridge: chemfiles (Wollam, #1011, #1744)
     * New bridge: TREXIO (neelravi, q-posev, #1090, #1879)
     * Formatted checkpoint parser updates
