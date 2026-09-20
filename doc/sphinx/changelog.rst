@@ -9,16 +9,34 @@ Changes in cclib-1.9
 
 **Features**
 
-    * New parser: CFOUR ()
-    * New parser: Serenity ()
-    * ORCA 6.0 support ()
-    * Complete PySCF bridge ()
-
-
+    * New parser: CFOUR (Stephen Slimak, #180, #1524)
+    * New parser: Serenity (Lukas Paetow, #1661, #1680, #1698, #1837)
+    * ORCA 6.0 and 6.1 support (Emmanuel Nicolas, #1038, #1177, #1611, #1612, #1769, #1789)
+    * Complete PySCF bridge (#1434, #1570, #1587, #1602, #1614)
+    * New bridge: chemfiles (Wollam, #1011, #1744)
+    * New bridge: TREXIO (neelravi, q-posev, #1090, #1879)
+    * Formatted checkpoint parser updates
+      * FChk: parse multipole moments saved by Q-Chem (#1626)
+      * FChk: implement geometry optimization attributes (#1628)
+    * Jaguar parser updates
+      * Add Jaguar 13.3 test data (#1883)
+      * Jaguar: implement optstatus and enable scan tests (#1607)
 
 **Bugfixes**
 
 **Developer facing changes**
+
+    * Increase minimum supported Python version from 3.7 to 3.10 (#1622, #1729, #1779, #1810, #1884, #1885, #1888)
+    * Add Pixi support and testing through Python 3.14 (#1774, #1830, #1833, #1834, #1882)
+    * Support NumPy 2.0 (#1513)
+    * Nix: update flake.lock and reenable build in CI (#1467, #1474, #1495)
+    * Pre-commit and tool updates
+      * Add hook to forbid non-Unix line endings (#1440, #1633)
+      * Add hook for TOML formatting and linting (#1776)
+      * Replace isort with ruff (#1811)
+      * Add hook for YAML formatting (#1816, #1818)
+      * Add hook for GitHub Actions linting (#1817, #1819)
+      * Switch from pre-commit.ci service to prek GitHub Action in CI (#1632, #1815, #1820)
 
 Changes in cclib-1.8.1
 ----------------------
