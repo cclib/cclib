@@ -15,19 +15,52 @@ Changes in cclib-1.9
     * Complete PySCF bridge (#1434, #1481, #1570, #1587, #1602, #1614)
     * New bridge: chemfiles (Wollam, #1011, #1744)
     * New bridge: TREXIO (neelravi, q-posev, #1090, #1879)
+    * DALTON parser updates
+      * Parse rotational constants (#1619)
     * Formatted checkpoint parser updates
       * FChk: parse multipole moments saved by Q-Chem (#1626)
       * FChk: implement geometry optimization attributes (#1628)
+    * GAMESS parser updates
+      * Parse rotational constants (#1619)
     * Jaguar parser updates
       * Add Jaguar 13.3 test data (#1883)
-      * Jaguar: implement optstatus and enable scan tests (#1607)
+      * Implement optstatus and enable scan tests (#1607)
+    * Molcas parser updates
+      * Set success flag (#1408)
+    * ORCA parser updates
+      * Parse scancoords and scanenergies (#1600, #1606)
+      * Parse rotconsts and optstatus (#1601)
+    * xtb parser updates
+      * Parse rotational constants (#1619)
 
 **Bugfixes**
+
+    * All parsers
+      * Don't unconditionally mark calculations as failed (#1408)
+    * Formatted checkpoint
+      * Fix setting success flag (#1401, #1408, #1805)
+    * Gaussian
+      * Fix parsing of platform line for macOS on ARM (#1420, #1452)
+    * IO
+      * Fix handling of geometry indices for FileWriter (#1566, #1653)
+    * Methods
+      * Update cube file reader to handle ORCA-generated files with DSET_IDS (Hananeh Oliaei, #1688)
+    * MOPAC
+      * Fix setting success flag (#1408)
+    * NWChem
+      * Parse Mulliken charges for NWChem 7.2 (Timofey Losev, #1518, #1519)
+      * Handle input element symbols in non-standard case (#1801, #1836)
+    * ORCA
+      * Fix parsing singly-excited state calculations with over 1000 MOs (#1509, #1629)
+      * Fix parsing CASSCF-based scans (#1577, #1592)
+      * Fix parsing of commercially-licensed outputs with different version string (Katsuhiko Nishimra, #1640)
+    * xtb
+      * Fix parsing double-letter elements (Andrew S. Rosen, #1448, #1463, #1496)
 
 **Developer facing changes**
 
     * Increase minimum supported Python version from 3.7 to 3.10 (#1622, #1729, #1779, #1810, #1884, #1885, #1888)
-    * Add Pixi support and testing through Python 3.14 (#1774, #1830, #1833, #1834, #1882)
+    * Add Pixi support and testing through Python 3.14 (#1520, #1774, #1830, #1833, #1834, #1882)
     * Support NumPy 2.0 (#1513)
     * Nix: update flake.lock and reenable build in CI (#1467, #1474, #1495)
     * Pre-commit and tool updates
