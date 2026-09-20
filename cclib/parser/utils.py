@@ -77,7 +77,7 @@ def convertor(value: float, fromunits: str, tounits: str) -> float:
         "wavenumber_to_kcal/mol": lambda x: x / 349.7550112,
         "wavenumber_to_kJ/mol": lambda x: x / 83.5934722814,
         "wavenumber_to_nm": lambda x: 1e7 / x,
-        "wavenumber_to_Hz": lambda x: x * 29.9792458,
+        "wavenumber_to_Hz": lambda x: x * 2.99792458e10,
         "eV_to_wavenumber": lambda x: x * 8065.54429,
         "eV_to_hartree": lambda x: x / 27.21138505,
         "eV_to_kcal/mol": lambda x: x * 23.060548867,
