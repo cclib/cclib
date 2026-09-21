@@ -17,6 +17,7 @@ import sys
 from functools import partial
 from pprint import pprint
 
+import cclib
 from cclib.io import ccread
 from cclib.parser import ccData
 from cclib.parser.logfilewrapper import URL_PATTERN
@@ -35,6 +36,13 @@ def ccget() -> None:
     import argparse
 
     parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"%(prog)s {cclib.__version__} ({cclib.__file__})",
+        help="show the cclib version and installation path, then exit",
+    )
 
     parser.add_argument(
         "attribute_or_compchemlogfile",
