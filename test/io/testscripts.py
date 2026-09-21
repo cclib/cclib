@@ -47,6 +47,17 @@ class ccgetTest:
         with pytest.raises(SystemExit):
             self.main()
 
+    @mock.patch("cclib.scripts.ccget.sys.argv", ["ccget", "--version"])
+    def test_version(self, mock_ccread, capsys) -> None:
+        """Does --version show the package version and installation path?"""
+        with pytest.raises(SystemExit) as exc_info:
+            self.main()
+
+        assert exc_info.value.code == 0
+        output = " ".join(capsys.readouterr().out.split())
+        assert output == f"ccget {cclib.__version__} ({cclib.__file__})"
+        mock_ccread.assert_not_called()
+
     @mock.patch("cclib.scripts.ccget.sys.argv", ["ccget", "atomcoords", INPUT_FILE])
     def test_ccread_invocation(self, mock_ccread) -> None:
         self.main()
