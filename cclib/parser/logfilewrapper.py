@@ -22,6 +22,12 @@ from urllib.error import URLError
 from urllib.request import urlopen
 
 
+try:
+    import zstandard
+except ImportError:
+    zstandard = None
+
+
 # Regular expression for validating URLs
 URL_PATTERN = re.compile(
     r"^(?:http|ftp)s?://"  # http:// or https://
@@ -203,6 +209,20 @@ class FileWrapper(FileWrapperBase):
                 encoding=encoding,
                 errors=errors,
             )
+
+        elif extension == ".zst":
+            if zstandard is None:
+                raise ImportError(
+                    "zstandard is required to read zstd-compressed files; "
+                    "install it with `pip install cclib[zstd]`"
+                )
+            # ZstdDecompressionReader is not seekable, so read the full
+            # decompressed contents into a seekable BytesIO object instead.
+            with zstandard.ZstdDecompressor().stream_reader(
+                fileobject if fileobject else open(filename, "rb")
+            ) as reader:
+                contents = reader.read()
+            fileobject = io.TextIOWrapper(io.BytesIO(contents), encoding=encoding, errors=errors)
 
         elif fileobject is not None:
             # Assuming that object is text file encoded in utf-8
