@@ -47,6 +47,18 @@ class ccgetTest:
         with pytest.raises(SystemExit):
             self.main()
 
+    @pytest.mark.parametrize("flag", ["--version", "-V"])
+    def test_version_flag(self, mock_ccread, capsys, flag) -> None:
+        """Does the script print the version when called with --version or -V?"""
+        with (
+            mock.patch("cclib.scripts.ccget.sys.argv", ["ccget", flag]),
+            pytest.raises(SystemExit) as excinfo,
+        ):
+            self.main()
+        assert excinfo.value.code == 0
+        captured = capsys.readouterr()
+        assert captured.out.strip() == f"ccget {cclib.__version__}"
+
     @mock.patch("cclib.scripts.ccget.sys.argv", ["ccget", "atomcoords", INPUT_FILE])
     def test_ccread_invocation(self, mock_ccread) -> None:
         self.main()
