@@ -139,6 +139,33 @@ class ccopenTest:
         assert self.ccopen(file_path) is not None
         assert self.ccopen([file_path, file_path]) is not None
 
+    def test_zst_io(self, tmp_path) -> None:
+        """Can we read from a zstd archive?"""
+        zstandard = pytest.importorskip("zstandard")
+        import gzip
+
+        # Build a .zst file at test time from an existing compressed fixture.
+        gz_path = os.path.join(__filedir__, "data/dvb_gopt.out.gz")
+        with gzip.open(gz_path, "rb") as gz_handle:
+            gz_contents = gz_handle.read()
+        zst_path = tmp_path / "dvb_gopt.out.zst"
+        with open(zst_path, "wb") as zst_handle:
+            zst_handle.write(zstandard.ZstdCompressor().compress(gz_contents))
+
+        # Decompressing the .zst file must give back the original contents,
+        # and both single-file and multi-file parsing should work.
+        assert zstandard.ZstdDecompressor().decompress(zst_path.read_bytes()) == gz_contents
+        assert self.ccopen(str(zst_path)).parse() is not None
+        assert self.ccopen([str(zst_path), str(zst_path)]) is not None
+
+    def test_zst_missing_dependency(self, monkeypatch) -> None:
+        """Does a .zst file fail with a clear error if zstandard is missing?"""
+        from cclib.parser.logfilewrapper import FileWrapper
+
+        monkeypatch.setattr("cclib.parser.logfilewrapper.zstandard", None)
+        with pytest.raises(ImportError, match="zstandard is required"):
+            FileWrapper("dvb_gopt.out.zst")
+
 
 class _determine_output_formatTest:
     def setup_method(self) -> None:

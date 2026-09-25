@@ -39,7 +39,7 @@ ccwrite = "cclib.scripts.ccwrite:main"
 cda = "cclib.scripts.cda:main"
 
 [project.optional-dependencies]
-all = ["cclib[bridges]"]
+all = ["cclib[bridges]", "cclib[zstd]"]
 bridges = [
     "ase>=3.21",
     "biopython",
@@ -51,19 +51,20 @@ bridges = [
     "qc-iodata>=1.0.0a2",
     "trexio",
 ]
-dev = ["cclib[bridges,docs,test-infrastructure]", "twine"]
+dev = ["cclib[bridges,docs,test-infrastructure,zstd]", "twine"]
 docs = [
     "build",
     "pip",
     "sphinx",
     "sphinx_rtd_theme",
 ]
-test = ["cclib[bridges,docs,test-infrastructure]"]
+test = ["cclib[bridges,docs,test-infrastructure,zstd]"]
 test-infrastructure = [
     "pytest-cov",
     "pytest-xdist",
     "pyyaml",
 ]
+zstd = ["zstandard"]
 
 [dependency-groups]
 bridges-git = [
