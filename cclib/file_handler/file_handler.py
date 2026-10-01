@@ -25,6 +25,45 @@ from urllib.request import urlopen
 from cclib.file_handler import utils
 
 
+try:  # pragma: no cover
+    from compression import zstd  # type: ignore[import-not-found]  # Python 3.14+
+except ImportError:  # pragma: no cover
+    zstd = None
+try:  # pragma: no cover
+    import zstandard
+except ImportError:  # pragma: no cover
+    zstandard = None
+
+
+def open_zstd_file(source: str | pathlib.Path | IO) -> IO[bytes]:
+    """
+    Open a zstd-compressed file for binary reading.
+
+    The returned file object is seekable, since parsers need to be able to
+    determine the size of the input and to read it more than once.
+    """
+    if zstd is not None:
+        # Python 3.14+ has a zstd implementation in the standard library.
+        return zstd.open(source, "rb")  # type: ignore[no-any-return]
+
+    if isinstance(source, (str, pathlib.Path)):
+        compressed = pathlib.Path(source).read_bytes()
+    else:
+        compressed = source.read()
+
+    # The stream reader cannot be seeked, since the frame header does not
+    # always record the uncompressed size, so decompress into memory instead.
+    buffer = io.BytesIO()
+    reader = zstandard.ZstdDecompressor().stream_reader(io.BytesIO(compressed))
+    while True:
+        chunk = reader.read(zstandard.DECOMPRESSION_RECOMMENDED_OUTPUT_SIZE)
+        if not chunk:
+            break
+        buffer.write(chunk)
+    buffer.seek(0)
+    return buffer
+
+
 # Regular expression for validating URLs
 URL_PATTERN = re.compile(
     r"^(?:http|ftp)s?://"  # http:// or https://
@@ -203,6 +242,20 @@ class FileHandler(FileWrapperBase):
             assert bz2 is not None, "ERROR: module bz2 cannot be imported"
             fileobject = io.TextIOWrapper(
                 bz2.BZ2File(fileobject if fileobject else filename, mode),
+                encoding=encoding,
+                errors=errors,
+            )
+
+        elif extension in [".zst", ".zstd"]:
+            if zstd is None and zstandard is None:
+                raise ImportError(
+                    "ERROR: reading zstd-compressed files requires either Python 3.14+ "
+                    "or the zstandard package (install cclib with the zstd extra)"
+                )
+            if mode != "r":
+                raise ValueError("ERROR: zstd-compressed files can only be read")
+            fileobject = io.TextIOWrapper(
+                open_zstd_file(fileobject if fileobject is not None else filename),
                 encoding=encoding,
                 errors=errors,
             )

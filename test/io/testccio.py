@@ -11,6 +11,7 @@ from io import StringIO
 from unittest import mock
 
 import cclib
+from cclib.file_handler import file_handler
 
 import pytest
 
@@ -135,6 +136,17 @@ class ccopenTest:
     def test_zip_io(self) -> None:
         """Can we read from a zip archive?"""
         file_path = os.path.join(__filedir__, "data/dvb_gopt.out.zip")
+        # Test both single-file and multi-file parsing.
+        assert self.ccopen(file_path) is not None
+        assert self.ccopen([file_path, file_path]) is not None
+
+    @pytest.mark.skipif(
+        file_handler.zstd is None and file_handler.zstandard is None,
+        reason="zstd support not available",
+    )
+    def test_zstd_io(self) -> None:
+        """Can we read from a zstd archive?"""
+        file_path = os.path.join(__filedir__, "data/dvb_gopt.out.zst")
         # Test both single-file and multi-file parsing.
         assert self.ccopen(file_path) is not None
         assert self.ccopen([file_path, file_path]) is not None

@@ -43,7 +43,7 @@ ccwrite = "cclib.scripts.ccwrite:main"
 cda = "cclib.scripts.cda:main"
 
 [project.optional-dependencies]
-all = ["cclib[bridges]"]
+all = ["cclib[bridges,zstd]"]
 bridges = [
     "ase>=3.21",
     "biopython",
@@ -55,18 +55,23 @@ bridges = [
     "qc-iodata>=1.0.0a2",
     "trexio",
 ]
-dev = ["cclib[bridges,docs,test-infrastructure]", "twine"]
+dev = ["cclib[bridges,docs,test-infrastructure,zstd]", "twine"]
 docs = [
     "build",
     "pip",
     "sphinx",
     "sphinx_rtd_theme",
 ]
-test = ["cclib[bridges,docs,test-infrastructure]"]
+test = ["cclib[bridges,docs,test-infrastructure,zstd]"]
 test-infrastructure = [
     "pytest-cov",
     "pytest-xdist",
     "pyyaml",
+]
+
+# Reading zstd-compressed files requires zstandard on Python < 3.14.
+zstd = [
+    "zstandard; python_version < '3.14'",
 ]
 
 [dependency-groups]
