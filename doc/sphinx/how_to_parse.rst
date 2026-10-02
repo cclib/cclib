@@ -53,6 +53,12 @@ The cclib package provides four scripts to parse and write data: ``ccget``, ``cc
 3. **cda** is used for the chemical decomposition analysis of output files.
 4. **ccframe** is used to write data tables from output files.
 
+Each of these scripts accepts ``--version``, which prints the cclib version in use and the directory it was installed into::
+
+    $ ccget --version
+    ccget (cclib 1.8.1)
+    installed at /usr/lib/python3/site-packages/cclib
+
 This page describes how to use the ccget, ccwrite and ccframe scripts to obtain data from output files.
 
 ccget

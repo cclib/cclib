@@ -2,13 +2,15 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
-"""Unit tests for main scripts (ccget, ccwrite)."""
+"""Unit tests for main scripts (ccget, ccwrite, ccframe, cda)."""
 
 import os
+import sys
 from pathlib import Path
 from unittest import mock
 
 import cclib
+import cclib.scripts
 from cclib.io import ccread, ccwrite
 from test.conftest import get_program_dir, gettestdata
 from test.io.testccio import BASE_URL, URL_FILES
@@ -226,3 +228,36 @@ class ccframeTest:
                 # TODO: this is what we really should be testing
                 pass
             assert newline[0][0] == "\n"
+
+
+class versionFlagTest:
+    """Every script exposes --version (issue #1910)."""
+
+    SCRIPTS = (("ccget", "ccget"), ("ccframe", "main"), ("ccwrite", "main"), ("cda", "main"))
+
+    @pytest.mark.parametrize(("prog", "entry_point"), SCRIPTS)
+    def test_version_flag(self, prog, entry_point, capsys) -> None:
+        """Does --version report the version and install path on stdout, then exit cleanly?"""
+        main = getattr(getattr(cclib.scripts, prog), entry_point)
+        with (
+            mock.patch.object(sys, "argv", [prog, "--version"]),
+            pytest.raises(SystemExit) as excinfo,
+        ):
+            main()
+
+        assert excinfo.value.code == 0
+        captured = capsys.readouterr()
+        assert captured.err == ""
+        assert captured.out.splitlines() == [
+            f"{prog} (cclib {cclib.__version__})",
+            f"installed at {Path(cclib.__file__).parent}",
+        ]
+
+    @pytest.mark.parametrize(("prog", "entry_point"), SCRIPTS)
+    def test_version_flag_in_help(self, prog, entry_point, capsys) -> None:
+        """Is --version advertised in the script's help output?"""
+        main = getattr(getattr(cclib.scripts, prog), entry_point)
+        with mock.patch.object(sys, "argv", [prog, "--help"]), pytest.raises(SystemExit):
+            main()
+
+        assert "--version" in capsys.readouterr().out

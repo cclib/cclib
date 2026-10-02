@@ -13,6 +13,7 @@ from collections.abc import Iterable
 
 from cclib.io import ccframe, ccopen
 from cclib.parser.utils import find_package
+from cclib.scripts._cli import add_version_argument
 
 
 _has_pandas = find_package("pandas")
@@ -50,6 +51,7 @@ def process_logfiles(filenames: Iterable[str], output: str | None, identifier: s
 
 def main() -> None:
     parser = argparse.ArgumentParser()
+    add_version_argument(parser)
     parser.add_argument(
         "-O",
         "--output",

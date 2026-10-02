@@ -20,6 +20,7 @@ from pprint import pprint
 from cclib.io import ccread
 from cclib.parser import ccData
 from cclib.parser.logfilewrapper import URL_PATTERN
+from cclib.scripts._cli import add_version_argument
 
 import numpy
 
@@ -35,6 +36,8 @@ def ccget() -> None:
     import argparse
 
     parser = argparse.ArgumentParser()
+
+    add_version_argument(parser)
 
     parser.add_argument(
         "attribute_or_compchemlogfile",

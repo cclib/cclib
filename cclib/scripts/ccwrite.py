@@ -12,10 +12,13 @@ import sys
 
 from cclib.io import ccopen, ccwrite
 from cclib.parser import ccData
+from cclib.scripts._cli import add_version_argument
 
 
 def main() -> str:
     parser = argparse.ArgumentParser()
+
+    add_version_argument(parser)
 
     parser.add_argument(
         "outputtype",

@@ -10,10 +10,12 @@ from argparse import ArgumentParser
 
 from cclib.io import ccread
 from cclib.method import CDA
+from cclib.scripts._cli import add_version_argument
 
 
 def main() -> None:
     parser = ArgumentParser()
+    add_version_argument(parser)
     parser.add_argument("file1", help="logfile containing the supermolecule")
     parser.add_argument("file2", help="logfile containing the first fragment")
     parser.add_argument("file3", help="logfile containing the second fragment")
