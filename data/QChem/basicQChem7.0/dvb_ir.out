@@ -1,0 +1,978 @@
+
+Running Job 1 of 1 dvb_ir.in
+qchem dvb_ir.in_26101.0 /scratch/shannon.houck/qchem26101/ 1
+/sw/qchem/release/7.0.0/exe/qcprog.exe_s dvb_ir.in_26101.0 /scratch/shannon.houck/qchem26101/
+                  Welcome to Q-Chem
+     A Quantum Leap Into The Future Of Chemistry
+
+
+ Q-Chem 7.0, Q-Chem, Inc., Pleasanton, CA (2026)
+
+ License issued to: Q-Chem (site)
+
+ S. Adibnia,  B. Alam,  B. J. Albrecht,  A. Aldossary,  E. Alguire,  
+ J. H. Andersen,  A. D. Andres,  J. E. Arias-Martinez,  A. Aspuru-Guzik,  
+ V. Athavale,  K. Begam,  A. Behn,  A. T. Bell,  N. Bellonzi,  Y. A. Bernard,  
+ E. J. Berquist,  N. A. Besley,  R. Bi,  N. Bogo,  C. Brandt,  K. Bravaya,  
+ D. R. Broderick,  B. R. Brooks,  H. G. A. Burton,  S. Camps,  A. Carreras,  
+ K. Carter-Fenk,  D. Casanova,  J.-D. Chai,  A. Chakraborty,  R. Chakraborty,  
+ J. Chen,  M. Chen,  T. Chen,  A. D. Chien,  M. Chow,  K. D. Closser,  
+ V. Cofer-Shabica,  M. P. Coons,  S. Coriani,  S. J. Cotton,  C. J. Cramer,  
+ G. Cserey,  L. Cunha,  A. L. Dempwolff,  J. Deng,  A. E. DePrince III,  
+ J. D. DiCenso,  J. Dickinson,  M. Diedenhofen,  H. Dinh,  
+ R. A. DiStasio Jr.,  L. B. Dittmer,  H. Do,  W. Dou,  A. Dreuw,  S. Ehlert,  
+ E. Epifanovsky,  P.-T. Fang,  S. Faraji,  S. Fatehi,  Q. Feng,  X. Feng,  
+ A. Ferino-Pérez,  J. Fetherolf,  S. Folkestad,  A. Fonlon,  Fošević,  
+ T. Friedhoff,  T. Froitzheim,  T. R. Furlani,  A. Ganeshram,  B. Ganoe,  
+ T. Gao,  S. M. Garner,  A. T. B. Gilbert,  P. M. W. Gill,  M. Gimferrer,  
+ G. Giudetti,  W. A. Goddard III,  M. Goldey,  J. Gomes,  R. Goudy,  M. Gray,  
+ S. Grimme,  S. Gulania,  A. O. Gunina,  J. A. Gyamfi,  S. Hammes-Schiffer,  
+ F. Hampe,  P. H. P. Harbach,  A. W. Hauser,  M. Head-Gordon,  
+ T. Head-Gordon,  W. J. Hehre,  J. M. Herbert,  M. F. Herbst,  M. Hodecker,  
+ Z. C. Holden,  S. Houck,  C. Hsu,  X. Huang,  K. Hui,  B. C. Huynh,  
+ K. Ikeda,  M. Ivanov,  L. D. Jacobson,  T. Jagau,  S. Jana,  N. K. Jayadev,  
+ H. Ji,  H. Jiang,  Y. Jiang,  Z. Jin,  Y. Jung,  Á. Jász,  B. Kaduk,  
+ L. de Kam,  R. Kang,  K. Khistyaev,  J. Kim,  L. Kim,  G. Kis,  N. Kissing,  
+ A. Klamt,  J. H. Koh,  E. Kolodzeiski,  J. Kong,  D. Kosenkov,  
+ T. Kowalczyk,  C. M. Krauter,  A. I. Krylov,  K. Kue,  T. Kus,  J. Kussmann,  
+ I. Ladjánszki,  D. S. Lambrecht,  A. Landau,  C. W. Lander,  A. W. Lange,  
+ K. U. Lao,  H. Laqua,  K. V. Lawler,  J. Lee,  D. Lefrancois,  S. Lehtola,  
+ J. Leitner,  D. S. Levine,  C. Li,  R. Li,  S. Li,  T. E. Li,  X. Li,  
+ Y.-P. Li,  J. Liang,  H.-H. Lin,  Y.-S. Lin,  H. Ling,  F. Liu,  J. Liu,  
+ K.-Y. Liu,  X. Liu,  A. Luenser,  C. Malbon,  A. Mandal,  A. Manjanath,  
+ P. U. Manohar,  E. Mansoor,  S. F. Manzer,  S.-P. Mao,  Y. Mao,  
+ N. Mardirossian,  A. V. Marenich,  T. Markovich,  F. Matz,  S. A. Maurer,  
+ S. May,  L. McCaslin,  C. W. McCurdy,  A. McIsaac,  P. F. McLaughlin,  
+ J.-M. Mewes,  S. A. Mewes,  R. E. Moorby,  S. Moradi,  J. Morgenstein,  
+ M. Mostafanejad,  M. Mukherjee,  A. Muller,  C. J. Mundy,  K. D. Nanda,  
+ M. G. Navas,  M. Neal,  J. B. Neaton,  T. Neudecker,  A. Ni,  C. Ochsenfeld,  
+ A. K. Ojha,  Q. Ou,  E. Paenurk,  G. Paran,  J. A. Parkhill,  
+ V. Parravicini,  R. L. Patterson,  S. K. Paul,  Z. Pei,  D. Picconi,  
+ F. Plasser,  P. Pokhilko,  J. Pottecher,  S. Prager,  E. I. Proynov,  
+ A. F. Pérez,  S. Quiton,  H. Ram,  E. Ramos-Cordoba,  B. Rana,  A. E. Rask,  
+ V. A. Rassolov,  D. R. Rehn,  H. Ren,  A. Rettig,  R. M. Richard,  
+ P. J. Robinson,  E. Rossomme,  S. Roy,  Á. Rák,  P. Salvador,  P. Samal,  
+ T. Scheele,  P. E. Schneider,  T. K. Schramm,  N. Sergueev,  Y. Shao,  
+ S. M. Sharada,  M. Sharma,  H. Shen,  Y. Shen,  A. Singh,  W. Skomorowski,  
+ L. Slipchenko,  S. Smiga,  R. P. Steele,  C. J. Stein,  A. J. Sterling,  
+ Y. Su,  Y.-C. Su,  J. E. Subotnik,  E. J. Sundstrom,  J. Talbot,  Z. Tao,  
+ H.-H. Teh,  J. Thirman,  A. J. W. Thom,  C. Titeca,  N. V. Tkachenko,  
+ A. Tkatchenko,  R. Tomann,  G. J. Tornai,  D. G. Truhlar,  H.-Y. Tsai,  
+ T. Tsuchimochi,  N. M. Tubman,  C. Utku,  S. P. Veccham,  M. L. Vidal,  
+ C. Villot,  T. V. Voorhis,  O. Vydrov,  E. Wang,  Z. Wang,  J. Wenzel,  
+ T. A. Wesolowski,  K. B. Whaley,  A. F. White,  J. Witek,  J. Wong,  H. Wu,  
+ A. Yamada,  C.-H. Yang,  K. Yao,  S. Yeganeh,  J. T. Yi,  S. R. Yost,  
+ Q. Yu,  F. Zeller,  I. Y. Zhang,  J. Zhang,  X. Zhang,  Y. Zhang,  Z. Zhang,  
+ C. Zhao,  T. Zhao,  Y. Zhu,  P. Zimmerman,  D. Zuev
+
+ Additional authors since Version 6.4.0: 
+ H. Aksu,  F. Ballesteros,  C. Chakravarty,  A. M. Clark,  Y. Kim,  
+ Q. Nguyen,  X. Pan,  R. Stein,  J. A. Tan,  M. G. S. Weiss,  R. Weiss,  
+ M. Wormit,  Y. Wu
+
+ Contributors to earlier versions of Q-Chem not listed above: 
+ R. D. Adamson,  B. Austin,  R. Baer,  J. Baker,  D. Barton,  G. J. O. Beran,  
+ K. Brandhorst,  K. Bravaya,  S. T. Brown,  E. F. C. Byrd,  
+ A. K. Chakraborty,  G. K. L. Chan,  C.-M. Chang,  Y. Chen,  C.-L. Cheng,  
+ S. H. Chien,  D. M. Chipman,  D. L. Crittenden,  H. Dachsel,  S. Dasgupta,  
+ R. J. Doerksen,  B. Dunietz,  A. D. Dutoi,  R. G. Edgar,  J. Fosso-Tande,  
+ L. Fusti-Molnar,  Z. Gan,  J. Gayvert,  Q. Ge,  D. Ghosh,  A. Ghysels,  
+ G. Gidofalvi,  A. Golubeva-Zadorozhnaya,  J. Gonthier,  
+ C. E. González-Espinoza,  M. S. Gordon,  S. R. Gwaltney,  D. Hait,  
+ M. Hanson-Heine,  G. Hawkins,  J. E. Herr,  A. Heyden,  S. Hirata,  
+ E. G. Hohenstein,  P. Horn,  I. Kaliman,  G. Kedziora,  F. J. Keil,  
+ C. Kelley,  R. Z. Khaliullin,  J. Kim,  R. A. King,  P. Klunzinger,  
+ Z. Koczor-Benda,  P. P. Korambath,  S. Kotaru,  L. Koulias,  A. Kunitsa,  
+ W. Kurlancheek,  J. Kussmann,  S. Kähler,  D. S. Lambrecht,  A. Laurent,  
+ A. M. Lee,  M. S. Lee,  S. V. Levchenko,  X. Li,  W. Liang,  M. Liebenthal,  
+ C. Y. Lin,  D. Liotard,  E. Livshits,  R. C. Lochan,  M. Loipersberger,  
+ I. Lotan,  H. Ma,  L. A. Martinez-Martinez,  P. E. Maslen,  S. Mason,  
+ N. J. Mayhall,  S. C. McKenzie,  M. F. S. J. Menger,  P. Morgante,  
+ A. F. Morrison,  J. W. Mullinax,  N. Nair,  D. Neuhauser,  E. Neuscamman,  
+ C. M. Oana,  R. Olivares-Amaya,  R. Olson,  D. P. O'Neill,  
+ K. J. Oosterbaan,  K. Paice,  A. C. Paul,  T. M. Perrine,  B. Peters,  
+ R. Peverati,  P. A. Pieniazek,  S. Prasad,  A. Prociuk,  Y. M. Rhee,  
+ J. Ritchie,  F. Rob,  M. A. Rohrdanz,  E. Rosta,  N. J. Russ,  
+ H. F. Schaefer III,  M. Scheurer,  M. W. Schmidt,  M. Schneider,  
+ N. E. Schultz,  S. Sharma,  N. Shenvi,  C. D. Sherrill,  A. C. Simmonett,  
+ D. W. Small,  A. Sodt,  T. Stein,  D. Stuck,  K. S. Thanthiriwatte,  
+ V. Vanovschi,  M. H. Vera,  L. Vogt,  F. Wang,  T. Wang,  A. Warshel,  
+ M. A. Watson,  M. de Wergifosse,  C. F. Williams,  J. Witte,  
+ H. L. Woodcock III,  Q. Wu,  X. Xu,  J. Yang,  Z.-Q. You,  A. Zech,  
+ W. Zhang,  Y. Zhao
+
+   Please cite Q-Chem as follows:
+  "Software for the frontiers of quantum chemistry:
+   An overview of developments in the Q-Chem 5 package"
+   J. Chem. Phys. 155, 084801 (2021)
+   https://doi.org/10.1063/5.0055522 (open access)
+
+ Q-Chem 7.0.0 for Intel X86 EM64T Linux
+
+ Parts of Q-Chem use Armadillo 12.8.2 (Cortisol Injector).
+ http://arma.sourceforge.net/
+
+ Q-Chem begins on Wed Jul 29 13:35:01 2026  
+
+ Host: coreman6
+0
+
+ Scratch files written to /scratch/shannon.houck/qchem26101//
+ Executable: /sw/qchem/release/7.0.0/exe/qcprog.exe_s
+ Number of threads = 1
+ Jul426 |scratch|qcdevops|jenkins|workspace|build_RNUM -1
+ Processing $rem in /sw/qchem/release/7.0.0/config/preferences:
+ Processing $rem in /hfnas/home/shannon.houck/.qchemrc:
+
+ Checking the input file for inconsistencies... 	...done.
+
+--------------------------------------------------------------
+User input:
+--------------------------------------------------------------
+$comment
+ Divinylbenzene, frequencies (analytic), RB3LYP/STO-3G
+$end
+
+$rem
+ jobtype = freq
+ method = b3lyp
+ basis = sto-3g
+ gui = 2
+$end
+
+$molecule
+ 0 1
+ C             -1.4152533224   0.2302217854   0.0000000000
+ C              1.4152533224  -0.2302217854   0.0000000000
+ C             -0.4951331558   1.3144608674   0.0000000000
+ C              0.4951331558  -1.3144608674   0.0000000000
+ C              0.8894090436   1.0909493743   0.0000000000
+ C             -0.8894090436  -1.0909493743   0.0000000000
+ H             -0.8795511985   2.3437343748   0.0000000000
+ H              0.8795511985  -2.3437343748   0.0000000000
+ H              1.5779041557   1.9450061275   0.0000000000
+ H             -1.5779041557  -1.9450061275   0.0000000000
+ C              2.8845844962  -0.5210893778   0.0000000000
+ C             -2.8845844962   0.5210893778   0.0000000000
+ H              3.1403356810  -1.5919605685   0.0000000000
+ H             -3.1403356810   1.5919605685   0.0000000000
+ C              3.8800428103   0.3822535424   0.0000000000
+ C             -3.8800428103  -0.3822535424   0.0000000000
+ H              3.6946765858   1.4624389570   0.0000000000
+ H             -3.6946765858  -1.4624389570   0.0000000000
+ H              4.9316453546   0.0711049543   0.0000000000
+ H             -4.9316453546  -0.0711049543   0.0000000000
+$end
+--------------------------------------------------------------
+ ----------------------------------------------------------------
+             Standard Nuclear Orientation (Angstroms)
+    I     Atom           X                Y                Z
+ ----------------------------------------------------------------
+    1      C       1.4130874143     0.2431624904     0.0000000000
+    2      C      -1.4130874143    -0.2431624904    -0.0000000000
+    3      C       0.4830843885     1.3189365745     0.0000000000
+    4      C      -0.4830843885    -1.3189365745    -0.0000000000
+    5      C      -0.8993545914     1.0827651191     0.0000000000
+    6      C       0.8993545914    -1.0827651191    -0.0000000000
+    7      H       0.8580679199     2.3516846249     0.0000000000
+    8      H      -0.8580679199    -2.3516846249    -0.0000000000
+    9      H      -1.5956359656     1.9304860077     0.0000000000
+   10      H       1.5956359656    -1.9304860077    -0.0000000000
+   11      C      -2.8796954734    -0.5474630906    -0.0000000000
+   12      C       2.8796954734     0.5474630906     0.0000000000
+   13      H      -3.1256368923    -1.6206297105    -0.0000000000
+   14      H       3.1256368923     1.6206297105     0.0000000000
+   15      C      -3.8833781934     0.3467330199     0.0000000000
+   16      C       3.8833781934    -0.3467330199    -0.0000000000
+   17      H      -3.7079040184     1.4285694128     0.0000000000
+   18      H       3.7079040184    -1.4285694128    -0.0000000000
+   19      H      -4.9320895300     0.0259747190     0.0000000000
+   20      H       4.9320895300    -0.0259747190    -0.0000000000
+ ----------------------------------------------------------------
+ Molecular Point Group                 C2h   NOp =  4
+ Largest Abelian Subgroup              C2h   NOp =  4
+ Nuclear Repulsion Energy =         445.93698006 hartrees
+ There are       35 alpha and       35 beta electrons
+ Requested basis set is STO-3G
+ There are 30 shells and 60 basis functions
+
+ Total QAlloc Memory Limit   8000 MB
+ Mega-Array Size       188 MB
+ MEM_STATIC part       192 MB
+
+ A cutoff of  1.0D-12 yielded    406 shell pairs
+ There are      1786 function pairs
+ Start forming overlap matrix
+ Smallest overlap matrix eigenvalue = 1.81E-01
+ Guess from superposition of atomic densities
+ Warning:  Energy on first SCF cycle will be non-variational
+ SAD guess density has 70.000000 electrons
+
+ -----------------------------------------------------------------------
+  General SCF calculation program by
+  Eric Jon Sundstrom, Paul Horn, Yuezhi Mao, Dmitri Zuev, Alec White,
+  David Stuck, Shaama M.S., Shane Yost, Joonho Lee, David Small,
+  Daniel Levine, Susi Lehtola, Hugh Burton, Evgeny Epifanovsky,
+  Bang C. Huynh
+ -----------------------------------------------------------------------
+ Exchange:     0.2000 Hartree-Fock + 0.0800 Slater + 0.7200 B88
+ Correlation:  0.1900 VWN1RPA + 0.8100 LYP
+ Using SG-1 standard quadrature grid
+ A restricted SCF calculation will be
+ performed using DIIS
+ SCF converges when DIIS error is below 1.0e-08
+ User-specified cutoff of 10e-12
+ used for neglect of 2-electron integrals.
+ A cutoff of 10e-12
+ used for neglect of overlap integrals.
+ Incremental Fock algorithm is on at the start.
+ ---------------------------------------
+  Cycle       Energy         DIIS error
+ ---------------------------------------
+    1    -381.8040966235      1.36e-01  
+    2    -382.3012692403      3.18e-03  
+    3    -382.3005309657      3.66e-03  
+    4    -382.3075312400      1.14e-03  
+    5    -382.3081982283      3.69e-04  
+    6    -382.3082707779      3.75e-05  
+    7    -382.3082716684      3.72e-06  
+    8    -382.3082716788      8.79e-07  
+    9    -382.3082716791      4.61e-07  
+   10    -382.3082716793      3.89e-08  
+   11    -382.3082716793      6.10e-09  Convergence criterion met
+ ---------------------------------------
+ SCF time:   CPU 2.41s  wall 3.00s 
+ SCF   energy =  -382.30827168
+ Total energy =  -382.30827168
+ Integrated density by DFT XC:
+   Number of electrons = 70
+   Numerical integral  =    69.999846264732
+   Relative error      =     0.0002196218 %
+ 
+ --------------------------------------------------------------
+             Orbital Energies (a.u.) and Symmetries
+ --------------------------------------------------------------
+ 
+ Alpha MOs, Restricted
+ -- Occupied --                  
+-10.020 -10.020 -10.008 -10.008 -10.007 -10.007 -10.006 -10.006
+  1 Bu    1 Ag    2 Ag    2 Bu    3 Ag    3 Bu    4 Bu    4 Ag                 
+ -9.992  -9.992  -0.809  -0.754  -0.718  -0.700  -0.667  -0.589
+  5 Ag    5 Bu    6 Ag    6 Bu    7 Ag    7 Bu    8 Bu    8 Ag                 
+ -0.559  -0.531  -0.510  -0.458  -0.439  -0.411  -0.398  -0.396
+  9 Ag    9 Bu   10 Ag   11 Ag   10 Bu   11 Bu   12 Bu   12 Ag                 
+ -0.374  -0.351  -0.347  -0.324  -0.311  -0.293  -0.287  -0.263
+ 13 Bu   14 Bu   13 Ag    1 Au   15 Bu   14 Ag   15 Ag    1 Bg                 
+ -0.212  -0.195  -0.153
+  2 Au    2 Bg    3 Bg                                                         
+ -- Virtual --                   
+  0.038   0.090   0.111   0.182   0.272   0.332   0.341   0.380
+  3 Au    4 Au    4 Bg    5 Au    5 Bg   16 Ag   16 Bu   17 Bu                 
+  0.381   0.410   0.411   0.426   0.439   0.454   0.478   0.526
+ 17 Ag   18 Ag   18 Bu   19 Bu   19 Ag   20 Bu   20 Ag   21 Ag                 
+  0.546   0.576   0.598   0.625   0.640   0.683   0.717   0.779
+ 21 Bu   22 Ag   22 Bu   23 Bu   23 Ag   24 Ag   24 Bu   25 Ag                 
+  0.794
+ 25 Bu                                                                         
+ 
+ Beta MOs, Restricted
+ -- Occupied --                  
+-10.020 -10.020 -10.008 -10.008 -10.007 -10.007 -10.006 -10.006
+  1 Bu    1 Ag    2 Ag    2 Bu    3 Ag    3 Bu    4 Bu    4 Ag                 
+ -9.992  -9.992  -0.809  -0.754  -0.718  -0.700  -0.667  -0.589
+  5 Ag    5 Bu    6 Ag    6 Bu    7 Ag    7 Bu    8 Bu    8 Ag                 
+ -0.559  -0.531  -0.510  -0.458  -0.439  -0.411  -0.398  -0.396
+  9 Ag    9 Bu   10 Ag   11 Ag   10 Bu   11 Bu   12 Bu   12 Ag                 
+ -0.374  -0.351  -0.347  -0.324  -0.311  -0.293  -0.287  -0.263
+ 13 Bu   14 Bu   13 Ag    1 Au   15 Bu   14 Ag   15 Ag    1 Bg                 
+ -0.212  -0.195  -0.153
+  2 Au    2 Bg    3 Bg                                                         
+ -- Virtual --                   
+  0.038   0.090   0.111   0.182   0.272   0.332   0.341   0.380
+  3 Au    4 Au    4 Bg    5 Au    5 Bg   16 Ag   16 Bu   17 Bu                 
+  0.381   0.410   0.411   0.426   0.439   0.454   0.478   0.526
+ 17 Ag   18 Ag   18 Bu   19 Bu   19 Ag   20 Bu   20 Ag   21 Ag                 
+  0.546   0.576   0.598   0.625   0.640   0.683   0.717   0.779
+ 21 Bu   22 Ag   22 Bu   23 Bu   23 Ag   24 Ag   24 Bu   25 Ag                 
+  0.794
+ 25 Bu                                                                         
+ --------------------------------------------------------------
+ 
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 C                    -0.004405
+      2 C                    -0.004405
+      3 C                    -0.076752
+      4 C                    -0.076752
+      5 C                    -0.077083
+      6 C                    -0.077083
+      7 H                     0.077995
+      8 H                     0.077995
+      9 H                     0.079316
+     10 H                     0.079316
+     11 C                    -0.076366
+     12 C                    -0.076366
+     13 H                     0.076692
+     14 H                     0.076692
+     15 C                    -0.154814
+     16 C                    -0.154814
+     17 H                     0.076117
+     18 H                     0.076117
+     19 H                     0.079299
+     20 H                     0.079299
+  ----------------------------------------
+  Sum of atomic charges =     0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X       0.0000      Y       0.0000      Z       0.0000
+       Tot       0.0000
+    Quadrupole Moments (Debye-Ang)
+        XX     -50.7270     XY       0.0867     YY     -50.2324
+        XZ       0.0000     YZ      -0.0000     ZZ     -58.6265
+    Octopole Moments (Debye-Ang^2)
+       XXX       0.0000    XXY      -0.0000    XYY       0.0000
+       YYY      -0.0000    XXZ       0.0000    XYZ       0.0000
+       YYZ       0.0000    XZZ       0.0000    YZZ       0.0000
+       ZZZ       0.0000
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -1859.8323   XXXY       7.2306   XXYY    -367.7962
+      XYYY       1.6044   YYYY    -330.1049   XXXZ       0.0000
+      XXYZ      -0.0000   XYYZ       0.0000   YYYZ      -0.0000
+      XXZZ    -367.2652   XYZZ      -0.0183   YYZZ     -72.2260
+      XZZZ       0.0000   YZZZ      -0.0000   ZZZZ     -47.6128
+ -----------------------------------------------------------------
+ Calculating MO derivatives via CPSCF
+    1     0    63    0.0938137  
+    2     0    63    0.0057783  
+    3    10    53    0.0002536  
+    4    61     2    0.0000076  
+    5    63     0    0.0000001  Converged
+ Polarizability Matrix (a.u.)
+            1           2           3
+    1-142.5715536   8.1707729   0.0000000
+    2   8.1707729 -68.5450480  -0.0000000
+    3   0.0000000  -0.0000000 -11.3467321
+ Calculating analytic Hessian of the SCF energy
+ 
+ Direct stationary perturbation theory relativistic correction:
+ 
+ 
+ **********************************************************************
+ **                                                                  **
+ **                       VIBRATIONAL ANALYSIS                       **
+ **                       --------------------                       **
+ **                                                                  **
+ **        VIBRATIONAL FREQUENCIES (CM**-1) AND NORMAL MODES         **
+ **     FORCE CONSTANTS (mDYN/ANGSTROM) AND REDUCED MASSES (AMU)     **
+ **                  INFRARED INTENSITIES (KM/MOL)                   **
+ **                                                                  **
+ **********************************************************************
+ 
+
+ Mode:                 1                      2                      3
+ Frequency:        47.26                  80.81                 152.37
+ Force Cnst:      0.0042                 0.0096                 0.0292
+ Red. Mass:       3.1577                 2.4972                 2.1376
+ IR Active:          YES                    NO                     YES
+ IR Intens:        0.031                  0.000                  0.343
+ Raman Active:       NO                     YES                    NO 
+               X      Y      Z        X      Y      Z        X      Y      Z
+ C          0.000  0.000 -0.079   -0.000 -0.000  0.086   -0.000 -0.000 -0.031
+ C          0.000  0.000 -0.079   -0.000 -0.000 -0.086   -0.000 -0.000 -0.031
+ C          0.000  0.000 -0.101   -0.000 -0.000 -0.042   -0.000 -0.000 -0.084
+ C          0.000  0.000 -0.101   -0.000 -0.000  0.042   -0.000 -0.000 -0.084
+ C          0.000  0.000 -0.094   -0.000 -0.000 -0.133   -0.000 -0.000 -0.097
+ C          0.000  0.000 -0.094   -0.000 -0.000  0.133   -0.000 -0.000 -0.097
+ H          0.000  0.000 -0.109   -0.000 -0.000 -0.083   -0.000 -0.000 -0.066
+ H          0.000  0.000 -0.109   -0.000 -0.000  0.083   -0.000 -0.000 -0.066
+ H          0.000  0.000 -0.100   -0.000 -0.000 -0.248   -0.000 -0.000 -0.084
+ H          0.000  0.000 -0.100   -0.000 -0.000  0.248   -0.000 -0.000 -0.084
+ C          0.000  0.000 -0.025   -0.000 -0.000 -0.139   -0.000  0.000  0.184
+ C          0.000 -0.000 -0.025   -0.000 -0.000  0.139   -0.000  0.000  0.184
+ H          0.000  0.000 -0.216   -0.000 -0.000 -0.394   -0.000  0.000  0.519
+ H          0.000 -0.000 -0.216   -0.000 -0.000  0.394   -0.000  0.000  0.519
+ C          0.000  0.000  0.268   -0.000  0.000  0.147    0.000  0.000  0.008
+ C          0.000 -0.000  0.268   -0.000 -0.000 -0.147    0.000  0.000  0.008
+ H          0.000  0.000  0.493   -0.000  0.000  0.446    0.000  0.000 -0.352
+ H          0.000 -0.000  0.493   -0.000 -0.000 -0.446    0.000  0.000 -0.352
+ H          0.000  0.000  0.301   -0.000  0.000  0.101    0.000  0.000  0.210
+ H          0.000 -0.000  0.301   -0.000 -0.000 -0.101    0.000  0.000  0.210
+ TransDip   0.000 -0.000  0.006    0.000 -0.000  0.000   -0.000  0.000  0.019
+
+ Mode:                 4                      5                      6
+ Frequency:       178.92                 262.68                 301.86
+ Force Cnst:      0.0643                 0.1318                 0.1273
+ Red. Mass:       3.4092                 3.2431                 2.3703
+ IR Active:          YES                    NO                     NO 
+ IR Intens:        0.257                  0.000                  0.000
+ Raman Active:       NO                     YES                    YES
+               X      Y      Z        X      Y      Z        X      Y      Z
+ C         -0.019 -0.105 -0.000    0.046 -0.120  0.000   -0.000  0.000  0.183
+ C         -0.019 -0.105 -0.000   -0.046  0.120  0.000    0.000 -0.000 -0.183
+ C         -0.025 -0.115 -0.000    0.100 -0.064 -0.000   -0.000  0.000  0.121
+ C         -0.025 -0.115  0.000   -0.100  0.064  0.000    0.000  0.000 -0.121
+ C         -0.011 -0.113 -0.000    0.067  0.080 -0.000   -0.000  0.000 -0.099
+ C         -0.011 -0.113  0.000   -0.067 -0.080  0.000    0.000  0.000  0.099
+ H         -0.025 -0.116 -0.000    0.186 -0.095 -0.000   -0.000  0.000  0.183
+ H         -0.025 -0.116  0.000   -0.186  0.095  0.000    0.000  0.000 -0.183
+ H         -0.007 -0.112 -0.000    0.148  0.151 -0.000   -0.000 -0.000 -0.128
+ H         -0.007 -0.112  0.000   -0.148 -0.151  0.000    0.000  0.000  0.128
+ C         -0.053  0.057 -0.000   -0.045  0.054  0.000    0.000 -0.000  0.056
+ C         -0.053  0.057 -0.000    0.045 -0.054 -0.000   -0.000 -0.000 -0.056
+ H         -0.220  0.095 -0.000    0.086  0.023  0.000   -0.000 -0.000  0.398
+ H         -0.220  0.095 -0.000   -0.086 -0.023 -0.000    0.000 -0.000 -0.398
+ C          0.101  0.234  0.000   -0.202 -0.120  0.000   -0.000 -0.000  0.032
+ C          0.101  0.234  0.000    0.202  0.120  0.000   -0.000 -0.000 -0.032
+ H          0.289  0.203  0.000   -0.408 -0.085 -0.000   -0.000 -0.000 -0.320
+ H          0.289  0.203  0.000    0.408  0.085  0.000   -0.000 -0.000  0.320
+ H          0.043  0.424 -0.000   -0.139 -0.330  0.000    0.000 -0.000  0.357
+ H          0.043  0.424 -0.000    0.139  0.330 -0.000   -0.000 -0.000 -0.357
+ TransDip  -0.015  0.006 -0.000   -0.000  0.000  0.000   -0.000 -0.000 -0.000
+
+ Mode:                 7                      8                      9
+ Frequency:       408.40                 425.37                 470.35
+ Force Cnst:      0.4698                 0.3254                 0.2934
+ Red. Mass:       4.7805                 3.0527                 2.2513
+ IR Active:          NO                     YES                    YES
+ IR Intens:        0.000                  0.086                  5.788
+ Raman Active:       YES                    NO                     NO 
+               X      Y      Z        X      Y      Z        X      Y      Z
+ C         -0.131 -0.139  0.000   -0.000 -0.000 -0.017   -0.000  0.000  0.199
+ C          0.131  0.139 -0.000    0.000  0.000 -0.017   -0.000  0.000  0.199
+ C          0.054 -0.007  0.000    0.000 -0.000 -0.212   -0.000  0.000 -0.091
+ C         -0.054  0.007  0.000   -0.000  0.000 -0.212   -0.000  0.000 -0.091
+ C          0.064  0.155 -0.000    0.000  0.000  0.218   -0.000  0.000 -0.062
+ C         -0.064 -0.155 -0.000   -0.000 -0.000  0.218   -0.000  0.000 -0.062
+ H          0.253 -0.083  0.000    0.000 -0.000 -0.408   -0.000  0.000 -0.336
+ H         -0.253  0.083  0.000   -0.000  0.000 -0.408   -0.000  0.000 -0.336
+ H          0.075  0.163 -0.000    0.000  0.000  0.486   -0.000  0.000 -0.289
+ H         -0.075 -0.163 -0.000   -0.000 -0.000  0.486   -0.000  0.000 -0.289
+ C          0.240 -0.005  0.000    0.000 -0.000  0.005    0.000 -0.000  0.063
+ C         -0.240  0.005 -0.000   -0.000 -0.000  0.005    0.000 -0.000  0.063
+ H          0.356 -0.028  0.000    0.000 -0.000  0.022    0.000 -0.000 -0.206
+ H         -0.356  0.028 -0.000   -0.000  0.000  0.022    0.000 -0.000 -0.206
+ C          0.197 -0.086 -0.000    0.000 -0.000 -0.002    0.000 -0.000 -0.028
+ C         -0.197  0.086  0.000   -0.000  0.000 -0.002    0.000 -0.000 -0.028
+ H          0.147 -0.080 -0.000    0.000 -0.000 -0.047    0.000 -0.000  0.245
+ H         -0.147  0.080  0.000   -0.000  0.000 -0.047    0.000 -0.000  0.245
+ H          0.219 -0.147  0.000    0.000 -0.000  0.040    0.000  0.000 -0.380
+ H         -0.219  0.147 -0.000   -0.000  0.000  0.040    0.000  0.000 -0.380
+ TransDip  -0.000  0.000 -0.000    0.000 -0.000  0.009   -0.000  0.000 -0.077
+
+ Mode:                10                     11                     12
+ Frequency:       485.60                 578.69                 659.06
+ Force Cnst:      0.4488                 0.5587                 0.5292
+ Red. Mass:       3.2305                 2.8315                 2.0679
+ IR Active:          YES                    NO                     NO 
+ IR Intens:        1.930                  0.000                  0.000
+ Raman Active:       NO                     YES                    YES
+               X      Y      Z        X      Y      Z        X      Y      Z
+ C         -0.060  0.041 -0.000    0.117 -0.063  0.000    0.000  0.000  0.040
+ C         -0.060  0.041 -0.000   -0.117  0.063  0.000   -0.000  0.000 -0.040
+ C         -0.086  0.074  0.000    0.063 -0.134  0.000    0.000 -0.000 -0.118
+ C         -0.086  0.074  0.000   -0.063  0.134 -0.000   -0.000  0.000  0.118
+ C         -0.103  0.076  0.000    0.019  0.024 -0.000    0.000 -0.000  0.114
+ C         -0.103  0.076  0.000   -0.019 -0.024  0.000   -0.000  0.000 -0.114
+ H         -0.098  0.081  0.000    0.085 -0.143  0.000    0.000 -0.000 -0.160
+ H         -0.098  0.081  0.000   -0.085  0.143 -0.000   -0.000  0.000  0.160
+ H         -0.102  0.078  0.000    0.181  0.159 -0.000    0.000  0.000  0.192
+ H         -0.102  0.078  0.000   -0.181 -0.159  0.000   -0.000  0.000 -0.192
+ C          0.026 -0.174 -0.000   -0.094 -0.172  0.000   -0.000 -0.000 -0.138
+ C          0.026 -0.174 -0.000    0.094  0.172 -0.000    0.000  0.000  0.138
+ H          0.053 -0.177  0.000   -0.051 -0.182  0.000   -0.000 -0.000  0.188
+ H          0.053 -0.177  0.000    0.051  0.182  0.000    0.000  0.000 -0.188
+ C          0.186 -0.030  0.000    0.059 -0.020 -0.000    0.000 -0.000  0.023
+ C          0.186 -0.030  0.000   -0.059  0.020  0.000   -0.000  0.000 -0.023
+ H          0.496 -0.084 -0.000    0.426 -0.081  0.000    0.000 -0.000 -0.301
+ H          0.496 -0.084 -0.000   -0.426  0.081 -0.000   -0.000  0.000  0.301
+ H          0.100  0.263  0.000   -0.045  0.325 -0.000    0.000  0.000  0.513
+ H          0.100  0.263  0.000    0.045 -0.325  0.000   -0.000 -0.000 -0.513
+ TransDip  -0.044  0.004  0.000    0.000 -0.000  0.000   -0.000  0.000 -0.000
+
+ Mode:                13                     14                     15
+ Frequency:       672.02                 709.28                 735.87
+ Force Cnst:      1.8326                 0.4388                 1.0163
+ Red. Mass:       6.8872                 1.4804                 3.1855
+ IR Active:          NO                     YES                    YES
+ IR Intens:        0.000                  0.437                  4.355
+ Raman Active:       YES                    NO                     NO 
+               X      Y      Z        X      Y      Z        X      Y      Z
+ C         -0.002 -0.105 -0.000   -0.000 -0.000  0.084    0.018  0.003 -0.000
+ C          0.002  0.105 -0.000    0.000  0.000  0.084    0.018  0.003 -0.000
+ C         -0.258 -0.232 -0.000   -0.000 -0.000  0.016   -0.134 -0.068 -0.000
+ C          0.258  0.232  0.000   -0.000 -0.000  0.016   -0.134 -0.068 -0.000
+ C         -0.324  0.160  0.000   -0.000 -0.000  0.020   -0.131 -0.026 -0.000
+ C          0.324 -0.160 -0.000   -0.000 -0.000  0.020   -0.131 -0.026 -0.000
+ H         -0.149 -0.273 -0.000   -0.000 -0.000 -0.309   -0.222 -0.035  0.000
+ H          0.149  0.273  0.000   -0.000 -0.000 -0.309   -0.222 -0.035  0.000
+ H         -0.255  0.218  0.000   -0.000 -0.000 -0.305   -0.200 -0.087  0.000
+ H          0.255 -0.218 -0.000   -0.000 -0.000 -0.305   -0.200 -0.087  0.000
+ C          0.012  0.058 -0.000    0.000  0.000 -0.116    0.183  0.129  0.000
+ C         -0.012 -0.058  0.000    0.000  0.000 -0.116    0.183  0.129  0.000
+ H          0.002  0.060  0.000    0.000  0.000  0.182    0.188  0.136 -0.000
+ H         -0.002 -0.060 -0.000    0.000  0.000  0.182    0.188  0.136 -0.000
+ C         -0.024  0.040  0.000    0.000  0.000  0.017    0.089 -0.012 -0.000
+ C          0.024 -0.040 -0.000    0.000  0.000  0.017    0.089 -0.012 -0.000
+ H         -0.123  0.056 -0.000   -0.000  0.000 -0.257   -0.264  0.042  0.000
+ H          0.123 -0.056  0.000   -0.000  0.000 -0.257   -0.264  0.042  0.000
+ H         -0.001 -0.041  0.000    0.000 -0.000  0.437    0.201 -0.370 -0.000
+ H          0.001  0.041 -0.000    0.000 -0.000  0.437    0.201 -0.370 -0.000
+ TransDip  -0.000  0.000  0.000    0.000  0.000 -0.021    0.067 -0.005  0.000
+
+ Mode:                16                     17                     18
+ Frequency:       811.22                 861.59                 897.08
+ Force Cnst:      1.2797                 1.9549                 0.5954
+ Red. Mass:       3.3004                 4.4697                 1.2557
+ IR Active:          NO                     NO                     NO 
+ IR Intens:        0.000                  0.000                  0.000
+ Raman Active:       YES                    YES                    YES
+               X      Y      Z        X      Y      Z        X      Y      Z
+ C          0.000 -0.000 -0.259    0.076  0.016 -0.000    0.000  0.000  0.002
+ C          0.000 -0.000  0.259   -0.076 -0.016 -0.000   -0.000  0.000 -0.002
+ C         -0.000 -0.000  0.106   -0.004 -0.246 -0.000    0.000 -0.000  0.071
+ C         -0.000  0.000 -0.106    0.004  0.246  0.000   -0.000  0.000 -0.071
+ C          0.000 -0.000 -0.104    0.073 -0.249 -0.000    0.000 -0.000  0.079
+ C          0.000  0.000  0.104   -0.073  0.249  0.000   -0.000  0.000 -0.079
+ H         -0.000  0.000  0.279   -0.204 -0.188  0.000   -0.000 -0.000 -0.485
+ H          0.000  0.000 -0.279    0.204  0.188 -0.000    0.000  0.000  0.485
+ H         -0.000 -0.000 -0.278    0.213 -0.154  0.000    0.000 -0.000 -0.503
+ H         -0.000 -0.000  0.278   -0.213  0.154 -0.000    0.000  0.000  0.503
+ C         -0.000 -0.000 -0.123    0.109  0.078  0.000    0.000  0.000  0.001
+ C          0.000  0.000  0.123   -0.109 -0.078 -0.000   -0.000 -0.000 -0.001
+ H         -0.000 -0.000  0.161    0.114  0.085 -0.000    0.000  0.000  0.001
+ H          0.000  0.000 -0.161   -0.114 -0.085  0.000   -0.000 -0.000 -0.001
+ C          0.000  0.000  0.012    0.075 -0.002 -0.000    0.000  0.000 -0.001
+ C         -0.000 -0.000 -0.012   -0.075  0.002  0.000   -0.000  0.000  0.001
+ H         -0.000  0.000 -0.214   -0.209  0.043  0.000   -0.000  0.000 -0.013
+ H          0.000 -0.000  0.214    0.209 -0.043 -0.000    0.000 -0.000  0.013
+ H          0.000 -0.000  0.411    0.174 -0.317 -0.000    0.000 -0.000  0.018
+ H         -0.000  0.000 -0.411   -0.174  0.317 -0.000   -0.000  0.000 -0.018
+ TransDip  -0.000 -0.000 -0.000   -0.000 -0.000 -0.000   -0.000  0.000  0.000
+
+ Mode:                19                     20                     21
+ Frequency:       898.61                 981.68                 981.80
+ Force Cnst:      0.8041                 0.7737                 0.7755
+ Red. Mass:       1.6901                 1.3627                 1.3655
+ IR Active:          YES                    NO                     YES
+ IR Intens:       26.392                  0.000                 36.554
+ Raman Active:       NO                     YES                    NO 
+               X      Y      Z        X      Y      Z        X      Y      Z
+ C          0.000  0.000  0.124   -0.000 -0.000 -0.004   -0.000 -0.000 -0.005
+ C          0.000 -0.000  0.124    0.000  0.000  0.004   -0.000 -0.000 -0.005
+ C         -0.000 -0.000 -0.073   -0.000 -0.000 -0.001    0.000  0.000 -0.000
+ C         -0.000  0.000 -0.073    0.000  0.000  0.001    0.000  0.000 -0.000
+ C          0.000 -0.000 -0.081    0.000 -0.000  0.001    0.000  0.000  0.004
+ C         -0.000  0.000 -0.081   -0.000  0.000 -0.001    0.000 -0.000  0.004
+ H         -0.000 -0.000  0.457   -0.000 -0.000  0.004    0.000  0.000  0.005
+ H         -0.000  0.000  0.457    0.000  0.000 -0.004    0.000  0.000  0.005
+ H          0.000 -0.000  0.468    0.000 -0.000 -0.013    0.000 -0.000 -0.021
+ H          0.000  0.000  0.468   -0.000  0.000  0.013    0.000 -0.000 -0.021
+ C         -0.000  0.000 -0.062    0.000  0.000 -0.041   -0.000 -0.000  0.042
+ C         -0.000 -0.000 -0.062   -0.000 -0.000  0.041   -0.000 -0.000  0.042
+ H          0.000  0.000  0.036    0.000  0.000  0.015   -0.000 -0.000 -0.015
+ H         -0.000 -0.000  0.036   -0.000 -0.000 -0.015   -0.000 -0.000 -0.015
+ C         -0.000  0.000  0.002   -0.000 -0.000  0.120    0.000  0.000 -0.120
+ C          0.000  0.000  0.002    0.000  0.000 -0.120    0.000  0.000 -0.120
+ H          0.000  0.000 -0.075    0.000 -0.000 -0.495   -0.000  0.000  0.496
+ H          0.000  0.000 -0.075    0.000  0.000  0.495   -0.000  0.000  0.496
+ H          0.000 -0.000  0.186   -0.000  0.000 -0.488    0.000 -0.000  0.487
+ H          0.000 -0.000  0.186    0.000 -0.000  0.488    0.000 -0.000  0.487
+ TransDip   0.000 -0.000  0.165   -0.000  0.000  0.000   -0.000 -0.000  0.194
+
+ Mode:                22                     23                     24
+ Frequency:      1020.66                1039.07                1072.61
+ Force Cnst:      0.7706                 0.8462                 1.9875
+ Red. Mass:       1.2556                 1.3302                 2.9321
+ IR Active:          NO                     YES                    YES
+ IR Intens:        0.000                  0.006                  0.477
+ Raman Active:       YES                    NO                     NO 
+               X      Y      Z        X      Y      Z        X      Y      Z
+ C          0.000  0.000 -0.020   -0.000 -0.000  0.000   -0.044 -0.014  0.000
+ C          0.000 -0.000  0.020   -0.000 -0.000  0.000   -0.044 -0.014 -0.000
+ C         -0.000 -0.000  0.075    0.000  0.000 -0.086    0.000  0.213  0.000
+ C         -0.000  0.000 -0.075   -0.000  0.000 -0.086    0.000  0.213  0.000
+ C          0.000 -0.000 -0.072    0.000 -0.000  0.085    0.061 -0.188 -0.000
+ C         -0.000  0.000  0.072    0.000 -0.000  0.085    0.061 -0.188 -0.000
+ H         -0.000  0.000 -0.506   -0.000  0.000  0.502   -0.266  0.320 -0.000
+ H         -0.000 -0.000  0.506   -0.000  0.000  0.502   -0.266  0.320 -0.000
+ H          0.000 -0.000  0.480   -0.000 -0.000 -0.482   -0.197 -0.411  0.000
+ H         -0.000  0.000 -0.480   -0.000 -0.000 -0.482   -0.197 -0.411  0.000
+ C          0.000  0.000 -0.011   -0.000 -0.000 -0.000   -0.002 -0.005 -0.000
+ C         -0.000 -0.000  0.011    0.000 -0.000 -0.000   -0.002 -0.005 -0.000
+ H          0.000  0.000 -0.024   -0.000 -0.000 -0.005   -0.036  0.003  0.000
+ H          0.000 -0.000  0.024    0.000 -0.000 -0.005   -0.036  0.003 -0.000
+ C         -0.000 -0.000  0.002    0.000  0.000  0.002    0.029  0.011  0.000
+ C         -0.000 -0.000 -0.002    0.000  0.000  0.002    0.029  0.011  0.000
+ H          0.000 -0.000 -0.031   -0.000  0.000 -0.021   -0.096  0.030  0.000
+ H          0.000 -0.000  0.031   -0.000 -0.000 -0.021   -0.096  0.030 -0.000
+ H         -0.000  0.000  0.029    0.000 -0.000 -0.005    0.071 -0.122 -0.000
+ H         -0.000  0.000 -0.029    0.000  0.000 -0.005    0.071 -0.122 -0.000
+ TransDip   0.000 -0.000  0.000   -0.000 -0.000 -0.002   -0.022  0.003 -0.000
+
+ Mode:                25                     26                     27
+ Frequency:      1102.70                1108.73                1108.89
+ Force Cnst:      1.0343                 0.7903                 0.7916
+ Red. Mass:       1.4437                 1.0911                 1.0927
+ IR Active:          YES                    YES                    NO 
+ IR Intens:        8.927                 13.155                  0.000
+ Raman Active:       NO                     NO                     YES
+               X      Y      Z        X      Y      Z        X      Y      Z
+ C          0.031  0.056  0.000    0.000 -0.000 -0.001    0.000  0.000 -0.002
+ C          0.031  0.056 -0.000   -0.000 -0.000 -0.001   -0.000 -0.000  0.002
+ C         -0.022 -0.025 -0.000    0.000  0.000 -0.003    0.000  0.000 -0.003
+ C         -0.022 -0.025 -0.000   -0.000 -0.000 -0.003   -0.000 -0.000  0.003
+ C          0.006 -0.058  0.000   -0.000  0.000  0.003   -0.000  0.000 -0.002
+ C          0.006 -0.058  0.000    0.000  0.000  0.003    0.000 -0.000  0.002
+ H         -0.206  0.039  0.000    0.000 -0.000  0.006    0.000  0.000  0.027
+ H         -0.206  0.039 -0.000    0.000 -0.000  0.006   -0.000 -0.000 -0.027
+ H         -0.001 -0.072 -0.000    0.000  0.000  0.003    0.000  0.000 -0.018
+ H         -0.001 -0.072 -0.000   -0.000 -0.000  0.003   -0.000 -0.000  0.018
+ C          0.032  0.054 -0.000   -0.000 -0.000 -0.061   -0.000 -0.000  0.062
+ C          0.032  0.054 -0.000    0.000  0.000 -0.061    0.000  0.000 -0.062
+ H          0.351 -0.016  0.000   -0.000  0.000  0.577   -0.000  0.000 -0.577
+ H          0.351 -0.016  0.000    0.000  0.000  0.577    0.000 -0.000  0.577
+ C         -0.071 -0.046 -0.000    0.000  0.000  0.005    0.000  0.000 -0.005
+ C         -0.071 -0.046 -0.000   -0.000 -0.000  0.005   -0.000 -0.000  0.005
+ H          0.348 -0.111  0.000   -0.000  0.000  0.326   -0.000  0.000 -0.326
+ H          0.348 -0.111  0.000    0.000 -0.000  0.326    0.000 -0.000  0.326
+ H         -0.198  0.368 -0.000    0.000 -0.000 -0.237    0.000 -0.000  0.236
+ H         -0.198  0.368 -0.000   -0.000  0.000 -0.237   -0.000  0.000 -0.236
+ TransDip   0.095  0.007  0.000   -0.000 -0.000  0.116   -0.000  0.000  0.000
+
+ Mode:                28                     29                     30
+ Frequency:      1110.63                1203.79                1263.10
+ Force Cnst:      1.0925                 1.1602                 1.1533
+ Red. Mass:       1.5033                 1.3588                 1.2269
+ IR Active:          NO                     YES                    NO 
+ IR Intens:        0.000                  1.408                  0.000
+ Raman Active:       YES                    NO                     YES
+               X      Y      Z        X      Y      Z        X      Y      Z
+ C          0.066  0.024  0.000   -0.051  0.034 -0.000   -0.070 -0.005  0.000
+ C         -0.066 -0.024 -0.000   -0.051  0.034 -0.000    0.070  0.005 -0.000
+ C          0.033  0.025  0.000   -0.055 -0.031  0.000    0.028 -0.040  0.000
+ C         -0.033 -0.025 -0.000   -0.055 -0.031 -0.000   -0.028  0.040 -0.000
+ C         -0.023  0.049  0.000    0.083 -0.021  0.000   -0.010 -0.034  0.000
+ C          0.023 -0.049 -0.000    0.083 -0.021 -0.000    0.010  0.034  0.000
+ H          0.068  0.017 -0.000   -0.388  0.080  0.000    0.472 -0.206  0.000
+ H         -0.068 -0.017  0.000   -0.388  0.080 -0.000   -0.472  0.206 -0.000
+ H          0.035  0.105  0.000    0.473  0.289 -0.000   -0.336 -0.306  0.000
+ H         -0.035 -0.105 -0.000    0.473  0.289 -0.000    0.336  0.306 -0.000
+ C         -0.028 -0.053 -0.000   -0.009 -0.008 -0.000   -0.024 -0.027  0.000
+ C          0.028  0.053  0.000   -0.009 -0.008 -0.000    0.024  0.027  0.000
+ H         -0.334  0.016  0.000   -0.025 -0.003  0.000   -0.121 -0.009 -0.000
+ H          0.334 -0.016 -0.000   -0.025 -0.003  0.000    0.121  0.009  0.000
+ C          0.087  0.043  0.000    0.025  0.004  0.000   -0.001  0.008  0.000
+ C         -0.087 -0.043 -0.000    0.025  0.004  0.000    0.001 -0.008 -0.000
+ H         -0.350  0.110  0.000   -0.042  0.013  0.000   -0.059  0.019 -0.000
+ H          0.350 -0.110 -0.000   -0.042  0.013  0.000    0.059 -0.019  0.000
+ H          0.226 -0.404 -0.000    0.062 -0.115 -0.000   -0.001  0.004  0.000
+ H         -0.226  0.404  0.000    0.062 -0.115 -0.000    0.001 -0.004  0.000
+ TransDip   0.000  0.000 -0.000   -0.033  0.018 -0.000    0.000  0.000 -0.000
+
+ Mode:                31                     32                     33
+ Frequency:      1285.19                1295.91                1350.01
+ Force Cnst:      2.2973                 2.8798                 5.4763
+ Red. Mass:       2.3606                 2.9105                 5.0999
+ IR Active:          YES                    NO                     YES
+ IR Intens:        0.100                  0.000                  8.895
+ Raman Active:       NO                     YES                    NO 
+               X      Y      Z        X      Y      Z        X      Y      Z
+ C          0.197 -0.067  0.000   -0.220  0.002  0.000    0.088  0.277 -0.000
+ C          0.197 -0.067 -0.000    0.220 -0.002 -0.000    0.088  0.277  0.000
+ C         -0.079  0.003  0.000   -0.097 -0.065 -0.000    0.182 -0.118 -0.000
+ C         -0.079  0.003  0.000    0.097  0.065  0.000    0.182 -0.118 -0.000
+ C          0.032  0.086  0.000    0.118  0.005  0.000   -0.149 -0.103 -0.000
+ C          0.032  0.086 -0.000   -0.118 -0.005 -0.000   -0.149 -0.103  0.000
+ H         -0.498  0.161 -0.000   -0.173 -0.060  0.000   -0.390  0.088  0.000
+ H         -0.498  0.161 -0.000    0.173  0.060 -0.000   -0.390  0.088 -0.000
+ H         -0.186 -0.094 -0.000    0.395  0.211 -0.000   -0.123 -0.087  0.000
+ H         -0.186 -0.094  0.000   -0.395 -0.211  0.000   -0.123 -0.087  0.000
+ C         -0.025 -0.042  0.000   -0.052 -0.078  0.000   -0.076 -0.107  0.000
+ C         -0.025 -0.042 -0.000    0.052  0.078  0.000   -0.076 -0.107  0.000
+ H         -0.323  0.014 -0.000   -0.387 -0.017 -0.000   -0.122 -0.108 -0.000
+ H         -0.323  0.014  0.000    0.387  0.017 -0.000   -0.122 -0.108 -0.000
+ C         -0.030  0.005  0.000   -0.026  0.029 -0.000    0.026  0.059  0.000
+ C         -0.030  0.005  0.000    0.026 -0.029 -0.000    0.026  0.059 -0.000
+ H         -0.063  0.013 -0.000   -0.158  0.056 -0.000   -0.275  0.113  0.000
+ H         -0.063  0.013 -0.000    0.158 -0.056 -0.000   -0.275  0.113  0.000
+ H         -0.062  0.089  0.000   -0.028  0.011  0.000    0.072 -0.107 -0.000
+ H         -0.062  0.089  0.000    0.028 -0.011  0.000    0.072 -0.107 -0.000
+ TransDip   0.009  0.005 -0.000    0.000  0.000 -0.000   -0.095 -0.010  0.000
+
+ Mode:                34                     35                     36
+ Frequency:      1399.74                1420.65                1426.68
+ Force Cnst:      1.6429                 1.5900                 1.5011
+ Red. Mass:       1.4232                 1.3372                 1.2517
+ IR Active:          NO                     YES                    NO 
+ IR Intens:        0.000                  8.440                  0.000
+ Raman Active:       YES                    NO                     YES
+               X      Y      Z        X      Y      Z        X      Y      Z
+ C         -0.013 -0.090 -0.000    0.013 -0.024  0.000    0.001 -0.055 -0.000
+ C          0.013  0.090 -0.000    0.013 -0.024 -0.000   -0.001  0.055  0.000
+ C          0.012 -0.006 -0.000   -0.033 -0.001  0.000    0.021 -0.012 -0.000
+ C         -0.012  0.006  0.000   -0.033 -0.001  0.000   -0.021  0.012 -0.000
+ C          0.040  0.013  0.000    0.026  0.020 -0.000    0.019  0.015 -0.000
+ C         -0.040 -0.013  0.000    0.026  0.020 -0.000   -0.019 -0.015 -0.000
+ H         -0.382  0.137 -0.000    0.008 -0.018 -0.000   -0.278  0.096  0.000
+ H          0.382 -0.137 -0.000    0.008 -0.018 -0.000    0.278 -0.096  0.000
+ H         -0.289 -0.263  0.000   -0.033 -0.031  0.000   -0.212 -0.176  0.000
+ H          0.289  0.263 -0.000   -0.033 -0.031  0.000    0.212  0.176 -0.000
+ C         -0.034 -0.066  0.000   -0.013 -0.071 -0.000   -0.001  0.047  0.000
+ C          0.034  0.066  0.000   -0.013 -0.071 -0.000    0.001 -0.047 -0.000
+ H          0.285 -0.145  0.000    0.569 -0.213 -0.000   -0.484  0.165 -0.000
+ H         -0.285  0.145  0.000    0.569 -0.213 -0.000    0.484 -0.165 -0.000
+ C          0.009  0.056  0.000   -0.012  0.082  0.000    0.017 -0.066 -0.000
+ C         -0.009 -0.056 -0.000   -0.012  0.082  0.000   -0.017  0.066  0.000
+ H         -0.224  0.101 -0.000   -0.302  0.142 -0.000    0.226 -0.110 -0.000
+ H          0.224 -0.101 -0.000   -0.302  0.142  0.000   -0.226  0.110  0.000
+ H          0.027 -0.021 -0.000   -0.010  0.041 -0.000    0.019 -0.042  0.000
+ H         -0.027  0.021  0.000   -0.010  0.041 -0.000   -0.019  0.042 -0.000
+ TransDip  -0.000  0.000  0.000   -0.091  0.017 -0.000   -0.000  0.000 -0.000
+
+ Mode:                37                     38                     39
+ Frequency:      1514.74                1565.30                1574.86
+ Force Cnst:      3.4249                 1.8770                 1.8982
+ Red. Mass:       2.5335                 1.3002                 1.2990
+ IR Active:          YES                    NO                     YES
+ IR Intens:       19.109                  0.000                  0.493
+ Raman Active:       NO                     YES                    NO 
+               X      Y      Z        X      Y      Z        X      Y      Z
+ C         -0.008  0.135  0.000    0.031  0.021 -0.000   -0.021  0.045  0.000
+ C         -0.008  0.135 -0.000   -0.031 -0.021  0.000   -0.021  0.045  0.000
+ C         -0.122 -0.071 -0.000    0.028 -0.012  0.000   -0.041 -0.001 -0.000
+ C         -0.122 -0.071  0.000   -0.028  0.012 -0.000   -0.041 -0.001  0.000
+ C          0.157  0.018  0.000   -0.004  0.017  0.000    0.027 -0.023 -0.000
+ C          0.157  0.018 -0.000    0.004 -0.017  0.000    0.027 -0.023 -0.000
+ H          0.219 -0.221 -0.000   -0.049  0.016 -0.000    0.138 -0.071  0.000
+ H          0.219 -0.221  0.000    0.049 -0.016  0.000    0.138 -0.071 -0.000
+ H         -0.309 -0.392  0.000   -0.035 -0.005  0.000    0.035 -0.026  0.000
+ H         -0.309 -0.392  0.000    0.035  0.005 -0.000    0.035 -0.026 -0.000
+ C         -0.070  0.001  0.000    0.097 -0.028 -0.000    0.077 -0.033 -0.000
+ C         -0.070  0.001 -0.000   -0.097  0.028  0.000    0.077 -0.033 -0.000
+ H         -0.047 -0.000 -0.000   -0.200  0.035  0.000   -0.242  0.037  0.000
+ H         -0.047 -0.000  0.000    0.200 -0.035  0.000   -0.242  0.037 -0.000
+ C          0.034 -0.010  0.000   -0.001 -0.022 -0.000    0.010 -0.026 -0.000
+ C          0.034 -0.010  0.000    0.001  0.022  0.000    0.010 -0.026 -0.000
+ H          0.146 -0.037 -0.000   -0.415  0.057  0.000   -0.410  0.053  0.000
+ H          0.146 -0.037 -0.000    0.415 -0.057 -0.000   -0.410  0.053  0.000
+ H          0.108 -0.221 -0.000   -0.168  0.488  0.000   -0.147  0.456  0.000
+ H          0.108 -0.221 -0.000    0.168 -0.488 -0.000   -0.147  0.456  0.000
+ TransDip  -0.036 -0.135 -0.000    0.000  0.000 -0.000    0.016  0.015  0.000
+
+ Mode:                40                     41                     42
+ Frequency:      1639.27                1689.70                1737.77
+ Force Cnst:      3.9204                 8.6153                 9.9422
+ Red. Mass:       2.4762                 5.1215                 5.5879
+ IR Active:          YES                    NO                     NO 
+ IR Intens:       15.380                  0.000                  0.000
+ Raman Active:       NO                     YES                    YES
+               X      Y      Z        X      Y      Z        X      Y      Z
+ C          0.160  0.040  0.000    0.029 -0.303 -0.000    0.191  0.007  0.000
+ C          0.160  0.040 -0.000   -0.029  0.303  0.000   -0.191 -0.007  0.000
+ C         -0.119  0.078  0.000   -0.114  0.167  0.000   -0.299  0.038 -0.000
+ C         -0.119  0.078  0.000    0.114 -0.167 -0.000    0.299 -0.038 -0.000
+ C         -0.065 -0.114 -0.000   -0.069 -0.206 -0.000    0.259  0.103  0.000
+ C         -0.065 -0.114 -0.000    0.069  0.206  0.000   -0.259 -0.103  0.000
+ H          0.455 -0.118  0.000    0.289  0.044  0.000    0.334 -0.207 -0.000
+ H          0.455 -0.118 -0.000   -0.289 -0.044  0.000   -0.334  0.207  0.000
+ H          0.367  0.223 -0.000    0.324  0.088  0.000   -0.201 -0.298 -0.000
+ H          0.367  0.223 -0.000   -0.324 -0.088  0.000    0.201  0.298  0.000
+ C         -0.035 -0.020  0.000   -0.034 -0.007  0.000    0.053 -0.011 -0.000
+ C         -0.035 -0.020 -0.000    0.034  0.007 -0.000   -0.053  0.011  0.000
+ H         -0.030 -0.027 -0.000   -0.167  0.028  0.000   -0.058  0.013  0.000
+ H         -0.030 -0.027  0.000    0.167 -0.028  0.000    0.058 -0.013 -0.000
+ C         -0.018  0.020  0.000    0.058 -0.041 -0.000   -0.021  0.014  0.000
+ C         -0.018  0.020  0.000   -0.058  0.041  0.000    0.021 -0.014 -0.000
+ H          0.093  0.003 -0.000   -0.232  0.003  0.000    0.059  0.005 -0.000
+ H          0.093  0.003  0.000    0.232 -0.003 -0.000   -0.059 -0.005  0.000
+ H          0.026 -0.131 -0.000   -0.004  0.179  0.000   -0.009 -0.033 -0.000
+ H          0.026 -0.131 -0.000    0.004 -0.179 -0.000    0.009  0.033  0.000
+ TransDip   0.125 -0.009 -0.000    0.000  0.000  0.000   -0.000 -0.000 -0.000
+
+ Mode:                43                     44                     45
+ Frequency:      1815.59                1816.57                3399.68
+ Force Cnst:      7.7244                 7.6721                 7.2383
+ Red. Mass:       3.9772                 3.9460                 1.0629
+ IR Active:          NO                     YES                    YES
+ IR Intens:        0.000                  1.493                 98.851
+ Raman Active:       YES                    NO                     NO 
+               X      Y      Z        X      Y      Z        X      Y      Z
+ C          0.020 -0.062 -0.000   -0.049  0.029  0.000   -0.000 -0.000 -0.000
+ C         -0.020  0.062  0.000   -0.049  0.029  0.000   -0.000 -0.000  0.000
+ C          0.034  0.021  0.000   -0.011 -0.009 -0.000   -0.000 -0.001 -0.000
+ C         -0.034 -0.021 -0.000   -0.011 -0.009  0.000   -0.000 -0.001 -0.000
+ C         -0.042 -0.045  0.000    0.020 -0.000 -0.000   -0.001  0.001 -0.000
+ C          0.042  0.045 -0.000    0.020 -0.000  0.000   -0.001  0.001  0.000
+ H         -0.006  0.043 -0.000    0.013 -0.023  0.000    0.003  0.010 -0.000
+ H          0.006 -0.043  0.000    0.013 -0.023 -0.000    0.003  0.010 -0.000
+ H          0.031  0.013 -0.000   -0.037 -0.054  0.000    0.011 -0.013 -0.000
+ H         -0.031 -0.013  0.000   -0.037 -0.054 -0.000    0.011 -0.013 -0.000
+ C          0.218 -0.143 -0.000    0.226 -0.141 -0.000   -0.008 -0.011  0.000
+ C         -0.218  0.143  0.000    0.226 -0.141 -0.000   -0.008 -0.011  0.000
+ H         -0.281 -0.063  0.000   -0.272 -0.061  0.000    0.040  0.181  0.000
+ H          0.281  0.063 -0.000   -0.272 -0.061  0.000    0.040  0.181  0.000
+ C         -0.185  0.153  0.000   -0.188  0.154  0.000    0.037 -0.031 -0.000
+ C          0.185 -0.153 -0.000   -0.188  0.154  0.000    0.037 -0.031  0.000
+ H          0.383  0.098 -0.000    0.389  0.098 -0.000    0.081  0.467  0.000
+ H         -0.383 -0.098  0.000    0.389  0.098 -0.000    0.081  0.467  0.000
+ H         -0.074 -0.343 -0.000   -0.077 -0.342 -0.000   -0.465 -0.147 -0.000
+ H          0.074  0.343  0.000   -0.077 -0.342 -0.000   -0.465 -0.147 -0.000
+ TransDip  -0.000 -0.000 -0.000   -0.002 -0.039 -0.000   -0.310  0.074 -0.000
+
+ Mode:                46                     47                     48
+ Frequency:      3400.41                3438.13                3438.16
+ Force Cnst:      7.2410                 7.6451                 7.6454
+ Red. Mass:       1.0629                 1.0977                 1.0977
+ IR Active:          NO                     YES                    NO 
+ IR Intens:        0.000                  3.692                  0.000
+ Raman Active:       YES                    NO                     YES
+               X      Y      Z        X      Y      Z        X      Y      Z
+ C         -0.000 -0.000 -0.000    0.002  0.000  0.000    0.002  0.000 -0.000
+ C          0.000  0.000  0.000    0.002  0.000 -0.000   -0.002 -0.000  0.000
+ C          0.000 -0.000 -0.000   -0.001 -0.002  0.000   -0.001 -0.003 -0.000
+ C         -0.000  0.000  0.000   -0.001 -0.002 -0.000    0.001  0.003  0.000
+ C          0.001 -0.001 -0.000    0.000  0.000  0.000   -0.001  0.001  0.000
+ C         -0.001  0.001 -0.000    0.000  0.000 -0.000    0.001 -0.001  0.000
+ H          0.001  0.002  0.000    0.007  0.022 -0.000    0.010  0.030  0.000
+ H         -0.001 -0.002  0.000    0.007  0.022  0.000   -0.010 -0.030 -0.000
+ H         -0.008  0.010  0.000   -0.001  0.001 -0.000    0.008 -0.010  0.000
+ H          0.008 -0.010 -0.000   -0.001  0.001  0.000   -0.008  0.010 -0.000
+ C          0.008  0.011  0.000   -0.010 -0.060 -0.000    0.010  0.061  0.000
+ C         -0.008 -0.011 -0.000   -0.010 -0.060 -0.000   -0.010 -0.061 -0.000
+ H         -0.040 -0.179 -0.000    0.150  0.662  0.000   -0.150 -0.662 -0.000
+ H          0.040  0.179  0.000    0.150  0.662  0.000    0.150  0.662  0.000
+ C         -0.037  0.031  0.000   -0.011  0.015  0.000    0.011 -0.015 -0.000
+ C          0.037 -0.031  0.000   -0.011  0.015  0.000   -0.011  0.015  0.000
+ H         -0.081 -0.468 -0.000   -0.029 -0.153 -0.000    0.029  0.152  0.000
+ H          0.081  0.468 -0.000   -0.029 -0.153 -0.000   -0.029 -0.152 -0.000
+ H          0.465  0.148  0.000    0.099  0.031 -0.000   -0.097 -0.031  0.000
+ H         -0.465 -0.148 -0.000    0.099  0.031  0.000    0.097  0.031  0.000
+ TransDip  -0.000  0.000  0.000   -0.060  0.015  0.000   -0.000  0.000  0.000
+
+ Mode:                49                     50                     51
+ Frequency:      3458.77                3462.27                3477.87
+ Force Cnst:      7.6930                 7.7074                 7.8304
+ Red. Mass:       1.0914                 1.0913                 1.0988
+ IR Active:          YES                    NO                     YES
+ IR Intens:        0.732                  0.000                  6.275
+ Raman Active:       NO                     YES                    NO 
+               X      Y      Z        X      Y      Z        X      Y      Z
+ C         -0.002  0.001 -0.000   -0.001  0.003  0.000   -0.000  0.004  0.000
+ C         -0.002  0.001 -0.000    0.001 -0.003  0.000   -0.000  0.004 -0.000
+ C         -0.017 -0.050 -0.000   -0.017 -0.050 -0.000   -0.014 -0.030 -0.000
+ C         -0.017 -0.050 -0.000    0.017  0.050  0.000   -0.014 -0.030 -0.000
+ C         -0.018  0.026  0.000   -0.018  0.025  0.000    0.036 -0.041 -0.000
+ C         -0.018  0.026  0.000    0.018 -0.025 -0.000    0.036 -0.041 -0.000
+ H          0.206  0.568  0.000    0.207  0.569  0.000    0.125  0.338  0.000
+ H          0.206  0.568  0.000   -0.207 -0.569 -0.000    0.125  0.338  0.000
+ H          0.229 -0.280 -0.000    0.228 -0.277 -0.000   -0.385  0.466  0.000
+ H          0.229 -0.280 -0.000   -0.228  0.277  0.000   -0.385  0.466  0.000
+ C          0.000  0.002 -0.000   -0.001 -0.003 -0.000    0.000  0.001 -0.000
+ C          0.000  0.002  0.000    0.001  0.003  0.000    0.000  0.001  0.000
+ H         -0.004 -0.023 -0.000    0.007  0.031  0.000   -0.003 -0.011 -0.000
+ H         -0.004 -0.023 -0.000   -0.007 -0.031  0.000   -0.003 -0.011  0.000
+ C         -0.001 -0.000 -0.000   -0.001  0.000  0.000    0.001  0.000  0.000
+ C         -0.001 -0.000 -0.000    0.001 -0.000 -0.000    0.001  0.000 -0.000
+ H         -0.001 -0.005  0.000   -0.001 -0.007 -0.000    0.000  0.004  0.000
+ H         -0.001 -0.005  0.000    0.001  0.007 -0.000    0.000  0.004 -0.000
+ H          0.013  0.004  0.000    0.011  0.003 -0.000   -0.014 -0.004  0.000
+ H          0.013  0.004  0.000   -0.011 -0.003 -0.000   -0.014 -0.004 -0.000
+ TransDip   0.010  0.025 -0.000    0.000  0.000 -0.000   -0.023  0.077  0.000
+
+ Mode:                52                     53                     54
+ Frequency:      3480.80                3552.24                3552.26
+ Force Cnst:      7.8504                 8.3142                 8.3140
+ Red. Mass:       1.0997                 1.1183                 1.1183
+ IR Active:          NO                     YES                    NO 
+ IR Intens:        0.000                  0.010                  0.000
+ Raman Active:       YES                    NO                     YES
+               X      Y      Z        X      Y      Z        X      Y      Z
+ C         -0.002 -0.001  0.000    0.000 -0.000  0.000    0.000 -0.000 -0.000
+ C          0.002  0.001 -0.000    0.000 -0.000  0.000   -0.000  0.000  0.000
+ C         -0.014 -0.031 -0.000   -0.000  0.000 -0.000    0.000  0.000  0.000
+ C          0.014  0.031  0.000   -0.000  0.000 -0.000   -0.000 -0.000 -0.000
+ C          0.036 -0.042 -0.000    0.000 -0.001 -0.000   -0.001  0.001 -0.000
+ C         -0.036  0.042  0.000    0.000 -0.001 -0.000    0.001 -0.001  0.000
+ H          0.123  0.336  0.000    0.000  0.000 -0.000   -0.001 -0.001  0.000
+ H         -0.123 -0.336 -0.000    0.000  0.000  0.000    0.001  0.001 -0.000
+ H         -0.386  0.468  0.000   -0.006  0.008  0.000    0.007 -0.010 -0.000
+ H          0.386 -0.468 -0.000   -0.006  0.008  0.000   -0.007  0.010 -0.000
+ C         -0.000 -0.001 -0.000   -0.001 -0.003 -0.000    0.001  0.003  0.000
+ C          0.000  0.001  0.000   -0.001 -0.003  0.000   -0.001 -0.003 -0.000
+ H          0.000  0.007  0.000    0.007  0.039  0.000   -0.007 -0.039 -0.000
+ H         -0.000 -0.007 -0.000    0.007  0.039  0.000    0.007  0.039 -0.000
+ C          0.001  0.001  0.000   -0.047 -0.053 -0.000    0.047  0.053  0.000
+ C         -0.001 -0.001  0.000   -0.047 -0.053 -0.000   -0.047 -0.053 -0.000
+ H         -0.000  0.000 -0.000    0.080  0.490  0.000   -0.080 -0.490 -0.000
+ H          0.000 -0.000  0.000    0.080  0.490 -0.000    0.080  0.490  0.000
+ H         -0.015 -0.004 -0.000    0.475  0.144  0.000   -0.475 -0.144 -0.000
+ H          0.015  0.004  0.000    0.475  0.144  0.000    0.475  0.144  0.000
+ TransDip  -0.000  0.000  0.000   -0.002  0.002  0.000   -0.000  0.000 -0.000
+
+ STANDARD THERMODYNAMIC QUANTITIES AT   298.15 K  AND     1.00 ATM
+
+   This Molecule has  0 Imaginary Frequencies
+   Zero point vibrational energy:      111.254 kcal/mol
+
+   Atom    1 Element C  Has Mass   12.00000
+   Atom    2 Element C  Has Mass   12.00000
+   Atom    3 Element C  Has Mass   12.00000
+   Atom    4 Element C  Has Mass   12.00000
+   Atom    5 Element C  Has Mass   12.00000
+   Atom    6 Element C  Has Mass   12.00000
+   Atom    7 Element H  Has Mass    1.00783
+   Atom    8 Element H  Has Mass    1.00783
+   Atom    9 Element H  Has Mass    1.00783
+   Atom   10 Element H  Has Mass    1.00783
+   Atom   11 Element C  Has Mass   12.00000
+   Atom   12 Element C  Has Mass   12.00000
+   Atom   13 Element H  Has Mass    1.00783
+   Atom   14 Element H  Has Mass    1.00783
+   Atom   15 Element C  Has Mass   12.00000
+   Atom   16 Element C  Has Mass   12.00000
+   Atom   17 Element H  Has Mass    1.00783
+   Atom   18 Element H  Has Mass    1.00783
+   Atom   19 Element H  Has Mass    1.00783
+   Atom   20 Element H  Has Mass    1.00783
+   Molecular Mass:   130.078300 amu
+   Principal axes and moments of inertia in amu*Bohr^2:
+                             1           2           3
+    Eigenvalues --      390.81956  2631.73358  3022.55314
+          X              -0.99999     0.00450     0.00000
+          Y              -0.00450    -0.99999     0.00000
+          Z              -0.00000     0.00000     1.00000
+   Rotational Symmetry Number is   2
+   The Molecule is an Asymmetric Top
+   Translational Enthalpy:        0.889 kcal/mol
+   Rotational Enthalpy:           0.889 kcal/mol
+   Vibrational Enthalpy:        115.054 kcal/mol
+   gas constant (RT):             0.592 kcal/mol
+   Translational Entropy:        40.502  cal/mol.K
+   Rotational Entropy:           28.143  cal/mol.K
+   Vibrational Entropy:          23.393  cal/mol.K
+
+   Total Enthalpy:              117.424 kcal/mol
+   Total Entropy:                92.038  cal/mol.K
+
+   Quasi-RRHO corrections using alpha = 4, and omega = 100 cm^-1
+   QRRHO-Vib. Enthalpy:         114.455 kcal/mol
+   QRRHO-Vib. Entropy:           21.542  cal/mol.K
+   QRRHO-Total Enthalpy:        116.825 kcal/mol
+   QRRHO-Total Entropy:          90.187  cal/mol.K
+ Total job time:  30.48s(wall), 30.19s(cpu) 
+ Wed Jul 29 13:35:31 2026
+
+        *************************************************************
+        *                                                           *
+        *  Thank you very much for using Q-Chem.  Have a nice day.  *
+        *                                                           *
+        *************************************************************
+
+
