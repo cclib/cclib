@@ -22,7 +22,7 @@ jobs:
 
   run-tests:
     name: Run tests and create distribution packages
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     strategy:
       matrix:
         pixi-env:
@@ -101,7 +101,7 @@ jobs:
     name: Test that installation from distribution packages works
     needs:
       - run-tests
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     strategy:
       matrix:
         install-method: [wheel, source]
