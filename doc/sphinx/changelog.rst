@@ -13,8 +13,9 @@ Changes in cclib-1.9
     * New parser: Serenity (Lukas Paetow, #1661, #1680, #1698, #1837)
     * ORCA 6.0 and 6.1 support (Emmanuel Nicolas, #1038, #1177, #1462, #1517, #1611, #1612, #1769, #1789)
     * Complete PySCF bridge (#1434, #1481, #1570, #1587, #1602, #1614)
-    * New bridge: chemfiles (Wollam, #1011, #1744)
+    * New bridge: chemfiles (Wollam, #1011, #1343, #1744, #1772)
     * New bridge: TREXIO (neelravi, q-posev, #1090, #1879)
+    * Always compute freeenergy if not present and required attributes are available (#1412)
     * DALTON parser updates
       * Parse rotational constants (#1619)
     * Formatted checkpoint parser updates
@@ -37,6 +38,8 @@ Changes in cclib-1.9
 
     * All parsers
       * Don't unconditionally mark calculations as failed (#1408)
+    * Documentation
+      * Correct a spelling mistake in geovalues description (flt6, #1642)
     * Formatted checkpoint
       * Fix setting success flag (#1401, #1408, #1805)
     * Gaussian
@@ -70,6 +73,9 @@ Changes in cclib-1.9
       * Add hook for YAML formatting (#1816, #1818)
       * Add hook for GitHub Actions linting (#1817, #1819)
       * Switch from pre-commit.ci service to prek GitHub Action in CI (#1632, #1815, #1820)
+    * pyproject.toml improvements
+      * Make licensing conformant to PEP 639 (#1775)
+      * Removed upper bound on versioningit version (#1444, #1445)
 
 Changes in cclib-1.8.1
 ----------------------
