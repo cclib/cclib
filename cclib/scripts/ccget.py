@@ -14,9 +14,13 @@ import os.path
 
 # This is needed for testing purposes only.
 import sys
+from collections.abc import Sequence
 from functools import partial
+from pathlib import Path
 from pprint import pprint
+from typing import Any
 
+import cclib
 from cclib.io import ccread
 from cclib.parser import ccData
 from cclib.parser.logfilewrapper import URL_PATTERN
@@ -34,7 +38,24 @@ def ccget() -> None:
 
     import argparse
 
+    class VersionAction(argparse.Action):
+        """Print version information without the help formatter's line wrapping."""
+
+        def __call__(
+            self,
+            parser: argparse.ArgumentParser,
+            namespace: argparse.Namespace | None,
+            values: str | Sequence[Any] | None,
+            option_string: str | None = None,
+        ) -> None:
+            print(f"{parser.prog} {cclib.__version__} from {Path(cclib.__file__).parent}")
+            parser.exit(0)
+
     parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "--version", action=VersionAction, nargs=0, help="show program's version number and exit"
+    )
 
     parser.add_argument(
         "attribute_or_compchemlogfile",
