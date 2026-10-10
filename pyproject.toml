@@ -159,23 +159,23 @@ py314 = { features = ["py314", "dev", "bridges-git"], solve-group = "py314" }
 
 [tool.pixi.feature.py310.dependencies]
 psi4 = "*"
-python = "3.10.*"
+python = "3.15.*"
 
 [tool.pixi.feature.py311.dependencies]
 psi4 = "*"
-python = "3.11.*"
+python = "3.15.*"
 
 [tool.pixi.feature.py312.dependencies]
 psi4 = "*"
-python = "3.12.*"
+python = "3.15.*"
 
 [tool.pixi.feature.py313.dependencies]
 psi4 = "*"
-python = "3.13.*"
+python = "3.15.*"
 
 [tool.pixi.feature.py314.dependencies]
 psi4 = "*"
-python = "3.14.*"
+python = "3.15.*"
 
 [tool.pixi.package]
 name = "cclib"
