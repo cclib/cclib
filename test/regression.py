@@ -3713,6 +3713,16 @@ def testXTB_basicXTB6_5_1_1448_out(logfile: "Logfile") -> None:
         rtol=2.8e-5,
     )
 
+def testXTB_basicXTB6_7_1_moocc_1509_out(logfile: "Logfile") -> None:
+    """Can we parse orbital info correctly when we have partial occupancies?"""
+
+    assert logfile.data.homos[0] == 1781
+    # HOMO
+    assert logfile.data.moenergies[0][logfile.data.homos[0]] == pytest.approx(-14.6426, abs=1e-4)
+    # LUMO
+    assert logfile.data.moenergies[0][logfile.data.homos[0]+1] == pytest.approx(-14.6417, abs=1e-4)
+
+
 
 # These regression tests are for logfiles that are not to be parsed
 # for some reason, and the function should start with 'testnoparse'.
