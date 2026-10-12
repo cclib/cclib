@@ -494,19 +494,65 @@ def _extract_orbitals(line: str) -> tuple[int, float, float, bool] | None:
         -------------------------------------------------------------
                     HL-Gap            0.1092983 Eh            2.9742 eV
                 Fermi-level           -0.3536781 Eh           -9.6241 eV
+
+    Sometimes we get partial occupancies for LUMO and beyond...
+
+    * Orbital Energies and Occupations
+
+         #    Occupation            Energy/Eh            Energy/eV
+      -------------------------------------------------------------
+         1        2.0000           -1.1957802             -32.5388
+       ...           ...                  ...                  ...
+      2964        2.0000           -0.7977922             -21.7090
+      2965        2.0000           -0.7977714             -21.7085
+      2966        2.0000           -0.7977247             -21.7072
+      2967        2.0000           -0.7977114             -21.7068
+      2968        2.0000           -0.7976802             -21.7060
+      2969        2.0000           -0.7976665             -21.7056
+      2970        2.0000           -0.7976401             -21.7049
+      2971        2.0000           -0.7976090             -21.7040
+      2972        2.0000           -0.7975614             -21.7028
+      2973        2.0000           -0.7975084             -21.7013
+      2974        2.0000           -0.7974860             -21.7007
+      2975        2.0000           -0.7974643             -21.7001
+      2976        2.0000           -0.7974019             -21.6984 (HOMO)
+      2977        0.0001           -0.7770426             -21.1444 (LUMO)
+      2978        0.0001           -0.7770132             -21.1436
+      2979        0.0000           -0.7767722             -21.1370
+      2980        0.0000           -0.7767141             -21.1355
+      2981        0.0000           -0.7766734             -21.1344
+      2982        0.0000           -0.7765458             -21.1309
+      2983        0.0000           -0.7765194             -21.1302
+      2984        0.0000           -0.7763235             -21.1248
+      2985        0.0000           -0.7762597             -21.1231
+      2986        0.0000           -0.7761667             -21.1206
+      2987        0.0000           -0.7761418             -21.1199
+       ...           ...                  ...                  ...
+      5796                          0.9482674              25.8037
+      -------------------------------------------------------------
+                  HL-Gap            0.0203593 Eh            0.5540 eV
+             Fermi-level           -0.7870079 Eh          -21.4156 eV
     """
     line_split = line.split()
     if set(line.strip()) == {" ", "."}:
         return None
-    if "(HOMO)" in line or (len(line_split) == 4 and "MO" not in line):
-        return (
-            int(line_split[0]),
-            float(line_split[1]),
-            float(line_split[3]),
-            bool("(HOMO) in line"),
-        )
-    if "(LUMO)" in line or (len(line_split) == 3 and "MO" not in line):
-        return int(line_split[0]), 0.0, float(line_split[2]), False
+
+    # Annoyingly, our line has variable length depending on factors outside of our control.
+    index = int(line_split[0])
+    if "(" in line_split[-1]:
+        # This line has HOMO or LUMO in it.
+        line_split = line_split[:-1]
+
+    energy = float(line_split[-2])
+
+    if len(line_split) == 4:
+        occupation = float(line_split[1])
+    else:
+        occupation = 0.0
+
+    is_homo = "(HOMO)" in line
+
+    return index, occupation, energy, is_homo
 
 
 def _extract_gfn2_mulliken_charge(line: str) -> tuple[float, int] | None:
