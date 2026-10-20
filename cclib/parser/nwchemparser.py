@@ -268,7 +268,8 @@ class NWChem(logfileparser.Logfile):
 
                 line = next(inputfile)
                 while line.strip():
-                    atomname, desc, shells, funcs, types = line.split()
+                    atomname, *desc, shells, funcs, types = line.split()
+                    desc = " ".join(desc)
                     atomelement = self.name2element(atomname)
                     self.metadata["basis_set"] = desc
 
