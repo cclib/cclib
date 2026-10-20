@@ -5,12 +5,8 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = "BSD-3-Clause"
 license-files = ["LICENSE"]
-authors = [
-    { name = "cclib development team", email = "cclib@googlegroups.com" }
-]
-maintainers = [
-    { name = "cclib development team", email = "cclib@googlegroups.com" }
-]
+authors = [{ name = "cclib development team", email = "cclib@googlegroups.com" }]
+maintainers = [{ name = "cclib development team", email = "cclib@googlegroups.com" }]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
@@ -217,13 +213,7 @@ extend-select = [
 lines-after-imports = 2
 # default is FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER
 # Placing third-party imports at the end makes their inclusion more obvious
-section-order = [
-    "future",
-    "standard-library",
-    "first-party",
-    "third-party",
-    "local-folder"
-]
+section-order = ["future", "standard-library", "first-party", "third-party", "local-folder"]
 
 [tool.ruff.lint.per-file-ignores]
 "test/test*.py" = [

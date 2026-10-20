@@ -173,7 +173,7 @@ repos:
       - id: rst-directive-colons
       - id: rst-inline-touching-normal
   - repo: https://github.com/tombi-toml/tombi-pre-commit
-    rev: v1.2.4
+    rev: v1.7.3
     hooks:
       - id: tombi-format
         # Requires https://github.com/cclib/cclib/pull/1775
@@ -189,7 +189,7 @@ repos:
         additional_dependencies:
           - "github.com/wasilibs/go-shellcheck/cmd/shellcheck@v0.11.1"
   - repo: https://github.com/zizmorcore/zizmor-pre-commit
-    rev: "v1.28.0"
+    rev: "v1.29.0"
     hooks:
       - id: zizmor
         args: [--no-progress, --persona=pedantic, --fix=all]
