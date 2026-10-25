@@ -159,26 +159,38 @@ py314 = { features = ["py314", "dev", "bridges-git"], solve-group = "py314" }
 py315 = { features = ["py315", "dev", "bridges-git"], solve-group = "py315" }
 
 [tool.pixi.feature.py310.dependencies]
+# needed for trexio
+pkg-config = "*"
 psi4 = "*"
 python = "3.10.*"
 
 [tool.pixi.feature.py311.dependencies]
+# needed for trexio
+pkg-config = "*"
 psi4 = "*"
 python = "3.11.*"
 
 [tool.pixi.feature.py312.dependencies]
+# needed for trexio
+pkg-config = "*"
 psi4 = "*"
 python = "3.12.*"
 
 [tool.pixi.feature.py313.dependencies]
+# needed for trexio
+pkg-config = "*"
 psi4 = "*"
 python = "3.13.*"
 
 [tool.pixi.feature.py314.dependencies]
+# needed for trexio
+pkg-config = "*"
 psi4 = "*"
 python = "3.14.*"
 
 [tool.pixi.feature.py315.dependencies]
+# needed for trexio
+pkg-config = "*"
 psi4 = "*"
 python = "3.15.*"
 
