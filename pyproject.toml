@@ -156,6 +156,7 @@ py311 = { features = ["py311", "dev", "bridges-git"], solve-group = "py311" }
 py312 = { features = ["py312", "dev", "bridges-git"], solve-group = "py312" }
 py313 = { features = ["py313", "dev", "bridges-git"], solve-group = "py313" }
 py314 = { features = ["py314", "dev", "bridges-git"], solve-group = "py314" }
+py315 = { features = ["py315", "dev", "bridges-git"], solve-group = "py315" }
 
 [tool.pixi.feature.py310.dependencies]
 psi4 = "*"
@@ -176,6 +177,10 @@ python = "3.13.*"
 [tool.pixi.feature.py314.dependencies]
 psi4 = "*"
 python = "3.14.*"
+
+[tool.pixi.feature.py315.dependencies]
+psi4 = "*"
+python = "3.15.*"
 
 [tool.pixi.package]
 name = "cclib"
