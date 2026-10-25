@@ -20,6 +20,7 @@ query {
             url
             number
             state
+            closedAt
             author {
               login
             }
