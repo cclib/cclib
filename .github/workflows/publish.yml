@@ -27,7 +27,7 @@ jobs:
 
   publish-to-testpypi:
     name: Publish Python distribution to TestPyPI
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
 
     # publish on merge to default branch or any tag
     if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')
@@ -41,7 +41,7 @@ jobs:
 
     steps:
       - name: Download all the dists
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c  # v8
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333  # v8
         with:
           name: python-package-distributions
           path: dist/
@@ -55,7 +55,7 @@ jobs:
 
   publish-to-pypi:
     name: Publish Python distribution to PyPI
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
 
     # only publish on release/versioned tag pushes
     if: startsWith(github.ref, 'refs/tags/v')
@@ -69,7 +69,7 @@ jobs:
 
     steps:
       - name: Download all the dists
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c  # v8
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333  # v8
         with:
           name: python-package-distributions
           path: dist/
@@ -83,7 +83,7 @@ jobs:
   github-release:
     name: >-
       Sign the Python distribution with Sigstore and upload them to GitHub Release
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
 
     # make (draft) release on any tag
     if: startsWith(github.ref, 'refs/tags/')
@@ -94,7 +94,7 @@ jobs:
 
     steps:
       - name: Download all the dists
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c  # v8
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333  # v8
         with:
           name: python-package-distributions
           path: dist/
