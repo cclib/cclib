@@ -52,6 +52,7 @@ class Writer(ABC):
     """Abstract class for writer objects."""
 
     required_attrs: tuple[str] = ()
+    _single_geometry = False
 
     def __init__(
         self,
@@ -83,18 +84,21 @@ class Writer(ABC):
 
         self._check_required_attributes()
 
+        lencoords = len(self.ccdata.atomcoords) if hasattr(self.ccdata, "atomcoords") else None
+        self.indices = _fix_indices(indices, lencoords)
+        if self._single_geometry:
+            if len(self.indices) > 1:
+                raise ValueError(f"{type(self).__name__} supports only one geometry")
+            self._geometry_index = next(iter(self.indices), -1)
+            if self.indices and (lencoords is None or not 0 <= self._geometry_index < lencoords):
+                raise IndexError("Geometry index out of range")
+
         # Open Babel isn't necessarily present.
         if _has_openbabel:
             # Generate the Open Babel/Pybel representation of the molecule.
             # Used for calculating SMILES/InChI, formula, MW, etc.
             self.obmol, self.pbmol = self._make_openbabel_from_ccdata()
             self.bond_connectivities = self._make_bond_connectivity_from_openbabel(self.obmol)
-
-        if hasattr(self.ccdata, "atomcoords"):
-            lencoords = len(self.ccdata.atomcoords)
-        else:
-            lencoords = None
-        self.indices = _fix_indices(indices, lencoords)
 
     @abstractmethod
     def generate_repr(self) -> str:
@@ -124,6 +128,8 @@ class Writer(ABC):
             _atomcoords = None
         else:
             _atomcoords = self.ccdata.atomcoords
+            if self._single_geometry:
+                _atomcoords = _atomcoords[[self._geometry_index]]
         if not hasattr(self.ccdata, "atomnos"):
             logger.warning("ccdata object does not have atomic numbers, setting to None")
             _atomnos = None

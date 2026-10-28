@@ -22,6 +22,8 @@ _has_openbabel = find_package("openbabel")
 class CML(filewriter.Writer):
     """A writer for chemical markup language (CML) files."""
 
+    _single_geometry = True
+
     def __init__(self, ccdata: "ccData", *args, **kwargs) -> None:
         """Initialize the CML writer object.
 
@@ -49,7 +51,7 @@ class CML(filewriter.Writer):
             elements = [self.pt.element[Z] for Z in self.ccdata.atomnos]
             for atomid in range(self.ccdata.natom):
                 atom = ET.SubElement(atomArray, "atom")
-                x, y, z = self.ccdata.atomcoords[-1][atomid].tolist()
+                x, y, z = self.ccdata.atomcoords[self._geometry_index][atomid].tolist()
                 d = {
                     "id": f"a{atomid + 1}",
                     "elementType": elements[atomid],

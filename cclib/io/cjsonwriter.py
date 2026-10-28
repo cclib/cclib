@@ -25,6 +25,8 @@ _has_openbabel = find_package("openbabel")
 class CJSON(filewriter.Writer):
     """A writer for chemical JSON (CJSON) files."""
 
+    _single_geometry = True
+
     def __init__(self, ccdata: "ccData", terse: bool = False, *args, **kwargs) -> None:
         """Initialize the chemical JSON writer object.
 
@@ -85,7 +87,7 @@ class CJSON(filewriter.Writer):
                 else:
                     cjson_dict["atoms"]["coords"] = dict()
                     cjson_dict["atoms"]["coords"]["3d"] = (
-                        self.ccdata.atomcoords[-1].flatten().tolist()
+                        self.ccdata.atomcoords[self._geometry_index].flatten().tolist()
                     )
                 continue
 
