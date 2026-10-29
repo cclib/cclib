@@ -265,8 +265,9 @@ class MOLDEN(filewriter.Writer):
         # [Atoms] (Angs|AU)
         unit = "Angs"
         molden_lines.append(f"[Atoms] {unit}")
-        # Last set of coordinates for geometry optimization runs.
-        index = -1
+        # Use the selected geometry when one was requested. With multiple
+        # indices, retain the existing convention of using the last geometry.
+        index = next(iter(self.indices)) if len(self.indices) == 1 else -1
         molden_lines.extend(self._coords_from_ccdata(index))
 
         (mosyms, moenergies, mooccs, mocoeffs) = (

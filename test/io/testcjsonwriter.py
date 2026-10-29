@@ -20,6 +20,22 @@ __datadir__ = os.path.join(__filepath__, "..", "..")
 class CJSONWriterTest:
     """Unit tests for the CJSON writer."""
 
+    def test_geometry_indices(self) -> None:
+        """The selected geometry is used for CJSON coordinates."""
+        import numpy as np
+        from cclib.parser.data import ccData
+
+        data = ccData({
+            "natom": 1,
+            "atomnos": np.array([1]),
+            "atomcoords": np.array([[[0.0, 0.0, 0.0]], [[9.0, 0.0, 0.0]]]),
+            "metadata": {},
+        })
+        first = cclib.io.cjsonwriter.CJSON(data, indices=[0]).as_dict()
+        last = cclib.io.cjsonwriter.CJSON(data, indices=[1]).as_dict()
+        assert first["atoms"]["coords"]["3d"] == [0.0, 0.0, 0.0]
+        assert last["atoms"]["coords"]["3d"] == [9.0, 0.0, 0.0]
+
     def test_init(self) -> None:
         """Does the class initialize correctly?"""
         fpath = os.path.join(__datadir__, "data/ADF/basicADF2007.01/dvb_gopt.adfout")
