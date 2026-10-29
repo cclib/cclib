@@ -6,6 +6,9 @@
 """Unit tests for XYZ reader."""
 
 import os
+from io import StringIO
+
+import pytest
 
 import cclib
 
@@ -18,6 +21,23 @@ __datadir__ = os.path.join(__filepath__, "..", "..")
 
 
 class XYZReaderTest:
+    @pytest.mark.parametrize(
+        "text",
+        [
+            "2\nwater\nO 0 0 0\n",
+            "2\nwater\nO 0 0 0\nH 1 0 0\n\n2\ntruncated\nO 0 0 0\n",
+            "2\n",
+        ],
+    )
+    def test_rejects_truncated_blocks(self, text: str) -> None:
+        """Truncated XYZ blocks must not be silently discarded."""
+        with pytest.raises(ValueError):
+            cclib.io.xyzreader.XYZ(StringIO(text)).parse()
+
+    def test_rejects_empty_file(self) -> None:
+        with pytest.raises(ValueError):
+            cclib.io.xyzreader.XYZ(StringIO("")).parse()
+
     def test_attributes_one(self) -> None:
         """Is an XYZ file with a single geometry read into a ccData properly?"""
         fpath = os.path.join(__datadir__, "test/bridge/uracil.xyz")
