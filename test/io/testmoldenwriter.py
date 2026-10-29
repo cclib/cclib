@@ -10,6 +10,9 @@ import os
 import cclib
 from cclib.io.filewriter import MissingAttributeError
 from cclib.io.moldenwriter import MoldenReformatter, round_molden
+from cclib.parser.data import ccData
+
+import numpy as np
 
 import pytest
 
@@ -21,6 +24,21 @@ __testdir__ = __filedir__
 
 
 class MOLDENTest:
+    def test_geometry_indices(self) -> None:
+        """The selected geometry is used for MOLDEN coordinates."""
+        data = ccData({
+            "natom": 1,
+            "atomnos": np.array([6]),
+            "atomcoords": np.array([[[0.0, 0.0, 0.0]], [[9.0, 0.0, 0.0]]]),
+            "metadata": {},
+        })
+        first = cclib.io.moldenwriter.MOLDEN(data, indices=[0]).generate_repr()
+        last = cclib.io.moldenwriter.MOLDEN(data, indices=[1]).generate_repr()
+        first_atom = next(line for line in first.splitlines() if line.startswith("C "))
+        last_atom = next(line for line in last.splitlines() if line.startswith("C "))
+        assert float(first_atom.split()[-3]) == 0.0
+        assert float(last_atom.split()[-3]) == 9.0
+
     def test_missing_attribute_error(self) -> None:
         """Check if MissingAttributeError is raised as expected."""
         fpath = os.path.join(__datadir__, "data/GAMESS/basicGAMESS-US2018/dvb_un_sp.out")
