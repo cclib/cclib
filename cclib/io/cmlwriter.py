@@ -47,9 +47,14 @@ class CML(filewriter.Writer):
         atomArray = ET.SubElement(molecule, "atomArray")
         if hasattr(self.ccdata, "atomcoords") and hasattr(self.ccdata, "atomnos"):
             elements = [self.pt.element[Z] for Z in self.ccdata.atomnos]
+            geometry_index = (
+                next(iter(self.indices))
+                if len(self.indices) == 1
+                else len(self.ccdata.atomcoords) - 1
+            )
             for atomid in range(self.ccdata.natom):
                 atom = ET.SubElement(atomArray, "atom")
-                x, y, z = self.ccdata.atomcoords[-1][atomid].tolist()
+                x, y, z = self.ccdata.atomcoords[geometry_index][atomid].tolist()
                 d = {
                     "id": f"a{atomid + 1}",
                     "elementType": elements[atomid],
