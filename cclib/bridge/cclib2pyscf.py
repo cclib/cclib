@@ -293,7 +293,9 @@ def cclibfrommethods(
     attributes["metadata"] = {
         "basis_set": mol.basis
         if isinstance(mol.basis, str)
-        else ", ".join(set(mol.basis.values())),
+        else ", ".join(
+            sorted({value if isinstance(value, str) else "custom" for value in mol.basis.values()})
+        ),
         "input_file_contents": mol.tostring(),
         "legacy_package_version": pyscf.__version__,
         "memory_available": mol.max_memory * 1000 * 1000,
