@@ -220,7 +220,7 @@ Using both the unit and regression tests, the line-by-line `test coverage`_ show
 .. _`cclib-data`: https://github.com/cclib/cclib-data
 .. _`regression.py`: https://github.com/cclib/cclib/blob/master/test/regression.py
 
-.. _`test coverage`: coverage/index.html
+.. _`test coverage`: https://app.codecov.io/gh/cclib/cclib
 .. _`testing script`: https://github.com/cclib/cclib/blob/master/.github/scripts/run_pytest.bash
 
 Adding a new regression test
