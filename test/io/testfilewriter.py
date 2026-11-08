@@ -35,6 +35,10 @@ class FileWriterTest:
         assert fix_indices(None, 10) == set()
         assert fix_indices(4, None) == {4}
         assert fix_indices(4, 10) == {4}
+        # Zero is falsy, so make sure a scalar 0 is kept rather than treated
+        # as "no indices" (#1945).
+        assert fix_indices(0, None) == {0}
+        assert fix_indices(0, 10) == {0}
         assert fix_indices([4], None) == {4}
         assert fix_indices([4, 5], None) == {4, 5}
         assert fix_indices([4, 4], None) == {4}

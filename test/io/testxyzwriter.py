@@ -160,6 +160,26 @@ class XYZWriterTest:
         with open(ref_fpath) as ref:
             assert ref.read() == new_repr
 
+    def test_roundtrip_10_index_zero(self) -> None:
+        """Does selecting the first structure with indices=0 match a reference
+        output where only the first structure is requested?
+
+        A scalar 0 is falsy, so it must not be treated as if no indices were
+        given, which would write the last structure instead (#1945).
+        """
+        orig_fpath = os.path.join(__filedir__, "data/example_MEP_trj.xyz")
+        reader = cclib.io.xyzreader.XYZ(orig_fpath)
+        data = reader.parse()
+
+        ref_fpath = os.path.join(__filedir__, "data/example_MEP_trj_ref_firstgeom.xyz")
+        with open(ref_fpath) as ref:
+            ref_repr = ref.read()
+
+        for indices in (0, [0]):
+            writer = cclib.io.xyzwriter.XYZ(data, indices=indices)
+            assert writer.indices == {0}
+            assert ref_repr == writer.generate_repr()
+
     def test_quantum_output_repr(self) -> None:
         """Can the XYZ representation be generated from a parsed quantum chemical
         output?
