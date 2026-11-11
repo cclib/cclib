@@ -498,15 +498,17 @@ def _extract_orbitals(line: str) -> tuple[int, float, float, bool] | None:
     line_split = line.split()
     if set(line.strip()) == {" ", "."}:
         return None
+    # Columns are: index, occupation (occupied orbitals only), energy in Eh, energy in eV.
+    # Return the Hartree value; the caller converts to eV.
     if "(HOMO)" in line or (len(line_split) == 4 and "MO" not in line):
         return (
             int(line_split[0]),
             float(line_split[1]),
-            float(line_split[3]),
-            bool("(HOMO) in line"),
+            float(line_split[2]),
+            "(HOMO)" in line,
         )
     if "(LUMO)" in line or (len(line_split) == 3 and "MO" not in line):
-        return int(line_split[0]), 0.0, float(line_split[2]), False
+        return int(line_split[0]), 0.0, float(line_split[1]), False
 
 
 def _extract_gfn2_mulliken_charge(line: str) -> tuple[float, int] | None:
