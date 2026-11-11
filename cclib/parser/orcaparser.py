@@ -197,8 +197,10 @@ class ORCA(logfileparser.Logfile):
             if "info" not in self.metadata:
                 self.metadata["info"] = []
 
+            # ORCA <= 5 closes the block with a line of "="; ORCA 6 does not, and the next section
+            # (a "*****" banner or a settings table) follows after blank lines.
             line = next(inputfile)
-            while line[0] != "=":
+            while line[0] != "=" and not line.lstrip().startswith("*") and "INPUT FILE" not in line:
                 if line.lower()[:7] == "warning":
                     self.metadata["warnings"].append("")
                     while len(line) > 1 and set(line.strip()) != {"="}:

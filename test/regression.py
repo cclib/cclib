@@ -2717,6 +2717,20 @@ def testORCA_ORCA5_0_casscf_beryllium_atom_sym_out(logfile: "Logfile") -> None:
     assert hasattr(logfile.data, "nooccnos")
 
 
+def testORCA_ORCA6_0_1618_out(logfile: "Logfile") -> None:
+    """ORCA 6 no longer closes the WARNINGS block with a line of "=", so the
+    parser consumed the rest of the file and returned an almost empty record
+    (only charge and metadata).
+    """
+    assert logfile.data.natom == 4
+    assert logfile.data.mult == 2
+    assert len(logfile.data.atomcoords) == 6
+    assert len(logfile.data.scfenergies) == 6
+    assert abs(logfile.data.scfenergies[0] - convertor(-237.19824574524819, "hartree", "eV")) < 1.0e-6
+    assert len(logfile.data.metadata["warnings"]) >= 2
+    assert logfile.data.optdone
+
+
 def testORCA_ORCA6_0_casscf_beryllium_atom_nosym_out(logfile: "Logfile") -> None:
     """A stereotypical CASSCF calculation, but with symmetry disabled."""
     assert hasattr(logfile.data, "moenergies")
