@@ -344,6 +344,8 @@ SP        NWChem      NWChemKSSPTest        basicNWChem7.0              dvb_sp_k
 SP        ORCA        OrcaSPTest            basicORCA5.0                dvb_sp.out
 SP        ORCA        OrcaSPTest            basicORCA6.0                dvb_sp_dft.out
 SP        ORCA        OrcaHFSPTest          basicORCA6.0                dvb_sp_hf.out
+SP        ORCA        OrcaSPTest            basicORCA6.1                dvb_sp_dft.out
+SP        ORCA        OrcaHFSPTest          basicORCA6.1                dvb_sp_hf.out
 SP        Psi3        Psi3SPTest            basicPsi3                   dvb_sp_hf.out
 SP        Psi4        PsiHFSPTest           basicPsi4-1.2.1             dvb_sp_rhf.out
 SP        Psi4        PsiSPTest             basicPsi4-1.2.1             dvb_sp_rks.out
@@ -470,6 +472,7 @@ TD        Jaguar      JaguarTDDFTTest       basicJaguar13.3        dvb_td.out
 TD        NWChem      GenericTDTest         basicNWChem7.0        dvb_td.out
 TD        ORCA        OrcaTDDFTTest         basicORCA5.0          dvb_td.out
 TD        ORCA        OrcaTDDFTTest         basicORCA6.0          dvb_td.out
+TD        ORCA        OrcaTDDFTTest         basicORCA6.1          dvb_td.out
 TD        ORCA        OrcaROCISTest         basicORCA5.0          dvb_rocis.out
 TD        ORCA        Orca6ROCISTest        basicORCA6.0          dvb_rocis.out
 TD        ORCA        OrcaADC2Test          basicORCA5.0          dvb_adc2.log

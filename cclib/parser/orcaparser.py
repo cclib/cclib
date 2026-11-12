@@ -951,9 +951,11 @@ Dispersion correction           -0.016199959
             self.mosyms = [[]]
 
             def continue_orbital_section(line: str) -> bool:
-                # terminated by ------
+                # terminated by:
+                # ------------------------------
+                # MOLECULAR ORBITALS (RHF, ROHF)
                 # OR has *Only the first 10 virtual orbitals were printed.
-                return len(line) > 25 and line[:5] not in ("*Only", "Total")
+                return len(line) > 31 and line[:5] not in ("*Only", "Total")
 
             line = next(inputfile)
             while continue_orbital_section(line):
