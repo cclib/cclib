@@ -145,6 +145,16 @@ Command line format::
 
 The valid output file formats are ``cjson``, ``cml``, and ``xyz``.
 
+When using the Python API, CML and CJSON export one geometry. For example,
+``data.writecml(indices=0)`` selects the first geometry and
+``data.writejson(indices=-1)`` selects the last. With no selection (or an empty
+selection), the last geometry is used. Multiple distinct indices raise
+``ValueError``; an index outside the available geometries raises ``IndexError``.
+Coordinates and Open Babel-derived bonds and identifiers use the same selected
+geometry. Other parsed calculation properties are not resampled by this option;
+selecting a geometry does not reconstruct electronic properties for that step.
+Use XYZ to export multiple geometries.
+
 1. `Chemical markup language`_ (CML)::
 
     $ ccwrite cml Benzeneselenol.out
