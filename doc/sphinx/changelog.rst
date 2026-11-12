@@ -4,6 +4,114 @@
 Changelog
 =========
 
+Changes in cclib-1.9
+--------------------
+
+**Features**
+
+    * New parser: CFOUR (Stephen Slimak, #180, #1524)
+    * New parser: Serenity (Lukas Paetow, #1661, #1680, #1698, #1837)
+    * ORCA 6.0 and 6.1 support (Emmanuel Nicolas, #1038, #1177, #1462, #1517, #1611, #1612, #1769, #1778, #1789)
+    * Complete PySCF bridge (#1434, #1481, #1570, #1587, #1602, #1614)
+    * New bridge: chemfiles (Wollam, #1011, #1343, #1744, #1772)
+    * New bridge: TREXIO (Ravindra Shinde, Evgeny Posenitskiy, #1090, #1879)
+    * Always compute ``freeenergy`` if not present and required attributes are available (#1412)
+    * Documentation updates
+      * Add documentation for ``optstatus`` (Ugochukwu Nwosu, #1455, #1456)
+      * Add cclib citation to README and update 2.0 citation in docs (Andrew S. Rosen, #1643, #1645)
+    * DALTON parser updates
+      * Parse ``rotconsts`` (#1619)
+    * Formatted checkpoint parser updates
+      * Parse multipole moments saved by Q-Chem (#1626)
+      * Implement geometry optimization attributes: ``optdone``, ``optstatus``, success flag, Gaussian keywords and route (#1628)
+    * GAMESS parser updates
+      * Parse ``rotconsts`` (#1619)
+    * Gaussian parser updates
+      * Parse keywords and comments into metadata (#1491, #1494)
+      * Parse route into metadata (#1507)
+    * Jaguar parser updates
+      * Add Jaguar 13.3 test data (#1883)
+      * Implement ``optstatus`` and enable scan tests (#1607)
+      * Implement thermochemistry: ``enthalpy``, ``entropy``, ``freeenergy``, and ``temperature`` (#1416)
+    * Method updates
+      * Update cube file reader to handle ORCA-generated files with DSET_IDS (Hananeh Oliaei, #1688)
+    * Molcas parser updates
+      * Set success flag (#1408)
+    * ORCA parser updates
+      * Parse ``scancoords`` and ``scanenergies`` (#1600, #1606)
+      * Parse ``rotconsts`` and ``optstatus`` (#1601)
+    * Psi4 parser updates
+      * Implement thermochemistry: ``enthalpy``, ``entropy``, ``freeenergy``, and ``temperature`` (#1415)
+    * xtb parser updates
+      * Parse ``rotconsts`` (#1619)
+
+**Bugfixes**
+
+    * All parsers
+      * Don't unconditionally mark calculations as failed (#1408)
+    * Documentation
+      * Correct a spelling mistake in ``geovalues`` description (flt6, #1642)
+      * Fix units and other issues in ``vibfconsts`` description (Nina van der Meulen, #1854)
+    * Formatted checkpoint
+      * Fix setting success flag (#1401, #1408, #1805)
+    * Gaussian
+      * Always take last NBO charges for combined alpha plus beta orbitals (#1576, #1594)
+      * Fix parsing non-default atomic charge types (#1504, #1507)
+      * Fix for possible inhomogeneous ``mpenergies`` (#1487)
+      * Fix excited states in excited state geometry optimizations not being reset each iteration (#1486)
+      * Fix parsing of platform line for macOS on ARM (#1420, #1452)
+    * IO
+      * Fix handling of geometry indices for FileWriter (#1566, #1653)
+    * Jaguar
+      * Fix parsing vibrational frequqency outputs with 6 or fewer normal modes (#911, #1500)
+    * Methods
+      * Nuclear: fix off-diagonal element sign in moment of inertia tensor (#1610)
+    * MOPAC
+      * Fix setting success flag (#1408)
+    * NWChem
+      * Parse Mulliken charges for NWChem 7.2 (Timofey Losev, #1518, #1519)
+      * Handle input element symbols in non-standard case (#1801, #1836)
+      * Clean up thermochemistry parsing and fix vibrational frequency unit test data (#1413)
+    * ORCA
+      * Fix parsing singly-excited state calculations with over 1000 MOs (#1509, #1629)
+      * Fix parsing CASSCF-based scans (#1577, #1592)
+      * Fix parsing of commercially-licensed outputs with different version string (Katsuhiko Nishimra, #1640)
+    * Q-Chem
+      * Fix parsing TDDFT calculations with more than 99 excited states (#1573, #1593)
+    * xtb
+      * Fix parsing double-letter elements (Andrew S. Rosen, #1448, #1463, #1496)
+      * Fix parsing non-coordinate and empty lines in coordinate blocks (gguanine, #1768)
+
+**Developer facing changes**
+
+    * Increase minimum supported Python version from 3.7 to 3.10 (#1622, #1729, #1779, #1810, #1884, #1885, #1888)
+      * Miscellaneous Open Babel installation updates (#1433, #1523, #1813, #1814)
+    * Add Pixi support and testing through Python 3.14 (#1520, #1774, #1830, #1833, #1834, #1882)
+    * Support NumPy 2.0 (#1513)
+    * Nix: update flake.lock and reenable build in CI (#1467, #1474, #1495)
+    * Documentation improvements
+      * Clarify how to add unit test data files for new program versions (#1532)
+    * Pre-commit and tool updates
+      * Add hook to forbid non-Unix line endings (#1440, #1633)
+      * Add hook for TOML formatting and linting (#1776)
+      * Python formatting and linting
+        * Replace isort with ruff (#1811)
+        * Enable ruff lints and apply ruff and pyupgrade fixes (#1313, #1443)
+      * Add hook for YAML formatting (#1816, #1818)
+      * Add hook for GitHub Actions linting (#1817, #1819)
+      * Switch from pre-commit.ci service to prek GitHub Action in CI (#1632, #1815, #1820)
+    * pyproject.toml improvements
+      * Make licensing conformant to PEP 639 (#1775)
+      * Removed upper bound on versioningit version (#1444, #1445)
+    * Other continuous integration improvements
+      * Switch from Dependabot to Renovate for version updates and pinning (#1535)
+      * Fix publishing to (Test)PyPI without attestations (#1516)
+      * Update locations of dependencies (#1436, #1823, #1846)
+    * Other Python improvements
+      * Add more type annotations (#1647)
+      * Enforce FileWrappers as iterators over strings (#1449)
+    * Fix regression test name (#1493)
+
 Changes in cclib-1.8.1
 ----------------------
 
@@ -44,7 +152,7 @@ Changes in cclib-1.8
 
 **Features**
 
-    * [GSoC 2023] New language bindings: Julia (Victor Hugo Cano Gil, #1053, https://github.com/cclib/Cclib.jl)
+    * [GSoC 2023] New language bindings: Julia (Renee Gil, #1053, https://github.com/cclib/Cclib.jl)
     * [GSoC 2023] New parser: NBO (Weronika Zak, #1230, #1233, #1244)
     * [GSoC 2023] New parser: GAMESS *.dat (Weronika Zak, #1208, #1214, #1229)
     * New attribute: nmrcouplingtensors for NMR spin-spin couplings, initially from ORCA (#125, #1191)
