@@ -3673,6 +3673,20 @@ def testTurbomole_Turbomole7_5_mp2_opt__(logfile: "Logfile") -> None:
     assert len(logfile.data.scfenergies) == len(logfile.data.mpenergies)
 
 
+def testXTB_basicXTB6_7_1_1768_xyz_out(logfile: "Logfile") -> None:
+    """The HOMO was reported as orbital 0 because every occupied orbital was
+    flagged as the HOMO (a string literal was passed to bool()).
+
+    xtb prints only a window of orbitals around the gap; orbital 34 (1-based)
+    is marked (HOMO) and orbital 35 (LUMO).
+    """
+    assert list(logfile.data.homos) == [33]
+    moenergies = logfile.data.moenergies[0]
+    assert len(moenergies) == 60
+    assert abs(moenergies[33] - convertor(-0.4160635, "hartree", "eV")) < 1.0e-3
+    assert abs(moenergies[34] - convertor(-0.2835938, "hartree", "eV")) < 1.0e-3
+
+
 def testXTB_basicXTB6_5_1_1448_out(logfile: "Logfile") -> None:
     """Atomic coordinates for elements with two-letter symbols were not being
     parsed.
