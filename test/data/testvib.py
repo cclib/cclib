@@ -132,7 +132,6 @@ class GenericIRTest:
         assert abs(max(data.vibrmasses) - self.max_reduced_mass) < 0.1
 
     @skipForParser("FChk", "not printed")
-    @skipForParser("Psi3", "not implemented yet")
     @skipForParser("PySCF", "not implemented yet")
     def testzeropointcorrection(self, data: "ccData") -> None:
         """Is the zero-point correction correct?"""

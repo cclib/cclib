@@ -31,9 +31,8 @@ The current version is **cclib 1.8** (see the changelog_ for what's new). The fo
 - `Q-Chem`_ (versions 5.1, 5.4, and 6.0)
 - Turbomole_ (versions 5.9, 7.2, 7.4, and 7.5)
 
-Output files from other versions of the above programs may still work, and regression tests are always welcome. The following legacy parsers are still tested as regressions, but not actively maintained:
-
-- Psi3 (version 3.4)
+..
+   Output files from other versions of the above programs may still work, and regression tests are always welcome. The following legacy parsers are still tested as regressions, but not actively maintained:
 
 Many types of output data are parsed by cclib, including atom coordinates, orbital information, vibrational modes and TD-DFT calculations. See the page on `Extracted Data`_ for a complete list with coverage for the different programs. Several `calculation methods`_ are also provided for interpreting the electronic properties of molecules.
 
