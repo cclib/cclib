@@ -2780,23 +2780,6 @@ def testORCA_ORCA6_0_ho_h_cas_aDZ_scanSA_out(logfile: "Logfile") -> None:
         )
 
 
-# PSI 3 #
-
-
-def testPsi3_Psi3_4_water_psi3_log(logfile: "Logfile") -> None:
-    """An RHF for water with D orbitals and C2v symmetry.
-
-    Here we can check that the D orbitals are considered by checking atombasis and nbasis.
-    """
-    assert logfile.data.nbasis == 25
-    assert [len(ab) for ab in logfile.data.atombasis] == [15, 5, 5]
-
-    # FIXME not present? wasn't failing earlier?
-    # assert logfile.data.metadata["legacy_package_version"] == "3.4"
-    assert logfile.data.metadata["package_version"] == "3.4alpha"
-    assert isinstance(parse_version(logfile.data.metadata["package_version"]), Version)
-
-
 # PSI 4 #
 
 
@@ -4251,70 +4234,6 @@ class OrcaIRTest_old(OrcaIRTest_pre4):
     @pytest.mark.skip("These values were wrong due to wrong input coordinates.")
     def testirintens(self, data: "ccData") -> None:
         """These values were wrong due to wrong input coordinates."""
-
-
-# PSI3 #
-
-
-class Psi3SPTest(GenericHFSPTest):
-    """Customized restricted single point HF/KS unittest"""
-
-    # The final energy is also a bit higher here, I think due to the fact
-    # that a SALC calculation is done instead of a full LCAO.
-    scfenergy = -378.895220030994
-    moenergy = -11.085851
-
-    @pytest.mark.skip("atomcharges not implemented for Psi3")
-    def testatomcharges_mulliken(self, data: "ccData") -> None:
-        pass
-
-    @pytest.mark.skip("atomcharges not implemented for Psi3")
-    def testatomcharges_lowdin(self, data: "ccData") -> None:
-        pass
-
-    @pytest.mark.skip("atomcharges not implemented for Psi3")
-    def testatomcharges_hirshfeld(self, data: "ccData") -> None:
-        pass
-
-    @pytest.mark.skip("atommasses not implemented yet")
-    def testatommasses(self, data: "ccData") -> None:
-        pass
-
-    @pytest.mark.skip("atomcharges not implemented for Psi3")
-    def testatomcharges(self, data: "ccData") -> None:
-        pass
-
-    @pytest.mark.skip("MO coefficients are printed separately for each SALC")
-    def testfornoormo(self, data: "ccData") -> None:
-        pass
-
-    @pytest.mark.skip("MO coefficients are printed separately for each SALC")
-    def testdimmocoeffs(self, data: "ccData") -> None:
-        pass
-
-    @pytest.mark.skip("Psi3 does not currently have the option to print the overlap matrix")
-    def testaooverlaps(self, data: "ccData") -> None:
-        pass
-
-    @pytest.mark.skip("reading rotational constants is not implemented for Psi3")
-    def testrotconsts(self, data: "ccData") -> None:
-        pass
-
-    @pytest.mark.skip("reading basis set is not implemented for Psi3")
-    def testmetadata_basis_set(self, data: "ccData") -> None:
-        pass
-
-    @pytest.mark.skip("reading input file is not implemented for Psi3")
-    def testmetadata_input_file(self, data: "ccData") -> None:
-        pass
-
-    @pytest.mark.skip("reading unformatted package version is not implemented for Psi3")
-    def testmetadata_legacy_package_version(self, data: "ccData") -> None:
-        pass
-
-    @pytest.mark.skip("reading cpu/wall time is not implemented for Psi3")
-    def testmetadata_times(self, data: "ccData") -> None:
-        pass
 
 
 # PSI4 #
