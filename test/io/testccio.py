@@ -48,10 +48,6 @@ class guess_filetypeTest:
         assert self.guess(["Northwest Computational Chemistry Package"]) == cclib.parser.NWChem
         assert self.guess(["O   R   C   A"]) == cclib.parser.ORCA
         assert (
-            self.guess(["PSI3: An Open-Source Ab Initio Electronic Structure Package"])
-            == cclib.parser.Psi3
-        )
-        assert (
             self.guess(["Psi4: An Open-Source Ab Initio Electronic Structure Package"])
             == cclib.parser.Psi4
         )
