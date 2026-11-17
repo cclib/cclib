@@ -84,8 +84,13 @@ class CJSON(filewriter.Writer):
                         )
                 else:
                     cjson_dict["atoms"]["coords"] = dict()
+                    geometry_index = (
+                        next(iter(self.indices))
+                        if len(self.indices) == 1
+                        else len(self.ccdata.atomcoords) - 1
+                    )
                     cjson_dict["atoms"]["coords"]["3d"] = (
-                        self.ccdata.atomcoords[-1].flatten().tolist()
+                        self.ccdata.atomcoords[geometry_index].flatten().tolist()
                     )
                 continue
 
