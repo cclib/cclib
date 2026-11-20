@@ -313,7 +313,7 @@ cannot be determined. Rerun without `$molecule read`."""
         return nparray
 
     def parse_matrix_aonames(
-        self, inputfile: "FileWrapper", nrows: int, ncols: int
+        self, inputfile: "FileWrapper", nrows: int, ncols: int, mocoeffs_have_symm: bool
     ) -> numpy.ndarray:
         """Q-Chem prints most matrices in a standard format; parse the matrix
         into a preallocated NumPy array of the appropriate shape.
@@ -332,6 +332,8 @@ cannot be determined. Rerun without `$molecule read`."""
             # If the line is just the column header (indices)...
             if line[:5].strip() == "":
                 line = next(inputfile)
+                if mocoeffs_have_symm:
+                    line = next(inputfile)
             # Do nothing for now.
             if "eigenvalues" in line:
                 line = next(inputfile)
@@ -471,6 +473,8 @@ cannot be determined. Rerun without `$molecule read`."""
                 package_version = groups[0]
                 self.metadata["package_version"] = package_version
                 self.metadata["legacy_package_version"] = package_version
+                parsed_version = parse_version(self.metadata["package_version"])
+                self.set_attribute("package_version", parsed_version)
                 self.set_attribute("parsed_svn_revision", False)
         # Avoid "Last SVN revision" entry.
         if "SVN revision" in line and "Last" not in line:
@@ -777,12 +781,11 @@ cannot be determined. Rerun without `$molecule read`."""
                             if "solvent_params" not in self.metadata:
                                 self.metadata["solvent_params"] = dict()
                             self.metadata["solvent_params"]["epsilon_infinite"] = float(tokens[1])
-
-            if line.strip() == "==== cosmo data ====":
+            if "= cosmo data =" in line.strip().lower():
                 self.metadata["solvent_model"] = "COSMO"
-                while line.strip() != "=== end cosmo data ===":
+                while "= end cosmo data =" not in line.strip().lower():
                     line = next(inputfile)
-                    if line.startswith("eps"):
+                    if line.strip().startswith("eps"):
                         if "solvent_params" not in self.metadata:
                             self.metadata["solvent_params"] = dict()
                         self.metadata["solvent_params"]["epsilon"] = float(line.split()[2])
@@ -876,7 +879,7 @@ cannot be determined. Rerun without `$molecule read`."""
             # "MOLECULAR ORBITAL COEFFICIENTS" blocks.
             if hasattr(self, "package_version"):
                 pv = self.package_version
-                if pv.major >= 5 and pv.minor > 1:
+                if pv >= Version("5.1.0"):
                     norbdisp = None
                     if hasattr(self, "nmo"):
                         norbdisp = self.nmo
@@ -997,7 +1000,7 @@ cannot be determined. Rerun without `$molecule read`."""
                 )
                 self.append_attribute("mocoeffs", mocoeffs.transpose())
 
-            if "Total energy in the final basis set" in line:
+            if "Total energy" in line:
                 self.append_attribute("scfenergies", float(line.split()[-1]))
 
             # Geometry optimization.
@@ -1412,8 +1415,15 @@ cannot be determined. Rerun without `$molecule read`."""
                 # We could also attempt to parse `moenergies` here, but
                 # nothing is gained by it.
 
+                print("SHIV", self.nbasis, self.norbdisp_alpha_aonames)
+                mocoeffs_have_symm = False
+                pv = self.package_version
+                if pv >= Version("7.0.0"):
+                    mocoeffs_have_symm = (
+                        True  # for versions newer than 7 mocoeffs are printed with symmetries
+                    )
                 mocoeffs = self.parse_matrix_aonames(
-                    inputfile, self.nbasis, self.norbdisp_alpha_aonames
+                    inputfile, self.nbasis, self.norbdisp_alpha_aonames, mocoeffs_have_symm
                 )
                 # Only use these MO coefficients if we don't have them
                 # from `scf_final_print`.
@@ -1428,8 +1438,14 @@ cannot be determined. Rerun without `$molecule read`."""
                 assert len(self.atombasis) == len(self.atomnos)
 
             if "BETA  MOLECULAR ORBITAL COEFFICIENTS" in line:
+                mocoeffs_have_symm = False
+                pv = self.package_version
+                if pv >= Version("7.0.0"):
+                    mocoeffs_have_symm = (
+                        True  # for versions newer than 7 mocoeffs are printed with symmetries
+                    )
                 mocoeffs = self.parse_matrix_aonames(
-                    inputfile, self.nbasis, self.norbdisp_beta_aonames
+                    inputfile, self.nbasis, self.norbdisp_beta_aonames, mocoeffs_have_symm
                 )
                 if len(self.mocoeffs) == 1:
                     self.mocoeffs.append(mocoeffs.transpose())

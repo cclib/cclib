@@ -874,6 +874,10 @@ class SolventMetadataTest:
         "basicQChem6.0/water_hf_solvent_smd_iefpcm.out",
         "the internally-used dielectric constant isn't printed, only solvent name",
     )
+    @skipForLogfile(
+        "basicQChem7.0/water_hf_solvent_smd_iefpcm.out",
+        "the internally-used dielectric constant isn't printed, only solvent name",
+    )
     def test_solvent_dielectric(self, data: "ccData") -> None:
         """Check solvent dielectric was parsed correctly"""
         assert (
@@ -935,7 +939,15 @@ class SMDCPCMMetadataTest(SolventMetadataTest):
     model = "SMD-CPCM"
 
 
+class QChemIEFPCMMetadataTest(QChemSolventMetadataTest, IEFPCMMetadataTest):
+    """Check we can parse implicit solvent data."""
+
+
 class QChemSMDIEFPCMMetadataTest(QChemSolventMetadataTest, SMDIEFPCMMetadataTest):
+    """Check we can parse implicit solvent data."""
+
+
+class QChemCPCMMetadataTest(QChemSolventMetadataTest, CPCMMetadataTest):
     """Check we can parse implicit solvent data."""
 
 
