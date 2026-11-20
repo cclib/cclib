@@ -440,7 +440,7 @@ def cclibfrommethods(
             if ccsd_t
             else convertor(cc.e_tot, "hartree", "eV")
         ]
-        attributes["metadata"]["success"] = cc.converged
+        attributes["metadata"]["success"] = attributes["metadata"]["success"] and cc.converged
         if cc.cc2:
             ccmethod = "CC2"
 
@@ -580,7 +580,8 @@ def cclibfrommethods(
     # Excited states.
     if len(et) > 0:
         # PySCF tracks convergence for each state which is great.
-        attributes["metadata"]["success"] = all(
+        # Make sure not to lose a previous failed state.
+        attributes["metadata"]["success"] = attributes["metadata"]["success"] and all(
             itertools.chain(*(etmethod.converged for etmethod in et))
         )
 
