@@ -39,7 +39,6 @@ from cclib.parser.mopacparser import MOPAC
 from cclib.parser.nboparser import NBO
 from cclib.parser.nwchemparser import NWChem
 from cclib.parser.orcaparser import ORCA
-from cclib.parser.psi3parser import Psi3
 from cclib.parser.psi4parser import Psi4
 from cclib.parser.qchemparser import QChem
 from cclib.parser.serenityparser import Serenity
@@ -89,7 +88,6 @@ triggers = [
     (NBO, ["N A T U R A L   A T O M I C   O R B I T A L   A N D"], True),
     (NWChem, ["Northwest Computational Chemistry Package"], True),
     (ORCA, ["O   R   C   A"], True),
-    (Psi3, ["PSI3: An Open-Source Ab Initio Electronic Structure Package"], True),
     (Psi4, ["Psi4: An Open-Source Ab Initio Electronic Structure Package"], True),
     (QChem, ["A Quantum Leap Into The Future Of Chemistry"], True),
     (Turbomole, ["TURBOMOLE"], True),
@@ -215,7 +213,7 @@ def ccopen(
 
     Returns:
       one of ADF, DALTON, GAMESS, GAMESS UK, Gaussian, Jaguar,
-      Molpro, MOPAC, NWChem, ORCA, Psi3, Psi/Psi4, QChem, CJSON or None
+      Molpro, MOPAC, NWChem, ORCA, Psi4, QChem, CJSON or None
       (if it cannot figure it out or the file does not exist).
     """
     if not isinstance(source, list):
