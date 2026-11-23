@@ -2,7 +2,13 @@
 #
 # This file is part of cclib (http://cclib.github.io) and is distributed under
 # the terms of the BSD 3-Clause License.
+import logging
+from pathlib import Path
+
+from cclib.parser import Gaussian
 from cclib.parser.gaussianparser import parse_route_line, parse_route_lines
+
+import numpy
 
 
 def test_parse_route_line() -> None:
@@ -31,3 +37,22 @@ def test_parse_route_lines() -> None:
         99: {5: 1, 9: 1},
     }
     assert parse_route_lines(original) == ref
+
+
+def test_rotconsts_asterisk(tmp_path: Path) -> None:
+    """Rotational constants with asterisks (linear molecules) parse as NaN.
+
+    Gaussian prints asterisks when a rotational constant overflows, e.g. for
+    linear molecules (see #1958, also #1270). `utils.float` maps such values
+    to NaN instead of raising ValueError.
+    """
+    logfile = tmp_path / "gaussian_asterisk_rotconsts.log"
+    logfile.write_text(
+        " Entering Gaussian System, Link 0=g16\n"
+        " Rotational constants (GHZ): ************ 12.73690 12.73690\n"
+        " Normal termination of Gaussian 16.\n"
+    )
+    data = Gaussian(str(logfile), loglevel=logging.ERROR).parse()
+    assert data.rotconsts.shape == (1, 3)
+    assert numpy.isnan(data.rotconsts[0][0])
+    numpy.testing.assert_allclose(data.rotconsts[0][1:], [12.73690, 12.73690])
