@@ -1,0 +1,14 @@
+# MoOCl4(2-) single point with the Hay-Wadt (LANL2) ECP on Mo and Cl,
+# as in the other Core tests (core electrons: Mo 28, Cl 10)
+! B3LYP LANL2DZ
+%basis
+  NewGTO O "6-31G(d)" end
+end
+* xyz -2 1
+Mo     0.000325    -0.000325     0.051810
+O      0.000206    -0.000206     1.741504
+Cl     1.711727    -1.711727    -0.659846
+Cl    -1.710992    -1.711738    -0.660079
+Cl    -1.711004     1.711004    -0.660311
+Cl     1.711738     1.710992    -0.660079
+*

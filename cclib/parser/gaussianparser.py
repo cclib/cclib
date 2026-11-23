@@ -2261,9 +2261,23 @@ class Gaussian(logfileparser.Logfile):
 
             line = next(inputfile)
             if line.find("Centers:") < 0:
+                # Without IOp(3/33=1), there is no "Centers:" line and each center is
+                # printed in turn, with its valence electrons if it has an ECP:
+                #
+                #    1          6
+                #                                    No pseudopotential on this center.
+                #    2         53            7
+                #                                       F and up
+                #                                                      0        1.0715702       -0.07928290
+                # ======================================================================================
+                self.coreelectrons = numpy.zeros(self.natom, "i")
+                while line.find("=====") < 0:
+                    info = line.split()
+                    if len(info) == 3 and all(x.isdigit() for x in info):
+                        center, atomno, valence = (int(x) for x in info)
+                        self.coreelectrons[center - 1] = atomno - valence
+                    line = next(inputfile)
                 return
-                # This was continue before parser refactoring.
-                # continue
 
             # Needs to handle code like the following:
             #

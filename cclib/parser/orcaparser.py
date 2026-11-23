@@ -922,6 +922,12 @@ Dispersion correction           -0.016199959
         0 H     1.0000    0     1.008    0.000000    0.000000    0.000000
         1 O     8.0000    0    15.999    0.000000    0.000000    1.889726
         2 H     1.0000    0     1.008    0.000000    1.889726    1.889726
+
+        The nuclear charge (ZA) of an atom with an ECP is reduced by its core
+        electrons and marked with an asterisk:
+        0 Mo   14.0000*   0    95.940    0.000614   -0.000614    0.097907
+        1 O     8.0000    0    15.999    0.000389   -0.000389    3.290966
+        * core charge reduced due to ECP
         """
         if line[0:28] == "CARTESIAN COORDINATES (A.U.)" and not hasattr(self, "atommasses"):
             next(inputfile)
@@ -929,6 +935,7 @@ Dispersion correction           -0.016199959
 
             line = next(inputfile)
             self.atommasses = []
+            coreelectrons = []
             while len(line) > 1:
                 if line[:32] == "* core charge reduced due to ECP":
                     break
@@ -937,7 +944,12 @@ Dispersion correction           -0.016199959
                 no, lb, za, frag, mass, x, y, z = line.split()
                 if lb[-1] != ">":
                     self.atommasses.append(float(mass))
+                    if za[-1] == "*":
+                        coreelectrons.append(self.table.number[lb] - round(float(za[:-1])))
+                    else:
+                        coreelectrons.append(0)
                 line = next(inputfile)
+            self.coreelectrons = numpy.array(coreelectrons, "i")
 
         if "The optimization did not converge" in line:
             if not hasattr(self, "optdone"):
